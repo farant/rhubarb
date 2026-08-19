@@ -7,6 +7,7 @@
 #include "imago_opus.h"
 #include <string.h>
 
+
 /* ============================================================
  * Functiones Auxiliares
  * ============================================================ */
@@ -15,13 +16,13 @@
  * Nearest neighbor scaling - velox et simplex
  */
 hic_manens vacuum
-_scalare_proximus(
+_scalare_proximus (
     constans i8* fons_pixela,
-    s32          fons_lat,
-    s32          fons_alt,
-    i8*          dest_pixela,
-    s32          dest_lat,
-    s32          dest_alt)
+            s32  fons_lat,
+            s32  fons_alt,
+             i8* dest_pixela,
+            s32  dest_lat,
+            s32  dest_alt)
 {
     s32 x, y;
     s32 src_x, src_y;
@@ -40,8 +41,8 @@ _scalare_proximus(
             si (src_x >= fons_lat) src_x = fons_lat - 1;
 
             /* Copiare pixel (4 bytes RGBA) */
-            src_idx = (src_y * fons_lat + src_x) * 4;
-            dest_idx = (y * dest_lat + x) * 4;
+            src_idx   = (src_y * fons_lat + src_x) * 4;
+            dest_idx  = (y * dest_lat + x) * 4;
 
             dest_pixela[dest_idx + 0] = fons_pixela[src_idx + 0];
             dest_pixela[dest_idx + 1] = fons_pixela[src_idx + 1];
@@ -56,13 +57,13 @@ _scalare_proximus(
  * Utitur fixed-point arithmetica (16 bits fractio)
  */
 hic_manens vacuum
-_scalare_bilinearis(
+_scalare_bilinearis (
     constans i8* fons_pixela,
-    s32          fons_lat,
-    s32          fons_alt,
-    i8*          dest_pixela,
-    s32          dest_lat,
-    s32          dest_alt)
+            s32  fons_lat,
+            s32  fons_alt,
+             i8* dest_pixela,
+            s32  dest_lat,
+            s32  dest_alt)
 {
     s32 x, y;
     s32 dest_idx;
@@ -84,10 +85,10 @@ _scalare_bilinearis(
     per (y = 0; y < dest_alt; y++)
     {
         /* Source Y in fixed point: y * scale_y */
-        s32 src_y_fp = y * scale_y;
-        s32 src_y0 = src_y_fp >> FP_SHIFT;
-        s32 src_y1 = src_y0 + 1;
-        s32 frac_y = src_y_fp & (FP_ONE - 1);
+        s32 src_y_fp  = y * scale_y;
+        s32 src_y0    = src_y_fp >> FP_SHIFT;
+        s32 src_y1    = src_y0 + 1;
+        s32 frac_y    = src_y_fp & (FP_ONE - 1);
 
         si (src_y0 >= fons_alt) src_y0 = fons_alt - 1;
         si (src_y1 >= fons_alt) src_y1 = fons_alt - 1;
@@ -95,10 +96,10 @@ _scalare_bilinearis(
         per (x = 0; x < dest_lat; x++)
         {
             /* Source X in fixed point: x * scale_x */
-            s32 src_x_fp = x * scale_x;
-            s32 src_x0 = src_x_fp >> FP_SHIFT;
-            s32 src_x1 = src_x0 + 1;
-            s32 frac_x = src_x_fp & (FP_ONE - 1);
+            s32 src_x_fp  = x * scale_x;
+            s32 src_x0    = src_x_fp >> FP_SHIFT;
+            s32 src_x1    = src_x0 + 1;
+            s32 frac_x    = src_x_fp & (FP_ONE - 1);
 
             si (src_x0 >= fons_lat) src_x0 = fons_lat - 1;
             si (src_x1 >= fons_lat) src_x1 = fons_lat - 1;
@@ -143,25 +144,26 @@ _scalare_bilinearis(
     #undef FP_ONE
 }
 
+
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
 
 Imago
-imago_scalare(
-    constans Imago* fons,
-    i32             nova_latitudo,
-    i32             nova_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina)
+imago_scalare (
+     constans Imago* fons,
+                i32  nova_latitudo,
+                i32  nova_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina)
 {
     Imago dest;
-    i32 pixela_size;
+      i32 pixela_size;
 
     /* Initiare dest cum valoribus nullis */
-    dest.pixela = NIHIL;
-    dest.latitudo = 0;
-    dest.altitudo = 0;
+    dest.pixela    = NIHIL;
+    dest.latitudo  = 0;
+    dest.altitudo  = 0;
 
     /* Validare argumenta */
     si (fons == NIHIL || fons->pixela == NIHIL || piscina == NIHIL)
@@ -214,12 +216,12 @@ imago_scalare(
 }
 
 Imago
-imago_scalare_ad_limites(
-    constans Imago* fons,
-    i32             max_latitudo,
-    i32             max_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina)
+imago_scalare_ad_limites (
+     constans Imago* fons,
+                i32  max_latitudo,
+                i32  max_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina)
 {
     Imago dest;
     s32 nova_lat, nova_alt;
@@ -232,9 +234,9 @@ imago_scalare_ad_limites(
     #define SCALE_FP_ONE (1 << SCALE_FP_SHIFT)
 
     /* Initiare dest cum valoribus nullis */
-    dest.pixela = NIHIL;
-    dest.latitudo = 0;
-    dest.altitudo = 0;
+    dest.pixela    = NIHIL;
+    dest.latitudo  = 0;
+    dest.altitudo  = 0;
 
     /* Validare argumenta */
     si (fons == NIHIL || fons->pixela == NIHIL || piscina == NIHIL)
@@ -251,10 +253,10 @@ imago_scalare_ad_limites(
     }
 
     /* Convertere ad signed */
-    fons_lat = (s32)fons->latitudo;
-    fons_alt = (s32)fons->altitudo;
-    max_lat = (s32)max_latitudo;
-    max_alt = (s32)max_altitudo;
+    fons_lat  = (s32)fons->latitudo;
+    fons_alt  = (s32)fons->altitudo;
+    max_lat   = (s32)max_latitudo;
+    max_alt   = (s32)max_altitudo;
 
     /* Computare scale factors (fixed point, 16 bits fractio)
      * Semper scalare ad limites, etiam si imago iam capit (pro zoom) */
@@ -280,16 +282,16 @@ imago_scalare_ad_limites(
 }
 
 Imago
-imago_extrahere_et_scalare(
-    constans Imago* fons,
-    i32             crop_x,
-    i32             crop_y,
-    i32             crop_lat,
-    i32             crop_alt,
-    i32             max_latitudo,
-    i32             max_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina)
+imago_extrahere_et_scalare (
+     constans Imago* fons,
+                i32  crop_x,
+                i32  crop_y,
+                i32  crop_lat,
+                i32  crop_alt,
+                i32  max_latitudo,
+                i32  max_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina)
 {
     Imago dest;
     s32 fons_lat, fons_alt;
@@ -302,9 +304,9 @@ imago_extrahere_et_scalare(
     #define SCALE_FP_ONE (1 << SCALE_FP_SHIFT)
 
     /* Initiare dest cum valoribus nullis */
-    dest.pixela = NIHIL;
-    dest.latitudo = 0;
-    dest.altitudo = 0;
+    dest.pixela    = NIHIL;
+    dest.latitudo  = 0;
+    dest.altitudo  = 0;
 
     /* Validare argumenta */
     si (fons == NIHIL || fons->pixela == NIHIL || piscina == NIHIL)
@@ -362,22 +364,22 @@ imago_extrahere_et_scalare(
     si (modus == IMAGO_SCALA_PROXIMUS)
     {
         /* Nearest neighbor - optimized with pointer arithmetic */
-        i8* dest_row = dest.pixela;
-        s32 dest_row_bytes = dest_lat * IV;
+         i8* dest_row        = dest.pixela;
+        s32  dest_row_bytes  = dest_lat * IV;
 
         per (y = 0; y < dest_alt; y++)
         {
             /* Compute source row once per scanline */
-            s32 src_y = cy + (y * ch) / dest_alt;
+                    s32  src_y = cy + (y * ch) / dest_alt;
             constans i8* src_row;
-            i8* dest_ptr = dest_row;
+                     i8* dest_ptr = dest_row;
 
             si (src_y >= fons_alt) src_y = fons_alt - 1;
             src_row = fons->pixela + (src_y * fons_lat * IV);
 
             per (x = 0; x < dest_lat; x++)
             {
-                s32 src_x = cx + (x * cw) / dest_lat;
+                        s32  src_x = cx + (x * cw) / dest_lat;
                 constans i8* src_ptr;
 
                 si (src_x >= fons_lat) src_x = fons_lat - 1;
@@ -401,31 +403,31 @@ imago_extrahere_et_scalare(
 
         per (y = 0; y < dest_alt; y++)
         {
-            s32 src_y_fp = y * scale_y_bl;
-            s32 src_y0 = cy + (src_y_fp >> FP_SHIFT);
-            s32 src_y1 = src_y0 + 1;
-            s32 frac_y = src_y_fp & (FP_ONE_BL - 1);
+            s32 src_y_fp  = y * scale_y_bl;
+            s32 src_y0    = cy + (src_y_fp >> FP_SHIFT);
+            s32 src_y1    = src_y0 + 1;
+            s32 frac_y    = src_y_fp & (FP_ONE_BL - 1);
 
             si (src_y0 >= fons_alt) src_y0 = fons_alt - 1;
             si (src_y1 >= fons_alt) src_y1 = fons_alt - 1;
 
             per (x = 0; x < dest_lat; x++)
             {
-                s32 src_x_fp = x * scale_x_bl;
-                s32 src_x0 = cx + (src_x_fp >> FP_SHIFT);
-                s32 src_x1 = src_x0 + 1;
-                s32 frac_x = src_x_fp & (FP_ONE_BL - 1);
+                s32 src_x_fp  = x * scale_x_bl;
+                s32 src_x0    = cx + (src_x_fp >> FP_SHIFT);
+                s32 src_x1    = src_x0 + 1;
+                s32 frac_x    = src_x_fp & (FP_ONE_BL - 1);
                 s32 idx00, idx01, idx10, idx11;
                 s32 dst_idx;
 
                 si (src_x0 >= fons_lat) src_x0 = fons_lat - 1;
                 si (src_x1 >= fons_lat) src_x1 = fons_lat - 1;
 
-                idx00 = (src_y0 * fons_lat + src_x0) * IV;
-                idx01 = (src_y0 * fons_lat + src_x1) * IV;
-                idx10 = (src_y1 * fons_lat + src_x0) * IV;
-                idx11 = (src_y1 * fons_lat + src_x1) * IV;
-                dst_idx = (y * dest_lat + x) * IV;
+                idx00    = (src_y0 * fons_lat + src_x0) * IV;
+                idx01    = (src_y0 * fons_lat + src_x1) * IV;
+                idx10    = (src_y1 * fons_lat + src_x0) * IV;
+                idx11    = (src_y1 * fons_lat + src_x1) * IV;
+                dst_idx  = (y * dest_lat + x) * IV;
 
                 /* Unrolled RGBA interpolation */
                 {

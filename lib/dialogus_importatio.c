@@ -11,6 +11,7 @@
 #include "color.h"
 #include <stdio.h>
 
+
 /* ============================================================
  * Constantae
  * ============================================================ */
@@ -24,6 +25,7 @@
 #define LAYOUT_SLIDERS_Y    XVIII
 #define LAYOUT_ZOOM_Y       XXV
 #define LAYOUT_BUTTONS_Y    XXVIII
+
 
 /* ============================================================
  * Functiones Internae - Forward Declarations
@@ -45,27 +47,30 @@ _dialogus_importatio_tractare_eventum(
 hic_manens vacuum
 _dialogus_importatio_destruere(Dialogus* dialogus);
 
+
 /* ============================================================
  * Reddere
  * ============================================================ */
 
 hic_manens vacuum
-_dialogus_importatio_reddere(
-    Dialogus*        dialogus,
-    TabulaPixelorum* tabula,
-    i32 x, i32 y,
-    i32 latitudo, i32 altitudo,
-    f32 scala)
+_dialogus_importatio_reddere (
+             Dialogus* dialogus,
+      TabulaPixelorum* tabula,
+                  i32  x,
+                  i32  y,
+                  i32  latitudo,
+                  i32  altitudo,
+                  f32  scala)
 {
     DialogusImportatio* di;
-    ImportatioVisus*    visus;
+       ImportatioVisus* visus;
     i32 char_w, char_h;
     i32 px, py;
     i32 base_x, base_y;  /* Positio base in characteribus */
-    Color color_text;
+     Color color_text;
     chorda label;
     chorda preset_labels[V];
-    s32 i;
+       s32 i;
 
     di = (DialogusImportatio*)dialogus->datum;
     si (di == NIHIL || di->visus == NIHIL)
@@ -75,9 +80,9 @@ _dialogus_importatio_reddere(
 
     visus = di->visus;
     /* Character dimensiones: 6 pixels latitudo, 8 pixels altitudo */
-    char_w = (i32)(6.0f * scala);
-    char_h = (i32)(8.0f * scala);
-    color_text = thema_color(COLOR_TEXT);
+    char_w      = (i32)(6.0f * scala);
+    char_h      = (i32)(8.0f * scala);
+    color_text  = thema_color(COLOR_TEXT);
 
     /* Base position in character coordinates */
     base_x = x;
@@ -117,8 +122,8 @@ _dialogus_importatio_reddere(
 
         si (fructus.mutatum)
         {
-            di->titulus = *fructus.textus;
-            di->titulus_cursor = fructus.cursor;
+            di->titulus         = *fructus.textus;
+            di->titulus_cursor  = fructus.cursor;
         }
         di->titulus_focused = fructus.focused;
     }
@@ -199,8 +204,8 @@ _dialogus_importatio_reddere(
     /* ---- Sliders (solum in griseum mode) ---- */
     si (!visus->modus_coloris)
     {
-        i32 sliders_base_char_y;
-        chorda slider_labels[III];
+                  i32 sliders_base_char_y;
+               chorda slider_labels[III];
         FructusSlider fructus;
 
         sliders_base_char_y = base_y + LAYOUT_SLIDERS_Y;
@@ -245,13 +250,13 @@ _dialogus_importatio_reddere(
     {
         i32 zoom_char_y, zoom_label_px, zoom_label_py;
         FructusSlider fructus;
-        s32 zoom_valor;   /* signatus: zoom < 1.0 dat negativum
+                  s32 zoom_valor;   /* signatus: zoom < 1.0 dat negativum
                            * (clampa inferior viva 2026-07-17) */
         chorda zoom_label;
 
-        zoom_char_y = base_y + LAYOUT_ZOOM_Y;
-        zoom_label_px = px + (LAYOUT_MARGIN * char_w);
-        zoom_label_py = py + (LAYOUT_ZOOM_Y * char_h);
+        zoom_char_y    = base_y + LAYOUT_ZOOM_Y;
+        zoom_label_px  = px + (LAYOUT_MARGIN * char_w);
+        zoom_label_py  = py + (LAYOUT_ZOOM_Y * char_h);
 
         zoom_label = chorda_ex_literis("Zoom:", di->piscina);
         tabula_pixelorum_pingere_chordam_scalatam(
@@ -325,17 +330,18 @@ _dialogus_importatio_reddere(
     (vacuum)altitudo;
 }
 
+
 /* ============================================================
  * Tractare Eventum
  * ============================================================ */
 
 hic_manens DialogusFructus
-_dialogus_importatio_tractare_eventum(
-    Dialogus*         dialogus,
+_dialogus_importatio_tractare_eventum (
+            Dialogus* dialogus,
     constans Eventus* eventus)
 {
     DialogusImportatio* di;
-    ImportatioVisus*    visus;
+       ImportatioVisus* visus;
 
     di = (DialogusImportatio*)dialogus->datum;
     si (di == NIHIL || di->visus == NIHIL)
@@ -348,8 +354,8 @@ _dialogus_importatio_tractare_eventum(
     /* Verificare button clicks (set in reddere on previous frame) */
     si (di->salvare_clicked)
     {
-        di->salvare_clicked = FALSUM;
-        visus->titulus = di->titulus;
+        di->salvare_clicked  = FALSUM;
+        visus->titulus       = di->titulus;
         redde DIALOGUS_CONFIRMATUS;
     }
     si (di->abicere_clicked)
@@ -362,14 +368,14 @@ _dialogus_importatio_tractare_eventum(
      * Click/release/key events semper salvare.
      * MUS_MOTUS solum salvare si non overwriting release event
      * (bottone necessitat videre MUS_LIBERATUS pro click). */
-    si (eventus->genus == EVENTUS_MUS_DEPRESSUS ||
-        eventus->genus == EVENTUS_MUS_LIBERATUS ||
-        eventus->genus == EVENTUS_CLAVIS_DEPRESSUS ||
-        eventus->genus == EVENTUS_MUS_ROTULA)
+    si (   eventus->genus == EVENTUS_MUS_DEPRESSUS
+        || eventus->genus == EVENTUS_MUS_LIBERATUS
+        || eventus->genus == EVENTUS_CLAVIS_DEPRESSUS
+        || eventus->genus == EVENTUS_MUS_ROTULA)
     {
-        di->eventus_currens = eventus;
-        di->eventus_mus_x = eventus->datum.mus.x;
-        di->eventus_mus_y = eventus->datum.mus.y;
+        di->eventus_currens  = eventus;
+        di->eventus_mus_x    = eventus->datum.mus.x;
+        di->eventus_mus_y    = eventus->datum.mus.y;
     }
     alioquin si (eventus->genus == EVENTUS_MUS_MOTUS)
     {
@@ -378,8 +384,8 @@ _dialogus_importatio_tractare_eventum(
         di->eventus_mus_y = eventus->datum.mus.y;
 
         /* Solum salvare si non overwriting release event */
-        si (di->eventus_currens == NIHIL ||
-            di->eventus_currens->genus != EVENTUS_MUS_LIBERATUS)
+        si (   di->eventus_currens        == NIHIL
+            || di->eventus_currens->genus != EVENTUS_MUS_LIBERATUS)
         {
             di->eventus_currens = eventus;
         }
@@ -438,24 +444,27 @@ _dialogus_importatio_tractare_eventum(
     redde DIALOGUS_CURRENS;
 }
 
+
 /* ============================================================
  * Destruere
  * ============================================================ */
 
 hic_manens vacuum
-_dialogus_importatio_destruere(Dialogus* dialogus)
+_dialogus_importatio_destruere (
+    Dialogus* dialogus)
 {
     /* Nihil speciale - piscina cleanup handles memory */
     (vacuum)dialogus;
 }
+
 
 /* ============================================================
  * API Publica
  * ============================================================ */
 
 DialogusImportatio*
-dialogus_importatio_creare(
-    Piscina*         piscina,
+dialogus_importatio_creare (
+            Piscina* piscina,
     ImportatioVisus* visus)
 {
     DialogusImportatio* di;
@@ -471,17 +480,17 @@ dialogus_importatio_creare(
         redde NIHIL;
     }
 
-    di->piscina = piscina;
-    di->visus = visus;
+    di->piscina  = piscina;
+    di->visus    = visus;
 
     /* Copiare titulum ab visus */
-    di->titulus = visus->titulus;
-    di->titulus_cursor = (s32)di->titulus.mensura;
-    di->titulus_focused = FALSUM;
-    di->focus_index = 0;
-    di->eventus_currens = NIHIL;
-    di->salvare_clicked = FALSUM;
-    di->abicere_clicked = FALSUM;
+    di->titulus          = visus->titulus;
+    di->titulus_cursor   = (s32)di->titulus.mensura;
+    di->titulus_focused  = FALSUM;
+    di->focus_index      = 0;
+    di->eventus_currens  = NIHIL;
+    di->salvare_clicked  = FALSUM;
+    di->abicere_clicked  = FALSUM;
 
     /* Configurare dialogus base */
     di->dialogus.datum = di;
@@ -497,7 +506,8 @@ dialogus_importatio_creare(
 }
 
 Dialogus*
-dialogus_importatio_obtinere_dialogum(DialogusImportatio* di)
+dialogus_importatio_obtinere_dialogum (
+    DialogusImportatio* di)
 {
     si (di == NIHIL)
     {
@@ -508,12 +518,12 @@ dialogus_importatio_obtinere_dialogum(DialogusImportatio* di)
 }
 
 b32
-dialogus_importatio_obtinere_fructum(
-    DialogusImportatio* di,
-    constans i8**       indices,
-    i32*                latitudo,
-    i32*                altitudo,
-    chorda*             titulus)
+dialogus_importatio_obtinere_fructum (
+    DialogusImportatio*  di,
+           constans i8** indices,
+                   i32*  latitudo,
+                   i32*  altitudo,
+                chorda*  titulus)
 {
     si (di == NIHIL || di->visus == NIHIL)
     {

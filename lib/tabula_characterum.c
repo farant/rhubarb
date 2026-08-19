@@ -1,19 +1,20 @@
 #include "tabula_characterum.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Initiatio
  * ================================================== */
 
 vacuum
-tabula_initiare(
+tabula_initiare (
     TabulaCharacterum* tabula,
-    Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo)
+              Piscina* piscina,
+                  i32  latitudo,
+                  i32  altitudo)
 {
-    i32 linea;
-    i32 columna;
+               i32 linea;
+               i32 columna;
     memoriae_index cellulae_magnitudo;
     memoriae_index indentatio_magnitudo;
 
@@ -47,16 +48,16 @@ tabula_initiare(
  * ================================================== */
 
 b32
-tabula_est_cellula_vacua(
+tabula_est_cellula_vacua (
     character c)
 {
     redde (c == '\0' || c == ' ' || c == '\t' || c == TAB_CONTINUATIO);
 }
 
 s32
-tabula_invenire_finem_contenti(
+tabula_invenire_finem_contenti (
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
     s32 columna;
 
@@ -87,9 +88,9 @@ tabula_invenire_finem_contenti(
 }
 
 i32
-tabula_invenire_initium_contenti(
+tabula_invenire_initium_contenti (
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
     i32 columna;
 
@@ -111,10 +112,10 @@ tabula_invenire_initium_contenti(
 }
 
 s32
-tabula_invenire_obicem(
+tabula_invenire_obicem (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna)
+                           i32  linea,
+                           i32  ab_columna)
 {
     i32 columna;
 
@@ -136,7 +137,7 @@ tabula_invenire_obicem(
 }
 
 b32
-tabula_est_plena(
+tabula_est_plena (
     constans TabulaCharacterum* tabula)
 {
     /* Tabula plena si ultima linea habet contentum in ultima columna */
@@ -148,7 +149,7 @@ tabula_est_plena(
 }
 
 b32
-tabula_est_vacua(
+tabula_est_vacua (
     constans TabulaCharacterum* tabula)
 {
     i32 linea;
@@ -170,12 +171,12 @@ tabula_est_vacua(
  * ================================================== */
 
 character
-tabula_trudere_dextram(
+tabula_trudere_dextram (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna)
+                  i32  linea,
+                  i32  ab_columna)
 {
-    i32 columna;
+          i32 columna;
     character overflow;
 
     si (linea < ZEPHYRUM || linea >= tabula->altitudo)
@@ -204,10 +205,10 @@ tabula_trudere_dextram(
 }
 
 vacuum
-tabula_trahere_sinistram(
+tabula_trahere_sinistram (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna)
+                  i32  linea,
+                  i32  ab_columna)
 {
     i32 columna;
 
@@ -232,9 +233,9 @@ tabula_trahere_sinistram(
 }
 
 b32
-tabula_inserere_lineam(
+tabula_inserere_lineam (
     TabulaCharacterum* tabula,
-    i32 ad_lineam)
+                  i32  ad_lineam)
 {
     i32 linea;
     i32 columna;
@@ -271,9 +272,9 @@ tabula_inserere_lineam(
 }
 
 vacuum
-tabula_delere_lineam(
+tabula_delere_lineam (
     TabulaCharacterum* tabula,
-    i32 linea)
+                  i32  linea)
 {
     i32 l;
     i32 columna;
@@ -302,13 +303,13 @@ tabula_delere_lineam(
 }
 
 b32
-tabula_tractare_overflow(
+tabula_tractare_overflow (
     TabulaCharacterum* tabula,
-    i32 linea,
-    character overflow)
+                  i32  linea,
+            character  overflow)
 {
-    i32 linea_seq;
-    i32 initium_seq;
+          i32 linea_seq;
+          i32 initium_seq;
     character overflow_seq;
 
     si (overflow == '\0')
@@ -321,8 +322,8 @@ tabula_tractare_overflow(
         redde FALSUM;  /* Non possumus tractare overflow ex ultima linea */
     }
 
-    linea_seq = linea + I;
-    initium_seq = tabula_invenire_initium_contenti(tabula, linea_seq);
+    linea_seq    = linea + I;
+    initium_seq  = tabula_invenire_initium_contenti(tabula, linea_seq);
 
     /* Si linea sequens habet indentationem, inserere lineam novam */
     si (initium_seq > ZEPHYRUM && initium_seq < tabula->latitudo)
@@ -358,13 +359,13 @@ tabula_tractare_overflow(
  * ================================================== */
 
 b32
-tabula_inserere_characterem(
+tabula_inserere_characterem (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    character c)
+                  i32  linea,
+                  i32  columna,
+            character  c)
 {
-    s32 obex;
+          s32 obex;
     character overflow;
 
     si (linea < ZEPHYRUM || linea >= tabula->altitudo)
@@ -454,10 +455,10 @@ tabula_inserere_characterem(
 }
 
 vacuum
-tabula_delere_characterem(
+tabula_delere_characterem (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna)
+                  i32  linea,
+                  i32  columna)
 {
     s32 finis;
 
@@ -483,25 +484,25 @@ tabula_delere_characterem(
 }
 
 vacuum
-tabula_invenire_contentum_connexum(
+tabula_invenire_contentum_connexum (
     TabulaCharacterum* tabula,
-    i32 linea_initium,
-    i32 columna_initium,
-    i32* linea_finis,
-    i32* columna_finis)
+                  i32  linea_initium,
+                  i32  columna_initium,
+                  i32* linea_finis,
+                  i32* columna_finis)
 {
     i32 linea;
     i32 columna;
     i32 spatia_consecutiva;
     b32 in_contentu;
 
-    *linea_finis = linea_initium;
-    *columna_finis = columna_initium;
+    *linea_finis    = linea_initium;
+    *columna_finis  = columna_initium;
 
-    linea = linea_initium;
-    columna = columna_initium;
-    spatia_consecutiva = ZEPHYRUM;
-    in_contentu = FALSUM;
+    linea               = linea_initium;
+    columna             = columna_initium;
+    spatia_consecutiva  = ZEPHYRUM;
+    in_contentu         = FALSUM;
 
     /* Scandere per contentum connexum */
     dum (linea < tabula->altitudo)
@@ -536,10 +537,10 @@ tabula_invenire_contentum_connexum(
             alioquin
             {
                 /* Contentum inventum */
-                in_contentu = VERUM;
-                spatia_consecutiva = ZEPHYRUM;
-                *linea_finis = linea;
-                *columna_finis = columna;
+                in_contentu         = VERUM;
+                spatia_consecutiva  = ZEPHYRUM;
+                *linea_finis        = linea;
+                *columna_finis      = columna;
             }
 
             columna++;
@@ -571,12 +572,12 @@ tabula_invenire_contentum_connexum(
  * ================================================== */
 
 b32
-tabula_inserere_tab(
+tabula_inserere_tab (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna)
+                  i32  linea,
+                  i32  columna)
 {
-    s32 obex;
+          s32 obex;
     character overflow1;
     character overflow2;
 
@@ -645,10 +646,10 @@ tabula_inserere_tab(
 }
 
 vacuum
-tabula_delere_tab(
+tabula_delere_tab (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna)
+                  i32  linea,
+                  i32  columna)
 {
     i32 columna_tab;
 
@@ -683,10 +684,10 @@ tabula_delere_tab(
 }
 
 b32
-tabula_est_tab_continuatio(
+tabula_est_tab_continuatio (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna)
+                           i32  linea,
+                           i32  columna)
 {
     si (linea < ZEPHYRUM || linea >= tabula->altitudo)
     {
@@ -707,12 +708,12 @@ tabula_est_tab_continuatio(
  * ================================================== */
 
 vacuum
-tabula_legere_ad_positionem(
+tabula_legere_ad_positionem (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    character* exitus,
-    i32 longitudo)
+                           i32  linea,
+                           i32  columna,
+                     character* exitus,
+                           i32  longitudo)
 {
     i32 i;
     i32 col;
@@ -740,10 +741,10 @@ tabula_legere_ad_positionem(
 }
 
 i32
-tabula_scribere_ad_positionem(
-    TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
+tabula_scribere_ad_positionem (
+     TabulaCharacterum* tabula,
+                   i32  linea,
+                   i32  columna,
     constans character* textus)
 {
     i32 i;
@@ -770,13 +771,13 @@ tabula_scribere_ad_positionem(
 }
 
 b32
-tabula_inserere_spatium(
+tabula_inserere_spatium (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    i32 longitudo)
+                  i32  linea,
+                  i32  columna,
+                  i32  longitudo)
 {
-    i32 i;
+          i32 i;
     character overflow;
 
     si (linea < ZEPHYRUM || linea >= tabula->altitudo)
@@ -820,11 +821,11 @@ tabula_inserere_spatium(
  * ================================================== */
 
 vacuum
-tabula_ex_literis_cum_dimensionibus(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo,
+tabula_ex_literis_cum_dimensionibus (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
+                   i32  latitudo,
+                   i32  altitudo,
     constans character* literae)
 {
     i32 linea;
@@ -835,17 +836,17 @@ tabula_ex_literis_cum_dimensionibus(
     /* Primo initiare cum dimensionibus datis */
     tabula_initiare(tabula, piscina, latitudo, altitudo);
 
-    linea = ZEPHYRUM;
-    columna = ZEPHYRUM;
-    indentatio_posita = FALSUM;
+    linea              = ZEPHYRUM;
+    columna            = ZEPHYRUM;
+    indentatio_posita  = FALSUM;
 
     per (i = ZEPHYRUM; literae[i] != '\0'; i++)
     {
         si (literae[i] == '\n')
         {
             linea++;
-            columna = ZEPHYRUM;
-            indentatio_posita = FALSUM;
+            columna            = ZEPHYRUM;
+            indentatio_posita  = FALSUM;
 
             si (linea >= tabula->altitudo)
             {
@@ -874,8 +875,8 @@ tabula_ex_literis_cum_dimensionibus(
                     /* Ponere sticky indentatio ad primum non-spatium */
                     si (!indentatio_posita && literae[i] != ' ')
                     {
-                        tabula->indentatio[linea] = (s32)columna;
-                        indentatio_posita = VERUM;
+                        tabula->indentatio[linea]  = (s32)columna;
+                        indentatio_posita          = VERUM;
                     }
 
                     columna++;
@@ -886,9 +887,9 @@ tabula_ex_literis_cum_dimensionibus(
 }
 
 vacuum
-tabula_ex_literis(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
+tabula_ex_literis (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
     constans character* literae)
 {
     tabula_ex_literis_cum_dimensionibus(
@@ -900,19 +901,19 @@ tabula_ex_literis(
 }
 
 b32
-tabula_aequalis_literis(
-    TabulaCharacterum* tabula,
+tabula_aequalis_literis (
+     TabulaCharacterum* tabula,
     constans character* expectatum)
 {
-    i32 linea;
-    i32 columna;
-    i32 i;
+          i32 linea;
+          i32 columna;
+          i32 i;
     character c_tabula;
     character c_expect;
 
-    linea = ZEPHYRUM;
-    columna = ZEPHYRUM;
-    i = ZEPHYRUM;
+    linea    = ZEPHYRUM;
+    columna  = ZEPHYRUM;
+    i        = ZEPHYRUM;
 
     dum (VERUM)
     {
@@ -1004,7 +1005,7 @@ tabula_aequalis_literis(
 }
 
 vacuum
-tabula_imprimere(
+tabula_imprimere (
     TabulaCharacterum* tabula)
 {
     s32 linea;
@@ -1072,9 +1073,9 @@ tabula_imprimere(
 }
 
 vacuum
-tabula_asserere(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
+tabula_asserere (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
     constans character* expectatum,
     constans character* descriptio)
 {

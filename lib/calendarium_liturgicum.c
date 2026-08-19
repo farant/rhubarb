@@ -17,10 +17,10 @@
  * ================================================== */
 
 structura CalendariumLiturgicum {
-    Piscina*         piscina;
+            Piscina* piscina;
     AnchoresMobiles* anchorae_cache[X];  /* Cache pro annis recentibus */
-    s32              cache_indices[X];   /* Anni in cache */
-    s32              cache_numerus;
+                s32  cache_indices[X];   /* Anni in cache */
+                s32  cache_numerus;
 };
 
 
@@ -29,33 +29,37 @@ structura CalendariumLiturgicum {
  * ================================================== */
 
 CalendariumLiturgicum*
-calendarium_creare(Piscina* piscina)
+calendarium_creare (
+    Piscina* piscina)
 {
     CalendariumLiturgicum* cal;
-    s32 i;
+                      s32  i;
 
     cal = (CalendariumLiturgicum*)piscina_allocare(
         piscina,
         magnitudo(CalendariumLiturgicum)
-    );
+        );
 
-    si (cal == NIHIL) {
+    si (cal == NIHIL)
+    {
         redde NIHIL;
     }
 
-    cal->piscina = piscina;
-    cal->cache_numerus = ZEPHYRUM;
+    cal->piscina        = piscina;
+    cal->cache_numerus  = ZEPHYRUM;
 
-    per (i = ZEPHYRUM; i < X; i++) {
-        cal->anchorae_cache[i] = NIHIL;
-        cal->cache_indices[i] = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        cal->anchorae_cache[i]  = NIHIL;
+        cal->cache_indices[i]   = ZEPHYRUM;
     }
 
     redde cal;
 }
 
 vacuum
-calendarium_destruere(CalendariumLiturgicum* cal)
+calendarium_destruere (
+    CalendariumLiturgicum* cal)
 {
     /* Omnia in piscina allocata sunt - nihil agendum */
     (vacuum)cal;
@@ -67,47 +71,50 @@ calendarium_destruere(CalendariumLiturgicum* cal)
  * ================================================== */
 
 interior AnchoresMobiles*
-computare_anchorae(s32 annus, Piscina* piscina)
+computare_anchorae (
+        s32  annus,
+    Piscina* piscina)
 {
     AnchoresMobiles* anch;
-    Dies pascha;
-    Dies epiphania;
-    s32 dies_hebdomadae;
+               Dies  pascha;
+               Dies  epiphania;
+                s32  dies_hebdomadae;
 
     anch = (AnchoresMobiles*)piscina_allocare(
         piscina,
         magnitudo(AnchoresMobiles)
-    );
+        );
 
-    si (anch == NIHIL) {
+    si (anch == NIHIL)
+    {
         redde NIHIL;
     }
 
     anch->annus = annus;
 
     /* Pascha - fundamentum omnium */
-    pascha = fasti_computus(annus);
-    anch->pascha = pascha;
+    pascha        = fasti_computus(annus);
+    anch->pascha  = pascha;
 
     /* Dies ex Paschate derivatae */
-    anch->feria_iv_cinerum = fasti_addere_dies(pascha, -XLVI);
-    anch->dominica_i_quadragesimae = fasti_addere_dies(pascha, -XLII);
-    anch->dominica_palmarum = fasti_addere_dies(pascha, -VII);
-    anch->feria_v_in_cena_domini = fasti_addere_dies(pascha, -III);
-    anch->feria_vi_in_passione = fasti_addere_dies(pascha, -II);
-    anch->sabbatum_sanctum = fasti_addere_dies(pascha, -I);
-    anch->ascensio = fasti_addere_dies(pascha, XXXIX);
-    anch->pentecoste = fasti_addere_dies(pascha, XLIX);
-    anch->ss_trinitas = fasti_addere_dies(pascha, LVI);
-    anch->corpus_christi = fasti_addere_dies(pascha, LX);
-    anch->cor_iesu = fasti_addere_dies(pascha, LXVIII);
+    anch->feria_iv_cinerum          = fasti_addere_dies(pascha, -XLVI);
+    anch->dominica_i_quadragesimae  = fasti_addere_dies(pascha, -XLII);
+    anch->dominica_palmarum         = fasti_addere_dies(pascha, -VII);
+    anch->feria_v_in_cena_domini    = fasti_addere_dies(pascha, -III);
+    anch->feria_vi_in_passione      = fasti_addere_dies(pascha, -II);
+    anch->sabbatum_sanctum          = fasti_addere_dies(pascha, -I);
+    anch->ascensio                  = fasti_addere_dies(pascha, XXXIX);
+    anch->pentecoste                = fasti_addere_dies(pascha, XLIX);
+    anch->ss_trinitas               = fasti_addere_dies(pascha, LVI);
+    anch->corpus_christi            = fasti_addere_dies(pascha, LX);
+    anch->cor_iesu                  = fasti_addere_dies(pascha, LXVIII);
 
     /* Dominica I Adventus - 4 dominicae ante Nativitatem */
     /* Invenire dominicam in vel ante 24 Dec (Vigilia), haec est Dominica IV Adventus */
     /* Tunc subtrahere 21 dies pro Dominica I Adventus */
     {
         Dies vigilia = fasti_dies(annus, FASTI_DECEMBER, XXIV);
-        s32 dies_ad_dominicam = fasti_dies_hebdomadis(vigilia);
+         s32 dies_ad_dominicam = fasti_dies_hebdomadis(vigilia);
         Dies dominica_iv = fasti_addere_dies(vigilia, -dies_ad_dominicam);
         anch->dominica_i_adventus = fasti_addere_dies(dominica_iv, -XXI);
     }
@@ -117,33 +124,39 @@ computare_anchorae(s32 annus, Piscina* piscina)
 
     /* Baptisma Domini - dominica post Epiphaniam */
     /* Si Epiphania (6 Ian) est dominica, Baptisma est die 7 vel 8 Ian */
-    epiphania = fasti_dies(annus, FASTI_IANUARIUS, VI);
-    dies_hebdomadae = fasti_dies_hebdomadis(epiphania);
+    epiphania        = fasti_dies(annus, FASTI_IANUARIUS, VI);
+    dies_hebdomadae  = fasti_dies_hebdomadis(epiphania);
 
-    si (dies_hebdomadae == ZEPHYRUM) {
+    si (dies_hebdomadae == ZEPHYRUM)
+    {
         /* Epiphania est dominica - Baptisma est feria II */
         anch->baptisma_domini = fasti_dies(annus, FASTI_IANUARIUS, VII);
-    } alioquin {
+    } alioquin
+    {
         /* Baptisma est dominica proxima post Epiphaniam */
         anch->baptisma_domini = fasti_addere_dies(
             epiphania,
             VII - dies_hebdomadae
-        );
+            );
     }
 
     redde anch;
 }
 
 AnchoresMobiles*
-calendarium_anchorae(CalendariumLiturgicum* cal, s32 annus)
+calendarium_anchorae (
+    CalendariumLiturgicum* cal,
+                      s32  annus)
 {
-    s32 i;
-    s32 index_minimus;
+                s32  i;
+                s32  index_minimus;
     AnchoresMobiles* anch;
 
     /* Quaerere in cache */
-    per (i = ZEPHYRUM; i < cal->cache_numerus; i++) {
-        si (cal->cache_indices[i] == annus) {
+    per (i = ZEPHYRUM; i < cal->cache_numerus; i++)
+    {
+        si (cal->cache_indices[i] == annus)
+        {
             redde cal->anchorae_cache[i];
         }
     }
@@ -151,25 +164,30 @@ calendarium_anchorae(CalendariumLiturgicum* cal, s32 annus)
     /* Non in cache - computare */
     anch = computare_anchorae(annus, cal->piscina);
 
-    si (anch == NIHIL) {
+    si (anch == NIHIL)
+    {
         redde NIHIL;
     }
 
     /* Addere ad cache */
-    si (cal->cache_numerus < X) {
-        cal->anchorae_cache[cal->cache_numerus] = anch;
-        cal->cache_indices[cal->cache_numerus] = annus;
+    si (cal->cache_numerus < X)
+    {
+        cal->anchorae_cache[cal->cache_numerus]  = anch;
+        cal->cache_indices[cal->cache_numerus]   = annus;
         cal->cache_numerus++;
-    } alioquin {
+    } alioquin
+    {
         /* Cache plenus - substituere minimum */
         index_minimus = ZEPHYRUM;
-        per (i = I; i < X; i++) {
-            si (cal->cache_indices[i] < cal->cache_indices[index_minimus]) {
+        per (i = I; i < X; i++)
+        {
+            si (cal->cache_indices[i] < cal->cache_indices[index_minimus])
+            {
                 index_minimus = i;
             }
         }
-        cal->anchorae_cache[index_minimus] = anch;
-        cal->cache_indices[index_minimus] = annus;
+        cal->anchorae_cache[index_minimus]  = anch;
+        cal->cache_indices[index_minimus]   = annus;
     }
 
     redde anch;
@@ -181,14 +199,15 @@ calendarium_anchorae(CalendariumLiturgicum* cal, s32 annus)
  * ================================================== */
 
 Dies
-calendarium_initium_temporis(
+calendarium_initium_temporis (
     CalendariumLiturgicum* cal,
-    TempusLiturgicum       tempus,
-    s32                    annus)
+         TempusLiturgicum  tempus,
+                      s32  annus)
 {
     AnchoresMobiles* anch;
 
-    commutatio (tempus) {
+    commutatio (tempus)
+    {
         casus TEMPUS_ADVENTUS:
             /* Annus liturgicus: Adventus anni N est in anno civili N-1 */
             anch = calendarium_anchorae(cal, annus - I);
@@ -223,14 +242,15 @@ calendarium_initium_temporis(
 }
 
 Dies
-calendarium_finis_temporis(
+calendarium_finis_temporis (
     CalendariumLiturgicum* cal,
-    TempusLiturgicum       tempus,
-    s32                    annus)
+         TempusLiturgicum  tempus,
+                      s32  annus)
 {
     AnchoresMobiles* anch;
 
-    commutatio (tempus) {
+    commutatio (tempus)
+    {
         casus TEMPUS_ADVENTUS:
             redde fasti_dies(annus - I, FASTI_DECEMBER, XXIV);
 
@@ -269,13 +289,16 @@ calendarium_finis_temporis(
  * ================================================== */
 
 TempusLiturgicum
-calendarium_tempus(CalendariumLiturgicum* cal, Dies dies)
+calendarium_tempus (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
-    s32 annus = dies.annus;
+                s32  annus = dies.annus;
     AnchoresMobiles* anch;
 
     /* Obtinere anchorae pro anno currente */
     anch = calendarium_anchorae(cal, annus);
+
 
     /* ================================================
      * NATIVITAS (Dec 25 - Baptisma Domini)
@@ -283,62 +306,75 @@ calendarium_tempus(CalendariumLiturgicum* cal, Dies dies)
      * ================================================ */
 
     /* Dec 25-31: Tempus Nativitatis */
-    si (dies.mensis == FASTI_DECEMBER && dies.dies >= XXV) {
+    si (dies.mensis == FASTI_DECEMBER && dies.dies >= XXV)
+    {
         redde TEMPUS_NATIVITATIS;
     }
 
     /* Ian 1 - Baptisma Domini: Tempus Nativitatis */
-    si (dies.mensis == FASTI_IANUARIUS &&
-        fasti_comparare(dies, anch->baptisma_domini) <= ZEPHYRUM) {
+    si (   dies.mensis == FASTI_IANUARIUS
+        && fasti_comparare(dies, anch->baptisma_domini) <= ZEPHYRUM)
+    {
         redde TEMPUS_NATIVITATIS;
     }
+
 
     /* ================================================
      * ADVENTUS (Dom I Adv - Dec 24)
      * ================================================ */
 
     /* Si in Adventu (post Dom I Adv et ante Dec 25) */
-    si (fasti_comparare(dies, anch->dominica_i_adventus) >= ZEPHYRUM &&
-        dies.mensis != FASTI_IANUARIUS) {
+    si (   fasti_comparare(dies, anch->dominica_i_adventus) >= ZEPHYRUM
+        && dies.mensis != FASTI_IANUARIUS)
+    {
         redde TEMPUS_ADVENTUS;
     }
+
 
     /* ================================================
      * CYCLUS PASCHALIS
      * ================================================ */
 
     /* Si post Pentecosten */
-    si (fasti_comparare(dies, anch->pentecoste) > ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->pentecoste) > ZEPHYRUM)
+    {
         redde TEMPUS_PER_ANNUM_II;
     }
 
     /* Si Pentecoste */
-    si (fasti_comparare(dies, anch->pentecoste) == ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->pentecoste) == ZEPHYRUM)
+    {
         redde TEMPUS_PASCHALE;
     }
 
     /* Si post Pascha */
-    si (fasti_comparare(dies, anch->pascha) >= ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->pascha) >= ZEPHYRUM)
+    {
         redde TEMPUS_PASCHALE;
     }
 
     /* Si in Triduo */
-    si (fasti_comparare(dies, anch->feria_v_in_cena_domini) >= ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->feria_v_in_cena_domini) >= ZEPHYRUM)
+    {
         redde TEMPUS_TRIDUUM_SACRUM;
     }
 
     /* Si post Feriam IV Cinerum */
-    si (fasti_comparare(dies, anch->feria_iv_cinerum) >= ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->feria_iv_cinerum) >= ZEPHYRUM)
+    {
         redde TEMPUS_QUADRAGESIMAE;
     }
+
 
     /* ================================================
      * TEMPUS PER ANNUM I (post Baptisma - ante Quadragesimam)
      * ================================================ */
 
-    si (fasti_comparare(dies, anch->baptisma_domini) > ZEPHYRUM) {
+    si (fasti_comparare(dies, anch->baptisma_domini) > ZEPHYRUM)
+    {
         redde TEMPUS_PER_ANNUM_I;
     }
+
 
     /* ================================================
      * TEMPUS PER ANNUM II (Defectus)
@@ -348,13 +384,15 @@ calendarium_tempus(CalendariumLiturgicum* cal, Dies dies)
 }
 
 InformatioTemporis
-calendarium_tempus_info(CalendariumLiturgicum* cal, Dies dies)
+calendarium_tempus_info (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
-    InformatioTemporis info;
-    TempusLiturgicum tempus;
-    AnchoresMobiles* anch;
-    Dies initium;
-    s32 dies_ab_initio;
+    InformatioTemporis  info;
+      TempusLiturgicum  tempus;
+       AnchoresMobiles* anch;
+                  Dies  initium;
+                   s32  dies_ab_initio;
 
     tempus = calendarium_tempus(cal, dies);
     info.tempus = tempus;
@@ -363,10 +401,12 @@ calendarium_tempus_info(CalendariumLiturgicum* cal, Dies dies)
 
     anch = calendarium_anchorae(cal, dies.annus);
 
-    commutatio (tempus) {
+    commutatio (tempus)
+    {
         casus TEMPUS_ADVENTUS:
             initium = anch->dominica_i_adventus;
-            si (fasti_comparare(dies, initium) < ZEPHYRUM) {
+            si (fasti_comparare(dies, initium) < ZEPHYRUM)
+            {
                 /* Adventus anni sequentis */
                 initium = calendarium_anchorae(cal, dies.annus + I)->dominica_i_adventus;
             }
@@ -390,7 +430,8 @@ calendarium_tempus_info(CalendariumLiturgicum* cal, Dies dies)
             dies_ab_initio = (s32)fasti_differentia(dies, initium).dies_totales;
             /* Feria IV Cinerum est ante Dominicam I */
             info.hebdomada = (dies_ab_initio + IV) / VII;
-            si (info.hebdomada == ZEPHYRUM) {
+            si (info.hebdomada == ZEPHYRUM)
+            {
                 info.hebdomada = I;  /* Post Cineres, ante Dom. I */
             }
             frange;
@@ -411,12 +452,13 @@ calendarium_tempus_info(CalendariumLiturgicum* cal, Dies dies)
             initium = anch->pentecoste;
             dies_ab_initio = (s32)fasti_differentia(dies, initium).dies_totales;
             /* Calculus complexus - simplificamus */
-            info.hebdomada = XXXIV -
-                (s32)((fasti_differentia(
+            info.hebdomada = XXXIV
+                - (s32)((fasti_differentia(
                     calendarium_anchorae(cal, dies.annus + I)->dominica_i_adventus,
                     dies
                 ).dies_totales + VI) / VII);
-            si (info.hebdomada < I) {
+            si (info.hebdomada < I)
+            {
                 info.hebdomada = I;
             }
             frange;
@@ -429,21 +471,26 @@ calendarium_tempus_info(CalendariumLiturgicum* cal, Dies dies)
 }
 
 ColorLiturgicus
-calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
+calendarium_color_temporis (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
-    TempusLiturgicum tempus = calendarium_tempus(cal, dies);
-    AnchoresMobiles* anch;
+    TempusLiturgicum  tempus = calendarium_tempus(cal, dies);
+     AnchoresMobiles* anch;
 
-    commutatio (tempus) {
+    commutatio (tempus)
+    {
         casus TEMPUS_ADVENTUS:
             /* Rosaceus Dominica III (Gaudete) */
             anch = calendarium_anchorae(cal, dies.annus);
-            si (fasti_comparare(dies, anch->dominica_i_adventus) < ZEPHYRUM) {
+            si (fasti_comparare(dies, anch->dominica_i_adventus) < ZEPHYRUM)
+            {
                 anch = calendarium_anchorae(cal, dies.annus + I);
             }
-            si (fasti_differentia(dies, anch->dominica_i_adventus).dies_totales >= XIV &&
-                fasti_differentia(dies, anch->dominica_i_adventus).dies_totales < XXI &&
-                fasti_dies_hebdomadis(dies) == ZEPHYRUM) {
+            si (   fasti_differentia(dies, anch->dominica_i_adventus).dies_totales >= XIV
+                && fasti_differentia(dies, anch->dominica_i_adventus).dies_totales < XXI
+                && fasti_dies_hebdomadis(dies) == ZEPHYRUM)
+            {
                 redde COLLIT_ROSACEUS;
             }
             redde COLLIT_VIOLACEUS;
@@ -458,9 +505,10 @@ calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
         casus TEMPUS_QUADRAGESIMAE:
             /* Rosaceus Dominica IV (Laetare) */
             anch = calendarium_anchorae(cal, dies.annus);
-            si (fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales >= XXI &&
-                fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales < XXVIII &&
-                fasti_dies_hebdomadis(dies) == ZEPHYRUM) {
+            si (   fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales >= XXI
+                && fasti_differentia(dies, anch->dominica_i_quadragesimae).dies_totales < XXVIII
+                && fasti_dies_hebdomadis(dies) == ZEPHYRUM)
+            {
                 redde COLLIT_ROSACEUS;
             }
             redde COLLIT_VIOLACEUS;
@@ -471,7 +519,8 @@ calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
         casus TEMPUS_PASCHALE:
             /* Ruber in Pentecoste */
             anch = calendarium_anchorae(cal, dies.annus);
-            si (fasti_comparare(dies, anch->pentecoste) == ZEPHYRUM) {
+            si (fasti_comparare(dies, anch->pentecoste) == ZEPHYRUM)
+            {
                 redde COLLIT_RUBER;
             }
             redde COLLIT_ALBUS;
@@ -487,14 +536,16 @@ calendarium_color_temporis(CalendariumLiturgicum* cal, Dies dies)
  * ================================================== */
 
 CyclusDominicalis
-calendarium_cyclus_dominicalis(s32 annus)
+calendarium_cyclus_dominicalis (
+    s32 annus)
 {
     /* Cyclus A = annus % 3 == 1 (2023, 2026, ...) */
     /* Cyclus B = annus % 3 == 2 (2024, 2027, ...) */
     /* Cyclus C = annus % 3 == 0 (2022, 2025, ...) */
     s32 residuum = annus % III;
 
-    commutatio (residuum) {
+    commutatio (residuum)
+    {
         casus I:
             redde CYCLUS_A;
         casus II:
@@ -505,7 +556,8 @@ calendarium_cyclus_dominicalis(s32 annus)
 }
 
 CyclusQuotidianus
-calendarium_cyclus_quotidianus(s32 annus)
+calendarium_cyclus_quotidianus (
+    s32 annus)
 {
     /* Cyclus I = annus impar */
     /* Cyclus II = annus par */
@@ -513,7 +565,9 @@ calendarium_cyclus_quotidianus(s32 annus)
 }
 
 s32
-calendarium_hebdomada_psalterii(CalendariumLiturgicum* cal, Dies dies)
+calendarium_hebdomada_psalterii (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     InformatioTemporis info = calendarium_tempus_info(cal, dies);
 
@@ -527,52 +581,64 @@ calendarium_hebdomada_psalterii(CalendariumLiturgicum* cal, Dies dies)
  * ================================================== */
 
 b32
-calendarium_est_feria_cinerum(CalendariumLiturgicum* cal, Dies dies)
+calendarium_est_feria_cinerum (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     AnchoresMobiles* anch = calendarium_anchorae(cal, dies.annus);
     redde fasti_comparare(dies, anch->feria_iv_cinerum) == ZEPHYRUM;
 }
 
 b32
-calendarium_est_hebdomada_sancta(CalendariumLiturgicum* cal, Dies dies)
+calendarium_est_hebdomada_sancta (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     AnchoresMobiles* anch = calendarium_anchorae(cal, dies.annus);
-    Dies dominica_palmarum = anch->dominica_palmarum;
+               Dies  dominica_palmarum = anch->dominica_palmarum;
 
-    redde fasti_comparare(dies, dominica_palmarum) >= ZEPHYRUM &&
-           fasti_comparare(dies, anch->feria_v_in_cena_domini) < ZEPHYRUM;
+    redde fasti_comparare(dies, dominica_palmarum) >= ZEPHYRUM
+        && fasti_comparare(dies, anch->feria_v_in_cena_domini) < ZEPHYRUM;
 }
 
 b32
-calendarium_est_triduum(CalendariumLiturgicum* cal, Dies dies)
+calendarium_est_triduum (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     redde calendarium_tempus(cal, dies) == TEMPUS_TRIDUUM_SACRUM;
 }
 
 b32
-calendarium_est_octava_paschae(CalendariumLiturgicum* cal, Dies dies)
+calendarium_est_octava_paschae (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     AnchoresMobiles* anch = calendarium_anchorae(cal, dies.annus);
-    s64 diff = fasti_differentia(dies, anch->pascha).dies_totales;
+                s64  diff = fasti_differentia(dies, anch->pascha).dies_totales;
 
     redde diff >= ZEPHYRUM && diff < VIII;
 }
 
 b32
-calendarium_est_octava_nativitatis(CalendariumLiturgicum* cal, Dies dies)
+calendarium_est_octava_nativitatis (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
     Dies nativitas;
-    s64 diff;
+     s64 diff;
 
     (vacuum)cal;
 
-    si (dies.mensis == FASTI_DECEMBER && dies.dies >= XXV) {
-        nativitas = fasti_dies(dies.annus, FASTI_DECEMBER, XXV);
-        diff = fasti_differentia(dies, nativitas).dies_totales;
+    si (dies.mensis == FASTI_DECEMBER && dies.dies >= XXV)
+    {
+        nativitas  = fasti_dies(dies.annus, FASTI_DECEMBER, XXV);
+        diff       = fasti_differentia(dies, nativitas).dies_totales;
         redde diff >= ZEPHYRUM && diff < VIII;
     }
 
-    si (dies.mensis == FASTI_IANUARIUS && dies.dies == I) {
+    si (dies.mensis == FASTI_IANUARIUS && dies.dies == I)
+    {
         redde VERUM;
     }
 
@@ -585,11 +651,13 @@ calendarium_est_octava_nativitatis(CalendariumLiturgicum* cal, Dies dies)
  * ================================================== */
 
 Dies
-calendarium_proxima_dominica(Dies dies)
+calendarium_proxima_dominica (
+    Dies dies)
 {
     s32 dies_hebdomadae = fasti_dies_hebdomadis(dies);
 
-    si (dies_hebdomadae == ZEPHYRUM) {
+    si (dies_hebdomadae == ZEPHYRUM)
+    {
         redde dies;
     }
 
@@ -597,10 +665,10 @@ calendarium_proxima_dominica(Dies dies)
 }
 
 Dies
-calendarium_invenire_festum(
+calendarium_invenire_festum (
     CalendariumLiturgicum* cal,
-    chorda                 titulus,
-    s32                    annus)
+                   chorda  titulus,
+                      s32  annus)
 {
     /* TODO: Implementare post sanctorale */
     (vacuum)cal;
@@ -665,14 +733,15 @@ interior constans character* NOMINA_COLORUM[] = {
 };
 
 chorda
-calendarium_nomen_temporis(
-    TempusLiturgicum tempus,
-    b32              abbreviatum,
-    Piscina*         piscina)
+calendarium_nomen_temporis (
+    TempusLiturgicum  tempus,
+                 b32  abbreviatum,
+             Piscina* piscina)
 {
     constans character* titulus;
 
-    si (tempus < ZEPHYRUM || tempus > TEMPUS_PER_ANNUM_II) {
+    si (tempus < ZEPHYRUM || tempus > TEMPUS_PER_ANNUM_II)
+    {
         redde chorda_ex_literis("", piscina);
     }
 
@@ -684,14 +753,15 @@ calendarium_nomen_temporis(
 }
 
 chorda
-calendarium_nomen_gradus(
-    GradusCelebrationis gradus,
-    b32                 abbreviatum,
-    Piscina*            piscina)
+calendarium_nomen_gradus (
+    GradusCelebrationis  gradus,
+                    b32  abbreviatum,
+                Piscina* piscina)
 {
     constans character* titulus;
 
-    si (gradus < ZEPHYRUM || gradus > GRADUS_DIES_PECULIARIS) {
+    si (gradus < ZEPHYRUM || gradus > GRADUS_DIES_PECULIARIS)
+    {
         redde chorda_ex_literis("", piscina);
     }
 
@@ -703,9 +773,12 @@ calendarium_nomen_gradus(
 }
 
 chorda
-calendarium_nomen_coloris(ColorLiturgicus color, Piscina* piscina)
+calendarium_nomen_coloris (
+    ColorLiturgicus  color,
+            Piscina* piscina)
 {
-    si (color < ZEPHYRUM || color > COLLIT_NIGER) {
+    si (color < ZEPHYRUM || color > COLLIT_NIGER)
+    {
         redde chorda_ex_literis("", piscina);
     }
 
@@ -720,40 +793,49 @@ interior constans character* NUMERI_ROMANI[] = {
 };
 
 chorda
-calendarium_formare_titulum(
+calendarium_formare_titulum (
     CalendariumLiturgicum* cal,
-    Dies                   dies,
-    Piscina*               piscina)
+                     Dies  dies,
+                  Piscina* piscina)
 {
-    InformatioTemporis info = calendarium_tempus_info(cal, dies);
-    character buffer[C];
+    InformatioTemporis  info = calendarium_tempus_info(cal, dies);
+             character  buffer[C];
     constans character* tempus_nomen;
     constans character* numerus;
-    s32 longitudo;
-    chorda result;
+                   s32  longitudo;
+                chorda  result;
 
     tempus_nomen = NOMINA_TEMPORUM[info.tempus];
 
-    si (info.hebdomada > ZEPHYRUM && info.hebdomada <= XXXIV) {
+    si (info.hebdomada > ZEPHYRUM && info.hebdomada <= XXXIV)
+    {
         numerus = NUMERI_ROMANI[info.hebdomada];
-    } alioquin {
+    } alioquin
+    {
         numerus = "";
     }
 
-    si (info.est_dominica) {
-        si (info.tempus == TEMPUS_PER_ANNUM_I ||
-            info.tempus == TEMPUS_PER_ANNUM_II) {
+    si (info.est_dominica)
+    {
+        si (   info.tempus == TEMPUS_PER_ANNUM_I
+            || info.tempus == TEMPUS_PER_ANNUM_II)
+        {
             longitudo = snprintf(buffer, C, "Dominica %s per Annum", numerus);
-        } alioquin si (info.tempus == TEMPUS_ADVENTUS) {
+        } alioquin si (info.tempus == TEMPUS_ADVENTUS)
+        {
             longitudo = snprintf(buffer, C, "Dominica %s Adventus", numerus);
-        } alioquin si (info.tempus == TEMPUS_QUADRAGESIMAE) {
+        } alioquin si (info.tempus == TEMPUS_QUADRAGESIMAE)
+        {
             longitudo = snprintf(buffer, C, "Dominica %s Quadragesimae", numerus);
-        } alioquin si (info.tempus == TEMPUS_PASCHALE) {
+        } alioquin si (info.tempus == TEMPUS_PASCHALE)
+        {
             longitudo = snprintf(buffer, C, "Dominica %s Paschae", numerus);
-        } alioquin {
+        } alioquin
+        {
             longitudo = snprintf(buffer, C, "Dominica - %s", tempus_nomen);
         }
-    } alioquin {
+    } alioquin
+    {
         /* Feria */
         constans character* dies_nomina[] = {
             "Dominica", "Feria II", "Feria III", "Feria IV",
@@ -770,25 +852,24 @@ calendarium_formare_titulum(
     redde result;
 }
 
-
 chorda
-calendarium_nomen_celebrationum(
-    Dies     dies,
+calendarium_nomen_celebrationum (
+       Dies  dies,
     Piscina* piscina)
 {
-    ChordaAedificator* aed;
-    constans character* nomen_mobile;
+           ChordaAedificator* aed;
+          constans character* nomen_mobile;
     constans SanctoraleDatum* sancta;
-    s32 num_sanctorum;
-    s32 i;
-    b32 primum;
-    chorda result;
+                         s32  num_sanctorum;
+                         s32  i;
+                         b32  primum;
+                      chorda  result;
 
     aed = chorda_aedificator_creare(piscina, CCLVI);
     si (aed == NIHIL)
     {
-        result.datum = NIHIL;
-        result.mensura = ZEPHYRUM;
+        result.datum    = NIHIL;
+        result.mensura  = ZEPHYRUM;
         redde result;
     }
 
@@ -864,61 +945,73 @@ nomen enumeratio {
  * Determinare gradum praecedentiae diei ex temporale.
  */
 interior GradusPraecedentiae
-obtinere_praeced_temporale(CalendariumLiturgicum* cal, Dies dies)
+obtinere_praeced_temporale (
+    CalendariumLiturgicum* cal,
+                     Dies  dies)
 {
-    TempusLiturgicum tempus = calendarium_tempus(cal, dies);
-    s32 dies_hebd = fasti_dies_hebdomadis(dies);
-    b32 est_dominica = (dies_hebd == ZEPHYRUM);
+    TempusLiturgicum tempus        = calendarium_tempus(cal, dies);
+                 s32 dies_hebd     = fasti_dies_hebdomadis(dies);
+                 b32 est_dominica  = (dies_hebd == ZEPHYRUM);
 
     /* Triduum Paschale - maxima praecedentia */
-    si (tempus == TEMPUS_TRIDUUM_SACRUM) {
+    si (tempus == TEMPUS_TRIDUUM_SACRUM)
+    {
         redde PRAECED_TRIDUUM;
     }
 
     /* Octava Paschae */
-    si (calendarium_est_octava_paschae(cal, dies)) {
+    si (calendarium_est_octava_paschae(cal, dies))
+    {
         redde PRAECED_DIES_PECULIARIS;
     }
 
     /* Feria IV Cinerum */
-    si (calendarium_est_feria_cinerum(cal, dies)) {
+    si (calendarium_est_feria_cinerum(cal, dies))
+    {
         redde PRAECED_DIES_PECULIARIS;
     }
 
     /* Hebdomada Sancta (Feria II - Feria IV) */
-    si (calendarium_est_hebdomada_sancta(cal, dies) && !est_dominica) {
+    si (calendarium_est_hebdomada_sancta(cal, dies) && !est_dominica)
+    {
         redde PRAECED_DIES_PECULIARIS;
     }
 
     /* Dominicae maiores (Adventus, Quadragesimae, Paschae) */
-    si (est_dominica) {
-        si (tempus == TEMPUS_ADVENTUS ||
-            tempus == TEMPUS_QUADRAGESIMAE ||
-            tempus == TEMPUS_PASCHALE) {
+    si (est_dominica)
+    {
+        si (   tempus == TEMPUS_ADVENTUS
+            || tempus == TEMPUS_QUADRAGESIMAE
+            || tempus == TEMPUS_PASCHALE)
+        {
             redde PRAECED_DOMINICA_MAIOR;
         }
         redde PRAECED_DOMINICA;
     }
 
     /* Feriae privilegiatae Adventus (17-24 Dec) */
-    si (tempus == TEMPUS_ADVENTUS &&
-        dies.mensis == FASTI_DECEMBER &&
-        dies.dies >= XVII && dies.dies <= XXIV) {
+    si (   tempus      == TEMPUS_ADVENTUS
+        && dies.mensis == FASTI_DECEMBER
+        && dies.dies   >= XVII && dies.dies <= XXIV)
+    {
         redde PRAECED_FERIA_PRIVILEGIATA;
     }
 
     /* Feriae Quadragesimae */
-    si (tempus == TEMPUS_QUADRAGESIMAE) {
+    si (tempus == TEMPUS_QUADRAGESIMAE)
+    {
         redde PRAECED_FERIA_PRIVILEGIATA;
     }
 
     /* 2 Novembris - Commemoratio Defunctorum */
-    si (dies.mensis == FASTI_NOVEMBER && dies.dies == II) {
+    si (dies.mensis == FASTI_NOVEMBER && dies.dies == II)
+    {
         redde PRAECED_DEFUNCTORUM;
     }
 
     /* Feriae Adventus (ante 17 Dec) */
-    si (tempus == TEMPUS_ADVENTUS) {
+    si (tempus == TEMPUS_ADVENTUS)
+    {
         redde PRAECED_FERIA_PRIVILEGIATA;
     }
 
@@ -926,16 +1019,17 @@ obtinere_praeced_temporale(CalendariumLiturgicum* cal, Dies dies)
     redde PRAECED_FERIA;
 }
 
-
 /*
  * obtinere_praeced_sanctorale
  *
  * Convertere GradusCelebrationis ad GradusPraecedentiae.
  */
 interior GradusPraecedentiae
-obtinere_praeced_sanctorale(GradusCelebrationis gradus)
+obtinere_praeced_sanctorale (
+    GradusCelebrationis gradus)
 {
-    commutatio (gradus) {
+    commutatio (gradus)
+    {
         casus GRADUS_SOLLEMNITAS:
             redde PRAECED_SOLLEMNITAS;
         casus GRADUS_FESTUM:
@@ -951,7 +1045,6 @@ obtinere_praeced_sanctorale(GradusCelebrationis gradus)
     }
 }
 
-
 /*
  * comparare_praecedentiam
  *
@@ -959,63 +1052,73 @@ obtinere_praeced_sanctorale(GradusCelebrationis gradus)
  * Redit: >0 si sanctorale vincit, <0 si temporale vincit, 0 si aequales.
  */
 interior s32
-comparare_praecedentiam(
+comparare_praecedentiam (
     GradusPraecedentiae praeced_temp,
     GradusPraecedentiae praeced_sanct)
 {
     /* Si temporale est Triduum vel Dies Peculiaris, temporale vincit */
-    si (praeced_temp >= PRAECED_DIES_PECULIARIS) {
+    si (praeced_temp >= PRAECED_DIES_PECULIARIS)
+    {
         redde -I;
     }
 
     /* Si sanctorale est sollemnitas */
-    si (praeced_sanct == PRAECED_SOLLEMNITAS) {
+    si (praeced_sanct == PRAECED_SOLLEMNITAS)
+    {
         /* Sollemnitas vincit omnes praeter Dominicas maiores et supra */
-        si (praeced_temp >= PRAECED_DOMINICA_MAIOR) {
+        si (praeced_temp >= PRAECED_DOMINICA_MAIOR)
+        {
             redde -I;  /* Dominica maior vincit */
         }
         redde I;  /* Sollemnitas vincit */
     }
 
     /* Dominicae (omnes) vincunt festa et memorias */
-    si (praeced_temp >= PRAECED_DOMINICA) {
+    si (praeced_temp >= PRAECED_DOMINICA)
+    {
         redde -I;
     }
 
     /* Commemoratio Defunctorum (2 Nov) - specialis */
-    si (praeced_temp == PRAECED_DEFUNCTORUM ||
-        praeced_sanct == PRAECED_DEFUNCTORUM) {
+    si (   praeced_temp  == PRAECED_DEFUNCTORUM
+        || praeced_sanct == PRAECED_DEFUNCTORUM)
+    {
         redde ZEPHYRUM;  /* Celebratur */
     }
 
     /* Festa */
-    si (praeced_sanct == PRAECED_FESTUM) {
-        si (praeced_temp <= PRAECED_FERIA_PRIVILEGIATA) {
+    si (praeced_sanct == PRAECED_FESTUM)
+    {
+        si (praeced_temp <= PRAECED_FERIA_PRIVILEGIATA)
+        {
             redde I;  /* Festum vincit feriam */
         }
         redde -I;
     }
 
     /* Memoriae in Quadragesima fiunt ad libitum */
-    si (praeced_temp == PRAECED_FERIA_PRIVILEGIATA) {
-        si (praeced_sanct == PRAECED_MEMORIA) {
+    si (praeced_temp == PRAECED_FERIA_PRIVILEGIATA)
+    {
+        si (praeced_sanct == PRAECED_MEMORIA)
+        {
             /* Memoria obligatoria fit ad libitum in Quadragesima */
             redde ZEPHYRUM;
         }
-        si (praeced_sanct == PRAECED_MEMORIA_AD_LIBITUM) {
+        si (praeced_sanct == PRAECED_MEMORIA_AD_LIBITUM)
+        {
             redde ZEPHYRUM;  /* Etiam permissa */
         }
         redde -I;
     }
 
     /* Memoriae in feriis ordinariae */
-    si (praeced_sanct >= PRAECED_MEMORIA_AD_LIBITUM) {
+    si (praeced_sanct >= PRAECED_MEMORIA_AD_LIBITUM)
+    {
         redde I;
     }
 
     redde ZEPHYRUM;
 }
-
 
 /*
  * creare_celebrationem_temporale
@@ -1023,44 +1126,50 @@ comparare_praecedentiam(
  * Creare Celebratio pro die temporali.
  */
 interior Celebratio*
-creare_celebrationem_temporale(
+creare_celebrationem_temporale (
     CalendariumLiturgicum* cal,
-    Dies                   dies,
-    Piscina*               piscina)
+                     Dies  dies,
+                  Piscina* piscina)
 {
-    Celebratio* celeb;
-    InformatioTemporis info;
-    chorda titulus;
+            Celebratio* celeb;
+    InformatioTemporis  info;
+                chorda  titulus;
 
     celeb = (Celebratio*)piscina_allocare(piscina, magnitudo(Celebratio));
-    si (celeb == NIHIL) {
+    si (celeb == NIHIL)
+    {
         redde NIHIL;
     }
 
-    info = calendarium_tempus_info(cal, dies);
-    titulus = calendarium_formare_titulum(cal, dies, piscina);
+    info     = calendarium_tempus_info(cal, dies);
+    titulus  = calendarium_formare_titulum(cal, dies, piscina);
 
-    celeb->titulus = titulus;
-    celeb->titulus_brevis = titulus;  /* Idem pro nunc */
-    celeb->color = calendarium_color_temporis(cal, dies);
-    celeb->genus = GENUS_TEMPORALE;
-    celeb->lectionarium = -I;
+    celeb->titulus         = titulus;
+    celeb->titulus_brevis  = titulus;  /* Idem pro nunc */
+    celeb->color           = calendarium_color_temporis(cal, dies);
+    celeb->genus           = GENUS_TEMPORALE;
+    celeb->lectionarium    = -I;
 
     /* Determinare gradus */
-    si (info.est_dominica) {
+    si (info.est_dominica)
+    {
         celeb->gradus = GRADUS_DOMINICA;
-    } alioquin si (calendarium_tempus(cal, dies) == TEMPUS_TRIDUUM_SACRUM ||
-                  calendarium_est_feria_cinerum(cal, dies) ||
-                  calendarium_est_hebdomada_sancta(cal, dies) ||
-                  calendarium_est_octava_paschae(cal, dies)) {
+    } alioquin si (   calendarium_tempus(cal, dies) == TEMPUS_TRIDUUM_SACRUM
+
+                   || calendarium_est_feria_cinerum(cal, dies)
+
+                   || calendarium_est_hebdomada_sancta(cal, dies)
+
+                   || calendarium_est_octava_paschae(cal, dies))
+    {
         celeb->gradus = GRADUS_DIES_PECULIARIS;
-    } alioquin {
+    } alioquin
+    {
         celeb->gradus = GRADUS_FERIA;
     }
 
     redde celeb;
 }
-
 
 /*
  * creare_celebrationem_sanctorale
@@ -1068,14 +1177,15 @@ creare_celebrationem_temporale(
  * Creare Celebratio ex SanctoraleDatum.
  */
 interior Celebratio*
-creare_celebrationem_sanctorale(
+creare_celebrationem_sanctorale (
     constans SanctoraleDatum* datum,
-    Piscina*                  piscina)
+                     Piscina* piscina)
 {
     Celebratio* celeb;
 
     celeb = (Celebratio*)piscina_allocare(piscina, magnitudo(Celebratio));
-    si (celeb == NIHIL) {
+    si (celeb == NIHIL)
+    {
         redde NIHIL;
     }
 
@@ -1095,24 +1205,25 @@ creare_celebrationem_sanctorale(
  * ================================================== */
 
 InformatioDiei*
-calendarium_obtinere_diem(
+calendarium_obtinere_diem (
     CalendariumLiturgicum* cal,
-    Dies                   dies,
-    Piscina*               piscina)
+                     Dies  dies,
+                  Piscina* piscina)
 {
-    InformatioDiei* info;
-    GradusPraecedentiae praeced_temp;
+              InformatioDiei* info;
+         GradusPraecedentiae  praeced_temp;
     constans SanctoraleDatum* sancta;
-    s32 num_sanctorum;
-    s32 i;
-    Celebratio* celeb_temp;
-    Celebratio* celebrationes_array;
-    s32 num_celebrationum;
-    s32 idx;
+                         s32  num_sanctorum;
+                         s32  i;
+                  Celebratio* celeb_temp;
+                  Celebratio* celebrationes_array;
+                         s32  num_celebrationum;
+                         s32  idx;
 
     info = (InformatioDiei*)piscina_allocare(piscina, magnitudo(InformatioDiei));
 
-    si (info == NIHIL) {
+    si (info == NIHIL)
+    {
         redde NIHIL;
     }
 
@@ -1139,63 +1250,73 @@ calendarium_obtinere_diem(
     celebrationes_array = (Celebratio*)piscina_allocare(
         piscina,
         magnitudo(Celebratio) * (memoriae_index)num_celebrationum
-    );
+        );
 
-    si (celebrationes_array == NIHIL) {
+    si (celebrationes_array == NIHIL)
+    {
         redde NIHIL;
     }
 
     idx = ZEPHYRUM;
 
     /* Addere celebrationem temporalem */
-    si (celeb_temp != NIHIL) {
+    si (celeb_temp != NIHIL)
+    {
         celebrationes_array[idx] = *celeb_temp;
         idx++;
     }
 
     /* Addere celebrationes sanctorales validas */
-    per (i = ZEPHYRUM; i < num_sanctorum; i++) {
-        GradusPraecedentiae praeced_sanct;
-        s32 comp;
-        Celebratio* celeb_sanct;
+    per (i = ZEPHYRUM; i < num_sanctorum; i++)
+    {
+        GradusPraecedentiae  praeced_sanct;
+                        s32  comp;
+                 Celebratio* celeb_sanct;
 
         praeced_sanct = obtinere_praeced_sanctorale(sancta[i].gradus);
         comp = comparare_praecedentiam(praeced_temp, praeced_sanct);
 
         /* Si sanctorale vincit vel est permissum */
-        si (comp >= ZEPHYRUM) {
+        si (comp >= ZEPHYRUM)
+        {
             celeb_sanct = creare_celebrationem_sanctorale(&sancta[i], piscina);
-            si (celeb_sanct != NIHIL) {
+            si (celeb_sanct != NIHIL)
+            {
                 celebrationes_array[idx] = *celeb_sanct;
                 idx++;
             }
         }
     }
 
-    info->celebrationes = celebrationes_array;
-    info->numerus_celebrationum = idx;
+    info->celebrationes          = celebrationes_array;
+    info->numerus_celebrationum  = idx;
 
     /* Determinare celebrationem principalem et colorem */
-    si (idx > ZEPHYRUM) {
+    si (idx > ZEPHYRUM)
+    {
         Celebratio* principalis = &celebrationes_array[ZEPHYRUM];
-        s32 j;
+               s32  j;
 
         /* Invenire celebrationem cum maximo gradu */
-        per (j = I; j < idx; j++) {
-            si (celebrationes_array[j].gradus > principalis->gradus) {
+        per (j = I; j < idx; j++)
+        {
+            si (celebrationes_array[j].gradus > principalis->gradus)
+            {
                 principalis = &celebrationes_array[j];
             }
         }
 
-        info->celebratio_principalis = principalis;
-        info->color_diei = principalis->color;
+        info->celebratio_principalis  = principalis;
+        info->color_diei              = principalis->color;
 
         /* Si principalis est sanctorale, titulus diei est titulus sancti */
-        si (principalis->genus == GENUS_SANCTORALE &&
-            principalis->gradus >= GRADUS_FESTUM) {
+        si (   principalis->genus  == GENUS_SANCTORALE
+            && principalis->gradus >= GRADUS_FESTUM)
+        {
             info->titulus_diei = principalis->titulus;
         }
-    } alioquin {
+    } alioquin
+    {
         info->celebratio_principalis = NIHIL;
         info->color_diei = calendarium_color_temporis(cal, dies);
     }

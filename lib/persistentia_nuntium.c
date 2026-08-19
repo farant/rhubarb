@@ -4,6 +4,7 @@
 #include "uuid.h"
 #include <string.h>
 
+
 /* ==================================================
  * PERSISTENTIA NUNTIUM - File-Based Event Storage
  *
@@ -18,10 +19,10 @@
  * ================================================== */
 
 nomen structura {
-    Piscina*       piscina;
+          Piscina* piscina;
     FilumScriptor* scriptor;
-    chorda         via_log;
-    i32            numerus_eventuum;
+           chorda  via_log;
+              i32  numerus_eventuum;
 } PersistentiaNuntiumData;
 
 
@@ -31,9 +32,9 @@ nomen structura {
 
 /* Serialize eventum ad NuntiumScriptor */
 interior b32
-_serialize_eventum(
-    NuntiumScriptor*  scriptor,
-    Piscina*          piscina,
+_serialize_eventum (
+     NuntiumScriptor* scriptor,
+             Piscina* piscina,
     constans Eventum* eventum)
 {
     chorda eventum_id;
@@ -147,9 +148,9 @@ _serialize_eventum(
 
 /* Scribere length-prefixed eventum ad file */
 interior b32
-_scribere_eventum_ad_filum(
+_scribere_eventum_ad_filum (
     PersistentiaNuntiumData* data,
-    NuntiumScriptor*         scriptor)
+            NuntiumScriptor* scriptor)
 {
     chorda eventum_datum;
 
@@ -161,9 +162,9 @@ _scribere_eventum_ad_filum(
 
     /* Scribere length prefix (varint) */
     {
-        i8  length_buffer[X];  /* Max 10 bytes pro varint */
-        i32 length_bytes = ZEPHYRUM;
-        i64 mensura = (i64)eventum_datum.mensura;
+            i8 length_buffer[X];  /* Max 10 bytes pro varint */
+           i32 length_bytes  = ZEPHYRUM;
+           i64 mensura       = (i64)eventum_datum.mensura;
         chorda length_chorda;
 
         /* Encode varint manually */
@@ -179,8 +180,8 @@ _scribere_eventum_ad_filum(
         }
         dum (mensura != 0);
 
-        length_chorda.datum = length_buffer;
-        length_chorda.mensura = length_bytes;
+        length_chorda.datum    = length_buffer;
+        length_chorda.mensura  = length_bytes;
 
         si (!filum_scriptor_scribere(data->scriptor, length_chorda))
         {
@@ -212,15 +213,15 @@ _scribere_eventum_ad_filum(
 
 /* Legere varint ex buffer */
 interior b32
-_legere_varint_ex_buffer(
-    i8*  datum,
+_legere_varint_ex_buffer (
+     i8* datum,
     i32  mensura,
     i32* positio,
     i64* valor_out)
 {
     i64 valor = 0;
     i32 shift = 0;
-    i8  byte;
+     i8 byte;
 
     dum (*positio < mensura)
     {
@@ -247,22 +248,22 @@ _legere_varint_ex_buffer(
 
 /* Deserialize unum eventum ex NuntiumLector */
 interior Eventum*
-_deserialize_eventum(
+_deserialize_eventum (
     NuntiumLector* lector,
-    Piscina*       piscina)
+          Piscina* piscina)
 {
     Eventum* e;
-    i32      tag;
-    i32      wire_type;
-    i32      genus = ZEPHYRUM;
-    chorda   entitas_id = {ZEPHYRUM, NIHIL};
-    chorda   entitas_genus = {ZEPHYRUM, NIHIL};
-    chorda   clavis = {ZEPHYRUM, NIHIL};
-    chorda   valor = {ZEPHYRUM, NIHIL};
-    chorda   relatio_id = {ZEPHYRUM, NIHIL};
-    chorda   relatio_genus = {ZEPHYRUM, NIHIL};
-    chorda   destinatio_id = {ZEPHYRUM, NIHIL};
-    chorda   nota = {ZEPHYRUM, NIHIL};
+        i32  tag;
+        i32  wire_type;
+        i32  genus          = ZEPHYRUM;
+     chorda  entitas_id     = {ZEPHYRUM, NIHIL};
+     chorda  entitas_genus  = {ZEPHYRUM, NIHIL};
+     chorda  clavis         = {ZEPHYRUM, NIHIL};
+     chorda  valor          = {ZEPHYRUM, NIHIL};
+     chorda  relatio_id     = {ZEPHYRUM, NIHIL};
+     chorda  relatio_genus  = {ZEPHYRUM, NIHIL};
+     chorda  destinatio_id  = {ZEPHYRUM, NIHIL};
+     chorda  nota           = {ZEPHYRUM, NIHIL};
 
     /* Parse all fields */
     dum (nuntium_legere_field(lector, &tag, &wire_type))
@@ -289,18 +290,18 @@ _deserialize_eventum(
 
             casus EVENTUM_TAG_CLAVIS:
                 /* Also EVENTUM_TAG_RELATIO_ID, EVENTUM_TAG_NOTA (tag X) */
-                si (genus == EVENTUS_PONERE_PROPRIETAS ||
-                    genus == EVENTUS_DELERE_PROPRIETAS)
+                si (   genus == EVENTUS_PONERE_PROPRIETAS
+                    || genus == EVENTUS_DELERE_PROPRIETAS)
                 {
                     clavis = nuntium_legere_chorda(lector);
                 }
-                alioquin si (genus == EVENTUS_ADDERE_RELATIO ||
-                             genus == EVENTUS_DELERE_RELATIO)
+                alioquin si (   genus == EVENTUS_ADDERE_RELATIO
+                             || genus == EVENTUS_DELERE_RELATIO)
                 {
                     relatio_id = nuntium_legere_chorda(lector);
                 }
-                alioquin si (genus == EVENTUS_ADDERE_NOTA ||
-                             genus == EVENTUS_DELERE_NOTA)
+                alioquin si (   genus == EVENTUS_ADDERE_NOTA
+                             || genus == EVENTUS_DELERE_NOTA)
                 {
                     nota = nuntium_legere_chorda(lector);
                 }
@@ -516,12 +517,12 @@ _deserialize_eventum(
  * ================================================== */
 
 interior b32
-_nuntium_scribere_eventum(
-    vacuum*           datum,
+_nuntium_scribere_eventum (
+              vacuum* datum,
     constans Eventum* eventum)
 {
     PersistentiaNuntiumData* data;
-    NuntiumScriptor*         scriptor;
+            NuntiumScriptor* scriptor;
 
     data = (PersistentiaNuntiumData*)datum;
 
@@ -548,15 +549,15 @@ _nuntium_scribere_eventum(
 }
 
 interior Xar*
-_nuntium_legere_eventus(
-    vacuum*  datum,
+_nuntium_legere_eventus (
+     vacuum* datum,
     Piscina* piscina)
 {
     PersistentiaNuntiumData* data;
-    Xar*                     resultus;
-    chorda                   log_datum;
-    i32                      positio;
-    character*               via_cstr;
+                        Xar* resultus;
+                     chorda  log_datum;
+                        i32  positio;
+                  character* via_cstr;
 
     data = (PersistentiaNuntiumData*)datum;
 
@@ -594,11 +595,11 @@ _nuntium_legere_eventus(
     positio = ZEPHYRUM;
     dum (positio < log_datum.mensura)
     {
-        i64            length;
-        chorda         eventum_datum;
-        NuntiumLector* lector;
-        Eventum*       eventum;
-        Eventum**      slot;
+                  i64   length;
+               chorda   eventum_datum;
+        NuntiumLector*  lector;
+              Eventum*  eventum;
+              Eventum** slot;
 
         /* Legere length prefix */
         si (!_legere_varint_ex_buffer(log_datum.datum, log_datum.mensura,
@@ -614,8 +615,8 @@ _nuntium_legere_eventus(
         }
 
         /* Creare lector */
-        eventum_datum.datum = log_datum.datum + positio;
-        eventum_datum.mensura = (i32)length;
+        eventum_datum.datum    = log_datum.datum + positio;
+        eventum_datum.mensura  = (i32)length;
 
         lector = nuntium_lector_creare(piscina, eventum_datum);
         si (!lector)
@@ -641,7 +642,7 @@ _nuntium_legere_eventus(
 }
 
 interior b32
-_nuntium_sync(
+_nuntium_sync (
     vacuum* datum)
 {
     PersistentiaNuntiumData* data;
@@ -657,7 +658,7 @@ _nuntium_sync(
 }
 
 interior vacuum
-_nuntium_claudere(
+_nuntium_claudere (
     vacuum* datum)
 {
     PersistentiaNuntiumData* data;
@@ -683,14 +684,14 @@ _nuntium_claudere(
  * ================================================== */
 
 Persistentia*
-persistentia_nuntium_creare(
-    Piscina*            piscina,
+persistentia_nuntium_creare (
+               Piscina* piscina,
     constans character* via)
 {
-    Persistentia*            pers;
+               Persistentia* pers;
     PersistentiaNuntiumData* data;
-    memoriae_index           via_len;
-    character*               via_copy;
+             memoriae_index  via_len;
+                  character* via_copy;
 
     si (!piscina || !via)
     {
@@ -711,19 +712,19 @@ persistentia_nuntium_creare(
         redde NIHIL;
     }
 
-    data->piscina = piscina;
-    data->numerus_eventuum = ZEPHYRUM;
+    data->piscina           = piscina;
+    data->numerus_eventuum  = ZEPHYRUM;
 
     /* Copiare via */
-    via_len = strlen(via);
-    via_copy = (character*)piscina_allocare(piscina, via_len + I);
+    via_len   = strlen(via);
+    via_copy  = (character*)piscina_allocare(piscina, via_len + I);
     si (!via_copy)
     {
         redde NIHIL;
     }
     memcpy(via_copy, via, via_len + I);
-    data->via_log.datum = (i8*)via_copy;
-    data->via_log.mensura = (i32)via_len;
+    data->via_log.datum    = (i8*)via_copy;
+    data->via_log.mensura  = (i32)via_len;
 
     /* Aperire filum pro scriptione */
     data->scriptor = filum_scriptor_aperire(via, FILUM_MODUS_APPENDERE, piscina);
@@ -738,18 +739,18 @@ persistentia_nuntium_creare(
     }
 
     /* Ponere interface */
-    pers->datum = data;
-    pers->scribere_eventum = _nuntium_scribere_eventum;
-    pers->legere_eventus = _nuntium_legere_eventus;
-    pers->sync = _nuntium_sync;
-    pers->claudere = _nuntium_claudere;
+    pers->datum             = data;
+    pers->scribere_eventum  = _nuntium_scribere_eventum;
+    pers->legere_eventus    = _nuntium_legere_eventus;
+    pers->sync              = _nuntium_sync;
+    pers->claudere          = _nuntium_claudere;
 
     redde pers;
 }
 
 Persistentia*
-persistentia_nuntium_aperire(
-    Piscina*            piscina,
+persistentia_nuntium_aperire (
+               Piscina* piscina,
     constans character* via)
 {
     /* Verificare si filum existit */

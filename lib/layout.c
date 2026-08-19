@@ -8,33 +8,34 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 /* ==================================================
  * Datum Structurae pro Widgets et Entitates
  * ================================================== */
 
 /* Datum internum pro pagina widget */
 nomen structura {
-    Pagina*    pagina;
+       Pagina* pagina;
     LayoutDom* dom;  /* Pro accedere registrum et piscina */
 } LayoutDatumPagina;
 
 /* Relatio differens - colligitur in prima passu, resolvitur in secunda */
 nomen structura {
     Entitas* ab_entitas;       /* Entitas originis */
-    chorda*  genus_relationis; /* Genus relationis e.g. "pages" */
-    chorda*  ad_referentia;    /* Referentia destinationis e.g. "Page::introduction" */
+     chorda* genus_relationis; /* Genus relationis e.g. "pages" */
+     chorda* ad_referentia;    /* Referentia destinationis e.g. "Page::introduction" */
 } LayoutRelatioDifferens;
 
 /* Datum internum pro navigator widget */
 nomen structura {
     NavigatorEntitatum* navigator;
-    Piscina*            piscina;
+               Piscina* piscina;
 } LayoutDatumNavigator;
 
 /* Datum internum pro libro widget */
 nomen structura {
     LibroPaginarum* libro;
-    LayoutDom*      dom;
+         LayoutDom* dom;
 } LayoutDatumLibro;
 
 
@@ -43,15 +44,15 @@ nomen structura {
  * ================================================== */
 
 interior vacuum
-_layout_pagina_reddere(
-    Widget*          widget,
+_layout_pagina_reddere (
+             Widget* widget,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     LayoutDatumPagina* datum;
 
@@ -70,8 +71,8 @@ _layout_pagina_reddere(
 }
 
 interior b32
-_layout_pagina_tractare_eventum(
-    Widget*           widget,
+_layout_pagina_tractare_eventum (
+              Widget* widget,
     constans Eventus* eventus)
 {
     LayoutDatumPagina* datum;
@@ -82,10 +83,10 @@ _layout_pagina_tractare_eventum(
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->ctx->reg_commandi)
     {
         RegioClicca regio;
-        i32 click_x;
-        i32 click_y;
-        i32 character_latitudo;
-        i32 character_altitudo;
+                i32 click_x;
+                i32 click_y;
+                i32 character_latitudo;
+                i32 character_altitudo;
 
         character_latitudo = VI;   /* 6 pixels per character */
         character_altitudo = VIII; /* 8 pixels per character */
@@ -103,11 +104,11 @@ _layout_pagina_tractare_eventum(
             {
                 ContextusCommandi ctx;
 
-                ctx.pagina = datum->pagina;
-                ctx.linea = regio.finis_linea;
-                ctx.columna = regio.finis_columna;
-                ctx.piscina = datum->dom->ctx->piscina;
-                ctx.datum_custom = NIHIL;
+                ctx.pagina        = datum->pagina;
+                ctx.linea         = regio.finis_linea;
+                ctx.columna       = regio.finis_columna;
+                ctx.piscina       = datum->dom->ctx->piscina;
+                ctx.datum_custom  = NIHIL;
 
                 /* Executare command per reg_commandi */
                 registrum_commandi_executare(datum->dom->ctx->reg_commandi, regio.datum, &ctx);
@@ -126,15 +127,15 @@ _layout_pagina_tractare_eventum(
  * ================================================== */
 
 interior vacuum
-_layout_navigator_reddere(
-    Widget*          widget,
+_layout_navigator_reddere (
+             Widget* widget,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     LayoutDatumNavigator* datum;
 
@@ -152,8 +153,8 @@ _layout_navigator_reddere(
 }
 
 interior b32
-_layout_navigator_tractare_eventum(
-    Widget*           widget,
+_layout_navigator_tractare_eventum (
+              Widget* widget,
     constans Eventus* eventus)
 {
     LayoutDatumNavigator* datum;
@@ -169,15 +170,15 @@ _layout_navigator_tractare_eventum(
  * ================================================== */
 
 interior vacuum
-_layout_libro_reddere(
-    Widget*          widget,
+_layout_libro_reddere (
+             Widget* widget,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     LayoutDatumLibro* datum;
 
@@ -196,12 +197,12 @@ _layout_libro_reddere(
 }
 
 interior b32
-_layout_libro_tractare_eventum(
-    Widget*           widget,
+_layout_libro_tractare_eventum (
+              Widget* widget,
     constans Eventus* eventus)
 {
     LayoutDatumLibro* datum;
-    Pagina* pagina;
+              Pagina* pagina;
 
     datum = (LayoutDatumLibro*)widget->datum;
 
@@ -209,8 +210,8 @@ _layout_libro_tractare_eventum(
     si (eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
         /* Ctrl+Shift+Right -> pagina proxima */
-        si ((eventus->datum.clavis.modificantes & MOD_IMPERIUM) &&
-            (eventus->datum.clavis.modificantes & MOD_SHIFT))
+        si (   (eventus->datum.clavis.modificantes & MOD_IMPERIUM)
+            && (eventus->datum.clavis.modificantes & MOD_SHIFT))
         {
             si (eventus->datum.clavis.clavis == CLAVIS_DEXTER)
             {
@@ -230,10 +231,10 @@ _layout_libro_tractare_eventum(
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS && datum->dom->ctx->reg_commandi)
     {
         RegioClicca regio;
-        i32 click_x;
-        i32 click_y;
-        i32 character_latitudo;
-        i32 character_altitudo;
+                i32 click_x;
+                i32 click_y;
+                i32 character_latitudo;
+                i32 character_altitudo;
 
         pagina = libro_pagina_currens(datum->libro);
         si (!pagina)
@@ -256,11 +257,11 @@ _layout_libro_tractare_eventum(
             {
                 ContextusCommandi ctx;
 
-                ctx.pagina = pagina;
-                ctx.linea = regio.finis_linea;
-                ctx.columna = regio.finis_columna;
-                ctx.piscina = datum->dom->ctx->piscina;
-                ctx.datum_custom = datum->libro;  /* Pass libro as custom datum */
+                ctx.pagina        = pagina;
+                ctx.linea         = regio.finis_linea;
+                ctx.columna       = regio.finis_columna;
+                ctx.piscina       = datum->dom->ctx->piscina;
+                ctx.datum_custom  = datum->libro;  /* Pass libro as custom datum */
 
                 /* Executare command per reg_commandi */
                 registrum_commandi_executare(datum->dom->ctx->reg_commandi, regio.datum, &ctx);
@@ -317,13 +318,13 @@ _layout_libro_tractare_eventum(
 
 /* Legere attributum integer ex nodo STML */
 interior i32
-_layout_attributum_i32(
-    StmlNodus*          nodus,
+_layout_attributum_i32 (
+             StmlNodus* nodus,
     constans character* titulus,
-    i32                 defaltum)
+                   i32  defaltum)
 {
     chorda* valor;
-    i32     fructus;
+       i32  fructus;
 
     valor = stml_attributum_capere(nodus, titulus);
     si (!valor || !valor->datum || valor->mensura == ZEPHYRUM)
@@ -340,21 +341,22 @@ _layout_attributum_i32(
     redde defaltum;
 }
 
+
 /* ==================================================
  * Processare Tags
  * ================================================== */
 
 interior b32
-_layout_processare_pagina(
+_layout_processare_pagina (
     vacuum* dom_v,
     vacuum* nodus_v)
 {
-    LayoutDom* dom = (LayoutDom*)dom_v;
-    StmlNodus* nodus = (StmlNodus*)nodus_v;
-    chorda*               id_chorda;
+    LayoutDom* dom    = (LayoutDom*)dom_v;
+    StmlNodus* nodus  = (StmlNodus*)nodus_v;
+       chorda* id_chorda;
     i32                   x, y, latitudo, altitudo;
-    Pagina*               pagina;
-    LayoutDatumPagina*    datum;
+                   Pagina* pagina;
+        LayoutDatumPagina* datum;
     LayoutWidgetIntroitus* introitus;
 
     /* Legere attributa - id est chorda* ex STML (iam internata) */
@@ -364,10 +366,10 @@ _layout_processare_pagina(
         id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "pagina");
     }
 
-    x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
-    y = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
-    latitudo = _layout_attributum_i32(nodus, "latitudo", LXX);
-    altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
+    x         = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
+    y         = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
+    latitudo  = _layout_attributum_i32(nodus, "latitudo", LXX);
+    altitudo  = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Allocare et initiare pagina */
     pagina = piscina_allocare(dom->ctx->piscina, magnitudo(Pagina));
@@ -402,8 +404,8 @@ _layout_processare_pagina(
     {
         redde FALSUM;
     }
-    datum->pagina = pagina;
-    datum->dom = dom;
+    datum->pagina  = pagina;
+    datum->dom     = dom;
 
     /* Registrare cum manager */
     manager_widget_registrare(
@@ -431,16 +433,16 @@ _layout_processare_pagina(
 }
 
 interior b32
-_layout_processare_libro(
+_layout_processare_libro (
     vacuum* dom_v,
     vacuum* nodus_v)
 {
-    LayoutDom* dom = (LayoutDom*)dom_v;
-    StmlNodus* nodus = (StmlNodus*)nodus_v;
-    chorda*                id_chorda;
+    LayoutDom* dom    = (LayoutDom*)dom_v;
+    StmlNodus* nodus  = (StmlNodus*)nodus_v;
+       chorda* id_chorda;
     i32                    x, y, latitudo, altitudo;
-    LibroPaginarum*        libro;
-    LayoutDatumLibro*      datum;
+           LibroPaginarum* libro;
+         LayoutDatumLibro* datum;
     LayoutWidgetIntroitus* introitus;
 
     /* Legere attributa - id est chorda* ex STML (iam internata) */
@@ -450,10 +452,10 @@ _layout_processare_libro(
         id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "libro");
     }
 
-    x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
-    y = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
-    latitudo = _layout_attributum_i32(nodus, "latitudo", LXX);
-    altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
+    x         = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
+    y         = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
+    latitudo  = _layout_attributum_i32(nodus, "latitudo", LXX);
+    altitudo  = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Creare libro */
     libro = libro_creare(dom->ctx);
@@ -488,11 +490,11 @@ _layout_processare_libro(
 
     /* Si nodus habet contentum (raw vel liberi), inserere in prima pagina
      * SOLUM si nihil carcatum ex repositorio (entitas_ids[0] == NIHIL) */
-    si ((nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM) &&
-        libro->entitas_ids[ZEPHYRUM] == NIHIL)
+    si (   (nodus->crudus || stml_numerus_liberorum(nodus) > ZEPHYRUM)
+        && libro->entitas_ids[ZEPHYRUM] == NIHIL)
     {
         Pagina* pagina;
-        chorda textus;
+        chorda  textus;
 
         textus = stml_textus_normalizatus(nodus, dom->ctx->piscina);
         si (textus.mensura > ZEPHYRUM)
@@ -522,8 +524,8 @@ _layout_processare_libro(
     {
         redde FALSUM;
     }
-    datum->libro = libro;
-    datum->dom = dom;
+    datum->libro  = libro;
+    datum->dom    = dom;
 
     /* Registrare cum manager */
     manager_widget_registrare(
@@ -551,16 +553,16 @@ _layout_processare_libro(
 }
 
 interior b32
-_layout_processare_navigator(
+_layout_processare_navigator (
     vacuum* dom_v,
     vacuum* nodus_v)
 {
-    LayoutDom* dom = (LayoutDom*)dom_v;
-    StmlNodus* nodus = (StmlNodus*)nodus_v;
-    chorda*                id_chorda;
+    LayoutDom* dom    = (LayoutDom*)dom_v;
+    StmlNodus* nodus  = (StmlNodus*)nodus_v;
+       chorda* id_chorda;
     i32                    x, y, latitudo, altitudo;
-    NavigatorEntitatum*    navigator;
-    LayoutDatumNavigator*  datum;
+       NavigatorEntitatum* navigator;
+     LayoutDatumNavigator* datum;
     LayoutWidgetIntroitus* introitus;
 
     si (!dom->ctx->repo)
@@ -576,10 +578,10 @@ _layout_processare_navigator(
         id_chorda = chorda_internare_ex_literis(dom->ctx->intern, "navigator");
     }
 
-    x = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
-    y = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
-    latitudo = _layout_attributum_i32(nodus, "latitudo", LXX);
-    altitudo = _layout_attributum_i32(nodus, "altitudo", LV);
+    x         = _layout_attributum_i32(nodus, "x", ZEPHYRUM);
+    y         = _layout_attributum_i32(nodus, "y", ZEPHYRUM);
+    latitudo  = _layout_attributum_i32(nodus, "latitudo", LXX);
+    altitudo  = _layout_attributum_i32(nodus, "altitudo", LV);
 
     /* Creare navigator */
     navigator = navigator_entitatum_creare(dom->ctx);
@@ -594,8 +596,8 @@ _layout_processare_navigator(
     {
         redde FALSUM;
     }
-    datum->navigator = navigator;
-    datum->piscina = dom->ctx->piscina;
+    datum->navigator  = navigator;
+    datum->piscina    = dom->ctx->piscina;
 
     /* Registrare cum manager */
     manager_widget_registrare(
@@ -622,6 +624,7 @@ _layout_processare_navigator(
     redde VERUM;
 }
 
+
 /* ==================================================
  * Schema Creation from typus/literalis Attributes
  * ================================================== */
@@ -637,25 +640,25 @@ _layout_processare_navigator(
  * Redde: VERUM si successus, FALSUM si conflictus (error entity creata)
  */
 interior b32
-_layout_processare_schema_proprietatis(
-    LayoutDom*           dom,
+_layout_processare_schema_proprietatis (
+              LayoutDom* dom,
     EntitasRepositorium* repositorium,
-    chorda*              entitas_genus,
-    chorda*              clavis,
-    chorda*              typus,
-    chorda*              literalis)
+                 chorda* entitas_genus,
+                 chorda* clavis,
+                 chorda* typus,
+                 chorda* literalis)
 {
-    Entitas*  typus_sem;
-    Entitas*  prop_def;
-    chorda*   literalis_existens;
-    chorda*   literalis_default;
-    chorda*   est_genus;
-    chorda*   clavis_intern;
-    chorda*   typus_literalis_clavis;
-    Relatio*  rel;
-    Entitas*  typus_sem_existens;
-    i32       i;
-    i32       num_rel;
+    Entitas* typus_sem;
+    Entitas* prop_def;
+     chorda* literalis_existens;
+     chorda* literalis_default;
+     chorda* est_genus;
+     chorda* clavis_intern;
+     chorda* typus_literalis_clavis;
+    Relatio* rel;
+    Entitas* typus_sem_existens;
+        i32  i;
+        i32  num_rel;
 
     /* Literalis default est "chorda" */
     literalis_default = chorda_internare_ex_literis(dom->ctx->intern, "chorda");
@@ -682,8 +685,8 @@ _layout_processare_schema_proprietatis(
     si (literalis_existens)
     {
         /* Verificare non conflictus */
-        si (literalis_existens != literalis &&
-            !chorda_aequalis(*literalis_existens, *literalis))
+        si (   literalis_existens != literalis
+            && !chorda_aequalis(*literalis_existens, *literalis))
         {
             /* Conflictus! Creare error entity */
             Entitas* error;
@@ -739,8 +742,8 @@ _layout_processare_schema_proprietatis(
                 dest_ent = repositorium->capere_entitatem(
                     repositorium->datum, rel->destinatio_id);
                 /* Verificare destinatio est TypusSemanticus, non Genus */
-                si (dest_ent && dest_ent->genus &&
-                    chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
+                si (   dest_ent && dest_ent->genus
+                    && chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
                 {
                     typus_sem_existens = dest_ent;
                     frange;
@@ -815,16 +818,15 @@ _layout_processare_schema_proprietatis(
     redde VERUM;
 }
 
-
 /* Resolvere referentia "Genus::slug" ad Entitas */
 interior Entitas*
-_layout_resolvere_referentia(
-    LayoutDom*           dom,
+_layout_resolvere_referentia (
+              LayoutDom* dom,
     EntitasRepositorium* repositorium,
-    chorda*              referentia)
+                 chorda* referentia)
 {
-    s32    sep_index;
-    i32    sep_pos;
+       s32 sep_index;
+       i32 sep_pos;
     chorda genus;
     chorda slug;
     chorda separator;
@@ -852,18 +854,18 @@ _layout_resolvere_referentia(
 }
 
 interior b32
-_layout_processare_entitas(
-    LayoutDom*           dom,
-    StmlNodus*           nodus,
+_layout_processare_entitas (
+              LayoutDom* dom,
+              StmlNodus* nodus,
     EntitasRepositorium* repositorium,
-    Xar*                 relationes_differentes)
+                    Xar* relationes_differentes)
 {
-    chorda*     genus_attr;
-    chorda*     slug_attr;
-    Entitas*    entitas;
-    StmlNodus*  liberum;
-    i32         i;
-    i32         num_liberi;
+       chorda* genus_attr;
+       chorda* slug_attr;
+      Entitas* entitas;
+    StmlNodus* liberum;
+          i32  i;
+          i32  num_liberi;
 
     si (!repositorium)
     {
@@ -871,8 +873,8 @@ _layout_processare_entitas(
     }
 
     /* Legere genus et slug attributa */
-    genus_attr = stml_attributum_capere(nodus, "genus");
-    slug_attr = stml_attributum_capere(nodus, "slug");
+    genus_attr  = stml_attributum_capere(nodus, "genus");
+    slug_attr   = stml_attributum_capere(nodus, "slug");
 
     si (!genus_attr || !slug_attr)
     {
@@ -966,17 +968,17 @@ _layout_processare_entitas(
             /* <relatio genus='pages' ad='Page::introduction'/> */
             /* Differre ad secundam passam */
             LayoutRelatioDifferens* diff;
-            chorda* genus_rel = stml_attributum_capere(liberum, "genus");
-            chorda* ad = stml_attributum_capere(liberum, "ad");
+                            chorda* genus_rel = stml_attributum_capere(liberum, "genus");
+                            chorda* ad = stml_attributum_capere(liberum, "ad");
 
             si (genus_rel && ad)
             {
                 diff = xar_addere(relationes_differentes);
                 si (diff)
                 {
-                    diff->ab_entitas = entitas;
-                    diff->genus_relationis = genus_rel;
-                    diff->ad_referentia = ad;
+                    diff->ab_entitas        = entitas;
+                    diff->genus_relationis  = genus_rel;
+                    diff->ad_referentia     = ad;
                 }
             }
         }
@@ -991,17 +993,17 @@ _layout_processare_entitas(
  * ================================================== */
 
 LayoutDom*
-layout_creare(
-    ContextusWidget*    ctx,
+layout_creare (
+       ContextusWidget* ctx,
     constans character* stml)
 {
-    LayoutDom*              dom;
-    StmlResultus            res;
-    StmlNodus*              layout_nodus;
-    StmlNodus*              liberum;
-    i32                     i;
-    i32                     num_liberi;
-    Xar*                    relationes_differentes;
+                 LayoutDom* dom;
+              StmlResultus  res;
+                 StmlNodus* layout_nodus;
+                 StmlNodus* liberum;
+                       i32  i;
+                       i32  num_liberi;
+                       Xar* relationes_differentes;
     LayoutRelatioDifferens* diff;
 
     si (!ctx || !ctx->piscina || !ctx->intern || !stml)
@@ -1048,8 +1050,8 @@ layout_creare(
 
     /* Invenire <layout> elementum */
     layout_nodus = res.elementum_radix;
-    si (!layout_nodus->titulus ||
-        !chorda_aequalis_literis(*layout_nodus->titulus, "layout"))
+    si (   !layout_nodus->titulus
+        || !chorda_aequalis_literis(*layout_nodus->titulus, "layout"))
     {
         /* Radix non est <layout> */
         redde NIHIL;
@@ -1093,9 +1095,9 @@ layout_creare(
     /* === Addere relatio root --contains--> Genus::Genus === */
     si (dom->ctx->repo)
     {
-        Xar*      radices;
-        Entitas*  entitas_radix;
-        Entitas*  genus_genus;
+            Xar* radices;
+        Entitas* entitas_radix;
+        Entitas* genus_genus;
 
         radices = dom->ctx->repo->capere_radices(dom->ctx->repo->datum);
         si (radices && xar_numerus(radices) > ZEPHYRUM)
@@ -1109,10 +1111,10 @@ layout_creare(
                 si (genus_genus)
                 {
                     /* Addere relatio "contains" si nondum existit */
-                    chorda* contains_genus;
-                    b32     iam_habet;
-                    i32     j;
-                    i32     num_rel;
+                     chorda* contains_genus;
+                        b32  iam_habet;
+                        i32  j;
+                        i32  num_rel;
                     Relatio* rel;
 
                     contains_genus = chorda_internare_ex_literis(dom->ctx->intern, "contains");
@@ -1122,8 +1124,8 @@ layout_creare(
                     per (j = ZEPHYRUM; j < num_rel; j++)
                     {
                         rel = (Relatio*)xar_obtinere(entitas_radix->relationes, j);
-                        si (rel && rel->genus == contains_genus &&
-                            rel->destinatio_id == genus_genus->id)
+                        si (   rel && rel->genus == contains_genus
+                            && rel->destinatio_id == genus_genus->id)
                         {
                             iam_habet = VERUM;
                             frange;
@@ -1189,12 +1191,12 @@ layout_creare(
 }
 
 vacuum*
-layout_obtinere(
-    LayoutDom*          dom,
+layout_obtinere (
+             LayoutDom* dom,
     constans character* id)
 {
     LayoutWidgetIntroitus* introitus;
-    b32                    inventum;
+                      b32  inventum;
 
     si (!dom || !id)
     {
@@ -1212,12 +1214,12 @@ layout_obtinere(
 }
 
 Pagina*
-layout_obtinere_pagina(
-    LayoutDom*          dom,
+layout_obtinere_pagina (
+             LayoutDom* dom,
     constans character* id)
 {
     LayoutWidgetIntroitus* introitus;
-    b32                    inventum;
+                      b32  inventum;
 
     si (!dom || !id)
     {
@@ -1235,12 +1237,12 @@ layout_obtinere_pagina(
 }
 
 NavigatorEntitatum*
-layout_obtinere_navigator(
-    LayoutDom*          dom,
+layout_obtinere_navigator (
+             LayoutDom* dom,
     constans character* id)
 {
     LayoutWidgetIntroitus* introitus;
-    b32                    inventum;
+                      b32  inventum;
 
     si (!dom || !id)
     {
@@ -1258,12 +1260,12 @@ layout_obtinere_navigator(
 }
 
 LibroPaginarum*
-layout_obtinere_libro(
-    LayoutDom*          dom,
+layout_obtinere_libro (
+             LayoutDom* dom,
     constans character* id)
 {
     LayoutWidgetIntroitus* introitus;
-    b32                    inventum;
+                      b32  inventum;
 
     si (!dom || !id)
     {
@@ -1281,15 +1283,15 @@ layout_obtinere_libro(
 }
 
 vacuum
-layout_ponere_reg_commandi(
-    LayoutDom*         dom,
+layout_ponere_reg_commandi (
+            LayoutDom* dom,
     RegistrumCommandi* reg_commandi)
 {
-    TabulaIterator iter;
-    chorda clavis;
-    vacuum* valor;
+           TabulaIterator  iter;
+                   chorda  clavis;
+                   vacuum* valor;
     LayoutWidgetIntroitus* introitus;
-    Pagina* pagina;
+                   Pagina* pagina;
 
     si (!dom)
     {
@@ -1314,7 +1316,7 @@ layout_ponere_reg_commandi(
         alioquin si (introitus && introitus->genus == LAYOUT_WIDGET_LIBRO)
         {
             LibroPaginarum* libro;
-            i32 j;
+                       i32  j;
 
             libro = (LibroPaginarum*)introitus->datum;
             /* Libro obtinet reg_commandi ex ctx, ergo solum actualizare coloratios paginarum */
@@ -1338,7 +1340,7 @@ layout_ponere_reg_commandi(
  * ================================================== */
 
 b32
-layout_registrare_defalta(
+layout_registrare_defalta (
     RegistrumWidget* reg)
 {
     si (!reg)

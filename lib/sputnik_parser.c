@@ -64,7 +64,8 @@ interior b32 _est_functio_sagitta_parenthesis(SputnikParser* parser);
  * ================================================== */
 
 interior SputnikLexema*
-_currens(SputnikParser* parser)
+_currens (
+    SputnikParser* parser)
 {
     si (parser->positus >= xar_numerus(parser->lexemata))
     {
@@ -74,7 +75,9 @@ _currens(SputnikParser* parser)
 }
 
 interior SputnikLexema*
-_aspicere(SputnikParser* parser, i32 offset)
+_aspicere (
+    SputnikParser* parser,
+              i32  offset)
 {
     i32 pos;
     pos = parser->positus + offset;
@@ -86,7 +89,8 @@ _aspicere(SputnikParser* parser, i32 offset)
 }
 
 interior b32
-_finis(SputnikParser* parser)
+_finis (
+    SputnikParser* parser)
 {
     SputnikLexema* lex;
     lex = _currens(parser);
@@ -94,7 +98,8 @@ _finis(SputnikParser* parser)
 }
 
 interior vacuum
-_progredi(SputnikParser* parser)
+_progredi (
+    SputnikParser* parser)
 {
     si (!_finis(parser))
     {
@@ -103,7 +108,9 @@ _progredi(SputnikParser* parser)
 }
 
 interior b32
-_verificare(SputnikParser* parser, SputnikLexemaGenus genus)
+_verificare (
+         SputnikParser* parser,
+    SputnikLexemaGenus  genus)
 {
     SputnikLexema* lex;
     lex = _currens(parser);
@@ -111,7 +118,9 @@ _verificare(SputnikParser* parser, SputnikLexemaGenus genus)
 }
 
 interior b32
-_consumere(SputnikParser* parser, SputnikLexemaGenus genus)
+_consumere (
+         SputnikParser* parser,
+    SputnikLexemaGenus  genus)
 {
     si (_verificare(parser, genus))
     {
@@ -122,7 +131,9 @@ _consumere(SputnikParser* parser, SputnikLexemaGenus genus)
 }
 
 interior vacuum
-_error(SputnikParser* parser, constans character* nuntius)
+_error (
+         SputnikParser* parser,
+    constans character* nuntius)
 {
     SputnikLexema* lex;
 
@@ -137,18 +148,21 @@ _error(SputnikParser* parser, constans character* nuntius)
     lex = _currens(parser);
     si (lex != NIHIL)
     {
-        parser->error_linea = lex->linea;
-        parser->error_columna = lex->columna;
+        parser->error_linea    = lex->linea;
+        parser->error_columna  = lex->columna;
     }
     alioquin
     {
-        parser->error_linea = ZEPHYRUM;
-        parser->error_columna = ZEPHYRUM;
+        parser->error_linea    = ZEPHYRUM;
+        parser->error_columna  = ZEPHYRUM;
     }
 }
 
 interior vacuum
-_expectare(SputnikParser* parser, SputnikLexemaGenus genus, constans character* nuntius)
+_expectare (
+         SputnikParser* parser,
+    SputnikLexemaGenus  genus,
+    constans character* nuntius)
 {
     si (!_consumere(parser, genus))
     {
@@ -162,10 +176,12 @@ _expectare(SputnikParser* parser, SputnikLexemaGenus genus, constans character* 
  * ================================================== */
 
 interior SputnikAstNodus*
-_creare_nodum(SputnikParser* parser, SputnikAstGenus genus)
+_creare_nodum (
+      SputnikParser* parser,
+    SputnikAstGenus  genus)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = piscina_allocare(parser->piscina, magnitudo(SputnikAstNodus));
     si (nodus == NIHIL)
@@ -183,20 +199,22 @@ _creare_nodum(SputnikParser* parser, SputnikAstGenus genus)
     lex = _currens(parser);
     si (lex != NIHIL)
     {
-        nodus->linea = lex->linea;
-        nodus->columna = lex->columna;
+        nodus->linea    = lex->linea;
+        nodus->columna  = lex->columna;
     }
     alioquin
     {
-        nodus->linea = ZEPHYRUM;
-        nodus->columna = ZEPHYRUM;
+        nodus->linea    = ZEPHYRUM;
+        nodus->columna  = ZEPHYRUM;
     }
 
     redde nodus;
 }
 
 interior vacuum
-_addere_infantem(SputnikAstNodus* parens, SputnikAstNodus* infans)
+_addere_infantem (
+    SputnikAstNodus* parens,
+    SputnikAstNodus* infans)
 {
     SputnikAstNodus** ptr;
 
@@ -218,7 +236,8 @@ _addere_infantem(SputnikAstNodus* parens, SputnikAstNodus* infans)
  * ================================================== */
 
 interior i32
-_praecedentia_infixum(SputnikLexemaGenus genus)
+_praecedentia_infixum (
+    SputnikLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -278,7 +297,8 @@ _praecedentia_infixum(SputnikLexemaGenus genus)
 }
 
 interior b32
-_est_dexter_associativum(SputnikLexemaGenus genus)
+_est_dexter_associativum (
+    SputnikLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -301,14 +321,15 @@ _est_dexter_associativum(SputnikLexemaGenus genus)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_numerum(SputnikParser* parser)
+_parsere_numerum (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
-    character buffer[LXIV];
-    i32 len;
-    i32 i;
-    i32 j;
+      SputnikLexema* lex;
+          character  buffer[LXIV];
+                i32  len;
+                i32  i;
+                i32  j;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -349,18 +370,19 @@ _parsere_numerum(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_pecuniam(SputnikParser* parser)
+_parsere_pecuniam (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
-    character buffer[LXIV];
-    i32 len;
-    i32 i;
-    i32 j;
-    s64 pars_integra;
-    s64 pars_decimalis;
-    i32 decimales;
-    b32 post_punctum;
+      SputnikLexema* lex;
+          character  buffer[LXIV];
+                i32  len;
+                i32  i;
+                i32  j;
+                s64  pars_integra;
+                s64  pars_decimalis;
+                i32  decimales;
+                b32  post_punctum;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -399,10 +421,10 @@ _parsere_pecuniam(SputnikParser* parser)
     buffer[j] = '\0';
 
     /* Parsere pars integra et decimalis */
-    pars_integra = ZEPHYRUM;
-    pars_decimalis = ZEPHYRUM;
-    decimales = ZEPHYRUM;
-    post_punctum = FALSUM;
+    pars_integra    = ZEPHYRUM;
+    pars_decimalis  = ZEPHYRUM;
+    decimales       = ZEPHYRUM;
+    post_punctum    = FALSUM;
 
     per (i = ZEPHYRUM; buffer[i] != '\0'; i++)
     {
@@ -441,10 +463,11 @@ _parsere_pecuniam(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_chordam(SputnikParser* parser)
+_parsere_chordam (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -467,7 +490,8 @@ _parsere_chordam(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_verum(SputnikParser* parser)
+_parsere_verum (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -477,7 +501,8 @@ _parsere_verum(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_falsum(SputnikParser* parser)
+_parsere_falsum (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -487,7 +512,8 @@ _parsere_falsum(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_nihil(SputnikParser* parser)
+_parsere_nihil (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -497,10 +523,11 @@ _parsere_nihil(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_identificatorem(SputnikParser* parser)
+_parsere_identificatorem (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -522,10 +549,11 @@ _parsere_identificatorem(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_signum(SputnikParser* parser)
+_parsere_signum (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -555,13 +583,14 @@ _parsere_signum(SputnikParser* parser)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_template(SputnikParser* parser)
+_parsere_template (
+    SputnikParser* parser)
 {
     SputnikAstNodus* resultus;
     SputnikAstNodus* textus_nodus;
     SputnikAstNodus* expr_nodus;
     SputnikAstNodus* concat_nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -598,8 +627,8 @@ _parsere_template(SputnikParser* parser)
         {
             redde NIHIL;
         }
-        textus_nodus->valor = lex->valor;
-        resultus = textus_nodus;
+        textus_nodus->valor  = lex->valor;
+        resultus             = textus_nodus;
     }
     alioquin
     {
@@ -704,9 +733,9 @@ _parsere_template(SputnikParser* parser)
     redde resultus;
 }
 
-
 interior SputnikAstNodus*
-_parsere_parenthesin(SputnikParser* parser)
+_parsere_parenthesin (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -721,7 +750,8 @@ _parsere_parenthesin(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_xar_literalem(SputnikParser* parser)
+_parsere_xar_literalem (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* elementum;
@@ -757,12 +787,13 @@ _parsere_xar_literalem(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_objectum_literalem(SputnikParser* parser)
+_parsere_objectum_literalem (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* clavis;
     SputnikAstNodus* valor;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_OBJECTUM_LITERALIS);
     si (nodus == NIHIL)
@@ -822,6 +853,7 @@ _parsere_objectum_literalem(SputnikParser* parser)
     redde nodus;
 }
 
+
 /* ==================================================
  * Arrow Function Parsing
  *
@@ -836,15 +868,16 @@ _parsere_objectum_literalem(SputnikParser* parser)
  * Scan forward usque ad ) et verificare si => sequitur
  */
 interior b32
-_est_functio_sagitta_parenthesis(SputnikParser* parser)
+_est_functio_sagitta_parenthesis (
+    SputnikParser* parser)
 {
-    i32 offset;
-    i32 depth;
+              i32  offset;
+              i32  depth;
     SputnikLexema* lex;
 
     /* Currens est (, incipiamus ab offset 1 */
-    offset = I;
-    depth = I;
+    offset  = I;
+    depth   = I;
 
     dum (depth > ZEPHYRUM)
     {
@@ -877,12 +910,13 @@ _est_functio_sagitta_parenthesis(SputnikParser* parser)
  *   - Parenthesis apertam ((x, y) => ...)
  */
 interior SputnikAstNodus*
-_parsere_functionem_sagittam(SputnikParser* parser)
+_parsere_functionem_sagittam (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* parametrum;
     SputnikAstNodus* corpus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_FUNCTIO_SAGITTA);
     si (nodus == NIHIL)
@@ -968,11 +1002,12 @@ _parsere_functionem_sagittam(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_praefixum_unarium(SputnikParser* parser)
+_parsere_praefixum_unarium (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* operandus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -1010,13 +1045,15 @@ _parsere_praefixum_unarium(SputnikParser* parser)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_binarium(SputnikParser* parser, SputnikAstNodus* sinister)
+_parsere_binarium (
+      SputnikParser* parser,
+    SputnikAstNodus* sinister)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* dexter;
-    SputnikLexema* lex;
-    i32 praecedentia;
-    b32 dexter_assoc;
+      SputnikLexema* lex;
+                i32  praecedentia;
+                b32  dexter_assoc;
 
     lex = _currens(parser);
     si (lex == NIHIL)
@@ -1052,7 +1089,9 @@ _parsere_binarium(SputnikParser* parser, SputnikAstNodus* sinister)
 }
 
 interior SputnikAstNodus*
-_parsere_ternarium(SputnikParser* parser, SputnikAstNodus* conditio)
+_parsere_ternarium (
+      SputnikParser* parser,
+    SputnikAstNodus* conditio)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* verum_ramus;
@@ -1092,15 +1131,17 @@ _parsere_ternarium(SputnikParser* parser, SputnikAstNodus* conditio)
 }
 
 interior SputnikAstNodus*
-_parsere_assignationem(SputnikParser* parser, SputnikAstNodus* target)
+_parsere_assignationem (
+      SputnikParser* parser,
+    SputnikAstNodus* target)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* valor;
 
     /* Verificare target validum */
-    si (target->genus != SPUTNIK_AST_IDENTIFICATOR &&
-        target->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
-        target->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+    si (   target->genus != SPUTNIK_AST_IDENTIFICATOR
+        && target->genus != SPUTNIK_AST_ACCESSUS_MEMBRI
+        && target->genus != SPUTNIK_AST_ACCESSUS_INDICE)
     {
         _error(parser, "Target assignationis invalidum");
         redde NIHIL;
@@ -1130,19 +1171,21 @@ _parsere_assignationem(SputnikParser* parser, SputnikAstNodus* target)
 }
 
 interior SputnikAstNodus*
-_parsere_assignationem_complexam(SputnikParser* parser, SputnikAstNodus* target)
+_parsere_assignationem_complexam (
+      SputnikParser* parser,
+    SputnikAstNodus* target)
 {
-    SputnikAstNodus* assignatio;
-    SputnikAstNodus* binaria;
-    SputnikAstNodus* target_copia;
-    SputnikAstNodus* valor;
-    SputnikLexema* lex;
-    SputnikLexemaGenus op_binarius;
+       SputnikAstNodus* assignatio;
+       SputnikAstNodus* binaria;
+       SputnikAstNodus* target_copia;
+       SputnikAstNodus* valor;
+         SputnikLexema* lex;
+    SputnikLexemaGenus  op_binarius;
 
     /* Verificare target validum */
-    si (target->genus != SPUTNIK_AST_IDENTIFICATOR &&
-        target->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
-        target->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+    si (   target->genus != SPUTNIK_AST_IDENTIFICATOR
+        && target->genus != SPUTNIK_AST_ACCESSUS_MEMBRI
+        && target->genus != SPUTNIK_AST_ACCESSUS_INDICE)
     {
         _error(parser, "Target assignationis invalidum");
         redde NIHIL;
@@ -1190,9 +1233,9 @@ _parsere_assignationem_complexam(SputnikParser* parser, SputnikAstNodus* target)
     {
         redde NIHIL;
     }
-    target_copia->valor = target->valor;
-    target_copia->operator = target->operator;
-    target_copia->numerus = target->numerus;
+    target_copia->valor     = target->valor;
+    target_copia->operator  = target->operator;
+    target_copia->numerus   = target->numerus;
 
     /* Creare operationem binariam: target OP valor */
     binaria = _creare_nodum(parser, SPUTNIK_AST_OPERATIO_BINARIA);
@@ -1217,7 +1260,9 @@ _parsere_assignationem_complexam(SputnikParser* parser, SputnikAstNodus* target)
 }
 
 interior SputnikAstNodus*
-_parsere_vocationem(SputnikParser* parser, SputnikAstNodus* callee)
+_parsere_vocationem (
+      SputnikParser* parser,
+    SputnikAstNodus* callee)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* argumentum;
@@ -1255,10 +1300,12 @@ _parsere_vocationem(SputnikParser* parser, SputnikAstNodus* callee)
 }
 
 interior SputnikAstNodus*
-_parsere_accessum_membri(SputnikParser* parser, SputnikAstNodus* objectum)
+_parsere_accessum_membri (
+      SputnikParser* parser,
+    SputnikAstNodus* objectum)
 {
     SputnikAstNodus* nodus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_ACCESSUS_MEMBRI);
     si (nodus == NIHIL)
@@ -1286,7 +1333,9 @@ _parsere_accessum_membri(SputnikParser* parser, SputnikAstNodus* objectum)
 }
 
 interior SputnikAstNodus*
-_parsere_accessum_indice(SputnikParser* parser, SputnikAstNodus* objectum)
+_parsere_accessum_indice (
+      SputnikParser* parser,
+    SputnikAstNodus* objectum)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* index;
@@ -1321,11 +1370,13 @@ _parsere_accessum_indice(SputnikParser* parser, SputnikAstNodus* objectum)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_expressionem(SputnikParser* parser, i32 praecedentia)
+_parsere_expressionem (
+    SputnikParser* parser,
+              i32  praecedentia)
 {
     SputnikAstNodus* sinister;
-    SputnikLexema* lex;
-    i32 praec_currens;
+      SputnikLexema* lex;
+                i32  praec_currens;
 
     si (parser->error_accidit)
     {
@@ -1523,11 +1574,12 @@ _parsere_expressionem(SputnikParser* parser, i32 praecedentia)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_declarationem_let(SputnikParser* parser)
+_parsere_declarationem_let (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* valor;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_DECLARATIO_LET);
     si (nodus == NIHIL)
@@ -1566,11 +1618,12 @@ _parsere_declarationem_let(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_declarationem_const(SputnikParser* parser)
+_parsere_declarationem_const (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* valor;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_DECLARATIO_CONST);
     si (nodus == NIHIL)
@@ -1608,7 +1661,8 @@ _parsere_declarationem_const(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_si(SputnikParser* parser)
+_parsere_sententiam_si (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* conditio;
@@ -1659,7 +1713,8 @@ _parsere_sententiam_si(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_dum(SputnikParser* parser)
+_parsere_sententiam_dum (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* conditio;
@@ -1698,7 +1753,8 @@ _parsere_sententiam_dum(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_per(SputnikParser* parser)
+_parsere_sententiam_per (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* init;
@@ -1797,7 +1853,8 @@ _parsere_sententiam_per(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_redde(SputnikParser* parser)
+_parsere_sententiam_redde (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* valor;
@@ -1828,7 +1885,8 @@ _parsere_sententiam_redde(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_grex(SputnikParser* parser)
+_parsere_sententiam_grex (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* sententia;
@@ -1859,12 +1917,13 @@ _parsere_sententiam_grex(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_declarationem_functio(SputnikParser* parser)
+_parsere_declarationem_functio (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* parametrum;
     SputnikAstNodus* corpus;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_DECLARATIO_FUNCTIO);
     si (nodus == NIHIL)
@@ -1934,7 +1993,8 @@ _parsere_declarationem_functio(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_frange(SputnikParser* parser)
+_parsere_sententiam_frange (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -1953,7 +2013,8 @@ _parsere_sententiam_frange(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam_perge(SputnikParser* parser)
+_parsere_sententiam_perge (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
 
@@ -1972,13 +2033,14 @@ _parsere_sententiam_perge(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_declarationem_entitas(SputnikParser* parser)
+_parsere_declarationem_entitas (
+    SputnikParser* parser)
 {
-    SputnikAstNodus* nodus;
-    SputnikAstNodus* genus_nodus;
-    SputnikLexema* lex;
+      SputnikAstNodus* nodus;
+      SputnikAstNodus* genus_nodus;
+        SputnikLexema* lex;
     ChordaAedificator* aed;
-    chorda genus_path;
+               chorda  genus_path;
 
     nodus = _creare_nodum(parser, SPUTNIK_AST_DECLARATIO_ENTITAS);
     si (nodus == NIHIL)
@@ -2058,11 +2120,12 @@ _parsere_declarationem_entitas(SputnikParser* parser)
 }
 
 interior SputnikAstNodus*
-_parsere_sententiam(SputnikParser* parser)
+_parsere_sententiam (
+    SputnikParser* parser)
 {
     SputnikAstNodus* nodus;
     SputnikAstNodus* expressio;
-    SputnikLexema* lex;
+      SputnikLexema* lex;
 
     si (parser->error_accidit)
     {
@@ -2134,9 +2197,9 @@ _parsere_sententiam(SputnikParser* parser)
             lex = _currens(parser);
             si (lex != NIHIL && lex->genus == SPUTNIK_LEXEMA_INCREMENT)
             {
-                si (expressio->genus != SPUTNIK_AST_IDENTIFICATOR &&
-                    expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
-                    expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+                si (   expressio->genus != SPUTNIK_AST_IDENTIFICATOR
+                    && expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI
+                    && expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
                 {
                     _error(parser, "++ requirit variabilem");
                     redde NIHIL;
@@ -2153,9 +2216,9 @@ _parsere_sententiam(SputnikParser* parser)
             }
             alioquin si (lex != NIHIL && lex->genus == SPUTNIK_LEXEMA_DECREMENT)
             {
-                si (expressio->genus != SPUTNIK_AST_IDENTIFICATOR &&
-                    expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI &&
-                    expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
+                si (   expressio->genus != SPUTNIK_AST_IDENTIFICATOR
+                    && expressio->genus != SPUTNIK_AST_ACCESSUS_MEMBRI
+                    && expressio->genus != SPUTNIK_AST_ACCESSUS_INDICE)
                 {
                     _error(parser, "-- requirit variabilem");
                     redde NIHIL;
@@ -2190,7 +2253,8 @@ _parsere_sententiam(SputnikParser* parser)
  * ================================================== */
 
 interior SputnikAstNodus*
-_parsere_programma(SputnikParser* parser)
+_parsere_programma (
+    SputnikParser* parser)
 {
     SputnikAstNodus* programma;
     SputnikAstNodus* sententia;
@@ -2224,20 +2288,20 @@ _parsere_programma(SputnikParser* parser)
  * ================================================== */
 
 SputnikParserResultus
-sputnik_parsere(
-    Xar*                 lexemata,
-    Piscina*             piscina,
+sputnik_parsere (
+                    Xar* lexemata,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     SputnikParserResultus resultus;
-    SputnikParser parser;
+            SputnikParser parser;
 
-    resultus.successus = FALSUM;
-    resultus.radix = NIHIL;
-    resultus.error_nuntius.datum = NIHIL;
-    resultus.error_nuntius.mensura = ZEPHYRUM;
-    resultus.error_linea = ZEPHYRUM;
-    resultus.error_columna = ZEPHYRUM;
+    resultus.successus              = FALSUM;
+    resultus.radix                  = NIHIL;
+    resultus.error_nuntius.datum    = NIHIL;
+    resultus.error_nuntius.mensura  = ZEPHYRUM;
+    resultus.error_linea            = ZEPHYRUM;
+    resultus.error_columna          = ZEPHYRUM;
 
     si (lexemata == NIHIL || piscina == NIHIL)
     {
@@ -2245,24 +2309,24 @@ sputnik_parsere(
     }
 
     /* Initializare parser */
-    parser.lexemata = lexemata;
-    parser.positus = ZEPHYRUM;
-    parser.piscina = piscina;
-    parser.intern = intern;
-    parser.error_accidit = FALSUM;
-    parser.error_nuntius.datum = NIHIL;
-    parser.error_nuntius.mensura = ZEPHYRUM;
-    parser.error_linea = ZEPHYRUM;
-    parser.error_columna = ZEPHYRUM;
+    parser.lexemata               = lexemata;
+    parser.positus                = ZEPHYRUM;
+    parser.piscina                = piscina;
+    parser.intern                 = intern;
+    parser.error_accidit          = FALSUM;
+    parser.error_nuntius.datum    = NIHIL;
+    parser.error_nuntius.mensura  = ZEPHYRUM;
+    parser.error_linea            = ZEPHYRUM;
+    parser.error_columna          = ZEPHYRUM;
 
     /* Parsere */
     resultus.radix = _parsere_programma(&parser);
 
     si (parser.error_accidit)
     {
-        resultus.error_nuntius = parser.error_nuntius;
-        resultus.error_linea = parser.error_linea;
-        resultus.error_columna = parser.error_columna;
+        resultus.error_nuntius  = parser.error_nuntius;
+        resultus.error_linea    = parser.error_linea;
+        resultus.error_columna  = parser.error_columna;
         redde resultus;
     }
 
@@ -2271,20 +2335,20 @@ sputnik_parsere(
 }
 
 SputnikParserResultus
-sputnik_parsere_ex_fonte(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_parsere_ex_fonte (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     SputnikLexatorResultus lex_res;
-    SputnikParserResultus resultus;
+     SputnikParserResultus resultus;
 
-    resultus.successus = FALSUM;
-    resultus.radix = NIHIL;
-    resultus.error_nuntius.datum = NIHIL;
-    resultus.error_nuntius.mensura = ZEPHYRUM;
-    resultus.error_linea = ZEPHYRUM;
-    resultus.error_columna = ZEPHYRUM;
+    resultus.successus              = FALSUM;
+    resultus.radix                  = NIHIL;
+    resultus.error_nuntius.datum    = NIHIL;
+    resultus.error_nuntius.mensura  = ZEPHYRUM;
+    resultus.error_linea            = ZEPHYRUM;
+    resultus.error_columna          = ZEPHYRUM;
 
     /* Lexicare */
     lex_res = sputnik_lexicare(fons, piscina, intern);
@@ -2301,9 +2365,9 @@ sputnik_parsere_ex_fonte(
 }
 
 SputnikParserResultus
-sputnik_parsere_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_parsere_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     chorda ch;
@@ -2317,7 +2381,8 @@ sputnik_parsere_ex_literis(
  * ================================================== */
 
 constans character*
-sputnik_ast_genus_nomen(SputnikAstGenus genus)
+sputnik_ast_genus_nomen (
+    SputnikAstGenus genus)
 {
     commutatio (genus)
     {
@@ -2359,10 +2424,12 @@ sputnik_ast_genus_nomen(SputnikAstGenus genus)
 }
 
 vacuum
-sputnik_ast_imprimere(SputnikAstNodus* nodus, i32 indentatio)
+sputnik_ast_imprimere (
+    SputnikAstNodus* nodus,
+                i32  indentatio)
 {
-    i32 i;
-    i32 num_liberi;
+                i32  i;
+                i32  num_liberi;
     SputnikAstNodus* infans;
 
     si (nodus == NIHIL)
@@ -2397,8 +2464,8 @@ sputnik_ast_imprimere(SputnikAstNodus* nodus, i32 indentatio)
     }
 
     /* Operator si OPERATIO */
-    si (nodus->genus == SPUTNIK_AST_OPERATIO_BINARIA ||
-        nodus->genus == SPUTNIK_AST_OPERATIO_UNARIA)
+    si (   nodus->genus == SPUTNIK_AST_OPERATIO_BINARIA
+        || nodus->genus == SPUTNIK_AST_OPERATIO_UNARIA)
     {
         imprimere(" [%s]", sputnik_lexema_genus_nomen(nodus->operator));
     }

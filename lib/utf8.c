@@ -30,7 +30,8 @@
 #define SURROGATUM_FINIS   0xDFFF
 
 s32
-utf8_longitudo_byte(i8 byte)
+utf8_longitudo_byte (
+    i8 byte)
 {
     i8 b = byte;
 
@@ -69,28 +70,31 @@ utf8_longitudo_byte(i8 byte)
 }
 
 b32
-utf8_est_continuatio(i8 byte)
+utf8_est_continuatio (
+    i8 byte)
 {
     redde ((byte & MASCA_CONT) == VALOR_CONT);
 }
 
 s32
-utf8_decodere(constans i8** ptr, constans i8* finis)
+utf8_decodere (
+    constans i8** ptr,
+    constans i8*  finis)
 {
     constans i8* p;
-    i8 primus;
-    s32 longitudo;
-    s32 codepoint;
-    s32 i;
+             i8  primus;
+            s32  longitudo;
+            s32  codepoint;
+            s32  i;
 
     si (ptr == NIHIL || *ptr == NIHIL || *ptr >= finis)
     {
         redde -1;
     }
 
-    p = *ptr;
-    primus = *p;
-    longitudo = utf8_longitudo_byte(primus);
+    p          = *ptr;
+    primus     = *p;
+    longitudo  = utf8_longitudo_byte(primus);
 
     /* Byte invalidus vel continuatio orphana */
     si (longitudo == 0)
@@ -121,8 +125,8 @@ utf8_decodere(constans i8** ptr, constans i8* finis)
                 (*ptr)++;
                 redde -1;
             }
-            codepoint = ((s32)(primus & 0x1F) << 6) |
-                        ((s32)(p[1] & 0x3F));
+            codepoint = ((s32)(primus & 0x1F) << 6)
+                | ((s32)(p[1] & 0x3F));
             /* Verifica non-overlong (minimum 0x80) */
             si (codepoint < 0x80)
             {
@@ -141,9 +145,9 @@ utf8_decodere(constans i8** ptr, constans i8* finis)
                     redde -1;
                 }
             }
-            codepoint = ((s32)(primus & 0x0F) << 12) |
-                        ((s32)(p[1] & 0x3F) << 6) |
-                        ((s32)(p[2] & 0x3F));
+            codepoint = ((s32)(primus & 0x0F) << 12)
+                | ((s32)(p[1] & 0x3F) << 6)
+                | ((s32)(p[2] & 0x3F));
             /* Verifica non-overlong (minimum 0x800) */
             si (codepoint < 0x800)
             {
@@ -168,10 +172,10 @@ utf8_decodere(constans i8** ptr, constans i8* finis)
                     redde -1;
                 }
             }
-            codepoint = ((s32)(primus & 0x07) << 18) |
-                        ((s32)(p[1] & 0x3F) << 12) |
-                        ((s32)(p[2] & 0x3F) << 6) |
-                        ((s32)(p[3] & 0x3F));
+            codepoint = ((s32)(primus & 0x07) << 18)
+                | ((s32)(p[1] & 0x3F) << 12)
+                | ((s32)(p[2] & 0x3F) << 6)
+                | ((s32)(p[3] & 0x3F));
             /* Verifica non-overlong (minimum 0x10000) */
             si (codepoint < 0x10000)
             {
@@ -197,21 +201,23 @@ utf8_decodere(constans i8** ptr, constans i8* finis)
 }
 
 s32
-utf8_numerare_runas(constans i8* datum, s32 mensura)
+utf8_numerare_runas (
+    constans i8* datum,
+            s32  mensura)
 {
     constans i8* ptr;
     constans i8* finis;
-    s32 numerus;
-    s32 runa;
+            s32  numerus;
+            s32  runa;
 
     si (datum == NIHIL || mensura <= 0)
     {
         redde 0;
     }
 
-    ptr = datum;
-    finis = datum + mensura;
-    numerus = 0;
+    ptr      = datum;
+    finis    = datum + mensura;
+    numerus  = 0;
 
     dum (ptr < finis)
     {
@@ -224,7 +230,9 @@ utf8_numerare_runas(constans i8* datum, s32 mensura)
 }
 
 constans i8*
-utf8_proxima_runa(constans i8* ptr, constans i8* finis)
+utf8_proxima_runa (
+    constans i8* ptr,
+    constans i8* finis)
 {
     s32 longitudo;
 
@@ -251,10 +259,12 @@ utf8_proxima_runa(constans i8* ptr, constans i8* finis)
 }
 
 constans i8*
-utf8_prior_runa(constans i8* ptr, constans i8* initium)
+utf8_prior_runa (
+    constans i8* ptr,
+    constans i8* initium)
 {
     constans i8* p;
-    s32 retro;
+            s32  retro;
 
     si (ptr == NIHIL || ptr <= initium)
     {
@@ -275,9 +285,11 @@ utf8_prior_runa(constans i8* ptr, constans i8* initium)
 }
 
 s32
-utf8_codere(s32 runa, i8* buffer)
+utf8_codere (
+    s32  runa,
+     i8* buffer)
 {
-    si (buffer == NIHIL || runa < 0
+    si (   buffer == NIHIL || runa < 0
         || (runa >= 0xD800 && runa <= 0xDFFF)
         || runa > 0x10FFFF)
     {

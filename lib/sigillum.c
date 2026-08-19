@@ -30,17 +30,19 @@ hic_manens constans i32 SIGILLUM_K[64] = {
 
 /* bloccum unum (64 octeti) comprimere */
 hic_manens vacuum
-_bloccum_comprimere (i32* status, constans i8* bloccus)
+_bloccum_comprimere (
+            i32* status,
+    constans i8* bloccus)
 {
-    i32 w[64];
-    i32 a;
-    i32 b;
-    i32 c;
-    i32 d;
-    i32 e;
-    i32 f;
-    i32 g;
-    i32 h;
+        i32 w[64];
+        i32 a;
+        i32 b;
+        i32 c;
+        i32 d;
+        i32 e;
+        i32 f;
+        i32 g;
+        i32 h;
     integer t;
 
     per (t = 0; t < 16; t++)
@@ -75,12 +77,12 @@ _bloccum_comprimere (i32* status, constans i8* bloccus)
     {
         i32 s1 = SIGILLUM_ROTR(e, 6) ^ SIGILLUM_ROTR(e, 11)
                ^ SIGILLUM_ROTR(e, 25);
-        i32 electio = (e & f) ^ ((~e) & g);
-        i32 temp1 = h + s1 + electio + SIGILLUM_K[t] + w[t];
+        i32 electio  = (e & f) ^ ((~e) & g);
+        i32 temp1    = h + s1 + electio + SIGILLUM_K[t] + w[t];
         i32 s0 = SIGILLUM_ROTR(a, 2) ^ SIGILLUM_ROTR(a, 13)
                ^ SIGILLUM_ROTR(a, 22);
-        i32 maioritas = (a & b) ^ (a & c) ^ (b & c);
-        i32 temp2 = s0 + maioritas;
+        i32 maioritas  = (a & b) ^ (a & c) ^ (b & c);
+        i32 temp2      = s0 + maioritas;
 
         h = g;
         g = f;
@@ -103,27 +105,30 @@ _bloccum_comprimere (i32* status, constans i8* bloccus)
 }
 
 vacuum
-sigillum_incipere (SigillumContextus* contextus)
+sigillum_incipere (
+    SigillumContextus* contextus)
 {
     /* radices quadratae primorum 8, pars fractionalis (§5.3.3) */
-    contextus->status[0] = 0x6a09e667UL;
-    contextus->status[1] = 0xbb67ae85UL;
-    contextus->status[2] = 0x3c6ef372UL;
-    contextus->status[3] = 0xa54ff53aUL;
-    contextus->status[4] = 0x510e527fUL;
-    contextus->status[5] = 0x9b05688cUL;
-    contextus->status[6] = 0x1f83d9abUL;
-    contextus->status[7] = 0x5be0cd19UL;
-    contextus->massa_mensura = 0;
-    contextus->totalis = 0;
+    contextus->status[0]      = 0x6a09e667UL;
+    contextus->status[1]      = 0xbb67ae85UL;
+    contextus->status[2]      = 0x3c6ef372UL;
+    contextus->status[3]      = 0xa54ff53aUL;
+    contextus->status[4]      = 0x510e527fUL;
+    contextus->status[5]      = 0x9b05688cUL;
+    contextus->status[6]      = 0x1f83d9abUL;
+    contextus->status[7]      = 0x5be0cd19UL;
+    contextus->massa_mensura  = 0;
+    contextus->totalis        = 0;
 }
 
 vacuum
-sigillum_addere (SigillumContextus* contextus, constans vacuum* datum,
-    memoriae_index mensura)
+sigillum_addere (
+    SigillumContextus* contextus,
+      constans vacuum* datum,
+       memoriae_index  mensura)
 {
-    constans i8* octeti = (constans i8*)datum;
-    memoriae_index k = 0;
+       constans i8* octeti  = (constans i8*)datum;
+    memoriae_index  k       = 0;
 
     contextus->totalis += (i64)mensura;
     dum (k < mensura)
@@ -140,11 +145,12 @@ sigillum_addere (SigillumContextus* contextus, constans vacuum* datum,
 }
 
 Sigillum
-sigillum_finire (SigillumContextus* contextus)
+sigillum_finire (
+    SigillumContextus* contextus)
 {
     Sigillum fructus;
-    i64 bitae = contextus->totalis * 8;
-    integer k;
+         i64 bitae = contextus->totalis * 8;
+     integer k;
 
     /* farcimen: 0x80, deinde zephyra usque ad 56 mod 64, deinde
      * longitudo bitarum 64-bitis maiore-fine */
@@ -185,7 +191,9 @@ sigillum_finire (SigillumContextus* contextus)
 }
 
 Sigillum
-sigillum_computare (constans vacuum* datum, memoriae_index mensura)
+sigillum_computare (
+    constans vacuum* datum,
+     memoriae_index  mensura)
 {
     SigillumContextus contextus;
 
@@ -195,21 +203,25 @@ sigillum_computare (constans vacuum* datum, memoriae_index mensura)
 }
 
 vacuum
-sigillum_hex (constans Sigillum* sigillum, character* effusio)
+sigillum_hex (
+    constans Sigillum* sigillum,
+            character* effusio)
 {
     hic_manens constans character DIGITI[] = "0123456789abcdef";
-    integer k;
+                          integer k;
 
     per (k = 0; k < SIGILLUM_OCTETI; k++)
     {
-        effusio[k * 2]     = DIGITI[(sigillum->octeti[k] >> 4) & 0x0f];
-        effusio[k * 2 + 1] = DIGITI[sigillum->octeti[k] & 0x0f];
+        effusio[k * 2]      = DIGITI[(sigillum->octeti[k] >> 4) & 0x0f];
+        effusio[k * 2 + 1]  = DIGITI[sigillum->octeti[k] & 0x0f];
     }
     effusio[SIGILLUM_OCTETI * 2] = '\0';
 }
 
 b32
-sigillum_aequale (constans Sigillum* a, constans Sigillum* b)
+sigillum_aequale (
+    constans Sigillum* a,
+    constans Sigillum* b)
 {
     /* TEMPORE CONSTANTI: memcmp ad primam differentiam exit, ergo
      * tempus responsi quot octeti congruant prodit. Ubi sigillum

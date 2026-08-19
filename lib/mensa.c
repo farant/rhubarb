@@ -24,6 +24,7 @@ interior integer _deletum_nota;
 #define PRAEFIXUM_MENSAE "mensa:"
 #define PRAEFIXUM_MENSURA 6
 
+
 /* ==================================================
  * Plica: acta -> status
  * ================================================== */
@@ -32,19 +33,21 @@ interior JsonValor*
 _statum_valor (Volumen* volumen, Piscina* piscina);
 
 interior JsonValor*
-_statum_valor (Volumen* volumen, Piscina* piscina)
+_statum_valor (
+    Volumen* volumen,
+    Piscina* piscina)
 {
-    Xar*            acta;
+               Xar* acta;
     TabulaDispersa* per_id;
-    JsonValor*      radix;
-    JsonValor*      elementa;
-    i32             index;
+         JsonValor* radix;
+         JsonValor* elementa;
+               i32  index;
 
-    acta = volumen_acta_legere(volumen, 0, piscina);
-    per_id = tabula_dispersa_creare_chorda(piscina, 64);
-    radix = json_objectum_creare(piscina);
-    elementa = json_objectum_creare(piscina);
-    si (acta == NIHIL || per_id == NIHIL || radix == NIHIL
+    acta      = volumen_acta_legere(volumen, 0, piscina);
+    per_id    = tabula_dispersa_creare_chorda(piscina, 64);
+    radix     = json_objectum_creare(piscina);
+    elementa  = json_objectum_creare(piscina);
+    si (   acta     == NIHIL || per_id == NIHIL || radix == NIHIL
         || elementa == NIHIL)
     {
         redde NIHIL;
@@ -55,11 +58,11 @@ _statum_valor (Volumen* volumen, Piscina* piscina)
         VolumenActum* actum = (VolumenActum*)xar_obtinere(acta,
             index);
         JsonResultus  lectum;
-        JsonValor*    id_valor;
-        chorda        id;
-        b32           deletum;
+           JsonValor* id_valor;
+              chorda  id;
+                 b32  deletum;
 
-        si (actum->genus.mensura <= PRAEFIXUM_MENSURA
+        si (   actum->genus.mensura <= PRAEFIXUM_MENSURA
             || memcmp(actum->genus.datum, PRAEFIXUM_MENSAE,
                 PRAEFIXUM_MENSURA) != 0)
         {
@@ -91,10 +94,10 @@ _statum_valor (Volumen* volumen, Piscina* piscina)
         /* fusio plana: claves datorum (praeter id) in obiectum
          * per-id superscribuntur */
         {
-            vacuum*    prius = NIHIL;
+               vacuum* prius = NIHIL;
             JsonValor* fusum;
 
-            si (!tabula_dispersa_invenire(per_id, id, &prius)
+            si (   !tabula_dispersa_invenire(per_id, id, &prius)
                 || prius == (vacuum*)&_deletum_nota)
             {
                 fusum = json_objectum_creare(piscina);
@@ -112,13 +115,13 @@ _statum_valor (Volumen* volumen, Piscina* piscina)
             {
                 JsonObjectumIterator iter =
                     json_objectum_iterator(lectum.radix);
-                chorda     clavis;
+                   chorda  clavis;
                 JsonValor* valor;
 
                 dum (json_objectum_iterator_proxima(&iter, &clavis,
                     &valor))
                 {
-                    si (clavis.mensura == 2
+                    si (   clavis.mensura                == 2
                         && memcmp(clavis.datum, "id", 2) == 0)
                     {
                         perge;
@@ -154,19 +157,22 @@ _statum_valor (Volumen* volumen, Piscina* piscina)
 }
 
 chorda
-mensa_statum_fingere (Volumen* volumen, Piscina* piscina)
+mensa_statum_fingere (
+    Volumen* volumen,
+    Piscina* piscina)
 {
     JsonValor* status = _statum_valor(volumen, piscina);
-    chorda     vacua;
+       chorda  vacua;
 
     si (status == NIHIL)
     {
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
     redde json_scribere(status, piscina);
 }
+
 
 /* ==================================================
  * Tractatores internuntii
@@ -177,11 +183,14 @@ _status_tractare (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa);
 
 interior JsonValor*
-_status_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_status_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     MensaContextus* ctx = (MensaContextus*)datum;
-    JsonValor*      status;
+         JsonValor* status;
 
     (vacuum)argumenta;
     status = _statum_valor(ctx->volumen, piscina);
@@ -199,23 +208,26 @@ _actum_tractare (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa);
 
 interior JsonValor*
-_actum_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_actum_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    MensaContextus* ctx = (MensaContextus*)datum;
-    JsonValor*      genus_valor;
-    JsonValor*      datum_valor;
-    JsonValor*      fructus;
-    chorda          genus;
-    chorda          corpus;
-    s64             seq;
+       MensaContextus* ctx = (MensaContextus*)datum;
+            JsonValor* genus_valor;
+            JsonValor* datum_valor;
+            JsonValor* fructus;
+               chorda  genus;
+               chorda  corpus;
+                  s64  seq;
     ChordaAedificator* aed;
 
     genus_valor = argumenta == NIHIL ? NIHIL
         : json_objectum_capere(argumenta, "genus");
     datum_valor = argumenta == NIHIL ? NIHIL
         : json_objectum_capere(argumenta, "datum");
-    si (genus_valor == NIHIL || !json_est_chorda(genus_valor)
+    si (   genus_valor == NIHIL || !json_est_chorda(genus_valor)
         || datum_valor == NIHIL || !json_est_objectum(datum_valor))
     {
         *culpa = chorda_ex_literis(
@@ -253,15 +265,18 @@ _imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa);
 
 interior JsonValor*
-_imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_imago_condere_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     MensaContextus* ctx = (MensaContextus*)datum;
-    JsonValor*      b64_valor;
-    Base64Fructus   decodificatum;
-    character       hex[SIGILLUM_HEX_MENSURA];
-    chorda          contentum;
-    JsonValor*      fructus;
+         JsonValor* b64_valor;
+     Base64Fructus  decodificatum;
+         character  hex[SIGILLUM_HEX_MENSURA];
+            chorda  contentum;
+         JsonValor* fructus;
 
     b64_valor = argumenta == NIHIL ? NIHIL
         : json_objectum_capere(argumenta, "datum_b64");
@@ -273,15 +288,15 @@ _imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
     }
     decodificatum = base64_decodificare(json_ad_chorda(b64_valor),
         piscina);
-    si (decodificatum.datum == NIHIL
+    si (   decodificatum.datum   == NIHIL
         || decodificatum.mensura <= 0)
     {
         *culpa = chorda_ex_literis(
             "mensa_imago_condere: base64 invalidum", piscina);
         redde NIHIL;
     }
-    contentum.datum = decodificatum.datum;
-    contentum.mensura = (i32)decodificatum.mensura;
+    contentum.datum    = decodificatum.datum;
+    contentum.mensura  = (i32)decodificatum.mensura;
     si (!volumen_massam_condere(ctx->volumen, contentum, hex))
     {
         *culpa = chorda_ex_literis(
@@ -299,14 +314,17 @@ _imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa);
 
 interior JsonValor*
-_imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_imago_promere_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     MensaContextus* ctx = (MensaContextus*)datum;
-    JsonValor*      sig_valor;
-    chorda          contentum;
-    b32             inventum;
-    JsonValor*      fructus;
+         JsonValor* sig_valor;
+            chorda  contentum;
+               b32  inventum;
+         JsonValor* fructus;
 
     sig_valor = argumenta == NIHIL ? NIHIL
         : json_objectum_capere(argumenta, "sigillum");
@@ -332,12 +350,15 @@ _imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
     redde fructus;
 }
 
+
 /* ==================================================
  * Praebere
  * ================================================== */
 
 MensaContextus*
-mensa_praebere (Internuntius* internuntius, Piscina* piscina,
+mensa_praebere (
+          Internuntius* internuntius,
+               Piscina* piscina,
     constans character* via_voluminis)
 {
     MensaContextus* ctx;
@@ -378,7 +399,8 @@ mensa_praebere (Internuntius* internuntius, Piscina* piscina,
 }
 
 vacuum
-mensa_claudere (MensaContextus* contextus)
+mensa_claudere (
+    MensaContextus* contextus)
 {
     si (contextus == NIHIL)
     {

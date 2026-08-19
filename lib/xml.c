@@ -2,30 +2,35 @@
 #include "chorda_aedificator.h"
 #include <string.h>
 
+
 /* ==================================================
  * Adiutores Interni
  * ================================================== */
 
 /* Verificare si character est spatium album */
 interior b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 /* Verificare si character est valida in nomine XML */
 interior b32
-_est_nomen_character(character c)
+_est_nomen_character (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           c == '_' || c == '-' || c == ':' || c == '.';
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || c == '_' || c == '-' || c == ':' || c == '.';
 }
 
 /* Comparare chorda* cum literis C (adiutor pro nullable pointers) */
 interior b32
-_chorda_ptr_aequalis_literis(chorda* ch, constans character* cstr)
+_chorda_ptr_aequalis_literis (
+                chorda* ch,
+    constans character* cstr)
 {
     si (!ch)
     {
@@ -36,7 +41,9 @@ _chorda_ptr_aequalis_literis(chorda* ch, constans character* cstr)
 
 /* Praeterire spatium album */
 interior vacuum
-_praeterire_spatium(chorda* input, i32* positus)
+_praeterire_spatium (
+    chorda* input,
+       i32* positus)
 {
     dum (*positus < input->mensura && _est_spatium((character)input->datum[*positus]))
     {
@@ -46,20 +53,20 @@ _praeterire_spatium(chorda* input, i32* positus)
 
 /* Internare chordam ex literis */
 interior chorda*
-_internare_literis(
+_internare_literis (
     InternamentumChorda* intern,
-    constans character*  cstr)
+     constans character* cstr)
 {
     redde chorda_internare_ex_literis(intern, cstr);
 }
 
 /* Internare chorda sectio */
 interior chorda*
-_internare_sectio(
+_internare_sectio (
     InternamentumChorda* intern,
-    chorda               fonte,
-    i32                  initium,
-    i32                  finis)
+                 chorda  fonte,
+                    i32  initium,
+                    i32  finis)
 {
     chorda sectio;
 
@@ -67,15 +74,16 @@ _internare_sectio(
     redde chorda_internare(intern, sectio);
 }
 
+
 /* ==================================================
  * Constructio - Creare Nodos
  * ================================================== */
 
 XmlNodus*
-xml_elementum_creare(
-    Piscina*             piscina,
+xml_elementum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus)
+     constans character* titulus)
 {
     XmlNodus* nodus;
 
@@ -90,21 +98,21 @@ xml_elementum_creare(
         redde NIHIL;
     }
 
-    nodus->genus = XML_NODUS_ELEMENTUM;
-    nodus->titulus = _internare_literis(intern, titulus);
-    nodus->valor = NIHIL;
-    nodus->attributa = xar_creare(piscina, magnitudo(XmlAttributum));
-    nodus->liberi = xar_creare(piscina, magnitudo(XmlNodus*));
-    nodus->parens = NIHIL;
+    nodus->genus      = XML_NODUS_ELEMENTUM;
+    nodus->titulus    = _internare_literis(intern, titulus);
+    nodus->valor      = NIHIL;
+    nodus->attributa  = xar_creare(piscina, magnitudo(XmlAttributum));
+    nodus->liberi     = xar_creare(piscina, magnitudo(XmlNodus*));
+    nodus->parens     = NIHIL;
 
     redde nodus;
 }
 
 XmlNodus*
-xml_textum_creare(
-    Piscina*             piscina,
+xml_textum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus)
+     constans character* textus)
 {
     XmlNodus* nodus;
 
@@ -119,21 +127,21 @@ xml_textum_creare(
         redde NIHIL;
     }
 
-    nodus->genus = XML_NODUS_TEXTUS;
-    nodus->titulus = NIHIL;
-    nodus->valor = _internare_literis(intern, textus);
-    nodus->attributa = NIHIL;
-    nodus->liberi = NIHIL;
-    nodus->parens = NIHIL;
+    nodus->genus      = XML_NODUS_TEXTUS;
+    nodus->titulus    = NIHIL;
+    nodus->valor      = _internare_literis(intern, textus);
+    nodus->attributa  = NIHIL;
+    nodus->liberi     = NIHIL;
+    nodus->parens     = NIHIL;
 
     redde nodus;
 }
 
 XmlNodus*
-xml_textum_creare_ex_chorda(
-    Piscina*             piscina,
+xml_textum_creare_ex_chorda (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda               textus)
+                 chorda  textus)
 {
     XmlNodus* nodus;
 
@@ -148,21 +156,21 @@ xml_textum_creare_ex_chorda(
         redde NIHIL;
     }
 
-    nodus->genus = XML_NODUS_TEXTUS;
-    nodus->titulus = NIHIL;
-    nodus->valor = chorda_internare(intern, textus);
-    nodus->attributa = NIHIL;
-    nodus->liberi = NIHIL;
-    nodus->parens = NIHIL;
+    nodus->genus      = XML_NODUS_TEXTUS;
+    nodus->titulus    = NIHIL;
+    nodus->valor      = chorda_internare(intern, textus);
+    nodus->attributa  = NIHIL;
+    nodus->liberi     = NIHIL;
+    nodus->parens     = NIHIL;
 
     redde nodus;
 }
 
 XmlNodus*
-xml_commentum_creare(
-    Piscina*             piscina,
+xml_commentum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus)
+     constans character* textus)
 {
     XmlNodus* nodus;
 
@@ -177,23 +185,23 @@ xml_commentum_creare(
         redde NIHIL;
     }
 
-    nodus->genus = XML_NODUS_COMMENTUM;
-    nodus->titulus = NIHIL;
-    nodus->valor = _internare_literis(intern, textus);
-    nodus->attributa = NIHIL;
-    nodus->liberi = NIHIL;
-    nodus->parens = NIHIL;
+    nodus->genus      = XML_NODUS_COMMENTUM;
+    nodus->titulus    = NIHIL;
+    nodus->valor      = _internare_literis(intern, textus);
+    nodus->attributa  = NIHIL;
+    nodus->liberi     = NIHIL;
+    nodus->parens     = NIHIL;
 
     redde nodus;
 }
 
 b32
-xml_attributum_addere(
-    XmlNodus*            nodus,
-    Piscina*             piscina,
+xml_attributum_addere (
+               XmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    constans character*  valor)
+     constans character* titulus,
+     constans character* valor)
 {
     XmlAttributum* attr;
 
@@ -222,19 +230,19 @@ xml_attributum_addere(
         redde FALSUM;
     }
 
-    attr->titulus = _internare_literis(intern, titulus);
-    attr->valor = _internare_literis(intern, valor);
+    attr->titulus  = _internare_literis(intern, titulus);
+    attr->valor    = _internare_literis(intern, valor);
 
     redde VERUM;
 }
 
 b32
-xml_attributum_addere_chorda(
-    XmlNodus*            nodus,
-    Piscina*             piscina,
+xml_attributum_addere_chorda (
+               XmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    chorda               valor)
+     constans character* titulus,
+                 chorda  valor)
 {
     XmlAttributum* attr;
 
@@ -263,14 +271,14 @@ xml_attributum_addere_chorda(
         redde FALSUM;
     }
 
-    attr->titulus = _internare_literis(intern, titulus);
-    attr->valor = chorda_internare(intern, valor);
+    attr->titulus  = _internare_literis(intern, titulus);
+    attr->valor    = chorda_internare(intern, valor);
 
     redde VERUM;
 }
 
 b32
-xml_liberum_addere(
+xml_liberum_addere (
     XmlNodus* parens,
     XmlNodus* liberum)
 {
@@ -297,18 +305,18 @@ xml_liberum_addere(
         redde FALSUM;
     }
 
-    *slot = liberum;
-    liberum->parens = parens;
+    *slot            = liberum;
+    liberum->parens  = parens;
 
     redde VERUM;
 }
 
 b32
-xml_textum_addere(
-    XmlNodus*            parens,
-    Piscina*             piscina,
+xml_textum_addere (
+               XmlNodus* parens,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus)
+     constans character* textus)
 {
     XmlNodus* nodus_textus;
 
@@ -321,12 +329,13 @@ xml_textum_addere(
     redde xml_liberum_addere(parens, nodus_textus);
 }
 
+
 /* ==================================================
  * Quaestio - Invenire in Arbore
  * ================================================== */
 
 i32
-xml_numerus_liberorum(
+xml_numerus_liberorum (
     XmlNodus* nodus)
 {
     si (!nodus || !nodus->liberi)
@@ -338,9 +347,9 @@ xml_numerus_liberorum(
 }
 
 XmlNodus*
-xml_liberum_ad_indicem(
+xml_liberum_ad_indicem (
     XmlNodus* nodus,
-    i32       index)
+         i32  index)
 {
     XmlNodus** slot;
 
@@ -359,12 +368,12 @@ xml_liberum_ad_indicem(
 }
 
 XmlNodus*
-xml_invenire_liberum(
-    XmlNodus*           nodus,
+xml_invenire_liberum (
+              XmlNodus* nodus,
     constans character* titulus)
 {
-    i32 i;
-    i32 num;
+         i32  i;
+         i32  num;
     XmlNodus* liberum;
 
     si (!nodus || !titulus || !nodus->liberi)
@@ -391,15 +400,15 @@ xml_invenire_liberum(
 }
 
 Xar*
-xml_invenire_omnes_liberos(
-    XmlNodus*           nodus,
+xml_invenire_omnes_liberos (
+              XmlNodus* nodus,
     constans character* titulus,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    Xar* resultus;
-    i32 i;
-    i32 num;
-    XmlNodus* liberum;
+         Xar*  resultus;
+         i32   i;
+         i32   num;
+    XmlNodus*  liberum;
     XmlNodus** slot;
 
     si (!nodus || !titulus || !piscina || !nodus->liberi)
@@ -435,12 +444,12 @@ xml_invenire_omnes_liberos(
 }
 
 chorda*
-xml_attributum_capere(
-    XmlNodus*           nodus,
+xml_attributum_capere (
+              XmlNodus* nodus,
     constans character* titulus)
 {
-    i32 i;
-    i32 num;
+              i32  i;
+              i32  num;
     XmlAttributum* attr;
 
     si (!nodus || !titulus || !nodus->attributa)
@@ -466,28 +475,28 @@ xml_attributum_capere(
 }
 
 b32
-xml_attributum_habet(
-    XmlNodus*           nodus,
+xml_attributum_habet (
+              XmlNodus* nodus,
     constans character* titulus)
 {
     redde xml_attributum_capere(nodus, titulus) != NIHIL;
 }
 
 chorda
-xml_textus_internus(
+xml_textus_internus (
     XmlNodus* nodus,
-    Piscina*  piscina)
+     Piscina* piscina)
 {
     ChordaAedificator* aed;
-    i32 i;
-    i32 num;
-    XmlNodus* liberum;
-    chorda resultus;
+                  i32  i;
+                  i32  num;
+             XmlNodus* liberum;
+               chorda  resultus;
 
     si (!nodus || !piscina)
     {
-        resultus.datum = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -500,16 +509,16 @@ xml_textus_internus(
     /* Si elementum, concatenare textum omnium liberorum */
     si (nodus->genus != XML_NODUS_ELEMENTUM || !nodus->liberi)
     {
-        resultus.datum = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
     aed = chorda_aedificator_creare(piscina, CXXVIII);
     si (!aed)
     {
-        resultus.datum = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -527,17 +536,18 @@ xml_textus_internus(
     redde chorda_aedificator_finire(aed);
 }
 
+
 /* ==================================================
  * Scriptio - Scribere XML
  * ================================================== */
 
 /* Scribere textum cum effugio XML */
 interior b32
-_scribere_textum_effugiens(
+_scribere_textum_effugiens (
     ChordaAedificator* aed,
-    chorda*            textus)
+               chorda* textus)
 {
-    i32 i;
+          i32 i;
     character c;
 
     si (!textus)
@@ -572,11 +582,11 @@ _scribere_textum_effugiens(
 
 /* Scribere valor attributi cum effugio */
 interior b32
-_scribere_attributum_valor(
+_scribere_attributum_valor (
     ChordaAedificator* aed,
-    chorda*            valor)
+               chorda* valor)
 {
-    i32 i;
+          i32 i;
     character c;
 
     si (!valor)
@@ -615,9 +625,9 @@ _scribere_attributum_valor(
 
 /* Scribere indentationem */
 interior vacuum
-_scribere_indentationem(
+_scribere_indentationem (
     ChordaAedificator* aed,
-    i32                gradus)
+                  i32  gradus)
 {
     i32 i;
 
@@ -628,19 +638,19 @@ _scribere_indentationem(
 }
 
 b32
-xml_scribere_ad_aedificator(
-    XmlNodus*          nodus,
+xml_scribere_ad_aedificator (
+             XmlNodus* nodus,
     ChordaAedificator* aed,
-    b32                pulchrum,
-    i32                indentatio)
+                  b32  pulchrum,
+                  i32  indentatio)
 {
-    i32 i;
-    i32 num_attr;
-    i32 num_lib;
+              i32  i;
+              i32  num_attr;
+              i32  num_lib;
     XmlAttributum* attr;
-    XmlNodus* liberum;
-    b32 habet_liberos;
-    b32 solum_textus;
+         XmlNodus* liberum;
+              b32  habet_liberos;
+              b32  solum_textus;
 
     si (!nodus || !aed)
     {
@@ -773,26 +783,26 @@ xml_scribere_ad_aedificator(
 }
 
 chorda
-xml_scribere(
+xml_scribere (
     XmlNodus* nodus,
-    Piscina*  piscina,
-    b32       pulchrum)
+     Piscina* piscina,
+         b32  pulchrum)
 {
     ChordaAedificator* aed;
-    chorda resultus;
+               chorda  resultus;
 
     si (!nodus || !piscina)
     {
-        resultus.datum = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
     aed = chorda_aedificator_creare(piscina, CCLVI);
     si (!aed)
     {
-        resultus.datum = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -801,32 +811,34 @@ xml_scribere(
     redde chorda_aedificator_finire(aed);
 }
 
+
 /* ==================================================
  * Parsatio - Legere XML
  * ================================================== */
 
 /* Contextus parsationis */
 nomen structura {
-    chorda               input;
-    i32                  positus;
-    i32                  linea;
-    i32                  columna;
-    Piscina*             piscina;
+                 chorda  input;
+                    i32  positus;
+                    i32  linea;
+                    i32  columna;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    XmlStatus            status;
-    chorda               error;
+              XmlStatus  status;
+                 chorda  error;
 } XmlContextus;
 
 /* Legere titulum (tag vel attributum) */
 interior chorda*
-_legere_titulus(XmlContextus* ctx)
+_legere_titulus (
+    XmlContextus* ctx)
 {
     i32 initium;
 
     initium = ctx->positus;
 
-    dum (ctx->positus < ctx->input.mensura &&
-         _est_nomen_character((character)ctx->input.datum[ctx->positus]))
+    dum (   ctx->positus < ctx->input.mensura
+         && _est_nomen_character((character)ctx->input.datum[ctx->positus]))
     {
         ctx->positus++;
         ctx->columna++;
@@ -842,11 +854,12 @@ _legere_titulus(XmlContextus* ctx)
 
 /* Legere valor attributi (post =") */
 interior chorda*
-_legere_valor_attributi(XmlContextus* ctx)
+_legere_valor_attributi (
+    XmlContextus* ctx)
 {
-    character quota;
+            character  quota;
     ChordaAedificator* aed;
-    chorda resultus;
+               chorda  resultus;
 
     si (ctx->positus >= ctx->input.mensura)
     {
@@ -885,51 +898,51 @@ _legere_valor_attributi(XmlContextus* ctx)
         si (c == '&')
         {
             /* Tractare entity reference */
-            si (ctx->positus + III < ctx->input.mensura &&
-                ctx->input.datum[ctx->positus + I] == 'l' &&
-                ctx->input.datum[ctx->positus + II] == 't' &&
-                ctx->input.datum[ctx->positus + III] == ';')
+            si (   ctx->positus + III < ctx->input.mensura
+                && ctx->input.datum[ctx->positus + I]   == 'l'
+                && ctx->input.datum[ctx->positus + II]  == 't'
+                && ctx->input.datum[ctx->positus + III] == ';')
             {
                 chorda_aedificator_appendere_character(aed, '<');
                 ctx->positus += IV;
                 ctx->columna += IV;
             }
-            alioquin si (ctx->positus + III < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'g' &&
-                         ctx->input.datum[ctx->positus + II] == 't' &&
-                         ctx->input.datum[ctx->positus + III] == ';')
+            alioquin si (   ctx->positus + III < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'g'
+                         && ctx->input.datum[ctx->positus + II]  == 't'
+                         && ctx->input.datum[ctx->positus + III] == ';')
             {
                 chorda_aedificator_appendere_character(aed, '>');
                 ctx->positus += IV;
                 ctx->columna += IV;
             }
-            alioquin si (ctx->positus + IV < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'a' &&
-                         ctx->input.datum[ctx->positus + II] == 'm' &&
-                         ctx->input.datum[ctx->positus + III] == 'p' &&
-                         ctx->input.datum[ctx->positus + IV] == ';')
+            alioquin si (   ctx->positus + IV < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'a'
+                         && ctx->input.datum[ctx->positus + II]  == 'm'
+                         && ctx->input.datum[ctx->positus + III] == 'p'
+                         && ctx->input.datum[ctx->positus + IV]  == ';')
             {
                 chorda_aedificator_appendere_character(aed, '&');
                 ctx->positus += V;
                 ctx->columna += V;
             }
-            alioquin si (ctx->positus + V < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'q' &&
-                         ctx->input.datum[ctx->positus + II] == 'u' &&
-                         ctx->input.datum[ctx->positus + III] == 'o' &&
-                         ctx->input.datum[ctx->positus + IV] == 't' &&
-                         ctx->input.datum[ctx->positus + V] == ';')
+            alioquin si (   ctx->positus + V < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'q'
+                         && ctx->input.datum[ctx->positus + II]  == 'u'
+                         && ctx->input.datum[ctx->positus + III] == 'o'
+                         && ctx->input.datum[ctx->positus + IV]  == 't'
+                         && ctx->input.datum[ctx->positus + V]   == ';')
             {
                 chorda_aedificator_appendere_character(aed, '"');
                 ctx->positus += VI;
                 ctx->columna += VI;
             }
-            alioquin si (ctx->positus + V < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'a' &&
-                         ctx->input.datum[ctx->positus + II] == 'p' &&
-                         ctx->input.datum[ctx->positus + III] == 'o' &&
-                         ctx->input.datum[ctx->positus + IV] == 's' &&
-                         ctx->input.datum[ctx->positus + V] == ';')
+            alioquin si (   ctx->positus + V < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'a'
+                         && ctx->input.datum[ctx->positus + II]  == 'p'
+                         && ctx->input.datum[ctx->positus + III] == 'o'
+                         && ctx->input.datum[ctx->positus + IV]  == 's'
+                         && ctx->input.datum[ctx->positus + V]   == ';')
             {
                 chorda_aedificator_appendere_character(aed, '\'');
                 ctx->positus += VI;
@@ -966,11 +979,12 @@ _legere_valor_attributi(XmlContextus* ctx)
 
 /* Legere textum inter tags */
 interior chorda*
-_legere_textus(XmlContextus* ctx)
+_legere_textus (
+    XmlContextus* ctx)
 {
     ChordaAedificator* aed;
-    chorda resultus;
-    b32 habet_contentum;
+               chorda  resultus;
+                  b32  habet_contentum;
 
     aed = chorda_aedificator_creare(ctx->piscina, LXIV);
     si (!aed)
@@ -996,51 +1010,51 @@ _legere_textus(XmlContextus* ctx)
             habet_contentum = VERUM;
 
             /* Tractare entity reference */
-            si (ctx->positus + III < ctx->input.mensura &&
-                ctx->input.datum[ctx->positus + I] == 'l' &&
-                ctx->input.datum[ctx->positus + II] == 't' &&
-                ctx->input.datum[ctx->positus + III] == ';')
+            si (   ctx->positus + III < ctx->input.mensura
+                && ctx->input.datum[ctx->positus + I]   == 'l'
+                && ctx->input.datum[ctx->positus + II]  == 't'
+                && ctx->input.datum[ctx->positus + III] == ';')
             {
                 chorda_aedificator_appendere_character(aed, '<');
                 ctx->positus += IV;
                 ctx->columna += IV;
             }
-            alioquin si (ctx->positus + III < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'g' &&
-                         ctx->input.datum[ctx->positus + II] == 't' &&
-                         ctx->input.datum[ctx->positus + III] == ';')
+            alioquin si (   ctx->positus + III < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'g'
+                         && ctx->input.datum[ctx->positus + II]  == 't'
+                         && ctx->input.datum[ctx->positus + III] == ';')
             {
                 chorda_aedificator_appendere_character(aed, '>');
                 ctx->positus += IV;
                 ctx->columna += IV;
             }
-            alioquin si (ctx->positus + IV < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'a' &&
-                         ctx->input.datum[ctx->positus + II] == 'm' &&
-                         ctx->input.datum[ctx->positus + III] == 'p' &&
-                         ctx->input.datum[ctx->positus + IV] == ';')
+            alioquin si (   ctx->positus + IV < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'a'
+                         && ctx->input.datum[ctx->positus + II]  == 'm'
+                         && ctx->input.datum[ctx->positus + III] == 'p'
+                         && ctx->input.datum[ctx->positus + IV]  == ';')
             {
                 chorda_aedificator_appendere_character(aed, '&');
                 ctx->positus += V;
                 ctx->columna += V;
             }
-            alioquin si (ctx->positus + V < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'q' &&
-                         ctx->input.datum[ctx->positus + II] == 'u' &&
-                         ctx->input.datum[ctx->positus + III] == 'o' &&
-                         ctx->input.datum[ctx->positus + IV] == 't' &&
-                         ctx->input.datum[ctx->positus + V] == ';')
+            alioquin si (   ctx->positus + V < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'q'
+                         && ctx->input.datum[ctx->positus + II]  == 'u'
+                         && ctx->input.datum[ctx->positus + III] == 'o'
+                         && ctx->input.datum[ctx->positus + IV]  == 't'
+                         && ctx->input.datum[ctx->positus + V]   == ';')
             {
                 chorda_aedificator_appendere_character(aed, '"');
                 ctx->positus += VI;
                 ctx->columna += VI;
             }
-            alioquin si (ctx->positus + V < ctx->input.mensura &&
-                         ctx->input.datum[ctx->positus + I] == 'a' &&
-                         ctx->input.datum[ctx->positus + II] == 'p' &&
-                         ctx->input.datum[ctx->positus + III] == 'o' &&
-                         ctx->input.datum[ctx->positus + IV] == 's' &&
-                         ctx->input.datum[ctx->positus + V] == ';')
+            alioquin si (   ctx->positus + V < ctx->input.mensura
+                         && ctx->input.datum[ctx->positus + I]   == 'a'
+                         && ctx->input.datum[ctx->positus + II]  == 'p'
+                         && ctx->input.datum[ctx->positus + III] == 'o'
+                         && ctx->input.datum[ctx->positus + IV]  == 's'
+                         && ctx->input.datum[ctx->positus + V]   == ';')
             {
                 chorda_aedificator_appendere_character(aed, '\'');
                 ctx->positus += VI;
@@ -1090,7 +1104,9 @@ interior XmlNodus* _legere_elementum(XmlContextus* ctx);
 
 /* Legere contentum elementi (liberi) */
 interior b32
-_legere_contentum(XmlContextus* ctx, XmlNodus* parens)
+_legere_contentum (
+    XmlContextus* ctx,
+        XmlNodus* parens)
 {
     dum (ctx->positus < ctx->input.mensura)
     {
@@ -1108,18 +1124,18 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
         si (c == '<')
         {
             /* Verificare si tag claudens */
-            si (ctx->positus + I < ctx->input.mensura &&
-                ctx->input.datum[ctx->positus + I] == '/')
+            si (   ctx->positus + I < ctx->input.mensura
+                && ctx->input.datum[ctx->positus + I] == '/')
             {
                 /* Tag claudens - finis contentum */
                 redde VERUM;
             }
 
             /* Verificare si commentum */
-            si (ctx->positus + III < ctx->input.mensura &&
-                ctx->input.datum[ctx->positus + I] == '!' &&
-                ctx->input.datum[ctx->positus + II] == '-' &&
-                ctx->input.datum[ctx->positus + III] == '-')
+            si (   ctx->positus + III < ctx->input.mensura
+                && ctx->input.datum[ctx->positus + I]   == '!'
+                && ctx->input.datum[ctx->positus + II]  == '-'
+                && ctx->input.datum[ctx->positus + III] == '-')
             {
                 /* Saltare commentum */
                 ctx->positus += IV;
@@ -1127,9 +1143,9 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
 
                 dum (ctx->positus + II < ctx->input.mensura)
                 {
-                    si (ctx->input.datum[ctx->positus] == '-' &&
-                        ctx->input.datum[ctx->positus + I] == '-' &&
-                        ctx->input.datum[ctx->positus + II] == '>')
+                    si (   ctx->input.datum[ctx->positus]      == '-'
+                        && ctx->input.datum[ctx->positus + I]  == '-'
+                        && ctx->input.datum[ctx->positus + II] == '>')
                     {
                         ctx->positus += III;
                         ctx->columna += III;
@@ -1152,8 +1168,8 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
             }
 
             /* Verificare si declaratio XML (<?xml ...?>) */
-            si (ctx->positus + I < ctx->input.mensura &&
-                ctx->input.datum[ctx->positus + I] == '?')
+            si (   ctx->positus + I < ctx->input.mensura
+                && ctx->input.datum[ctx->positus + I] == '?')
             {
                 /* Saltare declaratio */
                 ctx->positus += II;
@@ -1161,8 +1177,8 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
 
                 dum (ctx->positus + I < ctx->input.mensura)
                 {
-                    si (ctx->input.datum[ctx->positus] == '?' &&
-                        ctx->input.datum[ctx->positus + I] == '>')
+                    si (   ctx->input.datum[ctx->positus]     == '?'
+                        && ctx->input.datum[ctx->positus + I] == '>')
                     {
                         ctx->positus += II;
                         ctx->columna += II;
@@ -1200,7 +1216,7 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
         alioquin
         {
             /* Textus */
-            chorda* textus;
+              chorda* textus;
             XmlNodus* nodus_textus;
 
             textus = _legere_textus(ctx);
@@ -1221,14 +1237,15 @@ _legere_contentum(XmlContextus* ctx, XmlNodus* parens)
 
 /* Legere elementum */
 interior XmlNodus*
-_legere_elementum(XmlContextus* ctx)
+_legere_elementum (
+    XmlContextus* ctx)
 {
     XmlNodus* nodus;
-    chorda* tag_titulus;
+      chorda* tag_titulus;
 
     /* Expectare < */
-    si (ctx->positus >= ctx->input.mensura ||
-        ctx->input.datum[ctx->positus] != '<')
+    si (   ctx->positus                   >= ctx->input.mensura
+        || ctx->input.datum[ctx->positus] != '<')
     {
         ctx->status = XML_ERROR_SYNTAXIS;
         redde NIHIL;
@@ -1278,8 +1295,8 @@ _legere_elementum(XmlContextus* ctx)
         /* Self-closing tag */
         si (c == '/')
         {
-            si (ctx->positus + I >= ctx->input.mensura ||
-                ctx->input.datum[ctx->positus + I] != '>')
+            si (   ctx->positus + I >= ctx->input.mensura
+                || ctx->input.datum[ctx->positus + I] != '>')
             {
                 ctx->status = XML_ERROR_SYNTAXIS;
                 redde NIHIL;
@@ -1300,8 +1317,8 @@ _legere_elementum(XmlContextus* ctx)
 
         /* Attributum */
         {
-            chorda* attr_titulus;
-            chorda* attr_valor;
+                   chorda* attr_titulus;
+                   chorda* attr_valor;
             XmlAttributum* attr;
 
             attr_titulus = _legere_titulus(ctx);
@@ -1313,8 +1330,8 @@ _legere_elementum(XmlContextus* ctx)
 
             _praeterire_spatium(&ctx->input, &ctx->positus);
 
-            si (ctx->positus >= ctx->input.mensura ||
-                ctx->input.datum[ctx->positus] != '=')
+            si (   ctx->positus                   >= ctx->input.mensura
+                || ctx->input.datum[ctx->positus] != '=')
             {
                 ctx->status = XML_ERROR_ATTRIBUTUM;
                 redde NIHIL;
@@ -1335,8 +1352,8 @@ _legere_elementum(XmlContextus* ctx)
             attr = xar_addere(nodus->attributa);
             si (attr)
             {
-                attr->titulus = attr_titulus;
-                attr->valor = attr_valor;
+                attr->titulus  = attr_titulus;
+                attr->valor    = attr_valor;
             }
         }
     }
@@ -1350,9 +1367,9 @@ _legere_elementum(XmlContextus* ctx)
     /* Expectare tag claudens </titulus> */
     _praeterire_spatium(&ctx->input, &ctx->positus);
 
-    si (ctx->positus + I >= ctx->input.mensura ||
-        ctx->input.datum[ctx->positus] != '<' ||
-        ctx->input.datum[ctx->positus + I] != '/')
+    si (   ctx->positus + I                   >= ctx->input.mensura
+        || ctx->input.datum[ctx->positus]     != '<'
+        || ctx->input.datum[ctx->positus + I] != '/')
     {
         ctx->status = XML_ERROR_TAG_NON_CLAUSUM;
         redde NIHIL;
@@ -1385,8 +1402,8 @@ _legere_elementum(XmlContextus* ctx)
 
     _praeterire_spatium(&ctx->input, &ctx->positus);
 
-    si (ctx->positus >= ctx->input.mensura ||
-        ctx->input.datum[ctx->positus] != '>')
+    si (   ctx->positus                   >= ctx->input.mensura
+        || ctx->input.datum[ctx->positus] != '>')
     {
         ctx->status = XML_ERROR_SYNTAXIS;
         redde NIHIL;
@@ -1399,21 +1416,21 @@ _legere_elementum(XmlContextus* ctx)
 }
 
 XmlResultus
-xml_legere(
-    chorda               input,
-    Piscina*             piscina,
+xml_legere (
+                 chorda  input,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
-    XmlResultus resultus;
+     XmlResultus resultus;
     XmlContextus ctx;
 
-    resultus.successus = FALSUM;
-    resultus.radix = NIHIL;
-    resultus.status = XML_SUCCESSUS;
-    resultus.linea_erroris = ZEPHYRUM;
-    resultus.columna_erroris = ZEPHYRUM;
-    resultus.error.datum = NIHIL;
-    resultus.error.mensura = ZEPHYRUM;
+    resultus.successus        = FALSUM;
+    resultus.radix            = NIHIL;
+    resultus.status           = XML_SUCCESSUS;
+    resultus.linea_erroris    = ZEPHYRUM;
+    resultus.columna_erroris  = ZEPHYRUM;
+    resultus.error.datum      = NIHIL;
+    resultus.error.mensura    = ZEPHYRUM;
 
     si (!piscina || !intern)
     {
@@ -1427,15 +1444,15 @@ xml_legere(
         redde resultus;
     }
 
-    ctx.input = input;
-    ctx.positus = ZEPHYRUM;
-    ctx.linea = I;
-    ctx.columna = I;
-    ctx.piscina = piscina;
-    ctx.intern = intern;
-    ctx.status = XML_SUCCESSUS;
-    ctx.error.datum = NIHIL;
-    ctx.error.mensura = ZEPHYRUM;
+    ctx.input          = input;
+    ctx.positus        = ZEPHYRUM;
+    ctx.linea          = I;
+    ctx.columna        = I;
+    ctx.piscina        = piscina;
+    ctx.intern         = intern;
+    ctx.status         = XML_SUCCESSUS;
+    ctx.error.datum    = NIHIL;
+    ctx.error.mensura  = ZEPHYRUM;
 
     /* Saltare spatium et declarationes initiales */
     dum (ctx.positus < ctx.input.mensura)
@@ -1454,8 +1471,8 @@ xml_legere(
         si (c == '<')
         {
             /* Verificare si declaratio XML */
-            si (ctx.positus + I < ctx.input.mensura &&
-                ctx.input.datum[ctx.positus + I] == '?')
+            si (   ctx.positus + I < ctx.input.mensura
+                && ctx.input.datum[ctx.positus + I] == '?')
             {
                 /* Saltare declaratio */
                 ctx.positus += II;
@@ -1463,8 +1480,8 @@ xml_legere(
 
                 dum (ctx.positus + I < ctx.input.mensura)
                 {
-                    si (ctx.input.datum[ctx.positus] == '?' &&
-                        ctx.input.datum[ctx.positus + I] == '>')
+                    si (   ctx.input.datum[ctx.positus]     == '?'
+                        && ctx.input.datum[ctx.positus + I] == '>')
                     {
                         ctx.positus += II;
                         ctx.columna += II;
@@ -1478,10 +1495,10 @@ xml_legere(
             }
 
             /* Verificare si commentum */
-            si (ctx.positus + III < ctx.input.mensura &&
-                ctx.input.datum[ctx.positus + I] == '!' &&
-                ctx.input.datum[ctx.positus + II] == '-' &&
-                ctx.input.datum[ctx.positus + III] == '-')
+            si (   ctx.positus + III < ctx.input.mensura
+                && ctx.input.datum[ctx.positus + I]   == '!'
+                && ctx.input.datum[ctx.positus + II]  == '-'
+                && ctx.input.datum[ctx.positus + III] == '-')
             {
                 /* Saltare commentum */
                 ctx.positus += IV;
@@ -1489,9 +1506,9 @@ xml_legere(
 
                 dum (ctx.positus + II < ctx.input.mensura)
                 {
-                    si (ctx.input.datum[ctx.positus] == '-' &&
-                        ctx.input.datum[ctx.positus + I] == '-' &&
-                        ctx.input.datum[ctx.positus + II] == '>')
+                    si (   ctx.input.datum[ctx.positus]      == '-'
+                        && ctx.input.datum[ctx.positus + I]  == '-'
+                        && ctx.input.datum[ctx.positus + II] == '>')
                     {
                         ctx.positus += III;
                         ctx.columna += III;
@@ -1519,9 +1536,9 @@ xml_legere(
 
     si (ctx.status != XML_SUCCESSUS)
     {
-        resultus.status = ctx.status;
-        resultus.linea_erroris = ctx.linea;
-        resultus.columna_erroris = ctx.columna;
+        resultus.status           = ctx.status;
+        resultus.linea_erroris    = ctx.linea;
+        resultus.columna_erroris  = ctx.columna;
         redde resultus;
     }
 
@@ -1531,23 +1548,23 @@ xml_legere(
         redde resultus;
     }
 
-    resultus.successus = VERUM;
-    resultus.status = XML_SUCCESSUS;
+    resultus.successus  = VERUM;
+    resultus.status     = XML_SUCCESSUS;
 
     redde resultus;
 }
 
 XmlResultus
-xml_legere_ex_literis(
-    constans character*  cstr,
-    Piscina*             piscina,
+xml_legere_ex_literis (
+     constans character* cstr,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     chorda input;
-    i32 len;
+       i32 len;
     unio {
         constans character* cc;
-        i8* uc;
+                        i8* uc;
     } conv;
 
     len = ZEPHYRUM;
@@ -1557,9 +1574,9 @@ xml_legere_ex_literis(
     }
 
     /* Conversio constans -> non-constans (XML parser non mutat input) */
-    conv.cc = cstr;
-    input.datum = conv.uc;
-    input.mensura = len;
+    conv.cc        = cstr;
+    input.datum    = conv.uc;
+    input.mensura  = len;
 
     redde xml_legere(input, piscina, intern);
 }

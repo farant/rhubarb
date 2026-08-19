@@ -6,6 +6,7 @@
 #include "utf8.h"
 #include <string.h>
 
+
 /* ========================================================================
  * CONSTANTAE
  * ======================================================================== */
@@ -13,19 +14,24 @@
 #define LIMINA_VERSUS_DEFECTUS     LXX   /* 70% */
 #define LINEAE_VERSUS_PROBARE      V     /* 5 lineae */
 
+
 /* ========================================================================
  * FUNCTIONES INTERNAE - Characteres
  * ======================================================================== */
 
 interior b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 /* Verificare si range est solum whitespace */
 interior b32
-_est_solum_spatium(chorda textus, i32 initium, i32 finis)
+_est_solum_spatium (
+    chorda textus,
+       i32 initium,
+       i32 finis)
 {
     i32 i;
 
@@ -45,6 +51,7 @@ _est_solum_spatium(chorda textus, i32 initium, i32 finis)
     redde VERUM;
 }
 
+
 /* ========================================================================
  * FUNCTIONES INTERNAE - Paragraph et Versus Detectio
  * ======================================================================== */
@@ -53,7 +60,9 @@ _est_solum_spatium(chorda textus, i32 initium, i32 finis)
  * Tractare \r\n ut unam newline
  */
 interior i32
-_numerare_newlines(chorda textus, i32 pos)
+_numerare_newlines (
+    chorda textus,
+       i32 pos)
 {
     i32 numerus = 0;
 
@@ -88,21 +97,21 @@ _numerare_newlines(chorda textus, i32 pos)
  * UTF-8 aware
  */
 interior b32
-_est_versus(
+_est_versus (
     chorda textus,
-    i32    pos,
-    i32    latitudo,
-    i32    limina_pct,
-    i32    lineae_probare)
+       i32 pos,
+       i32 latitudo,
+       i32 limina_pct,
+       i32 lineae_probare)
 {
-    i32 lineae_breves = 0;
-    i32 lineae_probatae = 0;
-    i32 limina_lat = (latitudo * limina_pct) / C;
+    i32 lineae_breves    = 0;
+    i32 lineae_probatae  = 0;
+    i32 limina_lat       = (latitudo * limina_pct) / C;
 
     /* Probare usque ad lineae_probare lineas */
     dum (lineae_probatae < lineae_probare && pos < textus.mensura)
     {
-        i32 longitudo_lineae = 0;
+                i32  longitudo_lineae = 0;
         constans i8* scan_ptr;
         constans i8* scan_finis = textus.datum + textus.mensura;
 
@@ -167,7 +176,9 @@ _est_versus(
  * Redde: positio post ultimum character ante paragraph break
  */
 interior i32
-_invenire_finem_paragraphi(chorda textus, i32 pos)
+_invenire_finem_paragraphi (
+    chorda textus,
+       i32 pos)
 {
     dum (pos < textus.mensura)
     {
@@ -183,6 +194,7 @@ _invenire_finem_paragraphi(chorda textus, i32 pos)
     redde textus.mensura;
 }
 
+
 /* ========================================================================
  * FUNCTIONES INTERNAE - Extractio Linearum Versus
  * ======================================================================== */
@@ -191,24 +203,24 @@ _invenire_finem_paragraphi(chorda textus, i32 pos)
  * Quaeque linea usque ad \n est una SententiaCopia
  */
 interior vacuum
-_extrahere_lineas_versus(
-    chorda   textus,
-    i32      paragraphus_init,
-    i32      paragraphus_fin,
-    Xar*     copiae)
+_extrahere_lineas_versus (
+    chorda  textus,
+       i32  paragraphus_init,
+       i32  paragraphus_fin,
+       Xar* copiae)
 {
     i32 pos = paragraphus_init;
 
     dum (pos < paragraphus_fin)
     {
         SententiaCopia* copia;
-        i32 linea_init;
-        i32 linea_fin;
+                   i32  linea_init;
+                   i32  linea_fin;
 
         /* Saltare leading newlines/spaces */
-        dum (pos < paragraphus_fin &&
-             ((character)textus.datum[pos] == '\n' ||
-              (character)textus.datum[pos] == '\r'))
+        dum (   pos < paragraphus_fin
+             && ((character)textus.datum[pos] == '\n'
+            || (character)textus.datum[pos] == '\r'))
         {
             pos++;
         }
@@ -221,9 +233,9 @@ _extrahere_lineas_versus(
         linea_init = pos;
 
         /* Invenire finem lineae */
-        dum (pos < paragraphus_fin &&
-             (character)textus.datum[pos] != '\n' &&
-             (character)textus.datum[pos] != '\r')
+        dum (   pos < paragraphus_fin
+             && (character)textus.datum[pos] != '\n'
+             && (character)textus.datum[pos] != '\r')
         {
             pos++;
         }
@@ -239,14 +251,15 @@ _extrahere_lineas_versus(
         /* Saltare lineas vacuas vel solum spatium */
         si (linea_fin > linea_init && !_est_solum_spatium(textus, linea_init, linea_fin))
         {
-            copia = (SententiaCopia*)xar_addere(copiae);
-            copia->initium = linea_init;
-            copia->finis = linea_fin;
-            copia->est_versus = VERUM;
-            copia->est_vacua = FALSUM;
+            copia              = (SententiaCopia*)xar_addere(copiae);
+            copia->initium     = linea_init;
+            copia->finis       = linea_fin;
+            copia->est_versus  = VERUM;
+            copia->est_vacua   = FALSUM;
         }
     }
 }
+
 
 /* ========================================================================
  * FUNCTIONES INTERNAE - Extractio Sententiarum Prosae
@@ -256,20 +269,20 @@ _extrahere_lineas_versus(
  * Usat sententia_fissio_indices()
  */
 interior vacuum
-_extrahere_sententias_prosa(
-    chorda   textus,
-    i32      paragraphus_init,
-    i32      paragraphus_fin,
-    Xar*     copiae,
+_extrahere_sententias_prosa (
+     chorda  textus,
+        i32  paragraphus_init,
+        i32  paragraphus_fin,
+        Xar* copiae,
     Piscina* piscina)
 {
-    chorda sectio;
+                     chorda sectio;
     SententiaIndicesFructus indices;
-    i32 i;
+                        i32 i;
 
     /* Creare sectio pro paragrapho */
-    sectio.datum = textus.datum + paragraphus_init;
-    sectio.mensura = paragraphus_fin - paragraphus_init;
+    sectio.datum    = textus.datum + paragraphus_init;
+    sectio.mensura  = paragraphus_fin - paragraphus_init;
 
     /* Findere in sententias */
     indices = sententia_fissio_indices(sectio, piscina);
@@ -277,8 +290,8 @@ _extrahere_sententias_prosa(
     /* Convertere indices relativos ad absolutos et addere ad copiae */
     per (i = 0; i < indices.numerus; i++)
     {
-        i32 abs_init = paragraphus_init + indices.indices[i].initium;
-        i32 abs_fin = paragraphus_init + indices.indices[i].finis;
+        i32 abs_init  = paragraphus_init + indices.indices[i].initium;
+        i32 abs_fin   = paragraphus_init + indices.indices[i].finis;
 
         /* Saltare sententias vacuas vel solum spatium */
         si (!_est_solum_spatium(textus, abs_init, abs_fin))
@@ -292,6 +305,7 @@ _extrahere_sententias_prosa(
     }
 }
 
+
 /* ========================================================================
  * FUNCTIONES INTERNAE - Word Wrapping
  * ======================================================================== */
@@ -300,13 +314,13 @@ _extrahere_sententias_prosa(
  * Similis ad logicam paginarium sed pro una sententia
  */
 interior SententiaPagina*
-_wrap_sententia(
+_wrap_sententia (
     SententiaPaginariumResultus* resultus,
-    SententiaCopia*              copia)
+                 SententiaCopia* copia)
 {
     SententiaPagina* pagina;
-    i32 pos;
-    i32 latitudo = resultus->cache_latitudo;
+                i32  pos;
+                i32  latitudo = resultus->cache_latitudo;
 
     pagina = (SententiaPagina*)xar_addere(resultus->paginae);
     pagina->lineae = xar_creare(resultus->piscina, magnitudo(PaginariumLinea));
@@ -330,12 +344,12 @@ _wrap_sententia(
     dum (pos < copia->finis)
     {
         PaginariumLinea* linea;
-        i32 visual_len;
-        i32 source_len;
-        i32 last_break;
-        b32 habet_break;
-        constans i8* scan_ptr;
-        constans i8* scan_finis;
+                    i32  visual_len;
+                    i32  source_len;
+                    i32  last_break;
+                    b32  habet_break;
+            constans i8* scan_ptr;
+            constans i8* scan_finis;
 
         linea = (PaginariumLinea*)xar_addere(pagina->lineae);
         linea->initium = pos;
@@ -345,20 +359,20 @@ _wrap_sententia(
         si (copia->est_versus)
         {
             /* Versus: preservare structuram lineae fonte */
-            i32 line_len = 0;
-            i32 offset = 0;
-            i32 last_space_offset = 0;
-            b32 habet_spatium = FALSUM;
-            b32 hit_newline = FALSUM;
+            i32 line_len           = 0;
+            i32 offset             = 0;
+            i32 last_space_offset  = 0;
+            b32 habet_spatium      = FALSUM;
+            b32 hit_newline        = FALSUM;
 
-            scan_ptr = resultus->textus.datum + pos;
-            scan_finis = resultus->textus.datum + copia->finis;
+            scan_ptr    = resultus->textus.datum + pos;
+            scan_finis  = resultus->textus.datum + copia->finis;
 
             dum (scan_ptr < scan_finis && line_len < latitudo)
             {
                 constans i8* runa_initium = scan_ptr;
-                s32 runa = utf8_decodere(&scan_ptr, scan_finis);
-                i32 runa_bytes = (i32)(scan_ptr - runa_initium);
+                        s32  runa = utf8_decodere(&scan_ptr, scan_finis);
+                        i32  runa_bytes = (i32)(scan_ptr - runa_initium);
 
                 si (runa == '\n' || runa == '\r')
                 {
@@ -367,8 +381,8 @@ _wrap_sententia(
                 }
                 si (runa == ' ')
                 {
-                    last_space_offset = offset;
-                    habet_spatium = VERUM;
+                    last_space_offset  = offset;
+                    habet_spatium      = VERUM;
                 }
                 line_len++;
                 offset += runa_bytes;
@@ -376,13 +390,13 @@ _wrap_sententia(
 
             si (line_len >= latitudo && habet_spatium && !hit_newline)
             {
-                linea->finis = pos + last_space_offset;
-                pos = pos + last_space_offset + I;
+                linea->finis  = pos + last_space_offset;
+                pos           = pos + last_space_offset + I;
             }
             alioquin
             {
-                linea->finis = pos + offset;
-                pos = pos + offset;
+                linea->finis  = pos + offset;
+                pos           = pos + offset;
                 /* Consumere newline */
                 si (hit_newline && pos < copia->finis)
                 {
@@ -400,19 +414,19 @@ _wrap_sententia(
         alioquin
         {
             /* Prosa: tractare \n ut spatium, word-wrap */
-            visual_len = 0;
-            source_len = 0;
-            last_break = 0;
-            habet_break = FALSUM;
+            visual_len   = 0;
+            source_len   = 0;
+            last_break   = 0;
+            habet_break  = FALSUM;
 
-            scan_ptr = resultus->textus.datum + pos;
-            scan_finis = resultus->textus.datum + copia->finis;
+            scan_ptr    = resultus->textus.datum + pos;
+            scan_finis  = resultus->textus.datum + copia->finis;
 
             dum (visual_len < latitudo && scan_ptr < scan_finis)
             {
                 constans i8* runa_initium = scan_ptr;
-                s32 runa = utf8_decodere(&scan_ptr, scan_finis);
-                i32 runa_bytes = (i32)(scan_ptr - runa_initium);
+                        s32  runa = utf8_decodere(&scan_ptr, scan_finis);
+                        i32  runa_bytes = (i32)(scan_ptr - runa_initium);
 
                 /* Praeterire \r */
                 si (runa == '\r')
@@ -424,18 +438,18 @@ _wrap_sententia(
                 /* \n -> spatium */
                 si (runa == '\n')
                 {
-                    source_len += runa_bytes;
-                    last_break = source_len;
-                    habet_break = VERUM;
+                    source_len   += runa_bytes;
+                    last_break   = source_len;
+                    habet_break  = VERUM;
                     visual_len++;
                     perge;
                 }
 
                 si (runa == ' ')
                 {
-                    source_len += runa_bytes;
-                    last_break = source_len;
-                    habet_break = VERUM;
+                    source_len   += runa_bytes;
+                    last_break   = source_len;
+                    habet_break  = VERUM;
                     visual_len++;
                     perge;
                 }
@@ -447,13 +461,13 @@ _wrap_sententia(
             /* Applicare word wrap */
             si (visual_len >= latitudo && habet_break)
             {
-                linea->finis = pos + last_break;
-                pos = pos + last_break;
+                linea->finis  = pos + last_break;
+                pos           = pos + last_break;
             }
             alioquin
             {
-                linea->finis = pos + source_len;
-                pos = pos + source_len;
+                linea->finis  = pos + source_len;
+                pos           = pos + source_len;
             }
         }
     }
@@ -461,19 +475,20 @@ _wrap_sententia(
     redde pagina;
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - CREATIO
  * ======================================================================== */
 
 SententiaPaginariumResultus*
-sententia_paginarium_creare(
-    chorda   textus,
-    i32      latitudo,
-    i32      altitudo,
+sententia_paginarium_creare (
+     chorda  textus,
+        i32  latitudo,
+        i32  altitudo,
     Piscina* piscina)
 {
     SententiaPaginariumResultus* resultus;
-    i32 pos;
+                            i32  pos;
 
     si (piscina == NIHIL)
     {
@@ -540,9 +555,9 @@ sententia_paginarium_creare(
         }
 
         /* Movere post paragraph break */
-        pos = paragraphus_fin;
-        newlines = _numerare_newlines(textus, pos);
-        pos += newlines;
+        pos       = paragraphus_fin;
+        newlines  = _numerare_newlines(textus, pos);
+        pos       += newlines;
     }
 
     resultus->numerus_sententiarum = (i32)xar_numerus(resultus->copiae);
@@ -550,12 +565,13 @@ sententia_paginarium_creare(
     redde resultus;
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - ACCESSUS
  * ======================================================================== */
 
 i32
-sententia_paginarium_numerus(
+sententia_paginarium_numerus (
     SententiaPaginariumResultus* resultus)
 {
     si (resultus == NIHIL)
@@ -567,9 +583,9 @@ sententia_paginarium_numerus(
 }
 
 SententiaCopia*
-sententia_paginarium_copia_obtinere(
+sententia_paginarium_copia_obtinere (
     SententiaPaginariumResultus* resultus,
-    i32                          index)
+                            i32  index)
 {
     si (resultus == NIHIL || resultus->copiae == NIHIL)
     {
@@ -585,12 +601,12 @@ sententia_paginarium_copia_obtinere(
 }
 
 SententiaPagina*
-sententia_paginarium_pagina_obtinere(
+sententia_paginarium_pagina_obtinere (
     SententiaPaginariumResultus* resultus,
-    i32                          index)
+                            i32  index)
 {
     SententiaCopia* copia;
-    i32 num_paginae;
+               i32  num_paginae;
 
     si (resultus == NIHIL)
     {
@@ -625,23 +641,24 @@ sententia_paginarium_pagina_obtinere(
     redde (SententiaPagina*)xar_obtinere(resultus->paginae, index);
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - REDDITIO
  * ======================================================================== */
 
 chorda
-sententia_paginarium_linea_reddere(
+sententia_paginarium_linea_reddere (
     SententiaPaginariumResultus* resultus,
-    PaginariumLinea*             linea)
+                PaginariumLinea* linea)
 {
-    chorda res;
-    i32 longitudo;
-    i8* buffer;
-    i32 i;
-    i32 buf_pos;
+    chorda  res;
+       i32  longitudo;
+        i8* buffer;
+       i32  i;
+       i32  buf_pos;
 
-    res.datum = NIHIL;
-    res.mensura = 0;
+    res.datum    = NIHIL;
+    res.mensura  = 0;
 
     si (resultus == NIHIL || linea == NIHIL)
     {
@@ -706,8 +723,8 @@ sententia_paginarium_linea_reddere(
         }
     }
 
-    res.datum = buffer;
-    res.mensura = buf_pos;
+    res.datum    = buffer;
+    res.mensura  = buf_pos;
 
     redde res;
 }

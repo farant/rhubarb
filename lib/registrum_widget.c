@@ -8,8 +8,8 @@
  * ================================================== */
 
 RegistrumWidget*
-registrum_widget_creare(
-    Piscina*             piscina,
+registrum_widget_creare (
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     RegistrumWidget* reg;
@@ -25,9 +25,9 @@ registrum_widget_creare(
         redde NIHIL;
     }
 
-    reg->piscina = piscina;
-    reg->intern = intern;
-    reg->numerus = ZEPHYRUM;
+    reg->piscina  = piscina;
+    reg->intern   = intern;
+    reg->numerus  = ZEPHYRUM;
 
     redde reg;
 }
@@ -38,10 +38,10 @@ registrum_widget_creare(
  * ================================================== */
 
 b32
-registrum_widget_registrare(
-    RegistrumWidget*     reg,
-    constans character*  titulus,
-    FunctioWidgetFactory factory)
+registrum_widget_registrare (
+         RegistrumWidget* reg,
+      constans character* titulus,
+    FunctioWidgetFactory  factory)
 {
     chorda* titulus_intern;
 
@@ -63,20 +63,20 @@ registrum_widget_registrare(
     }
 
     /* Addere introitus */
-    reg->introitus[reg->numerus].titulus = titulus_intern;
-    reg->introitus[reg->numerus].factory = factory;
-    reg->introitus[reg->numerus].init = NIHIL;
+    reg->introitus[reg->numerus].titulus  = titulus_intern;
+    reg->introitus[reg->numerus].factory  = factory;
+    reg->introitus[reg->numerus].init     = NIHIL;
     reg->numerus++;
 
     redde VERUM;
 }
 
 b32
-registrum_widget_registrare_cum_init(
-    RegistrumWidget*     reg,
-    constans character*  titulus,
-    FunctioWidgetFactory factory,
-    FunctioWidgetInit    init)
+registrum_widget_registrare_cum_init (
+         RegistrumWidget* reg,
+      constans character* titulus,
+    FunctioWidgetFactory  factory,
+       FunctioWidgetInit  init)
 {
     chorda* titulus_intern;
 
@@ -98,9 +98,9 @@ registrum_widget_registrare_cum_init(
     }
 
     /* Addere introitus */
-    reg->introitus[reg->numerus].titulus = titulus_intern;
-    reg->introitus[reg->numerus].factory = factory;
-    reg->introitus[reg->numerus].init = init;
+    reg->introitus[reg->numerus].titulus  = titulus_intern;
+    reg->introitus[reg->numerus].factory  = factory;
+    reg->introitus[reg->numerus].init     = init;
     reg->numerus++;
 
     redde VERUM;
@@ -112,8 +112,8 @@ registrum_widget_registrare_cum_init(
  * ================================================== */
 
 vacuum
-registrum_widget_initiare_omnes(
-    RegistrumWidget*    reg,
+registrum_widget_initiare_omnes (
+              RegistrumWidget* reg,
     structura ContextusWidget* ctx)
 {
     s32 i;
@@ -138,9 +138,9 @@ registrum_widget_initiare_omnes(
  * ================================================== */
 
 FunctioWidgetFactory
-registrum_widget_invenire(
+registrum_widget_invenire (
     RegistrumWidget* reg,
-    chorda*          titulus)
+             chorda* titulus)
 {
     s32 i;
 
@@ -152,8 +152,8 @@ registrum_widget_invenire(
     per (i = ZEPHYRUM; i < reg->numerus; i++)
     {
         /* Comparare per pointer (internatum) vel per contentum */
-        si (reg->introitus[i].titulus == titulus ||
-            chorda_aequalis(*reg->introitus[i].titulus, *titulus))
+        si (   reg->introitus[i].titulus == titulus
+            || chorda_aequalis(*reg->introitus[i].titulus, *titulus))
         {
             redde reg->introitus[i].factory;
         }
@@ -163,8 +163,8 @@ registrum_widget_invenire(
 }
 
 FunctioWidgetFactory
-registrum_widget_invenire_literis(
-    RegistrumWidget*    reg,
+registrum_widget_invenire_literis (
+       RegistrumWidget* reg,
     constans character* titulus)
 {
     s32 i;

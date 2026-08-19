@@ -30,20 +30,20 @@ nomen enumeratio {
 } CampusTipus;
 
 nomen structura {
-    CampusTipus tipus;
-    chorda      nomen_campi;
-    chorda      valor;              /* Pro textum */
-    chorda      nomen_fasciculi;    /* Pro fasciculum */
-    chorda      content_type;       /* Pro fasciculum */
+    CampusTipus  tipus;
+         chorda  nomen_campi;
+         chorda  valor;              /* Pro textum */
+         chorda  nomen_fasciculi;    /* Pro fasciculum */
+         chorda  content_type;       /* Pro fasciculum */
     constans i8* datum;             /* Pro fasciculum */
-    i32         mensura;            /* Pro fasciculum */
+            i32  mensura;            /* Pro fasciculum */
 } MultipartCampus;
 
 structura MultipartAedificator {
-    Piscina*        piscina;
-    chorda          boundary;
-    MultipartCampus campi[MULTIPART_MAX_CAMPI];
-    i32             numerus_campi;
+            Piscina* piscina;
+             chorda  boundary;
+    MultipartCampus  campi[MULTIPART_MAX_CAMPI];
+                i32  numerus_campi;
 };
 
 
@@ -53,14 +53,15 @@ structura MultipartAedificator {
 
 /* Generare boundary aleatorium */
 interior chorda
-generare_boundary(Piscina* piscina)
+generare_boundary (
+    Piscina* piscina)
 {
     hic_manens constans character* characteres =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    chorda resultatus;
-    i8*    buffer;
-    i32    i;
-    i32    seed;
+    chorda  resultatus;
+        i8* buffer;
+       i32  i;
+       i32  seed;
 
     buffer = piscina_allocare(piscina, BOUNDARY_LONGITUDO);
 
@@ -69,32 +70,37 @@ generare_boundary(Piscina* piscina)
 
     per (i = 0; i < BOUNDARY_LONGITUDO; i++)
     {
-        seed = seed * MDCCLXXVI + I;
-        buffer[i] = (i8)characteres[(seed >> XVI) % LXII];
+        seed       = seed * MDCCLXXVI + I;
+        buffer[i]  = (i8)characteres[(seed >> XVI) % LXII];
     }
 
-    resultatus.mensura = BOUNDARY_LONGITUDO;
-    resultatus.datum = buffer;
+    resultatus.mensura  = BOUNDARY_LONGITUDO;
+    resultatus.datum    = buffer;
     redde resultatus;
 }
 
 /* Addere chorda ad buffer */
 interior vacuum
-addere_chorda(ChordaAedificator* aed, chorda s)
+addere_chorda (
+    ChordaAedificator* aed,
+               chorda  s)
 {
     chorda_aedificator_appendere_chorda(aed, s);
 }
 
 /* Addere C string ad buffer */
 interior vacuum
-addere_cstr(ChordaAedificator* aed, constans character* s)
+addere_cstr (
+     ChordaAedificator* aed,
+    constans character* s)
 {
     chorda_aedificator_appendere_literis(aed, s);
 }
 
 /* Addere CRLF */
 interior vacuum
-addere_crlf(ChordaAedificator* aed)
+addere_crlf (
+    ChordaAedificator* aed)
 {
     chorda_aedificator_appendere_character(aed, '\r');
     chorda_aedificator_appendere_character(aed, '\n');
@@ -102,7 +108,10 @@ addere_crlf(ChordaAedificator* aed)
 
 /* Addere data binaria */
 interior vacuum
-addere_data(ChordaAedificator* aed, constans i8* datum, i32 mensura)
+addere_data (
+    ChordaAedificator* aed,
+          constans i8* datum,
+                  i32  mensura)
 {
     i32 i;
 
@@ -118,7 +127,8 @@ addere_data(ChordaAedificator* aed, constans i8* datum, i32 mensura)
  * ======================================================================== */
 
 MultipartAedificator*
-multipart_creare(Piscina* piscina)
+multipart_creare (
+    Piscina* piscina)
 {
     MultipartAedificator* aed;
 
@@ -141,10 +151,10 @@ multipart_creare(Piscina* piscina)
  * ======================================================================== */
 
 vacuum
-multipart_addere_textum(
+multipart_addere_textum (
     MultipartAedificator* aed,
-    constans character*   nomen_campi,
-    chorda                valor)
+      constans character* nomen_campi,
+                  chorda  valor)
 {
     MultipartCampus* campus;
 
@@ -171,13 +181,13 @@ multipart_addere_textum(
 }
 
 vacuum
-multipart_addere_fasciculum(
+multipart_addere_fasciculum (
     MultipartAedificator* aed,
-    constans character*   nomen_campi,
-    constans character*   nomen_fasciculi,
-    constans character*   content_type,
-    constans i8*          datum,
-    i32                   mensura)
+      constans character* nomen_campi,
+      constans character* nomen_fasciculi,
+      constans character* content_type,
+             constans i8* datum,
+                     i32  mensura)
 {
     MultipartCampus* campus;
 
@@ -208,8 +218,8 @@ multipart_addere_fasciculum(
                                                   aed->piscina);
     }
 
-    campus->datum = datum;
-    campus->mensura = mensura;
+    campus->datum    = datum;
+    campus->mensura  = mensura;
 }
 
 
@@ -218,15 +228,16 @@ multipart_addere_fasciculum(
  * ======================================================================== */
 
 chorda
-multipart_content_type(MultipartAedificator* aed)
+multipart_content_type (
+    MultipartAedificator* aed)
 {
     ChordaAedificator* builder;
-    chorda             resultatus;
+               chorda  resultatus;
 
     si (aed == NIHIL)
     {
-        resultatus.datum = NIHIL;
-        resultatus.mensura = 0;
+        resultatus.datum    = NIHIL;
+        resultatus.mensura  = 0;
         redde resultatus;
     }
 
@@ -239,17 +250,18 @@ multipart_content_type(MultipartAedificator* aed)
 }
 
 chorda
-multipart_corpus_finire(MultipartAedificator* aed)
+multipart_corpus_finire (
+    MultipartAedificator* aed)
 {
-    ChordaAedificator*  builder;
-    MultipartCampus*    campus;
-    i32                 i;
+    ChordaAedificator* builder;
+      MultipartCampus* campus;
+                  i32  i;
 
     si (aed == NIHIL)
     {
         chorda vacua;
-        vacua.mensura = 0;
-        vacua.datum = NIHIL;
+        vacua.mensura  = 0;
+        vacua.datum    = NIHIL;
         redde vacua;
     }
 

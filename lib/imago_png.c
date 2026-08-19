@@ -36,17 +36,20 @@ interior constans i8 SIGNUM_PNG[VIII] = {
     (i8)XIII,    (i8)X,    (i8)XXVI,    (i8)X
 };
 
+
 /* ============================================================
  * Auxilia interna
  * ============================================================ */
 
 interior vacuum
-_be32_scribere (i8* destinatio, i32 valor)
+_be32_scribere (
+     i8* destinatio,
+    i32  valor)
 {
-    destinatio[0]   = (i8)((valor >> XXIV) & CCLV);
-    destinatio[I]   = (i8)((valor >> XVI)  & CCLV);
-    destinatio[II]  = (i8)((valor >> VIII) & CCLV);
-    destinatio[III] = (i8)( valor          & CCLV);
+    destinatio[0]    = (i8)((valor >> XXIV) & CCLV);
+    destinatio[I]    = (i8)((valor >> XVI) & CCLV);
+    destinatio[II]   = (i8)((valor >> VIII) & CCLV);
+    destinatio[III]  = (i8)( valor & CCLV);
 }
 
 /*
@@ -56,15 +59,17 @@ _be32_scribere (i8* destinatio, i32 valor)
  * electus ut summae intra XXXII bita maneant.
  */
 interior i32
-_adler32 (constans i8* datum, i32 mensura)
+_adler32 (
+    constans i8* datum,
+            i32  mensura)
 {
     i32 a, b;
     i32 i;
     i32 numerata;
 
-    a = (i32)I;
-    b = ZEPHYRUM;
-    numerata = ZEPHYRUM;
+    a         = (i32)I;
+    b         = ZEPHYRUM;
+    numerata  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < mensura; i++)
     {
@@ -74,9 +79,9 @@ _adler32 (constans i8* datum, i32 mensura)
         numerata++;
         si (numerata == (i32)ADLER_MAXIMUM)
         {
-            a %= (i32)ADLER_BASIS;
-            b %= (i32)ADLER_BASIS;
-            numerata = ZEPHYRUM;
+            a         %= (i32)ADLER_BASIS;
+            b         %= (i32)ADLER_BASIS;
+            numerata  = ZEPHYRUM;
         }
     }
 
@@ -92,20 +97,21 @@ _adler32 (constans i8* datum, i32 mensura)
  * Redde: sedes proxima post partem scriptam.
  */
 interior i32
-_pars_scribere (i8*                 tela,
-                i32                 sedes,
+_pars_scribere (
+                                i8* tela,
+                               i32  sedes,
                 constans character* genus,
-                constans i8*        datum,
-                i32                 mensura)
+                       constans i8* datum,
+                               i32  mensura)
 {
     i32 crc;
 
     _be32_scribere(tela + sedes, mensura);
 
-    tela[sedes + IV]  = (i8)genus[0];
-    tela[sedes + V]   = (i8)genus[I];
-    tela[sedes + VI]  = (i8)genus[II];
-    tela[sedes + VII] = (i8)genus[III];
+    tela[sedes + IV]   = (i8)genus[0];
+    tela[sedes + V]    = (i8)genus[I];
+    tela[sedes + VI]   = (i8)genus[II];
+    tela[sedes + VII]  = (i8)genus[III];
 
     si (mensura > ZEPHYRUM && datum != NIHIL)
     {
@@ -119,32 +125,35 @@ _pars_scribere (i8*                 tela,
     redde sedes + (i32)XII + mensura;
 }
 
+
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
 
 PngFructus
-imago_png_codificare (constans Imago* imago, Piscina* piscina)
+imago_png_codificare (
+    constans Imago* imago,
+           Piscina* piscina)
 {
-    PngFructus     fructus;
-    FlaturaFructus compressa;
-    i32  versus_mensura;
-    i32  crudum_mensura;
-    i8*  crudum;
-    i32  y;
-    i32  adler;
-    i32  zlib_mensura;
-    i8*  zlib;
-    i32  png_mensura;
-    i8*  tela;
-    i32  sedes;
-    i8   ihdr[XIII];
+        PngFructus  fructus;
+    FlaturaFructus  compressa;
+               i32  versus_mensura;
+               i32  crudum_mensura;
+                i8* crudum;
+               i32  y;
+               i32  adler;
+               i32  zlib_mensura;
+                i8* zlib;
+               i32  png_mensura;
+                i8* tela;
+               i32  sedes;
+                i8  ihdr[XIII];
 
-    fructus.successus     = FALSUM;
-    fructus.datum         = NIHIL;
-    fructus.mensura       = ZEPHYRUM;
-    fructus.error.datum   = NIHIL;
-    fructus.error.mensura = ZEPHYRUM;
+    fructus.successus      = FALSUM;
+    fructus.datum          = NIHIL;
+    fructus.mensura        = ZEPHYRUM;
+    fructus.error.datum    = NIHIL;
+    fructus.error.mensura  = ZEPHYRUM;
 
     /* Sine piscina ne nuntium quidem erroris fingi potest */
     si (piscina == NIHIL)
@@ -179,8 +188,8 @@ imago_png_codificare (constans Imago* imago, Piscina* piscina)
     {
         i8* versus;
 
-        versus    = crudum + y * versus_mensura;
-        versus[0] = (i8)ZEPHYRUM;   /* filtrum NULLUM */
+        versus     = crudum + y * versus_mensura;
+        versus[0]  = (i8)ZEPHYRUM;   /* filtrum NULLUM */
 
         memcpy(versus + I,
                imago->pixela + y * imago->latitudo * (i32)IV,
@@ -214,11 +223,11 @@ imago_png_codificare (constans Imago* imago, Piscina* piscina)
 
     _be32_scribere(ihdr,      imago->latitudo);
     _be32_scribere(ihdr + IV, imago->altitudo);
-    ihdr[VIII] = (i8)VIII;       /* profunditas bitorum */
-    ihdr[IX]   = (i8)VI;         /* genus coloris: RGBA */
-    ihdr[X]    = (i8)ZEPHYRUM;   /* modus compressionis */
-    ihdr[XI]   = (i8)ZEPHYRUM;   /* modus filtrandi */
-    ihdr[XII]  = (i8)ZEPHYRUM;   /* sine intertextura */
+    ihdr[VIII]  = (i8)VIII;       /* profunditas bitorum */
+    ihdr[IX]    = (i8)VI;         /* genus coloris: RGBA */
+    ihdr[X]     = (i8)ZEPHYRUM;   /* modus compressionis */
+    ihdr[XI]    = (i8)ZEPHYRUM;   /* modus filtrandi */
+    ihdr[XII]   = (i8)ZEPHYRUM;   /* sine intertextura */
 
     png_mensura = (i32)VIII                      /* signum */
                 + (i32)XII + (i32)XIII           /* IHDR */
@@ -247,17 +256,18 @@ imago_png_codificare (constans Imago* imago, Piscina* piscina)
         redde fructus;
     }
 
-    fructus.successus = VERUM;
-    fructus.datum     = tela;
-    fructus.mensura   = png_mensura;
+    fructus.successus  = VERUM;
+    fructus.datum      = tela;
+    fructus.mensura    = png_mensura;
 
     redde fructus;
 }
 
 PngFructus
-imago_png_scribere (constans Imago*     imago,
+imago_png_scribere (
+                        constans Imago* imago,
                     constans character* via,
-                    Piscina*            piscina)
+                               Piscina* piscina)
 {
     PngFructus fructus;
     FILE*      plagula;
@@ -271,8 +281,8 @@ imago_png_scribere (constans Imago*     imago,
 
     si (via == NIHIL)
     {
-        fructus.successus = FALSUM;
-        fructus.error = chorda_ex_literis("Via abest", piscina);
+        fructus.successus  = FALSUM;
+        fructus.error      = chorda_ex_literis("Via abest", piscina);
         redde fructus;
     }
 

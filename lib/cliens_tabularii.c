@@ -18,19 +18,22 @@
 
 /* litterae -> chorda (sine copia; unio contra cast-qual) */
 interior chorda
-_ch (constans character* litterae)
+_ch (
+    constans character* litterae)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = litterae;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(litterae);
+    u.l        = litterae;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(litterae);
     redde c;
 }
 
 interior b32
-_chorda_est (chorda c, constans character* litterae)
+_chorda_est (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -39,12 +42,15 @@ _chorda_est (chorda c, constans character* litterae)
             || memcmp(c.datum, litterae, m) == ZEPHYRUM);
 }
 
+
 /* ==================================================
  * cliens daemonis (per-petitionem, ut fori)
  * ================================================== */
 
 interior TcpConnexio*
-_conectere_aut_gignere (ClientTabularii* cliens, Piscina* pn)
+_conectere_aut_gignere (
+    ClientTabularii* cliens,
+            Piscina* pn)
 {
     TcpResultus rc = tcp_connectere("127.0.0.1", cliens->portus,
         pn);
@@ -86,17 +92,20 @@ _conectere_aut_gignere (ClientTabularii* cliens, Piscina* pn)
 /* lineam mittere, responsum ad novam lineam legere (obstruens);
  * chorda vacua = defectus (culpa posita) */
 interior chorda
-_daemon_petere (ClientTabularii* cliens, Piscina* pn, chorda linea,
-    chorda* culpa)
+_daemon_petere (
+    ClientTabularii* cliens,
+            Piscina* pn,
+             chorda  linea,
+             chorda* culpa)
 {
-    chorda vacua;
-    character* buf;
-    s32 pos = ZEPHYRUM;
+         chorda  vacua;
+      character* buf;
+            s32  pos = ZEPHYRUM;
     TcpConnexio* conn;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
-    conn = _conectere_aut_gignere(cliens, pn);
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    conn           = _conectere_aut_gignere(cliens, pn);
     si (conn == NIHIL)
     {
         *culpa = _ch("tabulariumd absens -"
@@ -105,7 +114,7 @@ _daemon_petere (ClientTabularii* cliens, Piscina* pn, chorda linea,
     }
     buf = (character*)piscina_allocare(pn,
         (memoriae_index)RESPONSUM_CAPACITAS);
-    si (buf == NIHIL
+    si (   buf == NIHIL
         || !tcp_mittere_omnia(conn, (constans i8*)linea.datum,
                linea.mensura)
         || !tcp_mittere_omnia(conn, (constans i8*)"\n", I))
@@ -129,8 +138,8 @@ _daemon_petere (ClientTabularii* cliens, Piscina* pn, chorda linea,
         {
             si (buf[j] == '\n')
             {
-                pos = j;
-                completum = VERUM;
+                pos        = j;
+                completum  = VERUM;
                 frange;
             }
         }
@@ -157,15 +166,18 @@ _daemon_petere (ClientTabularii* cliens, Piscina* pn, chorda linea,
  * {"result":{"content":[{"type":"text","text":...}]}} aut
  * {"error":{"message":...}} -> *est_error */
 interior chorda
-_textus_ex_responso (chorda responsum, Piscina* pn, b32* est_error)
+_textus_ex_responso (
+     chorda  responsum,
+    Piscina* pn,
+        b32* est_error)
 {
-    JsonResultus r = json_legere(responsum, pn);
-    JsonValor* v;
-    chorda vacua;
+    JsonResultus  r = json_legere(responsum, pn);
+       JsonValor* v;
+          chorda  vacua;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
-    *est_error = FALSUM;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    *est_error     = FALSUM;
     si (!r.successus || !json_est_objectum(r.radix))
     {
         *est_error = VERUM;
@@ -180,14 +192,14 @@ _textus_ex_responso (chorda responsum, Piscina* pn, b32* est_error)
     v = json_objectum_capere(r.radix, "result");
     si (v != NIHIL)
     {
-        JsonValor* contentum = json_objectum_capere(v, "content");
-        JsonValor* isError = json_objectum_capere(v, "isError");
+        JsonValor* contentum  = json_objectum_capere(v, "content");
+        JsonValor* isError    = json_objectum_capere(v, "isError");
 
         si (isError != NIHIL && json_ad_boolean(isError))
         {
             *est_error = VERUM;
         }
-        si (contentum != NIHIL && json_est_tabulatum(contentum)
+        si (   contentum != NIHIL && json_est_tabulatum(contentum)
             && json_tabulatum_numerus(contentum) > ZEPHYRUM)
         {
             redde json_ad_chorda(json_objectum_capere(
@@ -199,11 +211,11 @@ _textus_ex_responso (chorda responsum, Piscina* pn, b32* est_error)
     redde vacua;
 }
 
-
-
 /* chorda -> litterae NUL-terminatae in piscina */
 constans character*
-cliens_tabularii_litterae (Piscina* pn, chorda c)
+cliens_tabularii_litterae (
+    Piscina* pn,
+     chorda  c)
 {
     character* l = (character*)piscina_allocare(pn,
         (memoriae_index)(c.mensura + I));
@@ -222,15 +234,17 @@ cliens_tabularii_litterae (Piscina* pn, chorda c)
 
 /* "res <ID> creata" -> chorda ID (vacua si absens) */
 chorda
-cliens_tabularii_res_id (chorda textus, Piscina* pn)
+cliens_tabularii_res_id (
+     chorda  textus,
+    Piscina* pn)
 {
     constans character* t = cliens_tabularii_litterae(pn, textus);
     constans character* p = strstr(t, "res ");
-    chorda id_c;
-    i32 n = ZEPHYRUM;
+                chorda  id_c;
+                   i32  n = ZEPHYRUM;
 
-    id_c.mensura = ZEPHYRUM;
-    id_c.datum = NIHIL;
+    id_c.mensura  = ZEPHYRUM;
+    id_c.datum    = NIHIL;
     si (p == NIHIL)
     {
         redde id_c;
@@ -250,8 +264,8 @@ cliens_tabularii_res_id (chorda textus, Piscina* pn)
         }
         u.l = p;
         memcpy(copia, u.m, (memoriae_index)n);
-        id_c.datum = copia;
-        id_c.mensura = n;
+        id_c.datum    = copia;
+        id_c.mensura  = n;
     }
     redde id_c;
 }
@@ -259,19 +273,22 @@ cliens_tabularii_res_id (chorda textus, Piscina* pn)
 /* instrumentum daemonis vocare: petitio aedificata, textus
  * responsi redditus (vacuus + culpa in defectu) */
 chorda
-cliens_tabularii_vocare (ClientTabularii* cliens, Piscina* pn,
-    constans character* nomen_instrumenti, JsonValor* arg_obj,
-    chorda* culpa)
+cliens_tabularii_vocare (
+       ClientTabularii* cliens,
+               Piscina* pn,
+    constans character* nomen_instrumenti,
+             JsonValor* arg_obj,
+                chorda* culpa)
 {
-    JsonValor* petitio = json_objectum_creare(pn);
-    JsonValor* params = json_objectum_creare(pn);
-    chorda responsum;
-    chorda textus;
-    b32 est_error = FALSUM;
-    chorda vacua;
+    JsonValor* petitio  = json_objectum_creare(pn);
+    JsonValor* params   = json_objectum_creare(pn);
+       chorda  responsum;
+       chorda  textus;
+          b32  est_error = FALSUM;
+       chorda  vacua;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
     cliens->petitio_index++;
     json_objectum_ponere(petitio, "jsonrpc",
         json_chorda_creare_literis(pn, "2.0"));
@@ -301,10 +318,13 @@ cliens_tabularii_vocare (ClientTabularii* cliens, Piscina* pn,
 
 /* res generis a daemone: tabulatum JSON parsatum (NIHIL = culpa) */
 JsonValor*
-cliens_tabularii_legere_cum (ClientTabularii* cliens, Piscina* pn,
-    JsonValor* arg_obj, chorda* culpa)
+cliens_tabularii_legere_cum (
+    ClientTabularii* cliens,
+            Piscina* pn,
+          JsonValor* arg_obj,
+             chorda* culpa)
 {
-    chorda textus;
+          chorda textus;
     JsonResultus r;
 
     si (arg_obj == NIHIL)
@@ -329,8 +349,12 @@ cliens_tabularii_legere_cum (ClientTabularii* cliens, Piscina* pn,
 
 /* Involucrum vetus: genus + quantum sola. */
 JsonValor*
-cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
-    chorda genus, i32 quantum, chorda* culpa)
+cliens_tabularii_legere (
+    ClientTabularii* cliens,
+            Piscina* pn,
+             chorda  genus,
+                i32  quantum,
+             chorda* culpa)
 {
     JsonValor* arg_obj = json_objectum_creare(pn);
 
@@ -340,6 +364,7 @@ cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
         json_integer_creare(pn, (s64)quantum));
     redde cliens_tabularii_legere_cum(cliens, pn, arg_obj, culpa);
 }
+
 
 /* ==================================================
  * tractatores internuntii
@@ -352,18 +377,21 @@ cliens_tabularii_legere (ClientTabularii* cliens, Piscina* pn,
  * instrumentum Franis). Post hoc genera/campi novi C numquam
  * reaperiunt. Fructus {bene, textus, res_id?}. */
 JsonValor*
-cliens_tabularii_transmittere (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+cliens_tabularii_transmittere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     ClientTabularii* cliens = (ClientTabularii*)datum;
-    chorda instrumentum;
-    JsonValor* arg_obj = NIHIL;
-    chorda textus;
-    chorda novum_id;
-    JsonValor* fructus;
+             chorda  instrumentum;
+          JsonValor* arg_obj = NIHIL;
+             chorda  textus;
+             chorda  novum_id;
+          JsonValor* fructus;
 
-    instrumentum.mensura = ZEPHYRUM;
-    instrumentum.datum = NIHIL;
+    instrumentum.mensura  = ZEPHYRUM;
+    instrumentum.datum    = NIHIL;
     si (argumenta != NIHIL)
     {
         instrumentum = json_ad_chorda(json_objectum_capere(
@@ -411,16 +439,18 @@ cliens_tabularii_transmittere (JsonValor* argumenta, Piscina* piscina,
  * ======================================================================== */
 
 vacuum
-cliens_tabularii_incipere (ClientTabularii* cliens, i32 portus)
+cliens_tabularii_incipere (
+    ClientTabularii* cliens,
+                i32  portus)
 {
     si (cliens == NIHIL)
     {
         redde;
     }
-    cliens->portus = portus;
-    cliens->petitio_index = (s64)I;
-    cliens->actor = "fran";
-    cliens->launcher = "./gesta/tabulariumd.sh";
-    cliens->praefixum = "[cliens]";
-    cliens->genitus = FALSUM;
+    cliens->portus         = portus;
+    cliens->petitio_index  = (s64)I;
+    cliens->actor          = "fran";
+    cliens->launcher       = "./gesta/tabulariumd.sh";
+    cliens->praefixum      = "[cliens]";
+    cliens->genitus        = FALSUM;
 }

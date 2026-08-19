@@ -6,6 +6,7 @@
 #include "registrum_commandi.h"
 #include <string.h>
 
+
 /* ==================================================
  * Constantae
  * ================================================== */
@@ -119,7 +120,7 @@ hic_manens constans MethodusEntitatis methodi_entitatis[] = {
  * NOTA: Hic facit view in stringam staticam - non modificare!
  */
 hic_manens chorda
-_chorda_ex_cstr(
+_chorda_ex_cstr (
     constans character* cstr)
 {
     chorda fructus;
@@ -127,8 +128,8 @@ _chorda_ex_cstr(
     union { constans character* c; i8* m; } u;
     u.c = cstr;
 
-    fructus.datum = u.m;
-    fructus.mensura = (i32)strlen(cstr);
+    fructus.datum    = u.m;
+    fructus.mensura  = (i32)strlen(cstr);
 
     redde fructus;
 }
@@ -139,7 +140,7 @@ _chorda_ex_cstr(
  * ================================================== */
 
 SputnikSyntaxis*
-sputnik_syntaxis_creare(
+sputnik_syntaxis_creare (
     Piscina* piscina)
 {
     SputnikSyntaxis* syntaxis;
@@ -166,31 +167,31 @@ sputnik_syntaxis_creare(
  * ================================================== */
 
 vacuum
-sputnik_syntaxis_reddere(
+sputnik_syntaxis_reddere (
     SputnikSyntaxis* syntaxis,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 px_x;
-    i32 px_y;
-    i32 linea;
-    i32 i;
-    Color color_background;
-    Color color_text;
-    Color color_text_dim;
-    Color color_accent;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    chorda textus;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  px_x;
+                    i32  px_y;
+                    i32  linea;
+                    i32  i;
+                  Color  color_background;
+                  Color  color_text;
+                  Color  color_text_dim;
+                  Color  color_accent;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                 chorda  textus;
 
     (vacuum)syntaxis;
     (vacuum)latitudo;
@@ -213,14 +214,14 @@ sputnik_syntaxis_reddere(
     char_alt = CHAR_ALTITUDO * scala;
 
     /* Colores */
-    color_background = thema_color(COLOR_BACKGROUND);
-    color_text = thema_color(COLOR_TEXT);
-    color_text_dim = thema_color(COLOR_TEXT_DIM);
-    color_accent = color_ex_palette(PALETTE_DARK_LEAF);
+    color_background  = thema_color(COLOR_BACKGROUND);
+    color_text        = thema_color(COLOR_TEXT);
+    color_text_dim    = thema_color(COLOR_TEXT_DIM);
+    color_accent      = color_ex_palette(PALETTE_DARK_LEAF);
 
-    pixelum_text = color_ad_pixelum(color_text);
-    pixelum_text_dim = color_ad_pixelum(color_text_dim);
-    pixelum_accent = color_ad_pixelum(color_accent);
+    pixelum_text      = color_ad_pixelum(color_text);
+    pixelum_text_dim  = color_ad_pixelum(color_text_dim);
+    pixelum_accent    = color_ad_pixelum(color_accent);
 
     /* Pingere fondum */
     px_x = x * char_lat;
@@ -346,8 +347,8 @@ sputnik_syntaxis_reddere(
  * ================================================== */
 
 b32
-sputnik_syntaxis_tractare_eventum(
-    SputnikSyntaxis*  syntaxis,
+sputnik_syntaxis_tractare_eventum (
+     SputnikSyntaxis* syntaxis,
     constans Eventus* eventus)
 {
     (vacuum)syntaxis;
@@ -364,7 +365,7 @@ sputnik_syntaxis_tractare_eventum(
 
 /* Command handler pro $sputnik-syntax */
 hic_manens b32
-_sputnik_command_handler(
+_sputnik_command_handler (
     ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
@@ -381,7 +382,7 @@ _sputnik_command_handler(
 }
 
 vacuum
-sputnik_syntaxis_init(
+sputnik_syntaxis_init (
     ContextusWidget* ctx)
 {
     si (!ctx || !ctx->reg_commandi)
@@ -397,10 +398,10 @@ sputnik_syntaxis_init(
 }
 
 vacuum
-sputnik_syntaxis_salvare_status(
-    SputnikSyntaxis*     syntaxis,
+sputnik_syntaxis_salvare_status (
+        SputnikSyntaxis* syntaxis,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
     /* SputnikSyntaxis est read-only - nihil status ad salvare */
     (vacuum)syntaxis;
@@ -409,10 +410,10 @@ sputnik_syntaxis_salvare_status(
 }
 
 vacuum
-sputnik_syntaxis_carcare_status(
-    SputnikSyntaxis*     syntaxis,
+sputnik_syntaxis_carcare_status (
+        SputnikSyntaxis* syntaxis,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
     /* SputnikSyntaxis est read-only - nihil status ad carcare */
     (vacuum)syntaxis;

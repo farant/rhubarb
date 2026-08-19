@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -20,27 +21,27 @@
 #define IMPERIUM_CULPA      II
 
 nomen structura {
-    i32    tessera;
-    i32    status;
+       i32 tessera;
+       i32 status;
     chorda valor;    /* JSON serializatum (perfectum) aut nuntius (culpa) */
 } Iussum;
 
 structura Imperium {
-    Piscina*           piscina;
-    ImperiumAestimator aestimator;
-    vacuum*            datum;
-    Xar*               iussa;
-    i32                tessera_proxima;
-    i32                id_fenestrae;
-    ImperiumImaginator imaginator;
-    vacuum*            imaginator_datum;
-    ImperiumClaviarius claviarius;
-    vacuum*            claviarius_datum;
-    ImperiumMusarius   musarius;
-    vacuum*            musarius_datum;
-    ImperiumMagnitudinator magnitudinator;
-    vacuum*                magnitudinator_datum;
-    ImperiumFructus    fructus;
+                   Piscina* piscina;
+        ImperiumAestimator  aestimator;
+                    vacuum* datum;
+                       Xar* iussa;
+                       i32  tessera_proxima;
+                       i32  id_fenestrae;
+        ImperiumImaginator  imaginator;
+                    vacuum* imaginator_datum;
+        ImperiumClaviarius  claviarius;
+                    vacuum* claviarius_datum;
+          ImperiumMusarius  musarius;
+                    vacuum* musarius_datum;
+    ImperiumMagnitudinator  magnitudinator;
+                    vacuum* magnitudinator_datum;
+           ImperiumFructus  fructus;
 };
 
 /* contextus imaginis: tractator solum (datum, successus) accipit,
@@ -48,9 +49,10 @@ structura Imperium {
  * petitionis - petitio ante imaginem moritur) */
 nomen structura {
     Imperium* imperium;
-    i32       tessera;
-    chorda    via;
+         i32  tessera;
+      chorda  via;
 } ImagoContextus;
+
 
 /* ========================================================================
  * INTERNA
@@ -59,7 +61,7 @@ nomen structura {
 interior Iussum*
 _iussum_invenire (
     Imperium* imperium,
-    i32       tessera)
+         i32  tessera)
 {
     i32 index;
 
@@ -84,13 +86,13 @@ _iussum_invenire (
  * non fracta. */
 interior chorda
 _involvere (
-    Imperium*           imperium,
-    i32                 tessera,
-    chorda              js,
-    Piscina*            piscina)
+    Imperium* imperium,
+         i32  tessera,
+      chorda  js,
+     Piscina* piscina)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina, 1024);
-    character          numerus[XXXII];
+            character  numerus[XXXII];
 
     sprintf(numerus, "%d", (integer)tessera);
     (vacuum)imperium;
@@ -131,10 +133,10 @@ _involvere (
 interior vacuum
 _imago_facta (
     vacuum* datum,
-    b32     successus)
+       b32  successus)
 {
     ImagoContextus* ctx = (ImagoContextus*)datum;
-    Iussum*         iussum;
+            Iussum* iussum;
 
     si (ctx == NIHIL || ctx->imperium == NIHIL)
     {
@@ -154,8 +156,8 @@ _imago_facta (
         chorda_aedificator_appendere_character(a, '"');
         chorda_aedificator_appendere_evasus_json(a, ctx->via);
         chorda_aedificator_appendere_character(a, '"');
-        iussum->valor  = chorda_aedificator_finire(a);
-        iussum->status = IMPERIUM_PERFECTUM;
+        iussum->valor   = chorda_aedificator_finire(a);
+        iussum->status  = IMPERIUM_PERFECTUM;
     }
     alioquin
     {
@@ -172,12 +174,13 @@ _imago_facta (
 interior vacuum
 _respondere_json (
     HospitiumColloquium* colloquium,
-    i32                  status,
-    chorda               corpus)
+                    i32  status,
+                 chorda  corpus)
 {
     colloquium_respondere(colloquium, status, "application/json",
         corpus);
 }
+
 
 /* ========================================================================
  * TRACTATORES HTTP
@@ -188,18 +191,18 @@ interior vacuum
 _iubere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*                 imperium;
+                       Imperium* imperium;
     constans HttpPetitioServeri* petitio;
-    Piscina*                  p;
-    Iussum                    novum;
-    Iussum*                   sedes;
-    chorda                    involutum;
-    ChordaAedificator*        a;
-    character                 numerus[XXXII];
+                        Piscina* p;
+                         Iussum  novum;
+                         Iussum* sedes;
+                         chorda  involutum;
+              ChordaAedificator* a;
+                      character  numerus[XXXII];
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    petitio  = colloquium_petitio(colloquium);
-    p        = colloquium_piscina(colloquium);
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    petitio   = colloquium_petitio(colloquium);
+    p         = colloquium_piscina(colloquium);
 
     si (imperium == NIHIL || petitio == NIHIL)
     {
@@ -214,11 +217,11 @@ _iubere (
         redde;
     }
 
-    novum.tessera = imperium->tessera_proxima;
-    novum.status  = IMPERIUM_PENDENS;
-    novum.valor.datum   = NIHIL;
-    novum.valor.mensura = ZEPHYRUM;
-    imperium->tessera_proxima = imperium->tessera_proxima + I;
+    novum.tessera              = imperium->tessera_proxima;
+    novum.status               = IMPERIUM_PENDENS;
+    novum.valor.datum          = NIHIL;
+    novum.valor.mensura        = ZEPHYRUM;
+    imperium->tessera_proxima  = imperium->tessera_proxima + I;
 
     sedes = (Iussum*)xar_addere(imperium->iussa);
     si (sedes == NIHIL)
@@ -258,14 +261,14 @@ interior vacuum
 _clavem_immittere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*                    imperium;
+                       Imperium* imperium;
     constans HttpPetitioServeri* petitio;
-    Piscina*                     p;
-    constans character*          nomen_clavis;
+                        Piscina* p;
+             constans character* nomen_clavis;
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    petitio  = colloquium_petitio(colloquium);
-    p        = colloquium_piscina(colloquium);
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    petitio   = colloquium_petitio(colloquium);
+    p         = colloquium_piscina(colloquium);
 
     si (imperium == NIHIL || petitio == NIHIL)
     {
@@ -290,8 +293,8 @@ _clavem_immittere (
         redde;
     }
 
-    nomen_clavis = chorda_ut_cstr(petitio->corpus, p);
-    imperium->fructus.iussa_missa = imperium->fructus.iussa_missa + I;
+    nomen_clavis                   = chorda_ut_cstr(petitio->corpus, p);
+    imperium->fructus.iussa_missa  = imperium->fructus.iussa_missa + I;
 
     si (!imperium->claviarius(imperium->claviarius_datum, nomen_clavis))
     {
@@ -308,6 +311,7 @@ _clavem_immittere (
     _respondere_json(colloquium, CC,
         chorda_ex_literis("{\"ok\":true}", p));
 }
+
 
 /* POST /imperium/mus - corpus = "<genus> <x> <y>" ("motus 180 260")
  *
@@ -331,6 +335,7 @@ _clavem_immittere (
  *
  * Ergo: hoc opus manet, non testimonium. Qui redit primum causam
  * inveniat, deinde huic credat. */
+
 interior vacuum
 _murem_immittere (
     HospitiumColloquium* colloquium);
@@ -339,17 +344,17 @@ interior vacuum
 _murem_immittere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*                    imperium;
+                       Imperium* imperium;
     constans HttpPetitioServeri* petitio;
-    Piscina*                     p;
-    constans character*          corpus;
-    character                    genus[XXXII];
-    integer                      x;
-    integer                      y;
+                        Piscina* p;
+             constans character* corpus;
+                      character  genus[XXXII];
+                        integer  x;
+                        integer  y;
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    petitio  = colloquium_petitio(colloquium);
-    p        = colloquium_piscina(colloquium);
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    petitio   = colloquium_petitio(colloquium);
+    p         = colloquium_piscina(colloquium);
 
     si (imperium == NIHIL || petitio == NIHIL)
     {
@@ -372,7 +377,7 @@ _murem_immittere (
     }
 
     corpus = chorda_ut_cstr(petitio->corpus, p);
-    si (corpus == NIHIL
+    si (   corpus                                      == NIHIL
         || sscanf(corpus, "%31s %d %d", genus, &x, &y) != (integer)III)
     {
         _respondere_json(colloquium, CD,
@@ -415,20 +420,20 @@ interior vacuum
 _magnitudinem_ponere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*                    imperium;
+                       Imperium* imperium;
     constans HttpPetitioServeri* petitio;
-    Piscina*                     p;
-    constans character*          corpus;
-    integer                      latitudo;
-    integer                      altitudo;
-    i32                          facta_lat;
-    i32                          facta_alt;
-    ChordaAedificator*           a;
-    character                    numerus[XXXII];
+                        Piscina* p;
+             constans character* corpus;
+                        integer  latitudo;
+                        integer  altitudo;
+                            i32  facta_lat;
+                            i32  facta_alt;
+              ChordaAedificator* a;
+                      character  numerus[XXXII];
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    petitio  = colloquium_petitio(colloquium);
-    p        = colloquium_piscina(colloquium);
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    petitio   = colloquium_petitio(colloquium);
+    p         = colloquium_piscina(colloquium);
 
     si (imperium == NIHIL || petitio == NIHIL)
     {
@@ -451,7 +456,7 @@ _magnitudinem_ponere (
     }
 
     corpus = chorda_ut_cstr(petitio->corpus, p);
-    si (corpus == NIHIL
+    si (   corpus                                        == NIHIL
         || sscanf(corpus, "%d %d", &latitudo, &altitudo) != (integer)II)
     {
         _respondere_json(colloquium, CD,
@@ -490,18 +495,18 @@ interior vacuum
 _imaginem_petere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*                    imperium;
+                       Imperium* imperium;
     constans HttpPetitioServeri* petitio;
-    Piscina*                     p;
-    Iussum*                      sedes;
-    ImagoContextus*              ctx;
-    ChordaAedificator*           a;
-    character                    numerus[XXXII];
-    i32                          tessera;
+                        Piscina* p;
+                         Iussum* sedes;
+                 ImagoContextus* ctx;
+              ChordaAedificator* a;
+                      character  numerus[XXXII];
+                            i32  tessera;
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    petitio  = colloquium_petitio(colloquium);
-    p        = colloquium_piscina(colloquium);
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    petitio   = colloquium_petitio(colloquium);
+    p         = colloquium_piscina(colloquium);
 
     si (imperium == NIHIL || petitio == NIHIL)
     {
@@ -520,8 +525,8 @@ _imaginem_petere (
         redde;
     }
 
-    tessera = imperium->tessera_proxima;
-    imperium->tessera_proxima = imperium->tessera_proxima + I;
+    tessera                    = imperium->tessera_proxima;
+    imperium->tessera_proxima  = imperium->tessera_proxima + I;
 
     sedes = (Iussum*)xar_addere(imperium->iussa);
     si (sedes == NIHIL)
@@ -530,10 +535,10 @@ _imaginem_petere (
             chorda_ex_literis("{\"culpa\":\"tabula plena\"}", p));
         redde;
     }
-    sedes->tessera      = tessera;
-    sedes->status       = IMPERIUM_PENDENS;
-    sedes->valor.datum  = NIHIL;
-    sedes->valor.mensura = ZEPHYRUM;
+    sedes->tessera        = tessera;
+    sedes->status         = IMPERIUM_PENDENS;
+    sedes->valor.datum    = NIHIL;
+    sedes->valor.mensura  = ZEPHYRUM;
 
     ctx = (ImagoContextus*)piscina_allocare(imperium->piscina,
         (i32)magnitudo(ImagoContextus));
@@ -543,8 +548,8 @@ _imaginem_petere (
             chorda_ex_literis("{\"culpa\":\"piscina\"}", p));
         redde;
     }
-    ctx->imperium = imperium;
-    ctx->tessera  = tessera;
+    ctx->imperium  = imperium;
+    ctx->tessera   = tessera;
 
     si (petitio->corpus.mensura > ZEPHYRUM)
     {
@@ -579,17 +584,17 @@ interior vacuum
 _quaerere (
     HospitiumColloquium* colloquium)
 {
-    Imperium*          imperium;
-    Piscina*           p;
-    chorda             param;
-    Iussum*            iussum;
+             Imperium* imperium;
+              Piscina* p;
+               chorda  param;
+               Iussum* iussum;
     ChordaAedificator* a;
-    character          numerus[XXXII];
-    s32                tessera;
+            character  numerus[XXXII];
+                  s32  tessera;
 
-    imperium = (Imperium*)colloquium_datum(colloquium);
-    p        = colloquium_piscina(colloquium);
-    param    = colloquium_param(colloquium, "tessera");
+    imperium  = (Imperium*)colloquium_datum(colloquium);
+    p         = colloquium_piscina(colloquium);
+    param     = colloquium_param(colloquium, "tessera");
 
     si (imperium == NIHIL)
     {
@@ -649,6 +654,7 @@ _quaerere (
     _respondere_json(colloquium, CC, chorda_aedificator_finire(a));
 }
 
+
 /* ========================================================================
  * TRACTATOR PONTIS - 'imperium.responsum'
  * ======================================================================== */
@@ -656,15 +662,15 @@ _quaerere (
 interior JsonValor*
 _responsum (
     JsonValor* argumenta,
-    Piscina*   piscina,
-    vacuum*    datum,
-    chorda*    culpa_exitus)
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa_exitus)
 {
-    Imperium*  imperium = (Imperium*)datum;
+     Imperium* imperium = (Imperium*)datum;
     JsonValor* j_tessera;
     JsonValor* j_valor;
     JsonValor* j_culpa;
-    Iussum*    iussum;
+       Iussum* iussum;
 
     (vacuum)culpa_exitus;
 
@@ -706,15 +712,16 @@ _responsum (
     redde json_objectum_creare(piscina);
 }
 
+
 /* ========================================================================
  * API PUBLICA
  * ======================================================================== */
 
 Imperium*
 imperium_creare (
-    Piscina*           piscina,
-    ImperiumAestimator aestimator,
-    vacuum*            datum)
+               Piscina* piscina,
+    ImperiumAestimator  aestimator,
+                vacuum* datum)
 {
     Imperium* imperium;
 
@@ -728,25 +735,25 @@ imperium_creare (
     {
         redde NIHIL;
     }
-    imperium->piscina         = piscina;
-    imperium->aestimator      = aestimator;
-    imperium->datum           = datum;
+    imperium->piscina     = piscina;
+    imperium->aestimator  = aestimator;
+    imperium->datum       = datum;
     imperium->iussa           = xar_creare(piscina,
         (i32)magnitudo(Iussum));
-    imperium->tessera_proxima = I;
-    imperium->id_fenestrae    = ZEPHYRUM;
-    imperium->imaginator       = NIHIL;
-    imperium->imaginator_datum = NIHIL;
-    imperium->claviarius       = NIHIL;
-    imperium->claviarius_datum = NIHIL;
-    imperium->musarius         = NIHIL;
-    imperium->musarius_datum   = NIHIL;
-    imperium->magnitudinator       = NIHIL;
-    imperium->magnitudinator_datum = NIHIL;
-    imperium->fructus.iussa_missa      = ZEPHYRUM;
-    imperium->fructus.responsa_recepta = ZEPHYRUM;
-    imperium->fructus.culpae           = ZEPHYRUM;
-    imperium->fructus.pendentia        = ZEPHYRUM;
+    imperium->tessera_proxima           = I;
+    imperium->id_fenestrae              = ZEPHYRUM;
+    imperium->imaginator                = NIHIL;
+    imperium->imaginator_datum          = NIHIL;
+    imperium->claviarius                = NIHIL;
+    imperium->claviarius_datum          = NIHIL;
+    imperium->musarius                  = NIHIL;
+    imperium->musarius_datum            = NIHIL;
+    imperium->magnitudinator            = NIHIL;
+    imperium->magnitudinator_datum      = NIHIL;
+    imperium->fructus.iussa_missa       = ZEPHYRUM;
+    imperium->fructus.responsa_recepta  = ZEPHYRUM;
+    imperium->fructus.culpae            = ZEPHYRUM;
+    imperium->fructus.pendentia         = ZEPHYRUM;
 
     si (imperium->iussa == NIHIL)
     {
@@ -757,11 +764,11 @@ imperium_creare (
 
 b32
 imperium_praebere (
-    Imperium*     imperium,
-    Hospitium*    hospitium,
+        Imperium* imperium,
+       Hospitium* hospitium,
     Internuntius* internuntius)
 {
-    si (imperium == NIHIL || hospitium == NIHIL
+    si (   imperium     == NIHIL || hospitium == NIHIL
         || internuntius == NIHIL)
     {
         redde FALSUM;
@@ -809,7 +816,7 @@ imperium_praebere (
 vacuum
 imperium_fenestram_ponere (
     Imperium* imperium,
-    i32       id_fenestrae)
+         i32  id_fenestrae)
 {
     si (imperium != NIHIL)
     {
@@ -819,53 +826,53 @@ imperium_fenestram_ponere (
 
 vacuum
 imperium_imaginatorem_ponere (
-    Imperium*          imperium,
-    ImperiumImaginator imaginator,
-    vacuum*            datum)
+              Imperium* imperium,
+    ImperiumImaginator  imaginator,
+                vacuum* datum)
 {
     si (imperium != NIHIL)
     {
-        imperium->imaginator       = imaginator;
-        imperium->imaginator_datum = datum;
+        imperium->imaginator        = imaginator;
+        imperium->imaginator_datum  = datum;
     }
 }
 
 vacuum
 imperium_claviarium_ponere (
-    Imperium*          imperium,
-    ImperiumClaviarius claviarius,
-    vacuum*            datum)
+              Imperium* imperium,
+    ImperiumClaviarius  claviarius,
+                vacuum* datum)
 {
     si (imperium != NIHIL)
     {
-        imperium->claviarius       = claviarius;
-        imperium->claviarius_datum = datum;
+        imperium->claviarius        = claviarius;
+        imperium->claviarius_datum  = datum;
     }
 }
 
 vacuum
 imperium_musarium_ponere (
-    Imperium*        imperium,
-    ImperiumMusarius musarius,
-    vacuum*          datum)
+            Imperium* imperium,
+    ImperiumMusarius  musarius,
+              vacuum* datum)
 {
     si (imperium != NIHIL)
     {
-        imperium->musarius       = musarius;
-        imperium->musarius_datum = datum;
+        imperium->musarius        = musarius;
+        imperium->musarius_datum  = datum;
     }
 }
 
 vacuum
 imperium_magnitudinatorem_ponere (
-    Imperium*              imperium,
-    ImperiumMagnitudinator magnitudinator,
-    vacuum*                datum)
+                  Imperium* imperium,
+    ImperiumMagnitudinator  magnitudinator,
+                    vacuum* datum)
 {
     si (imperium != NIHIL)
     {
-        imperium->magnitudinator       = magnitudinator;
-        imperium->magnitudinator_datum = datum;
+        imperium->magnitudinator        = magnitudinator;
+        imperium->magnitudinator_datum  = datum;
     }
 }
 
@@ -875,10 +882,10 @@ imperium_fructus (
 {
     ImperiumFructus vacua;
 
-    vacua.iussa_missa      = ZEPHYRUM;
-    vacua.responsa_recepta = ZEPHYRUM;
-    vacua.culpae           = ZEPHYRUM;
-    vacua.pendentia        = ZEPHYRUM;
+    vacua.iussa_missa       = ZEPHYRUM;
+    vacua.responsa_recepta  = ZEPHYRUM;
+    vacua.culpae            = ZEPHYRUM;
+    vacua.pendentia         = ZEPHYRUM;
 
     si (imperium == NIHIL)
     {
@@ -892,28 +899,32 @@ imperium_fructus (
     }
 }
 
+
 /* ============================================================
  * VIVARIUM - ligatio parata (vide imperium.h)
  * ============================================================ */
 
 interior Vivarium
-_vivarium_fractum (constans character* causa, Piscina* piscina)
+_vivarium_fractum (
+    constans character* causa,
+               Piscina* piscina)
 {
     Vivarium v;
 
-    v.successus    = FALSUM;
-    v.hospitium    = NIHIL;
-    v.internuntius = NIHIL;
-    v.imperium     = NIHIL;
-    v.portus       = ZEPHYRUM;
-    v.propria      = FALSUM;
-    v.causa        = chorda_ex_literis(causa, piscina);
+    v.successus     = FALSUM;
+    v.hospitium     = NIHIL;
+    v.internuntius  = NIHIL;
+    v.imperium      = NIHIL;
+    v.portus        = ZEPHYRUM;
+    v.propria       = FALSUM;
+    v.causa         = chorda_ex_literis(causa, piscina);
 
     redde v;
 }
 
 Vivarium
-imperium_vivarium (Piscina* piscina,
+imperium_vivarium (
+                                         Piscina* piscina,
                    constans VivariumConfiguratio* figura)
 {
     Vivarium v;
@@ -930,14 +941,14 @@ imperium_vivarium (Piscina* piscina,
             piscina);
     }
 
-    v.successus    = FALSUM;
-    v.hospitium    = figura->hospitium;
-    v.internuntius = figura->internuntius;
-    v.imperium     = NIHIL;
-    v.portus       = ZEPHYRUM;
-    v.propria      = FALSUM;
-    v.causa.datum  = NIHIL;
-    v.causa.mensura = ZEPHYRUM;
+    v.successus      = FALSUM;
+    v.hospitium      = figura->hospitium;
+    v.internuntius   = figura->internuntius;
+    v.imperium       = NIHIL;
+    v.portus         = ZEPHYRUM;
+    v.propria        = FALSUM;
+    v.causa.datum    = NIHIL;
+    v.causa.mensura  = ZEPHYRUM;
 
     /* Hospitium: datum adhibere, aliter creare */
     si (v.hospitium == NIHIL)
@@ -1024,14 +1035,15 @@ imperium_vivarium (Piscina* piscina,
                                  figura->musarius_datum);
     }
 
-    v.portus    = hospitium_portus(v.hospitium);
-    v.successus = VERUM;
+    v.portus     = hospitium_portus(v.hospitium);
+    v.successus  = VERUM;
 
     redde v;
 }
 
 vacuum
-vivarium_gressus (constans Vivarium* vivarium)
+vivarium_gressus (
+    constans Vivarium* vivarium)
 {
     si (vivarium == NIHIL || vivarium->hospitium == NIHIL)
     {

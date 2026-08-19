@@ -19,22 +19,23 @@
 #include <time.h>
 #include <string.h>
 
+
 /* ==================================================
  * Built-in Commands
  * ================================================== */
 
 /* $date command - insert/update current date in output region */
 interior b32
-_concha_command_date(
+_concha_command_date (
     ContextusCommandi* ctx)
 {
     character expectatum[XXXII]; /* " MM/DD/YYYY\0" = 12; laxus pro
                                   * annis post 9999 et tm insanis
                                   * (gcc 13 format-overflow - porta
                                   * musl 2026-08-03) */
-    character contentum[XIII];
-    i32 longitudo;
-    time_t tempus_nunc;
+       character contentum[XIII];
+             i32 longitudo;
+          time_t tempus_nunc;
     structura tm* tempus_info;
 
     /* Generare datum expectatum */
@@ -76,21 +77,22 @@ _concha_command_date(
  * ================================================== */
 
 Concha*
-concha_creare(ConchaConfiguratio* config)
+concha_creare (
+    ConchaConfiguratio* config)
 {
-    Concha*              concha;
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-    Persistentia*        persistentia;
-    EntitasRepositorium* repositorium;
-    RegistrumCommandi*   reg_commandi;
-    RegistrumWidget*     reg_widget;
-    ContextusWidget*     ctx;
-    Schirmata*           schirmata;
-    LibroPaginarum*      libro;
-    Fenestra*            fenestra;
-    TabulaPixelorum*     tabula;
-    FenestraConfiguratio fenestra_config;
+                  Concha* concha;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+            Persistentia* persistentia;
+     EntitasRepositorium* repositorium;
+       RegistrumCommandi* reg_commandi;
+         RegistrumWidget* reg_widget;
+         ContextusWidget* ctx;
+               Schirmata* schirmata;
+          LibroPaginarum* libro;
+                Fenestra* fenestra;
+         TabulaPixelorum* tabula;
+    FenestraConfiguratio  fenestra_config;
 
     si (!config)
     {
@@ -119,28 +121,28 @@ concha_creare(ConchaConfiguratio* config)
         redde NIHIL;
     }
 
-    concha->piscina = piscina;
-    concha->latitudo = config->latitudo;
-    concha->altitudo = config->altitudo;
-    concha->via_persistentia = config->via_persistentia;
-    concha->currens = FALSUM;
+    concha->piscina           = piscina;
+    concha->latitudo          = config->latitudo;
+    concha->altitudo          = config->altitudo;
+    concha->via_persistentia  = config->via_persistentia;
+    concha->currens           = FALSUM;
 
     /* Obtinere internamentum */
-    intern = internamentum_globale();
-    concha->intern = intern;
+    intern          = internamentum_globale();
+    concha->intern  = intern;
 
     /* Creare persistentia */
     si (config->via_persistentia)
     {
         /* Creare directorium si necesse */
         {
-            character directorium[CXXVIII];
+                     character  directorium[CXXVIII];
             constans character* via;
-            i32 i;
-            i32 ultima_sep;
+                           i32  i;
+                           i32  ultima_sep;
 
-            via = config->via_persistentia;
-            ultima_sep = (i32)-1;
+            via         = config->via_persistentia;
+            ultima_sep  = (i32)-1;
 
             /* Invenire ultimum separator */
             per (i = ZEPHYRUM; via[i] != '\0' && i < CXXVII; i++)
@@ -293,10 +295,10 @@ concha_creare(ConchaConfiguratio* config)
  * ================================================== */
 
 b32
-concha_registrare_widget(
-    Concha*              concha,
-    constans character*  titulus,
-    FunctioWidgetFactory factory)
+concha_registrare_widget (
+                  Concha* concha,
+      constans character* titulus,
+    FunctioWidgetFactory  factory)
 {
     si (!concha || !concha->reg_widget)
     {
@@ -307,11 +309,11 @@ concha_registrare_widget(
 }
 
 b32
-concha_registrare_commandi(
-    Concha*             concha,
+concha_registrare_commandi (
+                Concha* concha,
     constans character* nomen_cmd,
-    FunctioCommand      functio,
-    vacuum*             datum)
+        FunctioCommand  functio,
+                vacuum* datum)
 {
     si (!concha || !concha->reg_commandi)
     {
@@ -328,9 +330,9 @@ concha_registrare_commandi(
  * ================================================== */
 
 b32
-concha_ponere_layout(
-    Concha*             concha,
-    i32                 schirma_index,
+concha_ponere_layout (
+                Concha* concha,
+                   i32  schirma_index,
     constans character* stml)
 {
     si (!concha || !concha->schirmata || !stml)
@@ -352,7 +354,8 @@ concha_ponere_layout(
  * ================================================== */
 
 s32
-concha_currere(Concha* concha)
+concha_currere (
+    Concha* concha)
 {
     Eventus eventus;
 
@@ -379,9 +382,9 @@ concha_currere(Concha* concha)
         dum (fenestra_obtinere_eventus(concha->fenestra, &eventus))
         {
             /* Sequi positionem muris pro cursore */
-            si (eventus.genus == EVENTUS_MUS_MOTUS ||
-                eventus.genus == EVENTUS_MUS_DEPRESSUS ||
-                eventus.genus == EVENTUS_MUS_LIBERATUS)
+            si (   eventus.genus == EVENTUS_MUS_MOTUS
+                || eventus.genus == EVENTUS_MUS_DEPRESSUS
+                || eventus.genus == EVENTUS_MUS_LIBERATUS)
             {
                 concha->mus_x = eventus.datum.mus.x;
                 concha->mus_y = eventus.datum.mus.y;
@@ -445,7 +448,8 @@ concha_currere(Concha* concha)
  * ================================================== */
 
 LibroPaginarum*
-concha_libro(Concha* concha)
+concha_libro (
+    Concha* concha)
 {
     si (!concha || !concha->schirmata)
     {
@@ -456,7 +460,8 @@ concha_libro(Concha* concha)
 }
 
 Schirmata*
-concha_schirmata(Concha* concha)
+concha_schirmata (
+    Concha* concha)
 {
     si (!concha)
     {
@@ -467,7 +472,8 @@ concha_schirmata(Concha* concha)
 }
 
 EntitasRepositorium*
-concha_repositorium(Concha* concha)
+concha_repositorium (
+    Concha* concha)
 {
     si (!concha)
     {
@@ -478,7 +484,8 @@ concha_repositorium(Concha* concha)
 }
 
 Piscina*
-concha_piscina(Concha* concha)
+concha_piscina (
+    Concha* concha)
 {
     si (!concha)
     {
@@ -489,7 +496,8 @@ concha_piscina(Concha* concha)
 }
 
 InternamentumChorda*
-concha_intern(Concha* concha)
+concha_intern (
+    Concha* concha)
 {
     si (!concha)
     {

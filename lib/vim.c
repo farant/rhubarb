@@ -2,6 +2,7 @@
 #include "piscina.h"
 #include <string.h>
 
+
 /* ==================================================
  * Constantae Internae
  * ================================================== */
@@ -42,41 +43,41 @@ _clamp_cursor(
  * ================================================== */
 
 VimStatus
-vim_initiare(
+vim_initiare (
     TabulaCharacterum* tabula)
 {
     VimStatus status;
 
-    status.tabula = tabula;
-    status.cursor_linea = ZEPHYRUM;
-    status.cursor_columna = ZEPHYRUM;
-    status.modo = MODO_VIM_NORMALIS;
-    status.selectio_initium_linea = -I;
-    status.selectio_initium_columna = -I;
-    status.visualis_tipo = MODO_VIM_VISUALIS_LINEA;
-    status.clavis_praecedens = '\0';
-    status.esperans_fd = FALSUM;
-    status.tempus_f = 0.0;
-    status.debet_claudere = FALSUM;
-    status.mutatus = FALSUM;
-    status.sine_auto_indent = FALSUM;
-    status.clipboard = NIHIL;
-    status.undo_acervus = NIHIL;
+    status.tabula                    = tabula;
+    status.cursor_linea              = ZEPHYRUM;
+    status.cursor_columna            = ZEPHYRUM;
+    status.modo                      = MODO_VIM_NORMALIS;
+    status.selectio_initium_linea    = -I;
+    status.selectio_initium_columna  = -I;
+    status.visualis_tipo             = MODO_VIM_VISUALIS_LINEA;
+    status.clavis_praecedens         = '\0';
+    status.esperans_fd               = FALSUM;
+    status.tempus_f                  = 0.0;
+    status.debet_claudere            = FALSUM;
+    status.mutatus                   = FALSUM;
+    status.sine_auto_indent          = FALSUM;
+    status.clipboard                 = NIHIL;
+    status.undo_acervus              = NIHIL;
 
     redde status;
 }
 
 VimStatus
-vim_initiare_cum_contextu(
+vim_initiare_cum_contextu (
     TabulaCharacterum* tabula,
-    VimClipboard* clipboard,
-    VimUndoAcervus* undo_acervus)
+         VimClipboard* clipboard,
+       VimUndoAcervus* undo_acervus)
 {
     VimStatus status;
 
-    status = vim_initiare(tabula);
-    status.clipboard = clipboard;
-    status.undo_acervus = undo_acervus;
+    status               = vim_initiare(tabula);
+    status.clipboard     = clipboard;
+    status.undo_acervus  = undo_acervus;
 
     redde status;
 }
@@ -88,18 +89,18 @@ vim_initiare_cum_contextu(
 
 /* Verificare si character est pars verbi (alphanumericus vel underscore) */
 hic_manens b32
-_est_character_verbi(
+_est_character_verbi (
     character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_');
 }
 
 /* Invenire ultimam lineam cum contentu in tabula */
 hic_manens i32
-_ultima_linea_cum_contentu(
+_ultima_linea_cum_contentu (
     TabulaCharacterum* tabula)
 {
     s32 linea;
@@ -117,9 +118,9 @@ _ultima_linea_cum_contentu(
 
 /* Invenire finem contenti in linea currenti (pro cursor clamping) */
 hic_manens s32
-_finis_lineae(
+_finis_lineae (
     TabulaCharacterum* tabula,
-    i32 linea)
+                  i32  linea)
 {
     s32 finis;
 
@@ -141,11 +142,11 @@ _finis_lineae(
  * recuperat; agri s32-ificare = sectio profundior (177 sedes),
  * nominata in worklog. */
 hic_manens VimStatus
-_clamp_cursor(
+_clamp_cursor (
     VimStatus status)
 {
-    s32 linea = (s32)status.cursor_linea;
-    s32 columna = (s32)status.cursor_columna;
+    s32 linea    = (s32)status.cursor_linea;
+    s32 columna  = (s32)status.cursor_columna;
 
     /* Clamp linea */
     si (linea < ZEPHYRUM)
@@ -167,8 +168,8 @@ _clamp_cursor(
         columna = (s32)status.tabula->latitudo - I;
     }
 
-    status.cursor_linea = (i32)linea;
-    status.cursor_columna = (i32)columna;
+    status.cursor_linea    = (i32)linea;
+    status.cursor_columna  = (i32)columna;
     redde status;
 }
 
@@ -178,7 +179,7 @@ _clamp_cursor(
  * ================================================== */
 
 hic_manens VimStatus
-_movere_sinistram(
+_movere_sinistram (
     VimStatus status)
 {
     si (status.cursor_columna > ZEPHYRUM)
@@ -199,7 +200,7 @@ _movere_sinistram(
 }
 
 hic_manens VimStatus
-_movere_dextram(
+_movere_dextram (
     VimStatus status)
 {
     /* 2D grid - libera navigatio */
@@ -221,7 +222,7 @@ _movere_dextram(
 }
 
 hic_manens VimStatus
-_movere_sursum(
+_movere_sursum (
     VimStatus status)
 {
     si (status.cursor_linea > ZEPHYRUM)
@@ -234,7 +235,7 @@ _movere_sursum(
 }
 
 hic_manens VimStatus
-_movere_deorsum(
+_movere_deorsum (
     VimStatus status)
 {
     si (status.cursor_linea < status.tabula->altitudo - I)
@@ -247,7 +248,7 @@ _movere_deorsum(
 }
 
 hic_manens VimStatus
-_movere_initium_lineae(
+_movere_initium_lineae (
     VimStatus status)
 {
     status.cursor_columna = ZEPHYRUM;
@@ -256,7 +257,7 @@ _movere_initium_lineae(
 }
 
 hic_manens VimStatus
-_movere_finem_lineae(
+_movere_finem_lineae (
     VimStatus status)
 {
     s32 finis_raw;
@@ -292,7 +293,7 @@ _movere_finem_lineae(
 }
 
 hic_manens VimStatus
-_movere_initium_contenti(
+_movere_initium_contenti (
     VimStatus status)
 {
     i32 initium;
@@ -309,12 +310,12 @@ _movere_initium_contenti(
 
 /* w - movere ad initium verbi proximi */
 hic_manens VimStatus
-_movere_verbum_proximum(
+_movere_verbum_proximum (
     VimStatus status)
 {
-    s32 finis;
+          s32 finis;
     character c;
-    b32 in_verbo;
+          b32 in_verbo;
 
     finis = _finis_lineae(status.tabula, status.cursor_linea);
 
@@ -385,10 +386,10 @@ _movere_verbum_proximum(
 
 /* b - movere ad initium verbi praecedentis */
 hic_manens VimStatus
-_movere_verbum_praecedens(
+_movere_verbum_praecedens (
     VimStatus status)
 {
-    s32 finis;
+          s32 finis;
     character c;
 
     /* Si ad initium lineae, movere ad lineam superiorem */
@@ -446,18 +447,18 @@ _movere_verbum_praecedens(
 
 /* g - movere ad initium tabulae */
 hic_manens VimStatus
-_movere_initium_tabulae(
+_movere_initium_tabulae (
     VimStatus status)
 {
-    status.cursor_linea = ZEPHYRUM;
-    status.cursor_columna = ZEPHYRUM;
+    status.cursor_linea    = ZEPHYRUM;
+    status.cursor_columna  = ZEPHYRUM;
 
     redde status;
 }
 
 /* G - movere ad finem tabulae (ultimam lineam buffer) */
 hic_manens VimStatus
-_movere_finem_tabulae(
+_movere_finem_tabulae (
     VimStatus status)
 {
     s32 finis;
@@ -486,7 +487,7 @@ _movere_finem_tabulae(
  * ================================================== */
 
 hic_manens VimStatus
-_inserere_characterem(
+_inserere_characterem (
     VimStatus status,
     character c)
 {
@@ -494,8 +495,8 @@ _inserere_characterem(
     i32 linea;
     i32 columna;
 
-    linea = status.cursor_linea;
-    columna = status.cursor_columna;
+    linea    = status.cursor_linea;
+    columna  = status.cursor_columna;
 
     successus = tabula_inserere_characterem(
         status.tabula,
@@ -540,7 +541,7 @@ _inserere_characterem(
 }
 
 hic_manens VimStatus
-_delere_characterem_sub_cursore(
+_delere_characterem_sub_cursore (
     VimStatus status)
 {
     s32 finis;
@@ -564,7 +565,7 @@ _delere_characterem_sub_cursore(
 }
 
 hic_manens VimStatus
-_delere_characterem_ante_cursorem(
+_delere_characterem_ante_cursorem (
     VimStatus status)
 {
     si (status.cursor_columna > ZEPHYRUM)
@@ -577,8 +578,8 @@ _delere_characterem_ante_cursorem(
         si (c_ante == TAB_CONTINUATIO && status.cursor_columna >= II)
         {
             tabula_delere_tab(status.tabula, status.cursor_linea, status.cursor_columna - I);
-            status.cursor_columna -= II;  /* Movere cursor retro per 2 */
-            status.mutatus = VERUM;
+            status.cursor_columna  -= II;  /* Movere cursor retro per 2 */
+            status.mutatus         = VERUM;
         }
         alioquin si (c_ante == '\t')
         {
@@ -615,8 +616,8 @@ _delere_characterem_ante_cursorem(
         finis_currentis = _finis_lineae(status.tabula, linea_inferior);
 
         /* Positio ubi cursor erit et ubi contentum jungitur */
-        pos_junctionis = (i32)(finis_superioris + I);
-        status.cursor_columna = pos_junctionis;
+        pos_junctionis         = (i32)(finis_superioris + I);
+        status.cursor_columna  = pos_junctionis;
 
         /* Copiare contentum lineae inferioris ad finem lineae superioris */
         si (finis_currentis >= ZEPHYRUM)
@@ -643,12 +644,12 @@ _delere_characterem_ante_cursorem(
 }
 
 hic_manens VimStatus
-_delere_lineam(
+_delere_lineam (
     VimStatus status)
 {
     VimUndoOperatio undo_op;
-    i32 col;
-    s32 finis;
+                i32 col;
+                s32 finis;
 
     /* Salvare lineam ad clipboard (si praesens) */
     si (status.clipboard != NIHIL)
@@ -660,10 +661,10 @@ _delere_lineam(
     /* Trudere undo operationem (si praesens) */
     si (status.undo_acervus != NIHIL)
     {
-        undo_op.tipo = VIM_UNDO_DELERE_LINEA;
-        undo_op.linea = status.cursor_linea;
-        undo_op.columna = status.cursor_columna;
-        undo_op.numerus_linearum = I;
+        undo_op.tipo              = VIM_UNDO_DELERE_LINEA;
+        undo_op.linea             = status.cursor_linea;
+        undo_op.columna           = status.cursor_columna;
+        undo_op.numerus_linearum  = I;
 
         /* Copiare contentum lineae ad undo */
         memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
@@ -691,7 +692,7 @@ _delere_lineam(
 
 /* d$ - delere ad finem lineae */
 hic_manens VimStatus
-_delere_ad_finem_lineae(
+_delere_ad_finem_lineae (
     VimStatus status)
 {
     s32 finis;
@@ -705,15 +706,15 @@ _delere_ad_finem_lineae(
         tabula_delere_characterem(status.tabula, status.cursor_linea, (i32)col);
     }
 
-    status.mutatus = VERUM;
-    status = _clamp_cursor(status);
+    status.mutatus  = VERUM;
+    status          = _clamp_cursor(status);
 
     redde status;
 }
 
 /* dG - delere ad finem tabulae */
 hic_manens VimStatus
-_delere_ad_finem_tabulae(
+_delere_ad_finem_tabulae (
     VimStatus status)
 {
     i32 ultima;
@@ -727,15 +728,15 @@ _delere_ad_finem_tabulae(
         tabula_delere_lineam(status.tabula, (i32)linea);
     }
 
-    status.mutatus = VERUM;
-    status = _clamp_cursor(status);
+    status.mutatus  = VERUM;
+    status          = _clamp_cursor(status);
 
     redde status;
 }
 
 /* J - jungere lineam currentem cum linea inferiore */
 hic_manens VimStatus
-_jungere_lineas(
+_jungere_lineas (
     VimStatus status)
 {
     s32 finis_currentis;
@@ -804,7 +805,7 @@ _jungere_lineas(
 
 /* >> - augere indentationem lineae */
 hic_manens VimStatus
-_augere_indentationem(
+_augere_indentationem (
     VimStatus status)
 {
     s32 finis;
@@ -839,7 +840,7 @@ _augere_indentationem(
 
 /* << - minuere indentationem lineae */
 hic_manens VimStatus
-_minuere_indentationem(
+_minuere_indentationem (
     VimStatus status)
 {
     i32 initium;
@@ -894,17 +895,17 @@ _minuere_indentationem(
 
 /* dd pro selectio visuali - delere omnes lineas selectas et salvare ad clipboard */
 hic_manens VimStatus
-_delere_selectio(
+_delere_selectio (
     VimStatus status)
 {
     VimUndoOperatio undo_op;
-    i32 linea_min;
-    i32 linea_max;
-    s32 linea;  /* Must be signed for decrementing loop to terminate */
-    i32 col;
-    s32 finis;
-    i32 numerus_linearum;
-    i32 clipboard_idx;
+                i32 linea_min;
+                i32 linea_max;
+                s32 linea;  /* Must be signed for decrementing loop to terminate */
+                i32 col;
+                s32 finis;
+                i32 numerus_linearum;
+                i32 clipboard_idx;
 
     /* Determinare range selectio */
     linea_min = (status.selectio_initium_linea < (s32)status.cursor_linea) ?
@@ -917,8 +918,8 @@ _delere_selectio(
     /* Limitare ad maximum clipboard */
     si (numerus_linearum > VIM_CLIPBOARD_LINEAE_MAXIMAE)
     {
-        numerus_linearum = VIM_CLIPBOARD_LINEAE_MAXIMAE;
-        linea_max = linea_min + numerus_linearum - I;
+        numerus_linearum  = VIM_CLIPBOARD_LINEAE_MAXIMAE;
+        linea_max         = linea_min + numerus_linearum - I;
     }
 
     /* Salvare lineas ad clipboard (si praesens) */
@@ -939,10 +940,10 @@ _delere_selectio(
         /* Trudere undo operationem */
         si (status.undo_acervus != NIHIL)
         {
-            undo_op.tipo = VIM_UNDO_DELERE_LINEA;
-            undo_op.linea = (i32)linea;
-            undo_op.columna = ZEPHYRUM;
-            undo_op.numerus_linearum = I;
+            undo_op.tipo              = VIM_UNDO_DELERE_LINEA;
+            undo_op.linea             = (i32)linea;
+            undo_op.columna           = ZEPHYRUM;
+            undo_op.numerus_linearum  = I;
 
             /* Copiare contentum lineae ad undo */
             memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
@@ -962,22 +963,22 @@ _delere_selectio(
     }
 
     /* Exire ex modo visuali */
-    status.modo = MODO_VIM_NORMALIS;
-    status.selectio_initium_linea = -I;
-    status.selectio_initium_columna = -I;
+    status.modo                      = MODO_VIM_NORMALIS;
+    status.selectio_initium_linea    = -I;
+    status.selectio_initium_columna  = -I;
 
     /* Ponere cursor ad linea_min */
-    status.cursor_linea = linea_min;
-    status.cursor_columna = ZEPHYRUM;
-    status = _clamp_cursor(status);
-    status.mutatus = VERUM;
+    status.cursor_linea    = linea_min;
+    status.cursor_columna  = ZEPHYRUM;
+    status                 = _clamp_cursor(status);
+    status.mutatus         = VERUM;
 
     redde status;
 }
 
 /* >> pro selectio - augere indentationem omnium linearum in selectione */
 hic_manens VimStatus
-_augere_indentationem_selectio(
+_augere_indentationem_selectio (
     VimStatus status)
 {
     i32 linea_min;
@@ -996,20 +997,20 @@ _augere_indentationem_selectio(
     /* Augere indentationem pro omni linea in selectione */
     per (linea = linea_min; linea <= linea_max; linea++)
     {
-        status.cursor_linea = linea;
-        status = _augere_indentationem(status);
+        status.cursor_linea  = linea;
+        status               = _augere_indentationem(status);
     }
 
     /* Restituere cursor */
-    status.cursor_linea = cursor_originalis;
-    status.mutatus = VERUM;
+    status.cursor_linea  = cursor_originalis;
+    status.mutatus       = VERUM;
 
     redde status;
 }
 
 /* << pro selectio - minuere indentationem omnium linearum in selectione */
 hic_manens VimStatus
-_minuere_indentationem_selectio(
+_minuere_indentationem_selectio (
     VimStatus status)
 {
     i32 linea_min;
@@ -1028,30 +1029,30 @@ _minuere_indentationem_selectio(
     /* Minuere indentationem pro omni linea in selectione */
     per (linea = linea_min; linea <= linea_max; linea++)
     {
-        status.cursor_linea = linea;
-        status = _minuere_indentationem(status);
+        status.cursor_linea  = linea;
+        status               = _minuere_indentationem(status);
     }
 
     /* Restituere cursor */
-    status.cursor_linea = cursor_originalis;
-    status.mutatus = VERUM;
+    status.cursor_linea  = cursor_originalis;
+    status.mutatus       = VERUM;
 
     redde status;
 }
 
 /* Copiare indentationem ex linea ad lineam novam (usus sticky metadata) */
 hic_manens VimStatus
-_copiare_indentationem(
+_copiare_indentationem (
     VimStatus status,
-    i32 linea_fons)
+          i32 linea_fons)
 {
     s32 indentatio;
     i32 col;
     s32 linea_scan;  /* Must be signed for loop to terminate correctly */
     s32 linea_cum_indentatio;
 
-    indentatio = -I;
-    linea_cum_indentatio = -I;
+    indentatio            = -I;
+    linea_cum_indentatio  = -I;
 
     /* Primo: verificare si linea_fons habet contentum et whitespace ad initium
      * Hoc permittit user adjustare indentationem (backspace tabs)
@@ -1070,8 +1071,8 @@ _copiare_indentationem(
         {
             i32 indent_finis;
 
-            indent_finis = ZEPHYRUM;
-            col = ZEPHYRUM;
+            indent_finis  = ZEPHYRUM;
+            col           = ZEPHYRUM;
 
             /* Scandere whitespace (tabs et spatia) ad initium lineae
              * Scanndimus usque ad finem contenti, non usque ad finem lineae
@@ -1085,8 +1086,8 @@ _copiare_indentationem(
                 si (c == '\t')
                 {
                     /* Tab inventa - saltare TAB_CONTINUATIO quoque */
-                    indent_finis = col + II;
-                    col += II;
+                    indent_finis  = col + II;
+                    col           += II;
                 }
                 alioquin si (c == ' ')
                 {
@@ -1103,8 +1104,8 @@ _copiare_indentationem(
             /* Si whitespace inventum ante contentum, usare illud */
             si (indent_finis > ZEPHYRUM)
             {
-                indentatio = (s32)indent_finis;
-                linea_cum_indentatio = (s32)linea_fons;
+                indentatio            = (s32)indent_finis;
+                linea_cum_indentatio  = (s32)linea_fons;
             }
         }
     }
@@ -1145,7 +1146,7 @@ _copiare_indentationem(
 
 /* o - inserere lineam novam infra cum auto-indent */
 hic_manens VimStatus
-_inserere_lineam_novam_infra(
+_inserere_lineam_novam_infra (
     VimStatus status)
 {
     b32 successus;
@@ -1157,9 +1158,9 @@ _inserere_lineam_novam_infra(
     si (successus)
     {
         status.cursor_linea++;
-        status.cursor_columna = ZEPHYRUM;
-        status.modo = MODO_VIM_INSERERE;
-        status.mutatus = VERUM;
+        status.cursor_columna  = ZEPHYRUM;
+        status.modo            = MODO_VIM_INSERERE;
+        status.mutatus         = VERUM;
 
         /* Auto-indent: copiare indentationem ex linea superiore */
         status = _copiare_indentationem(status, linea_fons);
@@ -1170,7 +1171,7 @@ _inserere_lineam_novam_infra(
 
 /* O - inserere lineam novam supra cum auto-indent */
 hic_manens VimStatus
-_inserere_lineam_novam_supra(
+_inserere_lineam_novam_supra (
     VimStatus status)
 {
     b32 successus;
@@ -1187,9 +1188,9 @@ _inserere_lineam_novam_supra(
 
     si (successus)
     {
-        status.cursor_columna = ZEPHYRUM;
-        status.modo = MODO_VIM_INSERERE;
-        status.mutatus = VERUM;
+        status.cursor_columna  = ZEPHYRUM;
+        status.modo            = MODO_VIM_INSERERE;
+        status.mutatus         = VERUM;
 
         /* Auto-indent: copiare indentationem ex linea inferiore (quae nunc est linea_fons + 1) */
         status = _copiare_indentationem(status, linea_fons + I);
@@ -1200,7 +1201,7 @@ _inserere_lineam_novam_supra(
 
 /* Enter in insert mode - nova linea cum auto-indent et split line */
 hic_manens VimStatus
-_inserere_novam_lineam_in_inserere(
+_inserere_novam_lineam_in_inserere (
     VimStatus status)
 {
     b32 successus;
@@ -1221,8 +1222,8 @@ _inserere_novam_lineam_in_inserere(
         finis_contenti = tabula_invenire_finem_contenti(status.tabula, linea_fons);
 
         /* Determinare indentationem pro nova linea (ante copiare textum) */
-        indentatio_nova = ZEPHYRUM;
-        linea_cum_indentatio = linea_fons;
+        indentatio_nova       = ZEPHYRUM;
+        linea_cum_indentatio  = linea_fons;
         si (!status.sine_auto_indent)
         {
             /* Primo: scandere whitespace in linea fonte si habet contentum */
@@ -1298,8 +1299,8 @@ _inserere_novam_lineam_in_inserere(
 
         /* Movere cursor ad novam lineam post indentationem */
         status.cursor_linea++;
-        status.cursor_columna = indentatio_nova;
-        status.mutatus = VERUM;
+        status.cursor_columna  = indentatio_nova;
+        status.mutatus         = VERUM;
     }
 
     redde status;
@@ -1311,9 +1312,9 @@ _inserere_novam_lineam_in_inserere(
  * ================================================== */
 
 hic_manens VimStatus
-_tractare_visualis(
+_tractare_visualis (
     VimStatus status,
-    s32 clavis)
+          s32 clavis)
 {
     /* Multi-key commands */
     si (status.clavis_praecedens == '>')
@@ -1394,9 +1395,9 @@ _tractare_visualis(
  * ================================================== */
 
 hic_manens VimStatus
-_tractare_normalis(
+_tractare_normalis (
     VimStatus status,
-    s32 clavis)
+          s32 clavis)
 {
     /* Multi-key commands */
     si (status.clavis_praecedens == 'd')
@@ -1575,10 +1576,10 @@ _tractare_normalis(
  * ================================================== */
 
 hic_manens VimStatus
-_tractare_inserere(
+_tractare_inserere (
     VimStatus status,
-    s32 clavis,
-    f64 tempus)
+          s32 clavis,
+          f64 tempus)
 {
     /* fd escape sequence */
     si (status.esperans_fd)
@@ -1591,8 +1592,8 @@ _tractare_inserere(
             /* Delere 'f' quod insertum est */
             status = _delere_characterem_ante_cursorem(status);
 
-            status.modo = MODO_VIM_NORMALIS;
-            status = _clamp_cursor(status);
+            status.modo  = MODO_VIM_NORMALIS;
+            status       = _clamp_cursor(status);
 
             redde status;
         }
@@ -1627,8 +1628,8 @@ _tractare_inserere(
             /* Tab occupat 2 cellulas: '\t' + TAB_CONTINUATIO */
             si (tabula_inserere_tab(status.tabula, status.cursor_linea, status.cursor_columna))
             {
-                status.cursor_columna += II;  /* Movere cursor per 2 */
-                status.mutatus = VERUM;
+                status.cursor_columna  += II;  /* Movere cursor per 2 */
+                status.mutatus         = VERUM;
             }
             redde status;
 
@@ -1662,21 +1663,21 @@ _tractare_inserere(
  * ================================================== */
 
 VimStatus
-vim_tractare_clavem(
+vim_tractare_clavem (
     VimStatus status,
-    s32 clavis)
+          s32 clavis)
 {
     redde vim_tractare_clavem_cum_tempore(status, clavis, 0.0);
 }
 
 VimStatus
-vim_tractare_clavem_cum_tempore(
+vim_tractare_clavem_cum_tempore (
     VimStatus status,
-    s32 clavis,
-    f64 tempus)
+          s32 clavis,
+          f64 tempus)
 {
-    status.mutatus = FALSUM;
-    status.debet_claudere = FALSUM;
+    status.mutatus         = FALSUM;
+    status.debet_claudere  = FALSUM;
 
     commutatio (status.modo)
     {
@@ -1702,7 +1703,7 @@ vim_tractare_clavem_cum_tempore(
  * ================================================== */
 
 constans character*
-vim_nomen_modi(
+vim_nomen_modi (
     ModoVim modo)
 {
     commutatio (modo)
@@ -1727,21 +1728,21 @@ vim_nomen_modi(
  * ================================================== */
 
 VimStatus
-vim_ponere_cursor(
+vim_ponere_cursor (
     VimStatus status,
-    i32 linea,
-    i32 columna)
+          i32 linea,
+          i32 columna)
 {
-    status.cursor_linea = linea;
-    status.cursor_columna = columna;
+    status.cursor_linea    = linea;
+    status.cursor_columna  = columna;
 
     redde _clamp_cursor(status);
 }
 
 VimStatus
-vim_ponere_modum(
+vim_ponere_modum (
     VimStatus status,
-    ModoVim modo)
+      ModoVim modo)
 {
     status.modo = modo;
 
@@ -1754,7 +1755,7 @@ vim_ponere_modum(
  * ================================================== */
 
 vacuum
-vim_clipboard_initiare(
+vim_clipboard_initiare (
     VimClipboard* clipboard)
 {
     si (clipboard == NIHIL)
@@ -1768,11 +1769,11 @@ vim_clipboard_initiare(
 
 /* Copiare lineam ex tabula ad clipboard */
 hic_manens vacuum
-_clipboard_copiare_lineam(
-    VimClipboard* clipboard,
+_clipboard_copiare_lineam (
+         VimClipboard* clipboard,
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 index_clipboard)
+                  i32  linea,
+                  i32  index_clipboard)
 {
     i32 col;
     s32 finis;
@@ -1809,7 +1810,7 @@ _clipboard_copiare_lineam(
  * ================================================== */
 
 VimUndoAcervus*
-vim_undo_creare(
+vim_undo_creare (
     Piscina* piscina)
 {
     VimUndoAcervus* acervus;
@@ -1826,16 +1827,16 @@ vim_undo_creare(
     }
 
     memset(acervus, ZEPHYRUM, magnitudo(VimUndoAcervus));
-    acervus->numerus = ZEPHYRUM;
-    acervus->index = ZEPHYRUM;
+    acervus->numerus  = ZEPHYRUM;
+    acervus->index    = ZEPHYRUM;
 
     redde acervus;
 }
 
 vacuum
-vim_undo_trudere(
-    VimUndoAcervus* acervus,
-    VimUndoOperatio op)
+vim_undo_trudere (
+     VimUndoAcervus* acervus,
+    VimUndoOperatio  op)
 {
     si (acervus == NIHIL)
     {
@@ -1856,8 +1857,8 @@ vim_undo_trudere(
 }
 
 b32
-vim_undo_tollere(
-    VimUndoAcervus* acervus,
+vim_undo_tollere (
+     VimUndoAcervus* acervus,
     VimUndoOperatio* op)
 {
     i32 index_tollere;
@@ -1885,7 +1886,7 @@ vim_undo_tollere(
 }
 
 b32
-vim_undo_est_vacuus(
+vim_undo_est_vacuus (
     VimUndoAcervus* acervus)
 {
     si (acervus == NIHIL)
@@ -1903,14 +1904,14 @@ vim_undo_est_vacuus(
 
 /* p - gluten post lineam currentem */
 hic_manens VimStatus
-_gluten_post(
+_gluten_post (
     VimStatus status)
 {
     VimUndoOperatio undo_op;
-    i32 linea_nova;
-    i32 col;
-    i32 linea_idx;
-    b32 successus;
+                i32 linea_nova;
+                i32 col;
+                i32 linea_idx;
+                b32 successus;
 
     /* Si clipboard vacuus, nihil facere */
     si (status.clipboard == NIHIL || status.clipboard->numerus_linearum == ZEPHYRUM)
@@ -1945,10 +1946,10 @@ _gluten_post(
         /* Trudere undo pro hac linea */
         si (status.undo_acervus != NIHIL)
         {
-            undo_op.tipo = VIM_UNDO_INSERERE_LINEA;
-            undo_op.linea = linea_nova;
-            undo_op.columna = ZEPHYRUM;
-            undo_op.numerus_linearum = I;
+            undo_op.tipo              = VIM_UNDO_INSERERE_LINEA;
+            undo_op.linea             = linea_nova;
+            undo_op.columna           = ZEPHYRUM;
+            undo_op.numerus_linearum  = I;
             memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
 
             vim_undo_trudere(status.undo_acervus, undo_op);
@@ -1957,22 +1958,22 @@ _gluten_post(
 
     /* Movere cursor ad primam lineam inserta */
     status.cursor_linea++;
-    status.cursor_columna = ZEPHYRUM;
-    status.mutatus = VERUM;
+    status.cursor_columna  = ZEPHYRUM;
+    status.mutatus         = VERUM;
 
     redde status;
 }
 
 /* P - gluten ante lineam currentem */
 hic_manens VimStatus
-_gluten_ante(
+_gluten_ante (
     VimStatus status)
 {
     VimUndoOperatio undo_op;
-    i32 linea_nova;
-    i32 col;
-    i32 linea_idx;
-    b32 successus;
+                i32 linea_nova;
+                i32 col;
+                i32 linea_idx;
+                b32 successus;
 
     /* Si clipboard vacuus, nihil facere */
     si (status.clipboard == NIHIL || status.clipboard->numerus_linearum == ZEPHYRUM)
@@ -2007,10 +2008,10 @@ _gluten_ante(
         /* Trudere undo pro hac linea */
         si (status.undo_acervus != NIHIL)
         {
-            undo_op.tipo = VIM_UNDO_INSERERE_LINEA;
-            undo_op.linea = linea_nova;
-            undo_op.columna = ZEPHYRUM;
-            undo_op.numerus_linearum = I;
+            undo_op.tipo              = VIM_UNDO_INSERERE_LINEA;
+            undo_op.linea             = linea_nova;
+            undo_op.columna           = ZEPHYRUM;
+            undo_op.numerus_linearum  = I;
             memset(undo_op.data, ZEPHYRUM, VIM_CLIPBOARD_LINEA_MAXIMA);
 
             vim_undo_trudere(status.undo_acervus, undo_op);
@@ -2018,8 +2019,8 @@ _gluten_ante(
     }
 
     /* Cursor manet ad lineam currentem (quae nunc est prima linea inserta) */
-    status.cursor_columna = ZEPHYRUM;
-    status.mutatus = VERUM;
+    status.cursor_columna  = ZEPHYRUM;
+    status.mutatus         = VERUM;
 
     redde status;
 }
@@ -2031,12 +2032,12 @@ _gluten_ante(
 
 /* u - retexere ultimam operationem */
 hic_manens VimStatus
-_retexere(
+_retexere (
     VimStatus status)
 {
     VimUndoOperatio op;
-    b32 successus;
-    i32 col;
+                b32 successus;
+                i32 col;
 
     /* Si undo acervus vacuus vel NIHIL, nihil facere */
     si (status.undo_acervus == NIHIL)
@@ -2068,9 +2069,9 @@ _retexere(
                     tabula_cellula(status.tabula, op.linea, col) = op.data[col];
                 }
 
-                status.cursor_linea = op.linea;
-                status.cursor_columna = op.columna;
-                status.mutatus = VERUM;
+                status.cursor_linea    = op.linea;
+                status.cursor_columna  = op.columna;
+                status.mutatus         = VERUM;
             }
             frange;
 

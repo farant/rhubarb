@@ -33,11 +33,12 @@ interior constans MimenOrdo MIMINA[] = {
 #define MIMINA_NUMERUS ((i32)(magnitudo(MIMINA) / magnitudo(MIMINA[0])))
 
 constans character*
-mimen_pro_via(constans character* via)
+mimen_pro_via (
+    constans character* via)
 {
     constans character* punctum = NIHIL;
     constans character* c;
-    i32 i;
+                   i32  i;
 
     si (via == NIHIL)
     {
@@ -69,10 +70,11 @@ mimen_pro_via(constans character* via)
 }
 
 constans character*
-mimen_pro_via_chorda(chorda via)
+mimen_pro_via_chorda (
+    chorda via)
 {
-    i32 punctum = 0;
-    b32 habet_punctum = FALSUM;
+    i32 punctum        = 0;
+    b32 habet_punctum  = FALSUM;
     i32 ext_len;
     i32 i;
 
@@ -80,8 +82,8 @@ mimen_pro_via_chorda(chorda via)
     {
         si (via.datum[i] == '.')
         {
-            punctum = i + I;
-            habet_punctum = VERUM;
+            punctum        = i + I;
+            habet_punctum  = VERUM;
         }
         alioquin si (via.datum[i] == '/')
         {
@@ -96,8 +98,8 @@ mimen_pro_via_chorda(chorda via)
         ext_len = via.mensura - punctum;
         per (i = ZEPHYRUM; i < MIMINA_NUMERUS; i++)
         {
-            si (ext_len == (i32)strlen(MIMINA[i].extensio) &&
-                memcmp(&via.datum[punctum], MIMINA[i].extensio,
+            si (   ext_len == (i32)strlen(MIMINA[i].extensio)
+                && memcmp(&via.datum[punctum], MIMINA[i].extensio,
                        (size_t)ext_len) == ZEPHYRUM)
             {
                 redde MIMINA[i].mimen;

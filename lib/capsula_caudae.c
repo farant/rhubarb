@@ -15,46 +15,48 @@
 
 /* Legere i32 little-endian ex byte pointer */
 interior i32
-_caudae_legere_i32(constans i8* p)
+_caudae_legere_i32 (
+    constans i8* p)
 {
     i32 result;
 
-    result = ((i32)(i8)p[0] & 0xFF) |
-             (((i32)(i8)p[1] & 0xFF) << VIII) |
-             (((i32)(i8)p[2] & 0xFF) << XVI) |
-             (((i32)(i8)p[3] & 0xFF) << XXIV);
+    result = ((i32)(i8)p[0] & 0xFF)
+        | (((i32)(i8)p[1] & 0xFF) << VIII)
+        | (((i32)(i8)p[2] & 0xFF) << XVI)
+        | (((i32)(i8)p[3] & 0xFF) << XXIV);
 
     redde result;
 }
 
-
 /* Legere i64 little-endian ex byte pointer */
 interior i64
-_caudae_legere_i64(constans i8* p)
+_caudae_legere_i64 (
+    constans i8* p)
 {
     i64 result;
     i64 low;
     i64 high;
 
-    low = (i64)((i32)(i8)p[0] & 0xFF) |
-          ((i64)((i32)(i8)p[1] & 0xFF) << VIII) |
-          ((i64)((i32)(i8)p[2] & 0xFF) << XVI) |
-          ((i64)((i32)(i8)p[3] & 0xFF) << XXIV);
+    low = (i64)((i32)(i8)p[0] & 0xFF)
+        | ((i64)((i32)(i8)p[1] & 0xFF) << VIII)
+        | ((i64)((i32)(i8)p[2] & 0xFF) << XVI)
+        | ((i64)((i32)(i8)p[3] & 0xFF) << XXIV);
 
-    high = (i64)((i32)(i8)p[4] & 0xFF) |
-           ((i64)((i32)(i8)p[5] & 0xFF) << VIII) |
-           ((i64)((i32)(i8)p[6] & 0xFF) << XVI) |
-           ((i64)((i32)(i8)p[7] & 0xFF) << XXIV);
+    high = (i64)((i32)(i8)p[4] & 0xFF)
+        | ((i64)((i32)(i8)p[5] & 0xFF) << VIII)
+        | ((i64)((i32)(i8)p[6] & 0xFF) << XVI)
+        | ((i64)((i32)(i8)p[7] & 0xFF) << XXIV);
 
     result = low | (high << 32);
 
     redde result;
 }
 
-
 /* Comparare chorda cum C string */
 interior b32
-_caudae_via_aequalis(chorda a, constans character* b)
+_caudae_via_aequalis (
+                chorda  a,
+    constans character* b)
 {
     i32 len_b;
     i32 i;
@@ -87,11 +89,11 @@ _caudae_via_aequalis(chorda a, constans character* b)
  * ======================================================================== */
 
 CapsulaCaudae*
-capsula_caudae_aperire(
+capsula_caudae_aperire (
     constans character* via_binarii,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    CapsulaCaudae*  capsula;
+    CapsulaCaudae* capsula;
     FILUM*          filum;
     i8              footer[XVI];
     i32             magic0;
@@ -124,8 +126,8 @@ capsula_caudae_aperire(
     }
 
     /* Legere footer */
-    si (fread(footer, I, (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA, filum) !=
-        (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA)
+    si (fread(footer, I, (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA, filum)
+        != (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA)
     {
         fclose(filum);
         redde NIHIL;
@@ -135,8 +137,8 @@ capsula_caudae_aperire(
     magic0 = _caudae_legere_i32(footer + VIII);
     magic1 = _caudae_legere_i32(footer + XII);
 
-    si (magic0 != (i32)CAPSULA_CAUDAE_MAGICA_0 ||
-        magic1 != (i32)CAPSULA_CAUDAE_MAGICA_1)
+    si (   magic0 != (i32)CAPSULA_CAUDAE_MAGICA_0
+        || magic1 != (i32)CAPSULA_CAUDAE_MAGICA_1)
     {
         fclose(filum);
         redde NIHIL;
@@ -159,9 +161,9 @@ capsula_caudae_aperire(
         redde NIHIL;
     }
 
-    header_magic = _caudae_legere_i32(header);
-    versio = _caudae_legere_i32(header + IV);
-    numerus = _caudae_legere_i32(header + VIII);
+    header_magic  = _caudae_legere_i32(header);
+    versio        = _caudae_legere_i32(header + IV);
+    numerus       = _caudae_legere_i32(header + VIII);
 
     /* Validate header magic (same as capsula) */
     si (header_magic != (i32)CAPSULA_MAGICA)
@@ -186,10 +188,10 @@ capsula_caudae_aperire(
         redde NIHIL;
     }
 
-    capsula->filum = filum;
-    capsula->asset_offset = asset_offset;
-    capsula->numerus_filorum = numerus;
-    capsula->piscina = piscina;
+    capsula->filum            = filum;
+    capsula->asset_offset     = asset_offset;
+    capsula->numerus_filorum  = numerus;
+    capsula->piscina          = piscina;
 
     /* Allocare index array */
     si (numerus > 0)
@@ -228,22 +230,22 @@ capsula_caudae_aperire(
     /* Parse TOC entries et legere path strings */
     per (i = 0; i < numerus; i++)
     {
-        i32 path_offset;
-        i32 path_len;
-        i32 data_offset;
-        i32 comp_size;
-        i32 raw_size;
-        i8* path_copy;
+        i32  path_offset;
+        i32  path_len;
+        i32  data_offset;
+        i32  comp_size;
+        i32  raw_size;
+         i8* path_copy;
 
         constans i8* entry_p;
 
         entry_p = toc_data + (i * XX);
 
-        path_offset = _caudae_legere_i32(entry_p);
-        path_len = _caudae_legere_i32(entry_p + IV);
-        data_offset = _caudae_legere_i32(entry_p + VIII);
-        comp_size = _caudae_legere_i32(entry_p + XII);
-        raw_size = _caudae_legere_i32(entry_p + XVI);
+        path_offset  = _caudae_legere_i32(entry_p);
+        path_len     = _caudae_legere_i32(entry_p + IV);
+        data_offset  = _caudae_legere_i32(entry_p + VIII);
+        comp_size    = _caudae_legere_i32(entry_p + XII);
+        raw_size     = _caudae_legere_i32(entry_p + XVI);
 
         /* Allocare et legere path string */
         path_copy = (i8*)piscina_allocare(piscina, (memoriae_index)path_len);
@@ -267,20 +269,20 @@ capsula_caudae_aperire(
             redde NIHIL;
         }
 
-        capsula->index[i].via.datum = path_copy;
-        capsula->index[i].via.mensura = path_len;
-        capsula->index[i].data_offset = data_offset;
-        capsula->index[i].mensura_compressa = comp_size;
-        capsula->index[i].mensura_cruda = raw_size;
-        capsula->index[i].compressa = (comp_size != raw_size);
+        capsula->index[i].via.datum          = path_copy;
+        capsula->index[i].via.mensura        = path_len;
+        capsula->index[i].data_offset        = data_offset;
+        capsula->index[i].mensura_compressa  = comp_size;
+        capsula->index[i].mensura_cruda      = raw_size;
+        capsula->index[i].compressa          = (comp_size != raw_size);
     }
 
     redde capsula;
 }
 
-
 vacuum
-capsula_caudae_claudere(CapsulaCaudae* capsula)
+capsula_caudae_claudere (
+    CapsulaCaudae* capsula)
 {
     si (capsula != NIHIL && capsula->filum != NIHIL)
     {
@@ -295,19 +297,19 @@ capsula_caudae_claudere(CapsulaCaudae* capsula)
  * ======================================================================== */
 
 CapsulaFructus
-capsula_caudae_legere(
-    CapsulaCaudae*      capsula,
+capsula_caudae_legere (
+         CapsulaCaudae* capsula,
     constans character* via,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    CapsulaFructus   fructus;
-    CapsulaIndexum*  entry;
-    i8*              compressed_data;
-    i64              file_data_offset;
+    CapsulaFructus  fructus;
+    CapsulaIndexum* entry;
+                i8* compressed_data;
+               i64  file_data_offset;
 
-    fructus.status = CAPSULA_OK;
-    fructus.datum.datum = NIHIL;
-    fructus.datum.mensura = 0;
+    fructus.status         = CAPSULA_OK;
+    fructus.datum.datum    = NIHIL;
+    fructus.datum.mensura  = 0;
 
     si (capsula == NIHIL || via == NIHIL || piscina == NIHIL)
     {
@@ -353,8 +355,8 @@ capsula_caudae_legere(
             redde fructus;
         }
 
-        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum) !=
-            (size_t)entry->mensura_compressa)
+        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum)
+            != (size_t)entry->mensura_compressa)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
             redde fructus;
@@ -371,8 +373,8 @@ capsula_caudae_legere(
             redde fructus;
         }
 
-        fructus.datum.datum = inflated.datum;
-        fructus.datum.mensura = inflated.mensura;
+        fructus.datum.datum    = inflated.datum;
+        fructus.datum.mensura  = inflated.mensura;
     }
     alioquin
     {
@@ -386,36 +388,35 @@ capsula_caudae_legere(
             redde fructus;
         }
 
-        si (fread(data, I, (size_t)entry->mensura_cruda, capsula->filum) !=
-            (size_t)entry->mensura_cruda)
+        si (fread(data, I, (size_t)entry->mensura_cruda, capsula->filum)
+            != (size_t)entry->mensura_cruda)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
             redde fructus;
         }
 
-        fructus.datum.datum = data;
-        fructus.datum.mensura = entry->mensura_cruda;
+        fructus.datum.datum    = data;
+        fructus.datum.mensura  = entry->mensura_cruda;
     }
 
     redde fructus;
 }
 
-
 CapsulaFructus
-capsula_caudae_legere_chorda(
+capsula_caudae_legere_chorda (
     CapsulaCaudae* capsula,
-    chorda         via,
-    Piscina*       piscina)
+           chorda  via,
+          Piscina* piscina)
 {
     CapsulaFructus  fructus;
     CapsulaIndexum* entry;
-    i8*             compressed_data;
-    i64             file_data_offset;
-    i32             i;
+                i8* compressed_data;
+               i64  file_data_offset;
+               i32  i;
 
-    fructus.status = CAPSULA_OK;
-    fructus.datum.datum = NIHIL;
-    fructus.datum.mensura = 0;
+    fructus.status         = CAPSULA_OK;
+    fructus.datum.datum    = NIHIL;
+    fructus.datum.mensura  = 0;
 
     si (capsula == NIHIL || piscina == NIHIL)
     {
@@ -483,8 +484,8 @@ capsula_caudae_legere_chorda(
             redde fructus;
         }
 
-        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum) !=
-            (size_t)entry->mensura_compressa)
+        si (fread(compressed_data, I, (size_t)entry->mensura_compressa, capsula->filum)
+            != (size_t)entry->mensura_compressa)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
             redde fructus;
@@ -500,8 +501,8 @@ capsula_caudae_legere_chorda(
             redde fructus;
         }
 
-        fructus.datum.datum = inflated.datum;
-        fructus.datum.mensura = inflated.mensura;
+        fructus.datum.datum    = inflated.datum;
+        fructus.datum.mensura  = inflated.mensura;
     }
     alioquin
     {
@@ -514,15 +515,15 @@ capsula_caudae_legere_chorda(
             redde fructus;
         }
 
-        si (fread(data, I, (size_t)entry->mensura_cruda, capsula->filum) !=
-            (size_t)entry->mensura_cruda)
+        si (fread(data, I, (size_t)entry->mensura_cruda, capsula->filum)
+            != (size_t)entry->mensura_cruda)
         {
             fructus.status = CAPSULA_FRACTA_DATUM;
             redde fructus;
         }
 
-        fructus.datum.datum = data;
-        fructus.datum.mensura = entry->mensura_cruda;
+        fructus.datum.datum    = data;
+        fructus.datum.mensura  = entry->mensura_cruda;
     }
 
     redde fructus;
@@ -534,17 +535,16 @@ capsula_caudae_legere_chorda(
  * ======================================================================== */
 
 b32
-capsula_caudae_habet(
-    CapsulaCaudae*      capsula,
+capsula_caudae_habet (
+         CapsulaCaudae* capsula,
     constans character* via)
 {
     redde capsula_caudae_invenire(capsula, via) != NIHIL;
 }
 
-
 CapsulaIndexum*
-capsula_caudae_invenire(
-    CapsulaCaudae*      capsula,
+capsula_caudae_invenire (
+         CapsulaCaudae* capsula,
     constans character* via)
 {
     i32 i;
@@ -571,7 +571,8 @@ capsula_caudae_invenire(
  * ======================================================================== */
 
 i32
-capsula_caudae_numerus(CapsulaCaudae* capsula)
+capsula_caudae_numerus (
+    CapsulaCaudae* capsula)
 {
     si (capsula == NIHIL)
     {
@@ -581,9 +582,10 @@ capsula_caudae_numerus(CapsulaCaudae* capsula)
     redde capsula->numerus_filorum;
 }
 
-
 CapsulaIndexum*
-capsula_caudae_indexum(CapsulaCaudae* capsula, i32 index)
+capsula_caudae_indexum (
+    CapsulaCaudae* capsula,
+              i32  index)
 {
     si (capsula == NIHIL || index < 0 || index >= capsula->numerus_filorum)
     {
@@ -593,9 +595,9 @@ capsula_caudae_indexum(CapsulaCaudae* capsula, i32 index)
     redde &capsula->index[index];
 }
 
-
 CapsulaCaudaeIter
-capsula_caudae_iter(CapsulaCaudae* capsula)
+capsula_caudae_iter (
+    CapsulaCaudae* capsula)
 {
     CapsulaCaudaeIter iter;
 
@@ -605,9 +607,9 @@ capsula_caudae_iter(CapsulaCaudae* capsula)
     redde iter;
 }
 
-
 b32
-capsula_caudae_iter_proximus(CapsulaCaudaeIter* iter)
+capsula_caudae_iter_proximus (
+    CapsulaCaudaeIter* iter)
 {
     si (iter == NIHIL || iter->capsula == NIHIL)
     {
@@ -629,7 +631,8 @@ capsula_caudae_iter_proximus(CapsulaCaudaeIter* iter)
  * ======================================================================== */
 
 b32
-capsula_caudae_habet_assets(constans character* via_binarii)
+capsula_caudae_habet_assets (
+    constans character* via_binarii)
 {
     FILUM* filum;
     i8    footer[XVI];
@@ -655,8 +658,8 @@ capsula_caudae_habet_assets(constans character* via_binarii)
     }
 
     /* Legere footer */
-    si (fread(footer, I, (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA, filum) !=
-        (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA)
+    si (fread(footer, I, (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA, filum)
+        != (size_t)CAPSULA_CAUDAE_FOOTER_MENSURA)
     {
         fclose(filum);
         redde FALSUM;
@@ -668,6 +671,6 @@ capsula_caudae_habet_assets(constans character* via_binarii)
     magic0 = _caudae_legere_i32(footer + VIII);
     magic1 = _caudae_legere_i32(footer + XII);
 
-    redde (magic0 == (i32)CAPSULA_CAUDAE_MAGICA_0 &&
-           magic1 == (i32)CAPSULA_CAUDAE_MAGICA_1);
+    redde (magic0 == (i32)CAPSULA_CAUDAE_MAGICA_0
+        && magic1 == (i32)CAPSULA_CAUDAE_MAGICA_1);
 }

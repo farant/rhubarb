@@ -1,5 +1,6 @@
 #include "persistentia.h"
 
+
 /* ==================================================
  * PERSISTENTIA MEMORIA - In-Memory Event Storage
  *
@@ -15,7 +16,7 @@
 
 nomen structura {
     Piscina* piscina;
-    Xar*     eventus;  /* Xar of Eventum* */
+        Xar* eventus;  /* Xar of Eventum* */
 } PersistentiaMemoriaData;
 
 
@@ -24,13 +25,13 @@ nomen structura {
  * ================================================== */
 
 interior b32
-_memoria_scribere_eventum(
-    vacuum*           datum,
+_memoria_scribere_eventum (
+              vacuum* datum,
     constans Eventum* eventum)
 {
-    PersistentiaMemoriaData* data;
-    Eventum**                slot;
-    Eventum*                 copia;
+    PersistentiaMemoriaData*  data;
+                    Eventum** slot;
+                    Eventum*  copia;
 
     data = (PersistentiaMemoriaData*)datum;
 
@@ -61,16 +62,16 @@ _memoria_scribere_eventum(
 }
 
 interior Xar*
-_memoria_legere_eventus(
-    vacuum*  datum,
+_memoria_legere_eventus (
+     vacuum* datum,
     Piscina* piscina)
 {
-    PersistentiaMemoriaData* data;
-    Xar*                     resultus;
-    Eventum**                slot;
-    Eventum*                 eventum;
-    i32                      i;
-    i32                      numerus;
+    PersistentiaMemoriaData*  data;
+                        Xar*  resultus;
+                    Eventum** slot;
+                    Eventum*  eventum;
+                        i32   i;
+                        i32   numerus;
 
     (vacuum)piscina;  /* Non usatum - eventus iam in memoria */
 
@@ -91,8 +92,8 @@ _memoria_legere_eventus(
     numerus = xar_numerus(data->eventus);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        eventum = *(Eventum**)xar_obtinere(data->eventus, i);
-        slot = (Eventum**)xar_addere(resultus);
+        eventum  = *(Eventum**)xar_obtinere(data->eventus, i);
+        slot     = (Eventum**)xar_addere(resultus);
         si (slot)
         {
             *slot = eventum;  /* Eventus manent in memoria originali */
@@ -103,7 +104,7 @@ _memoria_legere_eventus(
 }
 
 interior b32
-_memoria_sync(
+_memoria_sync (
     vacuum* datum)
 {
     (vacuum)datum;
@@ -112,7 +113,7 @@ _memoria_sync(
 }
 
 interior vacuum
-_memoria_claudere(
+_memoria_claudere (
     vacuum* datum)
 {
     (vacuum)datum;
@@ -125,10 +126,10 @@ _memoria_claudere(
  * ================================================== */
 
 Persistentia*
-persistentia_memoria_creare(
+persistentia_memoria_creare (
     Piscina* piscina)
 {
-    Persistentia*            pers;
+               Persistentia* pers;
     PersistentiaMemoriaData* data;
 
     si (!piscina)
@@ -159,11 +160,11 @@ persistentia_memoria_creare(
     }
 
     /* Ponere interface */
-    pers->datum = data;
-    pers->scribere_eventum = _memoria_scribere_eventum;
-    pers->legere_eventus = _memoria_legere_eventus;
-    pers->sync = _memoria_sync;
-    pers->claudere = _memoria_claudere;
+    pers->datum             = data;
+    pers->scribere_eventum  = _memoria_scribere_eventum;
+    pers->legere_eventus    = _memoria_legere_eventus;
+    pers->sync              = _memoria_sync;
+    pers->claudere          = _memoria_claudere;
 
     redde pers;
 }
@@ -174,10 +175,10 @@ persistentia_memoria_creare(
  * ================================================== */
 
 Eventum*
-eventum_creare_entitas(
+eventum_creare_entitas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus)
+     chorda* entitas_id,
+     chorda* entitas_genus)
 {
     Eventum* e;
 
@@ -192,18 +193,18 @@ eventum_creare_entitas(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_CREARE_ENTITAS;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
+    e->genus          = EVENTUS_CREARE_ENTITAS;
+    e->entitas_id     = entitas_id;
+    e->entitas_genus  = entitas_genus;
 
     redde e;
 }
 
 Eventum*
-eventum_delere_entitas(
+eventum_delere_entitas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus)
+     chorda* entitas_id,
+     chorda* entitas_genus)
 {
     Eventum* e;
 
@@ -218,20 +219,20 @@ eventum_delere_entitas(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_DELERE_ENTITAS;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
+    e->genus          = EVENTUS_DELERE_ENTITAS;
+    e->entitas_id     = entitas_id;
+    e->entitas_genus  = entitas_genus;
 
     redde e;
 }
 
 Eventum*
-eventum_ponere_proprietas(
+eventum_ponere_proprietas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  clavis,
-    chorda*  valor)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* clavis,
+     chorda* valor)
 {
     Eventum* e;
 
@@ -246,21 +247,21 @@ eventum_ponere_proprietas(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_PONERE_PROPRIETAS;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.proprietas.clavis = clavis;
-    e->datum.proprietas.valor = valor;
+    e->genus                    = EVENTUS_PONERE_PROPRIETAS;
+    e->entitas_id               = entitas_id;
+    e->entitas_genus            = entitas_genus;
+    e->datum.proprietas.clavis  = clavis;
+    e->datum.proprietas.valor   = valor;
 
     redde e;
 }
 
 Eventum*
-eventum_delere_proprietas(
+eventum_delere_proprietas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  clavis)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* clavis)
 {
     Eventum* e;
 
@@ -275,23 +276,23 @@ eventum_delere_proprietas(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_DELERE_PROPRIETAS;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.proprietas.clavis = clavis;
-    e->datum.proprietas.valor = NIHIL;
+    e->genus                    = EVENTUS_DELERE_PROPRIETAS;
+    e->entitas_id               = entitas_id;
+    e->entitas_genus            = entitas_genus;
+    e->datum.proprietas.clavis  = clavis;
+    e->datum.proprietas.valor   = NIHIL;
 
     redde e;
 }
 
 Eventum*
-eventum_addere_relatio(
+eventum_addere_relatio (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  relatio_id,
-    chorda*  relatio_genus,
-    chorda*  destinatio_id)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* relatio_id,
+     chorda* relatio_genus,
+     chorda* destinatio_id)
 {
     Eventum* e;
 
@@ -306,22 +307,22 @@ eventum_addere_relatio(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_ADDERE_RELATIO;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.relatio.relatio_id = relatio_id;
-    e->datum.relatio.relatio_genus = relatio_genus;
-    e->datum.relatio.destinatio_id = destinatio_id;
+    e->genus                        = EVENTUS_ADDERE_RELATIO;
+    e->entitas_id                   = entitas_id;
+    e->entitas_genus                = entitas_genus;
+    e->datum.relatio.relatio_id     = relatio_id;
+    e->datum.relatio.relatio_genus  = relatio_genus;
+    e->datum.relatio.destinatio_id  = destinatio_id;
 
     redde e;
 }
 
 Eventum*
-eventum_delere_relatio(
+eventum_delere_relatio (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  relatio_id)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* relatio_id)
 {
     Eventum* e;
 
@@ -336,22 +337,22 @@ eventum_delere_relatio(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_DELERE_RELATIO;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.relatio.relatio_id = relatio_id;
-    e->datum.relatio.relatio_genus = NIHIL;
-    e->datum.relatio.destinatio_id = NIHIL;
+    e->genus                        = EVENTUS_DELERE_RELATIO;
+    e->entitas_id                   = entitas_id;
+    e->entitas_genus                = entitas_genus;
+    e->datum.relatio.relatio_id     = relatio_id;
+    e->datum.relatio.relatio_genus  = NIHIL;
+    e->datum.relatio.destinatio_id  = NIHIL;
 
     redde e;
 }
 
 Eventum*
-eventum_addere_nota(
+eventum_addere_nota (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  nota)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* nota)
 {
     Eventum* e;
 
@@ -366,20 +367,20 @@ eventum_addere_nota(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_ADDERE_NOTA;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.nota.nota = nota;
+    e->genus            = EVENTUS_ADDERE_NOTA;
+    e->entitas_id       = entitas_id;
+    e->entitas_genus    = entitas_genus;
+    e->datum.nota.nota  = nota;
 
     redde e;
 }
 
 Eventum*
-eventum_delere_nota(
+eventum_delere_nota (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  nota)
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* nota)
 {
     Eventum* e;
 
@@ -394,10 +395,10 @@ eventum_delere_nota(
         redde NIHIL;
     }
 
-    e->genus = EVENTUS_DELERE_NOTA;
-    e->entitas_id = entitas_id;
-    e->entitas_genus = entitas_genus;
-    e->datum.nota.nota = nota;
+    e->genus            = EVENTUS_DELERE_NOTA;
+    e->entitas_id       = entitas_id;
+    e->entitas_genus    = entitas_genus;
+    e->datum.nota.nota  = nota;
 
     redde e;
 }

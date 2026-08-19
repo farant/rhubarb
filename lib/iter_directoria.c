@@ -117,9 +117,9 @@ directorium_iterator_proximum (
 {
     structura dirent* introitus;
       structura stat  status;
-           character  via_plena[1024];
-                 i32  longitudo_basis;
-                 i32  longitudo_nominis;
+           character via_plena[1024];
+                 i32 longitudo_basis;
+                 i32 longitudo_nominis;
 
     si (iterator == NIHIL || iterator->descriptum == NIHIL)
     {

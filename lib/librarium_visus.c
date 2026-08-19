@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+
 /* ==================================================
  * Constantae
  * ================================================== */
@@ -29,22 +30,22 @@
 
 /* Creare chorda ex C string (view, non allocatio) */
 hic_manens chorda
-_chorda_ex_cstr(
+_chorda_ex_cstr (
     constans character* cstr)
 {
     chorda fructus;
     union { constans character* c; i8* m; } u;
     u.c = cstr;
 
-    fructus.datum = u.m;
-    fructus.mensura = (i32)strlen(cstr);
+    fructus.datum    = u.m;
+    fructus.mensura  = (i32)strlen(cstr);
 
     redde fructus;
 }
 
 /* Comparare chordas insensitive ad casus */
 hic_manens b32
-_chorda_incipit_insensitive(
+_chorda_incipit_insensitive (
     chorda textus,
     chorda praefixum)
 {
@@ -71,7 +72,7 @@ _chorda_incipit_insensitive(
 
 /* Comparare annum (pro sortatio) */
 hic_manens s32
-_comparare_annum(
+_comparare_annum (
     chorda a,
     chorda b)
 {
@@ -85,8 +86,8 @@ _comparare_annum(
     i = 0;
     si (a.mensura > 0 && (character)a.datum[0] == '-')
     {
-        neg_a = VERUM;
-        i = 1;
+        neg_a  = VERUM;
+        i      = 1;
     }
     dum (i < a.mensura)
     {
@@ -106,8 +107,8 @@ _comparare_annum(
     i = 0;
     si (b.mensura > 0 && (character)b.datum[0] == '-')
     {
-        neg_b = VERUM;
-        i = 1;
+        neg_b  = VERUM;
+        i      = 1;
     }
     dum (i < b.mensura)
     {
@@ -128,7 +129,7 @@ _comparare_annum(
 
 /* Comparare titulum (pro sortatio alphabetica) */
 hic_manens s32
-_comparare_titulum(
+_comparare_titulum (
     chorda a,
     chorda b)
 {
@@ -159,14 +160,14 @@ _comparare_titulum(
  * ================================================== */
 
 hic_manens vacuum
-_librarium_visus_carcare_catalogum(
+_librarium_visus_carcare_catalogum (
     LibrariumVisus* visus)
 {
-    chorda contentum;
-    StmlResultus resultus;
-    Xar* libri_stml;
-    s32 i;
-    s32 numerus_librorum;
+          chorda  contentum;
+    StmlResultus  resultus;
+             Xar* libri_stml;
+             s32  i;
+             s32  numerus_librorum;
 
     /* Legere filum */
     contentum = filum_legere_totum(LIBRARIUM_VIA_STML, visus->piscina);
@@ -197,11 +198,11 @@ _librarium_visus_carcare_catalogum(
 
     per (i = 0; i < numerus_librorum; i++)
     {
-        StmlNodus* nodus_liber;
+         StmlNodus* nodus_liber;
         LibrumInfo* liber;
-        StmlNodus* nodus_temp;
-        chorda* attr_status;
-        Xar* tags_stml;
+         StmlNodus* nodus_temp;
+            chorda* attr_status;
+               Xar* tags_stml;
 
         nodus_liber = *(StmlNodus**)xar_obtinere(libri_stml, (i32)i);
         si (!nodus_liber)
@@ -304,8 +305,8 @@ _librarium_visus_carcare_catalogum(
         }
 
         /* Capere tags */
-        liber->tags = xar_creare(visus->piscina, magnitudo(chorda));
-        nodus_temp = stml_invenire_liberum(nodus_liber, "tags");
+        liber->tags  = xar_creare(visus->piscina, magnitudo(chorda));
+        nodus_temp   = stml_invenire_liberum(nodus_liber, "tags");
         si (nodus_temp)
         {
             tags_stml = stml_invenire_omnes_liberos(nodus_temp, "tag", visus->piscina);
@@ -317,7 +318,7 @@ _librarium_visus_carcare_catalogum(
                 per (j = 0; j < num_tags; j++)
                 {
                     StmlNodus* nodus_tag;
-                    chorda tag_textus;
+                       chorda  tag_textus;
 
                     nodus_tag = *(StmlNodus**)xar_obtinere(tags_stml, (i32)j);
                     si (nodus_tag)
@@ -396,7 +397,7 @@ _librarium_visus_carcare_catalogum(
  * ================================================== */
 
 hic_manens vacuum
-_librarium_visus_filtrare(
+_librarium_visus_filtrare (
     LibrariumVisus* visus)
 {
     s32 i;
@@ -417,7 +418,7 @@ _librarium_visus_filtrare(
     per (i = 0; i < num_libri; i++)
     {
         LibrumInfo* liber;
-        b32 includere = VERUM;
+               b32  includere = VERUM;
 
         liber = *(LibrumInfo**)xar_obtinere(visus->libri, (i32)i);
         si (!liber)
@@ -474,9 +475,9 @@ _librarium_visus_filtrare(
         {
             LibrumInfo** ptr_a;
             LibrumInfo** ptr_b;
-            LibrumInfo* a;
-            LibrumInfo* b;
-            s32 cmp;
+            LibrumInfo*  a;
+            LibrumInfo*  b;
+                   s32   cmp;
 
             ptr_a = (LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)j);
             ptr_b = (LibrumInfo**)xar_obtinere(visus->libri_filtrati, (i32)(j + 1));
@@ -514,8 +515,8 @@ _librarium_visus_filtrare(
  * ================================================== */
 
 LibrariumVisus*
-librarium_visus_creare(
-    Piscina*         piscina,
+librarium_visus_creare (
+            Piscina* piscina,
     ContextusWidget* ctx)
 {
     LibrariumVisus* visus;
@@ -531,22 +532,22 @@ librarium_visus_creare(
         redde NIHIL;
     }
 
-    visus->piscina = piscina;
-    visus->ctx = ctx;
-    visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
-    visus->ordo = LIBRARIUM_ORDO_CHRONOLOGICUS;
-    visus->categoria = LIBRARIUM_CAT_OMNES;
-    visus->filtrum_tag.mensura = 0;
-    visus->filtrum_quaestio.mensura = 0;
-    visus->index_paginae = 0;
-    visus->index_selecta = 0;
-    visus->liber_currens = -1;
-    visus->lector = librarium_lector_creare(piscina);
-    visus->latitudo_characterum = 0;
-    visus->altitudo_linearum = 0;
-    visus->scala = 1;
-    visus->widget_x = 0;
-    visus->widget_y = 0;
+    visus->piscina                   = piscina;
+    visus->ctx                       = ctx;
+    visus->modus                     = LIBRARIUM_MODUS_CATEGORIAE;
+    visus->ordo                      = LIBRARIUM_ORDO_CHRONOLOGICUS;
+    visus->categoria                 = LIBRARIUM_CAT_OMNES;
+    visus->filtrum_tag.mensura       = 0;
+    visus->filtrum_quaestio.mensura  = 0;
+    visus->index_paginae             = 0;
+    visus->index_selecta             = 0;
+    visus->liber_currens             = -1;
+    visus->lector                    = librarium_lector_creare(piscina);
+    visus->latitudo_characterum      = 0;
+    visus->altitudo_linearum         = 0;
+    visus->scala                     = 1;
+    visus->widget_x                  = 0;
+    visus->widget_y                  = 0;
 
     /* Carcare catalogum */
     _librarium_visus_carcare_catalogum(visus);
@@ -563,27 +564,27 @@ librarium_visus_creare(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_categoriae(
-    LibrariumVisus*  visus,
+_reddere_categoriae (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    i32 i;
-    constans character* optiones[III];
-    i32 num_libri;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+                    i32  i;
+     constans character* optiones[III];
+                    i32  num_libri;
 
     (vacuum)altitudo;
 
@@ -675,29 +676,29 @@ _reddere_categoriae(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_tags(
-    LibrariumVisus*  visus,
+_reddere_tags (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    i32 i;
-    i32 num_tags;
-    i32 tags_per_pagina;
-    i32 init_tag;
-    i32 finis_tag;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+                    i32  i;
+                    i32  num_tags;
+                    i32  tags_per_pagina;
+                    i32  init_tag;
+                    i32  finis_tag;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
     si (!ctx)
@@ -742,8 +743,8 @@ _reddere_tags(
     per (i = init_tag; i < finis_tag; i++)
     {
         chorda* tag;
-        i32 pixelum;
-        i32 idx_in_pagina = i - init_tag;
+           i32  pixelum;
+           i32  idx_in_pagina = i - init_tag;
 
         tag = (chorda*)xar_obtinere(visus->tags_unici, (i32)i);
         si (!tag)
@@ -803,30 +804,30 @@ _reddere_tags(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_catalogo_compacto(
-    LibrariumVisus*  visus,
+_reddere_catalogo_compacto (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    i32 i;
-    i32 num_libri;
-    i32 libri_per_pagina;
-    i32 init_liber;
-    i32 finis_liber;
-    i32 num_paginae;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+                    i32  i;
+                    i32  num_libri;
+                    i32  libri_per_pagina;
+                    i32  init_liber;
+                    i32  finis_liber;
+                    i32  num_paginae;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
     si (!ctx)
@@ -852,7 +853,7 @@ _reddere_catalogo_compacto(
 
     /* Header */
     {
-        character buffer[CXXVIII];
+                 character  buffer[CXXVIII];
         constans character* modo_str;
 
         si (visus->categoria == LIBRARIUM_CAT_PER_TITULUM)
@@ -890,12 +891,12 @@ _reddere_catalogo_compacto(
     per (i = init_liber; i < finis_liber; i++)
     {
         LibrumInfo* liber;
-        i32 pixelum;
-        i32 idx_in_pagina = i - init_liber;
-        character buffer[CCLVI];
-        s32 annus_val = 0;
-        i32 k;
-        b32 neg = FALSUM;
+               i32  pixelum;
+               i32  idx_in_pagina = i - init_liber;
+         character  buffer[CCLVI];
+               s32  annus_val = 0;
+               i32  k;
+               b32  neg = FALSUM;
 
         liber = *(LibrumInfo**)xar_obtinere(visus->libri_filtrati, i);
         si (!liber)
@@ -916,8 +917,8 @@ _reddere_catalogo_compacto(
         k = 0;
         si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
         {
-            neg = VERUM;
-            k = 1;
+            neg  = VERUM;
+            k    = 1;
         }
         dum (k < liber->annus.mensura)
         {
@@ -938,8 +939,8 @@ _reddere_catalogo_compacto(
             character annus_str[XVI];
             character titulus_trunc[C];
             character auctor_trunc[L];
-            i32 tit_len;
-            i32 auc_len;
+                  i32 tit_len;
+                  i32 auc_len;
 
             si (annus_val < 0)
             {
@@ -1013,27 +1014,27 @@ _reddere_catalogo_compacto(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_catalogo_plenus(
-    LibrariumVisus*  visus,
+_reddere_catalogo_plenus (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    i32 num_libri;
-    LibrumInfo* liber;
-    i32 chars_disponibiles;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+                    i32  num_libri;
+             LibrumInfo* liber;
+                    i32  chars_disponibiles;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
     si (!ctx)
@@ -1055,8 +1056,8 @@ _reddere_catalogo_plenus(
         latitudo * char_lat, altitudo * char_alt,
         color_background);
 
-    linea = y + I;
-    chars_disponibiles = latitudo - (PADDING * II);
+    linea               = y + I;
+    chars_disponibiles  = latitudo - (PADDING * II);
 
     num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
 
@@ -1093,14 +1094,14 @@ _reddere_catalogo_plenus(
     /* Auctor et Annus */
     {
         character buffer[CXXVIII];
-        s32 annus_val = 0;
-        i32 k = 0;
-        b32 neg = FALSUM;
+              s32 annus_val  = 0;
+              i32 k          = 0;
+              b32 neg        = FALSUM;
 
         si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
         {
-            neg = VERUM;
-            k = 1;
+            neg  = VERUM;
+            k    = 1;
         }
         dum (k < liber->annus.mensura)
         {
@@ -1152,9 +1153,9 @@ _reddere_catalogo_plenus(
     si (liber->tags && xar_numerus(liber->tags) > 0)
     {
         character tags_buffer[CXXVIII];
-        i32 tags_pos = 0;
-        i32 t;
-        i32 num_tags_liber = (i32)xar_numerus(liber->tags);
+              i32 tags_pos = 0;
+              i32 t;
+              i32 num_tags_liber = (i32)xar_numerus(liber->tags);
 
         per (t = 0; t < num_tags_liber && tags_pos < CXX; t++)
         {
@@ -1193,11 +1194,11 @@ _reddere_catalogo_plenus(
         per (sep_x = 0; sep_x < chars_disponibiles; sep_x++)
         {
             character sep_char[II];
-            chorda sep_chorda;
+               chorda sep_chorda;
 
-            sep_char[0] = '-';
-            sep_char[1] = '\0';
-            sep_chorda = _chorda_ex_cstr(sep_char);
+            sep_char[0]  = '-';
+            sep_char[1]  = '\0';
+            sep_chorda   = _chorda_ex_cstr(sep_char);
             tabula_pixelorum_pingere_chordam_scalatam(tabula,
                 (x + PADDING + sep_x) * char_lat, linea * char_alt,
                 sep_chorda, pixelum_text_dim, scala);
@@ -1208,16 +1209,16 @@ _reddere_catalogo_plenus(
     /* Summarium cum word wrap */
     si (liber->summarium.mensura > 0)
     {
-        i32 pos = 0;
-        i32 lineae_max = altitudo - VIII;  /* Reservare spatium pro footer */
-        i32 lineae_usae = 0;
+        i32 pos          = 0;
+        i32 lineae_max   = altitudo - VIII;  /* Reservare spatium pro footer */
+        i32 lineae_usae  = 0;
 
         dum (pos < liber->summarium.mensura && lineae_usae < lineae_max)
         {
             character line_buffer[CXXVIII];
-            i32 chars_in_line;
-            i32 break_pos;
-            chorda line_chorda;
+                  i32 chars_in_line;
+                  i32 break_pos;
+               chorda line_chorda;
 
             chars_in_line = chars_disponibiles;
             si (pos + chars_in_line > liber->summarium.mensura)
@@ -1241,8 +1242,8 @@ _reddere_catalogo_plenus(
             }
 
             memcpy(line_buffer, liber->summarium.datum + pos, (size_t)break_pos);
-            line_buffer[break_pos] = '\0';
-            line_chorda = _chorda_ex_cstr(line_buffer);
+            line_buffer[break_pos]  = '\0';
+            line_chorda             = _chorda_ex_cstr(line_buffer);
 
             tabula_pixelorum_pingere_chordam_scalatam(tabula,
                 (x + PADDING) * char_lat, linea * char_alt,
@@ -1255,9 +1256,9 @@ _reddere_catalogo_plenus(
             }
 
             /* Skip newlines */
-            dum (pos < liber->summarium.mensura &&
-                 ((character)liber->summarium.datum[pos] == '\n' ||
-                  (character)liber->summarium.datum[pos] == '\r'))
+            dum (   pos < liber->summarium.mensura
+                 && ((character)liber->summarium.datum[pos] == '\n'
+                || (character)liber->summarium.datum[pos] == '\r'))
             {
                 pos++;
             }
@@ -1287,27 +1288,27 @@ _reddere_catalogo_plenus(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_libro(
-    LibrariumVisus*  visus,
+_reddere_libro (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    LibrumInfo* liber;
-    i32 chars_disponibiles;
-    i32 num_libri;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+             LibrumInfo* liber;
+                    i32  chars_disponibiles;
+                    i32  num_libri;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
     si (!ctx)
@@ -1329,8 +1330,8 @@ _reddere_libro(
         latitudo * char_lat, altitudo * char_alt,
         color_background);
 
-    linea = y + I;
-    chars_disponibiles = latitudo - (PADDING * II);
+    linea               = y + I;
+    chars_disponibiles  = latitudo - (PADDING * II);
 
     num_libri = visus->libri_filtrati ? (i32)xar_numerus(visus->libri_filtrati) : 0;
 
@@ -1358,14 +1359,14 @@ _reddere_libro(
     /* Auctor et Annus */
     {
         character buffer[CXXVIII];
-        s32 annus_val = 0;
-        i32 k = 0;
-        b32 neg = FALSUM;
+              s32 annus_val  = 0;
+              i32 k          = 0;
+              b32 neg        = FALSUM;
 
         si (liber->annus.mensura > 0 && (character)liber->annus.datum[0] == '-')
         {
-            neg = VERUM;
-            k = 1;
+            neg  = VERUM;
+            k    = 1;
         }
         dum (k < liber->annus.mensura)
         {
@@ -1417,9 +1418,9 @@ _reddere_libro(
     si (liber->tags && xar_numerus(liber->tags) > 0)
     {
         character buffer[CCLVI];
-        i32 pos = 0;
-        i32 i;
-        i32 num_tags = (i32)xar_numerus(liber->tags);
+              i32 pos = 0;
+              i32 i;
+              i32 num_tags = (i32)xar_numerus(liber->tags);
 
         pos += (i32)sprintf(buffer + pos, "Tags: ");
 
@@ -1458,11 +1459,11 @@ _reddere_libro(
         per (sep_x = 0; sep_x < chars_disponibiles; sep_x++)
         {
             character sep_char[II];
-            chorda sep_chorda;
+               chorda sep_chorda;
 
-            sep_char[0] = '-';
-            sep_char[1] = '\0';
-            sep_chorda = _chorda_ex_cstr(sep_char);
+            sep_char[0]  = '-';
+            sep_char[1]  = '\0';
+            sep_chorda   = _chorda_ex_cstr(sep_char);
             tabula_pixelorum_pingere_chordam_scalatam(tabula,
                 (x + PADDING + sep_x) * char_lat, linea * char_alt,
                 sep_chorda, pixelum_text_dim, scala);
@@ -1473,15 +1474,15 @@ _reddere_libro(
     /* Summarium */
     si (liber->summarium.mensura > 0)
     {
-        i32 pos = 0;
-        i32 lineae_max = (altitudo - linea + y) - IV;
+        i32 pos         = 0;
+        i32 lineae_max  = (altitudo - linea + y) - IV;
 
         dum (pos < liber->summarium.mensura && lineae_max > 0)
         {
             character line_buffer[CXXVIII];
-            i32 chars_in_line;
-            i32 break_pos;
-            chorda line_chorda;
+                  i32 chars_in_line;
+                  i32 break_pos;
+               chorda line_chorda;
 
             chars_in_line = chars_disponibiles;
             si (pos + chars_in_line > liber->summarium.mensura)
@@ -1504,8 +1505,8 @@ _reddere_libro(
             }
 
             memcpy(line_buffer, liber->summarium.datum + pos, (size_t)break_pos);
-            line_buffer[break_pos] = '\0';
-            line_chorda = _chorda_ex_cstr(line_buffer);
+            line_buffer[break_pos]  = '\0';
+            line_chorda             = _chorda_ex_cstr(line_buffer);
 
             tabula_pixelorum_pingere_chordam_scalatam(tabula,
                 (x + PADDING) * char_lat, linea * char_alt,
@@ -1516,9 +1517,9 @@ _reddere_libro(
             {
                 pos++;
             }
-            dum (pos < liber->summarium.mensura &&
-                 ((character)liber->summarium.datum[pos] == '\n' ||
-                  (character)liber->summarium.datum[pos] == '\r'))
+            dum (   pos < liber->summarium.mensura
+                 && ((character)liber->summarium.datum[pos] == '\n'
+                || (character)liber->summarium.datum[pos] == '\r'))
             {
                 pos++;
             }
@@ -1542,25 +1543,25 @@ _reddere_libro(
  * ================================================== */
 
 hic_manens vacuum
-_reddere_lectio(
-    LibrariumVisus*  visus,
+_reddere_lectio (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 linea;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
-    Color color_background;
-    chorda titulus;
-    LibrumInfo* liber;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  linea;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
+                    i32  pixelum_accent;
+                  Color  color_background;
+                 chorda  titulus;
+             LibrumInfo* liber;
 
     ctx = delineare_creare_contextum(visus->piscina, tabula);
     si (!ctx)
@@ -1603,7 +1604,7 @@ _reddere_lectio(
             si (liber)
             {
                 character buffer[CXXVIII];
-                i32 tit_len = liber->titulus.mensura;
+                      i32 tit_len = liber->titulus.mensura;
                 si (tit_len > C)
                 {
                     tit_len = C;
@@ -1632,7 +1633,7 @@ _reddere_lectio(
     {
         /* Modus sententiae - reddere sententiam currentem */
         SententiaPagina* sent_pagina;
-        chorda textus_libri = librarium_lector_textus(visus->lector);
+                 chorda  textus_libri = librarium_lector_textus(visus->lector);
 
         sent_pagina = librarium_lector_sententia_pagina_obtinere(visus->lector);
 
@@ -1644,7 +1645,7 @@ _reddere_lectio(
             per (i = 0; i < numerus_linearum; i++)
             {
                 PaginariumLinea* pag_linea;
-                chorda linea_reddita;
+                         chorda  linea_reddita;
 
                 pag_linea = (PaginariumLinea*)xar_obtinere(
                     sent_pagina->lineae, i);
@@ -1684,10 +1685,10 @@ _reddere_lectio(
     {
         /* Modus paginae - reddere paginam currentem */
         PaginariumPagina* pagina;
-        i32 numerus_linearum;
-        i32 i;
-        s32 pagina_currens = librarium_lector_pagina_currens(visus->lector);
-        chorda textus_libri = librarium_lector_textus(visus->lector);
+                     i32  numerus_linearum;
+                     i32  i;
+                     s32  pagina_currens = librarium_lector_pagina_currens(visus->lector);
+                  chorda  textus_libri = librarium_lector_textus(visus->lector);
 
         pagina = librarium_lector_pagina_obtinere(visus->lector, pagina_currens);
 
@@ -1698,7 +1699,7 @@ _reddere_lectio(
             per (i = 0; i < numerus_linearum; i++)
             {
                 PaginariumLinea* pag_linea;
-                chorda linea_reddita;
+                         chorda  linea_reddita;
 
                 pag_linea = paginarium_linea_obtinere(pagina, i);
                 si (!pag_linea)
@@ -1764,15 +1765,15 @@ _reddere_lectio(
  * ================================================== */
 
 vacuum
-librarium_visus_reddere(
-    LibrariumVisus*  visus,
+librarium_visus_reddere (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    s32              x,
-    s32              y,
-    s32              latitudo,
-    s32              altitudo,
-    s32              scala,
-    b32              focused)
+                s32  x,
+                s32  y,
+                s32  latitudo,
+                s32  altitudo,
+                s32  scala,
+                b32  focused)
 {
     (vacuum)focused;
 
@@ -1782,11 +1783,11 @@ librarium_visus_reddere(
     }
 
     /* Cache layout */
-    visus->latitudo_characterum = latitudo;
-    visus->altitudo_linearum = altitudo;
-    visus->scala = scala;
-    visus->widget_x = x;
-    visus->widget_y = y;
+    visus->latitudo_characterum  = latitudo;
+    visus->altitudo_linearum     = altitudo;
+    visus->scala                 = scala;
+    visus->widget_x              = x;
+    visus->widget_y              = y;
 
     commutatio (visus->modus)
     {
@@ -1828,13 +1829,13 @@ librarium_visus_reddere(
  * ================================================== */
 
 hic_manens vacuum
-_librarium_visus_carcare_textum(
+_librarium_visus_carcare_textum (
     LibrariumVisus* visus)
 {
     LibrumInfo* liber;
-    s32 num_libri;
-    character via_buffer[DXII];
-    character numerus_buffer[XXXII];
+           s32  num_libri;
+     character  via_buffer[DXII];
+     character  numerus_buffer[XXXII];
 
     num_libri = visus->libri_filtrati ? (s32)xar_numerus(visus->libri_filtrati) : 0;
 
@@ -1884,8 +1885,8 @@ _librarium_visus_carcare_textum(
  * ================================================== */
 
 b32
-librarium_visus_tractare_eventum(
-    LibrariumVisus*   visus,
+librarium_visus_tractare_eventum (
+      LibrariumVisus* visus,
     constans Eventus* eventus)
 {
     si (!visus || !eventus)
@@ -2059,8 +2060,8 @@ librarium_visus_tractare_eventum(
 
             si (eventus->datum.clavis.clavis == CLAVIS_EFFUGIUM)
             {
-                visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
-                visus->index_selecta = II;  /* Per Tag */
+                visus->modus          = LIBRARIUM_MODUS_CATEGORIAE;
+                visus->index_selecta  = II;  /* Per Tag */
                 redde VERUM;
             }
             frange;
@@ -2146,8 +2147,8 @@ librarium_visus_tractare_eventum(
                     s32 liber_idx = visus->index_paginae * libri_per_pagina + visus->index_selecta;
                     si (liber_idx >= 0 && liber_idx < num_libri)
                     {
-                        visus->liber_currens = liber_idx;
-                        visus->modus = LIBRARIUM_MODUS_LIBRO;
+                        visus->liber_currens  = liber_idx;
+                        visus->modus          = LIBRARIUM_MODUS_LIBRO;
                     }
                     redde VERUM;
                 }
@@ -2267,8 +2268,8 @@ librarium_visus_tractare_eventum(
                 librarium_lector_salvare_progressum(visus->lector, visus->ctx->repo);
 
                 /* Retro ad catalogo */
-                visus->index_paginae = visus->liber_currens;
-                visus->modus = LIBRARIUM_MODUS_CATALOGO;
+                visus->index_paginae  = visus->liber_currens;
+                visus->modus          = LIBRARIUM_MODUS_CATALOGO;
                 redde VERUM;
             }
             frange;
@@ -2287,8 +2288,8 @@ librarium_visus_tractare_eventum(
  * ================================================== */
 
 vacuum
-librarium_visus_quaerere(
-    LibrariumVisus*     visus,
+librarium_visus_quaerere (
+        LibrariumVisus* visus,
     constans character* quaestio)
 {
     s32 num_inventum;
@@ -2311,17 +2312,17 @@ librarium_visus_quaerere(
     si (num_inventum == 1)
     {
         /* Uno solo - monstra in catalogo plenus */
-        visus->categoria = LIBRARIUM_CAT_OMNES;
-        visus->index_paginae = 0;
-        visus->modus = LIBRARIUM_MODUS_CATALOGO;
+        visus->categoria      = LIBRARIUM_CAT_OMNES;
+        visus->index_paginae  = 0;
+        visus->modus          = LIBRARIUM_MODUS_CATALOGO;
     }
     alioquin si (num_inventum > 1)
     {
         /* Plures - monstra catalogo compacto */
-        visus->categoria = LIBRARIUM_CAT_PER_TITULUM;
-        visus->index_paginae = 0;
-        visus->index_selecta = 0;
-        visus->modus = LIBRARIUM_MODUS_CATALOGO;
+        visus->categoria      = LIBRARIUM_CAT_PER_TITULUM;
+        visus->index_paginae  = 0;
+        visus->index_selecta  = 0;
+        visus->modus          = LIBRARIUM_MODUS_CATALOGO;
     }
     alioquin
     {
@@ -2333,7 +2334,7 @@ librarium_visus_quaerere(
 }
 
 vacuum
-librarium_visus_reset_ad_radix(
+librarium_visus_reset_ad_radix (
     LibrariumVisus* visus)
 {
     si (!visus)
@@ -2342,12 +2343,12 @@ librarium_visus_reset_ad_radix(
     }
 
     /* Reset ad modus categoriae */
-    visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
-    visus->index_selecta = 0;
-    visus->index_paginae = 0;
-    visus->filtrum_tag.mensura = 0;
-    visus->filtrum_quaestio.mensura = 0;
-    visus->liber_currens = -1;
+    visus->modus                     = LIBRARIUM_MODUS_CATEGORIAE;
+    visus->index_selecta             = 0;
+    visus->index_paginae             = 0;
+    visus->filtrum_tag.mensura       = 0;
+    visus->filtrum_quaestio.mensura  = 0;
+    visus->liber_currens             = -1;
 
     /* Re-filtrare cum categoria currens */
     _librarium_visus_filtrare(visus);
@@ -2360,14 +2361,14 @@ librarium_visus_reset_ad_radix(
 
 /* Command handler pro $library */
 hic_manens b32
-_librarium_command_handler(
+_librarium_command_handler (
     ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
-    character argumentum[LXIV];
-    i32 col;
-    i32 idx;
-    character c;
+          character  argumentum[LXIV];
+                i32  col;
+                i32  idx;
+          character  c;
 
     widget_ctx = (ContextusWidget*)ctx->datum_registratus;
     si (!widget_ctx || !widget_ctx->commutare_widget)
@@ -2407,7 +2408,7 @@ _librarium_command_handler(
 }
 
 vacuum
-librarium_visus_init(
+librarium_visus_init (
     ContextusWidget* ctx)
 {
     si (!ctx || !ctx->reg_commandi)
@@ -2423,13 +2424,13 @@ librarium_visus_init(
 }
 
 vacuum
-librarium_visus_salvare_status(
-    LibrariumVisus*      visus,
+librarium_visus_salvare_status (
+         LibrariumVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
-    Entitas* entitas;
-    character valor[XXXII];
+      Entitas* entitas;
+    character  valor[XXXII];
 
     si (!visus || !repo || !entitas_id)
     {
@@ -2471,7 +2472,7 @@ librarium_visus_salvare_status(
     si (visus->filtrum_tag.mensura > 0)
     {
         character tag_buf[CXXVIII];
-        i32 len = visus->filtrum_tag.mensura;
+              i32 len = visus->filtrum_tag.mensura;
         si (len > CXXVII)
         {
             len = CXXVII;
@@ -2489,7 +2490,7 @@ librarium_visus_salvare_status(
     si (visus->filtrum_quaestio.mensura > 0)
     {
         character quaestio_buf[CXXVIII];
-        i32 len = visus->filtrum_quaestio.mensura;
+              i32 len = visus->filtrum_quaestio.mensura;
         si (len > CXXVII)
         {
             len = CXXVII;
@@ -2509,14 +2510,14 @@ librarium_visus_salvare_status(
 }
 
 vacuum
-librarium_visus_carcare_status(
-    LibrariumVisus*      visus,
+librarium_visus_carcare_status (
+         LibrariumVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
     Entitas* entitas;
-    chorda* valor;
-    chorda* clavis;
+     chorda* valor;
+     chorda* clavis;
 
     si (!visus || !repo || !entitas_id)
     {
@@ -2531,8 +2532,8 @@ librarium_visus_carcare_status(
     }
 
     /* Carcare modus */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "modus");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(visus->ctx->intern, "modus");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
         s32 temp;
@@ -2617,8 +2618,8 @@ librarium_visus_carcare_status(
     }
 
     /* Carcare ordo */
-    clavis = chorda_internare_ex_literis(visus->ctx->intern, "ordo");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(visus->ctx->intern, "ordo");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor)
     {
         s32 temp;
@@ -2657,8 +2658,8 @@ librarium_visus_carcare_status(
             alioquin
             {
                 /* Index invalido - reset ad categoriae */
-                visus->modus = LIBRARIUM_MODUS_CATEGORIAE;
-                visus->liber_currens = -1;
+                visus->modus          = LIBRARIUM_MODUS_CATEGORIAE;
+                visus->liber_currens  = -1;
             }
         }
     }

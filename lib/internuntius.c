@@ -8,43 +8,47 @@
 
 /* praebitum unum registri */
 nomen structura {
-    InternuntiusTractator tractator;
-    vacuum*               datum;
+    InternuntiusTractator  tractator;
+                   vacuum* datum;
 } InternuntiusPraebitum;
 
 structura Internuntius {
-    Piscina*            piscina;
-    TabulaDispersa*     methodi_tabula;   /* titulus -> Praebitum* */
-    Xar*                methodi_ordo;     /* chorda (valore) */
-    InternuntiusMissor  mittere;
-    vacuum*             mittere_datum;
-    InternuntiusFructus fructus;
+                Piscina* piscina;
+         TabulaDispersa* methodi_tabula;   /* titulus -> Praebitum* */
+                    Xar* methodi_ordo;     /* chorda (valore) */
+     InternuntiusMissor  mittere;
+                 vacuum* mittere_datum;
+    InternuntiusFructus  fructus;
 };
+
 
 /* ==================================================
  * auxilia
  * ================================================== */
 
 interior chorda
-_ch (constans character* litterae)
+_ch (
+    constans character* litterae)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = litterae;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(litterae);
+    u.l        = litterae;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(litterae);
     redde c;
 }
 
 /* copia chordae in piscinam (datum novum, non NUL-terminatum) */
 interior chorda
-_copiare (Piscina* piscina, chorda c)
+_copiare (
+    Piscina* piscina,
+     chorda  c)
 {
     chorda nova;
 
-    nova.mensura = c.mensura;
-    nova.datum = NIHIL;
+    nova.mensura  = c.mensura;
+    nova.datum    = NIHIL;
     si (c.mensura > ZEPHYRUM)
     {
         nova.datum = (i8*)piscina_allocare(piscina,
@@ -60,7 +64,10 @@ _copiare (Piscina* piscina, chorda c)
 }
 
 interior vacuum
-_emittere (Internuntius* inx, JsonValor* responsum, Piscina* pv)
+_emittere (
+    Internuntius* inx,
+       JsonValor* responsum,
+         Piscina* pv)
 {
     chorda textus = json_scribere(responsum, pv);
 
@@ -72,11 +79,15 @@ _emittere (Internuntius* inx, JsonValor* responsum, Piscina* pv)
 
 /* responsum culpae construere et mittere (id solum si habetur) */
 interior vacuum
-_culpam_mittere (Internuntius* inx, b32 habet_id, s64 id,
-    chorda nuntius, Piscina* pv)
+_culpam_mittere (
+    Internuntius* inx,
+             b32  habet_id,
+             s64  id,
+          chorda  nuntius,
+         Piscina* pv)
 {
-    JsonValor* responsum = json_objectum_creare(pv);
-    JsonValor* culpa = json_objectum_creare(pv);
+    JsonValor* responsum  = json_objectum_creare(pv);
+    JsonValor* culpa      = json_objectum_creare(pv);
 
     si (habet_id)
     {
@@ -90,13 +101,16 @@ _culpam_mittere (Internuntius* inx, b32 habet_id, s64 id,
     _emittere(inx, responsum, pv);
 }
 
+
 /* ==================================================
  * vita
  * ================================================== */
 
 Internuntius*
-internuntius_creare (Piscina* piscina, InternuntiusMissor mittere,
-    vacuum* mittere_datum)
+internuntius_creare (
+               Piscina* piscina,
+    InternuntiusMissor  mittere,
+                vacuum* mittere_datum)
 {
     Internuntius* inx;
 
@@ -121,17 +135,19 @@ internuntius_creare (Piscina* piscina, InternuntiusMissor mittere,
     {
         redde NIHIL;
     }
-    inx->mittere = mittere;
-    inx->mittere_datum = mittere_datum;
+    inx->mittere        = mittere;
+    inx->mittere_datum  = mittere_datum;
     redde inx;
 }
 
 b32
-internuntius_praebere (Internuntius* inx,
-    constans character* methodus, InternuntiusTractator tractator,
-    vacuum* datum)
+internuntius_praebere (
+             Internuntius* inx,
+       constans character* methodus,
+    InternuntiusTractator  tractator,
+                   vacuum* datum)
 {
-    chorda titulus;
+                   chorda  titulus;
     InternuntiusPraebitum* praebitum;
 
     si (inx == NIHIL || methodus == NIHIL || tractator == NIHIL)
@@ -139,7 +155,7 @@ internuntius_praebere (Internuntius* inx,
         redde FALSUM;
     }
     titulus = _ch(methodus);
-    si (titulus.mensura == ZEPHYRUM
+    si (   titulus.mensura == ZEPHYRUM
         || tabula_dispersa_continet(inx->methodi_tabula, titulus))
     {
         redde FALSUM;   /* vacuum aut duplicatum - registrum codex */
@@ -149,13 +165,13 @@ internuntius_praebere (Internuntius* inx,
         inx->piscina,
         (memoriae_index)magnitudo(InternuntiusPraebitum),
         (memoriae_index)magnitudo(vacuum*));
-    si (praebitum == NIHIL
+    si (   praebitum == NIHIL
         || (titulus.mensura == ZEPHYRUM && methodus[0] != '\0'))
     {
         redde FALSUM;
     }
-    praebitum->tractator = tractator;
-    praebitum->datum = datum;
+    praebitum->tractator  = tractator;
+    praebitum->datum      = datum;
     si (!tabula_dispersa_inserere(inx->methodi_tabula, titulus,
             praebitum))
     {
@@ -172,22 +188,25 @@ internuntius_praebere (Internuntius* inx,
     redde VERUM;
 }
 
+
 /* ==================================================
  * dispatch
  * ================================================== */
 
 vacuum
-internuntius_tractare (Internuntius* inx, chorda nuntium,
-    Piscina* pv)
+internuntius_tractare (
+    Internuntius* inx,
+          chorda  nuntium,
+         Piscina* pv)
 {
-    JsonResultus r;
-    JsonValor* id_v;
-    JsonValor* methodus_v;
-    JsonValor* argumenta_v;
-    b32 habet_id = FALSUM;
-    s64 id = ZEPHYRUM;
-    chorda methodus;
-    vacuum* valor = NIHIL;
+             JsonResultus  r;
+                JsonValor* id_v;
+                JsonValor* methodus_v;
+                JsonValor* argumenta_v;
+                      b32  habet_id  = FALSUM;
+                      s64  id        = ZEPHYRUM;
+                   chorda  methodus;
+                   vacuum* valor = NIHIL;
     InternuntiusPraebitum* praebitum;
 
     si (inx == NIHIL || pv == NIHIL)
@@ -206,8 +225,8 @@ internuntius_tractare (Internuntius* inx, chorda nuntium,
     id_v = json_objectum_capere(r.radix, "id");
     si (id_v != NIHIL && json_est_integer(id_v))
     {
-        habet_id = VERUM;
-        id = json_ad_integer(id_v);
+        habet_id  = VERUM;
+        id        = json_ad_integer(id_v);
     }
     methodus_v = json_objectum_capere(r.radix, "methodus");
     si (methodus_v == NIHIL || !json_est_chorda(methodus_v))
@@ -230,15 +249,15 @@ internuntius_tractare (Internuntius* inx, chorda nuntium,
             chorda_aedificator_finire(aed), pv);
         redde;
     }
-    praebitum = (InternuntiusPraebitum*)valor;
-    argumenta_v = json_objectum_capere(r.radix, "argumenta");
+    praebitum    = (InternuntiusPraebitum*)valor;
+    argumenta_v  = json_objectum_capere(r.radix, "argumenta");
     {
-        chorda culpa;
+           chorda  culpa;
         JsonValor* fructus_v;
         JsonValor* responsum;
 
-        culpa.mensura = ZEPHYRUM;
-        culpa.datum = NIHIL;
+        culpa.mensura  = ZEPHYRUM;
+        culpa.datum    = NIHIL;
         fructus_v = praebitum->tractator(argumenta_v, pv,
             praebitum->datum, &culpa);
         si (culpa.mensura > ZEPHYRUM)
@@ -261,8 +280,11 @@ internuntius_tractare (Internuntius* inx, chorda nuntium,
 }
 
 vacuum
-internuntius_eventum_mittere (Internuntius* inx,
-    constans character* eventus, JsonValor* datum, Piscina* pv)
+internuntius_eventum_mittere (
+          Internuntius* inx,
+    constans character* eventus,
+             JsonValor* datum,
+               Piscina* pv)
 {
     JsonValor* responsum;
 
@@ -279,15 +301,18 @@ internuntius_eventum_mittere (Internuntius* inx,
     _emittere(inx, responsum, pv);
 }
 
+
 /* ==================================================
  * introspectio + fructus
  * ================================================== */
 
 Xar*
-internuntius_methodi (Internuntius* inx, Piscina* piscina)
+internuntius_methodi (
+    Internuntius* inx,
+         Piscina* piscina)
 {
     Xar* index;
-    i32 i;
+    i32  i;
 
     si (inx == NIHIL || piscina == NIHIL)
     {
@@ -300,8 +325,8 @@ internuntius_methodi (Internuntius* inx, Piscina* piscina)
     }
     per (i = ZEPHYRUM; i < xar_numerus(inx->methodi_ordo); i++)
     {
-        chorda* fons = (chorda*)xar_obtinere(inx->methodi_ordo, i);
-        chorda* locus = (chorda*)xar_addere(index);
+        chorda* fons   = (chorda*)xar_obtinere(inx->methodi_ordo, i);
+        chorda* locus  = (chorda*)xar_addere(index);
 
         si (fons != NIHIL && locus != NIHIL)
         {
@@ -312,7 +337,8 @@ internuntius_methodi (Internuntius* inx, Piscina* piscina)
 }
 
 InternuntiusFructus
-internuntius_fructus (constans Internuntius* inx)
+internuntius_fructus (
+    constans Internuntius* inx)
 {
     InternuntiusFructus vacua;
 
@@ -324,14 +350,18 @@ internuntius_fructus (constans Internuntius* inx)
     redde inx->fructus;
 }
 
+
 /* ==================================================
  * effugator litterae JS
  * ================================================== */
 
 /* cursum planum [initium, finis) appendere */
 interior vacuum
-_cursum_appendere (ChordaAedificator* aed, chorda textus,
-    i32 initium, i32 finis)
+_cursum_appendere (
+    ChordaAedificator* aed,
+               chorda  textus,
+                  i32  initium,
+                  i32  finis)
 {
     chorda pars;
 
@@ -339,21 +369,23 @@ _cursum_appendere (ChordaAedificator* aed, chorda textus,
     {
         redde;
     }
-    pars.datum = textus.datum + initium;
-    pars.mensura = finis - initium;
+    pars.datum    = textus.datum + initium;
+    pars.mensura  = finis - initium;
     chorda_aedificator_appendere_chorda(aed, pars);
 }
 
 chorda
-internuntius_effugere_js (chorda textus, Piscina* piscina)
+internuntius_effugere_js (
+     chorda  textus,
+    Piscina* piscina)
 {
     ChordaAedificator* aed;
-    i32 i = ZEPHYRUM;
-    i32 initium_cursus = ZEPHYRUM;
-    chorda vacua;
+                  i32  i               = ZEPHYRUM;
+                  i32  initium_cursus  = ZEPHYRUM;
+               chorda  vacua;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
     si (piscina == NIHIL)
     {
         redde vacua;
@@ -369,8 +401,8 @@ internuntius_effugere_js (chorda textus, Piscina* piscina)
         insignatus character o =
             (insignatus character)textus.datum[i];
         constans character* effugium = NIHIL;
-        character quattuor[VIII];
-        i32 saltus = I;
+                 character  quattuor[VIII];
+                       i32  saltus = I;
 
         si (o == (insignatus character)'\\')
         {
@@ -402,12 +434,12 @@ internuntius_effugere_js (chorda textus, Piscina* piscina)
             /* contra '</script' formas intra HTML intextum */
             effugium = "\\u003C";
         }
-        alioquin si (o == 0xE2
-            && i + II < textus.mensura
-            && (insignatus character)textus.datum[i + I] == 0x80
-            && ((insignatus character)textus.datum[i + II] == 0xA8
-                || (insignatus character)textus.datum[i + II]
-                    == 0xA9))
+        alioquin si (   o == 0xE2
+                     && i + II < textus.mensura
+                     && (insignatus character)textus.datum[i + I] == 0x80
+                     && ((insignatus character)textus.datum[i + II] == 0xA8
+                     || (insignatus character)textus.datum[i + II]
+                     == 0xA9))
         {
             /* U+2028/U+2029: in JSON licita, in littera JS cruda
              * illicita - classicum quod homines praetermittunt */
@@ -419,8 +451,8 @@ internuntius_effugere_js (chorda textus, Piscina* piscina)
         {
             _cursum_appendere(aed, textus, initium_cursus, i);
             chorda_aedificator_appendere_literis(aed, effugium);
-            i += saltus;
-            initium_cursus = i;
+            i               += saltus;
+            initium_cursus  = i;
         }
         alioquin
         {

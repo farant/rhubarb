@@ -21,6 +21,7 @@
 
 interior constans SanctoraleDatum SANCTORALE[] = {
 
+
     /* ============================================
      * IANUARIUS
      * ============================================ */
@@ -1222,40 +1223,46 @@ interior constans s32 SANCTORALE_NUMERUS =
  * Ponit numerum celebrationum in *numerus_celebrationum.
  */
 constans SanctoraleDatum*
-sanctorale_obtinere(
+sanctorale_obtinere (
     s32  mensis,
     s32  dies,
     s32* numerus_celebrationum)
 {
     s32 i;
-    s32 primus = -I;
-    s32 numerus = ZEPHYRUM;
+    s32 primus   = -I;
+    s32 numerus  = ZEPHYRUM;
 
     /* Quaerere per tabulam (ordinata est) */
-    per (i = ZEPHYRUM; i < SANCTORALE_NUMERUS; i++) {
-        si (SANCTORALE[i].mensis == mensis && SANCTORALE[i].dies == dies) {
-            si (primus < ZEPHYRUM) {
+    per (i = ZEPHYRUM; i < SANCTORALE_NUMERUS; i++)
+    {
+        si (SANCTORALE[i].mensis == mensis && SANCTORALE[i].dies == dies)
+        {
+            si (primus < ZEPHYRUM)
+            {
                 primus = i;
             }
             numerus++;
-        } alioquin si (SANCTORALE[i].mensis > mensis ||
-                      (SANCTORALE[i].mensis == mensis && SANCTORALE[i].dies > dies)) {
+        } alioquin si (   SANCTORALE[i].mensis > mensis
+
+                       || (SANCTORALE[i].mensis == mensis && SANCTORALE[i].dies > dies))
+        {
             /* Praeter diem quaesitam */
             frange;
         }
     }
 
-    si (numerus_celebrationum != NIHIL) {
+    si (numerus_celebrationum != NIHIL)
+    {
         *numerus_celebrationum = numerus;
     }
 
-    si (primus >= ZEPHYRUM) {
+    si (primus >= ZEPHYRUM)
+    {
         redde &SANCTORALE[primus];
     }
 
     redde NIHIL;
 }
-
 
 /*
  * sanctorale_numerus
@@ -1263,7 +1270,7 @@ sanctorale_obtinere(
  * Redit numerum totalem celebrationum in sanctorale.
  */
 s32
-sanctorale_numerus(vacuum)
+sanctorale_numerus (vacuum)
 {
     redde SANCTORALE_NUMERUS;
 }

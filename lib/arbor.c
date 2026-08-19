@@ -7,6 +7,7 @@
 /* DEBUG flag - set to 1 to enable debug output */
 #define ARBOR_DEBUG 0
 
+
 /* ==================================================
  * Default Options
  * ================================================== */
@@ -14,44 +15,45 @@
 interior constans character* _include_via_default = "include";
 
 ArborOptiones
-arbor_optiones_default(vacuum)
+arbor_optiones_default (vacuum)
 {
     ArborOptiones opt;
 
-    opt.pp_modus        = ARBOR_PP_MODUS_HYBRID;
-    opt.include_viae    = &_include_via_default;
-    opt.include_numerus = I;
+    opt.pp_modus         = ARBOR_PP_MODUS_HYBRID;
+    opt.include_viae     = &_include_via_default;
+    opt.include_numerus  = I;
 
     redde opt;
 }
+
 
 /* ==================================================
  * Parsere Fontem
  * ================================================== */
 
 ArborResultus
-arbor_parsere_fontem(
-    constans character*   fons,
-    i32                   longitudo,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    ArborOptiones*        optiones)
+arbor_parsere_fontem (
+     constans character* fons,
+                    i32  longitudo,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+          ArborOptiones* optiones)
 {
-    ArborResultus res;
-    ArborOptiones opt_default;
-    ArborLexator* lexator;
-    ArborPraeparator* pp;
-    ArborSyntaxis* syn;
-    Xar* lexemata;
-    Xar* processata;
-    ArborSyntaxisResultus parse_res;
-    i32 i;
+            ArborResultus  res;
+            ArborOptiones  opt_default;
+             ArborLexator* lexator;
+         ArborPraeparator* pp;
+            ArborSyntaxis* syn;
+                      Xar* lexemata;
+                      Xar* processata;
+    ArborSyntaxisResultus  parse_res;
+                      i32  i;
 
     /* Initializare resultum vacuum */
-    res.successus = FALSUM;
-    res.radix     = NIHIL;
-    res.errores   = NIHIL;
-    res.lexemata  = NIHIL;
+    res.successus  = FALSUM;
+    res.radix      = NIHIL;
+    res.errores    = NIHIL;
+    res.lexemata   = NIHIL;
 
     /* Verificare argumenta */
     si (fons == NIHIL || piscina == NIHIL || intern == NIHIL)
@@ -62,8 +64,8 @@ arbor_parsere_fontem(
     /* Uti optiones default si NIHIL */
     si (optiones == NIHIL)
     {
-        opt_default = arbor_optiones_default();
-        optiones = &opt_default;
+        opt_default  = arbor_optiones_default();
+        optiones     = &opt_default;
     }
 
     /* Lexere */
@@ -144,33 +146,34 @@ arbor_parsere_fontem(
     parse_res = arbor_syntaxis_parsere(syn, processata);
 
     /* Transferre resulta */
-    res.successus = parse_res.successus;
-    res.radix     = parse_res.radix;
-    res.errores   = parse_res.errores;
-    res.lexemata  = processata;
+    res.successus  = parse_res.successus;
+    res.radix      = parse_res.radix;
+    res.errores    = parse_res.errores;
+    res.lexemata   = processata;
 
     redde res;
 }
+
 
 /* ==================================================
  * Parsere Filum
  * ================================================== */
 
 ArborResultus
-arbor_parsere_filum(
-    constans character*   via,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    ArborOptiones*        optiones)
+arbor_parsere_filum (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+          ArborOptiones* optiones)
 {
     ArborResultus res;
-    chorda contentum;
+           chorda contentum;
 
     /* Initializare resultum vacuum */
-    res.successus = FALSUM;
-    res.radix     = NIHIL;
-    res.errores   = NIHIL;
-    res.lexemata  = NIHIL;
+    res.successus  = FALSUM;
+    res.radix      = NIHIL;
+    res.errores    = NIHIL;
+    res.lexemata   = NIHIL;
 
     /* Verificare argumenta */
     si (via == NIHIL || piscina == NIHIL || intern == NIHIL)

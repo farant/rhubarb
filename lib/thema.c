@@ -1,5 +1,6 @@
 #include "thema.h"
 
+
 /* ==================================================
  * Palette Aquinas (Ordinaria)
  * ================================================== */
@@ -50,35 +51,36 @@ hic_manens i32 mappa_semantica[COLOR_COUNT];
  * ================================================== */
 
 vacuum
-thema_initiare(vacuum)
+thema_initiare (vacuum)
 {
     i32 i;
 
     /* Copiere palette Aquinas ad palette currens */
-    per (i = ZEPHYRUM; i < XLVIII; i++) {
+    per (i = ZEPHYRUM; i < XLVIII; i++)
+    {
         palette_currens[i] = palette_aquinas[i];
     }
 
     /* Ponere mappas semanticas ordinarias */
-    mappa_semantica[COLOR_BACKGROUND]       = PALETTE_WARM_GRAY;
-    mappa_semantica[COLOR_TEXT]             = PALETTE_DARK_GRAY;
-    mappa_semantica[COLOR_TEXT_DIM]         = PALETTE_MEDIUM_DARK_GRAY;
-    mappa_semantica[COLOR_CURSOR]           = PALETTE_BRIGHT_GOLD;
-    mappa_semantica[COLOR_SELECTION]        = PALETTE_MEDIUM_DARK_GRAY;
+    mappa_semantica[COLOR_BACKGROUND]  = PALETTE_WARM_GRAY;
+    mappa_semantica[COLOR_TEXT]        = PALETTE_DARK_GRAY;
+    mappa_semantica[COLOR_TEXT_DIM]    = PALETTE_MEDIUM_DARK_GRAY;
+    mappa_semantica[COLOR_CURSOR]      = PALETTE_BRIGHT_GOLD;
+    mappa_semantica[COLOR_SELECTION]   = PALETTE_MEDIUM_DARK_GRAY;
 
-    mappa_semantica[COLOR_BORDER]           = PALETTE_MEDIUM_DARK_GRAY;
-    mappa_semantica[COLOR_BORDER_ACTIVE]    = PALETTE_DARK_LEAF;
+    mappa_semantica[COLOR_BORDER]         = PALETTE_MEDIUM_DARK_GRAY;
+    mappa_semantica[COLOR_BORDER_ACTIVE]  = PALETTE_DARK_LEAF;
 
-    mappa_semantica[COLOR_STATUS_NORMAL]    = PALETTE_MEDIUM_GRAY;
-    mappa_semantica[COLOR_STATUS_INSERT]    = PALETTE_BRIGHT_GOLD;
-    mappa_semantica[COLOR_STATUS_VISUAL]    = PALETTE_BRIGHT_LEAF;
+    mappa_semantica[COLOR_STATUS_NORMAL] = PALETTE_MEDIUM_GRAY;
+    mappa_semantica[COLOR_STATUS_INSERT] = PALETTE_BRIGHT_GOLD;
+    mappa_semantica[COLOR_STATUS_VISUAL] = PALETTE_BRIGHT_LEAF;
 
-    mappa_semantica[COLOR_ACCENT_PRIMARY]   = PALETTE_BRIGHT_LEAF;
-    mappa_semantica[COLOR_ACCENT_SECONDARY] = PALETTE_BRIGHT_GOLD;
+    mappa_semantica[COLOR_ACCENT_PRIMARY]    = PALETTE_BRIGHT_LEAF;
+    mappa_semantica[COLOR_ACCENT_SECONDARY]  = PALETTE_BRIGHT_GOLD;
 
-    mappa_semantica[COLOR_ERROR]            = PALETTE_BRIGHT_PINK;
-    mappa_semantica[COLOR_WARNING]          = PALETTE_MEDIUM_GOLD;
-    mappa_semantica[COLOR_SUCCESS]          = PALETTE_BRIGHT_LEAF;
+    mappa_semantica[COLOR_ERROR]    = PALETTE_BRIGHT_PINK;
+    mappa_semantica[COLOR_WARNING]  = PALETTE_MEDIUM_GOLD;
+    mappa_semantica[COLOR_SUCCESS]  = PALETTE_BRIGHT_LEAF;
 }
 
 
@@ -87,7 +89,8 @@ thema_initiare(vacuum)
  * ================================================== */
 
 Color
-thema_color(ColorThema color)
+thema_color (
+    ColorThema color)
 {
     i32 palette_index;
 
@@ -99,13 +102,15 @@ thema_color(ColorThema color)
 }
 
 i32
-thema_palette_index(ColorThema color)
+thema_palette_index (
+    ColorThema color)
 {
     redde mappa_semantica[color];
 }
 
 Color
-thema_color_ex_indice_colorationis(i8 index)
+thema_color_ex_indice_colorationis (
+    i8 index)
 {
     /* Mappa ColoratioIndex ad indices palette
      *
@@ -161,20 +166,21 @@ thema_color_ex_indice_colorationis(i8 index)
  * ================================================== */
 
 vacuum
-thema_ponere_mappam(
+thema_ponere_mappam (
     ColorThema color,
-    i32 palette_index)
+           i32 palette_index)
 {
     mappa_semantica[color] = palette_index;
 }
 
 vacuum
-thema_ponere_palette(
+thema_ponere_palette (
     constans i8* palette)
 {
     i32 i;
 
-    per (i = ZEPHYRUM; i < XLVIII; i++) {
+    per (i = ZEPHYRUM; i < XLVIII; i++)
+    {
         palette_currens[i] = palette[i];
     }
 }
@@ -185,7 +191,7 @@ thema_ponere_palette(
  * ================================================== */
 
 constans i8*
-thema_palette_aquinas(vacuum)
+thema_palette_aquinas (vacuum)
 {
     redde palette_aquinas;
 }

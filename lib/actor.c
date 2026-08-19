@@ -11,14 +11,14 @@
 
 /* Parsare chorda ad s32 */
 interior b32
-_actor_parsare_s32(
+_actor_parsare_s32 (
     chorda  valor,
-    s32*    resultus)
+       s32* resultus)
 {
-    character buffer[LXIV];
+    character  buffer[LXIV];
     character* endptr;
-    longus     val;
-    i32        len;
+       longus  val;
+          i32  len;
 
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
@@ -46,9 +46,9 @@ _actor_parsare_s32(
 
 /* Parsare chorda ad s64 */
 interior b32
-_actor_parsare_s64(
+_actor_parsare_s64 (
     chorda  valor,
-    s64*    resultus)
+       s64* resultus)
 {
     s64 val;
     s64 sign;
@@ -60,12 +60,12 @@ _actor_parsare_s64(
         redde FALSUM;
     }
 
-    val  = 0;
-    sign = 1;
-    i    = 0;
+    val   = 0;
+    sign  = 1;
+    i     = 0;
 
-    dum (i < valor.mensura &&
-         (valor.datum[i] == ' ' || valor.datum[i] == '\t'))
+    dum (   i < valor.mensura
+         && (valor.datum[i] == ' ' || valor.datum[i] == '\t'))
     {
         i++;
     }
@@ -118,14 +118,14 @@ _actor_parsare_s64(
 
 /* Parsare chorda ad f64 */
 interior b32
-_actor_parsare_f64(
+_actor_parsare_f64 (
     chorda  valor,
-    f64*    resultus)
+       f64* resultus)
 {
     character  buffer[CXXVIII];
     character* endptr;
-    f64        val;
-    i32        len;
+          f64  val;
+          i32  len;
 
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
@@ -153,26 +153,26 @@ _actor_parsare_f64(
 
 /* Parsare chorda ad b32 */
 interior b32
-_actor_parsare_b32(
+_actor_parsare_b32 (
     chorda  valor,
-    b32*    resultus)
+       b32* resultus)
 {
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
         redde FALSUM;
     }
 
-    si (chorda_aequalis_literis(valor, "true") ||
-        chorda_aequalis_literis(valor, "verum") ||
-        chorda_aequalis_literis(valor, "1"))
+    si (   chorda_aequalis_literis(valor, "true")
+        || chorda_aequalis_literis(valor, "verum")
+        || chorda_aequalis_literis(valor, "1"))
     {
         *resultus = VERUM;
         redde VERUM;
     }
 
-    si (chorda_aequalis_literis(valor, "false") ||
-        chorda_aequalis_literis(valor, "falsum") ||
-        chorda_aequalis_literis(valor, "0"))
+    si (   chorda_aequalis_literis(valor, "false")
+        || chorda_aequalis_literis(valor, "falsum")
+        || chorda_aequalis_literis(valor, "0"))
     {
         *resultus = FALSUM;
         redde VERUM;
@@ -187,14 +187,14 @@ _actor_parsare_b32(
  * ================================================== */
 
 Nuntius*
-nuntius_creare(
-    Piscina*             piscina,
+nuntius_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              mittens_id,
-    constans character*  genus)
+                 chorda* mittens_id,
+     constans character* genus)
 {
     Nuntius* nuntius;
-    chorda   genus_chorda;
+     chorda  genus_chorda;
 
     si (!piscina || !intern || !genus)
     {
@@ -210,12 +210,12 @@ nuntius_creare(
     /* Internare genus */
     genus_chorda = chorda_ex_literis(genus, piscina);
 
-    nuntius->mittens_id     = mittens_id;
-    nuntius->genus          = chorda_internare(intern, genus_chorda);
-    nuntius->datum          = NIHIL;  /* Allocatur pigre */
-    nuntius->tempus_creatus = tempus_nunc();
-    nuntius->piscina        = piscina;
-    nuntius->intern         = intern;
+    nuntius->mittens_id      = mittens_id;
+    nuntius->genus           = chorda_internare(intern, genus_chorda);
+    nuntius->datum           = NIHIL;  /* Allocatur pigre */
+    nuntius->tempus_creatus  = tempus_nunc();
+    nuntius->piscina         = piscina;
+    nuntius->intern          = intern;
 
     si (!nuntius->genus)
     {
@@ -232,7 +232,7 @@ nuntius_creare(
 
 /* Allocare datum si necessarium */
 interior b32
-_nuntius_datum_allocare(
+_nuntius_datum_allocare (
     Nuntius* nuntius)
 {
     si (!nuntius)
@@ -250,10 +250,10 @@ _nuntius_datum_allocare(
 }
 
 b32
-nuntius_datum_ponere(
-    Nuntius*            nuntius,
+nuntius_datum_ponere (
+               Nuntius* nuntius,
     constans character* clavis,
-    chorda*             valor)
+                chorda* valor)
 {
     chorda clavis_chorda;
 
@@ -273,8 +273,8 @@ nuntius_datum_ponere(
 }
 
 b32
-nuntius_datum_ponere_literis(
-    Nuntius*            nuntius,
+nuntius_datum_ponere_literis (
+               Nuntius* nuntius,
     constans character* clavis,
     constans character* valor)
 {
@@ -298,10 +298,10 @@ nuntius_datum_ponere_literis(
 }
 
 b32
-nuntius_datum_ponere_s32(
-    Nuntius*            nuntius,
+nuntius_datum_ponere_s32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s32                 valor)
+                   s32  valor)
 {
     character buffer[XXXII];
 
@@ -315,8 +315,8 @@ nuntius_datum_ponere_s32(
 }
 
 chorda*
-nuntius_datum_capere(
-    Nuntius*            nuntius,
+nuntius_datum_capere (
+               Nuntius* nuntius,
     constans character* clavis)
 {
     vacuum* valor;
@@ -335,10 +335,10 @@ nuntius_datum_capere(
 }
 
 b32
-nuntius_datum_capere_s32(
-    Nuntius*            nuntius,
+nuntius_datum_capere_s32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s32*                valor)
+                   s32* valor)
 {
     chorda* chorda_valor;
 
@@ -357,10 +357,10 @@ nuntius_datum_capere_s32(
 }
 
 b32
-nuntius_datum_capere_s64(
-    Nuntius*            nuntius,
+nuntius_datum_capere_s64 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s64*                valor)
+                   s64* valor)
 {
     chorda* chorda_valor;
 
@@ -379,10 +379,10 @@ nuntius_datum_capere_s64(
 }
 
 b32
-nuntius_datum_capere_f64(
-    Nuntius*            nuntius,
+nuntius_datum_capere_f64 (
+               Nuntius* nuntius,
     constans character* clavis,
-    f64*                valor)
+                   f64* valor)
 {
     chorda* chorda_valor;
 
@@ -401,10 +401,10 @@ nuntius_datum_capere_f64(
 }
 
 b32
-nuntius_datum_capere_b32(
-    Nuntius*            nuntius,
+nuntius_datum_capere_b32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    b32*                valor)
+                   b32* valor)
 {
     chorda* chorda_valor;
 
@@ -423,8 +423,8 @@ nuntius_datum_capere_b32(
 }
 
 b32
-nuntius_datum_habet(
-    Nuntius*            nuntius,
+nuntius_datum_habet (
+               Nuntius* nuntius,
     constans character* clavis)
 {
     si (!nuntius || !clavis || !nuntius->datum)
@@ -441,13 +441,13 @@ nuntius_datum_habet(
  * ================================================== */
 
 vacuum
-nuntius_imprimere(
+nuntius_imprimere (
     Nuntius* nuntius)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
-    chorda*        valor_chorda;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+            chorda* valor_chorda;
 
     si (!nuntius)
     {
@@ -503,9 +503,9 @@ nuntius_imprimere(
  * ================================================== */
 
 Capsa*
-capsa_creare(
+capsa_creare (
     Piscina* piscina,
-    chorda*  possessor_id)
+     chorda* possessor_id)
 {
     Capsa* capsa;
 
@@ -520,8 +520,8 @@ capsa_creare(
         redde NIHIL;
     }
 
-    capsa->possessor_id = possessor_id;
-    capsa->piscina      = piscina;
+    capsa->possessor_id  = possessor_id;
+    capsa->piscina       = piscina;
 
     capsa->nuntii = xar_creare(piscina, magnitudo(Nuntius*));
     si (!capsa->nuntii)
@@ -538,8 +538,8 @@ capsa_creare(
  * ================================================== */
 
 b32
-capsa_addere(
-    Capsa*   capsa,
+capsa_addere (
+      Capsa* capsa,
     Nuntius* nuntius)
 {
     Nuntius** slot;
@@ -560,13 +560,13 @@ capsa_addere(
 }
 
 Nuntius*
-capsa_tollere(
+capsa_tollere (
     Capsa* capsa)
 {
     Nuntius** primus;
     Nuntius*  nuntius;
-    i32       numerus;
-    i32       i;
+        i32   numerus;
+        i32   i;
 
     si (!capsa || xar_vacuum_est(capsa->nuntii))
     {
@@ -588,8 +588,8 @@ capsa_tollere(
         Nuntius** currens;
         Nuntius** prior;
 
-        currens = (Nuntius**)xar_obtinere(capsa->nuntii, i);
-        prior   = (Nuntius**)xar_obtinere(capsa->nuntii, i - I);
+        currens  = (Nuntius**)xar_obtinere(capsa->nuntii, i);
+        prior    = (Nuntius**)xar_obtinere(capsa->nuntii, i - I);
 
         si (currens && prior)
         {
@@ -604,7 +604,7 @@ capsa_tollere(
 }
 
 Nuntius*
-capsa_inspicere(
+capsa_inspicere (
     Capsa* capsa)
 {
     Nuntius** primus;
@@ -624,7 +624,7 @@ capsa_inspicere(
 }
 
 i32
-capsa_numerus(
+capsa_numerus (
     Capsa* capsa)
 {
     si (!capsa)
@@ -636,7 +636,7 @@ capsa_numerus(
 }
 
 b32
-capsa_vacua_est(
+capsa_vacua_est (
     Capsa* capsa)
 {
     si (!capsa)
@@ -648,7 +648,7 @@ capsa_vacua_est(
 }
 
 vacuum
-capsa_vacare(
+capsa_vacare (
     Capsa* capsa)
 {
     si (!capsa)

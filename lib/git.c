@@ -32,7 +32,8 @@ interior i32
 _be32 (constans i8* p);
 
 interior i32
-_be32 (constans i8* p)
+_be32 (
+    constans i8* p)
 {
     redde ((i32)p[0] << 24) | ((i32)p[1] << 16)
         | ((i32)p[2] << 8) | (i32)p[3];
@@ -44,14 +45,17 @@ interior vacuum
 _bin_ad_hex (constans i8* bin, i32 quantum, character* exitus);
 
 interior vacuum
-_bin_ad_hex (constans i8* bin, i32 quantum, character* exitus)
+_bin_ad_hex (
+    constans i8* bin,
+            i32  quantum,
+      character* exitus)
 {
     i32 i;
 
     per (i = 0; i < quantum; i = i + 1)
     {
-        exitus[i * 2] = _hex_digiti[(bin[i] >> 4) & 0x0F];
-        exitus[i * 2 + 1] = _hex_digiti[bin[i] & 0x0F];
+        exitus[i * 2]      = _hex_digiti[(bin[i] >> 4) & 0x0F];
+        exitus[i * 2 + 1]  = _hex_digiti[bin[i] & 0x0F];
     }
     exitus[quantum * 2] = '\0';
 }
@@ -60,7 +64,8 @@ interior s32
 _hex_valor (character c);
 
 interior s32
-_hex_valor (character c)
+_hex_valor (
+    character c)
 {
     si (c >= '0' && c <= '9')
     {
@@ -82,14 +87,16 @@ interior b32
 _hex_ad_bin (constans character* hex, i8* bin_exitus);
 
 interior b32
-_hex_ad_bin (constans character* hex, i8* bin_exitus)
+_hex_ad_bin (
+    constans character* hex,
+                    i8* bin_exitus)
 {
     i32 i;
 
     per (i = 0; i < 20; i = i + 1)
     {
-        s32 altus = _hex_valor(hex[i * 2]);
-        s32 imus = _hex_valor(hex[i * 2 + 1]);
+        s32 altus  = _hex_valor(hex[i * 2]);
+        s32 imus   = _hex_valor(hex[i * 2 + 1]);
 
         si (altus < 0 || imus < 0)
         {
@@ -108,7 +115,9 @@ interior i32
 _rotl (i32 x, i32 n);
 
 interior i32
-_rotl (i32 x, i32 n)
+_rotl (
+    i32 x,
+    i32 n)
 {
     redde (x << n) | (x >> (32 - n));
 }
@@ -117,7 +126,9 @@ interior vacuum
 _sha1_massam (constans i8* frustum, i32* h);
 
 interior vacuum
-_sha1_massam (constans i8* frustum, i32* h)
+_sha1_massam (
+    constans i8* frustum,
+            i32* h)
 {
     i32 w[80];
     i32 a = h[0];
@@ -162,12 +173,12 @@ _sha1_massam (constans i8* frustum, i32* h)
             f = b ^ c ^ d;
             k = 0xCA62C1D6u;
         }
-        novum = _rotl(a, 5) + f + e + k + w[i];
-        e = d;
-        d = c;
-        c = _rotl(b, 30);
-        b = a;
-        a = novum;
+        novum  = _rotl(a, 5) + f + e + k + w[i];
+        e      = d;
+        d      = c;
+        c      = _rotl(b, 30);
+        b      = a;
+        a      = novum;
     }
     h[0] = h[0] + a;
     h[1] = h[1] + b;
@@ -180,13 +191,16 @@ interior vacuum
 _sha1 (constans i8* datum, memoriae_index mensura, i8* exitus);
 
 interior vacuum
-_sha1 (constans i8* datum, memoriae_index mensura, i8* exitus)
+_sha1 (
+       constans i8* datum,
+    memoriae_index  mensura,
+                i8* exitus)
 {
-    i32            h[5];
-    memoriae_index plena = mensura / 64;
-    memoriae_index reliqua = mensura % 64;
+               i32 h[5];
+    memoriae_index plena    = mensura / 64;
+    memoriae_index reliqua  = mensura % 64;
     memoriae_index i;
-    i8             cauda[128];
+                i8 cauda[128];
     memoriae_index cauda_mensura;
 
     h[0] = 0x67452301u;
@@ -205,12 +219,12 @@ _sha1 (constans i8* datum, memoriae_index mensura, i8* exitus)
     {
         memcpy(cauda, datum + plena * 64, reliqua);
     }
-    cauda[reliqua] = (i8)0x80;
-    cauda_mensura = reliqua < 56 ? 64 : 128;
+    cauda[reliqua]  = (i8)0x80;
+    cauda_mensura   = reliqua < 56 ? 64 : 128;
     {
         /* longitudo in bitis, big-endian, octeti VIII ultimi */
         memoriae_index bita = mensura * 8;
-        i32 j;
+                   i32 j;
 
         per (j = 0; j < 8; j = j + 1)
         {
@@ -225,10 +239,10 @@ _sha1 (constans i8* datum, memoriae_index mensura, i8* exitus)
     }
     per (i = 0; i < 5; i = i + 1)
     {
-        exitus[i * 4] = (i8)((h[i] >> 24) & 0xFF);
-        exitus[i * 4 + 1] = (i8)((h[i] >> 16) & 0xFF);
-        exitus[i * 4 + 2] = (i8)((h[i] >> 8) & 0xFF);
-        exitus[i * 4 + 3] = (i8)(h[i] & 0xFF);
+        exitus[i * 4]      = (i8)((h[i] >> 24) & 0xFF);
+        exitus[i * 4 + 1]  = (i8)((h[i] >> 16) & 0xFF);
+        exitus[i * 4 + 2]  = (i8)((h[i] >> 8) & 0xFF);
+        exitus[i * 4 + 3]  = (i8)(h[i] & 0xFF);
     }
 }
 
@@ -240,7 +254,9 @@ interior i32
 _adler32 (constans i8* datum, i32 mensura);
 
 interior i32
-_adler32 (constans i8* datum, i32 mensura)
+_adler32 (
+    constans i8* datum,
+            i32  mensura)
 {
     i32 a = 1;
     i32 b = 0;
@@ -262,21 +278,24 @@ _zlib_inflare (constans i8* datum, i32 mensura, Piscina* piscina,
     b32 verificare_adler);
 
 interior FlaturaFructus
-_zlib_inflare (constans i8* datum, i32 mensura, Piscina* piscina,
-    b32 verificare_adler)
+_zlib_inflare (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina,
+            b32  verificare_adler)
 {
     FlaturaFructus fructus;
 
-    fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
+    fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
     si (mensura < 2)
     {
         redde fructus;
     }
-    si ((datum[0] & 0x0F) != 8
+    si (   (datum[0] & 0x0F)                             != 8
         || (((i32)datum[0] * 256 + (i32)datum[1]) % 31u) != 0
-        || (datum[1] & 0x20) != 0)
+        || (datum[1] & 0x20)                             != 0)
     {
         redde fructus;
     }
@@ -287,14 +306,14 @@ _zlib_inflare (constans i8* datum, i32 mensura, Piscina* piscina,
     }
     si (verificare_adler && mensura >= 6)
     {
-        i32 exspectatum = _be32(datum + mensura - 4);
-        i32 computatum = _adler32(fructus.datum, fructus.mensura);
+        i32 exspectatum  = _be32(datum + mensura - 4);
+        i32 computatum   = _adler32(fructus.datum, fructus.mensura);
 
         si (exspectatum != computatum)
         {
-            fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
         }
     }
     redde fructus;
@@ -309,11 +328,15 @@ _partem_legere (constans character* via, s64 offset, s64 quantum,
     Piscina* piscina, s64* lectum);
 
 interior i8*
-_partem_legere (constans character* via, s64 offset, s64 quantum,
-    Piscina* piscina, s64* lectum)
+_partem_legere (
+    constans character* via,
+                   s64  offset,
+                   s64  quantum,
+               Piscina* piscina,
+                   s64* lectum)
 {
     FILE* pl = fopen(via, "rb");
-    i8*   buffer;
+      i8* buffer;
 
     *lectum = 0;
     si (pl == NIHIL)
@@ -343,7 +366,7 @@ _partem_legere (constans character* via, s64 offset, s64 quantum,
 
 nomen structura {
     Piscina* piscina;
-    Xar*     viae_idx;   /* de chorda (viae absolutae .idx) */
+        Xar* viae_idx;   /* de chorda (viae absolutae .idx) */
 } SarcinaeContextus;
 
 interior s32
@@ -351,8 +374,10 @@ _sarcinae_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_sarcinae_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_sarcinae_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     SarcinaeContextus* ctx = (SarcinaeContextus*)contextus;
 
@@ -378,7 +403,9 @@ _viam_serere (Piscina* piscina, constans character* a,
     constans character* b);
 
 interior constans character*
-_viam_serere (Piscina* piscina, constans character* a,
+_viam_serere (
+               Piscina* piscina,
+    constans character* a,
     constans character* b)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
@@ -390,10 +417,12 @@ _viam_serere (Piscina* piscina, constans character* a,
 }
 
 GitRepositorium*
-git_aperire (Piscina* piscina, constans character* via)
+git_aperire (
+               Piscina* piscina,
+    constans character* via)
 {
-    GitRepositorium* repositorium;
-    chorda           radix;
+       GitRepositorium* repositorium;
+                chorda  radix;
     constans character* via_git = NIHIL;
 
     radix = via_absoluta(chorda_ex_literis(via, piscina), piscina);
@@ -464,20 +493,20 @@ git_aperire (Piscina* piscina, constans character* via)
     /* sarcinae: indices toti in memoriam (parvi), corpora manent
      * in disco */
     {
-        SarcinaeContextus  ctx;
-        DirectoriumFiltrum filtrum;
+         SarcinaeContextus  ctx;
+        DirectoriumFiltrum  filtrum;
         constans character* via_pack = _viam_serere(piscina,
             via_git, "/objects/pack");
         i32 i;
 
-        ctx.piscina = piscina;
-        ctx.viae_idx = xar_creare(piscina, (i32)magnitudo(chorda));
+        ctx.piscina   = piscina;
+        ctx.viae_idx  = xar_creare(piscina, (i32)magnitudo(chorda));
         si (ctx.viae_idx == NIHIL)
         {
             redde NIHIL;
         }
-        filtrum = directorium_filtrum_omnia();
-        filtrum.includere_occultos = FALSUM;
+        filtrum                     = directorium_filtrum_omnia();
+        filtrum.includere_occultos  = FALSUM;
         directorium_ambulare(via_pack, &filtrum,
             _sarcinae_ambulator, &ctx, piscina);
 
@@ -487,15 +516,15 @@ git_aperire (Piscina* piscina, constans character* via)
                 i);
             constans character* via_idx_cstr = chorda_ut_cstr(
                 via_idx, piscina);
-            chorda idx = filum_legere_totum(via_idx_cstr, piscina);
+                chorda  idx = filum_legere_totum(via_idx_cstr, piscina);
             GitSarcina* s;
 
             /* v2 solum: magia \377tOc versio 2 */
-            si (idx.mensura < 8 + 1024
-                || (i8)idx.datum[0] != (i8)0xFF
-                || idx.datum[1] != (i8)'t'
-                || idx.datum[2] != (i8)'O'
-                || idx.datum[3] != (i8)'c'
+            si (   idx.mensura < 8 + 1024
+                || (i8)idx.datum[0]          != (i8)0xFF
+                || idx.datum[1]              != (i8)'t'
+                || idx.datum[2]              != (i8)'O'
+                || idx.datum[3]              != (i8)'c'
                 || _be32((i8*)idx.datum + 4) != 2)
             {
                 perge;   /* idx v1 aut fracta - praetermissa */
@@ -517,9 +546,9 @@ git_aperire (Piscina* piscina, constans character* via)
                 s->via_sarcinae = chorda_ut_cstr(
                     chorda_aedificator_finire(aed), piscina);
             }
-            s->idx_datum = (i8*)idx.datum;
-            s->idx_mensura = idx.mensura;
-            s->numerus = _be32((i8*)idx.datum + 8 + 255 * 4);
+            s->idx_datum    = (i8*)idx.datum;
+            s->idx_mensura  = idx.mensura;
+            s->numerus      = _be32((i8*)idx.datum + 8 + 255 * 4);
         }
     }
     redde repositorium;
@@ -534,26 +563,28 @@ _sarcinae_offset (constans GitSarcina* s, constans i8* sha_bin,
     s64* offset_exitus);
 
 interior b32
-_sarcinae_offset (constans GitSarcina* s, constans i8* sha_bin,
-    s64* offset_exitus)
+_sarcinae_offset (
+    constans GitSarcina* s,
+            constans i8* sha_bin,
+                    s64* offset_exitus)
 {
-    constans i8* fanout = s->idx_datum + 8;
-    constans i8* shas = fanout + 1024;
-    i32 imus = sha_bin[0] == 0 ? 0
-        : _be32(fanout + ((i32)sha_bin[0] - 1) * 4);
-    i32 summus = _be32(fanout + (i32)sha_bin[0] * 4);
-    i32 inventus = -0;
-    b32 est_inventus = FALSUM;
+    constans i8* fanout  = s->idx_datum + 8;
+    constans i8* shas    = fanout + 1024;
+            i32  imus = sha_bin[0] == 0 ? 0
+                : _be32(fanout + ((i32)sha_bin[0] - 1) * 4);
+    i32 summus        = _be32(fanout + (i32)sha_bin[0] * 4);
+    i32 inventus      = -0;
+    b32 est_inventus  = FALSUM;
 
     dum (imus < summus)
     {
-        i32 medius = imus + (summus - imus) / 2;
-        integer ordo = memcmp(shas + medius * 20, sha_bin, 20);
+            i32 medius  = imus + (summus - imus) / 2;
+        integer ordo    = memcmp(shas + medius * 20, sha_bin, 20);
 
         si (ordo == 0)
         {
-            inventus = medius;
-            est_inventus = VERUM;
+            inventus      = medius;
+            est_inventus  = VERUM;
             frange;
         }
         alioquin si (ordo < 0)
@@ -579,9 +610,9 @@ _sarcinae_offset (constans GitSarcina* s, constans i8* sha_bin,
             /* tabula offsetuum magnorum (VIII octeti) */
             constans i8* magni = offsets32
                 + (memoriae_index)s->numerus * 4;
-            i32 index_magni = crudus & 0x7FFFFFFFu;
-            i32 altus = _be32(magni + index_magni * 8);
-            i32 imus_pars = _be32(magni + index_magni * 8 + 4);
+            i32 index_magni  = crudus & 0x7FFFFFFFu;
+            i32 altus        = _be32(magni + index_magni * 8);
+            i32 imus_pars    = _be32(magni + index_magni * 8 + 4);
 
             *offset_exitus = ((s64)altus << 32) | (s64)imus_pars;
         }
@@ -602,20 +633,24 @@ _deltam_applicare (Piscina* piscina, chorda basis,
     constans i8* delta, i32 mensura, b32* successus);
 
 interior chorda
-_deltam_applicare (Piscina* piscina, chorda basis,
-    constans i8* delta, i32 mensura, b32* successus)
+_deltam_applicare (
+        Piscina* piscina,
+         chorda  basis,
+    constans i8* delta,
+            i32  mensura,
+            b32* successus)
 {
-    chorda fructus;
-    i32    positus = 0;
-    memoriae_index basis_mensura = 0;
-    memoriae_index fructus_mensura = 0;
-    i32    gradus;
-    i8*    exitus;
-    memoriae_index scriptum = 0;
+            chorda  fructus;
+               i32  positus          = 0;
+    memoriae_index  basis_mensura    = 0;
+    memoriae_index  fructus_mensura  = 0;
+               i32  gradus;
+                i8* exitus;
+    memoriae_index  scriptum = 0;
 
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
-    *successus = FALSUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
+    *successus       = FALSUM;
 
     /* mensurae: catervae VII-bitorum, minima prima */
     gradus = 0;
@@ -667,7 +702,7 @@ _deltam_applicare (Piscina* piscina, chorda basis,
             /* copia e basi: offset/mensura octetatim per vexilla */
             memoriae_index co = 0;
             memoriae_index cm = 0;
-            i32 j;
+                       i32 j;
 
             per (j = 0; j < 4; j = j + 1)
             {
@@ -699,7 +734,7 @@ _deltam_applicare (Piscina* piscina, chorda basis,
             {
                 cm = 0x10000;
             }
-            si (co + cm > (memoriae_index)basis.mensura
+            si (   co + cm > (memoriae_index)basis.mensura
                 || scriptum + cm > fructus_mensura)
             {
                 redde fructus;
@@ -712,14 +747,14 @@ _deltam_applicare (Piscina* piscina, chorda basis,
         {
             memoriae_index quantum = (memoriae_index)op;
 
-            si (positus + (i32)quantum > mensura
+            si (   positus + (i32)quantum > mensura
                 || scriptum + quantum > fructus_mensura)
             {
                 redde fructus;
             }
             memcpy(exitus + scriptum, delta + positus, quantum);
-            positus = positus + (i32)quantum;
-            scriptum = scriptum + quantum;
+            positus   = positus + (i32)quantum;
+            scriptum  = scriptum + quantum;
         }
         alioquin
         {
@@ -730,9 +765,9 @@ _deltam_applicare (Piscina* piscina, chorda basis,
     {
         redde fructus;
     }
-    fructus.datum = exitus;
-    fructus.mensura = (i32)fructus_mensura;
-    *successus = VERUM;
+    fructus.datum    = exitus;
+    fructus.mensura  = (i32)fructus_mensura;
+    *successus       = VERUM;
     redde fructus;
 }
 
@@ -748,20 +783,22 @@ _zlib_e_sarcina (constans character* via, s64 offset,
     Piscina* piscina);
 
 interior FlaturaFructus
-_zlib_e_sarcina (constans character* via, s64 offset,
-    Piscina* piscina)
+_zlib_e_sarcina (
+    constans character* via,
+                   s64  offset,
+               Piscina* piscina)
 {
-    s64 fenestra = GIT_FENESTRA_PRIMA;
+               s64 fenestra = GIT_FENESTRA_PRIMA;
     FlaturaFructus fructus;
 
-    fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
+    fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
     per (;;)
     {
-        s64 lectum = 0;
-        i8* datum = _partem_legere(via, offset, fenestra, piscina,
-            &lectum);
+        s64  lectum = 0;
+         i8* datum = _partem_legere(via, offset, fenestra, piscina,
+             &lectum);
 
         si (datum == NIHIL || lectum < 2)
         {
@@ -773,7 +810,7 @@ _zlib_e_sarcina (constans character* via, s64 offset,
         {
             redde fructus;
         }
-        si (fructus.status != FLATURA_STATUS_INCOMPLETUS
+        si (   fructus.status != FLATURA_STATUS_INCOMPLETUS
             || lectum < fenestra)
         {
             redde fructus;   /* fractura vera aut finis plagulae */
@@ -783,21 +820,24 @@ _zlib_e_sarcina (constans character* via, s64 offset,
 }
 
 interior GitObiectum
-_obiectum_ad_offset (GitRepositorium* repositorium,
-    constans GitSarcina* s, s64 offset, Piscina* piscina,
-    i32 profunditas)
+_obiectum_ad_offset (
+        GitRepositorium* repositorium,
+    constans GitSarcina* s,
+                    s64  offset,
+                Piscina* piscina,
+                    i32  profunditas)
 {
-    GitObiectum obiectum;
-    s64 lectum = 0;
-    i8* caput;
-    i32 positus = 0;
-    i32 genus_crudum;
-    i8  b;
+    GitObiectum  obiectum;
+            s64  lectum = 0;
+             i8* caput;
+            i32  positus = 0;
+            i32  genus_crudum;
+             i8  b;
 
-    obiectum.successus = FALSUM;
-    obiectum.genus = GIT_OBIECTUM_IGNOTUM;
-    obiectum.datum.datum = NIHIL;
-    obiectum.datum.mensura = 0;
+    obiectum.successus      = FALSUM;
+    obiectum.genus          = GIT_OBIECTUM_IGNOTUM;
+    obiectum.datum.datum    = NIHIL;
+    obiectum.datum.mensura  = 0;
     si (profunditas > GIT_PROFUNDITAS_DELTAE)
     {
         redde obiectum;
@@ -811,13 +851,13 @@ _obiectum_ad_offset (GitRepositorium* repositorium,
     {
         redde obiectum;
     }
-    b = caput[positus];
-    positus = positus + 1;
-    genus_crudum = (i32)((b >> 4) & 0x07);
+    b             = caput[positus];
+    positus       = positus + 1;
+    genus_crudum  = (i32)((b >> 4) & 0x07);
     dum ((b & 0x80) != 0 && positus < (i32)lectum)
     {
-        b = caput[positus];
-        positus = positus + 1;
+        b        = caput[positus];
+        positus  = positus + 1;
     }
 
     si (genus_crudum == 6)
@@ -829,25 +869,25 @@ _obiectum_ad_offset (GitRepositorium* repositorium,
         {
             redde obiectum;
         }
-        b = caput[positus];
-        positus = positus + 1;
-        negativum = (s64)(b & 0x7F);
+        b          = caput[positus];
+        positus    = positus + 1;
+        negativum  = (s64)(b & 0x7F);
         dum ((b & 0x80) != 0)
         {
             si (positus >= (i32)lectum)
             {
                 redde obiectum;
             }
-            b = caput[positus];
-            positus = positus + 1;
-            negativum = ((negativum + 1) << 7) | (s64)(b & 0x7F);
+            b          = caput[positus];
+            positus    = positus + 1;
+            negativum  = ((negativum + 1) << 7) | (s64)(b & 0x7F);
         }
         {
             GitObiectum basis = _obiectum_ad_offset(repositorium,
                 s, offset - negativum, piscina, profunditas + 1);
             FlaturaFructus delta;
-            b32 bene = FALSUM;
-            chorda corpus;
+                       b32 bene = FALSUM;
+                    chorda corpus;
 
             si (!basis.successus)
             {
@@ -865,20 +905,20 @@ _obiectum_ad_offset (GitRepositorium* repositorium,
             {
                 redde obiectum;
             }
-            obiectum.successus = VERUM;
-            obiectum.genus = basis.genus;
-            obiectum.datum = corpus;
+            obiectum.successus  = VERUM;
+            obiectum.genus      = basis.genus;
+            obiectum.datum      = corpus;
             redde obiectum;
         }
     }
     si (genus_crudum == 7)
     {
         /* REF_DELTA: sha basis (XX octeti crudi) */
-        character sha_basis[GIT_SHA_HEX_MENSURA];
-        GitObiectum basis;
+             character sha_basis[GIT_SHA_HEX_MENSURA];
+           GitObiectum basis;
         FlaturaFructus delta;
-        b32 bene = FALSUM;
-        chorda corpus;
+                   b32 bene = FALSUM;
+                chorda corpus;
 
         si (positus + 20 > (i32)lectum)
         {
@@ -903,9 +943,9 @@ _obiectum_ad_offset (GitRepositorium* repositorium,
         {
             redde obiectum;
         }
-        obiectum.successus = VERUM;
-        obiectum.genus = basis.genus;
-        obiectum.datum = corpus;
+        obiectum.successus  = VERUM;
+        obiectum.genus      = basis.genus;
+        obiectum.datum      = corpus;
         redde obiectum;
     }
     si (genus_crudum >= 1 && genus_crudum <= 4)
@@ -922,8 +962,8 @@ _obiectum_ad_offset (GitRepositorium* repositorium,
             : genus_crudum == 2 ? GIT_OBIECTUM_ARBOR
             : genus_crudum == 3 ? GIT_OBIECTUM_MASSA
             : GIT_OBIECTUM_SIGNUM;
-        obiectum.datum.datum = (i8*)corpus.datum;
-        obiectum.datum.mensura = corpus.mensura;
+        obiectum.datum.datum    = (i8*)corpus.datum;
+        obiectum.datum.mensura  = corpus.mensura;
         redde obiectum;
     }
     redde obiectum;
@@ -937,7 +977,9 @@ interior GitObiectumGenus
 _genus_ex_titulo (constans i8* datum, i32 mensura);
 
 interior GitObiectumGenus
-_genus_ex_titulo (constans i8* datum, i32 mensura)
+_genus_ex_titulo (
+    constans i8* datum,
+            i32  mensura)
 {
     si (mensura >= 6 && memcmp(datum, "commit", 6) == 0)
     {
@@ -966,15 +1008,17 @@ _obiectum_verificare (Piscina* piscina, constans GitObiectum* o,
     constans character* sha);
 
 interior b32
-_obiectum_verificare (Piscina* piscina, constans GitObiectum* o,
-    constans character* sha)
+_obiectum_verificare (
+                 Piscina* piscina,
+    constans GitObiectum* o,
+      constans character* sha)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         (memoriae_index)64);
-    chorda    caput;
-    i8*       totum;
-    i8        sha_bin[20];
-    character sha_hex[GIT_SHA_HEX_MENSURA];
+       chorda  caput;
+           i8* totum;
+           i8  sha_bin[20];
+    character  sha_hex[GIT_SHA_HEX_MENSURA];
 
     chorda_aedificator_appendere_literis(aed,
         o->genus == GIT_OBIECTUM_COMMISSUM ? "commit"
@@ -1005,16 +1049,18 @@ _obiectum_verificare (Piscina* piscina, constans GitObiectum* o,
 }
 
 GitObiectum
-git_obiectum_legere (GitRepositorium* repositorium,
-    constans character* sha, Piscina* piscina)
+git_obiectum_legere (
+       GitRepositorium* repositorium,
+    constans character* sha,
+               Piscina* piscina)
 {
     GitObiectum obiectum;
-    i8          sha_bin[20];
+             i8 sha_bin[20];
 
-    obiectum.successus = FALSUM;
-    obiectum.genus = GIT_OBIECTUM_IGNOTUM;
-    obiectum.datum.datum = NIHIL;
-    obiectum.datum.mensura = 0;
+    obiectum.successus      = FALSUM;
+    obiectum.genus          = GIT_OBIECTUM_IGNOTUM;
+    obiectum.datum.datum    = NIHIL;
+    obiectum.datum.mensura  = 0;
     si (!_hex_ad_bin(sha, sha_bin))
     {
         redde obiectum;
@@ -1056,8 +1102,8 @@ git_obiectum_legere (GitRepositorium* repositorium,
                 {
                     obiectum.genus = _genus_ex_titulo(cruda.datum,
                         i);
-                    obiectum.datum.datum = cruda.datum + i + 1;
-                    obiectum.datum.mensura = cruda.mensura - i - 1;
+                    obiectum.datum.datum    = cruda.datum + i + 1;
+                    obiectum.datum.mensura  = cruda.mensura - i - 1;
                     obiectum.successus =
                         obiectum.genus != GIT_OBIECTUM_IGNOTUM
                         && _obiectum_verificare(piscina, &obiectum,
@@ -1104,7 +1150,9 @@ interior b32
 _sha_ex_chorda (chorda textus, character* exitus);
 
 interior b32
-_sha_ex_chorda (chorda textus, character* exitus)
+_sha_ex_chorda (
+       chorda  textus,
+    character* exitus)
 {
     i32 i;
 
@@ -1131,8 +1179,10 @@ _ref_legere (GitRepositorium* repositorium,
     constans character* titulus, character* sha_exitus);
 
 interior b32
-_ref_legere (GitRepositorium* repositorium,
-    constans character* titulus, character* sha_exitus)
+_ref_legere (
+       GitRepositorium* repositorium,
+    constans character* titulus,
+             character* sha_exitus)
 {
     /* laxa: .git/<titulus> */
     {
@@ -1170,20 +1220,20 @@ _ref_legere (GitRepositorium* repositorium,
 
             per (i = 0; i <= contentum.mensura; i = i + 1)
             {
-                si (i == contentum.mensura
+                si (   i                  == contentum.mensura
                     || contentum.datum[i] == '\n')
                 {
                     chorda linea = chorda_ex_buffer(
                         contentum.datum + initium, i - initium);
 
                     initium = i + 1;
-                    si (linea.mensura < 42
+                    si (   linea.mensura < 42
                         || linea.datum[0] == '#'
                         || linea.datum[0] == '^')
                     {
                         perge;
                     }
-                    si (linea.mensura == 41 + titulus_mensura
+                    si (   linea.mensura   == 41 + titulus_mensura
                         && linea.datum[40] == ' '
                         && memcmp(linea.datum + 41, titulus,
                                (memoriae_index)titulus_mensura)
@@ -1207,8 +1257,10 @@ _praefixo_congruit (constans i8* sha_bin,
     constans character* praefixum, i32 mensura);
 
 interior b32
-_praefixo_congruit (constans i8* sha_bin,
-    constans character* praefixum, i32 mensura)
+_praefixo_congruit (
+           constans i8* sha_bin,
+    constans character* praefixum,
+                   i32  mensura)
 {
     i32 i;
 
@@ -1229,9 +1281,9 @@ _praefixo_congruit (constans i8* sha_bin,
 
 nomen structura {
     constans character* praefixum;
-    i32                 mensura;
-    i32                 inventa;
-    character           candidatus[GIT_SHA_HEX_MENSURA];
+                   i32  mensura;
+                   i32  inventa;
+             character  candidatus[GIT_SHA_HEX_MENSURA];
 } ShaBreveContextus;
 
 interior vacuum
@@ -1239,10 +1291,11 @@ _candidatum_notare (ShaBreveContextus* ctx,
     constans character* sha_hex);
 
 interior vacuum
-_candidatum_notare (ShaBreveContextus* ctx,
+_candidatum_notare (
+     ShaBreveContextus* ctx,
     constans character* sha_hex)
 {
-    si (ctx->inventa > 0
+    si (   ctx->inventa > 0
         && memcmp(ctx->candidatus, sha_hex, 40) == 0)
     {
         redde;   /* idem obiectum laxum ET in sarcina - non ambiguum */
@@ -1256,14 +1309,16 @@ _laxa_breve_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_laxa_breve_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_laxa_breve_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     ShaBreveContextus* ctx = (ShaBreveContextus*)contextus;
-    character          sha_hex[GIT_SHA_HEX_MENSURA];
-    i32                i;
+            character  sha_hex[GIT_SHA_HEX_MENSURA];
+                  i32  i;
 
-    si (introitus->genus != INTROITUS_FILUM
+    si (   introitus->genus != INTROITUS_FILUM
         || via_plena.mensura < 38)
     {
         redde 0;
@@ -1300,12 +1355,14 @@ _sha_breve_resolvere (GitRepositorium* repositorium,
     constans character* praefixum, character* sha_exitus);
 
 interior b32
-_sha_breve_resolvere (GitRepositorium* repositorium,
-    constans character* praefixum, character* sha_exitus)
+_sha_breve_resolvere (
+       GitRepositorium* repositorium,
+    constans character* praefixum,
+             character* sha_exitus)
 {
     ShaBreveContextus ctx;
-    i32 mensura = (i32)strlen(praefixum);
-    i32 i;
+                  i32 mensura = (i32)strlen(praefixum);
+                  i32 i;
 
     si (mensura < 4 || mensura > 39)
     {
@@ -1318,19 +1375,19 @@ _sha_breve_resolvere (GitRepositorium* repositorium,
             redde FALSUM;
         }
     }
-    ctx.praefixum = praefixum;
-    ctx.mensura = mensura;
-    ctx.inventa = 0;
+    ctx.praefixum  = praefixum;
+    ctx.mensura    = mensura;
+    ctx.inventa    = 0;
 
     /* sarcinae: fanout octetum primum angustat, deinde percursus */
     per (i = 0; i < xar_numerus(repositorium->sarcinae); i = i + 1)
     {
         constans GitSarcina* s = (constans GitSarcina*)
             xar_obtinere(repositorium->sarcinae, i);
-        constans i8* fanout = s->idx_datum + 8;
-        constans i8* shas = fanout + 1024;
-        i32 primus = (i32)((_hex_valor(praefixum[0]) << 4)
-            | _hex_valor(praefixum[1]));
+        constans i8* fanout  = s->idx_datum + 8;
+        constans i8* shas    = fanout + 1024;
+                i32  primus = (i32)((_hex_valor(praefixum[0]) << 4)
+                    | _hex_valor(praefixum[1]));
         i32 imus = primus == 0 ? 0 : _be32(fanout + (primus - 1) * 4);
         i32 summus = _be32(fanout + primus * 4);
         i32 j;
@@ -1363,8 +1420,8 @@ _sha_breve_resolvere (GitRepositorium* repositorium,
         chorda_aedificator_appendere_literis(aed, "/objects/");
         chorda_aedificator_appendere_character(aed, praefixum[0]);
         chorda_aedificator_appendere_character(aed, praefixum[1]);
-        filtrum = directorium_filtrum_omnia();
-        filtrum.includere_occultos = FALSUM;
+        filtrum                     = directorium_filtrum_omnia();
+        filtrum.includere_occultos  = FALSUM;
         directorium_ambulare(chorda_ut_cstr(
             chorda_aedificator_finire(aed),
             repositorium->piscina), &filtrum,
@@ -1384,8 +1441,9 @@ _caput_legere (GitRepositorium* repositorium,
     character* sha_exitus);
 
 interior b32
-_caput_legere (GitRepositorium* repositorium,
-    character* sha_exitus)
+_caput_legere (
+    GitRepositorium* repositorium,
+          character* sha_exitus)
 {
     constans character* via_caput = _viam_serere(
         repositorium->piscina, repositorium->via_git, "/HEAD");
@@ -1397,14 +1455,14 @@ _caput_legere (GitRepositorium* repositorium,
     }
     contentum = filum_legere_totum(via_caput,
         repositorium->piscina);
-    si (contentum.mensura > 5
+    si (   contentum.mensura > 5
         && memcmp(contentum.datum, "ref: ", 5) == 0)
     {
         /* titulus ref sine linea nova finali */
-        i32 finis = contentum.mensura;
+                      i32  finis = contentum.mensura;
         ChordaAedificator* aed;
 
-        dum (finis > 5 && (contentum.datum[finis - 1] == '\n'
+        dum (   finis > 5 && (contentum.datum[finis - 1] == '\n'
             || contentum.datum[finis - 1] == '\r'))
         {
             finis = finis - 1;
@@ -1427,8 +1485,10 @@ _ad_commissum_pellere (GitRepositorium* repositorium,
     character* sha, Piscina* piscina);
 
 interior b32
-_ad_commissum_pellere (GitRepositorium* repositorium,
-    character* sha, Piscina* piscina)
+_ad_commissum_pellere (
+    GitRepositorium* repositorium,
+          character* sha,
+            Piscina* piscina)
 {
     i32 gradus;
 
@@ -1445,7 +1505,7 @@ _ad_commissum_pellere (GitRepositorium* repositorium,
         {
             redde VERUM;
         }
-        si (obiectum.datum.mensura < 47
+        si (   obiectum.datum.mensura < 47
             || memcmp(obiectum.datum.datum, "object ", 7) != 0)
         {
             redde FALSUM;
@@ -1460,15 +1520,17 @@ _ad_commissum_pellere (GitRepositorium* repositorium,
 }
 
 b32
-git_ref_resolvere (GitRepositorium* repositorium,
-    constans character* textus, character* sha_exitus)
+git_ref_resolvere (
+       GitRepositorium* repositorium,
+    constans character* textus,
+             character* sha_exitus)
 {
-    i32 mensura = (i32)strlen(textus);
-    i32 tilde = -0;
-    b32 habet_tilde = FALSUM;
-    s32 gradus_parentum = 0;
+          i32 mensura          = (i32)strlen(textus);
+          i32 tilde            = -0;
+          b32 habet_tilde      = FALSUM;
+          s32 gradus_parentum  = 0;
     character basis[256];
-    i32 i;
+          i32 i;
 
     si (mensura == 0 || mensura >= 250)
     {
@@ -1478,8 +1540,8 @@ git_ref_resolvere (GitRepositorium* repositorium,
     {
         si (textus[i] == '~')
         {
-            tilde = i;
-            habet_tilde = VERUM;
+            tilde        = i;
+            habet_tilde  = VERUM;
             frange;
         }
     }
@@ -1502,15 +1564,15 @@ git_ref_resolvere (GitRepositorium* repositorium,
     /* basis: sha plenum | CAPUT | nomen ref */
     {
         b32 resolutum = FALSUM;
-        i8  bin_probatio[20];
+         i8 bin_probatio[20];
 
         si (strlen(basis) == 40 && _hex_ad_bin(basis, bin_probatio))
         {
             memcpy(sha_exitus, basis, 41);
             resolutum = VERUM;
         }
-        alioquin si (strcmp(basis, "HEAD") == 0
-            || strcmp(basis, "CAPUT") == 0)
+        alioquin si (   strcmp(basis, "HEAD")  == 0
+                     || strcmp(basis, "CAPUT") == 0)
         {
             resolutum = _caput_legere(repositorium, sha_exitus);
         }
@@ -1562,7 +1624,7 @@ git_ref_resolvere (GitRepositorium* repositorium,
         }
         commissum = git_commissum_legere(repositorium, sha_exitus,
             repositorium->piscina);
-        si (!commissum.successus
+        si (   !commissum.successus
             || xar_numerus(commissum.parentes) == 0)
         {
             redde FALSUM;
@@ -1584,28 +1646,30 @@ git_ref_resolvere (GitRepositorium* repositorium,
  * -------------------------------------------------- */
 
 GitCommissum
-git_commissum_legere (GitRepositorium* repositorium,
-    constans character* sha, Piscina* piscina)
+git_commissum_legere (
+       GitRepositorium* repositorium,
+    constans character* sha,
+               Piscina* piscina)
 {
     GitCommissum commissum;
-    GitObiectum  obiectum;
-    chorda       datum;
-    i32          initium = 0;
-    i32          i;
+     GitObiectum obiectum;
+          chorda datum;
+             i32 initium = 0;
+             i32 i;
 
-    commissum.successus = FALSUM;
-    commissum.arbor.datum = NIHIL;
-    commissum.arbor.mensura = 0;
+    commissum.successus      = FALSUM;
+    commissum.arbor.datum    = NIHIL;
+    commissum.arbor.mensura  = 0;
     commissum.parentes = xar_creare(piscina,
         (i32)magnitudo(chorda));
-    commissum.auctor = commissum.arbor;
-    commissum.commissor = commissum.arbor;
-    commissum.tempus = 0;
-    commissum.nuntius = commissum.arbor;
+    commissum.auctor     = commissum.arbor;
+    commissum.commissor  = commissum.arbor;
+    commissum.tempus     = 0;
+    commissum.nuntius    = commissum.arbor;
 
     obiectum = git_obiectum_legere(repositorium, sha, piscina);
-    si (!obiectum.successus
-        || obiectum.genus != GIT_OBIECTUM_COMMISSUM
+    si (   !obiectum.successus
+        || obiectum.genus     != GIT_OBIECTUM_COMMISSUM
         || commissum.parentes == NIHIL)
     {
         redde commissum;
@@ -1635,14 +1699,14 @@ git_commissum_legere (GitRepositorium* repositorium,
             {
                 perge;   /* continuatio (gpgsig) */
             }
-            si (linea.mensura >= 45
+            si (   linea.mensura                   >= 45
                 && memcmp(linea.datum, "tree ", 5) == 0)
             {
                 commissum.arbor = chorda_ex_buffer(
                     linea.datum + 5, 40);
             }
-            alioquin si (linea.mensura >= 47
-                && memcmp(linea.datum, "parent ", 7) == 0)
+            alioquin si (   linea.mensura                     >= 47
+                         && memcmp(linea.datum, "parent ", 7) == 0)
             {
                 chorda* cella = (chorda*)xar_addere(
                     commissum.parentes);
@@ -1653,24 +1717,24 @@ git_commissum_legere (GitRepositorium* repositorium,
                 }
                 *cella = chorda_ex_buffer(linea.datum + 7, 40);
             }
-            alioquin si (linea.mensura > 7
-                && memcmp(linea.datum, "author ", 7) == 0)
+            alioquin si (   linea.mensura > 7
+                         && memcmp(linea.datum, "author ", 7) == 0)
             {
                 commissum.auctor = chorda_ex_buffer(
                     linea.datum + 7, linea.mensura - 7);
             }
-            alioquin si (linea.mensura > 10
-                && memcmp(linea.datum, "committer ", 10) == 0)
+            alioquin si (   linea.mensura > 10
+                         && memcmp(linea.datum, "committer ", 10) == 0)
             {
                 commissum.commissor = chorda_ex_buffer(
                     linea.datum + 10, linea.mensura - 10);
                 /* tempus: verbum paenultimum (ante zonam) */
                 {
-                    i32 finis = commissum.commissor.mensura;
-                    i32 j = finis;
+                    i32 finis  = commissum.commissor.mensura;
+                    i32 j      = finis;
 
-                    dum (j > 0
-                        && commissum.commissor.datum[j - 1] != ' ')
+                    dum (   j > 0
+                         && commissum.commissor.datum[j - 1] != ' ')
                     {
                         j = j - 1;
                     }
@@ -1678,7 +1742,7 @@ git_commissum_legere (GitRepositorium* repositorium,
                     {
                         i32 k = j - 1;
 
-                        dum (k > 0 && commissum.commissor
+                        dum (   k > 0 && commissum.commissor
                             .datum[k - 1] != ' ')
                         {
                             k = k - 1;
@@ -1698,13 +1762,15 @@ git_commissum_legere (GitRepositorium* repositorium,
 }
 
 Xar*
-git_arborem_legere (GitRepositorium* repositorium,
-    constans character* sha, Piscina* piscina)
+git_arborem_legere (
+       GitRepositorium* repositorium,
+    constans character* sha,
+               Piscina* piscina)
 {
     GitObiectum obiectum = git_obiectum_legere(repositorium, sha,
         piscina);
-    Xar*        introitus;
-    i32         positus = 0;
+    Xar* introitus;
+    i32  positus = 0;
 
     si (!obiectum.successus || obiectum.genus != GIT_OBIECTUM_ARBOR)
     {
@@ -1718,12 +1784,12 @@ git_arborem_legere (GitRepositorium* repositorium,
     }
     dum (positus < obiectum.datum.mensura)
     {
-        i32 initium_modi = positus;
-        i32 initium_tituli;
+                      i32  initium_modi = positus;
+                      i32  initium_tituli;
         GitArborIntroitus* e;
 
-        dum (positus < obiectum.datum.mensura
-            && obiectum.datum.datum[positus] != ' ')
+        dum (   positus < obiectum.datum.mensura
+             && obiectum.datum.datum[positus] != ' ')
         {
             positus = positus + 1;
         }
@@ -1739,10 +1805,10 @@ git_arborem_legere (GitRepositorium* repositorium,
         e->modus = chorda_ex_buffer(
             obiectum.datum.datum + initium_modi,
             positus - initium_modi);
-        positus = positus + 1;
-        initium_tituli = positus;
-        dum (positus < obiectum.datum.mensura
-            && obiectum.datum.datum[positus] != 0)
+        positus         = positus + 1;
+        initium_tituli  = positus;
+        dum (   positus < obiectum.datum.mensura
+             && obiectum.datum.datum[positus] != 0)
         {
             positus = positus + 1;
         }
@@ -1766,21 +1832,24 @@ git_arborem_legere (GitRepositorium* repositorium,
                 + positus, 20, hex);
             e->sha = chorda_ex_buffer((i8*)hex, 40);
         }
-        positus = positus + 20;
-        e->est_arbor = chorda_aequalis_literis(e->modus, "40000");
+        positus       = positus + 20;
+        e->est_arbor  = chorda_aequalis_literis(e->modus, "40000");
     }
     redde introitus;
 }
 
 b32
-git_sha_per_viam (GitRepositorium* repositorium,
-    constans character* sha_commissi, constans character* via,
-    Piscina* piscina, character* sha_exitus,
-    b32* est_arbor_exitus)
+git_sha_per_viam (
+       GitRepositorium* repositorium,
+    constans character* sha_commissi,
+    constans character* via,
+               Piscina* piscina,
+             character* sha_exitus,
+                   b32* est_arbor_exitus)
 {
-    character sha[GIT_SHA_HEX_MENSURA];
-    GitCommissum commissum;
-    chorda    arbor_sha;
+             character  sha[GIT_SHA_HEX_MENSURA];
+          GitCommissum  commissum;
+                chorda  arbor_sha;
     constans character* reliqua = via;
 
     *est_arbor_exitus = FALSUM;
@@ -1799,12 +1868,12 @@ git_sha_per_viam (GitRepositorium* repositorium,
     dum (*reliqua != '\0')
     {
         constans character* finis = reliqua;
-        i32 segmentum_mensura;
-        Xar* introitus;
-        i32  i;
-        b32  inventum_hic = FALSUM;
-        chorda sequens_sha;
-        b32  sequens_arbor = FALSUM;
+                       i32  segmentum_mensura;
+                       Xar* introitus;
+                       i32  i;
+                       b32  inventum_hic = FALSUM;
+                    chorda  sequens_sha;
+                       b32  sequens_arbor = FALSUM;
 
         dum (*finis != '\0' && *finis != '/')
         {
@@ -1822,20 +1891,20 @@ git_sha_per_viam (GitRepositorium* repositorium,
         {
             redde FALSUM;
         }
-        sequens_sha.datum = NIHIL;
-        sequens_sha.mensura = 0;
+        sequens_sha.datum    = NIHIL;
+        sequens_sha.mensura  = 0;
         per (i = 0; i < xar_numerus(introitus); i = i + 1)
         {
             GitArborIntroitus* e = (GitArborIntroitus*)
                 xar_obtinere(introitus, i);
 
-            si (e->titulus.mensura == segmentum_mensura
+            si (   e->titulus.mensura == segmentum_mensura
                 && memcmp(e->titulus.datum, reliqua,
                        (memoriae_index)segmentum_mensura) == 0)
             {
-                sequens_sha = e->sha;
-                sequens_arbor = e->est_arbor;
-                inventum_hic = VERUM;
+                sequens_sha    = e->sha;
+                sequens_arbor  = e->est_arbor;
+                inventum_hic   = VERUM;
                 frange;
             }
         }
@@ -1848,41 +1917,44 @@ git_sha_per_viam (GitRepositorium* repositorium,
             /* segmentum ultimum: sha introitus, sine contento */
             memcpy(sha_exitus, sequens_sha.datum,
                 (memoriae_index)40);
-            sha_exitus[40] = '\0';
-            *est_arbor_exitus = sequens_arbor;
+            sha_exitus[40]     = '\0';
+            *est_arbor_exitus  = sequens_arbor;
             redde VERUM;
         }
         si (!sequens_arbor)
         {
             redde FALSUM;
         }
-        arbor_sha = sequens_sha;
-        reliqua = finis + 1;
+        arbor_sha  = sequens_sha;
+        reliqua    = finis + 1;
     }
     redde FALSUM;
 }
 
 chorda
-git_massam_per_viam (GitRepositorium* repositorium,
-    constans character* sha_commissi, constans character* via,
-    Piscina* piscina, b32* inventum)
+git_massam_per_viam (
+       GitRepositorium* repositorium,
+    constans character* sha_commissi,
+    constans character* via,
+               Piscina* piscina,
+                   b32* inventum)
 {
-    chorda      vacua;
-    character   sha[GIT_SHA_HEX_MENSURA];
-    b32         est_arbor = FALSUM;
+         chorda vacua;
+      character sha[GIT_SHA_HEX_MENSURA];
+            b32 est_arbor = FALSUM;
     GitObiectum obiectum;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
-    *inventum = FALSUM;
-    si (!git_sha_per_viam(repositorium, sha_commissi, via,
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
+    *inventum      = FALSUM;
+    si (   !git_sha_per_viam(repositorium, sha_commissi, via,
             piscina, sha, &est_arbor)
         || est_arbor)
     {
         redde vacua;
     }
     obiectum = git_obiectum_legere(repositorium, sha, piscina);
-    si (!obiectum.successus
+    si (   !obiectum.successus
         || obiectum.genus != GIT_OBIECTUM_MASSA)
     {
         redde vacua;
@@ -1890,6 +1962,7 @@ git_massam_per_viam (GitRepositorium* repositorium,
     *inventum = VERUM;
     redde obiectum.datum;
 }
+
 
 /* ==================================================
  * Differentia arborum (screen sharum: subarbores
@@ -1901,16 +1974,18 @@ _viam_construere (Piscina* piscina, constans character* praefixum,
     chorda titulus);
 
 interior chorda
-_viam_construere (Piscina* piscina, constans character* praefixum,
-    chorda titulus)
+_viam_construere (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus)
 {
-    i32    praefixi_mensura = (i32)strlen(praefixum);
-    i32    tota = praefixi_mensura + titulus.mensura;
-    i8*    datum;
-    chorda via;
+       i32  praefixi_mensura  = (i32)strlen(praefixum);
+       i32  tota              = praefixi_mensura + titulus.mensura;
+        i8* datum;
+    chorda  via;
 
-    via.datum = NIHIL;
-    via.mensura = 0;
+    via.datum    = NIHIL;
+    via.mensura  = 0;
     datum = (i8*)piscina_allocare(piscina,
         (memoriae_index)(tota == 0 ? 1 : tota));
     si (datum == NIHIL)
@@ -1920,8 +1995,8 @@ _viam_construere (Piscina* piscina, constans character* praefixum,
     memcpy(datum, praefixum, (memoriae_index)praefixi_mensura);
     memcpy(datum + praefixi_mensura, titulus.datum,
         (memoriae_index)titulus.mensura);
-    via.datum = datum;
-    via.mensura = tota;
+    via.datum    = datum;
+    via.mensura  = tota;
     redde via;
 }
 
@@ -1930,10 +2005,12 @@ _praefixum_filii (Piscina* piscina, constans character* praefixum,
     chorda titulus);
 
 interior constans character*
-_praefixum_filii (Piscina* piscina, constans character* praefixum,
-    chorda titulus)
+_praefixum_filii (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus)
 {
-    i32        praefixi_mensura = (i32)strlen(praefixum);
+          i32  praefixi_mensura = (i32)strlen(praefixum);
     character* exitus = (character*)piscina_allocare(piscina,
         (memoriae_index)(praefixi_mensura + titulus.mensura + 2));
 
@@ -1944,8 +2021,8 @@ _praefixum_filii (Piscina* piscina, constans character* praefixum,
     memcpy(exitus, praefixum, (memoriae_index)praefixi_mensura);
     memcpy(exitus + praefixi_mensura, titulus.datum,
         (memoriae_index)titulus.mensura);
-    exitus[praefixi_mensura + titulus.mensura] = '/';
-    exitus[praefixi_mensura + titulus.mensura + 1] = '\0';
+    exitus[praefixi_mensura + titulus.mensura]      = '/';
+    exitus[praefixi_mensura + titulus.mensura + 1]  = '\0';
     redde exitus;
 }
 
@@ -1955,9 +2032,14 @@ _viam_mutatam_addere (Xar* exitus, Piscina* piscina,
     chorda sha_vetus, chorda sha_novus, GitViaGenus genus);
 
 interior b32
-_viam_mutatam_addere (Xar* exitus, Piscina* piscina,
-    constans character* praefixum, chorda titulus,
-    chorda sha_vetus, chorda sha_novus, GitViaGenus genus)
+_viam_mutatam_addere (
+                   Xar* exitus,
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus,
+                chorda  sha_vetus,
+                chorda  sha_novus,
+           GitViaGenus  genus)
 {
     GitViaMutata* m = (GitViaMutata*)xar_addere(exitus);
 
@@ -1970,9 +2052,9 @@ _viam_mutatam_addere (Xar* exitus, Piscina* piscina,
     {
         redde FALSUM;
     }
-    m->sha_vetus = sha_vetus;
-    m->sha_novus = sha_novus;
-    m->genus = genus;
+    m->sha_vetus  = sha_vetus;
+    m->sha_novus  = sha_novus;
+    m->genus      = genus;
     redde VERUM;
 }
 
@@ -1984,21 +2066,25 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
     constans character* sha_novus, Xar* exitus, Piscina* piscina);
 
 interior b32
-_arbores_differre_gradus (GitRepositorium* repositorium,
-    constans character* praefixum, constans character* sha_vetus,
-    constans character* sha_novus, Xar* exitus, Piscina* piscina)
+_arbores_differre_gradus (
+       GitRepositorium* repositorium,
+    constans character* praefixum,
+    constans character* sha_vetus,
+    constans character* sha_novus,
+                   Xar* exitus,
+               Piscina* piscina)
 {
-    Xar*            vetus_introitus = NIHIL;
-    Xar*            novus_introitus = NIHIL;
+               Xar* vetus_introitus = NIHIL;
+               Xar* novus_introitus = NIHIL;
     TabulaDispersa* nomina_veterum;
-    i32*            sumptae;
-    i32             numerus_veterum;
-    i32             numerus_novorum;
-    chorda          vacua;
-    i32             k;
+               i32* sumptae;
+               i32  numerus_veterum;
+               i32  numerus_novorum;
+            chorda  vacua;
+               i32  k;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
     si (sha_vetus != NIHIL)
     {
         vetus_introitus = git_arborem_legere(repositorium,
@@ -2044,8 +2130,8 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
         {
             redde FALSUM;
         }
-        *cella = k;
-        sumptae[k] = 0;
+        *cella      = k;
+        sumptae[k]  = 0;
         tabula_dispersa_inserere(nomina_veterum, va->titulus,
             (vacuum*)cella);
     }
@@ -2054,7 +2140,7 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
     {
         GitArborIntroitus* na = (GitArborIntroitus*)
             xar_obtinere(novus_introitus, k);
-        vacuum*            sedes = NIHIL;
+        vacuum* sedes = NIHIL;
 
         si (tabula_dispersa_invenire(nomina_veterum, na->titulus,
             &sedes))
@@ -2070,7 +2156,7 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
                     constans character* filii = _praefixum_filii(
                         piscina, praefixum, na->titulus);
 
-                    si (filii == NIHIL
+                    si (   filii == NIHIL
                         || !_arbores_differre_gradus(repositorium,
                                filii,
                                chorda_ut_cstr(va->sha, piscina),
@@ -2083,7 +2169,7 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
             }
             alioquin si (!va->est_arbor && !na->est_arbor)
             {
-                si ((!chorda_aequalis(va->sha, na->sha)
+                si (   (!chorda_aequalis(va->sha, na->sha)
                         || !chorda_aequalis(va->modus, na->modus))
                     && !_viam_mutatam_addere(exitus, piscina,
                            praefixum, na->titulus, va->sha,
@@ -2131,7 +2217,7 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
             constans character* filii = _praefixum_filii(piscina,
                 praefixum, na->titulus);
 
-            si (filii == NIHIL
+            si (   filii == NIHIL
                 || !_arbores_differre_gradus(repositorium, filii,
                        NIHIL, chorda_ut_cstr(na->sha, piscina),
                        exitus, piscina))
@@ -2140,8 +2226,8 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
             }
         }
         alioquin si (!_viam_mutatam_addere(exitus, piscina,
-            praefixum, na->titulus, vacua, na->sha,
-            GIT_VIA_ADDITA))
+                     praefixum, na->titulus, vacua, na->sha,
+                     GIT_VIA_ADDITA))
         {
             redde FALSUM;
         }
@@ -2161,7 +2247,7 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
             constans character* filii = _praefixum_filii(piscina,
                 praefixum, va->titulus);
 
-            si (filii == NIHIL
+            si (   filii == NIHIL
                 || !_arbores_differre_gradus(repositorium, filii,
                        chorda_ut_cstr(va->sha, piscina), NIHIL,
                        exitus, piscina))
@@ -2170,8 +2256,8 @@ _arbores_differre_gradus (GitRepositorium* repositorium,
             }
         }
         alioquin si (!_viam_mutatam_addere(exitus, piscina,
-            praefixum, va->titulus, va->sha, vacua,
-            GIT_VIA_REMOTA))
+                     praefixum, va->titulus, va->sha, vacua,
+                     GIT_VIA_REMOTA))
         {
             redde FALSUM;
         }
@@ -2183,7 +2269,9 @@ interior s32
 _viae_mutatae_comparare (constans vacuum* a, constans vacuum* b);
 
 interior s32
-_viae_mutatae_comparare (constans vacuum* a, constans vacuum* b)
+_viae_mutatae_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     redde chorda_comparare(
         ((constans GitViaMutata*)a)->via,
@@ -2191,9 +2279,11 @@ _viae_mutatae_comparare (constans vacuum* a, constans vacuum* b)
 }
 
 Xar*
-git_arbores_differre (GitRepositorium* repositorium,
+git_arbores_differre (
+       GitRepositorium* repositorium,
     constans character* sha_arboris_vetus,
-    constans character* sha_arboris_novum, Piscina* piscina)
+    constans character* sha_arboris_novum,
+               Piscina* piscina)
 {
     Xar* exitus = xar_creare(piscina,
         (i32)magnitudo(GitViaMutata));

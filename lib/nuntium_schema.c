@@ -14,6 +14,7 @@
 #include "piscina.h"
 #include <string.h>
 
+
 /* ================================================
  * Grammatica STML pro Schemate Nuntii
  * ================================================
@@ -89,16 +90,19 @@ hic_manens constans character* NUNTIUM_SCHEMA_GRAMMATICA =
     "  <initium>schema</initium>"
     "</grammatica>";
 
+
 /* ================================================
  * Functiones Auxiliares
  * ================================================ */
 
 /* Ponere nodum in tabula nodorum, reddere indicem ut s64 */
 hic_manens s64
-_ponere_nodum(NuntiumSchemaContextus* ctx, NuntiumSchemaNodus* nodus)
+_ponere_nodum (
+    NuntiumSchemaContextus* ctx,
+        NuntiumSchemaNodus* nodus)
 {
     NuntiumSchemaNodus** locus;
-    s64 index;
+                   s64   index;
 
     index = (s64)xar_numerus(ctx->nodi);
     locus = (NuntiumSchemaNodus**)xar_addere(ctx->nodi);
@@ -109,7 +113,9 @@ _ponere_nodum(NuntiumSchemaContextus* ctx, NuntiumSchemaNodus* nodus)
 
 /* Capere nodum ex tabula nodorum per indicem s64 */
 hic_manens NuntiumSchemaNodus*
-_capere_nodum(NuntiumSchemaContextus* ctx, s64 index)
+_capere_nodum (
+    NuntiumSchemaContextus* ctx,
+                       s64  index)
 {
     NuntiumSchemaNodus** locus;
 
@@ -123,15 +129,17 @@ _capere_nodum(NuntiumSchemaContextus* ctx, s64 index)
 
 /* Extrahere identificatorem ex valor compactato (offset<<32 | longitudo) */
 hic_manens chorda*
-_extrahere_identificatorem(NuntiumSchemaContextus* ctx, s64 valor)
+_extrahere_identificatorem (
+    NuntiumSchemaContextus* ctx,
+                       s64  valor)
 {
-    s32     offset;
-    s32     longitudo_id;
+       s32  offset;
+       s32  longitudo_id;
     chorda* copia;
-    i8*     dest;
+        i8* dest;
 
-    offset       = (s32)(valor >> XXXII);
-    longitudo_id = (s32)(valor & (s64)0xFFFFFFFF);
+    offset        = (s32)(valor >> XXXII);
+    longitudo_id  = (s32)(valor & (s64)0xFFFFFFFF);
 
     /* Copiare in piscinam (datum fontis potest esse temporaneum) */
     copia = (chorda*)piscina_allocare(ctx->piscina, (memoriae_index)magnitudo(chorda));
@@ -142,22 +150,23 @@ _extrahere_identificatorem(NuntiumSchemaContextus* ctx, s64 valor)
     si (!dest) redde NIHIL;
 
     memcpy(dest, ctx->fons + offset, (memoriae_index)longitudo_id);
-    copia->datum = dest;
-    copia->mensura = (i32)longitudo_id;
+    copia->datum    = dest;
+    copia->mensura  = (i32)longitudo_id;
 
     redde copia;
 }
+
 
 /* ================================================
  * Callback Reductionis
  * ================================================ */
 
 hic_manens s64
-_nuntium_schema_reductio(
-    s32 productio_index,
+_nuntium_schema_reductio (
+             s32  productio_index,
     constans s64* valori,
-    s32 numerus_dextrum,
-    vacuum* contextus)
+             s32  numerus_dextrum,
+          vacuum* contextus)
 {
     NuntiumSchemaContextus* ctx;
     (vacuum)numerus_dextrum;
@@ -195,8 +204,8 @@ _nuntium_schema_reductio(
         /* P1: definitio_list -> definitio */
         casus I:
         {
-            NuntiumSchemaNodus* wrapper;
-            NuntiumSchemaNodus* def_nodus;
+            NuntiumSchemaNodus*  wrapper;
+            NuntiumSchemaNodus*  def_nodus;
             NuntiumSchemaNodus** locus;
 
             wrapper = (NuntiumSchemaNodus*)piscina_allocare(
@@ -216,12 +225,12 @@ _nuntium_schema_reductio(
         /* P2: definitio_list -> definitio_list definitio */
         casus II:
         {
-            NuntiumSchemaNodus* lista;
-            NuntiumSchemaNodus* def_nodus;
+            NuntiumSchemaNodus*  lista;
+            NuntiumSchemaNodus*  def_nodus;
             NuntiumSchemaNodus** locus;
 
-            lista = _capere_nodum(ctx, valori[0]);
-            def_nodus = _capere_nodum(ctx, valori[1]);
+            lista      = _capere_nodum(ctx, valori[0]);
+            def_nodus  = _capere_nodum(ctx, valori[1]);
 
             locus = (NuntiumSchemaNodus**)xar_addere(
                 lista->datum.schema.definitiones);
@@ -261,8 +270,8 @@ _nuntium_schema_reductio(
         /* P4: campus_list -> campus */
         casus IV:
         {
-            NuntiumSchemaNodus* wrapper;
-            NuntiumSchemaNodus* campus_nodus;
+            NuntiumSchemaNodus*  wrapper;
+            NuntiumSchemaNodus*  campus_nodus;
             NuntiumSchemaNodus** locus;
 
             wrapper = (NuntiumSchemaNodus*)piscina_allocare(
@@ -283,12 +292,12 @@ _nuntium_schema_reductio(
         /* P5: campus_list -> campus_list campus */
         casus V:
         {
-            NuntiumSchemaNodus* lista;
-            NuntiumSchemaNodus* campus_nodus;
+            NuntiumSchemaNodus*  lista;
+            NuntiumSchemaNodus*  campus_nodus;
             NuntiumSchemaNodus** locus;
 
-            lista = _capere_nodum(ctx, valori[0]);
-            campus_nodus = _capere_nodum(ctx, valori[1]);
+            lista         = _capere_nodum(ctx, valori[0]);
+            campus_nodus  = _capere_nodum(ctx, valori[1]);
 
             locus = (NuntiumSchemaNodus**)xar_addere(
                 lista->datum.schema.definitiones);
@@ -329,22 +338,23 @@ _nuntium_schema_reductio(
     }
 }
 
+
 /* ================================================
  * Functio Principalis
  * ================================================ */
 
 NuntiumSchemaNodus*
-nuntium_schema_legere(
-    Piscina*             piscina,
-    constans character*  fons,
-    s32                  longitudo)
+nuntium_schema_legere (
+               Piscina* piscina,
+    constans character* fons,
+                   s32  longitudo)
 {
-    InternamentumChorda*    intern;
-    LapifexGrammatica*      grammatica;
-    LapifexCollectio*       collectio;
-    LapifexTabula*          tabula;
-    LapifexParsaturaFructus fructus;
-    NuntiumSchemaContextus  ctx;
+        InternamentumChorda* intern;
+          LapifexGrammatica* grammatica;
+           LapifexCollectio* collectio;
+              LapifexTabula* tabula;
+    LapifexParsaturaFructus  fructus;
+     NuntiumSchemaContextus  ctx;
 
     si (!piscina || !fons || longitudo <= ZEPHYRUM) redde NIHIL;
 

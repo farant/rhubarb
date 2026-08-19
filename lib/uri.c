@@ -17,7 +17,10 @@
 
 /* Invenire characterem in chorda, redde index vel i32 max si non invenitur */
 interior i32
-_invenire_character(constans character* s, i32 longitudo, character c)
+_invenire_character (
+    constans character* s,
+                   i32  longitudo,
+             character  c)
 {
     i32 i;
     per (i = 0; i < longitudo; i++)
@@ -32,7 +35,9 @@ _invenire_character(constans character* s, i32 longitudo, character c)
 
 /* Invenire sequentia ":/" in chorda, redde index vel longitudo si non invenitur */
 interior i32
-_invenire_schema_separator(constans character* s, i32 longitudo)
+_invenire_schema_separator (
+    constans character* s,
+                   i32  longitudo)
 {
     i32 i;
     si (longitudo < 3)
@@ -51,33 +56,35 @@ _invenire_schema_separator(constans character* s, i32 longitudo)
 
 /* Copiare substring in piscinam */
 interior chorda
-_copiare_substring(
+_copiare_substring (
     constans character* s,
-    i32                 initium,
-    i32                 longitudo,
-    Piscina*            piscina)
+                   i32  initium,
+                   i32  longitudo,
+               Piscina* piscina)
 {
-    chorda resultatus;
-    i8*    buffer;
+    chorda  resultatus;
+        i8* buffer;
 
     si (longitudo == 0)
     {
-        resultatus.datum = NIHIL;
-        resultatus.mensura = 0;
+        resultatus.datum    = NIHIL;
+        resultatus.mensura  = 0;
         redde resultatus;
     }
 
     buffer = piscina_allocare(piscina, longitudo);
     memcpy(buffer, s + initium, (memoriae_index)longitudo);
 
-    resultatus.datum = buffer;
-    resultatus.mensura = longitudo;
+    resultatus.datum    = buffer;
+    resultatus.mensura  = longitudo;
     redde resultatus;
 }
 
 /* Parse numerum ex chorda, redde 0 si error */
 interior i32
-_parse_numerum(constans character* s, i32 longitudo)
+_parse_numerum (
+    constans character* s,
+                   i32  longitudo)
 {
     i32 resultatus;
     i32 i;
@@ -104,22 +111,23 @@ _parse_numerum(constans character* s, i32 longitudo)
 
 /* Initializare Uri ad valores vacuos */
 interior vacuum
-_uri_initializare(Uri* uri)
+_uri_initializare (
+    Uri* uri)
 {
-    uri->schema.datum = NIHIL;
-    uri->schema.mensura = 0;
-    uri->userinfo.datum = NIHIL;
-    uri->userinfo.mensura = 0;
-    uri->hospes.datum = NIHIL;
-    uri->hospes.mensura = 0;
-    uri->portus = 0;
-    uri->via.datum = NIHIL;
-    uri->via.mensura = 0;
-    uri->quaestio.datum = NIHIL;
-    uri->quaestio.mensura = 0;
-    uri->fragmentum.datum = NIHIL;
-    uri->fragmentum.mensura = 0;
-    uri->est_absoluta = FALSUM;
+    uri->schema.datum        = NIHIL;
+    uri->schema.mensura      = 0;
+    uri->userinfo.datum      = NIHIL;
+    uri->userinfo.mensura    = 0;
+    uri->hospes.datum        = NIHIL;
+    uri->hospes.mensura      = 0;
+    uri->portus              = 0;
+    uri->via.datum           = NIHIL;
+    uri->via.mensura         = 0;
+    uri->quaestio.datum      = NIHIL;
+    uri->quaestio.mensura    = 0;
+    uri->fragmentum.datum    = NIHIL;
+    uri->fragmentum.mensura  = 0;
+    uri->est_absoluta        = FALSUM;
 }
 
 
@@ -128,22 +136,22 @@ _uri_initializare(Uri* uri)
  * ======================================================================== */
 
 b32
-uri_parse(
+uri_parse (
     constans character* url,
-    Uri*                uri,
-    Piscina*            piscina)
+                   Uri* uri,
+               Piscina* piscina)
 {
     constans character* cursor;
-    i32                 longitudo;
-    i32                 schema_end;
-    i32                 authority_start;
-    i32                 authority_end;
-    i32                 path_start;
-    i32                 query_start;
-    i32                 fragment_start;
-    i32                 at_pos;
-    i32                 colon_pos;
-    i32                 bracket_end;
+                   i32  longitudo;
+                   i32  schema_end;
+                   i32  authority_start;
+                   i32  authority_end;
+                   i32  path_start;
+                   i32  query_start;
+                   i32  fragment_start;
+                   i32  at_pos;
+                   i32  colon_pos;
+                   i32  bracket_end;
 
     si (url == NIHIL || uri == NIHIL || piscina == NIHIL)
     {
@@ -197,8 +205,8 @@ uri_parse(
     alioquin si (longitudo >= 2 && cursor[0] == '/' && cursor[1] == '/')
     {
         /* Protocol-relative: //example.com/path */
-        uri->est_absoluta = FALSUM;
-        authority_start = 2;
+        uri->est_absoluta  = FALSUM;
+        authority_start    = 2;
     }
     alioquin
     {
@@ -216,24 +224,24 @@ uri_parse(
                                          longitudo - authority_start, '/');
     si (authority_end < longitudo - authority_start)
     {
-        path_start = authority_start + authority_end;
-        authority_end = path_start;
+        path_start     = authority_start + authority_end;
+        authority_end  = path_start;
     }
     alioquin
     {
-        authority_end = longitudo;
-        path_start = longitudo;
+        authority_end  = longitudo;
+        path_start     = longitudo;
     }
 
     /* Parse authority: [userinfo@]hospes[:portus] */
     {
         constans character* auth;
-        i32                 auth_len;
-        i32                 host_start;
-        i32                 host_end;
+                       i32  auth_len;
+                       i32  host_start;
+                       i32  host_end;
 
-        auth = cursor + authority_start;
-        auth_len = authority_end - authority_start;
+        auth      = cursor + authority_start;
+        auth_len  = authority_end - authority_start;
 
         /* Userinfo (ante @) */
         at_pos = _invenire_character(auth, auth_len, '@');
@@ -306,9 +314,9 @@ uri_parse(
 }
 
 Uri*
-uri_creare(
+uri_creare (
     constans character* url,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
     Uri* uri;
 
@@ -332,23 +340,23 @@ uri_creare(
  * ======================================================================== */
 
 chorda
-uri_via_normalizare(
-    Uri*     uri,
+uri_via_normalizare (
+        Uri* uri,
     Piscina* piscina)
 {
     si (uri == NIHIL || piscina == NIHIL)
     {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = 0;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = 0;
         redde vacua;
     }
 
     si (uri->via.datum == NIHIL || uri->via.mensura == 0)
     {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = 0;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = 0;
         redde vacua;
     }
 
@@ -356,14 +364,14 @@ uri_via_normalizare(
 }
 
 Uri*
-uri_resolvere(
-    Uri*     base,
-    chorda   relativum,
+uri_resolvere (
+        Uri* base,
+     chorda  relativum,
     Piscina* piscina)
 {
-    Uri*   resultatus;
-    Uri    rel_uri;
-    chorda nova_via;
+       Uri* resultatus;
+       Uri  rel_uri;
+    chorda  nova_via;
 
     si (base == NIHIL || piscina == NIHIL)
     {
@@ -394,17 +402,17 @@ uri_resolvere(
     /* Si relativum est absolutum, redde illud */
     si (rel_uri.est_absoluta)
     {
-        *resultatus = rel_uri;
-        resultatus->via = via_normalizare(rel_uri.via, piscina);
+        *resultatus      = rel_uri;
+        resultatus->via  = via_normalizare(rel_uri.via, piscina);
         redde resultatus;
     }
 
     /* Copiare schema et hospes ex base */
-    resultatus->schema = base->schema;
-    resultatus->hospes = base->hospes;
-    resultatus->portus = base->portus;
-    resultatus->userinfo = base->userinfo;
-    resultatus->est_absoluta = VERUM;
+    resultatus->schema        = base->schema;
+    resultatus->hospes        = base->hospes;
+    resultatus->portus        = base->portus;
+    resultatus->userinfo      = base->userinfo;
+    resultatus->est_absoluta  = VERUM;
 
     /* Resolvere via */
     si (rel_uri.via.mensura > 0 && rel_uri.via.datum[0] == '/')
@@ -416,8 +424,8 @@ uri_resolvere(
     {
         /* Via relativum - combinare cum base */
         ChordaAedificator* aed;
-        i32                last_slash;
-        i32                i;
+                      i32  last_slash;
+                      i32  i;
 
         aed = chorda_aedificator_creare(piscina, CXXVIII);
 
@@ -448,13 +456,13 @@ uri_resolvere(
         /* Addere relativum */
         chorda_aedificator_appendere_chorda(aed, rel_uri.via);
 
-        nova_via = chorda_aedificator_finire(aed);
-        resultatus->via = via_normalizare(nova_via, piscina);
+        nova_via         = chorda_aedificator_finire(aed);
+        resultatus->via  = via_normalizare(nova_via, piscina);
     }
 
     /* Copiare quaestio et fragmentum ex relativum */
-    resultatus->quaestio = rel_uri.quaestio;
-    resultatus->fragmentum = rel_uri.fragmentum;
+    resultatus->quaestio    = rel_uri.quaestio;
+    resultatus->fragmentum  = rel_uri.fragmentum;
 
     redde resultatus;
 }
@@ -465,17 +473,17 @@ uri_resolvere(
  * ======================================================================== */
 
 chorda
-uri_construere(
-    Uri*     uri,
+uri_construere (
+        Uri* uri,
     Piscina* piscina)
 {
     ChordaAedificator* aed;
-    chorda             resultatus;
+               chorda  resultatus;
 
     si (uri == NIHIL || piscina == NIHIL)
     {
-        resultatus.datum = NIHIL;
-        resultatus.mensura = 0;
+        resultatus.datum    = NIHIL;
+        resultatus.mensura  = 0;
         redde resultatus;
     }
 
@@ -530,8 +538,8 @@ uri_construere(
                     (character)('0' + (character)digit));
                 started = VERUM;
             }
-            portus = portus % divisor;
-            divisor /= X;
+            portus   = portus % divisor;
+            divisor  /= X;
         }
     }
 
@@ -569,7 +577,8 @@ uri_construere(
  * ======================================================================== */
 
 i32
-uri_portus_default(chorda schema)
+uri_portus_default (
+    chorda schema)
 {
     si (schema.datum == NIHIL || schema.mensura == 0)
     {
@@ -620,7 +629,8 @@ uri_portus_default(chorda schema)
 }
 
 b32
-uri_est_absoluta(Uri* uri)
+uri_est_absoluta (
+    Uri* uri)
 {
     si (uri == NIHIL)
     {
@@ -631,7 +641,7 @@ uri_est_absoluta(Uri* uri)
 }
 
 b32
-uri_aequalis(
+uri_aequalis (
     Uri* a,
     Uri* b)
 {

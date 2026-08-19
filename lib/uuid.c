@@ -6,13 +6,14 @@
 #include <sys/time.h>
 #include <stdlib.h>  /* arc4random_buf on macOS */
 
+
 /* ==================================================
  * Auxiliares Internae
  * ================================================== */
 
 /* Capere tempus currens in milliseconds */
 interior i64
-_tempus_milliseconds(vacuum)
+_tempus_milliseconds (vacuum)
 {
     structura timeval tv;
     gettimeofday(&tv, NIHIL);
@@ -21,7 +22,9 @@ _tempus_milliseconds(vacuum)
 
 /* Generare bytes randomos */
 interior vacuum
-_generare_randomos(i8* bytes, i32 mensura)
+_generare_randomos (
+     i8* bytes,
+    i32  mensura)
 {
 #ifdef __APPLE__
     /* macOS habet arc4random_buf */
@@ -57,18 +60,18 @@ _generare_randomos(i8* bytes, i32 mensura)
  * ================================================== */
 
 chorda
-uuidv7_creare(
+uuidv7_creare (
     Piscina* piscina)
 {
-    i8         bytes[XVI];
-    i64        timestamp_ms;
-    chorda     resultus;
+           i8  bytes[XVI];
+          i64  timestamp_ms;
+       chorda  resultus;
     character* str;
 
     si (!piscina)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -79,12 +82,12 @@ uuidv7_creare(
     _generare_randomos(bytes, XVI);
 
     /* Ponere timestamp (48 bits, big-endian) in bytes 0-5 */
-    bytes[ZEPHYRUM] = (i8)((timestamp_ms >> XL) & 0xFF);
-    bytes[I]        = (i8)((timestamp_ms >> XXXII) & 0xFF);
-    bytes[II]       = (i8)((timestamp_ms >> XXIV) & 0xFF);
-    bytes[III]      = (i8)((timestamp_ms >> XVI) & 0xFF);
-    bytes[IV]       = (i8)((timestamp_ms >> VIII) & 0xFF);
-    bytes[V]        = (i8)(timestamp_ms & 0xFF);
+    bytes[ZEPHYRUM]  = (i8)((timestamp_ms >> XL) & 0xFF);
+    bytes[I]         = (i8)((timestamp_ms >> XXXII) & 0xFF);
+    bytes[II]        = (i8)((timestamp_ms >> XXIV) & 0xFF);
+    bytes[III]       = (i8)((timestamp_ms >> XVI) & 0xFF);
+    bytes[IV]        = (i8)((timestamp_ms >> VIII) & 0xFF);
+    bytes[V]         = (i8)(timestamp_ms & 0xFF);
 
     /* Ponere version bits (4 bits = 0111 = 7) in byte 6 */
     bytes[VI] = (i8)((bytes[VI] & 0x0F) | 0x70);
@@ -96,8 +99,8 @@ uuidv7_creare(
     str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
     si (!str)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -111,38 +114,38 @@ uuidv7_creare(
             bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV], bytes[XV]);
 
     /* Creare chordam */
-    resultus.datum   = (i8*)str;
-    resultus.mensura = UUID_MENSURA_CHORDAE;
+    resultus.datum    = (i8*)str;
+    resultus.mensura  = UUID_MENSURA_CHORDAE;
 
     redde resultus;
 }
 
 chorda
-uuidv5_creare(
-    Piscina*            piscina,
-    chorda              namespace_uuid,
+uuidv5_creare (
+               Piscina* piscina,
+                chorda  namespace_uuid,
     constans character* appellatio)
 {
-    SHA1Contextus ctx;
-    i8            namespace_bytes[XVI];
-    i8            hash[SHA1_DIGEST_MENSURA];
-    i8            uuid_bytes[XVI];
-    chorda        resultus;
-    character*    str;
-    i32           appellatio_len;
+    SHA1Contextus  ctx;
+               i8  namespace_bytes[XVI];
+               i8  hash[SHA1_DIGEST_MENSURA];
+               i8  uuid_bytes[XVI];
+           chorda  resultus;
+        character* str;
+              i32  appellatio_len;
 
     si (!piscina || !appellatio)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
     /* Convert namespace UUID to bytes */
     si (!uuid_ex_chorda(namespace_uuid, namespace_bytes))
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -172,8 +175,8 @@ uuidv5_creare(
     str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
     si (!str)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -189,8 +192,8 @@ uuidv5_creare(
             (i8)uuid_bytes[XII] & 0xFF, (i8)uuid_bytes[XIII] & 0xFF,
             (i8)uuid_bytes[XIV] & 0xFF, (i8)uuid_bytes[XV] & 0xFF);
 
-    resultus.datum   = (i8*)str;
-    resultus.mensura = UUID_MENSURA_CHORDAE;
+    resultus.datum    = (i8*)str;
+    resultus.mensura  = UUID_MENSURA_CHORDAE;
 
     redde resultus;
 }
@@ -203,22 +206,22 @@ hic_manens constans character UUID_NAMESPACE_ENTITAS_BYTES[] =
     "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 
 chorda
-uuidv5_ex_genere_et_titulo(
-    Piscina*            piscina,
+uuidv5_ex_genere_et_titulo (
+               Piscina* piscina,
     constans character* genus,
     constans character* titulus)
 {
-    character  appellatio_buffer[CCLVI];
-    i32        genus_len;
-    i32        titulus_len;
-    i32        i;
-    chorda     namespace_chorda;
+    character appellatio_buffer[CCLVI];
+          i32 genus_len;
+          i32 titulus_len;
+          i32 i;
+       chorda namespace_chorda;
 
     si (!piscina || !genus || !titulus)
     {
         chorda resultus;
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -239,8 +242,8 @@ uuidv5_ex_genere_et_titulo(
     si (genus_len + I + titulus_len >= CCLVI)
     {
         chorda resultus;
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -267,13 +270,13 @@ uuidv5_ex_genere_et_titulo(
  * ================================================== */
 
 s64
-uuidv7_tempus_extrahere(
+uuidv7_tempus_extrahere (
     chorda uuid_chorda)
 {
-    i8  bytes[VI];
-    i32 i;
-    i32 char_index;
-    s64 timestamp_ms;
+           i8 bytes[VI];
+          i32 i;
+          i32 char_index;
+          s64 timestamp_ms;
     character hi;
     character lo;
 
@@ -340,12 +343,12 @@ uuidv7_tempus_extrahere(
     }
 
     /* Reconstituere timestamp (big-endian 48 bits) */
-    timestamp_ms = ((s64)(bytes[ZEPHYRUM] & 0xFF) << XL) |
-                   ((s64)(bytes[I] & 0xFF) << XXXII) |
-                   ((s64)(bytes[II] & 0xFF) << XXIV) |
-                   ((s64)(bytes[III] & 0xFF) << XVI) |
-                   ((s64)(bytes[IV] & 0xFF) << VIII) |
-                   ((s64)(bytes[V] & 0xFF));
+    timestamp_ms = ((s64)(bytes[ZEPHYRUM] & 0xFF) << XL)
+        | ((s64)(bytes[I] & 0xFF) << XXXII)
+        | ((s64)(bytes[II] & 0xFF) << XXIV)
+        | ((s64)(bytes[III] & 0xFF) << XVI)
+        | ((s64)(bytes[IV] & 0xFF) << VIII)
+        | ((s64)(bytes[V] & 0xFF));
 
     redde timestamp_ms;
 }
@@ -356,13 +359,13 @@ uuidv7_tempus_extrahere(
  * ================================================== */
 
 b32
-uuid_ex_chorda(
-    chorda  uuid_chorda,
-    i8      bytes[XVI])
+uuid_ex_chorda (
+    chorda uuid_chorda,
+        i8 bytes[XVI])
 {
-    i32       i;
-    i32       byte_index;
-    i32       char_index;
+          i32 i;
+          i32 byte_index;
+          i32 char_index;
     character hi;
     character lo;
 
@@ -378,8 +381,8 @@ uuid_ex_chorda(
     per (i = ZEPHYRUM; i < XVI; i++)
     {
         /* Saltare dashes */
-        si (char_index == VIII || char_index == XIII ||
-            char_index == XVIII || char_index == XXIII)
+        si (   char_index == VIII || char_index == XIII
+            || char_index == XVIII || char_index == XXIII)
         {
             char_index++;
         }
@@ -430,17 +433,17 @@ uuid_ex_chorda(
 }
 
 chorda
-uuid_ad_chordam(
-    i8       bytes[XVI],
+uuid_ad_chordam (
+         i8  bytes[XVI],
     Piscina* piscina)
 {
-    chorda     resultus;
+       chorda  resultus;
     character* str;
 
     si (!bytes || !piscina)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -448,8 +451,8 @@ uuid_ad_chordam(
     str = (character*)piscina_allocare(piscina, UUID_MENSURA_CHORDAE + I);
     si (!str)
     {
-        resultus.datum   = NIHIL;
-        resultus.mensura = ZEPHYRUM;
+        resultus.datum    = NIHIL;
+        resultus.mensura  = ZEPHYRUM;
         redde resultus;
     }
 
@@ -462,8 +465,8 @@ uuid_ad_chordam(
             bytes[VIII], bytes[IX],
             bytes[X], bytes[XI], bytes[XII], bytes[XIII], bytes[XIV], bytes[XV]);
 
-    resultus.datum   = (i8*)str;
-    resultus.mensura = UUID_MENSURA_CHORDAE;
+    resultus.datum    = (i8*)str;
+    resultus.mensura  = UUID_MENSURA_CHORDAE;
 
     redde resultus;
 }
@@ -474,7 +477,7 @@ uuid_ad_chordam(
  * ================================================== */
 
 b32
-uuid_est_validus(
+uuid_est_validus (
     chorda uuid_chorda)
 {
     i32 i;
@@ -486,10 +489,10 @@ uuid_est_validus(
     }
 
     /* Verificare dashes in locis correctis */
-    si (uuid_chorda.datum[VIII] != '-' ||
-        uuid_chorda.datum[XIII] != '-' ||
-        uuid_chorda.datum[XVIII] != '-' ||
-        uuid_chorda.datum[XXIII] != '-')
+    si (   uuid_chorda.datum[VIII]  != '-'
+        || uuid_chorda.datum[XIII]  != '-'
+        || uuid_chorda.datum[XVIII] != '-'
+        || uuid_chorda.datum[XXIII] != '-')
     {
         redde FALSUM;
     }
@@ -507,9 +510,9 @@ uuid_est_validus(
 
         c = (character)uuid_chorda.datum[i];
 
-        si (!((c >= '0' && c <= '9') ||
-              (c >= 'a' && c <= 'f') ||
-              (c >= 'A' && c <= 'F')))
+        si (!((c >= '0' && c <= '9')
+            || (c >= 'a' && c <= 'f')
+            || (c >= 'A' && c <= 'F')))
         {
             redde FALSUM;
         }
@@ -519,7 +522,7 @@ uuid_est_validus(
 }
 
 b32
-uuid_est_v7(
+uuid_est_v7 (
     chorda uuid_chorda)
 {
     character version_char;
@@ -538,7 +541,7 @@ uuid_est_v7(
 }
 
 b32
-uuid_est_v5(
+uuid_est_v5 (
     chorda uuid_chorda)
 {
     character version_char;

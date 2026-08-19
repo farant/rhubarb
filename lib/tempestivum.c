@@ -9,7 +9,7 @@
  * ================================================== */
 
 interior s64
-_tempus_nunc_ms(vacuum)
+_tempus_nunc_ms (vacuum)
 {
     redde (s64)(tempus_nunc() * 1000.0);
 }
@@ -20,10 +20,10 @@ _tempus_nunc_ms(vacuum)
  * ================================================== */
 
 interior chorda*
-_internare_literis(
+_internare_literis (
     InternamentumChorda* intern,
-    Piscina*             piscina,
-    constans character*  cstr)
+                Piscina* piscina,
+     constans character* cstr)
 {
     chorda temp;
     temp = chorda_ex_literis(cstr, piscina);
@@ -36,10 +36,10 @@ _internare_literis(
  * ================================================== */
 
 AdministratorTempestivi*
-administrator_tempestivi_creare(
-    Piscina*             piscina,
+administrator_tempestivi_creare (
+                Piscina* piscina,
     EntitasRepositorium* repositorium,
-    CursusNuntiorum*     cursus,
+        CursusNuntiorum* cursus,
     InternamentumChorda* intern)
 {
     AdministratorTempestivi* admin;
@@ -55,10 +55,10 @@ administrator_tempestivi_creare(
         redde NIHIL;
     }
 
-    admin->piscina      = piscina;
-    admin->repositorium = repositorium;
-    admin->cursus       = cursus;
-    admin->intern       = intern;
+    admin->piscina       = piscina;
+    admin->repositorium  = repositorium;
+    admin->cursus        = cursus;
+    admin->intern        = intern;
 
     /* Cache genus tempestivi */
     admin->genus_tempestivi = _internare_literis(intern, piscina, TEMPESTIVUM_GENUS);
@@ -76,19 +76,19 @@ administrator_tempestivi_creare(
  * ================================================== */
 
 Entitas*
-tempestivum_creare_cum_delay(
+tempestivum_creare_cum_delay (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id,
-    constans character*      genus_nuntii,
-    s64                      intervallum_ms,
-    s64                      delay_ms,
-    b32                      repetere)
+                     chorda* destinatio_id,
+         constans character* genus_nuntii,
+                        s64  intervallum_ms,
+                        s64  delay_ms,
+                        b32  repetere)
 {
-    Entitas*  tempestivum;
-    character buffer[LXIV];
-    character dest_buffer[CXXVIII];
-    s64       proximum_tempus;
-    i32       dest_len;
+      Entitas* tempestivum;
+    character  buffer[LXIV];
+    character  dest_buffer[CXXVIII];
+          s64  proximum_tempus;
+          i32  dest_len;
 
     si (!admin || !destinatio_id || !genus_nuntii || intervallum_ms <= ZEPHYRUM)
     {
@@ -163,12 +163,12 @@ tempestivum_creare_cum_delay(
 }
 
 Entitas*
-tempestivum_creare(
+tempestivum_creare (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id,
-    constans character*      genus_nuntii,
-    s64                      intervallum_ms,
-    b32                      repetere)
+                     chorda* destinatio_id,
+         constans character* genus_nuntii,
+                        s64  intervallum_ms,
+                        b32  repetere)
 {
     /* Delay initialis = intervallum (prima activatio post intervallum) */
     redde tempestivum_creare_cum_delay(
@@ -181,9 +181,9 @@ tempestivum_creare(
 }
 
 b32
-tempestivum_annullare(
+tempestivum_annullare (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id)
+                     chorda* tempestivum_id)
 {
     si (!admin || !tempestivum_id)
     {
@@ -196,9 +196,9 @@ tempestivum_annullare(
 }
 
 b32
-tempestivum_pausare(
+tempestivum_pausare (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id)
+                     chorda* tempestivum_id)
 {
     Entitas* tempestivum;
 
@@ -224,9 +224,9 @@ tempestivum_pausare(
 }
 
 b32
-tempestivum_resumere(
+tempestivum_resumere (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id)
+                     chorda* tempestivum_id)
 {
     Entitas* tempestivum;
 
@@ -257,20 +257,20 @@ tempestivum_resumere(
  * ================================================== */
 
 i32
-tempestivum_processare(
+tempestivum_processare (
     AdministratorTempestivi* admin)
 {
-    Xar*      tempestiva;
-    i32       i;
-    i32       numerus;
-    i32       missi;
-    s64       tempus_nunc_ms;
-    chorda*   clavis_activum;
-    chorda*   clavis_proximum;
-    chorda*   clavis_intervallum;
-    chorda*   clavis_repetere;
-    chorda*   clavis_destinatio;
-    chorda*   clavis_genus_nuntii;
+       Xar* tempestiva;
+       i32  i;
+       i32  numerus;
+       i32  missi;
+       s64  tempus_nunc_ms;
+    chorda* clavis_activum;
+    chorda* clavis_proximum;
+    chorda* clavis_intervallum;
+    chorda* clavis_repetere;
+    chorda* clavis_destinatio;
+    chorda* clavis_genus_nuntii;
 
     si (!admin)
     {
@@ -287,15 +287,15 @@ tempestivum_processare(
     /* TODO: Addere quaerere_per_genus ad repositorium */
 
     /* Cached property keys */
-    clavis_activum      = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
-    clavis_proximum     = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_PROXIMUM);
-    clavis_intervallum  = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_INTERVALLUM);
-    clavis_repetere     = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_REPETERE);
-    clavis_destinatio   = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_DESTINATIO);
+    clavis_activum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
+    clavis_proximum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_PROXIMUM);
+    clavis_intervallum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_INTERVALLUM);
+    clavis_repetere = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_REPETERE);
+    clavis_destinatio = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_DESTINATIO);
     clavis_genus_nuntii = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_GENUS_NUNTII);
 
-    tempus_nunc_ms = _tempus_nunc_ms();
-    missi = ZEPHYRUM;
+    tempus_nunc_ms  = _tempus_nunc_ms();
+    missi           = ZEPHYRUM;
 
     /* Quaerere per textum genus (workaround) */
     tempestiva = admin->repositorium->quaerere_textum(
@@ -313,12 +313,12 @@ tempestivum_processare(
     {
         Entitas** slot;
         Entitas*  tempestivum;
-        b32       activum;
-        s64       proximum_tempus;
-        s64       intervallum;
-        b32       repetere;
-        chorda*   destinatio_id;
-        chorda*   genus_nuntii;
+            b32   activum;
+            s64   proximum_tempus;
+            s64   intervallum;
+            b32   repetere;
+         chorda*  destinatio_id;
+         chorda*  genus_nuntii;
 
         slot = (Entitas**)xar_obtinere(tempestiva, i);
         si (!slot || !*slot)
@@ -353,7 +353,7 @@ tempestivum_processare(
 
         /* Capere datum pro mittendo */
         destinatio_id = entitas_proprietas_capere(tempestivum, clavis_destinatio);
-        genus_nuntii  = entitas_proprietas_capere(tempestivum, clavis_genus_nuntii);
+        genus_nuntii = entitas_proprietas_capere(tempestivum, clavis_genus_nuntii);
 
         si (!destinatio_id || !genus_nuntii)
         {
@@ -364,7 +364,7 @@ tempestivum_processare(
         /* Nota: genus_nuntii est chorda*, debemus convertere ad cstr */
         {
             character genus_buffer[LXIV];
-            i32       len;
+                  i32 len;
 
             len = genus_nuntii->mensura;
             si (len > LXIII)
@@ -428,14 +428,14 @@ tempestivum_processare(
  * ================================================== */
 
 s64
-tempestivum_proxima_meta_ms(
+tempestivum_proxima_meta_ms (
     AdministratorTempestivi* admin)
 {
-    Xar*    tempestiva;
-    i32     i;
-    i32     numerus;
-    s64     tempus_nunc_ms;
-    s64     minima = -I;   /* -1 = nullum activum */
+       Xar* tempestiva;
+       i32  i;
+       i32  numerus;
+       s64  tempus_nunc_ms;
+       s64  minima = -I;   /* -1 = nullum activum */
     chorda* clavis_activum;
     chorda* clavis_proximum;
 
@@ -444,7 +444,7 @@ tempestivum_proxima_meta_ms(
         redde -I;
     }
 
-    clavis_activum  = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
+    clavis_activum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
     clavis_proximum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_PROXIMUM);
 
     tempestiva = admin->repositorium->quaerere_textum(
@@ -456,16 +456,16 @@ tempestivum_proxima_meta_ms(
         redde -I;
     }
 
-    tempus_nunc_ms = _tempus_nunc_ms();
-    numerus = xar_numerus(tempestiva);
+    tempus_nunc_ms  = _tempus_nunc_ms();
+    numerus         = xar_numerus(tempestiva);
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         Entitas** slot;
         Entitas*  tempestivum;
-        b32       activum;
-        s64       proximum_tempus;
-        s64       mora;
+            b32   activum;
+            s64   proximum_tempus;
+            s64   mora;
 
         slot = (Entitas**)xar_obtinere(tempestiva, i);
         si (!slot || !*slot)
@@ -504,13 +504,13 @@ tempestivum_proxima_meta_ms(
 }
 
 i32
-tempestivum_numerus_activorum(
+tempestivum_numerus_activorum (
     AdministratorTempestivi* admin)
 {
-    Xar*    tempestiva;
-    i32     i;
-    i32     numerus;
-    i32     activa;
+       Xar* tempestiva;
+       i32  i;
+       i32  numerus;
+       i32  activa;
     chorda* clavis_activum;
 
     si (!admin)
@@ -529,14 +529,14 @@ tempestivum_numerus_activorum(
         redde ZEPHYRUM;
     }
 
-    numerus = xar_numerus(tempestiva);
-    activa  = ZEPHYRUM;
+    numerus  = xar_numerus(tempestiva);
+    activa   = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         Entitas** slot;
         Entitas*  tempestivum;
-        b32       activum;
+            b32   activum;
 
         slot = (Entitas**)xar_obtinere(tempestiva, i);
         si (!slot || !*slot)
@@ -560,14 +560,14 @@ tempestivum_numerus_activorum(
 }
 
 Xar*
-tempestivum_pro_destinatione(
+tempestivum_pro_destinatione (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id)
+                     chorda* destinatio_id)
 {
-    Xar*    tempestiva;
-    Xar*    resultus;
-    i32     i;
-    i32     numerus;
+       Xar* tempestiva;
+       Xar* resultus;
+       i32  i;
+       i32  numerus;
     chorda* clavis_destinatio;
 
     si (!admin || !destinatio_id)
@@ -598,7 +598,7 @@ tempestivum_pro_destinatione(
     {
         Entitas** slot;
         Entitas*  tempestivum;
-        chorda*   dest;
+         chorda*  dest;
 
         slot = (Entitas**)xar_obtinere(tempestiva, i);
         si (!slot || !*slot)
@@ -628,13 +628,13 @@ tempestivum_pro_destinatione(
 }
 
 b32
-tempestivum_est_activum(
+tempestivum_est_activum (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id)
+                     chorda* tempestivum_id)
 {
     Entitas* tempestivum;
-    chorda*  clavis_activum;
-    b32      activum;
+     chorda* clavis_activum;
+        b32  activum;
 
     si (!admin || !tempestivum_id)
     {
@@ -666,12 +666,12 @@ tempestivum_est_activum(
  * ================================================== */
 
 vacuum
-tempestivum_imprimere(
+tempestivum_imprimere (
     AdministratorTempestivi* admin)
 {
-    Xar*    tempestiva;
-    i32     i;
-    i32     numerus;
+       Xar* tempestiva;
+       i32  i;
+       i32  numerus;
     chorda* clavis_activum;
     chorda* clavis_destinatio;
     chorda* clavis_genus_nuntii;
@@ -683,10 +683,10 @@ tempestivum_imprimere(
         redde;
     }
 
-    clavis_activum      = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
-    clavis_destinatio   = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_DESTINATIO);
+    clavis_activum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_ACTIVUM);
+    clavis_destinatio = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_DESTINATIO);
     clavis_genus_nuntii = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_GENUS_NUNTII);
-    clavis_intervallum  = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_INTERVALLUM);
+    clavis_intervallum = _internare_literis(admin->intern, admin->piscina, TEMPESTIVUM_PROP_INTERVALLUM);
 
     tempestiva = admin->repositorium->quaerere_textum(
         admin->repositorium->datum,
@@ -707,10 +707,10 @@ tempestivum_imprimere(
     {
         Entitas** slot;
         Entitas*  tempestivum;
-        b32       activum;
-        chorda*   dest;
-        chorda*   genus;
-        s64       intervallum;
+            b32   activum;
+         chorda*  dest;
+         chorda*  genus;
+            s64   intervallum;
 
         slot = (Entitas**)xar_obtinere(tempestiva, i);
         si (!slot || !*slot)
@@ -725,7 +725,7 @@ tempestivum_imprimere(
         }
 
         entitas_proprietas_capere_b32(tempestivum, clavis_activum, &activum);
-        dest  = entitas_proprietas_capere(tempestivum, clavis_destinatio);
+        dest = entitas_proprietas_capere(tempestivum, clavis_destinatio);
         genus = entitas_proprietas_capere(tempestivum, clavis_genus_nuntii);
         entitas_proprietas_capere_s64(tempestivum, clavis_intervallum, &intervallum);
 

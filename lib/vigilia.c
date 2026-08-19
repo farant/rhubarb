@@ -14,24 +14,25 @@
 #include <sys/stat.h>   /* sutura POSIX - macOS ex decreto */
 
 structura Vigilia {
-    Piscina*            piscina;
-    VigiliaStatus       status;
+               Piscina* piscina;
+         VigiliaStatus  status;
     constans character* signum;          /* hex plenum aut NIHIL */
-    character           signum_breve[XVII];
+             character  signum_breve[XVII];
     constans character* via_binarii;     /* NIHIL = quieta */
-    Xar*                fontes;          /* character* (NUL-term) */
-    s64                 ortus_mtempus;   /* nanosecundis */
-    s64                 ortus_magnitudo;
+                   Xar* fontes;          /* character* (NUL-term) */
+                   s64  ortus_mtempus;   /* nanosecundis */
+                   s64  ortus_magnitudo;
     constans character* cautio;          /* NIHIL dum recens */
     constans character* causa;           /* "" dum recens */
 
     /* politica tacendi (2026-07-17): agnitio explicita */
-    i32                 tacita_reliqua;
+                   i32  tacita_reliqua;
     constans character* causa_tacita;    /* fingerprint agnitionis */
-    VigiliaStatus       status_tacitus;
-    MomentumSec         tempus_ultimum;  /* secunda; horologium iniectum */
-    s64                 commissi_mtempus; /* stampa ad agnitionem (ns) */
+         VigiliaStatus  status_tacitus;
+           MomentumSec  tempus_ultimum;  /* secunda; horologium iniectum */
+                   s64  commissi_mtempus; /* stampa ad agnitionem (ns) */
 };
+
 
 /* ==================================================
  * auxilia
@@ -43,7 +44,8 @@ structura Vigilia {
  * silvae stat Darwin-veritas est, ergo bracchium aestimatum membra
  * nota ferre debet (via aestimata = bracchium sine custodia). */
 interior s64
-_mtempus_ns (constans structura stat* status_disci)
+_mtempus_ns (
+    constans structura stat* status_disci)
 {
 #ifdef __linux__
     redde (s64)status_disci->st_mtim.tv_sec
@@ -57,10 +59,12 @@ _mtempus_ns (constans structura stat* status_disci)
 }
 
 interior constans character*
-_litterae_copiare (Piscina* piscina, constans character* fons)
+_litterae_copiare (
+               Piscina* piscina,
+    constans character* fons)
 {
-    memoriae_index m = strlen(fons);
-    character* copia = (character*)piscina_allocare(piscina, m + I);
+    memoriae_index  m = strlen(fons);
+         character* copia = (character*)piscina_allocare(piscina, m + I);
 
     si (copia == NIHIL)
     {
@@ -73,11 +77,13 @@ _litterae_copiare (Piscina* piscina, constans character* fons)
 
 /* plagulam totam legere (NUL appenso); NIHIL si illegibilis */
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* textus;
 
     *mensura_out = ZEPHYRUM;
@@ -95,7 +101,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     }
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura_l > 0L
             && fread(textus, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -104,16 +110,18 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         redde NIHIL;
     }
     fclose(pl);
-    textus[mensura_l] = '\0';
-    *mensura_out = (i32)mensura_l;
+    textus[mensura_l]  = '\0';
+    *mensura_out       = (i32)mensura_l;
     redde textus;
 }
 
 /* manifestum onerare: via una per lineam, vacuae + '#' omissae */
 interior vacuum
-_manifestum_onerare (Vigilia* v, constans character* via)
+_manifestum_onerare (
+               Vigilia* v,
+    constans character* via)
 {
-    i32 mensura = ZEPHYRUM;
+          i32  mensura = ZEPHYRUM;
     character* textus = _plagulam_legere(v->piscina, via,
         &mensura);
     i32 cursor = ZEPHYRUM;
@@ -159,8 +167,8 @@ _manifestum_onerare (Vigilia* v, constans character* via)
                 {
                     memcpy(via_f, textus + initium,
                         (memoriae_index)(finis - initium));
-                    via_f[finis - initium] = '\0';
-                    *locus = via_f;
+                    via_f[finis - initium]  = '\0';
+                    *locus                  = via_f;
                 }
                 alioquin
                 {
@@ -173,14 +181,16 @@ _manifestum_onerare (Vigilia* v, constans character* via)
 
 /* cautionem figere (glutinosa; textus in piscinam perennem) */
 interior vacuum
-_figere (Vigilia* v, VigiliaStatus status,
+_figere (
+               Vigilia* v,
+         VigiliaStatus  status,
     constans character* causa)
 {
-    character* buf;
-    memoriae_index m = strlen(causa);
+         character* buf;
+    memoriae_index  m = strlen(causa);
 
-    v->status = status;
-    v->causa = _litterae_copiare(v->piscina, causa);
+    v->status  = status;
+    v->causa   = _litterae_copiare(v->piscina, causa);
     buf = (character*)piscina_allocare(v->piscina,
         m + (memoriae_index)CXCII);
     si (buf == NIHIL)
@@ -204,12 +214,14 @@ _figere (Vigilia* v, VigiliaStatus status,
     v->cautio = buf;
 }
 
+
 /* ==================================================
  * facies publica
  * ================================================== */
 
 Vigilia*
-vigilia_creare (Piscina* piscina,
+vigilia_creare (
+                         Piscina* piscina,
     constans VigiliaConfiguratio* cfg)
 {
     Vigilia* v;
@@ -226,8 +238,8 @@ vigilia_creare (Piscina* piscina,
         redde NIHIL;
     }
     memset(v, ZEPHYRUM, magnitudo(Vigilia));
-    v->piscina = piscina;
-    v->causa = "";
+    v->piscina  = piscina;
+    v->causa    = "";
     si (cfg == NIHIL)
     {
         redde v;   /* quieta */
@@ -250,8 +262,8 @@ vigilia_creare (Piscina* piscina,
         {
             v->via_binarii = _litterae_copiare(piscina,
                 cfg->via_binarii);
-            v->ortus_mtempus = _mtempus_ns(&status_disci);
-            v->ortus_magnitudo = (s64)status_disci.st_size;
+            v->ortus_mtempus    = _mtempus_ns(&status_disci);
+            v->ortus_magnitudo  = (s64)status_disci.st_size;
         }
     }
     si (cfg->via_manifesti != NIHIL && v->via_binarii != NIHIL)
@@ -262,13 +274,15 @@ vigilia_creare (Piscina* piscina,
 }
 
 VigiliaStatus
-vigilia_inspicere (Vigilia* vigilia, Piscina* effimera)
+vigilia_inspicere (
+    Vigilia* vigilia,
+    Piscina* effimera)
 {
     si (vigilia == NIHIL)
     {
         redde VIGILIA_RECENS;
     }
-    si (vigilia->status == VIGILIA_BINARIUM_NOVIUS
+    si (   vigilia->status      == VIGILIA_BINARIUM_NOVIUS
         || vigilia->via_binarii == NIHIL)
     {
         redde vigilia->status;   /* terminalis aut quieta */
@@ -279,12 +293,12 @@ vigilia_inspicere (Vigilia* vigilia, Piscina* effimera)
     {
         structura stat status_disci;
 
-        si (stat(vigilia->via_binarii, &status_disci) == ZEPHYRUM
+        si (   stat(vigilia->via_binarii, &status_disci) == ZEPHYRUM
             && (_mtempus_ns(&status_disci) != vigilia->ortus_mtempus
                 || (s64)status_disci.st_size
                     != vigilia->ortus_magnitudo))
         {
-            i32 mensura = ZEPHYRUM;
+                  i32  mensura = ZEPHYRUM;
             character* octeti = (effimera != NIHIL)
                 ? _plagulam_legere(effimera, vigilia->via_binarii,
                       &mensura)
@@ -315,7 +329,7 @@ vigilia_inspicere (Vigilia* vigilia, Piscina* effimera)
         }
     }
     /* vigilia fontium (semel figitur - glutinosa) */
-    si (vigilia->status == VIGILIA_RECENS
+    si (   vigilia->status == VIGILIA_RECENS
         && vigilia->fontes != NIHIL)
     {
         i32 k;
@@ -330,7 +344,7 @@ vigilia_inspicere (Vigilia* vigilia, Piscina* effimera)
             {
                 perge;
             }
-            si (stat(*via, &status_disci) == ZEPHYRUM
+            si (   stat(*via, &status_disci) == ZEPHYRUM
                 && _mtempus_ns(&status_disci)
                     > vigilia->ortus_mtempus)
             {
@@ -343,25 +357,29 @@ vigilia_inspicere (Vigilia* vigilia, Piscina* effimera)
 }
 
 VigiliaStatus
-vigilia_status (constans Vigilia* vigilia)
+vigilia_status (
+    constans Vigilia* vigilia)
 {
     redde (vigilia != NIHIL) ? vigilia->status : VIGILIA_RECENS;
 }
 
 constans character*
-vigilia_signum_breve (constans Vigilia* vigilia)
+vigilia_signum_breve (
+    constans Vigilia* vigilia)
 {
     redde (vigilia != NIHIL) ? vigilia->signum_breve : "";
 }
 
 constans character*
-vigilia_cautio (constans Vigilia* vigilia)
+vigilia_cautio (
+    constans Vigilia* vigilia)
 {
     redde (vigilia != NIHIL) ? vigilia->cautio : NIHIL;
 }
 
 constans character*
-vigilia_causa (constans Vigilia* vigilia)
+vigilia_causa (
+    constans Vigilia* vigilia)
 {
     redde (vigilia != NIHIL) ? vigilia->causa : "";
 }
@@ -380,9 +398,12 @@ _commissi_mtempus (vacuum)
 }
 
 b32
-vigilia_tacere (Vigilia* vigilia, i32 responsa, MomentumSec nunc)
+vigilia_tacere (
+        Vigilia* vigilia,
+            i32  responsa,
+    MomentumSec  nunc)
 {
-    si (vigilia == NIHIL || vigilia->cautio == NIHIL
+    si (   vigilia  == NIHIL || vigilia->cautio == NIHIL
         || responsa <= ZEPHYRUM)
     {
         redde FALSUM;   /* nihil tacendum */
@@ -391,16 +412,18 @@ vigilia_tacere (Vigilia* vigilia, i32 responsa, MomentumSec nunc)
     {
         responsa = D;   /* limen sanitatis */
     }
-    vigilia->tacita_reliqua = responsa;
-    vigilia->causa_tacita = vigilia->causa;
-    vigilia->status_tacitus = vigilia->status;
-    vigilia->tempus_ultimum = nunc;
-    vigilia->commissi_mtempus = _commissi_mtempus();
+    vigilia->tacita_reliqua    = responsa;
+    vigilia->causa_tacita      = vigilia->causa;
+    vigilia->status_tacitus    = vigilia->status;
+    vigilia->tempus_ultimum    = nunc;
+    vigilia->commissi_mtempus  = _commissi_mtempus();
     redde VERUM;
 }
 
 constans character*
-vigilia_cautio_dicenda (Vigilia* vigilia, MomentumSec nunc)
+vigilia_cautio_dicenda (
+        Vigilia* vigilia,
+    MomentumSec  nunc)
 {
     MoraSec quies;   /* momentum - momentum = mora (algebra signata) */
 
@@ -408,8 +431,8 @@ vigilia_cautio_dicenda (Vigilia* vigilia, MomentumSec nunc)
     {
         redde NIHIL;
     }
-    quies = nunc - vigilia->tempus_ultimum;
-    vigilia->tempus_ultimum = nunc;
+    quies                    = nunc - vigilia->tempus_ultimum;
+    vigilia->tempus_ultimum  = nunc;
     si (vigilia->cautio == NIHIL)
     {
         redde NIHIL;
@@ -426,8 +449,8 @@ vigilia_cautio_dicenda (Vigilia* vigilia, MomentumSec nunc)
     }
     /* re-armatio: causa aut status NOVUS - agnitio vetus novum
      * nuntium non tegit */
-    si (vigilia->status != vigilia->status_tacitus
-        || vigilia->causa_tacita == NIHIL
+    si (   vigilia->status != vigilia->status_tacitus
+        || vigilia->causa_tacita                         == NIHIL
         || strcmp(vigilia->causa, vigilia->causa_tacita) != ZEPHYRUM)
     {
         vigilia->tacita_reliqua = ZEPHYRUM;
@@ -444,11 +467,13 @@ vigilia_cautio_dicenda (Vigilia* vigilia, MomentumSec nunc)
 }
 
 b32
-vigilia_continet (constans Vigilia* vigilia, chorda via)
+vigilia_continet (
+    constans Vigilia* vigilia,
+              chorda  via)
 {
     i32 k;
 
-    si (vigilia == NIHIL || vigilia->fontes == NIHIL
+    si (   vigilia     == NIHIL || vigilia->fontes == NIHIL
         || via.mensura == ZEPHYRUM || via.datum == NIHIL)
     {
         redde FALSUM;
@@ -474,7 +499,7 @@ vigilia_continet (constans Vigilia* vigilia, chorda via)
         {
             perge;
         }
-        si (f_m == (memoriae_index)via.mensura
+        si (   f_m == (memoriae_index)via.mensura
             || (*locus)[f_m - (memoriae_index)via.mensura - I]
                 == '/')
         {

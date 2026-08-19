@@ -75,70 +75,70 @@ interior constans character* NOMINA_DIERUM_ANGLICA_BREVIA[VII] = {
  * ================================================== */
 
 Dies
-fasti_dies(
+fasti_dies (
     s32 annus,
     s32 mensis,
     s32 dies)
 {
     Dies d;
-    d.annus = annus;
-    d.mensis = mensis;
-    d.dies = dies;
+    d.annus   = annus;
+    d.mensis  = mensis;
+    d.dies    = dies;
     redde d;
 }
 
 Hora
-fasti_hora(
+fasti_hora (
     s32 hora,
     s32 minutum,
     s32 secundum)
 {
     Hora h;
-    h.hora = hora;
-    h.minutum = minutum;
-    h.secundum = secundum;
+    h.hora      = hora;
+    h.minutum   = minutum;
+    h.secundum  = secundum;
     redde h;
 }
 
 Dies
-fasti_dies_hodie(
+fasti_dies_hodie (
     vacuum)
 {
-    structura timeval tv;
-    structura tm* tm_info;
-    time_t secunda;
-    Dies d;
+    structura timeval  tv;
+         structura tm* tm_info;
+               time_t secunda;
+                 Dies d;
 
     gettimeofday(&tv, NIHIL);
     secunda = tv.tv_sec;
     tm_info = localtime(&secunda);
 
-    d.annus = (s32)(tm_info->tm_year + MCM);
-    d.mensis = (s32)(tm_info->tm_mon + I);
-    d.dies = (s32)(tm_info->tm_mday);
+    d.annus   = (s32)(tm_info->tm_year + MCM);
+    d.mensis  = (s32)(tm_info->tm_mon + I);
+    d.dies    = (s32)(tm_info->tm_mday);
 
     redde d;
 }
 
 DiesHora
-fasti_nunc(
+fasti_nunc (
     vacuum)
 {
-    structura timeval tv;
-    structura tm* tm_info;
-    time_t secunda;
-    DiesHora dh;
+    structura timeval  tv;
+         structura tm* tm_info;
+               time_t secunda;
+             DiesHora dh;
 
     gettimeofday(&tv, NIHIL);
     secunda = tv.tv_sec;
     tm_info = localtime(&secunda);
 
-    dh.dies.annus = (s32)(tm_info->tm_year + MCM);
-    dh.dies.mensis = (s32)(tm_info->tm_mon + I);
-    dh.dies.dies = (s32)(tm_info->tm_mday);
-    dh.hora.hora = (s32)(tm_info->tm_hour);
-    dh.hora.minutum = (s32)(tm_info->tm_min);
-    dh.hora.secundum = (s32)(tm_info->tm_sec);
+    dh.dies.annus     = (s32)(tm_info->tm_year + MCM);
+    dh.dies.mensis    = (s32)(tm_info->tm_mon + I);
+    dh.dies.dies      = (s32)(tm_info->tm_mday);
+    dh.hora.hora      = (s32)(tm_info->tm_hour);
+    dh.hora.minutum   = (s32)(tm_info->tm_min);
+    dh.hora.secundum  = (s32)(tm_info->tm_sec);
 
     redde dh;
 }
@@ -149,7 +149,7 @@ fasti_nunc(
  * ================================================== */
 
 b32
-fasti_est_bissextilis(
+fasti_est_bissextilis (
     s32 annus)
 {
     /* Regulae Gregorianae:
@@ -157,28 +157,33 @@ fasti_est_bissextilis(
      * - Sed divisibilis per 100: non bissextilis
      * - Sed divisibilis per 400: bissextilis
      */
-    si ((annus % CD) == ZEPHYRUM) {
+    si ((annus % CD) == ZEPHYRUM)
+    {
         redde VERUM;
     }
-    si ((annus % C) == ZEPHYRUM) {
+    si ((annus % C) == ZEPHYRUM)
+    {
         redde FALSUM;
     }
-    si ((annus % IV) == ZEPHYRUM) {
+    si ((annus % IV) == ZEPHYRUM)
+    {
         redde VERUM;
     }
     redde FALSUM;
 }
 
 s32
-fasti_dies_in_mense(
+fasti_dies_in_mense (
     s32 mensis,
     s32 annus)
 {
-    si (mensis < I || mensis > XII) {
+    si (mensis < I || mensis > XII)
+    {
         redde ZEPHYRUM;
     }
 
-    si (mensis == FASTI_FEBRUARIUS && fasti_est_bissextilis(annus)) {
+    si (mensis == FASTI_FEBRUARIUS && fasti_est_bissextilis(annus))
+    {
         redde XXIX;
     }
 
@@ -191,18 +196,20 @@ fasti_dies_in_mense(
  * ================================================== */
 
 b32
-fasti_dies_valida(
+fasti_dies_valida (
     Dies dies)
 {
     s32 dies_max;
 
-    si (dies.mensis < I || dies.mensis > XII) {
+    si (dies.mensis < I || dies.mensis > XII)
+    {
         redde FALSUM;
     }
 
     dies_max = fasti_dies_in_mense(dies.mensis, dies.annus);
 
-    si (dies.dies < I || dies.dies > dies_max) {
+    si (dies.dies < I || dies.dies > dies_max)
+    {
         redde FALSUM;
     }
 
@@ -210,16 +217,19 @@ fasti_dies_valida(
 }
 
 b32
-fasti_hora_valida(
+fasti_hora_valida (
     Hora hora)
 {
-    si (hora.hora < ZEPHYRUM || hora.hora > XXIII) {
+    si (hora.hora < ZEPHYRUM || hora.hora > XXIII)
+    {
         redde FALSUM;
     }
-    si (hora.minutum < ZEPHYRUM || hora.minutum > LIX) {
+    si (hora.minutum < ZEPHYRUM || hora.minutum > LIX)
+    {
         redde FALSUM;
     }
-    si (hora.secundum < ZEPHYRUM || hora.secundum > LIX) {
+    si (hora.secundum < ZEPHYRUM || hora.secundum > LIX)
+    {
         redde FALSUM;
     }
     redde VERUM;
@@ -235,7 +245,7 @@ fasti_hora_valida(
  * ================================================== */
 
 DiesIulianus
-fasti_ad_iulianum(
+fasti_ad_iulianum (
     Dies dies)
 {
     /* Algorithmus: formula Iuliana pro calendario Gregoriano
@@ -263,7 +273,7 @@ fasti_ad_iulianum(
 }
 
 Dies
-fasti_ex_iuliano(
+fasti_ex_iuliano (
     DiesIulianus iulianus)
 {
     /* Algorithmus inversus: JDN ad diem Gregorianam */
@@ -277,9 +287,9 @@ fasti_ex_iuliano(
     e = c - (1461LL * d) / IV;
     m = (V * e + II) / 153LL;
 
-    dies.dies = (s32)(e - (153LL * m + II) / V + I);
-    dies.mensis = (s32)(m + III - XII * (m / X));
-    dies.annus = (s32)(C * b + d - 4800LL + m / X);
+    dies.dies    = (s32)(e - (153LL * m + II) / V + I);
+    dies.mensis  = (s32)(m + III - XII * (m / X));
+    dies.annus   = (s32)(C * b + d - 4800LL + m / X);
 
     redde dies;
 }
@@ -290,31 +300,31 @@ fasti_ex_iuliano(
  * ================================================== */
 
 s32
-fasti_dies_hebdomadis(
+fasti_dies_hebdomadis (
     Dies dies)
 {
     /* Usans numeros Iulianos.
      * JDN % 7 dat diem hebdomadis ubi 0 = Lunae (Monday).
      * Nos volumus 0 = Dominica, ergo adiustamus.
      */
-    DiesIulianus jdn = fasti_ad_iulianum(dies);
-    s32 dh = (s32)((jdn + I) % VII);
+    DiesIulianus jdn  = fasti_ad_iulianum(dies);
+             s32 dh   = (s32)((jdn + I) % VII);
     redde dh;
 }
 
 s32
-fasti_dies_anni(
+fasti_dies_anni (
     Dies dies)
 {
     /* Dies anni: 1 Ian = 1, 31 Dec = 365 (vel 366) */
-    Dies prima = fasti_dies(dies.annus, I, I);
-    DiesIulianus jdn_dies = fasti_ad_iulianum(dies);
-    DiesIulianus jdn_prima = fasti_ad_iulianum(prima);
+            Dies prima      = fasti_dies(dies.annus, I, I);
+    DiesIulianus jdn_dies   = fasti_ad_iulianum(dies);
+    DiesIulianus jdn_prima  = fasti_ad_iulianum(prima);
     redde (s32)(jdn_dies - jdn_prima + I);
 }
 
 s32
-fasti_hebdomada_anni(
+fasti_hebdomada_anni (
     Dies dies)
 {
     /* ISO 8601 hebdomada:
@@ -326,48 +336,55 @@ fasti_hebdomada_anni(
      * 2. Computa quot hebdomadae inter illam et diem datam
      */
     Dies ian_iv;
-    s32 dh_ian_iv;
+     s32 dh_ian_iv;
     DiesIulianus jdn_dies, jdn_prima_feria_ii;
     s32 hebdomada;
 
     /* 4 Ianuarii semper est in prima hebdomada ISO */
-    ian_iv = fasti_dies(dies.annus, I, IV);
-    dh_ian_iv = fasti_dies_hebdomadis(ian_iv);
+    ian_iv     = fasti_dies(dies.annus, I, IV);
+    dh_ian_iv  = fasti_dies_hebdomadis(ian_iv);
 
     /* Converte ad Monday=0 pro computatione ISO */
     /* Dominica (0) -> 6, Feria II (1) -> 0, etc. */
-    si (dh_ian_iv == ZEPHYRUM) {
+    si (dh_ian_iv == ZEPHYRUM)
+    {
         dh_ian_iv = VI;
-    } alioquin {
+    } alioquin
+    {
         dh_ian_iv = dh_ian_iv - I;
     }
 
     /* Prima Feria II primae hebdomadis */
-    jdn_prima_feria_ii = fasti_ad_iulianum(ian_iv) - (s64)dh_ian_iv;
-    jdn_dies = fasti_ad_iulianum(dies);
+    jdn_prima_feria_ii  = fasti_ad_iulianum(ian_iv) - (s64)dh_ian_iv;
+    jdn_dies            = fasti_ad_iulianum(dies);
 
-    si (jdn_dies < jdn_prima_feria_ii) {
+    si (jdn_dies < jdn_prima_feria_ii)
+    {
         /* Dies est in ultima hebdomada anni praecedentis */
         redde fasti_hebdomada_anni(fasti_dies(dies.annus - I, XII, XXVIII));
     }
 
     hebdomada = (s32)((jdn_dies - jdn_prima_feria_ii) / VII) + I;
 
-    si (hebdomada > LII) {
+    si (hebdomada > LII)
+    {
         /* Verifica si revera est hebdomada 53 vel 1 anni sequentis */
-        Dies ian_iv_seq = fasti_dies(dies.annus + I, I, IV);
-        s32 dh_seq = fasti_dies_hebdomadis(ian_iv_seq);
+                Dies ian_iv_seq  = fasti_dies(dies.annus + I, I, IV);
+                 s32 dh_seq      = fasti_dies_hebdomadis(ian_iv_seq);
         DiesIulianus jdn_seq;
 
-        si (dh_seq == ZEPHYRUM) {
+        si (dh_seq == ZEPHYRUM)
+        {
             dh_seq = VI;
-        } alioquin {
+        } alioquin
+        {
             dh_seq = dh_seq - I;
         }
 
         jdn_seq = fasti_ad_iulianum(ian_iv_seq) - (s64)dh_seq;
 
-        si (jdn_dies >= jdn_seq) {
+        si (jdn_dies >= jdn_seq)
+        {
             redde I;
         }
     }
@@ -376,7 +393,7 @@ fasti_hebdomada_anni(
 }
 
 Dies
-fasti_prima_mensis(
+fasti_prima_mensis (
     s32 mensis,
     s32 annus)
 {
@@ -384,7 +401,7 @@ fasti_prima_mensis(
 }
 
 Dies
-fasti_ultima_mensis(
+fasti_ultima_mensis (
     s32 mensis,
     s32 annus)
 {
@@ -392,7 +409,7 @@ fasti_ultima_mensis(
 }
 
 s32
-fasti_primus_dies_hebdomadis_mensis(
+fasti_primus_dies_hebdomadis_mensis (
     s32 mensis,
     s32 annus)
 {
@@ -406,40 +423,43 @@ fasti_primus_dies_hebdomadis_mensis(
  * ================================================== */
 
 Dies
-fasti_addere_dies(
+fasti_addere_dies (
     Dies dies,
-    s32  numerus)
+     s32 numerus)
 {
-    s64 jdn = fasti_ad_iulianum(dies);
-    jdn = jdn + (s64)numerus;
+    s64 jdn  = fasti_ad_iulianum(dies);
+    jdn      = jdn + (s64)numerus;
     redde fasti_ex_iuliano(jdn);
 }
 
 Dies
-fasti_addere_menses(
+fasti_addere_menses (
     Dies dies,
-    s32  numerus)
+     s32 numerus)
 {
-    s32 menses_totales;
-    s32 dies_max;
+     s32 menses_totales;
+     s32 dies_max;
     Dies fructus;
 
     menses_totales = (dies.annus * XII) + (dies.mensis - I) + numerus;
 
-    fructus.annus = menses_totales / XII;
-    fructus.mensis = (menses_totales % XII) + I;
+    fructus.annus   = menses_totales / XII;
+    fructus.mensis  = (menses_totales % XII) + I;
 
     /* Tracta menses negativos */
-    si (fructus.mensis < I) {
-        fructus.mensis = fructus.mensis + XII;
-        fructus.annus = fructus.annus - I;
+    si (fructus.mensis < I)
+    {
+        fructus.mensis  = fructus.mensis + XII;
+        fructus.annus   = fructus.annus - I;
     }
 
     /* Cohibere diem si necessarium */
     dies_max = fasti_dies_in_mense(fructus.mensis, fructus.annus);
-    si (dies.dies > dies_max) {
+    si (dies.dies > dies_max)
+    {
         fructus.dies = dies_max;
-    } alioquin {
+    } alioquin
+    {
         fructus.dies = dies.dies;
     }
 
@@ -447,21 +467,23 @@ fasti_addere_menses(
 }
 
 Dies
-fasti_addere_annos(
+fasti_addere_annos (
     Dies dies,
-    s32  numerus)
+     s32 numerus)
 {
     Dies fructus;
-    s32 dies_max;
+     s32 dies_max;
 
-    fructus.annus = dies.annus + numerus;
-    fructus.mensis = dies.mensis;
+    fructus.annus   = dies.annus + numerus;
+    fructus.mensis  = dies.mensis;
 
     /* Cohibere diem (e.g., 29 Feb in non-bissextili) */
     dies_max = fasti_dies_in_mense(fructus.mensis, fructus.annus);
-    si (dies.dies > dies_max) {
+    si (dies.dies > dies_max)
+    {
         fructus.dies = dies_max;
-    } alioquin {
+    } alioquin
+    {
         fructus.dies = dies.dies;
     }
 
@@ -469,14 +491,14 @@ fasti_addere_annos(
 }
 
 Intervallum
-fasti_differentia(
+fasti_differentia (
     Dies prima,
     Dies secunda)
 {
     Intervallum i;
-    s64 jdn_prima = fasti_ad_iulianum(prima);
-    s64 jdn_secunda = fasti_ad_iulianum(secunda);
-    i.dies_totales = jdn_prima - jdn_secunda;
+            s64 jdn_prima    = fasti_ad_iulianum(prima);
+            s64 jdn_secunda  = fasti_ad_iulianum(secunda);
+    i.dies_totales           = jdn_prima - jdn_secunda;
     redde i;
 }
 
@@ -486,23 +508,25 @@ fasti_differentia(
  * ================================================== */
 
 s32
-fasti_comparare(
+fasti_comparare (
     Dies prima,
     Dies secunda)
 {
-    s64 jdn_prima = fasti_ad_iulianum(prima);
-    s64 jdn_secunda = fasti_ad_iulianum(secunda);
+    s64 jdn_prima    = fasti_ad_iulianum(prima);
+    s64 jdn_secunda  = fasti_ad_iulianum(secunda);
 
-    si (jdn_prima < jdn_secunda) {
+    si (jdn_prima < jdn_secunda)
+    {
         redde -I;
-    } alioquin si (jdn_prima > jdn_secunda) {
+    } alioquin si (jdn_prima > jdn_secunda)
+    {
         redde I;
     }
     redde ZEPHYRUM;
 }
 
 b32
-fasti_ante(
+fasti_ante (
     Dies prima,
     Dies secunda)
 {
@@ -510,7 +534,7 @@ fasti_ante(
 }
 
 b32
-fasti_post(
+fasti_post (
     Dies prima,
     Dies secunda)
 {
@@ -518,7 +542,7 @@ fasti_post(
 }
 
 b32
-fasti_aequalis(
+fasti_aequalis (
     Dies prima,
     Dies secunda)
 {
@@ -526,7 +550,7 @@ fasti_aequalis(
 }
 
 b32
-fasti_inter(
+fasti_inter (
     Dies dies,
     Dies ab,
     Dies ad)
@@ -540,15 +564,15 @@ fasti_inter(
  * ================================================== */
 
 MomentumSec
-fasti_ad_unix(
+fasti_ad_unix (
     DiesHora dh)
 {
     /* Unix epoch: 1970-01-01 00:00:00 UTC */
-    Dies epoch = fasti_dies(MCMX + LXX, I, I);
-    DiesIulianus jdn_dies = fasti_ad_iulianum(dh.dies);
-    DiesIulianus jdn_epoch = fasti_ad_iulianum(epoch);
-    MoraDierum dies_diff = jdn_dies - jdn_epoch;
-    s64 secunda;
+            Dies epoch      = fasti_dies(MCMX + LXX, I, I);
+    DiesIulianus jdn_dies   = fasti_ad_iulianum(dh.dies);
+    DiesIulianus jdn_epoch  = fasti_ad_iulianum(epoch);
+      MoraDierum dies_diff  = jdn_dies - jdn_epoch;
+             s64 secunda;
 
     /* conversio scalae (dies -> secunda): erasio consulta -
      * vestigatio fluminis conversiones inexpressas capit */
@@ -561,31 +585,32 @@ fasti_ad_unix(
 }
 
 DiesHora
-fasti_ex_unix(
+fasti_ex_unix (
     MomentumSec timestamp)
 {
-    Dies epoch = fasti_dies(MCMX + LXX, I, I);
-    DiesIulianus jdn_epoch = fasti_ad_iulianum(epoch);
-    s64 dies_diff;
-    s64 secunda_diei;
-    DiesHora dh;
+            Dies epoch      = fasti_dies(MCMX + LXX, I, I);
+    DiesIulianus jdn_epoch  = fasti_ad_iulianum(epoch);
+             s64 dies_diff;
+             s64 secunda_diei;
+        DiesHora dh;
 
     /* conversio scalae (secunda -> dies ab epocha): erasio
      * consulta - instans scalatum = mora ab ancora, algebra id
      * exprimere nequit */
-    dies_diff = (s64)timestamp / 86400LL;
-    secunda_diei = (s64)timestamp % 86400LL;
+    dies_diff     = (s64)timestamp / 86400LL;
+    secunda_diei  = (s64)timestamp % 86400LL;
 
     /* Tracta timestamps negativos */
-    si (secunda_diei < ZEPHYRUM) {
-        secunda_diei = secunda_diei + 86400LL;
-        dies_diff = dies_diff - I;
+    si (secunda_diei < ZEPHYRUM)
+    {
+        secunda_diei  = secunda_diei + 86400LL;
+        dies_diff     = dies_diff - I;
     }
 
-    dh.dies = fasti_ex_iuliano(jdn_epoch + dies_diff);
-    dh.hora.hora = (s32)(secunda_diei / 3600LL);
-    dh.hora.minutum = (s32)((secunda_diei % 3600LL) / LX);
-    dh.hora.secundum = (s32)(secunda_diei % LX);
+    dh.dies           = fasti_ex_iuliano(jdn_epoch + dies_diff);
+    dh.hora.hora      = (s32)(secunda_diei / 3600LL);
+    dh.hora.minutum   = (s32)((secunda_diei % 3600LL) / LX);
+    dh.hora.secundum  = (s32)(secunda_diei % LX);
 
     redde dh;
 }
@@ -596,7 +621,8 @@ fasti_ex_unix(
  * ================================================== */
 
 constans character*
-fasti_suffixum_ordinale(s32 numerus)
+fasti_suffixum_ordinale (
+    s32 numerus)
 {
     s32 absolutus;
 
@@ -604,12 +630,14 @@ fasti_suffixum_ordinale(s32 numerus)
     absolutus = numerus < ZEPHYRUM ? -numerus : numerus;
 
     /* Casus speciales: 11, 12, 13 semper "th" */
-    si (absolutus >= XI && absolutus <= XIII) {
+    si (absolutus >= XI && absolutus <= XIII)
+    {
         redde "th";
     }
 
     /* Secundum ultimam cifram */
-    commutatio (absolutus % X) {
+    commutatio (absolutus % X)
+    {
         casus I:   redde "st";
         casus II:  redde "nd";
         casus III: redde "rd";
@@ -618,28 +646,35 @@ fasti_suffixum_ordinale(s32 numerus)
 }
 
 chorda
-fasti_nomen_mensis(
-    s32      mensis,
-    b32      abbreviatum,
-    s32      lingua,
+fasti_nomen_mensis (
+        s32  mensis,
+        b32  abbreviatum,
+        s32  lingua,
     Piscina* piscina)
 {
     constans character* titulis;
 
-    si (mensis < I || mensis > XII) {
+    si (mensis < I || mensis > XII)
+    {
         redde chorda_ex_literis("", piscina);
     }
 
-    si (lingua == FASTI_LINGUA_ANGLICA) {
-        si (abbreviatum) {
+    si (lingua == FASTI_LINGUA_ANGLICA)
+    {
+        si (abbreviatum)
+        {
             titulis = NOMINA_MENSIUM_ANGLICA_BREVIA[mensis - I];
-        } alioquin {
+        } alioquin
+        {
             titulis = NOMINA_MENSIUM_ANGLICA[mensis - I];
         }
-    } alioquin {
-        si (abbreviatum) {
+    } alioquin
+    {
+        si (abbreviatum)
+        {
             titulis = NOMINA_MENSIUM_LATINA_BREVIA[mensis - I];
-        } alioquin {
+        } alioquin
+        {
             titulis = NOMINA_MENSIUM_LATINA[mensis - I];
         }
     }
@@ -648,28 +683,35 @@ fasti_nomen_mensis(
 }
 
 chorda
-fasti_nomen_diei_hebdomadis(
-    s32      dies_hebdomadis,
-    b32      abbreviatum,
-    s32      lingua,
+fasti_nomen_diei_hebdomadis (
+        s32  dies_hebdomadis,
+        b32  abbreviatum,
+        s32  lingua,
     Piscina* piscina)
 {
     constans character* titulis;
 
-    si (dies_hebdomadis < ZEPHYRUM || dies_hebdomadis > VI) {
+    si (dies_hebdomadis < ZEPHYRUM || dies_hebdomadis > VI)
+    {
         redde chorda_ex_literis("", piscina);
     }
 
-    si (lingua == FASTI_LINGUA_ANGLICA) {
-        si (abbreviatum) {
+    si (lingua == FASTI_LINGUA_ANGLICA)
+    {
+        si (abbreviatum)
+        {
             titulis = NOMINA_DIERUM_ANGLICA_BREVIA[dies_hebdomadis];
-        } alioquin {
+        } alioquin
+        {
             titulis = NOMINA_DIERUM_ANGLICA[dies_hebdomadis];
         }
-    } alioquin {
-        si (abbreviatum) {
+    } alioquin
+    {
+        si (abbreviatum)
+        {
             titulis = NOMINA_DIERUM_LATINA_BREVIA[dies_hebdomadis];
-        } alioquin {
+        } alioquin
+        {
             titulis = NOMINA_DIERUM_LATINA[dies_hebdomadis];
         }
     }
@@ -678,22 +720,25 @@ fasti_nomen_diei_hebdomadis(
 }
 
 vacuum
-fasti_scribere_diem(
+fasti_scribere_diem (
     ChordaAedificator* aedificator,
-    Dies               dies,
-    s32                forma)
+                 Dies  dies,
+                  s32  forma)
 {
-    commutatio (forma) {
+    commutatio (forma)
+    {
         casus FASTI_FORMA_ISO:
             /* YYYY-MM-DD */
             chorda_aedificator_appendere_s32(aedificator, dies.annus);
             chorda_aedificator_appendere_character(aedificator, '-');
-            si (dies.mensis < X) {
+            si (dies.mensis < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '-');
-            si (dies.dies < X) {
+            si (dies.dies < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
@@ -701,12 +746,14 @@ fasti_scribere_diem(
 
         casus FASTI_FORMA_EUROPAEA:
             /* DD/MM/YYYY */
-            si (dies.dies < X) {
+            si (dies.dies < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
             chorda_aedificator_appendere_character(aedificator, '/');
-            si (dies.mensis < X) {
+            si (dies.mensis < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
@@ -716,12 +763,14 @@ fasti_scribere_diem(
 
         casus FASTI_FORMA_AMERICANA:
             /* MM/DD/YYYY */
-            si (dies.mensis < X) {
+            si (dies.mensis < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '/');
-            si (dies.dies < X) {
+            si (dies.dies < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
@@ -786,12 +835,14 @@ fasti_scribere_diem(
             /* ISO fallback */
             chorda_aedificator_appendere_s32(aedificator, dies.annus);
             chorda_aedificator_appendere_character(aedificator, '-');
-            si (dies.mensis < X) {
+            si (dies.mensis < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.mensis);
             chorda_aedificator_appendere_character(aedificator, '-');
-            si (dies.dies < X) {
+            si (dies.dies < X)
+            {
                 chorda_aedificator_appendere_character(aedificator, '0');
             }
             chorda_aedificator_appendere_s32(aedificator, dies.dies);
@@ -800,57 +851,67 @@ fasti_scribere_diem(
 }
 
 vacuum
-fasti_scribere_horam(
+fasti_scribere_horam (
     ChordaAedificator* aedificator,
-    Hora               hora,
-    b32                cum_secundis,
-    b32                xxiv_horae)
+                 Hora  hora,
+                  b32  cum_secundis,
+                  b32  xxiv_horae)
 {
-    s32 h = hora.hora;
-    constans character* meridies = "";
+                   s32  h         = hora.hora;
+    constans character* meridies  = "";
 
-    si (!xxiv_horae) {
-        si (h == ZEPHYRUM) {
-            h = XII;
+    si (!xxiv_horae)
+    {
+        si (h == ZEPHYRUM)
+        {
+            h         = XII;
+            meridies  = " AM";
+        } alioquin si (h < XII)
+        {
             meridies = " AM";
-        } alioquin si (h < XII) {
-            meridies = " AM";
-        } alioquin si (h == XII) {
+        } alioquin si (h == XII)
+        {
             meridies = " PM";
-        } alioquin {
-            h = h - XII;
-            meridies = " PM";
+        } alioquin
+        {
+            h         = h - XII;
+            meridies  = " PM";
         }
     }
 
-    si (xxiv_horae && h < X) {
+    si (xxiv_horae && h < X)
+    {
         chorda_aedificator_appendere_character(aedificator, '0');
     }
     chorda_aedificator_appendere_s32(aedificator, h);
     chorda_aedificator_appendere_character(aedificator, ':');
-    si (hora.minutum < X) {
+    si (hora.minutum < X)
+    {
         chorda_aedificator_appendere_character(aedificator, '0');
     }
     chorda_aedificator_appendere_s32(aedificator, hora.minutum);
 
-    si (cum_secundis) {
+    si (cum_secundis)
+    {
         chorda_aedificator_appendere_character(aedificator, ':');
-        si (hora.secundum < X) {
+        si (hora.secundum < X)
+        {
             chorda_aedificator_appendere_character(aedificator, '0');
         }
         chorda_aedificator_appendere_s32(aedificator, hora.secundum);
     }
 
-    si (!xxiv_horae) {
+    si (!xxiv_horae)
+    {
         chorda_aedificator_appendere_literis(aedificator, meridies);
     }
 }
 
 chorda
-fasti_formare_diem(
-    Dies      dies,
-    s32       forma,
-    Piscina*  piscina)
+fasti_formare_diem (
+       Dies  dies,
+        s32  forma,
+    Piscina* piscina)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina, XXXII);
     fasti_scribere_diem(aed, dies, forma);
@@ -858,10 +919,10 @@ fasti_formare_diem(
 }
 
 chorda
-fasti_formare_horam(
-    Hora     hora,
-    b32      cum_secundis,
-    b32      xxiv_horae,
+fasti_formare_horam (
+       Hora  hora,
+        b32  cum_secundis,
+        b32  xxiv_horae,
     Piscina* piscina)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina, XVI);
@@ -875,21 +936,23 @@ fasti_formare_horam(
  * ================================================== */
 
 interior b32
-_parsare_duo_digiti(
-    chorda s,
-    s32    index,
-    s32*   fructus)
+_parsare_duo_digiti (
+    chorda  s,
+       s32  index,
+       s32* fructus)
 {
     s32 d1, d2;
 
-    si (index + I >= (s32)s.mensura) {
+    si (index + I >= (s32)s.mensura)
+    {
         redde FALSUM;
     }
 
     d1 = s.datum[index] - '0';
     d2 = s.datum[index + I] - '0';
 
-    si (d1 < ZEPHYRUM || d1 > IX || d2 < ZEPHYRUM || d2 > IX) {
+    si (d1 < ZEPHYRUM || d1 > IX || d2 < ZEPHYRUM || d2 > IX)
+    {
         redde FALSUM;
     }
 
@@ -898,35 +961,40 @@ _parsare_duo_digiti(
 }
 
 b32
-fasti_parsare_iso(
+fasti_parsare_iso (
     chorda  s,
-    Dies*   fructus)
+      Dies* fructus)
 {
     /* YYYY-MM-DD (10 characteres) */
-    s32 annus = ZEPHYRUM;
-    s32 mensis = ZEPHYRUM;
-    s32 dies = ZEPHYRUM;
+    s32 annus   = ZEPHYRUM;
+    s32 mensis  = ZEPHYRUM;
+    s32 dies    = ZEPHYRUM;
     s32 i;
-    s32 signum = I;
-    s32 index = ZEPHYRUM;
+    s32 signum  = I;
+    s32 index   = ZEPHYRUM;
 
-    si (s.mensura < X) {
+    si (s.mensura < X)
+    {
         redde FALSUM;
     }
 
     /* Tractare annum negativum */
-    si (s.datum[ZEPHYRUM] == '-') {
-        signum = -I;
-        index = I;
-        si (s.mensura < XI) {
+    si (s.datum[ZEPHYRUM] == '-')
+    {
+        signum  = -I;
+        index   = I;
+        si (s.mensura < XI)
+        {
             redde FALSUM;
         }
     }
 
     /* Parsare annum (4 digiti) */
-    per (i = ZEPHYRUM; i < IV; i = i + I) {
+    per (i = ZEPHYRUM; i < IV; i = i + I)
+    {
         s32 d = s.datum[index + i] - '0';
-        si (d < ZEPHYRUM || d > IX) {
+        si (d < ZEPHYRUM || d > IX)
+        {
             redde FALSUM;
         }
         annus = annus * X + d;
@@ -935,44 +1003,49 @@ fasti_parsare_iso(
     index = index + IV;
 
     /* Separatorem '-' */
-    si (s.datum[index] != '-') {
+    si (s.datum[index] != '-')
+    {
         redde FALSUM;
     }
     index = index + I;
 
     /* Parsare mensem */
-    si (!_parsare_duo_digiti(s, index, &mensis)) {
+    si (!_parsare_duo_digiti(s, index, &mensis))
+    {
         redde FALSUM;
     }
     index = index + II;
 
     /* Separatorem '-' */
-    si (s.datum[index] != '-') {
+    si (s.datum[index] != '-')
+    {
         redde FALSUM;
     }
     index = index + I;
 
     /* Parsare diem */
-    si (!_parsare_duo_digiti(s, index, &dies)) {
+    si (!_parsare_duo_digiti(s, index, &dies))
+    {
         redde FALSUM;
     }
 
-    fructus->annus = annus;
-    fructus->mensis = mensis;
-    fructus->dies = dies;
+    fructus->annus   = annus;
+    fructus->mensis  = mensis;
+    fructus->dies    = dies;
 
     redde fasti_dies_valida(*fructus);
 }
 
 b32
-fasti_parsare_diem(
+fasti_parsare_diem (
     chorda  s,
-    Dies*   fructus)
+      Dies* fructus)
 {
     /* Tentat varias formas */
 
     /* Prima: ISO (YYYY-MM-DD) */
-    si (fasti_parsare_iso(s, fructus)) {
+    si (fasti_parsare_iso(s, fructus))
+    {
         redde VERUM;
     }
 
@@ -991,7 +1064,7 @@ fasti_parsare_diem(
  * ================================================== */
 
 Dies
-fasti_computus(
+fasti_computus (
     s32 annus)
 {
     /* Algorithmus anonymus Gregorianus (Meeus/Jones/Butcher) */
@@ -1011,8 +1084,8 @@ fasti_computus(
     l = (XXXII + II * e + II * i - h - k) % VII;
     m = (a + XI * h + XXII * l) / CDLI;
 
-    mensis = (h + l - VII * m + CXIV) / XXXI;
-    dies = ((h + l - VII * m + CXIV) % XXXI) + I;
+    mensis  = (h + l - VII * m + CXIV) / XXXI;
+    dies    = ((h + l - VII * m + CXIV) % XXXI) + I;
 
     redde fasti_dies(annus, mensis, dies);
 }
@@ -1023,35 +1096,35 @@ fasti_computus(
  * ================================================== */
 
 Dies
-fasti_feria_vi(
+fasti_feria_vi (
     s32 annus)
 {
     redde fasti_addere_dies(fasti_computus(annus), -II);
 }
 
 Dies
-fasti_feria_iv_cinerum(
+fasti_feria_iv_cinerum (
     s32 annus)
 {
     redde fasti_addere_dies(fasti_computus(annus), -XLVI);
 }
 
 Dies
-fasti_dominica_palmarum(
+fasti_dominica_palmarum (
     s32 annus)
 {
     redde fasti_addere_dies(fasti_computus(annus), -VII);
 }
 
 Dies
-fasti_pentecoste(
+fasti_pentecoste (
     s32 annus)
 {
     redde fasti_addere_dies(fasti_computus(annus), XLIX);
 }
 
 constans character*
-fasti_nomen_festivitatis(
+fasti_nomen_festivitatis (
     Dies dies)
 {
     Dies pascha;

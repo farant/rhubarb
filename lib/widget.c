@@ -7,14 +7,14 @@
  * ================================================== */
 
 ContextusWidget*
-contextus_widget_creare(
-    Piscina*               piscina,
-    InternamentumChorda*   intern,
-    EntitasRepositorium*   repo,
-    RegistrumCommandi*     reg_commandi,
-    RegistrumWidget*       reg_widget,
-    FunctioCommutareWidget commutare_widget,
-    vacuum*                schirmata_datum)
+contextus_widget_creare (
+                   Piscina* piscina,
+       InternamentumChorda* intern,
+       EntitasRepositorium* repo,
+         RegistrumCommandi* reg_commandi,
+           RegistrumWidget* reg_widget,
+    FunctioCommutareWidget  commutare_widget,
+                    vacuum* schirmata_datum)
 {
     ContextusWidget* ctx;
 
@@ -29,13 +29,13 @@ contextus_widget_creare(
         redde NIHIL;
     }
 
-    ctx->piscina = piscina;
-    ctx->intern = intern;
-    ctx->repo = repo;
-    ctx->reg_commandi = reg_commandi;
-    ctx->reg_widget = reg_widget;
-    ctx->commutare_widget = commutare_widget;
-    ctx->schirmata_datum = schirmata_datum;
+    ctx->piscina           = piscina;
+    ctx->intern            = intern;
+    ctx->repo              = repo;
+    ctx->reg_commandi      = reg_commandi;
+    ctx->reg_widget        = reg_widget;
+    ctx->commutare_widget  = commutare_widget;
+    ctx->schirmata_datum   = schirmata_datum;
 
     redde ctx;
 }
@@ -46,11 +46,11 @@ contextus_widget_creare(
  * ================================================== */
 
 ManagerWidget*
-manager_widget_creare(
+manager_widget_creare (
     Piscina* piscina)
 {
     ManagerWidget* manager;
-    s32 i;
+              s32  i;
 
     manager = piscina_allocare(piscina, magnitudo(ManagerWidget));
     si (!manager)
@@ -58,25 +58,25 @@ manager_widget_creare(
         redde NIHIL;
     }
 
-    manager->piscina = piscina;
-    manager->numerus_widgetorum = ZEPHYRUM;
-    manager->focus_index = -I;  /* Nullus focus initio */
+    manager->piscina             = piscina;
+    manager->numerus_widgetorum  = ZEPHYRUM;
+    manager->focus_index         = -I;  /* Nullus focus initio */
 
     /* Initiare detectio duplex click */
-    manager->tempus_ultimus_click = 0.0;
-    manager->ultimus_click_x = ZEPHYRUM;
-    manager->ultimus_click_y = ZEPHYRUM;
+    manager->tempus_ultimus_click  = 0.0;
+    manager->ultimus_click_x       = ZEPHYRUM;
+    manager->ultimus_click_y       = ZEPHYRUM;
 
     /* Initiare widgets */
     per (i = ZEPHYRUM; i < XVI; i++)
     {
-        manager->widgets[i].datum = NIHIL;
-        manager->widgets[i].reddere = NIHIL;
-        manager->widgets[i].tractare_eventum = NIHIL;
-        manager->widgets[i].x = ZEPHYRUM;
-        manager->widgets[i].y = ZEPHYRUM;
-        manager->widgets[i].latitudo = ZEPHYRUM;
-        manager->widgets[i].altitudo = ZEPHYRUM;
+        manager->widgets[i].datum             = NIHIL;
+        manager->widgets[i].reddere           = NIHIL;
+        manager->widgets[i].tractare_eventum  = NIHIL;
+        manager->widgets[i].x                 = ZEPHYRUM;
+        manager->widgets[i].y                 = ZEPHYRUM;
+        manager->widgets[i].latitudo          = ZEPHYRUM;
+        manager->widgets[i].altitudo          = ZEPHYRUM;
     }
 
     redde manager;
@@ -88,34 +88,34 @@ manager_widget_creare(
  * ================================================== */
 
 s32
-manager_widget_registrare(
-    ManagerWidget*         manager,
-    vacuum*                datum,
-    FunctioReddere         reddere,
-    FunctioTractareEventum tractare_eventum,
-    i32                    x,
-    i32                    y,
-    i32                    latitudo,
-    i32                    altitudo)
+manager_widget_registrare (
+             ManagerWidget* manager,
+                    vacuum* datum,
+            FunctioReddere  reddere,
+    FunctioTractareEventum  tractare_eventum,
+                       i32  x,
+                       i32  y,
+                       i32  latitudo,
+                       i32  altitudo)
 {
     Widget* widget;
-    s32 index;
+       s32  index;
 
     si (!manager || manager->numerus_widgetorum >= XVI)
     {
         redde -I;  /* Capacitas plena */
     }
 
-    index = manager->numerus_widgetorum;
-    widget = &manager->widgets[index];
+    index   = manager->numerus_widgetorum;
+    widget  = &manager->widgets[index];
 
-    widget->datum = datum;
-    widget->reddere = reddere;
-    widget->tractare_eventum = tractare_eventum;
-    widget->x = x;
-    widget->y = y;
-    widget->latitudo = latitudo;
-    widget->altitudo = altitudo;
+    widget->datum             = datum;
+    widget->reddere           = reddere;
+    widget->tractare_eventum  = tractare_eventum;
+    widget->x                 = x;
+    widget->y                 = y;
+    widget->latitudo          = latitudo;
+    widget->altitudo          = altitudo;
 
     manager->numerus_widgetorum++;
 
@@ -134,9 +134,9 @@ manager_widget_registrare(
  * ================================================== */
 
 vacuum
-manager_widget_ponere_focus(
+manager_widget_ponere_focus (
     ManagerWidget* manager,
-    s32            index)
+              s32  index)
 {
     si (!manager || index < ZEPHYRUM || index >= manager->numerus_widgetorum)
     {
@@ -147,7 +147,7 @@ manager_widget_ponere_focus(
 }
 
 vacuum
-manager_widget_focus_proximum(
+manager_widget_focus_proximum (
     ManagerWidget* manager)
 {
     si (!manager || manager->numerus_widgetorum == ZEPHYRUM)
@@ -163,7 +163,7 @@ manager_widget_focus_proximum(
 }
 
 vacuum
-manager_widget_focus_praecedens(
+manager_widget_focus_praecedens (
     ManagerWidget* manager)
 {
     si (!manager || manager->numerus_widgetorum == ZEPHYRUM)
@@ -179,12 +179,12 @@ manager_widget_focus_praecedens(
 }
 
 b32
-manager_widget_focus_ad_punctum(
+manager_widget_focus_ad_punctum (
     ManagerWidget* manager,
-    i32            x,
-    i32            y)
+              i32  x,
+              i32  y)
 {
-    s32 i;
+       s32  i;
     Widget* widget;
 
     si (!manager)
@@ -198,8 +198,8 @@ manager_widget_focus_ad_punctum(
         widget = &manager->widgets[i];
 
         /* Verificare si punctum intra limites widget */
-        si (x >= widget->x && x < widget->x + widget->latitudo &&
-            y >= widget->y && y < widget->y + widget->altitudo)
+        si (   x >= widget->x && x < widget->x + widget->latitudo
+            && y >= widget->y && y < widget->y + widget->altitudo)
         {
             manager->focus_index = i;
             redde VERUM;
@@ -215,13 +215,13 @@ manager_widget_focus_ad_punctum(
  * ================================================== */
 
 b32
-manager_widget_tractare_eventum(
-    ManagerWidget*    manager,
+manager_widget_tractare_eventum (
+       ManagerWidget* manager,
     constans Eventus* eventus)
 {
-    Widget* focused_widget;
-    b32 consumptus;
-    Eventus eventus_ad_widget;
+     Widget* focused_widget;
+        b32  consumptus;
+    Eventus  eventus_ad_widget;
 
     si (!manager || !eventus)
     {
@@ -243,9 +243,9 @@ manager_widget_tractare_eventum(
         s32 diff_y;
         b32 est_duplex;
 
-        character_latitudo = VI;  /* 6 pixels per character (scala = 1) */
-        click_x_char = eventus->datum.mus.x / character_latitudo;
-        click_y_char = eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
+        character_latitudo  = VI;  /* 6 pixels per character (scala = 1) */
+        click_x_char        = eventus->datum.mus.x / character_latitudo;
+        click_y_char        = eventus->datum.mus.y / (VIII);  /* 8 pixels per character height */
 
         manager_widget_focus_ad_punctum(manager, click_x_char, click_y_char);
 
@@ -256,9 +256,9 @@ manager_widget_tractare_eventum(
         diff_y = (s32)eventus->datum.mus.y - (s32)manager->ultimus_click_y;
 
         /* Verificare si intra limites temporis et distantiae */
-        est_duplex = (delta < DUPLEX_CLICK_TEMPUS &&
-                      diff_x < DUPLEX_CLICK_DISTANTIA && diff_x > -DUPLEX_CLICK_DISTANTIA &&
-                      diff_y < DUPLEX_CLICK_DISTANTIA && diff_y > -DUPLEX_CLICK_DISTANTIA);
+        est_duplex = (delta < DUPLEX_CLICK_TEMPUS
+            && diff_x < DUPLEX_CLICK_DISTANTIA && diff_x > -DUPLEX_CLICK_DISTANTIA
+            && diff_y < DUPLEX_CLICK_DISTANTIA && diff_y > -DUPLEX_CLICK_DISTANTIA);
 
         si (est_duplex)
         {
@@ -271,15 +271,15 @@ manager_widget_tractare_eventum(
         alioquin
         {
             /* Memorare hunc click pro detectione futura */
-            manager->tempus_ultimus_click = nunc;
-            manager->ultimus_click_x = eventus->datum.mus.x;
-            manager->ultimus_click_y = eventus->datum.mus.y;
+            manager->tempus_ultimus_click  = nunc;
+            manager->ultimus_click_x       = eventus->datum.mus.x;
+            manager->ultimus_click_y       = eventus->datum.mus.y;
         }
     }
 
     /* Passare eventum ad widget cum focus */
-    si (manager->focus_index >= ZEPHYRUM &&
-        manager->focus_index < manager->numerus_widgetorum)
+    si (   manager->focus_index >= ZEPHYRUM
+        && manager->focus_index < manager->numerus_widgetorum)
     {
         focused_widget = &manager->widgets[manager->focus_index];
 
@@ -313,14 +313,14 @@ manager_widget_tractare_eventum(
  * ================================================== */
 
 vacuum
-manager_widget_reddere(
-    ManagerWidget*   manager,
+manager_widget_reddere (
+      ManagerWidget* manager,
     TabulaPixelorum* tabula,
-    i32              scala)
+                i32  scala)
 {
-    s32 i;
+       s32  i;
     Widget* widget;
-    b32 focused;
+       b32  focused;
 
     si (!manager || !tabula)
     {
@@ -330,8 +330,8 @@ manager_widget_reddere(
     /* Reddere omnes widgets */
     per (i = ZEPHYRUM; i < manager->numerus_widgetorum; i++)
     {
-        widget = &manager->widgets[i];
-        focused = (i == manager->focus_index);
+        widget   = &manager->widgets[i];
+        focused  = (i == manager->focus_index);
 
         si (widget->reddere)
         {

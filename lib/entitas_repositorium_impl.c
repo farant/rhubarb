@@ -6,6 +6,7 @@
 #include "flatura.h"
 #include <string.h>
 
+
 /* ==================================================
  * ENTITAS REPOSITORIUM IMPL - Unified Event-Sourced Repository
  *
@@ -21,12 +22,12 @@
  * ================================================== */
 
 nomen structura {
-    Piscina*             piscina;
-    Persistentia*        persistentia;
+                Piscina* piscina;
+           Persistentia* persistentia;
     InternamentumChorda* intern;
-    TabulaDispersa*      entitates;           /* id -> Entitas* */
-    TabulaDispersa*      relationes;          /* relatio_id -> Relatio* */
-    TabulaDispersa*      relationes_inversae; /* destinatio_id -> Xar* of Relatio* */
+         TabulaDispersa* entitates;           /* id -> Entitas* */
+         TabulaDispersa* relationes;          /* relatio_id -> Relatio* */
+         TabulaDispersa* relationes_inversae; /* destinatio_id -> Xar* of Relatio* */
 } RepositoriumData;
 
 
@@ -60,12 +61,12 @@ _impl_proprietas_definitio_invenire(
  * ================================================== */
 
 interior b32
-_index_relatio_inversa(
+_index_relatio_inversa (
     RepositoriumData* data,
-    Relatio*          relatio)
+             Relatio* relatio)
 {
-    vacuum*   existing;
-    Xar*      lista;
+     vacuum*  existing;
+        Xar*  lista;
     Relatio** slot;
 
     si (!data || !relatio || !relatio->destinatio_id)
@@ -100,15 +101,15 @@ _index_relatio_inversa(
 }
 
 interior b32
-_deindex_relatio_inversa(
+_deindex_relatio_inversa (
     RepositoriumData* data,
-    Relatio*          relatio)
+             Relatio* relatio)
 {
-    vacuum*  existing;
-    Xar*     lista;
+     vacuum* existing;
+        Xar* lista;
     Relatio* rel;
-    i32      i;
-    i32      numerus;
+        i32  i;
+        i32  numerus;
 
     si (!data || !relatio || !relatio->destinatio_id)
     {
@@ -121,8 +122,8 @@ _deindex_relatio_inversa(
         redde FALSUM;  /* Non in indice */
     }
 
-    lista = (Xar*)existing;
-    numerus = xar_numerus(lista);
+    lista    = (Xar*)existing;
+    numerus  = xar_numerus(lista);
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -143,12 +144,12 @@ _deindex_relatio_inversa(
  * ================================================== */
 
 interior Entitas*
-_impl_capere_entitatem(
+_impl_capere_entitatem (
     vacuum* datum,
     chorda* id)
 {
     RepositoriumData* data;
-    vacuum*           valor;
+              vacuum* valor;
 
     data = (RepositoriumData*)datum;
 
@@ -166,18 +167,18 @@ _impl_capere_entitatem(
 }
 
 interior Xar*
-_impl_capere_entitates_relatae(
-    vacuum*  datum,
+_impl_capere_entitates_relatae (
+     vacuum* datum,
     Entitas* entitas,
-    chorda*  genus_relationis)
+     chorda* genus_relationis)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    Relatio*          relatio;
-    Entitas*          entitas_relata;
-    Entitas**         slot;
-    i32               i;
-    i32               numerus;
+    RepositoriumData*  data;
+                 Xar*  resultus;
+             Relatio*  relatio;
+             Entitas*  entitas_relata;
+             Entitas** slot;
+                 i32   i;
+                 i32   numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -222,17 +223,17 @@ _impl_capere_entitates_relatae(
 }
 
 interior Xar*
-_impl_quaerere_cum_nota(
+_impl_quaerere_cum_nota (
     vacuum* datum,
     chorda* nota)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas**         slot;
+    RepositoriumData*  data;
+                 Xar*  resultus;
+      TabulaIterator   iter;
+              chorda   clavis;
+              vacuum*  valor;
+             Entitas*  entitas;
+             Entitas** slot;
 
     data = (RepositoriumData*)datum;
 
@@ -266,17 +267,17 @@ _impl_quaerere_cum_nota(
 }
 
 interior Xar*
-_impl_quaerere_cum_praefixo_notae(
-    vacuum*              datum,
-    constans character*  praefixum)
+_impl_quaerere_cum_praefixo_notae (
+                vacuum* datum,
+    constans character* praefixum)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas**         slot;
+    RepositoriumData*  data;
+                 Xar*  resultus;
+      TabulaIterator   iter;
+              chorda   clavis;
+              vacuum*  valor;
+             Entitas*  entitas;
+             Entitas** slot;
 
     data = (RepositoriumData*)datum;
 
@@ -317,18 +318,18 @@ _impl_quaerere_cum_praefixo_notae(
  * Redde: Entitas* (ProprietasDefinitio) si inventum, NIHIL si non
  */
 interior Entitas*
-_impl_proprietas_definitio_invenire(
-    vacuum*  datum,
-    chorda*  entitas_genus,
-    chorda*  proprietas_nomen)
+_impl_proprietas_definitio_invenire (
+    vacuum* datum,
+    chorda* entitas_genus,
+    chorda* proprietas_nomen)
 {
     RepositoriumData* data;
-    TabulaIterator    iter;
-    chorda            clavis_iter;
-    vacuum*           valor;
-    Entitas*          entitas;
-    chorda*           prop_entitas_genus;
-    chorda*           prop_proprietas_nomen;
+      TabulaIterator  iter;
+              chorda  clavis_iter;
+              vacuum* valor;
+             Entitas* entitas;
+              chorda* prop_entitas_genus;
+              chorda* prop_proprietas_nomen;
 
     data = (RepositoriumData*)datum;
 
@@ -343,8 +344,8 @@ _impl_proprietas_definitio_invenire(
         entitas = (Entitas*)valor;
 
         /* Verificare genus == "ProprietasDefinitio" */
-        si (!entitas->genus ||
-            !chorda_aequalis_literis(*entitas->genus, "ProprietasDefinitio"))
+        si (   !entitas->genus
+            || !chorda_aequalis_literis(*entitas->genus, "ProprietasDefinitio"))
         {
             perge;
         }
@@ -377,29 +378,31 @@ _impl_proprietas_definitio_invenire(
 }
 
 interior b32
-_continet_substring(constans character* haystack, constans character* needle)
+_continet_substring (
+    constans character* haystack,
+    constans character* needle)
 {
     redde strstr(haystack, needle) != NIHIL;
 }
 
 interior Xar*
-_impl_quaerere_textum(
-    vacuum*              datum,
-    constans character*  query)
+_impl_quaerere_textum (
+                vacuum* datum,
+    constans character* query)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas**         slot;
-    Proprietas*       prop;
-    i32               i;
-    i32               numerus_prop;
-    b32               inventum;
-    character         buffer_id[CCLVI];
-    character         buffer_valor[CCLVI];
+    RepositoriumData*  data;
+                 Xar*  resultus;
+      TabulaIterator   iter;
+              chorda   clavis;
+              vacuum*  valor;
+             Entitas*  entitas;
+             Entitas** slot;
+          Proprietas*  prop;
+                 i32   i;
+                 i32   numerus_prop;
+                 b32   inventum;
+           character   buffer_id[CCLVI];
+           character   buffer_valor[CCLVI];
 
     data = (RepositoriumData*)datum;
 
@@ -417,8 +420,8 @@ _impl_quaerere_textum(
     iter = tabula_dispersa_iterator_initium(data->entitates);
     dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
     {
-        entitas = (Entitas*)valor;
-        inventum = FALSUM;
+        entitas   = (Entitas*)valor;
+        inventum  = FALSUM;
 
         /* Verificare ID */
         si (entitas->id->mensura < CCLVI)
@@ -487,17 +490,17 @@ _impl_quaerere_textum(
 }
 
 interior Xar*
-_impl_quaerere_cum_genere(
-    vacuum*              datum,
-    constans character*  genus)
+_impl_quaerere_cum_genere (
+                vacuum* datum,
+    constans character* genus)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas**         slot;
+    RepositoriumData*  data;
+                 Xar*  resultus;
+      TabulaIterator   iter;
+              chorda   clavis;
+              vacuum*  valor;
+             Entitas*  entitas;
+             Entitas** slot;
 
     data = (RepositoriumData*)datum;
 
@@ -517,8 +520,8 @@ _impl_quaerere_cum_genere(
     {
         entitas = (Entitas*)valor;
 
-        si (entitas->genus &&
-            chorda_aequalis_literis(*entitas->genus, genus))
+        si (   entitas->genus
+            && chorda_aequalis_literis(*entitas->genus, genus))
         {
             slot = (Entitas**)xar_addere(resultus);
             si (slot)
@@ -532,18 +535,18 @@ _impl_quaerere_cum_genere(
 }
 
 interior Xar*
-_impl_quaerere_cum_praefixo_generis(
-    vacuum*              datum,
-    constans character*  praefixum)
+_impl_quaerere_cum_praefixo_generis (
+                vacuum* datum,
+    constans character* praefixum)
 {
-    RepositoriumData* data;
-    Xar*              resultus;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas**         slot;
-    i32               praefixum_len;
+    RepositoriumData*  data;
+                 Xar*  resultus;
+      TabulaIterator   iter;
+              chorda   clavis;
+              vacuum*  valor;
+             Entitas*  entitas;
+             Entitas** slot;
+                 i32   praefixum_len;
 
     data = (RepositoriumData*)datum;
 
@@ -565,9 +568,9 @@ _impl_quaerere_cum_praefixo_generis(
     {
         entitas = (Entitas*)valor;
 
-        si (entitas->genus &&
-            entitas->genus->mensura >= praefixum_len &&
-            memcmp(entitas->genus->datum, praefixum,
+        si (   entitas->genus
+            && entitas->genus->mensura >= praefixum_len
+            && memcmp(entitas->genus->datum, praefixum,
                    (memoriae_index)praefixum_len) == ZEPHYRUM)
         {
             slot = (Entitas**)xar_addere(resultus);
@@ -582,11 +585,11 @@ _impl_quaerere_cum_praefixo_generis(
 }
 
 interior Xar*
-_impl_capere_radices(
+_impl_capere_radices (
     vacuum* datum)
 {
     RepositoriumData* data;
-    chorda*           nota_root;
+              chorda* nota_root;
 
     data = (RepositoriumData*)datum;
 
@@ -605,12 +608,12 @@ _impl_capere_radices(
 }
 
 interior Relatio*
-_impl_capere_relatio(
+_impl_capere_relatio (
     vacuum* datum,
     chorda* relatio_id)
 {
     RepositoriumData* data;
-    vacuum*           valor;
+              vacuum* valor;
 
     data = (RepositoriumData*)datum;
 
@@ -628,12 +631,12 @@ _impl_capere_relatio(
 }
 
 interior Xar*
-_impl_capere_relationes_ad(
+_impl_capere_relationes_ad (
     vacuum* datum,
     chorda* entitas_id)
 {
     RepositoriumData* data;
-    vacuum*           existing;
+              vacuum* existing;
 
     data = (RepositoriumData*)datum;
 
@@ -660,16 +663,16 @@ _impl_capere_relationes_ad(
 /* Creare entitatem Genus pro via data (e.g., "Application-State::Widget")
  * Sine eventum - usatur interne tantum */
 interior Entitas*
-_assecurare_genus_entitatem_sine_evento(
-    RepositoriumData*   data,
+_assecurare_genus_entitatem_sine_evento (
+      RepositoriumData* data,
     constans character* via)
 {
-    chorda    uuid_chorda;
-    chorda*   id_internatum;
-    chorda*   genus_internatum;
-    Entitas*  entitas_existens;
-    Entitas*  entitas;
-    character appellatio_buffer[CCLVI];
+       chorda  uuid_chorda;
+       chorda* id_internatum;
+       chorda* genus_internatum;
+      Entitas* entitas_existens;
+      Entitas* entitas;
+    character  appellatio_buffer[CCLVI];
 
     /* Generare ID deterministicum: "Genus:<via>" */
     uuid_chorda = uuidv5_ex_genere_et_titulo(data->piscina, "Genus", via);
@@ -721,16 +724,16 @@ _assecurare_genus_entitatem_sine_evento(
     {
         constans character* segmentum;
         constans character* p;
-        i32 seg_len;
+                       i32  seg_len;
 
-        segmentum = via;
-        p = via;
+        segmentum  = via;
+        p          = via;
         dum (*p != '\0')
         {
             si (p[ZEPHYRUM] == ':' && p[I] == ':')
             {
-                segmentum = p + II;
-                p += II;
+                segmentum  = p + II;
+                p          += II;
             }
             alioquin
             {
@@ -754,17 +757,17 @@ _assecurare_genus_entitatem_sine_evento(
 
 /* Assecurare hierarchiam generis et creare relationes "contains" */
 interior Entitas*
-_assecurare_genus_hierarchiam(
-    RepositoriumData*   data,
+_assecurare_genus_hierarchiam (
+      RepositoriumData* data,
     constans character* genus)
 {
-    Entitas*   genus_radix;
-    Entitas*   genus_parens;
-    Entitas*   genus_currens;
+      Entitas* genus_radix;
+      Entitas* genus_parens;
+      Entitas* genus_currens;
     character  via_buffer[CCLVI];
-    i32        via_len;
-    i32        i;
-    chorda*    contains_genus;
+          i32  via_len;
+          i32  i;
+       chorda* contains_genus;
 
     si (!data || !genus)
     {
@@ -792,9 +795,9 @@ _assecurare_genus_hierarchiam(
     }
 
     /* Construere hierarchiam */
-    genus_parens = genus_radix;
-    via_buffer[ZEPHYRUM] = '\0';
-    via_len = ZEPHYRUM;
+    genus_parens          = genus_radix;
+    via_buffer[ZEPHYRUM]  = '\0';
+    via_len               = ZEPHYRUM;
 
     per (i = ZEPHYRUM; genus[i] != '\0'; i++)
     {
@@ -811,17 +814,17 @@ _assecurare_genus_hierarchiam(
             /* Addere relatio "contains" si nondum existit */
             {
                 Relatio* rel;
-                i32      num_rel;
-                i32      j;
-                b32      iam_habet;
+                    i32  num_rel;
+                    i32  j;
+                    b32  iam_habet;
 
-                iam_habet = FALSUM;
-                num_rel = xar_numerus(genus_parens->relationes);
+                iam_habet  = FALSUM;
+                num_rel    = xar_numerus(genus_parens->relationes);
                 per (j = ZEPHYRUM; j < num_rel; j++)
                 {
                     rel = (Relatio*)xar_obtinere(genus_parens->relationes, j);
-                    si (rel && rel->genus == contains_genus &&
-                        rel->destinatio_id == genus_currens->id)
+                    si (   rel && rel->genus == contains_genus
+                        && rel->destinatio_id == genus_currens->id)
                     {
                         iam_habet = VERUM;
                         frange;
@@ -861,17 +864,17 @@ _assecurare_genus_hierarchiam(
     /* Addere relatio "contains" a parente ad folium */
     {
         Relatio* rel;
-        i32      num_rel;
-        i32      j;
-        b32      iam_habet;
+            i32  num_rel;
+            i32  j;
+            b32  iam_habet;
 
-        iam_habet = FALSUM;
-        num_rel = xar_numerus(genus_parens->relationes);
+        iam_habet  = FALSUM;
+        num_rel    = xar_numerus(genus_parens->relationes);
         per (j = ZEPHYRUM; j < num_rel; j++)
         {
             rel = (Relatio*)xar_obtinere(genus_parens->relationes, j);
-            si (rel && rel->genus == contains_genus &&
-                rel->destinatio_id == genus_currens->id)
+            si (   rel && rel->genus == contains_genus
+                && rel->destinatio_id == genus_currens->id)
             {
                 iam_habet = VERUM;
                 frange;
@@ -894,16 +897,16 @@ _assecurare_genus_hierarchiam(
  * ================================================== */
 
 interior Entitas*
-_impl_entitas_creare(
-    vacuum*             datum,
+_impl_entitas_creare (
+                vacuum* datum,
     constans character* genus)
 {
     RepositoriumData* data;
-    chorda            uuid_chorda;
-    chorda*           id_internatum;
-    chorda*           genus_internatum;
-    Entitas*          entitas;
-    Eventum*          e;
+              chorda  uuid_chorda;
+              chorda* id_internatum;
+              chorda* genus_internatum;
+             Entitas* entitas;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -968,19 +971,19 @@ _impl_entitas_creare(
 }
 
 interior Entitas*
-_impl_entitas_scaffoldare(
-    vacuum*             datum,
+_impl_entitas_scaffoldare (
+                vacuum* datum,
     constans character* genus,
     constans character* titulus)
 {
     RepositoriumData* data;
-    chorda            uuid_chorda;
-    chorda*           id_internatum;
-    chorda*           genus_internatum;
-    Entitas*          entitas_existens;
-    Entitas*          entitas;
-    Entitas*          genus_folium;
-    Eventum*          e;
+              chorda  uuid_chorda;
+              chorda* id_internatum;
+              chorda* genus_internatum;
+             Entitas* entitas_existens;
+             Entitas* entitas;
+             Entitas* genus_folium;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1049,12 +1052,12 @@ _impl_entitas_scaffoldare(
 }
 
 interior b32
-_impl_entitas_delere(
+_impl_entitas_delere (
     vacuum* datum,
     chorda* id)
 {
     RepositoriumData* data;
-    Eventum*          e;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1084,17 +1087,17 @@ _impl_entitas_delere(
 }
 
 interior b32
-_impl_proprietas_ponere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_proprietas_ponere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* clavis,
     constans character* valor)
 {
     RepositoriumData* data;
-    chorda*           clavis_internata;
-    chorda*           valor_internatus;
-    chorda*           valor_existens;
-    Eventum*          e;
+              chorda* clavis_internata;
+              chorda* valor_internatus;
+              chorda* valor_existens;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1135,14 +1138,14 @@ _impl_proprietas_ponere(
 }
 
 interior b32
-_impl_proprietas_delere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_proprietas_delere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* clavis)
 {
     RepositoriumData* data;
-    chorda*           clavis_internata;
-    Eventum*          e;
+              chorda* clavis_internata;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1170,18 +1173,18 @@ _impl_proprietas_delere(
 }
 
 interior b32
-_impl_proprietas_ponere_blobum(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_proprietas_ponere_blobum (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* clavis,
-    const i8*           blobum,
-    i32                 mensura)
+              const i8* blobum,
+                   i32  mensura)
 {
     RepositoriumData* data;
-    chorda*           clavis_internata;
-    chorda*           valor_compressus;
-    FlaturaFructus    fructus;
-    Eventum*          e;
+              chorda* clavis_internata;
+              chorda* valor_compressus;
+      FlaturaFructus  fructus;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1210,8 +1213,8 @@ _impl_proprietas_ponere_blobum(
     {
         redde FALSUM;
     }
-    valor_compressus->datum = fructus.datum;
-    valor_compressus->mensura = fructus.mensura;
+    valor_compressus->datum    = fructus.datum;
+    valor_compressus->mensura  = fructus.mensura;
 
     /* Emit event - usare valor compressum ut chorda */
     e = eventum_ponere_proprietas(data->piscina, entitas->id, entitas->genus,
@@ -1227,15 +1230,15 @@ _impl_proprietas_ponere_blobum(
 }
 
 interior b32
-_impl_proprietas_capere_blobum(
-    vacuum*             datum,
-    Entitas*            entitas,
-    constans character* clavis,
-    i8**                datum_output,
-    i32*                mensura_output)
+_impl_proprietas_capere_blobum (
+                vacuum*  datum,
+               Entitas*  entitas,
+    constans character*  clavis,
+                    i8** datum_output,
+                   i32*  mensura_output)
 {
     RepositoriumData* data;
-    chorda*           clavis_internata;
+              chorda* clavis_internata;
 
     data = (RepositoriumData*)datum;
 
@@ -1257,21 +1260,21 @@ _impl_proprietas_capere_blobum(
 }
 
 interior Relatio*
-_impl_relatio_addere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_relatio_addere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* genus,
-    chorda*             destinatio_id)
+                chorda* destinatio_id)
 {
     RepositoriumData* data;
-    chorda            relatio_uuid;
-    chorda*           relatio_id;
-    chorda*           genus_internatum;
-    Relatio*          relatio;
-    Relatio*          rel_existens;
-    Eventum*          e;
-    i32               i;
-    i32               numerus;
+              chorda  relatio_uuid;
+              chorda* relatio_id;
+              chorda* genus_internatum;
+             Relatio* relatio;
+             Relatio* rel_existens;
+             Eventum* e;
+                 i32  i;
+                 i32  numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -1291,9 +1294,9 @@ _impl_relatio_addere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         rel_existens = (Relatio*)xar_obtinere(entitas->relationes, i);
-        si (rel_existens &&
-            rel_existens->genus == genus_internatum &&
-            rel_existens->destinatio_id == destinatio_id)
+        si (   rel_existens
+            && rel_existens->genus         == genus_internatum
+            && rel_existens->destinatio_id == destinatio_id)
         {
             redde rel_existens;  /* Iam existit - redde existentem */
         }
@@ -1344,18 +1347,18 @@ _impl_relatio_addere(
 }
 
 interior b32
-_impl_relatio_delere(
+_impl_relatio_delere (
     vacuum* datum,
     chorda* relatio_id)
 {
     RepositoriumData* data;
-    TabulaIterator    iter;
-    chorda            clavis;
-    vacuum*           valor;
-    Entitas*          entitas;
-    Entitas*          entitas_origo;
-    Relatio*          relatio;
-    Eventum*          e;
+      TabulaIterator  iter;
+              chorda  clavis;
+              vacuum* valor;
+             Entitas* entitas;
+             Entitas* entitas_origo;
+             Relatio* relatio;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1405,14 +1408,14 @@ _impl_relatio_delere(
 }
 
 interior b32
-_impl_nota_addere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_nota_addere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* nota)
 {
     RepositoriumData* data;
-    chorda*           nota_internata;
-    Eventum*          e;
+              chorda* nota_internata;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1445,14 +1448,14 @@ _impl_nota_addere(
 }
 
 interior b32
-_impl_nota_delere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_nota_delere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* nota)
 {
     RepositoriumData* data;
-    chorda*           nota_internata;
-    Eventum*          e;
+              chorda* nota_internata;
+             Eventum* e;
 
     data = (RepositoriumData*)datum;
 
@@ -1484,11 +1487,11 @@ _impl_nota_delere(
  * ================================================== */
 
 interior b32
-_applicare_eventum(
+_applicare_eventum (
     RepositoriumData* data,
-    Eventum*          eventum)
+             Eventum* eventum)
 {
-    chorda*  id_internatum;
+     chorda* id_internatum;
     Entitas* entitas;
 
     si (!data || !eventum)
@@ -1537,7 +1540,7 @@ _applicare_eventum(
             chorda* clavis_internata;
             chorda* valor_chorda;
             chorda* valor_prop;
-            b32 est_blobum;
+               b32  est_blobum;
 
             si (!tabula_dispersa_invenire(data->entitates, *id_internatum,
                                           (vacuum**)&entitas))
@@ -1556,9 +1559,9 @@ _applicare_eventum(
 
             /* Detegere si blobum per gzip magic bytes (0x1f 0x8b) */
             est_blobum = FALSUM;
-            si (valor_chorda->mensura >= II &&
-                valor_chorda->datum[ZEPHYRUM] == (i8)0x1f &&
-                valor_chorda->datum[I] == (i8)0x8b)
+            si (   valor_chorda->mensura         >= II
+                && valor_chorda->datum[ZEPHYRUM] == (i8)0x1f
+                && valor_chorda->datum[I]        == (i8)0x8b)
             {
                 est_blobum = VERUM;
             }
@@ -1567,8 +1570,8 @@ _applicare_eventum(
             {
                 /* Pro blobum: non internare valor, ponere directe cum typus */
                 Proprietas* prop;
-                i32 i;
-                i32 numerus;
+                       i32  i;
+                       i32  numerus;
 
                 /* Creare chorda non-internata pro valor */
                 valor_prop = piscina_allocare(data->piscina, magnitudo(chorda));
@@ -1576,8 +1579,8 @@ _applicare_eventum(
                 {
                     redde FALSUM;
                 }
-                valor_prop->datum = valor_chorda->datum;
-                valor_prop->mensura = valor_chorda->mensura;
+                valor_prop->datum    = valor_chorda->datum;
+                valor_prop->mensura  = valor_chorda->mensura;
 
                 /* Quaerere vel addere proprietas */
                 numerus = xar_numerus(entitas->proprietates);
@@ -1586,9 +1589,9 @@ _applicare_eventum(
                     prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
                     si (prop && prop->clavis == clavis_internata)
                     {
-                        prop->valor = valor_prop;
-                        prop->typus_literalis = TYPUS_BLOBUM;
-                        prop->parsitus_validus = FALSUM;
+                        prop->valor             = valor_prop;
+                        prop->typus_literalis   = TYPUS_BLOBUM;
+                        prop->parsitus_validus  = FALSUM;
                         redde VERUM;
                     }
                 }
@@ -1599,11 +1602,11 @@ _applicare_eventum(
                 {
                     redde FALSUM;
                 }
-                prop->clavis = clavis_internata;
-                prop->valor = valor_prop;
-                prop->typus_semanticus = NIHIL;
-                prop->typus_literalis = TYPUS_BLOBUM;
-                prop->parsitus_validus = FALSUM;
+                prop->clavis            = clavis_internata;
+                prop->valor             = valor_prop;
+                prop->typus_semanticus  = NIHIL;
+                prop->typus_literalis   = TYPUS_BLOBUM;
+                prop->parsitus_validus  = FALSUM;
                 redde VERUM;
             }
             alioquin
@@ -1640,9 +1643,9 @@ _applicare_eventum(
 
         casus EVENTUS_ADDERE_RELATIO:
         {
-            chorda*  relatio_id;
-            chorda*  genus_internatum;
-            chorda*  dest_id;
+             chorda* relatio_id;
+             chorda* genus_internatum;
+             chorda* dest_id;
             Relatio* relatio;
 
             si (!tabula_dispersa_invenire(data->entitates, *id_internatum,
@@ -1679,11 +1682,11 @@ _applicare_eventum(
 
         casus EVENTUS_DELERE_RELATIO:
         {
-            chorda*        relatio_id;
-            Relatio*       rel;
-            TabulaIterator iter;
-            chorda         clavis;
-            vacuum*        valor;
+                    chorda* relatio_id;
+                   Relatio* rel;
+            TabulaIterator  iter;
+                    chorda  clavis;
+                    vacuum* valor;
 
             relatio_id = chorda_internare(data->intern,
                                           *eventum->datum.relatio.relatio_id);
@@ -1759,13 +1762,13 @@ _applicare_eventum(
 }
 
 interior b32
-_replay_eventus(
+_replay_eventus (
     RepositoriumData* data)
 {
-    Xar*     eventus;
+        Xar* eventus;
     Eventum* e;
-    i32      i;
-    i32      numerus;
+        i32  i;
+        i32  numerus;
 
     /* Legere omnes eventus ex persistentia */
     eventus = data->persistentia->legere_eventus(data->persistentia->datum,
@@ -1795,7 +1798,7 @@ _replay_eventus(
  * ================================================== */
 
 interior Xar*
-_impl_legere_omnes_eventus(
+_impl_legere_omnes_eventus (
     vacuum* datum)
 {
     RepositoriumData* data;
@@ -1811,11 +1814,11 @@ _impl_legere_omnes_eventus(
 }
 
 interior i32
-_impl_numerus_eventorum(
+_impl_numerus_eventorum (
     vacuum* datum)
 {
     RepositoriumData* data;
-    Xar*              eventus;
+                 Xar* eventus;
 
     data = (RepositoriumData*)datum;
 
@@ -1834,17 +1837,17 @@ _impl_numerus_eventorum(
 }
 
 interior Xar*
-_impl_legere_eventus_entitatis(
+_impl_legere_eventus_entitatis (
     vacuum* datum,
     chorda* entitas_id)
 {
-    RepositoriumData* data;
-    Xar*              omnes;
-    Xar*              resultus;
-    Eventum*          e;
-    Eventum**         slot;
-    i32               i;
-    i32               numerus;
+    RepositoriumData*  data;
+                 Xar*  omnes;
+                 Xar*  resultus;
+             Eventum*  e;
+             Eventum** slot;
+                 i32   i;
+                 i32   numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -1883,17 +1886,17 @@ _impl_legere_eventus_entitatis(
 }
 
 interior Xar*
-_impl_legere_eventus_post_indicem(
+_impl_legere_eventus_post_indicem (
     vacuum* datum,
-    i32     index)
+       i32  index)
 {
-    RepositoriumData* data;
-    Xar*              omnes;
-    Xar*              resultus;
-    Eventum*          e;
-    Eventum**         slot;
-    i32               i;
-    i32               numerus;
+    RepositoriumData*  data;
+                 Xar*  omnes;
+                 Xar*  resultus;
+             Eventum*  e;
+             Eventum** slot;
+                 i32   i;
+                 i32   numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -1935,20 +1938,20 @@ _impl_legere_eventus_post_indicem(
 }
 
 interior Xar*
-_impl_legere_eventus_recentes(
+_impl_legere_eventus_recentes (
     vacuum* datum,
-    i32     numerus_petitus)
+       i32  numerus_petitus)
 {
-    RepositoriumData* data;
-    Xar*              omnes;
-    Xar*              resultus;
-    Eventum*          e;
-    Eventum**         slot;
-    s32               i;
-    i32               numerus_totalis;
+    RepositoriumData*  data;
+                 Xar*  omnes;
+                 Xar*  resultus;
+             Eventum*  e;
+             Eventum** slot;
+                 s32   i;
+                 i32   numerus_totalis;
     /* initium s32 (2026-07-17): subtractio i32 volvebatur cum
      * petitus > totalis - fenestra vacua pro OMNIBUS reddita */
-    s32               initium;
+    s32 initium;
 
     data = (RepositoriumData*)datum;
 
@@ -1969,8 +1972,8 @@ _impl_legere_eventus_recentes(
         redde NIHIL;
     }
 
-    numerus_totalis = xar_numerus(omnes);
-    initium = (s32)numerus_totalis - (s32)numerus_petitus;
+    numerus_totalis  = xar_numerus(omnes);
+    initium          = (s32)numerus_totalis - (s32)numerus_petitus;
     si (initium < ZEPHYRUM)
     {
         initium = ZEPHYRUM;
@@ -1993,17 +1996,17 @@ _impl_legere_eventus_recentes(
 }
 
 interior Xar*
-_impl_legere_eventus_generis_entitatis(
-    vacuum*             datum,
+_impl_legere_eventus_generis_entitatis (
+                vacuum* datum,
     constans character* genus_entitatis)
 {
-    RepositoriumData* data;
-    Xar*              omnes;
-    Xar*              resultus;
-    Eventum*          e;
-    Eventum**         slot;
-    i32               i;
-    i32               numerus;
+    RepositoriumData*  data;
+                 Xar*  omnes;
+                 Xar*  resultus;
+             Eventum*  e;
+             Eventum** slot;
+                 i32   i;
+                 i32   numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -2028,8 +2031,8 @@ _impl_legere_eventus_generis_entitatis(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         e = *(Eventum**)xar_obtinere(omnes, i);
-        si (e && e->entitas_genus &&
-            chorda_aequalis_literis(*e->entitas_genus, genus_entitatis))
+        si (   e && e->entitas_genus
+            && chorda_aequalis_literis(*e->entitas_genus, genus_entitatis))
         {
             slot = (Eventum**)xar_addere(resultus);
             si (slot)
@@ -2043,17 +2046,17 @@ _impl_legere_eventus_generis_entitatis(
 }
 
 interior Xar*
-_impl_legere_eventus_typi(
-    vacuum*      datum,
-    EventusGenus typus)
+_impl_legere_eventus_typi (
+          vacuum* datum,
+    EventusGenus  typus)
 {
-    RepositoriumData* data;
-    Xar*              omnes;
-    Xar*              resultus;
-    Eventum*          e;
-    Eventum**         slot;
-    i32               i;
-    i32               numerus;
+    RepositoriumData*  data;
+                 Xar*  omnes;
+                 Xar*  resultus;
+             Eventum*  e;
+             Eventum** slot;
+                 i32   i;
+                 i32   numerus;
 
     data = (RepositoriumData*)datum;
 
@@ -2097,12 +2100,12 @@ _impl_legere_eventus_typi(
  * ================================================== */
 
 EntitasRepositorium*
-entitas_repositorium_creare(
-    Piscina*      piscina,
+entitas_repositorium_creare (
+         Piscina* piscina,
     Persistentia* persistentia)
 {
     EntitasRepositorium* repo;
-    RepositoriumData*    data;
+       RepositoriumData* data;
 
     si (!piscina || !persistentia)
     {
@@ -2124,8 +2127,8 @@ entitas_repositorium_creare(
         redde NIHIL;
     }
 
-    data->piscina = piscina;
-    data->persistentia = persistentia;
+    data->piscina       = piscina;
+    data->persistentia  = persistentia;
 
     /* Usare internamentum globale pro chordas internatae */
     data->intern = internamentum_globale();
@@ -2173,17 +2176,17 @@ entitas_repositorium_creare(
     repo->capere_relatio = _impl_capere_relatio;
     repo->capere_relationes_ad = _impl_capere_relationes_ad;
 
-    repo->entitas_creare = _impl_entitas_creare;
-    repo->entitas_scaffoldare = _impl_entitas_scaffoldare;
-    repo->entitas_delere = _impl_entitas_delere;
-    repo->proprietas_ponere = _impl_proprietas_ponere;
-    repo->proprietas_delere = _impl_proprietas_delere;
-    repo->proprietas_ponere_blobum = _impl_proprietas_ponere_blobum;
-    repo->proprietas_capere_blobum = _impl_proprietas_capere_blobum;
-    repo->relatio_addere = _impl_relatio_addere;
-    repo->relatio_delere = _impl_relatio_delere;
-    repo->nota_addere = _impl_nota_addere;
-    repo->nota_delere = _impl_nota_delere;
+    repo->entitas_creare            = _impl_entitas_creare;
+    repo->entitas_scaffoldare       = _impl_entitas_scaffoldare;
+    repo->entitas_delere            = _impl_entitas_delere;
+    repo->proprietas_ponere         = _impl_proprietas_ponere;
+    repo->proprietas_delere         = _impl_proprietas_delere;
+    repo->proprietas_ponere_blobum  = _impl_proprietas_ponere_blobum;
+    repo->proprietas_capere_blobum  = _impl_proprietas_capere_blobum;
+    repo->relatio_addere            = _impl_relatio_addere;
+    repo->relatio_delere            = _impl_relatio_delere;
+    repo->nota_addere               = _impl_nota_addere;
+    repo->nota_delere               = _impl_nota_delere;
 
     /* Event log read functions */
     repo->legere_omnes_eventus = _impl_legere_omnes_eventus;
@@ -2203,10 +2206,10 @@ entitas_repositorium_creare(
  * ================================================== */
 
 Entitas*
-entitas_repositorium_proprietas_definitio_invenire(
+entitas_repositorium_proprietas_definitio_invenire (
     EntitasRepositorium* repo,
-    chorda*              entitas_genus,
-    chorda*              proprietas_nomen)
+                 chorda* entitas_genus,
+                 chorda* proprietas_nomen)
 {
     si (!repo || !entitas_genus || !proprietas_nomen)
     {
@@ -2220,23 +2223,23 @@ entitas_repositorium_proprietas_definitio_invenire(
 }
 
 b32
-entitas_repositorium_proprietas_validare(
+entitas_repositorium_proprietas_validare (
     EntitasRepositorium* repo,
-    Entitas*             entitas,
-    chorda*              clavis)
+                Entitas* entitas,
+                 chorda* clavis)
 {
     RepositoriumData* data;
-    Entitas*          definitio;
-    Entitas*          typus_semanticus_ent;
-    Proprietas*       prop;
-    chorda*           typus_literalis_str;
-    chorda*           typus_semanticus_nomen;
-    chorda*           est_genus;
-    Relatio*          rel;
-    TypusLiteralis    typus_expected;
-    b32               parse_success;
-    i32               i;
-    i32               numerus_rel;
+             Entitas* definitio;
+             Entitas* typus_semanticus_ent;
+          Proprietas* prop;
+              chorda* typus_literalis_str;
+              chorda* typus_semanticus_nomen;
+              chorda* est_genus;
+             Relatio* rel;
+      TypusLiteralis  typus_expected;
+                 b32  parse_success;
+                 i32  i;
+                 i32  numerus_rel;
 
     si (!repo || !entitas || !clavis)
     {
@@ -2281,8 +2284,8 @@ entitas_repositorium_proprietas_validare(
         {
             dest_ent = _impl_capere_entitatem(repo->datum, rel->destinatio_id);
             /* Verificare destinatio est TypusSemanticus, non Genus */
-            si (dest_ent && dest_ent->genus &&
-                chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
+            si (   dest_ent && dest_ent->genus
+                && chorda_aequalis_literis(*dest_ent->genus, "TypusSemanticus"))
             {
                 typus_semanticus_ent = dest_ent;
                 frange;
@@ -2333,22 +2336,22 @@ entitas_repositorium_proprietas_validare(
 }
 
 b32
-entitas_repositorium_validare(
+entitas_repositorium_validare (
     EntitasRepositorium* repo,
-    Entitas*             entitas)
+                Entitas* entitas)
 {
     Proprietas* prop;
-    i32         i;
-    i32         numerus;
-    b32         omnia_valida;
+           i32  i;
+           i32  numerus;
+           b32  omnia_valida;
 
     si (!repo || !entitas)
     {
         redde FALSUM;
     }
 
-    omnia_valida = VERUM;
-    numerus = xar_numerus(entitas->proprietates);
+    omnia_valida  = VERUM;
+    numerus       = xar_numerus(entitas->proprietates);
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {

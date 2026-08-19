@@ -15,7 +15,7 @@
 
 /* Alphabetum Base64 standard */
 hic_manens constans character*
-alphabetum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    alphabetum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 /* Tabula decodificationis (character -> valor 0-63, -1 = invalidus) */
 hic_manens constans s8 tabula_decodificationis[CXXVIII] = {
@@ -35,7 +35,8 @@ hic_manens constans s8 tabula_decodificationis[CXXVIII] = {
  * ======================================================================== */
 
 i32
-base64_longitudo_codificata(i32 mensura_originalis)
+base64_longitudo_codificata (
+    i32 mensura_originalis)
 {
     /* Formula: 4 * ceil(n / 3) */
     si (mensura_originalis <= 0)
@@ -47,7 +48,8 @@ base64_longitudo_codificata(i32 mensura_originalis)
 }
 
 i32
-base64_longitudo_decodificata(chorda codificata)
+base64_longitudo_decodificata (
+    chorda codificata)
 {
     i32 longitudo;
     i32 padding;
@@ -57,8 +59,8 @@ base64_longitudo_decodificata(chorda codificata)
         redde 0;
     }
 
-    longitudo = codificata.mensura;
-    padding = 0;
+    longitudo  = codificata.mensura;
+    padding    = 0;
 
     /* Numerare padding characters '=' */
     si (longitudo >= I && codificata.datum[longitudo - I] == '=')
@@ -80,28 +82,28 @@ base64_longitudo_decodificata(chorda codificata)
  * ======================================================================== */
 
 chorda
-base64_codificare(
+base64_codificare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina)
+            i32  mensura,
+        Piscina* piscina)
 {
-    chorda   resultatus;
-    i32      longitudo_output;
-    i8*      output;
-    i32      i;
-    i32      j;
+    chorda  resultatus;
+       i32  longitudo_output;
+        i8* output;
+       i32  i;
+       i32  j;
     i8       a, b, c;
-    i32      triplex;
+    i32 triplex;
 
     si (datum == NIHIL || mensura <= 0 || piscina == NIHIL)
     {
-        resultatus.datum = NIHIL;
-        resultatus.mensura = 0;
+        resultatus.datum    = NIHIL;
+        resultatus.mensura  = 0;
         redde resultatus;
     }
 
-    longitudo_output = base64_longitudo_codificata(mensura);
-    output = piscina_allocare(piscina, longitudo_output);
+    longitudo_output  = base64_longitudo_codificata(mensura);
+    output            = piscina_allocare(piscina, longitudo_output);
 
     j = 0;
     per (i = 0; i < mensura; i += III)
@@ -124,16 +126,16 @@ base64_codificare(
     /* Addere padding '=' */
     si (mensura % III == I)
     {
-        output[j - I] = '=';
-        output[j - II] = '=';
+        output[j - I]   = '=';
+        output[j - II]  = '=';
     }
     alioquin si (mensura % III == II)
     {
         output[j - I] = '=';
     }
 
-    resultatus.datum = output;
-    resultatus.mensura = longitudo_output;
+    resultatus.datum    = output;
+    resultatus.mensura  = longitudo_output;
 
     redde resultatus;
 }
@@ -144,21 +146,21 @@ base64_codificare(
  * ======================================================================== */
 
 Base64Fructus
-base64_decodificare(
-    chorda   codificata,
+base64_decodificare (
+     chorda  codificata,
     Piscina* piscina)
 {
-    Base64Fructus resultatus;
-    i32           longitudo_output;
-    i8*           output;
-    i32           i;
-    i32           j;
+    Base64Fructus  resultatus;
+              i32  longitudo_output;
+               i8* output;
+              i32  i;
+              i32  j;
     i8            a, b, c, d;
-    i32           quadruplex;
-    s8            val;
+    i32 quadruplex;
+     s8 val;
 
-    resultatus.datum = NIHIL;
-    resultatus.mensura = 0;
+    resultatus.datum    = NIHIL;
+    resultatus.mensura  = 0;
 
     si (codificata.datum == NIHIL || codificata.mensura <= 0 || piscina == NIHIL)
     {
@@ -171,8 +173,8 @@ base64_decodificare(
         redde resultatus;
     }
 
-    longitudo_output = base64_longitudo_decodificata(codificata);
-    output = piscina_allocare(piscina, longitudo_output);
+    longitudo_output  = base64_longitudo_decodificata(codificata);
+    output            = piscina_allocare(piscina, longitudo_output);
 
     j = 0;
     per (i = 0; i < codificata.mensura; i += IV)
@@ -187,8 +189,8 @@ base64_decodificare(
         val = (a >= 0 && a < CXXVIII) ? tabula_decodificationis[(integer)a] : -1;
         si (val < 0)
         {
-            resultatus.datum = NIHIL;
-            resultatus.mensura = 0;
+            resultatus.datum    = NIHIL;
+            resultatus.mensura  = 0;
             redde resultatus;
         }
         quadruplex = (i32)val << XVIII;
@@ -196,8 +198,8 @@ base64_decodificare(
         val = (b >= 0 && b < CXXVIII) ? tabula_decodificationis[(integer)b] : -1;
         si (val < 0)
         {
-            resultatus.datum = NIHIL;
-            resultatus.mensura = 0;
+            resultatus.datum    = NIHIL;
+            resultatus.mensura  = 0;
             redde resultatus;
         }
         quadruplex |= (i32)val << XII;
@@ -207,8 +209,8 @@ base64_decodificare(
             val = (c >= 0 && c < CXXVIII) ? tabula_decodificationis[(integer)c] : -1;
             si (val < 0)
             {
-                resultatus.datum = NIHIL;
-                resultatus.mensura = 0;
+                resultatus.datum    = NIHIL;
+                resultatus.mensura  = 0;
                 redde resultatus;
             }
             quadruplex |= (i32)val << VI;
@@ -223,12 +225,12 @@ base64_decodificare(
             val = (d >= 0 && d < CXXVIII) ? tabula_decodificationis[(integer)d] : -1;
             si (val < 0)
             {
-                resultatus.datum = NIHIL;
-                resultatus.mensura = 0;
+                resultatus.datum    = NIHIL;
+                resultatus.mensura  = 0;
                 redde resultatus;
             }
-            val_i = (i32)val;
-            quadruplex = quadruplex | val_i;
+            val_i       = (i32)val;
+            quadruplex  = quadruplex | val_i;
         }
 
         /* Extrahere 3 bytes */
@@ -246,8 +248,8 @@ base64_decodificare(
         }
     }
 
-    resultatus.datum = output;
-    resultatus.mensura = longitudo_output;
+    resultatus.datum    = output;
+    resultatus.mensura  = longitudo_output;
 
     redde resultatus;
 }

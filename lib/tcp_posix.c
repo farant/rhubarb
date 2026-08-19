@@ -35,7 +35,7 @@
 structura TcpConnexio {
     Piscina* piscina;
     integer  fd;              /* Socket file descriptor (signed!) */
-    b32      clausa;          /* Connexio clausa? */
+        b32  clausa;          /* Connexio clausa? */
 };
 
 
@@ -44,26 +44,31 @@ structura TcpConnexio {
  * ======================================================================== */
 
 interior TcpResultus
-_creare_error(TcpError error, constans character* msg, Piscina* piscina)
+_creare_error (
+              TcpError  error,
+    constans character* msg,
+               Piscina* piscina)
 {
     TcpResultus res;
-    res.successus = FALSUM;
-    res.connexio = NIHIL;
-    res.error = error;
+    res.successus  = FALSUM;
+    res.connexio   = NIHIL;
+    res.error      = error;
     si (msg && piscina)
     {
         res.error_descriptio = chorda_ex_literis(msg, piscina);
     }
     alioquin
     {
-        res.error_descriptio.datum = NIHIL;
-        res.error_descriptio.mensura = 0;
+        res.error_descriptio.datum    = NIHIL;
+        res.error_descriptio.mensura  = 0;
     }
     redde res;
 }
 
 interior vacuum
-_applicare_optiones(integer fd, constans TcpOptiones* opt)
+_applicare_optiones (
+                 integer  fd,
+    constans TcpOptiones* opt)
 {
     integer flag;
 
@@ -90,8 +95,8 @@ _applicare_optiones(integer fd, constans TcpOptiones* opt)
     si (opt->timeout_ms > 0)
     {
         structura timeval tv;
-        tv.tv_sec = opt->timeout_ms / M;
-        tv.tv_usec = (opt->timeout_ms % M) * M;
+        tv.tv_sec   = opt->timeout_ms / M;
+        tv.tv_usec  = (opt->timeout_ms % M) * M;
         setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, (socklen_t)magnitudo(tv));
         setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, (socklen_t)magnitudo(tv));
     }
@@ -101,7 +106,8 @@ _applicare_optiones(integer fd, constans TcpOptiones* opt)
  * processum totum necaret). Extra _applicare_optiones quia illa in
  * !opt cito redit - hoc SEMPER applicandum est. */
 interior vacuum
-_ponere_nosigpipe(integer fd)
+_ponere_nosigpipe (
+    integer fd)
 {
 #ifdef __APPLE__
     integer flag = 1;
@@ -122,40 +128,40 @@ _ponere_nosigpipe(integer fd)
  * ======================================================================== */
 
 TcpOptiones
-tcp_optiones_default(vacuum)
+tcp_optiones_default (vacuum)
 {
     TcpOptiones opt;
-    opt.timeout_ms = XXX * M;  /* 30 seconds */
-    opt.nodelay = VERUM;
-    opt.keepalive = FALSUM;
+    opt.timeout_ms  = XXX * M;  /* 30 seconds */
+    opt.nodelay     = VERUM;
+    opt.keepalive   = FALSUM;
     redde opt;
 }
 
 TcpResultus
-tcp_connectere(
+tcp_connectere (
     constans character* hospes,
-    i32                 portus,
-    Piscina*            piscina)
+                   i32  portus,
+               Piscina* piscina)
 {
     TcpOptiones opt = tcp_optiones_default();
     redde tcp_connectere_cum_optionibus(hospes, portus, &opt, piscina);
 }
 
 TcpResultus
-tcp_connectere_cum_optionibus(
-    constans character*   hospes,
-    i32                   portus,
+tcp_connectere_cum_optionibus (
+      constans character* hospes,
+                     i32  portus,
     constans TcpOptiones* optiones,
-    Piscina*              piscina)
+                 Piscina* piscina)
 {
-    TcpResultus res;
-    TcpConnexio* conn;
-    structura addrinfo hints;
+           TcpResultus  res;
+           TcpConnexio* conn;
+    structura addrinfo  hints;
     structura addrinfo* result;
     structura addrinfo* rp;
-    character portus_str[VIII];
-    integer status;
-    integer fd;
+             character portus_str[VIII];
+               integer status;
+               integer fd;
 
     /* Validare argumenta */
     si (!hospes || !piscina)
@@ -165,10 +171,10 @@ tcp_connectere_cum_optionibus(
 
     /* Convertere portus ad chorda */
     {
-        i32 p = portus;
-        i32 i = 0;
+              i32 p = portus;
+              i32 i = 0;
         character temp[VIII];
-        i32 len;
+              i32 len;
 
         si (p == 0)
         {
@@ -179,8 +185,8 @@ tcp_connectere_cum_optionibus(
         {
             dum (p > 0 && i < VII)
             {
-                temp[i++] = (character)('0' + (p % X));
-                p /= X;
+                temp[i++]  = (character)('0' + (p % X));
+                p          /= X;
             }
             len = i;
             per (i = 0; i < len; i++)
@@ -193,9 +199,9 @@ tcp_connectere_cum_optionibus(
 
     /* Setup hints pro getaddrinfo */
     memset(&hints, 0, magnitudo(hints));
-    hints.ai_family = AF_UNSPEC;      /* IPv4 vel IPv6 */
-    hints.ai_socktype = SOCK_STREAM;  /* TCP */
-    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_family    = AF_UNSPEC;      /* IPv4 vel IPv6 */
+    hints.ai_socktype  = SOCK_STREAM;  /* TCP */
+    hints.ai_protocol  = IPPROTO_TCP;
 
     /* DNS resolutio */
     status = getaddrinfo(hospes, portus_str, &hints, &result);
@@ -259,15 +265,15 @@ tcp_connectere_cum_optionibus(
         redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
     }
 
-    conn->piscina = piscina;
-    conn->fd = fd;
-    conn->clausa = FALSUM;
+    conn->piscina  = piscina;
+    conn->fd       = fd;
+    conn->clausa   = FALSUM;
 
-    res.successus = VERUM;
-    res.connexio = conn;
-    res.error = TCP_OK;
-    res.error_descriptio.datum = NIHIL;
-    res.error_descriptio.mensura = 0;
+    res.successus                 = VERUM;
+    res.connexio                  = conn;
+    res.error                     = TCP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = 0;
 
     redde res;
 }
@@ -278,10 +284,10 @@ tcp_connectere_cum_optionibus(
  * ======================================================================== */
 
 s32
-tcp_mittere(
-    TcpConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura)
+tcp_mittere (
+    TcpConnexio* connexio,
+    constans i8* data,
+            i32  mensura)
 {
     ssize_t n;
 
@@ -319,10 +325,10 @@ tcp_mittere(
 }
 
 b32
-tcp_mittere_omnia(
-    TcpConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura)
+tcp_mittere_omnia (
+    TcpConnexio* connexio,
+    constans i8* data,
+            i32  mensura)
 {
     i32 totalis = 0;
     i32 restans = mensura;
@@ -353,10 +359,10 @@ tcp_mittere_omnia(
 }
 
 s32
-tcp_recipere(
+tcp_recipere (
     TcpConnexio* connexio,
-    i8*          buffer,
-    i32          capacitas)
+             i8* buffer,
+            i32  capacitas)
 {
     ssize_t n;
 
@@ -394,7 +400,8 @@ tcp_recipere(
 }
 
 vacuum
-tcp_claudere(TcpConnexio* connexio)
+tcp_claudere (
+    TcpConnexio* connexio)
 {
     si (!connexio)
     {
@@ -404,8 +411,8 @@ tcp_claudere(TcpConnexio* connexio)
     si (connexio->fd >= 0 && !connexio->clausa)
     {
         close(connexio->fd);
-        connexio->fd = -1;
-        connexio->clausa = VERUM;
+        connexio->fd      = -1;
+        connexio->clausa  = VERUM;
     }
 }
 
@@ -415,7 +422,8 @@ tcp_claudere(TcpConnexio* connexio)
  * ======================================================================== */
 
 s32
-tcp_obtinere_fd(TcpConnexio* connexio)
+tcp_obtinere_fd (
+    TcpConnexio* connexio)
 {
     si (!connexio)
     {
@@ -425,13 +433,15 @@ tcp_obtinere_fd(TcpConnexio* connexio)
 }
 
 b32
-tcp_est_valida(TcpConnexio* connexio)
+tcp_est_valida (
+    TcpConnexio* connexio)
 {
     redde connexio != NIHIL && !connexio->clausa && connexio->fd >= 0;
 }
 
 constans character*
-tcp_error_descriptio(TcpError error)
+tcp_error_descriptio (
+    TcpError error)
 {
     commutatio (error)
     {
@@ -452,11 +462,11 @@ tcp_error_descriptio(TcpError error)
  * ======================================================================== */
 
 structura TcpServus {
-    Piscina*   piscina;
-    integer    fd;
-    b32        auscultans;
-    b32        non_blocans;
-    TcpAddress ligatum;
+       Piscina* piscina;
+       integer  fd;
+           b32  auscultans;
+           b32  non_blocans;
+    TcpAddress  ligatum;
 };
 
 
@@ -465,26 +475,31 @@ structura TcpServus {
  * ======================================================================== */
 
 interior TcpServusResultus
-_creare_servus_error(TcpError error, constans character* msg, Piscina* piscina)
+_creare_servus_error (
+              TcpError  error,
+    constans character* msg,
+               Piscina* piscina)
 {
     TcpServusResultus res;
-    res.successus = FALSUM;
-    res.servus = NIHIL;
-    res.error = error;
+    res.successus  = FALSUM;
+    res.servus     = NIHIL;
+    res.error      = error;
     si (msg && piscina)
     {
         res.error_descriptio = chorda_ex_literis(msg, piscina);
     }
     alioquin
     {
-        res.error_descriptio.datum = NIHIL;
-        res.error_descriptio.mensura = 0;
+        res.error_descriptio.datum    = NIHIL;
+        res.error_descriptio.mensura  = 0;
     }
     redde res;
 }
 
 interior TcpError
-_ponere_non_blocans_fd(integer fd, b32 non_blocans)
+_ponere_non_blocans_fd (
+    integer fd,
+        b32 non_blocans)
 {
     integer flags;
 
@@ -517,18 +532,18 @@ _ponere_non_blocans_fd(integer fd, b32 non_blocans)
  * ======================================================================== */
 
 TcpServusOptiones
-tcp_servus_optiones_default(vacuum)
+tcp_servus_optiones_default (vacuum)
 {
     TcpServusOptiones opt;
-    opt.tergum = CXXVIII;        /* 128 backlog */
-    opt.reuti_inscriptio = VERUM;
-    opt.non_blocans = VERUM;
+    opt.tergum            = CXXVIII;        /* 128 backlog */
+    opt.reuti_inscriptio  = VERUM;
+    opt.non_blocans       = VERUM;
     redde opt;
 }
 
 TcpServusResultus
-tcp_servus_creare(
-    i32      portus,
+tcp_servus_creare (
+        i32  portus,
     Piscina* piscina)
 {
     TcpServusOptiones opt = tcp_servus_optiones_default();
@@ -536,18 +551,18 @@ tcp_servus_creare(
 }
 
 TcpServusResultus
-tcp_servus_creare_cum_optionibus(
-    constans character*         hospes,
-    i32                         portus,
+tcp_servus_creare_cum_optionibus (
+            constans character* hospes,
+                           i32  portus,
     constans TcpServusOptiones* optiones,
-    Piscina*                    piscina)
+                       Piscina* piscina)
 {
-    TcpServusResultus res;
-    TcpServus* servus;
-    integer fd;
-    integer flag;
-    structura sockaddr_in addr;
-    socklen_t addr_len;
+        TcpServusResultus  res;
+                TcpServus* servus;
+                  integer  fd;
+                  integer  flag;
+    structura sockaddr_in  addr;
+                socklen_t addr_len;
 
     /* Validare argumenta */
     si (!piscina)
@@ -593,19 +608,19 @@ tcp_servus_creare_cum_optionibus(
 
     /* Setup address */
     memset(&addr, 0, magnitudo(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons((i16)portus);
+    addr.sin_family  = AF_INET;
+    addr.sin_port    = htons((i16)portus);
 
     si (hospes != NIHIL && hospes[0] != '\0')
     {
         /* Ligare ad specifica interface */
-        structura addrinfo hints;
+        structura addrinfo  hints;
         structura addrinfo* result;
-        integer status;
+                   integer status;
 
         memset(&hints, 0, magnitudo(hints));
-        hints.ai_family = AF_INET;
-        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_family    = AF_INET;
+        hints.ai_socktype  = SOCK_STREAM;
 
         status = getaddrinfo(hospes, NIHIL, &hints, &result);
         si (status != 0)
@@ -648,11 +663,11 @@ tcp_servus_creare_cum_optionibus(
         redde _creare_servus_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
     }
 
-    servus->piscina = piscina;
-    servus->fd = fd;
-    servus->auscultans = FALSUM;
-    servus->non_blocans = optiones->non_blocans;
-    servus->ligatum.portus = (i32)ntohs(addr.sin_port);
+    servus->piscina         = piscina;
+    servus->fd              = fd;
+    servus->auscultans      = FALSUM;
+    servus->non_blocans     = optiones->non_blocans;
+    servus->ligatum.portus  = (i32)ntohs(addr.sin_port);
 
     /* Obtinere hospes string */
     si (hospes != NIHIL && hospes[0] != '\0')
@@ -666,29 +681,29 @@ tcp_servus_creare_cum_optionibus(
     }
     alioquin
     {
-        servus->ligatum.hospes[0] = '0';
-        servus->ligatum.hospes[I] = '.';
-        servus->ligatum.hospes[II] = '0';
-        servus->ligatum.hospes[III] = '.';
-        servus->ligatum.hospes[IV] = '0';
-        servus->ligatum.hospes[V] = '.';
-        servus->ligatum.hospes[VI] = '0';
-        servus->ligatum.hospes[VII] = '\0';
+        servus->ligatum.hospes[0]    = '0';
+        servus->ligatum.hospes[I]    = '.';
+        servus->ligatum.hospes[II]   = '0';
+        servus->ligatum.hospes[III]  = '.';
+        servus->ligatum.hospes[IV]   = '0';
+        servus->ligatum.hospes[V]    = '.';
+        servus->ligatum.hospes[VI]   = '0';
+        servus->ligatum.hospes[VII]  = '\0';
     }
 
-    res.successus = VERUM;
-    res.servus = servus;
-    res.error = TCP_OK;
-    res.error_descriptio.datum = NIHIL;
-    res.error_descriptio.mensura = 0;
+    res.successus                 = VERUM;
+    res.servus                    = servus;
+    res.error                     = TCP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = 0;
 
     redde res;
 }
 
 TcpError
-tcp_servus_auscultare(
+tcp_servus_auscultare (
     TcpServus* servus,
-    i32        tergum)
+          i32  tergum)
 {
     si (!servus || servus->fd < 0)
     {
@@ -716,15 +731,15 @@ tcp_servus_auscultare(
 }
 
 TcpResultus
-tcp_servus_accipere(
+tcp_servus_accipere (
     TcpServus* servus,
-    Piscina*   piscina)
+      Piscina* piscina)
 {
-    TcpResultus res;
-    TcpConnexio* conn;
-    integer client_fd;
-    structura sockaddr_in client_addr;
-    socklen_t addr_len;
+              TcpResultus  res;
+              TcpConnexio* conn;
+                  integer  client_fd;
+    structura sockaddr_in  client_addr;
+                socklen_t addr_len;
 
     si (!servus || !piscina)
     {
@@ -754,9 +769,9 @@ tcp_servus_accipere(
     /* TCP_NODELAY in fd accepto - responsa parva sine mora Nagle */
     {
         TcpOptiones opt_accepti;
-        opt_accepti.timeout_ms = 0;
-        opt_accepti.nodelay = VERUM;
-        opt_accepti.keepalive = FALSUM;
+        opt_accepti.timeout_ms  = 0;
+        opt_accepti.nodelay     = VERUM;
+        opt_accepti.keepalive   = FALSUM;
         _applicare_optiones(client_fd, &opt_accepti);
     }
 
@@ -774,21 +789,22 @@ tcp_servus_accipere(
         redde _creare_error(TCP_ERROR_CONNEXIO, "Allocatio fallita", piscina);
     }
 
-    conn->piscina = piscina;
-    conn->fd = client_fd;
-    conn->clausa = FALSUM;
+    conn->piscina  = piscina;
+    conn->fd       = client_fd;
+    conn->clausa   = FALSUM;
 
-    res.successus = VERUM;
-    res.connexio = conn;
-    res.error = TCP_OK;
-    res.error_descriptio.datum = NIHIL;
-    res.error_descriptio.mensura = 0;
+    res.successus                 = VERUM;
+    res.connexio                  = conn;
+    res.error                     = TCP_OK;
+    res.error_descriptio.datum    = NIHIL;
+    res.error_descriptio.mensura  = 0;
 
     redde res;
 }
 
 integer
-tcp_servus_obtinere_fd(TcpServus* servus)
+tcp_servus_obtinere_fd (
+    TcpServus* servus)
 {
     si (!servus)
     {
@@ -798,7 +814,8 @@ tcp_servus_obtinere_fd(TcpServus* servus)
 }
 
 i32
-tcp_servus_obtinere_portum(TcpServus* servus)
+tcp_servus_obtinere_portum (
+    TcpServus* servus)
 {
     si (!servus)
     {
@@ -808,14 +825,15 @@ tcp_servus_obtinere_portum(TcpServus* servus)
 }
 
 TcpAddress
-tcp_servus_obtinere_address(TcpServus* servus)
+tcp_servus_obtinere_address (
+    TcpServus* servus)
 {
     TcpAddress addr;
 
     si (!servus)
     {
-        addr.hospes[0] = '\0';
-        addr.portus = 0;
+        addr.hospes[0]  = '\0';
+        addr.portus     = 0;
         redde addr;
     }
 
@@ -823,7 +841,8 @@ tcp_servus_obtinere_address(TcpServus* servus)
 }
 
 vacuum
-tcp_servus_claudere(TcpServus* servus)
+tcp_servus_claudere (
+    TcpServus* servus)
 {
     si (!servus)
     {
@@ -845,9 +864,9 @@ tcp_servus_claudere(TcpServus* servus)
  * ======================================================================== */
 
 TcpError
-tcp_ponere_non_blocans(
+tcp_ponere_non_blocans (
     TcpConnexio* connexio,
-    b32          non_blocans)
+            b32  non_blocans)
 {
     si (!connexio || connexio->fd < 0)
     {
@@ -858,14 +877,15 @@ tcp_ponere_non_blocans(
 }
 
 TcpAddress
-tcp_obtinere_peer_address(TcpConnexio* connexio)
+tcp_obtinere_peer_address (
+    TcpConnexio* connexio)
 {
-    TcpAddress addr;
+               TcpAddress addr;
     structura sockaddr_in peer_addr;
-    socklen_t addr_len;
+                socklen_t addr_len;
 
-    addr.hospes[0] = '\0';
-    addr.portus = 0;
+    addr.hospes[0]  = '\0';
+    addr.portus     = 0;
 
     si (!connexio || connexio->fd < 0)
     {

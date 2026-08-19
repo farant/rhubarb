@@ -1,6 +1,7 @@
 #include "friatio.h"
 #include <string.h>
 
+
 /* ==================================================
  * FNV-1a (Fowler-Noll-Vo)
  * ================================================== */
@@ -10,7 +11,7 @@
 #define FNV_PRIME        16777619U
 
 i32
-friatio_fnv1a(
+friatio_fnv1a (
     chorda clavis)
 {
     i32 friatum;
@@ -28,9 +29,9 @@ friatio_fnv1a(
 }
 
 i32
-friatio_fnv1a_literis(
+friatio_fnv1a_literis (
     constans character* literae,
-    i32                 mensura)
+                   i32  mensura)
 {
     i32 friatum;
     i32 i;
@@ -46,6 +47,7 @@ friatio_fnv1a_literis(
     redde friatum;
 }
 
+
 /* ==================================================
  * DJB2 (Dan Bernstein)
  * ================================================== */
@@ -53,7 +55,7 @@ friatio_fnv1a_literis(
 #define DJB2_INIT 5381U
 
 i32
-friatio_djb2(
+friatio_djb2 (
     chorda clavis)
 {
     i32 friatum;
@@ -71,9 +73,9 @@ friatio_djb2(
 }
 
 i32
-friatio_djb2_literis(
+friatio_djb2_literis (
     constans character* literae,
-    i32                 mensura)
+                   i32  mensura)
 {
     i32 friatum;
     i32 i;
@@ -88,6 +90,7 @@ friatio_djb2_literis(
     redde friatum;
 }
 
+
 /* ==================================================
  * SHA-1 Implementation
  *
@@ -99,10 +102,10 @@ friatio_djb2_literis(
 #define SHA1_ROL(value, bits) (((value) << (bits)) | ((value) >> (XXXII - (bits))))
 
 /* SHA-1 round functions */
-#define SHA1_F0(b,c,d) (((b) & (c)) | ((~(b)) & (d)))
-#define SHA1_F1(b,c,d) ((b) ^ (c) ^ (d))
-#define SHA1_F2(b,c,d) (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
-#define SHA1_F3(b,c,d) ((b) ^ (c) ^ (d))
+#define SHA1_F0(b, c, d) (((b) & (c)) | ((~(b)) & (d)))
+#define SHA1_F1(b, c, d) ((b) ^ (c) ^ (d))
+#define SHA1_F2(b, c, d) (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
+#define SHA1_F3(b, c, d) ((b) ^ (c) ^ (d))
 
 /* SHA-1 constants */
 #define SHA1_K0 0x5A827999UL
@@ -119,8 +122,8 @@ friatio_djb2_literis(
 
 /* Internal: Process a single 64-byte block */
 interior vacuum
-_sha1_transformare(
-    i32       status[V],
+_sha1_transformare (
+            i32 status[V],
     constans i8 buffer[LXIV])
 {
     i32 a, b, c, d, e;
@@ -130,10 +133,10 @@ _sha1_transformare(
     /* Copy buffer into 16 32-bit words (big-endian) */
     per (i = ZEPHYRUM; i < XVI; i++)
     {
-        w[i] = ((i32)((i8)buffer[i * IV] & 0xFF) << XXIV) |
-               ((i32)((i8)buffer[i * IV + I] & 0xFF) << XVI) |
-               ((i32)((i8)buffer[i * IV + II] & 0xFF) << VIII) |
-               ((i32)((i8)buffer[i * IV + III] & 0xFF));
+        w[i] = ((i32)((i8)buffer[i * IV] & 0xFF) << XXIV)
+            | ((i32)((i8)buffer[i * IV + I] & 0xFF) << XVI)
+            | ((i32)((i8)buffer[i * IV + II] & 0xFF) << VIII)
+            | ((i32)((i8)buffer[i * IV + III] & 0xFF));
     }
 
     /* Extend the sixteen 32-bit words into eighty 32-bit words */
@@ -195,31 +198,31 @@ _sha1_transformare(
     }
 
     /* Add to state */
-    status[ZEPHYRUM] += a;
-    status[I] += b;
-    status[II] += c;
-    status[III] += d;
-    status[IV] += e;
+    status[ZEPHYRUM]  += a;
+    status[I]         += b;
+    status[II]        += c;
+    status[III]       += d;
+    status[IV]        += e;
 }
 
 vacuum
-sha1_initiare(
+sha1_initiare (
     SHA1Contextus* ctx)
 {
-    ctx->status[ZEPHYRUM] = (i32)SHA1_H0;
-    ctx->status[I]        = (i32)SHA1_H1;
-    ctx->status[II]       = (i32)SHA1_H2;
-    ctx->status[III]      = (i32)SHA1_H3;
-    ctx->status[IV]       = (i32)SHA1_H4;
-    ctx->numerus[ZEPHYRUM] = ZEPHYRUM;
-    ctx->numerus[I]        = ZEPHYRUM;
+    ctx->status[ZEPHYRUM]   = (i32)SHA1_H0;
+    ctx->status[I]          = (i32)SHA1_H1;
+    ctx->status[II]         = (i32)SHA1_H2;
+    ctx->status[III]        = (i32)SHA1_H3;
+    ctx->status[IV]         = (i32)SHA1_H4;
+    ctx->numerus[ZEPHYRUM]  = ZEPHYRUM;
+    ctx->numerus[I]         = ZEPHYRUM;
 }
 
 vacuum
-sha1_addere(
-    SHA1Contextus*  ctx,
-    constans i8*    data,
-    i32             mensura)
+sha1_addere (
+    SHA1Contextus* ctx,
+      constans i8* data,
+              i32  mensura)
 {
     i32 i;
     i32 j;
@@ -256,19 +259,19 @@ sha1_addere(
 }
 
 vacuum
-sha1_finire(
+sha1_finire (
     SHA1Contextus* ctx,
-    i8             digest[SHA1_DIGEST_MENSURA])
+               i8  digest[SHA1_DIGEST_MENSURA])
 {
-    i8  numerus_finalis[VIII];
-    i8  c;
+     i8 numerus_finalis[VIII];
+     i8 c;
     i32 i;
 
     /* Store bit count (big-endian) */
     per (i = ZEPHYRUM; i < VIII; i++)
     {
-        numerus_finalis[i] = (i8)((ctx->numerus[(i >= IV ? ZEPHYRUM : I)] >>
-                             ((III - (i & III)) * VIII)) & 0xFF);
+        numerus_finalis[i] = (i8)((ctx->numerus[(i >= IV ? ZEPHYRUM : I)]
+            >> ((III - (i & III)) * VIII)) & 0xFF);
     }
 
     /* Pad to 56 mod 64 */
@@ -291,10 +294,10 @@ sha1_finire(
 }
 
 vacuum
-sha1_friare(
+sha1_friare (
     constans i8* data,
-    i32          mensura,
-    i8           digest[SHA1_DIGEST_MENSURA])
+            i32  mensura,
+             i8  digest[SHA1_DIGEST_MENSURA])
 {
     SHA1Contextus ctx;
 
@@ -304,12 +307,13 @@ sha1_friare(
 }
 
 vacuum
-sha1_friare_chorda(
+sha1_friare_chorda (
     chorda clavis,
-    i8     digest[SHA1_DIGEST_MENSURA])
+        i8 digest[SHA1_DIGEST_MENSURA])
 {
     sha1_friare((constans i8*)clavis.datum, clavis.mensura, digest);
 }
+
 
 /* ==================================================
  * SHA-256 Implementation
@@ -322,8 +326,8 @@ sha1_friare_chorda(
 #define SHA256_ROR(value, bits) (((value) >> (bits)) | ((value) << (XXXII - (bits))))
 
 /* SHA-256 logical functions */
-#define SHA256_CH(x,y,z)  (((x) & (y)) ^ ((~(x)) & (z)))
-#define SHA256_MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+#define SHA256_CH(x, y, z)  (((x) & (y)) ^ ((~(x)) & (z)))
+#define SHA256_MAJ(x, y, z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 #define SHA256_EP0(x)     (SHA256_ROR(x, II) ^ SHA256_ROR(x, XIII) ^ SHA256_ROR(x, XXII))
 #define SHA256_EP1(x)     (SHA256_ROR(x, VI) ^ SHA256_ROR(x, XI) ^ SHA256_ROR(x, XXV))
 #define SHA256_SIG0(x)    (SHA256_ROR(x, VII) ^ SHA256_ROR(x, XVIII) ^ ((x) >> III))
@@ -361,8 +365,8 @@ hic_manens constans i32 SHA256_K[LXIV] = {
 
 /* Internal: Process a single 64-byte block */
 interior vacuum
-_sha256_transformare(
-    i32         status[VIII],
+_sha256_transformare (
+            i32 status[VIII],
     constans i8 buffer[LXIV])
 {
     i32 a, b, c, d, e, f, g, h;
@@ -373,10 +377,10 @@ _sha256_transformare(
     /* Copy buffer into 16 32-bit words (big-endian) */
     per (i = ZEPHYRUM; i < XVI; i++)
     {
-        w[i] = ((i32)((i8)buffer[i * IV] & 0xFF) << XXIV) |
-               ((i32)((i8)buffer[i * IV + I] & 0xFF) << XVI) |
-               ((i32)((i8)buffer[i * IV + II] & 0xFF) << VIII) |
-               ((i32)((i8)buffer[i * IV + III] & 0xFF));
+        w[i] = ((i32)((i8)buffer[i * IV] & 0xFF) << XXIV)
+            | ((i32)((i8)buffer[i * IV + I] & 0xFF) << XVI)
+            | ((i32)((i8)buffer[i * IV + II] & 0xFF) << VIII)
+            | ((i32)((i8)buffer[i * IV + III] & 0xFF));
     }
 
     /* Extend the sixteen 32-bit words into sixty-four 32-bit words */
@@ -411,37 +415,37 @@ _sha256_transformare(
     }
 
     /* Add to state */
-    status[ZEPHYRUM] += a;
-    status[I] += b;
-    status[II] += c;
-    status[III] += d;
-    status[IV] += e;
-    status[V] += f;
-    status[VI] += g;
-    status[VII] += h;
+    status[ZEPHYRUM]  += a;
+    status[I]         += b;
+    status[II]        += c;
+    status[III]       += d;
+    status[IV]        += e;
+    status[V]         += f;
+    status[VI]        += g;
+    status[VII]       += h;
 }
 
 vacuum
-sha256_initiare(
+sha256_initiare (
     SHA256Contextus* ctx)
 {
-    ctx->status[ZEPHYRUM] = (i32)SHA256_H0;
-    ctx->status[I]        = (i32)SHA256_H1;
-    ctx->status[II]       = (i32)SHA256_H2;
-    ctx->status[III]      = (i32)SHA256_H3;
-    ctx->status[IV]       = (i32)SHA256_H4;
-    ctx->status[V]        = (i32)SHA256_H5;
-    ctx->status[VI]       = (i32)SHA256_H6;
-    ctx->status[VII]      = (i32)SHA256_H7;
-    ctx->numerus[ZEPHYRUM] = ZEPHYRUM;
-    ctx->numerus[I]        = ZEPHYRUM;
+    ctx->status[ZEPHYRUM]   = (i32)SHA256_H0;
+    ctx->status[I]          = (i32)SHA256_H1;
+    ctx->status[II]         = (i32)SHA256_H2;
+    ctx->status[III]        = (i32)SHA256_H3;
+    ctx->status[IV]         = (i32)SHA256_H4;
+    ctx->status[V]          = (i32)SHA256_H5;
+    ctx->status[VI]         = (i32)SHA256_H6;
+    ctx->status[VII]        = (i32)SHA256_H7;
+    ctx->numerus[ZEPHYRUM]  = ZEPHYRUM;
+    ctx->numerus[I]         = ZEPHYRUM;
 }
 
 vacuum
-sha256_addere(
+sha256_addere (
     SHA256Contextus* ctx,
-    constans i8*     data,
-    i32              mensura)
+        constans i8* data,
+                i32  mensura)
 {
     i32 i;
     i32 j;
@@ -478,19 +482,19 @@ sha256_addere(
 }
 
 vacuum
-sha256_finire(
+sha256_finire (
     SHA256Contextus* ctx,
-    i8               digest[SHA256_DIGEST_MENSURA])
+                 i8  digest[SHA256_DIGEST_MENSURA])
 {
-    i8  numerus_finalis[VIII];
-    i8  c;
+     i8 numerus_finalis[VIII];
+     i8 c;
     i32 i;
 
     /* Store bit count (big-endian) */
     per (i = ZEPHYRUM; i < VIII; i++)
     {
-        numerus_finalis[i] = (i8)((ctx->numerus[(i >= IV ? ZEPHYRUM : I)] >>
-                             ((III - (i & III)) * VIII)) & 0xFF);
+        numerus_finalis[i] = (i8)((ctx->numerus[(i >= IV ? ZEPHYRUM : I)]
+            >> ((III - (i & III)) * VIII)) & 0xFF);
     }
 
     /* Pad to 56 mod 64 */
@@ -513,10 +517,10 @@ sha256_finire(
 }
 
 vacuum
-sha256_friare(
+sha256_friare (
     constans i8* data,
-    i32          mensura,
-    i8           digest[SHA256_DIGEST_MENSURA])
+            i32  mensura,
+             i8  digest[SHA256_DIGEST_MENSURA])
 {
     SHA256Contextus ctx;
 
@@ -526,12 +530,13 @@ sha256_friare(
 }
 
 vacuum
-sha256_friare_chorda(
+sha256_friare_chorda (
     chorda clavis,
-    i8     digest[SHA256_DIGEST_MENSURA])
+        i8 digest[SHA256_DIGEST_MENSURA])
 {
     sha256_friare((constans i8*)clavis.datum, clavis.mensura, digest);
 }
+
 
 /* ==================================================
  * CRC32 Implementation
@@ -609,16 +614,16 @@ hic_manens constans i32 CRC32_TABULA[CCLVI] = {
 };
 
 i32
-crc32_initiare(vacuum)
+crc32_initiare (vacuum)
 {
     redde (i32)0xFFFFFFFFUL;
 }
 
 i32
-crc32_addere(
-    i32          crc_currens,
+crc32_addere (
+            i32  crc_currens,
     constans i8* data,
-    i32          mensura)
+            i32  mensura)
 {
     i32 i;
     i32 crc;
@@ -634,16 +639,16 @@ crc32_addere(
 }
 
 i32
-crc32_finire(
+crc32_finire (
     i32 crc_currens)
 {
     redde crc_currens ^ (i32)0xFFFFFFFFUL;
 }
 
 i32
-crc32_calculare(
+crc32_calculare (
     constans i8* data,
-    i32          mensura)
+            i32  mensura)
 {
     i32 crc;
 
@@ -655,7 +660,7 @@ crc32_calculare(
 }
 
 i32
-crc32_calculare_chorda(
+crc32_calculare_chorda (
     chorda clavis)
 {
     redde crc32_calculare((constans i8*)clavis.datum, clavis.mensura);

@@ -25,22 +25,22 @@
 
 /* Entry pro FD in reactor */
 nomen structura {
-    integer         fd;
-    i32             eventus;
-    ReactorCallback callback;
-    vacuum*         data;
-    b32             activus;
+            integer  fd;
+                i32  eventus;
+    ReactorCallback  callback;
+             vacuum* data;
+                b32  activus;
 } ReactorFdEntry;
 
 /* Entry pro timer */
 nomen structura {
-    ReactorTimerId       id;
-    i64                  proximus_ms;  /* Next fire time in ms */
-    i32                  interval_ms;
-    b32                  repetere;
-    ReactorTimerCallback callback;
-    vacuum*              data;
-    b32                  activus;
+          ReactorTimerId  id;
+                     i64  proximus_ms;  /* Next fire time in ms */
+                     i32  interval_ms;
+                     b32  repetere;
+    ReactorTimerCallback  callback;
+                  vacuum* data;
+                     b32  activus;
 } ReactorTimerEntry;
 
 /* Reactor structura */
@@ -48,14 +48,14 @@ structura Reactor {
     Piscina* piscina;
 
     /* FD tracking */
-    ReactorFdEntry     fd_entries[REACTOR_FD_MAXIMA];
-    structura pollfd   poll_fds[REACTOR_FD_MAXIMA];
-    i32                fd_numerus;
+      ReactorFdEntry fd_entries[REACTOR_FD_MAXIMA];
+    structura pollfd poll_fds[REACTOR_FD_MAXIMA];
+                 i32 fd_numerus;
 
     /* Timer tracking */
-    ReactorTimerEntry  timers[REACTOR_TIMER_MAXIMA];
-    i32                timer_numerus;
-    ReactorTimerId     proximus_timer_id;
+    ReactorTimerEntry timers[REACTOR_TIMER_MAXIMA];
+                  i32 timer_numerus;
+       ReactorTimerId proximus_timer_id;
 
     /* State */
     b32 currens;
@@ -69,7 +69,7 @@ structura Reactor {
 
 /* Obtinere tempus currentem in milliseconds */
 interior i64
-_obtinere_tempus_ms(vacuum)
+_obtinere_tempus_ms (vacuum)
 {
     structura timeval tv;
     gettimeofday(&tv, NIHIL);
@@ -83,14 +83,16 @@ _obtinere_tempus_ms(vacuum)
 
 /* Invenire FD entry index */
 interior i32
-_invenire_fd_index(Reactor* reactor, integer fd)
+_invenire_fd_index (
+    Reactor* reactor,
+    integer  fd)
 {
     i32 i;
 
     per (i = 0; i < reactor->fd_numerus; i++)
     {
-        si (reactor->fd_entries[i].activus &&
-            reactor->fd_entries[i].fd == fd)
+        si (   reactor->fd_entries[i].activus
+            && reactor->fd_entries[i].fd == fd)
         {
             redde i;
         }
@@ -101,7 +103,8 @@ _invenire_fd_index(Reactor* reactor, integer fd)
 
 /* Convertere reactor eventus ad poll eventus */
 interior brevis
-_eventus_ad_poll(i32 eventus)
+_eventus_ad_poll (
+    i32 eventus)
 {
     brevis poll_events = 0;
 
@@ -119,7 +122,8 @@ _eventus_ad_poll(i32 eventus)
 
 /* Convertere poll eventus ad reactor eventus */
 interior i32
-_poll_ad_eventus(brevis revents)
+_poll_ad_eventus (
+    brevis revents)
 {
     i32 eventus = 0;
 
@@ -145,7 +149,8 @@ _poll_ad_eventus(brevis revents)
 
 /* Rebuilere poll_fds array ex fd_entries */
 interior vacuum
-_rebuilere_poll_fds(Reactor* reactor)
+_rebuilere_poll_fds (
+    Reactor* reactor)
 {
     i32 i;
     i32 poll_idx = 0;
@@ -169,14 +174,16 @@ _rebuilere_poll_fds(Reactor* reactor)
 
 /* Invenire timer index per ID */
 interior i32
-_invenire_timer_index(Reactor* reactor, ReactorTimerId id)
+_invenire_timer_index (
+           Reactor* reactor,
+    ReactorTimerId  id)
 {
     i32 i;
 
     per (i = 0; i < reactor->timer_numerus; i++)
     {
-        si (reactor->timers[i].activus &&
-            reactor->timers[i].id == id)
+        si (   reactor->timers[i].activus
+            && reactor->timers[i].id == id)
         {
             redde i;
         }
@@ -187,7 +194,9 @@ _invenire_timer_index(Reactor* reactor, ReactorTimerId id)
 
 /* Calculare timeout usque ad proximum timer */
 interior i32
-_calculare_timer_timeout(Reactor* reactor, i32 max_timeout_ms)
+_calculare_timer_timeout (
+    Reactor* reactor,
+        i32  max_timeout_ms)
 {
     i64 nunc;
     i64 minimus;
@@ -201,9 +210,9 @@ _calculare_timer_timeout(Reactor* reactor, i32 max_timeout_ms)
         redde max_timeout_ms;
     }
 
-    nunc = _obtinere_tempus_ms();
-    minimus = 0;
-    invenit = FALSUM;
+    nunc     = _obtinere_tempus_ms();
+    minimus  = 0;
+    invenit  = FALSUM;
 
     per (i = 0; i < reactor->timer_numerus; i++)
     {
@@ -250,7 +259,8 @@ _calculare_timer_timeout(Reactor* reactor, i32 max_timeout_ms)
 
 /* Processare expired timers */
 interior i32
-_processare_timers(Reactor* reactor)
+_processare_timers (
+    Reactor* reactor)
 {
     i64 nunc;
     i32 i;
@@ -260,8 +270,8 @@ _processare_timers(Reactor* reactor)
 
     per (i = 0; i < reactor->timer_numerus; i++)
     {
-        si (reactor->timers[i].activus &&
-            reactor->timers[i].proximus_ms <= nunc)
+        si (   reactor->timers[i].activus
+            && reactor->timers[i].proximus_ms <= nunc)
         {
             /* Vocare callback */
             si (reactor->timers[i].callback)
@@ -292,7 +302,8 @@ _processare_timers(Reactor* reactor)
  * ======================================================================== */
 
 Reactor*
-reactor_creare(Piscina* piscina)
+reactor_creare (
+    Piscina* piscina)
 {
     Reactor* reactor;
 
@@ -307,12 +318,12 @@ reactor_creare(Piscina* piscina)
         redde NIHIL;
     }
 
-    reactor->piscina = piscina;
-    reactor->fd_numerus = 0;
-    reactor->timer_numerus = 0;
-    reactor->proximus_timer_id = 0;
-    reactor->currens = FALSUM;
-    reactor->sistere_petitum = FALSUM;
+    reactor->piscina            = piscina;
+    reactor->fd_numerus         = 0;
+    reactor->timer_numerus      = 0;
+    reactor->proximus_timer_id  = 0;
+    reactor->currens            = FALSUM;
+    reactor->sistere_petitum    = FALSUM;
 
     /* Initiare arrays */
     memset(reactor->fd_entries, 0, magnitudo(reactor->fd_entries));
@@ -323,16 +334,17 @@ reactor_creare(Piscina* piscina)
 }
 
 vacuum
-reactor_destruere(Reactor* reactor)
+reactor_destruere (
+    Reactor* reactor)
 {
     si (!reactor)
     {
         redde;
     }
 
-    reactor->currens = FALSUM;
-    reactor->fd_numerus = 0;
-    reactor->timer_numerus = 0;
+    reactor->currens        = FALSUM;
+    reactor->fd_numerus     = 0;
+    reactor->timer_numerus  = 0;
 }
 
 
@@ -341,12 +353,12 @@ reactor_destruere(Reactor* reactor)
  * ======================================================================== */
 
 b32
-reactor_adicere(
-    Reactor*        reactor,
-    integer         fd,
-    i32             eventus,
-    ReactorCallback callback,
-    vacuum*         data)
+reactor_adicere (
+            Reactor* reactor,
+            integer  fd,
+                i32  eventus,
+    ReactorCallback  callback,
+             vacuum* data)
 {
     i32 index;
     i32 i;
@@ -361,9 +373,9 @@ reactor_adicere(
     si (index != REACTOR_NON_INVENIT)
     {
         /* Actualizare existentem */
-        reactor->fd_entries[index].eventus = eventus;
-        reactor->fd_entries[index].callback = callback;
-        reactor->fd_entries[index].data = data;
+        reactor->fd_entries[index].eventus   = eventus;
+        reactor->fd_entries[index].callback  = callback;
+        reactor->fd_entries[index].data      = data;
         _rebuilere_poll_fds(reactor);
         redde VERUM;
     }
@@ -391,11 +403,11 @@ reactor_adicere(
         reactor->fd_numerus++;
     }
 
-    reactor->fd_entries[index].fd = fd;
-    reactor->fd_entries[index].eventus = eventus;
-    reactor->fd_entries[index].callback = callback;
-    reactor->fd_entries[index].data = data;
-    reactor->fd_entries[index].activus = VERUM;
+    reactor->fd_entries[index].fd        = fd;
+    reactor->fd_entries[index].eventus   = eventus;
+    reactor->fd_entries[index].callback  = callback;
+    reactor->fd_entries[index].data      = data;
+    reactor->fd_entries[index].activus   = VERUM;
 
     _rebuilere_poll_fds(reactor);
 
@@ -403,10 +415,10 @@ reactor_adicere(
 }
 
 b32
-reactor_modificare(
+reactor_modificare (
     Reactor* reactor,
     integer  fd,
-    i32      eventus)
+        i32  eventus)
 {
     i32 index;
 
@@ -428,7 +440,7 @@ reactor_modificare(
 }
 
 b32
-reactor_removere(
+reactor_removere (
     Reactor* reactor,
     integer  fd)
 {
@@ -457,17 +469,17 @@ reactor_removere(
  * ======================================================================== */
 
 ReactorTimerId
-reactor_timer_adicere(
-    Reactor*             reactor,
-    i32                  timeout_ms,
-    b32                  repetere,
-    ReactorTimerCallback callback,
-    vacuum*              data)
+reactor_timer_adicere (
+                 Reactor* reactor,
+                     i32  timeout_ms,
+                     b32  repetere,
+    ReactorTimerCallback  callback,
+                  vacuum* data)
 {
-    i32 index;
-    i32 i;
+               i32 index;
+               i32 i;
     ReactorTimerId id;
-    i64 nunc;
+               i64 nunc;
 
     si (!reactor || !callback)
     {
@@ -491,16 +503,16 @@ reactor_timer_adicere(
     }
 
     /* Creare timer */
-    nunc = _obtinere_tempus_ms();
-    id = reactor->proximus_timer_id++;
+    nunc  = _obtinere_tempus_ms();
+    id    = reactor->proximus_timer_id++;
 
-    reactor->timers[index].id = id;
-    reactor->timers[index].proximus_ms = nunc + (i64)timeout_ms;
-    reactor->timers[index].interval_ms = timeout_ms;
-    reactor->timers[index].repetere = repetere;
-    reactor->timers[index].callback = callback;
-    reactor->timers[index].data = data;
-    reactor->timers[index].activus = VERUM;
+    reactor->timers[index].id           = id;
+    reactor->timers[index].proximus_ms  = nunc + (i64)timeout_ms;
+    reactor->timers[index].interval_ms  = timeout_ms;
+    reactor->timers[index].repetere     = repetere;
+    reactor->timers[index].callback     = callback;
+    reactor->timers[index].data         = data;
+    reactor->timers[index].activus      = VERUM;
 
     si (index >= reactor->timer_numerus)
     {
@@ -511,9 +523,9 @@ reactor_timer_adicere(
 }
 
 b32
-reactor_timer_cancellare(
-    Reactor*       reactor,
-    ReactorTimerId id)
+reactor_timer_cancellare (
+           Reactor* reactor,
+    ReactorTimerId  id)
 {
     i32 index;
 
@@ -539,15 +551,15 @@ reactor_timer_cancellare(
  * ======================================================================== */
 
 i32
-reactor_poll(
+reactor_poll (
     Reactor* reactor,
-    i32      timeout_ms)
+        i32  timeout_ms)
 {
-    i32 timeout;
+        i32 timeout;
     integer poll_result;
-    i32 events_processati = 0;
-    i32 i;
-    i32 poll_idx;
+        i32 events_processati = 0;
+        i32 i;
+        i32 poll_idx;
 
     si (!reactor)
     {
@@ -614,15 +626,16 @@ reactor_poll(
 }
 
 vacuum
-reactor_currere(Reactor* reactor)
+reactor_currere (
+    Reactor* reactor)
 {
     si (!reactor)
     {
         redde;
     }
 
-    reactor->currens = VERUM;
-    reactor->sistere_petitum = FALSUM;
+    reactor->currens          = VERUM;
+    reactor->sistere_petitum  = FALSUM;
 
     dum (!reactor->sistere_petitum)
     {
@@ -633,7 +646,8 @@ reactor_currere(Reactor* reactor)
 }
 
 vacuum
-reactor_sistere(Reactor* reactor)
+reactor_sistere (
+    Reactor* reactor)
 {
     si (!reactor)
     {
@@ -644,7 +658,8 @@ reactor_sistere(Reactor* reactor)
 }
 
 b32
-reactor_est_currens(Reactor* reactor)
+reactor_est_currens (
+    Reactor* reactor)
 {
     si (!reactor)
     {
@@ -655,7 +670,8 @@ reactor_est_currens(Reactor* reactor)
 }
 
 i32
-reactor_numerus_fd(Reactor* reactor)
+reactor_numerus_fd (
+    Reactor* reactor)
 {
     i32 count = 0;
     i32 i;
@@ -677,7 +693,8 @@ reactor_numerus_fd(Reactor* reactor)
 }
 
 i32
-reactor_numerus_timer(Reactor* reactor)
+reactor_numerus_timer (
+    Reactor* reactor)
 {
     i32 count = 0;
     i32 i;

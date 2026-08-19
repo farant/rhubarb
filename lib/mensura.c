@@ -29,6 +29,7 @@
  * eodem processu aliter claves easdem haberent */
 interior i32 _numerator = ZEPHYRUM;
 
+
 /* ============================================================
  * Tempus et claves
  * ============================================================ */
@@ -47,7 +48,8 @@ mensura_momentum_nunc (vacuum)
 }
 
 chorda
-mensura_sessionem_novam (Piscina* piscina)
+mensura_sessionem_novam (
+    Piscina* piscina)
 {
     character tabula[XXXII];
 
@@ -63,7 +65,8 @@ mensura_sessionem_novam (Piscina* piscina)
 }
 
 chorda
-mensura_id_novum (Piscina* piscina)
+mensura_id_novum (
+    Piscina* piscina)
 {
     character tabula[LXIV];
 
@@ -82,19 +85,21 @@ mensura_id_novum (Piscina* piscina)
     redde chorda_ex_literis(tabula, piscina);
 }
 
+
 /* ============================================================
  * Forma lineae
  * ============================================================ */
 
 interior b32
-_campus_purus (chorda c)
+_campus_purus (
+    chorda c)
 {
     i32 i;
 
     per (i = ZEPHYRUM; i < c.mensura; i++)
     {
-        si (c.datum[i] == '\t' || c.datum[i] == '\n' ||
-            c.datum[i] == '\r')
+        si (   c.datum[i] == '\t' || c.datum[i] == '\n'
+            || c.datum[i] == '\r')
         {
             redde FALSUM;
         }
@@ -104,14 +109,16 @@ _campus_purus (chorda c)
 }
 
 chorda
-mensura_ad_lineam (constans Mensura* mensura, Piscina* piscina)
+mensura_ad_lineam (
+    constans Mensura* mensura,
+             Piscina* piscina)
 {
     ChordaAedificator* aedificator;
-    character          numeri[LXIV];
-    chorda             vacua;
+            character  numeri[LXIV];
+               chorda  vacua;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (mensura == NIHIL || piscina == NIHIL)
     {
@@ -120,9 +127,9 @@ mensura_ad_lineam (constans Mensura* mensura, Piscina* piscina)
 
     /* Campus qui separatorem continet formam frangeret, et lector
      * eam TACITE male legeret - ergo recusamus */
-    si (!_campus_purus(mensura->sessio) || !_campus_purus(mensura->id) ||
-        !_campus_purus(mensura->parens) || !_campus_purus(mensura->titulus) ||
-        !_campus_purus(mensura->unitas))
+    si (   !_campus_purus(mensura->sessio) || !_campus_purus(mensura->id)
+        || !_campus_purus(mensura->parens) || !_campus_purus(mensura->titulus)
+        || !_campus_purus(mensura->unitas))
     {
         redde vacua;
     }
@@ -159,12 +166,15 @@ mensura_ad_lineam (constans Mensura* mensura, Piscina* piscina)
 }
 
 b32
-mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
+mensura_ex_linea (
+     chorda  linea,
+    Mensura* exitus,
+    Piscina* piscina)
 {
-    chorda    campi[MENSURA_CAMPI];
-    i32       numerus_camporum;
+    chorda campi[MENSURA_CAMPI];
+       i32 numerus_camporum;
     i32       i, initium;
-    character tabula[LXIV];
+    character  tabula[LXIV];
     character* finis;
 
     si (exitus == NIHIL || piscina == NIHIL || linea.datum == NIHIL)
@@ -173,15 +183,15 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
     }
 
     /* Lineam novam terminalem tollere */
-    dum (linea.mensura > ZEPHYRUM &&
-         (linea.datum[linea.mensura - I] == '\n' ||
-          linea.datum[linea.mensura - I] == '\r'))
+    dum (   linea.mensura > ZEPHYRUM
+         && (linea.datum[linea.mensura - I] == '\n'
+        || linea.datum[linea.mensura - I] == '\r'))
     {
         linea.mensura--;
     }
 
-    numerus_camporum = ZEPHYRUM;
-    initium          = ZEPHYRUM;
+    numerus_camporum  = ZEPHYRUM;
+    initium           = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i <= linea.mensura; i++)
     {
@@ -191,8 +201,8 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
             {
                 redde FALSUM;   /* campi nimii */
             }
-            campi[numerus_camporum].datum   = linea.datum + initium;
-            campi[numerus_camporum].mensura = i - initium;
+            campi[numerus_camporum].datum    = linea.datum + initium;
+            campi[numerus_camporum].mensura  = i - initium;
             numerus_camporum++;
             initium = i + I;
         }
@@ -203,11 +213,11 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
         redde FALSUM;
     }
 
-    exitus->sessio  = campi[0];
-    exitus->id      = campi[I];
-    exitus->parens  = campi[II];
-    exitus->titulus = campi[III];
-    exitus->unitas  = campi[V];
+    exitus->sessio   = campi[0];
+    exitus->id       = campi[I];
+    exitus->parens   = campi[II];
+    exitus->titulus  = campi[III];
+    exitus->unitas   = campi[V];
 
     /* valor */
     si (campi[IV].mensura >= (i32)LXIV)
@@ -215,8 +225,8 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
         redde FALSUM;
     }
     memcpy(tabula, campi[IV].datum, (size_t)campi[IV].mensura);
-    tabula[campi[IV].mensura] = '\0';
-    exitus->valor = strtod(tabula, &finis);
+    tabula[campi[IV].mensura]  = '\0';
+    exitus->valor              = strtod(tabula, &finis);
     si (finis == tabula)
     {
         redde FALSUM;   /* nullus numerus */
@@ -228,8 +238,8 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
         redde FALSUM;
     }
     memcpy(tabula, campi[VI].datum, (size_t)campi[VI].mensura);
-    tabula[campi[VI].mensura] = '\0';
-    exitus->momentum = (s64)strtol(tabula, &finis, X);
+    tabula[campi[VI].mensura]  = '\0';
+    exitus->momentum           = (s64)strtol(tabula, &finis, X);
     si (finis == tabula)
     {
         redde FALSUM;
@@ -238,14 +248,16 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina)
     redde VERUM;
 }
 
+
 /* ============================================================
  * Diarium
  * ============================================================ */
 
 b32
-mensura_annotare (constans character* via_diarii,
-                  constans Mensura*   mensura,
-                  Piscina*            piscina)
+mensura_annotare (
+                constans character* via_diarii,
+                  constans Mensura* mensura,
+                           Piscina* piscina)
 {
     chorda linea;
     FILE*  plagula;
@@ -274,24 +286,26 @@ mensura_annotare (constans character* via_diarii,
     redde (scripta == (size_t)linea.mensura) ? VERUM : FALSUM;
 }
 
+
 /* ============================================================
  * Conditio in volumen
  * ============================================================ */
 
 MensuraFructus
-mensura_condere (constans character* via_diarii,
-                 Volumen*            volumen,
-                 Piscina*            piscina)
+mensura_condere (
+      constans character* via_diarii,
+                 Volumen* volumen,
+                 Piscina* piscina)
 {
     MensuraFructus fructus;
     FILE*          plagula;
     character      tabula[MENSURA_LINEA_MAXIMA];
     i32            malformatae;
 
-    fructus.successus    = FALSUM;
-    fructus.conditae     = ZEPHYRUM;
-    fructus.causa.datum  = NIHIL;
-    fructus.causa.mensura = ZEPHYRUM;
+    fructus.successus      = FALSUM;
+    fructus.conditae       = ZEPHYRUM;
+    fructus.causa.datum    = NIHIL;
+    fructus.causa.mensura  = ZEPHYRUM;
 
     si (via_diarii == NIHIL || volumen == NIHIL || piscina == NIHIL)
     {
@@ -318,18 +332,18 @@ mensura_condere (constans character* via_diarii,
 
     dum (fgets(tabula, (integer)magnitudo(tabula), plagula) != NIHIL)
     {
-        chorda  linea;
+         chorda linea;
         Mensura mensura;
 
-        linea.datum   = (i8*)tabula;
-        linea.mensura = (i32)strlen(tabula);
+        linea.datum    = (i8*)tabula;
+        linea.mensura  = (i32)strlen(tabula);
 
         /* Terminatorem lineae NON condere: actum in volumine
          * recordum est, non linea plagulae - qui postea quaerit
          * eum tacite in ultimo campo inveniret */
-        dum (linea.mensura > ZEPHYRUM &&
-             (tabula[linea.mensura - I] == '\n' ||
-              tabula[linea.mensura - I] == '\r'))
+        dum (   linea.mensura > ZEPHYRUM
+             && (tabula[linea.mensura - I] == '\n'
+            || tabula[linea.mensura - I] == '\r'))
         {
             linea.mensura--;
         }

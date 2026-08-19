@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 
+
 /* ==================================================
  * Constantae
  * ================================================== */
@@ -72,7 +73,6 @@ hic_manens constans character* nomina_semantica[COLOR_COUNT] = {
 };
 
 
-
 /* ==================================================
  * Functiones Auxiliares
  * ================================================== */
@@ -81,7 +81,7 @@ hic_manens constans character* nomina_semantica[COLOR_COUNT] = {
  * NOTA: Hic facit view in stringam staticam - non modificare!
  */
 hic_manens chorda
-_chorda_ex_cstr(
+_chorda_ex_cstr (
     constans character* cstr)
 {
     chorda fructus;
@@ -89,8 +89,8 @@ _chorda_ex_cstr(
     union { constans character* c; i8* m; } u;
     u.c = cstr;
 
-    fructus.datum = u.m;
-    fructus.mensura = (i32)strlen(cstr);
+    fructus.datum    = u.m;
+    fructus.mensura  = (i32)strlen(cstr);
 
     redde fructus;
 }
@@ -101,7 +101,7 @@ _chorda_ex_cstr(
  * ================================================== */
 
 ThemaVisus*
-thema_visus_creare(
+thema_visus_creare (
     Piscina* piscina)
 {
     ThemaVisus* visus;
@@ -117,11 +117,11 @@ thema_visus_creare(
         redde NIHIL;
     }
 
-    visus->piscina = piscina;
-    visus->pagina = THEMA_PAGINA_COLORES;
-    visus->exemplar_fg = V;        /* White (good default foreground) */
-    visus->exemplar_bg = ZEPHYRUM; /* Black (good default background) */
-    visus->modus_fg = VERUM;       /* Start in foreground edit mode */
+    visus->piscina      = piscina;
+    visus->pagina       = THEMA_PAGINA_COLORES;
+    visus->exemplar_fg  = V;        /* White (good default foreground) */
+    visus->exemplar_bg  = ZEPHYRUM; /* Black (good default background) */
+    visus->modus_fg     = VERUM;       /* Start in foreground edit mode */
 
     redde visus;
 }
@@ -132,24 +132,24 @@ thema_visus_creare(
  * ================================================== */
 
 hic_manens vacuum
-_thema_visus_reddere_colores(
-    ThemaVisus*          visus,
+_thema_visus_reddere_colores (
+             ThemaVisus* visus,
     ContextusDelineandi* ctx,
-    TabulaPixelorum*     tabula,
-    i32                  x,
-    i32                  y,
-    i32                  scala,
-    i32                  char_lat,
-    i32                  char_alt,
-    i32                  pixelum_text,
-    i32                  pixelum_text_dim,
-    Color                color_border)
+        TabulaPixelorum* tabula,
+                    i32  x,
+                    i32  y,
+                    i32  scala,
+                    i32  char_lat,
+                    i32  char_alt,
+                    i32  pixelum_text,
+                    i32  pixelum_text_dim,
+                  Color  color_border)
 {
-    i32 linea;
-    i32 i;
+          i32 linea;
+          i32 i;
     character numero_buffer[IV];
-    chorda numero_chorda;
-    chorda nomen_chorda;
+       chorda numero_chorda;
+       chorda nomen_chorda;
 
     (vacuum)visus;
 
@@ -165,31 +165,31 @@ _thema_visus_reddere_colores(
     /* Grid: 16 rows (background) x 16 columns (foreground) */
     {
         i32 row, col;
-        i32 cell_lat;
-        i32 cell_alt;
-        i32 grid_x;
-        i32 grid_y;
+           i32 cell_lat;
+           i32 cell_alt;
+           i32 grid_x;
+           i32 grid_y;
         chorda aa_chorda;
 
-        aa_chorda = _chorda_ex_cstr("Aa");
-        cell_lat = II * char_lat;
-        cell_alt = char_alt;
-        grid_x = (x + PADDING) * char_lat;
+        aa_chorda  = _chorda_ex_cstr("Aa");
+        cell_lat   = II * char_lat;
+        cell_alt   = char_alt;
+        grid_x     = (x + PADDING) * char_lat;
 
         per (row = ZEPHYRUM; row < XVI; row++)
         {
             Color bg_color;
 
-            bg_color = color_ex_palette(row);
-            grid_y = linea * char_alt;
+            bg_color  = color_ex_palette(row);
+            grid_y    = linea * char_alt;
 
             per (col = ZEPHYRUM; col < XVI; col++)
             {
                 Color fg_color;
-                i32 cell_x;
+                  i32 cell_x;
 
-                fg_color = color_ex_palette(col);
-                cell_x = grid_x + col * cell_lat;
+                fg_color  = color_ex_palette(col);
+                cell_x    = grid_x + col * cell_lat;
 
                 delineare_rectangulum_plenum(ctx, cell_x, grid_y,
                     cell_lat, cell_alt, bg_color);
@@ -210,8 +210,8 @@ _thema_visus_reddere_colores(
         i32 palette_x;
         i32 palette_linea;
 
-        palette_x = x + PADDING + XXXIV;
-        palette_linea = y + I;
+        palette_x      = x + PADDING + XXXIV;
+        palette_linea  = y + I;
 
         nomen_chorda = _chorda_ex_cstr("=== Palette ===");
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -222,10 +222,10 @@ _thema_visus_reddere_colores(
         per (i = ZEPHYRUM; i < XVI; i++)
         {
             Color palette_color;
-            i32 swatch_x;
-            i32 swatch_y;
-            i32 swatch_lat;
-            i32 swatch_alt;
+              i32 swatch_x;
+              i32 swatch_y;
+              i32 swatch_lat;
+              i32 swatch_alt;
 
             sprintf(numero_buffer, "%2d", i);
             numero_chorda = _chorda_ex_cstr(numero_buffer);
@@ -238,11 +238,11 @@ _thema_visus_reddere_colores(
                 (palette_x + IV) * char_lat, palette_linea * char_alt,
                 nomen_chorda, pixelum_text, scala);
 
-            palette_color = color_ex_palette(i);
-            swatch_x = (palette_x + XX) * char_lat;
-            swatch_y = palette_linea * char_alt;
-            swatch_lat = SWATCH_LATITUDO * char_lat;
-            swatch_alt = char_alt;
+            palette_color  = color_ex_palette(i);
+            swatch_x       = (palette_x + XX) * char_lat;
+            swatch_y       = palette_linea * char_alt;
+            swatch_lat     = SWATCH_LATITUDO * char_lat;
+            swatch_alt     = char_alt;
 
             delineare_rectangulum_plenum(ctx, swatch_x, swatch_y,
                 swatch_lat, swatch_alt, palette_color);
@@ -263,11 +263,11 @@ _thema_visus_reddere_colores(
     per (i = ZEPHYRUM; i < COLOR_COUNT; i++)
     {
         Color semantic_color;
-        i32 palette_index;
-        i32 swatch_x;
-        i32 swatch_y;
-        i32 swatch_lat;
-        i32 swatch_alt;
+          i32 palette_index;
+          i32 swatch_x;
+          i32 swatch_y;
+          i32 swatch_lat;
+          i32 swatch_alt;
 
         nomen_chorda = _chorda_ex_cstr(nomina_semantica[i]);
         tabula_pixelorum_pingere_chordam_scalatam(tabula,
@@ -292,11 +292,11 @@ _thema_visus_reddere_colores(
             (x + PADDING + XXII) * char_lat, linea * char_alt,
             nomen_chorda, pixelum_text, scala);
 
-        semantic_color = thema_color((ColorThema)i);
-        swatch_x = (x + PADDING + XXXVIII) * char_lat;
-        swatch_y = linea * char_alt;
-        swatch_lat = IV * char_lat;
-        swatch_alt = char_alt;
+        semantic_color  = thema_color((ColorThema)i);
+        swatch_x        = (x + PADDING + XXXVIII) * char_lat;
+        swatch_y        = linea * char_alt;
+        swatch_lat      = IV * char_lat;
+        swatch_alt      = char_alt;
 
         delineare_rectangulum_plenum(ctx, swatch_x, swatch_y,
             swatch_lat, swatch_alt, semantic_color);
@@ -313,28 +313,28 @@ _thema_visus_reddere_colores(
  * ================================================== */
 
 hic_manens vacuum
-_thema_visus_reddere_exemplaria(
-    ThemaVisus*          visus,
+_thema_visus_reddere_exemplaria (
+             ThemaVisus* visus,
     ContextusDelineandi* ctx,
-    TabulaPixelorum*     tabula,
-    i32                  x,
-    i32                  y,
-    i32                  scala,
-    i32                  char_lat,
-    i32                  char_alt,
-    i32                  pixelum_text,
-    i32                  pixelum_text_dim,
-    Color                color_border)
+        TabulaPixelorum* tabula,
+                    i32  x,
+                    i32  y,
+                    i32  scala,
+                    i32  char_lat,
+                    i32  char_alt,
+                    i32  pixelum_text,
+                    i32  pixelum_text_dim,
+                  Color  color_border)
 {
-    i32 linea;
-    i32 i;
-    i32 row;
-    i32 col;
+          i32 linea;
+          i32 i;
+          i32 row;
+          i32 col;
     character buffer[XXXII];
-    chorda text_chorda;
-    Color fg_color;
-    Color bg_color;
-    i32 pixelum_accent;
+       chorda text_chorda;
+        Color fg_color;
+        Color bg_color;
+          i32 pixelum_accent;
 
     linea = y + I;
 
@@ -439,18 +439,18 @@ _thema_visus_reddere_exemplaria(
  * ================================================== */
 
 hic_manens vacuum
-_thema_visus_reddere_pagina_indicator(
-    ThemaVisus*      visus,
+_thema_visus_reddere_pagina_indicator (
+         ThemaVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y_bottom,
-    i32              scala,
-    i32              char_lat,
-    i32              char_alt,
-    i32              pixelum_text_dim)
+                i32  x,
+                i32  y_bottom,
+                i32  scala,
+                i32  char_lat,
+                i32  char_alt,
+                i32  pixelum_text_dim)
 {
     character buffer[XXXII];
-    chorda indicator;
+       chorda indicator;
 
     sprintf(buffer, "Page %d/%d  (h/l to navigate)",
             visus->pagina + I, THEMA_PAGINA_MAXIMA + I);
@@ -467,27 +467,27 @@ _thema_visus_reddere_pagina_indicator(
  * ================================================== */
 
 vacuum
-thema_visus_reddere(
-    ThemaVisus*      visus,
+thema_visus_reddere (
+         ThemaVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 px_x;
-    i32 px_y;
-    Color color_background;
-    Color color_text;
-    Color color_text_dim;
-    Color color_border;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  px_x;
+                    i32  px_y;
+                  Color  color_background;
+                  Color  color_text;
+                  Color  color_text_dim;
+                  Color  color_border;
+                    i32  pixelum_text;
+                    i32  pixelum_text_dim;
 
     (vacuum)focused;
 
@@ -507,13 +507,13 @@ thema_visus_reddere(
     char_alt = CHAR_ALTITUDO * scala;
 
     /* Colores */
-    color_background = thema_color(COLOR_BACKGROUND);
-    color_text = thema_color(COLOR_TEXT);
-    color_text_dim = thema_color(COLOR_TEXT_DIM);
-    color_border = thema_color(COLOR_BORDER);
+    color_background  = thema_color(COLOR_BACKGROUND);
+    color_text        = thema_color(COLOR_TEXT);
+    color_text_dim    = thema_color(COLOR_TEXT_DIM);
+    color_border      = thema_color(COLOR_BORDER);
 
-    pixelum_text = color_ad_pixelum(color_text);
-    pixelum_text_dim = color_ad_pixelum(color_text_dim);
+    pixelum_text      = color_ad_pixelum(color_text);
+    pixelum_text_dim  = color_ad_pixelum(color_text_dim);
 
     /* Pingere fondum */
     px_x = x * char_lat;
@@ -549,8 +549,8 @@ thema_visus_reddere(
  * ================================================== */
 
 b32
-thema_visus_tractare_eventum(
-    ThemaVisus*       visus,
+thema_visus_tractare_eventum (
+          ThemaVisus* visus,
     constans Eventus* eventus)
 {
     si (!visus || !eventus)
@@ -644,7 +644,7 @@ thema_visus_tractare_eventum(
 
 /* Command handler pro $thema */
 hic_manens b32
-_thema_command_handler(
+_thema_command_handler (
     ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
@@ -661,7 +661,7 @@ _thema_command_handler(
 }
 
 vacuum
-thema_visus_init(
+thema_visus_init (
     ContextusWidget* ctx)
 {
     si (!ctx || !ctx->reg_commandi)
@@ -677,13 +677,13 @@ thema_visus_init(
 }
 
 vacuum
-thema_visus_salvare_status(
-    ThemaVisus*          visus,
+thema_visus_salvare_status (
+             ThemaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
-    Entitas* entitas;
-    character valor[XVI];
+      Entitas* entitas;
+    character  valor[XVI];
 
     si (!visus || !repo || !entitas_id)
     {
@@ -710,16 +710,16 @@ thema_visus_salvare_status(
 }
 
 vacuum
-thema_visus_carcare_status(
-    ThemaVisus*          visus,
+thema_visus_carcare_status (
+             ThemaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
-    Entitas* entitas;
-    chorda* clavis;
-    chorda* valor;
+                Entitas* entitas;
+                 chorda* clavis;
+                 chorda* valor;
     InternamentumChorda* intern;
-    s32 temp;
+                    s32  temp;
 
     si (!visus || !repo || !entitas_id)
     {
@@ -734,8 +734,8 @@ thema_visus_carcare_status(
     }
 
     /* Carcare pagina */
-    clavis = chorda_internare_ex_literis(intern, "pagina");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(intern, "pagina");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         si (chorda_ut_s32(*valor, &temp))
@@ -749,8 +749,8 @@ thema_visus_carcare_status(
     }
 
     /* Carcare exemplar_fg */
-    clavis = chorda_internare_ex_literis(intern, "exemplar_fg");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(intern, "exemplar_fg");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         si (chorda_ut_s32(*valor, &temp))
@@ -760,8 +760,8 @@ thema_visus_carcare_status(
     }
 
     /* Carcare exemplar_bg */
-    clavis = chorda_internare_ex_literis(intern, "exemplar_bg");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(intern, "exemplar_bg");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         si (chorda_ut_s32(*valor, &temp))
@@ -771,8 +771,8 @@ thema_visus_carcare_status(
     }
 
     /* Carcare modus_fg */
-    clavis = chorda_internare_ex_literis(intern, "modus_fg");
-    valor = entitas_proprietas_capere(entitas, clavis);
+    clavis  = chorda_internare_ex_literis(intern, "modus_fg");
+    valor   = entitas_proprietas_capere(entitas, clavis);
     si (valor && valor->mensura > ZEPHYRUM)
     {
         si (chorda_ut_s32(*valor, &temp))

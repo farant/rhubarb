@@ -5,15 +5,16 @@
 #include "delineare.h"
 #include "thema.h"
 
+
 /* ==================================================
  * Creatio / Initiatio
  * ================================================== */
 
 vacuum
-pagina_initiare(
-    Pagina* pagina,
+pagina_initiare (
+     Pagina* pagina,
     Piscina* piscina,
-    chorda* identificator)
+     chorda* identificator)
 {
     /* Initiare cum dimensionibus defaltis */
     pagina_initiare_cum_dimensionibus(
@@ -25,12 +26,12 @@ pagina_initiare(
 }
 
 vacuum
-pagina_initiare_cum_dimensionibus(
-    Pagina* pagina,
+pagina_initiare_cum_dimensionibus (
+     Pagina* pagina,
     Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo,
-    chorda* identificator)
+        i32  latitudo,
+        i32  altitudo,
+     chorda* identificator)
 {
     /* Initiare tabula characterum cum dimensionibus */
     tabula_initiare(&pagina->tabula, piscina, latitudo, altitudo);
@@ -47,12 +48,12 @@ pagina_initiare_cum_dimensionibus(
     pagina->identificator = identificator;
 
     /* Initiare cursor blink state */
-    pagina->tempus_cursor_ultimus = 0.0;
-    pagina->cursor_visibilis = VERUM;
+    pagina->tempus_cursor_ultimus  = 0.0;
+    pagina->cursor_visibilis       = VERUM;
 }
 
 vacuum
-pagina_vacare(
+pagina_vacare (
     Pagina* pagina)
 {
     i32 linea;
@@ -72,11 +73,10 @@ pagina_vacare(
     pagina->vim = vim_initiare(&pagina->tabula);
 }
 
-
 vacuum
-pagina_connectere_vim_contextu(
-    Pagina* pagina,
-    Piscina* piscina,
+pagina_connectere_vim_contextu (
+          Pagina* pagina,
+         Piscina* piscina,
     VimClipboard* clipboard)
 {
     si (pagina == NIHIL || piscina == NIHIL)
@@ -97,21 +97,21 @@ pagina_connectere_vim_contextu(
  * ================================================== */
 
 b32
-pagina_est_plena(
+pagina_est_plena (
     constans Pagina* pagina)
 {
     redde tabula_est_plena(&pagina->tabula);
 }
 
 b32
-pagina_est_vacua(
+pagina_est_vacua (
     constans Pagina* pagina)
 {
     redde tabula_est_vacua(&pagina->tabula);
 }
 
 ModoVim
-pagina_obtinere_modum(
+pagina_obtinere_modum (
     constans Pagina* pagina)
 {
     redde pagina->vim.modo;
@@ -124,9 +124,9 @@ pagina_obtinere_modum(
 
 /* Verificare si linea est in selectione visuali */
 hic_manens b32
-_est_linea_in_selectio(
+_est_linea_in_selectio (
     VimStatus* vim,
-    i32 linea)
+          i32  linea)
 {
     i32 linea_min;
     i32 linea_max;
@@ -155,14 +155,14 @@ _est_linea_in_selectio(
  * ================================================== */
 
 vacuum
-pagina_reddere(
+pagina_reddere (
     TabulaPixelorum* tabula_pixelorum,
-    Pagina* pagina,
-    i32 x,
-    i32 y,
-    i32 latitudo,
-    i32 altitudo,
-    i32 scala)
+             Pagina* pagina,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala)
 {
     i32 linea;
     i32 columna;
@@ -188,14 +188,14 @@ pagina_reddere(
         b32 in_selectio;
         i32 linea_pixel_y;
 
-        in_selectio = _est_linea_in_selectio(&pagina->vim, linea);
-        linea_pixel_y = (y + linea) * character_altitudo;
+        in_selectio    = _est_linea_in_selectio(&pagina->vim, linea);
+        linea_pixel_y  = (y + linea) * character_altitudo;
 
         /* Si linea in selectione, pingere background */
         si (in_selectio)
         {
-            i32 px;
-            i32 py;
+              i32 px;
+              i32 py;
             Color sel_bg;
 
             sel_bg = thema_color(COLOR_SELECTION);
@@ -217,8 +217,8 @@ pagina_reddere(
         per (columna = ZEPHYRUM; columna < latitudo && columna < pagina->tabula.latitudo; columna++)
         {
             character c;
-            i8 color_index;
-            Color text_color;
+                   i8 color_index;
+                Color text_color;
 
             c = tabula_cellula(&pagina->tabula, linea, columna);
 
@@ -261,14 +261,14 @@ pagina_reddere(
     }
 
     /* Update cursor blink state */
-    tempus_currens = tempus_nunc();
-    delta_tempus = tempus_currens - pagina->tempus_cursor_ultimus;
+    tempus_currens  = tempus_nunc();
+    delta_tempus    = tempus_currens - pagina->tempus_cursor_ultimus;
 
     /* Blink every 0.5 seconds */
     si (delta_tempus >= 0.5)
     {
-        pagina->cursor_visibilis = !pagina->cursor_visibilis;
-        pagina->tempus_cursor_ultimus = tempus_currens;
+        pagina->cursor_visibilis       = !pagina->cursor_visibilis;
+        pagina->tempus_cursor_ultimus  = tempus_currens;
     }
 
     /* Pingere cursorem */
@@ -299,27 +299,27 @@ pagina_reddere(
  * ================================================== */
 
 vacuum
-pagina_reddere_cum_margine(
-    Piscina* piscina,
+pagina_reddere_cum_margine (
+            Piscina* piscina,
     TabulaPixelorum* tabula_pixelorum,
-    Pagina* pagina,
-    i32 x,
-    i32 y,
-    i32 latitudo,
-    i32 altitudo,
-    i32 scala,
-    b32 focused)
+             Pagina* pagina,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     ContextusDelineandi* ctx;
-    i32 character_latitudo;
-    i32 character_altitudo;
+                    i32  character_latitudo;
+                    i32  character_altitudo;
     i32 box_x0, box_y0, box_x1, box_y1;
-    i32 textus_latitudo;
-    i32 textus_altitudo;
-    Color color_border;
-    Color color_border_inner;
-    chorda titulo;
-    chorda modo_textus;
+                   i32  textus_latitudo;
+                   i32  textus_altitudo;
+                 Color  color_border;
+                 Color  color_border_inner;
+                chorda  titulo;
+                chorda  modo_textus;
     constans character* modo_str;
 
     character_latitudo = VI * scala;
@@ -355,8 +355,8 @@ pagina_reddere_cum_margine(
 
         gap_padding = character_latitudo;
 
-        titulo_pixel_width = titulo.mensura * character_latitudo;
-        modo_pixel_width = modo_textus.mensura * character_latitudo;
+        titulo_pixel_width  = titulo.mensura * character_latitudo;
+        modo_pixel_width    = modo_textus.mensura * character_latitudo;
 
         /* Center titulo on top line */
         titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
@@ -411,8 +411,8 @@ pagina_reddere_cum_margine(
 
 /* Convertere clavis fenestrae ad clavis vim */
 hic_manens s32
-convertere_clavem(
-    clavis_t clavis,
+convertere_clavem (
+     clavis_t clavis,
     character typus)
 {
     commutatio (clavis)
@@ -474,8 +474,8 @@ convertere_clavem(
 }
 
 b32
-pagina_tractare_eventum(
-    Pagina* pagina,
+pagina_tractare_eventum (
+              Pagina* pagina,
     constans Eventus* eventus)
 {
     s32 clavis_vim;
@@ -487,8 +487,8 @@ pagina_tractare_eventum(
     }
 
     /* Reset cursor blink on keypress */
-    pagina->cursor_visibilis = VERUM;
-    pagina->tempus_cursor_ultimus = tempus_nunc();
+    pagina->cursor_visibilis       = VERUM;
+    pagina->tempus_cursor_ultimus  = tempus_nunc();
 
     /* Convertere clavem */
     clavis_vim = convertere_clavem(
@@ -525,25 +525,25 @@ pagina_tractare_eventum(
  * ================================================== */
 
 vacuum
-pagina_ponere_cursor(
+pagina_ponere_cursor (
     Pagina* pagina,
-    i32 linea,
-    i32 columna)
+       i32  linea,
+       i32  columna)
 {
     pagina->vim = vim_ponere_cursor(pagina->vim, linea, columna);
 }
 
 vacuum
-pagina_inserere_textum(
-    Pagina* pagina,
+pagina_inserere_textum (
+                Pagina* pagina,
     constans character* textus)
 {
     constans character* p;
-    ModoVim modo_prior;
+               ModoVim  modo_prior;
 
     /* Servare modum et intrare in inserere */
-    modo_prior = pagina->vim.modo;
-    pagina->vim = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
+    modo_prior   = pagina->vim.modo;
+    pagina->vim  = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
 
     per (p = textus; *p != '\0'; p++)
     {
@@ -564,16 +564,16 @@ pagina_inserere_textum(
 }
 
 vacuum
-pagina_inserere_textum_crudus(
-    Pagina* pagina,
+pagina_inserere_textum_crudus (
+                Pagina* pagina,
     constans character* textus)
 {
     constans character* p;
-    ModoVim modo_prior;
+               ModoVim  modo_prior;
 
     /* Servare modum et intrare in inserere */
-    modo_prior = pagina->vim.modo;
-    pagina->vim = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
+    modo_prior   = pagina->vim.modo;
+    pagina->vim  = vim_ponere_modum(pagina->vim, MODO_VIM_INSERERE);
 
     /* Disablare auto-indent pro insertion ex STML */
     pagina->vim.sine_auto_indent = VERUM;
@@ -604,59 +604,59 @@ pagina_inserere_textum_crudus(
 
 /* Verificare si character est pars verbi */
 hic_manens b32
-est_character_verbi(
+est_character_verbi (
     character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_');
 }
 
 /* Verificare si character est pars link (permittit '-' pro nomina paginarum) */
 hic_manens b32
-est_character_link(
+est_character_link (
     character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_') || (c == '-') || (c == '.');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_') || (c == '-') || (c == '.');
 }
 
 b32
-pagina_obtinere_regio_ad_punctum(
+pagina_obtinere_regio_ad_punctum (
     constans Pagina* pagina,
-    i32 linea,
-    i32 columna,
-    RegioClicca* regio)
+                i32  linea,
+                i32  columna,
+        RegioClicca* regio)
 {
-    s32 col;
-    s32 initium_columna;
-    s32 finis_columna;
-    s32 longitudo;
+          s32 col;
+          s32 initium_columna;
+          s32 finis_columna;
+          s32 longitudo;
     character c;
     character tag_char;
-    b32 est_link;
+          b32 est_link;
 
     /* Verificare limites */
-    si (linea < ZEPHYRUM || linea >= pagina->tabula.altitudo ||
-        columna < ZEPHYRUM || columna >= pagina->tabula.latitudo)
+    si (   linea < ZEPHYRUM || linea >= pagina->tabula.altitudo
+        || columna < ZEPHYRUM || columna >= pagina->tabula.latitudo)
     {
         redde FALSUM;
     }
 
     /* Scandere retro ad invenire $ vel # */
-    initium_columna = -I;
-    tag_char = '\0';
+    initium_columna  = -I;
+    tag_char         = '\0';
     per (col = (s32)columna; col >= ZEPHYRUM; col--)
     {
         c = tabula_cellula(&pagina->tabula, linea, (i32)col);
 
         si (c == '$' || c == '#')
         {
-            initium_columna = col;
-            tag_char = c;
+            initium_columna  = col;
+            tag_char         = c;
             frange;
         }
 
@@ -728,10 +728,10 @@ pagina_obtinere_regio_ad_punctum(
             regio->datum[longitudo] = '\0';
         }
 
-        regio->initium_linea = linea;
-        regio->initium_columna = (i32)initium_columna;
-        regio->finis_linea = linea;
-        regio->finis_columna = (i32)finis_columna;
+        regio->initium_linea    = linea;
+        regio->initium_columna  = (i32)initium_columna;
+        regio->finis_linea      = linea;
+        regio->finis_columna    = (i32)finis_columna;
 
         si (est_link)
         {

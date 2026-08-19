@@ -69,28 +69,28 @@ structura Manus {
      * assertum quod elementum suum VIDIT et tamen falsum dixit.
      * Probatio semitae FELICIS id invenit; semitae fallentes omnes
      * transierant. */
-    Piscina*   piscina;
-    Piscina*   scriptorium;
+    Piscina* piscina;
+    Piscina* scriptorium;
 
-    character  hospes[MANUS_HOSPES_MAXIMUS];
-    i32        portus;
+    character hospes[MANUS_HOSPES_MAXIMUS];
+          i32 portus;
 
     /* NIHIL nisi manus ipsa applicationem genuit. Praesentia eius
      * est quod gyrum haurire cogit. */
     Processus* processus;
 
-    b32        fracta;
-    chorda     causa;
+       b32 fracta;
+    chorda causa;
 
     /* Dum paratitudinem probamus, defectus EXSPECTATUR - frangere
      * manum ob eum absurdum esset. */
-    b32        tacens;
+    b32 tacens;
 
     /* Imago automatica cum manus frangitur; vacua = tacita.
      * 'in_imagine' recursionem vetat: si captura ipsa fallit,
      * _frangere iterum vocaretur. */
-    character  via_culpae[MANUS_VIA_MAXIMA];
-    b32        in_imagine;
+    character via_culpae[MANUS_VIA_MAXIMA];
+          b32 in_imagine;
 };
 
 /* Quid ansa tota rettulit. 'respondit' ab 'ok' DISTAT consulto:
@@ -98,16 +98,17 @@ structura Manus {
  * probatio fracta narrare non potest utrum res tua fracta sit an
  * abfuerit. */
 nomen structura {
-    b32    respondit;
-    b32    ok;
+       b32 respondit;
+       b32 ok;
     chorda visum;
 } ManusVerdictum;
 
 nomen structura {
-    b32    successus;   /* connexio facta, responsum lectum */
-    i32    status;
+       b32 successus;   /* connexio facta, responsum lectum */
+       i32 status;
     chorda corpus;
 } ManusResponsum;
+
 
 /* ========================================================================
  * Tempus
@@ -138,10 +139,11 @@ _quiescere (
     {
         redde;
     }
-    ts.tv_sec  = (time_t)((s64)ms / (s64)M);
-    ts.tv_nsec = (longus)(((s64)ms % (s64)M) * (s64)(M * M));
+    ts.tv_sec   = (time_t)((s64)ms / (s64)M);
+    ts.tv_nsec  = (longus)(((s64)ms % (s64)M) * (s64)(M * M));
     (vacuum)nanosleep(&ts, NIHIL);
 }
+
 
 /* ========================================================================
  * Chordae
@@ -152,7 +154,7 @@ _quiescere (
  * inde exit et non servatur memoria mortua est. */
 interior chorda
 _servare (
-    chorda   s,
+     chorda  s,
     Piscina* piscina)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina, s.mensura + I);
@@ -164,7 +166,7 @@ _servare (
  * chorda nostra terminum non fert). */
 interior constans character*
 _litterae (
-    chorda   s,
+     chorda  s,
     Piscina* piscina)
 {
     character* b = (character*)piscina_allocare(
@@ -186,7 +188,7 @@ _imaginem (
 
 interior vacuum
 _frangere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* causa)
 {
     si (manus->tacens)
@@ -196,8 +198,8 @@ _frangere (
     /* Prima causa sola servatur: sequentes eius sequelae sunt. */
     si (!manus->fracta)
     {
-        manus->fracta = VERUM;
-        manus->causa  = chorda_ex_literis(causa, manus->piscina);
+        manus->fracta  = VERUM;
+        manus->causa   = chorda_ex_literis(causa, manus->piscina);
 
         /* Imago in ipso momento fracturae - ANTE quam quicquam
          * aliud paginam moveat. Mora BREVIS consulto: si
@@ -218,27 +220,28 @@ _frangere (
     }
 }
 
+
 /* ========================================================================
  * HTTP
  * ======================================================================== */
 
 interior ManusResponsum
 _petere (
-    Manus*              manus,
-    HttpMethodus        methodus,
+                 Manus* manus,
+          HttpMethodus  methodus,
     constans character* via,
-    chorda              corpus,
-    Piscina*            arena)
+                chorda  corpus,
+               Piscina* arena)
 {
-    ManusResponsum r;
-    character      url[CCLVI];
-    HttpPetitio*   pet;
-    HttpResultus   res;
+    ManusResponsum  r;
+         character  url[CCLVI];
+       HttpPetitio* pet;
+      HttpResultus  res;
 
-    r.successus = FALSUM;
-    r.status    = 0;
-    r.corpus.mensura = 0;
-    r.corpus.datum   = NIHIL;
+    r.successus       = FALSUM;
+    r.status          = 0;
+    r.corpus.mensura  = 0;
+    r.corpus.datum    = NIHIL;
 
     sprintf(url, "http://%s:%d%s", manus->hospes, (integer)manus->portus, via);
 
@@ -259,11 +262,12 @@ _petere (
         redde r;
     }
 
-    r.successus = VERUM;
-    r.status    = res.responsum->status;
-    r.corpus    = res.responsum->corpus;
+    r.successus  = VERUM;
+    r.status     = res.responsum->status;
+    r.corpus     = res.responsum->corpus;
     redde r;
 }
+
 
 /* ========================================================================
  * Ansa imperii: tesseram petere, tesseram pulsare
@@ -273,15 +277,15 @@ _petere (
 /* Nihil hinc exit nisi numerus, ergo scriptorium totum reficitur. */
 interior s64
 _tesseram_petere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* via,
-    chorda              corpus)
+                chorda  corpus)
 {
-    PiscinaNotatio nota = piscina_notare(manus->scriptorium);
-    ManusResponsum r;
-    JsonResultus   j;
-    JsonValor*     t;
-    s64            tessera = -I;
+    PiscinaNotatio  nota = piscina_notare(manus->scriptorium);
+    ManusResponsum  r;
+      JsonResultus  j;
+         JsonValor* t;
+               s64  tessera = -I;
 
     /* CCII 'Acceptum', non CC: imperium tesseram reddit, non
      * effectum - iussum enim nondum factum est. Primum hic CC
@@ -310,29 +314,29 @@ _tesseram_petere (
  * exterior transeat. Valor JSON crudus in arenam manus servatur. */
 interior b32
 _tesseram_pulsare (
-    Manus*   manus,
-    s64      tessera,
-    Momentum terminus,
-    chorda*  valor,
-    chorda*  culpa)
+       Manus* manus,
+         s64  tessera,
+    Momentum  terminus,
+      chorda* valor,
+      chorda* culpa)
 {
     character via[LXIV];
-    Mora      intervallum = MANUS_PULSUS_PRIMUS;
-    chorda    vacuum_corpus;
+         Mora intervallum = MANUS_PULSUS_PRIMUS;
+       chorda vacuum_corpus;
 
-    vacuum_corpus.mensura = 0;
-    vacuum_corpus.datum   = NIHIL;
+    vacuum_corpus.mensura  = 0;
+    vacuum_corpus.datum    = NIHIL;
 
     sprintf(via, "/imperium/%ld", (longus)tessera);
 
     dum (VERUM)
     {
-        PiscinaNotatio nota = piscina_notare(manus->scriptorium);
-        ManusResponsum r;
-        JsonResultus   j;
-        JsonValor*     status;
-        b32            perfectum = FALSUM;
-        b32            fallitum  = FALSUM;
+        PiscinaNotatio  nota = piscina_notare(manus->scriptorium);
+        ManusResponsum  r;
+          JsonResultus  j;
+             JsonValor* status;
+                   b32  perfectum  = FALSUM;
+                   b32  fallitum   = FALSUM;
 
         /* Fistulas haurire. Valor redditus consulto abicitur:
          * PARATUS solum post exitum infantis redditur, et infans
@@ -362,7 +366,7 @@ _tesseram_pulsare (
                             /* Scribitur in scriptorio, SERVATUR in
                              * piscina: hoc transitum facit. */
                             chorda textus = json_scribere(v, manus->scriptorium);
-                            *valor    = _servare(textus, manus->piscina);
+                            *valor = _servare(textus, manus->piscina);
                             perfectum = VERUM;
                         }
                     }
@@ -408,20 +412,20 @@ _tesseram_pulsare (
  * gratia additur (vide MANUS_GRATIA). */
 interior b32
 _iussum (
-    Manus*   manus,
-    chorda   js,
-    Mora     mora_paginae,
-    chorda*  valor)
+     Manus* manus,
+    chorda  js,
+      Mora  mora_paginae,
+    chorda* valor)
 {
-    s64      tessera;
+         s64 tessera;
     Momentum terminus;
-    chorda   culpa;
+      chorda culpa;
 
-    culpa.mensura = 0;
-    culpa.datum   = NIHIL;
+    culpa.mensura  = 0;
+    culpa.datum    = NIHIL;
 
-    valor->mensura = 0;
-    valor->datum   = NIHIL;
+    valor->mensura  = 0;
+    valor->datum    = NIHIL;
 
     tessera = _tesseram_petere(manus, "/imperium", js);
     si (tessera < 0)
@@ -449,6 +453,7 @@ _iussum (
     }
     redde VERUM;
 }
+
 
 /* ========================================================================
  * JS: adiutores communes
@@ -790,6 +795,7 @@ _iussum (
     ".join(' '));if(ce)ce.apply(console,arguments);};" \
     "return 'positum';})()"
 
+
 /* ========================================================================
  * JS: gyrus exspectationis IN PAGINA
  * ======================================================================== */
@@ -800,12 +806,12 @@ _iussum (
  * (vide manus.h). */
 interior chorda
 _js_exspectare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* corpus_functionis,
-    Mora                mora)
+                  Mora  mora)
 {
     ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, DXII);
-    character          numerus[XXXII];
+            character  numerus[XXXII];
 
     sprintf(numerus, "%ld", (longus)mora);
 
@@ -827,7 +833,7 @@ _js_exspectare (
 /* Selectorem (aut textum quemlibet) ut litteras JS effugere. */
 interior vacuum
 _appendere_litteras_js (
-    ChordaAedificator*  a,
+     ChordaAedificator* a,
     constans character* s)
 {
     chorda_aedificator_appendere_character(a, '"');
@@ -838,17 +844,17 @@ _appendere_litteras_js (
 /* Verdictum ex valore JSON {ok,visum} legere. */
 interior ManusVerdictum
 _verdictum (
-    Manus* manus,
-    chorda valor,
-    b32    respondit)
+     Manus* manus,
+    chorda  valor,
+       b32  respondit)
 {
     ManusVerdictum v;
-    JsonResultus   j;
+      JsonResultus j;
 
-    v.respondit    = respondit;
-    v.ok           = FALSUM;
-    v.visum.mensura = 0;
-    v.visum.datum   = NIHIL;
+    v.respondit      = respondit;
+    v.ok             = FALSUM;
+    v.visum.mensura  = 0;
+    v.visum.datum    = NIHIL;
 
     si (!respondit)
     {
@@ -858,8 +864,8 @@ _verdictum (
     j = json_legere(valor, manus->piscina);
     si (j.successus && j.radix != NIHIL)
     {
-        JsonValor* ok    = json_objectum_capere(j.radix, "ok");
-        JsonValor* visum = json_objectum_capere(j.radix, "visum");
+        JsonValor* ok     = json_objectum_capere(j.radix, "ok");
+        JsonValor* visum  = json_objectum_capere(j.radix, "visum");
         si (ok != NIHIL && json_est_boolean(ok))
         {
             v.ok = json_ad_boolean(ok);
@@ -874,14 +880,15 @@ _verdictum (
 
 interior ManusVerdictum
 _exspectare (
-    Manus* manus,
-    chorda js,
-    Mora   mora)
+     Manus* manus,
+    chorda  js,
+      Mora  mora)
 {
     chorda valor;
-    b32    respondit = _iussum(manus, js, mora, &valor);
+       b32 respondit = _iussum(manus, js, mora, &valor);
     redde _verdictum(manus, valor, respondit);
 }
+
 
 /* ========================================================================
  * Cyclus vitae
@@ -895,11 +902,11 @@ _respondet (
     Manus* manus)
 {
     PiscinaNotatio nota = piscina_notare(manus->scriptorium);
-    chorda         vacuum_corpus;
+            chorda vacuum_corpus;
     ManusResponsum r;
 
-    vacuum_corpus.mensura = 0;
-    vacuum_corpus.datum   = NIHIL;
+    vacuum_corpus.mensura  = 0;
+    vacuum_corpus.datum    = NIHIL;
 
     r = _petere(manus, HTTP_GET, "/imperium/0", vacuum_corpus,
                 manus->scriptorium);
@@ -928,7 +935,7 @@ _paratus (
     Manus* manus)
 {
     chorda valor;
-    b32    fructus;
+       b32 fructus;
 
     manus->tacens = VERUM;
     fructus = _iussum(manus, chorda_ex_literis("1", manus->piscina),
@@ -936,9 +943,9 @@ _paratus (
     manus->tacens = FALSUM;
 
     /* Conatus defectus manum non maculet. */
-    manus->fracta        = FALSUM;
-    manus->causa.mensura = 0;
-    manus->causa.datum   = NIHIL;
+    manus->fracta         = FALSUM;
+    manus->causa.mensura  = 0;
+    manus->causa.datum    = NIHIL;
     redde fructus;
 }
 
@@ -955,20 +962,20 @@ _errores_instituere (
     (vacuum)_iussum(manus,
                     chorda_ex_literis(MANUS_JS_ERRORES, manus->piscina),
                     MANUS_MORA_BREVIS, &valor);
-    manus->tacens = FALSUM;
-    manus->fracta        = FALSUM;
-    manus->causa.mensura = 0;
-    manus->causa.datum   = NIHIL;
+    manus->tacens         = FALSUM;
+    manus->fracta         = FALSUM;
+    manus->causa.mensura  = 0;
+    manus->causa.datum    = NIHIL;
 }
 
 interior Manus*
 _manus_creare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* hospes,
-    i32                 portus)
+                   i32  portus)
 {
     Manus* manus;
-    i32    longitudo;
+      i32  longitudo;
 
     si (piscina == NIHIL || hospes == NIHIL)
     {
@@ -991,15 +998,15 @@ _manus_creare (
         redde NIHIL;
     }
 
-    manus->piscina   = piscina;
-    manus->portus    = portus;
-    manus->processus = NIHIL;
-    manus->fracta    = FALSUM;
-    manus->tacens     = FALSUM;
-    manus->in_imagine = FALSUM;
-    manus->via_culpae[0] = '\0';
-    manus->causa.mensura = 0;
-    manus->causa.datum   = NIHIL;
+    manus->piscina        = piscina;
+    manus->portus         = portus;
+    manus->processus      = NIHIL;
+    manus->fracta         = FALSUM;
+    manus->tacens         = FALSUM;
+    manus->in_imagine     = FALSUM;
+    manus->via_culpae[0]  = '\0';
+    manus->causa.mensura  = 0;
+    manus->causa.datum    = NIHIL;
     memcpy(manus->hospes, hospes, (memoriae_index)longitudo);
     manus->hospes[longitudo] = '\0';
 
@@ -1008,9 +1015,9 @@ _manus_creare (
 
 Manus*
 manus_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* hospes,
-    i32                 portus)
+                   i32  portus)
 {
     Manus* manus = _manus_creare(piscina, hospes, portus);
 
@@ -1039,9 +1046,9 @@ manus_incipere (
     i32                           portus,
     Mora                          mora)
 {
-    Manus*     manus;
+        Manus* manus;
     Processus* processus;
-    Momentum   terminus;
+     Momentum  terminus;
 
     manus = _manus_creare(piscina, "127.0.0.1", portus);
     si (manus == NIHIL || argumenta == NIHIL || argumenta[0] == NIHIL)
@@ -1118,7 +1125,7 @@ manus_reficere (
     manus->tacens = VERUM;
     {
         chorda valor;
-        b32    vivit = _iussum(manus,
+           b32 vivit = _iussum(manus,
                                chorda_ex_literis("1", manus->piscina),
                                MANUS_MORA_BREVIS, &valor);
         manus->tacens = FALSUM;
@@ -1131,9 +1138,9 @@ manus_reficere (
         }
     }
 
-    manus->fracta        = FALSUM;
-    manus->causa.mensura = 0;
-    manus->causa.datum   = NIHIL;
+    manus->fracta         = FALSUM;
+    manus->causa.mensura  = 0;
+    manus->causa.datum    = NIHIL;
 
     /* Acervus errorum quoque purgandus: terminus sectionis utrumque
      * vult, et qui reficere meminit purgare oblivisceretur. */
@@ -1150,10 +1157,11 @@ manus_causa (
     {
         redde manus->causa;
     }
-    vacua.mensura = 0;
-    vacua.datum   = NIHIL;
+    vacua.mensura  = 0;
+    vacua.datum    = NIHIL;
     redde vacua;
 }
+
 
 /* ========================================================================
  * Actiones
@@ -1161,15 +1169,15 @@ manus_causa (
 
 chorda
 manus_aestimare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* js,
-    Mora                mora)
+                  Mora  mora)
 {
     chorda valor;
     chorda vacua;
 
-    vacua.mensura = 0;
-    vacua.datum   = NIHIL;
+    vacua.mensura  = 0;
+    vacua.datum    = NIHIL;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1203,14 +1211,14 @@ manus_aestimare (
  * temporis est - id ipsum quod haec bibliotheca tollere debet. */
 interior b32
 _agere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* resolutor,   /* "q(" aut "qt(" */
     constans character* argumentum,  /* selector aut textus */
     constans character* opus,
     constans character* nomen_actionis)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1272,7 +1280,7 @@ _agere (
 
 b32
 manus_premere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     redde _agere(manus, "q(", selector, MANUS_JS_PREMERE,
@@ -1281,7 +1289,7 @@ manus_premere (
 
 b32
 manus_premere_textum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus)
 {
     /* PETITIO VACUA RECUSATUR.
@@ -1319,12 +1327,12 @@ manus_premere_textum (
 
 b32
 manus_scribere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
     constans character* textus)
 {
     ChordaAedificator* a;
-    b32                fructus;
+                  b32  fructus;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1407,21 +1415,21 @@ manus_scribere (
  * capere DEBET, quod publica forma (quae fractam recusat) vetaret. */
 interior b32
 _imaginem (
-    Manus*              manus,
-    constans character* via,
-    Mora                mora,
+                 Manus*  manus,
+    constans character*  via,
+                  Mora   mora,
     constans character** causa_out)
 {
-    s64      tessera;
+         s64 tessera;
     Momentum terminus;
-    chorda   valor;
-    chorda   culpa;
+      chorda valor;
+      chorda culpa;
 
-    valor.mensura = 0;
-    valor.datum   = NIHIL;
-    culpa.mensura = 0;
-    culpa.datum   = NIHIL;
-    *causa_out    = NIHIL;
+    valor.mensura  = 0;
+    valor.datum    = NIHIL;
+    culpa.mensura  = 0;
+    culpa.datum    = NIHIL;
+    *causa_out     = NIHIL;
 
     tessera = _tesseram_petere(manus, "/imperium/imago",
                                chorda_ex_literis(via, manus->piscina));
@@ -1443,11 +1451,11 @@ _imaginem (
 
 b32
 manus_movere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1530,13 +1538,13 @@ manus_movere (
 
 b32
 manus_clavem (
-    Manus*              manus,
+                 Manus* manus,
     constans character* clavis)
 {
     PiscinaNotatio nota;
     ManusResponsum r;
-    i32            status;
-    b32            ok;
+               i32 status;
+               b32 ok;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1552,8 +1560,8 @@ manus_clavem (
     r = _petere(manus, HTTP_POST, "/imperium/clavis",
                 chorda_ex_literis(clavis, manus->scriptorium),
                 manus->scriptorium);
-    status = r.successus ? r.status : ZEPHYRUM;
-    ok = r.successus && r.status >= CC && r.status < CCC;
+    status  = r.successus ? r.status : ZEPHYRUM;
+    ok      = r.successus && r.status >= CC && r.status < CCC;
     piscina_reficere(manus->scriptorium, nota);
 
     si (!ok)
@@ -1591,7 +1599,7 @@ manus_clavem (
 
 b32
 manus_imaginem (
-    Manus*              manus,
+                 Manus* manus,
     constans character* via)
 {
     constans character* causa = NIHIL;
@@ -1610,7 +1618,7 @@ manus_imaginem (
 
 vacuum
 manus_imaginem_culpae_ponere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* via)
 {
     i32 longitudo;
@@ -1633,6 +1641,7 @@ manus_imaginem_culpae_ponere (
     manus->via_culpae[longitudo] = '\0';
 }
 
+
 /* ========================================================================
  * Exploratio - TACITA
  *
@@ -1643,19 +1652,19 @@ manus_imaginem_culpae_ponere (
 
 interior ManusVerdictum
 _interrogare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* corpus_functionis)
 {
     ChordaAedificator* a;
-    chorda             js;
-    chorda             valor;
-    b32                respondit;
-    ManusVerdictum     mutum;
+               chorda  js;
+               chorda  valor;
+                  b32  respondit;
+       ManusVerdictum  mutum;
 
-    mutum.respondit     = FALSUM;
-    mutum.ok            = FALSUM;
-    mutum.visum.mensura = 0;
-    mutum.visum.datum   = NIHIL;
+    mutum.respondit      = FALSUM;
+    mutum.ok             = FALSUM;
+    mutum.visum.mensura  = 0;
+    mutum.visum.datum    = NIHIL;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1676,11 +1685,11 @@ _interrogare (
 
 b32
 manus_existit (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1699,12 +1708,12 @@ manus_existit (
 
 i32
 manus_numerus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
-    s32                n = 0;
+       ManusVerdictum  v;
+                  s32  n = 0;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1727,15 +1736,15 @@ manus_numerus (
 
 chorda
 manus_textus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
-    chorda             vacua;
+       ManusVerdictum  v;
+               chorda  vacua;
 
-    vacua.mensura = 0;
-    vacua.datum   = NIHIL;
+    vacua.mensura  = 0;
+    vacua.datum    = NIHIL;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1764,13 +1773,14 @@ manus_textus (
     redde v.visum;
 }
 
+
 /* ========================================================================
  * Volvere
  * ======================================================================== */
 
 b32
 manus_volvere_ad (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
@@ -1800,10 +1810,10 @@ manus_volvere_ad (
 b32
 manus_volvere (
     Manus* manus,
-    s32    pixela)
+      s32  pixela)
 {
     ChordaAedificator* a;
-    character          numerus[XXXII];
+            character  numerus[XXXII];
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1825,13 +1835,13 @@ manus_volvere (
 
 b32
 manus_volvere_in (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    s32                 pixela)
+                   s32  pixela)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
-    character          numerus[XXXII];
+       ManusVerdictum  v;
+            character  numerus[XXXII];
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -1889,13 +1899,13 @@ manus_volvere_in (
 
 s32
 manus_volutio (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
-    i32                k;
-    s32                positio;
+       ManusVerdictum  v;
+                  i32  k;
+                  s32  positio;
 
     si (manus == NIHIL || manus->fracta || selector == NIHIL)
     {
@@ -1933,19 +1943,20 @@ manus_volutio (
     redde positio;
 }
 
+
 /* ========================================================================
  * Exspectatio
  * ======================================================================== */
 
 b32
 manus_exspectare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    b32                 adesse,
-    Mora                mora)
+                   b32  adesse,
+                  Mora  mora)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta || selector == NIHIL)
     {
@@ -1990,27 +2001,28 @@ manus_exspectare (
     redde v.ok;
 }
 
+
 /* ========================================================================
  * Lectio
  * ======================================================================== */
 
 Lectio
 manus_legere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
     ChordaAedificator* a;
-    Lectio             fructus;
-    chorda             valor;
-    JsonResultus       lectio;
-    i32                i;
-    i32                n;
+               Lectio  fructus;
+               chorda  valor;
+         JsonResultus  lectio;
+                  i32  i;
+                  i32  n;
 
-    fructus.lineae  = NIHIL;
-    fructus.numerus = ZEPHYRUM;
+    fructus.lineae   = NIHIL;
+    fructus.numerus  = ZEPHYRUM;
 
-    si (manus == NIHIL || manus->fracta || piscina == NIHIL
+    si (   manus    == NIHIL || manus->fracta || piscina == NIHIL
         || selector == NIHIL)
     {
         redde fructus;
@@ -2063,8 +2075,8 @@ manus_legere (
     per (i = ZEPHYRUM; i < n; i++)
     {
         JsonValor* ordo = json_tabulatum_obtinere(lectio.radix, i);
-        i32        quot = json_tabulatum_numerus(ordo);
-        i32        j;
+              i32  quot = json_tabulatum_numerus(ordo);
+              i32  j;
 
         fructus.lineae[i].numerus  = quot;
         fructus.lineae[i].cellulae = (quot > ZEPHYRUM)
@@ -2083,15 +2095,16 @@ manus_legere (
     redde fructus;
 }
 
+
 /* ========================================================================
  * Affordantiae
  * ======================================================================== */
 
 interior chorda
 _campus_chorda (
-    JsonValor*          obiectum,
+             JsonValor* obiectum,
     constans character* clavis,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
     redde chorda_transcribere(
         json_ad_chorda(json_objectum_capere(obiectum, clavis)), piscina);
@@ -2099,7 +2112,7 @@ _campus_chorda (
 
 interior s32
 _campus_numerus (
-    JsonValor*          obiectum,
+             JsonValor* obiectum,
     constans character* clavis)
 {
     redde (s32)json_ad_integer(json_objectum_capere(obiectum, clavis));
@@ -2107,18 +2120,18 @@ _campus_numerus (
 
 Affordantiae
 manus_affordantiae (
-    Manus*   manus,
+      Manus* manus,
     Piscina* piscina)
 {
     ChordaAedificator* a;
-    Affordantiae       fructus;
-    chorda             valor;
-    JsonResultus       lectio;
-    i32                i;
-    i32                n;
+         Affordantiae  fructus;
+               chorda  valor;
+         JsonResultus  lectio;
+                  i32  i;
+                  i32  n;
 
-    fructus.res     = NIHIL;
-    fructus.numerus = ZEPHYRUM;
+    fructus.res      = NIHIL;
+    fructus.numerus  = ZEPHYRUM;
 
     si (manus == NIHIL || manus->fracta || piscina == NIHIL)
     {
@@ -2162,23 +2175,24 @@ manus_affordantiae (
 
     per (i = ZEPHYRUM; i < n; i++)
     {
-        JsonValor*   o = json_tabulatum_obtinere(lectio.radix, i);
+          JsonValor* o = json_tabulatum_obtinere(lectio.radix, i);
         Affordantia* d = &fructus.res[i];
 
-        d->genus        = (AffordantiaGenus)_campus_numerus(o, "genus");
-        d->selector     = _campus_chorda(o, "selector", piscina);
-        d->titulus      = _campus_chorda(o, "titulus", piscina);
-        d->valor        = _campus_chorda(o, "valor", piscina);
+        d->genus = (AffordantiaGenus)_campus_numerus(o, "genus");
+        d->selector = _campus_chorda(o, "selector", piscina);
+        d->titulus = _campus_chorda(o, "titulus", piscina);
+        d->valor = _campus_chorda(o, "valor", piscina);
         d->impedimentum = _campus_chorda(o, "impedimentum", piscina);
-        d->x            = _campus_numerus(o, "x");
-        d->y            = _campus_numerus(o, "y");
-        d->latitudo     = _campus_numerus(o, "latitudo");
-        d->altitudo     = _campus_numerus(o, "altitudo");
+        d->x = _campus_numerus(o, "x");
+        d->y = _campus_numerus(o, "y");
+        d->latitudo = _campus_numerus(o, "latitudo");
+        d->altitudo = _campus_numerus(o, "altitudo");
     }
 
     fructus.numerus = n;
     redde fructus;
 }
+
 
 /* ========================================================================
  * Focus
@@ -2186,7 +2200,7 @@ manus_affordantiae (
 
 b32
 manus_focus_ponere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a;
@@ -2232,21 +2246,21 @@ manus_focus_ponere (
 
 ManusFocus
 manus_focus (
-    Manus*   manus,
+      Manus* manus,
     Piscina* piscina)
 {
     ChordaAedificator* a;
-    ManusFocus         fructus;
-    chorda             valor;
-    JsonResultus       lectio;
+           ManusFocus  fructus;
+               chorda  valor;
+         JsonResultus  lectio;
 
-    fructus.habet           = FALSUM;
-    fructus.selector.mensura = 0;
-    fructus.selector.datum   = NIHIL;
-    fructus.titulus.mensura  = 0;
-    fructus.titulus.datum    = NIHIL;
-    fructus.tag.mensura      = 0;
-    fructus.tag.datum        = NIHIL;
+    fructus.habet             = FALSUM;
+    fructus.selector.mensura  = 0;
+    fructus.selector.datum    = NIHIL;
+    fructus.titulus.mensura   = 0;
+    fructus.titulus.datum     = NIHIL;
+    fructus.tag.mensura       = 0;
+    fructus.tag.datum         = NIHIL;
 
     si (manus == NIHIL || manus->fracta || piscina == NIHIL)
     {
@@ -2281,12 +2295,13 @@ manus_focus (
         redde fructus;
     }
 
-    fructus.habet    = _campus_numerus(lectio.radix, "habet") != ZEPHYRUM;
+    fructus.habet = _campus_numerus(lectio.radix, "habet") != ZEPHYRUM;
     fructus.selector = _campus_chorda(lectio.radix, "selector", piscina);
-    fructus.titulus  = _campus_chorda(lectio.radix, "titulus", piscina);
-    fructus.tag      = _campus_chorda(lectio.radix, "tag", piscina);
+    fructus.titulus = _campus_chorda(lectio.radix, "titulus", piscina);
+    fructus.tag = _campus_chorda(lectio.radix, "tag", piscina);
     redde fructus;
 }
+
 
 /* ========================================================================
  * Magnitudo
@@ -2295,17 +2310,17 @@ manus_focus (
 b32
 manus_magnitudinem_ponere (
     Manus* manus,
-    i32    latitudo,
-    i32    altitudo,
-    i32*   latitudo_facta,
-    i32*   altitudo_facta)
+      i32  latitudo,
+      i32  altitudo,
+      i32* latitudo_facta,
+      i32* altitudo_facta)
 {
     PiscinaNotatio nota;
     ManusResponsum r;
-    JsonResultus   lectio;
-    i32            status;
-    b32            ok;
-    character      corpus[LXIV];
+      JsonResultus lectio;
+               i32 status;
+               b32 ok;
+         character corpus[LXIV];
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2324,8 +2339,8 @@ manus_magnitudinem_ponere (
     r = _petere(manus, HTTP_POST, "/imperium/magnitudo",
                 chorda_ex_literis(corpus, manus->scriptorium),
                 manus->scriptorium);
-    status = r.successus ? r.status : ZEPHYRUM;
-    ok = r.successus && r.status >= CC && r.status < CCC;
+    status  = r.successus ? r.status : ZEPHYRUM;
+    ok      = r.successus && r.status >= CC && r.status < CCC;
 
     /* FACTA ANTE REFECTIONEM legere: corpus responsi in scriptorio
      * vivit, quod infra reficitur. Lectio post refectionem memoriam
@@ -2379,10 +2394,10 @@ manus_magnitudinem_ponere (
 b32
 manus_magnitudo (
     Manus* manus,
-    i32*   latitudo,
-    i32*   altitudo)
+      i32* latitudo,
+      i32* altitudo)
 {
-    chorda       valor;
+          chorda valor;
     JsonResultus lectio;
 
     si (manus == NIHIL || manus->fracta)
@@ -2417,6 +2432,7 @@ manus_magnitudo (
     redde VERUM;
 }
 
+
 /* ========================================================================
  * Asserta
  * ======================================================================== */
@@ -2426,13 +2442,13 @@ manus_magnitudo (
  * visum nominantur. */
 interior b32
 _notare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* genus,
-    chorda              expressio,
+                chorda  expressio,
     constans character* exspectatum,
-    ManusVerdictum      v,
+        ManusVerdictum  v,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     constans character* visum;
 
@@ -2475,7 +2491,7 @@ _notare (
 /* Descriptio pro compendio credo: 'manus[".tessera"]'. */
 interior chorda
 _expressio (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector)
 {
     ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, CXXVIII);
@@ -2487,15 +2503,15 @@ _expressio (
 
 b32
 _manus_credo_existere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    b32                 adesse,
-    Mora                mora,
+                   b32  adesse,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2524,14 +2540,14 @@ _manus_credo_existere (
 
 b32
 _manus_credo_focum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2570,16 +2586,16 @@ _manus_credo_focum (
 
 b32
 _manus_credo_textum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
     constans character* exspectatum,
-    b32                 pars_sufficit,
-    Mora                mora,
+                   b32  pars_sufficit,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2624,16 +2640,16 @@ _manus_credo_textum (
 
 b32
 _manus_credo_numerum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    i32                 quot,
-    Mora                mora,
+                   i32  quot,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
-    character          numerus[XXXII];
+       ManusVerdictum  v;
+            character  numerus[XXXII];
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2660,21 +2676,22 @@ _manus_credo_numerum (
                   numerus, v, filum, versus);
 }
 
+
 /* ========================================================================
  * Textus paginae, praesentia cruda, errores
  * ======================================================================== */
 
 b32
 _manus_credo_textum_paginae (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus,
-    b32                 adesse,
-    Mora                mora,
+                   b32  adesse,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2709,14 +2726,14 @@ _manus_credo_textum_paginae (
 
 b32
 _manus_credo_omnino (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
     ChordaAedificator* a;
-    ManusVerdictum     v;
+       ManusVerdictum  v;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2746,16 +2763,16 @@ _manus_credo_omnino (
 
 i32
 manus_errores (
-    Manus*  manus,
+     Manus* manus,
     chorda* primus)
 {
     ManusVerdictum v;
-    s32            quot = 0;
+               s32 quot = 0;
 
     si (primus != NIHIL)
     {
-        primus->mensura = 0;
-        primus->datum   = NIHIL;
+        primus->mensura  = 0;
+        primus->datum    = NIHIL;
     }
     si (manus == NIHIL || manus->fracta)
     {
@@ -2783,8 +2800,8 @@ manus_errores (
         }
         {
             chorda numerus;
-            numerus.datum   = v.visum.datum;
-            numerus.mensura = i;
+            numerus.datum    = v.visum.datum;
+            numerus.mensura  = i;
             si (!chorda_ut_s32(numerus, &quot))
             {
                 quot = 0;
@@ -2792,8 +2809,8 @@ manus_errores (
         }
         si (primus != NIHIL && i + I < v.visum.mensura)
         {
-            primus->datum   = v.visum.datum + i + I;
-            primus->mensura = v.visum.mensura - (i + I);
+            primus->datum    = v.visum.datum + i + I;
+            primus->mensura  = v.visum.mensura - (i + I);
         }
     }
     si (quot < 0)
@@ -2827,8 +2844,8 @@ manus_effusio (
 {
     chorda vacua;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
 
     si (manus == NIHIL || manus->processus == NIHIL)
     {
@@ -2842,19 +2859,19 @@ manus_effusio (
 
 b32
 _manus_credo_effusio (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
-    Momentum  terminus;
-    b32       inventum = FALSUM;
-    chorda    ultima;
+     Momentum terminus;
+          b32 inventum = FALSUM;
+       chorda ultima;
     character quot[XXXII];
 
-    ultima.datum   = NIHIL;
-    ultima.mensura = 0;
+    ultima.datum    = NIHIL;
+    ultima.mensura  = 0;
 
     si (manus == NIHIL || manus->fracta)
     {
@@ -2868,7 +2885,7 @@ _manus_credo_effusio (
     dum (VERUM)
     {
         ultima = manus_effusio(manus);
-        si (ultima.mensura > 0
+        si (   ultima.mensura > 0
             && chorda_continet(ultima,
                    chorda_ex_literis(textus, manus->piscina)))
         {
@@ -2896,12 +2913,12 @@ _manus_credo_effusio (
 
 b32
 _manus_credo_sine_erroribus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* filum,
-    s32                 versus)
+                   s32  versus)
 {
-    chorda    primus;
-    i32       quot;
+       chorda primus;
+          i32 quot;
     character numerus[XXXII];
 
     si (manus == NIHIL || manus->fracta)

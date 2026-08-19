@@ -17,14 +17,16 @@ structura Scrinium {
 
 structura ScriniumEnuntiatum {
     sqlite3_stmt* ansa;
-    Scrinium*     scrinium;
+        Scrinium* scrinium;
 };
 
 Scrinium*
-scrinium_aperire (Piscina* piscina, constans character* via)
+scrinium_aperire (
+               Piscina* piscina,
+    constans character* via)
 {
     Scrinium* s;
-    sqlite3* ansa = NIHIL;
+     sqlite3* ansa = NIHIL;
 
     si (sqlite3_open(via, &ansa) != SQLITE_OK)
     {
@@ -51,7 +53,8 @@ scrinium_aperire (Piscina* piscina, constans character* via)
 }
 
 vacuum
-scrinium_claudere (Scrinium* scrinium)
+scrinium_claudere (
+    Scrinium* scrinium)
 {
     si (scrinium == NIHIL || scrinium->ansa == NIHIL)
     {
@@ -62,26 +65,32 @@ scrinium_claudere (Scrinium* scrinium)
 }
 
 b32
-scrinium_exsequi (Scrinium* scrinium, constans character* sql)
+scrinium_exsequi (
+              Scrinium* scrinium,
+    constans character* sql)
 {
     redde sqlite3_exec(scrinium->ansa, sql, NIHIL, NIHIL, NIHIL)
         == SQLITE_OK ? VERUM : FALSUM;
 }
 
 constans character*
-scrinium_error (constans Scrinium* scrinium)
+scrinium_error (
+    constans Scrinium* scrinium)
 {
     redde sqlite3_errmsg(scrinium->ansa);
 }
 
 s64
-scrinium_ultimum_id (constans Scrinium* scrinium)
+scrinium_ultimum_id (
+    constans Scrinium* scrinium)
 {
     redde (s64)sqlite3_last_insert_rowid(scrinium->ansa);
 }
 
 ScriniumEnuntiatum*
-scrinium_praeparare (Scrinium* scrinium, constans character* sql)
+scrinium_praeparare (
+              Scrinium* scrinium,
+    constans character* sql)
 {
     /* enuntiata effimera sunt - allocatio sqlite ipsius sufficit;
      * involucrum parvum ex piscina non petimus ne vita piscinae
@@ -89,7 +98,7 @@ scrinium_praeparare (Scrinium* scrinium, constans character* sql)
      * (enuntiata plura simul) - malloc sqlite intus iam adhibetur,
      * ergo sqlite3_malloc pro involucro quoque: mundus unus. */
     ScriniumEnuntiatum* e;
-    sqlite3_stmt* ansa = NIHIL;
+          sqlite3_stmt* ansa = NIHIL;
 
     si (sqlite3_prepare_v2(scrinium->ansa, sql, -1, &ansa, NIHIL)
         != SQLITE_OK)
@@ -103,14 +112,16 @@ scrinium_praeparare (Scrinium* scrinium, constans character* sql)
         sqlite3_finalize(ansa);
         redde NIHIL;
     }
-    e->ansa = ansa;
-    e->scrinium = scrinium;
+    e->ansa      = ansa;
+    e->scrinium  = scrinium;
     redde e;
 }
 
 b32
-scrinium_ligare_textum (ScriniumEnuntiatum* enuntiatum, integer index,
-    chorda textus)
+scrinium_ligare_textum (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+                chorda  textus)
 {
     /* chorda NON null-terminata: (index, mensura) recte transfertur;
      * SQLITE_TRANSIENT = sqlite copiat (chorda effimera tuta) */
@@ -120,23 +131,29 @@ scrinium_ligare_textum (ScriniumEnuntiatum* enuntiatum, integer index,
 }
 
 b32
-scrinium_ligare_numerum (ScriniumEnuntiatum* enuntiatum, integer index,
-    s64 numerus)
+scrinium_ligare_numerum (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+                   s64  numerus)
 {
     redde sqlite3_bind_int64(enuntiatum->ansa, index,
         (sqlite3_int64)numerus) == SQLITE_OK ? VERUM : FALSUM;
 }
 
 b32
-scrinium_ligare_nihil (ScriniumEnuntiatum* enuntiatum, integer index)
+scrinium_ligare_nihil (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index)
 {
     redde sqlite3_bind_null(enuntiatum->ansa, index) == SQLITE_OK
         ? VERUM : FALSUM;
 }
 
 b32
-scrinium_ligare_massam (ScriniumEnuntiatum* enuntiatum, integer index,
-    chorda massa)
+scrinium_ligare_massam (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+                chorda  massa)
 {
     /* datum NIHIL sqlite ut NULL interpretaretur - massa vacua
      * blobum vacuum VERUM esse debet, ergo zeroblob(0) */
@@ -151,7 +168,8 @@ scrinium_ligare_massam (ScriniumEnuntiatum* enuntiatum, integer index,
 }
 
 integer
-scrinium_gradi (ScriniumEnuntiatum* enuntiatum)
+scrinium_gradi (
+    ScriniumEnuntiatum* enuntiatum)
 {
     integer fructus = sqlite3_step(enuntiatum->ansa);
 
@@ -167,16 +185,18 @@ scrinium_gradi (ScriniumEnuntiatum* enuntiatum)
 }
 
 chorda
-scrinium_columna_textus (ScriniumEnuntiatum* enuntiatum, integer index,
-    Piscina* piscina)
+scrinium_columna_textus (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+               Piscina* piscina)
 {
-    chorda fructus;
+                           chorda  fructus;
     constans insignatus character* textus =
         sqlite3_column_text(enuntiatum->ansa, index);
     integer mensura = sqlite3_column_bytes(enuntiatum->ansa, index);
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     si (textus == NIHIL || mensura <= 0)
     {
         redde fructus;
@@ -193,23 +213,26 @@ scrinium_columna_textus (ScriniumEnuntiatum* enuntiatum, integer index,
 }
 
 s64
-scrinium_columna_numerus (ScriniumEnuntiatum* enuntiatum,
-    integer index)
+scrinium_columna_numerus (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index)
 {
     redde (s64)sqlite3_column_int64(enuntiatum->ansa, index);
 }
 
 chorda
-scrinium_columna_massa (ScriniumEnuntiatum* enuntiatum, integer index,
-    Piscina* piscina)
+scrinium_columna_massa (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index,
+               Piscina* piscina)
 {
-    chorda fructus;
+             chorda  fructus;
     constans vacuum* datum =
         sqlite3_column_blob(enuntiatum->ansa, index);
     integer mensura = sqlite3_column_bytes(enuntiatum->ansa, index);
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     si (datum == NIHIL || mensura <= 0)
     {
         redde fructus;
@@ -226,22 +249,25 @@ scrinium_columna_massa (ScriniumEnuntiatum* enuntiatum, integer index,
 }
 
 b32
-scrinium_columna_nihil_est (ScriniumEnuntiatum* enuntiatum,
-    integer index)
+scrinium_columna_nihil_est (
+    ScriniumEnuntiatum* enuntiatum,
+               integer  index)
 {
     redde sqlite3_column_type(enuntiatum->ansa, index) == SQLITE_NULL
         ? VERUM : FALSUM;
 }
 
 vacuum
-scrinium_retexere (ScriniumEnuntiatum* enuntiatum)
+scrinium_retexere (
+    ScriniumEnuntiatum* enuntiatum)
 {
     (vacuum)sqlite3_reset(enuntiatum->ansa);
     (vacuum)sqlite3_clear_bindings(enuntiatum->ansa);
 }
 
 vacuum
-scrinium_finire (ScriniumEnuntiatum* enuntiatum)
+scrinium_finire (
+    ScriniumEnuntiatum* enuntiatum)
 {
     si (enuntiatum == NIHIL)
     {
@@ -253,28 +279,33 @@ scrinium_finire (ScriniumEnuntiatum* enuntiatum)
 
 /* trias transactionum (gesta K1) - tenuis super exsequi */
 b32
-scrinium_incipere (Scrinium* scrinium)
+scrinium_incipere (
+    Scrinium* scrinium)
 {
     redde scrinium_exsequi(scrinium, "BEGIN");
 }
 
 b32
-scrinium_committere (Scrinium* scrinium)
+scrinium_committere (
+    Scrinium* scrinium)
 {
     redde scrinium_exsequi(scrinium, "COMMIT");
 }
 
 b32
-scrinium_revolvere (Scrinium* scrinium)
+scrinium_revolvere (
+    Scrinium* scrinium)
 {
     redde scrinium_exsequi(scrinium, "ROLLBACK");
 }
 
 b32
-scrinium_migrare (Scrinium* scrinium,
-    constans character* constans* migrationes, integer numerus)
+scrinium_migrare (
+    Scrinium* scrinium,
+    constans character* constans* migrationes,
+    integer numerus)
 {
-    s64 initium = ZEPHYRUM;
+        s64 initium = ZEPHYRUM;
     integer k;
 
     si (!scrinium_exsequi(scrinium,
@@ -321,7 +352,7 @@ scrinium_migrare (Scrinium* scrinium,
         }
         e = scrinium_praeparare(scrinium,
             "INSERT INTO _migrationes (versio) VALUES (?)");
-        si (e == NIHIL || !scrinium_ligare_numerum(e, I, (s64)k)
+        si (   e                 == NIHIL || !scrinium_ligare_numerum(e, I, (s64)k)
             || scrinium_gradi(e) != SCRINIUM_FACTUM)
         {
             scrinium_finire(e);
@@ -333,12 +364,12 @@ scrinium_migrare (Scrinium* scrinium,
     redde scrinium_exsequi(scrinium, "COMMIT");
 }
 
-
 /* ULID: delegatio ad monetam (cusio una repositorii - lib/moneta.c;
  * implementatio illuc mota 2026-07-21, sqlite nimis grave pro
  * instrumentis solum cudentibus) */
 vacuum
-scrinium_ulid (character* effusio)
+scrinium_ulid (
+    character* effusio)
 {
     moneta_ulid(effusio);
 }

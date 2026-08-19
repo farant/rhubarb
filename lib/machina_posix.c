@@ -21,22 +21,25 @@
 #include <uuid/uuid.h>
 #endif
 
+
 /* ============================================================
  * Nucleus purus
  * ============================================================ */
 
 chorda
-machina_identitas_ex_fonte (constans chorda fons, Piscina* piscina)
+machina_identitas_ex_fonte (
+    constans chorda  fons,
+            Piscina* piscina)
 {
-    Sigillum  sigillum;
+     Sigillum sigillum;
     character hex[SIGILLUM_HEX_MENSURA];
-    chorda    vacua;
+       chorda vacua;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
-    si (piscina == NIHIL || fons.datum == NIHIL ||
-        fons.mensura == ZEPHYRUM)
+    si (   piscina      == NIHIL || fons.datum == NIHIL
+        || fons.mensura == ZEPHYRUM)
     {
         redde vacua;
     }
@@ -51,17 +54,19 @@ machina_identitas_ex_fonte (constans chorda fons, Piscina* piscina)
     redde chorda_ex_literis(hex, piscina);
 }
 
+
 /* ============================================================
  * Fons platformae
  * ============================================================ */
 
 chorda
-machina_identitas (Piscina* piscina)
+machina_identitas (
+    Piscina* piscina)
 {
     chorda vacua;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (piscina == NIHIL)
     {
@@ -99,8 +104,8 @@ machina_identitas (Piscina* piscina)
 
             si (lecta > 0)
             {
-                fons.datum   = (i8*)tabula;
-                fons.mensura = (i32)lecta;
+                fons.datum    = (i8*)tabula;
+                fons.mensura  = (i32)lecta;
                 redde machina_identitas_ex_fonte(fons, piscina);
             }
         }
@@ -112,28 +117,30 @@ machina_identitas (Piscina* piscina)
     redde vacua;
 }
 
+
 /* ============================================================
  * Nota plena
  * ============================================================ */
 
 MachinaNota
-machina_nota (Piscina* piscina)
+machina_nota (
+    Piscina* piscina)
 {
-    MachinaNota          nota;
-    structura utsname    nomina;
-    longus                numerus_nucleorum;
-    ChordaAedificator*   aedificator;
+          MachinaNota nota;
+    structura utsname  nomina;
+               longus  numerus_nucleorum;
+    ChordaAedificator* aedificator;
 
-    nota.valida             = FALSUM;
-    nota.identitas.datum    = NIHIL;
-    nota.identitas.mensura  = ZEPHYRUM;
-    nota.systema.datum      = NIHIL;
-    nota.systema.mensura    = ZEPHYRUM;
-    nota.architectura.datum = NIHIL;
-    nota.architectura.mensura = ZEPHYRUM;
-    nota.nuclei             = ZEPHYRUM;
-    nota.causa.datum        = NIHIL;
-    nota.causa.mensura      = ZEPHYRUM;
+    nota.valida                = FALSUM;
+    nota.identitas.datum       = NIHIL;
+    nota.identitas.mensura     = ZEPHYRUM;
+    nota.systema.datum         = NIHIL;
+    nota.systema.mensura       = ZEPHYRUM;
+    nota.architectura.datum    = NIHIL;
+    nota.architectura.mensura  = ZEPHYRUM;
+    nota.nuclei                = ZEPHYRUM;
+    nota.causa.datum           = NIHIL;
+    nota.causa.mensura         = ZEPHYRUM;
 
     si (piscina == NIHIL)
     {

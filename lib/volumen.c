@@ -10,13 +10,13 @@
 #include <stdio.h>
 
 structura Volumen {
-    Piscina*            piscina;
-    Scrinium*           scrinium;
+               Piscina* piscina;
+              Scrinium* scrinium;
     constans character* erratum;   /* proprium; scrinium_error alias */
-    b32                 in_transactione;   /* vocator possidet */
+                   b32  in_transactione;   /* vocator possidet */
 
     /* Volumen scratch: via servatur ut claudere eam delere possit. */
-    b32                 temporarium;
+                   b32  temporarium;
     constans character* via;
 };
 
@@ -48,7 +48,9 @@ interior Volumen*
 _volumen_struere (Piscina* piscina, constans character* via);
 
 interior Volumen*
-_volumen_struere (Piscina* piscina, constans character* via)
+_volumen_struere (
+               Piscina* piscina,
+    constans character* via)
 {
     Volumen* vol;
 
@@ -58,16 +60,16 @@ _volumen_struere (Piscina* piscina, constans character* via)
     {
         redde NIHIL;
     }
-    vol->piscina = piscina;
-    vol->erratum = NIHIL;
-    vol->in_transactione = FALSUM;
+    vol->piscina          = piscina;
+    vol->erratum          = NIHIL;
+    vol->in_transactione  = FALSUM;
     /* EXPLICITE, quia struere structuram campo-post-campum implet
      * SINE memset: campus additus purgamentum ferret, et
      * 'temporarium' purgamentum non-nullum volumen VERUM usoris in
      * claudendo deleret. Vitium quod semel scriptum tacet et semel
      * currit clamat. */
-    vol->temporarium = FALSUM;
-    vol->via = NIHIL;
+    vol->temporarium  = FALSUM;
+    vol->via          = NIHIL;
     {
         /* Via COPIATUR: vocator litteras suas liberare potest, et
          * volumen temporarium eas in claudendo adhuc eget. */
@@ -95,10 +97,12 @@ _volumen_struere (Piscina* piscina, constans character* via)
 }
 
 Volumen*
-volumen_creare (Piscina* piscina, constans character* via)
+volumen_creare (
+               Piscina* piscina,
+    constans character* via)
 {
     Volumen* vol;
-    chorda   datum;
+     chorda  datum;
 
     si (filum_existit(via))
     {
@@ -121,7 +125,9 @@ volumen_creare (Piscina* piscina, constans character* via)
 }
 
 Volumen*
-volumen_aperire (Piscina* piscina, constans character* via)
+volumen_aperire (
+               Piscina* piscina,
+    constans character* via)
 {
     si (!filum_existit(via))
     {
@@ -132,7 +138,8 @@ volumen_aperire (Piscina* piscina, constans character* via)
 }
 
 Volumen*
-volumen_aperire_aut_creare (Piscina* piscina,
+volumen_aperire_aut_creare (
+               Piscina* piscina,
     constans character* via)
 {
     si (filum_existit(via))
@@ -143,7 +150,8 @@ volumen_aperire_aut_creare (Piscina* piscina,
 }
 
 vacuum
-volumen_claudere (Volumen* volumen)
+volumen_claudere (
+    Volumen* volumen)
 {
     si (volumen == NIHIL)
     {
@@ -159,12 +167,14 @@ volumen_claudere (Volumen* volumen)
 }
 
 Volumen*
-volumen_temporarium (Piscina* piscina, constans character* praefixum)
+volumen_temporarium (
+               Piscina* piscina,
+    constans character* praefixum)
 {
-    ChordaAedificator* aed;
+     ChordaAedificator* aed;
     constans character* via = NIHIL;
-    Volumen*           vol;
-    i32                i;
+               Volumen* vol;
+                   i32  i;
 
     si (piscina == NIHIL)
     {
@@ -221,7 +231,8 @@ volumen_temporarium (Piscina* piscina, constans character* praefixum)
 }
 
 constans character*
-volumen_via (constans Volumen* volumen)
+volumen_via (
+    constans Volumen* volumen)
 {
     si (volumen == NIHIL)
     {
@@ -231,7 +242,8 @@ volumen_via (constans Volumen* volumen)
 }
 
 constans character*
-volumen_error (constans Volumen* volumen)
+volumen_error (
+    constans Volumen* volumen)
 {
     si (volumen == NIHIL)
     {
@@ -245,12 +257,14 @@ volumen_error (constans Volumen* volumen)
 }
 
 s64
-volumen_actum_appendere (Volumen* volumen, constans character* genus,
-    chorda datum)
+volumen_actum_appendere (
+               Volumen* volumen,
+    constans character* genus,
+                chorda  datum)
 {
     ScriniumEnuntiatum* e;
-    chorda              genus_ch;
-    integer             gradus;
+                chorda  genus_ch;
+               integer  gradus;
 
     genus_ch = chorda_ex_literis(genus, volumen->piscina);
     e = scrinium_praeparare(volumen->scrinium,
@@ -276,8 +290,11 @@ _actum_plagulae_fingere (Piscina* piscina, chorda via,
     constans character* sigillum_hex, constans character* origo);
 
 interior chorda
-_actum_plagulae_fingere (Piscina* piscina, chorda via,
-    constans character* sigillum_hex, constans character* origo)
+_actum_plagulae_fingere (
+               Piscina* piscina,
+                chorda  via,
+    constans character* sigillum_hex,
+    constans character* origo)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)256);
@@ -293,24 +310,27 @@ _actum_plagulae_fingere (Piscina* piscina, chorda via,
 }
 
 b32
-volumen_plagulam_condere (Volumen* volumen, chorda via_relativa,
-    chorda contentum, constans character* origo)
+volumen_plagulam_condere (
+               Volumen* volumen,
+                chorda  via_relativa,
+                chorda  contentum,
+    constans character* origo)
 {
-    Sigillum            sig;
-    character           hex[SIGILLUM_HEX_MENSURA];
-    chorda              hex_ch;
-    chorda              origo_ch;
-    chorda              datum;
+              Sigillum  sig;
+             character  hex[SIGILLUM_HEX_MENSURA];
+                chorda  hex_ch;
+                chorda  origo_ch;
+                chorda  datum;
     ScriniumEnuntiatum* e;
-    integer             gradus;
+               integer  gradus;
 
     sig = sigillum_computare((constans vacuum*)contentum.datum,
         (memoriae_index)contentum.mensura);
     sigillum_hex(&sig, hex);
-    hex_ch = chorda_ex_literis(hex, volumen->piscina);
-    origo_ch = chorda_ex_literis(origo, volumen->piscina);
+    hex_ch    = chorda_ex_literis(hex, volumen->piscina);
+    origo_ch  = chorda_ex_literis(origo, volumen->piscina);
 
-    si (!volumen->in_transactione
+    si (   !volumen->in_transactione
         && !scrinium_incipere(volumen->scrinium))
     {
         redde FALSUM;
@@ -378,13 +398,15 @@ revolve:
 }
 
 b32
-volumen_plagulam_removere (Volumen* volumen, chorda via_relativa)
+volumen_plagulam_removere (
+    Volumen* volumen,
+     chorda  via_relativa)
 {
     ScriniumEnuntiatum* e;
-    chorda              datum;
-    integer             gradus;
+                chorda  datum;
+               integer  gradus;
 
-    si (!volumen->in_transactione
+    si (   !volumen->in_transactione
         && !scrinium_incipere(volumen->scrinium))
     {
         redde FALSUM;
@@ -433,7 +455,8 @@ remove_revolve:
 }
 
 b32
-volumen_transactionem_incipere (Volumen* volumen)
+volumen_transactionem_incipere (
+    Volumen* volumen)
 {
     si (volumen->in_transactione)
     {
@@ -448,7 +471,8 @@ volumen_transactionem_incipere (Volumen* volumen)
 }
 
 b32
-volumen_transactionem_committere (Volumen* volumen)
+volumen_transactionem_committere (
+    Volumen* volumen)
 {
     si (!volumen->in_transactione)
     {
@@ -459,7 +483,8 @@ volumen_transactionem_committere (Volumen* volumen)
 }
 
 b32
-volumen_transactionem_revolvere (Volumen* volumen)
+volumen_transactionem_revolvere (
+    Volumen* volumen)
 {
     si (!volumen->in_transactione)
     {
@@ -470,17 +495,20 @@ volumen_transactionem_revolvere (Volumen* volumen)
 }
 
 chorda
-volumen_plagulam_promere (Volumen* volumen, chorda via_relativa,
-    Piscina* piscina, b32* inventum)
+volumen_plagulam_promere (
+    Volumen* volumen,
+     chorda  via_relativa,
+    Piscina* piscina,
+        b32* inventum)
 {
     ScriniumEnuntiatum* e;
-    chorda              vacua;
-    chorda              fructus;
-    integer             gradus;
+                chorda  vacua;
+                chorda  fructus;
+               integer  gradus;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
-    *inventum = FALSUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    *inventum      = FALSUM;
 
     e = scrinium_praeparare(volumen->scrinium,
         "SELECT m.contentum FROM plagulae p"
@@ -504,10 +532,12 @@ volumen_plagulam_promere (Volumen* volumen, chorda via_relativa,
 }
 
 Xar*
-volumen_plagulas_enumerare (Volumen* volumen, Piscina* piscina)
+volumen_plagulas_enumerare (
+    Volumen* volumen,
+    Piscina* piscina)
 {
     ScriniumEnuntiatum* e;
-    Xar*                ordo;
+                   Xar* ordo;
 
     ordo = xar_creare(piscina, (i32)magnitudo(VolumenPlagula));
     si (ordo == NIHIL)
@@ -529,22 +559,24 @@ volumen_plagulas_enumerare (Volumen* volumen, Piscina* piscina)
             scrinium_finire(e);
             redde NIHIL;
         }
-        p->via = scrinium_columna_textus(e, 0, piscina);
-        p->sigillum_hex = scrinium_columna_textus(e, 1, piscina);
-        p->origo = scrinium_columna_textus(e, 2, piscina);
+        p->via           = scrinium_columna_textus(e, 0, piscina);
+        p->sigillum_hex  = scrinium_columna_textus(e, 1, piscina);
+        p->origo         = scrinium_columna_textus(e, 2, piscina);
     }
     scrinium_finire(e);
     redde ordo;
 }
 
 b32
-volumen_massam_condere (Volumen* volumen, chorda contentum,
+volumen_massam_condere (
+      Volumen* volumen,
+       chorda  contentum,
     character* sigillum_hex_exitus)
 {
-    Sigillum            sig;
-    chorda              hex_ch;
+              Sigillum  sig;
+                chorda  hex_ch;
     ScriniumEnuntiatum* e;
-    integer             gradus;
+               integer  gradus;
 
     sig = sigillum_computare((constans vacuum*)contentum.datum,
         (memoriae_index)contentum.mensura);
@@ -567,16 +599,19 @@ volumen_massam_condere (Volumen* volumen, chorda contentum,
 }
 
 chorda
-volumen_massam_promere (Volumen* volumen, chorda sigillum_hex,
-    Piscina* piscina, b32* inventum)
+volumen_massam_promere (
+    Volumen* volumen,
+     chorda  sigillum_hex,
+    Piscina* piscina,
+        b32* inventum)
 {
     ScriniumEnuntiatum* e;
-    chorda              vacua;
-    chorda              fructus;
+                chorda  vacua;
+                chorda  fructus;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
-    *inventum = FALSUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    *inventum      = FALSUM;
 
     e = scrinium_praeparare(volumen->scrinium,
         "SELECT contentum FROM massae WHERE sigillum = ?");
@@ -597,11 +632,13 @@ volumen_massam_promere (Volumen* volumen, chorda sigillum_hex,
 }
 
 Xar*
-volumen_acta_legere (Volumen* volumen, s64 post_seq,
+volumen_acta_legere (
+    Volumen* volumen,
+        s64  post_seq,
     Piscina* piscina)
 {
     ScriniumEnuntiatum* e;
-    Xar*                ordo;
+                   Xar* ordo;
 
     ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
     si (ordo == NIHIL)
@@ -625,10 +662,10 @@ volumen_acta_legere (Volumen* volumen, s64 post_seq,
             scrinium_finire(e);
             redde NIHIL;
         }
-        a->seq = scrinium_columna_numerus(e, 0);
-        a->momentum = scrinium_columna_textus(e, 1, piscina);
-        a->genus = scrinium_columna_textus(e, 2, piscina);
-        a->datum = scrinium_columna_textus(e, 3, piscina);
+        a->seq       = scrinium_columna_numerus(e, 0);
+        a->momentum  = scrinium_columna_textus(e, 1, piscina);
+        a->genus     = scrinium_columna_textus(e, 2, piscina);
+        a->datum     = scrinium_columna_textus(e, 3, piscina);
     }
     scrinium_finire(e);
     redde ordo;
@@ -639,21 +676,26 @@ interior s32
 _plagulas_per_viam (constans vacuum* a, constans vacuum* b);
 
 interior s32
-_plagulas_per_viam (constans vacuum* a, constans vacuum* b)
+_plagulas_per_viam (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     redde chorda_comparare(((constans VolumenPlagula*)a)->via,
         ((constans VolumenPlagula*)b)->via);
 }
 
 Xar*
-volumen_plicam_ad (Volumen* volumen, s64 ad_seq, Piscina* piscina)
+volumen_plicam_ad (
+    Volumen* volumen,
+        s64  ad_seq,
+    Piscina* piscina)
 {
     ScriniumEnuntiatum* e;
-    TabulaDispersa*     plica;
-    Xar*                ordo;
+        TabulaDispersa* plica;
+                   Xar* ordo;
 
-    plica = tabula_dispersa_creare_chorda(piscina, 128);
-    ordo = xar_creare(piscina, (i32)magnitudo(VolumenPlagula));
+    plica  = tabula_dispersa_creare_chorda(piscina, 128);
+    ordo   = xar_creare(piscina, (i32)magnitudo(VolumenPlagula));
     si (plica == NIHIL || ordo == NIHIL)
     {
         redde NIHIL;
@@ -670,11 +712,11 @@ volumen_plicam_ad (Volumen* volumen, s64 ad_seq, Piscina* piscina)
     scrinium_ligare_numerum(e, 2, ad_seq);
     dum (scrinium_gradi(e) == SCRINIUM_ORDO)
     {
-        chorda       genus = scrinium_columna_textus(e, 0, piscina);
-        chorda       datum = scrinium_columna_textus(e, 1, piscina);
-        JsonResultus lectum = json_legere(datum, piscina);
-        JsonValor*   via_v;
-        chorda       via;
+              chorda  genus   = scrinium_columna_textus(e, 0, piscina);
+              chorda  datum   = scrinium_columna_textus(e, 1, piscina);
+        JsonResultus  lectum  = json_legere(datum, piscina);
+           JsonValor* via_v;
+              chorda  via;
 
         si (!lectum.successus)
         {
@@ -709,8 +751,8 @@ volumen_plicam_ad (Volumen* volumen, s64 ad_seq, Piscina* piscina)
                 scrinium_finire(e);
                 redde NIHIL;
             }
-            p->via = via;
-            p->sigillum_hex = json_ad_chorda(sig_v);
+            p->via           = via;
+            p->sigillum_hex  = json_ad_chorda(sig_v);
             p->origo = (orig_v != NIHIL && json_est_chorda(orig_v))
                 ? json_ad_chorda(orig_v)
                 : chorda_ex_literis("", piscina);
@@ -729,8 +771,8 @@ volumen_plicam_ad (Volumen* volumen, s64 ad_seq, Piscina* piscina)
         dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
             &valor))
         {
-            VolumenPlagula* fons = (VolumenPlagula*)valor;
-            VolumenPlagula* p = (VolumenPlagula*)xar_addere(ordo);
+            VolumenPlagula* fons  = (VolumenPlagula*)valor;
+            VolumenPlagula* p     = (VolumenPlagula*)xar_addere(ordo);
 
             si (p == NIHIL)
             {
@@ -747,10 +789,12 @@ interior s64
 _summa (Volumen* volumen, constans character* sql);
 
 interior s64
-_summa (Volumen* volumen, constans character* sql)
+_summa (
+               Volumen* volumen,
+    constans character* sql)
 {
     ScriniumEnuntiatum* e;
-    s64                 summa = 0;
+                   s64  summa = 0;
 
     e = scrinium_praeparare(volumen->scrinium, sql);
     si (e == NIHIL)
@@ -766,19 +810,22 @@ _summa (Volumen* volumen, constans character* sql)
 }
 
 s64
-volumen_summa_actorum (Volumen* volumen)
+volumen_summa_actorum (
+    Volumen* volumen)
 {
     redde _summa(volumen, "SELECT COUNT(*) FROM acta");
 }
 
 s64
-volumen_summa_plagularum (Volumen* volumen)
+volumen_summa_plagularum (
+    Volumen* volumen)
 {
     redde _summa(volumen, "SELECT COUNT(*) FROM plagulae");
 }
 
 s64
-volumen_summa_massarum (Volumen* volumen)
+volumen_summa_massarum (
+    Volumen* volumen)
 {
     redde _summa(volumen, "SELECT COUNT(*) FROM massae");
 }

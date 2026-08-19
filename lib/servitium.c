@@ -8,8 +8,8 @@
  * ================================================== */
 
 RegistrumServitii*
-registrum_servitii_creare(
-    Piscina*             piscina,
+registrum_servitii_creare (
+                Piscina* piscina,
     EntitasRepositorium* repositorium,
     InternamentumChorda* intern)
 {
@@ -26,9 +26,9 @@ registrum_servitii_creare(
         redde NIHIL;
     }
 
-    reg->piscina      = piscina;
-    reg->repositorium = repositorium;
-    reg->intern       = intern;
+    reg->piscina       = piscina;
+    reg->repositorium  = repositorium;
+    reg->intern        = intern;
 
     reg->nomina = tabula_dispersa_creare_chorda(piscina, XXXII);
     si (!reg->nomina)
@@ -45,14 +45,14 @@ registrum_servitii_creare(
  * ================================================== */
 
 b32
-servitium_registrare(
-    RegistrumServitii*  reg,
+servitium_registrare (
+     RegistrumServitii* reg,
     constans character* titulus,
-    chorda*             entitas_id)
+                chorda* entitas_id)
 {
-    chorda    titulus_chorda;
-    character nota_buffer[CXXVIII];
-    Entitas*  entitas;
+       chorda  titulus_chorda;
+    character  nota_buffer[CXXVIII];
+      Entitas* entitas;
 
     si (!reg || !titulus || !entitas_id)
     {
@@ -89,10 +89,10 @@ servitium_registrare(
 }
 
 b32
-servitium_registrare_entitatem(
-    RegistrumServitii*  reg,
+servitium_registrare_entitatem (
+     RegistrumServitii* reg,
     constans character* titulus,
-    Entitas*            entitas)
+               Entitas* entitas)
 {
     si (!reg || !titulus || !entitas)
     {
@@ -103,8 +103,8 @@ servitium_registrare_entitatem(
 }
 
 b32
-servitium_deregistrare(
-    RegistrumServitii*  reg,
+servitium_deregistrare (
+     RegistrumServitii* reg,
     constans character* titulus)
 {
     chorda titulus_chorda;
@@ -125,8 +125,8 @@ servitium_deregistrare(
  * ================================================== */
 
 chorda*
-servitium_obtinere_id(
-    RegistrumServitii*  reg,
+servitium_obtinere_id (
+     RegistrumServitii* reg,
     constans character* titulus)
 {
     vacuum* valor;
@@ -145,8 +145,8 @@ servitium_obtinere_id(
 }
 
 Entitas*
-servitium_obtinere(
-    RegistrumServitii*  reg,
+servitium_obtinere (
+     RegistrumServitii* reg,
     constans character* titulus)
 {
     chorda* entitas_id;
@@ -168,8 +168,8 @@ servitium_obtinere(
 }
 
 b32
-servitium_habet(
-    RegistrumServitii*  reg,
+servitium_habet (
+     RegistrumServitii* reg,
     constans character* titulus)
 {
     si (!reg || !titulus)
@@ -181,7 +181,7 @@ servitium_habet(
 }
 
 i32
-servitium_numerus(
+servitium_numerus (
     RegistrumServitii* reg)
 {
     si (!reg)
@@ -198,14 +198,14 @@ servitium_numerus(
  * ================================================== */
 
 i32
-servitium_discoperire(
+servitium_discoperire (
     RegistrumServitii* reg)
 {
-    Xar*    entitates;
-    i32     i;
-    i32     numerus;
-    i32     discooperti;
-    i32     praefixum_len;
+    Xar* entitates;
+    i32  i;
+    i32  numerus;
+    i32  discooperti;
+    i32  praefixum_len;
 
     si (!reg)
     {
@@ -224,15 +224,15 @@ servitium_discoperire(
         redde ZEPHYRUM;
     }
 
-    numerus     = xar_numerus(entitates);
-    discooperti = ZEPHYRUM;
+    numerus      = xar_numerus(entitates);
+    discooperti  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         Entitas** slot;
         Entitas*  entitas;
-        i32       j;
-        i32       numerus_notarum;
+            i32   j;
+            i32   numerus_notarum;
 
         slot = (Entitas**)xar_obtinere(entitates, i);
         si (!slot || !*slot)
@@ -275,9 +275,9 @@ servitium_discoperire(
                 si (aequalis)
                 {
                     /* Extrahire nomen post praefixum */
-                    character  nomen_buffer[LXIV];
-                    i32        nomen_len;
-                    chorda     nomen_chorda;
+                    character nomen_buffer[LXIV];
+                          i32 nomen_len;
+                       chorda nomen_chorda;
 
                     nomen_len = nota->mensura - praefixum_len;
                     si (nomen_len > LXIII)
@@ -312,12 +312,12 @@ servitium_discoperire(
  * ================================================== */
 
 vacuum
-servitium_imprimere(
+servitium_imprimere (
     RegistrumServitii* reg)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
 
     si (!reg)
     {
@@ -330,9 +330,9 @@ servitium_imprimere(
     iter = tabula_dispersa_iterator_initium(reg->nomina);
     dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
     {
-        chorda*  entitas_id;
+         chorda* entitas_id;
         Entitas* entitas;
-        chorda*  titulus;
+         chorda* titulus;
 
         entitas_id = (chorda*)valor;
         entitas = reg->repositorium->capere_entitatem(

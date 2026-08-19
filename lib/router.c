@@ -15,27 +15,27 @@
 /* Segment in parsed path */
 nomen structura {
     chorda valor;
-    b32    est_param;  /* Starts with : */
+       b32 est_param;  /* Starts with : */
 } RoutaSegmentum;
 
 /* Internal route structure */
 nomen structura {
-    HttpMethodus    methodus;
-    chorda          via;           /* Original path */
-    RoutaTipus      tipus;
-    vacuum*         datum;         /* Index opacus consumptoris */
-    b32             activus;
+    HttpMethodus  methodus;
+          chorda  via;           /* Original path */
+      RoutaTipus  tipus;
+          vacuum* datum;         /* Index opacus consumptoris */
+             b32  activus;
 
     /* Parsed segments */
-    RoutaSegmentum  segmenta[ROUTER_SEGMENTA_MAXIMA];
-    i32             segmenta_numerus;
+    RoutaSegmentum segmenta[ROUTER_SEGMENTA_MAXIMA];
+               i32 segmenta_numerus;
 } Routa;
 
 /* Router structure */
 structura Router {
     Piscina* piscina;
-    Routa    routae[ROUTER_ROUTA_MAXIMA];
-    i32      numerus;
+      Routa  routae[ROUTER_ROUTA_MAXIMA];
+        i32  numerus;
 };
 
 
@@ -45,16 +45,19 @@ structura Router {
 
 /* Creare chorda ex raw memory cum copia */
 interior chorda
-_chorda_ex_raw(constans character* data, i32 len, Piscina* piscina)
+_chorda_ex_raw (
+    constans character* data,
+                   i32  len,
+               Piscina* piscina)
 {
-    chorda temp;
-    chorda res;
-    i8* buffer;
+    chorda  temp;
+    chorda  res;
+        i8* buffer;
 
     si (len <= 0 || !data || !piscina)
     {
-        res.datum = NIHIL;
-        res.mensura = 0;
+        res.datum    = NIHIL;
+        res.mensura  = 0;
         redde res;
     }
 
@@ -62,14 +65,14 @@ _chorda_ex_raw(constans character* data, i32 len, Piscina* piscina)
     buffer = (i8*)piscina_allocare(piscina, (i64)len);
     si (!buffer)
     {
-        res.datum = NIHIL;
-        res.mensura = 0;
+        res.datum    = NIHIL;
+        res.mensura  = 0;
         redde res;
     }
 
     memcpy(buffer, data, (size_t)len);
-    temp.datum = buffer;
-    temp.mensura = len;
+    temp.datum    = buffer;
+    temp.mensura  = len;
 
     redde temp;
 }
@@ -81,7 +84,8 @@ _chorda_ex_raw(constans character* data, i32 len, Piscina* piscina)
 
 /* Verificare si via habet parameters */
 interior b32
-_via_habet_params(constans character* via)
+_via_habet_params (
+    constans character* via)
 {
     constans character* p = via;
 
@@ -101,17 +105,17 @@ _via_habet_params(constans character* via)
  * Returns numerus segmentorum, vel -1 si error
  */
 interior i32
-_parse_via(
+_parse_via (
     constans character* via,
-    RoutaSegmentum*     segmenta,
-    i32                 max_segmenta,
-    Piscina*            piscina)
+        RoutaSegmentum* segmenta,
+                   i32  max_segmenta,
+               Piscina* piscina)
 {
     constans character* p;
     constans character* segment_start;
-    i32 numerus = 0;
-    i32 len;
-    chorda seg;
+                   i32  numerus = 0;
+                   i32  len;
+                chorda  seg;
 
     si (!via || !segmenta || !piscina)
     {
@@ -166,27 +170,26 @@ _parse_via(
     redde numerus;
 }
 
-
 /* Parse request path in segmenta (simpler - no param detection) */
 interior i32
-_parse_request_via(
-    chorda          via,
-    chorda*         segmenta,
-    i32             max_segmenta)
+_parse_request_via (
+    chorda  via,
+    chorda* segmenta,
+       i32  max_segmenta)
 {
-    i8* p;
-    i8* segment_start;
-    i8* via_end;
-    i32 numerus = 0;
-    i32 len;
+     i8* p;
+     i8* segment_start;
+     i8* via_end;
+    i32  numerus = 0;
+    i32  len;
 
     si (via.mensura == 0 || !segmenta)
     {
         redde 0;
     }
 
-    p = via.datum;
-    via_end = via.datum + via.mensura;
+    p        = via.datum;
+    via_end  = via.datum + via.mensura;
 
     /* Skip leading slash */
     si (*p == '/')
@@ -207,8 +210,8 @@ _parse_request_via(
         len = (i32)(p - segment_start);
         si (len > 0)
         {
-            segmenta[numerus].datum = segment_start;
-            segmenta[numerus].mensura = len;
+            segmenta[numerus].datum    = segment_start;
+            segmenta[numerus].mensura  = len;
             numerus++;
         }
 
@@ -229,12 +232,12 @@ _parse_request_via(
 
 /* Match route pattern against request path */
 interior b32
-_match_pattern(
-    Routa*       routa,
-    chorda*      req_segmenta,
-    i32          req_numerus,
+_match_pattern (
+          Routa* routa,
+         chorda* req_segmenta,
+            i32  req_numerus,
     RoutaParams* params,
-    Piscina*     piscina)
+        Piscina* piscina)
 {
     i32 i;
 
@@ -281,7 +284,8 @@ _match_pattern(
  * ======================================================================== */
 
 Router*
-router_creare(Piscina* piscina)
+router_creare (
+    Piscina* piscina)
 {
     Router* router;
 
@@ -309,14 +313,14 @@ router_creare(Piscina* piscina)
  * ======================================================================== */
 
 b32
-router_adicere(
-    Router*             router,
-    HttpMethodus        methodus,
+router_adicere (
+                Router* router,
+          HttpMethodus  methodus,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     Routa* routa;
-    i32 len;
+      i32  len;
 
     si (!router || !via || !datum)
     {
@@ -330,11 +334,11 @@ router_adicere(
 
     routa = &router->routae[router->numerus];
 
-    len = (i32)strlen(via);
-    routa->via = _chorda_ex_raw(via, len, router->piscina);
-    routa->methodus = methodus;
-    routa->datum = datum;
-    routa->activus = VERUM;
+    len              = (i32)strlen(via);
+    routa->via       = _chorda_ex_raw(via, len, router->piscina);
+    routa->methodus  = methodus;
+    routa->datum     = datum;
+    routa->activus   = VERUM;
 
     /* Determine type and parse */
     si (_via_habet_params(via))
@@ -348,8 +352,8 @@ router_adicere(
     }
     alioquin
     {
-        routa->tipus = ROUTA_EXACTA;
-        routa->segmenta_numerus = 0;
+        routa->tipus             = ROUTA_EXACTA;
+        routa->segmenta_numerus  = 0;
     }
 
     router->numerus++;
@@ -358,46 +362,46 @@ router_adicere(
 }
 
 b32
-router_get(
-    Router*             router,
+router_get (
+                Router* router,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     redde router_adicere(router, HTTP_GET, via, datum);
 }
 
 b32
-router_post(
-    Router*             router,
+router_post (
+                Router* router,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     redde router_adicere(router, HTTP_POST, via, datum);
 }
 
 b32
-router_put(
-    Router*             router,
+router_put (
+                Router* router,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     redde router_adicere(router, HTTP_PUT, via, datum);
 }
 
 b32
-router_delete(
-    Router*             router,
+router_delete (
+                Router* router,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     redde router_adicere(router, HTTP_DELETE, via, datum);
 }
 
 b32
-router_patch(
-    Router*             router,
+router_patch (
+                Router* router,
     constans character* via,
-    vacuum*             datum)
+                vacuum* datum)
 {
     redde router_adicere(router, HTTP_PATCH, via, datum);
 }
@@ -408,18 +412,18 @@ router_patch(
  * ======================================================================== */
 
 RoutaResultus
-router_matching(
-    Router*      router,
-    HttpMethodus methodus,
-    chorda       via,
-    Piscina*     piscina)
+router_matching (
+          Router* router,
+    HttpMethodus  methodus,
+          chorda  via,
+         Piscina* piscina)
 {
-    RoutaResultus res;
-    chorda req_segmenta[ROUTER_SEGMENTA_MAXIMA];
-    RoutaParams candidatae;
-    i32 req_numerus;
-    i32 i;
-    Routa* routa;
+    RoutaResultus  res;
+           chorda  req_segmenta[ROUTER_SEGMENTA_MAXIMA];
+      RoutaParams  candidatae;
+              i32  req_numerus;
+              i32  i;
+            Routa* routa;
 
     memset(&res, 0, magnitudo(res));
 
@@ -448,9 +452,9 @@ router_matching(
 
             si (!res.invenit && routa->methodus == methodus)
             {
-                res.invenit = VERUM;
-                res.datum = routa->datum;
-                res.params.numerus = 0;
+                res.invenit         = VERUM;
+                res.datum           = routa->datum;
+                res.params.numerus  = 0;
             }
         }
     }
@@ -479,9 +483,9 @@ router_matching(
 
             si (!res.invenit && routa->methodus == methodus)
             {
-                res.invenit = VERUM;
-                res.datum = routa->datum;
-                res.params = candidatae;
+                res.invenit  = VERUM;
+                res.datum    = routa->datum;
+                res.params   = candidatae;
             }
         }
     }
@@ -495,16 +499,16 @@ router_matching(
  * ======================================================================== */
 
 chorda
-router_param_obtinere(
-    RoutaParams*        params,
+router_param_obtinere (
+           RoutaParams* params,
     constans character* titulus)
 {
     chorda empty;
-    i32 i;
-    i32 len;
+       i32 i;
+       i32 len;
 
-    empty.datum = NIHIL;
-    empty.mensura = 0;
+    empty.datum    = NIHIL;
+    empty.mensura  = 0;
 
     si (!params || !titulus)
     {
@@ -528,15 +532,15 @@ router_param_obtinere(
 }
 
 i32
-router_param_obtinere_i32(
-    RoutaParams*        params,
+router_param_obtinere_i32 (
+           RoutaParams* params,
     constans character* titulus,
-    i32                 default_valor)
+                   i32  default_valor)
 {
     chorda valor;
-    i32 result = 0;
-    i32 i;
-    i8 c;
+       i32 result = 0;
+       i32 i;
+        i8 c;
 
     valor = router_param_obtinere(params, titulus);
 
@@ -565,7 +569,8 @@ router_param_obtinere_i32(
  * ======================================================================== */
 
 i32
-router_numerus_routarum(Router* router)
+router_numerus_routarum (
+    Router* router)
 {
     si (!router)
     {

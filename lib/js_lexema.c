@@ -10,6 +10,7 @@
 
 #include <string.h>
 
+
 /* ==================================================
  * classes octetorum
  * ================================================== */
@@ -18,7 +19,8 @@ interior b32
 _est_spatium (character c);
 
 interior b32
-_est_spatium (character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r'
         || c == '\f' || c == '\v';
@@ -28,7 +30,8 @@ interior b32
 _est_linea_nova (character c);
 
 interior b32
-_est_linea_nova (character c)
+_est_linea_nova (
+    character c)
 {
     redde c == '\n' || c == '\r';
 }
@@ -37,7 +40,8 @@ interior b32
 _est_digitus (character c);
 
 interior b32
-_est_digitus (character c)
+_est_digitus (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
@@ -46,7 +50,8 @@ interior b32
 _est_hex (character c);
 
 interior b32
-_est_hex (character c)
+_est_hex (
+    character c)
 {
     redde _est_digitus(c) || (c >= 'a' && c <= 'f')
         || (c >= 'A' && c <= 'F');
@@ -56,7 +61,8 @@ interior b32
 _est_nominis_initium (character c);
 
 interior b32
-_est_nominis_initium (character c)
+_est_nominis_initium (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
         || c == '_' || c == '$' || (insignatus character)c >= 0x80;
@@ -66,7 +72,8 @@ interior b32
 _est_nominis (character c);
 
 interior b32
-_est_nominis (character c)
+_est_nominis (
+    character c)
 {
     redde _est_nominis_initium(c) || _est_digitus(c);
 }
@@ -77,16 +84,19 @@ interior chorda
 _chorda_ex_fonte (constans character* fons, i32 mensura);
 
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura)
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = fons;
-    c.datum = u.m;
-    c.mensura = mensura;
+    u.c        = fons;
+    c.datum    = u.m;
+    c.mensura  = mensura;
     redde c;
 }
+
 
 /* ==================================================
  * verba reservata
@@ -105,13 +115,15 @@ interior b32
 _est_verbum (constans character* datum, i32 mensura);
 
 interior b32
-_est_verbum (constans character* datum, i32 mensura)
+_est_verbum (
+    constans character* datum,
+                   i32  mensura)
 {
     i32 v;
 
     per (v = 0; _verba[v] != NIHIL; v = v + 1)
     {
-        si (strncmp(datum, _verba[v], (memoriae_index)mensura) == 0
+        si (   strncmp(datum, _verba[v], (memoriae_index)mensura) == 0
             && _verba[v][mensura] == '\0')
         {
             redde VERUM;
@@ -125,7 +137,9 @@ interior b32
 _verbum_valorem_fert (constans character* datum, i32 mensura);
 
 interior b32
-_verbum_valorem_fert (constans character* datum, i32 mensura)
+_verbum_valorem_fert (
+    constans character* datum,
+                   i32  mensura)
 {
     interior constans character* constans valentia[] = {
         "this", "true", "false", "null", "super", NIHIL
@@ -134,7 +148,7 @@ _verbum_valorem_fert (constans character* datum, i32 mensura)
 
     per (v = 0; valentia[v] != NIHIL; v = v + 1)
     {
-        si (strncmp(datum, valentia[v],
+        si (   strncmp(datum, valentia[v],
                 (memoriae_index)mensura) == 0
             && valentia[v][mensura] == '\0')
         {
@@ -144,6 +158,7 @@ _verbum_valorem_fert (constans character* datum, i32 mensura)
     redde FALSUM;
 }
 
+
 /* ==================================================
  * status lexatoris
  * ================================================== */
@@ -152,23 +167,25 @@ _verbum_valorem_fert (constans character* datum, i32 mensura)
 
 nomen structura {
     constans character* fons;
-    i32                 mensura;
-    i32                 k;              /* cursor */
+                   i32  mensura;
+                   i32  k;              /* cursor */
     /* acervus interpolationum: pro quaque aperta, numerus '{'
        apertorum intra eam (0 = '}' proximus formulam resumit) */
-    i32                 acervus[FORMULARUM_TECTUM];
-    i32                 altitudo;
+    i32 acervus[FORMULARUM_TECTUM];
+    i32 altitudo;
     /* lexema significans prius (trivia exclusa) - '/' iudicat */
-    JsLexemaGenus       prior_genus;
+         JsLexemaGenus  prior_genus;
     constans character* prior_datum;
-    i32                 prior_mensura;
+                   i32  prior_mensura;
 } JsLexator;
 
 interior character
 _ad (JsLexator* lx, i32 delta);
 
 interior character
-_ad (JsLexator* lx, i32 delta)
+_ad (
+    JsLexator* lx,
+          i32  delta)
 {
     si (lx->k + delta >= lx->mensura)
     {
@@ -181,7 +198,9 @@ interior b32
 _intra (JsLexator* lx, i32 delta);
 
 interior b32
-_intra (JsLexator* lx, i32 delta)
+_intra (
+    JsLexator* lx,
+          i32  delta)
 {
     redde lx->k + delta < lx->mensura;
 }
@@ -192,7 +211,8 @@ interior b32
 _divisio_hic (JsLexator* lx);
 
 interior b32
-_divisio_hic (JsLexator* lx)
+_divisio_hic (
+    JsLexator* lx)
 {
     commutatio (lx->prior_genus)
     {
@@ -217,7 +237,7 @@ _divisio_hic (JsLexator* lx)
                 redde VERUM;
             }
             /* '++'/'--' postfixa praesumpta (a++ / b divisio) */
-            si (lx->prior_mensura == 2
+            si (   lx->prior_mensura  == 2
                 && (u == '+' || u == '-')
                 && lx->prior_datum[0] == u)
             {
@@ -230,6 +250,7 @@ _divisio_hic (JsLexator* lx)
     }
 }
 
+
 /* ==================================================
  * consumptores
  * ================================================== */
@@ -239,7 +260,8 @@ interior JsLexemaGenus
 _chordam_consumere (JsLexator* lx);
 
 interior JsLexemaGenus
-_chordam_consumere (JsLexator* lx)
+_chordam_consumere (
+    JsLexator* lx)
 {
     character claudens = _ad(lx, 0);
 
@@ -285,9 +307,10 @@ interior vacuum
 _numerum_consumere (JsLexator* lx);
 
 interior vacuum
-_numerum_consumere (JsLexator* lx)
+_numerum_consumere (
+    JsLexator* lx)
 {
-    si (_ad(lx, 0) == '0'
+    si (   _ad(lx, 0) == '0'
         && (_ad(lx, 1) == 'x' || _ad(lx, 1) == 'X'))
     {
         lx->k = lx->k + 2;
@@ -297,7 +320,7 @@ _numerum_consumere (JsLexator* lx)
         }
         redde;
     }
-    si (_ad(lx, 0) == '0'
+    si (   _ad(lx, 0) == '0'
         && (_ad(lx, 1) == 'b' || _ad(lx, 1) == 'B'
             || _ad(lx, 1) == 'o' || _ad(lx, 1) == 'O'))
     {
@@ -320,7 +343,7 @@ _numerum_consumere (JsLexator* lx)
             lx->k = lx->k + 1;
         }
     }
-    si ((_ad(lx, 0) == 'e' || _ad(lx, 0) == 'E')
+    si (   (_ad(lx, 0) == 'e' || _ad(lx, 0) == 'E')
         && (_est_digitus(_ad(lx, 1))
             || ((_ad(lx, 1) == '+' || _ad(lx, 1) == '-')
                 && _est_digitus(_ad(lx, 2)))))
@@ -340,7 +363,8 @@ interior JsLexemaGenus
 _regex_consumere (JsLexator* lx);
 
 interior JsLexemaGenus
-_regex_consumere (JsLexator* lx)
+_regex_consumere (
+    JsLexator* lx)
 {
     b32 in_classe = FALSUM;
 
@@ -392,7 +416,9 @@ interior JsLexemaGenus
 _formulam_scandere (JsLexator* lx, b32 ab_initio);
 
 interior JsLexemaGenus
-_formulam_scandere (JsLexator* lx, b32 ab_initio)
+_formulam_scandere (
+    JsLexator* lx,
+          b32  ab_initio)
 {
     dum (_intra(lx, 0))
     {
@@ -420,9 +446,9 @@ _formulam_scandere (JsLexator* lx, b32 ab_initio)
         {
             si (lx->altitudo < FORMULARUM_TECTUM)
             {
-                lx->k = lx->k + 2;
-                lx->acervus[lx->altitudo] = 0;
-                lx->altitudo = lx->altitudo + 1;
+                lx->k                      = lx->k + 2;
+                lx->acervus[lx->altitudo]  = 0;
+                lx->altitudo               = lx->altitudo + 1;
                 redde ab_initio ? JS_LEX_FORMULA_INITIUM
                                 : JS_LEX_FORMULA_MEDIA;
             }
@@ -442,7 +468,8 @@ interior i32
 _interpunctionis_mensura (JsLexator* lx);
 
 interior i32
-_interpunctionis_mensura (JsLexator* lx)
+_interpunctionis_mensura (
+    JsLexator* lx)
 {
     character a = _ad(lx, 0);
     character b = _ad(lx, 1);
@@ -453,7 +480,7 @@ _interpunctionis_mensura (JsLexator* lx)
     {
         redde 4;
     }
-    si ((a == '=' && b == '=' && c == '=')
+    si (   (a == '=' && b == '=' && c == '=')
         || (a == '!' && b == '=' && c == '=')
         || (a == '*' && b == '*' && c == '=')
         || (a == '<' && b == '<' && c == '=')
@@ -471,7 +498,7 @@ _interpunctionis_mensura (JsLexator* lx)
         /* '?.' + digitus = ternarium cum .5 (regula ES2020) */
         redde _est_digitus(c) ? 1 : 2;
     }
-    si ((a == '=' && b == '>')
+    si (   (a == '=' && b == '>')
         || (a == '=' && b == '=') || (a == '!' && b == '=')
         || (a == '<' && b == '=') || (a == '>' && b == '=')
         || (a == '&' && b == '&') || (a == '|' && b == '|')
@@ -498,6 +525,7 @@ _interpunctionis_mensura (JsLexator* lx)
     }
 }
 
+
 /* ==================================================
  * lexema unum consumere
  * ================================================== */
@@ -506,7 +534,8 @@ interior JsLexemaGenus
 _lexema_consumere (JsLexator* lx);
 
 interior JsLexemaGenus
-_lexema_consumere (JsLexator* lx)
+_lexema_consumere (
+    JsLexator* lx)
 {
     character c = _ad(lx, 0);
 
@@ -564,15 +593,15 @@ _lexema_consumere (JsLexator* lx)
         redde _formulam_scandere(lx, VERUM);
     }
     /* '}' formulam resumens (interpolatio ad librum) */
-    si (c == '}' && lx->altitudo > 0
+    si (   c                             == '}' && lx->altitudo > 0
         && lx->acervus[lx->altitudo - 1] == 0)
     {
-        lx->altitudo = lx->altitudo - 1;
-        lx->k = lx->k + 1;
+        lx->altitudo  = lx->altitudo - 1;
+        lx->k         = lx->k + 1;
         redde _formulam_scandere(lx, FALSUM);
     }
     /* numeri */
-    si (_est_digitus(c)
+    si (   _est_digitus(c)
         || (c == '.' && _est_digitus(_ad(lx, 1))))
     {
         _numerum_consumere(lx);
@@ -619,37 +648,40 @@ _lexema_consumere (JsLexator* lx)
     redde JS_LEX_IGNOTUM;
 }
 
+
 /* ==================================================
  * facies publica
  * ================================================== */
 
 Xar*
-js_lexare (Piscina* piscina, constans character* fons,
-    i32 mensura)
+js_lexare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
-    JsLexator lx;
-    Xar*      lexemata;
-    i32       linea = 1;
-    i32       columna = 1;
+    JsLexator  lx;
+          Xar* lexemata;
+          i32  linea    = 1;
+          i32  columna  = 1;
 
     lexemata = xar_creare(piscina, (i32)magnitudo(JsLexema));
     si (lexemata == NIHIL)
     {
         redde NIHIL;
     }
-    lx.fons = fons;
-    lx.mensura = mensura;
-    lx.k = 0;
-    lx.altitudo = 0;
-    lx.prior_genus = JS_LEX_FINIS;   /* initium: regex licet */
-    lx.prior_datum = NIHIL;
-    lx.prior_mensura = 0;
+    lx.fons           = fons;
+    lx.mensura        = mensura;
+    lx.k              = 0;
+    lx.altitudo       = 0;
+    lx.prior_genus    = JS_LEX_FINIS;   /* initium: regex licet */
+    lx.prior_datum    = NIHIL;
+    lx.prior_mensura  = 0;
 
     dum (lx.k < lx.mensura)
     {
         JsLexema* l;
-        i32       initium = lx.k;
-        i32       j;
+             i32  initium = lx.k;
+             i32  j;
 
         JsLexemaGenus genus = _lexema_consumere(&lx);
 
@@ -661,25 +693,25 @@ js_lexare (Piscina* piscina, constans character* fons,
         l->genus = genus;
         l->valor = _chorda_ex_fonte(fons + initium,
             lx.k - initium);
-        l->offset = initium;
-        l->linea = linea;
-        l->columna = columna;
+        l->offset   = initium;
+        l->linea    = linea;
+        l->columna  = columna;
         /* lexema significans prius (trivia exclusa) */
-        si (genus != JS_LEX_SPATIA
+        si (   genus != JS_LEX_SPATIA
             && genus != JS_LEX_COMMENTARIUM
             && genus != JS_LEX_COMMENTARIUM_IMPERFECTUM)
         {
-            lx.prior_genus = genus;
-            lx.prior_datum = fons + initium;
-            lx.prior_mensura = lx.k - initium;
+            lx.prior_genus    = genus;
+            lx.prior_datum    = fons + initium;
+            lx.prior_mensura  = lx.k - initium;
         }
         /* positio proximi: octetos lexematis ambulare */
         per (j = initium; j < lx.k; j = j + 1)
         {
             si (fons[j] == '\n')
             {
-                linea = linea + 1;
-                columna = 1;
+                linea    = linea + 1;
+                columna  = 1;
             }
             alioquin
             {
@@ -694,20 +726,22 @@ js_lexare (Piscina* piscina, constans character* fons,
         {
             redde NIHIL;
         }
-        l->genus = JS_LEX_FINIS;
-        l->valor = _chorda_ex_fonte(fons + mensura, 0);
-        l->offset = mensura;
-        l->linea = linea;
-        l->columna = columna;
+        l->genus    = JS_LEX_FINIS;
+        l->valor    = _chorda_ex_fonte(fons + mensura, 0);
+        l->offset   = mensura;
+        l->linea    = linea;
+        l->columna  = columna;
     }
     redde lexemata;
 }
 
 chorda
-js_lexemata_emittere (Piscina* piscina, Xar* lexemata)
+js_lexemata_emittere (
+    Piscina* piscina,
+        Xar* lexemata)
 {
     ChordaAedificator* aed;
-    i32                k;
+                  i32  k;
 
     aed = chorda_aedificator_creare(piscina, (memoriae_index)256);
     per (k = 0; k < xar_numerus(lexemata); k = k + 1)
@@ -720,7 +754,8 @@ js_lexemata_emittere (Piscina* piscina, Xar* lexemata)
 }
 
 constans character*
-js_lexema_genus_nomen (JsLexemaGenus genus)
+js_lexema_genus_nomen (
+    JsLexemaGenus genus)
 {
     commutatio (genus)
     {

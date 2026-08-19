@@ -24,6 +24,7 @@
  * praeprocessoris divergentiam nunc impossibilem facit. */
 #define VITREA_CAPUT_PONTIS "X-Vitrea"
 
+
 /* ========================================================================
  * SCRIPTUM PONTIS - gemellum VITREA_CURSUS_JS pro transportu HTTP
  * ========================================================================
@@ -38,57 +39,60 @@
  * UNA omnia miscet et responsa per id itineranda sunt. HTTP
  * petitionem responso ipse copulat, ergo strato itinerandi opus
  * non est. */
+
 interior constans character* constans VITREA_SERVUS_SCRIPTUM =
-"<script>\n"
-"(function(){\n"
-"window.internuntius = {\n"
-"  vocare: function (methodus, argumenta) {\n"
-"    return fetch('/internuntius', {\n"
-"      method: 'POST',\n"
-"      headers: { 'Content-Type': 'application/json',\n"
-"                 '" VITREA_CAPUT_PONTIS "': '1' },\n"
-"      body: JSON.stringify({ id: 1, methodus: methodus,\n"
-"                             argumenta: argumenta || {} })\n"
-"    }).then(function (r) { return r.json(); })\n"
-"      .then(function (n) {\n"
-"        if (n.culpa) { throw new Error(n.culpa.nuntius); }\n"
-"        return n.fructus;\n"
-"      });\n"
-"  },\n"
-"  audire: function (eventus) {\n"
-"    console.error('internuntius: pulsus non transeunt super'\n"
-"      + ' transportum HTTP (eventus: ' + eventus + ').'\n"
-"      + ' AUDITOR HIC NUMQUAM VOCABITUR - SSE nondum'\n"
-"      + ' aedificatum.');\n"
-"  }\n"
-"};\n"
-"})();\n"
-"</script>\n";
+    "<script>\n"
+    "(function(){\n"
+    "window.internuntius = {\n"
+    "  vocare: function (methodus, argumenta) {\n"
+    "    return fetch('/internuntius', {\n"
+    "      method: 'POST',\n"
+    "      headers: { 'Content-Type': 'application/json',\n"
+    "                 '" VITREA_CAPUT_PONTIS "': '1' },\n"
+    "      body: JSON.stringify({ id: 1, methodus: methodus,\n"
+    "                             argumenta: argumenta || {} })\n"
+    "    }).then(function (r) { return r.json(); })\n"
+    "      .then(function (n) {\n"
+    "        if (n.culpa) { throw new Error(n.culpa.nuntius); }\n"
+    "        return n.fructus;\n"
+    "      });\n"
+    "  },\n"
+    "  audire: function (eventus) {\n"
+    "    console.error('internuntius: pulsus non transeunt super'\n"
+    "      + ' transportum HTTP (eventus: ' + eventus + ').'\n"
+    "      + ' AUDITOR HIC NUMQUAM VOCABITUR - SSE nondum'\n"
+    "      + ' aedificatum.');\n"
+    "  }\n"
+    "};\n"
+    "})();\n"
+    "</script>\n";
+
 
 /* ========================================================================
  * STATUS
  * ======================================================================== */
 
 structura VitreaServus {
-    Piscina*      piscina;
-    Hospitium*    hospitium;
+         Piscina* piscina;
+       Hospitium* hospitium;
     Internuntius* inx;
-    Capsula*      capsula;
-    chorda        tessera;      /* vacua = custodia dormit (loopback) */
+         Capsula* capsula;
+          chorda  tessera;      /* vacua = custodia dormit (loopback) */
     /* sedes responsi petitionis currentis: tuta quia hospitium filo
      * uno currit et tractator ad finem currit ante petitionem
      * proximam (vide notam in capite) */
-    Piscina*      piscina_petitionis;
-    chorda        responsum;
-    b32           responsum_positum;
+    Piscina* piscina_petitionis;
+     chorda  responsum;
+        b32  responsum_positum;
 };
 
 /* ligamen per assetum registratum (datum viae hospitii) */
 nomen structura {
-    VitreaServus*       servus;
+          VitreaServus* servus;
     constans character* via;         /* via in capsula, terminata */
-    b32                 est_pagina;  /* .html -> scriptum inseritur */
+                   b32  est_pagina;  /* .html -> scriptum inseritur */
 } AssetumLigamen;
+
 
 /* ========================================================================
  * AUXILIA
@@ -97,7 +101,9 @@ nomen structura {
 /* chorda -> litterae terminatae in piscina (capsula et mimen
  * chordas C exspectant) */
 interior character*
-_litterae_ex_chorda (chorda c, Piscina* piscina)
+_litterae_ex_chorda (
+     chorda  c,
+    Piscina* piscina)
 {
     character* s = (character*)piscina_allocare(piscina,
         (memoriae_index)(c.mensura + I));
@@ -118,40 +124,44 @@ _litterae_ex_chorda (chorda c, Piscina* piscina)
  * lavat - vide gesta/fontes/tabularium.c:345). Chordae ita factae
  * litteras STATICAS solum monstrent. */
 interior chorda
-_ch (constans character* litterae)
+_ch (
+    constans character* litterae)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = litterae;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(litterae);
+    u.l        = litterae;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(litterae);
     redde c;
 }
 
 /* scriptum pontis post <head> inserere; sine <head>, ante omnia
  * (pagina fragmentaria adhuc laborat - scriptum ante usum currit) */
 interior chorda
-_scriptum_inserere (chorda pagina, Piscina* piscina)
+_scriptum_inserere (
+     chorda  pagina,
+    Piscina* piscina)
 {
-    chorda acus = _ch("<head>");
-    chorda scriptum = _ch(VITREA_SERVUS_SCRIPTUM);
+    chorda acus      = _ch("<head>");
+    chorda scriptum  = _ch(VITREA_SERVUS_SCRIPTUM);
     chorda ante;
     chorda post;
-    s32    index;
-    i32    scissura;
+       s32 index;
+       i32 scissura;
 
     index = chorda_invenire_index(pagina, acus);
     si (index < 0)
     {
         redde chorda_concatenare(scriptum, pagina, piscina);
     }
-    scissura = (i32)index + acus.mensura;
-    ante = chorda_sectio(pagina, ZEPHYRUM, scissura);
-    post = chorda_sectio(pagina, scissura, pagina.mensura);
+    scissura  = (i32)index + acus.mensura;
+    ante      = chorda_sectio(pagina, ZEPHYRUM, scissura);
+    post      = chorda_sectio(pagina, scissura, pagina.mensura);
     redde chorda_concatenare(chorda_concatenare(ante, scriptum,
         piscina), post, piscina);
 }
+
 
 /* ========================================================================
  * CUSTODIA (auth)
@@ -177,7 +187,9 @@ _scriptum_inserere (chorda pagina, Piscina* piscina)
 
 /* comparatio tempore constanti chordarum (tesserae) */
 interior b32
-_tessera_congruit (chorda a, chorda b)
+_tessera_congruit (
+    chorda a,
+    chorda b)
 {
     i32 i;
     i32 differentia;
@@ -197,13 +209,15 @@ _tessera_congruit (chorda a, chorda b)
 /* valorem capitis petitionis invenire (case-insensitivus);
  * chorda vacua si abest */
 interior chorda
-_caput_valor (constans HttpPetitioServeri* p, constans character* titulus)
+_caput_valor (
+    constans HttpPetitioServeri* p,
+             constans character* titulus)
 {
     chorda vacua;
-    i32    i;
+       i32 i;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
     si (p == NIHIL)
     {
         redde vacua;
@@ -221,17 +235,19 @@ _caput_valor (constans HttpPetitioServeri* p, constans character* titulus)
 
 /* valorem parametri ex quaestione ("clavis=xyz&a=b") */
 interior chorda
-_quaestio_valor (chorda quaestio, constans character* clavis)
+_quaestio_valor (
+                chorda  quaestio,
+    constans character* clavis)
 {
     chorda vacua;
     chorda acus;
-    i32    i;
-    i32    len;
+       i32 i;
+       i32 len;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
-    acus = _ch(clavis);
-    len = acus.mensura;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    acus           = _ch(clavis);
+    len            = acus.mensura;
 
     per (i = ZEPHYRUM; i + len + I <= quaestio.mensura; i++)
     {
@@ -240,20 +256,20 @@ _quaestio_valor (chorda quaestio, constans character* clavis)
         {
             perge;
         }
-        si (memcmp(quaestio.datum + i, acus.datum, (size_t)len) == 0
+        si (   memcmp(quaestio.datum + i, acus.datum, (size_t)len) == 0
             && quaestio.datum[i + len] == '=')
         {
             chorda fructus;
-            i32    initium = i + len + I;
-            i32    finis = initium;
+               i32 initium  = i + len + I;
+               i32 finis    = initium;
 
-            dum (finis < quaestio.mensura
-                && quaestio.datum[finis] != '&')
+            dum (   finis < quaestio.mensura
+                 && quaestio.datum[finis] != '&')
             {
                 finis++;
             }
-            fructus.datum = quaestio.datum + initium;
-            fructus.mensura = finis - initium;
+            fructus.datum    = quaestio.datum + initium;
+            fructus.mensura  = finis - initium;
             redde fructus;
         }
     }
@@ -262,18 +278,19 @@ _quaestio_valor (chorda quaestio, constans character* clavis)
 
 /* tesseram ex crustulo extrahere (Cookie: vitrea=xyz; alia=...) */
 interior chorda
-_crustulum_tessera (constans HttpPetitioServeri* p)
+_crustulum_tessera (
+    constans HttpPetitioServeri* p)
 {
     chorda crustula = _caput_valor(p, "Cookie");
     chorda vacua;
-    i32    i;
+       i32 i;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i + VII <= crustula.mensura; i++)
     {
-        si (i > ZEPHYRUM && crustula.datum[i - I] != ' '
+        si (   i > ZEPHYRUM && crustula.datum[i - I] != ' '
             && crustula.datum[i - I] != ';')
         {
             perge;
@@ -281,16 +298,16 @@ _crustulum_tessera (constans HttpPetitioServeri* p)
         si (memcmp(crustula.datum + i, "vitrea=", VII) == 0)
         {
             chorda fructus;
-            i32    initium = i + VII;
-            i32    finis = initium;
+               i32 initium  = i + VII;
+               i32 finis    = initium;
 
-            dum (finis < crustula.mensura
-                && crustula.datum[finis] != ';')
+            dum (   finis < crustula.mensura
+                 && crustula.datum[finis] != ';')
             {
                 finis++;
             }
-            fructus.datum = crustula.datum + initium;
-            fructus.mensura = finis - initium;
+            fructus.datum    = crustula.datum + initium;
+            fructus.mensura  = finis - initium;
             redde fructus;
         }
     }
@@ -300,7 +317,8 @@ _crustulum_tessera (constans HttpPetitioServeri* p)
 /* CDI cum causa nominata (nulla pagina, nullum indicium quid
  * intus sit) */
 interior vacuum
-_recusare (HospitiumColloquium* colloquium)
+_recusare (
+    HospitiumColloquium* colloquium)
 {
     colloquium_respondere(colloquium, CDI, "text/plain",
         _ch("tessera necessaria\n"));
@@ -309,7 +327,9 @@ _recusare (HospitiumColloquium* colloquium)
 /* Redde VERUM si petitio pergere licet.
  * Custodia DORMIT si tessera non configurata (modus loopback). */
 interior b32
-_custodia_admittit (VitreaServus* s, HospitiumColloquium* colloquium)
+_custodia_admittit (
+           VitreaServus* s,
+    HospitiumColloquium* colloquium)
 {
     constans HttpPetitioServeri* p;
 
@@ -322,7 +342,9 @@ _custodia_admittit (VitreaServus* s, HospitiumColloquium* colloquium)
 }
 
 interior vacuum
-_missor (vacuum* datum, chorda textus)
+_missor (
+    vacuum* datum,
+    chorda  textus)
 {
     VitreaServus* s = (VitreaServus*)datum;
 
@@ -336,10 +358,11 @@ _missor (vacuum* datum, chorda textus)
 }
 
 interior vacuum
-_pons_tractator (HospitiumColloquium* colloquium)
+_pons_tractator (
+    HospitiumColloquium* colloquium)
 {
-    VitreaServus* s  = (VitreaServus*)colloquium_datum(colloquium);
-    Piscina*      pn = colloquium_piscina(colloquium);
+                   VitreaServus* s = (VitreaServus*)colloquium_datum(colloquium);
+                        Piscina* pn = colloquium_piscina(colloquium);
     constans HttpPetitioServeri* petitio =
         colloquium_petitio(colloquium);
 
@@ -351,7 +374,7 @@ _pons_tractator (HospitiumColloquium* colloquium)
     /* CSRF: caput proprium poscimus. Forma aliena illud sine
      * praevolatu ponere non potest, et praevolatum non tractamus -
      * ergo scriptio trans origines cadit etiam crustulo valido. */
-    si (s->tessera.mensura > ZEPHYRUM
+    si (   s->tessera.mensura > ZEPHYRUM
         && _caput_valor(petitio, VITREA_CAPUT_PONTIS).mensura == ZEPHYRUM)
     {
         colloquium_respondere(colloquium, CDIII, "application/json",
@@ -359,10 +382,10 @@ _pons_tractator (HospitiumColloquium* colloquium)
         redde;
     }
 
-    s->piscina_petitionis = pn;
-    s->responsum_positum  = FALSUM;
-    s->responsum.mensura  = ZEPHYRUM;
-    s->responsum.datum    = NIHIL;
+    s->piscina_petitionis  = pn;
+    s->responsum_positum   = FALSUM;
+    s->responsum.mensura   = ZEPHYRUM;
+    s->responsum.datum     = NIHIL;
 
     internuntius_tractare(s->inx, petitio->corpus, pn);
 
@@ -378,24 +401,26 @@ _pons_tractator (HospitiumColloquium* colloquium)
         s->responsum);
 }
 
+
 /* ========================================================================
  * ASSETA
  * ======================================================================== */
 
 interior vacuum
-_assetum_tractator (HospitiumColloquium* colloquium)
+_assetum_tractator (
+    HospitiumColloquium* colloquium)
 {
     AssetumLigamen* lig =
         (AssetumLigamen*)colloquium_datum(colloquium);
-    Piscina*        pn  = colloquium_piscina(colloquium);
-    VitreaServus*   s   = lig->servus;
+           Piscina* pn  = colloquium_piscina(colloquium);
+      VitreaServus* s   = lig->servus;
     CapsulaFructus  res;
-    chorda          corpus;
+            chorda  corpus;
 
     si (s->tessera.mensura > ZEPHYRUM)
     {
         constans HttpPetitioServeri* p = colloquium_petitio(colloquium);
-        chorda oblata = _quaestio_valor(p->quaestio, "clavis");
+                             chorda  oblata = _quaestio_valor(p->quaestio, "clavis");
 
         /* tessera in URL (ex QR): crustulum pone et REDIRIGE, ut
          * secretum ex barra addressum et ex annalibus navigatri
@@ -409,7 +434,7 @@ _assetum_tractator (HospitiumColloquium* colloquium)
             }
             {
                 character crustulum[512];
-                chorda    via_nuda = colloquium_petitio(colloquium)->via;
+                   chorda via_nuda = colloquium_petitio(colloquium)->via;
 
                 sprintf(crustulum,
                     "vitrea=%.*s; Path=/; HttpOnly; SameSite=Strict",
@@ -454,7 +479,8 @@ _assetum_tractator (HospitiumColloquium* colloquium)
 }
 
 interior b32
-_est_pagina (chorda via)
+_est_pagina (
+    chorda via)
 {
     redde chorda_terminatur(via, _ch(".html"))
         || chorda_terminatur(via, _ch(".htm"));
@@ -462,7 +488,9 @@ _est_pagina (chorda via)
 
 /* viam URL ex via capsulae: "/" praefixum */
 interior character*
-_url_ex_via (chorda via, Piscina* piscina)
+_url_ex_via (
+     chorda  via,
+    Piscina* piscina)
 {
     character* s = (character*)piscina_allocare(piscina,
         (memoriae_index)(via.mensura + II));
@@ -480,22 +508,24 @@ _url_ex_via (chorda via, Piscina* piscina)
     redde s;
 }
 
+
 /* ========================================================================
  * CYCLUS VITAE
  * ======================================================================== */
 
 VitreaServus*
-vitrea_servus_creare (Piscina* piscina,
+vitrea_servus_creare (
+                              Piscina* piscina,
     constans VitreaServusConfiguratio* configuratio)
 {
-    VitreaServus*         servus;
-    HospitiumConfiguratio cfg;
-    constans character*   via_initialis;
-    i32                   numerus;
-    i32                   i;
+             VitreaServus* servus;
+    HospitiumConfiguratio  cfg;
+       constans character* via_initialis;
+                      i32  numerus;
+                      i32  i;
 
-    si (piscina == NIHIL || configuratio == NIHIL
-        || configuratio->capsula == NIHIL
+    si (   piscina                 == NIHIL || configuratio == NIHIL
+        || configuratio->capsula   == NIHIL
         || configuratio->praebitor == NIHIL)
     {
         redde NIHIL;
@@ -505,7 +535,7 @@ vitrea_servus_creare (Piscina* piscina,
      * REFUSIO, non monitum. Forum in reticulo apertum sine custodia
      * casus esse non debet sed IMPOSSIBILE. Porta hic sedet (in
      * strato), non in app: ergo nulla app oblivisci potest. */
-    si (configuratio->hospes != NIHIL
+    si (   configuratio->hospes != NIHIL
         && (configuratio->tessera == NIHIL
             || strlen(configuratio->tessera) < XXXII))
     {
@@ -523,10 +553,10 @@ vitrea_servus_creare (Piscina* piscina,
         redde NIHIL;
     }
     memset(servus, ZEPHYRUM, magnitudo(VitreaServus));
-    servus->piscina = piscina;
-    servus->capsula = configuratio->capsula;
-    servus->tessera.datum = NIHIL;
-    servus->tessera.mensura = ZEPHYRUM;
+    servus->piscina          = piscina;
+    servus->capsula          = configuratio->capsula;
+    servus->tessera.datum    = NIHIL;
+    servus->tessera.mensura  = ZEPHYRUM;
     si (configuratio->tessera != NIHIL)
     {
         servus->tessera = chorda_transcribere(
@@ -534,10 +564,10 @@ vitrea_servus_creare (Piscina* piscina,
     }
 
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
-    cfg.hospes        = configuratio->hospes;   /* NIHIL = loopback */
-    cfg.portus        = configuratio->portus;
-    cfg.acta_accessus = configuratio->acta_accessus;
-    servus->hospitium = hospitium_creare(piscina, &cfg);
+    cfg.hospes         = configuratio->hospes;   /* NIHIL = loopback */
+    cfg.portus         = configuratio->portus;
+    cfg.acta_accessus  = configuratio->acta_accessus;
+    servus->hospitium  = hospitium_creare(piscina, &cfg);
     si (servus->hospitium == NIHIL)
     {
         redde NIHIL;
@@ -572,9 +602,9 @@ vitrea_servus_creare (Piscina* piscina,
     numerus = capsula_numerus(configuratio->capsula);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        CapsulaIndexum*  ix  = capsula_indexum(configuratio->capsula, i);
-        AssetumLigamen*  lig;
-        character*       url;
+        CapsulaIndexum* ix  = capsula_indexum(configuratio->capsula, i);
+        AssetumLigamen* lig;
+             character* url;
 
         si (ix == NIHIL)
         {
@@ -588,9 +618,9 @@ vitrea_servus_creare (Piscina* piscina,
             hospitium_destruere(servus->hospitium);
             redde NIHIL;
         }
-        lig->servus     = servus;
-        lig->via        = _litterae_ex_chorda(ix->via, piscina);
-        lig->est_pagina = _est_pagina(ix->via);
+        lig->servus      = servus;
+        lig->via         = _litterae_ex_chorda(ix->via, piscina);
+        lig->est_pagina  = _est_pagina(ix->via);
         si (lig->via == NIHIL)
         {
             hospitium_destruere(servus->hospitium);
@@ -610,7 +640,8 @@ vitrea_servus_creare (Piscina* piscina,
 }
 
 vacuum
-vitrea_servus_currere (VitreaServus* servus)
+vitrea_servus_currere (
+    VitreaServus* servus)
 {
     si (servus != NIHIL)
     {
@@ -619,7 +650,9 @@ vitrea_servus_currere (VitreaServus* servus)
 }
 
 b32
-vitrea_servus_gressus (VitreaServus* servus, s32 ms_maximae)
+vitrea_servus_gressus (
+    VitreaServus* servus,
+             s32  ms_maximae)
 {
     si (servus == NIHIL)
     {
@@ -629,7 +662,8 @@ vitrea_servus_gressus (VitreaServus* servus, s32 ms_maximae)
 }
 
 vacuum
-vitrea_servus_sistere (VitreaServus* servus)
+vitrea_servus_sistere (
+    VitreaServus* servus)
 {
     si (servus != NIHIL)
     {
@@ -638,7 +672,8 @@ vitrea_servus_sistere (VitreaServus* servus)
 }
 
 vacuum
-vitrea_servus_destruere (VitreaServus* servus)
+vitrea_servus_destruere (
+    VitreaServus* servus)
 {
     si (servus != NIHIL && servus->hospitium != NIHIL)
     {
@@ -648,7 +683,8 @@ vitrea_servus_destruere (VitreaServus* servus)
 }
 
 i32
-vitrea_servus_portus (constans VitreaServus* servus)
+vitrea_servus_portus (
+    constans VitreaServus* servus)
 {
     si (servus == NIHIL)
     {
@@ -658,7 +694,8 @@ vitrea_servus_portus (constans VitreaServus* servus)
 }
 
 Internuntius*
-vitrea_servus_internuntius (VitreaServus* servus)
+vitrea_servus_internuntius (
+    VitreaServus* servus)
 {
     si (servus == NIHIL)
     {

@@ -10,6 +10,7 @@
 /* Debug flag - set to 1 to enable debug output */
 #define FLATURA_DEBUG 0
 
+
 /* ========================================================================
  * CONSTANTIAE INTERNAE
  * ======================================================================== */
@@ -37,7 +38,7 @@ hic_manens i32 crc32_tabula[IV][CCLVI];
 hic_manens b32 crc32_initiatum = FALSUM;
 
 interior vacuum
-_flatura_crc32_initium(vacuum)
+_flatura_crc32_initium (vacuum)
 {
     i32 i;
     i32 j;
@@ -80,12 +81,11 @@ _flatura_crc32_initium(vacuum)
     crc32_initiatum = VERUM;
 }
 
-
 i32
-flatura_crc32_continuare(
-    i32          crc,
+flatura_crc32_continuare (
+            i32  crc,
     constans i8* datum,
-    i32          mensura)
+            i32  mensura)
 {
     i32 i;
     i32 remaining;
@@ -93,8 +93,8 @@ flatura_crc32_continuare(
     _flatura_crc32_initium();
 
     /* Processare 4 bytes simul (slice-by-4) */
-    remaining = mensura;
-    i = 0;
+    remaining  = mensura;
+    i          = 0;
 
     dum (remaining >= IV)
     {
@@ -102,18 +102,18 @@ flatura_crc32_continuare(
 
         /* Legere 4 bytes et XOR cum CRC */
         word = crc ^ (
-               ((i32)(datum[i] & 0xFF)) |
-               ((i32)(datum[i + I] & 0xFF) << VIII) |
-               ((i32)(datum[i + II] & 0xFF) << XVI) |
-               ((i32)(datum[i + III] & 0xFF) << XXIV));
+               ((i32)(datum[i] & 0xFF))
+            | ((i32)(datum[i + I] & 0xFF) << VIII)
+            | ((i32)(datum[i + II] & 0xFF) << XVI)
+            | ((i32)(datum[i + III] & 0xFF) << XXIV));
 
-        crc = crc32_tabula[III][word & 0xFF] ^
-              crc32_tabula[II][(word >> VIII) & 0xFF] ^
-              crc32_tabula[I][(word >> XVI) & 0xFF] ^
-              crc32_tabula[0][(word >> XXIV) & 0xFF];
+        crc = crc32_tabula[III][word & 0xFF]
+            ^ crc32_tabula[II][(word >> VIII) & 0xFF]
+            ^ crc32_tabula[I][(word >> XVI) & 0xFF]
+            ^ crc32_tabula[0][(word >> XXIV) & 0xFF];
 
-        i += IV;
-        remaining -= IV;
+        i          += IV;
+        remaining  -= IV;
     }
 
     /* Processare bytes residuos */
@@ -127,11 +127,10 @@ flatura_crc32_continuare(
     redde crc;
 }
 
-
 i32
-flatura_crc32(
+flatura_crc32 (
     constans i8* datum,
-    i32          mensura)
+            i32  mensura)
 {
     i32 crc;
 
@@ -148,31 +147,30 @@ flatura_crc32(
 
 nomen structura {
     constans i8* datum;
-    i32          mensura;
-    i32          positus;
-    i32          bit_buffer;
-    i32          bits_in_buffer;
+            i32  mensura;
+            i32  positus;
+            i32  bit_buffer;
+            i32  bits_in_buffer;
 } FlaturaLector;
 
 
 interior vacuum
-_flatura_lector_initium(
+_flatura_lector_initium (
     FlaturaLector* lector,
-    constans i8*   datum,
-    i32            mensura)
+      constans i8* datum,
+              i32  mensura)
 {
-    lector->datum = datum;
-    lector->mensura = mensura;
-    lector->positus = 0;
-    lector->bit_buffer = 0;
-    lector->bits_in_buffer = 0;
+    lector->datum           = datum;
+    lector->mensura         = mensura;
+    lector->positus         = 0;
+    lector->bit_buffer      = 0;
+    lector->bits_in_buffer  = 0;
 }
-
 
 /* <contractus reditus="-1,65535"/> */
 interior s32
-_flatura_legere_bits(
-    FlaturaLector*  lector,
+_flatura_legere_bits (
+     FlaturaLector* lector,
     NumerusBitorum  numerus_bits)
 {
     i32 valor;
@@ -198,13 +196,13 @@ _flatura_legere_bits(
     redde (s32)valor;
 }
 
-
 interior vacuum
-_flatura_saltare_ad_byte(FlaturaLector* lector)
+_flatura_saltare_ad_byte (
+    FlaturaLector* lector)
 {
     /* Discardere bits residuos in byte currenti */
-    lector->bit_buffer = 0;
-    lector->bits_in_buffer = 0;
+    lector->bit_buffer      = 0;
+    lector->bits_in_buffer  = 0;
 }
 
 
@@ -213,20 +211,20 @@ _flatura_saltare_ad_byte(FlaturaLector* lector)
  * ======================================================================== */
 
 nomen structura {
-    i8*      datum;
-    i32      capacitas;
-    i32      positus;
-    i32      bit_buffer;
-    i32      bits_in_buffer;
+         i8* datum;
+        i32  capacitas;
+        i32  positus;
+        i32  bit_buffer;
+        i32  bits_in_buffer;
     Piscina* piscina;
 } FlaturaScriptor;
 
 
 interior vacuum
-_flatura_scriptor_initium(
+_flatura_scriptor_initium (
     FlaturaScriptor* scriptor,
-    Piscina*         piscina,
-    i32              capacitas_initialis)
+            Piscina* piscina,
+                i32  capacitas_initialis)
 {
     scriptor->piscina = piscina;
     scriptor->capacitas = capacitas_initialis;
@@ -236,18 +234,18 @@ _flatura_scriptor_initium(
     scriptor->bits_in_buffer = 0;
 }
 
-
 interior vacuum
-_flatura_scriptor_crescere(FlaturaScriptor* scriptor)
+_flatura_scriptor_crescere (
+    FlaturaScriptor* scriptor)
 {
     i32  nova_capacitas;
-    i8*  novum_datum;
+     i8* novum_datum;
 
     nova_capacitas = scriptor->capacitas * II;
     novum_datum = (i8*)piscina_allocare(scriptor->piscina, (memoriae_index)nova_capacitas);
     memcpy(novum_datum, scriptor->datum, (size_t)scriptor->positus);
-    scriptor->datum = novum_datum;
-    scriptor->capacitas = nova_capacitas;
+    scriptor->datum      = novum_datum;
+    scriptor->capacitas  = nova_capacitas;
 }
 
 
@@ -271,17 +269,17 @@ _flatura_scriptor_crescere(FlaturaScriptor* scriptor)
 
 /* Keep function version for complex cases */
 interior vacuum
-_flatura_scribere_bits(
+_flatura_scribere_bits (
     FlaturaScriptor* scriptor,
-    i32              valor,
-    NumerusBitorum   numerus_bits)
+                i32  valor,
+     NumerusBitorum  numerus_bits)
 {
     FLATURA_SCRIBERE_BITS(scriptor, valor, numerus_bits);
 }
 
-
 interior vacuum
-_flatura_scriptor_finire(FlaturaScriptor* scriptor)
+_flatura_scriptor_finire (
+    FlaturaScriptor* scriptor)
 {
     /* Flush bits residuos */
     si (scriptor->bits_in_buffer > 0)
@@ -292,8 +290,8 @@ _flatura_scriptor_finire(FlaturaScriptor* scriptor)
         }
         scriptor->datum[scriptor->positus] = (i8)(scriptor->bit_buffer & 0xFF);
         scriptor->positus++;
-        scriptor->bit_buffer = 0;
-        scriptor->bits_in_buffer = 0;
+        scriptor->bit_buffer      = 0;
+        scriptor->bits_in_buffer  = 0;
     }
 }
 
@@ -305,7 +303,7 @@ _flatura_scriptor_finire(FlaturaScriptor* scriptor)
 /* Tabula pro decodificando Huffman symbola */
 nomen structura {
     s16* symbola;       /* Symbolum pro quoque codice (-1 = invalidus) */
-    i8*  longitudines;  /* Longitudo codi pro quoque codice */
+     i8* longitudines;  /* Longitudo codi pro quoque codice */
     i32  numerus;       /* Numerus symbolorum */
     i32  maxima_bits;   /* Maxima longitudo codi */
 } HuffmanTabula;
@@ -350,11 +348,11 @@ hic_manens constans i8 codex_longitudo_ordo[XIX] = {
 
 
 interior b32
-_flatura_huffman_construere(
+_flatura_huffman_construere (
     HuffmanTabula* tabula,
-    constans i8*   longitudines,
-    i32            numerus,
-    Piscina*       piscina)
+      constans i8* longitudines,
+              i32  numerus,
+          Piscina* piscina)
 {
     i32  bl_count[XVI];  /* Numerus codicum per longitudinem */
     i32  next_code[XVI]; /* Proximus codex pro quaque longitudine */
@@ -368,8 +366,8 @@ _flatura_huffman_construere(
     /* Initium */
     per (i = 0; i < XVI; i++)
     {
-        bl_count[i] = 0;
-        next_code[i] = 0;
+        bl_count[i]   = 0;
+        next_code[i]  = 0;
     }
 
     /* Numerare codices per longitudinem */
@@ -395,8 +393,8 @@ _flatura_huffman_construere(
     codex = 0;
     per (bits = 1; bits <= maxima_bits; bits++)
     {
-        codex = (codex + bl_count[bits - I]) << I;
-        next_code[bits] = codex;
+        codex            = (codex + bl_count[bits - I]) << I;
+        next_code[bits]  = codex;
     }
 
     /* Assignare codices */
@@ -424,8 +422,8 @@ _flatura_huffman_construere(
     /* Initium cum valoribus invalidis */
     per (i = 0; i < tabula_magnitudo; i++)
     {
-        tabula->symbola[i] = -1;
-        tabula->longitudines[i] = 0;
+        tabula->symbola[i]       = -1;
+        tabula->longitudines[i]  = 0;
     }
 
     /* Implere tabula */
@@ -451,8 +449,8 @@ _flatura_huffman_construere(
             incrementum = I << bits_codex;
             per (j = codex_rev; j < tabula_magnitudo; j += incrementum)
             {
-                tabula->symbola[j] = (s16)i;
-                tabula->longitudines[j] = (i8)bits_codex;
+                tabula->symbola[j]       = (s16)i;
+                tabula->longitudines[j]  = (i8)bits_codex;
             }
         }
     }
@@ -460,11 +458,10 @@ _flatura_huffman_construere(
     redde VERUM;
 }
 
-
 interior s32
-_flatura_huffman_legere(
-    FlaturaLector*  lector,
-    HuffmanTabula*  tabula)
+_flatura_huffman_legere (
+    FlaturaLector* lector,
+    HuffmanTabula* tabula)
 {
     s32 bits;
     s32 symbolum;
@@ -474,8 +471,8 @@ _flatura_huffman_legere(
     i32 bits_disponibiles;
 
     /* Calculare bits disponibiles */
-    bits_disponibiles = lector->bits_in_buffer +
-                        (lector->mensura - lector->positus) * VIII;
+    bits_disponibiles = lector->bits_in_buffer
+        + (lector->mensura - lector->positus) * VIII;
 
     si (bits_disponibiles <= 0)
     {
@@ -513,8 +510,8 @@ _flatura_huffman_legere(
         redde -1;
     }
 
-    symbolum = tabula->symbola[bits];
-    longitudo = (i32)tabula->longitudines[bits];
+    symbolum   = tabula->symbola[bits];
+    longitudo  = (i32)tabula->longitudines[bits];
 
     si (symbolum < 0)
     {
@@ -562,9 +559,9 @@ _flatura_huffman_legere(
  * ======================================================================== */
 
 interior b32
-_flatura_construere_tabulam_fixam_literarum(
+_flatura_construere_tabulam_fixam_literarum (
     HuffmanTabula* tabula,
-    Piscina*       piscina)
+          Piscina* piscina)
 {
     i32 tabula_magnitudo;
     i32 i;
@@ -575,8 +572,8 @@ _flatura_construere_tabulam_fixam_literarum(
     i32 incrementum;
 
     /* Fixed Huffman: 9 bits maxima */
-    tabula->maxima_bits = IX;
-    tabula_magnitudo = I << IX;
+    tabula->maxima_bits  = IX;
+    tabula_magnitudo     = I << IX;
 
     tabula->symbola = (s16*)piscina_allocare(piscina, (memoriae_index)((i32)tabula_magnitudo * (s32)magnitudo(s16)));
     tabula->longitudines = (i8*)piscina_allocare(piscina, (memoriae_index)tabula_magnitudo);
@@ -585,8 +582,8 @@ _flatura_construere_tabulam_fixam_literarum(
     /* Initium */
     per (i = 0; i < tabula_magnitudo; i++)
     {
-        tabula->symbola[i] = -1;
-        tabula->longitudines[i] = 0;
+        tabula->symbola[i]       = -1;
+        tabula->longitudines[i]  = 0;
     }
 
     /* Per RFC 1951 - exact codes, not canonical:
@@ -599,9 +596,9 @@ _flatura_construere_tabulam_fixam_literarum(
     /* 0-143: 8 bit codes starting at 0x30 */
     per (i = 0; i <= CXLIII; i++)
     {
-        codex = 0x30 + i;
-        bits = VIII;
-        codex_rev = 0;
+        codex      = 0x30 + i;
+        bits       = VIII;
+        codex_rev  = 0;
         per (j = 0; j < bits; j++)
         {
             codex_rev = (codex_rev << I) | ((codex >> j) & I);
@@ -609,32 +606,32 @@ _flatura_construere_tabulam_fixam_literarum(
         incrementum = I << bits;
         per (j = codex_rev; j < tabula_magnitudo; j += incrementum)
         {
-            tabula->symbola[j] = (s16)i;
-            tabula->longitudines[j] = (i8)bits;
+            tabula->symbola[j]       = (s16)i;
+            tabula->longitudines[j]  = (i8)bits;
         }
     }
 
     /* 144-255: 9 bit codes starting at 0x190 */
     per (i = CXLIV; i <= CCLV; i++)
     {
-        codex = 0x190 + (i - CXLIV);
-        bits = IX;
-        codex_rev = 0;
+        codex      = 0x190 + (i - CXLIV);
+        bits       = IX;
+        codex_rev  = 0;
         per (j = 0; j < bits; j++)
         {
             codex_rev = (codex_rev << I) | ((codex >> j) & I);
         }
         /* For 9-bit codes, no incrementum needed */
-        tabula->symbola[codex_rev] = (s16)i;
-        tabula->longitudines[codex_rev] = (i8)bits;
+        tabula->symbola[codex_rev]       = (s16)i;
+        tabula->longitudines[codex_rev]  = (i8)bits;
     }
 
     /* 256-279: 7 bit codes starting at 0x00 */
     per (i = FLATURA_END_BLOCK; i <= 279; i++)
     {
-        codex = i - FLATURA_END_BLOCK;
-        bits = VII;
-        codex_rev = 0;
+        codex      = i - FLATURA_END_BLOCK;
+        bits       = VII;
+        codex_rev  = 0;
         per (j = 0; j < bits; j++)
         {
             codex_rev = (codex_rev << I) | ((codex >> j) & I);
@@ -642,17 +639,17 @@ _flatura_construere_tabulam_fixam_literarum(
         incrementum = I << bits;
         per (j = codex_rev; j < tabula_magnitudo; j += incrementum)
         {
-            tabula->symbola[j] = (s16)i;
-            tabula->longitudines[j] = (i8)bits;
+            tabula->symbola[j]       = (s16)i;
+            tabula->longitudines[j]  = (i8)bits;
         }
     }
 
     /* 280-287: 8 bit codes starting at 0xC0 */
     per (i = CCLXXX; i <= 287; i++)
     {
-        codex = 0xC0 + (i - CCLXXX);
-        bits = VIII;
-        codex_rev = 0;
+        codex      = 0xC0 + (i - CCLXXX);
+        bits       = VIII;
+        codex_rev  = 0;
         per (j = 0; j < bits; j++)
         {
             codex_rev = (codex_rev << I) | ((codex >> j) & I);
@@ -660,21 +657,20 @@ _flatura_construere_tabulam_fixam_literarum(
         incrementum = I << bits;
         per (j = codex_rev; j < tabula_magnitudo; j += incrementum)
         {
-            tabula->symbola[j] = (s16)i;
-            tabula->longitudines[j] = (i8)bits;
+            tabula->symbola[j]       = (s16)i;
+            tabula->longitudines[j]  = (i8)bits;
         }
     }
 
     redde VERUM;
 }
 
-
 interior b32
-_flatura_construere_tabulam_fixam_distantiarum(
+_flatura_construere_tabulam_fixam_distantiarum (
     HuffmanTabula* tabula,
-    Piscina*       piscina)
+          Piscina* piscina)
 {
-    i8 longitudines[XXXII];  /* 32 symbola */
+     i8 longitudines[XXXII];  /* 32 symbola */
     i32 i;
 
     /* Per RFC 1951: omnes 5 bits */
@@ -692,37 +688,35 @@ _flatura_construere_tabulam_fixam_distantiarum(
  * ======================================================================== */
 
 nomen structura {
-    i8* datum;
-    i32 amplitudo;
-    i32 positus;
+     i8* datum;
+    i32  amplitudo;
+    i32  positus;
 } FlaturaFenestra;
 
 
 interior vacuum
-_flatura_fenestra_initium(
+_flatura_fenestra_initium (
     FlaturaFenestra* fenestra,
-    Piscina*         piscina)
+            Piscina* piscina)
 {
     fenestra->datum = (i8*)piscina_allocare(piscina, FLATURA_FENESTRA_MAGNITUDO);
     fenestra->amplitudo = FLATURA_FENESTRA_MAGNITUDO;
     fenestra->positus = 0;
 }
 
-
 interior vacuum
-_flatura_fenestra_scribere(
+_flatura_fenestra_scribere (
     FlaturaFenestra* fenestra,
-    i8               valor)
+                 i8  valor)
 {
     fenestra->datum[fenestra->positus & (fenestra->amplitudo - I)] = valor;
     fenestra->positus++;
 }
 
-
 interior i8
-_flatura_fenestra_legere(
+_flatura_fenestra_legere (
     FlaturaFenestra* fenestra,
-    i32              distantia)
+                i32  distantia)
 {
     i32 index;
     index = (fenestra->positus - distantia) & (fenestra->amplitudo - I);
@@ -735,18 +729,18 @@ _flatura_fenestra_legere(
  * ======================================================================== */
 
 nomen structura {
-    i8*      datum;
-    i32      capacitas;
-    i32      positus;
+         i8* datum;
+        i32  capacitas;
+        i32  positus;
     Piscina* piscina;
 } FlaturaOutput;
 
 
 interior vacuum
-_flatura_output_initium(
+_flatura_output_initium (
     FlaturaOutput* output,
-    Piscina*       piscina,
-    i32            capacitas_initialis)
+          Piscina* piscina,
+              i32  capacitas_initialis)
 {
     output->piscina = piscina;
     output->capacitas = capacitas_initialis;
@@ -754,26 +748,25 @@ _flatura_output_initium(
     output->positus = 0;
 }
 
-
 interior vacuum
-_flatura_output_crescere(FlaturaOutput* output)
+_flatura_output_crescere (
+    FlaturaOutput* output)
 {
     i32  nova_capacitas;
-    i8*  novum_datum;
+     i8* novum_datum;
 
     nova_capacitas = output->capacitas * II;
     novum_datum = (i8*)piscina_allocare(output->piscina, (memoriae_index)nova_capacitas);
     memcpy(novum_datum, output->datum, (size_t)output->positus);
-    output->datum = novum_datum;
-    output->capacitas = nova_capacitas;
+    output->datum      = novum_datum;
+    output->capacitas  = nova_capacitas;
 }
 
-
 interior vacuum
-_flatura_output_scribere(
-    FlaturaOutput*   output,
+_flatura_output_scribere (
+      FlaturaOutput* output,
     FlaturaFenestra* fenestra,
-    i8               valor)
+                 i8  valor)
 {
     si (output->positus >= output->capacitas)
     {
@@ -785,16 +778,15 @@ _flatura_output_scribere(
     _flatura_fenestra_scribere(fenestra, valor);
 }
 
-
 interior vacuum
-_flatura_output_copiare(
-    FlaturaOutput*   output,
+_flatura_output_copiare (
+      FlaturaOutput* output,
     FlaturaFenestra* fenestra,
-    i32              distantia,
-    i32              longitudo)
+                i32  distantia,
+                i32  longitudo)
 {
     i32 i;
-    i8  valor;
+     i8 valor;
 
     per (i = 0; i < longitudo; i++)
     {
@@ -809,17 +801,17 @@ _flatura_output_copiare(
  * ======================================================================== */
 
 interior FlaturaFructus
-_flatura_inflare_internus(
-    FlaturaLector*  lector,
-    Piscina*        piscina)
+_flatura_inflare_internus (
+    FlaturaLector* lector,
+          Piscina* piscina)
 {
-    FlaturaFructus   fructus;
-    FlaturaFenestra  fenestra;
-    FlaturaOutput    output;
-    HuffmanTabula    tabula_literarum;
-    HuffmanTabula    tabula_distantiarum;
-    b32              finalis;
-    s32              modus;
+     FlaturaFructus fructus;
+    FlaturaFenestra fenestra;
+      FlaturaOutput output;
+      HuffmanTabula tabula_literarum;
+      HuffmanTabula tabula_distantiarum;
+                b32 finalis;
+                s32 modus;
 #if FLATURA_DEBUG
     i32              symbola_count;
     symbola_count = 0;
@@ -832,14 +824,14 @@ _flatura_inflare_internus(
     dum (!finalis)
     {
         /* Legere block header */
-        finalis = _flatura_legere_bits(lector, I) ? VERUM : FALSUM;
-        modus = _flatura_legere_bits(lector, II);
+        finalis  = _flatura_legere_bits(lector, I) ? VERUM : FALSUM;
+        modus    = _flatura_legere_bits(lector, II);
 
         si (modus < 0)
         {
-            fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
             redde fructus;
         }
 
@@ -852,14 +844,14 @@ _flatura_inflare_internus(
 
             _flatura_saltare_ad_byte(lector);
 
-            len = _flatura_legere_bits(lector, XVI);
-            nlen = _flatura_legere_bits(lector, XVI);
+            len   = _flatura_legere_bits(lector, XVI);
+            nlen  = _flatura_legere_bits(lector, XVI);
 
             si (len < 0 || nlen < 0 || (len ^ 0xFFFF) != nlen)
             {
-                fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                fructus.datum = NIHIL;
-                fructus.mensura = 0;
+                fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                fructus.datum    = NIHIL;
+                fructus.mensura  = 0;
                 redde fructus;
             }
 
@@ -869,9 +861,9 @@ _flatura_inflare_internus(
                 b = _flatura_legere_bits(lector, VIII);
                 si (b < 0)
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
                 _flatura_output_scribere(&output, &fenestra, (i8)b);
@@ -884,27 +876,27 @@ _flatura_inflare_internus(
             si (modus == I)
             {
                 /* Fixed Huffman */
-                si (!_flatura_construere_tabulam_fixam_literarum(&tabula_literarum, piscina) ||
-                    !_flatura_construere_tabulam_fixam_distantiarum(&tabula_distantiarum, piscina))
+                si (   !_flatura_construere_tabulam_fixam_literarum(&tabula_literarum, piscina)
+                    || !_flatura_construere_tabulam_fixam_distantiarum(&tabula_distantiarum, piscina))
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_HUFFMAN;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_HUFFMAN;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
             }
             alioquin
             {
                 /* Dynamic Huffman */
-                s32 hlit;
-                s32 hdist;
-                s32 hclen;
-                i8  cl_lengths[XIX];
-                i8  all_lengths[288 + XXXII];
+                          s32 hlit;
+                          s32 hdist;
+                          s32 hclen;
+                           i8 cl_lengths[XIX];
+                           i8 all_lengths[288 + XXXII];
                 HuffmanTabula tabula_cl;
-                i32 i;
-                s32 total;
-                s32 index;
+                          i32 i;
+                          s32 total;
+                          s32 index;
 
                 hlit = _flatura_legere_bits(lector, V) + FLATURA_FIRST_LEN;
                 hdist = _flatura_legere_bits(lector, V) + 1;
@@ -912,9 +904,9 @@ _flatura_inflare_internus(
 
                 si (hlit < 0 || hdist < 0 || hclen < 0)
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
 
@@ -929,9 +921,9 @@ _flatura_inflare_internus(
                     len = _flatura_legere_bits(lector, III);
                     si (len < 0)
                     {
-                        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                        fructus.datum = NIHIL;
-                        fructus.mensura = 0;
+                        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                        fructus.datum    = NIHIL;
+                        fructus.mensura  = 0;
                         redde fructus;
                     }
                     cl_lengths[(i32)codex_longitudo_ordo[i]] = (i8)len;
@@ -940,9 +932,9 @@ _flatura_inflare_internus(
                 /* Construere code length tabula */
                 si (!_flatura_huffman_construere(&tabula_cl, cl_lengths, XIX, piscina))
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_HUFFMAN;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_HUFFMAN;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
 
@@ -957,9 +949,9 @@ _flatura_inflare_internus(
 
                     si (sym < 0)
                     {
-                        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                        fructus.datum = NIHIL;
-                        fructus.mensura = 0;
+                        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                        fructus.datum    = NIHIL;
+                        fructus.mensura  = 0;
                         redde fructus;
                     }
 
@@ -973,7 +965,7 @@ _flatura_inflare_internus(
                     {
                         /* Repetere praecedentum 3-6 times */
                         s32 count;
-                        i8  prev;
+                         i8 prev;
 
                         si (index == 0)
                         {
@@ -983,8 +975,8 @@ _flatura_inflare_internus(
                             redde fructus;
                         }
 
-                        count = _flatura_legere_bits(lector, II) + 3;
-                        prev = all_lengths[index - I];
+                        count  = _flatura_legere_bits(lector, II) + 3;
+                        prev   = all_lengths[index - I];
 
                         per (i = 0; (s32)i < count && index < total; i++)
                         {
@@ -1021,17 +1013,17 @@ _flatura_inflare_internus(
                 /* Construere tabulae */
                 si (!_flatura_huffman_construere(&tabula_literarum, all_lengths, (i32)hlit, piscina))
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_HUFFMAN;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_HUFFMAN;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
 
                 si (!_flatura_huffman_construere(&tabula_distantiarum, all_lengths + hlit, (i32)hdist, piscina))
                 {
-                    fructus.status = FLATURA_STATUS_FRACTA_HUFFMAN;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_HUFFMAN;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
             }
@@ -1047,9 +1039,9 @@ _flatura_inflare_internus(
 #if FLATURA_DEBUG
                     printf("  [DEBUG] sym < 0 at output=%d, count=%d\n", output.positus, symbola_count);
 #endif
-                    fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                    fructus.datum = NIHIL;
-                    fructus.mensura = 0;
+                    fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                    fructus.datum    = NIHIL;
+                    fructus.mensura  = 0;
                     redde fructus;
                 }
 
@@ -1092,9 +1084,9 @@ _flatura_inflare_internus(
 #if FLATURA_DEBUG
                         printf("  [DEBUG] len_index >= 29: sym=%d, len_index=%d\n", sym, len_index);
 #endif
-                        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-                        fructus.datum = NIHIL;
-                        fructus.mensura = 0;
+                        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+                        fructus.datum    = NIHIL;
+                        fructus.mensura  = 0;
                         redde fructus;
                     }
 
@@ -1157,35 +1149,34 @@ _flatura_inflare_internus(
         alioquin
         {
             /* modus == 3: reservatus, error */
-            fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
             redde fructus;
         }
     }
 
-    fructus.status = FLATURA_STATUS_OK;
-    fructus.datum = output.datum;
-    fructus.mensura = output.positus;
+    fructus.status   = FLATURA_STATUS_OK;
+    fructus.datum    = output.datum;
+    fructus.mensura  = output.positus;
 
     redde fructus;
 }
 
-
 FlaturaFructus
-flatura_inflare(
+flatura_inflare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina)
+            i32  mensura,
+        Piscina* piscina)
 {
     FlaturaLector lector;
 
     si (datum == NIHIL || piscina == NIHIL)
     {
         FlaturaFructus fructus;
-        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
@@ -1200,47 +1191,47 @@ flatura_inflare(
  * ======================================================================== */
 
 FlaturaFructus
-flatura_gzip_inflare(
+flatura_gzip_inflare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina)
+            i32  mensura,
+        Piscina* piscina)
 {
     FlaturaFructus fructus;
-    FlaturaLector  lector;
-    i32            positus;
-    i32            flags;
-    i32            crc_calculatus;
-    i32            crc_expectatus;
-    i32            isize_expectatus;
+     FlaturaLector lector;
+               i32 positus;
+               i32 flags;
+               i32 crc_calculatus;
+               i32 crc_expectatus;
+               i32 isize_expectatus;
 
     si (datum == NIHIL || piscina == NIHIL || mensura < XVIII)
     {
-        fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
     /* Verificare magic number */
     si (datum[0] != (i8)0x1F || datum[I] != (i8)0x8B)
     {
-        fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
     /* Verificare compression method (8 = deflate) */
     si (datum[II] != VIII)
     {
-        fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
-    flags = (i32)datum[III];
-    positus = X;  /* Post header fixum */
+    flags    = (i32)datum[III];
+    positus  = X;  /* Post header fixum */
 
     /* Saltare FEXTRA si praesens */
     si (flags & IV)
@@ -1248,9 +1239,9 @@ flatura_gzip_inflare(
         i32 xlen;
         si (positus + II > mensura)
         {
-            fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
             redde fructus;
         }
         xlen = (i32)datum[positus] | ((i32)datum[positus + I] << VIII);
@@ -1285,9 +1276,9 @@ flatura_gzip_inflare(
 
     si (positus >= mensura - VIII)
     {
-        fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
@@ -1305,31 +1296,31 @@ flatura_gzip_inflare(
         constans i8* trailer;
         trailer = datum + mensura - VIII;
 
-        crc_expectatus = (i32)((i32)trailer[0] |
-                               ((i32)trailer[I] << VIII) |
-                               ((i32)trailer[II] << XVI) |
-                               ((i32)trailer[III] << XXIV));
+        crc_expectatus = (i32)((i32)trailer[0]
+            | ((i32)trailer[I] << VIII)
+            | ((i32)trailer[II] << XVI)
+            | ((i32)trailer[III] << XXIV));
 
-        isize_expectatus = (i32)((i32)trailer[IV] |
-                                 ((i32)trailer[V] << VIII) |
-                                 ((i32)trailer[VI] << XVI) |
-                                 ((i32)trailer[VII] << XXIV));
+        isize_expectatus = (i32)((i32)trailer[IV]
+            | ((i32)trailer[V] << VIII)
+            | ((i32)trailer[VI] << XVI)
+            | ((i32)trailer[VII] << XXIV));
 
         crc_calculatus = flatura_crc32(fructus.datum, fructus.mensura);
 
         si (crc_calculatus != crc_expectatus)
         {
-            fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
             redde fructus;
         }
 
         si (fructus.mensura != isize_expectatus)
         {
-            fructus.status = FLATURA_STATUS_GZIP_FRACTA;
-            fructus.datum = NIHIL;
-            fructus.mensura = 0;
+            fructus.status   = FLATURA_STATUS_GZIP_FRACTA;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
             redde fructus;
         }
     }
@@ -1371,7 +1362,7 @@ hic_manens i8 longitudo_ad_indicem[CCLVI];  /* 256 entries covers 3-258 */
 hic_manens i8 distantia_ad_symbolum_tabula[CCLVI];
 
 interior vacuum
-_flatura_huffman_tabulae_initium(vacuum)
+_flatura_huffman_tabulae_initium (vacuum)
 {
     i32 i;
     i32 j;
@@ -1389,23 +1380,23 @@ _flatura_huffman_tabulae_initium(vacuum)
     {
         si (i <= CXLIII)
         {
-            codex = 0x30 + i;
-            bits = VIII;
+            codex  = 0x30 + i;
+            bits   = VIII;
         }
         alioquin si (i <= CCLV)
         {
-            codex = 0x190 + (i - CXLIV);
-            bits = IX;
+            codex  = 0x190 + (i - CXLIV);
+            bits   = IX;
         }
         alioquin si (i <= 279)
         {
-            codex = i - FLATURA_END_BLOCK;
-            bits = VII;
+            codex  = i - FLATURA_END_BLOCK;
+            bits   = VII;
         }
         alioquin
         {
-            codex = 0xC0 + (i - CCLXXX);
-            bits = VIII;
+            codex  = 0xC0 + (i - CCLXXX);
+            bits   = VIII;
         }
 
         /* Reverse bits */
@@ -1415,8 +1406,8 @@ _flatura_huffman_tabulae_initium(vacuum)
             rev_codex = (rev_codex << I) | ((codex >> j) & I);
         }
 
-        huffman_literal_codes[i] = (i16)rev_codex;
-        huffman_literal_bits[i] = (i8)bits;
+        huffman_literal_codes[i]  = (i16)rev_codex;
+        huffman_literal_bits[i]   = (i8)bits;
     }
 
     /* Build distance codes (5 bits, reversed) */
@@ -1481,9 +1472,9 @@ nomen structura {
 
 
 interior vacuum
-_flatura_hash_initium(
+_flatura_hash_initium (
     HashTabula* hash,
-    Piscina*    piscina)
+       Piscina* piscina)
 {
     i32 i;
 
@@ -1514,13 +1505,13 @@ _flatura_hash_initium(
     } dum (0)
 
 interior i32
-_flatura_quaerere_concordantiam(
-    HashTabula*  hash,
+_flatura_quaerere_concordantiam (
+     HashTabula* hash,
     constans i8* datum,
-    i32          positus,
-    i32          mensura,
-    i32          catena_maxima,
-    i32*         distantia_output)
+            i32  positus,
+            i32  mensura,
+            i32  catena_maxima,
+            i32* distantia_output)
 {
     i32 h;
     i32 optima_longitudo;
@@ -1533,11 +1524,11 @@ _flatura_quaerere_concordantiam(
         redde 0;
     }
 
-    h = FLATURA_HASH_CALCULARE(datum, positus);
-    currens = hash->capites[h];
-    optima_longitudo = 0;
-    optima_distantia = 0;
-    catena_longitudo = 0;
+    h                 = FLATURA_HASH_CALCULARE(datum, positus);
+    currens           = hash->capites[h];
+    optima_longitudo  = 0;
+    optima_distantia  = 0;
+    catena_longitudo  = 0;
 
     dum (currens >= 0 && catena_longitudo < catena_maxima)
     {
@@ -1552,8 +1543,8 @@ _flatura_quaerere_concordantiam(
 
         basis_fenestrae = positus
             & (i32)~(i32)(FLATURA_FENESTRA_MAGNITUDO - I);
-        currens_i = (i32)(s32)currens;
-        candidatus_positus = basis_fenestrae | currens_i;
+        currens_i           = (i32)(s32)currens;
+        candidatus_positus  = basis_fenestrae | currens_i;
 
         /* Verificare si in fenestra */
         si (candidatus_positus >= positus)
@@ -1594,8 +1585,8 @@ _flatura_quaerere_concordantiam(
         }
 
         /* Finish with byte-by-byte (remainder or finding exact mismatch) */
-        dum (longitudo < max_longitudo &&
-             datum[candidatus_positus + longitudo] == datum[positus + longitudo])
+        dum (   longitudo < max_longitudo
+             && datum[candidatus_positus + longitudo] == datum[positus + longitudo])
         {
             longitudo++;
         }
@@ -1624,10 +1615,10 @@ _flatura_quaerere_concordantiam(
     redde 0;
 }
 
-
 /* Invenire symbolum distantiae (used for distances > 256) */
 interior i32
-_flatura_distantia_ad_symbolum(i32 distantia)
+_flatura_distantia_ad_symbolum (
+    i32 distantia)
 {
     i32 i;
 
@@ -1653,23 +1644,23 @@ _flatura_distantia_ad_symbolum(i32 distantia)
 
 
 FlaturaFructus
-flatura_deflare(
-    constans i8*              datum,
-    i32                       mensura,
-    FlaturaCompressioNivellus nivellus,
-    Piscina*                  piscina)
+flatura_deflare (
+                  constans i8* datum,
+                          i32  mensura,
+    FlaturaCompressioNivellus  nivellus,
+                      Piscina* piscina)
 {
-    FlaturaFructus   fructus;
-    FlaturaScriptor  scriptor;
-    HashTabula       hash;
-    i32              positus;
-    i32              catena_maxima;
+     FlaturaFructus fructus;
+    FlaturaScriptor scriptor;
+         HashTabula hash;
+                i32 positus;
+                i32 catena_maxima;
 
     si (datum == NIHIL || piscina == NIHIL)
     {
-        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
@@ -1785,8 +1776,8 @@ flatura_deflare(
                 i32 i;
 
                 /* Use lookup table for length->symbol */
-                len_index = longitudo_ad_indicem[longitudo - III];
-                len_sym = FLATURA_FIRST_LEN + len_index;
+                len_index  = longitudo_ad_indicem[longitudo - III];
+                len_sym    = FLATURA_FIRST_LEN + len_index;
                 FLATURA_SCRIBERE_LITERALEM_FIXAM(&scriptor, len_sym);
 
                 si (longitudo_extra_bits[len_index] > 0)
@@ -1843,9 +1834,9 @@ flatura_deflare(
 
     _flatura_scriptor_finire(&scriptor);
 
-    fructus.status = FLATURA_STATUS_OK;
-    fructus.datum = scriptor.datum;
-    fructus.mensura = scriptor.positus;
+    fructus.status   = FLATURA_STATUS_OK;
+    fructus.datum    = scriptor.datum;
+    fructus.mensura  = scriptor.positus;
 
     redde fructus;
 }
@@ -1856,23 +1847,23 @@ flatura_deflare(
  * ======================================================================== */
 
 FlaturaFructus
-flatura_gzip_deflare(
-    constans i8*              datum,
-    i32                       mensura,
-    FlaturaCompressioNivellus nivellus,
-    Piscina*                  piscina)
+flatura_gzip_deflare (
+                  constans i8* datum,
+                          i32  mensura,
+    FlaturaCompressioNivellus  nivellus,
+                      Piscina* piscina)
 {
-    FlaturaFructus   fructus;
-    FlaturaFructus   deflate_fructus;
-    i8*              output;
-    i32              output_positus;
-    i32              crc;
+    FlaturaFructus  fructus;
+    FlaturaFructus  deflate_fructus;
+                i8* output;
+               i32  output_positus;
+               i32  crc;
 
     si (datum == NIHIL || piscina == NIHIL)
     {
-        fructus.status = FLATURA_STATUS_FRACTA_DATUM;
-        fructus.datum = NIHIL;
-        fructus.mensura = 0;
+        fructus.status   = FLATURA_STATUS_FRACTA_DATUM;
+        fructus.datum    = NIHIL;
+        fructus.mensura  = 0;
         redde fructus;
     }
 
@@ -1919,9 +1910,9 @@ flatura_gzip_deflare(
     output[output_positus++] = (i8)((mensura >> XVI) & 0xFF);
     output[output_positus++] = (i8)((mensura >> XXIV) & 0xFF);
 
-    fructus.status = FLATURA_STATUS_OK;
-    fructus.datum = output;
-    fructus.mensura = output_positus;
+    fructus.status   = FLATURA_STATUS_OK;
+    fructus.datum    = output;
+    fructus.mensura  = output_positus;
 
     redde fructus;
 }
@@ -1932,7 +1923,8 @@ flatura_gzip_deflare(
  * ======================================================================== */
 
 i32
-flatura_maxima_magnitudo_compressa(i32 mensura_originalis)
+flatura_maxima_magnitudo_compressa (
+    i32 mensura_originalis)
 {
     /* Worst case: stored blocks with overhead */
     /* Per 65535 bytes: 5 bytes header */
@@ -1943,9 +1935,9 @@ flatura_maxima_magnitudo_compressa(i32 mensura_originalis)
     redde mensura_originalis + (numerus_blocks * V) + XVIII;  /* +18 pro gzip header/trailer */
 }
 
-
 constans character*
-flatura_status_nuntium(FlaturaStatus status)
+flatura_status_nuntium (
+    FlaturaStatus status)
 {
     commutatio (status)
     {

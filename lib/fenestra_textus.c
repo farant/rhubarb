@@ -21,10 +21,10 @@ pingere_characterem_praecisum (
              i8  ch;
     constans i8* glypha;
             i32  ordo, columna, pixelum_y, pixelum_x;
-             i8  bits;
+             i8 bits;
 
-    ch = (i8)c;
-    glypha = fons_6x8[ch];
+    ch      = (i8)c;
+    glypha  = fons_6x8[ch];
 
     per (ordo = ZEPHYRUM; ordo < FONS_ALTITUDO; ordo++)
     {
@@ -47,7 +47,6 @@ pingere_characterem_praecisum (
     }
 }
 
-
 vacuum
 tabula_pixelorum_pingere_characterem (
     TabulaPixelorum* tabula,
@@ -56,13 +55,13 @@ tabula_pixelorum_pingere_characterem (
           character  c,
                 i32  color)
 {
-    i8 ch;
+             i8  ch;
     constans i8* glypha;
     i32 ordo, columna;
     i8 bits;
 
-    ch = (i8)c;
-    glypha = fons_6x8[ch];
+    ch      = (i8)c;
+    glypha  = fons_6x8[ch];
 
     per (ordo = ZEPHYRUM; ordo < FONS_ALTITUDO; ordo++)
     {
@@ -78,7 +77,6 @@ tabula_pixelorum_pingere_characterem (
     }
 }
 
-
 vacuum
 tabula_pixelorum_pingere_chordam (
     TabulaPixelorum* tabula,
@@ -87,18 +85,18 @@ tabula_pixelorum_pingere_chordam (
              chorda  textus,
                 i32  color)
 {
-          i32  initium_x;
+            i32  initium_x;
     constans i8* ptr;
     constans i8* finis;
 
-    initium_x = x;
-    ptr = textus.datum;
-    finis = textus.datum + textus.mensura;
+    initium_x  = x;
+    ptr        = textus.datum;
+    finis      = textus.datum + textus.mensura;
 
     dum (ptr < finis)
     {
         s32 runa;
-        i8 glypha;
+         i8 glypha;
 
         runa = utf8_decodere(&ptr, finis);
 
@@ -126,7 +124,6 @@ tabula_pixelorum_pingere_chordam (
     }
 }
 
-
 vacuum
 tabula_pixelorum_pingere_characterem_scalatum (
     TabulaPixelorum* tabula,
@@ -136,13 +133,13 @@ tabula_pixelorum_pingere_characterem_scalatum (
                 i32  color,
                 i32  scala)
 {
-    i8 ch;
+             i8  ch;
     constans i8* glypha;
     i32 ordo, columna, sy, sx;
     i8 bits;
 
-    ch = (i8)c;
-    glypha = fons_6x8[ch];
+    ch      = (i8)c;
+    glypha  = fons_6x8[ch];
 
     per (ordo = ZEPHYRUM; ordo < FONS_ALTITUDO; ordo++)
     {
@@ -168,7 +165,6 @@ tabula_pixelorum_pingere_characterem_scalatum (
     }
 }
 
-
 vacuum
 tabula_pixelorum_pingere_chordam_scalatam (
     TabulaPixelorum* tabula,
@@ -178,18 +174,18 @@ tabula_pixelorum_pingere_chordam_scalatam (
                 i32  color,
                 i32  scala)
 {
-          i32  initium_x;
+            i32  initium_x;
     constans i8* ptr;
     constans i8* finis;
 
-    initium_x = x;
-    ptr = textus.datum;
-    finis = textus.datum + textus.mensura;
+    initium_x  = x;
+    ptr        = textus.datum;
+    finis      = textus.datum + textus.mensura;
 
     dum (ptr < finis)
     {
         s32 runa;
-        i8 glypha;
+         i8 glypha;
 
         runa = utf8_decodere(&ptr, finis);
 
@@ -215,7 +211,6 @@ tabula_pixelorum_pingere_chordam_scalatam (
     }
 }
 
-
 vacuum
 tabula_pixelorum_pingere_chordam_praecisum (
     TabulaPixelorum* tabula,
@@ -228,18 +223,18 @@ tabula_pixelorum_pingere_chordam_praecisum (
                 i32  praecisio_latitudo,
                 i32  praecisio_altitudo)
 {
-          i32  initium_x;
+            i32  initium_x;
     constans i8* ptr;
     constans i8* finis;
 
-    initium_x = x;
-    ptr = textus.datum;
-    finis = textus.datum + textus.mensura;
+    initium_x  = x;
+    ptr        = textus.datum;
+    finis      = textus.datum + textus.mensura;
 
     dum (ptr < finis)
     {
         s32 runa;
-        i8 glypha;
+         i8 glypha;
 
         runa = utf8_decodere(&ptr, finis);
 
@@ -276,21 +271,20 @@ tabula_pixelorum_pingere_chordam_praecisum (
     }
 }
 
-
 i32
 fons_latitudo_chordae (
-             chorda  textus,
-                i32  scala)
+             chorda textus,
+                i32 scala)
 {
-          i32  latitudo;
-          i32  latitudo_maxima;
+            i32  latitudo;
+            i32  latitudo_maxima;
     constans i8* ptr;
     constans i8* finis;
 
-    latitudo = ZEPHYRUM;
-    latitudo_maxima = ZEPHYRUM;
-    ptr = textus.datum;
-    finis = textus.datum + textus.mensura;
+    latitudo         = ZEPHYRUM;
+    latitudo_maxima  = ZEPHYRUM;
+    ptr              = textus.datum;
+    finis            = textus.datum + textus.mensura;
 
     dum (ptr < finis)
     {
@@ -312,7 +306,6 @@ fons_latitudo_chordae (
 
     redde latitudo > latitudo_maxima ? latitudo : latitudo_maxima;
 }
-
 
 i32
 fons_altitudo_chordae (

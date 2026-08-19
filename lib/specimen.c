@@ -21,12 +21,14 @@
 #define SUFFIXUM_CANDIDATI    ".novum.png"
 #define SUFFIXUM_DIFFERENTIAE ".differentia.png"
 
+
 /* ============================================================
  * Auxilia: semitae
  * ============================================================ */
 
 interior character*
-_viam_struere (Piscina*            piscina,
+_viam_struere (
+                          Piscina* piscina,
                constans character* scrinium,
                constans character* titulus,
                constans character* suffixum)
@@ -61,7 +63,8 @@ _viam_struere (Piscina*            piscina,
  * extra scrinium scribere posset.
  */
 interior b32
-_titulus_validus (constans character* titulus)
+_titulus_validus (
+    constans character* titulus)
 {
     size_t i, m;
 
@@ -91,20 +94,26 @@ _titulus_validus (constans character* titulus)
     redde VERUM;
 }
 
+
 /* ============================================================
  * Auxilia: sectio EXACTA (sine scalatore)
  * ============================================================ */
 
 interior Imago
-_secare (constans Imago* fons, i32 x, i32 y, i32 lat, i32 alt,
-         Piscina* piscina)
+_secare (
+    constans Imago* fons,
+               i32  x,
+               i32  y,
+               i32  lat,
+               i32  alt,
+           Piscina* piscina)
 {
     Imago nova;
-    i32   versus;
+      i32 versus;
 
-    nova.pixela   = NIHIL;
-    nova.latitudo = ZEPHYRUM;
-    nova.altitudo = ZEPHYRUM;
+    nova.pixela    = NIHIL;
+    nova.latitudo  = ZEPHYRUM;
+    nova.altitudo  = ZEPHYRUM;
 
     si (fons == NIHIL || fons->pixela == NIHIL)
     {
@@ -149,6 +158,7 @@ _secare (constans Imago* fons, i32 x, i32 y, i32 lat, i32 alt,
     redde nova;
 }
 
+
 /* ============================================================
  * Auxilia: fructus
  * ============================================================ */
@@ -158,16 +168,16 @@ _fructus_vacuus (vacuum)
 {
     SpecimenFructus f;
 
-    f.sententia               = SPECIMEN_ARGUMENTA_INVALIDA;
-    f.collatio_facta          = FALSUM;
-    f.via_exemplaris.datum    = NIHIL;
-    f.via_exemplaris.mensura  = ZEPHYRUM;
-    f.via_candidati.datum     = NIHIL;
-    f.via_candidati.mensura   = ZEPHYRUM;
-    f.via_differentiae.datum  = NIHIL;
-    f.via_differentiae.mensura = ZEPHYRUM;
-    f.causa.datum             = NIHIL;
-    f.causa.mensura           = ZEPHYRUM;
+    f.sententia                 = SPECIMEN_ARGUMENTA_INVALIDA;
+    f.collatio_facta            = FALSUM;
+    f.via_exemplaris.datum      = NIHIL;
+    f.via_exemplaris.mensura    = ZEPHYRUM;
+    f.via_candidati.datum       = NIHIL;
+    f.via_candidati.mensura     = ZEPHYRUM;
+    f.via_differentiae.datum    = NIHIL;
+    f.via_differentiae.mensura  = ZEPHYRUM;
+    f.causa.datum               = NIHIL;
+    f.causa.mensura             = ZEPHYRUM;
 
     /* Fructum collationis ex bibliotheca ipsa sumimus ut omnis
      * campus impleatur, etiam si campus novus additur */
@@ -177,12 +187,14 @@ _fructus_vacuus (vacuum)
     redde f;
 }
 
+
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
 
 constans character*
-specimen_sententia_nomen (SpecimenSententia sententia)
+specimen_sententia_nomen (
+    SpecimenSententia sententia)
 {
     commutatio (sententia)
     {
@@ -199,7 +211,8 @@ specimen_sententia_nomen (SpecimenSententia sententia)
 }
 
 SpecimenRegula
-specimen_regula_solita (constans character* scrinium)
+specimen_regula_solita (
+    constans character* scrinium)
 {
     SpecimenRegula regula;
 
@@ -212,17 +225,18 @@ specimen_regula_solita (constans character* scrinium)
 }
 
 SpecimenFructus
-specimen_iudicare (constans Imago*     captura,
+specimen_iudicare (
+                       constans Imago* captura,
                    constans character* titulus,
-                   SpecimenRegula      regula,
-                   Piscina*            piscina)
+                       SpecimenRegula  regula,
+                              Piscina* piscina)
 {
-    SpecimenFructus fructus;
-    character*      via_exemplaris;
-    character*      via_candidati;
-    character*      via_differentiae;
-    ImagoFructus    exemplar;
-    PngFructus      scriptum;
+    SpecimenFructus  fructus;
+          character* via_exemplaris;
+          character* via_candidati;
+          character* via_differentiae;
+       ImagoFructus  exemplar;
+         PngFructus  scriptum;
 
     fructus = _fructus_vacuus();
 
@@ -231,8 +245,8 @@ specimen_iudicare (constans Imago*     captura,
         redde fructus;
     }
 
-    si (captura == NIHIL || captura->pixela == NIHIL ||
-        regula.scrinium == NIHIL)
+    si (   captura         == NIHIL || captura->pixela == NIHIL
+        || regula.scrinium == NIHIL)
     {
         fructus.causa = chorda_ex_literis("Argumenta invalida", piscina);
         redde fructus;
@@ -253,8 +267,8 @@ specimen_iudicare (constans Imago*     captura,
                                      SUFFIXUM_CANDIDATI);
     via_differentiae = _viam_struere(piscina, regula.scrinium, titulus,
                                      SUFFIXUM_DIFFERENTIAE);
-    si (via_exemplaris == NIHIL || via_candidati == NIHIL ||
-        via_differentiae == NIHIL)
+    si (   via_exemplaris   == NIHIL || via_candidati == NIHIL
+        || via_differentiae == NIHIL)
     {
         fructus.causa = chorda_ex_literis("Allocatio fracta", piscina);
         redde fructus;
@@ -277,7 +291,7 @@ specimen_iudicare (constans Imago*     captura,
             redde fructus;
         }
 
-        fructus.sententia     = SPECIMEN_EXEMPLAR_ABEST;
+        fructus.sententia = SPECIMEN_EXEMPLAR_ABEST;
         fructus.via_candidati = chorda_ex_literis(via_candidati, piscina);
         fructus.causa = chorda_ex_literis(
             "Exemplar abest. Candidatus scriptus est - eum INSPICE, "
@@ -286,8 +300,8 @@ specimen_iudicare (constans Imago*     captura,
     }
 
     /* ---- Mensurae: fere semper machina, non regressio ---- */
-    si (exemplar.imago.latitudo != captura->latitudo ||
-        exemplar.imago.altitudo != captura->altitudo)
+    si (   exemplar.imago.latitudo != captura->latitudo
+        || exemplar.imago.altitudo != captura->altitudo)
     {
         scriptum = imago_png_scribere(captura, via_candidati, piscina);
         si (scriptum.successus)
@@ -343,6 +357,7 @@ specimen_iudicare (constans Imago*     captura,
     redde fructus;
 }
 
+
 /* ============================================================
  * Stratum manus
  * ============================================================ */
@@ -350,13 +365,16 @@ specimen_iudicare (constans Imago*     captura,
 /* Numeros signatos ex chorda commatibus separata legere.
  * Chorda NON NUL-terminata est, ergo mensura portanda. */
 interior b32
-_numeros_legere (chorda fons, s32* exitus, i32 quot)
+_numeros_legere (
+    chorda  fons,
+       s32* exitus,
+       i32  quot)
 {
     i32 lecti;
     i32 i;
 
-    lecti = ZEPHYRUM;
-    i     = ZEPHYRUM;
+    lecti  = ZEPHYRUM;
+    i      = ZEPHYRUM;
 
     dum (lecti < quot && i < (i32)fons.mensura)
     {
@@ -365,9 +383,9 @@ _numeros_legere (chorda fons, s32* exitus, i32 quot)
         s32 valor;
 
         /* Ad numerum saltare (virgulas, virgulas geminas spernere) */
-        dum (i < (i32)fons.mensura &&
-             (fons.datum[i] < '0' || fons.datum[i] > '9') &&
-             fons.datum[i] != '-')
+        dum (   i < (i32)fons.mensura
+             && (fons.datum[i] < '0' || fons.datum[i] > '9')
+             && fons.datum[i] != '-')
         {
             i++;
         }
@@ -383,13 +401,13 @@ _numeros_legere (chorda fons, s32* exitus, i32 quot)
             i++;
         }
 
-        valor  = 0;
-        aliqua = FALSUM;
-        dum (i < (i32)fons.mensura &&
-             fons.datum[i] >= '0' && fons.datum[i] <= '9')
+        valor   = 0;
+        aliqua  = FALSUM;
+        dum (   i < (i32)fons.mensura
+             && fons.datum[i] >= '0' && fons.datum[i] <= '9')
         {
-            valor = valor * (s32)X + (s32)(fons.datum[i] - '0');
-            aliqua = VERUM;
+            valor   = valor * (s32)X + (s32)(fons.datum[i] - '0');
+            aliqua  = VERUM;
             i++;
         }
 
@@ -406,16 +424,17 @@ _numeros_legere (chorda fons, s32* exitus, i32 quot)
 }
 
 SpecimenFructus
-specimen_manus (Manus*              manus,
+specimen_manus (
+                             Manus* manus,
                 constans character* titulus,
                 constans character* selector,
-                SpecimenRegula      regula,
-                Piscina*            piscina)
+                    SpecimenRegula  regula,
+                           Piscina* piscina)
 {
-    SpecimenFructus fructus;
-    character*      via_temporaria;
-    ImagoFructus    captura;
-    Imago           iudicanda;
+    SpecimenFructus  fructus;
+          character* via_temporaria;
+       ImagoFructus  captura;
+              Imago  iudicanda;
 
     fructus = _fructus_vacuus();
 
@@ -465,9 +484,9 @@ specimen_manus (Manus*              manus,
     si (selector != NIHIL)
     {
         character* js;
-        chorda     responsum;
-        s32        numeri[V];
-        size_t     m_selectoris;
+           chorda  responsum;
+              s32  numeri[V];
+           size_t  m_selectoris;
 
         constans character* pars_prima =
             "(function(){var e=document.querySelector('";
@@ -480,8 +499,8 @@ specimen_manus (Manus*              manus,
         m_selectoris = strlen(selector);
         js = (character*)piscina_allocare(
                  piscina,
-                 (memoriae_index)(strlen(pars_prima) + m_selectoris +
-                                  strlen(pars_altera) + I));
+                 (memoriae_index)(strlen(pars_prima) + m_selectoris
+            + strlen(pars_altera) + I));
         si (js == NIHIL)
         {
             fructus.causa = chorda_ex_literis("Allocatio fracta", piscina);
@@ -494,8 +513,8 @@ specimen_manus (Manus*              manus,
 
         responsum = manus_aestimare(manus, js, (Mora)MM);
 
-        si (!_numeros_legere(responsum, numeri, (i32)V) ||
-            numeri[II] <= 0 || numeri[III] <= 0 || numeri[IV] <= 0)
+        si (   !_numeros_legere(responsum, numeri, (i32)V)
+            || numeri[II] <= 0 || numeri[III] <= 0 || numeri[IV] <= 0)
         {
             fructus.sententia = SPECIMEN_ELEMENTUM_ABEST;
             fructus.causa = chorda_ex_literis(
@@ -511,13 +530,17 @@ specimen_manus (Manus*              manus,
             s32 css_latitudo = numeri[IV];
             s32 x, y, lat, alt;
 
-            x   = (s32)((numeri[0]   * (s32)iudicanda.latitudo) / css_latitudo);
-            y   = (s32)((numeri[I]   * (s32)iudicanda.latitudo) / css_latitudo);
-            lat = (s32)((numeri[II]  * (s32)iudicanda.latitudo) / css_latitudo);
+            x = (s32)((numeri[0] * (s32)iudicanda.latitudo) / css_latitudo);
+            y = (s32)((numeri[I] * (s32)iudicanda.latitudo) / css_latitudo);
+            lat = (s32)((numeri[II] * (s32)iudicanda.latitudo) / css_latitudo);
             alt = (s32)((numeri[III] * (s32)iudicanda.latitudo) / css_latitudo);
 
-            si (x < 0) { x = 0; }
-            si (y < 0) { y = 0; }
+            si (x < 0)
+            { x = 0;
+            }
+            si (y < 0)
+            { y = 0;
+            }
 
             iudicanda = _secare(&captura.imago, (i32)x, (i32)y,
                                 (i32)lat, (i32)alt, piscina);

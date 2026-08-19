@@ -24,12 +24,12 @@ nomen structura {
 } SpeculumIntroitus;
 
 structura Speculum {
-    Piscina*           piscina;
-    Capsula*           capsula;
-    SpeculumAestimator aestimator;
-    vacuum*            aestimator_datum;
-    chorda             stipes;    /* evaluatio se-sanans, semel structa */
-    Xar*               cache;     /* SpeculumIntroitus; NIHIL donec primum obtinere */
+               Piscina* piscina;
+               Capsula* capsula;
+    SpeculumAestimator  aestimator;
+                vacuum* aestimator_datum;
+                chorda  stipes;    /* evaluatio se-sanans, semel structa */
+                   Xar* cache;     /* SpeculumIntroitus; NIHIL donec primum obtinere */
 };
 
 
@@ -38,7 +38,9 @@ structura Speculum {
  * ======================================================================== */
 
 interior b32
-_aequalis_literis(chorda textus, constans character* literis)
+_aequalis_literis (
+                chorda  textus,
+    constans character* literis)
 {
     i32 mensura;
 
@@ -51,7 +53,9 @@ _aequalis_literis(chorda textus, constans character* literis)
 }
 
 interior b32
-_terminatur(chorda textus, constans character* suffixum)
+_terminatur (
+                chorda  textus,
+    constans character* suffixum)
 {
     i32 mensura;
 
@@ -70,7 +74,8 @@ _terminatur(chorda textus, constans character* suffixum)
  * ======================================================================== */
 
 interior vacuum
-_cache_implere(Speculum* s)
+_cache_implere (
+    Speculum* s)
 {
     i32 i;
     i32 numerus;
@@ -87,8 +92,8 @@ _cache_implere(Speculum* s)
     numerus = capsula_numerus(s->capsula);
     per (i = 0; i < numerus; i++)
     {
-        CapsulaIndexum*    tabella;
-        CapsulaFructus     fructus;
+           CapsulaIndexum* tabella;
+           CapsulaFructus  fructus;
         SpeculumIntroitus* intro;
 
         tabella = capsula_indexum(s->capsula, i);
@@ -107,8 +112,8 @@ _cache_implere(Speculum* s)
         {
             redde;
         }
-        intro->via = tabella->via;
-        intro->corpus = fructus.datum;
+        intro->via     = tabella->via;
+        intro->corpus  = fructus.datum;
     }
 }
 
@@ -118,7 +123,9 @@ _cache_implere(Speculum* s)
  * ======================================================================== */
 
 interior JsonValor*
-_introitus_struere(constans SpeculumIntroitus* intro, Piscina* pv)
+_introitus_struere (
+    constans SpeculumIntroitus* intro,
+                       Piscina* pv)
 {
     JsonValor* obiectum;
 
@@ -133,7 +140,10 @@ _introitus_struere(constans SpeculumIntroitus* intro, Piscina* pv)
 
 /* proventus.txt: lineae clavis=valor -> obiectum planum */
 interior vacuum
-_proventus_parsare(chorda corpus, JsonValor* obiectum, Piscina* pv)
+_proventus_parsare (
+       chorda  corpus,
+    JsonValor* obiectum,
+      Piscina* pv)
 {
     i32 initium;
     i32 i;
@@ -144,10 +154,10 @@ _proventus_parsare(chorda corpus, JsonValor* obiectum, Piscina* pv)
         si (i == corpus.mensura || corpus.datum[i] == '\n')
         {
             chorda linea;
-            i32    j;
+               i32 j;
 
-            linea.datum = corpus.datum + initium;
-            linea.mensura = i - initium;
+            linea.datum    = corpus.datum + initium;
+            linea.mensura  = i - initium;
             per (j = 0; j < linea.mensura; j++)
             {
                 si (linea.datum[j] == '=')
@@ -160,10 +170,10 @@ _proventus_parsare(chorda corpus, JsonValor* obiectum, Piscina* pv)
                 chorda clavis;
                 chorda valor;
 
-                clavis.datum = linea.datum;
-                clavis.mensura = j;
-                valor.datum = linea.datum + j + I;
-                valor.mensura = linea.mensura - j - I;
+                clavis.datum    = linea.datum;
+                clavis.mensura  = j;
+                valor.datum     = linea.datum + j + I;
+                valor.mensura   = linea.mensura - j - I;
                 json_objectum_ponere_chorda(obiectum, clavis,
                     json_chorda_creare(pv, valor));
             }
@@ -175,38 +185,40 @@ _proventus_parsare(chorda corpus, JsonValor* obiectum, Piscina* pv)
 /* exclusa.txt: lineae via<TAB>magnitudo<TAB>digestum<TAB>causa ->
  * tabulatum obiectorum (campi ut chordae; causa spatiis tolerans) */
 interior JsonValor*
-_exclusa_parsare(chorda corpus, Piscina* pv)
+_exclusa_parsare (
+     chorda  corpus,
+    Piscina* pv)
 {
     JsonValor* tabulatum;
-    i32        initium;
-    i32        i;
+          i32  initium;
+          i32  i;
 
-    tabulatum = json_tabulatum_creare(pv);
-    initium = 0;
+    tabulatum  = json_tabulatum_creare(pv);
+    initium    = 0;
     per (i = 0; i <= corpus.mensura; i++)
     {
         si (i == corpus.mensura || corpus.datum[i] == '\n')
         {
             chorda linea;
 
-            linea.datum = corpus.datum + initium;
-            linea.mensura = i - initium;
+            linea.datum    = corpus.datum + initium;
+            linea.mensura  = i - initium;
             si (linea.mensura > 0)
             {
-                JsonValor* obiectum;
-                chorda     campi[IV];
-                i32        numerus_camporum;
-                i32        j;
-                i32        campus_initium;
+                         JsonValor* obiectum;
+                            chorda  campi[IV];
+                               i32  numerus_camporum;
+                               i32  j;
+                               i32  campus_initium;
                 constans character* claves[IV];
 
-                claves[0] = "via";
-                claves[I] = "magnitudo";
-                claves[II] = "digestum";
-                claves[III] = "causa";
+                claves[0]    = "via";
+                claves[I]    = "magnitudo";
+                claves[II]   = "digestum";
+                claves[III]  = "causa";
 
-                numerus_camporum = 0;
-                campus_initium = 0;
+                numerus_camporum  = 0;
+                campus_initium    = 0;
                 per (j = 0; j <= linea.mensura && numerus_camporum < IV; j++)
                 {
                     b32 finis_campi;
@@ -239,27 +251,30 @@ _exclusa_parsare(chorda corpus, Piscina* pv)
 }
 
 interior JsonValor*
-_speculum_obtinere(JsonValor* argumenta, Piscina* pv, vacuum* datum,
-    chorda* culpa)
+_speculum_obtinere (
+    JsonValor* argumenta,
+      Piscina* pv,
+       vacuum* datum,
+       chorda* culpa)
 {
-    Speculum*  s;
+     Speculum* s;
     JsonValor* radix;
     JsonValor* fontes;
     JsonValor* documenta;
     JsonValor* proventus;
     JsonValor* exclusa;
-    i32        i;
+          i32  i;
 
     (vacuum)argumenta;
     (vacuum)culpa;
     s = (Speculum*)datum;
     _cache_implere(s);
 
-    radix = json_objectum_creare(pv);
-    fontes = json_tabulatum_creare(pv);
-    documenta = json_tabulatum_creare(pv);
-    proventus = json_objectum_creare(pv);
-    exclusa = json_tabulatum_creare(pv);
+    radix      = json_objectum_creare(pv);
+    fontes     = json_tabulatum_creare(pv);
+    documenta  = json_tabulatum_creare(pv);
+    proventus  = json_objectum_creare(pv);
+    exclusa    = json_tabulatum_creare(pv);
 
     per (i = 0; i < xar_numerus(s->cache); i++)
     {
@@ -301,12 +316,13 @@ _speculum_obtinere(JsonValor* argumenta, Piscina* pv, vacuum* datum,
  * ======================================================================== */
 
 interior chorda
-_stipes_struere(Speculum* s)
+_stipes_struere (
+    Speculum* s)
 {
-    CapsulaFructus     scriptum;
-    CapsulaFructus     stylus;
+       CapsulaFructus  scriptum;
+       CapsulaFructus  stylus;
     ChordaAedificator* aed;
-    memoriae_index     capacitas;
+       memoriae_index  capacitas;
 
     scriptum = capsula_legere(s->capsula,
         "lib/speculum_assets/speculum.js", s->piscina);
@@ -361,9 +377,12 @@ _stipes_struere(Speculum* s)
  * ======================================================================== */
 
 Speculum*
-speculum_creare(Piscina* piscina, constans CapsulaEmbed* fontes,
-    Internuntius* inx, SpeculumAestimator aestimator,
-    vacuum* aestimator_datum)
+speculum_creare (
+                  Piscina* piscina,
+    constans CapsulaEmbed* fontes,
+             Internuntius* inx,
+       SpeculumAestimator  aestimator,
+                   vacuum* aestimator_datum)
 {
     Speculum* s;
 
@@ -373,10 +392,10 @@ speculum_creare(Piscina* piscina, constans CapsulaEmbed* fontes,
     }
     s = (Speculum*)piscina_allocare(piscina, magnitudo(Speculum));
     memset(s, 0, magnitudo(Speculum));
-    s->piscina = piscina;
-    s->aestimator = aestimator;
-    s->aestimator_datum = aestimator_datum;
-    s->capsula = capsula_aperire(fontes, piscina);
+    s->piscina           = piscina;
+    s->aestimator        = aestimator;
+    s->aestimator_datum  = aestimator_datum;
+    s->capsula           = capsula_aperire(fontes, piscina);
     si (s->capsula == NIHIL)
     {
         redde NIHIL;
@@ -391,7 +410,9 @@ speculum_creare(Piscina* piscina, constans CapsulaEmbed* fontes,
 }
 
 b32
-speculum_tangere(Speculum* speculum, constans Eventus* eventus)
+speculum_tangere (
+            Speculum* speculum,
+    constans Eventus* eventus)
 {
     si (speculum == NIHIL || eventus == NIHIL)
     {

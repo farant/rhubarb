@@ -5,6 +5,7 @@
 #include "utf8.h"
 #include <string.h>
 
+
 /* ========================================================================
  * FUNCTIONES INTERNAE
  * ======================================================================== */
@@ -13,9 +14,9 @@
  * Tractare \r\n ut unam newline (CRLF compatibility)
  */
 interior i32
-_numerare_newlines(
+_numerare_newlines (
     chorda textus,
-    i32    pos)
+       i32 pos)
 {
     i32 numerus = 0;
 
@@ -50,21 +51,21 @@ _numerare_newlines(
  * UTF-8 aware: numerat runas, non bytes
  */
 interior b32
-_est_versus(
+_est_versus (
     chorda textus,
-    i32    pos,
-    i32    latitudo,
-    i32    limina_pct,
-    i32    lineae_probare)
+       i32 pos,
+       i32 latitudo,
+       i32 limina_pct,
+       i32 lineae_probare)
 {
-    i32 lineae_breves = 0;
-    i32 lineae_probatae = 0;
-    i32 limina_lat = (latitudo * limina_pct) / C;
+    i32 lineae_breves    = 0;
+    i32 lineae_probatae  = 0;
+    i32 limina_lat       = (latitudo * limina_pct) / C;
 
     /* Probare usque ad lineae_probare lineas */
     dum (lineae_probatae < lineae_probare && pos < textus.mensura)
     {
-        i32 longitudo_lineae = 0;
+                i32  longitudo_lineae = 0;
         constans i8* scan_ptr;
         constans i8* scan_finis = textus.datum + textus.mensura;
 
@@ -126,36 +127,38 @@ _est_versus(
     redde (lineae_breves * C >= lineae_probatae * limina_pct);
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - CONFIGURATIO
  * ======================================================================== */
 
 PaginariumConfig
-paginarium_config_defectus(vacuum)
+paginarium_config_defectus (vacuum)
 {
     PaginariumConfig config;
 
-    config.latitudo = PAGINARIUM_LATITUDO_DEFECTUS;
-    config.altitudo = PAGINARIUM_ALTITUDO_DEFECTUS;
-    config.limina_versus = PAGINARIUM_LIMINA_VERSUS_DEFECTUS;
-    config.lineae_versus_probare = PAGINARIUM_LINEAE_PROBARE_DEFECTUS;
+    config.latitudo               = PAGINARIUM_LATITUDO_DEFECTUS;
+    config.altitudo               = PAGINARIUM_ALTITUDO_DEFECTUS;
+    config.limina_versus          = PAGINARIUM_LIMINA_VERSUS_DEFECTUS;
+    config.lineae_versus_probare  = PAGINARIUM_LINEAE_PROBARE_DEFECTUS;
 
     redde config;
 }
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE - PAGINATIO
  * ======================================================================== */
 
 PaginariumResultus
-paginarium_paginare(
-    chorda           textus,
-    PaginariumConfig config,
-    Piscina*         piscina)
+paginarium_paginare (
+              chorda  textus,
+    PaginariumConfig  config,
+             Piscina* piscina)
 {
     PaginariumResultus resultus;
-    i32 pos;
-    b32 modus_versus;
+                   i32 pos;
+                   b32 modus_versus;
 
     resultus.paginae = xar_creare(piscina, magnitudo(PaginariumPagina));
     resultus.numerus_paginarum = 0;
@@ -174,7 +177,7 @@ paginarium_paginare(
     dum (pos < textus.mensura)
     {
         PaginariumPagina* pagina;
-        i32 lineae_usae = 0;
+                     i32  lineae_usae = 0;
 
         /* Creare novam paginam */
         pagina = (PaginariumPagina*)xar_addere(resultus.paginae);
@@ -184,7 +187,7 @@ paginarium_paginare(
         dum (pos < textus.mensura && lineae_usae < config.altitudo)
         {
             PaginariumLinea* linea;
-            i32 newlines;
+                        i32  newlines;
 
             /* Verificare paragraph break (2+ newlines) */
             newlines = _numerare_newlines(textus, pos);
@@ -215,19 +218,19 @@ paginarium_paginare(
             si (modus_versus)
             {
                 /* Versus: preservare structuram, word-wrap si necessarium (UTF-8 aware) */
-                i32 line_len = 0;
-                i32 offset = 0;
-                i32 last_space_offset = 0;
-                b32 habet_spatium = FALSUM;
-                b32 hit_newline = FALSUM;
+                        i32  line_len = 0;
+                        i32  offset = 0;
+                        i32  last_space_offset = 0;
+                        b32  habet_spatium = FALSUM;
+                        b32  hit_newline = FALSUM;
                 constans i8* scan_ptr = textus.datum + pos;
                 constans i8* scan_finis = textus.datum + textus.mensura;
 
                 dum (scan_ptr < scan_finis && line_len < config.latitudo)
                 {
                     constans i8* runa_initium = scan_ptr;
-                    s32 runa = utf8_decodere(&scan_ptr, scan_finis);
-                    i32 runa_bytes = (i32)(scan_ptr - runa_initium);
+                            s32  runa = utf8_decodere(&scan_ptr, scan_finis);
+                            i32  runa_bytes = (i32)(scan_ptr - runa_initium);
 
                     si (runa == '\n' || runa == '\r')
                     {
@@ -236,8 +239,8 @@ paginarium_paginare(
                     }
                     si (runa == ' ')
                     {
-                        last_space_offset = offset;
-                        habet_spatium = VERUM;
+                        last_space_offset  = offset;
+                        habet_spatium      = VERUM;
                     }
                     line_len++;
                     offset += runa_bytes;
@@ -246,26 +249,26 @@ paginarium_paginare(
                 /* Si linea excedit latitudinem et habemus spatium, wrap ibi */
                 si (line_len >= config.latitudo && habet_spatium && !hit_newline)
                 {
-                    linea->finis = pos + last_space_offset;
-                    pos += last_space_offset + I;  /* +1 pro spatio */
+                    linea->finis  = pos + last_space_offset;
+                    pos           += last_space_offset + I;  /* +1 pro spatio */
                 }
                 alioquin
                 {
-                    linea->finis = pos + offset;
-                    pos += offset;
+                    linea->finis  = pos + offset;
+                    pos           += offset;
                     /* Consumere \r\n si praesens, NISI est paragraph break */
                     si (hit_newline && pos < textus.mensura)
                     {
                         /* Praeterire \r */
-                        dum (pos < textus.mensura &&
-                             (character)textus.datum[pos] == '\r')
+                        dum (   pos < textus.mensura
+                             && (character)textus.datum[pos] == '\r')
                         {
                             pos++;
                         }
                         /* Non consumere \n si est paragraph break (2+ newlines) */
-                        si (pos < textus.mensura &&
-                            (character)textus.datum[pos] == '\n' &&
-                            _numerare_newlines(textus, pos) < II)
+                        si (   pos < textus.mensura
+                            && (character)textus.datum[pos] == '\n'
+                            && _numerare_newlines(textus, pos) < II)
                         {
                             pos++;
                         }
@@ -275,18 +278,18 @@ paginarium_paginare(
             alioquin
             {
                 /* Prosa: tractare singulum newline ut spatium (UTF-8 aware) */
-                i32 visual_len = 0;
-                i32 source_len = 0;
-                i32 last_break_source = 0;
-                b32 habet_break = FALSUM;
+                        i32  visual_len = 0;
+                        i32  source_len = 0;
+                        i32  last_break_source = 0;
+                        b32  habet_break = FALSUM;
                 constans i8* scan_ptr = textus.datum + pos;
                 constans i8* scan_finis = textus.datum + textus.mensura;
 
                 dum (visual_len < config.latitudo && scan_ptr < scan_finis)
                 {
                     constans i8* runa_initium = scan_ptr;
-                    s32 runa = utf8_decodere(&scan_ptr, scan_finis);
-                    i32 runa_bytes = (i32)(scan_ptr - runa_initium);
+                            s32  runa = utf8_decodere(&scan_ptr, scan_finis);
+                            i32  runa_bytes = (i32)(scan_ptr - runa_initium);
 
                     /* Praeterire \r (non computare ut visual) */
                     si (runa == '\r')
@@ -303,18 +306,18 @@ paginarium_paginare(
                             frange;  /* Terminare ante paragraph break */
                         }
                         /* Singulum newline = spatium */
-                        source_len += runa_bytes;
-                        last_break_source = source_len;
-                        habet_break = VERUM;
+                        source_len         += runa_bytes;
+                        last_break_source  = source_len;
+                        habet_break        = VERUM;
                         visual_len++;
                         perge;
                     }
 
                     si (runa == ' ')
                     {
-                        source_len += runa_bytes;
-                        last_break_source = source_len;
-                        habet_break = VERUM;
+                        source_len         += runa_bytes;
+                        last_break_source  = source_len;
+                        habet_break        = VERUM;
                         visual_len++;
                         perge;
                     }
@@ -326,13 +329,13 @@ paginarium_paginare(
                 /* Applicare word wrap */
                 si (visual_len >= config.latitudo && habet_break)
                 {
-                    linea->finis = pos + last_break_source;
-                    pos += last_break_source;
+                    linea->finis  = pos + last_break_source;
+                    pos           += last_break_source;
                 }
                 alioquin
                 {
-                    linea->finis = pos + source_len;
-                    pos += source_len;
+                    linea->finis  = pos + source_len;
+                    pos           += source_len;
                 }
             }
 
@@ -346,14 +349,15 @@ paginarium_paginare(
     redde resultus;
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - ACCESSUS
  * ======================================================================== */
 
 PaginariumPagina*
-paginarium_pagina_obtinere(
+paginarium_pagina_obtinere (
     PaginariumResultus* resultus,
-    i32                 index)
+                   i32  index)
 {
     si (!resultus || !resultus->paginae)
     {
@@ -369,9 +373,9 @@ paginarium_pagina_obtinere(
 }
 
 PaginariumLinea*
-paginarium_linea_obtinere(
+paginarium_linea_obtinere (
     PaginariumPagina* pagina,
-    i32               index)
+                 i32  index)
 {
     si (!pagina || !pagina->lineae)
     {
@@ -387,7 +391,7 @@ paginarium_linea_obtinere(
 }
 
 i32
-paginarium_pagina_numerus_linearum(
+paginarium_pagina_numerus_linearum (
     PaginariumPagina* pagina)
 {
     si (!pagina || !pagina->lineae)
@@ -398,24 +402,25 @@ paginarium_pagina_numerus_linearum(
     redde (i32)xar_numerus(pagina->lineae);
 }
 
+
 /* ========================================================================
  * FUNCTIONES PUBLICAE - REDDITIO
  * ======================================================================== */
 
 chorda
-paginarium_linea_reddere(
-    chorda           textus,
+paginarium_linea_reddere (
+             chorda  textus,
     PaginariumLinea* linea,
-    Piscina*         piscina)
+            Piscina* piscina)
 {
-    chorda resultus;
-    i32 longitudo;
-    i8* buffer;
-    i32 i;
-    i32 buf_pos;
+    chorda  resultus;
+       i32  longitudo;
+        i8* buffer;
+       i32  i;
+       i32  buf_pos;
 
-    resultus.datum = NIHIL;
-    resultus.mensura = 0;
+    resultus.datum    = NIHIL;
+    resultus.mensura  = 0;
 
     si (!linea || !piscina)
     {
@@ -483,8 +488,8 @@ paginarium_linea_reddere(
         }
     }
 
-    resultus.datum = buffer;
-    resultus.mensura = buf_pos;
+    resultus.datum    = buffer;
+    resultus.mensura  = buf_pos;
 
     redde resultus;
 }

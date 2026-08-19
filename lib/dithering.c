@@ -7,6 +7,7 @@
 #include "dithering.h"
 #include <string.h>
 
+
 /* ============================================================
  * Aquinas Palette Data
  * ============================================================ */
@@ -49,6 +50,7 @@ constans character* AQUINAS_NOMINA[XVI] = {
     "Griseus Calidus"
 };
 
+
 /* ============================================================
  * Atkinson Offsets
  * ============================================================
@@ -57,11 +59,13 @@ constans character* AQUINAS_NOMINA[XVI] = {
  * [1] [1] [1]
  *     [1]
  */
+
 hic_manens constans s32 ATKINSON_OFFSETS[VI][II] = {
     {1, 0}, {2, 0},           /* dextra 1, dextra 2 */
     {-1, 1}, {0, 1}, {1, 1},  /* proxima linea: sinistra, centrum, dextra */
     {0, 2}                    /* duas lineas infra */
 };
+
 
 /* ============================================================
  * Functiones Auxiliares Internae
@@ -73,7 +77,10 @@ hic_manens constans s32 ATKINSON_OFFSETS[VI][II] = {
  * In fixed point: (77*R + 150*G + 28*B) >> 8
  */
 hic_manens s32
-_computare_luminantiam(s32 r, s32 g, s32 b)
+_computare_luminantiam (
+    s32 r,
+    s32 g,
+    s32 b)
 {
     redde (77 * r + 150 * g + 28 * b) >> 8;
 }
@@ -82,31 +89,33 @@ _computare_luminantiam(s32 r, s32 g, s32 b)
  * Clamp valor ad 0-255
  */
 hic_manens s32
-_clamp(s32 v)
+_clamp (
+    s32 v)
 {
     si (v < 0) redde 0;
     si (v > 255) redde 255;
     redde v;
 }
 
+
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
 
 DitheringFructus
-dithering_atkinson_colorum(
-    constans i8*  rgba,
-    i32           latitudo,
-    i32           altitudo,
+dithering_atkinson_colorum (
+     constans i8* rgba,
+             i32  latitudo,
+             i32  altitudo,
     constans b32  colores_activi[XVI],
-    Piscina*      piscina)
+         Piscina* piscina)
 {
-    DitheringFructus fructus;
-    s16* error_buf;  /* Interleaved RGB error: 3 rows only */
+    DitheringFructus  fructus;
+                 s16* error_buf;  /* Interleaved RGB error: 3 rows only */
     s32 x, y, i;
-    s32 lat = (s32)latitudo;
-    s32 alt = (s32)altitudo;
-    s32 num_pixela = lat * alt;
+    s32 lat         = (s32)latitudo;
+    s32 alt         = (s32)altitudo;
+    s32 num_pixela  = lat * alt;
     s32 row_stride;
 
     /* Pre-compute active palette for faster lookup */
@@ -115,10 +124,10 @@ dithering_atkinson_colorum(
     s32 active_indices[XVI];
 
     /* Initiare fructum */
-    fructus.successus = FALSUM;
-    fructus.indices = NIHIL;
-    fructus.latitudo = latitudo;
-    fructus.altitudo = altitudo;
+    fructus.successus  = FALSUM;
+    fructus.indices    = NIHIL;
+    fructus.latitudo   = latitudo;
+    fructus.altitudo   = altitudo;
 
     /* Validare */
     si (rgba == NIHIL || piscina == NIHIL || latitudo == 0 || altitudo == 0)
@@ -163,15 +172,15 @@ dithering_atkinson_colorum(
     /* Single-pass Atkinson dithering */
     per (y = 0; y < alt; y++)
     {
-        s32 row0 = (y % III) * row_stride;
-        s32 row1 = ((y + I) % III) * row_stride;
-        s32 row2 = ((y + II) % III) * row_stride;
-        s32 rgba_row = y * lat * IV;
+        s32 row0      = (y % III) * row_stride;
+        s32 row1      = ((y + I) % III) * row_stride;
+        s32 row2      = ((y + II) % III) * row_stride;
+        s32 rgba_row  = y * lat * IV;
 
         per (x = 0; x < lat; x++)
         {
-            s32 ex = x * III;
-            s32 rgba_idx = rgba_row + x * IV;
+            s32 ex        = x * III;
+            s32 rgba_idx  = rgba_row + x * IV;
 
             /* Get pixel + accumulated error */
             s32 old_r = (s32)(insignatus character)rgba[rgba_idx + 0] + error_buf[row0 + ex + 0];
@@ -185,21 +194,21 @@ dithering_atkinson_colorum(
 
             /* Find closest color - inline */
             {
-                s32 best_idx = 0;
-                s32 best_dist = 0x7FFFFFFF;
+                s32 best_idx   = 0;
+                s32 best_dist  = 0x7FFFFFFF;
                 s32 j;
 
                 per (j = 0; j < num_active; j++)
                 {
-                    s32 dr = old_r - active_palette[j][0];
-                    s32 dg = old_g - active_palette[j][1];
-                    s32 db = old_b - active_palette[j][2];
-                    s32 dist = dr * dr + dg * dg + db * db;
+                    s32 dr    = old_r - active_palette[j][0];
+                    s32 dg    = old_g - active_palette[j][1];
+                    s32 db    = old_b - active_palette[j][2];
+                    s32 dist  = dr * dr + dg * dg + db * db;
 
                     si (dist < best_dist)
                     {
-                        best_dist = dist;
-                        best_idx = j;
+                        best_dist  = dist;
+                        best_idx   = j;
                     }
                 }
 
@@ -267,20 +276,20 @@ dithering_atkinson_colorum(
 }
 
 DitheringFructus
-dithering_atkinson_griseum(
-    constans i8*  rgba,
-    i32           latitudo,
-    i32           altitudo,
+dithering_atkinson_griseum (
+     constans i8* rgba,
+             i32  latitudo,
+             i32  altitudo,
     constans b32  colores_activi[XVI],
     constans i32  puncta[III],
-    Piscina*      piscina)
+         Piscina* piscina)
 {
-    DitheringFructus fructus;
-    s32* error_lum;
+    DitheringFructus  fructus;
+                 s32* error_lum;
     s32 x, y, i;
-    s32 lat = (s32)latitudo;
-    s32 alt = (s32)altitudo;
-    s32 num_pixela = lat * alt;
+    s32 lat         = (s32)latitudo;
+    s32 alt         = (s32)altitudo;
+    s32 num_pixela  = lat * alt;
 
     /* Colores activi ordinati per luminantiam */
     s32 colores_ordinati[XVI];
@@ -288,10 +297,10 @@ dithering_atkinson_griseum(
     s32 num_activi = 0;
 
     /* Initiare fructum */
-    fructus.successus = FALSUM;
-    fructus.indices = NIHIL;
-    fructus.latitudo = latitudo;
-    fructus.altitudo = altitudo;
+    fructus.successus  = FALSUM;
+    fructus.indices    = NIHIL;
+    fructus.latitudo   = latitudo;
+    fructus.altitudo   = altitudo;
 
     /* Validare */
     si (rgba == NIHIL || piscina == NIHIL || latitudo == 0 || altitudo == 0)
@@ -327,12 +336,12 @@ dithering_atkinson_griseum(
         {
             si (luminantiae[j] > luminantiae[j + 1])
             {
-                s32 temp_lum = luminantiae[j];
-                s32 temp_col = colores_ordinati[j];
-                luminantiae[j] = luminantiae[j + 1];
-                colores_ordinati[j] = colores_ordinati[j + 1];
-                luminantiae[j + 1] = temp_lum;
-                colores_ordinati[j + 1] = temp_col;
+                s32 temp_lum             = luminantiae[j];
+                s32 temp_col             = colores_ordinati[j];
+                luminantiae[j]           = luminantiae[j + 1];
+                colores_ordinati[j]      = colores_ordinati[j + 1];
+                luminantiae[j + 1]       = temp_lum;
+                colores_ordinati[j + 1]  = temp_col;
             }
         }
     }
@@ -354,10 +363,10 @@ dithering_atkinson_griseum(
     /* Copiare luminantiam ad error buffer */
     per (i = 0; i < num_pixela; i++)
     {
-        s32 r = (s32)(insignatus character)rgba[i * 4 + 0];
-        s32 g = (s32)(insignatus character)rgba[i * 4 + 1];
-        s32 b = (s32)(insignatus character)rgba[i * 4 + 2];
-        error_lum[i] = _computare_luminantiam(r, g, b);
+        s32 r         = (s32)(insignatus character)rgba[i * 4 + 0];
+        s32 g         = (s32)(insignatus character)rgba[i * 4 + 1];
+        s32 b         = (s32)(insignatus character)rgba[i * 4 + 2];
+        error_lum[i]  = _computare_luminantiam(r, g, b);
     }
 
     /* Atkinson dithering */
@@ -365,9 +374,9 @@ dithering_atkinson_griseum(
     {
         per (x = 0; x < lat; x++)
         {
-            s32 idx = y * lat + x;
-            s32 old_lum = _clamp(error_lum[idx]);
-            s32 color_bucket = num_activi - 1;
+            s32 idx           = y * lat + x;
+            s32 old_lum       = _clamp(error_lum[idx]);
+            s32 color_bucket  = num_activi - 1;
             s32 color_idx;
             s32 new_lum;
             s32 err_lum;
@@ -384,8 +393,8 @@ dithering_atkinson_griseum(
             }
 
             /* Obtinere colorem ex bucket */
-            color_idx = colores_ordinati[color_bucket];
-            fructus.indices[idx] = (i8)color_idx;
+            color_idx             = colores_ordinati[color_bucket];
+            fructus.indices[idx]  = (i8)color_idx;
 
             /* Computare luminantiam target (linearis per bucket) */
             new_lum = (color_bucket * 255) / (num_activi > 1 ? num_activi - 1 : 1);
@@ -401,8 +410,8 @@ dithering_atkinson_griseum(
 
                 si (nx >= 0 && nx < lat && ny >= 0 && ny < alt)
                 {
-                    s32 nidx = ny * lat + nx;
-                    error_lum[nidx] += err_lum;
+                    s32 nidx         = ny * lat + nx;
+                    error_lum[nidx]  += err_lum;
                 }
             }
         }
@@ -413,11 +422,11 @@ dithering_atkinson_griseum(
 }
 
 vacuum
-dithering_indices_ad_rgba(
-    constans i8*  indices,
-    i8*           rgba_output,
-    i32           latitudo,
-    i32           altitudo)
+dithering_indices_ad_rgba (
+    constans i8* indices,
+             i8* rgba_output,
+            i32  latitudo,
+            i32  altitudo)
 {
     s32 i;
     s32 num_pixela = (s32)latitudo * (s32)altitudo;
@@ -441,7 +450,11 @@ dithering_indices_ad_rgba(
 }
 
 vacuum
-dithering_color_ex_indice(s32 index, i8* r, i8* g, i8* b)
+dithering_color_ex_indice (
+    s32  index,
+     i8* r,
+     i8* g,
+     i8* b)
 {
     si (index < 0) index = 0;
     si (index > XV) index = XV;
@@ -451,12 +464,14 @@ dithering_color_ex_indice(s32 index, i8* r, i8* g, i8* b)
     si (b) *b = AQUINAS_PALETTE[index][2];
 }
 
+
 /* ============================================================
  * Praeparatores (Presets)
  * ============================================================ */
 
 vacuum
-dithering_praeparare_omnes(b32 colores[XVI])
+dithering_praeparare_omnes (
+    b32 colores[XVI])
 {
     s32 i;
     per (i = 0; i < XVI; i++)
@@ -466,7 +481,8 @@ dithering_praeparare_omnes(b32 colores[XVI])
 }
 
 vacuum
-dithering_praeparare_griseum(b32 colores[XVI])
+dithering_praeparare_griseum (
+    b32 colores[XVI])
 {
     s32 i;
     /* Grayscale: 0, 1, 3, 4, 5, 15 */
@@ -474,16 +490,17 @@ dithering_praeparare_griseum(b32 colores[XVI])
     {
         colores[i] = FALSUM;
     }
-    colores[0] = VERUM;   /* Niger */
-    colores[1] = VERUM;   /* Griseus Obscurus */
-    colores[3] = VERUM;   /* Griseus Medius */
-    colores[4] = VERUM;   /* Griseus Lucidus */
-    colores[5] = VERUM;   /* Albus */
-    colores[15] = VERUM;  /* Griseus Calidus */
+    colores[0]   = VERUM;   /* Niger */
+    colores[1]   = VERUM;   /* Griseus Obscurus */
+    colores[3]   = VERUM;   /* Griseus Medius */
+    colores[4]   = VERUM;   /* Griseus Lucidus */
+    colores[5]   = VERUM;   /* Albus */
+    colores[15]  = VERUM;  /* Griseus Calidus */
 }
 
 vacuum
-dithering_praeparare_calidus(b32 colores[XVI])
+dithering_praeparare_calidus (
+    b32 colores[XVI])
 {
     s32 i;
     /* Warm: 0, 5, 6, 9, 10, 11, 15 */
@@ -491,17 +508,18 @@ dithering_praeparare_calidus(b32 colores[XVI])
     {
         colores[i] = FALSUM;
     }
-    colores[0] = VERUM;   /* Niger */
-    colores[5] = VERUM;   /* Albus */
-    colores[6] = VERUM;   /* Ruber Obscurus */
-    colores[9] = VERUM;   /* Aurum Obscurum */
-    colores[10] = VERUM;  /* Aurum Medium */
-    colores[11] = VERUM;  /* Aurum Lucidum */
-    colores[15] = VERUM;  /* Griseus Calidus */
+    colores[0]   = VERUM;   /* Niger */
+    colores[5]   = VERUM;   /* Albus */
+    colores[6]   = VERUM;   /* Ruber Obscurus */
+    colores[9]   = VERUM;   /* Aurum Obscurum */
+    colores[10]  = VERUM;  /* Aurum Medium */
+    colores[11]  = VERUM;  /* Aurum Lucidum */
+    colores[15]  = VERUM;  /* Griseus Calidus */
 }
 
 vacuum
-dithering_praeparare_frigidus(b32 colores[XVI])
+dithering_praeparare_frigidus (
+    b32 colores[XVI])
 {
     s32 i;
     /* Cool: 0, 1, 5, 7, 12, 13, 14 */
@@ -509,17 +527,18 @@ dithering_praeparare_frigidus(b32 colores[XVI])
     {
         colores[i] = FALSUM;
     }
-    colores[0] = VERUM;   /* Niger */
-    colores[1] = VERUM;   /* Griseus Obscurus */
-    colores[5] = VERUM;   /* Albus */
-    colores[7] = VERUM;   /* Caeruleus */
-    colores[12] = VERUM;  /* Folium Obscurum */
-    colores[13] = VERUM;  /* Folium Medium */
-    colores[14] = VERUM;  /* Folium Lucidum */
+    colores[0]   = VERUM;   /* Niger */
+    colores[1]   = VERUM;   /* Griseus Obscurus */
+    colores[5]   = VERUM;   /* Albus */
+    colores[7]   = VERUM;   /* Caeruleus */
+    colores[12]  = VERUM;  /* Folium Obscurum */
+    colores[13]  = VERUM;  /* Folium Medium */
+    colores[14]  = VERUM;  /* Folium Lucidum */
 }
 
 vacuum
-dithering_praeparare_monochromaticus(b32 colores[XVI])
+dithering_praeparare_monochromaticus (
+    b32 colores[XVI])
 {
     s32 i;
     /* Mono: 0, 5 */

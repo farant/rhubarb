@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Auxilia
  * ================================================== */
@@ -23,8 +24,11 @@ _texere (Piscina* piscina, constans character* a,
     constans character* b, constans character* c);
 
 interior constans character*
-_texere (Piscina* piscina, constans character* a,
-    constans character* b, constans character* c)
+_texere (
+               Piscina* piscina,
+    constans character* a,
+    constans character* b,
+    constans character* c)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         (memoriae_index)128);
@@ -46,8 +50,10 @@ _praefigere (Piscina* piscina, constans character* praefixum,
     chorda cauda);
 
 interior chorda
-_praefigere (Piscina* piscina, constans character* praefixum,
-    chorda cauda)
+_praefigere (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  cauda)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         (memoriae_index)128);
@@ -61,11 +67,12 @@ _praefigere (Piscina* piscina, constans character* praefixum,
  * + lib/ (directorium). via_directorium("/") = "/" - mensura
  * immota terminat; custodia graduum contra vias pathologicas. */
 constans character*
-silex_fabricam_invenire (Piscina* piscina,
+silex_fabricam_invenire (
+               Piscina* piscina,
     constans character* initium)
 {
     chorda via;
-    i32    gradus;
+       i32 gradus;
 
     via = via_absoluta(chorda_ex_literis(initium, piscina),
         piscina);
@@ -76,9 +83,9 @@ silex_fabricam_invenire (Piscina* piscina,
     per (gradus = 0; gradus < 64; gradus = gradus + 1)
     {
         constans character* radix = chorda_ut_cstr(via, piscina);
-        chorda parens;
+                    chorda  parens;
 
-        si (filum_existit(_texere(piscina, radix,
+        si (   filum_existit(_texere(piscina, radix,
                 "/include/latina.h", NIHIL))
             && filum_directorium_existit(_texere(piscina, radix,
                 "/lib", NIHIL))
@@ -103,16 +110,19 @@ silex_fabricam_invenire (Piscina* piscina,
     redde NIHIL;
 }
 
+
 /* ==================================================
  * Fons bibliothecarum (DISCUS | CORPUS)
  * ================================================== */
 
 SilexFons*
-silex_fons_disci (Piscina* piscina, constans character* fabrica)
+silex_fons_disci (
+               Piscina* piscina,
+    constans character* fabrica)
 {
     SilexFons* fons;
 
-    si (fabrica == NIHIL || !filum_directorium_existit(
+    si (   fabrica == NIHIL || !filum_directorium_existit(
         _texere(piscina, fabrica, "/include", NIHIL)))
     {
         redde NIHIL;
@@ -123,19 +133,20 @@ silex_fons_disci (Piscina* piscina, constans character* fabrica)
     {
         redde NIHIL;
     }
-    fons->genus   = SILEX_FONS_DISCUS;
-    fons->fabrica = fabrica;
-    fons->capsula = NIHIL;
-    fons->titulus = fabrica;
+    fons->genus    = SILEX_FONS_DISCUS;
+    fons->fabrica  = fabrica;
+    fons->capsula  = NIHIL;
+    fons->titulus  = fabrica;
     redde fons;
 }
 
 SilexFons*
-silex_fons_corporis (Piscina* piscina,
+silex_fons_corporis (
+                  Piscina* piscina,
     constans CapsulaEmbed* embed)
 {
     SilexFons* fons;
-    Capsula*   capsula = capsula_aperire(embed, piscina);
+      Capsula* capsula = capsula_aperire(embed, piscina);
 
     si (capsula == NIHIL)
     {
@@ -147,22 +158,22 @@ silex_fons_corporis (Piscina* piscina,
     {
         redde NIHIL;
     }
-    fons->genus   = SILEX_FONS_CORPUS;
-    fons->fabrica = NIHIL;
-    fons->capsula = capsula;
-    fons->titulus = "(corpus sine stampa)";
+    fons->genus    = SILEX_FONS_CORPUS;
+    fons->fabrica  = NIHIL;
+    fons->capsula  = capsula;
+    fons->titulus  = "(corpus sine stampa)";
     {
         CapsulaFructus stampa = capsula_legere(capsula,
             "corpus.versio", piscina);
 
-        si (stampa.status == CAPSULA_OK
+        si (   stampa.status == CAPSULA_OK
             && stampa.datum.mensura > 0)
         {
             chorda linea = stampa.datum;
 
             /* linea prima sine terminatione */
-            dum (linea.mensura > 0
-                && (linea.datum[linea.mensura - 1] == '\n'
+            dum (   linea.mensura > 0
+                 && (linea.datum[linea.mensura - 1] == '\n'
                     || linea.datum[linea.mensura - 1] == '\r'))
             {
                 linea.mensura = linea.mensura - 1;
@@ -175,8 +186,10 @@ silex_fons_corporis (Piscina* piscina,
 }
 
 b32
-silex_fons_existit (constans SilexFons* fons,
-    constans character* via_relativa, Piscina* piscina)
+silex_fons_existit (
+    constans SilexFons* fons,
+    constans character* via_relativa,
+               Piscina* piscina)
 {
     si (fons->genus == SILEX_FONS_CORPUS)
     {
@@ -187,15 +200,17 @@ silex_fons_existit (constans SilexFons* fons,
 }
 
 chorda
-silex_fons_legere (constans SilexFons* fons,
-    constans character* via_relativa, Piscina* piscina,
-    b32* inventum)
+silex_fons_legere (
+    constans SilexFons* fons,
+    constans character* via_relativa,
+               Piscina* piscina,
+                   b32* inventum)
 {
     chorda vacua;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
-    *inventum = FALSUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
+    *inventum      = FALSUM;
     si (fons->genus == SILEX_FONS_CORPUS)
     {
         CapsulaFructus f = capsula_legere(fons->capsula,
@@ -221,6 +236,7 @@ silex_fons_legere (constans SilexFons* fons,
     }
 }
 
+
 /* ==================================================
  * Scrutatio inclusionum (v0 textualis, lineatim)
  * ================================================== */
@@ -229,7 +245,9 @@ interior vacuum
 _inclusiones_scrutari (chorda contentum, Xar* opus);
 
 interior vacuum
-_inclusiones_scrutari (chorda contentum, Xar* opus)
+_inclusiones_scrutari (
+    chorda  contentum,
+       Xar* opus)
 {
     i32 i = 0;
 
@@ -237,8 +255,8 @@ _inclusiones_scrutari (chorda contentum, Xar* opus)
     {
         i32 p = i;
 
-        dum (p < contentum.mensura
-            && (contentum.datum[p] == ' '
+        dum (   p < contentum.mensura
+             && (contentum.datum[p] == ' '
                 || contentum.datum[p] == '\t'))
         {
             p = p + 1;
@@ -246,38 +264,38 @@ _inclusiones_scrutari (chorda contentum, Xar* opus)
         si (p < contentum.mensura && contentum.datum[p] == '#')
         {
             p = p + 1;
-            dum (p < contentum.mensura
-                && (contentum.datum[p] == ' '
+            dum (   p < contentum.mensura
+                 && (contentum.datum[p] == ' '
                     || contentum.datum[p] == '\t'))
             {
                 p = p + 1;
             }
-            si (p + 7 <= contentum.mensura
+            si (   p + 7 <= contentum.mensura
                 && memcmp(contentum.datum + p, "include", 7) == 0)
             {
                 p = p + 7;
-                dum (p < contentum.mensura
-                    && (contentum.datum[p] == ' '
+                dum (   p < contentum.mensura
+                     && (contentum.datum[p] == ' '
                         || contentum.datum[p] == '\t'))
                 {
                     p = p + 1;
                 }
-                si (p < contentum.mensura
+                si (   p < contentum.mensura
                     && contentum.datum[p] == '"')
                 {
                     i32 initium;
 
-                    p = p + 1;
-                    initium = p;
-                    dum (p < contentum.mensura
-                        && contentum.datum[p] != '"'
-                        && contentum.datum[p] != '\n')
+                    p        = p + 1;
+                    initium  = p;
+                    dum (   p < contentum.mensura
+                         && contentum.datum[p] != '"'
+                         && contentum.datum[p] != '\n')
                     {
                         p = p + 1;
                     }
-                    si (p < contentum.mensura
-                        && contentum.datum[p] == '"'
-                        && p - initium >= 2
+                    si (   p < contentum.mensura
+                        && contentum.datum[p]     == '"'
+                        && p - initium            >= 2
                         && contentum.datum[p - 2] == '.'
                         && contentum.datum[p - 1] == 'h')
                     {
@@ -301,6 +319,7 @@ _inclusiones_scrutari (chorda contentum, Xar* opus)
     }
 }
 
+
 /* ==================================================
  * Clausura bibliothecarum
  * ================================================== */
@@ -313,7 +332,9 @@ _vendor_basim (chorda caput, chorda* basis);
  * corporis '..' resolvere nequeunt, ergo par venditorium semper
  * 'vendor/<basis>' fit. */
 interior b32
-_vendor_basim (chorda caput, chorda* basis)
+_vendor_basim (
+    chorda  caput,
+    chorda* basis)
 {
     i32 i;
 
@@ -348,17 +369,21 @@ _plagulam_e_fonte_colligere (Piscina* piscina,
  * exsistit et lecta. opus NIHIL = folium (venditoria: contenta
  * eorum numquam scrutantur - sqlite3.c windows.h citat!) */
 interior b32
-_plagulam_e_fonte_colligere (Piscina* piscina,
-    constans SilexFons* fons, constans character* pars,
-    chorda titulus, Xar* fructus, Xar* opus)
+_plagulam_e_fonte_colligere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* pars,
+                chorda  titulus,
+                   Xar* fructus,
+                   Xar* opus)
 {
-    chorda              via_rel;
+                chorda  via_rel;
     constans character* via_rel_cstr;
-    chorda              contentum;
-    SilexRes*           res;
+                chorda  contentum;
+              SilexRes* res;
 
-    via_rel = _praefigere(piscina, pars, titulus);
-    via_rel_cstr = chorda_ut_cstr(via_rel, piscina);
+    via_rel       = _praefigere(piscina, pars, titulus);
+    via_rel_cstr  = chorda_ut_cstr(via_rel, piscina);
     si (!silex_fons_existit(fons, via_rel_cstr, piscina))
     {
         redde FALSUM;
@@ -389,24 +414,26 @@ _plagulam_e_fonte_colligere (Piscina* piscina,
 }
 
 Xar*
-silex_clausuram_colligere (Piscina* piscina,
+silex_clausuram_colligere (
+    Piscina* piscina,
     constans SilexFons* fons,
-    constans character* constans* semina, i32 numerus_seminum)
+    constans character* constans* semina,
+    i32 numerus_seminum)
 {
-    Xar*            opus;
-    Xar*            fructus;
+               Xar* opus;
+               Xar* fructus;
     TabulaDispersa* visa;
-    i32             s;
-    i32             index;
+               i32  s;
+               i32  index;
 
     si (fons == NIHIL)
     {
         redde NIHIL;   /* validatio in constructoribus fontis */
     }
 
-    opus = xar_creare(piscina, (i32)magnitudo(chorda));
-    fructus = xar_creare(piscina, (i32)magnitudo(SilexRes));
-    visa = tabula_dispersa_creare_chorda(piscina, 64);
+    opus     = xar_creare(piscina, (i32)magnitudo(chorda));
+    fructus  = xar_creare(piscina, (i32)magnitudo(SilexRes));
+    visa     = tabula_dispersa_creare_chorda(piscina, 64);
     si (opus == NIHIL || fructus == NIHIL || visa == NIHIL)
     {
         redde NIHIL;
@@ -451,7 +478,7 @@ silex_clausuram_colligere (Piscina* piscina,
                     (constans character*)basis_vendoris.datum);
             }
             /* geminus .c si basis '.h' terminatur */
-            si (basis_vendoris.mensura > 2
+            si (   basis_vendoris.mensura > 2
                 && basis_vendoris.datum[basis_vendoris.mensura - 2]
                     == '.'
                 && basis_vendoris.datum[basis_vendoris.mensura - 1]
@@ -489,8 +516,8 @@ silex_clausuram_colligere (Piscina* piscina,
         /* geminus lib: conventione aedilis include/X.h -> lib/X.c */
         si (caput.mensura >= 2)
         {
-            chorda  radix_capitis;
-            chorda  titulus_c;
+            chorda radix_capitis;
+            chorda titulus_c;
 
             radix_capitis = chorda_ex_buffer(caput.datum,
                 caput.mensura - 2);
@@ -570,6 +597,7 @@ silex_clausuram_colligere (Piscina* piscina,
     redde fructus;
 }
 
+
 /* ==================================================
  * Plagulae genitae (scaffold)
  * ================================================== */
@@ -578,7 +606,9 @@ interior chorda
 _fontem_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_fontem_fingere (Piscina* piscina, constans character* titulus)
+_fontem_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)1024);
@@ -624,7 +654,9 @@ interior chorda
 _probationem_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_probationem_fingere (Piscina* piscina, constans character* titulus)
+_probationem_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)1024);
@@ -698,7 +730,8 @@ _aedificare_sh_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_aedificare_sh_fingere (Piscina* piscina,
+_aedificare_sh_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -730,7 +763,9 @@ interior chorda
 _probare_sh_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_probare_sh_fingere (Piscina* piscina, constans character* titulus)
+_probare_sh_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -762,7 +797,9 @@ interior chorda
 _readme_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_readme_fingere (Piscina* piscina, constans character* titulus)
+_readme_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -788,6 +825,7 @@ _readme_fingere (Piscina* piscina, constans character* titulus)
     redde chorda_aedificator_finire(a);
 }
 
+
 /* ==================================================
  * Plagulae genitae (-vitrea): cor voluminis - pons ET
  * persistentia una salutatione probata. Identificatores C FIXI
@@ -798,7 +836,9 @@ interior chorda
 _pipa_h_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_pipa_h_fingere (Piscina* piscina, constans character* titulus)
+_pipa_h_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)1024);
@@ -849,7 +889,9 @@ interior chorda
 _pipa_c_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_pipa_c_fingere (Piscina* piscina, constans character* titulus)
+_pipa_c_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)4096);
@@ -954,7 +996,8 @@ _fontem_vitreum_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_fontem_vitreum_fingere (Piscina* piscina,
+_fontem_vitreum_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1143,7 +1186,9 @@ interior chorda
 _toml_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_toml_fingere (Piscina* piscina, constans character* titulus)
+_toml_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -1169,7 +1214,8 @@ _index_html_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_index_html_fingere (Piscina* piscina,
+_index_html_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1217,7 +1263,9 @@ interior chorda
 _js_fingere (Piscina* piscina, constans character* titulus);
 
 interior chorda
-_js_fingere (Piscina* piscina, constans character* titulus)
+_js_fingere (
+               Piscina* piscina,
+    constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
         (memoriae_index)512);
@@ -1245,7 +1293,8 @@ _probationem_vitream_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_probationem_vitream_fingere (Piscina* piscina,
+_probationem_vitream_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1353,7 +1402,8 @@ _fumus_manus_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_fumus_manus_fingere (Piscina* piscina,
+_fumus_manus_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1519,7 +1569,8 @@ _readme_vitreum_fingere (Piscina* piscina,
     constans character* titulus);
 
 interior chorda
-_readme_vitreum_fingere (Piscina* piscina,
+_readme_vitreum_fingere (
+               Piscina* piscina,
     constans character* titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1606,17 +1657,19 @@ _clausuram_e_contentis (Piscina* piscina,
     i32 numerus);
 
 interior Xar*
-_clausuram_e_contentis (Piscina* piscina,
-    constans SilexFons* fons, constans chorda* contenta,
-    i32 numerus)
+_clausuram_e_contentis (
+               Piscina* piscina,
+    constans SilexFons* fons,
+       constans chorda* contenta,
+                   i32  numerus)
 {
-    Xar*            nomina = xar_creare(piscina,
+    Xar* nomina = xar_creare(piscina,
         (i32)magnitudo(chorda));
     TabulaDispersa* electa = tabula_dispersa_creare_chorda(
         piscina, 32);
-    Xar*            semina_ch = xar_creare(piscina,
+    Xar* semina_ch = xar_creare(piscina,
         (i32)magnitudo(chorda));
-    i32             i;
+    i32 i;
 
     si (nomina == NIHIL || electa == NIHIL || semina_ch == NIHIL)
     {
@@ -1630,7 +1683,7 @@ _clausuram_e_contentis (Piscina* piscina,
     {
         chorda n = *(chorda*)xar_obtinere(nomina, i);
 
-        si (tabula_dispersa_continet(electa, n)
+        si (   tabula_dispersa_continet(electa, n)
             || _suffixum_habet(n, "_pipa.h")
             || _praefixum_habet(_basis_viae(n), "capsula_"))
         {
@@ -1668,6 +1721,7 @@ _clausuram_e_contentis (Piscina* piscina,
     }
 }
 
+
 /* ==================================================
  * Ordines generati (-vitrea): PROIECTIONES - listae fontium per
  * scopum e clausuris computatae, numquam globus.
@@ -1689,8 +1743,10 @@ _ordinem_fontium_appendere (ChordaAedificator* a,
     Xar* clausura, b32 cum_obiectivis);
 
 interior vacuum
-_ordinem_fontium_appendere (ChordaAedificator* a,
-    Xar* clausura, b32 cum_obiectivis)
+_ordinem_fontium_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura,
+                  b32  cum_obiectivis)
 {
     i32 k;
 
@@ -1702,7 +1758,7 @@ _ordinem_fontium_appendere (ChordaAedificator* a,
         {
             perge;
         }
-        si (_suffixum_habet(e->via, ".c")
+        si (   _suffixum_habet(e->via, ".c")
             || (cum_obiectivis && _suffixum_habet(e->via, ".m")))
         {
             chorda_aedificator_appendere_literis(a, " \\\n    ");
@@ -1717,23 +1773,24 @@ _regulas_venditorias_appendere (ChordaAedificator* a,
     Xar* clausura);
 
 interior vacuum
-_regulas_venditorias_appendere (ChordaAedificator* a,
-    Xar* clausura)
+_regulas_venditorias_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura)
 {
     i32 k;
 
     per (k = 0; k < xar_numerus(clausura); k = k + 1)
     {
         SilexRes* e = (SilexRes*)xar_obtinere(clausura, k);
-        chorda    basis;
+          chorda  basis;
 
-        si (e == NIHIL || !_praefixum_habet(e->via, "vendor/")
+        si (   e == NIHIL || !_praefixum_habet(e->via, "vendor/")
             || !_suffixum_habet(e->via, ".c"))
         {
             perge;
         }
-        basis = _basis_viae(e->via);
-        basis.mensura = basis.mensura - 2;   /* '.c' demitur */
+        basis          = _basis_viae(e->via);
+        basis.mensura  = basis.mensura - 2;   /* '.c' demitur */
         chorda_aedificator_appendere_literis(a,
             "if [ ! -f build/");
         chorda_aedificator_appendere_chorda(a, basis);
@@ -1758,23 +1815,24 @@ _obiecta_venditoria_appendere (ChordaAedificator* a,
     Xar* clausura);
 
 interior vacuum
-_obiecta_venditoria_appendere (ChordaAedificator* a,
-    Xar* clausura)
+_obiecta_venditoria_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura)
 {
     i32 k;
 
     per (k = 0; k < xar_numerus(clausura); k = k + 1)
     {
         SilexRes* e = (SilexRes*)xar_obtinere(clausura, k);
-        chorda    basis;
+          chorda  basis;
 
-        si (e == NIHIL || !_praefixum_habet(e->via, "vendor/")
+        si (   e == NIHIL || !_praefixum_habet(e->via, "vendor/")
             || !_suffixum_habet(e->via, ".c"))
         {
             perge;
         }
-        basis = _basis_viae(e->via);
-        basis.mensura = basis.mensura - 2;
+        basis          = _basis_viae(e->via);
+        basis.mensura  = basis.mensura - 2;
         chorda_aedificator_appendere_literis(a,
             " \\\n    build/");
         chorda_aedificator_appendere_chorda(a, basis);
@@ -1787,7 +1845,8 @@ _stampam_ordinis_appendere (ChordaAedificator* a,
     constans character* fons_titulus);
 
 interior vacuum
-_stampam_ordinis_appendere (ChordaAedificator* a,
+_stampam_ordinis_appendere (
+     ChordaAedificator* a,
     constans character* fons_titulus)
 {
     chorda_aedificator_appendere_literis(a,
@@ -1805,9 +1864,11 @@ _aedificare_vitreum_fingere (Piscina* piscina,
     constans character* fons_titulus);
 
 interior chorda
-_aedificare_vitreum_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_app,
-    Xar* clausura_instrumenti,
+_aedificare_vitreum_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_app,
+                   Xar* clausura_instrumenti,
     constans character* fons_titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1889,8 +1950,10 @@ _probare_vitreum_fingere (Piscina* piscina,
     constans character* fons_titulus);
 
 interior chorda
-_probare_vitreum_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_probationis,
+_probare_vitreum_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_probationis,
     constans character* fons_titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1929,8 +1992,10 @@ _fumus_sh_fingere (Piscina* piscina,
     constans character* fons_titulus);
 
 interior chorda
-_fumus_sh_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_fumi,
+_fumus_sh_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_fumi,
     constans character* fons_titulus)
 {
     ChordaAedificator* a = chorda_aedificator_creare(piscina,
@@ -1980,6 +2045,7 @@ _fumus_sh_fingere (Piscina* piscina,
     redde chorda_aedificator_finire(a);
 }
 
+
 /* ==================================================
  * Novum
  * ================================================== */
@@ -1989,8 +2055,11 @@ _rem_genitam_addere (Piscina* piscina, Xar* res_omnes,
     constans character* via, chorda contentum);
 
 interior vacuum
-_rem_genitam_addere (Piscina* piscina, Xar* res_omnes,
-    constans character* via, chorda contentum)
+_rem_genitam_addere (
+               Piscina* piscina,
+                   Xar* res_omnes,
+    constans character* via,
+                chorda  contentum)
 {
     SilexRes* res = (SilexRes*)xar_addere(res_omnes);
 
@@ -1998,29 +2067,31 @@ _rem_genitam_addere (Piscina* piscina, Xar* res_omnes,
     {
         redde;
     }
-    res->via = chorda_ex_literis(via, piscina);
-    res->contentum = contentum;
-    res->origo = "genita";
+    res->via        = chorda_ex_literis(via, piscina);
+    res->contentum  = contentum;
+    res->origo      = "genita";
 }
 
 SilexNovumFructus
-silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
+silex_novum (
+                        Piscina* piscina,
+    constans SilexNovumOptiones* optiones)
 {
-    SilexNovumFructus   fructus;
-    Xar*                res_omnes;
+     SilexNovumFructus  fructus;
+                   Xar* res_omnes;
     constans character* proiectum_dir;
     constans character* volumen_via;
-    Volumen*            vol;
-    i32                 index;
+               Volumen* vol;
+                   i32  index;
     interior constans character* constans SEMINA[] = {
         "latina.h", "piscina.h", "chorda.h", "credo.h"
     };
 
-    fructus.successus = FALSUM;
-    fructus.vendicatae = 0;
-    fructus.genitae = 0;
-    fructus.volumen_via = "";
-    fructus.erratum = NIHIL;
+    fructus.successus    = FALSUM;
+    fructus.vendicatae   = 0;
+    fructus.genitae      = 0;
+    fructus.volumen_via  = "";
+    fructus.erratum      = NIHIL;
 
     /* titulus: sine '/' et '.' (via fit) */
     {
@@ -2051,7 +2122,7 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
 
     proiectum_dir = _texere(piscina, optiones->destinatio, "/",
         optiones->titulus);
-    si (filum_directorium_existit(proiectum_dir)
+    si (   filum_directorium_existit(proiectum_dir)
         || filum_existit(proiectum_dir))
     {
         fructus.erratum = _texere(piscina,
@@ -2101,23 +2172,23 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             optiones->titulus);
         chorda fumus_c = _fumus_manus_fingere(piscina,
             optiones->titulus);
-        chorda contenta_app[3];
-        chorda contenta_probationis[3];
-        chorda contentum_instrumenti;
-        chorda ordo_aedificandi;
-        chorda ordo_probandi;
-        chorda ordo_fumi;
-        Xar*   clausura_instrumenti;
-        Xar*   clausura_probationis;
-        Xar*   clausura_fumi;
-        b32    inventum = FALSUM;
+        chorda  contenta_app[3];
+        chorda  contenta_probationis[3];
+        chorda  contentum_instrumenti;
+        chorda  ordo_aedificandi;
+        chorda  ordo_probandi;
+        chorda  ordo_fumi;
+           Xar* clausura_instrumenti;
+           Xar* clausura_probationis;
+           Xar* clausura_fumi;
+           b32  inventum = FALSUM;
 
-        contenta_app[0] = fons_c;
-        contenta_app[1] = pipa_c;
-        contenta_app[2] = pipa_h;
-        contenta_probationis[0] = probatio_c;
-        contenta_probationis[1] = pipa_c;
-        contenta_probationis[2] = pipa_h;
+        contenta_app[0]          = fons_c;
+        contenta_app[1]          = pipa_c;
+        contenta_app[2]          = pipa_h;
+        contenta_probationis[0]  = probatio_c;
+        contenta_probationis[1]  = pipa_c;
+        contenta_probationis[2]  = pipa_h;
         res_omnes = _clausuram_e_contentis(piscina,
             optiones->fons, contenta_app, 3);
         si (res_omnes == NIHIL)
@@ -2200,9 +2271,9 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
                 Xar* subsidiariae[III];
                 i32  s;
 
-                subsidiariae[0] = clausura_instrumenti;
-                subsidiariae[I] = clausura_probationis;
-                subsidiariae[II] = clausura_fumi;
+                subsidiariae[0]   = clausura_instrumenti;
+                subsidiariae[I]   = clausura_probationis;
+                subsidiariae[II]  = clausura_fumi;
 
                 per (s = 0; s < (i32)III; s = s + 1)
                 {
@@ -2240,8 +2311,8 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
             {
                 res->via = chorda_ex_literis(
                     "instrumenta/capsula_generare.c", piscina);
-                res->contentum = contentum_instrumenti;
-                res->origo = "vendicata:tools/capsula_generare.c";
+                res->contentum  = contentum_instrumenti;
+                res->origo      = "vendicata:tools/capsula_generare.c";
             }
         }
         fructus.vendicatae = xar_numerus(res_omnes);
@@ -2354,11 +2425,11 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
         {
             VolumenPlagula* p = (VolumenPlagula*)xar_obtinere(
                 manifestum, index);
-            b32    inventum;
+               b32 inventum;
             chorda contentum = volumen_plagulam_promere(vol, p->via,
                 piscina, &inventum);
             constans character* via_plena;
-            chorda parens;
+                        chorda  parens;
 
             si (!inventum)
             {
@@ -2387,8 +2458,8 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
      * semper manet) */
     {
         constans character* argumenta_chmod[6];
-        ProcessusResultus   r;
-        i32                 n;
+         ProcessusResultus  r;
+                       i32  n;
 
         argumenta_chmod[0] = "/bin/chmod";
         argumenta_chmod[1] = "+x";
@@ -2414,10 +2485,11 @@ silex_novum (Piscina* piscina, constans SilexNovumOptiones* optiones)
         }
     }
 
-    fructus.successus = VERUM;
-    fructus.volumen_via = volumen_via;
+    fructus.successus    = VERUM;
+    fructus.volumen_via  = volumen_via;
     redde fructus;
 }
+
 
 /* ==================================================
  * VCS: status / condere / historia
@@ -2427,7 +2499,9 @@ interior b32
 _praefixum_habet (chorda via, constans character* praefixum);
 
 interior b32
-_praefixum_habet (chorda via, constans character* praefixum)
+_praefixum_habet (
+                chorda  via,
+    constans character* praefixum)
 {
     memoriae_index m = strlen(praefixum);
 
@@ -2439,7 +2513,9 @@ interior b32
 _suffixum_habet (chorda via, constans character* suffixum);
 
 interior b32
-_suffixum_habet (chorda via, constans character* suffixum)
+_suffixum_habet (
+                chorda  via,
+    constans character* suffixum)
 {
     memoriae_index m = strlen(suffixum);
 
@@ -2453,7 +2529,8 @@ interior b32
 _praetermittenda (chorda via_rel);
 
 interior b32
-_praetermittenda (chorda via_rel)
+_praetermittenda (
+    chorda via_rel)
 {
     redde _praefixum_habet(via_rel, "bin/")
         || _praefixum_habet(via_rel, "build/")
@@ -2468,12 +2545,13 @@ _praetermittenda (chorda via_rel)
  * (cp/renominatio sanata - plagula EST documentum); plura =
  * recusatio clara nominans. */
 constans character*
-silex_volumen_viam_invenire (Piscina* piscina,
+silex_volumen_viam_invenire (
+               Piscina* piscina,
     constans character* proiectum_dir)
 {
     chorda absoluta = via_absoluta(
         chorda_ex_literis(proiectum_dir, piscina), piscina);
-    chorda titulus = via_nomen(absoluta, piscina);
+                chorda  titulus = via_nomen(absoluta, piscina);
     constans character* absoluta_cstr = chorda_ut_cstr(absoluta,
         piscina);
     constans character* via;
@@ -2497,10 +2575,10 @@ silex_volumen_viam_invenire (Piscina* piscina,
 
     /* II. *.volumen solitarium */
     {
-        DirectoriumIterator*  iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        constans character*   inventum = NIHIL;
-        i32                   numerus = 0;
+          constans character* inventum  = NIHIL;
+                         i32  numerus   = 0;
 
         iter = directorium_iterator_aperire(absoluta_cstr, piscina);
         si (iter == NIHIL)
@@ -2509,7 +2587,7 @@ silex_volumen_viam_invenire (Piscina* piscina,
         }
         dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
         {
-            si (e->genus != INTROITUS_FILUM
+            si (   e->genus != INTROITUS_FILUM
                 || !_suffixum_habet(e->titulus, ".volumen"))
             {
                 perge;
@@ -2543,12 +2621,12 @@ silex_volumen_viam_invenire (Piscina* piscina,
 }
 
 nomen structura {
-    Piscina*        piscina;
+           Piscina* piscina;
     TabulaDispersa* manifestum;   /* via -> chorda* (sigillum hex) */
     TabulaDispersa* visae;
-    Xar*            res;
-    i32             mundae;
-    i32             radix_mensura;   /* praefixum viae plenae */
+               Xar* res;
+               i32  mundae;
+               i32  radix_mensura;   /* praefixum viae plenae */
 } StatusContextus;
 
 interior s32
@@ -2556,15 +2634,17 @@ _status_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_status_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_status_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     StatusContextus* ctx = (StatusContextus*)contextus;
-    chorda           via_rel;
-    chorda           contentum;
-    Sigillum         sig;
-    character        hex[SIGILLUM_HEX_MENSURA];
-    vacuum*          conditum = NIHIL;
+             chorda  via_rel;
+             chorda  contentum;
+           Sigillum  sig;
+          character  hex[SIGILLUM_HEX_MENSURA];
+             vacuum* conditum = NIHIL;
 
     si (introitus->genus != INTROITUS_FILUM)
     {
@@ -2593,7 +2673,7 @@ _status_ambulator (chorda via_plena,
 
         tabula_dispersa_inserere(ctx->visae, via_rel,
             (vacuum*)ctx);
-        si (sigillum_conditum->mensura == 64
+        si (   sigillum_conditum->mensura                == 64
             && memcmp(sigillum_conditum->datum, hex, 64) == 0)
         {
             ctx->mundae = ctx->mundae + 1;
@@ -2605,8 +2685,8 @@ _status_ambulator (chorda via_plena,
 
             si (r != NIHIL)
             {
-                r->via = via_rel;
-                r->status = SILEX_PLAGULA_MUTATA;
+                r->via     = via_rel;
+                r->status  = SILEX_PLAGULA_MUTATA;
             }
         }
     }
@@ -2616,29 +2696,31 @@ _status_ambulator (chorda via_plena,
 
         si (r != NIHIL)
         {
-            r->via = via_rel;
-            r->status = SILEX_PLAGULA_NOVA;
+            r->via     = via_rel;
+            r->status  = SILEX_PLAGULA_NOVA;
         }
     }
     redde 0;
 }
 
 SilexStatusFructus
-silex_status (Piscina* piscina, constans character* proiectum_dir)
+silex_status (
+               Piscina* piscina,
+    constans character* proiectum_dir)
 {
     SilexStatusFructus  fructus;
     constans character* volumen_via;
-    Volumen*            vol;
-    Xar*                manifestum_ordo;
-    StatusContextus     ctx;
+               Volumen* vol;
+                   Xar* manifestum_ordo;
+       StatusContextus  ctx;
     DirectoriumFiltrum  filtrum;
-    chorda              radix_absoluta;
-    i32                 index;
+                chorda  radix_absoluta;
+                   i32  index;
 
-    fructus.successus = FALSUM;
-    fructus.mundae = 0;
-    fructus.res = NIHIL;
-    fructus.erratum = NIHIL;
+    fructus.successus  = FALSUM;
+    fructus.mundae     = 0;
+    fructus.res        = NIHIL;
+    fructus.erratum    = NIHIL;
 
     volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
@@ -2688,8 +2770,8 @@ silex_status (Piscina* piscina, constans character* proiectum_dir)
         chorda_ex_literis(proiectum_dir, piscina), piscina);
     ctx.radix_mensura = radix_absoluta.mensura + 1;   /* + '/' */
 
-    filtrum = directorium_filtrum_omnia();
-    filtrum.includere_occultos = FALSUM;
+    filtrum                     = directorium_filtrum_omnia();
+    filtrum.includere_occultos  = FALSUM;
     directorium_ambulare(
         chorda_ut_cstr(radix_absoluta, piscina), &filtrum,
         _status_ambulator, &ctx, piscina);
@@ -2708,35 +2790,37 @@ silex_status (Piscina* piscina, constans character* proiectum_dir)
 
             si (r != NIHIL)
             {
-                r->via = p->via;
-                r->status = SILEX_PLAGULA_ABSENS;
+                r->via     = p->via;
+                r->status  = SILEX_PLAGULA_ABSENS;
             }
         }
     }
     volumen_claudere(vol);
 
-    fructus.successus = VERUM;
-    fructus.mundae = ctx.mundae;
-    fructus.res = ctx.res;
+    fructus.successus  = VERUM;
+    fructus.mundae     = ctx.mundae;
+    fructus.res        = ctx.res;
     redde fructus;
 }
 
 SilexConditioFructus
-silex_condere (Piscina* piscina, constans character* proiectum_dir,
+silex_condere (
+               Piscina* piscina,
+    constans character* proiectum_dir,
     constans character* nuntius)
 {
-    SilexConditioFructus fructus;
-    SilexStatusFructus   status;
-    constans character*  volumen_via;
-    Volumen*             vol;
-    chorda               radix_absoluta;
-    i32                  index;
+    SilexConditioFructus  fructus;
+      SilexStatusFructus  status;
+      constans character* volumen_via;
+                 Volumen* vol;
+                  chorda  radix_absoluta;
+                     i32  index;
 
-    fructus.successus = FALSUM;
-    fructus.seq = 0;
-    fructus.conditae = 0;
-    fructus.remotae = 0;
-    fructus.erratum = NIHIL;
+    fructus.successus  = FALSUM;
+    fructus.seq        = 0;
+    fructus.conditae   = 0;
+    fructus.remotae    = 0;
+    fructus.erratum    = NIHIL;
 
     status = silex_status(piscina, proiectum_dir);
     si (!status.successus)
@@ -2750,8 +2834,8 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
         redde fructus;
     }
 
-    volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
-    vol = volumen_aperire(piscina, volumen_via);
+    volumen_via  = silex_volumen_viam_invenire(piscina, proiectum_dir);
+    vol          = volumen_aperire(piscina, volumen_via);
     si (vol == NIHIL)
     {
         fructus.erratum = "volumen aperiri non potuit";
@@ -2805,9 +2889,9 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
         {
             volumen_transactionem_revolvere(vol);
             volumen_claudere(vol);
-            fructus.erratum = "absorptio fracta - revoluta omnia";
-            fructus.conditae = 0;
-            fructus.remotae = 0;
+            fructus.erratum   = "absorptio fracta - revoluta omnia";
+            fructus.conditae  = 0;
+            fructus.remotae   = 0;
             redde fructus;
         }
     }
@@ -2817,7 +2901,7 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
         ChordaAedificator* aed = chorda_aedificator_creare(piscina,
             (memoriae_index)256);
         chorda datum;
-        s64    seq;
+           s64 seq;
 
         chorda_aedificator_appendere_literis(aed, "{\"nuntius\":\"");
         chorda_aedificator_appendere_literis_evasus_json(aed,
@@ -2829,8 +2913,8 @@ silex_condere (Piscina* piscina, constans character* proiectum_dir,
         chorda_aedificator_appendere_literis(aed, ",\"remotae\":");
         chorda_aedificator_appendere_s32(aed, (s32)fructus.remotae);
         chorda_aedificator_appendere_literis(aed, "}");
-        datum = chorda_aedificator_finire(aed);
-        seq = volumen_actum_appendere(vol, "conditio", datum);
+        datum  = chorda_aedificator_finire(aed);
+        seq    = volumen_actum_appendere(vol, "conditio", datum);
         si (seq == 0)
         {
             volumen_transactionem_revolvere(vol);
@@ -2860,8 +2944,12 @@ _conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
     b32 est_ortus, chorda* nuntius, b32* renovatio);
 
 interior vacuum
-_conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
-    b32 est_ortus, chorda* nuntius, b32* renovatio)
+_conditionem_exuere (
+                  Piscina* piscina,
+    constans VolumenActum* actum,
+                      b32  est_ortus,
+                   chorda* nuntius,
+                      b32* renovatio)
 {
     JsonResultus lectum;
 
@@ -2871,8 +2959,8 @@ _conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
         *nuntius = chorda_ex_literis("(ortus voluminis)", piscina);
         redde;
     }
-    *nuntius = chorda_ex_literis("(sine nuntio)", piscina);
-    lectum = json_legere(actum->datum, piscina);
+    *nuntius  = chorda_ex_literis("(sine nuntio)", piscina);
+    lectum    = json_legere(actum->datum, piscina);
     si (lectum.successus && json_est_objectum(lectum.radix))
     {
         JsonValor* n = json_objectum_capere(lectum.radix, "nuntius");
@@ -2887,14 +2975,16 @@ _conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
 }
 
 Xar*
-silex_historia (Piscina* piscina, constans character* proiectum_dir)
+silex_historia (
+               Piscina* piscina,
+    constans character* proiectum_dir)
 {
     constans character* volumen_via;
-    Volumen*            vol;
-    Xar*                acta;
-    Xar*                ordo;
-    i32                 index;
-    i32                 tactae = 0;
+               Volumen* vol;
+                   Xar* acta;
+                   Xar* ordo;
+                   i32  index;
+                   i32  tactae = 0;
 
     volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
@@ -2921,12 +3011,12 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
     per (index = 0; index < xar_numerus(acta); index = index + 1)
     {
         VolumenActum* a = (VolumenActum*)xar_obtinere(acta, index);
-        b32 est_conditio = chorda_aequalis_literis(a->genus,
-            "conditio");
+                 b32  est_conditio = chorda_aequalis_literis(a->genus,
+                     "conditio");
         b32 est_ortus = chorda_aequalis_literis(a->genus,
             "volumen-creatum");
 
-        si (chorda_aequalis_literis(a->genus, "plagula-condita")
+        si (   chorda_aequalis_literis(a->genus, "plagula-condita")
             || chorda_aequalis_literis(a->genus, "plagula-remota"))
         {
             tactae = tactae + 1;
@@ -2939,10 +3029,10 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
             {
                 redde NIHIL;
             }
-            c->seq = a->seq;
-            c->momentum = a->momentum;
-            c->tactae = tactae;
-            tactae = 0;
+            c->seq       = a->seq;
+            c->momentum  = a->momentum;
+            c->tactae    = tactae;
+            tactae       = 0;
             _conditionem_exuere(piscina, a, est_ortus, &c->nuntius,
                 &c->renovatio);
         }
@@ -2951,19 +3041,21 @@ silex_historia (Piscina* piscina, constans character* proiectum_dir)
 }
 
 Xar*
-silex_historia_plagulae (Piscina* piscina,
-    constans character* proiectum_dir, constans character* via)
+silex_historia_plagulae (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+    constans character* via)
 {
     constans character* volumen_via;
-    Volumen*            vol;
-    Xar*                acta;
-    Xar*                ordo;
-    chorda              quaesita;
-    chorda              pendens_sigillum;
-    chorda              pendens_origo;
-    b32                 pendens = FALSUM;
-    b32                 pendens_remota = FALSUM;
-    i32                 index;
+               Volumen* vol;
+                   Xar* acta;
+                   Xar* ordo;
+                chorda  quaesita;
+                chorda  pendens_sigillum;
+                chorda  pendens_origo;
+                   b32  pendens         = FALSUM;
+                   b32  pendens_remota  = FALSUM;
+                   i32  index;
 
     volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
@@ -2986,15 +3078,15 @@ silex_historia_plagulae (Piscina* piscina,
     {
         redde NIHIL;
     }
-    quaesita = chorda_ex_literis(via, piscina);
-    pendens_sigillum = chorda_ex_literis("", piscina);
-    pendens_origo = chorda_ex_literis("", piscina);
+    quaesita          = chorda_ex_literis(via, piscina);
+    pendens_sigillum  = chorda_ex_literis("", piscina);
+    pendens_origo     = chorda_ex_literis("", piscina);
 
     per (index = 0; index < xar_numerus(acta); index = index + 1)
     {
         VolumenActum* a = (VolumenActum*)xar_obtinere(acta, index);
-        b32 est_condita = chorda_aequalis_literis(a->genus,
-            "plagula-condita");
+                 b32  est_condita = chorda_aequalis_literis(a->genus,
+                     "plagula-condita");
         b32 est_remota = chorda_aequalis_literis(a->genus,
             "plagula-remota");
         b32 est_conditio = chorda_aequalis_literis(a->genus,
@@ -3011,13 +3103,13 @@ silex_historia_plagulae (Piscina* piscina,
                 JsonValor* v = json_objectum_capere(lectum.radix,
                     "via");
 
-                si (v != NIHIL && json_est_chorda(v)
+                si (   v != NIHIL && json_est_chorda(v)
                     && chorda_aequalis(json_ad_chorda(v), quaesita))
                 {
                     /* plures actus inter conditiones: ultimus
                      * vincit (status plagulae AD conditionem) */
-                    pendens = VERUM;
-                    pendens_remota = est_remota;
+                    pendens         = VERUM;
+                    pendens_remota  = est_remota;
                     pendens_sigillum = chorda_ex_literis("",
                         piscina);
                     pendens_origo = chorda_ex_literis("", piscina);
@@ -3049,18 +3141,19 @@ silex_historia_plagulae (Piscina* piscina,
             {
                 redde NIHIL;
             }
-            c->seq = a->seq;
-            c->momentum = a->momentum;
+            c->seq       = a->seq;
+            c->momentum  = a->momentum;
             _conditionem_exuere(piscina, a, est_ortus, &c->nuntius,
                 &c->renovatio);
-            c->sigillum = pendens_sigillum;
-            c->origo = pendens_origo;
-            c->remota = pendens_remota;
-            pendens = FALSUM;
+            c->sigillum  = pendens_sigillum;
+            c->origo     = pendens_origo;
+            c->remota    = pendens_remota;
+            pendens      = FALSUM;
         }
     }
     redde ordo;
 }
+
 
 /* ==================================================
  * Differentia (vide silex.h pro doctrina laterum)
@@ -3071,8 +3164,10 @@ _titulum_differentiae (Piscina* piscina,
     constans character* praefixum, chorda via);
 
 interior constans character*
-_titulum_differentiae (Piscina* piscina,
-    constans character* praefixum, chorda via)
+_titulum_differentiae (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  via)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         (memoriae_index)64);
@@ -3089,9 +3184,14 @@ _differentiae_rem_implere (Piscina* piscina,
     chorda vetus, chorda novum, b32 cum_textu);
 
 interior b32
-_differentiae_rem_implere (Piscina* piscina,
-    SilexDifferentiaRes* r, chorda via, SilexPlagulaStatus genus,
-    chorda vetus, chorda novum, b32 cum_textu)
+_differentiae_rem_implere (
+                Piscina* piscina,
+    SilexDifferentiaRes* r,
+                 chorda  via,
+     SilexPlagulaStatus  genus,
+                 chorda  vetus,
+                 chorda  novum,
+                    b32  cum_textu)
 {
     DifferentiaLinearum* d = differentia_linearum(piscina, vetus,
         novum);
@@ -3100,11 +3200,11 @@ _differentiae_rem_implere (Piscina* piscina,
     {
         redde FALSUM;
     }
-    r->via = via;
-    r->genus = genus;
-    r->summa = differentia_summa(d->tractus);
-    r->textus_vetus = vetus;
-    r->textus_novus = novum;
+    r->via           = via;
+    r->genus         = genus;
+    r->summa         = differentia_summa(d->tractus);
+    r->textus_vetus  = vetus;
+    r->textus_novus  = novum;
     si (cum_textu)
     {
         r->textus = differentia_unificata(piscina, d,
@@ -3119,15 +3219,15 @@ _differentiae_rem_implere (Piscina* piscina,
 }
 
 nomen structura {
-    Piscina*        piscina;
-    Volumen*        vol;
+           Piscina* piscina;
+           Volumen* vol;
     TabulaDispersa* vetus_tabula;   /* via -> VolumenPlagula* */
     TabulaDispersa* visae;
-    Xar*            res;            /* SilexDifferentiaRes */
-    i32             aequales;
-    i32             radix_mensura;
-    b32             cum_textu;
-    b32             fractum;
+               Xar* res;            /* SilexDifferentiaRes */
+               i32  aequales;
+               i32  radix_mensura;
+               b32  cum_textu;
+               b32  fractum;
 } DifferentiaContextus;
 
 interior s32
@@ -3135,15 +3235,17 @@ _differentia_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_differentia_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_differentia_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     DifferentiaContextus* ctx = (DifferentiaContextus*)contextus;
-    chorda                via_rel;
-    chorda                contentum;
-    Sigillum              sig;
-    character             hex[SIGILLUM_HEX_MENSURA];
-    vacuum*               conditum = NIHIL;
+                  chorda  via_rel;
+                  chorda  contentum;
+                Sigillum  sig;
+               character  hex[SIGILLUM_HEX_MENSURA];
+                  vacuum* conditum = NIHIL;
 
     si (ctx->fractum || introitus->genus != INTROITUS_FILUM)
     {
@@ -3171,15 +3273,15 @@ _differentia_ambulator (chorda via_plena,
     {
         VolumenPlagula* p = (VolumenPlagula*)conditum;
 
-        si (p->sigillum_hex.mensura == 64
+        si (   p->sigillum_hex.mensura                == 64
             && memcmp(p->sigillum_hex.datum, hex, 64) == 0)
         {
             ctx->aequales = ctx->aequales + 1;
         }
         alioquin
         {
-            b32                  inventum = FALSUM;
-            chorda               vetus = volumen_massam_promere(
+               b32 inventum = FALSUM;
+            chorda vetus = volumen_massam_promere(
                 ctx->vol, p->sigillum_hex, ctx->piscina,
                 &inventum);
             SilexDifferentiaRes* r;
@@ -3190,7 +3292,7 @@ _differentia_ambulator (chorda via_plena,
                 redde 0;
             }
             r = (SilexDifferentiaRes*)xar_addere(ctx->res);
-            si (r == NIHIL || !_differentiae_rem_implere(
+            si (   r == NIHIL || !_differentiae_rem_implere(
                 ctx->piscina, r, via_rel, SILEX_PLAGULA_MUTATA,
                 vetus, contentum, ctx->cum_textu))
             {
@@ -3203,7 +3305,7 @@ _differentia_ambulator (chorda via_plena,
         SilexDifferentiaRes* r = (SilexDifferentiaRes*)xar_addere(
             ctx->res);
 
-        si (r == NIHIL || !_differentiae_rem_implere(ctx->piscina,
+        si (   r == NIHIL || !_differentiae_rem_implere(ctx->piscina,
             r, via_rel, SILEX_PLAGULA_NOVA,
             chorda_ex_literis("", ctx->piscina), contentum,
             ctx->cum_textu))
@@ -3219,7 +3321,8 @@ _differentiae_res_comparare (constans vacuum* a,
     constans vacuum* b);
 
 interior s32
-_differentiae_res_comparare (constans vacuum* a,
+_differentiae_res_comparare (
+    constans vacuum* a,
     constans vacuum* b)
 {
     redde chorda_comparare(
@@ -3233,21 +3336,25 @@ _differentia_communis (Piscina* piscina,
     s64 ad_seq, b32 cum_textu);
 
 interior SilexDifferentiaFructus
-_differentia_communis (Piscina* piscina,
-    constans character* proiectum_dir, s64 a_seq, b32 ad_discum,
-    s64 ad_seq, b32 cum_textu)
+_differentia_communis (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+                   s64  a_seq,
+                   b32  ad_discum,
+                   s64  ad_seq,
+                   b32  cum_textu)
 {
-    SilexDifferentiaFructus fructus;
-    constans character*     volumen_via;
-    Volumen*                vol;
-    Xar*                    vetus_plica;
-    DifferentiaContextus    ctx;
-    i32                     index;
+    SilexDifferentiaFructus  fructus;
+         constans character* volumen_via;
+                    Volumen* vol;
+                        Xar* vetus_plica;
+       DifferentiaContextus  ctx;
+                        i32  index;
 
-    fructus.successus = FALSUM;
-    fructus.res = NIHIL;
-    fructus.aequales = 0;
-    fructus.erratum = NIHIL;
+    fructus.successus  = FALSUM;
+    fructus.res        = NIHIL;
+    fructus.aequales   = 0;
+    fructus.erratum    = NIHIL;
 
     volumen_via = silex_volumen_viam_invenire(piscina,
         proiectum_dir);
@@ -3271,18 +3378,18 @@ _differentia_communis (Piscina* piscina,
         redde fructus;
     }
 
-    ctx.piscina = piscina;
-    ctx.vol = vol;
-    ctx.vetus_tabula = tabula_dispersa_creare_chorda(piscina, 128);
-    ctx.visae = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.piscina       = piscina;
+    ctx.vol           = vol;
+    ctx.vetus_tabula  = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.visae         = tabula_dispersa_creare_chorda(piscina, 128);
     ctx.res = xar_creare(piscina,
         (i32)magnitudo(SilexDifferentiaRes));
-    ctx.aequales = 0;
-    ctx.radix_mensura = 0;
-    ctx.cum_textu = cum_textu;
-    ctx.fractum = FALSUM;
-    si (ctx.vetus_tabula == NIHIL || ctx.visae == NIHIL
-        || ctx.res == NIHIL)
+    ctx.aequales       = 0;
+    ctx.radix_mensura  = 0;
+    ctx.cum_textu      = cum_textu;
+    ctx.fractum        = FALSUM;
+    si (   ctx.vetus_tabula == NIHIL || ctx.visae == NIHIL
+        || ctx.res          == NIHIL)
     {
         volumen_claudere(vol);
         fructus.erratum = "memoria defecit";
@@ -3301,12 +3408,12 @@ _differentia_communis (Piscina* piscina,
     si (ad_discum)
     {
         DirectoriumFiltrum filtrum;
-        chorda             radix_absoluta = via_absoluta(
-            chorda_ex_literis(proiectum_dir, piscina), piscina);
+                    chorda radix_absoluta = via_absoluta(
+                        chorda_ex_literis(proiectum_dir, piscina), piscina);
 
-        ctx.radix_mensura = radix_absoluta.mensura + 1;
-        filtrum = directorium_filtrum_omnia();
-        filtrum.includere_occultos = FALSUM;
+        ctx.radix_mensura           = radix_absoluta.mensura + 1;
+        filtrum                     = directorium_filtrum_omnia();
+        filtrum.includere_occultos  = FALSUM;
         directorium_ambulare(
             chorda_ut_cstr(radix_absoluta, piscina), &filtrum,
             _differentia_ambulator, &ctx, piscina);
@@ -3326,7 +3433,7 @@ _differentia_communis (Piscina* piscina,
         {
             VolumenPlagula* q = (VolumenPlagula*)xar_obtinere(
                 novum_plica, index);
-            vacuum*         conditum = NIHIL;
+            vacuum* conditum = NIHIL;
 
             tabula_dispersa_inserere(ctx.visae, q->via,
                 (vacuum*)&ctx);
@@ -3342,8 +3449,8 @@ _differentia_communis (Piscina* piscina,
                     perge;
                 }
                 {
-                    b32    inventum_vetus = FALSUM;
-                    b32    inventum_novum = FALSUM;
+                       b32 inventum_vetus = FALSUM;
+                       b32 inventum_novum = FALSUM;
                     chorda vetus = volumen_massam_promere(vol,
                         p->sigillum_hex, piscina,
                         &inventum_vetus);
@@ -3358,7 +3465,7 @@ _differentia_communis (Piscina* piscina,
                         perge;
                     }
                     r = (SilexDifferentiaRes*)xar_addere(ctx.res);
-                    si (r == NIHIL || !_differentiae_rem_implere(
+                    si (   r == NIHIL || !_differentiae_rem_implere(
                         piscina, r, q->via, SILEX_PLAGULA_MUTATA,
                         vetus, novum, cum_textu))
                     {
@@ -3368,7 +3475,7 @@ _differentia_communis (Piscina* piscina,
             }
             alioquin
             {
-                b32    inventum_novum = FALSUM;
+                   b32 inventum_novum = FALSUM;
                 chorda novum = volumen_massam_promere(vol,
                     q->sigillum_hex, piscina, &inventum_novum);
                 SilexDifferentiaRes* r;
@@ -3379,7 +3486,7 @@ _differentia_communis (Piscina* piscina,
                     perge;
                 }
                 r = (SilexDifferentiaRes*)xar_addere(ctx.res);
-                si (r == NIHIL || !_differentiae_rem_implere(
+                si (   r == NIHIL || !_differentiae_rem_implere(
                     piscina, r, q->via, SILEX_PLAGULA_NOVA,
                     chorda_ex_literis("", piscina), novum,
                     cum_textu))
@@ -3401,7 +3508,7 @@ _differentia_communis (Piscina* piscina,
 
             si (!tabula_dispersa_continet(ctx.visae, p->via))
             {
-                b32    inventum_vetus = FALSUM;
+                   b32 inventum_vetus = FALSUM;
                 chorda vetus = volumen_massam_promere(vol,
                     p->sigillum_hex, piscina, &inventum_vetus);
                 SilexDifferentiaRes* r;
@@ -3412,7 +3519,7 @@ _differentia_communis (Piscina* piscina,
                     perge;
                 }
                 r = (SilexDifferentiaRes*)xar_addere(ctx.res);
-                si (r == NIHIL || !_differentiae_rem_implere(
+                si (   r == NIHIL || !_differentiae_rem_implere(
                     piscina, r, p->via, SILEX_PLAGULA_ABSENS,
                     vetus, chorda_ex_literis("", piscina),
                     cum_textu))
@@ -3430,42 +3537,49 @@ _differentia_communis (Piscina* piscina,
         redde fructus;
     }
     xar_ordinare(ctx.res, _differentiae_res_comparare);
-    fructus.successus = VERUM;
-    fructus.res = ctx.res;
-    fructus.aequales = ctx.aequales;
+    fructus.successus  = VERUM;
+    fructus.res        = ctx.res;
+    fructus.aequales   = ctx.aequales;
     redde fructus;
 }
 
 SilexDifferentiaFructus
-silex_differentia_laborans (Piscina* piscina,
-    constans character* proiectum_dir, s64 a_seq, b32 cum_textu)
+silex_differentia_laborans (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+                   s64  a_seq,
+                   b32  cum_textu)
 {
     redde _differentia_communis(piscina, proiectum_dir, a_seq,
         VERUM, (s64)0, cum_textu);
 }
 
 SilexDifferentiaFructus
-silex_differentia_plicarum (Piscina* piscina,
-    constans character* proiectum_dir, s64 a_seq, s64 ad_seq,
-    b32 cum_textu)
+silex_differentia_plicarum (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+                   s64  a_seq,
+                   s64  ad_seq,
+                   b32  cum_textu)
 {
     redde _differentia_communis(piscina, proiectum_dir, a_seq,
         FALSUM, ad_seq, cum_textu);
 }
+
 
 /* ==================================================
  * Proiectio: volumen arborem scribit (vide silex.h pro foedere)
  * ================================================== */
 
 nomen structura {
-    Piscina*        piscina;
-    Volumen*        vol;
+           Piscina* piscina;
+           Volumen* vol;
     TabulaDispersa* plica;   /* via -> VolumenPlagula* */
     TabulaDispersa* visae;
-    Xar*            res;     /* SilexProiciendaRes */
-    i32             intactae;
-    i32             obices;
-    i32             radix_mensura;
+               Xar* res;     /* SilexProiciendaRes */
+               i32  intactae;
+               i32  obices;
+               i32  radix_mensura;
 } ProiectioContextus;
 
 interior s32
@@ -3473,15 +3587,17 @@ _proiectio_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_proiectio_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_proiectio_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     ProiectioContextus* ctx = (ProiectioContextus*)contextus;
-    chorda    via_rel;
-    chorda    contentum;
-    Sigillum  sig;
-    character hex[SIGILLUM_HEX_MENSURA];
-    vacuum*   plica_v = NIHIL;
+                chorda  via_rel;
+                chorda  contentum;
+              Sigillum  sig;
+             character  hex[SIGILLUM_HEX_MENSURA];
+                vacuum* plica_v = NIHIL;
 
     si (introitus->genus != INTROITUS_FILUM)
     {
@@ -3506,8 +3622,8 @@ _proiectio_ambulator (chorda via_plena,
 
         si (r != NIHIL)
         {
-            r->via = via_rel;
-            r->status = SILEX_PROICIENDA_ALIENA;
+            r->via     = via_rel;
+            r->status  = SILEX_PROICIENDA_ALIENA;
         }
         redde 0;
     }
@@ -3521,7 +3637,7 @@ _proiectio_ambulator (chorda via_plena,
     {
         VolumenPlagula* p = (VolumenPlagula*)plica_v;
 
-        si (p->sigillum_hex.mensura == 64
+        si (   p->sigillum_hex.mensura                == 64
             && memcmp(p->sigillum_hex.datum, hex, 64) == 0)
         {
             ctx->intactae = ctx->intactae + 1;
@@ -3532,7 +3648,7 @@ _proiectio_ambulator (chorda via_plena,
              * massis alicubi residet (recuperabile per definitionem
              * - unus aspectus sigilli, pretium tabulae contentu
              * addressatae) */
-            b32 conditum = FALSUM;
+                           b32  conditum = FALSUM;
             SilexProiciendaRes* r;
 
             (vacuum)volumen_massam_promere(ctx->vol,
@@ -3555,24 +3671,27 @@ _proiectio_ambulator (chorda via_plena,
 }
 
 SilexProiectioFructus
-silex_proicere (Piscina* piscina, constans character* proiectum_dir,
-    s64 ad_seq, b32 scribere)
+silex_proicere (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+                   s64  ad_seq,
+                   b32  scribere)
 {
-    SilexProiectioFructus fructus;
-    constans character*   volumen_via;
-    Volumen*              vol;
-    Xar*                  plica_ordo;
-    ProiectioContextus    ctx;
-    DirectoriumFiltrum    filtrum;
-    chorda                radix_absoluta;
-    i32                   index;
+    SilexProiectioFructus  fructus;
+       constans character* volumen_via;
+                  Volumen* vol;
+                      Xar* plica_ordo;
+       ProiectioContextus  ctx;
+       DirectoriumFiltrum  filtrum;
+                   chorda  radix_absoluta;
+                      i32  index;
 
-    fructus.successus = FALSUM;
-    fructus.res = NIHIL;
-    fructus.intactae = 0;
-    fructus.obices = 0;
-    fructus.scriptae = 0;
-    fructus.erratum = NIHIL;
+    fructus.successus  = FALSUM;
+    fructus.res        = NIHIL;
+    fructus.intactae   = 0;
+    fructus.obices     = 0;
+    fructus.scriptae   = 0;
+    fructus.erratum    = NIHIL;
 
     volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
@@ -3594,16 +3713,16 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
         redde fructus;
     }
 
-    ctx.piscina = piscina;
-    ctx.vol = vol;
-    ctx.plica = tabula_dispersa_creare_chorda(piscina, 128);
-    ctx.visae = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.piscina  = piscina;
+    ctx.vol      = vol;
+    ctx.plica    = tabula_dispersa_creare_chorda(piscina, 128);
+    ctx.visae    = tabula_dispersa_creare_chorda(piscina, 128);
     ctx.res = xar_creare(piscina,
         (i32)magnitudo(SilexProiciendaRes));
-    ctx.intactae = 0;
-    ctx.obices = 0;
-    si (ctx.plica == NIHIL || ctx.visae == NIHIL
-        || ctx.res == NIHIL)
+    ctx.intactae  = 0;
+    ctx.obices    = 0;
+    si (   ctx.plica == NIHIL || ctx.visae == NIHIL
+        || ctx.res   == NIHIL)
     {
         volumen_claudere(vol);
         fructus.erratum = "memoria defecit";
@@ -3623,8 +3742,8 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
         chorda_ex_literis(proiectum_dir, piscina), piscina);
     ctx.radix_mensura = radix_absoluta.mensura + 1;   /* + '/' */
 
-    filtrum = directorium_filtrum_omnia();
-    filtrum.includere_occultos = FALSUM;
+    filtrum                     = directorium_filtrum_omnia();
+    filtrum.includere_occultos  = FALSUM;
     directorium_ambulare(
         chorda_ut_cstr(radix_absoluta, piscina), &filtrum,
         _proiectio_ambulator, &ctx, piscina);
@@ -3643,15 +3762,15 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
 
             si (r != NIHIL)
             {
-                r->via = p->via;
-                r->status = SILEX_PROICIENDA_CREANDA;
+                r->via     = p->via;
+                r->status  = SILEX_PROICIENDA_CREANDA;
             }
         }
     }
 
-    fructus.res = ctx.res;
-    fructus.intactae = ctx.intactae;
-    fructus.obices = ctx.obices;
+    fructus.res       = ctx.res;
+    fructus.intactae  = ctx.intactae;
+    fructus.obices    = ctx.obices;
 
     si (!scribere)
     {
@@ -3673,14 +3792,14 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
     {
         SilexProiciendaRes* r = (SilexProiciendaRes*)xar_obtinere(
             ctx.res, index);
-        vacuum*             plica_v = NIHIL;
-        VolumenPlagula*     p;
-        b32                 inventum = FALSUM;
-        chorda              contentum;
+                    vacuum* plica_v = NIHIL;
+            VolumenPlagula* p;
+                       b32  inventum = FALSUM;
+                    chorda  contentum;
         constans character* via_plena;
-        chorda              parens;
+                    chorda  parens;
 
-        si (r->status != SILEX_PROICIENDA_SCRIBENDA
+        si (   r->status != SILEX_PROICIENDA_SCRIBENDA
             && r->status != SILEX_PROICIENDA_CREANDA)
         {
             perge;
@@ -3723,6 +3842,7 @@ silex_proicere (Piscina* piscina, constans character* proiectum_dir,
     redde fructus;
 }
 
+
 /* ==================================================
  * Renovatio (vide silex.h pro comparatione trium sigillorum)
  * ================================================== */
@@ -3731,9 +3851,11 @@ interior chorda
 _sigillum_contenti (Piscina* piscina, chorda contentum);
 
 interior chorda
-_sigillum_contenti (Piscina* piscina, chorda contentum)
+_sigillum_contenti (
+    Piscina* piscina,
+     chorda  contentum)
 {
-    Sigillum  sig;
+     Sigillum sig;
     character hex[SIGILLUM_HEX_MENSURA];
 
     sig = sigillum_computare((constans vacuum*)contentum.datum,
@@ -3741,6 +3863,7 @@ _sigillum_contenti (Piscina* piscina, chorda contentum)
     sigillum_hex(&sig, hex);
     redde chorda_ex_literis(hex, piscina);
 }
+
 
 /* ==================================================
  * Semina auctorata (re-radicatio renovationis + partes):
@@ -3751,9 +3874,9 @@ _sigillum_contenti (Piscina* piscina, chorda contentum)
  * ================================================== */
 
 nomen structura {
-    Piscina*        piscina;
-    i32             radix_mensura;
-    Xar*            nomina;             /* chorda: nomina capitum */
+           Piscina* piscina;
+               i32  radix_mensura;
+               Xar* nomina;             /* chorda: nomina capitum */
     TabulaDispersa* bases_auctoratae;   /* basis -> praesens */
 } SeminaContextus;
 
@@ -3761,7 +3884,8 @@ interior chorda
 _basis_viae (chorda via);
 
 interior chorda
-_basis_viae (chorda via)
+_basis_viae (
+    chorda via)
 {
     i32 i;
 
@@ -3780,7 +3904,8 @@ interior b32
 _fons_codicis_est (chorda via);
 
 interior b32
-_fons_codicis_est (chorda via)
+_fons_codicis_est (
+    chorda via)
 {
     redde _suffixum_habet(via, ".c")
         || _suffixum_habet(via, ".h")
@@ -3792,11 +3917,13 @@ _semina_ambulator (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_semina_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_semina_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
     SeminaContextus* ctx = (SeminaContextus*)contextus;
-    chorda           via_rel;
+             chorda  via_rel;
 
     si (introitus->genus != INTROITUS_FILUM)
     {
@@ -3809,7 +3936,7 @@ _semina_ambulator (chorda via_plena,
     via_rel = chorda_ex_buffer(
         via_plena.datum + ctx->radix_mensura,
         via_plena.mensura - ctx->radix_mensura);
-    si (_praetermittenda(via_rel)
+    si (   _praetermittenda(via_rel)
         || _praefixum_habet(via_rel, "lib/")
         || _praefixum_habet(via_rel, "include/")
         || _praefixum_habet(via_rel, "vendor/"))
@@ -3841,44 +3968,49 @@ _semina_auctorata_colligere (Piscina* piscina,
     TabulaDispersa* bases_auctoratae);
 
 interior vacuum
-_semina_auctorata_colligere (Piscina* piscina,
-    constans character* radix_absoluta, Xar* nomina,
-    TabulaDispersa* bases_auctoratae)
+_semina_auctorata_colligere (
+               Piscina* piscina,
+    constans character* radix_absoluta,
+                   Xar* nomina,
+        TabulaDispersa* bases_auctoratae)
 {
-    SeminaContextus    ctx;
+       SeminaContextus ctx;
     DirectoriumFiltrum filtrum;
 
-    ctx.piscina = piscina;
-    ctx.radix_mensura = (i32)strlen(radix_absoluta) + 1;
-    ctx.nomina = nomina;
-    ctx.bases_auctoratae = bases_auctoratae;
-    filtrum = directorium_filtrum_omnia();
-    filtrum.includere_occultos = FALSUM;
+    ctx.piscina                 = piscina;
+    ctx.radix_mensura           = (i32)strlen(radix_absoluta) + 1;
+    ctx.nomina                  = nomina;
+    ctx.bases_auctoratae        = bases_auctoratae;
+    filtrum                     = directorium_filtrum_omnia();
+    filtrum.includere_occultos  = FALSUM;
     directorium_ambulare(radix_absoluta, &filtrum,
         _semina_ambulator, &ctx, piscina);
 }
 
 SilexRenovatioFructus
-silex_renovare (Piscina* piscina, constans character* proiectum_dir,
-    constans SilexFons* fons, b32 scribere)
+silex_renovare (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+    constans SilexFons* fons,
+                   b32  scribere)
 {
-    SilexRenovatioFructus fructus;
-    constans character*   volumen_via;
-    Volumen*              vol;
-    Xar*                  acta;
-    Xar*                  clausura;
-    TabulaDispersa*       tunc;    /* via -> chorda* (sigillum) */
-    TabulaDispersa*       novum;   /* via -> SilexRes* clausurae */
-    TabulaDispersa*       visae;
-    chorda                radix_absoluta;
-    i32                   index;
+    SilexRenovatioFructus  fructus;
+       constans character* volumen_via;
+                  Volumen* vol;
+                      Xar* acta;
+                      Xar* clausura;
+           TabulaDispersa* tunc;    /* via -> chorda* (sigillum) */
+           TabulaDispersa* novum;   /* via -> SilexRes* clausurae */
+           TabulaDispersa* visae;
+                   chorda  radix_absoluta;
+                      i32  index;
 
-    fructus.successus = FALSUM;
-    fructus.res = NIHIL;
-    fructus.intactae = 0;
-    fructus.renovatae = 0;
-    fructus.additae = 0;
-    fructus.erratum = NIHIL;
+    fructus.successus  = FALSUM;
+    fructus.res        = NIHIL;
+    fructus.intactae   = 0;
+    fructus.renovatae  = 0;
+    fructus.additae    = 0;
+    fructus.erratum    = NIHIL;
 
     volumen_via = silex_volumen_viam_invenire(piscina, proiectum_dir);
     si (volumen_via == NIHIL)
@@ -3907,10 +4039,10 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     {
         VolumenActum* a = (VolumenActum*)xar_obtinere(acta, index);
         JsonResultus  lectum;
-        JsonValor*    via_v;
-        chorda        via;
+           JsonValor* via_v;
+              chorda  via;
 
-        si (!chorda_aequalis_literis(a->genus, "plagula-condita")
+        si (   !chorda_aequalis_literis(a->genus, "plagula-condita")
             && !chorda_aequalis_literis(a->genus, "plagula-remota"))
         {
             perge;
@@ -3937,8 +4069,8 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
             JsonValor* sig_v = json_objectum_capere(lectum.radix,
                 "sigillum");
 
-            si (orig_v == NIHIL || !json_est_chorda(orig_v)
-                || sig_v == NIHIL || !json_est_chorda(sig_v))
+            si (   orig_v == NIHIL || !json_est_chorda(orig_v)
+                || sig_v  == NIHIL || !json_est_chorda(sig_v))
             {
                 perge;
             }
@@ -3970,20 +4102,20 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     radix_absoluta = via_absoluta(
         chorda_ex_literis(proiectum_dir, piscina), piscina);
     {
-        Xar*            nomina = xar_creare(piscina,
+        Xar* nomina = xar_creare(piscina,
             (i32)magnitudo(chorda));
         TabulaDispersa* bases = tabula_dispersa_creare_chorda(
             piscina, 32);
         TabulaDispersa* electa = tabula_dispersa_creare_chorda(
             piscina, 64);
-        Xar*            semina_ch = xar_creare(piscina,
+        Xar* semina_ch = xar_creare(piscina,
             (i32)magnitudo(chorda));
         TabulaIterator  iter;
-        chorda          clavis;
-        vacuum*         valor;
-        i32             n;
+                chorda  clavis;
+                vacuum* valor;
+                   i32  n;
 
-        si (nomina == NIHIL || bases == NIHIL || electa == NIHIL
+        si (   nomina    == NIHIL || bases == NIHIL || electa == NIHIL
             || semina_ch == NIHIL)
         {
             volumen_claudere(vol);
@@ -4013,7 +4145,7 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
             chorda nomen_capitis = *(chorda*)xar_obtinere(nomina,
                 n);
 
-            si (tabula_dispersa_continet(bases, nomen_capitis)
+            si (   tabula_dispersa_continet(bases, nomen_capitis)
                 || tabula_dispersa_continet(electa, nomen_capitis))
             {
                 perge;
@@ -4091,21 +4223,21 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     per (index = 0; index < xar_numerus(clausura);
         index = index + 1)
     {
-        SilexRes* e = (SilexRes*)xar_obtinere(clausura, index);
+                  SilexRes* e = (SilexRes*)xar_obtinere(clausura, index);
         constans character* via_plena = _texere(piscina,
             chorda_ut_cstr(radix_absoluta, piscina), "/",
             chorda_ut_cstr(e->via, piscina));
-        b32     in_disco = filum_existit(via_plena);
-        vacuum* tunc_v = NIHIL;
-        SilexRenovatioStatus classis;
-        b32     intacta = FALSUM;
+                         b32  in_disco  = filum_existit(via_plena);
+                      vacuum* tunc_v    = NIHIL;
+        SilexRenovatioStatus  classis;
+                         b32  intacta = FALSUM;
 
         si (tabula_dispersa_invenire(tunc, e->via, &tunc_v))
         {
             chorda sig_tunc = *(chorda*)tunc_v;
             chorda sig_novum = _sigillum_contenti(piscina,
                 e->contentum);
-            b32    fabrica_mota = !chorda_aequalis(sig_tunc,
+            b32 fabrica_mota = !chorda_aequalis(sig_tunc,
                 sig_novum);
 
             tabula_dispersa_inserere(visae, e->via, (vacuum*)e);
@@ -4162,8 +4294,8 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
 
             si (r != NIHIL)
             {
-                r->via = e->via;
-                r->status = classis;
+                r->via     = e->via;
+                r->status  = classis;
             }
         }
     }
@@ -4185,8 +4317,8 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
 
                 si (r != NIHIL)
                 {
-                    r->via = clavis;
-                    r->status = SILEX_RENOVATIO_DERELICTA;
+                    r->via     = clavis;
+                    r->status  = SILEX_RENOVATIO_DERELICTA;
                 }
             }
         }
@@ -4213,12 +4345,12 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
     {
         SilexRenovatioRes* r = (SilexRenovatioRes*)xar_obtinere(
             fructus.res, index);
-        vacuum*   novum_v = NIHIL;
-        SilexRes* e;
+                    vacuum* novum_v = NIHIL;
+                  SilexRes* e;
         constans character* via_plena;
-        chorda    parens;
+                    chorda  parens;
 
-        si (r->status != SILEX_RENOVATIO_RENOVANDA
+        si (   r->status != SILEX_RENOVATIO_RENOVANDA
             && r->status != SILEX_RENOVATIO_ADDENDA)
         {
             perge;
@@ -4239,7 +4371,7 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
             chorda_ex_literis(via_plena, piscina), piscina);
         filum_directorium_creare_si_necesse(
             chorda_ut_cstr(parens, piscina));
-        si (!filum_scribere(via_plena, e->contentum)
+        si (   !filum_scribere(via_plena, e->contentum)
             || !volumen_plagulam_condere(vol, r->via, e->contentum,
                 e->origo))
         {
@@ -4247,8 +4379,8 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
             volumen_claudere(vol);
             fructus.erratum = _texere(piscina,
                 "renovatio fracta: ", via_plena, NIHIL);
-            fructus.renovatae = 0;
-            fructus.additae = 0;
+            fructus.renovatae  = 0;
+            fructus.additae    = 0;
             redde fructus;
         }
         si (r->status == SILEX_RENOVATIO_RENOVANDA)
@@ -4298,23 +4430,26 @@ silex_renovare (Piscina* piscina, constans character* proiectum_dir,
 }
 
 Xar*
-silex_partes (Piscina* piscina, constans character* proiectum_dir,
-    constans SilexFons* fons, constans character* plagula)
+silex_partes (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+    constans SilexFons* fons,
+    constans character* plagula)
 {
-    Xar*            nomina = xar_creare(piscina,
+    Xar* nomina = xar_creare(piscina,
         (i32)magnitudo(chorda));
     TabulaDispersa* bases = tabula_dispersa_creare_chorda(piscina,
         32);
     TabulaDispersa* electa = tabula_dispersa_creare_chorda(
         piscina, 64);
-    Xar*            semina_ch = xar_creare(piscina,
+    Xar* semina_ch = xar_creare(piscina,
         (i32)magnitudo(chorda));
-    chorda          radix_absoluta;
-    Xar*            clausura;
-    Xar*            fructus;
-    i32             n;
+    chorda  radix_absoluta;
+       Xar* clausura;
+       Xar* fructus;
+       i32  n;
 
-    si (nomina == NIHIL || bases == NIHIL || electa == NIHIL
+    si (   nomina    == NIHIL || bases == NIHIL || electa == NIHIL
         || semina_ch == NIHIL || fons == NIHIL)
     {
         redde NIHIL;
@@ -4357,7 +4492,7 @@ silex_partes (Piscina* piscina, constans character* proiectum_dir,
             {
                 Xar* plica = volumen_plicam_ad(vol, (s64)0,
                     piscina);
-                i32  p;
+                i32 p;
 
                 si (plica != NIHIL)
                 {
@@ -4367,7 +4502,7 @@ silex_partes (Piscina* piscina, constans character* proiectum_dir,
                         VolumenPlagula* pl = (VolumenPlagula*)
                             xar_obtinere(plica, p);
 
-                        si (pl == NIHIL
+                        si (   pl == NIHIL
                             || !_praefixum_habet(pl->via,
                                 "include/")
                             || !_praefixum_habet(pl->origo,
@@ -4398,7 +4533,7 @@ silex_partes (Piscina* piscina, constans character* proiectum_dir,
 
         /* basis comparatur (inclusio '../fontes/x.h' plagulam
          * auctoratam 'fontes/x.h' nominat); capsula_* generata */
-        si (tabula_dispersa_continet(bases,
+        si (   tabula_dispersa_continet(bases,
                 _basis_viae(nomen_capitis))
             || _praefixum_habet(_basis_viae(nomen_capitis),
                 "capsula_")
@@ -4448,15 +4583,15 @@ silex_partes (Piscina* piscina, constans character* proiectum_dir,
     }
     per (n = 0; n < xar_numerus(clausura); n = n + 1)
     {
-        SilexRes*       e = (SilexRes*)xar_obtinere(clausura, n);
+              SilexRes* e = (SilexRes*)xar_obtinere(clausura, n);
         SilexPartesRes* r = (SilexPartesRes*)xar_addere(fructus);
 
         si (r == NIHIL)
         {
             perge;
         }
-        r->via = e->via;
-        r->origo = e->origo;
+        r->via    = e->via;
+        r->origo  = e->origo;
         r->adest = filum_existit(_texere(piscina,
             chorda_ut_cstr(radix_absoluta, piscina), "/",
             chorda_ut_cstr(e->via, piscina)));

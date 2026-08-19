@@ -9,6 +9,7 @@
 
 #include <string.h>
 
+
 /* ==================================================
  * classes octetorum
  * ================================================== */
@@ -17,7 +18,8 @@ interior b32
 _est_spatium (character c);
 
 interior b32
-_est_spatium (character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r'
         || c == '\f';
@@ -27,7 +29,8 @@ interior b32
 _est_littera (character c);
 
 interior b32
-_est_littera (character c)
+_est_littera (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
@@ -36,7 +39,8 @@ interior b32
 _est_digitus (character c);
 
 interior b32
-_est_digitus (character c)
+_est_digitus (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
@@ -45,7 +49,8 @@ interior b32
 _est_hex (character c);
 
 interior b32
-_est_hex (character c)
+_est_hex (
+    character c)
 {
     redde _est_digitus(c) || (c >= 'a' && c <= 'f')
         || (c >= 'A' && c <= 'F');
@@ -55,7 +60,8 @@ interior character
 _minuscula (character c);
 
 interior character
-_minuscula (character c)
+_minuscula (
+    character c)
 {
     si (c >= 'A' && c <= 'Z')
     {
@@ -71,16 +77,19 @@ interior chorda
 _chorda_ex_fonte (constans character* fons, i32 mensura);
 
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura)
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = fons;
-    c.datum = u.m;
-    c.mensura = mensura;
+    u.c        = fons;
+    c.datum    = u.m;
+    c.mensura  = mensura;
     redde c;
 }
+
 
 /* ==================================================
  * status lexatoris
@@ -94,22 +103,24 @@ nomen enumeratio {
 
 nomen structura {
     constans character* fons;
-    i32                 mensura;
-    i32                 k;              /* cursor */
-    HtmlModus           modus;
+                   i32  mensura;
+                   i32  k;              /* cursor */
+             HtmlModus  modus;
     constans character* crudus_datum;   /* titulus elementi crudi */
-    i32                 crudus_mensura;
+                   i32  crudus_mensura;
     constans character* tag_datum;      /* titulus tagi praesentis */
-    i32                 tag_mensura;
-    b32                 tag_clausura;   /* '</...' praesens? */
-    b32                 post_aequale;   /* proximum = valor */
+                   i32  tag_mensura;
+                   b32  tag_clausura;   /* '</...' praesens? */
+                   b32  post_aequale;   /* proximum = valor */
 } HtmlLexator;
 
 interior character
 _ad (HtmlLexator* lx, i32 delta);
 
 interior character
-_ad (HtmlLexator* lx, i32 delta)
+_ad (
+    HtmlLexator* lx,
+            i32  delta)
 {
     si (lx->k + delta >= lx->mensura)
     {
@@ -122,7 +133,9 @@ interior b32
 _intra (HtmlLexator* lx, i32 delta);
 
 interior b32
-_intra (HtmlLexator* lx, i32 delta)
+_intra (
+    HtmlLexator* lx,
+            i32  delta)
 {
     redde lx->k + delta < lx->mensura;
 }
@@ -133,14 +146,16 @@ _titulus_aequat (constans character* datum, i32 mensura,
     constans character* literis);
 
 interior b32
-_titulus_aequat (constans character* datum, i32 mensura,
+_titulus_aequat (
+    constans character* datum,
+                   i32  mensura,
     constans character* literis)
 {
     i32 k;
 
     per (k = 0; k < mensura; k = k + 1)
     {
-        si (literis[k] == '\0'
+        si (   literis[k]           == '\0'
             || _minuscula(datum[k]) != literis[k])
         {
             redde FALSUM;
@@ -155,13 +170,16 @@ interior b32
 _est_crudum (constans character* datum, i32 mensura);
 
 interior b32
-_est_crudum (constans character* datum, i32 mensura)
+_est_crudum (
+    constans character* datum,
+                   i32  mensura)
 {
     redde _titulus_aequat(datum, mensura, "script")
         || _titulus_aequat(datum, mensura, "style")
         || _titulus_aequat(datum, mensura, "title")
         || _titulus_aequat(datum, mensura, "textarea");
 }
+
 
 /* ==================================================
  * prospectus (nihil consumunt)
@@ -174,7 +192,8 @@ interior i32
 _referentia_mensura (HtmlLexator* lx);
 
 interior i32
-_referentia_mensura (HtmlLexator* lx)
+_referentia_mensura (
+    HtmlLexator* lx)
 {
     i32 n;
 
@@ -212,7 +231,7 @@ _referentia_mensura (HtmlLexator* lx)
             redde 0;
         }
         n = 2;
-        dum (n < 64 && (_est_littera(_ad(lx, n))
+        dum (   n < 64 && (_est_littera(_ad(lx, n))
             || _est_digitus(_ad(lx, n))))
         {
             n = n + 1;
@@ -231,7 +250,8 @@ interior b32
 _incipit_notatio (HtmlLexator* lx);
 
 interior b32
-_incipit_notatio (HtmlLexator* lx)
+_incipit_notatio (
+    HtmlLexator* lx)
 {
     character c = _ad(lx, 1);
 
@@ -253,9 +273,10 @@ interior b32
 _clausura_cruda_hic (HtmlLexator* lx);
 
 interior b32
-_clausura_cruda_hic (HtmlLexator* lx)
+_clausura_cruda_hic (
+    HtmlLexator* lx)
 {
-    i32       j;
+          i32 j;
     character c;
 
     si (_ad(lx, 0) != '<' || _ad(lx, 1) != '/')
@@ -274,6 +295,7 @@ _clausura_cruda_hic (HtmlLexator* lx)
     redde _est_spatium(c) || c == '/' || c == '>';
 }
 
+
 /* ==================================================
  * consumptores
  * ================================================== */
@@ -284,19 +306,20 @@ interior vacuum
 _tag_titulum_consumere (HtmlLexator* lx);
 
 interior vacuum
-_tag_titulum_consumere (HtmlLexator* lx)
+_tag_titulum_consumere (
+    HtmlLexator* lx)
 {
     i32 initium = lx->k;
 
-    dum (_intra(lx, 0) && !_est_spatium(_ad(lx, 0))
-        && _ad(lx, 0) != '/' && _ad(lx, 0) != '>')
+    dum (   _intra(lx, 0) && !_est_spatium(_ad(lx, 0))
+         && _ad(lx, 0) != '/' && _ad(lx, 0) != '>')
     {
         lx->k = lx->k + 1;
     }
-    lx->tag_datum = lx->fons + initium;
-    lx->tag_mensura = lx->k - initium;
-    lx->modus = MODUS_INTRA_TAG;
-    lx->post_aequale = FALSUM;
+    lx->tag_datum     = lx->fons + initium;
+    lx->tag_mensura   = lx->k - initium;
+    lx->modus         = MODUS_INTRA_TAG;
+    lx->post_aequale  = FALSUM;
 }
 
 /* post '>' aut '/>': modum sequentem eligere ('<script/>' modum
@@ -306,15 +329,16 @@ interior vacuum
 _tag_finitum (HtmlLexator* lx);
 
 interior vacuum
-_tag_finitum (HtmlLexator* lx)
+_tag_finitum (
+    HtmlLexator* lx)
 {
     lx->post_aequale = FALSUM;
-    si (!lx->tag_clausura
+    si (   !lx->tag_clausura
         && _est_crudum(lx->tag_datum, lx->tag_mensura))
     {
-        lx->modus = MODUS_CRUDUS;
-        lx->crudus_datum = lx->tag_datum;
-        lx->crudus_mensura = lx->tag_mensura;
+        lx->modus           = MODUS_CRUDUS;
+        lx->crudus_datum    = lx->tag_datum;
+        lx->crudus_mensura  = lx->tag_mensura;
         redde;
     }
     lx->modus = MODUS_DATA;
@@ -326,7 +350,8 @@ interior HtmlLexemaGenus
 _commentarium_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_commentarium_consumere (HtmlLexator* lx)
+_commentarium_consumere (
+    HtmlLexator* lx)
 {
     lx->k = lx->k + 4;   /* '<!--' */
     si (_ad(lx, 0) == '>')
@@ -365,7 +390,8 @@ interior HtmlLexemaGenus
 _doctype_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_doctype_consumere (HtmlLexator* lx)
+_doctype_consumere (
+    HtmlLexator* lx)
 {
     lx->k = lx->k + 9;   /* '<!doctype' */
     dum (_intra(lx, 0))
@@ -385,12 +411,13 @@ interior HtmlLexemaGenus
 _cdata_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_cdata_consumere (HtmlLexator* lx)
+_cdata_consumere (
+    HtmlLexator* lx)
 {
     lx->k = lx->k + 9;   /* '<![CDATA[' */
     dum (_intra(lx, 0))
     {
-        si (_ad(lx, 0) == ']' && _ad(lx, 1) == ']'
+        si (   _ad(lx, 0) == ']' && _ad(lx, 1) == ']'
             && _ad(lx, 2) == '>')
         {
             lx->k = lx->k + 3;
@@ -407,7 +434,8 @@ interior HtmlLexemaGenus
 _pravum_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_pravum_consumere (HtmlLexator* lx)
+_pravum_consumere (
+    HtmlLexator* lx)
 {
     dum (_intra(lx, 0))
     {
@@ -426,14 +454,15 @@ interior HtmlLexemaGenus
 _notationem_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_notationem_consumere (HtmlLexator* lx)
+_notationem_consumere (
+    HtmlLexator* lx)
 {
     character c = _ad(lx, 1);
 
     si (_est_littera(c))
     {
-        lx->k = lx->k + 1;
-        lx->tag_clausura = FALSUM;
+        lx->k             = lx->k + 1;
+        lx->tag_clausura  = FALSUM;
         _tag_titulum_consumere(lx);
         redde HTML_LEX_TAG_APERTURA;
     }
@@ -441,8 +470,8 @@ _notationem_consumere (HtmlLexator* lx)
     {
         si (_est_littera(_ad(lx, 2)))
         {
-            lx->k = lx->k + 2;
-            lx->tag_clausura = VERUM;
+            lx->k             = lx->k + 2;
+            lx->tag_clausura  = VERUM;
             _tag_titulum_consumere(lx);
             redde HTML_LEX_TAG_CLAUSURA;
         }
@@ -459,7 +488,7 @@ _notationem_consumere (HtmlLexator* lx)
     {
         redde _commentarium_consumere(lx);
     }
-    si (_minuscula(_ad(lx, 2)) == 'd'
+    si (   _minuscula(_ad(lx, 2)) == 'd'
         && _minuscula(_ad(lx, 3)) == 'o'
         && _minuscula(_ad(lx, 4)) == 'c'
         && _minuscula(_ad(lx, 5)) == 't'
@@ -469,7 +498,7 @@ _notationem_consumere (HtmlLexator* lx)
     {
         redde _doctype_consumere(lx);
     }
-    si (_ad(lx, 2) == '[' && _ad(lx, 3) == 'C'
+    si (   _ad(lx, 2) == '[' && _ad(lx, 3) == 'C'
         && _ad(lx, 4) == 'D' && _ad(lx, 5) == 'A'
         && _ad(lx, 6) == 'T' && _ad(lx, 7) == 'A'
         && _ad(lx, 8) == '[')
@@ -488,7 +517,8 @@ interior HtmlLexemaGenus
 _intra_tag_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_intra_tag_consumere (HtmlLexator* lx)
+_intra_tag_consumere (
+    HtmlLexator* lx)
 {
     character c = _ad(lx, 0);
 
@@ -525,8 +555,8 @@ _intra_tag_consumere (HtmlLexator* lx)
         }
         /* valor nudus: ad spatium aut '>' ('/' valoris pars est -
          * '<a href=x/>' valorem 'x/' dat; spec) */
-        dum (_intra(lx, 0) && !_est_spatium(_ad(lx, 0))
-            && _ad(lx, 0) != '>')
+        dum (   _intra(lx, 0) && !_est_spatium(_ad(lx, 0))
+             && _ad(lx, 0) != '>')
         {
             lx->k = lx->k + 1;
         }
@@ -540,8 +570,8 @@ _intra_tag_consumere (HtmlLexator* lx)
     }
     si (c == '=')
     {
-        lx->k = lx->k + 1;
-        lx->post_aequale = VERUM;
+        lx->k             = lx->k + 1;
+        lx->post_aequale  = VERUM;
         redde HTML_LEX_AEQUALE;
     }
     si (c == '/')
@@ -550,14 +580,15 @@ _intra_tag_consumere (HtmlLexator* lx)
         redde HTML_LEX_DELIM;   /* '/' solivagus (spec: neglectus) */
     }
     /* titulus attributi: ad spatium / '/' / '>' / '=' */
-    dum (_intra(lx, 0) && !_est_spatium(_ad(lx, 0))
-        && _ad(lx, 0) != '/' && _ad(lx, 0) != '>'
-        && _ad(lx, 0) != '=')
+    dum (   _intra(lx, 0) && !_est_spatium(_ad(lx, 0))
+         && _ad(lx, 0) != '/' && _ad(lx, 0) != '>'
+         && _ad(lx, 0) != '=')
     {
         lx->k = lx->k + 1;
     }
     redde HTML_LEX_ATTRIBUTUM_NOMEN;
 }
+
 
 /* ==================================================
  * lexema unum consumere
@@ -567,7 +598,8 @@ interior HtmlLexemaGenus
 _lexema_consumere (HtmlLexator* lx);
 
 interior HtmlLexemaGenus
-_lexema_consumere (HtmlLexator* lx)
+_lexema_consumere (
+    HtmlLexator* lx)
 {
     character c;
 
@@ -626,40 +658,43 @@ _lexema_consumere (HtmlLexator* lx)
     redde HTML_LEX_TEXTUS;
 }
 
+
 /* ==================================================
  * facies publica
  * ================================================== */
 
 Xar*
-html_lexare (Piscina* piscina, constans character* fons,
-    i32 mensura)
+html_lexare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
-    HtmlLexator lx;
-    Xar*        lexemata;
-    i32         linea = 1;
-    i32         columna = 1;
+    HtmlLexator  lx;
+            Xar* lexemata;
+            i32  linea    = 1;
+            i32  columna  = 1;
 
     lexemata = xar_creare(piscina, (i32)magnitudo(HtmlLexema));
     si (lexemata == NIHIL)
     {
         redde NIHIL;
     }
-    lx.fons = fons;
-    lx.mensura = mensura;
-    lx.k = 0;
-    lx.modus = MODUS_DATA;
-    lx.crudus_datum = NIHIL;
-    lx.crudus_mensura = 0;
-    lx.tag_datum = NIHIL;
-    lx.tag_mensura = 0;
-    lx.tag_clausura = FALSUM;
-    lx.post_aequale = FALSUM;
+    lx.fons            = fons;
+    lx.mensura         = mensura;
+    lx.k               = 0;
+    lx.modus           = MODUS_DATA;
+    lx.crudus_datum    = NIHIL;
+    lx.crudus_mensura  = 0;
+    lx.tag_datum       = NIHIL;
+    lx.tag_mensura     = 0;
+    lx.tag_clausura    = FALSUM;
+    lx.post_aequale    = FALSUM;
 
     dum (lx.k < lx.mensura)
     {
         HtmlLexema* l;
-        i32         initium = lx.k;
-        i32         j;
+               i32  initium = lx.k;
+               i32  j;
 
         HtmlLexemaGenus genus = _lexema_consumere(&lx);
 
@@ -671,16 +706,16 @@ html_lexare (Piscina* piscina, constans character* fons,
         l->genus = genus;
         l->valor = _chorda_ex_fonte(fons + initium,
             lx.k - initium);
-        l->offset = initium;
-        l->linea = linea;
-        l->columna = columna;
+        l->offset   = initium;
+        l->linea    = linea;
+        l->columna  = columna;
         /* positio proximi: octetos lexematis ambulare */
         per (j = initium; j < lx.k; j = j + 1)
         {
             si (fons[j] == '\n')
             {
-                linea = linea + 1;
-                columna = 1;
+                linea    = linea + 1;
+                columna  = 1;
             }
             alioquin
             {
@@ -695,20 +730,22 @@ html_lexare (Piscina* piscina, constans character* fons,
         {
             redde NIHIL;
         }
-        l->genus = HTML_LEX_FINIS;
-        l->valor = _chorda_ex_fonte(fons + mensura, 0);
-        l->offset = mensura;
-        l->linea = linea;
-        l->columna = columna;
+        l->genus    = HTML_LEX_FINIS;
+        l->valor    = _chorda_ex_fonte(fons + mensura, 0);
+        l->offset   = mensura;
+        l->linea    = linea;
+        l->columna  = columna;
     }
     redde lexemata;
 }
 
 chorda
-html_lexemata_emittere (Piscina* piscina, Xar* lexemata)
+html_lexemata_emittere (
+    Piscina* piscina,
+        Xar* lexemata)
 {
     ChordaAedificator* aed;
-    i32                k;
+                  i32  k;
 
     aed = chorda_aedificator_creare(piscina, (memoriae_index)256);
     per (k = 0; k < xar_numerus(lexemata); k = k + 1)
@@ -721,7 +758,8 @@ html_lexemata_emittere (Piscina* piscina, Xar* lexemata)
 }
 
 constans character*
-html_lexema_genus_nomen (HtmlLexemaGenus genus)
+html_lexema_genus_nomen (
+    HtmlLexemaGenus genus)
 {
     commutatio (genus)
     {

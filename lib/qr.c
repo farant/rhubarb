@@ -22,11 +22,11 @@ interior constans i32 _capacitas_octeti[10][4] = {
     /* V3:  */ { 53, 42, 32, 24},
     /* V4:  */ { 78, 62, 46, 34},
     /* V5:  */ {106, 84, 60, 44},
-    /* V6:  */ {134,106, 74, 58},
-    /* V7:  */ {154,122, 86, 64},
-    /* V8:  */ {192,152,108, 84},
-    /* V9:  */ {230,180,130, 98},
-    /* V10: */ {271,213,151,119}
+    /* V6:  */ {134, 106, 74, 58},
+    /* V7:  */ {154, 122, 86, 64},
+    /* V8:  */ {192, 152, 108, 84},
+    /* V9:  */ {230, 180, 130, 98},
+    /* V10: */ {271, 213, 151, 119}
 };
 
 /* Numerus ECC codewords per versio/ECC [versio-1][ecc] */
@@ -36,11 +36,11 @@ interior constans i32 _ecc_codewords[10][4] = {
     /* V3:  */ { 15, 26, 36, 44},
     /* V4:  */ { 20, 36, 52, 64},
     /* V5:  */ { 26, 48, 72, 88},
-    /* V6:  */ { 36, 64, 96,112},
-    /* V7:  */ { 40, 72,108,130},
-    /* V8:  */ { 48, 88,132,156},
-    /* V9:  */ { 60,110,160,192},
-    /* V10: */ { 72,130,192,224}
+    /* V6:  */ { 36, 64, 96, 112},
+    /* V7:  */ { 40, 72, 108, 130},
+    /* V8:  */ { 48, 88, 132, 156},
+    /* V9:  */ { 60, 110, 160, 192},
+    /* V10: */ { 72, 130, 192, 224}
 };
 
 /* Numerus data codewords totalis per versio (ante ECC) */
@@ -76,10 +76,13 @@ interior constans i32 _bloci[10][4] = {
 
 /* mensura bloci b (0-basati) ex datis totalibus et numero bloccorum */
 interior i32
-_bloci_mensura (i32 data_totalis, i32 bloci, i32 b)
+_bloci_mensura (
+    i32 data_totalis,
+    i32 bloci,
+    i32 b)
 {
-    i32 curtus = data_totalis / bloci;   /* 'brevis' = macro latinae */
-    i32 longi  = data_totalis % bloci;   /* ultimi unum plus ferunt */
+    i32 curtus  = data_totalis / bloci;   /* 'brevis' = macro latinae */
+    i32 longi   = data_totalis % bloci;   /* ultimi unum plus ferunt */
 
     redde curtus + ((b >= bloci - longi) ? I : ZEPHYRUM);
 }
@@ -114,15 +117,15 @@ interior constans i32 _format_info[4][8] = {
  * V1 habet nullos alignment patterns */
 interior constans i32 _alignment_positiones[10][8] = {
     /* V1:  */ {0, 0, 0, 0, 0, 0, 0, 0},           /* nullus */
-    /* V2:  */ {2, 6,18, 0, 0, 0, 0, 0},           /* 1 pattern ad (18,18) */
-    /* V3:  */ {2, 6,22, 0, 0, 0, 0, 0},
-    /* V4:  */ {2, 6,26, 0, 0, 0, 0, 0},
-    /* V5:  */ {2, 6,30, 0, 0, 0, 0, 0},
-    /* V6:  */ {2, 6,34, 0, 0, 0, 0, 0},
-    /* V7:  */ {3, 6,22,38, 0, 0, 0, 0},           /* 6 patterns (minus 3 overlapping finders) */
-    /* V8:  */ {3, 6,24,42, 0, 0, 0, 0},
-    /* V9:  */ {3, 6,26,46, 0, 0, 0, 0},
-    /* V10: */ {3, 6,28,50, 0, 0, 0, 0}
+    /* V2:  */ {2, 6, 18, 0, 0, 0, 0, 0},           /* 1 pattern ad (18,18) */
+    /* V3:  */ {2, 6, 22, 0, 0, 0, 0, 0},
+    /* V4:  */ {2, 6, 26, 0, 0, 0, 0, 0},
+    /* V5:  */ {2, 6, 30, 0, 0, 0, 0, 0},
+    /* V6:  */ {2, 6, 34, 0, 0, 0, 0, 0},
+    /* V7:  */ {3, 6, 22, 38, 0, 0, 0, 0},           /* 6 patterns (minus 3 overlapping finders) */
+    /* V8:  */ {3, 6, 24, 42, 0, 0, 0, 0},
+    /* V9:  */ {3, 6, 26, 46, 0, 0, 0, 0},
+    /* V10: */ {3, 6, 28, 50, 0, 0, 0, 0}
 };
 
 
@@ -131,7 +134,7 @@ interior constans i32 _alignment_positiones[10][8] = {
  * =========================================================== */
 
 interior vacuum
-_gf256_initiare(vacuum)
+_gf256_initiare (vacuum)
 {
     i32 i;
     i32 x;
@@ -143,22 +146,24 @@ _gf256_initiare(vacuum)
     x = I;
     per (i = ZEPHYRUM; i < CCLV; i++)
     {
-        _gf256_exp[i] = x;
-        _gf256_log[x] = i;
-        x <<= I;
+        _gf256_exp[i]  = x;
+        _gf256_log[x]  = i;
+        x              <<= I;
         si (x >= CCLVI)
         {
             x ^= 0x11D;
         }
     }
-    _gf256_exp[CCLV] = _gf256_exp[ZEPHYRUM];
-    _gf256_log[ZEPHYRUM] = ZEPHYRUM; /* Conventio: log(0) = 0 */
+    _gf256_exp[CCLV]      = _gf256_exp[ZEPHYRUM];
+    _gf256_log[ZEPHYRUM]  = ZEPHYRUM; /* Conventio: log(0) = 0 */
 
     _gf256_initiatus = VERUM;
 }
 
 interior i32
-_gf256_multiplicare(i32 a, i32 b)
+_gf256_multiplicare (
+    i32 a,
+    i32 b)
 {
     si (a == ZEPHYRUM || b == ZEPHYRUM) redde ZEPHYRUM;
     redde _gf256_exp[(_gf256_log[a] + _gf256_log[b]) % CCLV];
@@ -172,7 +177,9 @@ _gf256_multiplicare(i32 a, i32 b)
 /* Generare generator polynomial pro n ECC codewords
  * Coefficientes in gen[0..n] (gen[n] = 1, leading) */
 interior vacuum
-_rs_generare_generator(i32* gen, i32 n)
+_rs_generare_generator (
+    i32* gen,
+    i32  n)
 {
     i32 i, j;
 
@@ -196,11 +203,15 @@ _rs_generare_generator(i32* gen, i32 n)
  * data[0..data_len-1] = data codewords
  * ecc[0..ecc_len-1] = output ECC codewords */
 interior vacuum
-_rs_codificare(constans i8* data, i32 data_len, i8* ecc, i32 ecc_len)
+_rs_codificare (
+    constans i8* data,
+            i32  data_len,
+             i8* ecc,
+            i32  ecc_len)
 {
     i32* gen;
     i32  i, j;
-    i32  coef;
+        i32  coef;
     Piscina* temp;
 
     /* Allocare generator temporarium */
@@ -242,7 +253,12 @@ _rs_codificare(constans i8* data, i32 data_len, i8* ecc, i32 ecc_len)
 
 /* Ponere singularem modulum si intra fines */
 interior vacuum
-_ponere_modulum(i8* moduli, s32 mag, s32 x, s32 y, s32 valor)
+_ponere_modulum (
+     i8* moduli,
+    s32  mag,
+    s32  x,
+    s32  y,
+    s32  valor)
 {
     si (x >= ZEPHYRUM && x < mag && y >= ZEPHYRUM && y < mag)
     {
@@ -252,7 +268,11 @@ _ponere_modulum(i8* moduli, s32 mag, s32 x, s32 y, s32 valor)
 
 /* Ponere finder pattern (7x7) ad positionem */
 interior vacuum
-_ponere_finder(i8* moduli, s32 mag, s32 cx, s32 cy)
+_ponere_finder (
+     i8* moduli,
+    s32  mag,
+    s32  cx,
+    s32  cy)
 {
     s32 dx, dy;
 
@@ -260,11 +280,11 @@ _ponere_finder(i8* moduli, s32 mag, s32 cx, s32 cy)
     {
         per (dx = -III; dx <= III; dx++)
         {
-            s32 x = cx + dx;
-            s32 y = cy + dy;
-            s32 adx = dx < ZEPHYRUM ? -dx : dx;
-            s32 ady = dy < ZEPHYRUM ? -dy : dy;
-            s32 dist = adx > ady ? adx : ady; /* Chebyshev distance */
+            s32 x     = cx + dx;
+            s32 y     = cy + dy;
+            s32 adx   = dx < ZEPHYRUM ? -dx : dx;
+            s32 ady   = dy < ZEPHYRUM ? -dy : dy;
+            s32 dist  = adx > ady ? adx : ady; /* Chebyshev distance */
 
             /* Pattern: outer=black, ring=white, center 3x3=black
              * dist 3: black (outer), dist 2: white, dist 0-1: black (center 3x3) */
@@ -282,7 +302,13 @@ _ponere_finder(i8* moduli, s32 mag, s32 cx, s32 cy)
 
 /* Ponere separator (zona alba) circa finder */
 interior vacuum
-_ponere_separator(i8* moduli, s32 mag, s32 cx, s32 cy, s32 dir_x, s32 dir_y)
+_ponere_separator (
+     i8* moduli,
+    s32  mag,
+    s32  cx,
+    s32  cy,
+    s32  dir_x,
+    s32  dir_y)
 {
     s32 i;
 
@@ -301,7 +327,11 @@ _ponere_separator(i8* moduli, s32 mag, s32 cx, s32 cy, s32 dir_x, s32 dir_y)
 /* Ponere alignment pattern (5x5) ad positionem
  * Pattern: outer black, middle white, center black */
 interior vacuum
-_ponere_alignment(i8* moduli, s32 mag, s32 cx, s32 cy)
+_ponere_alignment (
+     i8* moduli,
+    s32  mag,
+    s32  cx,
+    s32  cy)
 {
     s32 dx, dy;
 
@@ -309,11 +339,11 @@ _ponere_alignment(i8* moduli, s32 mag, s32 cx, s32 cy)
     {
         per (dx = -II; dx <= II; dx++)
         {
-            s32 x = cx + dx;
-            s32 y = cy + dy;
-            s32 adx = dx < ZEPHYRUM ? -dx : dx;
-            s32 ady = dy < ZEPHYRUM ? -dy : dy;
-            s32 dist = adx > ady ? adx : ady;
+            s32 x     = cx + dx;
+            s32 y     = cy + dy;
+            s32 adx   = dx < ZEPHYRUM ? -dx : dx;
+            s32 ady   = dy < ZEPHYRUM ? -dy : dy;
+            s32 dist  = adx > ady ? adx : ady;
 
             /* dist 2: black (outer), dist 1: white, dist 0: black (center) */
             si (dist == I)
@@ -331,7 +361,10 @@ _ponere_alignment(i8* moduli, s32 mag, s32 cx, s32 cy)
 /* Ponere omnes alignment patterns pro versione
  * Saltat positiones quae superponunt cum finder patterns */
 interior vacuum
-_ponere_alignment_patterns(i8* moduli, s32 mag, s32 versio)
+_ponere_alignment_patterns (
+     i8* moduli,
+    s32  mag,
+    s32  versio)
 {
     s32 num_pos;
     s32 i, j;
@@ -365,7 +398,9 @@ _ponere_alignment_patterns(i8* moduli, s32 mag, s32 versio)
 
 /* Ponere timing patterns (alternating) */
 interior vacuum
-_ponere_timing(i8* moduli, s32 mag)
+_ponere_timing (
+     i8* moduli,
+    s32  mag)
 {
     s32 i;
 
@@ -384,7 +419,10 @@ _ponere_timing(i8* moduli, s32 mag)
 
 /* Ponere dark module (semper nigrum) */
 interior vacuum
-_ponere_dark_module(i8* moduli, s32 mag, s32 versio)
+_ponere_dark_module (
+     i8* moduli,
+    s32  mag,
+    s32  versio)
 {
     /* Positio: (8, 4*versio + 9) */
     s32 y = IV * versio + IX;
@@ -397,7 +435,10 @@ _ponere_dark_module(i8* moduli, s32 mag, s32 versio)
 /* Informatio versionis (V7+): XVIII bits bis positi - infra-sinistra
  * (3 lata x 6 alta) et supra-dextra (6 lata x 3 alta), speculo. */
 interior vacuum
-_ponere_versio_info(i8* moduli, s32 mag, s32 versio)
+_ponere_versio_info (
+     i8* moduli,
+    s32  mag,
+    s32  versio)
 {
     s32 info;
     s32 i;
@@ -420,7 +461,10 @@ _ponere_versio_info(i8* moduli, s32 mag, s32 versio)
 
 /* Ponere format info (15 bits) circa finders */
 interior vacuum
-_ponere_format_info(i8* moduli, s32 mag, s32 format_bits)
+_ponere_format_info (
+     i8* moduli,
+    s32  mag,
+    s32  format_bits)
 {
     s32 i;
     s32 bit;
@@ -474,7 +518,11 @@ _ponere_format_info(i8* moduli, s32 mag, s32 format_bits)
 
 /* Verificare si positio est reservata (finder, timing, format, etc.) */
 interior b32
-_est_reservatum(s32 mag, s32 x, s32 y, s32 versio)
+_est_reservatum (
+    s32 mag,
+    s32 x,
+    s32 y,
+    s32 versio)
 {
     /* Top-left finder + separator (9x9) */
     si (x < IX && y < IX) redde VERUM;
@@ -532,15 +580,20 @@ _est_reservatum(s32 mag, s32 x, s32 y, s32 versio)
 
 /* Ponere data bits in zigzag pattern */
 interior vacuum
-_ponere_data(i8* moduli, s32 mag, constans i8* data, s32 data_len, s32 versio)
+_ponere_data (
+             i8* moduli,
+            s32  mag,
+    constans i8* data,
+            s32  data_len,
+            s32  versio)
 {
     s32 x, y;
     s32 bit_index;
     s32 upward;
     s32 col;
 
-    bit_index = ZEPHYRUM;
-    upward = VERUM;
+    bit_index  = ZEPHYRUM;
+    upward     = VERUM;
 
     /* Iterare per columnas dextrae ad sinistram, 2 ad tempus */
     per (col = mag - I; col >= I; col -= II)
@@ -557,9 +610,9 @@ _ponere_data(i8* moduli, s32 mag, constans i8* data, s32 data_len, s32 versio)
             {
                 si (!_est_reservatum(mag, x, y, versio))
                 {
-                    s32 byte_index = bit_index / VIII;
-                    s32 bit_offset = VII - (bit_index % VIII);
-                    s32 bit_val = ZEPHYRUM;
+                    s32 byte_index  = bit_index / VIII;
+                    s32 bit_offset  = VII - (bit_index % VIII);
+                    s32 bit_val     = ZEPHYRUM;
 
                     si (byte_index < data_len)
                     {
@@ -584,7 +637,11 @@ _ponere_data(i8* moduli, s32 mag, constans i8* data, s32 data_len, s32 versio)
 /* Applicare mask pattern ad modulos
  * mask: 0-7 */
 interior vacuum
-_applicare_mask(i8* moduli, s32 mag, s32 mask, s32 versio)
+_applicare_mask (
+     i8* moduli,
+    s32  mag,
+    s32  mask,
+    s32  versio)
 {
     s32 x, y;
 
@@ -618,7 +675,9 @@ _applicare_mask(i8* moduli, s32 mag, s32 mask, s32 versio)
 
 /* Calculare penalty score pro mask evaluation */
 interior s32
-_calculare_poena(constans i8* moduli, s32 mag)
+_calculare_poena (
+    constans i8* moduli,
+            s32  mag)
 {
     s32 poena = ZEPHYRUM;
     s32 x, y;
@@ -629,8 +688,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
     /* Rows */
     per (y = ZEPHYRUM; y < mag; y++)
     {
-        count = I;
-        prev = moduli[y * mag];
+        count  = I;
+        prev   = moduli[y * mag];
         per (x = I; x < mag; x++)
         {
             si (moduli[y * mag + x] == prev)
@@ -640,8 +699,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
             alioquin
             {
                 si (count >= V) poena += III + (count - V);
-                count = I;
-                prev = moduli[y * mag + x];
+                count  = I;
+                prev   = moduli[y * mag + x];
             }
         }
         si (count >= V) poena += III + (count - V);
@@ -650,8 +709,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
     /* Columns */
     per (x = ZEPHYRUM; x < mag; x++)
     {
-        count = I;
-        prev = moduli[x];
+        count  = I;
+        prev   = moduli[x];
         per (y = I; y < mag; y++)
         {
             si (moduli[y * mag + x] == prev)
@@ -661,8 +720,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
             alioquin
             {
                 si (count >= V) poena += III + (count - V);
-                count = I;
-                prev = moduli[y * mag + x];
+                count  = I;
+                prev   = moduli[y * mag + x];
             }
         }
         si (count >= V) poena += III + (count - V);
@@ -674,9 +733,9 @@ _calculare_poena(constans i8* moduli, s32 mag)
         per (x = ZEPHYRUM; x < mag - I; x++)
         {
             s32 val = moduli[y * mag + x];
-            si (moduli[y * mag + x + I] == val &&
-                moduli[(y + I) * mag + x] == val &&
-                moduli[(y + I) * mag + x + I] == val)
+            si (   moduli[y * mag + x + I]       == val
+                && moduli[(y + I) * mag + x]     == val
+                && moduli[(y + I) * mag + x + I] == val)
             {
                 poena += III;
             }
@@ -688,8 +747,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
 
     /* Rule 4: Dark/light ratio */
     {
-        s32 dark = ZEPHYRUM;
-        s32 total = mag * mag;
+        s32 dark   = ZEPHYRUM;
+        s32 total  = mag * mag;
         s32 percent;
         s32 deviation;
 
@@ -701,8 +760,8 @@ _calculare_poena(constans i8* moduli, s32 mag)
             }
         }
 
-        percent = (dark * C) / total;
-        deviation = percent - L;
+        percent    = (dark * C) / total;
+        deviation  = percent - L;
         si (deviation < ZEPHYRUM) deviation = -deviation;
         poena += (deviation / V) * X;
     }
@@ -716,8 +775,12 @@ _calculare_poena(constans i8* moduli, s32 mag)
  * =========================================================== */
 
 b32
-qr_structura(i32 versio, QREcc ecc, i32* bloci, i32* data_codewords,
-    i32* ecc_codewords)
+qr_structura (
+      i32  versio,
+    QREcc  ecc,
+      i32* bloci,
+      i32* data_codewords,
+      i32* ecc_codewords)
 {
     i32 ec;
 
@@ -735,14 +798,17 @@ qr_structura(i32 versio, QREcc ecc, i32* bloci, i32* data_codewords,
 }
 
 i32
-qr_amplitudo_versionis(i32 versio)
+qr_amplitudo_versionis (
+    i32 versio)
 {
     si (versio < I || versio > XL) redde ZEPHYRUM;
     redde XVII + versio * IV;
 }
 
 i32
-qr_versio_minima(i32 mensura_datorum, QREcc ecc)
+qr_versio_minima (
+      i32 mensura_datorum,
+    QREcc ecc)
 {
     i32 v;
 
@@ -760,7 +826,10 @@ qr_versio_minima(i32 mensura_datorum, QREcc ecc)
 }
 
 s32
-qr_modulus(constans QR* qr, s32 x, s32 y)
+qr_modulus (
+    constans QR* qr,
+            s32  x,
+            s32  y)
 {
     si (!qr || !qr->moduli) redde -I;
     si (x < ZEPHYRUM || x >= (s32)qr->amplitudo) redde -I;
@@ -770,29 +839,33 @@ qr_modulus(constans QR* qr, s32 x, s32 y)
 }
 
 QR
-qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* piscina)
+qr_generare_ex_octets (
+    constans i8* datum,
+            i32  mensura,
+          QREcc  ecc,
+        Piscina* piscina)
 {
-    QR qr;
-    i32 versio;
-    i32 mag;
-    i32 data_codewords;
-    i32 ecc_codewords;
-    i32 total_codewords;
-    i8* codewords;
-    i32 bit_index;
-    i32 i;
-    s32 best_mask;
-    s32 best_poena;
-    i8* best_moduli;
+     QR  qr;
+    i32  versio;
+    i32  mag;
+    i32  data_codewords;
+    i32  ecc_codewords;
+    i32  total_codewords;
+     i8* codewords;
+    i32  bit_index;
+    i32  i;
+    s32  best_mask;
+    s32  best_poena;
+     i8* best_moduli;
 
     /* Initiare GF(256) */
     _gf256_initiare();
 
     /* Initiare fructus */
-    qr.amplitudo = ZEPHYRUM;
-    qr.moduli = NIHIL;
-    qr.versio = ZEPHYRUM;
-    qr.successus = FALSUM;
+    qr.amplitudo  = ZEPHYRUM;
+    qr.moduli     = NIHIL;
+    qr.versio     = ZEPHYRUM;
+    qr.successus  = FALSUM;
 
     si (!datum || mensura <= ZEPHYRUM || !piscina) redde qr;
     si (ecc < ZEPHYRUM || ecc > III) redde qr;
@@ -802,9 +875,9 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
     si (versio == ZEPHYRUM) redde qr; /* Data nimis magna */
 
     /* Calculare amplitudines */
-    mag = qr_amplitudo_versionis(versio);
-    ecc_codewords = _ecc_codewords[versio - I][ecc];
-    total_codewords = _data_codewords_totalis[versio - I];
+    mag              = qr_amplitudo_versionis(versio);
+    ecc_codewords    = _ecc_codewords[versio - I][ecc];
+    total_codewords  = _data_codewords_totalis[versio - I];
     /* CODEWORDS data, NON characteres capacitatis: _capacitas_octeti
      * capacitatem NUNTII fert (sine capite modi+numeri), quae
      * codewordis II minor est (III pro V10, ubi numerus XVI bitis
@@ -820,31 +893,31 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
     bit_index = ZEPHYRUM;
 
     /* Mode indicator (4 bits): 0100 = byte mode */
-    codewords[ZEPHYRUM] = (i8)0x40;
-    bit_index = IV;
+    codewords[ZEPHYRUM]  = (i8)0x40;
+    bit_index            = IV;
 
     /* Character count: VIII bitis pro V1-V9, XVI pro V10+ (modus
      * octetus, ISO 18004 tabula 3). Ansa datorum infra offset
      * arbitrarium bitorum tractat, ergo bit_index solus mutat. */
     si (versio < X)
     {
-        codewords[ZEPHYRUM] |= (i8)((mensura >> IV) & 0x0F);
-        codewords[I] = (i8)((mensura & 0x0F) << IV);
-        bit_index = XII;
+        codewords[ZEPHYRUM]  |= (i8)((mensura >> IV) & 0x0F);
+        codewords[I]         = (i8)((mensura & 0x0F) << IV);
+        bit_index            = XII;
     }
     alioquin
     {
-        codewords[ZEPHYRUM] |= (i8)((mensura >> XII) & 0x0F);
-        codewords[I] = (i8)((mensura >> IV) & 0xFF);
-        codewords[II] = (i8)((mensura & 0x0F) << IV);
-        bit_index = XX;
+        codewords[ZEPHYRUM]  |= (i8)((mensura >> XII) & 0x0F);
+        codewords[I]         = (i8)((mensura >> IV) & 0xFF);
+        codewords[II]        = (i8)((mensura & 0x0F) << IV);
+        bit_index            = XX;
     }
 
     /* Data bytes */
     per (i = ZEPHYRUM; i < mensura; i++)
     {
-        i32 byte_pos = bit_index / VIII;
-        i32 bit_off = bit_index % VIII;
+        i32 byte_pos  = bit_index / VIII;
+        i32 bit_off   = bit_index % VIII;
 
         si (bit_off == ZEPHYRUM)
         {
@@ -862,8 +935,8 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
     /* Padding ad byte boundary */
     /* Padding bytes: 0xEC, 0x11 alternating */
     {
-        i32 data_bits = bit_index;
-        i32 capacity_bits = data_codewords * VIII;
+        i32 data_bits      = bit_index;
+        i32 capacity_bits  = data_codewords * VIII;
         i32 pad_byte;
 
         /* Add terminator si spatium */
@@ -880,9 +953,9 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
         pad_byte = ZEPHYRUM;
         dum (bit_index / VIII < data_codewords)
         {
-            codewords[bit_index / VIII] = (i8)(pad_byte ? 0x11 : 0xEC);
-            pad_byte = !pad_byte;
-            bit_index += VIII;
+            codewords[bit_index / VIII]  = (i8)(pad_byte ? 0x11 : 0xEC);
+            pad_byte                     = !pad_byte;
+            bit_index                    += VIII;
         }
     }
 
@@ -893,8 +966,8 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
      * ergo versiones humiles laborabant (V1-V3 gradu M) et V4+
      * non, quod mensuratum est (oraculum: probatio_qr_gyrus.sh). */
     {
-        i32 bloci     = _bloci[versio - I][ecc];
-        i32 ec_per_bl = ecc_codewords / bloci;
+        i32 bloci      = _bloci[versio - I][ecc];
+        i32 ec_per_bl  = ecc_codewords / bloci;
         i32 offset;
         i32 b, j, k;
         i8* ec_omnia;
@@ -981,8 +1054,8 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
 
     per (i = ZEPHYRUM; i < VIII; i++)
     {
-        i8* temp_moduli;
-        s32 poena;
+         i8* temp_moduli;
+        s32  poena;
 
         temp_moduli = (i8*)piscina_allocare(piscina, (memoriae_index)(mag * mag));
         memcpy(temp_moduli, qr.moduli, (memoriae_index)(mag * mag));
@@ -997,8 +1070,8 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
 
         si (poena < best_poena)
         {
-            best_poena = poena;
-            best_mask = (s32)i;
+            best_poena  = poena;
+            best_mask   = (s32)i;
             memcpy(best_moduli, temp_moduli, (memoriae_index)(mag * mag));
         }
     }
@@ -1007,23 +1080,26 @@ qr_generare_ex_octets(constans i8* datum, i32 mensura, QREcc ecc, Piscina* pisci
     memcpy(qr.moduli, best_moduli, (memoriae_index)(mag * mag));
     (vacuum)best_mask; /* Silentium: reservatum pro futuro usu */
 
-    qr.amplitudo = mag;
-    qr.versio = versio;
-    qr.successus = VERUM;
+    qr.amplitudo  = mag;
+    qr.versio     = versio;
+    qr.successus  = VERUM;
 
     redde qr;
 }
 
 QR
-qr_generare(chorda datum, QREcc ecc, Piscina* piscina)
+qr_generare (
+     chorda  datum,
+      QREcc  ecc,
+    Piscina* piscina)
 {
     si (datum.datum == NIHIL || datum.mensura <= ZEPHYRUM)
     {
         QR qr_vacuus;
-        qr_vacuus.amplitudo = ZEPHYRUM;
-        qr_vacuus.moduli = NIHIL;
-        qr_vacuus.versio = ZEPHYRUM;
-        qr_vacuus.successus = FALSUM;
+        qr_vacuus.amplitudo  = ZEPHYRUM;
+        qr_vacuus.moduli     = NIHIL;
+        qr_vacuus.versio     = ZEPHYRUM;
+        qr_vacuus.successus  = FALSUM;
         redde qr_vacuus;
     }
 

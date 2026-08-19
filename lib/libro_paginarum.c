@@ -7,19 +7,20 @@
 #include "schirmata.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Utilitas Interna
  * ================================================== */
 
 /* Allocare et initiare nova pagina */
 hic_manens Pagina*
-_allocare_paginam(
+_allocare_paginam (
     LibroPaginarum* libro,
-    i32 index)
+               i32  index)
 {
-    Pagina* pagina;
-    character id_buffer[XXXII];
-    chorda* identificator;
+       Pagina* pagina;
+    character  id_buffer[XXXII];
+       chorda* identificator;
 
     /* Allocare Pagina ex piscina */
     pagina = (Pagina*)piscina_allocare(libro->ctx->piscina, magnitudo(Pagina));
@@ -47,10 +48,9 @@ _allocare_paginam(
     redde pagina;
 }
 
-
 /* Recordare pagina currens in historia */
 hic_manens vacuum
-_recordare_in_historia(
+_recordare_in_historia (
     LibroPaginarum* libro)
 {
     si (libro->historia_numerus < LIBRO_HISTORIA_MAGNITUDO)
@@ -76,11 +76,11 @@ _recordare_in_historia(
  * ================================================== */
 
 LibroPaginarum*
-libro_creare(
+libro_creare (
     ContextusWidget* ctx)
 {
     LibroPaginarum* libro;
-    i32 i;
+               i32  i;
 
     si (ctx == NIHIL || ctx->piscina == NIHIL || ctx->intern == NIHIL)
     {
@@ -95,12 +95,12 @@ libro_creare(
     }
 
     /* Initiare campos */
-    libro->ctx = ctx;
-    libro->numerus_paginarum = ZEPHYRUM;
-    libro->index_currens = ZEPHYRUM;
-    libro->historia_numerus = ZEPHYRUM;
-    libro->est_immundus = FALSUM;
-    libro->tempus_ultimae_mutationis = 0.0;
+    libro->ctx                        = ctx;
+    libro->numerus_paginarum          = ZEPHYRUM;
+    libro->index_currens              = ZEPHYRUM;
+    libro->historia_numerus           = ZEPHYRUM;
+    libro->est_immundus               = FALSUM;
+    libro->tempus_ultimae_mutationis  = 0.0;
 
     /* Initiare clipboard communicatum */
     vim_clipboard_initiare(&libro->clipboard);
@@ -108,9 +108,9 @@ libro_creare(
     /* Vacare arrays */
     per (i = ZEPHYRUM; i < LIBRO_MAXIMUS_PAGINARUM; i++)
     {
-        libro->paginae[i] = NIHIL;
-        libro->nomina[i] = NIHIL;
-        libro->entitas_ids[i] = NIHIL;
+        libro->paginae[i]      = NIHIL;
+        libro->nomina[i]       = NIHIL;
+        libro->entitas_ids[i]  = NIHIL;
     }
 
     per (i = ZEPHYRUM; i < LIBRO_HISTORIA_MAGNITUDO; i++)
@@ -135,9 +135,9 @@ libro_creare(
  * ================================================== */
 
 vacuum
-libro_navigare_ad(
+libro_navigare_ad (
     LibroPaginarum* libro,
-    s32             index)
+               s32  index)
 {
     si (libro == NIHIL)
     {
@@ -189,8 +189,8 @@ libro_navigare_ad(
         /* Salvare novam paginam ad repository */
         si (libro->ctx->repo != NIHIL)
         {
-            prior_index = libro->index_currens;
-            libro->index_currens = nova_index;
+            prior_index           = libro->index_currens;
+            libro->index_currens  = nova_index;
             libro_salvare_paginam(libro);
             libro->index_currens = prior_index;
         }
@@ -200,9 +200,8 @@ libro_navigare_ad(
     libro->index_currens = (i32)index;
 }
 
-
 vacuum
-libro_pagina_proxima(
+libro_pagina_proxima (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -213,9 +212,8 @@ libro_pagina_proxima(
     libro_navigare_ad(libro, (s32)libro->index_currens + I);
 }
 
-
 vacuum
-libro_pagina_prior(
+libro_pagina_prior (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -229,9 +227,8 @@ libro_pagina_prior(
     }
 }
 
-
 vacuum
-libro_pagina_ultima(
+libro_pagina_ultima (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -245,9 +242,8 @@ libro_pagina_ultima(
     }
 }
 
-
 vacuum
-libro_retro(
+libro_retro (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -270,13 +266,12 @@ libro_retro(
     }
 }
 
-
 b32
-libro_navigare_ad_nomen(
-    LibroPaginarum*     libro,
+libro_navigare_ad_nomen (
+        LibroPaginarum* libro,
     constans character* nomen_)
 {
-    i32 i;
+       i32  i;
     chorda* nomen_chorda;
 
     si (libro == NIHIL || nomen_ == NIHIL)
@@ -290,8 +285,8 @@ libro_navigare_ad_nomen(
     /* Quaerere paginam cum nomine */
     per (i = ZEPHYRUM; i < libro->numerus_paginarum; i++)
     {
-        si (libro->nomina[i] != NIHIL &&
-            libro->nomina[i]->datum == nomen_chorda->datum)  /* Pointer comparison (interned) */
+        si (   libro->nomina[i]        != NIHIL
+            && libro->nomina[i]->datum == nomen_chorda->datum)  /* Pointer comparison (interned) */
         {
             libro_navigare_ad(libro, (s32)i);
             redde VERUM;
@@ -307,7 +302,7 @@ libro_navigare_ad_nomen(
  * ================================================== */
 
 Pagina*
-libro_pagina_currens(
+libro_pagina_currens (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -326,9 +321,8 @@ libro_pagina_currens(
     redde libro->paginae[libro->index_currens];
 }
 
-
 i32
-libro_index_currens(
+libro_index_currens (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -339,9 +333,8 @@ libro_index_currens(
     redde libro->index_currens;
 }
 
-
 i32
-libro_numerus_paginarum(
+libro_numerus_paginarum (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -358,8 +351,8 @@ libro_numerus_paginarum(
  * ================================================== */
 
 s32
-libro_pagina_nova(
-    LibroPaginarum*     libro,
+libro_pagina_nova (
+        LibroPaginarum* libro,
     constans character* nomen_)
 {
     s32 nova_index;
@@ -394,11 +387,10 @@ libro_pagina_nova(
     redde nova_index;
 }
 
-
 vacuum
-libro_pagina_nominare(
-    LibroPaginarum*     libro,
-    i32                 index,
+libro_pagina_nominare (
+        LibroPaginarum* libro,
+                   i32  index,
     constans character* nomen_)
 {
     si (libro == NIHIL)
@@ -424,18 +416,17 @@ libro_pagina_nominare(
     si (libro->ctx->repo != NIHIL)
     {
         i32 prior_index;
-        prior_index = libro->index_currens;
-        libro->index_currens = index;
+        prior_index           = libro->index_currens;
+        libro->index_currens  = index;
         libro_salvare_paginam(libro);
         libro->index_currens = prior_index;
     }
 }
 
-
 chorda*
-libro_pagina_nomen(
+libro_pagina_nomen (
     LibroPaginarum* libro,
-    i32             index)
+               i32  index)
 {
     si (libro == NIHIL)
     {
@@ -456,12 +447,12 @@ libro_pagina_nomen(
  * ================================================== */
 
 b32
-libro_tractare_eventum(
-    LibroPaginarum* libro,
+libro_tractare_eventum (
+      LibroPaginarum* libro,
     constans Eventus* eventus)
 {
     Pagina* pagina;
-    b32 resultum;
+       b32  resultum;
 
     si (libro == NIHIL || eventus == NIHIL)
     {
@@ -492,30 +483,30 @@ libro_tractare_eventum(
  * ================================================== */
 
 vacuum
-libro_reddere(
-    Piscina*         piscina,
+libro_reddere (
+            Piscina* piscina,
     TabulaPixelorum* tabula_pixelorum,
-    LibroPaginarum*  libro,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+     LibroPaginarum* libro,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
-    Pagina* pagina;
+                 Pagina* pagina;
     ContextusDelineandi* ctx;
-    i32 character_latitudo;
-    i32 character_altitudo;
+                    i32  character_latitudo;
+                    i32  character_altitudo;
     i32 box_x0, box_y0, box_x1, box_y1;
-    i32 textus_latitudo;
-    i32 textus_altitudo;
-    Color color_border;
-    Color color_border_inner;
-    chorda titulo;
-    chorda modo_textus;
+                   i32  textus_latitudo;
+                   i32  textus_altitudo;
+                 Color  color_border;
+                 Color  color_border_inner;
+                chorda  titulo;
+                chorda  modo_textus;
     constans character* modo_str;
-    character indicium_buffer[XXXII];
+             character  indicium_buffer[XXXII];
 
     si (libro == NIHIL || tabula_pixelorum == NIHIL || piscina == NIHIL)
     {
@@ -566,8 +557,8 @@ libro_reddere(
     }
 
     /* Modo textus */
-    modo_str = vim_nomen_modi(pagina->vim.modo);
-    modo_textus = chorda_ex_literis(modo_str, piscina);
+    modo_str     = vim_nomen_modi(pagina->vim.modo);
+    modo_textus  = chorda_ex_literis(modo_str, piscina);
 
     {
         i32 titulo_pixel_width;
@@ -578,8 +569,8 @@ libro_reddere(
 
         gap_padding = character_latitudo;
 
-        titulo_pixel_width = titulo.mensura * character_latitudo;
-        modo_pixel_width = modo_textus.mensura * character_latitudo;
+        titulo_pixel_width  = titulo.mensura * character_latitudo;
+        modo_pixel_width    = modo_textus.mensura * character_latitudo;
 
         /* Center titulo on top line */
         titulo_x = box_x0 + ((box_x1 - box_x0) - titulo_pixel_width) / II;
@@ -639,17 +630,17 @@ libro_reddere(
  * Redde: chorda* allocata ex piscina, vel NIHIL si error
  */
 hic_manens chorda*
-_serializa_tabula(
-    Piscina*           piscina,
+_serializa_tabula (
+              Piscina* piscina,
     TabulaCharacterum* tabula)
 {
-    i8* buffer;
-    i32 buffer_capacitas;
-    i32 buffer_longitudo;
-    s32 linea;
-    s32 columna;
-    s32 finis_contenti;
-    s32 altitudo_s;
+        i8* buffer;
+       i32  buffer_capacitas;
+       i32  buffer_longitudo;
+       s32  linea;
+       s32  columna;
+       s32  finis_contenti;
+       s32  altitudo_s;
     chorda* resultum;
 
     si (piscina == NIHIL || tabula == NIHIL)
@@ -722,20 +713,19 @@ _serializa_tabula(
         redde NIHIL;
     }
 
-    resultum->datum = buffer;
-    resultum->mensura = (i32)buffer_longitudo;
+    resultum->datum    = buffer;
+    resultum->mensura  = (i32)buffer_longitudo;
 
     redde resultum;
 }
-
 
 /* Deserializa chordam ad TabulaCharacterum
  * Format: lineae separatae per '\n'
  */
 hic_manens vacuum
-_deserializa_tabula(
+_deserializa_tabula (
     TabulaCharacterum* tabula,
-    chorda*            contentum)
+               chorda* contentum)
 {
     i32 i;
     s32 linea;
@@ -757,8 +747,8 @@ _deserializa_tabula(
         tabula->cellulae[i] = '\0';
     }
 
-    linea = ZEPHYRUM;
-    columna = ZEPHYRUM;
+    linea    = ZEPHYRUM;
+    columna  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < (i32)contentum->mensura; i++)
     {
@@ -787,29 +777,27 @@ _deserializa_tabula(
     }
 }
 
-
 /* Generare titulum scaffold pro pagina
  * Semper usare "pagina-N" pro stabili identitate
  */
 hic_manens vacuum
-_generare_scaffold_titulum(
+_generare_scaffold_titulum (
     character* buffer,
-    i32        index)
+          i32  index)
 {
     sprintf(buffer, "pagina-%d", index);
 }
 
-
 b32
-libro_salvare_paginam(
+libro_salvare_paginam (
     LibroPaginarum* libro)
 {
-    Entitas* entitas;
-    Pagina* pagina;
-    chorda* contentum;
-    character scaffold_titulus[XXXII];
-    character ordo_buffer[XVI];
-    i32 idx;
+      Entitas* entitas;
+       Pagina* pagina;
+       chorda* contentum;
+    character  scaffold_titulus[XXXII];
+    character  ordo_buffer[XVI];
+          i32  idx;
 
     si (libro == NIHIL || libro->ctx->repo == NIHIL)
     {
@@ -875,7 +863,7 @@ libro_salvare_paginam(
     {
         /* Usare nomen custom */
         character* titulus_buffer;
-        chorda* nomen_chorda;
+           chorda* nomen_chorda;
 
         nomen_chorda = libro->nomina[idx];
         titulus_buffer = (character*)piscina_allocare(
@@ -943,9 +931,8 @@ libro_salvare_paginam(
     redde VERUM;
 }
 
-
 b32
-libro_salvare_omnes(
+libro_salvare_omnes (
     LibroPaginarum* libro)
 {
     i32 i;
@@ -957,8 +944,8 @@ libro_salvare_omnes(
         redde FALSUM;
     }
 
-    prior_index = libro->index_currens;
-    successus = VERUM;
+    prior_index  = libro->index_currens;
+    successus    = VERUM;
 
     per (i = ZEPHYRUM; i < libro->numerus_paginarum; i++)
     {
@@ -975,15 +962,14 @@ libro_salvare_omnes(
     redde successus;
 }
 
-
 b32
-libro_carcare(
+libro_carcare (
     LibroPaginarum* libro)
 {
     Xar* entitates;
-    i32 i;
-    i32 num_entitates;
-    s32 maximus_ordo;
+    i32  i;
+    i32  num_entitates;
+    s32  maximus_ordo;
 
     si (libro == NIHIL || libro->ctx->repo == NIHIL)
     {
@@ -1008,9 +994,9 @@ libro_carcare(
     per (i = ZEPHYRUM; i < num_entitates; i++)
     {
         Entitas** entitas_ptr;
-        Entitas* entitas;
-        chorda* ordo_valor;
-        s32 ordo;
+        Entitas*  entitas;
+         chorda*  ordo_valor;
+            s32   ordo;
 
         entitas_ptr = (Entitas**)xar_obtinere(entitates, i);
         si (entitas_ptr == NIHIL)
@@ -1056,11 +1042,11 @@ libro_carcare(
     per (i = ZEPHYRUM; i < num_entitates; i++)
     {
         Entitas** entitas_ptr;
-        Entitas* entitas;
-        chorda* ordo_valor;
-        chorda* titulus_valor;
-        chorda* contentum_valor;
-        s32 ordo;
+        Entitas*  entitas;
+         chorda*  ordo_valor;
+         chorda*  titulus_valor;
+         chorda*  contentum_valor;
+            s32   ordo;
 
         entitas_ptr = (Entitas**)xar_obtinere(entitates, i);
         si (entitas_ptr == NIHIL)
@@ -1121,7 +1107,7 @@ libro_carcare(
  * ================================================== */
 
 vacuum
-libro_marcare_immundum(
+libro_marcare_immundum (
     LibroPaginarum* libro)
 {
     si (libro == NIHIL)
@@ -1129,13 +1115,12 @@ libro_marcare_immundum(
         redde;
     }
 
-    libro->est_immundus = VERUM;
-    libro->tempus_ultimae_mutationis = tempus_nunc();
+    libro->est_immundus               = VERUM;
+    libro->tempus_ultimae_mutationis  = tempus_nunc();
 }
 
-
 vacuum
-libro_salvare_si_immundum(
+libro_salvare_si_immundum (
     LibroPaginarum* libro)
 {
     f64 tempus_currens;
@@ -1146,8 +1131,8 @@ libro_salvare_si_immundum(
         redde;
     }
 
-    tempus_currens = tempus_nunc();
-    intervallum = tempus_currens - libro->tempus_ultimae_mutationis;
+    tempus_currens  = tempus_nunc();
+    intervallum     = tempus_currens - libro->tempus_ultimae_mutationis;
 
     /* 2 secundae debounce */
     si (intervallum >= 2.0)
@@ -1166,12 +1151,12 @@ libro_salvare_si_immundum(
  * Redde: longitudo argumenti
  */
 hic_manens i32
-_libro_legere_argumentum(
+_libro_legere_argumentum (
     ContextusCommandi* ctx,
-    character*         buffer,
-    i32                max_long)
+            character* buffer,
+                  i32  max_long)
 {
-    i32 i;
+          i32 i;
     character c;
 
     /* Skip leading space */
@@ -1199,16 +1184,15 @@ _libro_legere_argumentum(
     redde i;
 }
 
-
 /* Obtinere libro ex contextus commandi via schirmata
  * Redde: LibroPaginarum* vel NIHIL
  */
 hic_manens LibroPaginarum*
-_libro_ex_contextu(
+_libro_ex_contextu (
     ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
-    Schirmata* schirmata;
+          Schirmata* schirmata;
 
     si (ctx == NIHIL || ctx->datum_registratus == NIHIL)
     {
@@ -1232,13 +1216,13 @@ _libro_ex_contextu(
 
 /* $rename <name> - rename current page */
 hic_manens b32
-_libro_command_rename(
+_libro_command_rename (
     ContextusCommandi* ctx)
 {
     LibroPaginarum* libro;
-    character titulus[LXIV];
-    i32 longitudo;
-    i32 index;
+         character  titulus[LXIV];
+               i32  longitudo;
+               i32  index;
 
     libro = _libro_ex_contextu(ctx);
     si (!libro)
@@ -1258,17 +1242,16 @@ _libro_command_rename(
     redde VERUM;
 }
 
-
 /* $goto <N> - go to page N */
 hic_manens b32
-_libro_command_goto(
+_libro_command_goto (
     ContextusCommandi* ctx)
 {
     LibroPaginarum* libro;
-    character num_buffer[XVI];
-    i32 longitudo;
-    s32 page_num;
-    chorda num_chorda;
+         character  num_buffer[XVI];
+               i32  longitudo;
+               s32  page_num;
+            chorda  num_chorda;
 
     libro = _libro_ex_contextu(ctx);
     si (!libro)
@@ -1294,14 +1277,13 @@ _libro_command_goto(
     redde VERUM;
 }
 
-
 /* $new - create new page and navigate to it */
 hic_manens b32
-_libro_command_new(
+_libro_command_new (
     ContextusCommandi* ctx)
 {
     LibroPaginarum* libro;
-    s32 new_index;
+               s32  new_index;
 
     libro = _libro_ex_contextu(ctx);
     si (!libro)
@@ -1324,7 +1306,7 @@ _libro_command_new(
  * ================================================== */
 
 vacuum
-libro_paginarum_init(
+libro_paginarum_init (
     ContextusWidget* ctx)
 {
     si (ctx == NIHIL || ctx->reg_commandi == NIHIL)

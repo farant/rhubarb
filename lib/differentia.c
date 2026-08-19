@@ -28,6 +28,7 @@
 
 #define DIFFERENTIA_TECTUM_D 2048
 
+
 /* ==================================================
  * Emissor tractuum
  * ================================================== */
@@ -46,8 +47,12 @@ _tractum_appendere (EmissorTractuum* e, DifferentiaGenus genus,
     s32 index_a, s32 index_b, s32 numerus);
 
 interior vacuum
-_tractum_appendere (EmissorTractuum* e, DifferentiaGenus genus,
-    s32 index_a, s32 index_b, s32 numerus)
+_tractum_appendere (
+     EmissorTractuum* e,
+    DifferentiaGenus  genus,
+                 s32  index_a,
+                 s32  index_b,
+                 s32  numerus)
 {
     DifferentiaTractus* t;
 
@@ -61,31 +66,32 @@ _tractum_appendere (EmissorTractuum* e, DifferentiaGenus genus,
         e->fractum = VERUM;
         redde;
     }
-    t->genus = genus;
-    t->index_a = (i32)index_a;
-    t->index_b = (i32)index_b;
-    t->numerus = (i32)numerus;
+    t->genus    = genus;
+    t->index_a  = (i32)index_a;
+    t->index_b  = (i32)index_b;
+    t->numerus  = (i32)numerus;
 }
 
 interior vacuum
 _pendentia_fundere (EmissorTractuum* e);
 
 interior vacuum
-_pendentia_fundere (EmissorTractuum* e)
+_pendentia_fundere (
+    EmissorTractuum* e)
 {
     si (e->deleta_pendentia > 0)
     {
         _tractum_appendere(e, DIFFERENTIA_DELETA, e->pos_a,
             e->pos_b, e->deleta_pendentia);
-        e->pos_a = e->pos_a + e->deleta_pendentia;
-        e->deleta_pendentia = 0;
+        e->pos_a             = e->pos_a + e->deleta_pendentia;
+        e->deleta_pendentia  = 0;
     }
     si (e->addita_pendentia > 0)
     {
         _tractum_appendere(e, DIFFERENTIA_ADDITA, e->pos_a,
             e->pos_b, e->addita_pendentia);
-        e->pos_b = e->pos_b + e->addita_pendentia;
-        e->addita_pendentia = 0;
+        e->pos_b             = e->pos_b + e->addita_pendentia;
+        e->addita_pendentia  = 0;
     }
 }
 
@@ -93,7 +99,9 @@ interior vacuum
 _idem_emittere (EmissorTractuum* e, s32 numerus);
 
 interior vacuum
-_idem_emittere (EmissorTractuum* e, s32 numerus)
+_idem_emittere (
+    EmissorTractuum* e,
+                s32  numerus)
 {
     si (numerus <= 0)
     {
@@ -110,9 +118,9 @@ _idem_emittere (EmissorTractuum* e, s32 numerus)
 
             si (ultimus->genus == DIFFERENTIA_IDEM)
             {
-                ultimus->numerus = ultimus->numerus + (i32)numerus;
-                e->pos_a = e->pos_a + numerus;
-                e->pos_b = e->pos_b + numerus;
+                ultimus->numerus  = ultimus->numerus + (i32)numerus;
+                e->pos_a          = e->pos_a + numerus;
+                e->pos_b          = e->pos_b + numerus;
                 redde;
             }
         }
@@ -127,7 +135,9 @@ interior vacuum
 _gradum_emittere (EmissorTractuum* e, DifferentiaGenus genus);
 
 interior vacuum
-_gradum_emittere (EmissorTractuum* e, DifferentiaGenus genus)
+_gradum_emittere (
+     EmissorTractuum* e,
+    DifferentiaGenus  genus)
 {
     si (genus == DIFFERENTIA_DELETA)
     {
@@ -143,6 +153,7 @@ _gradum_emittere (EmissorTractuum* e, DifferentiaGenus genus)
     }
 }
 
+
 /* ==================================================
  * Myers O(ND)
  * ================================================== */
@@ -151,7 +162,9 @@ interior s32*
 _s32_ordinem_allocare (Piscina* piscina, s32 numerus);
 
 interior s32*
-_s32_ordinem_allocare (Piscina* piscina, s32 numerus)
+_s32_ordinem_allocare (
+    Piscina* piscina,
+        s32  numerus)
 {
     redde (s32*)piscina_allocare(piscina,
         (memoriae_index)numerus * magnitudo(s32));
@@ -165,12 +178,16 @@ _myers_currere (Piscina* piscina, constans vacuum* constans* a,
     EmissorTractuum* emissor);
 
 interior b32
-_myers_currere (Piscina* piscina, constans vacuum* constans* a,
-    s32 na, constans vacuum* constans* b, s32 nb,
+_myers_currere (
+    Piscina* piscina,
+    constans vacuum* constans* a,
+    s32 na,
+    constans vacuum* constans* b,
+    s32 nb,
     EmissorTractuum* emissor)
 {
-    s32  maximus = na + nb;
-    s32  d_finalis = -1;
+    s32  maximus    = na + nb;
+    s32  d_finalis  = -1;
     s32* v;
     Xar* vestigia;   /* de s32* - fenestra per gyrum */
     Xar* gradus;     /* de s32 (genus) - ordine retrogrado */
@@ -189,8 +206,8 @@ _myers_currere (Piscina* piscina, constans vacuum* constans* a,
     {
         v[i] = 0;
     }
-    vestigia = xar_creare(piscina, (i32)magnitudo(s32*));
-    gradus = xar_creare(piscina, (i32)magnitudo(s32));
+    vestigia  = xar_creare(piscina, (i32)magnitudo(s32*));
+    gradus    = xar_creare(piscina, (i32)magnitudo(s32));
     si (vestigia == NIHIL || gradus == NIHIL)
     {
         redde FALSUM;
@@ -222,7 +239,7 @@ _myers_currere (Piscina* piscina, constans vacuum* constans* a,
 
         per (k = -d; k <= d; k = k + 2)
         {
-            si (k == -d || (k != d
+            si (   k == -d || (k != d
                 && v[(k - 1) + maximus + 1]
                     < v[(k + 1) + maximus + 1]))
             {
@@ -255,13 +272,13 @@ inventum:
     y = nb;
     per (d = d_finalis; d >= 0; d = d - 1)
     {
-        s32* nix = *(s32**)xar_obtinere_s(vestigia, d);
-        s32  kk = x - y;
+        s32* nix  = *(s32**)xar_obtinere_s(vestigia, d);
+        s32  kk   = x - y;
         s32  prior_k;
         s32  prior_x;
         s32  prior_y;
 
-        si (kk == -d || (kk != d
+        si (   kk == -d || (kk != d
             && nix[(kk - 1) + d + 1] < nix[(kk + 1) + d + 1]))
         {
             prior_k = kk + 1;
@@ -281,9 +298,9 @@ inventum:
             {
                 redde FALSUM;
             }
-            *g = (s32)DIFFERENTIA_IDEM;
-            x = x - 1;
-            y = y - 1;
+            *g  = (s32)DIFFERENTIA_IDEM;
+            x   = x - 1;
+            y   = y - 1;
         }
         si (d > 0)
         {
@@ -312,16 +329,20 @@ inventum:
 }
 
 Xar*
-differentia_seriei (Piscina* piscina, constans vacuum* constans* a,
-    i32 numerus_a, constans vacuum* constans* b, i32 numerus_b)
+differentia_seriei (
+    Piscina* piscina,
+    constans vacuum* constans* a,
+    i32 numerus_a,
+    constans vacuum* constans* b,
+    i32 numerus_b)
 {
     EmissorTractuum emissor;
-    s32             na = (s32)numerus_a;
-    s32             nb = (s32)numerus_b;
-    s32             praefixum = 0;
-    s32             suffixum = 0;
+                s32 na         = (s32)numerus_a;
+                s32 nb         = (s32)numerus_b;
+                s32 praefixum  = 0;
+                s32 suffixum   = 0;
 
-    si ((numerus_a > 0 && a == NIHIL)
+    si (   (numerus_a > 0 && a == NIHIL)
         || (numerus_b > 0 && b == NIHIL))
     {
         redde NIHIL;
@@ -332,19 +353,19 @@ differentia_seriei (Piscina* piscina, constans vacuum* constans* a,
     {
         redde NIHIL;
     }
-    emissor.pos_a = 0;
-    emissor.pos_b = 0;
-    emissor.deleta_pendentia = 0;
-    emissor.addita_pendentia = 0;
-    emissor.fractum = FALSUM;
+    emissor.pos_a             = 0;
+    emissor.pos_b             = 0;
+    emissor.deleta_pendentia  = 0;
+    emissor.addita_pendentia  = 0;
+    emissor.fractum           = FALSUM;
 
-    dum (praefixum < na && praefixum < nb
-        && a[praefixum] == b[praefixum])
+    dum (   praefixum < na && praefixum < nb
+         && a[praefixum] == b[praefixum])
     {
         praefixum = praefixum + 1;
     }
-    dum (suffixum < na - praefixum && suffixum < nb - praefixum
-        && a[na - 1 - suffixum] == b[nb - 1 - suffixum])
+    dum (   suffixum < na - praefixum && suffixum < nb - praefixum
+         && a[na - 1 - suffixum] == b[nb - 1 - suffixum])
     {
         suffixum = suffixum + 1;
     }
@@ -384,6 +405,7 @@ differentia_seriei (Piscina* piscina, constans vacuum* constans* a,
     redde emissor.tractus;
 }
 
+
 /* ==================================================
  * Involucrum linearum
  * ================================================== */
@@ -395,8 +417,12 @@ _lineas_findere (chorda textus, Xar* lineae, Xar* identitates,
     InternamentumChorda* intern, b32* sine_fine);
 
 interior b32
-_lineas_findere (chorda textus, Xar* lineae, Xar* identitates,
-    InternamentumChorda* intern, b32* sine_fine)
+_lineas_findere (
+                 chorda  textus,
+                    Xar* lineae,
+                    Xar* identitates,
+    InternamentumChorda* intern,
+                    b32* sine_fine)
 {
     i32 initium = 0;
     i32 i;
@@ -406,43 +432,43 @@ _lineas_findere (chorda textus, Xar* lineae, Xar* identitates,
     {
         si (textus.datum[i] == '\n')
         {
-            chorda   visum = chorda_ex_buffer(
+            chorda visum = chorda_ex_buffer(
                 textus.datum + initium, i - initium);
-            chorda   identitas = chorda_ex_buffer(
+            chorda identitas = chorda_ex_buffer(
                 textus.datum + initium, i - initium + 1);
-            chorda*  internata = chorda_internare(intern,
+            chorda* internata = chorda_internare(intern,
                 identitas);
             chorda*  cella_lineae = (chorda*)xar_addere(lineae);
             vacuum** cella_identitatis = (vacuum**)xar_addere(
                 identitates);
 
-            si (internata == NIHIL || cella_lineae == NIHIL
+            si (   internata         == NIHIL || cella_lineae == NIHIL
                 || cella_identitatis == NIHIL)
             {
                 redde FALSUM;
             }
-            *cella_lineae = visum;
-            *cella_identitatis = (vacuum*)internata;
-            initium = i + 1;
+            *cella_lineae       = visum;
+            *cella_identitatis  = (vacuum*)internata;
+            initium             = i + 1;
         }
     }
     si (initium < textus.mensura)
     {
-        chorda   visum = chorda_ex_buffer(textus.datum + initium,
+        chorda visum = chorda_ex_buffer(textus.datum + initium,
             textus.mensura - initium);
-        chorda*  internata = chorda_internare(intern, visum);
-        chorda*  cella_lineae = (chorda*)xar_addere(lineae);
+        chorda*  internata     = chorda_internare(intern, visum);
+        chorda*  cella_lineae  = (chorda*)xar_addere(lineae);
         vacuum** cella_identitatis = (vacuum**)xar_addere(
             identitates);
 
-        si (internata == NIHIL || cella_lineae == NIHIL
+        si (   internata         == NIHIL || cella_lineae == NIHIL
             || cella_identitatis == NIHIL)
         {
             redde FALSUM;
         }
-        *cella_lineae = visum;
-        *cella_identitatis = (vacuum*)internata;
-        *sine_fine = VERUM;
+        *cella_lineae       = visum;
+        *cella_identitatis  = (vacuum*)internata;
+        *sine_fine          = VERUM;
     }
     redde VERUM;
 }
@@ -451,13 +477,15 @@ interior vacuum**
 _ordinem_identitatum (Piscina* piscina, constans Xar* identitates);
 
 interior vacuum**
-_ordinem_identitatum (Piscina* piscina, constans Xar* identitates)
+_ordinem_identitatum (
+         Piscina* piscina,
+    constans Xar* identitates)
 {
-    i32      numerus = xar_numerus(identitates);
+       i32   numerus = xar_numerus(identitates);
     vacuum** ordo = (vacuum**)piscina_allocare(piscina,
         (memoriae_index)(numerus == 0 ? I : numerus)
             * magnitudo(vacuum*));
-    i32      i;
+    i32 i;
 
     si (ordo == NIHIL)
     {
@@ -471,14 +499,17 @@ _ordinem_identitatum (Piscina* piscina, constans Xar* identitates)
 }
 
 DifferentiaLinearum*
-differentia_linearum (Piscina* piscina, chorda a, chorda b)
+differentia_linearum (
+    Piscina* piscina,
+     chorda  a,
+     chorda  b)
 {
-    DifferentiaLinearum* d;
-    InternamentumChorda* intern;
-    Xar*                 identitates_a;
-    Xar*                 identitates_b;
-    vacuum**             ordo_a;
-    vacuum**             ordo_b;
+    DifferentiaLinearum*  d;
+    InternamentumChorda*  intern;
+                    Xar*  identitates_a;
+                    Xar*  identitates_b;
+                 vacuum** ordo_a;
+                 vacuum** ordo_b;
 
     d = (DifferentiaLinearum*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(DifferentiaLinearum));
@@ -487,16 +518,16 @@ differentia_linearum (Piscina* piscina, chorda a, chorda b)
     {
         redde NIHIL;
     }
-    d->lineae_a = xar_creare(piscina, (i32)magnitudo(chorda));
-    d->lineae_b = xar_creare(piscina, (i32)magnitudo(chorda));
-    identitates_a = xar_creare(piscina, (i32)magnitudo(vacuum*));
-    identitates_b = xar_creare(piscina, (i32)magnitudo(vacuum*));
-    si (d->lineae_a == NIHIL || d->lineae_b == NIHIL
+    d->lineae_a    = xar_creare(piscina, (i32)magnitudo(chorda));
+    d->lineae_b    = xar_creare(piscina, (i32)magnitudo(chorda));
+    identitates_a  = xar_creare(piscina, (i32)magnitudo(vacuum*));
+    identitates_b  = xar_creare(piscina, (i32)magnitudo(vacuum*));
+    si (   d->lineae_a   == NIHIL || d->lineae_b == NIHIL
         || identitates_a == NIHIL || identitates_b == NIHIL)
     {
         redde NIHIL;
     }
-    si (!_lineas_findere(a, d->lineae_a, identitates_a, intern,
+    si (   !_lineas_findere(a, d->lineae_a, identitates_a, intern,
             &d->a_sine_fine)
         || !_lineas_findere(b, d->lineae_b, identitates_b, intern,
             &d->b_sine_fine))
@@ -521,15 +552,17 @@ differentia_linearum (Piscina* piscina, chorda a, chorda b)
     redde d;
 }
 
+
 /* ==================================================
  * Emissio et summa
  * ================================================== */
 
 DifferentiaSumma
-differentia_summa (constans Xar* tractus)
+differentia_summa (
+    constans Xar* tractus)
 {
     DifferentiaSumma s;
-    i32              i;
+                 i32 i;
 
     s.additae = 0;
     s.deletae = 0;
@@ -558,7 +591,9 @@ interior chorda
 _lineam_capere (constans Xar* lineae, s32 index);
 
 interior chorda
-_lineam_capere (constans Xar* lineae, s32 index)
+_lineam_capere (
+    constans Xar* lineae,
+             s32  index)
 {
     redde *(chorda*)xar_obtinere_s(lineae, index);
 }
@@ -568,8 +603,12 @@ _lineam_scribere (ChordaAedificator* aed, character praefixum,
     chorda linea, b32 ultima, b32 sine_fine);
 
 interior vacuum
-_lineam_scribere (ChordaAedificator* aed, character praefixum,
-    chorda linea, b32 ultima, b32 sine_fine)
+_lineam_scribere (
+    ChordaAedificator* aed,
+            character  praefixum,
+               chorda  linea,
+                  b32  ultima,
+                  b32  sine_fine)
 {
     chorda_aedificator_appendere_character(aed, praefixum);
     chorda_aedificator_appendere_chorda(aed, linea);
@@ -588,8 +627,10 @@ _latus_capitis_scribere (ChordaAedificator* aed, s32 initium,
     s32 numerus);
 
 interior vacuum
-_latus_capitis_scribere (ChordaAedificator* aed, s32 initium,
-    s32 numerus)
+_latus_capitis_scribere (
+    ChordaAedificator* aed,
+                  s32  initium,
+                  s32  numerus)
 {
     chorda_aedificator_appendere_s32(aed,
         numerus == 0 ? initium : initium + 1);
@@ -601,16 +642,19 @@ _latus_capitis_scribere (ChordaAedificator* aed, s32 initium,
 }
 
 chorda
-differentia_unificata (Piscina* piscina,
-    constans DifferentiaLinearum* d, constans character* titulus_a,
-    constans character* titulus_b, i32 contextus)
+differentia_unificata (
+                         Piscina* piscina,
+    constans DifferentiaLinearum* d,
+              constans character* titulus_a,
+              constans character* titulus_b,
+                             i32  contextus)
 {
     ChordaAedificator* aed;
-    i32                n;
-    i32                i;
-    s32                ctx = (s32)contextus;
-    s32                na_lineae;
-    s32                nb_lineae;
+                  i32  n;
+                  i32  i;
+                  s32  ctx = (s32)contextus;
+                  s32  na_lineae;
+                  s32  nb_lineae;
 
     si (d == NIHIL || d->tractus == NIHIL)
     {
@@ -637,9 +681,9 @@ differentia_unificata (Piscina* piscina,
     chorda_aedificator_appendere_literis(aed, titulus_b);
     chorda_aedificator_appendere_character(aed, '\n');
 
-    n = xar_numerus(d->tractus);
-    na_lineae = (s32)xar_numerus(d->lineae_a);
-    nb_lineae = (s32)xar_numerus(d->lineae_b);
+    n          = xar_numerus(d->tractus);
+    na_lineae  = (s32)xar_numerus(d->lineae_a);
+    nb_lineae  = (s32)xar_numerus(d->lineae_b);
 
     i = 0;
     dum (i < n)
@@ -665,8 +709,8 @@ differentia_unificata (Piscina* piscina,
 
         /* massa [i..finis]: mutationes quarum hiatus IDEM
          * <= 2*contextus coalescunt */
-        finis = i;
-        j = i + 1;
+        finis  = i;
+        j      = i + 1;
         dum (j < n)
         {
             constans DifferentiaTractus* u =
@@ -675,8 +719,8 @@ differentia_unificata (Piscina* piscina,
 
             si (u->genus != DIFFERENTIA_IDEM)
             {
-                finis = j;
-                j = j + 1;
+                finis  = j;
+                j      = j + 1;
                 perge;
             }
             si (j == n - 1 || (s32)u->numerus > 2 * ctx)
@@ -705,10 +749,10 @@ differentia_unificata (Piscina* piscina,
                 ? (s32)postea->numerus : ctx;
         }
 
-        initium_a = (s32)primus->index_a - prae;
-        initium_b = (s32)primus->index_b - prae;
-        summa_a = prae + post;
-        summa_b = prae + post;
+        initium_a  = (s32)primus->index_a - prae;
+        initium_b  = (s32)primus->index_b - prae;
+        summa_a    = prae + post;
+        summa_b    = prae + post;
         per (j = i; j <= finis; j = j + 1)
         {
             constans DifferentiaTractus* u =

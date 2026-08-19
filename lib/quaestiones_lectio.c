@@ -3,9 +3,9 @@
 #include "quaestiones_lectio.h"
 
 QsQuaestiones*
-qs_quaestiones_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+qs_quaestiones_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     QsQuaestiones* res;
@@ -17,8 +17,8 @@ qs_quaestiones_legere_nodum(
     {
         redde NIHIL;
     }
-    res->nodus = nodus;
-    res->quaestio = xar_creare(piscina, (i32)magnitudo(QsQuaestio*));
+    res->nodus     = nodus;
+    res->quaestio  = xar_creare(piscina, (i32)magnitudo(QsQuaestio*));
     {
         i32 n;
         i32 i;
@@ -29,22 +29,22 @@ qs_quaestiones_legere_nodum(
             StmlNodus* l;
 
             l = stml_liberum_ad_indicem(nodus, i);
-            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-                !l->titulus)
+            si (   !l || l->genus != STML_NODUS_ELEMENTUM
+                || !l->titulus)
             {
                 perge;
             }
             si (chorda_aequalis_literis(*l->titulus,
                     "quaestio"))
             {
-                QsQuaestio* filius;
+                QsQuaestio*  filius;
                 QsQuaestio** locus;
 
                 filius = qs_quaestio_legere_nodum(l, piscina, intern);
                 si (filius)
                 {
-                    locus = (QsQuaestio**)xar_addere(res->quaestio);
-                    *locus = filius;
+                    locus   = (QsQuaestio**)xar_addere(res->quaestio);
+                    *locus  = filius;
                 }
             }
         }
@@ -54,18 +54,18 @@ qs_quaestiones_legere_nodum(
 }
 
 QsQuaestiones*
-qs_quaestiones_legere(
-    chorda               fons,
-    Piscina*             piscina,
+qs_quaestiones_legere (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              causa)
+                 chorda* causa)
 {
     StmlResultus r;
 
     si (causa)
     {
-        causa->datum   = NIHIL;
-        causa->mensura = ZEPHYRUM;
+        causa->datum    = NIHIL;
+        causa->mensura  = ZEPHYRUM;
     }
 
     r = stml_legere(fons, piscina, intern);
@@ -78,8 +78,8 @@ qs_quaestiones_legere(
         }
         redde NIHIL;
     }
-    si (!r.elementum_radix->titulus ||
-        !chorda_aequalis_literis(*r.elementum_radix->titulus,
+    si (   !r.elementum_radix->titulus
+        || !chorda_aequalis_literis(*r.elementum_radix->titulus,
                                  "quaestiones"))
     {
         si (causa)
@@ -95,9 +95,9 @@ qs_quaestiones_legere(
 }
 
 QsQuaestio*
-qs_quaestio_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+qs_quaestio_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     QsQuaestio* res;
@@ -143,8 +143,8 @@ qs_quaestio_legere_nodum(
             StmlNodus* l;
 
             l = stml_liberum_ad_indicem(nodus, i);
-            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-                !l->titulus)
+            si (   !l || l->genus != STML_NODUS_ELEMENTUM
+                || !l->titulus)
             {
                 perge;
             }
@@ -159,7 +159,7 @@ qs_quaestio_legere_nodum(
                 }
             }
             alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "causa"))
+                         "causa"))
             {
                 si (!res->causa)
                 {
@@ -169,9 +169,9 @@ qs_quaestio_legere_nodum(
                 }
             }
             alioquin si (chorda_aequalis_literis(*l->titulus,
-                    "parametrum"))
+                         "parametrum"))
             {
-                QsParametrum* filius;
+                QsParametrum*  filius;
                 QsParametrum** locus;
 
                 filius = qs_parametrum_legere_nodum(l, piscina, intern);
@@ -188,9 +188,9 @@ qs_quaestio_legere_nodum(
 }
 
 QsSelector*
-qs_selector_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+qs_selector_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     QsSelector* res;
@@ -210,9 +210,9 @@ qs_selector_legere_nodum(
 }
 
 QsCausa*
-qs_causa_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+qs_causa_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     QsCausa* res;
@@ -232,9 +232,9 @@ qs_causa_legere_nodum(
 }
 
 QsParametrum*
-qs_parametrum_legere_nodum(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+qs_parametrum_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     QsParametrum* res;
@@ -252,4 +252,3 @@ qs_parametrum_legere_nodum(
 
     redde res;
 }
-

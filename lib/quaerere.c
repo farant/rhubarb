@@ -13,23 +13,24 @@
 
 /* Verificare si character est minuscula */
 interior b32
-_quaerere_est_minuscula(i8 c)
+_quaerere_est_minuscula (
+    i8 c)
 {
     redde c >= 'a' && c <= 'z';
 }
 
-
 /* Verificare si character est maiuscula */
 interior b32
-_quaerere_est_maiuscula(i8 c)
+_quaerere_est_maiuscula (
+    i8 c)
 {
     redde c >= 'A' && c <= 'Z';
 }
 
-
 /* Convertere ad minusculam */
 interior i8
-_quaerere_ad_minusculam(i8 c)
+_quaerere_ad_minusculam (
+    i8 c)
 {
     si (_quaerere_est_maiuscula(c))
     {
@@ -38,19 +39,20 @@ _quaerere_ad_minusculam(i8 c)
     redde c;
 }
 
-
 /* Verificare si character est separator (word boundary) */
 interior b32
-_quaerere_est_separator(i8 c)
+_quaerere_est_separator (
+    i8 c)
 {
-    redde c == '/' || c == '_' || c == '-' ||
-           c == '.' || c == ' ' || c == '\\';
+    redde c == '/' || c == '_' || c == '-'
+        || c == '.' || c == ' ' || c == '\\';
 }
-
 
 /* Verificare si positio est limes verbi (word boundary) */
 interior b32
-_quaerere_est_limes_verbi(constans i8* datum, i32 pos)
+_quaerere_est_limes_verbi (
+    constans i8* datum,
+            i32  pos)
 {
     si (pos == 0)
     {
@@ -64,8 +66,8 @@ _quaerere_est_limes_verbi(constans i8* datum, i32 pos)
     }
 
     /* CamelCase transition: lowercase followed by uppercase */
-    si (_quaerere_est_minuscula(datum[pos - 1]) &&
-        _quaerere_est_maiuscula(datum[pos]))
+    si (   _quaerere_est_minuscula(datum[pos - 1])
+        && _quaerere_est_maiuscula(datum[pos]))
     {
         redde VERUM;
     }
@@ -73,10 +75,10 @@ _quaerere_est_limes_verbi(constans i8* datum, i32 pos)
     redde FALSUM;
 }
 
-
 /* Verificare si query habet maiusculam (pro smart case) */
 interior b32
-_quaerere_habet_maiusculam(chorda quaestio)
+_quaerere_habet_maiusculam (
+    chorda quaestio)
 {
     i32 i;
 
@@ -91,10 +93,12 @@ _quaerere_habet_maiusculam(chorda quaestio)
     redde FALSUM;
 }
 
-
 /* Comparare characters cum case handling */
 interior b32
-_quaerere_char_congruit(i8 q, i8 s, b32 case_sensitivus)
+_quaerere_char_congruit (
+     i8 q,
+     i8 s,
+    b32 case_sensitivus)
 {
     si (case_sensitivus)
     {
@@ -110,12 +114,12 @@ _quaerere_char_congruit(i8 q, i8 s, b32 case_sensitivus)
  * ======================================================================== */
 
 QuaerereOptiones
-quaerere_optiones_default(vacuum)
+quaerere_optiones_default (vacuum)
 {
     QuaerereOptiones opt;
 
-    opt.case_sensitivus = FALSUM;
-    opt.intelligens_casus = VERUM;
+    opt.case_sensitivus    = FALSUM;
+    opt.intelligens_casus  = VERUM;
 
     redde opt;
 }
@@ -126,9 +130,9 @@ quaerere_optiones_default(vacuum)
  * ======================================================================== */
 
 b32
-quaerere_congruit_cum_optionibus(
-    chorda            quaestio,
-    chorda            scopus,
+quaerere_congruit_cum_optionibus (
+              chorda  quaestio,
+              chorda  scopus,
     QuaerereOptiones* optiones)
 {
     i32 qi;  /* Query index */
@@ -174,9 +178,8 @@ quaerere_congruit_cum_optionibus(
     redde qi == quaestio.mensura;
 }
 
-
 b32
-quaerere_congruit(
+quaerere_congruit (
     chorda quaestio,
     chorda scopus)
 {
@@ -194,12 +197,12 @@ quaerere_congruit(
 
 /* Calculare score pro positiones */
 interior s32
-_quaerere_calculare_puncta(
-    chorda      quaestio,
-    chorda      scopus,
-    i32*        positiones,
-    i32         numerus,
-    b32         case_sensitivus)
+_quaerere_calculare_puncta (
+    chorda  quaestio,
+    chorda  scopus,
+       i32* positiones,
+       i32  numerus,
+       b32  case_sensitivus)
 {
     s32 puncta;
     i32 i;
@@ -224,8 +227,8 @@ _quaerere_calculare_puncta(
         }
 
         /* Exact case bonus (only in case-insensitive mode) */
-        si (!case_sensitivus &&
-            quaestio.datum[i] == scopus.datum[pos])
+        si (   !case_sensitivus
+            && quaestio.datum[i] == scopus.datum[pos])
         {
             puncta += QUAERERE_BONUS_CASUS_EXACTUS;
         }
@@ -252,11 +255,11 @@ _quaerere_calculare_puncta(
 
 /* Forward pass: find first matching positions (greedy) */
 interior b32
-_quaerere_passus_anterior(
-    chorda quaestio,
-    chorda scopus,
-    i32*   positiones,
-    b32    case_sensitivus)
+_quaerere_passus_anterior (
+    chorda  quaestio,
+    chorda  scopus,
+       i32* positiones,
+       b32  case_sensitivus)
 {
     i32 qi;
     i32 si_idx;
@@ -281,11 +284,11 @@ _quaerere_passus_anterior(
 
 /* Backward pass: try to find tighter clustering from end */
 interior vacuum
-_quaerere_passus_posterior(
-    chorda quaestio,
-    chorda scopus,
-    i32*   positiones,
-    b32    case_sensitivus)
+_quaerere_passus_posterior (
+    chorda  quaestio,
+    chorda  scopus,
+       i32* positiones,
+       b32  case_sensitivus)
 {
     i32 qi;
     s32 si_idx;
@@ -296,8 +299,8 @@ _quaerere_passus_posterior(
     }
 
     /* Start from last match position, scan backward */
-    qi = quaestio.mensura - 1;
-    si_idx = (s32)positiones[qi];
+    qi      = quaestio.mensura - 1;
+    si_idx  = (s32)positiones[qi];
 
     dum (qi > 0)
     {
@@ -328,33 +331,33 @@ _quaerere_passus_posterior(
  * ======================================================================== */
 
 QuaerereFructus
-quaerere_concordare_cum_optionibus(
-    chorda            quaestio,
-    chorda            scopus,
+quaerere_concordare_cum_optionibus (
+              chorda  quaestio,
+              chorda  scopus,
     QuaerereOptiones* optiones,
-    Piscina*          piscina)
+             Piscina* piscina)
 {
-    QuaerereFructus fructus;
-    b32             case_sens;
-    i32*            positiones;
+    QuaerereFructus  fructus;
+                b32  case_sens;
+                i32* positiones;
 
     /* Handle empty query */
     si (quaestio.mensura == 0)
     {
-        fructus.status = QUAERERE_OK;
-        fructus.puncta = 0;
-        fructus.positiones = NIHIL;
-        fructus.numerus = 0;
+        fructus.status      = QUAERERE_OK;
+        fructus.puncta      = 0;
+        fructus.positiones  = NIHIL;
+        fructus.numerus     = 0;
         redde fructus;
     }
 
     /* Check for null piscina */
     si (piscina == NIHIL)
     {
-        fructus.status = QUAERERE_FRACTA_ALLOCATIO;
-        fructus.puncta = 0;
-        fructus.positiones = NIHIL;
-        fructus.numerus = 0;
+        fructus.status      = QUAERERE_FRACTA_ALLOCATIO;
+        fructus.puncta      = 0;
+        fructus.positiones  = NIHIL;
+        fructus.numerus     = 0;
         redde fructus;
     }
 
@@ -378,20 +381,20 @@ quaerere_concordare_cum_optionibus(
 
     si (positiones == NIHIL)
     {
-        fructus.status = QUAERERE_FRACTA_ALLOCATIO;
-        fructus.puncta = 0;
-        fructus.positiones = NIHIL;
-        fructus.numerus = 0;
+        fructus.status      = QUAERERE_FRACTA_ALLOCATIO;
+        fructus.puncta      = 0;
+        fructus.positiones  = NIHIL;
+        fructus.numerus     = 0;
         redde fructus;
     }
 
     /* Forward pass */
     si (!_quaerere_passus_anterior(quaestio, scopus, positiones, case_sens))
     {
-        fructus.status = QUAERERE_NON_CONGRUIT;
-        fructus.puncta = 0;
-        fructus.positiones = NIHIL;
-        fructus.numerus = 0;
+        fructus.status      = QUAERERE_NON_CONGRUIT;
+        fructus.puncta      = 0;
+        fructus.positiones  = NIHIL;
+        fructus.numerus     = 0;
         redde fructus;
     }
 
@@ -402,17 +405,16 @@ quaerere_concordare_cum_optionibus(
     fructus.status = QUAERERE_OK;
     fructus.puncta = _quaerere_calculare_puncta(quaestio, scopus, positiones,
                                                  quaestio.mensura, case_sens);
-    fructus.positiones = positiones;
-    fructus.numerus = quaestio.mensura;
+    fructus.positiones  = positiones;
+    fructus.numerus     = quaestio.mensura;
 
     redde fructus;
 }
 
-
 QuaerereFructus
-quaerere_concordare(
-    chorda   quaestio,
-    chorda   scopus,
+quaerere_concordare (
+     chorda  quaestio,
+     chorda  scopus,
     Piscina* piscina)
 {
     QuaerereOptiones opt;
@@ -436,16 +438,19 @@ nomen structura {
 
 /* Insertion sort pro parvis partitionibus (descendens per puncta) */
 interior vacuum
-_quaerere_insertion_sort(QuaererePar* paria, s32 sinister, s32 dexter)
+_quaerere_insertion_sort (
+    QuaererePar* paria,
+            s32  sinister,
+            s32  dexter)
 {
-    s32 i;
-    s32 j;
+            s32 i;
+            s32 j;
     QuaererePar temp;
 
     per (i = sinister + 1; i <= dexter; i++)
     {
-        temp = paria[i];
-        j = i - 1;
+        temp  = paria[i];
+        j     = i - 1;
 
         dum (j >= sinister && paria[j].puncta < temp.puncta)
         {
@@ -457,14 +462,16 @@ _quaerere_insertion_sort(QuaererePar* paria, s32 sinister, s32 dexter)
     }
 }
 
-
 /* Quicksort cum insertion sort fallback (descendens per puncta) */
 interior vacuum
-_quaerere_quicksort(QuaererePar* paria, s32 sinister, s32 dexter)
+_quaerere_quicksort (
+    QuaererePar* paria,
+            s32  sinister,
+            s32  dexter)
 {
-    s32 i;
-    s32 j;
-    s32 pivot;
+            s32 i;
+            s32 j;
+            s32 pivot;
     QuaererePar temp;
 
     /* Pro parvis partitionibus, insertion sort est celerior */
@@ -475,9 +482,9 @@ _quaerere_quicksort(QuaererePar* paria, s32 sinister, s32 dexter)
     }
 
     /* Pivot ex elemento medio */
-    pivot = paria[(sinister + dexter) / II].puncta;
-    i = sinister;
-    j = dexter;
+    pivot  = paria[(sinister + dexter) / II].puncta;
+    i      = sinister;
+    j      = dexter;
 
     dum (i <= j)
     {
@@ -495,9 +502,9 @@ _quaerere_quicksort(QuaererePar* paria, s32 sinister, s32 dexter)
 
         si (i <= j)
         {
-            temp = paria[i];
-            paria[i] = paria[j];
-            paria[j] = temp;
+            temp      = paria[i];
+            paria[i]  = paria[j];
+            paria[j]  = temp;
             i++;
             j--;
         }
@@ -515,10 +522,11 @@ _quaerere_quicksort(QuaererePar* paria, s32 sinister, s32 dexter)
     }
 }
 
-
 /* Wrapper pro sorting API */
 interior vacuum
-_quaerere_ordinare(QuaererePar* paria, i32 numerus)
+_quaerere_ordinare (
+    QuaererePar* paria,
+            i32  numerus)
 {
     si (numerus <= 1)
     {
@@ -528,25 +536,24 @@ _quaerere_ordinare(QuaererePar* paria, i32 numerus)
     _quaerere_quicksort(paria, 0, (s32)numerus - 1);
 }
 
-
 QuaerereFiltrumFructus
-quaerere_filtrare_cum_optionibus(
-    chorda            quaestio,
-    chorda*           candidati,
-    i32               numerus_candidatorum,
+quaerere_filtrare_cum_optionibus (
+              chorda  quaestio,
+              chorda* candidati,
+                 i32  numerus_candidatorum,
     QuaerereOptiones* optiones,
-    Piscina*          piscina)
+             Piscina* piscina)
 {
-    QuaerereFiltrumFructus fructus;
-    QuaererePar*          paria;
-    i32                    numerus_congruentium;
-    i32                    i;
-    QuaerereFructus        match_result;
+    QuaerereFiltrumFructus  fructus;
+               QuaererePar* paria;
+                       i32  numerus_congruentium;
+                       i32  i;
+           QuaerereFructus  match_result;
 
     /* Initialize result */
-    fructus.elementa = NIHIL;
-    fructus.puncta = NIHIL;
-    fructus.numerus = 0;
+    fructus.elementa  = NIHIL;
+    fructus.puncta    = NIHIL;
+    fructus.numerus   = 0;
 
     si (piscina == NIHIL || candidati == NIHIL || numerus_candidatorum <= 0)
     {
@@ -569,8 +576,8 @@ quaerere_filtrare_cum_optionibus(
         si (quaestio.mensura == 0)
         {
             /* Empty query matches everything with score 0 */
-            paria[numerus_congruentium].puncta = 0;
-            paria[numerus_congruentium].index = i;
+            paria[numerus_congruentium].puncta  = 0;
+            paria[numerus_congruentium].index   = i;
             numerus_congruentium++;
         }
         alioquin
@@ -603,17 +610,17 @@ quaerere_filtrare_cum_optionibus(
 
     si (fructus.elementa == NIHIL || fructus.puncta == NIHIL)
     {
-        fructus.elementa = NIHIL;
-        fructus.puncta = NIHIL;
-        fructus.numerus = 0;
+        fructus.elementa  = NIHIL;
+        fructus.puncta    = NIHIL;
+        fructus.numerus   = 0;
         redde fructus;
     }
 
     /* Build result in sorted order */
     per (i = 0; i < numerus_congruentium; i++)
     {
-        fructus.elementa[i] = candidati[paria[i].index];
-        fructus.puncta[i] = paria[i].puncta;
+        fructus.elementa[i]  = candidati[paria[i].index];
+        fructus.puncta[i]    = paria[i].puncta;
     }
 
     fructus.numerus = numerus_congruentium;
@@ -621,12 +628,11 @@ quaerere_filtrare_cum_optionibus(
     redde fructus;
 }
 
-
 QuaerereFiltrumFructus
-quaerere_filtrare(
-    chorda   quaestio,
-    chorda*  candidati,
-    i32      numerus_candidatorum,
+quaerere_filtrare (
+     chorda  quaestio,
+     chorda* candidati,
+        i32  numerus_candidatorum,
     Piscina* piscina)
 {
     QuaerereOptiones opt;

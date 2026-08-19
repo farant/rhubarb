@@ -13,8 +13,8 @@
  * ================================================== */
 
 hic_manens structura {
-    constans character*  verbum;
-    SputnikLexemaGenus   genus;
+    constans character* verbum;
+    SputnikLexemaGenus  genus;
 } VERBA_CLAUSA[] = {
     {"sit",      SPUTNIK_LEXEMA_LET},
     {"constans", SPUTNIK_LEXEMA_CONST},
@@ -39,32 +39,37 @@ hic_manens structura {
  * ================================================== */
 
 interior b32
-_est_littera(character c)
+_est_littera (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z');
 }
 
 interior b32
-_est_cifra(character c)
+_est_cifra (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
 
 interior b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 interior b32
-_est_identificator_initium(character c)
+_est_identificator_initium (
+    character c)
 {
     redde _est_littera(c) || c == '_';
 }
 
 interior b32
-_est_identificator_character(character c)
+_est_identificator_character (
+    character c)
 {
     redde _est_littera(c) || _est_cifra(c) || c == '_';
 }
@@ -75,13 +80,16 @@ _est_identificator_character(character c)
  * ================================================== */
 
 interior b32
-_finis(SputnikLexator* lex)
+_finis (
+    SputnikLexator* lex)
 {
     redde lex->positus >= lex->fons.mensura;
 }
 
 interior character
-_aspicere(SputnikLexator* lex, i32 offset)
+_aspicere (
+    SputnikLexator* lex,
+               i32  offset)
 {
     i32 pos;
     pos = lex->positus + offset;
@@ -93,7 +101,9 @@ _aspicere(SputnikLexator* lex, i32 offset)
 }
 
 interior vacuum
-_progredi(SputnikLexator* lex, i32 numerus)
+_progredi (
+    SputnikLexator* lex,
+               i32  numerus)
 {
     i32 i;
     per (i = ZEPHYRUM; i < numerus && lex->positus < lex->fons.mensura; i++)
@@ -112,7 +122,8 @@ _progredi(SputnikLexator* lex, i32 numerus)
 }
 
 interior vacuum
-_praeterire_spatium(SputnikLexator* lex)
+_praeterire_spatium (
+    SputnikLexator* lex)
 {
     dum (!_finis(lex) && _est_spatium(_aspicere(lex, ZEPHYRUM)))
     {
@@ -126,7 +137,8 @@ _praeterire_spatium(SputnikLexator* lex)
  * ================================================== */
 
 interior SputnikLexemaGenus
-_quaerere_verbum_clausum(chorda valor)
+_quaerere_verbum_clausum (
+    chorda valor)
 {
     i32 i;
     i32 len;
@@ -152,33 +164,41 @@ _quaerere_verbum_clausum(chorda valor)
  * ================================================== */
 
 interior SputnikLexema
-_creare_lexema(SputnikLexator* lex, SputnikLexemaGenus genus,
-               i32 initium, i32 finis, i32 linea, i32 columna)
+_creare_lexema (
+        SputnikLexator* lex,
+    SputnikLexemaGenus  genus,
+                   i32  initium,
+                   i32  finis,
+                   i32  linea,
+                   i32  columna)
 {
     SputnikLexema lexema;
 
-    lexema.genus = genus;
-    lexema.valor.datum = lex->fons.datum + initium;
-    lexema.valor.mensura = finis - initium;
-    lexema.linea = linea;
-    lexema.columna = columna;
-    lexema.offset_initium = initium;
-    lexema.offset_finis = finis;
+    lexema.genus           = genus;
+    lexema.valor.datum     = lex->fons.datum + initium;
+    lexema.valor.mensura   = finis - initium;
+    lexema.linea           = linea;
+    lexema.columna         = columna;
+    lexema.offset_initium  = initium;
+    lexema.offset_finis    = finis;
 
     redde lexema;
 }
 
 interior SputnikLexema
-_creare_lexema_simplex(SputnikLexator* lex, SputnikLexemaGenus genus, i32 mensura)
+_creare_lexema_simplex (
+        SputnikLexator* lex,
+    SputnikLexemaGenus  genus,
+                   i32  mensura)
 {
     SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
+              i32 initium;
+              i32 linea;
+              i32 columna;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     _progredi(lex, mensura);
 
@@ -193,19 +213,20 @@ _creare_lexema_simplex(SputnikLexator* lex, SputnikLexemaGenus genus, i32 mensur
  * ================================================== */
 
 interior SputnikLexema
-_legere_identificator(SputnikLexator* lex)
+_legere_identificator (
+    SputnikLexator* lex)
 {
-    SputnikLexema lexema;
+         SputnikLexema lexema;
     SputnikLexemaGenus genus;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
-    character post;
+                   i32 initium;
+                   i32 linea;
+                   i32 columna;
+             character c;
+             character post;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Primus character iam validatus */
     _progredi(lex, I);
@@ -258,18 +279,19 @@ _legere_identificator(SputnikLexator* lex)
  * ================================================== */
 
 interior SputnikLexema
-_legere_numerum(SputnikLexator* lex)
+_legere_numerum (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
-    character post;
+              i32 initium;
+              i32 linea;
+              i32 columna;
+        character c;
+        character post;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Legere digitos cum underscore */
     dum (!_finis(lex))
@@ -365,7 +387,8 @@ _legere_numerum(SputnikLexator* lex)
  * Redde: character realis vel -1 si ignotus
  */
 interior s32
-_convertere_effugium(character c)
+_convertere_effugium (
+    character c)
 {
     commutatio (c)
     {
@@ -388,24 +411,25 @@ _convertere_effugium(character c)
  * ================================================== */
 
 interior SputnikLexema
-_legere_chordam(SputnikLexator* lex)
+_legere_chordam (
+    SputnikLexator* lex)
 {
-    SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character quota;
-    character c;
-    character c2;
-    s32 effugium;
-    character* buffer;
-    i32 buffer_cap;
-    i32 buffer_len;
-    i8* resultus;
+    SputnikLexema  lexema;
+              i32  initium;
+              i32  linea;
+              i32  columna;
+        character  quota;
+        character  c;
+        character  c2;
+              s32  effugium;
+        character* buffer;
+              i32  buffer_cap;
+              i32  buffer_len;
+               i8* resultus;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Memorare quota character */
     quota = _aspicere(lex, ZEPHYRUM);
@@ -414,8 +438,8 @@ _legere_chordam(SputnikLexator* lex)
     /* Allocare buffer pro chorda processata
      * Capacitas maxima est longitudo fontis residua
      */
-    buffer_cap = lex->fons.mensura - lex->positus;
-    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    buffer_cap  = lex->fons.mensura - lex->positus;
+    buffer      = piscina_allocare(lex->piscina, buffer_cap);
     si (buffer == NIHIL)
     {
         lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
@@ -451,20 +475,20 @@ _legere_chordam(SputnikLexator* lex)
                 resultus = NIHIL;
             }
 
-            lexema.genus = SPUTNIK_LEXEMA_CHORDA;
-            lexema.valor.datum = resultus;
-            lexema.valor.mensura = buffer_len;
-            lexema.linea = linea;
-            lexema.columna = columna;
-            lexema.offset_initium = initium;
-            lexema.offset_finis = lex->positus;
+            lexema.genus           = SPUTNIK_LEXEMA_CHORDA;
+            lexema.valor.datum     = resultus;
+            lexema.valor.mensura   = buffer_len;
+            lexema.linea           = linea;
+            lexema.columna         = columna;
+            lexema.offset_initium  = initium;
+            lexema.offset_finis    = lex->positus;
             redde lexema;
         }
         alioquin si (c == '\\')
         {
             /* Processare effugium */
-            c2 = _aspicere(lex, I);
-            effugium = _convertere_effugium(c2);
+            c2        = _aspicere(lex, I);
+            effugium  = _convertere_effugium(c2);
             si (effugium >= ZEPHYRUM)
             {
                 buffer[buffer_len++] = (character)effugium;
@@ -500,30 +524,31 @@ _legere_chordam(SputnikLexator* lex)
  * ================================================== */
 
 interior SputnikLexema
-_legere_template(SputnikLexator* lex)
+_legere_template (
+    SputnikLexator* lex)
 {
-    SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
-    character c2;
-    s32 effugium;
-    character* buffer;
-    i32 buffer_cap;
-    i32 buffer_len;
-    i8* resultus;
+    SputnikLexema  lexema;
+              i32  initium;
+              i32  linea;
+              i32  columna;
+        character  c;
+        character  c2;
+              s32  effugium;
+        character* buffer;
+              i32  buffer_cap;
+              i32  buffer_len;
+               i8* resultus;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Skip ` aperiens */
     _progredi(lex, I);
 
     /* Allocare buffer pro contentis processatis */
-    buffer_cap = lex->fons.mensura - lex->positus;
-    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    buffer_cap  = lex->fons.mensura - lex->positus;
+    buffer      = piscina_allocare(lex->piscina, buffer_cap);
     si (buffer == NIHIL)
     {
         lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
@@ -535,8 +560,8 @@ _legere_template(SputnikLexator* lex)
     /* Legere usque ad ` claudens vel ${ */
     dum (!_finis(lex))
     {
-        c = _aspicere(lex, ZEPHYRUM);
-        c2 = _aspicere(lex, I);
+        c   = _aspicere(lex, ZEPHYRUM);
+        c2  = _aspicere(lex, I);
 
         si (c == '`')
         {
@@ -557,13 +582,13 @@ _legere_template(SputnikLexator* lex)
                 resultus = NIHIL;
             }
 
-            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX;
-            lexema.valor.datum = resultus;
-            lexema.valor.mensura = buffer_len;
-            lexema.linea = linea;
-            lexema.columna = columna;
-            lexema.offset_initium = initium;
-            lexema.offset_finis = lex->positus + I;
+            lexema.genus           = SPUTNIK_LEXEMA_TEMPLATE_SIMPLEX;
+            lexema.valor.datum     = resultus;
+            lexema.valor.mensura   = buffer_len;
+            lexema.linea           = linea;
+            lexema.columna         = columna;
+            lexema.offset_initium  = initium;
+            lexema.offset_finis    = lex->positus + I;
             _progredi(lex, I);  /* Skip ` claudens */
             redde lexema;
         }
@@ -586,13 +611,13 @@ _legere_template(SputnikLexator* lex)
                 resultus = NIHIL;
             }
 
-            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_INITIUM;
-            lexema.valor.datum = resultus;
-            lexema.valor.mensura = buffer_len;
-            lexema.linea = linea;
-            lexema.columna = columna;
-            lexema.offset_initium = initium;
-            lexema.offset_finis = lex->positus + II;
+            lexema.genus           = SPUTNIK_LEXEMA_TEMPLATE_INITIUM;
+            lexema.valor.datum     = resultus;
+            lexema.valor.mensura   = buffer_len;
+            lexema.linea           = linea;
+            lexema.columna         = columna;
+            lexema.offset_initium  = initium;
+            lexema.offset_finis    = lex->positus + II;
             _progredi(lex, II);  /* Skip ${ */
             lex->template_profunditas++;
             redde lexema;
@@ -625,33 +650,33 @@ _legere_template(SputnikLexator* lex)
     redde lexema;
 }
 
-
 /* Legere continuationem template post } */
 interior SputnikLexema
-_legere_template_continuatio(SputnikLexator* lex)
+_legere_template_continuatio (
+    SputnikLexator* lex)
 {
-    SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
-    character c2;
-    s32 effugium;
-    character* buffer;
-    i32 buffer_cap;
-    i32 buffer_len;
-    i8* resultus;
+    SputnikLexema  lexema;
+              i32  initium;
+              i32  linea;
+              i32  columna;
+        character  c;
+        character  c2;
+              s32  effugium;
+        character* buffer;
+              i32  buffer_cap;
+              i32  buffer_len;
+               i8* resultus;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Skip } claudens interpolationem */
     _progredi(lex, I);
 
     /* Allocare buffer pro contentis processatis */
-    buffer_cap = lex->fons.mensura - lex->positus;
-    buffer = piscina_allocare(lex->piscina, buffer_cap);
+    buffer_cap  = lex->fons.mensura - lex->positus;
+    buffer      = piscina_allocare(lex->piscina, buffer_cap);
     si (buffer == NIHIL)
     {
         lexema = _creare_lexema(lex, SPUTNIK_LEXEMA_ERROR,
@@ -663,8 +688,8 @@ _legere_template_continuatio(SputnikLexator* lex)
     /* Legere usque ad ` claudens vel ${ */
     dum (!_finis(lex))
     {
-        c = _aspicere(lex, ZEPHYRUM);
-        c2 = _aspicere(lex, I);
+        c   = _aspicere(lex, ZEPHYRUM);
+        c2  = _aspicere(lex, I);
 
         si (c == '`')
         {
@@ -685,13 +710,13 @@ _legere_template_continuatio(SputnikLexator* lex)
                 resultus = NIHIL;
             }
 
-            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_FINIS;
-            lexema.valor.datum = resultus;
-            lexema.valor.mensura = buffer_len;
-            lexema.linea = linea;
-            lexema.columna = columna;
-            lexema.offset_initium = initium;
-            lexema.offset_finis = lex->positus + I;
+            lexema.genus           = SPUTNIK_LEXEMA_TEMPLATE_FINIS;
+            lexema.valor.datum     = resultus;
+            lexema.valor.mensura   = buffer_len;
+            lexema.linea           = linea;
+            lexema.columna         = columna;
+            lexema.offset_initium  = initium;
+            lexema.offset_finis    = lex->positus + I;
             _progredi(lex, I);  /* Skip ` claudens */
             lex->template_profunditas--;
             redde lexema;
@@ -715,13 +740,13 @@ _legere_template_continuatio(SputnikLexator* lex)
                 resultus = NIHIL;
             }
 
-            lexema.genus = SPUTNIK_LEXEMA_TEMPLATE_MEDIUM;
-            lexema.valor.datum = resultus;
-            lexema.valor.mensura = buffer_len;
-            lexema.linea = linea;
-            lexema.columna = columna;
-            lexema.offset_initium = initium;
-            lexema.offset_finis = lex->positus + II;
+            lexema.genus           = SPUTNIK_LEXEMA_TEMPLATE_MEDIUM;
+            lexema.valor.datum     = resultus;
+            lexema.valor.mensura   = buffer_len;
+            lexema.linea           = linea;
+            lexema.columna         = columna;
+            lexema.offset_initium  = initium;
+            lexema.offset_finis    = lex->positus + II;
             _progredi(lex, II);  /* Skip ${ */
             /* template_profunditas manet eodem - sumus adhuc in eadem template */
             redde lexema;
@@ -760,18 +785,19 @@ _legere_template_continuatio(SputnikLexator* lex)
  * ================================================== */
 
 interior SputnikLexema
-_legere_signum(SputnikLexator* lex)
+_legere_signum (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
-    character post;
+              i32 initium;
+              i32 linea;
+              i32 columna;
+        character c;
+        character post;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Skip # */
     _progredi(lex, I);
@@ -830,17 +856,18 @@ _legere_signum(SputnikLexator* lex)
  * ================================================== */
 
 interior SputnikLexema
-_legere_commentum_linea(SputnikLexator* lex)
+_legere_commentum_linea (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
+              i32 initium;
+              i32 linea;
+              i32 columna;
+        character c;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Skip // */
     _progredi(lex, II);
@@ -862,17 +889,18 @@ _legere_commentum_linea(SputnikLexator* lex)
 }
 
 interior SputnikLexema
-_legere_commentum_bloc(SputnikLexator* lex)
+_legere_commentum_bloc (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    i32 initium;
-    i32 linea;
-    i32 columna;
-    character c;
+              i32 initium;
+              i32 linea;
+              i32 columna;
+        character c;
 
-    initium = lex->positus;
-    linea = lex->linea;
-    columna = lex->columna;
+    initium  = lex->positus;
+    linea    = lex->linea;
+    columna  = lex->columna;
 
     /* Skip opening block comment */
     _progredi(lex, II);
@@ -903,9 +931,9 @@ _legere_commentum_bloc(SputnikLexator* lex)
  * ================================================== */
 
 SputnikLexator*
-sputnik_lexator_creare(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_lexator_creare (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     SputnikLexator* lex;
@@ -921,22 +949,22 @@ sputnik_lexator_creare(
         redde NIHIL;
     }
 
-    lex->fons = fons;
-    lex->positus = ZEPHYRUM;
-    lex->linea = I;
-    lex->columna = I;
-    lex->piscina = piscina;
-    lex->intern = intern;
-    lex->template_profunditas = ZEPHYRUM;
-    lex->bracchium_profunditas = ZEPHYRUM;
+    lex->fons                   = fons;
+    lex->positus                = ZEPHYRUM;
+    lex->linea                  = I;
+    lex->columna                = I;
+    lex->piscina                = piscina;
+    lex->intern                 = intern;
+    lex->template_profunditas   = ZEPHYRUM;
+    lex->bracchium_profunditas  = ZEPHYRUM;
 
     redde lex;
 }
 
 SputnikLexator*
-sputnik_lexator_creare_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_lexator_creare_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     chorda ch;
@@ -951,12 +979,13 @@ sputnik_lexator_creare_ex_literis(
  * ================================================== */
 
 SputnikLexema
-sputnik_lexator_legere(SputnikLexator* lex)
+sputnik_lexator_legere (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    character c;
-    character c2;
-    character c3;
+        character c;
+        character c2;
+        character c3;
 
     /* Skip spatium */
     _praeterire_spatium(lex);
@@ -964,19 +993,19 @@ sputnik_lexator_legere(SputnikLexator* lex)
     /* Verificare finem */
     si (_finis(lex))
     {
-        lexema.genus = SPUTNIK_LEXEMA_FINIS;
-        lexema.valor.datum = NIHIL;
-        lexema.valor.mensura = ZEPHYRUM;
-        lexema.linea = lex->linea;
-        lexema.columna = lex->columna;
-        lexema.offset_initium = lex->positus;
-        lexema.offset_finis = lex->positus;
+        lexema.genus           = SPUTNIK_LEXEMA_FINIS;
+        lexema.valor.datum     = NIHIL;
+        lexema.valor.mensura   = ZEPHYRUM;
+        lexema.linea           = lex->linea;
+        lexema.columna         = lex->columna;
+        lexema.offset_initium  = lex->positus;
+        lexema.offset_finis    = lex->positus;
         redde lexema;
     }
 
-    c = _aspicere(lex, ZEPHYRUM);
-    c2 = _aspicere(lex, I);
-    c3 = _aspicere(lex, II);
+    c   = _aspicere(lex, ZEPHYRUM);
+    c2  = _aspicere(lex, I);
+    c3  = _aspicere(lex, II);
 
     /* Identificator */
     si (_est_identificator_initium(c))
@@ -1021,8 +1050,8 @@ sputnik_lexator_legere(SputnikLexator* lex)
     /* Continuatio template post interpolationem
      * Solum si bracchium_profunditas == 0, alioquin est } normalis
      */
-    si (c == '}' && lex->template_profunditas > ZEPHYRUM
-                 && lex->bracchium_profunditas == ZEPHYRUM)
+    si (   c                          == '}' && lex->template_profunditas > ZEPHYRUM
+        && lex->bracchium_profunditas == ZEPHYRUM)
     {
         redde _legere_template_continuatio(lex);
     }
@@ -1169,8 +1198,8 @@ sputnik_lexator_legere(SputnikLexator* lex)
             }
             redde _creare_lexema_simplex(lex, SPUTNIK_LEXEMA_BRACCHIUM_A, I);
         casus '}':
-            si (lex->template_profunditas > ZEPHYRUM &&
-                lex->bracchium_profunditas > ZEPHYRUM)
+            si (   lex->template_profunditas > ZEPHYRUM
+                && lex->bracchium_profunditas > ZEPHYRUM)
             {
                 lex->bracchium_profunditas--;
             }
@@ -1199,31 +1228,33 @@ sputnik_lexator_legere(SputnikLexator* lex)
 }
 
 SputnikLexema
-sputnik_lexator_aspicere(SputnikLexator* lex)
+sputnik_lexator_aspicere (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
-    i32 positus_salvatus;
-    i32 linea_salvata;
-    i32 columna_salvata;
+              i32 positus_salvatus;
+              i32 linea_salvata;
+              i32 columna_salvata;
 
     /* Salvare statum */
-    positus_salvatus = lex->positus;
-    linea_salvata = lex->linea;
-    columna_salvata = lex->columna;
+    positus_salvatus  = lex->positus;
+    linea_salvata     = lex->linea;
+    columna_salvata   = lex->columna;
 
     /* Legere */
     lexema = sputnik_lexator_legere(lex);
 
     /* Restaurare statum */
-    lex->positus = positus_salvatus;
-    lex->linea = linea_salvata;
-    lex->columna = columna_salvata;
+    lex->positus  = positus_salvatus;
+    lex->linea    = linea_salvata;
+    lex->columna  = columna_salvata;
 
     redde lexema;
 }
 
 b32
-sputnik_lexator_finis(SputnikLexator* lex)
+sputnik_lexator_finis (
+    SputnikLexator* lex)
 {
     SputnikLexema lexema;
     lexema = sputnik_lexator_aspicere(lex);
@@ -1236,22 +1267,22 @@ sputnik_lexator_finis(SputnikLexator* lex)
  * ================================================== */
 
 SputnikLexatorResultus
-sputnik_lexicare(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_lexicare (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
-    SputnikLexatorResultus resultus;
-    SputnikLexator* lex;
-    SputnikLexema lexema;
-    SputnikLexema* ptr;
+    SputnikLexatorResultus  resultus;
+            SputnikLexator* lex;
+             SputnikLexema  lexema;
+             SputnikLexema* ptr;
 
-    resultus.successus = FALSUM;
-    resultus.lexemata = NIHIL;
-    resultus.error_nuntius.datum = NIHIL;
-    resultus.error_nuntius.mensura = ZEPHYRUM;
-    resultus.error_linea = ZEPHYRUM;
-    resultus.error_columna = ZEPHYRUM;
+    resultus.successus              = FALSUM;
+    resultus.lexemata               = NIHIL;
+    resultus.error_nuntius.datum    = NIHIL;
+    resultus.error_nuntius.mensura  = ZEPHYRUM;
+    resultus.error_linea            = ZEPHYRUM;
+    resultus.error_columna          = ZEPHYRUM;
 
     lex = sputnik_lexator_creare(fons, piscina, intern);
     si (lex == NIHIL)
@@ -1271,13 +1302,13 @@ sputnik_lexicare(
 
         si (lexema.genus == SPUTNIK_LEXEMA_ERROR)
         {
-            resultus.error_linea = lexema.linea;
-            resultus.error_columna = lexema.columna;
+            resultus.error_linea    = lexema.linea;
+            resultus.error_columna  = lexema.columna;
             redde resultus;
         }
 
-        ptr = xar_addere(resultus.lexemata);
-        *ptr = lexema;
+        ptr   = xar_addere(resultus.lexemata);
+        *ptr  = lexema;
 
         si (lexema.genus == SPUTNIK_LEXEMA_FINIS)
         {
@@ -1290,9 +1321,9 @@ sputnik_lexicare(
 }
 
 SputnikLexatorResultus
-sputnik_lexicare_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_lexicare_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     chorda ch;
@@ -1306,7 +1337,8 @@ sputnik_lexicare_ex_literis(
  * ================================================== */
 
 constans character*
-sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
+sputnik_lexema_genus_nomen (
+    SputnikLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -1379,7 +1411,8 @@ sputnik_lexema_genus_nomen(SputnikLexemaGenus genus)
 }
 
 vacuum
-sputnik_lexema_imprimere(SputnikLexema* lexema)
+sputnik_lexema_imprimere (
+    SputnikLexema* lexema)
 {
     imprimere("[%s", sputnik_lexema_genus_nomen(lexema->genus));
     si (lexema->valor.mensura > ZEPHYRUM)
@@ -1390,10 +1423,11 @@ sputnik_lexema_imprimere(SputnikLexema* lexema)
 }
 
 vacuum
-sputnik_lexemata_imprimere(Xar* lexemata)
+sputnik_lexemata_imprimere (
+    Xar* lexemata)
 {
-    i32 i;
-    i32 numerus;
+              i32  i;
+              i32  numerus;
     SputnikLexema* lexema;
 
     si (lexemata == NIHIL)

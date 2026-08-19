@@ -14,13 +14,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 /* ============================================================
  * Functiones Internae
  * ============================================================ */
 
 /* Comparator pro sortare alphabetice per titulum */
 hic_manens s32
-_comparare_imagines(constans vacuum* a, constans vacuum* b)
+_comparare_imagines (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     constans ImagoInfo* ia;
     constans ImagoInfo* ib;
@@ -46,9 +49,9 @@ _comparare_imagines(constans vacuum* a, constans vacuum* b)
         memoriae_index len_a, len_b, min_len;
         s32 cmp;
 
-        len_a = ia->titulus.mensura;
-        len_b = ib->titulus.mensura;
-        min_len = len_a < len_b ? len_a : len_b;
+        len_a    = ia->titulus.mensura;
+        len_b    = ib->titulus.mensura;
+        min_len  = len_a < len_b ? len_a : len_b;
 
         cmp = memcmp(ia->titulus.datum, ib->titulus.datum, min_len);
         si (cmp != 0)
@@ -61,20 +64,21 @@ _comparare_imagines(constans vacuum* a, constans vacuum* b)
 
 /* Carcare et cache-are imaginem selectam */
 hic_manens vacuum
-_carcare_imaginem_selectam(PinacothecaVisus* visus)
+_carcare_imaginem_selectam (
+    PinacothecaVisus* visus)
 {
     ImagoInfo* info;
-    Entitas* entitas;
-    chorda* clavis_datum;
-    i32 mensura_blob;
+      Entitas* entitas;
+       chorda* clavis_datum;
+          i32  mensura_blob;
 
-    si (visus->imagines == NIHIL ||
-        visus->index_selecta < 0 ||
-        (i32)visus->index_selecta >= xar_numerus(visus->imagines))
+    si (   visus->imagines           == NIHIL
+        || visus->index_selecta < 0
+        || (i32)visus->index_selecta >= xar_numerus(visus->imagines))
     {
-        visus->datum_cache = NIHIL;
-        visus->cache_latitudo = 0;
-        visus->cache_altitudo = 0;
+        visus->datum_cache     = NIHIL;
+        visus->cache_latitudo  = 0;
+        visus->cache_altitudo  = 0;
         redde;
     }
 
@@ -85,8 +89,8 @@ _carcare_imaginem_selectam(PinacothecaVisus* visus)
     }
 
     /* Verificare si iam in cache */
-    si (visus->cache_id.datum != NIHIL &&
-        chorda_aequalis(visus->cache_id, info->id))
+    si (   visus->cache_id.datum != NIHIL
+        && chorda_aequalis(visus->cache_id, info->id))
     {
         redde;
     }
@@ -113,31 +117,31 @@ _carcare_imaginem_selectam(PinacothecaVisus* visus)
             &mensura_blob,
             visus->piscina))
     {
-        visus->cache_latitudo = info->latitudo;
-        visus->cache_altitudo = info->altitudo;
-        visus->cache_id = info->id;
+        visus->cache_latitudo  = info->latitudo;
+        visus->cache_altitudo  = info->altitudo;
+        visus->cache_id        = info->id;
     }
     alioquin
     {
-        visus->datum_cache = NIHIL;
-        visus->cache_latitudo = 0;
-        visus->cache_altitudo = 0;
-        visus->cache_id.datum = NIHIL;  /* Clear cache_id so we retry */
-        visus->cache_id.mensura = 0;
+        visus->datum_cache       = NIHIL;
+        visus->cache_latitudo    = 0;
+        visus->cache_altitudo    = 0;
+        visus->cache_id.datum    = NIHIL;  /* Clear cache_id so we retry */
+        visus->cache_id.mensura  = 0;
     }
 }
 
 /* Reddere lista in browser mode */
 hic_manens vacuum
-_reddere_lista(
+_reddere_lista (
     PinacothecaVisus* visus,
-    TabulaPixelorum*  tabula,
-    i32               x,
-    i32               y,
-    i32               latitudo,
-    i32               altitudo,
-    i32               scala,
-    b32               focused)
+     TabulaPixelorum* tabula,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  altitudo,
+                 i32  scala,
+                 b32  focused)
 {
     i32 char_w, char_h;
     i32 px, py;
@@ -149,15 +153,15 @@ _reddere_lista(
 
     (vacuum)focused;
 
-    char_w = VI * scala;
-    char_h = VIII * scala;
-    px = x * char_w;
-    py = y * char_h;
+    char_w  = VI * scala;
+    char_h  = VIII * scala;
+    px      = x * char_w;
+    py      = y * char_h;
 
-    color_text = color_ad_pixelum(thema_color(COLOR_TEXT));
-    color_text_dim = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
-    color_selecta_fg = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
-    color_selecta_bg = color_ad_pixelum(thema_color(COLOR_TEXT));
+    color_text        = color_ad_pixelum(thema_color(COLOR_TEXT));
+    color_text_dim    = color_ad_pixelum(thema_color(COLOR_TEXT_DIM));
+    color_selecta_fg  = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    color_selecta_bg  = color_ad_pixelum(thema_color(COLOR_TEXT));
 
     max_lineae = altitudo - II;  /* Reservare spatium pro header */
     si (max_lineae < I)
@@ -169,7 +173,7 @@ _reddere_lista(
 
     /* Header */
     {
-        chorda header;
+           chorda header;
         character buf[LXIV];
         sprintf(buf, "Imagines (%d)", (i32)num_imagines);
         header = chorda_ex_literis(buf, visus->piscina);
@@ -185,9 +189,9 @@ _reddere_lista(
          i++, linea++)
     {
         ImagoInfo* info;
-        i32 line_y;
-        b32 selecta;
-        chorda titulus_display;
+              i32  line_y;
+              b32  selecta;
+           chorda  titulus_display;
 
         info = (ImagoInfo*)xar_obtinere(visus->imagines, (i32)i);
         si (info == NIHIL)
@@ -195,14 +199,14 @@ _reddere_lista(
             perge;
         }
 
-        line_y = py + (linea + II) * char_h;
-        selecta = ((s32)i == visus->index_selecta);
+        line_y   = py + (linea + II) * char_h;
+        selecta  = ((s32)i == visus->index_selecta);
 
         /* Truncare titulum si necessarium */
         si (latitudo > III && info->titulus.mensura > latitudo - III)
         {
-            titulus_display.datum = info->titulus.datum;
-            titulus_display.mensura = latitudo - III;
+            titulus_display.datum    = info->titulus.datum;
+            titulus_display.mensura  = latitudo - III;
         }
         alioquin
         {
@@ -225,8 +229,8 @@ _reddere_lista(
                     i32 dest_x, dest_y;
                     dest_x = px + rect_x;
                     dest_y = line_y + rect_y;
-                    si (dest_x >= 0 && dest_x < (i32)tabula->latitudo &&
-                        dest_y >= 0 && dest_y < (i32)tabula->altitudo)
+                    si (   dest_x >= 0 && dest_x < (i32)tabula->latitudo
+                        && dest_y >= 0 && dest_y < (i32)tabula->altitudo)
                     {
                         tabula->pixela[dest_y * (i32)tabula->latitudo + dest_x] = color_selecta_bg;
                     }
@@ -264,29 +268,29 @@ _reddere_lista(
 
 /* Reddere preview in browser mode */
 hic_manens vacuum
-_reddere_preview(
+_reddere_preview (
     PinacothecaVisus* visus,
-    TabulaPixelorum*  tabula,
-    i32               x,
-    i32               y,
-    i32               latitudo,
-    i32               altitudo,
-    i32               scala)
+     TabulaPixelorum* tabula,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  altitudo,
+                 i32  scala)
 {
     i32 char_w, char_h;
     i32 px, py, pw, ph;
     i32 dest_x, dest_y;
 
-    char_w = VI * scala;
-    char_h = VIII * scala;
-    px = x * char_w;
-    py = y * char_h;
-    pw = latitudo * char_w;
-    ph = altitudo * char_h;
+    char_w  = VI * scala;
+    char_h  = VIII * scala;
+    px      = x * char_w;
+    py      = y * char_h;
+    pw      = latitudo * char_w;
+    ph      = altitudo * char_h;
 
-    si (visus->datum_cache == NIHIL ||
-        visus->cache_latitudo <= 0 ||
-        visus->cache_altitudo <= 0)
+    si (   visus->datum_cache    == NIHIL
+        || visus->cache_latitudo <= 0
+        || visus->cache_altitudo <= 0)
     {
         /* Monstrare "Nulla imago" */
         chorda msg;
@@ -309,17 +313,17 @@ _reddere_preview(
         f32 scale_x, scale_y, scale_factor;
 
         /* Reservare spatium pro info text */
-        info_space = char_h * 2;
-        available_h = ph - info_space;
+        info_space   = char_h * 2;
+        available_h  = ph - info_space;
         si (available_h < 1)
         {
             available_h = 1;
         }
 
         /* Calculare scale factor ad fit (maintain aspect ratio) */
-        scale_x = (f32)pw / (f32)visus->cache_latitudo;
-        scale_y = (f32)available_h / (f32)visus->cache_altitudo;
-        scale_factor = scale_x < scale_y ? scale_x : scale_y;
+        scale_x       = (f32)pw / (f32)visus->cache_latitudo;
+        scale_y       = (f32)available_h / (f32)visus->cache_altitudo;
+        scale_factor  = scale_x < scale_y ? scale_x : scale_y;
 
         /* Non magnificare ultra 1.0 */
         si (scale_factor > 1.0f)
@@ -361,8 +365,8 @@ _reddere_preview(
                         src_y = visus->cache_altitudo - 1;
                     }
 
-                    src_idx = src_y * visus->cache_latitudo + src_x;
-                    index = visus->datum_cache[src_idx];
+                    src_idx  = src_y * visus->cache_latitudo + src_x;
+                    index    = visus->datum_cache[src_idx];
 
                     /* Capere colorem ex palette */
                     dithering_color_ex_indice((s32)index, &r, &g, &b);
@@ -370,8 +374,8 @@ _reddere_preview(
                     dx = dest_x + out_x;
                     dy = dest_y + out_y;
 
-                    si (dx >= 0 && dx < (i32)tabula->latitudo &&
-                        dy >= 0 && dy < (i32)tabula->altitudo)
+                    si (   dx >= 0 && dx < (i32)tabula->latitudo
+                        && dy >= 0 && dy < (i32)tabula->altitudo)
                     {
                         tabula->pixela[dy * (i32)tabula->latitudo + dx] =
                             (i32)RGB((insignatus character)r,
@@ -385,12 +389,12 @@ _reddere_preview(
         /* Info sub imagine */
         {
             ImagoInfo* info;
-            chorda info_str;
-            character buf[CXXVIII];
-            i32 info_y;
+               chorda  info_str;
+            character  buf[CXXVIII];
+                  i32  info_y;
 
-            si (visus->index_selecta >= 0 &&
-                (i32)visus->index_selecta < xar_numerus(visus->imagines))
+            si (   visus->index_selecta >= 0
+                && (i32)visus->index_selecta < xar_numerus(visus->imagines))
             {
                 info = (ImagoInfo*)xar_obtinere(visus->imagines, (i32)visus->index_selecta);
                 si (info != NIHIL)
@@ -398,8 +402,8 @@ _reddere_preview(
                     sprintf(buf, "%.*s (%dx%d)",
                         (i32)info->titulus.mensura, info->titulus.datum,
                         info->latitudo, info->altitudo);
-                    info_str = chorda_ex_literis(buf, visus->piscina);
-                    info_y = dest_y + scaled_h + char_h / 2;
+                    info_str  = chorda_ex_literis(buf, visus->piscina);
+                    info_y    = dest_y + scaled_h + char_h / 2;
                     si (info_y < py + ph - char_h)
                     {
                         tabula_pixelorum_pingere_chordam_scalatam(
@@ -418,29 +422,29 @@ _reddere_preview(
 
 /* Reddere modus visus (plena imago) */
 hic_manens vacuum
-_reddere_visus(
+_reddere_visus (
     PinacothecaVisus* visus,
-    TabulaPixelorum*  tabula,
-    i32               x,
-    i32               y,
-    i32               latitudo,
-    i32               altitudo,
-    i32               scala)
+     TabulaPixelorum* tabula,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  altitudo,
+                 i32  scala)
 {
     i32 char_w, char_h;
     i32 px, py, pw, ph;
     i32 dest_x, dest_y;
 
-    char_w = VI * scala;
-    char_h = VIII * scala;
-    px = x * char_w;
-    py = y * char_h;
-    pw = latitudo * char_w;
-    ph = altitudo * char_h;
+    char_w  = VI * scala;
+    char_h  = VIII * scala;
+    px      = x * char_w;
+    py      = y * char_h;
+    pw      = latitudo * char_w;
+    ph      = altitudo * char_h;
 
-    si (visus->datum_cache == NIHIL ||
-        visus->cache_latitudo <= 0 ||
-        visus->cache_altitudo <= 0)
+    si (   visus->datum_cache    == NIHIL
+        || visus->cache_latitudo <= 0
+        || visus->cache_altitudo <= 0)
     {
         chorda msg;
         msg = chorda_ex_literis("(nulla imago)", visus->piscina);
@@ -460,9 +464,9 @@ _reddere_visus(
         f32 scale_x, scale_y, scale_factor;
 
         /* Calculare scale factor ad fit (maintain aspect ratio) */
-        scale_x = (f32)pw / (f32)visus->cache_latitudo;
-        scale_y = (f32)ph / (f32)visus->cache_altitudo;
-        scale_factor = scale_x < scale_y ? scale_x : scale_y;
+        scale_x       = (f32)pw / (f32)visus->cache_latitudo;
+        scale_y       = (f32)ph / (f32)visus->cache_altitudo;
+        scale_factor  = scale_x < scale_y ? scale_x : scale_y;
 
         /* Non magnificare ultra 1.0 - monstrare ad dimensiones originales */
         si (scale_factor > 1.0f)
@@ -504,16 +508,16 @@ _reddere_visus(
                         src_y = visus->cache_altitudo - 1;
                     }
 
-                    src_idx = src_y * visus->cache_latitudo + src_x;
-                    index = visus->datum_cache[src_idx];
+                    src_idx  = src_y * visus->cache_latitudo + src_x;
+                    index    = visus->datum_cache[src_idx];
 
                     dithering_color_ex_indice((s32)index, &r, &g, &b);
 
                     dx = dest_x + out_x;
                     dy = dest_y + out_y;
 
-                    si (dx >= 0 && dx < (i32)tabula->latitudo &&
-                        dy >= 0 && dy < (i32)tabula->altitudo)
+                    si (   dx >= 0 && dx < (i32)tabula->latitudo
+                        && dy >= 0 && dy < (i32)tabula->altitudo)
                     {
                         tabula->pixela[dy * (i32)tabula->latitudo + dx] =
                             (i32)RGB((insignatus character)r,
@@ -528,7 +532,8 @@ _reddere_visus(
 
 /* Command handlers */
 hic_manens b32
-_pinacotheca_command_handler(ContextusCommandi* ctx)
+_pinacotheca_command_handler (
+    ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
 
@@ -548,13 +553,14 @@ _pinacotheca_command_handler(ContextusCommandi* ctx)
 }
 
 hic_manens b32
-_image_command_handler(ContextusCommandi* ctx)
+_image_command_handler (
+    ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
-    character argumentum[CXXVIII];
-    i32 idx;
-    i32 col;
-    character c;
+          character  argumentum[CXXVIII];
+                i32  idx;
+                i32  col;
+          character  c;
 
     widget_ctx = (ContextusWidget*)ctx->datum_registratus;
     si (!widget_ctx || !widget_ctx->commutare_widget)
@@ -590,7 +596,8 @@ _image_command_handler(ContextusCommandi* ctx)
  * ============================================================ */
 
 PinacothecaVisus*
-pinacotheca_visus_creare(ContextusWidget* ctx)
+pinacotheca_visus_creare (
+    ContextusWidget* ctx)
 {
     PinacothecaVisus* visus;
 
@@ -605,25 +612,25 @@ pinacotheca_visus_creare(ContextusWidget* ctx)
         redde NIHIL;
     }
 
-    visus->piscina = ctx->piscina;
-    visus->ctx = ctx;
+    visus->piscina  = ctx->piscina;
+    visus->ctx      = ctx;
 
-    visus->imagines = NIHIL;
-    visus->index_selecta = 0;
-    visus->index_paginae = 0;
-    visus->modus = PINACOTHECA_MODUS_BROWSER;
+    visus->imagines       = NIHIL;
+    visus->index_selecta  = 0;
+    visus->index_paginae  = 0;
+    visus->modus          = PINACOTHECA_MODUS_BROWSER;
 
-    visus->datum_cache = NIHIL;
-    visus->cache_latitudo = 0;
-    visus->cache_altitudo = 0;
-    visus->cache_id.datum = NIHIL;
-    visus->cache_id.mensura = 0;
+    visus->datum_cache       = NIHIL;
+    visus->cache_latitudo    = 0;
+    visus->cache_altitudo    = 0;
+    visus->cache_id.datum    = NIHIL;
+    visus->cache_id.mensura  = 0;
 
-    visus->confirmare_delere = FALSUM;
-    visus->renominare_activum = FALSUM;
-    visus->novum_nomen.datum = NIHIL;
-    visus->novum_nomen.mensura = 0;
-    visus->novum_nomen_cursor = 0;
+    visus->confirmare_delere    = FALSUM;
+    visus->renominare_activum   = FALSUM;
+    visus->novum_nomen.datum    = NIHIL;
+    visus->novum_nomen.mensura  = 0;
+    visus->novum_nomen_cursor   = 0;
 
     /* Carcare imagines */
     pinacotheca_visus_reficere(visus);
@@ -632,15 +639,15 @@ pinacotheca_visus_creare(ContextusWidget* ctx)
 }
 
 vacuum
-pinacotheca_visus_reddere(
+pinacotheca_visus_reddere (
     PinacothecaVisus* visus,
-    TabulaPixelorum*  tabula,
-    i32               x,
-    i32               y,
-    i32               latitudo,
-    i32               altitudo,
-    i32               scala,
-    b32               focused)
+     TabulaPixelorum* tabula,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  altitudo,
+                 i32  scala,
+                 b32  focused)
 {
     si (visus == NIHIL || tabula == NIHIL)
     {
@@ -648,11 +655,11 @@ pinacotheca_visus_reddere(
     }
 
     /* Salvare dimensiones (cast i32 to s32) */
-    visus->widget_x = (s32)x;
-    visus->widget_y = (s32)y;
-    visus->latitudo_characterum = (s32)latitudo;
-    visus->altitudo_linearum = (s32)altitudo;
-    visus->scala = (s32)scala;
+    visus->widget_x              = (s32)x;
+    visus->widget_y              = (s32)y;
+    visus->latitudo_characterum  = (s32)latitudo;
+    visus->altitudo_linearum     = (s32)altitudo;
+    visus->scala                 = (s32)scala;
 
     /* Carcare imaginem si necessarium */
     _carcare_imaginem_selectam(visus);
@@ -679,7 +686,7 @@ pinacotheca_visus_reddere(
 }
 
 b32
-pinacotheca_visus_tractare_eventum(
+pinacotheca_visus_tractare_eventum (
     PinacothecaVisus* visus,
     constans Eventus* eventus)
 {
@@ -811,9 +818,9 @@ pinacotheca_visus_tractare_eventum(
         }
 
         /* Ctrl+Shift+Arrows in visus mode: cycle images */
-        si (visus->modus == PINACOTHECA_MODUS_VISUS &&
-            (eventus->datum.clavis.modificantes & MOD_IMPERIUM) &&
-            (eventus->datum.clavis.modificantes & MOD_SHIFT))
+        si (   visus->modus == PINACOTHECA_MODUS_VISUS
+            && (eventus->datum.clavis.modificantes & MOD_IMPERIUM)
+            && (eventus->datum.clavis.modificantes & MOD_SHIFT))
         {
             /* Right: proxima imago */
             si (clavis == CLAVIS_DEXTER)
@@ -827,8 +834,8 @@ pinacotheca_visus_tractare_eventum(
                         visus->index_selecta = 0;
                     }
                     /* Invalidare cache */
-                    visus->datum_cache = NIHIL;
-                    visus->cache_id.datum = NIHIL;
+                    visus->datum_cache     = NIHIL;
+                    visus->cache_id.datum  = NIHIL;
                 }
                 redde VERUM;
             }
@@ -845,8 +852,8 @@ pinacotheca_visus_tractare_eventum(
                         visus->index_selecta = (s32)(num_imagines - 1);
                     }
                     /* Invalidare cache */
-                    visus->datum_cache = NIHIL;
-                    visus->cache_id.datum = NIHIL;
+                    visus->datum_cache     = NIHIL;
+                    visus->cache_id.datum  = NIHIL;
                 }
                 redde VERUM;
             }
@@ -871,7 +878,8 @@ pinacotheca_visus_tractare_eventum(
 }
 
 vacuum
-pinacotheca_visus_reficere(PinacothecaVisus* visus)
+pinacotheca_visus_reficere (
+    PinacothecaVisus* visus)
 {
     Xar* entitates;
     memoriae_index i, num;
@@ -888,24 +896,24 @@ pinacotheca_visus_reficere(PinacothecaVisus* visus)
 
     si (entitates == NIHIL)
     {
-        visus->imagines = NIHIL;
-        visus->index_selecta = 0;
-        visus->index_paginae = 0;
+        visus->imagines       = NIHIL;
+        visus->index_selecta  = 0;
+        visus->index_paginae  = 0;
         redde;
     }
 
     /* Creare lista ImagoInfo */
-    visus->imagines = xar_creare(visus->piscina, magnitudo(ImagoInfo));
-    num = xar_numerus(entitates);
+    visus->imagines  = xar_creare(visus->piscina, magnitudo(ImagoInfo));
+    num              = xar_numerus(entitates);
 
     per (i = 0; i < num; i++)
     {
-        Entitas* entitas;
+          Entitas* entitas;
         ImagoInfo* info;
-        chorda* clavis_titulus;
-        chorda* clavis_latitudo;
-        chorda* clavis_altitudo;
-        chorda* titulus_val;
+           chorda* clavis_titulus;
+           chorda* clavis_latitudo;
+           chorda* clavis_altitudo;
+           chorda* titulus_val;
         s32 lat_val, alt_val;
 
         entitas = *(Entitas**)xar_obtinere(entitates, (i32)i);
@@ -927,8 +935,8 @@ pinacotheca_visus_reficere(PinacothecaVisus* visus)
         }
         alioquin
         {
-            info->id.datum = NIHIL;
-            info->id.mensura = 0;
+            info->id.datum    = NIHIL;
+            info->id.mensura  = 0;
         }
 
         /* Titulus - clavis debet esse internata (pointer comparison!) */
@@ -940,8 +948,8 @@ pinacotheca_visus_reficere(PinacothecaVisus* visus)
         }
         alioquin
         {
-            info->titulus.datum = NIHIL;
-            info->titulus.mensura = 0;
+            info->titulus.datum    = NIHIL;
+            info->titulus.mensura  = 0;
         }
 
         /* Latitudo */
@@ -978,15 +986,15 @@ pinacotheca_visus_reficere(PinacothecaVisus* visus)
     visus->index_paginae = 0;
 
     /* Invalidare cache */
-    visus->datum_cache = NIHIL;
-    visus->cache_id.datum = NIHIL;
+    visus->datum_cache     = NIHIL;
+    visus->cache_id.datum  = NIHIL;
 
     fprintf(stderr, "Pinacotheca: %d imagines reficatae\n", (i32)xar_numerus(visus->imagines));
 }
 
 vacuum
-pinacotheca_visus_navigare_ad(
-    PinacothecaVisus*   visus,
+pinacotheca_visus_navigare_ad (
+      PinacothecaVisus* visus,
     constans character* titulus)
 {
     memoriae_index i, num;
@@ -997,28 +1005,29 @@ pinacotheca_visus_navigare_ad(
         redde;
     }
 
-    titulus_len = strlen(titulus);
-    num = xar_numerus(visus->imagines);
+    titulus_len  = strlen(titulus);
+    num          = xar_numerus(visus->imagines);
 
     per (i = 0; i < num; i++)
     {
         ImagoInfo* info;
         info = (ImagoInfo*)xar_obtinere(visus->imagines, (i32)i);
 
-        si (info != NIHIL &&
-            info->titulus.mensura == titulus_len &&
-            memcmp(info->titulus.datum, titulus, titulus_len) == 0)
+        si (   info != NIHIL
+            && info->titulus.mensura == titulus_len
+            && memcmp(info->titulus.datum, titulus, titulus_len) == 0)
         {
-            visus->index_selecta = (s32)i;
-            visus->index_paginae = (s32)i;
-            visus->modus = PINACOTHECA_MODUS_VISUS;
+            visus->index_selecta  = (s32)i;
+            visus->index_paginae  = (s32)i;
+            visus->modus          = PINACOTHECA_MODUS_VISUS;
             redde;
         }
     }
 }
 
 vacuum
-pinacotheca_visus_init(ContextusWidget* ctx)
+pinacotheca_visus_init (
+    ContextusWidget* ctx)
 {
     si (ctx == NIHIL || ctx->reg_commandi == NIHIL)
     {

@@ -10,15 +10,17 @@
 #include "chorda_aedificator.h"
 #include <stdio.h>
 
+
 /* ============================================================
  * Functiones Internae
  * ============================================================ */
 
 hic_manens vacuum
-_generare_titulum_defaltum(ImportatioVisus* visus)
+_generare_titulum_defaltum (
+    ImportatioVisus* visus)
 {
     ChordaAedificator* aed;
-    f64 nunc;
+                  f64  nunc;
 
     aed = chorda_aedificator_creare(visus->piscina, LXIV);
     si (aed == NIHIL)
@@ -35,7 +37,8 @@ _generare_titulum_defaltum(ImportatioVisus* visus)
 }
 
 hic_manens vacuum
-_praeparare_imaginem(ImportatioVisus* visus)
+_praeparare_imaginem (
+    ImportatioVisus* visus)
 {
     s32 src_w, src_h;
     s32 canvas_w, canvas_h;
@@ -51,19 +54,19 @@ _praeparare_imaginem(ImportatioVisus* visus)
         redde;
     }
 
-    src_w = (s32)visus->imago_originalis.latitudo;
-    src_h = (s32)visus->imago_originalis.altitudo;
-    canvas_w = (s32)visus->canvas_latitudo;
-    canvas_h = (s32)visus->canvas_altitudo;
+    src_w     = (s32)visus->imago_originalis.latitudo;
+    src_h     = (s32)visus->imago_originalis.altitudo;
+    canvas_w  = (s32)visus->canvas_latitudo;
+    canvas_h  = (s32)visus->canvas_altitudo;
 
     si (canvas_w < 1) canvas_w = 1;
     si (canvas_h < 1) canvas_h = 1;
 
     /* Compute base scale: at zoom=1.0, entire source fits in canvas */
     {
-        f32 scale_x = (f32)canvas_w / (f32)src_w;
-        f32 scale_y = (f32)canvas_h / (f32)src_h;
-        base_scale = (scale_x < scale_y) ? scale_x : scale_y;
+        f32 scale_x  = (f32)canvas_w / (f32)src_w;
+        f32 scale_y  = (f32)canvas_h / (f32)src_h;
+        base_scale   = (scale_x < scale_y) ? scale_x : scale_y;
     }
 
     /* Display scale = base * zoom (zoom magnifies the image) */
@@ -125,11 +128,12 @@ _praeparare_imaginem(ImportatioVisus* visus)
 }
 
 hic_manens vacuum
-_executare_dithering_internum(ImportatioVisus* visus)
+_executare_dithering_internum (
+    ImportatioVisus* visus)
 {
-    si (!visus->habet_imaginem ||
-        visus->imago_scalata.pixela == NIHIL ||
-        visus->rgba_dithered == NIHIL)
+    si (   !visus->habet_imaginem
+        || visus->imago_scalata.pixela == NIHIL
+        || visus->rgba_dithered        == NIHIL)
     {
         redde;
     }
@@ -168,12 +172,14 @@ _executare_dithering_internum(ImportatioVisus* visus)
     visus->necesse_redithering = FALSUM;
 }
 
+
 /* ============================================================
  * Creatio
  * ============================================================ */
 
 ImportatioVisus*
-importatio_visus_creare(Piscina* piscina)
+importatio_visus_creare (
+    Piscina* piscina)
 {
     ImportatioVisus* visus;
 
@@ -199,49 +205,50 @@ importatio_visus_creare(Piscina* piscina)
 
     /* Initiare dithering parameters */
     dithering_praeparare_omnes(visus->colores_activi);
-    visus->puncta[0] = LXIV;
-    visus->puncta[1] = CXXVIII;
-    visus->puncta[2] = CXCII;
-    visus->modus_coloris = VERUM;
+    visus->puncta[0]      = LXIV;
+    visus->puncta[1]      = CXXVIII;
+    visus->puncta[2]      = CXCII;
+    visus->modus_coloris  = VERUM;
 
     /* Initiare dithering fructus */
-    visus->dithering_fructus.successus = FALSUM;
-    visus->dithering_fructus.indices = NIHIL;
-    visus->rgba_dithered = NIHIL;
+    visus->dithering_fructus.successus  = FALSUM;
+    visus->dithering_fructus.indices    = NIHIL;
+    visus->rgba_dithered                = NIHIL;
 
     /* Initiare UI state */
-    visus->titulus.datum = NIHIL;
-    visus->titulus.mensura = ZEPHYRUM;
-    visus->titulus_cursor = ZEPHYRUM;
-    visus->titulus_focused = FALSUM;
+    visus->titulus.datum    = NIHIL;
+    visus->titulus.mensura  = ZEPHYRUM;
+    visus->titulus_cursor   = ZEPHYRUM;
+    visus->titulus_focused  = FALSUM;
 
     /* Initiare view state */
-    visus->zoom = 1.0f;
-    visus->crop_center_x = 0;
-    visus->crop_center_y = 0;
-    visus->dragging = FALSUM;
-    visus->drag_start_x = 0;
-    visus->drag_start_y = 0;
-    visus->drag_start_crop_x = 0;
-    visus->drag_start_crop_y = 0;
+    visus->zoom               = 1.0f;
+    visus->crop_center_x      = 0;
+    visus->crop_center_y      = 0;
+    visus->dragging           = FALSUM;
+    visus->drag_start_x       = 0;
+    visus->drag_start_y       = 0;
+    visus->drag_start_crop_x  = 0;
+    visus->drag_start_crop_y  = 0;
 
     /* Initiare debounce state */
-    visus->tempus_ultima_mutatio = 0.0;
-    visus->zoom_pendens = 1.0f;
-    visus->crop_center_x_pendens = 0;
-    visus->crop_center_y_pendens = 0;
+    visus->tempus_ultima_mutatio  = 0.0;
+    visus->zoom_pendens           = 1.0f;
+    visus->crop_center_x_pendens  = 0;
+    visus->crop_center_y_pendens  = 0;
 
     redde visus;
 }
+
 
 /* ============================================================
  * Sessio
  * ============================================================ */
 
 vacuum
-importatio_visus_initiare_sessionem(
+importatio_visus_initiare_sessionem (
     ImportatioVisus* visus,
-    constans Imago*  imago)
+     constans Imago* imago)
 {
     si (visus == NIHIL || imago == NIHIL)
     {
@@ -249,32 +256,32 @@ importatio_visus_initiare_sessionem(
     }
 
     /* Copiare imaginem */
-    visus->imago_originalis = *imago;
-    visus->habet_imaginem = VERUM;
-    visus->activus = VERUM;
+    visus->imago_originalis  = *imago;
+    visus->habet_imaginem    = VERUM;
+    visus->activus           = VERUM;
 
     /* Reset parameters ad defaults */
     dithering_praeparare_omnes(visus->colores_activi);
-    visus->puncta[0] = LXIV;
-    visus->puncta[1] = CXXVIII;
-    visus->puncta[2] = CXCII;
-    visus->modus_coloris = VERUM;
+    visus->puncta[0]      = LXIV;
+    visus->puncta[1]      = CXXVIII;
+    visus->puncta[2]      = CXCII;
+    visus->modus_coloris  = VERUM;
 
     /* Generare titulum defaltum */
     _generare_titulum_defaltum(visus);
     visus->titulus_cursor = (s32)visus->titulus.mensura;
 
     /* Reset view state - center on source image */
-    visus->zoom = 1.0f;
-    visus->crop_center_x = (i32)imago->latitudo / II;
-    visus->crop_center_y = (i32)imago->altitudo / II;
-    visus->dragging = FALSUM;
+    visus->zoom           = 1.0f;
+    visus->crop_center_x  = (i32)imago->latitudo / II;
+    visus->crop_center_y  = (i32)imago->altitudo / II;
+    visus->dragging       = FALSUM;
 
     /* Reset debounce - sync pending to current */
-    visus->zoom_pendens = visus->zoom;
-    visus->crop_center_x_pendens = visus->crop_center_x;
-    visus->crop_center_y_pendens = visus->crop_center_y;
-    visus->tempus_ultima_mutatio = 0.0;
+    visus->zoom_pendens           = visus->zoom;
+    visus->crop_center_x_pendens  = visus->crop_center_x;
+    visus->crop_center_y_pendens  = visus->crop_center_y;
+    visus->tempus_ultima_mutatio  = 0.0;
 
     /* Praeparare et dithering */
     _praeparare_imaginem(visus);
@@ -285,21 +292,23 @@ importatio_visus_initiare_sessionem(
 }
 
 vacuum
-importatio_visus_terminare_sessionem(ImportatioVisus* visus)
+importatio_visus_terminare_sessionem (
+    ImportatioVisus* visus)
 {
     si (visus == NIHIL)
     {
         redde;
     }
 
-    visus->activus = FALSUM;
-    visus->habet_imaginem = FALSUM;
+    visus->activus         = FALSUM;
+    visus->habet_imaginem  = FALSUM;
 
     fprintf(stderr, "Importatio sessio terminata\n");
 }
 
 b32
-importatio_visus_est_activus(ImportatioVisus* visus)
+importatio_visus_est_activus (
+    ImportatioVisus* visus)
 {
     si (visus == NIHIL)
     {
@@ -309,14 +318,15 @@ importatio_visus_est_activus(ImportatioVisus* visus)
     redde visus->activus;
 }
 
+
 /* ============================================================
  * Dithering Control
  * ============================================================ */
 
 vacuum
-importatio_visus_applicare_preset(
+importatio_visus_applicare_preset (
     ImportatioVisus* visus,
-    s32              preset)
+                s32  preset)
 {
     si (visus == NIHIL)
     {
@@ -348,50 +358,51 @@ importatio_visus_applicare_preset(
 }
 
 vacuum
-importatio_visus_toggle_color(
+importatio_visus_toggle_color (
     ImportatioVisus* visus,
-    s32              index)
+                s32  index)
 {
     si (visus == NIHIL || index < 0 || index >= XVI)
     {
         redde;
     }
 
-    visus->colores_activi[index] = !visus->colores_activi[index];
-    visus->necesse_redithering = VERUM;
+    visus->colores_activi[index]  = !visus->colores_activi[index];
+    visus->necesse_redithering    = VERUM;
 }
 
 vacuum
-importatio_visus_ponere_punctum(
+importatio_visus_ponere_punctum (
     ImportatioVisus* visus,
-    s32              index,
-    i32              valor)
+                s32  index,
+                i32  valor)
 {
     si (visus == NIHIL || index < 0 || index >= III)
     {
         redde;
     }
 
-    visus->puncta[index] = valor;
-    visus->necesse_redithering = VERUM;
+    visus->puncta[index]        = valor;
+    visus->necesse_redithering  = VERUM;
 }
 
 vacuum
-importatio_visus_ponere_modus(
+importatio_visus_ponere_modus (
     ImportatioVisus* visus,
-    b32              modus_coloris)
+                b32  modus_coloris)
 {
     si (visus == NIHIL)
     {
         redde;
     }
 
-    visus->modus_coloris = modus_coloris;
-    visus->necesse_redithering = VERUM;
+    visus->modus_coloris        = modus_coloris;
+    visus->necesse_redithering  = VERUM;
 }
 
 vacuum
-importatio_visus_executare_dithering(ImportatioVisus* visus)
+importatio_visus_executare_dithering (
+    ImportatioVisus* visus)
 {
     si (visus == NIHIL)
     {
@@ -402,9 +413,9 @@ importatio_visus_executare_dithering(ImportatioVisus* visus)
 }
 
 vacuum
-importatio_visus_ponere_zoom(
+importatio_visus_ponere_zoom (
     ImportatioVisus* visus,
-    f32              zoom)
+                f32  zoom)
 {
     si (visus == NIHIL)
     {
@@ -426,14 +437,15 @@ importatio_visus_ponere_zoom(
     si (visus->zoom != zoom)
     {
         /* Apply immediately - no debounce */
-        visus->zoom = zoom;
-        visus->zoom_pendens = zoom;
-        visus->necesse_redithering = VERUM;
+        visus->zoom                 = zoom;
+        visus->zoom_pendens         = zoom;
+        visus->necesse_redithering  = VERUM;
     }
 }
 
 vacuum
-importatio_visus_reset_view(ImportatioVisus* visus)
+importatio_visus_reset_view (
+    ImportatioVisus* visus)
 {
     si (visus == NIHIL)
     {
@@ -450,35 +462,36 @@ importatio_visus_reset_view(ImportatioVisus* visus)
     visus->dragging = FALSUM;
 
     /* Sync pending values - immediate reset */
-    visus->zoom_pendens = visus->zoom;
-    visus->crop_center_x_pendens = visus->crop_center_x;
-    visus->crop_center_y_pendens = visus->crop_center_y;
-    visus->tempus_ultima_mutatio = 0.0;
+    visus->zoom_pendens           = visus->zoom;
+    visus->crop_center_x_pendens  = visus->crop_center_x;
+    visus->crop_center_y_pendens  = visus->crop_center_y;
+    visus->tempus_ultima_mutatio  = 0.0;
 
     /* Immediate re-dither pro reset */
     visus->necesse_redithering = VERUM;
 }
+
 
 /* ============================================================
  * Reddere
  * ============================================================ */
 
 vacuum
-importatio_visus_reddere(
+importatio_visus_reddere (
     ImportatioVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     i32 char_w, char_h;
     i32 px, py, pw, ph;
     i32 dest_x, dest_y;
     i32 img_x, img_y;
-    Color color_text;
+     Color color_text;
     chorda label;
 
     (vacuum)focused;
@@ -499,12 +512,12 @@ importatio_visus_reddere(
         i32 new_canvas_h = altitudo * char_h - padding_top - padding_bottom;
 
         /* If canvas size changed, need to re-prepare */
-        si (new_canvas_w != (i32)visus->canvas_latitudo ||
-            new_canvas_h != (i32)visus->canvas_altitudo)
+        si (   new_canvas_w != (i32)visus->canvas_latitudo
+            || new_canvas_h != (i32)visus->canvas_altitudo)
         {
-            visus->canvas_latitudo = (i32)new_canvas_w;
-            visus->canvas_altitudo = (i32)new_canvas_h;
-            visus->necesse_redithering = VERUM;
+            visus->canvas_latitudo      = (i32)new_canvas_w;
+            visus->canvas_altitudo      = (i32)new_canvas_h;
+            visus->necesse_redithering  = VERUM;
         }
     }
 
@@ -557,10 +570,10 @@ importatio_visus_reddere(
                 dy = dest_y + img_y;
 
                 /* Clip to panel bounds */
-                si (dx >= px && dx < px + pw &&
-                    dy >= py && dy < py + ph &&
-                    dx >= 0 && dx < (i32)tabula->latitudo &&
-                    dy >= 0 && dy < (i32)tabula->altitudo)
+                si (   dx >= px && dx < px + pw
+                    && dy >= py && dy < py + ph
+                    && dx >= 0 && dx < (i32)tabula->latitudo
+                    && dy >= 0 && dy < (i32)tabula->altitudo)
                 {
                     i32 dest_idx_pixel;
                     dest_idx_pixel = dy * (i32)tabula->latitudo + dx;
@@ -574,13 +587,14 @@ importatio_visus_reddere(
     }
 }
 
+
 /* ============================================================
  * Eventus
  * ============================================================ */
 
 b32
-importatio_visus_tractare_eventum(
-    ImportatioVisus*  visus,
+importatio_visus_tractare_eventum (
+     ImportatioVisus* visus,
     constans Eventus* eventus)
 {
     si (visus == NIHIL || eventus == NIHIL)
@@ -596,9 +610,9 @@ importatio_visus_tractare_eventum(
     /* Tractare mouse drag pro panning crop center */
     si (eventus->genus == EVENTUS_MUS_DEPRESSUS)
     {
-        visus->dragging = VERUM;
-        visus->drag_start_x = eventus->datum.mus.x;
-        visus->drag_start_y = eventus->datum.mus.y;
+        visus->dragging      = VERUM;
+        visus->drag_start_x  = eventus->datum.mus.x;
+        visus->drag_start_y  = eventus->datum.mus.y;
         /* Use pending values as starting point */
         visus->drag_start_crop_x = visus->crop_center_x_pendens;
         visus->drag_start_crop_y = visus->crop_center_y_pendens;
@@ -627,34 +641,30 @@ importatio_visus_tractare_eventum(
         delta_y = (s32)eventus->datum.mus.y - (s32)visus->drag_start_y;
 
         /* Get source and crop dimensions (use pending zoom) */
-        src_w = (s32)visus->imago_originalis.latitudo;
-        src_h = (s32)visus->imago_originalis.altitudo;
-        crop_w = (s32)((f32)src_w / visus->zoom_pendens);
-        crop_h = (s32)((f32)src_h / visus->zoom_pendens);
+        src_w   = (s32)visus->imago_originalis.latitudo;
+        src_h   = (s32)visus->imago_originalis.altitudo;
+        crop_w  = (s32)((f32)src_w / visus->zoom_pendens);
+        crop_h  = (s32)((f32)src_h / visus->zoom_pendens);
 
         /* Convert pixel delta to source delta (inverse of scale) */
         /* Dragging right should move crop left in source */
-        new_center_x = (s32)visus->drag_start_crop_x -
-            (delta_x * crop_w) / (s32)visus->preview_latitudo;
-        new_center_y = (s32)visus->drag_start_crop_y -
-            (delta_y * crop_h) / (s32)visus->preview_altitudo;
+        new_center_x = (s32)visus->drag_start_crop_x
+            - (delta_x * crop_w) / (s32)visus->preview_latitudo;
+        new_center_y = (s32)visus->drag_start_crop_y
+            - (delta_y * crop_h) / (s32)visus->preview_altitudo;
 
         /* Clamp crop center to valid range */
-        si (new_center_x < crop_w / II)
-            new_center_x = crop_w / II;
-        si (new_center_y < crop_h / II)
-            new_center_y = crop_h / II;
-        si (new_center_x > src_w - crop_w / II)
-            new_center_x = src_w - crop_w / II;
-        si (new_center_y > src_h - crop_h / II)
-            new_center_y = src_h - crop_h / II;
+        si (new_center_x < crop_w / II) new_center_x = crop_w / II;
+        si (new_center_y < crop_h / II) new_center_y = crop_h / II;
+        si (new_center_x > src_w - crop_w / II) new_center_x = src_w - crop_w / II;
+        si (new_center_y > src_h - crop_h / II) new_center_y = src_h - crop_h / II;
 
         /* Apply immediately - no debounce (values are clamped positive) */
-        visus->crop_center_x = (i32)new_center_x;
-        visus->crop_center_y = (i32)new_center_y;
-        visus->crop_center_x_pendens = (i32)new_center_x;
-        visus->crop_center_y_pendens = (i32)new_center_y;
-        visus->necesse_redithering = VERUM;
+        visus->crop_center_x          = (i32)new_center_x;
+        visus->crop_center_y          = (i32)new_center_y;
+        visus->crop_center_x_pendens  = (i32)new_center_x;
+        visus->crop_center_y_pendens  = (i32)new_center_y;
+        visus->necesse_redithering    = VERUM;
 
         redde VERUM;
     }
@@ -671,17 +681,18 @@ importatio_visus_tractare_eventum(
     redde FALSUM;
 }
 
+
 /* ============================================================
  * Fructus
  * ============================================================ */
 
 b32
-importatio_visus_obtinere_fructum(
-    ImportatioVisus* visus,
-    constans i8**    indices,
-    i32*             latitudo,
-    i32*             altitudo,
-    chorda*          titulus)
+importatio_visus_obtinere_fructum (
+    ImportatioVisus*  visus,
+        constans i8** indices,
+                i32*  latitudo,
+                i32*  altitudo,
+             chorda*  titulus)
 {
     si (visus == NIHIL || !visus->activus || !visus->dithering_fructus.successus)
     {

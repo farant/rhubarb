@@ -17,31 +17,33 @@
 #define ATRIUM_ALTITUDO_ORDINARIA   900
 
 structura Atrium {
-    Piscina*       piscina;      /* vita atrii (vocantis) */
-    Piscina*       arena;        /* per-tictum; PROPRIA */
-    PiscinaNotatio arena_nota;   /* punctum ad quod reficitur */
+           Piscina* piscina;      /* vita atrii (vocantis) */
+           Piscina* arena;        /* per-tictum; PROPRIA */
+    PiscinaNotatio  arena_nota;   /* punctum ad quod reficitur */
 
-    Fenestra*      fenestra;
-    Capsula*       capsula;
-    Vitrea*        vitrea;
-    Internuntius*  internuntius;
-    Speculum*      speculum;     /* NIHIL = sine fontibus */
-    Vivarium       vivarium;     /* successus FALSUM = sine -vivum */
+        Fenestra* fenestra;
+         Capsula* capsula;
+          Vitrea* vitrea;
+    Internuntius* internuntius;
+        Speculum* speculum;     /* NIHIL = sine fontibus */
+        Vivarium  vivarium;     /* successus FALSUM = sine -vivum */
 
-    Mora           tictus_ms;
-    chorda         iniectio;     /* copiata in piscinam atrii */
-    b32            parata;       /* pagina se paratam nuntiavit */
+      Mora tictus_ms;
+    chorda iniectio;     /* copiata in piscinam atrii */
+       b32 parata;       /* pagina se paratam nuntiavit */
 
     AtriumEventor  eventor;
-    vacuum*        datum;
+           vacuum* datum;
 };
+
 
 /* ==================================================
  * Discretio nuntii - PURA (probabilis sine fenestra)
  * ================================================== */
 
 AtriumNuntiusGenus
-atrium_nuntium_discernere (chorda nuntium)
+atrium_nuntium_discernere (
+    chorda nuntium)
 {
     si (nuntium.datum == NIHIL || nuntium.mensura == ZEPHYRUM)
     {
@@ -56,7 +58,7 @@ atrium_nuntium_discernere (chorda nuntium)
         redde ATRIUM_NUNTIUS_RPC;
     }
 
-    si (nuntium.mensura == (i32)VII
+    si (   nuntium.mensura == (i32)VII
         && memcmp(nuntium.datum, "paratus", (memoriae_index)VII)
             == ZEPHYRUM)
     {
@@ -66,12 +68,15 @@ atrium_nuntium_discernere (chorda nuntium)
     redde ATRIUM_NUNTIUS_IGNOTUS;
 }
 
+
 /* ==================================================
  * Vexilla domus ex argv
  * ================================================== */
 
 vacuum
-atrium_vexilla_legere (AtriumConfiguratio* figura, integer argc,
+atrium_vexilla_legere (
+              AtriumConfiguratio*  figura,
+                         integer   argc,
                        character** argv)
 {
     integer i;
@@ -98,13 +103,13 @@ atrium_vexilla_legere (AtriumConfiguratio* figura, integer argc,
          * ita duas figuras rationabiles inattingibiles fecit: imperium
          * contra capsulam VECTAM (id quod probare vis), et assetum e
          * disco SINE canali exsecutionis aperto. */
-        alioquin si (strcmp(argv[i], "-radix") == ZEPHYRUM
+        alioquin si (   strcmp(argv[i], "-radix") == ZEPHYRUM
                      && (i + I) < argc)
         {
             i++;
             figura->capsula_radix = argv[i];
         }
-        alioquin si (strcmp(argv[i], "-portus") == ZEPHYRUM
+        alioquin si (   strcmp(argv[i], "-portus") == ZEPHYRUM
                      && (i + I) < argc)
         {
             /* SIGNATUM de industria: portus est i32 (INSIGNATUS),
@@ -120,12 +125,16 @@ atrium_vexilla_legere (AtriumConfiguratio* figura, integer argc,
     }
 }
 
+
 /* ==================================================
  * Creatio
  * ================================================== */
 
 interior Atrium*
-_frangere (chorda* causa, constans character* nuntius, Piscina* piscina)
+_frangere (
+                chorda* causa,
+    constans character* nuntius,
+               Piscina* piscina)
 {
     si (causa != NIHIL)
     {
@@ -135,13 +144,15 @@ _frangere (chorda* causa, constans character* nuntius, Piscina* piscina)
 }
 
 Atrium*
-atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
-               chorda* causa)
+atrium_creare (
+                        Piscina* piscina,
+    constans AtriumConfiguratio* figura,
+                         chorda* causa)
 {
-    Atrium*              atrium;
-    FenestraConfiguratio figura_fenestrae;
-    VitreaConfiguratio   figura_vitreae;
-    memoriae_index       arena_mensura;
+                  Atrium* atrium;
+    FenestraConfiguratio  figura_fenestrae;
+      VitreaConfiguratio  figura_vitreae;
+          memoriae_index  arena_mensura;
 
     si (piscina == NIHIL)
     {
@@ -149,8 +160,8 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
          * sedem poscit. Vacuam ponimus ne vocans stalum legat. */
         si (causa != NIHIL)
         {
-            causa->datum   = NIHIL;
-            causa->mensura = ZEPHYRUM;
+            causa->datum    = NIHIL;
+            causa->mensura  = ZEPHYRUM;
         }
         redde NIHIL;
     }
@@ -176,8 +187,8 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
     atrium->piscina   = piscina;
     atrium->tictus_ms = (figura->tictus_ms != ZEPHYRUM)
                       ? figura->tictus_ms : (Mora)CC;
-    atrium->eventor   = figura->eventor;
-    atrium->datum     = figura->datum;
+    atrium->eventor  = figura->eventor;
+    atrium->datum    = figura->datum;
 
     /* --- ARENA PER-TICTUM ---
      * Piscina PROPRIA, non sectio piscinae vocantis: reficitur
@@ -228,7 +239,7 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
     /* --- CAPSULA + VITREA --- */
     /* Radix data = fons discus, ansa eadem. Vitrea nihil de hoc scit:
      * capsula_legere unica vox est qua eam tangit. */
-    si (figura->capsula_radix != NIHIL
+    si (   figura->capsula_radix    != NIHIL
         && figura->capsula_radix[0] != '\0')
     {
         atrium->capsula = capsula_aperire_e_disco(
@@ -254,8 +265,8 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
     }
 
     memset(&figura_vitreae, 0, magnitudo(figura_vitreae));
-    figura_vitreae.origo         = VITREA_ORIGO_CAPSULA;
-    figura_vitreae.capsula       = atrium->capsula;
+    figura_vitreae.origo    = VITREA_ORIGO_CAPSULA;
+    figura_vitreae.capsula  = atrium->capsula;
     figura_vitreae.via_initialis = (figura->via_initialis != NIHIL)
                                  ? figura->via_initialis
                                  : "index.html";
@@ -302,20 +313,20 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
         VivariumConfiguratio figura_vivarii;
 
         memset(&figura_vivarii, 0, magnitudo(figura_vivarii));
-        figura_vivarii.portus       = figura->portus;
-        figura_vivarii.aestimator   = vitrea_aestimator;
-        figura_vivarii.imaginator   = vitrea_imaginator;
-        figura_vivarii.missor       = vitrea_missor;
-        figura_vivarii.datum        = atrium->vitrea;
+        figura_vivarii.portus      = figura->portus;
+        figura_vivarii.aestimator  = vitrea_aestimator;
+        figura_vivarii.imaginator  = vitrea_imaginator;
+        figura_vivarii.missor      = vitrea_missor;
+        figura_vivarii.datum       = atrium->vitrea;
         /* Claviarius FENESTRAM poscit (eventus nativus ad fenestram
          * clavem it), ceterae suturae VITREAM - ergo datum proprium.
          * Vide imperium.h. */
-        figura_vivarii.claviarius       = fenestra_claviarius;
-        figura_vivarii.claviarius_datum = atrium->fenestra;
-        figura_vivarii.musarius         = fenestra_musarius;
-        figura_vivarii.musarius_datum   = atrium->fenestra;
-        figura_vivarii.magnitudinator       = fenestra_magnitudinator;
-        figura_vivarii.magnitudinator_datum = atrium->fenestra;
+        figura_vivarii.claviarius            = fenestra_claviarius;
+        figura_vivarii.claviarius_datum      = atrium->fenestra;
+        figura_vivarii.musarius              = fenestra_musarius;
+        figura_vivarii.musarius_datum        = atrium->fenestra;
+        figura_vivarii.magnitudinator        = fenestra_magnitudinator;
+        figura_vivarii.magnitudinator_datum  = atrium->fenestra;
         figura_vivarii.fenestra     =
             fenestra_numerus_nativus(atrium->fenestra);
         /* Internuntium NOSTRUM tradimus: pons unus imperium unum
@@ -337,12 +348,14 @@ atrium_creare (Piscina* piscina, constans AtriumConfiguratio* figura,
     redde atrium;
 }
 
+
 /* ==================================================
  * Gyrus
  * ================================================== */
 
 vacuum
-atrium_monstrare (Atrium* atrium)
+atrium_monstrare (
+    Atrium* atrium)
 {
     si (atrium == NIHIL)
     {
@@ -352,7 +365,8 @@ atrium_monstrare (Atrium* atrium)
 }
 
 b32
-atrium_currendum (constans Atrium* atrium)
+atrium_currendum (
+    constans Atrium* atrium)
 {
     si (atrium == NIHIL)
     {
@@ -364,11 +378,12 @@ atrium_currendum (constans Atrium* atrium)
 }
 
 i32
-atrium_gressus (Atrium* atrium)
+atrium_gressus (
+    Atrium* atrium)
 {
-    i32     actum = ZEPHYRUM;
-    Eventus eventus;
-    chorda  nuntium;
+                   i32 actum = ZEPHYRUM;
+               Eventus eventus;
+                chorda nuntium;
     VitreaNuntiusGenus genus;
 
     si (atrium == NIHIL)
@@ -387,7 +402,7 @@ atrium_gressus (Atrium* atrium)
         /* Speculum PRIMUM: Cmd+Shift+D rapit et VERUM reddit.
          * Quod rapuit eventori non ostenditur - aliter app
          * compendium domus ut suum tractare posset. */
-        si (atrium->speculum != NIHIL
+        si (   atrium->speculum != NIHIL
             && speculum_tangere(atrium->speculum, &eventus))
         {
             perge;
@@ -405,8 +420,8 @@ atrium_gressus (Atrium* atrium)
             /* Processus interretialis obiit. Tres apps idem
              * agebant; nunc consilium domus est. */
             vitrea_recargare(atrium->vitrea);
-            atrium->parata = FALSUM;   /* pagina nova, iniectio rursus */
-            actum |= (i32)ATRIUM_ACTUM_INTERITUS;
+            atrium->parata  = FALSUM;   /* pagina nova, iniectio rursus */
+            actum           |= (i32)ATRIUM_ACTUM_INTERITUS;
             perge;
         }
 
@@ -444,7 +459,8 @@ atrium_gressus (Atrium* atrium)
 }
 
 vacuum
-atrium_destruere (Atrium* atrium)
+atrium_destruere (
+    Atrium* atrium)
 {
     si (atrium == NIHIL)
     {
@@ -461,12 +477,15 @@ atrium_destruere (Atrium* atrium)
     atrium->arena = NIHIL;
 }
 
+
 /* ==================================================
  * Iniectio
  * ================================================== */
 
 vacuum
-atrium_iniectionem_ponere (Atrium* atrium, chorda javascript)
+atrium_iniectionem_ponere (
+    Atrium* atrium,
+    chorda  javascript)
 {
     si (atrium == NIHIL || javascript.mensura == ZEPHYRUM)
     {
@@ -487,36 +506,42 @@ atrium_iniectionem_ponere (Atrium* atrium, chorda javascript)
     }
 }
 
+
 /* ==================================================
  * Accessus ad partes
  * ================================================== */
 
 Internuntius*
-atrium_internuntius (Atrium* atrium)
+atrium_internuntius (
+    Atrium* atrium)
 {
     redde (atrium != NIHIL) ? atrium->internuntius : NIHIL;
 }
 
 Vitrea*
-atrium_vitrea (Atrium* atrium)
+atrium_vitrea (
+    Atrium* atrium)
 {
     redde (atrium != NIHIL) ? atrium->vitrea : NIHIL;
 }
 
 Fenestra*
-atrium_fenestra (Atrium* atrium)
+atrium_fenestra (
+    Atrium* atrium)
 {
     redde (atrium != NIHIL) ? atrium->fenestra : NIHIL;
 }
 
 Piscina*
-atrium_arena (Atrium* atrium)
+atrium_arena (
+    Atrium* atrium)
 {
     redde (atrium != NIHIL) ? atrium->arena : NIHIL;
 }
 
 i32
-atrium_portus (constans Atrium* atrium)
+atrium_portus (
+    constans Atrium* atrium)
 {
     si (atrium == NIHIL || !atrium->vivarium.successus)
     {

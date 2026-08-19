@@ -15,7 +15,9 @@
 
 /* chorda C in campum fixum copiare, semper terminata */
 interior vacuum
-_copiare_tuto (character* scopus, i32 mensura,
+_copiare_tuto (
+             character* scopus,
+                   i32  mensura,
     constans character* fons)
 {
     i32 n;
@@ -34,11 +36,13 @@ _copiare_tuto (character* scopus, i32 mensura,
 }
 
 i32
-rete_addressus_locales (ReteInterfacies* effusio, i32 capacitas)
+rete_addressus_locales (
+    ReteInterfacies* effusio,
+                i32  capacitas)
 {
     structura ifaddrs* omnia = NIHIL;
     structura ifaddrs* it;
-    i32 numerus = ZEPHYRUM;
+                  i32 numerus = ZEPHYRUM;
 
     si (effusio == NIHIL || capacitas <= ZEPHYRUM)
     {
@@ -53,7 +57,7 @@ rete_addressus_locales (ReteInterfacies* effusio, i32 capacitas)
          it = it->ifa_next)
     {
         structura sockaddr_in* quattuor;
-        character textus[RETE_ADDRESSUM_MENSURA];
+                    character textus[RETE_ADDRESSUM_MENSURA];
 
         si (it->ifa_addr == NIHIL)
         {

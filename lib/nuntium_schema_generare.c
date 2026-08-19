@@ -13,13 +13,15 @@
 #include <string.h>
 #include <stdio.h>
 
+
 /* ================================================
  * Functiones Auxiliares Internae
  * ================================================ */
 
 /* Reddere C typum pro genere campi */
 hic_manens constans character*
-_genus_ad_c_typum(NuntiumCampusGenus genus)
+_genus_ad_c_typum (
+    NuntiumCampusGenus genus)
 {
     commutatio (genus)
     {
@@ -37,27 +39,29 @@ _genus_ad_c_typum(NuntiumCampusGenus genus)
 
 /* Verificare si genus est chorda/bytes (index nullable) */
 hic_manens b32
-_genus_est_chorda(NuntiumCampusGenus genus)
+_genus_est_chorda (
+    NuntiumCampusGenus genus)
 {
     redde (genus == NUNTIUM_CAMPUS_TEXTUS || genus == NUNTIUM_CAMPUS_BYTES);
 }
 
 /* Longitudo maxima typi C pro padding tabulari */
 hic_manens i32
-_longitudo_maxima_typi(NuntiumSchemaNodus* definitio)
+_longitudo_maxima_typi (
+    NuntiumSchemaNodus* definitio)
 {
     i32 maxima;
     i32 i;
     i32 numerus_camporum;
 
-    maxima = ZEPHYRUM;
-    numerus_camporum = xar_numerus(definitio->datum.definitio.campi);
+    maxima            = ZEPHYRUM;
+    numerus_camporum  = xar_numerus(definitio->datum.definitio.campi);
 
     per (i = ZEPHYRUM; i < numerus_camporum; i++)
     {
         NuntiumSchemaNodus** locus;
-        constans character* typus;
-        i32 longitudo;
+        constans character*  typus;
+                       i32   longitudo;
 
         locus = (NuntiumSchemaNodus**)xar_obtinere(
             definitio->datum.definitio.campi, i);
@@ -73,18 +77,18 @@ _longitudo_maxima_typi(NuntiumSchemaNodus* definitio)
 
 /* Emittere unam lineam scribere pro campo */
 hic_manens vacuum
-_emittere_scribere_campum(
-    ChordaAedificator* aed,
+_emittere_scribere_campum (
+     ChordaAedificator* aed,
     NuntiumSchemaNodus* campus,
     constans character* prefixum_tag,
     constans character* tag_suffixum,
     constans character* campus_titulis)
 {
     NuntiumCampusGenus genus;
-    i32 gradus;
+                   i32 gradus;
 
-    genus = campus->datum.campus.campus_genus;
-    gradus = chorda_aedificator_indentatio_gradus(aed);
+    genus   = campus->datum.campus.campus_genus;
+    gradus  = chorda_aedificator_indentatio_gradus(aed);
 
     si (_genus_est_chorda(genus))
     {
@@ -167,8 +171,8 @@ _emittere_scribere_campum(
 
 /* Emittere unum casus legere pro campo */
 hic_manens vacuum
-_emittere_legere_campum(
-    ChordaAedificator* aed,
+_emittere_legere_campum (
+     ChordaAedificator* aed,
     NuntiumSchemaNodus* campus,
     constans character* prefixum_tag,
     constans character* tag_suffixum,
@@ -176,13 +180,13 @@ _emittere_legere_campum(
     constans character* variabilis)
 {
     NuntiumCampusGenus genus;
-    i32 gradus;
-    i32 g2;
-    i32 g3;
-    i32 g4;
+                   i32 gradus;
+                   i32 g2;
+                   i32 g3;
+                   i32 g4;
 
-    genus = campus->datum.campus.campus_genus;
-    gradus = chorda_aedificator_indentatio_gradus(aed);
+    genus   = campus->datum.campus.campus_genus;
+    gradus  = chorda_aedificator_indentatio_gradus(aed);
 
     chorda_aedificator_appendere_indentationem(aed, gradus);
     chorda_aedificator_appendere_literis(aed, "casus ");
@@ -318,48 +322,50 @@ _emittere_legere_campum(
     }
 }
 
+
 /* ================================================
  * Generatio Capitis (.h)
  * ================================================ */
 
 chorda
-nuntium_schema_generare_caput(
-    Piscina*            piscina,
+nuntium_schema_generare_caput (
+               Piscina* piscina,
     NuntiumSchemaNodus* radix,
     constans character* caput_titulis)
 {
     ChordaAedificator* aed;
-    chorda titulis_chorda;
-    chorda custos;
-    i32 i;
-    i32 numerus_definitionum;
+               chorda  titulis_chorda;
+               chorda  custos;
+                  i32  i;
+                  i32  numerus_definitionum;
 
-    si (!piscina || !radix || !caput_titulis) {
+    si (!piscina || !radix || !caput_titulis)
+    {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
 
     aed = chorda_aedificator_creare(piscina, MMMMXCVI);
-    si (!aed) {
+    si (!aed)
+    {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
 
     /* Construere custos macro ex nomine fili */
-    titulis_chorda = chorda_ex_literis(caput_titulis, piscina);
-    custos = chorda_maiuscula(titulis_chorda, piscina);
+    titulis_chorda  = chorda_ex_literis(caput_titulis, piscina);
+    custos          = chorda_maiuscula(titulis_chorda, piscina);
 
     /* Substituere '.' et '-' cum '_' */
     {
         i32 j;
         per (j = ZEPHYRUM; j < custos.mensura; j++)
         {
-            si (custos.datum[j] == '.' || custos.datum[j] == '-')
-                custos.datum[j] = '_';
+            si (custos.datum[j] == '.' || custos.datum[j] == '-') custos.datum[j] = '_';
         }
     }
 
@@ -391,15 +397,15 @@ nuntium_schema_generare_caput(
     per (i = ZEPHYRUM; i < numerus_definitionum; i++)
     {
         NuntiumSchemaNodus** def_locus;
-        NuntiumSchemaNodus* definitio;
-        character* titulus_maiuscula_cstr;
-        character* titulus_minuscula_cstr;
-        character* titulus_cstr;
-        chorda titulus_maiuscula;
-        chorda titulus_minuscula;
-        i32 j;
-        i32 numerus_camporum;
-        i32 maxima_typi;
+        NuntiumSchemaNodus*  definitio;
+                 character*  titulus_maiuscula_cstr;
+                 character*  titulus_minuscula_cstr;
+                 character*  titulus_cstr;
+                    chorda   titulus_maiuscula;
+                    chorda   titulus_minuscula;
+                       i32   j;
+                       i32   numerus_camporum;
+                       i32   maxima_typi;
 
         def_locus = (NuntiumSchemaNodus**)xar_obtinere(
             radix->datum.schema.definitiones, i);
@@ -421,9 +427,9 @@ nuntium_schema_generare_caput(
         per (j = ZEPHYRUM; j < numerus_camporum; j++)
         {
             NuntiumSchemaNodus** c_locus;
-            NuntiumSchemaNodus* campus;
-            character* campus_titulis_cstr;
-            chorda campus_maiuscula;
+            NuntiumSchemaNodus*  campus;
+                     character*  campus_titulis_cstr;
+                        chorda   campus_maiuscula;
 
             c_locus = (NuntiumSchemaNodus**)xar_obtinere(
                 definitio->datum.definitio.campi, j);
@@ -454,11 +460,11 @@ nuntium_schema_generare_caput(
         per (j = ZEPHYRUM; j < numerus_camporum; j++)
         {
             NuntiumSchemaNodus** c_locus;
-            NuntiumSchemaNodus* campus;
-            character* campus_titulis_cstr;
-            constans character* c_typus;
-            i32 typus_longitudo;
-            i32 k;
+            NuntiumSchemaNodus*  campus;
+                     character*  campus_titulis_cstr;
+            constans character*  c_typus;
+                           i32   typus_longitudo;
+                           i32   k;
 
             c_locus = (NuntiumSchemaNodus**)xar_obtinere(
                 definitio->datum.definitio.campi, j);
@@ -474,8 +480,7 @@ nuntium_schema_generare_caput(
             chorda_aedificator_appendere_literis(aed, c_typus);
 
             /* Padding post typum */
-            per (k = typus_longitudo; k < maxima_typi + I; k++)
-                chorda_aedificator_appendere_character(aed, ' ');
+            per (k = typus_longitudo; k < maxima_typi + I; k++) chorda_aedificator_appendere_character(aed, ' ');
 
             chorda_aedificator_appendere_literis(aed, campus_titulis_cstr);
             chorda_aedificator_appendere_literis(aed, ";\n");
@@ -499,8 +504,7 @@ nuntium_schema_generare_caput(
         chorda_aedificator_appendere_literis(aed,
             "_legere(NuntiumLector* lector, Piscina* piscina);\n");
 
-        si (i < numerus_definitionum - I)
-            chorda_aedificator_appendere_literis(aed, "\n");
+        si (i < numerus_definitionum - I) chorda_aedificator_appendere_literis(aed, "\n");
     }
 
     /* Clausura custos */
@@ -516,32 +520,35 @@ nuntium_schema_generare_caput(
     redde chorda_aedificator_finire(aed);
 }
 
+
 /* ================================================
  * Generatio Corporis (.c)
  * ================================================ */
 
 chorda
-nuntium_schema_generare_corpus(
-    Piscina*            piscina,
+nuntium_schema_generare_corpus (
+               Piscina* piscina,
     NuntiumSchemaNodus* radix,
     constans character* caput_titulis)
 {
     ChordaAedificator* aed;
-    i32 i;
-    i32 numerus_definitionum;
+                  i32  i;
+                  i32  numerus_definitionum;
 
-    si (!piscina || !radix || !caput_titulis) {
+    si (!piscina || !radix || !caput_titulis)
+    {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
 
     aed = chorda_aedificator_creare(piscina, MMMMXCVI);
-    si (!aed) {
+    si (!aed)
+    {
         chorda vacua;
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
 
@@ -558,15 +565,15 @@ nuntium_schema_generare_corpus(
     per (i = ZEPHYRUM; i < numerus_definitionum; i++)
     {
         NuntiumSchemaNodus** def_locus;
-        NuntiumSchemaNodus* definitio;
-        character* titulus_cstr;
-        character* titulus_maiuscula_cstr;
-        character* titulus_minuscula_cstr;
-        chorda titulus_maiuscula;
-        chorda titulus_minuscula;
-        i32 j;
-        i32 numerus_camporum;
-        character prefixum_tag[CCLVI];
+        NuntiumSchemaNodus*  definitio;
+                 character*  titulus_cstr;
+                 character*  titulus_maiuscula_cstr;
+                 character*  titulus_minuscula_cstr;
+                    chorda   titulus_maiuscula;
+                    chorda   titulus_minuscula;
+                       i32   j;
+                       i32   numerus_camporum;
+                 character   prefixum_tag[CCLVI];
 
         def_locus = (NuntiumSchemaNodus**)xar_obtinere(
             radix->datum.schema.definitiones, i);
@@ -588,9 +595,11 @@ nuntium_schema_generare_corpus(
         snprintf(prefixum_tag, (memoriae_index)CCLVI, "%s_TAG_",
             titulus_maiuscula_cstr);
 
+
         /* ============================
          * Functio _scribere
          * ============================ */
+
         chorda_aedificator_appendere_literis(aed, "b32\n");
         chorda_aedificator_appendere_literis(aed, titulus_minuscula_cstr);
         chorda_aedificator_appendere_literis(aed,
@@ -611,10 +620,10 @@ nuntium_schema_generare_corpus(
         per (j = ZEPHYRUM; j < numerus_camporum; j++)
         {
             NuntiumSchemaNodus** c_locus;
-            NuntiumSchemaNodus* campus;
-            character* campus_titulis_cstr;
-            chorda campus_maiuscula;
-            character* campus_maiuscula_cstr;
+            NuntiumSchemaNodus*  campus;
+                     character*  campus_titulis_cstr;
+                        chorda   campus_maiuscula;
+                     character*  campus_maiuscula_cstr;
 
             c_locus = (NuntiumSchemaNodus**)xar_obtinere(
                 definitio->datum.definitio.campi, j);
@@ -630,8 +639,7 @@ nuntium_schema_generare_corpus(
             _emittere_scribere_campum(aed, campus,
                 prefixum_tag, campus_maiuscula_cstr, campus_titulis_cstr);
 
-            si (j < numerus_camporum - I)
-                chorda_aedificator_appendere_literis(aed, "\n");
+            si (j < numerus_camporum - I) chorda_aedificator_appendere_literis(aed, "\n");
         }
 
         /* Reddere VERUM */
@@ -643,9 +651,11 @@ nuntium_schema_generare_corpus(
         chorda_aedificator_pop_indentationem(aed);
         chorda_aedificator_appendere_literis(aed, "}\n\n");
 
+
         /* ============================
          * Functio _legere
          * ============================ */
+
         chorda_aedificator_appendere_literis(aed, titulus_cstr);
         chorda_aedificator_appendere_literis(aed, "*\n");
         chorda_aedificator_appendere_literis(aed, titulus_minuscula_cstr);
@@ -716,10 +726,10 @@ nuntium_schema_generare_corpus(
                 per (j = ZEPHYRUM; j < numerus_camporum; j++)
                 {
                     NuntiumSchemaNodus** c_locus;
-                    NuntiumSchemaNodus* campus;
-                    character* campus_titulis_cstr;
-                    chorda campus_maiuscula;
-                    character* campus_maiuscula_cstr;
+                    NuntiumSchemaNodus*  campus;
+                             character*  campus_titulis_cstr;
+                                chorda   campus_maiuscula;
+                             character*  campus_maiuscula_cstr;
 
                     c_locus = (NuntiumSchemaNodus**)xar_obtinere(
                         definitio->datum.definitio.campi, j);
@@ -774,8 +784,7 @@ nuntium_schema_generare_corpus(
         chorda_aedificator_pop_indentationem(aed);
         chorda_aedificator_appendere_literis(aed, "}\n");
 
-        si (i < numerus_definitionum - I)
-            chorda_aedificator_appendere_literis(aed, "\n");
+        si (i < numerus_definitionum - I) chorda_aedificator_appendere_literis(aed, "\n");
     }
 
     redde chorda_aedificator_finire(aed);

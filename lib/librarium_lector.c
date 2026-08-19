@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
+
 /* ==================================================
  * Constantae
  * ================================================== */
@@ -17,7 +18,7 @@
  * ================================================== */
 
 LibrariumLector*
-librarium_lector_creare(
+librarium_lector_creare (
     Piscina* piscina)
 {
     LibrariumLector* lector;
@@ -33,21 +34,21 @@ librarium_lector_creare(
         redde NIHIL;
     }
 
-    lector->piscina = piscina;
-    lector->textus.datum = NIHIL;
-    lector->textus.mensura = 0;
-    lector->numerus_buffer[0] = '\0';
-    lector->via_buffer[0] = '\0';
-    lector->paginarium.paginae = NIHIL;
-    lector->paginarium.numerus_paginarum = 0;
-    lector->pagina_currens = 0;
-    lector->paginae_totales = 0;
-    lector->modus_sententiae = FALSUM;
-    lector->sententia_resultus = NIHIL;
-    lector->sententia_currens = 0;
-    lector->cache_latitudo = 0;
-    lector->cache_altitudo = 0;
-    lector->est_carcatus = FALSUM;
+    lector->piscina                       = piscina;
+    lector->textus.datum                  = NIHIL;
+    lector->textus.mensura                = 0;
+    lector->numerus_buffer[0]             = '\0';
+    lector->via_buffer[0]                 = '\0';
+    lector->paginarium.paginae            = NIHIL;
+    lector->paginarium.numerus_paginarum  = 0;
+    lector->pagina_currens                = 0;
+    lector->paginae_totales               = 0;
+    lector->modus_sententiae              = FALSUM;
+    lector->sententia_resultus            = NIHIL;
+    lector->sententia_currens             = 0;
+    lector->cache_latitudo                = 0;
+    lector->cache_altitudo                = 0;
+    lector->est_carcatus                  = FALSUM;
 
     redde lector;
 }
@@ -58,8 +59,8 @@ librarium_lector_creare(
  * ================================================== */
 
 b32
-librarium_lector_carcare(
-    LibrariumLector*    lector,
+librarium_lector_carcare (
+       LibrariumLector* lector,
     constans character* via,
     constans character* numerus_libri)
 {
@@ -105,13 +106,13 @@ librarium_lector_carcare(
         redde FALSUM;
     }
 
-    lector->est_carcatus = VERUM;
-    lector->pagina_currens = 0;
+    lector->est_carcatus    = VERUM;
+    lector->pagina_currens  = 0;
 
     /* Reset modus sententiae */
-    lector->modus_sententiae = FALSUM;
-    lector->sententia_resultus = NIHIL;
-    lector->sententia_currens = 0;
+    lector->modus_sententiae    = FALSUM;
+    lector->sententia_resultus  = NIHIL;
+    lector->sententia_currens   = 0;
 
     /* Invalidare cache */
     lector->cache_latitudo = 0;
@@ -126,14 +127,14 @@ librarium_lector_carcare(
  * ================================================== */
 
 vacuum
-librarium_lector_paginare(
+librarium_lector_paginare (
     LibrariumLector* lector,
-    s32              latitudo,
-    s32              altitudo)
+                s32  latitudo,
+                s32  altitudo)
 {
     PaginariumConfig config;
-    s32 chars_disponibiles;
-    s32 lineae_disponibiles;
+                 s32 chars_disponibiles;
+                 s32 lineae_disponibiles;
 
     si (!lector)
     {
@@ -141,9 +142,9 @@ librarium_lector_paginare(
     }
 
     /* Verificare cache */
-    si (lector->cache_latitudo == latitudo &&
-        lector->cache_altitudo == altitudo &&
-        lector->est_carcatus)
+    si (   lector->cache_latitudo == latitudo
+        && lector->cache_altitudo == altitudo
+        && lector->est_carcatus)
     {
         redde;
     }
@@ -157,8 +158,8 @@ librarium_lector_paginare(
         redde;
     }
 
-    chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - V;  /* Header et footer */
+    chars_disponibiles   = latitudo - (PADDING * II);
+    lineae_disponibiles  = altitudo - V;  /* Header et footer */
 
     si (chars_disponibiles < X)
     {
@@ -170,9 +171,9 @@ librarium_lector_paginare(
     }
 
     /* Configurare paginarium */
-    config = paginarium_config_defectus();
-    config.latitudo = (i32)chars_disponibiles;
-    config.altitudo = (i32)lineae_disponibiles;
+    config           = paginarium_config_defectus();
+    config.latitudo  = (i32)chars_disponibiles;
+    config.altitudo  = (i32)lineae_disponibiles;
 
     /* Paginare via paginarium */
     lector->paginarium = paginarium_paginare(
@@ -187,7 +188,7 @@ librarium_lector_paginare(
  * ================================================== */
 
 vacuum
-librarium_lector_pagina_proxima(
+librarium_lector_pagina_proxima (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -202,7 +203,7 @@ librarium_lector_pagina_proxima(
 }
 
 vacuum
-librarium_lector_pagina_prior(
+librarium_lector_pagina_prior (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -217,9 +218,9 @@ librarium_lector_pagina_prior(
 }
 
 vacuum
-librarium_lector_pagina_saltare(
+librarium_lector_pagina_saltare (
     LibrariumLector* lector,
-    s32              pagina)
+                s32  pagina)
 {
     si (!lector)
     {
@@ -248,7 +249,7 @@ librarium_lector_pagina_saltare(
  * ================================================== */
 
 vacuum
-librarium_lector_toggle_modus_sententiae(
+librarium_lector_toggle_modus_sententiae (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -266,7 +267,7 @@ librarium_lector_toggle_modus_sententiae(
 }
 
 vacuum
-librarium_lector_sententia_proxima(
+librarium_lector_sententia_proxima (
     LibrariumLector* lector)
 {
     s32 totales;
@@ -285,7 +286,7 @@ librarium_lector_sententia_proxima(
 }
 
 vacuum
-librarium_lector_sententia_prior(
+librarium_lector_sententia_prior (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -300,10 +301,10 @@ librarium_lector_sententia_prior(
 }
 
 vacuum
-librarium_lector_sententia_paginare(
+librarium_lector_sententia_paginare (
     LibrariumLector* lector,
-    s32              latitudo,
-    s32              altitudo)
+                s32  latitudo,
+                s32  altitudo)
 {
     s32 chars_disponibiles;
     s32 lineae_disponibiles;
@@ -314,15 +315,15 @@ librarium_lector_sententia_paginare(
     }
 
     /* Verificare cache - si iam paginatum cum isdem dimensionibus */
-    si (lector->sententia_resultus != NIHIL &&
-        lector->cache_latitudo == latitudo &&
-        lector->cache_altitudo == altitudo)
+    si (   lector->sententia_resultus != NIHIL
+        && lector->cache_latitudo     == latitudo
+        && lector->cache_altitudo     == altitudo)
     {
         redde;
     }
 
-    chars_disponibiles = latitudo - (PADDING * II);
-    lineae_disponibiles = altitudo - V;  /* Header et footer */
+    chars_disponibiles   = latitudo - (PADDING * II);
+    lineae_disponibiles  = altitudo - V;  /* Header et footer */
 
     si (chars_disponibiles < X)
     {
@@ -346,7 +347,7 @@ librarium_lector_sententia_paginare(
 }
 
 b32
-librarium_lector_in_modo_sententiae(
+librarium_lector_in_modo_sententiae (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -357,7 +358,7 @@ librarium_lector_in_modo_sententiae(
 }
 
 s32
-librarium_lector_sententia_currens(
+librarium_lector_sententia_currens (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -368,7 +369,7 @@ librarium_lector_sententia_currens(
 }
 
 s32
-librarium_lector_sententiae_totales(
+librarium_lector_sententiae_totales (
     LibrariumLector* lector)
 {
     si (!lector || !lector->sententia_resultus)
@@ -379,7 +380,7 @@ librarium_lector_sententiae_totales(
 }
 
 SententiaPagina*
-librarium_lector_sententia_pagina_obtinere(
+librarium_lector_sententia_pagina_obtinere (
     LibrariumLector* lector)
 {
     si (!lector || !lector->sententia_resultus)
@@ -398,7 +399,7 @@ librarium_lector_sententia_pagina_obtinere(
  * ================================================== */
 
 s32
-librarium_lector_pagina_currens(
+librarium_lector_pagina_currens (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -409,7 +410,7 @@ librarium_lector_pagina_currens(
 }
 
 s32
-librarium_lector_paginae_totales(
+librarium_lector_paginae_totales (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -420,9 +421,9 @@ librarium_lector_paginae_totales(
 }
 
 PaginariumPagina*
-librarium_lector_pagina_obtinere(
+librarium_lector_pagina_obtinere (
     LibrariumLector* lector,
-    s32              index)
+                s32  index)
 {
     si (!lector)
     {
@@ -432,13 +433,13 @@ librarium_lector_pagina_obtinere(
 }
 
 chorda
-librarium_lector_textus(
+librarium_lector_textus (
     LibrariumLector* lector)
 {
     chorda vacua;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
 
     si (!lector)
     {
@@ -448,7 +449,7 @@ librarium_lector_textus(
 }
 
 b32
-librarium_lector_habet_textum(
+librarium_lector_habet_textum (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -459,7 +460,7 @@ librarium_lector_habet_textum(
 }
 
 constans character*
-librarium_lector_numerus(
+librarium_lector_numerus (
     LibrariumLector* lector)
 {
     si (!lector)
@@ -475,12 +476,12 @@ librarium_lector_numerus(
  * ================================================== */
 
 vacuum
-librarium_lector_salvare_progressum(
-    LibrariumLector*     lector,
+librarium_lector_salvare_progressum (
+        LibrariumLector* lector,
     EntitasRepositorium* repo)
 {
-    Entitas* entitas;
-    character pagina_buffer[XXXII];
+      Entitas* entitas;
+    character  pagina_buffer[XXXII];
 
     si (!lector || !repo)
     {
@@ -529,14 +530,14 @@ librarium_lector_salvare_progressum(
 }
 
 vacuum
-librarium_lector_carcare_progressum(
-    LibrariumLector*     lector,
+librarium_lector_carcare_progressum (
+        LibrariumLector* lector,
     EntitasRepositorium* repo,
     InternamentumChorda* intern)
 {
     Entitas* entitas;
-    chorda* clavis;
-    s32 pagina_salvata = 0;
+     chorda* clavis;
+        s32  pagina_salvata = 0;
 
     si (!lector || !repo || !intern)
     {

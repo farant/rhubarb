@@ -34,33 +34,43 @@
 #pragma clang diagnostic pop
 #endif
 
+
 /* ============================================================
  * Wrapper functions in pure C (ante latina.h)
  * ============================================================ */
 
 static unsigned char*
-_stbi_load_file(const char* filename, int* width, int* height)
+_stbi_load_file (
+    const char* filename,
+           int* width,
+           int* height)
 {
     return stbi_load(filename, width, height, NULL, 4);
 }
 
 static unsigned char*
-_stbi_load_mem(const unsigned char* buffer, int len, int* width, int* height)
+_stbi_load_mem (
+    const unsigned char* buffer,
+                    int  len,
+                    int* width,
+                    int* height)
 {
     return stbi_load_from_memory(buffer, len, width, height, NULL, 4);
 }
 
 static void
-_stbi_free(unsigned char* data)
+_stbi_free (
+    unsigned char* data)
 {
     stbi_image_free(data);
 }
 
 static const char*
-_stbi_error(void)
+_stbi_error (void)
 {
     return stbi_failure_reason();
 }
+
 
 /* ============================================================
  * Nunc includere imago.h (et latina.h)
@@ -68,26 +78,29 @@ _stbi_error(void)
 
 #include "imago.h"
 
+
 /* ============================================================
  * Functiones Publicae
  * ============================================================ */
 
 ImagoFructus
-imago_caricare_ex_file(constans character* via, Piscina* piscina)
+imago_caricare_ex_file (
+    constans character* via,
+               Piscina* piscina)
 {
-    ImagoFructus fructus;
+            ImagoFructus  fructus;
     insignatus character* stbi_data;
     integer lat, alt;
-    i32 pixela_size;
+                   i32  pixela_size;
     constans character* err;
 
     /* Initiare fructum */
-    fructus.successus = FALSUM;
-    fructus.imago.pixela = NIHIL;
-    fructus.imago.latitudo = 0;
-    fructus.imago.altitudo = 0;
-    fructus.error.datum = NIHIL;
-    fructus.error.mensura = 0;
+    fructus.successus       = FALSUM;
+    fructus.imago.pixela    = NIHIL;
+    fructus.imago.latitudo  = 0;
+    fructus.imago.altitudo  = 0;
+    fructus.error.datum     = NIHIL;
+    fructus.error.mensura   = 0;
 
     si (via == NIHIL || piscina == NIHIL)
     {
@@ -124,29 +137,32 @@ imago_caricare_ex_file(constans character* via, Piscina* piscina)
     memcpy(fructus.imago.pixela, stbi_data, (size_t)pixela_size);
     _stbi_free(stbi_data);
 
-    fructus.imago.latitudo = (i32)lat;
-    fructus.imago.altitudo = (i32)alt;
-    fructus.successus = VERUM;
+    fructus.imago.latitudo  = (i32)lat;
+    fructus.imago.altitudo  = (i32)alt;
+    fructus.successus       = VERUM;
 
     redde fructus;
 }
 
 ImagoFructus
-imago_caricare_ex_memoria(constans i8* datum, i32 mensura, Piscina* piscina)
+imago_caricare_ex_memoria (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina)
 {
-    ImagoFructus fructus;
+            ImagoFructus  fructus;
     insignatus character* stbi_data;
     integer lat, alt;
-    i32 pixela_size;
+                   i32  pixela_size;
     constans character* err;
 
     /* Initiare fructum */
-    fructus.successus = FALSUM;
-    fructus.imago.pixela = NIHIL;
-    fructus.imago.latitudo = 0;
-    fructus.imago.altitudo = 0;
-    fructus.error.datum = NIHIL;
-    fructus.error.mensura = 0;
+    fructus.successus       = FALSUM;
+    fructus.imago.pixela    = NIHIL;
+    fructus.imago.latitudo  = 0;
+    fructus.imago.altitudo  = 0;
+    fructus.error.datum     = NIHIL;
+    fructus.error.mensura   = 0;
 
     si (datum == NIHIL || mensura <= 0 || piscina == NIHIL)
     {
@@ -183,9 +199,9 @@ imago_caricare_ex_memoria(constans i8* datum, i32 mensura, Piscina* piscina)
     memcpy(fructus.imago.pixela, stbi_data, (size_t)pixela_size);
     _stbi_free(stbi_data);
 
-    fructus.imago.latitudo = (i32)lat;
-    fructus.imago.altitudo = (i32)alt;
-    fructus.successus = VERUM;
+    fructus.imago.latitudo  = (i32)lat;
+    fructus.imago.altitudo  = (i32)alt;
+    fructus.successus       = VERUM;
 
     redde fructus;
 }

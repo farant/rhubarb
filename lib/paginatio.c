@@ -1,25 +1,28 @@
 #include "paginatio.h"
 #include "numerus_romanus.h"
 
+
 /* ====================================================================
  * Vide paginatio.h de ratione.
  * ==================================================================== */
 
 interior b32
-_album (i8 c)
+_album (
+    i8 c)
 {
     redde (c == ' ' || c == '\t') ? VERUM : FALSUM;
 }
 
 Paginatio
-paginatio_legere (chorda s)
+paginatio_legere (
+    chorda s)
 {
     Paginatio p;
-    i32       initium = ZEPHYRUM;
-    i32       finis;
-    i32       i;
-    i32       valor = ZEPHYRUM;
-    chorda    nucleus;
+          i32 initium = ZEPHYRUM;
+          i32 finis;
+          i32 i;
+          i32 valor = ZEPHYRUM;
+       chorda nucleus;
 
     p.genus = PAGINATIO_NULLA;
     p.valor = ZEPHYRUM;
@@ -35,12 +38,12 @@ paginatio_legere (chorda s)
     {
         redde p;
     }
-    nucleus.datum   = s.datum + initium;
-    nucleus.mensura = finis - initium;
+    nucleus.datum    = s.datum + initium;
+    nucleus.mensura  = finis - initium;
 
     /* Arabica: cifrae SOLAE. Signum '+'/'-' non accipitur - pagina
      * negativa non est, et '+12' mendum est, non comitas. */
-    si (nucleus.datum[ZEPHYRUM] >= '0'
+    si (   nucleus.datum[ZEPHYRUM] >= '0'
         && nucleus.datum[ZEPHYRUM] <= '9')
     {
         per (i = ZEPHYRUM; i < nucleus.mensura; i++)
@@ -74,7 +77,8 @@ paginatio_legere (chorda s)
 }
 
 i64
-paginatio_clavis (Paginatio p)
+paginatio_clavis (
+    Paginatio p)
 {
     si (p.genus == PAGINATIO_ROMANA)
     {
@@ -89,7 +93,8 @@ paginatio_clavis (Paginatio p)
 }
 
 i64
-paginatio_clavis_chordae (chorda s)
+paginatio_clavis_chordae (
+    chorda s)
 {
     redde paginatio_clavis(paginatio_legere(s));
 }

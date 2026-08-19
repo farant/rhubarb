@@ -1,12 +1,16 @@
 #include "color.h"
 #include "thema.h"
 
+
 /* ==================================================
  * Color Creation
  * ================================================== */
 
 Color
-color_ex_rgb(i8 r, i8 g, i8 b)
+color_ex_rgb (
+    i8 r,
+    i8 g,
+    i8 b)
 {
     Color color;
     color.r = r;
@@ -17,7 +21,11 @@ color_ex_rgb(i8 r, i8 g, i8 b)
 }
 
 Color
-color_ex_rgba(i8 r, i8 g, i8 b, i8 a)
+color_ex_rgba (
+    i8 r,
+    i8 g,
+    i8 b,
+    i8 a)
 {
     Color color;
     color.r = r;
@@ -28,15 +36,16 @@ color_ex_rgba(i8 r, i8 g, i8 b, i8 a)
 }
 
 Color
-color_ex_palette(i32 palette_index)
+color_ex_palette (
+    i32 palette_index)
 {
     constans i8* pal;
-    i32 offset;
-    Color color;
+            i32  offset;
+          Color  color;
     i32 r, g, b;
 
-    pal = thema_palette_aquinas();
-    offset = palette_index * III;
+    pal     = thema_palette_aquinas();
+    offset  = palette_index * III;
 
     /* Palette uses 6-bit values (0x00-0x3F), scale to 8-bit (0x00-0xFF) */
     r = ((i32)pal[offset + ZEPHYRUM] * CCLV) / LXIII;
@@ -52,7 +61,8 @@ color_ex_palette(i32 palette_index)
 }
 
 Color
-color_ex_pixelum(i32 pixel)
+color_ex_pixelum (
+    i32 pixel)
 {
     Color color;
 
@@ -71,35 +81,40 @@ color_ex_pixelum(i32 pixel)
  * ================================================== */
 
 i32
-color_ad_pixelum(Color color)
+color_ad_pixelum (
+    Color color)
 {
     /* Pack as ABGR for macOS pixel buffer */
-    redde ((i32)color.a << XXIV) |
-          ((i32)color.b << XVI) |
-          ((i32)color.g << VIII) |
-          ((i32)color.r);
+    redde ((i32)color.a << XXIV)
+        | ((i32)color.b << XVI)
+        | ((i32)color.g << VIII)
+        | ((i32)color.r);
 }
 
 i8
-color_obtinere_r(Color color)
+color_obtinere_r (
+    Color color)
 {
     redde color.r;
 }
 
 i8
-color_obtinere_g(Color color)
+color_obtinere_g (
+    Color color)
 {
     redde color.g;
 }
 
 i8
-color_obtinere_b(Color color)
+color_obtinere_b (
+    Color color)
 {
     redde color.b;
 }
 
 i8
-color_obtinere_a(Color color)
+color_obtinere_a (
+    Color color)
 {
     redde color.a;
 }
@@ -110,7 +125,10 @@ color_obtinere_a(Color color)
  * ================================================== */
 
 Color
-color_interpolate(Color a, Color b, i32 t)
+color_interpolate (
+    Color a,
+    Color b,
+      i32 t)
 {
     Color result;
     /* Arithmetica SIGNATA ex decreto (inventum gradus severi
@@ -130,7 +148,8 @@ color_interpolate(Color a, Color b, i32 t)
 }
 
 i8
-color_ad_cinereum(Color color)
+color_ad_cinereum (
+    Color color)
 {
     /* ITU-R BT.601 luminance weights:
      * Y = 0.299*R + 0.587*G + 0.114*B
@@ -140,7 +159,9 @@ color_ad_cinereum(Color color)
 }
 
 b32
-color_aequalis(Color a, Color b)
+color_aequalis (
+    Color a,
+    Color b)
 {
     redde (a.r == b.r) && (a.g == b.g) && (a.b == b.b) && (a.a == b.a);
 }

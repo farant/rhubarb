@@ -7,25 +7,26 @@
 #include "similitudo.h"
 #include <string.h>
 
+
 /* ==================================================
  * Structurae interiores
  * ================================================== */
 
 nomen structura {
-    chorda*  titulus;
-    i32      minimum;
+    chorda* titulus;
+       i32  minimum;
     /* SIGNATUM CONSULTO: -1 = infinitum. i32 INSIGNATUS est, ergo
      * '-1' in numerum immanem verteretur et 'maximum >= ZEPHYRUM'
      * semper verum esset - rami qui numquam currunt. Uncus examinis
      * id statim nominavit (codex: comparatio vana). */
-    s32      maximum;   /* -1 = infinitum */
+    s32 maximum;   /* -1 = infinitum */
 } CanonLiberum;
 
 nomen structura {
-    chorda*            titulus;
+               chorda* titulus;
     CanonGenusValoris  genus;
-    b32                necessarium;
-    Xar*               optiones;   /* Xar de chorda* (electio) */
+                  b32  necessarium;
+                  Xar* optiones;   /* Xar de chorda* (electio) */
     /* valor praestitutus cum attributum abest (NIHIL = nullus) -
      * attributum STML 'ordinarius=' fert, sed id verbum macro
      * latina est (default), ergo campus 'praestitutum'. Canon eum
@@ -33,18 +34,18 @@ nomen structura {
      * documentatio, catalogus generatus, generatio codicis
      * (initiatio structurarum). Conformitas generi in lectione
      * cogitur: praestitutum mendax canonem clamans frangit. */
-    chorda*            praestitutum;
+    chorda* praestitutum;
     /* FINES (spec fines) - numerus solus: fractio = punctum
      * decimale licet; minimum/maximum INCLUSIVA, forma eadem
      * lexicali scripta (fractio finium formam regit). Constrictio
      * spatii valorum, numquam repraesentatio machinae. */
-    b32                fractio;
-    chorda*            finis_minimus;
-    chorda*            finis_maximus;
+       b32  fractio;
+    chorda* finis_minimus;
+    chorda* finis_maximus;
 } CanonAttributum;
 
 nomen structura {
-    chorda*  titulus;
+    chorda* titulus;
     /* intra= : definitio ad PARENTEM adstricta. NIHIL = globalis.
      * Necessarium quia idem nomen formas duas ferre potest:
      * aedilis <regula> intra <nexus> obiectum= poscit et
@@ -52,26 +53,26 @@ nomen structura {
      * <obiectum> continet. Declarationes GLOBALES (mos DTD) hoc
      * dicere non possunt; contextus (mos RELAX NG) potest.
      * INVENTUM dialecto SECUNDO describendo - natura eo caruit. */
-    chorda*  intra;
-    b32      radix;
-    b32      textus_licet;
+    chorda* intra;
+       b32  radix;
+       b32  textus_licet;
     /* TEXTUS ubi licet genus ferre potest (textus="numerus"):
      * textus non vacuus generi congruere debet. TEXTUS = sine
      * genere (textus="verum" vetus). */
     CanonGenusValoris  textus_genus;
-    Xar*     attributa;  /* Xar de CanonAttributum */
-    Xar*     liberi;     /* Xar de CanonLiberum */
+                  Xar* attributa;  /* Xar de CanonAttributum */
+                  Xar* liberi;     /* Xar de CanonLiberum */
 } CanonElementum;
 
 nomen structura {
-    chorda*  titulus;
-    chorda*  attributum;
-    Xar*     super;      /* Xar de chorda* - genera elementorum */
+    chorda* titulus;
+    chorda* attributum;
+       Xar* super;      /* Xar de chorda* - genera elementorum */
     /* intra= : scopus per INSTANTIAM parentis nominati - unicitas
      * intra quamque instantiam separatim iudicatur (postulatio
      * quaestionum: parametra intra quaestionem unica, trans
      * quaestiones libere iterata). NIHIL = documentum totum. */
-    chorda*  intra;
+    chorda* intra;
 } CanonUnicitas;
 
 /* citatio: clavis-relatio intra documentum (mos xs:key/keyref).
@@ -84,13 +85,14 @@ nomen structura {
  * discit. Cum intra=: claves et citantes intra EANDEM instantiam
  * quaeruntur - transitus statum machinae SUAE citat, non alienae. */
 nomen structura {
-    chorda*  titulus;
-    chorda*  attributum;
-    Xar*     super;          /* vacuum = elementum quodlibet */
-    chorda*  intra;
-    Xar*     ad_elementa;    /* Xar de chorda* - tituli clavigeri */
-    chorda*  ad_attributum;
+    chorda* titulus;
+    chorda* attributum;
+       Xar* super;          /* vacuum = elementum quodlibet */
+    chorda* intra;
+       Xar* ad_elementa;    /* Xar de chorda* - tituli clavigeri */
+    chorda* ad_attributum;
 } CanonCitatio;
+
 
 /* ==================================================
  * Prototypa
@@ -136,12 +138,13 @@ interior chorda* _suggestio(constans chorda* quaestio,
 interior vacuum _subarborem_colligere(StmlNodus* scopus,
     constans chorda* limes, StmlNodus* infixus, Xar* nodi);
 
+
 /* ==================================================
  * Auxilia
  * ================================================== */
 
 interior b32
-album_solum(
+album_solum (
     constans chorda* s)
 {
     i32 i;
@@ -161,7 +164,7 @@ album_solum(
 }
 
 interior CanonGenusValoris
-genus_legere(
+genus_legere (
     constans chorda* s)
 {
     si (chorda_aequalis_literis(*s, "nomen"))   redde CANON_GENUS_NOMEN;
@@ -169,21 +172,17 @@ genus_legere(
     si (chorda_aequalis_literis(*s, "veritas")) redde CANON_GENUS_VERITAS;
     si (chorda_aequalis_literis(*s, "dies"))    redde CANON_GENUS_DIES;
     si (chorda_aequalis_literis(*s, "electio")) redde CANON_GENUS_ELECTIO;
-    si (chorda_aequalis_literis(*s, "identitas"))
-        redde CANON_GENUS_IDENTITAS;
-    si (chorda_aequalis_literis(*s, "referentia"))
-        redde CANON_GENUS_REFERENTIA;
-    si (chorda_aequalis_literis(*s, "compositum"))
-        redde CANON_GENUS_COMPOSITUM;
-    si (chorda_aequalis_literis(*s, "titulus"))
-        redde CANON_GENUS_TITULUS;
+    si (chorda_aequalis_literis(*s, "identitas")) redde CANON_GENUS_IDENTITAS;
+    si (chorda_aequalis_literis(*s, "referentia")) redde CANON_GENUS_REFERENTIA;
+    si (chorda_aequalis_literis(*s, "compositum")) redde CANON_GENUS_COMPOSITUM;
+    si (chorda_aequalis_literis(*s, "titulus")) redde CANON_GENUS_TITULUS;
 
     redde CANON_GENUS_TEXTUS;
 }
 
 /* yyyy | yyyy-mm | yyyy-mm-dd */
 interior b32
-dies_bene_formata(
+dies_bene_formata (
     constans chorda* d)
 {
     i32 i;
@@ -197,11 +196,11 @@ dies_bene_formata(
      * moritur); formae cum mense post signum quattuor digitos
      * servant (recursio in reliquum, digito primo custodito ne
      * '--312' signum geminum ferat). */
-    si (d->mensura > I &&
-        (character)d->datum[ZEPHYRUM] == '-')
+    si (   d->mensura > I
+        && (character)d->datum[ZEPHYRUM] == '-')
     {
-        si ((character)d->datum[I] < '0' ||
-            (character)d->datum[I] > '9')
+        si (   (character)d->datum[I] < '0'
+            || (character)d->datum[I] > '9')
         {
             redde FALSUM;
         }
@@ -222,8 +221,8 @@ dies_bene_formata(
         {
             chorda reliqua;
 
-            reliqua.datum   = d->datum + I;
-            reliqua.mensura = d->mensura - I;
+            reliqua.datum    = d->datum + I;
+            reliqua.mensura  = d->mensura - I;
             redde dies_bene_formata(&reliqua);
         }
     }
@@ -263,8 +262,8 @@ dies_bene_formata(
     {
         i32 dd;
 
-        dd = (i32)(d->datum[VIII] - '0') * X +
-             (i32)(d->datum[IX] - '0');
+        dd = (i32)(d->datum[VIII] - '0') * X
+            + (i32)(d->datum[IX] - '0');
         si (dd < I || dd > XXXI)
         {
             redde FALSUM;
@@ -279,21 +278,21 @@ dies_bene_formata(
  * Formam SANAM praesumit (valor_congruit ante iudicavit).
  * '-0' == '0': signum sine digitis significantibus tollitur. */
 interior vacuum
-_numerum_secare(
-    constans chorda*  v,
-    b32*              negativus,
-    i32*              integri_a,
-    i32*              integri_n,
-    i32*              fracti_a,
-    i32*              fracti_n)
+_numerum_secare (
+    constans chorda* v,
+                b32* negativus,
+                i32* integri_a,
+                i32* integri_n,
+                i32* fracti_a,
+                i32* fracti_n)
 {
     i32 initium;
     i32 punctum;
     i32 finis;
     i32 i;
 
-    initium    = ZEPHYRUM;
-    *negativus = FALSUM;
+    initium     = ZEPHYRUM;
+    *negativus  = FALSUM;
     si (v->mensura > ZEPHYRUM)
     {
         character c;
@@ -301,8 +300,8 @@ _numerum_secare(
         c = (character)v->datum[ZEPHYRUM];
         si (c == '-')
         {
-            *negativus = VERUM;
-            initium = I;
+            *negativus  = VERUM;
+            initium     = I;
         }
         alioquin si (c == '+')
         {
@@ -320,8 +319,8 @@ _numerum_secare(
         }
     }
 
-    dum (initium < punctum &&
-         (character)v->datum[initium] == '0')
+    dum (   initium < punctum
+         && (character)v->datum[initium] == '0')
     {
         initium++;
     }
@@ -332,10 +331,10 @@ _numerum_secare(
     {
         i32 post;
 
-        post  = punctum + I;
-        finis = v->mensura;
-        dum (finis > post &&
-             (character)v->datum[finis - I] == '0')
+        post   = punctum + I;
+        finis  = v->mensura;
+        dum (   finis > post
+             && (character)v->datum[finis - I] == '0')
         {
             finis--;
         }
@@ -355,9 +354,17 @@ _numerum_secare(
 }
 
 interior s32
-_magnitudines_comparare(
-    constans chorda* a, i32 ia, i32 na, i32 fa, i32 nfa,
-    constans chorda* b, i32 ib, i32 nb, i32 fb, i32 nfb)
+_magnitudines_comparare (
+    constans chorda* a,
+                i32  ia,
+                i32  na,
+                i32  fa,
+                i32  nfa,
+    constans chorda* b,
+                i32  ib,
+                i32  nb,
+                i32  fb,
+                i32  nfb)
 {
     i32 i;
     i32 maxima;
@@ -398,9 +405,9 @@ _magnitudines_comparare(
  * zephyrum si aequales, positivum si a>b. Formas sanas praesumit -
  * comparatio digitorum, numquam conversio. */
 interior s32
-_numeros_comparare(
-    constans chorda*  a,
-    constans chorda*  b)
+_numeros_comparare (
+    constans chorda* a,
+    constans chorda* b)
 {
     b32 neg_a;
     b32 neg_b;
@@ -427,22 +434,22 @@ _numeros_comparare(
  * eam generator multiplicia citare non poterat et sedes CDII
  * nomine solo iudicabantur. */
 interior b32
-_super_congruit(
-    StmlNodus*        n,
-    constans chorda*  t)
+_super_congruit (
+          StmlNodus* n,
+    constans chorda* t)
 {
     b32 inventus;
     i32 solidus;
     i32 i;
 
-    inventus = FALSUM;
-    solidus  = ZEPHYRUM;
+    inventus  = FALSUM;
+    solidus   = ZEPHYRUM;
     per (i = ZEPHYRUM; i < t->mensura; i++)
     {
         si ((character)t->datum[i] == '/')
         {
-            solidus  = i;
-            inventus = VERUM;
+            solidus   = i;
+            inventus  = VERUM;
             frange;
         }
     }
@@ -455,15 +462,15 @@ _super_congruit(
         chorda pars_parentis;
         chorda pars_liberi;
 
-        pars_parentis = chorda_sectio(*t, ZEPHYRUM, solidus);
-        pars_liberi   = chorda_sectio(*t, solidus + I, t->mensura);
+        pars_parentis  = chorda_sectio(*t, ZEPHYRUM, solidus);
+        pars_liberi    = chorda_sectio(*t, solidus + I, t->mensura);
         si (!chorda_aequalis(*n->titulus, pars_liberi))
         {
             redde FALSUM;
         }
-        si (!n->parens ||
-            n->parens->genus != STML_NODUS_ELEMENTUM ||
-            !n->parens->titulus)
+        si (   !n->parens
+            || n->parens->genus != STML_NODUS_ELEMENTUM
+            || !n->parens->titulus)
         {
             redde FALSUM;
         }
@@ -474,21 +481,21 @@ _super_congruit(
 /* an valor (formae iam sanae) intra fines declaratos sit - numerus
  * solus fines fert (lectio canonis id cogit) */
 interior b32
-_intra_fines(
-    constans chorda*  v,
-    CanonAttributum*  a)
+_intra_fines (
+    constans chorda* v,
+    CanonAttributum* a)
 {
     si (a->genus != CANON_GENUS_NUMERUS)
     {
         redde VERUM;
     }
-    si (a->finis_minimus &&
-        _numeros_comparare(v, a->finis_minimus) < ZEPHYRUM)
+    si (   a->finis_minimus
+        && _numeros_comparare(v, a->finis_minimus) < ZEPHYRUM)
     {
         redde FALSUM;
     }
-    si (a->finis_maximus &&
-        _numeros_comparare(v, a->finis_maximus) > ZEPHYRUM)
+    si (   a->finis_maximus
+        && _numeros_comparare(v, a->finis_maximus) > ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -496,9 +503,9 @@ _intra_fines(
 }
 
 interior b32
-valor_congruit(
-    constans chorda*  v,
-    CanonAttributum*  a)
+valor_congruit (
+    constans chorda* v,
+    CanonAttributum* a)
 {
     i32 i;
 
@@ -516,9 +523,9 @@ valor_congruit(
             /* titulus: punctum UNUM ducens licitum ('.species'),
              * corpus dein compositum; punctum solum vetatur */
             initium = ZEPHYRUM;
-            si (a->genus == CANON_GENUS_TITULUS &&
-                v->mensura > I &&
-                (character)v->datum[ZEPHYRUM] == '.')
+            si (   a->genus                      == CANON_GENUS_TITULUS
+                && v->mensura > I
+                && (character)v->datum[ZEPHYRUM] == '.')
             {
                 initium = I;
             }
@@ -532,12 +539,12 @@ valor_congruit(
                 character c;
 
                 c = (character)v->datum[i];
-                si (!((c >= 'a' && c <= 'z') ||
-                      (c >= 'A' && c <= 'Z') ||
-                      (c >= '0' && c <= '9') ||
-                      c == '_' || c == '*' ||
-                      (c == '-' &&
-                       a->genus != CANON_GENUS_NOMEN)))
+                si (!((c >= 'a' && c <= 'z')
+                    || (c >= 'A' && c <= 'Z')
+                    || (c >= '0' && c <= '9')
+                    || c == '_' || c == '*'
+                    || (c == '-'
+                    && a->genus != CANON_GENUS_NOMEN)))
                 {
                     redde FALSUM;
                 }
@@ -555,9 +562,9 @@ valor_congruit(
             {
                 redde FALSUM;
             }
-            punctum_visum = FALSUM;
-            digitus_ante  = FALSUM;
-            digitus_post  = FALSUM;
+            punctum_visum  = FALSUM;
+            digitus_ante   = FALSUM;
+            digitus_post   = FALSUM;
             per (i = ZEPHYRUM; i < v->mensura; i++)
             {
                 character c;
@@ -567,8 +574,8 @@ valor_congruit(
                 {
                     perge;
                 }
-                si (c == '.' && a->fractio && !punctum_visum &&
-                    digitus_ante)
+                si (   c == '.' && a->fractio && !punctum_visum
+                    && digitus_ante)
                 {
                     punctum_visum = VERUM;
                     perge;
@@ -598,8 +605,8 @@ valor_congruit(
         }
 
         casus CANON_GENUS_VERITAS:
-            redde (b32)(chorda_aequalis_literis(*v, "verum") ||
-                        chorda_aequalis_literis(*v, "falsum"));
+            redde (b32)(chorda_aequalis_literis(*v, "verum")
+                || chorda_aequalis_literis(*v, "falsum"));
 
         casus CANON_GENUS_DIES:
             redde dies_bene_formata(v);
@@ -621,7 +628,7 @@ valor_congruit(
         casus CANON_GENUS_REFERENTIA:
         {
             character signum;
-            i32       finis_corporis;
+                  i32 finis_corporis;
 
             si (v->mensura < II)
             {
@@ -642,15 +649,15 @@ valor_congruit(
              * UNAM inter attributa et textum servat. */
             si (signum == '&')
             {
-                si (v->mensura < III ||
-                    (character)v->datum[v->mensura - I] != ';')
+                si (   v->mensura < III
+                    || (character)v->datum[v->mensura - I] != ';')
                 {
                     redde FALSUM;
                 }
                 finis_corporis = v->mensura - I;
             }
-            alioquin si (a->genus == CANON_GENUS_REFERENTIA &&
-                         signum == '.')
+            alioquin si (   a->genus == CANON_GENUS_REFERENTIA
+                         && signum   == '.')
             {
                 finis_corporis = v->mensura;
             }
@@ -664,10 +671,10 @@ valor_congruit(
                 character c;
 
                 c = (character)v->datum[i];
-                si (!((c >= 'a' && c <= 'z') ||
-                      (c >= 'A' && c <= 'Z') ||
-                      (c >= '0' && c <= '9') ||
-                      c == '_' || c == '*' || c == '-'))
+                si (!((c >= 'a' && c <= 'z')
+                    || (c >= 'A' && c <= 'Z')
+                    || (c >= '0' && c <= '9')
+                    || c == '_' || c == '*' || c == '-'))
                 {
                     redde FALSUM;
                 }
@@ -681,14 +688,14 @@ valor_congruit(
 }
 
 interior vacuum
-vitium_addere(
-    Xar*              vitia,
+vitium_addere (
+                 Xar* vitia,
     CanonVitiumGenus  genus,
-    StmlNodus*        nodus,
-    chorda*           elementum,
-    chorda*           detail,
-    i32               numerus,
-    i32               limes)
+           StmlNodus* nodus,
+              chorda* elementum,
+              chorda* detail,
+                 i32  numerus,
+                 i32  limes)
 {
     CanonVitium* v;
 
@@ -698,12 +705,12 @@ vitium_addere(
         redde;
     }
 
-    v->genus     = genus;
-    v->nodus     = nodus;
-    v->elementum = elementum;
-    v->detail    = detail;
-    v->numerus   = numerus;
-    v->limes     = limes;
+    v->genus      = genus;
+    v->nodus      = nodus;
+    v->elementum  = elementum;
+    v->detail     = detail;
+    v->numerus    = numerus;
+    v->limes      = limes;
 }
 
 /* 'an X?' pro nomine ignoto - similitudo_optima_decurtata quia
@@ -711,26 +718,26 @@ vitium_addere(
  * donec candidati appareant - errores transpositionis capit quos
  * subsequentia nuda non potest). NIHIL si nihil simile. */
 interior chorda*
-_suggestio(
-    constans chorda*  quaestio,
-    constans chorda*  candidati,
-    i32               numerus,
-    Piscina*          piscina)
+_suggestio (
+    constans chorda* quaestio,
+    constans chorda* candidati,
+                i32  numerus,
+            Piscina* piscina)
 {
-    SimilitudoFructus fructus;
-    chorda*           d;
-    constans chorda*  optimus;
+    SimilitudoFructus  fructus;
+               chorda* d;
+      constans chorda* optimus;
 
-    si (numerus == ZEPHYRUM ||
-        similitudo_optima_decurtata(*quaestio, candidati, numerus,
+    si (   numerus == ZEPHYRUM
+        || similitudo_optima_decurtata(*quaestio, candidati, numerus,
                                     &fructus, I) == ZEPHYRUM)
     {
         redde NIHIL;
     }
     optimus = &candidati[fructus.index];
 
-    d = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
-    d->mensura = III + optimus->mensura + I;
+    d           = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+    d->mensura  = III + optimus->mensura + I;
     d->datum = (i8*)piscina_allocare(piscina,
                                      (memoriae_index)d->mensura);
     memcpy(d->datum, "an ", III);
@@ -743,15 +750,15 @@ _suggestio(
 
 /* clavis tabulae: "parens/nomen" pro definitione adstricta */
 interior chorda
-clavis_scopi(
-    Piscina*          p,
-    constans chorda*  intra,
-    constans chorda*  titulus)
+clavis_scopi (
+            Piscina* p,
+    constans chorda* intra,
+    constans chorda* titulus)
 {
     chorda k;
 
-    k.mensura = intra->mensura + I + titulus->mensura;
-    k.datum   = (i8*)piscina_allocare(p, (memoriae_index)k.mensura);
+    k.mensura  = intra->mensura + I + titulus->mensura;
+    k.datum    = (i8*)piscina_allocare(p, (memoriae_index)k.mensura);
     memcpy(k.datum, intra->datum, (memoriae_index)intra->mensura);
     k.datum[intra->mensura] = (i8)'/';
     memcpy(k.datum + intra->mensura + I, titulus->datum,
@@ -768,18 +775,18 @@ clavis_scopi(
  * 'adhibet' intra='instrumentum-aedificationis'). NIHIL = parens
  * arboris (mos ordinarius). */
 interior CanonElementum*
-_elementum_quaerere_vi(
-    Canon*               c,
-    StmlNodus*           n,
-    constans chorda*     parens_vi)
+_elementum_quaerere_vi (
+              Canon* c,
+          StmlNodus* n,
+    constans chorda* parens_vi)
 {
-    vacuum*          valor;
+             vacuum* valor;
     constans chorda* parens_titulus;
 
     parens_titulus = parens_vi;
-    si (!parens_titulus && n->parens &&
-        n->parens->genus == STML_NODUS_ELEMENTUM &&
-        n->parens->titulus)
+    si (   !parens_titulus && n->parens
+        && n->parens->genus == STML_NODUS_ELEMENTUM
+        && n->parens->titulus)
     {
         parens_titulus = n->parens->titulus;
     }
@@ -787,8 +794,8 @@ _elementum_quaerere_vi(
     si (parens_titulus)
     {
         PiscinaNotatio nota;
-        chorda         k;
-        b32            inventum;
+                chorda k;
+                   b32 inventum;
 
         nota = piscina_notare(c->piscina);
         k = clavis_scopi(c->piscina, parens_titulus, n->titulus);
@@ -809,9 +816,9 @@ _elementum_quaerere_vi(
 }
 
 interior CanonElementum*
-elementum_quaerere(
-    Canon*      c,
-    StmlNodus*  n)
+elementum_quaerere (
+        Canon* c,
+    StmlNodus* n)
 {
     redde _elementum_quaerere_vi(c, n, NIHIL);
 }
@@ -821,12 +828,12 @@ elementum_quaerere(
  * - instantia interior scopus suus est), subarbore infixi
  * praetermissa */
 interior vacuum
-_scopos_colligere(
-    StmlNodus*        radix,
-    constans chorda*  intra,
-    StmlNodus*        infixus,
-    Xar*              scopi,
-    Piscina*          piscina)
+_scopos_colligere (
+          StmlNodus* radix,
+    constans chorda* intra,
+          StmlNodus* infixus,
+                Xar* scopi,
+            Piscina* piscina)
 {
     Xar* acervus;
     i32  j;
@@ -835,8 +842,8 @@ _scopos_colligere(
     {
         StmlNodus** locus;
 
-        locus = (StmlNodus**)xar_addere(scopi);
-        *locus = radix;
+        locus   = (StmlNodus**)xar_addere(scopi);
+        *locus  = radix;
         redde;
     }
 
@@ -844,23 +851,23 @@ _scopos_colligere(
     {
         StmlNodus** locus;
 
-        locus = (StmlNodus**)xar_addere(acervus);
-        *locus = radix;
+        locus   = (StmlNodus**)xar_addere(acervus);
+        *locus  = radix;
     }
 
     per (j = ZEPHYRUM; j < xar_numerus(acervus); j++)
     {
         StmlNodus* n;
-        i32        numerus;
-        i32        k;
+              i32  numerus;
+              i32  k;
 
         n = *(StmlNodus**)xar_obtinere(acervus, j);
         si (n->titulus && chorda_aequalis(*n->titulus, *intra))
         {
             StmlNodus** locus;
 
-            locus = (StmlNodus**)xar_addere(scopi);
-            *locus = n;
+            locus   = (StmlNodus**)xar_addere(scopi);
+            *locus  = n;
         }
 
         numerus = stml_numerus_liberorum(n);
@@ -870,13 +877,13 @@ _scopos_colligere(
             StmlNodus** locus;
 
             l = stml_liberum_ad_indicem(n, k);
-            si (!l || l == infixus ||
-                l->genus != STML_NODUS_ELEMENTUM)
+            si (   !l || l == infixus
+                || l->genus != STML_NODUS_ELEMENTUM)
             {
                 perge;
             }
-            locus = (StmlNodus**)xar_addere(acervus);
-            *locus = l;
+            locus   = (StmlNodus**)xar_addere(acervus);
+            *locus  = l;
         }
     }
 }
@@ -886,60 +893,60 @@ _scopos_colligere(
  * scopus interior claves suas ipse tenet, exterior eas non
  * videt. Subarbor infixi semper praetermissa. */
 interior vacuum
-_subarborem_colligere(
-    StmlNodus*        scopus,
-    constans chorda*  limes,
-    StmlNodus*        infixus,
-    Xar*              nodi)
+_subarborem_colligere (
+          StmlNodus* scopus,
+    constans chorda* limes,
+          StmlNodus* infixus,
+                Xar* nodi)
 {
     i32 j;
 
     {
         StmlNodus** locus;
 
-        locus = (StmlNodus**)xar_addere(nodi);
-        *locus = scopus;
+        locus   = (StmlNodus**)xar_addere(nodi);
+        *locus  = scopus;
     }
 
     per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
     {
         StmlNodus* n;
-        i32        numerus;
-        i32        k;
+              i32  numerus;
+              i32  k;
 
-        n = *(StmlNodus**)xar_obtinere(nodi, j);
-        numerus = stml_numerus_liberorum(n);
+        n        = *(StmlNodus**)xar_obtinere(nodi, j);
+        numerus  = stml_numerus_liberorum(n);
         per (k = ZEPHYRUM; k < numerus; k++)
         {
             StmlNodus*  l;
             StmlNodus** locus;
 
             l = stml_liberum_ad_indicem(n, k);
-            si (!l || l == infixus ||
-                l->genus != STML_NODUS_ELEMENTUM)
+            si (   !l || l == infixus
+                || l->genus != STML_NODUS_ELEMENTUM)
             {
                 perge;
             }
-            si (limes && l->titulus &&
-                chorda_aequalis(*l->titulus, *limes))
+            si (   limes && l->titulus
+                && chorda_aequalis(*l->titulus, *limes))
             {
                 perge;   /* instantia interior: scopus suus */
             }
-            locus = (StmlNodus**)xar_addere(nodi);
-            *locus = l;
+            locus   = (StmlNodus**)xar_addere(nodi);
+            *locus  = l;
         }
     }
 }
 
 StmlNodus*
-canon_infixum_invenire(
+canon_infixum_invenire (
     StmlNodus* elementum_radix)
 {
     i32 numerus;
     i32 i;
 
-    si (!elementum_radix ||
-        elementum_radix->genus != STML_NODUS_ELEMENTUM)
+    si (   !elementum_radix
+        || elementum_radix->genus != STML_NODUS_ELEMENTUM)
     {
         redde NIHIL;
     }
@@ -954,8 +961,8 @@ canon_infixum_invenire(
         {
             perge;   /* textus albus et commentaria non numerant */
         }
-        si (l->titulus &&
-            chorda_aequalis_literis(*l->titulus, "canon"))
+        si (   l->titulus
+            && chorda_aequalis_literis(*l->titulus, "canon"))
         {
             redde l;
         }
@@ -965,16 +972,17 @@ canon_infixum_invenire(
     redde NIHIL;
 }
 
+
 /* ==================================================
  * Lectio canonis
  * ================================================== */
 
 Canon*
-canon_legere(
-    chorda                fons,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    chorda*               causa)
+canon_legere (
+                 chorda  fons,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa)
 {
     StmlResultus r;
 
@@ -993,26 +1001,26 @@ canon_legere(
 }
 
 Canon*
-canon_ex_nodo(
-    StmlNodus*            elementum,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    chorda*               causa)
+canon_ex_nodo (
+              StmlNodus* elementum,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa)
 {
-    Canon*  c;
-    i32     numerus;
-    i32     i;
+    Canon* c;
+      i32  numerus;
+      i32  i;
 
     si (causa)
     {
-        causa->datum   = NIHIL;
-        causa->mensura = ZEPHYRUM;
+        causa->datum    = NIHIL;
+        causa->mensura  = ZEPHYRUM;
     }
 
-    si (!elementum ||
-        elementum->genus != STML_NODUS_ELEMENTUM ||
-        !elementum->titulus ||
-        !chorda_aequalis_literis(*elementum->titulus, "canon"))
+    si (   !elementum
+        || elementum->genus != STML_NODUS_ELEMENTUM
+        || !elementum->titulus
+        || !chorda_aequalis_literis(*elementum->titulus, "canon"))
     {
         si (causa)
         {
@@ -1023,23 +1031,23 @@ canon_ex_nodo(
     }
 
     c = (Canon*)piscina_allocare(piscina, magnitudo(Canon));
-    c->piscina    = piscina;
-    c->intern     = intern;
-    c->dialectus  = stml_attributum_capere(elementum, "dialectus");
-    c->versio     = stml_attributum_capere(elementum, "versio");
-    c->elementa   = tabula_dispersa_creare_chorda(piscina, LXIV);
+    c->piscina = piscina;
+    c->intern = intern;
+    c->dialectus = stml_attributum_capere(elementum, "dialectus");
+    c->versio = stml_attributum_capere(elementum, "versio");
+    c->elementa = tabula_dispersa_creare_chorda(piscina, LXIV);
     c->unicitates = xar_creare(piscina, (i32)magnitudo(CanonUnicitas*));
     c->citationes = xar_creare(piscina, (i32)magnitudo(CanonCitatio*));
-    c->tituli     = xar_creare(piscina, (i32)magnitudo(chorda*));
-    c->radix      = NIHIL;
+    c->tituli = xar_creare(piscina, (i32)magnitudo(chorda*));
+    c->radix = NIHIL;
     c->claves_externae = NIHIL;
-    c->claves_fons     = NIHIL;
+    c->claves_fons = NIHIL;
 
     numerus = stml_numerus_liberorum(elementum);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* n;
-        chorda*    titulus;
+           chorda* titulus;
 
         n = stml_liberum_ad_indicem(elementum, i);
         si (!n || n->genus != STML_NODUS_ELEMENTUM)
@@ -1064,14 +1072,14 @@ canon_ex_nodo(
             nl = stml_numerus_liberorum(n);
             per (j = ZEPHYRUM; j < nl; j++)
             {
-                StmlNodus*          cl;
+                         StmlNodus* cl;
                 CanonClavisExterna* ce;
-                chorda              textus;
+                            chorda  textus;
 
                 cl = stml_liberum_ad_indicem(n, j);
-                si (!cl || cl->genus != STML_NODUS_ELEMENTUM ||
-                    !cl->titulus ||
-                    !chorda_aequalis_literis(*cl->titulus, "clavis"))
+                si (   !cl || cl->genus != STML_NODUS_ELEMENTUM
+                    || !cl->titulus
+                    || !chorda_aequalis_literis(*cl->titulus, "clavis"))
                 {
                     perge;
                 }
@@ -1085,8 +1093,8 @@ canon_ex_nodo(
                 }
                 ce = (CanonClavisExterna*)piscina_allocare(piscina,
                     magnitudo(CanonClavisExterna));
-                ce->clavis = chorda_internare(intern, textus);
-                ce->genus  = stml_attributum_capere(cl, "genus");
+                ce->clavis  = chorda_internare(intern, textus);
+                ce->genus   = stml_attributum_capere(cl, "genus");
                 tabula_dispersa_inserere(c->claves_externae,
                                          *ce->clavis, ce);
             }
@@ -1102,9 +1110,9 @@ canon_ex_nodo(
         si (chorda_aequalis_literis(*n->titulus, "elementum"))
         {
             CanonElementum* e;
-            chorda*         attr;
-            i32             nl;
-            i32             j;
+                    chorda* attr;
+                       i32  nl;
+                       i32  j;
 
             e = (CanonElementum*)piscina_allocare(piscina,
                 magnitudo(CanonElementum));
@@ -1113,18 +1121,18 @@ canon_ex_nodo(
                                 (i32)magnitudo(CanonAttributum));
             e->liberi       = xar_creare(piscina,
                                 (i32)magnitudo(CanonLiberum));
-            e->intra = stml_attributum_capere(n, "intra");
-            attr = stml_attributum_capere(n, "radix");
-            e->radix = (b32)(attr &&
-                chorda_aequalis_literis(*attr, "verum"));
+            e->intra  = stml_attributum_capere(n, "intra");
+            attr      = stml_attributum_capere(n, "radix");
+            e->radix = (b32)(attr
+                && chorda_aequalis_literis(*attr, "verum"));
             /* textus=: verum = licet sine genere; genus nominatum
              * (numerus/dies/...) = licet et congruere debet;
              * absens aut ignotus = vetitus. 'electio' pro textu
              * mechanismum optionum non habet - ut verum tractatur
              * (canon.canon eam ex electione sua excludit). */
-            e->textus_licet = FALSUM;
-            e->textus_genus = CANON_GENUS_TEXTUS;
-            attr = stml_attributum_capere(n, "textus");
+            e->textus_licet  = FALSUM;
+            e->textus_genus  = CANON_GENUS_TEXTUS;
+            attr             = stml_attributum_capere(n, "textus");
             si (attr)
             {
                 si (chorda_aequalis_literis(*attr, "verum"))
@@ -1155,15 +1163,15 @@ canon_ex_nodo(
             {
                 chorda** locus_t;
 
-                locus_t = (chorda**)xar_addere(c->tituli);
-                *locus_t = titulus;
+                locus_t   = (chorda**)xar_addere(c->tituli);
+                *locus_t  = titulus;
             }
 
             nl = stml_numerus_liberorum(n);
             per (j = ZEPHYRUM; j < nl; j++)
             {
                 StmlNodus* l;
-                chorda*    lt;
+                   chorda* lt;
 
                 l = stml_liberum_ad_indicem(n, j);
                 si (!l || l->genus != STML_NODUS_ELEMENTUM)
@@ -1180,40 +1188,40 @@ canon_ex_nodo(
                                             "attributum"))
                 {
                     CanonAttributum* a;
-                    chorda*          g;
-                    i32              no;
-                    i32              k;
+                             chorda* g;
+                                i32  no;
+                                i32  k;
 
                     a = (CanonAttributum*)xar_addere(e->attributa);
-                    a->titulus  = lt;
+                    a->titulus = lt;
                     g = stml_attributum_capere(l, "genus");
                     a->genus = g ? genus_legere(g)
                                  : CANON_GENUS_TEXTUS;
                     g = stml_attributum_capere(l, "necessarium");
-                    a->necessarium = (b32)(g &&
-                        chorda_aequalis_literis(*g, "verum"));
+                    a->necessarium = (b32)(g
+                        && chorda_aequalis_literis(*g, "verum"));
                     a->optiones = xar_creare(piscina,
                                     (i32)magnitudo(chorda*));
 
                     no = stml_numerus_liberorum(l);
                     per (k = ZEPHYRUM; k < no; k++)
                     {
-                        StmlNodus* o;
-                        chorda**   locus;
-                        chorda     t;
+                        StmlNodus*  o;
+                           chorda** locus;
+                           chorda   t;
 
                         o = stml_liberum_ad_indicem(l, k);
-                        si (!o ||
-                            o->genus != STML_NODUS_ELEMENTUM ||
-                            !chorda_aequalis_literis(*o->titulus,
+                        si (   !o
+                            || o->genus != STML_NODUS_ELEMENTUM
+                            || !chorda_aequalis_literis(*o->titulus,
                                                      "optio"))
                         {
                             perge;
                         }
                         t = chorda_praecidere(
                             stml_textus_internus(o, piscina));
-                        locus = (chorda**)xar_addere(a->optiones);
-                        *locus = chorda_internare(intern, t);
+                        locus   = (chorda**)xar_addere(a->optiones);
+                        *locus  = chorda_internare(intern, t);
                     }
 
                     /* FINES ante ordinarium (spec fines): numerus
@@ -1221,15 +1229,15 @@ canon_ex_nodo(
                      * ordine esse debent - canon mendax de se ipso
                      * fractura clamans est, non documentatio. */
                     g = stml_attributum_capere(l, "fractio");
-                    a->fractio = (b32)(g &&
-                        chorda_aequalis_literis(*g, "verum"));
+                    a->fractio = (b32)(g
+                        && chorda_aequalis_literis(*g, "verum"));
                     a->finis_minimus =
                         stml_attributum_capere(l, "minimum");
                     a->finis_maximus =
                         stml_attributum_capere(l, "maximum");
-                    si ((a->fractio || a->finis_minimus ||
-                         a->finis_maximus) &&
-                        a->genus != CANON_GENUS_NUMERUS)
+                    si (   (a->fractio || a->finis_minimus
+                        || a->finis_maximus)
+                        && a->genus != CANON_GENUS_NUMERUS)
                     {
                         si (causa)
                         {
@@ -1239,10 +1247,10 @@ canon_ex_nodo(
                         }
                         redde NIHIL;
                     }
-                    si ((a->finis_minimus &&
-                         !valor_congruit(a->finis_minimus, a)) ||
-                        (a->finis_maximus &&
-                         !valor_congruit(a->finis_maximus, a)))
+                    si (   (a->finis_minimus
+                        && !valor_congruit(a->finis_minimus, a))
+                        || (a->finis_maximus
+                        && !valor_congruit(a->finis_maximus, a)))
                     {
                         si (causa)
                         {
@@ -1251,10 +1259,10 @@ canon_ex_nodo(
                         }
                         redde NIHIL;
                     }
-                    si (a->finis_minimus && a->finis_maximus &&
-                        _numeros_comparare(a->finis_minimus,
-                                           a->finis_maximus) >
-                            ZEPHYRUM)
+                    si (   a->finis_minimus && a->finis_maximus
+                        && _numeros_comparare(a->finis_minimus,
+                                           a->finis_maximus)
+                        > ZEPHYRUM)
                     {
                         si (causa)
                         {
@@ -1271,9 +1279,9 @@ canon_ex_nodo(
                      * documentatio falsa tacita. */
                     a->praestitutum =
                         stml_attributum_capere(l, "ordinarius");
-                    si (a->praestitutum &&
-                        (!valor_congruit(a->praestitutum, a) ||
-                         !_intra_fines(a->praestitutum, a)))
+                    si (   a->praestitutum
+                        && (!valor_congruit(a->praestitutum, a)
+                        || !_intra_fines(a->praestitutum, a)))
                     {
                         si (causa)
                         {
@@ -1288,12 +1296,12 @@ canon_ex_nodo(
                                                      "liberum"))
                 {
                     CanonLiberum* lb;
-                    chorda*       m;
+                          chorda* m;
 
-                    lb = (CanonLiberum*)xar_addere(e->liberi);
-                    lb->titulus = lt;
-                    lb->minimum = ZEPHYRUM;
-                    lb->maximum = -I;
+                    lb           = (CanonLiberum*)xar_addere(e->liberi);
+                    lb->titulus  = lt;
+                    lb->minimum  = ZEPHYRUM;
+                    lb->maximum  = -I;
 
                     m = stml_attributum_capere(l, "minimum");
                     si (m)
@@ -1333,8 +1341,8 @@ canon_ex_nodo(
         {
             CanonCitatio*  ci;
             CanonCitatio** locus;
-            chorda*        ad;
-            chorda*        super;
+                  chorda*  ad;
+                  chorda*  super;
 
             ci = (CanonCitatio*)piscina_allocare(piscina,
                 magnitudo(CanonCitatio));
@@ -1344,8 +1352,8 @@ canon_ex_nodo(
             ci->intra         = stml_attributum_capere(n, "intra");
             ci->super         = xar_creare(piscina,
                                     (i32)magnitudo(chorda*));
-            ci->ad_elementa   = NIHIL;
-            ci->ad_attributum = NIHIL;
+            ci->ad_elementa    = NIHIL;
+            ci->ad_attributum  = NIHIL;
 
             /* ad="elementum.../attributum" - solidus OBLIGATORIUS,
              * tituli spatiis separati ante eum (unus = forma
@@ -1366,8 +1374,8 @@ canon_ex_nodo(
                         frange;
                     }
                 }
-                si (solidus <= ZEPHYRUM ||
-                    (i32)solidus >= ad->mensura - I)
+                si (   solidus      <= ZEPHYRUM
+                    || (i32)solidus >= ad->mensura - I)
                 {
                     si (causa)
                     {
@@ -1379,9 +1387,9 @@ canon_ex_nodo(
                     redde NIHIL;
                 }
                 {
-                    chorda                pars;
+                                   chorda pars;
                     chorda_fissio_fructus f;
-                    i32                   m;
+                                      i32 m;
 
                     pars = chorda_sectio(*ad, ZEPHYRUM,
                                          (i32)solidus);
@@ -1427,7 +1435,7 @@ canon_ex_nodo(
             si (super)
             {
                 chorda_fissio_fructus f;
-                i32                   k;
+                                  i32 k;
 
                 f = chorda_fissio(*super, ' ', piscina);
                 per (k = ZEPHYRUM; k < f.numerus; k++)
@@ -1440,26 +1448,26 @@ canon_ex_nodo(
                     {
                         perge;
                     }
-                    locus_s = (chorda**)xar_addere(ci->super);
-                    *locus_s = chorda_internare(intern, t);
+                    locus_s   = (chorda**)xar_addere(ci->super);
+                    *locus_s  = chorda_internare(intern, t);
                 }
             }
 
-            locus = (CanonCitatio**)xar_addere(c->citationes);
-            *locus = ci;
+            locus   = (CanonCitatio**)xar_addere(c->citationes);
+            *locus  = ci;
         }
         alioquin si (chorda_aequalis_literis(*n->titulus,
                                              "unicitas"))
         {
             CanonUnicitas*  u;
             CanonUnicitas** locus;
-            chorda*         super;
+                   chorda*  super;
 
             u = (CanonUnicitas*)piscina_allocare(piscina,
                 magnitudo(CanonUnicitas));
-            u->titulus    = titulus;
-            u->attributum = stml_attributum_capere(n, "attributum");
-            u->intra      = stml_attributum_capere(n, "intra");
+            u->titulus     = titulus;
+            u->attributum  = stml_attributum_capere(n, "attributum");
+            u->intra       = stml_attributum_capere(n, "intra");
             u->super      = xar_creare(piscina,
                                 (i32)magnitudo(chorda*));
 
@@ -1467,7 +1475,7 @@ canon_ex_nodo(
             si (super)
             {
                 chorda_fissio_fructus f;
-                i32                   k;
+                                  i32 k;
 
                 f = chorda_fissio(*super, ' ', piscina);
                 per (k = ZEPHYRUM; k < f.numerus; k++)
@@ -1480,18 +1488,19 @@ canon_ex_nodo(
                     {
                         perge;
                     }
-                    locus_s = (chorda**)xar_addere(u->super);
-                    *locus_s = chorda_internare(intern, t);
+                    locus_s   = (chorda**)xar_addere(u->super);
+                    *locus_s  = chorda_internare(intern, t);
                 }
             }
 
-            locus = (CanonUnicitas**)xar_addere(c->unicitates);
-            *locus = u;
+            locus   = (CanonUnicitas**)xar_addere(c->unicitates);
+            *locus  = u;
         }
     }
 
     redde c;
 }
+
 
 /* ==================================================
  * Iudicium
@@ -1504,13 +1513,13 @@ canon_ex_nodo(
  * (NC_CIT_APERTA generatoris artefactum illius aetatis erat) -
  * nunc cusae domesticae + claves externae id complent. */
 interior b32
-_clavigerum_stellae(
-    Canon*           c,
-    StmlNodus*       n,
+_clavigerum_stellae (
+              Canon* c,
+          StmlNodus* n,
     constans chorda* attributum)
 {
     CanonElementum* e;
-    i32             i;
+               i32  i;
 
     si (!attributum)
     {
@@ -1526,8 +1535,8 @@ _clavigerum_stellae(
         CanonAttributum* def;
 
         def = (CanonAttributum*)xar_obtinere(e->attributa, i);
-        si (def->genus == CANON_GENUS_IDENTITAS &&
-            chorda_aequalis(*def->titulus, *attributum))
+        si (   def->genus == CANON_GENUS_IDENTITAS
+            && chorda_aequalis(*def->titulus, *attributum))
         {
             redde VERUM;
         }
@@ -1541,13 +1550,13 @@ _clavigerum_stellae(
  * augmentum rara sed legalis; augmenta nidificata quaeque suo iure
  * colliguntur). */
 interior vacuum
-_augmenta_cusasque_colligere(
-    Canon*           c,
-    StmlNodus*       n,
-    StmlNodus*       infixus,
-    Xar*             augmenta,
-    TabulaDispersa*  cusa,
-    Piscina*         piscina)
+_augmenta_cusasque_colligere (
+             Canon* c,
+         StmlNodus* n,
+         StmlNodus* infixus,
+               Xar* augmenta,
+    TabulaDispersa* cusa,
+           Piscina* piscina)
 {
     i32 i;
     i32 numerus;
@@ -1577,7 +1586,7 @@ _augmenta_cusasque_colligere(
             per (i = ZEPHYRUM; i < xar_numerus(e->attributa); i++)
             {
                 CanonAttributum* def;
-                chorda*          v;
+                         chorda* v;
 
                 def = (CanonAttributum*)xar_obtinere(e->attributa,
                                                      i);
@@ -1610,17 +1619,17 @@ _augmenta_cusasque_colligere(
  * sine maximo legale (recursione plena iudicatum), attributum aut
  * liberum adstrictum = pugna, ignotum = vitium ordinarium. */
 interior vacuum
-_augmentum_iudicare(
-    Canon*           c,
-    StmlNodus*       a,
-    TabulaDispersa*  cusa,
-    Xar*             vitia,
-    Piscina*         piscina)
+_augmentum_iudicare (
+             Canon* c,
+         StmlNodus* a,
+    TabulaDispersa* cusa,
+               Xar* vitia,
+           Piscina* piscina)
 {
     CanonElementum* genus_def;
-    vacuum*         valor;
-    i32             i;
-    i32             numerus;
+            vacuum* valor;
+               i32  i;
+               i32  numerus;
 
     genus_def = NIHIL;
 
@@ -1635,16 +1644,16 @@ _augmentum_iudicare(
             redde;
         }
     }
-    alioquin si (c->claves_externae &&
-                 tabula_dispersa_invenire(c->claves_externae,
+    alioquin si (   c->claves_externae
+                 && tabula_dispersa_invenire(c->claves_externae,
                                           *a->augmentum_clavis,
                                           &valor))
     {
         CanonClavisExterna* ce;
 
         ce = (CanonClavisExterna*)valor;
-        si (ce->genus &&
-            tabula_dispersa_invenire(c->elementa, *ce->genus,
+        si (   ce->genus
+            && tabula_dispersa_invenire(c->elementa, *ce->genus,
                                      &valor))
         {
             genus_def = (CanonElementum*)valor;
@@ -1671,9 +1680,9 @@ _augmentum_iudicare(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        b32        legale;
-        b32        pugna;
-        i32        j;
+              b32  legale;
+              b32  pugna;
+              i32  j;
 
         l = stml_liberum_ad_indicem(a, i);
         si (!l)
@@ -1701,8 +1710,8 @@ _augmentum_iudicare(
             perge;
         }
 
-        legale = FALSUM;
-        pugna  = FALSUM;
+        legale  = FALSUM;
+        pugna   = FALSUM;
         per (j = ZEPHYRUM; j < xar_numerus(genus_def->liberi); j++)
         {
             CanonLiberum* lb;
@@ -1764,17 +1773,17 @@ _augmentum_iudicare(
  * _elementum_quaerere_vi) - NIHIL ubique praeter liberos
  * augmentationum, quibus genus destinatum traditur. */
 interior vacuum
-nodum_iudicare(
-    Canon*           c,
-    StmlNodus*       n,
-    Xar*             vitia,
-    Piscina*         piscina,
+nodum_iudicare (
+              Canon* c,
+          StmlNodus* n,
+                Xar* vitia,
+            Piscina* piscina,
     constans chorda* parens_vi)
 {
     CanonElementum* e;
-    StmlNodus*      infixus;
-    i32             numerus;
-    i32             i;
+         StmlNodus* infixus;
+               i32  numerus;
+               i32  i;
 
     si (!n || n->genus != STML_NODUS_ELEMENTUM || !n->titulus)
     {
@@ -1807,8 +1816,8 @@ nodum_iudicare(
         si (xar_numerus(c->tituli) > ZEPHYRUM)
         {
             chorda* acies;
-            i32     na;
-            i32     ia;
+               i32  na;
+               i32  ia;
 
             na = xar_numerus(c->tituli);
             acies = (chorda*)piscina_allocare(piscina,
@@ -1828,12 +1837,12 @@ nodum_iudicare(
     /* ---- attributa praesentia ---- */
     per (i = ZEPHYRUM; i < xar_numerus(n->attributa); i++)
     {
-        StmlAttributum*  a;
+         StmlAttributum* a;
         CanonAttributum* def;
-        i32              j;
+                    i32  j;
 
-        a = (StmlAttributum*)xar_obtinere(n->attributa, i);
-        def = NIHIL;
+        a    = (StmlAttributum*)xar_obtinere(n->attributa, i);
+        def  = NIHIL;
         per (j = ZEPHYRUM; j < xar_numerus(e->attributa); j++)
         {
             CanonAttributum* cand;
@@ -1851,13 +1860,13 @@ nodum_iudicare(
             chorda* detail;
             chorda* sug;
 
-            detail = a->titulus;
-            sug = NIHIL;
+            detail  = a->titulus;
+            sug     = NIHIL;
             si (xar_numerus(e->attributa) > ZEPHYRUM)
             {
                 chorda* acies;
-                i32     na;
-                i32     ia;
+                   i32  na;
+                   i32  ia;
 
                 na = xar_numerus(e->attributa);
                 acies = (chorda*)piscina_allocare(piscina,
@@ -1874,8 +1883,8 @@ nodum_iudicare(
                 /* "nomen (an X?)" - nomen ignotum SERVATUR */
                 detail = (chorda*)piscina_allocare(piscina,
                     magnitudo(chorda));
-                detail->mensura = a->titulus->mensura + II +
-                                  sug->mensura + I;
+                detail->mensura = a->titulus->mensura + II
+                    + sug->mensura + I;
                 detail->datum = (i8*)piscina_allocare(piscina,
                     (memoriae_index)detail->mensura);
                 memcpy(detail->datum, a->titulus->datum,
@@ -1910,8 +1919,8 @@ nodum_iudicare(
         CanonAttributum* def;
 
         def = (CanonAttributum*)xar_obtinere(e->attributa, i);
-        si (def->necessarium &&
-            !stml_attributum_capere(n, chorda_ut_cstr(*def->titulus,
+        si (   def->necessarium
+            && !stml_attributum_capere(n, chorda_ut_cstr(*def->titulus,
                                                       piscina)))
         {
             vitium_addere(vitia, CANON_ATTRIBUTUM_DEEST, n,
@@ -1937,9 +1946,9 @@ nodum_iudicare(
             tmp.optiones      = NIHIL;
             tmp.praestitutum  = NIHIL;
             /* fines in textu typato v1 NON stant (spec fines) */
-            tmp.fractio       = FALSUM;
-            tmp.finis_minimus = NIHIL;
-            tmp.finis_maximus = NIHIL;
+            tmp.fractio        = FALSUM;
+            tmp.finis_minimus  = NIHIL;
+            tmp.finis_maximus  = NIHIL;
             si (!valor_congruit(&textus_totus, &tmp))
             {
                 chorda* d;
@@ -1958,19 +1967,19 @@ nodum_iudicare(
     per (i = ZEPHYRUM; i < xar_numerus(e->liberi); i++)
     {
         CanonLiberum* lb;
-        i32           computa;
-        i32           j;
+                 i32  computa;
+                 i32  j;
 
-        lb = (CanonLiberum*)xar_obtinere(e->liberi, i);
-        computa = ZEPHYRUM;
+        lb       = (CanonLiberum*)xar_obtinere(e->liberi, i);
+        computa  = ZEPHYRUM;
         per (j = ZEPHYRUM; j < numerus; j++)
         {
             StmlNodus* l;
 
             l = stml_liberum_ad_indicem(n, j);
-            si (l && l != infixus &&
-                l->genus == STML_NODUS_ELEMENTUM &&
-                chorda_aequalis(*l->titulus, *lb->titulus))
+            si (   l && l != infixus
+                && l->genus == STML_NODUS_ELEMENTUM
+                && chorda_aequalis(*l->titulus, *lb->titulus))
             {
                 computa++;
             }
@@ -1991,8 +2000,8 @@ nodum_iudicare(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        b32        licet;
-        i32        j;
+              b32  licet;
+              i32  j;
 
         l = stml_liberum_ad_indicem(n, i);
         si (!l || l == infixus)
@@ -2002,8 +2011,8 @@ nodum_iudicare(
 
         si (l->genus == STML_NODUS_TEXTUS)
         {
-            si (!e->textus_licet && l->valor &&
-                !album_solum(l->valor))
+            si (   !e->textus_licet && l->valor
+                && !album_solum(l->valor))
             {
                 vitium_addere(vitia, CANON_TEXTUS_ILLICITUS, l,
                               e->titulus, NIHIL, ZEPHYRUM,
@@ -2049,14 +2058,14 @@ nodum_iudicare(
 }
 
 Xar*
-canon_iudicare(
-    Canon*      canon,
-    StmlNodus*  radix,
-    Piscina*    piscina)
+canon_iudicare (
+        Canon* canon,
+    StmlNodus* radix,
+      Piscina* piscina)
 {
-    Xar*       vitia;
+          Xar* vitia;
     StmlNodus* elementum_radix;
-    i32        i;
+          i32  i;
 
     si (!canon || !piscina)
     {
@@ -2075,8 +2084,8 @@ canon_iudicare(
     {
         i32 numerus;
 
-        elementum_radix = NIHIL;
-        numerus = stml_numerus_liberorum(radix);
+        elementum_radix  = NIHIL;
+        numerus          = stml_numerus_liberorum(radix);
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             StmlNodus* l;
@@ -2094,8 +2103,8 @@ canon_iudicare(
         redde vitia;
     }
 
-    si (canon->radix &&
-        !chorda_aequalis(*elementum_radix->titulus, *canon->radix))
+    si (   canon->radix
+        && !chorda_aequalis(*elementum_radix->titulus, *canon->radix))
     {
         vitium_addere(vitia, CANON_RADIX_MALA, elementum_radix,
                       elementum_radix->titulus, canon->radix,
@@ -2116,10 +2125,10 @@ canon_iudicare(
 
         per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
         {
-            CanonUnicitas*      u;
-            Xar*                scopi;
+                 CanonUnicitas* u;
+                           Xar* scopi;
             constans character* attr_cstr;
-            i32                 is;
+                           i32  is;
 
             u = *(CanonUnicitas**)xar_obtinere(canon->unicitates,
                                                i);
@@ -2136,10 +2145,10 @@ canon_iudicare(
 
             per (is = ZEPHYRUM; is < xar_numerus(scopi); is++)
             {
-                StmlNodus*      s;
+                     StmlNodus* s;
                 TabulaDispersa* visa;
-                Xar*            nodi;
-                i32             j;
+                           Xar* nodi;
+                           i32  j;
 
                 s = *(StmlNodus**)xar_obtinere(scopi, is);
                 visa = tabula_dispersa_creare_chorda(piscina,
@@ -2151,12 +2160,12 @@ canon_iudicare(
                 per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
                     StmlNodus* n;
-                    b32        sub;
-                    i32        m;
-                    chorda*    v;
+                          b32  sub;
+                          i32  m;
+                       chorda* v;
 
-                    n = *(StmlNodus**)xar_obtinere(nodi, j);
-                    sub = FALSUM;
+                    n    = *(StmlNodus**)xar_obtinere(nodi, j);
+                    sub  = FALSUM;
                     per (m = ZEPHYRUM; m < xar_numerus(u->super);
                          m++)
                     {
@@ -2194,18 +2203,18 @@ canon_iudicare(
 
         per (i = ZEPHYRUM; i < xar_numerus(canon->citationes); i++)
         {
-            CanonCitatio*       ci;
-            Xar*                scopi;
+                  CanonCitatio* ci;
+                           Xar* scopi;
             constans character* attr_cstr;
             constans character* ad_attr_cstr;
-            i32                 is;
+                           i32  is;
 
             ci = *(CanonCitatio**)xar_obtinere(canon->citationes,
                                                i);
             /* citatio manca (attributa absentia) INERS relinquitur
              * hic - canon.canon eam in ipso canone clamat */
-            si (!ci->attributum || !ci->ad_elementa ||
-                !ci->ad_attributum)
+            si (   !ci->attributum || !ci->ad_elementa
+                || !ci->ad_attributum)
             {
                 perge;
             }
@@ -2220,10 +2229,10 @@ canon_iudicare(
 
             per (is = ZEPHYRUM; is < xar_numerus(scopi); is++)
             {
-                StmlNodus*      s;
+                     StmlNodus* s;
                 TabulaDispersa* claves;
-                Xar*            nodi;
-                i32             j;
+                           Xar* nodi;
+                           i32  j;
 
                 s = *(StmlNodus**)xar_obtinere(scopi, is);
                 claves = tabula_dispersa_creare_chorda(piscina,
@@ -2238,12 +2247,12 @@ canon_iudicare(
                 per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
                     StmlNodus* n;
-                    chorda*    v;
-                    b32        clavigerum;
-                    i32        m;
+                       chorda* v;
+                          b32  clavigerum;
+                          i32  m;
 
-                    n = *(StmlNodus**)xar_obtinere(nodi, j);
-                    clavigerum = FALSUM;
+                    n           = *(StmlNodus**)xar_obtinere(nodi, j);
+                    clavigerum  = FALSUM;
                     per (m = ZEPHYRUM;
                          m < xar_numerus(ci->ad_elementa); m++)
                     {
@@ -2282,7 +2291,7 @@ canon_iudicare(
                 per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
                     StmlNodus* n;
-                    chorda*    v;
+                       chorda* v;
 
                     n = *(StmlNodus**)xar_obtinere(nodi, j);
                     si (xar_numerus(ci->super) > ZEPHYRUM)
@@ -2322,11 +2331,11 @@ canon_iudicare(
                          * opus, ergo etiam in canone moduli
                          * currit (spec canon-referentia par. 5) */
                         chorda corpus;
-                        b32    notum;
-                        i32    mv;
+                           b32 notum;
+                           i32 mv;
 
-                        corpus = chorda_sectio(*v, I, v->mensura);
-                        notum  = FALSUM;
+                        corpus  = chorda_sectio(*v, I, v->mensura);
+                        notum   = FALSUM;
                         per (mv = ZEPHYRUM;
                              mv < xar_numerus(ci->ad_elementa);
                              mv++)
@@ -2360,14 +2369,14 @@ canon_iudicare(
                         si (!notum)
                         {
                             chorda* sug;
-                            i32     nv;
+                               i32  nv;
 
-                            sug = NIHIL;
-                            nv  = xar_numerus(ci->ad_elementa);
+                            sug  = NIHIL;
+                            nv   = xar_numerus(ci->ad_elementa);
                             si (nv > ZEPHYRUM)
                             {
                                 chorda* acies_v;
-                                i32     iv;
+                                   i32  iv;
 
                                 acies_v = (chorda*)
                                     piscina_allocare(piscina,
@@ -2393,8 +2402,8 @@ canon_iudicare(
                     {
                         vacuum* val_e;
 
-                        si (canon->claves_externae &&
-                            tabula_dispersa_invenire(
+                        si (   canon->claves_externae
+                            && tabula_dispersa_invenire(
                                 canon->claves_externae, *v,
                                 &val_e))
                         {
@@ -2408,11 +2417,11 @@ canon_iudicare(
                              * subsumptio gratis). Stella genus
                              * quodvis admittit. */
                             CanonClavisExterna* ce;
-                            b32                 congruit;
-                            i32                 mg;
+                                           b32  congruit;
+                                           i32  mg;
 
-                            ce = (CanonClavisExterna*)val_e;
-                            congruit = FALSUM;
+                            ce        = (CanonClavisExterna*)val_e;
+                            congruit  = FALSUM;
                             per (mg = ZEPHYRUM;
                                  mg < xar_numerus(ci->ad_elementa);
                                  mg++)
@@ -2421,10 +2430,10 @@ canon_iudicare(
 
                                 tg = (chorda**)xar_obtinere(
                                     ci->ad_elementa, mg);
-                                si (chorda_aequalis_literis(**tg,
-                                                            "*") ||
-                                    (ce->genus &&
-                                     chorda_aequalis(**tg,
+                                si (   chorda_aequalis_literis(**tg,
+                                                            "*")
+                                    || (ce->genus
+                                    && chorda_aequalis(**tg,
                                                      *ce->genus)))
                                 {
                                     congruit = VERUM;
@@ -2463,9 +2472,9 @@ canon_iudicare(
          * documenti legalis). Scopus idem ac citationum: cusae
          * domi + claves externae bibliothecae (librarium W3). ---- */
         {
-            Xar*            augmenta;
+                       Xar* augmenta;
             TabulaDispersa* cusa;
-            i32             ia;
+                       i32  ia;
 
             augmenta = xar_creare(piscina,
                                   (i32)magnitudo(StmlNodus*));
@@ -2497,8 +2506,8 @@ canon_iudicare(
 
                     fons_doc = stml_attributum_capere(
                         elementum_radix, "fons");
-                    si (fons_doc &&
-                        chorda_aequalis(*fons_doc,
+                    si (   fons_doc
+                        && chorda_aequalis(*fons_doc,
                                         *canon->claves_fons))
                     {
                         exemptum = VERUM;
@@ -2507,9 +2516,9 @@ canon_iudicare(
 
                 si (!exemptum)
                 {
-                    TabulaIterator it;
-                    chorda         clavis;
-                    vacuum*        v;
+                    TabulaIterator  it;
+                            chorda  clavis;
+                            vacuum* v;
 
                     it = tabula_dispersa_iterator_initium(cusa);
                     dum (tabula_dispersa_iterator_proximum(
@@ -2519,7 +2528,7 @@ canon_iudicare(
                                 canon->claves_externae, clavis))
                         {
                             StmlNodus* cudens;
-                            chorda*    d;
+                               chorda* d;
 
                             cudens = (StmlNodus*)v;
                             d = (chorda*)piscina_allocare(piscina,
@@ -2540,7 +2549,7 @@ canon_iudicare(
 }
 
 constans character*
-canon_nuntius(
+canon_nuntius (
     CanonVitiumGenus genus)
 {
     commutatio (genus)
@@ -2587,22 +2596,23 @@ canon_nuntius(
     }
 }
 
+
 /* ==================================================
  * Registrum
  * ================================================== */
 
 chorda
-canon_registrum_quaerere_radice(
-    chorda            catalogus,
-    constans chorda*  radix,
-    Piscina*          piscina)
+canon_registrum_quaerere_radice (
+             chorda  catalogus,
+    constans chorda* radix,
+            Piscina* piscina)
 {
-    chorda                vacua;
+                   chorda vacua;
     chorda_fissio_fructus lineae;
-    i32                   i;
+                      i32 i;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (!radix || radix->mensura == ZEPHYRUM)
     {
@@ -2612,12 +2622,12 @@ canon_registrum_quaerere_radice(
     lineae = chorda_fissio(catalogus, '\n', piscina);
     per (i = ZEPHYRUM; i < lineae.numerus; i++)
     {
-        chorda                linea;
+                       chorda linea;
         chorda_fissio_fructus campi;
 
         linea = chorda_praecidere(lineae.elementa[i]);
-        si (linea.mensura == ZEPHYRUM ||
-            (character)linea.datum[ZEPHYRUM] == '#')
+        si (   linea.mensura                    == ZEPHYRUM
+            || (character)linea.datum[ZEPHYRUM] == '#')
         {
             perge;
         }
@@ -2631,9 +2641,9 @@ canon_registrum_quaerere_radice(
             chorda clavis;
 
             clavis = chorda_praecidere(campi.elementa[ZEPHYRUM]);
-            si (clavis.mensura >= III &&
-                (character)clavis.datum[ZEPHYRUM] == '<' &&
-                (character)clavis.datum[clavis.mensura - I] == '>')
+            si (   clavis.mensura                              >= III
+                && (character)clavis.datum[ZEPHYRUM]           == '<'
+                && (character)clavis.datum[clavis.mensura - I] == '>')
             {
                 chorda intus;
 
@@ -2651,18 +2661,18 @@ canon_registrum_quaerere_radice(
 }
 
 chorda
-canon_registrum_quaerere(
-    chorda               catalogus,
-    constans character*  via_plagulae,
-    Piscina*             piscina)
+canon_registrum_quaerere (
+                chorda  catalogus,
+    constans character* via_plagulae,
+               Piscina* piscina)
 {
-    chorda                vacua;
-    chorda_fissio_fructus lineae;
-    constans character*   punctum;
-    i32                   i;
+                   chorda  vacua;
+    chorda_fissio_fructus  lineae;
+       constans character* punctum;
+                      i32  i;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (!via_plagulae)
     {
@@ -2677,12 +2687,12 @@ canon_registrum_quaerere(
     lineae = chorda_fissio(catalogus, '\n', piscina);
     per (i = ZEPHYRUM; i < lineae.numerus; i++)
     {
-        chorda                linea;
+                       chorda linea;
         chorda_fissio_fructus campi;
 
         linea = chorda_praecidere(lineae.elementa[i]);
-        si (linea.mensura == ZEPHYRUM ||
-            (character)linea.datum[ZEPHYRUM] == '#')
+        si (   linea.mensura                    == ZEPHYRUM
+            || (character)linea.datum[ZEPHYRUM] == '#')
         {
             perge;
         }

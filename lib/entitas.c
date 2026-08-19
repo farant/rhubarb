@@ -15,14 +15,14 @@
  * Redde: VERUM si successus, FALSUM si error
  */
 interior b32
-_parsare_s32(
+_parsare_s32 (
     chorda  valor,
-    s32*    resultus)
+       s32* resultus)
 {
-    character buffer[64];
+    character  buffer[64];
     character* endptr;
-    longus     val;
-    i32        len;
+       longus  val;
+          i32  len;
 
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
@@ -39,8 +39,8 @@ _parsare_s32(
     buffer[len] = '\0';
 
     /* Parsare */
-    errno = 0;
-    val = strtol(buffer, &endptr, 10);
+    errno  = 0;
+    val    = strtol(buffer, &endptr, 10);
 
     /* Verificare errores */
     si (errno == ERANGE || val < INT_MIN || val > INT_MAX)
@@ -59,9 +59,9 @@ _parsare_s32(
 
 /* Parsare chorda ad s64 (manual parser pro C89 compatibility) */
 interior b32
-_parsare_s64(
+_parsare_s64 (
     chorda  valor,
-    s64*    resultus)
+       s64* resultus)
 {
     s64 val;
     s64 sign;
@@ -73,13 +73,13 @@ _parsare_s64(
         redde FALSUM;
     }
 
-    val  = 0;
-    sign = 1;
-    i    = 0;
+    val   = 0;
+    sign  = 1;
+    i     = 0;
 
     /* Saltare whitespace */
-    dum (i < valor.mensura &&
-         (valor.datum[i] == ' ' || valor.datum[i] == '\t'))
+    dum (   i < valor.mensura
+         && (valor.datum[i] == ' ' || valor.datum[i] == '\t'))
     {
         i++;
     }
@@ -111,8 +111,8 @@ _parsare_s64(
         si (c >= '0' && c <= '9')
         {
             /* Verificare overflow ante multiplicare */
-            si (val > 922337203685477580LL ||
-                (val == 922337203685477580LL && (c - '0') > 7))
+            si (   val > 922337203685477580LL
+                || (val == 922337203685477580LL && (c - '0') > 7))
             {
                 redde FALSUM;  /* Overflow */
             }
@@ -143,14 +143,14 @@ _parsare_s64(
 
 /* Parsare chorda ad f64 */
 interior b32
-_parsare_f64(
+_parsare_f64 (
     chorda  valor,
-    f64*    resultus)
+       f64* resultus)
 {
     character  buffer[128];
     character* endptr;
-    f64        val;
-    i32        len;
+          f64  val;
+          i32  len;
 
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
@@ -167,8 +167,8 @@ _parsare_f64(
     buffer[len] = '\0';
 
     /* Parsare */
-    errno = 0;
-    val = strtod(buffer, &endptr);
+    errno  = 0;
+    val    = strtod(buffer, &endptr);
 
     /* Verificare errores */
     si (errno == ERANGE)
@@ -189,9 +189,9 @@ _parsare_f64(
  * Accepta: "true", "false", "1", "0", "verum", "falsum"
  */
 interior b32
-_parsare_b32(
+_parsare_b32 (
     chorda  valor,
-    b32*    resultus)
+       b32* resultus)
 {
     si (!valor.datum || valor.mensura == ZEPHYRUM || !resultus)
     {
@@ -199,18 +199,18 @@ _parsare_b32(
     }
 
     /* Verificare "true" / "verum" / "1" */
-    si (chorda_aequalis_literis(valor, "true") ||
-        chorda_aequalis_literis(valor, "verum") ||
-        chorda_aequalis_literis(valor, "1"))
+    si (   chorda_aequalis_literis(valor, "true")
+        || chorda_aequalis_literis(valor, "verum")
+        || chorda_aequalis_literis(valor, "1"))
     {
         *resultus = VERUM;
         redde VERUM;
     }
 
     /* Verificare "false" / "falsum" / "0" */
-    si (chorda_aequalis_literis(valor, "false") ||
-        chorda_aequalis_literis(valor, "falsum") ||
-        chorda_aequalis_literis(valor, "0"))
+    si (   chorda_aequalis_literis(valor, "false")
+        || chorda_aequalis_literis(valor, "falsum")
+        || chorda_aequalis_literis(valor, "0"))
     {
         *resultus = FALSUM;
         redde VERUM;
@@ -223,9 +223,9 @@ _parsare_b32(
  * Accepta: raw millisecond string, vel ISO 8601 (futuro)
  */
 interior b32
-_parsare_tempus(
+_parsare_tempus (
     chorda  valor,
-    s64*    resultus)
+       s64* resultus)
 {
     /* Pro nunc, solum acceptare raw millisecond strings */
     redde _parsare_s64(valor, resultus);
@@ -236,7 +236,7 @@ _parsare_tempus(
  * Redde: TypusLiteralis enum valor, vel TYPUS_NIHIL si non cognitus
  */
 TypusLiteralis
-typus_literalis_ex_chorda(
+typus_literalis_ex_chorda (
     chorda typus)
 {
     si (!typus.datum || typus.mensura == ZEPHYRUM)
@@ -280,9 +280,9 @@ typus_literalis_ex_chorda(
  * Caches result in prop->parsitus si successus
  */
 b32
-proprietas_parsare_ut_typum(
-    Proprietas*    prop,
-    TypusLiteralis typus)
+proprietas_parsare_ut_typum (
+        Proprietas* prop,
+    TypusLiteralis  typus)
 {
     si (!prop || !prop->valor)
     {
@@ -303,9 +303,9 @@ proprietas_parsare_ut_typum(
             s32 val;
             si (_parsare_s32(*prop->valor, &val))
             {
-                prop->parsitus.ut_s32  = val;
-                prop->typus_literalis  = TYPUS_S32;
-                prop->parsitus_validus = VERUM;
+                prop->parsitus.ut_s32   = val;
+                prop->typus_literalis   = TYPUS_S32;
+                prop->parsitus_validus  = VERUM;
                 redde VERUM;
             }
             redde FALSUM;
@@ -316,9 +316,9 @@ proprietas_parsare_ut_typum(
             s64 val;
             si (_parsare_s64(*prop->valor, &val))
             {
-                prop->parsitus.ut_s64  = val;
-                prop->typus_literalis  = TYPUS_S64;
-                prop->parsitus_validus = VERUM;
+                prop->parsitus.ut_s64   = val;
+                prop->typus_literalis   = TYPUS_S64;
+                prop->parsitus_validus  = VERUM;
                 redde VERUM;
             }
             redde FALSUM;
@@ -329,9 +329,9 @@ proprietas_parsare_ut_typum(
             f64 val;
             si (_parsare_f64(*prop->valor, &val))
             {
-                prop->parsitus.ut_f64  = val;
-                prop->typus_literalis  = TYPUS_F64;
-                prop->parsitus_validus = VERUM;
+                prop->parsitus.ut_f64   = val;
+                prop->typus_literalis   = TYPUS_F64;
+                prop->parsitus_validus  = VERUM;
                 redde VERUM;
             }
             redde FALSUM;
@@ -342,9 +342,9 @@ proprietas_parsare_ut_typum(
             b32 val;
             si (_parsare_b32(*prop->valor, &val))
             {
-                prop->parsitus.ut_b32  = val;
-                prop->typus_literalis  = TYPUS_B32;
-                prop->parsitus_validus = VERUM;
+                prop->parsitus.ut_b32   = val;
+                prop->typus_literalis   = TYPUS_B32;
+                prop->parsitus_validus  = VERUM;
                 redde VERUM;
             }
             redde FALSUM;
@@ -355,9 +355,9 @@ proprietas_parsare_ut_typum(
             s64 val;
             si (_parsare_tempus(*prop->valor, &val))
             {
-                prop->parsitus.ut_tempus = val;
-                prop->typus_literalis    = TYPUS_TEMPUS;
-                prop->parsitus_validus   = VERUM;
+                prop->parsitus.ut_tempus  = val;
+                prop->typus_literalis     = TYPUS_TEMPUS;
+                prop->parsitus_validus    = VERUM;
                 redde VERUM;
             }
             redde FALSUM;
@@ -374,10 +374,10 @@ proprietas_parsare_ut_typum(
  * ================================================== */
 
 Entitas*
-entitas_creare(
+entitas_creare (
     Piscina* piscina,
-    chorda*  id,
-    chorda*  genus)
+     chorda* id,
+     chorda* genus)
 {
     Entitas* entitas;
 
@@ -394,8 +394,8 @@ entitas_creare(
     }
 
     /* Ponere campos */
-    entitas->id    = id;
-    entitas->genus = genus;
+    entitas->id     = id;
+    entitas->genus  = genus;
 
     /* Creare Xars pro proprietatibus, relationibus, notis */
     entitas->proprietates = xar_creare(piscina, magnitudo(Proprietas));
@@ -428,14 +428,14 @@ entitas_creare(
  * ================================================== */
 
 b32
-entitas_proprietas_ponere(
+entitas_proprietas_ponere (
     Entitas* entitas,
-    chorda*  clavis,
-    chorda*  valor)
+     chorda* clavis,
+     chorda* valor)
 {
     Proprietas* prop;
-    i32         i;
-    i32         numerus;
+           i32  i;
+           i32  numerus;
 
     si (!entitas || !clavis || !valor)
     {
@@ -452,8 +452,8 @@ entitas_proprietas_ponere(
             /* Renovare valorem existentem */
             prop->valor = valor;
             /* Reset parsing state - will be re-parsed if needed */
-            prop->typus_literalis  = TYPUS_NIHIL;
-            prop->parsitus_validus = FALSUM;
+            prop->typus_literalis   = TYPUS_NIHIL;
+            prop->parsitus_validus  = FALSUM;
             redde VERUM;
         }
     }
@@ -465,23 +465,23 @@ entitas_proprietas_ponere(
         redde FALSUM;
     }
 
-    prop->clavis           = clavis;
-    prop->valor            = valor;
-    prop->typus_semanticus = NIHIL;
-    prop->typus_literalis  = TYPUS_NIHIL;
-    prop->parsitus_validus = FALSUM;
+    prop->clavis            = clavis;
+    prop->valor             = valor;
+    prop->typus_semanticus  = NIHIL;
+    prop->typus_literalis   = TYPUS_NIHIL;
+    prop->parsitus_validus  = FALSUM;
 
     redde VERUM;
 }
 
 chorda*
-entitas_proprietas_capere(
+entitas_proprietas_capere (
     Entitas* entitas,
-    chorda*  clavis)
+     chorda* clavis)
 {
     Proprietas* prop;
-    i32         i;
-    i32         numerus;
+           i32  i;
+           i32  numerus;
 
     si (!entitas || !clavis)
     {
@@ -502,13 +502,13 @@ entitas_proprietas_capere(
 }
 
 Proprietas*
-entitas_proprietas_capere_plena(
+entitas_proprietas_capere_plena (
     Entitas* entitas,
-    chorda*  clavis)
+     chorda* clavis)
 {
     Proprietas* prop;
-    i32         i;
-    i32         numerus;
+           i32  i;
+           i32  numerus;
 
     si (!entitas || !clavis)
     {
@@ -529,10 +529,10 @@ entitas_proprietas_capere_plena(
 }
 
 b32
-entitas_proprietas_capere_s32(
+entitas_proprietas_capere_s32 (
     Entitas* entitas,
-    chorda*  clavis,
-    s32*     valor)
+     chorda* clavis,
+        s32* valor)
 {
     Proprietas* prop;
 
@@ -558,9 +558,9 @@ entitas_proprietas_capere_s32(
     si (_parsare_s32(*prop->valor, valor))
     {
         /* Cache resultatum */
-        prop->parsitus.ut_s32  = *valor;
-        prop->typus_literalis  = TYPUS_S32;
-        prop->parsitus_validus = VERUM;
+        prop->parsitus.ut_s32   = *valor;
+        prop->typus_literalis   = TYPUS_S32;
+        prop->parsitus_validus  = VERUM;
         redde VERUM;
     }
 
@@ -568,10 +568,10 @@ entitas_proprietas_capere_s32(
 }
 
 b32
-entitas_proprietas_capere_s64(
+entitas_proprietas_capere_s64 (
     Entitas* entitas,
-    chorda*  clavis,
-    s64*     valor)
+     chorda* clavis,
+        s64* valor)
 {
     Proprietas* prop;
 
@@ -597,9 +597,9 @@ entitas_proprietas_capere_s64(
     si (_parsare_s64(*prop->valor, valor))
     {
         /* Cache resultatum */
-        prop->parsitus.ut_s64  = *valor;
-        prop->typus_literalis  = TYPUS_S64;
-        prop->parsitus_validus = VERUM;
+        prop->parsitus.ut_s64   = *valor;
+        prop->typus_literalis   = TYPUS_S64;
+        prop->parsitus_validus  = VERUM;
         redde VERUM;
     }
 
@@ -607,10 +607,10 @@ entitas_proprietas_capere_s64(
 }
 
 b32
-entitas_proprietas_capere_f64(
+entitas_proprietas_capere_f64 (
     Entitas* entitas,
-    chorda*  clavis,
-    f64*     valor)
+     chorda* clavis,
+        f64* valor)
 {
     Proprietas* prop;
 
@@ -636,9 +636,9 @@ entitas_proprietas_capere_f64(
     si (_parsare_f64(*prop->valor, valor))
     {
         /* Cache resultatum */
-        prop->parsitus.ut_f64  = *valor;
-        prop->typus_literalis  = TYPUS_F64;
-        prop->parsitus_validus = VERUM;
+        prop->parsitus.ut_f64   = *valor;
+        prop->typus_literalis   = TYPUS_F64;
+        prop->parsitus_validus  = VERUM;
         redde VERUM;
     }
 
@@ -646,10 +646,10 @@ entitas_proprietas_capere_f64(
 }
 
 b32
-entitas_proprietas_capere_b32(
+entitas_proprietas_capere_b32 (
     Entitas* entitas,
-    chorda*  clavis,
-    b32*     valor)
+     chorda* clavis,
+        b32* valor)
 {
     Proprietas* prop;
 
@@ -675,9 +675,9 @@ entitas_proprietas_capere_b32(
     si (_parsare_b32(*prop->valor, valor))
     {
         /* Cache resultatum */
-        prop->parsitus.ut_b32  = *valor;
-        prop->typus_literalis  = TYPUS_B32;
-        prop->parsitus_validus = VERUM;
+        prop->parsitus.ut_b32   = *valor;
+        prop->typus_literalis   = TYPUS_B32;
+        prop->parsitus_validus  = VERUM;
         redde VERUM;
     }
 
@@ -685,10 +685,10 @@ entitas_proprietas_capere_b32(
 }
 
 b32
-entitas_proprietas_capere_tempus(
+entitas_proprietas_capere_tempus (
     Entitas* entitas,
-    chorda*  clavis,
-    s64*     valor)
+     chorda* clavis,
+        s64* valor)
 {
     Proprietas* prop;
 
@@ -714,9 +714,9 @@ entitas_proprietas_capere_tempus(
     si (_parsare_tempus(*prop->valor, valor))
     {
         /* Cache resultatum */
-        prop->parsitus.ut_tempus = *valor;
-        prop->typus_literalis    = TYPUS_TEMPUS;
-        prop->parsitus_validus   = VERUM;
+        prop->parsitus.ut_tempus  = *valor;
+        prop->typus_literalis     = TYPUS_TEMPUS;
+        prop->parsitus_validus    = VERUM;
         redde VERUM;
     }
 
@@ -724,18 +724,18 @@ entitas_proprietas_capere_tempus(
 }
 
 b32
-entitas_proprietas_ponere_blobum(
-    Entitas*     entitas,
-    chorda*      clavis,
-    const i8*    datum,
-    i32          mensura,
-    Piscina*     piscina)
+entitas_proprietas_ponere_blobum (
+     Entitas* entitas,
+      chorda* clavis,
+    const i8* datum,
+         i32  mensura,
+     Piscina* piscina)
 {
     FlaturaFructus  compressus;
-    chorda*         valor_chorda;
-    Proprietas*     prop;
-    i32             i;
-    i32             numerus;
+            chorda* valor_chorda;
+        Proprietas* prop;
+               i32  i;
+               i32  numerus;
 
     si (!entitas || !clavis || !datum || mensura <= 0 || !piscina)
     {
@@ -760,8 +760,8 @@ entitas_proprietas_ponere_blobum(
     {
         redde FALSUM;
     }
-    valor_chorda->datum   = compressus.datum;
-    valor_chorda->mensura = compressus.mensura;
+    valor_chorda->datum    = compressus.datum;
+    valor_chorda->mensura  = compressus.mensura;
 
     /* Quaerere si clavis iam existit (renovare valorem) */
     numerus = xar_numerus(entitas->proprietates);
@@ -771,9 +771,9 @@ entitas_proprietas_ponere_blobum(
         si (prop && prop->clavis == clavis)
         {
             /* Renovare valorem existentem */
-            prop->valor            = valor_chorda;
-            prop->typus_literalis  = TYPUS_BLOBUM;
-            prop->parsitus_validus = FALSUM;
+            prop->valor             = valor_chorda;
+            prop->typus_literalis   = TYPUS_BLOBUM;
+            prop->parsitus_validus  = FALSUM;
             redde VERUM;
         }
     }
@@ -785,25 +785,25 @@ entitas_proprietas_ponere_blobum(
         redde FALSUM;
     }
 
-    prop->clavis           = clavis;
-    prop->valor            = valor_chorda;
-    prop->typus_semanticus = NIHIL;
-    prop->typus_literalis  = TYPUS_BLOBUM;
-    prop->parsitus_validus = FALSUM;
+    prop->clavis            = clavis;
+    prop->valor             = valor_chorda;
+    prop->typus_semanticus  = NIHIL;
+    prop->typus_literalis   = TYPUS_BLOBUM;
+    prop->parsitus_validus  = FALSUM;
 
     redde VERUM;
 }
 
 b32
-entitas_proprietas_capere_blobum(
-    Entitas*     entitas,
-    chorda*      clavis,
-    i8**         datum,
-    i32*         mensura,
-    Piscina*     piscina)
+entitas_proprietas_capere_blobum (
+    Entitas*  entitas,
+     chorda*  clavis,
+         i8** datum,
+        i32*  mensura,
+    Piscina*  piscina)
 {
-    Proprietas*    prop;
-    FlaturaFructus decompressus;
+        Proprietas* prop;
+    FlaturaFructus  decompressus;
 
     si (!entitas || !clavis || !datum || !mensura || !piscina)
     {
@@ -834,29 +834,29 @@ entitas_proprietas_capere_blobum(
         redde FALSUM;
     }
 
-    *datum   = decompressus.datum;
-    *mensura = decompressus.mensura;
+    *datum    = decompressus.datum;
+    *mensura  = decompressus.mensura;
 
     redde VERUM;
 }
 
 b32
-entitas_proprietas_habet(
+entitas_proprietas_habet (
     Entitas* entitas,
-    chorda*  clavis)
+     chorda* clavis)
 {
     redde entitas_proprietas_capere(entitas, clavis) != NIHIL;
 }
 
 b32
-entitas_proprietas_delere(
+entitas_proprietas_delere (
     Entitas* entitas,
-    chorda*  clavis)
+     chorda* clavis)
 {
     Proprietas* prop;
     Proprietas* ultima;
-    i32         i;
-    i32         numerus;
+           i32  i;
+           i32  numerus;
 
     si (!entitas || !clavis)
     {
@@ -896,15 +896,15 @@ entitas_proprietas_delere(
  * ================================================== */
 
 Relatio*
-entitas_relatio_addere(
-    Entitas*             entitas,
-    Piscina*             piscina,
+entitas_relatio_addere (
+                Entitas* entitas,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              genus,
-    chorda*              destinatio_id)
+                 chorda* genus,
+                 chorda* destinatio_id)
 {
-    chorda   id_chorda;
-    chorda*  id_interned;
+    chorda  id_chorda;
+    chorda* id_interned;
 
     si (!entitas || !piscina || !intern || !genus || !destinatio_id)
     {
@@ -931,13 +931,13 @@ entitas_relatio_addere(
 }
 
 Relatio*
-entitas_relatio_addere_cum_id(
-    Entitas*             entitas,
-    Piscina*             piscina,
+entitas_relatio_addere_cum_id (
+                Entitas* entitas,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              relatio_id,
-    chorda*              genus,
-    chorda*              destinatio_id)
+                 chorda* relatio_id,
+                 chorda* genus,
+                 chorda* destinatio_id)
 {
     Relatio* relatio;
 
@@ -956,22 +956,22 @@ entitas_relatio_addere_cum_id(
         redde NIHIL;
     }
 
-    relatio->id            = relatio_id;
-    relatio->origo_id      = entitas->id;
-    relatio->genus         = genus;
-    relatio->destinatio_id = destinatio_id;
+    relatio->id             = relatio_id;
+    relatio->origo_id       = entitas->id;
+    relatio->genus          = genus;
+    relatio->destinatio_id  = destinatio_id;
 
     redde relatio;
 }
 
 Relatio*
-entitas_relatio_capere(
+entitas_relatio_capere (
     Entitas* entitas,
-    chorda*  relatio_id)
+     chorda* relatio_id)
 {
     Relatio* relatio;
-    i32      i;
-    i32      numerus;
+        i32  i;
+        i32  numerus;
 
     si (!entitas || !relatio_id)
     {
@@ -992,16 +992,16 @@ entitas_relatio_capere(
 }
 
 Xar*
-entitas_relationes_generis_capere(
+entitas_relationes_generis_capere (
     Entitas* entitas,
-    chorda*  genus,
+     chorda* genus,
     Piscina* piscina)
 {
     Relatio* relatio;
     Relatio* nova;
-    Xar*     resultus;
-    i32      i;
-    i32      numerus;
+        Xar* resultus;
+        i32  i;
+        i32  numerus;
 
     si (!entitas || !genus || !piscina)
     {
@@ -1035,14 +1035,14 @@ entitas_relationes_generis_capere(
 }
 
 b32
-entitas_relatio_delere(
+entitas_relatio_delere (
     Entitas* entitas,
-    chorda*  relatio_id)
+     chorda* relatio_id)
 {
     Relatio* relatio;
     Relatio* ultima;
-    i32      i;
-    i32      numerus;
+        i32  i;
+        i32  numerus;
 
     si (!entitas || !relatio_id)
     {
@@ -1082,9 +1082,9 @@ entitas_relatio_delere(
  * ================================================== */
 
 b32
-entitas_nota_addere(
+entitas_nota_addere (
     Entitas* entitas,
-    chorda*  nota)
+     chorda* nota)
 {
     chorda** slot;
 
@@ -1111,13 +1111,13 @@ entitas_nota_addere(
 }
 
 b32
-entitas_nota_habet(
+entitas_nota_habet (
     Entitas* entitas,
-    chorda*  nota)
+     chorda* nota)
 {
     chorda** slot;
-    i32      i;
-    i32      numerus;
+       i32   i;
+       i32   numerus;
 
     si (!entitas || !nota)
     {
@@ -1138,24 +1138,24 @@ entitas_nota_habet(
 }
 
 b32
-entitas_nota_cum_praefixo_habet(
-    Entitas*             entitas,
-    constans character*  praefixum)
+entitas_nota_cum_praefixo_habet (
+               Entitas* entitas,
+    constans character* praefixum)
 {
     chorda** slot;
     chorda*  nota;
-    i32      i;
-    i32      numerus;
-    i32      mensura_praefixum;
-    i32      j;
+       i32   i;
+       i32   numerus;
+       i32   mensura_praefixum;
+       i32   j;
 
     si (!entitas || !praefixum)
     {
         redde FALSUM;
     }
 
-    mensura_praefixum = (i32)strlen(praefixum);
-    numerus = xar_numerus(entitas->notae);
+    mensura_praefixum  = (i32)strlen(praefixum);
+    numerus            = xar_numerus(entitas->notae);
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -1193,14 +1193,14 @@ entitas_nota_cum_praefixo_habet(
 }
 
 b32
-entitas_nota_delere(
+entitas_nota_delere (
     Entitas* entitas,
-    chorda*  nota)
+     chorda* nota)
 {
     chorda** slot;
     chorda** ultima;
-    i32      i;
-    i32      numerus;
+       i32   i;
+       i32   numerus;
 
     si (!entitas || !nota)
     {
@@ -1240,11 +1240,11 @@ entitas_nota_delere(
  * ================================================== */
 
 chorda*
-entitas_titulum_capere(
+entitas_titulum_capere (
     Entitas* entitas)
 {
-    i32         i;
-    i32         numerus;
+           i32  i;
+           i32  numerus;
     Proprietas* prop;
 
     si (!entitas)
@@ -1257,8 +1257,8 @@ entitas_titulum_capere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
-        si (prop && prop->clavis && prop->clavis->datum &&
-            chorda_aequalis_literis(*prop->clavis, "name"))
+        si (   prop && prop->clavis && prop->clavis->datum
+            && chorda_aequalis_literis(*prop->clavis, "name"))
         {
             si (prop->valor && prop->valor->datum)
             {
@@ -1271,8 +1271,8 @@ entitas_titulum_capere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         prop = (Proprietas*)xar_obtinere(entitas->proprietates, i);
-        si (prop && prop->clavis && prop->clavis->datum &&
-            chorda_aequalis_literis(*prop->clavis, "title"))
+        si (   prop && prop->clavis && prop->clavis->datum
+            && chorda_aequalis_literis(*prop->clavis, "title"))
         {
             si (prop->valor && prop->valor->datum)
             {
@@ -1286,7 +1286,7 @@ entitas_titulum_capere(
 }
 
 i32
-entitas_numerus_proprietatum(
+entitas_numerus_proprietatum (
     Entitas* entitas)
 {
     si (!entitas || !entitas->proprietates)
@@ -1297,7 +1297,7 @@ entitas_numerus_proprietatum(
 }
 
 i32
-entitas_numerus_relationum(
+entitas_numerus_relationum (
     Entitas* entitas)
 {
     si (!entitas || !entitas->relationes)
@@ -1308,7 +1308,7 @@ entitas_numerus_relationum(
 }
 
 i32
-entitas_numerus_notarum(
+entitas_numerus_notarum (
     Entitas* entitas)
 {
     si (!entitas || !entitas->notae)
@@ -1319,14 +1319,14 @@ entitas_numerus_notarum(
 }
 
 vacuum
-entitas_imprimere(
+entitas_imprimere (
     Entitas* entitas)
 {
-    Proprietas* prop;
-    Relatio*    relatio;
-    chorda**    nota_slot;
-    i32         i;
-    i32         numerus;
+    Proprietas*  prop;
+       Relatio*  relatio;
+        chorda** nota_slot;
+           i32   i;
+           i32   numerus;
 
     si (!entitas)
     {

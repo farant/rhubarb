@@ -6,12 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /* ==================================================
  * auxilia
  * ================================================== */
 
 interior character
-_minusculum (character c)
+_minusculum (
+    character c)
 {
     si (c >= 'A' && c <= 'Z')
     {
@@ -22,12 +24,13 @@ _minusculum (character c)
 
 /* praefixum sine casu; VERUM si linea praefixo incipit */
 interior b32
-_praefixum_sine_casu (constans character* linea,
+_praefixum_sine_casu (
+    constans character* linea,
     constans character* praefixum)
 {
     dum (*praefixum != '\0')
     {
-        si (*linea == '\0'
+        si (   *linea              == '\0'
             || _minusculum(*linea) != _minusculum(*praefixum))
         {
             redde FALSUM;
@@ -43,18 +46,21 @@ _chorda_vacua (vacuum)
 {
     chorda c;
 
-    c.mensura = ZEPHYRUM;
-    c.datum = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    c.datum    = NIHIL;
     redde c;
 }
+
 
 /* ==================================================
  * EPISTULA (framing)
  * ================================================== */
 
 chorda
-tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
-    b32* fluxus_finitus)
+tabellarius_epistulam_legere (
+       FILE* fluxus,
+    Piscina* piscina,
+        b32* fluxus_finitus)
 {
     longus mensura_corporis = -1L;
 
@@ -69,8 +75,8 @@ tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
     per (;;)
     {
         character linea[CCLVI];
-        s32 plenitudo = ZEPHYRUM;
-        int c;
+              s32 plenitudo = ZEPHYRUM;
+              int c;
 
         dum ((c = fgetc(fluxus)) != EOF && c != '\n')
         {
@@ -107,7 +113,7 @@ tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
         /* capita cetera (Content-Type...) ignorata */
     }
 
-    si (mensura_corporis < 0L
+    si (   mensura_corporis < 0L
         || (insignatus longus)mensura_corporis
             > TABELLARIUS_CORPUS_MAXIMUM)
     {
@@ -116,7 +122,7 @@ tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
     }
 
     {
-        chorda corpus;
+           chorda  corpus;
         character* datum = (character*)piscina_allocare(piscina,
             (memoriae_index)(mensura_corporis + 1L));
 
@@ -125,7 +131,7 @@ tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
             *fluxus_finitus = VERUM;
             redde _chorda_vacua();
         }
-        si (mensura_corporis > 0L
+        si (   mensura_corporis > 0L
             && fread(datum, I, (memoriae_index)mensura_corporis,
                    fluxus)
                 != (memoriae_index)mensura_corporis)
@@ -133,15 +139,17 @@ tabellarius_epistulam_legere (FILE* fluxus, Piscina* piscina,
             *fluxus_finitus = VERUM;
             redde _chorda_vacua();
         }
-        datum[mensura_corporis] = '\0';
-        corpus.mensura = (i32)mensura_corporis;
-        corpus.datum = (i8*)datum;
+        datum[mensura_corporis]  = '\0';
+        corpus.mensura           = (i32)mensura_corporis;
+        corpus.datum             = (i8*)datum;
         redde corpus;
     }
 }
 
 vacuum
-tabellarius_epistulam_scribere (FILE* fluxus, chorda corpus)
+tabellarius_epistulam_scribere (
+      FILE* fluxus,
+    chorda  corpus)
 {
     si (fluxus == NIHIL)
     {
@@ -158,8 +166,10 @@ tabellarius_epistulam_scribere (FILE* fluxus, chorda corpus)
 }
 
 chorda
-tabellarius_lineam_legere (FILE* fluxus, Piscina* piscina,
-    b32* fluxus_finitus)
+tabellarius_lineam_legere (
+       FILE* fluxus,
+    Piscina* piscina,
+        b32* fluxus_finitus)
 {
     *fluxus_finitus = FALSUM;
     si (fluxus == NIHIL || piscina == NIHIL)
@@ -195,7 +205,7 @@ tabellarius_lineam_legere (FILE* fluxus, Piscina* piscina,
         {
             chorda linea = chorda_aedificator_finire(aed);
 
-            si (aliquid && linea.mensura > ZEPHYRUM
+            si (   aliquid && linea.mensura > ZEPHYRUM
                 && linea.datum[linea.mensura - I] == (i8)'\r')
             {
                 linea.mensura--;
@@ -216,11 +226,13 @@ tabellarius_lineam_legere (FILE* fluxus, Piscina* piscina,
 }
 
 b32
-tabellarius_lineam_scribere (FILE* fluxus, chorda corpus)
+tabellarius_lineam_scribere (
+      FILE* fluxus,
+    chorda  corpus)
 {
     i32 i;
 
-    si (fluxus == NIHIL || corpus.datum == NIHIL
+    si (   fluxus         == NIHIL || corpus.datum == NIHIL
         || corpus.mensura == ZEPHYRUM)
     {
         redde FALSUM;
@@ -241,21 +253,24 @@ tabellarius_lineam_scribere (FILE* fluxus, chorda corpus)
     redde VERUM;
 }
 
+
 /* ==================================================
  * NUNTIUS (envelope)
  * ================================================== */
 
 TabellariusNuntius
-tabellarius_nuntium_legere (chorda corpus, Piscina* piscina)
+tabellarius_nuntium_legere (
+     chorda  corpus,
+    Piscina* piscina)
 {
     TabellariusNuntius n;
-    JsonResultus res;
+          JsonResultus res;
 
-    n.genus = TABELLARIUS_PRAVUM;
-    n.radix = NIHIL;
-    n.id = NIHIL;
-    n.methodus = _chorda_vacua();
-    n.params = NIHIL;
+    n.genus     = TABELLARIUS_PRAVUM;
+    n.radix     = NIHIL;
+    n.id        = NIHIL;
+    n.methodus  = _chorda_vacua();
+    n.params    = NIHIL;
 
     si (piscina == NIHIL || corpus.datum == NIHIL)
     {
@@ -277,17 +292,17 @@ tabellarius_nuntium_legere (chorda corpus, Piscina* piscina)
             "method");
         JsonValor* id_v = json_objectum_capere(res.radix, "id");
 
-        n.id = id_v;
-        n.params = json_objectum_capere(res.radix, "params");
+        n.id      = id_v;
+        n.params  = json_objectum_capere(res.radix, "params");
         si (methodus_v != NIHIL && json_est_chorda(methodus_v))
         {
             n.methodus = json_ad_chorda(methodus_v);
             n.genus = (id_v != NIHIL) ? TABELLARIUS_PETITIO
                                       : TABELLARIUS_NUNTIATIO;
         }
-        alioquin si (id_v != NIHIL
-            && (json_objectum_habet(res.radix, "result")
-                || json_objectum_habet(res.radix, "error")))
+        alioquin si (   id_v != NIHIL
+                     && (json_objectum_habet(res.radix, "result")
+                     || json_objectum_habet(res.radix, "error")))
         {
             n.genus = TABELLARIUS_RESPONSUM;
         }
@@ -295,12 +310,15 @@ tabellarius_nuntium_legere (chorda corpus, Piscina* piscina)
     redde n;
 }
 
+
 /* ==================================================
  * FABRI
  * ================================================== */
 
 chorda
-tabellarius_responsum (Piscina* piscina, JsonValor* id,
+tabellarius_responsum (
+      Piscina* piscina,
+    JsonValor* id,
     JsonValor* resultatum)
 {
     JsonValor* obj;
@@ -325,7 +343,10 @@ tabellarius_responsum (Piscina* piscina, JsonValor* id,
 }
 
 chorda
-tabellarius_errorem (Piscina* piscina, JsonValor* id, longus codex,
+tabellarius_errorem (
+               Piscina* piscina,
+             JsonValor* id,
+                longus  codex,
     constans character* nuntius)
 {
     JsonValor* obj;
@@ -335,8 +356,8 @@ tabellarius_errorem (Piscina* piscina, JsonValor* id, longus codex,
     {
         redde _chorda_vacua();
     }
-    obj = json_objectum_creare(piscina);
-    error_v = json_objectum_creare(piscina);
+    obj      = json_objectum_creare(piscina);
+    error_v  = json_objectum_creare(piscina);
     si (obj == NIHIL || error_v == NIHIL)
     {
         redde _chorda_vacua();
@@ -354,8 +375,10 @@ tabellarius_errorem (Piscina* piscina, JsonValor* id, longus codex,
 }
 
 chorda
-tabellarius_nuntiationem (Piscina* piscina,
-    constans character* methodus, JsonValor* params)
+tabellarius_nuntiationem (
+               Piscina* piscina,
+    constans character* methodus,
+             JsonValor* params)
 {
     JsonValor* obj;
 

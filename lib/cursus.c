@@ -8,12 +8,12 @@
  * ================================================== */
 
 interior Capsa*
-_cursus_obtinere_vel_creare_capsam(
+_cursus_obtinere_vel_creare_capsam (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id)
+             chorda* entitas_id)
 {
     vacuum* valor;
-    Capsa*  capsa;
+     Capsa* capsa;
 
     si (!cursus || !entitas_id)
     {
@@ -48,14 +48,14 @@ _cursus_obtinere_vel_creare_capsam(
  * ================================================== */
 
 interior b32
-_cursus_tractare_nuntium(
+_cursus_tractare_nuntium (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id,
-    Nuntius*         nuntius)
+             chorda* entitas_id,
+            Nuntius* nuntius)
 {
-    Entitas*           entitas;
-    FunctioTractandi   tractator;
-    ContextusTractandi ctx;
+               Entitas* entitas;
+      FunctioTractandi  tractator;
+    ContextusTractandi  ctx;
 
     si (!cursus || !entitas_id || !nuntius)
     {
@@ -86,12 +86,12 @@ _cursus_tractare_nuntium(
     }
 
     /* Preparare contextum */
-    ctx.entitas      = entitas;
-    ctx.nuntius      = nuntius;
-    ctx.repositorium = cursus->repositorium;
-    ctx.cursus       = cursus;
-    ctx.piscina      = cursus->piscina;
-    ctx.datum_custom = cursus->datum_custom;
+    ctx.entitas       = entitas;
+    ctx.nuntius       = nuntius;
+    ctx.repositorium  = cursus->repositorium;
+    ctx.cursus        = cursus;
+    ctx.piscina       = cursus->piscina;
+    ctx.datum_custom  = cursus->datum_custom;
 
     /* Invocare tractator */
     redde tractator(&ctx);
@@ -103,11 +103,11 @@ _cursus_tractare_nuntium(
  * ================================================== */
 
 CursusNuntiorum*
-cursus_creare(
-    Piscina*              piscina,
+cursus_creare (
+                 Piscina* piscina,
     RegistrumTractatoris* tractator,
-    EntitasRepositorium*  repositorium,
-    InternamentumChorda*  intern)
+     EntitasRepositorium* repositorium,
+     InternamentumChorda* intern)
 {
     CursusNuntiorum* cursus;
 
@@ -122,11 +122,11 @@ cursus_creare(
         redde NIHIL;
     }
 
-    cursus->piscina      = piscina;
-    cursus->tractator    = tractator;
-    cursus->repositorium = repositorium;
-    cursus->intern       = intern;
-    cursus->datum_custom = NIHIL;
+    cursus->piscina       = piscina;
+    cursus->tractator     = tractator;
+    cursus->repositorium  = repositorium;
+    cursus->intern        = intern;
+    cursus->datum_custom  = NIHIL;
 
     /* Creare tabulam capsarum */
     cursus->capsae = tabula_dispersa_creare_chorda(piscina, LXIV);
@@ -139,9 +139,9 @@ cursus_creare(
 }
 
 vacuum
-cursus_ponere_datum(
+cursus_ponere_datum (
     CursusNuntiorum* cursus,
-    vacuum*          datum)
+             vacuum* datum)
 {
     si (cursus)
     {
@@ -155,15 +155,15 @@ cursus_ponere_datum(
  * ================================================== */
 
 b32
-cursus_mittere(
-    CursusNuntiorum*    cursus,
-    chorda*             mittens_id,
-    chorda*             destinatio_id,
+cursus_mittere (
+       CursusNuntiorum* cursus,
+                chorda* mittens_id,
+                chorda* destinatio_id,
     constans character* genus_nuntii,
-    TabulaDispersa*     datum)
+        TabulaDispersa* datum)
 {
     Nuntius* nuntius;
-    Capsa*   capsa;
+      Capsa* capsa;
 
     si (!cursus || !destinatio_id || !genus_nuntii)
     {
@@ -195,10 +195,10 @@ cursus_mittere(
 }
 
 b32
-cursus_mittere_nuntium(
+cursus_mittere_nuntium (
     CursusNuntiorum* cursus,
-    chorda*          destinatio_id,
-    Nuntius*         nuntius)
+             chorda* destinatio_id,
+            Nuntius* nuntius)
 {
     Capsa* capsa;
 
@@ -219,10 +219,10 @@ cursus_mittere_nuntium(
 }
 
 b32
-cursus_mittere_simplex(
-    CursusNuntiorum*    cursus,
-    chorda*             mittens_id,
-    chorda*             destinatio_id,
+cursus_mittere_simplex (
+       CursusNuntiorum* cursus,
+                chorda* mittens_id,
+                chorda* destinatio_id,
     constans character* genus_nuntii)
 {
     redde cursus_mittere(cursus, mittens_id, destinatio_id, genus_nuntii, NIHIL);
@@ -234,14 +234,14 @@ cursus_mittere_simplex(
  * ================================================== */
 
 i32
-cursus_processare(
+cursus_processare (
     CursusNuntiorum* cursus,
-    i32              maximus_nuntii)
+                i32  maximus_nuntii)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
-    i32            tractati;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+               i32  tractati;
 
     si (!cursus || maximus_nuntii <= ZEPHYRUM)
     {
@@ -254,12 +254,12 @@ cursus_processare(
     iter = tabula_dispersa_iterator_initium(cursus->capsae);
     dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
     {
-        Capsa*   capsa;
+          Capsa* capsa;
         Nuntius* nuntius;
-        chorda*  entitas_id;
+         chorda* entitas_id;
 
-        capsa = (Capsa*)valor;
-        entitas_id = capsa->possessor_id;
+        capsa       = (Capsa*)valor;
+        entitas_id  = capsa->possessor_id;
 
         /* Tractare nuntios in hac capsa */
         dum (!capsa_vacua_est(capsa) && tractati < maximus_nuntii)
@@ -283,14 +283,14 @@ cursus_processare(
 }
 
 i32
-cursus_processare_entitatem(
+cursus_processare_entitatem (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id,
-    i32              maximus_nuntii)
+             chorda* entitas_id,
+                i32  maximus_nuntii)
 {
-    Capsa*   capsa;
+      Capsa* capsa;
     Nuntius* nuntius;
-    i32      tractati;
+        i32  tractati;
 
     si (!cursus || !entitas_id || maximus_nuntii <= ZEPHYRUM)
     {
@@ -324,13 +324,13 @@ cursus_processare_entitatem(
  * ================================================== */
 
 i32
-cursus_numerus_pendentium(
+cursus_numerus_pendentium (
     CursusNuntiorum* cursus)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
-    i32            summa;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+               i32  summa;
 
     si (!cursus)
     {
@@ -351,9 +351,9 @@ cursus_numerus_pendentium(
 }
 
 i32
-cursus_numerus_pendentium_entitatis(
+cursus_numerus_pendentium_entitatis (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id)
+             chorda* entitas_id)
 {
     Capsa* capsa;
 
@@ -372,9 +372,9 @@ cursus_numerus_pendentium_entitatis(
 }
 
 b32
-cursus_habet_capsam(
+cursus_habet_capsam (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id)
+             chorda* entitas_id)
 {
     si (!cursus || !entitas_id)
     {
@@ -385,9 +385,9 @@ cursus_habet_capsam(
 }
 
 Capsa*
-cursus_obtinere_capsam(
+cursus_obtinere_capsam (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id)
+             chorda* entitas_id)
 {
     vacuum* valor;
 
@@ -410,12 +410,12 @@ cursus_obtinere_capsam(
  * ================================================== */
 
 vacuum
-cursus_vacare(
+cursus_vacare (
     CursusNuntiorum* cursus)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
 
     si (!cursus)
     {
@@ -432,14 +432,14 @@ cursus_vacare(
 }
 
 vacuum
-cursus_imprimere(
+cursus_imprimere (
     CursusNuntiorum* cursus)
 {
-    TabulaIterator iter;
-    chorda         clavis;
-    vacuum*        valor;
-    i32            total_capsae;
-    i32            total_nuntii;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+               i32  total_capsae;
+               i32  total_nuntii;
 
     si (!cursus)
     {

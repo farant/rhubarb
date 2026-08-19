@@ -24,12 +24,15 @@
 #include <stdio.h>
 #include <time.h>
 
+
 /* ====================================================
  * Auxilia parva
  * ==================================================== */
 
 interior vacuum
-_chordam_addere (Xar* xar, chorda valor)
+_chordam_addere (
+       Xar* xar,
+    chorda  valor)
 {
     chorda* locus;
 
@@ -41,13 +44,17 @@ _chordam_addere (Xar* xar, chorda valor)
 }
 
 interior Xar*
-_xar_chordarum (Piscina* piscina)
+_xar_chordarum (
+    Piscina* piscina)
 {
     redde xar_creare(piscina, (i32)magnitudo(chorda));
 }
 
 interior chorda
-_iungere_binas (chorda a, chorda b, Piscina* piscina)
+_iungere_binas (
+     chorda  a,
+     chorda  b,
+    Piscina* piscina)
 {
     chorda partes[2];
 
@@ -57,8 +64,11 @@ _iungere_binas (chorda a, chorda b, Piscina* piscina)
 }
 
 interior vacuum
-_causam_ponere (chorda* causa_out, Piscina* piscina,
-    constans character* praefixum, chorda res)
+_causam_ponere (
+                chorda* causa_out,
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  res)
 {
     ChordaAedificator* aedificator;
 
@@ -77,8 +87,10 @@ _causam_ponere (chorda* causa_out, Piscina* piscina,
 }
 
 interior b32
-_existit_sub_radice (constans AedilisConfiguratio* configuratio,
-    chorda via, Piscina* piscina)
+_existit_sub_radice (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  via,
+                         Piscina* piscina)
 {
     redde via_existit(
         _iungere_binas(configuratio->radix, via, piscina));
@@ -86,32 +98,36 @@ _existit_sub_radice (constans AedilisConfiguratio* configuratio,
 
 /* Verbum primum (ad spatium) scindere; reliquum tersum reddere */
 interior chorda
-_verbum_primum (chorda s, chorda* reliquum_out)
+_verbum_primum (
+    chorda  s,
+    chorda* reliquum_out)
 {
     chorda verbum;
-    i32 i;
+       i32 i;
 
     i = 0;
     dum (i < s.mensura && s.datum[i] != (i8)' ')
     {
         i++;
     }
-    verbum.datum = s.datum;
-    verbum.mensura = i;
+    verbum.datum    = s.datum;
+    verbum.mensura  = i;
     dum (i < s.mensura && s.datum[i] == (i8)' ')
     {
         i++;
     }
     si (reliquum_out != NIHIL)
     {
-        reliquum_out->datum = s.datum + i;
-        reliquum_out->mensura = s.mensura - i;
+        reliquum_out->datum    = s.datum + i;
+        reliquum_out->mensura  = s.mensura - i;
     }
     redde verbum;
 }
 
 interior vacuum
-_verba_scindere (chorda s, Xar* fructus)
+_verba_scindere (
+    chorda  s,
+       Xar* fructus)
 {
     i32 i;
 
@@ -133,19 +149,22 @@ _verba_scindere (chorda s, Xar* fructus)
         {
             chorda verbum;
 
-            verbum.datum = s.datum + initium;
-            verbum.mensura = i - initium;
+            verbum.datum    = s.datum + initium;
+            verbum.mensura  = i - initium;
             _chordam_addere(fructus, verbum);
         }
     }
 }
+
 
 /* ====================================================
  * Configuratio (aedilis.stml)
  * ==================================================== */
 
 interior Xar*
-_vexilla_colligere (StmlNodus* nodus, Piscina* piscina)
+_vexilla_colligere (
+    StmlNodus* nodus,
+      Piscina* piscina)
 {
     Xar* fructus;
     Xar* liberi;
@@ -163,10 +182,10 @@ _vexilla_colligere (StmlNodus* nodus, Piscina* piscina)
     per (i = 0; i < numerus; i++)
     {
         StmlNodus* liber;
-        chorda     textus;
+           chorda  textus;
 
-        liber = *(StmlNodus**)xar_obtinere(liberi, i);
-        textus = stml_textus_normalizatus(liber, piscina);
+        liber   = *(StmlNodus**)xar_obtinere(liberi, i);
+        textus  = stml_textus_normalizatus(liber, piscina);
         si (textus.mensura > 0)
         {
             _chordam_addere(fructus, textus);
@@ -176,17 +195,19 @@ _vexilla_colligere (StmlNodus* nodus, Piscina* piscina)
 }
 
 AedilisConfiguratio*
-aedilis_configurationem_legere (Piscina* piscina,
-    constans character* via_stml, chorda* causa_out)
+aedilis_configurationem_legere (
+               Piscina* piscina,
+    constans character* via_stml,
+                chorda* causa_out)
 {
     AedilisConfiguratio* configuratio;
     InternamentumChorda* intern;
-    StmlResultus         lectum;
-    StmlNodus*           radix_nodus;
-    StmlNodus*           sectio;
-    chorda               textus;
-    i32                  i;
-    i32                  numerus;
+           StmlResultus  lectum;
+              StmlNodus* radix_nodus;
+              StmlNodus* sectio;
+                 chorda  textus;
+                    i32  i;
+                    i32  numerus;
 
     textus = filum_legere_totum(via_stml, piscina);
     si (textus.mensura == 0)
@@ -215,9 +236,9 @@ aedilis_configurationem_legere (Piscina* piscina,
     }
     configuratio->radix = via_directorium(
         chorda_ex_literis(via_stml, piscina), piscina);
-    configuratio->inclusa = _xar_chordarum(piscina);
-    configuratio->vexilla = _xar_chordarum(piscina);
-    configuratio->variantes = _xar_chordarum(piscina);
+    configuratio->inclusa    = _xar_chordarum(piscina);
+    configuratio->vexilla    = _xar_chordarum(piscina);
+    configuratio->variantes  = _xar_chordarum(piscina);
     configuratio->regulae_nexus = xar_creare(piscina,
         (i32)magnitudo(AedilisRegulaNexus));
     configuratio->regulae_vendor = xar_creare(piscina,
@@ -230,15 +251,15 @@ aedilis_configurationem_legere (Piscina* piscina,
     {
         Xar* viae;
 
-        viae = stml_invenire_omnes_liberos(sectio, "via", piscina);
-        numerus = xar_numerus(viae);
+        viae     = stml_invenire_omnes_liberos(sectio, "via", piscina);
+        numerus  = xar_numerus(viae);
         per (i = 0; i < numerus; i++)
         {
             StmlNodus* nodus;
-            chorda     via;
+               chorda  via;
 
-            nodus = *(StmlNodus**)xar_obtinere(viae, i);
-            via = stml_textus_normalizatus(nodus, piscina);
+            nodus  = *(StmlNodus**)xar_obtinere(viae, i);
+            via    = stml_textus_normalizatus(nodus, piscina);
             si (via.mensura > 0)
             {
                 _chordam_addere(configuratio->inclusa, via);
@@ -271,12 +292,12 @@ aedilis_configurationem_legere (Piscina* piscina,
         numerus = xar_numerus(regulae);
         per (i = 0; i < numerus; i++)
         {
-            StmlNodus*         nodus;
-            chorda*            obiectum;
+                     StmlNodus* nodus;
+                        chorda* obiectum;
             AedilisRegulaNexus* regula;
 
-            nodus = *(StmlNodus**)xar_obtinere(regulae, i);
-            obiectum = stml_attributum_capere(nodus, "obiectum");
+            nodus     = *(StmlNodus**)xar_obtinere(regulae, i);
+            obiectum  = stml_attributum_capere(nodus, "obiectum");
             si (obiectum == NIHIL)
             {
                 perge;
@@ -302,12 +323,12 @@ aedilis_configurationem_legere (Piscina* piscina,
         numerus = xar_numerus(fontes);
         per (i = 0; i < numerus; i++)
         {
-            StmlNodus*           nodus;
-            chorda*              fons;
+                      StmlNodus* nodus;
+                         chorda* fons;
             AedilisRegulaVendor* regula;
 
-            nodus = *(StmlNodus**)xar_obtinere(fontes, i);
-            fons = stml_attributum_capere(nodus, "via");
+            nodus  = *(StmlNodus**)xar_obtinere(fontes, i);
+            fons   = stml_attributum_capere(nodus, "via");
             si (fons == NIHIL)
             {
                 perge;
@@ -333,12 +354,12 @@ aedilis_configurationem_legere (Piscina* piscina,
         numerus = xar_numerus(regulae);
         per (i = 0; i < numerus; i++)
         {
-            StmlNodus*        nodus;
-            chorda*           caput;
+                    StmlNodus* nodus;
+                       chorda* caput;
             AedilisIrregulare* regula;
-            Xar*              obiecta;
-            i32               k;
-            i32               numerus_obiectorum;
+                          Xar* obiecta;
+                          i32  k;
+                          i32  numerus_obiectorum;
 
             nodus = *(StmlNodus**)xar_obtinere(regulae, i);
             caput = stml_attributum_capere(nodus, "caput");
@@ -352,15 +373,15 @@ aedilis_configurationem_legere (Piscina* piscina,
             {
                 perge;
             }
-            regula->caput = *caput;
-            regula->obiecta = _xar_chordarum(piscina);
+            regula->caput    = *caput;
+            regula->obiecta  = _xar_chordarum(piscina);
             obiecta = stml_invenire_omnes_liberos(nodus,
                 "obiectum", piscina);
             numerus_obiectorum = xar_numerus(obiecta);
             per (k = 0; k < numerus_obiectorum; k++)
             {
                 StmlNodus* obiectum_nodus;
-                chorda     via;
+                   chorda  via;
 
                 obiectum_nodus = *(StmlNodus**)xar_obtinere(
                     obiecta, k);
@@ -377,6 +398,7 @@ aedilis_configurationem_legere (Piscina* piscina,
     redde configuratio;
 }
 
+
 /* ====================================================
  * Resolutio directivarum
  * ==================================================== */
@@ -384,16 +406,19 @@ aedilis_configurationem_legere (Piscina* piscina,
 /* Viam resolutam (relativam radici, normalizatam) reddere;
  * chorda vacua = nusquam inventa (systema) */
 interior chorda
-_directivam_resolvere (constans AedilisConfiguratio* configuratio,
-    chorda includens_dir, chorda rogata, Piscina* piscina)
+_directivam_resolvere (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  includens_dir,
+                          chorda  rogata,
+                         Piscina* piscina)
 {
     chorda candidata;
     chorda vacua;
-    i32    i;
-    i32    numerus;
+       i32 i;
+       i32 numerus;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
 
     /* rogata ipsa relativa radici (tegit -MM iam-resolutas) */
     si (_existit_sub_radice(configuratio, rogata, piscina))
@@ -402,7 +427,7 @@ _directivam_resolvere (constans AedilisConfiguratio* configuratio,
     }
 
     /* relativa includenti */
-    si (includens_dir.mensura > 0
+    si (   includens_dir.mensura > 0
         && !chorda_aequalis_literis(includens_dir, "."))
     {
         candidata = via_normalizare(
@@ -433,14 +458,18 @@ _directivam_resolvere (constans AedilisConfiguratio* configuratio,
     redde vacua;
 }
 
+
 /* ====================================================
  * Proba conventionis: caput -> fons obiecti
  * ==================================================== */
 
 interior chorda
-_candidatam_struere (chorda directorium, chorda basis,
-    constans character* varians, constans character* extensio,
-    Piscina* piscina)
+_candidatam_struere (
+                chorda  directorium,
+                chorda  basis,
+    constans character* varians,
+    constans character* extensio,
+               Piscina* piscina)
 {
     ChordaAedificator* aedificator;
 
@@ -460,22 +489,25 @@ _candidatam_struere (chorda directorium, chorda basis,
 /* Caput -> fons obiecti per conventionem (variantes praelatione,
  * deinde basis); chorda vacua = caput sine obiecto */
 interior chorda
-_obiectum_probare (constans AedilisConfiguratio* configuratio,
-    Xar* variantes_effectivae, chorda caput, Piscina* piscina)
+_obiectum_probare (
+    constans AedilisConfiguratio* configuratio,
+                             Xar* variantes_effectivae,
+                          chorda  caput,
+                         Piscina* piscina)
 {
     chorda basis;
     chorda caput_dir;
     chorda obiecti_dir;
     chorda candidata;
     chorda vacua;
-    i32    i;
-    i32    numerus;
+       i32 i;
+       i32 numerus;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
 
-    basis = via_nomen_radix(via_nomen(caput, piscina), piscina);
-    caput_dir = via_directorium(caput, piscina);
+    basis      = via_nomen_radix(via_nomen(caput, piscina), piscina);
+    caput_dir  = via_directorium(caput, piscina);
     si (chorda_aequalis_literis(caput_dir, "include"))
     {
         obiecti_dir = chorda_ex_literis("lib", piscina);
@@ -488,11 +520,11 @@ _obiectum_probare (constans AedilisConfiguratio* configuratio,
     numerus = xar_numerus(variantes_effectivae);
     per (i = 0; i < numerus; i++)
     {
-        chorda     varians;
+           chorda  varians;
         character* varians_cstr;
 
-        varians = *(chorda*)xar_obtinere(variantes_effectivae, i);
-        varians_cstr = chorda_ut_cstr(varians, piscina);
+        varians       = *(chorda*)xar_obtinere(variantes_effectivae, i);
+        varians_cstr  = chorda_ut_cstr(varians, piscina);
         candidata = _candidatam_struere(obiecti_dir, basis,
             varians_cstr, ".m", piscina);
         si (_existit_sub_radice(configuratio, candidata, piscina))
@@ -515,31 +547,34 @@ _obiectum_probare (constans AedilisConfiguratio* configuratio,
     redde vacua;
 }
 
+
 /* ====================================================
  * Machina derivationis
  * ==================================================== */
 
 nomen structura {
-    Piscina*                      piscina;
+                         Piscina* piscina;
     constans AedilisConfiguratio* configuratio;
-    AedilisFructus*               fructus;
-    TabulaDispersa*               visa_fontium;
-    TabulaDispersa*               visa_capitum;
-    TabulaDispersa*               visa_obiectorum;
-    TabulaDispersa*               visa_systematum;
-    TabulaDispersa*               visa_vendorum;
-    TabulaDispersa*               textualia;      /* .c inclusa */
-    Xar*                          pendentia;      /* chorda */
-    Xar*                          variantes_effectivae;
+                  AedilisFructus* fructus;
+                  TabulaDispersa* visa_fontium;
+                  TabulaDispersa* visa_capitum;
+                  TabulaDispersa* visa_obiectorum;
+                  TabulaDispersa* visa_systematum;
+                  TabulaDispersa* visa_vendorum;
+                  TabulaDispersa* textualia;      /* .c inclusa */
+                             Xar* pendentia;      /* chorda */
+                             Xar* variantes_effectivae;
 } Machina;
 
 interior Xar*
-_regulam_nexus_invenire (constans AedilisConfiguratio* configuratio,
-    chorda via_obiecti, Piscina* piscina)
+_regulam_nexus_invenire (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  via_obiecti,
+                         Piscina* piscina)
 {
     chorda basis;
-    i32    i;
-    i32    numerus;
+       i32 i;
+       i32 numerus;
 
     basis = via_nomen_radix(via_nomen(via_obiecti, piscina),
         piscina);
@@ -561,8 +596,10 @@ _regulam_nexus_invenire (constans AedilisConfiguratio* configuratio,
 /* Aristam graphi inclusionum in caput scribere (unice; xar pigre
  * creatum - caput sine aristis NIHIL manet) */
 interior vacuum
-_aristam_addere (AedilisCaput* caput, chorda resoluta,
-    Piscina* piscina)
+_aristam_addere (
+    AedilisCaput* caput,
+          chorda  resoluta,
+         Piscina* piscina)
 {
     i32 i;
     i32 numerus;
@@ -589,11 +626,14 @@ _aristam_addere (AedilisCaput* caput, chorda resoluta,
 }
 
 interior vacuum
-_obiectum_addere (Machina* machina, chorda via, chorda caput,
-    AedilisOrigo origo)
+_obiectum_addere (
+         Machina* machina,
+          chorda  via,
+          chorda  caput,
+    AedilisOrigo  origo)
 {
     AedilisObiectum* obiectum;
-    b32              absens;
+                b32  absens;
 
     si (chorda_aequalis(via, machina->fructus->scopus))
     {
@@ -614,10 +654,10 @@ _obiectum_addere (Machina* machina, chorda via, chorda caput,
     {
         redde;
     }
-    obiectum->via = via;
-    obiectum->caput = caput;
-    obiectum->origo = origo;
-    obiectum->absens = absens;
+    obiectum->via     = via;
+    obiectum->caput   = caput;
+    obiectum->origo   = origo;
+    obiectum->absens  = absens;
     obiectum->vexilla_nexus = _regulam_nexus_invenire(
         machina->configuratio, via, machina->piscina);
 
@@ -628,7 +668,7 @@ _obiectum_addere (Machina* machina, chorda via, chorda caput,
      * ut-fons (biblia_dr 6.1MB: silva parsare = OOM; exemplar
      * limitis speculi) - notantur, compilantur, nectuntur, numquam
      * ambulantur. Cetera ambulantur. */
-    si (!absens && origo != AEDILIS_ORIGO_ANNOTATIO
+    si (   !absens && origo != AEDILIS_ORIGO_ANNOTATIO
         && filum_mensura(chorda_ut_cstr(_iungere_binas(
                 machina->configuratio->radix, via,
                 machina->piscina), machina->piscina))
@@ -639,11 +679,13 @@ _obiectum_addere (Machina* machina, chorda via, chorda caput,
 }
 
 interior vacuum
-_vendor_tractare (Machina* machina, chorda resoluta)
+_vendor_tractare (
+    Machina* machina,
+     chorda  resoluta)
 {
     chorda fons;
-    i32    i;
-    i32    numerus;
+       i32 i;
+       i32 numerus;
     chorda suffixum_h;
 
     suffixum_h = chorda_ex_literis(".h", machina->piscina);
@@ -651,10 +693,10 @@ _vendor_tractare (Machina* machina, chorda resoluta)
     {
         /* caput vendicatum: conventio X.h -> X.c eodem loco */
         ChordaAedificator* aedificator;
-        chorda             sine_extensione;
+                   chorda  sine_extensione;
 
-        sine_extensione.datum = resoluta.datum;
-        sine_extensione.mensura = resoluta.mensura - 2;
+        sine_extensione.datum    = resoluta.datum;
+        sine_extensione.mensura  = resoluta.mensura - 2;
         aedificator = chorda_aedificator_creare(machina->piscina,
             128);
         chorda_aedificator_appendere_chorda(aedificator,
@@ -672,9 +714,9 @@ _vendor_tractare (Machina* machina, chorda resoluta)
                 machina->fructus->capita);
             si (caput != NIHIL)
             {
-                caput->via = resoluta;
-                caput->origo = AEDILIS_ORIGO_DERIVATUM;
-                caput->inclusa = NIHIL;
+                caput->via      = resoluta;
+                caput->origo    = AEDILIS_ORIGO_DERIVATUM;
+                caput->inclusa  = NIHIL;
             }
             /* valor = caput ipsum (aristae per ambulationem) */
             (vacuum)tabula_dispersa_inserere(
@@ -707,8 +749,8 @@ _vendor_tractare (Machina* machina, chorda resoluta)
         {
             redde;
         }
-        vendor->fons = fons;
-        vendor->vexilla = NIHIL;
+        vendor->fons     = fons;
+        vendor->vexilla  = NIHIL;
         numerus = xar_numerus(
             machina->configuratio->regulae_vendor);
         per (i = 0; i < numerus; i++)
@@ -727,8 +769,9 @@ _vendor_tractare (Machina* machina, chorda resoluta)
 }
 
 interior Xar*
-_irregulare_invenire (constans AedilisConfiguratio* configuratio,
-    chorda caput)
+_irregulare_invenire (
+    constans AedilisConfiguratio* configuratio,
+                          chorda  caput)
 {
     i32 i;
     i32 numerus;
@@ -749,17 +792,20 @@ _irregulare_invenire (constans AedilisConfiguratio* configuratio,
 }
 
 AedilisFructus*
-aedilis_derivare (Piscina* piscina,
+aedilis_derivare (
+                         Piscina* piscina,
     constans AedilisConfiguratio* configuratio,
-    constans character* scopus, constans character* varians,
-    AedilisExtractor extractor, vacuum* extractor_datum,
-    chorda* causa_out)
+              constans character* scopus,
+              constans character* varians,
+                AedilisExtractor  extractor,
+                          vacuum* extractor_datum,
+                          chorda* causa_out)
 {
-    Machina machina;
+           Machina  machina;
     AedilisFructus* fructus;
-    chorda praefixum_vendor;
-    chorda suffixum_h;
-    i32 cursor;
+            chorda  praefixum_vendor;
+            chorda  suffixum_h;
+               i32  cursor;
 
     fructus = (AedilisFructus*)piscina_allocare(piscina,
         magnitudo(AedilisFructus));
@@ -777,9 +823,9 @@ aedilis_derivare (Piscina* piscina,
         (i32)magnitudo(AedilisVendor));
     fructus->vexilla_annotata = _xar_chordarum(piscina);
 
-    machina.piscina = piscina;
-    machina.configuratio = configuratio;
-    machina.fructus = fructus;
+    machina.piscina       = piscina;
+    machina.configuratio  = configuratio;
+    machina.fructus       = fructus;
     machina.visa_fontium = tabula_dispersa_creare_chorda(piscina,
         256);
     machina.visa_capitum = tabula_dispersa_creare_chorda(piscina,
@@ -821,26 +867,26 @@ aedilis_derivare (Piscina* piscina,
     }
     alioquin
     {
-        fructus->varians.datum = NIHIL;
-        fructus->varians.mensura = 0;
+        fructus->varians.datum    = NIHIL;
+        fructus->varians.mensura  = 0;
     }
 
-    praefixum_vendor = chorda_ex_literis("vendor/", piscina);
-    suffixum_h = chorda_ex_literis(".h", piscina);
+    praefixum_vendor  = chorda_ex_literis("vendor/", piscina);
+    suffixum_h        = chorda_ex_literis(".h", piscina);
 
     _chordam_addere(machina.pendentia, fructus->scopus);
     cursor = 0;
 
     dum (cursor < xar_numerus(machina.pendentia))
     {
-        chorda        fons;
-        chorda        includens_dir;
-        Xar*          directivae;
-        Xar*          annotationes;
+              chorda  fons;
+              chorda  includens_dir;
+                 Xar* directivae;
+                 Xar* annotationes;
         AedilisCaput* caput_fontis;
-        b32           ex_oraculo;
-        i32           i;
-        i32           numerus;
+                 b32  ex_oraculo;
+                 i32  i;
+                 i32  numerus;
 
         fons = *(chorda*)xar_obtinere(machina.pendentia, cursor);
         cursor++;
@@ -865,9 +911,9 @@ aedilis_derivare (Piscina* piscina,
             }
         }
 
-        directivae = NIHIL;
-        annotationes = NIHIL;
-        ex_oraculo = FALSUM;
+        directivae    = NIHIL;
+        annotationes  = NIHIL;
+        ex_oraculo    = FALSUM;
         si (!extractor(extractor_datum,
                 chorda_ut_cstr(_iungere_binas(configuratio->radix,
                     fons, piscina), piscina),
@@ -992,20 +1038,20 @@ aedilis_derivare (Piscina* piscina,
             chorda verbum;
             chorda reliquum;
 
-            annotatio = *(chorda*)xar_obtinere(annotationes, i);
-            verbum = _verbum_primum(annotatio, &reliquum);
-            si (chorda_aequalis_literis(verbum, "obiectum")
+            annotatio  = *(chorda*)xar_obtinere(annotationes, i);
+            verbum     = _verbum_primum(annotatio, &reliquum);
+            si (   chorda_aequalis_literis(verbum, "obiectum")
                 && reliquum.mensura > 0)
             {
                 chorda caput_vacuum;
 
-                caput_vacuum.datum = NIHIL;
-                caput_vacuum.mensura = 0;
+                caput_vacuum.datum    = NIHIL;
+                caput_vacuum.mensura  = 0;
                 _obiectum_addere(&machina, reliquum, caput_vacuum,
                     AEDILIS_ORIGO_ANNOTATIO);
             }
-            alioquin si (chorda_aequalis_literis(verbum, "corpus")
-                && reliquum.mensura > 0)
+            alioquin si (   chorda_aequalis_literis(verbum, "corpus")
+                         && reliquum.mensura > 0)
             {
                 /* caput implementatorem suum declarat (verbum in
                  * capitibus domesticum; cum proba conventionis
@@ -1022,8 +1068,8 @@ aedilis_derivare (Piscina* piscina,
                 _obiectum_addere(&machina, reliquum, fons,
                     AEDILIS_ORIGO_CORPUS);
             }
-            alioquin si (chorda_aequalis_literis(verbum,
-                    "vexillum") && reliquum.mensura > 0)
+            alioquin si (   chorda_aequalis_literis(verbum,
+                         "vexillum") && reliquum.mensura > 0)
             {
                 _chordam_addere(fructus->vexilla_annotata,
                     reliquum);
@@ -1074,12 +1120,15 @@ aedilis_derivare (Piscina* piscina,
     redde fructus;
 }
 
+
 /* ====================================================
  * Ordo topologicus capitum
  * ==================================================== */
 
 interior s32
-_capitis_index (constans AedilisFructus* fructus, chorda via)
+_capitis_index (
+    constans AedilisFructus* fructus,
+                     chorda  via)
 {
     i32 i;
     i32 numerus;
@@ -1099,8 +1148,10 @@ _capitis_index (constans AedilisFructus* fructus, chorda via)
 }
 
 Xar*
-aedilis_capita_ordinare (constans AedilisFructus* fructus,
-    Piscina* piscina, chorda* causa_out)
+aedilis_capita_ordinare (
+    constans AedilisFructus* fructus,
+                    Piscina* piscina,
+                     chorda* causa_out)
 {
     Xar* ordinati;   /* AedilisCaput* */
     Xar* emissa;     /* b32, parallela capitibus */
@@ -1135,9 +1186,9 @@ aedilis_capita_ordinare (constans AedilisFructus* fructus,
         per (i = 0; i < numerus; i++)
         {
             AedilisCaput* caput;
-            b32           parata;
-            i32           k;
-            i32           numerus_aristarum;
+                     b32  parata;
+                     i32  k;
+                     i32  numerus_aristarum;
 
             si (*(b32*)xar_obtinere(emissa, i))
             {
@@ -1155,7 +1206,7 @@ aedilis_capita_ordinare (constans AedilisFructus* fructus,
                 index_dependentiae = _capitis_index(fructus,
                     *(chorda*)xar_obtinere(caput->inclusa, k));
                 /* dependentia extra capita = satisfacta */
-                si (index_dependentiae >= 0
+                si (   index_dependentiae >= 0
                     && !*(b32*)xar_obtinere(emissa,
                         (i32)index_dependentiae))
                 {
@@ -1210,12 +1261,14 @@ aedilis_capita_ordinare (constans AedilisFructus* fructus,
     redde ordinati;
 }
 
+
 /* ====================================================
  * Manifestum STML
  * ==================================================== */
 
 interior constans character*
-_origo_titulus (AedilisOrigo origo)
+_origo_titulus (
+    AedilisOrigo origo)
 {
     commutatio (origo)
     {
@@ -1229,8 +1282,11 @@ _origo_titulus (AedilisOrigo origo)
 }
 
 interior vacuum
-_vexilla_appendere (StmlNodus* parens, Xar* vexilla,
-    Piscina* piscina, InternamentumChorda* intern)
+_vexilla_appendere (
+              StmlNodus* parens,
+                    Xar* vexilla,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     i32 i;
     i32 numerus;
@@ -1243,17 +1299,17 @@ _vexilla_appendere (StmlNodus* parens, Xar* vexilla,
     per (i = 0; i < numerus; i++)
     {
         StmlNodus* nodus;
-        chorda     vexillum;
+           chorda  vexillum;
 
-        vexillum = *(chorda*)xar_obtinere(vexilla, i);
-        nodus = stml_elementum_creare(piscina, intern, "vexillum");
+        vexillum  = *(chorda*)xar_obtinere(vexilla, i);
+        nodus     = stml_elementum_creare(piscina, intern, "vexillum");
         si (nodus == NIHIL)
         {
             perge;
         }
-        nodus->crudus = VERUM;
-        nodus->captio_directio = STML_CAPTIO_ANTE;
-        nodus->captio_numerus = 1;
+        nodus->crudus           = VERUM;
+        nodus->captio_directio  = STML_CAPTIO_ANTE;
+        nodus->captio_numerus   = 1;
         {
             StmlNodus* textus;
 
@@ -1269,15 +1325,17 @@ _vexilla_appendere (StmlNodus* parens, Xar* vexilla,
 }
 
 chorda
-aedilis_manifestum_scribere (constans AedilisFructus* fructus,
-    Piscina* piscina, constans character* commissum)
+aedilis_manifestum_scribere (
+    constans AedilisFructus* fructus,
+                    Piscina* piscina,
+         constans character* commissum)
 {
     InternamentumChorda* intern;
-    StmlNodus* radix;
-    StmlNodus* sectio;
-    character  tempus_litterae[32];
-    i32 i;
-    i32 numerus;
+              StmlNodus* radix;
+              StmlNodus* sectio;
+              character  tempus_litterae[32];
+                    i32  i;
+                    i32  numerus;
 
     intern = internamentum_creare(piscina);
     radix = stml_elementum_creare(piscina, intern,
@@ -1304,7 +1362,7 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
     per (i = 0; i < numerus; i++)
     {
         AedilisObiectum* obiectum;
-        StmlNodus*       nodus;
+              StmlNodus* nodus;
 
         obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
             i);
@@ -1334,7 +1392,7 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
     per (i = 0; i < numerus; i++)
     {
         AedilisCaput* caput;
-        StmlNodus*    nodus;
+           StmlNodus* nodus;
 
         caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
         nodus = stml_elementum_creare(piscina, intern, "caput");
@@ -1383,7 +1441,7 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
     per (i = 0; i < numerus; i++)
     {
         AedilisVendor* vendor;
-        StmlNodus*     nodus;
+            StmlNodus* nodus;
 
         vendor = (AedilisVendor*)xar_obtinere(fructus->vendores,
             i);
@@ -1404,6 +1462,7 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
     redde stml_scribere(radix, piscina, VERUM);
 }
 
+
 /* ====================================================
  * Emissio scriptorum bash
  * ==================================================== */
@@ -1411,11 +1470,13 @@ aedilis_manifestum_scribere (constans AedilisFructus* fructus,
 /* Nomen obiecti planatum: lib/tcp_posix.c -> lib__tcp_posix.o
  * (collisiones basium trans directoria impossibiles) */
 interior chorda
-_obiecti_nomen (chorda fons, Piscina* piscina)
+_obiecti_nomen (
+     chorda  fons,
+    Piscina* piscina)
 {
     ChordaAedificator* aedificator;
-    i32 i;
-    i32 finis;
+                  i32  i;
+                  i32  finis;
 
     finis = fons.mensura;
     dum (finis > 0 && fons.datum[finis - 1] != (i8)'.')
@@ -1445,8 +1506,9 @@ _obiecti_nomen (chorda fons, Piscina* piscina)
 }
 
 interior vacuum
-_scriptum_vexilla_iungere (ChordaAedificator* aedificator,
-    Xar* vexilla)
+_scriptum_vexilla_iungere (
+    ChordaAedificator* aedificator,
+                  Xar* vexilla)
 {
     i32 i;
     i32 numerus;
@@ -1465,7 +1527,9 @@ _scriptum_vexilla_iungere (ChordaAedificator* aedificator,
 
 /* Vexillum in xar addere nisi iam adest (deduplicatio nexus) */
 interior vacuum
-_vexillum_unicum (Xar* xar, chorda vexillum)
+_vexillum_unicum (
+       Xar* xar,
+    chorda  vexillum)
 {
     i32 i;
     i32 numerus;
@@ -1483,15 +1547,18 @@ _vexillum_unicum (Xar* xar, chorda vexillum)
 }
 
 chorda
-aedilis_scriptum_scribere (constans AedilisFructus* fructus,
-    constans AedilisConfiguratio* configuratio, Piscina* piscina,
-    b32 solitarius, constans character* commissum)
+aedilis_scriptum_scribere (
+         constans AedilisFructus* fructus,
+    constans AedilisConfiguratio* configuratio,
+                         Piscina* piscina,
+                             b32  solitarius,
+              constans character* commissum)
 {
     ChordaAedificator* s;
-    chorda             basis;
-    character          tempus_litterae[32];
-    i32                i;
-    i32                numerus;
+               chorda  basis;
+            character  tempus_litterae[32];
+                  i32  i;
+                  i32  numerus;
 
     basis = via_nomen_radix(via_nomen(fructus->scopus, piscina),
         piscina);
@@ -1625,7 +1692,7 @@ aedilis_scriptum_scribere (constans AedilisFructus* fructus,
     per (i = 0; i < numerus; i++)
     {
         AedilisVendor* vendor;
-        chorda         obiecti;
+               chorda  obiecti;
 
         vendor = (AedilisVendor*)xar_obtinere(fructus->vendores,
             i);
@@ -1700,13 +1767,13 @@ aedilis_scriptum_scribere (constans AedilisFructus* fructus,
     {
         Xar* nexus_vexilla;
 
-        nexus_vexilla = _xar_chordarum(piscina);
-        numerus = xar_numerus(fructus->obiecta);
+        nexus_vexilla  = _xar_chordarum(piscina);
+        numerus        = xar_numerus(fructus->obiecta);
         per (i = 0; i < numerus; i++)
         {
             AedilisObiectum* obiectum;
-            i32 k;
-            i32 numerus_vexillorum;
+                        i32  k;
+                        i32  numerus_vexillorum;
 
             obiectum = (AedilisObiectum*)xar_obtinere(
                 fructus->obiecta, i);

@@ -44,8 +44,8 @@ hic_manens constans character* RESPONSUM_PLENITUDINIS =
 /* Exemplar CAPSAE - router indices obiectorum solos tenet (ISO C
  * indices functionum in vacuum* vetat) */
 nomen structura {
-    HospitiumTractator tractator;
-    vacuum*            datum;
+    HospitiumTractator  tractator;
+                vacuum* datum;
 } CapsaTractatoris;
 
 nomen enumeratio {
@@ -54,27 +54,27 @@ nomen enumeratio {
 } ConnexioStatus;
 
 nomen structura {
-    b32            activa;
-    Hospitium*     hospitium;
-    TcpConnexio*   tcp;
-    integer        fd;
-    Piscina*       piscina_connexionis;
-    PiscinaNotatio basis;          /* ante parserem notata */
-    HttpParser*    parser;
+               b32  activa;
+         Hospitium* hospitium;
+       TcpConnexio* tcp;
+           integer  fd;
+           Piscina* piscina_connexionis;
+    PiscinaNotatio  basis;          /* ante parserem notata */
+        HttpParser* parser;
 
     /* cauda scriptionis */
-    chorda         scribenda;
-    i32            offset;         /* offset <= scribenda.mensura invariat */
+    chorda scribenda;
+       i32 offset;         /* offset <= scribenda.mensura invariat */
 
     ConnexioStatus status;
-    b32            keep_alive;
-    b32            claudenda_post; /* post caudam percolatam claudere */
-    b32            ob_reliquias;   /* clausura propter bytes pipelinatos */
+               b32 keep_alive;
+               b32 claudenda_post; /* post caudam percolatam claudere */
+               b32 ob_reliquias;   /* clausura propter bytes pipelinatos */
 
     /* termini (secunda f64 - tempus_nunc directe comparata) */
-    f64            terminus_otii;
-    f64            terminus_capitum;
-    b32            capita_legens;
+    f64 terminus_otii;
+    f64 terminus_capitum;
+    b32 capita_legens;
 } ConnexioHospitii;
 
 nomen structura {
@@ -83,10 +83,10 @@ nomen structura {
 } DirectoriumServiendum;
 
 structura Hospitium {
-    Piscina*   piscina;
+      Piscina* piscina;
     TcpServus* servus;
-    Reactor*   reactor;
-    Router*    router;
+      Reactor* reactor;
+       Router* router;
 
     /* configuratio resoluta */
     i32 connexiones_maximae;
@@ -98,26 +98,26 @@ structura Hospitium {
     b32 acta_accessus;
 
     ConnexioHospitii connexiones[HOSPITIUM_CONNEXIONES_TECTUM];
-    i32 connexiones_numerus;
+                 i32 connexiones_numerus;
 
     DirectoriumServiendum directoria[HOSPITIUM_DIRECTORIA_MAXIMA];
-    i32 directoria_numerus;
+                      i32 directoria_numerus;
 
     HospitiumFructus fructus;
-    b32 sistere_petitum;
+                 b32 sistere_petitum;
 };
 
 structura HospitiumColloquium {
-    Hospitium*          hospitium;
-    ConnexioHospitii*   connexio;
+             Hospitium* hospitium;
+      ConnexioHospitii* connexio;
     HttpPetitioServeri* petitio;
-    RoutaParams*        params;
-    vacuum*             datum;
-    b32                 est_caput;   /* HEAD - corpus omittendum */
+           RoutaParams* params;
+                vacuum* datum;
+                   b32  est_caput;   /* HEAD - corpus omittendum */
 
-    HttpCaput           capita[HOSPITIUM_CAPITA_MAXIMA];
-    i32                 capita_numerus;
-    b32                 respondit;
+    HttpCaput capita[HOSPITIUM_CAPITA_MAXIMA];
+          i32 capita_numerus;
+          b32 respondit;
 };
 
 
@@ -150,7 +150,9 @@ interior b32 _directorium_tentare(Hospitium* h, ConnexioHospitii* conn,
 
 /* Copia NUL-terminata pro API systematis (filum/iter) */
 interior constans character*
-_literis(chorda s, Piscina* piscina)
+_literis (
+     chorda  s,
+    Piscina* piscina)
 {
     character* l = (character*)piscina_allocare(piscina, (i64)(s.mensura + I));
     si (s.mensura > 0)
@@ -162,11 +164,11 @@ _literis(chorda s, Piscina* piscina)
 }
 
 interior chorda
-_chorda_vacua(vacuum)
+_chorda_vacua (vacuum)
 {
     chorda vacua;
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
     redde vacua;
 }
 
@@ -176,7 +178,9 @@ _chorda_vacua(vacuum)
  * ======================================================================== */
 
 interior vacuum
-_connexionem_claudere(Hospitium* h, ConnexioHospitii* conn)
+_connexionem_claudere (
+           Hospitium* h,
+    ConnexioHospitii* conn)
 {
     si (!conn->activa)
     {
@@ -187,17 +191,19 @@ _connexionem_claudere(Hospitium* h, ConnexioHospitii* conn)
     tcp_claudere(conn->tcp);
     piscina_destruere(conn->piscina_connexionis);
 
-    conn->activa = FALSUM;
-    conn->piscina_connexionis = NIHIL;
-    conn->parser = NIHIL;
-    conn->tcp = NIHIL;
+    conn->activa               = FALSUM;
+    conn->piscina_connexionis  = NIHIL;
+    conn->parser               = NIHIL;
+    conn->tcp                  = NIHIL;
     h->connexiones_numerus--;
 }
 
 /* Terminus petitionis: refectio piscinae + parser NOVUS.
  * Vocatur SOLUM post caudam scriptionis percolatam. */
 interior vacuum
-_paratus_novae(Hospitium* h, ConnexioHospitii* conn)
+_paratus_novae (
+           Hospitium* h,
+    ConnexioHospitii* conn)
 {
     f64 nunc;
 
@@ -205,23 +211,25 @@ _paratus_novae(Hospitium* h, ConnexioHospitii* conn)
     conn->parser = http_parser_creare_cum_limitibus(
         conn->piscina_connexionis, h->petitio_maxima, h->uri_maxima);
 
-    conn->scribenda = _chorda_vacua();
-    conn->offset = 0;
-    conn->status = CONNEXIO_LEGENS;
-    conn->keep_alive = VERUM;
-    conn->claudenda_post = FALSUM;
-    conn->ob_reliquias = FALSUM;
+    conn->scribenda       = _chorda_vacua();
+    conn->offset          = 0;
+    conn->status          = CONNEXIO_LEGENS;
+    conn->keep_alive      = VERUM;
+    conn->claudenda_post  = FALSUM;
+    conn->ob_reliquias    = FALSUM;
 
-    nunc = tempus_nunc();
-    conn->capita_legens = VERUM;
-    conn->terminus_capitum = nunc + h->capita_maxima;
-    conn->terminus_otii = nunc + h->otium_maximum;
+    nunc                    = tempus_nunc();
+    conn->capita_legens     = VERUM;
+    conn->terminus_capitum  = nunc + h->capita_maxima;
+    conn->terminus_otii     = nunc + h->otium_maximum;
 
     reactor_modificare(h->reactor, conn->fd, (i32)REACTOR_LEGERE);
 }
 
 interior vacuum
-_scribere_tentare(Hospitium* h, ConnexioHospitii* conn)
+_scribere_tentare (
+           Hospitium* h,
+    ConnexioHospitii* conn)
 {
     dum (conn->offset < conn->scribenda.mensura)
     {
@@ -237,8 +245,8 @@ _scribere_tentare(Hospitium* h, ConnexioHospitii* conn)
         si (n == 0)
         {
             /* socket plenus - caudam servare, SCRIBERE armare */
-            conn->status = CONNEXIO_SCRIBENS;
-            conn->terminus_otii = tempus_nunc() + h->otium_maximum;
+            conn->status         = CONNEXIO_SCRIBENS;
+            conn->terminus_otii  = tempus_nunc() + h->otium_maximum;
             reactor_modificare(h->reactor, conn->fd, (i32)REACTOR_SCRIBERE);
             redde;
         }
@@ -267,11 +275,14 @@ _scribere_tentare(Hospitium* h, ConnexioHospitii* conn)
  * ======================================================================== */
 
 interior vacuum
-_responsum_mittere(Hospitium* h, ConnexioHospitii* conn,
-    HttpResponsum* responsum, b32 sine_corpore)
+_responsum_mittere (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+       HttpResponsum* responsum,
+                 b32  sine_corpore)
 {
     Piscina* p = conn->piscina_connexionis;
-    chorda serializata;
+     chorda  serializata;
 
     /* ACAO uniformis in omni responso si petitum */
     si (h->acao)
@@ -315,9 +326,9 @@ _responsum_mittere(Hospitium* h, ConnexioHospitii* conn,
         i32 i;
         per (i = 0; i + III < serializata.mensura; i++)
         {
-            si (serializata.datum[i] == '\r'
-                && serializata.datum[i + I] == '\n'
-                && serializata.datum[i + II] == '\r'
+            si (   serializata.datum[i]       == '\r'
+                && serializata.datum[i + I]   == '\n'
+                && serializata.datum[i + II]  == '\r'
                 && serializata.datum[i + III] == '\n')
             {
                 serializata.mensura = i + IV;
@@ -326,19 +337,25 @@ _responsum_mittere(Hospitium* h, ConnexioHospitii* conn,
         }
     }
 
-    conn->scribenda = serializata;
-    conn->offset = 0;
+    conn->scribenda  = serializata;
+    conn->offset     = 0;
     _scribere_tentare(h, conn);
 }
 
 interior vacuum
-_respondere_plene(Hospitium* h, ConnexioHospitii* conn,
-    i32 status, constans character* caput_titulus, chorda caput_valor,
-    constans character* mimen_typus, chorda corpus, b32 sine_corpore)
+_respondere_plene (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+                   i32  status,
+    constans character* caput_titulus,
+                chorda  caput_valor,
+    constans character* mimen_typus,
+                chorda  corpus,
+                   b32  sine_corpore)
 {
     HttpResponsum responsum;
-    HttpCaput capita_localia[II];
-    i32 numerus = 0;
+        HttpCaput capita_localia[II];
+              i32 numerus = 0;
 
     si (caput_titulus)
     {
@@ -357,17 +374,20 @@ _respondere_plene(Hospitium* h, ConnexioHospitii* conn,
     }
 
     memset(&responsum, 0, magnitudo(responsum));
-    responsum.status = status;
-    responsum.capita = capita_localia;
-    responsum.capita_numerus = numerus;
-    responsum.corpus = corpus;
+    responsum.status          = status;
+    responsum.capita          = capita_localia;
+    responsum.capita_numerus  = numerus;
+    responsum.corpus          = corpus;
 
     _responsum_mittere(h, conn, &responsum, sine_corpore);
 }
 
 interior vacuum
-_respondere_simplex(Hospitium* h, ConnexioHospitii* conn,
-    i32 status, b32 sine_corpore)
+_respondere_simplex (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+                 i32  status,
+                 b32  sine_corpore)
 {
     _respondere_plene(h, conn, status, NIHIL, _chorda_vacua(), NIHIL,
                       _chorda_vacua(), sine_corpore);
@@ -379,14 +399,18 @@ _respondere_simplex(Hospitium* h, ConnexioHospitii* conn,
  * ======================================================================== */
 
 interior vacuum
-_indicem_generare(Hospitium* h, ConnexioHospitii* conn,
-    constans character* via_disci, chorda via_paginae, b32 est_caput)
+_indicem_generare (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+    constans character* via_disci,
+                chorda  via_paginae,
+                   b32  est_caput)
 {
-    Piscina* p = conn->piscina_connexionis;
-    ChordaAedificator* aed = chorda_aedificator_creare(p, DXII);
-    DirectoriumIterator* iter;
+                 Piscina* p    = conn->piscina_connexionis;
+       ChordaAedificator* aed  = chorda_aedificator_creare(p, DXII);
+     DirectoriumIterator* iter;
     DirectoriumIntroitus* intro;
-    chorda corpus;
+                  chorda  corpus;
 
     chorda_aedificator_appendere_literis(aed, "<html><body><h1>");
     chorda_aedificator_appendere_chorda(aed, via_paginae);
@@ -423,8 +447,12 @@ _indicem_generare(Hospitium* h, ConnexioHospitii* conn,
 }
 
 interior vacuum
-_filum_regulare_servire(Hospitium* h, ConnexioHospitii* conn,
-    constans character* via_disci, chorda via_typi, b32 est_caput)
+_filum_regulare_servire (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+    constans character* via_disci,
+                chorda  via_typi,
+                   b32  est_caput)
 {
     chorda contentum = filum_legere_totum(via_disci,
                                           conn->piscina_connexionis);
@@ -434,21 +462,26 @@ _filum_regulare_servire(Hospitium* h, ConnexioHospitii* conn,
 }
 
 interior vacuum
-_filum_servire(Hospitium* h, ConnexioHospitii* conn,
-    DirectoriumServiendum* ds, chorda rel, chorda via_paginae, b32 est_caput)
+_filum_servire (
+                Hospitium* h,
+         ConnexioHospitii* conn,
+    DirectoriumServiendum* ds,
+                   chorda  rel,
+                   chorda  via_paginae,
+                      b32  est_caput)
 {
-    Piscina* p = conn->piscina_connexionis;
-    chorda partes[II];
-    chorda iuncta;
-    chorda normalizata;
+               Piscina* p = conn->piscina_connexionis;
+                chorda  partes[II];
+                chorda  iuncta;
+                chorda  normalizata;
     constans character* via_disci;
-    FilumStatus status_fili;
+           FilumStatus  status_fili;
 
     si (rel.mensura > 0)
     {
-        partes[0] = ds->directorium;
-        partes[I] = rel;
-        iuncta = via_iungere(partes, II, p);
+        partes[0]  = ds->directorium;
+        partes[I]  = rel;
+        iuncta     = via_iungere(partes, II, p);
     }
     alioquin
     {
@@ -458,7 +491,7 @@ _filum_servire(Hospitium* h, ConnexioHospitii* conn,
 
     /* defensio traversalis: radix praefixum byteorum normalizatae sit,
      * cum limite segmenti ("/tmp/x" non praefixum "/tmp/xy") */
-    si (!chorda_incipit(normalizata, ds->directorium)
+    si (   !chorda_incipit(normalizata, ds->directorium)
         || (normalizata.mensura > ds->directorium.mensura
             && normalizata.datum[ds->directorium.mensura] != '/'))
     {
@@ -476,14 +509,14 @@ _filum_servire(Hospitium* h, ConnexioHospitii* conn,
 
     si (status_fili.est_directorium)
     {
-        chorda partes_indicis[II];
-        chorda via_indicis;
+                    chorda  partes_indicis[II];
+                    chorda  via_indicis;
         constans character* index_disci;
 
-        partes_indicis[0] = normalizata;
-        partes_indicis[I] = chorda_ex_literis("index.html", p);
-        via_indicis = via_iungere(partes_indicis, II, p);
-        index_disci = _literis(via_indicis, p);
+        partes_indicis[0]  = normalizata;
+        partes_indicis[I]  = chorda_ex_literis("index.html", p);
+        via_indicis        = via_iungere(partes_indicis, II, p);
+        index_disci        = _literis(via_indicis, p);
 
         si (filum_existit(index_disci))
         {
@@ -506,11 +539,14 @@ _filum_servire(Hospitium* h, ConnexioHospitii* conn,
 }
 
 interior b32
-_directorium_tentare(Hospitium* h, ConnexioHospitii* conn,
-    HttpPetitioServeri* petitio, b32 est_caput)
+_directorium_tentare (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+    HttpPetitioServeri* petitio,
+                   b32  est_caput)
 {
     chorda decodificata;
-    i32 d;
+       i32 d;
 
     si (h->directoria_numerus == 0)
     {
@@ -523,15 +559,15 @@ _directorium_tentare(Hospitium* h, ConnexioHospitii* conn,
     per (d = 0; d < h->directoria_numerus; d++)
     {
         DirectoriumServiendum* ds = &h->directoria[d];
-        chorda rel;
+                       chorda  rel;
 
         si (!chorda_incipit(decodificata, ds->praefixum))
         {
             perge;
         }
 
-        rel.datum = decodificata.datum + ds->praefixum.mensura;
-        rel.mensura = decodificata.mensura - ds->praefixum.mensura;
+        rel.datum    = decodificata.datum + ds->praefixum.mensura;
+        rel.mensura  = decodificata.mensura - ds->praefixum.mensura;
 
         /* limes praefixi viae: "/staticx" non sub "/static" */
         si (rel.mensura > 0 && rel.datum[0] != '/')
@@ -552,19 +588,23 @@ _directorium_tentare(Hospitium* h, ConnexioHospitii* conn,
  * ======================================================================== */
 
 interior vacuum
-_tractatorem_vocare(Hospitium* h, ConnexioHospitii* conn,
-    HttpPetitioServeri* petitio, RoutaResultus* routa, b32 est_caput)
+_tractatorem_vocare (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+    HttpPetitioServeri* petitio,
+         RoutaResultus* routa,
+                   b32  est_caput)
 {
-    HospitiumColloquium colloquium;
-    CapsaTractatoris* capsa = (CapsaTractatoris*)routa->datum;
+    HospitiumColloquium  colloquium;
+       CapsaTractatoris* capsa = (CapsaTractatoris*)routa->datum;
 
     memset(&colloquium, 0, magnitudo(colloquium));
-    colloquium.hospitium = h;
-    colloquium.connexio = conn;
-    colloquium.petitio = petitio;
-    colloquium.params = &routa->params;
-    colloquium.datum = capsa->datum;
-    colloquium.est_caput = est_caput;
+    colloquium.hospitium  = h;
+    colloquium.connexio   = conn;
+    colloquium.petitio    = petitio;
+    colloquium.params     = &routa->params;
+    colloquium.datum      = capsa->datum;
+    colloquium.est_caput  = est_caput;
 
     capsa->tractator(&colloquium);
 
@@ -576,14 +616,17 @@ _tractatorem_vocare(Hospitium* h, ConnexioHospitii* conn,
 }
 
 interior vacuum
-_mittere_non_permissum(Hospitium* h, ConnexioHospitii* conn,
-    i32 larva, b32 est_caput)
+_mittere_non_permissum (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+                 i32  larva,
+                 b32  est_caput)
 {
     ChordaAedificator* aed =
         chorda_aedificator_creare(conn->piscina_connexionis, LXIV);
     chorda allow;
-    b32 primus = VERUM;
-    i32 m;
+       b32 primus = VERUM;
+       i32 m;
 
     per (m = 0; m <= (i32)HTTP_OPTIONS; m++)
     {
@@ -598,7 +641,7 @@ _mittere_non_permissum(Hospitium* h, ConnexioHospitii* conn,
             primus = FALSUM;
         }
     }
-    si ((larva & ROUTA_METHODUS_BIT(HTTP_GET))
+    si (   (larva & ROUTA_METHODUS_BIT(HTTP_GET))
         && !(larva & ROUTA_METHODUS_BIT(HTTP_HEAD)))
     {
         chorda_aedificator_appendere_literis(aed, ", HEAD");
@@ -614,28 +657,30 @@ _mittere_non_permissum(Hospitium* h, ConnexioHospitii* conn,
 }
 
 interior vacuum
-_petitionem_expedire(Hospitium* h, ConnexioHospitii* conn)
+_petitionem_expedire (
+           Hospitium* h,
+    ConnexioHospitii* conn)
 {
     HttpPetitioServeri* petitio = http_parser_obtinere_petitio(conn->parser);
-    HttpMethodus methodus_efficax;
-    b32 est_caput;
-    RoutaResultus routa;
-    i32 reliquiae;
+          HttpMethodus  methodus_efficax;
+                   b32  est_caput;
+         RoutaResultus  routa;
+                   i32  reliquiae;
 
     conn->capita_legens = FALSUM;
 
     /* reliquiae = pipelining differtur: servire, respondere, claudere */
-    reliquiae = http_parser_reliquiae(conn->parser);
-    conn->keep_alive = petitio->keep_alive;
+    reliquiae         = http_parser_reliquiae(conn->parser);
+    conn->keep_alive  = petitio->keep_alive;
     si (reliquiae > 0)
     {
-        conn->keep_alive = FALSUM;
-        conn->ob_reliquias = VERUM;
+        conn->keep_alive    = FALSUM;
+        conn->ob_reliquias  = VERUM;
     }
     conn->claudenda_post = !conn->keep_alive;
 
-    est_caput = (petitio->methodus == HTTP_HEAD);
-    methodus_efficax = est_caput ? HTTP_GET : petitio->methodus;
+    est_caput         = (petitio->methodus == HTTP_HEAD);
+    methodus_efficax  = est_caput ? HTTP_GET : petitio->methodus;
 
     routa = router_matching(h->router, methodus_efficax, petitio->via,
                             conn->piscina_connexionis);
@@ -654,7 +699,7 @@ _petitionem_expedire(Hospitium* h, ConnexioHospitii* conn)
         redde;
     }
 
-    si (methodus_efficax == HTTP_GET
+    si (   methodus_efficax == HTTP_GET
         && _directorium_tentare(h, conn, petitio, est_caput))
     {
         redde;
@@ -669,14 +714,16 @@ _petitionem_expedire(Hospitium* h, ConnexioHospitii* conn)
  * ======================================================================== */
 
 interior vacuum
-_legere(Hospitium* h, ConnexioHospitii* conn)
+_legere (
+           Hospitium* h,
+    ConnexioHospitii* conn)
 {
     i8 buffer[HOSPITIUM_BUFFER_LECTIONIS];
 
     per (;;)
     {
         HttpParseResultus res;
-        s32 n = tcp_recipere(conn->tcp, buffer, HOSPITIUM_BUFFER_LECTIONIS);
+                      s32 n = tcp_recipere(conn->tcp, buffer, HOSPITIUM_BUFFER_LECTIONIS);
 
         si (n == TCP_ITERUM)
         {
@@ -697,8 +744,8 @@ _legere(Hospitium* h, ConnexioHospitii* conn)
         si (!res.successus)
         {
             h->fructus.petitiones_reiectae++;
-            conn->keep_alive = FALSUM;
-            conn->claudenda_post = VERUM;
+            conn->keep_alive      = FALSUM;
+            conn->claudenda_post  = VERUM;
             _respondere_simplex(h, conn,
                 res.status_suggestus ? res.status_suggestus : (i32)CD,
                 FALSUM);
@@ -714,10 +761,13 @@ _legere(Hospitium* h, ConnexioHospitii* conn)
 }
 
 interior vacuum
-_connexio_callback(integer fd, i32 eventus, vacuum* data)
+_connexio_callback (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
 {
-    ConnexioHospitii* conn = (ConnexioHospitii*)data;
-    Hospitium* h = conn->hospitium;
+    ConnexioHospitii* conn  = (ConnexioHospitii*)data;
+           Hospitium* h     = conn->hospitium;
 
     (vacuum)fd;
 
@@ -759,7 +809,8 @@ _connexio_callback(integer fd, i32 eventus, vacuum* data)
 }
 
 interior ConnexioHospitii*
-_slot_liberum(Hospitium* h)
+_slot_liberum (
+    Hospitium* h)
 {
     i32 i;
     per (i = 0; i < h->connexiones_maximae; i++)
@@ -773,7 +824,10 @@ _slot_liberum(Hospitium* h)
 }
 
 interior vacuum
-_auscultator_callback(integer fd, i32 eventus, vacuum* data)
+_auscultator_callback (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
 {
     Hospitium* h = (Hospitium*)data;
 
@@ -783,10 +837,10 @@ _auscultator_callback(integer fd, i32 eventus, vacuum* data)
     /* percolare usque ad TCP_ERROR_ITERUM */
     per (;;)
     {
-        Piscina* p;
-        TcpResultus acceptum;
+                 Piscina* p;
+             TcpResultus  acceptum;
         ConnexioHospitii* conn;
-        f64 nunc;
+                     f64  nunc;
 
         p = piscina_generare_dynamicum("hospitium_connexio",
                                        HOSPITIUM_PISCINA_CONNEXIONIS);
@@ -820,13 +874,13 @@ _auscultator_callback(integer fd, i32 eventus, vacuum* data)
         conn->basis = piscina_notare(p);   /* TcpConnexio ANTE basim */
         conn->parser = http_parser_creare_cum_limitibus(
             p, h->petitio_maxima, h->uri_maxima);
-        conn->status = CONNEXIO_LEGENS;
-        conn->keep_alive = VERUM;
+        conn->status      = CONNEXIO_LEGENS;
+        conn->keep_alive  = VERUM;
 
-        nunc = tempus_nunc();
-        conn->capita_legens = VERUM;
-        conn->terminus_capitum = nunc + h->capita_maxima;
-        conn->terminus_otii = nunc + h->otium_maximum;
+        nunc                    = tempus_nunc();
+        conn->capita_legens     = VERUM;
+        conn->terminus_capitum  = nunc + h->capita_maxima;
+        conn->terminus_otii     = nunc + h->otium_maximum;
 
         h->connexiones_numerus++;
         h->fructus.connexiones_acceptae++;
@@ -837,11 +891,12 @@ _auscultator_callback(integer fd, i32 eventus, vacuum* data)
 }
 
 interior vacuum
-_vigilia_callback(vacuum* data)
+_vigilia_callback (
+    vacuum* data)
 {
-    Hospitium* h = (Hospitium*)data;
-    f64 nunc = tempus_nunc();
-    i32 i;
+    Hospitium* h     = (Hospitium*)data;
+          f64  nunc  = tempus_nunc();
+          i32  i;
 
     per (i = 0; i < h->connexiones_maximae; i++)
     {
@@ -852,7 +907,7 @@ _vigilia_callback(vacuum* data)
             perge;
         }
 
-        si ((conn->capita_legens && nunc > conn->terminus_capitum)
+        si (   (conn->capita_legens && nunc > conn->terminus_capitum)
             || nunc > conn->terminus_otii)
         {
             h->fructus.clausae_otio++;
@@ -867,15 +922,15 @@ _vigilia_callback(vacuum* data)
  * ======================================================================== */
 
 Hospitium*
-hospitium_creare(
-    Piscina*                        piscina,
+hospitium_creare (
+                           Piscina* piscina,
     constans HospitiumConfiguratio* configuratio)
 {
-    Hospitium* h;
-    HospitiumConfiguratio cfg;
-    TcpServusOptiones opt;
-    TcpServusResultus servus_res;
-    integer auscultator_fd;
+                Hospitium* h;
+    HospitiumConfiguratio  cfg;
+        TcpServusOptiones  opt;
+        TcpServusResultus  servus_res;
+                  integer  auscultator_fd;
 
     si (!piscina)
     {
@@ -905,14 +960,14 @@ hospitium_creare(
     {
         h->connexiones_maximae = HOSPITIUM_CONNEXIONES_TECTUM;
     }
-    h->petitio_maxima = cfg.petitio_maxima;
-    h->uri_maxima = cfg.uri_maxima;
+    h->petitio_maxima  = cfg.petitio_maxima;
+    h->uri_maxima      = cfg.uri_maxima;
     h->otium_maximum = (cfg.otium_maximum_ms > 0)
         ? ((f64)cfg.otium_maximum_ms / (f64)M) : (f64)XXX;
     h->capita_maxima = (cfg.capita_maxima_ms > 0)
         ? ((f64)cfg.capita_maxima_ms / (f64)M) : (f64)X;
-    h->acao = cfg.acao;
-    h->acta_accessus = cfg.acta_accessus;
+    h->acao           = cfg.acao;
+    h->acta_accessus  = cfg.acta_accessus;
 
     opt = tcp_servus_optiones_default();  /* non_blocans VERUM */
     servus_res = tcp_servus_creare_cum_optionibus(
@@ -930,8 +985,8 @@ hospitium_creare(
         redde NIHIL;
     }
 
-    h->reactor = reactor_creare(piscina);
-    h->router = router_creare(piscina);
+    h->reactor  = reactor_creare(piscina);
+    h->router   = router_creare(piscina);
     si (!h->reactor || !h->router)
     {
         tcp_servus_claudere(h->servus);
@@ -947,7 +1002,8 @@ hospitium_creare(
 }
 
 vacuum
-hospitium_destruere(Hospitium* hospitium)
+hospitium_destruere (
+    Hospitium* hospitium)
 {
     i32 i;
 
@@ -969,12 +1025,12 @@ hospitium_destruere(Hospitium* hospitium)
 }
 
 b32
-hospitium_praebere(
-    Hospitium*          hospitium,
-    HttpMethodus        methodus,
+hospitium_praebere (
+             Hospitium* hospitium,
+          HttpMethodus  methodus,
     constans character* via,
     HospitiumTractator  tractator,
-    vacuum*             datum)
+                vacuum* datum)
 {
     CapsaTractatoris* capsa;
 
@@ -985,15 +1041,15 @@ hospitium_praebere(
 
     capsa = (CapsaTractatoris*)piscina_allocare(hospitium->piscina,
         (i64)magnitudo(CapsaTractatoris));
-    capsa->tractator = tractator;
-    capsa->datum = datum;
+    capsa->tractator  = tractator;
+    capsa->datum      = datum;
 
     redde router_adicere(hospitium->router, methodus, via, capsa);
 }
 
 b32
-hospitium_directorium_servire(
-    Hospitium*          hospitium,
+hospitium_directorium_servire (
+             Hospitium* hospitium,
     constans character* praefixum,
     constans character* directorium)
 {
@@ -1017,9 +1073,9 @@ hospitium_directorium_servire(
 }
 
 b32
-hospitium_gressus(
+hospitium_gressus (
     Hospitium* hospitium,
-    s32        ms_maximae)
+          s32  ms_maximae)
 {
     si (!hospitium || hospitium->sistere_petitum)
     {
@@ -1033,7 +1089,8 @@ hospitium_gressus(
 }
 
 vacuum
-hospitium_currere(Hospitium* hospitium)
+hospitium_currere (
+    Hospitium* hospitium)
 {
     si (!hospitium)
     {
@@ -1047,7 +1104,8 @@ hospitium_currere(Hospitium* hospitium)
 }
 
 vacuum
-hospitium_sistere(Hospitium* hospitium)
+hospitium_sistere (
+    Hospitium* hospitium)
 {
     si (!hospitium)
     {
@@ -1057,7 +1115,8 @@ hospitium_sistere(Hospitium* hospitium)
 }
 
 i32
-hospitium_portus(constans Hospitium* hospitium)
+hospitium_portus (
+    constans Hospitium* hospitium)
 {
     si (!hospitium)
     {
@@ -1067,7 +1126,8 @@ hospitium_portus(constans Hospitium* hospitium)
 }
 
 HospitiumFructus
-hospitium_fructus(constans Hospitium* hospitium)
+hospitium_fructus (
+    constans Hospitium* hospitium)
 {
     HospitiumFructus vacuus;
 
@@ -1085,7 +1145,8 @@ hospitium_fructus(constans Hospitium* hospitium)
  * ======================================================================== */
 
 constans HttpPetitioServeri*
-colloquium_petitio(HospitiumColloquium* colloquium)
+colloquium_petitio (
+    HospitiumColloquium* colloquium)
 {
     si (!colloquium)
     {
@@ -1095,9 +1156,9 @@ colloquium_petitio(HospitiumColloquium* colloquium)
 }
 
 chorda
-colloquium_param(
+colloquium_param (
     HospitiumColloquium* colloquium,
-    constans character*  titulus)
+     constans character* titulus)
 {
     si (!colloquium)
     {
@@ -1107,7 +1168,8 @@ colloquium_param(
 }
 
 Piscina*
-colloquium_piscina(HospitiumColloquium* colloquium)
+colloquium_piscina (
+    HospitiumColloquium* colloquium)
 {
     si (!colloquium)
     {
@@ -1117,7 +1179,8 @@ colloquium_piscina(HospitiumColloquium* colloquium)
 }
 
 vacuum*
-colloquium_datum(HospitiumColloquium* colloquium)
+colloquium_datum (
+    HospitiumColloquium* colloquium)
 {
     si (!colloquium)
     {
@@ -1127,10 +1190,10 @@ colloquium_datum(HospitiumColloquium* colloquium)
 }
 
 vacuum
-colloquium_caput_addere(
+colloquium_caput_addere (
     HospitiumColloquium* colloquium,
-    constans character*  titulus,
-    constans character*  valor)
+     constans character* titulus,
+     constans character* valor)
 {
     Piscina* p;
 
@@ -1152,25 +1215,25 @@ colloquium_caput_addere(
 }
 
 vacuum
-colloquium_respondere(
+colloquium_respondere (
     HospitiumColloquium* colloquium,
-    i32                  status,
-    constans character*  mimen_typus,
-    chorda               corpus)
+                    i32  status,
+     constans character* mimen_typus,
+                 chorda  corpus)
 {
-    HttpResponsum responsum;
-    Hospitium* h;
+       HttpResponsum  responsum;
+           Hospitium* h;
     ConnexioHospitii* conn;
-    Piscina* p;
+             Piscina* p;
 
     si (!colloquium || colloquium->respondit)
     {
         redde;  /* uno ictu - vocatio prima vincit */
     }
 
-    h = colloquium->hospitium;
-    conn = colloquium->connexio;
-    p = conn->piscina_connexionis;
+    h     = colloquium->hospitium;
+    conn  = colloquium->connexio;
+    p     = conn->piscina_connexionis;
 
     si (mimen_typus && colloquium->capita_numerus < HOSPITIUM_CAPITA_MAXIMA)
     {
@@ -1184,10 +1247,10 @@ colloquium_respondere(
     colloquium->respondit = VERUM;
 
     memset(&responsum, 0, magnitudo(responsum));
-    responsum.status = status;
-    responsum.capita = colloquium->capita;
-    responsum.capita_numerus = colloquium->capita_numerus;
-    responsum.corpus = corpus;
+    responsum.status          = status;
+    responsum.capita          = colloquium->capita;
+    responsum.capita_numerus  = colloquium->capita_numerus;
+    responsum.corpus          = corpus;
 
     _responsum_mittere(h, conn, &responsum, colloquium->est_caput);
 }

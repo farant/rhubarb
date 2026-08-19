@@ -11,7 +11,8 @@
 #include "../include/fons.h"
 
 i8
-fons_codepoint_ad_glypham(s32 codepoint)
+fons_codepoint_ad_glypham (
+    s32 codepoint)
 {
     /* Codepoint invalidus */
     si (codepoint < ZEPHYRUM)
@@ -122,7 +123,8 @@ fons_codepoint_ad_glypham(s32 codepoint)
 }
 
 b32
-fons_est_mappatum(s32 codepoint)
+fons_est_mappatum (
+    s32 codepoint)
 {
     redde (fons_codepoint_ad_glypham(codepoint) != FONS_TOFU);
 }

@@ -10,6 +10,7 @@
 #include "color.h"
 #include "chorda_aedificator.h"
 
+
 /* ============================================================
  * Status Staticus - Tractare statum per frames
  * ============================================================ */
@@ -24,33 +25,43 @@ hic_manens structura {
     b32 mus_depressus;  /* Mus button currently down */
 } _elementa_status = {FALSUM, 0, FALSUM, 0, 0, 0, FALSUM};
 
+
 /* ============================================================
  * Functiones Auxiliares
  * ============================================================ */
 
 /* Generare id unicum ex positione */
 interior i32
-_elementa_generare_id(i32 x, i32 y)
+_elementa_generare_id (
+    i32 x,
+    i32 y)
 {
     redde (x * 31337) ^ (y * 7919);
 }
 
 /* Probare si punctum intra rectangulum */
 interior b32
-_elementa_punctum_in_recto(i32 px, i32 py, i32 rx, i32 ry, i32 rl, i32 ra)
+_elementa_punctum_in_recto (
+    i32 px,
+    i32 py,
+    i32 rx,
+    i32 ry,
+    i32 rl,
+    i32 ra)
 {
     redde (px >= rx && px < rx + rl && py >= ry && py < ry + ra);
 }
 
 /* Renovare positio muris ex eventu */
 interior vacuum
-_elementa_renovare_mus(constans Eventus* eventus)
+_elementa_renovare_mus (
+    constans Eventus* eventus)
 {
     si (eventus != NIHIL)
     {
-        si (eventus->genus == EVENTUS_MUS_MOTUS ||
-            eventus->genus == EVENTUS_MUS_DEPRESSUS ||
-            eventus->genus == EVENTUS_MUS_LIBERATUS)
+        si (   eventus->genus == EVENTUS_MUS_MOTUS
+            || eventus->genus == EVENTUS_MUS_DEPRESSUS
+            || eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
             _elementa_status.mus_x = eventus->datum.mus.x;
             _elementa_status.mus_y = eventus->datum.mus.y;
@@ -63,48 +74,49 @@ _elementa_renovare_mus(constans Eventus* eventus)
         {
             _elementa_status.mus_depressus = FALSUM;
             /* Finis slider drag state - bottone state managed by bottone itself */
-            _elementa_status.slider_dragging = FALSUM;
-            _elementa_status.slider_drag_id = 0;
+            _elementa_status.slider_dragging  = FALSUM;
+            _elementa_status.slider_drag_id   = 0;
             /* NON clariare bottone_pressed hic - bottone facit in suo codice */
         }
     }
 }
+
 
 /* ============================================================
  * Slider
  * ============================================================ */
 
 FructusSlider
-elementa_slider(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              valor,
-    i32              valor_min,
-    i32              valor_max,
+elementa_slider (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  valor,
+                 i32  valor_min,
+                 i32  valor_max,
     constans Eventus* eventus,
-    f32              scala)
+                 f32  scala)
 {
-    FructusSlider fructus;
+          FructusSlider  fructus;
     ContextusDelineandi* ctx;
-    i32 id;
+                    i32  id;
     i32 px, py;
-    i32 track_y;
-    i32 track_latitudo;
-    i32 thumb_radius;
-    i32 thumb_x;
-    f32 ratio;
+      i32 track_y;
+      i32 track_latitudo;
+      i32 thumb_radius;
+      i32 thumb_x;
+      f32 ratio;
     Color color_track;
     Color color_thumb;
     i32 hit_x, hit_y, hit_lat, hit_alt;
 
     /* Initiare fructum */
-    fructus.valor = valor;
-    fructus.mutatum = FALSUM;
-    fructus.hover = FALSUM;
-    fructus.dragging = FALSUM;
+    fructus.valor     = valor;
+    fructus.mutatum   = FALSUM;
+    fructus.hover     = FALSUM;
+    fructus.dragging  = FALSUM;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -115,11 +127,11 @@ elementa_slider(
 
     /* Computare dimensiones in pixelis */
     /* Character = 6x8 pixels */
-    px = (i32)((f32)x * 6.0f * scala);
-    py = (i32)((f32)y * 8.0f * scala);
-    track_latitudo = (i32)((f32)latitudo * 6.0f * scala);
-    thumb_radius = (i32)(4.0f * scala);
-    track_y = py + (i32)(4.0f * scala);  /* Centro verticali */
+    px              = (i32)((f32)x * 6.0f * scala);
+    py              = (i32)((f32)y * 8.0f * scala);
+    track_latitudo  = (i32)((f32)latitudo * 6.0f * scala);
+    thumb_radius    = (i32)(4.0f * scala);
+    track_y         = py + (i32)(4.0f * scala);  /* Centro verticali */
 
     /* ID unicum pro hoc slider */
     id = _elementa_generare_id(x, y);
@@ -136,10 +148,10 @@ elementa_slider(
     thumb_x = px + (i32)(ratio * (f32)(track_latitudo - thumb_radius * 2)) + thumb_radius;
 
     /* Hit testing area */
-    hit_x = px;
-    hit_y = py;
-    hit_lat = track_latitudo;
-    hit_alt = (i32)(8.0f * scala);
+    hit_x    = px;
+    hit_y    = py;
+    hit_lat  = track_latitudo;
+    hit_alt  = (i32)(8.0f * scala);
 
     /* Renovare positio muris */
     _elementa_renovare_mus(eventus);
@@ -153,15 +165,15 @@ elementa_slider(
         /* Tractare mouse down - initium drag */
         si (eventus->genus == EVENTUS_MUS_DEPRESSUS && fructus.hover)
         {
-            _elementa_status.slider_dragging = VERUM;
-            _elementa_status.slider_drag_id = id;
+            _elementa_status.slider_dragging  = VERUM;
+            _elementa_status.slider_drag_id   = id;
         }
 
         /* Tractare mouse up - finis drag */
         si (eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
-            _elementa_status.slider_dragging = FALSUM;
-            _elementa_status.slider_drag_id = 0;
+            _elementa_status.slider_dragging  = FALSUM;
+            _elementa_status.slider_drag_id   = 0;
         }
     }
 
@@ -186,8 +198,8 @@ elementa_slider(
 
         si (valor_novus != (s32)fructus.valor)
         {
-            fructus.valor = (i32)valor_novus;
-            fructus.mutatum = VERUM;
+            fructus.valor    = (i32)valor_novus;
+            fructus.mutatum  = VERUM;
         }
 
         /* Recomputare thumb_x */
@@ -213,36 +225,37 @@ elementa_slider(
     redde fructus;
 }
 
+
 /* ============================================================
  * Bottone
  * ============================================================ */
 
 FructusBottone
-elementa_bottone(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    chorda*          label,
+elementa_bottone (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+              chorda* label,
     constans Eventus* eventus,
-    f32              scala)
+                 f32  scala)
 {
-    FructusBottone fructus;
+         FructusBottone  fructus;
     ContextusDelineandi* ctx;
-    i32 id;
+                    i32  id;
     i32 px, py;
     i32 padding;
     i32 latitudo, altitudo;
     i32 text_x, text_y;
-    i32 offset;
-    b32 pressed;
+      i32 offset;
+      b32 pressed;
     Color color_bg;
     Color color_border;
     Color color_text;
 
     /* Initiare fructum */
-    fructus.clicked = FALSUM;
-    fructus.hover = FALSUM;
+    fructus.clicked  = FALSUM;
+    fructus.hover    = FALSUM;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -255,9 +268,9 @@ elementa_bottone(
     id = _elementa_generare_id(x, y);
 
     /* Computare dimensiones */
-    px = (i32)((f32)x * 6.0f * scala);
-    py = (i32)((f32)y * 8.0f * scala);
-    padding = (i32)(6.0f * scala);
+    px       = (i32)((f32)x * 6.0f * scala);
+    py       = (i32)((f32)y * 8.0f * scala);
+    padding  = (i32)(6.0f * scala);
 
     /* Latitudo ex longitudine label + padding */
     si (label != NIHIL)
@@ -276,9 +289,9 @@ elementa_bottone(
     /* Renovare positio muris (sed NON clariare button state - facimus hic) */
     si (eventus != NIHIL)
     {
-        si (eventus->genus == EVENTUS_MUS_MOTUS ||
-            eventus->genus == EVENTUS_MUS_DEPRESSUS ||
-            eventus->genus == EVENTUS_MUS_LIBERATUS)
+        si (   eventus->genus == EVENTUS_MUS_MOTUS
+            || eventus->genus == EVENTUS_MUS_DEPRESSUS
+            || eventus->genus == EVENTUS_MUS_LIBERATUS)
         {
             _elementa_status.mus_x = eventus->datum.mus.x;
             _elementa_status.mus_y = eventus->datum.mus.y;
@@ -293,8 +306,8 @@ elementa_bottone(
         /* Mouse down - start press */
         si (eventus->genus == EVENTUS_MUS_DEPRESSUS && fructus.hover)
         {
-            _elementa_status.bottone_pressed = VERUM;
-            _elementa_status.bottone_pressed_id = id;
+            _elementa_status.bottone_pressed     = VERUM;
+            _elementa_status.bottone_pressed_id  = id;
         }
 
         /* Mouse up - end press, trigger click if still over button */
@@ -308,8 +321,8 @@ elementa_bottone(
                     fructus.clicked = VERUM;
                 }
                 /* Solum clariare si hic bottone erat depressus */
-                _elementa_status.bottone_pressed = FALSUM;
-                _elementa_status.bottone_pressed_id = 0;
+                _elementa_status.bottone_pressed     = FALSUM;
+                _elementa_status.bottone_pressed_id  = 0;
             }
         }
     }
@@ -327,21 +340,21 @@ elementa_bottone(
     si (pressed)
     {
         /* Pressed: darker accent */
-        color_bg = thema_color(COLOR_ACCENT_SECONDARY);
-        color_border = thema_color(COLOR_BORDER_ACTIVE);
-        color_text = thema_color(COLOR_BACKGROUND);
+        color_bg      = thema_color(COLOR_ACCENT_SECONDARY);
+        color_border  = thema_color(COLOR_BORDER_ACTIVE);
+        color_text    = thema_color(COLOR_BACKGROUND);
     }
     alioquin si (fructus.hover)
     {
-        color_bg = thema_color(COLOR_ACCENT_PRIMARY);
-        color_border = thema_color(COLOR_BORDER_ACTIVE);
-        color_text = thema_color(COLOR_BACKGROUND);
+        color_bg      = thema_color(COLOR_ACCENT_PRIMARY);
+        color_border  = thema_color(COLOR_BORDER_ACTIVE);
+        color_text    = thema_color(COLOR_BACKGROUND);
     }
     alioquin
     {
-        color_bg = thema_color(COLOR_BACKGROUND);
-        color_border = thema_color(COLOR_BORDER);
-        color_text = thema_color(COLOR_TEXT);
+        color_bg      = thema_color(COLOR_BACKGROUND);
+        color_border  = thema_color(COLOR_BORDER);
+        color_text    = thema_color(COLOR_TEXT);
     }
 
     /* Delineare rectangulum rotundum (offset when pressed) */
@@ -359,34 +372,35 @@ elementa_bottone(
     redde fructus;
 }
 
+
 /* ============================================================
  * Capsa Optandi (Checkbox)
  * ============================================================ */
 
 FructusCapsaOptandi
-elementa_capsa_optandi(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    chorda*          label,
-    b32              valor,
+elementa_capsa_optandi (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+              chorda* label,
+                 b32  valor,
     constans Eventus* eventus,
-    f32              scala)
+                 f32  scala)
 {
-    FructusCapsaOptandi fructus;
+    FructusCapsaOptandi  fructus;
     ContextusDelineandi* ctx;
     i32 px, py;
-    i32 box_size;
-    i32 hit_latitudo;
+      i32 box_size;
+      i32 hit_latitudo;
     Color color_border;
     Color color_fill;
     Color color_text;
 
     /* Initiare fructum */
-    fructus.valor = valor;
-    fructus.mutatum = FALSUM;
-    fructus.hover = FALSUM;
+    fructus.valor    = valor;
+    fructus.mutatum  = FALSUM;
+    fructus.hover    = FALSUM;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -396,9 +410,9 @@ elementa_capsa_optandi(
     }
 
     /* Computare dimensiones */
-    px = (i32)((f32)x * 6.0f * scala);
-    py = (i32)((f32)y * 8.0f * scala);
-    box_size = (i32)(8.0f * scala);
+    px        = (i32)((f32)x * 6.0f * scala);
+    py        = (i32)((f32)y * 8.0f * scala);
+    box_size  = (i32)(8.0f * scala);
 
     /* Hit area includit label */
     si (label != NIHIL)
@@ -421,8 +435,8 @@ elementa_capsa_optandi(
     {
         si (eventus->genus == EVENTUS_MUS_DEPRESSUS && fructus.hover)
         {
-            fructus.valor = !fructus.valor;
-            fructus.mutatum = VERUM;
+            fructus.valor    = !fructus.valor;
+            fructus.mutatum  = VERUM;
         }
     }
 
@@ -454,39 +468,40 @@ elementa_capsa_optandi(
     redde fructus;
 }
 
+
 /* ============================================================
  * Campus Textus (Text Input)
  * ============================================================ */
 
 FructusCampusTextus
-elementa_campus_textus(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    chorda*          textus,
-    s32              cursor,
-    b32              focused,
+elementa_campus_textus (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+              chorda* textus,
+                 s32  cursor,
+                 b32  focused,
     constans Eventus* eventus,
-    f32              scala)
+                 f32  scala)
 {
-    FructusCampusTextus fructus;
+    FructusCampusTextus  fructus;
     ContextusDelineandi* ctx;
     i32 px, py;
     i32 field_latitudo, field_altitudo;
-    i32 padding;
-    i32 cursor_x;
+      i32 padding;
+      i32 cursor_x;
     Color color_border;
     Color color_bg;
     Color color_text;
     Color color_cursor;
 
     /* Initiare fructum */
-    fructus.textus = textus;
-    fructus.cursor = cursor;
-    fructus.mutatum = FALSUM;
-    fructus.focused = focused;
+    fructus.textus   = textus;
+    fructus.cursor   = cursor;
+    fructus.mutatum  = FALSUM;
+    fructus.focused  = focused;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -496,11 +511,11 @@ elementa_campus_textus(
     }
 
     /* Computare dimensiones */
-    px = (i32)((f32)x * 6.0f * scala);
-    py = (i32)((f32)y * 8.0f * scala);
-    field_latitudo = (i32)((f32)latitudo * 6.0f * scala);
-    field_altitudo = (i32)(14.0f * scala);  /* Altior pro padding maiore */
-    padding = (i32)(4.0f * scala);           /* Padding maior */
+    px              = (i32)((f32)x * 6.0f * scala);
+    py              = (i32)((f32)y * 8.0f * scala);
+    field_latitudo  = (i32)((f32)latitudo * 6.0f * scala);
+    field_altitudo  = (i32)(14.0f * scala);  /* Altior pro padding maiore */
+    padding         = (i32)(4.0f * scala);           /* Padding maior */
 
     /* Renovare positio muris */
     _elementa_renovare_mus(eventus);
@@ -534,8 +549,8 @@ elementa_campus_textus(
         /* Tractare clavis si focused */
         si (fructus.focused && eventus->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
-            character typus = eventus->datum.clavis.typus;
-            clavis_t clavis = eventus->datum.clavis.clavis;
+            character typus   = eventus->datum.clavis.typus;
+             clavis_t clavis  = eventus->datum.clavis.clavis;
 
             /* Backspace */
             si (clavis == CLAVIS_RETRORSUM && fructus.cursor > 0)
@@ -544,7 +559,7 @@ elementa_campus_textus(
                 si (textus != NIHIL && textus->mensura > 0)
                 {
                     ChordaAedificator* aed = chorda_aedificator_creare(piscina, textus->mensura);
-                    s32 j;
+                                  s32  j;
 
                     /* Copiere omnes characteres praeter eum ad cursor-1 */
                     per (j = 0; j < (s32)textus->mensura; j++)
@@ -566,8 +581,8 @@ elementa_campus_textus(
             {
                 /* Creare novam chordam cum charactere inserto ad cursor */
                 ChordaAedificator* aed;
-                s32 j;
-                i32 old_len = (textus != NIHIL) ? textus->mensura : 0;
+                              s32  j;
+                              i32  old_len = (textus != NIHIL) ? textus->mensura : 0;
 
                 aed = chorda_aedificator_creare(piscina, old_len + 2);
 
@@ -637,9 +652,9 @@ elementa_campus_textus(
         /* Delineare tantum characteres visibiles */
         si (textus != NIHIL && textus->mensura > 0)
         {
-            s32 start_char = scroll_chars;
-            s32 end_char = scroll_chars + (s32)max_visible_chars;
-            s32 text_len = (s32)textus->mensura;
+            s32 start_char  = scroll_chars;
+            s32 end_char    = scroll_chars + (s32)max_visible_chars;
+            s32 text_len    = (s32)textus->mensura;
             s32 j;
 
             /* Clamp ad limites textus */
@@ -650,10 +665,10 @@ elementa_campus_textus(
             per (j = start_char; j < end_char; j++)
             {
                 chorda char_str;
-                i32 char_x = px + padding + (i32)(j - scroll_chars) * char_latitudo;
+                   i32 char_x = px + padding + (i32)(j - scroll_chars) * char_latitudo;
 
-                char_str.datum = &textus->datum[j];
-                char_str.mensura = 1;
+                char_str.datum    = &textus->datum[j];
+                char_str.mensura  = 1;
 
                 tabula_pixelorum_pingere_chordam_scalatam(tabula, char_x, text_y_centered, char_str, color_ad_pixelum(color_text), (i32)scala);
             }
@@ -670,22 +685,23 @@ elementa_campus_textus(
     redde fructus;
 }
 
+
 /* ============================================================
  * Graticula Colorum (Palette Grid)
  * ============================================================ */
 
 FructusGraticulaColorum
-elementa_graticula_colorum(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    constans b32*    colores,
+elementa_graticula_colorum (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+        constans b32* colores,
     constans Eventus* eventus,
-    f32              scala)
+                 f32  scala)
 {
-    FructusGraticulaColorum fructus;
-    ContextusDelineandi* ctx;
+    FructusGraticulaColorum  fructus;
+        ContextusDelineandi* ctx;
     i32 px, py;
     i32 swatch_size;
     i32 gap;
@@ -697,8 +713,8 @@ elementa_graticula_colorum(
     {
         fructus.colores[i] = colores[i];
     }
-    fructus.mutatum = FALSUM;
-    fructus.toggled_index = -1;
+    fructus.mutatum        = FALSUM;
+    fructus.toggled_index  = -1;
 
     /* Creare contextum delineandi */
     ctx = delineare_creare_contextum(piscina, tabula);
@@ -708,10 +724,10 @@ elementa_graticula_colorum(
     }
 
     /* Computare dimensiones */
-    px = (i32)((f32)x * 6.0f * scala);
-    py = (i32)((f32)y * 8.0f * scala);
-    swatch_size = (i32)(12.0f * scala);
-    gap = (i32)(2.0f * scala);
+    px           = (i32)((f32)x * 6.0f * scala);
+    py           = (i32)((f32)y * 8.0f * scala);
+    swatch_size  = (i32)(12.0f * scala);
+    gap          = (i32)(2.0f * scala);
 
     /* Renovare positio muris */
     _elementa_renovare_mus(eventus);
@@ -723,10 +739,10 @@ elementa_graticula_colorum(
         i32 sx, sy;
 
         /* Computare positio in graticula 2x8 */
-        row = (s32)(i / 8);
-        col = (s32)(i % 8);
-        sx = px + (i32)col * (swatch_size + gap);
-        sy = py + (i32)row * (swatch_size + gap);
+        row  = (s32)(i / 8);
+        col  = (s32)(i % 8);
+        sx   = px + (i32)col * (swatch_size + gap);
+        sy   = py + (i32)row * (swatch_size + gap);
 
         /* Obtinere color ex palette (color_ex_palette scales 6-bit to 8-bit) */
         color_swatch = color_ex_palette(i);
@@ -736,9 +752,9 @@ elementa_graticula_colorum(
         {
             si (_elementa_punctum_in_recto(_elementa_status.mus_x, _elementa_status.mus_y, sx, sy, swatch_size, swatch_size))
             {
-                fructus.colores[i] = !fructus.colores[i];
-                fructus.mutatum = VERUM;
-                fructus.toggled_index = (s32)i;
+                fructus.colores[i]     = !fructus.colores[i];
+                fructus.mutatum        = VERUM;
+                fructus.toggled_index  = (s32)i;
             }
         }
 

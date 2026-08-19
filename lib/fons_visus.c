@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 
+
 /* ==================================================
  * Constantae
  * ================================================== */
@@ -24,15 +25,15 @@
  * ================================================== */
 
 hic_manens chorda
-_chorda_ex_cstr(
+_chorda_ex_cstr (
     constans character* cstr)
 {
     chorda fructus;
     union { constans character* c; i8* m; } u;
     u.c = cstr;
 
-    fructus.datum = u.m;
-    fructus.mensura = (i32)strlen(cstr);
+    fructus.datum    = u.m;
+    fructus.mensura  = (i32)strlen(cstr);
 
     redde fructus;
 }
@@ -43,7 +44,7 @@ _chorda_ex_cstr(
  * ================================================== */
 
 FonsVisus*
-fons_visus_creare(
+fons_visus_creare (
     Piscina* piscina)
 {
     FonsVisus* visus;
@@ -59,8 +60,8 @@ fons_visus_creare(
         redde NIHIL;
     }
 
-    visus->piscina = piscina;
-    visus->scroll_y = 0;
+    visus->piscina   = piscina;
+    visus->scroll_y  = 0;
 
     redde visus;
 }
@@ -71,30 +72,30 @@ fons_visus_creare(
  * ================================================== */
 
 vacuum
-fons_visus_reddere(
-    FonsVisus*       visus,
+fons_visus_reddere (
+          FonsVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused)
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused)
 {
     ContextusDelineandi* ctx;
-    i32 char_lat;
-    i32 char_alt;
-    i32 px_x;
-    i32 px_y;
-    i32 linea;
+                    i32  char_lat;
+                    i32  char_alt;
+                    i32  px_x;
+                    i32  px_y;
+                    i32  linea;
     i32 row, col;
-    Color color_background;
-    Color color_text;
-    Color color_text_dim;
-    Color color_accent;
-    i32 pixelum_text;
-    i32 pixelum_text_dim;
-    i32 pixelum_accent;
+     Color color_background;
+     Color color_text;
+     Color color_text_dim;
+     Color color_accent;
+       i32 pixelum_text;
+       i32 pixelum_text_dim;
+       i32 pixelum_accent;
     chorda hex_chorda;
     chorda titulo_chorda;
 
@@ -119,14 +120,14 @@ fons_visus_reddere(
     char_alt = CHAR_ALTITUDO * scala;
 
     /* Colores */
-    color_background = thema_color(COLOR_BACKGROUND);
-    color_text = thema_color(COLOR_TEXT);
-    color_text_dim = thema_color(COLOR_TEXT_DIM);
-    color_accent = thema_color(COLOR_ACCENT_PRIMARY);
+    color_background  = thema_color(COLOR_BACKGROUND);
+    color_text        = thema_color(COLOR_TEXT);
+    color_text_dim    = thema_color(COLOR_TEXT_DIM);
+    color_accent      = thema_color(COLOR_ACCENT_PRIMARY);
 
-    pixelum_text = color_ad_pixelum(color_text);
-    pixelum_text_dim = color_ad_pixelum(color_text_dim);
-    pixelum_accent = color_ad_pixelum(color_accent);
+    pixelum_text      = color_ad_pixelum(color_text);
+    pixelum_text_dim  = color_ad_pixelum(color_text_dim);
+    pixelum_accent    = color_ad_pixelum(color_accent);
 
     /* Pingere fondum */
     px_x = x * char_lat;
@@ -145,7 +146,7 @@ fons_visus_reddere(
 
     /* === Header row (0-F) === */
     {
-        i32 header_x = x + PADDING + IV;  /* Offset pro row labels */
+              i32 header_x = x + PADDING + IV;  /* Offset pro row labels */
         character col_label[II];
 
         /* Spatium pro row labels */
@@ -169,8 +170,8 @@ fons_visus_reddere(
     /* === Grid 16x16 === */
     per (row = ZEPHYRUM; row < XVI; row++)
     {
-        i32 grid_x;
-        i32 grid_y;
+              i32 grid_x;
+              i32 grid_y;
         character row_label[IV];
 
         grid_y = linea * char_alt;
@@ -186,14 +187,14 @@ fons_visus_reddere(
 
         per (col = ZEPHYRUM; col < XVI; col++)
         {
-            i32 glyph_index;
-            i32 cell_x;
-            i32 cell_y;
+                  i32 glyph_index;
+                  i32 cell_x;
+                  i32 cell_y;
             character glyph_char;
 
-            glyph_index = row * XVI + col;
-            cell_x = (grid_x + col * CELL_LATITUDO) * char_lat;
-            cell_y = grid_y;
+            glyph_index  = row * XVI + col;
+            cell_x       = (grid_x + col * CELL_LATITUDO) * char_lat;
+            cell_y       = grid_y;
 
             /* Pingere rectangulum plenum cum medium gray */
             delineare_rectangulum_plenum(ctx,
@@ -282,8 +283,8 @@ fons_visus_reddere(
  * ================================================== */
 
 b32
-fons_visus_tractare_eventum(
-    FonsVisus*        visus,
+fons_visus_tractare_eventum (
+           FonsVisus* visus,
     constans Eventus* eventus)
 {
     (vacuum)visus;
@@ -300,7 +301,7 @@ fons_visus_tractare_eventum(
 
 /* Command handler pro $fons */
 hic_manens b32
-_fons_command_handler(
+_fons_command_handler (
     ContextusCommandi* ctx)
 {
     ContextusWidget* widget_ctx;
@@ -316,7 +317,7 @@ _fons_command_handler(
 }
 
 vacuum
-fons_visus_init(
+fons_visus_init (
     ContextusWidget* ctx)
 {
     si (!ctx || !ctx->reg_commandi)
@@ -332,10 +333,10 @@ fons_visus_init(
 }
 
 vacuum
-fons_visus_salvare_status(
-    FonsVisus*           visus,
+fons_visus_salvare_status (
+              FonsVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
     /* FonsVisus est read-only - nihil status ad salvare */
     (vacuum)visus;
@@ -344,10 +345,10 @@ fons_visus_salvare_status(
 }
 
 vacuum
-fons_visus_carcare_status(
-    FonsVisus*           visus,
+fons_visus_carcare_status (
+              FonsVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id)
+     constans character* entitas_id)
 {
     /* FonsVisus est read-only - nihil status ad carcare */
     (vacuum)visus;

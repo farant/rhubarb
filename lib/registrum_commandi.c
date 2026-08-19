@@ -2,12 +2,13 @@
 #include "chorda.h"
 #include <string.h>
 
+
 /* ==================================================
  * Registry - Creatio
  * ================================================== */
 
 RegistrumCommandi*
-registrum_commandi_creare(
+registrum_commandi_creare (
     Piscina* piscina)
 {
     RegistrumCommandi* reg;
@@ -18,8 +19,8 @@ registrum_commandi_creare(
         redde NIHIL;
     }
 
-    reg->piscina = piscina;
-    reg->tabula = tabula_dispersa_creare_chorda(piscina, LXIV);  /* 64 initial capacity */
+    reg->piscina  = piscina;
+    reg->tabula   = tabula_dispersa_creare_chorda(piscina, LXIV);  /* 64 initial capacity */
 
     si (!reg->tabula)
     {
@@ -35,15 +36,15 @@ registrum_commandi_creare(
  * ================================================== */
 
 vacuum
-registrum_commandi_registrare(
-    RegistrumCommandi* reg,
+registrum_commandi_registrare (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi,
-    FunctioCommand functio,
-    vacuum* datum)
+        FunctioCommand  functio,
+                vacuum* datum)
 {
     Command* command;
-    chorda clavis;
-    i32 i;
+     chorda  clavis;
+        i32  i;
 
     si (!reg || !nomen_commandi || !functio)
     {
@@ -64,8 +65,8 @@ registrum_commandi_registrare(
     }
     command->titulus[i] = '\0';
 
-    command->executare = functio;
-    command->datum = datum;
+    command->executare  = functio;
+    command->datum      = datum;
 
     /* Create chorda key */
     clavis = chorda_ex_literis(nomen_commandi, reg->piscina);
@@ -80,14 +81,14 @@ registrum_commandi_registrare(
  * ================================================== */
 
 b32
-registrum_commandi_executare(
-    RegistrumCommandi* reg,
+registrum_commandi_executare (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi,
-    ContextusCommandi* ctx)
+     ContextusCommandi* ctx)
 {
     Command* command;
-    vacuum* valor;
-    b32 inventus;
+     vacuum* valor;
+        b32  inventus;
 
     si (!reg || !nomen_commandi || !ctx)
     {
@@ -116,8 +117,8 @@ registrum_commandi_executare(
  * ================================================== */
 
 b32
-registrum_commandi_habet(
-    RegistrumCommandi* reg,
+registrum_commandi_habet (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi)
 {
     si (!reg || !nomen_commandi)

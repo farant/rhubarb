@@ -8,6 +8,7 @@
 
 #include <string.h>
 
+
 /* ==================================================
  * classes octetorum
  * ================================================== */
@@ -16,7 +17,8 @@ interior b32
 _est_spatium (character c);
 
 interior b32
-_est_spatium (character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r'
         || c == '\f';
@@ -26,7 +28,8 @@ interior b32
 _est_linea_nova (character c);
 
 interior b32
-_est_linea_nova (character c)
+_est_linea_nova (
+    character c)
 {
     redde c == '\n' || c == '\r' || c == '\f';
 }
@@ -35,7 +38,8 @@ interior b32
 _est_digitus (character c);
 
 interior b32
-_est_digitus (character c)
+_est_digitus (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
@@ -44,7 +48,8 @@ interior b32
 _est_hex (character c);
 
 interior b32
-_est_hex (character c)
+_est_hex (
+    character c)
 {
     redde _est_digitus(c) || (c >= 'a' && c <= 'f')
         || (c >= 'A' && c <= 'F');
@@ -54,7 +59,8 @@ interior b32
 _est_nominis_initium (character c);
 
 interior b32
-_est_nominis_initium (character c)
+_est_nominis_initium (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
         || c == '_' || (insignatus character)c >= 0x80;
@@ -64,7 +70,8 @@ interior b32
 _est_nominis (character c);
 
 interior b32
-_est_nominis (character c)
+_est_nominis (
+    character c)
 {
     redde _est_nominis_initium(c) || _est_digitus(c) || c == '-';
 }
@@ -76,14 +83,16 @@ interior chorda
 _chorda_ex_fonte (constans character* fons, i32 mensura);
 
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura)
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = fons;
-    c.datum = u.m;
-    c.mensura = mensura;
+    u.c        = fons;
+    c.datum    = u.m;
+    c.mensura  = mensura;
     redde c;
 }
 
@@ -92,7 +101,8 @@ interior b32
 _non_imprimibilis (character c);
 
 interior b32
-_non_imprimibilis (character c)
+_non_imprimibilis (
+    character c)
 {
     insignatus character u = (insignatus character)c;
 
@@ -100,21 +110,24 @@ _non_imprimibilis (character c)
         || u == 0x7F;
 }
 
+
 /* ==================================================
  * status lexatoris
  * ================================================== */
 
 nomen structura {
     constans character* fons;
-    i32                 mensura;
-    i32                 k;        /* cursor */
+                   i32  mensura;
+                   i32  k;        /* cursor */
 } CssLexator;
 
 interior character
 _ad (CssLexator* lx, i32 delta);
 
 interior character
-_ad (CssLexator* lx, i32 delta)
+_ad (
+    CssLexator* lx,
+           i32  delta)
 {
     si (lx->k + delta >= lx->mensura)
     {
@@ -127,7 +140,9 @@ interior b32
 _intra (CssLexator* lx, i32 delta);
 
 interior b32
-_intra (CssLexator* lx, i32 delta)
+_intra (
+    CssLexator* lx,
+           i32  delta)
 {
     redde lx->k + delta < lx->mensura;
 }
@@ -137,7 +152,9 @@ interior b32
 _effugium_validum (CssLexator* lx, i32 delta);
 
 interior b32
-_effugium_validum (CssLexator* lx, i32 delta)
+_effugium_validum (
+    CssLexator* lx,
+           i32  delta)
 {
     si (!_intra(lx, delta) || _ad(lx, delta) != '\\')
     {
@@ -156,7 +173,8 @@ interior vacuum
 _effugium_consumere (CssLexator* lx);
 
 interior vacuum
-_effugium_consumere (CssLexator* lx)
+_effugium_consumere (
+    CssLexator* lx)
 {
     i32 n = 0;
 
@@ -169,8 +187,8 @@ _effugium_consumere (CssLexator* lx)
     {
         dum (n < 6 && _intra(lx, 0) && _est_hex(_ad(lx, 0)))
         {
-            lx->k = lx->k + 1;
-            n = n + 1;
+            lx->k  = lx->k + 1;
+            n      = n + 1;
         }
         /* spatium unum post effugium hex PARS effugii est
          * ("\41 x" identificator "Ax" est - fines recti) */
@@ -195,7 +213,9 @@ interior b32
 _incipit_identificator (CssLexator* lx, i32 delta);
 
 interior b32
-_incipit_identificator (CssLexator* lx, i32 delta)
+_incipit_identificator (
+    CssLexator* lx,
+           i32  delta)
 {
     character c = _ad(lx, delta);
 
@@ -217,7 +237,9 @@ interior b32
 _incipit_numerus (CssLexator* lx, i32 delta);
 
 interior b32
-_incipit_numerus (CssLexator* lx, i32 delta)
+_incipit_numerus (
+    CssLexator* lx,
+           i32  delta)
 {
     character c = _ad(lx, delta);
 
@@ -242,7 +264,8 @@ interior vacuum
 _nomen_consumere (CssLexator* lx);
 
 interior vacuum
-_nomen_consumere (CssLexator* lx)
+_nomen_consumere (
+    CssLexator* lx)
 {
     dum (_intra(lx, 0))
     {
@@ -266,7 +289,8 @@ interior vacuum
 _numerum_consumere (CssLexator* lx);
 
 interior vacuum
-_numerum_consumere (CssLexator* lx)
+_numerum_consumere (
+    CssLexator* lx)
 {
     si (_ad(lx, 0) == '+' || _ad(lx, 0) == '-')
     {
@@ -284,7 +308,7 @@ _numerum_consumere (CssLexator* lx)
             lx->k = lx->k + 1;
         }
     }
-    si ((_ad(lx, 0) == 'e' || _ad(lx, 0) == 'E')
+    si (   (_ad(lx, 0) == 'e' || _ad(lx, 0) == 'E')
         && (_est_digitus(_ad(lx, 1))
             || ((_ad(lx, 1) == '+' || _ad(lx, 1) == '-')
                 && _est_digitus(_ad(lx, 2)))))
@@ -303,7 +327,8 @@ interior CssLexemaGenus
 _url_consumere (CssLexator* lx);
 
 interior CssLexemaGenus
-_url_consumere (CssLexator* lx)
+_url_consumere (
+    CssLexator* lx)
 {
     dum (_est_spatium(_ad(lx, 0)) && _intra(lx, 0))
     {
@@ -340,7 +365,7 @@ _url_consumere (CssLexator* lx)
             }
             frange;   /* spatium intus -> url mala */
         }
-        si (c == '"' || c == '\'' || c == '('
+        si (   c == '"' || c == '\'' || c == '('
             || _non_imprimibilis(c))
         {
             frange;   /* url mala */
@@ -381,7 +406,8 @@ interior CssLexemaGenus
 _chordam_consumere (CssLexator* lx);
 
 interior CssLexemaGenus
-_chordam_consumere (CssLexator* lx)
+_chordam_consumere (
+    CssLexator* lx)
 {
     character claudens = _ad(lx, 0);
 
@@ -429,6 +455,7 @@ _chordam_consumere (CssLexator* lx)
     redde CSS_LEX_CHORDA_IMPERFECTA;   /* EOF - clamor */
 }
 
+
 /* ==================================================
  * lexema unum consumere (spec §4.3.1)
  * ================================================== */
@@ -437,7 +464,8 @@ interior CssLexemaGenus
 _lexema_consumere (CssLexator* lx);
 
 interior CssLexemaGenus
-_lexema_consumere (CssLexator* lx)
+_lexema_consumere (
+    CssLexator* lx)
 {
     character c = _ad(lx, 0);
 
@@ -483,15 +511,33 @@ _lexema_consumere (CssLexator* lx)
         redde CSS_LEX_DELIM;
     }
     /* interpunctio simplex */
-    si (c == '(') { lx->k = lx->k + 1; redde CSS_LEX_PAREN_APERTA; }
-    si (c == ')') { lx->k = lx->k + 1; redde CSS_LEX_PAREN_CLAUSA; }
-    si (c == '[') { lx->k = lx->k + 1; redde CSS_LEX_QUADRA_APERTA; }
-    si (c == ']') { lx->k = lx->k + 1; redde CSS_LEX_QUADRA_CLAUSA; }
-    si (c == '{') { lx->k = lx->k + 1; redde CSS_LEX_BRACE_APERTA; }
-    si (c == '}') { lx->k = lx->k + 1; redde CSS_LEX_BRACE_CLAUSA; }
-    si (c == ',') { lx->k = lx->k + 1; redde CSS_LEX_COMMA; }
-    si (c == ':') { lx->k = lx->k + 1; redde CSS_LEX_COLON; }
-    si (c == ';') { lx->k = lx->k + 1; redde CSS_LEX_SEMICOLON; }
+    si (c == '(')
+    { lx->k = lx->k + 1; redde CSS_LEX_PAREN_APERTA;
+    }
+    si (c == ')')
+    { lx->k = lx->k + 1; redde CSS_LEX_PAREN_CLAUSA;
+    }
+    si (c == '[')
+    { lx->k = lx->k + 1; redde CSS_LEX_QUADRA_APERTA;
+    }
+    si (c == ']')
+    { lx->k = lx->k + 1; redde CSS_LEX_QUADRA_CLAUSA;
+    }
+    si (c == '{')
+    { lx->k = lx->k + 1; redde CSS_LEX_BRACE_APERTA;
+    }
+    si (c == '}')
+    { lx->k = lx->k + 1; redde CSS_LEX_BRACE_CLAUSA;
+    }
+    si (c == ',')
+    { lx->k = lx->k + 1; redde CSS_LEX_COMMA;
+    }
+    si (c == ':')
+    { lx->k = lx->k + 1; redde CSS_LEX_COLON;
+    }
+    si (c == ';')
+    { lx->k = lx->k + 1; redde CSS_LEX_SEMICOLON;
+    }
     /* numeri et signa ambigua */
     si (c == '+' || c == '.')
     {
@@ -522,7 +568,7 @@ _lexema_consumere (CssLexator* lx)
     }
     si (c == '<')
     {
-        si (_ad(lx, 1) == '!' && _ad(lx, 2) == '-'
+        si (   _ad(lx, 1) == '!' && _ad(lx, 2) == '-'
             && _ad(lx, 3) == '-')
         {
             lx->k = lx->k + 4;
@@ -583,13 +629,13 @@ identificator_via:
 
         _nomen_consumere(lx);
         /* url( ... ) - nisi citatum sequitur (tunc functio) */
-        si (lx->k - initium == 3
+        si (   lx->k - initium == 3
             && (lx->fons[initium] == 'u' || lx->fons[initium] == 'U')
             && (lx->fons[initium + 1] == 'r'
                 || lx->fons[initium + 1] == 'R')
             && (lx->fons[initium + 2] == 'l'
                 || lx->fons[initium + 2] == 'L')
-            && _ad(lx, 0) == '(')
+            && _ad(lx, 0)      == '(')
         {
             i32 prospectus = 1;
 
@@ -597,7 +643,7 @@ identificator_via:
             {
                 prospectus = prospectus + 1;
             }
-            si (_ad(lx, prospectus) == '"'
+            si (   _ad(lx, prospectus) == '"'
                 || _ad(lx, prospectus) == '\'')
             {
                 lx->k = lx->k + 1;
@@ -615,33 +661,36 @@ identificator_via:
     }
 }
 
+
 /* ==================================================
  * facies publica
  * ================================================== */
 
 Xar*
-css_lexare (Piscina* piscina, constans character* fons,
-    i32 mensura)
+css_lexare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
-    CssLexator lx;
-    Xar*       lexemata;
-    i32        linea = 1;
-    i32        columna = 1;
+    CssLexator  lx;
+           Xar* lexemata;
+           i32  linea    = 1;
+           i32  columna  = 1;
 
     lexemata = xar_creare(piscina, (i32)magnitudo(CssLexema));
     si (lexemata == NIHIL)
     {
         redde NIHIL;
     }
-    lx.fons = fons;
-    lx.mensura = mensura;
-    lx.k = 0;
+    lx.fons     = fons;
+    lx.mensura  = mensura;
+    lx.k        = 0;
 
     dum (lx.k < lx.mensura)
     {
         CssLexema* l;
-        i32        initium = lx.k;
-        i32        j;
+              i32  initium = lx.k;
+              i32  j;
 
         CssLexemaGenus genus = _lexema_consumere(&lx);
 
@@ -653,16 +702,16 @@ css_lexare (Piscina* piscina, constans character* fons,
         l->genus = genus;
         l->valor = _chorda_ex_fonte(fons + initium,
             lx.k - initium);
-        l->offset = initium;
-        l->linea = linea;
-        l->columna = columna;
+        l->offset   = initium;
+        l->linea    = linea;
+        l->columna  = columna;
         /* positio proximi: octetos lexematis ambulare */
         per (j = initium; j < lx.k; j = j + 1)
         {
             si (fons[j] == '\n')
             {
-                linea = linea + 1;
-                columna = 1;
+                linea    = linea + 1;
+                columna  = 1;
             }
             alioquin
             {
@@ -677,20 +726,22 @@ css_lexare (Piscina* piscina, constans character* fons,
         {
             redde NIHIL;
         }
-        l->genus = CSS_LEX_FINIS;
-        l->valor = _chorda_ex_fonte(fons + mensura, 0);
-        l->offset = mensura;
-        l->linea = linea;
-        l->columna = columna;
+        l->genus    = CSS_LEX_FINIS;
+        l->valor    = _chorda_ex_fonte(fons + mensura, 0);
+        l->offset   = mensura;
+        l->linea    = linea;
+        l->columna  = columna;
     }
     redde lexemata;
 }
 
 chorda
-css_lexemata_emittere (Piscina* piscina, Xar* lexemata)
+css_lexemata_emittere (
+    Piscina* piscina,
+        Xar* lexemata)
 {
     ChordaAedificator* aed;
-    i32                k;
+                  i32  k;
 
     aed = chorda_aedificator_creare(piscina, (memoriae_index)256);
     per (k = 0; k < xar_numerus(lexemata); k = k + 1)
@@ -703,7 +754,8 @@ css_lexemata_emittere (Piscina* piscina, Xar* lexemata)
 }
 
 constans character*
-css_lexema_genus_nomen (CssLexemaGenus genus)
+css_lexema_genus_nomen (
+    CssLexemaGenus genus)
 {
     commutatio (genus)
     {

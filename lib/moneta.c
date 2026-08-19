@@ -18,7 +18,9 @@ hic_manens i32 _ulid_fortuita[16];
 /* octeti fortuiti ex /dev/urandom (stdio purum - semita POSIX sed
  * mechanismus vulgaris); in defectu, miscela temporis */
 interior vacuum
-_fortuita_implere (i8* effusio, memoriae_index mensura)
+_fortuita_implere (
+                i8* effusio,
+    memoriae_index  mensura)
 {
     FILE* fons = fopen("/dev/urandom", "rb");
 
@@ -33,8 +35,8 @@ _fortuita_implere (i8* effusio, memoriae_index mensura)
     }
     {
         memoriae_index k;
-        i64 semen = (i64)_ulid_tempus_ultimum
-            ^ (i64)0x9e3779b97f4a7c15ULL;
+                   i64 semen = (i64)_ulid_tempus_ultimum
+                       ^ (i64)0x9e3779b97f4a7c15ULL;
 
         per (k = ZEPHYRUM; k < mensura; k++)
         {
@@ -46,11 +48,12 @@ _fortuita_implere (i8* effusio, memoriae_index mensura)
 }
 
 vacuum
-moneta_ulid (character* effusio)
+moneta_ulid (
+    character* effusio)
 {
     structura timeval nunc_tv;
-    Momentum nunc;
-    integer k;
+             Momentum nunc;
+              integer k;
 
     gettimeofday(&nunc_tv, NIHIL);
     /* instans = secunda scalata + residuum microsecundorum ut MORA
@@ -79,14 +82,14 @@ moneta_ulid (character* effusio)
     }
     alioquin
     {
-        i8 octeti[10];
+             i8 octeti[10];
         integer pars;
 
         _ulid_tempus_ultimum = nunc;
         _fortuita_implere(octeti, 10);
         per (pars = 0; pars < 2; pars++)
         {
-            i64 n = 0;
+                i64 n = 0;
             integer b;
 
             per (b = 0; b < 5; b++)
@@ -95,8 +98,8 @@ moneta_ulid (character* effusio)
             }
             per (b = 7; b >= 0; b--)
             {
-                _ulid_fortuita[pars * 8 + b] = (i32)(n % 32);
-                n = n / 32;
+                _ulid_fortuita[pars * 8 + b]  = (i32)(n % 32);
+                n                             = n / 32;
             }
         }
     }
@@ -107,8 +110,8 @@ moneta_ulid (character* effusio)
 
         per (k = 9; k >= 0; k--)
         {
-            effusio[k] = ULID_LITTERAE[t % 32];
-            t = t / 32;
+            effusio[k]  = ULID_LITTERAE[t % 32];
+            t           = t / 32;
         }
     }
     per (k = 0; k < 16; k++)
@@ -119,13 +122,14 @@ moneta_ulid (character* effusio)
 }
 
 vacuum
-moneta_ulid_fortuita (character* effusio)
+moneta_ulid_fortuita (
+    character* effusio)
 {
     structura timeval nunc_tv;
-    Momentum nunc;
-    i8 octeti[10];
-    integer k;
-    integer pars;
+             Momentum nunc;
+                   i8 octeti[10];
+              integer k;
+              integer pars;
 
     gettimeofday(&nunc_tv, NIHIL);
     nunc = (Momentum)nunc_tv.tv_sec * 1000
@@ -136,8 +140,8 @@ moneta_ulid_fortuita (character* effusio)
 
         per (k = 9; k >= 0; k--)
         {
-            effusio[k] = ULID_LITTERAE[t % 32];
-            t = t / 32;
+            effusio[k]  = ULID_LITTERAE[t % 32];
+            t           = t / 32;
         }
     }
     /* fortuita RECENTIA quaque vocatione - status monotoniae
@@ -146,7 +150,7 @@ moneta_ulid_fortuita (character* effusio)
     _fortuita_implere(octeti, 10);
     per (pars = 0; pars < 2; pars++)
     {
-        i64 n = 0;
+            i64 n = 0;
         integer b;
 
         per (b = 0; b < 5; b++)
@@ -155,8 +159,8 @@ moneta_ulid_fortuita (character* effusio)
         }
         per (b = 7; b >= 0; b--)
         {
-            effusio[10 + pars * 8 + b] = ULID_LITTERAE[n % 32];
-            n = n / 32;
+            effusio[10 + pars * 8 + b]  = ULID_LITTERAE[n % 32];
+            n                           = n / 32;
         }
     }
     effusio[26] = '\0';
@@ -165,7 +169,9 @@ moneta_ulid_fortuita (character* effusio)
 /* octeti fortuiti sine reservo: pro secretis, ubi reservum
  * praevisibile peius est quam defectus apertus (vide moneta.h) */
 b32
-moneta_octeti_fortuiti (i8* effusio, i32 mensura)
+moneta_octeti_fortuiti (
+     i8* effusio,
+    i32  mensura)
 {
     FILE* fons;
 

@@ -17,7 +17,9 @@ nomen structura {
 } PonsTractatoris;
 
 interior vacuum*
-_pontem_struere(Piscina* piscina, FunctioTractandi functio)
+_pontem_struere (
+             Piscina* piscina,
+    FunctioTractandi  functio)
 {
     PonsTractatoris* pons;
 
@@ -37,8 +39,8 @@ _pontem_struere(Piscina* piscina, FunctioTractandi functio)
  * ================================================== */
 
 RegistrumTractatoris*
-registrum_tractatoris_creare(
-    Piscina*             piscina,
+registrum_tractatoris_creare (
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     RegistrumTractatoris* reg;
@@ -54,8 +56,8 @@ registrum_tractatoris_creare(
         redde NIHIL;
     }
 
-    reg->piscina = piscina;
-    reg->intern  = intern;
+    reg->piscina  = piscina;
+    reg->intern   = intern;
 
     /* Creare tabulas */
     reg->genera = tabula_dispersa_creare_chorda(piscina, XXXII);
@@ -79,18 +81,18 @@ registrum_tractatoris_creare(
  * ================================================== */
 
 b32
-registrum_tractatoris_registrare(
+registrum_tractatoris_registrare (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii,
-    FunctioTractandi      functio)
+      constans character* genus_entitatis,
+      constans character* genus_nuntii,
+        FunctioTractandi  functio)
 {
-    chorda           genus_ent_chorda;
-    chorda           genus_nun_chorda;
-    chorda*          genus_ent_intern;
-    chorda*          genus_nun_intern;
-    TabulaDispersa*  tractatori_entitatis;
-    vacuum*          valor;
+            chorda  genus_ent_chorda;
+            chorda  genus_nun_chorda;
+            chorda* genus_ent_intern;
+            chorda* genus_nun_intern;
+    TabulaDispersa* tractatori_entitatis;
+            vacuum* valor;
 
     si (!reg || !genus_entitatis || !genus_nuntii || !functio)
     {
@@ -143,10 +145,10 @@ registrum_tractatoris_registrare(
 }
 
 b32
-registrum_tractatoris_ponere_fallback(
+registrum_tractatoris_ponere_fallback (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    FunctioTractandi      functio)
+      constans character* genus_entitatis,
+        FunctioTractandi  functio)
 {
     chorda  genus_chorda;
     chorda* genus_intern;
@@ -182,13 +184,13 @@ registrum_tractatoris_ponere_fallback(
  * ================================================== */
 
 FunctioTractandi
-registrum_tractatoris_invenire(
+registrum_tractatoris_invenire (
     RegistrumTractatoris* reg,
-    chorda*               genus_entitatis,
-    chorda*               genus_nuntii)
+                  chorda* genus_entitatis,
+                  chorda* genus_nuntii)
 {
     TabulaDispersa* tractatori_entitatis;
-    vacuum*         valor;
+            vacuum* valor;
 
     si (!reg || !genus_entitatis || !genus_nuntii)
     {
@@ -221,10 +223,10 @@ quaerere_fallback:
 }
 
 FunctioTractandi
-registrum_tractatoris_invenire_literis(
+registrum_tractatoris_invenire_literis (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii)
+      constans character* genus_entitatis,
+      constans character* genus_nuntii)
 {
     chorda  genus_ent_chorda;
     chorda  genus_nun_chorda;
@@ -252,10 +254,10 @@ registrum_tractatoris_invenire_literis(
 }
 
 b32
-registrum_tractatoris_habet(
+registrum_tractatoris_habet (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii)
+      constans character* genus_entitatis,
+      constans character* genus_nuntii)
 {
     redde registrum_tractatoris_invenire_literis(reg, genus_entitatis, genus_nuntii) != NIHIL;
 }
@@ -266,13 +268,13 @@ registrum_tractatoris_habet(
  * ================================================== */
 
 i32
-registrum_tractatoris_numerus(
+registrum_tractatoris_numerus (
     RegistrumTractatoris* reg)
 {
     TabulaIterator  iter_genera;
-    chorda          clavis_genus;
-    vacuum*         valor_tabula;
-    i32             summa;
+            chorda  clavis_genus;
+            vacuum* valor_tabula;
+               i32  summa;
 
     si (!reg)
     {
@@ -286,23 +288,23 @@ registrum_tractatoris_numerus(
     dum (tabula_dispersa_iterator_proximum(&iter_genera, &clavis_genus, &valor_tabula))
     {
         TabulaDispersa* tractatori;
-        tractatori = (TabulaDispersa*)valor_tabula;
-        summa += tabula_dispersa_numerus(tractatori);
+        tractatori  = (TabulaDispersa*)valor_tabula;
+        summa       += tabula_dispersa_numerus(tractatori);
     }
 
     redde summa;
 }
 
 vacuum
-registrum_tractatoris_imprimere(
+registrum_tractatoris_imprimere (
     RegistrumTractatoris* reg)
 {
     TabulaIterator  iter_genera;
     TabulaIterator  iter_nuntii;
-    chorda          clavis_genus;
-    chorda          clavis_nuntius;
-    vacuum*         valor_tabula;
-    vacuum*         valor_functio;
+            chorda  clavis_genus;
+            chorda  clavis_nuntius;
+            vacuum* valor_tabula;
+            vacuum* valor_functio;
 
     si (!reg)
     {

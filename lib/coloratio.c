@@ -9,47 +9,52 @@
 
 /* Verificare si character est pars verbi (identifier) */
 hic_manens b32
-_est_character_verbi(character c)
+_est_character_verbi (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_');
 }
 
 /* Verificare si character potest initiare nomen tag/attributum */
 hic_manens b32
-_est_nomen_initium(character c)
+_est_nomen_initium (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c == '_') || (c == ':');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c == '_') || (c == ':');
 }
 
 /* Verificare si character potest esse in nomine tag/attributum */
 hic_manens b32
-_est_nomen_character(character c)
+_est_nomen_character (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_') || (c == ':') ||
-           (c == '-') || (c == '.');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_') || (c == ':')
+        || (c == '-') || (c == '.');
 }
 
 /* Verificare si character potest esse in valore nudo (bare value) */
 hic_manens b32
-_est_valor_nudus_character(character c)
+_est_valor_nudus_character (
+    character c)
 {
-    redde (c >= 'a' && c <= 'z') ||
-           (c >= 'A' && c <= 'Z') ||
-           (c >= '0' && c <= '9') ||
-           (c == '_') || (c == '-');
+    redde (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || (c == '_') || (c == '-');
 }
 
 /* Verificare si character est spatium */
 hic_manens b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde (c == ' ') || (c == '\t') || (c == '\n') || (c == '\r');
 }
@@ -60,14 +65,14 @@ _est_spatium(character c)
  * ================================================== */
 
 Coloratio*
-coloratio_creare(
+coloratio_creare (
     Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo)
+        i32  latitudo,
+        i32  altitudo)
 {
-    Coloratio* coloratio;
-    memoriae_index indices_size;
-    memoriae_index status_size;
+         Coloratio* coloratio;
+    memoriae_index  indices_size;
+    memoriae_index  status_size;
 
     si (!piscina || latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM)
     {
@@ -81,11 +86,11 @@ coloratio_creare(
         redde NIHIL;
     }
 
-    coloratio->piscina = piscina;
-    coloratio->latitudo = latitudo;
-    coloratio->altitudo = altitudo;
-    coloratio->regulae = ZEPHYRUM;
-    coloratio->reg_commandi = NIHIL;
+    coloratio->piscina       = piscina;
+    coloratio->latitudo      = latitudo;
+    coloratio->altitudo      = altitudo;
+    coloratio->regulae       = ZEPHYRUM;
+    coloratio->reg_commandi  = NIHIL;
 
     /* Allocare indices array */
     indices_size = (memoriae_index)(latitudo * altitudo) * magnitudo(i8);
@@ -111,8 +116,8 @@ coloratio_creare(
 }
 
 Coloratio*
-coloratio_creare_ex_tabula(
-    Piscina* piscina,
+coloratio_creare_ex_tabula (
+                       Piscina* piscina,
     constans TabulaCharacterum* tabula)
 {
     si (!piscina || !tabula)
@@ -129,9 +134,9 @@ coloratio_creare_ex_tabula(
  * ================================================== */
 
 vacuum
-coloratio_ponere_regulas(
+coloratio_ponere_regulas (
     Coloratio* coloratio,
-    i32 regulae)
+          i32  regulae)
 {
     si (coloratio)
     {
@@ -140,9 +145,9 @@ coloratio_ponere_regulas(
 }
 
 vacuum
-coloratio_addere_regulam(
+coloratio_addere_regulam (
     Coloratio* coloratio,
-    i32 regula)
+          i32  regula)
 {
     si (coloratio)
     {
@@ -151,9 +156,9 @@ coloratio_addere_regulam(
 }
 
 vacuum
-coloratio_removere_regulam(
+coloratio_removere_regulam (
     Coloratio* coloratio,
-    i32 regula)
+          i32  regula)
 {
     si (coloratio)
     {
@@ -162,7 +167,7 @@ coloratio_removere_regulam(
 }
 
 vacuum
-coloratio_ponere_registrum(
+coloratio_ponere_registrum (
     Coloratio* coloratio,
     structura RegistrumCommandi* reg)
 {
@@ -196,17 +201,20 @@ hic_manens constans character* clavis_sputnik_builtin[] = {
 
 /* Verificare si verbum est in lista */
 hic_manens b32
-_est_in_lista(constans character* verbum, i32 longitudo, constans character** lista)
+_est_in_lista (
+    constans character*  verbum,
+                   i32   longitudo,
+    constans character** lista)
 {
-    i32 i;
+                   i32  i;
     constans character* clavis;
 
     per (i = ZEPHYRUM; lista[i] != NIHIL; i++)
     {
         clavis = lista[i];
         /* Comparare longitudinem et contentum */
-        si ((i32)strlen(clavis) == longitudo &&
-            memcmp(verbum, clavis, (size_t)longitudo) == ZEPHYRUM)
+        si (   (i32)strlen(clavis)                       == longitudo
+            && memcmp(verbum, clavis, (size_t)longitudo) == ZEPHYRUM)
         {
             redde VERUM;
         }
@@ -216,7 +224,8 @@ _est_in_lista(constans character* verbum, i32 longitudo, constans character** li
 
 /* Verificare si character est digitus */
 hic_manens b32
-_est_digitus(character c)
+_est_digitus (
+    character c)
 {
     redde (c >= '0' && c <= '9');
 }
@@ -228,18 +237,18 @@ _est_digitus(character c)
 
 /* Colorare sputnik syntax in linea */
 hic_manens vacuum
-_colorare_sputnik(
-    Coloratio* coloratio,
+_colorare_sputnik (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
-    i32 col;
-    i32 initium;
-    i32 finis;
-    i32 i;
+          i32 col;
+          i32 initium;
+          i32 finis;
+          i32 i;
     character c;
     character verbum[LXIV];
-    i32 verbum_long;
+          i32 verbum_long;
 
     col = ZEPHYRUM;
 
@@ -255,8 +264,8 @@ _colorare_sputnik(
         }
 
         /* Comments: // */
-        si (c == '/' && col + I < tabula->latitudo &&
-            tabula_cellula(tabula, linea, col + I) == '/')
+        si (   c              == '/' && col + I < tabula->latitudo
+            && tabula_cellula(tabula, linea, col + I) == '/')
         {
             /* Color rest of line as comment */
             per (i = col; i < tabula->latitudo; i++)
@@ -270,8 +279,8 @@ _colorare_sputnik(
         /* Strings: " or ' */
         si (c == '"' || c == '\'')
         {
-            character delimitator = c;
-            initium = col;
+            character delimitator  = c;
+            initium                = col;
             col++;
 
             dum (col < tabula->latitudo)
@@ -322,8 +331,8 @@ _colorare_sputnik(
                 }
 
                 /* String interpolation: ${ ... } */
-                si (c == '$' && col + I < tabula->latitudo &&
-                    tabula_cellula(tabula, linea, col + I) == '{')
+                si (   c              == '$' && col + I < tabula->latitudo
+                    && tabula_cellula(tabula, linea, col + I) == '{')
                 {
                     i32 brace_depth;
 
@@ -385,8 +394,8 @@ _colorare_sputnik(
         }
 
         /* Numbers: digits, optionally with . and $ suffix */
-        si (_est_digitus(c) || (c == '.' && col + I < tabula->latitudo &&
-            _est_digitus(tabula_cellula(tabula, linea, col + I))))
+        si (   _est_digitus(c) || (c == '.' && col + I < tabula->latitudo
+            && _est_digitus(tabula_cellula(tabula, linea, col + I))))
         {
             initium = col;
 
@@ -421,8 +430,8 @@ _colorare_sputnik(
         }
 
         /* Tags: #word */
-        si (c == '#' && col + I < tabula->latitudo &&
-            _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+        si (   c == '#' && col + I < tabula->latitudo
+            && _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
         {
             initium = col;
             col++;
@@ -441,8 +450,8 @@ _colorare_sputnik(
         /* Identifiers and keywords (kebab-case permissa) */
         si (_est_character_verbi(c) && !_est_digitus(c))
         {
-            initium = col;
-            verbum_long = ZEPHYRUM;
+            initium      = col;
+            verbum_long  = ZEPHYRUM;
 
             dum (col < tabula->latitudo)
             {
@@ -457,8 +466,8 @@ _colorare_sputnik(
                     }
                     col++;
                 }
-                alioquin si (c == '-' && col + I < tabula->latitudo &&
-                             _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+                alioquin si (   c == '-' && col + I < tabula->latitudo
+                             && _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
                 {
                     /* Hyphen: solum consume si sequitur identifier character */
                     si (verbum_long < LXIII)
@@ -478,8 +487,8 @@ _colorare_sputnik(
             finis = col;
 
             /* Check keyword categories */
-            si (_est_in_lista(verbum, verbum_long, clavis_sputnik_declarationes) ||
-                _est_in_lista(verbum, verbum_long, clavis_sputnik_control))
+            si (   _est_in_lista(verbum, verbum_long, clavis_sputnik_declarationes)
+                || _est_in_lista(verbum, verbum_long, clavis_sputnik_control))
             {
                 per (i = initium; i < finis; i++)
                 {
@@ -487,14 +496,14 @@ _colorare_sputnik(
                 }
 
                 /* Tractare speciale pro "entitas variable-name : EntityName" */
-                si (verbum_long == VII &&
-                    verbum[ZEPHYRUM] == 'e' && verbum[I] == 'n' && verbum[II] == 't' &&
-                    verbum[III] == 'i' && verbum[IV] == 't' && verbum[V] == 'a' && verbum[VI] == 's')
+                si (   verbum_long      == VII
+                    && verbum[ZEPHYRUM] == 'e' && verbum[I] == 'n' && verbum[II] == 't'
+                    && verbum[III]      == 'i' && verbum[IV] == 't' && verbum[V] == 'a' && verbum[VI] == 's')
                 {
                     /* Saltare spatia post "entitas" */
-                    dum (col < tabula->latitudo &&
-                         (tabula_cellula(tabula, linea, col) == ' ' ||
-                          tabula_cellula(tabula, linea, col) == '\t'))
+                    dum (   col < tabula->latitudo
+                         && (tabula_cellula(tabula, linea, col) == ' '
+                        || tabula_cellula(tabula, linea, col) == '\t'))
                     {
                         col++;
                     }
@@ -514,9 +523,9 @@ _colorare_sputnik(
                     }
 
                     /* Saltare spatia ante ':' */
-                    dum (col < tabula->latitudo &&
-                         (tabula_cellula(tabula, linea, col) == ' ' ||
-                          tabula_cellula(tabula, linea, col) == '\t'))
+                    dum (   col < tabula->latitudo
+                         && (tabula_cellula(tabula, linea, col) == ' '
+                        || tabula_cellula(tabula, linea, col) == '\t'))
                     {
                         col++;
                     }
@@ -529,9 +538,9 @@ _colorare_sputnik(
                         col++;
 
                         /* Saltare spatia post ':' */
-                        dum (col < tabula->latitudo &&
-                             (tabula_cellula(tabula, linea, col) == ' ' ||
-                              tabula_cellula(tabula, linea, col) == '\t'))
+                        dum (   col < tabula->latitudo
+                             && (tabula_cellula(tabula, linea, col) == ' '
+                            || tabula_cellula(tabula, linea, col) == '\t'))
                         {
                             col++;
                         }
@@ -580,8 +589,8 @@ _colorare_sputnik(
         }
 
         /* Operators */
-        si (c == '+' || c == '-' || c == '*' || c == '/' || c == '%' ||
-            c == '=' || c == '<' || c == '>' || c == '!' || c == '&' || c == '|')
+        si (   c == '+' || c == '-' || c == '*' || c == '/' || c == '%'
+            || c == '=' || c == '<' || c == '>' || c == '!' || c == '&' || c == '|')
         {
             coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
             col++;
@@ -589,19 +598,19 @@ _colorare_sputnik(
             si (col < tabula->latitudo)
             {
                 character c2 = tabula_cellula(tabula, linea, col);
-                si ((c == '=' && c2 == '=') ||
-                    (c == '!' && c2 == '=') ||
-                    (c == '<' && c2 == '=') ||
-                    (c == '>' && c2 == '=') ||
-                    (c == '&' && c2 == '&') ||
-                    (c == '|' && c2 == '|') ||
-                    (c == '=' && c2 == '>') ||
-                    (c == '+' && c2 == '+') ||
-                    (c == '-' && c2 == '-') ||
-                    (c == '+' && c2 == '=') ||
-                    (c == '-' && c2 == '=') ||
-                    (c == '*' && c2 == '=') ||
-                    (c == '/' && c2 == '='))
+                si (   (c == '=' && c2 == '=')
+                    || (c == '!' && c2 == '=')
+                    || (c == '<' && c2 == '=')
+                    || (c == '>' && c2 == '=')
+                    || (c == '&' && c2 == '&')
+                    || (c == '|' && c2 == '|')
+                    || (c == '=' && c2 == '>')
+                    || (c == '+' && c2 == '+')
+                    || (c == '-' && c2 == '-')
+                    || (c == '+' && c2 == '=')
+                    || (c == '-' && c2 == '=')
+                    || (c == '*' && c2 == '=')
+                    || (c == '/' && c2 == '='))
                 {
                     coloratio_index(coloratio, linea, col) = COLORATIO_OPERANS;
                     col++;
@@ -615,17 +624,16 @@ _colorare_sputnik(
     }
 }
 
-
 /* Colorare #link patterns in linea (outside sputnik blocks) */
 hic_manens vacuum
-_colorare_links(
-    Coloratio* coloratio,
+_colorare_links (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
-    i32 col;
-    i32 initium;
-    i32 i;
+          i32 col;
+          i32 initium;
+          i32 i;
     character c;
 
     per (col = ZEPHYRUM; col < tabula->latitudo; col++)
@@ -635,8 +643,8 @@ _colorare_links(
         si (c == '#')
         {
             /* Verificare si proximus character est valida initium verbi */
-            si (col + I < tabula->latitudo &&
-                _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
+            si (   col + I < tabula->latitudo
+                && _est_character_verbi(tabula_cellula(tabula, linea, col + I)))
             {
                 initium = col;
                 col++;
@@ -666,18 +674,18 @@ _colorare_links(
 
 /* Colorare $command patterns in linea */
 hic_manens vacuum
-_colorare_commanda(
-    Coloratio* coloratio,
+_colorare_commanda (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
-    i32 col;
-    i32 initium;
-    i32 i;
-    i32 longitudo;
+          i32 col;
+          i32 initium;
+          i32 i;
+          i32 longitudo;
     character c;
     character nomen_commandi[XXXII];
-    b32 debet_colorare;
+          b32 debet_colorare;
 
     per (col = ZEPHYRUM; col < tabula->latitudo; col++)
     {
@@ -746,20 +754,20 @@ _colorare_commanda(
 
 /* Computare status lineae (for multi-line block tracking) */
 hic_manens i8
-_computare_status_lineae(
+_computare_status_lineae (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i8 status_initium)
+                           i32  linea,
+                            i8  status_initium)
 {
-    i32 col;
+          i32 col;
     character c;
-    i8 status;
-    b32 in_string;
+           i8 status;
+          b32 in_string;
     character string_delim;
 
-    status = status_initium;
-    in_string = FALSUM;
-    string_delim = '\0';
+    status        = status_initium;
+    in_string     = FALSUM;
+    string_delim  = '\0';
 
     per (col = ZEPHYRUM; col < tabula->latitudo; col++)
     {
@@ -775,8 +783,8 @@ _computare_status_lineae(
         {
             si (c == '"' || c == '\'' || c == '`')
             {
-                in_string = VERUM;
-                string_delim = c;
+                in_string     = VERUM;
+                string_delim  = c;
                 perge;
             }
         }
@@ -789,8 +797,8 @@ _computare_status_lineae(
                 {
                     perge;  /* Escaped quote */
                 }
-                in_string = FALSUM;
-                string_delim = '\0';
+                in_string     = FALSUM;
+                string_delim  = '\0';
             }
             perge;  /* Don't check for tags inside strings */
         }
@@ -801,17 +809,17 @@ _computare_status_lineae(
             /* Check for "<sputnik>" - need at least 9 chars */
             si (col + VIII < tabula->latitudo)
             {
-                si (tabula_cellula(tabula, linea, col + I) == 's' &&
-                    tabula_cellula(tabula, linea, col + II) == 'p' &&
-                    tabula_cellula(tabula, linea, col + III) == 'u' &&
-                    tabula_cellula(tabula, linea, col + IV) == 't' &&
-                    tabula_cellula(tabula, linea, col + V) == 'n' &&
-                    tabula_cellula(tabula, linea, col + VI) == 'i' &&
-                    tabula_cellula(tabula, linea, col + VII) == 'k' &&
-                    tabula_cellula(tabula, linea, col + VIII) == '>')
+                si (   tabula_cellula(tabula, linea, col + I) == 's'
+                    && tabula_cellula(tabula, linea, col + II) == 'p'
+                    && tabula_cellula(tabula, linea, col + III) == 'u'
+                    && tabula_cellula(tabula, linea, col + IV) == 't'
+                    && tabula_cellula(tabula, linea, col + V) == 'n'
+                    && tabula_cellula(tabula, linea, col + VI) == 'i'
+                    && tabula_cellula(tabula, linea, col + VII) == 'k'
+                    && tabula_cellula(tabula, linea, col + VIII) == '>')
                 {
-                    status = STATUS_LINEA_IN_SPUTNIK;
-                    col += VIII;  /* Skip past tag */
+                    status  = STATUS_LINEA_IN_SPUTNIK;
+                    col     += VIII;  /* Skip past tag */
                     perge;
                 }
             }
@@ -823,18 +831,18 @@ _computare_status_lineae(
             /* Check for "</sputnik>" - need at least 10 chars */
             si (col + IX < tabula->latitudo)
             {
-                si (tabula_cellula(tabula, linea, col + I) == '/' &&
-                    tabula_cellula(tabula, linea, col + II) == 's' &&
-                    tabula_cellula(tabula, linea, col + III) == 'p' &&
-                    tabula_cellula(tabula, linea, col + IV) == 'u' &&
-                    tabula_cellula(tabula, linea, col + V) == 't' &&
-                    tabula_cellula(tabula, linea, col + VI) == 'n' &&
-                    tabula_cellula(tabula, linea, col + VII) == 'i' &&
-                    tabula_cellula(tabula, linea, col + VIII) == 'k' &&
-                    tabula_cellula(tabula, linea, col + IX) == '>')
+                si (   tabula_cellula(tabula, linea, col + I) == '/'
+                    && tabula_cellula(tabula, linea, col + II) == 's'
+                    && tabula_cellula(tabula, linea, col + III) == 'p'
+                    && tabula_cellula(tabula, linea, col + IV) == 'u'
+                    && tabula_cellula(tabula, linea, col + V) == 't'
+                    && tabula_cellula(tabula, linea, col + VI) == 'n'
+                    && tabula_cellula(tabula, linea, col + VII) == 'i'
+                    && tabula_cellula(tabula, linea, col + VIII) == 'k'
+                    && tabula_cellula(tabula, linea, col + IX) == '>')
                 {
-                    status = STATUS_LINEA_NORMALIS;
-                    col += IX;  /* Skip past tag */
+                    status  = STATUS_LINEA_NORMALIS;
+                    col     += IX;  /* Skip past tag */
                     perge;
                 }
             }
@@ -846,13 +854,13 @@ _computare_status_lineae(
 
 /* Colorare STML/HTML tags in linea */
 hic_manens vacuum
-_colorare_tags(
-    Coloratio* coloratio,
+_colorare_tags (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula,
-    i32 linea)
+                           i32  linea)
 {
-    i32 col;
-    i32 tag_initium;
+          i32 col;
+          i32 tag_initium;
     character c;
     character quote_char;
 
@@ -1051,11 +1059,11 @@ _colorare_tags(
 
 /* Colorare singulam lineam cum contextu */
 hic_manens vacuum
-_colorare_lineam(
-    Coloratio* coloratio,
+_colorare_lineam (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i8 status_initium)
+                           i32  linea,
+                            i8  status_initium)
 {
     /* Apply STML tag highlighting si regula activa */
     si (coloratio->regulae & COLORATIO_REGULA_STML)
@@ -1064,8 +1072,8 @@ _colorare_lineam(
     }
 
     /* Apply sputnik syntax highlighting si in sputnik block */
-    si (status_initium == STATUS_LINEA_IN_SPUTNIK &&
-        (coloratio->regulae & COLORATIO_REGULA_SPUTNIK))
+    si (   status_initium == STATUS_LINEA_IN_SPUTNIK
+        && (coloratio->regulae & COLORATIO_REGULA_SPUTNIK))
     {
         _colorare_sputnik(coloratio, tabula, linea);
     }
@@ -1088,7 +1096,7 @@ _colorare_lineam(
  * ================================================== */
 
 vacuum
-coloratio_vacare(
+coloratio_vacare (
     Coloratio* coloratio)
 {
     memoriae_index indices_size;
@@ -1107,13 +1115,13 @@ coloratio_vacare(
 }
 
 vacuum
-coloratio_computare(
-    Coloratio* coloratio,
+coloratio_computare (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula)
 {
     i32 linea;
-    i8 status_currens;
-    i8 status_initium;
+     i8 status_currens;
+     i8 status_initium;
 
     si (!coloratio || !tabula)
     {
@@ -1148,18 +1156,18 @@ coloratio_computare(
  * ================================================== */
 
 i8
-coloratio_obtinere(
+coloratio_obtinere (
     constans Coloratio* coloratio,
-    i32 linea,
-    i32 columna)
+                   i32  linea,
+                   i32  columna)
 {
     si (!coloratio || !coloratio->indices)
     {
         redde COLORATIO_DEFALTA;
     }
 
-    si (linea < ZEPHYRUM || linea >= coloratio->altitudo ||
-        columna < ZEPHYRUM || columna >= coloratio->latitudo)
+    si (   linea < ZEPHYRUM || linea >= coloratio->altitudo
+        || columna < ZEPHYRUM || columna >= coloratio->latitudo)
     {
         redde COLORATIO_DEFALTA;
     }
@@ -1168,9 +1176,9 @@ coloratio_obtinere(
 }
 
 i8
-coloratio_obtinere_status_lineae(
+coloratio_obtinere_status_lineae (
     constans Coloratio* coloratio,
-    i32 linea)
+                   i32  linea)
 {
     si (!coloratio || !coloratio->status_lineae)
     {

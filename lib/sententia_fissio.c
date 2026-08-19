@@ -2,6 +2,7 @@
 #include "utf8.h"
 #include <string.h>
 
+
 /* ==================================================
  * Constantae - Smart Quote Codepoints
  * ================================================== */
@@ -71,43 +72,50 @@ interior constans character* ABBREVIATIONES[] = {
  * ================================================== */
 
 interior b32
-_est_littera(character c)
+_est_littera (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 interior b32
-_est_cifra(character c)
+_est_cifra (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
 
 interior b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 interior b32
-_est_punctum_terminale(character c)
+_est_punctum_terminale (
+    character c)
 {
     redde c == '.' || c == '!' || c == '?';
 }
 
 interior b32
-_est_maiuscula(character c)
+_est_maiuscula (
+    character c)
 {
     redde c >= 'A' && c <= 'Z';
 }
 
 interior b32
-_est_minuscula(character c)
+_est_minuscula (
+    character c)
 {
     redde c >= 'a' && c <= 'z';
 }
 
 interior character
-_ad_minusculam(character c)
+_ad_minusculam (
+    character c)
 {
     si (_est_maiuscula(c))
     {
@@ -123,7 +131,9 @@ _ad_minusculam(character c)
 
 /* Decodere codepoint ad positione */
 interior s32
-_decodere_runam(chorda textus, i32 index)
+_decodere_runam (
+    chorda textus,
+       i32 index)
 {
     constans i8* ptr;
     constans i8* finis;
@@ -133,15 +143,17 @@ _decodere_runam(chorda textus, i32 index)
         redde -1;
     }
 
-    ptr = (constans i8*)(textus.datum + index);
-    finis = (constans i8*)(textus.datum + textus.mensura);
+    ptr    = (constans i8*)(textus.datum + index);
+    finis  = (constans i8*)(textus.datum + textus.mensura);
 
     redde utf8_decodere(&ptr, finis);
 }
 
 /* Obtinere longitudinem bytes runae ad positione */
 interior i32
-_longitudo_runae(chorda textus, i32 index)
+_longitudo_runae (
+    chorda textus,
+       i32 index)
 {
     s32 result;
 
@@ -156,32 +168,35 @@ _longitudo_runae(chorda textus, i32 index)
 
 /* An codepoint est quote (rectus vel curvus) */
 interior b32
-_est_quote_runa(s32 codepoint)
+_est_quote_runa (
+    s32 codepoint)
 {
-    redde codepoint == QUOTE_DOUBLE_RECTUS ||
-           codepoint == QUOTE_SINGLE_RECTUS ||
-           codepoint == QUOTE_DOUBLE_SINISTER ||
-           codepoint == QUOTE_DOUBLE_DEXTER ||
-           codepoint == QUOTE_SINGLE_SINISTER ||
-           codepoint == QUOTE_SINGLE_DEXTER;
+    redde codepoint == QUOTE_DOUBLE_RECTUS
+        || codepoint == QUOTE_SINGLE_RECTUS
+        || codepoint == QUOTE_DOUBLE_SINISTER
+        || codepoint == QUOTE_DOUBLE_DEXTER
+        || codepoint == QUOTE_SINGLE_SINISTER
+        || codepoint == QUOTE_SINGLE_DEXTER;
 }
 
 /* An codepoint est quote duplex */
 interior b32
-_est_quote_duplex(s32 codepoint)
+_est_quote_duplex (
+    s32 codepoint)
 {
-    redde codepoint == QUOTE_DOUBLE_RECTUS ||
-           codepoint == QUOTE_DOUBLE_SINISTER ||
-           codepoint == QUOTE_DOUBLE_DEXTER;
+    redde codepoint == QUOTE_DOUBLE_RECTUS
+        || codepoint == QUOTE_DOUBLE_SINISTER
+        || codepoint == QUOTE_DOUBLE_DEXTER;
 }
 
 /* An codepoint est quote simplex */
 interior b32
-_est_quote_simplex(s32 codepoint)
+_est_quote_simplex (
+    s32 codepoint)
 {
-    redde codepoint == QUOTE_SINGLE_RECTUS ||
-           codepoint == QUOTE_SINGLE_SINISTER ||
-           codepoint == QUOTE_SINGLE_DEXTER;
+    redde codepoint == QUOTE_SINGLE_RECTUS
+        || codepoint == QUOTE_SINGLE_SINISTER
+        || codepoint == QUOTE_SINGLE_DEXTER;
 }
 
 
@@ -191,7 +206,10 @@ _est_quote_simplex(s32 codepoint)
 
 /* Comparare verbum cum abbreviatione (case-insensitive) */
 interior b32
-_comparare_abbreviationem(constans character* verbum, i32 longitudo, constans character* abbrev)
+_comparare_abbreviationem (
+    constans character* verbum,
+                   i32  longitudo,
+    constans character* abbrev)
 {
     i32 i;
     i32 abbrev_long;
@@ -216,11 +234,13 @@ _comparare_abbreviationem(constans character* verbum, i32 longitudo, constans ch
 
 /* An verbum est abbreviatio */
 interior b32
-_est_abbreviatio(constans character* verbum, i32 longitudo)
+_est_abbreviatio (
+    constans character* verbum,
+                   i32  longitudo)
 {
-    i32 i;
+          i32 i;
     character verbum_sine_puncto[LXIV];
-    i32 long_sine_puncto;
+          i32 long_sine_puncto;
 
     si (longitudo <= ZEPHYRUM || longitudo >= LXIV)
     {
@@ -257,11 +277,15 @@ _est_abbreviatio(constans character* verbum, i32 longitudo)
 
 /* Extrahere verbum ante punctum */
 interior i32
-_extrahere_verbum_ante_punctum(chorda textus, i32 punctum_index, character* buffer, i32 buffer_max)
+_extrahere_verbum_ante_punctum (
+       chorda  textus,
+          i32  punctum_index,
+    character* buffer,
+          i32  buffer_max)
 {
-    i32 initium;
-    i32 longitudo;
-    i32 i;
+          i32 initium;
+          i32 longitudo;
+          i32 i;
     character c;
 
     /* Verificare parametros */
@@ -326,7 +350,9 @@ _extrahere_verbum_ante_punctum(chorda textus, i32 punctum_index, character* buff
 
 /* An character ante est cifra et character post est cifra (numerus decimalis) */
 interior b32
-_est_numerus_decimalis(chorda textus, i32 punctum_index)
+_est_numerus_decimalis (
+    chorda textus,
+       i32 punctum_index)
 {
     character ante;
     character post;
@@ -344,7 +370,9 @@ _est_numerus_decimalis(chorda textus, i32 punctum_index)
 
 /* An est ellipsis (tres puncti) */
 interior b32
-_est_ellipsis(chorda textus, i32 punctum_index)
+_est_ellipsis (
+    chorda textus,
+       i32 punctum_index)
 {
     si ((character)textus.datum[punctum_index] != '.')
     {
@@ -353,8 +381,8 @@ _est_ellipsis(chorda textus, i32 punctum_index)
 
     si (punctum_index + II < textus.mensura)
     {
-        redde (character)textus.datum[punctum_index + I] == '.' &&
-               (character)textus.datum[punctum_index + II] == '.';
+        redde (character)textus.datum[punctum_index + I] == '.'
+            && (character)textus.datum[punctum_index + II] == '.';
     }
 
     redde FALSUM;
@@ -362,7 +390,9 @@ _est_ellipsis(chorda textus, i32 punctum_index)
 
 /* An verbum est possessivum cum smart apostrophe (terminans in 's) */
 interior b32
-_est_possessivum_smart(constans character* verbum, i32 longitudo)
+_est_possessivum_smart (
+    constans character* verbum,
+                   i32  longitudo)
 {
     /* Minimum: X's = 4+ bytes (X + 3-byte apostrophe + s) */
     si (longitudo < IV)
@@ -372,11 +402,11 @@ _est_possessivum_smart(constans character* verbum, i32 longitudo)
 
     /* Probare si terminat in smart apostrophe + s */
     /* Smart apostrophe (') est 3 bytes: 0xE2 0x80 0x99 */
-    si (longitudo >= IV &&
-        (i8)verbum[longitudo - IV] == (i8)0xE2 &&
-        (i8)verbum[longitudo - III] == (i8)0x80 &&
-        (i8)verbum[longitudo - II] == (i8)0x99 &&
-        (verbum[longitudo - I] == 's' || verbum[longitudo - I] == 'S'))
+    si (   longitudo                   >= IV
+        && (i8)verbum[longitudo - IV]  == (i8)0xE2
+        && (i8)verbum[longitudo - III] == (i8)0x80
+        && (i8)verbum[longitudo - II]  == (i8)0x99
+        && (verbum[longitudo - I] == 's' || verbum[longitudo - I] == 'S'))
     {
         redde VERUM;
     }
@@ -386,11 +416,14 @@ _est_possessivum_smart(constans character* verbum, i32 longitudo)
 
 /* An est abbreviatio specialis (etc., al.) sequuta per maiusculam */
 interior b32
-_est_abbreviatio_specialis(chorda textus, i32 punctum_index, constans character* verbum)
+_est_abbreviatio_specialis (
+                chorda  textus,
+                   i32  punctum_index,
+    constans character* verbum)
 {
-    i32 i;
+          i32 i;
     character verbum_lower[LXIV];
-    i32 longitudo;
+          i32 longitudo;
 
     /* Convertere ad minusculas */
     longitudo = (i32)strlen(verbum);
@@ -428,7 +461,9 @@ _est_abbreviatio_specialis(chorda textus, i32 punctum_index, constans character*
 
 /* An est attributio dialogi post quote */
 interior b32
-_est_attributio_dialogi(chorda textus, i32 post_quote_index)
+_est_attributio_dialogi (
+    chorda textus,
+       i32 post_quote_index)
 {
     i32 i;
     i32 num_verba;
@@ -456,9 +491,9 @@ _est_attributio_dialogi(chorda textus, i32 post_quote_index)
     si ((character)textus.datum[i] == 'I' && i + I < textus.mensura && _est_spatium((character)textus.datum[i + I]))
     {
         /* Numerare verba post "I" */
-        i += II;  /* Saltare "I " */
-        num_verba = ZEPHYRUM;
-        in_verbo = FALSUM;
+        i          += II;  /* Saltare "I " */
+        num_verba  = ZEPHYRUM;
+        in_verbo   = FALSUM;
 
         dum (i < textus.mensura && num_verba <= II)
         {
@@ -503,20 +538,20 @@ _est_attributio_dialogi(chorda textus, i32 post_quote_index)
  * ================================================== */
 
 structura SententiaIterator {
-    chorda   textus;           /* Textus originalis */
+     chorda  textus;           /* Textus originalis */
     Piscina* piscina;          /* Pro allocationibus */
 
     /* Cache sententiarum (crescit dum iteramus) */
-    chorda*  cache;            /* Array sententiarum in cache */
-    i32      cache_numerus;    /* Quot in cache */
-    i32      cache_capacitas;  /* Capacitas allocata */
+    chorda* cache;            /* Array sententiarum in cache */
+       i32  cache_numerus;    /* Quot in cache */
+       i32  cache_capacitas;  /* Capacitas allocata */
 
     /* Positio currens */
-    i32      index_currens;    /* Index sententiae currentis */
-    i32      byte_currens;     /* Offset byte in textu */
+    i32 index_currens;    /* Index sententiae currentis */
+    i32 byte_currens;     /* Offset byte in textu */
 
     /* Vexillum completionis */
-    b32      completum;        /* Verum si totum textum analysatum */
+    b32 completum;        /* Verum si totum textum analysatum */
 };
 
 
@@ -529,7 +564,9 @@ structura SententiaIterator {
  * ================================================== */
 
 interior i32
-_invenire_finem_sententiae(chorda textus, i32 initium)
+_invenire_finem_sententiae (
+    chorda textus,
+       i32 initium)
 {
     i32 i;
     b32 in_quote;
@@ -540,15 +577,15 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
         redde textus.mensura;
     }
 
-    in_quote = FALSUM;
-    quote_genus = ZEPHYRUM;
+    in_quote     = FALSUM;
+    quote_genus  = ZEPHYRUM;
 
     i = initium;
     dum (i < textus.mensura)
     {
         character c = (character)textus.datum[i];
-        s32 codepoint;
-        i32 runa_long;
+              s32 codepoint;
+              i32 runa_long;
 
         /* Obtinere codepoint (pro smart quotes) */
         codepoint = _decodere_runam(textus, i);
@@ -557,6 +594,7 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
         {
             runa_long = I;
         }
+
 
         /* ==================================================
          * Tractare Quotes
@@ -567,13 +605,13 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
         {
             si (!in_quote)
             {
-                in_quote = VERUM;
-                quote_genus = codepoint;
+                in_quote     = VERUM;
+                quote_genus  = codepoint;
             }
             alioquin si (_est_quote_duplex(quote_genus))
             {
-                in_quote = FALSUM;
-                quote_genus = ZEPHYRUM;
+                in_quote     = FALSUM;
+                quote_genus  = ZEPHYRUM;
             }
             i += runa_long;
             perge;
@@ -597,25 +635,28 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
                     si (post_c == 's' || post_c == 't' || post_c == 'd' || post_c == 'm')
                     {
                         /* Probare si sequitur spatium vel punctum */
-                        si (post + I >= textus.mensura ||
-                            _est_spatium((character)textus.datum[post + I]) ||
-                            _est_punctum_terminale((character)textus.datum[post + I]))
+                        si (   post + I >= textus.mensura
+                            || _est_spatium((character)textus.datum[post + I])
+                            || _est_punctum_terminale((character)textus.datum[post + I]))
                         {
                             est_possessivum = VERUM;
                         }
                     }
-                    alioquin si (post_c == 'l' && post + I < textus.mensura &&
-                                (character)textus.datum[post + I] == 'l')
+                    alioquin si (   post_c == 'l' && post + I < textus.mensura
+
+                                 && (character)textus.datum[post + I] == 'l')
                     {
                         est_possessivum = VERUM;  /* 'll */
                     }
-                    alioquin si (post_c == 'v' && post + I < textus.mensura &&
-                                (character)textus.datum[post + I] == 'e')
+                    alioquin si (   post_c == 'v' && post + I < textus.mensura
+
+                                 && (character)textus.datum[post + I] == 'e')
                     {
                         est_possessivum = VERUM;  /* 've */
                     }
-                    alioquin si (post_c == 'r' && post + I < textus.mensura &&
-                                (character)textus.datum[post + I] == 'e')
+                    alioquin si (   post_c == 'r' && post + I < textus.mensura
+
+                                 && (character)textus.datum[post + I] == 'e')
                     {
                         est_possessivum = VERUM;  /* 're */
                     }
@@ -627,19 +668,20 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
                 /* Est quote */
                 si (!in_quote)
                 {
-                    in_quote = VERUM;
-                    quote_genus = codepoint;
+                    in_quote     = VERUM;
+                    quote_genus  = codepoint;
                 }
                 alioquin si (_est_quote_simplex(quote_genus))
                 {
-                    in_quote = FALSUM;
-                    quote_genus = ZEPHYRUM;
+                    in_quote     = FALSUM;
+                    quote_genus  = ZEPHYRUM;
                 }
             }
 
             i += runa_long;
             perge;
         }
+
 
         /* ==================================================
          * Tractare Puncta Terminalia
@@ -648,11 +690,11 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
         si (_est_punctum_terminale(c))
         {
             character verbum[LXIV];
-            i32 verbum_long;
-            b32 est_abbrev;
-            b32 est_decimal;
-            b32 est_ellips;
-            b32 est_specialis;
+                  i32 verbum_long;
+                  b32 est_abbrev;
+                  b32 est_decimal;
+                  b32 est_ellips;
+                  b32 est_specialis;
 
             /* Extrahere verbum ante punctum */
             verbum_long = _extrahere_verbum_ante_punctum(textus, i, verbum, LXIV);
@@ -669,9 +711,9 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
                 i32 pos_s = i - I;  /* Positio 's' in textu */
                 si (pos_s >= III)
                 {
-                    si ((i8)textus.datum[pos_s - III] == (i8)0xE2 &&
-                        (i8)textus.datum[pos_s - II] == (i8)0x80 &&
-                        (i8)textus.datum[pos_s - I] == (i8)0x99)
+                    si (   (i8)textus.datum[pos_s - III] == (i8)0xE2
+                        && (i8)textus.datum[pos_s - II]  == (i8)0x80
+                        && (i8)textus.datum[pos_s - I]   == (i8)0x99)
                     {
                         /* Est possessivum (Satan's, etc.) - non abbreviatio */
                         est_abbrev = FALSUM;
@@ -736,13 +778,13 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
                             /* Actualizare quote status */
                             si (in_quote && _est_quote_duplex(quote_genus) && _est_quote_duplex(post_codepoint))
                             {
-                                in_quote = FALSUM;
-                                quote_genus = ZEPHYRUM;
+                                in_quote     = FALSUM;
+                                quote_genus  = ZEPHYRUM;
                             }
                             alioquin si (in_quote && _est_quote_simplex(quote_genus) && _est_quote_simplex(post_codepoint))
                             {
-                                in_quote = FALSUM;
-                                quote_genus = ZEPHYRUM;
+                                in_quote     = FALSUM;
+                                quote_genus  = ZEPHYRUM;
                             }
 
                             perge;
@@ -801,17 +843,17 @@ _invenire_finem_sententiae(chorda textus, i32 initium)
  * ================================================== */
 
 SententiaeFissioFructus
-sententia_fissio(
-    chorda   textus,
+sententia_fissio (
+     chorda  textus,
     Piscina* piscina)
 {
     SententiaeFissioFructus fructus;
-    i32 capacitas;
-    i32 i;
-    i32 finis;
+                        i32 capacitas;
+                        i32 i;
+                        i32 finis;
 
-    fructus.sententiae = NIHIL;
-    fructus.numerus = ZEPHYRUM;
+    fructus.sententiae  = NIHIL;
+    fructus.numerus     = ZEPHYRUM;
 
     si (textus.mensura <= ZEPHYRUM || piscina == NIHIL)
     {
@@ -837,19 +879,19 @@ sententia_fissio(
 
     dum (i < textus.mensura)
     {
-        i32 initium;
+           i32 initium;
         chorda sententia;
 
-        initium = i;
-        finis = _invenire_finem_sententiae(textus, initium);
+        initium  = i;
+        finis    = _invenire_finem_sententiae(textus, initium);
 
         /* Creare sententiam (trim spatia) */
         {
             i32 sent_init;
             i32 sent_fin;
 
-            sent_init = initium;
-            sent_fin = finis;
+            sent_init  = initium;
+            sent_fin   = finis;
 
             /* Trim initium */
             dum (sent_init < sent_fin && _est_spatium((character)textus.datum[sent_init]))
@@ -875,7 +917,7 @@ sententia_fissio(
                     /* Expandere array si necesse */
                     si (fructus.numerus >= capacitas)
                     {
-                        i32 nova_capacitas;
+                           i32  nova_capacitas;
                         chorda* novum_array;
 
                         nova_capacitas = capacitas * II;
@@ -883,8 +925,8 @@ sententia_fissio(
                         si (novum_array != NIHIL)
                         {
                             memcpy(novum_array, fructus.sententiae, (size_t)(fructus.numerus * (i32)magnitudo(chorda)));
-                            fructus.sententiae = novum_array;
-                            capacitas = nova_capacitas;
+                            fructus.sententiae  = novum_array;
+                            capacitas           = nova_capacitas;
                         }
                     }
 
@@ -906,9 +948,8 @@ sententia_fissio(
     redde fructus;
 }
 
-
 i32
-sententia_numerare(
+sententia_numerare (
     chorda textus)
 {
     i32 numerus;
@@ -920,8 +961,8 @@ sententia_numerare(
         redde ZEPHYRUM;
     }
 
-    numerus = ZEPHYRUM;
-    i = ZEPHYRUM;
+    numerus  = ZEPHYRUM;
+    i        = ZEPHYRUM;
 
     /* Saltare spatia initialia */
     dum (i < textus.mensura && _est_spatium((character)textus.datum[i]))
@@ -938,8 +979,8 @@ sententia_numerare(
             i32 sent_init;
             i32 sent_fin;
 
-            sent_init = i;
-            sent_fin = finis;
+            sent_init  = i;
+            sent_fin   = finis;
 
             dum (sent_init < sent_fin && _est_spatium((character)textus.datum[sent_init]))
             {
@@ -963,16 +1004,15 @@ sententia_numerare(
     redde numerus;
 }
 
-
 SententiaIndicesFructus
-sententia_fissio_indices(
-    chorda   textus,
+sententia_fissio_indices (
+     chorda  textus,
     Piscina* piscina)
 {
     SententiaIndicesFructus fructus;
-    i32 capacitas;
-    i32 i;
-    i32 finis;
+                        i32 capacitas;
+                        i32 i;
+                        i32 finis;
 
     fructus.indices = NIHIL;
     fructus.numerus = ZEPHYRUM;
@@ -1005,12 +1045,12 @@ sententia_fissio_indices(
         i32 sent_init;
         i32 sent_fin;
 
-        initium = i;
-        finis = _invenire_finem_sententiae(textus, initium);
+        initium  = i;
+        finis    = _invenire_finem_sententiae(textus, initium);
 
         /* Trim spatia */
-        sent_init = initium;
-        sent_fin = finis;
+        sent_init  = initium;
+        sent_fin   = finis;
 
         dum (sent_init < sent_fin && _est_spatium((character)textus.datum[sent_init]))
         {
@@ -1027,7 +1067,7 @@ sententia_fissio_indices(
             /* Expandere array si necesse */
             si (fructus.numerus >= capacitas)
             {
-                i32 nova_capacitas;
+                             i32  nova_capacitas;
                 SententiaIndices* novum_array;
 
                 nova_capacitas = capacitas * II;
@@ -1035,14 +1075,14 @@ sententia_fissio_indices(
                 si (novum_array != NIHIL)
                 {
                     memcpy(novum_array, fructus.indices, (size_t)(fructus.numerus * (i32)magnitudo(SententiaIndices)));
-                    fructus.indices = novum_array;
-                    capacitas = nova_capacitas;
+                    fructus.indices  = novum_array;
+                    capacitas        = nova_capacitas;
                 }
             }
 
             /* Addere indices */
-            fructus.indices[fructus.numerus].initium = sent_init;
-            fructus.indices[fructus.numerus].finis = sent_fin;
+            fructus.indices[fructus.numerus].initium  = sent_init;
+            fructus.indices[fructus.numerus].finis    = sent_fin;
             fructus.numerus++;
         }
 
@@ -1065,8 +1105,8 @@ sententia_fissio_indices(
  * ================================================== */
 
 SententiaIterator*
-sententia_iterator_creare(
-    chorda   textus,
+sententia_iterator_creare (
+     chorda  textus,
     Piscina* piscina)
 {
     SententiaIterator* iter;
@@ -1082,17 +1122,17 @@ sententia_iterator_creare(
         redde NIHIL;
     }
 
-    iter->textus = textus;
-    iter->piscina = piscina;
+    iter->textus   = textus;
+    iter->piscina  = piscina;
 
     /* Initiare cache */
     iter->cache_capacitas = XVI;
     iter->cache = piscina_allocare(piscina, (i64)(iter->cache_capacitas * (i32)magnitudo(chorda)));
     iter->cache_numerus = ZEPHYRUM;
 
-    iter->index_currens = (i32)-1;  /* Ante primam */
-    iter->byte_currens = ZEPHYRUM;
-    iter->completum = FALSUM;
+    iter->index_currens  = (i32)-1;  /* Ante primam */
+    iter->byte_currens   = ZEPHYRUM;
+    iter->completum      = FALSUM;
 
     /* Saltare spatia initialia */
     dum (iter->byte_currens < textus.mensura && _est_spatium((character)textus.datum[iter->byte_currens]))
@@ -1103,12 +1143,12 @@ sententia_iterator_creare(
     redde iter;
 }
 
-
 /* Auxiliaris: expandere cache si necesse */
 interior b32
-_iterator_expandere_cache(SententiaIterator* iter)
+_iterator_expandere_cache (
+    SententiaIterator* iter)
 {
-    i32 nova_capacitas;
+       i32  nova_capacitas;
     chorda* novum_array;
 
     si (iter->cache_numerus < iter->cache_capacitas)
@@ -1124,22 +1164,22 @@ _iterator_expandere_cache(SententiaIterator* iter)
     }
 
     memcpy(novum_array, iter->cache, (size_t)(iter->cache_numerus * (i32)magnitudo(chorda)));
-    iter->cache = novum_array;
-    iter->cache_capacitas = nova_capacitas;
+    iter->cache            = novum_array;
+    iter->cache_capacitas  = nova_capacitas;
 
     redde VERUM;
 }
 
-
 /* Auxiliaris: parsere proximam sententiam in cache */
 interior b32
-_iterator_parsere_proximam(SententiaIterator* iter)
+_iterator_parsere_proximam (
+    SententiaIterator* iter)
 {
-    i32 initium;
-    i32 finis;
+       i32 initium;
+       i32 finis;
     chorda sententia;
-    i32 sent_init;
-    i32 sent_fin;
+       i32 sent_init;
+       i32 sent_fin;
 
     si (iter->completum)
     {
@@ -1152,12 +1192,12 @@ _iterator_parsere_proximam(SententiaIterator* iter)
         redde FALSUM;
     }
 
-    initium = iter->byte_currens;
-    finis = _invenire_finem_sententiae(iter->textus, initium);
+    initium  = iter->byte_currens;
+    finis    = _invenire_finem_sententiae(iter->textus, initium);
 
     /* Trim */
-    sent_init = initium;
-    sent_fin = finis;
+    sent_init  = initium;
+    sent_fin   = finis;
 
     dum (sent_init < sent_fin && _est_spatium((character)iter->textus.datum[sent_init]))
     {
@@ -1172,8 +1212,8 @@ _iterator_parsere_proximam(SententiaIterator* iter)
     si (sent_fin <= sent_init)
     {
         iter->byte_currens = finis;
-        dum (iter->byte_currens < iter->textus.mensura &&
-             _est_spatium((character)iter->textus.datum[iter->byte_currens]))
+        dum (   iter->byte_currens < iter->textus.mensura
+             && _est_spatium((character)iter->textus.datum[iter->byte_currens]))
         {
             iter->byte_currens++;
         }
@@ -1204,8 +1244,8 @@ _iterator_parsere_proximam(SententiaIterator* iter)
 
     /* Movere byte_currens */
     iter->byte_currens = finis;
-    dum (iter->byte_currens < iter->textus.mensura &&
-         _est_spatium((character)iter->textus.datum[iter->byte_currens]))
+    dum (   iter->byte_currens < iter->textus.mensura
+         && _est_spatium((character)iter->textus.datum[iter->byte_currens]))
     {
         iter->byte_currens++;
     }
@@ -1218,16 +1258,15 @@ _iterator_parsere_proximam(SententiaIterator* iter)
     redde VERUM;
 }
 
-
 chorda
-sententia_iterator_proxima(
+sententia_iterator_proxima (
     SententiaIterator* iter)
 {
     chorda vacua;
-    i32 proximus_index;
+       i32 proximus_index;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (iter == NIHIL)
     {
@@ -1258,16 +1297,15 @@ sententia_iterator_proxima(
     redde vacua;
 }
 
-
 chorda
-sententia_iterator_prior(
+sententia_iterator_prior (
     SententiaIterator* iter)
 {
     chorda vacua;
-    i32 prior_index;
+       i32 prior_index;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (iter == NIHIL)
     {
@@ -1290,9 +1328,8 @@ sententia_iterator_prior(
     redde vacua;
 }
 
-
 s32
-sententia_iterator_index(
+sententia_iterator_index (
     SententiaIterator* iter)
 {
     si (iter == NIHIL)
@@ -1303,9 +1340,8 @@ sententia_iterator_index(
     redde (s32)iter->index_currens;
 }
 
-
 i32
-sententia_iterator_numerus(
+sententia_iterator_numerus (
     SententiaIterator* iter)
 {
     si (iter == NIHIL)
@@ -1322,9 +1358,8 @@ sententia_iterator_numerus(
     redde iter->cache_numerus;
 }
 
-
 vacuum
-sententia_iterator_reset(
+sententia_iterator_reset (
     SententiaIterator* iter)
 {
     si (iter == NIHIL)

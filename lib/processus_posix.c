@@ -36,6 +36,7 @@
  * ad summum CCLVI KiB agit et redit. */
 #define PROCESSUS_FRUSTA_PER_PULSUM LXIV
 
+
 /* ========================================================================
  * STATUS
  * ======================================================================== */
@@ -43,46 +44,47 @@
 /* sacculus crescens in arena (duplicatio + copia - piscina
  * liberationem non habet, ergo capacitas sola crescit) */
 nomen structura {
-    i8* datum;
-    i32 mensura;
-    i32 capacitas;
+     i8* datum;
+    i32  mensura;
+    i32  capacitas;
 } Sacculus;
 
 structura Processus {
     Piscina* piscina;
-    pid_t    pid;
+      pid_t  pid;
 
     /* fines LEGENDI; -I = clausum (custos contra clausuram duplam) */
-    integer  fd_ef;
-    integer  fd_er;
-    integer  fd_exec;
+    integer fd_ef;
+    integer fd_er;
+    integer fd_exec;
 
     Sacculus sac_ef;
     Sacculus sac_er;
 
-    i64      initium;
-    i32      mora_maxima_ms;
-    i32      mora_ms;
+    i64 initium;
+    i32 mora_maxima_ms;
+    i32 mora_ms;
 
-    b32      ef_apertus;
-    b32      er_apertus;
-    b32      memoria_fracta;
-    b32      tempus_excessum;
-    b32      abruptus;
-    b32      occisus;
-    b32      messus;
-    b32      perfectus;
+    b32 ef_apertus;
+    b32 er_apertus;
+    b32 memoria_fracta;
+    b32 tempus_excessum;
+    b32 abruptus;
+    b32 occisus;
+    b32 messus;
+    b32 perfectus;
 
-    integer  status;
-    integer  exec_errno;
+    integer status;
+    integer exec_errno;
 
     /* error ANTE generationem (argumenta prava, furca fracta).
      * Manubrium validum manet et statim PARATUS est, ut vocator
      * semitam UNAM tractet - vide caput. Nuntius litterae STATICAE
      * sunt, ergo nulla allocatio in semita erroris. */
-    ProcessusError      error_initialis;
+        ProcessusError  error_initialis;
     constans character* nuntius_initialis;
 };
+
 
 /* ========================================================================
  * FUNCTIONES INTERNAE
@@ -106,7 +108,8 @@ _tempus_ms (vacuum)
 #define PROCESSUS_SINE_TERMINO 2147483647
 
 interior s64
-_terminum_reliquum (Processus* p)
+_terminum_reliquum (
+    Processus* p)
 {
     s64 reliquum;
 
@@ -126,26 +129,31 @@ _terminum_reliquum (Processus* p)
 /* somnus brevis sine fistulis (select vacuum) - pro anquisitione
  * WNOHANG ubi fistulae iam clausae sunt et select nihil custodit */
 interior vacuum
-_dormire_ms (i32 ms)
+_dormire_ms (
+    i32 ms)
 {
     structura timeval tv;
 
-    tv.tv_sec  = (time_t)(ms / (i32)M);
-    tv.tv_usec = (integer)((ms % (i32)M) * (i32)M);
+    tv.tv_sec   = (time_t)(ms / (i32)M);
+    tv.tv_usec  = (integer)((ms % (i32)M) * (i32)M);
     (vacuum)select(0, NIHIL, NIHIL, NIHIL, &tv);
 }
 
 interior vacuum
-_sacculum_incipere (Sacculus* s)
+_sacculum_incipere (
+    Sacculus* s)
 {
-    s->datum = NIHIL;
-    s->mensura = ZEPHYRUM;
-    s->capacitas = ZEPHYRUM;
+    s->datum      = NIHIL;
+    s->mensura    = ZEPHYRUM;
+    s->capacitas  = ZEPHYRUM;
 }
 
 interior b32
-_sacculum_addere (Sacculus* s, constans i8* fons, i32 numerus,
-    Piscina* piscina)
+_sacculum_addere (
+       Sacculus* s,
+    constans i8* fons,
+            i32  numerus,
+        Piscina* piscina)
 {
     si (numerus <= ZEPHYRUM)
     {
@@ -171,8 +179,8 @@ _sacculum_addere (Sacculus* s, constans i8* fons, i32 numerus,
         {
             memcpy(nova_datum, s->datum, (memoriae_index)s->mensura);
         }
-        s->datum = nova_datum;
-        s->capacitas = nova_capacitas;
+        s->datum      = nova_datum;
+        s->capacitas  = nova_capacitas;
     }
     memcpy(s->datum + s->mensura, fons, (memoriae_index)numerus);
     s->mensura += numerus;
@@ -180,17 +188,19 @@ _sacculum_addere (Sacculus* s, constans i8* fons, i32 numerus,
 }
 
 interior chorda
-_sacculum_finire (constans Sacculus* s)
+_sacculum_finire (
+    constans Sacculus* s)
 {
     chorda c;
 
-    c.datum = s->datum;
-    c.mensura = s->mensura;
+    c.datum    = s->datum;
+    c.mensura  = s->mensura;
     redde c;
 }
 
 interior vacuum
-_non_blocantem_ponere (integer fd)
+_non_blocantem_ponere (
+    integer fd)
 {
     integer vexilla = fcntl(fd, F_GETFL, 0);
 
@@ -201,7 +211,8 @@ _non_blocantem_ponere (integer fd)
 }
 
 interior vacuum
-_fd_claudere (integer* fd)
+_fd_claudere (
+    integer* fd)
 {
     si (*fd >= 0)
     {
@@ -215,23 +226,25 @@ _resultus_vacuus (vacuum)
 {
     ProcessusResultus r;
 
-    r.successus = FALSUM;
-    r.codex_exitus = ZEPHYRUM;
-    r.signum = ZEPHYRUM;
-    r.effusio.datum = NIHIL;
-    r.effusio.mensura = ZEPHYRUM;
-    r.erratum.datum = NIHIL;
-    r.erratum.mensura = ZEPHYRUM;
-    r.mora_ms = ZEPHYRUM;
-    r.error = PROCESSUS_OK;
-    r.error_descriptio.datum = NIHIL;
-    r.error_descriptio.mensura = ZEPHYRUM;
+    r.successus                 = FALSUM;
+    r.codex_exitus              = ZEPHYRUM;
+    r.signum                    = ZEPHYRUM;
+    r.effusio.datum             = NIHIL;
+    r.effusio.mensura           = ZEPHYRUM;
+    r.erratum.datum             = NIHIL;
+    r.erratum.mensura           = ZEPHYRUM;
+    r.mora_ms                   = ZEPHYRUM;
+    r.error                     = PROCESSUS_OK;
+    r.error_descriptio.datum    = NIHIL;
+    r.error_descriptio.mensura  = ZEPHYRUM;
     redde r;
 }
 
 interior ProcessusResultus
-_error_reddere (ProcessusError error, constans character* nuntius,
-    Piscina* piscina)
+_error_reddere (
+        ProcessusError  error,
+    constans character* nuntius,
+               Piscina* piscina)
 {
     ProcessusResultus r = _resultus_vacuus();
 
@@ -249,22 +262,25 @@ _error_reddere (ProcessusError error, constans character* nuntius,
  * IV KiB per tictum (quod effusionem magnam per multos tictus
  * traheret). */
 interior vacuum
-_fistulam_haurire (Processus* p, integer fd, b32* apertus,
-    Sacculus* sac)
+_fistulam_haurire (
+    Processus* p,
+      integer  fd,
+          b32* apertus,
+     Sacculus* sac)
 {
     i32 frusta = ZEPHYRUM;
 
     dum (*apertus && frusta < (i32)PROCESSUS_FRUSTA_PER_PULSUM)
     {
-        i8      frustum[PROCESSUS_FRUSTUM];
+             i8 frustum[PROCESSUS_FRUSTUM];
         ssize_t n = read(fd, frustum, (memoriae_index)PROCESSUS_FRUSTUM);
 
         si (n > 0)
         {
             si (!_sacculum_addere(sac, frustum, (i32)n, p->piscina))
             {
-                p->memoria_fracta = VERUM;
-                *apertus = FALSUM;
+                p->memoria_fracta  = VERUM;
+                *apertus           = FALSUM;
                 redde;
             }
             frusta++;
@@ -301,13 +317,15 @@ _fistulam_haurire (Processus* p, integer fd, b32* apertus,
  * gradu' - quae ambiguitas prior hic habitabat.
  */
 interior vacuum
-_ansam_pulsare (Processus* p, i32 mora_gradus_ms)
+_ansam_pulsare (
+    Processus* p,
+          i32  mora_gradus_ms)
 {
-    fd_set             legendi;
+               fd_set legendi;
     structura timeval  mora;
-    structura timeval* mora_ptr = NIHIL;
-    integer            maximus = -I;
-    integer            paratus;
+    structura timeval* mora_ptr  = NIHIL;
+              integer maximus    = -I;
+              integer paratus;
 
     si (!p->ef_apertus && !p->er_apertus)
     {
@@ -339,8 +357,8 @@ _ansam_pulsare (Processus* p, i32 mora_gradus_ms)
      * 'reliquum <= ZEPHYRUM' NUMQUAM flagrabat donec gradus
      * terminati tegumentum select sustulerunt; vide worklog). */
     {
-        i64 gradus   = (i64)mora_gradus_ms;
-        s64 reliquum = _terminum_reliquum(p);
+        i64 gradus    = (i64)mora_gradus_ms;
+        s64 reliquum  = _terminum_reliquum(p);
 
         si (p->tempus_excessum)
         {
@@ -352,9 +370,9 @@ _ansam_pulsare (Processus* p, i32 mora_gradus_ms)
         }
         /* tv_usec est int in Darwin, longus alibi - conversio per
          * typum campi ipsius, non per typum coniectum */
-        mora.tv_sec = (time_t)(gradus / (i64)M);
-        mora.tv_usec = (integer)((gradus % (i64)M) * (i64)M);
-        mora_ptr = &mora;
+        mora.tv_sec   = (time_t)(gradus / (i64)M);
+        mora.tv_usec  = (integer)((gradus % (i64)M) * (i64)M);
+        mora_ptr      = &mora;
     }
 
     paratus = select(maximus + I, &legendi, NIHIL, NIHIL, mora_ptr);
@@ -391,7 +409,9 @@ _ansam_pulsare (Processus* p, i32 mora_gradus_ms)
 /* infantem metere. obstans=FALSUM adhibet WNOHANG.
  * Redde: VERUM si messus (aut nihil metendum). */
 interior b32
-_reficere (Processus* p, b32 obstans)
+_reficere (
+    Processus* p,
+          b32  obstans)
 {
     si (p->messus)
     {
@@ -405,8 +425,8 @@ _reficere (Processus* p, b32 obstans)
     dum (VERUM)
     {
         integer status = ZEPHYRUM;
-        pid_t   r = waitpid(p->pid, &status,
-            obstans ? 0 : WNOHANG);
+          pid_t r = waitpid(p->pid, &status,
+              obstans ? 0 : WNOHANG);
 
         si (r == p->pid)
         {
@@ -434,7 +454,8 @@ _reficere (Processus* p, b32 obstans)
  * eadem lectio OBSTARET - quod totam semitam incrementalem
  * everteret. */
 interior vacuum
-_exec_errno_legere (Processus* p)
+_exec_errno_legere (
+    Processus* p)
 {
     ssize_t n;
 
@@ -453,7 +474,9 @@ _exec_errno_legere (Processus* p)
 /* processum ad finem ducere. obstans=FALSUM redit FALSUM si nondum
  * paratus est. */
 interior b32
-_perficere (Processus* p, b32 obstans)
+_perficere (
+    Processus* p,
+          b32  obstans)
 {
     si (p->perfectus)
     {
@@ -475,7 +498,7 @@ _perficere (Processus* p, b32 obstans)
      *
      * Ergo messem NON-OBSTANTEM primo tentamus: si infans abiit,
      * reliquias haurimus et perficimus. EOF non exspectatur. */
-    si (!p->messus && p->pid > (pid_t)ZEPHYRUM
+    si (   !p->messus && p->pid > (pid_t)ZEPHYRUM
         && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
     {
         si (_reficere(p, FALSUM))
@@ -501,7 +524,7 @@ _perficere (Processus* p, b32 obstans)
      * moram integram infantis exspectaret, quod contrarium est eius
      * quod pollicetur (probatio XII id cepit: 'sleep 10' abruptum
      * decem secunda tenuit). */
-    si (!p->messus && (p->ef_apertus || p->er_apertus)
+    si (   !p->messus && (p->ef_apertus || p->er_apertus)
         && !p->tempus_excessum && !p->memoria_fracta && !p->abruptus)
     {
         si (!obstans)
@@ -512,8 +535,8 @@ _perficere (Processus* p, b32 obstans)
          * infantem inspicimus. Sine hoc, nepos fistulam tenens
          * ansam usque ad terminum totalem teneret - quod villa
          * contra ssh cum ControlPersist passa est. */
-        dum ((p->ef_apertus || p->er_apertus)
-            && !p->tempus_excessum && !p->memoria_fracta)
+        dum (   (p->ef_apertus || p->er_apertus)
+             && !p->tempus_excessum && !p->memoria_fracta)
         {
             _ansam_pulsare(p, (i32)C);
             si (_reficere(p, FALSUM))
@@ -542,7 +565,7 @@ _perficere (Processus* p, b32 obstans)
     /* '!p->messus' in custode occisionis: pid messus alienum fieri
      * potest (recyclus), et vexillum terminale post messem positum
      * infantem NOSTRUM iam non nominat */
-    si ((p->tempus_excessum || p->memoria_fracta || p->abruptus)
+    si (   (p->tempus_excessum || p->memoria_fracta || p->abruptus)
         && !p->occisus && !p->messus)
     {
         (vacuum)kill(p->pid, SIGKILL);
@@ -561,7 +584,7 @@ _perficere (Processus* p, b32 obstans)
      * terminus vigilat. Occiso aut sine termino semita simplex
      * sufficit (SIGKILL messem mox terminat; terminus nullus =
      * exspectatio infinita ex contractu). */
-    si (obstans && !p->messus && !p->occisus
+    si (   obstans && !p->messus && !p->occisus
         && p->mora_maxima_ms > ZEPHYRUM)
     {
         dum (!_reficere(p, FALSUM))
@@ -584,13 +607,14 @@ _perficere (Processus* p, b32 obstans)
         redde FALSUM;
     }
     _exec_errno_legere(p);
-    p->mora_ms = (i32)(_tempus_ms() - p->initium);
-    p->perfectus = VERUM;
+    p->mora_ms    = (i32)(_tempus_ms() - p->initium);
+    p->perfectus  = VERUM;
     redde VERUM;
 }
 
 interior ProcessusResultus
-_resultus_aedificare (Processus* p)
+_resultus_aedificare (
+    Processus* p)
 {
     ProcessusResultus r = _resultus_vacuus();
 
@@ -651,7 +675,8 @@ _resultus_aedificare (Processus* p)
 }
 
 interior Processus*
-_manubrium_novum (Piscina* piscina)
+_manubrium_novum (
+    Piscina* piscina)
 {
     Processus* p = (Processus*)piscina_allocare(piscina,
         magnitudo(Processus));
@@ -661,11 +686,11 @@ _manubrium_novum (Piscina* piscina)
         redde NIHIL;
     }
     memset(p, 0, magnitudo(Processus));
-    p->piscina = piscina;
-    p->pid = (pid_t)-I;
-    p->fd_ef = -I;
-    p->fd_er = -I;
-    p->fd_exec = -I;
+    p->piscina  = piscina;
+    p->pid      = (pid_t)-I;
+    p->fd_ef    = -I;
+    p->fd_er    = -I;
+    p->fd_exec  = -I;
     _sacculum_incipere(&p->sac_ef);
     _sacculum_incipere(&p->sac_er);
     p->error_initialis = PROCESSUS_OK;
@@ -673,7 +698,9 @@ _manubrium_novum (Piscina* piscina)
 }
 
 interior Processus*
-_manubrium_fractum (Piscina* piscina, ProcessusError error,
+_manubrium_fractum (
+               Piscina* piscina,
+        ProcessusError  error,
     constans character* nuntius)
 {
     Processus* p = _manubrium_novum(piscina);
@@ -682,19 +709,21 @@ _manubrium_fractum (Piscina* piscina, ProcessusError error,
     {
         redde NIHIL;
     }
-    p->error_initialis = error;
-    p->nuntius_initialis = nuntius;
-    p->perfectus = VERUM;
-    p->messus = VERUM;
+    p->error_initialis    = error;
+    p->nuntius_initialis  = nuntius;
+    p->perfectus          = VERUM;
+    p->messus             = VERUM;
     redde p;
 }
+
 
 /* ========================================================================
  * FUNCTIONES PUBLICAE
  * ======================================================================== */
 
 constans character*
-processus_error_nomen (ProcessusError error)
+processus_error_nomen (
+    ProcessusError error)
 {
     commutatio (error)
     {
@@ -709,13 +738,15 @@ processus_error_nomen (ProcessusError error)
 }
 
 Processus*
-processus_incipere (constans character* constans* argumenta,
-    i32 mora_maxima_ms, Piscina* piscina)
+processus_incipere (
+    constans character* constans* argumenta,
+    i32 mora_maxima_ms,
+    Piscina* piscina)
 {
     Processus* p;
-    integer    fistula_ef[II];
-    integer    fistula_er[II];
-    integer    fistula_exec[II];
+      integer  fistula_ef[II];
+      integer  fistula_er[II];
+      integer  fistula_exec[II];
 
     si (piscina == NIHIL)
     {
@@ -757,8 +788,8 @@ processus_incipere (constans character* constans* argumenta,
     /* CLOEXEC: exec felix fistulam tacite claudit = signum */
     (vacuum)fcntl(fistula_exec[I], F_SETFD, FD_CLOEXEC);
 
-    p->initium = _tempus_ms();
-    p->pid = fork();
+    p->initium  = _tempus_ms();
+    p->pid      = fork();
     si (p->pid < 0)
     {
         close(fistula_ef[0]);   close(fistula_ef[I]);
@@ -780,7 +811,7 @@ processus_incipere (constans character* constans* argumenta,
         close(fistula_ef[0]);
         close(fistula_er[0]);
         close(fistula_exec[0]);
-        si (dup2(fistula_ef[I], STDOUT_FILENO) < 0
+        si (   dup2(fistula_ef[I], STDOUT_FILENO) < 0
             || dup2(fistula_er[I], STDERR_FILENO) < 0)
         {
             _exit(CXXVII);
@@ -801,9 +832,9 @@ processus_incipere (constans character* constans* argumenta,
     close(fistula_ef[I]);
     close(fistula_er[I]);
     close(fistula_exec[I]);
-    p->fd_ef = fistula_ef[0];
-    p->fd_er = fistula_er[0];
-    p->fd_exec = fistula_exec[0];
+    p->fd_ef    = fistula_ef[0];
+    p->fd_er    = fistula_er[0];
+    p->fd_exec  = fistula_exec[0];
     _non_blocantem_ponere(p->fd_ef);
     _non_blocantem_ponere(p->fd_er);
     p->ef_apertus = VERUM;
@@ -812,7 +843,8 @@ processus_incipere (constans character* constans* argumenta,
 }
 
 ProcessusStatus
-processus_pulsare (Processus* processus)
+processus_pulsare (
+    Processus* processus)
 {
     si (processus == NIHIL || processus->perfectus)
     {
@@ -827,35 +859,38 @@ processus_pulsare (Processus* processus)
 }
 
 chorda
-processus_effusio_hactenus (constans Processus* processus)
+processus_effusio_hactenus (
+    constans Processus* processus)
 {
     chorda vacua;
 
     si (processus == NIHIL)
     {
-        vacua.datum = NIHIL;
-        vacua.mensura = 0;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = 0;
         redde vacua;
     }
     redde _sacculum_finire(&processus->sac_ef);
 }
 
 chorda
-processus_erratum_hactenus (constans Processus* processus)
+processus_erratum_hactenus (
+    constans Processus* processus)
 {
     chorda vacua;
 
     si (processus == NIHIL)
     {
-        vacua.datum = NIHIL;
-        vacua.mensura = 0;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = 0;
         redde vacua;
     }
     redde _sacculum_finire(&processus->sac_er);
 }
 
 ProcessusResultus
-processus_metere (Processus* processus)
+processus_metere (
+    Processus* processus)
 {
     si (processus == NIHIL)
     {
@@ -872,7 +907,8 @@ processus_metere (Processus* processus)
 }
 
 vacuum
-processus_abrumpere (Processus* processus)
+processus_abrumpere (
+    Processus* processus)
 {
     si (processus == NIHIL || processus->perfectus)
     {
@@ -883,8 +919,10 @@ processus_abrumpere (Processus* processus)
 }
 
 ProcessusResultus
-processus_exsequi (constans character* constans* argumenta,
-    i32 mora_maxima_ms, Piscina* piscina)
+processus_exsequi (
+    constans character* constans* argumenta,
+    i32 mora_maxima_ms,
+    Piscina* piscina)
 {
     Processus* p;
 
@@ -904,7 +942,8 @@ processus_exsequi (constans character* constans* argumenta,
 }
 
 b32
-processus_transformare (constans character* constans* argumenta)
+processus_transformare (
+    constans character* constans* argumenta)
 {
     unio {
         constans character* constans* c;

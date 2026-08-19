@@ -24,7 +24,8 @@ interior b32
 _e_disco (constans Capsula* capsula);
 
 interior b32
-_e_disco (constans Capsula* capsula)
+_e_disco (
+    constans Capsula* capsula)
 {
     redde capsula != NIHIL && capsula->radix.mensura > ZEPHYRUM;
 }
@@ -40,27 +41,30 @@ interior chorda
 _via_tuta (constans Capsula* capsula, chorda relativa, Piscina* piscina);
 
 interior chorda
-_via_tuta (constans Capsula* capsula, chorda relativa, Piscina* piscina)
+_via_tuta (
+    constans Capsula* capsula,
+              chorda  relativa,
+             Piscina* piscina)
 {
     chorda partes[II];
     chorda iuncta;
     chorda normalizata;
     chorda vacua;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     si (relativa.mensura == ZEPHYRUM)
     {
         redde vacua;
     }
 
-    partes[0] = capsula->radix;
-    partes[I] = relativa;
-    iuncta = via_iungere(partes, (i32)II, piscina);
-    normalizata = via_normalizare(iuncta, piscina);
+    partes[0]    = capsula->radix;
+    partes[I]    = relativa;
+    iuncta       = via_iungere(partes, (i32)II, piscina);
+    normalizata  = via_normalizare(iuncta, piscina);
 
-    si (!chorda_incipit(normalizata, capsula->radix)
+    si (   !chorda_incipit(normalizata, capsula->radix)
         || (normalizata.mensura > capsula->radix.mensura
             && normalizata.datum[capsula->radix.mensura] != '/'))
     {
@@ -76,16 +80,18 @@ _e_disco_legere (constans Capsula* capsula, chorda relativa,
     Piscina* piscina);
 
 interior CapsulaFructus
-_e_disco_legere (constans Capsula* capsula, chorda relativa,
-    Piscina* piscina)
+_e_disco_legere (
+    constans Capsula* capsula,
+              chorda  relativa,
+             Piscina* piscina)
 {
-    CapsulaFructus      fructus;
-    chorda              via_plena;
+        CapsulaFructus  fructus;
+                chorda  via_plena;
     constans character* cstr;
 
-    fructus.status = CAPSULA_NON_INVENTUM;
-    fructus.datum.datum = NIHIL;
-    fructus.datum.mensura = ZEPHYRUM;
+    fructus.status         = CAPSULA_NON_INVENTUM;
+    fructus.datum.datum    = NIHIL;
+    fructus.datum.mensura  = ZEPHYRUM;
 
     via_plena = _via_tuta(capsula, relativa, piscina);
     si (via_plena.mensura == ZEPHYRUM)
@@ -109,8 +115,8 @@ _e_disco_legere (constans Capsula* capsula, chorda relativa,
         redde fructus;
     }
 
-    fructus.datum = filum_legere_totum(cstr, piscina);
-    fructus.status = CAPSULA_OK;
+    fructus.datum   = filum_legere_totum(cstr, piscina);
+    fructus.status  = CAPSULA_OK;
     redde fructus;
 }
 
@@ -118,8 +124,8 @@ _e_disco_legere (constans Capsula* capsula, chorda relativa,
 /* Contextus ambulationis: cursus I numerat, cursus II implet. */
 nomen structura {
     Capsula* capsula;
-    i32      numerus;
-    b32      implere;
+        i32  numerus;
+        b32  implere;
     Piscina* piscina;
 } ContextusAmbulandi;
 
@@ -129,19 +135,21 @@ _introitum_tractare (chorda via_plena,
     constans DirectoriumIntroitus* introitus, vacuum* contextus);
 
 interior s32
-_introitum_tractare (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus)
+_introitum_tractare (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
-    ContextusAmbulandi* ctx = (ContextusAmbulandi*)contextus;
-    chorda              radix = ctx->capsula->radix;
-    i32                 initium;
+    ContextusAmbulandi* ctx    = (ContextusAmbulandi*)contextus;
+                chorda  radix  = ctx->capsula->radix;
+                   i32  initium;
 
     si (introitus == NIHIL || introitus->genus != INTROITUS_FILUM)
     {
         redde ZEPHYRUM;
     }
     /* Radix praefixum sit; aliter viam relativam computare non possumus */
-    si (!chorda_incipit(via_plena, radix)
+    si (   !chorda_incipit(via_plena, radix)
         || via_plena.mensura <= radix.mensura)
     {
         redde ZEPHYRUM;
@@ -155,9 +163,9 @@ _introitum_tractare (chorda via_plena,
 
     si (ctx->implere)
     {
-        i8* copia;
-        i32 longitudo = via_plena.mensura - initium;
-        i32 j;
+         i8* copia;
+        i32  longitudo = via_plena.mensura - initium;
+        i32  j;
 
         copia = (i8*)piscina_allocare(ctx->piscina,
             (memoriae_index)longitudo);
@@ -183,17 +191,16 @@ _introitum_tractare (chorda via_plena,
     redde ZEPHYRUM;
 }
 
-
 Capsula*
-capsula_aperire_e_disco(
+capsula_aperire_e_disco (
     constans character* radix,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    Capsula*            capsula;
-    chorda              normalizata;
+               Capsula* capsula;
+                chorda  normalizata;
     constans character* radix_cstr;
     DirectoriumFiltrum  filtrum;
-    IntroitusGenus      genera[I];
+        IntroitusGenus  genera[I];
     ContextusAmbulandi  ctx;
 
     si (radix == NIHIL || piscina == NIHIL)
@@ -222,18 +229,18 @@ capsula_aperire_e_disco(
     {
         redde NIHIL;
     }
-    capsula->datum = NIHIL;
-    capsula->mensura = ZEPHYRUM;
-    capsula->numerus_filorum = ZEPHYRUM;
-    capsula->index = NIHIL;
-    capsula->piscina = piscina;
-    capsula->radix = normalizata;
+    capsula->datum            = NIHIL;
+    capsula->mensura          = ZEPHYRUM;
+    capsula->numerus_filorum  = ZEPHYRUM;
+    capsula->index            = NIHIL;
+    capsula->piscina          = piscina;
+    capsula->radix            = normalizata;
 
-    genera[0] = INTROITUS_FILUM;
-    filtrum = directorium_filtrum_omnia();
-    filtrum.genera_accepta = genera;
-    filtrum.genera_numerus = (i32)I;
-    filtrum.includere_occultos = FALSUM;
+    genera[0]                   = INTROITUS_FILUM;
+    filtrum                     = directorium_filtrum_omnia();
+    filtrum.genera_accepta      = genera;
+    filtrum.genera_numerus      = (i32)I;
+    filtrum.includere_occultos  = FALSUM;
 
     /* CURSUS I: numerare */
     ctx.capsula = capsula;
@@ -277,22 +284,24 @@ capsula_aperire_e_disco(
 
 /* Legere i32 little-endian ex byte pointer */
 interior i32
-_capsula_legere_i32(constans i8* p)
+_capsula_legere_i32 (
+    constans i8* p)
 {
     i32 result;
 
-    result = ((i32)(i8)p[0] & 0xFF) |
-             (((i32)(i8)p[1] & 0xFF) << VIII) |
-             (((i32)(i8)p[2] & 0xFF) << XVI) |
-             (((i32)(i8)p[3] & 0xFF) << XXIV);
+    result = ((i32)(i8)p[0] & 0xFF)
+        | (((i32)(i8)p[1] & 0xFF) << VIII)
+        | (((i32)(i8)p[2] & 0xFF) << XVI)
+        | (((i32)(i8)p[3] & 0xFF) << XXIV);
 
     redde result;
 }
 
-
 /* Comparare chorda cum C string */
 interior b32
-_capsula_via_aequalis(chorda a, constans character* b)
+_capsula_via_aequalis (
+                chorda  a,
+    constans character* b)
 {
     i32 len_b;
     i32 i;
@@ -325,17 +334,17 @@ _capsula_via_aequalis(chorda a, constans character* b)
  * ======================================================================== */
 
 Capsula*
-capsula_aperire(
+capsula_aperire (
     constans CapsulaEmbed* embed,
-    Piscina*               piscina)
+                  Piscina* piscina)
 {
-    Capsula*    capsula;
+        Capsula* capsula;
     constans i8* p;
-    i32         magic;
-    i32         versio;
-    i32         numerus;
-    i32         toc_offset;
-    i32         i;
+            i32  magic;
+            i32  versio;
+            i32  numerus;
+            i32  toc_offset;
+            i32  i;
 
     si (embed == NIHIL || piscina == NIHIL)
     {
@@ -350,9 +359,9 @@ capsula_aperire(
     p = embed->datum;
 
     /* Legere header */
-    magic = _capsula_legere_i32(p);
-    versio = _capsula_legere_i32(p + IV);
-    numerus = _capsula_legere_i32(p + VIII);
+    magic    = _capsula_legere_i32(p);
+    versio   = _capsula_legere_i32(p + IV);
+    numerus  = _capsula_legere_i32(p + VIII);
 
     /* Validate magic */
     si (magic != (i32)CAPSULA_MAGICA)
@@ -373,12 +382,12 @@ capsula_aperire(
         redde NIHIL;
     }
 
-    capsula->datum = embed->datum;
-    capsula->mensura = embed->mensura;
-    capsula->numerus_filorum = numerus;
-    capsula->piscina = piscina;
-    capsula->radix.datum = NIHIL;      /* infixa, non e disco */
-    capsula->radix.mensura = ZEPHYRUM;
+    capsula->datum            = embed->datum;
+    capsula->mensura          = embed->mensura;
+    capsula->numerus_filorum  = numerus;
+    capsula->piscina          = piscina;
+    capsula->radix.datum      = NIHIL;      /* infixa, non e disco */
+    capsula->radix.mensura    = ZEPHYRUM;
 
     /* Allocate index array */
     si (numerus > 0)
@@ -406,23 +415,23 @@ capsula_aperire(
 
     per (i = 0; i < numerus; i++)
     {
-        i32 path_offset;
-        i32 path_len;
-        i32 data_offset;
-        i32 comp_size;
-        i32 raw_size;
-        i8* path_copy;
-        i32 j;
+        i32  path_offset;
+        i32  path_len;
+        i32  data_offset;
+        i32  comp_size;
+        i32  raw_size;
+         i8* path_copy;
+        i32  j;
 
         constans i8* entry_p;
 
         entry_p = p + toc_offset + (i * XX);
 
-        path_offset = _capsula_legere_i32(entry_p);
-        path_len = _capsula_legere_i32(entry_p + IV);
-        data_offset = _capsula_legere_i32(entry_p + VIII);
-        comp_size = _capsula_legere_i32(entry_p + XII);
-        raw_size = _capsula_legere_i32(entry_p + XVI);
+        path_offset  = _capsula_legere_i32(entry_p);
+        path_len     = _capsula_legere_i32(entry_p + IV);
+        data_offset  = _capsula_legere_i32(entry_p + VIII);
+        comp_size    = _capsula_legere_i32(entry_p + XII);
+        raw_size     = _capsula_legere_i32(entry_p + XVI);
 
         /* Copy path string into piscina (embedded data is const) */
         path_copy = (i8*)piscina_allocare(piscina, (memoriae_index)path_len);
@@ -435,12 +444,12 @@ capsula_aperire(
             path_copy[j] = p[path_offset + j];
         }
 
-        capsula->index[i].via.datum = path_copy;
-        capsula->index[i].via.mensura = (i32)path_len;
-        capsula->index[i].data_offset = data_offset;
-        capsula->index[i].mensura_compressa = comp_size;
-        capsula->index[i].mensura_cruda = raw_size;
-        capsula->index[i].compressa = (comp_size != raw_size);
+        capsula->index[i].via.datum          = path_copy;
+        capsula->index[i].via.mensura        = (i32)path_len;
+        capsula->index[i].data_offset        = data_offset;
+        capsula->index[i].mensura_compressa  = comp_size;
+        capsula->index[i].mensura_cruda      = raw_size;
+        capsula->index[i].compressa          = (comp_size != raw_size);
     }
 
     redde capsula;
@@ -452,18 +461,18 @@ capsula_aperire(
  * ======================================================================== */
 
 CapsulaFructus
-capsula_legere(
-    Capsula*            capsula,
+capsula_legere (
+               Capsula* capsula,
     constans character* via,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
-    CapsulaFructus   fructus;
-    CapsulaIndexum*  entry;
-    constans i8*     data_ptr;
+    CapsulaFructus  fructus;
+    CapsulaIndexum* entry;
+       constans i8* data_ptr;
 
-    fructus.status = CAPSULA_OK;
-    fructus.datum.datum = NIHIL;
-    fructus.datum.mensura = 0;
+    fructus.status         = CAPSULA_OK;
+    fructus.datum.datum    = NIHIL;
+    fructus.datum.mensura  = 0;
 
     si (capsula == NIHIL || via == NIHIL || piscina == NIHIL)
     {
@@ -501,14 +510,14 @@ capsula_legere(
             redde fructus;
         }
 
-        fructus.datum.datum = inflated.datum;
-        fructus.datum.mensura = inflated.mensura;
+        fructus.datum.datum    = inflated.datum;
+        fructus.datum.mensura  = inflated.mensura;
     }
     alioquin
     {
         /* Uncompressed - copy data to piscina (embedded data is const) */
-        i8* copy;
-        i32 k;
+         i8* copy;
+        i32  k;
 
         copy = (i8*)piscina_allocare(piscina, (memoriae_index)entry->mensura_cruda);
         si (copy == NIHIL)
@@ -522,28 +531,27 @@ capsula_legere(
             copy[k] = data_ptr[k];
         }
 
-        fructus.datum.datum = copy;
-        fructus.datum.mensura = entry->mensura_cruda;
+        fructus.datum.datum    = copy;
+        fructus.datum.mensura  = entry->mensura_cruda;
     }
 
     redde fructus;
 }
 
-
 CapsulaFructus
-capsula_legere_chorda(
+capsula_legere_chorda (
     Capsula* capsula,
-    chorda   via,
+     chorda  via,
     Piscina* piscina)
 {
     CapsulaFructus  fructus;
     CapsulaIndexum* entry;
-    constans i8*    data_ptr;
-    i32             i;
+       constans i8* data_ptr;
+               i32  i;
 
-    fructus.status = CAPSULA_OK;
-    fructus.datum.datum = NIHIL;
-    fructus.datum.mensura = 0;
+    fructus.status         = CAPSULA_OK;
+    fructus.datum.datum    = NIHIL;
+    fructus.datum.mensura  = 0;
 
     si (capsula == NIHIL || piscina == NIHIL)
     {
@@ -604,14 +612,14 @@ capsula_legere_chorda(
             redde fructus;
         }
 
-        fructus.datum.datum = inflated.datum;
-        fructus.datum.mensura = inflated.mensura;
+        fructus.datum.datum    = inflated.datum;
+        fructus.datum.mensura  = inflated.mensura;
     }
     alioquin
     {
         /* Uncompressed - copy data to piscina (embedded data is const) */
-        i8* copy;
-        i32 k;
+         i8* copy;
+        i32  k;
 
         copy = (i8*)piscina_allocare(piscina, (memoriae_index)entry->mensura_cruda);
         si (copy == NIHIL)
@@ -625,8 +633,8 @@ capsula_legere_chorda(
             copy[k] = data_ptr[k];
         }
 
-        fructus.datum.datum = copy;
-        fructus.datum.mensura = entry->mensura_cruda;
+        fructus.datum.datum    = copy;
+        fructus.datum.mensura  = entry->mensura_cruda;
     }
 
     redde fructus;
@@ -638,8 +646,8 @@ capsula_legere_chorda(
  * ======================================================================== */
 
 b32
-capsula_habet(
-    Capsula*            capsula,
+capsula_habet (
+               Capsula* capsula,
     constans character* via)
 {
     /* Modo disci DISCUM interrogat, non indicem photographatum: aliter
@@ -647,7 +655,7 @@ capsula_habet(
      * et dissensus ille vitium esset quod nemo quaereret. */
     si (_e_disco(capsula) && via != NIHIL)
     {
-        chorda              via_plena;
+                    chorda  via_plena;
         constans character* cstr;
 
         via_plena = _via_tuta(capsula,
@@ -663,10 +671,9 @@ capsula_habet(
     redde capsula_invenire(capsula, via) != NIHIL;
 }
 
-
 CapsulaIndexum*
-capsula_invenire(
-    Capsula*            capsula,
+capsula_invenire (
+               Capsula* capsula,
     constans character* via)
 {
     i32 i;
@@ -693,7 +700,8 @@ capsula_invenire(
  * ======================================================================== */
 
 i32
-capsula_numerus(Capsula* capsula)
+capsula_numerus (
+    Capsula* capsula)
 {
     si (capsula == NIHIL)
     {
@@ -703,9 +711,10 @@ capsula_numerus(Capsula* capsula)
     redde capsula->numerus_filorum;
 }
 
-
 CapsulaIndexum*
-capsula_indexum(Capsula* capsula, i32 index)
+capsula_indexum (
+    Capsula* capsula,
+        i32  index)
 {
     si (capsula == NIHIL || index < 0 || index >= capsula->numerus_filorum)
     {
@@ -715,9 +724,9 @@ capsula_indexum(Capsula* capsula, i32 index)
     redde &capsula->index[index];
 }
 
-
 CapsulaIter
-capsula_iter(Capsula* capsula)
+capsula_iter (
+    Capsula* capsula)
 {
     CapsulaIter iter;
 
@@ -727,9 +736,9 @@ capsula_iter(Capsula* capsula)
     redde iter;
 }
 
-
 b32
-capsula_iter_proximus(CapsulaIter* iter)
+capsula_iter_proximus (
+    CapsulaIter* iter)
 {
     si (iter == NIHIL || iter->capsula == NIHIL)
     {
@@ -751,7 +760,8 @@ capsula_iter_proximus(CapsulaIter* iter)
  * ======================================================================== */
 
 constans character*
-capsula_status_nuntium(CapsulaStatus status)
+capsula_status_nuntium (
+    CapsulaStatus status)
 {
     commutatio (status)
     {

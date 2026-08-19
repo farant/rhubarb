@@ -7,6 +7,7 @@
 #include "thema.h"
 #include "color.h"
 
+
 /* ============================================================
  * Constantae
  * ============================================================ */
@@ -19,15 +20,19 @@
 #define DIALOGUS_MARGIN 1
 #define DIALOGUS_TITULUS_ALTITUDO 2
 
+
 /* ============================================================
  * dialogus_computare_limites
  * ============================================================ */
 
 vacuum
-dialogus_computare_limites(
-    i32  panel_w, i32 panel_h,
-    i32* dialog_x, i32* dialog_y,
-    i32* dialog_w, i32* dialog_h)
+dialogus_computare_limites (
+                                  i32  panel_w,
+                                  i32  panel_h,
+                                  i32* dialog_x,
+                                  i32* dialog_y,
+                                  i32* dialog_w,
+                                  i32* dialog_h)
 {
     i32 w, h;
 
@@ -42,27 +47,30 @@ dialogus_computare_limites(
     *dialog_h = h;
 }
 
+
 /* ============================================================
  * dialogus_reddere_frame
  * ============================================================ */
 
 vacuum
-dialogus_reddere_frame(
-    TabulaPixelorum* tabula,
-    i32 x, i32 y,
-    i32 latitudo, i32 altitudo,
-    chorda* titulus,
-    f32 scala,
-    i32* content_x,
-    i32* content_y,
-    i32* content_w,
-    i32* content_h)
+dialogus_reddere_frame (
+      TabulaPixelorum* tabula,
+                  i32  x,
+                  i32  y,
+                  i32  latitudo,
+                  i32  altitudo,
+               chorda* titulus,
+                  f32  scala,
+                  i32* content_x,
+                  i32* content_y,
+                  i32* content_w,
+                  i32* content_h)
 {
     ContextusDelineandi* ctx;
-    Piscina* piscina_temp;
-    Color color_bg;
-    Color color_border;
-    Color color_title;
+                Piscina* piscina_temp;
+                  Color  color_bg;
+                  Color  color_border;
+                  Color  color_title;
     i32 char_w, char_h;
     i32 px, py, pw, ph;
     i32 title_y;
@@ -75,9 +83,9 @@ dialogus_reddere_frame(
     }
 
     /* Obtinere colores ex thema */
-    color_bg = thema_color(COLOR_BACKGROUND);
-    color_border = thema_color(COLOR_BORDER_ACTIVE);
-    color_title = thema_color(COLOR_TEXT);
+    color_bg      = thema_color(COLOR_BACKGROUND);
+    color_border  = thema_color(COLOR_BORDER_ACTIVE);
+    color_title   = thema_color(COLOR_TEXT);
 
     /* Computare dimensiones character (6x8 ut elementa) */
     char_w = (i32)(6.0f * scala);
@@ -110,8 +118,8 @@ dialogus_reddere_frame(
     /* Delineare titulum si datum */
     si (titulus != NIHIL && titulus->datum != NIHIL)
     {
-        i32 title_x = px + char_w;
-        i32 title_text_y = py + (char_h / 2);
+        i32 title_x       = px + char_w;
+        i32 title_text_y  = py + (char_h / 2);
         tabula_pixelorum_pingere_chordam_scalatam(
             tabula,
             title_x, title_text_y,
@@ -129,17 +137,20 @@ dialogus_reddere_frame(
     piscina_destruere(piscina_temp);
 }
 
+
 /* ============================================================
  * dialogus_reddere_overlay
  * ============================================================ */
 
 vacuum
-dialogus_reddere_overlay(
-    Dialogus*        dialogus,
-    TabulaPixelorum* tabula,
-    i32 panel_x, i32 panel_y,
-    i32 panel_w, i32 panel_h,
-    f32 scala)
+dialogus_reddere_overlay (
+            Dialogus* dialogus,
+     TabulaPixelorum* tabula,
+                 i32  panel_x,
+                 i32  panel_y,
+                 i32  panel_w,
+                 i32  panel_h,
+                 f32  scala)
 {
     i32 dialog_x, dialog_y, dialog_w, dialog_h;
     i32 content_x, content_y, content_w, content_h;
