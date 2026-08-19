@@ -23,3 +23,4 @@ lib/lapifex_generare.c	generatio gelata: praedecessor referentiae (deletur post 
 lib/lapifex_glr.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
 lib/lapifex_lexere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
 lib/lapifex_parsere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+include/latina.h	fons lexici - mensa macro tab-ordinata deliberata (datum generatum ex eo)

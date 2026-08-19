@@ -1010,14 +1010,13 @@ _ramum_censere (
     }
 }
 
-/* R1 + R2 (definitio) + R8 */
+/* R1 + R2 + R8 super caput functionis (definitionis AUT
+ * prototypi - nucleus communis; porta prototyporum 2a clausa) */
 interior vacuum
-_definitionem_censere (
+_functionis_caput_censere (
     FormatorAmbitus* ambitus,
-         SilvaNodus* definitio)
+         SilvaNodus* functionis)
 {
-    SilvaNodus* declarator;
-    SilvaNodus* functionis;
     SilvaToken* titulus;
     SilvaToken* apertum;
      SilvaValor parametra;
@@ -1025,9 +1024,6 @@ _definitionem_censere (
             i32 prior_linea;
             i32 i;
 
-    declarator = _valor_nodus(
-        silva_c89_definitio_functionis_declarator(definitio));
-    functionis = _declarator_functionis(declarator);
     si (!functionis) redde;
 
     titulus = _titulus_declaratoris(_valor_nodus(
@@ -1130,6 +1126,42 @@ _definitionem_censere (
         }
         prior_linea = lb;
     }
+}
+
+/* prototypum verum: declaratio cum declaratore functionis cuius
+ * internum TITULUS est (monstratores functionum - internum
+ * PARENTHESIS - excluduntur; R7 eos exemptos vult) */
+interior SilvaNodus*
+_prototypi_functionis (SilvaNodus* declaratio)
+{
+    SilvaValor  declaratores;
+    SilvaValor* d;
+    SilvaNodus* declarator;
+    SilvaNodus* functionis;
+    SilvaNodus* internum;
+
+    si (!declaratio
+        || declaratio->genus != SILVA_C89_GENUS_DECLARATIO)
+    {
+        redde NIHIL;
+    }
+    declaratores = silva_c89_declaratio_declaratores(declaratio);
+    si (silva_valor_lista_numerus(declaratores) != (i32)I)
+    {
+        redde NIHIL;
+    }
+    d = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
+    declarator = d ? _valor_nodus(*d) : NIHIL;
+    functionis = _declarator_functionis(declarator);
+    si (!functionis) redde NIHIL;
+    internum = _valor_nodus(
+        silva_c89_declarator_functionis_internum(functionis));
+    si (!internum || internum->genus
+        != SILVA_C89_GENUS_DECLARATOR_TITULUS)
+    {
+        redde NIHIL;
+    }
+    redde functionis;
 }
 
 /* R2 (vocatio): nullum spatium ante parenthesim */
@@ -1939,14 +1971,13 @@ _corpus_interius_censere (
 }
 
 /* R7 super parametra (forma multi-linearis sola - forma
- * uni-linearis iam R8 flagravit) */
+ * uni-linearis iam R8 flagravit); nucleus communis definitionibus
+ * et prototypis */
 interior vacuum
-_parametra_ordinem_censere (
+_parametra_ordinem_functionis (
     FormatorAmbitus* ambitus,
-         SilvaNodus* definitio)
+         SilvaNodus* functionis)
 {
-    SilvaNodus* declarator;
-    SilvaNodus* functionis;
     SilvaToken* apertum;
      SilvaValor parametra;
       R7Membrum membra[R7_MEMBRA_MAXIMA];
@@ -1954,9 +1985,6 @@ _parametra_ordinem_censere (
             i32 plena;
             i32 i;
 
-    declarator = _valor_nodus(
-        silva_c89_definitio_functionis_declarator(definitio));
-    functionis = _declarator_functionis(declarator);
     si (!functionis) redde;
     apertum = _valor_radix(
         silva_c89_declarator_functionis_tok_apertum(functionis));
@@ -2331,6 +2359,20 @@ _catena_vindicata (
     redde FALSUM;
 }
 
+/* definitio: caput + parametra uno vocamine */
+interior vacuum
+_definitionem_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* definitio)
+{
+    SilvaNodus* functionis;
+
+    functionis = _declarator_functionis(_valor_nodus(
+        silva_c89_definitio_functionis_declarator(definitio)));
+    _functionis_caput_censere(ambitus, functionis);
+    _parametra_ordinem_functionis(ambitus, functionis);
+}
+
 /* ==================================================
  * R10 operatores: binarii spatiati, accessus/conversio/
  * unarii/postcrementum arti. ASSIGNATIO exclusa (R9).
@@ -2627,7 +2669,6 @@ _nodum_percurrere (
             corpus = _valor_nodus(
                 silva_c89_definitio_functionis_corpus(nodus));
             _definitionem_censere(ambitus, nodus);
-            _parametra_ordinem_censere(ambitus, nodus);
             si (corpus) _corpus_censere(ambitus, corpus, nodus);
             frange;
         }
@@ -3332,6 +3373,23 @@ formator_lint (
                 alioquin
                 {
                     lb_prior = ZEPHYRUM;
+                }
+
+                /* prototypa radicis (porta 2a clausa): R1/R2/
+                 * R8/R7-parametra - locales NON tanguntur (haec
+                 * via radicem solam ambulat) */
+                {
+                    SilvaNodus* functionis;
+
+                    functionis = _prototypi_functionis(
+                        nodus_radicis);
+                    si (functionis)
+                    {
+                        _functionis_caput_censere(&ambitus,
+                            functionis);
+                        _parametra_ordinem_functionis(&ambitus,
+                            functionis);
+                    }
                 }
 
                 _nodum_percurrere(&ambitus, nodus_radicis);

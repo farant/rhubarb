@@ -1459,6 +1459,72 @@ s32 principale (vacuum)
         CREDO_VERUM(s.successus);
     }
 
+    imprimere("\n--- Probans prototypa (porta 2a clausa) ---\n");
+    {
+        /* casus arx_caeli Frani: typi parametrorum prototypi
+         * dextre ordinandi (R7), spatium definitionis (R2) */
+        SilvaContextus* ctx;
+        constans character* caput;
+        constans character* fons;
+        FormatorScriptum s;
+
+        caput =
+            "nomen structura ArcCaeli ArcCaeli;\n"
+            "nomen vacuum (*FunctioLigaminis)(vacuum*);\n"
+            "nomen insignatus integer i32;\n";
+        ctx = silva_contextus_creare(piscina);
+        CREDO_NON_NIHIL(ctx);
+        CREDO_VERUM(silva_contextus_latinam_addere(ctx));
+        CREDO_VERUM(silva_contextus_praebere(ctx,
+            "probandum.h", caput, (i32)strlen(caput)));
+
+        fons =
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "arx_ponere_ligamen(\n"
+            "    ArcCaeli*           arc,\n"
+            "    FunctioLigaminis ligamen,\n"
+            "    vacuum*             datum);\n";
+        s = formator_scribere(piscina, ctx, fons,
+            (i32)strlen(fons));
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "arx_ponere_ligamen (\n"
+            "            ArcCaeli* arc,\n"
+            "    FunctioLigaminis  ligamen,\n"
+            "              vacuum* datum);\n"));
+
+        /* prototypum uni-lineare: R8 findit, R7 ordinat */
+        fons =
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "facere(i32 a, i32 b);\n";
+        s = formator_scribere(piscina, ctx, fons,
+            (i32)strlen(fons));
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#include \"probandum.h\"\n"
+            "vacuum\n"
+            "facere (\n"
+            "    i32 a,\n"
+            "    i32 b);\n"));
+
+        /* monstrator functionis: NON prototypum (internum
+         * PARENTHESIS) - intactus */
+        fons =
+            "#include \"probandum.h\"\n"
+            "nomen vacuum (*FunctioX)(i32 a, i32 b);\n";
+        s = formator_scribere(piscina, ctx, fons,
+            (i32)strlen(fons));
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
     imprimere("\n--- Probans vexillum post vexillum ---\n");
     {
         /* vexilla consecutiva: regula ANTE hiatum possidet (II

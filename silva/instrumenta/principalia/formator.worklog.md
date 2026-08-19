@@ -648,3 +648,52 @@ Doors: node-level source-purity query (silva-side: "is this
 subtree macro-free?") would replace the per-rule guards with one
 clean cut, same shape as the AMBIGUUS cut; differre directive/
 unit pairing on whitespace-only reshapes (13-file quirk class).
+
+## 2026-08-19 — evolutio IV: include/ (143 capita, zero recusationes)
+
+The header batch ran clean on the first pass: 143 written, zero
+refusals, second sweep stable — the five hardenings held on
+prototype-heavy terrain with nothing new to fix. latina.h PINNED
+in exclusiones (row 21): its macro table is tab-STOP aligned by
+hand; naive tab→4sp would shred the expansion column, no rule
+exists to re-align macro tables, and the lexicon datum is
+generated from it. Ten files show differre pairing quirks — all
+examen-ACCIPE and all verified whitespace-pure by the stripped-sha
+oracle (prototype reshapes break pairing keys more often than
+function bodies; the filed differre desideratum covers it).
+
+Choreography executed: ./silva/amalgamare.sh (ALSO retired the
+batch-three debt — the amalgam vendors lib sources and had been
+stale since lib/ was formatted; VERIFICATUM standalone + hospes
+37/37 + nm 0), ./tools/natura_struere.sh, both suites (root
+136/137 planta_lectio pre-existing; silva 40/40).
+
+Formatted so far: lib/ complete (batches 1-3) + include/
+complete (batch 4). Remaining terrain: silva/fontes +
+silva/instrumenta, apps/, tools' C sources — per decree.
+
+## 2026-08-19 — prototype coverage (the 2a door closes; Fran's arx_caeli read)
+
+Fran read arx_caeli.h and asked for right-aligned parameter types
+on declarations — the tranche-2a door (R1/R2/R8/R7-params were
+definition-only while the DECREED rules always said "definitions
+AND prototypes"). Closed by refactoring: _functionis_caput_censere
+(R1/R2/R8) + _parametra_ordinem_functionis (R7-params) are now
+cores over the FUNCTIONIS declarator node; _definitionem_censere
+is a thin wrapper; ROOT-level DECLARATIOs with a true prototype
+shape get the same checks. "True prototype" = single declarator
+resolving through _declarator_functionis whose INTERNUM is
+DECLARATOR_TITULUS — function-POINTER declarators have internum
+PARENTHESIS and stay exempt (R7's standing rule). Prototypes are
+checked ONLY from the root walk, so local prototypes inside
+function bodies are untouched (their R1 "column 1" demand would
+be wrong there).
+
+Sweep: 177 files retouched (headers + the .c files' interior
+forward declarations), zero refusals, stable, purity oracle
+clean, examen ACCIPE (imago pre-existing). arx_caeli.h now:
+`               ArcCaeli* arc,` / `    FunctioLinkCallback  callback,`
+— the _allocare_interna form on declarations. Amalgam
+re-verified; natura rebuilt; root 136/137; silva 40/40.
+Probatio 207/207 (arx_caeli-shape bytes derived and pinned;
+single-line prototype split; fn-pointer-typedef negative).

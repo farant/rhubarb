@@ -12733,3 +12733,13 @@ differre = puritas spatiali sha probata; imago REICE
 praeexsistens - stb venditum). Choreographia: instrumenta
 mtime-custodita (natura) post formationem struenda. Probatio
 198/198. Portae silvae: quaestio puritatis fontis nodi.
+
+## 2026-08-19 — formator: prototypa (porta 2a clausa)
+
+Lectio arx_caeli Frani: typi parametrorum declarationum dextre
+ordinandi. Nuclei communes (_functionis_caput_censere +
+_parametra_ordinem_functionis) super nodum FUNCTIONIS;
+prototypum verum = internum TITULUS (monstratores PARENTHESIS
+exempti); radix sola (locales intacti). CLXXVII plagulae
+retactae, 0 recusationes, stabiles, purae. Probatio 207/207;
+amalgama VERIFICATUM; suites virides.
