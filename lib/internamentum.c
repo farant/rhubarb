@@ -1,18 +1,19 @@
 #include "internamentum.h"
 #include <string.h>
 
+
 /* ==================================================
  * Singleton Globale
  * ================================================== */
 
 InternamentumChorda*
-internamentum_globale(vacuum)
+internamentum_globale (vacuum)
 {
     /* statica intra functionem (2026-07-21): functio se totam
      * continet - amalgama eam demittere potest sine variabilibus
      * orbatis in scopo plagulae */
-    hic_manens Piscina*             _piscina_globalis = NIHIL;
-    hic_manens InternamentumChorda* _internamentum_globale = NIHIL;
+                hic_manens Piscina* _piscina_globalis       = NIHIL;
+    hic_manens InternamentumChorda* _internamentum_globale  = NIHIL;
 
     /* Pigra initialisatio */
     si (_internamentum_globale == NIHIL)
@@ -30,12 +31,13 @@ internamentum_globale(vacuum)
     redde _internamentum_globale;
 }
 
+
 /* ==================================================
  * Creatio
  * ================================================== */
 
 InternamentumChorda*
-internamentum_creare(
+internamentum_creare (
     Piscina* piscina)
 {
     InternamentumChorda* intern;
@@ -72,9 +74,9 @@ internamentum_creare(
  * ================================================== */
 
 chorda*
-chorda_internare(
+chorda_internare (
     InternamentumChorda* intern,
-    chorda s)
+                 chorda  s)
 {
     vacuum* valor_existens;
     chorda* canonica;
@@ -114,11 +116,10 @@ chorda_internare(
     redde canonica;
 }
 
-
 chorda*
-chorda_internare_ex_literis(
+chorda_internare_ex_literis (
     InternamentumChorda* intern,
-    constans character* cstr)
+     constans character* cstr)
 {
     vacuum* valor_existens;
     chorda* canonica;
@@ -159,9 +160,9 @@ chorda_internare_ex_literis(
  * ================================================== */
 
 b32
-chorda_est_internata(
+chorda_est_internata (
     InternamentumChorda* intern,
-    chorda s)
+                 chorda  s)
 {
     si (!intern)
     {
@@ -177,7 +178,7 @@ chorda_est_internata(
  * ================================================== */
 
 i32
-internamentum_numerus(
+internamentum_numerus (
     InternamentumChorda* intern)
 {
     si (!intern || !intern->tabula)
@@ -188,9 +189,8 @@ internamentum_numerus(
     redde tabula_dispersa_numerus(intern->tabula);
 }
 
-
 vacuum
-internamentum_vacare(
+internamentum_vacare (
     InternamentumChorda* intern)
 {
     si (!intern || !intern->tabula)

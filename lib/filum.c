@@ -8,12 +8,13 @@
 
 /* Platform-specific headers */
 #ifdef _WIN32
-	#include <sys/stat.h>
-	#include <io.h>
+    #include <sys/stat.h>
+    #include <io.h>
 #else
-	#include <sys/stat.h>
-	#include <unistd.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
 #endif
+
 
 /* ==================================================
  * Structura FilumLector - Internal
@@ -41,20 +42,20 @@ hic_manens character _filum_error_buffer[CCLVI]; /* 256 bytes */
 hic_manens       b32 _filum_error_est = FALSUM;
 
 interior vacuum
-_filum_error_ponere(
+_filum_error_ponere (
     constans character* message)
 {
-	strncpy(_filum_error_buffer, message, CCLV);
-	_filum_error_buffer[CCLV] = '\0';
-	_filum_error_est = VERUM;
+    strncpy(_filum_error_buffer, message, CCLV);
+    _filum_error_buffer[CCLV]  = '\0';
+    _filum_error_est           = VERUM;
 }
 
 interior vacuum
-_filum_error_purgare(
+_filum_error_purgare (
     vacuum)
 {
-	_filum_error_est = FALSUM;
-	_filum_error_buffer[ZEPHYRUM] = '\0';
+    _filum_error_est               = FALSUM;
+    _filum_error_buffer[ZEPHYRUM]  = '\0';
 }
 
 
@@ -63,115 +64,115 @@ _filum_error_purgare(
  * ================================================== */
 
 chorda
-filum_legere_totum(
-	constans character* via,
-	           Piscina* piscina)
+filum_legere_totum (
+    constans character* via,
+               Piscina* piscina)
 {
-	  structura stat st;
-	         FILUM* f;
-	memoriae_index  mensura;
-	            i8* buffer;
-	memoriae_index  legere_summa;
-	        chorda  fructus;
+      structura stat st;
+             FILUM* f;
+    memoriae_index  mensura;
+                i8* buffer;
+    memoriae_index  legere_summa;
+            chorda  fructus;
 
-	si (!via || !piscina)
-	{
-		_filum_error_ponere("via vel piscina est NIHIL");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
+    si (!via || !piscina)
+    {
+        _filum_error_ponere("via vel piscina est NIHIL");
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	/* Invenire mensuram per stat() - velocius quam fseek/ftell */
-	si (stat(via, &st) != ZEPHYRUM)
-	{
-		_filum_error_ponere("stat fracta");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
+    /* Invenire mensuram per stat() - velocius quam fseek/ftell */
+    si (stat(via, &st) != ZEPHYRUM)
+    {
+        _filum_error_ponere("stat fracta");
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
 
-	mensura = (memoriae_index)st.st_size;
+    mensura = (memoriae_index)st.st_size;
 
-	/* Aperire filum */
-	f = fopen(via, "rb");
-	si (!f)
-	{
-		_filum_error_ponere("fopen fracta");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
+    /* Aperire filum */
+    f = fopen(via, "rb");
+    si (!f)
+    {
+        _filum_error_ponere("fopen fracta");
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
 
-	/* Allocare buffer */
-	buffer = (i8*)piscina_allocare(piscina, mensura);
-	si (!buffer)
-	{
-		fclose(f);
-		_filum_error_ponere("piscina_allocare fracta");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
+    /* Allocare buffer */
+    buffer = (i8*)piscina_allocare(piscina, mensura);
+    si (!buffer)
+    {
+        fclose(f);
+        _filum_error_ponere("piscina_allocare fracta");
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
 
-	/* Legere contentum */
-	legere_summa = fread(buffer, I, mensura, f);
-	fclose(f);
+    /* Legere contentum */
+    legere_summa = fread(buffer, I, mensura, f);
+    fclose(f);
 
-	si (legere_summa != mensura)
-	{
-		_filum_error_ponere("fread fracta - non omnia legere");
-		fructus.mensura = ZEPHYRUM;
-		fructus.datum   = NIHIL;
-		redde fructus;
-	}
+    si (legere_summa != mensura)
+    {
+        _filum_error_ponere("fread fracta - non omnia legere");
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
 
-	fructus.mensura = (i32)mensura;
-	fructus.datum   = buffer;
-	redde fructus;
+    fructus.mensura  = (i32)mensura;
+    fructus.datum    = buffer;
+    redde fructus;
 }
 
 b32
-filum_existit(
+filum_existit (
     constans character* via)
 {
-	FILUM* f;
+    FILUM* f;
 
-	si (!via) redde FALSUM;
+    si (!via) redde FALSUM;
 
-	f = fopen(via, "r");
-	si (!f) redde FALSUM;
+    f = fopen(via, "r");
+    si (!f) redde FALSUM;
 
-	fclose(f);
-	redde VERUM;
+    fclose(f);
+    redde VERUM;
 }
 
 memoriae_index
-filum_mensura(
+filum_mensura (
     constans character* via)
 {
-	 FILUM* f;
-	longus  mensura_signed;
+     FILUM* f;
+    longus  mensura_signed;
 
-	si (!via) redde ZEPHYRUM;
+    si (!via) redde ZEPHYRUM;
 
-	f = fopen(via, "rb");
-	si (!f) redde ZEPHYRUM;
+    f = fopen(via, "rb");
+    si (!f) redde ZEPHYRUM;
 
-	si (fseek(f, ZEPHYRUM, SEEK_END) != ZEPHYRUM)
-	{
-		fclose(f);
-		redde ZEPHYRUM;
-	}
+    si (fseek(f, ZEPHYRUM, SEEK_END) != ZEPHYRUM)
+    {
+        fclose(f);
+        redde ZEPHYRUM;
+    }
 
-	mensura_signed = ftell(f);
-	fclose(f);
+    mensura_signed = ftell(f);
+    fclose(f);
 
-	si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
-	redde (memoriae_index)mensura_signed;
+    redde (memoriae_index)mensura_signed;
 }
 
 
@@ -180,229 +181,237 @@ filum_mensura(
  * ================================================== */
 
 FilumLector*
-filum_lector_aperire(
-	constans character* via,
-	           Piscina* piscina)
+filum_lector_aperire (
+    constans character* via,
+               Piscina* piscina)
 {
-	FilumLector* lector;
+    FilumLector* lector;
 
-	si (!via || !piscina)
-	{
-		_filum_error_ponere("via vel piscina est NIHIL");
-		redde NIHIL;
-	}
+    si (!via || !piscina)
+    {
+        _filum_error_ponere("via vel piscina est NIHIL");
+        redde NIHIL;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	lector = (FilumLector*)piscina_allocare(piscina, magnitudo(FilumLector));
-	si (!lector)
-	{
-		_filum_error_ponere("piscina_allocare fracta");
-		redde NIHIL;
-	}
+    lector = (FilumLector*)piscina_allocare(piscina, magnitudo(FilumLector));
+    si (!lector)
+    {
+        _filum_error_ponere("piscina_allocare fracta");
+        redde NIHIL;
+    }
 
-	lector->descriptum = fopen(via, "r");
-	si (!lector->descriptum)
-	{
-		_filum_error_ponere("fopen fracta");
-		redde NIHIL;
-	}
+    lector->descriptum = fopen(via, "r");
+    si (!lector->descriptum)
+    {
+        _filum_error_ponere("fopen fracta");
+        redde NIHIL;
+    }
 
-	lector->numerus_versus = ZEPHYRUM;
-	lector->est_finis      = FALSUM;
-	lector->piscina        = piscina;
+    lector->numerus_versus  = ZEPHYRUM;
+    lector->est_finis       = FALSUM;
+    lector->piscina         = piscina;
 
-	redde lector;
+    redde lector;
 }
 
 b32
-filum_lector_lineam_proximam(
+filum_lector_lineam_proximam (
     FilumLector* lector,
          chorda* linea_out)
 {
-	             character* result;
-	        memoriae_index  longitudo;
-	                    i8* buffer_allocatus;
-	                   b32  habet_newline;
-	    ChordaAedificator* aedificator;
-	        memoriae_index  i;
+                 character* result;
+            memoriae_index  longitudo;
+                        i8* buffer_allocatus;
+                       b32  habet_newline;
+         ChordaAedificator* aedificator;
+            memoriae_index  i;
 
-	si (!lector || !linea_out)
-	{
-		redde FALSUM;
-	}
+    si (!lector || !linea_out)
+    {
+        redde FALSUM;
+    }
 
-	si (lector->est_finis)
-	{
-		linea_out->mensura = ZEPHYRUM;
-		linea_out->datum   = NIHIL;
-		redde FALSUM;
-	}
+    si (lector->est_finis)
+    {
+        linea_out->mensura  = ZEPHYRUM;
+        linea_out->datum    = NIHIL;
+        redde FALSUM;
+    }
 
-	/* Prima lectio */
-	result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
-	si (!result)
-	{
-		/* EOF vel error */
-		lector->est_finis  = VERUM;
-		linea_out->mensura = ZEPHYRUM;
-		linea_out->datum   = NIHIL;
-		redde FALSUM;
-	}
+    /* Prima lectio */
+    result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
+    si (!result)
+    {
+        /* EOF vel error */
+        lector->est_finis   = VERUM;
+        linea_out->mensura  = ZEPHYRUM;
+        linea_out->datum    = NIHIL;
+        redde FALSUM;
+    }
 
-	lector->numerus_versus++;
+    lector->numerus_versus++;
 
-	longitudo = strlen(lector->buffer);
+    longitudo = strlen(lector->buffer);
 
-	/* Verificare si habet newline ad finem */
-	habet_newline = FALSUM;
-	si (longitudo > ZEPHYRUM &&
-	    (lector->buffer[longitudo - I] == '\n' ||
-	     lector->buffer[longitudo - I] == '\r'))
-	{
-		habet_newline = VERUM;
-	}
+    /* Verificare si habet newline ad finem */
+    habet_newline = FALSUM;
+    si (   longitudo > ZEPHYRUM
 
-	/* Si linea completa (habet newline VEL non implevit buffer),
+        && (lector->buffer[longitudo - I] == '\n'
+
+        || lector->buffer[longitudo - I] == '\r'))
+    {
+        habet_newline = VERUM;
+    }
+
+    /* Si linea completa (habet newline VEL non implevit buffer),
 	 * processare directe */
-	si (habet_newline || longitudo < (MMMMXCVI - I))
-	{
-		/* Removere newline characteres */
-		dum (longitudo > ZEPHYRUM &&
-		     (lector->buffer[longitudo - I] == '\n' ||
-		      lector->buffer[longitudo - I] == '\r'))
-		{
-			lector->buffer[longitudo - I] = '\0';
-			longitudo--;
-		}
+    si (habet_newline || longitudo < (MMMMXCVI - I))
+    {
+        /* Removere newline characteres */
+        dum (   longitudo > ZEPHYRUM
 
-		/* Si linea vacua (longitudo == 0), redde chordam vacuam */
-		si (longitudo == ZEPHYRUM)
-		{
-			linea_out->mensura = ZEPHYRUM;
-			linea_out->datum   = NIHIL;
-			redde VERUM;
-		}
+             && (lector->buffer[longitudo - I] == '\n'
 
-		/* Allocare ex piscina */
-		buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
-		si (!buffer_allocatus)
-		{
-			_filum_error_ponere("piscina_allocare fracta");
-			linea_out->mensura = ZEPHYRUM;
-			linea_out->datum   = NIHIL;
-			redde FALSUM;
-		}
+            || lector->buffer[longitudo - I] == '\r'))
+        {
+            lector->buffer[longitudo - I] = '\0';
+            longitudo--;
+        }
 
-		memcpy(buffer_allocatus, lector->buffer, longitudo);
-		linea_out->mensura = (i32)longitudo;
-		linea_out->datum   = buffer_allocatus;
+        /* Si linea vacua (longitudo == 0), redde chordam vacuam */
+        si (longitudo == ZEPHYRUM)
+        {
+            linea_out->mensura  = ZEPHYRUM;
+            linea_out->datum    = NIHIL;
+            redde VERUM;
+        }
 
-		redde VERUM;
-	}
+        /* Allocare ex piscina */
+        buffer_allocatus = (i8*)piscina_allocare(lector->piscina, longitudo);
+        si (!buffer_allocatus)
+        {
+            _filum_error_ponere("piscina_allocare fracta");
+            linea_out->mensura  = ZEPHYRUM;
+            linea_out->datum    = NIHIL;
+            redde FALSUM;
+        }
 
-	/* Linea continuat - usare ChordaAedificator pro crescentia dynamica */
-	aedificator = chorda_aedificator_creare(lector->piscina, MMMMXCVI * II);
-	si (!aedificator)
-	{
-		_filum_error_ponere("chorda_aedificator_creare fracta");
-		linea_out->mensura = ZEPHYRUM;
-		linea_out->datum   = NIHIL;
-		redde FALSUM;
-	}
+        memcpy(buffer_allocatus, lector->buffer, longitudo);
+        linea_out->mensura  = (i32)longitudo;
+        linea_out->datum    = buffer_allocatus;
 
-	/* Appendere primum fragmentum */
-	per (i = ZEPHYRUM; i < longitudo; i++)
-	{
-		si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
-		{
-			_filum_error_ponere("chorda_aedificator_appendere fracta");
-			linea_out->mensura = ZEPHYRUM;
-			linea_out->datum   = NIHIL;
-			redde FALSUM;
-		}
-	}
+        redde VERUM;
+    }
 
-	/* Legere fragmenta reliqua usque ad newline vel EOF */
-	dum (VERUM)
-	{
-		result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
-		si (!result)
-		{
-			/* EOF - finire lineam */
-			lector->est_finis = VERUM;
-			*linea_out = chorda_aedificator_finire(aedificator);
-			redde VERUM;
-		}
+    /* Linea continuat - usare ChordaAedificator pro crescentia dynamica */
+    aedificator = chorda_aedificator_creare(lector->piscina, MMMMXCVI * II);
+    si (!aedificator)
+    {
+        _filum_error_ponere("chorda_aedificator_creare fracta");
+        linea_out->mensura  = ZEPHYRUM;
+        linea_out->datum    = NIHIL;
+        redde FALSUM;
+    }
 
-		longitudo = strlen(lector->buffer);
+    /* Appendere primum fragmentum */
+    per (i = ZEPHYRUM; i < longitudo; i++)
+    {
+        si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+        {
+            _filum_error_ponere("chorda_aedificator_appendere fracta");
+            linea_out->mensura  = ZEPHYRUM;
+            linea_out->datum    = NIHIL;
+            redde FALSUM;
+        }
+    }
 
-		/* Verificare newline */
-		habet_newline = FALSUM;
-		si (longitudo > ZEPHYRUM &&
-		    (lector->buffer[longitudo - I] == '\n' ||
-		     lector->buffer[longitudo - I] == '\r'))
-		{
-			habet_newline = VERUM;
-		}
+    /* Legere fragmenta reliqua usque ad newline vel EOF */
+    dum (VERUM)
+    {
+        result = fgets(lector->buffer, MMMMXCVI, lector->descriptum);
+        si (!result)
+        {
+            /* EOF - finire lineam */
+            lector->est_finis  = VERUM;
+            *linea_out         = chorda_aedificator_finire(aedificator);
+            redde VERUM;
+        }
 
-		/* Removere newline si existit */
-		dum (longitudo > ZEPHYRUM &&
-		     (lector->buffer[longitudo - I] == '\n' ||
-		      lector->buffer[longitudo - I] == '\r'))
-		{
-			lector->buffer[longitudo - I] = '\0';
-			longitudo--;
-		}
+        longitudo = strlen(lector->buffer);
 
-		/* Appendere fragmentum */
-		per (i = ZEPHYRUM; i < longitudo; i++)
-		{
-			si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
-			{
-				_filum_error_ponere("chorda_aedificator_appendere fracta");
-				linea_out->mensura = ZEPHYRUM;
-				linea_out->datum   = NIHIL;
-				redde FALSUM;
-			}
-		}
+        /* Verificare newline */
+        habet_newline = FALSUM;
+        si (   longitudo > ZEPHYRUM
 
-		si (habet_newline || longitudo < (MMMMXCVI - I))
-		{
-			/* Linea completa */
-			*linea_out = chorda_aedificator_finire(aedificator);
-			redde VERUM;
-		}
-	}
+            && (lector->buffer[longitudo - I] == '\n'
+
+            || lector->buffer[longitudo - I] == '\r'))
+        {
+            habet_newline = VERUM;
+        }
+
+        /* Removere newline si existit */
+        dum (   longitudo > ZEPHYRUM
+
+             && (lector->buffer[longitudo - I] == '\n'
+
+            || lector->buffer[longitudo - I] == '\r'))
+        {
+            lector->buffer[longitudo - I] = '\0';
+            longitudo--;
+        }
+
+        /* Appendere fragmentum */
+        per (i = ZEPHYRUM; i < longitudo; i++)
+        {
+            si (!chorda_aedificator_appendere_character(aedificator, lector->buffer[i]))
+            {
+                _filum_error_ponere("chorda_aedificator_appendere fracta");
+                linea_out->mensura  = ZEPHYRUM;
+                linea_out->datum    = NIHIL;
+                redde FALSUM;
+            }
+        }
+
+        si (habet_newline || longitudo < (MMMMXCVI - I))
+        {
+            /* Linea completa */
+            *linea_out = chorda_aedificator_finire(aedificator);
+            redde VERUM;
+        }
+    }
 }
 
 i32
-filum_lector_numerus_versus(
+filum_lector_numerus_versus (
     FilumLector* lector)
 {
-	redde lector ? lector->numerus_versus : ZEPHYRUM;
+    redde lector ? lector->numerus_versus : ZEPHYRUM;
 }
 
 b32
-filum_lector_finis(
+filum_lector_finis (
     FilumLector* lector)
 {
-	redde lector ? lector->est_finis : VERUM;
+    redde lector ? lector->est_finis : VERUM;
 }
 
 vacuum
-filum_lector_claudere(
+filum_lector_claudere (
     FilumLector* lector)
 {
-	si (!lector) redde;
+    si (!lector) redde;
 
-	si (lector->descriptum)
-	{
-		fclose(lector->descriptum);
-		lector->descriptum = NIHIL;
-	}
+    si (lector->descriptum)
+    {
+        fclose(lector->descriptum);
+        lector->descriptum = NIHIL;
+    }
 
-	/* Nota: FilumLector ipsa allocata ex piscina,
+    /* Nota: FilumLector ipsa allocata ex piscina,
 	 * ergo non liberatur manualiter */
 }
 
@@ -412,196 +421,196 @@ filum_lector_claudere(
  * ================================================== */
 
 FilumScriptor*
-filum_scriptor_aperire(
-	constans character* via,
-	         FilumModus modus,
-	           Piscina* piscina)
+filum_scriptor_aperire (
+     constans character* via,
+             FilumModus  modus,
+                Piscina* piscina)
 {
-	FilumScriptor*      scriptor;
-	constans character* modus_str;
+         FilumScriptor* scriptor;
+    constans character* modus_str;
 
-	si (!via || !piscina)
-	{
-		_filum_error_ponere("via vel piscina est NIHIL");
-		redde NIHIL;
-	}
+    si (!via || !piscina)
+    {
+        _filum_error_ponere("via vel piscina est NIHIL");
+        redde NIHIL;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	scriptor = (FilumScriptor*)piscina_allocare(piscina, magnitudo(FilumScriptor));
-	si (!scriptor)
-	{
-		_filum_error_ponere("piscina_allocare fracta");
-		redde NIHIL;
-	}
+    scriptor = (FilumScriptor*)piscina_allocare(piscina, magnitudo(FilumScriptor));
+    si (!scriptor)
+    {
+        _filum_error_ponere("piscina_allocare fracta");
+        redde NIHIL;
+    }
 
-	/* Determinare modus string */
-	si (modus == FILUM_MODUS_APPENDERE)
-	{
-		modus_str = "ab";
-	}
-	alioquin
-	{
-		modus_str = "wb";
-	}
+    /* Determinare modus string */
+    si (modus == FILUM_MODUS_APPENDERE)
+    {
+        modus_str = "ab";
+    }
+    alioquin
+    {
+        modus_str = "wb";
+    }
 
-	scriptor->descriptum = fopen(via, modus_str);
-	si (!scriptor->descriptum)
-	{
-		_filum_error_ponere("fopen fracta");
-		redde NIHIL;
-	}
+    scriptor->descriptum = fopen(via, modus_str);
+    si (!scriptor->descriptum)
+    {
+        _filum_error_ponere("fopen fracta");
+        redde NIHIL;
+    }
 
-	scriptor->piscina = piscina;
+    scriptor->piscina = piscina;
 
-	redde scriptor;
+    redde scriptor;
 }
 
 b32
-filum_scriptor_scribere(
-	FilumScriptor* scriptor,
-	        chorda contentum)
+filum_scriptor_scribere (
+     FilumScriptor* scriptor,
+            chorda  contentum)
 {
-	memoriae_index scriptus;
+    memoriae_index scriptus;
 
-	si (!scriptor || !scriptor->descriptum)
-	{
-		_filum_error_ponere("scriptor invalidus");
-		redde FALSUM;
-	}
+    si (!scriptor || !scriptor->descriptum)
+    {
+        _filum_error_ponere("scriptor invalidus");
+        redde FALSUM;
+    }
 
-	si (!contentum.datum || contentum.mensura == ZEPHYRUM)
-	{
-		/* Nihil scribere - successus */
-		redde VERUM;
-	}
+    si (!contentum.datum || contentum.mensura == ZEPHYRUM)
+    {
+        /* Nihil scribere - successus */
+        redde VERUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura,
-	                  scriptor->descriptum);
+    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura,
+                      scriptor->descriptum);
 
-	si (scriptus != (memoriae_index)contentum.mensura)
-	{
-		_filum_error_ponere("fwrite fracta");
-		redde FALSUM;
-	}
+    si (scriptus != (memoriae_index)contentum.mensura)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_scriptor_scribere_literis(
-	     FilumScriptor* scriptor,
-	constans character* contentum)
+filum_scriptor_scribere_literis (
+         FilumScriptor* scriptor,
+    constans character* contentum)
 {
-	memoriae_index longitudo;
-	memoriae_index scriptus;
+    memoriae_index longitudo;
+    memoriae_index scriptus;
 
-	si (!scriptor || !scriptor->descriptum)
-	{
-		_filum_error_ponere("scriptor invalidus");
-		redde FALSUM;
-	}
+    si (!scriptor || !scriptor->descriptum)
+    {
+        _filum_error_ponere("scriptor invalidus");
+        redde FALSUM;
+    }
 
-	si (!contentum)
-	{
-		/* Nihil scribere - successus */
-		redde VERUM;
-	}
+    si (!contentum)
+    {
+        /* Nihil scribere - successus */
+        redde VERUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	longitudo = strlen(contentum);
-	si (longitudo == ZEPHYRUM)
-	{
-		redde VERUM;
-	}
+    longitudo = strlen(contentum);
+    si (longitudo == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
 
-	scriptus = fwrite(contentum, I, longitudo, scriptor->descriptum);
+    scriptus = fwrite(contentum, I, longitudo, scriptor->descriptum);
 
-	si (scriptus != longitudo)
-	{
-		_filum_error_ponere("fwrite fracta");
-		redde FALSUM;
-	}
+    si (scriptus != longitudo)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_scriptor_lineam_scribere(
-	     FilumScriptor* scriptor,
-	constans character* linea)
+filum_scriptor_lineam_scribere (
+         FilumScriptor* scriptor,
+    constans character* linea)
 {
-	si (!scriptor || !scriptor->descriptum)
-	{
-		_filum_error_ponere("scriptor invalidus");
-		redde FALSUM;
-	}
+    si (!scriptor || !scriptor->descriptum)
+    {
+        _filum_error_ponere("scriptor invalidus");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	/* Scribere lineam */
-	si (linea)
-	{
-		memoriae_index longitudo = strlen(linea);
-		si (longitudo > ZEPHYRUM)
-		{
-			memoriae_index scriptus = fwrite(linea, I, longitudo,
-			                                 scriptor->descriptum);
-			si (scriptus != longitudo)
-			{
-				_filum_error_ponere("fwrite fracta");
-				redde FALSUM;
-			}
-		}
-	}
+    /* Scribere lineam */
+    si (linea)
+    {
+        memoriae_index longitudo = strlen(linea);
+        si (longitudo > ZEPHYRUM)
+        {
+            memoriae_index scriptus = fwrite(linea, I, longitudo,
+                                             scriptor->descriptum);
+            si (scriptus != longitudo)
+            {
+                _filum_error_ponere("fwrite fracta");
+                redde FALSUM;
+            }
+        }
+    }
 
-	/* Scribere newline */
-	si (fputc('\n', scriptor->descriptum) == EOF)
-	{
-		_filum_error_ponere("fputc fracta");
-		redde FALSUM;
-	}
+    /* Scribere newline */
+    si (fputc('\n', scriptor->descriptum) == EOF)
+    {
+        _filum_error_ponere("fputc fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_scriptor_sync(
-	FilumScriptor* scriptor)
+filum_scriptor_sync (
+    FilumScriptor* scriptor)
 {
-	si (!scriptor || !scriptor->descriptum)
-	{
-		_filum_error_ponere("scriptor invalidus");
-		redde FALSUM;
-	}
+    si (!scriptor || !scriptor->descriptum)
+    {
+        _filum_error_ponere("scriptor invalidus");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	si (fflush(scriptor->descriptum) != ZEPHYRUM)
-	{
-		_filum_error_ponere("fflush fracta");
-		redde FALSUM;
-	}
+    si (fflush(scriptor->descriptum) != ZEPHYRUM)
+    {
+        _filum_error_ponere("fflush fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 vacuum
-filum_scriptor_claudere(
-	FilumScriptor* scriptor)
+filum_scriptor_claudere (
+    FilumScriptor* scriptor)
 {
-	si (!scriptor) redde;
+    si (!scriptor) redde;
 
-	si (scriptor->descriptum)
-	{
-		fclose(scriptor->descriptum);
-		scriptor->descriptum = NIHIL;
-	}
+    si (scriptor->descriptum)
+    {
+        fclose(scriptor->descriptum);
+        scriptor->descriptum = NIHIL;
+    }
 
-	/* Nota: FilumScriptor ipsa allocata ex piscina,
+    /* Nota: FilumScriptor ipsa allocata ex piscina,
 	 * ergo non liberatur manualiter */
 }
 
@@ -611,147 +620,147 @@ filum_scriptor_claudere(
  * ================================================== */
 
 b32
-filum_scribere(
-	constans character* via,
-	            chorda  contentum)
+filum_scribere (
+    constans character* via,
+                chorda  contentum)
 {
-	         FILUM* f;
-	memoriae_index  scriptus;
+             FILUM* f;
+    memoriae_index  scriptus;
 
-	si (!via || !contentum.datum)
-	{
-		_filum_error_ponere("via vel contentum est NIHIL");
-		redde FALSUM;
-	}
+    si (!via || !contentum.datum)
+    {
+        _filum_error_ponere("via vel contentum est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	f = fopen(via, "wb");
-	si (!f)
-	{
-		_filum_error_ponere("fopen pro scribere fracta");
-		redde FALSUM;
-	}
+    f = fopen(via, "wb");
+    si (!f)
+    {
+        _filum_error_ponere("fopen pro scribere fracta");
+        redde FALSUM;
+    }
 
-	scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
-	fclose(f);
+    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
+    fclose(f);
 
-	si (scriptus != (memoriae_index)contentum.mensura)
-	{
-		_filum_error_ponere("fwrite fracta - non omnia scripta");
-		redde FALSUM;
-	}
+    si (scriptus != (memoriae_index)contentum.mensura)
+    {
+        _filum_error_ponere("fwrite fracta - non omnia scripta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_scribere_literis(
-	constans character* via,
-	constans character* contentum)
+filum_scribere_literis (
+    constans character* via,
+    constans character* contentum)
 {
-	         FILUM* f;
-	memoriae_index  longitudo;
-	memoriae_index  scriptus;
+             FILUM* f;
+    memoriae_index  longitudo;
+    memoriae_index  scriptus;
 
-	si (!via || !contentum)
-	{
-		_filum_error_ponere("via vel contentum est NIHIL");
-		redde FALSUM;
-	}
+    si (!via || !contentum)
+    {
+        _filum_error_ponere("via vel contentum est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	f = fopen(via, "w");
-	si (!f)
-	{
-		_filum_error_ponere("fopen pro scribere fracta");
-		redde FALSUM;
-	}
+    f = fopen(via, "w");
+    si (!f)
+    {
+        _filum_error_ponere("fopen pro scribere fracta");
+        redde FALSUM;
+    }
 
-	longitudo = strlen(contentum);
-	scriptus  = fwrite(contentum, I, longitudo, f);
-	fclose(f);
+    longitudo  = strlen(contentum);
+    scriptus   = fwrite(contentum, I, longitudo, f);
+    fclose(f);
 
-	si (scriptus != longitudo)
-	{
-		_filum_error_ponere("fwrite fracta");
-		redde FALSUM;
-	}
+    si (scriptus != longitudo)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_appendere(
-	constans character* via,
-	            chorda  contentum)
+filum_appendere (
+    constans character* via,
+                chorda  contentum)
 {
-	         FILUM* f;
-	memoriae_index  scriptus;
+             FILUM* f;
+    memoriae_index  scriptus;
 
-	si (!via || !contentum.datum)
-	{
-		_filum_error_ponere("via vel contentum est NIHIL");
-		redde FALSUM;
-	}
+    si (!via || !contentum.datum)
+    {
+        _filum_error_ponere("via vel contentum est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	f = fopen(via, "ab");
-	si (!f)
-	{
-		_filum_error_ponere("fopen pro appendere fracta");
-		redde FALSUM;
-	}
+    f = fopen(via, "ab");
+    si (!f)
+    {
+        _filum_error_ponere("fopen pro appendere fracta");
+        redde FALSUM;
+    }
 
-	scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
-	fclose(f);
+    scriptus = fwrite(contentum.datum, I, (memoriae_index)contentum.mensura, f);
+    fclose(f);
 
-	si (scriptus != (memoriae_index)contentum.mensura)
-	{
-		_filum_error_ponere("fwrite fracta");
-		redde FALSUM;
-	}
+    si (scriptus != (memoriae_index)contentum.mensura)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_appendere_literis(
-	constans character* via,
-	constans character* contentum)
+filum_appendere_literis (
+    constans character* via,
+    constans character* contentum)
 {
-	         FILUM* f;
-	memoriae_index  longitudo;
-	memoriae_index  scriptus;
+             FILUM* f;
+    memoriae_index  longitudo;
+    memoriae_index  scriptus;
 
-	si (!via || !contentum)
-	{
-		_filum_error_ponere("via vel contentum est NIHIL");
-		redde FALSUM;
-	}
+    si (!via || !contentum)
+    {
+        _filum_error_ponere("via vel contentum est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	f = fopen(via, "a");
-	si (!f)
-	{
-		_filum_error_ponere("fopen pro appendere fracta");
-		redde FALSUM;
-	}
+    f = fopen(via, "a");
+    si (!f)
+    {
+        _filum_error_ponere("fopen pro appendere fracta");
+        redde FALSUM;
+    }
 
-	longitudo = strlen(contentum);
-	scriptus  = fwrite(contentum, I, longitudo, f);
-	fclose(f);
+    longitudo  = strlen(contentum);
+    scriptus   = fwrite(contentum, I, longitudo, f);
+    fclose(f);
 
-	si (scriptus != longitudo)
-	{
-		_filum_error_ponere("fwrite fracta");
-		redde FALSUM;
-	}
+    si (scriptus != longitudo)
+    {
+        _filum_error_ponere("fwrite fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 
@@ -760,99 +769,99 @@ filum_appendere_literis(
  * ================================================== */
 
 b32
-filum_delere(
+filum_delere (
     constans character* via)
 {
-	si (!via)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	si (remove(via) != ZEPHYRUM)
-	{
-		_filum_error_ponere("remove fracta");
-		redde FALSUM;
-	}
+    si (remove(via) != ZEPHYRUM)
+    {
+        _filum_error_ponere("remove fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_movere(
-	constans character* via_vetus,
-	constans character* via_nova)
+filum_movere (
+    constans character* via_vetus,
+    constans character* via_nova)
 {
-	si (!via_vetus || !via_nova)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via_vetus || !via_nova)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	si (rename(via_vetus, via_nova) != ZEPHYRUM)
-	{
-		_filum_error_ponere("rename fracta");
-		redde FALSUM;
-	}
+    si (rename(via_vetus, via_nova) != ZEPHYRUM)
+    {
+        _filum_error_ponere("rename fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_copiare(
-	constans character* via_fons,
-	constans character* via_destinatio)
+filum_copiare (
+    constans character* via_fons,
+    constans character* via_destinatio)
 {
-	         FILUM* fons;
-	         FILUM* dest;
-	     character  buffer[MMMMXCVI];
-	memoriae_index  legere_bytes;
-	memoriae_index  scriptus_bytes;
+             FILUM* fons;
+             FILUM* dest;
+         character  buffer[MMMMXCVI];
+    memoriae_index  legere_bytes;
+    memoriae_index  scriptus_bytes;
 
-	si (!via_fons || !via_destinatio)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via_fons || !via_destinatio)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	fons = fopen(via_fons, "rb");
-	si (!fons)
-	{
-		_filum_error_ponere("aperire fons fracta");
-		redde FALSUM;
-	}
+    fons = fopen(via_fons, "rb");
+    si (!fons)
+    {
+        _filum_error_ponere("aperire fons fracta");
+        redde FALSUM;
+    }
 
-	dest = fopen(via_destinatio, "wb");
-	si (!dest)
-	{
-		fclose(fons);
-		_filum_error_ponere("aperire destinatio fracta");
-		redde FALSUM;
-	}
+    dest = fopen(via_destinatio, "wb");
+    si (!dest)
+    {
+        fclose(fons);
+        _filum_error_ponere("aperire destinatio fracta");
+        redde FALSUM;
+    }
 
-	/* Copiare per buffer */
-	dum ((legere_bytes = fread(buffer, I, MMMMXCVI, fons)) > ZEPHYRUM)
-	{
-		scriptus_bytes = fwrite(buffer, I, legere_bytes, dest);
-		si (scriptus_bytes != legere_bytes)
-		{
-			fclose(fons);
-			fclose(dest);
-			_filum_error_ponere("fwrite in copiare fracta");
-			redde FALSUM;
-		}
-	}
+    /* Copiare per buffer */
+    dum ((legere_bytes = fread(buffer, I, MMMMXCVI, fons)) > ZEPHYRUM)
+    {
+        scriptus_bytes = fwrite(buffer, I, legere_bytes, dest);
+        si (scriptus_bytes != legere_bytes)
+        {
+            fclose(fons);
+            fclose(dest);
+            _filum_error_ponere("fwrite in copiare fracta");
+            redde FALSUM;
+        }
+    }
 
-	fclose(fons);
-	fclose(dest);
+    fclose(fons);
+    fclose(dest);
 
-	redde VERUM;
+    redde VERUM;
 }
 
 
@@ -861,127 +870,127 @@ filum_copiare(
  * ================================================== */
 
 b32
-filum_directorium_creare(
-	constans character* via)
+filum_directorium_creare (
+    constans character* via)
 {
-	si (!via)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
 #ifdef _WIN32
-	si (_mkdir(via) != ZEPHYRUM)
+    si (_mkdir(via) != ZEPHYRUM)
 #else
-	si (mkdir(via, 0755) != ZEPHYRUM)
+    si (mkdir(via, 0755) != ZEPHYRUM)
 #endif
-	{
-		_filum_error_ponere("mkdir fracta");
-		redde FALSUM;
-	}
+    {
+        _filum_error_ponere("mkdir fracta");
+        redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_directorium_creare_si_necesse(
-	constans character* via)
+filum_directorium_creare_si_necesse (
+    constans character* via)
 {
-	structura stat st;
+    structura stat st;
 
-	si (!via)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	/* Si iam existit, successus */
-	si (stat(via, &st) == ZEPHYRUM)
-	{
-		si (S_ISDIR(st.st_mode))
-		{
-			redde VERUM;
-		}
-		/* Existit sed non est directorium */
-		_filum_error_ponere("via existit sed non est directorium");
-		redde FALSUM;
-	}
+    /* Si iam existit, successus */
+    si (stat(via, &st) == ZEPHYRUM)
+    {
+        si (S_ISDIR(st.st_mode))
+        {
+            redde VERUM;
+        }
+        /* Existit sed non est directorium */
+        _filum_error_ponere("via existit sed non est directorium");
+        redde FALSUM;
+    }
 
-	/* Non existit - creare */
-	redde filum_directorium_creare(via);
+    /* Non existit - creare */
+    redde filum_directorium_creare(via);
 }
 
 b32
-filum_directorium_creare_cum_modo(
-	constans character* via,
-	           integer  modus)
+filum_directorium_creare_cum_modo (
+    constans character* via,
+               integer  modus)
 {
-	structura stat st;
+    structura stat st;
 
-	si (!via)
-	{
-		_filum_error_ponere("via est NIHIL");
-		redde FALSUM;
-	}
+    si (!via)
+    {
+        _filum_error_ponere("via est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	si (stat(via, &st) == ZEPHYRUM)
-	{
-		si (!S_ISDIR(st.st_mode))
-		{
-			_filum_error_ponere("via existit sed non est directorium");
-			redde FALSUM;
-		}
-		/* IAM EXSISTIT: modum coercere. Directorium quod alia causa
+    si (stat(via, &st) == ZEPHYRUM)
+    {
+        si (!S_ISDIR(st.st_mode))
+        {
+            _filum_error_ponere("via existit sed non est directorium");
+            redde FALSUM;
+        }
+        /* IAM EXSISTIT: modum coercere. Directorium quod alia causa
 		 * laxius creavit aliter tacite laxum maneret - et defectus
 		 * permissionum is est qui numquam clamat. */
 #ifndef _WIN32
-		si (chmod(via, (mode_t)modus) != ZEPHYRUM)
-		{
-			_filum_error_ponere("chmod fracta");
-			redde FALSUM;
-		}
+        si (chmod(via, (mode_t)modus) != ZEPHYRUM)
+        {
+            _filum_error_ponere("chmod fracta");
+            redde FALSUM;
+        }
 #endif
-		redde VERUM;
-	}
+        redde VERUM;
+    }
 
 #ifdef _WIN32
-	(vacuum)modus;
-	si (_mkdir(via) != ZEPHYRUM)
+    (vacuum)modus;
+    si (_mkdir(via) != ZEPHYRUM)
 #else
-	si (mkdir(via, (mode_t)modus) != ZEPHYRUM)
+    si (mkdir(via, (mode_t)modus) != ZEPHYRUM)
 #endif
-	{
-		_filum_error_ponere("mkdir fracta");
-		redde FALSUM;
-	}
+    {
+        _filum_error_ponere("mkdir fracta");
+        redde FALSUM;
+    }
 #ifndef _WIN32
-	/* umask mkdir corrigit; chmod explicitus modum VERUM ponit */
-	si (chmod(via, (mode_t)modus) != ZEPHYRUM)
-	{
-		_filum_error_ponere("chmod post mkdir fracta");
-		redde FALSUM;
-	}
+    /* umask mkdir corrigit; chmod explicitus modum VERUM ponit */
+    si (chmod(via, (mode_t)modus) != ZEPHYRUM)
+    {
+        _filum_error_ponere("chmod post mkdir fracta");
+        redde FALSUM;
+    }
 #endif
-	redde VERUM;
+    redde VERUM;
 }
 
 b32
-filum_directorium_existit(
-	constans character* via)
+filum_directorium_existit (
+    constans character* via)
 {
-	structura stat st;
+    structura stat st;
 
-	si (!via) redde FALSUM;
+    si (!via) redde FALSUM;
 
-	si (stat(via, &st) != ZEPHYRUM) redde FALSUM;
+    si (stat(via, &st) != ZEPHYRUM) redde FALSUM;
 
-	redde S_ISDIR(st.st_mode);
+    redde S_ISDIR(st.st_mode);
 }
 
 
@@ -990,41 +999,41 @@ filum_directorium_existit(
  * ================================================== */
 
 b32
-filum_status(
-	constans character* via,
-	       FilumStatus* status_out)
+filum_status (
+    constans character* via,
+           FilumStatus* status_out)
 {
-	structura stat st;
+    structura stat st;
 
-	si (!via || !status_out)
-	{
-		_filum_error_ponere("via vel status_out est NIHIL");
-		redde FALSUM;
-	}
+    si (!via || !status_out)
+    {
+        _filum_error_ponere("via vel status_out est NIHIL");
+        redde FALSUM;
+    }
 
-	_filum_error_purgare();
+    _filum_error_purgare();
 
-	si (stat(via, &st) != ZEPHYRUM)
-	{
-		_filum_error_ponere("stat fracta");
-		redde FALSUM;
-	}
+    si (stat(via, &st) != ZEPHYRUM)
+    {
+        _filum_error_ponere("stat fracta");
+        redde FALSUM;
+    }
 
-	status_out->mensura = (memoriae_index)st.st_size;
+    status_out->mensura = (memoriae_index)st.st_size;
 
 #ifdef _WIN32
-	status_out->est_directorium = (st.st_mode & _S_IFDIR) != ZEPHYRUM;
-	status_out->est_filum       = (st.st_mode & _S_IFREG) != ZEPHYRUM;
-	status_out->potest_legere   = (st.st_mode & _S_IREAD) != ZEPHYRUM;
-	status_out->potest_scribere = (st.st_mode & _S_IWRITE) != ZEPHYRUM;
+    status_out->est_directorium = (st.st_mode & _S_IFDIR) != ZEPHYRUM;
+    status_out->est_filum       = (st.st_mode & _S_IFREG) != ZEPHYRUM;
+    status_out->potest_legere   = (st.st_mode & _S_IREAD) != ZEPHYRUM;
+    status_out->potest_scribere = (st.st_mode & _S_IWRITE) != ZEPHYRUM;
 #else
-	status_out->est_directorium = S_ISDIR(st.st_mode);
-	status_out->est_filum       = S_ISREG(st.st_mode);
-	status_out->potest_legere   = (st.st_mode & S_IRUSR) != ZEPHYRUM;
-	status_out->potest_scribere = (st.st_mode & S_IWUSR) != ZEPHYRUM;
+    status_out->est_directorium  = S_ISDIR(st.st_mode);
+    status_out->est_filum        = S_ISREG(st.st_mode);
+    status_out->potest_legere    = (st.st_mode & S_IRUSR) != ZEPHYRUM;
+    status_out->potest_scribere  = (st.st_mode & S_IWUSR) != ZEPHYRUM;
 #endif
 
-	redde VERUM;
+    redde VERUM;
 }
 
 
@@ -1033,9 +1042,9 @@ filum_status(
  * ================================================== */
 
 constans character*
-filum_error_recens(
+filum_error_recens (
     vacuum)
 {
-	si (!_filum_error_est) redde NIHIL;
-	redde _filum_error_buffer;
+    si (!_filum_error_est) redde NIHIL;
+    redde _filum_error_buffer;
 }

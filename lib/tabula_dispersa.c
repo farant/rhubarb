@@ -4,26 +4,31 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Functiones Friationis (wrappers ad friatio.h)
  * ================================================== */
 
 i32
-tabula_friare_fnv1a(chorda clavis)
+tabula_friare_fnv1a (
+    chorda clavis)
 {
     redde friatio_fnv1a(clavis);
 }
 
 /* Friare literis C directe (pro evitare const cast) */
 interior i32
-_friare_literis(constans character* cstr)
+_friare_literis (
+    constans character* cstr)
 {
     redde friatio_fnv1a_literis(cstr, (i32)strlen(cstr));
 }
 
 /* Comparare literis C cum chorda */
 interior b32
-_aequalis_literis_chorda(constans character* cstr, chorda clavis)
+_aequalis_literis_chorda (
+    constans character* cstr,
+                chorda  clavis)
 {
     i32 mensura_cstr;
     i32 i;
@@ -46,12 +51,14 @@ _aequalis_literis_chorda(constans character* cstr, chorda clavis)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Adiutor: Proxima Potentia Binaria
  * ================================================== */
 
 interior i32
-_proxima_potentia_2(i32 n)
+_proxima_potentia_2 (
+    i32 n)
 {
     n--;
     n |= n >> I;
@@ -63,16 +70,17 @@ _proxima_potentia_2(i32 n)
     redde n;
 }
 
+
 /* ==================================================
  * Functiones Friationis (wrappers ad friatio.h)
  * ================================================== */
 
 i32
-tabula_friare_multiplicatio(chorda clavis)
+tabula_friare_multiplicatio (
+    chorda clavis)
 {
     redde friatio_djb2(clavis);
 }
-
 
 
 /* ==================================================
@@ -91,17 +99,17 @@ _invenire_slotum (
     i32 distantia;
     i32 positus_primus_deletum;
 
-    *inventum              = FALSUM;
-    positus                = friatum & tabula->capacitas_mask;
-    distantia              = ZEPHYRUM;
-    positus_primus_deletum = (i32)-I;
+    *inventum               = FALSUM;
+    positus                 = friatum & tabula->capacitas_mask;
+    distantia               = ZEPHYRUM;
+    positus_primus_deletum  = (i32)-I;
 
     dum (tabula->sloti[positus].status != SLOT_VACUUM)
     {
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
-            si (tabula->sloti[positus].hash_cachatum == friatum &&
-                tabula->comparatio(
+            si (   tabula->sloti[positus].hash_cachatum == friatum
+                && tabula->comparatio(
                     tabula->sloti[positus].clavis, clavis) == ZEPHYRUM)
             {
                 *inventum = VERUM;
@@ -142,26 +150,26 @@ _invenire_slotum (
 /* Invenire slotum pro literis C (evitare const cast) */
 interior i32
 _invenire_slotum_literis (
-    TabulaDispersa*     tabula,
+        TabulaDispersa* tabula,
     constans character* cstr,
-               i32      friatum,
-               b32*     inventum)
+                   i32  friatum,
+                   b32* inventum)
 {
     i32 positus;
     i32 distantia;
     i32 positus_primus_deletum;
 
-    *inventum              = FALSUM;
-    positus                = friatum & tabula->capacitas_mask;
-    distantia              = ZEPHYRUM;
-    positus_primus_deletum = (i32)-I;
+    *inventum               = FALSUM;
+    positus                 = friatum & tabula->capacitas_mask;
+    distantia               = ZEPHYRUM;
+    positus_primus_deletum  = (i32)-I;
 
     dum (tabula->sloti[positus].status != SLOT_VACUUM)
     {
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
-            si (tabula->sloti[positus].hash_cachatum == friatum &&
-                _aequalis_literis_chorda(cstr, tabula->sloti[positus].clavis))
+            si (   tabula->sloti[positus].hash_cachatum == friatum
+                && _aequalis_literis_chorda(cstr, tabula->sloti[positus].clavis))
             {
                 *inventum = VERUM;
                 redde positus;
@@ -204,17 +212,18 @@ _invenire_slotum_literis (
  * ================================================== */
 
 interior b32
-_tabula_dispersa_crescere(TabulaDispersa* tabula)
+_tabula_dispersa_crescere (
+    TabulaDispersa* tabula)
 {
     Slotus* sloti_veteres;
        i32  capacitas_vetus;
        i32  i;
 
-    sloti_veteres   = tabula->sloti;
-    capacitas_vetus = tabula->capacitas;
+    sloti_veteres    = tabula->sloti;
+    capacitas_vetus  = tabula->capacitas;
 
-    tabula->capacitas      = capacitas_vetus * II;
-    tabula->capacitas_mask = tabula->capacitas - I;
+    tabula->capacitas       = capacitas_vetus * II;
+    tabula->capacitas_mask  = tabula->capacitas - I;
 
     tabula->sloti = (Slotus*)piscina_allocare(
         tabula->piscina,
@@ -222,9 +231,9 @@ _tabula_dispersa_crescere(TabulaDispersa* tabula)
 
     si (!tabula->sloti)
     {
-        tabula->sloti          = sloti_veteres;
-        tabula->capacitas      = capacitas_vetus;
-        tabula->capacitas_mask = tabula->capacitas - I;
+        tabula->sloti           = sloti_veteres;
+        tabula->capacitas       = capacitas_vetus;
+        tabula->capacitas_mask  = tabula->capacitas - I;
         redde FALSUM;
     }
 
@@ -233,10 +242,10 @@ _tabula_dispersa_crescere(TabulaDispersa* tabula)
         tabula->sloti[i].status = SLOT_VACUUM;
     }
 
-    tabula->numerus = ZEPHYRUM;
-    tabula->numerus_deletorum = ZEPHYRUM;
-    tabula->collisiones_totales = ZEPHYRUM;
-    tabula->distantia_maxima = ZEPHYRUM;
+    tabula->numerus              = ZEPHYRUM;
+    tabula->numerus_deletorum    = ZEPHYRUM;
+    tabula->collisiones_totales  = ZEPHYRUM;
+    tabula->distantia_maxima     = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < capacitas_vetus; i++)
     {
@@ -252,12 +261,13 @@ _tabula_dispersa_crescere(TabulaDispersa* tabula)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Creatio
  * ================================================== */
 
 TabulaDispersa*
-tabula_dispersa_creare(
+tabula_dispersa_creare (
              Piscina* piscina,
                  i32  capacitas_initialis,
        TabulaFriatio  friatio,
@@ -276,7 +286,7 @@ tabula_dispersa_creare(
     si (capacitas < XVI) capacitas = XVI;
 
     tabula = (TabulaDispersa*)piscina_allocare(
-                                piscina, 
+                                piscina,
                                 magnitudo(TabulaDispersa));
     si (!tabula) redde NIHIL;
 
@@ -287,31 +297,30 @@ tabula_dispersa_creare(
 
     per (i = ZEPHYRUM; i < capacitas; i++)
     {
-        tabula->sloti[i].status         = SLOT_VACUUM;
-        tabula->sloti[i].clavis.mensura = ZEPHYRUM;
-        tabula->sloti[i].clavis.datum   = NIHIL;
-        tabula->sloti[i].valor          = NIHIL;
-        tabula->sloti[i].hash_cachatum  = ZEPHYRUM;
+        tabula->sloti[i].status          = SLOT_VACUUM;
+        tabula->sloti[i].clavis.mensura  = ZEPHYRUM;
+        tabula->sloti[i].clavis.datum    = NIHIL;
+        tabula->sloti[i].valor           = NIHIL;
+        tabula->sloti[i].hash_cachatum   = ZEPHYRUM;
     }
 
-    tabula->capacitas                = capacitas;
-    tabula->capacitas_mask           = capacitas - I;
-    tabula->numerus                  = ZEPHYRUM;
-    tabula->numerus_deletorum        = ZEPHYRUM;
-    tabula->piscina                  = piscina;
-    tabula->comparatio               = comparatio;
-    tabula->friatio                  = friatio;
-    tabula->factor_maximus           = 0.75f;
-    tabula->factor_deletorum_maximus = 0.25f;
-    tabula->collisiones_totales      = ZEPHYRUM;
-    tabula->distantia_maxima         = ZEPHYRUM;
+    tabula->capacitas                 = capacitas;
+    tabula->capacitas_mask            = capacitas - I;
+    tabula->numerus                   = ZEPHYRUM;
+    tabula->numerus_deletorum         = ZEPHYRUM;
+    tabula->piscina                   = piscina;
+    tabula->comparatio                = comparatio;
+    tabula->friatio                   = friatio;
+    tabula->factor_maximus            = 0.75f;
+    tabula->factor_deletorum_maximus  = 0.25f;
+    tabula->collisiones_totales       = ZEPHYRUM;
+    tabula->distantia_maxima          = ZEPHYRUM;
 
     redde tabula;
 }
 
-
 TabulaDispersa*
-tabula_dispersa_creare_chorda(
+tabula_dispersa_creare_chorda (
     Piscina* piscina,
         i32  capacitas_initialis)
 {
@@ -328,7 +337,7 @@ tabula_dispersa_creare_chorda(
  * ================================================== */
 
 b32
-tabula_dispersa_inserere(
+tabula_dispersa_inserere (
     TabulaDispersa* tabula,
             chorda  clavis,
             vacuum* valor)
@@ -343,8 +352,8 @@ tabula_dispersa_inserere(
     }
 
     /* Confer factores oneris */
-    si (tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus ||
-        tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
+    si (   tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus
+        || tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
     {
         si (!_tabula_dispersa_crescere(tabula))
         {
@@ -368,10 +377,10 @@ tabula_dispersa_inserere(
         tabula->numerus_deletorum--;
     }
 
-    tabula->sloti[positus].clavis          = clavis;
-    tabula->sloti[positus].valor           = valor;
-    tabula->sloti[positus].hash_cachatum   = friatum;
-    tabula->sloti[positus].status          = SLOT_OCCUPATUM;
+    tabula->sloti[positus].clavis         = clavis;
+    tabula->sloti[positus].valor          = valor;
+    tabula->sloti[positus].hash_cachatum  = friatum;
+    tabula->sloti[positus].status         = SLOT_OCCUPATUM;
     tabula->numerus++;
 
     redde VERUM;
@@ -383,7 +392,7 @@ tabula_dispersa_inserere(
  * ================================================== */
 
 b32
-tabula_dispersa_invenire(
+tabula_dispersa_invenire (
     TabulaDispersa*  tabula,
             chorda   clavis,
             vacuum** valor_out)
@@ -413,7 +422,7 @@ tabula_dispersa_invenire(
 }
 
 b32
-tabula_dispersa_continet(
+tabula_dispersa_continet (
     TabulaDispersa* tabula,
             chorda  clavis)
 {
@@ -421,10 +430,10 @@ tabula_dispersa_continet(
 }
 
 b32
-tabula_dispersa_invenire_literis(
-    TabulaDispersa*        tabula,
-    constans character*    cstr,
-            vacuum**       valor_out)
+tabula_dispersa_invenire_literis (
+        TabulaDispersa*  tabula,
+    constans character*  cstr,
+                vacuum** valor_out)
 {
     i32 friatum;
     i32 positus;
@@ -454,19 +463,20 @@ tabula_dispersa_invenire_literis(
 }
 
 b32
-tabula_dispersa_continet_literis(
-    TabulaDispersa*     tabula,
+tabula_dispersa_continet_literis (
+        TabulaDispersa* tabula,
     constans character* cstr)
 {
     redde tabula_dispersa_invenire_literis(tabula, cstr, NIHIL);
 }
+
 
 /* ==================================================
  * Deletio
  * ================================================== */
 
 b32
-tabula_dispersa_delere(
+tabula_dispersa_delere (
     TabulaDispersa* tabula,
             chorda  clavis)
 {
@@ -499,7 +509,8 @@ tabula_dispersa_delere(
  * ================================================== */
 
 vacuum
-tabula_dispersa_vacare(TabulaDispersa* tabula)
+tabula_dispersa_vacare (
+    TabulaDispersa* tabula)
 {
     i32 i;
 
@@ -507,33 +518,35 @@ tabula_dispersa_vacare(TabulaDispersa* tabula)
 
     per (i = ZEPHYRUM; i < tabula->capacitas; i++)
     {
-        tabula->sloti[i].status         = SLOT_VACUUM;
-        tabula->sloti[i].clavis.mensura = ZEPHYRUM;
-        tabula->sloti[i].clavis.datum   = NIHIL;
-        tabula->sloti[i].valor          = NIHIL;
+        tabula->sloti[i].status          = SLOT_VACUUM;
+        tabula->sloti[i].clavis.mensura  = ZEPHYRUM;
+        tabula->sloti[i].clavis.datum    = NIHIL;
+        tabula->sloti[i].valor           = NIHIL;
     }
 
-    tabula->numerus             = ZEPHYRUM;
-    tabula->numerus_deletorum   = ZEPHYRUM;
-    tabula->collisiones_totales = ZEPHYRUM;
-    tabula->distantia_maxima    = ZEPHYRUM;
+    tabula->numerus              = ZEPHYRUM;
+    tabula->numerus_deletorum    = ZEPHYRUM;
+    tabula->collisiones_totales  = ZEPHYRUM;
+    tabula->distantia_maxima     = ZEPHYRUM;
 }
+
 
 /* ==================================================
  * Iterator
  * ================================================== */
 
 TabulaIterator
-tabula_dispersa_iterator_initium(TabulaDispersa* tabula)
+tabula_dispersa_iterator_initium (
+    TabulaDispersa* tabula)
 {
     TabulaIterator iter;
-    iter.tabula        = tabula;
-    iter.positus_currens = ZEPHYRUM;
+    iter.tabula           = tabula;
+    iter.positus_currens  = ZEPHYRUM;
     redde iter;
 }
 
 b32
-tabula_dispersa_iterator_proximum(
+tabula_dispersa_iterator_proximum (
     TabulaIterator*  iter,
             chorda*  clavis_out,
             vacuum** valor_out)
@@ -567,7 +580,8 @@ tabula_dispersa_iterator_proximum(
  * ================================================== */
 
 f32
-tabula_dispersa_factor_oneris(TabulaDispersa* tabula)
+tabula_dispersa_factor_oneris (
+    TabulaDispersa* tabula)
 {
     si (!tabula || tabula->capacitas == ZEPHYRUM)
     {
@@ -577,7 +591,8 @@ tabula_dispersa_factor_oneris(TabulaDispersa* tabula)
 }
 
 f32
-tabula_dispersa_factor_deletorum(TabulaDispersa* tabula)
+tabula_dispersa_factor_deletorum (
+    TabulaDispersa* tabula)
 {
     si (!tabula || tabula->capacitas == ZEPHYRUM)
     {
@@ -587,13 +602,15 @@ tabula_dispersa_factor_deletorum(TabulaDispersa* tabula)
 }
 
 i32
-tabula_dispersa_numerus(TabulaDispersa* tabula)
+tabula_dispersa_numerus (
+    TabulaDispersa* tabula)
 {
     redde tabula ? tabula->numerus : ZEPHYRUM;
 }
 
 vacuum
-tabula_dispersa_status_imprimere(TabulaDispersa* tabula)
+tabula_dispersa_status_imprimere (
+    TabulaDispersa* tabula)
 {
     si (!tabula)
     {

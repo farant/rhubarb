@@ -465,10 +465,10 @@ _unescape_chorda (
      chorda  input,
     Piscina* piscina)
 {
-    chorda result;
-    i8 * buffer;
-    i32 i;
-    i32 out;
+    chorda  result;
+        i8* buffer;
+       i32  i;
+       i32  out;
 
     si (input.mensura == 0)
     {
@@ -587,9 +587,9 @@ interior s64
 _parse_integer (
     chorda valor)
 {
-    s64 result = 0;
-    i32 i = 0;
-    b32 negativus = FALSUM;
+    s64 result     = 0;
+    i32 i          = 0;
+    b32 negativus  = FALSUM;
 
     si (valor.mensura > 0 && (character)valor.datum[0] == '-')
     {
@@ -679,10 +679,10 @@ _parser_error (
 {
     si (!parser->error)
     {
-        parser->error          = VERUM;
+        parser->error = VERUM;
         parser->error_msg = chorda_ex_literis(msg, parser->piscina);
-        parser->error_linea    = parser->currens.linea;
-        parser->error_columna  = parser->currens.columna;
+        parser->error_linea = parser->currens.linea;
+        parser->error_columna = parser->currens.columna;
     }
 }
 
@@ -705,9 +705,9 @@ interior chorda
 _parser_token_valor (
     JsonParser* parser)
 {
-    chorda result;
-    i8 * buffer;
-    i32 len = parser->currens.valor_mensura;
+    chorda  result;
+        i8* buffer;
+       i32  len = parser->currens.valor_mensura;
 
     si (len <= 0)
     {
@@ -933,13 +933,13 @@ _parse_valor (
             chorda num_str = _parser_token_valor(parser);
             si (_numerus_est_fluitans(num_str))
             {
-                f64 f = _parse_fluitans(num_str, parser->piscina);
-                val = json_fluitans_creare(parser->piscina, f);
+                f64 f  = _parse_fluitans(num_str, parser->piscina);
+                val    = json_fluitans_creare(parser->piscina, f);
             }
             alioquin
             {
-                s64 n = _parse_integer(num_str);
-                val = json_integer_creare(parser->piscina, n);
+                s64 n  = _parse_integer(num_str);
+                val    = json_integer_creare(parser->piscina, n);
             }
             _parser_avanzare(parser);
             redde val;
@@ -1487,9 +1487,9 @@ json_chorda_creare_literis (
                Piscina* piscina,
     constans character* valor)
 {
-    chorda ch;
-    i8 * buffer;
-    i32 len;
+    chorda  ch;
+        i8* buffer;
+       i32  len;
 
     si (!piscina || !valor)
     {
@@ -1527,9 +1527,9 @@ json_tabulatum_creare (
         redde NIHIL;
     }
 
-    val->genus            = JSON_TABULATUM;
+    val->genus = JSON_TABULATUM;
     val->datum.tabulatum = xar_creare(piscina, (i32)magnitudo(JsonValor*));
-    val->piscina          = piscina;
+    val->piscina = piscina;
     redde val;
 }
 

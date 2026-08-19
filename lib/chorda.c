@@ -21,9 +21,9 @@ chorda_ex_literis (
     constans character* litterae,
                Piscina* piscina)
 {
-    chorda fructus;
-       i32 mensura;
-        i8 * allocatus;
+    chorda  fructus;
+       i32  mensura;
+        i8* allocatus;
 
     si (!litterae || !piscina)
     {
@@ -32,8 +32,8 @@ chorda_ex_literis (
         redde fructus;
     }
 
-      mensura  = (i32)strlen(litterae);
-    allocatus  = (i8*)piscina_allocare(piscina, mensura);
+      mensura = (i32)strlen(litterae);
+    allocatus = (i8*)piscina_allocare(piscina, mensura);
 
     si (!allocatus)
     {
@@ -94,8 +94,8 @@ chorda_transcribere (
      chorda  s,
     Piscina* piscina)
 {
-    chorda fructus;
-        i8 * allocatus;
+    chorda  fructus;
+        i8* allocatus;
 
     si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
     {
@@ -126,8 +126,8 @@ chorda_concatenare (
      chorda  b,
     Piscina* piscina)
 {
-    chorda fructus;
-        i8 * allocatus;
+    chorda  fructus;
+        i8* allocatus;
        i32  mensura_totalis;
 
     si (!piscina)
@@ -245,7 +245,7 @@ chorda_fissio (
         redde fructus;
     }
 
-    capacitas  = XVI;
+    capacitas = XVI;
     elementa = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
     si (!elementa)
     {
@@ -254,8 +254,8 @@ chorda_fissio (
         redde fructus;
     }
 
-    numerus  = ZEPHYRUM;
-    initium  = ZEPHYRUM;
+    numerus = ZEPHYRUM;
+    initium = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i <= s.mensura; i++)
     {
@@ -269,7 +269,7 @@ chorda_fissio (
                  chorda* elementa_nova;
                     i32  j;
 
-                capacitas      *= II;
+                capacitas *= II;
                 elementa_nova = (chorda*)piscina_allocare(piscina, capacitas * magnitudo(chorda));
                 si (!elementa_nova)
                 {
@@ -805,10 +805,10 @@ chorda_substituere (
       chorda  novum,
      Piscina* piscina)
 {
-    chorda fructus;
-       i32 numerus_occurrentia;
-       i32 mensura_nova;
-        i8 * allocatus;
+    chorda  fructus;
+       i32  numerus_occurrentia;
+       i32  mensura_nova;
+        i8* allocatus;
        i32  positus_lecti;
        i32  positus_scripti;
        i32  i;
@@ -892,8 +892,8 @@ chorda_invertere (
      chorda  s,
     Piscina* piscina)
 {
-    chorda fructus;
-        i8 * allocatus;
+    chorda  fructus;
+        i8* allocatus;
        i32  i;
 
     si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
@@ -927,8 +927,8 @@ chorda_duplicare (
         i32  numerus,
     Piscina* piscina)
 {
-    chorda fructus;
-        i8 * allocatus;
+    chorda  fructus;
+        i8* allocatus;
        i32  mensura_nova;
        i32  i;
 
@@ -1086,8 +1086,8 @@ chorda_friare (
 
     per (i = ZEPHYRUM; i < s.mensura; i++)
     {
-        friatum  ^= (i8)s.datum[i];
-        friatum  *= CHORDA_FRIATUM_PRIMUS;
+        friatum ^= (i8)s.datum[i];
+        friatum *= CHORDA_FRIATUM_PRIMUS;
     }
 
     redde friatum;
@@ -1128,7 +1128,7 @@ _extrahere_verba (
         redde fructus;
     }
 
-    capacitas  = XVI;
+    capacitas = XVI;
     verba = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
     si (!verba)
     {
@@ -1142,14 +1142,14 @@ _extrahere_verba (
 
     per (i = ZEPHYRUM; i <= s.mensura; i++)
     {
-        b32 est_finis = (i == s.mensura);
-        b32 est_alpha = FALSUM;
-        b32 est_digitus = FALSUM;
-        b32 est_maiuscula = FALSUM;
-        b32 praec_minuscula = FALSUM;
-        b32 praec_digitus = FALSUM;
-        b32 praec_maiuscula = FALSUM;
-        b32 debet_scindere = FALSUM;
+        b32 est_finis        = (i == s.mensura);
+        b32 est_alpha        = FALSUM;
+        b32 est_digitus      = FALSUM;
+        b32 est_maiuscula    = FALSUM;
+        b32 praec_minuscula  = FALSUM;
+        b32 praec_digitus    = FALSUM;
+        b32 praec_maiuscula  = FALSUM;
+        b32 debet_scindere   = FALSUM;
 
         si (!est_finis)
         {
@@ -1200,7 +1200,7 @@ _extrahere_verba (
                  chorda* verba_nova;
                     i32  j;
 
-                capacitas   *= II;
+                capacitas *= II;
                 verba_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
                 si (!verba_nova)
                 {
@@ -1255,9 +1255,9 @@ chorda_pascalis (
      chorda  s,
     Piscina* piscina)
 {
-    chorda_fissio_fructus verba;
-                   chorda fructus;
-                      i8 * allocatus;
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                       i8* allocatus;
                       i32  positus;
                       i32  i;
                       i32  j;
@@ -1320,9 +1320,9 @@ chorda_camelus (
      chorda  s,
     Piscina* piscina)
 {
-    chorda_fissio_fructus verba;
-                   chorda fructus;
-                      i8 * allocatus;
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                       i8* allocatus;
                       i32  positus;
                       i32  i;
                       i32  j;
@@ -1389,9 +1389,9 @@ chorda_serpens (
      chorda  s,
     Piscina* piscina)
 {
-    chorda_fissio_fructus verba;
-                   chorda fructus;
-                      i8 * allocatus;
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                       i8* allocatus;
                       i32  mensura_nova;
                       i32  positus;
                       i32  i;
@@ -1459,9 +1459,9 @@ chorda_kebab (
      chorda  s,
     Piscina* piscina)
 {
-    chorda_fissio_fructus verba;
-                   chorda fructus;
-                      i8 * allocatus;
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                       i8* allocatus;
                       i32  mensura_nova;
                       i32  positus;
                       i32  i;
@@ -1529,9 +1529,9 @@ chorda_pascalis_serpens (
      chorda  s,
     Piscina* piscina)
 {
-    chorda_fissio_fructus verba;
-                   chorda fructus;
-                      i8 * allocatus;
+    chorda_fissio_fructus  verba;
+                   chorda  fructus;
+                       i8* allocatus;
                       i32  mensura_nova;
                       i32  positus;
                       i32  i;
@@ -1651,11 +1651,11 @@ chorda_ex_s32 (
         s32  numerus,
     Piscina* piscina)
 {
-         chorda fructus;
-      character buffer[CXXXII];
-            s32 mensura_signed;
-            i32 mensura;
-             i8 * allocatus;
+         chorda  fructus;
+      character  buffer[CXXXII];
+            s32  mensura_signed;
+            i32  mensura;
+             i8* allocatus;
 
     fructus.mensura  = ZEPHYRUM;
     fructus.datum    = NIHIL;
@@ -1671,7 +1671,7 @@ chorda_ex_s32 (
         redde fructus;
     }
 
-    mensura    = (i32)mensura_signed;
+    mensura = (i32)mensura_signed;
     allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
     si (!allocatus)
     {
@@ -1691,12 +1691,12 @@ chorda_ex_f64 (
         i32  praecisio,
     Piscina* piscina)
 {
-         chorda fructus;
-      character buffer[CXXXII];
-      character formatalis[XVI];
-            s32 mensura_signed;
-            i32 mensura;
-             i8 * allocatus;
+         chorda  fructus;
+      character  buffer[CXXXII];
+      character  formatalis[XVI];
+            s32  mensura_signed;
+            i32  mensura;
+             i8* allocatus;
 
     fructus.mensura  = ZEPHYRUM;
     fructus.datum    = NIHIL;
@@ -1713,7 +1713,7 @@ chorda_ex_f64 (
         redde fructus;
     }
 
-    mensura    = (i32)mensura_signed;
+    mensura = (i32)mensura_signed;
     allocatus = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
     si (!allocatus)
     {
@@ -1733,8 +1733,8 @@ chorda_character_ad (
         i32  index,
     Piscina* piscina)
 {
-    chorda fructus;
-        i8 * allocatus;
+    chorda  fructus;
+        i8* allocatus;
 
     fructus.mensura  = ZEPHYRUM;
     fructus.datum    = NIHIL;
@@ -1799,7 +1799,7 @@ chorda_fissio_chorda (
         redde fructus;
     }
 
-    capacitas  = XVI;
+    capacitas = XVI;
     elementa = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
     si (!elementa)
     {
@@ -1821,7 +1821,7 @@ chorda_fissio_chorda (
                  chorda* elementa_nova;
                     i32  j;
 
-                capacitas      *= II;
+                capacitas *= II;
                 elementa_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
                 si (!elementa_nova)
                 {
@@ -1854,7 +1854,7 @@ chorda_fissio_chorda (
          chorda* elementa_nova;
             i32  j;
 
-        capacitas      *= II;
+        capacitas *= II;
         elementa_nova = (chorda*)piscina_allocare(piscina, (memoriae_index)capacitas * magnitudo(chorda));
         si (!elementa_nova)
         {

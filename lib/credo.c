@@ -6,6 +6,7 @@
 #include <string.h>
 #include <math.h>
 
+
 /* ======================================================
  * Globalis Status
  * ====================================================== */
@@ -14,6 +15,7 @@ universalis        Piscina* _credo_piscina  = NIHIL;
 universalis   CredoNotatio* _credo_primus   = NIHIL;
 universalis   CredoNotatio* _credo_nunc     = NIHIL;
 universalis memoriae_index  _credo_numerus  = ZEPHYRUM;
+
 
 /* ======================================================
  * Adiutores Interni
@@ -50,13 +52,13 @@ _credo_concatenare (
 
     si (!_credo_primus)
     {
-        _credo_primus   = notatio;
-        _credo_nunc     = notatio;
-    } 
+        _credo_primus  = notatio;
+        _credo_nunc    = notatio;
+    }
     alioquin
     {
-        _credo_nunc->sequens = notatio;
-        _credo_nunc          = notatio;
+        _credo_nunc->sequens  = notatio;
+        _credo_nunc           = notatio;
     }
 
     _credo_numerus++;
@@ -88,6 +90,7 @@ credo_claudere (
     _credo_numerus  = ZEPHYRUM;
 }
 
+
 /* ======================================================
  * Interrogatio
  * ====================================================== */
@@ -103,8 +106,8 @@ memoriae_index
 credo_numerus_praeteriti (
     vacuum)
 {
-    memoriae_index  summa   = ZEPHYRUM;
-      CredoNotatio* notatio = _credo_primus;
+    memoriae_index  summa    = ZEPHYRUM;
+      CredoNotatio* notatio  = _credo_primus;
 
     dum (notatio)
     {
@@ -118,13 +121,12 @@ credo_numerus_praeteriti (
     redde summa;
 }
 
-memoriae_index 
+memoriae_index
 credo_numerus_fracti (
     vacuum)
 {
     redde _credo_numerus - credo_numerus_praeteriti();
 }
-
 
 b32
 credo_omnia_praeterierunt (
@@ -144,10 +146,10 @@ CredoNotatio*
 credo_invenire_fractos (
     memoriae_index* numerus_fructus)
 {
-    CredoNotatio*  primus  = NIHIL;
-    CredoNotatio*  ultimus = NIHIL;
-    CredoNotatio*  notatio = _credo_primus;
-    memoriae_index summa   = ZEPHYRUM;
+      CredoNotatio* primus   = NIHIL;
+      CredoNotatio* ultimus  = NIHIL;
+      CredoNotatio* notatio  = _credo_primus;
+    memoriae_index  summa    = ZEPHYRUM;
 
     si (numerus_fructus)
     {
@@ -168,8 +170,8 @@ credo_invenire_fractos (
             {
                 frange;
             }
-            *copia         = *notatio;
-            copia->sequens = NIHIL;
+            *copia          = *notatio;
+            copia->sequens  = NIHIL;
 
             si (ultimus)
             {
@@ -192,14 +194,13 @@ credo_invenire_fractos (
     redde primus;
 }
 
-
 vacuum
 credo_imprimere_compendium (
     vacuum)
 {
-    memoriae_index totalis    = credo_numerus_totalis();
-    memoriae_index praeteriti = credo_numerus_praeteriti();
-    memoriae_index fracti     = credo_numerus_fracti();
+    memoriae_index totalis     = credo_numerus_totalis();
+    memoriae_index praeteriti  = credo_numerus_praeteriti();
+    memoriae_index fracti      = credo_numerus_fracti();
 
     imprimere("\n");
     imprimere("=== CREDO COMPENDIUM ===\n");
@@ -237,14 +238,14 @@ _credo_notare (
 
     si (!notatio) redde;
 
-    notatio->genus          = chorda_ex_literis(genus,          _credo_piscina);
-    notatio->expressio      = chorda_ex_literis(expressio,      _credo_piscina);
-    notatio->valor_primus   = chorda_ex_literis(valor_primus,   _credo_piscina);
+    notatio->genus = chorda_ex_literis(genus,          _credo_piscina);
+    notatio->expressio = chorda_ex_literis(expressio,      _credo_piscina);
+    notatio->valor_primus = chorda_ex_literis(valor_primus,   _credo_piscina);
     notatio->valor_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
-    notatio->filum          = chorda_ex_literis(filum,          _credo_piscina);
-    notatio->versus         = versus;
-    notatio->praeteritus    = praeteritus;
-    notatio->ordo           = _credo_numerus;
+    notatio->filum = chorda_ex_literis(filum,          _credo_piscina);
+    notatio->versus = versus;
+    notatio->praeteritus = praeteritus;
+    notatio->ordo = _credo_numerus;
 
     _credo_concatenare(notatio);
 
@@ -386,11 +387,11 @@ _credo_notare_chorda (
     constans character* filum,
                    s32  versus)
 {
-    b32 praeteritus;
+       b32 praeteritus;
     chorda chorda_primus;
     chorda chorda_secundus;
 
-    chorda_primus   = chorda_ex_literis(valor_primus, _credo_piscina);
+    chorda_primus = chorda_ex_literis(valor_primus, _credo_piscina);
     chorda_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
 
     praeteritus = chorda_aequalis(chorda_primus, chorda_secundus);
@@ -403,7 +404,7 @@ vacuum
 _credo_notare_chorda_literis (
     constans character* genus,
     constans character* expressio,
-    chorda              valor_primus,
+                chorda  valor_primus,
     constans character* valor_secundus,
     constans character* filum,
                    s32  versus)
@@ -622,4 +623,3 @@ _credo_notare_f64_proximus (
 
     _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
 }
-

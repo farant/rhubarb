@@ -143,7 +143,7 @@ _allocare_interna (
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
     ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-    necessaria        = ordinatus_offset + mensura;
+    necessaria = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -151,9 +151,9 @@ _allocare_interna (
         si (piscina->nunc->sequens)
         {
             /* Transire ad alveum sequentem */
-            piscina->nunc     = piscina->nunc->sequens;
+            piscina->nunc = piscina->nunc->sequens;
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-            necessaria        = ordinatus_offset + mensura;
+            necessaria = ordinatus_offset + mensura;
         }
         alioquin si (piscina->est_dynamicum)
         {
@@ -167,7 +167,7 @@ _allocare_interna (
             si (necessaria > capacitas_nova)
             {
                 capacitas_nova = necessaria + piscina->mensura_alvei_initia;
-                piscina->mensura_alvei_initia  = capacitas_nova;
+                piscina->mensura_alvei_initia = capacitas_nova;
             }
 
             alveus_novum = _alveus_nova(capacitas_nova);
@@ -186,7 +186,7 @@ _allocare_interna (
             piscina->nunc           = alveus_novum;
 
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-            necessaria        = ordinatus_offset + mensura;
+            necessaria = ordinatus_offset + mensura;
 
             _debug_imprimere(
                     piscina->titulus ? piscina->titulus : "nemo",
@@ -210,7 +210,7 @@ _allocare_interna (
 
     /* Allocare ex alveo nunc */
     ptr = (character*)(piscina->nunc->buffer) + ordinatus_offset;
-    piscina->nunc->offset  = necessaria;
+    piscina->nunc->offset = necessaria;
 
     /* Sequi apex usus per omnes alvei */
     summa_nunc = ZEPHYRUM;

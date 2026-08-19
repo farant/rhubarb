@@ -9,7 +9,8 @@
 #define POENA_HIATUS_LONGI   I     /* per litteram ultra primam */
 
 interior character
-_minusculum (character c)
+_minusculum (
+    character c)
 {
     si (c >= 'A' && c <= 'Z')
     {
@@ -19,13 +20,15 @@ _minusculum (character c)
 }
 
 interior b32
-_est_maiuscula (character c)
+_est_maiuscula (
+    character c)
 {
     redde (c >= 'A' && c <= 'Z') ? VERUM : FALSUM;
 }
 
 interior b32
-_est_minuscula (character c)
+_est_minuscula (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') ? VERUM : FALSUM;
 }
@@ -33,15 +36,17 @@ _est_minuscula (character c)
 /* initium verbi? positio 0; post separatorem; transitus
  * minusculae -> MAIUSCULAE (CamelCase: MedullaLineae) */
 interior b32
-_limes_verbi (chorda candidatus, i32 positio)
+_limes_verbi (
+    chorda candidatus,
+       i32 positio)
 {
     character prior;
     character praesens;
 
     si (positio == ZEPHYRUM) redde VERUM;
-    prior = (character)candidatus.datum[positio - I];
-    praesens = (character)candidatus.datum[positio];
-    si (prior == '_' || prior == '-' || prior == '.'
+    prior     = (character)candidatus.datum[positio - I];
+    praesens  = (character)candidatus.datum[positio];
+    si (   prior == '_' || prior == '-' || prior == '.'
         || prior == '/' || prior == ':' || prior == ' ')
     {
         redde VERUM;
@@ -62,17 +67,22 @@ _limes_verbi (chorda candidatus, i32 positio)
  * maximum trans consumptiones >= pavimento (validum si
  * optimum_est). */
 interior vacuum
-_ambulare (chorda quaestio, chorda candidatus, i32 pavimentum,
-    i32* consumpta, s32* punctum_finale, s32* punctum_optimum,
-    b32* optimum_est)
+_ambulare (
+    chorda  quaestio,
+    chorda  candidatus,
+       i32  pavimentum,
+       i32* consumpta,
+       s32* punctum_finale,
+       s32* punctum_optimum,
+       b32* optimum_est)
 {
-    s32 punctum = ZEPHYRUM;
-    s32 optimum = ZEPHYRUM;
-    b32 ullum = FALSUM;
-    i32 qi = ZEPHYRUM;
+    s32 punctum  = ZEPHYRUM;
+    s32 optimum  = ZEPHYRUM;
+    b32 ullum    = FALSUM;
+    i32 qi       = ZEPHYRUM;
     i32 ci;
-    i32 prior = ZEPHYRUM;
-    b32 prima_facta = FALSUM;
+    i32 prior        = ZEPHYRUM;
+    b32 prima_facta  = FALSUM;
 
     per (ci = ZEPHYRUM;
          ci < candidatus.mensura && qi < quaestio.mensura; ci++)
@@ -102,19 +112,19 @@ _ambulare (chorda quaestio, chorda candidatus, i32 pavimentum,
         {
             punctum += PRAEMIUM_CASUS;
         }
-        prior = ci;
-        prima_facta = VERUM;
+        prior        = ci;
+        prima_facta  = VERUM;
         qi++;
         si (qi >= pavimentum && (!ullum || punctum > optimum))
         {
-            optimum = punctum;
-            ullum = VERUM;
+            optimum  = punctum;
+            ullum    = VERUM;
         }
     }
-    *consumpta = qi;
-    *punctum_finale = punctum;
-    *punctum_optimum = optimum;
-    *optimum_est = ullum;
+    *consumpta        = qi;
+    *punctum_finale   = punctum;
+    *punctum_optimum  = optimum;
+    *optimum_est      = ullum;
 }
 
 b32
@@ -145,7 +155,10 @@ similitudo_punctare (
 
 /* a melior quam fructus f? (punctum desc, tum brevior, tum index) */
 interior b32
-_melior (s32 punctum, i32 index, constans chorda* candidati,
+_melior (
+                           s32  punctum,
+                           i32  index,
+               constans chorda* candidati,
     constans SimilitudoFructus* f)
 {
     si (punctum != f->punctum) redde (punctum > f->punctum);
@@ -160,13 +173,18 @@ _melior (s32 punctum, i32 index, constans chorda* candidati,
 /* inserere in fructus ordinatos (a fine; ultimus cadit si plenum);
  * scripta novum redditur */
 interior i32
-_inserere (SimilitudoFructus* fructus, i32 scripta, i32 maxima,
-    constans chorda* candidati, i32 k, s32 punctum)
+_inserere (
+    SimilitudoFructus* fructus,
+                  i32  scripta,
+                  i32  maxima,
+      constans chorda* candidati,
+                  i32  k,
+                  s32  punctum)
 {
     i32 loco = scripta;
 
-    dum (loco > ZEPHYRUM
-        && _melior(punctum, k, candidati, &fructus[loco - I]))
+    dum (   loco > ZEPHYRUM
+         && _melior(punctum, k, candidati, &fructus[loco - I]))
     {
         loco--;
     }
@@ -183,24 +201,24 @@ _inserere (SimilitudoFructus* fructus, i32 scripta, i32 maxima,
             m--;
         }
     }
-    fructus[loco].index = k;
-    fructus[loco].punctum = punctum;
+    fructus[loco].index    = k;
+    fructus[loco].punctum  = punctum;
     redde (scripta < maxima) ? scripta + I : scripta;
 }
 
 i32
 similitudo_optima (
-    chorda             quaestio,
-    constans chorda*   candidati,
-    i32                numerus_candidatorum,
+               chorda  quaestio,
+      constans chorda* candidati,
+                  i32  numerus_candidatorum,
     SimilitudoFructus* fructus,
-    i32                maxima)
+                  i32  maxima)
 {
     i32 scripta = ZEPHYRUM;
     i32 k;
 
-    si (fructus == NIHIL || candidati == NIHIL
-        || maxima == ZEPHYRUM)
+    si (   fructus == NIHIL || candidati == NIHIL
+        || maxima  == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
@@ -220,15 +238,18 @@ similitudo_optima (
 }
 
 i32
-similitudo_optima_decurtata (chorda quaestio,
-    constans chorda* candidati, i32 numerus_candidatorum,
-    SimilitudoFructus* fructus, i32 maxima)
+similitudo_optima_decurtata (
+               chorda  quaestio,
+      constans chorda* candidati,
+                  i32  numerus_candidatorum,
+    SimilitudoFructus* fructus,
+                  i32  maxima)
 {
     i32 scripta = ZEPHYRUM;
     i32 k;
 
-    si (fructus == NIHIL || candidati == NIHIL
-        || maxima == ZEPHYRUM || quaestio.mensura < III)
+    si (   fructus == NIHIL || candidati == NIHIL
+        || maxima  == ZEPHYRUM || quaestio.mensura < III)
     {
         redde ZEPHYRUM;
     }

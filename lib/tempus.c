@@ -35,8 +35,8 @@ tempus_initiare (
     g_horologium.pulsus_ultimi_quadri = g_horologium.pulsus_initii;
     g_horologium.pulsus_currentis = g_horologium.pulsus_initii;
 
-    g_statisticae.quadra_destinata_per_secundum = 60.0;
-    g_statisticae.tempus_minimum_quadri = 1000000.0;
+    g_statisticae.quadra_destinata_per_secundum  = 60.0;
+    g_statisticae.tempus_minimum_quadri          = 1000000.0;
 
     g_initiatus = VERUM;
 }
@@ -249,12 +249,12 @@ tempus_restituere (
         redde;
     }
 
-    pulsus_initii = fenestra_tempus_obtinere_pulsus();
-    tempus->pulsus_initii = pulsus_initii;
-    tempus->pulsus_ultimi_quadri = pulsus_initii;
-    tempus->pulsus_currentis = pulsus_initii;
-    tempus->delta_tempus = 0.0;
-    tempus->tempus_totale = 0.0;
+    pulsus_initii                 = fenestra_tempus_obtinere_pulsus();
+    tempus->pulsus_initii         = pulsus_initii;
+    tempus->pulsus_ultimi_quadri  = pulsus_initii;
+    tempus->pulsus_currentis      = pulsus_initii;
+    tempus->delta_tempus          = 0.0;
+    tempus->tempus_totale         = 0.0;
 }
 
 f64
@@ -410,7 +410,7 @@ lenire_retro_egressus (
 {
     constans f32 c1 = 1.70158f;
     constans f32 c3 = c1 + 1.0f;
-           f32 t1;
+             f32 t1;
 
     t1 = t - 1.0f;
     redde 1.0f + c3 * t1 * t1 * t1 + c1 * t1 * t1;
@@ -529,8 +529,8 @@ animare_ad (
     f32 differentia;
     f32 gradus;
 
-    differentia = destinatum - currens;
-    gradus = celeritas * delta_tempus;
+    differentia  = destinatum - currens;
+    gradus       = celeritas * delta_tempus;
 
     si ((f32)fabs(differentia) <= gradus)
     {
