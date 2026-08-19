@@ -12534,3 +12534,31 @@ MOTA mensurata: ancoratio LCS — motus relativus est, vicini
 immoti arbitri. Ianuae nominatae in worklog: differentia brachiorum
 conditionalium (arma retenta!), par symbolorum prototypum+definitio,
 recepta fistulae vocantes.
+
+## 2026-08-19 — formator G1 (lint formae) + correctio sequentiae veteris
+
+SEQUENTIA CORRECTA: the 2026-07 entry (~5598, "formator rides
+transforms") is SUPERSEDED by project-specs/formator-regulae.md
+(decretae 2026-08-19): the formatter arrives lint-first, riding
+silva_lexare_cruda trivia directly, sequenced BEFORE the RP
+performance work (parcum 01M0BGJXEM) and not behind the
+quaestio→transform-DSL chain. The transform DSL remains a named
+door for the G2 fix machinery evaluation.
+
+Shipped: instrumenta/silva_formator.{h,c} (machina, probabilis) +
+principalia/formator.c (CLI) + formator.sh + formator_fontes_generata
+(aedilis-derived) + probatio_silva_formator (33 credo, negatives
+pin genus semantics: tabs-in-strings and banners-in-strings immune).
+Stream tranche R5/R6/R12/R14/R16; structural rules = tranche 2
+(R5 depth checking deferred WITH CAUSE: naive %4 false-fires on R7
+two-column alignment).
+
+SUITE-WIDE LINK FIX: differentia + sigillum added to
+compile_probationes.sh RADIX_FONTES — every probatio had been
+link-broken since the 2026-08-18 differre extraction (instrumenta
+glob links silva_differre.c universally; nobody ran the suite
+between). Ladder below.
+
+First light: piscina.c 45 divergentiae (24 vexilla-59 / 6 caudae /
+14 longae / 1 vacua finalis — supersets the hand archaeology, zero
+false fires); chorda.c 132 tabulae + 5 + 42.

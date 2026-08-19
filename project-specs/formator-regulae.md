@@ -237,18 +237,26 @@ fixes stay manual (or a separate consented tool).
 
 ### R16 `longitudo-lxxii` — LINT (v1)
 
-Line length limit 72 (PROPOSITA — the one number not yet decreed;
-observed practice ranges 64-80, recent files hover 66-72). Report
-only; the formator never rewraps (Contractus).
+Line length limit 72 (DECRETA 2026-08-19; observed practice ranged
+64-80, recent files hover 66-72). Report only; the formator never
+rewraps (Contractus).
 
 ---
 
 ## Quaestiones apertae
 
-- R16's number (72 proposed).
 - Header-specific rules beyond R1/R7/R8 applying to prototypes
   (doc-comment shapes like piscina.h's notatio section are observed
   but not decreed — out of v1 scope).
-- Where formator lives: silva-side (`silva/formator.sh` +
-  `instrumenta/principalia/formator.c`) presumed, matching the
-  read-bench pattern; confirm at G1.
+
+## Status G1 (2026-08-19)
+
+CONFIRMED home: `silva/formator.sh` → `instrumenta/principalia/
+formator.c` (CLI) + `instrumenta/silva_formator.{h,c}` (machine,
+probatio-linkable — the differre split). Stream tranche shipped:
+R5 (tabs only — depth checking deferred WITH CAUSE: naive %4
+false-fires on R7 alignment), R6, R12, R14, R16. Structural
+tranche (tree-riding rules) next. Probatio 33/33; negatives pin
+the genus semantics (tabs in string literals and `=`-runs in
+strings are immune by construction). First light on piscina.c: 45
+divergences, superset of the hand archaeology, zero false fires.

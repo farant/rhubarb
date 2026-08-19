@@ -56,6 +56,8 @@ declare -a RADIX_FONTES=(
     "selectio"
     "stml"
     "credo"
+    "differentia"
+    "sigillum"
 )
 
 FILTER="${1:-}"
