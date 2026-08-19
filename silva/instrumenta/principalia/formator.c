@@ -265,13 +265,16 @@ principale (
             piscina_destruere(piscina);
             redde II;
         }
-        textus = filum_legere_totum(via, piscina);
         ulla_plagula = VERUM;
 
-        si (scriptura)
+        /* piscina operis PER PLAGULAM in AMBOBUS modis: modus lint
+         * olim in piscinam longaevam parsabat - cursus corporis
+         * (230+ plagulae) eam exhauriebat et processus tacite in
+         * medio moriebatur (venatio praeonerationis lexici: cauda
+         * include/t*-z* e censu evanuit). Piscina longaeva contextui
+         * soli servit. */
         {
-            Piscina*         opus;
-            FormatorScriptum s;
+            Piscina* opus;
 
             opus = piscina_generare_dynamicum("formator-opus",
                 67108864);
@@ -281,6 +284,12 @@ principale (
                 piscina_destruere(piscina);
                 redde II;
             }
+            textus = filum_legere_totum(via, opus);
+
+        si (scriptura)
+        {
+            FormatorScriptum s;
+
             s = formator_scribere(opus, contextus,
                 (constans character*)textus.datum,
                 textus.mensura);
@@ -314,14 +323,15 @@ principale (
                 formator_lint(opus, contextus,
                     (constans character*)s.textus.datum,
                     s.textus.mensura), machina);
-            piscina_destruere(opus);
         }
         alioquin
         {
             summa += _divergentias_imprimere(via,
-                formator_lint(piscina, contextus,
+                formator_lint(opus, contextus,
                     (constans character*)textus.datum,
                     textus.mensura), machina);
+        }
+            piscina_destruere(opus);
         }
     }
 

@@ -152,7 +152,11 @@ silva_c89_parsare (
 /* Eadem sed cum CONTEXTU hospitis (M2d Chunk A): lexica
  * (latina!), includenda praebita, fines - grammatica c89 tandem
  * expansione pascitur. Contextus diu vivit, inter parsuras
- * reusabilis. */
+ * reusabilis. TYPI LEXICI PRAEONERANTUR (01M0D4QV5S pars 1):
+ * plagulae lexicae standalone parsantur oraculo dato ante fontem
+ * principalem - typedefs earum (i8/i32/s64...) registrantur et
+ * 'i8 * t;' declaratio fit, non AMBIGUUM; lexicon posterius
+ * typos prioris videt. */
 SilvaParsura*
 silva_c89_parsare_cum_contextu (
     Piscina*                 piscina,

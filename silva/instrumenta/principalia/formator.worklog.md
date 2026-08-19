@@ -747,3 +747,24 @@ probationes rollout (CREDO-dense terrain) fires new classes, the cheap
 general design is a per-parse LYING-SITE set (one linear pass over
 parsura->lexemata marking sites claimed by >=2 distinct tokens; then
 per-token honesty is O(1)) rather than per-node subtree walks.
+
+## 2026-08-19 — CLI: lint mode gets the per-file opus piscina (silent batch death)
+
+Exposed by the lexicon-typedef preload, but pre-existing: lint mode
+parsed every file into the LONG-LIVED piscina (context + praebere'd
+headers + all parses, never reset) while only -scribere mode had a
+per-file opus piscina. At ~230 corpus files the arena exhausted and
+the process died SILENTLY mid-batch. Diagnostic signature worth
+remembering: the census dropped ONLY in lint-forever classes
+(longitudo -135, vexillum -93, fixable classes identical) and the
+per-file diff showed every vanished file was alphabetically AFTER a
+point (include/t*-z*) — a census drop in lint-forever classes means
+files dropped out of judgment, not improvement. Fix: both modes now
+run inside a per-file opus piscina (file text included); the
+long-lived piscina serves the context alone. Corpus census restored
+byte-identical (6,491 / 246 files).
+
+Also confirmed: the lexicon preload produced ZERO new divergences on
+the formatted corpus — the rollout had already run with types visible
+via formator_latinam_praebere, which the root fix now makes redundant
+(retirement is the follow-up).

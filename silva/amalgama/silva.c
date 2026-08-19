@@ -1070,7 +1070,10 @@ SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
     SilvaOraculum* oraculum);
 
 /* Eadem cum contextu hospitis (lexica latina, includenda
- * praebita) - grammatica c89 expansione pascitur (M2d) */
+ * praebita) - grammatica c89 expansione pascitur (M2d). Typi
+ * lexici praeonerantur: plagulae lexicae standalone parsantur
+ * oraculo dato ante fontem principalem - typedefs earum
+ * registrantur ('i8 * t;' declaratio fit, non ambiguum) */
 SilvaParsura* silva_c89_parsare_cum_contextu(
     SilvaPiscina* piscina, const SilvaContextus* contextus,
     const char* via, const char* fons, unsigned int mensura,
@@ -4990,7 +4993,11 @@ silva_c89_parsare (
 /* Eadem sed cum CONTEXTU hospitis (M2d Chunk A): lexica
  * (latina!), includenda praebita, fines - grammatica c89 tandem
  * expansione pascitur. Contextus diu vivit, inter parsuras
- * reusabilis. */
+ * reusabilis. TYPI LEXICI PRAEONERANTUR (01M0D4QV5S pars 1):
+ * plagulae lexicae standalone parsantur oraculo dato ante fontem
+ * principalem - typedefs earum (i8/i32/s64...) registrantur et
+ * 'i8 * t;' declaratio fit, non AMBIGUUM; lexicon posterius
+ * typos prioris videt. */
 SilvaParsura*
 silva_c89_parsare_cum_contextu (
     SilvaPiscina*                 piscina,
@@ -40889,11 +40896,43 @@ silva_c89_parsare_cum_contextu (
     SilvaOraculum*           oraculum)
 {
     SilvaParsura* parsura;
+    i32           k;
 
     si (oraculum == NIHIL)
     {
         oraculum = silva_oraculum_creare(piscina);
         si (oraculum == NIHIL) redde NIHIL;
+    }
+    /* Typi lexici praeonerantur (01M0D4QV5S pars 1): via lexici
+     * expansionis directivas SOLAS processat ("Reliqua lexici
+     * abiciuntur") - typedefs latinae (i8/i32/s64...) oraculum
+     * numquam attingebant et 'i8 * t;' AMBIGUUM manebat ubi clang
+     * declarationem videt. Plagulae lexicae hic standalone
+     * parsantur ORACULO COMMUNI, ordine: typedefs earum per uncum
+     * praecommissionis registrantur (tituli in piscinam oraculi
+     * COPIANTUR; arbor lexici abicitur), lexicon posterius typos
+     * prioris videt (cascata). Praeonerati = visibiles ubique
+     * (visibilitas per ordinem ambulationis; situs trans fontes
+     * non comparantur). Sine contextu nihil mutatur. */
+    si (contextus != NIHIL)
+    {
+        per (k = ZEPHYRUM; k < silva_xar_numerus(contextus->lexica); k++)
+        {
+            constans SilvaContextusPlagula* plagula =
+                (constans SilvaContextusPlagula*)silva_xar_obtinere(
+                    contextus->lexica, k);
+
+            si (plagula == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (silva_c89_parsare(piscina, plagula->via,
+                    plagula->textus, plagula->mensura,
+                    oraculum) == NIHIL)
+            {
+                redde NIHIL;
+            }
+        }
     }
     parsura = silva_parsare_cum_contextu(piscina, contextus, via,
         fons, mensura, &SILVA_C89_GRAMMATICA, oraculum,

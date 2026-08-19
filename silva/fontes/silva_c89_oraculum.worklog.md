@@ -75,3 +75,40 @@ Cursor Wave-0: **31 → 45/73 praeteritae**. New classes surfaced by
 suites advancing past the old wall: forma localis ignota (9 suites),
 nuntium EXITUS 1 (first wrong-exit — runs to completion, fails an
 assert: investigate), lapifex TEMPUS pending long-boundary run.
+
+## 2026-08-19 — lexicon typedefs preloaded into the oracle (01M0D4QV5S part 1)
+
+The lexicon path in the expansion layer processes DIRECTIVES ONLY
+("Reliqua lexici abiciuntur"), so latina.h's typedefs (i8/i32/s64/
+b32...) never reached the oracle: `i8 * t;` stayed retained-AMBIGUUS
+where clang sees a declaration — every cum-contextu consumer diverged
+from the compiler on latina-typedef disambiguation (the frozen
+`i8 * novum_datum;` damage class the formator hit in nuntium.c).
+
+Fix in silva_c89_parsare_cum_contextu, using the seam the API comment
+already blessed ("oraculum datum typos plagulae ACCIPIT - praeonera
+typos externos ante"): each lexicon plagula is parsed STANDALONE with
+the shared oracle before the main parse. Typedefs register through
+the ordinary precommit walk (titles are COPIED into the oracle's
+piscina; the lexicon tree is discarded); later lexica see earlier
+lexica's types (shared-oracle cascade); preloaded = visible
+everywhere because visibility is walk ORDER, not cross-file situs
+(the 2026-07-06 sanatio). The expansion layer keeps its
+directives-only contract — this lives entirely in the c89 layer.
+
+Notes:
+- Grammar pre-check: `typedef unsigned long long` parses (i64/s64
+  register fine).
+- Per-parse cost: one standalone parse of each lexicon per
+  cum-contextu call (latina.h ≈ mostly directives, tiny GLR load).
+  Caching door: preload once per long-lived oracle, not per call —
+  park until mensor says it matters.
+- The old c89 probatio vector `"Meus m;" + lexicon typedef` passed
+  BEFORE this fix only because root-level `Meus m;` cannot fork —
+  it proved the parse, not registration. The new tests assert
+  typum_novit directly + the forking shape `i8 * t;`.
+- memoriae_index: `typedef size_t memoriae_index;` — size_t is a
+  SYSTEM typedef silva never sees; whether it registers is not
+  pinned here. The named door: system typedefs in the systema
+  lexicon files (now that lexicon content flows, adding typedef
+  lines there heals FILE/size_t/... for free).

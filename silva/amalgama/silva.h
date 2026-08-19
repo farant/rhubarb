@@ -1057,7 +1057,10 @@ SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
     SilvaOraculum* oraculum);
 
 /* Eadem cum contextu hospitis (lexica latina, includenda
- * praebita) - grammatica c89 expansione pascitur (M2d) */
+ * praebita) - grammatica c89 expansione pascitur (M2d). Typi
+ * lexici praeonerantur: plagulae lexicae standalone parsantur
+ * oraculo dato ante fontem principalem - typedefs earum
+ * registrantur ('i8 * t;' declaratio fit, non ambiguum) */
 SilvaParsura* silva_c89_parsare_cum_contextu(
     SilvaPiscina* piscina, const SilvaContextus* contextus,
     const char* via, const char* fons, unsigned int mensura,

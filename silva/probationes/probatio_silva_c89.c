@@ -2472,6 +2472,129 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: typi lexici oraculo visibiles (01M0D4QV5S pars 1).
+     * Via lexici directivas solas processabat - "Reliqua lexici
+     * abiciuntur" typos perdebat: 'i8 * t;' ubi clang
+     * declarationem videt AMBIGUUM manebat (venatio nuntium
+     * 43/44, damnum congelatum formatoris). Sanatio: plagulae
+     * lexicae standalone parsantur ORACULO COMMUNI ante fontem
+     * principalem - typedefs earum per uncum praecommissionis
+     * registrantur (praeonerati = visibiles ubique, ordo
+     * ambulationis).
+     * ======================================================== */
+
+    {
+        imprimere("\n--- Probans typos lexici ---\n");
+
+        /* latina: i8 * t; ad radicem -> declaratio soluta */
+        {
+            SilvaContextus*     ctx = silva_contextus_creare(
+                piscina);
+            SilvaOraculum*      oraculum = silva_oraculum_creare(
+                piscina);
+            constans character* fons = "i8 * t;\n";
+            SilvaParsura*       parsura;
+            SilvaNodus*         primus;
+
+            CREDO_NON_NIHIL (ctx);
+            CREDO_NON_NIHIL (oraculum);
+            CREDO_VERUM (silva_contextus_latinam_addere(ctx));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), oraculum);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_VERUM (parsura->successus);
+            /* typi latinae registrati */
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("i8", piscina)));
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("i32", piscina)));
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("s64", piscina)));
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("b32", piscina)));
+            /* i8 * t solvitur - retentio nulla */
+            CREDO_AEQUALIS_I32 (parsura->numerus_errorum,
+                ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            primus = _elementum(parsura->commissio->radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    (s32)SILVA_C89_GENUS_DECLARATIO);
+            }
+        }
+
+        /* cascata: lexicon posterius typum lexici prioris videt
+         * (oraculum commune trans plagulas lexicas, ordine) */
+        {
+            SilvaContextus*     ctx = silva_contextus_creare(
+                piscina);
+            SilvaOraculum*      oraculum = silva_oraculum_creare(
+                piscina);
+            constans character* fons = "Derivatus * d;\n";
+            SilvaParsura*       parsura;
+            SilvaNodus*         primus;
+
+            CREDO_NON_NIHIL (ctx);
+            CREDO_NON_NIHIL (oraculum);
+            CREDO_VERUM (silva_contextus_lexicon_addere(ctx,
+                "primum.h", "typedef int Basis;\n",
+                (i32)strlen("typedef int Basis;\n")));
+            CREDO_VERUM (silva_contextus_lexicon_addere(ctx,
+                "secundum.h", "typedef Basis Derivatus;\n",
+                (i32)strlen("typedef Basis Derivatus;\n")));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), oraculum);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_VERUM (parsura->successus);
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("Basis", piscina)));
+            CREDO_VERUM (silva_oraculum_typum_novit(oraculum,
+                chorda_ex_literis("Derivatus", piscina)));
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), ZEPHYRUM);
+            primus = _elementum(parsura->commissio->radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    (s32)SILVA_C89_GENUS_DECLARATIO);
+            }
+        }
+
+        /* custodia contra registrationem phantasma: sine lexico
+         * retentio honesta manet */
+        {
+            SilvaContextus*     ctx = silva_contextus_creare(
+                piscina);
+            constans character* fons = "i8 * t;\n";
+            SilvaParsura*       parsura;
+            SilvaNodus*         primus;
+
+            CREDO_NON_NIHIL (ctx);
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            CREDO_VERUM (parsura->successus);
+            CREDO_AEQUALIS_I32 (xar_numerus(
+                parsura->commissio->ambigui), I);
+            primus = _elementum(parsura->commissio->radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                CREDO_AEQUALIS_S32 (primus->genus,
+                    (s32)SILVA_C89_GENUS_AMBIGUUS);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: corpus syntaxis v1 (Chunk C). INVENTUM: corpus
      * paene totum DECLARATIONES est (expressiones intra
      * initiatores vivunt) - "dimidium expressionum" INTENTIONIS

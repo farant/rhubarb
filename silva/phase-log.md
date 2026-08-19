@@ -12759,3 +12759,25 @@ byte-exacta praetermittit. Probatio nova puritas 32/32; silva 41/41;
 amalgama VERIFICATUM (silva.h manu extensum). Casus vivus: probatio
 ipsa (macris CREDO plena) XLVI ordines falsos e regula R2-vocationis
 formatoris traxit - sedes adoptionis prima nominata.
+
+## 2026-08-19 — oraculum: typi lexici praeonerati (01M0D4QV5S pars 1)
+
+Radix sanata: via lexici directivas solas processat (contractus
+manet), sed silva_c89_parsare_cum_contextu plagulas lexicas nunc
+STANDALONE parsare facit oraculo communi ante fontem principalem -
+typedefs latinae registrantur, 'i8 * t;' declaratio fit (retentio
+nulla), cascata lexicorum ordine. Sedes benedicta ab ipso commento
+API ("praeonera typos externos ante"). Probationes: typum_novit
+directum + forma furcans + custodia sine lexico (retentio honesta).
+1633/1633; silva 41/41; radix 0 fractorum; amalgama VERIFICATUM.
+VENATIO LATERALIS: modus lint CLI formatoris in piscinam longaevam
+parsabat - cursus corporis eam exhauriebat, processus TACITE in
+medio moriebatur (census in classibus lint-perpetuis solis cadebat,
+cauda alphabetica evanescebat - signatura diagnostica). Piscina
+operis per plagulam in ambobus modis; census 6491 byte-identicus
+restitutus, plagulae 246. Praeoneratio divergentias novas NULLAS
+in corpore formato peperit (evolutio iam typis visibilibus cucurrit
+per formator_latinam_praebere - iam redundans, retiratio proxima).
+Ostia: cache praeonerationis per oraculum longaevum (mensor
+dictet); typi systematis in lexica systema (size_t/FILE - nunc
+quod contentum lexici fluit, sanatio gratis fit).
