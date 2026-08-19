@@ -146,3 +146,27 @@ R7 = 3863 fires (known-type runs only).
 
 Census 2b: 28503 total (columnae 3863 / aequatio 4308 / intervalla
 783 on top of 2a's numbers). Probatio 67/67.
+
+## 2026-08-19 — praebere upgrade: include resolution (R7 sees everything)
+
+formator_lint gained a contextus param (NIHIL = internal
+latina-only; probatio path). CLI builds ONE long-lived contextus:
+latinam_addere + praebere every *.h in include/, silva/fontes/,
+silva/instrumenta/ (basename as via — matches #include "x.h"
+spelling; contextus copies content, reused across all parses).
+CONSEQUENCE HANDLED: the tree now carries header-fons nodes —
+span checks self-filter via extensionem_lineis(fons_princeps),
+and all direct token checks go through _principalis() (fons_index
+== fons_princeps) so header content is never flagged under the
+linted file's name. Differential probatio: a praebere'd fictional
+typedef makes a broken run fire 2 columnae divergences that were
+exempt-invisible without it. Also learned the hard way (again):
+hardcoded string-literal lengths lie — 121 vs the real 122
+truncated the final newline and fired linea-nova-deest; strlen.
+
+VALIDATION: piscina.c = ZERO columnae fires with full resolution —
+the alignment exemplar passes its own executable rule completely
+(71 total unchanged, all real drift). Census: columnae 3863 ->
+6212 (+2349 newly visible), total 34584. Cost: 35s / 291 files
+(~120ms each with full header expansion) — RP not needed for lint
+tempo.

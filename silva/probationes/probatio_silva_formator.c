@@ -20,7 +20,8 @@ _lint (
               Piscina* piscina,
     constans character* fons)
 {
-    redde formator_lint(piscina, fons, (i32)strlen(fons));
+    redde formator_lint(piscina, NIHIL, fons,
+        (i32)strlen(fons));
 }
 
 interior FormatorDivergentia*
@@ -426,6 +427,44 @@ s32 principale (vacuum)
             "intervalla") == ZEPHYRUM);
         CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
             (i32)4);
+    }
+
+    imprimere("\n--- Probans capita praebita (R7 resoluta) ---\n");
+    {
+        /* DIFFERENTIALIS: typedef in capite praebito resolvitur
+         * -> ordo fractus FLAGRAT (sine praebitione membrum
+         * ambiguum exemptum esset et lint taceret) */
+        SilvaContextus* ctx;
+        constans character* caput;
+        constans character* fons_probandus;
+        Xar* d;
+
+        caput = "nomen insignatus integer mensura_probanda;\n";
+        ctx = silva_contextus_creare(piscina);
+        CREDO_NON_NIHIL(ctx);
+        CREDO_VERUM(silva_contextus_latinam_addere(ctx));
+        CREDO_VERUM(silva_contextus_praebere(ctx,
+            "probandum.h", caput, (i32)strlen(caput)));
+
+        fons_probandus =
+            "#include \"probandum.h\"\n"
+            "interior vacuum\n"
+            "_f (\n"
+            "    vacuum* a)\n"
+            "{\n"
+            "    vacuum* datum;\n"
+            "    mensura_probanda n;\n"
+            "\n"
+            "    datum = a;\n"
+            "}\n";
+        d = formator_lint(piscina, ctx, fons_probandus,
+            (i32)strlen(fons_probandus));
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "columnae-binae") == ZEPHYRUM);
+        CREDO_VERUM(strcmp(_divergentia(d, 1)->regula,
+            "columnae-binae") == ZEPHYRUM);
     }
 
     imprimere("\n--- Probans catenam alioquin-si (caput) ---\n");

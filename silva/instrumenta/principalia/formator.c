@@ -16,10 +16,52 @@
 #include "chorda.h"
 #include "xar.h"
 #include "filum.h"
+#include "iter_directoria.h"
 #include "silva_formator.h"
 
 #include <stdio.h>
 #include <string.h>
+
+/* capita directorii praebere (typedef alieni resolvuntur -
+ * sine hoc R7 ordines typorum ignotorum exemptos facit) */
+interior vacuum
+_capita_praebere (
+     SilvaContextus* contextus,
+           Piscina* piscina,
+    constans character* directorium)
+{
+    DirectoriumIterator*  iter;
+    DirectoriumIntroitus* introitus;
+
+    iter = directorium_iterator_aperire(directorium, piscina);
+    si (!iter) redde;
+
+    dum ((introitus = directorium_iterator_proximum(iter))
+        != NIHIL)
+    {
+        character via_plena[512];
+        character titulus[256];
+           chorda textus;
+              i32 n;
+
+        si (introitus->genus != INTROITUS_FILUM) perge;
+        n = introitus->titulus.mensura;
+        si (n < (i32)II || n >= (i32)255
+            || introitus->titulus.datum[n - II] != '.'
+            || introitus->titulus.datum[n - I] != 'h')
+        {
+            perge;
+        }
+        sprintf(titulus, "%.*s", (integer)n,
+            (constans character*)introitus->titulus.datum);
+        sprintf(via_plena, "%s/%s", directorium, titulus);
+        textus = filum_legere_totum(via_plena, piscina);
+        si (textus.mensura == (i32)ZEPHYRUM) perge;
+        silva_contextus_praebere(contextus, titulus,
+            (constans character*)textus.datum, textus.mensura);
+    }
+    directorium_iterator_claudere(iter);
+}
 
 #define EXCLUSIONES_VIA \
     "silva/probationes/fixa/formatoris/exclusiones.txt"
@@ -84,12 +126,13 @@ principale (
      integer  numerus,
     character** argumenta)
 {
-    Piscina* piscina;
-      chorda  exclusiones;
-         b32  machina;
-         b32  ulla_plagula;
-         i32  summa;
-     integer  i;
+    Piscina*        piscina;
+    SilvaContextus* contextus;
+    chorda          exclusiones;
+    b32             machina;
+    b32             ulla_plagula;
+    i32             summa;
+    integer         i;
 
     machina      = FALSUM;
     ulla_plagula = FALSUM;
@@ -116,6 +159,16 @@ principale (
     {
         exclusiones = filum_legere_totum(EXCLUSIONES_VIA,
             piscina);
+    }
+
+    contextus = silva_contextus_creare(piscina);
+    si (contextus)
+    {
+        silva_contextus_latinam_addere(contextus);
+        _capita_praebere(contextus, piscina, "include");
+        _capita_praebere(contextus, piscina, "silva/fontes");
+        _capita_praebere(contextus, piscina,
+            "silva/instrumenta");
     }
 
     si (machina)
@@ -157,7 +210,7 @@ principale (
             redde II;
         }
         textus = filum_legere_totum(via, piscina);
-        divergentiae = formator_lint(piscina,
+        divergentiae = formator_lint(piscina, contextus,
             (constans character*)textus.datum, textus.mensura);
         ulla_plagula = VERUM;
 

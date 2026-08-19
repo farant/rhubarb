@@ -383,6 +383,18 @@ _extensio (
     redde *linea_a != (i32)ZEPHYRUM;
 }
 
+/* custodia fontis: lexema fontis principis est? Capitibus
+ * praebitis arbor contentum capitum quoque fert - divergentiae
+ * ad plagulam iudicatam solam pertinent. */
+interior b32
+_principalis (
+    FormatorAmbitus* ambitus,
+        SilvaToken*  lexema)
+{
+    redde lexema != NIHIL
+        && lexema->fons_index == ambitus->fons_princeps;
+}
+
 /* catenam declaratoris descendere ad FUNCTIONIS extimam */
 interior SilvaNodus*
 _declarator_functionis (SilvaNodus* declarator)
@@ -516,7 +528,7 @@ _corpus_censere (
     situs  = _extensio(possessor, ambitus->fons_princeps,
         &la, &ca, &lb, &cb);
 
-    si (aperta)
+    si (_principalis(ambitus, aperta))
     {
         si (!aperta->initium_lineae)
         {
@@ -532,7 +544,7 @@ _corpus_censere (
                 aperta->columna, (s32)aperta->columna, (s32)ca);
         }
     }
-    si (clausa)
+    si (_principalis(ambitus, clausa))
     {
         si (!clausa->initium_lineae)
         {
@@ -564,7 +576,7 @@ _ramum_censere (
            i32  cb;
 
     nodus = _valor_nodus(ramus);
-    si (!nodus || !ancora) redde;
+    si (!nodus || !_principalis(ambitus, ancora)) redde;
     si (nodus->genus == SILVA_C89_GENUS_CORPUS) redde;
     si (!_extensio(nodus, ambitus->fons_princeps,
         &la, &ca, &lb, &cb))
@@ -604,6 +616,7 @@ _definitionem_censere (
         silva_c89_declarator_functionis_internum(functionis)));
     apertum = _valor_radix(
         silva_c89_declarator_functionis_tok_apertum(functionis));
+    si (!_principalis(ambitus, titulus)) redde;
 
     /* R1: titulus in columna prima lineae suae */
     si (titulus && (!titulus->initium_lineae
@@ -692,7 +705,7 @@ _vocationem_censere (
     functio = _valor_nodus(silva_c89_vocatio_functio(vocatio));
     apertum = _valor_radix(
         silva_c89_vocatio_tok_apertum(vocatio));
-    si (!functio || !apertum) redde;
+    si (!functio || !_principalis(ambitus, apertum)) redde;
     si (!_extensio(functio, ambitus->fons_princeps,
         &la, &ca, &lb, &cb))
     {
@@ -1240,6 +1253,7 @@ _parametra_ordinem_censere (
     si (!functionis) redde;
     apertum = _valor_radix(
         silva_c89_declarator_functionis_tok_apertum(functionis));
+    si (!_principalis(ambitus, apertum)) redde;
     parametra = silva_c89_declarator_functionis_parametra(
         functionis);
     numerus = silva_valor_lista_numerus(parametra);
@@ -1463,15 +1477,15 @@ _nodum_percurrere (
 Xar*
 formator_lint (
               Piscina* piscina,
+       SilvaContextus* contextus,
     constans character* fons,
                    i32  mensura)
 {
-    Xar*            divergentiae;
-    Xar*            cruda;
-    SilvaContextus* contextus;
-    SilvaParsura*   parsura;
-    i32             numerus;
-    i32             i;
+    Xar*          divergentiae;
+    Xar*          cruda;
+    SilvaParsura* parsura;
+    i32           numerus;
+    i32           i;
 
     divergentiae = xar_creare(piscina,
         magnitudo(FormatorDivergentia));
@@ -1554,9 +1568,12 @@ formator_lint (
 
     /* pars arboris: parsura fracta => regulae fluminis solae
      * (fragmenta licita - lint numquam frangit) */
-    contextus = silva_contextus_creare(piscina);
-    si (contextus == NIHIL) redde divergentiae;
-    silva_contextus_latinam_addere(contextus);
+    si (contextus == NIHIL)
+    {
+        contextus = silva_contextus_creare(piscina);
+        si (contextus == NIHIL) redde divergentiae;
+        silva_contextus_latinam_addere(contextus);
+    }
     parsura = silva_c89_parsare_cum_contextu(piscina, contextus,
         "lint", fons, mensura, NIHIL);
     si (parsura && parsura->successus

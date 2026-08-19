@@ -17,6 +17,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "silva_contextus.h"
 
 nomen structura {
     constans character* regula;      /* nomen stabile regulae */
@@ -29,10 +30,17 @@ nomen structura {
 
 /* Lint super fontem unum: Xar de FormatorDivergentia (vacuum =
  * conformis; NIHIL solum si piscina fracta). Fons vivere debet
- * quamdiu divergentiae vivunt (visus, nulla copia). */
+ * quamdiu divergentiae vivunt (visus, nulla copia).
+ *
+ * contextus: diu vivens, inter plagulas reusabilis - vocator
+ * capita praebet ut typedef alieni resolvantur (R7 sine eis
+ * ordines typorum ignotorum exemptos facit). NIHIL = contextus
+ * internus latina-solum. Divergentiae SEMPER ad fontem principem
+ * solum pertinent (contentum capitum numquam flagratur). */
 Xar*
 formator_lint (
               Piscina* piscina,
+       SilvaContextus* contextus,
     constans character* fons,
                    i32  mensura);
 

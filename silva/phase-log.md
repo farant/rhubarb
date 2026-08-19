@@ -12589,3 +12589,15 @@ DOOR (big): no include resolution => unknown-typedef runs
 exempt-skip — R7 blind exactly where piscina aligns; praebere/
 legati-style contextus = highest-value lint upgrade. Census:
 28503 (13/16 rules live; R10/R11/R15 remain).
+
+## 2026-08-19 — formator: praebere (resolutio inclusionum)
+
+Contextus unus diu vivens in CLI (include/ + silva/fontes/ +
+silva/instrumenta/ praebita); machina contextum accipit (NIHIL =
+latina-solum). Custodia fontis: _principalis() in omnibus
+inspectionibus lexematum directis - contentum capitum numquam sub
+nomine plagulae iudicatae flagratur (extensiones iam per
+fons_princeps se filtrabant). Probatio differentialis 74/74.
+piscina: ZERO columnae - exemplar ordinationis regulae suae
+exsecutabili plene conformis. Census 34584 (columnae 6212);
+tempus 35s/291 - RP non necessaria pro lint.
