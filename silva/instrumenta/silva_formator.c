@@ -2396,6 +2396,13 @@ _nodum_percurrere (
 
     commutatio (nodus->genus)
     {
+        casus SILVA_C89_GENUS_AMBIGUUS:
+            /* lectiones plures vivae (oraculum non decrevit) -
+             * arbor ipsa nescit quid sit, ergo spatia iudicari
+             * NEQUEUNT. Ambulare ambas lectiones = regulae
+             * contradictorias imponere (oscillatio '(i32)-I'
+             * cast/binarium quam tabula_dispersa detexit). */
+            redde;
         casus SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS:
         {
             SilvaNodus* corpus;

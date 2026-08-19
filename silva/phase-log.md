@@ -12670,3 +12670,16 @@ minimo R11 (si: paren+1 == ca+4 exacte); forma pendens reiecta
 (paren-2 minimum contradiceret). per dilata CUM CAUSA. Trio
 evolutum retractum: json +11 (catenae aspicere = exemplar Frani
 octetim), chorda +1; differre omnes [cosmetica]. Probatio 177/177.
+
+## 2026-08-19 — formator: oscillatio AMBIGUI (evolutio II)
+
+Recusationes primae verae (tabula_dispersa/iter_directoria):
+cyclus 2 in 'operatores' - `(i32)-I` ut AMBIGUUS parsatur
+(oraculum inter conversionem et binarium non decernit) et
+percursus formatoris AMBAS lectiones ambulabat, spatia
+contradictoria imponens. Sanatio: percursus ad AMBIGUUM secatur
+(regio quam arbor nescit iudicari nequit); fixum probatione.
+Fractura XII iterationum honeste recusavit - machina recusationis
+se solvit. PORTAE silvae: visibilitas typorum lexici pro oraculo;
+differre directivae bis apparentes (ADDITA+REMOTA pro cosmetica).
+Evolutio II: X plagulae fundamenti, omnes portae virides.

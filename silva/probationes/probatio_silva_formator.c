@@ -1290,6 +1290,25 @@ s32 principale (vacuum)
         CREDO_FALSUM(s.mutatum);
     }
 
+    imprimere("\n--- Probans ambiguum praetermissum ---\n");
+    {
+        /* '(typus_ignotus)-I' = AMBIGUUS (conversio aut
+         * binarium - oraculum non decernit). Ambulare ambas
+         * lectiones spatia contradictoria imponeret
+         * (oscillatio evolutionis II); regio ambigua non
+         * iudicatur - stabilis et intacta */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (\n"
+            "    i32 positus)\n"
+            "{\n"
+            "    si (positus != (ignotum_genus)-I) redde;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

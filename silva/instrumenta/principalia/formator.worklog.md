@@ -433,3 +433,46 @@ exemplar), piscina zero. differre 1+2 MUTATA all [cosmetica],
 examen ACCIPE, suites green. Probatio 177/177 (target-form
 self-conformance pinned — proves the R10 deferral; negatives:
 single-line tight, multiline non-chain unpadded).
+
+## 2026-08-19 — evolutio II + the AMBIGUUS oscillation
+
+Batch two (10 foundation files) produced the first real
+non-convergence refusals: tabula_dispersa + iter_directoria,
+"punctum fixum intra XII iterationes non attinctum". Per-iteration
+tracing showed a clean 2-cycle in 'operatores': insert-a-space
+rounds alternating with delete-a-space rounds at the same sites.
+Minimal repro: `(i32)-I`.
+
+ROOT CAUSE: the construct parses as an AMBIGUUS node (conversio
+vs binarium readings — the oracle does not decree, even though
+i32 is a lexicon typedef; lexicon-type visibility for ambiguity
+resolution is a SILVA-SIDE question, named below). The formator's
+generic liberi recursion descended into ALL interpretationes —
+walking BOTH readings and enforcing both spacings: the binary arm
+wants `(i32) - I`, the cast arm wants `(i32)-I`, each round the
+arm disagreeing with the current text fires. Perfect oscillation;
+the 12-round breaker caught it and refused honestly (files left
+untouched — the refusal machinery paying for itself).
+
+FIX: _nodum_percurrere cuts at SILVA_C89_GENUS_AMBIGUUS — a
+region the tree itself cannot decide is a region whose spacing
+cannot be judged. Conservative coverage loss, pinned in probatio
+(`(ignotum_genus)-I` stable + untouched). Convergence restored:
+tabula_dispersa 131 em/4 it, iter_directoria 220/3.
+
+DOORS (silva-side): (1) why does the oracle keep cast-vs-binary
+ambiguous when the type IS a lexicon typedef? Resolving would
+upgrade formator coverage in those regions (currently unjudged).
+(2) differre desideratum: a DIRECTIVE unit appearing twice (both
+arms of #ifdef) whose only change is indentation classifies as
+ADDITA+REMOTA instead of MUTATA[cosmetica] — filum.c's
+<sys/stat.h> tab→space case; byte diff is pure whitespace, token
+gate proved identity, but the differre gate needs a manual glance
+when directives move columns.
+
+Batch two results: xar 836/4, filum 807/4, nuntium 598/3,
+chorda_aedificator 441/3, iter_directoria 220/3, tabula_dispersa
+131/4, similitudo 91/4, tempus 45/2, credo 30/3, internamentum
+18/3. differre all [cosmetica] (filum's directive rows explained
+above); examen ACCIPE ×10; root suite 136/137 (planta_lectio
+pre-existing); silva 40/40. Probatio 179/179.
