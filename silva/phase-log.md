@@ -12628,3 +12628,16 @@ plagulis veris: chorda.c + piscina.c uno cursu sanatae, differre =
 cursus alter nihil agit (idempotentia). Probatio 117/117, suite
 40/40. Sequens: G2b arboris (R1-R4/R8 + custodia directivarum
 probanda), G2c ordinationis (R7/R9/R11).
+
+## 2026-08-19 — formator G2b: emendationes arboris
+
+R1/R2/R3/R4/R8 + R13-inter + vexilla consuta. Vexillum 'tolerans'
+in emendatione: iuncturae (commentum/continuatio licite obstant)
+tacite dilatantur; recusatio clamosa vitiis detectorum reservata.
+INVENTUM: radix sedes-USUS est (catena invocationis) - arbor
+expansa macro in punctum invocationis collabitur, R4/R3 in
+corporibus macro numquam flagrant (probatione fixum). Custodia
+directivarum per vexillum-post ante '#include' fixa. json.c lux
+prima: 213 emendationes / 3 iterationes, R1 7->0 R8 96->0 R2
+69->0; differre 69 MUTATA omnes [cosmetica]; examen ACCIPE.
+Probatio 144/144, suite 40/40. Sequens: G2c ordinatio (R7/R9/R11).

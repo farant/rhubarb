@@ -304,6 +304,34 @@ second `-scribere` run a no-op (idempotence on real files). Probatio
 spacing/inter-functions, R1/R2/R3/R4/R8 (G2b), R7/R9/R10-tree/R11
 (G2c).
 
+## Status G2b (2026-08-19) — tree-tier fixes
+
+Wired: R1 (name to own line / de-indent), R2 definition + call gaps,
+R3 both braces both cases (move to own line at owner column / re-column),
+R4 join, R8 param split (provisional indent 4 — G2c's R7 aligns),
+R13-inter (insert blank when glued / trim to one), banner ante/post
+spacing. New contract nuance: emendationes carry a `tolerans` flag —
+JOIN spans (R4, R2 gaps, R13-inter trims) may legitimately hit a
+comment or `\` continuation and then drop quietly as unfixable;
+strict spans (padding, indentation, token-own bytes) still refuse the
+whole file loudly on non-whitespace (detector bug).
+
+FINDING pinned in probatio: `silva_token_radix` follows the
+INVOCATION chain — a macro-expanded statement's whole tree collapses
+to the use-site line, so R4/R3 legitimately never fire inside
+`#define` bodies (the multi-line guard-macro fixture is CONFORMIS).
+The directive guard is instead exercised by banner-post spacing
+wanting to insert `\n` at column 1 of an `#include` line — dropped
+(conservatively: even line-start inserts), file intact, divergence
+residual.
+
+Real-file first light: json.c — 213 emendationes, 3 iterations;
+typus-in-linea-sua 7→0, parametra-singula 96→0,
+spatium-definitionis 69→0, longitudo 66→63 (param splits shorten
+lines); differre 69 MUTATA ALL [cosmetica]; examen ACCIPE; rerun
+stable. Probatio 144/144; suite 40/40. Remaining: G2c alignment
+(R7/R9/R10-tree/R11), then the supervised corpus rollout.
+
 EXCLUSIONES (decretae 2026-08-19): pins file
 `silva/probationes/fixa/formatoris/exclusiones.txt`, format
 `via<TAB>causa` (the examen-pins pattern — every row carries a

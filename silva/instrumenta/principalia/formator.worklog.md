@@ -277,3 +277,58 @@ alignment emendationes (R7/R9/R10-tree/R11 incl. the two-span
 operator-move fix). Corpus rollout AFTER G2c, supervised: run
 -scribere over lib/+include/+silva/ with differre + examen + full
 suite as the acceptance stack, library by library.
+
+## 2026-08-19 — G2b: tree-tier emendationes (R1/R2/R3/R4/R8 + R13-inter + vexilla)
+
+Contract refinement forced by R4: emendationes now carry `tolerans`.
+JOIN spans (R4 body-join, R2 gaps, R13-inter blank-trims) can
+legitimately contain a comment or backslash-continuation — those
+drop QUIETLY as unfixable (divergence stays reported). Strict spans
+(padding, line-leading indentation, token-own bytes) keep the loud
+whole-file refusal, which stays reserved for actual detector bugs.
+Two wrappers (_emendare / _emendare_tolerans) over _emendare_ipsum;
+G2a call sites untouched.
+
+THE FINDING OF THE DAY — radix is USE-SITE: my directive-guard
+fixture (R4 on a statement-shaped `#define` body) came back
+CONFORMIS from the real CLI, and the reason is architectural:
+`silva_token_radix` follows the INVOCATIO chain, so every token of
+a macro-expanded statement resolves to the invocation line. The
+expanded tree collapses to a single source point; multi-line macro
+bodies can never fire R4/R3. (The token's OWN linea/columna fields
+are def-site — that's the latina.h trap already known — but radix,
+which all position checks go through, is use-site.) Pinned as its
+own probatio case. The directive guard is instead reachable — and
+now pinned — via banner-post spacing trying to insert '\n' at
+column 1 of an '#include' line: dropped, file intact, residual
+divergence. Guard is deliberately conservative (drops even
+line-start inserts on directive lines, which would actually be
+safe); recorded as acceptable coverage loss.
+
+Fix mechanics worth remembering:
+- R3 own-line move = pure INSERT of '\n' + (owner_col - 1) spaces
+  before the brace; the orphaned space before it becomes trailing
+  and R12 cleans it NEXT round. Same lazy-composition trick
+  everywhere: no fix cleans up after another fix.
+- R8 splits ALL params of a one-line list in a single round
+  (insert-only edits never overlap); provisional indent IV until
+  G2c's R7 alignment.
+- R13-inter excess-blanks and R13-collapse can both fire on the
+  same gap (3+ blanks between functions) — overlap-drop plus
+  iteration converges: collapse wins round 1 (higher offset,
+  descending order), inter trims to one blank round 2.
+- Banner ante/post inserts guard on nl_cursus > 0 (banner sharing
+  a line with code = unfixable, no emendatio).
+
+json.c first light: 213 emendationes / 3 iterations; R1 7->0
+(the flat predicates at 1021-1051 now wear full house form),
+R8 96->0, R2 69->0; longitudo 66->63 as a side effect of param
+splits. differre: 69 MUTATA all [cosmetica]. examen ACCIPE. Rerun
+stable. Probatio 144/144; suite 40/40.
+
+Doors: freestanding non-banner comments between functions make
+R13-inter's blank count include comment lines (lint-level, G1
+behavior) — the tolerans trim just refuses there, so it is safe
+but unexamined; revisit with the comment query layer. G2c next:
+R7 columns / R9 clusters / R10-tree spacing / R11 continuation
+(incl. the two-span operator move).

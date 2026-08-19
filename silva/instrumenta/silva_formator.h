@@ -23,12 +23,18 @@
  * ORIGINALI (coordinatae 1-basatae; finis exclusivus) cum textu
  * inserendo. Applicator solus octetos spatiales delere et spatia/
  * lineas novas inserere potest - custodia contractus in strato
- * infimo (commenta et lexemata physice intacta manent). */
+ * infimo (commenta et lexemata physice intacta manent).
+ *
+ * tolerans: spatium octetos non-spatiales LICITE continere potest
+ * (iunctura trans commentum aut continuationem '\\') - custodia
+ * spatialis id tacite dilatat pro recusatione clamosa (quae vitiis
+ * detectorum reservatur). */
 nomen structura {
     i32    linea_a;
     i32    columna_a;
     i32    linea_b;
     i32    columna_b;
+    b32    tolerans;
     chorda insertum;
 } FormatorEmendatio;
 

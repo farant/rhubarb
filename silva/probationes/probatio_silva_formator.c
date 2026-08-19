@@ -776,6 +776,226 @@ s32 principale (vacuum)
         }
     }
 
+    imprimere("\n--- Probans scribere: arbor composita (R8+R3+R4)"
+        " ---\n");
+    {
+        /* regulae per iterationem componuntur: R8 parametrum
+         * findit, R3 brachium movet, R4 custodem iungit; spatia
+         * caudae orta iteratione sequente sanantur */
+        constans character* fons =
+            "interior i32\n"
+            "adiuvare (i32 valor) {\n"
+            "    si (valor)\n"
+            "        redde I;\n"
+            "    redde ZEPHYRUM;\n"
+            "}\n";
+        constans character* exspectatum =
+            "interior i32\n"
+            "adiuvare (\n"
+            "    i32 valor)\n"
+            "{\n"
+            "    si (valor) redde I;\n"
+            "    redde ZEPHYRUM;\n"
+            "}\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)3);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            exspectatum));
+        CREDO_VERUM(strcmp(silva_differre_classificare_textus(
+            piscina, chorda_ex_literis(fons, piscina),
+            s.textus), "cosmetica") == ZEPHYRUM);
+        {
+            FormatorScriptum s2;
+
+            s2 = formator_scribere(piscina, NIHIL,
+                (constans character*)s.textus.datum,
+                s.textus.mensura);
+            CREDO_VERUM(s2.successus);
+            CREDO_FALSUM(s2.mutatum);
+        }
+    }
+
+    imprimere("\n--- Probans scribere: radix sedes-usus (macro)"
+        " ---\n");
+    {
+        /* silva_token_radix catenam INVOCATIONIS sequitur -
+         * sententia expansa tota in lineam invocationis
+         * collabitur, ergo R4 in corpore macro numquam flagrat
+         * (definitio multi-linearis CONFORMIS est) */
+        constans character* fons =
+            "#define CUSTODI(x) \\\n"
+            "    si (x) \\\n"
+            "        redde ZEPHYRUM;\n"
+            "\n"
+            "i32\n"
+            "probare (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    CUSTODI(a);\n"
+            "    redde I;\n"
+            "}\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+        Xar* d = _lint(piscina, fons);
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus, fons));
+    }
+
+    imprimere("\n--- Probans scribere: custodia directivarum ---\n");
+    {
+        /* vexillum-post editio '\n' in linea '#include'
+         * inserere vellet - custodia directivarum dilatat
+         * (conservativa: etiam initium lineae), plagula
+         * INTACTA, divergentia residua superest */
+        constans character* fons =
+            "/* ================================================== */\n"
+            "#include \"probandum.h\"\n"
+            "i32 a;\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+        Xar* d = _lint(piscina, fons);
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus, fons));
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "intervalla") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans scribere: titulus in lineam suam"
+        " (R1) ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "interior i32 adiuvare (\n"
+            "    i32 valor)\n"
+            "{\n"
+            "    redde valor;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "interior i32\n"
+            "adiuvare (\n"
+            "    i32 valor)\n"
+            "{\n"
+            "    redde valor;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: spatium vocationis"
+        " (R2) ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    facere (I);\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    facere(I);\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: intervalla vexilli ---\n");
+    {
+        /* una vacua ante (II debitae), nulla post (I debita) */
+        FormatorScriptum s = _scribere(piscina,
+            "i32 a;\n"
+            "\n"
+            "/* ==================================================\n"
+            " * Titulus\n"
+            " * ================================================== */\n"
+            "i32 b;\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "i32 a;\n"
+            "\n"
+            "\n"
+            "/* ==================================================\n"
+            " * Titulus\n"
+            " * ================================================== */\n"
+            "\n"
+            "i32 b;\n"));
+    }
+
+    imprimere("\n--- Probans scribere: functiones conglutinatae"
+        " ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "interior vacuum\n"
+            "_a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "interior vacuum\n"
+            "_b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "interior vacuum\n"
+            "_a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "interior vacuum\n"
+            "_b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: vacuae inter functiones"
+        " nimis ---\n");
+    {
+        /* III vacuae -> I per collapsam (III->II) tum
+         * inter-functiones (II->I) - convergentia trans
+         * iterationes, plagae imbricatae dilatae */
+        FormatorScriptum s = _scribere(piscina,
+            "interior vacuum\n"
+            "_a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "\n"
+            "\n"
+            "interior vacuum\n"
+            "_b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)3);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "interior vacuum\n"
+            "_a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "interior vacuum\n"
+            "_b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

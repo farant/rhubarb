@@ -65,13 +65,14 @@ _addere (
 /* emendationem divergentiae ULTIMAE addere (exemplar: _addere
  * tum _emendare - detector ipse editionem sanantem novit) */
 interior vacuum
-_emendare (
+_emendare_ipsum (
        Xar* divergentiae,
        i32  linea_a,
        i32  columna_a,
        i32  linea_b,
        i32  columna_b,
-    chorda  insertum)
+    chorda  insertum,
+       b32  tolerans)
 {
     FormatorDivergentia* d;
                     i32  n;
@@ -85,8 +86,39 @@ _emendare (
     d->emendationes[d->numerus_emendationum].columna_a = columna_a;
     d->emendationes[d->numerus_emendationum].linea_b   = linea_b;
     d->emendationes[d->numerus_emendationum].columna_b = columna_b;
+    d->emendationes[d->numerus_emendationum].tolerans  = tolerans;
     d->emendationes[d->numerus_emendationum].insertum  = insertum;
     d->numerus_emendationum += I;
+}
+
+/* stricta: spatium octetos spatiales solum tegere DEBET
+ * (violatio = vitium detectoris, plagula tota recusatur) */
+interior vacuum
+_emendare (
+       Xar* divergentiae,
+       i32  linea_a,
+       i32  columna_a,
+       i32  linea_b,
+       i32  columna_b,
+    chorda  insertum)
+{
+    _emendare_ipsum(divergentiae, linea_a, columna_a, linea_b,
+        columna_b, insertum, FALSUM);
+}
+
+/* tolerans: iunctura quae commentum aut continuationem licite
+ * offendere potest - tunc tacite dilatatur, divergentia superest */
+interior vacuum
+_emendare_tolerans (
+       Xar* divergentiae,
+       i32  linea_a,
+       i32  columna_a,
+       i32  linea_b,
+       i32  columna_b,
+    chorda  insertum)
+{
+    _emendare_ipsum(divergentiae, linea_a, columna_a, linea_b,
+        columna_b, insertum, VERUM);
 }
 
 /* textus inserendus: novae lineae tum spatia */
@@ -378,6 +410,45 @@ _regio_vexillum_habet (
     redde FALSUM;
 }
 
+/* cursum novarum linearum [nl_primus, finis) ad 'servandae'
+ * novas reducere: (servandae+1)-a usque ad ultimam delentur
+ * (emendatio divergentiae ultimae) */
+interior vacuum
+_novas_delere (
+    Piscina* piscina,
+        Xar* divergentiae,
+        Xar* cruda,
+        i32  nl_primus,
+        i32  finis,
+        i32  servandae)
+{
+    SilvaToken* nl_prima_delenda;
+    SilvaToken* nl_ultima;
+           i32  visae;
+           i32  j;
+
+    nl_prima_delenda = NIHIL;
+    nl_ultima        = NIHIL;
+    visae            = ZEPHYRUM;
+    per (j = nl_primus; j < finis; j += I)
+    {
+        SilvaToken* t;
+
+        t = _lexema(cruda, j);
+        si (t->genus != SILVA_LEX_NOVA_LINEA) perge;
+        visae += I;
+        si (visae == servandae + I) nl_prima_delenda = t;
+        nl_ultima = t;
+    }
+    si (nl_prima_delenda && nl_ultima)
+    {
+        _emendare(divergentiae, nl_prima_delenda->linea,
+            nl_prima_delenda->columna, nl_ultima->linea,
+            nl_ultima->columna + nl_ultima->valor.mensura,
+            _textus_emendationis(piscina, ZEPHYRUM, ZEPHYRUM));
+    }
+}
+
 interior vacuum
 _intervalla_censere (
     Piscina* piscina,
@@ -418,39 +489,11 @@ _intervalla_censere (
             ? nl_cursus - I : (i32)ZEPHYRUM;
         si (vacuae >= (i32)III)
         {
-            SilvaToken* nl_quartus;
-            SilvaToken* nl_ultimus;
-                   i32  visae;
-                   i32  j;
-
             _addere(divergentiae, "intervalla",
                 "lineae vacuae nimis multae", lexema->linea, I,
                 (s32)vacuae, II);
-
-            /* emendatio: novas lineas III primas servare (II
-             * vacuae), quartam usque ad ultimam delere */
-            nl_quartus = NIHIL;
-            nl_ultimus = NIHIL;
-            visae      = ZEPHYRUM;
-            per (j = nl_primus; j < i; j += I)
-            {
-                SilvaToken* t;
-
-                t = _lexema(cruda, j);
-                si (t->genus != SILVA_LEX_NOVA_LINEA) perge;
-                visae += I;
-                si (visae == (i32)IV) nl_quartus = t;
-                nl_ultimus = t;
-            }
-            si (nl_quartus && nl_ultimus)
-            {
-                _emendare(divergentiae, nl_quartus->linea,
-                    nl_quartus->columna, nl_ultimus->linea,
-                    nl_ultimus->columna
-                        + nl_ultimus->valor.mensura,
-                    _textus_emendationis(piscina, ZEPHYRUM,
-                        ZEPHYRUM));
-            }
+            _novas_delere(piscina, divergentiae, cruda,
+                nl_primus, i, III);
         }
         si (_vexillum_continet(lexema) && prior != NIHIL
             && vacuae < (i32)III && vacuae != (i32)II)
@@ -459,6 +502,15 @@ _intervalla_censere (
                 "duae lineae vacuae ante vexillum exspectatae",
                 lexema->linea, lexema->columna, (s32)vacuae,
                 II);
+            /* emendatio solum si vexillum lineam suam incipit
+             * (nl_cursus > 0); in linea codicis = non fixabile */
+            si (nl_cursus != (i32)ZEPHYRUM)
+            {
+                _emendare(divergentiae, lexema->linea, I,
+                    lexema->linea, I,
+                    _textus_emendationis(piscina, II - vacuae,
+                        ZEPHYRUM));
+            }
         }
         si (prior != NIHIL && _vexillum_continet(prior)
             && lexema->genus != SILVA_LEX_EOF
@@ -468,6 +520,22 @@ _intervalla_censere (
                 "una linea vacua post vexillum exspectata",
                 lexema->linea, lexema->columna, (s32)vacuae,
                 I);
+            si (vacuae == (i32)ZEPHYRUM)
+            {
+                si (nl_cursus != (i32)ZEPHYRUM)
+                {
+                    _emendare(divergentiae, lexema->linea, I,
+                        lexema->linea, I,
+                        _textus_emendationis(piscina, I,
+                            ZEPHYRUM));
+                }
+            }
+            alioquin
+            {
+                /* vacuae II: unam servare (novae II) */
+                _novas_delere(piscina, divergentiae, cruda,
+                    nl_primus, i, II);
+            }
         }
         prior = lexema;
         nl_cursus = ZEPHYRUM;
@@ -827,12 +895,24 @@ _corpus_censere (
                 "brachium apertum in linea sua exspectatum",
                 aperta->linea, aperta->columna,
                 (s32)aperta->columna, I);
+            si (situs)
+            {
+                _emendare(ambitus->divergentiae, aperta->linea,
+                    aperta->columna, aperta->linea,
+                    aperta->columna,
+                    _textus_emendationis(ambitus->piscina, I,
+                        ca - I));
+            }
         }
         alioquin si (situs && aperta->columna != ca)
         {
             _addere(ambitus->divergentiae, "bracchia-allman",
                 "columna brachii aperti", aperta->linea,
                 aperta->columna, (s32)aperta->columna, (s32)ca);
+            _emendare(ambitus->divergentiae, aperta->linea, I,
+                aperta->linea, aperta->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, ca - I));
         }
     }
     si (_principalis(ambitus, clausa))
@@ -843,12 +923,24 @@ _corpus_censere (
                 "brachium clausum in linea sua exspectatum",
                 clausa->linea, clausa->columna,
                 (s32)clausa->columna, I);
+            si (situs)
+            {
+                _emendare(ambitus->divergentiae, clausa->linea,
+                    clausa->columna, clausa->linea,
+                    clausa->columna,
+                    _textus_emendationis(ambitus->piscina, I,
+                        ca - I));
+            }
         }
         alioquin si (situs && clausa->columna != ca)
         {
             _addere(ambitus->divergentiae, "bracchia-allman",
                 "columna brachii clausi", clausa->linea,
                 clausa->columna, (s32)clausa->columna, (s32)ca);
+            _emendare(ambitus->divergentiae, clausa->linea, I,
+                clausa->linea, clausa->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, ca - I));
         }
     }
 }
@@ -880,6 +972,13 @@ _ramum_censere (
             "corpus sine brachiis in linea conditionis"
             " exspectatum", la, ca, (s32)la,
             (s32)ancora->linea);
+        /* iunctura tolerans: commentum aut continuatio in
+         * spatio eam licite obstruit (tunc residua manet) */
+        _emendare_tolerans(ambitus->divergentiae,
+            ancora->linea,
+            ancora->columna + ancora->valor.mensura, la, ca,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                I));
     }
 }
 
@@ -917,6 +1016,23 @@ _definitionem_censere (
             "titulus functionis in columna prima lineae suae"
             " exspectatus", titulus->linea, titulus->columna,
             (s32)titulus->columna, I);
+        si (!titulus->initium_lineae)
+        {
+            /* titulus post specificatores: linea nova ante */
+            _emendare(ambitus->divergentiae, titulus->linea,
+                titulus->columna, titulus->linea,
+                titulus->columna,
+                _textus_emendationis(ambitus->piscina, I,
+                    ZEPHYRUM));
+        }
+        alioquin
+        {
+            /* linea sua, columna prava: indentatio deleta */
+            _emendare(ambitus->divergentiae, titulus->linea, I,
+                titulus->linea, titulus->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, ZEPHYRUM));
+        }
     }
 
     /* R2 (definitio): spatium unicum ante parenthesim */
@@ -933,6 +1049,11 @@ _definitionem_censere (
                 " definitionis", apertum->linea,
                 apertum->columna,
                 (s32)(apertum->columna - finis_tituli), I);
+            _emendare_tolerans(ambitus->divergentiae,
+                apertum->linea, finis_tituli, apertum->linea,
+                apertum->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, I));
         }
     }
 
@@ -975,6 +1096,9 @@ _definitionem_censere (
             _addere(ambitus->divergentiae, "parametra-singula",
                 "parametrum in linea sua exspectatum", la, ca,
                 (s32)la, (s32)(prior_linea + I));
+            /* indentatio provisoria IV - R7 (G2c) ordinabit */
+            _emendare(ambitus->divergentiae, la, ca, la, ca,
+                _textus_emendationis(ambitus->piscina, I, IV));
         }
         prior_linea = lb;
     }
@@ -1008,6 +1132,11 @@ _vocationem_censere (
             "nullum spatium ante parenthesim vocationis"
             " exspectatum", apertum->linea, apertum->columna,
             (s32)(apertum->columna - cb), ZEPHYRUM);
+        _emendare_tolerans(ambitus->divergentiae,
+            apertum->linea, cb, apertum->linea,
+            apertum->columna,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                ZEPHYRUM));
     }
 }
 
@@ -2428,13 +2557,37 @@ formator_lint (
                             && la_effectiva - lb_prior - I
                                 != (i32)I)
                         {
+                            i32 vacuae_inter;
+
+                            vacuae_inter = la_effectiva
+                                - lb_prior - I;
                             _addere(divergentiae,
                                 "intervalla",
                                 "una linea vacua inter"
                                 " functiones exspectata",
                                 la_effectiva, I,
-                                (s32)(la_effectiva - lb_prior
-                                    - I), I);
+                                (s32)vacuae_inter, I);
+                            si (vacuae_inter == (i32)ZEPHYRUM)
+                            {
+                                /* conglutinatae: nova ante */
+                                _emendare(divergentiae,
+                                    la_effectiva, I,
+                                    la_effectiva, I,
+                                    _textus_emendationis(
+                                        piscina, I, ZEPHYRUM));
+                            }
+                            alioquin
+                            {
+                                /* nimis: unam vacuam servare
+                                 * (tolerans: commentum liberum
+                                 * in spatio obstruere potest) */
+                                _emendare_tolerans(divergentiae,
+                                    lb_prior + II, I,
+                                    la_effectiva, I,
+                                    _textus_emendationis(
+                                        piscina, ZEPHYRUM,
+                                        ZEPHYRUM));
+                            }
                         }
                         lb_prior = lb;
                     }
@@ -2682,7 +2835,12 @@ _emendationes_complanare (
             }
             si (!sana)
             {
-                *violatio_spatialis = VERUM;
+                /* tolerans: iunctura licite obstructa (commentum,
+                 * continuatio) - tacite dilatata, non vitium */
+                si (!em->tolerans)
+                {
+                    *violatio_spatialis = VERUM;
+                }
                 perge;
             }
 
