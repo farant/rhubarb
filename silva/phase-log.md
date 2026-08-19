@@ -12601,3 +12601,14 @@ fons_princeps se filtrabant). Probatio differentialis 74/74.
 piscina: ZERO columnae - exemplar ordinationis regulae suae
 exsecutabili plene conformis. Census 34584 (columnae 6212);
 tempus 35s/291 - RP non necessaria pro lint.
+
+## 2026-08-19 — formator: cauda lint (R10/R11/R15/R13-inter) — LINT COMPLETUM
+
+XVI/XVI regulae vivae. R11 >= ca+IV (non ==; certamen cum R7
+vitatum, strictitudo = decisio G2); operator-ducens sine STAR/
+AMPERSAND (ambigui) et '='. Duo genera falsorum in prima luce
+sanata: declarationes bloccales (structura/congeries) e spatiis
+R11 exemptae; vexilla inter functiones per regionem (non vista)
+quaesita. piscina 71 immutata (zero e novis); probatio 91/91,
+suite 40/40. Census lint finalis: 42555 (operatores 4466 /
+continuatio 3341 / ordo-inclusionum VII). Sequens: G2 -scribere.

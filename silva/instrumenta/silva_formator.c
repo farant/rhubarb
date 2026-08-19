@@ -270,6 +270,42 @@ _vexillum_continet (SilvaToken* lexema)
     redde FALSUM;
 }
 
+/* regione linearum [linea_a, linea_b] vexillum quaerere
+ * (cursus '=' >= X) - pro R13 inter functiones */
+interior b32
+_regio_vexillum_habet (
+    constans character* fons,
+                   i32  mensura,
+                   i32  linea_a,
+                   i32  linea_b)
+{
+    i32 i;
+    i32 linea;
+    i32 cursus;
+
+    si (linea_b < linea_a) redde FALSUM;
+    linea  = I;
+    cursus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < mensura; i += I)
+    {
+        si (fons[i] == '\n')
+        {
+            linea += I;
+            cursus = ZEPHYRUM;
+            si (linea > linea_b) redde FALSUM;
+            perge;
+        }
+        si (linea < linea_a) perge;
+        si (fons[i] == '=')
+        {
+            cursus += I;
+            si (cursus >= (i32)VEXILLUM_MINIMUS) redde VERUM;
+        }
+        alioquin cursus = ZEPHYRUM;
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _intervalla_censere (
     Xar* divergentiae,
@@ -333,6 +369,128 @@ _intervalla_censere (
 }
 
 /* ==================================================
+ * R15 ordo-inclusionum (flumine): postulata_posix.h prima;
+ * domesticae ("...") ante systemicas (<...>)
+ * ================================================== */
+
+interior b32
+_continet_literas (
+                 chorda  textus,
+    constans character* quaesitum)
+{
+    i32 mensura_quaesiti;
+    i32 i;
+
+    mensura_quaesiti = (i32)strlen(quaesitum);
+    si (mensura_quaesiti == (i32)ZEPHYRUM
+        || textus.mensura < mensura_quaesiti)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i + mensura_quaesiti <= textus.mensura;
+        i += I)
+    {
+        si (memcmp(textus.datum + i, quaesitum,
+            (memoriae_index)mensura_quaesiti) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior i32
+_proximum_verum (
+    Xar* cruda,
+    i32  numerus,
+    i32  index)
+{
+    dum (index < numerus)
+    {
+        SilvaLexemaGenus g;
+
+        g = _lexema(cruda, index)->genus;
+        si (g != SILVA_LEX_SPATIA && g != SILVA_LEX_TABULAE
+            && g != SILVA_LEX_NOVA_LINEA
+            && g != SILVA_LEX_CONTINUATIO
+            && g != SILVA_LEX_COMMENTUM_CLAUSUM
+            && g != SILVA_LEX_COMMENTUM_LINEA)
+        {
+            redde index;
+        }
+        index += I;
+    }
+    redde numerus;
+}
+
+interior vacuum
+_inclusiones_ordinem_censere (
+    Xar* divergentiae,
+    Xar* cruda)
+{
+    i32 numerus;
+    i32 i;
+    b32 vidi_systemicam;
+    i32 numerus_inclusionum;
+
+    numerus            = cruda ? xar_numerus(cruda)
+        : (i32)ZEPHYRUM;
+    vidi_systemicam    = FALSUM;
+    numerus_inclusionum = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        SilvaToken* lexema;
+               i32  j;
+               i32  k;
+
+        lexema = _lexema(cruda, i);
+        si (lexema->genus != SILVA_LEX_CANCELLUM
+            || !lexema->initium_lineae)
+        {
+            perge;
+        }
+        j = _proximum_verum(cruda, numerus, i + I);
+        si (j >= numerus) perge;
+        si (_lexema(cruda, j)->genus != SILVA_LEX_IDENTIFICATOR
+            || !chorda_aequalis_literis(
+                _lexema(cruda, j)->valor, "include"))
+        {
+            perge;
+        }
+        k = _proximum_verum(cruda, numerus, j + I);
+        si (k >= numerus) perge;
+
+        si (_lexema(cruda, k)->genus == SILVA_LEX_STRING_LIT)
+        {
+            si (vidi_systemicam)
+            {
+                _addere(divergentiae, "ordo-inclusionum",
+                    "inclusio domestica post systemicam",
+                    lexema->linea, lexema->columna, ZEPHYRUM,
+                    ZEPHYRUM);
+            }
+            si (_continet_literas(_lexema(cruda, k)->valor,
+                "postulata_posix")
+                && numerus_inclusionum != (i32)ZEPHYRUM)
+            {
+                _addere(divergentiae, "ordo-inclusionum",
+                    "postulata_posix.h prima inclusio esse"
+                    " debet", lexema->linea, lexema->columna,
+                    ZEPHYRUM, ZEPHYRUM);
+            }
+            numerus_inclusionum += I;
+        }
+        alioquin si (_lexema(cruda, k)->genus
+            == SILVA_LEX_MINOR)
+        {
+            vidi_systemicam = VERUM;
+            numerus_inclusionum += I;
+        }
+    }
+}
+
+/* ==================================================
  * pars arboris - regulae structurales (tranche II.a:
  * R1 typus-in-linea-sua, R2 spatium-definitionis,
  * R3 bracchia-allman, R4 custos-una-linea,
@@ -347,8 +505,35 @@ _intervalla_censere (
 nomen structura {
         Xar* divergentiae;
     Piscina* piscina;
+        Xar* continuationes;   /* ContinuatioSpatium (R11) */
         s32  fons_princeps;
 } FormatorAmbitus;
+
+/* R11: extensio sententiae multi-linearis - lineae internae
+ * continuationes sunt (indentatio >= ca + IV postulata) */
+nomen structura {
+    i32 la;
+    i32 ca;
+    i32 lb;
+} ContinuatioSpatium;
+
+interior vacuum
+_spatium_continuationis_addere (
+    FormatorAmbitus* ambitus,
+                i32  la,
+                i32  ca,
+                i32  lb)
+{
+    ContinuatioSpatium* spatium;
+
+    si (!ambitus->continuationes || lb <= la) redde;
+    spatium = (ContinuatioSpatium*)xar_addere(
+        ambitus->continuationes);
+    si (!spatium) redde;
+    spatium->la = la;
+    spatium->ca = ca;
+    spatium->lb = lb;
+}
 
 interior SilvaNodus*
 _valor_nodus (SilvaValor valor)
@@ -1299,6 +1484,155 @@ _parametra_ordinem_censere (
     _ordinem_censere(ambitus, membra, plena);
 }
 
+/* ==================================================
+ * R10 operatores: binarii spatiati, accessus/conversio/
+ * unarii/postcrementum arti. ASSIGNATIO exclusa (R9).
+ * ================================================== */
+
+interior vacuum
+_binarium_operatorem_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus)
+{
+    SilvaToken* operator_tok;
+           i32  sla;
+           i32  sca;
+           i32  slb;
+           i32  scb;
+           i32  dla;
+           i32  dca;
+           i32  dlb;
+           i32  dcb;
+
+    operator_tok = _valor_radix(
+        silva_c89_binarium_tok_operator(nodus));
+    si (!_principalis(ambitus, operator_tok)) redde;
+
+    si (_valoris_extensio(ambitus,
+        silva_c89_binarium_sinister(nodus), &sla, &sca, &slb,
+        &scb)
+        && operator_tok->linea == slb
+        && operator_tok->columna != scb + I)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "spatium unicum ante operatorem binarium",
+            operator_tok->linea, operator_tok->columna,
+            (s32)(operator_tok->columna - scb), I);
+    }
+    si (_valoris_extensio(ambitus,
+        silva_c89_binarium_dexter(nodus), &dla, &dca, &dlb,
+        &dcb)
+        && dla == operator_tok->linea
+        && dca != operator_tok->columna
+            + operator_tok->valor.mensura + I)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "spatium unicum post operatorem binarium",
+            operator_tok->linea, dca,
+            (s32)(dca - (operator_tok->columna
+                + operator_tok->valor.mensura)), I);
+    }
+}
+
+interior vacuum
+_accessum_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus)
+{
+    SilvaToken* operator_tok;
+    SilvaToken* titulus;
+           i32  bla;
+           i32  bca;
+           i32  blb;
+           i32  bcb;
+
+    operator_tok = _valor_radix(
+        silva_c89_accessus_tok_operator(nodus));
+    si (!_principalis(ambitus, operator_tok)) redde;
+
+    si (_valoris_extensio(ambitus,
+        silva_c89_accessus_basis(nodus), &bla, &bca, &blb,
+        &bcb)
+        && operator_tok->linea == blb
+        && operator_tok->columna != bcb)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "accessus basi arte iungendus",
+            operator_tok->linea, operator_tok->columna,
+            (s32)(operator_tok->columna - bcb), ZEPHYRUM);
+    }
+    titulus = _valor_radix(
+        silva_c89_accessus_tok_titulus(nodus));
+    si (_principalis(ambitus, titulus)
+        && titulus->linea == operator_tok->linea
+        && titulus->columna != operator_tok->columna
+            + operator_tok->valor.mensura)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "titulus accessui arte iungendus",
+            titulus->linea, titulus->columna,
+            (s32)(titulus->columna
+                - (operator_tok->columna
+                    + operator_tok->valor.mensura)), ZEPHYRUM);
+    }
+}
+
+interior vacuum
+_conversionem_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus)
+{
+    SilvaToken* clausum;
+           i32  ila;
+           i32  ica;
+           i32  ilb;
+           i32  icb;
+
+    clausum = _valor_radix(
+        silva_c89_conversio_tok_clausum(nodus));
+    si (!_principalis(ambitus, clausum)) redde;
+    si (_valoris_extensio(ambitus,
+        silva_c89_conversio_internum(nodus), &ila, &ica, &ilb,
+        &icb)
+        && ila == clausum->linea
+        && ica != clausum->columna + I)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "conversio operando arte iungenda",
+            clausum->linea, ica,
+            (s32)(ica - clausum->columna - I), ZEPHYRUM);
+    }
+}
+
+interior vacuum
+_unarium_censere (
+    FormatorAmbitus* ambitus,
+         SilvaNodus* nodus)
+{
+    SilvaToken* operator_tok;
+           i32  ila;
+           i32  ica;
+           i32  ilb;
+           i32  icb;
+
+    operator_tok = _valor_radix(
+        silva_c89_unarium_tok_operator(nodus));
+    si (!_principalis(ambitus, operator_tok)) redde;
+    si (_valoris_extensio(ambitus,
+        silva_c89_unarium_internum(nodus), &ila, &ica, &ilb,
+        &icb)
+        && ila == operator_tok->linea
+        && ica != operator_tok->columna
+            + operator_tok->valor.mensura)
+    {
+        _addere(ambitus->divergentiae, "operatores",
+            "operator unarius operando arte iungendus",
+            operator_tok->linea, ica,
+            (s32)(ica - (operator_tok->columna
+                + operator_tok->valor.mensura)), ZEPHYRUM);
+    }
+}
+
 interior vacuum
 _nodum_percurrere (
     FormatorAmbitus* ambitus,
@@ -1320,6 +1654,23 @@ _si_censere (
 
     clausum = _valor_radix(silva_c89_si_tok_clausum(nodus));
     consequens = _valor_nodus(silva_c89_si_consequens(nodus));
+
+    /* R11: conditio multi-linearis = continuationes */
+    si (_principalis(ambitus, clausum))
+    {
+        i32 la;
+        i32 ca;
+        i32 lb;
+        i32 cb;
+
+        si (_extensio(nodus, ambitus->fons_princeps, &la, &ca,
+            &lb, &cb)
+            && clausum->linea > la)
+        {
+            _spatium_continuationis_addere(ambitus, la, ca,
+                clausum->linea);
+        }
+    }
 
     si (consequens
         && consequens->genus == SILVA_C89_GENUS_CORPUS)
@@ -1392,6 +1743,21 @@ _nodum_percurrere (
             corpus = _valor_nodus(silva_c89_dum_corpus(nodus));
             clausum = _valor_radix(
                 silva_c89_dum_tok_clausum(nodus));
+            si (_principalis(ambitus, clausum))
+            {
+                i32 la;
+                i32 ca;
+                i32 lb;
+                i32 cb;
+
+                si (_extensio(nodus, ambitus->fons_princeps,
+                    &la, &ca, &lb, &cb)
+                    && clausum->linea > la)
+                {
+                    _spatium_continuationis_addere(ambitus,
+                        la, ca, clausum->linea);
+                }
+            }
             si (corpus
                 && corpus->genus == SILVA_C89_GENUS_CORPUS)
             {
@@ -1412,6 +1778,21 @@ _nodum_percurrere (
             corpus = _valor_nodus(silva_c89_per_corpus(nodus));
             clausum = _valor_radix(
                 silva_c89_per_tok_clausum(nodus));
+            si (_principalis(ambitus, clausum))
+            {
+                i32 la;
+                i32 ca;
+                i32 lb;
+                i32 cb;
+
+                si (_extensio(nodus, ambitus->fons_princeps,
+                    &la, &ca, &lb, &cb)
+                    && clausum->linea > la)
+                {
+                    _spatium_continuationis_addere(ambitus,
+                        la, ca, clausum->linea);
+                }
+            }
             si (corpus
                 && corpus->genus == SILVA_C89_GENUS_CORPUS)
             {
@@ -1440,6 +1821,104 @@ _nodum_percurrere (
         casus SILVA_C89_GENUS_VOCATIO:
             _vocationem_censere(ambitus, nodus);
             frange;
+        casus SILVA_C89_GENUS_BINARIUM:
+            _binarium_operatorem_censere(ambitus, nodus);
+            frange;
+        casus SILVA_C89_GENUS_ACCESSUS:
+            _accessum_censere(ambitus, nodus);
+            frange;
+        casus SILVA_C89_GENUS_CONVERSIO:
+            _conversionem_censere(ambitus, nodus);
+            frange;
+        casus SILVA_C89_GENUS_UNARIUM:
+            _unarium_censere(ambitus, nodus);
+            frange;
+        casus SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS:
+        casus SILVA_C89_GENUS_DECLARATIO:
+        casus SILVA_C89_GENUS_REDDE:
+        {
+            i32 la;
+            i32 ca;
+            i32 lb;
+            i32 cb;
+            b32 forma_bloccalis;
+
+            /* declarationes corpus typi ferentes (structura/
+             * unio/enumeratio/congeries) formam bloccalem
+             * habent - lineae internae continuationes NON
+             * sunt ('};' in columna I rectum est) */
+            forma_bloccalis = FALSUM;
+            si (nodus->genus == SILVA_C89_GENUS_DECLARATIO)
+            {
+                SilvaValor specificatores;
+                       i32 n_spec;
+                       i32 s;
+
+                specificatores =
+                    silva_c89_declaratio_specificatores(nodus);
+                n_spec = silva_valor_lista_numerus(
+                    specificatores);
+                per (s = ZEPHYRUM; s < n_spec; s += I)
+                {
+                    SilvaValor* e;
+                    SilvaNodus* n_s;
+
+                    e = silva_valor_lista_obtinere(
+                        specificatores, s);
+                    n_s = e ? _valor_nodus(*e) : NIHIL;
+                    si (n_s && (n_s->genus
+                            == SILVA_C89_GENUS_STRUCTURA
+                        || n_s->genus == SILVA_C89_GENUS_UNIO
+                        || n_s->genus
+                            == SILVA_C89_GENUS_ENUMERATIO))
+                    {
+                        forma_bloccalis = VERUM;
+                        frange;
+                    }
+                }
+            }
+            si (nodus->genus == SILVA_C89_GENUS_DECLARATIO
+                && !forma_bloccalis)
+            {
+                SilvaValor declaratores;
+                       i32 n_d;
+                       i32 d;
+
+                declaratores = silva_c89_declaratio_declaratores(
+                    nodus);
+                n_d = silva_valor_lista_numerus(declaratores);
+                per (d = ZEPHYRUM; d < n_d && !forma_bloccalis;
+                    d += I)
+                {
+                    SilvaValor* e;
+                    SilvaNodus* n_d_nodus;
+
+                    e = silva_valor_lista_obtinere(
+                        declaratores, d);
+                    n_d_nodus = e ? _valor_nodus(*e) : NIHIL;
+                    si (n_d_nodus && n_d_nodus->genus
+                        == SILVA_C89_GENUS_DECLARATOR_INITIATUS
+                        && _valor_nodus(
+                            silva_c89_declarator_initiatus_initiator(
+                                n_d_nodus)) != NIHIL
+                        && _valor_nodus(
+                            silva_c89_declarator_initiatus_initiator(
+                                n_d_nodus))->genus
+                            == SILVA_C89_GENUS_CONGERIES)
+                    {
+                        forma_bloccalis = VERUM;
+                    }
+                }
+            }
+            si (!forma_bloccalis
+                && _extensio(nodus, ambitus->fons_princeps,
+                    &la, &ca, &lb, &cb))
+            {
+                _spatium_continuationis_addere(ambitus, la, ca,
+                    lb);
+            }
+            frange;
+        }
         casus SILVA_C89_GENUS_CORPUS:
             _corpus_interius_censere(ambitus, nodus);
             frange;
@@ -1466,6 +1945,140 @@ _nodum_percurrere (
         {
             _nodum_percurrere(ambitus,
                 *(SilvaNodus**)xar_obtinere(liberi, i));
+        }
+    }
+}
+
+/* ==================================================
+ * R11 continuatio (flumine + extensionibus arboris):
+ * lineae internae sententiarum >= ca + IV; fractura iuxta
+ * operatorem binarium ANTE operatorem (operator initio
+ * continuationis, non fine lineae). STAR/AMPERSAND
+ * ambigui exclusi; ASSIGNATIO exclusa (mos domus:
+ * '=' finem lineae claudere licet).
+ * ================================================== */
+
+interior b32
+_operator_ducibilis (SilvaLexemaGenus genus)
+{
+    redde genus == SILVA_LEX_PLUS
+        || genus == SILVA_LEX_MINUS
+        || genus == SILVA_LEX_SOLIDUS
+        || genus == SILVA_LEX_PERCENTUM
+        || genus == SILVA_LEX_ET_ET
+        || genus == SILVA_LEX_VEL_VEL
+        || genus == SILVA_LEX_BARRA
+        || genus == SILVA_LEX_CARET
+        || genus == SILVA_LEX_MINOR
+        || genus == SILVA_LEX_MAIOR
+        || genus == SILVA_LEX_MINOR_AEQUALIS
+        || genus == SILVA_LEX_MAIOR_AEQUALIS
+        || genus == SILVA_LEX_AEQUALIS_AEQUALIS
+        || genus == SILVA_LEX_NON_AEQUALIS
+        || genus == SILVA_LEX_SINISTRORSUM
+        || genus == SILVA_LEX_DEXTRORSUM;
+}
+
+interior constans ContinuatioSpatium*
+_spatium_invenire (
+    Xar* continuationes,
+    i32  linea,
+    b32  interius)
+{
+    i32 numerus;
+    i32 i;
+
+    numerus = continuationes ? xar_numerus(continuationes)
+        : (i32)ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        constans ContinuatioSpatium* spatium;
+
+        spatium = (constans ContinuatioSpatium*)xar_obtinere(
+            continuationes, i);
+        si (interius)
+        {
+            si (linea > spatium->la && linea <= spatium->lb)
+            {
+                redde spatium;
+            }
+        }
+        alioquin si (linea >= spatium->la
+            && linea < spatium->lb)
+        {
+            redde spatium;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_continuationes_censere (
+    Xar* divergentiae,
+    Xar* cruda,
+    Xar* continuationes)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!continuationes
+        || xar_numerus(continuationes) == (i32)ZEPHYRUM)
+    {
+        redde;
+    }
+    numerus = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        SilvaToken* lexema;
+        constans ContinuatioSpatium* spatium;
+
+        lexema = _lexema(cruda, i);
+
+        /* indentatio continuationis */
+        si (lexema->initium_lineae)
+        {
+            spatium = _spatium_invenire(continuationes,
+                lexema->linea, VERUM);
+            si (spatium
+                && lexema->columna < spatium->ca + IV)
+            {
+                _addere(divergentiae, "continuatio",
+                    "continuatio parum indentata",
+                    lexema->linea, lexema->columna,
+                    (s32)lexema->columna,
+                    (s32)(spatium->ca + IV));
+            }
+        }
+
+        /* operator claudens lineam intra sententiam */
+        si (_operator_ducibilis(lexema->genus)
+            && i + I < numerus)
+        {
+            i32 j;
+
+            j = i + I;
+            dum (j < numerus
+                && (_lexema(cruda, j)->genus == SILVA_LEX_SPATIA
+                    || _lexema(cruda, j)->genus
+                        == SILVA_LEX_COMMENTUM_CLAUSUM))
+            {
+                j += I;
+            }
+            si (j < numerus && _lexema(cruda, j)->genus
+                == SILVA_LEX_NOVA_LINEA)
+            {
+                spatium = _spatium_invenire(continuationes,
+                    lexema->linea, FALSUM);
+                si (spatium)
+                {
+                    _addere(divergentiae, "continuatio",
+                        "operator initio continuationis"
+                        " ponendus, non fine lineae",
+                        lexema->linea, lexema->columna,
+                        ZEPHYRUM, ZEPHYRUM);
+                }
+            }
         }
     }
 }
@@ -1560,11 +2173,45 @@ formator_lint (
         {
             _vexilla_censere(divergentiae, lexema);
         }
+
+        /* R10 (virgula): nullum spatium ante, spatium post */
+        si (lexema->genus == SILVA_LEX_COMMA)
+        {
+            si (i != (i32)ZEPHYRUM
+                && _lexema(cruda, i - I)->genus
+                    == SILVA_LEX_SPATIA)
+            {
+                _addere(divergentiae, "operatores",
+                    "nullum spatium ante virgulam",
+                    lexema->linea, lexema->columna,
+                    (s32)_lexema(cruda, i - I)->valor.mensura,
+                    ZEPHYRUM);
+            }
+            si (i + I < numerus)
+            {
+                SilvaLexemaGenus g;
+
+                g = _lexema(cruda, i + I)->genus;
+                si (g != SILVA_LEX_SPATIA
+                    && g != SILVA_LEX_NOVA_LINEA
+                    && g != SILVA_LEX_CONTINUATIO
+                    && g != SILVA_LEX_COMMENTUM_CLAUSUM
+                    && g != SILVA_LEX_COMMENTUM_LINEA
+                    && g != SILVA_LEX_EOF)
+                {
+                    _addere(divergentiae, "operatores",
+                        "spatium post virgulam deest",
+                        lexema->linea, lexema->columna,
+                        ZEPHYRUM, I);
+                }
+            }
+        }
     }
 
     _longitudinem_censere(divergentiae, fons, mensura);
     _finem_censere(divergentiae, fons, mensura);
     _intervalla_censere(divergentiae, cruda);
+    _inclusiones_ordinem_censere(divergentiae, cruda);
 
     /* pars arboris: parsura fracta => regulae fluminis solae
      * (fragmenta licita - lint numquam frangit) */
@@ -1582,11 +2229,15 @@ formator_lint (
     {
         FormatorAmbitus ambitus;
         SilvaValor      radix;
+        i32             lb_prior;
 
-        ambitus.divergentiae  = divergentiae;
-        ambitus.piscina       = piscina;
-        ambitus.fons_princeps = parsura->fons_princeps;
+        ambitus.divergentiae   = divergentiae;
+        ambitus.piscina        = piscina;
+        ambitus.fons_princeps  = parsura->fons_princeps;
+        ambitus.continuationes = xar_creare(piscina,
+            magnitudo(ContinuatioSpatium));
         radix = parsura->commissio->radix;
+        lb_prior = ZEPHYRUM;
 
         si (radix.genus == SILVA_VALOR_LISTA)
         {
@@ -1597,20 +2248,75 @@ formator_lint (
             per (j = ZEPHYRUM; j < n; j += I)
             {
                 SilvaValor* elementum;
+                SilvaNodus* nodus_radicis;
 
                 elementum = silva_valor_lista_obtinere(radix,
                     j);
-                si (elementum)
+                nodus_radicis = elementum
+                    ? _valor_nodus(*elementum) : NIHIL;
+                si (!nodus_radicis) perge;
+
+                /* R13: una linea vacua inter functiones
+                 * (commentarium ducens ad functionem
+                 * pertinet; vexillum interpositum = regula
+                 * vexillorum, par omissum) */
+                si (nodus_radicis->genus
+                    == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
                 {
-                    _nodum_percurrere(&ambitus,
-                        _valor_nodus(*elementum));
+                    i32 la;
+                    i32 ca;
+                    i32 lb;
+                    i32 cb;
+
+                    si (_extensio(nodus_radicis,
+                        ambitus.fons_princeps, &la, &ca, &lb,
+                        &cb))
+                    {
+                        SilvaCommentariumVista vista;
+                        i32 la_effectiva;
+
+                        la_effectiva = la;
+                        si (silva_commentarium_ducens(
+                            nodus_radicis,
+                            ambitus.fons_princeps, &vista)
+                            != ZEPHYRUM
+                            && (i32)vista.linea < la_effectiva)
+                        {
+                            la_effectiva = (i32)vista.linea;
+                        }
+                        si (lb_prior != (i32)ZEPHYRUM
+                            && !_regio_vexillum_habet(fons,
+                                mensura, lb_prior + I,
+                                la_effectiva - I)
+                            && la_effectiva - lb_prior - I
+                                != (i32)I)
+                        {
+                            _addere(divergentiae,
+                                "intervalla",
+                                "una linea vacua inter"
+                                " functiones exspectata",
+                                la_effectiva, I,
+                                (s32)(la_effectiva - lb_prior
+                                    - I), I);
+                        }
+                        lb_prior = lb;
+                    }
                 }
+                alioquin
+                {
+                    lb_prior = ZEPHYRUM;
+                }
+
+                _nodum_percurrere(&ambitus, nodus_radicis);
             }
         }
         alioquin si (radix.genus == SILVA_VALOR_NODUS)
         {
             _nodum_percurrere(&ambitus, radix.datum.nodus);
         }
+
+        _continuationes_censere(divergentiae, cruda,
+            ambitus.continuationes);
     }
 
     redde divergentiae;

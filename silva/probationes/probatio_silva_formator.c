@@ -429,6 +429,119 @@ s32 principale (vacuum)
             (i32)4);
     }
 
+    imprimere("\n--- Probans operatores (R10) ---\n");
+    {
+        /* binarium arte scriptum: ante + post ambo flagrant */
+        Xar* d = _lint(piscina,
+            "interior i32\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    redde a+a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "operatores") == ZEPHYRUM);
+    }
+    {
+        /* virgula: spatium ante + nullum post */
+        Xar* d = _lint(piscina,
+            "interior i32\n"
+            "_g (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    redde _g(a ,a);\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "operatores") == ZEPHYRUM);
+        CREDO_VERUM(strcmp(_divergentia(d, 1)->regula,
+            "operatores") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans continuationem (R11) ---\n");
+    {
+        /* continuatio parum indentata (< ca + IV) */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    a = a\n"
+            "  + a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "continuatio") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(
+            (i32)_divergentia(d, 0)->exspectatum, (i32)9);
+    }
+    {
+        /* operator claudens lineam (initio continuationis
+         * ponendus) */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    i32 a)\n"
+            "{\n"
+            "    a = a +\n"
+            "        a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "continuatio") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans ordinem inclusionum (R15) ---\n");
+    {
+        /* domestica post systemicam */
+        Xar* d = _lint(piscina,
+            "#include <string.h>\n"
+            "#include \"chorda.h\"\n"
+            "i32 a;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "ordo-inclusionum") == ZEPHYRUM);
+    }
+    {
+        /* postulata_posix.h non prima */
+        Xar* d = _lint(piscina,
+            "#include \"chorda.h\"\n"
+            "#include \"postulata_posix.h\"\n"
+            "i32 a;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "ordo-inclusionum") == ZEPHYRUM);
+    }
+
+    imprimere("\n--- Probans intervalla inter functiones ---\n");
+    {
+        /* functiones conglutinatae (0 vacuae pro I) */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "interior vacuum\n"
+            "_b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "intervalla") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
+            (i32)0);
+    }
+
     imprimere("\n--- Probans capita praebita (R7 resoluta) ---\n");
     {
         /* DIFFERENTIALIS: typedef in capite praebito resolvitur

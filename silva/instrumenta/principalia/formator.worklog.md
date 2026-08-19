@@ -170,3 +170,37 @@ the alignment exemplar passes its own executable rule completely
 6212 (+2349 newly visible), total 34584. Cost: 35s / 291 files
 (~120ms each with full header expansion) — RP not needed for lint
 tempo.
+
+## 2026-08-19 — lint tail: R10/R11/R15/R13-inter — LINT TIER COMPLETE
+
+R10 operatores: tree checks on BINARIUM (one space both sides,
+same-line guards so author breaks don't false-fire), ACCESSUS /
+CONVERSIO / UNARIUM tight; ASSIGNATIO excluded (R9's domain);
+comma = stream check (no space before, space-or-newline after;
+extra spaces after tolerated — table alignment). R11: statement
+spans collected in tree walk (SENTENTIA/DECLARATIO/REDDE + si/dum/
+per condition regions); continuation lines must start >= ca+4
+(>= not ==: exact-column would war with R7's right-aligned params;
+strictness is a G2 decision); operator-leading enforced by flagging
+binary ops that END a line inside a span (STAR/AMPERSAND excluded —
+unary-ambiguous at stream level; '=' excluded — house allows it at
+line end). R15: stream walk of #include lines — postulata first,
+house before system. R13-inter: adjacent top-level definitions need
+exactly 1 blank; commentarium_ducens folds doc comments into the
+function's start; banner-in-gap pairs SKIP (banner spacing is R14/
+R13-banner's business).
+
+Two false-fire classes caught and fixed at first light: (1) struct/
+union/enum-defining and congeries-initialized DECLARATIOs are
+block-shaped, not wrapped statements — exempted from R11 spans
+('};' at column 1 was firing); (2) banner-separated functions —
+commentarium_ducens only sees tightly-above comments, so the
+banner-in-gap check scans the source REGION between functions.
+
+piscina.c: 71 unchanged — ZERO fires from all four new rules (its
+operators/continuations/includes/function-spacing are clean); all
+positives pinned by deliberate-violation probatio cases (91/91).
+Census FINAL LINT: 42555 — operatores 4466, continuatio 3341,
+intervalla 940, ordo-inclusionum SEVEN (imago.c = vendored stb,
+selectio.c, capsula_caudae.h). 16/16 rules live. Next: G2
+-scribere.
