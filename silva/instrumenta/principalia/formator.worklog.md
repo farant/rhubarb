@@ -558,3 +558,37 @@ nuntium 21 / tempus 34 emendationes); the nuntium block is now
 byte-identical to the hand's original. Gates: examen ACCIPE x13,
 differre cosmetica-only (filum's known directive rows), root
 136/137 (pre-existing), silva 40/40.
+
+## 2026-08-19 — R9 covers declaration initializers (the G1 door closes)
+
+Fran found nuntium 770-771: `s64 shifted = ...` / `s64 mask = ...`
+with unaligned initializer `=`s — and correctly guessed the rule
+gap. R9 clustered assignment STATEMENTS only; R7 governed the
+type/name columns of those declarations (both s64, so nothing
+moved); the initializer operators were governed by NOTHING (R10
+excludes '='). This was the named G1 door "decl-with-init `=`
+alignment in R7 runs".
+
+Closed: DECLARATIO elements with a single DECLARATOR_INITIATUS
+(single-line, operator on the declarator's line) now feed the R9
+cluster — LHS cb = one-past the DECLARATOR (array suffixes ride,
+as in R7), so the equal-width and cluster-fall refinements apply
+unchanged. Feeding happens in the R7 leading-run branch (which
+`perge`d past the R9 section entirely — the aeq append/flush
+logic is now the `_aeq_pascere` helper both paths share).
+Decisions: R7-EXEMPT decl-inits still feed (the '=' can align
+even when the columns can't); uninitialized declarations BREAK
+the cluster (conservative; door if corpus says otherwise);
+multi-declarator lines break; decl-init + adjacent assignment
+statement co-cluster (the aggressive decree crosses the
+declaration/statement boundary — pinned).
+
+Composition note: R7 moves names, which changes declarator cb
+values — the fixpoint loop absorbs the interaction (R7 settles,
+then '='s align; no choreography).
+
+nuntium 770-771 now reads `shifted  = / mask     =` — exactly
+Fran's sketch. Six files took small passes (chorda 8, credo 9,
+json 7, similitudo 6, nuntium 4, internamentum 2). Probatio
+193/193; examen ACCIPE; differre cosmetica-only; root 136/137
+(pre-existing); silva 40/40.

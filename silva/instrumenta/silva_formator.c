@@ -1585,8 +1585,105 @@ _aequationes_censere (
     }
 }
 
+/* glomeri R9 alere: apta appenditur (fractura contiguitatis
+ * flusa), non-apta glomus findit et censet */
+interior vacuum
+_aeq_pascere (
+    FormatorAmbitus* ambitus,
+                i32* aeq_cb,
+                i32* aeq_op,
+                i32* aeq_lineae,
+                i32* aeq_fines,
+                i32* aeq_plena,
+                i32* aeq_linea_prior,
+                b32  apta,
+                i32  cb,
+                i32  op_columna,
+                i32  la,
+                i32  finis)
+{
+    si (apta)
+    {
+        si ((*aeq_linea_prior != (i32)ZEPHYRUM
+                && la > *aeq_linea_prior + I)
+            || *aeq_plena >= (i32)R7_MEMBRA_MAXIMA)
+        {
+            _aequationes_censere(ambitus, aeq_cb, aeq_op,
+                aeq_lineae, aeq_fines, *aeq_plena);
+            *aeq_plena = ZEPHYRUM;
+        }
+        aeq_cb[*aeq_plena]     = cb;
+        aeq_op[*aeq_plena]     = op_columna;
+        aeq_lineae[*aeq_plena] = la;
+        aeq_fines[*aeq_plena]  = finis;
+        *aeq_plena += I;
+        *aeq_linea_prior = la;
+    }
+    alioquin
+    {
+        _aequationes_censere(ambitus, aeq_cb, aeq_op,
+            aeq_lineae, aeq_fines, *aeq_plena);
+        *aeq_plena       = ZEPHYRUM;
+        *aeq_linea_prior = ZEPHYRUM;
+    }
+}
+
+/* declaratio initiata glomeri R9 alenda? (porta G1 clausa -
+ * Fran 'nuntium 770' invenit: '=' initiatorum a nulla regula
+ * regebatur). cb = una post declaratorem (suffixa aciei
+ * participant, ut R7). */
+interior b32
+_declarationem_aequatione_metiri (
+    FormatorAmbitus* ambitus,
+        SilvaNodus*  nodus,
+        SilvaNodus*  declarator,
+                i32* cb,
+                i32* op_columna,
+                i32* la,
+                i32* finis)
+{
+    SilvaToken* op_tok;
+           i32  xla;
+           i32  xca;
+           i32  xlb;
+           i32  xcb;
+           i32  sla;
+           i32  sca;
+           i32  slb;
+           i32  scb;
+
+    si (!declarator || declarator->genus
+        != SILVA_C89_GENUS_DECLARATOR_INITIATUS)
+    {
+        redde FALSUM;
+    }
+    op_tok = _valor_radix(
+        silva_c89_declarator_initiatus_tok_operator(
+            declarator));
+    si (!_principalis(ambitus, op_tok)) redde FALSUM;
+    si (!_valoris_extensio(ambitus,
+        silva_c89_declarator_initiatus_declarator(declarator),
+        &xla, &xca, &xlb, &xcb)
+        || xla != xlb || op_tok->linea != xla)
+    {
+        redde FALSUM;
+    }
+    si (!_extensio(nodus, ambitus->fons_princeps, &sla, &sca,
+        &slb, &scb)
+        || sla != slb)
+    {
+        redde FALSUM;
+    }
+    *cb         = xcb;
+    *op_columna = op_tok->columna;
+    *la         = xla;
+    *finis      = scb;
+    redde VERUM;
+}
+
 /* ordines localium in capite corporis + glomera assignationum
- * (R9: '=' per glomus ordinata; linea vacua findit) */
+ * (R9: '=' per glomus ordinata; linea vacua findit; declarationes
+ * initiatae participant) */
 interior vacuum
 _corpus_interius_censere (
     FormatorAmbitus* ambitus,
@@ -1633,15 +1730,16 @@ _corpus_interius_censere (
             si (nodus
                 && nodus->genus == SILVA_C89_GENUS_DECLARATIO)
             {
-                SilvaValor declaratores;
+                SilvaValor  declaratores;
+                SilvaNodus* declarator;
 
+                declarator   = NIHIL;
                 declaratores = silva_c89_declaratio_declaratores(
                     nodus);
                 si (silva_valor_lista_numerus(declaratores)
                     == (i32)I)
                 {
                     SilvaValor* d;
-                    SilvaNodus* declarator;
 
                     d = silva_valor_lista_obtinere(
                         declaratores, ZEPHYRUM);
@@ -1650,6 +1748,29 @@ _corpus_interius_censere (
                         silva_c89_declaratio_specificatores(
                             nodus), declarator, &novum);
                 }
+
+                /* R9: initiata glomeri alitur (etiam R7-exempta;
+                 * non-initiata glomus findit) */
+                {
+                    b32 aeq_apta;
+                    i32 dcb;
+                    i32 op_col;
+                    i32 dla;
+                    i32 finis;
+
+                    dcb    = ZEPHYRUM;
+                    op_col = ZEPHYRUM;
+                    dla    = ZEPHYRUM;
+                    finis  = ZEPHYRUM;
+                    aeq_apta = _declarationem_aequatione_metiri(
+                        ambitus, nodus, declarator, &dcb,
+                        &op_col, &dla, &finis);
+                    _aeq_pascere(ambitus, aeq_cb, aeq_op,
+                        aeq_lineae, aeq_fines, &aeq_plena,
+                        &aeq_linea_prior, aeq_apta, dcb,
+                        op_col, dla, finis);
+                }
+
                 si (!sanum)
                 {
                     /* declaratio exempta - ordinem findit */
@@ -1719,31 +1840,12 @@ _corpus_interius_censere (
                 }
             }
 
-            si (apta)
-            {
-                si ((aeq_linea_prior != (i32)ZEPHYRUM
-                        && la > aeq_linea_prior + I)
-                    || aeq_plena >= (i32)R7_MEMBRA_MAXIMA)
-                {
-                    _aequationes_censere(ambitus, aeq_cb,
-                        aeq_op, aeq_lineae, aeq_fines,
-                        aeq_plena);
-                    aeq_plena = ZEPHYRUM;
-                }
-                aeq_cb[aeq_plena]     = cb;
-                aeq_op[aeq_plena]     = operator_tok->columna;
-                aeq_lineae[aeq_plena] = la;
-                aeq_fines[aeq_plena]  = scb;
-                aeq_plena += I;
-                aeq_linea_prior = la;
-            }
-            alioquin
-            {
-                _aequationes_censere(ambitus, aeq_cb, aeq_op,
-                    aeq_lineae, aeq_fines, aeq_plena);
-                aeq_plena = ZEPHYRUM;
-                aeq_linea_prior = ZEPHYRUM;
-            }
+            _aeq_pascere(ambitus, aeq_cb, aeq_op, aeq_lineae,
+                aeq_fines, &aeq_plena, &aeq_linea_prior, apta,
+                apta ? cb : (i32)ZEPHYRUM,
+                apta ? operator_tok->columna : (i32)ZEPHYRUM,
+                apta ? la : (i32)ZEPHYRUM,
+                apta ? scb : (i32)ZEPHYRUM);
         }
     }
     _ordinem_censere(ambitus, membra, plena);

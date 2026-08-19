@@ -1113,6 +1113,49 @@ s32 principale (vacuum)
             "}\n"));
     }
 
+    imprimere("\n--- Probans R9: declarationes initiatae ---\n");
+    {
+        /* porta G1 clausa (nuntium 770): '=' initiatorum
+         * glomeri participat - sinistrum = declarator (nomen),
+         * latitudo mixta -> max + II */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    s64 shifted = I;\n"
+            "    s64 mask = II;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    s64 shifted  = I;\n"
+            "    s64 mask     = II;\n"
+            "}\n"));
+    }
+    {
+        /* declaratio initiata + assignatio contigua = glomus
+         * UNUM (glomera avida trans limitem) */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a = I;\n"
+            "    b = II;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a  = I;\n"
+            "    b      = II;\n"
+            "}\n"));
+    }
+
     imprimere("\n--- Probans R9: glomus cadens (LXXII) ---\n");
     {
         /* ordinatio membrum longum trans LXXII truderet ->

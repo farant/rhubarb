@@ -12708,3 +12708,14 @@ LXXII gradus GLOMERIS (membrum ullum transgrederetur → glomus
 totum ad minimum cadit). Praedicatum a spatiis independens - non
 oscillat. Cursus xiii plagularum: nuntium = forma manus octetim.
 Probatio 189/189; portae virides.
+
+## 2026-08-19 — formator R9: initiatores declarationum (porta G1 clausa)
+
+Nuntium 770 (Fran): '=' initiatorum a NULLA regula regebatur
+(R9 sententias solas, R10 '=' excludit). Clausum: declarationes
+initiatae uni-lineares glomeri R9 aluntur (cb = una post
+declaratorem; aequilata/cadentia inalterata); _aeq_pascere
+communis ambabus viis. Decisiones: exemptae R7 alunt tamen;
+non-initiatae findunt; assignatio contigua co-glomerat. Sex
+plagulae politae; nuntium = adumbratio Frani exacte. Probatio
+193/193; portae virides.
