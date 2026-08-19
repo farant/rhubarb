@@ -866,7 +866,7 @@ chorda_substituere (
     dum (positus_lecti < s.mensura)
     {
         /* Verificare si hic est antiquum */
-        si (positus_lecti <= s.mensura - antiquum.mensura
+        si (   positus_lecti <= s.mensura - antiquum.mensura
             && memcmp(s.datum + positus_lecti, antiquum.datum, (memoriae_index)antiquum.mensura) == ZEPHYRUM)
         {
             /* Scribere novum */

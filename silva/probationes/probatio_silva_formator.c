@@ -1187,6 +1187,109 @@ s32 principale (vacuum)
         }
     }
 
+    imprimere("\n--- Probans scribere: catena logica (R17) ---\n");
+    {
+        /* exemplar Frani: operandum primum ad parenthesim + IV,
+         * operatores ad parenthesim + I, comparationes ad
+         * max(cb) + I (spatium UNUM post sinistrum longissimum) */
+        constans character* fons =
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    si (_lex_aspicere(lex, I) == 'a'\n"
+            "        && _lex_aspicere(lex, II) == 'l'\n"
+            "        && _lex_aspicere(lex, III) == 's'\n"
+            "        && _lex_aspicere(lex, IV) == 'e')\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n";
+        constans character* exspectatum =
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    si (   _lex_aspicere(lex, I)   == 'a'\n"
+            "        && _lex_aspicere(lex, II)  == 'l'\n"
+            "        && _lex_aspicere(lex, III) == 's'\n"
+            "        && _lex_aspicere(lex, IV)  == 'e')\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)3);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            exspectatum));
+
+        /* forma perfecta se ipsa conformis (R10-ante cedit
+         * vindicationi R17 - sine cessione spatia ordinationis
+         * flagrarent) */
+        {
+            Xar* d = _lint(piscina, exspectatum);
+
+            CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+        }
+    }
+
+    imprimere("\n--- Probans scribere: catena in dum ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    dum (a == b\n"
+            "        && c == d)\n"
+            "    {\n"
+            "        a = b;\n"
+            "    }\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    dum (   a == b\n"
+            "         && c == d)\n"
+            "    {\n"
+            "        a = b;\n"
+            "    }\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans catenam: negativa ---\n");
+    {
+        /* uni-linearis: catena arta manet (numquam involvimus) */
+        Xar* d = _lint(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    si (a == b && c == d) redde;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+    {
+        /* multi-linearis NON catena (vocatio): R17 tacet, sine
+         * suffarcinatione parenthesis */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    si (functio(a,\n"
+            "        b))\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

@@ -12657,3 +12657,16 @@ exemplari exsecuta), json 535/4, chorda 478/3 - residuae SOLUM
 longitudo+vexillum; differre omnes [cosmetica]; examen ACCIPE.
 Probatio 167/167, suite 40/40. GRADUS FIX COMPLETUS - sequens:
 evolutio corporis supervisa, tum portae G3.
+
+## 2026-08-19 — formator R17: catena-logica
+
+Regula nova ex recensione Frani evolutionis I: catenae &&/||
+multi-lineares in si/dum - operandum ad parenthesim + IV (spatia
+III post '('), operatores ducentes ad parenthesim + I,
+comparationes bi-char ad max(cb) + I. Vindicatio: R10-ante
+comparationibus catenae cedit (divisio '=' R9/R10 iterata).
+Electio formae: suffarcinata parenthesis stricte compatibilis cum
+minimo R11 (si: paren+1 == ca+4 exacte); forma pendens reiecta
+(paren-2 minimum contradiceret). per dilata CUM CAUSA. Trio
+evolutum retractum: json +11 (catenae aspicere = exemplar Frani
+octetim), chorda +1; differre omnes [cosmetica]. Probatio 177/177.

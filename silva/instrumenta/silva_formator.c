@@ -680,8 +680,16 @@ nomen structura {
         Xar* divergentiae;
     Piscina* piscina;
         Xar* continuationes;   /* ContinuatioSpatium (R11) */
+        Xar* catena_ops;       /* CatenaSedes (R17 vindicata) */
         s32  fons_princeps;
 } FormatorAmbitus;
+
+/* R17: sedes operatoris comparationis a catena vindicata -
+ * R10-ante ordinationi eius cedit */
+nomen structura {
+    i32 linea;
+    i32 columna;
+} CatenaSedes;
 
 /* R11: extensio sententiae multi-linearis - lineae internae
  * continuationes sunt (indentatio >= ca + IV postulata) */
@@ -1792,6 +1800,321 @@ _parametra_ordinem_censere (
 }
 
 /* ==================================================
+ * R17 catena-logica: catena &&/|| multi-linearis in
+ * conditione si/dum/per. Operandum primum ad
+ * parenthesim + IV (spatia III post '('), operatores
+ * ducentes ad parenthesim + I, comparationes
+ * bi-characterum ordine R9-simili ad max(cb) + I
+ * (decretum Frani 2026-08-19; nota: + I hic, R9 + II).
+ * ================================================== */
+
+#define CATENA_MEMBRA_MAXIMA 64
+
+interior b32
+_operator_logicus (SilvaLexemaGenus genus)
+{
+    redde genus == SILVA_LEX_ET_ET
+        || genus == SILVA_LEX_VEL_VEL;
+}
+
+interior b32
+_comparatio_bichar (SilvaLexemaGenus genus)
+{
+    redde genus == SILVA_LEX_AEQUALIS_AEQUALIS
+        || genus == SILVA_LEX_NON_AEQUALIS
+        || genus == SILVA_LEX_MINOR_AEQUALIS
+        || genus == SILVA_LEX_MAIOR_AEQUALIS;
+}
+
+nomen structura {
+    SilvaToken* ops[CATENA_MEMBRA_MAXIMA];   /* logici */
+           i32  numerus_operatorum;
+    SilvaNodus* rami[CATENA_MEMBRA_MAXIMA];
+           i32  numerus_ramorum;
+} CatenaCollectio;
+
+/* spinam logicam colligere: operatores &&/|| et ramos (folia
+ * non-logica) ordine fontis; parentheses interiores NON
+ * aperiuntur (catenae nidificatae ancoram propriam habent) */
+interior vacuum
+_catenam_colligere (
+        SilvaNodus*  nodus,
+    CatenaCollectio* collectio)
+{
+    si (!nodus) redde;
+    si (nodus->genus == SILVA_C89_GENUS_BINARIUM)
+    {
+        SilvaToken* op;
+
+        op = _valor_radix(
+            silva_c89_binarium_tok_operator(nodus));
+        si (op && _operator_logicus(op->genus))
+        {
+            _catenam_colligere(_valor_nodus(
+                silva_c89_binarium_sinister(nodus)), collectio);
+            si (collectio->numerus_operatorum
+                < (i32)CATENA_MEMBRA_MAXIMA)
+            {
+                collectio->ops[collectio->numerus_operatorum]
+                    = op;
+                collectio->numerus_operatorum += I;
+            }
+            _catenam_colligere(_valor_nodus(
+                silva_c89_binarium_dexter(nodus)), collectio);
+            redde;
+        }
+    }
+    si (collectio->numerus_ramorum
+        < (i32)CATENA_MEMBRA_MAXIMA)
+    {
+        collectio->rami[collectio->numerus_ramorum] = nodus;
+        collectio->numerus_ramorum += I;
+    }
+}
+
+interior vacuum
+_catenam_censere (
+    FormatorAmbitus* ambitus,
+         SilvaValor  valor_apertum,
+         SilvaValor  valor_clausum,
+        SilvaNodus*  conditio)
+{
+    SilvaToken*     aperta;
+    SilvaToken*     clausa;
+    SilvaToken*     radix_op;
+    CatenaCollectio collectio;
+    i32             columna_operandi;
+    i32             columna_operatoris;
+    i32             cb_maxima;
+    i32             i;
+    i32             la;
+    i32             ca;
+    i32             lb;
+    i32             cb;
+
+    aperta = _valor_radix(valor_apertum);
+    clausa = _valor_radix(valor_clausum);
+    si (!_principalis(ambitus, aperta)
+        || !_principalis(ambitus, clausa))
+    {
+        redde;
+    }
+    si (clausa->linea <= aperta->linea) redde;
+    si (!conditio
+        || conditio->genus != SILVA_C89_GENUS_BINARIUM)
+    {
+        redde;
+    }
+    radix_op = _valor_radix(
+        silva_c89_binarium_tok_operator(conditio));
+    si (!radix_op || !_operator_logicus(radix_op->genus))
+    {
+        redde;
+    }
+
+    collectio.numerus_operatorum = ZEPHYRUM;
+    collectio.numerus_ramorum    = ZEPHYRUM;
+    _catenam_colligere(conditio, &collectio);
+
+    columna_operandi   = aperta->columna + IV;
+    columna_operatoris = aperta->columna + I;
+
+    /* A: operandum primum ad parenthesim + IV */
+    si (_extensio(conditio, ambitus->fons_princeps, &la, &ca,
+        &lb, &cb)
+        && la == aperta->linea
+        && ca != columna_operandi)
+    {
+        _addere(ambitus->divergentiae, "catena-logica",
+            "spatia tria post parenthesim catenae exspectata",
+            la, ca, (s32)ca, (s32)columna_operandi);
+        _emendare_tolerans(ambitus->divergentiae, la,
+            aperta->columna + I, la, ca,
+            _textus_emendationis(ambitus->piscina, ZEPHYRUM,
+                III));
+    }
+
+    /* B: operatores ducentes ad parenthesim + I */
+    per (i = ZEPHYRUM; i < collectio.numerus_operatorum;
+        i += I)
+    {
+        SilvaToken* op;
+
+        op = collectio.ops[i];
+        si (!_principalis(ambitus, op)
+            || !op->initium_lineae)
+        {
+            perge;
+        }
+        si (op->columna != columna_operatoris)
+        {
+            _addere(ambitus->divergentiae, "catena-logica",
+                "operator catenae ad parenthesim + I"
+                " exspectatus", op->linea, op->columna,
+                (s32)op->columna, (s32)columna_operatoris);
+            _emendare(ambitus->divergentiae, op->linea, I,
+                op->linea, op->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, columna_operatoris - I));
+        }
+    }
+
+    /* C: comparationes bi-characterum ordinatae ad
+     * max(cb sinistrorum) + I; participes = rami
+     * uni-lineares columnam operandi incipientes. Sedes
+     * omnium participum vindicantur (R10-ante cedit). */
+    cb_maxima = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < collectio.numerus_ramorum; i += I)
+    {
+        SilvaNodus* ramus;
+        SilvaToken* op;
+               i32  rla;
+               i32  rca;
+               i32  rlb;
+               i32  rcb;
+               i32  sla;
+               i32  sca;
+               i32  slb;
+               i32  scb;
+
+        ramus = collectio.rami[i];
+        si (!ramus || ramus->genus != SILVA_C89_GENUS_BINARIUM)
+        {
+            perge;
+        }
+        op = _valor_radix(
+            silva_c89_binarium_tok_operator(ramus));
+        si (!op || !_comparatio_bichar(op->genus)
+            || !_principalis(ambitus, op))
+        {
+            perge;
+        }
+        si (!_extensio(ramus, ambitus->fons_princeps, &rla,
+            &rca, &rlb, &rcb)
+            || rla != rlb || rca != columna_operandi)
+        {
+            perge;
+        }
+        si (!_valoris_extensio(ambitus,
+            silva_c89_binarium_sinister(ramus), &sla, &sca,
+            &slb, &scb)
+            || sla != slb || op->linea != sla)
+        {
+            perge;
+        }
+        si (scb > cb_maxima) cb_maxima = scb;
+    }
+    si (cb_maxima == (i32)ZEPHYRUM) redde;
+
+    per (i = ZEPHYRUM; i < collectio.numerus_ramorum; i += I)
+    {
+        SilvaNodus* ramus;
+        SilvaToken* op;
+               i32  rla;
+               i32  rca;
+               i32  rlb;
+               i32  rcb;
+               i32  sla;
+               i32  sca;
+               i32  slb;
+               i32  scb;
+               i32  columna_recta;
+        CatenaSedes* sedes;
+
+        ramus = collectio.rami[i];
+        si (!ramus || ramus->genus != SILVA_C89_GENUS_BINARIUM)
+        {
+            perge;
+        }
+        op = _valor_radix(
+            silva_c89_binarium_tok_operator(ramus));
+        si (!op || !_comparatio_bichar(op->genus)
+            || !_principalis(ambitus, op))
+        {
+            perge;
+        }
+        si (!_extensio(ramus, ambitus->fons_princeps, &rla,
+            &rca, &rlb, &rcb)
+            || rla != rlb || rca != columna_operandi)
+        {
+            perge;
+        }
+        si (!_valoris_extensio(ambitus,
+            silva_c89_binarium_sinister(ramus), &sla, &sca,
+            &slb, &scb)
+            || sla != slb || op->linea != sla)
+        {
+            perge;
+        }
+
+        /* vindicare (etiam sine divergentia) */
+        si (ambitus->catena_ops)
+        {
+            sedes = (CatenaSedes*)xar_addere(
+                ambitus->catena_ops);
+            si (sedes)
+            {
+                sedes->linea   = op->linea;
+                sedes->columna = op->columna;
+            }
+        }
+
+        columna_recta = cb_maxima + I;
+        si (op->columna == columna_recta) perge;
+        si (columna_recta > op->columna
+            && (rcb - I) + (columna_recta - op->columna)
+                > (i32)LONGITUDO_RECTA)
+        {
+            perge;   /* exceptio LXXII (ut R9) */
+        }
+        _addere(ambitus->divergentiae, "catena-logica",
+            "comparatio catenae non ordinata", op->linea,
+            op->columna, (s32)op->columna,
+            (s32)columna_recta);
+        si (op->columna < columna_recta)
+        {
+            _emendare(ambitus->divergentiae, op->linea,
+                op->columna, op->linea, op->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, columna_recta - op->columna));
+        }
+        alioquin
+        {
+            _emendare(ambitus->divergentiae, op->linea,
+                columna_recta, op->linea, op->columna,
+                _textus_emendationis(ambitus->piscina,
+                    ZEPHYRUM, ZEPHYRUM));
+        }
+    }
+}
+
+/* estne sedes operatoris a catena vindicata? */
+interior b32
+_catena_vindicata (
+    FormatorAmbitus* ambitus,
+                i32  linea,
+                i32  columna)
+{
+    i32 numerus;
+    i32 i;
+
+    numerus = ambitus->catena_ops
+        ? xar_numerus(ambitus->catena_ops) : (i32)ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        constans CatenaSedes* sedes;
+
+        sedes = (constans CatenaSedes*)xar_obtinere(
+            ambitus->catena_ops, i);
+        si (sedes->linea == linea && sedes->columna == columna)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ==================================================
  * R10 operatores: binarii spatiati, accessus/conversio/
  * unarii/postcrementum arti. ASSIGNATIO exclusa (R9).
  * ================================================== */
@@ -1819,7 +2142,10 @@ _binarium_operatorem_censere (
         silva_c89_binarium_sinister(nodus), &sla, &sca, &slb,
         &scb)
         && operator_tok->linea == slb
-        && operator_tok->columna != scb + I)
+        && operator_tok->columna != scb + I
+        && !(_comparatio_bichar(operator_tok->genus)
+            && _catena_vindicata(ambitus, operator_tok->linea,
+                operator_tok->columna)))
     {
         _addere(ambitus->divergentiae, "operatores",
             "spatium unicum ante operatorem binarium",
@@ -1998,6 +2324,12 @@ _si_censere (
     clausum = _valor_radix(silva_c89_si_tok_clausum(nodus));
     consequens = _valor_nodus(silva_c89_si_consequens(nodus));
 
+    /* R17: catena logica in conditione (ANTE percursum -
+     * vindicationes R10 praecedere debent) */
+    _catenam_censere(ambitus, silva_c89_si_tok_apertum(nodus),
+        silva_c89_si_tok_clausum(nodus),
+        _valor_nodus(silva_c89_si_conditio(nodus)));
+
     /* R11: conditio multi-linearis = continuationes */
     si (_principalis(ambitus, clausum))
     {
@@ -2086,6 +2418,10 @@ _nodum_percurrere (
             corpus = _valor_nodus(silva_c89_dum_corpus(nodus));
             clausum = _valor_radix(
                 silva_c89_dum_tok_clausum(nodus));
+            _catenam_censere(ambitus,
+                silva_c89_dum_tok_apertum(nodus),
+                silva_c89_dum_tok_clausum(nodus),
+                _valor_nodus(silva_c89_dum_conditio(nodus)));
             si (_principalis(ambitus, clausum))
             {
                 i32 la;
@@ -2677,6 +3013,8 @@ formator_lint (
         ambitus.fons_princeps  = parsura->fons_princeps;
         ambitus.continuationes = xar_creare(piscina,
             magnitudo(ContinuatioSpatium));
+        ambitus.catena_ops     = xar_creare(piscina,
+            magnitudo(CatenaSedes));
         radix = parsura->commissio->radix;
         lb_prior = ZEPHYRUM;
 

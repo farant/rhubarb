@@ -249,7 +249,7 @@ _lex_chorda (
                 per (i = 0; i < IV; i++)
                 {
                     _lex_avanzare(lex);
-                    si (lex->positio >= lex->mensura
+                    si (   lex->positio >= lex->mensura
                         || !_est_hex_digitus(_lex_currens(lex)))
                     {
                         redde _lex_error(lex, "Unicode escape invalidus");
@@ -359,8 +359,8 @@ _lex_keyword (
     /* true */
     si (_lex_currens(lex) == 't')
     {
-        si (_lex_aspicere(lex, I) == 'r'
-            && _lex_aspicere(lex, II) == 'u'
+        si (   _lex_aspicere(lex, I)   == 'r'
+            && _lex_aspicere(lex, II)  == 'u'
             && _lex_aspicere(lex, III) == 'e')
         {
             lex->positio       += IV;
@@ -375,10 +375,10 @@ _lex_keyword (
     /* false */
     si (_lex_currens(lex) == 'f')
     {
-        si (_lex_aspicere(lex, I) == 'a'
-            && _lex_aspicere(lex, II) == 'l'
+        si (   _lex_aspicere(lex, I)   == 'a'
+            && _lex_aspicere(lex, II)  == 'l'
             && _lex_aspicere(lex, III) == 's'
-            && _lex_aspicere(lex, IV) == 'e')
+            && _lex_aspicere(lex, IV)  == 'e')
         {
             lex->positio       += V;
             lex->columna       += V;
@@ -392,8 +392,8 @@ _lex_keyword (
     /* null */
     si (_lex_currens(lex) == 'n')
     {
-        si (_lex_aspicere(lex, I) == 'u'
-            && _lex_aspicere(lex, II) == 'l'
+        si (   _lex_aspicere(lex, I)   == 'u'
+            && _lex_aspicere(lex, II)  == 'l'
             && _lex_aspicere(lex, III) == 'l')
         {
             lex->positio       += IV;

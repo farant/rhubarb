@@ -249,6 +249,43 @@ Line length limit 72 (DECRETA 2026-08-19; observed practice ranged
 64-80, recent files hover 66-72). Report only; the formator never
 rewraps (Contractus).
 
+### R17 `catena-logica` — FIX (decreta 2026-08-19)
+
+Multiline `&&`/`||` chains in `si`/`dum` conditions take the
+padded-paren form: first operand at paren+4 (three spaces after
+`(`), each line-leading chain operator at paren+1, and — the
+comparison-run extension — branches that are two-character
+comparisons (`==` `!=` `<=` `>=`) align their operators at
+**max(LHS end) + 1** (ONE space after the longest left side; note
+the deliberate contrast with R9's max+2).
+
+```c
+        si (   _lex_aspicere(lex, I)   == 'a'
+            && _lex_aspicere(lex, II)  == 'l'
+            && _lex_aspicere(lex, III) == 's'
+            && _lex_aspicere(lex, IV)  == 'e')
+```
+
+Edges:
+- Triggers ONLY on already-multiline chains (single-line conditions
+  stay tight — no rewrap, Contractus).
+- The paren-interior padding is R17's territory: no future
+  tight-paren rule may claim that gap.
+- R10-ante DEFERS to R17 for claimed comparison operators (same
+  division as `=` between R10 and R9); R10-post (one space after
+  the operator) still applies. Alignment inherits R9's 72-exception.
+- Mixed chains: non-comparison branches (boolean calls, `<`/`>`
+  single-char comparisons) share the padding but don't participate
+  in alignment.
+- Nested parenthesized chains anchor on their own paren
+  (recursion); parenless chains (`redde a || b`) stay on R11's
+  ca+4. `per` deferred WITH CAUSE: its paren wraps the init clause
+  first, so the paren+4 anchor doesn't fit — chains there keep
+  R11's minimum until a sensible anchor is decreed.
+- Chosen over the operand-aligned hanging form (`&&` at paren−2)
+  because it is strictly compatible with R11's ≥ ca+4 minimum for
+  every keyword and anchors on a single token.
+
 ---
 
 ## Quaestiones apertae

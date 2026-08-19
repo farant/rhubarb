@@ -394,3 +394,42 @@ FIX TIER COMPLETE. Next: supervised corpus rollout
 (library-by-library, differre + examen + suite as acceptance),
 then G3 doors (banners, R14 promotion, prototype R1/R8 coverage,
 comment-interior whitespace).
+
+## 2026-08-19 — R17 catena-logica (padded-paren chains + comparison runs)
+
+Born from Fran reviewing batch one: the R11 operator-move had
+flipped json.c's trailing-&& chains to leading-at-ca+4, and the
+convergence turned out to be exact — the padded-paren form Fran
+chose is the machine's existing output PLUS three spaces after
+'(' (for si, paren+1 == ca+4 precisely). The rejected alternative
+(operand-aligned, operator at paren-2) would have contradicted
+R11's minimum and needed a carve-out.
+
+Shape: multiline &&/|| chain directly under a si/dum condition
+paren → first operand paren+4, leading operators paren+1,
+two-char-comparison branches align ops at max(lhs cb) + I (ONE
+space after the longest LHS — Fran's exemplar; deliberately
+tighter than R9's + II). Claims mechanism: every participating
+comparison registers its operator position in ambitus->catena_ops
+and R10-ante DEFERS (same '=' division as R9/R10; without it the
+aligned form would flag "spatium unicum ante"). Claim happens even
+when C is silent — already-aligned ops need the deferral too.
+Order matters: _catenam_censere runs BEFORE the walk descends into
+the condition (si: top of _si_censere; dum: case block before
+liberi recursion), so claims precede R10's checks.
+
+Scope decisions: si + dum only. per DEFERRED WITH CAUSE (its paren
+wraps the init clause first — paren+4 anchors nothing sensible);
+parenless chains (redde) stay on R11 ca+4; single-line conditions
+untouched (no rewrap); nested parens anchor recursively (excluded
+from the outer spine walk). Mixed chains: padding + operator
+placement apply, only comparison branches align. First-branch
+participation lags one round (it sits at paren+1 until A pads it
+to paren+4) — fixpoint absorbs it, exemplar converges in 3.
+
+Applied to the rolled-out trio: chorda +1 (a substituere guard),
+json +11 (the aspicere chains — now byte-identical to Fran's
+exemplar), piscina zero. differre 1+2 MUTATA all [cosmetica],
+examen ACCIPE, suites green. Probatio 177/177 (target-form
+self-conformance pinned — proves the R10 deferral; negatives:
+single-line tight, multiline non-chain unpadded).
