@@ -35,21 +35,21 @@ nomen enumeratio {
 } JsonTokenGenus;
 
 nomen structura {
-    JsonTokenGenus genus;
-    i32            valor_initium;   /* Start position in input */
-    i32            valor_mensura;   /* Length of value */
-    i32            linea;
-    i32            columna;
+        JsonTokenGenus  genus;
+                   i32  valor_initium;   /* Start position in input */
+                   i32  valor_mensura;   /* Length of value */
+                   i32  linea;
+                   i32  columna;
     constans character* error;      /* Error message (static string) */
 } JsonToken;
 
 nomen structura {
     constans i8* datum;
-    i32          mensura;
-    i32          positio;
-    i32          linea;
-    i32          columna;
-    Piscina*     piscina;
+            i32  mensura;
+            i32  positio;
+            i32  linea;
+            i32  columna;
+        Piscina* piscina;
 } JsonLexema;
 
 
@@ -58,27 +58,31 @@ nomen structura {
  * ======================================================================== */
 
 interior b32
-_est_spatium(character c)
+_est_spatium (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\n' || c == '\r';
 }
 
 interior b32
-_est_digitus(character c)
+_est_digitus (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
 
 interior b32
-_est_hex_digitus(character c)
+_est_hex_digitus (
+    character c)
 {
-    redde (c >= '0' && c <= '9') ||
-           (c >= 'a' && c <= 'f') ||
-           (c >= 'A' && c <= 'F');
+    redde (c >= '0' && c <= '9')
+        || (c >= 'a' && c <= 'f')
+        || (c >= 'A' && c <= 'F');
 }
 
 interior i32
-_hex_valor(character c)
+_hex_valor (
+    character c)
 {
     si (c >= '0' && c <= '9')
     {
@@ -101,18 +105,22 @@ _hex_valor(character c)
  * ======================================================================== */
 
 interior vacuum
-_lex_initare(JsonLexema* lex, chorda input, Piscina* piscina)
+_lex_initare (
+    JsonLexema* lex,
+        chorda  input,
+       Piscina* piscina)
 {
-    lex->datum = input.datum;
-    lex->mensura = input.mensura;
-    lex->positio = 0;
-    lex->linea = I;
-    lex->columna = I;
-    lex->piscina = piscina;
+    lex->datum    = input.datum;
+    lex->mensura  = input.mensura;
+    lex->positio  = 0;
+    lex->linea    = I;
+    lex->columna  = I;
+    lex->piscina  = piscina;
 }
 
 interior character
-_lex_currens(JsonLexema* lex)
+_lex_currens (
+    JsonLexema* lex)
 {
     si (lex->positio >= lex->mensura)
     {
@@ -122,7 +130,9 @@ _lex_currens(JsonLexema* lex)
 }
 
 interior character
-_lex_aspicere(JsonLexema* lex, i32 offset)
+_lex_aspicere (
+    JsonLexema* lex,
+           i32  offset)
 {
     i32 pos = lex->positio + offset;
     si (pos >= lex->mensura)
@@ -133,7 +143,8 @@ _lex_aspicere(JsonLexema* lex, i32 offset)
 }
 
 interior vacuum
-_lex_avanzare(JsonLexema* lex)
+_lex_avanzare (
+    JsonLexema* lex)
 {
     si (lex->positio < lex->mensura)
     {
@@ -151,7 +162,8 @@ _lex_avanzare(JsonLexema* lex)
 }
 
 interior vacuum
-_lex_saltare_spatium(JsonLexema* lex)
+_lex_saltare_spatium (
+    JsonLexema* lex)
 {
     dum (lex->positio < lex->mensura && _est_spatium(_lex_currens(lex)))
     {
@@ -160,42 +172,47 @@ _lex_saltare_spatium(JsonLexema* lex)
 }
 
 interior JsonToken
-_lex_error(JsonLexema* lex, constans character* msg)
+_lex_error (
+            JsonLexema* lex,
+    constans character* msg)
 {
     JsonToken tok;
-    tok.genus = JSON_TOK_ERROR;
-    tok.valor_initium = 0;
-    tok.valor_mensura = 0;
-    tok.linea = lex->linea;
-    tok.columna = lex->columna;
-    tok.error = msg;
+    tok.genus          = JSON_TOK_ERROR;
+    tok.valor_initium  = 0;
+    tok.valor_mensura  = 0;
+    tok.linea          = lex->linea;
+    tok.columna        = lex->columna;
+    tok.error          = msg;
     redde tok;
 }
 
 interior JsonToken
-_lex_simplex(JsonLexema* lex, JsonTokenGenus genus)
+_lex_simplex (
+        JsonLexema* lex,
+    JsonTokenGenus  genus)
 {
     JsonToken tok;
-    tok.genus = genus;
-    tok.valor_initium = lex->positio;
-    tok.valor_mensura = I;
-    tok.linea = lex->linea;
-    tok.columna = lex->columna;
-    tok.error = NIHIL;
+    tok.genus          = genus;
+    tok.valor_initium  = lex->positio;
+    tok.valor_mensura  = I;
+    tok.linea          = lex->linea;
+    tok.columna        = lex->columna;
+    tok.error          = NIHIL;
     _lex_avanzare(lex);
     redde tok;
 }
 
 /* Legere chorda cum escape sequences */
 interior JsonToken
-_lex_chorda(JsonLexema* lex)
+_lex_chorda (
+    JsonLexema* lex)
 {
     JsonToken tok;
-    i32 initium;
+          i32 initium;
 
-    tok.linea = lex->linea;
-    tok.columna = lex->columna;
-    tok.error = NIHIL;
+    tok.linea    = lex->linea;
+    tok.columna  = lex->columna;
+    tok.error    = NIHIL;
 
     /* Saltare " aperiens */
     _lex_avanzare(lex);
@@ -208,9 +225,9 @@ _lex_chorda(JsonLexema* lex)
         si (c == '"')
         {
             /* Fine chordae */
-            tok.genus = JSON_TOK_CHORDA;
-            tok.valor_initium = initium;
-            tok.valor_mensura = lex->positio - initium;
+            tok.genus          = JSON_TOK_CHORDA;
+            tok.valor_initium  = initium;
+            tok.valor_mensura  = lex->positio - initium;
             _lex_avanzare(lex);  /* Saltare " claudens */
             redde tok;
         }
@@ -232,8 +249,8 @@ _lex_chorda(JsonLexema* lex)
                 per (i = 0; i < IV; i++)
                 {
                     _lex_avanzare(lex);
-                    si (lex->positio >= lex->mensura ||
-                        !_est_hex_digitus(_lex_currens(lex)))
+                    si (lex->positio >= lex->mensura
+                        || !_est_hex_digitus(_lex_currens(lex)))
                     {
                         redde _lex_error(lex, "Unicode escape invalidus");
                     }
@@ -256,14 +273,15 @@ _lex_chorda(JsonLexema* lex)
 
 /* Legere numerum (integer vel float) */
 interior JsonToken
-_lex_numerus(JsonLexema* lex)
+_lex_numerus (
+    JsonLexema* lex)
 {
     JsonToken tok;
-    i32 initium = lex->positio;
+          i32 initium = lex->positio;
 
-    tok.linea = lex->linea;
-    tok.columna = lex->columna;
-    tok.error = NIHIL;
+    tok.linea    = lex->linea;
+    tok.columna  = lex->columna;
+    tok.error    = NIHIL;
 
     /* Optional minus */
     si (_lex_currens(lex) == '-')
@@ -320,35 +338,36 @@ _lex_numerus(JsonLexema* lex)
         }
     }
 
-    tok.genus = JSON_TOK_NUMERUS;
-    tok.valor_initium = initium;
-    tok.valor_mensura = lex->positio - initium;
+    tok.genus          = JSON_TOK_NUMERUS;
+    tok.valor_initium  = initium;
+    tok.valor_mensura  = lex->positio - initium;
     redde tok;
 }
 
 /* Legere keyword (true, false, null) */
 interior JsonToken
-_lex_keyword(JsonLexema* lex)
+_lex_keyword (
+    JsonLexema* lex)
 {
     JsonToken tok;
-    i32 initium = lex->positio;
+          i32 initium = lex->positio;
 
-    tok.linea = lex->linea;
-    tok.columna = lex->columna;
-    tok.error = NIHIL;
+    tok.linea    = lex->linea;
+    tok.columna  = lex->columna;
+    tok.error    = NIHIL;
 
     /* true */
     si (_lex_currens(lex) == 't')
     {
-        si (_lex_aspicere(lex, I) == 'r' &&
-            _lex_aspicere(lex, II) == 'u' &&
-            _lex_aspicere(lex, III) == 'e')
+        si (_lex_aspicere(lex, I) == 'r'
+            && _lex_aspicere(lex, II) == 'u'
+            && _lex_aspicere(lex, III) == 'e')
         {
-            lex->positio += IV;
-            lex->columna += IV;
-            tok.genus = JSON_TOK_VERUM;
-            tok.valor_initium = initium;
-            tok.valor_mensura = IV;
+            lex->positio       += IV;
+            lex->columna       += IV;
+            tok.genus          = JSON_TOK_VERUM;
+            tok.valor_initium  = initium;
+            tok.valor_mensura  = IV;
             redde tok;
         }
     }
@@ -356,16 +375,16 @@ _lex_keyword(JsonLexema* lex)
     /* false */
     si (_lex_currens(lex) == 'f')
     {
-        si (_lex_aspicere(lex, I) == 'a' &&
-            _lex_aspicere(lex, II) == 'l' &&
-            _lex_aspicere(lex, III) == 's' &&
-            _lex_aspicere(lex, IV) == 'e')
+        si (_lex_aspicere(lex, I) == 'a'
+            && _lex_aspicere(lex, II) == 'l'
+            && _lex_aspicere(lex, III) == 's'
+            && _lex_aspicere(lex, IV) == 'e')
         {
-            lex->positio += V;
-            lex->columna += V;
-            tok.genus = JSON_TOK_FALSUM;
-            tok.valor_initium = initium;
-            tok.valor_mensura = V;
+            lex->positio       += V;
+            lex->columna       += V;
+            tok.genus          = JSON_TOK_FALSUM;
+            tok.valor_initium  = initium;
+            tok.valor_mensura  = V;
             redde tok;
         }
     }
@@ -373,15 +392,15 @@ _lex_keyword(JsonLexema* lex)
     /* null */
     si (_lex_currens(lex) == 'n')
     {
-        si (_lex_aspicere(lex, I) == 'u' &&
-            _lex_aspicere(lex, II) == 'l' &&
-            _lex_aspicere(lex, III) == 'l')
+        si (_lex_aspicere(lex, I) == 'u'
+            && _lex_aspicere(lex, II) == 'l'
+            && _lex_aspicere(lex, III) == 'l')
         {
-            lex->positio += IV;
-            lex->columna += IV;
-            tok.genus = JSON_TOK_NULLUM;
-            tok.valor_initium = initium;
-            tok.valor_mensura = IV;
+            lex->positio       += IV;
+            lex->columna       += IV;
+            tok.genus          = JSON_TOK_NULLUM;
+            tok.valor_initium  = initium;
+            tok.valor_mensura  = IV;
             redde tok;
         }
     }
@@ -390,7 +409,8 @@ _lex_keyword(JsonLexema* lex)
 }
 
 interior JsonToken
-_lex_proxima(JsonLexema* lex)
+_lex_proxima (
+    JsonLexema* lex)
 {
     character c;
 
@@ -399,12 +419,12 @@ _lex_proxima(JsonLexema* lex)
     si (lex->positio >= lex->mensura)
     {
         JsonToken tok;
-        tok.genus = JSON_TOK_FINIS;
-        tok.valor_initium = 0;
-        tok.valor_mensura = 0;
-        tok.linea = lex->linea;
-        tok.columna = lex->columna;
-        tok.error = NIHIL;
+        tok.genus          = JSON_TOK_FINIS;
+        tok.valor_initium  = 0;
+        tok.valor_mensura  = 0;
+        tok.linea          = lex->linea;
+        tok.columna        = lex->columna;
+        tok.error          = NIHIL;
         redde tok;
     }
 
@@ -441,17 +461,19 @@ _lex_proxima(JsonLexema* lex)
  * Allocat nova chorda in piscina
  */
 interior chorda
-_unescape_chorda(chorda input, Piscina* piscina)
+_unescape_chorda (
+     chorda  input,
+    Piscina* piscina)
 {
     chorda result;
-    i8* buffer;
+    i8 * buffer;
     i32 i;
     i32 out;
 
     si (input.mensura == 0)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
@@ -459,13 +481,13 @@ _unescape_chorda(chorda input, Piscina* piscina)
     buffer = (i8*)piscina_allocare(piscina, (i64)(input.mensura + I));
     si (!buffer)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
-    i = 0;
-    out = 0;
+    i    = 0;
+    out  = 0;
 
     dum (i < input.mensura)
     {
@@ -493,8 +515,8 @@ _unescape_chorda(chorda input, Piscina* piscina)
                         i32 j;
                         per (j = 0; j < IV; j++)
                         {
-                            codepoint = codepoint * XVI +
-                                _hex_valor((character)input.datum[i + II + j]);
+                            codepoint = codepoint * XVI
+                                + _hex_valor((character)input.datum[i + II + j]);
                         }
 
                         /* Encode as UTF-8 */
@@ -535,8 +557,8 @@ _unescape_chorda(chorda input, Piscina* piscina)
         }
     }
 
-    result.datum = buffer;
-    result.mensura = out;
+    result.datum    = buffer;
+    result.mensura  = out;
     redde result;
 }
 
@@ -546,7 +568,8 @@ _unescape_chorda(chorda input, Piscina* piscina)
  * ======================================================================== */
 
 interior b32
-_numerus_est_fluitans(chorda valor)
+_numerus_est_fluitans (
+    chorda valor)
 {
     i32 i;
     per (i = 0; i < valor.mensura; i++)
@@ -561,7 +584,8 @@ _numerus_est_fluitans(chorda valor)
 }
 
 interior s64
-_parse_integer(chorda valor)
+_parse_integer (
+    chorda valor)
 {
     s64 result = 0;
     i32 i = 0;
@@ -569,8 +593,8 @@ _parse_integer(chorda valor)
 
     si (valor.mensura > 0 && (character)valor.datum[0] == '-')
     {
-        negativus = VERUM;
-        i = I;
+        negativus  = VERUM;
+        i          = I;
     }
 
     dum (i < valor.mensura)
@@ -587,10 +611,12 @@ _parse_integer(chorda valor)
 }
 
 interior f64
-_parse_fluitans(chorda valor, Piscina* piscina)
+_parse_fluitans (
+     chorda  valor,
+    Piscina* piscina)
 {
     character* buffer;
-    f64 result;
+          f64  result;
 
     /* Copiare ad null-terminated buffer pro strtod */
     buffer = (character*)piscina_allocare(piscina, (i64)(valor.mensura + I));
@@ -611,51 +637,59 @@ _parse_fluitans(chorda valor, Piscina* piscina)
  * ======================================================================== */
 
 nomen structura {
-    JsonLexema lex;
-    JsonToken  currens;
-    Piscina*   piscina;
-    b32        error;
-    chorda     error_msg;
-    i32        error_linea;
-    i32        error_columna;
+    JsonLexema  lex;
+     JsonToken  currens;
+       Piscina* piscina;
+           b32  error;
+        chorda  error_msg;
+           i32  error_linea;
+           i32  error_columna;
 } JsonParser;
 
 /* Forward declarations */
 interior JsonValor* _parse_valor(JsonParser* parser);
 
 interior vacuum
-_parser_initare(JsonParser* parser, chorda input, Piscina* piscina)
+_parser_initare (
+    JsonParser* parser,
+        chorda  input,
+       Piscina* piscina)
 {
     _lex_initare(&parser->lex, input, piscina);
-    parser->piscina = piscina;
-    parser->error = FALSUM;
-    parser->error_msg.datum = NIHIL;
-    parser->error_msg.mensura = 0;
-    parser->error_linea = 0;
-    parser->error_columna = 0;
-    parser->currens = _lex_proxima(&parser->lex);
+    parser->piscina            = piscina;
+    parser->error              = FALSUM;
+    parser->error_msg.datum    = NIHIL;
+    parser->error_msg.mensura  = 0;
+    parser->error_linea        = 0;
+    parser->error_columna      = 0;
+    parser->currens            = _lex_proxima(&parser->lex);
 }
 
 interior vacuum
-_parser_avanzare(JsonParser* parser)
+_parser_avanzare (
+    JsonParser* parser)
 {
     parser->currens = _lex_proxima(&parser->lex);
 }
 
 interior vacuum
-_parser_error(JsonParser* parser, constans character* msg)
+_parser_error (
+            JsonParser* parser,
+    constans character* msg)
 {
     si (!parser->error)
     {
-        parser->error = VERUM;
+        parser->error          = VERUM;
         parser->error_msg = chorda_ex_literis(msg, parser->piscina);
-        parser->error_linea = parser->currens.linea;
-        parser->error_columna = parser->currens.columna;
+        parser->error_linea    = parser->currens.linea;
+        parser->error_columna  = parser->currens.columna;
     }
 }
 
 interior b32
-_parser_expectare(JsonParser* parser, JsonTokenGenus genus)
+_parser_expectare (
+        JsonParser* parser,
+    JsonTokenGenus  genus)
 {
     si (parser->currens.genus != genus)
     {
@@ -668,35 +702,37 @@ _parser_expectare(JsonParser* parser, JsonTokenGenus genus)
 
 /* Extrahere chorda ex token currens (allocat copia) */
 interior chorda
-_parser_token_valor(JsonParser* parser)
+_parser_token_valor (
+    JsonParser* parser)
 {
     chorda result;
-    i8* buffer;
+    i8 * buffer;
     i32 len = parser->currens.valor_mensura;
 
     si (len <= 0)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
     buffer = (i8*)piscina_allocare(parser->piscina, (i64)len);
     si (!buffer)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
     memcpy(buffer, parser->lex.datum + parser->currens.valor_initium, (size_t)len);
-    result.datum = buffer;
-    result.mensura = len;
+    result.datum    = buffer;
+    result.mensura  = len;
     redde result;
 }
 
 interior JsonValor*
-_parse_objectum(JsonParser* parser)
+_parse_objectum (
+    JsonParser* parser)
 {
     JsonValor* obj;
 
@@ -720,11 +756,11 @@ _parse_objectum(JsonParser* parser)
     /* Parse pairs */
     fac
     {
-        chorda clavis_raw;
-        chorda clavis_unesc;
-        chorda* clavis_intern;
+           chorda  clavis_raw;
+           chorda  clavis_unesc;
+           chorda* clavis_intern;
         JsonValor* valor;
-        JsonPar* slot;
+          JsonPar* slot;
 
         /* Expectare chorda pro clave */
         si (parser->currens.genus != JSON_TOK_CHORDA)
@@ -732,8 +768,8 @@ _parse_objectum(JsonParser* parser)
             _parser_error(parser, "Clavis chorda expectata");
             redde NIHIL;
         }
-        clavis_raw = _parser_token_valor(parser);
-        clavis_unesc = _unescape_chorda(clavis_raw, parser->piscina);
+        clavis_raw    = _parser_token_valor(parser);
+        clavis_unesc  = _unescape_chorda(clavis_raw, parser->piscina);
         _parser_avanzare(parser);
 
         /* Internare clavem */
@@ -756,8 +792,8 @@ _parse_objectum(JsonParser* parser)
         slot = (JsonPar*)xar_addere(obj->datum.objectum);
         si (slot)
         {
-            slot->clavis = clavis_intern;
-            slot->valor = valor;
+            slot->clavis  = clavis_intern;
+            slot->valor   = valor;
         }
 
         /* Comma? */
@@ -787,7 +823,8 @@ _parse_objectum(JsonParser* parser)
 }
 
 interior JsonValor*
-_parse_tabulatum(JsonParser* parser)
+_parse_tabulatum (
+    JsonParser* parser)
 {
     JsonValor* arr;
 
@@ -846,7 +883,8 @@ _parse_tabulatum(JsonParser* parser)
 }
 
 interior JsonValor*
-_parse_valor(JsonParser* parser)
+_parse_valor (
+    JsonParser* parser)
 {
     JsonValor* val;
 
@@ -865,11 +903,11 @@ _parse_valor(JsonParser* parser)
         }
         alioquin
         {
-            parser->error_msg.datum = NIHIL;
-            parser->error_msg.mensura = 0;
+            parser->error_msg.datum    = NIHIL;
+            parser->error_msg.mensura  = 0;
         }
-        parser->error_linea = parser->currens.linea;
-        parser->error_columna = parser->currens.columna;
+        parser->error_linea    = parser->currens.linea;
+        parser->error_columna  = parser->currens.columna;
         redde NIHIL;
     }
 
@@ -938,25 +976,25 @@ _parse_valor(JsonParser* parser)
  * ======================================================================== */
 
 JsonResultus
-json_legere(
-    chorda   input,
+json_legere (
+     chorda  input,
     Piscina* piscina)
 {
     JsonResultus res;
-    JsonParser parser;
+      JsonParser parser;
 
-    res.successus = FALSUM;
-    res.radix = NIHIL;
-    res.error.datum = NIHIL;
-    res.error.mensura = 0;
-    res.linea = 0;
-    res.columna = 0;
+    res.successus      = FALSUM;
+    res.radix          = NIHIL;
+    res.error.datum    = NIHIL;
+    res.error.mensura  = 0;
+    res.linea          = 0;
+    res.columna        = 0;
 
     si (!piscina)
     {
         /* Non possumus allocare error message sine piscina */
-        res.error.datum = NIHIL;
-        res.error.mensura = 0;
+        res.error.datum    = NIHIL;
+        res.error.mensura  = 0;
         redde res;
     }
 
@@ -966,10 +1004,10 @@ json_legere(
 
     si (parser.error || !res.radix)
     {
-        res.successus = FALSUM;
-        res.error = parser.error_msg;
-        res.linea = parser.error_linea;
-        res.columna = parser.error_columna;
+        res.successus  = FALSUM;
+        res.error      = parser.error_msg;
+        res.linea      = parser.error_linea;
+        res.columna    = parser.error_columna;
     }
     alioquin
     {
@@ -980,21 +1018,21 @@ json_legere(
 }
 
 JsonResultus
-json_legere_literis(
+json_legere_literis (
     constans character* input,
-    Piscina*            piscina)
+               Piscina* piscina)
 {
     chorda ch;
 
     si (!input || !piscina)
     {
         JsonResultus res;
-        res.successus = FALSUM;
-        res.radix = NIHIL;
-        res.error.datum = NIHIL;
-        res.error.mensura = 0;
-        res.linea = 0;
-        res.columna = 0;
+        res.successus      = FALSUM;
+        res.radix          = NIHIL;
+        res.error.datum    = NIHIL;
+        res.error.mensura  = 0;
+        res.linea          = 0;
+        res.columna        = 0;
         redde res;
     }
 
@@ -1009,7 +1047,8 @@ json_legere_literis(
  * ======================================================================== */
 
 JsonGenus
-json_genus(JsonValor* valor)
+json_genus (
+    JsonValor* valor)
 {
     si (!valor)
     {
@@ -1018,37 +1057,51 @@ json_genus(JsonValor* valor)
     redde valor->genus;
 }
 
-b32 json_est_nullum(JsonValor* valor)
+b32
+json_est_nullum (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_NULLUM;
 }
 
-b32 json_est_boolean(JsonValor* valor)
+b32
+json_est_boolean (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_BOOLEAN;
 }
 
-b32 json_est_integer(JsonValor* valor)
+b32
+json_est_integer (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_INTEGER;
 }
 
-b32 json_est_fluitans(JsonValor* valor)
+b32
+json_est_fluitans (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_FLUITANS;
 }
 
-b32 json_est_chorda(JsonValor* valor)
+b32
+json_est_chorda (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_CHORDA;
 }
 
-b32 json_est_tabulatum(JsonValor* valor)
+b32
+json_est_tabulatum (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_TABULATUM;
 }
 
-b32 json_est_objectum(JsonValor* valor)
+b32
+json_est_objectum (
+    JsonValor* valor)
 {
     redde valor && valor->genus == JSON_OBJECTUM;
 }
@@ -1059,7 +1112,8 @@ b32 json_est_objectum(JsonValor* valor)
  * ======================================================================== */
 
 b32
-json_ad_boolean(JsonValor* valor)
+json_ad_boolean (
+    JsonValor* valor)
 {
     si (!valor || valor->genus != JSON_BOOLEAN)
     {
@@ -1069,7 +1123,8 @@ json_ad_boolean(JsonValor* valor)
 }
 
 s64
-json_ad_integer(JsonValor* valor)
+json_ad_integer (
+    JsonValor* valor)
 {
     si (!valor || valor->genus != JSON_INTEGER)
     {
@@ -1079,7 +1134,8 @@ json_ad_integer(JsonValor* valor)
 }
 
 f64
-json_ad_fluitans(JsonValor* valor)
+json_ad_fluitans (
+    JsonValor* valor)
 {
     si (!valor || valor->genus != JSON_FLUITANS)
     {
@@ -1089,11 +1145,12 @@ json_ad_fluitans(JsonValor* valor)
 }
 
 chorda
-json_ad_chorda(JsonValor* valor)
+json_ad_chorda (
+    JsonValor* valor)
 {
     chorda vacua;
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
 
     si (!valor || valor->genus != JSON_CHORDA)
     {
@@ -1108,7 +1165,8 @@ json_ad_chorda(JsonValor* valor)
  * ======================================================================== */
 
 i32
-json_tabulatum_numerus(JsonValor* valor)
+json_tabulatum_numerus (
+    JsonValor* valor)
 {
     si (!valor || valor->genus != JSON_TABULATUM || !valor->datum.tabulatum)
     {
@@ -1118,7 +1176,9 @@ json_tabulatum_numerus(JsonValor* valor)
 }
 
 JsonValor*
-json_tabulatum_obtinere(JsonValor* valor, i32 index)
+json_tabulatum_obtinere (
+    JsonValor* valor,
+          i32  index)
 {
     JsonValor** ptr;
 
@@ -1146,7 +1206,8 @@ json_tabulatum_obtinere(JsonValor* valor, i32 index)
  * ======================================================================== */
 
 i32
-json_objectum_numerus(JsonValor* valor)
+json_objectum_numerus (
+    JsonValor* valor)
 {
     si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
     {
@@ -1156,11 +1217,13 @@ json_objectum_numerus(JsonValor* valor)
 }
 
 JsonValor*
-json_objectum_capere(JsonValor* valor, constans character* clavis)
+json_objectum_capere (
+             JsonValor* valor,
+    constans character* clavis)
 {
     chorda* clavis_intern;
-    i32 i;
-    i32 num;
+       i32  i;
+       i32  num;
 
     si (!clavis || !valor)
     {
@@ -1191,11 +1254,13 @@ json_objectum_capere(JsonValor* valor, constans character* clavis)
 }
 
 JsonValor*
-json_objectum_capere_chorda(JsonValor* valor, chorda clavis)
+json_objectum_capere_chorda (
+    JsonValor* valor,
+       chorda  clavis)
 {
     chorda* clavis_intern;
-    i32 i;
-    i32 num;
+       i32  i;
+       i32  num;
 
     si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
     {
@@ -1221,13 +1286,17 @@ json_objectum_capere_chorda(JsonValor* valor, chorda clavis)
 }
 
 b32
-json_objectum_habet(JsonValor* valor, constans character* clavis)
+json_objectum_habet (
+             JsonValor* valor,
+    constans character* clavis)
 {
     redde json_objectum_capere(valor, clavis) != NIHIL;
 }
 
 JsonPar*
-json_objectum_par_obtinere(JsonValor* valor, i32 index)
+json_objectum_par_obtinere (
+    JsonValor* valor,
+          i32  index)
 {
     si (!valor || valor->genus != JSON_OBJECTUM || !valor->datum.objectum)
     {
@@ -1243,19 +1312,20 @@ json_objectum_par_obtinere(JsonValor* valor, i32 index)
 }
 
 JsonObjectumIterator
-json_objectum_iterator(JsonValor* valor)
+json_objectum_iterator (
+    JsonValor* valor)
 {
     JsonObjectumIterator iter;
-    iter.objectum = valor;
-    iter.index = 0;
+    iter.objectum  = valor;
+    iter.index     = 0;
     redde iter;
 }
 
 b32
-json_objectum_iterator_proxima(
-    JsonObjectumIterator* iter,
-    chorda*               clavis_ex,
-    JsonValor**           valor_ex)
+json_objectum_iterator_proxima (
+    JsonObjectumIterator*  iter,
+                  chorda*  clavis_ex,
+               JsonValor** valor_ex)
 {
     JsonPar* par;
 
@@ -1295,7 +1365,8 @@ json_objectum_iterator_proxima(
  * ======================================================================== */
 
 JsonValor*
-json_nullum_creare(Piscina* piscina)
+json_nullum_creare (
+    Piscina* piscina)
 {
     JsonValor* val;
 
@@ -1310,13 +1381,15 @@ json_nullum_creare(Piscina* piscina)
         redde NIHIL;
     }
 
-    val->genus = JSON_NULLUM;
-    val->piscina = piscina;
+    val->genus    = JSON_NULLUM;
+    val->piscina  = piscina;
     redde val;
 }
 
 JsonValor*
-json_boolean_creare(Piscina* piscina, b32 valor)
+json_boolean_creare (
+    Piscina* piscina,
+        b32  valor)
 {
     JsonValor* val;
 
@@ -1331,14 +1404,16 @@ json_boolean_creare(Piscina* piscina, b32 valor)
         redde NIHIL;
     }
 
-    val->genus = JSON_BOOLEAN;
-    val->datum.boolean_valor = valor;
-    val->piscina = piscina;
+    val->genus                = JSON_BOOLEAN;
+    val->datum.boolean_valor  = valor;
+    val->piscina              = piscina;
     redde val;
 }
 
 JsonValor*
-json_integer_creare(Piscina* piscina, s64 valor)
+json_integer_creare (
+    Piscina* piscina,
+        s64  valor)
 {
     JsonValor* val;
 
@@ -1353,14 +1428,16 @@ json_integer_creare(Piscina* piscina, s64 valor)
         redde NIHIL;
     }
 
-    val->genus = JSON_INTEGER;
-    val->datum.integer_valor = valor;
-    val->piscina = piscina;
+    val->genus                = JSON_INTEGER;
+    val->datum.integer_valor  = valor;
+    val->piscina              = piscina;
     redde val;
 }
 
 JsonValor*
-json_fluitans_creare(Piscina* piscina, f64 valor)
+json_fluitans_creare (
+    Piscina* piscina,
+        f64  valor)
 {
     JsonValor* val;
 
@@ -1375,14 +1452,16 @@ json_fluitans_creare(Piscina* piscina, f64 valor)
         redde NIHIL;
     }
 
-    val->genus = JSON_FLUITANS;
-    val->datum.fluitans_valor = valor;
-    val->piscina = piscina;
+    val->genus                 = JSON_FLUITANS;
+    val->datum.fluitans_valor  = valor;
+    val->piscina               = piscina;
     redde val;
 }
 
 JsonValor*
-json_chorda_creare(Piscina* piscina, chorda valor)
+json_chorda_creare (
+    Piscina* piscina,
+     chorda  valor)
 {
     JsonValor* val;
 
@@ -1397,17 +1476,19 @@ json_chorda_creare(Piscina* piscina, chorda valor)
         redde NIHIL;
     }
 
-    val->genus = JSON_CHORDA;
-    val->datum.chorda_valor = valor;
-    val->piscina = piscina;
+    val->genus               = JSON_CHORDA;
+    val->datum.chorda_valor  = valor;
+    val->piscina             = piscina;
     redde val;
 }
 
 JsonValor*
-json_chorda_creare_literis(Piscina* piscina, constans character* valor)
+json_chorda_creare_literis (
+               Piscina* piscina,
+    constans character* valor)
 {
     chorda ch;
-    i8* buffer;
+    i8 * buffer;
     i32 len;
 
     si (!piscina || !valor)
@@ -1415,22 +1496,23 @@ json_chorda_creare_literis(Piscina* piscina, constans character* valor)
         redde NIHIL;
     }
 
-    len = (i32)strlen(valor);
-    buffer = (i8*)piscina_allocare(piscina, (i64)(len + I));
+    len     = (i32)strlen(valor);
+    buffer  = (i8*)piscina_allocare(piscina, (i64)(len + I));
     si (!buffer)
     {
         redde NIHIL;
     }
     memcpy(buffer, valor, (size_t)len);
 
-    ch.datum = buffer;
-    ch.mensura = len;
+    ch.datum    = buffer;
+    ch.mensura  = len;
 
     redde json_chorda_creare(piscina, ch);
 }
 
 JsonValor*
-json_tabulatum_creare(Piscina* piscina)
+json_tabulatum_creare (
+    Piscina* piscina)
 {
     JsonValor* val;
 
@@ -1445,14 +1527,15 @@ json_tabulatum_creare(Piscina* piscina)
         redde NIHIL;
     }
 
-    val->genus = JSON_TABULATUM;
+    val->genus            = JSON_TABULATUM;
     val->datum.tabulatum = xar_creare(piscina, (i32)magnitudo(JsonValor*));
-    val->piscina = piscina;
+    val->piscina          = piscina;
     redde val;
 }
 
 JsonValor*
-json_objectum_creare(Piscina* piscina)
+json_objectum_creare (
+    Piscina* piscina)
 {
     JsonValor* val;
 
@@ -1467,9 +1550,9 @@ json_objectum_creare(Piscina* piscina)
         redde NIHIL;
     }
 
-    val->genus = JSON_OBJECTUM;
-    val->datum.objectum = xar_creare(piscina, (i32)magnitudo(JsonPar));
-    val->piscina = piscina;
+    val->genus           = JSON_OBJECTUM;
+    val->datum.objectum  = xar_creare(piscina, (i32)magnitudo(JsonPar));
+    val->piscina         = piscina;
     redde val;
 }
 
@@ -1479,7 +1562,9 @@ json_objectum_creare(Piscina* piscina)
  * ======================================================================== */
 
 vacuum
-json_tabulatum_addere(JsonValor* tabulatum, JsonValor* valor)
+json_tabulatum_addere (
+    JsonValor* tabulatum,
+    JsonValor* valor)
 {
     JsonValor** slot;
 
@@ -1501,14 +1586,14 @@ json_tabulatum_addere(JsonValor* tabulatum, JsonValor* valor)
 }
 
 vacuum
-json_objectum_ponere(
-    JsonValor*          objectum,
+json_objectum_ponere (
+             JsonValor* objectum,
     constans character* clavis,
-    JsonValor*          valor)
+             JsonValor* valor)
 {
-    chorda* clavis_intern;
-    i32 i;
-    i32 num;
+     chorda* clavis_intern;
+        i32  i;
+        i32  num;
     JsonPar* slot;
 
     si (!objectum || !clavis)
@@ -1541,20 +1626,20 @@ json_objectum_ponere(
     slot = (JsonPar*)xar_addere(objectum->datum.objectum);
     si (slot)
     {
-        slot->clavis = clavis_intern;
-        slot->valor = valor;
+        slot->clavis  = clavis_intern;
+        slot->valor   = valor;
     }
 }
 
 vacuum
-json_objectum_ponere_chorda(
+json_objectum_ponere_chorda (
     JsonValor* objectum,
-    chorda     clavis,
+       chorda  clavis,
     JsonValor* valor)
 {
-    chorda* clavis_intern;
-    i32 i;
-    i32 num;
+     chorda* clavis_intern;
+        i32  i;
+        i32  num;
     JsonPar* slot;
 
     si (!objectum || objectum->genus != JSON_OBJECTUM)
@@ -1587,8 +1672,8 @@ json_objectum_ponere_chorda(
     slot = (JsonPar*)xar_addere(objectum->datum.objectum);
     si (slot)
     {
-        slot->clavis = clavis_intern;
-        slot->valor = valor;
+        slot->clavis  = clavis_intern;
+        slot->valor   = valor;
     }
 }
 
@@ -1601,7 +1686,9 @@ interior vacuum
 _scribere_valor(JsonValor* valor, ChordaAedificator* aed, b32 pulchrum, i32 indent);
 
 interior vacuum
-_scribere_indentatio(ChordaAedificator* aed, i32 level)
+_scribere_indentatio (
+    ChordaAedificator* aed,
+                  i32  level)
 {
     i32 i;
     per (i = 0; i < level; i++)
@@ -1611,7 +1698,11 @@ _scribere_indentatio(ChordaAedificator* aed, i32 level)
 }
 
 interior vacuum
-_scribere_objectum(JsonValor* obj, ChordaAedificator* aed, b32 pulchrum, i32 indent)
+_scribere_objectum (
+            JsonValor* obj,
+    ChordaAedificator* aed,
+                  b32  pulchrum,
+                  i32  indent)
 {
     i32 num;
     i32 i;
@@ -1672,7 +1763,11 @@ _scribere_objectum(JsonValor* obj, ChordaAedificator* aed, b32 pulchrum, i32 ind
 }
 
 interior vacuum
-_scribere_tabulatum(JsonValor* arr, ChordaAedificator* aed, b32 pulchrum, i32 indent)
+_scribere_tabulatum (
+            JsonValor* arr,
+    ChordaAedificator* aed,
+                  b32  pulchrum,
+                  i32  indent)
 {
     i32 num;
     i32 i;
@@ -1717,7 +1812,11 @@ _scribere_tabulatum(JsonValor* arr, ChordaAedificator* aed, b32 pulchrum, i32 in
 }
 
 interior vacuum
-_scribere_valor(JsonValor* valor, ChordaAedificator* aed, b32 pulchrum, i32 indent)
+_scribere_valor (
+            JsonValor* valor,
+    ChordaAedificator* aed,
+                  b32  pulchrum,
+                  i32  indent)
 {
     si (!valor)
     {
@@ -1780,23 +1879,25 @@ _scribere_valor(JsonValor* valor, ChordaAedificator* aed, b32 pulchrum, i32 inde
  * ======================================================================== */
 
 chorda
-json_scribere(JsonValor* valor, Piscina* piscina)
+json_scribere (
+    JsonValor* valor,
+      Piscina* piscina)
 {
     ChordaAedificator* aed;
-    chorda result;
+               chorda  result;
 
     si (!piscina)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
     aed = chorda_aedificator_creare(piscina, CCLVI);
     si (!aed)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
@@ -1806,23 +1907,25 @@ json_scribere(JsonValor* valor, Piscina* piscina)
 }
 
 chorda
-json_scribere_pulchrum(JsonValor* valor, Piscina* piscina)
+json_scribere_pulchrum (
+    JsonValor* valor,
+      Piscina* piscina)
 {
     ChordaAedificator* aed;
-    chorda result;
+               chorda  result;
 
     si (!piscina)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
     aed = chorda_aedificator_creare(piscina, CCLVI);
     si (!aed)
     {
-        result.datum = NIHIL;
-        result.mensura = 0;
+        result.datum    = NIHIL;
+        result.mensura  = 0;
         redde result;
     }
 
@@ -1832,8 +1935,8 @@ json_scribere_pulchrum(JsonValor* valor, Piscina* piscina)
 }
 
 vacuum
-json_scribere_ad_aedificator(
-    JsonValor*         valor,
+json_scribere_ad_aedificator (
+            JsonValor* valor,
     ChordaAedificator* aed)
 {
     si (!aed)
@@ -1845,10 +1948,10 @@ json_scribere_ad_aedificator(
 }
 
 vacuum
-json_scribere_ad_aedificator_pulchrum(
-    JsonValor*         valor,
+json_scribere_ad_aedificator_pulchrum (
+            JsonValor* valor,
     ChordaAedificator* aed,
-    i32                indentatio)
+                  i32  indentatio)
 {
     si (!aed)
     {

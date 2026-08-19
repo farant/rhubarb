@@ -9,6 +9,7 @@
                               * vel -DPISCINA_DEBUG=1 in linea compilandi */
 #endif
 
+
 /* ===========================================================
  * Structura Alvei - allocatio singularis
  * =========================================================== */
@@ -41,7 +42,7 @@ structura Piscina {
 
 interior memoriae_index
 _proxima_ordinatio (
-        memoriae_index ptr, 
+        memoriae_index ptr,
         memoriae_index ordinatio)
 {
     memoriae_index ordinatus = ptr + (ordinatio - I);
@@ -54,7 +55,7 @@ _debug_imprimere (
     constans character* operatio,
         memoriae_index  mensura)
 {
-    si (PISCINA_DEBUG) 
+    si (PISCINA_DEBUG)
     {
         imprimere("[PISCINA %s] %s: %lu bytes\n", piscinae_titulum,
                   operatio, (insignatus longus)mensura);
@@ -80,9 +81,9 @@ _alveus_nova (
         redde NIHIL;
     }
 
-    alveus->capacitas = capacitas;
-    alveus->offset    = ZEPHYRUM;
-    alveus->sequens   = NIHIL;
+    alveus->capacitas  = capacitas;
+    alveus->offset     = ZEPHYRUM;
+    alveus->sequens    = NIHIL;
 
     redde alveus;
 }
@@ -116,10 +117,11 @@ _catena_alveus_vacare (
     dum (alveus)
     {
         memset(alveus->buffer, ZEPHYRUM, alveus->capacitas);
-        alveus->offset = ZEPHYRUM;
-        alveus = alveus->sequens;
+        alveus->offset  = ZEPHYRUM;
+        alveus          = alveus->sequens;
     }
 }
+
 
 /* ===========================================================
  * ALLOCATIO FUNDAMENTALIS LOGICA
@@ -134,14 +136,14 @@ _allocare_interna (
 {
     memoriae_index  ordinatus_offset;
     memoriae_index  necessaria;
-    memoriae_index  summa_nunc; 
+    memoriae_index  summa_nunc;
             Alveus* b;
             vacuum* ptr;
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
     ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-    necessaria       = ordinatus_offset + mensura;
+    necessaria        = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -149,9 +151,9 @@ _allocare_interna (
         si (piscina->nunc->sequens)
         {
             /* Transire ad alveum sequentem */
-            piscina->nunc = piscina->nunc->sequens;
+            piscina->nunc     = piscina->nunc->sequens;
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            necessaria        = ordinatus_offset + mensura;
         }
         alioquin si (piscina->est_dynamicum)
         {
@@ -165,7 +167,7 @@ _allocare_interna (
             si (necessaria > capacitas_nova)
             {
                 capacitas_nova = necessaria + piscina->mensura_alvei_initia;
-                piscina->mensura_alvei_initia = capacitas_nova;
+                piscina->mensura_alvei_initia  = capacitas_nova;
             }
 
             alveus_novum = _alveus_nova(capacitas_nova);
@@ -180,11 +182,11 @@ _allocare_interna (
                 redde NIHIL;
             }
 
-            piscina->nunc->sequens = alveus_novum;
-            piscina->nunc = alveus_novum;
+            piscina->nunc->sequens  = alveus_novum;
+            piscina->nunc           = alveus_novum;
 
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            necessaria        = ordinatus_offset + mensura;
 
             _debug_imprimere(
                     piscina->titulus ? piscina->titulus : "nemo",
@@ -208,7 +210,7 @@ _allocare_interna (
 
     /* Allocare ex alveo nunc */
     ptr = (character*)(piscina->nunc->buffer) + ordinatus_offset;
-    piscina->nunc->offset = necessaria;
+    piscina->nunc->offset  = necessaria;
 
     /* Sequi apex usus per omnes alvei */
     summa_nunc = ZEPHYRUM;
@@ -226,6 +228,7 @@ _allocare_interna (
     redde ptr;
 }
 
+
 /* ===========================================================
  * GENERATIO
  * =========================================================== */
@@ -241,7 +244,7 @@ piscina_generare_dynamicum (
     si (!piscina) redde NIHIL;
 
     alveus_primus = _alveus_nova(mensura_alvei_initia);
-    si (!alveus_primus) 
+    si (!alveus_primus)
     {
         liberare(piscina);
         redde NIHIL;
@@ -294,7 +297,7 @@ piscina_generare_certae_magnitudinis (
 
     piscina->primus                = alveus_primus;
     piscina->nunc                  = alveus_primus;
-    piscina->mensura_alvei_initia = mensura_buffer;
+    piscina->mensura_alvei_initia  = mensura_buffer;
     piscina->est_dynamicum         = FALSUM;
     piscina->maximus_usus          = ZEPHYRUM;
 
@@ -324,7 +327,7 @@ piscina_generare_certae_magnitudinis (
  * DESTRUCTIO
  * =========================================================== */
 
-vacuum 
+vacuum
 piscina_destruere (
         Piscina* piscina)
 {
@@ -340,7 +343,6 @@ piscina_destruere (
 /* ===========================================================
  * ALLOCATIO - EXITIUM SI DEFECIT
  * =========================================================== */
-
 
 vacuum*
 piscina_allocare (
@@ -359,6 +361,7 @@ piscina_allocare_ordinatum (
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
 
+
 /* ===========================================================
  * ALLOCATIO - REDDE NIHIL SI DEFECIT
  * =========================================================== */
@@ -373,12 +376,13 @@ piscina_conari_allocare (
 
 vacuum*
 piscina_conari_allocare_ordinatum (
-           Piscina* piscina, 
+           Piscina* piscina,
     memoriae_index  mensura,
     memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, FALSUM);
 }
+
 
 /* ===========================================================
  * CYCLUS VITAE
@@ -393,6 +397,7 @@ piscina_vacare (
     piscina->nunc = piscina->primus;
     _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo", "vacare", ZEPHYRUM);
 }
+
 
 /* ===========================================================
  * QUAESTIO
@@ -447,6 +452,7 @@ piscina_summa_apex_usus (
     redde piscina ? piscina->maximus_usus : ZEPHYRUM;
 }
 
+
 /* ===========================================================
  * NOTATIO - MARK/RESET PATTERN
  * =========================================================== */
@@ -459,13 +465,13 @@ piscina_notare (
 
     si (!piscina)
     {
-        notatio.alveus_nunc = NIHIL;
-        notatio.positus = ZEPHYRUM;
+        notatio.alveus_nunc  = NIHIL;
+        notatio.positus      = ZEPHYRUM;
         redde notatio;
     }
 
-    notatio.alveus_nunc = piscina->nunc;
-    notatio.positus = piscina->nunc->offset;
+    notatio.alveus_nunc  = piscina->nunc;
+    notatio.positus      = piscina->nunc->offset;
 
     _debug_imprimere(
             piscina->titulus ? piscina->titulus : "nemo",
@@ -477,8 +483,8 @@ piscina_notare (
 
 vacuum
 piscina_reficere (
-              Piscina* piscina,
-        PiscinaNotatio notatio)
+               Piscina* piscina,
+        PiscinaNotatio  notatio)
 {
     Alveus* alveus_notatus;
     Alveus* alveus_iter;
@@ -522,4 +528,3 @@ piscina_potesne_allocare (
     /* Pro piscinis certae magnitudinis, verificare spatium */
     redde mensura <= reliqua ? VERUM : FALSUM;
 }
-
