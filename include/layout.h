@@ -13,6 +13,7 @@
 #include "registrum_commandi.h"
 #include "registrum_widget.h"
 
+
 /* ==================================================
  * LAYOUT - Systema Declarativum pro Widgets
  *
@@ -48,15 +49,15 @@ nomen enumeratio {
 
 /* Introitus in tabula lookup */
 nomen structura {
-    vacuum*           datum;   /* Pagina*, NavigatorEntitatum*, etc */
-    LayoutGenusWidget genus;   /* Genus widget */
+               vacuum* datum;   /* Pagina*, NavigatorEntitatum*, etc */
+    LayoutGenusWidget  genus;   /* Genus widget */
 } LayoutWidgetIntroitus;
 
 /* DOM layout - continet manager et tabula lookup */
 nomen structura {
-    ManagerWidget*       manager;
-    TabulaDispersa*      widgets;  /* id (chorda*) -> LayoutWidgetIntroitus* */
-    ContextusWidget*     ctx;      /* Contextus communicatus */
+      ManagerWidget* manager;
+     TabulaDispersa* widgets;  /* id (chorda*) -> LayoutWidgetIntroitus* */
+    ContextusWidget* ctx;      /* Contextus communicatus */
 } LayoutDom;
 
 
@@ -75,8 +76,8 @@ nomen structura {
  * Redde: LayoutDom* si successus, NIHIL si error
  */
 LayoutDom*
-layout_creare(
-    ContextusWidget*    ctx,
+layout_creare (
+       ContextusWidget* ctx,
     constans character* stml);
 
 
@@ -92,8 +93,8 @@ layout_creare(
  * Redde: vacuum* ad widget, vel NIHIL si non inventum
  */
 vacuum*
-layout_obtinere(
-    LayoutDom*          dom,
+layout_obtinere (
+             LayoutDom* dom,
     constans character* id);
 
 /* Obtinere Pagina per id
@@ -104,8 +105,8 @@ layout_obtinere(
  * Redde: Pagina* si inventum et genus correctum, NIHIL aliter
  */
 Pagina*
-layout_obtinere_pagina(
-    LayoutDom*          dom,
+layout_obtinere_pagina (
+             LayoutDom* dom,
     constans character* id);
 
 /* Obtinere NavigatorEntitatum per id
@@ -116,8 +117,8 @@ layout_obtinere_pagina(
  * Redde: NavigatorEntitatum* si inventum et genus correctum, NIHIL aliter
  */
 NavigatorEntitatum*
-layout_obtinere_navigator(
-    LayoutDom*          dom,
+layout_obtinere_navigator (
+             LayoutDom* dom,
     constans character* id);
 
 /* Obtinere LibroPaginarum per id
@@ -128,8 +129,8 @@ layout_obtinere_navigator(
  * Redde: LibroPaginarum* si inventum et genus correctum, NIHIL aliter
  */
 LibroPaginarum*
-layout_obtinere_libro(
-    LayoutDom*          dom,
+layout_obtinere_libro (
+             LayoutDom* dom,
     constans character* id);
 
 
@@ -146,8 +147,8 @@ layout_obtinere_libro(
  * reg_commandi: registrum commandi
  */
 vacuum
-layout_ponere_reg_commandi(
-    LayoutDom*         dom,
+layout_ponere_reg_commandi (
+            LayoutDom* dom,
     RegistrumCommandi* reg_commandi);
 
 
@@ -165,7 +166,7 @@ layout_ponere_reg_commandi(
  * Redde: VERUM si successus, FALSUM si error
  */
 b32
-layout_registrare_defalta(
+layout_registrare_defalta (
     RegistrumWidget* reg);
 
 #endif /* LAYOUT_H */

@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "fenestra.h"
 
+
 /* ==================================================
  * CURSOR - Cursor Muris Proprius
  *
@@ -36,9 +37,9 @@
  * y: positio verticalis in pixelis
  */
 vacuum
-cursor_reddere(
+cursor_reddere (
     TabulaPixelorum* tabula,
-    i32 x,
-    i32 y);
+                i32  x,
+                i32  y);
 
 #endif /* CURSOR_H */

@@ -14,12 +14,30 @@
  * Prototypi Interni
  * ================================================== */
 
-interior SputnikValor _evaluare_nodum(SputnikInterpres* interp, SputnikAstNodus* nodus);
-interior vacuum _executare_sententiam(SputnikInterpres* interp, SputnikAstNodus* nodus);
-interior vacuum _exec_sententiam_frange(SputnikInterpres* interp, SputnikAstNodus* nodus);
-interior vacuum _exec_sententiam_perge(SputnikInterpres* interp, SputnikAstNodus* nodus);
-interior vacuum _exec_sententiam_incrementum(SputnikInterpres* interp, SputnikAstNodus* nodus);
-interior vacuum _exec_sententiam_decrementum(SputnikInterpres* interp, SputnikAstNodus* nodus);
+interior SputnikValor
+_evaluare_nodum (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
+interior vacuum
+_executare_sententiam (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
+interior vacuum
+_exec_sententiam_frange (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
+interior vacuum
+_exec_sententiam_perge (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
+interior vacuum
+_exec_sententiam_incrementum (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
+interior vacuum
+_exec_sententiam_decrementum (
+    SputnikInterpres* interp,
+     SputnikAstNodus* nodus);
 
 
 /* ==================================================
@@ -1209,7 +1227,12 @@ _methodus_xar_join (
 }
 
 /* Forward declaration - needed for callback methods */
-interior SputnikValor _vocare_functionem(SputnikInterpres*, SputnikAstNodus*, Xar*, SputnikAstNodus*);
+interior SputnikValor
+_vocare_functionem (
+    SputnikInterpres*,
+    SputnikAstNodus*,
+    Xar*,
+    SputnikAstNodus*);
 
 /* map(fn) - transform each element */
 interior SputnikValor

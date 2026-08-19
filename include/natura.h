@@ -9,6 +9,7 @@
 #include "tabula_dispersa.h"
 #include "stml.h"
 
+
 /* ==================================================
  * natura - onerator bibliothecae semanticae
  *
@@ -30,6 +31,7 @@
  * commutandis.
  * ================================================== */
 
+
 /* ==================================================
  * Diagnostica
  * ================================================== */
@@ -47,26 +49,27 @@ nomen structura {
           constans character* nuntius;   /* quid violatum */
 } NaturaDiagnosticum;
 
+
 /* ==================================================
  * Sceletum
  * ================================================== */
 
 nomen structura NaturaGenus NaturaGenus;
 structura NaturaGenus {
-         chorda*  titulus;    /* attributum nomen= (internatum) */
-         chorda*  modulus;    /* exemplar domesticum */
-    NaturaGenus*  parens;     /* sub= resolutum (trans-exemplar),
+         chorda* titulus;    /* attributum nomen= (internatum) */
+         chorda* modulus;    /* exemplar domesticum */
+    NaturaGenus* parens;     /* sub= resolutum (trans-exemplar),
                                * vel genus ambiens si nidificatum
                                * (.species/.cultivar semper hoc) */
-    NaturaGenus*  parens_etiam; /* etiam= resolutum: membrum
+    NaturaGenus* parens_etiam; /* etiam= resolutum: membrum
                                * essentiale duplex GENERUM (arbor
                                * porphyriana 2026-08-10 - doctrina
                                * a rebus portata; apparatus ambas
                                * catenas debet) */
-            Xar*  liberi;     /* index reversus: Xar de NaturaGenus* */
-            Xar*  res_suae;   /* Xar de NaturaRes* (individua sola
+            Xar* liberi;     /* index reversus: Xar de NaturaGenus* */
+            Xar* res_suae;   /* Xar de NaturaRes* (individua sola
                                * post arborem porphyrianam) */
-      StmlNodus*  nodus;      /* subtree - cetera hinc leguntur */
+      StmlNodus* nodus;      /* subtree - cetera hinc leguntur */
 };
 
 /* res = INDIVIDUA SOLA (arbor porphyriana 2026-08-10, decretum
@@ -91,19 +94,19 @@ structura NaturaGenus {
  * in individuo REFERT. */
 nomen structura NaturaRes NaturaRes;
 structura NaturaRes {
-         chorda*  titulus;
-         chorda*  modulus;
-    NaturaGenus*  genus_suum;   /* genus continens (APPARATUS) */
-    NaturaGenus*  genus_etiam;  /* etiam= resolutum: membrum
+         chorda* titulus;
+         chorda* modulus;
+    NaturaGenus* genus_suum;   /* genus continens (APPARATUS) */
+    NaturaGenus* genus_etiam;  /* etiam= resolutum: membrum
                                  * essentiale duplex (par.3/4).
                                  * Apparatus AMBARUM catenarum
                                  * huic rei debetur */
-      NaturaRes*  continens;    /* res ambiens si nidificata,
+      NaturaRes* continens;    /* res ambiens si nidificata,
                                  * NIHIL si sub genere recta
                                  * (TAXINOMIA) */
-            Xar*  res_suae;     /* Xar de NaturaRes*: res HUIC
+            Xar* res_suae;     /* Xar de NaturaRes*: res HUIC
                                  * rei proxime nidificatae */
-      StmlNodus*  nodus;
+      StmlNodus* nodus;
 };
 
 /* necessitudo - genus relationis PRIMAE CLASSIS (spec
@@ -112,12 +115,12 @@ structura NaturaRes {
  * scriptura ligant. Tres strata: identitas / titulus / scriptura. */
 nomen structura NaturaNecessitudo NaturaNecessitudo;
 structura NaturaNecessitudo {
-              chorda*  titulus;    /* nomen= (internatum) */
-              chorda*  conversum;  /* conversum= aut NIHIL -
+              chorda* titulus;    /* nomen= (internatum) */
+              chorda* conversum;  /* conversum= aut NIHIL -
                                     * IDENTITAS UNA, scripturae duae */
-              chorda*  modulus;
-    NaturaNecessitudo*  parens;    /* sub= resolutum (nectere) */
-           StmlNodus*  nodus;      /* a=/ad=/scriptiones hinc */
+               chorda* modulus;
+    NaturaNecessitudo* parens;    /* sub= resolutum (nectere) */
+            StmlNodus* nodus;      /* a=/ad=/scriptiones hinc */
 };
 
 /* discrimen entis - genera, res dictionarii, et necessitudines
@@ -131,14 +134,14 @@ nomen enumeratio {
 
 nomen structura {
     NaturaEnsDiscrimen  discrimen;
-               vacuum*  corpus;   /* NaturaGenus* aut NaturaRes*
+                vacuum* corpus;   /* NaturaGenus* aut NaturaRes*
                                    * aut NaturaNecessitudo* */
 } NaturaEns;
 
 nomen structura {
-              chorda*  stirps;         /* modulus (= nomen plagulae) */
-              chorda*  versio;         /* attributum versio= */
-           StmlNodus*  radix;          /* elementum <natura> */
+              chorda* stirps;         /* modulus (= nomen plagulae) */
+              chorda* versio;         /* attributum versio= */
+           StmlNodus* radix;          /* elementum <natura> */
 } NaturaExemplar;
 
 /* verdictum sedis ligatae contra fines familiae (regula XXII
@@ -154,47 +157,49 @@ nomen enumeratio {
  * implet (fundamentum relationis '-sedes': quis familiae huic
  * dependet, qua directione, quo verdicto) */
 nomen structura {
-          NaturaExemplar*  exemplar;
-             NaturaGenus*  possessor;  /* genus sedem ferens */
-               StmlNodus*  nodus;      /* relatio aut terminus */
-                  chorda*  titulus;    /* verbum sedis aut munus */
-       NaturaNecessitudo*  ligata;
+           NaturaExemplar* exemplar;
+              NaturaGenus* possessor;  /* genus sedem ferens */
+                StmlNodus* nodus;      /* relatio aut terminus */
+                   chorda* titulus;    /* verbum sedis aut munus */
+        NaturaNecessitudo* ligata;
                       b32  conversa;   /* directio e nomine
                                         * efficaci (decretum
                                         * 2026-08-11) */
-                  chorda*  ad_attr;    /* NIHIL si absens */
+                   chorda* ad_attr;    /* NIHIL si absens */
      NaturaSedesVerdictum  verdictum;
 } NaturaSedesLigata;
 
 nomen structura {
-                Piscina*  piscina;
-    InternamentumChorda*  intern;
-                    Xar*  exemplaria;    /* Xar de NaturaExemplar* */
-                    Xar*  genera_omnia;  /* Xar de NaturaGenus* */
-                    Xar*  res_omnes;     /* Xar de NaturaRes* */
-         TabulaDispersa*  entia;         /* "modulus/nomen" -> NaturaEns* */
-         TabulaDispersa*  nomina;        /* nomen nudum -> NaturaEns*
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                    Xar* exemplaria;    /* Xar de NaturaExemplar* */
+                    Xar* genera_omnia;  /* Xar de NaturaGenus* */
+                    Xar* res_omnes;     /* Xar de NaturaRes* */
+         TabulaDispersa* entia;         /* "modulus/nomen" -> NaturaEns* */
+         TabulaDispersa* nomina;        /* nomen nudum -> NaturaEns*
                                           * (homonyma -> sentinella,
                                           * quaestio NIHIL reddit) */
-                    Xar*  necessitudines_omnes;
+                    Xar* necessitudines_omnes;
                                          /* Xar de NaturaNecessitudo* */
-         TabulaDispersa*  scriptiones;   /* scriptura quaevis (nomen/
+         TabulaDispersa* scriptiones;   /* scriptura quaevis (nomen/
                                           * conversum/scriptio) ->
                                           * NaturaNecessitudo*; nectere
                                           * aedificat, NIHIL ante */
-                    Xar*  diagnostica;   /* Xar de NaturaDiagnosticum */
-                    Xar*  sedes_ligatae; /* Xar de NaturaSedesLigata -
+                    Xar* diagnostica;   /* Xar de NaturaDiagnosticum */
+                    Xar* sedes_ligatae; /* Xar de NaturaSedesLigata -
                                           * nectere implet */
-                     b32  nexum;         /* nectere iam factum? */
+                     b32 nexum;         /* nectere iam factum? */
 } NaturaBibliotheca;
+
 
 /* ==================================================
  * Creatio
  * ================================================== */
 
 NaturaBibliotheca*
-natura_bibliotheca_creare(
+natura_bibliotheca_creare (
     Piscina* piscina);
+
 
 /* ==================================================
  * Phasis I - legere (exemplar unum)
@@ -209,10 +214,11 @@ natura_bibliotheca_creare(
  * ================================================== */
 
 b32
-natura_legere(
-    NaturaBibliotheca*   bib,
-    chorda               fons,
-    constans character*  stirps);
+natura_legere (
+     NaturaBibliotheca* bib,
+                chorda  fons,
+    constans character* stirps);
+
 
 /* ==================================================
  * Phasis II - nectere (bibliotheca tota)
@@ -225,7 +231,7 @@ natura_legere(
  * ================================================== */
 
 i32
-natura_nectere(
+natura_nectere (
     NaturaBibliotheca* bib);
 
 /* finem familiae HYPOTHETICE superponere - inter legere et
@@ -236,18 +242,19 @@ natura_nectere(
  * declarationum, XXIV), quod ambulatio manualis non praestat.
  * FALSUM = familia ignota aut iam nexum. */
 b32
-natura_finem_superponere(
-    NaturaBibliotheca*   bib,
-    constans character*  familia,
-    constans character*  finis,
-    constans character*  valor);
+natura_finem_superponere (
+     NaturaBibliotheca* bib,
+    constans character* familia,
+    constans character* finis,
+    constans character* valor);
 
 /* finis effectivus declarationis ("a" aut "ad"): proximus
  * non-'*' in catena sub= - NIHIL = apertus */
 chorda*
-natura_finem_effectivum(
-    NaturaNecessitudo*   declarata,
-    constans character*  finis);
+natura_finem_effectivum (
+     NaturaNecessitudo* declarata,
+    constans character* finis);
+
 
 /* ==================================================
  * Quaestiones (superficies Steenbergiana)
@@ -256,37 +263,38 @@ natura_finem_effectivum(
 /* nomine nudo - NIHIL si absens AUT homonymum (tunc
  * natura_genus_in adhibendum: addressa /modulus/nomen) */
 NaturaGenus*
-natura_genus(
-    NaturaBibliotheca*   bib,
-    constans character*  titulus);
+natura_genus (
+     NaturaBibliotheca* bib,
+    constans character* titulus);
 
 NaturaGenus*
-natura_genus_in(
-    NaturaBibliotheca*   bib,
-    constans character*  modulus,
-    constans character*  titulus);
+natura_genus_in (
+     NaturaBibliotheca* bib,
+    constans character* modulus,
+    constans character* titulus);
 
 /* ens quodlibet (genus aut res dictionarii) per addressam */
 NaturaEns*
-natura_ens_in(
-    NaturaBibliotheca*   bib,
-    constans character*  modulus,
-    constans character*  titulus);
+natura_ens_in (
+     NaturaBibliotheca* bib,
+    constans character* modulus,
+    constans character* titulus);
 
 /* necessitudo scriptura quavis (nomen / conversum / scriptio) -
  * NIHIL si absens aut ambigua. Ante nectere nomen primarium solum
  * resolvit. */
 NaturaNecessitudo*
-natura_necessitudo(
-    NaturaBibliotheca*   bib,
-    constans character*  titulus);
+natura_necessitudo (
+     NaturaBibliotheca* bib,
+    constans character* titulus);
 
 /* catena parentum, a proximo ad radicem
  * Redde: Xar de NaturaGenus* */
 Xar*
-natura_maiores(
+natura_maiores (
     NaturaGenus* genus,
-    Piscina*     piscina);
+        Piscina* piscina);
+
 
 /* ==================================================
  * Apparatus - consumptor primus
@@ -299,16 +307,16 @@ natura_maiores(
  * ================================================== */
 
 nomen structura {
-      StmlNodus*  nodus;    /* proprietas/pars/machina_statuum/
+      StmlNodus* nodus;    /* proprietas/pars/machina_statuum/
                              * actio/relatio */
-    NaturaGenus*  auctor;   /* genus quod contulit */
+    NaturaGenus* auctor;   /* genus quod contulit */
 } NaturaApparatusMembrum;
 
 /* Redde: Xar de NaturaApparatusMembrum */
 Xar*
-natura_apparatus(
-    NaturaBibliotheca*  bib,
-    NaturaGenus*        genus,
-    Piscina*            piscina);
+natura_apparatus (
+    NaturaBibliotheca* bib,
+          NaturaGenus* genus,
+              Piscina* piscina);
 
 #endif /* NATURA_H */

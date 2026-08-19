@@ -30,7 +30,9 @@ interior integer _deletum_nota;
  * ================================================== */
 
 interior JsonValor*
-_statum_valor (Volumen* volumen, Piscina* piscina);
+_statum_valor (
+    Volumen* volumen,
+    Piscina* piscina);
 
 interior JsonValor*
 _statum_valor (
@@ -179,8 +181,11 @@ mensa_statum_fingere (
  * ================================================== */
 
 interior JsonValor*
-_status_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa);
+_status_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa);
 
 interior JsonValor*
 _status_tractare (
@@ -204,8 +209,11 @@ _status_tractare (
 }
 
 interior JsonValor*
-_actum_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa);
+_actum_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa);
 
 interior JsonValor*
 _actum_tractare (
@@ -261,8 +269,11 @@ _actum_tractare (
  * mensa_imago_promere {sigillum}  -> {datum_b64} */
 
 interior JsonValor*
-_imago_condere_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa);
+_imago_condere_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa);
 
 interior JsonValor*
 _imago_condere_tractare (
@@ -310,8 +321,11 @@ _imago_condere_tractare (
 }
 
 interior JsonValor*
-_imago_promere_tractare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa);
+_imago_promere_tractare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa);
 
 interior JsonValor*
 _imago_promere_tractare (

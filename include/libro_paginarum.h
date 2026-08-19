@@ -10,6 +10,7 @@
 #include "registrum_commandi.h"
 #include "widget.h"
 
+
 /* ==================================================
  * LIBRO PAGINARUM - Multi-Page Editor Widget
  *
@@ -89,7 +90,7 @@ nomen structura {
  * Redde: LibroPaginarum* si successus, NIHIL si error
  */
 LibroPaginarum*
-libro_creare(
+libro_creare (
     ContextusWidget* ctx);
 
 
@@ -106,9 +107,9 @@ libro_creare(
  * index: index paginae (0-based, negative clamped to 0)
  */
 vacuum
-libro_navigare_ad(
+libro_navigare_ad (
     LibroPaginarum* libro,
-    s32             index);
+               s32  index);
 
 
 /* Navigare ad paginam proximam
@@ -116,7 +117,7 @@ libro_navigare_ad(
  * libro: libro paginarum
  */
 vacuum
-libro_pagina_proxima(
+libro_pagina_proxima (
     LibroPaginarum* libro);
 
 
@@ -125,7 +126,7 @@ libro_pagina_proxima(
  * libro: libro paginarum
  */
 vacuum
-libro_pagina_prior(
+libro_pagina_prior (
     LibroPaginarum* libro);
 
 
@@ -134,7 +135,7 @@ libro_pagina_prior(
  * libro: libro paginarum
  */
 vacuum
-libro_pagina_ultima(
+libro_pagina_ultima (
     LibroPaginarum* libro);
 
 
@@ -143,7 +144,7 @@ libro_pagina_ultima(
  * libro: libro paginarum
  */
 vacuum
-libro_retro(
+libro_retro (
     LibroPaginarum* libro);
 
 
@@ -155,8 +156,8 @@ libro_retro(
  * Redde: VERUM si inventa et navigata, FALSUM si non inventa
  */
 b32
-libro_navigare_ad_nomen(
-    LibroPaginarum*     libro,
+libro_navigare_ad_nomen (
+        LibroPaginarum* libro,
     constans character* nomen_);
 
 
@@ -171,7 +172,7 @@ libro_navigare_ad_nomen(
  * Redde: Pagina* currentis
  */
 Pagina*
-libro_pagina_currens(
+libro_pagina_currens (
     LibroPaginarum* libro);
 
 
@@ -182,7 +183,7 @@ libro_pagina_currens(
  * Redde: index paginae currentis (0-based)
  */
 i32
-libro_index_currens(
+libro_index_currens (
     LibroPaginarum* libro);
 
 
@@ -193,7 +194,7 @@ libro_index_currens(
  * Redde: numerus paginarum
  */
 i32
-libro_numerus_paginarum(
+libro_numerus_paginarum (
     LibroPaginarum* libro);
 
 
@@ -211,8 +212,8 @@ libro_numerus_paginarum(
  * Redde: index novae paginae, vel -1 si error
  */
 s32
-libro_pagina_nova(
-    LibroPaginarum*     libro,
+libro_pagina_nova (
+        LibroPaginarum* libro,
     constans character* nomen_);
 
 
@@ -223,9 +224,9 @@ libro_pagina_nova(
  * nomen_: novum nomen (NIHIL pro removere nomen)
  */
 vacuum
-libro_pagina_nominare(
-    LibroPaginarum*     libro,
-    i32                 index,
+libro_pagina_nominare (
+        LibroPaginarum* libro,
+                   i32  index,
     constans character* nomen_);
 
 
@@ -237,9 +238,9 @@ libro_pagina_nominare(
  * Redde: chorda* nomen (vel NIHIL si sine nomine)
  */
 chorda*
-libro_pagina_nomen(
+libro_pagina_nomen (
     LibroPaginarum* libro,
-    i32             index);
+               i32  index);
 
 
 /* ==================================================
@@ -256,8 +257,8 @@ libro_pagina_nomen(
  * Redde: VERUM si tractatus, FALSUM si debet claudere
  */
 b32
-libro_tractare_eventum(
-    LibroPaginarum* libro,
+libro_tractare_eventum (
+      LibroPaginarum* libro,
     constans Eventus* eventus);
 
 
@@ -279,16 +280,16 @@ libro_tractare_eventum(
  * focused:         VERUM si habet focus
  */
 vacuum
-libro_reddere(
-    Piscina*         piscina,
+libro_reddere (
+            Piscina* piscina,
     TabulaPixelorum* tabula_pixelorum,
-    LibroPaginarum*  libro,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+     LibroPaginarum* libro,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -302,7 +303,7 @@ libro_reddere(
  * Redde: VERUM si successus
  */
 b32
-libro_salvare_paginam(
+libro_salvare_paginam (
     LibroPaginarum* libro);
 
 
@@ -313,7 +314,7 @@ libro_salvare_paginam(
  * Redde: VERUM si successus
  */
 b32
-libro_salvare_omnes(
+libro_salvare_omnes (
     LibroPaginarum* libro);
 
 
@@ -324,7 +325,7 @@ libro_salvare_omnes(
  * Redde: VERUM si successus
  */
 b32
-libro_carcare(
+libro_carcare (
     LibroPaginarum* libro);
 
 
@@ -337,7 +338,7 @@ libro_carcare(
  * libro: libro paginarum
  */
 vacuum
-libro_marcare_immundum(
+libro_marcare_immundum (
     LibroPaginarum* libro);
 
 
@@ -347,7 +348,7 @@ libro_marcare_immundum(
  * libro: libro paginarum
  */
 vacuum
-libro_salvare_si_immundum(
+libro_salvare_si_immundum (
     LibroPaginarum* libro);
 
 
@@ -362,7 +363,7 @@ libro_salvare_si_immundum(
  * Registrat: $rename, $goto, $new
  */
 vacuum
-libro_paginarum_init(
+libro_paginarum_init (
     ContextusWidget* ctx);
 
 

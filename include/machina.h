@@ -47,6 +47,7 @@
  * paucas impossibilis, et in tabulis legibile manet */
 #define MACHINA_IDENTITAS_LONGITUDO XVI
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -61,13 +62,14 @@
  * @valida: si FALSUM, identitas VACUA est et causa dicit cur
  */
 nomen structura {
-    b32    valida;
+       b32 valida;
     chorda identitas;      /* XVI litterae hex, aut vacua */
     chorda systema;        /* e.g. "Darwin 23.6.0" */
     chorda architectura;   /* e.g. "arm64" */
-    i32    nuclei;         /* numerus nucleorum agentium */
+       i32 nuclei;         /* numerus nucleorum agentium */
     chorda causa;          /* si !valida */
 } MachinaNota;
+
 
 /* ============================================================
  * Functiones
@@ -85,7 +87,9 @@ nomen structura {
  * Redde: XVI litterae hex, aut chorda vacua si fons vacuus est.
  */
 chorda
-machina_identitas_ex_fonte (constans chorda fons, Piscina* piscina);
+machina_identitas_ex_fonte (
+    constans chorda  fons,
+            Piscina* piscina);
 
 /*
  * machina_identitas - Identitas huius machinae
@@ -101,12 +105,14 @@ machina_identitas_ex_fonte (constans chorda fons, Piscina* piscina);
  * potest.
  */
 chorda
-machina_identitas (Piscina* piscina);
+machina_identitas (
+    Piscina* piscina);
 
 /*
  * machina_nota - Identitas cum condicionibus grossis
  */
 MachinaNota
-machina_nota (Piscina* piscina);
+machina_nota (
+    Piscina* piscina);
 
 #endif /* MACHINA_H */

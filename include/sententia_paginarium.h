@@ -24,6 +24,7 @@
 #include "xar.h"
 #include "paginarium.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -56,14 +57,15 @@ nomen structura {
 /* SententiaPaginariumResultus - Resultus totalis
  */
 nomen structura {
-    Xar*     copiae;              /* Array de SententiaCopia */
-    Xar*     paginae;             /* Array de SententiaPagina (lazy) */
-    i32      numerus_sententiarum;
-    chorda   textus;              /* Textus originalis */
+        Xar* copiae;              /* Array de SententiaCopia */
+        Xar* paginae;             /* Array de SententiaPagina (lazy) */
+        i32  numerus_sententiarum;
+     chorda  textus;              /* Textus originalis */
     Piscina* piscina;
-    i32      cache_latitudo;      /* Pro invalidatione */
-    i32      cache_altitudo;
+        i32  cache_latitudo;      /* Pro invalidatione */
+        i32  cache_altitudo;
 } SententiaPaginariumResultus;
+
 
 /* ========================================================================
  * FUNCTIONES - CREATIO
@@ -82,11 +84,12 @@ nomen structura {
  * Redde: Resultus (NIHIL si error)
  */
 SententiaPaginariumResultus*
-sententia_paginarium_creare(
-    chorda   textus,
-    i32      latitudo,
-    i32      altitudo,
+sententia_paginarium_creare (
+     chorda  textus,
+        i32  latitudo,
+        i32  altitudo,
     Piscina* piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - ACCESSUS
@@ -95,7 +98,7 @@ sententia_paginarium_creare(
 /* Obtinere numerum sententiarum totalem
  */
 i32
-sententia_paginarium_numerus(
+sententia_paginarium_numerus (
     SententiaPaginariumResultus* resultus);
 
 /* Obtinere copiam (unitatem) specificam
@@ -103,9 +106,9 @@ sententia_paginarium_numerus(
  * Redde: Pointer ad SententiaCopia, vel NIHIL si index invalidus
  */
 SententiaCopia*
-sententia_paginarium_copia_obtinere(
+sententia_paginarium_copia_obtinere (
     SententiaPaginariumResultus* resultus,
-    i32                          index);
+                            i32  index);
 
 /* Obtinere paginam word-wrapped pro sententia
  *
@@ -114,9 +117,10 @@ sententia_paginarium_copia_obtinere(
  * Redde: Pointer ad SententiaPagina, vel NIHIL si index invalidus
  */
 SententiaPagina*
-sententia_paginarium_pagina_obtinere(
+sententia_paginarium_pagina_obtinere (
     SententiaPaginariumResultus* resultus,
-    i32                          index);
+                            i32  index);
+
 
 /* ========================================================================
  * FUNCTIONES - REDDITIO
@@ -127,8 +131,8 @@ sententia_paginarium_pagina_obtinere(
  * Similis ad paginarium_linea_reddere sed pro SententiaPagina
  */
 chorda
-sententia_paginarium_linea_reddere(
+sententia_paginarium_linea_reddere (
     SententiaPaginariumResultus* resultus,
-    PaginariumLinea*             linea);
+                PaginariumLinea* linea);
 
 #endif /* SENTENTIA_PAGINARIUM_H */

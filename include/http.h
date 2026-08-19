@@ -21,6 +21,7 @@
 #include "chorda.h"
 #include "fasti.h"   /* MoraAngusta: duratio ms (stirps Morae) */
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -59,21 +60,21 @@ nomen structura HttpPetitio HttpPetitio;
 
 /* Responsum (response) */
 nomen structura {
-    i32    status;               /* 200, 404, etc. */
+       i32 status;               /* 200, 404, etc. */
     chorda status_descriptio;    /* "OK", "Not Found", etc. */
     chorda corpus;               /* Response body */
 
     /* Capita (headers) - pro accessu interno */
     HttpCaput* capita;
-    i32        capita_numerus;
+          i32  capita_numerus;
 } HttpResponsum;
 
 /* Resultus */
 nomen structura {
-    b32           successus;
+              b32  successus;
     HttpResponsum* responsum;
-    HttpError     error;
-    chorda        error_descriptio;
+        HttpError  error;
+           chorda  error_descriptio;
 } HttpResultus;
 
 
@@ -93,20 +94,20 @@ nomen enumeratio {
 /* Petitio serveri (parsed incoming request) */
 nomen structura {
     HttpMethodus methodus;
-    chorda       uri;              /* Full URI "/path?query" */
-    chorda       via;              /* Path only "/path" */
-    chorda       quaestio;         /* Query string (after ?) */
-    i32          versio;           /* 10 = HTTP/1.0, 11 = HTTP/1.1 */
+          chorda uri;              /* Full URI "/path?query" */
+          chorda via;              /* Path only "/path" */
+          chorda quaestio;         /* Query string (after ?) */
+             i32 versio;           /* 10 = HTTP/1.0, 11 = HTTP/1.1 */
 
-    HttpCaput*   capita;           /* Array of headers */
-    i32          capita_numerus;
+    HttpCaput* capita;           /* Array of headers */
+          i32  capita_numerus;
 
-    chorda       corpus;           /* Request body */
-    i32          corpus_longitudo; /* Body length */
+    chorda corpus;           /* Request body */
+       i32 corpus_longitudo; /* Body length */
 
-    b32          keep_alive;       /* Connection: keep-alive */
-    b32          chunked;          /* Transfer-Encoding: chunked */
-    i32          content_length;   /* Content-Length header value */
+    b32 keep_alive;       /* Connection: keep-alive */
+    b32 chunked;          /* Transfer-Encoding: chunked */
+    i32 content_length;   /* Content-Length header value */
 } HttpPetitioServeri;
 
 /* Parser incrementalis (opaque) */
@@ -118,12 +119,12 @@ nomen structura HttpParser HttpParser;
 
 /* Resultus parse */
 nomen structura {
-    b32                 successus;
-    b32                 completa;      /* FALSUM si necesse plus data */
+                   b32  successus;
+                   b32  completa;      /* FALSUM si necesse plus data */
     HttpPetitioServeri* petitio;
-    HttpError           error;
-    chorda              error_descriptio;
-    i32                 status_suggestus;  /* Status HTTP mittendus (0 = nullus) */
+             HttpError  error;
+                chorda  error_descriptio;
+                   i32  status_suggestus;  /* Status HTTP mittendus (0 = nullus) */
 } HttpParseResultus;
 
 
@@ -139,15 +140,15 @@ nomen structura {
  * Redde: HttpPetitio* vel NIHIL si error
  */
 HttpPetitio*
-http_petitio_creare(
-    Piscina*            piscina,
-    HttpMethodus        methodus,
+http_petitio_creare (
+               Piscina* piscina,
+          HttpMethodus  methodus,
     constans character* url);
 
 /* Addere caput (header) ad petitio */
 vacuum
-http_petitio_caput_addere(
-    HttpPetitio*        petitio,
+http_petitio_caput_addere (
+           HttpPetitio* petitio,
     constans character* titulus,
     constans character* valor);
 
@@ -156,22 +157,22 @@ http_petitio_caput_addere(
  * internum servat. Tempore icto http_exsequi HTTP_ERROR_TIMEOUT
  * reddit, corpore partiali consulto abiecto. */
 vacuum
-http_petitio_tempus_ponere(
+http_petitio_tempus_ponere (
     HttpPetitio* petitio,
     MoraAngusta  tempus_ms);
 
 /* Ponere corpus (body) petitionis */
 vacuum
-http_petitio_corpus_ponere(
-    HttpPetitio*        petitio,
+http_petitio_corpus_ponere (
+           HttpPetitio* petitio,
     constans character* corpus,
-    i32                 mensura);
+                   i32  mensura);
 
 /* Ponere corpus ex chorda */
 vacuum
-http_petitio_corpus_ponere_chorda(
+http_petitio_corpus_ponere_chorda (
     HttpPetitio* petitio,
-    chorda       corpus);
+         chorda  corpus);
 
 
 /* ========================================================================
@@ -186,9 +187,9 @@ http_petitio_corpus_ponere_chorda(
  * Redde: Resultus cum responsum vel error
  */
 HttpResultus
-http_exsequi(
+http_exsequi (
     HttpPetitio* petitio,
-    Piscina*     piscina);
+        Piscina* piscina);
 
 /* Exsequi petitio cum sequendo redirectiones (301, 302, 307, 308)
  *
@@ -199,10 +200,10 @@ http_exsequi(
  * Redde: Resultus cum responsum finale vel error
  */
 HttpResultus
-http_exsequi_cum_redirectionibus(
+http_exsequi_cum_redirectionibus (
     HttpPetitio* petitio,
-    Piscina*     piscina,
-    i32          max_redirectiones);
+        Piscina* piscina,
+            i32  max_redirectiones);
 
 
 /* ========================================================================
@@ -214,8 +215,8 @@ http_exsequi_cum_redirectionibus(
  * Redde: Valor capitis vel chorda vacua si non invenitur
  */
 chorda
-http_responsum_caput(
-    HttpResponsum*      responsum,
+http_responsum_caput (
+         HttpResponsum* responsum,
     constans character* titulus);
 
 /* Obtinere descriptio status (e.g., 200 -> "OK")
@@ -225,7 +226,8 @@ http_responsum_caput(
  * Redde: String descriptio status
  */
 constans character*
-http_status_descriptio(i32 status);
+http_status_descriptio (
+    i32 status);
 
 /* Serialize responsum ad HTTP response string
  *
@@ -235,9 +237,9 @@ http_status_descriptio(i32 status);
  * Redde: Chorda cum "HTTP/1.1 200 OK\r\n..."
  */
 chorda
-http_responsum_serialize(
+http_responsum_serialize (
     HttpResponsum* responsum,
-    Piscina*       piscina);
+          Piscina* piscina);
 
 /* Serialize cum capite Connection explicito (pro servo)
  *
@@ -248,10 +250,10 @@ http_responsum_serialize(
  * keep_alive: VERUM = "Connection: keep-alive", FALSUM = "close"
  */
 chorda
-http_responsum_serialize_cum_conexione(
+http_responsum_serialize_cum_conexione (
     HttpResponsum* responsum,
-    b32            keep_alive,
-    Piscina*       piscina);
+              b32  keep_alive,
+          Piscina* piscina);
 
 
 /* ========================================================================
@@ -260,11 +262,13 @@ http_responsum_serialize_cum_conexione(
 
 /* Obtinere nomen methodi */
 constans character*
-http_methodus_nomen(HttpMethodus methodus);
+http_methodus_nomen (
+    HttpMethodus methodus);
 
 /* Obtinere error descriptio */
 constans character*
-http_error_descriptio(HttpError error);
+http_error_descriptio (
+    HttpError error);
 
 
 /* ========================================================================
@@ -280,10 +284,10 @@ http_error_descriptio(HttpError error);
  * Redde: Resultus cum petitio vel error
  */
 HttpParseResultus
-http_petitio_parse(
+http_petitio_parse (
     constans character* datum,
-    i32                 longitudo,
-    Piscina*            piscina);
+                   i32  longitudo,
+               Piscina* piscina);
 
 /* Creare parser incrementalis
  *
@@ -292,7 +296,8 @@ http_petitio_parse(
  * Redde: Parser vel NIHIL si error
  */
 HttpParser*
-http_parser_creare(Piscina* piscina);
+http_parser_creare (
+    Piscina* piscina);
 
 /* Creare parser cum limitibus (0 = defalta)
  *
@@ -300,17 +305,18 @@ http_parser_creare(Piscina* piscina);
  * uri_maxima:     Limes URI in bytes (414 si excessum)
  */
 HttpParser*
-http_parser_creare_cum_limitibus(
+http_parser_creare_cum_limitibus (
     Piscina* piscina,
-    i32      petitio_maxima,
-    i32      uri_maxima);
+        i32  petitio_maxima,
+        i32  uri_maxima);
 
 /* Bytes in buffer post finem petitionis completae (pipelining detectio)
  *
  * Redde: 0 nisi COMPLETA; aliter numerus byteorum reliquorum
  */
 i32
-http_parser_reliquiae(HttpParser* parser);
+http_parser_reliquiae (
+    HttpParser* parser);
 
 /* Adicere data ad parser
  *
@@ -321,26 +327,30 @@ http_parser_reliquiae(HttpParser* parser);
  * Redde: Resultus (successus = parse valida, completa = petitio completa)
  */
 HttpParseResultus
-http_parser_adicere(
-    HttpParser*         parser,
+http_parser_adicere (
+            HttpParser* parser,
     constans character* datum,
-    i32                 longitudo);
+                   i32  longitudo);
 
 /* Verificare si parsing completa */
 b32
-http_parser_est_completa(HttpParser* parser);
+http_parser_est_completa (
+    HttpParser* parser);
 
 /* Obtinere petitio parsata (post completa) */
 HttpPetitioServeri*
-http_parser_obtinere_petitio(HttpParser* parser);
+http_parser_obtinere_petitio (
+    HttpParser* parser);
 
 /* Reset parser pro nova petitio */
 vacuum
-http_parser_reset(HttpParser* parser);
+http_parser_reset (
+    HttpParser* parser);
 
 /* Convertere methodus string ad enum */
 HttpMethodus
-http_methodus_ex_literis(constans character* methodus);
+http_methodus_ex_literis (
+    constans character* methodus);
 
 
 #endif /* HTTP_H */

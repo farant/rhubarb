@@ -37,8 +37,8 @@ nomen structura MensaContextus MensaContextus;
  * tractatores registrantur. NIHIL = defectus (causa in stderr). */
 MensaContextus*
 mensa_praebere (
-    Internuntius*       internuntius,
-    Piscina*            piscina,
+          Internuntius* internuntius,
+               Piscina* piscina,
     constans character* via_voluminis);
 
 /* volumen contextus claudere (ante piscina_destruere) */

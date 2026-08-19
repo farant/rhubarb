@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "xar.h"
 
+
 /* ====================================================
  * AEDILIS - Stratum Constructionis (machina clausurae)
  *
@@ -42,42 +43,44 @@ nomen b32 (*AedilisExtractor)(
     Xar**               annotationes_out,
     b32*                ex_oraculo_out);
 
+
 /* ====================================================
  * Configuratio (aedilis.stml)
  * ==================================================== */
 
 nomen structura {
-    chorda obiectum;   /* basis obiecti, e.g. "fenestra_macos" */
-    Xar*   vexilla;    /* chorda */
+    chorda  obiectum;   /* basis obiecti, e.g. "fenestra_macos" */
+       Xar* vexilla;    /* chorda */
 } AedilisRegulaNexus;
 
 nomen structura {
-    chorda fons;       /* e.g. "vendor/sqlite3.c" */
-    Xar*   vexilla;    /* chorda */
+    chorda  fons;       /* e.g. "vendor/sqlite3.c" */
+       Xar* vexilla;    /* chorda */
 } AedilisRegulaVendor;
 
 nomen structura {
-    chorda caput;      /* e.g. "include/aliquid.h" */
-    Xar*   obiecta;    /* chorda: fontes obiectorum */
+    chorda  caput;      /* e.g. "include/aliquid.h" */
+       Xar* obiecta;    /* chorda: fontes obiectorum */
 } AedilisIrregulare;
 
 nomen structura {
-    chorda radix;      /* directorium aedilis.stml (radix probarum) */
-    Xar*   inclusa;    /* chorda: directoria -I, ordine */
-    Xar*   vexilla;    /* chorda: vexilla basis compilationis */
-    Xar*   variantes;  /* chorda: praelatio variantium, ordine */
-    Xar*   regulae_nexus;   /* AedilisRegulaNexus (valore) */
-    Xar*   regulae_vendor;  /* AedilisRegulaVendor (valore) */
-    Xar*   irregularia;     /* AedilisIrregulare (valore) */
+    chorda  radix;      /* directorium aedilis.stml (radix probarum) */
+       Xar* inclusa;    /* chorda: directoria -I, ordine */
+       Xar* vexilla;    /* chorda: vexilla basis compilationis */
+       Xar* variantes;  /* chorda: praelatio variantium, ordine */
+       Xar* regulae_nexus;   /* AedilisRegulaNexus (valore) */
+       Xar* regulae_vendor;  /* AedilisRegulaVendor (valore) */
+       Xar* irregularia;     /* AedilisIrregulare (valore) */
 } AedilisConfiguratio;
 
 /* Legere configurationem ex via data; radix = directorium eius.
  * NIHIL + causa si absens aut malformata. */
 AedilisConfiguratio*
-aedilis_configurationem_legere(
-    Piscina*            piscina,
+aedilis_configurationem_legere (
+               Piscina* piscina,
     constans character* via_stml,
-    chorda*             causa_out);
+                chorda* causa_out);
+
 
 /* ====================================================
  * Fructus derivationis
@@ -99,18 +102,18 @@ nomen enumeratio {
 } AedilisOrigo;
 
 nomen structura {
-    chorda       via;            /* fons obiecti (lib/x.c) */
-    chorda       caput;          /* caput vocans; mensura 0 licet */
+          chorda via;            /* fons obiecti (lib/x.c) */
+          chorda caput;          /* caput vocans; mensura 0 licet */
     AedilisOrigo origo;
-    b32          absens;         /* declaratum, non in disco
+             b32 absens;         /* declaratum, non in disco
                                   * (generata - annotatio sola) */
-    Xar*         vexilla_nexus;  /* chorda ex regulis; NIHIL licet */
+    Xar* vexilla_nexus;  /* chorda ex regulis; NIHIL licet */
 } AedilisObiectum;
 
 nomen structura {
-    chorda       via;
-    AedilisOrigo origo;
-    Xar*         inclusa;  /* chorda: viae resolutae quas HOC caput
+          chorda  via;
+    AedilisOrigo  origo;
+             Xar* inclusa;  /* chorda: viae resolutae quas HOC caput
                             * includit (aristae graphi - Phasis
                             * amalgamatis A); NIHIL = nullae
                             * (numquam ambulatum aut sine
@@ -120,50 +123,50 @@ nomen structura {
 } AedilisCaput;
 
 nomen structura {
-    chorda fons;       /* vendor/x.c */
-    Xar*   vexilla;    /* ex regula; NIHIL licet */
+    chorda  fons;       /* vendor/x.c */
+       Xar* vexilla;    /* ex regula; NIHIL licet */
 } AedilisVendor;
 
 nomen structura {
-    chorda scopus;
-    chorda varians;
-    Xar*   obiecta;           /* AedilisObiectum (valore) */
-    Xar*   capita;            /* AedilisCaput (valore) */
-    Xar*   systemata;         /* chorda */
-    Xar*   vendores;          /* AedilisVendor (valore) */
-    Xar*   vexilla_annotata;  /* chorda */
+    chorda  scopus;
+    chorda  varians;
+       Xar* obiecta;           /* AedilisObiectum (valore) */
+       Xar* capita;            /* AedilisCaput (valore) */
+       Xar* systemata;         /* chorda */
+       Xar* vendores;          /* AedilisVendor (valore) */
+       Xar* vexilla_annotata;  /* chorda */
 } AedilisFructus;
 
 /* Clausuram scopi derivare (punctum fixum trans plagulas).
  * varians NIHIL = praelatio prima configurationis.
  * NIHIL + causa in recusatione - nullus fructus partialis. */
 AedilisFructus*
-aedilis_derivare(
-    Piscina*                      piscina,
+aedilis_derivare (
+                         Piscina* piscina,
     constans AedilisConfiguratio* configuratio,
-    constans character*           scopus,
-    constans character*           varians,
-    AedilisExtractor              extractor,
-    vacuum*                       extractor_datum,
-    chorda*                       causa_out);
+              constans character* scopus,
+              constans character* varians,
+                AedilisExtractor  extractor,
+                          vacuum* extractor_datum,
+                          chorda* causa_out);
 
 /* Capita ordine topologico reddere (inclusa ante includentia;
  * intra gyrum ordo inventionis servatur - determinismus). Xar de
  * AedilisCaput* in fructum monstrantium (stabilia - xar segmentata).
  * NIHIL + causa in cyclo, viis cycli nominatis. */
 Xar*
-aedilis_capita_ordinare(
+aedilis_capita_ordinare (
     constans AedilisFructus* fructus,
-    Piscina*                 piscina,
-    chorda*                  causa_out);
+                    Piscina* piscina,
+                     chorda* causa_out);
 
 /* Fructum ut manifestum STML scribere (chorda emissa).
  * commissum NIHIL = attributum omissum. */
 chorda
-aedilis_manifestum_scribere(
+aedilis_manifestum_scribere (
     constans AedilisFructus* fructus,
-    Piscina*                 piscina,
-    constans character*      commissum);
+                    Piscina* piscina,
+         constans character* commissum);
 
 /* Fructum ut scriptum bash scribere (chorda emissa).
  * solitarius FALSUM = cache-reutens (obiecta communia in
@@ -173,11 +176,11 @@ aedilis_manifestum_scribere(
  * (custos intus); binarium in build/aedilis/<basis>/<basis>.
  * bash-3.2-tutum, porta per codicem exitus, sine ANSI. */
 chorda
-aedilis_scriptum_scribere(
-    constans AedilisFructus*      fructus,
+aedilis_scriptum_scribere (
+         constans AedilisFructus* fructus,
     constans AedilisConfiguratio* configuratio,
-    Piscina*                      piscina,
-    b32                           solitarius,
-    constans character*           commissum);
+                         Piscina* piscina,
+                             b32  solitarius,
+              constans character* commissum);
 
 #endif /* AEDILIS_H */

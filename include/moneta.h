@@ -45,7 +45,7 @@ moneta_ulid_fortuita (
  * qui ut successus spectat. Ergo duae functiones, non una. */
 b32
 moneta_octeti_fortuiti (
-    i8* effusio,
-    i32 mensura);
+     i8* effusio,
+    i32  mensura);
 
 #endif /* MONETA_H */

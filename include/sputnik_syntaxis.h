@@ -7,6 +7,7 @@
 #include "widget.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * SPUTNIK SYNTAXIS - Syntax Reference Widget
  *
@@ -47,7 +48,7 @@ nomen structura {
  * Redde: SputnikSyntaxis* si successus, NIHIL si error
  */
 SputnikSyntaxis*
-sputnik_syntaxis_creare(
+sputnik_syntaxis_creare (
     Piscina* piscina);
 
 
@@ -65,15 +66,15 @@ sputnik_syntaxis_creare(
  * focused: an widget habet focus
  */
 vacuum
-sputnik_syntaxis_reddere(
+sputnik_syntaxis_reddere (
     SputnikSyntaxis* syntaxis,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -90,8 +91,8 @@ sputnik_syntaxis_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-sputnik_syntaxis_tractare_eventum(
-    SputnikSyntaxis*  syntaxis,
+sputnik_syntaxis_tractare_eventum (
+     SputnikSyntaxis* syntaxis,
     constans Eventus* eventus);
 
 
@@ -106,7 +107,7 @@ sputnik_syntaxis_tractare_eventum(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-sputnik_syntaxis_init(
+sputnik_syntaxis_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -118,10 +119,10 @@ sputnik_syntaxis_init(
  * NOTA: SputnikSyntaxis est read-only, ergo nihil salvare
  */
 vacuum
-sputnik_syntaxis_salvare_status(
-    SputnikSyntaxis*     syntaxis,
+sputnik_syntaxis_salvare_status (
+        SputnikSyntaxis* syntaxis,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -132,10 +133,10 @@ sputnik_syntaxis_salvare_status(
  * NOTA: SputnikSyntaxis est read-only, ergo nihil carcare
  */
 vacuum
-sputnik_syntaxis_carcare_status(
-    SputnikSyntaxis*     syntaxis,
+sputnik_syntaxis_carcare_status (
+        SputnikSyntaxis* syntaxis,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* SPUTNIK_SYNTAXIS_H */

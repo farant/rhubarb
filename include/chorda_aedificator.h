@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * ChordaAedificator - Accumulatio efficax chordarum
  *
@@ -37,18 +38,19 @@
 
 nomen structura ChordaAedificator ChordaAedificator;
 
+
 /* ==================================================
  * Creatio / Destructio
  * ================================================== */
 
 ChordaAedificator*
 chorda_aedificator_creare (
-	       Piscina* piscina,
-	memoriae_index  capacitas_initialis);
+           Piscina* piscina,
+    memoriae_index  capacitas_initialis);
 
 vacuum
 chorda_aedificator_destruere (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -57,8 +59,8 @@ chorda_aedificator_destruere (
 
 b32
 chorda_aedificator_appendere_character (
-	ChordaAedificator* aedificator,
-	        character  c);
+    ChordaAedificator* aedificator,
+            character  c);
 
 
 /* ==================================================
@@ -67,13 +69,13 @@ chorda_aedificator_appendere_character (
 
 b32
 chorda_aedificator_appendere_literis (
-	 ChordaAedificator* aedificator,
-	constans character* cstr);
+     ChordaAedificator* aedificator,
+    constans character* cstr);
 
 b32
 chorda_aedificator_appendere_chorda (
-	ChordaAedificator* aedificator,
-	           chorda  s);
+    ChordaAedificator* aedificator,
+               chorda  s);
 
 
 /* ==================================================
@@ -82,13 +84,13 @@ chorda_aedificator_appendere_chorda (
 
 b32
 chorda_aedificator_appendere_s32 (
-	ChordaAedificator* aedificator,
-	              s32  n);
+    ChordaAedificator* aedificator,
+                  s32  n);
 
 b32
 chorda_aedificator_appendere_i32 (
-	ChordaAedificator* aedificator,
-	              i32  n);
+    ChordaAedificator* aedificator,
+                  i32  n);
 
 
 /* ==================================================
@@ -99,24 +101,24 @@ chorda_aedificator_appendere_i32 (
 
 b32
 chorda_aedificator_appendere_f64 (
-	ChordaAedificator* aedificator,
-	              f64  n,
-	              i32  decimales);
+    ChordaAedificator* aedificator,
+                  f64  n,
+                  i32  decimales);
 
 /* appendere_repetita: appende characterem n vicibus
  * Utile ad padding vel indentationem */
 b32
 chorda_aedificator_appendere_repetita (
-	ChordaAedificator* aedificator,
-	        character  c,
-	              i32  numerus);
+    ChordaAedificator* aedificator,
+            character  c,
+                  i32  numerus);
 
 /* appendere_hex_i32: appende integrum ut hexadecimale (minusculae, sine 0x)
  * Utile ad debugging vel IDs */
 b32
 chorda_aedificator_appendere_hex_i32 (
-	ChordaAedificator* aedificator,
-	              i32  n);
+    ChordaAedificator* aedificator,
+                  i32  n);
 
 
 /* ==================================================
@@ -129,13 +131,13 @@ chorda_aedificator_appendere_hex_i32 (
 
 b32
 chorda_aedificator_appendere_evasus_json (
-	ChordaAedificator* aedificator,
-	           chorda  s);
+    ChordaAedificator* aedificator,
+               chorda  s);
 
 b32
 chorda_aedificator_appendere_literis_evasus_json (
-	 ChordaAedificator* aedificator,
-	constans character* cstr);
+     ChordaAedificator* aedificator,
+    constans character* cstr);
 
 
 /* ==================================================
@@ -144,7 +146,7 @@ chorda_aedificator_appendere_literis_evasus_json (
 
 b32
 chorda_aedificator_appendere_lineam_novam (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 /* appendere_indentationem: appende N spatia (pro gradu currenti)
  * ubi N = gradus * spatia_per_gradum (typice 2 vel 4)
@@ -152,8 +154,8 @@ chorda_aedificator_appendere_lineam_novam (
  * Trade indentatio_gradus ab aedificatore, vel specifica manualiter */
 b32
 chorda_aedificator_appendere_indentationem (
-	ChordaAedificator* aedificator,
-	              i32  gradus);
+    ChordaAedificator* aedificator,
+                  i32  gradus);
 
 
 /* ==================================================
@@ -176,15 +178,15 @@ chorda_aedificator_appendere_indentationem (
 
 vacuum
 chorda_aedificator_push_indentationem (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 vacuum
 chorda_aedificator_pop_indentationem (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 i32
 chorda_aedificator_indentatio_gradus (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -194,14 +196,14 @@ chorda_aedificator_indentatio_gradus (
 /* longitudo: longitudo currens chordae accumulatae */
 memoriae_index
 chorda_aedificator_longitudo (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 /* spectare: vide contentum currentem sine finiendo
  * Reddit chordam spectationem buffer currenti.
  * Validus solum usque ad proximam mutationem. */
 chorda
 chorda_aedificator_spectare (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -212,7 +214,7 @@ chorda_aedificator_spectare (
  * Utile ad reutilizandum aedificatorem pro chordis multiplicibus */
 vacuum
 chorda_aedificator_reset (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 /* finire: converte aedificatorem ad chordam
  * Transfert dominium chordae accumulatae ad vocantem.
@@ -220,7 +222,7 @@ chorda_aedificator_reset (
  * Vocans debet finaliter deallocare per piscinam. */
 chorda
 chorda_aedificator_finire (
-	ChordaAedificator* aedificator);
+    ChordaAedificator* aedificator);
 
 
 /* ==================================================

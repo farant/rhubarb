@@ -32,20 +32,23 @@
  * ============================================================ */
 
 hic_manens vacuum
-_dialogus_importatio_reddere(
-    Dialogus*        dialogus,
+_dialogus_importatio_reddere (
+           Dialogus* dialogus,
     TabulaPixelorum* tabula,
-    i32 x, i32 y,
-    i32 latitudo, i32 altitudo,
-    f32 scala);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                f32  scala);
 
 hic_manens DialogusFructus
-_dialogus_importatio_tractare_eventum(
-    Dialogus*         dialogus,
+_dialogus_importatio_tractare_eventum (
+            Dialogus* dialogus,
     constans Eventus* eventus);
 
 hic_manens vacuum
-_dialogus_importatio_destruere(Dialogus* dialogus);
+_dialogus_importatio_destruere (
+    Dialogus* dialogus);
 
 
 /* ============================================================

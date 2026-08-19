@@ -42,21 +42,52 @@
  * Prototypi Interni
  * ================================================== */
 
-interior SputnikAstNodus* _parsere_expressionem(SputnikParser* parser, i32 praecedentia);
-interior SputnikAstNodus* _parsere_sententiam(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_declarationem_let(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_declarationem_const(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_si(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_dum(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_per(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_redde(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_grex(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_declarationem_functio(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_frange(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_sententiam_perge(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_functionem_sagittam(SputnikParser* parser);
-interior SputnikAstNodus* _parsere_declarationem_entitas(SputnikParser* parser);
-interior b32 _est_functio_sagitta_parenthesis(SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_expressionem (
+    SputnikParser* parser,
+              i32  praecedentia);
+interior SputnikAstNodus*
+_parsere_sententiam (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_declarationem_let (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_declarationem_const (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_si (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_dum (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_per (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_redde (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_grex (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_declarationem_functio (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_frange (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_sententiam_perge (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_functionem_sagittam (
+    SputnikParser* parser);
+interior SputnikAstNodus*
+_parsere_declarationem_entitas (
+    SputnikParser* parser);
+interior b32
+_est_functio_sagitta_parenthesis (
+    SputnikParser* parser);
 
 
 /* ==================================================

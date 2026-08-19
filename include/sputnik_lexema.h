@@ -7,6 +7,7 @@
 #include "internamentum.h"
 #include "xar.h"
 
+
 /* ==================================================
  * SPUTNIK LEXEMA - Lexer pro Sputnik
  *
@@ -139,12 +140,12 @@ nomen enumeratio {
  * ================================================== */
 
 nomen structura {
-    SputnikLexemaGenus  genus;
-    chorda              valor;          /* Vista in fontem */
-    i32                 linea;          /* 1-based */
-    i32                 columna;        /* 1-based */
-    i32                 offset_initium;
-    i32                 offset_finis;
+    SputnikLexemaGenus genus;
+                chorda valor;          /* Vista in fontem */
+                   i32 linea;          /* 1-based */
+                   i32 columna;        /* 1-based */
+                   i32 offset_initium;
+                   i32 offset_finis;
 } SputnikLexema;
 
 
@@ -153,14 +154,14 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    chorda               fons;
-    i32                  positus;
-    i32                  linea;
-    i32                  columna;
-    Piscina*             piscina;
+                 chorda  fons;
+                    i32  positus;
+                    i32  linea;
+                    i32  columna;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    i32                  template_profunditas;  /* Profunditas interpolationis template */
-    i32                  bracchium_profunditas; /* Profunditas { } intra interpolationem */
+                    i32  template_profunditas;  /* Profunditas interpolationis template */
+                    i32  bracchium_profunditas; /* Profunditas { } intra interpolationem */
 } SputnikLexator;
 
 
@@ -169,11 +170,11 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    b32                  successus;
-    Xar*                 lexemata;      /* Xar de SputnikLexema */
-    chorda               error_nuntius;
-    i32                  error_linea;
-    i32                  error_columna;
+       b32  successus;
+       Xar* lexemata;      /* Xar de SputnikLexema */
+    chorda  error_nuntius;
+       i32  error_linea;
+       i32  error_columna;
 } SputnikLexatorResultus;
 
 
@@ -190,16 +191,16 @@ nomen structura {
  * Redde: SputnikLexator* si successus, NIHIL si fractura
  */
 SputnikLexator*
-sputnik_lexator_creare(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_lexator_creare (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Creare lexatorem ex C string */
 SputnikLexator*
-sputnik_lexator_creare_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_lexator_creare_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -214,17 +215,17 @@ sputnik_lexator_creare_ex_literis(
  *       genus == SPUTNIK_LEXEMA_ERROR indicat errorem
  */
 SputnikLexema
-sputnik_lexator_legere(
+sputnik_lexator_legere (
     SputnikLexator* lexator);
 
 /* Aspicere proximum lexema sine consumptione */
 SputnikLexema
-sputnik_lexator_aspicere(
+sputnik_lexator_aspicere (
     SputnikLexator* lexator);
 
 /* Verificare si ad finem */
 b32
-sputnik_lexator_finis(
+sputnik_lexator_finis (
     SputnikLexator* lexator);
 
 
@@ -237,16 +238,16 @@ sputnik_lexator_finis(
  * Redde: SputnikLexatorResultus cum omnibus lexematis
  */
 SputnikLexatorResultus
-sputnik_lexicare(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_lexicare (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Lexicare ex C string */
 SputnikLexatorResultus
-sputnik_lexicare_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_lexicare_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -256,17 +257,17 @@ sputnik_lexicare_ex_literis(
 
 /* Obtinere nomen generis pro depuratione */
 constans character*
-sputnik_lexema_genus_nomen(
+sputnik_lexema_genus_nomen (
     SputnikLexemaGenus genus);
 
 /* Imprimere lexema pro depuratione */
 vacuum
-sputnik_lexema_imprimere(
+sputnik_lexema_imprimere (
     SputnikLexema* lexema);
 
 /* Imprimere omnia lexemata */
 vacuum
-sputnik_lexemata_imprimere(
+sputnik_lexemata_imprimere (
     Xar* lexemata);
 
 #endif /* SPUTNIK_LEXEMA_H */

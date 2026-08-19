@@ -9,6 +9,7 @@
 #include "widget.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * PINACOTHECA VISUS - Gallery Widget
  *
@@ -53,15 +54,15 @@ nomen enumeratio {
 
 /* Informationes de imagine (cached ex entitas) */
 nomen structura {
-    chorda  id;           /* Entitas UUID */
-    chorda  titulus;
-    i32     latitudo;
-    i32     altitudo;
+    chorda id;           /* Entitas UUID */
+    chorda titulus;
+       i32 latitudo;
+       i32 altitudo;
 } ImagoInfo;
 
 /* Status visus pinacothecae */
 nomen structura {
-    Piscina*         piscina;
+            Piscina* piscina;
     ContextusWidget* ctx;
 
     /* Lista imaginum */
@@ -73,10 +74,10 @@ nomen structura {
     PinacothecaModus modus;
 
     /* Cache pro imagine selecta */
-    i8*  datum_cache;         /* Palette indices (decompressed) */
-    i32  cache_latitudo;
-    i32  cache_altitudo;
-    chorda cache_id;          /* Id imaginis in cache */
+        i8* datum_cache;         /* Palette indices (decompressed) */
+       i32  cache_latitudo;
+       i32  cache_altitudo;
+    chorda  cache_id;          /* Id imaginis in cache */
 
     /* Dimensiones widget (salvati pro eventus tractatio) */
     s32 latitudo_characterum;
@@ -86,10 +87,10 @@ nomen structura {
     s32 widget_y;
 
     /* Dialog state (pro delete/rename) */
-    b32 confirmare_delere;    /* Monstrare confirmationem */
-    b32 renominare_activum;   /* Text input activum */
+       b32 confirmare_delere;    /* Monstrare confirmationem */
+       b32 renominare_activum;   /* Text input activum */
     chorda novum_nomen;       /* Buffer pro renominare */
-    s32 novum_nomen_cursor;
+       s32 novum_nomen_cursor;
 } PinacothecaVisus;
 
 
@@ -104,7 +105,7 @@ nomen structura {
  * Redde: PinacothecaVisus* si successus, NIHIL si error
  */
 PinacothecaVisus*
-pinacotheca_visus_creare(
+pinacotheca_visus_creare (
     ContextusWidget* ctx);
 
 
@@ -122,15 +123,15 @@ pinacotheca_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-pinacotheca_visus_reddere(
+pinacotheca_visus_reddere (
     PinacothecaVisus* visus,
-    TabulaPixelorum*  tabula,
-    i32               x,
-    i32               y,
-    i32               latitudo,
-    i32               altitudo,
-    i32               scala,
-    b32               focused);
+     TabulaPixelorum* tabula,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  altitudo,
+                 i32  scala,
+                 b32  focused);
 
 
 /* ==================================================
@@ -145,7 +146,7 @@ pinacotheca_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-pinacotheca_visus_tractare_eventum(
+pinacotheca_visus_tractare_eventum (
     PinacothecaVisus* visus,
     constans Eventus* eventus);
 
@@ -161,7 +162,7 @@ pinacotheca_visus_tractare_eventum(
  * Quaerit omnes Vultus::Imago et sortat alphabetice.
  */
 vacuum
-pinacotheca_visus_reficere(
+pinacotheca_visus_reficere (
     PinacothecaVisus* visus);
 
 /* Navigare ad imaginem per titulum
@@ -172,8 +173,8 @@ pinacotheca_visus_reficere(
  * Si inventum: selectat et monstra in preview/visus
  */
 vacuum
-pinacotheca_visus_navigare_ad(
-    PinacothecaVisus*   visus,
+pinacotheca_visus_navigare_ad (
+      PinacothecaVisus* visus,
     constans character* titulus);
 
 
@@ -188,7 +189,7 @@ pinacotheca_visus_navigare_ad(
  * Registrat: $pinacotheca, $image
  */
 vacuum
-pinacotheca_visus_init(
+pinacotheca_visus_init (
     ContextusWidget* ctx);
 
 

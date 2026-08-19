@@ -38,6 +38,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -55,18 +56,19 @@ nomen enumeratio {
 } ProcessusError;
 
 nomen structura {
-    b32            successus;      /* generatus ET exspectatus.
+    b32 successus;      /* generatus ET exspectatus.
                                     * NOTA: codex_exitus non-zerus
                                     * successus MANET - processus
                                     * cucurrit et respondit. */
-    i32            codex_exitus;   /* WEXITSTATUS (0 nisi signo) */
-    i32            signum;         /* WTERMSIG, aut 0 */
-    chorda         effusio;        /* stdout captus */
-    chorda         erratum;        /* stderr captus - SEPARATIM */
-    i32            mora_ms;        /* tempus elapsum */
+               i32 codex_exitus;   /* WEXITSTATUS (0 nisi signo) */
+               i32 signum;         /* WTERMSIG, aut 0 */
+            chorda effusio;        /* stdout captus */
+            chorda erratum;        /* stderr captus - SEPARATIM */
+               i32 mora_ms;        /* tempus elapsum */
     ProcessusError error;
-    chorda         error_descriptio;
+            chorda error_descriptio;
 } ProcessusResultus;
+
 
 /* ========================================================================
  * FUNCTIONES
@@ -88,14 +90,15 @@ nomen structura {
  * (id est codex_exitus).
  */
 ProcessusResultus
-processus_exsequi(
+processus_exsequi (
     constans character* constans* argumenta,
     i32                          mora_maxima_ms,
     Piscina*                     piscina);
 
 /* Descriptio erroris ut litterae staticae (pro nuntiis). */
 constans character*
-processus_error_nomen(ProcessusError error);
+processus_error_nomen (
+    ProcessusError error);
 
 /* Processus IPSE fit programma nominatum (execvp - eadem PID,
  * descriptores aperti manent). Pro residentibus qui se super
@@ -108,7 +111,7 @@ processus_error_nomen(ProcessusError error);
  * Redde: numquam si felix; FALSUM si exec fefellit (vocator
  * pergat - defectus non fatalis). */
 b32
-processus_transformare(
+processus_transformare (
     constans character* constans* argumenta);
 
 
@@ -161,7 +164,7 @@ nomen enumeratio {
  * tarde pulsat.
  */
 Processus*
-processus_incipere(
+processus_incipere (
     constans character* constans* argumenta,
     i32                          mora_maxima_ms,
     Piscina*                     piscina);
@@ -174,7 +177,8 @@ processus_incipere(
  * currere pergit CURRIT manet - recte, quia nondum finivit.
  */
 ProcessusStatus
-processus_pulsare(Processus* processus);
+processus_pulsare (
+    Processus* processus);
 
 /* Effusio HACTENUS capta, sine expectatione - quod pulsare iam
  * hausit. Non destruit: iterum vocari potest.
@@ -203,13 +207,15 @@ processus_erratum_hactenus (
  * Idempotens: iterum vocata idem resultum reddit.
  */
 ProcessusResultus
-processus_metere(Processus* processus);
+processus_metere (
+    Processus* processus);
 
 /* Occidere et metere (SIGKILL). Pro pyxide 'abrumpe' faciei.
  * Post hoc processus_metere resultum cum PROCESSUS_ERROR_TEMPUS
  * fert. Tuta si iam perfectus (nihil agit).
  */
 vacuum
-processus_abrumpere(Processus* processus);
+processus_abrumpere (
+    Processus* processus);
 
 #endif /* PROCESSUS_H */

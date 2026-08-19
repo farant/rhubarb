@@ -45,19 +45,19 @@ nomen structura LibrariumLector {
     Piscina* piscina;
 
     /* Textus carcatus */
-    chorda textus;
+       chorda textus;
     character numerus_buffer[LIBRARIUM_LECTOR_NUMERUS_MAX];
     character via_buffer[LIBRARIUM_LECTOR_VIA_MAX];
 
     /* Paginatio (modus paginae) */
     PaginariumResultus paginarium;
-    s32 pagina_currens;
-    s32 paginae_totales;
+                   s32 pagina_currens;
+                   s32 paginae_totales;
 
     /* Modus sententiae */
-    b32 modus_sententiae;
+                            b32  modus_sententiae;
     SententiaPaginariumResultus* sententia_resultus;
-    s32 sententia_currens;
+                            s32  sententia_currens;
 
     /* Cache */
     s32 cache_latitudo;
@@ -77,7 +77,7 @@ nomen structura LibrariumLector {
  * Redde: Lector novus, vel NIHIL si error
  */
 LibrariumLector*
-librarium_lector_creare(
+librarium_lector_creare (
     Piscina* piscina);
 
 
@@ -94,8 +94,8 @@ librarium_lector_creare(
  * Redde: VERUM si successus, FALSUM si error
  */
 b32
-librarium_lector_carcare(
-    LibrariumLector*    lector,
+librarium_lector_carcare (
+       LibrariumLector* lector,
     constans character* via,
     constans character* numerus_libri);
 
@@ -113,10 +113,10 @@ librarium_lector_carcare(
  * altitudo: Altitudo in lineis
  */
 vacuum
-librarium_lector_paginare(
+librarium_lector_paginare (
     LibrariumLector* lector,
-    s32              latitudo,
-    s32              altitudo);
+                s32  latitudo,
+                s32  altitudo);
 
 
 /* ========================================================================
@@ -125,12 +125,12 @@ librarium_lector_paginare(
 
 /* Saltare ad paginam proximam */
 vacuum
-librarium_lector_pagina_proxima(
+librarium_lector_pagina_proxima (
     LibrariumLector* lector);
 
 /* Saltare ad paginam priorem */
 vacuum
-librarium_lector_pagina_prior(
+librarium_lector_pagina_prior (
     LibrariumLector* lector);
 
 /* Saltare ad paginam specificam
@@ -139,9 +139,9 @@ librarium_lector_pagina_prior(
  * pagina: Index paginae (0-indexed, clamped ad limites)
  */
 vacuum
-librarium_lector_pagina_saltare(
+librarium_lector_pagina_saltare (
     LibrariumLector* lector,
-    s32              pagina);
+                s32  pagina);
 
 
 /* ========================================================================
@@ -150,17 +150,17 @@ librarium_lector_pagina_saltare(
 
 /* Toggle modus sententiae (inter paginae et sententiae) */
 vacuum
-librarium_lector_toggle_modus_sententiae(
+librarium_lector_toggle_modus_sententiae (
     LibrariumLector* lector);
 
 /* Saltare ad sententiam proximam */
 vacuum
-librarium_lector_sententia_proxima(
+librarium_lector_sententia_proxima (
     LibrariumLector* lector);
 
 /* Saltare ad sententiam priorem */
 vacuum
-librarium_lector_sententia_prior(
+librarium_lector_sententia_prior (
     LibrariumLector* lector);
 
 /* Paginare sententias (cum caching)
@@ -170,24 +170,24 @@ librarium_lector_sententia_prior(
  * altitudo: Altitudo in lineis
  */
 vacuum
-librarium_lector_sententia_paginare(
+librarium_lector_sententia_paginare (
     LibrariumLector* lector,
-    s32              latitudo,
-    s32              altitudo);
+                s32  latitudo,
+                s32  altitudo);
 
 /* Verificare si in modo sententiae */
 b32
-librarium_lector_in_modo_sententiae(
+librarium_lector_in_modo_sententiae (
     LibrariumLector* lector);
 
 /* Obtinere sententia currens (0-indexed) */
 s32
-librarium_lector_sententia_currens(
+librarium_lector_sententia_currens (
     LibrariumLector* lector);
 
 /* Obtinere numerus sententiarum totalis */
 s32
-librarium_lector_sententiae_totales(
+librarium_lector_sententiae_totales (
     LibrariumLector* lector);
 
 /* Obtinere paginam word-wrapped pro sententia currens
@@ -195,7 +195,7 @@ librarium_lector_sententiae_totales(
  * Redde: Pointer ad SententiaPagina, vel NIHIL si error
  */
 SententiaPagina*
-librarium_lector_sententia_pagina_obtinere(
+librarium_lector_sententia_pagina_obtinere (
     LibrariumLector* lector);
 
 
@@ -205,12 +205,12 @@ librarium_lector_sententia_pagina_obtinere(
 
 /* Obtinere pagina currens (0-indexed) */
 s32
-librarium_lector_pagina_currens(
+librarium_lector_pagina_currens (
     LibrariumLector* lector);
 
 /* Obtinere numerus paginarum totalis */
 s32
-librarium_lector_paginae_totales(
+librarium_lector_paginae_totales (
     LibrariumLector* lector);
 
 /* Obtinere paginam specificam
@@ -218,23 +218,23 @@ librarium_lector_paginae_totales(
  * Redde: Pointer ad paginam, vel NIHIL si invalidus
  */
 PaginariumPagina*
-librarium_lector_pagina_obtinere(
+librarium_lector_pagina_obtinere (
     LibrariumLector* lector,
-    s32              index);
+                s32  index);
 
 /* Obtinere textum carcatum */
 chorda
-librarium_lector_textus(
+librarium_lector_textus (
     LibrariumLector* lector);
 
 /* Verificare si textus carcatus */
 b32
-librarium_lector_habet_textum(
+librarium_lector_habet_textum (
     LibrariumLector* lector);
 
 /* Obtinere numerus libri currens (ID) */
 constans character*
-librarium_lector_numerus(
+librarium_lector_numerus (
     LibrariumLector* lector);
 
 
@@ -250,8 +250,8 @@ librarium_lector_numerus(
  * repo:   Repositorium entitatum (potest esse NIHIL)
  */
 vacuum
-librarium_lector_salvare_progressum(
-    LibrariumLector*     lector,
+librarium_lector_salvare_progressum (
+        LibrariumLector* lector,
     EntitasRepositorium* repo);
 
 /* Carcare progressum lectionis ex repositorio
@@ -263,8 +263,8 @@ librarium_lector_salvare_progressum(
  * intern: Internamentum chordarum (pro lookup)
  */
 vacuum
-librarium_lector_carcare_progressum(
-    LibrariumLector*     lector,
+librarium_lector_carcare_progressum (
+        LibrariumLector* lector,
     EntitasRepositorium* repo,
     InternamentumChorda* intern);
 

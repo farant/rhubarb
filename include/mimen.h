@@ -19,10 +19,12 @@
  * Redde: typus MIME vel "application/octet-stream" si ignotum
  */
 constans character*
-mimen_pro_via(constans character* via);
+mimen_pro_via (
+    constans character* via);
 
 /* Idem pro chorda non NUL-terminata (longitudine limitata) */
 constans character*
-mimen_pro_via_chorda(chorda via);
+mimen_pro_via_chorda (
+    chorda via);
 
 #endif /* MIMEN_H */

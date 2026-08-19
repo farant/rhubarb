@@ -28,7 +28,9 @@
  *   U+2026       -> 0x2E       (ellipsis ad punctum)
  *   Aliter       -> FONS_TOFU
  */
-i8 fons_codepoint_ad_glypham(s32 codepoint);
+i8
+fons_codepoint_ad_glypham (
+    s32 codepoint);
 
 /*
  * fons_est_mappatum - An codepoint habet glypham in fonte?
@@ -37,6 +39,8 @@ i8 fons_codepoint_ad_glypham(s32 codepoint);
  *
  * Redde: VERUM si mappatum (non TOFU), FALSUM aliter
  */
-b32 fons_est_mappatum(s32 codepoint);
+b32
+fons_est_mappatum (
+    s32 codepoint);
 
 #endif /* FONS_H */

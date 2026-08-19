@@ -125,23 +125,67 @@ structura HospitiumColloquium {
  * PRAENUNTIATIONES INTERNAE
  * ======================================================================== */
 
-interior vacuum _connexio_callback(integer fd, i32 eventus, vacuum* data);
-interior vacuum _auscultator_callback(integer fd, i32 eventus, vacuum* data);
-interior vacuum _vigilia_callback(vacuum* data);
-interior vacuum _connexionem_claudere(Hospitium* h, ConnexioHospitii* conn);
-interior vacuum _scribere_tentare(Hospitium* h, ConnexioHospitii* conn);
-interior vacuum _paratus_novae(Hospitium* h, ConnexioHospitii* conn);
-interior vacuum _legere(Hospitium* h, ConnexioHospitii* conn);
-interior vacuum _petitionem_expedire(Hospitium* h, ConnexioHospitii* conn);
-interior vacuum _responsum_mittere(Hospitium* h, ConnexioHospitii* conn,
-    HttpResponsum* responsum, b32 sine_corpore);
-interior vacuum _respondere_plene(Hospitium* h, ConnexioHospitii* conn,
-    i32 status, constans character* caput_titulus, chorda caput_valor,
-    constans character* mimen_typus, chorda corpus, b32 sine_corpore);
-interior vacuum _respondere_simplex(Hospitium* h, ConnexioHospitii* conn,
-    i32 status, b32 sine_corpore);
-interior b32 _directorium_tentare(Hospitium* h, ConnexioHospitii* conn,
-    HttpPetitioServeri* petitio, b32 est_caput);
+interior vacuum
+_connexio_callback (
+    integer  fd,
+        i32  eventus,
+     vacuum* data);
+interior vacuum
+_auscultator_callback (
+    integer  fd,
+        i32  eventus,
+     vacuum* data);
+interior vacuum
+_vigilia_callback (
+    vacuum* data);
+interior vacuum
+_connexionem_claudere (
+           Hospitium* h,
+    ConnexioHospitii* conn);
+interior vacuum
+_scribere_tentare (
+           Hospitium* h,
+    ConnexioHospitii* conn);
+interior vacuum
+_paratus_novae (
+           Hospitium* h,
+    ConnexioHospitii* conn);
+interior vacuum
+_legere (
+           Hospitium* h,
+    ConnexioHospitii* conn);
+interior vacuum
+_petitionem_expedire (
+           Hospitium* h,
+    ConnexioHospitii* conn);
+interior vacuum
+_responsum_mittere (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+       HttpResponsum* responsum,
+                 b32  sine_corpore);
+interior vacuum
+_respondere_plene (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+                   i32  status,
+    constans character* caput_titulus,
+                chorda  caput_valor,
+    constans character* mimen_typus,
+                chorda  corpus,
+                   b32  sine_corpore);
+interior vacuum
+_respondere_simplex (
+           Hospitium* h,
+    ConnexioHospitii* conn,
+                 i32  status,
+                 b32  sine_corpore);
+interior b32
+_directorium_tentare (
+             Hospitium* h,
+      ConnexioHospitii* conn,
+    HttpPetitioServeri* petitio,
+                   b32  est_caput);
 
 
 /* ========================================================================

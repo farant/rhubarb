@@ -30,6 +30,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ========================================================================
  * CONSTANTAE
  * ======================================================================== */
@@ -38,6 +39,7 @@
 #define PAGINARIUM_LINEAE_PROBARE_DEFECTUS    V     /* 5 lineae */
 #define PAGINARIUM_LATITUDO_DEFECTUS          LXXX  /* 80 characteres */
 #define PAGINARIUM_ALTITUDO_DEFECTUS          XXV   /* 25 lineae */
+
 
 /* ========================================================================
  * TYPI
@@ -76,6 +78,7 @@ nomen structura PaginariumResultus {
     i32  numerus_paginarum; /* Numerus paginarum totalis */
 } PaginariumResultus;
 
+
 /* ========================================================================
  * FUNCTIONES - CONFIGURATIO
  * ======================================================================== */
@@ -83,7 +86,8 @@ nomen structura PaginariumResultus {
 /* Obtinere configurationem defectus
  */
 PaginariumConfig
-paginarium_config_defectus(vacuum);
+paginarium_config_defectus (vacuum);
+
 
 /* ========================================================================
  * FUNCTIONES - PAGINATIO
@@ -99,10 +103,11 @@ paginarium_config_defectus(vacuum);
  * Redde: Resultus cum paginis
  */
 PaginariumResultus
-paginarium_paginare(
-    chorda           textus,
-    PaginariumConfig config,
-    Piscina*         piscina);
+paginarium_paginare (
+              chorda  textus,
+    PaginariumConfig  config,
+             Piscina* piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - ACCESSUS
@@ -116,9 +121,9 @@ paginarium_paginare(
  * Redde: Pointer ad paginam, vel NIHIL si index invalidus
  */
 PaginariumPagina*
-paginarium_pagina_obtinere(
+paginarium_pagina_obtinere (
     PaginariumResultus* resultus,
-    i32                 index);
+                   i32  index);
 
 /* Obtinere lineam specificam de pagina (0-indexed)
  *
@@ -128,15 +133,16 @@ paginarium_pagina_obtinere(
  * Redde: Pointer ad lineam, vel NIHIL si index invalidus
  */
 PaginariumLinea*
-paginarium_linea_obtinere(
+paginarium_linea_obtinere (
     PaginariumPagina* pagina,
-    i32               index);
+                 i32  index);
 
 /* Numerus linearum in pagina
  */
 i32
-paginarium_pagina_numerus_linearum(
+paginarium_pagina_numerus_linearum (
     PaginariumPagina* pagina);
+
 
 /* ========================================================================
  * FUNCTIONES - REDDITIO
@@ -156,9 +162,9 @@ paginarium_pagina_numerus_linearum(
  * Redde: Chorda allocata cum textu reddendo
  */
 chorda
-paginarium_linea_reddere(
-    chorda           textus,
+paginarium_linea_reddere (
+             chorda  textus,
     PaginariumLinea* linea,
-    Piscina*         piscina);
+            Piscina* piscina);
 
 #endif /* PAGINARIUM_H */

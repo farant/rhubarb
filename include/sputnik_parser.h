@@ -8,6 +8,7 @@
 #include "xar.h"
 #include "sputnik_lexema.h"
 
+
 /* ==================================================
  * SPUTNIK PARSER - Parser pro Sputnik
  *
@@ -119,14 +120,14 @@ nomen enumeratio {
 nomen structura SputnikAstNodus SputnikAstNodus;
 
 structura SputnikAstNodus {
-    SputnikAstGenus      genus;
-    chorda               valor;           /* Identificator, chorda literalis, etc. */
-    SputnikLexemaGenus   operator;        /* Pro operationibus binariis/unariis */
-    f64                  numerus;         /* Pro numeris literalibus */
-    s64                  pecunia;         /* Pro pecunia literalibus (centesimi) */
-    Xar*                 liberi;          /* Xar de SputnikAstNodus* */
-    i32                  linea;
-    i32                  columna;
+       SputnikAstGenus  genus;
+                chorda  valor;           /* Identificator, chorda literalis, etc. */
+    SputnikLexemaGenus  operator;        /* Pro operationibus binariis/unariis */
+                   f64  numerus;         /* Pro numeris literalibus */
+                   s64  pecunia;         /* Pro pecunia literalibus (centesimi) */
+                   Xar* liberi;          /* Xar de SputnikAstNodus* */
+                   i32  linea;
+                   i32  columna;
 };
 
 
@@ -135,14 +136,14 @@ structura SputnikAstNodus {
  * ================================================== */
 
 nomen structura {
-    Xar*                 lexemata;        /* Lexemata input */
-    i32                  positus;         /* Positio currens */
-    Piscina*             piscina;
+                    Xar* lexemata;        /* Lexemata input */
+                    i32  positus;         /* Positio currens */
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  error_accidit;
-    chorda               error_nuntius;
-    i32                  error_linea;
-    i32                  error_columna;
+                    b32  error_accidit;
+                 chorda  error_nuntius;
+                    i32  error_linea;
+                    i32  error_columna;
 } SputnikParser;
 
 
@@ -151,11 +152,11 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    b32              successus;
+                b32  successus;
     SputnikAstNodus* radix;               /* Radix PROGRAMMA nodus */
-    chorda           error_nuntius;
-    i32              error_linea;
-    i32              error_columna;
+             chorda  error_nuntius;
+                i32  error_linea;
+                i32  error_columna;
 } SputnikParserResultus;
 
 
@@ -172,9 +173,9 @@ nomen structura {
  * Redde: SputnikParserResultus
  */
 SputnikParserResultus
-sputnik_parsere(
-    Xar*                 lexemata,
-    Piscina*             piscina,
+sputnik_parsere (
+                    Xar* lexemata,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Parsere programma ex fonte chorda (commoditas)
@@ -182,16 +183,16 @@ sputnik_parsere(
  * Lexicat et parset fontem in uno passu.
  */
 SputnikParserResultus
-sputnik_parsere_ex_fonte(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_parsere_ex_fonte (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Parsere ex C string */
 SputnikParserResultus
-sputnik_parsere_ex_literis(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_parsere_ex_literis (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -201,13 +202,13 @@ sputnik_parsere_ex_literis(
 
 /* Obtinere nomen generis AST pro depuratione */
 constans character*
-sputnik_ast_genus_nomen(
+sputnik_ast_genus_nomen (
     SputnikAstGenus genus);
 
 /* Imprimere AST pro depuratione */
 vacuum
-sputnik_ast_imprimere(
+sputnik_ast_imprimere (
     SputnikAstNodus* nodus,
-    i32              indentatio);
+                i32  indentatio);
 
 #endif /* SPUTNIK_PARSER_H */

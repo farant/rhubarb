@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * Typi Fundamentales
  * ================================================== */
@@ -99,28 +100,72 @@ tempus_actualizare (
  * Functiones Lenitionis (t debet esse 0.0 ad 1.0)
  * ================================================== */
 
-f32 lenire_linearis(f32 t);
-f32 lenire_quadraticus_ingressus(f32 t);
-f32 lenire_quadraticus_egressus(f32 t);
-f32 lenire_quadraticus_ingressus_egressus(f32 t);
-f32 lenire_cubicus_ingressus(f32 t);
-f32 lenire_cubicus_egressus(f32 t);
-f32 lenire_cubicus_ingressus_egressus(f32 t);
-f32 lenire_sinus_ingressus(f32 t);
-f32 lenire_sinus_egressus(f32 t);
-f32 lenire_sinus_ingressus_egressus(f32 t);
-f32 lenire_exponens_ingressus(f32 t);
-f32 lenire_exponens_egressus(f32 t);
-f32 lenire_exponens_ingressus_egressus(f32 t);
-f32 lenire_retro_ingressus(f32 t);
-f32 lenire_retro_egressus(f32 t);
-f32 lenire_retro_ingressus_egressus(f32 t);
-f32 lenire_elasticus_ingressus(f32 t);
-f32 lenire_elasticus_egressus(f32 t);
-f32 lenire_elasticus_ingressus_egressus(f32 t);
-f32 lenire_resiliens_ingressus(f32 t);
-f32 lenire_resiliens_egressus(f32 t);
-f32 lenire_resiliens_ingressus_egressus(f32 t);
+f32
+lenire_linearis (
+    f32 t);
+f32
+lenire_quadraticus_ingressus (
+    f32 t);
+f32
+lenire_quadraticus_egressus (
+    f32 t);
+f32
+lenire_quadraticus_ingressus_egressus (
+    f32 t);
+f32
+lenire_cubicus_ingressus (
+    f32 t);
+f32
+lenire_cubicus_egressus (
+    f32 t);
+f32
+lenire_cubicus_ingressus_egressus (
+    f32 t);
+f32
+lenire_sinus_ingressus (
+    f32 t);
+f32
+lenire_sinus_egressus (
+    f32 t);
+f32
+lenire_sinus_ingressus_egressus (
+    f32 t);
+f32
+lenire_exponens_ingressus (
+    f32 t);
+f32
+lenire_exponens_egressus (
+    f32 t);
+f32
+lenire_exponens_ingressus_egressus (
+    f32 t);
+f32
+lenire_retro_ingressus (
+    f32 t);
+f32
+lenire_retro_egressus (
+    f32 t);
+f32
+lenire_retro_ingressus_egressus (
+    f32 t);
+f32
+lenire_elasticus_ingressus (
+    f32 t);
+f32
+lenire_elasticus_egressus (
+    f32 t);
+f32
+lenire_elasticus_ingressus_egressus (
+    f32 t);
+f32
+lenire_resiliens_ingressus (
+    f32 t);
+f32
+lenire_resiliens_egressus (
+    f32 t);
+f32
+lenire_resiliens_ingressus_egressus (
+    f32 t);
 
 
 /* ==================================================

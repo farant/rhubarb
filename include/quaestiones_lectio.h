@@ -27,51 +27,64 @@ nomen enumeratio {
 } QsQuaestioGradus;
 
 structura QsQuaestiones {
-    StmlNodus*  nodus;
-    Xar*        quaestio;   /* QsQuaestio* */
+    StmlNodus* nodus;
+          Xar* quaestio;   /* QsQuaestio* */
 };
 
 structura QsQuaestio {
-    StmlNodus*  nodus;
-    chorda*     titulus;
-    QsQuaestioGradus gradus;
-    QsSelector* selector;
-    QsCausa* causa;
-    Xar*        parametrum;   /* QsParametrum* */
+           StmlNodus* nodus;
+              chorda* titulus;
+    QsQuaestioGradus  gradus;
+          QsSelector* selector;
+             QsCausa* causa;
+                 Xar* parametrum;   /* QsParametrum* */
 };
 
 structura QsSelector {
-    StmlNodus*  nodus;
-    chorda      textus;
+    StmlNodus* nodus;
+       chorda  textus;
 };
 
 structura QsCausa {
-    StmlNodus*  nodus;
-    chorda      textus;
+    StmlNodus* nodus;
+       chorda  textus;
 };
 
 structura QsParametrum {
-    StmlNodus*  nodus;
-    chorda*     titulus;
+    StmlNodus* nodus;
+       chorda* titulus;
 };
 
-QsQuaestiones* qs_quaestiones_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
+QsQuaestiones*
+qs_quaestiones_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
-QsQuaestiones* qs_quaestiones_legere(
-    chorda fons, Piscina* piscina,
-    InternamentumChorda* intern, chorda* causa);
-QsQuaestio* qs_quaestio_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
+QsQuaestiones*
+qs_quaestiones_legere (
+                 chorda  fons,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda* causa);
+QsQuaestio*
+qs_quaestio_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
-QsSelector* qs_selector_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
+QsSelector*
+qs_selector_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
-QsCausa* qs_causa_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
+QsCausa*
+qs_causa_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
-QsParametrum* qs_parametrum_legere_nodum(
-    StmlNodus* nodus, Piscina* piscina,
+QsParametrum*
+qs_parametrum_legere_nodum (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 #endif /* QUAESTIONES_LECTIO_H */

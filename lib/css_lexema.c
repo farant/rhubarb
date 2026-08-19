@@ -14,7 +14,8 @@
  * ================================================== */
 
 interior b32
-_est_spatium (character c);
+_est_spatium (
+    character c);
 
 interior b32
 _est_spatium (
@@ -25,7 +26,8 @@ _est_spatium (
 }
 
 interior b32
-_est_linea_nova (character c);
+_est_linea_nova (
+    character c);
 
 interior b32
 _est_linea_nova (
@@ -35,7 +37,8 @@ _est_linea_nova (
 }
 
 interior b32
-_est_digitus (character c);
+_est_digitus (
+    character c);
 
 interior b32
 _est_digitus (
@@ -45,7 +48,8 @@ _est_digitus (
 }
 
 interior b32
-_est_hex (character c);
+_est_hex (
+    character c);
 
 interior b32
 _est_hex (
@@ -56,7 +60,8 @@ _est_hex (
 }
 
 interior b32
-_est_nominis_initium (character c);
+_est_nominis_initium (
+    character c);
 
 interior b32
 _est_nominis_initium (
@@ -67,7 +72,8 @@ _est_nominis_initium (
 }
 
 interior b32
-_est_nominis (character c);
+_est_nominis (
+    character c);
 
 interior b32
 _est_nominis (
@@ -80,7 +86,9 @@ _est_nominis (
  * fons constans - unio castum celat; nemo per visum scribit
  * (contractus; idem mos silvae) */
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura);
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura);
 
 interior chorda
 _chorda_ex_fonte (
@@ -98,7 +106,8 @@ _chorda_ex_fonte (
 
 /* non imprimibilis (spec §4.2): 00-08, 0B, 0E-1F, 7F */
 interior b32
-_non_imprimibilis (character c);
+_non_imprimibilis (
+    character c);
 
 interior b32
 _non_imprimibilis (
@@ -122,7 +131,9 @@ nomen structura {
 } CssLexator;
 
 interior character
-_ad (CssLexator* lx, i32 delta);
+_ad (
+    CssLexator* lx,
+           i32  delta);
 
 interior character
 _ad (
@@ -137,7 +148,9 @@ _ad (
 }
 
 interior b32
-_intra (CssLexator* lx, i32 delta);
+_intra (
+    CssLexator* lx,
+           i32  delta);
 
 interior b32
 _intra (
@@ -149,7 +162,9 @@ _intra (
 
 /* effugium validum ad positionem k+delta: '\' + non linea nova */
 interior b32
-_effugium_validum (CssLexator* lx, i32 delta);
+_effugium_validum (
+    CssLexator* lx,
+           i32  delta);
 
 interior b32
 _effugium_validum (
@@ -170,7 +185,8 @@ _effugium_validum (
 /* effugium consumere (cursor in '\'): '\' + hex{1,6} + spatium
  * unum optionale, aut '\' + octetus unus */
 interior vacuum
-_effugium_consumere (CssLexator* lx);
+_effugium_consumere (
+    CssLexator* lx);
 
 interior vacuum
 _effugium_consumere (
@@ -210,7 +226,9 @@ _effugium_consumere (
 
 /* inciperetne identificator ad k+delta? (spec §4.3.9) */
 interior b32
-_incipit_identificator (CssLexator* lx, i32 delta);
+_incipit_identificator (
+    CssLexator* lx,
+           i32  delta);
 
 interior b32
 _incipit_identificator (
@@ -234,7 +252,9 @@ _incipit_identificator (
 
 /* inciperetne numerus ad k+delta? (spec §4.3.10) */
 interior b32
-_incipit_numerus (CssLexator* lx, i32 delta);
+_incipit_numerus (
+    CssLexator* lx,
+           i32  delta);
 
 interior b32
 _incipit_numerus (
@@ -261,7 +281,8 @@ _incipit_numerus (
 
 /* nomen consumere (cursor in initio nominis) */
 interior vacuum
-_nomen_consumere (CssLexator* lx);
+_nomen_consumere (
+    CssLexator* lx);
 
 interior vacuum
 _nomen_consumere (
@@ -286,7 +307,8 @@ _nomen_consumere (
 
 /* numerum consumere: [+-]? digiti [. digiti] [eE [+-] digiti] */
 interior vacuum
-_numerum_consumere (CssLexator* lx);
+_numerum_consumere (
+    CssLexator* lx);
 
 interior vacuum
 _numerum_consumere (
@@ -324,7 +346,8 @@ _numerum_consumere (
 /* url intus consumere (cursor post 'url('); genus redditur.
  * Reliquiae url malae (spec §4.3.14): ad ')' aut EOF. */
 interior CssLexemaGenus
-_url_consumere (CssLexator* lx);
+_url_consumere (
+    CssLexator* lx);
 
 interior CssLexemaGenus
 _url_consumere (
@@ -403,7 +426,8 @@ _url_consumere (
 
 /* chordam consumere (cursor in claudente); genus redditur */
 interior CssLexemaGenus
-_chordam_consumere (CssLexator* lx);
+_chordam_consumere (
+    CssLexator* lx);
 
 interior CssLexemaGenus
 _chordam_consumere (
@@ -461,7 +485,8 @@ _chordam_consumere (
  * ================================================== */
 
 interior CssLexemaGenus
-_lexema_consumere (CssLexator* lx);
+_lexema_consumere (
+    CssLexator* lx);
 
 interior CssLexemaGenus
 _lexema_consumere (

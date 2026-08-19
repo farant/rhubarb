@@ -29,60 +29,110 @@ interior NaturaEns SENTINELLA_HOMONYMA;
  * Prototypa interiora
  * ================================================== */
 
-interior vacuum diagnosticum_addere(
-    NaturaBibliotheca* bib, NaturaDiagnosticumGradus gradus,
-    i32 regula, chorda* modulus, chorda* ens,
-    constans character* nuntius);
-interior chorda clavis_entis(
-    Piscina* piscina, constans chorda* modulus,
+interior vacuum
+diagnosticum_addere (
+           NaturaBibliotheca* bib,
+    NaturaDiagnosticumGradus  gradus,
+                         i32  regula,
+                      chorda* modulus,
+                      chorda* ens,
+          constans character* nuntius);
+interior chorda
+clavis_entis (
+            Piscina* piscina,
+    constans chorda* modulus,
     constans chorda* titulus);
-interior vacuum ens_registrare(
-    NaturaBibliotheca* bib, NaturaExemplar* ex,
-    NaturaEnsDiscrimen discrimen, vacuum* corpus,
-    chorda* titulus);
-interior vacuum arborem_legere(
-    NaturaBibliotheca* bib, NaturaExemplar* ex,
-    StmlNodus* nodus, NaturaGenus* ambiens,
-    NaturaRes* ambiens_res);
-interior StmlNodus* in_catena_invenire(
-    NaturaGenus* genus, constans character* continens,
-    constans character* elementum, constans character* clavis,
-    chorda* quaesitum);
-interior StmlNodus* in_membris_invenire(
-    NaturaGenus* primus, NaturaGenus* etiam,
-    constans character* continens, constans character* elementum,
-    constans character* clavis, chorda* quaesitum);
-interior NaturaNecessitudo* necessitudinem_invenire(
-    NaturaBibliotheca* bib, constans chorda* scriptura);
-interior vacuum scripturam_inserere(
-    NaturaBibliotheca* bib, NaturaNecessitudo* declarata,
-    chorda* scriptura);
-interior NaturaGenus* genus_per_chordam(
-    NaturaBibliotheca* bib, constans chorda* titulus);
-interior chorda* finem_effectivum(
-    NaturaNecessitudo* declarata, constans character* finis);
-interior b32 genus_subsumitur(
-    NaturaBibliotheca* bib, NaturaGenus* genus,
-    constans chorda* latius);
-interior vacuum sedem_ligare(
-    NaturaBibliotheca* bib, NaturaExemplar* ex,
-    NaturaGenus* possessor, Xar* insoluta,
-    StmlNodus* sedes, chorda* titulus_sedis);
-interior constans character* nuntium_insolutarum_fingere(
-    Piscina* piscina, Xar* insoluta);
-interior b32 dies_bene_formata(constans chorda* d);
-interior vacuum qualificationes_probare(
-    NaturaBibliotheca* bib, NaturaExemplar* ex,
-    Xar* gradus_noti, StmlNodus* nodus, chorda* ens);
-interior vacuum arborem_nectere(
-    NaturaBibliotheca* bib, NaturaExemplar* ex, Xar* gradus_noti,
-    StmlNodus* nodus, NaturaGenus* genus_c, NaturaRes* res_c,
-    Xar* insoluta);
-interior NaturaEns* ens_quaerere(
-    NaturaBibliotheca* bib, constans chorda* modulus,
-    constans chorda* titulus);
-interior vacuum apparatui_contribuere(
-    Xar* apparatus, NaturaGenus* genus);
+interior vacuum
+ens_registrare (
+     NaturaBibliotheca* bib,
+        NaturaExemplar* ex,
+    NaturaEnsDiscrimen  discrimen,
+                vacuum* corpus,
+                chorda* titulus);
+interior vacuum
+arborem_legere (
+    NaturaBibliotheca* bib,
+       NaturaExemplar* ex,
+            StmlNodus* nodus,
+          NaturaGenus* ambiens,
+            NaturaRes* ambiens_res);
+interior StmlNodus*
+in_catena_invenire (
+           NaturaGenus* genus,
+    constans character* continens,
+    constans character* elementum,
+    constans character* clavis,
+                chorda* quaesitum);
+interior StmlNodus*
+in_membris_invenire (
+           NaturaGenus* primus,
+           NaturaGenus* etiam,
+    constans character* continens,
+    constans character* elementum,
+    constans character* clavis,
+                chorda* quaesitum);
+interior NaturaNecessitudo*
+necessitudinem_invenire (
+    NaturaBibliotheca* bib,
+      constans chorda* scriptura);
+interior vacuum
+scripturam_inserere (
+    NaturaBibliotheca* bib,
+    NaturaNecessitudo* declarata,
+               chorda* scriptura);
+interior NaturaGenus*
+genus_per_chordam (
+    NaturaBibliotheca* bib,
+      constans chorda* titulus);
+interior chorda*
+finem_effectivum (
+     NaturaNecessitudo* declarata,
+    constans character* finis);
+interior b32
+genus_subsumitur (
+    NaturaBibliotheca* bib,
+          NaturaGenus* genus,
+      constans chorda* latius);
+interior vacuum
+sedem_ligare (
+    NaturaBibliotheca* bib,
+       NaturaExemplar* ex,
+          NaturaGenus* possessor,
+                  Xar* insoluta,
+            StmlNodus* sedes,
+               chorda* titulus_sedis);
+interior constans character*
+nuntium_insolutarum_fingere (
+    Piscina* piscina,
+        Xar* insoluta);
+interior b32
+dies_bene_formata (
+    constans chorda* d);
+interior vacuum
+qualificationes_probare (
+    NaturaBibliotheca* bib,
+       NaturaExemplar* ex,
+                  Xar* gradus_noti,
+            StmlNodus* nodus,
+               chorda* ens);
+interior vacuum
+arborem_nectere (
+    NaturaBibliotheca* bib,
+       NaturaExemplar* ex,
+                  Xar* gradus_noti,
+            StmlNodus* nodus,
+          NaturaGenus* genus_c,
+            NaturaRes* res_c,
+                  Xar* insoluta);
+interior NaturaEns*
+ens_quaerere (
+    NaturaBibliotheca* bib,
+      constans chorda* modulus,
+      constans chorda* titulus);
+interior vacuum
+apparatui_contribuere (
+            Xar* apparatus,
+    NaturaGenus* genus);
 
 
 /* ==================================================

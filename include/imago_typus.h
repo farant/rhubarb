@@ -27,9 +27,9 @@
  * Datum in piscina allocatum - liberare non opus est.
  */
 nomen structura {
-    i8* pixela;       /* RGBA datum (IV bytes per pixelum) */
-    i32 latitudo;     /* Latitudo in pixelis */
-    i32 altitudo;     /* Altitudo in pixelis */
+     i8* pixela;       /* RGBA datum (IV bytes per pixelum) */
+    i32  latitudo;     /* Latitudo in pixelis */
+    i32  altitudo;     /* Altitudo in pixelis */
 } Imago;
 
 #endif /* IMAGO_TYPUS_H */

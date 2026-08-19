@@ -5,6 +5,7 @@
 #include "piscina.h"
 #include "credo.h"
 
+
 /* ==================================================
  * TABULA CHARACTERUM - 2D Character Grid
  *
@@ -52,10 +53,10 @@
 /* Pure 2D character grid - no cursor, no UI state
  * Cellulae allocantur dynamice ex piscina */
 nomen structura {
-    i32 latitudo;       /* Numerus columnarum */
-    i32 altitudo;       /* Numerus linearum */
+          i32  latitudo;       /* Numerus columnarum */
+          i32  altitudo;       /* Numerus linearum */
     character* cellulae;  /* [altitudo * latitudo], row-major */
-    s32* indentatio;      /* [altitudo] - Sticky indentation per linea (-1 = non posita) */
+          s32* indentatio;      /* [altitudo] - Sticky indentation per linea (-1 = non posita) */
 } TabulaCharacterum;
 
 /* Macro pro accessu cellulae - row-major layout */
@@ -77,11 +78,11 @@ nomen structura {
  * altitudo: numerus linearum
  */
 vacuum
-tabula_initiare(
+tabula_initiare (
     TabulaCharacterum* tabula,
-    Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo);
+              Piscina* piscina,
+                  i32  latitudo,
+                  i32  altitudo);
 
 
 /* ==================================================
@@ -95,9 +96,9 @@ tabula_initiare(
  * linea: linea (0 ad altitudo-1)
  */
 s32
-tabula_invenire_finem_contenti(
+tabula_invenire_finem_contenti (
     constans TabulaCharacterum* tabula,
-    i32 linea);
+                           i32  linea);
 
 /* Invenire initium contenti in linea (post indentationem)
  * Reddit columnam primi non-whitespace, vel latitudo si vacua
@@ -106,9 +107,9 @@ tabula_invenire_finem_contenti(
  * linea: linea (0 ad altitudo-1)
  */
 i32
-tabula_invenire_initium_contenti(
+tabula_invenire_initium_contenti (
     constans TabulaCharacterum* tabula,
-    i32 linea);
+                           i32  linea);
 
 /* Invenire obicem (barrier) in linea ab columna data
  * Obex est columna primi non-whitespace post columnam datam
@@ -119,10 +120,10 @@ tabula_invenire_initium_contenti(
  * ab_columna: columna ab qua quaerere (0 ad latitudo-1)
  */
 s32
-tabula_invenire_obicem(
+tabula_invenire_obicem (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna);
+                           i32  linea,
+                           i32  ab_columna);
 
 /* Verificare si cellula est vacua (whitespace vel '\0')
  *
@@ -131,7 +132,7 @@ tabula_invenire_obicem(
  * Reddit: VERUM si vacua
  */
 b32
-tabula_est_cellula_vacua(
+tabula_est_cellula_vacua (
     character c);
 
 /* Verificare si tabula est plena
@@ -142,7 +143,7 @@ tabula_est_cellula_vacua(
  * Reddit: VERUM si plena
  */
 b32
-tabula_est_plena(
+tabula_est_plena (
     constans TabulaCharacterum* tabula);
 
 /* Verificare si tabula est vacua (omnes cellulae vacuae)
@@ -152,7 +153,7 @@ tabula_est_plena(
  * Reddit: VERUM si vacua
  */
 b32
-tabula_est_vacua(
+tabula_est_vacua (
     constans TabulaCharacterum* tabula);
 
 
@@ -170,10 +171,10 @@ tabula_est_vacua(
  * Reddit: character qui excidit, vel '\0' si nihil
  */
 character
-tabula_trudere_dextram(
+tabula_trudere_dextram (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna);
+                  i32  linea,
+                  i32  ab_columna);
 
 /* Trahere contentum sinistram in linea ab columna data
  * Cellulae post contentum fiunt '\0'
@@ -183,10 +184,10 @@ tabula_trudere_dextram(
  * ab_columna: columna ab qua trahere (0 ad latitudo-1)
  */
 vacuum
-tabula_trahere_sinistram(
+tabula_trahere_sinistram (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 ab_columna);
+                  i32  linea,
+                  i32  ab_columna);
 
 /* Inserere lineam vacuam ad positionem, trudendo sequentes deorsum
  * Reddit FALSUM si ultima linea habet contentum (non potest trudere)
@@ -197,9 +198,9 @@ tabula_trahere_sinistram(
  * Reddit: VERUM si successus
  */
 b32
-tabula_inserere_lineam(
+tabula_inserere_lineam (
     TabulaCharacterum* tabula,
-    i32 ad_lineam);
+                  i32  ad_lineam);
 
 /* Delere lineam, trahendo sequentes sursum
  * Ultima linea fit vacua
@@ -208,9 +209,9 @@ tabula_inserere_lineam(
  * linea: linea delenda (0 ad altitudo-1)
  */
 vacuum
-tabula_delere_lineam(
+tabula_delere_lineam (
     TabulaCharacterum* tabula,
-    i32 linea);
+                  i32  linea);
 
 /* Tractare overflow ex linea in lineam sequentem
  * Considerat indentationem: si linea sequens habet indentationem,
@@ -223,10 +224,10 @@ tabula_delere_lineam(
  * Reddit: VERUM si successus, FALSUM si pagina plena
  */
 b32
-tabula_tractare_overflow(
+tabula_tractare_overflow (
     TabulaCharacterum* tabula,
-    i32 linea,
-    character overflow);
+                  i32  linea,
+            character  overflow);
 
 
 /* ==================================================
@@ -246,11 +247,11 @@ tabula_tractare_overflow(
  * Reddit: VERUM si successus, FALSUM si pagina plena
  */
 b32
-tabula_inserere_characterem(
+tabula_inserere_characterem (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    character c);
+                  i32  linea,
+                  i32  columna,
+            character  c);
 
 /* Delere characterem ad positionem, trahens contentum sinistram
  *
@@ -259,10 +260,10 @@ tabula_inserere_characterem(
  * columna: columna (0 ad latitudo-1)
  */
 vacuum
-tabula_delere_characterem(
+tabula_delere_characterem (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna);
+                  i32  linea,
+                  i32  columna);
 
 /* Invenire extensionem contenti connexi (pro backspace pull-up)
  * Contentum connexum = verba separata per singulum spatium
@@ -275,12 +276,12 @@ tabula_delere_characterem(
  * columna_finis: [exitus] columna finis contenti connexi
  */
 vacuum
-tabula_invenire_contentum_connexum(
+tabula_invenire_contentum_connexum (
     TabulaCharacterum* tabula,
-    i32 linea_initium,
-    i32 columna_initium,
-    i32* linea_finis,
-    i32* columna_finis);
+                  i32  linea_initium,
+                  i32  columna_initium,
+                  i32* linea_finis,
+                  i32* columna_finis);
 
 
 /* ==================================================
@@ -297,10 +298,10 @@ tabula_invenire_contentum_connexum(
  * Reddit: VERUM si successus, FALSUM si non potest inserere
  */
 b32
-tabula_inserere_tab(
+tabula_inserere_tab (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna);
+                  i32  linea,
+                  i32  columna);
 
 /* Delere tab ad positionem (vel ad TAB_CONTINUATIO)
  * Si columna habet TAB_CONTINUATIO, delere totum tab (ambas cellulas)
@@ -311,10 +312,10 @@ tabula_inserere_tab(
  * columna: columna (0 ad latitudo-1)
  */
 vacuum
-tabula_delere_tab(
+tabula_delere_tab (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna);
+                  i32  linea,
+                  i32  columna);
 
 /* Verificare si cellula est TAB_CONTINUATIO (pars secunda tab)
  *
@@ -325,10 +326,10 @@ tabula_delere_tab(
  * Reddit: VERUM si TAB_CONTINUATIO
  */
 b32
-tabula_est_tab_continuatio(
+tabula_est_tab_continuatio (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna);
+                           i32  linea,
+                           i32  columna);
 
 
 /* ==================================================
@@ -345,12 +346,12 @@ tabula_est_tab_continuatio(
  * longitudo: numerus characterum legendorum
  */
 vacuum
-tabula_legere_ad_positionem(
+tabula_legere_ad_positionem (
     constans TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    character* exitus,
-    i32 longitudo);
+                           i32  linea,
+                           i32  columna,
+                     character* exitus,
+                           i32  longitudo);
 
 /* Scribere characteres ad positionem (sine trudere, sine cursor)
  * Simpliciter superpingit cellulas existentes
@@ -363,10 +364,10 @@ tabula_legere_ad_positionem(
  * Reddit: numerus characterum scriptorum
  */
 i32
-tabula_scribere_ad_positionem(
-    TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
+tabula_scribere_ad_positionem (
+     TabulaCharacterum* tabula,
+                   i32  linea,
+                   i32  columna,
     constans character* textus);
 
 /* Inserere spatium ad positionem, trudens contentum dextram
@@ -380,11 +381,11 @@ tabula_scribere_ad_positionem(
  * Reddit: VERUM si successus, FALSUM si overflow non tractabilis
  */
 b32
-tabula_inserere_spatium(
+tabula_inserere_spatium (
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 columna,
-    i32 longitudo);
+                  i32  linea,
+                  i32  columna,
+                  i32  longitudo);
 
 
 /* ==================================================
@@ -403,11 +404,11 @@ tabula_inserere_spatium(
  * literae: string cum '\n' pro lineis novis
  */
 vacuum
-tabula_ex_literis_cum_dimensionibus(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo,
+tabula_ex_literis_cum_dimensionibus (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
+                   i32  latitudo,
+                   i32  altitudo,
     constans character* literae);
 
 /* Creare tabula ex string literal (cum dimensionibus defaltis)
@@ -420,9 +421,9 @@ tabula_ex_literis_cum_dimensionibus(
  * literae: string cum '\n' pro lineis novis
  */
 vacuum
-tabula_ex_literis(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
+tabula_ex_literis (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
     constans character* literae);
 
 /* Comparare tabula ad string expectatum
@@ -434,8 +435,8 @@ tabula_ex_literis(
  * Reddit: VERUM si aequalis
  */
 b32
-tabula_aequalis_literis(
-    TabulaCharacterum* tabula,
+tabula_aequalis_literis (
+     TabulaCharacterum* tabula,
     constans character* expectatum);
 
 /* Imprimere tabula ad stdout (pro debugging)
@@ -445,7 +446,7 @@ tabula_aequalis_literis(
  * tabula: tabula imprimenda
  */
 vacuum
-tabula_imprimere(
+tabula_imprimere (
     TabulaCharacterum* tabula);
 
 /* Assertio helper - comparat et imprimit si non aequalis
@@ -457,9 +458,9 @@ tabula_imprimere(
  * descriptio: descriptio assertionis
  */
 vacuum
-tabula_asserere(
-    TabulaCharacterum* tabula,
-    Piscina* piscina,
+tabula_asserere (
+     TabulaCharacterum* tabula,
+               Piscina* piscina,
     constans character* expectatum,
     constans character* descriptio);
 

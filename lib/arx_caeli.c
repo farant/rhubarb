@@ -31,9 +31,17 @@
  * Forward Declarations
  * ================================================== */
 
-hic_manens i32 _obtinere_max_z_index(ArcCaeli* arc);
-hic_manens vacuum _ordinare_per_z_index_asc(ArcCaeli* arc, i32* indices);
-hic_manens vacuum _ordinare_per_z_index_desc(ArcCaeli* arc, i32* indices);
+hic_manens i32
+_obtinere_max_z_index (
+    ArcCaeli* arc);
+hic_manens vacuum
+_ordinare_per_z_index_asc (
+    ArcCaeli* arc,
+         i32* indices);
+hic_manens vacuum
+_ordinare_per_z_index_desc (
+    ArcCaeli* arc,
+         i32* indices);
 
 
 /* ==================================================

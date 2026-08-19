@@ -7,6 +7,7 @@
 #include "widget.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * FONS VISUS - Font Glyph Viewer Widget
  *
@@ -33,7 +34,7 @@
 /* FonsVisus - Widget state */
 nomen structura {
     Piscina* piscina;
-    i32      scroll_y;     /* Scroll offset si necessarium */
+        i32  scroll_y;     /* Scroll offset si necessarium */
 } FonsVisus;
 
 
@@ -48,7 +49,7 @@ nomen structura {
  * Redde: FonsVisus* si successus, NIHIL si error
  */
 FonsVisus*
-fons_visus_creare(
+fons_visus_creare (
     Piscina* piscina);
 
 
@@ -66,15 +67,15 @@ fons_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-fons_visus_reddere(
-    FonsVisus*       visus,
+fons_visus_reddere (
+          FonsVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -91,8 +92,8 @@ fons_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-fons_visus_tractare_eventum(
-    FonsVisus*        visus,
+fons_visus_tractare_eventum (
+           FonsVisus* visus,
     constans Eventus* eventus);
 
 
@@ -107,7 +108,7 @@ fons_visus_tractare_eventum(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-fons_visus_init(
+fons_visus_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -119,10 +120,10 @@ fons_visus_init(
  * NOTA: FonsVisus est read-only, ergo nihil salvare
  */
 vacuum
-fons_visus_salvare_status(
-    FonsVisus*           visus,
+fons_visus_salvare_status (
+              FonsVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -133,10 +134,10 @@ fons_visus_salvare_status(
  * NOTA: FonsVisus est read-only, ergo nihil carcare
  */
 vacuum
-fons_visus_carcare_status(
-    FonsVisus*           visus,
+fons_visus_carcare_status (
+              FonsVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* FONS_VISUS_H */

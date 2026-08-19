@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "tabula_dispersa.h"
 
+
 /* ==================================================
  * Internamentum Chordae - String Interning
  * "Conservare unicam copiam cuiusque chordae"
@@ -18,7 +19,7 @@
 nomen structura InternamentumChorda InternamentumChorda;
 structura InternamentumChorda {
     TabulaDispersa* tabula;  /* chorda -> chorda* (canonica) */
-    Piscina* piscina;        /* Omnes chordae internatae hic allocantur */
+           Piscina* piscina;        /* Omnes chordae internatae hic allocantur */
 };
 
 
@@ -32,7 +33,8 @@ structura InternamentumChorda {
  * tabulam internamenti participare.
  */
 InternamentumChorda*
-internamentum_globale(vacuum);
+internamentum_globale (vacuum);
+
 
 /* ==================================================
  * Creatio
@@ -42,7 +44,7 @@ internamentum_globale(vacuum);
  * Plerumque melius est uti internamentum_globale()
  */
 InternamentumChorda*
-internamentum_creare(
+internamentum_creare (
     Piscina* piscina);
 
 
@@ -52,15 +54,15 @@ internamentum_creare(
 
 /* Internare chordam - redde pointer ad copiam canonicam */
 chorda*
-chorda_internare(
+chorda_internare (
     InternamentumChorda* intern,
-    chorda s);
+                 chorda  s);
 
 /* Convenientia: internare ex literis C */
 chorda*
-chorda_internare_ex_literis(
+chorda_internare_ex_literis (
     InternamentumChorda* intern,
-    constans character* cstr);
+     constans character* cstr);
 
 
 /* ==================================================
@@ -69,9 +71,9 @@ chorda_internare_ex_literis(
 
 /* Verificare si chorda iam internata est */
 b32
-chorda_est_internata(
+chorda_est_internata (
     InternamentumChorda* intern,
-    chorda s);
+                 chorda  s);
 
 
 /* ==================================================
@@ -80,12 +82,12 @@ chorda_est_internata(
 
 /* Numerum chordaram internatarum obtinere */
 i32
-internamentum_numerus(
+internamentum_numerus (
     InternamentumChorda* intern);
 
 /* Vacare omnes chordas internatas (reset tabula) */
 vacuum
-internamentum_vacare(
+internamentum_vacare (
     InternamentumChorda* intern);
 
 #endif /* INTERNAMENTUM_H */

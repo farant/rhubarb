@@ -6,6 +6,7 @@
 #include "macho.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * SECTIO - Extractio Sectionum ex Mach-O
  *
@@ -58,12 +59,12 @@ nomen structura Sectio Sectio;
 
 /* Iterator pro ambulatione omnium sectionum in omnibus segmentis */
 nomen structura SectioIterator {
-	constans MachO* macho;
-	MachoIteratorMandatum mandatum_iter;     /* Persistent load command iterator */
-	constans vacuum* segment_currens;        /* Current segment (opaque) */
-	constans vacuum* sectiones;              /* Section array (opaque) */
-	           i32  sectio_index;            /* Current section in segment */
-	           i32  sectio_numerus;          /* Number of sections in current segment */
+           constans MachO* macho;
+    MachoIteratorMandatum  mandatum_iter;     /* Persistent load command iterator */
+          constans vacuum* segment_currens;        /* Current segment (opaque) */
+          constans vacuum* sectiones;              /* Section array (opaque) */
+                      i32  sectio_index;            /* Current section in segment */
+                      i32  sectio_numerus;          /* Number of sections in current segment */
 } SectioIterator;
 
 /* Initializare iteratorem
@@ -73,8 +74,8 @@ nomen structura SectioIterator {
  * Reddit: iterator ad initium
  */
 SectioIterator
-sectio_iterator_initium(
-	constans MachO* macho);
+sectio_iterator_initium (
+    constans MachO* macho);
 
 /* Obtinere sectionem proximam
  *
@@ -93,8 +94,8 @@ sectio_iterator_initium(
  *   }
  */
 Sectio*
-sectio_iterator_proximum(
-	SectioIterator* iter);
+sectio_iterator_proximum (
+    SectioIterator* iter);
 
 
 /* ==================================================
@@ -116,11 +117,11 @@ sectio_iterator_proximum(
  *   Sectio* cstring = sectio_invenire(macho, "__TEXT", "__cstring", p);
  */
 Sectio*
-sectio_invenire(
-	constans MachO* macho,
-	constans character* nomen_segmenti,
-	constans character* nomen_sectionis,
-	       Piscina* piscina);
+sectio_invenire (
+        constans MachO* macho,
+    constans character* nomen_segmenti,
+    constans character* nomen_sectionis,
+               Piscina* piscina);
 
 
 /* ==================================================
@@ -137,9 +138,9 @@ sectio_invenire(
  * NOTA: Nomen in formato Mach-O est char[16], potest non terminari cum \0
  */
 chorda
-sectio_nomen(
-	constans Sectio* sectio,
-	       Piscina* piscina);
+sectio_nomen (
+    constans Sectio* sectio,
+            Piscina* piscina);
 
 /* Obtinere nomen segmenti
  *
@@ -149,9 +150,9 @@ sectio_nomen(
  * Reddit: chordam cum nomine segmenti
  */
 chorda
-sectio_nomen_segmenti(
-	constans Sectio* sectio,
-	       Piscina* piscina);
+sectio_nomen_segmenti (
+    constans Sectio* sectio,
+            Piscina* piscina);
 
 /* Obtinere datum sectionis (ZERO-COPY)
  *
@@ -171,8 +172,8 @@ sectio_nomen_segmenti(
  *   chorda saved = chorda_transcribere(data, cache);
  */
 chorda
-sectio_datum(
-	constans Sectio* sectio);
+sectio_datum (
+    constans Sectio* sectio);
 
 /* Obtinere mensuram sectionis in bytes
  *
@@ -181,8 +182,8 @@ sectio_datum(
  * Reddit: mensuram sectionis
  */
 memoriae_index
-sectio_mensura(
-	constans Sectio* sectio);
+sectio_mensura (
+    constans Sectio* sectio);
 
 /* Obtinere addressam virtualem sectionis
  *
@@ -191,8 +192,8 @@ sectio_mensura(
  * Reddit: addressam virtualem (VM address)
  */
 memoriae_index
-sectio_addressa(
-	constans Sectio* sectio);
+sectio_addressa (
+    constans Sectio* sectio);
 
 /* Obtinere ordinationem sectionis
  *
@@ -203,8 +204,8 @@ sectio_addressa(
  * NOTA: Valor 3 significat 2^3 = 8 byte alignment
  */
 i32
-sectio_ordinatio(
-	constans Sectio* sectio);
+sectio_ordinatio (
+    constans Sectio* sectio);
 
 /* Obtinere vexilla sectionis
  *
@@ -215,8 +216,8 @@ sectio_ordinatio(
  * NOTA: Vexilla includunt genus sectionis et attributa
  */
 i32
-sectio_vexilla(
-	constans Sectio* sectio);
+sectio_vexilla (
+    constans Sectio* sectio);
 
 
 /* ==================================================
@@ -258,8 +259,8 @@ sectio_vexilla(
  * Reddit: genus sectionis (SECTIO_GENUS_*)
  */
 i32
-sectio_extrahere_genus(
-	i32 vexilla);
+sectio_extrahere_genus (
+    i32 vexilla);
 
 /* Verificare si sectio continet instructiones
  *
@@ -268,8 +269,8 @@ sectio_extrahere_genus(
  * Reddit: VERUM si continet instructiones
  */
 b32
-sectio_est_instructiones(
-	constans Sectio* sectio);
+sectio_est_instructiones (
+    constans Sectio* sectio);
 
 /* Verificare si sectio est debug info
  *
@@ -278,8 +279,8 @@ sectio_est_instructiones(
  * Reddit: VERUM si est debug
  */
 b32
-sectio_est_debug(
-	constans Sectio* sectio);
+sectio_est_debug (
+    constans Sectio* sectio);
 
 
 /* ==================================================
@@ -291,7 +292,7 @@ sectio_est_debug(
  * Reddit: literas describens errorem, vel NIHIL si nullus error
  */
 constans character*
-sectio_error_recens(
-	vacuum);
+sectio_error_recens (
+    vacuum);
 
 #endif /* SECTIO_H */

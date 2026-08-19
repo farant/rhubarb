@@ -48,13 +48,13 @@ nomen structura {
  * migrationes applicantur, actum 'volumen-creatum' scribitur */
 Volumen*
 volumen_creare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via);
 
 /* aperire: plagula exsistat */
 Volumen*
 volumen_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via);
 
 /* aperire si exsistit, alioquin creare - pro apps quae volumen
@@ -63,7 +63,7 @@ volumen_aperire (
  * pollicitum erat quod nulla functio praestabat.) */
 Volumen*
 volumen_aperire_aut_creare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via);
 
 /* VOLUMEN SCRATCH - status qui probationem non superstat.
@@ -90,7 +90,7 @@ volumen_aperire_aut_creare (
  * ostendit). */
 Volumen*
 volumen_temporarium (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* praefixum);
 
 /* Volumen temporarium plagulam suam hic delet. */
@@ -112,18 +112,18 @@ volumen_error (
 /* actum in caudam appendere (datum = JSON); seq redditum, 0 = vitium */
 s64
 volumen_actum_appendere (
-    Volumen*            volumen,
+               Volumen* volumen,
     constans character* genus,
-    chorda              datum);
+                chorda  datum);
 
 /* plagulam condere: transactione una - massa (sigillo dedup) +
  * actum 'plagula-condita' + manifestum (upsert per viam).
  * origo e.g. "vendicata:lib/chorda.c" | "genita" */
 b32
 volumen_plagulam_condere (
-    Volumen*            volumen,
-    chorda              via_relativa,
-    chorda              contentum,
+               Volumen* volumen,
+                chorda  via_relativa,
+                chorda  contentum,
     constans character* origo);
 
 /* plagulam e manifesto removere: actum 'plagula-remota' + DELETE.
@@ -132,7 +132,7 @@ volumen_plagulam_condere (
 b32
 volumen_plagulam_removere (
     Volumen* volumen,
-    chorda   via_relativa);
+     chorda  via_relativa);
 
 /* transactio vocatoris (conditio multi-plagularis atomica):
  * inter incipere/committere, plagulam_condere/removere transactiones
@@ -155,9 +155,9 @@ volumen_transactionem_revolvere (
 chorda
 volumen_plagulam_promere (
     Volumen* volumen,
-    chorda   via_relativa,
+     chorda  via_relativa,
     Piscina* piscina,
-    b32*     inventum);
+        b32* inventum);
 
 /* massam nudam condere (contentum sigillo addressatum, dedup) -
  * massa CONTENTUM est, non eventus: veritas de USU eius in actis
@@ -165,17 +165,17 @@ volumen_plagulam_promere (
  * >= SIGILLUM_HEX_MENSURA octeti. */
 b32
 volumen_massam_condere (
-    Volumen*   volumen,
-    chorda     contentum,
+      Volumen* volumen,
+       chorda  contentum,
     character* sigillum_hex_exitus);
 
 /* massam promere sigillo (hex); *inventum FALSUM si ignotum */
 chorda
 volumen_massam_promere (
     Volumen* volumen,
-    chorda   sigillum_hex,
+     chorda  sigillum_hex,
     Piscina* piscina,
-    b32*     inventum);
+        b32* inventum);
 
 /* manifestum totum, ordine viae; Xar de VolumenPlagula */
 Xar*
@@ -185,7 +185,7 @@ volumen_plagulas_enumerare (
 
 /* actum lectum (chordae ex piscina vocantis) */
 nomen structura {
-    s64    seq;
+       s64 seq;
     chorda momentum;
     chorda genus;
     chorda datum;
@@ -196,7 +196,7 @@ nomen structura {
 Xar*
 volumen_acta_legere (
     Volumen* volumen,
-    s64      post_seq,
+        s64  post_seq,
     Piscina* piscina);
 
 /* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
@@ -207,7 +207,7 @@ volumen_acta_legere (
 Xar*
 volumen_plicam_ad (
     Volumen* volumen,
-    s64      ad_seq,
+        s64  ad_seq,
     Piscina* piscina);
 
 s64

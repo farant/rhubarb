@@ -55,6 +55,7 @@
 #include "piscina.h"
 #include "volumen.h"
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -78,14 +79,15 @@ nomen structura {
     chorda titulus;
     duplex valor;
     chorda unitas;
-    s64    momentum;
+       s64 momentum;
 } Mensura;
 
 nomen structura {
-    b32    successus;
-    i32    conditae;
+       b32 successus;
+       i32 conditae;
     chorda causa;
 } MensuraFructus;
+
 
 /* ============================================================
  * Claves
@@ -97,7 +99,8 @@ nomen structura {
  * Tempore praefixa, ergo ordine temporis ordinatur.
  */
 chorda
-mensura_sessionem_novam (Piscina* piscina);
+mensura_sessionem_novam (
+    Piscina* piscina);
 
 /*
  * mensura_id_novum - Clavis mensurae nova
@@ -106,7 +109,8 @@ mensura_sessionem_novam (Piscina* piscina);
  * numerator intra processum).
  */
 chorda
-mensura_id_novum (Piscina* piscina);
+mensura_id_novum (
+    Piscina* piscina);
 
 /*
  * mensura_momentum_nunc - Millisecunda ab epocha
@@ -115,6 +119,7 @@ mensura_id_novum (Piscina* piscina);
  */
 s64
 mensura_momentum_nunc (vacuum);
+
 
 /* ============================================================
  * Forma lineae (NUCLEUS PURUS - probabilis sine plagula)
@@ -131,7 +136,9 @@ mensura_momentum_nunc (vacuum);
  *        tacite corrumpit.
  */
 chorda
-mensura_ad_lineam (constans Mensura* mensura, Piscina* piscina);
+mensura_ad_lineam (
+    constans Mensura* mensura,
+             Piscina* piscina);
 
 /*
  * mensura_ex_linea - Lineam in mensuram vertere
@@ -140,7 +147,11 @@ mensura_ad_lineam (constans Mensura* mensura, Piscina* piscina);
  *        non numerus).
  */
 b32
-mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina);
+mensura_ex_linea (
+     chorda  linea,
+    Mensura* exitus,
+    Piscina* piscina);
+
 
 /* ============================================================
  * Diarium et conditio
@@ -152,9 +163,10 @@ mensura_ex_linea (chorda linea, Mensura* exitus, Piscina* piscina);
  * Via calida: apertio, appensio, clausura. Nullum sqlite.
  */
 b32
-mensura_annotare (constans character* via_diarii,
-                  constans Mensura*   mensura,
-                  Piscina*            piscina);
+mensura_annotare (
+                constans character* via_diarii,
+                  constans Mensura* mensura,
+                           Piscina* piscina);
 
 /*
  * mensura_condere - Diarium in volumen transferre
@@ -165,8 +177,9 @@ mensura_annotare (constans character* via_diarii,
  * Lineae malformatae NON silentur: numerantur et causa eas nominat.
  */
 MensuraFructus
-mensura_condere (constans character* via_diarii,
-                 Volumen*            volumen,
-                 Piscina*            piscina);
+mensura_condere (
+      constans character* via_diarii,
+                 Volumen* volumen,
+                 Piscina* piscina);
 
 #endif /* MENSURA_H */

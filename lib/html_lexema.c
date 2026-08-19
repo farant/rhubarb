@@ -15,7 +15,8 @@
  * ================================================== */
 
 interior b32
-_est_spatium (character c);
+_est_spatium (
+    character c);
 
 interior b32
 _est_spatium (
@@ -26,7 +27,8 @@ _est_spatium (
 }
 
 interior b32
-_est_littera (character c);
+_est_littera (
+    character c);
 
 interior b32
 _est_littera (
@@ -36,7 +38,8 @@ _est_littera (
 }
 
 interior b32
-_est_digitus (character c);
+_est_digitus (
+    character c);
 
 interior b32
 _est_digitus (
@@ -46,7 +49,8 @@ _est_digitus (
 }
 
 interior b32
-_est_hex (character c);
+_est_hex (
+    character c);
 
 interior b32
 _est_hex (
@@ -57,7 +61,8 @@ _est_hex (
 }
 
 interior character
-_minuscula (character c);
+_minuscula (
+    character c);
 
 interior character
 _minuscula (
@@ -74,7 +79,9 @@ _minuscula (
  * fons constans - unio castum celat; nemo per visum scribit
  * (contractus; idem mos silvae et css_lexema) */
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura);
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura);
 
 interior chorda
 _chorda_ex_fonte (
@@ -115,7 +122,9 @@ nomen structura {
 } HtmlLexator;
 
 interior character
-_ad (HtmlLexator* lx, i32 delta);
+_ad (
+    HtmlLexator* lx,
+            i32  delta);
 
 interior character
 _ad (
@@ -130,7 +139,9 @@ _ad (
 }
 
 interior b32
-_intra (HtmlLexator* lx, i32 delta);
+_intra (
+    HtmlLexator* lx,
+            i32  delta);
 
 interior b32
 _intra (
@@ -142,7 +153,9 @@ _intra (
 
 /* titulus == literis, casu neglecto (literis minusculis dandum) */
 interior b32
-_titulus_aequat (constans character* datum, i32 mensura,
+_titulus_aequat (
+    constans character* datum,
+                   i32  mensura,
     constans character* literis);
 
 interior b32
@@ -167,7 +180,9 @@ _titulus_aequat (
 /* elementa cruda: RAWTEXT (script, style) + RCDATA (title,
  * textarea) - hic idem lexata, distinctio decoctionis = arbor */
 interior b32
-_est_crudum (constans character* datum, i32 mensura);
+_est_crudum (
+    constans character* datum,
+                   i32  mensura);
 
 interior b32
 _est_crudum (
@@ -189,7 +204,8 @@ _est_crudum (
  * Tectum LXIV octetis: prospectus linearis manet (tituli nominati
  * veri <= XXXIII, numerici tam longi digni non sunt). */
 interior i32
-_referentia_mensura (HtmlLexator* lx);
+_referentia_mensura (
+    HtmlLexator* lx);
 
 interior i32
 _referentia_mensura (
@@ -247,7 +263,8 @@ _referentia_mensura (
 /* inciperetne notatio ad '<'? (spec: littera, '!', '?', aut '/'
  * cum octeto sequente; '<' aliter textus manet) */
 interior b32
-_incipit_notatio (HtmlLexator* lx);
+_incipit_notatio (
+    HtmlLexator* lx);
 
 interior b32
 _incipit_notatio (
@@ -270,7 +287,8 @@ _incipit_notatio (
  * neglecto) + (spatium | '/' | '>') - aliter textus crudus manet
  * ('</scripty' scriptum non claudit; spec) */
 interior b32
-_clausura_cruda_hic (HtmlLexator* lx);
+_clausura_cruda_hic (
+    HtmlLexator* lx);
 
 interior b32
 _clausura_cruda_hic (
@@ -303,7 +321,8 @@ _clausura_cruda_hic (
 /* titulum tagi consumere (cursor post '<' aut '</'); statum
  * intra-tag instituit */
 interior vacuum
-_tag_titulum_consumere (HtmlLexator* lx);
+_tag_titulum_consumere (
+    HtmlLexator* lx);
 
 interior vacuum
 _tag_titulum_consumere (
@@ -326,7 +345,8 @@ _tag_titulum_consumere (
  * crudum intrat - mos navigatorum, signum se-claudens pro
  * elementis crudis ignoratur) */
 interior vacuum
-_tag_finitum (HtmlLexator* lx);
+_tag_finitum (
+    HtmlLexator* lx);
 
 interior vacuum
 _tag_finitum (
@@ -347,7 +367,8 @@ _tag_finitum (
 /* commentarium (cursor in '<!--'): clauditur per '-->' aut
  * '--!>'; abrupta '<!-->' et '<!--->' clausa (spec, cum errore) */
 interior HtmlLexemaGenus
-_commentarium_consumere (HtmlLexator* lx);
+_commentarium_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _commentarium_consumere (
@@ -387,7 +408,8 @@ _commentarium_consumere (
 /* doctype (cursor in '<!doctype'): lexema unum ad '>' primum -
  * quod spec etiam intra identificatores citatos facit (abrupte) */
 interior HtmlLexemaGenus
-_doctype_consumere (HtmlLexator* lx);
+_doctype_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _doctype_consumere (
@@ -408,7 +430,8 @@ _doctype_consumere (
 
 /* sectio CDATA (cursor in '<![CDATA['): ad ']]>' */
 interior HtmlLexemaGenus
-_cdata_consumere (HtmlLexator* lx);
+_cdata_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _cdata_consumere (
@@ -431,7 +454,8 @@ _cdata_consumere (
 /* commentarium pravum (cursor post praefixum '<!', '<?', '</'):
  * ad '>' primum inclusum, aut EOF */
 interior HtmlLexemaGenus
-_pravum_consumere (HtmlLexator* lx);
+_pravum_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _pravum_consumere (
@@ -451,7 +475,8 @@ _pravum_consumere (
 
 /* notatio (cursor in '<', _incipit_notatio iam vera) */
 interior HtmlLexemaGenus
-_notationem_consumere (HtmlLexator* lx);
+_notationem_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _notationem_consumere (
@@ -514,7 +539,8 @@ _notationem_consumere (
  * probatur, ut '<a href=/>' valorem '/' det et tag normaliter
  * finiat (mos spec et navigatorum) */
 interior HtmlLexemaGenus
-_intra_tag_consumere (HtmlLexator* lx);
+_intra_tag_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _intra_tag_consumere (
@@ -595,7 +621,8 @@ _intra_tag_consumere (
  * ================================================== */
 
 interior HtmlLexemaGenus
-_lexema_consumere (HtmlLexator* lx);
+_lexema_consumere (
+    HtmlLexator* lx);
 
 interior HtmlLexemaGenus
 _lexema_consumere (

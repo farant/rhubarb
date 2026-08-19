@@ -22,8 +22,8 @@
 
 /* Fructus decodificationis */
 nomen structura {
-    i8* datum;
-    i32 mensura;
+     i8* datum;
+    i32  mensura;
 } Base64Fructus;
 
 
@@ -40,10 +40,10 @@ nomen structura {
  * Redde: chorda Base64 codificata
  */
 chorda
-base64_codificare(
+base64_codificare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina);
+            i32  mensura,
+        Piscina* piscina);
 
 
 /* ========================================================================
@@ -59,8 +59,8 @@ base64_codificare(
  *        (datum = NIHIL si error)
  */
 Base64Fructus
-base64_decodificare(
-    chorda   codificata,
+base64_decodificare (
+     chorda  codificata,
     Piscina* piscina);
 
 
@@ -75,7 +75,8 @@ base64_decodificare(
  * Redde: Longitudo chordae Base64 (cum padding)
  */
 i32
-base64_longitudo_codificata(i32 mensura_originalis);
+base64_longitudo_codificata (
+    i32 mensura_originalis);
 
 /* Calculare longitudo output pro decodificatio
  *
@@ -84,7 +85,8 @@ base64_longitudo_codificata(i32 mensura_originalis);
  * Redde: Longitudo datorum decodificatorum
  */
 i32
-base64_longitudo_decodificata(chorda codificata);
+base64_longitudo_decodificata (
+    chorda codificata);
 
 
 #endif /* BASE64_H */

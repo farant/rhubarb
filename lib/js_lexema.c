@@ -16,7 +16,8 @@
  * ================================================== */
 
 interior b32
-_est_spatium (character c);
+_est_spatium (
+    character c);
 
 interior b32
 _est_spatium (
@@ -27,7 +28,8 @@ _est_spatium (
 }
 
 interior b32
-_est_linea_nova (character c);
+_est_linea_nova (
+    character c);
 
 interior b32
 _est_linea_nova (
@@ -37,7 +39,8 @@ _est_linea_nova (
 }
 
 interior b32
-_est_digitus (character c);
+_est_digitus (
+    character c);
 
 interior b32
 _est_digitus (
@@ -47,7 +50,8 @@ _est_digitus (
 }
 
 interior b32
-_est_hex (character c);
+_est_hex (
+    character c);
 
 interior b32
 _est_hex (
@@ -58,7 +62,8 @@ _est_hex (
 }
 
 interior b32
-_est_nominis_initium (character c);
+_est_nominis_initium (
+    character c);
 
 interior b32
 _est_nominis_initium (
@@ -69,7 +74,8 @@ _est_nominis_initium (
 }
 
 interior b32
-_est_nominis (character c);
+_est_nominis (
+    character c);
 
 interior b32
 _est_nominis (
@@ -81,7 +87,9 @@ _est_nominis (
 /* chorda ex fonte (visus, nulla copia): unio castum celat; nemo
  * per visum scribit (contractus; mos silvae/css/html) */
 interior chorda
-_chorda_ex_fonte (constans character* fons, i32 mensura);
+_chorda_ex_fonte (
+    constans character* fons,
+                   i32  mensura);
 
 interior chorda
 _chorda_ex_fonte (
@@ -112,7 +120,9 @@ interior constans character* constans _verba[] = {
 };
 
 interior b32
-_est_verbum (constans character* datum, i32 mensura);
+_est_verbum (
+    constans character* datum,
+                   i32  mensura);
 
 interior b32
 _est_verbum (
@@ -134,7 +144,9 @@ _est_verbum (
 
 /* verba post quae '/' divisio est (valorem ferunt) */
 interior b32
-_verbum_valorem_fert (constans character* datum, i32 mensura);
+_verbum_valorem_fert (
+    constans character* datum,
+                   i32  mensura);
 
 interior b32
 _verbum_valorem_fert (
@@ -180,7 +192,9 @@ nomen structura {
 } JsLexator;
 
 interior character
-_ad (JsLexator* lx, i32 delta);
+_ad (
+    JsLexator* lx,
+          i32  delta);
 
 interior character
 _ad (
@@ -195,7 +209,9 @@ _ad (
 }
 
 interior b32
-_intra (JsLexator* lx, i32 delta);
+_intra (
+    JsLexator* lx,
+          i32  delta);
 
 interior b32
 _intra (
@@ -208,7 +224,8 @@ _intra (
 /* estne '/' hic divisio (non regex)? heuristice classica super
  * lexemate significante priore; simplificationes in capite */
 interior b32
-_divisio_hic (JsLexator* lx);
+_divisio_hic (
+    JsLexator* lx);
 
 interior b32
 _divisio_hic (
@@ -257,7 +274,8 @@ _divisio_hic (
 
 /* chordam consumere (cursor in citatione claudente) */
 interior JsLexemaGenus
-_chordam_consumere (JsLexator* lx);
+_chordam_consumere (
+    JsLexator* lx);
 
 interior JsLexemaGenus
 _chordam_consumere (
@@ -304,7 +322,8 @@ _chordam_consumere (
 /* numerum consumere: digiti [. digiti] [eE [+-] digiti],
  * 0x hex, 0b/0o (digiti lati - arbor validat) */
 interior vacuum
-_numerum_consumere (JsLexator* lx);
+_numerum_consumere (
+    JsLexator* lx);
 
 interior vacuum
 _numerum_consumere (
@@ -360,7 +379,8 @@ _numerum_consumere (
  * exclusa): corpus cum classibus [..] ('/' intus litteralis),
  * effugiis; deinde vexilla. Linea nova cruda -> IMPERFECTA. */
 interior JsLexemaGenus
-_regex_consumere (JsLexator* lx);
+_regex_consumere (
+    JsLexator* lx);
 
 interior JsLexemaGenus
 _regex_consumere (
@@ -413,7 +433,9 @@ _regex_consumere (
  * ad '`' (finis) aut '${' (interpolatio - acervus crescit) aut
  * EOF. Lineae novae intus LICITAE (lexema multilineare). */
 interior JsLexemaGenus
-_formulam_scandere (JsLexator* lx, b32 ab_initio);
+_formulam_scandere (
+    JsLexator* lx,
+          b32  ab_initio);
 
 interior JsLexemaGenus
 _formulam_scandere (
@@ -465,7 +487,8 @@ _formulam_scandere (
 /* mensura interpunctionis ad cursorem (munch maximus), 0 si
  * octetus nulli operatori congruit */
 interior i32
-_interpunctionis_mensura (JsLexator* lx);
+_interpunctionis_mensura (
+    JsLexator* lx);
 
 interior i32
 _interpunctionis_mensura (
@@ -531,7 +554,8 @@ _interpunctionis_mensura (
  * ================================================== */
 
 interior JsLexemaGenus
-_lexema_consumere (JsLexator* lx);
+_lexema_consumere (
+    JsLexator* lx);
 
 interior JsLexemaGenus
 _lexema_consumere (

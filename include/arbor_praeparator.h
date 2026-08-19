@@ -8,6 +8,7 @@
 #include "tabula_dispersa.h"
 #include "arbor_lexema.h"
 
+
 /* ==================================================
  * ARBOR PRAEPARATOR - C Preprocessor
  *
@@ -27,6 +28,7 @@
  *   Xar* expandita = arbor_praeparator_processare(pp, "main.c");
  * ================================================== */
 
+
 /* ==================================================
  * Macro Expansion Origin Chain
  *
@@ -36,22 +38,24 @@
  * ================================================== */
 
 nomen structura ArborOrigo {
-    chorda*                  nomen_macro;       /* Which macro expanded (NULL if #include) */
-    chorda*                  via_file;          /* File path (for #include tracking) */
-    i32                      linea_originalis;
-    i32                      columna_originalis;
-    i32                      expansio_index;    /* Nesting level (0=original source) */
+    chorda* nomen_macro;       /* Which macro expanded (NULL if #include) */
+    chorda* via_file;          /* File path (for #include tracking) */
+       i32  linea_originalis;
+       i32  columna_originalis;
+       i32  expansio_index;    /* Nesting level (0=original source) */
     structura ArborOrigo*    pater;             /* Parent expansion (NULL if root) */
 } ArborOrigo;
+
 
 /* ==================================================
  * Token with Origin Tracking
  * ================================================== */
 
 nomen structura {
-    ArborLexema*    lexema;
-    ArborOrigo*     origo;    /* NULL if from original source (not macro/include) */
+    ArborLexema* lexema;
+     ArborOrigo* origo;    /* NULL if from original source (not macro/include) */
 } ArborLexemaOrigo;
+
 
 /* ==================================================
  * Directive Types
@@ -73,6 +77,7 @@ nomen enumeratio {
     ARBOR_DIRECTIVA_UNKNOWN
 } ArborDirectivaGenus;
 
+
 /* ==================================================
  * Preprocessor Mode
  *
@@ -87,25 +92,28 @@ nomen enumeratio {
     ARBOR_PP_MODUS_HYBRID         /* Hybrid: learn macros, preserve tokens */
 } ArborPPModus;
 
+
 /* ==================================================
  * Macro Definition
  * ================================================== */
 
 nomen structura {
-    chorda*         titulus;         /* Macro name (interned) */
-    b32             est_functio;     /* Function-like macro */
-    b32             est_variadic;    /* Has ... parameter */
-    Xar*            parametra;       /* Xar of chorda* (param names) */
-    Xar*            corpus;          /* Xar of ArborLexema* (body tokens) */
-    chorda          via_file;        /* Where defined */
-    i32             linea_def;
+    chorda* titulus;         /* Macro name (interned) */
+       b32  est_functio;     /* Function-like macro */
+       b32  est_variadic;    /* Has ... parameter */
+       Xar* parametra;       /* Xar of chorda* (param names) */
+       Xar* corpus;          /* Xar of ArborLexema* (body tokens) */
+    chorda  via_file;        /* Where defined */
+       i32  linea_def;
 } ArborMacroDefinitio;
+
 
 /* ==================================================
  * Preprocessor State (opaque)
  * ================================================== */
 
 nomen structura ArborPraeparator ArborPraeparator;
+
 
 /* ==================================================
  * Error Types (reused from arbor_syntaxis)
@@ -122,46 +130,54 @@ nomen enumeratio {
 } ArborPPErrorGenus;
 
 nomen structura {
-    ArborPPErrorGenus   genus;
-    chorda              nuntius;
-    chorda              via_file;
-    i32                 linea;
-    i32                 columna;
+    ArborPPErrorGenus genus;
+               chorda nuntius;
+               chorda via_file;
+                  i32 linea;
+                  i32 columna;
 } ArborPPError;
+
 
 /* ==================================================
  * API - Creation and Configuration
  * ================================================== */
 
 /* Creare praeparator */
-ArborPraeparator* arbor_praeparator_creare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern);
+ArborPraeparator*
+arbor_praeparator_creare (
+                Piscina* piscina,
+    InternamentumChorda* intern);
 
 /* Ponere modum (PROCESSARE vel PRESERVARE) */
-vacuum arbor_praeparator_ponere_modum(
-    ArborPraeparator*     pp,
-    ArborPPModus          modus);
+vacuum
+arbor_praeparator_ponere_modum (
+    ArborPraeparator* pp,
+        ArborPPModus  modus);
 
 /* Obtinere modum */
-ArborPPModus arbor_praeparator_obtinere_modum(
-    ArborPraeparator*     pp);
+ArborPPModus
+arbor_praeparator_obtinere_modum (
+    ArborPraeparator* pp);
 
 /* Addere via include (search path) */
-vacuum arbor_praeparator_addere_via(
-    ArborPraeparator*     pp,
-    constans character*   via);
+vacuum
+arbor_praeparator_addere_via (
+      ArborPraeparator* pp,
+    constans character* via);
 
 /* Definire macro (e.g., from command line -D) */
-vacuum arbor_praeparator_definire(
-    ArborPraeparator*     pp,
-    constans character*   nomen_macro,
-    constans character*   valor);
+vacuum
+arbor_praeparator_definire (
+      ArborPraeparator* pp,
+    constans character* nomen_macro,
+    constans character* valor);
 
 /* Undefinire macro (e.g., from command line -U) */
-vacuum arbor_praeparator_undefinire(
-    ArborPraeparator*     pp,
-    constans character*   nomen_macro);
+vacuum
+arbor_praeparator_undefinire (
+      ArborPraeparator* pp,
+    constans character* nomen_macro);
+
 
 /* ==================================================
  * API - Processing
@@ -171,58 +187,75 @@ vacuum arbor_praeparator_undefinire(
  * Reads file, lexes, preprocesses recursively.
  * Returns Xar of ArborLexemaOrigo.
  */
-Xar* arbor_praeparator_processare(
-    ArborPraeparator*     pp,
-    constans character*   via_file);
+Xar*
+arbor_praeparator_processare (
+      ArborPraeparator* pp,
+    constans character* via_file);
 
 /* Processare lexemata jam habita
  * For when you already have tokens (e.g., from embedded source).
  * Returns Xar of ArborLexemaOrigo.
  */
-Xar* arbor_praeparator_processare_lexemata(
-    ArborPraeparator*     pp,
-    Xar*                  lexemata,
-    constans character*   via_file);
+Xar*
+arbor_praeparator_processare_lexemata (
+      ArborPraeparator* pp,
+                   Xar* lexemata,
+    constans character* via_file);
+
 
 /* ==================================================
  * API - Query
  * ================================================== */
 
 /* Obtinere macro definition (for hover info, debugging) */
-ArborMacroDefinitio* arbor_praeparator_obtinere_macro(
-    ArborPraeparator*     pp,
-    chorda*               nomen_macro);
+ArborMacroDefinitio*
+arbor_praeparator_obtinere_macro (
+    ArborPraeparator* pp,
+              chorda* nomen_macro);
 
 /* Check if macro is defined */
-b32 arbor_praeparator_est_definitum(
-    ArborPraeparator*     pp,
-    chorda*               nomen_macro);
+b32
+arbor_praeparator_est_definitum (
+    ArborPraeparator* pp,
+              chorda* nomen_macro);
 
 /* Obtinere errores */
-Xar* arbor_praeparator_errores(ArborPraeparator* pp);
+Xar*
+arbor_praeparator_errores (
+    ArborPraeparator* pp);
 
 /* Obtinere keyword macros (for hybrid mode)
  * Returns TabulaDispersa mapping macro name (chorda*) -> keyword token type (i32)
  * E.g., "hic_manens" -> ARBOR_LEXEMA_STATIC
  * Caller should NOT free the table.
  */
-TabulaDispersa* arbor_praeparator_obtinere_keyword_macros(ArborPraeparator* pp);
+TabulaDispersa*
+arbor_praeparator_obtinere_keyword_macros (
+    ArborPraeparator* pp);
 
 /* Obtinere typedef nomina (for hybrid mode)
  * Returns TabulaDispersa of typedef names learned from included files.
  * E.g., "i8", "i32", etc.
  * Caller should NOT free the table.
  */
-TabulaDispersa* arbor_praeparator_obtinere_typedef_nomina(ArborPraeparator* pp);
+TabulaDispersa*
+arbor_praeparator_obtinere_typedef_nomina (
+    ArborPraeparator* pp);
+
 
 /* ==================================================
  * API - Utilities
  * ================================================== */
 
 /* Obtinere nomen directiva (pro debugging) */
-constans character* arbor_directiva_genus_nomen(ArborDirectivaGenus genus);
+constans character*
+arbor_directiva_genus_nomen (
+    ArborDirectivaGenus genus);
 
 /* Format error for display */
-chorda arbor_pp_error_formare(Piscina* piscina, ArborPPError* err);
+chorda
+arbor_pp_error_formare (
+         Piscina* piscina,
+    ArborPPError* err);
 
 #endif /* ARBOR_PRAEPARATOR_H */

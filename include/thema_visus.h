@@ -7,6 +7,7 @@
 #include "widget.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * THEMA VISUS - Theme & Pattern Viewer Widget
  *
@@ -35,10 +36,10 @@
 /* ThemaVisus - Widget state */
 nomen structura {
     Piscina* piscina;
-    i32 pagina;           /* 0 = colores, 1 = exemplaria */
-    i32 exemplar_fg;      /* foreground color index 0-15 */
-    i32 exemplar_bg;      /* background color index 0-15 */
-    b32 modus_fg;         /* VERUM = editing fg, FALSUM = editing bg */
+        i32  pagina;           /* 0 = colores, 1 = exemplaria */
+        i32  exemplar_fg;      /* foreground color index 0-15 */
+        i32  exemplar_bg;      /* background color index 0-15 */
+        b32  modus_fg;         /* VERUM = editing fg, FALSUM = editing bg */
 } ThemaVisus;
 
 
@@ -53,7 +54,7 @@ nomen structura {
  * Redde: ThemaVisus* si successus, NIHIL si error
  */
 ThemaVisus*
-thema_visus_creare(
+thema_visus_creare (
     Piscina* piscina);
 
 
@@ -71,15 +72,15 @@ thema_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-thema_visus_reddere(
-    ThemaVisus*      visus,
+thema_visus_reddere (
+         ThemaVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -98,8 +99,8 @@ thema_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-thema_visus_tractare_eventum(
-    ThemaVisus*       visus,
+thema_visus_tractare_eventum (
+          ThemaVisus* visus,
     constans Eventus* eventus);
 
 
@@ -114,7 +115,7 @@ thema_visus_tractare_eventum(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-thema_visus_init(
+thema_visus_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -126,10 +127,10 @@ thema_visus_init(
  * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
  */
 vacuum
-thema_visus_salvare_status(
-    ThemaVisus*          visus,
+thema_visus_salvare_status (
+             ThemaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -140,10 +141,10 @@ thema_visus_salvare_status(
  * entitas_id: identificator entitas (e.g., "ThemaStatus::0")
  */
 vacuum
-thema_visus_carcare_status(
-    ThemaVisus*          visus,
+thema_visus_carcare_status (
+             ThemaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* THEMA_VISUS_H */

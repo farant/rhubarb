@@ -12,6 +12,7 @@
 #include "imago.h"
 #include "piscina.h"
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -23,6 +24,7 @@ nomen enumeratio {
     IMAGO_SCALA_PROXIMUS,   /* Nearest neighbor - velox, pixelatum */
     IMAGO_SCALA_BILINEARIS  /* Bilinear interpolatio - lenis */
 } ImagoScalaModus;
+
 
 /* ============================================================
  * Functiones
@@ -40,12 +42,12 @@ nomen enumeratio {
  * Redde: Nova imago scalata (allocata in piscina)
  */
 Imago
-imago_scalare(
-    constans Imago* fons,
-    i32             nova_latitudo,
-    i32             nova_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina);
+imago_scalare (
+     constans Imago* fons,
+                i32  nova_latitudo,
+                i32  nova_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina);
 
 /*
  * imago_scalare_ad_limites - Scalare ad limites, servare proportionem
@@ -63,12 +65,12 @@ imago_scalare(
  * Redde: Nova imago scalata (allocata in piscina)
  */
 Imago
-imago_scalare_ad_limites(
-    constans Imago* fons,
-    i32             max_latitudo,
-    i32             max_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina);
+imago_scalare_ad_limites (
+     constans Imago* fons,
+                i32  max_latitudo,
+                i32  max_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina);
 
 /*
  * imago_extrahere_et_scalare - Extrahere regionem et scalare
@@ -89,15 +91,15 @@ imago_scalare_ad_limites(
  * Redde: Nova imago extracta et scalata
  */
 Imago
-imago_extrahere_et_scalare(
-    constans Imago* fons,
-    i32             crop_x,
-    i32             crop_y,
-    i32             crop_lat,
-    i32             crop_alt,
-    i32             max_latitudo,
-    i32             max_altitudo,
-    ImagoScalaModus modus,
-    Piscina*        piscina);
+imago_extrahere_et_scalare (
+     constans Imago* fons,
+                i32  crop_x,
+                i32  crop_y,
+                i32  crop_lat,
+                i32  crop_alt,
+                i32  max_latitudo,
+                i32  max_altitudo,
+    ImagoScalaModus  modus,
+            Piscina* piscina);
 
 #endif /* IMAGO_OPUS_H */

@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * SENTENTIA FISSIO
  * Bibliotheca pro findere textum in sententias
@@ -25,7 +26,7 @@
 
 nomen structura {
     chorda* sententiae;   /* Array chordarum sententiarum (copiatae) */
-    i32     numerus;      /* Numerus sententiarum */
+       i32  numerus;      /* Numerus sententiarum */
 } SententiaeFissioFructus;
 
 
@@ -40,7 +41,7 @@ nomen structura {
 
 nomen structura {
     SententiaIndices* indices;   /* Array indicum */
-    i32               numerus;   /* Numerus sententiarum */
+                 i32  numerus;   /* Numerus sententiarum */
 } SententiaIndicesFructus;
 
 
@@ -63,8 +64,8 @@ nomen structura SententiaIterator SententiaIterator;
  * Redde: structura cum array sententiarum et numero
  */
 SententiaeFissioFructus
-sententia_fissio(
-    chorda   textus,
+sententia_fissio (
+     chorda  textus,
     Piscina* piscina);
 
 
@@ -75,7 +76,7 @@ sententia_fissio(
  * Redde: numerus sententiarum
  */
 i32
-sententia_numerare(
+sententia_numerare (
     chorda textus);
 
 
@@ -87,8 +88,8 @@ sententia_numerare(
  * Redde: structura cum array indicum et numero
  */
 SententiaIndicesFructus
-sententia_fissio_indices(
-    chorda   textus,
+sententia_fissio_indices (
+     chorda  textus,
     Piscina* piscina);
 
 
@@ -104,8 +105,8 @@ sententia_fissio_indices(
  * Redde: iterator novus (NIHIL si error)
  */
 SententiaIterator*
-sententia_iterator_creare(
-    chorda   textus,
+sententia_iterator_creare (
+     chorda  textus,
     Piscina* piscina);
 
 
@@ -116,7 +117,7 @@ sententia_iterator_creare(
  * Redde: proxima sententia (chorda vacua si ad finem)
  */
 chorda
-sententia_iterator_proxima(
+sententia_iterator_proxima (
     SententiaIterator* iter);
 
 
@@ -127,7 +128,7 @@ sententia_iterator_proxima(
  * Redde: prior sententia (chorda vacua si ad initium)
  */
 chorda
-sententia_iterator_prior(
+sententia_iterator_prior (
     SententiaIterator* iter);
 
 
@@ -138,7 +139,7 @@ sententia_iterator_prior(
  * Redde: index currens, vel -1 si iterator NIHIL
  */
 s32
-sententia_iterator_index(
+sententia_iterator_index (
     SententiaIterator* iter);
 
 
@@ -149,7 +150,7 @@ sententia_iterator_index(
  * Redde: numerus totalis sententiarum
  */
 i32
-sententia_iterator_numerus(
+sententia_iterator_numerus (
     SententiaIterator* iter);
 
 
@@ -158,7 +159,7 @@ sententia_iterator_numerus(
  * iter: iterator
  */
 vacuum
-sententia_iterator_reset(
+sententia_iterator_reset (
     SententiaIterator* iter);
 
 

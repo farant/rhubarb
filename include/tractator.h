@@ -10,6 +10,7 @@
 #include "entitas.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * TRACTATOR - Registrum Tractatoris Nuntiorum
  *
@@ -46,12 +47,12 @@ structura CursusNuntiorum;
  * datum_custom: Datum applicatio-specificum
  */
 nomen structura ContextusTractandi {
-    Entitas*                    entitas;
-    Nuntius*                    nuntius;
-    EntitasRepositorium*        repositorium;
+                Entitas* entitas;
+                Nuntius* nuntius;
+    EntitasRepositorium* repositorium;
     structura CursusNuntiorum*  cursus;
-    Piscina*                    piscina;
-    vacuum*                     datum_custom;
+    Piscina* piscina;
+     vacuum* datum_custom;
 } ContextusTractandi;
 
 
@@ -80,9 +81,9 @@ nomen b32 (*FunctioTractandi)(ContextusTractandi* ctx);
  * intern: Internamentum pro chordis
  */
 nomen structura RegistrumTractatoris {
-    TabulaDispersa*      genera;
-    TabulaDispersa*      fallbacks;
-    Piscina*             piscina;
+         TabulaDispersa* genera;
+         TabulaDispersa* fallbacks;
+                Piscina* piscina;
     InternamentumChorda* intern;
 } RegistrumTractatoris;
 
@@ -99,8 +100,8 @@ nomen structura RegistrumTractatoris {
  * Redde: RegistrumTractatoris* si successus, NIHIL si fractura
  */
 RegistrumTractatoris*
-registrum_tractatoris_creare(
-    Piscina*             piscina,
+registrum_tractatoris_creare (
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -118,21 +119,21 @@ registrum_tractatoris_creare(
  * Redde: VERUM si successus
  */
 b32
-registrum_tractatoris_registrare(
+registrum_tractatoris_registrare (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii,
-    FunctioTractandi      functio);
+      constans character* genus_entitatis,
+      constans character* genus_nuntii,
+        FunctioTractandi  functio);
 
 /* Ponere fallback tractator pro genere entitatis
  *
  * Fallback vocatur si nullus tractator specificus inventus
  */
 b32
-registrum_tractatoris_ponere_fallback(
+registrum_tractatoris_ponere_fallback (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    FunctioTractandi      functio);
+      constans character* genus_entitatis,
+        FunctioTractandi  functio);
 
 
 /* ==================================================
@@ -146,24 +147,24 @@ registrum_tractatoris_ponere_fallback(
  * Redde: FunctioTractandi si inventum, NIHIL si non
  */
 FunctioTractandi
-registrum_tractatoris_invenire(
+registrum_tractatoris_invenire (
     RegistrumTractatoris* reg,
-    chorda*               genus_entitatis,
-    chorda*               genus_nuntii);
+                  chorda* genus_entitatis,
+                  chorda* genus_nuntii);
 
 /* Invenire tractator per literis C */
 FunctioTractandi
-registrum_tractatoris_invenire_literis(
+registrum_tractatoris_invenire_literis (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii);
+      constans character* genus_entitatis,
+      constans character* genus_nuntii);
 
 /* Verificare si tractator registratus */
 b32
-registrum_tractatoris_habet(
+registrum_tractatoris_habet (
     RegistrumTractatoris* reg,
-    constans character*   genus_entitatis,
-    constans character*   genus_nuntii);
+      constans character* genus_entitatis,
+      constans character* genus_nuntii);
 
 
 /* ==================================================
@@ -172,12 +173,12 @@ registrum_tractatoris_habet(
 
 /* Numerus tractatoris registratorum */
 i32
-registrum_tractatoris_numerus(
+registrum_tractatoris_numerus (
     RegistrumTractatoris* reg);
 
 /* Imprimere registrum pro depuratione */
 vacuum
-registrum_tractatoris_imprimere(
+registrum_tractatoris_imprimere (
     RegistrumTractatoris* reg);
 
 #endif /* TRACTATOR_H */

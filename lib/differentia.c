@@ -43,8 +43,12 @@ nomen structura {
 } EmissorTractuum;
 
 interior vacuum
-_tractum_appendere (EmissorTractuum* e, DifferentiaGenus genus,
-    s32 index_a, s32 index_b, s32 numerus);
+_tractum_appendere (
+     EmissorTractuum* e,
+    DifferentiaGenus  genus,
+                 s32  index_a,
+                 s32  index_b,
+                 s32  numerus);
 
 interior vacuum
 _tractum_appendere (
@@ -73,7 +77,8 @@ _tractum_appendere (
 }
 
 interior vacuum
-_pendentia_fundere (EmissorTractuum* e);
+_pendentia_fundere (
+    EmissorTractuum* e);
 
 interior vacuum
 _pendentia_fundere (
@@ -96,7 +101,9 @@ _pendentia_fundere (
 }
 
 interior vacuum
-_idem_emittere (EmissorTractuum* e, s32 numerus);
+_idem_emittere (
+    EmissorTractuum* e,
+                s32  numerus);
 
 interior vacuum
 _idem_emittere (
@@ -132,7 +139,9 @@ _idem_emittere (
 }
 
 interior vacuum
-_gradum_emittere (EmissorTractuum* e, DifferentiaGenus genus);
+_gradum_emittere (
+     EmissorTractuum* e,
+    DifferentiaGenus  genus);
 
 interior vacuum
 _gradum_emittere (
@@ -159,7 +168,9 @@ _gradum_emittere (
  * ================================================== */
 
 interior s32*
-_s32_ordinem_allocare (Piscina* piscina, s32 numerus);
+_s32_ordinem_allocare (
+    Piscina* piscina,
+        s32  numerus);
 
 interior s32*
 _s32_ordinem_allocare (
@@ -173,8 +184,12 @@ _s32_ordinem_allocare (
 /* VERUM = scriptum emissum; FALSUM = tectum percussum aut memoria
  * defecit - vocator triviale emittat */
 interior b32
-_myers_currere (Piscina* piscina, constans vacuum* constans* a,
-    s32 na, constans vacuum* constans* b, s32 nb,
+_myers_currere (
+    Piscina* piscina,
+    constans vacuum* constans* a,
+    s32 na,
+    constans vacuum* constans* b,
+    s32 nb,
     EmissorTractuum* emissor);
 
 interior b32
@@ -413,8 +428,12 @@ differentia_seriei (
 /* lineae = visus in textum datum (non copiae); identitates =
  * monstratores internati super spatia '\n'-inclusiva */
 interior b32
-_lineas_findere (chorda textus, Xar* lineae, Xar* identitates,
-    InternamentumChorda* intern, b32* sine_fine);
+_lineas_findere (
+                 chorda  textus,
+                    Xar* lineae,
+                    Xar* identitates,
+    InternamentumChorda* intern,
+                    b32* sine_fine);
 
 interior b32
 _lineas_findere (
@@ -474,7 +493,9 @@ _lineas_findere (
 }
 
 interior vacuum**
-_ordinem_identitatum (Piscina* piscina, constans Xar* identitates);
+_ordinem_identitatum (
+         Piscina* piscina,
+    constans Xar* identitates);
 
 interior vacuum**
 _ordinem_identitatum (
@@ -588,7 +609,9 @@ differentia_summa (
 }
 
 interior chorda
-_lineam_capere (constans Xar* lineae, s32 index);
+_lineam_capere (
+    constans Xar* lineae,
+             s32  index);
 
 interior chorda
 _lineam_capere (
@@ -599,8 +622,12 @@ _lineam_capere (
 }
 
 interior vacuum
-_lineam_scribere (ChordaAedificator* aed, character praefixum,
-    chorda linea, b32 ultima, b32 sine_fine);
+_lineam_scribere (
+    ChordaAedificator* aed,
+            character  praefixum,
+               chorda  linea,
+                  b32  ultima,
+                  b32  sine_fine);
 
 interior vacuum
 _lineam_scribere (
@@ -623,8 +650,10 @@ _lineam_scribere (
 /* numerus == 1: ",1" omittitur (mos GNU); numerus == 0: initium
  * 0-basatum ipsum (positio ANTE quam inseritur) */
 interior vacuum
-_latus_capitis_scribere (ChordaAedificator* aed, s32 initium,
-    s32 numerus);
+_latus_capitis_scribere (
+    ChordaAedificator* aed,
+                  s32  initium,
+                  s32  numerus);
 
 interior vacuum
 _latus_capitis_scribere (

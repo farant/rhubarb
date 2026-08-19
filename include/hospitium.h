@@ -29,6 +29,7 @@
 #include "chorda.h"
 #include "http.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -43,14 +44,14 @@ nomen vacuum (*HospitiumTractator)(HospitiumColloquium* colloquium);
 /* Configuratio - 0/NIHIL = defalta */
 nomen structura {
     constans character* hospes;      /* NIHIL = "127.0.0.1" */
-    i32 portus;                      /* 0 = auto-selectus */
-    i32 connexiones_maximae;         /* 0 = CXXVIII (tectum CXXVIII) */
-    i32 petitio_maxima;              /* 0 = 1MB (413 super) */
-    i32 uri_maxima;                  /* 0 = 8KB (414 super) */
-    MoraAngusta otium_maximum_ms;    /* 0 = 30000 */
-    MoraAngusta capita_maxima_ms;    /* 0 = 10000 */
-    b32 acao;                        /* Access-Control-Allow-Origin: * */
-    b32 acta_accessus;               /* linea per petitionem ad stderr */
+                   i32  portus;                      /* 0 = auto-selectus */
+                   i32  connexiones_maximae;         /* 0 = CXXVIII (tectum CXXVIII) */
+                   i32  petitio_maxima;              /* 0 = 1MB (413 super) */
+                   i32  uri_maxima;                  /* 0 = 8KB (414 super) */
+           MoraAngusta  otium_maximum_ms;    /* 0 = 30000 */
+           MoraAngusta  capita_maxima_ms;    /* 0 = 10000 */
+                   b32  acao;                        /* Access-Control-Allow-Origin: * */
+                   b32  acta_accessus;               /* linea per petitionem ad stderr */
 } HospitiumConfiguratio;
 
 /* Numeratores - decisiones perf haec legunt */
@@ -72,53 +73,58 @@ nomen structura {
 /* Creare servum: ligare + auscultare + reactor internus.
  * Redde NIHIL si ligatio fallit. */
 Hospitium*
-hospitium_creare(
-    Piscina*                       piscina,
+hospitium_creare (
+                           Piscina* piscina,
     constans HospitiumConfiguratio* configuratio);
 
 /* Claudere omnes connexiones + auscultatorem */
 vacuum
-hospitium_destruere(Hospitium* hospitium);
+hospitium_destruere (
+    Hospitium* hospitium);
 
 /* Registrare tractatorem pro methodo + via (":param" supportatum).
  * datum opacum ad colloquium_datum redditur. */
 b32
-hospitium_praebere(
-    Hospitium*          hospitium,
-    HttpMethodus        methodus,
+hospitium_praebere (
+             Hospitium* hospitium,
+          HttpMethodus  methodus,
     constans character* via,
     HospitiumTractator  tractator,
-    vacuum*             datum);
+                vacuum* datum);
 
 /* Servire directorium sub praefixo viae (GET/HEAD solum):
  * index.html documentum defaltum, pagina indicis generata si absens,
  * defensio traversalis (../ recusatur post decodificationem). */
 b32
-hospitium_directorium_servire(
-    Hospitium*          hospitium,
+hospitium_directorium_servire (
+             Hospitium* hospitium,
     constans character* praefixum,
     constans character* directorium);
 
 /* Gyrus unus ansae (pro ansa hospitis externa).
  * Redde FALSUM post hospitium_sistere. */
 b32
-hospitium_gressus(
+hospitium_gressus (
     Hospitium* hospitium,
-    s32        ms_maximae);
+          s32  ms_maximae);
 
 /* Gressus in ansa usque ad sistere */
 vacuum
-hospitium_currere(Hospitium* hospitium);
+hospitium_currere (
+    Hospitium* hospitium);
 
 vacuum
-hospitium_sistere(Hospitium* hospitium);
+hospitium_sistere (
+    Hospitium* hospitium);
 
 /* Portus ligatus (utilis cum portus 0 = auto) */
 i32
-hospitium_portus(constans Hospitium* hospitium);
+hospitium_portus (
+    constans Hospitium* hospitium);
 
 HospitiumFructus
-hospitium_fructus(constans Hospitium* hospitium);
+hospitium_fructus (
+    constans Hospitium* hospitium);
 
 
 /* ========================================================================
@@ -126,36 +132,39 @@ hospitium_fructus(constans Hospitium* hospitium);
  * ======================================================================== */
 
 constans HttpPetitioServeri*
-colloquium_petitio(HospitiumColloquium* colloquium);
+colloquium_petitio (
+    HospitiumColloquium* colloquium);
 
 /* Valor parametri viae (":id" etc.); chorda vacua si absens */
 chorda
-colloquium_param(
+colloquium_param (
     HospitiumColloquium* colloquium,
-    constans character*  titulus);
+     constans character* titulus);
 
 /* Piscina petitionis - allocationes moriuntur post responsum */
 Piscina*
-colloquium_piscina(HospitiumColloquium* colloquium);
+colloquium_piscina (
+    HospitiumColloquium* colloquium);
 
 /* Datum registratum in hospitium_praebere */
 vacuum*
-colloquium_datum(HospitiumColloquium* colloquium);
+colloquium_datum (
+    HospitiumColloquium* colloquium);
 
 /* Addere caput responsi - ANTE respondere vocandum */
 vacuum
-colloquium_caput_addere(
+colloquium_caput_addere (
     HospitiumColloquium* colloquium,
-    constans character*  titulus,
-    constans character*  valor);
+     constans character* titulus,
+     constans character* valor);
 
 /* Respondere uno ictu (vocatio prima vincit; sine vocatione = D).
  * mimen: typus MIME pro Content-Type (NIHIL = sine capite) */
 vacuum
-colloquium_respondere(
+colloquium_respondere (
     HospitiumColloquium* colloquium,
-    i32                  status,
-    constans character*  mimen,
-    chorda               corpus);
+                    i32  status,
+     constans character* mimen,
+                 chorda  corpus);
 
 #endif /* HOSPITIUM_H */

@@ -8,6 +8,7 @@
 #include "widget.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * BIBLIA VISUS - Douay-Rheims Bible Viewer Widget
  *
@@ -35,7 +36,7 @@
 
 /* BibliaVisus - Widget state */
 nomen structura {
-    Piscina* piscina;
+            Piscina* piscina;
     constans Biblia* biblia;
 
     /* View state */
@@ -76,7 +77,7 @@ nomen structura {
  * Redde: BibliaVisus* si successus, NIHIL si error
  */
 BibliaVisus*
-biblia_visus_creare(
+biblia_visus_creare (
     Piscina* piscina);
 
 
@@ -94,15 +95,15 @@ biblia_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-biblia_visus_reddere(
-    BibliaVisus*     visus,
+biblia_visus_reddere (
+        BibliaVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -117,8 +118,8 @@ biblia_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-biblia_visus_tractare_eventum(
-    BibliaVisus*      visus,
+biblia_visus_tractare_eventum (
+         BibliaVisus* visus,
     constans Eventus* eventus);
 
 
@@ -135,8 +136,8 @@ biblia_visus_tractare_eventum(
  * Redde: VERUM si navigatio successus, FALSUM si liber non inventus
  */
 b32
-biblia_visus_navigare_ad(
-    BibliaVisus* visus,
+biblia_visus_navigare_ad (
+           BibliaVisus* visus,
     constans character* referentia);
 
 
@@ -151,7 +152,7 @@ biblia_visus_navigare_ad(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-biblia_visus_init(
+biblia_visus_init (
     ContextusWidget* ctx);
 
 /* Salvare status ad entitas
@@ -163,10 +164,10 @@ biblia_visus_init(
  * Salvat: in_toc, liber_currens, capitulum_currens, index_paginae
  */
 vacuum
-biblia_visus_salvare_status(
-    BibliaVisus*         visus,
+biblia_visus_salvare_status (
+            BibliaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status ex entitas
  *
@@ -177,10 +178,10 @@ biblia_visus_salvare_status(
  * Carcat: in_toc, liber_currens, capitulum_currens, index_paginae
  */
 vacuum
-biblia_visus_carcare_status(
-    BibliaVisus*         visus,
+biblia_visus_carcare_status (
+            BibliaVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* BIBLIA_VISUS_H */

@@ -19,6 +19,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -38,10 +39,10 @@ nomen enumeratio {
 
 /* Resultus connexionis */
 nomen structura {
-    b32          successus;
+            b32  successus;
     TlsConnexio* connexio;
-    TlsError     error;
-    chorda       error_descriptio;
+       TlsError  error;
+         chorda  error_descriptio;
 } TlsResultus;
 
 /* Optiones */
@@ -56,9 +57,9 @@ nomen structura {
  * (non_post - tempus_currens) / 86400. Visio MUNDI: hoc est quod
  * hospes vere praebet, non quod in disco eius iacet. */
 nomen structura {
-    b32    valida;      /* certificatum obtentum et legibile? */
-    s64    non_ante;    /* notBefore, epocha unix */
-    s64    non_post;    /* notAfter, epocha unix */
+       b32 valida;      /* certificatum obtentum et legibile? */
+       s64 non_ante;    /* notBefore, epocha unix */
+       s64 non_post;    /* notAfter, epocha unix */
     chorda subiectum;   /* summarium subiecti (CN), vacuum si abest */
 } TlsCertificatum;
 
@@ -76,21 +77,22 @@ nomen structura {
  * Redde: Resultus cum connexio vel error
  */
 TlsResultus
-tls_connectere(
+tls_connectere (
     constans character* hospes,
-    i32                 portus,
-    Piscina*            piscina);
+                   i32  portus,
+               Piscina* piscina);
 
 /* Connectere cum optionibus */
 TlsResultus
-tls_connectere_cum_optionibus(
-    constans character*  hospes,
-    i32                  portus,
+tls_connectere_cum_optionibus (
+      constans character* hospes,
+                     i32  portus,
     constans TlsOptiones* optiones,
-    Piscina*             piscina);
+                 Piscina* piscina);
 
 /* Optiones default */
-TlsOptiones tls_optiones_default(vacuum);
+TlsOptiones
+tls_optiones_default (vacuum);
 
 
 /* ========================================================================
@@ -102,34 +104,35 @@ TlsOptiones tls_optiones_default(vacuum);
  * Redde: Numerus bytes missi, vel -1 si error
  */
 s32
-tls_mittere(
-    TlsConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura);
+tls_mittere (
+    TlsConnexio* connexio,
+    constans i8* data,
+            i32  mensura);
 
 /* Mittere omnia data (blocking usque omnia missa)
  *
  * Redde: VERUM si omnia missa, FALSUM si error
  */
 b32
-tls_mittere_omnia(
-    TlsConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura);
+tls_mittere_omnia (
+    TlsConnexio* connexio,
+    constans i8* data,
+            i32  mensura);
 
 /* Recipere data (decrypted)
  *
  * Redde: Numerus bytes recepti, 0 si connexio clausa, -1 si error
  */
 s32
-tls_recipere(
+tls_recipere (
     TlsConnexio* connexio,
-    i8*          buffer,
-    i32          capacitas);
+             i8* buffer,
+            i32  capacitas);
 
 /* Claudere connexionem */
 vacuum
-tls_claudere(TlsConnexio* connexio);
+tls_claudere (
+    TlsConnexio* connexio);
 
 
 /* ========================================================================
@@ -137,7 +140,9 @@ tls_claudere(TlsConnexio* connexio);
  * ======================================================================== */
 
 /* Verificare si connexio valida */
-b32 tls_est_valida(TlsConnexio* connexio);
+b32
+tls_est_valida (
+    TlsConnexio* connexio);
 
 /* Certificatum hospitis obtinere.
  *
@@ -147,12 +152,14 @@ b32 tls_est_valida(TlsConnexio* connexio);
  * Redde: VERUM si certificatum legi potuit; FALSUM aliter (exitus
  * tunc valida=FALSUM fert). */
 b32
-tls_certificatum_obtinere(
-    TlsConnexio*     connexio,
+tls_certificatum_obtinere (
+        TlsConnexio* connexio,
     TlsCertificatum* exitus);
 
 /* Obtinere error descriptio */
-constans character* tls_error_descriptio(TlsError error);
+constans character*
+tls_error_descriptio (
+    TlsError error);
 
 
 #endif /* TLS_H */

@@ -14,19 +14,19 @@ nomen structura Piscina Piscina;
  * Captat statum piscinam ut postea reficere possit
  */
 nomen structura PiscinaNotatio {
-    vacuum*        alveus_nunc;   /* Index ad alveum currentem */
-    memoriae_index positus;       /* Offset in alveo */
+            vacuum* alveus_nunc;   /* Index ad alveum currentem */
+    memoriae_index  positus;       /* Offset in alveo */
 } PiscinaNotatio;
 
 Piscina*
 piscina_generare_dynamicum (
-		constans character* piscinae_titulum,
-			  memoriae_index  mensura_alvei_initia);
+          constans character* piscinae_titulum,
+              memoriae_index  mensura_alvei_initia);
 
 Piscina*
 piscina_generare_certae_magnitudinis (
-		constans character* piscinae_titulum,
-		    memoriae_index  mensura_buffer);
+        constans character* piscinae_titulum,
+            memoriae_index  mensura_buffer);
 
 
 /* ===============================================
@@ -35,7 +35,7 @@ piscina_generare_certae_magnitudinis (
 
 vacuum
 piscina_destruere (
-		Piscina* piscina);
+        Piscina* piscina);
 
 
 /* ===============================================
@@ -44,14 +44,14 @@ piscina_destruere (
 
 vacuum*
 piscina_allocare (
-						 Piscina* piscina,
-		memoriae_index  mensura);
+                         Piscina* piscina,
+                  memoriae_index  mensura);
 
 vacuum*
 piscina_allocare_ordinatum (
-						 Piscina* piscina,
-		memoriae_index  mensura,
-		memoriae_index  ordinatio);
+                         Piscina* piscina,
+                  memoriae_index  mensura,
+                  memoriae_index  ordinatio);
 
 
 /* ===============================================
@@ -60,23 +60,23 @@ piscina_allocare_ordinatum (
 
 vacuum*
 piscina_conari_allocare (
-						 Piscina* piscina,
-		memoriae_index  mensura);
+                         Piscina* piscina,
+                  memoriae_index  mensura);
 
 vacuum*
 piscina_conari_allocare_ordinatum (
-						 Piscina* piscina,
-		memoriae_index  mensura,
-		memoriae_index  ordinatio);
+                         Piscina* piscina,
+                  memoriae_index  mensura,
+                  memoriae_index  ordinatio);
 
 
 /* ===============================================
  * Cyclus Vitae
  * =============================================== */
 
-vacuum 
+vacuum
 piscina_vacare (
-		Piscina* piscina);
+        Piscina* piscina);
 
 
 /* ===============================================
@@ -85,19 +85,19 @@ piscina_vacare (
 
 memoriae_index
 piscina_summa_usus (
-		constans Piscina* piscina);
+        constans Piscina* piscina);
 
 memoriae_index
 piscina_summa_inutilis_allocatus (
-		constans Piscina* piscina);
+        constans Piscina* piscina);
 
 memoriae_index
 piscina_reliqua_antequam_cresca_alvei (
-		constans Piscina* piscina);
+        constans Piscina* piscina);
 
 memoriae_index
 piscina_summa_apex_usus (
-		constans Piscina* piscina);
+        constans Piscina* piscina);
 
 
 /* ===============================================
@@ -113,7 +113,7 @@ piscina_summa_apex_usus (
  */
 PiscinaNotatio
 piscina_notare (
-		Piscina* piscina);
+        Piscina* piscina);
 
 /* piscina_reficere - Reficit statum ad notationem
  * "Reficere piscinam ad statum notatum"
@@ -122,8 +122,8 @@ piscina_notare (
  */
 vacuum
 piscina_reficere (
-		      Piscina* piscina,
-		PiscinaNotatio notatio);
+               Piscina* piscina,
+        PiscinaNotatio  notatio);
 
 /* piscina_potesne_allocare - Verificat si allocatio possibilis
  * "Potesne allocare hanc mensuram sine crescentia?"
@@ -133,7 +133,7 @@ piscina_reficere (
  */
 b32
 piscina_potesne_allocare (
-		constans Piscina* piscina,
-		  memoriae_index  mensura);
+        constans Piscina* piscina,
+          memoriae_index  mensura);
 
 #endif

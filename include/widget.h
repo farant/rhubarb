@@ -35,15 +35,15 @@ nomen vacuum (*FunctioCommutareWidget)(
     constans character* argumentum);
 
 nomen structura {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
     EntitasRepositorium* repo;          /* NIHIL si non requiritur */
-    RegistrumCommandi*   reg_commandi;  /* NIHIL si non requiritur */
-    RegistrumWidget*     reg_widget;    /* NIHIL si non requiritur */
+      RegistrumCommandi* reg_commandi;  /* NIHIL si non requiritur */
+        RegistrumWidget* reg_widget;    /* NIHIL si non requiritur */
 
     /* Pro mode switching - widgets vocant hunc callback ad commutare */
-    FunctioCommutareWidget commutare_widget;  /* NIHIL si non requiritur */
-    vacuum*                schirmata_datum;   /* Datum opacum pro callback */
+    FunctioCommutareWidget  commutare_widget;  /* NIHIL si non requiritur */
+                    vacuum* schirmata_datum;   /* Datum opacum pro callback */
 } ContextusWidget;
 
 /* Creare contextum widget
@@ -59,14 +59,14 @@ nomen structura {
  * Redde: ContextusWidget* si successus, NIHIL si error
  */
 ContextusWidget*
-contextus_widget_creare(
-    Piscina*               piscina,
-    InternamentumChorda*   intern,
-    EntitasRepositorium*   repo,
-    RegistrumCommandi*     reg_commandi,
-    RegistrumWidget*       reg_widget,
-    FunctioCommutareWidget commutare_widget,
-    vacuum*                schirmata_datum);
+contextus_widget_creare (
+                   Piscina* piscina,
+       InternamentumChorda* intern,
+       EntitasRepositorium* repo,
+         RegistrumCommandi* reg_commandi,
+           RegistrumWidget* reg_widget,
+    FunctioCommutareWidget  commutare_widget,
+                    vacuum* schirmata_datum);
 
 
 /* ==================================================
@@ -133,9 +133,9 @@ nomen b32 (*FunctioTractareEventum)(
  * ================================================== */
 
 nomen structura Widget {
-    vacuum*               datum;              /* Widget data (Pagina*, NavigatorEntitatum*, etc) */
-    FunctioReddere        reddere;            /* Rendering function */
-    FunctioTractareEventum tractare_eventum;  /* Event handler */
+                    vacuum* datum;              /* Widget data (Pagina*, NavigatorEntitatum*, etc) */
+            FunctioReddere  reddere;            /* Rendering function */
+    FunctioTractareEventum  tractare_eventum;  /* Event handler */
 
     /* Layout */
     i32 x;                /* Positio X in characteribus */
@@ -151,14 +151,14 @@ nomen structura Widget {
 
 nomen structura ManagerWidget {
     Piscina* piscina;
-    Widget   widgets[XVI];      /* Array widgetorum registratorum */
-    s32      numerus_widgetorum;
-    s32      focus_index;       /* Index widget cum focus (-1 si nullus) */
+     Widget  widgets[XVI];      /* Array widgetorum registratorum */
+        s32  numerus_widgetorum;
+        s32  focus_index;       /* Index widget cum focus (-1 si nullus) */
 
     /* Detectio duplex click */
-    f64      tempus_ultimus_click;
-    i32      ultimus_click_x;   /* In pixelis */
-    i32      ultimus_click_y;
+    f64 tempus_ultimus_click;
+    i32 ultimus_click_x;   /* In pixelis */
+    i32 ultimus_click_y;
 } ManagerWidget;
 
 
@@ -173,7 +173,7 @@ nomen structura ManagerWidget {
  * Redde: manager novus, vel NIHIL si fractura
  */
 ManagerWidget*
-manager_widget_creare(
+manager_widget_creare (
     Piscina* piscina);
 
 
@@ -193,15 +193,15 @@ manager_widget_creare(
  * Redde: index widget registrati, vel -1 si capacitas plena
  */
 s32
-manager_widget_registrare(
-    ManagerWidget*         manager,
-    vacuum*                datum,
-    FunctioReddere         reddere,
-    FunctioTractareEventum tractare_eventum,
-    i32                    x,
-    i32                    y,
-    i32                    latitudo,
-    i32                    altitudo);
+manager_widget_registrare (
+             ManagerWidget* manager,
+                    vacuum* datum,
+            FunctioReddere  reddere,
+    FunctioTractareEventum  tractare_eventum,
+                       i32  x,
+                       i32  y,
+                       i32  latitudo,
+                       i32  altitudo);
 
 
 /* ==================================================
@@ -214,16 +214,16 @@ manager_widget_registrare(
  * index: index widget
  */
 vacuum
-manager_widget_ponere_focus(
+manager_widget_ponere_focus (
     ManagerWidget* manager,
-    s32            index);
+              s32  index);
 
 /* Movere focus ad widget proximum (cyclus)
  *
  * manager: manager
  */
 vacuum
-manager_widget_focus_proximum(
+manager_widget_focus_proximum (
     ManagerWidget* manager);
 
 /* Movere focus ad widget praecedentem (cyclus)
@@ -231,7 +231,7 @@ manager_widget_focus_proximum(
  * manager: manager
  */
 vacuum
-manager_widget_focus_praecedens(
+manager_widget_focus_praecedens (
     ManagerWidget* manager);
 
 /* Ponere focus basatus in coordinatis muris (click-to-focus)
@@ -242,10 +242,10 @@ manager_widget_focus_praecedens(
  * Redde: VERUM si widget inventus ad coordinatas
  */
 b32
-manager_widget_focus_ad_punctum(
+manager_widget_focus_ad_punctum (
     ManagerWidget* manager,
-    i32            x,
-    i32            y);
+              i32  x,
+              i32  y);
 
 
 /* ==================================================
@@ -263,8 +263,8 @@ manager_widget_focus_ad_punctum(
  * Redde: VERUM si eventus tractatus
  */
 b32
-manager_widget_tractare_eventum(
-    ManagerWidget*    manager,
+manager_widget_tractare_eventum (
+       ManagerWidget* manager,
     constans Eventus* eventus);
 
 
@@ -279,9 +279,9 @@ manager_widget_tractare_eventum(
  * scala: factor scalae fontis
  */
 vacuum
-manager_widget_reddere(
-    ManagerWidget*   manager,
+manager_widget_reddere (
+      ManagerWidget* manager,
     TabulaPixelorum* tabula,
-    i32              scala);
+                i32  scala);
 
 #endif /* WIDGET_H */

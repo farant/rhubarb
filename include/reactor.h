@@ -18,6 +18,7 @@
 #include "latina.h"
 #include "piscina.h"
 
+
 /* ========================================================================
  * CONSTANTES
  * ======================================================================== */
@@ -72,11 +73,13 @@ nomen vacuum (*ReactorTimerCallback)(vacuum* data);
  * Redde: Reactor vel NIHIL si error
  */
 Reactor*
-reactor_creare(Piscina* piscina);
+reactor_creare (
+    Piscina* piscina);
 
 /* Destruere reactor */
 vacuum
-reactor_destruere(Reactor* reactor);
+reactor_destruere (
+    Reactor* reactor);
 
 
 /* ========================================================================
@@ -94,29 +97,29 @@ reactor_destruere(Reactor* reactor);
  * Redde: VERUM si successus
  */
 b32
-reactor_adicere(
-    Reactor*        reactor,
-    integer         fd,
-    i32             eventus,
-    ReactorCallback callback,
-    vacuum*         data);
+reactor_adicere (
+            Reactor* reactor,
+            integer  fd,
+                i32  eventus,
+    ReactorCallback  callback,
+             vacuum* data);
 
 /* Modificare events pro FD
  *
  * Redde: VERUM si successus
  */
 b32
-reactor_modificare(
+reactor_modificare (
     Reactor* reactor,
     integer  fd,
-    i32      eventus);
+        i32  eventus);
 
 /* Removere FD ex reactor
  *
  * Redde: VERUM si successus
  */
 b32
-reactor_removere(
+reactor_removere (
     Reactor* reactor,
     integer  fd);
 
@@ -136,21 +139,21 @@ reactor_removere(
  * Redde: Timer ID (>= 0) vel -1 si error
  */
 ReactorTimerId
-reactor_timer_adicere(
-    Reactor*             reactor,
-    i32                  timeout_ms,
-    b32                  repetere,
-    ReactorTimerCallback callback,
-    vacuum*              data);
+reactor_timer_adicere (
+                 Reactor* reactor,
+                     i32  timeout_ms,
+                     b32  repetere,
+    ReactorTimerCallback  callback,
+                  vacuum* data);
 
 /* Cancellare timer
  *
  * Redde: VERUM si successus
  */
 b32
-reactor_timer_cancellare(
-    Reactor*       reactor,
-    ReactorTimerId id);
+reactor_timer_cancellare (
+           Reactor* reactor,
+    ReactorTimerId  id);
 
 
 /* ========================================================================
@@ -164,35 +167,40 @@ reactor_timer_cancellare(
  * Redde: Numerus events processatorum
  */
 i32
-reactor_poll(
+reactor_poll (
     Reactor* reactor,
-    i32      timeout_ms);
+        i32  timeout_ms);
 
 /* Currere event loop usque reactor_sistere()
  *
  * Vocat reactor_poll() in loop infinito.
  */
 vacuum
-reactor_currere(Reactor* reactor);
+reactor_currere (
+    Reactor* reactor);
 
 /* Petere ut event loop sistat
  *
  * Event loop finietur post currentem poll() iteration.
  */
 vacuum
-reactor_sistere(Reactor* reactor);
+reactor_sistere (
+    Reactor* reactor);
 
 /* Verificare si reactor currens */
 b32
-reactor_est_currens(Reactor* reactor);
+reactor_est_currens (
+    Reactor* reactor);
 
 /* Obtinere numerum FDs registratorum */
 i32
-reactor_numerus_fd(Reactor* reactor);
+reactor_numerus_fd (
+    Reactor* reactor);
 
 /* Obtinere numerum timers activorum */
 i32
-reactor_numerus_timer(Reactor* reactor);
+reactor_numerus_timer (
+    Reactor* reactor);
 
 
 #endif /* REACTOR_H */

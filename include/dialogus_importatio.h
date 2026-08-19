@@ -17,6 +17,7 @@
 #include "dithering.h"
 #include "importatio_visus.h"
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -24,27 +25,28 @@
 nomen structura DialogusImportatio DialogusImportatio;
 
 struct DialogusImportatio {
-    Piscina*          piscina;
-    Dialogus          dialogus;       /* Base dialog (embedded) */
-    ImportatioVisus*  visus;          /* Preview widget (external) */
+            Piscina* piscina;
+           Dialogus  dialogus;       /* Base dialog (embedded) */
+    ImportatioVisus* visus;          /* Preview widget (external) */
 
     /* UI state */
-    chorda            titulus;        /* Name field content */
-    s32               titulus_cursor;
-    b32               titulus_focused;
-    s32               focus_index;    /* 0=titulus, 1-5=presets, 6=palette, 7-9=sliders */
+    chorda titulus;        /* Name field content */
+       s32 titulus_cursor;
+       b32 titulus_focused;
+       s32 focus_index;    /* 0=titulus, 1-5=presets, 6=palette, 7-9=sliders */
 
     /* Eventus currentis (pro elementa) */
     constans Eventus* eventus_currens;
 
     /* Mouse position (renovatur per omnes mouse events) */
-    i32               eventus_mus_x;
-    i32               eventus_mus_y;
+    i32 eventus_mus_x;
+    i32 eventus_mus_y;
 
     /* Button click flags (set in reddere, checked in tractare_eventum) */
-    b32               salvare_clicked;
-    b32               abicere_clicked;
+    b32 salvare_clicked;
+    b32 abicere_clicked;
 };
+
 
 /* ============================================================
  * Functiones
@@ -59,8 +61,8 @@ struct DialogusImportatio {
  * Redde: DialogusImportatio* si successus, NIHIL si error
  */
 DialogusImportatio*
-dialogus_importatio_creare(
-    Piscina*         piscina,
+dialogus_importatio_creare (
+            Piscina* piscina,
     ImportatioVisus* visus);
 
 /*
@@ -71,7 +73,8 @@ dialogus_importatio_creare(
  * Redde: Dialogus* pro schirmata_aperire_dialogum
  */
 Dialogus*
-dialogus_importatio_obtinere_dialogum(DialogusImportatio* di);
+dialogus_importatio_obtinere_dialogum (
+    DialogusImportatio* di);
 
 /*
  * dialogus_importatio_obtinere_fructum - Obtinere dithered datum post confirmatio
@@ -87,11 +90,11 @@ dialogus_importatio_obtinere_dialogum(DialogusImportatio* di);
  * Redde: VERUM si datum disponibilis
  */
 b32
-dialogus_importatio_obtinere_fructum(
-    DialogusImportatio* di,
-    constans i8**       indices,
-    i32*                latitudo,
-    i32*                altitudo,
-    chorda*             titulus);
+dialogus_importatio_obtinere_fructum (
+    DialogusImportatio*  di,
+           constans i8** indices,
+                   i32*  latitudo,
+                   i32*  altitudo,
+                chorda*  titulus);
 
 #endif /* DIALOGUS_IMPORTATIO_H */

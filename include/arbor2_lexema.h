@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "internamentum.h"
 
+
 /* ==================================================
  * ARBOR2 LEXEMA - Lexer pro C89 (v2)
  *
@@ -24,6 +25,7 @@
  *   }
  * ================================================== */
 
+
 /* ==================================================
  * Standard Values
  * ================================================== */
@@ -31,6 +33,7 @@
 #define ARBOR2_STANDARD_C89       0
 #define ARBOR2_STANDARD_C99       1
 #define ARBOR2_STANDARD_EXTENSION 2
+
 
 /* ==================================================
  * Token Types
@@ -173,6 +176,7 @@ nomen enumeratio {
     ARBOR2_LEXEMA_NOMEN_TYPUS      /* Typedef name token */
 } Arbor2LexemaGenus;
 
+
 /* ==================================================
  * Token
  *
@@ -182,16 +186,17 @@ nomen enumeratio {
  * ================================================== */
 
 nomen structura {
-    Arbor2LexemaGenus genus;         /* Token type */
-    chorda            valor;         /* Text of token */
-    i32               byte_offset;   /* 0-based offset in source */
-    i32               longitudo;     /* Length in bytes */
-    i32               linea;         /* Starting line (1-based) */
-    i32               columna;       /* Starting column (1-based) */
-    Xar*              spatia_ante;   /* Leading whitespace/comments (Xar of Arbor2Lexema*) */
-    Xar*              spatia_post;   /* Trailing whitespace/comments (Xar of Arbor2Lexema*) */
-    i8                standard;      /* ARBOR2_STANDARD_* */
+    Arbor2LexemaGenus  genus;         /* Token type */
+               chorda  valor;         /* Text of token */
+                  i32  byte_offset;   /* 0-based offset in source */
+                  i32  longitudo;     /* Length in bytes */
+                  i32  linea;         /* Starting line (1-based) */
+                  i32  columna;       /* Starting column (1-based) */
+                  Xar* spatia_ante;   /* Leading whitespace/comments (Xar of Arbor2Lexema*) */
+                  Xar* spatia_post;   /* Trailing whitespace/comments (Xar of Arbor2Lexema*) */
+                   i8  standard;      /* ARBOR2_STANDARD_* */
 } Arbor2Lexema;
+
 
 /* ==================================================
  * Lexer State (opaque)
@@ -199,24 +204,32 @@ nomen structura {
 
 nomen structura Arbor2Lexator Arbor2Lexator;
 
+
 /* ==================================================
  * API
  * ================================================== */
 
 /* Creare lexator ex fonte */
-Arbor2Lexator* arbor2_lexator_creare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+Arbor2Lexator*
+arbor2_lexator_creare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Obtinere proximum lexema */
-Arbor2Lexema* arbor2_lexema_proximum(Arbor2Lexator* lex);
+Arbor2Lexema*
+arbor2_lexema_proximum (
+    Arbor2Lexator* lex);
 
 /* Obtinere omnia lexemata */
-Xar* arbor2_lexema_omnia(Arbor2Lexator* lex);
+Xar*
+arbor2_lexema_omnia (
+    Arbor2Lexator* lex);
 
 /* Obtinere nomen genus (pro debugging) */
-constans character* arbor2_lexema_genus_nomen(Arbor2LexemaGenus genus);
+constans character*
+arbor2_lexema_genus_nomen (
+    Arbor2LexemaGenus genus);
 
 #endif /* ARBOR2_LEXEMA_H */

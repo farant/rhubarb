@@ -9,6 +9,7 @@
 #include "internamentum.h"
 #include "fasti.h"   /* Momentum: millisecunda ab epocha (canon) */
 
+
 /* ==================================================
  * Typus Literalis (Literal/Parsed Types)
  * ================================================== */
@@ -32,7 +33,7 @@ nomen enumeratio {
  * Redde: TypusLiteralis enum valor, vel TYPUS_NIHIL si non cognitus
  */
 TypusLiteralis
-typus_literalis_ex_chorda(
+typus_literalis_ex_chorda (
     chorda typus);
 
 
@@ -44,16 +45,16 @@ typus_literalis_ex_chorda(
  * "Property: key-value pair with type information"
  */
 nomen structura {
-    chorda*        clavis;            /* Clavis (internata) */
-    chorda*        valor;             /* Valor originalis (chorda, internata) */
-    chorda*        typus_semanticus;  /* e.g., "Currency::USD", NIHIL si generic */
-    TypusLiteralis typus_literalis;   /* Discriminator pro unione */
-    b32            parsitus_validus;  /* VERUM si parsing successit */
+            chorda* clavis;            /* Clavis (internata) */
+            chorda* valor;             /* Valor originalis (chorda, internata) */
+            chorda* typus_semanticus;  /* e.g., "Currency::USD", NIHIL si generic */
+    TypusLiteralis  typus_literalis;   /* Discriminator pro unione */
+               b32  parsitus_validus;  /* VERUM si parsing successit */
     unio {
-        s32 ut_s32;
-        s64 ut_s64;
-        f64 ut_f64;
-        b32 ut_b32;
+             s32 ut_s32;
+             s64 ut_s64;
+             f64 ut_f64;
+             b32 ut_b32;
         Momentum ut_tempus;  /* millisecunda ab epocha */
     } parsitus;
 } Proprietas;
@@ -63,9 +64,9 @@ nomen structura {
  * Redde: VERUM si parsing successit, FALSUM si error
  */
 b32
-proprietas_parsare_ut_typum(
-    Proprietas*    prop,
-    TypusLiteralis typus);
+proprietas_parsare_ut_typum (
+        Proprietas* prop,
+    TypusLiteralis  typus);
 
 /* Relatio - Arcus directus ad aliam entitatem
  * "Relationship: directed edge to another entity"
@@ -84,10 +85,10 @@ nomen structura {
 nomen structura {
     chorda* id;                        /* ID unicum (internatum) */
     chorda* genus;                     /* Nomen generis (internatum) */
-    Xar*    proprietates;              /* Xar de Proprietas */
-    Xar*    relationes;                /* Xar de Relatio */
-    Xar*    notae;                     /* Xar de chorda* (notae internatas) */
-    Xar*    proprietas_definitiones;   /* Cache: Xar de Entitas* (ProprietasDefinitio) */
+       Xar* proprietates;              /* Xar de Proprietas */
+       Xar* relationes;                /* Xar de Relatio */
+       Xar* notae;                     /* Xar de chorda* (notae internatas) */
+       Xar* proprietas_definitiones;   /* Cache: Xar de Entitas* (ProprietasDefinitio) */
 } Entitas;
 
 
@@ -101,10 +102,10 @@ nomen structura {
  * Redde: Entitas nova, vel NIHIL si fractura
  */
 Entitas*
-entitas_creare(
+entitas_creare (
     Piscina* piscina,
-    chorda*  id,
-    chorda*  genus);
+     chorda* id,
+     chorda* genus);
 
 
 /* ==================================================
@@ -117,10 +118,10 @@ entitas_creare(
  * Redde: VERUM si successus, FALSUM si fractura
  */
 b32
-entitas_proprietas_ponere(
+entitas_proprietas_ponere (
     Entitas* entitas,
-    chorda*  clavis,
-    chorda*  valor);
+     chorda* clavis,
+     chorda* valor);
 
 /* Capere valorem proprietatis per clavis (chorda)
  * Quaestio linearis per omnes proprietates
@@ -128,49 +129,49 @@ entitas_proprietas_ponere(
  * Redde: Valor si inventum, NIHIL si non inventum
  */
 chorda*
-entitas_proprietas_capere(
+entitas_proprietas_capere (
     Entitas* entitas,
-    chorda*  clavis);
+     chorda* clavis);
 
 /* Capere proprietatem plenam (pro inspectione typi)
  *
  * Redde: Proprietas* si inventum, NIHIL si non inventum
  */
 Proprietas*
-entitas_proprietas_capere_plena(
+entitas_proprietas_capere_plena (
     Entitas* entitas,
-    chorda*  clavis);
+     chorda* clavis);
 
 /* Typed accessors - redde VERUM si successus et valor est typi correcti */
 b32
-entitas_proprietas_capere_s32(
+entitas_proprietas_capere_s32 (
     Entitas* entitas,
-    chorda*  clavis,
-    s32*     valor);
+     chorda* clavis,
+        s32* valor);
 
 b32
-entitas_proprietas_capere_s64(
+entitas_proprietas_capere_s64 (
     Entitas* entitas,
-    chorda*  clavis,
-    s64*     valor);
+     chorda* clavis,
+        s64* valor);
 
 b32
-entitas_proprietas_capere_f64(
+entitas_proprietas_capere_f64 (
     Entitas* entitas,
-    chorda*  clavis,
-    f64*     valor);
+     chorda* clavis,
+        f64* valor);
 
 b32
-entitas_proprietas_capere_b32(
+entitas_proprietas_capere_b32 (
     Entitas* entitas,
-    chorda*  clavis,
-    b32*     valor);
+     chorda* clavis,
+        b32* valor);
 
 b32
-entitas_proprietas_capere_tempus(
+entitas_proprietas_capere_tempus (
     Entitas* entitas,
-    chorda*  clavis,
-    s64*     valor);
+     chorda* clavis,
+        s64* valor);
 
 /* Ponere proprietatem blobum (datum binarium)
  * Datum comprimetur automatice cum flatura gzip
@@ -184,12 +185,12 @@ entitas_proprietas_capere_tempus(
  * Redde: VERUM si successus, FALSUM si fractura
  */
 b32
-entitas_proprietas_ponere_blobum(
-    Entitas*     entitas,
-    chorda*      clavis,
-    const i8*    datum,
-    i32          mensura,
-    Piscina*     piscina);
+entitas_proprietas_ponere_blobum (
+     Entitas* entitas,
+      chorda* clavis,
+    const i8* datum,
+         i32  mensura,
+     Piscina* piscina);
 
 /* Capere proprietatem blobum (datum binarium)
  * Datum decomprimetur automatice ex flatura gzip
@@ -203,21 +204,21 @@ entitas_proprietas_ponere_blobum(
  * Redde: VERUM si successus, FALSUM si non inventum vel fractura
  */
 b32
-entitas_proprietas_capere_blobum(
-    Entitas*     entitas,
-    chorda*      clavis,
-    i8**         datum,
-    i32*         mensura,
-    Piscina*     piscina);
+entitas_proprietas_capere_blobum (
+    Entitas*  entitas,
+     chorda*  clavis,
+         i8** datum,
+        i32*  mensura,
+    Piscina*  piscina);
 
 /* Verificare si entitas proprietatem habet
  *
  * Redde: VERUM si habet, FALSUM si non
  */
 b32
-entitas_proprietas_habet(
+entitas_proprietas_habet (
     Entitas* entitas,
-    chorda*  clavis);
+     chorda* clavis);
 
 /* Delere proprietatem per clavis
  * Usus swap-and-pop: proprietas ultima movetur ad locum deletum
@@ -225,9 +226,9 @@ entitas_proprietas_habet(
  * Redde: VERUM si deletum, FALSUM si non inventum
  */
 b32
-entitas_proprietas_delere(
+entitas_proprietas_delere (
     Entitas* entitas,
-    chorda*  clavis);
+     chorda* clavis);
 
 
 /* ==================================================
@@ -240,12 +241,12 @@ entitas_proprietas_delere(
  * Redde: Relatio* si successus, NIHIL si fractura
  */
 Relatio*
-entitas_relatio_addere(
-    Entitas*             entitas,
-    Piscina*             piscina,
+entitas_relatio_addere (
+                Entitas* entitas,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              genus,
-    chorda*              destinatio_id);
+                 chorda* genus,
+                 chorda* destinatio_id);
 
 /* Addere relationem cum ID specifico (pro replay eventuum)
  * Non generat UUIDv7 - usare ID provisum
@@ -253,22 +254,22 @@ entitas_relatio_addere(
  * Redde: Relatio* si successus, NIHIL si fractura
  */
 Relatio*
-entitas_relatio_addere_cum_id(
-    Entitas*             entitas,
-    Piscina*             piscina,
+entitas_relatio_addere_cum_id (
+                Entitas* entitas,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              relatio_id,
-    chorda*              genus,
-    chorda*              destinatio_id);
+                 chorda* relatio_id,
+                 chorda* genus,
+                 chorda* destinatio_id);
 
 /* Capere relationem per ID
  *
  * Redde: Relatio* si inventum, NIHIL si non inventum
  */
 Relatio*
-entitas_relatio_capere(
+entitas_relatio_capere (
     Entitas* entitas,
-    chorda*  relatio_id);
+     chorda* relatio_id);
 
 /* Capere omnes relationes generis specificati
  * Allocat novum Xar cum relationibus generis
@@ -276,9 +277,9 @@ entitas_relatio_capere(
  * Redde: Xar de Relatio*, vel NIHIL si nullae
  */
 Xar*
-entitas_relationes_generis_capere(
+entitas_relationes_generis_capere (
     Entitas* entitas,
-    chorda*  genus,
+     chorda* genus,
     Piscina* piscina);
 
 /* Delere relationem per ID
@@ -287,9 +288,9 @@ entitas_relationes_generis_capere(
  * Redde: VERUM si deletum, FALSUM si non inventum
  */
 b32
-entitas_relatio_delere(
+entitas_relatio_delere (
     Entitas* entitas,
-    chorda*  relatio_id);
+     chorda* relatio_id);
 
 
 /* ==================================================
@@ -301,9 +302,9 @@ entitas_relatio_delere(
  * Redde: VERUM si successus, FALSUM si fractura
  */
 b32
-entitas_nota_addere(
+entitas_nota_addere (
     Entitas* entitas,
-    chorda*  nota);
+     chorda* nota);
 
 /* Verificare si entitas notam habet
  * Usus aequalitas indicis (chordae internatae)
@@ -311,9 +312,9 @@ entitas_nota_addere(
  * Redde: VERUM si habet, FALSUM si non
  */
 b32
-entitas_nota_habet(
+entitas_nota_habet (
     Entitas* entitas,
-    chorda*  nota);
+     chorda* nota);
 
 /* Verificare si entitas notam cum praefixo habet
  * e.g., "#project::" matches "#project::active"
@@ -321,9 +322,9 @@ entitas_nota_habet(
  * Redde: VERUM si habet, FALSUM si non
  */
 b32
-entitas_nota_cum_praefixo_habet(
-    Entitas*             entitas,
-    constans character*  praefixum);
+entitas_nota_cum_praefixo_habet (
+               Entitas* entitas,
+    constans character* praefixum);
 
 /* Delere notam ab entitate
  * Usus swap-and-pop: nota ultima movetur ad locum deletum
@@ -331,9 +332,9 @@ entitas_nota_cum_praefixo_habet(
  * Redde: VERUM si deletum, FALSUM si non inventum
  */
 b32
-entitas_nota_delere(
+entitas_nota_delere (
     Entitas* entitas,
-    chorda*  nota);
+     chorda* nota);
 
 
 /* ==================================================
@@ -346,31 +347,31 @@ entitas_nota_delere(
  * Redde: chorda* ad titulum (non allocata, indicat ad datum internum)
  */
 chorda*
-entitas_titulum_capere(
+entitas_titulum_capere (
     Entitas* entitas);
 
 /* Capere numerum proprietatum
  */
 i32
-entitas_numerus_proprietatum(
+entitas_numerus_proprietatum (
     Entitas* entitas);
 
 /* Capere numerum relationum
  */
 i32
-entitas_numerus_relationum(
+entitas_numerus_relationum (
     Entitas* entitas);
 
 /* Capere numerum notarum
  */
 i32
-entitas_numerus_notarum(
+entitas_numerus_notarum (
     Entitas* entitas);
 
 /* Imprimere entitatem pro depuratione
  */
 vacuum
-entitas_imprimere(
+entitas_imprimere (
     Entitas* entitas);
 
 #endif /* ENTITAS_H */

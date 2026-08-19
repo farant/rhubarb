@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ====================================================
  * VIA - Manipulatio Viarum Filorum
  *
@@ -53,9 +54,9 @@
 
 chorda
 via_iungere (
-		constans chorda* partes,
-							  i32  numerus,
-						Piscina* piscina);
+                  constans chorda* partes,
+                              i32  numerus,
+                          Piscina* piscina);
 
 
 /* ====================================================
@@ -73,8 +74,8 @@ via_iungere (
  */
 chorda
 via_normalizare (
-	   chorda  via,
-    Piscina* piscina);
+       chorda  via,
+      Piscina* piscina);
 
 /* Convertere viam relativam ad absolutam
  *
@@ -87,8 +88,9 @@ via_normalizare (
  */
 chorda
 via_absoluta (
-	      chorda  via,
-	    Piscina* piscina);
+          chorda  via,
+         Piscina* piscina);
+
 
 /* ====================================================
  * Extractio
@@ -105,8 +107,8 @@ via_absoluta (
  */
 chorda
 via_directorium (
-		 chorda  via,
-		Piscina* piscina);
+         chorda  via,
+        Piscina* piscina);
 
 /* Extrahere nomen fili (basename)
  *
@@ -117,8 +119,8 @@ via_directorium (
  */
 chorda
 via_nomen (
-		 chorda  via,
-		Piscina* piscina);
+         chorda  via,
+        Piscina* piscina);
 
 /* Extrahere nomen fili sine extensione (stem)
  *
@@ -130,8 +132,8 @@ via_nomen (
  */
 chorda
 via_nomen_radix (
-		 chorda  via,
-		Piscina* piscina);
+         chorda  via,
+        Piscina* piscina);
 
 /* Extrahere extensionem fili (includens punctum)
  *
@@ -145,8 +147,9 @@ via_nomen_radix (
  */
 chorda
 via_extensio (
-		 chorda  via,
-		Piscina* piscina);
+         chorda  via,
+        Piscina* piscina);
+
 
 /* ====================================================
  * Interrogatio
@@ -159,14 +162,14 @@ via_extensio (
  */
 b32
 via_est_absoluta (
-		chorda via);
+        chorda via);
 
 /* Verificare si via relativa est
  * Contrarium via_est_absoluta
  */
 b32
 via_est_relativa (
-		chorda via);
+        chorda via);
 
 
 /* ====================================================
@@ -183,7 +186,8 @@ via_est_relativa (
  */
 b32
 via_existit (
-	chorda via);
+    chorda via);
+
 
 /* ====================================================
  * Utilitas
@@ -198,6 +202,6 @@ via_existit (
  */
 chorda
 via_directorium_currens (
-		Piscina* piscina);
+        Piscina* piscina);
 
 #endif /* VIA_H */

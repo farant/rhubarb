@@ -45,7 +45,9 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
 #define MIGRATIONES_VOLUMINIS_NUMERUS 3
 
 interior Volumen*
-_volumen_struere (Piscina* piscina, constans character* via);
+_volumen_struere (
+               Piscina* piscina,
+    constans character* via);
 
 interior Volumen*
 _volumen_struere (
@@ -286,8 +288,11 @@ volumen_actum_appendere (
 
 /* datum JSON actus 'plagula-condita' */
 interior chorda
-_actum_plagulae_fingere (Piscina* piscina, chorda via,
-    constans character* sigillum_hex, constans character* origo);
+_actum_plagulae_fingere (
+               Piscina* piscina,
+                chorda  via,
+    constans character* sigillum_hex,
+    constans character* origo);
 
 interior chorda
 _actum_plagulae_fingere (
@@ -673,7 +678,9 @@ volumen_acta_legere (
 
 /* comparator viae pro ordine plicae (aequalis ORDER BY via) */
 interior s32
-_plagulas_per_viam (constans vacuum* a, constans vacuum* b);
+_plagulas_per_viam (
+    constans vacuum* a,
+    constans vacuum* b);
 
 interior s32
 _plagulas_per_viam (
@@ -786,7 +793,9 @@ volumen_plicam_ad (
 }
 
 interior s64
-_summa (Volumen* volumen, constans character* sql);
+_summa (
+               Volumen* volumen,
+    constans character* sql);
 
 interior s64
 _summa (

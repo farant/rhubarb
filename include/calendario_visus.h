@@ -8,6 +8,7 @@
 #include "calendarium_liturgicum.h"
 #include "fasti.h"
 
+
 /* ==================================================
  * CALENDARIO VISUS - Liturgical Calendar Widget
  *
@@ -41,7 +42,7 @@
 
 /* CalendarioVisus - Widget state */
 nomen structura {
-    Piscina* piscina;
+                  Piscina* piscina;
     CalendariumLiturgicum* cal;
 
     /* Status visus */
@@ -75,7 +76,7 @@ nomen structura {
  * Initializat ad diem hodiernum.
  */
 CalendarioVisus*
-calendario_visus_creare(
+calendario_visus_creare (
     Piscina* piscina);
 
 
@@ -93,15 +94,15 @@ calendario_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-calendario_visus_reddere(
+calendario_visus_reddere (
     CalendarioVisus* visus,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -116,8 +117,8 @@ calendario_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-calendario_visus_tractare_eventum(
-    CalendarioVisus*  visus,
+calendario_visus_tractare_eventum (
+     CalendarioVisus* visus,
     constans Eventus* eventus);
 
 
@@ -131,16 +132,16 @@ calendario_visus_tractare_eventum(
  * dies: dies ad quem navigare
  */
 vacuum
-calendario_visus_navigare_ad(
+calendario_visus_navigare_ad (
     CalendarioVisus* visus,
-    Dies             dies);
+               Dies  dies);
 
 /* Navigare ad diem hodiernum
  *
  * visus: calendario viewer
  */
 vacuum
-calendario_visus_hodie(
+calendario_visus_hodie (
     CalendarioVisus* visus);
 
 
@@ -155,7 +156,7 @@ calendario_visus_hodie(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-calendario_visus_init(
+calendario_visus_init (
     ContextusWidget* ctx);
 
 

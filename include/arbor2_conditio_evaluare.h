@@ -9,6 +9,7 @@
 #include "arbor2_token.h"
 #include "arbor2_expandere.h"
 
+
 /* ==================================================
  * ARBOR2 CONDITIO EVALUARE - Preprocessor Expression Evaluator
  *
@@ -30,6 +31,7 @@
  *   i64 valor = arbor2_conditio_evaluare(exp, tokens, &successus);
  * ================================================== */
 
+
 /* ==================================================
  * API - Expression Evaluation
  * ================================================== */
@@ -43,10 +45,12 @@
  * Returns evaluated value (0 = false, nonzero = true)
  * On error, returns 0 and sets *successus to FALSUM
  */
-i64 arbor2_conditio_evaluare(
-    Arbor2Expansion*    exp,
-    Xar*                lexemata,
-    b32*                successus);
+i64
+arbor2_conditio_evaluare (
+    Arbor2Expansion* exp,
+                Xar* lexemata,
+                b32* successus);
+
 
 /* ==================================================
  * API - Macro Definition Query
@@ -59,8 +63,9 @@ i64 arbor2_conditio_evaluare(
  *
  * Returns VERUM if macro is defined, FALSUM otherwise
  */
-b32 arbor2_conditio_est_definitum(
-    Arbor2Expansion*    exp,
-    chorda              titulus);
+b32
+arbor2_conditio_est_definitum (
+    Arbor2Expansion* exp,
+             chorda  titulus);
 
 #endif /* ARBOR2_CONDITIO_EVALUARE_H */

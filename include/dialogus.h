@@ -13,6 +13,7 @@
 #include "chorda.h"
 #include "fenestra.h"
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -32,7 +33,7 @@ nomen enumeratio {
 nomen structura Dialogus Dialogus;
 
 struct Dialogus {
-    vacuum*  datum;       /* Datum specificum dialogi */
+     vacuum* datum;       /* Datum specificum dialogi */
     Piscina* piscina;     /* Piscina pro allocationes */
 
     /*
@@ -73,6 +74,7 @@ struct Dialogus {
     chorda titulus;
 };
 
+
 /* ============================================================
  * Functiones
  * ============================================================ */
@@ -95,16 +97,18 @@ struct Dialogus {
  * @content_h: Output: altitudo content area
  */
 vacuum
-dialogus_reddere_frame(
+dialogus_reddere_frame (
     TabulaPixelorum* tabula,
-    i32 x, i32 y,
-    i32 latitudo, i32 altitudo,
-    chorda* titulus,
-    f32 scala,
-    i32* content_x,
-    i32* content_y,
-    i32* content_w,
-    i32* content_h);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+             chorda* titulus,
+                f32  scala,
+                i32* content_x,
+                i32* content_y,
+                i32* content_w,
+                i32* content_h);
 
 /*
  * dialogus_reddere_overlay - Delineare dialogum cum frame
@@ -120,12 +124,14 @@ dialogus_reddere_frame(
  * @scala:        Scala fontis
  */
 vacuum
-dialogus_reddere_overlay(
-    Dialogus*        dialogus,
+dialogus_reddere_overlay (
+           Dialogus* dialogus,
     TabulaPixelorum* tabula,
-    i32 panel_x, i32 panel_y,
-    i32 panel_w, i32 panel_h,
-    f32 scala);
+                i32  panel_x,
+                i32  panel_y,
+                i32  panel_w,
+                i32  panel_h,
+                f32  scala);
 
 /*
  * dialogus_computare_limites - Computare positio et dimensiones dialogi
@@ -140,9 +146,12 @@ dialogus_reddere_overlay(
  * @dialog_h:    Output: altitudo dialogi
  */
 vacuum
-dialogus_computare_limites(
-    i32  panel_w, i32 panel_h,
-    i32* dialog_x, i32* dialog_y,
-    i32* dialog_w, i32* dialog_h);
+dialogus_computare_limites (
+    i32  panel_w,
+    i32  panel_h,
+    i32* dialog_x,
+    i32* dialog_y,
+    i32* dialog_w,
+    i32* dialog_h);
 
 #endif /* DIALOGUS_H */

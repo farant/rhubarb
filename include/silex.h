@@ -30,6 +30,7 @@
 #include "capsula.h"
 #include "differentia.h"
 
+
 /* ==================================================
  * Fons bibliothecarum: DISCUS (fabrica in disco) aut CORPUS
  * (capsula in binario infixa). Lector unicus clausurae - omnes
@@ -42,43 +43,43 @@ nomen enumeratio {
 } SilexFonsGenus;
 
 nomen structura {
-    SilexFonsGenus      genus;
+        SilexFonsGenus  genus;
     constans character* fabrica;   /* DISCUS: radix arboris */
-    Capsula*            capsula;   /* CORPUS: corpus apertum */
+               Capsula* capsula;   /* CORPUS: corpus apertum */
     constans character* titulus;   /* pro nuntiis: via aut stampa */
 } SilexFons;
 
 /* DISCUS: include/ adsit; NIHIL si invalida */
 SilexFons*
 silex_fons_disci (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fabrica);
 
 /* CORPUS: capsulam aperit; titulus e clave 'corpus.versio'
  * (absente: "(corpus sine stampa)"); NIHIL si capsula fracta */
 SilexFons*
 silex_fons_corporis (
-    Piscina*               piscina,
+                  Piscina* piscina,
     constans CapsulaEmbed* embed);
 
 b32
 silex_fons_existit (
     constans SilexFons* fons,
     constans character* via_relativa,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* *inventum FALSUM si via ignota */
 chorda
 silex_fons_legere (
     constans SilexFons* fons,
     constans character* via_relativa,
-    Piscina*            piscina,
-    b32*                inventum);
+               Piscina* piscina,
+                   b32* inventum);
 
 /* plagula colligenda: via relativa proiecti + contentum + origo */
 nomen structura {
-    chorda              via;
-    chorda              contentum;
+                chorda  via;
+                chorda  contentum;
     constans character* origo;   /* "vendicata:<via>" | "genita" */
 } SilexRes;
 
@@ -86,14 +87,14 @@ nomen structura {
     constans SilexFons* fons;         /* unde bibliothecae */
     constans character* destinatio;   /* directorium parens ("."...) */
     constans character* titulus;      /* nomen proiecti */
-    b32                 vitrea;       /* semen vitreum (cor voluminis)
+                   b32  vitrea;       /* semen vitreum (cor voluminis)
                                        * + ordines IV generati */
 } SilexNovumOptiones;
 
 nomen structura {
-    b32                 successus;
-    i32                 vendicatae;   /* plagulae e fabrica */
-    i32                 genitae;      /* plagulae genitae */
+                   b32  successus;
+                   i32  vendicatae;   /* plagulae e fabrica */
+                   i32  genitae;      /* plagulae genitae */
     constans character* volumen_via;
     constans character* erratum;      /* si !successus: causa */
 } SilexNovumFructus;
@@ -111,7 +112,7 @@ silex_clausuram_colligere (
 /* proiectum novum excudere; vide silex.h caput pro forma */
 SilexNovumFructus
 silex_novum (
-    Piscina*                  piscina,
+                        Piscina* piscina,
     constans SilexNovumOptiones* optiones);
 
 /* fabricam sponte invenire: ascensus ex initio (directorium),
@@ -120,8 +121,9 @@ silex_novum (
  * SILEX_FABRICA) vocatori manent - hoc gradus TERTIUS est. */
 constans character*
 silex_fabricam_invenire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* initium);
+
 
 /* ==================================================
  * VCS: status / condere / historia
@@ -139,14 +141,14 @@ nomen enumeratio {
 } SilexPlagulaStatus;
 
 nomen structura {
-    chorda             via;
+                chorda via;
     SilexPlagulaStatus status;
 } SilexStatusRes;
 
 nomen structura {
-    b32                 successus;
-    i32                 mundae;   /* congruentes (tacent) */
-    Xar*                res;      /* SilexStatusRes - non-mundae */
+                   b32  successus;
+                   i32  mundae;   /* congruentes (tacent) */
+                   Xar* res;      /* SilexStatusRes - non-mundae */
     constans character* erratum;
 } SilexStatusFructus;
 
@@ -155,20 +157,20 @@ nomen structura {
  * clara + NIHIL. (Identitas documenti - decisum red-team IX.) */
 constans character*
 silex_volumen_viam_invenire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir);
 
 /* lector purus - numquam scribit */
 SilexStatusFructus
 silex_status (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir);
 
 nomen structura {
-    b32                 successus;
-    s64                 seq;        /* actus conditionis */
-    i32                 conditae;   /* mutatae + novae absorptae */
-    i32                 remotae;
+                   b32  successus;
+                   s64  seq;        /* actus conditionis */
+                   i32  conditae;   /* mutatae + novae absorptae */
+                   i32  remotae;
     constans character* erratum;    /* "nihil condendum" si vacuum */
 } SilexConditioFructus;
 
@@ -176,16 +178,16 @@ nomen structura {
  * transactione UNA (omnia aut nihil) */
 SilexConditioFructus
 silex_condere (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
     constans character* nuntius);
 
 nomen structura {
-    s64    seq;
+       s64 seq;
     chorda momentum;
     chorda nuntius;    /* "(ortus voluminis)" pro ortu */
-    i32    tactae;     /* plagulae ab introitu priore */
-    b32    renovatio;  /* conditio a 'renovare -scribere' posita -
+       i32 tactae;     /* plagulae ab introitu priore */
+       b32 renovatio;  /* conditio a 'renovare -scribere' posita -
                         * STRUCTURALITER lecta (clavis 'renovatae'
                         * in dato), non e nuntio */
 } SilexConditio;
@@ -193,7 +195,7 @@ nomen structura {
 /* conditiones (+ ortus) ordine temporis; NIHIL = erratum */
 Xar*
 silex_historia (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir);
 
 /* historia plagulae UNIUS: actus plagulae viae datae, quisque
@@ -202,20 +204,21 @@ silex_historia (
  * vacuus). Xar de SilexPlagulaConditio ordine temporis; vacuum =
  * via numquam tacta; NIHIL = volumen legi non potuit. */
 nomen structura {
-    s64    seq;        /* conditionis */
+       s64 seq;        /* conditionis */
     chorda momentum;   /* conditionis */
     chorda nuntius;
     chorda sigillum;   /* hex post conditionem; vacua si remota */
     chorda origo;      /* "condita" | "vendicata:<via>" | ... */
-    b32    remota;
-    b32    renovatio;
+       b32 remota;
+       b32 renovatio;
 } SilexPlagulaConditio;
 
 Xar*
 silex_historia_plagulae (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
     constans character* via);
+
 
 /* ==================================================
  * Differentia: QUID mutatum est, textu (desideratum 01M08Q43BT -
@@ -231,35 +234,36 @@ silex_historia_plagulae (
  * ================================================== */
 
 nomen structura {
-    chorda             via;
+                chorda via;
     SilexPlagulaStatus genus;    /* MUTATA | NOVA | ABSENS */
-    DifferentiaSumma   summa;
-    chorda             textus;
-    chorda             textus_vetus;  /* latus crudum (semper) */
-    chorda             textus_novus;  /* - consumptores unitatum */
+      DifferentiaSumma summa;
+                chorda textus;
+                chorda textus_vetus;  /* latus crudum (semper) */
+                chorda textus_novus;  /* - consumptores unitatum */
 } SilexDifferentiaRes;
 
 nomen structura {
-    b32                 successus;
-    Xar*                res;       /* SilexDifferentiaRes */
-    i32                 aequales;
+                   b32  successus;
+                   Xar* res;       /* SilexDifferentiaRes */
+                   i32  aequales;
     constans character* erratum;
 } SilexDifferentiaFructus;
 
 SilexDifferentiaFructus
 silex_differentia_laborans (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
-    s64                 a_seq,
-    b32                 cum_textu);
+                   s64  a_seq,
+                   b32  cum_textu);
 
 SilexDifferentiaFructus
 silex_differentia_plicarum (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
-    s64                 a_seq,
-    s64                 ad_seq,
-    b32                 cum_textu);
+                   s64  a_seq,
+                   s64  ad_seq,
+                   b32  cum_textu);
+
 
 /* ==================================================
  * Proiectio: volumen arborem scribit (condere inversum)
@@ -285,26 +289,27 @@ nomen enumeratio {
 } SilexProiciendaStatus;
 
 nomen structura {
-    chorda                via;
+                   chorda via;
     SilexProiciendaStatus status;
 } SilexProiciendaRes;
 
 nomen structura {
-    b32                 successus;
-    Xar*                res;        /* SilexProiciendaRes;
+    b32  successus;
+    Xar* res;        /* SilexProiciendaRes;
                                      * intactae tacent (numerus) */
-    i32                 intactae;
-    i32                 obices;
-    i32                 scriptae;   /* si scribere */
+                   i32  intactae;
+                   i32  obices;
+                   i32  scriptae;   /* si scribere */
     constans character* erratum;
 } SilexProiectioFructus;
 
 SilexProiectioFructus
 silex_proicere (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
-    s64                 ad_seq,
-    b32                 scribere);
+                   s64  ad_seq,
+                   b32  scribere);
+
 
 /* ==================================================
  * Renovatio: bibliothecae vendicatae e fabrica renovantur
@@ -339,25 +344,26 @@ nomen enumeratio {
 } SilexRenovatioStatus;
 
 nomen structura {
-    chorda               via;
+                  chorda via;
     SilexRenovatioStatus status;
 } SilexRenovatioRes;
 
 nomen structura {
-    b32                 successus;
-    Xar*                res;        /* intactae tacent (numerus) */
-    i32                 intactae;
-    i32                 renovatae;  /* si scribere: scriptae */
-    i32                 additae;
+                   b32  successus;
+                   Xar* res;        /* intactae tacent (numerus) */
+                   i32  intactae;
+                   i32  renovatae;  /* si scribere: scriptae */
+                   i32  additae;
     constans character* erratum;
 } SilexRenovatioFructus;
 
 SilexRenovatioFructus
 silex_renovare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
     constans SilexFons* fons,
-    b32                 scribere);
+                   b32  scribere);
+
 
 /* ==================================================
  * Partes: oraculum clausurae ut verbum. Clausura ex seminibus
@@ -366,16 +372,16 @@ silex_renovare (
  * ================================================== */
 
 nomen structura {
-    chorda              via;
+                chorda  via;
     constans character* origo;
-    b32                 adest;   /* in arbore proiecti */
+                   b32  adest;   /* in arbore proiecti */
 } SilexPartesRes;
 
 /* plagula data (via in disco proiecti) aut NIHIL = auctoratae
  * omnes; Xar de SilexPartesRes; NIHIL si clausura colligi nequit */
 Xar*
 silex_partes (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* proiectum_dir,
     constans SilexFons* fons,
     constans character* plagula);

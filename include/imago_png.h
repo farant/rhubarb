@@ -41,6 +41,7 @@
 #include "piscina.h"
 #include "imago_typus.h"   /* typum solum poscimus, non decodificatorem */
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -53,11 +54,12 @@
  * @error:   causa NOMINATA si !successus (numquam tacet)
  */
 nomen structura {
-    b32    successus;
-    i8*    datum;
-    i32    mensura;
-    chorda error;
+       b32  successus;
+        i8* datum;
+       i32  mensura;
+    chorda  error;
 } PngFructus;
+
 
 /* ============================================================
  * Functiones
@@ -73,7 +75,9 @@ nomen structura {
  *        pura, ergo sine plagula probari potest.
  */
 PngFructus
-imago_png_codificare (constans Imago* imago, Piscina* piscina);
+imago_png_codificare (
+    constans Imago* imago,
+           Piscina* piscina);
 
 /*
  * imago_png_scribere - Imaginem in plagulam PNG scribere
@@ -87,8 +91,9 @@ imago_png_codificare (constans Imago* imago, Piscina* piscina);
  *        vult imago_png_codificare vocet.
  */
 PngFructus
-imago_png_scribere (constans Imago*         imago,
-                    constans character*     via,
-                    Piscina*                piscina);
+imago_png_scribere (
+                        constans Imago* imago,
+                    constans character* via,
+                               Piscina* piscina);
 
 #endif /* IMAGO_PNG_H */

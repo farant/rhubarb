@@ -11,6 +11,7 @@
 #include "entitas.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * SPUTNIK INTERPRES - Interpres pro Sputnik
  *
@@ -65,8 +66,8 @@ nomen enumeratio {
  * ================================================== */
 
 nomen structura {
-    Xar*   xar;       /* Array objectum */
-    chorda titulus;   /* Nomen methodi (push, pop, etc.) */
+       Xar* xar;       /* Array objectum */
+    chorda  titulus;   /* Nomen methodi (push, pop, etc.) */
 } SputnikMethodusXar;
 
 
@@ -78,7 +79,7 @@ nomen structura {
 
 nomen structura {
     Entitas* entitas;   /* Entity objectum */
-    chorda   titulus;   /* Nomen methodi (add_relation, related, etc.) */
+     chorda  titulus;   /* Nomen methodi (add_relation, related, etc.) */
 } SputnikMethodusEntitas;
 
 
@@ -90,7 +91,7 @@ nomen structura {
 
 nomen structura {
     EntitasRepositorium* repositorium;  /* Repository objectum */
-    chorda               titulus;       /* Nomen methodi (get, query, etc.) */
+                 chorda  titulus;       /* Nomen methodi (get, query, etc.) */
 } SputnikMethodusRepositorium;
 
 
@@ -117,18 +118,18 @@ nomen structura SputnikValor SputnikValor;
 structura SputnikValor {
     SputnikValorGenus genus;
     unio {
-        f64                          numerus;
-        chorda                       chorda_valor;
-        Xar*                         xar;                  /* Xar de SputnikValor* */
-        TabulaDispersa*              objectum;             /* chorda -> SputnikValor* */
-        SputnikAstNodus*             functio;              /* DECLARATIO_FUNCTIO node */
-        SputnikMethodusXar           methodus_xar;         /* array method reference */
-        Entitas*                     entitas;              /* entity reference */
-        SputnikMethodusEntitas       methodus_entitas;     /* entity method reference */
-        EntitasRepositorium*         repositorium;         /* repository reference */
+                                f64  numerus;
+                             chorda  chorda_valor;
+                                Xar* xar;                  /* Xar de SputnikValor* */
+                     TabulaDispersa* objectum;             /* chorda -> SputnikValor* */
+                    SputnikAstNodus* functio;              /* DECLARATIO_FUNCTIO node */
+                 SputnikMethodusXar  methodus_xar;         /* array method reference */
+                            Entitas* entitas;              /* entity reference */
+             SputnikMethodusEntitas  methodus_entitas;     /* entity method reference */
+                EntitasRepositorium* repositorium;         /* repository reference */
         SputnikMethodusRepositorium  methodus_repositorium; /* repo method reference */
-        SputnikMethodusChorda        methodus_chorda;      /* string method reference */
-        s64                          pecunia;              /* centesimi (currency) */
+              SputnikMethodusChorda  methodus_chorda;      /* string method reference */
+                                s64  pecunia;              /* centesimi (currency) */
     } ut;
 };
 
@@ -143,9 +144,9 @@ structura SputnikValor {
 nomen structura SputnikAmbitus SputnikAmbitus;
 
 structura SputnikAmbitus {
-    TabulaDispersa*  variabiles;    /* chorda -> SputnikValor* */
-    TabulaDispersa*  constantes;    /* chorda -> VERUM si constans */
-    SputnikAmbitus*  parens;        /* parent scope (NIHIL pro globali) */
+    TabulaDispersa* variabiles;    /* chorda -> SputnikValor* */
+    TabulaDispersa* constantes;    /* chorda -> VERUM si constans */
+    SputnikAmbitus* parens;        /* parent scope (NIHIL pro globali) */
 };
 
 
@@ -154,19 +155,19 @@ structura SputnikAmbitus {
  * ================================================== */
 
 nomen structura {
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-    EntitasRepositorium*  repositorium;       /* entity storage */
-    SputnikAmbitus*       ambitus_globalis;
-    SputnikAmbitus*       ambitus_currens;
-    b32                   error_accidit;
-    chorda                error_nuntius;
-    i32                   error_linea;
-    i32                   error_columna;
-    b32                   redde_activa;       /* return statement hit */
-    SputnikValor          redde_valor;        /* return value */
-    b32                   frange_activa;      /* break statement hit */
-    b32                   perge_activa;       /* continue statement hit */
+                Piscina* piscina;
+    InternamentumChorda* intern;
+    EntitasRepositorium* repositorium;       /* entity storage */
+         SputnikAmbitus* ambitus_globalis;
+         SputnikAmbitus* ambitus_currens;
+                    b32  error_accidit;
+                 chorda  error_nuntius;
+                    i32  error_linea;
+                    i32  error_columna;
+                    b32  redde_activa;       /* return statement hit */
+           SputnikValor  redde_valor;        /* return value */
+                    b32  frange_activa;      /* break statement hit */
+                    b32  perge_activa;       /* continue statement hit */
 } SputnikInterpres;
 
 
@@ -175,11 +176,11 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    b32           successus;
-    SputnikValor  valor;
-    chorda        error_nuntius;
-    i32           error_linea;
-    i32           error_columna;
+             b32 successus;
+    SputnikValor valor;
+          chorda error_nuntius;
+             i32 error_linea;
+             i32 error_columna;
 } SputnikInterpresResultus;
 
 
@@ -196,23 +197,23 @@ nomen structura {
  * Redde: SputnikInterpresResultus
  */
 SputnikInterpresResultus
-sputnik_evaluare(
-    constans character*  fons,
-    Piscina*             piscina,
+sputnik_evaluare (
+     constans character* fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Evaluare ex chorda */
 SputnikInterpresResultus
-sputnik_evaluare_ex_chorda(
-    chorda               fons,
-    Piscina*             piscina,
+sputnik_evaluare_ex_chorda (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Interpretare pre-parsed AST */
 SputnikInterpresResultus
-sputnik_interpretare(
-    SputnikAstNodus*     radix,
-    Piscina*             piscina,
+sputnik_interpretare (
+        SputnikAstNodus* radix,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -230,27 +231,27 @@ sputnik_interpretare(
  * Redde: SputnikInterpresResultus
  */
 SputnikInterpresResultus
-sputnik_evaluare_cum_repositorio(
-    constans character*   fons,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    EntitasRepositorium*  repositorium);
+sputnik_evaluare_cum_repositorio (
+     constans character* fons,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repositorium);
 
 /* Evaluare ex chorda cum repositorio */
 SputnikInterpresResultus
-sputnik_evaluare_ex_chorda_cum_repositorio(
-    chorda                fons,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    EntitasRepositorium*  repositorium);
+sputnik_evaluare_ex_chorda_cum_repositorio (
+                 chorda  fons,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repositorium);
 
 /* Interpretare pre-parsed AST cum repositorio */
 SputnikInterpresResultus
-sputnik_interpretare_cum_repositorio(
-    SputnikAstNodus*      radix,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    EntitasRepositorium*  repositorium);
+sputnik_interpretare_cum_repositorio (
+        SputnikAstNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    EntitasRepositorium* repositorium);
 
 
 /* ==================================================
@@ -259,13 +260,13 @@ sputnik_interpretare_cum_repositorio(
 
 /* Convertere valor ad chorda (pro print, debug, etc.) */
 chorda
-sputnik_valor_ad_chordam(
-    SputnikValor*        valor,
-    Piscina*             piscina);
+sputnik_valor_ad_chordam (
+    SputnikValor* valor,
+         Piscina* piscina);
 
 /* Obtinere nomen generis valoris */
 constans character*
-sputnik_valor_genus_nomen(
+sputnik_valor_genus_nomen (
     SputnikValorGenus genus);
 
 #endif /* SPUTNIK_INTERPRES_H */

@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "chorda.h"
 
+
 /* ====================================================================
  * PAGINATIO - designatio paginae libri
  *
@@ -34,7 +35,7 @@ nomen enumeratio
 nomen structura
 {
     GenusPaginationis genus;
-    i32               valor;
+                  i32 valor;
 } Paginatio;
 
 /* --------------------------------------------------------------------
@@ -50,7 +51,9 @@ nomen structura
  * eadem lex qua inscriptio capituli regitur.
  * -------------------------------------------------------------------- */
 
-Paginatio paginatio_legere (chorda s);
+Paginatio
+paginatio_legere (
+    chorda s);
 
 /* --------------------------------------------------------------------
  * ORDO - clavis unius numeri
@@ -66,9 +69,13 @@ Paginatio paginatio_legere (chorda s);
 
 #define PAGINATIO_BANDA 1000000
 
-i64 paginatio_clavis (Paginatio p);
+i64
+paginatio_clavis (
+    Paginatio p);
 
 /* Commoditas: chorda -> clavis uno gradu */
-i64 paginatio_clavis_chordae (chorda s);
+i64
+paginatio_clavis_chordae (
+    chorda s);
 
 #endif /* PAGINATIO_H */

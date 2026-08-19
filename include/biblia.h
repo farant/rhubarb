@@ -6,6 +6,7 @@
 #include "latina.h"
 #include "chorda.h"
 
+
 /* ==================================================
  * BIBLIA - Scriptura Sacra in Memoria
  *
@@ -130,8 +131,8 @@ nomen structura {
     constans character* nomen_latinum;
     constans character* nomen_anglicum;
     constans character* abbreviatio;
-    i32 capitula_numerus;
-    i32 capitula_initium;  /* index in capitula[] array */
+                   i32  capitula_numerus;
+                   i32  capitula_initium;  /* index in capitula[] array */
 } Liber;
 
 /* Biblia - tota scriptura */
@@ -140,15 +141,15 @@ nomen structura {
     constans character* annus;         /* e.g., "1899" */
 
     constans character* textus;        /* totus textus concatenatus */
-    memoriae_index textus_longitudo;
+        memoriae_index  textus_longitudo;
 
-    i32 libri_numerus;
+               i32  libri_numerus;
     constans Liber* libri;
 
-    i32 capitula_numerus;
+                   i32  capitula_numerus;
     constans Capitulum* capitula;
 
-    i32 versus_numerus;
+                i32  versus_numerus;
     constans Versus* versus;
 } Biblia;
 
@@ -162,7 +163,7 @@ nomen structura {
  * Reddit: pointer ad structuram Biblia (statice allocata)
  */
 constans Biblia*
-biblia_obtinere_dr(vacuum);
+biblia_obtinere_dr (vacuum);
 
 /* Obtinere textum versus
  *
@@ -174,11 +175,11 @@ biblia_obtinere_dr(vacuum);
  * Reddit: chorda cum textu versus, vel chorda vacua si non invenitur
  */
 chorda
-biblia_versus(
+biblia_versus (
     constans Biblia* biblia,
-    i32 liber,
-    i32 capitulum,
-    i32 versus_num);
+                i32  liber,
+                i32  capitulum,
+                i32  versus_num);
 
 /* Obtinere nomen libri
  *
@@ -188,9 +189,9 @@ biblia_versus(
  * Reddit: nomen anglicum libri
  */
 constans character*
-biblia_nomen_libri(
+biblia_nomen_libri (
     constans Biblia* biblia,
-    i32 liber);
+                i32  liber);
 
 /* Obtinere numerum capitulorum in libro
  *
@@ -200,9 +201,9 @@ biblia_nomen_libri(
  * Reddit: numerus capitulorum
  */
 i32
-biblia_capitula_in_libro(
+biblia_capitula_in_libro (
     constans Biblia* biblia,
-    i32 liber);
+                i32  liber);
 
 /* Obtinere numerum versuum in capitulo
  *
@@ -213,10 +214,10 @@ biblia_capitula_in_libro(
  * Reddit: numerus versuum
  */
 i32
-biblia_versus_in_capitulo(
+biblia_versus_in_capitulo (
     constans Biblia* biblia,
-    i32 liber,
-    i32 capitulum);
+                i32  liber,
+                i32  capitulum);
 
 /* Invenire librum per nomen (case-insensitive prefix match)
  *
@@ -226,8 +227,8 @@ biblia_versus_in_capitulo(
  * Reddit: index libri si inventus, -1 si non inventus
  */
 s32
-biblia_invenire_librum(
-    constans Biblia* biblia,
+biblia_invenire_librum (
+       constans Biblia* biblia,
     constans character* quaesitum);
 
 

@@ -13,6 +13,7 @@
 #include "piscina.h"
 #include "fenestra.h"
 
+
 /* ============================================================
  * Slider - Tractus horizontalis pro valoribus numeralibus
  * ============================================================ */
@@ -25,17 +26,18 @@ nomen structura {
 } FructusSlider;
 
 FructusSlider
-elementa_slider(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              valor,
-    i32              valor_min,
-    i32              valor_max,
+elementa_slider (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+                 i32  valor,
+                 i32  valor_min,
+                 i32  valor_max,
     constans Eventus* eventus,
-    f32              scala);
+                 f32  scala);
+
 
 /* ============================================================
  * Bottone - Pulsus simplex cum label
@@ -47,14 +49,15 @@ nomen structura {
 } FructusBottone;
 
 FructusBottone
-elementa_bottone(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    chorda*          label,
+elementa_bottone (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+              chorda* label,
     constans Eventus* eventus,
-    f32              scala);
+                 f32  scala);
+
 
 /* ============================================================
  * Capsa Optandi - Checkbox pro valoribus boolean
@@ -67,15 +70,16 @@ nomen structura {
 } FructusCapsaOptandi;
 
 FructusCapsaOptandi
-elementa_capsa_optandi(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    chorda*          label,
-    b32              valor,
+elementa_capsa_optandi (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+              chorda* label,
+                 b32  valor,
     constans Eventus* eventus,
-    f32              scala);
+                 f32  scala);
+
 
 /* ============================================================
  * Campus Textus - Text input field
@@ -83,23 +87,24 @@ elementa_capsa_optandi(
 
 nomen structura {
     chorda* textus;  /* Textus novus (potest esse nova allocatio) */
-    s32     cursor;  /* Positio cursor nova */
-    b32     mutatum; /* VERUM si textus mutatus */
-    b32     focused; /* Reflectit statum focus */
+       s32  cursor;  /* Positio cursor nova */
+       b32  mutatum; /* VERUM si textus mutatus */
+       b32  focused; /* Reflectit statum focus */
 } FructusCampusTextus;
 
 FructusCampusTextus
-elementa_campus_textus(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    chorda*          textus,
-    s32              cursor,
-    b32              focused,
+elementa_campus_textus (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+                 i32  latitudo,
+              chorda* textus,
+                 s32  cursor,
+                 b32  focused,
     constans Eventus* eventus,
-    f32              scala);
+                 f32  scala);
+
 
 /* ============================================================
  * Graticula Colorum - 2x8 grid pro selectione colorum Aquinas
@@ -112,13 +117,13 @@ nomen structura {
 } FructusGraticulaColorum;
 
 FructusGraticulaColorum
-elementa_graticula_colorum(
-    TabulaPixelorum* tabula,
-    Piscina*         piscina,
-    i32              x,
-    i32              y,
-    constans b32*    colores,
+elementa_graticula_colorum (
+     TabulaPixelorum* tabula,
+             Piscina* piscina,
+                 i32  x,
+                 i32  y,
+        constans b32* colores,
     constans Eventus* eventus,
-    f32              scala);
+                 f32  scala);
 
 #endif /* ELEMENTA_H */

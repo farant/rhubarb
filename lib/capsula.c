@@ -21,7 +21,8 @@
  */
 
 interior b32
-_e_disco (constans Capsula* capsula);
+_e_disco (
+    constans Capsula* capsula);
 
 interior b32
 _e_disco (
@@ -38,7 +39,10 @@ _e_disco (
  * byteorum CUM limite segmenti ("/tmp/x" praefixum "/tmp/xy" non est).
  */
 interior chorda
-_via_tuta (constans Capsula* capsula, chorda relativa, Piscina* piscina);
+_via_tuta (
+    constans Capsula* capsula,
+              chorda  relativa,
+             Piscina* piscina);
 
 interior chorda
 _via_tuta (
@@ -76,8 +80,10 @@ _via_tuta (
 
 
 interior CapsulaFructus
-_e_disco_legere (constans Capsula* capsula, chorda relativa,
-    Piscina* piscina);
+_e_disco_legere (
+    constans Capsula* capsula,
+              chorda  relativa,
+             Piscina* piscina);
 
 interior CapsulaFructus
 _e_disco_legere (
@@ -131,8 +137,10 @@ nomen structura {
 
 
 interior s32
-_introitum_tractare (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_introitum_tractare (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _introitum_tractare (

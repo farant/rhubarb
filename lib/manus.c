@@ -181,9 +181,9 @@ _litterae (
 
 interior b32
 _imaginem (
-    Manus*               manus,
+                 Manus*  manus,
     constans character*  via,
-    Mora                 mora,
+                  Mora   mora,
     constans character** causa_out);
 
 interior vacuum

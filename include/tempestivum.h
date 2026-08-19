@@ -9,6 +9,7 @@
 #include "entitas_repositorium.h"
 #include "cursus.h"
 
+
 /* ==================================================
  * TEMPESTIVUM - Timer Entities
  *
@@ -53,10 +54,10 @@
  */
 nomen structura AdministratorTempestivi {
     EntitasRepositorium* repositorium;
-    CursusNuntiorum*     cursus;
+        CursusNuntiorum* cursus;
     InternamentumChorda* intern;
-    Piscina*             piscina;
-    chorda*              genus_tempestivi; /* Cached interned genus */
+                Piscina* piscina;
+                 chorda* genus_tempestivi; /* Cached interned genus */
 } AdministratorTempestivi;
 
 
@@ -74,10 +75,10 @@ nomen structura AdministratorTempestivi {
  * Redde: AdministratorTempestivi* si successus, NIHIL si fractura
  */
 AdministratorTempestivi*
-administrator_tempestivi_creare(
-    Piscina*             piscina,
+administrator_tempestivi_creare (
+                Piscina* piscina,
     EntitasRepositorium* repositorium,
-    CursusNuntiorum*     cursus,
+        CursusNuntiorum* cursus,
     InternamentumChorda* intern);
 
 
@@ -96,46 +97,46 @@ administrator_tempestivi_creare(
  * Redde: Entitas* tempestivi si successus, NIHIL si fractura
  */
 Entitas*
-tempestivum_creare(
+tempestivum_creare (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id,
-    constans character*      genus_nuntii,
-    s64                      intervallum_ms,
-    b32                      repetere);
+                     chorda* destinatio_id,
+         constans character* genus_nuntii,
+                        s64  intervallum_ms,
+                        b32  repetere);
 
 /* Creare tempestivum cum delay initiali
  *
  * delay_ms: Delay ante primam activationem
  */
 Entitas*
-tempestivum_creare_cum_delay(
+tempestivum_creare_cum_delay (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id,
-    constans character*      genus_nuntii,
-    s64                      intervallum_ms,
-    s64                      delay_ms,
-    b32                      repetere);
+                     chorda* destinatio_id,
+         constans character* genus_nuntii,
+                        s64  intervallum_ms,
+                        s64  delay_ms,
+                        b32  repetere);
 
 /* Annullare tempestivum
  *
  * Redde: VERUM si annullatum, FALSUM si non inventum
  */
 b32
-tempestivum_annullare(
+tempestivum_annullare (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id);
+                     chorda* tempestivum_id);
 
 /* Pausare tempestivum */
 b32
-tempestivum_pausare(
+tempestivum_pausare (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id);
+                     chorda* tempestivum_id);
 
 /* Resumere tempestivum */
 b32
-tempestivum_resumere(
+tempestivum_resumere (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id);
+                     chorda* tempestivum_id);
 
 
 /* ==================================================
@@ -151,7 +152,7 @@ tempestivum_resumere(
  * Redde: Numerus nuntiorum missorum
  */
 i32
-tempestivum_processare(
+tempestivum_processare (
     AdministratorTempestivi* admin);
 
 
@@ -167,25 +168,25 @@ tempestivum_processare(
  *   tempestivum_processare(admin);
  * Percursus linearis sicut processare (N parvum). */
 s64
-tempestivum_proxima_meta_ms(
+tempestivum_proxima_meta_ms (
     AdministratorTempestivi* admin);
 
 /* Numerus tempestivorum activorum */
 i32
-tempestivum_numerus_activorum(
+tempestivum_numerus_activorum (
     AdministratorTempestivi* admin);
 
 /* Obtinere tempestiva pro entitate destinationis */
 Xar*
-tempestivum_pro_destinatione(
+tempestivum_pro_destinatione (
     AdministratorTempestivi* admin,
-    chorda*                  destinatio_id);
+                     chorda* destinatio_id);
 
 /* Verificare si tempestivum activum */
 b32
-tempestivum_est_activum(
+tempestivum_est_activum (
     AdministratorTempestivi* admin,
-    chorda*                  tempestivum_id);
+                     chorda* tempestivum_id);
 
 
 /* ==================================================
@@ -194,7 +195,7 @@ tempestivum_est_activum(
 
 /* Imprimere status pro depuratione */
 vacuum
-tempestivum_imprimere(
+tempestivum_imprimere (
     AdministratorTempestivi* admin);
 
 #endif /* TEMPESTIVUM_H */

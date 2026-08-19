@@ -10,6 +10,7 @@
 #include "tractator.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * CURSUS NUNTIORUM - Message Bus
  *
@@ -43,12 +44,12 @@
  * datum_custom: Datum applicatio-specificum
  */
 nomen structura CursusNuntiorum {
-    TabulaDispersa*       capsae;
+          TabulaDispersa* capsae;
     RegistrumTractatoris* tractator;
-    EntitasRepositorium*  repositorium;
-    InternamentumChorda*  intern;
-    Piscina*              piscina;
-    vacuum*               datum_custom;
+     EntitasRepositorium* repositorium;
+     InternamentumChorda* intern;
+                 Piscina* piscina;
+                  vacuum* datum_custom;
 } CursusNuntiorum;
 
 
@@ -66,17 +67,17 @@ nomen structura CursusNuntiorum {
  * Redde: CursusNuntiorum* si successus, NIHIL si fractura
  */
 CursusNuntiorum*
-cursus_creare(
-    Piscina*              piscina,
+cursus_creare (
+                 Piscina* piscina,
     RegistrumTractatoris* tractator,
-    EntitasRepositorium*  repositorium,
-    InternamentumChorda*  intern);
+     EntitasRepositorium* repositorium,
+     InternamentumChorda* intern);
 
 /* Ponere datum custom */
 vacuum
-cursus_ponere_datum(
+cursus_ponere_datum (
     CursusNuntiorum* cursus,
-    vacuum*          datum);
+             vacuum* datum);
 
 
 /* ==================================================
@@ -94,26 +95,26 @@ cursus_ponere_datum(
  * Redde: VERUM si successus
  */
 b32
-cursus_mittere(
-    CursusNuntiorum*    cursus,
-    chorda*             mittens_id,
-    chorda*             destinatio_id,
+cursus_mittere (
+       CursusNuntiorum* cursus,
+                chorda* mittens_id,
+                chorda* destinatio_id,
     constans character* genus_nuntii,
-    TabulaDispersa*     datum);
+        TabulaDispersa* datum);
 
 /* Mittere nuntium iam creatum */
 b32
-cursus_mittere_nuntium(
+cursus_mittere_nuntium (
     CursusNuntiorum* cursus,
-    chorda*          destinatio_id,
-    Nuntius*         nuntius);
+             chorda* destinatio_id,
+            Nuntius* nuntius);
 
 /* Mittere nuntium simplex (sine payload) */
 b32
-cursus_mittere_simplex(
-    CursusNuntiorum*    cursus,
-    chorda*             mittens_id,
-    chorda*             destinatio_id,
+cursus_mittere_simplex (
+       CursusNuntiorum* cursus,
+                chorda* mittens_id,
+                chorda* destinatio_id,
     constans character* genus_nuntii);
 
 
@@ -129,16 +130,16 @@ cursus_mittere_simplex(
  * Redde: Numerus nuntiorum tractatorum
  */
 i32
-cursus_processare(
+cursus_processare (
     CursusNuntiorum* cursus,
-    i32              maximus_nuntii);
+                i32  maximus_nuntii);
 
 /* Processare omnes nuntios pro entitate specifica */
 i32
-cursus_processare_entitatem(
+cursus_processare_entitatem (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id,
-    i32              maximus_nuntii);
+             chorda* entitas_id,
+                i32  maximus_nuntii);
 
 
 /* ==================================================
@@ -147,26 +148,26 @@ cursus_processare_entitatem(
 
 /* Numerus nuntiorum pendentium in toto */
 i32
-cursus_numerus_pendentium(
+cursus_numerus_pendentium (
     CursusNuntiorum* cursus);
 
 /* Numerus nuntiorum pendentium pro entitate */
 i32
-cursus_numerus_pendentium_entitatis(
+cursus_numerus_pendentium_entitatis (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id);
+             chorda* entitas_id);
 
 /* Verificare si entitas habet capsam */
 b32
-cursus_habet_capsam(
+cursus_habet_capsam (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id);
+             chorda* entitas_id);
 
 /* Obtinere capsam entitatis (NIHIL si non existit) */
 Capsa*
-cursus_obtinere_capsam(
+cursus_obtinere_capsam (
     CursusNuntiorum* cursus,
-    chorda*          entitas_id);
+             chorda* entitas_id);
 
 
 /* ==================================================
@@ -175,12 +176,12 @@ cursus_obtinere_capsam(
 
 /* Vacare omnes capsas (removere omnes nuntios) */
 vacuum
-cursus_vacare(
+cursus_vacare (
     CursusNuntiorum* cursus);
 
 /* Imprimere status pro depuratione */
 vacuum
-cursus_imprimere(
+cursus_imprimere (
     CursusNuntiorum* cursus);
 
 #endif /* CURSUS_H */

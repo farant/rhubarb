@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * ARGUMENTA - Parsitio Argumentorum Lineae Mandati
  *
@@ -67,7 +68,7 @@ nomen structura ArgumentaFructus ArgumentaFructus;
  */
 ArgumentaParser*
 argumenta_creare (
-	Piscina* piscina);
+    Piscina* piscina);
 
 
 /* ==================================================
@@ -92,10 +93,10 @@ argumenta_creare (
  */
 vacuum
 argumenta_addere_vexillum (
-	   ArgumentaParser* parser,
-	constans character* nomen_brevis,
-	constans character* nomen_longus,
-	constans character* descriptio);
+       ArgumentaParser* parser,
+    constans character* nomen_brevis,
+    constans character* nomen_longus,
+    constans character* descriptio);
 
 
 /* ==================================================
@@ -122,10 +123,10 @@ argumenta_addere_vexillum (
  */
 vacuum
 argumenta_addere_optionem (
-	   ArgumentaParser* parser,
-	constans character* nomen_brevis,
-	constans character* nomen_longus,
-	constans character* descriptio);
+       ArgumentaParser* parser,
+    constans character* nomen_brevis,
+    constans character* nomen_longus,
+    constans character* descriptio);
 
 
 /* ==================================================
@@ -150,10 +151,10 @@ argumenta_addere_optionem (
  */
 vacuum
 argumenta_addere_positionalem (
-	   ArgumentaParser* parser,
-	constans character* titulus,
-	constans character* descriptio,
-	               b32  necessarius);
+       ArgumentaParser* parser,
+    constans character* titulus,
+    constans character* descriptio,
+                   b32  necessarius);
 
 
 /* ==================================================
@@ -173,8 +174,8 @@ argumenta_addere_positionalem (
  */
 vacuum
 argumenta_ponere_descriptionem (
-	   ArgumentaParser* parser,
-	constans character* descriptio);
+       ArgumentaParser* parser,
+    constans character* descriptio);
 
 /* Addere exemplum usu
  *
@@ -190,8 +191,8 @@ argumenta_ponere_descriptionem (
  */
 vacuum
 argumenta_addere_exemplum (
-	   ArgumentaParser* parser,
-	constans character* exemplum);
+       ArgumentaParser* parser,
+    constans character* exemplum);
 
 
 /* ==================================================
@@ -214,9 +215,9 @@ argumenta_addere_exemplum (
  */
 ArgumentaFructus*
 argumenta_parsere (
-	    			   ArgumentaParser* parser,
-	                         i32  argc,
-	constans character* constans* argv);
+                       ArgumentaParser* parser,
+                             i32  argc,
+    constans character* constans* argv);
 
 /* Parsere argumenta (reddit NIHIL si errore)
  *
@@ -239,9 +240,9 @@ argumenta_parsere (
  */
 ArgumentaFructus*
 argumenta_conari_parsere (
-	             ArgumentaParser* parser,
-	                         i32  argc,
-	constans character* constans* argv);
+                 ArgumentaParser* parser,
+                             i32  argc,
+    constans character* constans* argv);
 
 
 /* ==================================================
@@ -263,8 +264,8 @@ argumenta_conari_parsere (
  */
 b32
 argumenta_habet_vexillum (
-	constans ArgumentaFructus* fructus,
-	       constans character* titulus);
+    constans ArgumentaFructus* fructus,
+           constans character* titulus);
 
 
 /* ==================================================
@@ -291,9 +292,9 @@ argumenta_habet_vexillum (
  */
 chorda
 argumenta_obtinere_optionem (
-	constans ArgumentaFructus* fructus,
-	       constans character* titulus,
-	                  Piscina* piscina);
+    constans ArgumentaFructus* fructus,
+           constans character* titulus,
+                      Piscina* piscina);
 
 
 /* ==================================================
@@ -314,9 +315,9 @@ argumenta_obtinere_optionem (
  */
 chorda
 argumenta_obtinere_positionalem (
-	constans ArgumentaFructus* fructus,
-	                       i32  index,
-	                  Piscina* piscina);
+     constans ArgumentaFructus* fructus,
+                           i32  index,
+                       Piscina* piscina);
 
 /* Obtinere numerum argumentorum positionalium
  *
@@ -334,7 +335,7 @@ argumenta_obtinere_positionalem (
  */
 i32
 argumenta_numerus_positionalium (
-	constans ArgumentaFructus* fructus);
+    constans ArgumentaFructus* fructus);
 
 
 /* ==================================================
@@ -357,7 +358,7 @@ argumenta_numerus_positionalium (
  */
 vacuum
 argumenta_imprimere_auxilium (
-	constans ArgumentaParser* parser);
+    constans ArgumentaParser* parser);
 
 /* Imprimere nuntium erroris recens
  *
@@ -376,6 +377,6 @@ argumenta_imprimere_auxilium (
  */
 vacuum
 argumenta_imprimere_errorem (
-	constans ArgumentaParser* parser);
+    constans ArgumentaParser* parser);
 
 #endif /* ARGUMENTA_H */

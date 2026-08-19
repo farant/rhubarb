@@ -1163,7 +1163,10 @@ _composita_congruit (
  * ================================================== */
 
 /* Declaratio anticipata pro recursione */
-interior b32 _sequentia_congruit(SelectioSequentia* selectio, StmlNodus* nodus);
+interior b32
+_sequentia_congruit (
+    SelectioSequentia* selectio,
+            StmlNodus* nodus);
 
 /* Verificare si aliquis antecessor congruit cum catena selectoris reliqua */
 interior b32

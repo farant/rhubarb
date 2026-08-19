@@ -60,18 +60,18 @@
 
 /* Opened tail capsule (runtime state) */
 nomen structura {
-    FILUM*           filum;            /* Open file handle to binary */
-    i64              asset_offset;     /* Where assets start in file */
-    i32              numerus_filorum;  /* Number of files */
-    CapsulaIndexum*  index;            /* Parsed TOC array */
-    Piscina*         piscina;          /* Arena used for parsing */
+             FILUM* filum;            /* Open file handle to binary */
+               i64  asset_offset;     /* Where assets start in file */
+               i32  numerus_filorum;  /* Number of files */
+    CapsulaIndexum* index;            /* Parsed TOC array */
+           Piscina* piscina;          /* Arena used for parsing */
 } CapsulaCaudae;
 
 
 /* Iterator for walking all files */
 nomen structura {
     CapsulaCaudae* capsula;
-    i32            positus;            /* Current position (1-indexed after proximus) */
+              i32  positus;            /* Current position (1-indexed after proximus) */
 } CapsulaCaudaeIter;
 
 
@@ -89,9 +89,9 @@ nomen structura {
  * Nota: Call capsula_caudae_claudere() when done to close file handle
  */
 CapsulaCaudae*
-capsula_caudae_aperire(
+capsula_caudae_aperire (
     constans character* via_binarii,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 
 /* Claudere capsulam et file handle
@@ -101,7 +101,8 @@ capsula_caudae_aperire(
  * Nota: Index memoria vivit in piscina, hoc solum claudit file
  */
 vacuum
-capsula_caudae_claudere(CapsulaCaudae* capsula);
+capsula_caudae_claudere (
+    CapsulaCaudae* capsula);
 
 
 /* ========================================================================
@@ -119,18 +120,18 @@ capsula_caudae_claudere(CapsulaCaudae* capsula);
  * Nota: Uses same CapsulaFructus type as capsula.h for API compatibility
  */
 CapsulaFructus
-capsula_caudae_legere(
-    CapsulaCaudae*      capsula,
+capsula_caudae_legere (
+         CapsulaCaudae* capsula,
     constans character* via,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 
 /* Legere file per chorda path */
 CapsulaFructus
-capsula_caudae_legere_chorda(
+capsula_caudae_legere_chorda (
     CapsulaCaudae* capsula,
-    chorda         via,
-    Piscina*       piscina);
+           chorda  via,
+          Piscina* piscina);
 
 
 /* ========================================================================
@@ -145,15 +146,15 @@ capsula_caudae_legere_chorda(
  * Redde: VERUM si existit
  */
 b32
-capsula_caudae_habet(
-    CapsulaCaudae*      capsula,
+capsula_caudae_habet (
+         CapsulaCaudae* capsula,
     constans character* via);
 
 
 /* Invenire index entry per path (vel NIHIL si non inventum) */
 CapsulaIndexum*
-capsula_caudae_invenire(
-    CapsulaCaudae*      capsula,
+capsula_caudae_invenire (
+         CapsulaCaudae* capsula,
     constans character* via);
 
 
@@ -163,17 +164,21 @@ capsula_caudae_invenire(
 
 /* Obtinere numerum filorum */
 i32
-capsula_caudae_numerus(CapsulaCaudae* capsula);
+capsula_caudae_numerus (
+    CapsulaCaudae* capsula);
 
 
 /* Obtinere index entry per position (0-indexed) */
 CapsulaIndexum*
-capsula_caudae_indexum(CapsulaCaudae* capsula, i32 index);
+capsula_caudae_indexum (
+    CapsulaCaudae* capsula,
+              i32  index);
 
 
 /* Creare iterator */
 CapsulaCaudaeIter
-capsula_caudae_iter(CapsulaCaudae* capsula);
+capsula_caudae_iter (
+    CapsulaCaudae* capsula);
 
 
 /* Avanzare ad proximum file
@@ -184,7 +189,8 @@ capsula_caudae_iter(CapsulaCaudae* capsula);
  *   CapsulaIndexum* curr = capsula_caudae_indexum(iter->capsula, iter->positus - 1);
  */
 b32
-capsula_caudae_iter_proximus(CapsulaCaudaeIter* iter);
+capsula_caudae_iter_proximus (
+    CapsulaCaudaeIter* iter);
 
 
 /* ========================================================================
@@ -198,7 +204,8 @@ capsula_caudae_iter_proximus(CapsulaCaudaeIter* iter);
  * Redde: VERUM si habet valid footer
  */
 b32
-capsula_caudae_habet_assets(constans character* via_binarii);
+capsula_caudae_habet_assets (
+    constans character* via_binarii);
 
 
 #endif /* CAPSULA_CAUDAE_H */

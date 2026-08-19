@@ -8,6 +8,7 @@
 #include "internamentum.h"
 #include "stml.h"
 
+
 /* ==================================================
  * Selectio - Parser et Congruens Selectorum CSS
  *
@@ -19,6 +20,7 @@
  * - Combinatores: descendens (spatium), liberum (>), fratres (+, ~)
  * - Pseudo-classes: :first-child, :last-child, :empty
  * ================================================== */
+
 
 /* ==================================================
  * Genera Selectionum
@@ -58,16 +60,17 @@ nomen enumeratio {
     COMBINATOR_FRATER_GEN  = IV   /* ~ - frater generalis */
 } CombinatorGenus;
 
+
 /* ==================================================
  * Structurae
  * ================================================== */
 
 /* Componens selectoris simplicis */
 nomen structura {
-    SelectioGenus       genus;
-    chorda*             valor;       /* nomen tituli, id, classis */
+         SelectioGenus  genus;
+                chorda* valor;       /* nomen tituli, id, classis */
     AttributumOperator  attr_op;     /* pro selectoribus attributi */
-    chorda*             attr_valor;  /* valor attributi ad congruendum */
+                chorda* attr_valor;  /* valor attributi ad congruendum */
     PseudoClassisGenus  pseudo;      /* pro selectoribus pseudo-classis */
 } SelectioSimplex;
 
@@ -82,18 +85,19 @@ nomen structura {
  * e.g., div > p .class est catena III selectorum compositorum
  */
 nomen structura SelectioSequentia {
-    SelectioComposita*           composita;
-    CombinatorGenus              combinator;  /* combinator ANTE hoc */
+    SelectioComposita* composita;
+      CombinatorGenus  combinator;  /* combinator ANTE hoc */
     structura SelectioSequentia* sequens;     /* proximum in catena */
 } SelectioSequentia;
 
 /* Resultus parsationis */
 nomen structura {
-    b32                successus;
+                  b32  successus;
     SelectioSequentia* selectio;
-    i32                error_positus;
-    chorda             error;
+                  i32  error_positus;
+               chorda  error;
 } SelectioResultus;
+
 
 /* ==================================================
  * Parsatio - Legere Selectores
@@ -101,17 +105,18 @@ nomen structura {
 
 /* Legere selectorem ex chorda */
 SelectioResultus
-selectio_legere(
-    chorda               input,
-    Piscina*             piscina,
+selectio_legere (
+                 chorda  input,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Legere selectorem ex literis C */
 SelectioResultus
-selectio_legere_ex_literis(
-    constans character*  cstr,
-    Piscina*             piscina,
+selectio_legere_ex_literis (
+     constans character* cstr,
+                Piscina* piscina,
     InternamentumChorda* intern);
+
 
 /* ==================================================
  * Congruentia - Verificare Congruentia
@@ -119,9 +124,10 @@ selectio_legere_ex_literis(
 
 /* Verificare si nodus congruit cum selectore */
 b32
-selectio_congruit(
+selectio_congruit (
     SelectioSequentia* selectio,
-    StmlNodus*         nodus);
+            StmlNodus* nodus);
+
 
 /* ==================================================
  * Quaestio - Invenire Nodos
@@ -129,18 +135,19 @@ selectio_congruit(
 
 /* Invenire primum nodum congruentem (profunditas prima) */
 StmlNodus*
-selectio_invenire_primum(
-    StmlNodus*         radix,
+selectio_invenire_primum (
+            StmlNodus* radix,
     SelectioSequentia* selectio);
 
 /* Invenire omnes nodos congruentes
  * Redde: Xar de StmlNodus*
  */
 Xar*
-selectio_invenire_omnes(
-    StmlNodus*         radix,
+selectio_invenire_omnes (
+            StmlNodus* radix,
     SelectioSequentia* selectio,
-    Piscina*           piscina);
+              Piscina* piscina);
+
 
 /* ==================================================
  * Commoditas - Functiones Commoditatis
@@ -148,20 +155,20 @@ selectio_invenire_omnes(
 
 /* Legere et invenire primum congruentem (modus querySelector) */
 StmlNodus*
-stml_quaerere(
-    StmlNodus*           radix,
-    constans character*  selector,
-    Piscina*             piscina,
+stml_quaerere (
+              StmlNodus* radix,
+     constans character* selector,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Legere et invenire omnes congruentes (modus querySelectorAll)
  * Redde: Xar de StmlNodus*
  */
 Xar*
-stml_quaerere_omnes(
-    StmlNodus*           radix,
-    constans character*  selector,
-    Piscina*             piscina,
+stml_quaerere_omnes (
+              StmlNodus* radix,
+     constans character* selector,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 #endif /* SELECTIO_H */

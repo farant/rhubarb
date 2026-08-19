@@ -64,14 +64,14 @@ nomen structura VitreaServus VitreaServus;
 
 /* Configuratio - 0/NIHIL = defalta */
 nomen structura {
-    Capsula*              capsula;         /* asseta applicationis */
-    constans character*   via_initialis;   /* NIHIL = "index.html" */
-    InternuntiusPraebitor praebitor;       /* registratio methodorum */
-    vacuum*               praebitor_datum;
+                  Capsula* capsula;         /* asseta applicationis */
+       constans character* via_initialis;   /* NIHIL = "index.html" */
+    InternuntiusPraebitor  praebitor;       /* registratio methodorum */
+                   vacuum* praebitor_datum;
     /* NIHIL = "127.0.0.1": loopback de industria. Expositio in
      * reticulum ACTUS EXPLICITUS sit ("0.0.0.0"), numquam quod
      * per neglegentiam accidit. */
-    constans character*   hospes;
+    constans character* hospes;
     /* Tessera secreta (chorda hexadecimalis, >= XXXII characteres).
      *
      * PORTA NATIVITATIS: si 'hospes' datur (id est, expositio ultra
@@ -82,9 +82,9 @@ nomen structura {
      * Bibliotheca UNDE venerit nescit: lima, arca, environmentum.
      * Ea sutura est per quam arca (01KYAMMMF58F) postea succedet
      * sine ulla mutatione huius codicis. */
-    constans character*   tessera;
-    i32                   portus;          /* 0 = auto-selectus */
-    b32                   acta_accessus;   /* linea per petitionem */
+    constans character* tessera;
+                   i32  portus;          /* 0 = auto-selectus */
+                   b32  acta_accessus;   /* linea per petitionem */
 } VitreaServusConfiguratio;
 
 /* Creare: hospitium ligare + internuntium creare + praebitorem
@@ -92,33 +92,38 @@ nomen structura {
  * Redde NIHIL si ligatio aut praebitio fallit. */
 VitreaServus*
 vitrea_servus_creare (
-    Piscina*                              piscina,
-    constans VitreaServusConfiguratio*    configuratio);
+                              Piscina* piscina,
+    constans VitreaServusConfiguratio* configuratio);
 
 /* Gressus in ansa usque ad sistere */
 vacuum
-vitrea_servus_currere (VitreaServus* servus);
+vitrea_servus_currere (
+    VitreaServus* servus);
 
 /* Gyrus unus (pro ansa hospitis externa - e.g. applicatio quae
  * fenestram ET servum simul gerit). Redde FALSUM post sistere. */
 b32
 vitrea_servus_gressus (
     VitreaServus* servus,
-    s32           ms_maximae);
+             s32  ms_maximae);
 
 vacuum
-vitrea_servus_sistere (VitreaServus* servus);
+vitrea_servus_sistere (
+    VitreaServus* servus);
 
 vacuum
-vitrea_servus_destruere (VitreaServus* servus);
+vitrea_servus_destruere (
+    VitreaServus* servus);
 
 /* Portus ligatus (utilis cum portus 0 = auto) */
 i32
-vitrea_servus_portus (constans VitreaServus* servus);
+vitrea_servus_portus (
+    constans VitreaServus* servus);
 
 /* Internuntius interior - pro applicatione quae pulsus mittere
  * aut registrum inspicere velit */
 Internuntius*
-vitrea_servus_internuntius (VitreaServus* servus);
+vitrea_servus_internuntius (
+    VitreaServus* servus);
 
 #endif /* VITREA_SERVUS_H */

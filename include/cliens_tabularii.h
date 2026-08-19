@@ -32,22 +32,24 @@
 #include "chorda.h"
 #include "json.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
 
 nomen structura {
-    i32                 portus;
-    s64                 petitio_index;   /* id JSON-RPC crescens */
+                   i32  portus;
+                   s64  petitio_index;   /* id JSON-RPC crescens */
     constans character* actor;           /* iniectus in transmittere */
     constans character* launcher;        /* via ad scriptum daemonis */
     constans character* praefixum;       /* nota stderr, e.g. "[villa]" */
-    b32                 genitus;         /* launcher iam excitatus?
+                   b32  genitus;         /* launcher iam excitatus?
                                           * (in structura, non
                                           * hic_manens: duo clientes
                                           * in eodem processu portus
                                           * diversos servire possunt) */
 } ClientTabularii;
+
 
 /* ========================================================================
  * FUNCTIONES
@@ -56,44 +58,50 @@ nomen structura {
 /* Clientem ad valores ordinarios ponere (portus datus; actor
  * "fran"; launcher "./gesta/tabulariumd.sh"; praefixum "[cliens]"). */
 vacuum
-cliens_tabularii_incipere(ClientTabularii* cliens, i32 portus);
+cliens_tabularii_incipere (
+    ClientTabularii* cliens,
+                i32  portus);
 
 /* Instrumentum daemonis vocare. Fructus = textus responsi (chorda
  * vacua + culpa posita in defectu). */
 chorda
-cliens_tabularii_vocare(
-    ClientTabularii*    cliens,
-    Piscina*            pn,
+cliens_tabularii_vocare (
+       ClientTabularii* cliens,
+               Piscina* pn,
     constans character* nomen_instrumenti,
-    JsonValor*          argumenta,
-    chorda*             culpa);
+             JsonValor* argumenta,
+                chorda* culpa);
 
 /* legere {genus, quantum} -> tabulatum JSON parsatum (NIHIL = culpa). */
 JsonValor*
-cliens_tabularii_legere(
+cliens_tabularii_legere (
     ClientTabularii* cliens,
-    Piscina*         pn,
-    chorda           genus,
-    i32              quantum,
-    chorda*          culpa);
+            Piscina* pn,
+             chorda  genus,
+                i32  quantum,
+             chorda* culpa);
 
 /* legere cum argumentis ARBITRARIIS (sine_campis, res, status...) -
  * idem fructus parsatus. Vocator obiectum aedificat, ergo campi novi
  * daemonis hic numquam reaperiunt. */
 JsonValor*
-cliens_tabularii_legere_cum(
+cliens_tabularii_legere_cum (
     ClientTabularii* cliens,
-    Piscina*         pn,
-    JsonValor*       argumenta,
-    chorda*          culpa);
+            Piscina* pn,
+          JsonValor* argumenta,
+             chorda* culpa);
 
 /* "res <ID> creata" -> chorda ID (vacua si absens). */
 chorda
-cliens_tabularii_res_id(chorda textus, Piscina* pn);
+cliens_tabularii_res_id (
+     chorda  textus,
+    Piscina* pn);
 
 /* chorda -> litterae NUL-terminatae in piscina. */
 constans character*
-cliens_tabularii_litterae(Piscina* pn, chorda c);
+cliens_tabularii_litterae (
+    Piscina* pn,
+     chorda  c);
 
 /* Tractator internuntii: {instrumentum, argumenta} ->
  * {bene, textus, res_id?}. Datum tractatoris = ClientTabularii*.
@@ -106,10 +114,10 @@ cliens_tabularii_litterae(Piscina* pn, chorda c);
  *       cliens_tabularii_transmittere, &cliens);
  */
 JsonValor*
-cliens_tabularii_transmittere(
+cliens_tabularii_transmittere (
     JsonValor* argumenta,
-    Piscina*   piscina,
-    vacuum*    datum,
-    chorda*    culpa);
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa);
 
 #endif /* CLIENS_TABULARII_H */

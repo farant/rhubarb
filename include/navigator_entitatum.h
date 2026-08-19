@@ -9,6 +9,7 @@
 #include "xar.h"
 #include "widget.h"
 
+
 /* ==================================================
  * Structurae
  * ================================================== */
@@ -28,23 +29,23 @@ nomen enumeratio {
 nomen structura {
     chorda* entitas_id;             /* ID entitatis parentis */
     chorda* entitas_id_destinatio;  /* ID entitatis quo navigavimus */
-    b32     per_backlink;           /* VERUM si navigavimus per backlink */
+       b32  per_backlink;           /* VERUM si navigavimus per backlink */
 } ItemHistoriae;
 
 /* Item ad reddendum in columna media
  * "Item to render in center column"
  */
 nomen structura {
-    GenusItem genus;
-    i32       altitudo;  /* Lineae quas occupat */
-    vacuum*   datum;     /* Relatio* vel Proprietas* */
+    GenusItem  genus;
+          i32  altitudo;  /* Lineae quas occupat */
+       vacuum* datum;     /* Relatio* vel Proprietas* */
 } ItemNavigatoris;
 
 /* Navigator entitatum - Widget pro exploratione graphi
  * "Entity navigator - Widget for graph exploration"
  */
 nomen structura {
-    ContextusWidget*     ctx;
+    ContextusWidget* ctx;
 
     /* Via navigationis (historia) */
     Xar* via;  /* Xar de ItemHistoriae - dynamic path stack */
@@ -54,8 +55,8 @@ nomen structura {
 
     /* Items pro columna media */
     ItemNavigatoris items[CXXVIII];  /* Capacitas maxima */
-    i32             numerus_itemorum;
-    i32             selectio;        /* Index item selectus */
+                i32 numerus_itemorum;
+                i32 selectio;        /* Index item selectus */
 
     /* Paginatio */
     i32 pagina_currens;
@@ -75,7 +76,7 @@ nomen structura {
  * Redde: Navigator novus, vel NIHIL si fractura
  */
 NavigatorEntitatum*
-navigator_entitatum_creare(
+navigator_entitatum_creare (
     ContextusWidget* ctx);
 
 
@@ -90,10 +91,10 @@ navigator_entitatum_creare(
  * Redde: VERUM si successus, FALSUM si entitas non inventa
  */
 b32
-navigator_entitatum_navigare_ad(
+navigator_entitatum_navigare_ad (
     NavigatorEntitatum* nav,
-    chorda*             entitas_id,
-    b32                 per_backlink);
+                chorda* entitas_id,
+                   b32  per_backlink);
 
 /* Retro in via (pop historia)
  * Navigat ad entitatem praecendentem in via
@@ -101,7 +102,7 @@ navigator_entitatum_navigare_ad(
  * Redde: VERUM si successus, FALSUM si via vacua
  */
 b32
-navigator_entitatum_retro(
+navigator_entitatum_retro (
     NavigatorEntitatum* nav);
 
 
@@ -117,9 +118,9 @@ navigator_entitatum_retro(
  * Redde: VERUM si eventum tractatum, FALSUM si non
  */
 b32
-navigator_entitatum_tractare_eventum(
-    NavigatorEntitatum*  nav,
-    constans Eventus*    eventus);
+navigator_entitatum_tractare_eventum (
+    NavigatorEntitatum* nav,
+      constans Eventus* eventus);
 
 
 /* ==================================================
@@ -132,15 +133,15 @@ navigator_entitatum_tractare_eventum(
  * focused: VERUM si widget habet focus (mutat colorem border)
  */
 vacuum
-navigator_entitatum_reddere(
-    NavigatorEntitatum*  nav,
-    TabulaPixelorum*     tabula,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    i32                  scala,
-    b32                  focused);
+navigator_entitatum_reddere (
+    NavigatorEntitatum* nav,
+       TabulaPixelorum* tabula,
+                   i32  x,
+                   i32  y,
+                   i32  latitudo,
+                   i32  altitudo,
+                   i32  scala,
+                   b32  focused);
 
 
 /* ==================================================
@@ -154,7 +155,7 @@ navigator_entitatum_reddere(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-navigator_entitatum_init(
+navigator_entitatum_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -166,10 +167,10 @@ navigator_entitatum_init(
  * Salvat: entitas_currens_id, selectio, pagina_currens
  */
 vacuum
-navigator_entitatum_salvare_status(
-    NavigatorEntitatum*  nav,
+navigator_entitatum_salvare_status (
+     NavigatorEntitatum* nav,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -180,10 +181,10 @@ navigator_entitatum_salvare_status(
  * Carcat: navigat ad entitatem, restaurat selectio/pagina
  */
 vacuum
-navigator_entitatum_carcare_status(
-    NavigatorEntitatum*  nav,
+navigator_entitatum_carcare_status (
+     NavigatorEntitatum* nav,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* NAVIGATOR_ENTITATUM_H */

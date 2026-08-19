@@ -49,18 +49,18 @@ nomen vacuum (*SpeculumAestimator)(vacuum* datum, chorda js);
  * Redde NIHIL si capsula fracta aut methodus iam praebita. */
 Speculum*
 speculum_creare (
-    Piscina*               piscina,
+                  Piscina* piscina,
     constans CapsulaEmbed* fontes,
-    Internuntius*          inx,
-    SpeculumAestimator     aestimator,
-    vacuum*                aestimator_datum);
+             Internuntius* inx,
+       SpeculumAestimator  aestimator,
+                   vacuum* aestimator_datum);
 
 /* In effusione eventuum ansae vocanda. Cmd+Shift+D deprimitur ->
  * stipitem se-sanantem per aestimatorem evaluat. Redde VERUM si
  * eventus consumptus est. */
 b32
 speculum_tangere (
-    Speculum*         speculum,
+            Speculum* speculum,
     constans Eventus* eventus);
 
 #endif /* SPECULUM_H */

@@ -24,6 +24,7 @@
 #include "piscina.h"
 #include "xar.h"
 
+
 /* ================================================
  * Genus Campi - Typus campi in nuntio
  * ================================================ */
@@ -39,6 +40,7 @@ nomen enumeratio {
     NUNTIUM_CAMPUS_F64
 } NuntiumCampusGenus;
 
+
 /* ================================================
  * Genus Nodi AST
  * ================================================ */
@@ -48,6 +50,7 @@ nomen enumeratio {
     NUNTIUM_SCHEMA_NODUS_DEFINITIO,
     NUNTIUM_SCHEMA_NODUS_CAMPUS
 } NuntiumSchemaNodusGenus;
+
 
 /* ================================================
  * Nodus AST
@@ -62,15 +65,16 @@ structura NuntiumSchemaNodus {
         } schema;
         structura {
             chorda* titulus;     /* Nomen nuntii (internatum) */
-            Xar*    campi;       /* Xar de NuntiumSchemaNodus* */
+               Xar* campi;       /* Xar de NuntiumSchemaNodus* */
         } definitio;
         structura {
-            NuntiumCampusGenus campus_genus;
-            chorda*            titulus;   /* Nomen campi (internatum) */
-            s32                tag;       /* Numerus tag */
+            NuntiumCampusGenus  campus_genus;
+                        chorda* titulus;   /* Nomen campi (internatum) */
+                           s32  tag;       /* Numerus tag */
         } campus;
     } datum;
 };
+
 
 /* ================================================
  * Contextus Parsationis (pro reductio callback)
@@ -78,10 +82,11 @@ structura NuntiumSchemaNodus {
 
 nomen structura {
     constans character* fons;
-    s32                 longitudo_fontis;
-    Piscina*            piscina;
-    Xar*                nodi;    /* Xar de NuntiumSchemaNodus* */
+                   s32  longitudo_fontis;
+               Piscina* piscina;
+                   Xar* nodi;    /* Xar de NuntiumSchemaNodus* */
 } NuntiumSchemaContextus;
+
 
 /* ================================================
  * Functio Principalis
@@ -96,10 +101,11 @@ nomen structura {
  * Redde: NuntiumSchemaNodus* (radix, genus = SCHEMA), vel NIHIL si error
  */
 NuntiumSchemaNodus*
-nuntium_schema_legere(
-    Piscina*             piscina,
-    constans character*  fons,
-    s32                  longitudo);
+nuntium_schema_legere (
+               Piscina* piscina,
+    constans character* fons,
+                   s32  longitudo);
+
 
 /* ================================================
  * Generatio Codicis ex Schemate
@@ -114,8 +120,8 @@ nuntium_schema_legere(
  * Redde: chorda cum fonte C generato
  */
 chorda
-nuntium_schema_generare_caput(
-    Piscina*            piscina,
+nuntium_schema_generare_caput (
+               Piscina* piscina,
     NuntiumSchemaNodus* radix,
     constans character* caput_titulis);
 
@@ -128,8 +134,8 @@ nuntium_schema_generare_caput(
  * Redde: chorda cum fonte C generato
  */
 chorda
-nuntium_schema_generare_corpus(
-    Piscina*            piscina,
+nuntium_schema_generare_corpus (
+               Piscina* piscina,
     NuntiumSchemaNodus* radix,
     constans character* caput_titulis);
 

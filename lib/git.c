@@ -29,7 +29,8 @@
  * -------------------------------------------------- */
 
 interior i32
-_be32 (constans i8* p);
+_be32 (
+    constans i8* p);
 
 interior i32
 _be32 (
@@ -42,7 +43,10 @@ _be32 (
 hic_manens constans character _hex_digiti[] = "0123456789abcdef";
 
 interior vacuum
-_bin_ad_hex (constans i8* bin, i32 quantum, character* exitus);
+_bin_ad_hex (
+    constans i8* bin,
+            i32  quantum,
+      character* exitus);
 
 interior vacuum
 _bin_ad_hex (
@@ -61,7 +65,8 @@ _bin_ad_hex (
 }
 
 interior s32
-_hex_valor (character c);
+_hex_valor (
+    character c);
 
 interior s32
 _hex_valor (
@@ -84,7 +89,9 @@ _hex_valor (
 
 /* VERUM si 40 hex; bin_exitus (20 octeti) impletur */
 interior b32
-_hex_ad_bin (constans character* hex, i8* bin_exitus);
+_hex_ad_bin (
+    constans character* hex,
+                    i8* bin_exitus);
 
 interior b32
 _hex_ad_bin (
@@ -112,7 +119,9 @@ _hex_ad_bin (
  * -------------------------------------------------- */
 
 interior i32
-_rotl (i32 x, i32 n);
+_rotl (
+    i32 x,
+    i32 n);
 
 interior i32
 _rotl (
@@ -123,7 +132,9 @@ _rotl (
 }
 
 interior vacuum
-_sha1_massam (constans i8* frustum, i32* h);
+_sha1_massam (
+    constans i8* frustum,
+            i32* h);
 
 interior vacuum
 _sha1_massam (
@@ -188,7 +199,10 @@ _sha1_massam (
 }
 
 interior vacuum
-_sha1 (constans i8* datum, memoriae_index mensura, i8* exitus);
+_sha1 (
+       constans i8* datum,
+    memoriae_index  mensura,
+                i8* exitus);
 
 interior vacuum
 _sha1 (
@@ -251,7 +265,9 @@ _sha1 (
  * -------------------------------------------------- */
 
 interior i32
-_adler32 (constans i8* datum, i32 mensura);
+_adler32 (
+    constans i8* datum,
+            i32  mensura);
 
 interior i32
 _adler32 (
@@ -274,8 +290,11 @@ _adler32 (
  * verificare_adler: solum ubi finis fluxus notus est (obiecta
  * laxa - plagula tota); in sarcinis longitudo compressa ignota. */
 interior FlaturaFructus
-_zlib_inflare (constans i8* datum, i32 mensura, Piscina* piscina,
-    b32 verificare_adler);
+_zlib_inflare (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina,
+            b32  verificare_adler);
 
 interior FlaturaFructus
 _zlib_inflare (
@@ -324,8 +343,12 @@ _zlib_inflare (
  * -------------------------------------------------- */
 
 interior i8*
-_partem_legere (constans character* via, s64 offset, s64 quantum,
-    Piscina* piscina, s64* lectum);
+_partem_legere (
+    constans character* via,
+                   s64  offset,
+                   s64  quantum,
+               Piscina* piscina,
+                   s64* lectum);
 
 interior i8*
 _partem_legere (
@@ -370,8 +393,10 @@ nomen structura {
 } SarcinaeContextus;
 
 interior s32
-_sarcinae_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_sarcinae_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _sarcinae_ambulator (
@@ -399,7 +424,9 @@ _sarcinae_ambulator (
 }
 
 interior constans character*
-_viam_serere (Piscina* piscina, constans character* a,
+_viam_serere (
+               Piscina* piscina,
+    constans character* a,
     constans character* b);
 
 interior constans character*
@@ -559,8 +586,10 @@ git_aperire (
  * -------------------------------------------------- */
 
 interior b32
-_sarcinae_offset (constans GitSarcina* s, constans i8* sha_bin,
-    s64* offset_exitus);
+_sarcinae_offset (
+    constans GitSarcina* s,
+            constans i8* sha_bin,
+                    s64* offset_exitus);
 
 interior b32
 _sarcinae_offset (
@@ -629,8 +658,12 @@ _sarcinae_offset (
  * -------------------------------------------------- */
 
 interior chorda
-_deltam_applicare (Piscina* piscina, chorda basis,
-    constans i8* delta, i32 mensura, b32* successus);
+_deltam_applicare (
+        Piscina* piscina,
+         chorda  basis,
+    constans i8* delta,
+            i32  mensura,
+            b32* successus);
 
 interior chorda
 _deltam_applicare (
@@ -772,15 +805,20 @@ _deltam_applicare (
 }
 
 interior GitObiectum
-_obiectum_ad_offset (GitRepositorium* repositorium,
-    constans GitSarcina* s, s64 offset, Piscina* piscina,
-    i32 profunditas);
+_obiectum_ad_offset (
+        GitRepositorium* repositorium,
+    constans GitSarcina* s,
+                    s64  offset,
+                Piscina* piscina,
+                    i32  profunditas);
 
 /* fenestra crescens: legere partem, inflare; INCOMPLETUS ->
  * fenestra quadruplicata */
 interior FlaturaFructus
-_zlib_e_sarcina (constans character* via, s64 offset,
-    Piscina* piscina);
+_zlib_e_sarcina (
+    constans character* via,
+                   s64  offset,
+               Piscina* piscina);
 
 interior FlaturaFructus
 _zlib_e_sarcina (
@@ -974,7 +1012,9 @@ _obiectum_ad_offset (
  * -------------------------------------------------- */
 
 interior GitObiectumGenus
-_genus_ex_titulo (constans i8* datum, i32 mensura);
+_genus_ex_titulo (
+    constans i8* datum,
+            i32  mensura);
 
 interior GitObiectumGenus
 _genus_ex_titulo (
@@ -1004,8 +1044,10 @@ _genus_ex_titulo (
  * sha petitum - lector se ipsum probat (lectio poculi CRC veneno
  * infecti: oraculum alterius GENERIS in ipso instrumento). */
 interior b32
-_obiectum_verificare (Piscina* piscina, constans GitObiectum* o,
-    constans character* sha);
+_obiectum_verificare (
+                 Piscina* piscina,
+    constans GitObiectum* o,
+      constans character* sha);
 
 interior b32
 _obiectum_verificare (
@@ -1147,7 +1189,9 @@ git_obiectum_legere (
  * -------------------------------------------------- */
 
 interior b32
-_sha_ex_chorda (chorda textus, character* exitus);
+_sha_ex_chorda (
+       chorda  textus,
+    character* exitus);
 
 interior b32
 _sha_ex_chorda (
@@ -1175,8 +1219,10 @@ _sha_ex_chorda (
 }
 
 interior b32
-_ref_legere (GitRepositorium* repositorium,
-    constans character* titulus, character* sha_exitus);
+_ref_legere (
+       GitRepositorium* repositorium,
+    constans character* titulus,
+             character* sha_exitus);
 
 interior b32
 _ref_legere (
@@ -1253,8 +1299,10 @@ _ref_legere (
  * -------------------------------------------------- */
 
 interior b32
-_praefixo_congruit (constans i8* sha_bin,
-    constans character* praefixum, i32 mensura);
+_praefixo_congruit (
+           constans i8* sha_bin,
+    constans character* praefixum,
+                   i32  mensura);
 
 interior b32
 _praefixo_congruit (
@@ -1287,7 +1335,8 @@ nomen structura {
 } ShaBreveContextus;
 
 interior vacuum
-_candidatum_notare (ShaBreveContextus* ctx,
+_candidatum_notare (
+     ShaBreveContextus* ctx,
     constans character* sha_hex);
 
 interior vacuum
@@ -1305,8 +1354,10 @@ _candidatum_notare (
 }
 
 interior s32
-_laxa_breve_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_laxa_breve_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _laxa_breve_ambulator (
@@ -1351,8 +1402,10 @@ _laxa_breve_ambulator (
 }
 
 interior b32
-_sha_breve_resolvere (GitRepositorium* repositorium,
-    constans character* praefixum, character* sha_exitus);
+_sha_breve_resolvere (
+       GitRepositorium* repositorium,
+    constans character* praefixum,
+             character* sha_exitus);
 
 interior b32
 _sha_breve_resolvere (
@@ -1437,8 +1490,9 @@ _sha_breve_resolvere (
 }
 
 interior b32
-_caput_legere (GitRepositorium* repositorium,
-    character* sha_exitus);
+_caput_legere (
+    GitRepositorium* repositorium,
+          character* sha_exitus);
 
 interior b32
 _caput_legere (
@@ -1481,8 +1535,10 @@ _caput_legere (
 
 /* signum adnotatum -> commissum (linea "object <sha>") */
 interior b32
-_ad_commissum_pellere (GitRepositorium* repositorium,
-    character* sha, Piscina* piscina);
+_ad_commissum_pellere (
+    GitRepositorium* repositorium,
+          character* sha,
+            Piscina* piscina);
 
 interior b32
 _ad_commissum_pellere (
@@ -1970,8 +2026,10 @@ git_massam_per_viam (
  * ================================================= */
 
 interior chorda
-_viam_construere (Piscina* piscina, constans character* praefixum,
-    chorda titulus);
+_viam_construere (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus);
 
 interior chorda
 _viam_construere (
@@ -2001,8 +2059,10 @@ _viam_construere (
 }
 
 interior constans character*
-_praefixum_filii (Piscina* piscina, constans character* praefixum,
-    chorda titulus);
+_praefixum_filii (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus);
 
 interior constans character*
 _praefixum_filii (
@@ -2027,9 +2087,14 @@ _praefixum_filii (
 }
 
 interior b32
-_viam_mutatam_addere (Xar* exitus, Piscina* piscina,
-    constans character* praefixum, chorda titulus,
-    chorda sha_vetus, chorda sha_novus, GitViaGenus genus);
+_viam_mutatam_addere (
+                   Xar* exitus,
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus,
+                chorda  sha_vetus,
+                chorda  sha_novus,
+           GitViaGenus  genus);
 
 interior b32
 _viam_mutatam_addere (
@@ -2061,9 +2126,13 @@ _viam_mutatam_addere (
 /* gradus unus recursionis: latus NIHIL = subarbor tota absens
  * (introitus omnes lateris alterius ADDITA aut REMOTA fiunt) */
 interior b32
-_arbores_differre_gradus (GitRepositorium* repositorium,
-    constans character* praefixum, constans character* sha_vetus,
-    constans character* sha_novus, Xar* exitus, Piscina* piscina);
+_arbores_differre_gradus (
+       GitRepositorium* repositorium,
+    constans character* praefixum,
+    constans character* sha_vetus,
+    constans character* sha_novus,
+                   Xar* exitus,
+               Piscina* piscina);
 
 interior b32
 _arbores_differre_gradus (
@@ -2266,7 +2335,9 @@ _arbores_differre_gradus (
 }
 
 interior s32
-_viae_mutatae_comparare (constans vacuum* a, constans vacuum* b);
+_viae_mutatae_comparare (
+    constans vacuum* a,
+    constans vacuum* b);
 
 interior s32
 _viae_mutatae_comparare (

@@ -9,6 +9,7 @@
 #include "tabula_dispersa.h"
 #include "stml.h"
 
+
 /* ==================================================
  * canon - schema STML generale (gradus II)
  *
@@ -55,6 +56,7 @@
  * clamat, non tacite iners fit.
  * ================================================== */
 
+
 /* ==================================================
  * Genera valorum attributorum
  * ================================================== */
@@ -85,6 +87,7 @@ nomen enumeratio {
      * attributorum composita manent (speculum lexatoris stml). */
     CANON_GENUS_TITULUS    = X
 } CanonGenusValoris;
+
 
 /* ==================================================
  * Diagnostica
@@ -147,43 +150,45 @@ nomen enumeratio {
 
 nomen structura {
     CanonVitiumGenus  genus;
-    StmlNodus*        nodus;      /* ubi (potest NIHIL) */
-    chorda*           elementum;  /* quod elementum */
-    chorda*           detail;     /* attributum/liberum/valor */
-    i32               numerus;    /* observatum (cardinalitas) */
-    i32               limes;      /* postulatum (cardinalitas) */
+           StmlNodus* nodus;      /* ubi (potest NIHIL) */
+              chorda* elementum;  /* quod elementum */
+              chorda* detail;     /* attributum/liberum/valor */
+                 i32  numerus;    /* observatum (cardinalitas) */
+                 i32  limes;      /* postulatum (cardinalitas) */
 } CanonVitium;
+
 
 /* ==================================================
  * Canon oneratus
  * ================================================== */
 
 nomen structura {
-                Piscina*  piscina;
-    InternamentumChorda*  intern;
-                 chorda*  dialectus;
-                 chorda*  versio;
-         TabulaDispersa*  elementa;    /* nomen -> CanonElementum* */
-                    Xar*  unicitates;  /* Xar de CanonUnicitas* */
-                    Xar*  citationes;  /* Xar de CanonCitatio* */
-                    Xar*  tituli;      /* Xar de chorda* - tituli
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                 chorda* dialectus;
+                 chorda* versio;
+         TabulaDispersa* elementa;    /* nomen -> CanonElementum* */
+                    Xar* unicitates;  /* Xar de CanonUnicitas* */
+                    Xar* citationes;  /* Xar de CanonCitatio* */
+                    Xar* tituli;      /* Xar de chorda* - tituli
                                         * elementorum, pro
                                         * suggestione ('an X?') */
-                 chorda*  radix;       /* nomen elementi radicis */
-         TabulaDispersa*  claves_externae; /* librarium (W1): clavis
+                 chorda* radix;       /* nomen elementi radicis */
+         TabulaDispersa* claves_externae; /* librarium (W1): clavis
                                         * sigillata verbatim ->
                                         * CanonClavisExterna*
                                         * (lib/canon.c); NIHIL si
                                         * canon blocum non fert.
                                         * Citabiles, non cudendae */
-                 chorda*  claves_fons; /* bibliotheca possidens */
+                 chorda* claves_fons; /* bibliotheca possidens */
 } Canon;
 
 /* clavis externa - individuum bibliothecae citabile (librarium) */
 nomen structura {
-    chorda*  clavis;   /* forma sigillata verbatim: &nomen; */
-    chorda*  genus;    /* elementum generis in eodem canone (kebab) */
+    chorda* clavis;   /* forma sigillata verbatim: &nomen; */
+    chorda* genus;    /* elementum generis in eodem canone (kebab) */
 } CanonClavisExterna;
+
 
 /* ==================================================
  * Lectio
@@ -192,27 +197,28 @@ nomen structura {
 /* Canonem ex fonte STML legere.
  * Redde NIHIL si canon ipse male formatus est (nuntius in causa). */
 Canon*
-canon_legere(
-    chorda               fons,
-    Piscina*             piscina,
+canon_legere (
+                 chorda  fons,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              causa);
+                 chorda* causa);
 
 /* Canonem ex elemento <canon> IAM PARSATO struere - via infixi
  * (subtree in documento vivente). canon_legere = parsare + hoc. */
 Canon*
-canon_ex_nodo(
-    StmlNodus*           elementum,
-    Piscina*             piscina,
+canon_ex_nodo (
+              StmlNodus* elementum,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              causa);
+                 chorda* causa);
 
 /* Canonem infixum invenire: liberum PRIMUM elementare radicis,
  * si titulo 'canon' - aliter NIHIL. Positio ipsa regula est:
  * <canon> serior in documento contentum est, non contractus. */
 StmlNodus*
-canon_infixum_invenire(
+canon_infixum_invenire (
     StmlNodus* elementum_radix);
+
 
 /* ==================================================
  * Iudicium
@@ -222,15 +228,16 @@ canon_infixum_invenire(
  * radix = nodus DOCUMENTI (resultus.radix) aut elementum radicis.
  * Redde: Xar de CanonVitium (vacuum = sanum) */
 Xar*
-canon_iudicare(
-    Canon*     canon,
+canon_iudicare (
+        Canon* canon,
     StmlNodus* radix,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Nuntius legibilis pro genere vitii */
 constans character*
-canon_nuntius(
+canon_nuntius (
     CanonVitiumGenus genus);
+
 
 /* ==================================================
  * Registrum - extensio ad canonem
@@ -253,17 +260,17 @@ canon_nuntius(
 /* Canonem per EXTENSIONEM viae invenire.
  * Redde: via canonis (ex piscina) aut chorda vacua si nullus. */
 chorda
-canon_registrum_quaerere(
-    chorda               catalogus,
-    constans character*  via_plagulae,
-    Piscina*             piscina);
+canon_registrum_quaerere (
+                chorda  catalogus,
+    constans character* via_plagulae,
+               Piscina* piscina);
 
 /* Canonem per ELEMENTUM RADICIS invenire (clavis '<nomen>').
  * Redde: via canonis aut chorda vacua si nullus. */
 chorda
-canon_registrum_quaerere_radice(
-    chorda            catalogus,
-    constans chorda*  radix,
-    Piscina*          piscina);
+canon_registrum_quaerere_radice (
+             chorda  catalogus,
+    constans chorda* radix,
+            Piscina* piscina);
 
 #endif /* CANON_H */

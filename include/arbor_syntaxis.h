@@ -8,6 +8,7 @@
 #include "arbor_lexema.h"
 #include "arbor_praeparator.h"
 
+
 /* ==================================================
  * ARBOR SYNTAXIS - C89 Parser
  *
@@ -29,6 +30,7 @@
  *       arbor_nodus_imprimere(res.radix, ZEPHYRUM);
  *   }
  * ================================================== */
+
 
 /* ==================================================
  * Node Types (genus)
@@ -109,6 +111,7 @@ nomen enumeratio {
     ARBOR_NODUS_EXTENSION
 } ArborNodusGenus;
 
+
 /* ==================================================
  * Error Types
  * ================================================== */
@@ -128,14 +131,15 @@ nomen enumeratio {
 } ArborSeveritas;
 
 nomen structura {
-    ArborErrorGenus     genus;
-    ArborSeveritas      severitas;
-    chorda              nuntius;
-    chorda              via_file;
-    i32                 linea;
-    i32                 columna;
-    i32                 longitudo;
+    ArborErrorGenus genus;
+     ArborSeveritas severitas;
+             chorda nuntius;
+             chorda via_file;
+                i32 linea;
+                i32 columna;
+                i32 longitudo;
 } ArborError;
+
 
 /* ==================================================
  * AST Node
@@ -147,28 +151,28 @@ nomen structura {
 nomen structura ArborNodus ArborNodus;
 
 structura ArborNodus {
-    ArborNodusGenus    genus;
+    ArborNodusGenus genus;
 
     /* Location span */
-    i32                byte_initium;
-    i32                byte_finis;
-    i32                linea_initium;
-    i32                columna_initium;
-    i32                linea_finis;
-    i32                columna_finis;
+    i32 byte_initium;
+    i32 byte_finis;
+    i32 linea_initium;
+    i32 columna_initium;
+    i32 linea_finis;
+    i32 columna_finis;
 
     /* Trivia for roundtrip */
-    Xar*               trivia_ante;   /* Xar of ArborTrivia */
-    Xar*               trivia_post;
+    Xar* trivia_ante;   /* Xar of ArborTrivia */
+    Xar* trivia_post;
 
     /* Standard tracking */
-    i8                 standard;      /* ARBOR_STANDARD_* */
+    i8 standard;      /* ARBOR_STANDARD_* */
 
     /* Macro provenance (NULL if from original source) */
-    ArborOrigo*        origo;
+    ArborOrigo* origo;
 
     /* Parent for navigation */
-    ArborNodus*        pater;
+    ArborNodus* pater;
 
     /* Resolved type (populated by arbor_typus, NULL until then) */
     structura ArborTypus*  typus_resolutum;
@@ -177,241 +181,243 @@ structura ArborNodus {
     unio {
         /* function-definition */
         structura {
-            Xar*          specifiers;    /* Xar of ArborNodus* (type/storage) */
-            ArborNodus*   declarator;
-            Xar*          old_params;    /* K&R style param decls */
-            ArborNodus*   corpus;        /* compound-statement */
+                   Xar* specifiers;    /* Xar of ArborNodus* (type/storage) */
+            ArborNodus* declarator;
+                   Xar* old_params;    /* K&R style param decls */
+            ArborNodus* corpus;        /* compound-statement */
         } functio;
 
         /* declaration */
         structura {
-            Xar*          specifiers;    /* Xar of ArborNodus* */
-            Xar*          declaratores;  /* Xar of ArborNodus* (init-declarators) */
+            Xar* specifiers;    /* Xar of ArborNodus* */
+            Xar* declaratores;  /* Xar of ArborNodus* (init-declarators) */
         } declaratio;
 
         /* struct/union-specifier */
         structura {
-            chorda*       titulus;       /* Tag name (may be NULL) */
-            Xar*          membra;        /* Member declarations */
-            chorda*       keyword_valor; /* Original keyword text (e.g., "structura") */
+            chorda* titulus;       /* Tag name (may be NULL) */
+               Xar* membra;        /* Member declarations */
+            chorda* keyword_valor; /* Original keyword text (e.g., "structura") */
         } aggregatum;
 
         /* enum-specifier */
         structura {
-            chorda*       titulus;
-            Xar*          enumeratores;
+            chorda* titulus;
+               Xar* enumeratores;
         } enum_spec;
 
         /* if-statement */
         structura {
-            ArborNodus*   conditio;
-            ArborNodus*   consequens;
-            ArborNodus*   alternans;     /* else branch, may be NULL */
+            ArborNodus* conditio;
+            ArborNodus* consequens;
+            ArborNodus* alternans;     /* else branch, may be NULL */
         } conditionale;
 
         /* switch-statement */
         structura {
-            ArborNodus*   conditio;
-            ArborNodus*   corpus;
+            ArborNodus* conditio;
+            ArborNodus* corpus;
         } selectio;
 
         /* while/do-statement */
         structura {
-            ArborNodus*   conditio;
-            ArborNodus*   corpus;
+            ArborNodus* conditio;
+            ArborNodus* corpus;
         } iteratio;
 
         /* for-statement */
         structura {
-            ArborNodus*   init;          /* May be NULL */
-            ArborNodus*   conditio;      /* May be NULL */
-            ArborNodus*   post;          /* May be NULL */
-            ArborNodus*   corpus;
+            ArborNodus* init;          /* May be NULL */
+            ArborNodus* conditio;      /* May be NULL */
+            ArborNodus* post;          /* May be NULL */
+            ArborNodus* corpus;
         } circuitus;
 
         /* binary-expression */
         structura {
-            ArborNodus*       sinister;
+                  ArborNodus* sinister;
             ArborLexemaGenus  operator;
-            ArborNodus*       dexter;
+                  ArborNodus* dexter;
         } binarium;
 
         /* unary-expression */
         structura {
             ArborLexemaGenus  operator;
-            ArborNodus*       operandum;
-            b32               est_postfix;  /* For ++ -- */
+                  ArborNodus* operandum;
+                         b32  est_postfix;  /* For ++ -- */
         } unarium;
 
         /* call-expression */
         structura {
-            ArborNodus*   callee;
-            Xar*          argumenta;
+            ArborNodus* callee;
+                   Xar* argumenta;
         } vocatio;
 
         /* member-expression */
         structura {
-            ArborNodus*       objectum;
+                  ArborNodus* objectum;
             ArborLexemaGenus  operator;  /* . or -> */
-            chorda*           membrum;
+                      chorda* membrum;
         } membrum;
 
         /* subscript-expression */
         structura {
-            ArborNodus*   array;
-            ArborNodus*   index;
+            ArborNodus* array;
+            ArborNodus* index;
         } subscriptum;
 
         /* cast-expression */
         structura {
-            ArborNodus*   typus;
-            ArborNodus*   expressio;
+            ArborNodus* typus;
+            ArborNodus* expressio;
         } conversio;
 
         /* sizeof-expression */
         structura {
-            ArborNodus*   operandum;     /* Expression or type */
-            b32           est_typus;     /* sizeof(type) vs sizeof expr */
+            ArborNodus* operandum;     /* Expression or type */
+                   b32  est_typus;     /* sizeof(type) vs sizeof expr */
         } sizeof_expr;
 
         /* conditional-expression (ternary) */
         structura {
-            ArborNodus*   conditio;
-            ArborNodus*   verum;
-            ArborNodus*   falsum;
+            ArborNodus* conditio;
+            ArborNodus* verum;
+            ArborNodus* falsum;
         } ternarium;
 
         /* assignment-expression */
         structura {
-            ArborNodus*       target;
+                  ArborNodus* target;
             ArborLexemaGenus  operator;  /* = += -= etc */
-            ArborNodus*       valor;
+                  ArborNodus* valor;
         } assignatio;
 
         /* compound-statement */
         structura {
-            Xar*          sententiae;    /* statements + declarations */
-            Xar*          trivia_vacuum; /* trivia for empty body (between { and }) */
+            Xar* sententiae;    /* statements + declarations */
+            Xar* trivia_vacuum; /* trivia for empty body (between { and }) */
         } compositum;
 
         /* return-statement */
         structura {
-            ArborNodus*   valor;         /* May be NULL */
+            ArborNodus* valor;         /* May be NULL */
         } reditio;
 
         /* goto-statement */
         structura {
-            chorda*       label;
+            chorda* label;
         } saltus;
 
         /* labeled-statement */
         structura {
-            chorda*       label;
-            ArborNodus*   sententia;
+                chorda* label;
+            ArborNodus* sententia;
         } titulatum;
 
         /* case-label */
         structura {
-            ArborNodus*   valor;
-            ArborNodus*   sententia;
+            ArborNodus* valor;
+            ArborNodus* sententia;
         } eventus;
 
         /* identifier, type specifier, storage class, type qualifier */
         structura {
-            chorda*       valor;         /* Interned for identifiers */
-            ArborLexemaGenus keyword;    /* For keywords like int, const, static */
+                      chorda* valor;         /* Interned for identifiers */
+            ArborLexemaGenus  keyword;    /* For keywords like int, const, static */
         } folium;
 
         /* integer literal */
         structura {
-            chorda*       textus;
-            i64           valor;
-            b32           est_unsigned;
-            b32           est_long;
+            chorda* textus;
+               i64  valor;
+               b32  est_unsigned;
+               b32  est_long;
         } numerus;
 
         /* float literal */
         structura {
-            chorda*       textus;
-            f64           valor;
+            chorda* textus;
+               f64  valor;
         } floating;
 
         /* char literal */
         structura {
-            chorda*       textus;
-            i32           valor;
+            chorda* textus;
+               i32  valor;
         } character_lit;
 
         /* string literal */
         structura {
-            chorda*       textus;
-            Xar*          partes;      /* For adjacent strings: Xar of ArborLexema* */
+            chorda* textus;
+               Xar* partes;      /* For adjacent strings: Xar of ArborLexema* */
         } string_lit;
 
         /* pointer declarator */
         structura {
-            Xar*          qualifiers;    /* Xar of ArborNodus* (const, volatile) */
-            ArborNodus*   inner;         /* Inner declarator */
+                   Xar* qualifiers;    /* Xar of ArborNodus* (const, volatile) */
+            ArborNodus* inner;         /* Inner declarator */
         } pointer;
 
         /* array declarator */
         structura {
-            ArborNodus*   inner;
-            ArborNodus*   size;          /* May be NULL for [] */
+            ArborNodus* inner;
+            ArborNodus* size;          /* May be NULL for [] */
         } array;
 
         /* init-declarator */
         structura {
-            ArborNodus*   declarator;
-            ArborNodus*   initializer;   /* May be NULL */
+            ArborNodus* declarator;
+            ArborNodus* initializer;   /* May be NULL */
         } init_decl;
 
         /* parameter declaration */
         structura {
-            Xar*          specifiers;
-            ArborNodus*   declarator;    /* May be NULL for abstract */
+                   Xar* specifiers;
+            ArborNodus* declarator;    /* May be NULL for abstract */
         } parametrum;
 
         /* initializer list { a, b, c } */
         structura {
-            Xar*          elementa;
-            Xar*          trivia_post_open;  /* "{" + trivia post { */
+            Xar* elementa;
+            Xar* trivia_post_open;  /* "{" + trivia post { */
         } init_list;
 
         /* error node */
         structura {
-            chorda        nuntius;
-            Xar*          lexemata_praetermissa;  /* Skipped tokens */
+            chorda  nuntius;
+               Xar* lexemata_praetermissa;  /* Skipped tokens */
         } error;
 
         /* generic children (for nodes with uniform child lists) */
         structura {
-            Xar*          liberi;        /* Xar of ArborNodus* */
+            Xar* liberi;        /* Xar of ArborNodus* */
         } genericum;
 
         /* comma expression */
         structura {
-            Xar*          expressiones;  /* Xar of ArborNodus* */
+            Xar* expressiones;  /* Xar of ArborNodus* */
         } comma;
 
         /* preprocessor directive (preserve mode) */
         structura {
-            ArborDirectivaGenus   genus;      /* Which directive (#include, #define, etc) */
-            Xar*                  lexemata;   /* All tokens on directive line */
+            ArborDirectivaGenus  genus;      /* Which directive (#include, #define, etc) */
+                            Xar* lexemata;   /* All tokens on directive line */
         } directiva;
 
     } datum;
 };
+
 
 /* ==================================================
  * Parse Result
  * ================================================== */
 
 nomen structura {
-    b32                 successus;
-    ArborNodus*         radix;         /* translation-unit */
-    Xar*                errores;       /* Xar of ArborError */
+           b32  successus;
+    ArborNodus* radix;         /* translation-unit */
+           Xar* errores;       /* Xar of ArborError */
 } ArborSyntaxisResultus;
+
 
 /* ==================================================
  * Parser State (opaque)
@@ -419,28 +425,33 @@ nomen structura {
 
 nomen structura ArborSyntaxis ArborSyntaxis;
 
+
 /* ==================================================
  * API - Creation
  * ================================================== */
 
 /* Creare parser */
-ArborSyntaxis* arbor_syntaxis_creare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern);
+ArborSyntaxis*
+arbor_syntaxis_creare (
+                Piscina* piscina,
+    InternamentumChorda* intern);
 
 /* Ponere keyword macros table (from preprocessor HYBRID mode)
  * Maps macro names to keyword token types.
  * E.g., "hic_manens" -> ARBOR_LEXEMA_STATIC */
-vacuum arbor_syntaxis_ponere_keyword_macros(
-    ArborSyntaxis*        syn,
-    TabulaDispersa*       keyword_macros);
+vacuum
+arbor_syntaxis_ponere_keyword_macros (
+     ArborSyntaxis* syn,
+    TabulaDispersa* keyword_macros);
 
 /* Ponere typedef nomina table (from preprocessor HYBRID mode)
  * Contains typedef names learned from included files.
  * E.g., "i8", "i32", etc. */
-vacuum arbor_syntaxis_ponere_typedef_nomina(
-    ArborSyntaxis*        syn,
-    TabulaDispersa*       typedef_nomina);
+vacuum
+arbor_syntaxis_ponere_typedef_nomina (
+     ArborSyntaxis* syn,
+    TabulaDispersa* typedef_nomina);
+
 
 /* ==================================================
  * API - Parsing
@@ -451,31 +462,42 @@ vacuum arbor_syntaxis_ponere_typedef_nomina(
  * lexemata: Xar of ArborLexemaOrigo (from preprocessor)
  * Returns: ArborSyntaxisResultus with AST or errors
  */
-ArborSyntaxisResultus arbor_syntaxis_parsere(
-    ArborSyntaxis*        syn,
-    Xar*                  lexemata);
+ArborSyntaxisResultus
+arbor_syntaxis_parsere (
+    ArborSyntaxis* syn,
+              Xar* lexemata);
 
 /* Parsere ex fonte directo (lexer + preprocessor + parser)
  *
  * Convenience function that runs full pipeline.
  */
-ArborSyntaxisResultus arbor_syntaxis_parsere_fontem(
-    ArborSyntaxis*        syn,
-    constans character*   fons,
-    i32                   mensura,
-    constans character*   via_file);
+ArborSyntaxisResultus
+arbor_syntaxis_parsere_fontem (
+         ArborSyntaxis* syn,
+    constans character* fons,
+                   i32  mensura,
+    constans character* via_file);
+
 
 /* ==================================================
  * API - Utilities
  * ================================================== */
 
 /* Obtinere nomen genus (for CSS selectors and debugging) */
-constans character* arbor_nodus_genus_nomen(ArborNodusGenus genus);
+constans character*
+arbor_nodus_genus_nomen (
+    ArborNodusGenus genus);
 
 /* Imprimere AST pro depuratione */
-vacuum arbor_nodus_imprimere(ArborNodus* nodus, i32 indentatio);
+vacuum
+arbor_nodus_imprimere (
+    ArborNodus* nodus,
+           i32  indentatio);
 
 /* Format error for display */
-chorda arbor_error_formare(Piscina* piscina, ArborError* err);
+chorda
+arbor_error_formare (
+       Piscina* piscina,
+    ArborError* err);
 
 #endif /* ARBOR_SYNTAXIS_H */

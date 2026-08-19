@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * CSS LEXEMA - lexator totalis pro CSS
  *
@@ -85,10 +86,10 @@ nomen enumeratio {
 
 nomen structura {
     CssLexemaGenus genus;
-    chorda         valor;    /* in fontem spectat - verbatim */
-    i32            offset;   /* octeti ab initio fontis */
-    i32            linea;    /* 1-basata */
-    i32            columna;  /* 1-basata, octeti */
+            chorda valor;    /* in fontem spectat - verbatim */
+               i32 offset;   /* octeti ab initio fontis */
+               i32 linea;    /* 1-basata */
+               i32 columna;  /* 1-basata, octeti */
 } CssLexema;
 
 /* Lexare fontem: Xar de CssLexema (per valorem), lexema FINIS
@@ -96,15 +97,15 @@ nomen structura {
  * Fons non copiatur. */
 Xar*
 css_lexare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fons,
-    i32                 mensura);
+                   i32  mensura);
 
 /* Oraculum fidelitatis: valores concatenati == fons */
 chorda
 css_lexemata_emittere (
     Piscina* piscina,
-    Xar*     lexemata);
+        Xar* lexemata);
 
 /* Titulus generis (pro debugging et probationibus) */
 constans character*

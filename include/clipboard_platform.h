@@ -12,6 +12,7 @@
 #include "piscina.h"
 #include "imago.h"
 
+
 /* ============================================================
  * Functiones Principales
  * ============================================================ */
@@ -22,7 +23,7 @@
  * Redde: VERUM si imago est in clipboard, FALSUM aliter
  */
 b32
-clipboard_habet_imaginem(vacuum);
+clipboard_habet_imaginem (vacuum);
 
 /*
  * clipboard_capere_imaginem - Capere imaginem ex clipboard
@@ -33,6 +34,7 @@ clipboard_habet_imaginem(vacuum);
  *        Si non est imago, successus = FALSUM.
  */
 ImagoFructus
-clipboard_capere_imaginem(Piscina* piscina);
+clipboard_capere_imaginem (
+    Piscina* piscina);
 
 #endif /* CLIPBOARD_PLATFORM_H */

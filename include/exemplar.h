@@ -5,6 +5,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ==================================================
  * EXEMPLAR - Bibliotheca Congruendi Exemplarium
  *
@@ -84,10 +85,10 @@ nomen structura Exemplar Exemplar;
  * Redde: Exemplar* si successus, NIHIL si error
  */
 Exemplar*
-exemplar_compilare(
-    chorda          exemplar_textus,
+exemplar_compilare (
+            chorda  exemplar_textus,
     ExemplarStatus* status,
-    Piscina*        piscina);
+           Piscina* piscina);
 
 
 /* ==================================================
@@ -102,9 +103,9 @@ exemplar_compilare(
  * Redde: VERUM si tota chorda congruit
  */
 b32
-exemplar_congruit_totum(
+exemplar_congruit_totum (
     constans Exemplar* exemplar,
-    chorda             textus);
+               chorda  textus);
 
 /* Invenire primam congruentiam in chorda
  *
@@ -114,9 +115,9 @@ exemplar_congruit_totum(
  * Redde: ExemplarFructus cum positione (congruit=FALSUM si non inventum)
  */
 ExemplarFructus
-exemplar_invenire(
+exemplar_invenire (
     constans Exemplar* exemplar,
-    chorda             textus);
+               chorda  textus);
 
 /* Invenire omnes congruentias in chorda
  *
@@ -128,11 +129,11 @@ exemplar_invenire(
  * Redde: Numerum congruentiarum inventarum
  */
 i32
-exemplar_invenire_omnes(
+exemplar_invenire_omnes (
     constans Exemplar*  exemplar,
-    chorda              textus,
-    ExemplarFructus**   fructus_out,
-    Piscina*            piscina);
+               chorda   textus,
+      ExemplarFructus** fructus_out,
+              Piscina*  piscina);
 
 
 /* ==================================================
@@ -149,10 +150,10 @@ exemplar_invenire_omnes(
  * Redde: VERUM si congruentia inventa
  */
 b32
-exemplar_congruit_literis(
+exemplar_congruit_literis (
     constans character* exemplar_cstr,
-    chorda              textus,
-    Piscina*            piscina);
+                chorda  textus,
+               Piscina* piscina);
 
 /* Convertere statum ad descriptionem humanam
  *
@@ -161,7 +162,7 @@ exemplar_congruit_literis(
  * Redde: C-string descriptionis (staticum, non liberandum)
  */
 constans character*
-exemplar_status_descriptio(
+exemplar_status_descriptio (
     ExemplarStatus status);
 
 

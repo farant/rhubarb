@@ -20,6 +20,7 @@
 #include "dialogus.h"
 #include "importatio_visus.h"
 
+
 /* ==================================================
  * SCHIRMATA - Systema Schirmarum (Screens)
  *
@@ -53,17 +54,17 @@
 
 /* Status salvatus pro libro widget in schirma */
 nomen structura {
-    i32 index_paginae;      /* Quae pagina aperta */
-    i32 cursor_linea;       /* Positio cursoris */
-    i32 cursor_columna;
+        i32 index_paginae;      /* Quae pagina aperta */
+        i32 cursor_linea;       /* Positio cursoris */
+        i32 cursor_columna;
     ModoVim modo;           /* Modus vim (normalis, inserere, visualis) */
 } SchirmaLibroStatus;
 
 /* Singula schirma */
 nomen structura {
-    ManagerWidget* manager;           /* Widgets pro hac schirma */
-    SchirmaLibroStatus libro_status;  /* Status salvatus libro */
-    b32 initiatus;                    /* An haec schirma initiata */
+         ManagerWidget* manager;           /* Widgets pro hac schirma */
+    SchirmaLibroStatus  libro_status;  /* Status salvatus libro */
+                   b32  initiatus;                    /* An haec schirma initiata */
     /* Modi flags - indicant quod widget activum in dextra parte */
     b32 modus_arx_caeli;              /* VERUM = cards mode */
     b32 modus_thema_visus;            /* VERUM = theme viewer mode */
@@ -78,7 +79,7 @@ nomen structura {
     ImportatioVisus* importatio_visus; /* Import preview (during import) */
     /* Dialogus modalis */
     Dialogus* dialogus;               /* Dialogus activus, vel NIHIL */
-    s32       dialogus_panel;         /* Quod panel: 0=sinister, 1=dexter */
+         s32  dialogus_panel;         /* Quod panel: 0=sinister, 1=dexter */
 } Schirma;
 
 /* Controller schirmarum */
@@ -86,21 +87,21 @@ nomen structura {
     ContextusWidget* ctx;
 
     Schirma schirmae[SCHIRMATA_MAXIMUS];
-    i32 index_currens;        /* Schirma currens (0-9) */
-    b32 praefixum_activum;    /* ctrl-a depressus, expectans commandum */
-    f64 tempus_praefixum;     /* Tempus quando ctrl-a depressus */
+        i32 index_currens;        /* Schirma currens (0-9) */
+        b32 praefixum_activum;    /* ctrl-a depressus, expectans commandum */
+        f64 tempus_praefixum;     /* Tempus quando ctrl-a depressus */
 
     /* Res communicatae inter omnes schirmas */
     LibroPaginarum* libro;
 
     /* Singleton widget instances (una per typum, non per schirmam) */
-    ArcCaeli*        arx_caeli;           /* Cloud castle widget */
-    ThemaVisus*      thema_visus;         /* Theme viewer widget */
-    SputnikSyntaxis* sputnik_syntaxis;    /* Syntax reference widget */
-    BibliaVisus*     biblia_visus;        /* Bible viewer widget */
-    LibrariumVisus*  librarium_visus;     /* Library viewer widget */
-    FonsVisus*       fons_visus;          /* Font glyph viewer widget */
-    CalendarioVisus* calendario_visus;    /* Calendar viewer widget */
+            ArcCaeli* arx_caeli;           /* Cloud castle widget */
+          ThemaVisus* thema_visus;         /* Theme viewer widget */
+     SputnikSyntaxis* sputnik_syntaxis;    /* Syntax reference widget */
+         BibliaVisus* biblia_visus;        /* Bible viewer widget */
+      LibrariumVisus* librarium_visus;     /* Library viewer widget */
+           FonsVisus* fons_visus;          /* Font glyph viewer widget */
+     CalendarioVisus* calendario_visus;    /* Calendar viewer widget */
     PinacothecaVisus* pinacotheca_visus;  /* Gallery viewer widget */
 } Schirmata;
 
@@ -119,9 +120,9 @@ nomen structura {
  * Redde: Schirmata* si successus, NIHIL si error
  */
 Schirmata*
-schirmata_creare(
+schirmata_creare (
     ContextusWidget* ctx,
-    LibroPaginarum*  libro);
+     LibroPaginarum* libro);
 
 
 /* ==================================================
@@ -136,16 +137,16 @@ schirmata_creare(
  * index: index schirmae (0-9)
  */
 vacuum
-schirmata_commutare_ad(
+schirmata_commutare_ad (
     Schirmata* schirmata,
-    s32        index);
+          s32  index);
 
 /* Commutare ad schirmam proximam (cyclus)
  *
  * schirmata: controller
  */
 vacuum
-schirmata_proxima(
+schirmata_proxima (
     Schirmata* schirmata);
 
 /* Commutare ad schirmam priorem (cyclus)
@@ -153,7 +154,7 @@ schirmata_proxima(
  * schirmata: controller
  */
 vacuum
-schirmata_prior(
+schirmata_prior (
     Schirmata* schirmata);
 
 /* Commutare ad modus Arx Caeli (cards)
@@ -162,8 +163,8 @@ schirmata_prior(
  * slug: slug schirmae cardium (NIHIL = root)
  */
 vacuum
-schirmata_commutare_ad_arx_caeli(
-    Schirmata*          schirmata,
+schirmata_commutare_ad_arx_caeli (
+             Schirmata* schirmata,
     constans character* slug);
 
 /* Commutare ad modus navigator
@@ -171,7 +172,7 @@ schirmata_commutare_ad_arx_caeli(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_navigator(
+schirmata_commutare_ad_navigator (
     Schirmata* schirmata);
 
 /* Commutare ad modus thema visus (theme viewer)
@@ -179,7 +180,7 @@ schirmata_commutare_ad_navigator(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_thema_visus(
+schirmata_commutare_ad_thema_visus (
     Schirmata* schirmata);
 
 /* Commutare ad modus sputnik syntaxis (syntax reference)
@@ -187,7 +188,7 @@ schirmata_commutare_ad_thema_visus(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_sputnik_syntaxis(
+schirmata_commutare_ad_sputnik_syntaxis (
     Schirmata* schirmata);
 
 /* Commutare ad modus biblia visus (Bible viewer)
@@ -195,7 +196,7 @@ schirmata_commutare_ad_sputnik_syntaxis(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_biblia_visus(
+schirmata_commutare_ad_biblia_visus (
     Schirmata* schirmata);
 
 /* Commutare ad modus librarium (library viewer)
@@ -204,8 +205,8 @@ schirmata_commutare_ad_biblia_visus(
  * quaestio: optional search query (NIHIL = none)
  */
 vacuum
-schirmata_commutare_ad_librarium(
-    Schirmata*          schirmata,
+schirmata_commutare_ad_librarium (
+             Schirmata* schirmata,
     constans character* quaestio);
 
 /* Commutare ad modus fons visus (font glyph viewer)
@@ -213,7 +214,7 @@ schirmata_commutare_ad_librarium(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_fons_visus(
+schirmata_commutare_ad_fons_visus (
     Schirmata* schirmata);
 
 /* Commutare ad modus calendario visus (calendar viewer)
@@ -221,7 +222,7 @@ schirmata_commutare_ad_fons_visus(
  * schirmata: controller
  */
 vacuum
-schirmata_commutare_ad_calendario_visus(
+schirmata_commutare_ad_calendario_visus (
     Schirmata* schirmata);
 
 /* Commutare ad modus pinacotheca (gallery viewer)
@@ -230,8 +231,8 @@ schirmata_commutare_ad_calendario_visus(
  * titulus: optional image title to navigate to (NIHIL = browser)
  */
 vacuum
-schirmata_commutare_ad_pinacotheca(
-    Schirmata*          schirmata,
+schirmata_commutare_ad_pinacotheca (
+             Schirmata* schirmata,
     constans character* titulus);
 
 /* Initiare import imaginis ex clipboard
@@ -241,7 +242,7 @@ schirmata_commutare_ad_pinacotheca(
  * Redde: VERUM si importatio initiata
  */
 b32
-schirmata_initiare_importationem_ex_clipboard(
+schirmata_initiare_importationem_ex_clipboard (
     Schirmata* schirmata);
 
 
@@ -258,17 +259,17 @@ schirmata_initiare_importationem_ex_clipboard(
  * panel: quod panel (0=sinister, 1=dexter)
  */
 vacuum
-schirmata_aperire_dialogum(
+schirmata_aperire_dialogum (
     Schirmata* schirmata,
-    Dialogus*  dialogus,
-    s32        panel);
+     Dialogus* dialogus,
+          s32  panel);
 
 /* Claudere dialogum currentem
  *
  * schirmata: controller
  */
 vacuum
-schirmata_claudere_dialogum(
+schirmata_claudere_dialogum (
     Schirmata* schirmata);
 
 /* Quaerere an dialogus activus
@@ -278,7 +279,7 @@ schirmata_claudere_dialogum(
  * Redde: VERUM si dialogus activus
  */
 b32
-schirmata_habet_dialogum(
+schirmata_habet_dialogum (
     Schirmata* schirmata);
 
 
@@ -297,8 +298,8 @@ schirmata_habet_dialogum(
  * Redde: VERUM si eventus tractatus
  */
 b32
-schirmata_tractare_eventum(
-    Schirmata*        schirmata,
+schirmata_tractare_eventum (
+           Schirmata* schirmata,
     constans Eventus* eventus);
 
 
@@ -313,10 +314,10 @@ schirmata_tractare_eventum(
  * scala: factor scalae fontis
  */
 vacuum
-schirmata_reddere(
-    Schirmata*       schirmata,
+schirmata_reddere (
+          Schirmata* schirmata,
     TabulaPixelorum* tabula,
-    i32              scala);
+                i32  scala);
 
 
 /* ==================================================
@@ -330,7 +331,7 @@ schirmata_reddere(
  * Redde: index (0-9)
  */
 i32
-schirmata_index_currens(
+schirmata_index_currens (
     Schirmata* schirmata);
 
 /* Obtinere manager schirmae currentis
@@ -340,7 +341,7 @@ schirmata_index_currens(
  * Redde: ManagerWidget* schirmae currentis
  */
 ManagerWidget*
-schirmata_manager_currens(
+schirmata_manager_currens (
     Schirmata* schirmata);
 
 /* Obtinere libro paginarum (communicatus)
@@ -350,7 +351,7 @@ schirmata_manager_currens(
  * Redde: LibroPaginarum*
  */
 LibroPaginarum*
-schirmata_libro(
+schirmata_libro (
     Schirmata* schirmata);
 
 
@@ -366,7 +367,7 @@ schirmata_libro(
  * schirmata: controller
  */
 vacuum
-schirmata_salvare_omnes(
+schirmata_salvare_omnes (
     Schirmata* schirmata);
 
 /* Carcare omnes schirmas ex repository
@@ -377,7 +378,7 @@ schirmata_salvare_omnes(
  * schirmata: controller
  */
 vacuum
-schirmata_carcare_omnes(
+schirmata_carcare_omnes (
     Schirmata* schirmata);
 
 

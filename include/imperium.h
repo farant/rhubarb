@@ -109,6 +109,7 @@ nomen b32 (*ImperiumMagnitudinator)(
     i32*    latitudo_facta,
     i32*    altitudo_facta);
 
+
 /* ==========================================================
  * VIVARIUM - imperium PARATUM (baculi inclusi)
  * ==========================================================
@@ -151,30 +152,30 @@ nomen b32 (*ImperiumMagnitudinator)(
  */
 
 nomen structura {
-    i32                portus;       /* ZEPHYRUM = auto-selectus */
+                   i32 portus;       /* ZEPHYRUM = auto-selectus */
     ImperiumAestimator aestimator;   /* OBLIGATORIUS */
     ImperiumImaginator imaginator;   /* NIHIL = sine /imperium/imago */
     ImperiumClaviarius claviarius;   /* NIHIL = sine /imperium/clavis */
     /* Claviarius FENESTRAM poscit, ceterae suturae VITREAM - ergo
      * datum proprium. Unum 'datum' pro utroque ruinam silentem
      * daret (typus alius, compilator tacet). */
-    vacuum*            claviarius_datum;
-    ImperiumMusarius   musarius;     /* NIHIL = sine /imperium/mus */
-    vacuum*            musarius_datum;
+              vacuum* claviarius_datum;
+    ImperiumMusarius  musarius;     /* NIHIL = sine /imperium/mus */
+              vacuum* musarius_datum;
     /* NIHIL = sine /imperium/magnitudo. FENESTRAM poscit ut
      * claviarius, non vitream - ergo datum proprium. */
-    ImperiumMagnitudinator magnitudinator;
-    vacuum*                magnitudinator_datum;
-    InternuntiusMissor missor;       /* opus nisi internuntius datur */
-    vacuum*            datum;        /* idem omnibus suturis */
-    i32                fenestra;     /* ID nativum (ZEPHYRUM = nullum) */
-    Hospitium*         hospitium;    /* NIHIL = intus creare */
+    ImperiumMagnitudinator  magnitudinator;
+                    vacuum* magnitudinator_datum;
+        InternuntiusMissor  missor;       /* opus nisi internuntius datur */
+                    vacuum* datum;        /* idem omnibus suturis */
+                       i32  fenestra;     /* ID nativum (ZEPHYRUM = nullum) */
+                 Hospitium* hospitium;    /* NIHIL = intus creare */
     /* NIHIL = intus creare. Datus esse potest, sed RECENS esse
      * debet: imperium methodum 'imperium.responsum' in ponte
      * registrat, et registratio gemina fallit - ergo pons UNUS
      * imperium UNUM fert. Pontem iam ligatum tradere vivarium
      * RECUSARE facit (probatum). */
-    Internuntius*      internuntius;
+    Internuntius* internuntius;
 } VivariumConfiguratio;
 
 /*
@@ -183,13 +184,13 @@ nomen structura {
  * @causa:   NOMINAT quid defecerit; numquam vacua cum !successus
  */
 nomen structura {
-    b32           successus;
-    Hospitium*    hospitium;
+             b32  successus;
+       Hospitium* hospitium;
     Internuntius* internuntius;
-    Imperium*     imperium;
-    i32           portus;
-    b32           propria;
-    chorda        causa;
+        Imperium* imperium;
+             i32  portus;
+             b32  propria;
+          chorda  causa;
 } Vivarium;
 
 /*
@@ -199,7 +200,8 @@ nomen structura {
  * quaeque applicatio eum ex documentis rursus deducat.
  */
 Vivarium
-imperium_vivarium (Piscina* piscina,
+imperium_vivarium (
+                                         Piscina* piscina,
                    constans VivariumConfiguratio* figura);
 
 /*
@@ -209,7 +211,9 @@ imperium_vivarium (Piscina* piscina,
  * ansa duplex aliter dimidia manet.
  */
 vacuum
-vivarium_gressus (constans Vivarium* vivarium);
+vivarium_gressus (
+    constans Vivarium* vivarium);
+
 
 /* ==================================================
  * Cyclus vitae
@@ -217,16 +221,16 @@ vivarium_gressus (constans Vivarium* vivarium);
 
 Imperium*
 imperium_creare (
-    Piscina*           piscina,
-    ImperiumAestimator aestimator,
-    vacuum*            datum);
+               Piscina* piscina,
+    ImperiumAestimator  aestimator,
+                vacuum* datum);
 
 /* Vias HTTP et methodum pontis 'imperium.responsum' registrare.
  * FALSUM si registratio fallit. */
 b32
 imperium_praebere (
-    Imperium*     imperium,
-    Hospitium*    hospitium,
+        Imperium* imperium,
+       Hospitium* hospitium,
     Internuntius* internuntius);
 
 /* Id fenestrae nativae (CGWindowID in macOS) ut instrumentum
@@ -235,7 +239,7 @@ imperium_praebere (
 vacuum
 imperium_fenestram_ponere (
     Imperium* imperium,
-    i32       id_fenestrae);
+         i32  id_fenestrae);
 
 /* Imaginatorem ponere -> viam 'POST /imperium/imago' aperit.
  * Sine eo via CDIV reddit (recusatio APERTA, non imago vacua).
@@ -247,9 +251,9 @@ imperium_fenestram_ponere (
  * aderant - nihil novi machinamenti opus fuit. */
 vacuum
 imperium_imaginatorem_ponere (
-    Imperium*          imperium,
-    ImperiumImaginator imaginator,
-    vacuum*            datum);
+              Imperium* imperium,
+    ImperiumImaginator  imaginator,
+                vacuum* datum);
 
 /* Claviarium ponere -> viam 'POST /imperium/clavis' aperit.
  * Sine eo via CDIV reddit (recusatio APERTA).
@@ -262,18 +266,18 @@ imperium_imaginatorem_ponere (
  * machinamentum sine causa esset. Nomen ignotum CD reddit. */
 vacuum
 imperium_claviarium_ponere (
-    Imperium*          imperium,
-    ImperiumClaviarius claviarius,
-    vacuum*            datum);
+              Imperium* imperium,
+    ImperiumClaviarius  claviarius,
+                vacuum* datum);
 
 /* Musarium ponere -> viam 'POST /imperium/mus' aperit.
  * Corpus: "<genus> <x> <y>" (e.g. "motus 180 260").
  * Synchrona ut clavis; genus ignotum aut coordinatae pravae CD. */
 vacuum
 imperium_musarium_ponere (
-    Imperium*         imperium,
+            Imperium* imperium,
     ImperiumMusarius  musarius,
-    vacuum*           datum);
+              vacuum* datum);
 
 /* Magnitudinatorem ponere -> viam 'POST /imperium/magnitudo' aperit.
  * Corpus: "<latitudo> <altitudo>" (e.g. "320 800").
@@ -284,9 +288,10 @@ imperium_musarium_ponere (
  * Synchrona ut clavis. Mensura non positiva CD. */
 vacuum
 imperium_magnitudinatorem_ponere (
-    Imperium*              imperium,
-    ImperiumMagnitudinator magnitudinator,
-    vacuum*                datum);
+                  Imperium* imperium,
+    ImperiumMagnitudinator  magnitudinator,
+                    vacuum* datum);
+
 
 /* ==================================================
  * Numeratores (mensura est productum)

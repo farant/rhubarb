@@ -57,9 +57,9 @@ nomen enumeratio {
 
 /* Fructus operationis */
 nomen structura {
-    FlaturaStatus status;
-    i8*           datum;      /* Output (allocatum ex piscina) */
-    i32           mensura;    /* Longitudo output */
+    FlaturaStatus  status;
+               i8* datum;      /* Output (allocatum ex piscina) */
+              i32  mensura;    /* Longitudo output */
 } FlaturaFructus;
 
 
@@ -76,10 +76,10 @@ nomen structura {
  * Redde: FlaturaFructus cum data decompressa
  */
 FlaturaFructus
-flatura_inflare(
+flatura_inflare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina);
+            i32  mensura,
+        Piscina* piscina);
 
 
 /* Inflare gzip datum (cum capite et cauda)
@@ -91,10 +91,10 @@ flatura_inflare(
  * Redde: FlaturaFructus cum data decompressa
  */
 FlaturaFructus
-flatura_gzip_inflare(
+flatura_gzip_inflare (
     constans i8* datum,
-    i32          mensura,
-    Piscina*     piscina);
+            i32  mensura,
+        Piscina* piscina);
 
 
 /* ========================================================================
@@ -111,11 +111,11 @@ flatura_gzip_inflare(
  * Redde: FlaturaFructus cum data compressa
  */
 FlaturaFructus
-flatura_deflare(
-    constans i8*              datum,
-    i32                       mensura,
-    FlaturaCompressioNivellus nivellus,
-    Piscina*                  piscina);
+flatura_deflare (
+                  constans i8* datum,
+                          i32  mensura,
+    FlaturaCompressioNivellus  nivellus,
+                      Piscina* piscina);
 
 
 /* Deflare datum cum gzip wrapper
@@ -128,11 +128,11 @@ flatura_deflare(
  * Redde: FlaturaFructus cum data gzip compressa
  */
 FlaturaFructus
-flatura_gzip_deflare(
-    constans i8*              datum,
-    i32                       mensura,
-    FlaturaCompressioNivellus nivellus,
-    Piscina*                  piscina);
+flatura_gzip_deflare (
+                  constans i8* datum,
+                          i32  mensura,
+    FlaturaCompressioNivellus  nivellus,
+                      Piscina* piscina);
 
 
 /* ========================================================================
@@ -147,9 +147,9 @@ flatura_gzip_deflare(
  * Redde: CRC-32 valor
  */
 i32
-flatura_crc32(
+flatura_crc32 (
     constans i8* datum,
-    i32          mensura);
+            i32  mensura);
 
 
 /* Calculare CRC-32 incrementaliter
@@ -161,10 +161,10 @@ flatura_crc32(
  * Redde: CRC-32 valor (XOR cum 0xFFFFFFFF pro finali)
  */
 i32
-flatura_crc32_continuare(
-    i32          crc,
+flatura_crc32_continuare (
+            i32  crc,
     constans i8* datum,
-    i32          mensura);
+            i32  mensura);
 
 
 /* Aestimare maximam magnitudinem compressam
@@ -174,7 +174,8 @@ flatura_crc32_continuare(
  * Redde: Maxima magnitudo possibilis post compressionem
  */
 i32
-flatura_maxima_magnitudo_compressa(i32 mensura_originalis);
+flatura_maxima_magnitudo_compressa (
+    i32 mensura_originalis);
 
 
 /* Obtinere nuntium erroris
@@ -184,7 +185,8 @@ flatura_maxima_magnitudo_compressa(i32 mensura_originalis);
  * Redde: Descriptio erroris (Latine)
  */
 constans character*
-flatura_status_nuntium(FlaturaStatus status);
+flatura_status_nuntium (
+    FlaturaStatus status);
 
 
 #endif /* FLATURA_H */

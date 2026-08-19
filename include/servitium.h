@@ -9,6 +9,7 @@
 #include "entitas.h"
 #include "entitas_repositorium.h"
 
+
 /* ==================================================
  * SERVITIUM - Service Registry
  *
@@ -43,10 +44,10 @@
  * intern: Internamentum pro chordis
  */
 nomen structura RegistrumServitii {
-    TabulaDispersa*      nomina;
+         TabulaDispersa* nomina;
     EntitasRepositorium* repositorium;
     InternamentumChorda* intern;
-    Piscina*             piscina;
+                Piscina* piscina;
 } RegistrumServitii;
 
 
@@ -63,8 +64,8 @@ nomen structura RegistrumServitii {
  * Redde: RegistrumServitii* si successus, NIHIL si fractura
  */
 RegistrumServitii*
-registrum_servitii_creare(
-    Piscina*             piscina,
+registrum_servitii_creare (
+                Piscina* piscina,
     EntitasRepositorium* repositorium,
     InternamentumChorda* intern);
 
@@ -84,25 +85,25 @@ registrum_servitii_creare(
  * Redde: VERUM si successus
  */
 b32
-servitium_registrare(
-    RegistrumServitii*  reg,
+servitium_registrare (
+     RegistrumServitii* reg,
     constans character* titulus,
-    chorda*             entitas_id);
+                chorda* entitas_id);
 
 /* Registrare servitium cum entitate iam creata */
 b32
-servitium_registrare_entitatem(
-    RegistrumServitii*  reg,
+servitium_registrare_entitatem (
+     RegistrumServitii* reg,
     constans character* titulus,
-    Entitas*            entitas);
+               Entitas* entitas);
 
 /* Deregistrare servitium
  *
  * Redde: VERUM si deregistratum, FALSUM si non inventum
  */
 b32
-servitium_deregistrare(
-    RegistrumServitii*  reg,
+servitium_deregistrare (
+     RegistrumServitii* reg,
     constans character* titulus);
 
 
@@ -115,8 +116,8 @@ servitium_deregistrare(
  * Redde: Entitas* si inventum, NIHIL si non
  */
 Entitas*
-servitium_obtinere(
-    RegistrumServitii*  reg,
+servitium_obtinere (
+     RegistrumServitii* reg,
     constans character* titulus);
 
 /* Obtinere ID servitii per nomen
@@ -124,19 +125,19 @@ servitium_obtinere(
  * Redde: chorda* ID si inventum, NIHIL si non
  */
 chorda*
-servitium_obtinere_id(
-    RegistrumServitii*  reg,
+servitium_obtinere_id (
+     RegistrumServitii* reg,
     constans character* titulus);
 
 /* Verificare si servitium registratum */
 b32
-servitium_habet(
-    RegistrumServitii*  reg,
+servitium_habet (
+     RegistrumServitii* reg,
     constans character* titulus);
 
 /* Numerus servitiorum registratorum */
 i32
-servitium_numerus(
+servitium_numerus (
     RegistrumServitii* reg);
 
 
@@ -152,7 +153,7 @@ servitium_numerus(
  * Redde: Numerus servitiorum discoopertorum
  */
 i32
-servitium_discoperire(
+servitium_discoperire (
     RegistrumServitii* reg);
 
 
@@ -162,7 +163,7 @@ servitium_discoperire(
 
 /* Imprimere registrum pro depuratione */
 vacuum
-servitium_imprimere(
+servitium_imprimere (
     RegistrumServitii* reg);
 
 #endif /* SERVITIUM_H */

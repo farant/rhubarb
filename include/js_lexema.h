@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * JS LEXEMA - lexator totalis pro JavaScript
  *
@@ -101,10 +102,10 @@ nomen enumeratio {
 
 nomen structura {
     JsLexemaGenus genus;
-    chorda        valor;    /* in fontem spectat - verbatim */
-    i32           offset;   /* octeti ab initio fontis */
-    i32           linea;    /* 1-basata */
-    i32           columna;  /* 1-basata, octeti */
+           chorda valor;    /* in fontem spectat - verbatim */
+              i32 offset;   /* octeti ab initio fontis */
+              i32 linea;    /* 1-basata */
+              i32 columna;  /* 1-basata, octeti */
 } JsLexema;
 
 /* Lexare fontem: Xar de JsLexema (per valorem), lexema FINIS
@@ -112,15 +113,15 @@ nomen structura {
  * Fons non copiatur. */
 Xar*
 js_lexare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fons,
-    i32                 mensura);
+                   i32  mensura);
 
 /* Oraculum fidelitatis: valores concatenati == fons */
 chorda
 js_lexemata_emittere (
     Piscina* piscina,
-    Xar*     lexemata);
+        Xar* lexemata);
 
 /* Titulus generis (pro debugging et probationibus) */
 constans character*

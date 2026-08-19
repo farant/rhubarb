@@ -40,7 +40,8 @@ nomen structura MultipartAedificator MultipartAedificator;
  * Redde: MultipartAedificator* vel NIHIL si error
  */
 MultipartAedificator*
-multipart_creare(Piscina* piscina);
+multipart_creare (
+    Piscina* piscina);
 
 
 /* ========================================================================
@@ -54,10 +55,10 @@ multipart_creare(Piscina* piscina);
  * valor:       Valor campi
  */
 vacuum
-multipart_addere_textum(
+multipart_addere_textum (
     MultipartAedificator* aed,
-    constans character*   nomen_campi,
-    chorda                valor);
+      constans character* nomen_campi,
+                  chorda  valor);
 
 /* Addere file field ad form
  *
@@ -69,13 +70,13 @@ multipart_addere_textum(
  * mensura:         Longitudo datorum
  */
 vacuum
-multipart_addere_fasciculum(
+multipart_addere_fasciculum (
     MultipartAedificator* aed,
-    constans character*   nomen_campi,
-    constans character*   nomen_fasciculi,
-    constans character*   content_type,
-    constans i8*          datum,
-    i32                   mensura);
+      constans character* nomen_campi,
+      constans character* nomen_fasciculi,
+      constans character* content_type,
+             constans i8* datum,
+                     i32  mensura);
 
 
 /* ========================================================================
@@ -87,14 +88,16 @@ multipart_addere_fasciculum(
  * Redde: chorda "multipart/form-data; boundary=..."
  */
 chorda
-multipart_content_type(MultipartAedificator* aed);
+multipart_content_type (
+    MultipartAedificator* aed);
 
 /* Construere corpus finale
  *
  * Redde: chorda cum complete multipart body
  */
 chorda
-multipart_corpus_finire(MultipartAedificator* aed);
+multipart_corpus_finire (
+    MultipartAedificator* aed);
 
 
 #endif /* MULTIPART_H */

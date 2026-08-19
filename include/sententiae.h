@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "sigillum.h"
 
+
 /* ====================================================================
  * SENTENTIAE - lector documentorum LOCIS INSCRIPTORUM
  *
@@ -119,7 +120,7 @@
 nomen structura
 {
     chorda vocabulum;   /* "principle", "retracted" - sine uncinis */
-    b32    fert_onus;   /* declaratum ut [x: ...] */
+       b32 fert_onus;   /* declaratum ut [x: ...] */
 } Gradus;
 
 /* --------------------------------------------------------------------
@@ -139,10 +140,10 @@ nomen enumeratio
 nomen structura
 {
     GenusRemissionis genus;
-    chorda           siglum;    /* "ST"; vacuum si interna */
-    chorda           scopus;    /* "13.5" aut "I q.21 a.3" */
-    chorda           textus;    /* span integer, verbatim */
-    b32              resoluta;  /* interna: meta in hoc libro exstat */
+              chorda siglum;    /* "ST"; vacuum si interna */
+              chorda scopus;    /* "13.5" aut "I q.21 a.3" */
+              chorda textus;    /* span integer, verbatim */
+                 b32 resoluta;  /* interna: meta in hoc libro exstat */
 } Remissio;
 
 /* Tabula siglorum ex prooemio - "| ST | Aquinas, Summa Theologiae |".
@@ -166,31 +167,31 @@ nomen structura
 
 nomen structura
 {
-    chorda   locus;              /* "4.obj.1.1" ut scriptus */
-    i32      profunditas;        /* numerus segmentorum */
-    chorda   textus;             /* iunctus, gradibus intactis */
-    chorda   textus_normatus;    /* forma sigillata */
+      chorda locus;              /* "4.obj.1.1" ut scriptus */
+         i32 profunditas;        /* numerus segmentorum */
+      chorda textus;             /* iunctus, gradibus intactis */
+      chorda textus_normatus;    /* forma sigillata */
     Sigillum sigillum;
 
-    s32      gradus;             /* index in vocabularium; -I si nullus */
-    chorda   onus_gradus;        /* payload de [retracted: ...] */
-    Xar*     annotationes;       /* chorda - uncina non-graduum */
-    Xar*     remissiones;        /* Remissio */
+       s32  gradus;             /* index in vocabularium; -I si nullus */
+    chorda  onus_gradus;        /* payload de [retracted: ...] */
+       Xar* annotationes;       /* chorda - uncina non-graduum */
+       Xar* remissiones;        /* Remissio */
 
-    i32      pars;               /* index in partes */
-    i32      linea;              /* linea loci, ab I - pro nuntiis */
+    i32 pars;               /* index in partes */
+    i32 linea;              /* linea loci, ab I - pro nuntiis */
 
     /* IUDICIA DERIVATA - semel hic computata, ne quisque consumptor
      * chordas iterum comparet (et alius aliter). */
-    b32      retractum;
-    b32      inresolutum;
+    b32 retractum;
+    b32 inresolutum;
 } Sententia;
 
 nomen structura
 {
     chorda titulus;   /* "Part II - On the mask" */
-    i32    prima;     /* index primae sententiae */
-    i32    numerus;   /* quot sententiae */
+       i32 prima;     /* index primae sententiae */
+       i32 numerus;   /* quot sententiae */
 } Pars;
 
 /* --------------------------------------------------------------------
@@ -227,9 +228,9 @@ nomen enumeratio
 nomen structura
 {
     GenusAnomaliae genus;
-    i32            linea;
-    chorda         textus;   /* fragmentum offendens */
-    chorda         causa;    /* semper NOMINAT - numquam vacua */
+               i32 linea;
+            chorda textus;   /* fragmentum offendens */
+            chorda causa;    /* semper NOMINAT - numquam vacua */
 } Anomalia;
 
 /* --------------------------------------------------------------------
@@ -246,31 +247,34 @@ nomen structura
 
 nomen structura
 {
-    b32             successus;
+                b32 successus;
     CulpaStructurae culpa;
-    i32             linea_culpae;
-    i32             columna_culpae;
-    chorda          causa;
+                i32 linea_culpae;
+                i32 columna_culpae;
+             chorda causa;
 
     /* prooemium */
-    chorda titulus;
-    chorda siglum;          /* "DI" - clavis canonica */
-    chorda status;          /* "DRAFT" */
-    chorda prooemium;       /* textus crudus ante primum saeptum */
-    Xar*   vocabularium;    /* Gradus */
-    Xar*   auctoritates;    /* Auctoritas */
+    chorda  titulus;
+    chorda  siglum;          /* "DI" - clavis canonica */
+    chorda  status;          /* "DRAFT" */
+    chorda  prooemium;       /* textus crudus ante primum saeptum */
+       Xar* vocabularium;    /* Gradus */
+       Xar* auctoritates;    /* Auctoritas */
 
     /* corpus */
-    Xar*   partes;          /* Pars */
-    Xar*   sententiae;      /* Sententia */
-    Xar*   anomaliae;       /* Anomalia */
+    Xar* partes;          /* Pars */
+    Xar* sententiae;      /* Sententia */
+    Xar* anomaliae;       /* Anomalia */
 } Liber;
 
 /* --------------------------------------------------------------------
  * VIII. LECTIO
  * -------------------------------------------------------------------- */
 
-Liber sententiae_legere (chorda fons, Piscina* piscina);
+Liber
+sententiae_legere (
+     chorda  fons,
+    Piscina* piscina);
 
 /* --------------------------------------------------------------------
  * IX. NORMALIZATIO ET SIGILLUM - duae functiones, consulto
@@ -301,9 +305,14 @@ Liber sententiae_legere (chorda fons, Piscina* piscina);
  * ancoram INTEGRAM contra claim falsam resolvit.
  * -------------------------------------------------------------------- */
 
-chorda   sententiae_normalizare (chorda textus, constans Xar* vocabularium,
+chorda
+sententiae_normalizare (
+                                  chorda  textus,
+                            constans Xar* vocabularium,
                                  Piscina* piscina);
-Sigillum sententiae_sigillare   (chorda textus_normatus);
+Sigillum
+sententiae_sigillare (
+    chorda textus_normatus);
 
 /* --------------------------------------------------------------------
  * X. QUAESTIO ET ANCORAE
@@ -325,22 +334,37 @@ nomen enumeratio
 nomen structura
 {
     StatusAncorae status;
-    chorda        locus_novus;   /* si MOTA */
+           chorda locus_novus;   /* si MOTA */
 } IudiciumAncorae;
 
-Sententia*      sententiae_per_locum   (constans Liber* liber, chorda locus);
-IudiciumAncorae sententiae_ancoram_iudicare (constans Liber* liber, chorda locus,
-                                             Sigillum sigillum);
+Sententia*
+sententiae_per_locum (
+    constans Liber* liber,
+            chorda  locus);
+IudiciumAncorae
+sententiae_ancoram_iudicare (
+                                       constans Liber* liber,
+                                               chorda  locus,
+                                             Sigillum  sigillum);
 
 /* Parens de "4.obj.1.1" est "4.obj.1". FALSUM si locus radix est. */
-b32 sententiae_parentem_capere (chorda locus, chorda* parens);
+b32
+sententiae_parentem_capere (
+    chorda  locus,
+    chorda* parens);
 
 /* --------------------------------------------------------------------
  * XI. NOMINA - functiones publicae, ne consumptor tabulas repetat
  * -------------------------------------------------------------------- */
 
-constans character* sententiae_culpae_nomen   (CulpaStructurae culpa);
-constans character* sententiae_anomaliae_nomen (GenusAnomaliae genus);
-constans character* sententiae_ancorae_nomen  (StatusAncorae status);
+constans character*
+sententiae_culpae_nomen (
+    CulpaStructurae culpa);
+constans character*
+sententiae_anomaliae_nomen (
+    GenusAnomaliae genus);
+constans character*
+sententiae_ancorae_nomen (
+    StatusAncorae status);
 
 #endif /* SENTENTIAE_H */

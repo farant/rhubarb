@@ -6,6 +6,7 @@
 #include "fenestra.h"
 #include "color.h"
 
+
 /* ==================================================
  * DELINEARE - Functiones Graphicae
  *
@@ -57,7 +58,7 @@ nomen enumeratio {
 /* Contextus delineandi pro gestione status */
 nomen structura {
     TabulaPixelorum* tabula;
-    Piscina* piscina;
+            Piscina* piscina;
 
     /* Rectangulum praecisionis */
     i32 praecisio_x;
@@ -90,7 +91,7 @@ nomen structura {
  */
 ContextusDelineandi*
 delineare_creare_contextum (
-    Piscina*         piscina,
+            Piscina* piscina,
     TabulaPixelorum* tabula);
 
 /* Restituere contextum ad statum initialem
@@ -114,7 +115,7 @@ delineare_restituere_contextum (
 vacuum
 delineare_ponere_modum (
     ContextusDelineandi* ctx,
-    modus_delineandi_t   modus);
+     modus_delineandi_t  modus);
 
 
 /* ==================================================
@@ -129,7 +130,7 @@ delineare_ponere_modum (
 vacuum
 delineare_ponere_exemplar (
     ContextusDelineandi* ctx,
-    constans i8          exemplar[VIII]);
+            constans i8  exemplar[VIII]);
 
 /* Ponere exemplar internum
  *
@@ -139,7 +140,7 @@ delineare_ponere_exemplar (
 vacuum
 delineare_ponere_exemplar_internum (
     ContextusDelineandi* ctx,
-    i32                  exemplar_id);
+                    i32  exemplar_id);
 
 /* Ponere offset exemplaris
  *
@@ -150,8 +151,8 @@ delineare_ponere_exemplar_internum (
 vacuum
 delineare_ponere_offset_exemplaris (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y);
+                    i32  x,
+                    i32  y);
 
 
 /* ==================================================
@@ -169,10 +170,10 @@ delineare_ponere_offset_exemplaris (
 vacuum
 delineare_ponere_praecisionem (
     ContextusDelineandi* ctx,
-    s32                  x,
-    s32                  y,
-    i32                  latitudo,
-    i32                  altitudo);
+                    s32  x,
+                    s32  y,
+                    i32  latitudo,
+                    i32  altitudo);
 
 /* Tollere praecisionem
  *
@@ -197,9 +198,9 @@ delineare_tollere_praecisionem (
 vacuum
 delineare_pixelum (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    Color                color);
+                    i32  x,
+                    i32  y,
+                  Color  color);
 
 
 /* ==================================================
@@ -218,11 +219,11 @@ delineare_pixelum (
 vacuum
 delineare_lineam (
     ContextusDelineandi* ctx,
-    i32                  x0,
-    i32                  y0,
-    i32                  x1,
-    i32                  y1,
-    Color                color);
+                    i32  x0,
+                    i32  y0,
+                    i32  x1,
+                    i32  y1,
+                  Color  color);
 
 /* Delineare lineam horizontalem
  *
@@ -235,10 +236,10 @@ delineare_lineam (
 vacuum
 delineare_lineam_horizontalem (
     ContextusDelineandi* ctx,
-    i32                  x0,
-    i32                  x1,
-    i32                  y,
-    Color                color);
+                    i32  x0,
+                    i32  x1,
+                    i32  y,
+                  Color  color);
 
 /* Delineare lineam verticalem
  *
@@ -251,10 +252,10 @@ delineare_lineam_horizontalem (
 vacuum
 delineare_lineam_verticalem (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y0,
-    i32                  y1,
-    Color                color);
+                    i32  x,
+                    i32  y0,
+                    i32  y1,
+                  Color  color);
 
 
 /* ==================================================
@@ -273,11 +274,11 @@ delineare_lineam_verticalem (
 vacuum
 delineare_rectangulum (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    Color                color);
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                  Color  color);
 
 /* Delineare rectangulum plenum
  *
@@ -291,11 +292,11 @@ delineare_rectangulum (
 vacuum
 delineare_rectangulum_plenum (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    Color                color);
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                  Color  color);
 
 /* Delineare rectangulum rotundum (cum angulis rotundis)
  *
@@ -310,12 +311,12 @@ delineare_rectangulum_plenum (
 vacuum
 delineare_rectangulum_rotundum (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    i32                  radius,
-    Color                color);
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                    i32  radius,
+                  Color  color);
 
 /* Delineare rectangulum rotundum plenum
  *
@@ -330,12 +331,12 @@ delineare_rectangulum_rotundum (
 vacuum
 delineare_rectangulum_rotundum_plenum (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    i32                  radius,
-    Color                color);
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                    i32  radius,
+                  Color  color);
 
 
 /* ==================================================
@@ -353,10 +354,10 @@ delineare_rectangulum_rotundum_plenum (
 vacuum
 delineare_circulum (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    s32                  radius,
-    Color                color);
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    s32  radius,
+                  Color  color);
 
 /* Delineare circulum plenum
  *
@@ -369,10 +370,10 @@ delineare_circulum (
 vacuum
 delineare_circulum_plenum (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    s32                  radius,
-    Color                color);
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    s32  radius,
+                  Color  color);
 
 
 /* ==================================================
@@ -393,13 +394,13 @@ delineare_circulum_plenum (
 vacuum
 delineare_triangulum (
     ContextusDelineandi* ctx,
-    i32                  x0,
-    i32                  y0,
-    i32                  x1,
-    i32                  y1,
-    i32                  x2,
-    i32                  y2,
-    Color                color);
+                    i32  x0,
+                    i32  y0,
+                    i32  x1,
+                    i32  y1,
+                    i32  x2,
+                    i32  y2,
+                  Color  color);
 
 /* Delineare triangulum plenum
  *
@@ -415,13 +416,13 @@ delineare_triangulum (
 vacuum
 delineare_triangulum_plenum (
     ContextusDelineandi* ctx,
-    i32                  x0,
-    i32                  y0,
-    i32                  x1,
-    i32                  y1,
-    i32                  x2,
-    i32                  y2,
-    Color                color);
+                    i32  x0,
+                    i32  y0,
+                    i32  x1,
+                    i32  y1,
+                    i32  x2,
+                    i32  y2,
+                  Color  color);
 
 
 /* ==================================================
@@ -440,11 +441,11 @@ delineare_triangulum_plenum (
 vacuum
 delineare_ellipsin (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    s32                  radius_x,
-    s32                  radius_y,
-    Color                color);
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    s32  radius_x,
+                    s32  radius_y,
+                  Color  color);
 
 /* Delineare ellipsin plenam
  *
@@ -458,11 +459,11 @@ delineare_ellipsin (
 vacuum
 delineare_ellipsin_plenam (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    s32                  radius_x,
-    s32                  radius_y,
-    Color                color);
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    s32  radius_x,
+                    s32  radius_y,
+                  Color  color);
 
 
 /* ==================================================
@@ -479,9 +480,9 @@ delineare_ellipsin_plenam (
 vacuum
 delineare_polygonum (
     ContextusDelineandi* ctx,
-    constans i32*        puncta,
-    i32                  numerus_punctorum,
-    Color                color);
+           constans i32* puncta,
+                    i32  numerus_punctorum,
+                  Color  color);
 
 /* Delineare polygonum plenum
  *
@@ -493,9 +494,9 @@ delineare_polygonum (
 vacuum
 delineare_polygonum_plenum (
     ContextusDelineandi* ctx,
-    constans i32*        puncta,
-    i32                  numerus_punctorum,
-    Color                color);
+           constans i32* puncta,
+                    i32  numerus_punctorum,
+                  Color  color);
 
 
 /* ==================================================
@@ -510,7 +511,7 @@ delineare_polygonum_plenum (
 vacuum
 delineare_vacare (
     ContextusDelineandi* ctx,
-    Color                color);
+                  Color  color);
 
 /* Delineare cratem (grid)
  *
@@ -521,8 +522,8 @@ delineare_vacare (
 vacuum
 delineare_cratem (
     ContextusDelineandi* ctx,
-    i32                  spatium,
-    Color                color);
+                    i32  spatium,
+                  Color  color);
 
 
 /* ==================================================
@@ -549,15 +550,15 @@ nomen enumeratio {
  * horizontalis: VERUM pro gradiente horizontali, FALSUM pro verticali
  */
 vacuum
-delineare_gradientum_linearem_dithered(
+delineare_gradientum_linearem_dithered (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    Color                color_initium,
-    Color                color_finis,
-    b32                  horizontalis);
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                  Color  color_initium,
+                  Color  color_finis,
+                    b32  horizontalis);
 
 /* Delineare gradientum radialem cum Floyd-Steinberg dithering (backwards compatibility)
  *
@@ -569,13 +570,13 @@ delineare_gradientum_linearem_dithered(
  * color_peripheria: color peripheriae
  */
 vacuum
-delineare_gradientum_radialem_dithered(
+delineare_gradientum_radialem_dithered (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    i32                  radius,
-    Color                color_centrum,
-    Color                color_peripheria);
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    i32  radius,
+                  Color  color_centrum,
+                  Color  color_peripheria);
 
 /* Delineare gradientum linearem cum dithering algorithmum et palette
  *
@@ -592,18 +593,18 @@ delineare_gradientum_radialem_dithered(
  * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
  */
 vacuum
-delineare_gradientum_linearem_dithered_cum_palette(
+delineare_gradientum_linearem_dithered_cum_palette (
     ContextusDelineandi* ctx,
-    i32                  x,
-    i32                  y,
-    i32                  latitudo,
-    i32                  altitudo,
-    Color                color_initium,
-    Color                color_finis,
-    b32                  horizontalis,
+                    i32  x,
+                    i32  y,
+                    i32  latitudo,
+                    i32  altitudo,
+                  Color  color_initium,
+                  Color  color_finis,
+                    b32  horizontalis,
     AlgorithusDithering  algorithmus,
-    constans Color*      palette,
-    i32                  numerus_colorum);
+         constans Color* palette,
+                    i32  numerus_colorum);
 
 /* Delineare gradientum radialem cum dithering algorithmum et palette
  *
@@ -618,16 +619,16 @@ delineare_gradientum_linearem_dithered_cum_palette(
  * numerus_colorum: numerus colorum in palette (ignoratur si palette == NIHIL)
  */
 vacuum
-delineare_gradientum_radialem_dithered_cum_palette(
+delineare_gradientum_radialem_dithered_cum_palette (
     ContextusDelineandi* ctx,
-    i32                  centrum_x,
-    i32                  centrum_y,
-    i32                  radius,
-    Color                color_centrum,
-    Color                color_peripheria,
+                    i32  centrum_x,
+                    i32  centrum_y,
+                    i32  radius,
+                  Color  color_centrum,
+                  Color  color_peripheria,
     AlgorithusDithering  algorithmus,
-    constans Color*      palette,
-    i32                  numerus_colorum);
+         constans Color* palette,
+                    i32  numerus_colorum);
 
 
 /* ==================================================

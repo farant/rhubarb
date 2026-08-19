@@ -38,6 +38,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * Nucleus: differentia seriei (identitas monstratoris)
  * ================================================== */
@@ -54,9 +55,9 @@ nomen enumeratio {
  * sine arithmetica. */
 nomen structura {
     DifferentiaGenus genus;
-    i32              index_a;
-    i32              index_b;
-    i32              numerus;   /* quot elementa in tractu */
+                 i32 index_a;
+                 i32 index_b;
+                 i32 numerus;   /* quot elementa in tractu */
 } DifferentiaTractus;
 
 /* Xar de DifferentiaTractus, ordine; NIHIL = memoria defecit.
@@ -69,6 +70,7 @@ differentia_seriei (
     i32                        numerus_a,
     constans vacuum* constans* b,
     i32                        numerus_b);
+
 
 /* ==================================================
  * Involucrum linearum
@@ -91,8 +93,9 @@ nomen structura {
 DifferentiaLinearum*
 differentia_linearum (
     Piscina* piscina,
-    chorda   a,
-    chorda   b);
+     chorda  a,
+     chorda  b);
+
 
 /* ==================================================
  * Emissio et summa
@@ -108,11 +111,11 @@ differentia_linearum (
  * differentia. */
 chorda
 differentia_unificata (
-    Piscina*                      piscina,
+                         Piscina* piscina,
     constans DifferentiaLinearum* d,
-    constans character*           titulus_a,
-    constans character*           titulus_b,
-    i32                           contextus);
+              constans character* titulus_a,
+              constans character* titulus_b,
+                             i32  contextus);
 
 /* pro conspectu '+N -M' (silex differentia, nomina primum) */
 nomen structura {

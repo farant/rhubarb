@@ -8,6 +8,7 @@
 #include "internamentum.h"
 #include "xar.h"
 
+
 /* ==================================================
  * ACTOR - Systema Actorum
  *
@@ -35,11 +36,11 @@
  * tempus_creatus: Quando nuntius creatus est
  */
 nomen structura Nuntius {
-    chorda*              mittens_id;
-    chorda*              genus;
-    TabulaDispersa*      datum;
-    f64                  tempus_creatus;
-    Piscina*             piscina;
+                 chorda* mittens_id;
+                 chorda* genus;
+         TabulaDispersa* datum;
+                    f64  tempus_creatus;
+                Piscina* piscina;
     InternamentumChorda* intern;
 } Nuntius;
 
@@ -58,11 +59,11 @@ nomen structura Nuntius {
  * Redde: Nuntius* si successus, NIHIL si fractura
  */
 Nuntius*
-nuntius_creare(
-    Piscina*             piscina,
+nuntius_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda*              mittens_id,
-    constans character*  genus);
+                 chorda* mittens_id,
+     constans character* genus);
 
 
 /* ==================================================
@@ -78,36 +79,36 @@ nuntius_creare(
  * Redde: VERUM si successus
  */
 b32
-nuntius_datum_ponere(
-    Nuntius*            nuntius,
+nuntius_datum_ponere (
+               Nuntius* nuntius,
     constans character* clavis,
-    chorda*             valor);
+                chorda* valor);
 
 /* Ponere valorem ex C string
  *
  * Creat chorda internata ex cstr et ponit in datum
  */
 b32
-nuntius_datum_ponere_literis(
-    Nuntius*            nuntius,
+nuntius_datum_ponere_literis (
+               Nuntius* nuntius,
     constans character* clavis,
     constans character* valor);
 
 /* Ponere valorem s32 (convertit ad chorda)
  */
 b32
-nuntius_datum_ponere_s32(
-    Nuntius*            nuntius,
+nuntius_datum_ponere_s32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s32                 valor);
+                   s32  valor);
 
 /* Capere valorem ex datum nuntii
  *
  * Redde: chorda* si inventum, NIHIL si non
  */
 chorda*
-nuntius_datum_capere(
-    Nuntius*            nuntius,
+nuntius_datum_capere (
+               Nuntius* nuntius,
     constans character* clavis);
 
 /* Capere valorem ut s32
@@ -115,40 +116,40 @@ nuntius_datum_capere(
  * Redde: VERUM si inventum et conversio successit
  */
 b32
-nuntius_datum_capere_s32(
-    Nuntius*            nuntius,
+nuntius_datum_capere_s32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s32*                valor);
+                   s32* valor);
 
 /* Capere valorem ut s64
  */
 b32
-nuntius_datum_capere_s64(
-    Nuntius*            nuntius,
+nuntius_datum_capere_s64 (
+               Nuntius* nuntius,
     constans character* clavis,
-    s64*                valor);
+                   s64* valor);
 
 /* Capere valorem ut f64
  */
 b32
-nuntius_datum_capere_f64(
-    Nuntius*            nuntius,
+nuntius_datum_capere_f64 (
+               Nuntius* nuntius,
     constans character* clavis,
-    f64*                valor);
+                   f64* valor);
 
 /* Capere valorem ut b32
  */
 b32
-nuntius_datum_capere_b32(
-    Nuntius*            nuntius,
+nuntius_datum_capere_b32 (
+               Nuntius* nuntius,
     constans character* clavis,
-    b32*                valor);
+                   b32* valor);
 
 /* Verificare si datum habet clavem
  */
 b32
-nuntius_datum_habet(
-    Nuntius*            nuntius,
+nuntius_datum_habet (
+               Nuntius* nuntius,
     constans character* clavis);
 
 
@@ -159,7 +160,7 @@ nuntius_datum_habet(
 /* Imprimere nuntium pro depuratione
  */
 vacuum
-nuntius_imprimere(
+nuntius_imprimere (
     Nuntius* nuntius);
 
 
@@ -173,8 +174,8 @@ nuntius_imprimere(
  * nuntii: Xar de Nuntius*
  */
 nomen structura Capsa {
-    chorda*  possessor_id;
-    Xar*     nuntii;
+     chorda* possessor_id;
+        Xar* nuntii;
     Piscina* piscina;
 } Capsa;
 
@@ -191,9 +192,9 @@ nomen structura Capsa {
  * Redde: Capsa* si successus, NIHIL si fractura
  */
 Capsa*
-capsa_creare(
+capsa_creare (
     Piscina* piscina,
-    chorda*  possessor_id);
+     chorda* possessor_id);
 
 
 /* ==================================================
@@ -205,8 +206,8 @@ capsa_creare(
  * Redde: VERUM si successus
  */
 b32
-capsa_addere(
-    Capsa*   capsa,
+capsa_addere (
+      Capsa* capsa,
     Nuntius* nuntius);
 
 /* Capere et removere primum nuntium (FIFO)
@@ -214,7 +215,7 @@ capsa_addere(
  * Redde: Nuntius* si habuit, NIHIL si vacua
  */
 Nuntius*
-capsa_tollere(
+capsa_tollere (
     Capsa* capsa);
 
 /* Inspicere primum nuntium sine remotione
@@ -222,25 +223,25 @@ capsa_tollere(
  * Redde: Nuntius* si habuit, NIHIL si vacua
  */
 Nuntius*
-capsa_inspicere(
+capsa_inspicere (
     Capsa* capsa);
 
 /* Numerus nuntiorum in capsa
  */
 i32
-capsa_numerus(
+capsa_numerus (
     Capsa* capsa);
 
 /* Verificare si capsa vacua
  */
 b32
-capsa_vacua_est(
+capsa_vacua_est (
     Capsa* capsa);
 
 /* Vacare capsam (removere omnes nuntios)
  */
 vacuum
-capsa_vacare(
+capsa_vacare (
     Capsa* capsa);
 
 #endif /* ACTOR_H */

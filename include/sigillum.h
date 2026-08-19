@@ -33,7 +33,7 @@ nomen structura {
 
 nomen structura {
     i32 status[8];       /* H0..H7 */
-    i8  massa[64];       /* bloccus partialis */
+     i8 massa[64];       /* bloccus partialis */
     i32 massa_mensura;   /* octeti in massa (0..63) */
     i64 totalis;         /* octeti toti visi */
 } SigillumContextus;
@@ -42,7 +42,7 @@ nomen structura {
 Sigillum
 sigillum_computare (
     constans vacuum* datum,
-    memoriae_index   mensura);
+     memoriae_index  mensura);
 
 /* incrementaliter */
 vacuum
@@ -52,8 +52,8 @@ sigillum_incipere (
 vacuum
 sigillum_addere (
     SigillumContextus* contextus,
-    constans vacuum*   datum,
-    memoriae_index     mensura);
+      constans vacuum* datum,
+       memoriae_index  mensura);
 
 Sigillum
 sigillum_finire (
@@ -63,7 +63,7 @@ sigillum_finire (
 vacuum
 sigillum_hex (
     constans Sigillum* sigillum,
-    character*         effusio);
+            character* effusio);
 
 b32
 sigillum_aequale (

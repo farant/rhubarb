@@ -48,18 +48,18 @@ nomen enumeratio {
 
 /* Result of single match */
 nomen structura {
-    QuaerereStatus status;
-    s32            puncta;        /* Score (higher = better match) */
-    i32*           positiones;    /* Match positions in target (allocatum ex piscina) */
-    i32            numerus;       /* Number of matched characters */
+    QuaerereStatus  status;
+               s32  puncta;        /* Score (higher = better match) */
+               i32* positiones;    /* Match positions in target (allocatum ex piscina) */
+               i32  numerus;       /* Number of matched characters */
 } QuaerereFructus;
 
 
 /* Result of batch filtering */
 nomen structura {
     chorda* elementa;             /* Sorted array of matching strings */
-    s32*    puncta;               /* Corresponding scores */
-    i32     numerus;              /* Number of matches */
+       s32* puncta;               /* Corresponding scores */
+       i32  numerus;              /* Number of matches */
 } QuaerereFiltrumFructus;
 
 
@@ -82,7 +82,7 @@ nomen structura {
  * Redde: Optiones cum case_sensitivus=FALSUM, intelligens_casus=VERUM
  */
 QuaerereOptiones
-quaerere_optiones_default(vacuum);
+quaerere_optiones_default (vacuum);
 
 
 /* ========================================================================
@@ -97,7 +97,7 @@ quaerere_optiones_default(vacuum);
  * Redde: VERUM si query est subsequence de target
  */
 b32
-quaerere_congruit(
+quaerere_congruit (
     chorda quaestio,
     chorda scopus);
 
@@ -111,9 +111,9 @@ quaerere_congruit(
  * Redde: VERUM si congruit
  */
 b32
-quaerere_congruit_cum_optionibus(
-    chorda            quaestio,
-    chorda            scopus,
+quaerere_congruit_cum_optionibus (
+              chorda  quaestio,
+              chorda  scopus,
     QuaerereOptiones* optiones);
 
 
@@ -130,9 +130,9 @@ quaerere_congruit_cum_optionibus(
  * Redde: QuaerereFructus cum status, puncta, positiones
  */
 QuaerereFructus
-quaerere_concordare(
-    chorda   quaestio,
-    chorda   scopus,
+quaerere_concordare (
+     chorda  quaestio,
+     chorda  scopus,
     Piscina* piscina);
 
 
@@ -146,11 +146,11 @@ quaerere_concordare(
  * Redde: QuaerereFructus
  */
 QuaerereFructus
-quaerere_concordare_cum_optionibus(
-    chorda            quaestio,
-    chorda            scopus,
+quaerere_concordare_cum_optionibus (
+              chorda  quaestio,
+              chorda  scopus,
     QuaerereOptiones* optiones,
-    Piscina*          piscina);
+             Piscina* piscina);
 
 
 /* ========================================================================
@@ -167,10 +167,10 @@ quaerere_concordare_cum_optionibus(
  * Redde: QuaerereFiltrumFructus cum elementa ordinata per score (descending)
  */
 QuaerereFiltrumFructus
-quaerere_filtrare(
-    chorda   quaestio,
-    chorda*  candidati,
-    i32      numerus_candidatorum,
+quaerere_filtrare (
+     chorda  quaestio,
+     chorda* candidati,
+        i32  numerus_candidatorum,
     Piscina* piscina);
 
 
@@ -185,12 +185,12 @@ quaerere_filtrare(
  * Redde: QuaerereFiltrumFructus
  */
 QuaerereFiltrumFructus
-quaerere_filtrare_cum_optionibus(
-    chorda            quaestio,
-    chorda*           candidati,
-    i32               numerus_candidatorum,
+quaerere_filtrare_cum_optionibus (
+              chorda  quaestio,
+              chorda* candidati,
+                 i32  numerus_candidatorum,
     QuaerereOptiones* optiones,
-    Piscina*          piscina);
+             Piscina* piscina);
 
 
 #endif /* QUAERERE_H */

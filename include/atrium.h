@@ -11,6 +11,7 @@
 #include "speculum.h"
 #include "imperium.h"
 
+
 /* atrium.h - applicatio vitreae PLENA (baculi inclusi)
  *
  * PROBLEMA MENSURATUM: forum, villa, mensor_ui eandem structuram
@@ -99,6 +100,7 @@
 
 nomen structura Atrium Atrium;
 
+
 /* ==================================================
  * Nuntius pontis: quid pagina misit
  * ==================================================
@@ -127,7 +129,9 @@ nomen enumeratio {
 } AtriumNuntiusGenus;
 
 AtriumNuntiusGenus
-atrium_nuntium_discernere (chorda nuntium);
+atrium_nuntium_discernere (
+    chorda nuntium);
+
 
 /* ==================================================
  * Quid hoc tictu accidit (vexilla ex atrium_gressus)
@@ -140,6 +144,7 @@ nomen enumeratio {
     ATRIUM_ACTUM_INTERITUS = 4 /* processus interretialis obiit;
                                 * atrium IAM recargavit */
 } AtriumActum;
+
 
 /* ==================================================
  * Configuratio
@@ -165,11 +170,11 @@ nomen vacuum (*AtriumEventor)(
 nomen structura {
     /* --- FENESTRA --- */
     constans character* titulus;        /* OBLIGATORIUS */
-    i32                 latitudo;       /* ZEPHYRUM = 1000 */
-    i32                 altitudo;       /* ZEPHYRUM = 900 */
-    i32                 vexilla;        /* ZEPHYRUM = CLAUDIBILIS
+                   i32  latitudo;       /* ZEPHYRUM = 1000 */
+                   i32  altitudo;       /* ZEPHYRUM = 900 */
+                   i32  vexilla;        /* ZEPHYRUM = CLAUDIBILIS
                                          * | MUTABILIS | CENTRATA */
-    b32                 retro;          /* VERUM = focum systematis
+    b32 retro;          /* VERUM = focum systematis
                                          * NON rapere (FENESTRA_RETRO;
                                          * vexillum domus '-retro' -
                                          * probationes fumi sine
@@ -177,7 +182,7 @@ nomen structura {
 
     /* --- PAGINA --- */
     constans CapsulaEmbed* capsula;       /* OBLIGATORIA */
-    constans character*    via_initialis; /* NIHIL = "index.html" */
+       constans character* via_initialis; /* NIHIL = "index.html" */
     /* RADIX: non-NIHIL = assetum e DIRECTORIO legere, non e capsula
      * infixa. Vexillum domus '-radix <via>' hoc implet.
      *
@@ -189,7 +194,7 @@ nomen structura {
      * 'capsula' OBLIGATORIA MANET: id est quod vehitur. Radix fontem
      * mutat, non pactum - ergo binarium sine vexillo semper id agit
      * quod vectum est. */
-    constans character*    capsula_radix;
+    constans character* capsula_radix;
     /* VERUM = inspector Safari CELATUS. Tres apps eum volunt, ergo
      * ordinarium est adesse; capsula vecta eum claudat.
      *
@@ -199,7 +204,7 @@ nomen structura {
      * propria (sicut 'fontes' speculo), non valor alius huius campi.
      * Campum 'sine_inspectore' nominare regionem occuparet quam
      * nondum decrevimus. */
-    b32                    sine_inspectore_webkit;
+    b32 sine_inspectore_webkit;
 
     /* --- SPECULUM (Cmd+Shift+D) --- */
     /* Capsula FONTIUM, non assetorum - a bin/capsula_generare
@@ -214,10 +219,10 @@ nomen structura {
     i32 portus;                         /* ZEPHYRUM = auto-selectus */
 
     /* --- GYRUS --- */
-    Mora           tictus_ms;           /* ZEPHYRUM = CC */
-    memoriae_index arena_mensura;       /* ZEPHYRUM = M * M */
-    AtriumEventor  eventor;             /* NIHIL = eventus absorbentur */
-    vacuum*        datum;               /* eventori traditum */
+              Mora  tictus_ms;           /* ZEPHYRUM = CC */
+    memoriae_index  arena_mensura;       /* ZEPHYRUM = M * M */
+     AtriumEventor  eventor;             /* NIHIL = eventus absorbentur */
+            vacuum* datum;               /* eventori traditum */
 } AtriumConfiguratio;
 
 /* Vexilla domus ex argv legere: -vivum, -portus N.
@@ -228,9 +233,10 @@ nomen structura {
  * duplicatio est quam atrium tollere debet. */
 vacuum
 atrium_vexilla_legere (
-    AtriumConfiguratio* figura,
-    integer             argc,
-    character**         argv);
+    AtriumConfiguratio*  figura,
+               integer   argc,
+             character** argv);
+
 
 /* ==================================================
  * Cyclus vitae
@@ -245,9 +251,9 @@ atrium_vexilla_legere (
  */
 Atrium*
 atrium_creare (
-    Piscina*                     piscina,
+                        Piscina* piscina,
     constans AtriumConfiguratio* figura,
-    chorda*                      causa);
+                         chorda* causa);
 
 /* Fenestram monstrare. Post methodos praebitas vocanda: pagina
  * onerari incipit, et methodus quae nondum praebita est vocari
@@ -280,6 +286,7 @@ vacuum
 atrium_destruere (
     Atrium* atrium);
 
+
 /* ==================================================
  * Iniectio: JS semel post 'paratus'
  * ==================================================
@@ -306,10 +313,12 @@ atrium_destruere (
  * Chorda COPIATUR in piscinam atrii - aedificator vocantis post hoc
  * liberari aut reficii potest.
  */
+
 vacuum
 atrium_iniectionem_ponere (
     Atrium* atrium,
     chorda  javascript);
+
 
 /* ==================================================
  * Accessus ad partes

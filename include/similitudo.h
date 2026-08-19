@@ -38,11 +38,11 @@ similitudo_punctare (
  * scribuntur; numerus scriptorum redditur. */
 i32
 similitudo_optima (
-    chorda             quaestio,
-    constans chorda*   candidati,
-    i32                numerus_candidatorum,
+               chorda  quaestio,
+      constans chorda* candidati,
+                  i32  numerus_candidatorum,
     SimilitudoFructus* fructus,
-    i32                maxima);
+                  i32  maxima);
 
 /* Ut optima, sed punctum candidati = OPTIMUM trans praefixa
  * quaestionis (pavimentum III codicilli; quaestio brevior III
@@ -57,10 +57,10 @@ similitudo_optima (
  * duorum 2026-07-30 (emitte + nexus + legatus). */
 i32
 similitudo_optima_decurtata (
-    chorda             quaestio,
-    constans chorda*   candidati,
-    i32                numerus_candidatorum,
+               chorda  quaestio,
+      constans chorda* candidati,
+                  i32  numerus_candidatorum,
     SimilitudoFructus* fructus,
-    i32                maxima);
+                  i32  maxima);
 
 #endif /* SIMILITUDO_H */

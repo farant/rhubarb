@@ -11,11 +11,13 @@
 #include "latina.h"
 #include "piscina.h"
 
+
 /* ============================================================
  * Constantae
  * ============================================================ */
 
 #define AQUINAS_COLORUM_NUMERUS XVI
+
 
 /* ============================================================
  * Aquinas Palette (16 colores)
@@ -30,6 +32,7 @@ externus constans i8 AQUINAS_PALETTE[XVI][III];
 /* Nomina colorum pro debug */
 externus constans character* AQUINAS_NOMINA[XVI];
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -38,11 +41,12 @@ externus constans character* AQUINAS_NOMINA[XVI];
  * DitheringFructus - Fructus operationis dithering
  */
 nomen structura {
-    b32   successus;
-    i8*   indices;    /* Palette indices 0-15, unus per pixel */
-    i32   latitudo;
-    i32   altitudo;
+    b32  successus;
+     i8* indices;    /* Palette indices 0-15, unus per pixel */
+    i32  latitudo;
+    i32  altitudo;
 } DitheringFructus;
+
 
 /* ============================================================
  * Functiones Principales
@@ -63,12 +67,12 @@ nomen structura {
  * Redde: DitheringFructus cum indices (unus byte per pixel)
  */
 DitheringFructus
-dithering_atkinson_colorum(
-    constans i8*  rgba,
-    i32           latitudo,
-    i32           altitudo,
+dithering_atkinson_colorum (
+     constans i8* rgba,
+             i32  latitudo,
+             i32  altitudo,
     constans b32  colores_activi[XVI],
-    Piscina*      piscina);
+         Piscina* piscina);
 
 /*
  * dithering_atkinson_griseum - Modus griseus
@@ -86,13 +90,14 @@ dithering_atkinson_colorum(
  * Redde: DitheringFructus cum indices
  */
 DitheringFructus
-dithering_atkinson_griseum(
-    constans i8*  rgba,
-    i32           latitudo,
-    i32           altitudo,
+dithering_atkinson_griseum (
+     constans i8* rgba,
+             i32  latitudo,
+             i32  altitudo,
     constans b32  colores_activi[XVI],
     constans i32  puncta[III],
-    Piscina*      piscina);
+         Piscina* piscina);
+
 
 /* ============================================================
  * Functiones Auxiliares
@@ -107,11 +112,11 @@ dithering_atkinson_griseum(
  * @altitudo:     Altitudo
  */
 vacuum
-dithering_indices_ad_rgba(
-    constans i8*  indices,
-    i8*           rgba_output,
-    i32           latitudo,
-    i32           altitudo);
+dithering_indices_ad_rgba (
+    constans i8* indices,
+             i8* rgba_output,
+            i32  latitudo,
+            i32  altitudo);
 
 /*
  * dithering_color_ex_indice - Obtinere colorem ex indice
@@ -120,25 +125,40 @@ dithering_indices_ad_rgba(
  * @r, @g, @b: Pointers ad valores output
  */
 vacuum
-dithering_color_ex_indice(s32 index, i8* r, i8* g, i8* b);
+dithering_color_ex_indice (
+    s32  index,
+     i8* r,
+     i8* g,
+     i8* b);
+
 
 /* ============================================================
  * Praeparatores Colorum (Presets)
  * ============================================================ */
 
 /* Omnes XVI colores */
-vacuum dithering_praeparare_omnes(b32 colores[XVI]);
+vacuum
+dithering_praeparare_omnes (
+    b32 colores[XVI]);
 
 /* Colores grisei: 0, 1, 3, 4, 5, 15 */
-vacuum dithering_praeparare_griseum(b32 colores[XVI]);
+vacuum
+dithering_praeparare_griseum (
+    b32 colores[XVI]);
 
 /* Colores calidi: 0, 5, 6, 9, 10, 11, 15 */
-vacuum dithering_praeparare_calidus(b32 colores[XVI]);
+vacuum
+dithering_praeparare_calidus (
+    b32 colores[XVI]);
 
 /* Colores frigidi: 0, 1, 5, 7, 12, 13, 14 */
-vacuum dithering_praeparare_frigidus(b32 colores[XVI]);
+vacuum
+dithering_praeparare_frigidus (
+    b32 colores[XVI]);
 
 /* Monochromaticus (niger et albus): 0, 5 */
-vacuum dithering_praeparare_monochromaticus(b32 colores[XVI]);
+vacuum
+dithering_praeparare_monochromaticus (
+    b32 colores[XVI]);
 
 #endif /* DITHERING_H */

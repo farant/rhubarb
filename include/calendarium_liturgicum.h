@@ -8,6 +8,7 @@
 #include "chorda.h"
 #include "fasti.h"
 
+
 /* ==================================================
  * CALENDARIUM LITURGICUM
  * Bibliotheca Calendarii Liturgici Romani (Forma Ordinaria)
@@ -102,67 +103,67 @@ nomen enumeratio {
 
 /* Celebratio - Una celebratio liturgica */
 nomen structura {
-    chorda               titulus;        /* Titulus plenus */
-    chorda               titulus_brevis; /* Titulus abbreviatus */
-    GradusCelebrationis  gradus;
-    ColorLiturgicus      color;
-    GenusCelebrationis   genus;
-    s32                  lectionarium;   /* Numerus in Lectionario (-1 si ignotus) */
+                 chorda titulus;        /* Titulus plenus */
+                 chorda titulus_brevis; /* Titulus abbreviatus */
+    GradusCelebrationis gradus;
+        ColorLiturgicus color;
+     GenusCelebrationis genus;
+                    s32 lectionarium;   /* Numerus in Lectionario (-1 si ignotus) */
 } Celebratio;
 
 
 /* InformatioCycli - Cyclus lectionum */
 nomen structura {
-    CyclusDominicalis  cyclus_dominicalis;  /* A, B, C */
-    CyclusQuotidianus  cyclus_quotidianus;  /* I, II */
-    s32                hebdomada_psalterii; /* 1-4 */
+    CyclusDominicalis cyclus_dominicalis;  /* A, B, C */
+    CyclusQuotidianus cyclus_quotidianus;  /* I, II */
+                  s32 hebdomada_psalterii; /* 1-4 */
 } InformatioCycli;
 
 
 /* InformatioTemporis - Positio in tempore liturgico */
 nomen structura {
-    TempusLiturgicum  tempus;
-    s32               hebdomada;          /* Numerus hebdomadae (1+) */
-    s32               dies_in_hebdomada;  /* 0=Dominica, 6=Sabbatum */
-    b32               est_dominica;
+    TempusLiturgicum tempus;
+                 s32 hebdomada;          /* Numerus hebdomadae (1+) */
+                 s32 dies_in_hebdomada;  /* 0=Dominica, 6=Sabbatum */
+                 b32 est_dominica;
 } InformatioTemporis;
 
 
 /* InformatioDiei - Informationes completae pro una die */
 nomen structura {
-    Dies                dies;
+                  Dies  dies;
     InformatioTemporis  tempus_info;
-    Celebratio*         celebrationes;
-    s32                 numerus_celebrationum;
-    Celebratio*         celebratio_principalis;
-    ColorLiturgicus     color_diei;
-    InformatioCycli     cyclus;
-    chorda              titulus_diei;
+            Celebratio* celebrationes;
+                   s32  numerus_celebrationum;
+            Celebratio* celebratio_principalis;
+       ColorLiturgicus  color_diei;
+       InformatioCycli  cyclus;
+                chorda  titulus_diei;
 } InformatioDiei;
 
 
 /* AnchoresMobiles - Dies movebiles pro anno */
 nomen structura {
-    s32   annus;
+    s32 annus;
 
     /* Pascha et derivatae */
-    Dies  pascha;
-    Dies  feria_iv_cinerum;
-    Dies  dominica_i_quadragesimae;
-    Dies  dominica_palmarum;
-    Dies  feria_v_in_cena_domini;
-    Dies  feria_vi_in_passione;
-    Dies  sabbatum_sanctum;
-    Dies  ascensio;
-    Dies  pentecoste;
-    Dies  ss_trinitas;
-    Dies  corpus_christi;
-    Dies  cor_iesu;
+    Dies pascha;
+    Dies feria_iv_cinerum;
+    Dies dominica_i_quadragesimae;
+    Dies dominica_palmarum;
+    Dies feria_v_in_cena_domini;
+    Dies feria_vi_in_passione;
+    Dies sabbatum_sanctum;
+    Dies ascensio;
+    Dies pentecoste;
+    Dies ss_trinitas;
+    Dies corpus_christi;
+    Dies cor_iesu;
 
     /* Adventus et Nativitas */
-    Dies  dominica_i_adventus;
-    Dies  christus_rex;
-    Dies  baptisma_domini;
+    Dies dominica_i_adventus;
+    Dies christus_rex;
+    Dies baptisma_domini;
 } AnchoresMobiles;
 
 
@@ -175,11 +176,11 @@ nomen structura CalendariumLiturgicum CalendariumLiturgicum;
  * ================================================== */
 
 CalendariumLiturgicum*
-calendarium_creare(
+calendarium_creare (
     Piscina* piscina);
 
 vacuum
-calendarium_destruere(
+calendarium_destruere (
     CalendariumLiturgicum* cal);
 
 
@@ -189,10 +190,10 @@ calendarium_destruere(
 
 /* Obtinere informationes completas pro die */
 InformatioDiei*
-calendarium_obtinere_diem(
+calendarium_obtinere_diem (
     CalendariumLiturgicum* cal,
-    Dies                   dies,
-    Piscina*               piscina);
+                     Dies  dies,
+                  Piscina* piscina);
 
 
 /* ==================================================
@@ -200,19 +201,19 @@ calendarium_obtinere_diem(
  * ================================================== */
 
 TempusLiturgicum
-calendarium_tempus(
+calendarium_tempus (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 InformatioTemporis
-calendarium_tempus_info(
+calendarium_tempus_info (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 ColorLiturgicus
-calendarium_color_temporis(
+calendarium_color_temporis (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 
 /* ==================================================
@@ -220,21 +221,21 @@ calendarium_color_temporis(
  * ================================================== */
 
 AnchoresMobiles*
-calendarium_anchorae(
+calendarium_anchorae (
     CalendariumLiturgicum* cal,
-    s32                    annus);
+                      s32  annus);
 
 Dies
-calendarium_initium_temporis(
+calendarium_initium_temporis (
     CalendariumLiturgicum* cal,
-    TempusLiturgicum       tempus,
-    s32                    annus);
+         TempusLiturgicum  tempus,
+                      s32  annus);
 
 Dies
-calendarium_finis_temporis(
+calendarium_finis_temporis (
     CalendariumLiturgicum* cal,
-    TempusLiturgicum       tempus,
-    s32                    annus);
+         TempusLiturgicum  tempus,
+                      s32  annus);
 
 
 /* ==================================================
@@ -242,17 +243,17 @@ calendarium_finis_temporis(
  * ================================================== */
 
 CyclusDominicalis
-calendarium_cyclus_dominicalis(
+calendarium_cyclus_dominicalis (
     s32 annus);
 
 CyclusQuotidianus
-calendarium_cyclus_quotidianus(
+calendarium_cyclus_quotidianus (
     s32 annus);
 
 s32
-calendarium_hebdomada_psalterii(
+calendarium_hebdomada_psalterii (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 
 /* ==================================================
@@ -260,29 +261,29 @@ calendarium_hebdomada_psalterii(
  * ================================================== */
 
 b32
-calendarium_est_feria_cinerum(
+calendarium_est_feria_cinerum (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 b32
-calendarium_est_hebdomada_sancta(
+calendarium_est_hebdomada_sancta (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 b32
-calendarium_est_triduum(
+calendarium_est_triduum (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 b32
-calendarium_est_octava_paschae(
+calendarium_est_octava_paschae (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 b32
-calendarium_est_octava_nativitatis(
+calendarium_est_octava_nativitatis (
     CalendariumLiturgicum* cal,
-    Dies                   dies);
+                     Dies  dies);
 
 
 /* ==================================================
@@ -290,14 +291,14 @@ calendarium_est_octava_nativitatis(
  * ================================================== */
 
 Dies
-calendarium_proxima_dominica(
+calendarium_proxima_dominica (
     Dies dies);
 
 Dies
-calendarium_invenire_festum(
+calendarium_invenire_festum (
     CalendariumLiturgicum* cal,
-    chorda                 titulus,
-    s32                    annus);
+                   chorda  titulus,
+                      s32  annus);
 
 
 /* ==================================================
@@ -305,27 +306,27 @@ calendarium_invenire_festum(
  * ================================================== */
 
 chorda
-calendarium_nomen_temporis(
-    TempusLiturgicum tempus,
-    b32              abbreviatum,
-    Piscina*         piscina);
+calendarium_nomen_temporis (
+    TempusLiturgicum  tempus,
+                 b32  abbreviatum,
+             Piscina* piscina);
 
 chorda
-calendarium_nomen_gradus(
-    GradusCelebrationis gradus,
-    b32                 abbreviatum,
-    Piscina*            piscina);
+calendarium_nomen_gradus (
+    GradusCelebrationis  gradus,
+                    b32  abbreviatum,
+                Piscina* piscina);
 
 chorda
-calendarium_nomen_coloris(
-    ColorLiturgicus color,
-    Piscina*        piscina);
+calendarium_nomen_coloris (
+    ColorLiturgicus  color,
+            Piscina* piscina);
 
 chorda
-calendarium_formare_titulum(
+calendarium_formare_titulum (
     CalendariumLiturgicum* cal,
-    Dies                   dies,
-    Piscina*               piscina);
+                     Dies  dies,
+                  Piscina* piscina);
 
 /* Obtinere nomina omnium celebrationum pro die (mobiles et fixae)
  *
@@ -338,8 +339,8 @@ calendarium_formare_titulum(
  * Redde: chorda cum nominibus (e.g. "Easter", "St. Stephen", "Ss. Peter, Paul")
  */
 chorda
-calendarium_nomen_celebrationum(
-    Dies     dies,
+calendarium_nomen_celebrationum (
+       Dies  dies,
     Piscina* piscina);
 
 
@@ -349,13 +350,13 @@ calendarium_nomen_celebrationum(
 
 /* SanctoraleDatum - Entry in the sanctorale table */
 nomen structura {
-    s32                  mensis;
-    s32                  dies;
-    constans character*  titulus;         /* English name */
-    constans character*  titulus_brevis;  /* Abbreviated name */
+                    s32  mensis;
+                    s32  dies;
+     constans character* titulus;         /* English name */
+     constans character* titulus_brevis;  /* Abbreviated name */
     GradusCelebrationis  gradus;
-    ColorLiturgicus      color;
-    b32                  dies_obligationis;  /* US Holy Day of Obligation */
+        ColorLiturgicus  color;
+                    b32  dies_obligationis;  /* US Holy Day of Obligation */
 } SanctoraleDatum;
 
 
@@ -365,14 +366,14 @@ nomen structura {
 
 /* Get sanctorale entries for a given date */
 constans SanctoraleDatum*
-sanctorale_obtinere(
+sanctorale_obtinere (
     s32  mensis,
     s32  dies,
     s32* numerus_celebrationum);
 
 /* Get number of entries in sanctorale */
 s32
-sanctorale_numerus(vacuum);
+sanctorale_numerus (vacuum);
 
 
 /* ==================================================

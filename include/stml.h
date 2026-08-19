@@ -8,6 +8,7 @@
 #include "xar.h"
 #include "internamentum.h"
 
+
 /* ==================================================
  * STML - Structured Text Markup Language
  *
@@ -43,6 +44,7 @@
  *   attributi irrepraesentabilis; tags crudi verbatim.
  * ================================================== */
 
+
 /* ==================================================
  * Genera Nodorum
  * ================================================== */
@@ -57,6 +59,7 @@ nomen enumeratio {
     STML_NODUS_TRANSCLUSIO  = VII   /* <<selector>> */
 } StmlNodusGenus;
 
+
 /* ==================================================
  * Directio Captionis (Capture Operators)
  * ================================================== */
@@ -67,6 +70,7 @@ nomen enumeratio {
     STML_CAPTIO_RETRO       = II,   /* backward <) tag> */
     STML_CAPTIO_FARCIMEN    = III   /* sandwich <= tag => */
 } StmlCaptioDirectio;
+
 
 /* ==================================================
  * Status Parsationis
@@ -82,6 +86,7 @@ nomen enumeratio {
     STML_ERROR_VACUUM_INPUT          = VI,
     STML_ERROR_CAPTIO                = VII   /* Capture operator error */
 } StmlStatus;
+
 
 /* ==================================================
  * Genera Tokenum (Internal)
@@ -113,6 +118,7 @@ nomen enumeratio {
     STML_TOKEN_PERCENTUM_CLAUDERE   = XIX    /* </%> */
 } StmlTokenGenus;
 
+
 /* ==================================================
  * Structurae
  * ================================================== */
@@ -130,11 +136,11 @@ nomen structura {
  * "Node in STML tree"
  */
 nomen structura StmlNodus {
-    StmlNodusGenus           genus;
-    chorda*                  titulus;         /* Tag name for elements */
-    chorda*                  valor;           /* Text/comment/PI/transclusion content */
-    Xar*                     attributa;       /* Xar de StmlAttributum */
-    Xar*                     liberi;          /* Xar de StmlNodus* */
+    StmlNodusGenus  genus;
+            chorda* titulus;         /* Tag name for elements */
+            chorda* valor;           /* Text/comment/PI/transclusion content */
+               Xar* attributa;       /* Xar de StmlAttributum */
+               Xar* liberi;          /* Xar de StmlNodus* */
     structura StmlNodus*     parens;
 
     /* Linea fontis ubi nodus incipit (1-basata; 0 = non e
@@ -143,39 +149,40 @@ nomen structura StmlNodus {
      * fidelitas byte-exacta intacta. Consumptor primus:
      * diagnostica canonis (vitium sine linea in plagula 49k
      * linearum venatio est, non diagnosticum). */
-    i32                      linea;
+    i32 linea;
 
     /* STML-specific fields */
-    b32                      crudus;          /* Raw content tag (! suffix) */
-    StmlCaptioDirectio       captio_directio;
-    i32                      captio_numerus;  /* Number of capture parens */
-    b32                      clausura_anonyma; /* Clausum per </> - scriptor
+                   b32 crudus;          /* Raw content tag (! suffix) */
+    StmlCaptioDirectio captio_directio;
+                   i32 captio_numerus;  /* Number of capture parens */
+                   b32 clausura_anonyma; /* Clausum per </> - scriptor
                                                 * formam authoris servat */
 
     /* Fragment fields */
-    b32                      fragmentum;      /* Is this a fragment? <#> or <#id> */
-    chorda*                  fragmentum_id;   /* Fragment ID (NIHIL for anonymous) */
+       b32  fragmentum;      /* Is this a fragment? <#> or <#id> */
+    chorda* fragmentum_id;   /* Fragment ID (NIHIL for anonymous) */
 
     /* Augmentatio (librarium): '<% &clavis;>' - clavis destinata
      * VERBATIM sigillata servatur ('&c;' - eaedem litterae quibus
      * citationes canonis comparantur). NIHIL = elementum
      * ordinarium; genus manet ELEMENTUM (titulus "%" geritur),
      * ergo consumptores generum intacti. */
-    chorda*                  augmentum_clavis;
+    chorda* augmentum_clavis;
 } StmlNodus;
 
 /* StmlResultus - Resultus parsationis
  * "Parsing result"
  */
 nomen structura {
-    b32         successus;
-    StmlNodus*  radix;            /* Root document node */
-    StmlNodus*  elementum_radix;  /* First element child */
+           b32  successus;
+     StmlNodus* radix;            /* Root document node */
+     StmlNodus* elementum_radix;  /* First element child */
     StmlStatus  status;
-    i32         linea_erroris;
-    i32         columna_erroris;
-    chorda      error;
+           i32  linea_erroris;
+           i32  columna_erroris;
+        chorda  error;
 } StmlResultus;
+
 
 /* ==================================================
  * Parsatio - Legere STML
@@ -185,19 +192,20 @@ nomen structura {
  * "Parse STML from string"
  */
 StmlResultus
-stml_legere(
-    chorda               input,
-    Piscina*             piscina,
+stml_legere (
+                 chorda  input,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Legere STML ex literis C
  * "Parse STML from C string"
  */
 StmlResultus
-stml_legere_ex_literis(
-    constans character*  cstr,
-    Piscina*             piscina,
+stml_legere_ex_literis (
+     constans character* cstr,
+                Piscina* piscina,
     InternamentumChorda* intern);
+
 
 /* ==================================================
  * Quaestio - Invenire in Arbore
@@ -207,37 +215,37 @@ stml_legere_ex_literis(
  * "Find first child with tag name"
  */
 StmlNodus*
-stml_invenire_liberum(
-    StmlNodus*           nodus,
-    constans character*  titulus);
+stml_invenire_liberum (
+             StmlNodus* nodus,
+    constans character* titulus);
 
 /* Invenire omnes liberos cum titulo
  * "Find all children with tag name"
  * Redde: Xar de StmlNodus*
  */
 Xar*
-stml_invenire_omnes_liberos(
-    StmlNodus*           nodus,
-    constans character*  titulus,
-    Piscina*             piscina);
+stml_invenire_omnes_liberos (
+             StmlNodus* nodus,
+    constans character* titulus,
+               Piscina* piscina);
 
 /* Capere attributum per titulum
  * "Get attribute value by name"
  * Redde: chorda* ad valor, vel NIHIL si non inventum
  */
 chorda*
-stml_attributum_capere(
-    StmlNodus*           nodus,
-    constans character*  titulus);
+stml_attributum_capere (
+             StmlNodus* nodus,
+    constans character* titulus);
 
 /* Verificare si nodus habet attributum
  * "Check if node has attribute"
  * Useful for boolean attributes
  */
 b32
-stml_attributum_habet(
-    StmlNodus*           nodus,
-    constans character*  titulus);
+stml_attributum_habet (
+             StmlNodus* nodus,
+    constans character* titulus);
 
 /* Capere textum internum (concatenatum), VERBATIM
  * "Get inner text content"
@@ -254,9 +262,9 @@ stml_attributum_habet(
  * documentum fideliter refert et normalizatio HIC eligitur.
  */
 chorda
-stml_textus_internus(
+stml_textus_internus (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Capere textum internum NORMALIZATUM
  * "Get inner text content, whitespace-normalized"
@@ -268,24 +276,25 @@ stml_textus_internus(
  * indentatione fontis expectat.
  */
 chorda
-stml_textus_normalizatus(
+stml_textus_normalizatus (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Numerus liberorum
  * "Number of children"
  */
 i32
-stml_numerus_liberorum(
+stml_numerus_liberorum (
     StmlNodus* nodus);
 
 /* Capere liberum ad indicem
  * "Get child at index"
  */
 StmlNodus*
-stml_liberum_ad_indicem(
+stml_liberum_ad_indicem (
     StmlNodus* nodus,
-    i32        index);
+          i32  index);
+
 
 /* ==================================================
  * Navigatio - Traversal
@@ -296,35 +305,35 @@ stml_liberum_ad_indicem(
  * Redde: -1 si non habet parentem
  */
 s32
-stml_index_inter_fratres(
+stml_index_inter_fratres (
     StmlNodus* nodus);
 
 /* Capere proximum fratrem
  * "Get next sibling"
  */
 StmlNodus*
-stml_frater_proximus(
+stml_frater_proximus (
     StmlNodus* nodus);
 
 /* Capere priorem fratrem
  * "Get previous sibling"
  */
 StmlNodus*
-stml_frater_prior(
+stml_frater_prior (
     StmlNodus* nodus);
 
 /* Capere primum liberum
  * "Get first child"
  */
 StmlNodus*
-stml_primus_liberum(
+stml_primus_liberum (
     StmlNodus* nodus);
 
 /* Capere ultimum liberum
  * "Get last child"
  */
 StmlNodus*
-stml_ultimus_liberum(
+stml_ultimus_liberum (
     StmlNodus* nodus);
 
 /* Capere omnes fratres (excludens se)
@@ -332,29 +341,30 @@ stml_ultimus_liberum(
  * Redde: Xar de StmlNodus*
  */
 Xar*
-stml_fratres(
+stml_fratres (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Capere omnes maiores (parens, avus, etc.)
  * "Get all ancestors"
  * Redde: Xar de StmlNodus* (a parente ad radicem)
  */
 Xar*
-stml_maiores(
+stml_maiores (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Invenire proximum maiorem congruentem cum selectore
  * "Find closest ancestor matching selector"
  * Nota: includit se si congruit
  */
 StmlNodus*
-stml_proximus_maior(
-    StmlNodus*           nodus,
-    constans character*  selector,
-    Piscina*             piscina,
+stml_proximus_maior (
+              StmlNodus* nodus,
+     constans character* selector,
+                Piscina* piscina,
     InternamentumChorda* intern);
+
 
 /* ==================================================
  * Constructio - Creare Nodos
@@ -364,84 +374,84 @@ stml_proximus_maior(
  * "Create element node"
  */
 StmlNodus*
-stml_elementum_creare(
-    Piscina*             piscina,
+stml_elementum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus);
+     constans character* titulus);
 
 /* Creare elementum crudum (raw content)
  * "Create raw content element"
  */
 StmlNodus*
-stml_elementum_crudum_creare(
-    Piscina*             piscina,
+stml_elementum_crudum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus);
+     constans character* titulus);
 
 /* Creare nodum textus
  * "Create text node"
  */
 StmlNodus*
-stml_textum_creare(
-    Piscina*             piscina,
+stml_textum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
 
 /* Creare nodum textus ex chorda
  * "Create text node from chorda"
  */
 StmlNodus*
-stml_textum_creare_ex_chorda(
-    Piscina*             piscina,
+stml_textum_creare_ex_chorda (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda               textus);
+                 chorda  textus);
 
 /* Creare commentum
  * "Create comment node"
  */
 StmlNodus*
-stml_commentum_creare(
-    Piscina*             piscina,
+stml_commentum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
 
 /* Addere attributum ad elementum
  * "Add attribute to element"
  */
 b32
-stml_attributum_addere(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_attributum_addere (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    constans character*  valor);
+     constans character* titulus,
+     constans character* valor);
 
 /* Addere attributum boolean (valor = "true")
  * "Add boolean attribute"
  */
 b32
-stml_attributum_boolean_addere(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_attributum_boolean_addere (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus);
+     constans character* titulus);
 
 /* Addere attributum cum chorda valor
  * "Add attribute with chorda value"
  */
 b32
-stml_attributum_addere_chorda(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_attributum_addere_chorda (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    chorda               valor);
+     constans character* titulus,
+                 chorda  valor);
 
 /* Addere liberum ad elementum
  * "Add child to element"
  */
 b32
-stml_liberum_addere(
+stml_liberum_addere (
     StmlNodus* parens,
     StmlNodus* liberum);
 
@@ -449,11 +459,12 @@ stml_liberum_addere(
  * "Add text content to element"
  */
 b32
-stml_textum_addere(
-    StmlNodus*           parens,
-    Piscina*             piscina,
+stml_textum_addere (
+              StmlNodus* parens,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
+
 
 /* ==================================================
  * Scriptio - Scribere STML
@@ -465,20 +476,21 @@ stml_textum_addere(
  * pulchrum: si VERUM, addere indentationem et lineae novae
  */
 chorda
-stml_scribere(
+stml_scribere (
     StmlNodus* nodus,
-    Piscina*   piscina,
-    b32        pulchrum);
+      Piscina* piscina,
+          b32  pulchrum);
 
 /* Scribere nodum ad ChordaAedificator
  * "Serialize node to string builder"
  */
 b32
-stml_scribere_ad_aedificator(
-    StmlNodus*          nodus,
-    ChordaAedificator*  aedificator,
-    b32                 pulchrum,
-    i32                 indentatio);
+stml_scribere_ad_aedificator (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  b32  pulchrum,
+                  i32  indentatio);
+
 
 /* ==================================================
  * Tituli - Labels (class-like attribute)
@@ -491,57 +503,58 @@ stml_scribere_ad_aedificator(
  * "Check if node has label"
  */
 b32
-stml_titulum_habet(
-    StmlNodus*          nodus,
+stml_titulum_habet (
+             StmlNodus* nodus,
     constans character* titulum);
 
 /* Numerus titulorum
  * "Number of labels"
  */
 i32
-stml_titulos_numerus(
+stml_titulos_numerus (
     StmlNodus* nodus);
 
 /* Capere omnes titulos ut Xar de chorda
  * "Get all labels as array of strings"
  */
 Xar*
-stml_titulos_capere(
+stml_titulos_capere (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Addere titulum ad nodum
  * "Add label to node"
  * Redde: VERUM si additum, FALSUM si iam existit
  */
 b32
-stml_titulum_addere(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_titulum_addere (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulum);
+     constans character* titulum);
 
 /* Removere titulum ex nodo
  * "Remove label from node"
  * Redde: VERUM si remotum, FALSUM si non inventum
  */
 b32
-stml_titulum_removere(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_titulum_removere (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulum);
+     constans character* titulum);
 
 /* Commutare titulum (toggle)
  * "Toggle label on node"
  * Redde: VERUM si nunc habet, FALSUM si nunc non habet
  */
 b32
-stml_titulum_commutare(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_titulum_commutare (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulum);
+     constans character* titulum);
+
 
 /* ==================================================
  * Mutatio - Tree Manipulation
@@ -554,53 +567,54 @@ stml_titulum_commutare(
  * "Prepend child"
  */
 b32
-stml_praeponere(
+stml_praeponere (
     StmlNodus* parens,
     StmlNodus* liberum,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Inserere ante nodum
  * "Insert before node"
  */
 b32
-stml_inserere_ante(
+stml_inserere_ante (
     StmlNodus* nodus,
     StmlNodus* novum,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Inserere post nodum
  * "Insert after node"
  */
 b32
-stml_inserere_post(
+stml_inserere_post (
     StmlNodus* nodus,
     StmlNodus* novum,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Removere nodum ex parente
  * "Remove node from parent"
  * Nodus manet in memoria (piscina), sed non in arbore
  */
 b32
-stml_removere(
+stml_removere (
     StmlNodus* nodus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Vacare omnes liberos
  * "Remove all children"
  */
 vacuum
-stml_vacare_liberos(
+stml_vacare_liberos (
     StmlNodus* nodus);
 
 /* Substituere nodum cum alio
  * "Replace node with another"
  */
 b32
-stml_substituere(
+stml_substituere (
     StmlNodus* vetus,
     StmlNodus* novum,
-    Piscina*   piscina);
+      Piscina* piscina);
+
 
 /* ==================================================
  * Duplicatio - Cloning
@@ -611,9 +625,9 @@ stml_substituere(
  * Includit omnes liberos, attributa, etc.
  */
 StmlNodus*
-stml_duplicare(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_duplicare (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Duplicare nodum (superficialiter)
@@ -621,10 +635,11 @@ stml_duplicare(
  * Non includit liberos
  */
 StmlNodus*
-stml_duplicare_superficialiter(
-    StmlNodus*           nodus,
-    Piscina*             piscina,
+stml_duplicare_superficialiter (
+              StmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern);
+
 
 /* ==================================================
  * Strictum - forma BENE FORMATA super parsationem
@@ -659,20 +674,20 @@ nomen enumeratio {
 
 nomen structura {
     StmlStrictumGenus  genus;
-    StmlNodus*         nodus;   /* ubi inventum */
-    chorda*            causa;   /* nomen attributi duplicati, vel NIHIL */
+            StmlNodus* nodus;   /* ubi inventum */
+               chorda* causa;   /* nomen attributi duplicati, vel NIHIL */
 } StmlStrictumVitium;
 
 /* Probare arborem parsatam. radix = nodus DOCUMENTI (resultus.radix).
  * Redde: Xar de StmlStrictumVitium (vacuum si sanum) */
 Xar*
-stml_strictum(
+stml_strictum (
     StmlNodus* radix,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Nuntius legibilis pro genere vitii */
 constans character*
-stml_strictum_nuntius(
+stml_strictum_nuntius (
     StmlStrictumGenus genus);
 
 #endif /* STML_H */

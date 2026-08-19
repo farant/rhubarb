@@ -24,18 +24,20 @@
 #include "lapifex_parsere.h"
 #include "piscina.h"
 
+
 /* ================================================
  * Fructus Lexeris
  * ================================================ */
 
 nomen structura {
-    LapifexSignum*  signa;          /* Tabula signorum plana */
-    s32             numerus;        /* Numerus signorum */
-    b32             successus;
-    s32             error_positio;  /* Byte offset erroris */
-    s32             error_linea;    /* Linea erroris (1-basis) */
-    s32             error_columna;  /* Columna erroris (1-basis) */
+    LapifexSignum* signa;          /* Tabula signorum plana */
+              s32  numerus;        /* Numerus signorum */
+              b32  successus;
+              s32  error_positio;  /* Byte offset erroris */
+              s32  error_linea;    /* Linea erroris (1-basis) */
+              s32  error_columna;  /* Columna erroris (1-basis) */
 } LapifexLexFructus;
+
 
 /* ================================================
  * Functiones Principales
@@ -51,11 +53,11 @@ nomen structura {
  * Redde: LapifexLexFructus
  */
 LapifexLexFructus
-lapifex_lexere(
-    LapifexGrammatica*       grammatica,
-    constans character*      fons,
-    s32                      longitudo,
-    Piscina*                 piscina);
+lapifex_lexere (
+     LapifexGrammatica* grammatica,
+    constans character* fons,
+                   s32  longitudo,
+               Piscina* piscina);
 
 /* Commoditas: lexere et parsare in uno passu
  *
@@ -68,11 +70,11 @@ lapifex_lexere(
  * Redde: LapifexParsaturaFructus
  */
 LapifexParsaturaFructus
-lapifex_lexere_et_parsare(
-    LapifexTabula*           tabula,
-    constans character*      fons,
-    s32                      longitudo,
+lapifex_lexere_et_parsare (
+              LapifexTabula* tabula,
+         constans character* fons,
+                        s32  longitudo,
     LapifexReductioCallback  reductio,
-    vacuum*                  contextus);
+                     vacuum* contextus);
 
 #endif /* LAPIFEX_LEXERE_H */

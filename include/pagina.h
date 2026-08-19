@@ -9,6 +9,7 @@
 #include "vim.h"
 #include "coloratio.h"
 
+
 /* ==================================================
  * PAGINA - Editor Textus 2D Grid
  *
@@ -61,10 +62,10 @@ nomen structura {
 
 /* Regio clickable in textu (tag, command, link) */
 nomen structura RegioClicca {
-    i32 initium_linea;
-    i32 initium_columna;
-    i32 finis_linea;
-    i32 finis_columna;
+          i32 initium_linea;
+          i32 initium_columna;
+          i32 finis_linea;
+          i32 finis_columna;
     character genus[XVI];    /* Tag type: "command", "link", "block" */
     character datum[LXIV];   /* Command/link name or content */
 } RegioClicca;
@@ -85,10 +86,10 @@ nomen structura RegioClicca {
  *                debet esse chorda* ex internamento vel piscina - Pagina non copiat
  */
 vacuum
-pagina_initiare(
-    Pagina* pagina,
+pagina_initiare (
+     Pagina* pagina,
     Piscina* piscina,
-    chorda* identificator);
+     chorda* identificator);
 
 /* Initiare paginam cum dimensionibus specificatis
  *
@@ -99,12 +100,12 @@ pagina_initiare(
  * identificator: identificator paginae
  */
 vacuum
-pagina_initiare_cum_dimensionibus(
-    Pagina* pagina,
+pagina_initiare_cum_dimensionibus (
+     Pagina* pagina,
     Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo,
-    chorda* identificator);
+        i32  latitudo,
+        i32  altitudo,
+     chorda* identificator);
 
 /* Vacare paginam
  *
@@ -113,7 +114,7 @@ pagina_initiare_cum_dimensionibus(
  * pagina: pagina vacanda
  */
 vacuum
-pagina_vacare(
+pagina_vacare (
     Pagina* pagina);
 
 /* Connectere clipboard et creare undo acervum
@@ -126,9 +127,9 @@ pagina_vacare(
  * clipboard: clipboard communicatus (potest esse NIHIL)
  */
 vacuum
-pagina_connectere_vim_contextu(
-    Pagina* pagina,
-    Piscina* piscina,
+pagina_connectere_vim_contextu (
+          Pagina* pagina,
+         Piscina* piscina,
     VimClipboard* clipboard);
 
 
@@ -143,7 +144,7 @@ pagina_connectere_vim_contextu(
  * Reddit: VERUM si plena
  */
 b32
-pagina_est_plena(
+pagina_est_plena (
     constans Pagina* pagina);
 
 /* Est vacua
@@ -153,7 +154,7 @@ pagina_est_plena(
  * Reddit: VERUM si vacua
  */
 b32
-pagina_est_vacua(
+pagina_est_vacua (
     constans Pagina* pagina);
 
 /* Obtinere modum currentem
@@ -163,7 +164,7 @@ pagina_est_vacua(
  * Reddit: modus vim (MODO_VIM_NORMALIS, MODO_VIM_INSERERE, etc.)
  */
 ModoVim
-pagina_obtinere_modum(
+pagina_obtinere_modum (
     constans Pagina* pagina);
 
 
@@ -184,14 +185,14 @@ pagina_obtinere_modum(
  * scala: factor scalae fontis (1 = 6x8, 2 = 12x16)
  */
 vacuum
-pagina_reddere(
+pagina_reddere (
     TabulaPixelorum* tabula_pixelorum,
-    Pagina* pagina,
-    i32 x,
-    i32 y,
-    i32 latitudo,
-    i32 altitudo,
-    i32 scala);
+             Pagina* pagina,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala);
 
 /* Reddere paginam cum margine (border et status)
  *
@@ -209,16 +210,16 @@ pagina_reddere(
  * focused: VERUM si widget habet focus (mutat colorem border)
  */
 vacuum
-pagina_reddere_cum_margine(
-    Piscina* piscina,
+pagina_reddere_cum_margine (
+            Piscina* piscina,
     TabulaPixelorum* tabula_pixelorum,
-    Pagina* pagina,
-    i32 x,
-    i32 y,
-    i32 latitudo,
-    i32 altitudo,
-    i32 scala,
-    b32 focused);
+             Pagina* pagina,
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -235,8 +236,8 @@ pagina_reddere_cum_margine(
  * Reddit: VERUM si eventus tractatus, FALSUM si debet claudere (ESC in normal)
  */
 b32
-pagina_tractare_eventum(
-    Pagina* pagina,
+pagina_tractare_eventum (
+              Pagina* pagina,
     constans Eventus* eventus);
 
 
@@ -251,10 +252,10 @@ pagina_tractare_eventum(
  * columna: columna (0 - TABULA_LATITUDO-1)
  */
 vacuum
-pagina_ponere_cursor(
+pagina_ponere_cursor (
     Pagina* pagina,
-    i32 linea,
-    i32 columna);
+       i32  linea,
+       i32  columna);
 
 /* Inserere chordam ad cursor (in modo inserere)
  *
@@ -266,8 +267,8 @@ pagina_ponere_cursor(
  * textus: textus inserendus (null-terminated)
  */
 vacuum
-pagina_inserere_textum(
-    Pagina* pagina,
+pagina_inserere_textum (
+                Pagina* pagina,
     constans character* textus);
 
 /* Inserere textum in pagina sine auto-indent
@@ -278,8 +279,8 @@ pagina_inserere_textum(
  * textus: textus inserendus (null-terminated)
  */
 vacuum
-pagina_inserere_textum_crudus(
-    Pagina* pagina,
+pagina_inserere_textum_crudus (
+                Pagina* pagina,
     constans character* textus);
 
 
@@ -299,10 +300,10 @@ pagina_inserere_textum_crudus(
  * Reddit: VERUM si regio inventa, FALSUM si non
  */
 b32
-pagina_obtinere_regio_ad_punctum(
+pagina_obtinere_regio_ad_punctum (
     constans Pagina* pagina,
-    i32 linea,
-    i32 columna,
-    RegioClicca* regio);
+                i32  linea,
+                i32  columna,
+        RegioClicca* regio);
 
 #endif /* PAGINA_H */

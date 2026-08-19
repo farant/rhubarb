@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ===================================================
  * Tabula Dispersa - Tabula Friationis per Addressing Apertum
  * "Tabula: series plana, per friationes indexata"
@@ -75,6 +76,7 @@ tabula_dispersa_creare_chorda (
     Piscina* piscina,
         i32  capacitas_initialis);
 
+
 /* ==================================================
  * Insertio / Quaestio / Deletio
  * ================================================== */
@@ -110,14 +112,14 @@ tabula_dispersa_continet (
  * FALSUM reddit si non inventum */
 b32
 tabula_dispersa_invenire_literis (
-    TabulaDispersa*        tabula,
-    constans character*    cstr,
-            vacuum**       valor_out);
+        TabulaDispersa*  tabula,
+    constans character*  cstr,
+                vacuum** valor_out);
 
 /* Convenientia: verificatio existentiae per literis C */
 b32
 tabula_dispersa_continet_literis (
-    TabulaDispersa*     tabula,
+        TabulaDispersa* tabula,
     constans character* cstr);
 
 /* Introitum delere per clavis
@@ -158,6 +160,7 @@ tabula_dispersa_iterator_proximum (
             chorda*  clavis_out,
             vacuum** valor_out);
 
+
 /* =================================================
  * Statisticae / Diagnostica
  * ================================================== */
@@ -171,11 +174,11 @@ tabula_dispersa_factor_deletorum (
     TabulaDispersa* tabula);
 
 i32
-tabula_dispersa_numerus(
+tabula_dispersa_numerus (
     TabulaDispersa* tabula);
 
 vacuum
-tabula_dispersa_status_imprimere(
+tabula_dispersa_status_imprimere (
     TabulaDispersa* tabula);
 
 
@@ -192,4 +195,3 @@ tabula_friare_multiplicatio (
     chorda clavis);
 
 #endif /* TABULA_DISPERSA_H */
-

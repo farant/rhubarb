@@ -6,6 +6,7 @@
 #include "pagina.h"
 #include "tabula_dispersa.h"
 
+
 /* ==================================================
  * REGISTRUM COMMANDI - Command Registry System
  *
@@ -32,12 +33,12 @@
 
 /* Context passed to all command functions */
 nomen structura ContextusCommandi {
-    Pagina* pagina;           /* Which pagina triggered command */
-    i32 linea;                /* Grid row where command ends */
-    i32 columna;              /* Grid column where command ends */
+     Pagina* pagina;           /* Which pagina triggered command */
+        i32  linea;                /* Grid row where command ends */
+        i32  columna;              /* Grid column where command ends */
     Piscina* piscina;         /* Piscina for allocations */
-    vacuum* datum_custom;     /* Call-site specific data (e.g., libro) */
-    vacuum* datum_registratus;/* Data registered with command (e.g., schirmata) */
+     vacuum* datum_custom;     /* Call-site specific data (e.g., libro) */
+     vacuum* datum_registratus;/* Data registered with command (e.g., schirmata) */
 } ContextusCommandi;
 
 
@@ -60,9 +61,9 @@ nomen b32 (*FunctioCommand)(ContextusCommandi* ctx);
 
 /* Registered command */
 nomen structura Command {
-    character titulus[XXXII]; /* Command name ("date", "time", etc) */
-    FunctioCommand executare; /* Execution function */
-    vacuum* datum;            /* Optional command-specific data */
+         character  titulus[XXXII]; /* Command name ("date", "time", etc) */
+    FunctioCommand  executare; /* Execution function */
+            vacuum* datum;            /* Optional command-specific data */
 } Command;
 
 
@@ -73,7 +74,7 @@ nomen structura Command {
 /* Command registry */
 nomen structura RegistrumCommandi {
     TabulaDispersa* tabula;  /* Hash table: chorda -> Command* */
-    Piscina* piscina;        /* Piscina for allocations */
+           Piscina* piscina;        /* Piscina for allocations */
 } RegistrumCommandi;
 
 
@@ -88,7 +89,7 @@ nomen structura RegistrumCommandi {
  * Returns: new registry, or NIHIL if failure
  */
 RegistrumCommandi*
-registrum_commandi_creare(
+registrum_commandi_creare (
     Piscina* piscina);
 
 
@@ -104,11 +105,11 @@ registrum_commandi_creare(
  * datum: optional command-specific data
  */
 vacuum
-registrum_commandi_registrare(
-    RegistrumCommandi* reg,
+registrum_commandi_registrare (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi,
-    FunctioCommand functio,
-    vacuum* datum);
+        FunctioCommand  functio,
+                vacuum* datum);
 
 
 /* ==================================================
@@ -124,10 +125,10 @@ registrum_commandi_registrare(
  * Returns: VERUM if command found and executed, FALSUM otherwise
  */
 b32
-registrum_commandi_executare(
-    RegistrumCommandi* reg,
+registrum_commandi_executare (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi,
-    ContextusCommandi* ctx);
+     ContextusCommandi* ctx);
 
 
 /* ==================================================
@@ -142,8 +143,8 @@ registrum_commandi_executare(
  * Returns: VERUM if command registered, FALSUM otherwise
  */
 b32
-registrum_commandi_habet(
-    RegistrumCommandi* reg,
+registrum_commandi_habet (
+     RegistrumCommandi* reg,
     constans character* nomen_commandi);
 
 #endif /* REGISTRUM_COMMANDI_H */

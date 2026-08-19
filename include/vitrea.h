@@ -60,11 +60,11 @@ nomen enumeratio {
 } VitreaOrigo;
 
 nomen structura {
-    VitreaOrigo         origo;
-    Capsula*            capsula;        /* ORIGO_CAPSULA */
+           VitreaOrigo  origo;
+               Capsula* capsula;        /* ORIGO_CAPSULA */
     constans character* via_initialis;  /* "index.html" */
     constans character* url;            /* ORIGO_URL */
-    b32                 inspectabilis;  /* Inspector Safari;
+                   b32  inspectabilis;  /* Inspector Safari;
                                          * macOS 13.3+ */
 } VitreaConfiguratio;
 
@@ -96,9 +96,9 @@ nomen vacuum (*VitreaErrator)(
 
 vacuum
 vitrea_erratorem_ponere (
-    Vitrea*       vitrea,
-    VitreaErrator errator,
-    vacuum*       datum);
+           Vitrea* vitrea,
+    VitreaErrator  errator,
+           vacuum* datum);
 
 nomen enumeratio {
     VITREA_NUNTIUS_PONS = 0,   /* nuntius pontis JS->C (textus) */
@@ -109,8 +109,8 @@ nomen enumeratio {
 
 Vitrea*
 vitrea_creare (
-    Piscina*                     piscina,
-    Fenestra*                    fenestra,
+                        Piscina* piscina,
+                       Fenestra* fenestra,
     constans VitreaConfiguratio* configuratio);
 
 /* ANTE fenestra_destruere vocanda */
@@ -124,8 +124,8 @@ vitrea_destruere (
  * ansae. */
 b32
 vitrea_obtinere_nuntium (
-    Vitrea*             vitrea,
-    chorda*             nuntium,
+                Vitrea* vitrea,
+                chorda* nuntium,
     VitreaNuntiusGenus* genus);
 
 /* aestimatio JS cruda (filum principale; ignis-et-obliviscere) */
@@ -152,6 +152,7 @@ vitrea_aestimator (
     vacuum* datum,
     chorda  js);
 
+
 /* ==================================================
  * Imago - contenta sua ipsius photographare
  *
@@ -175,19 +176,19 @@ nomen vacuum (*VitreaImagoFacta) (
  * FALSUM statim = petitio ipsa fracta (vitrea aut via absens). */
 b32
 vitrea_imaginem_petere (
-    Vitrea*             vitrea,
+                Vitrea* vitrea,
     constans character* via,
-    VitreaImagoFacta    facta,
-    vacuum*             facta_datum);
+      VitreaImagoFacta  facta,
+                vacuum* facta_datum);
 
 /* imaginator seam-formis (gemellus vitrea_aestimator): datum =
  * Vitrea*. Pro consumptoribus sine typo Vitrea (e.g. imperium). */
 b32
 vitrea_imaginator (
-    vacuum*             datum,
+                vacuum* datum,
     constans character* via,
-    VitreaImagoFacta    facta,
-    vacuum*             facta_datum);
+      VitreaImagoFacta  facta,
+                vacuum* facta_datum);
 
 vacuum
 vitrea_recargare (

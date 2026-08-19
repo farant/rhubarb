@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "fasti.h"
 
+
 /* manus.h - manus quae in applicationem vivam porrigitur
  *
  * PROBLEMA: imperium canalem dedit - iussum intrat, valor redit.
@@ -125,6 +126,7 @@
 
 nomen structura Manus Manus;
 
+
 /* ==================================================
  * Morae (fasti.h Mora - ms, SIGNATA)
  * ================================================== */
@@ -141,6 +143,7 @@ nomen structura Manus Manus;
 /* Pro re quae vere tarda est: aedificatio, reditus retis veri. */
 #define MANUS_MORA_LONGA      ((Mora)(X * M))
 
+
 /* ==================================================
  * Cyclus vitae
  * ================================================== */
@@ -153,9 +156,9 @@ nomen structura Manus Manus;
  * silentio omnia asserta praeterire faceret. */
 Manus*
 manus_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* hospes,
-    i32                 portus);
+                   i32  portus);
 
 /* Applicationem ipsam generare, portum exspectare, manum reddere.
  * Semita hermetica (integratio continua, machina aliena).
@@ -184,6 +187,7 @@ vacuum
 manus_claudere (
     Manus* manus);
 
+
 /* ==================================================
  * Errores paginae
  * ==================================================
@@ -208,7 +212,7 @@ manus_claudere (
  * accipit - primus enim fere semper causa est, ceteri sequelae. */
 i32
 manus_errores (
-    Manus*  manus,
+     Manus* manus,
     chorda* primus);
 
 /* Collecta DELERE - 'his rationem reddidi; a novo incipe'.
@@ -229,6 +233,7 @@ manus_errores (
 vacuum
 manus_errores_purgare (
     Manus* manus);
+
 
 /* ==================================================
  * Effusio applicationis generatae
@@ -251,9 +256,11 @@ manus_errores_purgare (
  *
  * CAVE ut in vitrea: chorda in sacculum spectat quem pulsatio
  * proxima relocare potest. TRACTA STATIM. */
+
 chorda
 manus_effusio (
     Manus* manus);
+
 
 /* ==================================================
  * Status
@@ -301,6 +308,7 @@ b32
 manus_reficere (
     Manus* manus);
 
+
 /* ==================================================
  * Actiones (nihil exspectant - actio ipsa synchrona est)
  * ================================================== */
@@ -312,9 +320,10 @@ manus_reficere (
  * novam poscit eam hic invenire debet, non bibliothecam mutare. */
 chorda
 manus_aestimare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* js,
-    Mora                mora);
+                  Mora  mora);
+
 
 /* Murem super elementum LIBRARE (hover), sine ullo clicu.
  *
@@ -347,9 +356,10 @@ manus_aestimare (
  * Elementum in PROSPECTUM prius volvitur. Selector VISIBILE
  * significat, ut ubique. FALSUM (et manus fracta) si nihil congruit
  * aut mensura ZEPHYRUM est. */
+
 b32
 manus_movere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 /* Clavem NOMINATAM immittere (ictus unus: depressa + liberata).
@@ -385,21 +395,21 @@ manus_movere (
  * praebuit - causa UTRUMQUE distinguit. */
 b32
 manus_clavem (
-    Manus*              manus,
+                 Manus* manus,
     constans character* clavis);
 
 /* Elementum primum selectoris premere. FALSUM (et manus fracta) si
  * nullum congruit - clic in vacuum vitium est, non nihil. */
 b32
 manus_premere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 /* Textum in campum ponere ET eventus 'input'/'change' immittere -
  * sine iis facies reactiva nihil sentit. */
 b32
 manus_scribere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
     constans character* textus);
 
@@ -415,8 +425,9 @@ manus_scribere (
  * continet, et sine hac lege quaeque petitio corpus premeret. */
 b32
 manus_premere_textum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus);
+
 
 /* ==================================================
  * Volvere
@@ -436,7 +447,7 @@ manus_premere_textum (
  * FALSUM (et manus fracta) si nullum visibile congruit. */
 b32
 manus_volvere_ad (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 /* PAGINAM pixelis volvere; NEGATIVUM sursum.
@@ -447,7 +458,7 @@ manus_volvere_ad (
 b32
 manus_volvere (
     Manus* manus,
-    s32    pixela);
+      s32  pixela);
 
 /* ELEMENTUM intra se volvere; NEGATIVUM sursum.
  *
@@ -473,23 +484,23 @@ manus_volvere (
  * elementum immobile est. */
 b32
 manus_volvere_in (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    s32                 pixela);
+                   s32  pixela);
 
 /* Positio volutionis elementi (scrollTop). NEGATIVUM si nullum
  * visibile congruit aut manus fracta - ZEPHYRUM enim positio
  * legitima est et defectum significare NON potest. */
 s32
 manus_volutio (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 /* Imaginem paginae in plagulam scribere (per imperium/imago).
  * FALSUM si applicatio imaginatorem non praebuit. */
 b32
 manus_imaginem (
-    Manus*              manus,
+                 Manus* manus,
     constans character* via);
 
 /* Imago AUTOMATICA in hanc plagulam cum manus PRIMUM frangitur;
@@ -505,8 +516,9 @@ manus_imaginem (
  * plagulas sine rogatu scribit importuna est. */
 vacuum
 manus_imaginem_culpae_ponere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* via);
+
 
 /* ==================================================
  * Exploratio (TACITA - nihil notat, nihil exspectat)
@@ -518,20 +530,21 @@ manus_imaginem_culpae_ponere (
 
 b32
 manus_existit (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 i32
 manus_numerus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
 
 /* Textus elementi primi: campi valorem, cetera contentum. Vacua si
  * nullum congruit. */
 chorda
 manus_textus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
+
 
 /* ==================================================
  * Exspectatio - interrogationes quoque MORENTUR
@@ -565,10 +578,11 @@ manus_textus (
  * causa nominata) si terminus transit. */
 b32
 manus_exspectare (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    b32                 adesse,
-    Mora                mora);
+                   b32  adesse,
+                  Mora  mora);
+
 
 /* ==================================================
  * Lectio - QUID DICIT (contentum structuratum)
@@ -598,12 +612,12 @@ manus_exspectare (
 
 nomen structura {
     chorda* cellulae;
-    i32     numerus;
+       i32  numerus;
 } LineaLecta;
 
 nomen structura {
     LineaLecta* lineae;
-    i32         numerus;
+           i32  numerus;
 } Lectio;
 
 /* Contentum visibile congruentium, in piscinam datam.
@@ -611,9 +625,10 @@ nomen structura {
  * per manus_fracta. */
 Lectio
 manus_legere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Affordantiae - QUID ADEST (enumeratio)
@@ -670,19 +685,19 @@ nomen enumeratio {
  */
 nomen structura {
     AffordantiaGenus genus;
-    chorda           selector;
-    chorda           titulus;
-    chorda           valor;
-    chorda           impedimentum;
-    s32              x;
-    s32              y;
-    s32              latitudo;
-    s32              altitudo;
+              chorda selector;
+              chorda titulus;
+              chorda valor;
+              chorda impedimentum;
+                 s32 x;
+                 s32 y;
+                 s32 latitudo;
+                 s32 altitudo;
 } Affordantia;
 
 nomen structura {
     Affordantia* res;
-    i32          numerus;
+            i32  numerus;
 } Affordantiae;
 
 /* Omnia visibilia quae tangi possunt, in piscinam datam.
@@ -690,8 +705,9 @@ nomen structura {
  * distingue per manus_fracta. */
 Affordantiae
 manus_affordantiae (
-    Manus*   manus,
+      Manus* manus,
     Piscina* piscina);
+
 
 /* ==================================================
  * Focus - UBI CLAVIS CADET
@@ -716,7 +732,7 @@ manus_affordantiae (
  */
 
 nomen structura {
-    b32    habet;      /* FALSUM = nihil (corpus) focum tenet */
+       b32 habet;      /* FALSUM = nihil (corpus) focum tenet */
     chorda selector;   /* forma affordantiarum: '#id' aut semita */
     chorda titulus;    /* quod usor legit */
     chorda tag;        /* 'input', 'button', ... (minusculis) */
@@ -725,7 +741,7 @@ nomen structura {
 /* Quod nunc focum tenet. habet=FALSUM si nihil, aut manus fracta. */
 ManusFocus
 manus_focus (
-    Manus*   manus,
+      Manus* manus,
     Piscina* piscina);
 
 /* Focum PONERE in elementum nominatum.
@@ -748,8 +764,9 @@ manus_focus (
  * FRANGIT si focus non mansit, causam nominans. */
 b32
 manus_focus_ponere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector);
+
 
 /* ==================================================
  * Magnitudo - PROSPECTUM MUTARE
@@ -772,13 +789,14 @@ manus_focus_ponere (
  * Redde FALSUM si applicatio magnitudinatorem non praebuit (app manu
  * structa imperium_magnitudinatorem_ponere vocet; atrium eum ponit),
  * aut mensura non positiva est. */
+
 b32
 manus_magnitudinem_ponere (
     Manus* manus,
-    i32    latitudo,
-    i32    altitudo,
-    i32*   latitudo_facta,   /* NIHIL licet */
-    i32*   altitudo_facta);  /* NIHIL licet */
+      i32  latitudo,
+      i32  altitudo,
+      i32* latitudo_facta,   /* NIHIL licet */
+      i32* altitudo_facta);  /* NIHIL licet */
 
 /* Prospectus currens ut pagina eum videt (innerWidth/innerHeight).
  *
@@ -790,8 +808,9 @@ manus_magnitudinem_ponere (
 b32
 manus_magnitudo (
     Manus* manus,
-    i32*   latitudo,
-    i32*   altitudo);
+      i32* latitudo,
+      i32* altitudo);
+
 
 /* ==================================================
  * Asserta (EXSPECTANT, notant, frangunt)
@@ -803,48 +822,48 @@ manus_magnitudo (
  */
 
 #define CREDO_MANUS_EXISTIT(m, sel) \
-	_manus_credo_existere((m), (sel), VERUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_existere((m), (sel), VERUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_EXISTIT_MORA(m, sel, mora) \
-	_manus_credo_existere((m), (sel), VERUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_existere((m), (sel), VERUM, \
+            (mora), __FILE__, __LINE__)
 
 /* Absentiam exspectare - pro re quae ABIRE debet (pyxis clausa,
  * rota volvens finita). */
 #define CREDO_MANUS_ABEST(m, sel) \
-	_manus_credo_existere((m), (sel), FALSUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_existere((m), (sel), FALSUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_ABEST_MORA(m, sel, mora) \
-	_manus_credo_existere((m), (sel), FALSUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_existere((m), (sel), FALSUM, \
+            (mora), __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUS(m, sel, exspectatum) \
-	_manus_credo_textum((m), (sel), (exspectatum), FALSUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_textum((m), (sel), (exspectatum), FALSUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUS_MORA(m, sel, exspectatum, mora) \
-	_manus_credo_textum((m), (sel), (exspectatum), FALSUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_textum((m), (sel), (exspectatum), FALSUM, \
+            (mora), __FILE__, __LINE__)
 
 /* Pars sufficit - pro textu qui numerum mutabilem aut tempus
  * continet. */
 #define CREDO_MANUS_TEXTUS_CONTINET(m, sel, pars) \
-	_manus_credo_textum((m), (sel), (pars), VERUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_textum((m), (sel), (pars), VERUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUS_CONTINET_MORA(m, sel, pars, mora) \
-	_manus_credo_textum((m), (sel), (pars), VERUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_textum((m), (sel), (pars), VERUM, \
+            (mora), __FILE__, __LINE__)
 
 #define CREDO_MANUS_NUMERUS(m, sel, quot) \
-	_manus_credo_numerum((m), (sel), (quot), \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_numerum((m), (sel), (quot), \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_NUMERUS_MORA(m, sel, quot, mora) \
-	_manus_credo_numerum((m), (sel), (quot), \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_numerum((m), (sel), (quot), \
+            (mora), __FILE__, __LINE__)
 
 /* Textus USQUAM in pagina visibilis - sine selectore.
  *
@@ -852,20 +871,20 @@ manus_magnitudo (
  *
  * Quod usor legit, non ubi marcatio id ponit. */
 #define CREDO_MANUS_TEXTUM(m, textus) \
-	_manus_credo_textum_paginae((m), (textus), VERUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_textum_paginae((m), (textus), VERUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUM_MORA(m, textus, mora) \
-	_manus_credo_textum_paginae((m), (textus), VERUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_textum_paginae((m), (textus), VERUM, \
+            (mora), __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUM_ABEST(m, textus) \
-	_manus_credo_textum_paginae((m), (textus), FALSUM, \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_textum_paginae((m), (textus), FALSUM, \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_TEXTUM_ABEST_MORA(m, textus, mora) \
-	_manus_credo_textum_paginae((m), (textus), FALSUM, \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_textum_paginae((m), (textus), FALSUM, \
+            (mora), __FILE__, __LINE__)
 
 /* ABEST vs ABEST_OMNINO - distinctio quam Cypress inter
  * 'not.be.visible' et 'not.exist' servat.
@@ -877,12 +896,12 @@ manus_magnitudo (
  * num applicatio nodos occultos in aeternum congerat - quod primum
  * numquam videret. */
 #define CREDO_MANUS_ABEST_OMNINO(m, sel) \
-	_manus_credo_omnino((m), (sel), \
-			MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
+    _manus_credo_omnino((m), (sel), \
+            MANUS_MORA_ORDINARIA, __FILE__, __LINE__)
 
 #define CREDO_MANUS_ABEST_OMNINO_MORA(m, sel, mora) \
-	_manus_credo_omnino((m), (sel), \
-			(mora), __FILE__, __LINE__)
+    _manus_credo_omnino((m), (sel), \
+            (mora), __FILE__, __LINE__)
 
 /* Effusio applicationis textum hunc continet - EXSPECTANS.
  *
@@ -890,17 +909,17 @@ manus_magnitudo (
  * gyrus eius pulsat, et fistula cum manus pulsat. Assertum ergo
  * exspectare DEBET, sicut cetera huius bibliothecae. */
 #define CREDO_MANUS_EFFUSIO(m, textus) \
-	_manus_credo_effusio((m), (textus), MANUS_MORA_ORDINARIA, \
-			__FILE__, __LINE__)
+    _manus_credo_effusio((m), (textus), MANUS_MORA_ORDINARIA, \
+            __FILE__, __LINE__)
 
 #define CREDO_MANUS_EFFUSIO_MORA(m, textus, mora) \
-	_manus_credo_effusio((m), (textus), (mora), __FILE__, __LINE__)
+    _manus_credo_effusio((m), (textus), (mora), __FILE__, __LINE__)
 
 /* Nullus error in pagina ex quo manus aperta est. Vide 'Errores
  * paginae' supra: assertum ultimum eorum quae probatio de se ipsa
  * scire debet. */
 #define CREDO_MANUS_SINE_ERRORIBUS(m) \
-	_manus_credo_sine_erroribus((m), __FILE__, __LINE__)
+    _manus_credo_sine_erroribus((m), __FILE__, __LINE__)
 
 /* Selector hic focum tenet - EXSPECTANS.
  *
@@ -914,11 +933,12 @@ manus_magnitudo (
  *   CREDO_MANUS_FOCUS(m, "#quaestio-campus");
  */
 #define CREDO_MANUS_FOCUS(m, sel) \
-	_manus_credo_focum((m), (sel), MANUS_MORA_ORDINARIA, \
-			__FILE__, __LINE__)
+    _manus_credo_focum((m), (sel), MANUS_MORA_ORDINARIA, \
+            __FILE__, __LINE__)
 
 #define CREDO_MANUS_FOCUS_MORA(m, sel, mora) \
-	_manus_credo_focum((m), (sel), (mora), __FILE__, __LINE__)
+    _manus_credo_focum((m), (sel), (mora), __FILE__, __LINE__)
+
 
 /* ==================================================
  * Interiora macronum (ne voces recta - __FILE__ perderes)
@@ -926,69 +946,69 @@ manus_magnitudo (
 
 b32
 _manus_credo_existere (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    b32                 adesse,
-    Mora                mora,
+                   b32  adesse,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_focum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_textum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
     constans character* exspectatum,
-    b32                 pars_sufficit,
-    Mora                mora,
+                   b32  pars_sufficit,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_numerum (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    i32                 quot,
-    Mora                mora,
+                   i32  quot,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_textum_paginae (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus,
-    b32                 adesse,
-    Mora                mora,
+                   b32  adesse,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_omnino (
-    Manus*              manus,
+                 Manus* manus,
     constans character* selector,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_effusio (
-    Manus*              manus,
+                 Manus* manus,
     constans character* textus,
-    Mora                mora,
+                  Mora  mora,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 b32
 _manus_credo_sine_erroribus (
-    Manus*              manus,
+                 Manus* manus,
     constans character* filum,
-    s32                 versus);
+                   s32  versus);
 
 #endif /* MANUS_H */

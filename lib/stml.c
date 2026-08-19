@@ -1442,7 +1442,9 @@ _parser_creare_nodus (
 }
 
 /* Forward declaration */
-interior StmlNodus* _parser_legere_nodus(StmlParserContext* ctx);
+interior StmlNodus*
+_parser_legere_nodus (
+    StmlParserContext* ctx);
 
 /* Parse an element */
 interior StmlNodus*

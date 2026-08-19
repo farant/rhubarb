@@ -1100,7 +1100,9 @@ _legere_textus (
 }
 
 /* Declaratio anticipata */
-interior XmlNodus* _legere_elementum(XmlContextus* ctx);
+interior XmlNodus*
+_legere_elementum (
+    XmlContextus* ctx);
 
 /* Legere contentum elementi (liberi) */
 interior b32

@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "chorda_aedificator.h"
 
+
 /* ==================================================
  * FASTI - Bibliotheca Calendarii et Temporis
  *
@@ -110,6 +111,7 @@ nomen structura {
     Hora hora;
 } DiesHora;
 
+
 /* ==================================================
  * Typi Temporis (genera signata, 01KYNXXVX9)
  *
@@ -162,26 +164,26 @@ nomen structura {
 
 /* Creare diem ex componentibus (non validat) */
 Dies
-fasti_dies(
+fasti_dies (
     s32 annus,
     s32 mensis,
     s32 dies);
 
 /* Creare horam ex componentibus (non validat) */
 Hora
-fasti_hora(
+fasti_hora (
     s32 hora,
     s32 minutum,
     s32 secundum);
 
 /* Obtinere diem hodiernam ex systemate */
 Dies
-fasti_dies_hodie(
+fasti_dies_hodie (
     vacuum);
 
 /* Obtinere diem et horam nunc ex systemate */
 DiesHora
-fasti_nunc(
+fasti_nunc (
     vacuum);
 
 
@@ -191,12 +193,12 @@ fasti_nunc(
 
 /* Verificare si dies valida */
 b32
-fasti_dies_valida(
+fasti_dies_valida (
     Dies dies);
 
 /* Verificare si hora valida */
 b32
-fasti_hora_valida(
+fasti_hora_valida (
     Hora hora);
 
 
@@ -206,45 +208,45 @@ fasti_hora_valida(
 
 /* Est annus bissextilis? (leap year) */
 b32
-fasti_est_bissextilis(
+fasti_est_bissextilis (
     s32 annus);
 
 /* Numerus dierum in mense (28-31) */
 s32
-fasti_dies_in_mense(
+fasti_dies_in_mense (
     s32 mensis,
     s32 annus);
 
 /* Dies hebdomadis (0=Dominica, 6=Sabbatum) */
 s32
-fasti_dies_hebdomadis(
+fasti_dies_hebdomadis (
     Dies dies);
 
 /* Dies anni (1-366) */
 s32
-fasti_dies_anni(
+fasti_dies_anni (
     Dies dies);
 
 /* Numerus hebdomadis ISO (1-53) */
 s32
-fasti_hebdomada_anni(
+fasti_hebdomada_anni (
     Dies dies);
 
 /* Prima dies mensis */
 Dies
-fasti_prima_mensis(
+fasti_prima_mensis (
     s32 mensis,
     s32 annus);
 
 /* Ultima dies mensis */
 Dies
-fasti_ultima_mensis(
+fasti_ultima_mensis (
     s32 mensis,
     s32 annus);
 
 /* Dies hebdomadis primae diei mensis (pro layout calendarii) */
 s32
-fasti_primus_dies_hebdomadis_mensis(
+fasti_primus_dies_hebdomadis_mensis (
     s32 mensis,
     s32 annus);
 
@@ -255,25 +257,25 @@ fasti_primus_dies_hebdomadis_mensis(
 
 /* Addere dies (negativus = subtrahere) */
 Dies
-fasti_addere_dies(
+fasti_addere_dies (
     Dies dies,
-    s32  numerus);
+     s32 numerus);
 
 /* Addere menses (cohibet si dies invalidus) */
 Dies
-fasti_addere_menses(
+fasti_addere_menses (
     Dies dies,
-    s32  numerus);
+     s32 numerus);
 
 /* Addere annos (cohibet si dies invalidus) */
 Dies
-fasti_addere_annos(
+fasti_addere_annos (
     Dies dies,
-    s32  numerus);
+     s32 numerus);
 
 /* Differentia inter duas dies */
 Intervallum
-fasti_differentia(
+fasti_differentia (
     Dies prima,
     Dies secunda);
 
@@ -284,31 +286,31 @@ fasti_differentia(
 
 /* Comparare: -1 si prima < secunda, 0 si =, +1 si > */
 s32
-fasti_comparare(
+fasti_comparare (
     Dies prima,
     Dies secunda);
 
 /* Est prima ante secundam? */
 b32
-fasti_ante(
+fasti_ante (
     Dies prima,
     Dies secunda);
 
 /* Est prima post secundam? */
 b32
-fasti_post(
+fasti_post (
     Dies prima,
     Dies secunda);
 
 /* Sunt dies aequales? */
 b32
-fasti_aequalis(
+fasti_aequalis (
     Dies prima,
     Dies secunda);
 
 /* Est dies inter duas dies (inclusive)? */
 b32
-fasti_inter(
+fasti_inter (
     Dies dies,
     Dies ab,
     Dies ad);
@@ -322,12 +324,12 @@ fasti_inter(
 
 /* Convertere diem ad numerum Iulianum */
 DiesIulianus
-fasti_ad_iulianum(
+fasti_ad_iulianum (
     Dies dies);
 
 /* Convertere numerum Iulianum ad diem */
 Dies
-fasti_ex_iuliano(
+fasti_ex_iuliano (
     DiesIulianus iulianus);
 
 
@@ -337,12 +339,12 @@ fasti_ex_iuliano(
 
 /* Convertere DiesHora ad Unix timestamp (UTC) */
 MomentumSec
-fasti_ad_unix(
+fasti_ad_unix (
     DiesHora dh);
 
 /* Convertere Unix timestamp ad DiesHora (UTC) */
 DiesHora
-fasti_ex_unix(
+fasti_ex_unix (
     MomentumSec timestamp);
 
 
@@ -357,54 +359,54 @@ fasti_ex_unix(
  * Redde: suffixum ("st", "nd", "rd", vel "th")
  */
 constans character*
-fasti_suffixum_ordinale(
+fasti_suffixum_ordinale (
     s32 numerus);
 
 /* Nomen mensis */
 chorda
-fasti_nomen_mensis(
-    s32      mensis,
-    b32      abbreviatum,
-    s32      lingua,
+fasti_nomen_mensis (
+        s32  mensis,
+        b32  abbreviatum,
+        s32  lingua,
     Piscina* piscina);
 
 /* Nomen diei hebdomadis */
 chorda
-fasti_nomen_diei_hebdomadis(
-    s32      dies_hebdomadis,
-    b32      abbreviatum,
-    s32      lingua,
+fasti_nomen_diei_hebdomadis (
+        s32  dies_hebdomadis,
+        b32  abbreviatum,
+        s32  lingua,
     Piscina* piscina);
 
 /* Formare diem */
 chorda
-fasti_formare_diem(
-    Dies      dies,
-    s32       forma,
-    Piscina*  piscina);
+fasti_formare_diem (
+       Dies  dies,
+        s32  forma,
+    Piscina* piscina);
 
 /* Formare horam */
 chorda
-fasti_formare_horam(
-    Hora     hora,
-    b32      cum_secundis,
-    b32      xxiv_horae,
+fasti_formare_horam (
+       Hora  hora,
+        b32  cum_secundis,
+        b32  xxiv_horae,
     Piscina* piscina);
 
 /* Scribere diem ad aedificatorem */
 vacuum
-fasti_scribere_diem(
+fasti_scribere_diem (
     ChordaAedificator* aedificator,
-    Dies               dies,
-    s32                forma);
+                 Dies  dies,
+                  s32  forma);
 
 /* Scribere horam ad aedificatorem */
 vacuum
-fasti_scribere_horam(
+fasti_scribere_horam (
     ChordaAedificator* aedificator,
-    Hora               hora,
-    b32                cum_secundis,
-    b32                xxiv_horae);
+                 Hora  hora,
+                  b32  cum_secundis,
+                  b32  xxiv_horae);
 
 
 /* ==================================================
@@ -413,15 +415,15 @@ fasti_scribere_horam(
 
 /* Parsare diem ISO (YYYY-MM-DD) */
 b32
-fasti_parsare_iso(
+fasti_parsare_iso (
     chorda  s,
-    Dies*   fructus);
+      Dies* fructus);
 
 /* Parsare diem (tentat varios formatos) */
 b32
-fasti_parsare_diem(
+fasti_parsare_diem (
     chorda  s,
-    Dies*   fructus);
+      Dies* fructus);
 
 
 /* ==================================================
@@ -433,7 +435,7 @@ fasti_parsare_diem(
 
 /* Computare diem Paschatis (Dominica Resurrectionis) */
 Dies
-fasti_computus(
+fasti_computus (
     s32 annus);
 
 
@@ -446,22 +448,22 @@ fasti_computus(
 
 /* Feria VI in Passione Domini (Good Friday) = Pascha - 2 */
 Dies
-fasti_feria_vi(
+fasti_feria_vi (
     s32 annus);
 
 /* Feria IV Cinerum (Ash Wednesday) = Pascha - 46 */
 Dies
-fasti_feria_iv_cinerum(
+fasti_feria_iv_cinerum (
     s32 annus);
 
 /* Dominica in Palmis (Palm Sunday) = Pascha - 7 */
 Dies
-fasti_dominica_palmarum(
+fasti_dominica_palmarum (
     s32 annus);
 
 /* Pentecoste (Pentecost) = Pascha + 49 */
 Dies
-fasti_pentecoste(
+fasti_pentecoste (
     s32 annus);
 
 /* Nomen festivitatis pro die (English, for display)
@@ -471,7 +473,7 @@ fasti_pentecoste(
  * Redde: nomen festivitatis vel NIHIL si non est festivitas
  */
 constans character*
-fasti_nomen_festivitatis(
+fasti_nomen_festivitatis (
     Dies dies);
 
 

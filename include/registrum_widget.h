@@ -9,6 +9,7 @@
 /* Forward declaration */
 structura ContextusWidget;
 
+
 /* ==================================================
  * REGISTRUM WIDGET - Factory Registry pro Widgets
  *
@@ -59,17 +60,17 @@ nomen vacuum (*FunctioWidgetInit)(
 
 /* Introitus in registrum */
 nomen structura {
-    chorda*              titulus;   /* Tag name e.g. "pagina" */
-    FunctioWidgetFactory factory;   /* Factory function */
-    FunctioWidgetInit    init;      /* Init function (potest esse NIHIL) */
+                  chorda* titulus;   /* Tag name e.g. "pagina" */
+    FunctioWidgetFactory  factory;   /* Factory function */
+       FunctioWidgetInit  init;      /* Init function (potest esse NIHIL) */
 } RegistrumWidgetIntroitus;
 
 /* Registrum widget */
 nomen structura {
-    Piscina*                  piscina;
-    InternamentumChorda*      intern;
+                     Piscina* piscina;
+         InternamentumChorda* intern;
     RegistrumWidgetIntroitus  introitus[REGISTRUM_WIDGET_MAXIMUS];
-    s32                       numerus;
+                         s32  numerus;
 } RegistrumWidget;
 
 
@@ -85,8 +86,8 @@ nomen structura {
  * Redde: RegistrumWidget* si successus, NIHIL si error
  */
 RegistrumWidget*
-registrum_widget_creare(
-    Piscina*             piscina,
+registrum_widget_creare (
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 
@@ -103,10 +104,10 @@ registrum_widget_creare(
  * Redde: VERUM si successus, FALSUM si plenum vel error
  */
 b32
-registrum_widget_registrare(
-    RegistrumWidget*     reg,
-    constans character*  titulus,
-    FunctioWidgetFactory factory);
+registrum_widget_registrare (
+         RegistrumWidget* reg,
+      constans character* titulus,
+    FunctioWidgetFactory  factory);
 
 /* Registrare widget factory cum init
  *
@@ -118,11 +119,11 @@ registrum_widget_registrare(
  * Redde: VERUM si successus, FALSUM si plenum vel error
  */
 b32
-registrum_widget_registrare_cum_init(
-    RegistrumWidget*     reg,
-    constans character*  titulus,
-    FunctioWidgetFactory factory,
-    FunctioWidgetInit    init);
+registrum_widget_registrare_cum_init (
+         RegistrumWidget* reg,
+      constans character* titulus,
+    FunctioWidgetFactory  factory,
+       FunctioWidgetInit  init);
 
 
 /* ==================================================
@@ -138,7 +139,7 @@ registrum_widget_registrare_cum_init(
  * ctx: contextus widget pro passare ad init functiones
  */
 vacuum
-registrum_widget_initiare_omnes(
+registrum_widget_initiare_omnes (
     RegistrumWidget*           reg,
     structura ContextusWidget* ctx);
 
@@ -155,9 +156,9 @@ registrum_widget_initiare_omnes(
  * Redde: FunctioWidgetFactory si inventum, NIHIL si non
  */
 FunctioWidgetFactory
-registrum_widget_invenire(
+registrum_widget_invenire (
     RegistrumWidget* reg,
-    chorda*          titulus);
+             chorda* titulus);
 
 /* Invenire factory pro tag (ex literis)
  *
@@ -167,8 +168,8 @@ registrum_widget_invenire(
  * Redde: FunctioWidgetFactory si inventum, NIHIL si non
  */
 FunctioWidgetFactory
-registrum_widget_invenire_literis(
-    RegistrumWidget*    reg,
+registrum_widget_invenire_literis (
+       RegistrumWidget* reg,
     constans character* titulus);
 
 #endif /* REGISTRUM_WIDGET_H */

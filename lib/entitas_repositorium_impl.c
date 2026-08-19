@@ -36,24 +36,24 @@ nomen structura {
  * ================================================== */
 
 interior b32
-_impl_proprietas_ponere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_proprietas_ponere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* clavis,
     constans character* valor);
 
 interior Relatio*
-_impl_relatio_addere(
-    vacuum*             datum,
-    Entitas*            entitas,
+_impl_relatio_addere (
+                vacuum* datum,
+               Entitas* entitas,
     constans character* genus,
-    chorda*             destinatio_id);
+                chorda* destinatio_id);
 
 interior Entitas*
-_impl_proprietas_definitio_invenire(
-    vacuum*  datum,
-    chorda*  entitas_genus,
-    chorda*  proprietas_nomen);
+_impl_proprietas_definitio_invenire (
+    vacuum* datum,
+    chorda* entitas_genus,
+    chorda* proprietas_nomen);
 
 
 /* ==================================================

@@ -1,6 +1,7 @@
 #ifndef COLORATIO_H
 #define COLORATIO_H
 
+
 /* ==================================================
  * COLORATIO - Syntax Highlighting Module
  *
@@ -123,10 +124,10 @@ nomen structura {
  * Reddit: Coloratio*, vel NIHIL si error
  */
 Coloratio*
-coloratio_creare(
+coloratio_creare (
     Piscina* piscina,
-    i32 latitudo,
-    i32 altitudo);
+        i32  latitudo,
+        i32  altitudo);
 
 /* Creare coloratio ex TabulaCharacterum (copies dimensions)
  *
@@ -136,8 +137,8 @@ coloratio_creare(
  * Reddit: Coloratio*, vel NIHIL si error
  */
 Coloratio*
-coloratio_creare_ex_tabula(
-    Piscina* piscina,
+coloratio_creare_ex_tabula (
+                       Piscina* piscina,
     constans TabulaCharacterum* tabula);
 
 
@@ -151,9 +152,9 @@ coloratio_creare_ex_tabula(
  * regulae: bitmask of COLORATIO_REGULA_*
  */
 vacuum
-coloratio_ponere_regulas(
+coloratio_ponere_regulas (
     Coloratio* coloratio,
-    i32 regulae);
+          i32  regulae);
 
 /* Addere singulam regulam
  *
@@ -161,9 +162,9 @@ coloratio_ponere_regulas(
  * regula: single COLORATIO_REGULA_* flag
  */
 vacuum
-coloratio_addere_regulam(
+coloratio_addere_regulam (
     Coloratio* coloratio,
-    i32 regula);
+          i32  regula);
 
 /* Removere singulam regulam
  *
@@ -171,9 +172,9 @@ coloratio_addere_regulam(
  * regula: single COLORATIO_REGULA_* flag
  */
 vacuum
-coloratio_removere_regulam(
+coloratio_removere_regulam (
     Coloratio* coloratio,
-    i32 regula);
+          i32  regula);
 
 /* Ponere registrum commandi pro validatione $commands
  *
@@ -184,7 +185,7 @@ coloratio_removere_regulam(
  * reg: command registry (vel NIHIL)
  */
 vacuum
-coloratio_ponere_registrum(
+coloratio_ponere_registrum (
     Coloratio* coloratio,
     structura RegistrumCommandi* reg);
 
@@ -204,8 +205,8 @@ coloratio_ponere_registrum(
  * tabula: source character data
  */
 vacuum
-coloratio_computare(
-    Coloratio* coloratio,
+coloratio_computare (
+                     Coloratio* coloratio,
     constans TabulaCharacterum* tabula);
 
 /* Vacare omnes indices ad COLORATIO_DEFALTA
@@ -213,7 +214,7 @@ coloratio_computare(
  * coloratio: target
  */
 vacuum
-coloratio_vacare(
+coloratio_vacare (
     Coloratio* coloratio);
 
 
@@ -230,10 +231,10 @@ coloratio_vacare(
  * Reddit: color index (0 to COLORATIO_NUMERUS_MAX-1)
  */
 i8
-coloratio_obtinere(
+coloratio_obtinere (
     constans Coloratio* coloratio,
-    i32 linea,
-    i32 columna);
+                   i32  linea,
+                   i32  columna);
 
 /* Obtinere status lineae ad finem lineae
  *
@@ -243,9 +244,9 @@ coloratio_obtinere(
  * Reddit: StatusLinea value
  */
 i8
-coloratio_obtinere_status_lineae(
+coloratio_obtinere_status_lineae (
     constans Coloratio* coloratio,
-    i32 linea);
+                   i32  linea);
 
 
 #endif /* COLORATIO_H */

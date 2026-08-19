@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "xar.h"
 
+
 /* ====================================================================
  * CAPITULA - index libri ex textu adglutinato
  *
@@ -106,9 +107,9 @@ nomen structura
 {
     chorda inscriptio;   /* "1", "XIV", "Capitulum 3"; vacua si nulla */
     chorda titulus;      /* nomen capituli - NUMQUAM vacuum */
-    i32    gradus;       /* profunditas; ZEPHYRUM = summa */
-    i32    ordo;         /* positio in serie legendi, ab I */
-    i32    linea;        /* linea fontis, ab I - pro nuntiis */
+       i32 gradus;       /* profunditas; ZEPHYRUM = summa */
+       i32 ordo;         /* positio in serie legendi, ab I */
+       i32 linea;        /* linea fontis, ab I - pro nuntiis */
 } Capitulum;
 
 nomen structura
@@ -125,6 +126,9 @@ nomen structura
  * ultima sine fine legitima est.
  * -------------------------------------------------------------------- */
 
-IndexLibri capitula_legere (chorda fons, Piscina* piscina);
+IndexLibri
+capitula_legere (
+     chorda  fons,
+    Piscina* piscina);
 
 #endif /* CAPITULA_H */

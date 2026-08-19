@@ -13,6 +13,7 @@
 #include "libro_paginarum.h"
 #include "fenestra.h"
 
+
 /* ==================================================
  * CONCHA - Widget Shell
  *
@@ -49,8 +50,8 @@
 /* Configuratio pro concha */
 nomen structura {
     constans character* titulus;           /* Titulus fenestrae */
-    i32                 latitudo;          /* Latitudo fenestrae (pixels) */
-    i32                 altitudo;          /* Altitudo fenestrae (pixels) */
+                   i32  latitudo;          /* Latitudo fenestrae (pixels) */
+                   i32  altitudo;          /* Altitudo fenestrae (pixels) */
     constans character* via_persistentia;  /* Via ad log file (NIHIL = in memoria) */
 } ConchaConfiguratio;
 
@@ -61,32 +62,32 @@ nomen structura {
 
 nomen structura {
     /* Infrastructura */
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    Persistentia*        persistentia;
+           Persistentia* persistentia;
     EntitasRepositorium* repositorium;
-    ContextusWidget*     ctx;
+        ContextusWidget* ctx;
 
     /* Registra */
-    RegistrumCommandi*   reg_commandi;
-    RegistrumWidget*     reg_widget;
+    RegistrumCommandi* reg_commandi;
+      RegistrumWidget* reg_widget;
 
     /* UI */
-    Schirmata*           schirmata;
-    Fenestra*            fenestra;
-    TabulaPixelorum*     tabula;
+          Schirmata* schirmata;
+           Fenestra* fenestra;
+    TabulaPixelorum* tabula;
 
     /* Configuratio */
-    constans character*  via_persistentia;
-    i32                  latitudo;
-    i32                  altitudo;
+    constans character* via_persistentia;
+                   i32  latitudo;
+                   i32  altitudo;
 
     /* Status */
-    b32                  currens;
+    b32 currens;
 
     /* Cursor */
-    i32                  mus_x;
-    i32                  mus_y;
+    i32 mus_x;
+    i32 mus_y;
 } Concha;
 
 
@@ -104,7 +105,8 @@ nomen structura {
  *       et built-in commands ($date) automatice.
  */
 Concha*
-concha_creare(ConchaConfiguratio* config);
+concha_creare (
+    ConchaConfiguratio* config);
 
 
 /* ==================================================
@@ -120,10 +122,10 @@ concha_creare(ConchaConfiguratio* config);
  * Redde: VERUM si successus, FALSUM si error
  */
 b32
-concha_registrare_widget(
-    Concha*              concha,
-    constans character*  titulus,
-    FunctioWidgetFactory factory);
+concha_registrare_widget (
+                  Concha* concha,
+      constans character* titulus,
+    FunctioWidgetFactory  factory);
 
 /* Registrare command (ante concha_currere)
  *
@@ -135,11 +137,11 @@ concha_registrare_widget(
  * Redde: VERUM si successus, FALSUM si error
  */
 b32
-concha_registrare_commandi(
-    Concha*             concha,
+concha_registrare_commandi (
+                Concha* concha,
     constans character* nomen_cmd,
-    FunctioCommand      functio,
-    vacuum*             datum);
+        FunctioCommand  functio,
+                vacuum* datum);
 
 
 /* ==================================================
@@ -155,9 +157,9 @@ concha_registrare_commandi(
  * Redde: VERUM si successus, FALSUM si error
  */
 b32
-concha_ponere_layout(
-    Concha*             concha,
-    i32                 schirma_index,
+concha_ponere_layout (
+                Concha* concha,
+                   i32  schirma_index,
     constans character* stml);
 
 
@@ -172,7 +174,8 @@ concha_ponere_layout(
  * Redde: 0 si clean exit, 1 si error
  */
 s32
-concha_currere(Concha* concha);
+concha_currere (
+    Concha* concha);
 
 
 /* ==================================================
@@ -186,7 +189,8 @@ concha_currere(Concha* concha);
  * Redde: LibroPaginarum* ex schirma currens, vel NIHIL
  */
 LibroPaginarum*
-concha_libro(Concha* concha);
+concha_libro (
+    Concha* concha);
 
 /* Obtinere schirmata (pro commands)
  *
@@ -195,7 +199,8 @@ concha_libro(Concha* concha);
  * Redde: Schirmata*
  */
 Schirmata*
-concha_schirmata(Concha* concha);
+concha_schirmata (
+    Concha* concha);
 
 /* Obtinere repositorium (pro commands)
  *
@@ -204,7 +209,8 @@ concha_schirmata(Concha* concha);
  * Redde: EntitasRepositorium*
  */
 EntitasRepositorium*
-concha_repositorium(Concha* concha);
+concha_repositorium (
+    Concha* concha);
 
 /* Obtinere piscina (pro commands quae allocatione requirunt)
  *
@@ -213,7 +219,8 @@ concha_repositorium(Concha* concha);
  * Redde: Piscina*
  */
 Piscina*
-concha_piscina(Concha* concha);
+concha_piscina (
+    Concha* concha);
 
 /* Obtinere internamentum (pro commands)
  *
@@ -222,6 +229,7 @@ concha_piscina(Concha* concha);
  * Redde: InternamentumChorda*
  */
 InternamentumChorda*
-concha_intern(Concha* concha);
+concha_intern (
+    Concha* concha);
 
 #endif /* CONCHA_H */

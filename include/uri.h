@@ -19,6 +19,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ========================================================================
  * CONSTANTES
  * ======================================================================== */
@@ -44,11 +45,11 @@ nomen structura {
     chorda schema;       /* "https", "http", "ftp", etc. */
     chorda userinfo;     /* "user:pass" (ante @, optionalis) */
     chorda hospes;       /* "example.com" vel "[::1]" pro IPv6 */
-    i32    portus;       /* Numerus portus vel URI_PORTUS_NULLUS */
+       i32 portus;       /* Numerus portus vel URI_PORTUS_NULLUS */
     chorda via;          /* "/path/to/resource" */
     chorda quaestio;     /* "key=value&foo=bar" (post ?) */
     chorda fragmentum;   /* "section" (post #) */
-    b32    est_absoluta; /* VERUM si habet schema */
+       b32 est_absoluta; /* VERUM si habet schema */
 } Uri;
 
 
@@ -65,10 +66,10 @@ nomen structura {
  * Redde: VERUM si parsing successit, FALSUM si error
  */
 b32
-uri_parse(
+uri_parse (
     constans character* url,
-    Uri*                uri,
-    Piscina*            piscina);
+                   Uri* uri,
+               Piscina* piscina);
 
 /* Parse et creare Uri in piscina
  *
@@ -77,9 +78,9 @@ uri_parse(
  * Redde: Pointer ad Uri vel NIHIL si error
  */
 Uri*
-uri_creare(
+uri_creare (
     constans character* url,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 
 /* ========================================================================
@@ -93,8 +94,8 @@ uri_creare(
  * Redde: Chorda cum via normalizata
  */
 chorda
-uri_via_normalizare(
-    Uri*     uri,
+uri_via_normalizare (
+        Uri* uri,
     Piscina* piscina);
 
 /* Resolvere URI relativum contra base
@@ -106,9 +107,9 @@ uri_via_normalizare(
  * Redde: Novum Uri absolutum vel NIHIL si error
  */
 Uri*
-uri_resolvere(
-    Uri*     base,
-    chorda   relativum,
+uri_resolvere (
+        Uri* base,
+     chorda  relativum,
     Piscina* piscina);
 
 
@@ -124,8 +125,8 @@ uri_resolvere(
  * Redde: Chorda cum URI completa
  */
 chorda
-uri_construere(
-    Uri*     uri,
+uri_construere (
+        Uri* uri,
     Piscina* piscina);
 
 
@@ -141,18 +142,20 @@ uri_construere(
  * aliud   -> URI_PORTUS_NULLUS
  */
 i32
-uri_portus_default(chorda schema);
+uri_portus_default (
+    chorda schema);
 
 /* Verificare si URI est absoluta (habet schema) */
 b32
-uri_est_absoluta(Uri* uri);
+uri_est_absoluta (
+    Uri* uri);
 
 /* Comparare duo URIs
  *
  * Redde: VERUM si aequales
  */
 b32
-uri_aequalis(
+uri_aequalis (
     Uri* a,
     Uri* b);
 

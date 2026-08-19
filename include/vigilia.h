@@ -69,7 +69,7 @@ nomen structura Vigilia Vigilia;
  * obiectum quietum validum */
 Vigilia*
 vigilia_creare (
-    Piscina*                      piscina,
+                         Piscina* piscina,
     constans VigiliaConfiguratio* cfg);
 
 /* per petitionem vocanda (stat unum per plagulam vigilatam -
@@ -104,7 +104,8 @@ vigilia_causa (
 b32
 vigilia_continet (
     constans Vigilia* vigilia,
-    chorda            via);
+              chorda  via);
+
 
 /* ==================================================
  * politica tacendi (2026-07-17): agnitio explicita
@@ -131,9 +132,9 @@ vigilia_continet (
  * loquitur - agnitio ad causam agnitam scopata). */
 b32
 vigilia_tacere (
-    Vigilia*    vigilia,
-    i32         responsa,
-    MomentumSec nunc);
+        Vigilia* vigilia,
+            i32  responsa,
+    MomentumSec  nunc);
 
 /* Facies emissionis UNICA post politicam: cautio dicenda aut NIHIL
  * (recens AUT tacita). Latus-effectus: horologium quietis gerit et
@@ -141,7 +142,7 @@ vigilia_tacere (
  * vigilia_cautio crudam relinquant huic. */
 constans character*
 vigilia_cautio_dicenda (
-    Vigilia*    vigilia,
-    MomentumSec nunc);
+        Vigilia* vigilia,
+    MomentumSec  nunc);
 
 #endif /* VIGILIA_H */

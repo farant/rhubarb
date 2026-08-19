@@ -647,7 +647,9 @@ nomen structura {
 } JsonParser;
 
 /* Forward declarations */
-interior JsonValor* _parse_valor(JsonParser* parser);
+interior JsonValor*
+_parse_valor (
+    JsonParser* parser);
 
 interior vacuum
 _parser_initare (
@@ -1683,7 +1685,11 @@ json_objectum_ponere_chorda (
  * ======================================================================== */
 
 interior vacuum
-_scribere_valor(JsonValor* valor, ChordaAedificator* aed, b32 pulchrum, i32 indent);
+_scribere_valor (
+            JsonValor* valor,
+    ChordaAedificator* aed,
+                  b32  pulchrum,
+                  i32  indent);
 
 interior vacuum
 _scribere_indentatio (

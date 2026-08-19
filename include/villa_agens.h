@@ -45,19 +45,20 @@
 
 nomen structura VillaAgens VillaAgens;
 
+
 /* ========================================================================
  * I. CONFIGURATIO
  * ======================================================================== */
 
 nomen structura {
-	/* Directorium socketorum moderantium, SINE '/%C'. Vacuum =
+    /* Directorium socketorum moderantium, SINE '/%C'. Vacuum =
 	 * nulla multiplicatio. */
-	chorda              via_moderandi;
-	/* NIHIL = ex ambiente (VILLA_SSH) aut "ssh". */
-	constans character* via_ssh;
-	i32                 mora_probationis_ms;  /* ZEPHYRUM = XV000 */
-	i32                 mora_actionis_ms;     /* ZEPHYRUM = XXX000 */
-	i32                 portus_tabularii;     /* ZEPHYRUM = 8753 */
+    chorda via_moderandi;
+    /* NIHIL = ex ambiente (VILLA_SSH) aut "ssh". */
+    constans character* via_ssh;
+                   i32  mora_probationis_ms;  /* ZEPHYRUM = XV000 */
+                   i32  mora_actionis_ms;     /* ZEPHYRUM = XXX000 */
+                   i32  portus_tabularii;     /* ZEPHYRUM = 8753 */
 } VillaConfiguratio;
 
 /* Configurationem ordinariam parare:
@@ -70,9 +71,9 @@ nomen structura {
  */
 b32
 villa_configurationem_parare (
-	VillaConfiguratio* configuratio,
-	          Piscina* piscina,
-	           chorda* causa);
+    VillaConfiguratio* configuratio,
+              Piscina* piscina,
+               chorda* causa);
 
 
 /* ========================================================================
@@ -91,7 +92,8 @@ villa_configurationem_parare (
  * contra sprintf immodicum custodit).
  */
 b32
-villa_unitas_valida (chorda nomen_unitatis);
+villa_unitas_valida (
+    chorda nomen_unitatis);
 
 
 /* ========================================================================
@@ -111,9 +113,9 @@ villa_unitas_valida (chorda nomen_unitatis);
  */
 chorda
 villa_scriptum_probationis (
-	constans Xar* unitates,
-	         i32* omissa,
-	     Piscina* piscina);
+    constans Xar* unitates,
+             i32* omissa,
+         Piscina* piscina);
 
 
 /* ========================================================================
@@ -121,24 +123,25 @@ villa_scriptum_probationis (
  * ======================================================================== */
 
 nomen structura {
-	b32            perfecta;      /* cyclus finitus (felix an non) */
-	b32            felix;         /* omnia bene */
-	CausaExitus    causa;         /* si !felix */
-	i32            mora_ms;
+            b32 perfecta;      /* cyclus finitus (felix an non) */
+            b32 felix;         /* omnia bene */
+    CausaExitus causa;         /* si !felix */
+            i32 mora_ms;
 
-	/* lectiones parsatae; vacuae si sectio defuit aut cecidit */
-	Xar*           unitates;      /* UnitasCursoria */
-	Xar*           servitia;      /* StatusServitii */
-	Xar*           situs;         /* SitusNginx */
-	StatusDisci    discus;
-	StatusMemoriae memoria;
-	i64            tempus_activum;
+    /* lectiones parsatae; vacuae si sectio defuit aut cecidit */
+               Xar* unitates;      /* UnitasCursoria */
+               Xar* servitia;      /* StatusServitii */
+               Xar* situs;         /* SitusNginx */
+       StatusDisci  discus;
+    StatusMemoriae  memoria;
+               i64  tempus_activum;
 
-	/* Sectiones quae defuerunt aut ceciderunt, prosa brevi. Vacua
+    /* Sectiones quae defuerunt aut ceciderunt, prosa brevi. Vacua
 	 * = omnia advenerunt. Facies eam monstret: probatio partim
 	 * felix TACITE dimidiata pessimum genus est. */
-	chorda         querelae;
+    chorda querelae;
 } ProbatioServi;
+
 
 /* ========================================================================
  * V. AGENS
@@ -146,9 +149,9 @@ nomen structura {
 
 VillaAgens*
 villa_agens_creare (
-	constans VillaConfiguratio* configuratio,
-	           ClientTabularii* cliens,
-	                  Piscina*  piscina);
+    constans VillaConfiguratio* configuratio,
+               ClientTabularii* cliens,
+                       Piscina* piscina);
 
 /* Genera 'servus' et 'servitium' seminare.
  *
@@ -161,8 +164,8 @@ villa_agens_creare (
  */
 b32
 villa_genera_seminare (
-	VillaAgens* agens,
-	    chorda* causa);
+    VillaAgens* agens,
+        chorda* causa);
 
 /* Probationem incipere (NON obstat). alias/hospes ut in
  * ConfiguratioSsh; unitates = nomina systemd petenda.
@@ -171,40 +174,48 @@ villa_genera_seminare (
  * aedificari non potuit (causa nominatur). */
 b32
 villa_probationem_incipere (
-	VillaAgens* agens,
-	    chorda  clavis_servi,   /* identitas in tabula agentis */
-	    chorda  alias,
-	constans Xar* unitates,
-	    chorda* causa);
+      VillaAgens* agens,
+          chorda  clavis_servi,   /* identitas in tabula agentis */
+          chorda  alias,
+    constans Xar* unitates,
+          chorda* causa);
 
 /* Omnes probationes currentes uno gradu provehere. Vocanda semel
  * per tictum. NUMQUAM OBSTAT. Redde numerum probationum quae hoc
  * pulsu PERFECTAE sunt. */
 i32
-villa_agens_pulsare (VillaAgens* agens);
+villa_agens_pulsare (
+    VillaAgens* agens);
 
 /* Photographia ultima servi (NIHIL si nulla adhuc). */
 constans ProbatioServi*
 villa_probatio_ultima (
-	VillaAgens* agens,
-	    chorda  clavis_servi);
+    VillaAgens* agens,
+        chorda  clavis_servi);
 
 /* Numerus probationum in cursu. */
 i32
-villa_probationes_currentes (constans VillaAgens* agens);
+villa_probationes_currentes (
+    constans VillaAgens* agens);
 
 /* Enumeratio sediumm notarum (facies statum omnium colligit):
  * numerus + clavis per indicem (vacua extra fines). Sedes nascitur
  * cum probatio aut actio prima servi incipit. */
 i32
-villa_sedes_numerus (constans VillaAgens* agens);
+villa_sedes_numerus (
+    constans VillaAgens* agens);
 
 chorda
-villa_sedes_clavis (constans VillaAgens* agens, i32 index);
+villa_sedes_clavis (
+    constans VillaAgens* agens,
+                    i32  index);
 
 /* an probatio huius servi in cursu sit (par villa_actio_currit) */
 b32
-villa_probatio_currit (VillaAgens* agens, chorda clavis_servi);
+villa_probatio_currit (
+    VillaAgens* agens,
+        chorda  clavis_servi);
+
 
 /* ========================================================================
  * VI. ACTIONES - quae EVENTUS pariunt
@@ -224,31 +235,32 @@ villa_probatio_currit (VillaAgens* agens, chorda clavis_servi);
  * eventus scribitur, actio tamen curritur).
  */
 nomen structura {
-	b32         successus;    /* processus cucurrit ET codex ZEPHYRUM */
-	CausaExitus causa;
-	chorda      effusio;
-	chorda      erratum;
-	i32         mora_ms;
-	b32         eventus_scriptus;
+            b32 successus;    /* processus cucurrit ET codex ZEPHYRUM */
+    CausaExitus causa;
+         chorda effusio;
+         chorda erratum;
+            i32 mora_ms;
+            b32 eventus_scriptus;
 } ResultusActionis;
 
 ResultusActionis
 villa_actionem_agere (
-	VillaAgens* agens,
-	    chorda  alias,
-	    chorda  res_servi,
-	    chorda  imperium,
-	   Piscina* piscina);
+    VillaAgens* agens,
+        chorda  alias,
+        chorda  res_servi,
+        chorda  imperium,
+       Piscina* piscina);
+
 
 /* ========================================================================
  * VII. IUDICIUM PUNCTI - photographia in colorem unum
  * ======================================================================== */
 
 nomen enumeratio {
-	VILLA_IUDICIUM_IGNOTUS = 0,   /* nulla probatio perfecta adhuc */
-	VILLA_IUDICIUM_SANUS,         /* viride: omnia munda */
-	VILLA_IUDICIUM_LANGUIDUS,     /* flavum: querelae aut discus */
-	VILLA_IUDICIUM_FRACTUS        /* rubrum */
+    VILLA_IUDICIUM_IGNOTUS = 0,   /* nulla probatio perfecta adhuc */
+    VILLA_IUDICIUM_SANUS,         /* viride: omnia munda */
+    VILLA_IUDICIUM_LANGUIDUS,     /* flavum: querelae aut discus */
+    VILLA_IUDICIUM_FRACTUS        /* rubrum */
 } VillaIudicium;
 
 /* Iudicium purum photographiae (decisum 2026-07-30):
@@ -262,11 +274,13 @@ nomen enumeratio {
  *   IGNOTUS   = NIHIL aut nondum perfecta - punctum griseum, non
  *               mendacium viride (lex 'Result=success' memento). */
 VillaIudicium
-villa_iudicare (constans ProbatioServi* probatio);
+villa_iudicare (
+    constans ProbatioServi* probatio);
 
 /* nomen breve pro facie ("sanus"/"languidus"/"fractus"/"ignotus") */
 constans character*
-villa_iudicium_nomen (VillaIudicium iudicium);
+villa_iudicium_nomen (
+    VillaIudicium iudicium);
 
 
 /* ========================================================================
@@ -291,24 +305,30 @@ villa_iudicium_nomen (VillaIudicium iudicium);
  * aut mandatum aedificari non potuit. */
 b32
 villa_actionem_incipere (
-	VillaAgens* agens,
-	    chorda  clavis_servi,
-	    chorda  alias,
-	    chorda  res_servi,
-	    chorda  imperium,
-	    chorda* causa);
+    VillaAgens* agens,
+        chorda  clavis_servi,
+        chorda  alias,
+        chorda  res_servi,
+        chorda  imperium,
+        chorda* causa);
 
 /* an actio huius servi in cursu sit */
 b32
-villa_actio_currit (VillaAgens* agens, chorda clavis_servi);
+villa_actio_currit (
+    VillaAgens* agens,
+        chorda  clavis_servi);
 
 /* fructus actionis ultimae perfectae (NIHIL si nulla adhuc) */
 constans ResultusActionis*
-villa_actio_ultima (VillaAgens* agens, chorda clavis_servi);
+villa_actio_ultima (
+    VillaAgens* agens,
+        chorda  clavis_servi);
 
 /* actionem currentem occidere et fructum conficere (TEMPUS in
  * causa processus); tuta si nulla currit */
 vacuum
-villa_actionem_abrumpere (VillaAgens* agens, chorda clavis_servi);
+villa_actionem_abrumpere (
+    VillaAgens* agens,
+        chorda  clavis_servi);
 
 #endif /* VILLA_AGENS_H */

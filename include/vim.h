@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "tabula_characterum.h"
 
+
 /* ==================================================
  * VIM - Editor Imperare Interpres
  *
@@ -76,7 +77,7 @@ nomen enumeratio {
 
 nomen structura {
     character lineae[VIM_CLIPBOARD_LINEAE_MAXIMAE][VIM_CLIPBOARD_LINEA_MAXIMA];
-    i32 numerus_linearum;
+          i32 numerus_linearum;
 } VimClipboard;
 
 
@@ -97,16 +98,16 @@ nomen enumeratio {
 
 nomen structura {
     VimUndoTipo tipo;
-    i32 linea;
-    i32 columna;
-    character data[VIM_CLIPBOARD_LINEA_MAXIMA];
-    i32 numerus_linearum;  /* pro multi-linea operationibus */
+            i32 linea;
+            i32 columna;
+      character data[VIM_CLIPBOARD_LINEA_MAXIMA];
+            i32 numerus_linearum;  /* pro multi-linea operationibus */
 } VimUndoOperatio;
 
 nomen structura {
     VimUndoOperatio operationes[VIM_UNDO_MAGNITUDO];
-    i32 numerus;  /* numerus operationum in acervo */
-    i32 index;    /* proxima positio scribendi (circularis) */
+                i32 numerus;  /* numerus operationum in acervo */
+                i32 index;    /* proxima positio scribendi (circularis) */
 } VimUndoAcervus;
 
 /* Status vim - omnia necessaria pro tractare clavem */
@@ -159,7 +160,7 @@ nomen structura {
  * Reddit: status initiatus
  */
 VimStatus
-vim_initiare(
+vim_initiare (
     TabulaCharacterum* tabula);
 
 
@@ -178,9 +179,9 @@ vim_initiare(
  * Reddit: novus status post tractare clavem
  */
 VimStatus
-vim_tractare_clavem(
+vim_tractare_clavem (
     VimStatus status,
-    s32 clavis);
+          s32 clavis);
 
 /* Tractare clavem cum tempore (pro fd timing)
  *
@@ -193,10 +194,10 @@ vim_tractare_clavem(
  * Reddit: novus status
  */
 VimStatus
-vim_tractare_clavem_cum_tempore(
+vim_tractare_clavem_cum_tempore (
     VimStatus status,
-    s32 clavis,
-    f64 tempus);
+          s32 clavis,
+          f64 tempus);
 
 
 /* ==================================================
@@ -210,7 +211,7 @@ vim_tractare_clavem_cum_tempore(
  * Reddit: nomen modi ("NORMAL", "INSERT", "VISUAL")
  */
 constans character*
-vim_nomen_modi(
+vim_nomen_modi (
     ModoVim modo);
 
 
@@ -227,10 +228,10 @@ vim_nomen_modi(
  * Reddit: status cum novo cursore
  */
 VimStatus
-vim_ponere_cursor(
+vim_ponere_cursor (
     VimStatus status,
-    i32 linea,
-    i32 columna);
+          i32 linea,
+          i32 columna);
 
 /* Ponere modum directe
  *
@@ -240,9 +241,9 @@ vim_ponere_cursor(
  * Reddit: status cum novo modo
  */
 VimStatus
-vim_ponere_modum(
+vim_ponere_modum (
     VimStatus status,
-    ModoVim modo);
+      ModoVim modo);
 
 
 /* ==================================================
@@ -254,7 +255,7 @@ vim_ponere_modum(
  * clipboard: clipboard initiandus
  */
 vacuum
-vim_clipboard_initiare(
+vim_clipboard_initiare (
     VimClipboard* clipboard);
 
 
@@ -269,7 +270,7 @@ vim_clipboard_initiare(
  * Reddit: VimUndoAcervus* si successus, NIHIL si error
  */
 VimUndoAcervus*
-vim_undo_creare(
+vim_undo_creare (
     Piscina* piscina);
 
 /* Trudere operationem in acervum
@@ -278,9 +279,9 @@ vim_undo_creare(
  * op: operatio trudenda
  */
 vacuum
-vim_undo_trudere(
-    VimUndoAcervus* acervus,
-    VimUndoOperatio op);
+vim_undo_trudere (
+     VimUndoAcervus* acervus,
+    VimUndoOperatio  op);
 
 /* Tollere operationem ex acervo
  *
@@ -290,8 +291,8 @@ vim_undo_trudere(
  * Reddit: VERUM si operatio tolta, FALSUM si acervus vacuus
  */
 b32
-vim_undo_tollere(
-    VimUndoAcervus* acervus,
+vim_undo_tollere (
+     VimUndoAcervus* acervus,
     VimUndoOperatio* op);
 
 /* Interrogare si acervus vacuus
@@ -301,7 +302,7 @@ vim_undo_tollere(
  * Reddit: VERUM si vacuus
  */
 b32
-vim_undo_est_vacuus(
+vim_undo_est_vacuus (
     VimUndoAcervus* acervus);
 
 
@@ -318,10 +319,10 @@ vim_undo_est_vacuus(
  * Reddit: status initiatus
  */
 VimStatus
-vim_initiare_cum_contextu(
+vim_initiare_cum_contextu (
     TabulaCharacterum* tabula,
-    VimClipboard* clipboard,
-    VimUndoAcervus* undo_acervus);
+         VimClipboard* clipboard,
+       VimUndoAcervus* undo_acervus);
 
 
 #endif /* VIM_H */

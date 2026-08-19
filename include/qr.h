@@ -53,7 +53,7 @@ nomen enumeratio {
 /* Fructus generationis QR */
 nomen structura {
     i32  amplitudo;    /* Latitudo et altitudo in modulis (QR semper quadratum) */
-    i8*  moduli;       /* Array amplitudo × amplitudo: 0=albus, 1=niger */
+     i8* moduli;       /* Array amplitudo × amplitudo: 0=albus, 1=niger */
     i32  versio;       /* Versio QR (I-X hic), determinat amplitudinem */
     b32  successus;    /* VERUM si generatio successit */
 } QR;
@@ -72,9 +72,9 @@ nomen structura {
  * Redde: QR cum modulis (successus=FALSUM si error vel data nimis magna)
  */
 QR
-qr_generare(
-    chorda   datum,
-    QREcc    ecc,
+qr_generare (
+     chorda  datum,
+      QREcc  ecc,
     Piscina* piscina);
 
 /* Generare QR code ex data binaria
@@ -87,11 +87,11 @@ qr_generare(
  * Redde: QR cum modulis
  */
 QR
-qr_generare_ex_octets(
+qr_generare_ex_octets (
     constans i8* datum,
-           i32  mensura,
-         QREcc  ecc,
-      Piscina*  piscina);
+            i32  mensura,
+          QREcc  ecc,
+        Piscina* piscina);
 
 
 /* ========================================================================
@@ -107,10 +107,10 @@ qr_generare_ex_octets(
  * Redde: 0=albus, 1=niger, -1=extra fines
  */
 s32
-qr_modulus(
+qr_modulus (
     constans QR* qr,
-           s32  x,
-           s32  y);
+            s32  x,
+            s32  y);
 
 
 /* ========================================================================
@@ -125,8 +125,8 @@ qr_modulus(
  * Redde: Versio (I-X), vel 0 si data nimis magna (ultra V10)
  */
 i32
-qr_versio_minima(
-    i32   mensura_datorum,
+qr_versio_minima (
+      i32 mensura_datorum,
     QREcc ecc);
 
 /* Structura bloccorum Reed-Solomon pro versione/gradu
@@ -140,12 +140,12 @@ qr_versio_minima(
  * Redde: FALSUM si versio/gradus extra ambitum (exeuntia intacta)
  */
 b32
-qr_structura(
-    i32    versio,
+qr_structura (
+      i32  versio,
     QREcc  ecc,
-    i32*   bloci,
-    i32*   data_codewords,
-    i32*   ecc_codewords);
+      i32* bloci,
+      i32* data_codewords,
+      i32* ecc_codewords);
 
 /* Obtinere amplitudinem (latitudo/altitudo) pro versione
  *
@@ -155,7 +155,7 @@ qr_structura(
  *        Formula: 17 + versio * 4
  */
 i32
-qr_amplitudo_versionis(
+qr_amplitudo_versionis (
     i32 versio);
 
 

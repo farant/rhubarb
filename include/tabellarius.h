@@ -38,6 +38,7 @@
 /* Tectum corporis (contra mensuras corruptas/hostiles) */
 #define TABELLARIUS_CORPUS_MAXIMUM (67108864UL)
 
+
 /* ==================================================
  * EPISTULA (framing)
  * ================================================== */
@@ -51,16 +52,16 @@
  */
 chorda
 tabellarius_epistulam_legere (
-    FILE*    fluxus,
+       FILE* fluxus,
     Piscina* piscina,
-    b32*     fluxus_finitus);
+        b32* fluxus_finitus);
 
 /* Epistulam scribere: caput + corpus + fflush (puritas stdout =
  * vocantis; haec functio solum protocollum scribit). */
 vacuum
 tabellarius_epistulam_scribere (
-    FILE*  fluxus,
-    chorda corpus);
+      FILE* fluxus,
+    chorda  corpus);
 
 /* Framing alterum (MCP stdio): nuntius unus = linea una JSON.
  * Lineam legere: sine termino (aedificator), '\r' finalis
@@ -68,9 +69,9 @@ tabellarius_epistulam_scribere (
  * legimus), EOF ante '\n' = fluxus finitus. */
 chorda
 tabellarius_lineam_legere (
-    FILE*    fluxus,
+       FILE* fluxus,
     Piscina* piscina,
-    b32*     fluxus_finitus);
+        b32* fluxus_finitus);
 
 /* Lineam scribere: corpus + '\n' + fflush. LEX SERIALIZATIONIS:
  * corpus '\n' crudum continere NON potest (json_scribere compactum
@@ -79,8 +80,9 @@ tabellarius_lineam_legere (
  * scriptum. */
 b32
 tabellarius_lineam_scribere (
-    FILE*  fluxus,
-    chorda corpus);
+      FILE* fluxus,
+    chorda  corpus);
+
 
 /* ==================================================
  * NUNTIUS (envelope)
@@ -96,20 +98,21 @@ nomen enumeratio {
 } TabellariusGenus;
 
 nomen structura {
-    TabellariusGenus genus;
-    JsonValor*       radix;    /* objectum totum; NIHIL si analysis
+    TabellariusGenus  genus;
+           JsonValor* radix;    /* objectum totum; NIHIL si analysis
                                 * fracta */
-    JsonValor*       id;       /* VERBATIM; NIHIL = absens */
-    chorda           methodus; /* vacua si absens */
-    JsonValor*       params;   /* NIHIL = absens */
+    JsonValor* id;       /* VERBATIM; NIHIL = absens */
+       chorda  methodus; /* vacua si absens */
+    JsonValor* params;   /* NIHIL = absens */
 } TabellariusNuntius;
 
 /* Corpus in nuntium analysare. Tolerans: campus "jsonrpc" non
  * imponitur (LSP semper "2.0" mittit; structura sola iudicatur). */
 TabellariusNuntius
 tabellarius_nuntium_legere (
-    chorda   corpus,
+     chorda  corpus,
     Piscina* piscina);
+
 
 /* ==================================================
  * FABRI (corpora responsi/erroris/nuntiationis)
@@ -119,24 +122,24 @@ tabellarius_nuntium_legere (
  * id NIHIL -> null; resultatum NIHIL -> null */
 chorda
 tabellarius_responsum (
-    Piscina*   piscina,
+      Piscina* piscina,
     JsonValor* id,
     JsonValor* resultatum);
 
 /* {"jsonrpc":"2.0","id":<id>,"error":{"code":N,"message":"..."}} */
 chorda
 tabellarius_errorem (
-    Piscina*            piscina,
-    JsonValor*          id,
-    longus              codex,
+               Piscina* piscina,
+             JsonValor* id,
+                longus  codex,
     constans character* nuntius);
 
 /* {"jsonrpc":"2.0","method":"...","params":<params>}
  * params NIHIL -> campus omissus */
 chorda
 tabellarius_nuntiationem (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* methodus,
-    JsonValor*          params);
+             JsonValor* params);
 
 #endif /* TABELLARIUS_H */

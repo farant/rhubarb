@@ -19,6 +19,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ========================================================================
  * TYPI
  * ======================================================================== */
@@ -39,10 +40,10 @@ nomen enumeratio {
 
 /* Resultus connexionis */
 nomen structura {
-    b32          successus;
+            b32  successus;
     TcpConnexio* connexio;
-    TcpError     error;
-    chorda       error_descriptio;
+       TcpError  error;
+         chorda  error_descriptio;
 } TcpResultus;
 
 /* Optiones */
@@ -66,21 +67,22 @@ nomen structura {
  * Redde: Resultus cum connexio vel error
  */
 TcpResultus
-tcp_connectere(
+tcp_connectere (
     constans character* hospes,
-    i32                 portus,
-    Piscina*            piscina);
+                   i32  portus,
+               Piscina* piscina);
 
 /* Connectere cum optionibus */
 TcpResultus
-tcp_connectere_cum_optionibus(
-    constans character*   hospes,
-    i32                   portus,
+tcp_connectere_cum_optionibus (
+      constans character* hospes,
+                     i32  portus,
     constans TcpOptiones* optiones,
-    Piscina*              piscina);
+                 Piscina* piscina);
 
 /* Optiones default */
-TcpOptiones tcp_optiones_default(vacuum);
+TcpOptiones
+tcp_optiones_default (vacuum);
 
 
 /* ========================================================================
@@ -95,20 +97,20 @@ TcpOptiones tcp_optiones_default(vacuum);
  * collisionem cum EOF habet, ergo 0 = "iterum tentare" hic manet.
  */
 s32
-tcp_mittere(
-    TcpConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura);
+tcp_mittere (
+    TcpConnexio* connexio,
+    constans i8* data,
+            i32  mensura);
 
 /* Mittere omnia data (blocking usque omnia missa)
  *
  * Redde: VERUM si omnia missa, FALSUM si error
  */
 b32
-tcp_mittere_omnia(
-    TcpConnexio*   connexio,
-    constans i8*   data,
-    i32            mensura);
+tcp_mittere_omnia (
+    TcpConnexio* connexio,
+    constans i8* data,
+            i32  mensura);
 
 /* Valor redditus tcp_recipere si non-blocans et nihil paratum (EAGAIN) */
 #define TCP_ITERUM (-2)
@@ -121,14 +123,15 @@ tcp_mittere_omnia(
  *        -1          error
  */
 s32
-tcp_recipere(
+tcp_recipere (
     TcpConnexio* connexio,
-    i8*          buffer,
-    i32          capacitas);
+             i8* buffer,
+            i32  capacitas);
 
 /* Claudere connexionem */
 vacuum
-tcp_claudere(TcpConnexio* connexio);
+tcp_claudere (
+    TcpConnexio* connexio);
 
 
 /* ========================================================================
@@ -136,13 +139,19 @@ tcp_claudere(TcpConnexio* connexio);
  * ======================================================================== */
 
 /* Obtinere file descriptor (pro select/poll) */
-s32 tcp_obtinere_fd(TcpConnexio* connexio);
+s32
+tcp_obtinere_fd (
+    TcpConnexio* connexio);
 
 /* Verificare si connexio valida */
-b32 tcp_est_valida(TcpConnexio* connexio);
+b32
+tcp_est_valida (
+    TcpConnexio* connexio);
 
 /* Obtinere error descriptio */
-constans character* tcp_error_descriptio(TcpError error);
+constans character*
+tcp_error_descriptio (
+    TcpError error);
 
 
 /* ========================================================================
@@ -155,7 +164,7 @@ nomen structura TcpServus TcpServus;
 /* Address info */
 nomen structura {
     character hospes[CCLVI];
-    i32       portus;
+          i32 portus;
 } TcpAddress;
 
 /* Server optiones */
@@ -167,10 +176,10 @@ nomen structura {
 
 /* Server resultus */
 nomen structura {
-    b32         successus;
-    TcpServus*  servus;
-    TcpError    error;
-    chorda      error_descriptio;
+          b32  successus;
+    TcpServus* servus;
+     TcpError  error;
+       chorda  error_descriptio;
 } TcpServusResultus;
 
 
@@ -186,8 +195,8 @@ nomen structura {
  * Redde: Resultus cum servus vel error
  */
 TcpServusResultus
-tcp_servus_creare(
-    i32      portus,
+tcp_servus_creare (
+        i32  portus,
     Piscina* piscina);
 
 /* Creare server cum optionibus
@@ -198,14 +207,15 @@ tcp_servus_creare(
  * piscina:  Arena pro allocationibus
  */
 TcpServusResultus
-tcp_servus_creare_cum_optionibus(
-    constans character*         hospes,
-    i32                         portus,
+tcp_servus_creare_cum_optionibus (
+            constans character* hospes,
+                           i32  portus,
     constans TcpServusOptiones* optiones,
-    Piscina*                    piscina);
+                       Piscina* piscina);
 
 /* Optiones default pro server */
-TcpServusOptiones tcp_servus_optiones_default(vacuum);
+TcpServusOptiones
+tcp_servus_optiones_default (vacuum);
 
 /* Incipere auscultare pro connexionibus
  *
@@ -214,9 +224,9 @@ TcpServusOptiones tcp_servus_optiones_default(vacuum);
  * Redde: TCP_OK vel error
  */
 TcpError
-tcp_servus_auscultare(
+tcp_servus_auscultare (
     TcpServus* servus,
-    i32        tergum);
+          i32  tergum);
 
 /* Accipere connexionem (blocking vel non-blocking secundum optiones)
  *
@@ -227,25 +237,29 @@ tcp_servus_auscultare(
  *        Si non_blocans et nullae connexiones, error = TCP_ERROR_ITERUM
  */
 TcpResultus
-tcp_servus_accipere(
+tcp_servus_accipere (
     TcpServus* servus,
-    Piscina*   piscina);
+      Piscina* piscina);
 
 /* Obtinere file descriptor (pro reactor/poll) */
 integer
-tcp_servus_obtinere_fd(TcpServus* servus);
+tcp_servus_obtinere_fd (
+    TcpServus* servus);
 
 /* Obtinere portum ligatum (utilis si portus 0 usus) */
 i32
-tcp_servus_obtinere_portum(TcpServus* servus);
+tcp_servus_obtinere_portum (
+    TcpServus* servus);
 
 /* Obtinere address ligatam */
 TcpAddress
-tcp_servus_obtinere_address(TcpServus* servus);
+tcp_servus_obtinere_address (
+    TcpServus* servus);
 
 /* Claudere server */
 vacuum
-tcp_servus_claudere(TcpServus* servus);
+tcp_servus_claudere (
+    TcpServus* servus);
 
 
 /* ========================================================================
@@ -257,13 +271,14 @@ tcp_servus_claudere(TcpServus* servus);
  * Redde: TCP_OK vel error
  */
 TcpError
-tcp_ponere_non_blocans(
+tcp_ponere_non_blocans (
     TcpConnexio* connexio,
-    b32          non_blocans);
+            b32  non_blocans);
 
 /* Obtinere peer address ex connexione */
 TcpAddress
-tcp_obtinere_peer_address(TcpConnexio* connexio);
+tcp_obtinere_peer_address (
+    TcpConnexio* connexio);
 
 
 #endif /* TCP_H */

@@ -20,6 +20,7 @@
 #include "lapifex_generare.h"
 #include "lapifex_parsere.h"
 
+
 /* ================================================
  * Maxima GLR
  * ================================================ */
@@ -30,6 +31,7 @@
 /* Numerus maximus fructuum (parsationes ambiguae) */
 #define LAPIFEX_GLR_MAX_FRUCTUS XXXII
 
+
 /* ================================================
  * GSS Nodus - Nodus in Acervo Grapho-Structurato
  * ================================================ */
@@ -37,47 +39,51 @@
 nomen structura LapifexGSSNodus LapifexGSSNodus;
 
 structura LapifexGSSNodus {
-    s32               status;             /* Status LR in hoc nodo */
-    s64               valor;              /* Valor semanticus */
-    Xar*              praedecessores;     /* Xar de LapifexGSSNodus* */
-    s32               profunditas;        /* Profunditas in GSS */
-    b32               vivus;              /* VERUM si via adhuc activa */
+    s32  status;             /* Status LR in hoc nodo */
+    s64  valor;              /* Valor semanticus */
+    Xar* praedecessores;     /* Xar de LapifexGSSNodus* */
+    s32  profunditas;        /* Profunditas in GSS */
+    b32  vivus;              /* VERUM si via adhuc activa */
 };
+
 
 /* ================================================
  * Via Activa - Una via parsationis in GSS
  * ================================================ */
 
 nomen structura {
-    LapifexGSSNodus*  culmen;             /* Nodus in culmine huius viae */
-    b32               activa;             /* VERUM si via adhuc activa */
-    s32               index;              /* Index huius viae */
+    LapifexGSSNodus* culmen;             /* Nodus in culmine huius viae */
+                b32  activa;             /* VERUM si via adhuc activa */
+                s32  index;              /* Index huius viae */
 } LapifexGLRVia;
+
 
 /* ================================================
  * Fructus GLR
  * ================================================ */
 
 nomen structura {
-    s64*              valori;             /* Tabula valorum fructuum */
-    s32               numerus_fructuum;   /* Numerus parsationum inventarum */
-    b32               successus;          /* VERUM si saltem una parsatio inventa */
-    b32               ambiguus;           /* VERUM si plures parsationes inventae */
+                      s64* valori;             /* Tabula valorum fructuum */
+                      s32  numerus_fructuum;   /* Numerus parsationum inventarum */
+                      b32  successus;          /* VERUM si saltem una parsatio inventa */
+                      b32  ambiguus;           /* VERUM si plures parsationes inventae */
     LapifexParsaturaError  error;         /* Informatio erroris si fractum */
 } LapifexGLRFructus;
+
 
 /* ================================================
  * GLR Motor
  * ================================================ */
 
 nomen structura {
-    LapifexTabula*    tabula;             /* Tabula ACTION/GOTO */
-    Piscina*          piscina;            /* Arena allocatoris */
-    Xar*              viae;               /* Xar de LapifexGLRVia */
-    Xar*              nodi_omnes;         /* Xar de LapifexGSSNodus* (omnes creati) */
-    s32               numerus_furcationum; /* Statisticae */
-    s32               numerus_fusionum;
+    LapifexTabula* tabula;             /* Tabula ACTION/GOTO */
+          Piscina* piscina;            /* Arena allocatoris */
+              Xar* viae;               /* Xar de LapifexGLRVia */
+              Xar* nodi_omnes;         /* Xar de LapifexGSSNodus* (omnes creati) */
+              s32  numerus_furcationum; /* Statisticae */
+              s32  numerus_fusionum;
 } LapifexGLR;
+
 
 /* ================================================
  * API Publica
@@ -89,9 +95,9 @@ nomen structura {
  * Redde: LapifexGLR* vel NIHIL si error
  */
 LapifexGLR*
-lapifex_glr_creare(
-    Piscina*        piscina,
-    LapifexTabula*  tabula);
+lapifex_glr_creare (
+          Piscina* piscina,
+    LapifexTabula* tabula);
 
 /* Parsare flumen signorum usans GLR
  * glr       - Motor GLR creatus
@@ -102,18 +108,18 @@ lapifex_glr_creare(
  * Redde: LapifexGLRFructus
  */
 LapifexGLRFructus
-lapifex_glr_parsare(
-    LapifexGLR*              glr,
-    constans LapifexSignum*  signa,
-    s32                      numerus,
+lapifex_glr_parsare (
+                 LapifexGLR* glr,
+     constans LapifexSignum* signa,
+                        s32  numerus,
     LapifexReductioCallback  reductio,
-    vacuum*                  contextus);
+                     vacuum* contextus);
 
 /* Reficere motorem GLR pro nova parsatione
  * (liberare GSS nodos, reficere vias)
  */
 vacuum
-lapifex_glr_reficere(
-    LapifexGLR*  glr);
+lapifex_glr_reficere (
+    LapifexGLR* glr);
 
 #endif /* LAPIFEX_GLR_H */

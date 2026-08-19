@@ -10,6 +10,7 @@
 #include "paginarium.h"
 #include "librarium_lector.h"
 
+
 /* ==================================================
  * LIBRARIUM VISUS - Library Viewer Widget
  *
@@ -77,19 +78,19 @@ nomen enumeratio {
 
 /* Informationes de libro */
 nomen structura {
-    chorda numerus;      /* Gutenberg ID */
-    chorda titulus;
-    chorda auctor;
-    chorda annus;
-    chorda summarium;
-    chorda notae;
-    chorda via;          /* Via ad filum textus */
-    Xar* tags;           /* Xar de chorda */
+    chorda  numerus;      /* Gutenberg ID */
+    chorda  titulus;
+    chorda  auctor;
+    chorda  annus;
+    chorda  summarium;
+    chorda  notae;
+    chorda  via;          /* Via ad filum textus */
+       Xar* tags;           /* Xar de chorda */
 } LibrumInfo;
 
 /* Status visus librarii */
 nomen structura {
-    Piscina* piscina;
+            Piscina* piscina;
     ContextusWidget* ctx;
 
     /* Omnes libri ex librarium.stml */
@@ -97,19 +98,19 @@ nomen structura {
     Xar* tags_unici;         /* Xar de chorda - tags unici */
 
     /* Status navigationis */
-    LibrariumModus modus;
-    LibrariumOrdo ordo;
-    LibrariumCategoria categoria;
-    chorda filtrum_tag;      /* Tag currens pro filtro (mensura=0 = nullum) */
-    Xar* libri_filtrati;     /* Vista filtrata/sortata in libri */
-    chorda filtrum_quaestio; /* Quaestio quaerendi */
+        LibrariumModus  modus;
+         LibrariumOrdo  ordo;
+    LibrariumCategoria  categoria;
+                chorda  filtrum_tag;      /* Tag currens pro filtro (mensura=0 = nullum) */
+                   Xar* libri_filtrati;     /* Vista filtrata/sortata in libri */
+                chorda  filtrum_quaestio; /* Quaestio quaerendi */
 
     /* Paginatio catalogi */
     s32 index_paginae;       /* Pagina currens in catalogo */
     s32 index_selecta;       /* Item selectum */
 
     /* Status libri / lectionis */
-    s32 liber_currens;       /* Index in libri_filtrati */
+                s32  liber_currens;       /* Index in libri_filtrati */
     LibrariumLector* lector; /* Lector pro textus et paginatione */
 
     /* Dimensiones widget */
@@ -133,8 +134,8 @@ nomen structura {
  * Redde: LibrariumVisus* si successus, NIHIL si error
  */
 LibrariumVisus*
-librarium_visus_creare(
-    Piscina*        piscina,
+librarium_visus_creare (
+            Piscina* piscina,
     ContextusWidget* ctx);
 
 
@@ -152,15 +153,15 @@ librarium_visus_creare(
  * focused: an widget habet focus
  */
 vacuum
-librarium_visus_reddere(
-    LibrariumVisus*  visus,
+librarium_visus_reddere (
+     LibrariumVisus* visus,
     TabulaPixelorum* tabula,
-    s32              x,
-    s32              y,
-    s32              latitudo,
-    s32              altitudo,
-    s32              scala,
-    b32              focused);
+                s32  x,
+                s32  y,
+                s32  latitudo,
+                s32  altitudo,
+                s32  scala,
+                b32  focused);
 
 
 /* ==================================================
@@ -175,8 +176,8 @@ librarium_visus_reddere(
  * Redde: VERUM si eventus tractatus, FALSUM alioquin
  */
 b32
-librarium_visus_tractare_eventum(
-    LibrariumVisus*   visus,
+librarium_visus_tractare_eventum (
+      LibrariumVisus* visus,
     constans Eventus* eventus);
 
 
@@ -194,8 +195,8 @@ librarium_visus_tractare_eventum(
  * Si 0: nihil mutare
  */
 vacuum
-librarium_visus_quaerere(
-    LibrariumVisus*     visus,
+librarium_visus_quaerere (
+        LibrariumVisus* visus,
     constans character* quaestio);
 
 /* Reset ad radix (MODUS_CATEGORIAE)
@@ -205,7 +206,7 @@ librarium_visus_quaerere(
  * Restituit modus ad CATEGORIAE, purificat filtros.
  */
 vacuum
-librarium_visus_reset_ad_radix(
+librarium_visus_reset_ad_radix (
     LibrariumVisus* visus);
 
 
@@ -220,7 +221,7 @@ librarium_visus_reset_ad_radix(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-librarium_visus_init(
+librarium_visus_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -232,10 +233,10 @@ librarium_visus_init(
  * Salvat: modus, categoria, tag, indices
  */
 vacuum
-librarium_visus_salvare_status(
-    LibrariumVisus*      visus,
+librarium_visus_salvare_status (
+         LibrariumVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -246,10 +247,10 @@ librarium_visus_salvare_status(
  * Carcat: modus, categoria, tag, indices
  */
 vacuum
-librarium_visus_carcare_status(
-    LibrariumVisus*      visus,
+librarium_visus_carcare_status (
+         LibrariumVisus* visus,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* LIBRARIUM_VISUS_H */

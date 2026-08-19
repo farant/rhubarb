@@ -8,6 +8,7 @@
 #include "xar.h"
 #include "internamentum.h"
 
+
 /* ==================================================
  * XML - Bibliotheca XML Generalis
  *
@@ -21,6 +22,7 @@
  * - Non supportat: namespaces, DTD, CDATA
  * ================================================== */
 
+
 /* ==================================================
  * Genera Nodorum
  * ================================================== */
@@ -30,6 +32,7 @@ nomen enumeratio {
     XML_NODUS_TEXTUS    = II,   /* text content */
     XML_NODUS_COMMENTUM = III   /* <!-- comment --> */
 } XmlNodusGenus;
+
 
 /* ==================================================
  * Status Parsationis
@@ -45,6 +48,7 @@ nomen enumeratio {
     XML_ERROR_EFFUGIUM           = VI,
     XML_ERROR_VACUUM_INPUT       = VII
 } XmlStatus;
+
 
 /* ==================================================
  * Structurae
@@ -62,11 +66,11 @@ nomen structura {
  * "Node in XML tree"
  */
 nomen structura XmlNodus {
-    XmlNodusGenus        genus;       /* Genus nodi */
-    chorda*              titulus;     /* Titulus tagi (pro elementis) */
-    chorda*              valor;       /* Contentum textuale */
-    Xar*                 attributa;   /* Xar de XmlAttributum */
-    Xar*                 liberi;      /* Xar de XmlNodus* */
+    XmlNodusGenus  genus;       /* Genus nodi */
+           chorda* titulus;     /* Titulus tagi (pro elementis) */
+           chorda* valor;       /* Contentum textuale */
+              Xar* attributa;   /* Xar de XmlAttributum */
+              Xar* liberi;      /* Xar de XmlNodus* */
     structura XmlNodus*  parens;      /* Nodus parentis */
 } XmlNodus;
 
@@ -74,13 +78,14 @@ nomen structura XmlNodus {
  * "Parsing result"
  */
 nomen structura {
-    b32        successus;
-    XmlNodus*  radix;
+          b32  successus;
+     XmlNodus* radix;
     XmlStatus  status;
-    i32        linea_erroris;
-    i32        columna_erroris;
-    chorda     error;
+          i32  linea_erroris;
+          i32  columna_erroris;
+       chorda  error;
 } XmlResultus;
+
 
 /* ==================================================
  * Parsatio - Legere XML
@@ -90,19 +95,20 @@ nomen structura {
  * "Parse XML from string"
  */
 XmlResultus
-xml_legere(
-    chorda               input,
-    Piscina*             piscina,
+xml_legere (
+                 chorda  input,
+                Piscina* piscina,
     InternamentumChorda* intern);
 
 /* Legere XML ex literis C
  * "Parse XML from C string"
  */
 XmlResultus
-xml_legere_ex_literis(
-    constans character*  cstr,
-    Piscina*             piscina,
+xml_legere_ex_literis (
+     constans character* cstr,
+                Piscina* piscina,
     InternamentumChorda* intern);
+
 
 /* ==================================================
  * Quaestio - Invenire in Arbore
@@ -112,8 +118,8 @@ xml_legere_ex_literis(
  * "Find first child with tag name"
  */
 XmlNodus*
-xml_invenire_liberum(
-    XmlNodus*           nodus,
+xml_invenire_liberum (
+              XmlNodus* nodus,
     constans character* titulus);
 
 /* Invenire omnes liberos cum titulo
@@ -121,50 +127,51 @@ xml_invenire_liberum(
  * Redde: Xar de XmlNodus*
  */
 Xar*
-xml_invenire_omnes_liberos(
-    XmlNodus*           nodus,
+xml_invenire_omnes_liberos (
+              XmlNodus* nodus,
     constans character* titulus,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* Capere attributum per titulum
  * "Get attribute value by name"
  * Redde: chorda* ad valor, vel NIHIL si non inventum
  */
 chorda*
-xml_attributum_capere(
-    XmlNodus*           nodus,
+xml_attributum_capere (
+              XmlNodus* nodus,
     constans character* titulus);
 
 /* Verificare si nodus habet attributum
  * "Check if node has attribute"
  */
 b32
-xml_attributum_habet(
-    XmlNodus*           nodus,
+xml_attributum_habet (
+              XmlNodus* nodus,
     constans character* titulus);
 
 /* Capere textum internum (concatenatum)
  * "Get inner text content"
  */
 chorda
-xml_textus_internus(
+xml_textus_internus (
     XmlNodus* nodus,
-    Piscina*  piscina);
+     Piscina* piscina);
 
 /* Numerus liberorum
  * "Number of children"
  */
 i32
-xml_numerus_liberorum(
+xml_numerus_liberorum (
     XmlNodus* nodus);
 
 /* Capere liberum ad indicem
  * "Get child at index"
  */
 XmlNodus*
-xml_liberum_ad_indicem(
+xml_liberum_ad_indicem (
     XmlNodus* nodus,
-    i32       index);
+         i32  index);
+
 
 /* ==================================================
  * Constructio - Creare Nodos
@@ -174,65 +181,65 @@ xml_liberum_ad_indicem(
  * "Create element node"
  */
 XmlNodus*
-xml_elementum_creare(
-    Piscina*             piscina,
+xml_elementum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus);
+     constans character* titulus);
 
 /* Creare nodum textus
  * "Create text node"
  */
 XmlNodus*
-xml_textum_creare(
-    Piscina*             piscina,
+xml_textum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
 
 /* Creare nodum textus ex chorda
  * "Create text node from chorda"
  */
 XmlNodus*
-xml_textum_creare_ex_chorda(
-    Piscina*             piscina,
+xml_textum_creare_ex_chorda (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda               textus);
+                 chorda  textus);
 
 /* Creare commentum
  * "Create comment node"
  */
 XmlNodus*
-xml_commentum_creare(
-    Piscina*             piscina,
+xml_commentum_creare (
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
 
 /* Addere attributum ad elementum
  * "Add attribute to element"
  */
 b32
-xml_attributum_addere(
-    XmlNodus*            nodus,
-    Piscina*             piscina,
+xml_attributum_addere (
+               XmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    constans character*  valor);
+     constans character* titulus,
+     constans character* valor);
 
 /* Addere attributum cum chorda valor
  * "Add attribute with chorda value"
  */
 b32
-xml_attributum_addere_chorda(
-    XmlNodus*            nodus,
-    Piscina*             piscina,
+xml_attributum_addere_chorda (
+               XmlNodus* nodus,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  titulus,
-    chorda               valor);
+     constans character* titulus,
+                 chorda  valor);
 
 /* Addere liberum ad elementum
  * "Add child to element"
  */
 b32
-xml_liberum_addere(
+xml_liberum_addere (
     XmlNodus* parens,
     XmlNodus* liberum);
 
@@ -240,11 +247,12 @@ xml_liberum_addere(
  * "Add text content to element"
  */
 b32
-xml_textum_addere(
-    XmlNodus*            parens,
-    Piscina*             piscina,
+xml_textum_addere (
+               XmlNodus* parens,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    constans character*  textus);
+     constans character* textus);
+
 
 /* ==================================================
  * Scriptio - Scribere XML
@@ -256,19 +264,19 @@ xml_textum_addere(
  * pulchrum: si VERUM, addere indentationem et lineae novae
  */
 chorda
-xml_scribere(
+xml_scribere (
     XmlNodus* nodus,
-    Piscina*  piscina,
-    b32       pulchrum);
+     Piscina* piscina,
+         b32  pulchrum);
 
 /* Scribere nodum ad ChordaAedificator
  * "Serialize node to string builder"
  */
 b32
-xml_scribere_ad_aedificator(
-    XmlNodus*          nodus,
+xml_scribere_ad_aedificator (
+             XmlNodus* nodus,
     ChordaAedificator* aedificator,
-    b32                pulchrum,
-    i32                indentatio);
+                  b32  pulchrum,
+                  i32  indentatio);
 
 #endif /* XML_H */

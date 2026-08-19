@@ -51,6 +51,6 @@ nomen structura {
 i32
 rete_addressus_locales (
     ReteInterfacies* effusio,
-    i32              capacitas);
+                i32  capacitas);
 
 #endif /* RETE_H */

@@ -31,6 +31,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ========================================================================
  * I. AEDIFICATOR MANDATI SSH
  * ======================================================================== */
@@ -48,68 +49,69 @@
 #define VILLA_SSH_ARGUMENTA_MAXIMA XXIV
 
 nomen structura {
-	/* IDENTITAS PRIMA: alias in ~/.ssh/config. Fran servum ut
+    /* IDENTITAS PRIMA: alias in ~/.ssh/config. Fran servum ut
 	 * 'ssh smaragda' attingit; ssh ipse claves, agentem,
 	 * ProxyJump, blocos Match, et Include resolvit. Ergo villa
 	 * configurationem MUTUATUR sicut auctoritatem mutuatur, et
 	 * configurationem ssh ipsa non parsat (quod vere durum est:
 	 * wildcards, Match, Include). */
-	chorda alias;
+    chorda alias;
 
-	/* RECIDIVUM pro capsis extra ~/.ssh/config. Adhibentur solum
+    /* RECIDIVUM pro capsis extra ~/.ssh/config. Adhibentur solum
 	 * si alias vacuus est. */
-	chorda hospes;
-	chorda usor;
-	i32    portus;              /* ZEPHYRUM = tacitum (ssh decernit) */
-	chorda clavis;              /* -i; vacua = tacitum */
+    chorda hospes;
+    chorda usor;
+       i32 portus;              /* ZEPHYRUM = tacitum (ssh decernit) */
+    chorda clavis;              /* -i; vacua = tacitum */
 
-	/* Directorium socketi moderantis, SINE '/%C' terminali.
+    /* Directorium socketi moderantis, SINE '/%C' terminali.
 	 * Vacuum = nulla multiplicatio (semita probationis id facit).
 	 * Sedes recta = $HOME/.rhubarb/cm - NON sub build/, quod
 	 * speculum_generare et fumus 'rm -rf' faciunt: socketus sub
 	 * ssh deletus omne imperium posterum ad manum plenam tacite
 	 * degenerat. */
-	chorda via_moderandi;
+    chorda via_moderandi;
 
-	i32 mora_conexionis;        /* ConnectTimeout; ZEPHYRUM = V */
-	i32 perseverantia;          /* ControlPersist; ZEPHYRUM = CCC */
+    i32 mora_conexionis;        /* ConnectTimeout; ZEPHYRUM = V */
+    i32 perseverantia;          /* ControlPersist; ZEPHYRUM = CCC */
 
-	/* Sutura binarii: 'ssh' nisi VILLA_SSH positum. Semel in
+    /* Sutura binarii: 'ssh' nisi VILLA_SSH positum. Semel in
 	 * configuratione legitur, ergo semita configurationis et
 	 * semita probationis SUTURA UNA sunt, non duae. */
-	constans character* via_ssh;
+    constans character* via_ssh;
 } ConfiguratioSsh;
 
 nomen enumeratio {
-	VILLA_SSH_OK = 0,
-	VILLA_SSH_SINE_DESTINATIONE,  /* nec alias nec hospes */
-	VILLA_SSH_SINE_IMPERIO,       /* imperium remotum vacuum */
-	VILLA_SSH_VIA_LONGA,          /* ControlPath supra terminum */
-	VILLA_SSH_NIMIS_ARGUMENTORUM  /* vector excessus (custos) */
+    VILLA_SSH_OK = 0,
+    VILLA_SSH_SINE_DESTINATIONE,  /* nec alias nec hospes */
+    VILLA_SSH_SINE_IMPERIO,       /* imperium remotum vacuum */
+    VILLA_SSH_VIA_LONGA,          /* ControlPath supra terminum */
+    VILLA_SSH_NIMIS_ARGUMENTORUM  /* vector excessus (custos) */
 } VillaSshError;
 
 nomen structura {
-	b32           successus;
-	VillaSshError error;
-	chorda        causa;        /* recusatio NOMINATA si !successus */
+              b32 successus;
+    VillaSshError error;
+           chorda causa;        /* recusatio NOMINATA si !successus */
 
-	/* Vector NIHIL-terminatus, paratus pro processus_exsequi.
+    /* Vector NIHIL-terminatus, paratus pro processus_exsequi.
 	 * NULLA concha: spatia, virgulae, lineae novae in imperio
 	 * remoto TUTA sunt, quia nemo ea interpretatur. */
-	constans character** argumenta;
-	i32                  numerus;   /* sine NIHIL terminali */
+    constans character** argumenta;
+                   i32   numerus;   /* sine NIHIL terminali */
 } MandatumSsh;
 
 /* Mandatum ssh aedificare. Recusatio semper causam NOMINAT. */
 MandatumSsh
 villa_mandatum_ssh (
-	constans ConfiguratioSsh* configuratio,
-	                  chorda  imperium,
-	                Piscina*  piscina);
+    constans ConfiguratioSsh* configuratio,
+                      chorda  imperium,
+                     Piscina* piscina);
 
 /* Descriptio erroris ut litterae staticae (pro nuntiis). */
 constans character*
-villa_ssh_error_nomen (VillaSshError error);
+villa_ssh_error_nomen (
+    VillaSshError error);
 
 
 /* ========================================================================
@@ -144,35 +146,36 @@ villa_ssh_error_nomen (VillaSshError error);
  */
 
 nomen enumeratio {
-	VILLA_EXITUS_SUCCESSUS = 0,      /* codex ZEPHYRUM */
-	/* --- ssh ipse defecit (codex CCLV) --- */
-	VILLA_EXITUS_HOSPES_IGNOTUS,     /* nomen resolvi non potest */
-	VILLA_EXITUS_CONEXIO_RECUSATA,   /* portus clausus */
-	VILLA_EXITUS_TEMPUS,             /* ConnectTimeout ssh */
-	VILLA_EXITUS_CLAVIS_HOSPITIS,    /* known_hosts non consentit */
-	VILLA_EXITUS_PERMISSIO,          /* clavis recusata */
-	VILLA_EXITUS_SSH_ALIUS,          /* CCLV, causa ignota */
-	/* --- imperium remotum cucurrit --- */
-	VILLA_EXITUS_IMPERIUM_ABSENS,    /* CXXVII */
-	VILLA_EXITUS_IMPERIUM_FRACTUM    /* codex alius non-zerus */
+    VILLA_EXITUS_SUCCESSUS = 0,      /* codex ZEPHYRUM */
+    /* --- ssh ipse defecit (codex CCLV) --- */
+    VILLA_EXITUS_HOSPES_IGNOTUS,     /* nomen resolvi non potest */
+    VILLA_EXITUS_CONEXIO_RECUSATA,   /* portus clausus */
+    VILLA_EXITUS_TEMPUS,             /* ConnectTimeout ssh */
+    VILLA_EXITUS_CLAVIS_HOSPITIS,    /* known_hosts non consentit */
+    VILLA_EXITUS_PERMISSIO,          /* clavis recusata */
+    VILLA_EXITUS_SSH_ALIUS,          /* CCLV, causa ignota */
+    /* --- imperium remotum cucurrit --- */
+    VILLA_EXITUS_IMPERIUM_ABSENS,    /* CXXVII */
+    VILLA_EXITUS_IMPERIUM_FRACTUM    /* codex alius non-zerus */
 } VillaExitus;
 
 nomen structura {
-	VillaExitus genus;
-	chorda      causa;      /* linea DECISIVA erratii, verbatim */
-	i32         codex;      /* codex exitus crudus */
-	b32         ssh_ipse;   /* VERUM = defectus ssh, non imperii */
+    VillaExitus genus;
+         chorda causa;      /* linea DECISIVA erratii, verbatim */
+            i32 codex;      /* codex exitus crudus */
+            b32 ssh_ipse;   /* VERUM = defectus ssh, non imperii */
 } CausaExitus;
 
 CausaExitus
 villa_exitum_discernere (
-	   i32  codex_exitus,
-	chorda  erratum,
-	Piscina* piscina);
+        i32  codex_exitus,
+     chorda  erratum,
+    Piscina* piscina);
 
 /* Nomen breve ut litterae staticae (pro faciebus et nuntiis). */
 constans character*
-villa_exitus_nomen (VillaExitus genus);
+villa_exitus_nomen (
+    VillaExitus genus);
 
 
 /* ========================================================================
@@ -214,35 +217,35 @@ villa_exitus_nomen (VillaExitus genus);
  */
 
 nomen structura {
-	chorda id;                  /* Id */
-	chorda descriptio;          /* Description */
-	chorda status_oneris;       /* LoadState */
-	chorda status_vitae;        /* ActiveState */
-	chorda sub_status;          /* SubState */
-	chorda status_plagulae;     /* UnitFileState (potest vacuus) */
-	chorda tempus_initii;       /* ActiveEnterTimestamp (verbatim) */
+    chorda id;                  /* Id */
+    chorda descriptio;          /* Description */
+    chorda status_oneris;       /* LoadState */
+    chorda status_vitae;        /* ActiveState */
+    chorda sub_status;          /* SubState */
+    chorda status_plagulae;     /* UnitFileState (potest vacuus) */
+    chorda tempus_initii;       /* ActiveEnterTimestamp (verbatim) */
 
-	/* Result: success|exit-code|signal|timeout|oom-kill|core-dump|
+    /* Result: success|exit-code|signal|timeout|oom-kill|core-dump|
 	 * watchdog|start-limit-hit|resources|protocol.
 	 * SIGNIFICAT NIHIL nisi 'fracta' - vide (b) supra. */
-	chorda causa_finis;
-	i32    codex_exitus;        /* ExecMainStatus */
-	i32    pid;                 /* MainPID; ZEPHYRUM = nullus */
-	i32    restitutiones;       /* NRestarts */
+    chorda causa_finis;
+       i32 codex_exitus;        /* ExecMainStatus */
+       i32 pid;                 /* MainPID; ZEPHYRUM = nullus */
+       i32 restitutiones;       /* NRestarts */
 
-	/* Iudicia derivata - unum locum, ne quisque consumptor
+    /* Iudicia derivata - unum locum, ne quisque consumptor
 	 * chordas iterum comparet (et alius aliter). */
-	b32 inventa;                /* LoadState != 'not-found' */
-	b32 currit;                 /* ActiveState == 'active' */
-	b32 fracta;                 /* ActiveState == 'failed' */
+    b32 inventa;                /* LoadState != 'not-found' */
+    b32 currit;                 /* ActiveState == 'active' */
+    b32 fracta;                 /* ActiveState == 'failed' */
 } StatusServitii;
 
 /* Redde Xar de StatusServitii (ordine effusionis). Tabulata vacua
  * intrante vacua. */
 Xar*
 villa_systemctl_legere (
-	  chorda effusio,
-	Piscina* piscina);
+      chorda  effusio,
+     Piscina* piscina);
 
 
 /* ========================================================================
@@ -269,17 +272,17 @@ villa_systemctl_legere (
  */
 
 nomen structura {
-	chorda unitas;              /* UNIT */
-	chorda onus;                /* LOAD */
-	chorda vita;                /* ACTIVE */
-	chorda sub;                 /* SUB */
-	chorda descriptio;          /* DESCRIPTION (spatia continet) */
+    chorda unitas;              /* UNIT */
+    chorda onus;                /* LOAD */
+    chorda vita;                /* ACTIVE */
+    chorda sub;                 /* SUB */
+    chorda descriptio;          /* DESCRIPTION (spatia continet) */
 } UnitasCursoria;
 
 Xar*
 villa_unitates_legere (
-	  chorda effusio,
-	Piscina* piscina);
+      chorda  effusio,
+     Piscina* piscina);
 
 
 /* ========================================================================
@@ -313,59 +316,59 @@ villa_unitates_legere (
 /* Clausula = blocus 'server { }' unus, crudus, ut in plagula
  * iacet. */
 nomen structura {
-	chorda hospes;              /* server_name primum */
-	chorda hospites;            /* server_name omnia, spatio iuncta */
-	chorda destinatio;          /* proxy_pass PRIMUM (vacua si nulla) */
+    chorda hospes;              /* server_name primum */
+    chorda hospites;            /* server_name omnia, spatio iuncta */
+    chorda destinatio;          /* proxy_pass PRIMUM (vacua si nulla) */
 
-	/* QUOT 'proxy_pass' in bloco fuerint. 'destinatio' PRIMUM
+    /* QUOT 'proxy_pass' in bloco fuerint. 'destinatio' PRIMUM
 	 * solum tenet - blocum cum locationibus pluribus ad upstreams
 	 * diversos aliter TACITE unum ostenderet ut si solus esset.
 	 * Numerus terminum VISIBILEM facit: facies 'unum ex tribus'
 	 * dicere potest potius quam mentiri. Droplet nostrum unam
 	 * locationem per servum habet, ergo fixa hoc non exercent -
 	 * id est ratio propter quam numerus adest, non contra. */
-	i32    destinationes;
+    i32 destinationes;
 
-	chorda certificatum;        /* ssl_certificate (vacuum si nullum) */
-	chorda radix;               /* root (vacua si nulla) */
-	chorda plagula;             /* '# configuration file X:' proximum */
-	i32    linea;               /* linea ubi 'server {' (I-basata) */
-	b32    ssl;                 /* aliquod 'listen ... ssl' */
-	b32    redirigit;           /* 'return 30x' praesens */
+    chorda certificatum;        /* ssl_certificate (vacuum si nullum) */
+    chorda radix;               /* root (vacua si nulla) */
+    chorda plagula;             /* '# configuration file X:' proximum */
+       i32 linea;               /* linea ubi 'server {' (I-basata) */
+       b32 ssl;                 /* aliquod 'listen ... ssl' */
+       b32 redirigit;           /* 'return 30x' praesens */
 } ClausulaNginx;
 
 /* Situs = clausulae eiusdem nominis PLICATAE (gemina Certbot in
  * unum). */
 nomen structura {
-	chorda hospes;
-	chorda hospites;
-	chorda destinatio;           /* primum inventum */
-	i32    destinationes;        /* summa per bloca plicata */
-	chorda certificatum;
-	chorda radix;
-	chorda plagula;
-	b32    ssl;
-	b32    habet_redirectionem;  /* clausula socia http->https adest */
-	i32    clausulae;            /* quot bloca in hunc situm plicata */
+    chorda hospes;
+    chorda hospites;
+    chorda destinatio;           /* primum inventum */
+       i32 destinationes;        /* summa per bloca plicata */
+    chorda certificatum;
+    chorda radix;
+    chorda plagula;
+       b32 ssl;
+       b32 habet_redirectionem;  /* clausula socia http->https adest */
+       i32 clausulae;            /* quot bloca in hunc situm plicata */
 } SitusNginx;
 
 /* Bloca 'server' cruda, ordine plagulae. */
 Xar*
 villa_nginx_clausulas_legere (
-	  chorda effusio,
-	Piscina* piscina);
+      chorda  effusio,
+     Piscina* piscina);
 
 /* Clausulas in situs plicare (gemina Certbot conflantur). */
 Xar*
 villa_nginx_situs_plicare (
-	constans Xar* clausulae,
-	    Piscina*  piscina);
+    constans Xar* clausulae,
+         Piscina* piscina);
 
 /* Commoditas: ambo gradus uno vocamine. */
 Xar*
 villa_nginx_legere (
-	  chorda effusio,
-	Piscina* piscina);
+      chorda  effusio,
+     Piscina* piscina);
 
 
 /* ========================================================================
@@ -394,23 +397,23 @@ villa_nginx_legere (
 #define VILLA_MARCA_SECTIONIS "##VILLA##"
 
 nomen structura {
-	chorda titulus;       /* nomen sectionis ('nomen' = macro!) */
-	chorda contentum;     /* effusio, sine lineis marcae */
-	i32    codex;         /* exitus imperii (si clausa) */
-	b32    clausa;        /* finem suum invenit? */
+    chorda titulus;       /* nomen sectionis ('nomen' = macro!) */
+    chorda contentum;     /* effusio, sine lineis marcae */
+       i32 codex;         /* exitus imperii (si clausa) */
+       b32 clausa;        /* finem suum invenit? */
 } SectioProbationis;
 
 /* Effusionem compositam in sectiones findere (ordine emissionis). */
 Xar*
 villa_sectiones_legere (
-	  chorda effusio,
-	Piscina* piscina);
+      chorda  effusio,
+     Piscina* piscina);
 
 /* Sectionem nomine invenire (NIHIL si abest). */
 constans SectioProbationis*
 villa_sectionem_invenire (
-	constans      Xar* sectiones,
-	constans character* titulus);
+     constans      Xar* sectiones,
+    constans character* titulus);
 
 
 /* ========================================================================
@@ -425,42 +428,42 @@ villa_sectionem_invenire (
  * '-P' (POSIX) non omittendum: sine eo df nomina longa in lineam
  * alteram frangit et columnae vagantur. */
 nomen structura {
-	chorda systema;             /* Filesystem */
-	chorda punctum;             /* Mounted on */
-	i64    frusta;              /* 1024-blocks */
-	i64    usa;                 /* Used */
-	i64    praesto;             /* Available */
-	i32    capacitas;           /* Capacity, sine '%' */
+    chorda systema;             /* Filesystem */
+    chorda punctum;             /* Mounted on */
+       i64 frusta;              /* 1024-blocks */
+       i64 usa;                 /* Used */
+       i64 praesto;             /* Available */
+       i32 capacitas;           /* Capacity, sine '%' */
 } StatusDisci;
 
 b32
 villa_discum_legere (
-	         chorda  effusio,
-	    StatusDisci* fructus,
-	       Piscina*  piscina);
+             chorda  effusio,
+        StatusDisci* fructus,
+            Piscina* piscina);
 
 /* IMPERIUM: head -5 /proc/meminfo
  * /proc adhibetur, non 'free', quia forma /proc per versiones
  * stabilis manet dum prosa 'free' mutat. */
 nomen structura {
-	i64 summa_kb;               /* MemTotal */
-	i64 libera_kb;              /* MemFree */
-	i64 praesto_kb;             /* MemAvailable */
-	i64 interposita_kb;         /* Buffers */
-	i64 condita_kb;             /* Cached */
+    i64 summa_kb;               /* MemTotal */
+    i64 libera_kb;              /* MemFree */
+    i64 praesto_kb;             /* MemAvailable */
+    i64 interposita_kb;         /* Buffers */
+    i64 condita_kb;             /* Cached */
 } StatusMemoriae;
 
 b32
 villa_memoriam_legere (
-	          chorda  effusio,
-	 StatusMemoriae*  fructus);
+              chorda  effusio,
+      StatusMemoriae* fructus);
 
 /* IMPERIUM: cat /proc/uptime
  * Forma: '<activum>.<cc> <otiosum>.<cc>'. Pars integra sola
  * sumitur - nullum punctum fluitans in villa. */
 b32
 villa_tempus_activum_legere (
-	chorda  effusio,
-	   i64* secunda);
+    chorda  effusio,
+       i64* secunda);
 
 #endif /* VILLA_LECTORES_H */

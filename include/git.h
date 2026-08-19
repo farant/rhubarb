@@ -47,31 +47,31 @@
 /* sarcina una (.pack + .idx); idx totum in memoria */
 nomen structura {
     constans character* via_sarcinae;   /* .pack */
-    i8*                 idx_datum;
-    i32                 idx_mensura;
-    i32                 numerus;        /* obiecta in sarcina */
+                    i8* idx_datum;
+                   i32  idx_mensura;
+                   i32  numerus;        /* obiecta in sarcina */
 } GitSarcina;
 
 nomen structura {
-    Piscina*            piscina;    /* creationis - sarcinae etc. */
+               Piscina* piscina;    /* creationis - sarcinae etc. */
     constans character* via_git;    /* ".../.git" absoluta */
-    Xar*                sarcinae;   /* GitSarcina */
+                   Xar* sarcinae;   /* GitSarcina */
 } GitRepositorium;
 
 /* ascendit ex via data (directorium) donec .git inveniat;
  * NIHIL = non repositorium (aut sha256, aut illegibile) */
 GitRepositorium*
 git_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via);
 
 /* textus -> sha hex in exitus[GIT_SHA_HEX_MENSURA];
  * subcopia supra descripta; FALSUM = non resolutum */
 b32
 git_ref_resolvere (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* textus,
-    character*          sha_exitus);
+             character* sha_exitus);
 
 nomen enumeratio {
     GIT_OBIECTUM_IGNOTUM = 0,
@@ -82,47 +82,47 @@ nomen enumeratio {
 } GitObiectumGenus;
 
 nomen structura {
-    b32              successus;
+                 b32 successus;
     GitObiectumGenus genus;
-    chorda           datum;     /* corpus crudum (post caput) */
+              chorda datum;     /* corpus crudum (post caput) */
 } GitObiectum;
 
 /* laxum aut e sarcina (deltis applicatis); sha = hex 40 */
 GitObiectum
 git_obiectum_legere (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 nomen structura {
-    b32    successus;
-    chorda arbor;       /* sha hex arboris */
-    Xar*   parentes;    /* de chorda (sha hex), ordine */
-    chorda auctor;      /* linea cruda "Nomen <cursus> ts zona" */
-    chorda commissor;
-    s64    tempus;      /* epocha commissoris; 0 si illegibilis */
-    chorda nuntius;
+       b32  successus;
+    chorda  arbor;       /* sha hex arboris */
+       Xar* parentes;    /* de chorda (sha hex), ordine */
+    chorda  auctor;      /* linea cruda "Nomen <cursus> ts zona" */
+    chorda  commissor;
+       s64  tempus;      /* epocha commissoris; 0 si illegibilis */
+    chorda  nuntius;
 } GitCommissum;
 
 GitCommissum
 git_commissum_legere (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 nomen structura {
     chorda modus;      /* "100644" | "40000" | "120000" | ... */
     chorda titulus;
     chorda sha;        /* hex 40 */
-    b32    est_arbor;  /* modus 40000 (subdirectorium) */
+       b32 est_arbor;  /* modus 40000 (subdirectorium) */
 } GitArborIntroitus;
 
 /* Xar de GitArborIntroitus ordine arboris; NIHIL = erratum */
 Xar*
 git_arborem_legere (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* sha introitus ad viam SINE lectione contenti - cribrum gradus
  * primi ("mutatane plagula inter commissa?" = comparatio shas,
@@ -131,23 +131,23 @@ git_arborem_legere (
  * ad commissum non exsistit. */
 b32
 git_sha_per_viam (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha_commissi,
     constans character* via,
-    Piscina*            piscina,
-    character*          sha_exitus,
-    b32*                est_arbor_exitus);
+               Piscina* piscina,
+             character* sha_exitus,
+                   b32* est_arbor_exitus);
 
 /* 'git show <commissum>:<via>' ut vocatio C - arborem a radice
  * per segmenta viae ambulat, massam promit. *inventum FALSUM si
  * via ad commissum non exsistit (chorda vacua redditur). */
 chorda
 git_massam_per_viam (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha_commissi,
     constans character* via,
-    Piscina*            piscina,
-    b32*                inventum);
+               Piscina* piscina,
+                   b32* inventum);
 
 nomen enumeratio {
     GIT_VIA_MUTATA = 0,
@@ -156,9 +156,9 @@ nomen enumeratio {
 } GitViaGenus;
 
 nomen structura {
-    chorda      via;        /* a radice repositorii */
-    chorda      sha_vetus;  /* hex 40; vacua si ADDITA */
-    chorda      sha_novus;  /* hex 40; vacua si REMOTA */
+         chorda via;        /* a radice repositorii */
+         chorda sha_vetus;  /* hex 40; vacua si ADDITA */
+         chorda sha_novus;  /* hex 40; vacua si REMOTA */
     GitViaGenus genus;
 } GitViaMutata;
 
@@ -171,9 +171,9 @@ nomen structura {
  * (chorda_comparare); NIHIL = erratum lectionis arboris. */
 Xar*
 git_arbores_differre (
-    GitRepositorium*    repositorium,
+       GitRepositorium* repositorium,
     constans character* sha_arboris_vetus,
     constans character* sha_arboris_novum,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 #endif /* GIT_H */

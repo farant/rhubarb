@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * UUIDv7 - Time-Ordered Unique Identifiers
  * ================================================== */
@@ -19,6 +20,7 @@
  * String format: xxxxxxxx-xxxx-7xxx-yxxx-xxxxxxxxxxxx
  * Mensura: 36 characteres (32 hex + 4 dashes)
  */
+
 
 /* ==================================================
  * UUIDv5 - Name-Based Unique Identifiers (SHA-1)
@@ -46,7 +48,7 @@
  * Redde: Chorda UUIDv7, vel chorda vacuum si fractura
  */
 chorda
-uuidv7_creare(
+uuidv7_creare (
     Piscina* piscina);
 
 /* Creare novum UUIDv5 ex namespace et nomine
@@ -58,9 +60,9 @@ uuidv7_creare(
  * Redde: Chorda UUIDv5, vel chorda vacuum si fractura
  */
 chorda
-uuidv5_creare(
-    Piscina*            piscina,
-    chorda              namespace_uuid,
+uuidv5_creare (
+               Piscina* piscina,
+                chorda  namespace_uuid,
     constans character* appellatio);
 
 /* Creare UUIDv5 ex genere et titulo (conveniens pro entitates)
@@ -72,8 +74,8 @@ uuidv5_creare(
  * Redde: Chorda UUIDv5, vel chorda vacuum si fractura
  */
 chorda
-uuidv5_ex_genere_et_titulo(
-    Piscina*            piscina,
+uuidv5_ex_genere_et_titulo (
+               Piscina* piscina,
     constans character* genus,
     constans character* titulus);
 
@@ -88,7 +90,7 @@ uuidv5_ex_genere_et_titulo(
  * Redde: Unix timestamp in milliseconds, vel -1 si non UUIDv7
  */
 s64
-uuidv7_tempus_extrahere(
+uuidv7_tempus_extrahere (
     chorda uuid_chorda);
 
 
@@ -102,9 +104,9 @@ uuidv7_tempus_extrahere(
  * Redde: VERUM si successus, FALSUM si format invalidus
  */
 b32
-uuid_ex_chorda(
-    chorda  uuid_chorda,
-    i8      bytes[XVI]);
+uuid_ex_chorda (
+    chorda uuid_chorda,
+        i8 bytes[XVI]);
 
 /* Convertere UUID ex bytes ad chordam
  * Format 16 bytes ad chorda UUID
@@ -112,8 +114,8 @@ uuid_ex_chorda(
  * Redde: Chorda UUID, vel chorda vacuum si fractura
  */
 chorda
-uuid_ad_chordam(
-    i8       bytes[XVI],
+uuid_ad_chordam (
+         i8  bytes[XVI],
     Piscina* piscina);
 
 
@@ -126,7 +128,7 @@ uuid_ad_chordam(
  * Redde: VERUM si format validus, FALSUM si non
  */
 b32
-uuid_est_validus(
+uuid_est_validus (
     chorda uuid_chorda);
 
 /* Verificare si UUID est UUIDv7
@@ -134,7 +136,7 @@ uuid_est_validus(
  * Redde: VERUM si versio 7, FALSUM si non
  */
 b32
-uuid_est_v7(
+uuid_est_v7 (
     chorda uuid_chorda);
 
 /* Verificare si UUID est UUIDv5
@@ -142,7 +144,7 @@ uuid_est_v7(
  * Redde: VERUM si versio 5, FALSUM si non
  */
 b32
-uuid_est_v5(
+uuid_est_v5 (
     chorda uuid_chorda);
 
 #endif /* UUID_H */

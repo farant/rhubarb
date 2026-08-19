@@ -10,6 +10,7 @@
 #include "chorda.h"
 #include "fasti.h"   /* Mora: duratio millisecundorum */
 
+
 /* ==================================================
  * FENESTRA - Creatio et Gestio Fenestrarum
  *
@@ -197,15 +198,15 @@ nomen structura {
             i32 altitudo;
         } mutare_magnitudinem;
         structura {
-            clavis_t  clavis;
+             clavis_t clavis;
             character typus;          /* Character typed (0 if none/special key) */
-            i32       modificantes;
+                  i32 modificantes;
         } clavis;
         structura {
-            i32          x;
-            i32          y;
+                     i32 x;
+                     i32 y;
             mus_botton_t botton;
-            i32          modificantes;
+                     i32 modificantes;
         } mus;
         structura {
             f32 delta_x;
@@ -222,11 +223,11 @@ nomen structura {
 /* Configuratio fenestrae */
 nomen structura {
     constans character* titulus;
-    i32 x;
-    i32 y;
-    i32 latitudo;
-    i32 altitudo;
-    i32 vexilla;
+                   i32  x;
+                   i32  y;
+                   i32  latitudo;
+                   i32  altitudo;
+                   i32  vexilla;
 } FenestraConfiguratio;
 
 
@@ -266,7 +267,7 @@ nomen structura Fenestra Fenestra;
  */
 Fenestra*
 fenestra_creare (
-    Piscina*                       piscina,
+                          Piscina* piscina,
     constans FenestraConfiguratio* configuratio);
 
 /* Destruere fenestram
@@ -322,7 +323,7 @@ fenestra_perscrutari_eventus (
 vacuum
 fenestra_expectare_eventus (
     Fenestra* fenestra,
-    Mora      ms_maximae);
+        Mora  ms_maximae);
 
 /* Obtinere eventum proximum ex cauda
  *
@@ -348,7 +349,7 @@ fenestra_obtinere_eventus (
  */
 vacuum
 fenestra_ponere_titulum (
-    Fenestra* fenestra,
+              Fenestra* fenestra,
     constans character* titulus);
 
 /* Obtinere magnitudinem fenestrae
@@ -579,13 +580,14 @@ fenestra_numerus_nativus (
  *
  * Redde FALSUM si fenestra abest aut eventus fingi non potuit.
  */
+
 b32
 fenestra_clavem_immittere (
-    Fenestra*           fenestra,
-    i32                 codex,
-    i32                 modificatores,
+              Fenestra* fenestra,
+                   i32  codex,
+                   i32  modificatores,
     constans character* characteres,
-    b32                 depressa);
+                   b32  depressa);
 
 /* Fenestram clavem facere (focum rapere). Agitatio focum poscit;
  * usus humanus eum iam habet. */
@@ -626,7 +628,7 @@ fenestra_clavem_capere (
  */
 b32
 fenestra_claviarius (
-    vacuum*             datum,
+                vacuum* datum,
     constans character* clavis);
 
 
@@ -657,11 +659,11 @@ nomen enumeratio {
 
 b32
 fenestra_murem_immittere (
-    Fenestra*        fenestra,
-    FenestraMusGenus genus,
-    i32              x,             /* CSS px a sinistra */
-    i32              y,             /* CSS px a SUMMO */
-    i32              modificatores);
+            Fenestra* fenestra,
+    FenestraMusGenus  genus,
+                 i32  x,             /* CSS px a sinistra */
+                 i32  y,             /* CSS px a SUMMO */
+                 i32  modificatores);
 
 /* Mus per NOMEN generis (forma suturae imperii par; 'datum'
  * Fenestra* est). Nomina: "motus" "depressio" "tractus" "liberatio"
@@ -671,10 +673,10 @@ fenestra_murem_immittere (
  * in claviario. Redde FALSUM si genus ignotum. */
 b32
 fenestra_musarius (
-    vacuum*             datum,
+                vacuum* datum,
     constans character* genus,
-    i32                 x,
-    i32                 y);
+                   i32  x,
+                   i32  y);
 
 
 /* Magnitudinem ponere per suturam (forma imperii par; 'datum'
@@ -697,10 +699,10 @@ fenestra_musarius (
 b32
 fenestra_magnitudinator (
     vacuum* datum,
-    i32     latitudo,
-    i32     altitudo,
-    i32*    latitudo_facta,
-    i32*    altitudo_facta);
+       i32  latitudo,
+       i32  altitudo,
+       i32* latitudo_facta,
+       i32* altitudo_facta);
 
 
 /* ==================================================
@@ -720,7 +722,7 @@ fenestra_magnitudinator (
  */
 TabulaPixelorum*
 fenestra_creare_tabulam_pixelorum (
-    Piscina*  piscina,
+     Piscina* piscina,
     Fenestra* fenestra,
          i32  altitudo_fixa);
 
@@ -733,7 +735,7 @@ fenestra_creare_tabulam_pixelorum (
  */
 vacuum
 fenestra_praesentare_pixela (
-    Fenestra* fenestra,
+           Fenestra* fenestra,
     TabulaPixelorum* tabula);
 
 
@@ -903,8 +905,8 @@ tabula_pixelorum_pingere_chordam_praecisum (
  */
 i32
 fons_latitudo_chordae (
-             chorda  textus,
-                i32  scala);
+             chorda textus,
+                i32 scala);
 
 /* Obtinere altitudinem chordae
  *

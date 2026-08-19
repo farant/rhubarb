@@ -5,6 +5,7 @@
 #include "chorda.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * MACHO - Parsitio Filorum Mach-O
  *
@@ -96,15 +97,15 @@ nomen structura MandatumOnustum MandatumOnustum;
  * ================================================== */
 
 nomen enumeratio {
-	MACHO_GENUS_OBIECTUM    = 0x1,  /* MH_OBJECT - .o files */
-	MACHO_GENUS_EXECUTABILE = 0x2,  /* MH_EXECUTE */
-	MACHO_GENUS_FVMLIB      = 0x3,  /* MH_FVMLIB */
-	MACHO_GENUS_CORE        = 0x4,  /* MH_CORE */
-	MACHO_GENUS_PRELOAD     = 0x5,  /* MH_PRELOAD */
-	MACHO_GENUS_DYLIB       = 0x6,  /* MH_DYLIB */
-	MACHO_GENUS_DYLINKER    = 0x7,  /* MH_DYLINKER */
-	MACHO_GENUS_BUNDLE      = 0x8,  /* MH_BUNDLE */
-	MACHO_GENUS_DSYM        = 0xa   /* MH_DSYM */
+    MACHO_GENUS_OBIECTUM    = 0x1,  /* MH_OBJECT - .o files */
+    MACHO_GENUS_EXECUTABILE = 0x2,  /* MH_EXECUTE */
+    MACHO_GENUS_FVMLIB      = 0x3,  /* MH_FVMLIB */
+    MACHO_GENUS_CORE        = 0x4,  /* MH_CORE */
+    MACHO_GENUS_PRELOAD     = 0x5,  /* MH_PRELOAD */
+    MACHO_GENUS_DYLIB       = 0x6,  /* MH_DYLIB */
+    MACHO_GENUS_DYLINKER    = 0x7,  /* MH_DYLINKER */
+    MACHO_GENUS_BUNDLE      = 0x8,  /* MH_BUNDLE */
+    MACHO_GENUS_DSYM        = 0xa   /* MH_DSYM */
 } MachoGenusFilum;
 
 
@@ -113,32 +114,32 @@ nomen enumeratio {
  * ================================================== */
 
 /* Mandatum oneris typi communes */
-#define MACHO_LC_SEGMENT            	0x1   /* Segmentum 32-bit */
-#define MACHO_LC_SYMTAB             	0x2   /* Tabula symbolorum */
-#define MACHO_LC_THREAD             	0x4   /* Thread */
-#define MACHO_LC_UNIXTHREAD         	0x5   /* Unix thread */
-#define MACHO_LC_DYSYMTAB           	0xb   /* Tabula symbolorum dynamica */
-#define MACHO_LC_LOAD_DYLIB         	0xc   /* Onerare dylib */
-#define MACHO_LC_ID_DYLIB           	0xd   /* Identitas dylib */
-#define MACHO_LC_LOAD_DYLINKER      	0xe   /* Onerare dynamic linker */
-#define MACHO_LC_ID_DYLINKER        	0xf   /* Identitas dynamic linker */
-#define MACHO_LC_LOAD_WEAK_DYLIB    	0x18  /* Onerare dylib debilis */
-#define MACHO_LC_SEGMENT_64         	0x19  /* Segmentum 64-bit */
-#define MACHO_LC_UUID               	0x1b  /* UUID */
-#define MACHO_LC_CODE_SIGNATURE     	0x1d  /* Signatura codicis */
-#define MACHO_LC_SEGMENT_SPLIT_INFO 	0x1e  /* Info fissionis segmenti */
-#define MACHO_LC_REEXPORT_DYLIB     	(0x1f | 0x80000000)  /* Re-exportare dylib */
-#define MACHO_LC_ENCRYPTION_INFO    	0x21  /* Info encryptionis */
-#define MACHO_LC_DYLD_INFO          	0x22  /* Info dyld */
-#define MACHO_LC_DYLD_INFO_ONLY     	0x22 | 0x80000000
+#define MACHO_LC_SEGMENT                0x1   /* Segmentum 32-bit */
+#define MACHO_LC_SYMTAB                 0x2   /* Tabula symbolorum */
+#define MACHO_LC_THREAD                 0x4   /* Thread */
+#define MACHO_LC_UNIXTHREAD             0x5   /* Unix thread */
+#define MACHO_LC_DYSYMTAB               0xb   /* Tabula symbolorum dynamica */
+#define MACHO_LC_LOAD_DYLIB             0xc   /* Onerare dylib */
+#define MACHO_LC_ID_DYLIB               0xd   /* Identitas dylib */
+#define MACHO_LC_LOAD_DYLINKER          0xe   /* Onerare dynamic linker */
+#define MACHO_LC_ID_DYLINKER            0xf   /* Identitas dynamic linker */
+#define MACHO_LC_LOAD_WEAK_DYLIB        0x18  /* Onerare dylib debilis */
+#define MACHO_LC_SEGMENT_64             0x19  /* Segmentum 64-bit */
+#define MACHO_LC_UUID                   0x1b  /* UUID */
+#define MACHO_LC_CODE_SIGNATURE         0x1d  /* Signatura codicis */
+#define MACHO_LC_SEGMENT_SPLIT_INFO     0x1e  /* Info fissionis segmenti */
+#define MACHO_LC_REEXPORT_DYLIB         (0x1f | 0x80000000)  /* Re-exportare dylib */
+#define MACHO_LC_ENCRYPTION_INFO        0x21  /* Info encryptionis */
+#define MACHO_LC_DYLD_INFO              0x22  /* Info dyld */
+#define MACHO_LC_DYLD_INFO_ONLY         0x22 | 0x80000000
 #define MACHO_LC_VERSION_MIN_MACOSX   0x24  /* Versio minima macOS */
 #define MACHO_LC_VERSION_MIN_IPHONEOS 0x25  /* Versio minima iOS */
-#define MACHO_LC_FUNCTION_STARTS    	0x26  /* Initia functionum */
-#define MACHO_LC_MAIN               	0x28  /* Entry point (LC_MAIN) */
-#define MACHO_LC_DATA_IN_CODE       	0x29  /* Data in code */
-#define MACHO_LC_SOURCE_VERSION     	0x2a  /* Versio fontis */
-#define MACHO_LC_ENCRYPTION_INFO_64 	0x2c  /* Info encryptionis 64-bit */
-#define MACHO_LC_BUILD_VERSION      	0x32  /* Versio aedificationis */
+#define MACHO_LC_FUNCTION_STARTS        0x26  /* Initia functionum */
+#define MACHO_LC_MAIN                   0x28  /* Entry point (LC_MAIN) */
+#define MACHO_LC_DATA_IN_CODE           0x29  /* Data in code */
+#define MACHO_LC_SOURCE_VERSION         0x2a  /* Versio fontis */
+#define MACHO_LC_ENCRYPTION_INFO_64     0x2c  /* Info encryptionis 64-bit */
+#define MACHO_LC_BUILD_VERSION          0x32  /* Versio aedificationis */
 
 
 /* ==================================================
@@ -159,8 +160,8 @@ nomen enumeratio {
  */
 MachoFilum*
 macho_filum_aperire (
-	constans character* via,
-	           Piscina* piscina);
+    constans character* via,
+               Piscina* piscina);
 
 /* Aperire filum Mach-O ex memoria
  *
@@ -175,9 +176,9 @@ macho_filum_aperire (
  */
 MachoFilum*
 macho_filum_ex_memoria (
-	   constans i8* datum,
-	memoriae_index  mensura,
-				 Piscina* piscina);
+             constans i8* datum,
+          memoriae_index  mensura,
+                 Piscina* piscina);
 
 
 /* ==================================================
@@ -192,7 +193,7 @@ macho_filum_ex_memoria (
  */
 i32
 macho_filum_numerus_imago (
-	constans MachoFilum* filum);
+    constans MachoFilum* filum);
 
 /* Obtinere imaginem Mach-O per indicem
  *
@@ -203,8 +204,8 @@ macho_filum_numerus_imago (
  */
 MachO*
 macho_filum_imago (
-	constans MachoFilum* filum,
-	                i32  index);
+    constans MachoFilum* filum,
+                    i32  index);
 
 /* Obtinere typum processoris imaginis
  *
@@ -215,8 +216,8 @@ macho_filum_imago (
  */
 i32
 macho_filum_genus_processoris (
-	constans MachoFilum* filum,
-	                i32  index);
+    constans MachoFilum* filum,
+                    i32  index);
 
 /* Obtinere subtypum processoris imaginis
  *
@@ -227,8 +228,8 @@ macho_filum_genus_processoris (
  */
 i32
 macho_filum_subgenus_processoris (
-	constans MachoFilum* filum,
-	                i32  index);
+    constans MachoFilum* filum,
+                    i32  index);
 
 
 /* ==================================================
@@ -250,8 +251,8 @@ macho_filum_subgenus_processoris (
  */
 MachO*
 macho_aperire (
-	constans character* via,
-	           Piscina* piscina);
+    constans character* via,
+               Piscina* piscina);
 
 /* Aperire ex memoria
  *
@@ -265,9 +266,9 @@ macho_aperire (
  */
 MachO*
 macho_ex_memoria (
-	   constans i8* datum,
-	memoriae_index  mensura,
-				 Piscina* piscina);
+             constans i8* datum,
+          memoriae_index  mensura,
+                 Piscina* piscina);
 
 
 /* ==================================================
@@ -280,7 +281,7 @@ macho_ex_memoria (
  */
 i32
 macho_genus_processoris (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere subtypum processoris
  *
@@ -288,7 +289,7 @@ macho_genus_processoris (
  */
 i32
 macho_subgenus_processoris (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere typum fili
  *
@@ -296,7 +297,7 @@ macho_subgenus_processoris (
  */
 i32
 macho_genus_filum (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere numerum mandatorum oneris
  *
@@ -304,7 +305,7 @@ macho_genus_filum (
  */
 i32
 macho_numerus_mandatorum (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Verificare si 64-bit
  *
@@ -312,7 +313,7 @@ macho_numerus_mandatorum (
  */
 b32
 macho_est_64bit (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere piscinam Mach-O
  *
@@ -323,7 +324,7 @@ macho_est_64bit (
  */
 Piscina*
 macho_piscina (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere datum crudum Mach-O
  *
@@ -334,7 +335,7 @@ macho_piscina (
  */
 constans i8*
 macho_datum (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere mensuram datum Mach-O
  *
@@ -344,7 +345,7 @@ macho_datum (
  */
 memoriae_index
 macho_mensura (
-	constans MachO* macho);
+    constans MachO* macho);
 
 
 /* ==================================================
@@ -372,9 +373,9 @@ macho_mensura (
  */
 chorda*
 macho_obtinere_dylibs (
-	constans MachO* macho,
-	           i32* numerus,
-	       Piscina* piscina);
+    constans MachO* macho,
+               i32* numerus,
+           Piscina* piscina);
 
 /* Obtinere punctum ingressus (entry point)
  *
@@ -390,8 +391,8 @@ macho_obtinere_dylibs (
  */
 b32
 macho_obtinere_entry_point (
-	constans MachO* macho,
-	memoriae_index* offset);
+    constans MachO* macho,
+    memoriae_index* offset);
 
 /* Obtinere UUID
  *
@@ -416,8 +417,8 @@ macho_obtinere_entry_point (
  */
 b32
 macho_obtinere_uuid (
-	constans MachO* macho,
-	            i8  uuid[XVI]);
+    constans MachO* macho,
+                i8  uuid[XVI]);
 
 
 /* ==================================================
@@ -426,9 +427,9 @@ macho_obtinere_uuid (
 
 /* Iterator pro ambulatione mandatorum oneris */
 nomen structura MachoIteratorMandatum {
-	constans MachO* macho;
-	           i32  index_currens;
-	           i32  offset_currens;
+    constans MachO* macho;
+               i32  index_currens;
+               i32  offset_currens;
 } MachoIteratorMandatum;
 
 /* Initializare iteratorem
@@ -439,7 +440,7 @@ nomen structura MachoIteratorMandatum {
  */
 MachoIteratorMandatum
 macho_iterator_mandatorum_initium (
-	constans MachO* macho);
+    constans MachO* macho);
 
 /* Obtinere mandatum proximum
  *
@@ -457,7 +458,7 @@ macho_iterator_mandatorum_initium (
  */
 MandatumOnustum*
 macho_iterator_mandatorum_proximum (
-	MachoIteratorMandatum* iter);
+    MachoIteratorMandatum* iter);
 
 /* Verificare si iteratio completa
  *
@@ -467,7 +468,7 @@ macho_iterator_mandatorum_proximum (
  */
 b32
 macho_iterator_mandatorum_finis (
-	MachoIteratorMandatum* iter);
+    MachoIteratorMandatum* iter);
 
 
 /* ==================================================
@@ -482,7 +483,7 @@ macho_iterator_mandatorum_finis (
  */
 i32
 mandatum_genus (
-	constans MandatumOnustum* mandatum);
+    constans MandatumOnustum* mandatum);
 
 /* Obtinere mensuram mandati
  *
@@ -492,7 +493,7 @@ mandatum_genus (
  */
 memoriae_index
 mandatum_magnitudo (
-	constans MandatumOnustum* mandatum);
+    constans MandatumOnustum* mandatum);
 
 /* Obtinere datum crudum mandati
  *
@@ -507,7 +508,7 @@ mandatum_magnitudo (
  */
 constans vacuum*
 mandatum_datum (
-	constans MandatumOnustum* mandatum);
+    constans MandatumOnustum* mandatum);
 
 
 /* ==================================================
@@ -522,6 +523,6 @@ mandatum_datum (
  */
 constans character*
 macho_error_recens (
-	vacuum);
+    vacuum);
 
 #endif /* MACHO_H */

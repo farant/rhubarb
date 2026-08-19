@@ -6,6 +6,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * HTML LEXEMA - lexator totalis pro HTML
  *
@@ -96,10 +97,10 @@ nomen enumeratio {
 
 nomen structura {
     HtmlLexemaGenus genus;
-    chorda          valor;    /* in fontem spectat - verbatim */
-    i32             offset;   /* octeti ab initio fontis */
-    i32             linea;    /* 1-basata */
-    i32             columna;  /* 1-basata, octeti */
+             chorda valor;    /* in fontem spectat - verbatim */
+                i32 offset;   /* octeti ab initio fontis */
+                i32 linea;    /* 1-basata */
+                i32 columna;  /* 1-basata, octeti */
 } HtmlLexema;
 
 /* Lexare fontem: Xar de HtmlLexema (per valorem), lexema FINIS
@@ -107,15 +108,15 @@ nomen structura {
  * Fons non copiatur. */
 Xar*
 html_lexare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fons,
-    i32                 mensura);
+                   i32  mensura);
 
 /* Oraculum fidelitatis: valores concatenati == fons */
 chorda
 html_lexemata_emittere (
     Piscina* piscina,
-    Xar*     lexemata);
+        Xar* lexemata);
 
 /* Titulus generis (pro debugging et probationibus) */
 constans character*

@@ -20,7 +20,10 @@
  *
  * Nota: Indicator promovetur ad proximam runam post decodificationem
  */
-s32 utf8_decodere(constans i8** ptr, constans i8* finis);
+s32
+utf8_decodere (
+    constans i8** ptr,
+    constans i8*  finis);
 
 /*
  * utf8_longitudo_byte - Quot bytes hic byte principalis indicat?
@@ -37,7 +40,9 @@ s32 utf8_decodere(constans i8** ptr, constans i8* finis);
  *   10xxxxxx -> 0 (continuatio, non principalis)
  *   11111xxx -> 0 (invalidum)
  */
-s32 utf8_longitudo_byte(i8 byte);
+s32
+utf8_longitudo_byte (
+    i8 byte);
 
 /*
  * utf8_est_continuatio - An hic byte est continuatio? (10xxxxxx)
@@ -46,7 +51,9 @@ s32 utf8_longitudo_byte(i8 byte);
  *
  * Redde: VERUM si continuatio, FALSUM aliter
  */
-b32 utf8_est_continuatio(i8 byte);
+b32
+utf8_est_continuatio (
+    i8 byte);
 
 /*
  * utf8_numerare_runas - Numerare codepoints in buffer
@@ -56,7 +63,10 @@ b32 utf8_est_continuatio(i8 byte);
  *
  * Redde: Numerus runarum (codepoints), bytes invalidi numerantur ut 1
  */
-s32 utf8_numerare_runas(constans i8* datum, s32 mensura);
+s32
+utf8_numerare_runas (
+    constans i8* datum,
+            s32  mensura);
 
 /*
  * utf8_proxima_runa - Promovere ad proximam limitem runae
@@ -66,7 +76,10 @@ s32 utf8_numerare_runas(constans i8* datum, s32 mensura);
  *
  * Redde: Indicator novus ad proximam runam
  */
-constans i8* utf8_proxima_runa(constans i8* ptr, constans i8* finis);
+constans i8*
+utf8_proxima_runa (
+    constans i8* ptr,
+    constans i8* finis);
 
 /*
  * utf8_prior_runa - Retrocedere ad priorem limitem runae
@@ -76,7 +89,10 @@ constans i8* utf8_proxima_runa(constans i8* ptr, constans i8* finis);
  *
  * Redde: Indicator novus ad priorem runam
  */
-constans i8* utf8_prior_runa(constans i8* ptr, constans i8* initium);
+constans i8*
+utf8_prior_runa (
+    constans i8* ptr,
+    constans i8* initium);
 
 /*
  * utf8_codere - Codere unam runam in sequentiam UTF-8
@@ -87,6 +103,9 @@ constans i8* utf8_prior_runa(constans i8* ptr, constans i8* initium);
  *
  * Redde: Numerus bytes scriptorum; 0 si runa invalida
  */
-s32 utf8_codere(s32 runa, i8* buffer);
+s32
+utf8_codere (
+    s32  runa,
+     i8* buffer);
 
 #endif /* UTF8_H */

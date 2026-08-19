@@ -42,6 +42,7 @@
 #include "piscina.h"
 #include "imago_typus.h"   /* typum solum poscimus, non decodificatorem */
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -125,9 +126,10 @@ nomen structura {
     i32 arca_latitudo;
     i32 arca_altitudo;
 
-    b32   pictura_praesto;
+      b32 pictura_praesto;
     Imago pictura;
 } CollatioFructus;
+
 
 /* ============================================================
  * Functiones
@@ -165,9 +167,10 @@ collatio_regula_solita (vacuum);
  * ex PRIMO ducitur.
  */
 CollatioFructus
-imago_conferre (constans Imago* primus,
+imago_conferre (
+                constans Imago* primus,
                 constans Imago* secundus,
                 CollatioRegula  regula,
-                Piscina*        piscina);
+                       Piscina* piscina);
 
 #endif /* IMAGO_COLLATIO_H */

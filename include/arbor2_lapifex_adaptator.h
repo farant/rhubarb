@@ -30,26 +30,29 @@
 /* Numerus maximus generum lexematum (enum Arbor2LexemaGenus) */
 #define ARBOR2_LAPIFEX_MAX_GENERA XCV
 
+
 /* ================================================
  * Fructus Conversionis
  * ================================================ */
 
 nomen structura {
-    LapifexSignum*  signa;              /* Tabula signorum convertorum */
-    s32             numerus;            /* Numerus signorum */
-    b32             successus;          /* VERUM si conversio successit */
-    s32             numerus_ignoratorum; /* Numerus trivialium filtratorum */
+    LapifexSignum* signa;              /* Tabula signorum convertorum */
+              s32  numerus;            /* Numerus signorum */
+              b32  successus;          /* VERUM si conversio successit */
+              s32  numerus_ignoratorum; /* Numerus trivialium filtratorum */
 } Arbor2LapifexFructus;
+
 
 /* ================================================
  * Adaptator
  * ================================================ */
 
 nomen structura {
-    s32                 mappa[ARBOR2_LAPIFEX_MAX_GENERA]; /* genus -> index terminalis */
-    Piscina*            piscina;
-    LapifexGrammatica*  grammatica;
+                  s32  mappa[ARBOR2_LAPIFEX_MAX_GENERA]; /* genus -> index terminalis */
+              Piscina* piscina;
+    LapifexGrammatica* grammatica;
 } Arbor2LapifexAdaptator;
+
 
 /* ================================================
  * API Publica
@@ -61,9 +64,9 @@ nomen structura {
  * Redde: Arbor2LapifexAdaptator* vel NIHIL si error
  */
 Arbor2LapifexAdaptator*
-arbor2_lapifex_adaptator_creare(
-    Piscina*            piscina,
-    LapifexGrammatica*  grammatica);
+arbor2_lapifex_adaptator_creare (
+              Piscina* piscina,
+    LapifexGrammatica* grammatica);
 
 /* Convertere flumen lexematum in signa lapifex
  * adaptator  - Adaptator creatus
@@ -71,20 +74,20 @@ arbor2_lapifex_adaptator_creare(
  * Redde: Arbor2LapifexFructus
  */
 Arbor2LapifexFructus
-arbor2_lapifex_convertere(
-    Arbor2LapifexAdaptator*  adaptator,
-    Xar*                     lexemata);
+arbor2_lapifex_convertere (
+    Arbor2LapifexAdaptator* adaptator,
+                       Xar* lexemata);
 
 /* Confer si genus est trivia (spatia, commentum, etc.)
  * Redde: VERUM si trivia
  */
 b32
-arbor2_lapifex_est_trivia(
-    Arbor2LexemaGenus  genus);
+arbor2_lapifex_est_trivia (
+    Arbor2LexemaGenus genus);
 
 /* Imprimere mappam pro depuratione */
 vacuum
-arbor2_lapifex_mappam_imprimere(
-    Arbor2LapifexAdaptator*  adaptator);
+arbor2_lapifex_mappam_imprimere (
+    Arbor2LapifexAdaptator* adaptator);
 
 #endif /* ARBOR2_LAPIFEX_ADAPTATOR_H */

@@ -59,6 +59,7 @@
 #include "imago_collatio.h"
 #include "manus.h"
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -97,7 +98,7 @@ nomen enumeratio {
  */
 nomen structura {
     constans character* scrinium;
-    CollatioRegula      collatio;
+        CollatioRegula  collatio;
 } SpecimenRegula;
 
 /*
@@ -110,13 +111,14 @@ nomen structura {
  */
 nomen structura {
     SpecimenSententia sententia;
-    CollatioFructus   collatio;
-    b32               collatio_facta;
-    chorda            via_exemplaris;
-    chorda            via_candidati;
-    chorda            via_differentiae;
-    chorda            causa;
+      CollatioFructus collatio;
+                  b32 collatio_facta;
+               chorda via_exemplaris;
+               chorda via_candidati;
+               chorda via_differentiae;
+               chorda causa;
 } SpecimenFructus;
+
 
 /* ============================================================
  * Functiones
@@ -131,7 +133,8 @@ nomen structura {
  * enim tota causa est cur fractura utilis sit).
  */
 SpecimenRegula
-specimen_regula_solita (constans character* scrinium);
+specimen_regula_solita (
+    constans character* scrinium);
 
 /*
  * specimen_iudicare - Capturam contra exemplar servatum iudicare
@@ -144,10 +147,11 @@ specimen_regula_solita (constans character* scrinium);
  * @titulus: nomen exemplaris (SINE semita, SINE suffixu)
  */
 SpecimenFructus
-specimen_iudicare (constans Imago*     captura,
+specimen_iudicare (
+                       constans Imago* captura,
                    constans character* titulus,
-                   SpecimenRegula      regula,
-                   Piscina*            piscina);
+                       SpecimenRegula  regula,
+                              Piscina* piscina);
 
 /*
  * specimen_manus - Capere, secare, iudicare
@@ -163,17 +167,20 @@ specimen_iudicare (constans Imago*     captura,
  * tacent donec manus_reficere vocetur (vide manus.h).
  */
 SpecimenFructus
-specimen_manus (Manus*              manus,
+specimen_manus (
+                             Manus* manus,
                 constans character* titulus,
                 constans character* selector,
-                SpecimenRegula      regula,
-                Piscina*            piscina);
+                    SpecimenRegula  regula,
+                           Piscina* piscina);
 
 /*
  * specimen_sententia_nomen - Nomen sententiae pro nuntiis
  */
 constans character*
-specimen_sententia_nomen (SpecimenSententia sententia);
+specimen_sententia_nomen (
+    SpecimenSententia sententia);
+
 
 /* ============================================================
  * Credo

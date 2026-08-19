@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "internamentum.h"
 
+
 /* ==================================================
  * ARBOR LEXEMA - Lexer pro C89
  *
@@ -27,6 +28,7 @@
  *   }
  * ================================================== */
 
+
 /* ==================================================
  * Standard Values
  * ================================================== */
@@ -34,6 +36,7 @@
 #define ARBOR_STANDARD_C89       0
 #define ARBOR_STANDARD_C99       1
 #define ARBOR_STANDARD_EXTENSION 2
+
 
 /* ==================================================
  * Token Types
@@ -161,17 +164,19 @@ nomen enumeratio {
     ARBOR_LEXEMA_TYPEDEF_MACRO    /* Macro expands to a type (e.g., i8 -> char) */
 } ArborLexemaGenus;
 
+
 /* ==================================================
  * Trivia (whitespace and comments)
  * ================================================== */
 
 nomen structura {
-    chorda      valor;           /* Actual text content */
-    b32         est_commentum;   /* true if comment, false if whitespace */
-    b32         est_c99;         /* true if // comment (C99) */
-    i32         linea;           /* Starting line (1-based) */
-    i32         columna;         /* Starting column (1-based) */
+    chorda valor;           /* Actual text content */
+       b32 est_commentum;   /* true if comment, false if whitespace */
+       b32 est_c99;         /* true if // comment (C99) */
+       i32 linea;           /* Starting line (1-based) */
+       i32 columna;         /* Starting column (1-based) */
 } ArborTrivia;
+
 
 /* ==================================================
  * Token
@@ -179,21 +184,23 @@ nomen structura {
 
 nomen structura {
     ArborLexemaGenus  genus;         /* Token type */
-    chorda            valor;         /* Text of token (identifier/literal text) */
-    i32               byte_offset;   /* 0-based offset in source */
-    i32               longitudo;     /* Length in bytes */
-    i32               linea;         /* Starting line (1-based) */
-    i32               columna;       /* Starting column (1-based) */
-    Xar*              trivia_ante;   /* Leading trivia (Xar of ArborTrivia) */
-    Xar*              trivia_post;   /* Trailing trivia (Xar of ArborTrivia) */
-    i8                standard;      /* ARBOR_STANDARD_* */
+              chorda  valor;         /* Text of token (identifier/literal text) */
+                 i32  byte_offset;   /* 0-based offset in source */
+                 i32  longitudo;     /* Length in bytes */
+                 i32  linea;         /* Starting line (1-based) */
+                 i32  columna;       /* Starting column (1-based) */
+                 Xar* trivia_ante;   /* Leading trivia (Xar of ArborTrivia) */
+                 Xar* trivia_post;   /* Trailing trivia (Xar of ArborTrivia) */
+                  i8  standard;      /* ARBOR_STANDARD_* */
 } ArborLexema;
+
 
 /* ==================================================
  * Lexer State (opaque)
  * ================================================== */
 
 nomen structura ArborLexator ArborLexator;
+
 
 /* ==================================================
  * API
@@ -206,11 +213,12 @@ nomen structura ArborLexator ArborLexator;
  * fons: Source text (not necessarily null-terminated)
  * mensura: Length of source in bytes
  */
-ArborLexator* arbor_lexator_creare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+ArborLexator*
+arbor_lexator_creare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Obtinere proximum lexema
  *
@@ -218,14 +226,19 @@ ArborLexator* arbor_lexator_creare(
  * Returns token with genus=ARBOR_LEXEMA_EOF at end.
  * Returns token with genus=ARBOR_LEXEMA_ERROR on error.
  */
-ArborLexema* arbor_lexema_proximum(ArborLexator* lex);
+ArborLexema*
+arbor_lexema_proximum (
+    ArborLexator* lex);
 
 /* Prospicere sine consumendo
  *
  * ahead: Number of tokens to look ahead (0 = next token)
  * Returns NULL if beyond end of input.
  */
-ArborLexema* arbor_lexema_prospicere(ArborLexator* lex, i32 ahead);
+ArborLexema*
+arbor_lexema_prospicere (
+    ArborLexator* lex,
+             i32  ahead);
 
 /* Obtinere omnia lexemata
  *
@@ -233,12 +246,16 @@ ArborLexema* arbor_lexema_prospicere(ArborLexator* lex, i32 ahead);
  * Includes EOF token at end.
  * Returns NULL on allocation failure.
  */
-Xar* arbor_lexema_omnia(ArborLexator* lex);
+Xar*
+arbor_lexema_omnia (
+    ArborLexator* lex);
 
 /* Obtinere nomen genus (pro debugging)
  *
  * Returns human-readable name for token type.
  */
-constans character* arbor_lexema_genus_nomen(ArborLexemaGenus genus);
+constans character*
+arbor_lexema_genus_nomen (
+    ArborLexemaGenus genus);
 
 #endif /* ARBOR_LEXEMA_H */

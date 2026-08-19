@@ -52,7 +52,7 @@ nomen structura ScriniumEnuntiatum ScriniumEnuntiatum;
  * Piscina structuras involucri possidet (vita scrinii). */
 Scrinium*
 scrinium_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via);
 
 vacuum
@@ -62,7 +62,7 @@ scrinium_claudere (
 /* sql sine fructibus (CREATE/INSERT/BEGIN...); VERUM = successus */
 b32
 scrinium_exsequi (
-    Scrinium*           scrinium,
+              Scrinium* scrinium,
     constans character* sql);
 
 /* nuntius erroris ultimi (litterae SQLite - vita scrinii) */
@@ -77,33 +77,33 @@ scrinium_ultimum_id (
 /* enuntiata praeparata (indices ligaminum 1-basati) */
 ScriniumEnuntiatum*
 scrinium_praeparare (
-    Scrinium*           scrinium,
+              Scrinium* scrinium,
     constans character* sql);
 
 b32
 scrinium_ligare_textum (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index,
-    chorda              textus);
+               integer  index,
+                chorda  textus);
 
 b32
 scrinium_ligare_numerum (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index,
-    s64                 numerus);
+               integer  index,
+                   s64  numerus);
 
 b32
 scrinium_ligare_nihil (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index);
+               integer  index);
 
 /* massa = datum binarium (BLOB; chorda datum binarium fert).
  * massa vacua (mensura 0) = blobum vacuum, non NULL. */
 b32
 scrinium_ligare_massam (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index,
-    chorda              massa);
+               integer  index,
+                chorda  massa);
 
 integer
 scrinium_gradi (
@@ -114,13 +114,13 @@ scrinium_gradi (
 chorda
 scrinium_columna_textus (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index,
-    Piscina*            piscina);
+               integer  index,
+               Piscina* piscina);
 
 s64
 scrinium_columna_numerus (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index);
+               integer  index);
 
 /* blobum in piscinam copiatur; blobum vacuum = chorda vacua
  * (datum NIHIL, mensura 0) - a NULL non distinguitur, vocator
@@ -128,13 +128,13 @@ scrinium_columna_numerus (
 chorda
 scrinium_columna_massa (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index,
-    Piscina*            piscina);
+               integer  index,
+               Piscina* piscina);
 
 b32
 scrinium_columna_nihil_est (
     ScriniumEnuntiatum* enuntiatum,
-    integer             index);
+               integer  index);
 
 /* retexere: reuti (ligamina purgata) */
 vacuum

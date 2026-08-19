@@ -6,6 +6,7 @@
 #include "macho.h"
 #include "piscina.h"
 
+
 /* ==================================================
  * SYMBOLA - Extractio Tabulae Symbolorum ex Mach-O
  *
@@ -115,9 +116,9 @@ nomen structura Symbolum Symbolum;
  *       Si nullum LC_SYMTAB, reddit NIHIL.
  */
 TabulaSymbolorum*
-tabula_symbolorum_ex_macho(
-	constans MachO* macho,
-	       Piscina* piscina);
+tabula_symbolorum_ex_macho (
+    constans MachO* macho,
+           Piscina* piscina);
 
 
 /* ==================================================
@@ -131,8 +132,8 @@ tabula_symbolorum_ex_macho(
  * Reddit: numerus symbolorum in tabula
  */
 i32
-tabula_symbolorum_numerus(
-	constans TabulaSymbolorum* tabula);
+tabula_symbolorum_numerus (
+    constans TabulaSymbolorum* tabula);
 
 /* Obtinere symbolum per indicem
  *
@@ -144,9 +145,9 @@ tabula_symbolorum_numerus(
  * NOTA: Symbola ordinata per indicem originalem in binario
  */
 Symbolum*
-tabula_symbolorum_symbolum(
-	constans TabulaSymbolorum* tabula,
-	                      i32  index);
+tabula_symbolorum_symbolum (
+    constans TabulaSymbolorum* tabula,
+                          i32  index);
 
 
 /* ==================================================
@@ -155,8 +156,8 @@ tabula_symbolorum_symbolum(
 
 /* Iterator pro ambulatione omnium symbolorum */
 nomen structura SymbolorumIterator {
-	constans TabulaSymbolorum* tabula;
-	                      i32  index_currens;
+    constans TabulaSymbolorum* tabula;
+                          i32  index_currens;
 } SymbolorumIterator;
 
 /* Initializare iteratorem
@@ -166,8 +167,8 @@ nomen structura SymbolorumIterator {
  * Reddit: iterator ad initium
  */
 SymbolorumIterator
-symbolorum_iterator_initium(
-	constans TabulaSymbolorum* tabula);
+symbolorum_iterator_initium (
+    constans TabulaSymbolorum* tabula);
 
 /* Obtinere symbolum proximum
  *
@@ -184,8 +185,8 @@ symbolorum_iterator_initium(
  *   }
  */
 Symbolum*
-symbolorum_iterator_proximum(
-	SymbolorumIterator* iter);
+symbolorum_iterator_proximum (
+    SymbolorumIterator* iter);
 
 /* Verificare si iteratio completa
  *
@@ -194,8 +195,8 @@ symbolorum_iterator_proximum(
  * Reddit: VERUM si finis, FALSUM alioquin
  */
 b32
-symbolorum_iterator_finis(
-	SymbolorumIterator* iter);
+symbolorum_iterator_finis (
+    SymbolorumIterator* iter);
 
 
 /* ==================================================
@@ -220,10 +221,10 @@ symbolorum_iterator_finis(
  *   Symbolum* printf = symbolum_invenire(tabula, "_printf", p);
  */
 Symbolum*
-symbolum_invenire(
-	constans TabulaSymbolorum* tabula,
-	constans character* appellatio,
-	       Piscina* piscina);
+symbolum_invenire (
+    constans TabulaSymbolorum* tabula,
+           constans character* appellatio,
+                      Piscina* piscina);
 
 /* Invenire symbolum per addressam
  *
@@ -240,10 +241,10 @@ symbolum_invenire(
  *       Non invenit symbola "proxima" - requirit aequalitatem exactam
  */
 Symbolum*
-symbolum_invenire_per_addressa(
-	constans TabulaSymbolorum* tabula,
-	           memoriae_index  addressa,
-	                  Piscina* piscina);
+symbolum_invenire_per_addressa (
+    constans TabulaSymbolorum* tabula,
+               memoriae_index  addressa,
+                      Piscina* piscina);
 
 
 /* ==================================================
@@ -261,9 +262,9 @@ symbolum_invenire_per_addressa(
  *       Si vis servare ultra vitam piscinae, usa chorda_transcribere().
  */
 chorda
-symbolum_nomen(
-	constans Symbolum* symbolum,
-	          Piscina* piscina);
+symbolum_nomen (
+    constans Symbolum* symbolum,
+              Piscina* piscina);
 
 /* Obtinere addressam symboli
  *
@@ -274,8 +275,8 @@ symbolum_nomen(
  * NOTA: Pro symbolis externis (undefined), potest esse ZEPHYRUM
  */
 memoriae_index
-symbolum_addressa(
-	constans Symbolum* symbolum);
+symbolum_addressa (
+    constans Symbolum* symbolum);
 
 /* Obtinere typum symboli
  *
@@ -289,8 +290,8 @@ symbolum_addressa(
  *   si (base_type == SYMBOLUM_TYPE_SECT) { ... }
  */
 i32
-symbolum_genus(
-	constans Symbolum* symbolum);
+symbolum_genus (
+    constans Symbolum* symbolum);
 
 /* Obtinere numerum sectionis
  *
@@ -302,8 +303,8 @@ symbolum_genus(
  *       Symbola externa habent n_sect == ZEPHYRUM
  */
 i32
-symbolum_numerus_sectionis(
-	constans Symbolum* symbolum);
+symbolum_numerus_sectionis (
+    constans Symbolum* symbolum);
 
 /* Obtinere descriptorem symboli
  *
@@ -312,8 +313,8 @@ symbolum_numerus_sectionis(
  * Reddit: n_desc valor (flags varii)
  */
 i32
-symbolum_descriptor(
-	constans Symbolum* symbolum);
+symbolum_descriptor (
+    constans Symbolum* symbolum);
 
 
 /* ==================================================
@@ -334,8 +335,8 @@ symbolum_descriptor(
  *       Haec functio usat heuristicas communes
  */
 b32
-symbolum_est_functio(
-	constans Symbolum* symbolum);
+symbolum_est_functio (
+    constans Symbolum* symbolum);
 
 /* Verificare si symbolum est externum (globale)
  *
@@ -344,8 +345,8 @@ symbolum_est_functio(
  * Reddit: VERUM si SYMBOLUM_EXT situs
  */
 b32
-symbolum_est_externum(
-	constans Symbolum* symbolum);
+symbolum_est_externum (
+    constans Symbolum* symbolum);
 
 /* Verificare si symbolum est privatum externum
  *
@@ -354,8 +355,8 @@ symbolum_est_externum(
  * Reddit: VERUM si SYMBOLUM_PEXT situs
  */
 b32
-symbolum_est_privatum_externum(
-	constans Symbolum* symbolum);
+symbolum_est_privatum_externum (
+    constans Symbolum* symbolum);
 
 /* Verificare si symbolum est undefined (externum non definitum)
  *
@@ -364,8 +365,8 @@ symbolum_est_privatum_externum(
  * Reddit: VERUM si SYMBOLUM_TYPE_UNDEF
  */
 b32
-symbolum_est_indefinitum(
-	constans Symbolum* symbolum);
+symbolum_est_indefinitum (
+    constans Symbolum* symbolum);
 
 /* Verificare si symbolum est debug (stab)
  *
@@ -374,8 +375,8 @@ symbolum_est_indefinitum(
  * Reddit: VERUM si symbolum debug (SYMBOLUM_STAB)
  */
 b32
-symbolum_est_debug(
-	constans Symbolum* symbolum);
+symbolum_est_debug (
+    constans Symbolum* symbolum);
 
 /* Verificare si symbolum est debilis (weak)
  *
@@ -384,8 +385,8 @@ symbolum_est_debug(
  * Reddit: VERUM si SYMBOLUM_WEAK_DEF vel SYMBOLUM_WEAK_REF
  */
 b32
-symbolum_est_debile(
-	constans Symbolum* symbolum);
+symbolum_est_debile (
+    constans Symbolum* symbolum);
 
 
 /* ==================================================
@@ -413,10 +414,10 @@ symbolum_est_debile(
  *   }
  */
 Symbolum**
-symbola_obtinere_functiones(
-	constans TabulaSymbolorum* tabula,
-	                      i32* numerus,
-	                  Piscina* piscina);
+symbola_obtinere_functiones (
+    constans TabulaSymbolorum* tabula,
+                          i32* numerus,
+                      Piscina* piscina);
 
 /* Obtinere omnia symbola externa indefinita
  *
@@ -430,10 +431,10 @@ symbola_obtinere_functiones(
  * Reddit: tabulam Symbolum* (externa), vel NIHIL si error
  */
 Symbolum**
-symbola_obtinere_externa_indefinita(
-	constans TabulaSymbolorum* tabula,
-	                      i32* numerus,
-	                  Piscina* piscina);
+symbola_obtinere_externa_indefinita (
+    constans TabulaSymbolorum* tabula,
+                          i32* numerus,
+                      Piscina* piscina);
 
 
 /* ==================================================
@@ -447,7 +448,7 @@ symbola_obtinere_externa_indefinita(
  * NOTA: Nuntius non possessus a vocante (static buffer)
  */
 constans character*
-symbola_error_recens(
-	vacuum);
+symbola_error_recens (
+    vacuum);
 
 #endif /* SYMBOLA_H */

@@ -25,7 +25,7 @@
 nomen structura {
     chorda* claves;
     chorda* valores;
-    i32     numerus;
+       i32  numerus;
 } UrlParams;
 
 
@@ -44,8 +44,8 @@ nomen structura {
  * Redde: chorda percent-encoded
  */
 chorda
-url_codificare(
-    chorda   originalis,
+url_codificare (
+     chorda  originalis,
     Piscina* piscina);
 
 
@@ -61,8 +61,8 @@ url_codificare(
  * Redde: chorda decodificata
  */
 chorda
-url_decodificare(
-    chorda   codificata,
+url_decodificare (
+     chorda  codificata,
     Piscina* piscina);
 
 
@@ -83,10 +83,10 @@ url_decodificare(
  * Redde: Query string
  */
 chorda
-url_params_construere(
-    chorda*  claves,
-    chorda*  valores,
-    i32      numerus,
+url_params_construere (
+     chorda* claves,
+     chorda* valores,
+        i32  numerus,
     Piscina* piscina);
 
 /* Parse query string ad key-value pairs
@@ -97,8 +97,8 @@ url_params_construere(
  * Redde: UrlParams cum arrays clavium et valorum
  */
 UrlParams
-url_params_parse(
-    chorda   query_string,
+url_params_parse (
+     chorda  query_string,
     Piscina* piscina);
 
 

@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "chorda.h"
 
+
 /* ====================================================================
  * NUMERI ROMANI - lectio formae subtractivae STRICTAE
  *
@@ -30,6 +31,9 @@
  *
  * Redde VERUM si s numerus Romanus validus est; valor (si non NIHIL)
  * summam accipit. Chorda vacua FALSUM. */
-b32 numerus_romanus_legere (chorda s, i32* valor);
+b32
+numerus_romanus_legere (
+    chorda  s,
+       i32* valor);
 
 #endif /* NUMERUS_ROMANUS_H */

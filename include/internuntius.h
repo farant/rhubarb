@@ -95,42 +95,42 @@ nomen vacuum (*InternuntiusPraebitor)(
 
 Internuntius*
 internuntius_creare (
-    Piscina*           piscina,
-    InternuntiusMissor mittere,
-    vacuum*            mittere_datum);
+               Piscina* piscina,
+    InternuntiusMissor  mittere,
+                vacuum* mittere_datum);
 
 /* methodum praebere: titulus copiatur in piscinam diuturnam.
  * Duplicatum RECUSATUR (FALSUM) - registrum codex est, semel
  * definitum; recusatio errores compaginis capit. */
 b32
 internuntius_praebere (
-    Internuntius*         inx,
-    constans character*   methodus,
-    InternuntiusTractator tractator,
-    vacuum*               datum);
+             Internuntius* inx,
+       constans character* methodus,
+    InternuntiusTractator  tractator,
+                   vacuum* datum);
 
 /* nuntium unum tractare: parsare -> invenire -> vocare ->
  * respondere per missorem. Numquam fragit (vide supra). */
 vacuum
 internuntius_tractare (
     Internuntius* inx,
-    chorda        nuntium,
-    Piscina*      piscina_vocationis);
+          chorda  nuntium,
+         Piscina* piscina_vocationis);
 
 /* eventum pellere: { "eventus": titulus, "datum": datum|null } */
 vacuum
 internuntius_eventum_mittere (
-    Internuntius*       inx,
+          Internuntius* inx,
     constans character* eventus,
-    JsonValor*          datum,
-    Piscina*            piscina_vocationis);
+             JsonValor* datum,
+               Piscina* piscina_vocationis);
 
 /* introspectio registri: Xar de chorda (valore), ordine
  * praebitionis - semen generationis ligaminum (dilatio nominata) */
 Xar*
 internuntius_methodi (
     Internuntius* inx,
-    Piscina*      piscina);
+         Piscina* piscina);
 
 InternuntiusFructus
 internuntius_fructus (
@@ -144,7 +144,7 @@ internuntius_fructus (
  * Functio pura; probationes aureae. */
 chorda
 internuntius_effugere_js (
-    chorda   textus,
+     chorda  textus,
     Piscina* piscina);
 
 #endif /* INTERNUNTIUS_H */

@@ -13,6 +13,7 @@
 #include "piscina.h"
 #include "imago_typus.h"   /* Imago ipsa - typus decodificatorem non trahit */
 
+
 /* ============================================================
  * Typi
  * ============================================================ */
@@ -21,10 +22,11 @@
  * ImagoFructus - Fructus operationis caricare
  */
 nomen structura {
-    b32    successus; /* VERUM si carricatio successit */
-    Imago  imago;     /* Imago carricata (si successus) */
+       b32 successus; /* VERUM si carricatio successit */
+     Imago imago;     /* Imago carricata (si successus) */
     chorda error;     /* Nuntius erroris (si non successus) */
 } ImagoFructus;
+
 
 /* ============================================================
  * Functiones
@@ -39,7 +41,9 @@ nomen structura {
  * Redde: ImagoFructus cum successus=VERUM si bene, alioquin error
  */
 ImagoFructus
-imago_caricare_ex_file(constans character* via, Piscina* piscina);
+imago_caricare_ex_file (
+    constans character* via,
+               Piscina* piscina);
 
 /*
  * imago_caricare_ex_memoria - Caricare imaginem ex buffer memoriae
@@ -51,6 +55,9 @@ imago_caricare_ex_file(constans character* via, Piscina* piscina);
  * Redde: ImagoFructus cum successus=VERUM si bene, alioquin error
  */
 ImagoFructus
-imago_caricare_ex_memoria(constans i8* datum, i32 mensura, Piscina* piscina);
+imago_caricare_ex_memoria (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina);
 
 #endif /* IMAGO_H */

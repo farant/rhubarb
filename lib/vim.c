@@ -15,26 +15,26 @@
  * ================================================== */
 
 hic_manens vacuum
-_clipboard_copiare_lineam(
-    VimClipboard* clipboard,
+_clipboard_copiare_lineam (
+         VimClipboard* clipboard,
     TabulaCharacterum* tabula,
-    i32 linea,
-    i32 index_clipboard);
+                  i32  linea,
+                  i32  index_clipboard);
 
 hic_manens VimStatus
-_gluten_post(
+_gluten_post (
     VimStatus status);
 
 hic_manens VimStatus
-_gluten_ante(
+_gluten_ante (
     VimStatus status);
 
 hic_manens VimStatus
-_retexere(
+_retexere (
     VimStatus status);
 
 hic_manens VimStatus
-_clamp_cursor(
+_clamp_cursor (
     VimStatus status);
 
 

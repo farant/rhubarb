@@ -6,6 +6,7 @@
 #include "piscina.h"
 #include "xar.h"
 
+
 /* ==================================================
  * TOML - Parser pro Subset TOML
  *
@@ -18,6 +19,7 @@
  * - Tabulae [section] (ignorantur, claves fiunt top-level)
  * ================================================== */
 
+
 /* ==================================================
  * Genera Valorum
  * ================================================== */
@@ -29,6 +31,7 @@ nomen enumeratio {
     TOML_BOOLEAN    = IV      /* Boolean valor (true/false) */
 } TomlGenus;
 
+
 /* ==================================================
  * Structurae
  * ================================================== */
@@ -37,27 +40,28 @@ nomen enumeratio {
 nomen structura {
     TomlGenus genus;
     unio {
-        chorda   chorda_valor;
-        s32      numerus_valor;
-        Xar*     tabulatum_valor;  /* Xar de chorda */
-        b32      boolean_valor;
+        chorda  chorda_valor;
+           s32  numerus_valor;
+           Xar* tabulatum_valor;  /* Xar de chorda */
+           b32  boolean_valor;
     } datum;
 } TomlValor;
 
 /* TomlIntroitus - Par clavis-valor */
 nomen structura {
-    chorda     clavis;
-    TomlValor  valor;
+       chorda clavis;
+    TomlValor valor;
 } TomlIntroitus;
 
 /* TomlDocumentum - Documentum parsatum */
 nomen structura {
-    Xar*       introitus;       /* Xar de TomlIntroitus */
-    Piscina*   piscina;
-    b32        successus;
-    chorda     error;
-    i32        linea_erroris;
+        Xar* introitus;       /* Xar de TomlIntroitus */
+    Piscina* piscina;
+        b32  successus;
+     chorda  error;
+        i32  linea_erroris;
 } TomlDocumentum;
+
 
 /* ==================================================
  * Parsatio
@@ -67,15 +71,16 @@ nomen structura {
  * Redde: TomlDocumentum* (semper non-NIHIL, verificare successus)
  */
 TomlDocumentum*
-toml_legere(
-    chorda   input,
+toml_legere (
+     chorda  input,
     Piscina* piscina);
 
 /* Legere TOML ex literis C */
 TomlDocumentum*
-toml_legere_literis(
+toml_legere_literis (
     constans character* input,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Quaestio
@@ -85,41 +90,42 @@ toml_legere_literis(
  * Redde: TomlValor* vel NIHIL si non inventum
  */
 TomlValor*
-toml_capere(
-    TomlDocumentum*     doc,
+toml_capere (
+        TomlDocumentum* doc,
     constans character* clavis);
 
 /* Commoditates pro typis specificis */
 
 /* Capere chordam (redde chordam vacuam si non inventum) */
 chorda
-toml_capere_chorda(
-    TomlDocumentum*     doc,
+toml_capere_chorda (
+        TomlDocumentum* doc,
     constans character* clavis);
 
 /* Capere numerum (redde 0 si non inventum) */
 s32
-toml_capere_numerum(
-    TomlDocumentum*     doc,
+toml_capere_numerum (
+        TomlDocumentum* doc,
     constans character* clavis);
 
 /* Capere tabulatum (redde NIHIL si non inventum) */
 Xar*
-toml_capere_tabulatum(
-    TomlDocumentum*     doc,
+toml_capere_tabulatum (
+        TomlDocumentum* doc,
     constans character* clavis);
 
 /* Capere boolean (redde FALSUM si non inventum) */
 b32
-toml_capere_boolean(
-    TomlDocumentum*     doc,
+toml_capere_boolean (
+        TomlDocumentum* doc,
     constans character* clavis);
 
 /* Verificare si clavis existit */
 b32
-toml_habet(
-    TomlDocumentum*     doc,
+toml_habet (
+        TomlDocumentum* doc,
     constans character* clavis);
+
 
 /* ==================================================
  * Utilitas
@@ -127,17 +133,17 @@ toml_habet(
 
 /* Numerus introituum */
 i32
-toml_numerus_introituum(
+toml_numerus_introituum (
     TomlDocumentum* doc);
 
 /* Verificare si parsatio successit */
 b32
-toml_successus(
+toml_successus (
     TomlDocumentum* doc);
 
 /* Capere nuntium erroris */
 chorda
-toml_error(
+toml_error (
     TomlDocumentum* doc);
 
 #endif /* TOML_H */

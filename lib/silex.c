@@ -20,8 +20,11 @@
  * ================================================== */
 
 interior constans character*
-_texere (Piscina* piscina, constans character* a,
-    constans character* b, constans character* c);
+_texere (
+               Piscina* piscina,
+    constans character* a,
+    constans character* b,
+    constans character* c);
 
 interior constans character*
 _texere (
@@ -46,8 +49,10 @@ _texere (
 }
 
 interior chorda
-_praefigere (Piscina* piscina, constans character* praefixum,
-    chorda cauda);
+_praefigere (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  cauda);
 
 interior chorda
 _praefigere (
@@ -242,7 +247,9 @@ silex_fons_legere (
  * ================================================== */
 
 interior vacuum
-_inclusiones_scrutari (chorda contentum, Xar* opus);
+_inclusiones_scrutari (
+    chorda  contentum,
+       Xar* opus);
 
 interior vacuum
 _inclusiones_scrutari (
@@ -325,7 +332,9 @@ _inclusiones_scrutari (
  * ================================================== */
 
 interior b32
-_vendor_basim (chorda caput, chorda* basis);
+_vendor_basim (
+    chorda  caput,
+    chorda* basis);
 
 /* 'vendor/' in nomine (quocumque praefixo, e.g. '../vendor/x.h')
  * -> basis post eam, si sine '/' ulteriore. Normalizatio: claves
@@ -361,9 +370,13 @@ _vendor_basim (
 }
 
 interior b32
-_plagulam_e_fonte_colligere (Piscina* piscina,
-    constans SilexFons* fons, constans character* pars,
-    chorda titulus, Xar* fructus, Xar* opus);
+_plagulam_e_fonte_colligere (
+               Piscina* piscina,
+    constans SilexFons* fons,
+    constans character* pars,
+                chorda  titulus,
+                   Xar* fructus,
+                   Xar* opus);
 
 /* pars = "include/" | "lib/" | "vendor/"; VERUM = plagula in fonte
  * exsistit et lecta. opus NIHIL = folium (venditoria: contenta
@@ -603,7 +616,9 @@ silex_clausuram_colligere (
  * ================================================== */
 
 interior chorda
-_fontem_fingere (Piscina* piscina, constans character* titulus);
+_fontem_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _fontem_fingere (
@@ -651,7 +666,9 @@ _fontem_fingere (
 }
 
 interior chorda
-_probationem_fingere (Piscina* piscina, constans character* titulus);
+_probationem_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _probationem_fingere (
@@ -726,7 +743,8 @@ _probationem_fingere (
     " -Wmissing-prototypes -Wwrite-strings -Wno-long-long"
 
 interior chorda
-_aedificare_sh_fingere (Piscina* piscina,
+_aedificare_sh_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -760,7 +778,9 @@ _aedificare_sh_fingere (
 }
 
 interior chorda
-_probare_sh_fingere (Piscina* piscina, constans character* titulus);
+_probare_sh_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _probare_sh_fingere (
@@ -794,7 +814,9 @@ _probare_sh_fingere (
 }
 
 interior chorda
-_readme_fingere (Piscina* piscina, constans character* titulus);
+_readme_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _readme_fingere (
@@ -833,7 +855,9 @@ _readme_fingere (
  * ================================================== */
 
 interior chorda
-_pipa_h_fingere (Piscina* piscina, constans character* titulus);
+_pipa_h_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _pipa_h_fingere (
@@ -886,7 +910,9 @@ _pipa_h_fingere (
 }
 
 interior chorda
-_pipa_c_fingere (Piscina* piscina, constans character* titulus);
+_pipa_c_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _pipa_c_fingere (
@@ -992,7 +1018,8 @@ _pipa_c_fingere (
 }
 
 interior chorda
-_fontem_vitreum_fingere (Piscina* piscina,
+_fontem_vitreum_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -1183,7 +1210,9 @@ _fontem_vitreum_fingere (
 }
 
 interior chorda
-_toml_fingere (Piscina* piscina, constans character* titulus);
+_toml_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _toml_fingere (
@@ -1210,7 +1239,8 @@ _toml_fingere (
 }
 
 interior chorda
-_index_html_fingere (Piscina* piscina,
+_index_html_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -1260,7 +1290,9 @@ _index_html_fingere (
 }
 
 interior chorda
-_js_fingere (Piscina* piscina, constans character* titulus);
+_js_fingere (
+               Piscina* piscina,
+    constans character* titulus);
 
 interior chorda
 _js_fingere (
@@ -1289,7 +1321,8 @@ _js_fingere (
 }
 
 interior chorda
-_probationem_vitream_fingere (Piscina* piscina,
+_probationem_vitream_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -1398,7 +1431,8 @@ _probationem_vitream_fingere (
 }
 
 interior chorda
-_fumus_manus_fingere (Piscina* piscina,
+_fumus_manus_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -1565,7 +1599,8 @@ _fumus_manus_fingere (
 }
 
 interior chorda
-_readme_vitreum_fingere (Piscina* piscina,
+_readme_vitreum_fingere (
+               Piscina* piscina,
     constans character* titulus);
 
 interior chorda
@@ -1642,19 +1677,26 @@ _readme_vitreum_fingere (
 
 /* prototypa praemissa - definitiones infra (sectio VCS/semina) */
 interior b32
-_praefixum_habet (chorda via, constans character* praefixum);
+_praefixum_habet (
+                chorda  via,
+    constans character* praefixum);
 interior b32
-_suffixum_habet (chorda via, constans character* suffixum);
+_suffixum_habet (
+                chorda  via,
+    constans character* suffixum);
 interior chorda
-_basis_viae (chorda via);
+_basis_viae (
+    chorda via);
 
 /* semina = inclusiones contentorum datorum (dedup); NIHIL si
  * clausura fracta. Capita propria templi (<t>_pipa.h,
  * capsula_<t>.h) non quaeruntur in fonte. */
 interior Xar*
-_clausuram_e_contentis (Piscina* piscina,
-    constans SilexFons* fons, constans chorda* contenta,
-    i32 numerus);
+_clausuram_e_contentis (
+               Piscina* piscina,
+    constans SilexFons* fons,
+       constans chorda* contenta,
+                   i32  numerus);
 
 interior Xar*
 _clausuram_e_contentis (
@@ -1739,8 +1781,10 @@ _clausuram_e_contentis (
 /* ' \<nl>    lib/x.c' pro quaque bibliotheca clausurae; .m solum
  * si cum_obiectivis */
 interior vacuum
-_ordinem_fontium_appendere (ChordaAedificator* a,
-    Xar* clausura, b32 cum_obiectivis);
+_ordinem_fontium_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura,
+                  b32  cum_obiectivis);
 
 interior vacuum
 _ordinem_fontium_appendere (
@@ -1769,8 +1813,9 @@ _ordinem_fontium_appendere (
 
 /* regulae venditoriae (una pro quoque .c venditorio clausurae) */
 interior vacuum
-_regulas_venditorias_appendere (ChordaAedificator* a,
-    Xar* clausura);
+_regulas_venditorias_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura);
 
 interior vacuum
 _regulas_venditorias_appendere (
@@ -1811,8 +1856,9 @@ _regulas_venditorias_appendere (
 
 /* obiecta venditoria in lineam nexus */
 interior vacuum
-_obiecta_venditoria_appendere (ChordaAedificator* a,
-    Xar* clausura);
+_obiecta_venditoria_appendere (
+    ChordaAedificator* a,
+                  Xar* clausura);
 
 interior vacuum
 _obiecta_venditoria_appendere (
@@ -1841,7 +1887,8 @@ _obiecta_venditoria_appendere (
 }
 
 interior vacuum
-_stampam_ordinis_appendere (ChordaAedificator* a,
+_stampam_ordinis_appendere (
+     ChordaAedificator* a,
     constans character* fons_titulus);
 
 interior vacuum
@@ -1858,9 +1905,11 @@ _stampam_ordinis_appendere (
 }
 
 interior chorda
-_aedificare_vitreum_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_app,
-    Xar* clausura_instrumenti,
+_aedificare_vitreum_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_app,
+                   Xar* clausura_instrumenti,
     constans character* fons_titulus);
 
 interior chorda
@@ -1945,8 +1994,10 @@ _aedificare_vitreum_fingere (
 }
 
 interior chorda
-_probare_vitreum_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_probationis,
+_probare_vitreum_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_probationis,
     constans character* fons_titulus);
 
 interior chorda
@@ -1987,8 +2038,10 @@ _probare_vitreum_fingere (
 }
 
 interior chorda
-_fumus_sh_fingere (Piscina* piscina,
-    constans character* titulus, Xar* clausura_fumi,
+_fumus_sh_fingere (
+               Piscina* piscina,
+    constans character* titulus,
+                   Xar* clausura_fumi,
     constans character* fons_titulus);
 
 interior chorda
@@ -2051,8 +2104,11 @@ _fumus_sh_fingere (
  * ================================================== */
 
 interior vacuum
-_rem_genitam_addere (Piscina* piscina, Xar* res_omnes,
-    constans character* via, chorda contentum);
+_rem_genitam_addere (
+               Piscina* piscina,
+                   Xar* res_omnes,
+    constans character* via,
+                chorda  contentum);
 
 interior vacuum
 _rem_genitam_addere (
@@ -2496,7 +2552,9 @@ silex_novum (
  * ================================================== */
 
 interior b32
-_praefixum_habet (chorda via, constans character* praefixum);
+_praefixum_habet (
+                chorda  via,
+    constans character* praefixum);
 
 interior b32
 _praefixum_habet (
@@ -2510,7 +2568,9 @@ _praefixum_habet (
 }
 
 interior b32
-_suffixum_habet (chorda via, constans character* suffixum);
+_suffixum_habet (
+                chorda  via,
+    constans character* suffixum);
 
 interior b32
 _suffixum_habet (
@@ -2526,7 +2586,8 @@ _suffixum_habet (
 
 /* quae vias VCS numquam videt (occulta iam filtro exclusa) */
 interior b32
-_praetermittenda (chorda via_rel);
+_praetermittenda (
+    chorda via_rel);
 
 interior b32
 _praetermittenda (
@@ -2630,8 +2691,10 @@ nomen structura {
 } StatusContextus;
 
 interior s32
-_status_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_status_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _status_ambulator (
@@ -2940,8 +3003,12 @@ silex_condere (
  * 'conditae'/'remotae' scribit, renovare 'renovatae'/'additae'),
  * non e textu nuntii */
 interior vacuum
-_conditionem_exuere (Piscina* piscina, constans VolumenActum* actum,
-    b32 est_ortus, chorda* nuntius, b32* renovatio);
+_conditionem_exuere (
+                  Piscina* piscina,
+    constans VolumenActum* actum,
+                      b32  est_ortus,
+                   chorda* nuntius,
+                      b32* renovatio);
 
 interior vacuum
 _conditionem_exuere (
@@ -3160,8 +3227,10 @@ silex_historia_plagulae (
  * ================================================== */
 
 interior constans character*
-_titulum_differentiae (Piscina* piscina,
-    constans character* praefixum, chorda via);
+_titulum_differentiae (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  via);
 
 interior constans character*
 _titulum_differentiae (
@@ -3179,9 +3248,14 @@ _titulum_differentiae (
 
 /* differentia currit SEMPER (summa inde); emissio si cum_textu */
 interior b32
-_differentiae_rem_implere (Piscina* piscina,
-    SilexDifferentiaRes* r, chorda via, SilexPlagulaStatus genus,
-    chorda vetus, chorda novum, b32 cum_textu);
+_differentiae_rem_implere (
+                Piscina* piscina,
+    SilexDifferentiaRes* r,
+                 chorda  via,
+     SilexPlagulaStatus  genus,
+                 chorda  vetus,
+                 chorda  novum,
+                    b32  cum_textu);
 
 interior b32
 _differentiae_rem_implere (
@@ -3231,8 +3305,10 @@ nomen structura {
 } DifferentiaContextus;
 
 interior s32
-_differentia_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_differentia_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _differentia_ambulator (
@@ -3317,7 +3393,8 @@ _differentia_ambulator (
 }
 
 interior s32
-_differentiae_res_comparare (constans vacuum* a,
+_differentiae_res_comparare (
+    constans vacuum* a,
     constans vacuum* b);
 
 interior s32
@@ -3331,9 +3408,13 @@ _differentiae_res_comparare (
 }
 
 interior SilexDifferentiaFructus
-_differentia_communis (Piscina* piscina,
-    constans character* proiectum_dir, s64 a_seq, b32 ad_discum,
-    s64 ad_seq, b32 cum_textu);
+_differentia_communis (
+               Piscina* piscina,
+    constans character* proiectum_dir,
+                   s64  a_seq,
+                   b32  ad_discum,
+                   s64  ad_seq,
+                   b32  cum_textu);
 
 interior SilexDifferentiaFructus
 _differentia_communis (
@@ -3583,8 +3664,10 @@ nomen structura {
 } ProiectioContextus;
 
 interior s32
-_proiectio_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_proiectio_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _proiectio_ambulator (
@@ -3848,7 +3931,9 @@ silex_proicere (
  * ================================================== */
 
 interior chorda
-_sigillum_contenti (Piscina* piscina, chorda contentum);
+_sigillum_contenti (
+    Piscina* piscina,
+     chorda  contentum);
 
 interior chorda
 _sigillum_contenti (
@@ -3881,7 +3966,8 @@ nomen structura {
 } SeminaContextus;
 
 interior chorda
-_basis_viae (chorda via);
+_basis_viae (
+    chorda via);
 
 interior chorda
 _basis_viae (
@@ -3901,7 +3987,8 @@ _basis_viae (
 }
 
 interior b32
-_fons_codicis_est (chorda via);
+_fons_codicis_est (
+    chorda via);
 
 interior b32
 _fons_codicis_est (
@@ -3913,8 +4000,10 @@ _fons_codicis_est (
 }
 
 interior s32
-_semina_ambulator (chorda via_plena,
-    constans DirectoriumIntroitus* introitus, vacuum* contextus);
+_semina_ambulator (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus);
 
 interior s32
 _semina_ambulator (
@@ -3963,9 +4052,11 @@ _semina_ambulator (
 }
 
 interior vacuum
-_semina_auctorata_colligere (Piscina* piscina,
-    constans character* radix_absoluta, Xar* nomina,
-    TabulaDispersa* bases_auctoratae);
+_semina_auctorata_colligere (
+               Piscina* piscina,
+    constans character* radix_absoluta,
+                   Xar* nomina,
+        TabulaDispersa* bases_auctoratae);
 
 interior vacuum
 _semina_auctorata_colligere (

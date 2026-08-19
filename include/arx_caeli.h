@@ -9,6 +9,7 @@
 #include "entitas_repositorium.h"
 #include "widget.h"
 
+
 /* ==================================================
  * ARX CAELI - Castellum Nubium (Cloud Castle)
  *
@@ -63,41 +64,41 @@ nomen vacuum (*FunctioLinkCallback)(vacuum* datum, constans character* link);
 /* Singula carta */
 nomen structura {
     chorda id;              /* Entitas ID */
-    i32 x;                  /* Positio in pixelis (relativum ad widget) */
-    i32 y;                  /* Positio in pixelis */
-    i32 latitudo;           /* Latitudo calculata ex textu (in characteribus) */
-    i32 altitudo;           /* Altitudo calculata ex textu (in characteribus) */
-    i32 z_index;            /* Ordo reddendi (higher = on top) */
+       i32 x;                  /* Positio in pixelis (relativum ad widget) */
+       i32 y;                  /* Positio in pixelis */
+       i32 latitudo;           /* Latitudo calculata ex textu (in characteribus) */
+       i32 altitudo;           /* Altitudo calculata ex textu (in characteribus) */
+       i32 z_index;            /* Ordo reddendi (higher = on top) */
     chorda textus;          /* Contentum cartae (multilinea) */
-    b32 est_folder;         /* Habet portal_ad relationem */
+       b32 est_folder;         /* Habet portal_ad relationem */
 } Carta;
 
 /* Controller Arcis Caeli */
 nomen structura {
-    ContextusWidget*     ctx;
+    ContextusWidget* ctx;
 
     /* Schirma currens */
     chorda schirma_currens_id;      /* Entitas ID schirmae */
     chorda schirma_currens_slug;    /* Slug pro navigatione */
 
     /* Cartae in schirma currenti */
-    Carta cartae[CARTAE_MAXIMUS];
+     Carta  cartae[CARTAE_MAXIMUS];
     chorda* entitas_ids[CARTAE_MAXIMUS];  /* Entity ID per carta, NIHIL si nova */
-    i32 numerus_cartarum;
+       i32  numerus_cartarum;
 
     /* Historia navigationis (pro < Retro) */
     chorda historia[HISTORIA_MAXIMUS];
-    i32 historia_index;
+       i32 historia_index;
 
     /* Status selectionis/editionis */
     ArcModus modus;
-    i32 index_selecta;              /* -1 si nihil */
-    i32 cursor_linea;               /* Cursor in carta (inserere) */
-    i32 cursor_columna;
+         i32 index_selecta;              /* -1 si nihil */
+         i32 cursor_linea;               /* Cursor in carta (inserere) */
+         i32 cursor_columna;
 
     /* Buffer editionis (pro inserere modo) */
     character edit_buffer[DXII];    /* 512 characters max */
-    i32 edit_longitudo;
+          i32 edit_longitudo;
 
     /* Status trahendi */
     b32 trahens;
@@ -124,8 +125,8 @@ nomen structura {
     i32 scala;                      /* Factor scalae fontis */
 
     /* Link callback */
-    FunctioLinkCallback link_callback;
-    vacuum*             link_callback_datum;
+    FunctioLinkCallback  link_callback;
+                 vacuum* link_callback_datum;
 } ArcCaeli;
 
 
@@ -140,7 +141,7 @@ nomen structura {
  * Redde: ArcCaeli* si successus, NIHIL si error
  */
 ArcCaeli*
-arx_caeli_creare(
+arx_caeli_creare (
     ContextusWidget* ctx);
 
 
@@ -154,8 +155,8 @@ arx_caeli_creare(
  * slug: slug schirmae (NIHIL = radix)
  */
 vacuum
-arx_caeli_navigare_ad(
-    ArcCaeli*         arc,
+arx_caeli_navigare_ad (
+              ArcCaeli* arc,
     constans character* slug);
 
 /* Navigare retro in historia
@@ -163,7 +164,7 @@ arx_caeli_navigare_ad(
  * arc: controller
  */
 vacuum
-arx_caeli_retro(
+arx_caeli_retro (
     ArcCaeli* arc);
 
 /* Ponere callback pro link navigation
@@ -173,10 +174,10 @@ arx_caeli_retro(
  * datum: datum transmittendum ad callback
  */
 vacuum
-arx_caeli_ponere_link_callback(
-    ArcCaeli*           arc,
-    FunctioLinkCallback callback,
-    vacuum*             datum);
+arx_caeli_ponere_link_callback (
+               ArcCaeli* arc,
+    FunctioLinkCallback  callback,
+                 vacuum* datum);
 
 
 /* ==================================================
@@ -190,10 +191,10 @@ arx_caeli_ponere_link_callback(
  * y: positio y in characteribus
  */
 vacuum
-arx_caeli_carta_creare(
+arx_caeli_carta_creare (
     ArcCaeli* arc,
-    i32       x,
-    i32       y);
+         i32  x,
+         i32  y);
 
 /* Delere cartam per index
  *
@@ -201,9 +202,9 @@ arx_caeli_carta_creare(
  * index: index cartae in array
  */
 vacuum
-arx_caeli_carta_delere(
+arx_caeli_carta_delere (
     ArcCaeli* arc,
-    i32       index);
+         i32  index);
 
 /* Movere cartam ad novam positionem
  *
@@ -213,11 +214,11 @@ arx_caeli_carta_delere(
  * y: nova positio y
  */
 vacuum
-arx_caeli_carta_movere(
+arx_caeli_carta_movere (
     ArcCaeli* arc,
-    i32       index,
-    s32       x,
-    s32       y);
+         i32  index,
+         s32  x,
+         s32  y);
 
 /* Verificare collisionem cum aliis cartis
  *
@@ -228,13 +229,13 @@ arx_caeli_carta_movere(
  * Redde: VERUM si collisio, FALSUM si vacuum
  */
 b32
-arx_caeli_verificare_collisio(
+arx_caeli_verificare_collisio (
     ArcCaeli* arc,
-    i32       x,
-    i32       y,
-    i32       latitudo,
-    i32       altitudo,
-    i32       ignorare_index);
+         i32  x,
+         i32  y,
+         i32  latitudo,
+         i32  altitudo,
+         i32  ignorare_index);
 
 
 /* ==================================================
@@ -251,15 +252,15 @@ arx_caeli_verificare_collisio(
  * focused: an widget habet focus
  */
 vacuum
-arx_caeli_reddere(
-    ArcCaeli*        arc,
+arx_caeli_reddere (
+           ArcCaeli* arc,
     TabulaPixelorum* tabula,
-    i32              x,
-    i32              y,
-    i32              latitudo,
-    i32              altitudo,
-    i32              scala,
-    b32              focused);
+                i32  x,
+                i32  y,
+                i32  latitudo,
+                i32  altitudo,
+                i32  scala,
+                b32  focused);
 
 /* Tractare eventum
  *
@@ -269,8 +270,8 @@ arx_caeli_reddere(
  * Redde: VERUM si eventus tractatus
  */
 b32
-arx_caeli_tractare_eventum(
-    ArcCaeli*         arc,
+arx_caeli_tractare_eventum (
+            ArcCaeli* arc,
     constans Eventus* eventus);
 
 
@@ -283,7 +284,7 @@ arx_caeli_tractare_eventum(
  * arc: controller
  */
 vacuum
-arx_caeli_carcare(
+arx_caeli_carcare (
     ArcCaeli* arc);
 
 /* Salvare cartas ad repositorium
@@ -291,7 +292,7 @@ arx_caeli_carcare(
  * arc: controller
  */
 vacuum
-arx_caeli_salvare(
+arx_caeli_salvare (
     ArcCaeli* arc);
 
 /* Salvare si immundum et tempus elapsum
@@ -299,7 +300,7 @@ arx_caeli_salvare(
  * arc: controller
  */
 vacuum
-arx_caeli_salvare_si_immundum(
+arx_caeli_salvare_si_immundum (
     ArcCaeli* arc);
 
 /* Marcare immundum (triggerat debounced save)
@@ -307,7 +308,7 @@ arx_caeli_salvare_si_immundum(
  * arc: controller
  */
 vacuum
-arx_caeli_marcare_immundum(
+arx_caeli_marcare_immundum (
     ArcCaeli* arc);
 
 
@@ -322,7 +323,7 @@ arx_caeli_marcare_immundum(
  * Vocatur per registrum_widget_initiare_omnes()
  */
 vacuum
-arx_caeli_init(
+arx_caeli_init (
     ContextusWidget* ctx);
 
 /* Salvare status visus ad entitas
@@ -334,10 +335,10 @@ arx_caeli_init(
  * Salvat: schirma_currens_slug, historia, historia_index
  */
 vacuum
-arx_caeli_salvare_status(
-    ArcCaeli*            arc,
+arx_caeli_salvare_status (
+               ArcCaeli* arc,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 /* Carcare status visus ex entitas
  *
@@ -348,10 +349,10 @@ arx_caeli_salvare_status(
  * Carcat: schirma_currens_slug et navigat ad eam
  */
 vacuum
-arx_caeli_carcare_status(
-    ArcCaeli*            arc,
+arx_caeli_carcare_status (
+               ArcCaeli* arc,
     EntitasRepositorium* repo,
-    constans character*  entitas_id);
+     constans character* entitas_id);
 
 
 #endif /* ARX_CAELI_H */

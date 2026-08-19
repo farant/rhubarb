@@ -4,6 +4,7 @@
 #include "latina.h"
 #include "color.h"
 
+
 /* ==================================================
  * THEMA - 16-Color Palette Theme System
  *
@@ -88,7 +89,7 @@ nomen enumeratio {
  * Debet vocari ante usum systematis themae.
  */
 vacuum
-thema_initiare(vacuum);
+thema_initiare (vacuum);
 
 
 /* ==================================================
@@ -104,7 +105,8 @@ thema_initiare(vacuum);
  * Reddit: Color structura
  */
 Color
-thema_color(ColorThema color);
+thema_color (
+    ColorThema color);
 
 /* Obtinere indicem palette pro colore semantico
  *
@@ -113,7 +115,8 @@ thema_color(ColorThema color);
  * Reddit: index in palette (0-15)
  */
 i32
-thema_palette_index(ColorThema color);
+thema_palette_index (
+    ColorThema color);
 
 /* Obtinere colorem ex indice colorationis (syntax highlighting)
  *
@@ -124,7 +127,8 @@ thema_palette_index(ColorThema color);
  * Reddit: Color structura
  */
 Color
-thema_color_ex_indice_colorationis(i8 index);
+thema_color_ex_indice_colorationis (
+    i8 index);
 
 
 /* ==================================================
@@ -137,9 +141,9 @@ thema_color_ex_indice_colorationis(i8 index);
  * palette_index: index in palette (0-15)
  */
 vacuum
-thema_ponere_mappam(
+thema_ponere_mappam (
     ColorThema color,
-    i32 palette_index);
+           i32 palette_index);
 
 /* Ponere palette completam (16 colores)
  *
@@ -147,7 +151,7 @@ thema_ponere_mappam(
  *          Format: [R0, G0, B0, R1, G1, B1, ..., R15, G15, B15]
  */
 vacuum
-thema_ponere_palette(
+thema_ponere_palette (
     constans i8* palette);
 
 
@@ -160,6 +164,6 @@ thema_ponere_palette(
  * Reddit: pointer ad palette Aquinas (48 bytes)
  */
 constans i8*
-thema_palette_aquinas(vacuum);
+thema_palette_aquinas (vacuum);
 
 #endif /* THEMA_H */

@@ -49,7 +49,9 @@ nomen structura {
 } SedesServi;
 
 interior vacuum
-_actionem_conficere (VillaAgens* agens, SedesServi* sedes);
+_actionem_conficere (
+    VillaAgens* agens,
+    SedesServi* sedes);
 
 structura VillaAgens {
               Piscina* piscina;      /* vita applicationis */

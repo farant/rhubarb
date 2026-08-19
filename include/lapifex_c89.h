@@ -25,6 +25,7 @@
 #include "lapifex_glr.h"
 #include "arbor2_expandere.h"
 
+
 /* ================================================
  * Contextus pro reductione
  *
@@ -32,10 +33,11 @@
  * ================================================ */
 
 nomen structura {
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-    chorda*               via_file;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                 chorda* via_file;
 } LapifexC89Contextus;
+
 
 /* ================================================
  * API Publica
@@ -49,11 +51,11 @@ nomen structura {
  * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
  */
 Arbor2Nodus*
-lapifex_c89_expressionem_parsare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+lapifex_c89_expressionem_parsare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Parsare declarationem ex fonte
  * piscina  - Arena allocatoris
@@ -63,11 +65,11 @@ lapifex_c89_expressionem_parsare(
  * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
  */
 Arbor2Nodus*
-lapifex_c89_declarationem_parsare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+lapifex_c89_declarationem_parsare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Parsare sententiam ex fonte
  * piscina  - Arena allocatoris
@@ -77,11 +79,11 @@ lapifex_c89_declarationem_parsare(
  * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
  */
 Arbor2Nodus*
-lapifex_c89_sententiam_parsare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+lapifex_c89_sententiam_parsare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Parsare translationem (translation unit) ex fonte
  * piscina  - Arena allocatoris
@@ -91,11 +93,11 @@ lapifex_c89_sententiam_parsare(
  * Redde: Arbor2Nodus* radix AST (TRANSLATION_UNIT), vel NIHIL si error
  */
 Arbor2Nodus*
-lapifex_c89_translationem_parsare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    constans character*   fons,
-    i32                   mensura);
+lapifex_c89_translationem_parsare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* fons,
+                    i32  mensura);
 
 /* Parsare fontem per expansionem (preprocessor → parser pipeline)
  * piscina  - Arena allocatoris
@@ -107,13 +109,13 @@ lapifex_c89_translationem_parsare(
  * Redde: Arbor2Nodus* radix AST, vel NIHIL si error
  */
 Arbor2Nodus*
-lapifex_c89_fontem_parsare(
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    Arbor2Expansion*      exp,
-    constans character*   fons,
-    i32                   mensura,
-    constans character*   via_file);
+lapifex_c89_fontem_parsare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+        Arbor2Expansion* exp,
+     constans character* fons,
+                    i32  mensura,
+     constans character* via_file);
 
 /* Praescandere lexemata pro typedef nominibus
  * lexemata       - Xar of Arbor2Lexema* (mutatur in loco)
@@ -122,7 +124,7 @@ lapifex_c89_fontem_parsare(
  * numerus_ext    - Numerus externarum nominum
  */
 vacuum
-lapifex_c89_typedef_praescandere(
+lapifex_c89_typedef_praescandere (
     Xar*                     lexemata,
     InternamentumChorda*     intern,
     constans character* constans* externa_nomina,
@@ -130,7 +132,7 @@ lapifex_c89_typedef_praescandere(
 
 /* Obtinere grammaticam STML expressionum (pro usu externo / probatione) */
 constans character*
-lapifex_c89_expressio_grammatica(vacuum);
+lapifex_c89_expressio_grammatica (vacuum);
 
 /* Callback reductionis (exposita pro probatione)
  * productio_index  - Index productionis
@@ -140,10 +142,10 @@ lapifex_c89_expressio_grammatica(vacuum);
  * Redde: s64 valor (Arbor2Nodus* codificatus)
  */
 s64
-lapifex_c89_expressio_reductio(
-    s32           productio_index,
+lapifex_c89_expressio_reductio (
+             s32  productio_index,
     constans s64* valori,
-    s32           numerus,
-    vacuum*       contextus);
+             s32  numerus,
+          vacuum* contextus);
 
 #endif /* LAPIFEX_C89_H */

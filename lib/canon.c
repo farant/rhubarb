@@ -98,45 +98,117 @@ nomen structura {
  * Prototypa
  * ================================================== */
 
-interior CanonGenusValoris genus_legere(constans chorda* s);
-interior b32 valor_congruit(constans chorda* v, CanonAttributum* a);
-interior vacuum _numerum_secare(constans chorda* v, b32* negativus,
-                                i32* integri_a, i32* integri_n,
-                                i32* fracti_a, i32* fracti_n);
-interior s32 _magnitudines_comparare(constans chorda* a, i32 ia,
-                                     i32 na, i32 fa, i32 nfa,
-                                     constans chorda* b, i32 ib,
-                                     i32 nb, i32 fb, i32 nfb);
-interior s32 _numeros_comparare(constans chorda* a,
+interior CanonGenusValoris
+genus_legere (
+    constans chorda* s);
+interior b32
+valor_congruit (
+    constans chorda* v,
+    CanonAttributum* a);
+interior vacuum
+_numerum_secare (
+                    constans chorda* v,
+                                b32* negativus,
+                                i32* integri_a,
+                                i32* integri_n,
+                                i32* fracti_a,
+                                i32* fracti_n);
+interior s32
+_magnitudines_comparare (
+                                     constans chorda* a,
+                                                 i32  ia,
+                                                 i32  na,
+                                                 i32  fa,
+                                                 i32  nfa,
+                                     constans chorda* b,
+                                                 i32  ib,
+                                                 i32  nb,
+                                                 i32  fb,
+                                                 i32  nfb);
+interior s32
+_numeros_comparare (
+                                constans chorda* a,
                                 constans chorda* b);
-interior b32 _intra_fines(constans chorda* v, CanonAttributum* a);
-interior b32 _super_congruit(StmlNodus* n, constans chorda* t);
-interior vacuum vitium_addere(Xar* vitia, CanonVitiumGenus genus,
-    StmlNodus* nodus, chorda* elementum, chorda* detail,
-    i32 numerus, i32 limes);
-interior CanonElementum* elementum_quaerere(Canon* c,
+interior b32
+_intra_fines (
+    constans chorda* v,
+    CanonAttributum* a);
+interior b32
+_super_congruit (
+          StmlNodus* n,
+    constans chorda* t);
+interior vacuum
+vitium_addere (
+                 Xar* vitia,
+    CanonVitiumGenus  genus,
+           StmlNodus* nodus,
+              chorda* elementum,
+              chorda* detail,
+                 i32  numerus,
+                 i32  limes);
+interior CanonElementum*
+elementum_quaerere (
+        Canon* c,
     StmlNodus* n);
-interior CanonElementum* _elementum_quaerere_vi(Canon* c,
-    StmlNodus* n, constans chorda* parens_vi);
-interior chorda clavis_scopi(Piscina* p, constans chorda* intra,
+interior CanonElementum*
+_elementum_quaerere_vi (
+              Canon* c,
+          StmlNodus* n,
+    constans chorda* parens_vi);
+interior chorda
+clavis_scopi (
+            Piscina* p,
+    constans chorda* intra,
     constans chorda* titulus);
-interior vacuum nodum_iudicare(Canon* c, StmlNodus* n, Xar* vitia,
-    Piscina* piscina, constans chorda* parens_vi);
-interior vacuum _augmenta_cusasque_colligere(Canon* c, StmlNodus* n,
-    StmlNodus* infixus, Xar* augmenta, TabulaDispersa* cusa,
-    Piscina* piscina);
-interior b32 _clavigerum_stellae(Canon* c, StmlNodus* n,
+interior vacuum
+nodum_iudicare (
+              Canon* c,
+          StmlNodus* n,
+                Xar* vitia,
+            Piscina* piscina,
+    constans chorda* parens_vi);
+interior vacuum
+_augmenta_cusasque_colligere (
+             Canon* c,
+         StmlNodus* n,
+         StmlNodus* infixus,
+               Xar* augmenta,
+    TabulaDispersa* cusa,
+           Piscina* piscina);
+interior b32
+_clavigerum_stellae (
+              Canon* c,
+          StmlNodus* n,
     constans chorda* attributum);
-interior vacuum _augmentum_iudicare(Canon* c, StmlNodus* a,
-    TabulaDispersa* cusa, Xar* vitia, Piscina* piscina);
-interior b32 album_solum(constans chorda* s);
-interior vacuum _scopos_colligere(StmlNodus* radix,
-    constans chorda* intra, StmlNodus* infixus, Xar* scopi,
-    Piscina* piscina);
-interior chorda* _suggestio(constans chorda* quaestio,
-    constans chorda* candidati, i32 numerus, Piscina* piscina);
-interior vacuum _subarborem_colligere(StmlNodus* scopus,
-    constans chorda* limes, StmlNodus* infixus, Xar* nodi);
+interior vacuum
+_augmentum_iudicare (
+             Canon* c,
+         StmlNodus* a,
+    TabulaDispersa* cusa,
+               Xar* vitia,
+           Piscina* piscina);
+interior b32
+album_solum (
+    constans chorda* s);
+interior vacuum
+_scopos_colligere (
+          StmlNodus* radix,
+    constans chorda* intra,
+          StmlNodus* infixus,
+                Xar* scopi,
+            Piscina* piscina);
+interior chorda*
+_suggestio (
+    constans chorda* quaestio,
+    constans chorda* candidati,
+                i32  numerus,
+            Piscina* piscina);
+interior vacuum
+_subarborem_colligere (
+          StmlNodus* scopus,
+    constans chorda* limes,
+          StmlNodus* infixus,
+                Xar* nodi);
 
 
 /* ==================================================

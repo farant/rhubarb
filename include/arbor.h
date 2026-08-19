@@ -8,6 +8,7 @@
 #include "arbor_syntaxis.h"
 #include "arbor_praeparator.h"
 
+
 /* ==================================================
  * ARBOR - Convenience API
  *
@@ -22,33 +23,37 @@
  *   }
  * ================================================== */
 
+
 /* ==================================================
  * Options
  * ================================================== */
 
 nomen structura {
-    ArborPPModus          pp_modus;        /* HYBRID, PROCESSARE, PRESERVARE */
-    constans character**  include_viae;    /* Array of include paths */
-    i32                   include_numerus; /* Number of include paths */
+          ArborPPModus   pp_modus;        /* HYBRID, PROCESSARE, PRESERVARE */
+    constans character** include_viae;    /* Array of include paths */
+                   i32   include_numerus; /* Number of include paths */
 } ArborOptiones;
+
 
 /* ==================================================
  * Result
  * ================================================== */
 
 nomen structura {
-    b32          successus;
-    ArborNodus*  radix;        /* AST root */
-    Xar*         errores;      /* Parse errors (Xar of ArborError) */
-    Xar*         lexemata;     /* Preprocessed tokens (for formatter) */
+           b32  successus;
+    ArborNodus* radix;        /* AST root */
+           Xar* errores;      /* Parse errors (Xar of ArborError) */
+           Xar* lexemata;     /* Preprocessed tokens (for formatter) */
 } ArborResultus;
+
 
 /* ==================================================
  * API
  * ================================================== */
 
 /* Optiones default: HYBRID modus, "include" via */
-ArborOptiones arbor_optiones_default(vacuum);
+ArborOptiones
+arbor_optiones_default (vacuum);
 
 /* Parsere filum per viam
  *
@@ -60,11 +65,11 @@ ArborOptiones arbor_optiones_default(vacuum);
  * Legit filum, lexet, praeparat, et parset.
  */
 ArborResultus
-arbor_parsere_filum(
-    constans character*   via,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    ArborOptiones*        optiones);
+arbor_parsere_filum (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+          ArborOptiones* optiones);
 
 /* Parsere fontem directe
  *
@@ -77,11 +82,11 @@ arbor_parsere_filum(
  * Lexet, praeparat, et parset ex memoria.
  */
 ArborResultus
-arbor_parsere_fontem(
-    constans character*   fons,
-    i32                   longitudo,
-    Piscina*              piscina,
-    InternamentumChorda*  intern,
-    ArborOptiones*        optiones);
+arbor_parsere_fontem (
+     constans character* fons,
+                    i32  longitudo,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+          ArborOptiones* optiones);
 
 #endif /* ARBOR_H */

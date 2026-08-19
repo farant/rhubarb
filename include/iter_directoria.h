@@ -5,6 +5,7 @@
 #include "piscina.h"
 #include "chorda.h"
 
+
 /* ==================================================
  * ITER_DIRECTORIA - Iteratio Directoriorum
  *
@@ -52,7 +53,7 @@ nomen enumeratio {
 
 /* Informatio de introitu in directorio */
 nomen structura {
-    chorda         titulus;  /* Titulus introitus (non via plena) */
+            chorda titulus;  /* Titulus introitus (non via plena) */
     IntroitusGenus genus;    /* Genus introitus */
     memoriae_index mensura;  /* Mensura fili in bytes (0 pro directoriis) */
 } DirectoriumIntroitus;
@@ -73,9 +74,9 @@ nomen structura DirectoriumIterator DirectoriumIterator;
  * Reddit: DirectoriumIterator* si successus, NIHIL si error
  */
 DirectoriumIterator*
-directorium_iterator_aperire(
+directorium_iterator_aperire (
     constans character* via,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* Obtinere proximum introitum
  *
@@ -88,7 +89,7 @@ directorium_iterator_aperire(
  *       directorium_iterator_proximum vel claudere
  */
 DirectoriumIntroitus*
-directorium_iterator_proximum(
+directorium_iterator_proximum (
     DirectoriumIterator* iterator);
 
 /* Claudere iterator
@@ -98,7 +99,7 @@ directorium_iterator_proximum(
  * NOTA: Memoria liberata cum piscina destruitur
  */
 vacuum
-directorium_iterator_claudere(
+directorium_iterator_claudere (
     DirectoriumIterator* iterator);
 
 
@@ -109,10 +110,10 @@ directorium_iterator_claudere(
 /* Configuratio filtri pro ambulatore recursivo */
 nomen structura {
     IntroitusGenus* genera_accepta;     /* Array generum acceptorum (NIHIL = omnia) */
-    i32             genera_numerus;     /* Numerus in genera_accepta */
-    chorda          exemplar;           /* Exemplar nominis (* et ? supportati, vacua = omnia) */
-    s32             profunditas_max;    /* Profunditas maxima (0 = sine limite, -1 = sine recursione) */
-    b32             includere_occultos; /* Includere fila occulta (. prefix)? */
+               i32  genera_numerus;     /* Numerus in genera_accepta */
+            chorda  exemplar;           /* Exemplar nominis (* et ? supportati, vacua = omnia) */
+               s32  profunditas_max;    /* Profunditas maxima (0 = sine limite, -1 = sine recursione) */
+               b32  includere_occultos; /* Includere fila occulta (. prefix)? */
 } DirectoriumFiltrum;
 
 /* Creare filtrum quod omnia acceptat
@@ -120,7 +121,7 @@ nomen structura {
  * Reddit: DirectoriumFiltrum cum valoribus default
  */
 DirectoriumFiltrum
-directorium_filtrum_omnia(
+directorium_filtrum_omnia (
     vacuum);
 
 
@@ -154,12 +155,12 @@ nomen s32 (*DirectoriumAmbulatorFunctio)(
  * NOTA: Callback reddit 0 ad pergendum, non-0 ad terminandum
  */
 s32
-directorium_ambulare(
-    constans character*            via,
-    constans DirectoriumFiltrum*   filtrum,
-    DirectoriumAmbulatorFunctio    functio,
-    vacuum*                        contextus,
-    Piscina*                       piscina);
+directorium_ambulare (
+             constans character* via,
+    constans DirectoriumFiltrum* filtrum,
+    DirectoriumAmbulatorFunctio  functio,
+                         vacuum* contextus,
+                        Piscina* piscina);
 
 
 /* ==================================================
@@ -173,7 +174,7 @@ directorium_ambulare(
  * Reddit: VERUM si est directorium, FALSUM alioquin
  */
 b32
-directorium_existit(
+directorium_existit (
     constans character* via);
 
 /* Verificare si titulus congruit cum exemplari
@@ -190,7 +191,7 @@ directorium_existit(
  *   "abc.txt"  congruit "*.md"      -> FALSUM
  */
 b32
-directorium_titulus_congruit(
+directorium_titulus_congruit (
     chorda titulus,
     chorda exemplar);
 

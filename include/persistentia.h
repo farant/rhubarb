@@ -9,6 +9,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * PERSISTENTIA - Event Sourcing Storage Interface
  *
@@ -84,15 +85,15 @@ nomen structura {
 
 /* Eventum - tagged union */
 nomen structura {
-    EventusGenus genus;
-    chorda*      entitas_id;
-    chorda*      entitas_genus;  /* Genus entitatis - in omnibus eventis */
+    EventusGenus  genus;
+          chorda* entitas_id;
+          chorda* entitas_genus;  /* Genus entitatis - in omnibus eventis */
 
     unio {
-        EventumCreare       creare;      /* (nunc vacua - genus in top-level) */
+              EventumCreare creare;      /* (nunc vacua - genus in top-level) */
         EventumProprietatis proprietas;
-        EventumRelationis   relatio;
-        EventumNotae        nota;
+          EventumRelationis relatio;
+               EventumNotae nota;
     } datum;
 } Eventum;
 
@@ -127,9 +128,9 @@ structura Persistentia {
     vacuum* datum;
 
     PersistentiaScribereEventum scribere_eventum;
-    PersistentiaLegereEventus   legere_eventus;
-    PersistentiaSync            sync;
-    PersistentiaClaudere        claudere;
+      PersistentiaLegereEventus legere_eventus;
+               PersistentiaSync sync;
+           PersistentiaClaudere claudere;
 };
 
 
@@ -146,7 +147,7 @@ structura Persistentia {
  * Reddit: Persistentia* vel NIHIL si error
  */
 Persistentia*
-persistentia_memoria_creare(
+persistentia_memoria_creare (
     Piscina* piscina);
 
 /* Creare persistentia cum file (nuntium/protobuf serialization)
@@ -159,8 +160,8 @@ persistentia_memoria_creare(
  * Reddit: Persistentia* vel NIHIL si error
  */
 Persistentia*
-persistentia_nuntium_creare(
-    Piscina*            piscina,
+persistentia_nuntium_creare (
+               Piscina* piscina,
     constans character* via);
 
 /* Aperire persistentia ex file existente
@@ -172,8 +173,8 @@ persistentia_nuntium_creare(
  * Reddit: Persistentia* vel NIHIL si file non existit vel error
  */
 Persistentia*
-persistentia_nuntium_aperire(
-    Piscina*            piscina,
+persistentia_nuntium_aperire (
+               Piscina* piscina,
     constans character* via);
 
 
@@ -190,67 +191,67 @@ persistentia_nuntium_aperire(
  * Reddit: Eventum* vel NIHIL
  */
 Eventum*
-eventum_creare_entitas(
+eventum_creare_entitas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus);
+     chorda* entitas_id,
+     chorda* entitas_genus);
 
 /* Creare eventum pro delere entitas */
 Eventum*
-eventum_delere_entitas(
+eventum_delere_entitas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus);
+     chorda* entitas_id,
+     chorda* entitas_genus);
 
 /* Creare eventum pro ponere proprietas */
 Eventum*
-eventum_ponere_proprietas(
+eventum_ponere_proprietas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  clavis,
-    chorda*  valor);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* clavis,
+     chorda* valor);
 
 /* Creare eventum pro delere proprietas */
 Eventum*
-eventum_delere_proprietas(
+eventum_delere_proprietas (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  clavis);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* clavis);
 
 /* Creare eventum pro addere relatio */
 Eventum*
-eventum_addere_relatio(
+eventum_addere_relatio (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  relatio_id,
-    chorda*  relatio_genus,
-    chorda*  destinatio_id);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* relatio_id,
+     chorda* relatio_genus,
+     chorda* destinatio_id);
 
 /* Creare eventum pro delere relatio */
 Eventum*
-eventum_delere_relatio(
+eventum_delere_relatio (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  relatio_id);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* relatio_id);
 
 /* Creare eventum pro addere nota */
 Eventum*
-eventum_addere_nota(
+eventum_addere_nota (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  nota);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* nota);
 
 /* Creare eventum pro delere nota */
 Eventum*
-eventum_delere_nota(
+eventum_delere_nota (
     Piscina* piscina,
-    chorda*  entitas_id,
-    chorda*  entitas_genus,
-    chorda*  nota);
+     chorda* entitas_id,
+     chorda* entitas_genus,
+     chorda* nota);
 
 #endif /* PERSISTENTIA_H */
