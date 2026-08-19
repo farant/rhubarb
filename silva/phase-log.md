@@ -12781,3 +12781,19 @@ per formator_latinam_praebere - iam redundans, retiratio proxima).
 Ostia: cache praeonerationis per oraculum longaevum (mensor
 dictet); typi systematis in lexica systema (size_t/FILE - nunc
 quod contentum lexici fluit, sanatio gratis fit).
+
+## 2026-08-19 — ambigua: census classificationis (gradus II) natus
+
+Instrumentum novum ./silva/ambigua.sh: ambiguitas RETENTA per
+plagulam sub contextu scientiae maximae (systema_c89 + systema_posix
++ latina - residuum = quod lexicon sanare nequit), propria/aliena
+per extensionem attributa, -loca positiones, -pinna porta regressus
+(vitium plantatum: exit I probatum). Fundamentum pinnatum: 226 trans
+311 plagulas (lib+include). Classes sanatae in via: functiones
+systematis 'liberare(x);' T(x)-furca (systema_c89 externa) et posix
+(setsockopt...) - piscina 5->0, processus_posix 23->0. CLASSIS
+DOMINANS residua (146): '(nomen) * x' in corporibus macrorum
+(conversio-an-multiplicatio, nomina LOCALIA oraculo ignota -
+registratio localium = ostium silvae nominatum). Praeoneratio
+lexicorum (94899b2) has sanationes gratis dedit - censu nunc
+mensuratas.

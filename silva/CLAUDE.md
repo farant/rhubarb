@@ -112,7 +112,13 @@ Pins = EXPECTED-red files with a named cause per row, format
 via<TAB>causa, in fixa/examinis/exclusiones.txt - NOT lexicon
 gaps: those get healed via systema_posix.h sectiones, auspex_posix
 gate). Differential bar: ./silva/examen_vectis.sh [-corpus]
-(oracle leak sweep + pinned invalid corpus + pin diff). Officina-side sibling:
+(oracle leak sweep + pinned invalid corpus + pin diff).
+Classification bar: ./silva/ambigua.sh <viae> [-machina] [-loca]
+[-pinna silva/probationes/fixa/ambiguorum/pinna.tsv] — retained-
+AMBIGUUS census under the max-knowledge lexicon context (baseline
+226 pinned 2026-08-19; dominant residual = `(name) * x` inside
+macro bodies, local names unknown to the oracle; above-pin =
+REGRESSUS, exit 1). Officina-side sibling:
 ./officina/interpretare.sh (run a corpus function in machinula).
 Conventions: root CLAUDE.md + the conventions recorded in phase-log
 complexities (i32 is UNSIGNED — s32/s64 for anything signed; never
