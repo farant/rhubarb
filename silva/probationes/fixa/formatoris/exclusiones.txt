@@ -1,0 +1,25 @@
+# exclusiones formatoris - plagulae a lint formae exemptae
+# (forma: via<TAB>causa, viae radici-relativae sine './').
+# Exemplar examinis: quaeque linea causa NOMINATA - decisio
+# recordata, non lista quae tacite senescit. Exemptio SEMPER
+# clamatur (stderr "exempta ..."), numquam tacita.
+lib/biblia_dr.c	datum non codex: scriptura sacra ut litterae C (32678 divergentiarum censum obruebat)
+lib/arbor_formator.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor_index.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor_lexema.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor_praeparator.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor_syntaxis.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor_typus.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_conditio_evaluare.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_expandere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_glr.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_glr_tabula.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_lapifex_adaptator.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_lexema.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_scribere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/arbor2_token.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/lapifex_c89_grammatica.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/lapifex_generare.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/lapifex_glr.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/lapifex_lexere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
+lib/lapifex_parsere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)

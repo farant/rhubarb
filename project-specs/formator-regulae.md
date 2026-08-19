@@ -260,3 +260,17 @@ tranche (tree-riding rules) next. Probatio 33/33; negatives pin
 the genus semantics (tabs in string literals and `=`-runs in
 strings are immune by construction). First light on piscina.c: 45
 divergences, superset of the hand archaeology, zero false fires.
+
+EXCLUSIONES (decretae 2026-08-19): pins file
+`silva/probationes/fixa/formatoris/exclusiones.txt`, format
+`via<TAB>causa` (the examen-pins pattern — every row carries a
+named cause). Exemption is NEVER silent: the CLI announces
+`formator: exempta <via> (<causa>)` on stderr. Exempted at birth:
+lib/biblia_dr.c (data, not code) + the three frozen predecessor
+generations (arbor ×6, arbor2 ×8, lapifex ×5 — deleted after
+parity harvest per silva culture). R16 stays 72: raising to 80
+would cut fires 60% (6356→2556 measured), but the count is not
+the target — the norm is, and recent practice sits under 72.
+Census baseline with exclusions live: 14286 divergences in 244 of
+291 judged files (tabs 7772 / long 5225 / banners 1237 / trailing
+51 / keyword-spacing 1).

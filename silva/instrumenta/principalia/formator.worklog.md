@@ -57,3 +57,21 @@ R13 need the tree; selector engine silva_quaestio may carry several
 — "definitio-functionis" one selector each). R15 include-order =
 lint-forever candidate. Census over lib/ + include/ = the G1
 acceptance payoff.
+
+## 2026-08-19 — exclusiones + R16 confirmed at 72
+
+Pins file silva/probationes/fixa/formatoris/exclusiones.txt
+(examen-pins pattern, via<TAB>causa, named cause per row; leading
+"./" on input viae normalized away). Exemption always announced on
+stderr — silent gate ≡ dead gate. Born with 20 rows: biblia_dr.c
+(data) + arbor/arbor2/lapifex frozen generations (Fran 2026-08-19).
+Threshold experiment from census data (no re-run needed — inventum
+column carries actual lengths): >72 = 6356, >79 = 2854, >80 = 2556.
+60% reduction available at 80, but kept 72: the norm is the target,
+not the count, and tranche-2 structural fixes (params one-per-line)
+will shrink old long lines anyway. Census with exclusions live:
+14286 in 244/291 files (tabs 7772 / long 5225 / banners 1237 /
+trailing 51 / keyword 1). Hook note: mid-edit examen flagged
+"variabilis inutilis" on the exclusiones declaration — intermediate
+state between the declaration edit and the use edits; rebuild under
+-Werror (unused = error) is the authority and passed.

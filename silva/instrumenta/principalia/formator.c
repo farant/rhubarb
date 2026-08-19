@@ -21,12 +21,71 @@
 #include <stdio.h>
 #include <string.h>
 
+#define EXCLUSIONES_VIA \
+    "silva/probationes/fixa/formatoris/exclusiones.txt"
+
+/* exclusiones: via<TAB>causa (radici-relativae); '#' et lineae
+ * vacuae omissae. Exemptio numquam tacita - vocator clamat. */
+interior b32
+_exempta (
+              chorda  exclusiones,
+    constans character* via,
+              chorda* causa_exitus)
+{
+    i8* datum;
+    i32 n;
+    i32 i;
+    i32 via_mensura;
+
+    dum (via[ZEPHYRUM] == '.' && via[I] == '/') via += II;
+    via_mensura = (i32)strlen(via);
+
+    datum = exclusiones.datum;
+    n     = exclusiones.mensura;
+    i     = ZEPHYRUM;
+
+    dum (i < n)
+    {
+        i32 initium;
+        i32 finis_lineae;
+        i32 positus_tab;
+
+        initium = i;
+        dum (i < n && datum[i] != '\n') i += I;
+        finis_lineae = i;
+        i += I;
+
+        si (finis_lineae == initium) perge;
+        si (datum[initium] == '#') perge;
+
+        positus_tab = initium;
+        dum (positus_tab < finis_lineae
+            && datum[positus_tab] != '\t')
+        {
+            positus_tab += I;
+        }
+        si (positus_tab == finis_lineae) perge;
+
+        si (positus_tab - initium == via_mensura
+            && memcmp(datum + initium, via,
+                (memoriae_index)via_mensura) == ZEPHYRUM)
+        {
+            causa_exitus->datum   = datum + positus_tab + I;
+            causa_exitus->mensura = finis_lineae - positus_tab
+                - I;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 integer
 principale (
      integer  numerus,
     character** argumenta)
 {
     Piscina* piscina;
+      chorda  exclusiones;
          b32  machina;
          b32  ulla_plagula;
          i32  summa;
@@ -51,6 +110,14 @@ principale (
         redde II;
     }
 
+    exclusiones.mensura = ZEPHYRUM;
+    exclusiones.datum   = NIHIL;
+    si (filum_existit(EXCLUSIONES_VIA))
+    {
+        exclusiones = filum_legere_totum(EXCLUSIONES_VIA,
+            piscina);
+    }
+
     si (machina)
     {
         imprimere("# via\tlinea\tcolumna\tregula\tinventum\t"
@@ -67,6 +134,20 @@ principale (
 
         via = argumenta[i];
         si (via[ZEPHYRUM] == '-') perge;
+
+        si (exclusiones.mensura != (i32)ZEPHYRUM)
+        {
+            chorda causa;
+
+            si (_exempta(exclusiones, via, &causa))
+            {
+                fprintf(stderr, "formator: exempta %s (%.*s)\n",
+                    via, (integer)causa.mensura,
+                    (constans character*)causa.datum);
+                ulla_plagula = VERUM;
+                perge;
+            }
+        }
 
         si (!filum_existit(via))
         {
