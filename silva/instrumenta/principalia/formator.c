@@ -62,15 +62,10 @@ _capita_praebere (
         sprintf(via_plena, "%s/%s", directorium, titulus);
         textus = filum_legere_totum(via_plena, piscina);
         si (textus.mensura == (i32)ZEPHYRUM) perge;
-        si (strcmp(titulus, "latina.h") == ZEPHYRUM)
-        {
-            /* custos neutralizatus - typi lexici oraculo
-             * visibiles fiunt (vide silva_formator.h) */
-            formator_latinam_praebere(contextus, piscina,
-                (constans character*)textus.datum,
-                textus.mensura);
-            perge;
-        }
+        /* latina.h praebetur ut ceterae: sub inclusione custos
+         * LATINA_H (a lexico definitus) corpus supprimit - recte;
+         * typi eius ex LEXICO praeonerantur (94899b2), involucro
+         * custodis-vacuati retirato */
         silva_contextus_praebere(contextus, titulus,
             (constans character*)textus.datum, textus.mensura);
     }

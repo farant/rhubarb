@@ -1381,32 +1381,28 @@ s32 principale (vacuum)
         CREDO_FALSUM(s.mutatum);
     }
 
-    imprimere("\n--- Probans latinam sine custode ---\n");
+    imprimere("\n--- Probans typum lexici (radix sanata) ---\n");
     {
-        /* DIFFERENTIALIS: lexicon custodem LATINA_H definit,
-         * ergo corpus latina.h praebiti sub inclusione
-         * supprimitur et typi eius oraculo invisibiles manent
-         * ('typus * x;' ambiguum, R7 caecum). Custode
-         * neutralizato typus registratur et stella prava
-         * FLAGRAT. */
+        /* Olim DIFFERENTIALIS custodis: formator_latinam_praebere
+         * custodem LATINA_H vacuabat ut typi plagulae praebitae
+         * registrarentur (involucrum). Radix sanata (94899b2):
+         * typedefs LEXICI IPSIUS oraculo praeonerantur -
+         * involucrum retiratum. Typus per lexicon planum visibilis:
+         * stella prava + titulus pravus flagrant (ante sanationem:
+         * ZEPHYRUM ordines, regio ambigua R7 caeca). */
         SilvaContextus* ctx;
-        constans character* caput;
         constans character* fons;
         Xar* d;
 
-        caput =
-            "#ifndef LATINA_H\n"
-            "#define LATINA_H\n"
-            "nomen signatus character i8_probandum;\n"
-            "#endif\n";
         ctx = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL(ctx);
         CREDO_VERUM(silva_contextus_latinam_addere(ctx));
-        CREDO_VERUM(formator_latinam_praebere(ctx, piscina,
-            caput, (i32)strlen(caput)));
+        CREDO_VERUM(silva_contextus_lexicon_addere(ctx,
+            "probandum.h",
+            "typedef signed char i8_probandum;\n",
+            (i32)strlen("typedef signed char i8_probandum;\n")));
 
         fons =
-            "#include \"latina.h\"\n"
             "vacuum\n"
             "probare (vacuum)\n"
             "{\n"
@@ -1415,8 +1411,6 @@ s32 principale (vacuum)
         d = formator_lint(piscina, ctx, fons,
             (i32)strlen(fons));
 
-        /* stella prava + titulus pravus - ambo flagrant (sine
-         * custode neutralizato: ZEPHYRUM, regio ambigua) */
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
         CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
             "columnae-binae") == ZEPHYRUM);

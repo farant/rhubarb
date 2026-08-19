@@ -768,3 +768,16 @@ Also confirmed: the lexicon preload produced ZERO new divergences on
 the formatted corpus — the rollout had already run with types visible
 via formator_latinam_praebere, which the root fix now makes redundant
 (retirement is the follow-up).
+
+## 2026-08-19 — formator_latinam_praebere RETIRED (the bandage comes off)
+
+With lexicon typedefs preloaded by silva itself (94899b2), the
+guard-blanking praebere existed only to do worse what the root fix
+does everywhere: ~70 lines of machinery (_lineam_vacuare,
+_linea_congruit, the guard scanner) deleted; the CLI praebet
+latina.h like any other header (its body correctly guard-suppressed
+under #include — types come from the lexicon). The "latina sine
+custode" differential test became "typus lexici (radix sanata)":
+a plain-C typedef added via silva_contextus_lexicon_addere, same
+two columnae-binae assertions. Gates: probatio 210/210, silva
+41/41, corpus census 6,491 byte-identical.

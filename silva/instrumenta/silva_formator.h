@@ -88,18 +88,4 @@ formator_scribere (
     constans character* fons,
                    i32  mensura);
 
-/* latina.h praebere custode neutralizato. Lexicon custodem iam
- * definit (directivae solae ex lexico fluunt - typedefs
- * abiciuntur), ergo corpus plagulae verae sub inclusione numquam
- * parsatur et typi lexici oraculo INVISIBILES manent - unde
- * 'i8 * x;' et '(i32)-I' ambigua. Lineae custodis vacuantur (non
- * deletae - positiones provenientiaeque servantur); typedefs tunc
- * fluunt et oraculum eos registrat. */
-b32
-formator_latinam_praebere (
-       SilvaContextus* contextus,
-              Piscina* piscina,
-    constans character* textus,
-                   i32  mensura);
-
 #endif /* SILVA_FORMATOR_H */
