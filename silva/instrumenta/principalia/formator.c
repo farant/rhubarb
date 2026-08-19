@@ -1,14 +1,19 @@
-/* formator.c - lint formae domus (G1)
+/* formator.c - lint et scriptura formae domus (G1 + G2)
  *
  * Usus:
- *   formator <via.c> [viae ...] [-machina]
+ *   formator <via.c> [viae ...] [-machina] [-scribere]
+ *
+ * -scribere: emendationes fixabiles applicat et plagulam IN SITU
+ * superscribit (portae in machina: series lexematum, custodia
+ * spatialis, punctum fixum). Ordines divergentiarum tunc super
+ * FRUCTUM referunt (residuae = gradus LINT + non-fixabiles).
  *
  * Regulae: project-specs/formator-regulae.md. Machina in
  * instrumenta/silva_formator.{h,c} (probabilis, silici
  * portabilis) - hic modi et CLI soli, exemplar differre.
  *
- * Exitus: 0 conformis | 1 divergentiae | 2 usus aut plagula
- * illegibilis
+ * Exitus: 0 conformis | 1 divergentiae (residuae) | 2 usus,
+ * plagula illegibilis, aut scriptura recusata
  */
 
 #include "latina.h"
@@ -121,6 +126,43 @@ _exempta (
     redde FALSUM;
 }
 
+/* ordines divergentiarum imprimere; reddit numerum */
+interior i32
+_divergentias_imprimere (
+    constans character* via,
+                   Xar* divergentiae,
+                   b32  machina)
+{
+    i32 n;
+    i32 j;
+
+    n = divergentiae ? xar_numerus(divergentiae)
+        : (i32)ZEPHYRUM;
+    per (j = ZEPHYRUM; j < n; j += I)
+    {
+        FormatorDivergentia* d;
+
+        d = (FormatorDivergentia*)xar_obtinere(divergentiae, j);
+        si (machina)
+        {
+            imprimere("%s\t%u\t%u\t%s\t%d\t%d\t%s\n", via,
+                (insignatus integer)d->linea,
+                (insignatus integer)d->columna, d->regula,
+                (integer)d->inventum,
+                (integer)d->exspectatum, d->nuntius);
+        }
+        alioquin
+        {
+            imprimere("%s:%u:%u\t%s\t%s (%d pro %d)\n",
+                via, (insignatus integer)d->linea,
+                (insignatus integer)d->columna, d->regula,
+                d->nuntius, (integer)d->inventum,
+                (integer)d->exspectatum);
+        }
+    }
+    redde n;
+}
+
 integer
 principale (
      integer  numerus,
@@ -130,11 +172,15 @@ principale (
     SilvaContextus* contextus;
     chorda          exclusiones;
     b32             machina;
+    b32             scriptura;
+    b32             recusatio;
     b32             ulla_plagula;
     i32             summa;
     integer         i;
 
     machina      = FALSUM;
+    scriptura    = FALSUM;
+    recusatio    = FALSUM;
     ulla_plagula = FALSUM;
     summa        = ZEPHYRUM;
 
@@ -143,6 +189,10 @@ principale (
         si (strcmp(argumenta[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
+        }
+        si (strcmp(argumenta[i], "-scribere") == ZEPHYRUM)
+        {
+            scriptura = VERUM;
         }
     }
 
@@ -181,9 +231,6 @@ principale (
     {
         constans character* via;
                     chorda  textus;
-                       Xar* divergentiae;
-                       i32  n;
-                       i32  j;
 
         via = argumenta[i];
         si (via[ZEPHYRUM] == '-') perge;
@@ -210,43 +257,69 @@ principale (
             redde II;
         }
         textus = filum_legere_totum(via, piscina);
-        divergentiae = formator_lint(piscina, contextus,
-            (constans character*)textus.datum, textus.mensura);
         ulla_plagula = VERUM;
 
-        n = divergentiae ? xar_numerus(divergentiae)
-            : (i32)ZEPHYRUM;
-        summa += n;
-
-        per (j = ZEPHYRUM; j < n; j += I)
+        si (scriptura)
         {
-            FormatorDivergentia* d;
+            Piscina*         opus;
+            FormatorScriptum s;
 
-            d = (FormatorDivergentia*)xar_obtinere(
-                divergentiae, j);
-            si (machina)
+            opus = piscina_generare_dynamicum("formator-opus",
+                67108864);
+            si (!opus)
             {
-                imprimere("%s\t%u\t%u\t%s\t%d\t%d\t%s\n", via,
-                    (insignatus integer)d->linea,
-                    (insignatus integer)d->columna, d->regula,
-                    (integer)d->inventum,
-                    (integer)d->exspectatum, d->nuntius);
+                fprintf(stderr, "formator: piscina fracta\n");
+                piscina_destruere(piscina);
+                redde II;
             }
-            alioquin
+            s = formator_scribere(opus, contextus,
+                (constans character*)textus.datum,
+                textus.mensura);
+            si (!s.successus)
             {
-                imprimere("%s:%u:%u\t%s\t%s (%d pro %d)\n",
-                    via, (insignatus integer)d->linea,
-                    (insignatus integer)d->columna, d->regula,
-                    d->nuntius, (integer)d->inventum,
-                    (integer)d->exspectatum);
+                fprintf(stderr,
+                    "formator: recusatum %s (%s)\n", via,
+                    s.querela);
+                recusatio = VERUM;
+                piscina_destruere(opus);
+                perge;
             }
+            si (s.mutatum)
+            {
+                si (!filum_scribere(via, s.textus))
+                {
+                    fprintf(stderr,
+                        "formator: scriptura fracta %s\n",
+                        via);
+                    recusatio = VERUM;
+                    piscina_destruere(opus);
+                    perge;
+                }
+                fprintf(stderr,
+                    "formator: scriptum %s (%u emendationes,"
+                    " %u iterationes)\n", via,
+                    (insignatus integer)s.applicatae,
+                    (insignatus integer)s.iterationes);
+            }
+            summa += _divergentias_imprimere(via,
+                formator_lint(opus, contextus,
+                    (constans character*)s.textus.datum,
+                    s.textus.mensura), machina);
+            piscina_destruere(opus);
+        }
+        alioquin
+        {
+            summa += _divergentias_imprimere(via,
+                formator_lint(piscina, contextus,
+                    (constans character*)textus.datum,
+                    textus.mensura), machina);
         }
     }
 
     si (!ulla_plagula)
     {
-        fprintf(stderr,
-            "usus: formator <via.c> [viae ...] [-machina]\n");
+        fprintf(stderr, "usus: formator <via.c> [viae ...]"
+            " [-machina] [-scribere]\n");
         piscina_destruere(piscina);
         redde II;
     }
@@ -265,5 +338,6 @@ principale (
     }
 
     piscina_destruere(piscina);
+    si (recusatio) redde II;
     redde summa != (i32)ZEPHYRUM ? I : ZEPHYRUM;
 }

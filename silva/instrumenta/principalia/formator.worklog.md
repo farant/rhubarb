@@ -204,3 +204,76 @@ Census FINAL LINT: 42555 — operatores 4466, continuatio 3341,
 intervalla 940, ordo-inclusionum SEVEN (imago.c = vendored stb,
 selectio.c, capsula_caudae.h). 16/16 rules live. Next: G2
 -scribere.
+
+## 2026-08-19 — G2a: the emendatio engine (-scribere) + stream fixes
+
+THE ARCHITECTURAL DECISION: detectors ARE the fixers. Each detector
+that fires records the whitespace edit curing it (`_addere` then
+`_emendare`: up to 2 spans in ORIGINAL coordinates + insert text,
+FormatorEmendatio[II] on the divergence). One analysis pass = report
+AND fix; the two modes physically cannot drift. Rejected
+alternative: a separate fix engine keyed off (regula, nuntius)
+strings — stringly, and drift-prone. Tree-transform machinery (the
+VISIO's clone/mutate/emit) stays the G3+ road for banner rewriting;
+for whitespace-only v1, byte splicing with a whitespace-invariant
+applier is strictly safer.
+
+The applier is dumb and paranoid BY DESIGN (Contractus enforced at
+the lowest layer):
+- deletes only bytes in {space, tab, CR, NL}; violation = the whole
+  file REFUSED loudly ("vitium detectoris") — never partial-applied
+- inserts only spaces/newlines
+- newline-bearing edits touching a preprocessor line are dropped
+  (directive guard: '#' lines + backslash-continuations; splitting
+  a #define would change semantics). Untested path in G2a (no
+  stream rule can reach it) — G2b OBLIGATION: probatio case via
+  R3/R4 on a statement-shaped macro body.
+- overlapping spans: sorted descending (offset_a, offset_b), first
+  accepted wins, rest dropped — the NEXT ITERATION regenerates them
+  against fresh geometry. This is the composition mechanism: rules
+  compose through the fixpoint loop, not through inter-rule
+  choreography (R8 splits params; next round R7 aligns them).
+- descending application = every span's original coordinates stay
+  valid simultaneously; no reindexing.
+
+formator_scribere: work on a piscina copy (fons untouched), loop
+lint→flatten→apply to fixpoint (ITERATIONES_MAXIMAE 12), token-
+series gate vs the ORIGINAL every round (non-whitespace tokens
+compared by genus+valor — COMMENTS INCLUDED, so comment bytes are
+gate-checked too). Refusals return the untouched original with a
+named querela. applicatae==0 with pending edits (all directive-
+dropped) = honest convergence: residuals stay reported by lint.
+
+DECREE (Fran-visible default): tabula = IV spatia.
+
+Wired in G2a (stream tier): R5, R12 ×3, R6 ×2, R10-comma ×2,
+R13-collapse. The collapse edit spans from the 4th newline token of
+the run to the last (keeps 2 blanks); interleaved trailing spaces
+on blank lines are separate R12 edits — overlap-drop + iteration
+handles the collision (verified in the EOF case where R13-collapse
+and R12-final-blanks overlap: one applies, the other converges next
+round).
+
+First light, real files (scratch copies): chorda.c (the tab
+monster) + piscina.c fixed in ONE pass each; re-run = no-op
+(idempotence on real files); differre = 8 + 7 MUTATA all
+[cosmetica] — THE DOGFOOD GATE PASSES ON REAL FILES; examen ACCIPE
+both. 3 tab-lines survive in chorda.c = comment-INTERIOR bytes
+(inside the COMMENTUM token) — lint never flagged them, fix never
+touches them; lint↔fix agree on the Contractus boundary. Probatio
+117/117 (portae section: differre-cosmetica assert via
+silva_differre_classificare_textus — the differre MACHINE is
+C-callable from the probatio, no shelling out; fidelitas
+lexare→emittere byte-exact; idempotence). Suite 40/40.
+
+Gotchas hit: credo has no credo_piscina() (pass piscina to
+helpers); unsigned-subtract-then-compare flagged by examen in the
+directive-continuation scan (restructured to compare-first);
+qsort needs stdlib.h.
+
+Doors: G2b = tree-tier emendationes (R1/R2/R3/R4/R8 + R13-inter +
+banner spacing) + the directive-guard probatio case; G2c =
+alignment emendationes (R7/R9/R10-tree/R11 incl. the two-span
+operator-move fix). Corpus rollout AFTER G2c, supervised: run
+-scribere over lib/+include/+silva/ with differre + examen + full
+suite as the acceptance stack, library by library.

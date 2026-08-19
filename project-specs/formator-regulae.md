@@ -269,6 +269,41 @@ the genus semantics (tabs in string literals and `=`-runs in
 strings are immune by construction). First light on piscina.c: 45
 divergences, superset of the hand archaeology, zero false fires.
 
+## Status G2a (2026-08-19) — the emendatio engine + stream fixes
+
+`-scribere` is live. Architecture: **the detectors are the fixers** —
+each lint detector, when it fires, also records the machine-readable
+edit that cures it (up to two whitespace spans in ORIGINAL
+coordinates + insert text, via `_addere` then `_emendare`). One
+analysis pass produces both report and fix; the modes cannot drift.
+The applier is deliberately dumb and paranoid: it may only delete
+whitespace bytes, only insert spaces/newlines, refuses newline edits
+touching preprocessor lines (directive guard incl. `\`-continuations),
+drops overlapping spans, and applies descending by offset so all
+original coordinates stay valid. `formator_scribere` loops lint→apply
+to a fixpoint (max 12): **rules compose through iteration, not
+choreography** — G2b's R8 will split params, the next round's R7
+aligns them. Gates in the machine: token-series identity vs the
+ORIGINAL every round (comments included — bytes must match), fixpoint
+required, refusal returns the untouched original with a named
+querela. External gates in the probatio: differre classifies fix as
+`cosmetica` (the dogfood assert), lexare→emittere roundtrips the
+output byte-exact, idempotence.
+
+DECREE G2a: **tabula = IV spatia** (pure-tab indent in the corpus is
+one level per tab). Comment-INTERIOR tabs survive (inside COMMENTUM
+bytes — Contractus), same class as comment-interior trailing space;
+G3's banner decision owns them.
+
+Wired so far (stream tier): R5 tabs, R12 (trailing + final-newline +
+trailing-blank-lines), R6, R10-comma, R13-collapse (3+ blanks → 2).
+Real-file first light: chorda.c + piscina.c fixed in one pass,
+differre = 8 + 7 MUTATA ALL `[cosmetica]`, examen ACCIPE both,
+second `-scribere` run a no-op (idempotence on real files). Probatio
+117/117; suite 40/40. Unwired fixes (still lint-only): R13 banner
+spacing/inter-functions, R1/R2/R3/R4/R8 (G2b), R7/R9/R10-tree/R11
+(G2c).
+
 EXCLUSIONES (decretae 2026-08-19): pins file
 `silva/probationes/fixa/formatoris/exclusiones.txt`, format
 `via<TAB>causa` (the examen-pins pattern — every row carries a

@@ -10,6 +10,8 @@
 #include "chorda.h"
 #include "xar.h"
 #include "silva_formator.h"
+#include "silva_differre.h"
+#include "silva_lexema.h"
 #include "credo.h"
 
 #include <stdio.h>
@@ -22,6 +24,25 @@ _lint (
 {
     redde formator_lint(piscina, NIHIL, fons,
         (i32)strlen(fons));
+}
+
+interior FormatorScriptum
+_scribere (
+              Piscina* piscina,
+    constans character* fons)
+{
+    redde formator_scribere(piscina, NIHIL, fons,
+        (i32)strlen(fons));
+}
+
+interior b32
+_textus_aequalis (
+               Piscina* piscina,
+                chorda  textus,
+    constans character* literae)
+{
+    redde chorda_aequalis(textus,
+        chorda_ex_literis(literae, piscina));
 }
 
 interior FormatorDivergentia*
@@ -599,6 +620,160 @@ s32 principale (vacuum)
             "}\n");
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+
+    imprimere("\n--- Probans scribere: conformis intactus ---\n");
+    {
+        constans character* fons =
+            "interior i32\n"
+            "_adiuvare (\n"
+            "    i32 valor)\n"
+            "{\n"
+            "    si (valor > I) redde valor;\n"
+            "    redde ZEPHYRUM;\n"
+            "}\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)1);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus, fons));
+    }
+
+    imprimere("\n--- Probans scribere: tabulae -> IV spatia ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "\tredde;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: caudae et finis ---\n");
+    {
+        /* spatia caudae + linea nova finalis deest */
+        FormatorScriptum s = _scribere(piscina,
+            "i32 a; \ni32 b;");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "i32 a;\ni32 b;\n"));
+    }
+    {
+        /* lineae vacuae in fine -> una nova */
+        FormatorScriptum s = _scribere(piscina,
+            "i32 a;\n\n\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "i32 a;\n"));
+    }
+
+    imprimere("\n--- Probans scribere: virgula ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    f(a ,b);\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    f(a, b);\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans scribere: intervalla collapsa ---\n");
+    {
+        FormatorScriptum s = _scribere(piscina,
+            "i32 a;\n"
+            "\n"
+            "\n"
+            "\n"
+            "i32 b;\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "i32 a;\n"
+            "\n"
+            "\n"
+            "i32 b;\n"));
+    }
+
+    imprimere("\n--- Probans scribere: portae (differre/fidelitas/"
+        "idempotentia) ---\n");
+    {
+        /* violationes multae in functione una: tabula + R6 +
+         * caudae + virgula - una iteratione sanatae, altera
+         * conformitas confirmata */
+        constans character* fons =
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "\tsi(I) redde;   \n"
+            "    f(a ,b);\n"
+            "}\n";
+        constans character* exspectatum =
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    si (I) redde;\n"
+            "    f(a, b);\n"
+            "}\n";
+        FormatorScriptum s = _scribere(piscina, fons);
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_AEQUALIS_I32(s.iterationes, (i32)2);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            exspectatum));
+
+        /* PORTA DIFFERRE (canis cibus): classificatio =
+         * cosmetica sola */
+        CREDO_VERUM(strcmp(silva_differre_classificare_textus(
+            piscina, chorda_ex_literis(fons, piscina),
+            s.textus), "cosmetica") == ZEPHYRUM);
+
+        /* PORTA FIDELITATIS: lexare(fructus) emissum ==
+         * fructus, octetim */
+        {
+            Xar* lexemata;
+
+            lexemata = silva_lexare(piscina,
+                (constans character*)s.textus.datum,
+                s.textus.mensura, ZEPHYRUM);
+            CREDO_NON_NIHIL(lexemata);
+            CREDO_VERUM(chorda_aequalis(
+                silva_lexemata_emittere(piscina, lexemata),
+                s.textus));
+        }
+
+        /* PORTA IDEMPOTENTIAE: scribere(fructus) intactus */
+        {
+            FormatorScriptum s2;
+
+            s2 = formator_scribere(piscina, NIHIL,
+                (constans character*)s.textus.datum,
+                s.textus.mensura);
+            CREDO_VERUM(s2.successus);
+            CREDO_FALSUM(s2.mutatum);
+            CREDO_VERUM(chorda_aequalis(s2.textus, s.textus));
+        }
     }
 
     imprimere("\n");

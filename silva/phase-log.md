@@ -12612,3 +12612,19 @@ R11 exemptae; vexilla inter functiones per regionem (non vista)
 quaesita. piscina 71 immutata (zero e novis); probatio 91/91,
 suite 40/40. Census lint finalis: 42555 (operatores 4466 /
 continuatio 3341 / ordo-inclusionum VII). Sequens: G2 -scribere.
+
+## 2026-08-19 — formator G2a: machina emendationum (-scribere)
+
+Detectores IPSI fixatores: quisque flagrans editionem sanantem
+registrat (spans spatiales in coordinatis ORIGINALIBUS). Applicator
+caecus et suspiciosus: octetos spatiales solum delet, spatia/novas
+solum inserit, lineas directivarum '\n' numquam tangit, imbricatas
+dilatat; formator_scribere ad punctum fixum iterat (regulae per
+iterationem componuntur). Porta serierum contra ORIGINALEM quaque
+iteratione (commenta inclusa). Decretum: tabula = IV spatia. Flumen
+consutum: R5/R12/R6/R10-virgula/R13-collapsus. Lux prima in
+plagulis veris: chorda.c + piscina.c uno cursu sanatae, differre =
+15 MUTATA omnes [cosmetica] (CANIS CIBUS TRANSIT), examen ACCIPE,
+cursus alter nihil agit (idempotentia). Probatio 117/117, suite
+40/40. Sequens: G2b arboris (R1-R4/R8 + custodia directivarum
+probanda), G2c ordinationis (R7/R9/R11).

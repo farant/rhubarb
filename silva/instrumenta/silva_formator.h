@@ -19,6 +19,19 @@
 #include "xar.h"
 #include "silva_contextus.h"
 
+/* G2: emendatio - editio spatiorum ut spatium [a, b) in textu
+ * ORIGINALI (coordinatae 1-basatae; finis exclusivus) cum textu
+ * inserendo. Applicator solus octetos spatiales delere et spatia/
+ * lineas novas inserere potest - custodia contractus in strato
+ * infimo (commenta et lexemata physice intacta manent). */
+nomen structura {
+    i32    linea_a;
+    i32    columna_a;
+    i32    linea_b;
+    i32    columna_b;
+    chorda insertum;
+} FormatorEmendatio;
+
 nomen structura {
     constans character* regula;      /* nomen stabile regulae */
     constans character* nuntius;     /* descriptio brevis */
@@ -26,6 +39,8 @@ nomen structura {
                    i32  columna;     /* 1-basata */
                    s32  inventum;    /* valor inventus */
                    s32  exspectatum; /* valor exspectatus */
+                   i32  numerus_emendationum; /* 0 = non fixabilis */
+      FormatorEmendatio  emendationes[II];
 } FormatorDivergentia;
 
 /* Lint super fontem unum: Xar de FormatorDivergentia (vacuum =
@@ -39,6 +54,29 @@ nomen structura {
  * solum pertinent (contentum capitum numquam flagratur). */
 Xar*
 formator_lint (
+              Piscina* piscina,
+       SilvaContextus* contextus,
+    constans character* fons,
+                   i32  mensura);
+
+/* G2 -scribere: emendationes lint ad punctum fixum applicare.
+ * Successus = textus formatus (copia in piscina; fons intactus);
+ * recusatio (querela nominata, textus = copia originalis) si
+ * series lexematum mutaretur aut punctum fixum intra XII
+ * iterationes non attingitur. Divergentiae sine emendatione
+ * (gradus LINT, non-fixabiles) honeste supersunt - lint super
+ * fructum eas adhuc nominat. */
+nomen structura {
+                 chorda  textus;
+                    b32  successus;
+                    b32  mutatum;
+                    i32  iterationes;
+                    i32  applicatae;   /* emendationes summa */
+    constans character*  querela;      /* NIHIL nisi recusatum */
+} FormatorScriptum;
+
+FormatorScriptum
+formator_scribere (
               Piscina* piscina,
        SilvaContextus* contextus,
     constans character* fons,
