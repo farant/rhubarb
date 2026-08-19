@@ -12743,3 +12743,19 @@ prototypum verum = internum TITULUS (monstratores PARENTHESIS
 exempti); radix sola (locales intacti). CLXXVII plagulae
 retactae, 0 recusationes, stabiles, purae. Probatio 207/207;
 amalgama VERIFICATUM; suites virides.
+
+## 2026-08-19 — nodus: quaestiones provenientiae (puritas + geometria fida)
+
+Porta formatoris (01M0D4QV5S pars 2) clausa: silva_{nodus,valor}_
+est_fons_purus (lexemata OMNIA FONS - severa, in codice latinizato
+sententiae fere numquam purae) + silva_{nodus,valor}_geometria_fida
+(sedes radicum DISTINCTAE - expansio 1:1 fida, 1:N collabitur).
+Collapsus = lexemata DISTINCTA sedem eandem vindicantia; lexema idem
+bis visum (bracchia ambigua communicant) exclusum per identitatem.
+Radix synthetica = FALSUM statim; plagulae aliae omissae. PROPRIETAS
+RELEXATIONIS probata (subarboris purae extensio relexata seriem
+lexematum exacte reddit) - oraculum classificationis quod fidelitas
+byte-exacta praetermittit. Probatio nova puritas 32/32; silva 41/41;
+amalgama VERIFICATUM (silva.h manu extensum). Casus vivus: probatio
+ipsa (macris CREDO plena) XLVI ordines falsos e regula R2-vocationis
+formatoris traxit - sedes adoptionis prima nominata.

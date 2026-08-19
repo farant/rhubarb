@@ -201,6 +201,49 @@ silva_nodus_extensionem_lineis (
     i32*                 linea_b,
     i32*                 columna_b);
 
+/* Puritas fontis: VERUM si lexemata subarboris OMNIA origine FONS
+ * sunt (stratum 0 - nihil ex expansione/pasta/stringificatione/
+ * API). fons_index >= 0: lexemata plagulae datae esse debent;
+ * < 0 = plagula quaelibet. Subarbor sine lexematis = VERUM
+ * (vacue). Geometria subarboris purae ipsa lexemata sunt -
+ * extensiones sine mendacio ullo. CAUTIO: in codice latinizato
+ * verba clavium (si->if) expansa sunt - sententiae fere numquam
+ * purae; vide geometria_fida pro quaestione laxiore. */
+b32
+silva_valor_est_fons_purus (
+    SilvaValor valor,
+    s32        fons_index);
+
+b32
+silva_nodus_est_fons_purus (
+    constans SilvaNodus* nodus,
+    s32                  fons_index);
+
+/* Geometria fida: VERUM si sedes fontis (per radicem originis)
+ * lexematum subarboris DISTINCTAE sunt. Expansio 1:1 (macros
+ * latinae: si->if) fida manet - lexema unum, sedes invocationis
+ * una et vera; expansio 1:N lexemata plura ad sedem UNAM collabit
+ * et geometriam mentitur (extensiones verisimiles sed degeneres -
+ * venationes formatoris 2026-08-19). Lexema radice synthetica
+ * (byte_offset < 0, e.g. origo API) = FALSUM statim, sedes
+ * inscibilis. Lexemata radice in plagula alia (fons_index >= 0)
+ * omittuntur - geometriae plagulae datae non pertinent. Lexema
+ * IDEM bis visum (bracchia ambigua subarbores communicant)
+ * collapsus NON est - identitas lexematis intra sedem comparatur.
+ * Piscina pro tabula sedium efficaci (quaestio pura, arbor
+ * intacta). */
+b32
+silva_valor_geometria_fida (
+    Piscina*   piscina,
+    SilvaValor valor,
+    s32        fons_index);
+
+b32
+silva_nodus_geometria_fida (
+    Piscina*             piscina,
+    constans SilvaNodus* nodus,
+    s32                  fons_index);
+
 /* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
  * (regula arbor2-comment-spec: bloccus contiguus sine linea vacua
  * inter finem eius et nodum; linea vacua intra = bloccus superior

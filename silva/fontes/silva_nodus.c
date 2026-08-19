@@ -521,6 +521,260 @@ silva_nodus_extensionem_lineis (constans SilvaNodus* n,
 }
 
 /* ==================================================
+ * Puritas fontis + geometria fida - quaestiones
+ * provenientiae (comites honestatis extensionis:
+ * extensio geometriam refert, hae utrum credenda sit)
+ * ================================================== */
+
+b32
+silva_valor_est_fons_purus (SilvaValor v, s32 fons_index)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                si (!silva_token_est_fons(v.datum.token))
+                {
+                    redde FALSUM;
+                }
+                si (fons_index >= (s32)ZEPHYRUM
+                    && v.datum.token->fons_index != fons_index)
+                {
+                    redde FALSUM;
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+            redde silva_nodus_est_fons_purus(v.datum.nodus,
+                fons_index);
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL
+                    && !silva_valor_est_fons_purus(*elem,
+                           fons_index))
+                {
+                    redde FALSUM;
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+    redde VERUM;
+}
+
+b32
+silva_nodus_est_fons_purus (constans SilvaNodus* n, s32 fons_index)
+{
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        si (!silva_valor_est_fons_purus(n->loci[k], fons_index))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* sedes radicis collecta - clavis collapsus (fons, byte) +
+ * identitas lexematis arboris (idem bis visum = communicatio
+ * ambigua, non collapsus) */
+nomen structura {
+    s32         fons;
+    s32         byte;
+    SilvaToken* token;
+} SedesRadicis;
+
+interior s32
+_sedes_comparare (constans vacuum* a, constans vacuum* b)
+{
+    constans SedesRadicis* sa = (constans SedesRadicis*)a;
+    constans SedesRadicis* sb = (constans SedesRadicis*)b;
+
+    si (sa->fons != sb->fons)
+    {
+        redde (sa->fons < sb->fons) ? -I : I;
+    }
+    si (sa->byte != sb->byte)
+    {
+        redde (sa->byte < sb->byte) ? -I : I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* FALSUM = sedes inscibilis inventa (radix synthetica) aut
+ * defectus memoriae - fides statim negatur */
+interior b32
+_sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                SilvaToken* radix_t = silva_token_radix(
+                    v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->byte_offset < (s32)ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                si (fons_index < (s32)ZEPHYRUM
+                    || radix_t->fons_index == fons_index)
+                {
+                    SedesRadicis* addita =
+                        (SedesRadicis*)xar_addere(sedes);
+
+                    si (addita == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    addita->fons = radix_t->fons_index;
+                    addita->byte = radix_t->byte_offset;
+                    addita->token = v.datum.token;
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+        {
+            constans SilvaNodus* n = v.datum.nodus;
+            insignatus integer k;
+
+            si (n != NIHIL)
+            {
+                per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+                {
+                    si (!_sedes_colligere(n->loci[k], fons_index,
+                            sedes))
+                    {
+                        redde FALSUM;
+                    }
+                }
+            }
+            frange;
+        }
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL
+                    && !_sedes_colligere(*elem, fons_index, sedes))
+                {
+                    redde FALSUM;
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+    redde VERUM;
+}
+
+/* sedes ordinatae percurrere: sedes eadem a lexematis DISTINCTIS
+ * vindicata = collapsus (lexema idem bis = communicatio ambigua) */
+interior b32
+_sedes_examinare (Xar* sedes)
+{
+    i32 numerus;
+    i32 k;
+
+    xar_ordinare(sedes, _sedes_comparare);
+    numerus = xar_numerus(sedes);
+    per (k = I; k < numerus; k++)
+    {
+        constans SedesRadicis* prior =
+            (constans SedesRadicis*)xar_obtinere(sedes, k - I);
+        constans SedesRadicis* currens =
+            (constans SedesRadicis*)xar_obtinere(sedes, k);
+
+        si (prior->fons == currens->fons
+            && prior->byte == currens->byte
+            && prior->token != currens->token)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+silva_valor_geometria_fida (Piscina* piscina, SilvaValor v,
+    s32 fons_index)
+{
+    Xar* sedes;
+
+    si (piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sedes = xar_creare(piscina, (i32)magnitudo(SedesRadicis));
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_sedes_colligere(v, fons_index, sedes))
+    {
+        redde FALSUM;
+    }
+    redde _sedes_examinare(sedes);
+}
+
+b32
+silva_nodus_geometria_fida (Piscina* piscina,
+    constans SilvaNodus* n, s32 fons_index)
+{
+    Xar* sedes;
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (piscina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sedes = xar_creare(piscina, (i32)magnitudo(SedesRadicis));
+    si (sedes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        si (!_sedes_colligere(n->loci[k], fons_index, sedes))
+        {
+            redde FALSUM;
+        }
+    }
+    redde _sedes_examinare(sedes);
+}
+
+/* ==================================================
  * commentarium ducens - consumptor PRIMUS pinnae
  * "commenta sunt contenta" (VISIO; INTENTIO in
  * silva/phase-log.md 2026-07-14)

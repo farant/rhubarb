@@ -335,6 +335,25 @@ void silva_nodus_extensionem_lineis(const SilvaNodus* nodus,
     int fons_index, unsigned int* linea_a, unsigned int* columna_a,
     unsigned int* linea_b, unsigned int* columna_b);
 
+/* Puritas fontis: 1 si lexemata subarboris OMNIA origine FONS
+ * (stratum 0 - nihil expansum). fons_index >= 0 = plagulae datae;
+ * < 0 = quaelibet. Subarbor sine lexematis = 1 (vacue). */
+int silva_valor_est_fons_purus(SilvaValor valor, int fons_index);
+int silva_nodus_est_fons_purus(const SilvaNodus* nodus,
+    int fons_index);
+
+/* Geometria fida: 1 si sedes fontis (per radicem originis)
+ * lexematum subarboris DISTINCTAE - expansio 1:1 fida manet,
+ * expansio 1:N lexemata plura ad sedem invocationis unam collabit
+ * (extensiones verisimiles sed degeneres). Radix synthetica
+ * (byte_offset < 0) = 0 statim; lexemata plagularum aliarum
+ * omissa; lexema IDEM bis visum (bracchia ambigua) collapsus non
+ * est - identitas comparatur. */
+int silva_valor_geometria_fida(SilvaPiscina* piscina,
+    SilvaValor valor, int fons_index);
+int silva_nodus_geometria_fida(SilvaPiscina* piscina,
+    const SilvaNodus* nodus, int fons_index);
+
 /* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
  * (contiguus, sine linea vacua inter finem eius et nodum; linea
  * vacua intra bloccum = pars superior cadit). Extenta BYTES in
