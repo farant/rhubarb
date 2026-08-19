@@ -176,6 +176,13 @@ Build nothing before it fires. Consensed design, all from 2026-08-10:
   verbs + pipeline) as a TOOL in the renominare/emendare lineage:
   "XSLT done right" for corpus-wide STML migrations (35 models through
   a format change will want this someday). Never document-embedded.
+  **Design mass banked 2026-08-19: `mutatio-visio.md`** — decreed-verb
+  vocabulary with per-verb series contracts, nested registry-judged
+  patterns (quantified binding scopes as transactions, non-linear
+  captures, commands at bound positions), slotted components with
+  signatures, the quaestio pseudo-bridge (patterns project to boolean
+  = user-defined pseudo-selectors; path-shaped patterns translate to
+  1D chains), twin engines over silva AND stml trees, one semantics.
 - **Pipe-views** `<<&x; | cum-augmentis>>` — computed views in
   GENERATED projections only (INDEX pages, inspectors).
 - **Parameterized fragments** (G2: `<#f attr="@hole">` +
