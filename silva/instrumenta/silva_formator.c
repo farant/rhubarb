@@ -1007,14 +1007,17 @@ _membra_censere (
 }
 
 /* R9: glomus assignationum - operatores '=' ordinati ad
- * max(finis sinistri) + I; glomera singula (n < II) tacent
- * (spatium unicum = negotium R10) */
+ * max(finis sinistri) + II ("xyz  = valor", decretum Frani
+ * 2026-08-19). Glomera singula (n < II) tacent (spatium =
+ * negotium R10). Exceptio: membrum cuius forma ordinata
+ * limitem LXXII transgrederetur tacet. */
 interior vacuum
 _aequationes_censere (
     FormatorAmbitus* ambitus,
       constans  i32* cb,
       constans  i32* operator_columnae,
       constans  i32* lineae,
+      constans  i32* fines,
                 i32  numerus)
 {
     i32 columna_recta;
@@ -1025,22 +1028,27 @@ _aequationes_censere (
     columna_recta = ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        si (cb[i] + I > columna_recta)
+        si (cb[i] + II > columna_recta)
         {
-            columna_recta = cb[i] + I;
+            columna_recta = cb[i] + II;
         }
     }
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        si (operator_columnae[i] != columna_recta)
+        si (operator_columnae[i] == columna_recta) perge;
+        si (columna_recta > operator_columnae[i]
+            && (fines[i] - I)
+                + (columna_recta - operator_columnae[i])
+                > (i32)LONGITUDO_RECTA)
         {
-            _addere(ambitus->divergentiae,
-                "aequatio-assignationum",
-                "operator '=' glomeris non ordinatus",
-                lineae[i], operator_columnae[i],
-                (s32)operator_columnae[i],
-                (s32)columna_recta);
+            perge;
         }
+        _addere(ambitus->divergentiae,
+            "aequatio-assignationum",
+            "operator '=' glomeris non ordinatus",
+            lineae[i], operator_columnae[i],
+            (s32)operator_columnae[i],
+            (s32)columna_recta);
     }
 }
 
@@ -1061,6 +1069,7 @@ _corpus_interius_censere (
             i32 aeq_cb[R7_MEMBRA_MAXIMA];
             i32 aeq_op[R7_MEMBRA_MAXIMA];
             i32 aeq_lineae[R7_MEMBRA_MAXIMA];
+            i32 aeq_fines[R7_MEMBRA_MAXIMA];
             i32 aeq_plena;
             i32 aeq_linea_prior;
 
@@ -1141,11 +1150,16 @@ _corpus_interius_censere (
                    i32  ca;
                    i32  lb;
                    i32  cb;
+                   i32  sla;
+                   i32  sca;
+                   i32  slb;
+                   i32  scb;
                    b32  apta;
 
             apta = FALSUM;
             assignatio = NIHIL;
             operator_tok = NIHIL;
+            scb = ZEPHYRUM;
             si (nodus && nodus->genus
                 == SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS)
             {
@@ -1163,7 +1177,10 @@ _corpus_interius_censere (
                     silva_c89_assignatio_sinister(assignatio),
                     &la, &ca, &lb, &cb)
                     && la == lb
-                    && operator_tok->linea == la)
+                    && operator_tok->linea == la
+                    && _extensio(nodus, ambitus->fons_princeps,
+                        &sla, &sca, &slb, &scb)
+                    && sla == slb)
                 {
                     apta = VERUM;
                 }
@@ -1176,19 +1193,21 @@ _corpus_interius_censere (
                     || aeq_plena >= (i32)R7_MEMBRA_MAXIMA)
                 {
                     _aequationes_censere(ambitus, aeq_cb,
-                        aeq_op, aeq_lineae, aeq_plena);
+                        aeq_op, aeq_lineae, aeq_fines,
+                        aeq_plena);
                     aeq_plena = ZEPHYRUM;
                 }
                 aeq_cb[aeq_plena]     = cb;
                 aeq_op[aeq_plena]     = operator_tok->columna;
                 aeq_lineae[aeq_plena] = la;
+                aeq_fines[aeq_plena]  = scb;
                 aeq_plena += I;
                 aeq_linea_prior = la;
             }
             alioquin
             {
                 _aequationes_censere(ambitus, aeq_cb, aeq_op,
-                    aeq_lineae, aeq_plena);
+                    aeq_lineae, aeq_fines, aeq_plena);
                 aeq_plena = ZEPHYRUM;
                 aeq_linea_prior = ZEPHYRUM;
             }
@@ -1196,7 +1215,7 @@ _corpus_interius_censere (
     }
     _ordinem_censere(ambitus, membra, plena);
     _aequationes_censere(ambitus, aeq_cb, aeq_op, aeq_lineae,
-        aeq_plena);
+        aeq_fines, aeq_plena);
 }
 
 /* R7 super parametra (forma multi-linearis sola - forma

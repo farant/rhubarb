@@ -168,18 +168,26 @@ _allocare_interna (
 ### R9 `aequatio-assignationum` — FIX
 
 `=` alignment per cluster. A cluster is a contiguous run of simple
-assignment statements (`lhs = expr;`) or of declarations with
-initializers; a blank line or any other statement breaks the cluster;
-each cluster aligns independently. Mechanism: LHS stays LEFT-aligned
-at the statement indent; padding goes before the `=`.
+single-line assignment statements; a blank line or any other
+statement breaks the cluster; each cluster aligns independently.
+Mechanism: LHS stays LEFT-aligned at the statement indent; padding
+goes before the `=`; the operator sits at **max(LHS end) + 2** —
+TWO spaces after the longest LHS (`xyz  = valor`, decreed
+2026-08-19: the corpus contained both one- and two-space stanzas;
+Fran chose two).
 
 ```c
-    fructus.mensura = mensura;
-    fructus.datum   = allocatus;
+    piscina->primus                = alveus_primus;
+    piscina->mensura_alvei_initia  = mensura_alvei_initia;
 ```
 
-(chorda.c:35-36 right-aligns bare LHS names instead — decreed drift;
-statements keep a uniform left edge.)
+Clusters are AGGRESSIVE by decree: any adjacent simple assignments
+co-align, including mixed member/local stanzas — odd-looking
+results feed the post-lint heuristic refinement phase rather than
+pre-emptive exceptions. ONE exception: a member whose aligned form
+would push its line past R16's 72 stays silent (and unfixed).
+(chorda.c:35-36 right-aligns bare LHS names instead — decreed
+drift; statements keep a uniform left edge.)
 
 ### R10 `operatores` — FIX
 

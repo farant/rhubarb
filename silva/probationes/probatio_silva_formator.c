@@ -352,8 +352,8 @@ s32 principale (vacuum)
             "    character* nota;\n"
             "      integer  b;\n"
             "\n"
-            "    nota = NIHIL;\n"
-            "    b    = a;\n"
+            "    nota  = NIHIL;\n"
+            "    b     = a;\n"
             "}\n");
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
@@ -368,7 +368,7 @@ s32 principale (vacuum)
             "    integer alpha;\n"
             "    integer beta;\n"
             "\n"
-            "    alpha = a;\n"
+            "    alpha  = a;\n"
             "    beta = a;\n"
             "}\n");
 
@@ -376,7 +376,25 @@ s32 principale (vacuum)
         CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
             "aequatio-assignationum") == ZEPHYRUM);
         CREDO_AEQUALIS_I32(
-            (i32)_divergentia(d, 0)->exspectatum, (i32)11);
+            (i32)_divergentia(d, 0)->exspectatum, (i32)12);
+    }
+    {
+        /* exceptio LXXII: membrum cuius forma ordinata limitem
+         * transgrederetur tacet (brevis maneret > LXXII) */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    integer a)\n"
+            "{\n"
+            "    integer brevis;\n"
+            "    integer longissimum_titulum_habens;\n"
+            "\n"
+            "    brevis = a + a + a + a + a + a + a + a + a"
+            " + a + a + a + a;\n"
+            "    longissimum_titulum_habens  = a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
     }
 
     imprimere("\n--- Probans intervalla (R13) ---\n");
