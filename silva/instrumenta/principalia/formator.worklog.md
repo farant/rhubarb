@@ -592,3 +592,59 @@ Fran's sketch. Six files took small passes (chorda 8, credo 9,
 json 7, similitudo 6, nuntium 4, internamentum 2). Probatio
 193/193; examen ACCIPE; differre cosmetica-only; root 136/137
 (pre-existing); silva 40/40.
+
+## 2026-08-19 — evolutio III: lib/ wholesale + five engine hardenings
+
+Batch three (all of lib/) opened with 98 written / 23 refused.
+The refusals decomposed into FIVE distinct defect classes, each
+now fixed and (where synthesizable) pinned:
+
+1. **Inline block-shaped specifiers poisoned column runs** —
+   `unio { ... } u;` in a locals block: the locals run collected
+   it with cb = one-past '}' and shifted neighbors toward it
+   forever, while _membra_censere "aligned" its INTERNAL members
+   sitting on ONE line, growing the target each round (the
+   js_lexema chase, +7/round). Fixes: STRUCTURA/UNIO/ENUMERATIO
+   specifiers exempt from _membrum_colligere; same-line members
+   NEVER co-align (guards in _membra_censere, _corpus_interius,
+   _parametra_ordinem, _aeq_pascere — R7/R9 are cross-line rules).
+2. **Macro-expanded LHS extents lie** (coloratio 999:
+   `coloratio_index(...) = X` — radix collapses to the invocation,
+   measured cb lands mid-call) — R9's pull-delete reached real
+   code and the STRICT guard refused the file (correctly!).
+   All four alignment pulls (R9, R7 stella, R7 titulus, R17-C)
+   are now tolerans: a lying extent or an interposed comment
+   drops the edit quietly, divergence stays.
+3. **Macro-expanded OPERATORS produce garbage geometry** (flatura:
+   FLATURA_SCRIBERE_BITS(...) internals firing R10 with -21
+   gaps) — operator extraction for R9/R10/R17 switched from
+   _valor_radix to _token_fons: only SOURCE-level operators are
+   judged. Latina keywords are unaffected (their checks anchor on
+   keyword/paren tokens via radix, which is honest 1:1 there).
+4. **Self-chasing title columns** (flatura 1811: 245→267→289…)
+   — a member whose measured type extent crossed its own title
+   (macro lie) made cb_max grow with every title pad. Sanity
+   invariant in _membrum_colligere: the type must END before the
+   title starts (titulus->columna >= cb), else exempt.
+5. **The banner-banner one-byte war** (persistentia: header
+   comment with a 50-run IS a banner; post-rule wanted 1 blank,
+   the next banner's ante-rule wanted 2 — eternal insert/delete
+   of one newline). Decree: when the next token is itself a
+   banner, the ANTE rule owns the gap.
+
+After hardening: **122 files written, ZERO refusals, second
+sweep fully stable**. Gates: differre cosmetica-only on 109;
+13 files show ADDITA/REMOTA pairing quirks — ALL verified pure
+whitespace by the independent oracle (whitespace-stripped
+sha both sides identical). imago.c examen REICE is PRE-EXISTING
+(vendored stb; red on HEAD too). ROLLOUT CHOREOGRAPHY LESSON:
+mtime-gated tool binaries (natura_glossae/canones) go STALUS
+when their sources are formatted — ./tools/natura_struere.sh is
+part of the rollout dance; expect the same for other
+self-gating tools. Root suite 136/137 after rebuild
+(planta_lectio pre-existing); silva 40/40. Probatio 198/198.
+
+Doors: node-level source-purity query (silva-side: "is this
+subtree macro-free?") would replace the per-rule guards with one
+clean cut, same shape as the AMBIGUUS cut; differre directive/
+unit pairing on whitespace-only reshapes (13-file quirk class).

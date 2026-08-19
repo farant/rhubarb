@@ -1424,6 +1424,62 @@ s32 principale (vacuum)
             "columnae-binae") == ZEPHYRUM);
     }
 
+    imprimere("\n--- Probans unionem in situ (stabilis) ---\n");
+    {
+        /* venatio js_lexema: unio uni-linearis in bloco localium
+         * - specificator bloccalis ordinem non participat, membra
+         * interna eadem linea non co-ordinantur; stabilis */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 solum;\n"
+            "    unio { i32 a; i32 b; } u;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
+    imprimere("\n--- Probans sinistrum macro-expansum ---\n");
+    {
+        /* venatio coloratio 999: extensio sinistri expansi
+         * MENTITUR (radix ad invocationem collabitur) - tractio
+         * tolerans dilatatur, plagula numquam recusatur */
+        FormatorScriptum s = _scribere(piscina,
+            "#define LOCUS(t) ((t)->datum)\n"
+            "vacuum\n"
+            "probare (\n"
+            "    vacuum* t)\n"
+            "{\n"
+            "    quies = I;\n"
+            "    LOCUS(t) = II;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+    }
+
+    imprimere("\n--- Probans vexillum post vexillum ---\n");
+    {
+        /* vexilla consecutiva: regula ANTE hiatum possidet (II
+         * vacuae) - post I volebat = bellum aeternum unius
+         * octeti (venatio persistentiae). II vacuae stabiles. */
+        FormatorScriptum s = _scribere(piscina,
+            "/* ==================================================\n"
+            " * Caput\n"
+            " * ================================================== */\n"
+            "\n"
+            "\n"
+            "/* ==================================================\n"
+            " * Sectio\n"
+            " * ================================================== */\n"
+            "\n"
+            "i32 a;\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
     imprimere("\n--- Probans ambiguum praetermissum ---\n");
     {
         /* '(typus_ignotus)-I' = AMBIGUUS (conversio aut
