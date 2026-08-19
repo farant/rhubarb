@@ -697,3 +697,17 @@ clean, examen ACCIPE (imago pre-existing). arx_caeli.h now:
 re-verified; natura rebuilt; root 136/137; silva 40/40.
 Probatio 207/207 (arx_caeli-shape bytes derived and pinned;
 single-line prototype split; fn-pointer-typedef negative).
+
+## 2026-08-19 — formator-custos: the report-only post-edit hook
+
+PostToolUse (Write|Edit) on .c/.h: lints the written file and
+pushes FIXABLE divergences (count + first 6 rows) with the
+one-command nudge "./silva/formator.sh <via> -scribere". Silence
+discipline: lint-forever rules (longitudo/vexilla/ordo) are
+FILTERED — piscina.c carries 14 long lines forever and nagging
+each edit would teach ignoring. Pinned exclusions are silent via
+the CLI itself (exempta → stderr, no rows). Warm cost ~0.6s
+(formator.sh's mtime .o cache). PLANTED FAULT at birth verified
+three ways: fires on unformatted terrain (silva_lexema.c, 270
+fixable), silent on formatted-with-lint-residue (piscina), silent
+on pinned (biblia_dr).
