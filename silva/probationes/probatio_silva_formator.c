@@ -144,6 +144,7 @@ s32 principale (vacuum)
             " * Titulus\n"
             " * =============================="
             "============================= */\n"
+            "\n"
             "i32 a;\n");
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
@@ -163,6 +164,7 @@ s32 principale (vacuum)
             " * Titulus\n"
             " * ========================="
             "========================= */\n"
+            "\n"
             "i32 a;\n");
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
@@ -308,6 +310,104 @@ s32 principale (vacuum)
             "}\n");
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+
+    imprimere("\n--- Probans columnas binas (R7) ---\n");
+    {
+        /* ordo structurae conformis: typi dextre ordinati,
+         * stella in hiatu (G = II), tituli ad columnam unam */
+        Xar* d = _lint(piscina,
+            "nomen structura Probandum {\n"
+            "     vacuum* buffer;\n"
+            "    integer  numerus;\n"
+            "} Probandum;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+    {
+        /* fractus: ora typorum inaequalis + titulus male situs */
+        Xar* d = _lint(piscina,
+            "nomen structura Probandum {\n"
+            "    vacuum* buffer;\n"
+            "    integer numerus;\n"
+            "} Probandum;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)2);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "columnae-binae") == ZEPHYRUM);
+        CREDO_VERUM(strcmp(_divergentia(d, 1)->regula,
+            "columnae-binae") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(
+            (i32)_divergentia(d, 1)->exspectatum, (i32)14);
+    }
+
+    imprimere("\n--- Probans aequationem (R9 + locales R7) ---\n");
+    {
+        /* locales ordinatae + glomus '=' ordinatum */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    integer a)\n"
+            "{\n"
+            "    character* nota;\n"
+            "      integer  b;\n"
+            "\n"
+            "    nota = NIHIL;\n"
+            "    b    = a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
+    }
+    {
+        /* glomus fractum: '=' secundum non ordinatum */
+        Xar* d = _lint(piscina,
+            "interior vacuum\n"
+            "_f (\n"
+            "    integer a)\n"
+            "{\n"
+            "    integer alpha;\n"
+            "    integer beta;\n"
+            "\n"
+            "    alpha = a;\n"
+            "    beta = a;\n"
+            "}\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "aequatio-assignationum") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(
+            (i32)_divergentia(d, 0)->exspectatum, (i32)11);
+    }
+
+    imprimere("\n--- Probans intervalla (R13) ---\n");
+    {
+        /* una vacua ante vexillum (duae exspectatae) */
+        Xar* d = _lint(piscina,
+            "integer a;\n"
+            "\n"
+            "/* ========================="
+            "========================= */\n"
+            "\n"
+            "integer b;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "intervalla") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
+            (i32)1);
+    }
+    {
+        /* cumulus vacuarum (IV) nimius */
+        Xar* d = _lint(piscina,
+            "integer a;\n"
+            "\n\n\n\n"
+            "integer b;\n");
+
+        CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)1);
+        CREDO_VERUM(strcmp(_divergentia(d, 0)->regula,
+            "intervalla") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)_divergentia(d, 0)->inventum,
+            (i32)4);
     }
 
     imprimere("\n--- Probans catenam alioquin-si (caput) ---\n");

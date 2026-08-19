@@ -12574,3 +12574,18 @@ bracchia 829 / custos 114 / typus 7 — all 7 in json.c). Probatio
 52/52, suite 40/40, piscina.c = 45 unchanged (exemplar conformant
 under its own rules). Doors in formator.worklog.md (arbor-absens
 marker, prototypes, alignment tranche 2b).
+
+## 2026-08-19 — formator tranche 2b (R7 columnae-binae / R9 aequatio / R13 intervalla-partim)
+
+The two-column rule executable: common type edge (cb), gap =
+1+max-stars, star at cb, names at cb+gap; runs = struct members /
+leading locals / multi-line params, blank line splits, exemptions
+cause-named. R9 clusters at max(lhs)+1; R13 banner spacing + 3+
+collapse. Probatio 67/67. piscina 45->71 — every new fire is the
+drift the hand archaeology found (blank-line drift, unaligned
+stanzas) + one CALIBRATION find: corpus contains both minimal and
+minimal+1 stanza alignment (Fran decree needed pre-fix). NAMED
+DOOR (big): no include resolution => unknown-typedef runs
+exempt-skip — R7 blind exactly where piscina aligns; praebere/
+legati-style contextus = highest-value lint upgrade. Census:
+28503 (13/16 rules live; R10/R11/R15 remain).

@@ -106,3 +106,43 @@ typus-in-linea-sua 7 (ALL seven = one cluster of flat one-line
 predicates in lib/json.c:1021-1051). Probatio 52/52; suite 40/40;
 piscina.c still exactly 45 (zero structural — the exemplar is
 conformant under its own executable rules).
+
+## 2026-08-19 — tranche 2b: alignment rules (R7/R9/R13-partial)
+
+R7 columnae-binae in lint form: per run, with cb = one-past-type-end
+— common cb across members, gap = 1 + max stars, first star at
+exactly cb, names at exactly cb + gap. Runs: struct/union member
+lists, leading local-declaration blocks, multi-line param lists
+(single-line param form is R8's finding, R7 stays silent). Exempt
+per member WITH CAUSE: function-pointer declarators, post-star
+qualifiers, multi-declarator lines, multi-line specs. R9: clusters
+of simple single-line assignment statements (blank line or any
+other statement breaks); `=` at max(lhs_end)+1; single-statement
+clusters silent (spacing there = R10's future job). R13 partial:
+2-blanks-before-banner / 1-after (banner = comment containing an
+=-run >= 10) + 3+ blank collapse; between-functions and
+after-locals policy = doors (comment interplay needs design).
+
+TWO CALIBRATION FINDINGS from piscina first light (45 -> 71, all
+new fires verified real):
+1. **Minimal vs uniform padding**: the piscina->primus stanzas are
+   uniformly aligned but ONE column wider than minimal (op at
+   max_cb+2); the alveus stanzas use minimal (max_cb+1). Rule as
+   coded = minimal. Fran must decree before fix tier.
+2. **Cluster aggressiveness**: the rule as decreed aligns ANY
+   adjacent simple assignments (`alveus->offset = ZEPHYRUM;` +
+   `alveus = alveus->sequens;` must co-align) — the hand never did
+   this in loop bodies. May want narrowing (e.g. only stanzas of
+   >= 3, or same-LHS-prefix). Census: 4308 fires — review sample
+   before -scribere.
+
+**R7's big limitation, named**: the lint parse has NO include
+resolution — unknown typedefs (memoriae_index, Alveus, chorda...)
+make members ambiguous and runs exempt-skip. piscina.c shows ZERO
+columnae-binae despite being the alignment exemplar. Door:
+praebere-based header resolution (legati-style prepared contextus)
+= the single highest-value lint upgrade. Even blind, corpus-wide
+R7 = 3863 fires (known-type runs only).
+
+Census 2b: 28503 total (columnae 3863 / aequatio 4308 / intervalla
+783 on top of 2a's numbers). Probatio 67/67.
