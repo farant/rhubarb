@@ -1076,6 +1076,7 @@ s32 principale (vacuum)
             "    d = e -> f;\n"
             "}\n");
 
+        /* a/d aequilata -> spatium UNUM (decretum novum) */
         CREDO_VERUM(s.successus);
         CREDO_VERUM(_textus_aequalis(piscina, s.textus,
             "vacuum\n"
@@ -1084,8 +1085,55 @@ s32 principale (vacuum)
             "    i32 a;\n"
             "    i32 d;\n"
             "\n"
-            "    a  = b + c;\n"
-            "    d  = e->f;\n"
+            "    a = b + c;\n"
+            "    d = e->f;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans R9: sinistra aequilata ---\n");
+    {
+        /* sinistris aequilatis spatium UNUM (forma nuntii:
+         * valor = / valor |= manu scripta) - duplex ad unum
+         * stringitur */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    valor  = I;\n"
+            "    valor |= II;\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    valor = I;\n"
+            "    valor |= II;\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans R9: glomus cadens (LXXII) ---\n");
+    {
+        /* ordinatio membrum longum trans LXXII truderet ->
+         * glomus TOTUM ad minimum cadit (nulla raggedness
+         * mixta - membrum breve duplex ad unum stringitur,
+         * longum iam minimale manet) */
+        FormatorScriptum s = _scribere(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a  = I;\n"
+            "    b_longum_nomen_valde_extensum = functio_vocata(argumentum_primum_x);\n"
+            "}\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    a = I;\n"
+            "    b_longum_nomen_valde_extensum = functio_vocata(argumentum_primum_x);\n"
             "}\n"));
     }
 

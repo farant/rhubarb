@@ -1497,11 +1497,16 @@ _membra_censere (
     _ordinem_censere(ambitus, membra, plena);
 }
 
-/* R9: glomus assignationum - operatores '=' ordinati ad
- * max(finis sinistri) + II ("xyz  = valor", decretum Frani
- * 2026-08-19). Glomera singula (n < II) tacent (spatium =
- * negotium R10). Exceptio: membrum cuius forma ordinata
- * limitem LXXII transgrederetur tacet. */
+/* R9: glomus assignationum - operatores ordinati ad max(finis
+ * sinistri) + II ("xyz  = valor"); sinistris AEQUILATIS ad
+ * max + I (spatium duplex nihil signat ubi nulla suffarcinatio
+ * - decretum Frani 2026-08-19). Glomera singula (n < II) tacent.
+ * Custodia LXXII est GLOMERIS TOTIUS: si ordinatio membrum
+ * ullum transgrederetur, glomus totum ad minimum cadit (cb + I
+ * quodque) - uniformitas invarians est, exceptio per membrum
+ * eam scindebat (raggedness nuntii quam Fran invenit).
+ * Praedicatum a spatiis praesentibus independens - non
+ * oscillat. */
 interior vacuum
 _aequationes_censere (
     FormatorAmbitus* ambitus,
@@ -1511,50 +1516,68 @@ _aequationes_censere (
       constans  i32* fines,
                 i32  numerus)
 {
+    i32 cb_maxima;
     i32 columna_recta;
+    b32 aequilata;
+    b32 cadit;
     i32 i;
 
     si (numerus < (i32)II) redde;
 
-    columna_recta = ZEPHYRUM;
+    cb_maxima = ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        si (cb[i] + II > columna_recta)
+        si (cb[i] > cb_maxima) cb_maxima = cb[i];
+    }
+    aequilata = VERUM;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        si (cb[i] != cb_maxima)
         {
-            columna_recta = cb[i] + II;
+            aequilata = FALSUM;
+            frange;
         }
     }
+    columna_recta = cb_maxima + (aequilata ? I : II);
+
+    cadit = FALSUM;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        si (operator_columnae[i] == columna_recta) perge;
-        si (columna_recta > operator_columnae[i]
-            && (fines[i] - I)
-                + (columna_recta - operator_columnae[i])
-                > (i32)LONGITUDO_RECTA)
+        si ((fines[i] - operator_columnae[i]) + columna_recta
+            - I > (i32)LONGITUDO_RECTA)
         {
-            perge;
+            cadit = VERUM;
+            frange;
         }
+    }
+
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        i32 exspectata;
+
+        exspectata = cadit ? cb[i] + I : columna_recta;
+        si (operator_columnae[i] == exspectata) perge;
         _addere(ambitus->divergentiae,
             "aequatio-assignationum",
             "operator '=' glomeris non ordinatus",
             lineae[i], operator_columnae[i],
             (s32)operator_columnae[i],
-            (s32)columna_recta);
-        si (operator_columnae[i] < columna_recta)
+            (s32)exspectata);
+        si (operator_columnae[i] < exspectata)
         {
             _emendare(ambitus->divergentiae, lineae[i],
                 operator_columnae[i], lineae[i],
                 operator_columnae[i],
                 _textus_emendationis(ambitus->piscina,
                     ZEPHYRUM,
-                    columna_recta - operator_columnae[i]));
+                    exspectata - operator_columnae[i]));
         }
         alioquin
         {
-            /* sinister ad cb[i] <= recta - II desinit: spatium
-             * [recta, operator) spatiale est */
+            /* sinister ad cb[i] < exspectata desinit: spatium
+             * [exspectata, operator) spatiale est */
             _emendare(ambitus->divergentiae, lineae[i],
-                columna_recta, lineae[i],
+                exspectata, lineae[i],
                 operator_columnae[i],
                 _textus_emendationis(ambitus->piscina,
                     ZEPHYRUM, ZEPHYRUM));

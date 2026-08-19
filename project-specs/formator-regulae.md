@@ -184,10 +184,25 @@ Fran chose two).
 Clusters are AGGRESSIVE by decree: any adjacent simple assignments
 co-align, including mixed member/local stanzas — odd-looking
 results feed the post-lint heuristic refinement phase rather than
-pre-emptive exceptions. ONE exception: a member whose aligned form
-would push its line past R16's 72 stays silent (and unfixed).
-(chorda.c:35-36 right-aligns bare LHS names instead — decreed
-drift; statements keep a uniform left edge.)
+pre-emptive exceptions. (chorda.c:35-36 right-aligns bare LHS
+names instead — decreed drift; statements keep a uniform left
+edge.)
+
+Two refinements (decreed 2026-08-19, from nuntium first light):
+
+- **Equal-width clusters sit at max+1** — when every LHS has the
+  same width there is no padding anywhere, so the double space
+  marks nothing; single space (the hand's `valor = / valor |=`
+  form). Corollary: an equal-width cluster inserts no padding and
+  can never be pushed past 72 by alignment.
+- **The 72 guard is CLUSTER-level**: if aligning would push ANY
+  member past 72, the WHOLE cluster falls back to minimal (each
+  operator at its own LHS end + 1). Uniformity is the invariant
+  R9 exists for; the earlier per-member exception broke it —
+  short members aligned, long ones stayed, producing the ragged
+  mix Fran found at nuntium 647-654. The overflow predicate is
+  computed independently of present spacing, so it cannot
+  oscillate across fixpoint iterations.
 
 ### R10 `operatores` — FIX
 

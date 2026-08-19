@@ -12698,3 +12698,13 @@ classis FILUM (=FILE, typus SYSTEMATIS - numquam parsatur) manu
 sanata et porta nominata. Portae silvae: contentum lexici
 fluere (radix vera); visibilitas typorum systematis. Probatio
 185/185; suites virides.
+
+## 2026-08-19 — formator R9 politum: aequilata + custodia glomeris
+
+Nuntium 647-654 laceratum (Fran): exceptio LXXII per membrum
+uniformitatem scindebat. Politiones: sinistra aequilata → max+I
+(spatium duplex nihil signat sine suffarcinatione); custodia
+LXXII gradus GLOMERIS (membrum ullum transgrederetur → glomus
+totum ad minimum cadit). Praedicatum a spatiis independens - non
+oscillat. Cursus xiii plagularum: nuntium = forma manus octetim.
+Probatio 189/189; portae virides.

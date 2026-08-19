@@ -529,3 +529,32 @@ Gates: examen ACCIPE x13; differre all [cosmetica] (filum's
 directive rows = the known classification quirk); root suite
 136/137 (planta_lectio pre-existing); silva 40/40. Probatio
 185/185.
+
+## 2026-08-19 — R9 refined: equal-width clusters + cluster-level 72 guard
+
+Fran found nuntium 647-654 ragged: valor-accumulator lines mixing
+one and two spaces before the operators. Archaeology: the hand's
+original was UNIFORMLY single-spaced; R9's per-member 72-exception
+aligned the short lines to max+2 and silently skipped the long
+ones — the exception destroyed the very uniformity the rule
+exists for. Two refinements, both from Fran's principles:
+
+1. Equal-width LHS → operator at max+1 (single space). The double
+   space marks padding; identical widths have none. Corollary:
+   equal-width clusters insert nothing and can't overflow.
+2. The 72 guard is now CLUSTER-level: any member would overflow →
+   the WHOLE cluster drops to minimal (own cb+1 each). No partial
+   alignment, ever. The overflow predicate uses
+   (fines - op) + recta - 1, which is invariant to current
+   spacing — an earlier draft that measured current line length
+   would have oscillated (align→overflow→unalign→fits→align).
+
+Probatio 189/189 (uniform tighten, cluster-fall at the exact
+72 boundary, and the R10-interplay expectation updated — a/d are
+equal-width so they tightened to single space). Refinement pass
+over the 13: nine files touched (piscina 6 / chorda 15 / json 5 /
+xar 16 / credo 10 / tabula_dispersa 11 / chorda_aedificator 11 /
+nuntium 21 / tempus 34 emendationes); the nuntium block is now
+byte-identical to the hand's original. Gates: examen ACCIPE x13,
+differre cosmetica-only (filum's known directive rows), root
+136/137 (pre-existing), silva 40/40.
