@@ -18,8 +18,28 @@
 # (nexus fractus clamat - lista stala numquam tacite mentitur).
 
 set -u
+# Ordinatio LOCO immunis: fructus OCTETIM confertur (-probare infra).
+export LC_ALL=C
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
+
+# -probare: derivare et CONFERRE, nihil scribere (porta vetustatis).
+# Exitus: 0 = recens, 1 = rancidum.
+#
+# Manifestum hoc SUITE RADICIS totam regit, et - dissimile
+# manifestis amalgamatis, quae portam suam 2026-08-20 acceperunt -
+# nulla porta id custodiebat. Classis eadem: artificium generatum,
+# commissum, a nemine revisum. Derivatio hic PURE ordinata est
+# (unio sorted ex aedile), ergo confertio nuda sufficit - nulla
+# praelatio, nullum signum temporis.
+PROBARE=0
+for arg in "$@"; do
+    case "$arg" in
+        -probare) PROBARE=1 ;;
+        *) echo "usus: compile_tests_fontes_generare.sh [-probare]" >&2
+           exit 2 ;;
+    esac
+done
 
 EXITUS="compile_tests_fontes_generata.sh"
 
@@ -58,6 +78,12 @@ if [ -n "$DUPLICATA" ]; then
     exit 1
 fi
 
+DESTINATIO="$EXITUS"
+if [ "$PROBARE" -eq 1 ]; then
+    DESTINATIO="$TEMPORARIUM.novum"
+    trap 'rm -f "$TEMPORARIUM" "$TEMPORARIUM.novum"' EXIT
+fi
+
 {
     echo "# $EXITUS - GENERATUM AB AEDILE - NE MANU EDITES"
     echo "# unio clausurarum omnium principalium suite (necte-omnia)"
@@ -68,6 +94,21 @@ fi
     echo "declare -a OBJC_SOURCES=("
     echo "$UNIO_M" | while IFS= read -r f; do echo "    \"$f\""; done
     echo ")"
-} > "$EXITUS"
+} > "$DESTINATIO"
+
+if [ "$PROBARE" -eq 1 ]; then
+    if [ ! -f "$EXITUS" ]; then
+        echo "compile_tests_fontes_generare: RANCIDUM - $EXITUS deest"
+        exit 1
+    fi
+    if cmp -s "$DESTINATIO" "$EXITUS"; then
+        echo "compile_tests_fontes_generare: recens"
+        exit 0
+    fi
+    echo "compile_tests_fontes_generare: RANCIDUM - $EXITUS derivationi non congruit"
+    diff "$EXITUS" "$DESTINATIO" | grep -E '^[<>]' | head -8
+    echo "  regenera: ./tools/compile_tests_fontes_generare.sh"
+    exit 1
+fi
 
 echo "$EXITUS scriptum ($(echo "$UNIO_C" | wc -l | tr -d ' ') C + $(echo "$UNIO_M" | wc -l | tr -d ' ') ObjC)"
