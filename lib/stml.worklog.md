@@ -414,3 +414,58 @@ pre-existing safe path; the three committed `.stml` artifacts do not
 move. `librarium_collector` writes STML by hand-concatenating strings
 and never calls the writer at all — separately filed, since that also
 means it never escapes entities (01M0EEK3YYEYVBWV9BFWD028D5).
+
+## 2026-08-19 — clausura tacita in modo pulchro (strepitum minuere)
+
+Fran's request, second half of the same sitting. In pretty mode, emit
+`</>` instead of `</name>` while the content is short; keep the name
+past ~30 lines, on the reasoning that once the open tag has scrolled
+off screen the name stops being noise and starts being help.
+Threshold is `STML_CLAUSURA_TACITA_LINEAE` (XXX).
+
+Decided from the bytes already emitted, not from the tree: record the
+builder length after `>`, count newlines from there at closing time.
+That measures exactly what the reader will see, and it is what the
+writer itself just laid out.
+
+**Fixed point holds, and here is why it is not luck.** `</>` and
+`</name>` occupy the same number of LINES, so the choice cannot feed
+back into the measurement that produced it — no oscillation is
+possible. All thirteen pretty tests assert two cycles; all stable.
+
+**Invariant worth knowing** (pinned by test XIII): a parent's content
+strictly contains its children's, so a parent is never shorter than a
+child. Therefore a tacit closer on a parent IMPLIES tacit closers on
+every descendant — `</>` runs are always contiguous at the end of a
+block, never interleaved with named ones on the way down.
+
+**Exclusions.** Raw (`crudus`) elements keep the explicit name because
+the grammar does not let `</>` close them. Non-pretty mode is
+untouched and still preserves the author's own form byte-for-byte —
+fidelity mode does not get opinions about layout.
+
+**Named unevenness, not incidental.** An element sitting on a
+COLLAPSED boundary is rendered with `pulchrum=FALSUM` (so it will not
+self-indent), and that same flag also means "preserve the author's
+closing form" — so it keeps `</post>` while its siblings get `</>`.
+One flag is now carrying two meanings. Tests II and X pin the current
+behaviour so it cannot drift silently. The clean separation is the
+door already named in the previous entry: hoist indentation out of the
+four child cases into the loop, at which point "do not indent me" and
+"fidelity mode" stop sharing a channel.
+
+**Rejected on measurement: the forward-capture form.** Fran also
+proposed `<foo (>abc` on its own line instead of `<foo>abc</foo>`.
+Probed against the real parser: text nodes run to the next `<`, so the
+terminating newline becomes PART of the captured value — `abc` reads
+back as `abc\n`, and re-writing compounds it. The raw-line variant
+`<foo! (>` does not parse in that position at all, and an element with
+empty text emits `<foo (>` which then captures the FOLLOWING SIBLING
+as its child. Making it safe would require the parser to trim, which
+needs a form-flag to keep the round-trip exact — and cuts against the
+2026-08-06 ruling that moved normalization OUT of parsing into the
+accessors. `</>` gets `<lex-identificator>n</>` at 23 chars against
+capture's 22, so the whole benefit survives at none of the cost.
+Capture stays what it already is: an authoring affordance, used by the
+47 hand-written `<via (>path` lines in aedilis.stml, whose only reader
+already normalizes them.

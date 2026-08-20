@@ -2920,6 +2920,45 @@ stml_textus_internus (
     redde chorda_aedificator_finire(aed);
 }
 
+/* Ultra hoc contentum, clausura NOMEN retinet. Ratio: si contentum
+ * tot lineas occupat, tag apertum et clausum in schermo simul non
+ * sunt, ubi nomen legenti AUXILIUM est, non strepitus. Infra,
+ * nomen repetitum strepitus merus est et '</>' sufficit. */
+#define STML_CLAUSURA_TACITA_LINEAE XXX
+
+/* Quot lineas contentum iam emissum occupet, ab 'initium' ad finem
+ * buffri. Numeratur ex OCTETIS EMISSIS, non ex arbore: sic mensura
+ * eadem est quam lector in schermo videt, et decisio a dispositione
+ * pendet quam scriptor ipse modo generavit.
+ *
+ * PUNCTUM FIXUM: forma clausurae ('</>' an '</nomen>') numerum
+ * linearum NON mutat - utraque in eadem linea sedet - ergo decisio
+ * per scriptiones iteratas stabilis manet et oscillare nequit. */
+interior i32
+_lineae_contenti (
+    ChordaAedificator* aedificator,
+       memoriae_index  initium)
+{
+            chorda vista;
+    memoriae_index k;
+               i32 lineae;
+
+    vista   = chorda_aedificator_spectare(aedificator);
+    lineae  = ZEPHYRUM;
+
+    per (k = initium; k < (memoriae_index)vista.mensura; k++)
+    {
+        character c;
+
+        c = (character)vista.datum[k];
+        si (c == '\n')
+        {
+            lineae++;
+        }
+    }
+    redde lineae;
+}
+
 /* an chorda spatium album SOLUM ferat (vacua quoque) */
 interior b32
 _spatium_album_solum (
@@ -4333,8 +4372,12 @@ stml_scribere_ad_aedificator (
                 }
                 alioquin
                 {
-                    StmlNodus* first_child;
+                         StmlNodus* first_child;
+                    memoriae_index  initium_contenti;
+                               b32  clausura_tacita;
+
                     chorda_aedificator_appendere_character(aedificator, '>');
+                    initium_contenti = chorda_aedificator_longitudo(aedificator);
 
                     num = xar_numerus(nodus->liberi);
                     first_child = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
@@ -4440,8 +4483,26 @@ stml_scribere_ad_aedificator (
                         }
                     }
 
+                    /* Clausura TACITA (2026-08-19): in modo pulchro
+                     * nomen repetitum strepitus est cum contentum
+                     * breve sit; ultra STML_CLAUSURA_TACITA_LINEAE
+                     * nomen rursus AUXILIUM fit (tag apertum extra
+                     * schermum abiit). Crudi clausuram EXPRESSAM
+                     * tenent - grammatica '</>' eos claudere non
+                     * sinit - ergo excepti. Modus NON-pulcher formam
+                     * AUTHORIS intactam servat: ibi fidelitas
+                     * octetim regnat, non dispositio nostra. */
+                    clausura_tacita = nodus->clausura_anonyma;
+                    si (pulchrum && !nodus->crudus)
+                    {
+                        clausura_tacita =
+                            (_lineae_contenti(aedificator, initium_contenti)
+                                <= STML_CLAUSURA_TACITA_LINEAE)
+                            ? VERUM : FALSUM;
+                    }
+
                     chorda_aedificator_appendere_literis(aedificator, "</");
-                    si (nodus->titulus && !nodus->clausura_anonyma)
+                    si (nodus->titulus && !clausura_tacita)
                     {
                         chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
                     }

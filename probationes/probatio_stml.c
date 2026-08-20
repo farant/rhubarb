@@ -3188,91 +3188,132 @@ s32 principale(vacuum)
 
     imprimere("\n--- Probans scriptionem pulchram contenti mixti ---\n");
 
+    /* NOTA DE CLAUSURIS: modus pulcher clausuram TACITAM ('</>')
+     * eligit dum contentum breve sit (vide STML_CLAUSURA_TACITA_
+     * LINEAE). Elementum super terminum COLLAPSUM tamen
+     * pulchrum=FALSUM accipit, ergo formam AUTHORIS retinet -
+     * unde '</post>' in casibus II et X iuxta '</>' stat. Vexillum
+     * unum duo nunc portat ('ne te indentes' et 'fidelitas'):
+     * inaequalitas nominata, non incidens. */
+
     /* I. elementum, deinde textus - terminus dexter collabitur */
     _pulchrum_probare(piscina, intern,
         "<t><ante>x</ante>n</t>",
-        "<t>\n  <ante>x</ante>n</t>",
+        "<t>\n  <ante>x</>n</>",
         "I elementum-tum-textus: PRAETERITUM");
 
-    /* II. textus, deinde elementum - speculum casus I */
+    /* II. textus, deinde elementum - speculum casus I. NOTA
+     * '</post>': post super terminum collapsum sedet */
     _pulchrum_probare(piscina, intern,
         "<t>n<post>y</post></t>",
-        "<t>n<post>y</post>\n</t>",
+        "<t>n<post>y</post>\n</>",
         "II textus-tum-elementum: PRAETERITUM");
 
     /* III. textus utrimque: elementum interpositum indentationem
      * SUAM omnino perdit - lectio sola sibi constans contractus */
     _pulchrum_probare(piscina, intern,
         "<t>a<b/>c</t>",
-        "<t>a<b/>c</t>",
+        "<t>a<b/>c</>",
         "III textus-elementum-textus: PRAETERITUM");
 
-    /* IV. CUSTOS REGRESSUS: nullus textus - forma hodierna manere
-     * DEBET (ante sanationem et post) */
+    /* IV. CUSTOS: nullus textus - dispositio (lineae, indentatio)
+     * manere DEBET; sola clausura tacita fit */
     _pulchrum_probare(piscina, intern,
         "<t><a/><b/></t>",
-        "<t>\n  <a/>\n  <b/>\n</t>",
+        "<t>\n  <a/>\n  <b/>\n</>",
         "IV omnia-elementa (custos): PRAETERITUM");
 
-    /* V. CUSTOS REGRESSUS: textus unicus - casum specialem
-     * praeexsistentem tangit, ab hoc opere INTACTUM */
+    /* V. CUSTOS: textus unicus - casum specialem praeexsistentem
+     * tangit; forma brevissima quam Fran petivit ('<foo>abc</>') */
     _pulchrum_probare(piscina, intern,
         "<t>textus solus</t>",
-        "<t>textus solus</t>",
+        "<t>textus solus</>",
         "V textus-unicus (custos): PRAETERITUM");
 
-    /* VI. albus solus inter elementa: TRANSPARENS esse debet.
-     * Hodie linea vacua vaga oritur - contentum nodi albi recte
-     * supprimitur sed ansa lineam suam nihilominus addit. Exitus
-     * casui IV par esse DEBET */
+    /* VI. albus solus inter elementa: TRANSPARENS esse debet -
+     * exitus casui IV par */
     _pulchrum_probare(piscina, intern,
         "<t><a/>  <b/></t>",
-        "<t>\n  <a/>\n  <b/>\n</t>",
+        "<t>\n  <a/>\n  <b/>\n</>",
         "VI albus-solus transparens: PRAETERITUM");
 
     /* VII. termini plures: omnis terminus textum tangit */
     _pulchrum_probare(piscina, intern,
         "<t>a<b/>c<d/>e</t>",
-        "<t>a<b/>c<d/>e</t>",
+        "<t>a<b/>c<d/>e</>",
         "VII termini plures: PRAETERITUM");
 
-    /* VIII. nidificatio: indentatio + I recte componi debet */
+    /* VIII. nidificatio: indentatio + I recte componi debet.
+     * Catena '</>' contigua est - vide invariantem infra */
     _pulchrum_probare(piscina, intern,
         "<root><t><ante>x</ante>n</t></root>",
-        "<root>\n  <t>\n    <ante>x</ante>n</t>\n</root>",
+        "<root>\n  <t>\n    <ante>x</>n</>\n</>",
         "VIII nidificatio componens: PRAETERITUM");
 
     /* IX. elementum-TEXTUS-elementum: forma quam ARBOR ipsa fert
      * (lexema = <ante> + litterae + <post>). Casus consumptoris
-     * veri, ab octo prioribus NON tactus - terminus uterque
-     * collabitur dum termini extremi non */
+     * veri, ab octo prioribus NON tactus */
     _pulchrum_probare(piscina, intern,
         "<t><a/>n<b/></t>",
-        "<t>\n  <a/>n<b/>\n</t>",
+        "<t>\n  <a/>n<b/>\n</>",
         "IX elementum-textus-elementum (forma arboris): PRAETERITUM");
 
     /* X. PRETIUM NOMINATUM figendum: vicinus termini collapsi
-     * pulchrum=FALSUM accipit, ergo formam suam INTERNAM quoque
-     * planam reddit. Mensuratum, non incidens - si quis hoc mutet,
-     * haec probatio id dicat */
+     * pulchrum=FALSUM accipit, ergo formam suam INTERNAM planam
+     * reddit ET clausuram nominatam retinet. Mensuratum */
     _pulchrum_probare(piscina, intern,
         "<t>n<post><alta><altior/></alta></post></t>",
-        "<t>n<post><alta><altior/></alta></post>\n</t>",
+        "<t>n<post><alta><altior/></alta></post>\n</>",
         "X planatio vicini (pretium fixum): PRAETERITUM");
 
-    /* XI. effugium entium per semitam mixtam: textus significans
-     * FALSO scribitur, sed _scribere_evasus nihilominus currit */
+    /* XI. effugium entium per semitam mixtam */
     _pulchrum_probare(piscina, intern,
         "<t><a/>x &amp; y</t>",
-        "<t>\n  <a/>x &amp; y</t>",
+        "<t>\n  <a/>x &amp; y</>",
         "XI effugium entium in contento mixto: PRAETERITUM");
 
-    /* XII. COMMENTUM textui adiacens: se indentat ut elementum,
-     * ergo terminus sinister eius spatium fert, dexter non */
+    /* XII. COMMENTUM textui adiacens */
     _pulchrum_probare(piscina, intern,
         "<t><!--c-->n</t>",
-        "<t>\n  <!--c-->n</t>",
+        "<t>\n  <!--c-->n</>",
         "XII commentum textui adiacens: PRAETERITUM");
+
+    {
+        /* XIII. LIMEN clausurae tacitae - altera pars regulae,
+         * ab omnibus supra NON tacta (omnes breves sunt).
+         * Ultra limen nomen RETINETUR quia tag apertum extra
+         * schermum abiit et nomen tunc auxilium est.
+         *
+         * INVARIANS quem hoc figit: contentum parentis contentum
+         * liberi CONTINET, ergo parens numquam brevior est quam
+         * liberus. Unde clausura tacita parentis clausuram tacitam
+         * omnium posterorum IMPLICAT - catenae '</>' semper
+         * contiguae, numquam intermixtae. */
+        ChordaAedificator* aed;
+        chorda             ingressus;
+        chorda             exitus;
+        StmlResultus       res;
+        i32                j;
+
+        aed = chorda_aedificator_creare(piscina, MMMMXCVI);
+        chorda_aedificator_appendere_literis(aed, "<longus>");
+        per (j = ZEPHYRUM; j < (XXX + X); j++)
+        {
+            chorda_aedificator_appendere_literis(aed, "<a/>");
+        }
+        chorda_aedificator_appendere_literis(aed, "</longus>");
+        ingressus = chorda_aedificator_finire(aed);
+
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        exitus = stml_scribere(res.elementum_radix, piscina, VERUM);
+
+        /* XL liberi => XLI lineae > XXX: nomen RETINETUR */
+        CREDO_VERUM(chorda_continet(exitus,
+            chorda_ex_literis("</longus>", piscina)));
+
+        imprimere("  XIII limen: nomen ultra limen retentum: PRAETERITUM\n");
+    }
 
     /* ==================================================
      * Compendium
