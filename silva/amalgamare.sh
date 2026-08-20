@@ -99,11 +99,19 @@ for f in "silva_token" "silva_lexema"; do
 done
 
 # ---- 2. build + run the amalgamator (manifest + shared mechanism) ----
-echo "  [silva] amalgamator.c (+ silva_amalgama.c + silva_unitates.c)"
+# Fontes ex POLITICA, non hic enumerati: haec lista et ea scriptoris
+# excludendorum idem esse DEBENT, et cum geminae essent, divergerunt
+# (vide amalgamatoris_fontes in fontes_politica.sh).
+# shellcheck source=/dev/null
+. "$SILVA_DIR/instrumenta/principalia/fontes_politica.sh"
+FONTES_AMALGAMATORIS=""
+for f in $(amalgamatoris_fontes); do
+    FONTES_AMALGAMATORIS="$FONTES_AMALGAMATORIS $RADIX_DIR/$f"
+done
+echo "  [silva] amalgamator.c (fontes ex politica)"
+# shellcheck disable=SC2086
 clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -I"$SILVA_DIR/instrumenta" \
-    "$SILVA_DIR/instrumenta/principalia/amalgamator.c" \
-    "$SILVA_DIR/instrumenta/silva_amalgama.c" \
-    "$SILVA_DIR/instrumenta/silva_unitates.c" $obj_files \
+    $FONTES_AMALGAMATORIS $obj_files \
     -o "$BUILD_DIR/amalgamator" || exit 1
 
 "$BUILD_DIR/amalgamator" "$RADIX_DIR" "$AMALGAMA_DIR/silva.c" || exit 1

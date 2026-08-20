@@ -106,19 +106,14 @@ trap _exitum_reddere EXIT
 _amalgamatorem_struere() {
     case "$PROIECTUM" in
         silva)
-            # NB haec recipe GEMINA est eius in silva/amalgamare.sh -
-            # ambae amalgamatorem struunt, neutra alteram consulit.
-            # Divergerunt semel iam: silva_unitates.c in amalgamare.sh
-            # (fed3e78) additum est, hic NUMQUAM - unde hic scriptor
-            # pro silva omnino frangebatur, et nemo id sciebat quia
-            # nemo eum curreret. Porta vetustatis (gradus 0
-            # amalgamandi) hanc classem in posterum capit; recipe
-            # communicanda manet OSTIUM nominatum.
+            # Fontes ex POLITICA (unus fons veritatis - vide
+            # amalgamatoris_fontes ibi pro historia divergentiae).
+            # Obiecta hic CALEFACTA sumuntur; vectis ea recentia
+            # struit - discrimen legitimum, ergo non communicatum.
+            # shellcheck disable=SC2046
             clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes \
                 -Isilva/instrumenta \
-                silva/instrumenta/principalia/amalgamator.c \
-                silva/instrumenta/silva_amalgama.c \
-                silva/instrumenta/silva_unitates.c \
+                $(amalgamatoris_fontes) \
                 silva/build/piscina.o silva/build/chorda.o \
                 silva/build/chorda_aedificator.o silva/build/xar.o \
                 silva/build/tabula_dispersa.o silva/build/friatio.o \
