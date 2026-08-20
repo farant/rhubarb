@@ -133,6 +133,17 @@ forbids. Fran's move-don't-delete instinct is exactly right here.
 5. **Not a downside**: git history survives `git mv` with rename
    detection, and the frozen-reference purpose in silva/CLAUDE.md is
    *better* served by a readable archive folder than by deletion.
+6. **The move would silently reverse a standing decretum.** Found by
+   the ledger's duplicate-guard, not by reading code — decretum
+   **01KXSAK5K7HW** (Fran, 2026-07-17) rules that the 8 codex-58
+   (VANA) sites in the legacy parsers are NOT fixed, NOT `TOLERA`-ed,
+   and NOT excluded: they "stand in the census as named frozen
+   residue," with the metric pinned at **census 58 = 8**. That
+   visibility is the whole point of the ruling. If the files move out
+   of the swept paths, the count silently drops to 0 — which reads as
+   an improvement and is actually the loss of a deliberate choice.
+   **Before moving: decide whether the pin follows the files, or the
+   decretum is superseded.** Sibling decretum: 01KXR5ZMAWV0.
 
 ## 8. Recommended procedure
 

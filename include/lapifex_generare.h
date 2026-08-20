@@ -1,5 +1,21 @@
 /* lapifex_generare.h - Generator Grammaticae GLR
  *
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │ CONSUMPTOR VIVUS: lib/nuntium_schema.c                        │
+ * │                                                               │
+ * │ Lapifex silvae ANTECESSOR est (arbor v1 -> arbor2 -> lapifex  │
+ * │ -> silva) et ut parsator C89 RETIRATUS. Sed nuntium - quod    │
+ * │ vivit - schema suum HAC machina compilat. Munera DUO,         │
+ * │ quorum arbor plagularum unum solum ostendit.                  │
+ * │                                                               │
+ * │ ERGO: lapifex_*.{c,h} archivari aut deleri NON possunt dum    │
+ * │ nuntium ea petit, quamvis probationes eius                    │
+ * │ (probatio_lapifex_c89_*) munus retiratum solum probent et     │
+ * │ ideo seorsum moveri possint.                                  │
+ * │                                                               │
+ * │ Vide project-specs/generationes-praecedentes-archivandae.md   │
+ * └──────────────────────────────────────────────────────────────┘
+ *
  * Legit grammaticam ex STML, computat FIRST/FOLLOW coniuncta,
  * construit collectio canonica LR(1).
  *
