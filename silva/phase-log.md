@@ -12818,3 +12818,40 @@ Probatio 36/36; silva 42/42; silex restructum (machinam fert).
 Tres gradus probationis nunc omnes vivunt: assertiones punctatae
 (fixturae), census corporis pinnatus (ambigua), proprietas
 metamorphica (haec).
+
+## 2026-08-20 — T0 + T1 arboris; machina amalgamandi exercita
+
+Duo tranchae plani arboris (project-specs/arbor-stml-plan.md)
+perfectae, et per T1 machina amalgamandi primum vere exercita.
+
+**T0 — sanatio stml (22542ea, 6409d07, 5905a93).** Scriptio pulchra
+contentum mixtum corrumpebat et CUMULABAT; probationes ANTE
+sanationem rubrae verificatae (XIII assertiones). Custos
+'omnia-elementa' revelavit quod inquisitio non ceperat: scriptio
+pulchra puncto fixo carebat pro OMNI elemento plus quam unum liberum
+ferente. Formae IV additae postea, quia forma quam ARBOR ipsa fert
+(elementum-textus-elementum) inter octo priores NON erat - contra
+bibliothecam prae-sanatione probatae (XIII -> XXI defectus), ergo
+regressus verae. Clausura tacita ('</>') addita sub limine XXX
+linearum. Forma captionis REIECTA super mensuram. 679/679.
+
+**T1 — porta vetustatis (51cdcf1, 7a9c0c5, 078d3dd, 9ddb04c,
+32da1fe).** Vitium plantatum utrimque mensuratum. Sed inventa maiora
+fuerunt: scriptor excludendorum pro silva OMNINO fractus; cursus eius
+fractus exitum commissum delebat; TESSERA ET OFFICINA AMALGAMARI NON
+POTERANT; tria manifesta rancida ab 7ba8d84. Omnia tacita per menses.
+Detail: tools/amalgamatio.worklog.md.
+
+**Haruspex (7ec7465)** ruber et obscurus - exclusio NOMINE scripta cum
+ratio CLASSEM tegeret. Nunc viridis: CCXLIII TU, VII.D assertiones
+formarum contra clang. Nusquam tamen vocatur.
+
+**RADIX COMMUNIS omnium:** casus singuli qui CLASSES esse debuerant.
+Nomen unum in haruspice; recipe quater descripta; introitus manifesti
+quem nemo re-derivavit. Quisque rectus donec membrum SECUNDUM
+appareret, et omnis fractura tacita quia instrumenta quae clamarent
+ea erant quae nemo currebat.
+
+**Proximum:** T2 arboris (stratum vocabularii - sigillum, tags
+lexematum praefixo 'lex-', tabula orthographiae cum porta sua).
+Aperta amalgamatis in worklog §'Still open'.
