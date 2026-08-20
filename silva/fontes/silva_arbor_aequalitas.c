@@ -22,6 +22,7 @@ nomen structura {
          SilvaArborDifferentia* differentia;
                      character  via[SILVA_ARBOR_VIA_CAPACITAS];
                            i32  via_longitudo;
+                           i32  profunditas;
 } ArborComparator;
 
 
@@ -490,8 +491,14 @@ _arbor_nodi_aequales (
             NIHIL, NIHIL, -I, -I);
     }
 
-    /* PATER: nullitas sola - vide rationem in capite */
-    si ((a->pater == NIHIL) != (b->pater == NIHIL))
+    /* PATER: nullitas sola, et INTERIORIBUS solis. Parentela
+     * RADICUM comparationis EXTRA comparationem iacet: subarbor in
+     * arbore maiore electa patrem habet, arbor eadem seorsum lecta
+     * habere non potest. Radices conferre CIX divergentias falsas
+     * super corpus dedit - artificium comparationis, non defectus
+     * lectoris. */
+    si (   comparator->profunditas > ZEPHYRUM
+        && (a->pater == NIHIL) != (b->pater == NIHIL))
     {
         redde _arbor_divergere(comparator, "nodus/pater-nullitas", a, b,
             NIHIL, NIHIL, -I, -I);
@@ -502,8 +509,10 @@ _arbor_nodi_aequales (
     {
         via_prior = comparator->via_longitudo;
         _arbor_via_premere(comparator, a->genus, i);
+        comparator->profunditas++;
         fructus = _arbor_valores_aequales(comparator, a->loci[i], b->loci[i],
             a, b, (s32)i);
+        comparator->profunditas--;
         _arbor_via_restituere(comparator, via_prior);
     }
     redde fructus;
@@ -533,6 +542,7 @@ silva_arbor_aequalis (
     comparator.modus          = modus;
     comparator.differentia    = differentia;
     comparator.via_longitudo  = ZEPHYRUM;
+    comparator.profunditas    = ZEPHYRUM;
     comparator.via[0]         = '\0';
 
     redde _arbor_nodi_aequales(&comparator, a, b);

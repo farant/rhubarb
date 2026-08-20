@@ -1211,19 +1211,34 @@ principale (vacuum)
             CREDO_NON_NIHIL (nidus_b);
             CREDO_NON_NIHIL (nidus_a->pater);
             CREDO_NON_NIHIL (nidus_b->pater);
-            CREDO_VERUM (silva_arbor_aequalis(nidus_a, nidus_b,
+
+            /* Vitium in nodo INTERIORE plantandum, et comparatio a
+             * RADICIBUS incipienda: parentela radicum comparationis
+             * extra comparationem iacet, ergo ibi CONSULTO non
+             * confertur (T6: radices conferre CIX divergentias
+             * falsas super corpus dedit). Prima forma huius
+             * probationis vitium in radice IPSA plantabat et ideo
+             * post emendationem T6 tacuit. */
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
 
             servatus        = nidus_b->pater;
             nidus_b->pater  = NIHIL;
-            CREDO_FALSUM (silva_arbor_aequalis(nidus_a, nidus_b,
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
             CREDO_VERUM (differentia.campus != NIHIL
                 && strcmp(differentia.campus,
                        "nodus/pater-nullitas") == ZEPHYRUM);
             nidus_b->pater = servatus;
-            CREDO_VERUM (silva_arbor_aequalis(nidus_a, nidus_b,
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+
+            /* et RADIX ipsa non confertur - custodia deliberata */
+            servatus = b->pater;
+            b->pater = b->pater ? NIHIL : a;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            b->pater = servatus;
         }
 
         /* xiv. locus/genus-valoris - locus praesens contra NIHIL */

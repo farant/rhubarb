@@ -13202,3 +13202,67 @@ oraculum B (circuitus octetorum per silva_scribere_nodum, quod
 dominium geminum triviorum capit ubi comparator caecus est) +
 recensio repraesentationalis (quid circuitum NON supervixerit,
 nominatim, in worklog).
+
+## 2026-08-20 — T6 arboris: PORTA M1 + recensio repraesentationalis
+
+probatio_silva_arbor_circuitus.c. LXXVIII plagulae, CCLXXXI
+subarbores, CCLXX/CCLXXXI UTROQUE oraculo, NULLAE divergentiae.
+XI casus non transeuntes recusatio M1 documentata sunt (lexema
+non-FONS, limes expansionis) - consilium, non reliquiae.
+Detail: silva/fontes/silva_arbor.worklog.md.
+
+**RECENSIO DUO VITIA VERA INVENIT - quod est eius munus.** Cursu
+primo oraculum A LXXIX/CCLXXXI. Recensio classes nominavit, et
+ambae vitia fuerunt, non limites repraesentationis.
+
+(i) 'nodus/pater-nullitas' CIX - vitium in COMPARATORE MEO.
+Subarbor in arbore maiore electa patrem HABET; eadem seorsum lecta
+habere non potest. Custodia rem conferebat cuius responsum EXTRA
+comparationem iacet. Sanatum: pater INTERIORIBUS solis confertur.
+Probatio T4 quae hoc vitium plantabat id in RADICE plantabat, ergo
+post sanationem TACUIT - mota ad nodum interiorem, cum assertione
+nova quod radix consulto NON confertur.
+
+(ii) 'lexema/offset' CLXXVIII - vitium VERUM in ancora. Scriptor
+ancoram ex lexemate PRIMO sumebat, sed emissio TRIVIIS DUCENTIBUS
+incipit. Lector ergo cursorem ad lexema ponebat, trivia ante id
+emittebat, et omnes sedes longitudine indentationis labebantur.
+PROBATIO PARVA ID CAPERE NON POTUIT: 'int n = 0;' lexema primum ad
+offset 0 sine ullo trivio ducente habet - forma unica in qua vitium
+evanescit. Corpus opus fuit. Instantia recta legis 'fixturae
+praesumptiones tuas communicant; corpus non'.
+
+(iii) 'lexema/initium-lineae' X - NON vitium sed FACTUM
+repraesentationale. An lexema primum lineam incipiat pendet ab eo
+quod ANTE subarborem in plagula stat; ex subarbore derivari NON
+potest. Contextus est, sicut ipsa ancora, ergo in involucro portatur
+('linea-initium').
+
+**IUSTIFICATIO SPEC PRO ORACULO B FALSA EST, MENSURATA.** Spec §8 et
+planum dicunt B necessarium quia comparator ad dominium GEMINUM
+triviorum CAECUS sit. Planum etiam dixit: si A quoque cadat, siste et
+investiga. Vitium plantatum, mensuratum: 'dominium geminum: A CEPIT,
+B CEPIT'. AMBO capiunt, quia A series triviorum PER LEXEMA confert,
+ergo dominus secundus seriem ostendit ubi origo nullam habebat.
+Casus quem spec imaginabatur postulat originem trivia aequi-contenta
+in AMBOBUS sedibus habere - tunc autem octeti quoque congruunt et B
+pariter tacet. In circuitu A ad dominium triviorum NON infirmior est
+quam B.
+
+B TAMEN RETINETUR alia de causa quae VERA est: oraculum INDEPENDENS
+est - semitam silva_scribere_nodum super arbores LECTAS exercet quam
+A numquam tangit, et defectum in A IPSO caperet (comparator falso
+'aequales' dicens A caecus est per constructionem, B clamat).
+Disiunctio nunc DIRECTE asserta: vitium 'longitudo' plantatum A
+cadere facit et B transire (longitudo confertur sed numquam
+emittitur). Sine ea assertione 'ambo oracula viridia' significare
+posset 'idem bis egimus'.
+
+Nota methodi: ter hoc arcu campum divergentem divinavi et ter
+erravi. Campum et semitam comparatoris IMPRIMERE rem uno cursu
+solvit, quotiens. Structura-exitus se meruit: booleano, quaeque
+harum bisectio fuisset.
+
+**M1 PERFECTUM.** Restat T7 (integratio amalgamatis: silva.h
+prototypis publicis extendere - functiones iam EXTERNAE sunt, ergo
+res declarationis pro hospitibus, non nexus).

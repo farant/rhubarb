@@ -66160,6 +66160,7 @@ nomen structura {
                                i32 ancora_linea;
                                i32 ancora_columna;
                                s32 ancora_fons;
+                               b32 ancora_initium_lineae;
 
     /* Fractura */
                constans character* causa;
@@ -66254,13 +66255,42 @@ _numerare_lexema (
         _clavis_lexematis(scriptor->piscina, lexema), nota);
 
     /* Ancora = primum lexema ordine ambulationis */
+    /* ANCORA = sedes ubi EMISSIO incipit, non sedes lexematis.
+     * Emissio TRIVIIS ducentibus incipit, ergo si lexema primum
+     * spatia_ante fert, ancora ex TRIVIO PRIMO sumenda est.
+     * Aliter lector cursorem ad lexema ponit, deinde trivia ante
+     * id emittit, et lexema ipsum post trivia cadit - omnes sedes
+     * longitudine indentationis labuntur.
+     * MENSURATUM (T6): lexema solum adhibens CLXXVIII divergentias
+     * 'lexema/offset' super corpus dedit. Probatio parva id NON
+     * cepit quia 'int n = 0;' lexema primum ad offset 0 sine ullo
+     * trivio ducente habet - casus in quo vitium evanescit. */
     si (!scriptor->ancora_nota)
     {
+        constans SilvaToken* initium = lexema;
+
+        si (   lexema->spatia_ante != NIHIL
+            && silva_xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+        {
+            constans SilvaToken* trivium = *(SilvaToken**)
+                silva_xar_obtinere(lexema->spatia_ante, ZEPHYRUM);
+
+            si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
+            {
+                initium = trivium;
+            }
+        }
+
         scriptor->ancora_nota     = VERUM;
-        scriptor->ancora_offset   = lexema->byte_offset;
-        scriptor->ancora_linea    = lexema->linea;
-        scriptor->ancora_columna  = lexema->columna;
+        scriptor->ancora_offset   = initium->byte_offset;
+        scriptor->ancora_linea    = initium->linea;
+        scriptor->ancora_columna  = initium->columna;
         scriptor->ancora_fons     = lexema->fons_index;
+        /* NON DERIVABILE ex subarbore: an lexema primum lineam
+         * incipiat pendet ab eo quod ANTE subarborem in plagula
+         * stat. Contextus est, sicut ipsa ancora - ergo portandum.
+         * (T6: X divergentiae 'lexema/initium-lineae' hinc.) */
+        scriptor->ancora_initium_lineae = lexema->initium_lineae;
     }
 }
 
@@ -67116,6 +67146,11 @@ silva_arbor_scribere_nodum (
             scriptor.ancora_linea);
         _attributum_numeri(&scriptor, involucrum, "columna",
             scriptor.ancora_columna);
+        si (scriptor.ancora_initium_lineae)
+        {
+            silva_stml_attributum_boolean_addere(involucrum, piscina,
+                intern, "linea-initium");
+        }
     }
 
     /* PASSUS II */
@@ -68308,6 +68343,8 @@ silva_arbor_legere (
     {
         sedes.offset = (s32)numerus;
         ancora_adest = VERUM;
+        sedes.post_lineam = silva_stml_attributum_habet(involucrum,
+            "linea-initium");
     }
     attributum = silva_stml_attributum_capere(involucrum, "linea");
     si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
@@ -68381,6 +68418,7 @@ nomen structura {
          SilvaArborDifferentia* differentia;
                      character  via[SILVA_ARBOR_VIA_CAPACITAS];
                            i32  via_longitudo;
+                           i32  profunditas;
 } ArborComparator;
 
 
@@ -68849,8 +68887,14 @@ _arbor_nodi_aequales (
             NIHIL, NIHIL, -I, -I);
     }
 
-    /* PATER: nullitas sola - vide rationem in capite */
-    si ((a->pater == NIHIL) != (b->pater == NIHIL))
+    /* PATER: nullitas sola, et INTERIORIBUS solis. Parentela
+     * RADICUM comparationis EXTRA comparationem iacet: subarbor in
+     * arbore maiore electa patrem habet, arbor eadem seorsum lecta
+     * habere non potest. Radices conferre CIX divergentias falsas
+     * super corpus dedit - artificium comparationis, non defectus
+     * lectoris. */
+    si (   comparator->profunditas > ZEPHYRUM
+        && (a->pater == NIHIL) != (b->pater == NIHIL))
     {
         redde _arbor_divergere(comparator, "nodus/pater-nullitas", a, b,
             NIHIL, NIHIL, -I, -I);
@@ -68861,8 +68905,10 @@ _arbor_nodi_aequales (
     {
         via_prior = comparator->via_longitudo;
         _arbor_via_premere(comparator, a->genus, i);
+        comparator->profunditas++;
         fructus = _arbor_valores_aequales(comparator, a->loci[i], b->loci[i],
             a, b, (s32)i);
+        comparator->profunditas--;
         _arbor_via_restituere(comparator, via_prior);
     }
     redde fructus;
@@ -68892,6 +68938,7 @@ silva_arbor_aequalis (
     comparator.modus          = modus;
     comparator.differentia    = differentia;
     comparator.via_longitudo  = ZEPHYRUM;
+    comparator.profunditas    = ZEPHYRUM;
     comparator.via[0]         = '\0';
 
     redde _arbor_nodi_aequales(&comparator, a, b);

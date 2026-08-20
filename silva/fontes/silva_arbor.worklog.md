@@ -522,3 +522,82 @@ The AMBIGUUS document now loads, and the test asserts the two arms are
 **different node objects** whose first tokens are **the same pointer**
 (`CREDO_AEQUALIS_PTR`). Equality of content would have passed with
 duplicated tokens; only pointer equality shows sharing survived.
+
+---
+
+## 2026-08-20 — T6, the M1 gate + representational audit
+
+`probatio_silva_arbor_circuitus.c`. **78 files, 281 subtrees, 270/281
+on BOTH oracles, zero divergences.** The 11 non-passing cases are the
+documented M1 refusal (`lexema non-FONS`, the expansion boundary) and
+are designed behaviour, not residue.
+
+### The audit found two real defects — which is the point
+
+First run: oracle A **79/281**. The audit named the classes, and both
+turned out to be genuine bugs rather than representational limits.
+
+**1. `nodus/pater-nullitas` × 109 — a bug in MY comparator.** A
+subtree selected from the middle of a tree HAS a parent; the same
+subtree loaded standalone cannot. So the pater-nullity check was
+comparing something whose answer lies outside the comparison. Fixed:
+pater is compared for INTERIOR nodes only. The T4 test that planted
+this fault had planted it at the comparison root, so it went silent
+after the fix — moved to an interior node, plus a new assertion that
+the root deliberately ISN'T compared.
+
+**2. `lexema/offset` × 178 — a real bug in the anchor.** The writer
+captured the anchor from the first *token*, but emission begins with
+that token's *leading trivia*. So the reader placed the cursor at the
+token, emitted the trivia first, and every position slid by the
+indentation width.
+
+**The small test could not have caught this.** `int n = 0;` has its
+first token at offset 0 with no leading trivia — the one shape where
+the bug vanishes. It took the corpus. Straight instance of "fixtures
+share your assumptions; a corpus does not."
+
+**3. `lexema/initium-lineae` × 10 — a representational fact, not a
+bug.** Whether the first token starts a line depends on what precedes
+the subtree IN THE FILE. It is not derivable from the subtree at all.
+So it is context, exactly like the anchor, and is now carried on the
+envelope as `linea-initium`.
+
+After all three: **270/281, zero divergences.**
+
+### The spec's justification for oracle B is WRONG, measured
+
+Spec §8 and the plan both say oracle B is needed because the
+comparator is **blind to trivia double-ownership** ("both owners look
+locally correct"). The plan also said: if A fails too, stop and
+investigate. I planted the fault and measured:
+
+    dominium geminum: A CEPIT, B CEPIT
+
+**Both catch it.** The reason is straightforward once seen: A compares
+trivia series PER TOKEN, so a second owner shows a series where the
+original had none, and A reports `trivia/ante`. The scenario the spec
+imagined — where both owners look locally correct — requires the
+original to have equal-content trivia at BOTH sites; but then the
+emitted bytes match too, and B is equally silent.
+
+**In the round-trip configuration, A is not weaker than B on trivia
+ownership.**
+
+B is kept, for a reason that IS true: it is an **independent** oracle.
+It exercises `silva_scribere_nodum` over *loaded* trees — a path A
+never touches — and it would catch a defect in A itself. A comparator
+that wrongly says "equal" is invisible to A by construction and loud
+in B.
+
+That the oracles are genuinely disjoint is now asserted directly: a
+planted `longitudo` mutation makes **A fail and B pass** (longitudo is
+compared but never emitted). Without that assertion, "both oracles
+green" could equally mean "we ran the same check twice".
+
+### Method note
+
+Three times this arc I guessed which field would diverge and was wrong
+three times. Printing the comparator's own `campus` and `via` settled
+it in one run, every time. The out-struct earned its existence: with a
+boolean, each of these would have been a bisect.
