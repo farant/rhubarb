@@ -332,6 +332,25 @@ _typum_asserere (FILE* pl, SilvaSemantica* sem, TypusC89* typus,
  * Plagula una
  * ================================================== */
 
+/* Estne plagula LEXICON silvae (systema_*.h)? Basis nominis
+ * inspicitur, non via tota - lexicon ubicumque situm idem manet.
+ * CLASSIS, non nomen: lexicon quodlibet futurum se sponte excludet. */
+hic_manens b32
+_lexicon_est (constans character* via)
+{
+    constans character* basis;
+    constans character* solidus;
+
+    basis   = via;
+    solidus = strrchr(via, '/');
+    si (solidus != NIHIL)
+    {
+        basis = solidus + I;
+    }
+    redde (strncmp(basis, "systema_", magnitudo("systema_") - I) == ZEPHYRUM)
+        ? VERUM : FALSUM;
+}
+
 hic_manens vacuum
 _plagulam_inspicere (constans SilvaContextus* ctx,
     constans character* via)
@@ -353,9 +372,17 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
     {
         redde;
     }
-    /* systema ipsum numquam a clang compilatur (typi synthetici
-     * consulto - partitio provenientiae); haruspex eum praeterit */
-    si (strstr(via, "systema_c89.h") != NIHIL)
+    /* LEXICA (systema_*.h) numquam a clang compilantur: typi
+     * synthetici consulto sunt - partitio provenientiae - et
+     * plagulae ipsae stare solae nequeunt (systema_posix.h 'time_t'
+     * nominat quem nullum caput vero praebet). Haruspex eas praeterit.
+     *
+     * Prius 'systema_c89.h' SOLUM nominabatur. Cum systema_posix.h
+     * lexicon SECUNDUM factum est (28502f2), nemo condicionem
+     * extendit: haruspex ex illo die ruber stetit, et nemo vidit
+     * quia nemo eum currebat. Nunc CLASSIS excluditur, non nomen -
+     * lexicon tertium se sponte excludet. */
+    si (_lexicon_est(via))
     {
         piscina_destruere(piscina);
         redde;
