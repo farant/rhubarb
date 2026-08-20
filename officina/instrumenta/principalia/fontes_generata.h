@@ -13,7 +13,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
     { "include/friatio.h", SERVANDA_FRIATIONIS, NIHIL, FALSUM, VERUM },
     { "include/tabula_dispersa.h", NIHIL, EXCLUDENDA_TABULAE, FALSUM, VERUM },
-    { "include/xar.h", NIHIL, EXCLUDENDA_XARIS, FALSUM, VERUM }
+    { "include/xar.h", NIHIL, EXCLUDENDA_XARIS, FALSUM, VERUM },
+    { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {

@@ -7,7 +7,6 @@
  * tessera/amalgamare.sh
  */
 
-#include "postulata_posix.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -744,14 +743,14 @@ nomen size_t 								memoriae_index;
  * Captat statum piscinam ut postea reficere possit
  */
 nomen structura TesseraPiscinaNotatio {
-    vacuum*        alveus_nunc;   /* Index ad alveum currentem */
-    memoriae_index positus;       /* Offset in alveo */
+            vacuum* alveus_nunc;   /* Index ad alveum currentem */
+    memoriae_index  positus;       /* Offset in alveo */
 } TesseraPiscinaNotatio;
 
 TesseraPiscina*
 tessera_piscina_generare_dynamicum (
-		constans character* piscinae_titulum,
-			  memoriae_index  mensura_alvei_initia);
+          constans character* piscinae_titulum,
+              memoriae_index  mensura_alvei_initia);
 
 
 /* ===============================================
@@ -760,7 +759,7 @@ tessera_piscina_generare_dynamicum (
 
 vacuum
 tessera_piscina_destruere (
-		TesseraPiscina* piscina);
+        TesseraPiscina* piscina);
 
 
 /* ===============================================
@@ -769,14 +768,14 @@ tessera_piscina_destruere (
 
 static vacuum*
 tessera_piscina_allocare (
-						 TesseraPiscina* piscina,
-		memoriae_index  mensura);
+                         TesseraPiscina* piscina,
+                  memoriae_index  mensura);
 
 static vacuum*
 tessera_piscina_allocare_ordinatum (
-						 TesseraPiscina* piscina,
-		memoriae_index  mensura,
-		memoriae_index  ordinatio);
+                         TesseraPiscina* piscina,
+                  memoriae_index  mensura,
+                  memoriae_index  ordinatio);
 
 #endif
 
@@ -784,14 +783,15 @@ tessera_piscina_allocare_ordinatum (
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
 
+
 /* ==================================================
  * Creatio / Destructio
  * ================================================== */
 
 static TesseraChordaAedificator*
 tessera_chorda_aedificator_creare (
-	       TesseraPiscina* piscina,
-	memoriae_index  capacitas_initialis);
+           TesseraPiscina* piscina,
+    memoriae_index  capacitas_initialis);
 
 
 /* ==================================================
@@ -800,8 +800,8 @@ tessera_chorda_aedificator_creare (
 
 static b32
 tessera_chorda_aedificator_appendere_character (
-	TesseraChordaAedificator* aedificator,
-	        character  c);
+    TesseraChordaAedificator* aedificator,
+            character  c);
 
 
 /* ==================================================
@@ -810,20 +810,20 @@ tessera_chorda_aedificator_appendere_character (
 
 static b32
 tessera_chorda_aedificator_appendere_literis (
-	 TesseraChordaAedificator* aedificator,
-	constans character* cstr);
+     TesseraChordaAedificator* aedificator,
+    constans character* cstr);
 
 static b32
 tessera_chorda_aedificator_appendere_i32 (
-	TesseraChordaAedificator* aedificator,
-	              i32  n);
+    TesseraChordaAedificator* aedificator,
+                  i32  n);
 
 /* spectare: vide contentum currentem sine finiendo
  * Reddit chordam spectationem buffer currenti.
  * Validus solum usque ad proximam mutationem. */
 static TesseraChorda
 tessera_chorda_aedificator_spectare (
-	TesseraChordaAedificator* aedificator);
+    TesseraChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -834,7 +834,7 @@ tessera_chorda_aedificator_spectare (
  * Utile ad reutilizandum aedificatorem pro chordis multiplicibus */
 static vacuum
 tessera_chorda_aedificator_reset (
-	TesseraChordaAedificator* aedificator);
+    TesseraChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -869,7 +869,10 @@ tessera_chorda_aedificator_reset (
  *
  * Nota: Indicator promovetur ad proximam runam post decodificationem
  */
-static s32 tessera_utf8_decodere(constans i8** ptr, constans i8* finis);
+static s32
+tessera_utf8_decodere (
+    constans i8** ptr,
+    constans i8*  finis);
 
 /*
  * utf8_longitudo_byte - Quot bytes hic byte principalis indicat?
@@ -886,7 +889,9 @@ static s32 tessera_utf8_decodere(constans i8** ptr, constans i8* finis);
  *   10xxxxxx -> 0 (continuatio, non principalis)
  *   11111xxx -> 0 (invalidum)
  */
-static s32 tessera_utf8_longitudo_byte(i8 byte);
+static s32
+tessera_utf8_longitudo_byte (
+    i8 byte);
 
 /*
  * utf8_est_continuatio - An hic byte est continuatio? (10xxxxxx)
@@ -895,9 +900,46 @@ static s32 tessera_utf8_longitudo_byte(i8 byte);
  *
  * Redde: VERUM si continuatio, FALSUM aliter
  */
-static b32 tessera_utf8_est_continuatio(i8 byte);
+static b32
+tessera_utf8_est_continuatio (
+    i8 byte);
 
 #endif /* UTF8_H */
+
+/* ================= ex include/postulata_posix.h ================= */
+/* postulata_posix.h - postulata platformae pro superficie POSIX
+ *
+ * SUTURA praeprocessoris pura: interfacies portabilis, mores
+ * per-platformam. glibc sub -std=c89 declarationes POSIX CELAT nisi
+ * macro probationis proprietatum ante caput systematis primum
+ * definitur; Darwin et musl ordinarie permissivi sunt. Sine hoc
+ * capite plagula quaeque POSIX-utens in Linux glibc cadit
+ * (tcp_posix.c: XX errores ex radicibus IV celatis - mensuratum).
+ *
+ * CUR _DEFAULT_SOURCE: sonda Docker 2026-08-03 (glibc 2.35 gcc 11.4;
+ * musl 1.2.5 gcc 13.2; VI plagulae x V variantes - acta in actis
+ * tabularii 01KYTGNA36) mensuravit: _DEFAULT_SOURCE omnia
+ * macro-sanabilia in AMBABUS libc sanat et in Darwin nihil agit.
+ * Variantes strictae PEIORES sunt, non aequales: _XOPEN_SOURCE 700
+ * et _POSIX_C_SOURCE usleep RE-CELANT (XPG7 sustulit). Decretum
+ * 01KZ3RYZWK: caput unum, non definitiones per plagulam.
+ *
+ * LEX (codex examinis 85 custodit): hoc caput inclusio PRIMA
+ * plagulae POSIX-utentis sit - ante caput proprium, ante latina.h.
+ * features.h glibc copiam SEMEL figit, primo tactu capitis systematis
+ * cuiuslibet; latina.h stddef.h trahit, ergo "prima" ad litteram.
+ *
+ * Nomen _DEFAULT_SOURCE classis reservatae est (C89 7.1.3) -
+ * REFERIMUS interruptorem glibc documentatum, non coinamus (eadem
+ * licentia qua externa systematis referuntur).
+ */
+
+#ifndef POSTULATA_POSIX_H
+#define POSTULATA_POSIX_H
+
+#define _DEFAULT_SOURCE 1
+
+#endif /* POSTULATA_POSIX_H */
 
 /* ================= ex tessera/fontes/tessera_cellula.h ================= */
 /* tessera_cellula.h - Cellula, stilus, colores, signa (Phase A)
@@ -1202,6 +1244,7 @@ b32 tessera_magnitudinem_renovare (TesseraOpus* opus);
                               * vel -DPISCINA_DEBUG=1 in linea compilandi */
 #endif
 
+
 /* ===========================================================
  * Structura Alvei - allocatio singularis
  * =========================================================== */
@@ -1234,7 +1277,7 @@ structura TesseraPiscina {
 
 interior memoriae_index
 _proxima_ordinatio (
-        memoriae_index ptr, 
+        memoriae_index ptr,
         memoriae_index ordinatio)
 {
     memoriae_index ordinatus = ptr + (ordinatio - I);
@@ -1247,9 +1290,10 @@ _debug_imprimere (
     constans character* operatio,
         memoriae_index  mensura)
 {
-    si (PISCINA_DEBUG) 
+    si (PISCINA_DEBUG)
     {
-        imprimere("[PISCINA %s] %s: %zu bytes\n", piscinae_titulum, operatio, mensura);
+        imprimere("[PISCINA %s] %s: %lu bytes\n", piscinae_titulum,
+                  operatio, (insignatus longus)mensura);
     }
 }
 
@@ -1272,9 +1316,9 @@ _alveus_nova (
         redde NIHIL;
     }
 
-    alveus->capacitas = capacitas;
-    alveus->offset    = ZEPHYRUM;
-    alveus->sequens   = NIHIL;
+    alveus->capacitas  = capacitas;
+    alveus->offset     = ZEPHYRUM;
+    alveus->sequens    = NIHIL;
 
     redde alveus;
 }
@@ -1301,6 +1345,7 @@ _catena_alveus_destruere (
     }
 }
 
+
 /* ===========================================================
  * ALLOCATIO FUNDAMENTALIS LOGICA
  * =========================================================== */
@@ -1314,14 +1359,14 @@ _allocare_interna (
 {
     memoriae_index  ordinatus_offset;
     memoriae_index  necessaria;
-    memoriae_index  summa_nunc; 
+    memoriae_index  summa_nunc;
             Alveus* b;
             vacuum* ptr;
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
     ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-    necessaria       = ordinatus_offset + mensura;
+    necessaria = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -1360,8 +1405,8 @@ _allocare_interna (
                 redde NIHIL;
             }
 
-            piscina->nunc->sequens = alveus_novum;
-            piscina->nunc = alveus_novum;
+            piscina->nunc->sequens  = alveus_novum;
+            piscina->nunc           = alveus_novum;
 
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
             necessaria = ordinatus_offset + mensura;
@@ -1376,9 +1421,9 @@ _allocare_interna (
             /* Non dynamicum et nulli alvei reliqui */
             si (fatalis)
             {
-                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %zu)\n",
+                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %lu)\n",
                           piscina->titulus ? piscina->titulus : "nemo",
-                          necessaria);
+                          (insignatus longus)necessaria);
                 exire(I);
             }
             redde NIHIL;
@@ -1406,6 +1451,7 @@ _allocare_interna (
     redde ptr;
 }
 
+
 /* ===========================================================
  * GENERATIO
  * =========================================================== */
@@ -1421,7 +1467,7 @@ tessera_piscina_generare_dynamicum (
     si (!piscina) redde NIHIL;
 
     alveus_primus = _alveus_nova(mensura_alvei_initia);
-    si (!alveus_primus) 
+    si (!alveus_primus)
     {
         liberare(piscina);
         redde NIHIL;
@@ -1460,7 +1506,7 @@ tessera_piscina_generare_dynamicum (
  * DESTRUCTIO
  * =========================================================== */
 
-vacuum 
+vacuum
 tessera_piscina_destruere (
         TesseraPiscina* piscina)
 {
@@ -1476,7 +1522,6 @@ tessera_piscina_destruere (
 /* ===========================================================
  * ALLOCATIO - EXITIUM SI DEFECIT
  * =========================================================== */
-
 
 static vacuum*
 tessera_piscina_allocare (
@@ -1495,19 +1540,19 @@ tessera_piscina_allocare_ordinatum (
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
 
-
 /* ================= ex lib/chorda_aedificator.c ================= */
+
 
 /* ==================================================
  * Structura ChordaAedificator - Interna
  * ================================================== */
 
 structura TesseraChordaAedificator {
-	           i8*  buffer;
-	memoriae_index  capacitas;
-	memoriae_index  offset;
-	       TesseraPiscina* piscina;
-	           i32  indentatio_gradus;
+                i8* buffer;
+    memoriae_index  capacitas;
+    memoriae_index  offset;
+           TesseraPiscina* piscina;
+               i32  indentatio_gradus;
 };
 
 
@@ -1516,86 +1561,82 @@ structura TesseraChordaAedificator {
  * ================================================== */
 
 interior memoriae_index
-_proxima_capacitas(memoriae_index nunc)
+_proxima_capacitas (
+    memoriae_index nunc)
 {
-	/* Duplica capacitatem donec satis habeamus */
-	redde nunc > ZEPHYRUM ? nunc * II : XVI;
+    /* Duplica capacitatem donec satis habeamus */
+    redde nunc > ZEPHYRUM ? nunc * II : XVI;
 }
 
 interior b32
-_crescere(
-    TesseraChordaAedificator* aedificator, 
+_crescere (
+    TesseraChordaAedificator* aedificator,
        memoriae_index  necessaria)
 {
-	memoriae_index  capacitas_nova;
-	            i8* buffer_novum;
+    memoriae_index  capacitas_nova;
+                i8* buffer_novum;
 
-	capacitas_nova = aedificator->capacitas;
-	dum (capacitas_nova < necessaria)
-	{
-		capacitas_nova = _proxima_capacitas(capacitas_nova);
-	}
+    capacitas_nova = aedificator->capacitas;
+    dum (capacitas_nova < necessaria)
+    {
+        capacitas_nova = _proxima_capacitas(capacitas_nova);
+    }
 
-	buffer_novum = (i8*)tessera_piscina_allocare(aedificator->piscina, capacitas_nova);
-	si (!buffer_novum)
-		redde FALSUM;
+    buffer_novum = (i8*)tessera_piscina_allocare(aedificator->piscina, capacitas_nova);
+    si (!buffer_novum) redde FALSUM;
 
-	si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
-	{
-		memcpy(buffer_novum, aedificator->buffer, aedificator->offset);
-	}
+    si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
+    {
+        memcpy(buffer_novum, aedificator->buffer, aedificator->offset);
+    }
 
-	aedificator->buffer    = buffer_novum;
-	aedificator->capacitas = capacitas_nova;
+    aedificator->buffer     = buffer_novum;
+    aedificator->capacitas  = capacitas_nova;
 
-	redde VERUM;
+    redde VERUM;
 }
 
 interior b32
-_appendere_interna(
-    TesseraChordaAedificator* aedificator, 
-          constans i8* datum, 
+_appendere_interna (
+    TesseraChordaAedificator* aedificator,
+          constans i8* datum,
        memoriae_index  mensura)
 {
-	memoriae_index necessaria;
+    memoriae_index necessaria;
 
-	si (!aedificator || !datum || mensura == ZEPHYRUM)
-		redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
+    si (!aedificator || !datum || mensura == ZEPHYRUM) redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
 
-	necessaria = aedificator->offset + mensura;
+    necessaria = aedificator->offset + mensura;
 
-	si (necessaria > aedificator->capacitas)
-	{
-		si (!_crescere(aedificator, necessaria))
-			redde FALSUM;
-	}
+    si (necessaria > aedificator->capacitas)
+    {
+        si (!_crescere(aedificator, necessaria)) redde FALSUM;
+    }
 
-	memcpy(aedificator->buffer + aedificator->offset, datum, mensura);
-	aedificator->offset += mensura;
+    memcpy(aedificator->buffer + aedificator->offset, datum, mensura);
+    aedificator->offset += mensura;
 
-	redde VERUM;
+    redde VERUM;
 }
 
 interior memoriae_index
-_format_integer_i32(
-               i32  n, 
-                i8* buffer, 
+_format_integer_i32 (
+               i32  n,
+                i8* buffer,
     memoriae_index  capacitas)
 {
-	     character cstr[CXXXII];
-	           s32 mensura_signed;
-	memoriae_index mensura;
+         character cstr[CXXXII];
+               s32 mensura_signed;
+    memoriae_index mensura;
 
-	mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
-	si (mensura_signed < ZEPHYRUM)
-		redde ZEPHYRUM;
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
-	mensura = (memoriae_index)mensura_signed;
-	si (mensura >= capacitas)
-		redde ZEPHYRUM;
+    mensura = (memoriae_index)mensura_signed;
+    si (mensura >= capacitas) redde ZEPHYRUM;
 
-	memcpy(buffer, cstr, mensura);
-	redde mensura;
+    memcpy(buffer, cstr, mensura);
+    redde mensura;
 }
 
 
@@ -1604,33 +1645,30 @@ _format_integer_i32(
  * ================================================== */
 
 static TesseraChordaAedificator*
-tessera_chorda_aedificator_creare(
-           TesseraPiscina* piscina, 
-    memoriae_index capacitas_initialis)
+tessera_chorda_aedificator_creare (
+           TesseraPiscina* piscina,
+    memoriae_index  capacitas_initialis)
 {
-	TesseraChordaAedificator* aedificator;
-	               i8* buffer;
+    TesseraChordaAedificator* aedificator;
+                   i8* buffer;
 
-	si (!piscina || capacitas_initialis == ZEPHYRUM)
-		redde NIHIL;
+    si (!piscina || capacitas_initialis == ZEPHYRUM) redde NIHIL;
 
-	aedificator = (TesseraChordaAedificator*)tessera_piscina_allocare(
-                                        piscina, 
+    aedificator = (TesseraChordaAedificator*)tessera_piscina_allocare(
+                                        piscina,
                                         magnitudo(TesseraChordaAedificator));
-	si (!aedificator)
-		redde NIHIL;
+    si (!aedificator) redde NIHIL;
 
-	buffer = (i8*)tessera_piscina_allocare(piscina, capacitas_initialis);
-	si (!buffer)
-		redde NIHIL;
+    buffer = (i8*)tessera_piscina_allocare(piscina, capacitas_initialis);
+    si (!buffer) redde NIHIL;
 
-	aedificator->buffer            = buffer;
-	aedificator->capacitas         = capacitas_initialis;
-	aedificator->offset            = ZEPHYRUM;
-	aedificator->piscina           = piscina;
-	aedificator->indentatio_gradus = ZEPHYRUM;
+    aedificator->buffer             = buffer;
+    aedificator->capacitas          = capacitas_initialis;
+    aedificator->offset             = ZEPHYRUM;
+    aedificator->piscina            = piscina;
+    aedificator->indentatio_gradus  = ZEPHYRUM;
 
-	redde aedificator;
+    redde aedificator;
 }
 
 
@@ -1639,12 +1677,12 @@ tessera_chorda_aedificator_creare(
  * ================================================== */
 
 static b32
-tessera_chorda_aedificator_appendere_character(
-    TesseraChordaAedificator* aedificator, 
+tessera_chorda_aedificator_appendere_character (
+    TesseraChordaAedificator* aedificator,
             character  c)
 {
-	i8 ch = (i8)c;
-	redde _appendere_interna(aedificator, &ch, I);
+    i8 ch = (i8)c;
+    redde _appendere_interna(aedificator, &ch, I);
 }
 
 
@@ -1653,55 +1691,52 @@ tessera_chorda_aedificator_appendere_character(
  * ================================================== */
 
 static b32
-tessera_chorda_aedificator_appendere_literis(
-     TesseraChordaAedificator* aedificator, 
+tessera_chorda_aedificator_appendere_literis (
+     TesseraChordaAedificator* aedificator,
     constans character* cstr)
 {
-	memoriae_index mensura;
+    memoriae_index mensura;
 
-	si (!aedificator || !cstr)
-		redde FALSUM;
+    si (!aedificator || !cstr) redde FALSUM;
 
-	mensura = strlen(cstr);
-	redde _appendere_interna(aedificator, (constans i8*)cstr, mensura);
+    mensura = strlen(cstr);
+    redde _appendere_interna(aedificator, (constans i8*)cstr, mensura);
 }
 
 static b32
-tessera_chorda_aedificator_appendere_i32(
-    TesseraChordaAedificator* aedificator, 
+tessera_chorda_aedificator_appendere_i32 (
+    TesseraChordaAedificator* aedificator,
                   i32  n)
 {
-	            i8 buffer[CXXXII];
-	memoriae_index mensura;
+                i8 buffer[CXXXII];
+    memoriae_index mensura;
 
-	si (!aedificator)
-		redde FALSUM;
+    si (!aedificator) redde FALSUM;
 
-	mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
-	si (mensura == ZEPHYRUM)
-		redde FALSUM;
+    mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
+    si (mensura == ZEPHYRUM) redde FALSUM;
 
-	redde _appendere_interna(aedificator, buffer, mensura);
+    redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 static TesseraChorda
-tessera_chorda_aedificator_spectare(
+tessera_chorda_aedificator_spectare (
     TesseraChordaAedificator* aedificator)
 {
-	TesseraChorda result;
+    TesseraChorda result;
 
-	si (!aedificator || !aedificator->buffer)
-	{
-		result.mensura = ZEPHYRUM;
-		result.datum   = NIHIL;
-	}
-	alioquin
-	{
-		result.mensura = (i32)aedificator->offset;
-		result.datum   = aedificator->buffer;
-	}
+    si (!aedificator || !aedificator->buffer)
+    {
+        result.mensura  = ZEPHYRUM;
+        result.datum    = NIHIL;
+    }
+    alioquin
+    {
+        result.mensura  = (i32)aedificator->offset;
+        result.datum    = aedificator->buffer;
+    }
 
-	redde result;
+    redde result;
 }
 
 
@@ -1710,14 +1745,13 @@ tessera_chorda_aedificator_spectare(
  * ================================================== */
 
 static vacuum
-tessera_chorda_aedificator_reset(
+tessera_chorda_aedificator_reset (
     TesseraChordaAedificator* aedificator)
 {
-	si (!aedificator)
-		redde;
+    si (!aedificator) redde;
 
-	aedificator->offset            = ZEPHYRUM;
-	aedificator->indentatio_gradus = ZEPHYRUM;
+    aedificator->offset             = ZEPHYRUM;
+    aedificator->indentatio_gradus  = ZEPHYRUM;
 }
 
 /* ================= ex lib/utf8.c ================= */
@@ -1742,7 +1776,8 @@ tessera_chorda_aedificator_reset(
 #define SURROGATUM_FINIS   0xDFFF
 
 static s32
-tessera_utf8_longitudo_byte(i8 byte)
+tessera_utf8_longitudo_byte (
+    i8 byte)
 {
     i8 b = byte;
 
@@ -1781,28 +1816,31 @@ tessera_utf8_longitudo_byte(i8 byte)
 }
 
 static b32
-tessera_utf8_est_continuatio(i8 byte)
+tessera_utf8_est_continuatio (
+    i8 byte)
 {
     redde ((byte & MASCA_CONT) == VALOR_CONT);
 }
 
 static s32
-tessera_utf8_decodere(constans i8** ptr, constans i8* finis)
+tessera_utf8_decodere (
+    constans i8** ptr,
+    constans i8*  finis)
 {
     constans i8* p;
-    i8 primus;
-    s32 longitudo;
-    s32 codepoint;
-    s32 i;
+             i8  primus;
+            s32  longitudo;
+            s32  codepoint;
+            s32  i;
 
     si (ptr == NIHIL || *ptr == NIHIL || *ptr >= finis)
     {
         redde -1;
     }
 
-    p = *ptr;
-    primus = *p;
-    longitudo = tessera_utf8_longitudo_byte(primus);
+    p          = *ptr;
+    primus     = *p;
+    longitudo  = tessera_utf8_longitudo_byte(primus);
 
     /* Byte invalidus vel continuatio orphana */
     si (longitudo == 0)
@@ -1833,8 +1871,8 @@ tessera_utf8_decodere(constans i8** ptr, constans i8* finis)
                 (*ptr)++;
                 redde -1;
             }
-            codepoint = ((s32)(primus & 0x1F) << 6) |
-                        ((s32)(p[1] & 0x3F));
+            codepoint = ((s32)(primus & 0x1F) << 6)
+                | ((s32)(p[1] & 0x3F));
             /* Verifica non-overlong (minimum 0x80) */
             si (codepoint < 0x80)
             {
@@ -1853,9 +1891,9 @@ tessera_utf8_decodere(constans i8** ptr, constans i8* finis)
                     redde -1;
                 }
             }
-            codepoint = ((s32)(primus & 0x0F) << 12) |
-                        ((s32)(p[1] & 0x3F) << 6) |
-                        ((s32)(p[2] & 0x3F));
+            codepoint = ((s32)(primus & 0x0F) << 12)
+                | ((s32)(p[1] & 0x3F) << 6)
+                | ((s32)(p[2] & 0x3F));
             /* Verifica non-overlong (minimum 0x800) */
             si (codepoint < 0x800)
             {
@@ -1880,10 +1918,10 @@ tessera_utf8_decodere(constans i8** ptr, constans i8* finis)
                     redde -1;
                 }
             }
-            codepoint = ((s32)(primus & 0x07) << 18) |
-                        ((s32)(p[1] & 0x3F) << 12) |
-                        ((s32)(p[2] & 0x3F) << 6) |
-                        ((s32)(p[3] & 0x3F));
+            codepoint = ((s32)(primus & 0x07) << 18)
+                | ((s32)(p[1] & 0x3F) << 12)
+                | ((s32)(p[2] & 0x3F) << 6)
+                | ((s32)(p[3] & 0x3F));
             /* Verifica non-overlong (minimum 0x10000) */
             si (codepoint < 0x10000)
             {

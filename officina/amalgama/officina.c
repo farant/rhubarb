@@ -8,7 +8,6 @@
  * in lib/. Regenerare: officina/amalgamare.sh
  */
 
-#include "postulata_posix.h"
 #include "silva.h"
 
 #include <stdio.h>
@@ -1110,14 +1109,14 @@ nomen size_t 								memoriae_index;
  * Captat statum piscinam ut postea reficere possit
  */
 nomen structura OfficinaPiscinaNotatio {
-    vacuum*        alveus_nunc;   /* Index ad alveum currentem */
-    memoriae_index positus;       /* Offset in alveo */
+            vacuum* alveus_nunc;   /* Index ad alveum currentem */
+    memoriae_index  positus;       /* Offset in alveo */
 } OfficinaPiscinaNotatio;
 
 OfficinaPiscina*
 officina_piscina_generare_dynamicum (
-		constans character* piscinae_titulum,
-			  memoriae_index  mensura_alvei_initia);
+          constans character* piscinae_titulum,
+              memoriae_index  mensura_alvei_initia);
 
 
 /* ===============================================
@@ -1126,7 +1125,7 @@ officina_piscina_generare_dynamicum (
 
 vacuum
 officina_piscina_destruere (
-		OfficinaPiscina* piscina);
+        OfficinaPiscina* piscina);
 
 
 /* ===============================================
@@ -1135,14 +1134,14 @@ officina_piscina_destruere (
 
 static vacuum*
 officina_piscina_allocare (
-						 OfficinaPiscina* piscina,
-		memoriae_index  mensura);
+                         OfficinaPiscina* piscina,
+                  memoriae_index  mensura);
 
 static vacuum*
 officina_piscina_allocare_ordinatum (
-						 OfficinaPiscina* piscina,
-		memoriae_index  mensura,
-		memoriae_index  ordinatio);
+                         OfficinaPiscina* piscina,
+                  memoriae_index  mensura,
+                  memoriae_index  ordinatio);
 
 #endif
 
@@ -1157,13 +1156,13 @@ officina_piscina_allocare_ordinatum (
 
 static OfficinaChorda
 officina_chorda_ex_literis (
-		constans character* cstr,
-							 OfficinaPiscina* piscina);
+                  constans character* litterae,
+                             OfficinaPiscina* piscina);
 
 static OfficinaChorda
 officina_chorda_transcribere (
-		 OfficinaChorda  s,
-		OfficinaPiscina* piscina);
+         OfficinaChorda  s,
+        OfficinaPiscina* piscina);
 
 
 /* ==================================================
@@ -1171,25 +1170,26 @@ officina_chorda_transcribere (
  * ================================================= */
 
 nomen structura {
-	OfficinaChorda* elementa;
-	i32     numerus;
+    OfficinaChorda* elementa;
+       i32  numerus;
 } OfficinaChordaFissioFructus;
 
 static b32
 officina_chorda_aequalis_literis (
-		OfficinaChorda              s,
-		constans character* cstr);
+                    OfficinaChorda  s,
+        constans character* cstr);
 
 static s32
 officina_chorda_comparare (
-		OfficinaChorda a,
-		OfficinaChorda b);
+        OfficinaChorda a,
+        OfficinaChorda b);
 
 #endif /* CHORDA_H */
 
 /* ================= ex include/chorda_aedificator.h ================= */
 #ifndef CHORDA_AEDIFICATOR_H
 #define CHORDA_AEDIFICATOR_H
+
 
 /* ==================================================
  * ChordaAedificator - Accumulatio efficax chordarum
@@ -1223,14 +1223,15 @@ officina_chorda_comparare (
 
 nomen structura OfficinaChordaAedificator OfficinaChordaAedificator;
 
+
 /* ==================================================
  * Creatio / Destructio
  * ================================================== */
 
 static OfficinaChordaAedificator*
 officina_chorda_aedificator_creare (
-	       OfficinaPiscina* piscina,
-	memoriae_index  capacitas_initialis);
+           OfficinaPiscina* piscina,
+    memoriae_index  capacitas_initialis);
 
 
 /* ==================================================
@@ -1239,8 +1240,8 @@ officina_chorda_aedificator_creare (
 
 static b32
 officina_chorda_aedificator_appendere_character (
-	OfficinaChordaAedificator* aedificator,
-	        character  c);
+    OfficinaChordaAedificator* aedificator,
+            character  c);
 
 
 /* ==================================================
@@ -1249,26 +1250,26 @@ officina_chorda_aedificator_appendere_character (
 
 static b32
 officina_chorda_aedificator_appendere_literis (
-	 OfficinaChordaAedificator* aedificator,
-	constans character* cstr);
+     OfficinaChordaAedificator* aedificator,
+    constans character* cstr);
 
 static b32
 officina_chorda_aedificator_appendere_chorda (
-	OfficinaChordaAedificator* aedificator,
-	           OfficinaChorda  s);
+    OfficinaChordaAedificator* aedificator,
+               OfficinaChorda  s);
 
 static b32
 officina_chorda_aedificator_appendere_i32 (
-	OfficinaChordaAedificator* aedificator,
-	              i32  n);
+    OfficinaChordaAedificator* aedificator,
+                  i32  n);
 
 /* appendere_repetita: appende characterem n vicibus
  * Utile ad padding vel indentationem */
 static b32
 officina_chorda_aedificator_appendere_repetita (
-	OfficinaChordaAedificator* aedificator,
-	        character  c,
-	              i32  numerus);
+    OfficinaChordaAedificator* aedificator,
+            character  c,
+                  i32  numerus);
 
 /* finire: converte aedificatorem ad chordam
  * Transfert dominium chordae accumulatae ad vocantem.
@@ -1276,7 +1277,7 @@ officina_chorda_aedificator_appendere_repetita (
  * Vocans debet finaliter deallocare per piscinam. */
 static OfficinaChorda
 officina_chorda_aedificator_finire (
-	OfficinaChordaAedificator* aedificator);
+    OfficinaChordaAedificator* aedificator);
 
 
 /* ==================================================
@@ -1294,6 +1295,7 @@ officina_chorda_aedificator_finire (
 #ifndef FRIATIO_H
 #define FRIATIO_H
 
+
 /* ==================================================
  * Friatio - Functiones Friationis (Hash Functions)
  *
@@ -1304,6 +1306,7 @@ officina_chorda_aedificator_finire (
  * - Functiones non-cryptographicae (pro tabulis dispersis)
  * - Functiones cryptographicae (pro UUIDs, checksums, etc.)
  * ================================================== */
+
 
 /* ==================================================
  * Functiones Non-Cryptographicae (32-bit)
@@ -1318,8 +1321,9 @@ officina_chorda_aedificator_finire (
  * Prime: 16777619
  */
 static i32
-officina_friatio_fnv1a(
+officina_friatio_fnv1a (
     OfficinaChorda clavis);
+
 
 /* ==================================================
  * SHA-1 (Secure Hash Algorithm 1)
@@ -1331,6 +1335,7 @@ officina_friatio_fnv1a(
 
 #define SHA1_DIGEST_MENSURA   XX    /* 20 bytes */
 #define SHA1_BLOCK_MENSURA    LXIV  /* 64 bytes */
+
 
 /* ==================================================
  * SHA-256 (Secure Hash Algorithm 256)
@@ -1348,6 +1353,7 @@ officina_friatio_fnv1a(
 /* ================= ex include/tabula_dispersa.h ================= */
 #ifndef TABULA_DISPERSA_H
 #define TABULA_DISPERSA_H
+
 
 /* ===================================================
  * Tabula Dispersa - Tabula Friationis per Addressing Apertum
@@ -1419,6 +1425,7 @@ officina_tabula_dispersa_creare_chorda (
     OfficinaPiscina* piscina,
         i32  capacitas_initialis);
 
+
 /* ==================================================
  * Insertio / Quaestio / Deletio
  * ================================================== */
@@ -1443,6 +1450,7 @@ officina_tabula_dispersa_invenire (
             OfficinaChorda   clavis,
             vacuum** valor_out);
 
+
 /* =================================================
  * Statisticae / Diagnostica
  * ================================================== */
@@ -1465,7 +1473,6 @@ officina_tabula_friare_fnv1a (
     OfficinaChorda clavis);
 
 #endif /* TABULA_DISPERSA_H */
-
 
 /* ================= ex include/xar.h ================= */
 /* xar.h - "Codex Tabulae Exponentialis"
@@ -1499,18 +1506,19 @@ officina_tabula_friare_fnv1a (
 /* XarIterator - Iterator pro ambulatione omnium elementorum
  */
 nomen structura OfficinaXarIterator {
-	constans structura OfficinaXar* xar;     /* Tabula iterata */
-			               i32  index_currens;         /* Index currens */
-				             i32  index_segmenti;        /* Segmentum currens */
-			               i32  offset_in_segmento;    /* Offset in segmento */
-		            vacuum* basis_segmenti;        /* Basis segmenti currentis */
-			               i32  finis_segmenti;        /* Finis segmenti currentis */
+    constans structura OfficinaXar* xar;     /* Tabula iterata */
+                              i32  index_currens;         /* Index currens */
+                              i32  index_segmenti;        /* Segmentum currens */
+                              i32  offset_in_segmento;    /* Offset in segmento */
+                           vacuum* basis_segmenti;        /* Basis segmenti currentis */
+                              i32  finis_segmenti;        /* Finis segmenti currentis */
 } OfficinaXarIterator;
 
 /* XarComparator - Index functionis pro comparationibus
  * Redde: -1 si a < b, 0 si a == b, +1 si a > b
  */
 nomen s32 (*OfficinaXarComparator)(constans vacuum* a, constans vacuum* b);
+
 
 /* ========================================================================
  * FUNCTIONES PRINCIPALES
@@ -1520,19 +1528,20 @@ nomen s32 (*OfficinaXarComparator)(constans vacuum* a, constans vacuum* b);
  * "Genesis tabulae exponentialis"
  */
 static OfficinaXar*
-officina_xar_creare(
-		OfficinaPiscina* piscina,
-		 		i32  magnitudo_elementi);
+officina_xar_creare (
+             OfficinaPiscina* piscina,
+                 i32  magnitudo_elementi);
 
 /* Xar Creare Cum Vexillis
  * "Creare cum omnibus optionibus"
  */
 static OfficinaXar*
-officina_xar_creare_cum_vexillis(
-		OfficinaPiscina* piscina,
-        i32  magnitudo_elementi,
-        i32  magnitudo_primi,
-        i32  vexilla);
+officina_xar_creare_cum_vexillis (
+        OfficinaPiscina* piscina,
+            i32  magnitudo_elementi,
+            i32  magnitudo_primi,
+            i32  vexilla);
+
 
 /* ========================================================================
  * LOCATIO ET ACCESSUS
@@ -1544,9 +1553,9 @@ officina_xar_creare_cum_vexillis(
  * Redde: Index ad elementum, vel NIHIL si invalidus
  */
 vacuum*
-officina_xar_obtinere(
-		constans OfficinaXar* xar,
-		         i32  index);
+officina_xar_obtinere (
+        constans OfficinaXar* xar,
+                 i32  index);
 
 /* Xar Obtinere Signatum - Obtinere cum indice signato
  * "Pro iterationibus cum decrementis"
@@ -1554,9 +1563,10 @@ officina_xar_obtinere(
  * Redde: Index ad elementum, vel NIHIL si invalidus vel negativus
  */
 vacuum*
-officina_xar_obtinere_s(
-		constans OfficinaXar* xar,
-		         s32  index);
+officina_xar_obtinere_s (
+        constans OfficinaXar* xar,
+                 s32  index);
+
 
 /* ========================================================================
  * ADDITIO
@@ -1568,8 +1578,9 @@ officina_xar_obtinere_s(
  * Redde: Index ad elementum novum, vel NIHIL si allocatio fracta
  */
 static vacuum*
-officina_xar_addere(
-		OfficinaXar* xar);
+officina_xar_addere (
+        OfficinaXar* xar);
+
 
 /* ========================================================================
  * UTILITAS
@@ -1579,16 +1590,16 @@ officina_xar_addere(
  * "Obtinere numerum elementorum"
  */
 i32
-officina_xar_numerus(
-		constans OfficinaXar* xar);
+officina_xar_numerus (
+        constans OfficinaXar* xar);
 
 /* Xar Truncare - Truncare ad magnitudinem minorem
  * "Truncare ad magnitudinem minorem"
  */
 static vacuum
-officina_xar_truncare(
-		OfficinaXar* xar,
-		i32  numerus_novus);
+officina_xar_truncare (
+        OfficinaXar* xar,
+        i32  numerus_novus);
 
 /* Xar Copiare Ad Tabulam - Copiare elementa ad tabulam
  * "Copiare elementa ad tabulam"
@@ -1596,11 +1607,11 @@ officina_xar_truncare(
  * Redde: Numerus elementorum copiatorum
  */
 static i32
-officina_xar_copiare_ad_tabulam(
-		constans OfficinaXar* xar,
-		      vacuum* destinatio,
-		         i32  initium,
-		         i32  numerus);
+officina_xar_copiare_ad_tabulam (
+        constans OfficinaXar* xar,
+              vacuum* destinatio,
+                 i32  initium,
+                 i32  numerus);
 
 
 /* ========================================================================
@@ -1613,8 +1624,8 @@ officina_xar_copiare_ad_tabulam(
  * Redde: VERUM si successus, FALSUM si xar vacuum
  */
 static b32
-officina_xar_removere_ultimum(
-		OfficinaXar* xar);
+officina_xar_removere_ultimum (
+        OfficinaXar* xar);
 
 /* Xar Removere Cum Ultimo - Swap-remove O(1)
  * "Removere elementum ad indicem mutando cum ultimo"
@@ -1623,11 +1634,46 @@ officina_xar_removere_ultimum(
  * Redde: VERUM si successus, FALSUM si index invalidus
  */
 static b32
-officina_xar_removere_cum_ultimo(
-		OfficinaXar* xar,
-		i32  index);
+officina_xar_removere_cum_ultimo (
+        OfficinaXar* xar,
+        i32  index);
 
 #endif /* XAR_H */
+
+/* ================= ex include/postulata_posix.h ================= */
+/* postulata_posix.h - postulata platformae pro superficie POSIX
+ *
+ * SUTURA praeprocessoris pura: interfacies portabilis, mores
+ * per-platformam. glibc sub -std=c89 declarationes POSIX CELAT nisi
+ * macro probationis proprietatum ante caput systematis primum
+ * definitur; Darwin et musl ordinarie permissivi sunt. Sine hoc
+ * capite plagula quaeque POSIX-utens in Linux glibc cadit
+ * (tcp_posix.c: XX errores ex radicibus IV celatis - mensuratum).
+ *
+ * CUR _DEFAULT_SOURCE: sonda Docker 2026-08-03 (glibc 2.35 gcc 11.4;
+ * musl 1.2.5 gcc 13.2; VI plagulae x V variantes - acta in actis
+ * tabularii 01KYTGNA36) mensuravit: _DEFAULT_SOURCE omnia
+ * macro-sanabilia in AMBABUS libc sanat et in Darwin nihil agit.
+ * Variantes strictae PEIORES sunt, non aequales: _XOPEN_SOURCE 700
+ * et _POSIX_C_SOURCE usleep RE-CELANT (XPG7 sustulit). Decretum
+ * 01KZ3RYZWK: caput unum, non definitiones per plagulam.
+ *
+ * LEX (codex examinis 85 custodit): hoc caput inclusio PRIMA
+ * plagulae POSIX-utentis sit - ante caput proprium, ante latina.h.
+ * features.h glibc copiam SEMEL figit, primo tactu capitis systematis
+ * cuiuslibet; latina.h stddef.h trahit, ergo "prima" ad litteram.
+ *
+ * Nomen _DEFAULT_SOURCE classis reservatae est (C89 7.1.3) -
+ * REFERIMUS interruptorem glibc documentatum, non coinamus (eadem
+ * licentia qua externa systematis referuntur).
+ */
+
+#ifndef POSTULATA_POSIX_H
+#define POSTULATA_POSIX_H
+
+#define _DEFAULT_SOURCE 1
+
+#endif /* POSTULATA_POSIX_H */
 
 /* ================= ex officina/fontes/officina_medulla.h ================= */
 /* officina_medulla.h - Medulla: IR registrorum linearis (M1a B)
@@ -2138,6 +2184,7 @@ MedullaLineae* demissio_lineas_colligere (OfficinaPiscina* piscina,
                               * vel -DPISCINA_DEBUG=1 in linea compilandi */
 #endif
 
+
 /* ===========================================================
  * Structura Alvei - allocatio singularis
  * =========================================================== */
@@ -2170,7 +2217,7 @@ structura OfficinaPiscina {
 
 interior memoriae_index
 _proxima_ordinatio (
-        memoriae_index ptr, 
+        memoriae_index ptr,
         memoriae_index ordinatio)
 {
     memoriae_index ordinatus = ptr + (ordinatio - I);
@@ -2183,9 +2230,10 @@ _debug_imprimere (
     constans character* operatio,
         memoriae_index  mensura)
 {
-    si (PISCINA_DEBUG) 
+    si (PISCINA_DEBUG)
     {
-        imprimere("[PISCINA %s] %s: %zu bytes\n", piscinae_titulum, operatio, mensura);
+        imprimere("[PISCINA %s] %s: %lu bytes\n", piscinae_titulum,
+                  operatio, (insignatus longus)mensura);
     }
 }
 
@@ -2208,9 +2256,9 @@ _alveus_nova (
         redde NIHIL;
     }
 
-    alveus->capacitas = capacitas;
-    alveus->offset    = ZEPHYRUM;
-    alveus->sequens   = NIHIL;
+    alveus->capacitas  = capacitas;
+    alveus->offset     = ZEPHYRUM;
+    alveus->sequens    = NIHIL;
 
     redde alveus;
 }
@@ -2237,6 +2285,7 @@ _catena_alveus_destruere (
     }
 }
 
+
 /* ===========================================================
  * ALLOCATIO FUNDAMENTALIS LOGICA
  * =========================================================== */
@@ -2250,14 +2299,14 @@ _allocare_interna (
 {
     memoriae_index  ordinatus_offset;
     memoriae_index  necessaria;
-    memoriae_index  summa_nunc; 
+    memoriae_index  summa_nunc;
             Alveus* b;
             vacuum* ptr;
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
     ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
-    necessaria       = ordinatus_offset + mensura;
+    necessaria = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -2296,8 +2345,8 @@ _allocare_interna (
                 redde NIHIL;
             }
 
-            piscina->nunc->sequens = alveus_novum;
-            piscina->nunc = alveus_novum;
+            piscina->nunc->sequens  = alveus_novum;
+            piscina->nunc           = alveus_novum;
 
             ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
             necessaria = ordinatus_offset + mensura;
@@ -2312,9 +2361,9 @@ _allocare_interna (
             /* Non dynamicum et nulli alvei reliqui */
             si (fatalis)
             {
-                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %zu)\n",
+                imprimere("ALLOCATIO PISCINAE FRACTA: %s (indigentia %lu)\n",
                           piscina->titulus ? piscina->titulus : "nemo",
-                          necessaria);
+                          (insignatus longus)necessaria);
                 exire(I);
             }
             redde NIHIL;
@@ -2342,6 +2391,7 @@ _allocare_interna (
     redde ptr;
 }
 
+
 /* ===========================================================
  * GENERATIO
  * =========================================================== */
@@ -2357,7 +2407,7 @@ officina_piscina_generare_dynamicum (
     si (!piscina) redde NIHIL;
 
     alveus_primus = _alveus_nova(mensura_alvei_initia);
-    si (!alveus_primus) 
+    si (!alveus_primus)
     {
         liberare(piscina);
         redde NIHIL;
@@ -2396,7 +2446,7 @@ officina_piscina_generare_dynamicum (
  * DESTRUCTIO
  * =========================================================== */
 
-vacuum 
+vacuum
 officina_piscina_destruere (
         OfficinaPiscina* piscina)
 {
@@ -2412,7 +2462,6 @@ officina_piscina_destruere (
 /* ===========================================================
  * ALLOCATIO - EXITIUM SI DEFECIT
  * =========================================================== */
-
 
 static vacuum*
 officina_piscina_allocare (
@@ -2431,7 +2480,6 @@ officina_piscina_allocare_ordinatum (
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
 }
 
-
 /* ================= ex lib/chorda.c ================= */
 
 #define CHORDA_FRIATUM_OFFSET  2166136261U
@@ -2444,33 +2492,33 @@ officina_piscina_allocare_ordinatum (
 
 static OfficinaChorda
 officina_chorda_ex_literis (
-    constans character* cstr,
+    constans character* litterae,
                OfficinaPiscina* piscina)
 {
     OfficinaChorda  fructus;
        i32  mensura;
         i8* allocatus;
 
-    si (!cstr || !piscina)
+    si (!litterae || !piscina)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum   = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
 
-      mensura = (i32)strlen(cstr);
+      mensura = (i32)strlen(litterae);
     allocatus = (i8*)officina_piscina_allocare(piscina, mensura);
 
     si (!allocatus)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum   = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
 
-    memcpy(allocatus, cstr, mensura);
-    fructus.mensura = mensura;
-    fructus.datum   = allocatus;
+    memcpy(allocatus, litterae, mensura);
+    fructus.mensura  = mensura;
+    fructus.datum    = allocatus;
     redde fructus;
 }
 
@@ -2484,30 +2532,30 @@ officina_chorda_transcribere (
 
     si (!piscina || !s.datum || s.mensura == ZEPHYRUM)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum   = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
 
     allocatus = (i8*)officina_piscina_allocare(piscina, s.mensura);
     si (!allocatus)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum   = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
 
     memcpy(allocatus, s.datum, s.mensura);
 
-    fructus.mensura = s.mensura;
-    fructus.datum   = allocatus;
+    fructus.mensura  = s.mensura;
+    fructus.datum    = allocatus;
 
     redde fructus;
 }
 
 static b32
 officina_chorda_aequalis_literis (
-    OfficinaChorda              s,
+                OfficinaChorda  s,
     constans character* cstr)
 {
     i32 len;
@@ -2546,7 +2594,7 @@ officina_chorda_comparare (
     OfficinaChorda a,
     OfficinaChorda b)
 {
-    memoriae_index minima_mensura; 
+    memoriae_index minima_mensura;
                s32 cmp_result;
 
     minima_mensura  = a.mensura < b.mensura ? a.mensura : b.mensura;
@@ -2565,16 +2613,17 @@ officina_chorda_comparare (
 
 /* ================= ex lib/chorda_aedificator.c ================= */
 
+
 /* ==================================================
  * Structura ChordaAedificator - Interna
  * ================================================== */
 
 structura OfficinaChordaAedificator {
-	           i8*  buffer;
-	memoriae_index  capacitas;
-	memoriae_index  offset;
-	       OfficinaPiscina* piscina;
-	           i32  indentatio_gradus;
+                i8* buffer;
+    memoriae_index  capacitas;
+    memoriae_index  offset;
+           OfficinaPiscina* piscina;
+               i32  indentatio_gradus;
 };
 
 
@@ -2583,86 +2632,82 @@ structura OfficinaChordaAedificator {
  * ================================================== */
 
 interior memoriae_index
-_proxima_capacitas(memoriae_index nunc)
+_proxima_capacitas (
+    memoriae_index nunc)
 {
-	/* Duplica capacitatem donec satis habeamus */
-	redde nunc > ZEPHYRUM ? nunc * II : XVI;
+    /* Duplica capacitatem donec satis habeamus */
+    redde nunc > ZEPHYRUM ? nunc * II : XVI;
 }
 
 interior b32
-_crescere(
-    OfficinaChordaAedificator* aedificator, 
+_crescere (
+    OfficinaChordaAedificator* aedificator,
        memoriae_index  necessaria)
 {
-	memoriae_index  capacitas_nova;
-	            i8* buffer_novum;
+    memoriae_index  capacitas_nova;
+                i8* buffer_novum;
 
-	capacitas_nova = aedificator->capacitas;
-	dum (capacitas_nova < necessaria)
-	{
-		capacitas_nova = _proxima_capacitas(capacitas_nova);
-	}
+    capacitas_nova = aedificator->capacitas;
+    dum (capacitas_nova < necessaria)
+    {
+        capacitas_nova = _proxima_capacitas(capacitas_nova);
+    }
 
-	buffer_novum = (i8*)officina_piscina_allocare(aedificator->piscina, capacitas_nova);
-	si (!buffer_novum)
-		redde FALSUM;
+    buffer_novum = (i8*)officina_piscina_allocare(aedificator->piscina, capacitas_nova);
+    si (!buffer_novum) redde FALSUM;
 
-	si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
-	{
-		memcpy(buffer_novum, aedificator->buffer, aedificator->offset);
-	}
+    si (aedificator->buffer && aedificator->offset > ZEPHYRUM)
+    {
+        memcpy(buffer_novum, aedificator->buffer, aedificator->offset);
+    }
 
-	aedificator->buffer    = buffer_novum;
-	aedificator->capacitas = capacitas_nova;
+    aedificator->buffer     = buffer_novum;
+    aedificator->capacitas  = capacitas_nova;
 
-	redde VERUM;
+    redde VERUM;
 }
 
 interior b32
-_appendere_interna(
-    OfficinaChordaAedificator* aedificator, 
-          constans i8* datum, 
+_appendere_interna (
+    OfficinaChordaAedificator* aedificator,
+          constans i8* datum,
        memoriae_index  mensura)
 {
-	memoriae_index necessaria;
+    memoriae_index necessaria;
 
-	si (!aedificator || !datum || mensura == ZEPHYRUM)
-		redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
+    si (!aedificator || !datum || mensura == ZEPHYRUM) redde mensura == ZEPHYRUM; /* Appendix vacua bona est */
 
-	necessaria = aedificator->offset + mensura;
+    necessaria = aedificator->offset + mensura;
 
-	si (necessaria > aedificator->capacitas)
-	{
-		si (!_crescere(aedificator, necessaria))
-			redde FALSUM;
-	}
+    si (necessaria > aedificator->capacitas)
+    {
+        si (!_crescere(aedificator, necessaria)) redde FALSUM;
+    }
 
-	memcpy(aedificator->buffer + aedificator->offset, datum, mensura);
-	aedificator->offset += mensura;
+    memcpy(aedificator->buffer + aedificator->offset, datum, mensura);
+    aedificator->offset += mensura;
 
-	redde VERUM;
+    redde VERUM;
 }
 
 interior memoriae_index
-_format_integer_i32(
-               i32  n, 
-                i8* buffer, 
+_format_integer_i32 (
+               i32  n,
+                i8* buffer,
     memoriae_index  capacitas)
 {
-	     character cstr[CXXXII];
-	           s32 mensura_signed;
-	memoriae_index mensura;
+         character cstr[CXXXII];
+               s32 mensura_signed;
+    memoriae_index mensura;
 
-	mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
-	si (mensura_signed < ZEPHYRUM)
-		redde ZEPHYRUM;
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
 
-	mensura = (memoriae_index)mensura_signed;
-	si (mensura >= capacitas)
-		redde ZEPHYRUM;
+    mensura = (memoriae_index)mensura_signed;
+    si (mensura >= capacitas) redde ZEPHYRUM;
 
-	memcpy(buffer, cstr, mensura);
-	redde mensura;
+    memcpy(buffer, cstr, mensura);
+    redde mensura;
 }
 
 
@@ -2671,33 +2716,30 @@ _format_integer_i32(
  * ================================================== */
 
 static OfficinaChordaAedificator*
-officina_chorda_aedificator_creare(
-           OfficinaPiscina* piscina, 
-    memoriae_index capacitas_initialis)
+officina_chorda_aedificator_creare (
+           OfficinaPiscina* piscina,
+    memoriae_index  capacitas_initialis)
 {
-	OfficinaChordaAedificator* aedificator;
-	               i8* buffer;
+    OfficinaChordaAedificator* aedificator;
+                   i8* buffer;
 
-	si (!piscina || capacitas_initialis == ZEPHYRUM)
-		redde NIHIL;
+    si (!piscina || capacitas_initialis == ZEPHYRUM) redde NIHIL;
 
-	aedificator = (OfficinaChordaAedificator*)officina_piscina_allocare(
-                                        piscina, 
+    aedificator = (OfficinaChordaAedificator*)officina_piscina_allocare(
+                                        piscina,
                                         magnitudo(OfficinaChordaAedificator));
-	si (!aedificator)
-		redde NIHIL;
+    si (!aedificator) redde NIHIL;
 
-	buffer = (i8*)officina_piscina_allocare(piscina, capacitas_initialis);
-	si (!buffer)
-		redde NIHIL;
+    buffer = (i8*)officina_piscina_allocare(piscina, capacitas_initialis);
+    si (!buffer) redde NIHIL;
 
-	aedificator->buffer            = buffer;
-	aedificator->capacitas         = capacitas_initialis;
-	aedificator->offset            = ZEPHYRUM;
-	aedificator->piscina           = piscina;
-	aedificator->indentatio_gradus = ZEPHYRUM;
+    aedificator->buffer             = buffer;
+    aedificator->capacitas          = capacitas_initialis;
+    aedificator->offset             = ZEPHYRUM;
+    aedificator->piscina            = piscina;
+    aedificator->indentatio_gradus  = ZEPHYRUM;
 
-	redde aedificator;
+    redde aedificator;
 }
 
 
@@ -2706,12 +2748,12 @@ officina_chorda_aedificator_creare(
  * ================================================== */
 
 static b32
-officina_chorda_aedificator_appendere_character(
-    OfficinaChordaAedificator* aedificator, 
+officina_chorda_aedificator_appendere_character (
+    OfficinaChordaAedificator* aedificator,
             character  c)
 {
-	i8 ch = (i8)c;
-	redde _appendere_interna(aedificator, &ch, I);
+    i8 ch = (i8)c;
+    redde _appendere_interna(aedificator, &ch, I);
 }
 
 
@@ -2720,93 +2762,87 @@ officina_chorda_aedificator_appendere_character(
  * ================================================== */
 
 static b32
-officina_chorda_aedificator_appendere_literis(
-     OfficinaChordaAedificator* aedificator, 
+officina_chorda_aedificator_appendere_literis (
+     OfficinaChordaAedificator* aedificator,
     constans character* cstr)
 {
-	memoriae_index mensura;
+    memoriae_index mensura;
 
-	si (!aedificator || !cstr)
-		redde FALSUM;
+    si (!aedificator || !cstr) redde FALSUM;
 
-	mensura = strlen(cstr);
-	redde _appendere_interna(aedificator, (constans i8*)cstr, mensura);
+    mensura = strlen(cstr);
+    redde _appendere_interna(aedificator, (constans i8*)cstr, mensura);
 }
 
 static b32
-officina_chorda_aedificator_appendere_chorda(
-    OfficinaChordaAedificator* aedificator, 
-               OfficinaChorda s)
+officina_chorda_aedificator_appendere_chorda (
+    OfficinaChordaAedificator* aedificator,
+               OfficinaChorda  s)
 {
-	si (!aedificator || !s.datum)
-		redde FALSUM;
+    si (!aedificator || !s.datum) redde FALSUM;
 
-	redde _appendere_interna(aedificator, s.datum, s.mensura);
+    redde _appendere_interna(aedificator, s.datum, s.mensura);
 }
 
 static b32
-officina_chorda_aedificator_appendere_i32(
-    OfficinaChordaAedificator* aedificator, 
+officina_chorda_aedificator_appendere_i32 (
+    OfficinaChordaAedificator* aedificator,
                   i32  n)
 {
-	            i8 buffer[CXXXII];
-	memoriae_index mensura;
+                i8 buffer[CXXXII];
+    memoriae_index mensura;
 
-	si (!aedificator)
-		redde FALSUM;
+    si (!aedificator) redde FALSUM;
 
-	mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
-	si (mensura == ZEPHYRUM)
-		redde FALSUM;
+    mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
+    si (mensura == ZEPHYRUM) redde FALSUM;
 
-	redde _appendere_interna(aedificator, buffer, mensura);
+    redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 static b32
-officina_chorda_aedificator_appendere_repetita(
-    OfficinaChordaAedificator* aedificator,
+officina_chorda_aedificator_appendere_repetita (
+     OfficinaChordaAedificator* aedificator,
              character  c,
                    i32  numerus)
 {
-	i32 i;
+    i32 i;
 
-	/* numerus i32 insignatus - custodia negativi mortua remota
+    /* numerus i32 insignatus - custodia negativi mortua remota
 	 * (2026-07-17); familia indentationis non-negativa per push/pop */
-	si (!aedificator)
-		redde FALSUM;
+    si (!aedificator) redde FALSUM;
 
-	si (numerus == ZEPHYRUM)
-		redde VERUM;
+    si (numerus == ZEPHYRUM) redde VERUM;
 
-	per (i = ZEPHYRUM; i < numerus; i++)
-	{
-		si (!officina_chorda_aedificator_appendere_character(aedificator, c))
-			redde FALSUM;
-	}
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (!officina_chorda_aedificator_appendere_character(aedificator, c)) redde FALSUM;
+    }
 
-	redde VERUM;
+    redde VERUM;
 }
 
 static OfficinaChorda
-officina_chorda_aedificator_finire(
+officina_chorda_aedificator_finire (
     OfficinaChordaAedificator* aedificator)
 {
-	OfficinaChorda result;
+    OfficinaChorda result;
 
-	si (!aedificator)
-	{
-		result.mensura = ZEPHYRUM;
-		result.datum   = NIHIL;
-		redde result;
-	}
+    si (!aedificator)
+    {
+        result.mensura  = ZEPHYRUM;
+        result.datum    = NIHIL;
+        redde result;
+    }
 
-	result.mensura = (i32)aedificator->offset;
-	result.datum   = aedificator->buffer;
+    result.mensura  = (i32)aedificator->offset;
+    result.datum    = aedificator->buffer;
 
-	redde result;
+    redde result;
 }
 
 /* ================= ex lib/friatio.c ================= */
+
 
 /* ==================================================
  * FNV-1a (Fowler-Noll-Vo)
@@ -2817,7 +2853,7 @@ officina_chorda_aedificator_finire(
 #define FNV_PRIME        16777619U
 
 static i32
-officina_friatio_fnv1a(
+officina_friatio_fnv1a (
     OfficinaChorda clavis)
 {
     i32 friatum;
@@ -2834,11 +2870,13 @@ officina_friatio_fnv1a(
     redde friatum;
 }
 
+
 /* ==================================================
  * DJB2 (Dan Bernstein)
  * ================================================== */
 
 #define DJB2_INIT 5381U
+
 
 /* ==================================================
  * SHA-1 Implementation
@@ -2851,10 +2889,10 @@ officina_friatio_fnv1a(
 #define SHA1_ROL(value, bits) (((value) << (bits)) | ((value) >> (XXXII - (bits))))
 
 /* SHA-1 round functions */
-#define SHA1_F0(b,c,d) (((b) & (c)) | ((~(b)) & (d)))
-#define SHA1_F1(b,c,d) ((b) ^ (c) ^ (d))
-#define SHA1_F2(b,c,d) (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
-#define SHA1_F3(b,c,d) ((b) ^ (c) ^ (d))
+#define SHA1_F0(b, c, d) (((b) & (c)) | ((~(b)) & (d)))
+#define SHA1_F1(b, c, d) ((b) ^ (c) ^ (d))
+#define SHA1_F2(b, c, d) (((b) & (c)) | ((b) & (d)) | ((c) & (d)))
+#define SHA1_F3(b, c, d) ((b) ^ (c) ^ (d))
 
 /* SHA-1 constants */
 #define SHA1_K0 0x5A827999UL
@@ -2869,6 +2907,7 @@ officina_friatio_fnv1a(
 #define SHA1_H3 0x10325476UL
 #define SHA1_H4 0xC3D2E1F0UL
 
+
 /* ==================================================
  * SHA-256 Implementation
  *
@@ -2880,8 +2919,8 @@ officina_friatio_fnv1a(
 #define SHA256_ROR(value, bits) (((value) >> (bits)) | ((value) << (XXXII - (bits))))
 
 /* SHA-256 logical functions */
-#define SHA256_CH(x,y,z)  (((x) & (y)) ^ ((~(x)) & (z)))
-#define SHA256_MAJ(x,y,z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
+#define SHA256_CH(x, y, z)  (((x) & (y)) ^ ((~(x)) & (z)))
+#define SHA256_MAJ(x, y, z) (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 #define SHA256_EP0(x)     (SHA256_ROR(x, II) ^ SHA256_ROR(x, XIII) ^ SHA256_ROR(x, XXII))
 #define SHA256_EP1(x)     (SHA256_ROR(x, VI) ^ SHA256_ROR(x, XI) ^ SHA256_ROR(x, XXV))
 #define SHA256_SIG0(x)    (SHA256_ROR(x, VII) ^ SHA256_ROR(x, XVIII) ^ ((x) >> III))
@@ -2899,22 +2938,26 @@ officina_friatio_fnv1a(
 
 /* ================= ex lib/tabula_dispersa.c ================= */
 
+
 /* ==================================================
  * Functiones Friationis (wrappers ad friatio.h)
  * ================================================== */
 
 static i32
-officina_tabula_friare_fnv1a(OfficinaChorda clavis)
+officina_tabula_friare_fnv1a (
+    OfficinaChorda clavis)
 {
     redde officina_friatio_fnv1a(clavis);
 }
+
 
 /* ==================================================
  * Adiutor: Proxima Potentia Binaria
  * ================================================== */
 
 interior i32
-_proxima_potentia_2(i32 n)
+_proxima_potentia_2 (
+    i32 n)
 {
     n--;
     n |= n >> I;
@@ -2925,7 +2968,6 @@ _proxima_potentia_2(i32 n)
     n++;
     redde n;
 }
-
 
 
 /* ==================================================
@@ -2944,17 +2986,17 @@ _invenire_slotum (
     i32 distantia;
     i32 positus_primus_deletum;
 
-    *inventum              = FALSUM;
-    positus                = friatum & tabula->capacitas_mask;
-    distantia              = ZEPHYRUM;
-    positus_primus_deletum = (i32)-I;
+    *inventum               = FALSUM;
+    positus                 = friatum & tabula->capacitas_mask;
+    distantia               = ZEPHYRUM;
+    positus_primus_deletum  = (i32)-I;
 
     dum (tabula->sloti[positus].status != SLOT_VACUUM)
     {
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
-            si (tabula->sloti[positus].hash_cachatum == friatum &&
-                tabula->comparatio(
+            si (   tabula->sloti[positus].hash_cachatum == friatum
+                && tabula->comparatio(
                     tabula->sloti[positus].clavis, clavis) == ZEPHYRUM)
             {
                 *inventum = VERUM;
@@ -2998,17 +3040,18 @@ _invenire_slotum (
  * ================================================== */
 
 interior b32
-_tabula_dispersa_crescere(OfficinaTabulaDispersa* tabula)
+_tabula_dispersa_crescere (
+    OfficinaTabulaDispersa* tabula)
 {
     Slotus* sloti_veteres;
        i32  capacitas_vetus;
        i32  i;
 
-    sloti_veteres   = tabula->sloti;
-    capacitas_vetus = tabula->capacitas;
+    sloti_veteres    = tabula->sloti;
+    capacitas_vetus  = tabula->capacitas;
 
-    tabula->capacitas      = capacitas_vetus * II;
-    tabula->capacitas_mask = tabula->capacitas - I;
+    tabula->capacitas       = capacitas_vetus * II;
+    tabula->capacitas_mask  = tabula->capacitas - I;
 
     tabula->sloti = (Slotus*)officina_piscina_allocare(
         tabula->piscina,
@@ -3016,9 +3059,9 @@ _tabula_dispersa_crescere(OfficinaTabulaDispersa* tabula)
 
     si (!tabula->sloti)
     {
-        tabula->sloti          = sloti_veteres;
-        tabula->capacitas      = capacitas_vetus;
-        tabula->capacitas_mask = tabula->capacitas - I;
+        tabula->sloti           = sloti_veteres;
+        tabula->capacitas       = capacitas_vetus;
+        tabula->capacitas_mask  = tabula->capacitas - I;
         redde FALSUM;
     }
 
@@ -3027,10 +3070,10 @@ _tabula_dispersa_crescere(OfficinaTabulaDispersa* tabula)
         tabula->sloti[i].status = SLOT_VACUUM;
     }
 
-    tabula->numerus = ZEPHYRUM;
-    tabula->numerus_deletorum = ZEPHYRUM;
-    tabula->collisiones_totales = ZEPHYRUM;
-    tabula->distantia_maxima = ZEPHYRUM;
+    tabula->numerus              = ZEPHYRUM;
+    tabula->numerus_deletorum    = ZEPHYRUM;
+    tabula->collisiones_totales  = ZEPHYRUM;
+    tabula->distantia_maxima     = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < capacitas_vetus; i++)
     {
@@ -3046,12 +3089,13 @@ _tabula_dispersa_crescere(OfficinaTabulaDispersa* tabula)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Creatio
  * ================================================== */
 
 static OfficinaTabulaDispersa*
-officina_tabula_dispersa_creare(
+officina_tabula_dispersa_creare (
              OfficinaPiscina* piscina,
                  i32  capacitas_initialis,
        TabulaFriatio  friatio,
@@ -3070,7 +3114,7 @@ officina_tabula_dispersa_creare(
     si (capacitas < XVI) capacitas = XVI;
 
     tabula = (OfficinaTabulaDispersa*)officina_piscina_allocare(
-                                piscina, 
+                                piscina,
                                 magnitudo(OfficinaTabulaDispersa));
     si (!tabula) redde NIHIL;
 
@@ -3081,31 +3125,30 @@ officina_tabula_dispersa_creare(
 
     per (i = ZEPHYRUM; i < capacitas; i++)
     {
-        tabula->sloti[i].status         = SLOT_VACUUM;
-        tabula->sloti[i].clavis.mensura = ZEPHYRUM;
-        tabula->sloti[i].clavis.datum   = NIHIL;
-        tabula->sloti[i].valor          = NIHIL;
-        tabula->sloti[i].hash_cachatum  = ZEPHYRUM;
+        tabula->sloti[i].status          = SLOT_VACUUM;
+        tabula->sloti[i].clavis.mensura  = ZEPHYRUM;
+        tabula->sloti[i].clavis.datum    = NIHIL;
+        tabula->sloti[i].valor           = NIHIL;
+        tabula->sloti[i].hash_cachatum   = ZEPHYRUM;
     }
 
-    tabula->capacitas                = capacitas;
-    tabula->capacitas_mask           = capacitas - I;
-    tabula->numerus                  = ZEPHYRUM;
-    tabula->numerus_deletorum        = ZEPHYRUM;
-    tabula->piscina                  = piscina;
-    tabula->comparatio               = comparatio;
-    tabula->friatio                  = friatio;
-    tabula->factor_maximus           = 0.75f;
-    tabula->factor_deletorum_maximus = 0.25f;
-    tabula->collisiones_totales      = ZEPHYRUM;
-    tabula->distantia_maxima         = ZEPHYRUM;
+    tabula->capacitas                 = capacitas;
+    tabula->capacitas_mask            = capacitas - I;
+    tabula->numerus                   = ZEPHYRUM;
+    tabula->numerus_deletorum         = ZEPHYRUM;
+    tabula->piscina                   = piscina;
+    tabula->comparatio                = comparatio;
+    tabula->friatio                   = friatio;
+    tabula->factor_maximus            = 0.75f;
+    tabula->factor_deletorum_maximus  = 0.25f;
+    tabula->collisiones_totales       = ZEPHYRUM;
+    tabula->distantia_maxima          = ZEPHYRUM;
 
     redde tabula;
 }
 
-
 static OfficinaTabulaDispersa*
-officina_tabula_dispersa_creare_chorda(
+officina_tabula_dispersa_creare_chorda (
     OfficinaPiscina* piscina,
         i32  capacitas_initialis)
 {
@@ -3122,7 +3165,7 @@ officina_tabula_dispersa_creare_chorda(
  * ================================================== */
 
 static b32
-officina_tabula_dispersa_inserere(
+officina_tabula_dispersa_inserere (
     OfficinaTabulaDispersa* tabula,
             OfficinaChorda  clavis,
             vacuum* valor)
@@ -3137,8 +3180,8 @@ officina_tabula_dispersa_inserere(
     }
 
     /* Confer factores oneris */
-    si (officina_tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus ||
-        officina_tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
+    si (   officina_tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus
+        || officina_tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
     {
         si (!_tabula_dispersa_crescere(tabula))
         {
@@ -3162,10 +3205,10 @@ officina_tabula_dispersa_inserere(
         tabula->numerus_deletorum--;
     }
 
-    tabula->sloti[positus].clavis          = clavis;
-    tabula->sloti[positus].valor           = valor;
-    tabula->sloti[positus].hash_cachatum   = friatum;
-    tabula->sloti[positus].status          = SLOT_OCCUPATUM;
+    tabula->sloti[positus].clavis         = clavis;
+    tabula->sloti[positus].valor          = valor;
+    tabula->sloti[positus].hash_cachatum  = friatum;
+    tabula->sloti[positus].status         = SLOT_OCCUPATUM;
     tabula->numerus++;
 
     redde VERUM;
@@ -3177,7 +3220,7 @@ officina_tabula_dispersa_inserere(
  * ================================================== */
 
 static b32
-officina_tabula_dispersa_invenire(
+officina_tabula_dispersa_invenire (
     OfficinaTabulaDispersa*  tabula,
             OfficinaChorda   clavis,
             vacuum** valor_out)
@@ -3212,7 +3255,8 @@ officina_tabula_dispersa_invenire(
  * ================================================== */
 
 static f32
-officina_tabula_dispersa_factor_oneris(OfficinaTabulaDispersa* tabula)
+officina_tabula_dispersa_factor_oneris (
+    OfficinaTabulaDispersa* tabula)
 {
     si (!tabula || tabula->capacitas == ZEPHYRUM)
     {
@@ -3222,7 +3266,8 @@ officina_tabula_dispersa_factor_oneris(OfficinaTabulaDispersa* tabula)
 }
 
 static f32
-officina_tabula_dispersa_factor_deletorum(OfficinaTabulaDispersa* tabula)
+officina_tabula_dispersa_factor_deletorum (
+    OfficinaTabulaDispersa* tabula)
 {
     si (!tabula || tabula->capacitas == ZEPHYRUM)
     {
@@ -3232,6 +3277,7 @@ officina_tabula_dispersa_factor_deletorum(OfficinaTabulaDispersa* tabula)
 }
 
 /* ================= ex lib/xar.c ================= */
+
 
 /* ========================================================================
  * STRUCTURAE INTERNAE
@@ -3246,12 +3292,14 @@ nomen structura XarLocatio {
     vacuum* basis_segmenti;         /* Initium segmenti */
 } XarLocatio;
 
+
 /* ========================================================================
  * CONSTANTAE INTERNAE
  * ======================================================================== */
 
 /* Factor duplicandi pro crescentia segmentorum */
 #define XAR_FACTOR_DUPLICANDI  II
+
 
 /* ========================================================================
  * FUNCTIONES AUXILIARES
@@ -3264,34 +3312,34 @@ nomen structura XarLocatio {
  * "Regula duplicandi"
  */
 interior i32
-computare_magnitudinem_segmenti(
+computare_magnitudinem_segmenti (
     constans OfficinaXar* xar,
              i32  index_segmenti)
 {
-	i32 shift_amount;
+    i32 shift_amount;
 
-	si (index_segmenti <= I)
+    si (index_segmenti <= I)
     {
-		/* Duo prima segmenta: eadem magnitudo */
-		redde xar->magnitudo_primi;
-	}
+        /* Duo prima segmenta: eadem magnitudo */
+        redde xar->magnitudo_primi;
+    }
 
-	shift_amount = index_segmenti - I;
+    shift_amount = index_segmenti - I;
 
-	/* Impossibilis cum indices i32 validi
+    /* Impossibilis cum indices i32 validi
 	 * Cum magnitudo_primi = XVI et indices i32 (max ~2^31),
 	 * numquam opus est plus quam ~27-30 segmenta.
 	 * Si hic pervenis, corruptio structurae vel error gravis.
 	 */
-	si (shift_amount >= XXX)
+    si (shift_amount >= XXX)
     {
-		imprimere("FRACTA: xar segmentum nimis altum: %d\n", index_segmenti);
-		imprimere("        (impossibilis cum indices i32 - corruptio?)\n");
-		exire(I);
-	}
+        imprimere("FRACTA: xar segmentum nimis altum: %d\n", index_segmenti);
+        imprimere("        (impossibilis cum indices i32 - corruptio?)\n");
+        exire(I);
+    }
 
-	/* Segmenta sequentia: duplicant */
-	redde xar->magnitudo_primi << shift_amount;
+    /* Segmenta sequentia: duplicant */
+    redde xar->magnitudo_primi << shift_amount;
 }
 
 /* Allocare Segmentum
@@ -3300,52 +3348,53 @@ computare_magnitudinem_segmenti(
  * Redde: VERUM si successus, FALSUM si error
  */
 interior b32
-allocare_segmentum(
+allocare_segmentum (
     OfficinaXar* xar,
     i32  index_segmenti)
 {
-	           i32  magnitudo_segmenti;
-	memoriae_index  magnitudo_memoriae;
-	        vacuum* memoria;
+               i32  magnitudo_segmenti;
+    memoriae_index  magnitudo_memoriae;
+            vacuum* memoria;
 
-	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
+    si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
     {
-		redde FALSUM;  /* Nimis multa segmenta! */
-	}
+        redde FALSUM;  /* Nimis multa segmenta! */
+    }
 
-	si (xar->segmenta[index_segmenti])
+    si (xar->segmenta[index_segmenti])
     {
-		redde VERUM;  /* Iam allocatus */
-	}
+        redde VERUM;  /* Iam allocatus */
+    }
 
-	/* Computare magnitudinem segmenti */
-	magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
-	magnitudo_memoriae = (memoriae_index)magnitudo_segmenti * xar->magnitudo_elementi;
+    /* Computare magnitudinem segmenti */
+    magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
+    magnitudo_memoriae = (memoriae_index)magnitudo_segmenti * xar->magnitudo_elementi;
 
-	/* Allocare ex piscina */
-	memoria = officina_piscina_allocare(xar->piscina, magnitudo_memoriae);
-	si (!memoria)
+    /* Allocare ex piscina */
+    memoria = officina_piscina_allocare(xar->piscina, magnitudo_memoriae);
+    si (!memoria)
     {
-		redde FALSUM;  /* Allocatio fracta */
-	}
+        redde FALSUM;  /* Allocatio fracta */
+    }
 
-	/* Zephyrum memoriam si vexillum non ponit */
-	si (!(xar->vexilla & XAR_VEXILLUM_SINE_ZEPHYRUM))
+    /* Zephyrum memoriam si vexillum non ponit */
+    si (!(xar->vexilla & XAR_VEXILLUM_SINE_ZEPHYRUM))
     {
-		memset(memoria, ZEPHYRUM, magnitudo_memoriae);
-	}
+        memset(memoria, ZEPHYRUM, magnitudo_memoriae);
+    }
 
-	/* Renovare statum xar */
-	xar->segmenta[index_segmenti] = memoria;
-	si (index_segmenti >= xar->numerus_segmentorum)
+    /* Renovare statum xar */
+    xar->segmenta[index_segmenti] = memoria;
+    si (index_segmenti >= xar->numerus_segmentorum)
     {
-		xar->numerus_segmentorum = index_segmenti + I;
-	}
-	/* Incrementaliter renovare capacitatem - O(1) non O(n) */
-	xar->capacitas_totalis += magnitudo_segmenti;
+        xar->numerus_segmentorum = index_segmenti + I;
+    }
+    /* Incrementaliter renovare capacitatem - O(1) non O(n) */
+    xar->capacitas_totalis += magnitudo_segmenti;
 
-	redde VERUM;
+    redde VERUM;
 }
+
 
 /* ========================================================================
  * FUNCTIONES CREATIONIS
@@ -3353,65 +3402,66 @@ allocare_segmentum(
 
 /* Xar Creare */
 static OfficinaXar*
-officina_xar_creare(
+officina_xar_creare (
     OfficinaPiscina* piscina,
         i32  magnitudo_elementi)
 {
-	redde officina_xar_creare_cum_vexillis(piscina,
-	                               magnitudo_elementi,
-	                               XAR_PRIMUS_SEGMENTUM,
-	                               XAR_VEXILLUM_ORDINARIUS);
+    redde officina_xar_creare_cum_vexillis(piscina,
+                                   magnitudo_elementi,
+                                   XAR_PRIMUS_SEGMENTUM,
+                                   XAR_VEXILLUM_ORDINARIUS);
 }
 
 /* Xar Creare Cum Vexillis
  * "Genesis tabulae exponentialis - cum omnibus optionibus"
  */
 static OfficinaXar*
-officina_xar_creare_cum_vexillis(
+officina_xar_creare_cum_vexillis (
     OfficinaPiscina* piscina,
         i32  magnitudo_elementi,
         i32  magnitudo_primi,
         i32  vexilla)
 {
-	OfficinaXar* xar;
-	i32  i;
+    OfficinaXar* xar;
+    i32  i;
 
-	si (!piscina || magnitudo_elementi == ZEPHYRUM)
+    si (!piscina || magnitudo_elementi == ZEPHYRUM)
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	/* Allocare structuram xar ex piscina */
-	xar = (OfficinaXar*)officina_piscina_allocare_ordinatum(piscina, magnitudo(OfficinaXar), magnitudo(OfficinaXar));
-	si (!xar)
+    /* Allocare structuram xar ex piscina */
+    xar = (OfficinaXar*)officina_piscina_allocare_ordinatum(piscina, magnitudo(OfficinaXar), magnitudo(OfficinaXar));
+    si (!xar)
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	/* Initializare metadatum
+    /* Initializare metadatum
 	 * "Initium notitiae"
 	 */
-	xar->numerus_elementorum = ZEPHYRUM;
-	xar->magnitudo_elementi  = magnitudo_elementi;
-	xar->magnitudo_primi     = magnitudo_primi ? magnitudo_primi : XAR_PRIMUS_SEGMENTUM;
-	xar->numerus_segmentorum = ZEPHYRUM;
-	xar->capacitas_totalis   = ZEPHYRUM;
-	xar->vexilla             = vexilla;
-	xar->piscina             = piscina;
+    xar->numerus_elementorum = ZEPHYRUM;
+    xar->magnitudo_elementi = magnitudo_elementi;
+    xar->magnitudo_primi = magnitudo_primi ? magnitudo_primi : XAR_PRIMUS_SEGMENTUM;
+    xar->numerus_segmentorum = ZEPHYRUM;
+    xar->capacitas_totalis = ZEPHYRUM;
+    xar->vexilla = vexilla;
+    xar->piscina = piscina;
 
-	/* Vacuare segmenta
+    /* Vacuare segmenta
 	 * "Vacuare omnes indices segmentorum"
 	 */
-	per (i = ZEPHYRUM; i < XAR_MAXIMUS_SEGMENTORUM; i++)
+    per (i = ZEPHYRUM; i < XAR_MAXIMUS_SEGMENTORUM; i++)
     {
-		xar->segmenta[i] = NIHIL;
-	}
+        xar->segmenta[i] = NIHIL;
+    }
 
-	/* Ponere titulus */
-	strcpy(xar->titulus, "Xar Anonymus");
+    /* Ponere titulus */
+    strcpy(xar->titulus, "Xar Anonymus");
 
-	redde xar;
+    redde xar;
 }
+
 
 /* ========================================================================
  * LOCATIO ET ACCESSUS
@@ -3425,130 +3475,132 @@ officina_xar_creare_cum_vexillis(
  * 2. Quaestio exponentia pro ceteris (sine circulatio per omnia segmenta)
  */
 interior b32
-officina_xar_locare(
+officina_xar_locare (
     constans     OfficinaXar* xar,
                  i32  index,
           XarLocatio* locatio)
 {
-	i32 index_segmenti;
-	i32 magnitudo_segmenti;
-	i32 index_adiustus;
+    i32 index_segmenti;
+    i32 magnitudo_segmenti;
+    i32 index_adiustus;
 
-	si (!xar || !locatio)
+    si (!xar || !locatio)
     {
-		redde FALSUM;
-	}
+        redde FALSUM;
+    }
 
-	/* Via rapida pro primis duobus segmentis (eadem magnitudo)
+    /* Via rapida pro primis duobus segmentis (eadem magnitudo)
 	 */
-	si (index < xar->magnitudo_primi * II)
+    si (index < xar->magnitudo_primi * II)
     {
-		si (index < xar->magnitudo_primi)
+        si (index < xar->magnitudo_primi)
         {
-			/* Segmentum primum */
-			locatio->index_segmenti     = ZEPHYRUM;
-			locatio->offset_in_segmento = index;
-			locatio->magnitudo_segmenti = xar->magnitudo_primi;
-		}
+            /* Segmentum primum */
+            locatio->index_segmenti      = ZEPHYRUM;
+            locatio->offset_in_segmento  = index;
+            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+        }
         alioquin
         {
-			/* Segmentum secundum */
-			locatio->index_segmenti     = I;
-			locatio->offset_in_segmento = index - xar->magnitudo_primi;
-			locatio->magnitudo_segmenti = xar->magnitudo_primi;
-		}
-		locatio->basis_segmenti = xar->segmenta[locatio->index_segmenti];
-		redde VERUM;
-	}
+            /* Segmentum secundum */
+            locatio->index_segmenti      = I;
+            locatio->offset_in_segmento  = index - xar->magnitudo_primi;
+            locatio->magnitudo_segmenti  = xar->magnitudo_primi;
+        }
+        locatio->basis_segmenti = xar->segmenta[locatio->index_segmenti];
+        redde VERUM;
+    }
 
-	/* Computatio directa pro segmentis exponentialibus
+    /* Computatio directa pro segmentis exponentialibus
 	 *
 	 * Usans manipulationem bitorum pro quaestio exponentia
 	 */
-	index_adiustus     = index - (xar->magnitudo_primi * II);
-	index_segmenti     = II;
-	magnitudo_segmenti = xar->magnitudo_primi * II;  /* Magnitudo segmenti 2 */
+    index_adiustus      = index - (xar->magnitudo_primi * II);
+    index_segmenti      = II;
+    magnitudo_segmenti  = xar->magnitudo_primi * II;  /* Magnitudo segmenti 2 */
 
-	/* Invenire segmentum usans formam crescentiae exponentialem
+    /* Invenire segmentum usans formam crescentiae exponentialem
 	 */
-	dum (index_adiustus >= magnitudo_segmenti &&
-         index_segmenti < XAR_MAXIMUS_SEGMENTORUM)
+    dum (   index_adiustus >= magnitudo_segmenti
+         && index_segmenti < XAR_MAXIMUS_SEGMENTORUM)
     {
-		index_adiustus -= magnitudo_segmenti;
+        index_adiustus -= magnitudo_segmenti;
 
-		/* Verificare overflow ante duplicatio
+        /* Verificare overflow ante duplicatio
 		 * Si magnitudo_segmenti > 2^30, duplicatio overflow facit
 		 */
-		si (magnitudo_segmenti > (0x7FFFFFFF >> I))
+        si (magnitudo_segmenti > (0x7FFFFFFF >> I))
         {
-			imprimere("FRACTA: xar magnitudo segmenti overflow: %d\n",
-			          magnitudo_segmenti);
-			imprimere("        (impossibilis cum indices i32)\n");
-			exire(I);
-		}
+            imprimere("FRACTA: xar magnitudo segmenti overflow: %d\n",
+                      magnitudo_segmenti);
+            imprimere("        (impossibilis cum indices i32)\n");
+            exire(I);
+        }
 
-		magnitudo_segmenti <<= I;  /* Duplicare pro segmento proximo */
-		index_segmenti++;
-	}
+        magnitudo_segmenti <<= I;  /* Duplicare pro segmento proximo */
+        index_segmenti++;
+    }
 
-	si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
+    si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
     {
-		redde FALSUM;  /* Index nimis magnus */
-	}
+        redde FALSUM;  /* Index nimis magnus */
+    }
 
-	locatio->index_segmenti     = index_segmenti;
-	locatio->offset_in_segmento = index_adiustus;
-	locatio->magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
-	locatio->basis_segmenti     = xar->segmenta[index_segmenti];
+    locatio->index_segmenti = index_segmenti;
+    locatio->offset_in_segmento = index_adiustus;
+    locatio->magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
+    locatio->basis_segmenti = xar->segmenta[index_segmenti];
 
-	redde VERUM;
+    redde VERUM;
 }
 
 /* Xar Obtinere
  * "Obtinere elementum"
  */
 vacuum*
-officina_xar_obtinere(
+officina_xar_obtinere (
     constans OfficinaXar* xar,
              i32  index)
 {
-	XarLocatio  locatio;
-	        i8* basis;
+    XarLocatio  locatio;
+            i8* basis;
 
-	si (!xar || index >= xar->numerus_elementorum)
+    si (!xar || index >= xar->numerus_elementorum)
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	si (!officina_xar_locare(xar, index, &locatio))
+    si (!officina_xar_locare(xar, index, &locatio))
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	si (!locatio.basis_segmenti)
+    si (!locatio.basis_segmenti)
     {
-		redde NIHIL;  /* Segmentum non allocatus */
-	}
+        redde NIHIL;  /* Segmentum non allocatus */
+    }
 
-	/* Computare locum elementi
+    /* Computare locum elementi
 	 */
-	basis = (i8*)locatio.basis_segmenti;
-	redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
+    basis = (i8*)locatio.basis_segmenti;
+    redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
 
 /* Xar Obtinere Signatum
  * "Pro iterationibus cum decrementis"
  */
 vacuum*
-officina_xar_obtinere_s(
+officina_xar_obtinere_s (
     constans OfficinaXar* xar,
              s32  index)
 {
-	si (index < ZEPHYRUM) {
-		redde NIHIL;
-	}
-	redde officina_xar_obtinere(xar, (i32)index);
+    si (index < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde officina_xar_obtinere(xar, (i32)index);
 }
+
 
 /* ========================================================================
  * ADDITIO
@@ -3558,44 +3610,45 @@ officina_xar_obtinere_s(
  * "Addere ad finem"
  */
 static vacuum*
-officina_xar_addere(
+officina_xar_addere (
     OfficinaXar* xar)
 {
-	XarLocatio  locatio;
-	       i32  index_novus;
-	        i8* basis;
+    XarLocatio  locatio;
+           i32  index_novus;
+            i8* basis;
 
-	si (!xar)
+    si (!xar)
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	index_novus = xar->numerus_elementorum;
+    index_novus = xar->numerus_elementorum;
 
-	/* Invenire ubi elementum novum ibit */
-	si (!officina_xar_locare(xar, index_novus, &locatio))
+    /* Invenire ubi elementum novum ibit */
+    si (!officina_xar_locare(xar, index_novus, &locatio))
     {
-		redde NIHIL;
-	}
+        redde NIHIL;
+    }
 
-	/* Assecurare segmentum existit */
-	si (!xar->segmenta[locatio.index_segmenti])
+    /* Assecurare segmentum existit */
+    si (!xar->segmenta[locatio.index_segmenti])
     {
-		si (!allocare_segmentum(xar, locatio.index_segmenti))
+        si (!allocare_segmentum(xar, locatio.index_segmenti))
         {
-			redde NIHIL;  /* Allocatio fracta */
-		}
-		/* Renovare locationem cum segmento novo */
-		locatio.basis_segmenti = xar->segmenta[locatio.index_segmenti];
-	}
+            redde NIHIL;  /* Allocatio fracta */
+        }
+        /* Renovare locationem cum segmento novo */
+        locatio.basis_segmenti = xar->segmenta[locatio.index_segmenti];
+    }
 
-	/* Incrementare numerum */
-	xar->numerus_elementorum++;
+    /* Incrementare numerum */
+    xar->numerus_elementorum++;
 
-	/* Reddere indicem ad elementum novum */
-	basis = (i8*)locatio.basis_segmenti;
-	redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
+    /* Reddere indicem ad elementum novum */
+    basis = (i8*)locatio.basis_segmenti;
+    redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
+
 
 /* ========================================================================
  * UTILITAS
@@ -3603,50 +3656,52 @@ officina_xar_addere(
 
 /* Xar Numerus */
 i32
-officina_xar_numerus(
+officina_xar_numerus (
     constans OfficinaXar* xar)
 {
-	redde xar ? xar->numerus_elementorum : ZEPHYRUM;
+    redde xar ? xar->numerus_elementorum : ZEPHYRUM;
 }
 
 /* Xar Truncare */
 static vacuum
-officina_xar_truncare(OfficinaXar* xar, i32 numerus_novus)
+officina_xar_truncare (
+    OfficinaXar* xar,
+    i32  numerus_novus)
 {
-	si (xar && numerus_novus < xar->numerus_elementorum)
+    si (xar && numerus_novus < xar->numerus_elementorum)
     {
-		xar->numerus_elementorum = numerus_novus;
-	}
+        xar->numerus_elementorum = numerus_novus;
+    }
 }
 
 /* Xar Copiare Ad Tabulam */
 static i32
-officina_xar_copiare_ad_tabulam(
+officina_xar_copiare_ad_tabulam (
     constans OfficinaXar* xar,
           vacuum* destinatio,
              i32  initium,
              i32  numerus)
 {
-	    i8* destinatio_bytes;
-	   i32  i;
-	vacuum* src;
+        i8* destinatio_bytes;
+       i32  i;
+    vacuum* src;
 
-	destinatio_bytes = (i8*)destinatio;
+    destinatio_bytes = (i8*)destinatio;
 
-	per (i = ZEPHYRUM; i < numerus; i++)
+    per (i = ZEPHYRUM; i < numerus; i++)
     {
-		src = officina_xar_obtinere(xar, initium + i);
-		si (!src)
+        src = officina_xar_obtinere(xar, initium + i);
+        si (!src)
         {
-			redde i;  /* Reddere numerum copiatum cum successu */
-		}
-		memcpy(
+            redde i;  /* Reddere numerum copiatum cum successu */
+        }
+        memcpy(
             destinatio_bytes + (i * xar->magnitudo_elementi),
             src,
             xar->magnitudo_elementi);
-	}
+    }
 
-	redde numerus;
+    redde numerus;
 }
 
 
@@ -3658,65 +3713,65 @@ officina_xar_copiare_ad_tabulam(
  * "Removere ultimum - O(1)"
  */
 static b32
-officina_xar_removere_ultimum(
+officina_xar_removere_ultimum (
     OfficinaXar* xar)
 {
-	si (!xar || xar->numerus_elementorum == ZEPHYRUM)
-	{
-		redde FALSUM;
-	}
+    si (!xar || xar->numerus_elementorum == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
 
-	xar->numerus_elementorum--;
-	redde VERUM;
+    xar->numerus_elementorum--;
+    redde VERUM;
 }
 
 /* Xar Removere Cum Ultimo
  * "Swap-remove - O(1)"
  */
 static b32
-officina_xar_removere_cum_ultimo(
+officina_xar_removere_cum_ultimo (
     OfficinaXar* xar,
     i32  index)
 {
-	vacuum* elementum_ad_remotionem;
-	vacuum* elementum_ultimum;
-	   i32  index_ultimus;
+    vacuum* elementum_ad_remotionem;
+    vacuum* elementum_ultimum;
+       i32  index_ultimus;
 
-	si (!xar || xar->numerus_elementorum == ZEPHYRUM)
-	{
-		redde FALSUM;
-	}
+    si (!xar || xar->numerus_elementorum == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
 
-	si (index >= xar->numerus_elementorum)
-	{
-		redde FALSUM;
-	}
+    si (index >= xar->numerus_elementorum)
+    {
+        redde FALSUM;
+    }
 
-	index_ultimus = xar->numerus_elementorum - I;
+    index_ultimus = xar->numerus_elementorum - I;
 
-	/* Si index est ultimus, simpliciter removere */
-	si (index == index_ultimus)
-	{
-		xar->numerus_elementorum--;
-		redde VERUM;
-	}
+    /* Si index est ultimus, simpliciter removere */
+    si (index == index_ultimus)
+    {
+        xar->numerus_elementorum--;
+        redde VERUM;
+    }
 
-	/* Mutare cum ultimo et removere ultimum */
-	elementum_ad_remotionem = officina_xar_obtinere(xar, index);
-	elementum_ultimum       = officina_xar_obtinere(xar, index_ultimus);
+    /* Mutare cum ultimo et removere ultimum */
+    elementum_ad_remotionem  = officina_xar_obtinere(xar, index);
+    elementum_ultimum        = officina_xar_obtinere(xar, index_ultimus);
 
-	si (!elementum_ad_remotionem || !elementum_ultimum)
-	{
-		redde FALSUM;
-	}
+    si (!elementum_ad_remotionem || !elementum_ultimum)
+    {
+        redde FALSUM;
+    }
 
-	/* Copiare ultimum ad positionem remotionis */
-	memcpy(elementum_ad_remotionem, elementum_ultimum, xar->magnitudo_elementi);
+    /* Copiare ultimum ad positionem remotionis */
+    memcpy(elementum_ad_remotionem, elementum_ultimum, xar->magnitudo_elementi);
 
-	/* Decrementare numerum */
-	xar->numerus_elementorum--;
+    /* Decrementare numerum */
+    xar->numerus_elementorum--;
 
-	redde VERUM;
+    redde VERUM;
 }
 
 /* ================= ex officina/fontes/officina_medulla.c ================= */

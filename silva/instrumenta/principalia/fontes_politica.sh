@@ -20,9 +20,14 @@
 # si crescant, idem sequantur.)
 # ------------------------------------------------------------------
 amalgamatoris_fontes() {
+    # manifestum PROPRIUM silvae + mechanismus COMMUNIS (quem tessera
+    # et officina quoque petunt - vide tools/mechanismus_fontes.sh)
+    _mech_radix="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+    # shellcheck source=/dev/null
+    . "$_mech_radix/tools/mechanismus_fontes.sh"
+
     echo "silva/instrumenta/principalia/amalgamator.c"
-    echo "silva/instrumenta/silva_amalgama.c"
-    echo "silva/instrumenta/silva_unitates.c"
+    mechanismus_silvae_fontes
 }
 
 # radices derivationis = corpora propria silvae; tabulae fixturarum

@@ -65,13 +65,28 @@ for f in "silva_token" "silva_lexema"; do
     fi
     obj_files="$obj_files $obj"
 done
-src="$SILVA_DIR/instrumenta/silva_amalgama.c"
-obj="$BUILD_DIR/mech_silva_amalgama.o"
-if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [silva] silva_amalgama.c (mechanismus)"
-    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
-fi
-obj_files="$obj_files $obj"
+# Mechanismus COMMUNIS ex lista communi - vide tools/
+# mechanismus_fontes.sh (lista ter descripta divergit semel iam et
+# amalgama huius proiecti per menses confici non potuit).
+# shellcheck source=/dev/null
+. "$RADIX_DIR/tools/mechanismus_fontes.sh"
+for m in $(mechanismus_silvae_fontes); do
+    src="$RADIX_DIR/$m"
+    obj="$BUILD_DIR/mech_$(basename "$m" .c).o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [silva] $(basename "$m") (mechanismus)"
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# ---- 1.5 PORTA VETUSTATIS: manifesta derivationi congruere ----
+# POST obiecta, ANTE amalgamationem: probatio excludendorum
+# amalgamatorem NECTIT, qui obiecta calefacta petit - porta
+# vere-prima in arbore frigida se ipsam frangeret (mensuratum
+# 2026-08-20). Ratio plena: tools/porta_vetustatis.sh
+echo "  [porta 0] vetustas manifestorum"
+"$RADIX_DIR/tools/porta_vetustatis.sh" officina "$BUILD_DIR/vetustas" || exit 1
 
 # ---- 2. build + run the amalgamator (officina manifest) ----
 echo "  [officina] amalgamator.c (manifestum)"

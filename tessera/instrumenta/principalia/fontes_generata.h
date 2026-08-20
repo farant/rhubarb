@@ -10,7 +10,8 @@
 interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/piscina.h", NIHIL, EXCLUDENDA_PISCINAE, FALSUM, VERUM },
     { "include/chorda_aedificator.h", NIHIL, EXCLUDENDA_AEDIFICATORIS, FALSUM, VERUM },
-    { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM }
+    { "include/utf8.h", NIHIL, EXCLUDENDA_UTF8, FALSUM, VERUM },
+    { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {

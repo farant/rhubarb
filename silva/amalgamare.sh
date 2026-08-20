@@ -50,21 +50,6 @@ declare -a INCLUDE_FLAGS=(
 #
 # Prius omnibus: fractura hic nata est ante quam quicquam struitur,
 # ne opus perfectum abiciatur.
-echo "  [porta 0] vetustas manifestorum"
-if ! "$RADIX_DIR/tools/amalgama_fontes_generare.sh" -probare silva \
-        > "$BUILD_DIR/vetustas_fontium.txt" 2>&1; then
-    echo "amalgamare: FRACTA - manifestum FONTIUM rancidum:"
-    grep -v '^  \[dep\]\|^  \[amalgama\]\|paratum$' \
-        "$BUILD_DIR/vetustas_fontium.txt" | head -12
-    exit 1
-fi
-if ! "$RADIX_DIR/tools/amalgama_excludenda_generare.sh" -probare silva \
-        > "$BUILD_DIR/vetustas_excludendorum.txt" 2>&1; then
-    echo "amalgamare: FRACTA - manifestum EXCLUDENDORUM rancidum:"
-    grep -v '^  gyrus ' "$BUILD_DIR/vetustas_excludendorum.txt" | head -12
-    exit 1
-fi
-
 # ---- 1. dependency objects (rhubarb libs + the silva lexer) ----
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
@@ -97,6 +82,17 @@ for f in "silva_token" "silva_lexema"; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# ---- 1.5 PORTA VETUSTATIS: manifesta derivationi congruere ----
+# POST obiecta, ANTE amalgamationem. Non prius: probatio
+# excludendorum amalgamatorem NECTIT, qui obiecta calefacta petit -
+# in arbore frigida porta vere-prima se ipsam frangeret (mensuratum
+# 2026-08-20 in tessera/officina, quorum obiecta mechanismi nondum
+# exstabant). Hic tamen adhuc ante opus CARUM stat: amalgamatio,
+# compilatio standalone, hospes, nm, censura omnia sequuntur.
+# Ratio plena: tools/porta_vetustatis.sh
+echo "  [porta 0] vetustas manifestorum"
+"$RADIX_DIR/tools/porta_vetustatis.sh" silva "$BUILD_DIR/vetustas" || exit 1
 
 # ---- 2. build + run the amalgamator (manifest + shared mechanism) ----
 # Fontes ex POLITICA, non hic enumerati: haec lista et ea scriptoris
