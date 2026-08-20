@@ -62,24 +62,18 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
 interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "_evadere_json",
     "_format_duplex",
-    "_format_integer_i32",
-    "_format_integer_s32",
     "chorda_aedificator_appendere_evasus_json",
     "chorda_aedificator_appendere_f64",
     "chorda_aedificator_appendere_hex_i32",
-    "chorda_aedificator_appendere_i32",
     "chorda_aedificator_appendere_indentationem",
     "chorda_aedificator_appendere_lineam_novam",
     "chorda_aedificator_appendere_literis_evasus_json",
     "chorda_aedificator_appendere_repetita",
-    "chorda_aedificator_appendere_s32",
-    "chorda_aedificator_destruere",
     "chorda_aedificator_indentatio_gradus",
     "chorda_aedificator_longitudo",
     "chorda_aedificator_pop_indentationem",
     "chorda_aedificator_push_indentationem",
     "chorda_aedificator_reset",
-    "chorda_aedificator_spectare",
     NIHIL
 };
 

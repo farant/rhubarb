@@ -12855,3 +12855,66 @@ ea erant quae nemo currebat.
 **Proximum:** T2 arboris (stratum vocabularii - sigillum, tags
 lexematum praefixo 'lex-', tabula orthographiae cum porta sua).
 Aperta amalgamatis in worklog §'Still open'.
+
+## 2026-08-20 — T2 arboris: stratum vocabularii
+
+Quattuor artificia (sigillum, quaesitiones nominum, tabula
+orthographiae, mangulatio tagorum). Nullus codex arborum adhuc -
+T2 consulto stratum est quod arbores non tangit, ergo per se
+committitur. Detail: silva/fontes/silva_arbor.worklog.md.
+
+**Discrimen quod laborem rexit:** ex quattuor artificiis SOLUM
+tabula orthographiae veritatem NOVAM creat. Cetera ex tabulis
+exsistentibus derivantur, ergo dissentire non possunt. Silva
+tabulam inversam genus->littera nusquam habet (verba clausa
+antrorsum sola, interpunctiones cascada recognoscens), ergo arbor
+eam AUCTORAVIT - fons veritatis SECUNDUS qui a lexatore divergere
+potest. Illuc omnis diligentia portae ivit.
+
+**Sigillum TOTALE est, non exemplar.** SilvaRegistrumCoctum
+quattuor campos exacte fert (duae series + duo numeri), ergo
+genera[] et loci[] ambulata totam structuram tegunt. Nullus status
+occultus, nullus campus versionis usquam - contentum tabularum
+solum signum versionis est, quod est prorsus quod friandum volumus.
+Forma: VIII cifrae hexadecimales ante-implitae (NON per
+appendere_hex_i32, quod '%x' adhibet ergo longitudinem VARIAM dat).
+
+**Porta orthographiae duplex.** Tabula positionalis est et campum
+'genus' redundantem fert cuius unicum munus est ut quaesitio
+congruentiam SUAM probet: enumeratione perturbata RECUSAT potius
+quam mentiatur. Id solum tamen custodia MORTUA esset - probatio
+quae 'genera quae orthographiam habent' iteraret introitus fractos
+simpliciter praeteriret. Ergo probatio fines enumerationis
+EXPLICITE nominat (AUTO..WHILE, QUADRA_APERTA..CANCELLUM_CANCELLUM)
+et praesentiam ibi exigit. VITIA UTRAQUE PLANTATA ET MENSURATA:
+orthographia falsa ('=>' pro '->') -> II fracta, nominata; ordines
+PLUS/MINUS permutati -> III fracta, nominata. LXXX orthographiae
+fixae primo cursu recte relectae, '#' '##' '...' '<<=' inclusis.
+
+**Insidiae DUAE.** (i) 'registrum' macro latinae est (register):
+'SilvaRegistrumCoctum registrum;' nihil declaravit, unde cascada
+'assignatio classium incompatibilium' ad omnia vocamina, quia
+DEFINITIO adiutoris parsari non poterat. Landmine documentum.
+Notandum: EXAMEN id ante clang recte notavit et ego instrumento
+diffisus sum. (ii) '/proc' in darwin non exstat, ergo ansa
+'until [ ! -e /proc/$$ ]' statim vera est - opus currens perfectum
+falso nuntiavit. Eadem classis ac portae falso-virides.
+
+**Porta vetustatis T1 se ipsam meruit:** modulus fontium novus est
+prorsus casus taciti pro quo aedificata est, et hoc primum eius
+incendium in rancore VERO fuit (non plantato). Recusavit, ambos
+ordines (.h et .c) nominavit, mandatum regenerationis nominavit.
+Excludenda deinde CLIV -> CXLVIII: sex functiones venditae mortuae
+esse desierunt quia arbor eas vocat (appendere_i32/s32, spectare,
+destruere, _format_integer_*) - prorsus copia quam sigillum
+introduxit, ergo messis pervenientiam VERAM sequitur.
+
+**Ostium nominatum, non apertum:** quaesitiones nominum QUINTA
+descriptio manu-voluta sunt (scribere:76, commissio:471,
+parsare:10, quaestio:289). Promotio in silva_tabulae.h quinque
+plagulas tangit - in commentario fontis notata, M1 non impedit.
+
+**Proximum:** T3, scriptor (arbor -> STML). Nota quod arbor a
+scribere in AMBIGUO consulto divergit (scribere solam canonicam
+emittit, arbor omnes interpretationes) - prima captura substantiva
+recensionis repraesentationalis.

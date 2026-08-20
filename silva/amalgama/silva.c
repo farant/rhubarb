@@ -2436,6 +2436,10 @@ silva_chorda_aedificator_creare (
            SilvaPiscina* piscina,
     memoriae_index  capacitas_initialis);
 
+static vacuum
+silva_chorda_aedificator_destruere (
+    SilvaChordaAedificator* aedificator);
+
 
 /* ==================================================
  * Appendere - Singularis Character
@@ -2460,6 +2464,28 @@ static b32
 silva_chorda_aedificator_appendere_chorda (
     SilvaChordaAedificator* aedificator,
                SilvaChorda  s);
+
+
+/* ==================================================
+ * Appendere - Numeri (Integri)
+ * ================================================== */
+
+static b32
+silva_chorda_aedificator_appendere_s32 (
+    SilvaChordaAedificator* aedificator,
+                  s32  n);
+
+static b32
+silva_chorda_aedificator_appendere_i32 (
+    SilvaChordaAedificator* aedificator,
+                  i32  n);
+
+/* spectare: vide contentum currentem sine finiendo
+ * Reddit chordam spectationem buffer currenti.
+ * Validus solum usque ad proximam mutationem. */
+static SilvaChorda
+silva_chorda_aedificator_spectare (
+    SilvaChordaAedificator* aedificator);
 
 /* finire: converte aedificatorem ad chordam
  * Transfert dominium chordae accumulatae ad vocantem.
@@ -6341,6 +6367,166 @@ silva_quaestiones_parare (
 
 #endif /* SILVA_QUAESTIONES_H */
 
+/* ================= ex silva/fontes/silva_arbor.h ================= */
+/* silva_arbor.h - vocabularium dialecti 'arbor' (STML canonicum)
+ *
+ * Arbor proicit arbores parsurae silvae in STML canonicum et eas
+ * relegit. HOC caput stratum VOCABULARII solum fert (T2): sigillum
+ * registri, quaesitiones nominum, tabulam orthographiae, mangulationem
+ * tagorum. Scriptor (T3), comparator (T4), lector (T5) sequuntur.
+ *
+ * Consilium: project-specs/arbor-stml-spec-v2.md + arbor-stml-plan.md.
+ *
+ * CHARTA VOCABULARII (spec §2, contra registrum coctum mensurata):
+ *   - genus nodi   -> tag elementi VERBATIM ex SilvaTabGenus.titulus
+ *   - locus        -> tag elementi VERBATIM ex SilvaTabLocus.titulus
+ *                     (nomina locorum NON globaliter unica sunt: LXII
+ *                      nomina per CLXXVI ordines - locus significat
+ *                      solum relative ad genus parentis)
+ *   - genus lexematis -> tag PRAEFIXATUM 'lex-'
+ *
+ * CUR PRAEFIXUM: spatia nominum NON disiuncta sunt. 'assignatio' est
+ * et genus nodi et SILVA_LEX_ASSIGNATIO; 'corpus' est et genus et
+ * nomen loci. Praeterea genera lexematum in vocabulario communi
+ * NUMQUAM fuerunt - machina quaestionis genera lexematum attingere
+ * nequit (valorem TEXTUS comparat, non genus), et NOMINA_GENERUM
+ * tabula separata est numquam in SilvaRegistrumCoctum nexa. Praefixum
+ * ergo limitem spatii nominum DICIT, non celat.
+ */
+
+#ifndef SILVA_ARBOR_H
+#define SILVA_ARBOR_H
+
+/* Praefixum tagorum lexematum (vide caput pro ratione) */
+#define SILVA_ARBOR_PRAEFIXUM "lex-"
+
+/* Capacitas buffer cuivis tago lexematis sufficiens: praefixum (IV)
+ * + nomen longissimum ('SINISTRORSUM_ASSIGNATIO', XXIII) + terminator.
+ * Rotundatum ad LXIV - probatio limitem verum custodit. */
+#define SILVA_ARBOR_TAG_CAPACITAS 64
+
+/* Longitudo sigilli in characteribus (nibbles hexadecimales) */
+#define SILVA_ARBOR_SIGILLI_LONGITUDO 8
+
+
+/* ==================================================
+ * Sigillum registri
+ * ================================================== */
+
+/* Sigillum registri grammatici: friatio FNV-1a super genera + locos,
+ * reddita ut chorda hexadecimalis minuscula VIII characterum
+ * (semper VIII - zephyris ante-implita, ut sigilla oculo conferri
+ * possint).
+ *
+ * TOTALE, non exemplar: SilvaRegistrumCoctum quattuor campos exacte
+ * fert (duae series + duo numeri), ergo genera[] et loci[] ambulata
+ * TOTAM structuram tegunt - nullus est status occultus quem sigillum
+ * praeterire possit. Nullus campus versionis usquam exstat: CONTENTUM
+ * tabularum solum signum versionis est, quod est prorsus quod
+ * friandum volumus.
+ *
+ * Munus: documentum arboris sigillum fert; lector CONFERT et REICIT
+ * si divergit. Arbor iudicata vocabulario falso mendacium est.
+ *
+ * XXXII bita sufficiunt quia comparatio UNA fit (sigillum documenti
+ * contra sigillum registri currentis), ergo acceptio falsa 2^-32
+ * constat - non terminus natalicius, qui comparationi binis inter
+ * copiam applicaretur.
+ *
+ * Piscina/tabularium NIHIL -> chorda vacua (mensura ZEPHYRUM). */
+SilvaChorda
+silva_arbor_sigillum (
+                           SilvaPiscina* piscina,
+     constans SilvaRegistrumCoctum* tabularium);
+
+
+/* ==================================================
+ * Quaesitiones nominum registri
+ * ================================================== */
+
+/* Nomen generis nodi -> index in tabularium->genera; -I si ignotum.
+ * Titulus NON terminatur nullo (mensura data) - chordae documenti
+ * ita veniunt. */
+s32
+silva_arbor_genus_index (
+     constans SilvaRegistrumCoctum* tabularium,
+                constans character* titulus,
+                               i32  mensura);
+
+/* Nomen loci INTRA genus datum -> index ABSOLUTUS in seriem planam
+ * tabularium->loci; -I si ignotum aut genus_index extra fines.
+ *
+ * Scopus generis essentialis est: nomina locorum non globaliter
+ * unica sunt (vide caput). Index absolutus redditur ut vocans
+ * speciem statim legere possit: tabularium->loci[index].species. */
+s32
+silva_arbor_locus_index (
+     constans SilvaRegistrumCoctum* tabularium,
+                               s32  genus_index,
+                constans character* titulus,
+                               i32  mensura);
+
+
+/* ==================================================
+ * Orthographia lexematum
+ * ================================================== */
+
+/* Orthographia FIXA generis lexematis ('auto', '[', '->', ...);
+ * NIHIL si genus orthographiam VARIAM fert (identificator, litterae,
+ * trivia, genera robustitatis) aut si genus extra fines est.
+ *
+ * ARTIFICIUM NOVUM, PORTA OBLIGATA. Silva tabulam INVERSAM
+ * (genus -> littera) nusquam habet: verba clausa tabulam ANTRORSUM
+ * solam ferunt (VERBA_CLAUSA, silva_lexema.c) et interpunctiones
+ * cascadam si-alioquin recognoscentem solam (_legere_interpunctionem).
+ * Haec ergo fons veritatis SECUNDUS est, qui a lexatore divergere
+ * potest. Porta ad nativitatem: probatio orthographiam CUIUSQUE
+ * introitus lexat et genus redditum exspectat.
+ *
+ * Silva trigraphos NON implet, ergo orthographiae hodie vere I:I
+ * sunt. Si trigraphi umquam addantur tabula I:I esse desinit et
+ * valor portandus fit - dependentia nominata. */
+constans character*
+silva_arbor_orthographia (
+    SilvaLexemaGenus genus);
+
+/* An valor lexematis in documento PORTANDUS sit (orthographia varia).
+ * FALSUM pro generibus orthographiae fixae ET pro EOF, cuius valor
+ * semper vacuus est. */
+b32
+silva_arbor_valor_portandus (
+    SilvaLexemaGenus genus);
+
+
+/* ==================================================
+ * Mangulatio tagorum lexematum
+ * ================================================== */
+
+/* Tag lexematis in buffer datum scribere: praefixum 'lex-' + nomen
+ * generis minusculum, '_' in '-' mutatis. Nullo terminatur.
+ * Reddit longitudinem SCRIPTAM (sine terminatore), aut ZEPHYRUM si
+ * genus extra fines est aut capacitas non sufficit.
+ *
+ * Nomen ex silva_lexema_genus_nomen sumitur - NON tabula propria.
+ * Tabula propria quartus fons veritatis esset. */
+i32
+silva_arbor_lexema_tag (
+    SilvaLexemaGenus  genus,
+           character* buffer,
+                 i32  capacitas);
+
+/* Tag ('lex-...') -> genus lexematis; SILVA_LEX_NUMERUS_GENERUM si
+ * ignotum. Titulus NON terminatur nullo (mensura data).
+ *
+ * Implementum per mangulationem ANTRORSAM cuiusque generis et
+ * comparationem - ergo directiones duae DIVERGERE NON POSSUNT. */
+SilvaLexemaGenus
+silva_arbor_lexema_ex_tag (
+     constans character* tag,
+                    i32  mensura);
+
+#endif /* SILVA_ARBOR_H */
+
 /* ================= ex lib/piscina.c ================= */
 
 #ifndef PISCINA_DEBUG
@@ -7066,6 +7252,48 @@ _appendere_interna (
     redde VERUM;
 }
 
+/* Formata integrum signatum ad buffer
+ * Vocans praebet buffer, debet esse >= 32 bytes (tutus pro s32) */
+interior memoriae_index
+_format_integer_s32 (
+               s32  n,
+                i8* buffer,
+    memoriae_index  capacitas)
+{
+            character cstr[CXXXII];
+                  s32 mensura_signed;
+       memoriae_index mensura;
+
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%d", n);
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
+
+    mensura = (memoriae_index)mensura_signed;
+    si (mensura >= capacitas) redde ZEPHYRUM;
+
+    memcpy(buffer, cstr, mensura);
+    redde mensura;
+}
+
+interior memoriae_index
+_format_integer_i32 (
+               i32  n,
+                i8* buffer,
+    memoriae_index  capacitas)
+{
+         character cstr[CXXXII];
+               s32 mensura_signed;
+    memoriae_index mensura;
+
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr), "%u", n);
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
+
+    mensura = (memoriae_index)mensura_signed;
+    si (mensura >= capacitas) redde ZEPHYRUM;
+
+    memcpy(buffer, cstr, mensura);
+    redde mensura;
+}
+
 
 /* ==================================================
  * Creatio
@@ -7096,6 +7324,23 @@ silva_chorda_aedificator_creare (
     aedificator->indentatio_gradus  = ZEPHYRUM;
 
     redde aedificator;
+}
+
+
+/* ==================================================
+ * Destructio
+ * ================================================== */
+
+static vacuum
+silva_chorda_aedificator_destruere (
+    SilvaChordaAedificator* aedificator)
+{
+    /* Piscina possidet memoriam; solum liberamus structuram */
+    si (aedificator)
+    {
+        /* Nota: buffer etiam allocatus ex piscina,
+		 * ergo liberabitur quando piscina destruitur */
+    }
 }
 
 
@@ -7138,6 +7383,63 @@ silva_chorda_aedificator_appendere_chorda (
     si (!aedificator || !s.datum) redde FALSUM;
 
     redde _appendere_interna(aedificator, s.datum, s.mensura);
+}
+
+
+/* ==================================================
+ * Appendere - Numeri
+ * ================================================== */
+
+static b32
+silva_chorda_aedificator_appendere_s32 (
+    SilvaChordaAedificator* aedificator,
+                  s32  n)
+{
+                i8 buffer[CXXXII];
+    memoriae_index mensura;
+
+    si (!aedificator) redde FALSUM;
+
+    mensura = _format_integer_s32(n, buffer, magnitudo(buffer));
+    si (mensura == ZEPHYRUM) redde FALSUM;
+
+    redde _appendere_interna(aedificator, buffer, mensura);
+}
+
+static b32
+silva_chorda_aedificator_appendere_i32 (
+    SilvaChordaAedificator* aedificator,
+                  i32  n)
+{
+                i8 buffer[CXXXII];
+    memoriae_index mensura;
+
+    si (!aedificator) redde FALSUM;
+
+    mensura = _format_integer_i32(n, buffer, magnitudo(buffer));
+    si (mensura == ZEPHYRUM) redde FALSUM;
+
+    redde _appendere_interna(aedificator, buffer, mensura);
+}
+
+static SilvaChorda
+silva_chorda_aedificator_spectare (
+    SilvaChordaAedificator* aedificator)
+{
+    SilvaChorda result;
+
+    si (!aedificator || !aedificator->buffer)
+    {
+        result.mensura  = ZEPHYRUM;
+        result.datum    = NIHIL;
+    }
+    alioquin
+    {
+        result.mensura  = (i32)aedificator->offset;
+        result.datum    = aedificator->buffer;
+    }
+
+    redde result;
 }
 
 static SilvaChorda
@@ -63994,4 +64296,436 @@ silva_quaestiones_parare (
         }
         redde quaestio;
     }
+}
+
+/* ================= ex silva/fontes/silva_arbor.c ================= */
+
+
+/* ==================================================
+ * Tabula orthographiae - FONS VERITATIS SECUNDUS
+ *
+ * Ordo POSITIONALIS est (index = genus), ergo quaesitio O(I).
+ * Campus 'genus' redundans NON otiosus est: solus exsistit ut
+ * silva_arbor_orthographia congruentiam positionis probare possit
+ * et, si quis enumerationem ordinet neque hanc tabulam, RECUSET
+ * potius quam mentiatur. Probatio idem trans genera OMNIA affirmat.
+ *
+ * NIHIL = orthographia VARIA (valor in documento portandus).
+ * Vide portam in probatio_silva_arbor.c: orthographia CUIUSQUE
+ * introitus lexatur et genus redditum exspectatur - haec tabula
+ * a lexatore divergere non potest sine porta rubra.
+ * ================================================== */
+
+hic_manens constans structura {
+      SilvaLexemaGenus  genus;
+    constans character* orthographia;
+} ORTHOGRAPHIAE[SILVA_LEX_NUMERUS_GENERUM] = {
+    { SILVA_LEX_EOF,                   NIHIL },
+
+    /* Robustitas - valor verbatim */
+    { SILVA_LEX_OCTETUS_IGNOTUS,       NIHIL },
+    { SILVA_LEX_STRING_IMPERFECTUM,    NIHIL },
+    { SILVA_LEX_CHARACTER_IMPERFECTUM, NIHIL },
+
+    /* Identificator et litterae - valor verbatim */
+    { SILVA_LEX_IDENTIFICATOR,         NIHIL },
+    { SILVA_LEX_INTEGER,               NIHIL },
+    { SILVA_LEX_FLOAT,                 NIHIL },
+    { SILVA_LEX_CHARACTER_LIT,         NIHIL },
+    { SILVA_LEX_STRING_LIT,            NIHIL },
+
+    /* Verba clausa C89 - XXXII */
+    { SILVA_LEX_AUTO,                  "auto" },
+    { SILVA_LEX_BREAK,                 "break" },
+    { SILVA_LEX_CASE,                  "case" },
+    { SILVA_LEX_CHAR,                  "char" },
+    { SILVA_LEX_CONST,                 "const" },
+    { SILVA_LEX_CONTINUE,              "continue" },
+    { SILVA_LEX_DEFAULT,               "default" },
+    { SILVA_LEX_DO,                    "do" },
+    { SILVA_LEX_DOUBLE,                "double" },
+    { SILVA_LEX_ELSE,                  "else" },
+    { SILVA_LEX_ENUM,                  "enum" },
+    { SILVA_LEX_EXTERN,                "extern" },
+    { SILVA_LEX_FLOAT_KW,              "float" },
+    { SILVA_LEX_FOR,                   "for" },
+    { SILVA_LEX_GOTO,                  "goto" },
+    { SILVA_LEX_IF,                    "if" },
+    { SILVA_LEX_INT,                   "int" },
+    { SILVA_LEX_LONG,                  "long" },
+    { SILVA_LEX_REGISTER,              "register" },
+    { SILVA_LEX_RETURN,                "return" },
+    { SILVA_LEX_SHORT,                 "short" },
+    { SILVA_LEX_SIGNED,                "signed" },
+    { SILVA_LEX_SIZEOF,                "sizeof" },
+    { SILVA_LEX_STATIC,                "static" },
+    { SILVA_LEX_STRUCT,                "struct" },
+    { SILVA_LEX_SWITCH,                "switch" },
+    { SILVA_LEX_TYPEDEF,               "typedef" },
+    { SILVA_LEX_UNION,                 "union" },
+    { SILVA_LEX_UNSIGNED,              "unsigned" },
+    { SILVA_LEX_VOID,                  "void" },
+    { SILVA_LEX_VOLATILE,              "volatile" },
+    { SILVA_LEX_WHILE,                 "while" },
+
+    /* Interpunctiones - XLVIII */
+    { SILVA_LEX_QUADRA_APERTA,         "[" },
+    { SILVA_LEX_QUADRA_CLAUSA,         "]" },
+    { SILVA_LEX_PAREN_APERTA,          "(" },
+    { SILVA_LEX_PAREN_CLAUSA,          ")" },
+    { SILVA_LEX_BRACE_APERTA,          "{" },
+    { SILVA_LEX_BRACE_CLAUSA,          "}" },
+    { SILVA_LEX_PUNCTUM,               "." },
+    { SILVA_LEX_SAGITTA,               "->" },
+    { SILVA_LEX_INCREMENTUM,           "++" },
+    { SILVA_LEX_DECREMENTUM,           "--" },
+    { SILVA_LEX_AMPERSAND,             "&" },
+    { SILVA_LEX_STAR,                  "*" },
+    { SILVA_LEX_PLUS,                  "+" },
+    { SILVA_LEX_MINUS,                 "-" },
+    { SILVA_LEX_TILDE,                 "~" },
+    { SILVA_LEX_EXCLAMATIO,            "!" },
+    { SILVA_LEX_SOLIDUS,               "/" },
+    { SILVA_LEX_PERCENTUM,             "%" },
+    { SILVA_LEX_SINISTRORSUM,          "<<" },
+    { SILVA_LEX_DEXTRORSUM,            ">>" },
+    { SILVA_LEX_MINOR,                 "<" },
+    { SILVA_LEX_MAIOR,                 ">" },
+    { SILVA_LEX_MINOR_AEQUALIS,        "<=" },
+    { SILVA_LEX_MAIOR_AEQUALIS,        ">=" },
+    { SILVA_LEX_AEQUALIS_AEQUALIS,     "==" },
+    { SILVA_LEX_NON_AEQUALIS,          "!=" },
+    { SILVA_LEX_CARET,                 "^" },
+    { SILVA_LEX_BARRA,                 "|" },
+    { SILVA_LEX_ET_ET,                 "&&" },
+    { SILVA_LEX_VEL_VEL,               "||" },
+    { SILVA_LEX_QUAESTIO,              "?" },
+    { SILVA_LEX_COLON,                 ":" },
+    { SILVA_LEX_SEMICOLON,             ";" },
+    { SILVA_LEX_ELLIPSIS,              "..." },
+    { SILVA_LEX_ASSIGNATIO,            "=" },
+    { SILVA_LEX_STAR_ASSIGNATIO,       "*=" },
+    { SILVA_LEX_SOLIDUS_ASSIGNATIO,    "/=" },
+    { SILVA_LEX_PERCENTUM_ASSIGNATIO,  "%=" },
+    { SILVA_LEX_PLUS_ASSIGNATIO,       "+=" },
+    { SILVA_LEX_MINUS_ASSIGNATIO,      "-=" },
+    { SILVA_LEX_SINISTRORSUM_ASSIGNATIO, "<<=" },
+    { SILVA_LEX_DEXTRORSUM_ASSIGNATIO, ">>=" },
+    { SILVA_LEX_AMPERSAND_ASSIGNATIO,  "&=" },
+    { SILVA_LEX_CARET_ASSIGNATIO,      "^=" },
+    { SILVA_LEX_BARRA_ASSIGNATIO,      "|=" },
+    { SILVA_LEX_COMMA,                 "," },
+    { SILVA_LEX_CANCELLUM,             "#" },
+    { SILVA_LEX_CANCELLUM_CANCELLUM,   "##" },
+
+    /* Trivia - valor verbatim (numerus spatiorum, textus commenti) */
+    { SILVA_LEX_SPATIA,                NIHIL },
+    { SILVA_LEX_TABULAE,               NIHIL },
+    { SILVA_LEX_NOVA_LINEA,            NIHIL },
+    { SILVA_LEX_CONTINUATIO,           NIHIL },
+    { SILVA_LEX_COMMENTUM_CLAUSUM,     NIHIL },
+    { SILVA_LEX_COMMENTUM_LINEA,       NIHIL }
+};
+
+hic_manens constans character* HEX_CIFRAE = "0123456789abcdef";
+
+
+/* ==================================================
+ * Sigillum registri
+ * ================================================== */
+
+SilvaChorda
+silva_arbor_sigillum (
+                           SilvaPiscina* piscina,
+     constans SilvaRegistrumCoctum* tabularium)
+{
+    SilvaChordaAedificator* materia;
+    SilvaChordaAedificator* exitus;
+               SilvaChorda  friandum;
+               SilvaChorda  vacua;
+                  i32  friatum;
+                  i32  i;
+
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+
+    si (piscina == NIHIL || tabularium == NIHIL)
+    {
+        redde vacua;
+    }
+
+    materia = silva_chorda_aedificator_creare(piscina, 4096);
+    si (materia == NIHIL)
+    {
+        redde vacua;
+    }
+
+    /* Separator post CAMPUM QUEMQUE: sine eo 'ab' + 'c' et 'a' +
+     * 'bc' eandem materiam darent. */
+    per (i = ZEPHYRUM; i < tabularium->numerus_generum; i++)
+    {
+        constans SilvaTabGenus* genus = &tabularium->genera[i];
+
+        si (genus->titulus != NIHIL)
+        {
+            silva_chorda_aedificator_appendere_literis(materia,
+                genus->titulus);
+        }
+        silva_chorda_aedificator_appendere_character(materia, '\n');
+        silva_chorda_aedificator_appendere_i32(materia, genus->loci_offset);
+        silva_chorda_aedificator_appendere_character(materia, '\n');
+        silva_chorda_aedificator_appendere_i32(materia, genus->loci_numerus);
+        silva_chorda_aedificator_appendere_character(materia, '\n');
+    }
+
+    per (i = ZEPHYRUM; i < tabularium->numerus_locorum; i++)
+    {
+        constans SilvaTabLocus* locus = &tabularium->loci[i];
+
+        si (locus->titulus != NIHIL)
+        {
+            silva_chorda_aedificator_appendere_literis(materia,
+                locus->titulus);
+        }
+        silva_chorda_aedificator_appendere_character(materia, '\n');
+        silva_chorda_aedificator_appendere_s32(materia, locus->species);
+        silva_chorda_aedificator_appendere_character(materia, '\n');
+    }
+
+    friandum = silva_chorda_aedificator_spectare(materia);
+    friatum  = silva_friatio_fnv1a_literis(
+        (constans character*)friandum.datum, friandum.mensura);
+    silva_chorda_aedificator_destruere(materia);
+
+    /* Hexadecimale VIII characterum, ante-implitum. NON per
+     * chorda_aedificator_appendere_hex_i32: illud '%x' adhibet, ergo
+     * longitudinem VARIAM dat (sigillum 0x0000abcd 'abcd' fieret) -
+     * sigilla oculo conferenda longitudinem fixam petunt. */
+    exitus = silva_chorda_aedificator_creare(piscina,
+        SILVA_ARBOR_SIGILLI_LONGITUDO + I);
+    si (exitus == NIHIL)
+    {
+        redde vacua;
+    }
+
+    per (i = ZEPHYRUM; i < SILVA_ARBOR_SIGILLI_LONGITUDO; i++)
+    {
+        i32 gradus;
+        i32 nibble;
+
+        gradus = (SILVA_ARBOR_SIGILLI_LONGITUDO - I - i) * IV;
+        nibble = (friatum >> gradus) & (i32)0xF;
+        silva_chorda_aedificator_appendere_character(exitus,
+            HEX_CIFRAE[nibble]);
+    }
+
+    redde silva_chorda_aedificator_finire(exitus);
+}
+
+
+/* ==================================================
+ * Quaesitiones nominum registri
+ *
+ * OSTIUM NOMINATUM: haec QUINTA descriptio manu-voluta quaesitionis
+ * nominis-in-indicem est. Priores: silva_scribere.c:76,
+ * silva_commissio.c:471, silva_parsare.c:10, silva_quaestio.c:289
+ * (cuius formam scandendi haec sequitur). Regula tertiae vicis iam
+ * longe transgressa est - adiutor communis in silva_tabulae.h
+ * promovendus, sed id OPUS M1 NON est: promotio quinque plagulas
+ * exsistentes tangit et probationes suas petit.
+ * ================================================== */
+
+s32
+silva_arbor_genus_index (
+     constans SilvaRegistrumCoctum* tabularium,
+                constans character* titulus,
+                               i32  mensura)
+{
+    i32 i;
+
+    si (tabularium == NIHIL || titulus == NIHIL)
+    {
+        redde -I;
+    }
+
+    per (i = ZEPHYRUM; i < tabularium->numerus_generum; i++)
+    {
+        constans character* candidatus = tabularium->genera[i].titulus;
+
+        si (   candidatus                                   != NIHIL
+            && strlen(candidatus) == (size_t)mensura
+            && memcmp(candidatus, titulus, (size_t)mensura) == ZEPHYRUM)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+s32
+silva_arbor_locus_index (
+     constans SilvaRegistrumCoctum* tabularium,
+                               s32  genus_index,
+                constans character* titulus,
+                               i32  mensura)
+{
+    constans SilvaTabGenus* genus;
+                       i32  i;
+
+    si (tabularium == NIHIL || titulus == NIHIL)
+    {
+        redde -I;
+    }
+    si (   genus_index < ZEPHYRUM
+        || (i32)genus_index >= tabularium->numerus_generum)
+    {
+        redde -I;
+    }
+
+    genus = &tabularium->genera[genus_index];
+
+    per (i = ZEPHYRUM; i < genus->loci_numerus; i++)
+    {
+                       i32  absolutus = genus->loci_offset + i;
+        constans character* candidatus;
+
+        si (absolutus >= tabularium->numerus_locorum)
+        {
+            frange;
+        }
+        candidatus = tabularium->loci[absolutus].titulus;
+
+        si (   candidatus                                   != NIHIL
+            && strlen(candidatus) == (size_t)mensura
+            && memcmp(candidatus, titulus, (size_t)mensura) == ZEPHYRUM)
+        {
+            redde (s32)absolutus;
+        }
+    }
+    redde -I;
+}
+
+
+/* ==================================================
+ * Orthographia lexematum
+ * ================================================== */
+
+constans character*
+silva_arbor_orthographia (
+    SilvaLexemaGenus genus)
+{
+    si ((i32)genus >= (i32)SILVA_LEX_NUMERUS_GENERUM)
+    {
+        redde NIHIL;
+    }
+    /* Custodia ordinis - vide caput tabulae. Congruentia fracta
+     * RECUSAT; mentiri non licet. */
+    si (ORTHOGRAPHIAE[genus].genus != genus)
+    {
+        redde NIHIL;
+    }
+    redde ORTHOGRAPHIAE[genus].orthographia;
+}
+
+b32
+silva_arbor_valor_portandus (
+    SilvaLexemaGenus genus)
+{
+    si ((i32)genus >= (i32)SILVA_LEX_NUMERUS_GENERUM)
+    {
+        redde FALSUM;
+    }
+    /* EOF orthographiam non habet NEQUE valorem - vacuus semper */
+    si (genus == SILVA_LEX_EOF)
+    {
+        redde FALSUM;
+    }
+    redde (silva_arbor_orthographia(genus) == NIHIL) ? VERUM : FALSUM;
+}
+
+
+/* ==================================================
+ * Mangulatio tagorum lexematum
+ * ================================================== */
+
+i32
+silva_arbor_lexema_tag (
+    SilvaLexemaGenus  genus,
+           character* buffer,
+                 i32  capacitas)
+{
+    constans character* titulus;
+                   i32  praefixum;
+                   i32  scripta;
+                   i32  i;
+
+    si (buffer == NIHIL || capacitas == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si ((i32)genus >= (i32)SILVA_LEX_NUMERUS_GENERUM)
+    {
+        redde ZEPHYRUM;
+    }
+
+    titulus = silva_lexema_genus_nomen(genus);
+    si (titulus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+
+    praefixum  = (i32)strlen(SILVA_ARBOR_PRAEFIXUM);
+    scripta    = praefixum + (i32)strlen(titulus);
+    si (scripta + I > capacitas)
+    {
+        redde ZEPHYRUM;
+    }
+
+    memcpy(buffer, SILVA_ARBOR_PRAEFIXUM, (size_t)praefixum);
+    per (i = ZEPHYRUM; titulus[i] != '\0'; i++)
+    {
+        character c = titulus[i];
+
+        si (c >= 'A' && c <= 'Z')
+        {
+            c = (character)(c - 'A' + 'a');
+        }
+        alioquin si (c == '_')
+        {
+            c = '-';
+        }
+        buffer[praefixum + i] = c;
+    }
+    buffer[scripta] = '\0';
+    redde scripta;
+}
+
+SilvaLexemaGenus
+silva_arbor_lexema_ex_tag (
+     constans character* tag,
+                    i32  mensura)
+{
+    character buffer[SILVA_ARBOR_TAG_CAPACITAS];
+          i32 i;
+
+    si (tag == NIHIL || mensura == ZEPHYRUM)
+    {
+        redde SILVA_LEX_NUMERUS_GENERUM;
+    }
+
+    /* Per mangulationem ANTRORSAM - ergo directiones divergere
+     * non possunt. Genera XCV sunt; haec quaesitio semel per
+     * elementum lectionis fit, non in ansa arta. */
+    per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
+    {
+        i32 longitudo = silva_arbor_lexema_tag((SilvaLexemaGenus)i,
+            buffer, SILVA_ARBOR_TAG_CAPACITAS);
+
+        si (   longitudo                            == mensura
+            && memcmp(buffer, tag, (size_t)mensura) == ZEPHYRUM)
+        {
+            redde (SilvaLexemaGenus)i;
+        }
+    }
+    redde SILVA_LEX_NUMERUS_GENERUM;
 }
