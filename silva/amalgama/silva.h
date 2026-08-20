@@ -1812,4 +1812,135 @@ SilvaXar* silva_annotationes_colligere(SilvaPiscina* piscina,
 SilvaXar* silva_annotationes_unitates(SilvaPiscina* piscina,
     const SilvaParsura* parsura);
 
+
+/* ==================================================
+ * Arbor: parse trees <-> canonical STML (M1)
+ *
+ * Trees project to STML documents and load back. Node genus is the
+ * element tag verbatim, a locus is a wrapper element, lexemes take a
+ * "lex-" prefix (the namespaces are NOT disjoint - "assignatio" is
+ * both a node genus and a lexeme genus).
+ *
+ * Positions are NEVER written: the envelope carries an anchor and
+ * everything else is derived at load. A canonical document must not
+ * be able to lie.
+ *
+ * M1 LIMIT: a token whose origin is not FONS (i.e. produced by macro
+ * expansion) is REFUSED by the writer, mirroring silva_scribere's
+ * expansion boundary. Serialising it faithfully needs its origo
+ * chain, which references tokens that are not in the tree; that pool
+ * is M2. The refusal is loud and named, never a silent omission.
+ * ================================================== */
+
+#define SILVA_ARBOR_SIGILLI_LONGITUDO 8
+#define SILVA_ARBOR_TAG_CAPACITAS     64
+#define SILVA_ARBOR_VIA_CAPACITAS     256
+
+/* Registry seal: FNV-1a over genera + loci, 8 lowercase hex digits.
+ * TOTAL rather than a sample - the registry struct is exactly two
+ * arrays plus their counts, so walking both covers all of it. A
+ * document carries its seal; the loader REFUSES on mismatch, because
+ * a tree judged by the wrong vocabulary is a lie. */
+SilvaChorda silva_arbor_sigillum(SilvaPiscina* piscina,
+    const SilvaRegistrumCoctum* tabularium);
+
+/* Name lookups. The locus lookup is genus-SCOPED and must be: locus
+ * names are not globally unique ("corpus" is a locus of
+ * definitio-functionis but not of the genus "corpus"). Returns -1 if
+ * unknown. Titles are NOT NUL-terminated - a length is required. */
+int silva_arbor_genus_index(const SilvaRegistrumCoctum* tabularium,
+    const char* titulus, unsigned int mensura);
+int silva_arbor_locus_index(const SilvaRegistrumCoctum* tabularium,
+    int genus_index, const char* titulus, unsigned int mensura);
+
+/* Fixed spelling of a lexeme genus ("auto", "[", "->"); NULL when the
+ * genus carries a VARIABLE spelling (identifiers, literals, trivia)
+ * and the value must therefore be carried in the document. */
+const char* silva_arbor_orthographia(SilvaLexemaGenus genus);
+int silva_arbor_valor_portandus(SilvaLexemaGenus genus);
+
+/* Lexeme tag mangling: "lex-" + lowercase name, '_' -> '-'. Writes
+ * NUL-terminated; returns the length written, or 0 on bad genus or
+ * insufficient capacity. The reverse runs the forward mangling and
+ * compares, so the two directions cannot drift. */
+unsigned int silva_arbor_lexema_tag(SilvaLexemaGenus genus,
+    char* buffer, unsigned int capacitas);
+SilvaLexemaGenus silva_arbor_lexema_ex_tag(const char* tag,
+    unsigned int mensura);
+
+/* Writer result - same shape as SilvaScriptura (loud failure: a
+ * static causa plus the offending node, never a silent omission). */
+typedef struct SilvaArborScriptura {
+    int               successus;
+    SilvaChorda       textus;   /* STML bytes; empty on failure */
+    const char*       causa;    /* static diagnostic; NULL if well */
+    const SilvaNodus* sedes;    /* failing node; NULL permitted */
+} SilvaArborScriptura;
+
+/* grammatica is a PARAMETER, not derived: the registry cannot name
+ * itself (there is no version or identity field anywhere in the
+ * tables). The seal distinguishes grammars cryptographically; this
+ * name is for humans.
+ * expansio is REQUIRED - the fons table lives on it and a bare node
+ * cannot resolve fons_index. intern may be NULL (lazily created). */
+SilvaArborScriptura silva_arbor_scribere_nodum(SilvaPiscina* piscina,
+    const SilvaNodus* nodus, const SilvaRegistrumCoctum* tabularium,
+    const char* grammatica, const SilvaExpansio* expansio,
+    SilvaInternamentumChorda* intern);
+
+/* Comparison mode. What a position MEANS depends on where the tree
+ * came from, so the caller says which question is being asked:
+ *   STRUCTURALIS - positions ignored. A transform that MOVES a
+ *                  subtree leaves the same tree.
+ *   FIDELITAS    - positions compared. Round-trip mode: the document
+ *                  carries no positions, so this is what verifies the
+ *                  derivation.
+ * PROVENANCE (sourced vs synthetic) is compared in BOTH modes: it is
+ * a structural fact about the token, not a coordinate. */
+typedef enum SilvaArborComparatioModus {
+    SILVA_ARBOR_COMPARATIO_STRUCTURALIS = 0,
+    SILVA_ARBOR_COMPARATIO_FIDELITAS
+} SilvaArborComparatioModus;
+
+/* The FIRST divergence, named. A bare boolean is useless in a gate
+ * over a corpus - it turns every failure into a manual bisect. */
+typedef struct SilvaArborDifferentia {
+    const char*       campus;    /* diverging field; NULL if equal */
+    const SilvaNodus* nodus_a;
+    const SilvaNodus* nodus_b;
+    const SilvaToken* lexema_a;  /* NULL unless lexical */
+    const SilvaToken* lexema_b;
+    int               locus;     /* -1 if not applicable */
+    int               index;     /* -1 if not applicable */
+    char              via[SILVA_ARBOR_VIA_CAPACITAS];  /* genus.locus trail */
+} SilvaArborDifferentia;
+
+/* Non-zero if equal. differentia may be NULL.
+ * pater is compared by NULLITY and for INTERIOR nodes only: the
+ * parentage of the comparison roots lies outside the comparison.
+ * DELIBERATELY BLIND to nothing in particular - see the M1 gate's
+ * header for what the two round-trip oracles do and do not cover. */
+int silva_arbor_aequalis(const SilvaNodus* a, const SilvaNodus* b,
+    SilvaArborComparatioModus modus,
+    SilvaArborDifferentia* differentia);
+
+/* Reader failure: a static causa plus the DOCUMENT LINE. A fault
+ * without a line is a hunt, not a diagnostic. */
+typedef struct SilvaArborVitium {
+    const char*  causa;   /* NULL if well */
+    unsigned int linea;   /* 1-based; 0 if unknown */
+} SilvaArborVitium;
+
+/* Validates BEFORE building: envelope, grammatica, SEAL, every genus
+ * and locus known, locus species vs content, value present iff the
+ * genus is variable-spelling. Builds through the checked path, and
+ * polices LISTA_MIXTA element kinds itself.
+ * Returns NULL plus a named vitium on refusal. A document with no
+ * anchor is legitimate - that is an AUTHORED tree, and it keeps line
+ * structure while leaving coordinates unset. */
+SilvaNodus* silva_arbor_legere(SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern, SilvaChorda textus,
+    const SilvaRegistrumCoctum* tabularium, const char* grammatica,
+    SilvaArborVitium* vitium);
+
 #endif /* SILVA_H */

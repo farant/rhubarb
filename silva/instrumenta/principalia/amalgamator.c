@@ -90,6 +90,11 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "StmlAttributum", "StmlNodus", "StmlResultus",
     "InternamentumChorda",
     "SilvaAnnotatioModus", "SilvaAnnotatio",
+    /* arbor: STML canonicum (M1, 2026-08-20) - silva.h typos
+     * publicos possidet; enumeratio modorum quoque cadit (C89
+     * enumeratores duplicatos vetat, non solum typedef) */
+    "SilvaArborScriptura", "SilvaArborComparatioModus",
+    "SilvaArborDifferentia", "SilvaArborVitium",
     NIHIL
 };
 

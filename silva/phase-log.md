@@ -13266,3 +13266,61 @@ harum bisectio fuisset.
 **M1 PERFECTUM.** Restat T7 (integratio amalgamatis: silva.h
 prototypis publicis extendere - functiones iam EXTERNAE sunt, ergo
 res declarationis pro hospitibus, non nexus).
+
+## 2026-08-20 — T7 arboris: integratio amalgamatis. **M1 PERFECTUM.**
+
+silva/amalgama/silva.h superficie arboris publica extensum, stilo
+C89 vanillo. hospes XXXVIII/XXXVIII. Detail:
+silva/fontes/silva_arbor.worklog.md.
+
+**EDITIO CAPITIS MECHANISMUM QUEM CAPUT IPSUM DOCUMENTAT EXCITAVIT.**
+silva.h dicit discrepantiam inter se et corpora 'compilationem
+ipsam frangere (deriva se-corrigens)'. Conatus primus id PROBAVIT,
+sed ex angulo quem non praevideram: amalgamator listam
+CADENDA_TYPEDEF servat typorum quos silva.h POSSIDET, et unitates
+typedef aequivalentes ex capitibus internis demittit ut quaeque
+SEMEL per unitatem translationis exsistat. Typi mei quattuor novi in
+ea non erant, ergo AMBAE copiae venerunt et amalgama 'typedef
+redefinition' recusavit. ERGO: superficies manus pro TYPO publico
+novo DUO loca est, non unum - declaratio in silva.h ET nomen in
+CADENDA_TYPEDEF. Nota enumerationem quoque id petere: C89
+ENUMERATORES duplicatos vetat, non solum typedef.
+
+**DECLARATIONES INPROBATAE ERANT, ET PAENE ITA MISSAE SUNT.**
+silva.c caput silva.h NON includit. Nihil in aedificatione prototypa
+manu scripta contra corpora amalgamata compilat. Ergo declarationes
+addere et portas virides spectare probavisset SOLUM caput PARSARI -
+superficies arboris tota male declarata esse potuisset et portae
+omnes tamen transissent. Classis 'porta tacita = porta mortua', in
+loco quem nemo inspiciebat.
+
+Sanatio: hospes.c nunc circuitum arboris PLENUM per CAPUT currit
+(sigillum, scriptor, lector, comparator) et contra amalgama nectit.
+Ea est porta ad nativitatem quam haec superficies carebat.
+
+CALIBRATA, non praesumpta: 'grammatica' ut 'int' declarata pro
+'const char*' hospitem compilare prohibet, parametrum nominans.
+Restitutum, pure compilat.
+
+LIMES HONESTUS huius portae: capit discrepantias quas VOCANS
+notaret (typus falsus in sede vocationis, declaratio absens). NON
+capit discrepantiam ABI puram quae typos tamen servat, quia C
+signaturas inter unitates translationis numquam confert. Reliquum
+formae amalgamatis inhaeret; porta id non elegit praeterire.
+
+**TABULA M1:** porta LXXVIII plagulae / CCLXXXI subarbores /
+CCLXX utroque oraculo / nullae divergentiae; XI recusationes omnes
+'lexema non-FONS'; DCLXXXIII assertiones unitatis; silva XLIV/XLIV;
+amalgama standalone + hospes XXXVIII/XXXVIII + nm-intersectio 0 +
+censura.
+
+**QUOD M1 NON FACIT, aperte dictum:** (i) plagulas INTEGRAS -
+directivae, rami non sumpti, trivia caudae extra arborem nodorum
+vivunt et formam <parsura> petunt (M2); (ii) subarbores macro-
+ferentes - macros IN ARBORE SUNT (lexemata expansa cum catenis
+origins), sed catena origins lexemata EXTRA arborem nominat, ergo
+piscina <origines> opus est (M2; 'origo=' iam reservatum);
+(iii) PRACTICE: quia codex latinizatus si/per/redde per macros
+expandit, subarbores plerasque fontium NOSTRORUM recusarentur. Ratio
+XI/CCLXXXI corpus roundtrip PLANUM C esse reflectit. Hoc piscinam
+originum partem M2 MAXIMI PRETII facit, non ornamentum.

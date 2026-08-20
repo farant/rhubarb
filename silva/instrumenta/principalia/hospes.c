@@ -1537,6 +1537,96 @@ int main(void)
         }
     }
 
+    /* ARBOR: circuitus STML per silva.h (M1).
+     *
+     * NON ornamentum. silva.c caput silva.h NON includit, ergo
+     * discrepantia inter prototypa manu scripta et corpora
+     * amalgamata a NULLA compilatione capitur - nisi quis eas PER
+     * CAPUT vocet et nectat. Hoc facit id. Sine hoc, superficies
+     * arboris in silva.h declarata sed a nemine probata esset:
+     * classis 'porta tacita = porta mortua'. */
+    {
+        const char*     fons = "int n = 0;\n";
+        SilvaParsura*   parsura;
+        SilvaNodus*     origo = NULL;
+        SilvaNodus*     lecta;
+        SilvaChorda     sigillum;
+        SilvaArborScriptura   scriptura;
+        SilvaArborVitium      vitium;
+        SilvaArborDifferentia differentia;
+        int             bene_arbor = 0;
+
+        summa++;
+        parsura = silva_parsare(piscina, "hospes-arbor.c", fons,
+            (unsigned int)strlen(fons), &SILVA_C89_GRAMMATICA,
+            NULL, NULL, NULL);
+        if (parsura != NULL && parsura->commissio != NULL)
+        {
+            SilvaValor radix = parsura->commissio->radix;
+            unsigned int i;
+            unsigned int quot = silva_valor_lista_numerus(radix);
+
+            for (i = 0; i < quot; i++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(radix, i);
+
+                if (elem != NULL && elem->genus == SILVA_VALOR_NODUS)
+                {
+                    origo = elem->datum.nodus;
+                    break;
+                }
+            }
+        }
+
+        /* sigillum: forma VIII characterum */
+        sigillum = silva_arbor_sigillum(piscina, &SILVA_C89_REGISTRUM);
+
+        if (origo != NULL
+            && sigillum.mensura == SILVA_ARBOR_SIGILLI_LONGITUDO)
+        {
+            scriptura = silva_arbor_scribere_nodum(piscina, origo,
+                &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NULL);
+            if (scriptura.successus)
+            {
+                lecta = silva_arbor_legere(piscina, NULL,
+                    scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
+                    &vitium);
+                if (lecta != NULL
+                    && silva_arbor_aequalis(origo, lecta,
+                           SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                           &differentia))
+                {
+                    bene_arbor = 1;
+                }
+                else if (lecta == NULL)
+                {
+                    fprintf(stderr, "hospes: arbor recusata: %s\n",
+                        vitium.causa ? vitium.causa : "(nulla)");
+                }
+                else
+                {
+                    fprintf(stderr, "hospes: arbor divergens: %s\n",
+                        differentia.campus ? differentia.campus
+                                           : "(nullus)");
+                }
+            }
+            else
+            {
+                fprintf(stderr, "hospes: arbor scriptura: %s\n",
+                    scriptura.causa ? scriptura.causa : "(nulla)");
+            }
+        }
+
+        if (bene_arbor)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: arbor circuitus\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

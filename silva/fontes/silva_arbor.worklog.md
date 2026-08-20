@@ -601,3 +601,72 @@ Three times this arc I guessed which field would diverge and was wrong
 three times. Printing the comparator's own `campus` and `via` settled
 it in one run, every time. The out-struct earned its existence: with a
 boolean, each of these would have been a bisect.
+
+---
+
+## 2026-08-20 — T7, amalgam integration. **M1 COMPLETE.**
+
+`silva/amalgama/silva.h` extended with the arbor public surface in
+vanilla C89 (`int`/`const`, `SilvaPiscina*`, no latina). hospes 38/38.
+
+### The header edit tripped the mechanism the header documents
+
+`silva.h` says a discrepancy between it and the bodies "breaks
+compilation itself (self-correcting drift)". First attempt proved it
+— but from an angle I hadn't predicted. The amalgamator keeps a
+`CADENDA_TYPEDEF` list of types `silva.h` OWNS, and drops the
+equivalent typedefs out of the internal headers so each exists once
+per translation unit. My four new types weren't on it, so both copies
+landed and the amalgam refused with `typedef redefinition`.
+
+So the hand surface for a new public TYPE is two places, not one:
+the declaration in `silva.h` AND the name in `CADENDA_TYPEDEF`. Note
+the enum needed it too — C89 forbids duplicate *enumerators*, not
+just duplicate typedefs.
+
+### The declarations were unverified, and nearly shipped that way
+
+`silva.c` does **not** include `silva.h`. Nothing in the build
+compiles the hand-written prototypes against the amalgamated bodies.
+So adding declarations and watching the gates go green would have
+proven only that the header *parses* — the whole arbor surface could
+have been mis-declared and every gate would still have passed.
+
+Cure: `hospes.c` now runs a full arbor round trip **through the
+header** — seal, writer, reader, comparator — and links against the
+amalgam. That is the gate at birth this surface was missing.
+
+Calibrated rather than assumed: declaring `grammatica` as `int`
+instead of `const char*` makes hospes fail to compile, naming the
+parameter. Reverted, compiles clean.
+
+**Honest limit of this gate**: it catches mismatches a CALLER would
+notice (wrong type at a call site, missing declaration). It does NOT
+catch a pure ABI mismatch that still type-checks, because C never
+cross-checks signatures between translation units. That residue is
+inherent to the amalgam shape, not something this gate chose to skip.
+
+### M1 scoreboard
+
+| | |
+|---|---|
+| M1 gate | 78 files, 281 subtrees, **270/281 both oracles**, zero divergences |
+| refusals | 11, all `lexema non-FONS` — the documented expansion boundary |
+| unit tests | 683 assertions in `probatio_silva_arbor` |
+| suite | silva 44/44 |
+| amalgam | standalone + hospes 38/38 + nm-intersection 0 + censura |
+
+### What M1 does NOT do, stated plainly
+
+- **Whole files.** A file carries directives, non-taken conditional
+  branches and tail trivia that live outside the node tree. Those need
+  the `<parsura>` form — M2.
+- **Macro-bearing subtrees.** Macros ARE in the tree (expanded tokens
+  with origo chains); what M1 can't serialise is the origo chain,
+  because it references tokens that are not in the tree. The
+  `<origines>` pool is M2, and `origo=` is already reserved.
+- **Practical reach**: because latinized code expands `si`/`per`/
+  `redde` through macros, most subtrees of rhubarb's OWN sources would
+  refuse. The 11/281 rate reflects the roundtrip corpus being plain C.
+  This makes the origo pool the highest-value part of M2, not a
+  nice-to-have.
