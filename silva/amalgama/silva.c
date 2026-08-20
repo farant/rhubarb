@@ -11235,6 +11235,12 @@ silva_stml_textus_internus (
     redde silva_chorda_aedificator_finire(aed);
 }
 
+/* Ultra hoc contentum, clausura NOMEN retinet. Ratio: si contentum
+ * tot lineas occupat, tag apertum et clausum in schermo simul non
+ * sunt, ubi nomen legenti AUXILIUM est, non strepitus. Infra,
+ * nomen repetitum strepitus merus est et '</>' sufficit. */
+#define STML_CLAUSURA_TACITA_LINEAE XXX
+
 static SilvaChorda
 silva_stml_textus_normalizatus (
     SilvaStmlNodus* nodus,

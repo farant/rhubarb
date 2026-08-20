@@ -24,8 +24,22 @@ cd "$SCRIPT_DIR/.."
 
 si_fracta() { echo "amalgama_excludenda_generare: $1" >&2; exit 1; }
 
-[ $# -eq 1 ] || si_fracta "usus: amalgama_excludenda_generare.sh <proiectum>"
-PROIECTUM="$1"
+# -probare: derivare et CONFERRE, nihil scribere (porta vetustatis).
+# Exitus: 0 = recens, 1 = rancidum (regeneratio debetur).
+PROBARE=0
+PROIECTUM=""
+for arg in "$@"; do
+    case "$arg" in
+        -probare) PROBARE=1 ;;
+        -*)       si_fracta "vexillum ignotum: $arg" ;;
+        *)
+            [ -z "$PROIECTUM" ] || si_fracta "proiectum bis datum"
+            PROIECTUM="$arg"
+            ;;
+    esac
+done
+[ -n "$PROIECTUM" ] \
+    || si_fracta "usus: amalgama_excludenda_generare.sh [-probare] <proiectum>"
 SEDES="$PROIECTUM/instrumenta/principalia"
 POLITICA="$SEDES/fontes_politica.sh"
 EXITUS="$SEDES/excludenda_generata.h"
@@ -58,16 +72,53 @@ rm -rf "$STATIO"
 mkdir -p "$STATIO"
 
 # ------------------------------------------------------------------
+# CUSTODIA EXITUS: _caput_emittere in EXITUM ipsum scribit, et ante
+# ansam semel (listae VACUAE), quia amalgamator singulis gyris cum
+# listis novis recompilatur - ergo scriptio in plagulam veram opus
+# mechanismi est, non effectus finalis.
+#
+# Consequentia mensurata 2026-08-20: cursus qui gyro PRIMO frangitur
+# (amalgamator strui non potuit) EXITUM vacuum post se relinquebat -
+# CLIII nomina deleta, plagula commissa corrupta, nullo verbo dicto.
+# Ergo: exemplar ante omnia servatur et in fractura REDDITUR.
+# In modo -probare idem mechanismum praebet: cursus scribit, deinde
+# comparamus, deinde exemplar semper redditur.
+# ------------------------------------------------------------------
+EXEMPLAR="$STATIO/exitus_exemplar"
+EXITUS_REDDENDUS=0
+
+[ -f "$EXITUS" ] && cp "$EXITUS" "$EXEMPLAR"
+
+_exitum_reddere() {
+    if [ "$EXITUS_REDDENDUS" -eq 1 ] && [ -f "$EXEMPLAR" ]; then
+        cp "$EXEMPLAR" "$EXITUS"
+    fi
+}
+trap _exitum_reddere EXIT
+
+# fractura quaelibet ante finem = exemplar redditur
+[ -f "$EXEMPLAR" ] && EXITUS_REDDENDUS=1
+
+# ------------------------------------------------------------------
 # recipe constructionis amalgamatoris per proiectum (obiecta
 # dependentiarum a vecte proiecti calefacta - vectis prius currendus)
 # ------------------------------------------------------------------
 _amalgamatorem_struere() {
     case "$PROIECTUM" in
         silva)
+            # NB haec recipe GEMINA est eius in silva/amalgamare.sh -
+            # ambae amalgamatorem struunt, neutra alteram consulit.
+            # Divergerunt semel iam: silva_unitates.c in amalgamare.sh
+            # (fed3e78) additum est, hic NUMQUAM - unde hic scriptor
+            # pro silva omnino frangebatur, et nemo id sciebat quia
+            # nemo eum curreret. Porta vetustatis (gradus 0
+            # amalgamandi) hanc classem in posterum capit; recipe
+            # communicanda manet OSTIUM nominatum.
             clang "${VEXILLA_PLENA[@]}" -Iinclude -Isilva/fontes \
                 -Isilva/instrumenta \
                 silva/instrumenta/principalia/amalgamator.c \
                 silva/instrumenta/silva_amalgama.c \
+                silva/instrumenta/silva_unitates.c \
                 silva/build/piscina.o silva/build/chorda.o \
                 silva/build/chorda_aedificator.o silva/build/xar.o \
                 silva/build/tabula_dispersa.o silva/build/friatio.o \
@@ -239,5 +290,23 @@ for b in $BASES; do
     n=$(wc -l < "$STATIO/lista_$b.txt" | tr -d ' ')
     SUMMA=$((SUMMA + n))
 done
+
+if [ "$PROBARE" -eq 1 ]; then
+    # exemplar per laqueum EXIT redditur - hic solum iudicamus
+    if [ ! -f "$EXEMPLAR" ]; then
+        echo "amalgama_excludenda_generare ($PROIECTUM): RANCIDUM - $EXITUS deest"
+        exit 1
+    fi
+    if cmp -s "$EXITUS" "$EXEMPLAR"; then
+        echo "amalgama_excludenda_generare ($PROIECTUM): recens ($SUMMA nomina)"
+        exit 0
+    fi
+    echo "amalgama_excludenda_generare ($PROIECTUM): RANCIDUM - $EXITUS derivationi non congruit"
+    echo "  regenera: ./tools/amalgama_excludenda_generare.sh $PROIECTUM"
+    exit 1
+fi
+
+# successus: exitus novus MANET (laqueus eum non reddat)
+EXITUS_REDDENDUS=0
 echo "amalgama_excludenda_generare ($PROIECTUM): $EXITUS ($SUMMA nomina, $GYRUS gyri)"
 echo "  (nunc curre ./$PROIECTUM/amalgamare.sh - portae plenae + byte-identitas)"

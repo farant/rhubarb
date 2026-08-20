@@ -142,6 +142,7 @@ interior constans character* constans EXCLUDENDA_STML[] = {
     "_duplicare_recursivum",
     "_liberi_inserere_ad",
     "_liberi_removere_ad",
+    "_lineae_contenti",
     "_scribere_evasus",
     "_scribere_indentatio",
     "_spatium_album_solum",
