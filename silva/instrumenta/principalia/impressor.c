@@ -1,8 +1,8 @@
-/* arbor.c - impressor arborum (dev-time, M2a Chunk A)
+/* impressor.c - impressor arborum (dev-time, M2a Chunk A)
  *
- * Usus: arbor '<fons>'        e.g. arbor '2+3*4;'
- *       arbor -f <via>        plagulam legere
- *       arbor -d <via>        vistam declarationum imprimere
+ * Usus: impressor '<fons>'    e.g. impressor '2+3*4;'
+ *       impressor -f <via>    plagulam legere
+ *       impressor -d <via>    vistam declarationum imprimere
  *
  * Parsat fontem grammatica c89 et arborem generum imprimit,
  * ambulatione generica per registrum coctum (nomina generum et

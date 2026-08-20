@@ -1,10 +1,16 @@
 #!/bin/bash
 
-# silva/arbor.sh - impressor arborum compilare et currere (dev-time)
+# silva/impressor.sh - impressor arborum compilare et currere (dev-time)
 #
 # Usage:
-#   ./arbor.sh '2+3*4;'          # fons in linea mandati
-#   ./arbor.sh -f via/plagula.c  # plagulam legere
+#   ./impressor.sh '2+3*4;'          # fons in linea mandati
+#   ./impressor.sh -f via/plagula.c  # plagulam legere
+#
+# NOMEN: 'arbor.sh' usque ad 2026-08-20. Mutatum quia dialectus STML
+# canonica silvae 'arbor' vocatur (project-specs/arbor-stml-spec-v2.md)
+# et vox iam tria significabat (parsatores antecessores in include/
+# arbor*.h, hoc instrumentum, episodium). Instrumentum se ipsum semper
+# 'impressorem arborum' nominaverat - nomen suum sumpsit.
 
 set -u
 
@@ -24,7 +30,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$SILVA_DIR/fontes"
 )
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
-source "$SILVA_DIR/arbor_fontes_generata.sh"
+source "$SILVA_DIR/impressor_fontes_generata.sh"
 
 # Obiecta VETUSTA capitibus novis = valores enum generum
 # renumerati SILENTER falsi (inventum M2c Chunk B: resolutor
@@ -57,9 +63,9 @@ done
 
 # Semper renectere: obiecta mutata (tabulae regeneratae!) aliter
 # in binario vetusto latent - fons erroris classicus
-ARBOR_SRC="$SILVA_DIR/instrumenta/principalia/arbor.c"
-ARBOR_BIN="$BUILD_DIR/arbor"
-clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$ARBOR_SRC" $obj_files \
-    -o "$ARBOR_BIN" || exit 1
+IMPRESSOR_SRC="$SILVA_DIR/instrumenta/principalia/impressor.c"
+IMPRESSOR_BIN="$BUILD_DIR/impressor"
+clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$IMPRESSOR_SRC" $obj_files \
+    -o "$IMPRESSOR_BIN" || exit 1
 
-exec "$ARBOR_BIN" "$@"
+exec "$IMPRESSOR_BIN" "$@"
