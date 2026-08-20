@@ -141,6 +141,21 @@ compile_libraries() {
     # Create build directory
     mkdir -p "$BUILD_DIR"
 
+    # AMALGAMATA COMMISSA: adhuc compilant? (< I sec.)
+    # Amalgamata artificia GENERATA et COMMISSA sunt quae suite
+    # ordinaria numquam tangebat - unde per menses rumpi poterant
+    # tacite. Haec porta putredinem ARTIFICII capit (corruptio
+    # manualis, fructus fractus commissus, caput manu scriptum a
+    # corpore divergens). Semitam REGENERATIONIS NON capit: vide
+    # tools/amalgamata_probare.sh pro discrimine, quod momenti est.
+    if [ -x tools/amalgamata_probare.sh ]; then
+        if ! tools/amalgamata_probare.sh > "$BUILD_DIR/amalgamata.txt" 2>&1; then
+            echo -e "${RED}AMALGAMATA FRACTA:${RESET}"
+            head -12 "$BUILD_DIR/amalgamata.txt"
+            exit 1
+        fi
+    fi
+
     # capita mutata sine recompilo = corruptio ABI (excubitor:
     # antea vexillum globale needs_compile solum accendebatur sed
     # condiciones per-plagulam capita ignorabant - vexillum
