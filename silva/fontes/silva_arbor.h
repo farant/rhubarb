@@ -323,4 +323,61 @@ silva_arbor_aequalis (
     SilvaArborComparatioModus  modus,
         SilvaArborDifferentia* differentia);
 
+
+/* ==================================================
+ * Lector: STML canonicum -> arbor (T5a)
+ *
+ * ASYMMETRIA cum scriptore, consulta: scriptor arborem a parsatore
+ * structam accipit, ergo bene-formatam praesumere potest et ad
+ * limitem expansionis solum recusat. Lector octetos QUOSLIBET
+ * accipit et OMNIA statuere debet. Pars maior huius stratum
+ * VALIDATIONIS est, non constructionis.
+ * ================================================== */
+
+/* Vitium lectionis: causa STATICA + LINEA documenti. Linea non
+ * ornamentum est - vitium sine linea in documento magno venatio
+ * est, non diagnosticum (StmlNodus.linea ob hoc ipsum exstat). */
+nomen structura {
+    constans character* causa;   /* NIHIL si bene */
+                    i32 linea;   /* 1-basata; ZEPHYRUM si ignota */
+} SilvaArborVitium;
+
+/* Documentum arboris in arborem silvae relegere.
+ *
+ * VALIDAT ANTE CONSTRUCTIONEM: involucrum adest; 'grammatica'
+ * congruit; SIGILLUM congruit aut RECUSAT (arbor vocabulario falso
+ * iudicata mendacium est); genus et locus quisque registro noti;
+ * species loci contento congruit; valor adest si et solum si genus
+ * orthographiam variam fert.
+ *
+ * CONSTRUIT PER SEMITAM CUSTODITAM: silva_nodus_creare +
+ * silva_nodus_ponere (S32 - species probata, semel-tantum scribere),
+ * ergo custodia constructionis gratis. SED lector elementa LISTAE
+ * MIXTAE ipse custodire DEBET: silva_nodus_appendere speciem loci
+ * solam probat, numquam quid intus eat.
+ *
+ * VALOR VERBATIM per stml_textus_internus - NUMQUAM
+ * stml_textus_normalizatus, quod transformat.
+ *
+ * QUOD T5a NONDUM FACIT (T5b): positiones/pater/longitudinem
+ * derivare, et transclusiones resolvere. Ergo lexemata SYNTHETICA
+ * redeunt (byte_offset -I) et documentum transclusionem ferens
+ * CLARE RECUSATUR. Arbor sine sedibus hoc modo legitima est - id
+ * est prorsus casus arboris AUCTORATAE, quae fontem non habet.
+ *
+ * NB comparator talem arborem contra parsatam AEQUALEM NON dicet,
+ * ne modo structurali quidem, quia PROVENIENTIA utroque modo
+ * confertur. Hoc rectum est: T5a circuitum plenum simulare NON
+ * potest, et custodia id DICIT potius quam celet.
+ *
+ * Reddit NIHIL + vitium nominatum in recusatione. */
+SilvaNodus*
+silva_arbor_legere (
+                          Piscina* piscina,
+              InternamentumChorda* intern,
+                            chorda textus,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* grammatica,
+                 SilvaArborVitium* vitium);
+
 #endif /* SILVA_ARBOR_H */

@@ -13056,3 +13056,74 @@ postquam ille generator CLIII introitus scribendo-fractus delevit.
 Primum exercitium VERUM (non plantatum) illius retis.
 
 **Proximum:** T5, lector (STML -> arbor).
+
+## 2026-08-20 — T5a arboris: lector (validatio + constructio)
+
+silva_arbor_legere. DCLXVI assertiones virides (XL novae). Ambitus
+a T5 consulto scissus: T5a validat et struit, T5b fixuras derivat
+et transclusiones resolvit. Detail:
+silva/fontes/silva_arbor.worklog.md.
+
+**ASYMMETRIA quae totam trancheam format:** scriptor arborem a
+parsatore structam accipit, ergo bene-formatam praesumere potest et
+ad limitem expansionis solum recusat. Lector octetos QUOSLIBET
+accipit et OMNIA statuere debet. Pars maior T5a validatio est, non
+constructio - octo refutationes nominatae contra semitam
+constructionis unam.
+
+**stml_textus_internus POSTEROS OMNES tegit, et super contentum
+MIXTUM tacite fallit.** Spec dicit valorem per textus_internus
+VERBATIM sumendum esse, non normalizatum - id de TRANSFORMATIONE
+est et rectum est. Sed de AMBITU nihil dicit, et ambitus insidiae
+sunt: elementum lexematis arboris contentum mixtum est (textus
+IUXTA <ante>/<post>), ergo lexema commentum in triviis ferens
+textum commenti in valorem suum ABSORPTUM haberet, tacite. Lector
+ergo liberos DIRECTOS solos sumit. Eadem lex ac inventum lentium
+triviorum T3, ex parte altera: non satis est transformationem
+rectam eligere, AMBITUM quoque rectum eligere oportet.
+
+**REFUTATIO SCRIPTORIS EST QUAE LECTIONEM UNIVOCAM FACIT.** Cursu
+primo circuitus recusavit 'valor in genere orthographiae fixae'
+linea VI - vitium verum, meum: scriptor pulcher lineas novas et
+indentationem ut nodos textus emittit, et illi liberi DIRECTI
+elementi lexematis sunt, ergo omne lexema pulchre scriptum valorem
+ferre videbatur. Sanatio = textum spatii albi solius praeterire; et
+ratio cur id TUTUM sit, non coniectura, est quod scriptor valorem
+spatii-albi-solius REFUTAT (_textus_tutus, in T3 alia de causa
+additum). Valor talis esse NON potest, ergo praeteritio univoca
+est. Contractus UNUS per duas partes, et ambae partes scribendae
+fuerunt priusquam altera tuta esset.
+
+**COMPARATOR LECTOREM PRIMO USU VERO CEPIT.** Arbor T5a consulto
+incompleta est (sine patre, sine positionibus), ergo probatio
+circuitus asserit comparatorem RECUSARE et quid recuset nominare.
+Divergentia prima 'nodus/pater-nullitas' est - prorsus casus ad
+quem caput T4 illam custodiam scriptam esse dicit. Bis campum
+divergentem divinavi et bis erravi; campum et semitam comparatoris
+IMPRIMERE rem uno cursu solvit. Semita ('16.0' = genus XVI, locus
+0) se statim solvit - id est structura-exitus faciens quod
+booleanum non posset.
+
+**VITIUM PLANTATUM QUOD REM FALSAM PROBAVIT.** Refutatio 'genus
+ignotum' primum '<declaratio>' substituit - cuius tag claudens
+NOMINATUS est, quia elementum limen XXX linearum clausurae tacitae
+(T0) excedit. Tag apertum solum substituere tags DISPARES fecit,
+ergo documentum ut vitium PARSATIONIS periit et probatio
+refutationem 'transiit' de causa prorsus falsa, vocabularium
+numquam attingens. Mutatum ad '<typus-primitivus>' (clausura
+tacita). Lex vitii plantati acuta: non satis est vitium verum esse
+et portam rubere - **vitium ea de causa quae PROBATUR cadere
+debet**; documentum quod in parsatore moritur ad iudicium
+vocabularii numquam pervenit.
+
+**DILATIO CLARA, non tacita:** documentum transclusionem ferens
+NOMINE recusatur cum linea sua. Fragmenta aperiuntur potius quam
+recusentur, ut documentum communicatum ad TRANSCLUSIONEM cadat -
+ubi dilatio vera est - non ad fragmentum, ubi nuntius falleret.
+
+**Proximum:** T5b - fixurae (pater, initium_lineae, longitudo,
+positiones per ambulationem emissionis ab ancora) + resolutio
+transclusionum. Consilium: positiones per PRIMITIVUM emissionis
+(silva_lexema_emittere_in) derivare, NON per ambulationem
+numerantem alteram - aliter fons veritatis secundus qui in
+ordinatas falsas tacite divergeret.

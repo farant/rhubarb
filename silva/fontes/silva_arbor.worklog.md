@@ -344,3 +344,91 @@ excludenda run left the committed manifest **untouched**, because of
 the snapshot+trap added in T1 after that generator destroyed 153
 entries by failing mid-write. First real (unplanted) exercise of that
 safety net.
+
+---
+
+## 2026-08-20 — T5a, the reader (validate + build)
+
+`silva_arbor_legere`. 666 assertions green (40 new). Scope split from
+T5 deliberately: T5a validates and builds, T5b derives fixups and
+resolves transclusions.
+
+### The asymmetry that shapes the whole tranche
+
+The writer receives a tree the parser built, so it may assume
+well-formedness and refuses only at the expansion boundary. The reader
+receives arbitrary bytes and must establish everything. Most of T5a is
+validation, not construction — eight named refusals against one build
+path.
+
+### `stml_textus_internus` is DESCENDANT-wide, and that silently lies on mixed content
+
+The spec says valor comes through `stml_textus_internus` VERBATIM
+rather than `_normalizatus`. That guidance is about *transformation*
+and it is right. But it says nothing about **scope**, and the scope is
+a trap: `textus_internus` concatenates every descendant text node. An
+arbor token element is mixed content — text beside `<ante>`/`<post>` —
+so a token carrying a comment in its trivia would have the comment's
+text **absorbed into its valor**, silently.
+
+So the reader takes DIRECT text children only. Same law as the
+trivia-lens finding in T3, from the other side: it is not enough to
+choose the right transformation, you have to choose the right extent.
+
+### The writer's refusal is what makes the reader unambiguous
+
+First run, the round-trip refused with "valor in genere orthographiae
+fixae" at line 6. Real bug, mine: the pretty writer emits newline+
+indent as text nodes, and those are *direct* children of a token
+element, so every prettily-written token looked like it carried a
+valor.
+
+The fix is to skip whitespace-only direct text — and the reason that
+is SAFE rather than a guess is that the writer REFUSES whitespace-only
+valor (`_textus_tutus`, added in T3 for a different reason). Because
+that value can never be a valor, skipping it is unambiguous.
+
+**One contract living in two halves, and both halves needed writing
+before either was safe.** Worth remembering as a positive instance of
+the pattern that usually shows up as a defect.
+
+### The comparator caught the loader on its first real use
+
+T5a's tree is deliberately incomplete — no pater, no positions — so
+the round-trip test asserts that `silva_arbor_aequalis` **refuses**,
+and names what it refuses on. The first divergence is
+`nodus/pater-nullitas`, which is exactly the case the T4 header says
+that check exists for ("a loader that never fixed pater up at all").
+
+Twice now I guessed which field would diverge first and was wrong
+twice — `lexema/valor`, then `lexema/initium-lineae`. Printing the
+comparator's own `campus` and `via` settled it in one run. The
+diagnostic path (`16.0` = genus 16, locus 0) paid for itself
+immediately: that is the out-struct doing the job a boolean could not.
+
+When T5b lands, this assertion flips from "refuses, naming pater" to
+full equality. That is the intended shape — the test currently
+DOCUMENTS what T5a does not yet provide, rather than pretending.
+
+### A planted fault that tested the wrong thing
+
+The unknown-genus refusal first substituted `<declaratio>` — whose
+closing tag is NAMED, because the element exceeds the 30-line tacit-
+closure threshold from T0. Replacing only the opening tag produced
+mismatched tags, so the document failed as an **STML parse error** and
+the test "passed the refusal" for entirely the wrong reason. Switched
+to `<typus-primitivus>`, which closes with `</>`.
+
+Generalizes the planted-fault law: it is not enough for the fault to
+be real and for the gate to go red. **The fault has to fail for the
+reason under test** — a document that dies in the parser never reaches
+the vocabulary check at all.
+
+### Deferred loudly, not silently
+
+Transclusion resolution is T5b, so a document containing one is
+REFUSED by name ("transclusio nondum resoluta (T5b)") with its line.
+Fragments are unwrapped rather than refused, so a shared document
+fails at the transclusion — where the real deferral is — instead of at
+the fragment, where the message would mislead. There is a test using
+the real AMBIGUUS document for exactly this.
