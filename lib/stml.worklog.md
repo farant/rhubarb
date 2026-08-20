@@ -349,3 +349,68 @@ HAND (vanilla C89 idiom) or the standalone verify fails with
 Cosmetic follow-up not taken: coloratio has no `<%`-aware arm (its
 `#` handling is hashtag styling, not STML tag structure) — `%`
 renders as operator color, acceptable.
+
+## 2026-08-19 — scriptio pulchra: contentum mixtum corrumpebat (et cumulabat)
+
+Found while grounding the arbor⇄STML spec (silva parse trees →
+canonical STML), which wants tokens carrying their spelling as text
+content alongside `<ante>`/`<post>` trivia element children — i.e.
+mixed content, in every single token, in a document meant to be
+pretty-printed and hand-authored. A live probe compiled against the
+real libs said no:
+
+    <t><ante>x</ante>n</t>  --pretty-->  <t>\n  <ante>x</ante>\nn\n</t>
+
+Re-read, the token's spelling is no longer `n` but `\nn\n`. It does
+not stabilise — a second cycle gives `\n\nn\n\n`. Each pass adds a
+newline per side. "Ignore whitespace-only text on load" does NOT
+rescue this: the corrupted node is not whitespace-only, it contains
+the real text.
+
+**Root cause.** The mixed-children branch emitted `\n` before the
+first child and after every child unconditionally, blind to the
+child's genus, while indentation *spaces* come from each child's own
+case (ELEMENTUM/COMMENTUM/PROCESSIO/DOCTYPE self-indent; TEXTUS and
+TRANSCLUSIO never did). So real text got bracketed by bare newlines
+that became part of its value.
+
+**Second defect, same cause, found by the tests not the analysis.**
+A whitespace-only text child already had its *content* suppressed,
+but the loop still appended its trailing newline — a stray blank
+line. Consequence nobody had noticed: **pretty output was never a
+fixed point for ANY element with 2+ children.** The all-elements
+regression guard `<t><a/><b/></t>` writes correctly the first time
+and then grows a blank line before every child on each subsequent
+read-write cycle. The scoping pass had verified the first write and
+stopped there; only the two-cycle assertion caught it.
+
+**Fix.** The loop now decides per BOUNDARY, not per child: a boundary
+carries whitespace unless either side is significant text.
+Whitespace-only text children are fully transparent — skipped, and
+boundaries computed against the real neighbours. When a boundary
+collapses, the element neighbour must also not self-indent, so it is
+invoked with `pulchrum=FALSUM` (the crudus/single-text branch above
+already used exactly this trick). Named price: that child's own
+interior formatting flattens too. Acceptable here; the cleaner
+alternative — move indentation from the four child cases up into the
+loop so the boundary decision is atomic — is a bigger refactor, left
+as a door.
+
+Also folded in: TRANSCLUSIO never called `_scribere_indentatio` at
+all, so `<<#nav>>` stood unindented among indented siblings. One line.
+
+**Lesson worth keeping: one cycle is not evidence.** Both defects
+compound, and both would read as "fine" under a single
+write→read→compare. Every pretty-mode test now asserts a SECOND
+cycle. The pre-existing pretty test was the warning sign in
+hindsight — it built an all-structural tree and asserted only that
+the output was non-empty and contained a newline, which is a test
+that cannot fail.
+
+Blast radius measured before touching anything: five `pulchrum=VERUM`
+call sites (gutenberg_index, librarium_merge, aedilis, one test), all
+building text nodes as the sole child of their element, so all on the
+pre-existing safe path; the three committed `.stml` artifacts do not
+move. `librarium_collector` writes STML by hand-concatenating strings
+and never calls the writer at all — separately filed, since that also
+means it never escapes entities (01M0EEK3YYEYVBWV9BFWD028D5).

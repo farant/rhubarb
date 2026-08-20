@@ -4363,26 +4363,79 @@ stml_scribere_ad_aedificator (
                     }
                     alioquin
                     {
-                        si (pulchrum)
-                        {
-                            chorda_aedificator_appendere_character(aedificator, '\n');
-                        }
+                        /* TERMINI, non liberi singuli (2026-08-19).
+                         *
+                         * Regula: terminus spatium album fert NISI
+                         * utravis pars textus SIGNIFICANS est. Textus
+                         * solum-albus TRANSPARENS est - nec emittitur
+                         * nec terminos afficit, ergo vicini VERI inter
+                         * se conveniunt.
+                         *
+                         * Ansa prior spatium per liberum incondite
+                         * emittebat, generis immemor, et duo vitia
+                         * pariebat: (i) textus verus lineis novis
+                         * circumdatus, quae VALORIS eius pars fiebant
+                         * ('n' -> '\nn\n' -> '\n\nn\n\n' - CUMULABAT);
+                         * (ii) liberus albus, contento recte
+                         * suppresso, lineam suam nihilominus addebat -
+                         * unde scriptio pulchra puncto fixo carebat
+                         * pro OMNI elemento plus quam unum liberum
+                         * ferente.
+                         *
+                         * Indentatio a CASU liberi ipsius emittitur,
+                         * non ab hac ansa; ergo termino collapso
+                         * vexillum pulchri liberi extingui DEBET,
+                         * aliter spatia indentationis textui
+                         * agglutinantur - eadem corruptio, habitu
+                         * alio. Exemplar: ramus crudus/textus-unicus
+                         * supra idem FALSUM iam imponit. Pretium
+                         * nominatum: liberus sic vocatus formam suam
+                         * INTERNAM quoque planam reddit. */
+                        b32 aliquid_emissum;
+                        b32 textus_ante;
+
+                        aliquid_emissum  = FALSUM;
+                        textus_ante      = FALSUM;
 
                         per (i = ZEPHYRUM; i < num; i++)
                         {
+                            b32 est_textus;
+                            b32 arte;
+
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
-                            si (liberum)
+                            si (!liberum)
                             {
-                                stml_scribere_ad_aedificator(liberum, aedificator, pulchrum, indentatio + I);
-                                si (pulchrum)
-                                {
-                                    chorda_aedificator_appendere_character(aedificator, '\n');
-                                }
+                                perge;
                             }
+
+                            si (   pulchrum
+                                && liberum->genus == STML_NODUS_TEXTUS
+                                && (   liberum->valor == NIHIL
+                                    || _spatium_album_solum(liberum->valor)))
+                            {
+                                perge;
+                            }
+
+                            est_textus = (liberum->genus == STML_NODUS_TEXTUS)
+                                ? VERUM : FALSUM;
+                            arte = (est_textus || textus_ante) ? VERUM : FALSUM;
+
+                            si (pulchrum && !arte)
+                            {
+                                chorda_aedificator_appendere_character(aedificator, '\n');
+                            }
+
+                            stml_scribere_ad_aedificator(liberum, aedificator,
+                                (pulchrum && !arte) ? VERUM : FALSUM,
+                                indentatio + I);
+
+                            aliquid_emissum  = VERUM;
+                            textus_ante      = est_textus;
                         }
 
-                        si (pulchrum)
+                        si (pulchrum && aliquid_emissum && !textus_ante)
                         {
+                            chorda_aedificator_appendere_character(aedificator, '\n');
                             _scribere_indentatio(aedificator, indentatio);
                         }
                     }
@@ -4458,6 +4511,13 @@ stml_scribere_ad_aedificator (
             frange;
 
         casus STML_NODUS_TRANSCLUSIO:
+            /* Indentatio ut ceteri (2026-08-19): casus hic soli
+             * ELEMENTO/COMMENTO/PROCESSIONI/DOCTYPE aderat, unde
+             * transclusio inter fratres indentatos nuda stabat */
+            si (pulchrum)
+            {
+                _scribere_indentatio(aedificator, indentatio);
+            }
             chorda_aedificator_appendere_literis(aedificator, "<<");
             si (nodus->valor)
             {

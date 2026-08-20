@@ -19,6 +19,45 @@ _chorda_ptr_eq_literis(chorda* ch, constans character* cstr)
     redde chorda_aequalis_literis(*ch, cstr);
 }
 
+/* Adiutor: formam pulchram probare ET stabilitatem per cyclos duos.
+ *
+ * Cyclus UNUS non sufficit. Vitium contenti mixti (2026-08-19) non
+ * semel corrumpebat sed CUMULABAT: valor "n" fiebat "\nn\n" transitu
+ * primo, deinde "\n\nn\n\n" secundo. Probatio unius cycli id "sanum"
+ * videre potuisset. Ergo scriptio->lectio->scriptio idem octetim
+ * reddere DEBET - haec assertio omni probationi pulchrae addenda est,
+ * non his solis. */
+interior vacuum
+_pulchrum_probare(Piscina*             piscina,
+                  InternamentumChorda* intern,
+                  constans character*  input,
+                  constans character*  exspectatum,
+                  constans character*  titulus)
+{
+    StmlResultus primum;
+    StmlResultus secundum;
+    chorda       scriptum;
+    chorda       rescriptum;
+
+    primum = stml_legere_ex_literis(input, piscina, intern);
+    CREDO_VERUM(primum.successus);
+
+    scriptum = stml_scribere(primum.elementum_radix, piscina, VERUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, exspectatum);
+
+    secundum = stml_legere(scriptum, piscina, intern);
+    CREDO_VERUM(secundum.successus);
+    rescriptum = stml_scribere(secundum.elementum_radix, piscina,
+                               VERUM);
+    /* Contra EXSPECTATUM iterum, non contra scriptum: aequalitas
+     * chordarum nudarum octetos in fractura non ostendit, et
+     * (scriptum == exspectatum && rescriptum == exspectatum)
+     * idem probat fortius */
+    CREDO_CHORDA_AEQUALIS_LITERIS(rescriptum, exspectatum);
+
+    imprimere("  %s\n", titulus);
+}
+
 s32 principale(vacuum)
 {
     Piscina*             piscina;
@@ -3131,6 +3170,77 @@ s32 principale(vacuum)
 
         imprimere("  augmentatio: PRAETERITUM\n");
     }
+
+    /* ==================================================
+     * Scriptio pulchra: contentum MIXTUM (textus + elementa)
+     *
+     * CONTRACTUS: liberus TEXTUS qui non-solum-albus est VERBATIM
+     * emittitur, nullo spatio ab utraque parte iniecto. Liberi
+     * TEXTUS solum-albi TRANSPARENTES sunt (omittuntur; termini
+     * contra vicinos VEROS computantur). Liberi ELEMENTUM et
+     * similes lineam novam + indentationem retinent.
+     *
+     * Cum terminus collabitur, vicinus elementalis se indentare NON
+     * debet - indentatio hodie a CASU liberi ipsius emittitur, non
+     * ab ansa, ergo utrumque supprimendum est (exemplar exstat:
+     * ramus crudus/textus-unicus FALSUM liberis imponit).
+     * ================================================== */
+
+    imprimere("\n--- Probans scriptionem pulchram contenti mixti ---\n");
+
+    /* I. elementum, deinde textus - terminus dexter collabitur */
+    _pulchrum_probare(piscina, intern,
+        "<t><ante>x</ante>n</t>",
+        "<t>\n  <ante>x</ante>n</t>",
+        "I elementum-tum-textus: PRAETERITUM");
+
+    /* II. textus, deinde elementum - speculum casus I */
+    _pulchrum_probare(piscina, intern,
+        "<t>n<post>y</post></t>",
+        "<t>n<post>y</post>\n</t>",
+        "II textus-tum-elementum: PRAETERITUM");
+
+    /* III. textus utrimque: elementum interpositum indentationem
+     * SUAM omnino perdit - lectio sola sibi constans contractus */
+    _pulchrum_probare(piscina, intern,
+        "<t>a<b/>c</t>",
+        "<t>a<b/>c</t>",
+        "III textus-elementum-textus: PRAETERITUM");
+
+    /* IV. CUSTOS REGRESSUS: nullus textus - forma hodierna manere
+     * DEBET (ante sanationem et post) */
+    _pulchrum_probare(piscina, intern,
+        "<t><a/><b/></t>",
+        "<t>\n  <a/>\n  <b/>\n</t>",
+        "IV omnia-elementa (custos): PRAETERITUM");
+
+    /* V. CUSTOS REGRESSUS: textus unicus - casum specialem
+     * praeexsistentem tangit, ab hoc opere INTACTUM */
+    _pulchrum_probare(piscina, intern,
+        "<t>textus solus</t>",
+        "<t>textus solus</t>",
+        "V textus-unicus (custos): PRAETERITUM");
+
+    /* VI. albus solus inter elementa: TRANSPARENS esse debet.
+     * Hodie linea vacua vaga oritur - contentum nodi albi recte
+     * supprimitur sed ansa lineam suam nihilominus addit. Exitus
+     * casui IV par esse DEBET */
+    _pulchrum_probare(piscina, intern,
+        "<t><a/>  <b/></t>",
+        "<t>\n  <a/>\n  <b/>\n</t>",
+        "VI albus-solus transparens: PRAETERITUM");
+
+    /* VII. termini plures: omnis terminus textum tangit */
+    _pulchrum_probare(piscina, intern,
+        "<t>a<b/>c<d/>e</t>",
+        "<t>a<b/>c<d/>e</t>",
+        "VII termini plures: PRAETERITUM");
+
+    /* VIII. nidificatio: indentatio + I recte componi debet */
+    _pulchrum_probare(piscina, intern,
+        "<root><t><ante>x</ante>n</t></root>",
+        "<root>\n  <t>\n    <ante>x</ante>n</t>\n</root>",
+        "VIII nidificatio componens: PRAETERITUM");
 
     /* ==================================================
      * Compendium
