@@ -59,6 +59,118 @@ _primus_congruens (
     redde primum ? primum->nodus : NIHIL;
 }
 
+/* Nodum generis dati in valore quaerere - per RADICEM commissionis
+ * (SilvaValor, non-constantem), ergo accessus mutabilis sine ullo
+ * cast qualificatorem tollente (-Wcast-qual eum vetat) */
+interior SilvaNodus*
+_nodus_generis (
+    SilvaValor valor,
+           s32 genus)
+{
+    SilvaNodus* fructus;
+           i32  numerus;
+           i32  i;
+
+    si (valor.genus == SILVA_VALOR_NODUS)
+    {
+        si (valor.datum.nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (valor.datum.nodus->genus == genus)
+        {
+            redde valor.datum.nodus;
+        }
+        per (i = ZEPHYRUM; i < valor.datum.nodus->numerus_locorum; i++)
+        {
+            fructus = _nodus_generis(valor.datum.nodus->loci[i], genus);
+            si (fructus != NIHIL)
+            {
+                redde fructus;
+            }
+        }
+        redde NIHIL;
+    }
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        numerus = silva_valor_lista_numerus(valor);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaValor* elementum = silva_valor_lista_obtinere(valor, i);
+
+            si (elementum != NIHIL)
+            {
+                fructus = _nodus_generis(*elementum, genus);
+                si (fructus != NIHIL)
+                {
+                    redde fructus;
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* Primum lexema subarboris, ordine locorum */
+interior SilvaToken*
+_primum_lexema (
+    SilvaNodus* nodus)
+{
+    SilvaToken* fructus;
+           i32  numerus;
+           i32  i;
+           i32  j;
+
+    si (nodus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        SilvaValor valor = nodus->loci[i];
+
+        si (valor.genus == SILVA_VALOR_TOKEN)
+        {
+            redde valor.datum.token;
+        }
+        si (valor.genus == SILVA_VALOR_NODUS)
+        {
+            fructus = _primum_lexema(valor.datum.nodus);
+            si (fructus != NIHIL)
+            {
+                redde fructus;
+            }
+        }
+        si (valor.genus == SILVA_VALOR_LISTA)
+        {
+            numerus = silva_valor_lista_numerus(valor);
+            per (j = ZEPHYRUM; j < numerus; j++)
+            {
+                SilvaValor* elementum =
+                    silva_valor_lista_obtinere(valor, j);
+
+                si (elementum == NIHIL)
+                {
+                    perge;
+                }
+                si (elementum->genus == SILVA_VALOR_TOKEN)
+                {
+                    redde elementum->datum.token;
+                }
+                si (elementum->genus == SILVA_VALOR_NODUS)
+                {
+                    fructus = _primum_lexema(elementum->datum.nodus);
+                    si (fructus != NIHIL)
+                    {
+                        redde fructus;
+                    }
+                }
+            }
+        }
+    }
+    redde NIHIL;
+}
+
 /* Quotiens acus in feno appareat */
 interior i32
 _quotiens (
@@ -780,6 +892,332 @@ principale (vacuum)
                 && strcmp(scriptura.causa,
                        "forma nodi registro non congruit") == ZEPHYRUM);
         }
+    }
+
+
+    /* ========================================================
+     * PROBARE: comparator - vitium PLANTATUM per campum quemque
+     *
+     * Duae parsurae eiusdem fontis: arbores aequales, obiecta
+     * lexematum INDEPENDENTIA. Campus unus mutatur, inaequalitas
+     * exspectatur ET campus rectus nominari debet. Comparator qui
+     * frangi non potest classis custodiae mortuae est - eadem
+     * classis quam tabula orthographiae in T2 vitavit.
+     * ======================================================== */
+
+    {
+           constans character* fons = "int n = 0;\n";
+                 SilvaParsura* parsura_a;
+                 SilvaParsura* parsura_b;
+                   SilvaNodus* a;
+                   SilvaNodus* b;
+                   SilvaToken* lexema;
+        SilvaArborDifferentia  differentia;
+
+        imprimere("\n--- Probans comparatorem (vitia plantata) ---\n");
+
+        parsura_a = silva_c89_parsare(piscina, "aequalitas.c", fons,
+            (i32)strlen(fons), NIHIL);
+        parsura_b = silva_c89_parsare(piscina, "aequalitas.c", fons,
+            (i32)strlen(fons), NIHIL);
+        CREDO_NON_NIHIL (parsura_a);
+        CREDO_NON_NIHIL (parsura_b);
+
+        a = _nodus_generis(parsura_a->commissio->radix,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+        b = _nodus_generis(parsura_b->commissio->radix,
+            (s32)SILVA_C89_GENUS_DECLARATIO);
+        CREDO_NON_NIHIL (a);
+        CREDO_NON_NIHIL (b);
+
+        /* BASIS: parsurae duae eiusdem fontis aequales UTROQUE modo.
+         * Sine hac assertione omnia infra vacue transirent */
+        CREDO_VERUM (silva_arbor_aequalis(a, b,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        CREDO_NIHIL (differentia.campus);
+        CREDO_VERUM (silva_arbor_aequalis(a, b,
+            SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+
+        /* differentia NIHIL licet */
+        CREDO_VERUM (silva_arbor_aequalis(a, b,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, NIHIL));
+
+        lexema = _primum_lexema(b);
+        CREDO_NON_NIHIL (lexema);
+
+        /* i. lexema/genus */
+        {
+            SilvaLexemaGenus servatum = lexema->genus;
+
+            lexema->genus = SILVA_LEX_LONG;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/genus")
+                    == ZEPHYRUM);
+            CREDO_AEQUALIS_PTR (differentia.lexema_b, lexema);
+            /* semita sedem nominat, non solum campum */
+            CREDO_VERUM (differentia.via[0] != '\0');
+            lexema->genus = servatum;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* ii. lexema/valor */
+        {
+            chorda servatus = lexema->valor;
+
+            lexema->valor = chorda_ex_literis("zzz", piscina);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/valor")
+                    == ZEPHYRUM);
+            lexema->valor = servatus;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* iii. lexema/standard */
+        {
+            i8 servatum = lexema->standard;
+
+            lexema->standard = (i8)SILVA_STANDARD_C99;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/standard")
+                    == ZEPHYRUM);
+            lexema->standard = servatum;
+        }
+
+        /* iv. lexema/fons */
+        {
+            s32 servatum = lexema->fons_index;
+
+            lexema->fons_index = servatum + I;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/fons")
+                    == ZEPHYRUM);
+            lexema->fons_index = servatum;
+        }
+
+        /* v. lexema/initium-lineae */
+        {
+            b32 servatum = lexema->initium_lineae;
+
+            lexema->initium_lineae = servatum ? FALSUM : VERUM;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/initium-lineae")
+                    == ZEPHYRUM);
+            lexema->initium_lineae = servatum;
+        }
+
+        /* vi. MODUS vere aliquid facit: positio mutata FIDELITATE
+         * capitur, STRUCTURA non. Sine ambabus assertionibus modus
+         * qui nihil ageret idem videretur ac modus qui operatur */
+        {
+            i32 servata = lexema->linea;
+
+            lexema->linea = servata + X;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/linea")
+                    == ZEPHYRUM);
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            lexema->linea = servata;
+        }
+
+        /* vii. idem pro columna et offset */
+        {
+            i32 servata = lexema->columna;
+
+            lexema->columna = servata + X;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            lexema->columna = servata;
+        }
+        {
+            s32 servatum = lexema->byte_offset;
+
+            lexema->byte_offset = servatum + X;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/offset")
+                    == ZEPHYRUM);
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            lexema->byte_offset = servatum;
+        }
+
+        /* viii. PROVENIENTIA - UTROQUE modo capitur. Haec est
+         * assertio quae custodiam 'positiones solum cum ambo sedem
+         * habeant' mortuam esse probat: vitium derivationis omnia ad
+         * -I ponens illic taceret, hic clamat */
+        {
+            s32 servatum = lexema->byte_offset;
+
+            lexema->byte_offset = -I;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/provenientia")
+                    == ZEPHYRUM);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/provenientia")
+                    == ZEPHYRUM);
+            lexema->byte_offset = servatum;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+        }
+
+        /* ix. trivia - series et numerus */
+        {
+            Xar* servata = lexema->spatia_post;
+
+            lexema->spatia_post = NIHIL;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "trivia/post")
+                    == ZEPHYRUM);
+            lexema->spatia_post = servata;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* x. trivium IPSUM (valor triviorum, non solum numerus).
+         * NB praesentia triviorum ASSERITUR, non si-clausula
+         * custoditur: 'int' spatium sequens fert. Custodita, haec
+         * probatio tacite transiret quandocumque trivia abessent -
+         * ipsa classis custodiae mortuae quam hic venamur */
+        {
+            SilvaToken* trivium;
+                chorda  servatus;
+
+            CREDO_NON_NIHIL (lexema->spatia_post);
+            CREDO_VERUM (xar_numerus(lexema->spatia_post) > ZEPHYRUM);
+
+            trivium  = *(SilvaToken**)xar_obtinere(
+                lexema->spatia_post, ZEPHYRUM);
+            servatus = trivium->valor;
+
+            trivium->valor = chorda_ex_literis("      ", piscina);
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/valor")
+                    == ZEPHYRUM);
+            trivium->valor = servatus;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* xi. nodus/genus */
+        {
+            s32 servatum = b->genus;
+
+            b->genus = (s32)SILVA_C89_GENUS_CORPUS;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "nodus/genus")
+                    == ZEPHYRUM);
+            CREDO_AEQUALIS_PTR (differentia.nodus_b, b);
+            b->genus = servatum;
+        }
+
+        /* xii. nodus/numerus-locorum */
+        {
+            i32 servatus = b->numerus_locorum;
+
+            b->numerus_locorum = servatus - I;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "nodus/numerus-locorum")
+                    == ZEPHYRUM);
+            b->numerus_locorum = servatus;
+        }
+
+        /* xiii. nodus/pater-nullitas - captura 'lector patrem omnino
+         * non fixit'. Comparatio monstratorum trans arbores nihil
+         * significaret; nullitas significat */
+        {
+            SilvaNodus* servatus = b->pater;
+
+            /* NODUS NIDIFICATUS adhibendus est, non 'declaratio'
+             * ipsa: nodus summus in LISTA radicis sedet, ergo
+             * patrem NON habet (commissio patrem inter nodos figit,
+             * non a lista). Prima forma huius probationis id
+             * si-clausula custodiebat et ideo NIHIL asserebat -
+             * custodia clausulam vacuam CELABAT. Inventum eam
+             * tollendo. */
+            SilvaNodus* nidus_a = _nodus_generis(
+                parsura_a->commissio->radix,
+                (s32)SILVA_C89_GENUS_TYPUS_PRIMITIVUS);
+            SilvaNodus* nidus_b = _nodus_generis(
+                parsura_b->commissio->radix,
+                (s32)SILVA_C89_GENUS_TYPUS_PRIMITIVUS);
+
+            CREDO_NON_NIHIL (nidus_a);
+            CREDO_NON_NIHIL (nidus_b);
+            CREDO_NON_NIHIL (nidus_a->pater);
+            CREDO_NON_NIHIL (nidus_b->pater);
+            CREDO_VERUM (silva_arbor_aequalis(nidus_a, nidus_b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+
+            servatus        = nidus_b->pater;
+            nidus_b->pater  = NIHIL;
+            CREDO_FALSUM (silva_arbor_aequalis(nidus_a, nidus_b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus,
+                       "nodus/pater-nullitas") == ZEPHYRUM);
+            nidus_b->pater = servatus;
+            CREDO_VERUM (silva_arbor_aequalis(nidus_a, nidus_b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* xiv. locus/genus-valoris - locus praesens contra NIHIL */
+        {
+            SilvaValor servatus  = b->loci[0];
+            SilvaValor vacuus    = silva_valor_nihil();
+
+            b->loci[0] = vacuus;
+            CREDO_FALSUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "locus/genus-valoris")
+                    == ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (differentia.locus, (s32)ZEPHYRUM);
+            b->loci[0] = servatus;
+            CREDO_VERUM (silva_arbor_aequalis(a, b,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+
+        /* xv. arbor contra se ipsam semper aequalis */
+        CREDO_VERUM (silva_arbor_aequalis(a, a,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+
+        /* xvi. NIHIL */
+        CREDO_VERUM (silva_arbor_aequalis(NIHIL, NIHIL,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        CREDO_FALSUM (silva_arbor_aequalis(a, NIHIL,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        CREDO_VERUM (differentia.campus != NIHIL
+            && strcmp(differentia.campus, "nodus/nihil") == ZEPHYRUM);
     }
 
     credo_imprimere_compendium();

@@ -75,5 +75,6 @@ interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
     { "silva/fontes/silva_quaestio.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_annotationes.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "silva/fontes/silva_quaestiones.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "silva/fontes/silva_arbor.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "silva/fontes/silva_arbor.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "silva/fontes/silva_arbor_aequalitas.c", NIHIL, NIHIL, VERUM, FALSUM }
 };

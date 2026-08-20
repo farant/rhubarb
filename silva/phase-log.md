@@ -12993,3 +12993,66 @@ continentiam probare debet, non praesumere.
 
 **Proximum:** T4, comparator (silva_arbor_aequalitas.c) - API
 PUBLICA fontium, non adiutor probationis.
+
+## 2026-08-20 — T4 arboris: comparator
+
+silva_arbor_aequalis in plagula propria (silva_arbor_aequalitas.c).
+DCXXVI assertiones virides (LXV novae). Detail:
+silva/fontes/silva_arbor.worklog.md.
+
+**POSITIONES MODUM COEGERUNT, et Fran causam nominavit.** Planum
+initium_lineae enumeraverat, ordinatas non. Spec §4 tamen portam
+campos RECOMPUTATOS conferre vult - et positiones pars maxima
+illius classis sunt, quia eas derivare potius quam portare
+elegimus. Eas praeterire derivationem T5 fere improbatam
+relinqueret. Sed eas semper conferre consumptorem quem planum
+NOMINAT frangit: portae mutationis rogant 'an transformatio
+arborem servaverit' de subarbore quae LEGITIME mota est. Quaestio
+Frani - quid de AST puro STML sine textu fontis - eadem res ex
+tertia parte est: arbores auctoratae ordinatas omnino non habent.
+Ergo modus duplex: STRUCTURALIS contra FIDELITAS.
+
+**EMENDATIO QUAE MODO IPSO PLUS VALET.** Implementum tentans est
+'positiones conferre solum cum ambo lexemata byte_offset >= 0
+habeant' - quod est PRORSUS vitium custodiae-sine-subiecto huius
+mane (/proc in darwin): vitium derivationis omnia ad -I ponens
+taceret. Ergo positionum VALORES modum sequuntur, PROVENIENTIA
+autem (signum byte_offset, fons contra syntheticum) UTROQUE modo
+confertur. Probatio mutationem provenientiae ambobus modis capi
+asserit.
+
+**QUOD COMPARATOR CONSULTO VIDERE NON POTEST:** dominium GEMINUM
+triviorum. Si lexema idem in duabus listis spatia_* apparet, ambo
+domini localiter recti videntur. NON vitium hic sanandum - ipsa
+ratio cur T6 oraculum SECUNDUM habet. Caput id dicit expresse,
+quia instinctus naturalis legenti est comparatorem 'emendare'
+donec omnia capiat, quod classes defectuum duas disiunctas in unam
+collaberet.
+
+**CUSTODIA PROBATIONEM VACUAM CELANS - inventa eam tollendo.**
+Probatio patris primum 'si (a->pater != NIHIL) { ... }' scripta
+transiit. Custodia sublata rubuit, quod revelavit DECLARATIONEM
+patrem OMNINO NON HABERE: nodus summus in LISTA radicis sedet, et
+commissio patrem inter NODOS figit, non a lista. Ergo forma
+custodita prorsus NIHIL asserebat et probationi operanti similis
+erat. Sanatum per nodum NIDIFICATUM (typus-primitivus). Eadem
+lectio ac custodia triviorum eodem passu sublata: **clausula
+conditionalis circa assertionem exitus tacitus est, et solus modus
+sciendi an portans sit eam DELERE et spectare.**
+
+**AMALGAMA CEPIT QUOD AEDIFICATIO MODULARIS VIDERE NEQUIT.**
+Adiutores 'interior' _nodi_aequales et _valores_aequales nominati
+cum staticis eiusdem nominis in silva_glr.c colliserunt. Ambae
+plagulae seorsum pure compilant - sed in amalgamate unius plagulae
+OMNE 'static' spatium nominum UNUM communicat. Amalgamator nomine
+recusavit, ambas plagulas nominans. Classis notanda: aedificatio
+modularis et amalgama regulas DIVERSAS imponunt, et regula
+amalgamatis invisibilis est donec eam curras. Statici omnes novem
+nunc praefixum '_arbor_' ferunt.
+
+Praeterea eodem defectu: cursus excludendorum fractus manifestum
+commissum INTACTUM reliquit, ob exemplar+laqueum in T1 additum
+postquam ille generator CLIII introitus scribendo-fractus delevit.
+Primum exercitium VERUM (non plantatum) illius retis.
+
+**Proximum:** T5, lector (STML -> arbor).

@@ -230,3 +230,117 @@ fragments actually counts fragments + transclusions, and the identity
 `fragments == transclusions` fails for reasons that look like a writer
 bug. Fragments = raw − transclusions. Substring counting over a
 nesting syntax needs the containment checked, not assumed.
+
+---
+
+## 2026-08-20 — T4, the comparator
+
+`silva_arbor_aequalis` in its own `silva_arbor_aequalitas.c`.
+626 assertions green (65 new).
+
+### Positions forced a MODE, and Fran named why
+
+The plan listed `initium_lineae` but not the coordinates. The spec's
+§4, though, wants the gate to compare *recomputed* fields — and
+positions are the largest part of that class, since we chose to derive
+rather than carry them. Skipping them would leave T5's derivation
+essentially unverified.
+
+But comparing them unconditionally breaks the consumer the plan names:
+mutatio's gates ask "did this transform preserve the tree" about a
+subtree that legitimately *moved*. Fran's question — what about a pure
+STML AST with no source text — is the same problem from the third
+direction: authored trees have no coordinates at all.
+
+So: `SILVA_ARBOR_COMPARATIO_STRUCTURALIS` vs `_FIDELITAS`. T6's oracle
+A runs fidelity; mutatio will run structural.
+
+### The refinement that matters more than the mode
+
+The tempting implementation is "compare positions only when both
+tokens have `byte_offset >= 0`" — auto-skip when synthetic. That is
+**exactly the guard-with-no-subject defect** from this morning's
+`/proc` trap: a derivation bug that left every offset at -1 would sail
+through in silence.
+
+So position **values** follow the mode, but position **provenance** —
+the sign of `byte_offset`, sourced vs synthetic — is compared in
+**every** mode. A token silently changing provenance is a structural
+fact about the tree, not a coordinate. There's a test asserting the
+provenance mutation is caught in *both* modes.
+
+### What the comparator deliberately CANNOT see
+
+Trivia double-ownership. If one token appears in two `spatia_*` lists,
+both owners look locally correct and a structural walk says nothing.
+That is not a defect to fix here — it is the entire reason T6 has a
+second oracle (byte emission, where it shows up as duplicated bytes).
+The header says so explicitly, because the natural instinct on reading
+this comparator is to "improve" it until it catches everything, which
+would collapse two disjoint failure classes into one.
+
+### pater: nullity only
+
+Comparing `pater` pointers across two trees is meaningless — different
+objects. The stronger check, "pater equals the node we descended
+from", breaks on shared subtrees, because `committere` assigns from the
+LAST visit in walk order (parked twice in the phase-log). So the
+comparator compares **nullity**: `a->pater == NIHIL` iff
+`b->pater == NIHIL`. That still catches the thing worth catching — a
+loader that never fixed pater up at all.
+
+### A guard concealing a vacuous test — caught by removing it
+
+The pater test was first written with `si (a->pater != NIHIL) { ... }`
+around the assertions. It passed. Removing the guard turned it red,
+which revealed that **`declaratio` has no pater at all**: a top-level
+node sits in the radix LIST, and commissio assigns pater between
+*nodes*, not from a list. So the guarded version asserted precisely
+nothing, and looked identical to a working test.
+
+Fixed by running the pater assertions on a NESTED node
+(`typus-primitivus`) that genuinely has one. Same lesson as the trivia
+guard I removed in the same pass: **a conditional around an assertion
+is a silent opt-out, and the only way to find out whether it is
+load-bearing is to delete it and watch.**
+
+### Field coverage
+
+Planted and confirmed, each naming its own field: `lexema/genus`,
+`/valor`, `/standard`, `/fons`, `/initium-lineae`, `/provenientia`,
+`/offset`, `/linea`, `/columna`; `trivia/post` (count) and trivia valor;
+`nodus/genus`, `/numerus-locorum`, `/pater-nullitas`;
+`locus/genus-valoris`; plus NIHIL handling and self-equality.
+
+The mode itself is tested from both sides — a mutated coordinate must
+be caught by fidelity AND ignored by structural. One assertion alone
+would not distinguish a working mode from a mode that does nothing.
+
+### Diagnostic path
+
+`SilvaArborDifferentia.via` carries a `genus.locus>genus.locus` trail,
+built push/pop during descent into a fixed buffer (no allocation, so
+the comparator needs no piscina). Genus is numeric because the
+comparator takes no registry — it is deliberately grammar-ignorant,
+touching only the two trees.
+
+### The amalgam caught something the modular build cannot see
+
+`silva_arbor_aequalitas.c` first defined `interior` helpers named
+`_nodi_aequales` and `_valores_aequales`. Both files compiled cleanly
+in isolation — but `silva_glr.c` already has statics by those exact
+names, and **in a single-file amalgam every `static` shares one
+namespace.** The amalgamator refused by name, naming both files.
+
+Worth recording as a class: the modular build and the amalgam enforce
+*different* rules, and the amalgam's rule is invisible until you run
+it. Any new `interior` helper with a generic name is a latent
+collision. All nine statics in the file now carry an `_arbor_` prefix,
+which makes the collision structurally impossible rather than
+merely absent today.
+
+Second thing that earned itself in the same failure: the failed
+excludenda run left the committed manifest **untouched**, because of
+the snapshot+trap added in T1 after that generator destroyed 153
+entries by failing mid-write. First real (unplanted) exercise of that
+safety net.
