@@ -137,7 +137,8 @@ Division of labor:
 - Every 1D selector chain embeds trivially into the pattern language
   (a chain is a degenerate, spine-only tree).
 - A pattern that happens to be path-shaped translates DOWN to a 1D
-  selector string (compilable to the existing engine).
+  selector string (compilable to the existing engine) — **with one
+  measured exception, see below.**
 - Any pattern — path-shaped or not — projects to a BOOLEAN and can
   therefore be registered as a **user-defined pseudo-selector**: the
   existing silva_quaestio_registrare mechanism, but with the pseudo
@@ -146,6 +147,29 @@ Division of labor:
   boolean (bindings unavailable) — CONSISTENT with quaestio's
   existing capture-neutrality rule, so the degradation semantics are
   already house law. Full binding mode = pattern engine as driver.
+
+**LIMIT OF THE DOWNWARD TRANSLATION (measured, arbor spec-v2 §10;
+recorded here 2026-08-20 as that spec directed).** The theorem above
+holds for patterns whose spine descends through GENERA. It does NOT
+hold for patterns that descend through NAMED LOCI, because
+**quaestio has no locus combinator** (silva_quaestio.h:103-109). A 1D
+selector can ask WHETHER a locus exists — `vocatio[functio]`, boolean
+— but cannot descend INTO it by name and keep matching. So a
+path-shaped pattern of the form "in the `functio` locus of a
+`vocatio`, match X" has no 1D equivalent at all; it is not merely
+awkward to express.
+
+Two consequences for the pattern engine:
+- the "translates DOWN" property must be stated as CONDITIONAL, and
+  the compiler must REFUSE (loudly, naming the locus step) rather
+  than emit an approximate selector that silently matches elsewhere;
+- the natural fix is a locus combinator in quaestio, which is a
+  quaestio-side feature and therefore a DOOR for that engine, not
+  work the pattern language can do for itself.
+
+Arbor makes this concrete: its documents alternate genus and locus
+elements by depth, so locus-descending paths are the common shape
+there, not an edge case.
 
 Net effect: the component library backfills the 1D language through
 the pseudo mechanism with ZERO changes to quaestio's grammar.
