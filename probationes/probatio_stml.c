@@ -3242,6 +3242,38 @@ s32 principale(vacuum)
         "<root>\n  <t>\n    <ante>x</ante>n</t>\n</root>",
         "VIII nidificatio componens: PRAETERITUM");
 
+    /* IX. elementum-TEXTUS-elementum: forma quam ARBOR ipsa fert
+     * (lexema = <ante> + litterae + <post>). Casus consumptoris
+     * veri, ab octo prioribus NON tactus - terminus uterque
+     * collabitur dum termini extremi non */
+    _pulchrum_probare(piscina, intern,
+        "<t><a/>n<b/></t>",
+        "<t>\n  <a/>n<b/>\n</t>",
+        "IX elementum-textus-elementum (forma arboris): PRAETERITUM");
+
+    /* X. PRETIUM NOMINATUM figendum: vicinus termini collapsi
+     * pulchrum=FALSUM accipit, ergo formam suam INTERNAM quoque
+     * planam reddit. Mensuratum, non incidens - si quis hoc mutet,
+     * haec probatio id dicat */
+    _pulchrum_probare(piscina, intern,
+        "<t>n<post><alta><altior/></alta></post></t>",
+        "<t>n<post><alta><altior/></alta></post>\n</t>",
+        "X planatio vicini (pretium fixum): PRAETERITUM");
+
+    /* XI. effugium entium per semitam mixtam: textus significans
+     * FALSO scribitur, sed _scribere_evasus nihilominus currit */
+    _pulchrum_probare(piscina, intern,
+        "<t><a/>x &amp; y</t>",
+        "<t>\n  <a/>x &amp; y</t>",
+        "XI effugium entium in contento mixto: PRAETERITUM");
+
+    /* XII. COMMENTUM textui adiacens: se indentat ut elementum,
+     * ergo terminus sinister eius spatium fert, dexter non */
+    _pulchrum_probare(piscina, intern,
+        "<t><!--c-->n</t>",
+        "<t>\n  <!--c-->n</t>",
+        "XII commentum textui adiacens: PRAETERITUM");
+
     /* ==================================================
      * Compendium
      * ================================================== */
