@@ -13324,3 +13324,56 @@ piscina <origines> opus est (M2; 'origo=' iam reservatum);
 expandit, subarbores plerasque fontium NOSTRORUM recusarentur. Ratio
 XI/CCLXXXI corpus roundtrip PLANUM C esse reflectit. Hoc piscinam
 originum partem M2 MAXIMI PRETII facit, non ornamentum.
+
+## 2026-08-20 — mensurae ante M2 (probe, non commissae)
+
+Duae probae targetae ante M2 incipiendum, ambae Frano suasae et
+approbatae. Detail in memoria arbor-stml-project + nota parci.
+
+**I. CENSUS ORIGINUM + RATIO RECUSATIONIS.** Responsum: codex
+latinizatus expansione ACTIVA recusatur ratione C%. Plagula duarum
+linearum ('#include "latina.h" / integer a = ZEPHYRUM;') LXIII
+lexemata dat quorum XXXV EXPANSIO; subarbores IV, recusatae IV.
+Bracchia unionis quae vere occurrunt: EXPANSIO (dominans); CHORDA
+(stringificatio - credo.h '#x' eam in OMNI probatione nostra gignit,
+confirmatum); PASTA (## - in include/ solum in capitibus
+ANTECESSORUM archivandis + villa_lectores.h, ergo in codice vivo fere
+absens); API (e definitionibus iniectis solum). Ergo piscina M2
+EXPANSIONE + CHORDA a die primo ferat.
+
+**MENSURA PRIMA CONFIDENTER FALSA FUIT** - et hoc lectio maior est
+quam numerus. Probe primus silva/fontes/*.c standalone parsavit et
+rettulit 'recusatae 0, omnia FONS'. Conclusio inde: 'M1 codicem
+nostrum bene tractat, piscina originum pretii minoris' - CONTRARIUM
+veri. Causa: silva plagulas numquam ipsa aperit; includenda non
+praebita ignota manent, ergo latina.h numquam legebatur, 'si'/'per'
+identificatores manebant, nihil expandebatur, nihil recusabatur.
+Configuratio quam NEMO adhibet - et sine ullo errore. Par minimum id
+uno cursu revelavit. LEX: mensura REACH instrumenti significat solum
+in apparatu quem consumptores VERI habent. Numerus falsus prioritates
+M2 in contrarium vertisset, et numerus falsus DATIS similis est, non
+probationi absenti.
+
+**II. PROIECTIO CANONIS - SPICA.** Exprimibilis: ITA. 'intra='
+elementum parenti adstringit, et aedilis.canon duas <elementum
+nomen="regula"> definitiones eo distinctas iam fert - prorsus quod
+arbor petit, quia nomina locorum globaliter unica NON sunt.
+
+'Fere gratuita': NON, propter SCALAM. Canon arboris ~CCCXXX
+definitiones elementorum petit (LVIII genera + CLXXVI loci
+genere-adstricti + ~XCV lexemata). Canon maximus manu scriptus =
+natura.canon cum XXXII. Decuplum eius quod canon umquam vidit;
+efficacia et usus humanus ibi immensurata.
+
+ET SCALA EST QUAE HIATUM CANONIS NOTUM MATERIALEM FACIT:
+canon.canon:20-27 refert unicitatem ADSTRICTAM (per parentem, aut
+par intra+nomen) esse postulationem quam dialectus tertius facit sed
+canon nondum ACCIPIT. Cum XIII elementis introitus geminus oculo
+capitur; cum CLXXVI locis in artificio GENERATO tacitus est. Illa
+custodia ANTE generationem aedificanda est, aliter proiectio cum
+modo defectus incustodito mittitur.
+
+CONSILIUM MUTATUM: proiectionem canonis 'initium vile M2' dixeram.
+Independens manet, sed vilis non est et emendationem canon-lateris
+prius petit. Interim piscina originum ex 'maximi pretii' in 'sine qua
+arbor codicem nostrum omnino tangere nequit' mota est.
