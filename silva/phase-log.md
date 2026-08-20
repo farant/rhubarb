@@ -12918,3 +12918,78 @@ plagulas tangit - in commentario fontis notata, M1 non impedit.
 scribere in AMBIGUO consulto divergit (scribere solam canonicam
 emittit, arbor omnes interpretationes) - prima captura substantiva
 recensionis repraesentationalis.
+
+## 2026-08-20 — T3 arboris: scriptor (arbor -> STML)
+
+silva_arbor_scribere_nodum. DLXI assertiones virides (XLIII novae).
+Detail: silva/fontes/silva_arbor.worklog.md.
+
+**Signatura parametrum accepit quod planum non habebat:**
+'grammatica' TRADITUR, non derivatur. Registrum se ipsum NOMINARE
+NEQUIT - nullus campus versionis aut identitatis in
+SilvaRegistrumCoctum est (idem factum quo sigillum utitur:
+contentum tabularum solum signum versionis). Sigillum grammaticas
+cryptographice distinguit; nomen homini legendum a vocante venire
+DEBET. "c89" infixum dum registrum quodlibet accipitur mendacium
+esset quod documentum deinde ferret.
+
+**AMBIGUUS: divergentia ABSENTIA codicis est.** scribere solam
+interpretationem canonicam emittit (octeti unam lectionem scribunt);
+arbor OMNES. Notandum: nullus casus specialis opus fuit - ambulatio
+generica listam 'interpretationes' totam emittit, et NON specialem
+facere IPSUM est divergentia. Circuitus octetorum ambiguitatem
+servare structuraliter nequit; haec est captura prima substantiva
+recensionis repraesentationalis.
+
+**LENTES TRIVIORUM NECESSITAS SUNT, non ornamentum** - inventio
+quae documenta tacite corrupisset. Valor triviorum SPATIA/TABULAE/
+NOVA_LINEA spatium album SOLUM est, et scriptor pulcher stml nodos
+textus spatii albi solius CONSULTO praeterit (fidelitas contra
+legibilitatem). Indentatio ut textus emissa ergo sine ullo errore
+perisset. '<lex-spatia n="4"/>' idem in ATTRIBUTO fert, ubi nihil
+eam radit; nihil perit (valor numero plene determinatur).
+
+Generaliter, et in T5 portandum: **cum forma classem 'transparentem'
+aut 'insignificantem' habeat, quidquid in eam cadit
+repraesentationem EXTRA eam petit.**
+
+Eadem ratio '_textus_tutus' peperit, quod valorem spatii-albi-solius
+aut NUL-ferentem REFUTAT potius quam tacite perdat. T6 mensurabit an
+umquam in corpore vero incendat.
+
+**Passus DUO, quia usus primus scire non potest.** Communicatio
+fragmenti/transclusionis scire debet AD PRIMAM emissionem an lexema
+iterum adhibeatur. Passus I usus in tabulam monstratore-clavatam
+numerat; passus II emittit. Alternativa - fragmentum omni lexemati -
+recta esset et illegibilis. Passus I etiam ANCORAM capit (lexema
+primum ordine AMBULATIONIS, non octetorum: lector ambulationem
+replicat).
+
+**T0 bis in situ apparet.** (i) Elementa lexematum contentum MIXTUM
+sunt ('<lex-identificator>n<post>...</post></>') - forma prorsus
+quam T0 sanavit; ante eam scriptor lineas novas circa 'n' iniciebat
+et valorem CUMULATIM corrumpebat. Assertio nunc chordam illam
+litteralem custodit, ergo sanatio T0 custodem in sede VERA habet,
+non in formis syntheticis solum. (ii) Clausurae omnes tacitae '</>'
+sunt; assertiones meae primae '</lex-integer>' divinaverunt et
+fractae sunt - scriptor rectus erat, probatio falsa.
+
+**Amalgama: praedictio plani ad litteram evenit.** T7 gradus II
+anticipaverat arborem 'stml_scribere' et fratres ex EXCLUDENDA_STML
+retracturum esse, quia silva scriptorem STML in tempore currendi
+ANTE non habebat. Mensuratum: excludenda CXLVIII -> CXXXI, et XVII
+nomina reviviscentia dimidium scriptoris TOTUM sunt - stml_scribere,
+_scribere_evasus, _scribere_indentatio, _spatium_album_solum,
+constructores elementorum/attributorum/textus, et **_lineae_contenti**,
+adiutor clausurae tacitae in T0 scriptus qui ad nativitatem
+praesectus est quia vocans eius unicus ipse exclusus erat.
+
+**Vitium probationis memorandum:** '<<#lexN>>' chordam '<#lex'
+CONTINET, ergo numeratio subchordae nuda fragmenta ET transclusiones
+simul numerat, et identitas 'fragmenta == transclusiones' frangitur
+ob causas quae vitium scriptoris simulant. Fragmenta = crudum -
+transclusiones. Numeratio subchordarum super syntaxin NIDIFICANTEM
+continentiam probare debet, non praesumere.
+
+**Proximum:** T4, comparator (silva_arbor_aequalitas.c) - API
+PUBLICA fontium, non adiutor probationis.

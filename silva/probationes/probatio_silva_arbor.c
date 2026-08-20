@@ -18,14 +18,72 @@
 #include "xar.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
+#include "silva_nodus.h"
 #include "silva_tabulae.h"
 #include "silva_tabulae_c89.h"
 #include "silva_tabulae_sceleti.h"
+#include "silva_parsare.h"
+#include "silva_quaestio.h"
+#include "silva_c89_oraculum.h"
 #include "silva_arbor.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
 
+
+/* Primum nodum selectori congruentem; NIHIL si nullum */
+interior constans SilvaNodus*
+_primus_congruens (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* selector)
+{
+         constans character* causa = NIHIL;
+              SilvaQuaestio* quaestio;
+                        Xar* resultata;
+    SilvaQuaestioResultatum* primum;
+
+    quaestio = silva_quaestio_compilare(piscina, &SILVA_C89_REGISTRUM,
+        selector, &causa);
+    si (quaestio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    resultata = silva_quaestio_exsequi(quaestio,
+        parsura->commissio->radix, piscina);
+    si (resultata == NIHIL || xar_numerus(resultata) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    primum = (SilvaQuaestioResultatum*)xar_obtinere(resultata, ZEPHYRUM);
+    redde primum ? primum->nodus : NIHIL;
+}
+
+/* Quotiens acus in feno appareat */
+interior i32
+_quotiens (
+                 chorda  fenum,
+     constans character* acus)
+{
+    i32 numerus;
+    i32 i;
+    i32 longitudo;
+
+    numerus    = ZEPHYRUM;
+    longitudo  = (i32)strlen(acus);
+    si (longitudo == ZEPHYRUM || fenum.mensura < longitudo)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i <= fenum.mensura - longitudo; i++)
+    {
+        si (memcmp(fenum.datum + i, acus, (size_t)longitudo) == ZEPHYRUM)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
 
 /* Sigillum registri synthetici - series mutabiles, ut sensibilitas
  * per campum probari possit */
@@ -494,6 +552,234 @@ principale (vacuum)
             (i32)strlen("lex-fictum")) == SILVA_LEX_NUMERUS_GENERUM);
         CREDO_VERUM (silva_arbor_lexema_ex_tag(NIHIL, ZEPHYRUM)
             == SILVA_LEX_NUMERUS_GENERUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: scriptor - exhibitum I ('int n = 0;', purus)
+     * ======================================================== */
+
+    {
+         constans character* fons = "int n = 0;\n";
+               SilvaParsura* parsura;
+        constans SilvaNodus* declaratio;
+        SilvaArborScriptura  scriptura;
+
+        imprimere("\n--- Probans scriptorem (exhibitum I) ---\n");
+
+        parsura = silva_c89_parsare(piscina, "exhibitum.c", fons,
+            (i32)strlen(fons), NIHIL);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_VERUM (parsura->successus);
+
+        declaratio = _primus_congruens(piscina, parsura, "declaratio");
+        CREDO_NON_NIHIL (declaratio);
+
+        scriptura = silva_arbor_scribere_nodum(piscina, declaratio,
+            &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+        si (!scriptura.successus)
+        {
+            imprimere("  FRACTA: %s\n",
+                scriptura.causa ? scriptura.causa : "(sine causa)");
+        }
+        CREDO_VERUM (scriptura.successus);
+        CREDO_VERUM (scriptura.textus.mensura > ZEPHYRUM);
+
+        /* involucrum: grammatica + sigillum + ancora */
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<arbor grammatica=\"c89\"") == I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "registrum-sigillum=\"") == I);
+
+        /* genus = tag, locus = involucrum */
+        CREDO_VERUM (_quotiens(scriptura.textus, "<declaratio>") == I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<specificatores>") == I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<typus-primitivus>") == I);
+
+        /* lexema orthographiae FIXAE: tag solus, NULLUS textus
+         * (orthographia in genere ipso vivit). Clausurae tacitae
+         * '</>' sunt - vide sanationem T0 */
+        CREDO_VERUM (_quotiens(scriptura.textus, "<lex-int>") == I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-semicolon>") == I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-assignatio>") == I);
+
+        /* lexema orthographiae VARIAE: valor ut TEXTUS */
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-integer>0</>") == I);
+
+        /* CONTENTUM MIXTUM (textus IUXTA elementa): forma quam
+         * sanatio T0 possibilem fecit. Ante eam scriptor pulcher
+         * lineas novas circa 'n' iniciebat et valorem CORRUMPEBAT,
+         * cumulatim per cursum. Haec assertio illam sanationem
+         * in situ vero custodit. */
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-identificator>n<post><lex-spatia n=\"1\"/></post>")
+            == I);
+
+        /* trivia per LENTEM compactam - non ut textus (qui a
+         * scriptore pulchro tacite praeteriretur) */
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-spatia n=\"1\"/>") >= I);
+        CREDO_VERUM (_quotiens(scriptura.textus, "<post>") >= I);
+        CREDO_VERUM (_quotiens(scriptura.textus,
+            "<lex-nova-linea/>") == I);
+
+        /* POSITIONES NON SCRIPTAE: nullum b=/linea=/columna= praeter
+         * ancoram involucri (quae semel apparet) */
+        CREDO_AEQUALIS_S32 ((s32)_quotiens(scriptura.textus, " b=\""),
+            (s32)I);
+        CREDO_AEQUALIS_S32 ((s32)_quotiens(scriptura.textus,
+            " linea=\""), (s32)I);
+
+        /* nullum fragmentum: nihil communicatur in arbore pura */
+        CREDO_AEQUALIS_S32 ((s32)_quotiens(scriptura.textus, "<#"),
+            (s32)ZEPHYRUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: scriptor - exhibitum III (AMBIGUUS, communicatio)
+     *
+     * 'i8 * t;' sine lexico: duo bracchia GLR lexemata EADEM ferunt.
+     * Arbor a silva_scribere consulto divergit - OMNIA bracchia
+     * emittuntur, quod est ipsa captura prima recensionis
+     * repraesentationalis (circuitus octetorum ambiguitatem servare
+     * structuraliter nequit).
+     * ======================================================== */
+
+    {
+         constans character* fons = "i8 * t;\n";
+               SilvaParsura* parsura;
+        constans SilvaNodus* ambiguus;
+        SilvaArborScriptura  scriptura;
+
+        imprimere("\n--- Probans scriptorem (exhibitum III) ---\n");
+
+        parsura = silva_c89_parsare(piscina, "ambiguum.c", fons,
+            (i32)strlen(fons), NIHIL);
+        CREDO_NON_NIHIL (parsura);
+
+        ambiguus = _primus_congruens(piscina, parsura, "ambiguus");
+        si (ambiguus == NIHIL)
+        {
+            imprimere("  (nullum ambiguum - grammatica mutata?)\n");
+        }
+        CREDO_NON_NIHIL (ambiguus);
+
+        si (ambiguus != NIHIL)
+        {
+            scriptura = silva_arbor_scribere_nodum(piscina, ambiguus,
+                &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+            si (!scriptura.successus)
+            {
+                imprimere("  FRACTA: %s\n",
+                    scriptura.causa ? scriptura.causa : "(sine causa)");
+            }
+            CREDO_VERUM (scriptura.successus);
+
+            /* AMBO bracchia emissa - divergentia a scribere */
+            CREDO_VERUM (_quotiens(scriptura.textus,
+                "<interpretationes>") == I);
+            CREDO_VERUM (_quotiens(scriptura.textus,
+                "<declaratio>") >= I);
+            CREDO_VERUM (_quotiens(scriptura.textus,
+                "<sententia-expressionis>") >= I);
+
+            /* locus INDEX ut textus arabicus */
+            CREDO_VERUM (_quotiens(scriptura.textus,
+                "<canonica>") == I);
+
+            /* COMMUNICATIO: lexemata communicata fragmenta accipiunt,
+             * usus sequentes transclusiones. Numeri congruere DEBENT -
+             * fragmentum sine transclusione (aut contra) significaret
+             * identitatem perisse */
+            /* NB '<<#lexN>>' chordam '<#lex' CONTINET - ergo numerus
+             * crudus fragmenta ET transclusiones simul numerat.
+             * Fragmenta = crudum - transclusiones. */
+            {
+                i32 crudum = _quotiens(scriptura.textus, "<#lex");
+                i32 transclusiones = _quotiens(scriptura.textus,
+                    "<<#lex");
+                i32 fragmenta = crudum - transclusiones;
+
+                CREDO_VERUM (fragmenta >= I);
+                /* lexema quodque communicatum bis adhibetur (bracchia
+                 * duo), ergo fragmentum unum + transclusio una */
+                CREDO_AEQUALIS_S32 ((s32)fragmenta,
+                    (s32)transclusiones);
+            }
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: scriptor - refutationes clarae
+     * ======================================================== */
+
+    {
+         constans character* fons = "int n = 0;\n";
+               SilvaParsura* parsura;
+        constans SilvaNodus* declaratio;
+        SilvaArborScriptura  scriptura;
+
+        imprimere("\n--- Probans refutationes scriptoris ---\n");
+
+        parsura = silva_c89_parsare(piscina, "exhibitum.c", fons,
+            (i32)strlen(fons), NIHIL);
+        declaratio = _primus_congruens(piscina, parsura, "declaratio");
+        CREDO_NON_NIHIL (declaratio);
+
+        /* argumenta nihil */
+        scriptura = silva_arbor_scribere_nodum(NIHIL, declaratio,
+            &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+        CREDO_FALSUM (scriptura.successus);
+        CREDO_NON_NIHIL (scriptura.causa);
+
+        scriptura = silva_arbor_scribere_nodum(piscina, NIHIL,
+            &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+        CREDO_FALSUM (scriptura.successus);
+
+        /* grammatica innominata: registrum nomen SUUM non fert, ergo
+         * scriptor eum fingere non potest */
+        scriptura = silva_arbor_scribere_nodum(piscina, declaratio,
+            &SILVA_C89_REGISTRUM, NIHIL, parsura->expansio, NIHIL);
+        CREDO_FALSUM (scriptura.successus);
+        CREDO_VERUM (scriptura.causa != NIHIL
+            && strcmp(scriptura.causa, "grammatica innominata")
+                == ZEPHYRUM);
+
+        /* genus registro ignotum: nodus formae alienae */
+        {
+            SilvaNodus* fictus = silva_nodus_creare(piscina,
+                (s32)9999, ZEPHYRUM);
+
+            CREDO_NON_NIHIL (fictus);
+            scriptura = silva_arbor_scribere_nodum(piscina, fictus,
+                &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+            CREDO_FALSUM (scriptura.successus);
+            CREDO_VERUM (scriptura.causa != NIHIL
+                && strcmp(scriptura.causa, "genus registro ignotum")
+                    == ZEPHYRUM);
+            CREDO_AEQUALIS_PTR (scriptura.sedes, fictus);
+        }
+
+        /* forma nodi registro non congruens (loci nimis pauci) */
+        {
+            SilvaNodus* truncus = silva_nodus_creare(piscina,
+                (s32)SILVA_C89_GENUS_CORPUS, I);
+
+            CREDO_NON_NIHIL (truncus);
+            scriptura = silva_arbor_scribere_nodum(piscina, truncus,
+                &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
+            CREDO_FALSUM (scriptura.successus);
+            CREDO_VERUM (scriptura.causa != NIHIL
+                && strcmp(scriptura.causa,
+                       "forma nodi registro non congruit") == ZEPHYRUM);
+        }
     }
 
     credo_imprimere_compendium();

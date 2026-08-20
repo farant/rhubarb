@@ -141,3 +141,92 @@ deliberately not opened during M1.
 ### Counts
 
 518 assertions, all green.
+
+---
+
+## 2026-08-20 — T3, the writer (tree → STML)
+
+`silva_arbor_scribere_nodum`. 561 assertions green (43 new).
+
+### The signature gained a parameter the plan didn't have
+
+`grammatica` is passed in, not derived. The registry **cannot name
+itself** — there is no version or identity field anywhere in
+`SilvaRegistrumCoctum` (that's the same fact the seal exploits: table
+content is the only version signal). The seal distinguishes grammars
+cryptographically; the human-readable name has to come from the
+caller. Hardcoding `"c89"` while accepting any registry would have
+been a lie the document then carries.
+
+### AMBIGUUS: the divergence is an ABSENCE of code
+
+`silva_scribere` emits only the canonical arm, because bytes can spell
+exactly one reading. Arbor emits all of them. The notable part is that
+this required **no special case at all** — the generic walk emits the
+whole `interpretationes` list, and *not* special-casing it IS the
+divergence. Byte-roundtrip is structurally incapable of preserving
+ambiguity; this is the representational audit's first real catch.
+
+### Compact trivia lenses are REQUIRED, not cosmetic
+
+This is the finding that would have silently corrupted documents.
+Trivia valor for `SPATIA`/`TABULAE`/`NOVA_LINEA` is **whitespace
+only** — and the stml pretty-writer deliberately drops whitespace-only
+text nodes (fidelity vs legibility, lib/stml.c). Emitting indentation
+as text content would therefore have been discarded with no error at
+all. `<lex-spatia n="4"/>` carries the same information in an
+attribute, where nothing strips it. Nothing is lost: the valor is
+fully determined by the count.
+
+Generalized, and worth carrying into T5: **when a format has a
+"transparent" or "insignificant" class, any payload that falls into
+that class needs a representation outside it.**
+
+The same reasoning produced `_textus_tutus`, which REFUSES any
+variable-spelling valor that is whitespace-only or NUL-bearing rather
+than losing it silently. T6 will measure whether it ever fires on the
+real corpus; today it is a guard against a class, not a known case.
+
+### Two-pass, because first use can't know
+
+Fragment/transclusion sharing needs to know at the *first* emission
+whether a token will be used again. Pass 1 counts token uses into a
+pointer-keyed hash; pass 2 emits, giving `<#lexN>` to the first use of
+any token with count > 1 and `<<#lexN>>` to the rest. The alternative —
+giving every token a fragment id — would be correct and unreadable.
+
+Pass 1 also captures the position ANCHOR (first token in *walk* order,
+not byte order, since the loader replays the walk).
+
+### T0 shows up twice, in situ
+
+1. The document's token elements are **mixed content** —
+   `<lex-identificator>n<post><lex-spatia n="1"/></post></>` — which is
+   exactly the shape T0 fixed. Before T0 the pretty writer injected
+   newlines around `n` and corrupted the valor, compounding each
+   cycle. There is now an assertion on that literal string, so T0's fix
+   has a regression guard at a real call site rather than only in
+   synthetic shapes.
+2. Every closing tag is the tacit `</>` under the 30-line threshold,
+   also T0. My first assertions guessed `</lex-integer>` and failed —
+   the writer was right and the test was wrong.
+
+### Amalgam: the prediction in the plan came true exactly
+
+T7 step 2 anticipated that arbor would pull `stml_scribere` and
+friends back out of `EXCLUDENDA_STML`, since silva had no runtime STML
+*writer* before. Measured: excludenda **148 → 131**, and the 17
+revived names are the entire writer half —
+`stml_scribere`, `stml_scribere_ad_aedificator`, `_scribere_evasus`,
+`_scribere_indentatio`, `_spatium_album_solum`, the element/attribute/
+text constructors, and **`_lineae_contenti`**, the tacit-closure helper
+written in T0 that was pruned at birth because its only caller was
+itself excluded.
+
+### A test bug worth remembering
+
+`"<<#lex1>>"` CONTAINS `"<#lex"`, so a naive substring count of
+fragments actually counts fragments + transclusions, and the identity
+`fragments == transclusions` fails for reasons that look like a writer
+bug. Fragments = raw − transclusions. Substring counting over a
+nesting syntax needs the containment checked, not assumed.

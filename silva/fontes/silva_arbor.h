@@ -30,8 +30,11 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "internamentum.h"
 #include "silva_token.h"
+#include "silva_nodus.h"
 #include "silva_tabulae.h"
+#include "silva_expandere.h"
 
 /* Praefixum tagorum lexematum (vide caput pro ratione) */
 #define SILVA_ARBOR_PRAEFIXUM "lex-"
@@ -160,5 +163,76 @@ SilvaLexemaGenus
 silva_arbor_lexema_ex_tag (
      constans character* tag,
                     i32  mensura);
+
+
+/* ==================================================
+ * Scriptor: arbor -> STML canonicum (T3)
+ * ================================================== */
+
+/* Tag involucri triviorum ante/post lexema */
+#define SILVA_ARBOR_TAG_ANTE      "ante"
+#define SILVA_ARBOR_TAG_POST      "post"
+#define SILVA_ARBOR_TAG_SCISSURA  "scissura"
+#define SILVA_ARBOR_TAG_ENVOLUCRI "arbor"
+
+/* Fructus scripturae - forma SilvaScriptura aequata (fractura clara:
+ * successus FALSUM + causa STATICA + sedes, numquam praetermissio
+ * tacita). */
+nomen structura {
+                     b32  successus;
+                  chorda  textus;  /* octeti STML; vacua in fractura */
+      constans character* causa;   /* diagnosticum staticum; NIHIL si bene */
+     constans SilvaNodus* sedes;   /* nodus fracturae; NIHIL licet */
+} SilvaArborScriptura;
+
+/* Subarborem in documentum STML canonicum scribere.
+ *
+ * grammatica: nomen grammaticae in involucrum scriptum (e.g. "c89").
+ *   PARAMETRUM EST, non derivatum: registrum coctum nomen SUUM non
+ *   fert (nullus campus versionis aut identitatis in tabulis - vide
+ *   silva_arbor_sigillum). Sigillum grammaticas cryptographice
+ *   distinguit; hoc nomen homini est.
+ *
+ * expansio: NECESSARIA, non optionalis - tabula fontium in
+ *   SilvaExpansio.fontes vivit et nodus nudus fons_index solvere
+ *   nequit. NIHIL licet solum si nullum lexema fontem nominat.
+ *
+ * intern: NIHIL licet -> per internamentum_creare pigre creatur.
+ *
+ * QUAE SCRIBUNTUR: genus nodi = tag; locus = involucrum (NIHIL
+ * omissus); lexema = tag praefixatum 'lex-'; valor ut TEXTUS et
+ * solum generibus orthographiae variae; trivia in <ante>/<post> per
+ * lentes compactas; scissurae ut <scissura offset="N"/>; 'standard'
+ * et 'f' solum cum non-ordinaria.
+ *
+ * QUAE NON SCRIBUNTUR: positiones (b/linea/columna). Involucrum
+ * ANCORAM solam fert; cetera ambulatione emissionis derivantur.
+ * Lex: documentum canonicum MENTIRI non possit - positio portata
+ * cum contento dissentire potest, derivata non potest.
+ *
+ * AMBIGUUS: arbor a silva_scribere CONSULTO divergit. Scribere solam
+ * interpretationem canonicam emittit (octeti unam lectionem solam
+ * scribere possunt); arbor OMNES emittit, quia hoc est quod circuitus
+ * octetorum structuraliter servare non potest. Nulla causa specialis
+ * in codice: ambulatio generica listam 'interpretationes' totam
+ * emittit, et hoc IPSUM est divergentia.
+ *
+ * COMMUNICATIO LEXEMATUM: bracchia ambigua lexemata EADEM communicant
+ * (identitas res est - duplicatio mentiretur). Usus primus fragmentum
+ * nominatum scribit (<#lexN>), usus sequentes transclusionem
+ * (<<#lexN>>). Duo passus: primus usus numerat, secundus emittit -
+ * aliter usus primus scire non posset an fragmentum opus esset.
+ *
+ * REFUTAT CLARE: lexema non-FONS (limes expansionis, sicut scribere),
+ * genus ignotum, forma corrupta, elementum listae mixtae illicitum,
+ * valor textui non tutus. */
+SilvaArborScriptura
+silva_arbor_scribere_nodum (
+                          Piscina* piscina,
+              constans SilvaNodus* nodus,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* grammatica,
+           constans SilvaExpansio* expansio,
+              InternamentumChorda* intern);
 
 #endif /* SILVA_ARBOR_H */
