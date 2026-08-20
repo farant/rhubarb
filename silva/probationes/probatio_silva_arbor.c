@@ -1336,18 +1336,69 @@ principale (vacuum)
          * T5a circuitum plenum simulare NON posse: custodia id DICIT
          * potius quam celet, quod est ipsa ratio cur provenientia
          * modum non sequitur. */
-        CREDO_FALSUM (silva_arbor_aequalis(origo, lecta,
+        /* ORACULUM A (T5b): aequalitas PLENA modo FIDELITATIS.
+         * Documentum positiones NON fert, ergo hoc derivationem
+         * ipsam probat - id est ratio cur positiones in comparatorem
+         * omnino inclusae sunt. In T5a haec assertio 'recusat,
+         * patrem nominans' erat; nunc vertitur, ut consilium dixit. */
+        si (!silva_arbor_aequalis(origo, lecta,
+                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia))
+        {
+            imprimere("  [divergentia] %s @ %s\n",
+                differentia.campus ? differentia.campus : "(nihil)",
+                differentia.via);
+        }
+        CREDO_VERUM (silva_arbor_aequalis(origo, lecta,
+            SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        CREDO_VERUM (silva_arbor_aequalis(origo, lecta,
             SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
-        CREDO_NON_NIHIL (differentia.campus);
-        /* Divergentia PRIMA 'nodus/pater-nullitas' est - id est
-         * PRORSUS casus ad quem custodia patris in T4 scripta est
-         * ('lectorem patrem omnino non fixisse'), et hic primum in
-         * usu vero incendit. Provenientia et initium-lineae eodem
-         * documento sequerentur; OMNIA T5b sanabit, et tunc haec
-         * assertio in AEQUALITATEM plenam vertetur. Interim
-         * DOCUMENTUM est eius quod T5a nondum praestat. */
-        CREDO_VERUM (strcmp(differentia.campus,
-            "nodus/pater-nullitas") == ZEPHYRUM);
+
+        /* Aequalitas plena primo cursu suspecta est - ergo probemus
+         * eam ex ANCORA vere pendere, non fortuito congruere. */
+
+        /* ancora MOTA -> sedes omnes labuntur */
+        {
+            SilvaNodus* mota = silva_arbor_legere(piscina, NIHIL,
+                _substituere(piscina, documentum, " b=\"0\"",
+                    " b=\"500\""),
+                &SILVA_C89_REGISTRUM, "c89", &vitium);
+
+            CREDO_NON_NIHIL (mota);
+            CREDO_FALSUM (silva_arbor_aequalis(origo, mota,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/offset")
+                    == ZEPHYRUM);
+            /* structura tamen intacta - modus rem suam agit */
+            CREDO_VERUM (silva_arbor_aequalis(origo, mota,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+        }
+
+        /* ancora ABSENS -> arbor AUCTORATA: sedes -I manent, et
+         * comparator id per PROVENIENTIAM dicit (utroque modo).
+         * Hic est casus arboris sine textu fontis */
+        {
+            SilvaNodus* nuda = silva_arbor_legere(piscina, NIHIL,
+                _substituere(piscina, documentum, " b=\"0\"", ""),
+                &SILVA_C89_REGISTRUM, "c89", &vitium);
+            SilvaToken* lexema_nudum;
+
+            CREDO_NON_NIHIL (nuda);
+            lexema_nudum = _primum_lexema(nuda);
+            CREDO_NON_NIHIL (lexema_nudum);
+            CREDO_VERUM (lexema_nudum->byte_offset < ZEPHYRUM);
+            /* structura LINEARUM tamen derivata est: ancora
+             * ORDINATAS solas regit */
+            CREDO_VERUM (lexema_nudum->initium_lineae);
+            CREDO_AEQUALIS_I32 (lexema_nudum->longitudo,
+                lexema_nudum->valor.mensura);
+
+            CREDO_FALSUM (silva_arbor_aequalis(origo, nuda,
+                SILVA_ARBOR_COMPARATIO_STRUCTURALIS, &differentia));
+            CREDO_VERUM (differentia.campus != NIHIL
+                && strcmp(differentia.campus, "lexema/provenientia")
+                    == ZEPHYRUM);
+        }
 
         /* iii. REFUTATIONES - vitium in documento PLANTATUM,
          * quaeque causam SUAM et lineam nominans */
@@ -1446,13 +1497,62 @@ principale (vacuum)
             &SILVA_C89_REGISTRUM, "c89", parsura->expansio, NIHIL);
         CREDO_VERUM (scriptura.successus);
 
-        /* Documentum communicatum RECUSATUR, causa dilationem
-         * NOMINANS - non tacite decidit, non partem legit */
+        /* T5b: documentum communicatum LEGITUR, et lexemata
+         * communicata OBIECTUM IDEM sunt - non paria. Identitas res
+         * est: bracchia GLR eosdem octetos fontis tegunt, et
+         * duplicatio de arbore mentiretur. */
+        {
+            SilvaNodus* lectus;
+            SilvaNodus* bracchium_a;
+            SilvaNodus* bracchium_b;
+            SilvaValor  interpretationes;
+                   i32  i;
+
+            lectus = silva_arbor_legere(piscina, NIHIL,
+                scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
+                &vitium);
+            si (lectus == NIHIL)
+            {
+                imprimere("  RECUSATUM: %s (linea %d)\n",
+                    vitium.causa ? vitium.causa : "(sine causa)",
+                    (integer)vitium.linea);
+            }
+            CREDO_NON_NIHIL (lectus);
+            CREDO_NIHIL (vitium.causa);
+
+            /* locum interpretationum invenire (lista bracchiorum) */
+            interpretationes = silva_valor_nihil();
+            per (i = ZEPHYRUM; i < lectus->numerus_locorum; i++)
+            {
+                si (lectus->loci[i].genus == SILVA_VALOR_LISTA)
+                {
+                    interpretationes = lectus->loci[i];
+                    frange;
+                }
+            }
+            CREDO_VERUM (silva_valor_lista_numerus(interpretationes)
+                >= II);
+
+            bracchium_a = silva_valor_lista_obtinere(
+                interpretationes, ZEPHYRUM)->datum.nodus;
+            bracchium_b = silva_valor_lista_obtinere(
+                interpretationes, I)->datum.nodus;
+            CREDO_NON_NIHIL (bracchium_a);
+            CREDO_NON_NIHIL (bracchium_b);
+            /* bracchia DIVERSA (genera diversa), lexemata EADEM */
+            CREDO_INAEQUALITAS_PTR (bracchium_a, bracchium_b);
+            CREDO_AEQUALIS_PTR (_primum_lexema(bracchium_a),
+                _primum_lexema(bracchium_b));
+        }
+
+        /* transclusio ORBA (fragmentum ignotum) clare recusatur */
         CREDO_NIHIL (silva_arbor_legere(piscina, NIHIL,
-            scriptura.textus, &SILVA_C89_REGISTRUM, "c89", &vitium));
+            _substituere(piscina, scriptura.textus, "<<#lex",
+                "<<#orphanum"),
+            &SILVA_C89_REGISTRUM, "c89", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa,
-                   "transclusio nondum resoluta (T5b)") == ZEPHYRUM);
+                   "transclusio ad fragmentum ignotum") == ZEPHYRUM);
         CREDO_VERUM (vitium.linea > ZEPHYRUM);
     }
 

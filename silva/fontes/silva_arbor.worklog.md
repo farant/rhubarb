@@ -432,3 +432,93 @@ Fragments are unwrapped rather than refused, so a shared document
 fails at the transclusion — where the real deferral is — instead of at
 the fragment, where the message would mislead. There is a test using
 the real AMBIGUUS document for exactly this.
+
+---
+
+## 2026-08-20 — T5b, fixups + transclusion resolution
+
+683 assertions green (17 new). **Oracle A is now live**: parse →
+serialize → load → `silva_arbor_aequalis(FIDELITAS)` returns equal,
+positions included.
+
+### pater was a CALL, not a walk
+
+The plan lists "recompute pater" as a step. It isn't one:
+`silva_committere` already does the pater fixup — its own header says
+"oraculum/resolutor NIHIL licent (tunc nulla resolutio - pater +
+normalizatio solae)". So the fixup and the commit that makes a loaded
+tree queryable are **the same operation**, and the reader just calls
+it. Ten seconds of reading the header removed a whole step. Kin to the
+house rule about pricing narrowings at the seam rather than from
+memory.
+
+### Positions: a second implementation, but a GATED one
+
+Derivation walks in emission order maintaining `(offset, linea,
+columna)` from the envelope anchor. I had hoped to reuse
+`silva_lexema_emittere_in` so there would be no second byte-counting
+implementation — but that primitive emits *ante + valor + post as one
+blob* and gives no intermediate positions, and per-component positions
+are exactly what is needed. So the scanner is genuinely a second
+implementation.
+
+What keeps it honest is that **the round-trip gate compares its output
+against the lexer's**, on every fixture at T6. Unlike the spelling
+table, the second source of truth here has an oracle that judges it
+directly rather than by proxy.
+
+Two details the scanner has to get right, both discovered by writing
+it rather than by reading:
+- **Scissurae must be counted.** Valor is the *clean* value; the
+  `\<newline>` splices were removed. They are re-inserted on emission,
+  so if the scanner skips them, everything after a splice-bearing
+  token slides.
+- **Logical vs physical lines.** `linea` counts physical newlines,
+  including those inside a CONTINUATIO. But `initium_lineae` counts
+  LOGICAL lines, so a CONTINUATIO must NOT set the "next token starts
+  a line" flag while a NOVA_LINEA must. Two counters over the same
+  bytes.
+
+### Shared tokens must not advance the cursor twice
+
+An AMBIGUUS emits every arm, and the arms cover the SAME source bytes.
+Walking both would advance the cursor twice and slide everything after
+it. Since resolution makes shared tokens the same object, the guard is
+"already placed → skip", which falls out naturally from identity being
+preserved rather than needing separate bookkeeping.
+
+### Splitting the derivation made the authored case honest
+
+First cut gated the whole walk on the anchor, so an anchorless
+document got no derived fields at all — and the round-trip test then
+diverged at `lexema/initium-lineae` rather than the provenance I
+expected (third wrong guess; printing settled it again).
+
+That was a design smell, not just a test problem. `initium_lineae` and
+`longitudo` derive from **trivia and valor**, not from any anchor.
+Only coordinates need one. Split accordingly: line structure is always
+derived, coordinates only when anchored. Now "no anchor" means "no
+coordinates" rather than "nothing derived", and an authored tree —
+Fran's case — gets everything that is actually knowable about it.
+
+### Planted faults against my OWN success
+
+Full fidelity equality on the first run is suspicious, so the passing
+result was attacked:
+
+| planted | result |
+|---|---|
+| anchor `b="0"` → `b="500"` | fidelity diverges at `lexema/offset`; structural still equal |
+| anchor attribute removed | coordinates stay -1, comparator refuses at `lexema/provenientia`, line structure still derived |
+| transclusion id → unknown | refused: "transclusio ad fragmentum ignotum" |
+
+The first is the important one: without it, "positions match" could
+mean "derivation works" OR "the comparator never looked". Moving the
+anchor proves the derived coordinates actually flow from it.
+
+### Identity, asserted as identity
+
+The AMBIGUUS document now loads, and the test asserts the two arms are
+**different node objects** whose first tokens are **the same pointer**
+(`CREDO_AEQUALIS_PTR`). Equality of content would have passed with
+duplicated tokens; only pointer equality shows sharing survived.

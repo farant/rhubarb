@@ -13127,3 +13127,78 @@ transclusionum. Consilium: positiones per PRIMITIVUM emissionis
 (silva_lexema_emittere_in) derivare, NON per ambulationem
 numerantem alteram - aliter fons veritatis secundus qui in
 ordinatas falsas tacite divergeret.
+
+## 2026-08-20 — T5b arboris: fixurae + resolutio transclusionum
+
+DCLXXXIII assertiones virides (XVII novae). **ORACULUM A NUNC
+VIVIT**: parsare -> scribere -> legere -> silva_arbor_aequalis
+modo FIDELITATIS AEQUALES reddit, positionibus inclusis. Detail:
+silva/fontes/silva_arbor.worklog.md.
+
+**PATER VOCATIO ERAT, non ambulatio.** Planum 'patrem recomputare'
+ut gradum enumerat. Non est: silva_committere id iam agit - caput
+eius dicit 'oraculum/resolutor NIHIL licent (tunc nulla resolutio -
+pater + normalizatio SOLAE)'. Ergo fixura patris et commissio quae
+arborem lectam interrogabilem facit OPERATIO EADEM sunt, et lector
+eam simpliciter vocat. Decem secundae capitis legendi gradum totum
+abstulerunt - cognatum regulae domus de narrationibus ad IUNCTURAM
+pretiandis, non ex memoria.
+
+**POSITIONES: implementum SECUNDUM, sed PORTATUM.** Speraveram
+silva_lexema_emittere_in reusurum ne fons veritatis secundus
+oriretur - sed illud ante+valorem+post ut MASSAM UNAM emittit et
+positiones intermedias non dat, et positiones PER COMPONENTEM sunt
+prorsus quod opus est. Ergo scanner vere implementum secundum est.
+Quod eum honestum servat: porta circuitus fructum eius contra
+LEXATOREM ipsum confert, in omni fixtura ad T6. Dissimile tabulae
+orthographiae, hic fons secundus oraculum habet quod eum DIRECTE
+iudicat, non per vicarium.
+
+Duo quae scanner recte agere debet, scribendo inventa non legendo:
+(i) SCISSURAE numerandae sunt - valor MUNDUS est, laminae emissione
+reinseruntur, ergo eis praeteritis omnia post lexema lamina-ferens
+labuntur; (ii) LINEAE LOGICAE contra PHYSICAS - 'linea' novas
+lineas physicas numerat, CONTINUATIONE inclusa, sed initium_lineae
+lineas LOGICAS numerat, ergo CONTINUATIO vexillum 'lexema proximum
+lineam incipit' poni NON debet, NOVA_LINEA debet. Duo numeratores
+super eosdem octetos.
+
+**LEXEMATA COMMUNICATA CURSOREM BIS PROMOVERE NON DEBENT.** AMBIGUUS
+bracchia omnia emittit, et bracchia eosdem octetos fontis tegunt.
+Ambo ambulata cursorem bis promoverent. Cum resolutio lexemata
+communicata OBIECTUM IDEM faciat, custodia 'iam positum -> praeteri'
+ex IDENTITATE SERVATA sponte cadit, sine ratiocinio separato.
+
+**DERIVATIONE SCISSA CASUS AUCTORATUS HONESTUS FACTUS EST.** Prima
+forma ambulationem TOTAM ancora custodiebat, ergo documentum sine
+ancora nullos campos derivatos accipiebat - et probatio circuitus
+tunc ad 'lexema/initium-lineae' divergebat, non ad provenientiam
+quam exspectabam (tertia coniectura falsa; impressio rem iterum
+solvit). Id vitium CONSILII erat, non probationis: initium_lineae et
+longitudo ex TRIVIIS et VALORE derivantur, non ex ancora ulla.
+ORDINATAE solae ancoram petunt. Scissum: structura linearum semper
+derivatur, ordinatae solum cum ancora. Nunc 'sine ancora' significat
+'sine ordinatis', non 'nihil derivatum', et arbor AUCTORATA (casus
+Frani) omnia accipit quae de ea sciri possunt.
+
+**VITIA PLANTATA CONTRA SUCCESSUM MEUM IPSIUS.** Aequalitas plena
+primo cursu suspecta est, ergo fructus transiens oppugnatus est:
+ancora b="0" -> b="500" = fidelitas ad 'lexema/offset' divergit,
+structura aequalis manet; ancora ABLATA = ordinatae -I manent,
+comparator ad 'lexema/provenientia' recusat, structura linearum
+tamen derivata; id transclusionis ignotum = 'transclusio ad
+fragmentum ignotum'. PRIMUM maximi momenti est: sine eo
+'positiones congruunt' significare posset 'derivatio operatur' AUT
+'comparator numquam inspexit'.
+
+**IDENTITAS UT IDENTITAS ASSERTA.** Documentum AMBIGUUM nunc
+legitur, et probatio asserit bracchia OBIECTA DIVERSA esse quorum
+lexemata prima MONSTRATOR IDEM sint (CREDO_AEQUALIS_PTR).
+Aequalitas contenti cum lexematibus duplicatis transisset; sola
+aequalitas monstratorum communicationem supervixisse ostendit.
+
+**Proximum:** T6 - porta M1: oraculum A super LXXVIII fixturas +
+oraculum B (circuitus octetorum per silva_scribere_nodum, quod
+dominium geminum triviorum capit ubi comparator caecus est) +
+recensio repraesentationalis (quid circuitum NON supervixerit,
+nominatim, in worklog).
