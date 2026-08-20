@@ -16,13 +16,33 @@
 #       (proiectum: silva | tessera | officina)
 
 set -u
+# Ordinatio LOCO immunis: derivatio per sort/comm currit, et fructus
+# OCTETIM confertur (porta -probare infra). Sine hoc, machinae
+# duae locis diversis manifesta diversa derivare possunt et porta
+# rancorem falsum clamet. (Scriptor excludendorum idem iam per
+# 'LC_ALL=C sort' in loco suo facit.)
+export LC_ALL=C
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
 si_fracta() { echo "amalgama_fontes_generare: $1" >&2; exit 1; }
 
-[ $# -eq 1 ] || si_fracta "usus: amalgama_fontes_generare.sh <proiectum>"
-PROIECTUM="$1"
+# -probare: derivare et CONFERRE, nihil scribere (porta vetustatis).
+# Exitus: 0 = recens, 1 = rancidum (regeneratio debetur).
+PROBARE=0
+PROIECTUM=""
+for arg in "$@"; do
+    case "$arg" in
+        -probare) PROBARE=1 ;;
+        -*)       si_fracta "vexillum ignotum: $arg" ;;
+        *)
+            [ -z "$PROIECTUM" ] || si_fracta "proiectum bis datum"
+            PROIECTUM="$arg"
+            ;;
+    esac
+done
+[ -n "$PROIECTUM" ] \
+    || si_fracta "usus: amalgama_fontes_generare.sh [-probare] <proiectum>"
 SEDES="$PROIECTUM/instrumenta/principalia"
 POLITICA="$SEDES/fontes_politica.sh"
 EXITUS="$SEDES/fontes_generata.h"
@@ -194,5 +214,28 @@ _ordines_emittere() {  # $1 = ordo.txt, $2 = est_corpus, $3 = est_vendicata
     echo "};"
 } > "$STATIO/fontes_generata.h.novum"
 
+CAPITA_N=$(wc -l < "$STATIO/capita_ordo.txt" | tr -d ' ')
+CORPORA_N=$(cat "$STATIO/ov_ordo.txt" "$STATIO/op_ordo.txt" | wc -l | tr -d ' ')
+
+if [ "$PROBARE" -eq 1 ]; then
+    # Scriptor hic per se IDEMPOTENS est: praelationem ex EXITU
+    # commisso legit (supra), ergo arbore immota ordinem eundem
+    # reddit ex CONSTRUCTIONE, non forte. Ideo confertio nuda
+    # sufficit - nulla normalizatio, nullum signum temporis.
+    if [ ! -f "$EXITUS" ]; then
+        echo "amalgama_fontes_generare ($PROIECTUM): RANCIDUM - $EXITUS deest"
+        exit 1
+    fi
+    if cmp -s "$STATIO/fontes_generata.h.novum" "$EXITUS"; then
+        echo "amalgama_fontes_generare ($PROIECTUM): recens ($CAPITA_N capita, $CORPORA_N corpora)"
+        exit 0
+    fi
+    echo "amalgama_fontes_generare ($PROIECTUM): RANCIDUM - $EXITUS derivationi non congruit"
+    diff "$EXITUS" "$STATIO/fontes_generata.h.novum" \
+        | grep -E '^[<>].*\{ "' | head -8
+    echo "  regenera: ./tools/amalgama_fontes_generare.sh $PROIECTUM"
+    exit 1
+fi
+
 mv "$STATIO/fontes_generata.h.novum" "$EXITUS"
-echo "amalgama_fontes_generare ($PROIECTUM): $EXITUS ($(wc -l < "$STATIO/capita_ordo.txt" | tr -d ' ') capita, $(cat "$STATIO/ov_ordo.txt" "$STATIO/op_ordo.txt" | wc -l | tr -d ' ') corpora)"
+echo "amalgama_fontes_generare ($PROIECTUM): $EXITUS ($CAPITA_N capita, $CORPORA_N corpora)"

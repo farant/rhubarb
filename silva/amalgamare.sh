@@ -33,6 +33,38 @@ declare -a INCLUDE_FLAGS=(
     "-I$SILVA_DIR/fontes"
 )
 
+# ---- 0. PORTA VETUSTATIS: manifesta derivationi congruere ----
+# amalgamare.sh manifesta sua NON regenerat - ex COMMISSIS struit.
+# Ergo modulus novus in fontibus (aut vocator novus functionis
+# vendicatae) sine regeneratione = amalgama tacite FALSA quae portas
+# I-VI omnes transit, quia nihil quod abest quaeritur.
+#
+# MENSURATUM 2026-08-20 (die quo haec porta nata est): manifestum
+# fontium ab 7ba8d84 rancidum iacuerat - postulata_posix.h in
+# clausura silvae erat, in manifesto aberat - et nemo id viderat.
+# Porta id primo cursu invenit.
+#
+# Confertio INCONDITA (non per mtime, non 'si plagula nova apparet'):
+# excludenda etiam tunc mutantur cum functio vendicata iam nota
+# vocatorem novum accipit, quod nulla plagula nova prodit.
+#
+# Prius omnibus: fractura hic nata est ante quam quicquam struitur,
+# ne opus perfectum abiciatur.
+echo "  [porta 0] vetustas manifestorum"
+if ! "$RADIX_DIR/tools/amalgama_fontes_generare.sh" -probare silva \
+        > "$BUILD_DIR/vetustas_fontium.txt" 2>&1; then
+    echo "amalgamare: FRACTA - manifestum FONTIUM rancidum:"
+    grep -v '^  \[dep\]\|^  \[amalgama\]\|paratum$' \
+        "$BUILD_DIR/vetustas_fontium.txt" | head -12
+    exit 1
+fi
+if ! "$RADIX_DIR/tools/amalgama_excludenda_generare.sh" -probare silva \
+        > "$BUILD_DIR/vetustas_excludendorum.txt" 2>&1; then
+    echo "amalgamare: FRACTA - manifestum EXCLUDENDORUM rancidum:"
+    grep -v '^  gyrus ' "$BUILD_DIR/vetustas_excludendorum.txt" | head -12
+    exit 1
+fi
+
 # ---- 1. dependency objects (rhubarb libs + the silva lexer) ----
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
