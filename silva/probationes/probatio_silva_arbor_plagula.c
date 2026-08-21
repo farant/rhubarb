@@ -497,6 +497,27 @@ _plagulam_probare (
         redde;
     }
 
+    {
+        /* Documentum plagulae NOMINATAE effundere, EXITU QUOLIBET -
+         * inspectio, non diagnosis. ARBOR_DEFIGERE_NOMEN=<pars viae>
+         * cum ARBOR_DEFIGERE=<via exitus>. */
+        constans character* petitum = getenv("ARBOR_DEFIGERE_NOMEN");
+
+        si (   petitum != NIHIL
+            && getenv("ARBOR_DEFIGERE") != NIHIL
+            && strstr(via, petitum) != NIHIL)
+        {
+            FILE* ef = fopen(getenv("ARBOR_DEFIGERE"), "wb");
+
+            si (ef != NIHIL)
+            {
+                fwrite(scriptura.textus.datum, I,
+                    (memoriae_index)scriptura.textus.mensura, ef);
+                fclose(ef);
+            }
+        }
+    }
+
     lecta = silva_arbor_legere_parsuram(opus, NIHIL, scriptura.textus,
         &SILVA_C89_REGISTRUM, "c89", &vitium);
     si (lecta == NIHIL)
