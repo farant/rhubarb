@@ -13654,3 +13654,36 @@ M2 §3 proiectio canonis independens manet.
 PRAE-EXSTANTIA (mtime probatum, XIX Aug - ANTE hanc sessionem):
 probatio_natura_glossae cadit quia bin/natura_glossae lib/stml.c
 antiquius est (./tools/natura_struere.sh); planta_lectio nota flaky.
+
+## RELATIO — M2 §2 PERFECTUM (T8 amalgama), 2026-08-21
+
+Superficies parsurae in silva.h publicata; exercitium hospitis
+octetim-exactum additum (XXXVIII/XXXVIII -> XXXIX/XXXIX).
+
+M2 §2 TOTUM (T1-T8) PERFECTUM:
+  M1 subarbores      CCLXXXI/CCLXXXI ambo oracula
+  M2 planum (LXXVIII) LXXVIII/LXXVIII ambo
+  M2 latinizatum (CLIV) CLIV/CLIV ambo
+  casus adversarii    XXIV/XXIV
+  hospes per caput    XXXIX/XXXIX
+  silva probationes   XLVI/XLVI
+
+CALIBRATIO PORTAM SECUNDAM APERUIT: plano dicente hospitem SOLUM
+prototypa contra corpora probare, vitium plantatum in MESSE
+EXCLUDENDORUM primum cecidit (amalgama_messis.c caput iuxta corpora
+quoque compilat). Hospes seorsum probatus vitium INDEPENDENTER capit,
+diagnostico meliore (sedem vocationis ET declarationem nominat).
+Praemissa plani stala; portae DUAE sunt.
+
+LEX: fractura PRIMA interroganda est, non accipienda. Si aedificatione
+abrupta contentus fuissem, portam quam calibrare volebam numquam
+probavissem - et 'porta tacita = porta mortua' rursus latuisset.
+
+RESTANT in parco arboris: M2 §3 (proiectio canonis - independens,
+emendationem canon-lateris 'adstricta' petens) et M3 (explorator, §3a
+visionis - super exitum M1, laboratorio primum; sketch 'fons oculus'
+inspiciendus ANTE aedificationem).
+
+INSTRUMENTUM NOVUM hodie: ./silva/arbor.sh <plagula.c> documentum in
+stdout scribit (-nudum sine clausura, -tacitus sine compendio).
+Mensurat quoque: lexemata, expansa, ambigui, errores.
