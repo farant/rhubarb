@@ -1627,6 +1627,98 @@ int main(void)
         }
     }
 
+    /* PARSURA: circuitus OCTETIM EXACTUS per silva.h (M2).
+     *
+     * Eadem ratio qua exercitium arboris supra, sed superficies M2 -
+     * et oraculum FORTIUS: valor expectatus non est exitus silvae sed
+     * FONS IPSE. Si prototypa parsurae a corporibus amalgamatis
+     * divergunt, hoc solum id capit; silva.c caput non includit.
+     *
+     * Fons directivam, macrum functio-simile, et macrum VACUUM fert:
+     * tria quae extra arborem nodorum vivunt (linea directivae
+     * consumpta, extentum invocationis, invocatio nihil pariens).
+     * Sine iis circuitus arborem solam probaret. */
+    {
+        const char* fons =
+            "#define BIS(x) ((x) + (x))\n"
+            "#define NIHIL_AGERE(x)\n"
+            "NIHIL_AGERE(y)\n"
+            "int n = BIS(3);\n";
+        SilvaParsura*   parsura;
+        SilvaParsura*   lecta;
+        SilvaArborScriptura   scriptura;
+        SilvaArborVitium      vitium;
+        SilvaArborDifferentia differentia;
+        SilvaScriptura  emissio;
+        unsigned int    mensura;
+        int             bene_parsura = 0;
+
+        summa++;
+        mensura = (unsigned int)strlen(fons);
+        parsura = silva_parsare(piscina, "hospes-parsura.c", fons,
+            mensura, &SILVA_C89_GRAMMATICA, NULL, NULL, NULL);
+        if (parsura != NULL && parsura->commissio != NULL)
+        {
+            scriptura = silva_arbor_scribere_parsuram(piscina, parsura,
+                &SILVA_C89_REGISTRUM, "c89", parsura->fons_princeps,
+                NULL);
+            if (!scriptura.successus)
+            {
+                fprintf(stderr, "hospes: parsura scriptura: %s\n",
+                    scriptura.causa ? scriptura.causa : "(nulla)");
+            }
+            else
+            {
+                lecta = silva_arbor_legere_parsuram(piscina, NULL,
+                    scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
+                    &vitium);
+                if (lecta == NULL)
+                {
+                    fprintf(stderr, "hospes: parsura recusata: %s\n",
+                        vitium.causa ? vitium.causa : "(nulla)");
+                }
+                else
+                {
+                    emissio = silva_scribere_fontem(piscina, lecta,
+                        &SILVA_C89_REGISTRUM, lecta->fons_princeps);
+                    if (emissio.successus
+                        && emissio.textus.mensura == mensura
+                        && memcmp(emissio.textus.datum, fons,
+                               (size_t)mensura) == 0
+                        && silva_arbor_parsurae_aequales(parsura, lecta,
+                               SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                               &differentia))
+                    {
+                        bene_parsura = 1;
+                    }
+                    else if (!emissio.successus)
+                    {
+                        fprintf(stderr, "hospes: emissio: %s\n",
+                            emissio.causa ? emissio.causa : "(nulla)");
+                    }
+                    else
+                    {
+                        fprintf(stderr,
+                            "hospes: parsura divergens: %s "
+                            "(octeti %u contra %u)\n",
+                            differentia.campus ? differentia.campus
+                                               : "(octeti)",
+                            emissio.textus.mensura, mensura);
+                    }
+                }
+            }
+        }
+
+        if (bene_parsura)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: parsura circuitus\n");
+        }
+    }
+
     /* telemetria arenae */
     {
         size_t usus = silva_piscina_summa_usus(piscina);

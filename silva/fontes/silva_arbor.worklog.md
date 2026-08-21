@@ -1321,3 +1321,66 @@ two days before this session): `probatio_natura_glossae` fails because
 `bin/natura_glossae` is older than `lib/stml.c` (needs
 `./tools/natura_struere.sh`); `probatio_planta_lectio` is the known
 flaky. Root suite otherwise 134 passing.
+
+## 2026-08-21 — T8: amalgam integration. M2 §2 COMPLETE.
+
+The whole M2 surface was invisible to hosts: `silva.h` exposed M1's
+subtree API and none of the parsura API. Everything T1–T7 built was
+unreachable from outside silva.
+
+Three prototypes added (`scribere_parsuram`, `legere_parsuram`,
+`parsurae_aequales`), in vanilla C89 with English comments, matching the
+header's host-facing convention. All six types were already public and
+already `CADENDA_TYPEDEF`-listed from M1's work, and both manifests
+regenerated with zero drift — so steps 1 and 3 cost nothing.
+
+**The hospes exercise is the part that matters.** `silva.c` does not
+include `silva.h`, so a prototype that disagrees with its body is caught
+by *no* compilation — you can add declarations, watch every gate go
+green, and have proven only that the header parses. The new exercise
+runs a full round trip through the header and compares against the
+**source bytes**, not against silva's own output:
+
+```
+#define BIS(x) ((x) + (x))
+#define NIHIL_AGERE(x)
+NIHIL_AGERE(y)
+int n = BIS(3);
+```
+
+Four lines chosen so the three things that live *outside* the node tree
+are all present: a consumed directive line, a function-like invocation
+extent, and an invocation whose expansion produces nothing. Without
+them the round trip would only exercise the tree. hospes 38/38 → 39/39.
+
+### Calibration found a second gate
+
+Planted `const char* grammatica` → `int` and rebuilt. It failed — but in
+`amalgama_messis.c`, the **excludenda harvest**, which also compiles the
+header alongside the bodies. The build aborted before hospes ran, so
+that told us nothing about hospes itself.
+
+Compiling hospes alone against the faulty header confirmed it catches
+the fault independently, with the better diagnostic — naming both the
+call site (`hospes.c:1663`) and the declaration (`silva.h:1970`), where
+the harvest says only "conflicting types".
+
+**So the plan's premise — that hospes is the only thing checking
+prototypes against bodies — is outdated. There are two.** Worth knowing:
+a green build after a header edit is load-bearing evidence from two
+independent directions, not one. But the calibration only proved that
+because the first failure was interrogated rather than accepted.
+
+### M2 §2 final state
+
+| gate | result |
+|---|---|
+| M1 subtrees | 281/281 both oracles |
+| M2 plain C (78) | 78/78 both oracles |
+| M2 latinized (154) | **154/154 both oracles** |
+| adversarial cases | 24/24 |
+| hospes (through silva.h) | **39/39** |
+| silva suite | 46/46 |
+
+Remaining in the arbor project: M2 §3 (canon projection, independent,
+blocked on canon-side `adstricta` uniqueness) and M3 (the explorer).

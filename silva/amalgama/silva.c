@@ -1957,6 +1957,44 @@ SilvaNodus* silva_arbor_legere(SilvaPiscina* piscina,
     const SilvaRegistrumCoctum* tabularium, const char* grammatica,
     SilvaArborVitium* vitium);
 
+/* WHOLE-FILE serialization (M2). The node surface above projects a
+ * SUBTREE; this projects an entire SilvaParsura, which additionally
+ * carries everything living OUTSIDE the node tree: consumed directive
+ * lines, conditional regions with their untaken arms, the EOF token's
+ * trailing trivia, the fons index->path table, function-like macro
+ * invocation extents, and invocations whose expansion produced no
+ * tokens at all.
+ *
+ * The round trip
+ *     parse -> scribere_parsuram -> legere_parsuram -> scribere_fontem
+ * reproduces the source file BYTE FOR BYTE. Verified over 232 files
+ * (78 plain C + 154 latinized), matching what silva's own emitter
+ * achieves without STML in the loop.
+ *
+ * fons_index selects WHICH file to project: a parse spans its whole
+ * include closure, and the document describes one file of it - pass
+ * parsura->fons_princeps for the main source. The document therefore
+ * carries only that file's directives, which is why comparing whole-
+ * parse totals against a loaded document is comparing unlike things.
+ *
+ * intern may be NULL (lazily created). */
+SilvaArborScriptura silva_arbor_scribere_parsuram(SilvaPiscina* piscina,
+    const SilvaParsura* parsura, const SilvaRegistrumCoctum* tabularium,
+    const char* grammatica, int fons_index,
+    SilvaInternamentumChorda* intern);
+
+SilvaParsura* silva_arbor_legere_parsuram(SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern, SilvaChorda textus,
+    const SilvaRegistrumCoctum* tabularium, const char* grammatica,
+    SilvaArborVitium* vitium);
+
+/* Parsura comparison, same two modes as silva_arbor_aequalis. Names
+ * the FIRST divergence rather than returning a bare boolean: over a
+ * corpus, an unnamed failure is a manual bisect. */
+int silva_arbor_parsurae_aequales(const SilvaParsura* a,
+    const SilvaParsura* b, SilvaArborComparatioModus modus,
+    SilvaArborDifferentia* differentia);
+
 #endif /* SILVA_H */
 
 /* ================= ex include/latina.h ================= */
