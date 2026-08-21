@@ -640,6 +640,7 @@ _numerare_lexema (
     casus SILVA_ORIGO_PASTA:
         _numerare_lexema(scriptor, lexema->origo.datum.pasta.sinister);
         _numerare_lexema(scriptor, lexema->origo.datum.pasta.dexter);
+        _numerare_lexema(scriptor, lexema->origo.datum.pasta.invocatio);
         frange;
     casus SILVA_ORIGO_CHORDA:
         _numerare_lexema(scriptor,
@@ -1041,12 +1042,14 @@ _origo_scribere (
         constans chorda* titulus_macro;
     constans SilvaToken* primus;
     constans SilvaToken* secundus;
+    constans SilvaToken* tertius;
     constans SilvaToken* definitio;
               StmlNodus* elem;
               StmlNodus* scriptum;
 
     primus     = NIHIL;
     secundus   = NIHIL;
+    tertius    = NIHIL;
     definitio  = NIHIL;
 
     commutatio (origo->genus)
@@ -1064,6 +1067,10 @@ _origo_scribere (
         titulus_macro  = origo->datum.pasta.nomen_macro;
         primus         = origo->datum.pasta.sinister;
         secundus       = origo->datum.pasta.dexter;
+        /* TERTIUS = invocatio (ancora emissionis). Parentes
+         * PROVENIENTIA sunt et ex corpore venire possunt; sola
+         * invocatio ad octetos usus ducit. */
+        tertius        = origo->datum.pasta.invocatio;
         frange;
     casus SILVA_ORIGO_CHORDA:
         tag            = SILVA_ARBOR_TAG_STRINGIFICATIO;
@@ -1147,6 +1154,33 @@ _origo_scribere (
         {
             scriptor->causa = "dexter in originem addi non potuit";
             redde FALSUM;
+        }
+    }
+    si (tertius != NIHIL)
+    {
+        scriptum = _scribere_lexema(scriptor, tertius);
+        si (scriptum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!stml_liberum_addere(elem, scriptum))
+        {
+            scriptor->causa = "invocatio pastae addi non potuit";
+            redde FALSUM;
+        }
+        /* Extentum invocationis PASTAE - eadem ratio qua EXPANSIO */
+        si (scriptum->genus != STML_NODUS_TRANSCLUSIO)
+        {
+            Xar* lamina = _extentum_laminam_quaerere(scriptor->expansio,
+                tertius);
+
+            si (lamina != NIHIL && xar_numerus(lamina) > I)
+            {
+                si (!_extentum_scribere(scriptor, elem, lamina))
+                {
+                    redde FALSUM;
+                }
+            }
         }
     }
     si (!stml_liberum_addere(elementum, elem))
@@ -2314,6 +2348,7 @@ _origo_legere (
     SilvaOrigoGenus  genus;
          SilvaToken* primus;
          SilvaToken* secundus;
+         SilvaToken* tertius;
          SilvaToken* definitio;
           StmlNodus* liberum;
              chorda* attributum;
@@ -2324,6 +2359,7 @@ _origo_legere (
 
     primus        = NIHIL;
     secundus      = NIHIL;
+    tertius       = NIHIL;
     definitio     = NIHIL;
     fragmenti_id  = NIHIL;
 
@@ -2384,7 +2420,8 @@ _origo_legere (
             && chorda_aequalis_literis(*liberum->titulus,
                    SILVA_ARBOR_TAG_EXTENTUM))
         {
-            si (!_extentum_legere(lector, liberum, primus))
+            si (!_extentum_legere(lector, liberum,
+                     (genus == SILVA_ORIGO_PASTA) ? tertius : primus))
             {
                 redde FALSUM;
             }
@@ -2418,6 +2455,10 @@ _origo_legere (
         alioquin si (secundus == NIHIL)
         {
             secundus = lectum;
+        }
+        alioquin si (tertius == NIHIL)
+        {
+            tertius = lectum;
         }
     }
 
@@ -2464,6 +2505,7 @@ _origo_legere (
     casus SILVA_ORIGO_PASTA:
         lexema->origo.datum.pasta.sinister     = primus;
         lexema->origo.datum.pasta.dexter       = secundus;
+        lexema->origo.datum.pasta.invocatio    = tertius;
         lexema->origo.datum.pasta.nomen_macro  = titulus_macro;
         lexema->origo.datum.pasta.caecatio     = NIHIL;
         frange;
@@ -3231,7 +3273,12 @@ _positiones_lexematis (
             invocatio = lexema->origo.datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            invocatio = lexema->origo.datum.pasta.sinister;
+            /* Invocatio VERA, non sinister: parens ex CORPORE
+             * venire potest, invocatio semper ex usu. Ante campum
+             * 'invocatio' sinister proximum erat quod habebamus. */
+            invocatio = lexema->origo.datum.pasta.invocatio
+                      ? lexema->origo.datum.pasta.invocatio
+                      : lexema->origo.datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
             invocatio = lexema->origo.datum.stringificatio.primus;
@@ -3759,7 +3806,9 @@ _parsura_lexema_emissionis (
             proximum = lexema->origo.datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            proximum = lexema->origo.datum.pasta.sinister;
+            proximum = lexema->origo.datum.pasta.invocatio
+                     ? lexema->origo.datum.pasta.invocatio
+                     : lexema->origo.datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
             proximum = lexema->origo.datum.stringificatio.primus;

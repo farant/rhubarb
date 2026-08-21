@@ -880,11 +880,14 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_latinus.clausurae_truncatae, ZEPHYRUM);
 
     /* ORACULUM SEPARANS: emissio DIRECTA (silva sola, sine STML).
-     * CLIII quia arbor2_glr_tabula.c (tabula GLR generata, MDLI KB)
-     * emissionem SILVAE IPSIUS non superat - vitium NUCLEI, extra
-     * hanc phasim. Si HIC numerus cadit, vitium silvae est; si
-     * OCTETIM EXACTAE solae cadunt, nostrum. */
-    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 153);
+     * CLIV = PLENUM. Fuit CLIII dum arbor2_glr_tabula.c (tabula GLR
+     * generata, MDLI KB) emissionem recusaret; causa NON erat
+     * memoria ut coniectatum est, sed deferral PASTAE - tabula
+     * generata '##' plena est. Campo 'invocatio' armae PASTAE
+     * addito, silva plagulas OMNES emittit.
+     * Si HIC numerus cadit, vitium silvae est; si OCTETIM EXACTAE
+     * solae cadunt, nostrum. */
+    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 154);
 
     /* PROIECTIO NIHIL AMITTIT: circuitus STML numerum silvae
      * AEQUAT. Quidquid silva emittere potest, per STML circuit. */
@@ -893,7 +896,10 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.emissio_recusata, ZEPHYRUM);
 
-    /* Una recusatio lectionis: eadem plagula arbor2_glr_tabula.c */
+    /* Una recusatio lectionis, adhuc arbor2_glr_tabula.c sed causa
+     * ALIA: 'transclusio ad fragmentum ignotum' in lectore NOSTRO
+     * (documentum MDCCCXVI milia linearum). Vitium PASTAE solutum
+     * est; hoc separatum manet. */
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, I);
 
     /* Comparator nusquam caecus */

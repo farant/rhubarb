@@ -149,6 +149,25 @@ _radix_probata (SilvaToken* token, b32* impurum_out)
                  * deferral coegit, vectis maximalista) */
                 token = token->origo.datum.stringificatio.primus;
                 frange;
+            casus SILVA_ORIGO_PASTA:
+                /* PASTA: invocationem sequi, NON parentes.
+                 *
+                 * Parens uterque ex CORPORE macri venire potest
+                 * ('#define C(a) pre##a' - 'pre' def-site est,
+                 * 'a' argumentum substitutum), ergo a parentibus
+                 * ad usum semita non semper ducit: id est quod
+                 * nota vetus 'radix trans plagulam definitionis
+                 * errare potest' dicebat. Campus 'invocatio'
+                 * (arma PASTAE additus) semitam rectam dat,
+                 * sicut EXPANSIO iam habebat. Sine eo (lexema
+                 * vetus) recusatio nominata manet. */
+                si (token->origo.datum.pasta.invocatio == NIHIL)
+                {
+                    *impurum_out = VERUM;
+                    redde token;
+                }
+                token = token->origo.datum.pasta.invocatio;
+                frange;
             ordinarius:
                 *impurum_out = VERUM;
                 redde token;

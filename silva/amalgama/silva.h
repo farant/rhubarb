@@ -204,6 +204,7 @@ typedef struct SilvaOrigo {
         struct {
             SilvaToken*    sinister;
             SilvaToken*    dexter;
+            SilvaToken*    invocatio;
             SilvaChorda*   nomen_macro;
             SilvaCaecatio* caecatio;
         } pasta;

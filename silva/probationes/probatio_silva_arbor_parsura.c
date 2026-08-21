@@ -760,9 +760,10 @@ principale (vacuum)
               "NOSTRUM: extentum pro origine CHORDA non scribitur "
               "(silva sola TRANSIT - vide _extentum_continens)" },
             { "pasta",
-              "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n", FALSUM,
-              "SILVA: deferral NOMINATUM (silva_scribere.h) - PASTA in "
-              "catena = fractura clara" },
+              "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n", VERUM, NIHIL },
+            { "pasta parente ex CORPORE",
+              "#define C(a) pre##a\nint prex = 0;\nint n = C(x);\n",
+              VERUM, NIHIL },
 
             /* --- lacunae et regiones --- */
             { "directiva intra regionem",

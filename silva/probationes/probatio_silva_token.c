@@ -138,12 +138,14 @@ s32 principale (vacuum)
 
         pasta = silva_token_ex_pasta(piscina, SILVA_LEX_IDENTIFICATOR,
             chorda_ex_literis("silva_crescat", piscina),
-            sinister, dexter, titulus, NIHIL);
+            sinister, dexter, sinister, titulus, NIHIL);
 
         CREDO_CHORDA_AEQUALIS_LITERIS (pasta->valor, "silva_crescat");
         CREDO_AEQUALIS_I32 ((i32)pasta->origo.genus, (i32)SILVA_ORIGO_PASTA);
         CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.sinister, sinister);
         CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.dexter, dexter);
+        /* ANCORA EMISSIONIS servata et a parentibus distincta */
+        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.invocatio, sinister);
 
         /* Radix sequitur sinistrum (catena primaria) */
         CREDO_AEQUALIS_PTR (silva_token_radix(pasta), sinister);

@@ -217,6 +217,7 @@ typedef struct SilvaOrigo {
         struct {
             SilvaToken*    sinister;
             SilvaToken*    dexter;
+            SilvaToken*    invocatio;
             SilvaChorda*   nomen_macro;
             SilvaCaecatio* caecatio;
         } pasta;
@@ -3588,7 +3589,14 @@ silva_token_ex_expansione (
     SilvaChorda*        nomen_macro,
     SilvaCaecatio* caecatio);
 
-/* Lexema ex ## - textus novus, parentes ambo servati */
+/* Lexema ex ## - textus novus, parentes ambo servati.
+ *
+ * 'invocatio' ANCORA EMISSIONIS est, non provenientia: sinister et
+ * dexter dicunt QUID glutinatum sit (visio ea solario ostendit),
+ * invocatio dicit UBI in octetis id factum sit. Ambo necessaria
+ * sunt quia parens uterque ex CORPORE macri venire potest
+ * ('#define C(a) pre##a' - 'pre' def-site est), ergo a parentibus
+ * ad usum semita non semper ducit. */
 SilvaToken*
 silva_token_ex_pasta (
     SilvaPiscina*         piscina,
@@ -3596,6 +3604,7 @@ silva_token_ex_pasta (
     SilvaChorda           valor,
     SilvaToken*      sinister,
     SilvaToken*      dexter,
+    SilvaToken*      invocatio,
     SilvaChorda*          nomen_macro,
     SilvaCaecatio*   caecatio);
 
@@ -6809,6 +6818,10 @@ silva_arbor_lexema_ex_tag (
  * Catenae NESTATIONE LITTERALI - macro ex macro natum elementum
  * suum INTRA invocationem ferit. */
 #define SILVA_ARBOR_TAG_EXPANSIO       "expansio"
+/* Lamina invocationis functio-similis [nomen..')'] - sextum
+ * elementum clausurae emissionis (spec 0.1). Octeti argumentorum
+ * a NULLO lexemate arboris monstrantur, ergo PORTANDI sunt. */
+#define SILVA_ARBOR_TAG_EXTENTUM       "extentum"
 #define SILVA_ARBOR_TAG_PASTA          "pasta"
 #define SILVA_ARBOR_TAG_STRINGIFICATIO "stringificatio"
 #define SILVA_ARBOR_TAG_API            "api"
@@ -13320,6 +13333,7 @@ silva_token_ex_pasta (
     SilvaChorda           valor,
     SilvaToken*      sinister,
     SilvaToken*      dexter,
+    SilvaToken*      invocatio,
     SilvaChorda*          nomen_macro,
     SilvaCaecatio*   caecatio)
 {
@@ -13344,6 +13358,7 @@ silva_token_ex_pasta (
     token->origo.genus                  = SILVA_ORIGO_PASTA;
     token->origo.datum.pasta.sinister    = sinister;
     token->origo.datum.pasta.dexter      = dexter;
+    token->origo.datum.pasta.invocatio   = invocatio;
     token->origo.datum.pasta.nomen_macro = nomen_macro;
     token->origo.datum.pasta.caecatio    = caecatio;
 
@@ -16683,6 +16698,7 @@ _conglutinare (
     SilvaExpansio* exp,
     SilvaToken*    sinister,
     SilvaToken*    dexter,
+    SilvaToken*    invocatio,
     SilvaChorda*        nomen_macro,
     SilvaCaecatio* hs,
     SilvaXar*           exitus)
@@ -16713,7 +16729,7 @@ _conglutinare (
 
     t = *(SilvaToken**)silva_xar_obtinere(relexata, ZEPHYRUM);
     pasta = silva_token_ex_pasta(exp->piscina, t->genus, t->valor,
-        sinister, dexter, nomen_macro, hs);
+        sinister, dexter, invocatio, nomen_macro, hs);
     _lexema_addere(exitus, pasta);
 
     /* best-effort: reliqua emittuntur ut sunt */
@@ -16877,7 +16893,8 @@ _substituere (
                     silva_xar_numerus(sinistra) - I);
                 op_dex = *(SilvaToken**)silva_xar_obtinere(dextra, ZEPHYRUM);
 
-                _conglutinare(exp, op_sin, op_dex, def->titulus, hs_nova,
+                _conglutinare(exp, op_sin, op_dex, invocatio,
+                    def->titulus, hs_nova,
                     nova_sinistra);
 
                 per (j = I; j < silva_xar_numerus(dextra); j++)
@@ -40875,6 +40892,25 @@ _radix_probata (SilvaToken* token, b32* impurum_out)
                  * extentum invenit (Chunk C - corpus solarii
                  * deferral coegit, vectis maximalista) */
                 token = token->origo.datum.stringificatio.primus;
+                frange;
+            casus SILVA_ORIGO_PASTA:
+                /* PASTA: invocationem sequi, NON parentes.
+                 *
+                 * Parens uterque ex CORPORE macri venire potest
+                 * ('#define C(a) pre##a' - 'pre' def-site est,
+                 * 'a' argumentum substitutum), ergo a parentibus
+                 * ad usum semita non semper ducit: id est quod
+                 * nota vetus 'radix trans plagulam definitionis
+                 * errare potest' dicebat. Campus 'invocatio'
+                 * (arma PASTAE additus) semitam rectam dat,
+                 * sicut EXPANSIO iam habebat. Sine eo (lexema
+                 * vetus) recusatio nominata manet. */
+                si (token->origo.datum.pasta.invocatio == NIHIL)
+                {
+                    *impurum_out = VERUM;
+                    redde token;
+                }
+                token = token->origo.datum.pasta.invocatio;
                 frange;
             ordinarius:
                 *impurum_out = VERUM;
@@ -66510,6 +66546,7 @@ _numerare_lexema (
     casus SILVA_ORIGO_PASTA:
         _numerare_lexema(scriptor, lexema->origo.datum.pasta.sinister);
         _numerare_lexema(scriptor, lexema->origo.datum.pasta.dexter);
+        _numerare_lexema(scriptor, lexema->origo.datum.pasta.invocatio);
         frange;
     casus SILVA_ORIGO_CHORDA:
         _numerare_lexema(scriptor,
@@ -66808,6 +66845,84 @@ _scribere_lexema (
           ArborScriptor* scriptor,
     constans SilvaToken* lexema);
 
+/* Laminam extenti invocationis quaerere (identitas monstratoris -
+ * speculum _extentum_quaerere in silva_scribere.c; numeri parvi,
+ * scansio linearis sufficit). */
+interior SilvaXar*
+_extentum_laminam_quaerere (
+    constans SilvaExpansio* expansio,
+       constans SilvaToken* invocatio)
+{
+    i32 k;
+
+    si (   expansio           == NIHIL
+        || expansio->extenta  == NIHIL
+        || invocatio          == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(expansio->extenta); k++)
+    {
+        constans SilvaExtentumInvocationis* ext =
+            (constans SilvaExtentumInvocationis*)
+                silva_xar_obtinere(expansio->extenta, k);
+
+        si (ext != NIHIL && ext->invocatio == invocatio)
+        {
+            redde ext->lamina;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Laminam [nomen..')'] in elementum extenti scribere. Lexema primum
+ * NOMEN ipsum est - iam scriptum, ergo transclusio fit; identitas
+ * sic servatur sine duplicatione. */
+interior b32
+_extentum_scribere (
+    ArborScriptor* scriptor,
+       SilvaStmlNodus* parens,
+             SilvaXar* lamina)
+{
+    SilvaStmlNodus* elem;
+          i32  k;
+
+    elem = silva_stml_elementum_creare(scriptor->piscina, scriptor->intern,
+        SILVA_ARBOR_TAG_EXTENTUM);
+    si (elem == NIHIL)
+    {
+        scriptor->causa = "elementum extenti creari non potuit";
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(lamina); k++)
+    {
+        constans SilvaToken* t;
+                  SilvaStmlNodus* scriptum;
+
+        t = *(constans SilvaToken**)silva_xar_obtinere(lamina, k);
+        si (t == NIHIL)
+        {
+            perge;
+        }
+        scriptum = _scribere_lexema(scriptor, t);
+        si (scriptum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!silva_stml_liberum_addere(elem, scriptum))
+        {
+            scriptor->causa = "lexema in extentum addi non potuit";
+            redde FALSUM;
+        }
+    }
+    si (!silva_stml_liberum_addere(parens, elem))
+    {
+        scriptor->causa = "extentum in originem addi non potuit";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Originem lexematis in elementum eius NESTARE.
  *
  * FONS nihil fert - ~XC% lexematum nihil solvit.
@@ -66833,12 +66948,14 @@ _origo_scribere (
         constans SilvaChorda* titulus_macro;
     constans SilvaToken* primus;
     constans SilvaToken* secundus;
+    constans SilvaToken* tertius;
     constans SilvaToken* definitio;
               SilvaStmlNodus* elem;
               SilvaStmlNodus* scriptum;
 
     primus     = NIHIL;
     secundus   = NIHIL;
+    tertius    = NIHIL;
     definitio  = NIHIL;
 
     commutatio (origo->genus)
@@ -66856,6 +66973,10 @@ _origo_scribere (
         titulus_macro  = origo->datum.pasta.nomen_macro;
         primus         = origo->datum.pasta.sinister;
         secundus       = origo->datum.pasta.dexter;
+        /* TERTIUS = invocatio (ancora emissionis). Parentes
+         * PROVENIENTIA sunt et ex corpore venire possunt; sola
+         * invocatio ad octetos usus ducit. */
+        tertius        = origo->datum.pasta.invocatio;
         frange;
     casus SILVA_ORIGO_CHORDA:
         tag            = SILVA_ARBOR_TAG_STRINGIFICATIO;
@@ -66902,6 +67023,31 @@ _origo_scribere (
             scriptor->causa = "invocatio in originem addi non potuit";
             redde FALSUM;
         }
+        /* EXTENTUM INVOCATIONIS - sextum clausurae elementum.
+         *
+         * Invocatio functio-similis octetos [nomen..')'] tegit, sed
+         * lexema invocationis NOMEN SOLUM est. Argumenta, parentheses,
+         * commata a NULLO lexemate arboris monstrantur - consumpta
+         * sunt. Ergo derivari NEQUEUNT: portanda.
+         *
+         * SEMEL per invocationem: si scriptum transclusio est,
+         * invocatio iam scripta est et extentum cum ea.
+         * Macro OBIECTUM-SIMILE lamina I lexematis (nomen ipsum) fert
+         * aut nullam - nihil portandum, ergo praeteritur. */
+        si (   scriptum->genus != STML_NODUS_TRANSCLUSIO
+            && origo->genus    == SILVA_ORIGO_EXPANSIO)
+        {
+            SilvaXar* lamina = _extentum_laminam_quaerere(scriptor->expansio,
+                primus);
+
+            si (lamina != NIHIL && silva_xar_numerus(lamina) > I)
+            {
+                si (!_extentum_scribere(scriptor, elem, lamina))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
     }
     si (secundus != NIHIL)
     {
@@ -66914,6 +67060,33 @@ _origo_scribere (
         {
             scriptor->causa = "dexter in originem addi non potuit";
             redde FALSUM;
+        }
+    }
+    si (tertius != NIHIL)
+    {
+        scriptum = _scribere_lexema(scriptor, tertius);
+        si (scriptum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!silva_stml_liberum_addere(elem, scriptum))
+        {
+            scriptor->causa = "invocatio pastae addi non potuit";
+            redde FALSUM;
+        }
+        /* Extentum invocationis PASTAE - eadem ratio qua EXPANSIO */
+        si (scriptum->genus != STML_NODUS_TRANSCLUSIO)
+        {
+            SilvaXar* lamina = _extentum_laminam_quaerere(scriptor->expansio,
+                tertius);
+
+            si (lamina != NIHIL && silva_xar_numerus(lamina) > I)
+            {
+                si (!_extentum_scribere(scriptor, elem, lamina))
+                {
+                    redde FALSUM;
+                }
+            }
         }
     }
     si (!silva_stml_liberum_addere(elementum, elem))
@@ -67561,6 +67734,10 @@ nomen structura {
                   SilvaArborVitium* vitium;
                     SilvaTabulaDispersa* fragmenta;   /* id -> SilvaToken* */
                                s32  fons_ordinarius;
+    /* Expansio parsurae (M2): extenta invocationum huc inseruntur.
+     * NIHIL in lectione SUBARBORIS - documentum M1 extenta non fert
+     * (limes nominatus, non celatus). */
+                     SilvaExpansio* expansio;
 } ArborLector;
 
 /* Cursor derivationis (T5b): sedes currens in ambulatione
@@ -67583,6 +67760,12 @@ nomen structura {
     i32 linea_finalis;
     i32 columna_finalis;
     b32 post_lineam_finalis;
+    /* FONS LACUNAE. Offset sine fonte SENSU CARET: octetus CXCII
+     * plagulae II et octetus CXCII plagulae VI nihil commune
+     * habent. Sine hoc campo lacuna plagulae principis lexemati
+     * CAPITIS applicabatur et cursor trans octetos alienos
+     * saliebat (MENSURATUM T7: IV plagulae, delta DCCCXXXV). */
+    s32 fons;
 } ParsuraLacuna;
 
 nomen structura {
@@ -67595,6 +67778,12 @@ nomen structura {
     /* Lacunae, ordine offset; NIHIL = nullae (casus subarboris) */
     SilvaXar* lacunae;
     i32  lacuna_proxima;
+
+    /* Expansio, pro extentis invocationum. Derivatio EADEM octeta
+     * percurrere debet quae emissio scribit; emissor extentum
+     * consulit (silva_scribere.c: '[nomen..\')\'] lexematim'), ergo
+     * hic quoque. NIHIL = subarbor (extenta non feruntur). */
+    constans SilvaExpansio* expansio;
 } ArborCursor;
 
 /* Recusare: causam et lineam figere. Semper FALSUM reddit ut
@@ -67901,11 +68090,152 @@ _trivia_legere (
     redde VERUM;
 }
 
+/* Fontem domini triviis imponere (vide vocationem in _lexema_legere) */
+interior vacuum
+_trivia_fontem_ponere (
+    SilvaXar* series,
+    s32  fons)
+{
+    i32 i;
+    i32 quantum;
+
+    si (series == NIHIL || fons < ZEPHYRUM)
+    {
+        redde;
+    }
+    quantum = silva_xar_numerus(series);
+    per (i = ZEPHYRUM; i < quantum; i++)
+    {
+        SilvaToken** sedes;
+
+        sedes = (SilvaToken**)silva_xar_obtinere(series, i);
+        si (sedes != NIHIL && *sedes != NIHIL)
+        {
+            (*sedes)->fons_index = fons;
+        }
+    }
+}
+
 interior SilvaToken*
 _lexema_legere (
      ArborLector* lector,
        SilvaStmlNodus* elementum,
           SilvaChorda* fragmenti_id);
+
+interior SilvaStmlNodus*
+_fragmentum_aperire (
+    ArborLector*  lector,
+      SilvaStmlNodus*  elementum,
+         SilvaChorda** id_exitus);
+
+/* Extentum invocationis legere: lamina [nomen..')'] reficitur et sub
+ * invocatione sua reponitur. Emissor eam consulit ubi arbor lexemata
+ * EXPANSA fert - sine ea nomen solum emittitur et octeti argumentorum
+ * silenter pereunt (MENSURATUM T7: XIV plagulae latinae, delta
+ * octetorum semper EXACTE longitudo argumentorum cum parenthesibus,
+ * e.g. 'ROUTA_METHODUS_BIT(m)' delta III = '(m)'). */
+interior b32
+_extentum_legere (
+    ArborLector* lector,
+      SilvaStmlNodus* elementum,
+      SilvaToken* invocatio)
+{
+                          SilvaXar* lamina;
+                          i32  cursor;
+                          i32  numerus;
+    SilvaExtentumInvocationis* cella;
+
+    si (invocatio == NIHIL)
+    {
+        redde _recusare(lector, "extentum sine invocatione",
+            elementum->linea);
+    }
+    lamina = silva_xar_creare(lector->piscina, magnitudo(SilvaToken*));
+    si (lamina == NIHIL)
+    {
+        redde _recusare(lector, "lamina extenti creari non potuit",
+            elementum->linea);
+    }
+    cursor   = ZEPHYRUM;
+    numerus  = silva_stml_numerus_liberorum(elementum);
+    per (; cursor < numerus; cursor++)
+    {
+        SilvaStmlNodus* liberum;
+       SilvaToken* lectum;
+          SilvaChorda*  id;
+      SilvaToken** sedes;
+
+        liberum = silva_stml_liberum_ad_indicem(elementum, cursor);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        si (   liberum->genus != STML_NODUS_ELEMENTUM
+            && liberum->genus != STML_NODUS_TRANSCLUSIO)
+        {
+            perge;
+        }
+        id       = NIHIL;
+        liberum  = _fragmentum_aperire(lector, liberum, &id);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        lectum = _lexema_legere(lector, liberum, id);
+        si (lectum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sedes = (SilvaToken**)silva_xar_addere(lamina);
+        si (sedes == NIHIL)
+        {
+            redde _recusare(lector, "lexema in laminam addi non potuit",
+                elementum->linea);
+        }
+        *sedes = lectum;
+    }
+
+    /* LEXEMA PRIMUM LAMINAE *EST* INVOCATIO - identitas, non
+     * aequalitas.
+     *
+     * Scriptor nomen BIS scribit (semel in 'expansio', semel ut
+     * caput laminae) quia custodia transclusionis 'usus > I'
+     * petit, et lexemata laminae in arbore non sunt, ergo usum
+     * non accumulant. Lectio ergo DUO OBIECTA parit valore pari.
+     * Emissor autem extentum per IDENTITATEM MONSTRATORIS quaerit
+     * ('ext->invocatio == radix'), et derivatio alterum obiectum
+     * ponit quam emissor legit - ergo invocatio sedem numquam
+     * rectam accipit et emissio eam SILENTER OMITTIT.
+     * MENSURATUM (T7): IV plagulae, octeti invocationis absentes
+     * dum extenta ipsa recte numerarentur (A=X, B=X). Numerus par
+     * identitatem NON probat. */
+    si (silva_xar_numerus(lamina) > ZEPHYRUM)
+    {
+        SilvaToken** caput;
+
+        caput = (SilvaToken**)silva_xar_obtinere(lamina, ZEPHYRUM);
+        si (caput != NIHIL)
+        {
+            *caput = invocatio;
+        }
+    }
+
+    si (lector->expansio == NIHIL || lector->expansio->extenta == NIHIL)
+    {
+        redde _recusare(lector, "extentum sine expansione",
+            elementum->linea);
+    }
+    cella = (SilvaExtentumInvocationis*)
+        silva_xar_addere(lector->expansio->extenta);
+    si (cella == NIHIL)
+    {
+        redde _recusare(lector, "extentum addi non potuit",
+            elementum->linea);
+    }
+    cella->invocatio  = invocatio;
+    cella->lamina     = lamina;
+    redde VERUM;
+}
 
 /* Originem ex elemento nestato reficere.
  *
@@ -67924,16 +68254,20 @@ _origo_legere (
     SilvaOrigoGenus  genus;
          SilvaToken* primus;
          SilvaToken* secundus;
+         SilvaToken* tertius;
          SilvaToken* definitio;
           SilvaStmlNodus* liberum;
              SilvaChorda* attributum;
              SilvaChorda* titulus_macro;
+             SilvaChorda* fragmenti_id;
                 i32  cursor;
                 i32  numerus;
 
-    primus     = NIHIL;
-    secundus   = NIHIL;
-    definitio  = NIHIL;
+    primus        = NIHIL;
+    secundus      = NIHIL;
+    tertius       = NIHIL;
+    definitio     = NIHIL;
+    fragmenti_id  = NIHIL;
 
     si (silva_chorda_aequalis_literis(*elementum->titulus,
             SILVA_ARBOR_TAG_EXPANSIO))
@@ -67985,7 +68319,37 @@ _origo_legere (
         {
             perge;
         }
-        lectum = _lexema_legere(lector, liberum, NIHIL);
+        /* EXTENTUM: lamina [nomen..')'] invocationis functio-similis.
+         * Post invocationem ipsam stat, ergo 'primus' iam notus est. */
+        si (   liberum->genus   == STML_NODUS_ELEMENTUM
+            && liberum->titulus != NIHIL
+            && silva_chorda_aequalis_literis(*liberum->titulus,
+                   SILVA_ARBOR_TAG_EXTENTUM))
+        {
+            si (!_extentum_legere(lector, liberum,
+                     (genus == SILVA_ORIGO_PASTA) ? tertius : primus))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        /* FRAGMENTUM APERIENDUM, sicut in semita ARBORIS.
+         *
+         * Lexema invocationis saepe fragmentum est (scriptor id sub
+         * '#lexN' deponit ut transclusiones sequentes IDEM OBIECTUM
+         * inveniant - invocatio una plura lexemata expansa gignere
+         * potest). Sine apertione titulus '#lexN' ipse tag lexematis
+         * habebatur, et registrum recte nesciebat.
+         * MENSURATUM (T7): XXXI plagulae latinae hinc RECUSABANTUR.
+         * Semita arboris hoc iam agebat (vide _fragmentum_aperire in
+         * ambulatione); origo, superficies NOVA, id non hereditavit
+         * - eadem lex quae ancoram ter fefellit. */
+        liberum = _fragmentum_aperire(lector, liberum, &fragmenti_id);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        lectum = _lexema_legere(lector, liberum, fragmenti_id);
         si (lectum == NIHIL)
         {
             redde FALSUM;
@@ -67997,6 +68361,10 @@ _origo_legere (
         alioquin si (secundus == NIHIL)
         {
             secundus = lectum;
+        }
+        alioquin si (tertius == NIHIL)
+        {
+            tertius = lectum;
         }
     }
 
@@ -68043,6 +68411,7 @@ _origo_legere (
     casus SILVA_ORIGO_PASTA:
         lexema->origo.datum.pasta.sinister     = primus;
         lexema->origo.datum.pasta.dexter       = secundus;
+        lexema->origo.datum.pasta.invocatio    = tertius;
         lexema->origo.datum.pasta.nomen_macro  = titulus_macro;
         lexema->origo.datum.pasta.caecatio     = NIHIL;
         frange;
@@ -68315,6 +68684,20 @@ _lexema_legere (
             redde NIHIL;
         }
     }
+
+    /* TRIVIA FONTEM DOMINI SEQUUNTUR.
+     *
+     * Trivium in eadem plagula iacet ac lexema cui adhaeret - id
+     * DERIVABILE est, ergo portandum NON est (lex M1: documentum
+     * mentiri non possit). Sed lector trivia cum 'fons_ordinarius'
+     * creabat (vide _trivium_legere), quod fontem PRINCIPEM
+     * significat; ergo trivium capitis in principem tacite mutabatur
+     * et emissor id in plagulam falsam ponebat.
+     * MENSURATUM (T7): VII plagulae latinae hinc divergebant, omnes
+     * ad lexema NOVA_LINEA in regione degradata. Corpus planum id
+     * capere NON potuit: uno fonte, ordinarius IPSE fons est. */
+    _trivia_fontem_ponere(lexema->spatia_ante, lexema->fons_index);
+    _trivia_fontem_ponere(lexema->spatia_post, lexema->fons_index);
 
     /* Fragmentum: lexema sub ID suo deponere, ut transclusiones
      * sequentes HOC OBIECTUM inveniant */
@@ -68796,7 +69179,12 @@ _positiones_lexematis (
             invocatio = lexema->origo.datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            invocatio = lexema->origo.datum.pasta.sinister;
+            /* Invocatio VERA, non sinister: parens ex CORPORE
+             * venire potest, invocatio semper ex usu. Ante campum
+             * 'invocatio' sinister proximum erat quod habebamus. */
+            invocatio = lexema->origo.datum.pasta.invocatio
+                      ? lexema->origo.datum.pasta.invocatio
+                      : lexema->origo.datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
             invocatio = lexema->origo.datum.stringificatio.primus;
@@ -68806,7 +69194,31 @@ _positiones_lexematis (
         }
         si (invocatio != NIHIL)
         {
-            _positiones_lexematis(cursor, invocatio);
+            /* EXTENTUM: invocatio functio-similis octetos
+             * [nomen..')'] tegit, non nomen solum. Emissor totam
+             * laminam scribit; derivatio quae nomen solum promovet
+             * omnes sedes sequentes eiusdem lineae labi facit -
+             * delta EXACTE longitudo argumentorum (MENSURATUM T7).
+             * Custodia 'iam positum' dedup gratis dat: lamina inter
+             * lexemata expansa eiusdem invocationis COMMUNICATA est. */
+            SilvaXar* lamina;
+
+            lamina = _extentum_laminam_quaerere(cursor->expansio,
+                invocatio);
+            si (lamina != NIHIL && silva_xar_numerus(lamina) > I)
+            {
+                i32 k;
+
+                per (k = ZEPHYRUM; k < silva_xar_numerus(lamina); k++)
+                {
+                    _positiones_lexematis(cursor,
+                        *(SilvaToken**)silva_xar_obtinere(lamina, k));
+                }
+            }
+            alioquin
+            {
+                _positiones_lexematis(cursor, invocatio);
+            }
         }
         redde;
     }
@@ -68822,27 +69234,46 @@ _positiones_lexematis (
 
     /* LACUNAS transilire ad quas cursor pervenit. Omnis derivatio
      * per hanc functionem fluit, ergo unum punctum mutationis. */
-    dum (   cursor->lacunae != NIHIL
-         && cursor->lacuna_proxima < silva_xar_numerus(cursor->lacunae))
+    si (cursor->lacunae != NIHIL)
     {
-        ParsuraLacuna* lacuna;
+        /* Scansio LOCALIS: 'i' semper crescit (ergo nulla ansa
+         * infinita), sed 'lacuna_proxima' SOLUM committitur cum
+         * lacuna vere applicata aut plane praeterita est. Lacuna
+         * ALIENI FONTIS praetermittitur SINE commissione - alioquin
+         * lexema sequens eiusdem plagulae eam amitteret. */
+        i32 i;
 
-        lacuna = (ParsuraLacuna*)silva_xar_obtinere(cursor->lacunae,
-            cursor->lacuna_proxima);
-        si (lacuna == NIHIL || lacuna->finis <= cursor->offset)
+        i = cursor->lacuna_proxima;
+        dum (i < silva_xar_numerus(cursor->lacunae))
         {
-            cursor->lacuna_proxima++;
-            perge;
+            ParsuraLacuna* lacuna;
+
+            lacuna = (ParsuraLacuna*)silva_xar_obtinere(cursor->lacunae, i);
+            si (lacuna == NIHIL || lacuna->finis <= cursor->offset)
+            {
+                i++;
+                cursor->lacuna_proxima = i;
+                perge;
+            }
+            si (lacuna->offset > cursor->offset)
+            {
+                frange;
+            }
+            /* FONS CONGRUAT. Offset sine fonte sensu caret. */
+            si (   lacuna->fons >= ZEPHYRUM
+                && lexema->fons_index >= ZEPHYRUM
+                && lacuna->fons != lexema->fons_index)
+            {
+                i++;
+                perge;
+            }
+            cursor->offset       = lacuna->finis;
+            cursor->linea        = lacuna->linea_finalis;
+            cursor->columna      = lacuna->columna_finalis;
+            cursor->post_lineam  = lacuna->post_lineam_finalis;
+            i++;
+            cursor->lacuna_proxima = i;
         }
-        si (lacuna->offset > cursor->offset)
-        {
-            frange;
-        }
-        cursor->offset       = lacuna->finis;
-        cursor->linea        = lacuna->linea_finalis;
-        cursor->columna      = lacuna->columna_finalis;
-        cursor->post_lineam  = lacuna->post_lineam_finalis;
-        cursor->lacuna_proxima++;
     }
 
     numerus = lexema->spatia_ante
@@ -68948,6 +69379,7 @@ silva_arbor_legere (
     lector.vitium           = vitium;
     lector.fragmenta        = NIHIL;
     lector.fons_ordinarius  = ZEPHYRUM;
+    lector.expansio         = NIHIL;
 
     si (piscina == NIHIL || tabularium == NIHIL || grammatica == NIHIL)
     {
@@ -69015,6 +69447,7 @@ silva_arbor_legere (
     sedes.post_lineam     = VERUM;
     sedes.lacunae         = NIHIL;
     sedes.lacuna_proxima  = ZEPHYRUM;
+    sedes.expansio        = NIHIL;
 
     attributum = silva_stml_attributum_capere(involucrum, "b");
     si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
@@ -69279,7 +69712,9 @@ _parsura_lexema_emissionis (
             proximum = lexema->origo.datum.expansio.invocatio;
             frange;
         casus SILVA_ORIGO_PASTA:
-            proximum = lexema->origo.datum.pasta.sinister;
+            proximum = lexema->origo.datum.pasta.invocatio
+                     ? lexema->origo.datum.pasta.invocatio
+                     : lexema->origo.datum.pasta.sinister;
             frange;
         casus SILVA_ORIGO_CHORDA:
             proximum = lexema->origo.datum.stringificatio.primus;
@@ -69787,7 +70222,17 @@ silva_arbor_scribere_parsuram (
     scriptor.ancora_offset          = -I;
     scriptor.ancora_linea           = ZEPHYRUM;
     scriptor.ancora_columna         = ZEPHYRUM;
-    scriptor.ancora_fons            = ZEPHYRUM;
+    /* FONS ORDINARIUS = fons PRINCEPS, non ZEPHYRUM.
+     *
+     * Scriptor 'f' OMITTIT cum fons_index ancoram aequat; lector
+     * absentiam ad 'fons-princeps' restituit (vide fons_ordinarius).
+     * DUO DEFALTA PRO EADEM ABSENTIA esse debent UNUM. Cum fons unus
+     * est, 0 == princeps et discrimen latet - ergo corpus planum
+     * LXXVIII/LXXVIII viruit dum vitium adesset. Cum clausura
+     * praebetur princeps ULTIMUS est (praebita indices priores
+     * capiunt), ergo omne lexema fontis 0 tacite in principem
+     * mutabatur: CXXII ex CLIV plagulis latinis (mensuratum T7). */
+    scriptor.ancora_fons            = parsura->fons_princeps;
     scriptor.ancora_initium_lineae  = FALSUM;
     scriptor.causa                  = NIHIL;
     scriptor.sedes                  = NIHIL;
@@ -69803,6 +70248,12 @@ silva_arbor_scribere_parsuram (
 
     /* PASSUS I - numeratio usuum, UNA per documentum TOTUM */
     _numerare_valorem(&scriptor, radix);
+
+    /* POST passum I, quia _numerare_lexema ancoram ex lexemate PRIMO
+     * ambulationis ponit - quod in plagula latinizata ex CAPITE venit
+     * (latina.h), non ex principe. Statutio ante passum I silenter
+     * deleretur. Vide notam ad scriptor.ancora_fons supra. */
+    scriptor.ancora_fons = parsura->fons_princeps;
 
     involucrum = silva_stml_elementum_creare(piscina, intern,
         SILVA_ARBOR_TAG_PARSURA);
@@ -70148,6 +70599,26 @@ _parsura_lacunas_conferre (
     redde ZEPHYRUM;
 }
 
+/* Fons laminae = fons lexematis primi (lamina una plagula constat -
+ * directiva aut ramus regionis in una plagula iacet). -I si vacua. */
+interior s32
+_laminae_fons (
+    constans SilvaXar* lamina)
+{
+    constans SilvaToken** sedes;
+
+    si (lamina == NIHIL || silva_xar_numerus(lamina) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    sedes = (constans SilvaToken**)silva_xar_obtinere(lamina, ZEPHYRUM);
+    si (sedes == NIHIL || *sedes == NIHIL)
+    {
+        redde -I;
+    }
+    redde (*sedes)->fons_index;
+}
+
 /* Lacunam notare: ab initio dato usque ad sedem quam cursor post
  * laminam lectam tenet. Extentum ergo ex DERIVATIONE IPSA venit -
  * nullus fons veritatis secundus. */
@@ -70155,7 +70626,8 @@ interior b32
 _parsura_lacunam_notare (
                      SilvaXar* lacunae,
                      s32  initium,
-    constans ArborCursor* post)
+    constans ArborCursor* post,
+                     s32  fons)
 {
     ParsuraLacuna* lacuna;
 
@@ -70170,6 +70642,7 @@ _parsura_lacunam_notare (
     }
     lacuna->offset               = initium;
     lacuna->finis                = post->offset;
+    lacuna->fons                 = fons;
     lacuna->linea_finalis        = post->linea;
     lacuna->columna_finalis      = post->columna;
     lacuna->post_lineam_finalis  = post->post_lineam;
@@ -70213,6 +70686,41 @@ _parsura_ancoram_legere (
             &numerus))
     {
         cursor->columna = numerus;
+    }
+
+    /* INDEX LACUNARUM RE-QUAERENDUS.
+     *
+     * 'lacuna_proxima' index MONOTONUS est - semel ultra lacunam
+     * provectus numquam redit. Id rectum esset si ambulatio una
+     * linearis per octetos esset; NON EST. Liberi supremi ordine
+     * ARBORIS stant, non ordine octetorum: contentum capitis inter
+     * eos iacet (e.g. 'declaratio b=8135 linea=403' plagulae
+     * ALTERIUS), ergo ancora cursorem RETRO quoque ponit.
+     *
+     * Sine re-quaesitione lacunae iam praeteritae perduntur, et
+     * lexema post eas sedem NIMIS PARVAM accipit.
+     * MENSURATUM (T7, tempus.c): regio '#ifndef M_PI / #define /
+     * #endif'. Directiva '#define' lacunam [XCIII, CXXIX) ponit,
+     * sed cum conditionalis ad ancoram LXXIX legeretur, index iam
+     * ultra eam erat - ergo '#endif' sedem XCIII accepit, id est
+     * sedem ipsius '#define'. Delta XXXVI = illa linea exacte. */
+    si (cursor->lacunae != NIHIL)
+    {
+        i32 i;
+
+        cursor->lacuna_proxima = silva_xar_numerus(cursor->lacunae);
+        per (i = ZEPHYRUM; i < silva_xar_numerus(cursor->lacunae); i++)
+        {
+            constans ParsuraLacuna* lacuna;
+
+            lacuna = (constans ParsuraLacuna*)
+                silva_xar_obtinere(cursor->lacunae, i);
+            si (lacuna != NIHIL && lacuna->finis > cursor->offset)
+            {
+                cursor->lacuna_proxima = i;
+                frange;
+            }
+        }
     }
 }
 
@@ -70415,6 +70923,7 @@ silva_arbor_legere_parsuram (
     lector.vitium           = vitium;
     lector.fragmenta        = NIHIL;
     lector.fons_ordinarius  = ZEPHYRUM;
+    lector.expansio         = NIHIL;
 
     si (piscina == NIHIL || tabularium == NIHIL || grammatica == NIHIL)
     {
@@ -70505,6 +71014,7 @@ silva_arbor_legere_parsuram (
      * ex memoria non-initializata fluere. */
     memset(parsura, ZEPHYRUM, magnitudo(SilvaParsura));
     parsura->expansio       = expansio;
+    lector.expansio         = expansio;
     parsura->fons_princeps  = -I;
 
     attributum = silva_stml_attributum_capere(involucrum, "fons-princeps");
@@ -70529,6 +71039,7 @@ silva_arbor_legere_parsuram (
     sedes.post_lineam     = VERUM;
     sedes.lacunae         = NIHIL;
     sedes.lacuna_proxima  = ZEPHYRUM;
+    sedes.expansio        = expansio;
     sedes.sedes_notae     = VERUM;
 
     /* Cursor nunc PER LIBERUM ex ancora ponitur (vide
@@ -70658,7 +71169,8 @@ silva_arbor_legere_parsuram (
                     redde NIHIL;
                 }
                 si (!_parsura_lacunam_notare(lacunae,
-                         initium_lacunae, &sedes))
+                         initium_lacunae, &sedes,
+                         _laminae_fons(lamina)))
                 {
                     _recusare(&lector, "lacuna notari non potuit",
                         elem->linea);
@@ -70787,7 +71299,8 @@ silva_arbor_legere_parsuram (
                 }
                 *sedes_laminae = lamina;
                 si (!_parsura_lacunam_notare(lacunae,
-                         initium_lacunae, &sedes))
+                         initium_lacunae, &sedes,
+                         _laminae_fons(lamina)))
                 {
                     _recusare(&lector, "lacuna notari non potuit",
                         elem->linea);
@@ -71684,6 +72197,82 @@ _arbor_regiones_aequales (
     redde VERUM;
 }
 
+/* Fons laminae directivae = fons lexematis primi eius. */
+interior s32
+_laminae_fons_index (
+    constans SilvaXar* lamina)
+{
+    constans SilvaToken** sedes;
+
+    si (lamina == NIHIL || silva_xar_numerus(lamina) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    sedes = (constans SilvaToken**)silva_xar_obtinere(lamina, ZEPHYRUM);
+    si (sedes == NIHIL || *sedes == NIHIL)
+    {
+        redde -I;
+    }
+    redde (*sedes)->fons_index;
+}
+
+/* Numerus directivarum FONTIS DATI (vide notam ad DIRECTIVAE). */
+interior i32
+_directivae_fontis (
+    constans SilvaParsura* p,
+                      s32  fons)
+{
+    i32 numerus;
+    i32 k;
+
+    si (p == NIHIL || p->directivae == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    numerus = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < silva_xar_numerus(p->directivae); k++)
+    {
+        si (_laminae_fons_index(*(SilvaXar**)silva_xar_obtinere(p->directivae, k))
+                == fons)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+/* Directiva n-esima FONTIS DATI; NIHIL si abest. */
+interior SilvaXar*
+_directivam_fontis (
+    constans SilvaParsura* p,
+                      s32  fons,
+                      i32  n)
+{
+    i32 visae;
+    i32 k;
+
+    si (p == NIHIL || p->directivae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    visae = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < silva_xar_numerus(p->directivae); k++)
+    {
+        SilvaXar* lamina = *(SilvaXar**)silva_xar_obtinere(p->directivae, k);
+
+        si (_laminae_fons_index(lamina) != fons)
+        {
+            perge;
+        }
+        si (visae == n)
+        {
+            redde lamina;
+        }
+        visae++;
+    }
+    redde NIHIL;
+}
+
 b32
 silva_arbor_parsurae_aequales (
         constans SilvaParsura* a,
@@ -71777,11 +72366,26 @@ silva_arbor_parsurae_aequales (
         }
     }
 
-    /* DIRECTIVAE */
-    numerus_a = a->directivae != NIHIL
-              ? silva_xar_numerus(a->directivae) : (i32)ZEPHYRUM;
-    numerus_b = b->directivae != NIHIL
-              ? silva_xar_numerus(b->directivae) : (i32)ZEPHYRUM;
+    /* DIRECTIVAE - FONTIS PRINCIPIS SOLIUS.
+     *
+     * Documentum PLAGULAE proiectio est, non PARSURAE (spec 1), et
+     * scriptor directivas per fontem filtrat
+     * (_parsura_reinserendum_addere ... fons_index). Ergo parsura
+     * originalis directivas OMNIUM plagularum fert (capita quoque)
+     * dum lecta principis solius: comparare summas est poma piris
+     * conferre.
+     *
+     * MENSURATUM (T7): A=DCXCVII, B=VII. Discrimen tantum non
+     * subtile erat, et tamen CXLIX plagulae octetim exactae -
+     * quod ipsum probat directivas deesse EMISSIONI non obstare.
+     * Comparator ergo causam VERAM harum IV plagularum CELABAT:
+     * primam divergentiam nuntiat, et haec falsa prima erat.
+     *
+     * LEX: instrumentum diagnosticum quod rem aliam comparat quam
+     * documentum repraesentat ductum falsum dat, non nullum -
+     * quod peius est. */
+    numerus_a = _directivae_fontis(a, a->fons_princeps);
+    numerus_b = _directivae_fontis(b, b->fons_princeps);
     si (numerus_a != numerus_b)
     {
         redde _arbor_divergere(&comparator, "directivae/numerus",
@@ -71790,8 +72394,8 @@ silva_arbor_parsurae_aequales (
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
         si (!_arbor_lamina_aequalis(&comparator,
-                 *(SilvaXar**)silva_xar_obtinere(a->directivae, i),
-                 *(SilvaXar**)silva_xar_obtinere(b->directivae, i),
+                 _directivam_fontis(a, a->fons_princeps, i),
+                 _directivam_fontis(b, b->fons_princeps, i),
                  "directiva", (s32)i))
         {
             redde FALSUM;

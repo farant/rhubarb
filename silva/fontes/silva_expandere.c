@@ -1987,6 +1987,7 @@ _conglutinare (
     SilvaExpansio* exp,
     SilvaToken*    sinister,
     SilvaToken*    dexter,
+    SilvaToken*    invocatio,
     chorda*        nomen_macro,
     SilvaCaecatio* hs,
     Xar*           exitus)
@@ -2017,7 +2018,7 @@ _conglutinare (
 
     t = *(SilvaToken**)xar_obtinere(relexata, ZEPHYRUM);
     pasta = silva_token_ex_pasta(exp->piscina, t->genus, t->valor,
-        sinister, dexter, nomen_macro, hs);
+        sinister, dexter, invocatio, nomen_macro, hs);
     _lexema_addere(exitus, pasta);
 
     /* best-effort: reliqua emittuntur ut sunt */
@@ -2181,7 +2182,8 @@ _substituere (
                     xar_numerus(sinistra) - I);
                 op_dex = *(SilvaToken**)xar_obtinere(dextra, ZEPHYRUM);
 
-                _conglutinare(exp, op_sin, op_dex, def->titulus, hs_nova,
+                _conglutinare(exp, op_sin, op_dex, invocatio,
+                    def->titulus, hs_nova,
                     nova_sinistra);
 
                 per (j = I; j < xar_numerus(dextra); j++)

@@ -116,6 +116,7 @@ silva_token_ex_pasta (
     chorda           valor,
     SilvaToken*      sinister,
     SilvaToken*      dexter,
+    SilvaToken*      invocatio,
     chorda*          nomen_macro,
     SilvaCaecatio*   caecatio)
 {
@@ -140,6 +141,7 @@ silva_token_ex_pasta (
     token->origo.genus                  = SILVA_ORIGO_PASTA;
     token->origo.datum.pasta.sinister    = sinister;
     token->origo.datum.pasta.dexter      = dexter;
+    token->origo.datum.pasta.invocatio   = invocatio;
     token->origo.datum.pasta.nomen_macro = nomen_macro;
     token->origo.datum.pasta.caecatio    = caecatio;
 

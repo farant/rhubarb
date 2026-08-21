@@ -1140,3 +1140,76 @@ least one substituted operand, keeps the honest refusal otherwise
 shapes); (B) add `invocatio` to the PASTA arm, which touches five layers
 including our `<pasta>` element. Suggested order: (A) now-ish, (B) when a
 consumer demands it — the same rule under which CHORDA was implemented.
+
+## 2026-08-21 — PASTA completed, route (B): `invocatio` on the paste arm
+
+Chose (B) over the cheap (A) because it is a **data-model** change, and
+silva's own doctrine says those must precede optimization: all three
+predecessor parsers died from early data-model decisions, not missing
+features. (A) is an emitter heuristic — safe at any time. (B) is not.
+
+**Measured, not estimated:**
+
+| | before | after |
+|---|---|---|
+| `SilvaToken` | 120 | **128** (+6.7%) |
+| `SilvaOrigo` | 40 | 48 |
+| union | 32 (4 ptrs) | 40 (5 ptrs) |
+
+`expansio` and `pasta` were *tied* at four pointers, so pasta's fifth
+grows the union and therefore every token — origin is embedded, not
+pointed to. Since the RP work is allocator-bound, token size is the input
+it cares about most: tuning against 120 then moving to 128 would have
+invalidated the measurements. And with zero external consumers this is
+the cheapest the ABI change will ever be.
+
+**I mispriced (B) as five layers of new plumbing.** Reading the seam,
+`_substituere` (`silva_expandere.c:2088`) already carries `invocatio`, so
+the expander side is a pass-through to `_conglutinare`. The house rule
+about pricing at the seam rather than from memory held again.
+
+**`invocatio` does not replace `sinister`/`dexter`.** Those are
+*provenance* — what was glued, which the VISIO commits to showing in
+solarium. `invocatio` is the *emission anchor*. Different jobs, so the 8
+bytes are earned.
+
+### The headline result was not the one we were aiming at
+
+`arbor2_glr_tabula.c` — the 1.5 MB generated GLR table that failed silva's
+**own** emitter — now round-trips. **It was never a memory problem.** It
+was the paste deferral: a generated parser table is full of `##`. Direct
+emission went 153/154 → **154/154**, and the pinned gate caught it by
+failing loudly rather than letting the number drift up unnoticed.
+
+The arena-exhaustion hypothesis (Fran's, and I found it plausible) was
+wrong. `successus=0` with zero bytes out looks like exhaustion and was
+actually a named refusal doing its job.
+
+### Where the invocation had to reach
+
+- `_radix_probata` follows it for PASTA, with the old refusal retained
+  when it is absent (older tokens stay honest rather than crashing)
+- our `<pasta>` element gained a **third** operand; extent anchored on
+  it, not on `sinister`
+- `_numerare_lexema`, the derivation cursor and the anchor chain all used
+  `pasta.sinister` **as** the invocation before — a standing
+  approximation that is now simply correct
+
+### Result
+
+| | silva alone | through STML |
+|---|---|---|
+| plain C (78) | 78/78 | 78/78 |
+| latinized (154) | **154/154** | 153/154 |
+
+Adversarial cases now **22**, including a new `#define C(a) pre##a` where
+one operand comes from the macro **body** — the case route (A) provably
+could not have fixed, since neither operand-following path reaches the use
+site. It passes.
+
+The one remaining STML failure is `arbor2_glr_tabula.c`, now refusing for
+an unrelated reason in *our* reader ("transclusio ad fragmentum ignotum",
+1.8M-line document). Separate bug, separate fix.
+
+silva 46/46 · root 134/134 · M1 281/281 · amalgam re-verified (hospes
+38/38, nm-intersection 0).

@@ -218,6 +218,7 @@ nomen structura {
         structura {
             SilvaToken*    sinister;    /* parens sinister ## */
             SilvaToken*    dexter;      /* parens dexter ## */
+            SilvaToken*    invocatio;   /* lexema invocationis (use-site) */
             chorda*        nomen_macro;
             SilvaCaecatio* caecatio;
         } pasta;
@@ -278,7 +279,14 @@ silva_token_ex_expansione (
     chorda*        nomen_macro,
     SilvaCaecatio* caecatio);
 
-/* Lexema ex ## - textus novus, parentes ambo servati */
+/* Lexema ex ## - textus novus, parentes ambo servati.
+ *
+ * 'invocatio' ANCORA EMISSIONIS est, non provenientia: sinister et
+ * dexter dicunt QUID glutinatum sit (visio ea solario ostendit),
+ * invocatio dicit UBI in octetis id factum sit. Ambo necessaria
+ * sunt quia parens uterque ex CORPORE macri venire potest
+ * ('#define C(a) pre##a' - 'pre' def-site est), ergo a parentibus
+ * ad usum semita non semper ducit. */
 SilvaToken*
 silva_token_ex_pasta (
     Piscina*         piscina,
@@ -286,6 +294,7 @@ silva_token_ex_pasta (
     chorda           valor,
     SilvaToken*      sinister,
     SilvaToken*      dexter,
+    SilvaToken*      invocatio,
     chorda*          nomen_macro,
     SilvaCaecatio*   caecatio);
 
