@@ -13543,3 +13543,114 @@ non pinna, ut doctrina silvae iubet.
 Deinde: T8 amalgama (CADENDA_TYPEDEF + hospes per caput;
 `silva_arbor_parsurae_aequales` API publica NOVA). M2 §3 proiectio
 canonis independens manet.
+
+## RELATIO — M2 §2 T7 PERFECTUM + silva completa, 2026-08-21 (vesper)
+
+**CLIV/CLIV utroque oraculo.** Proiectio STML silvam ipsam AEQUAT:
+quidquid silva emittere potest, per STML circuit octetim exacte.
+Nullae recusationes, nullae divergentiae, comparator nusquam caecus.
+
+| corpus | silva sola | per STML |
+|---|---|---|
+| planum (LXXVIII) | LXXVIII/LXXVIII | LXXVIII/LXXVIII |
+| latinizatum (CLIV) | **CLIV/CLIV** | **CLIV/CLIV** |
+
+Initium: 0/CLIV. Casus adversarii: XXIV.
+
+### ORACULUM SEPARANS - instrumentum quod phasim solvit
+
+Fran quaesivit utrum vitium extentorum nostrum an silvae esset. Id
+MENSURANDUM erat, non ex codice legendum: probatio nunc emissionem
+DIRECTAM (parsare -> scribere_fontem, sine STML) IUXTA circuitum
+plenum numerat.
+
+**Sine eo vitium NUCLEI et vitium PROIECTIONIS in uno numero
+involvuntur.** Porta M2 valorem expectatum EXTRA silvam ponit (octeti
+plagulae in disco); hoc axem ALTERUM findit - silva contra nos. Omne
+inventum reliquum huius diei ab eo pendet.
+
+### DUAE LEGES, QUAEQUE QUATER
+
+**LEX ANCORAE** (facies I-III ante, IV hodie): ancora est ubi EMISSIO
+INCIPIT, non ubi lexema stat. Facies IV: ordinatio supremorum offset
+lexematis CRUDI conferebat dum ancora scripta triviis inclusa esset -
+duae notiones eiusdem rei. Sanatio semper eadem: functio UNA ambabus
+serviens.
+
+**LEX SUPERFICIEI DUPLICATAE**: superficies nova quae conceptum
+vetustum re-implet vitia eius RE-INVENIT. Fragmenta aperienda:
+arbor faciebat; origo non; lamina non; ramus 'directiva' QUARTAM
+copiam inline ferebat. Tres sanationes numquam propagatae.
+**Sanatio quarta fuit DELERE, non emendare.** Hoc genus deletionem
+poscit, non emendationem alteram.
+
+### VITIA SANATA (VIII)
+
+Nostra: defaltum asymmetricum 'f' (CXXII plagulae) · trivia fontem
+non ferentia (VII) · origo fragmenta non aperiens (XXXI) · extenta
+NUMQUAM LATA (sextum clausurae elementum, spec 0.1) · index
+lacunarum monotonus post ancoram (IX) · comparator directivas
+OMNIUM fontium contra principem solum conferens · identitas
+invocationis in extento perdita (IV) · ordinatio/lamina supra.
+
+Silvae: PASTA deferral (via B - campus 'invocatio') · expansio
+VACUA perditio TACITA.
+
+### SILVA PROPIOR SCOPO PLENO
+
+Fran scopum medium nominavit: silvam ad statum stabilem perducere
+ANTE optimationem, ne opus futurum praecludatur. Duo hodie lata:
+
+- **PASTA** (via B, mutatio DATI): SilvaToken CXX -> CXXVIII
+  (+VI.VII%). Electa quia doctrina silvae dicit decreta DATI ante
+  optimationem stare debere - tres parsatores priores ex illis
+  mortui sunt. Opus RP allocator-bound est; ad CXX metiri deinde
+  mutare mensuras invalidaret. **Consumptores externi NULLI -
+  momentum vilissimum quod umquam erit.**
+- **EXPANSIO VACUA**: perditio TACITA (successus=1) sanata. Idioma
+  cotidianum ('#define UNUSED(x)'); corpus nostrum nullum habet
+  CASU, non consilio.
+
+Restat API sola in deferral originis.
+
+### METHODUS
+
+- **Coniectura ter erravit, arithmetica semel solvit.** Delta
+  'ROUTA_METHODUS_BIT(m)' = III = '(m)'; 'SHA1_ROL(...)' = LV =
+  argumenta. Campum imprimere et subtrahere.
+- **Numerus par identitatem NON probat**: extenta A=X B=X per IV
+  plagulas fractas.
+- **Summam solam iudicare fallit**: tabula CAUSARUM signum est.
+  Numerus IV mansit dum classis 'lexema/offset' -> 'directivae/
+  numerus' moveretur - id est sanatio, non stagnatio.
+- **Instrumentum quod rem ALIAM confert ductum FALSUM dat**, non
+  nullum - quod peius est. Comparator sanatus IV plagulas CAECUS
+  transiit: verus status, prius celatus.
+- **Octeti numquam mentiuntur.** Comparatore caeco, 'OCTETUS I
+  DIVERGENS' cum fenestra utriusque textus causam uno cursu dedit.
+- **Pretium ad SUTURAM, non ex memoria**: (B) BIS nimis magnum
+  aestimavi; _substituere invocationem iam ferebat.
+
+### PORTAE
+
+Porta apparatus (spec 6.5) FORAMEN habebat quod calibratio invenit:
+expansiones OMNES numerans LIX ex CLIV transire sinebat dum latina.h
+numquam aperiretur. **Porta quae PROXIMUM rei mensurat nihil
+mensurat.** Nunc def-site in latina.h petit.
+
+Casus adversarii expectatione nituntur, non fracturis: quisque
+'debet_transire' cum causa ferens, pinna DISCREPANTIAS numerans -
+ergo SANATIO tam clamat quam regressus. Calibrata utroque modo.
+
+### IN VOLATU
+
+T8 amalgama PROXIMA (CADENDA_TYPEDEF + hospes per caput;
+silva_arbor_parsurae_aequales API publica NOVA). Nota: amalgama hodie
+BIS re-generata et verificata (hospes XXXVIII/XXXVIII), ergo T8
+minus quam scriptum est.
+
+M2 §3 proiectio canonis independens manet.
+
+PRAE-EXSTANTIA (mtime probatum, XIX Aug - ANTE hanc sessionem):
+probatio_natura_glossae cadit quia bin/natura_glossae lib/stml.c
+antiquius est (./tools/natura_struere.sh); planta_lectio nota flaky.
