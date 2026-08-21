@@ -34,6 +34,7 @@
 #include "silva_tabulae.h"
 #include "silva_tabulae_c89.h"
 #include "silva_parsare.h"
+#include "silva_expandere.h"
 #include "silva_scribere.h"
 #include "silva_c89_oraculum.h"
 #include "silva_arbor.h"
@@ -44,11 +45,23 @@
 #include <dirent.h>
 
 #define CAUSAE_MAXIMAE 32
+#define CLAUSURA_MAXIMA 96
+#define VIA_MAXIMA 512
 
 nomen structura {
     constans character* causa;
                    i32  numerus;
 } CausaNumerata;
+
+/* Clausura inclusionum ex 'bin/aedilis fons.c --partes' (ordines C =
+ * capita domestica). Silva plagulas ipsa numquam aperit - consulto,
+ * substratum purum est - ergo harnesium eas PRAEBERE debet. */
+nomen structura {
+    character series[CLAUSURA_MAXIMA][VIA_MAXIMA];
+          i32 numerus;
+          b32 latina_inest;   /* latina.h in clausura = plagula latinizata */
+          b32 truncata;       /* CLAUSURA_MAXIMA transgressa - CLAMANDUM */
+} Clausura;
 
 nomen structura {
     i32 plagulae;
@@ -58,6 +71,12 @@ nomen structura {
     i32 emissio_recusata;
     i32 octeti_divergentes;
     i32 comparator_tacuit;   /* octeti divergunt, arbor 'aequalis' */
+
+    /* PORTA APPARATUS (spec 6.5) */
+    i32 latinizatae;         /* plagulae quarum clausura latina.h fert */
+    i32 apparatus_fracti;    /* latinizatae, sed ZERO lexemata expansa */
+    i32 clausurae_truncatae;
+    i32 lexemata_expansa;    /* summa - mensura pervasionis macro */
 
     CausaNumerata recusationes[CAUSAE_MAXIMAE];
               i32 numerus_recusationum;
@@ -113,6 +132,152 @@ _est_c_vel_h (
     redde FALSUM;
 }
 
+interior b32
+_est_c (
+    constans character* titulus)
+{
+    memoriae_index m;
+
+    m = strlen(titulus);
+    si (m < III)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(titulus[m - II] == '.' && titulus[m - I] == 'c');
+}
+
+interior b32
+_desinit_in (
+    constans character* via,
+    constans character* cauda)
+{
+    memoriae_index m;
+    memoriae_index n;
+
+    m = strlen(via);
+    n = strlen(cauda);
+    si (n > m)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(strcmp(via + (m - n), cauda) == ZEPHYRUM);
+}
+
+/* Clausuram ex aedile petere. Ordines TAB-separati; 'C' = caput
+ * domesticum, 'S' = systematis (silva ea non habet - directivae
+ * inresolutae transeunt), 'O' = obiectum. */
+interior vacuum
+_clausuram_petere (
+    constans character* radix,
+    constans character* via_relativa,
+              Clausura* clausura)
+{
+    character mandatum[1024];
+    character linea[VIA_MAXIMA + 64];
+        FILE* tubus;
+
+    clausura->numerus      = ZEPHYRUM;
+    clausura->latina_inest = FALSUM;
+    clausura->truncata     = FALSUM;
+
+    sprintf(mandatum,
+        "cd '%s' && ./bin/aedilis '%s' --partes 2>/dev/null",
+        radix, via_relativa);
+    tubus = popen(mandatum, "r");
+    si (tubus == NIHIL)
+    {
+        redde;
+    }
+    dum (fgets(linea, (integer)magnitudo(linea), tubus) != NIHIL)
+    {
+        memoriae_index m;
+
+        si (linea[ZEPHYRUM] != 'C' || linea[I] != '\t')
+        {
+            perge;
+        }
+        m = strlen(linea);
+        dum (m > ZEPHYRUM
+             && (linea[m - I] == '\n' || linea[m - I] == '\r'))
+        {
+            linea[m - I] = '\0';
+            m--;
+        }
+        si (m <= II)
+        {
+            perge;
+        }
+        si (clausura->numerus >= CLAUSURA_MAXIMA)
+        {
+            /* NON tacite truncandum: numerus tectus numerum falsum
+             * pareret qui datum simulat. */
+            clausura->truncata = VERUM;
+            perge;
+        }
+        si (m - II >= VIA_MAXIMA)
+        {
+            clausura->truncata = VERUM;
+            perge;
+        }
+        strcpy(clausura->series[clausura->numerus], linea + II);
+        si (_desinit_in(linea + II, "latina.h"))
+        {
+            clausura->latina_inest = VERUM;
+        }
+        clausura->numerus++;
+    }
+    pclose(tubus);
+}
+
+/* Numerus lexematum ex expansione macro natorum, EX FONTE DATO.
+ *
+ * CUR FONS NOMINANDUS EST (mensuratum, calibratio T7): numerare
+ * expansiones OMNES portam mendacem facit. Plagula quaeque suum
+ * '#define' ferens (e.g. XAR_FACTOR_DUPLICANDI in lib/xar.c)
+ * lexemata expansa parit SINE ulla clausura praebita - LIX ex CLIV
+ * plagulis portam sic transierunt dum latina.h numquam visa est.
+ * Ergo porta petit: expansiones quarum DEFINITIO in latina.h iacet.
+ *
+ * fons < 0 (i.e. latina.h numquam resoluta) reddit ZEPHYRUM, quod
+ * est responsum rectum: si fons numquam intravit, nihil ex eo venit.
+ */
+interior i32
+_lexemata_ex_fonte_numerare (
+    constans SilvaParsura* parsura,
+                      s32  fons)
+{
+    i32 numerus;
+    i32 i;
+    i32 quantum;
+
+    si (parsura == NIHIL || parsura->lexemata == NIHIL
+        || fons < ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    numerus = ZEPHYRUM;
+    quantum = xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < quantum; i++)
+    {
+        SilvaToken** sedes;
+         SilvaToken* corpus_macro;
+
+        sedes = (SilvaToken**)xar_obtinere(parsura->lexemata, i);
+        si (   sedes == NIHIL
+            || *sedes == NIHIL
+            || (*sedes)->origo.genus != SILVA_ORIGO_EXPANSIO)
+        {
+            perge;
+        }
+        corpus_macro = (*sedes)->origo.datum.expansio.corpus;
+        si (corpus_macro != NIHIL && corpus_macro->fons_index == fons)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
 interior i8*
 _plagulam_legere (
                Piscina* piscina,
@@ -159,9 +324,19 @@ _plagulam_legere (
     redde buffer;
 }
 
+/* Circuitus unus. clausura == NIHIL = corpus planum (gradus T5).
+ * clausura != NIHIL = gradus latinizatus (T7).
+ *
+ * 'praebere' est SUTURA CALIBRATIONIS, consulto permanens: FALSUM
+ * clausuram silvae NEGAT dum scientiam nostram de ea servat, ergo
+ * porta apparatus incendere DEBET. Polaritas tuta est - positio
+ * falsa portam CLAMARE facit, non tacere. */
 interior vacuum
 _plagulam_probare (
     constans character* via,
+    constans character* radix,
+     constans Clausura* clausura,
+                   b32  praebere,
          PlagulaCensus* census)
 {
                   Piscina* opus;
@@ -173,7 +348,9 @@ _plagulam_probare (
          SilvaArborVitium  vitium;
            SilvaScriptura  emissio;
     SilvaArborDifferentia  differentia;
+                      s32  fons_latina;
 
+    fons_latina = -I;
     opus = piscina_generare_dynamicum("porta_plagulae", 67108864);
     si (opus == NIHIL)
     {
@@ -186,9 +363,54 @@ _plagulam_probare (
         redde;
     }
     census->plagulae++;
+    si (clausura != NIHIL && clausura->truncata)
+    {
+        census->clausurae_truncatae++;
+    }
+    si (clausura != NIHIL && clausura->latina_inest)
+    {
+        census->latinizatae++;
+    }
 
-    origo = silva_parsare(opus, via, (constans character*)fons,
-        mensura, &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    si (clausura != NIHIL && praebere)
+    {
+        SilvaExpansio* expansio;
+                   i32 i;
+
+        expansio = silva_expansio_creare(opus);
+        per (i = ZEPHYRUM; i < clausura->numerus; i++)
+        {
+            character via_capitis[1024];
+                  i8* textus;
+                  i32 m_caput;
+                  s32 index_fontis;
+
+            sprintf(via_capitis, "%s/%s", radix, clausura->series[i]);
+            textus = _plagulam_legere(opus, via_capitis, &m_caput);
+            si (textus == NIHIL)
+            {
+                perge;
+            }
+            /* Praebitio DUAS claves ponit (viam canonicam +
+             * basename), ergo '#include "chorda.h"' resolvitur
+             * quamquam viam 'include/chorda.h' damus. */
+            index_fontis = silva_includendum_praebere(expansio,
+                clausura->series[i], (constans character*)textus,
+                m_caput);
+            si (_desinit_in(clausura->series[i], "latina.h"))
+            {
+                fons_latina = index_fontis;
+            }
+        }
+        origo = silva_parsare_cum_expansione(opus, expansio, via,
+            (constans character*)fons, mensura, &SILVA_C89_GRAMMATICA,
+            NIHIL, NIHIL, NIHIL);
+    }
+    alioquin
+    {
+        origo = silva_parsare(opus, via, (constans character*)fons,
+            mensura, &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    }
     si (origo == NIHIL || origo->commissio == NIHIL)
     {
         _causam_notare(census->recusationes,
@@ -196,6 +418,35 @@ _plagulam_probare (
         census->scriptura_recusata++;
         piscina_destruere(opus);
         redde;
+    }
+
+    /* ==========================================================
+     * PORTA APPARATUS (spec 6.5) - ANTE rem quam custodit.
+     *
+     * Sine clausura latina.h numquam videtur, 'si' identificator
+     * MANET, arbor circuit OCTETIM EXACTA - et numerus purus
+     * NIHIL de codice latinizato mensurat. Bis incendit, duabus
+     * causis diversis, et utroque numerum peperit qui datum
+     * simulabat. Ergo: si clausura latina.h fert sed ZERO
+     * lexemata expansa nascuntur, CADAT CLARE.
+     * ========================================================== */
+    si (clausura != NIHIL && clausura->latina_inest)
+    {
+        i32 expansa;
+
+        expansa = _lexemata_ex_fonte_numerare(origo, fons_latina);
+        census->lexemata_expansa += expansa;
+        si (expansa == ZEPHYRUM)
+        {
+            census->apparatus_fracti++;
+            _causam_notare(census->recusationes,
+                &census->numerus_recusationum,
+                "clausura inclusionum non praebita");
+            imprimere("    APPARATUS FRACTUS: %s (latina.h in "
+                "clausura, ZERO lexemata expansa)\n", via);
+            piscina_destruere(opus);
+            redde;
+        }
     }
 
     scriptura = silva_arbor_scribere_parsuram(opus, origo,
@@ -216,6 +467,21 @@ _plagulam_probare (
         _causam_notare(census->recusationes,
             &census->numerus_recusationum, vitium.causa);
         census->lectio_recusata++;
+        si (getenv("ARBOR_DEFIGERE") != NIHIL)
+        {
+            FILE* effusio;
+
+            imprimere("    LECTIO RECUSATA: %s :: %s (linea STML %d)\n",
+                via, vitium.causa ? vitium.causa : "?",
+                (integer)vitium.linea);
+            effusio = fopen(getenv("ARBOR_DEFIGERE"), "wb");
+            si (effusio != NIHIL)
+            {
+                fwrite(scriptura.textus.datum, I,
+                    (memoriae_index)scriptura.textus.mensura, effusio);
+                fclose(effusio);
+            }
+        }
         piscina_destruere(opus);
         redde;
     }
@@ -263,13 +529,19 @@ _plagulam_probare (
         si (   differentia.lexema_a != NIHIL
             && differentia.lexema_b != NIHIL)
         {
-            imprimere("      A b=%d l=%d c=%d | B b=%d l=%d c=%d\n",
+            imprimere("      A b=%d l=%d c=%d f=%d o=%d | "
+                "B b=%d l=%d c=%d f=%d o=%d | princeps=%d\n",
                 (integer)differentia.lexema_a->byte_offset,
                 (integer)differentia.lexema_a->linea,
                 (integer)differentia.lexema_a->columna,
+                (integer)differentia.lexema_a->fons_index,
+                (integer)differentia.lexema_a->origo.genus,
                 (integer)differentia.lexema_b->byte_offset,
                 (integer)differentia.lexema_b->linea,
-                (integer)differentia.lexema_b->columna);
+                (integer)differentia.lexema_b->columna,
+                (integer)differentia.lexema_b->fons_index,
+                (integer)differentia.lexema_b->origo.genus,
+                (integer)lecta->fons_princeps);
             imprimere("      valor A [%.*s]\n",
                 (integer)differentia.lexema_a->valor.mensura,
                 (constans character*)
@@ -304,11 +576,14 @@ principale (vacuum)
 {
                 Piscina* piscina;
           PlagulaCensus  census;
+          PlagulaCensus  census_latinus;
      constans character* radix;
               character  via_corporis[512];
               character  via_plagulae[1024];
+              character  via_relativa[1024];
                     DIR* corpus;
          structura dirent* introitus;
+                Clausura  clausura;
                      b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_plagulae",
@@ -347,7 +622,8 @@ principale (vacuum)
         }
         sprintf(via_plagulae, "%s/%s", via_corporis,
             introitus->d_name);
-        _plagulam_probare(via_plagulae, &census);
+        _plagulam_probare(via_plagulae, radix, NIHIL, FALSUM,
+            &census);
     }
     closedir(corpus);
 
@@ -372,6 +648,74 @@ principale (vacuum)
         census.numerus_recusationum);
     _causas_imprimere("DIVERGENTIAE", census.divergentiae,
         census.numerus_divergentiarum);
+
+    /* ==============================================================
+     * GRADUS LATINIZATUS (T7) - corpus quod M2 vere petit
+     *
+     * Corpus supra C PLANUM est: nullum latina.h, ergo nullum
+     * lexema expansum. Numerus eius probat formam circuire in C
+     * quod codici NOSTRO non similis est. Hic plagulis lib
+     * occurrit, ubi 'si', 'per', 'redde', 'NIHIL' OMNIA
+     * expansiones macro sunt - ergo lex ancorae T6b (catena
+     * originis ad invocationem strati 0 sequenda) non casus
+     * marginalis est sed SEMITA CALIDA.
+     * ============================================================== */
+    memset(&census_latinus, 0, magnitudo(PlagulaCensus));
+    sprintf(via_corporis, "%s/lib", radix);
+
+    imprimere("\n--- GRADUS LATINIZATUS: lib/*.c cum clausuris ---\n");
+    imprimere("  corpus: %s\n", via_corporis);
+
+    corpus = opendir(via_corporis);
+    si (corpus == NIHIL)
+    {
+        imprimere("FRACTA: corpus latinum non apertum: %s\n",
+            via_corporis);
+        credo_imprimere_compendium();
+        piscina_destruere(piscina);
+        redde I;
+    }
+    dum ((introitus = readdir(corpus)) != NIHIL)
+    {
+        si (!_est_c(introitus->d_name))
+        {
+            perge;
+        }
+        sprintf(via_relativa, "lib/%s", introitus->d_name);
+        sprintf(via_plagulae, "%s/%s", radix, via_relativa);
+        _clausuram_petere(radix, via_relativa, &clausura);
+        _plagulam_probare(via_plagulae, radix, &clausura, VERUM,
+            &census_latinus);
+    }
+    closedir(corpus);
+
+    imprimere("  plagulae:            %d\n",
+        (integer)census_latinus.plagulae);
+    imprimere("  latinizatae:         %d\n",
+        (integer)census_latinus.latinizatae);
+    imprimere("  lexemata expansa:    %d\n",
+        (integer)census_latinus.lexemata_expansa);
+    imprimere("  APPARATUS FRACTI:    %d\n",
+        (integer)census_latinus.apparatus_fracti);
+    imprimere("  clausurae truncatae: %d\n",
+        (integer)census_latinus.clausurae_truncatae);
+    imprimere("  OCTETIM EXACTAE:     %d / %d\n",
+        (integer)census_latinus.octetim_exactae,
+        (integer)census_latinus.plagulae);
+    imprimere("  scriptura recusata:  %d\n",
+        (integer)census_latinus.scriptura_recusata);
+    imprimere("  lectio recusata:     %d\n",
+        (integer)census_latinus.lectio_recusata);
+    imprimere("  emissio recusata:    %d\n",
+        (integer)census_latinus.emissio_recusata);
+    imprimere("  octeti divergentes:  %d\n",
+        (integer)census_latinus.octeti_divergentes);
+    imprimere("  comparator tacuit:   %d\n",
+        (integer)census_latinus.comparator_tacuit);
+    _causas_imprimere("RECUSATIONES", census_latinus.recusationes,
+        census_latinus.numerus_recusationum);
+    _causas_imprimere("DIVERGENTIAE", census_latinus.divergentiae,
+        census_latinus.numerus_divergentiarum);
 
 
     /* ==========================================================

@@ -2031,11 +2031,43 @@ _trivia_legere (
     redde VERUM;
 }
 
+/* Fontem domini triviis imponere (vide vocationem in _lexema_legere) */
+interior vacuum
+_trivia_fontem_ponere (
+    Xar* series,
+    s32  fons)
+{
+    i32 i;
+    i32 quantum;
+
+    si (series == NIHIL || fons < ZEPHYRUM)
+    {
+        redde;
+    }
+    quantum = xar_numerus(series);
+    per (i = ZEPHYRUM; i < quantum; i++)
+    {
+        SilvaToken** sedes;
+
+        sedes = (SilvaToken**)xar_obtinere(series, i);
+        si (sedes != NIHIL && *sedes != NIHIL)
+        {
+            (*sedes)->fons_index = fons;
+        }
+    }
+}
+
 interior SilvaToken*
 _lexema_legere (
      ArborLector* lector,
        StmlNodus* elementum,
           chorda* fragmenti_id);
+
+interior StmlNodus*
+_fragmentum_aperire (
+    ArborLector*  lector,
+      StmlNodus*  elementum,
+         chorda** id_exitus);
 
 /* Originem ex elemento nestato reficere.
  *
@@ -2058,12 +2090,14 @@ _origo_legere (
           StmlNodus* liberum;
              chorda* attributum;
              chorda* titulus_macro;
+             chorda* fragmenti_id;
                 i32  cursor;
                 i32  numerus;
 
-    primus     = NIHIL;
-    secundus   = NIHIL;
-    definitio  = NIHIL;
+    primus        = NIHIL;
+    secundus      = NIHIL;
+    definitio     = NIHIL;
+    fragmenti_id  = NIHIL;
 
     si (chorda_aequalis_literis(*elementum->titulus,
             SILVA_ARBOR_TAG_EXPANSIO))
@@ -2115,7 +2149,23 @@ _origo_legere (
         {
             perge;
         }
-        lectum = _lexema_legere(lector, liberum, NIHIL);
+        /* FRAGMENTUM APERIENDUM, sicut in semita ARBORIS.
+         *
+         * Lexema invocationis saepe fragmentum est (scriptor id sub
+         * '#lexN' deponit ut transclusiones sequentes IDEM OBIECTUM
+         * inveniant - invocatio una plura lexemata expansa gignere
+         * potest). Sine apertione titulus '#lexN' ipse tag lexematis
+         * habebatur, et registrum recte nesciebat.
+         * MENSURATUM (T7): XXXI plagulae latinae hinc RECUSABANTUR.
+         * Semita arboris hoc iam agebat (vide _fragmentum_aperire in
+         * ambulatione); origo, superficies NOVA, id non hereditavit
+         * - eadem lex quae ancoram ter fefellit. */
+        liberum = _fragmentum_aperire(lector, liberum, &fragmenti_id);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        lectum = _lexema_legere(lector, liberum, fragmenti_id);
         si (lectum == NIHIL)
         {
             redde FALSUM;
@@ -2445,6 +2495,20 @@ _lexema_legere (
             redde NIHIL;
         }
     }
+
+    /* TRIVIA FONTEM DOMINI SEQUUNTUR.
+     *
+     * Trivium in eadem plagula iacet ac lexema cui adhaeret - id
+     * DERIVABILE est, ergo portandum NON est (lex M1: documentum
+     * mentiri non possit). Sed lector trivia cum 'fons_ordinarius'
+     * creabat (vide _trivium_legere), quod fontem PRINCIPEM
+     * significat; ergo trivium capitis in principem tacite mutabatur
+     * et emissor id in plagulam falsam ponebat.
+     * MENSURATUM (T7): VII plagulae latinae hinc divergebant, omnes
+     * ad lexema NOVA_LINEA in regione degradata. Corpus planum id
+     * capere NON potuit: uno fonte, ordinarius IPSE fons est. */
+    _trivia_fontem_ponere(lexema->spatia_ante, lexema->fons_index);
+    _trivia_fontem_ponere(lexema->spatia_post, lexema->fons_index);
 
     /* Fragmentum: lexema sub ID suo deponere, ut transclusiones
      * sequentes HOC OBIECTUM inveniant */
@@ -3917,7 +3981,17 @@ silva_arbor_scribere_parsuram (
     scriptor.ancora_offset          = -I;
     scriptor.ancora_linea           = ZEPHYRUM;
     scriptor.ancora_columna         = ZEPHYRUM;
-    scriptor.ancora_fons            = ZEPHYRUM;
+    /* FONS ORDINARIUS = fons PRINCEPS, non ZEPHYRUM.
+     *
+     * Scriptor 'f' OMITTIT cum fons_index ancoram aequat; lector
+     * absentiam ad 'fons-princeps' restituit (vide fons_ordinarius).
+     * DUO DEFALTA PRO EADEM ABSENTIA esse debent UNUM. Cum fons unus
+     * est, 0 == princeps et discrimen latet - ergo corpus planum
+     * LXXVIII/LXXVIII viruit dum vitium adesset. Cum clausura
+     * praebetur princeps ULTIMUS est (praebita indices priores
+     * capiunt), ergo omne lexema fontis 0 tacite in principem
+     * mutabatur: CXXII ex CLIV plagulis latinis (mensuratum T7). */
+    scriptor.ancora_fons            = parsura->fons_princeps;
     scriptor.ancora_initium_lineae  = FALSUM;
     scriptor.causa                  = NIHIL;
     scriptor.sedes                  = NIHIL;
@@ -3933,6 +4007,12 @@ silva_arbor_scribere_parsuram (
 
     /* PASSUS I - numeratio usuum, UNA per documentum TOTUM */
     _numerare_valorem(&scriptor, radix);
+
+    /* POST passum I, quia _numerare_lexema ancoram ex lexemate PRIMO
+     * ambulationis ponit - quod in plagula latinizata ex CAPITE venit
+     * (latina.h), non ex principe. Statutio ante passum I silenter
+     * deleretur. Vide notam ad scriptor.ancora_fons supra. */
+    scriptor.ancora_fons = parsura->fons_princeps;
 
     involucrum = stml_elementum_creare(piscina, intern,
         SILVA_ARBOR_TAG_PARSURA);
