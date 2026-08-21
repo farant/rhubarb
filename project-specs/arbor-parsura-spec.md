@@ -1,7 +1,15 @@
 # Arbor M2 §2 — the `<parsura>` full-document form (spec)
 
-Status: **design approved 2026-08-20** (Fran, section by section).
-Not yet planned, not yet built. M1 is complete and gated.
+Status: **design approved 2026-08-20** (Fran, section by section);
+**BUILT and GATED 2026-08-21** through T6b — see
+`arbor-parsura-plan.md` for the tranche table. Both gates at full
+coverage: M1 subtrees 281/281 on both oracles, M2 whole files 78/78
+byte-exact, zero refusals and zero divergences on either.
+Remaining in M2: latinized corpus tier (T7), amalgam (T8), canon
+projection (§3, independent).
+
+**§1 carries a correction made by measurement** — read the block
+quote there before trusting the anchor rule.
 
 Read order on re-entry: this file → `arbor-stml-spec-v2.md` §0 (the
 seven assumptions measurement corrected in M1) → `arbor-stml-visio.md`
