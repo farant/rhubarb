@@ -38,7 +38,7 @@ before T1, §3 before T6, §6 before T5.
 | T6 nested origin | shipped `befe0d71` |
 | T6b anchor follows origin chain | shipped `913299ee` |
 | T7 latinized tier + apparatus gate | **DONE** — 154/154 both oracles |
-| **T8 amalgam** | **next** — but amalgam was regenerated + verified twice on 2026-08-21 (hospes 38/38, nm-intersection 0), so less remains than written |
+| **T8 amalgam** | **next**. Verified 2026-08-21: Step 1 manifests CLEAN (both regenerated, zero drift); Step 3 CADENDA already lists all six parsura types. **Remaining: the 3 public prototypes are ABSENT from silva.h — the whole M2 surface is invisible to hosts — plus the hospes exercise (Step 4) and its calibration (Step 5).** |
 
 **Both gates at full coverage**: M1 281/281 both oracles, M2 78/78
 byte-exact, zero refusals, zero divergences on either.
