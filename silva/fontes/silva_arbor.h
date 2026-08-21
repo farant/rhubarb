@@ -180,6 +180,10 @@ silva_arbor_lexema_ex_tag (
  * Catenae NESTATIONE LITTERALI - macro ex macro natum elementum
  * suum INTRA invocationem ferit. */
 #define SILVA_ARBOR_TAG_EXPANSIO       "expansio"
+/* Lamina invocationis functio-similis [nomen..')'] - sextum
+ * elementum clausurae emissionis (spec 0.1). Octeti argumentorum
+ * a NULLO lexemate arboris monstrantur, ergo PORTANDI sunt. */
+#define SILVA_ARBOR_TAG_EXTENTUM       "extentum"
 #define SILVA_ARBOR_TAG_PASTA          "pasta"
 #define SILVA_ARBOR_TAG_STRINGIFICATIO "stringificatio"
 #define SILVA_ARBOR_TAG_API            "api"
