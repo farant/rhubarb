@@ -2728,3 +2728,618 @@ silva_arbor_legere (
 
     redde arbor;
 }
+
+
+/* ==================================================
+ * Parsura: plagula INTEGRA <-> STML canonicum (M2 §2)
+ *
+ * Documentum <parsura> CLAUSURAM EMISSIONIS fert - id est prorsus
+ * quod silva_scribere_fontem legit - et nihil aliud. Strata, acta,
+ * numeratores et vexilla salutis EXCLUDUNTUR: strata EXITUS
+ * expansionis sunt, ergo stratum mutare incohaerens est, et
+ * documentum quod plagulam EDITAM iuxta stratum NON EDITUM ferre
+ * posset MENTIRI posset.
+ *
+ * UNUS scriptor totum documentum scribit (et UNUS lector totum
+ * relegit) CONSULTO: numeratio fragmentorum documento-scopata est.
+ * silva_arbor_scribere_nodum per nodum vocatum numerus_notarum ad
+ * zephyrum omni vocamine reponeret, ergo duo nodi supremi ambo
+ * '<#lex1>' emitterent et documentum identitates GEMINAS ferret.
+ *
+ * Statica huius sectionis praefixum _parsura_ ferunt: in amalgamate
+ * uno statica omnia spatium nominum unum communicant.
+ *
+ * Consilium: project-specs/arbor-parsura-spec.md.
+ * ================================================== */
+
+/* Chorda nullo NON terminatur; APIs quae 'constans character*'
+ * petunt bufferum nullatum egent. */
+interior character*
+_parsura_via_nullata (
+             Piscina* piscina,
+     constans chorda* via)
+{
+    character* buffer;
+
+    si (via == NIHIL || via->datum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    buffer = (character*)piscina_allocare(piscina,
+        (memoriae_index)via->mensura + I);
+    si (buffer == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memcpy(buffer, via->datum, (memoriae_index)via->mensura);
+    buffer[via->mensura] = '\0';
+    redde buffer;
+}
+
+/* Sectio fontium: tabula index -> via. Lector eam REPETIT quia
+ * scriptor expansionem non-NIHIL postulat ut fons_index solvat.
+ * NB tag in initio commentarii scanner annotationum evocat - ergo
+ * hic nominatim, non per tagum. */
+interior b32
+_parsura_fontes_scribere (
+             ArborScriptor* scriptor,
+                 StmlNodus* involucrum,
+    constans SilvaExpansio* expansio)
+{
+    StmlNodus* sectio;
+          i32  i;
+
+    sectio = stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, SILVA_ARBOR_TAG_FONTES);
+    si (sectio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (expansio != NIHIL && expansio->fontes != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(expansio->fontes); i++)
+        {
+            SilvaFons* fons;
+            StmlNodus* elem;
+
+            fons = (SilvaFons*)xar_obtinere(expansio->fontes, i);
+            si (fons == NIHIL)
+            {
+                perge;
+            }
+            elem = stml_elementum_creare(scriptor->piscina,
+                scriptor->intern, SILVA_ARBOR_TAG_FONS);
+            si (elem == NIHIL)
+            {
+                redde FALSUM;
+            }
+            _attributum_numeri(scriptor, elem, "index", i);
+            si (fons->via != NIHIL)
+            {
+                stml_attributum_addere_chorda(elem, scriptor->piscina,
+                    scriptor->intern, "via", *fons->via);
+            }
+            si (fons->est_lexicon)
+            {
+                stml_attributum_boolean_addere(elem,
+                    scriptor->piscina, scriptor->intern, "lexicon");
+            }
+            si (fons->est_syntheticus)
+            {
+                stml_attributum_boolean_addere(elem,
+                    scriptor->piscina, scriptor->intern,
+                    "syntheticus");
+            }
+            si (!stml_liberum_addere(sectio, elem))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde stml_liberum_addere(involucrum, sectio);
+}
+
+SilvaArborScriptura
+silva_arbor_scribere_parsuram (
+                          Piscina* piscina,
+            constans SilvaParsura* parsura,
+    constans SilvaRegistrumCoctum* tabularium,
+               constans character* grammatica,
+                              s32  fons_index,
+              InternamentumChorda* intern)
+{
+          ArborScriptor  scriptor;
+    SilvaArborScriptura  fructus;
+              StmlNodus* involucrum;
+                 chorda  sigillum;
+             SilvaValor  radix;
+                    i32  numerus;
+                    i32  i;
+
+    fructus.successus       = FALSUM;
+    fructus.textus.datum    = NIHIL;
+    fructus.textus.mensura  = ZEPHYRUM;
+    fructus.causa           = NIHIL;
+    fructus.sedes           = NIHIL;
+
+    si (   piscina            == NIHIL || parsura == NIHIL
+        || tabularium         == NIHIL || grammatica == NIHIL
+        || parsura->commissio == NIHIL)
+    {
+        fructus.causa = "argumenta nihil";
+        redde fructus;
+    }
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            fructus.causa = "internamentum creari non potuit";
+            redde fructus;
+        }
+    }
+
+    scriptor.piscina                = piscina;
+    scriptor.intern                 = intern;
+    scriptor.tabularium             = tabularium;
+    scriptor.expansio               = parsura->expansio;
+    scriptor.numerus_notarum        = ZEPHYRUM;
+    scriptor.ancora_nota            = FALSUM;
+    scriptor.ancora_offset          = -I;
+    scriptor.ancora_linea           = ZEPHYRUM;
+    scriptor.ancora_columna         = ZEPHYRUM;
+    scriptor.ancora_fons            = ZEPHYRUM;
+    scriptor.ancora_initium_lineae  = FALSUM;
+    scriptor.causa                  = NIHIL;
+    scriptor.sedes                  = NIHIL;
+    scriptor.lexemata         = tabula_dispersa_creare_chorda(
+        piscina, 256);
+    si (scriptor.lexemata == NIHIL)
+    {
+        fructus.causa = "tabula lexematum creari non potuit";
+        redde fructus;
+    }
+
+    radix = parsura->commissio->radix;
+
+    /* PASSUS I - numeratio usuum, UNA per documentum TOTUM */
+    _numerare_valorem(&scriptor, radix);
+
+    involucrum = stml_elementum_creare(piscina, intern,
+        SILVA_ARBOR_TAG_PARSURA);
+    si (involucrum == NIHIL)
+    {
+        fructus.causa = "involucrum creari non potuit";
+        redde fructus;
+    }
+    stml_attributum_addere(involucrum, piscina, intern, "grammatica",
+        grammatica);
+
+    sigillum = silva_arbor_sigillum(piscina, tabularium);
+    si (sigillum.mensura == ZEPHYRUM)
+    {
+        fructus.causa = "sigillum computari non potuit";
+        redde fructus;
+    }
+    stml_attributum_addere_chorda(involucrum, piscina, intern,
+        "registrum-sigillum", sigillum);
+
+    /* NULLA ANCORA: plagula ipsa initium est (spec §1) - sedes
+     * omnes ab offset ZEPHYRUM, linea I derivantur. */
+    si (fons_index >= ZEPHYRUM)
+    {
+        _attributum_numeri(&scriptor, involucrum, "fons-princeps",
+            (i32)fons_index);
+    }
+
+    si (!_parsura_fontes_scribere(&scriptor, involucrum,
+             parsura->expansio))
+    {
+        fructus.causa = "sectio fontium scribi non potuit";
+        redde fructus;
+    }
+
+    /* PASSUS II - arbor. Nodi supremi LIBERI DIRECTI involucri
+     * sunt (non in involucro listae) ut ordo documenti ordo
+     * plagulae sit. */
+    si (radix.genus == SILVA_VALOR_LISTA)
+    {
+        numerus = silva_valor_lista_numerus(radix);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaValor* elementum;
+             StmlNodus* scriptum;
+
+            elementum = silva_valor_lista_obtinere(radix, i);
+            si (elementum == NIHIL)
+            {
+                perge;
+            }
+            si (   elementum->genus       != SILVA_VALOR_NODUS
+                || elementum->datum.nodus == NIHIL)
+            {
+                fructus.causa = "radix elementum non-nodale fert";
+                redde fructus;
+            }
+            scriptum = _scribere_nodum_internum(&scriptor,
+                elementum->datum.nodus);
+            si (scriptum == NIHIL)
+            {
+                fructus.causa = scriptor.causa ? scriptor.causa
+                                               : "scriptura fracta";
+                fructus.sedes = scriptor.sedes;
+                redde fructus;
+            }
+            si (!stml_liberum_addere(involucrum, scriptum))
+            {
+                fructus.causa = "nodus in involucrum addi non potuit";
+                redde fructus;
+            }
+        }
+    }
+    alioquin si (   radix.genus       == SILVA_VALOR_NODUS
+                 && radix.datum.nodus != NIHIL)
+    {
+        StmlNodus* scriptum;
+
+        scriptum = _scribere_nodum_internum(&scriptor,
+            radix.datum.nodus);
+        si (scriptum == NIHIL)
+        {
+            fructus.causa = scriptor.causa ? scriptor.causa
+                                           : "scriptura fracta";
+            fructus.sedes = scriptor.sedes;
+            redde fructus;
+        }
+        si (!stml_liberum_addere(involucrum, scriptum))
+        {
+            fructus.causa = "nodus in involucrum addi non potuit";
+            redde fructus;
+        }
+    }
+    alioquin
+    {
+        fructus.causa = "radix nec lista nec nodus";
+        redde fructus;
+    }
+
+    /* CAUDA: trivia plagulae post ultimum lexema. Custodia eadem
+     * ac silva_scribere_fontem: lexema EOF plagulae HUIUS solum. */
+    si (   parsura->lexema_finis != NIHIL
+        && (   fons_index < ZEPHYRUM
+            || parsura->lexema_finis->fons_index == fons_index))
+    {
+        StmlNodus* cauda;
+        StmlNodus* lexema;
+
+        cauda = stml_elementum_creare(piscina, intern,
+            SILVA_ARBOR_TAG_CAUDA);
+        si (cauda == NIHIL)
+        {
+            fructus.causa = "cauda creari non potuit";
+            redde fructus;
+        }
+        lexema = _scribere_lexema(&scriptor, parsura->lexema_finis);
+        si (lexema == NIHIL)
+        {
+            fructus.causa = scriptor.causa ? scriptor.causa
+                                           : "cauda scribi non potuit";
+            redde fructus;
+        }
+        si (   !stml_liberum_addere(cauda, lexema)
+            || !stml_liberum_addere(involucrum, cauda))
+        {
+            fructus.causa = "cauda in involucrum addi non potuit";
+            redde fructus;
+        }
+    }
+
+    fructus.textus     = stml_scribere(involucrum, piscina, VERUM);
+    fructus.successus  = VERUM;
+    redde fructus;
+}
+
+/* Sectionem fontium relegere in expansionem novam. Indices
+ * documenti contra indices redditos PROBANTUR: tabula fontium ordinata est, et
+ * divergentia significaret fons_index cuiusque lexematis alium
+ * fontem nominare - mendacium tacitum. */
+interior b32
+_parsura_fontes_legere (
+      ArborLector* lector,
+        StmlNodus* involucrum,
+    SilvaExpansio* expansio)
+{
+    StmlNodus* sectio;
+    StmlNodus* elem;
+          i32  cursor;
+          i32  intra;
+
+    cursor = ZEPHYRUM;
+    sectio = _elementum_proximum(lector, involucrum, &cursor);
+    si (   sectio == NIHIL || sectio->titulus == NIHIL
+        || !chorda_aequalis_literis(*sectio->titulus,
+               SILVA_ARBOR_TAG_FONTES))
+    {
+        _recusare(lector, "sectio <fontes> deest",
+            sectio ? sectio->linea : involucrum->linea);
+        redde FALSUM;
+    }
+
+    intra = ZEPHYRUM;
+    dum ((elem = _elementum_proximum(lector, sectio, &intra))
+             != NIHIL)
+    {
+           chorda* via;
+           chorda* attributum;
+        character* nullata;
+        SilvaFons* fons;
+              i32  index_documenti;
+              s32  index_redditus;
+
+        si (   elem->titulus == NIHIL
+            || !chorda_aequalis_literis(*elem->titulus,
+                   SILVA_ARBOR_TAG_FONS))
+        {
+            _recusare(lector, "elementum non-<fons> in <fontes>",
+                elem->linea);
+            redde FALSUM;
+        }
+        via = stml_attributum_capere(elem, "via");
+        si (via == NIHIL)
+        {
+            _recusare(lector, "<fons> sine via", elem->linea);
+            redde FALSUM;
+        }
+        nullata = _parsura_via_nullata(lector->piscina, via);
+        si (nullata == NIHIL)
+        {
+            _recusare(lector, "via transcribi non potuit",
+                elem->linea);
+            redde FALSUM;
+        }
+        index_redditus = silva_fons_addere(expansio, nullata,
+            stml_attributum_habet(elem, "syntheticus"));
+        si (index_redditus < ZEPHYRUM)
+        {
+            _recusare(lector, "fons addi non potuit", elem->linea);
+            redde FALSUM;
+        }
+        attributum = stml_attributum_capere(elem, "index");
+        si (   attributum           != NIHIL
+            && _numerus_ex_chorda(attributum, &index_documenti)
+            && (s32)index_documenti != index_redditus)
+        {
+            _recusare(lector, "index fontis non congruit",
+                elem->linea);
+            redde FALSUM;
+        }
+        fons = (SilvaFons*)xar_obtinere(expansio->fontes,
+            (i32)index_redditus);
+        si (fons != NIHIL)
+        {
+            fons->est_lexicon = stml_attributum_habet(elem,
+                "lexicon");
+        }
+    }
+    redde VERUM;
+}
+
+SilvaParsura*
+silva_arbor_legere_parsuram (
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+                            chorda  textus,
+     constans SilvaRegistrumCoctum* tabularium,
+                constans character* grammatica,
+                  SilvaArborVitium* vitium)
+{
+      ArborLector  lector;
+      ArborCursor  sedes;
+     StmlResultus  resultus;
+        StmlNodus* involucrum;
+        StmlNodus* elem;
+     SilvaParsura* parsura;
+    SilvaExpansio* expansio;
+       SilvaValor  radix;
+           chorda* attributum;
+           chorda  sigillum;
+              i32  cursor;
+              i32  numerus;
+
+    si (vitium != NIHIL)
+    {
+        vitium->causa = NIHIL;
+        vitium->linea = ZEPHYRUM;
+    }
+
+    lector.piscina          = piscina;
+    lector.intern           = intern;
+    lector.tabularium       = tabularium;
+    lector.vitium           = vitium;
+    lector.fragmenta        = NIHIL;
+    lector.fons_ordinarius  = ZEPHYRUM;
+
+    si (piscina == NIHIL || tabularium == NIHIL || grammatica == NIHIL)
+    {
+        _recusare(&lector, "argumenta nihil", ZEPHYRUM);
+        redde NIHIL;
+    }
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            _recusare(&lector, "internamentum creari non potuit",
+                ZEPHYRUM);
+            redde NIHIL;
+        }
+        lector.intern = intern;
+    }
+
+    resultus = stml_legere(textus, piscina, intern);
+    si (!resultus.successus)
+    {
+        _recusare(&lector, "STML parsari non potuit",
+            resultus.linea_erroris);
+        redde NIHIL;
+    }
+
+    involucrum = resultus.elementum_radix;
+    si (   involucrum == NIHIL || involucrum->titulus == NIHIL
+        || !chorda_aequalis_literis(*involucrum->titulus,
+               SILVA_ARBOR_TAG_PARSURA))
+    {
+        _recusare(&lector, "involucrum <parsura> deest",
+            involucrum ? involucrum->linea : ZEPHYRUM);
+        redde NIHIL;
+    }
+
+    attributum = stml_attributum_capere(involucrum, "grammatica");
+    si (   attributum == NIHIL
+        || !chorda_aequalis_literis(*attributum, grammatica))
+    {
+        _recusare(&lector, "grammatica non congruit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+
+    /* SIGILLUM: parsura vocabulario FALSO iudicata mendacium est */
+    sigillum   = silva_arbor_sigillum(piscina, tabularium);
+    attributum = stml_attributum_capere(involucrum,
+        "registrum-sigillum");
+    si (   attributum == NIHIL || sigillum.mensura == ZEPHYRUM
+        || !chorda_aequalis(*attributum, sigillum))
+    {
+        _recusare(&lector, "sigillum registri non congruit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+
+    lector.fragmenta = tabula_dispersa_creare_chorda(piscina, 64);
+    si (lector.fragmenta == NIHIL)
+    {
+        _recusare(&lector, "tabula fragmentorum creari non potuit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+
+    expansio = silva_expansio_creare(piscina);
+    si (expansio == NIHIL)
+    {
+        _recusare(&lector, "expansio creari non potuit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+    si (!_parsura_fontes_legere(&lector, involucrum, expansio))
+    {
+        redde NIHIL;
+    }
+
+    parsura = (SilvaParsura*)piscina_allocare(piscina,
+        magnitudo(SilvaParsura));
+    si (parsura == NIHIL)
+    {
+        _recusare(&lector, "parsura allocari non potuit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+    /* CAMPI EXCLUSI ZEPHYRO EXPLICITE - telemetria parsurae in
+     * documento NON vivit (spec §1), ergo hic nasci debet, non
+     * ex memoria non-initializata fluere. */
+    memset(parsura, ZEPHYRUM, magnitudo(SilvaParsura));
+    parsura->expansio       = expansio;
+    parsura->fons_princeps  = -I;
+
+    attributum = stml_attributum_capere(involucrum, "fons-princeps");
+    si (   attributum != NIHIL && _numerus_ex_chorda(attributum,
+            &numerus))
+    {
+        parsura->fons_princeps = (s32)numerus;
+        lector.fons_ordinarius = (s32)numerus;
+    }
+
+    /* Liberi involucri ordine DOCUMENTI, qui ordo PLAGULAE est.
+     * <fontes> iam consumpta; <cauda> caudam fert; cetera nodi. */
+    radix   = silva_valor_lista_nova(piscina);
+    cursor  = ZEPHYRUM;
+    dum ((elem = _elementum_proximum(&lector, involucrum, &cursor))
+             != NIHIL)
+    {
+        SilvaNodus* nodus;
+         StmlNodus* apertum;
+
+        si (   elem->titulus != NIHIL
+            && chorda_aequalis_literis(*elem->titulus,
+                   SILVA_ARBOR_TAG_FONTES))
+        {
+            perge;
+        }
+        si (   elem->titulus != NIHIL
+            && chorda_aequalis_literis(*elem->titulus,
+                   SILVA_ARBOR_TAG_CAUDA))
+        {
+            StmlNodus* interius;
+                  i32  intra;
+
+            intra     = ZEPHYRUM;
+            interius  = _elementum_proximum(&lector, elem, &intra);
+            si (interius == NIHIL)
+            {
+                _recusare(&lector, "<cauda> lexema non fert",
+                    elem->linea);
+                redde NIHIL;
+            }
+            parsura->lexema_finis = _lexema_legere(&lector, interius,
+                NIHIL);
+            si (parsura->lexema_finis == NIHIL)
+            {
+                redde NIHIL;
+            }
+            perge;
+        }
+        apertum = _fragmentum_aperire(&lector, elem, NIHIL);
+        si (apertum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        nodus = _nodum_legere(&lector, apertum);
+        si (nodus == NIHIL)
+        {
+            redde NIHIL;
+        }
+        /* PROSPECTUM NOVUM reddit (mensura + I) - lista semantica
+         * VALORIS est, ergo reassignandum, non 'successus' */
+        radix = silva_valor_lista_appendere(piscina, radix,
+            silva_valor_nodus(nodus));
+        si (radix.genus != SILVA_VALOR_LISTA)
+        {
+            _recusare(&lector, "nodus in radicem addi non potuit",
+                elem->linea);
+            redde NIHIL;
+        }
+    }
+
+    /* FIXURAE: sedes ab INITIO PLAGULAE - nulla ancora opus est,
+     * quia plagula ipsa initium est (spec §1). */
+    sedes.offset       = ZEPHYRUM;
+    sedes.linea        = I;
+    sedes.columna      = I;
+    sedes.post_lineam  = VERUM;
+    sedes.sedes_notae  = VERUM;
+    _positiones_valoris(&sedes, radix);
+    si (parsura->lexema_finis != NIHIL)
+    {
+        _positiones_lexematis(&sedes, parsura->lexema_finis);
+    }
+
+    parsura->commissio = silva_committere(piscina, radix, tabularium,
+        NIHIL, NIHIL, NIHIL);
+    si (parsura->commissio == NIHIL)
+    {
+        _recusare(&lector, "parsura committi non potuit",
+            involucrum->linea);
+        redde NIHIL;
+    }
+    parsura->successus = VERUM;
+    redde parsura;
+}

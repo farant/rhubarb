@@ -35,6 +35,7 @@
 #include "silva_nodus.h"
 #include "silva_tabulae.h"
 #include "silva_expandere.h"
+#include "silva_parsare.h"   /* SilvaParsura - superficies parsurae (M2) */
 
 /* Praefixum tagorum lexematum (vide caput pro ratione) */
 #define SILVA_ARBOR_PRAEFIXUM "lex-"
@@ -338,8 +339,8 @@ silva_arbor_aequalis (
  * ornamentum est - vitium sine linea in documento magno venatio
  * est, non diagnosticum (StmlNodus.linea ob hoc ipsum exstat). */
 nomen structura {
-    constans character* causa;   /* NIHIL si bene */
-                    i32 linea;   /* 1-basata; ZEPHYRUM si ignota */
+     constans character* causa;   /* NIHIL si bene */
+                    i32  linea;   /* 1-basata; ZEPHYRUM si ignota */
 } SilvaArborVitium;
 
 /* Documentum arboris in arborem silvae relegere.
@@ -373,11 +374,94 @@ nomen structura {
  * Reddit NIHIL + vitium nominatum in recusatione. */
 SilvaNodus*
 silva_arbor_legere (
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+                            chorda  textus,
+     constans SilvaRegistrumCoctum* tabularium,
+                constans character* grammatica,
+                  SilvaArborVitium* vitium);
+
+
+/* ==================================================
+ * Parsura: plagula INTEGRA <-> STML canonicum (M2 §2)
+ *
+ * Documentum <parsura> proiectio PLAGULAE est, non parsurae:
+ * fert CLAUSURAM EMISSIONIS - id est prorsus quod
+ * silva_scribere_fontem legit - et nihil aliud. Sex res: arborem
+ * nodorum, directivas, arborem regionum (rami non sumpti),
+ * trivia caudae (lexema EOF), tabulam fontium, extenta.
+ *
+ * QUAE EXCLUDUNTUR ET CUR: strata, acta, numeratores, vexilla
+ * salutis (est_intermissa, fines_tactae, numerus_errorum, ...).
+ * Ratio non est 'derivabilia sunt' sed FORTIOR: STML forma
+ * MUTABILIS est editionibus tractabilis, et strata EXITUS
+ * expansionis sunt - ergo stratum mutare incohaerens est.
+ * Documentum quod plagulam EDITAM iuxta stratum NON EDITUM ferre
+ * posset MENTIRI posset. Eadem lex quae M1 sedes derivare fecit.
+ * <strata> nomen RESERVATUM manet, sicut 'origo=' in M1.
+ *
+ * NULLA ANCORA: subarbor ancoram fert quia quid ante eam stet
+ * scire nequit. Plagula ipsa INITIUM est - ergo sedes omnes ab
+ * offset ZEPHYRUM, linea I derivantur.
+ *
+ * Consilium: project-specs/arbor-parsura-spec.md.
+ * ================================================== */
+
+/* Tags sectionum documenti parsurae */
+#define SILVA_ARBOR_TAG_PARSURA "parsura"
+#define SILVA_ARBOR_TAG_FONTES  "fontes"
+#define SILVA_ARBOR_TAG_FONS    "fons"
+#define SILVA_ARBOR_TAG_CAUDA   "cauda"
+
+/* Plagulam integram ex parsura in documentum <parsura> scribere.
+ *
+ * fons_index: cuius plagulae octeti petuntur (parsura plures fert).
+ *   Plerumque parsura->fons_princeps. -I = quaelibet.
+ *
+ * grammatica: ut in silva_arbor_scribere_nodum - PARAMETRUM, quia
+ *   registrum nomen suum non fert.
+ *
+ * intern: NIHIL licet -> pigre creatur.
+ *
+ * UNUS scriptor totum documentum scribit, CONSULTO: numeratio
+ * fragmentorum (<#lexN>) DOCUMENTO-scopata est, et
+ * silva_arbor_scribere_nodum per nodum vocatum numeratorem suum ad
+ * zephyrum omni vocamine reponeret - ergo duo nodi supremi ambo
+ * '<#lex1>' emitterent et documentum identitates GEMINAS ferret.
+ *
+ * REFUTAT CLARE, ut scriptor nodorum. */
+SilvaArborScriptura
+silva_arbor_scribere_parsuram (
                           Piscina* piscina,
-              InternamentumChorda* intern,
-                            chorda textus,
+            constans SilvaParsura* parsura,
     constans SilvaRegistrumCoctum* tabularium,
                constans character* grammatica,
-                 SilvaArborVitium* vitium);
+                              s32  fons_index,
+              InternamentumChorda* intern);
+
+/* Documentum <parsura> in parsuram silvae relegere.
+ *
+ * VALIDAT ANTE CONSTRUCTIONEM ut lector nodorum: involucrum
+ * <parsura>; 'grammatica' congruit; 'registrum-sigillum' congruit
+ * aut RECUSAT.
+ *
+ * REFICIT: SilvaExpansio novam cum tabula fontium (scriptor eam
+ * REPETIT - silva_arbor_scribere_nodum expansionem non-NIHIL
+ * postulat ut fons_index solvat, et silva_scribere_fontem
+ * expansio->regiones legit); commissionem per silva_committere;
+ * lexema_finis; fons_princeps ex involucro.
+ *
+ * CAMPI EXCLUSI (vide caput sectionis) ZEPHYRO EXPLICITE
+ * ponuntur - numquam non-initializati relinquuntur.
+ *
+ * Reddit NIHIL + vitium nominatum in recusatione. */
+SilvaParsura*
+silva_arbor_legere_parsuram (
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+                            chorda  textus,
+     constans SilvaRegistrumCoctum* tabularium,
+                constans character* grammatica,
+                  SilvaArborVitium* vitium);
 
 #endif /* SILVA_ARBOR_H */
