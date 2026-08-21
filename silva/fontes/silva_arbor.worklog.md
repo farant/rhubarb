@@ -1027,3 +1027,56 @@ all — something is lost or duplicated in the directive set on the round
 trip. `directivae/numerus` carries no token, which is why the divergence
 printer emits no `A b=` line for it; diagnosing it needs the two counts
 printed, which the harness does not yet do.
+
+## 2026-08-21 — T7b: adversarial cases (21), three findings
+
+The corpus exercises only the macros `lib/` happens to use, and `extenta`
+was hours old. 21 deliberately hostile shapes, each a full text round
+trip, each classified by the **separating oracle** (`parse → emit`, no
+STML) so the report says *whose* bug it is.
+
+**18 passed first try** — including three-level nesting, an invocation as
+its own argument, commas inside parens, multi-line invocations, comments
+inside arguments, two invocations on one line, object-like macros
+expanding to function-like invocations, and directives inside conditional
+regions. That is real evidence the extenta design generalises.
+
+**Three failures, and the oracle split them cleanly:**
+
+| case | silva alone | verdict |
+|---|---|---|
+| `#define V(a)` + `V(x)` — empty expansion | FAILS | **silva** |
+| `#define S(a) #a` — stringification | **PASSES** | **OURS** |
+| `#define P(a,b) a##b` — paste | FAILS | silva, *named deferral* |
+
+**The one that is ours:** stringification. The emitter finds a
+stringification's extent by **containment** (`_extentum_continens` —
+the origin's token is an *argument*, not the invocation name), but our
+writer only emits `<extentum>` for `SILVA_ORIGO_EXPANSIO` origins. So the
+document carries no extent for `S(salve)` and the invocation's bytes are
+lost. Fixing it means a containment lookup at write time and a different
+key at read time (`lamina[0]`, not `primus`) — note that this collides
+with the identity fix that sets `lamina[0] = invocatio`, which is correct
+only for the EXPANSIO case. **Not yet built.**
+
+**Empty expansion** is worth a look on the silva side: a macro expanding
+to nothing leaves *no* token bearing the origin, so nothing points at the
+invocation's bytes. Same shape as the `extenta` problem one level up —
+bytes referenced by nothing — which suggests it may need the same remedy.
+
+`a##b` is the documented deferral in `silva_scribere.h` ("PASTA/CHORDA/API
+in catena = fractura clara"). Interesting asymmetry: CHORDA is named in
+that same deferral, yet silva handles `#a` fine — so the comment is
+broader than the behaviour.
+
+### The gate shape, and why it is expectation-based
+
+Each case carries `debet_transire` plus a named cause. The pin counts
+**discrepancies from expectation**, not failures — so a *fix* is as loud
+as a regression. A pin that only counts failures would guard a dead limit
+forever and nobody would learn the limit had lifted.
+
+**Calibrated both ways at birth.** The failure direction was proven by the
+three real findings printing before expectations existed; the SANATUM
+direction by planting `debet_transire = FALSUM` on a passing case and
+confirming it reports `SANATUM` and fails the suite.

@@ -109,6 +109,36 @@ _circuitus (
     redde _circuitus_cum(piscina, fons, causa_out, NIHIL);
 }
 
+/* ORACULUM SEPARANS: parsare -> scribere_fontem, SINE STML.
+ * Respondet 'utrum vitium nostrum an silvae sit'. VERUM = silva
+ * sola formam tractat, ergo quidquid circuitus amittit NOSTRUM est. */
+interior b32
+_circuitus_directus (
+               Piscina* piscina,
+    constans character* fons)
+{
+    SilvaParsura*  origo;
+    SilvaScriptura emissio;
+    i32            mensura;
+
+    mensura = (i32)strlen(fons);
+    origo = silva_parsare(piscina, "probatio.c", fons, mensura,
+        &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+    si (origo == NIHIL || origo->commissio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    emissio = silva_scribere_fontem(piscina, origo,
+        &SILVA_C89_REGISTRUM, origo->fons_princeps);
+    si (!emissio.successus)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(   emissio.textus.mensura == mensura
+                && memcmp(emissio.textus.datum, fons,
+                       (memoriae_index)mensura) == ZEPHYRUM);
+}
+
 /* Chordam substituere (pro vitiis plantatis) */
 interior chorda
 _substituere (
@@ -663,6 +693,144 @@ principale (vacuum)
             CREDO_VERUM (silva_arbor_parsurae_aequales(origo, lecta,
                 SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
         }
+    }
+
+    /* ==============================================================
+     * T7b - CASUS ADVERSARII: extenta invocationum et lacunae
+     *
+     * Corpus quod habemus macra ea sola exercet quibus 'lib' utitur.
+     * Extentum invocationis (sextum clausurae elementum) horis
+     * paucis natum est; formae quas corpus NON fert hic quaeruntur
+     * CONSULTO. Quaeque forma circuitum plenum petit: octeti in,
+     * octeti idem out.
+     *
+     * NOTA: parsura NUDA macra in ipsa plagula definita EXPANDIT
+     * (id est quod portam apparatus prope fefellit - vide
+     * probatio_silva_arbor_plagula). Ergo clausura hic non opus est.
+     * ============================================================== */
+    {
+        nomen structura {
+            constans character* titulus;
+            constans character* fons;
+                         b32    debet_transire;
+            constans character* causa_nota;
+        } CasusAdversarius;
+
+        constans CasusAdversarius CASUS[] = {
+            /* --- invocationes functio-similes --- */
+            { "functio-similis simplex",
+              "#define F(a) (a)\nint n = F(1);\n", VERUM, NIHIL },
+            { "argumenta duo",
+              "#define F(a,b) ((a)+(b))\nint n = F(1, 2);\n", VERUM, NIHIL },
+            { "sine argumentis",
+              "#define F() 0\nint n = F();\n", VERUM, NIHIL },
+            { "comma intra parentheses",
+              "#define F(a) (a)\nint n = F((1,2));\n", VERUM, NIHIL },
+            { "invocatio multi-linearis",
+              "#define F(a,b) ((a)+(b))\nint n = F(1,\n    2);\n", VERUM, NIHIL },
+            { "commentum intra argumenta",
+              "#define F(a) (a)\nint n = F(/* x */ 1);\n", VERUM, NIHIL },
+            { "spatia intra argumenta",
+              "#define F(a) (a)\nint n = F( 1 );\n", VERUM, NIHIL },
+            { "duae invocationes una linea",
+              "#define F(a) (a)\nint n = F(1) + F(2);\n", VERUM, NIHIL },
+            { "invocatio intra argumentum sui",
+              "#define F(a) (a)\nint n = F(F(1));\n", VERUM, NIHIL },
+
+            /* --- nidificatio --- */
+            { "nidus duorum graduum",
+              "#define G(a) ((a)*2)\n#define F(a) G(a)\nint n = F(3);\n", VERUM, NIHIL },
+            { "nidus trium graduum",
+              "#define H(a) ((a)+1)\n#define G(a) H(a)\n"
+              "#define F(a) G(a)\nint n = F(3);\n", VERUM, NIHIL },
+            { "obiectum-simile intra functio-similem",
+              "#define X 5\n#define F(a) ((a)+X)\nint n = F(1);\n", VERUM, NIHIL },
+            { "obiectum-simile ad invocationem expansum",
+              "#define G(a) (a)\n#define F G(1)\nint n = F;\n", VERUM, NIHIL },
+
+            /* --- expansio vacua --- */
+            { "expansio vacua",
+              "#define V(a)\nV(x)\nint n = 0;\n", FALSUM,
+              "SILVA: expansio vacua - nullum lexema originem fert, "
+              "ergo octeti invocationis a nullo monstrantur" },
+
+            /* --- arma originis PASTA et CHORDA --- */
+            { "stringificatio",
+              "#define S(a) #a\nconstans char* s = S(salve);\n", FALSUM,
+              "NOSTRUM: extentum pro origine CHORDA non scribitur "
+              "(silva sola TRANSIT - vide _extentum_continens)" },
+            { "pasta",
+              "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n", FALSUM,
+              "SILVA: deferral NOMINATUM (silva_scribere.h) - PASTA in "
+              "catena = fractura clara" },
+
+            /* --- lacunae et regiones --- */
+            { "directiva intra regionem",
+              "#ifndef X\n#define X 1\n#endif\nint n = 0;\n", VERUM, NIHIL },
+            { "directiva cum commento multi-lineari intra regionem",
+              "#ifndef X\n#define X 1 /* prima\n              * altera */\n"
+              "#endif\nint n = 0;\n", VERUM, NIHIL },
+            { "regio intra corpus functionis",
+              "int f(void)\n{\n#ifdef A\n    return 1;\n#else\n"
+              "    return 2;\n#endif\n}\n", VERUM, NIHIL },
+            { "regiones duae",
+              "#ifndef A\n#define A 1\n#endif\nint n = 0;\n"
+              "#ifndef B\n#define B 2\n#endif\nint m = 1;\n", VERUM, NIHIL },
+            { "macrum et regio miscentur",
+              "#define F(a) (a)\n#ifndef X\n#define X 1\n#endif\n"
+              "int n = F(X);\n", VERUM, NIHIL }
+        };
+
+        constans i32 NUMERUS_CASUUM =
+            (i32)(magnitudo(CASUS) / magnitudo(CASUS[0]));
+        i32 c;
+        i32 fracti;
+
+        imprimere("\n--- T7b: casus adversarii (%d) ---\n",
+            (integer)NUMERUS_CASUUM);
+        fracti = ZEPHYRUM;
+        per (c = ZEPHYRUM; c < NUMERUS_CASUUM; c++)
+        {
+            constans character* causa;
+                           b32  transiit;
+
+            transiit = _circuitus(piscina, CASUS[c].fons, &causa);
+            si (transiit == CASUS[c].debet_transire)
+            {
+                perge;
+            }
+            fracti++;
+            si (!transiit)
+            {
+                /* REGRESSUS: forma quae transire DEBEBAT fracta est */
+                imprimere("  REGRESSUS [%s]: %s  {silva sola: %s}\n",
+                    CASUS[c].titulus, causa ? causa : "?",
+                    _circuitus_directus(piscina, CASUS[c].fons)
+                        ? "TRANSIT - vitium NOSTRUM"
+                        : "FRANGITUR - vitium SILVAE");
+            }
+            alioquin
+            {
+                /* SANATUM: limes notus non iam viget. Hoc quoque
+                 * CLAMARE debet - aliter pinna limitem mortuum
+                 * perpetuo custodiret et nemo sciret. */
+                imprimere("  SANATUM [%s]: limes notus solutus est"
+                    " - pinnam et notam renovare\n"
+                    "    (nota vetus: %s)\n",
+                    CASUS[c].titulus,
+                    CASUS[c].causa_nota ? CASUS[c].causa_nota : "?");
+            }
+        }
+        imprimere("  discrepantiae ab expectatione: %d / %d\n",
+            (integer)fracti, (integer)NUMERUS_CASUUM);
+
+        /* LIMITES NOTI (III), quisque causa NOMINATA in tabula:
+         *   expansio vacua  - SILVA
+         *   stringificatio  - NOSTRUM (silva sola transit)
+         *   pasta           - SILVA, deferral nominatum
+         * Pinna DISCREPANTIAS numerat, non fracturas: sic et
+         * regressus et SANATIO clamant. */
+        CREDO_AEQUALIS_I32 (fracti, ZEPHYRUM);
     }
 
     credo_imprimere_compendium();
