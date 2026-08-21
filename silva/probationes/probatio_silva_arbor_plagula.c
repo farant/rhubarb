@@ -390,15 +390,18 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.numerus_recusationum, ZEPHYRUM);
 
-    /* LXXVII ex LXXVIII octetim exactae. UNA superest: latina.h,
-     * casus pathologicus - plagula DEFINITIONUM ipsa, seorsum
-     * parsata, ergo macra sua per se ipsam expandit. Causa
-     * SUSPECTA (nondum probata): lexemata expansa quae obiectum
-     * def-site COMMUNICANT originem UNAM ferunt, ergo invocationem
-     * UNAM, et usus secundus cursorem non promovet. Numerus hic
-     * PINNATUS est ut emendatio ANNUNTIETUR. */
-    CREDO_AEQUALIS_I32 (census.octetim_exactae, 77);
-    CREDO_AEQUALIS_I32 (census.octeti_divergentes, I);
+    /* LXXVIII ex LXXVIII - COPERTURA PLENA. Oraculum VISIONIS
+     * ('code->STML->load->emit == code') super corpus totum viret:
+     * nulla recusatio, nulla divergentia, comparator nusquam
+     * caecus.
+     *
+     * Ultimum vitium: ancora ex lexemate EXPANSO sumpta sedem
+     * DEF-SITE dabat (plagulae ALTERIUS), non sedem invocationis
+     * ubi octeti vere stant. Sanatio: _parsura_lexema_emissionis
+     * catenam originis ad radicem strati 0 sequitur. */
+    CREDO_AEQUALIS_I32 (census.octetim_exactae, 78);
+    CREDO_AEQUALIS_I32 (census.octeti_divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.numerus_divergentiarum, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.emissio_recusata, ZEPHYRUM);
 

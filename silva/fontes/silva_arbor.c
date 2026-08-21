@@ -537,6 +537,10 @@ _nota_lexematis (
  * Passus I - usus lexematum numerare + ancoram capere
  * ================================================== */
 
+interior constans SilvaToken*
+_parsura_lexema_emissionis (
+    constans SilvaToken*);
+
 interior vacuum
 _numerare_valorem (
     ArborScriptor*,
@@ -586,7 +590,13 @@ _numerare_lexema (
      * trivio ducente habet - casus in quo vitium evanescit. */
     si (!scriptor->ancora_nota)
     {
-        constans SilvaToken* initium = lexema;
+        constans SilvaToken* initium;
+
+        /* Catenam originis sequi: emissio ab invocatione strati 0
+         * incipit, non a lexemate expanso (cuius sedes DEF-SITE
+         * est, in plagula alia). Vide _parsura_lexema_emissionis. */
+        lexema   = _parsura_lexema_emissionis(lexema);
+        initium  = lexema;
 
         si (   lexema->spatia_ante != NIHIL
             && xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
@@ -3369,6 +3379,54 @@ _parsura_primum_lexema (
     redde NIHIL;
 }
 
+/* Lexema quod EMISSIONEM incipit: catenam originis ad radicem
+ * strati 0 sequi.
+ *
+ * Lexema expansum sedem DEF-SITE fert (silva_token_ex_expansione
+ * campos lexicales a corpore copiat), sed in fluxu octetorum
+ * INVOCATIO stat. Ancora ergo ex expansione sumpta sedem plagulae
+ * ALTERIUS daret - et nodus totus inde laberetur.
+ *
+ * MENSURATUM: latina.h 'nomen insignatus brevis i16;' - lexema
+ * primum expansum 'typedef' est, cuius sedes est linea XXXIX
+ * ('#define nomen typedef'), non linea CCCXLIX ubi nodus vere
+ * stat. */
+interior constans SilvaToken*
+_parsura_lexema_emissionis (
+    constans SilvaToken* lexema)
+{
+    i32 custodia;
+
+    custodia = ZEPHYRUM;
+    dum (lexema != NIHIL && custodia < 64)
+    {
+        constans SilvaToken* proximum;
+
+        proximum = NIHIL;
+        commutatio (lexema->origo.genus)
+        {
+        casus SILVA_ORIGO_EXPANSIO:
+            proximum = lexema->origo.datum.expansio.invocatio;
+            frange;
+        casus SILVA_ORIGO_PASTA:
+            proximum = lexema->origo.datum.pasta.sinister;
+            frange;
+        casus SILVA_ORIGO_CHORDA:
+            proximum = lexema->origo.datum.stringificatio.primus;
+            frange;
+        ordinarius:
+            frange;
+        }
+        si (proximum == NIHIL)
+        {
+            frange;
+        }
+        lexema = proximum;
+        custodia++;
+    }
+    redde lexema;
+}
+
 /* ANCORA per liberum SUPREMUM documenti.
  *
  * CUR non cursor unus continuus: contentum NON-arboreum (laminae
@@ -3403,7 +3461,10 @@ _parsura_ancoram_scribere (
      * Probationes unitatis id capere NON potuerunt: fontes earum
      * commentaria ducentia non habent. 'Fixturae praesumptiones
      * tuas communicant; corpus non.' */
-    initium = lexema;
+    /* Catenam originis PRIMO sequi: emissio ab invocatione strati
+     * 0 incipit, non a lexemate expanso */
+    lexema   = _parsura_lexema_emissionis(lexema);
+    initium  = lexema;
     si (   lexema->spatia_ante != NIHIL
         && xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
     {

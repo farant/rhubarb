@@ -503,32 +503,27 @@ principale (vacuum)
 
 
     /* ==========================================================
-     * NUMERI POST T6 (origo nestata) - COPERTURA AUCTA, RESIDUUM
-     * UNUM NOMINATUM.
+     * COPERTURA PLENA POST T6.
      *
      * ANTE T6: CCLXX/CCLXXXI utroque oraculo; XI subarbores
      * OMNINO RECUSATAE (limes expansionis) ergo NUMQUAM conlatae.
-     * POST T6: recusationes NULLAE; oraculum B (octeti)
-     * CCLXXXI/CCLXXXI - PERFECTUM; oraculum A (arbor) CCLXXVII.
+     * POST T6: CCLXXXI/CCLXXXI UTROQUE, recusationes nullae,
+     * divergentiae nullae.
      *
-     * Ergo copertura AUCTA est utroque modo (CCLXXXI > CCLXX
-     * octetim; CCLXXVII > CCLXX structuraliter), sed IV subarbores
-     * octetos rectos reddunt dum sedes lexematum divergunt
-     * ('lexema/offset').
-     *
-     * RESIDUUM NOMINATUM, non celatum: causa SUSPECTA est lexemata
-     * expansa quae obiectum def-site COMMUNICANT unam originem
-     * ferre, ergo unam invocationem, ergo usum secundum cursorem
-     * non promovere. NONDUM PROBATUM - vide notam parci.
-     *
-     * Pinna EXACTA: cum residuum sanetur haec probatio CADET, quod
-     * consilium est.
+     * Ultimum vitium: ANCORA EX LEXEMATE EXPANSO. Lexema expansum
+     * sedem DEF-SITE fert (silva_token_ex_expansione campos
+     * lexicales a corpore copiat), sed in fluxu octetorum
+     * INVOCATIO stat - ergo ancora sedem plagulae ALTERIUS dabat
+     * et nodus totus inde labebatur. Sanatio:
+     * _parsura_lexema_emissionis catenam ad radicem strati 0
+     * sequitur.
      * ========================================================== */
 
     CREDO_AEQUALIS_I32 (census.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.oraculum_b, census.subarbores);
-    CREDO_AEQUALIS_I32 (census.oraculum_a, census.subarbores - IV);
+    CREDO_AEQUALIS_I32 (census.oraculum_a, census.subarbores);
+    CREDO_AEQUALIS_I32 (census.numerus_divergentiarum, ZEPHYRUM);
 
 
     /* ==========================================================
