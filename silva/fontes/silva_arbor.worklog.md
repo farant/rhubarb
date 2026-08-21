@@ -962,3 +962,47 @@ generated GLR table) fails silva's **own** direct emission —
 projection one, and it is the same file that fails our transclusion
 path. Its size makes it the likely pathological case. Recorded, not
 fixed — it is out of T7's scope and belongs to silva proper.
+
+### T7 tail: the gap index, and one hypothesis that was wrong
+
+**Gap index re-seek (9 files, 140 → 149).** `lacuna_proxima` was a
+**monotonic** index — correct only if derivation were one linear walk in
+byte order. It is not: top-level children stand in **tree** order, and
+header content sits between them (`declaratio b=8135 linea=403` from
+another file), so an anchor moves the cursor *backwards* too. Any gap the
+index had already passed was lost forever.
+
+Measured on `tempus.c`: the region `#ifndef M_PI / #define M_PI … /
+#endif`. The `#define` directive registers gap [93,129) correctly, but by
+the time the `conditionalis` was read at anchor 79 the index sat beyond
+it — so `#endif` derived at 93, the `#define`'s own offset. Delta 36 =
+exactly that line plus its newline. The plain corpus cannot show this: with
+one source, top-level children are *already* in byte order.
+
+**Per-source gaps — correct, but NOT the fix I predicted.** I reasoned that
+the last 4 files (all sharing path `16.0>21.1 index 12`) were a main-file
+gap being applied to a header token, since `Piscina` from `f=2` landed 835
+bytes ahead. Added `fons` to `ParsuraLacuna` and made the skip require a
+source match. **The count did not move.** Verified the object rebuilt, so
+the hypothesis was simply wrong.
+
+Kept anyway, labelled for what it is: **correctness by construction, not a
+measured fix.** A gap is a byte range in a specific file; applying one to
+another file's token is wrong by definition, and the old code had no
+guard. But it fixed nothing observable, and the next session should not
+read it as having addressed the remaining four.
+
+**The remaining 4 need a fresh diagnosis.** What is known: all four share
+one path, the token is `Piscina` in a shared header at line 11 col 17,
+and the loaded position is line 30 col 17 — *same column, 19 lines on*.
+Same-column strongly suggests the derived cursor landed on a **different
+prototype's** `Piscina` in an aligned header, i.e. an over-advance of 835
+bytes inside that header, not a mis-anchor. That is a lead, not a
+conclusion — the last two guesses here cost a build each, and printing the
+field settled it both times.
+
+**Score at the end of T7:** plain C 78/78 both oracles; latinized
+**149/154 through STML**, against **153/154 for silva alone**. So our
+projection now loses exactly 4 of the files silva itself can round-trip,
+and `arbor2_glr_tabula.c` (1.5 MB generated table) is silva's own defect —
+Fran's read is arena exhaustion, plausible and untested.

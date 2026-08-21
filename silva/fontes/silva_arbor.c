@@ -1820,6 +1820,12 @@ nomen structura {
     i32 linea_finalis;
     i32 columna_finalis;
     b32 post_lineam_finalis;
+    /* FONS LACUNAE. Offset sine fonte SENSU CARET: octetus CXCII
+     * plagulae II et octetus CXCII plagulae VI nihil commune
+     * habent. Sine hoc campo lacuna plagulae principis lexemati
+     * CAPITIS applicabatur et cursor trans octetos alienos
+     * saliebat (MENSURATUM T7: IV plagulae, delta DCCCXXXV). */
+    s32 fons;
 } ParsuraLacuna;
 
 nomen structura {
@@ -3250,27 +3256,46 @@ _positiones_lexematis (
 
     /* LACUNAS transilire ad quas cursor pervenit. Omnis derivatio
      * per hanc functionem fluit, ergo unum punctum mutationis. */
-    dum (   cursor->lacunae != NIHIL
-         && cursor->lacuna_proxima < xar_numerus(cursor->lacunae))
+    si (cursor->lacunae != NIHIL)
     {
-        ParsuraLacuna* lacuna;
+        /* Scansio LOCALIS: 'i' semper crescit (ergo nulla ansa
+         * infinita), sed 'lacuna_proxima' SOLUM committitur cum
+         * lacuna vere applicata aut plane praeterita est. Lacuna
+         * ALIENI FONTIS praetermittitur SINE commissione - alioquin
+         * lexema sequens eiusdem plagulae eam amitteret. */
+        i32 i;
 
-        lacuna = (ParsuraLacuna*)xar_obtinere(cursor->lacunae,
-            cursor->lacuna_proxima);
-        si (lacuna == NIHIL || lacuna->finis <= cursor->offset)
+        i = cursor->lacuna_proxima;
+        dum (i < xar_numerus(cursor->lacunae))
         {
-            cursor->lacuna_proxima++;
-            perge;
+            ParsuraLacuna* lacuna;
+
+            lacuna = (ParsuraLacuna*)xar_obtinere(cursor->lacunae, i);
+            si (lacuna == NIHIL || lacuna->finis <= cursor->offset)
+            {
+                i++;
+                cursor->lacuna_proxima = i;
+                perge;
+            }
+            si (lacuna->offset > cursor->offset)
+            {
+                frange;
+            }
+            /* FONS CONGRUAT. Offset sine fonte sensu caret. */
+            si (   lacuna->fons >= ZEPHYRUM
+                && lexema->fons_index >= ZEPHYRUM
+                && lacuna->fons != lexema->fons_index)
+            {
+                i++;
+                perge;
+            }
+            cursor->offset       = lacuna->finis;
+            cursor->linea        = lacuna->linea_finalis;
+            cursor->columna      = lacuna->columna_finalis;
+            cursor->post_lineam  = lacuna->post_lineam_finalis;
+            i++;
+            cursor->lacuna_proxima = i;
         }
-        si (lacuna->offset > cursor->offset)
-        {
-            frange;
-        }
-        cursor->offset       = lacuna->finis;
-        cursor->linea        = lacuna->linea_finalis;
-        cursor->columna      = lacuna->columna_finalis;
-        cursor->post_lineam  = lacuna->post_lineam_finalis;
-        cursor->lacuna_proxima++;
     }
 
     numerus = lexema->spatia_ante
@@ -4594,6 +4619,26 @@ _parsura_lacunas_conferre (
     redde ZEPHYRUM;
 }
 
+/* Fons laminae = fons lexematis primi (lamina una plagula constat -
+ * directiva aut ramus regionis in una plagula iacet). -I si vacua. */
+interior s32
+_laminae_fons (
+    constans Xar* lamina)
+{
+    constans SilvaToken** sedes;
+
+    si (lamina == NIHIL || xar_numerus(lamina) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    sedes = (constans SilvaToken**)xar_obtinere(lamina, ZEPHYRUM);
+    si (sedes == NIHIL || *sedes == NIHIL)
+    {
+        redde -I;
+    }
+    redde (*sedes)->fons_index;
+}
+
 /* Lacunam notare: ab initio dato usque ad sedem quam cursor post
  * laminam lectam tenet. Extentum ergo ex DERIVATIONE IPSA venit -
  * nullus fons veritatis secundus. */
@@ -4601,7 +4646,8 @@ interior b32
 _parsura_lacunam_notare (
                      Xar* lacunae,
                      s32  initium,
-    constans ArborCursor* post)
+    constans ArborCursor* post,
+                     s32  fons)
 {
     ParsuraLacuna* lacuna;
 
@@ -4616,6 +4662,7 @@ _parsura_lacunam_notare (
     }
     lacuna->offset               = initium;
     lacuna->finis                = post->offset;
+    lacuna->fons                 = fons;
     lacuna->linea_finalis        = post->linea;
     lacuna->columna_finalis      = post->columna;
     lacuna->post_lineam_finalis  = post->post_lineam;
@@ -5142,7 +5189,8 @@ silva_arbor_legere_parsuram (
                     redde NIHIL;
                 }
                 si (!_parsura_lacunam_notare(lacunae,
-                         initium_lacunae, &sedes))
+                         initium_lacunae, &sedes,
+                         _laminae_fons(lamina)))
                 {
                     _recusare(&lector, "lacuna notari non potuit",
                         elem->linea);
@@ -5271,7 +5319,8 @@ silva_arbor_legere_parsuram (
                 }
                 *sedes_laminae = lamina;
                 si (!_parsura_lacunam_notare(lacunae,
-                         initium_lacunae, &sedes))
+                         initium_lacunae, &sedes,
+                         _laminae_fons(lamina)))
                 {
                     _recusare(&lector, "lacuna notari non potuit",
                         elem->linea);
