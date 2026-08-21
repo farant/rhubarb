@@ -415,9 +415,30 @@ principale (vacuum)
         CREDO_CHORDA_CONTINET (scriptura.textus,
             chorda_ex_literis("<fontes>", piscina));
 
-        /* NULLA ancora: plagula ipsa initium est (spec §1) */
-        CREDO_FALSUM (chorda_continet(scriptura.textus,
-            chorda_ex_literis(" b=\"", piscina)));
+        /* INVOLUCRUM ancoram non fert: plagula ipsa initium est
+         * (spec §1). Liberi SUPREMI tamen ancoras FERUNT, et
+         * necessario - contentum non-arboreum (laminae regionum
+         * degradatarum) intra spatium octetorum nodi iacere potest,
+         * ergo ordo documenti ordinem octetorum exprimere nequit.
+         * Correctio spec §1, implementatione inventa (T3b). */
+        {
+            chorda prima_linea;
+               i32 finis;
+
+            finis = ZEPHYRUM;
+            dum (   finis < scriptura.textus.mensura
+                 && scriptura.textus.datum[finis] != '\n')
+            {
+                finis++;
+            }
+            prima_linea.datum    = scriptura.textus.datum;
+            prima_linea.mensura  = finis;
+            CREDO_FALSUM (chorda_continet(prima_linea,
+                chorda_ex_literis(" b=\"", piscina)));
+        }
+        /* Liberi ancoras ferunt - id quod circuitum verum reddit */
+        CREDO_CHORDA_CONTINET (scriptura.textus,
+            chorda_ex_literis(" b=\"", piscina));
 
         /* grammatica falsa -> RECUSATIO */
         CREDO_NIHIL (silva_arbor_legere_parsuram(piscina, NIHIL,

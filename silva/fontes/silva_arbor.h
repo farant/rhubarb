@@ -413,6 +413,9 @@ silva_arbor_legere (
 #define SILVA_ARBOR_TAG_FONS    "fons"
 #define SILVA_ARBOR_TAG_CAUDA   "cauda"
 #define SILVA_ARBOR_TAG_DIRECTIVA "directiva"
+#define SILVA_ARBOR_TAG_REGIO_DIRECTIVA "regio-directiva"
+#define SILVA_ARBOR_TAG_REGIO_CRUDA     "regio-cruda"
+#define SILVA_ARBOR_TAG_REGIO_FINIS     "regio-finis"
 
 /* Plagulam integram ex parsura in documentum <parsura> scribere.
  *
