@@ -6974,6 +6974,7 @@ silva_arbor_legere (
 #define SILVA_ARBOR_TAG_FONTES  "fontes"
 #define SILVA_ARBOR_TAG_FONS    "fons"
 #define SILVA_ARBOR_TAG_CAUDA   "cauda"
+#define SILVA_ARBOR_TAG_DIRECTIVA "directiva"
 
 /* Plagulam integram ex parsura in documentum <parsura> scribere.
  *
@@ -68667,6 +68668,124 @@ _parsura_fontes_scribere (
     redde silva_stml_liberum_addere(involucrum, sectio);
 }
 
+/* Offset primi lexematis ordine AMBULATIONIS; -I si nullum lexema.
+ * Ordo ambulationis (non minimum octetorum) eligitur ut idem sit
+ * ordo quo scriptor emittit. */
+interior s32
+_parsura_primum_offset (
+    SilvaValor valor)
+{
+    i32 numerus;
+    i32 i;
+
+    si (valor.genus == SILVA_VALOR_TOKEN)
+    {
+        si (valor.datum.token == NIHIL)
+        {
+            redde -I;
+        }
+        redde valor.datum.token->byte_offset;
+    }
+    si (valor.genus == SILVA_VALOR_NODUS && valor.datum.nodus != NIHIL)
+    {
+        per (i = ZEPHYRUM; i < valor.datum.nodus->numerus_locorum;
+             i++)
+        {
+            s32 offset;
+
+            offset = _parsura_primum_offset(valor.datum.nodus->loci[i]);
+            si (offset >= ZEPHYRUM)
+            {
+                redde offset;
+            }
+        }
+        redde -I;
+    }
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        numerus = silva_valor_lista_numerus(valor);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            SilvaValor* elementum;
+                   s32  offset;
+
+            elementum = silva_valor_lista_obtinere(valor, i);
+            si (elementum == NIHIL)
+            {
+                perge;
+            }
+            offset = _parsura_primum_offset(*elementum);
+            si (offset >= ZEPHYRUM)
+            {
+                redde offset;
+            }
+        }
+    }
+    redde -I;
+}
+
+/* Linea directivae consumpta: lexemata sua ut liberos fert.
+ * Directivae ARBORI non pertinent (res plagulae sunt, non nodorum -
+ * silva_scribere.h:11) ergo elementum PROPRIUM habent, et lector
+ * eas ex ordine documenti RETRAHIT. */
+interior SilvaStmlNodus*
+_parsura_directivam_scribere (
+    ArborScriptor* scriptor,
+              SilvaXar* lamina)
+{
+    SilvaStmlNodus* elementum;
+          i32  i;
+
+    elementum = silva_stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, SILVA_ARBOR_TAG_DIRECTIVA);
+    si (elementum == NIHIL)
+    {
+        scriptor->causa = "directiva creari non potuit";
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(lamina); i++)
+    {
+        SilvaToken* lexema;
+         SilvaStmlNodus* scriptum;
+
+        lexema = *(SilvaToken**)silva_xar_obtinere(lamina, i);
+        si (lexema == NIHIL)
+        {
+            perge;
+        }
+        scriptum = _scribere_lexema(scriptor, lexema);
+        si (scriptum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (!silva_stml_liberum_addere(elementum, scriptum))
+        {
+            scriptor->causa = "lexema in directivam addi non potuit";
+            redde NIHIL;
+        }
+    }
+    redde elementum;
+}
+
+/* Offset primi lexematis laminae; -I si vacua. */
+interior s32
+_parsura_laminae_offset (
+    SilvaXar* lamina)
+{
+    SilvaToken* primum;
+
+    si (lamina == NIHIL || silva_xar_numerus(lamina) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    primum = *(SilvaToken**)silva_xar_obtinere(lamina, ZEPHYRUM);
+    si (primum == NIHIL)
+    {
+        redde -I;
+    }
+    redde primum->byte_offset;
+}
+
 SilvaArborScriptura
 silva_arbor_scribere_parsuram (
                           SilvaPiscina* piscina,
@@ -68772,17 +68891,98 @@ silva_arbor_scribere_parsuram (
      * plagulae sit. */
     si (radix.genus == SILVA_VALOR_LISTA)
     {
-        numerus = silva_valor_lista_numerus(radix);
-        per (i = ZEPHYRUM; i < numerus; i++)
-        {
-            SilvaValor* elementum;
-             SilvaStmlNodus* scriptum;
+        i32 directivarum;
+        i32 d;
 
-            elementum = silva_valor_lista_obtinere(radix, i);
-            si (elementum == NIHIL)
+        numerus       = silva_valor_lista_numerus(radix);
+        directivarum  = parsura->directivae != NIHIL
+                      ? silva_xar_numerus(parsura->directivae) : ZEPHYRUM;
+        d = ZEPHYRUM;
+        i = ZEPHYRUM;
+
+        /* FUSIO ordine OCTETORUM: ambae listae iam ordine fontis
+         * sunt, ergo fusio simplex sufficit (nulla ordinatio).
+         * Ordinatio per offset HIC licita est et HIC SOLUM - res
+         * strati fluxus, non arboris (silva_scribere.h:19). */
+        per (;;)
+        {
+                    SilvaXar* lamina;
+             SilvaValor* elementum;
+              SilvaStmlNodus* scriptum;
+                    s32  offset_directivae;
+                    s32  offset_nodi;
+
+            lamina             = NIHIL;
+            elementum          = NIHIL;
+            offset_directivae  = -I;
+            offset_nodi        = -I;
+
+            /* Proxima directiva HUIUS fontis; ceterae omittuntur,
+             * ut in silva_scribere.c _reinserendum_addere */
+            dum (d < directivarum)
             {
+                       SilvaXar* candidata;
+                SilvaToken* primum;
+
+                candidata = *(SilvaXar**)silva_xar_obtinere(parsura->directivae,
+                    d);
+                si (   candidata              == NIHIL
+                    || silva_xar_numerus(candidata) == ZEPHYRUM)
+                {
+                    d++;
+                    perge;
+                }
+                primum = *(SilvaToken**)silva_xar_obtinere(candidata,
+                    ZEPHYRUM);
+                si (   primum == NIHIL
+                    || (   fons_index >= ZEPHYRUM
+                        && primum->fons_index != fons_index))
+                {
+                    d++;
+                    perge;
+                }
+                lamina             = candidata;
+                offset_directivae  = _parsura_laminae_offset(lamina);
+                frange;
+            }
+
+            si (i < numerus)
+            {
+                elementum = silva_valor_lista_obtinere(radix, i);
+                si (elementum != NIHIL)
+                {
+                    offset_nodi = _parsura_primum_offset(*elementum);
+                }
+            }
+
+            si (lamina == NIHIL && elementum == NIHIL)
+            {
+                frange;
+            }
+
+            si (   lamina != NIHIL
+                && (   elementum == NIHIL
+                    || offset_directivae <= offset_nodi))
+            {
+                scriptum = _parsura_directivam_scribere(&scriptor,
+                    lamina);
+                si (scriptum == NIHIL)
+                {
+                    fructus.causa = scriptor.causa
+                                  ? scriptor.causa
+                                  : "directiva fracta";
+                    redde fructus;
+                }
+                si (!silva_stml_liberum_addere(involucrum, scriptum))
+                {
+                    fructus.causa =
+                        "directiva in involucrum addi non potuit";
+                    redde fructus;
+                }
+                d++;
                 perge;
             }
+
             si (   elementum->genus       != SILVA_VALOR_NODUS
                 || elementum->datum.nodus == NIHIL)
             {
@@ -68803,6 +69003,7 @@ silva_arbor_scribere_parsuram (
                 fructus.causa = "nodus in involucrum addi non potuit";
                 redde fructus;
             }
+            i++;
         }
     }
     alioquin si (   radix.genus       == SILVA_VALOR_NODUS
@@ -68833,6 +69034,19 @@ silva_arbor_scribere_parsuram (
 
     /* CAUDA: trivia plagulae post ultimum lexema. Custodia eadem
      * ac silva_scribere_fontem: lexema EOF plagulae HUIUS solum. */
+    si (   parsura->lexema_finis             != NIHIL
+        && fons_index                        >= ZEPHYRUM
+        && parsura->lexema_finis->fons_index != fons_index)
+    {
+        /* Plagula INCLUSA: EOF suum in includendis manet, non in
+         * parsura->lexema_finis (silva_scribere.c:727-750 illam
+         * semitam sequitur). Documentum pro plagula inclusa nondum
+         * SPECIFICATUM est (spec §8, apertum), ergo RECUSAMUS
+         * NOMINATIM potius quam caudam tacite omittimus - omissio
+         * tacita documentum mendax faceret. */
+        fructus.causa = "cauda plagulae inclusae nondum lata";
+        redde fructus;
+    }
     si (   parsura->lexema_finis != NIHIL
         && (   fons_index < ZEPHYRUM
             || parsura->lexema_finis->fons_index == fons_index))
@@ -69088,6 +69302,18 @@ silva_arbor_legere_parsuram (
 
     /* Liberi involucri ordine DOCUMENTI, qui ordo PLAGULAE est.
      * <fontes> iam consumpta; <cauda> caudam fert; cetera nodi. */
+    /* SEDES ab INITIO PLAGULAE. Derivatio ordine DOCUMENTI fit,
+     * non ordine arboris: directivae ex arbore RETRAHUNTUR sed in
+     * FLUXU OCTETORUM inter nodos iacent, ergo cursor eas videre
+     * DEBET - aliter offsets omnes post directivam primam labuntur
+     * et silva_scribere_fontem (quae per offset intertexit)
+     * ordinem falsum reficit. */
+    sedes.offset       = ZEPHYRUM;
+    sedes.linea        = I;
+    sedes.columna      = I;
+    sedes.post_lineam  = VERUM;
+    sedes.sedes_notae  = VERUM;
+
     radix   = silva_valor_lista_nova(piscina);
     cursor  = ZEPHYRUM;
     dum ((elem = _elementum_proximum(&lector, involucrum, &cursor))
@@ -69100,6 +69326,73 @@ silva_arbor_legere_parsuram (
             && silva_chorda_aequalis_literis(*elem->titulus,
                    SILVA_ARBOR_TAG_FONTES))
         {
+            perge;
+        }
+        /* RETRACTIO: directivae ex ordine documenti in campum
+         * suum. Documentum eas ubi scriptae sunt fert (superficies
+         * editionis); parsura ONERATA eas seorsum fert, ut arbor
+         * PURA maneat - id est quod subarborem motam octetos suos
+         * ubicumque emittere sinit. */
+        si (   elem->titulus != NIHIL
+            && silva_chorda_aequalis_literis(*elem->titulus,
+                   SILVA_ARBOR_TAG_DIRECTIVA))
+        {
+            SilvaStmlNodus*  lexema_elem;
+                  SilvaXar*  lamina;
+                  SilvaXar** sedes_laminae;
+                  i32   intra;
+
+            si (parsura->directivae == NIHIL)
+            {
+                parsura->directivae = silva_xar_creare(piscina,
+                    magnitudo(SilvaXar*));
+                si (parsura->directivae == NIHIL)
+                {
+                    _recusare(&lector,
+                        "xar directivarum creari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+            }
+            lamina = silva_xar_creare(piscina, magnitudo(SilvaToken*));
+            si (lamina == NIHIL)
+            {
+                _recusare(&lector, "lamina creari non potuit",
+                    elem->linea);
+                redde NIHIL;
+            }
+            intra = ZEPHYRUM;
+            dum ((lexema_elem = _elementum_proximum(&lector, elem,
+                      &intra)) != NIHIL)
+            {
+                SilvaToken*  lexema;
+                SilvaToken** sedes_lexematis;
+
+                lexema = _lexema_legere(&lector, lexema_elem, NIHIL);
+                si (lexema == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                _positiones_lexematis(&sedes, lexema);
+                sedes_lexematis = (SilvaToken**)silva_xar_addere(lamina);
+                si (sedes_lexematis == NIHIL)
+                {
+                    _recusare(&lector,
+                        "lexema in laminam addi non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                *sedes_lexematis = lexema;
+            }
+            sedes_laminae = (SilvaXar**)silva_xar_addere(parsura->directivae);
+            si (sedes_laminae == NIHIL)
+            {
+                _recusare(&lector,
+                    "lamina in directivas addi non potuit",
+                    elem->linea);
+                redde NIHIL;
+            }
+            *sedes_laminae = lamina;
             perge;
         }
         si (   elem->titulus != NIHIL
@@ -69137,6 +69430,7 @@ silva_arbor_legere_parsuram (
         }
         /* PROSPECTUM NOVUM reddit (mensura + I) - lista semantica
          * VALORIS est, ergo reassignandum, non 'successus' */
+        _positiones_nodi(&sedes, nodus);
         radix = silva_valor_lista_appendere(piscina, radix,
             silva_valor_nodus(nodus));
         si (radix.genus != SILVA_VALOR_LISTA)
@@ -69147,14 +69441,7 @@ silva_arbor_legere_parsuram (
         }
     }
 
-    /* FIXURAE: sedes ab INITIO PLAGULAE - nulla ancora opus est,
-     * quia plagula ipsa initium est (spec §1). */
-    sedes.offset       = ZEPHYRUM;
-    sedes.linea        = I;
-    sedes.columna      = I;
-    sedes.post_lineam  = VERUM;
-    sedes.sedes_notae  = VERUM;
-    _positiones_valoris(&sedes, radix);
+    /* Cauda ultima - cursor iam per documentum totum ambulavit */
     si (parsura->lexema_finis != NIHIL)
     {
         _positiones_lexematis(&sedes, parsura->lexema_finis);

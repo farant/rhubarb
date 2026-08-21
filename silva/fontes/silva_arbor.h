@@ -412,6 +412,7 @@ silva_arbor_legere (
 #define SILVA_ARBOR_TAG_FONTES  "fontes"
 #define SILVA_ARBOR_TAG_FONS    "fons"
 #define SILVA_ARBOR_TAG_CAUDA   "cauda"
+#define SILVA_ARBOR_TAG_DIRECTIVA "directiva"
 
 /* Plagulam integram ex parsura in documentum <parsura> scribere.
  *

@@ -31,10 +31,11 @@
 /* Circuitum plenum unius fontis currere; VERUM si octeti congruunt.
  * causa_out (si non NIHIL) causam fracturae nominat. */
 interior b32
-_circuitus (
+_circuitus_cum (
                Piscina*  piscina,
     constans character*  fons,
-    constans character** causa_out)
+    constans character** causa_out,
+          SilvaParsura** lecta_out)
 {
          SilvaParsura* origo;
          SilvaParsura* lecta;
@@ -43,8 +44,12 @@ _circuitus (
        SilvaScriptura  emissio;
                   i32  mensura;
 
-    *causa_out  = NIHIL;
-    mensura     = (i32)strlen(fons);
+    *causa_out = NIHIL;
+    si (lecta_out != NIHIL)
+    {
+        *lecta_out = NIHIL;
+    }
+    mensura = (i32)strlen(fons);
 
     origo = silva_parsare(piscina, "probatio.c", fons, mensura,
         &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
@@ -71,6 +76,11 @@ _circuitus (
         redde FALSUM;
     }
 
+    si (lecta_out != NIHIL)
+    {
+        *lecta_out = lecta;
+    }
+
     emissio = silva_scribere_fontem(piscina, lecta,
         &SILVA_C89_REGISTRUM, lecta->fons_princeps);
     si (!emissio.successus)
@@ -88,6 +98,15 @@ _circuitus (
         redde FALSUM;
     }
     redde VERUM;
+}
+
+interior b32
+_circuitus (
+               Piscina*  piscina,
+    constans character*  fons,
+    constans character** causa_out)
+{
+    redde _circuitus_cum(piscina, fons, causa_out, NIHIL);
 }
 
 /* Chordam substituere (pro vitiis plantatis) */
@@ -189,6 +208,75 @@ principale (vacuum)
         si (causa != NIHIL)
         {
             imprimere("  causa: %s\n", causa);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: directivae ordine DOCUMENTI + RETRACTIO
+     *
+     * Octeti soli NON sufficiunt: circuitus octetim exactus
+     * transiret etiam si directiva in ARBORE relicta esset. Ergo
+     * structura quoque asseritur - arbor onerata directivam NON
+     * continet, et parsura->directivae eam FERT.
+     * ======================================================== */
+
+    {
+        constans character* causa;
+              SilvaParsura* lecta;
+
+        CREDO_VERUM (_circuitus_cum(piscina,
+            "#include \"a.h\"\nint n = 0;\n", &causa, &lecta));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+        si (lecta != NIHIL && lecta->commissio != NIHIL)
+        {
+            /* RETRACTIO: radix nodum UNUM fert (declarationem),
+             * directivam NON */
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                lecta->commissio->radix), I);
+            CREDO_NON_NIHIL (lecta->directivae);
+            CREDO_AEQUALIS_I32 (xar_numerus(lecta->directivae), I);
+        }
+    }
+
+    /* Directiva INTER nodos: ordo documenti ordo plagulae est */
+    {
+        constans character* causa;
+              SilvaParsura* lecta;
+
+        CREDO_VERUM (_circuitus_cum(piscina,
+            "int a = 1;\n#define X 1\nint b = 2;\n",
+            &causa, &lecta));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+        si (lecta != NIHIL && lecta->commissio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                lecta->commissio->radix), II);
+            CREDO_AEQUALIS_I32 (xar_numerus(lecta->directivae), I);
+        }
+    }
+
+    /* Directivae plures ante omnem nodum */
+    {
+        constans character* causa;
+              SilvaParsura* lecta;
+
+        CREDO_VERUM (_circuitus_cum(piscina,
+            "#include \"a.h\"\n#include \"b.h\"\nint n = 0;\n",
+            &causa, &lecta));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+        si (lecta != NIHIL)
+        {
+            CREDO_AEQUALIS_I32 (xar_numerus(lecta->directivae), II);
         }
     }
 
