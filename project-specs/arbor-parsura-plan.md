@@ -10,12 +10,14 @@ document and loads back such that `silva_scribere_fontem` reproduces
 the original file byte for byte — including latinized sources, whose
 subtrees refuse at 100% today.
 
-**Architecture:** A new `silva/fontes/silva_arbor_parsura.c` owns the
-document envelope, the section layout, and the *hoist* (splitting
-document-order content back into `radix` / `directivae` / `regiones`).
-M1's node writer and reader are called unchanged for the tree. The
-node writer in `silva_arbor.c` is extended once, in T6, to stop
-refusing non-FONS tokens and emit the nested origin form instead.
+**Architecture:** The parsura layer is appended to
+`silva/fontes/silva_arbor.c`, sharing M1's `ArborScriptor` and
+`ArborLector` because fragment numbering and the fragment table are
+both **document-scoped** (see the File Structure correction). It owns
+the document envelope, the section layout, and the *hoist* — splitting
+document-order content back into `radix` / `directivae` / `regiones`.
+M1's per-node walk is reused internally. In T6 the node writer stops
+refusing non-FONS tokens and emits the nested origin form instead.
 
 **Tech stack:** C89 under the house flags, silva's vendored stml,
 `credo` for tests.
@@ -37,8 +39,7 @@ before T1, §3 before T6, §6 before T5.
   `./silva/censor.sh <file>` on every new file.
 - `i32`/`i64` are **UNSIGNED**; use `s32`/`s64` for anything signed.
   `chorda` is **not** null-terminated.
-- **Every `interior` helper in the new file takes a `_parsura_`
-  prefix.** In a single-file amalgam all statics share one namespace;
+- **Every new `interior` helper takes a `_parsura_` prefix.** In a single-file amalgam all statics share one namespace;
   this collided in M1 (`_nodi_aequales` against `silva_glr.c`).
 - Refusals are loud: `successus = FALSUM` + a **static** `causa`,
   never a silent skip. Reader vitia carry a `linea`.
@@ -55,15 +56,40 @@ before T1, §3 before T6, §6 before T5.
 
 | file | responsibility |
 |---|---|
-| `silva/fontes/silva_arbor_parsura.c` | **new** — envelope, sections, hoist, parsura writer + reader |
+| `silva/fontes/silva_arbor.c` | **modify** — parsura writer + reader + hoist appended (T1–T3); nested origin replaces the non-FONS refusal (T6) |
 | `silva/fontes/silva_arbor.h` | **modify** — add the parsura surface (T1) and the origin tags (T6) |
-| `silva/fontes/silva_arbor.c` | **modify, T6 only** — nested origin replaces the non-FONS refusal |
 | `silva/fontes/silva_arbor_aequalitas.c` | **modify, T4** — comparator past trees |
 | `silva/probationes/probatio_silva_arbor_parsura.c` | **new** — unit tests (T1–T4) |
 | `silva/probationes/probatio_silva_arbor_plagula.c` | **new** — the M2 gate, both corpus tiers (T5, T7) |
 | `silva/amalgama/silva.h` | **modify, T8** — public prototypes, vanilla C89 |
 | `silva/instrumenta/principalia/amalgamator.c` | **modify, T8** — `CADENDA_TYPEDEF` |
 | `silva/instrumenta/principalia/hospes.c` | **modify, T8** — exercise the surface through the header |
+
+**CORRECTION (2026-08-20, priced at the seam, not from memory).** An
+earlier draft of this table put the parsura layer in a new
+`silva_arbor_parsura.c`. That is wrong, for three reasons found by
+reading the code:
+
+1. `silva_arbor_scribere_nodum` returns **`chorda` text**, not an
+   `StmlNodus*`. A separate file cannot splice node elements into a
+   `<parsura>` envelope without re-parsing its own output.
+2. **The fragment counter is per-call.** `ArborScriptor.numerus_notarum`
+   (`silva_arbor.c:473`) restarts at zero on every call, so two
+   top-level nodes would each emit `<#lex1>` and the document would
+   carry duplicate ids the reader resolves wrongly. Fragments appear
+   only on AMBIGUUS nodes, so this is invisible to fixtures and would
+   surface as a corpus bug — the class that cost M1 two rounds.
+   Fragment numbering is inherently **document-scoped**, so the
+   document writer must share the node writer's state.
+3. `ArborLector.fragmenta` is document-scoped for the same reason, and
+   `silva_arbor_legere` consumes a whole document, not a subtree.
+
+The alternative — promoting `ArborScriptor`, `_numerare_nodum`,
+`_scribere_nodum_internum` and a lector entry to a silva-internal
+header — is *more* change to shipped, gated M1 code than appending is,
+and widens the symbol set the amalgam's nm-intersection gate watches.
+Size is not an objection: `silva_arbor.c` is 2,730 lines against
+`silva_expandere.c`'s 3,070.
 
 ---
 
@@ -103,7 +129,8 @@ silva_arbor_legere_parsuram (
 `SilvaArborScriptura` and `SilvaArborVitium` already exist
 (`silva_arbor.h`) — reuse, do not redeclare.
 
-- [ ] **Step 1 — create the file with its header comment.** State:
+- [ ] **Step 1 — append a banner section to `silva_arbor.c`** with a
+  header comment. State:
   the document is a projection of the FILE not the parse (spec §1);
   the emission closure is the six things `silva_scribere_fontem`
   reads; strata and health flags are excluded because layers are
@@ -112,7 +139,8 @@ silva_arbor_legere_parsuram (
 - [ ] **Step 2 — the envelope, write side.** Build an `StmlNodus`
   tree as M1's writer does, then one `stml_scribere(radix, piscina,
   VERUM)`. Attributes on `<parsura>`: `grammatica` (the parameter),
-  `sigillum` (from `silva_arbor_sigillum`), `fons` (the path from
+  `registrum-sigillum` (from `silva_arbor_sigillum`) — this is the
+  name M1 already uses (`silva_arbor.c:1449`), not `sigillum`, `fons` (the path from
   `expansio->fontes[fons_index].via`). **No `ancora`, no
   `linea-initium`** — a file is the beginning, so positions derive
   from offset 0, line 1 (spec §1).
@@ -120,11 +148,18 @@ silva_arbor_legere_parsuram (
   entry of `parsura->expansio->fontes` (`Xar` of `SilvaFons` **by
   value** — `silva_expandere.h:176`). Mark lexicon sources with a
   bare `lexicon` attribute.
-- [ ] **Step 4 — the tree.** Walk `parsura->commissio->radix` (a
-  `SilvaValor` LISTA) and call the existing
-  `silva_arbor_scribere_nodum` per top-level node, splicing the
-  resulting elements as children of `<parsura>`. Reuse, do not
-  reimplement.
+- [ ] **Step 4 — the tree.** Drive M1's internal walk directly, ONE
+  `ArborScriptor` for the whole document: `_numerare_nodum` over
+  every top-level node first (pass I — counting fragment uses and
+  capturing nothing else), then `_scribere_nodum_internum` per node
+  (pass II), appending each returned `StmlNodus*` as a child of
+  `<parsura>`. **Do not call the public `silva_arbor_scribere_nodum`
+  per node** — it returns text, and it resets `numerus_notarum`, so
+  two nodes would both emit `<#lex1>` and the document would carry
+  duplicate ids.
+  **The anchor fields on the scriptor are unused here** — a file
+  starts at offset 0 — but `_numerare_nodum` sets them anyway; leave
+  them set and simply do not write them onto the envelope.
 - [ ] **Step 5 — `<cauda>`.** Emit `parsura->lexema_finis` as one
   `lex-eof` element inside `<cauda>`, following
   `silva_scribere.c:721-726`'s guard: emit only when
@@ -135,7 +170,7 @@ silva_arbor_legere_parsuram (
   reached.
 - [ ] **Step 6 — the read side.** Validate before constructing, as
   `silva_arbor_legere` does: envelope tag present; `grammatica`
-  matches; **`sigillum` matches or REFUSE** (a tree judged by the
+  matches; **`registrum-sigillum` matches or REFUSE** (a tree judged by the
   wrong vocabulary is a lie); every child element is a known
   section or a known genus. Allocate a `SilvaParsura`; create its
   `SilvaExpansio` with `silva_expansio_creare(piscina)` and refill
@@ -159,10 +194,10 @@ silva_arbor_legere_parsuram (
   arbor_parsura`. **Exit 2 means the filter matched nothing**, not
   that it passed.
 - [ ] **Step 10 — sigil sensitivity.** Assert a document whose
-  `sigillum` attribute is hand-mutated by one nibble is REFUSED,
+  `registrum-sigillum` attribute is hand-mutated by one nibble is REFUSED,
   with a `causa` naming the seal.
 - [ ] **Step 11 — censor, formator, amalgam.**
-  `./silva/censor.sh silva/fontes/silva_arbor_parsura.c`, then
+  `./silva/censor.sh silva/fontes/silva_arbor.c`, then
   `./silva/formator.sh … -scribere`, then `./silva/amalgamare.sh`.
 - [ ] **Step 12 — commit.**
 
