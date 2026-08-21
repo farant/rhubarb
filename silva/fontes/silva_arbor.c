@@ -2954,15 +2954,46 @@ _parsura_ancoram_scribere (
                StmlNodus* elementum,
      constans SilvaToken* lexema)
 {
+    constans SilvaToken* initium;
+
     si (lexema == NIHIL || lexema->byte_offset < ZEPHYRUM)
     {
         redde;
     }
+
+    /* ANCORA = sedes ubi EMISSIO INCIPIT, non sedes LEXEMATIS.
+     *
+     * Emissio triviis DUCENTIBUS incipit (commentarium, spatia),
+     * ergo ancora ex lexemate sumpta lectorem cursorem ad lexema
+     * ponere faceret, trivia ANTE id emittere, et sedes omnes
+     * longitudine triviorum labi. Idem vitium M1 T6 cepit (CLXXVIII
+     * divergentiae); hic RECURRIT quia ancoram novam scripsi potius
+     * quam rationem M1 adhibui.
+     *
+     * Probationes unitatis id capere NON potuerunt: fontes earum
+     * commentaria ducentia non habent. 'Fixturae praesumptiones
+     * tuas communicant; corpus non.' */
+    initium = lexema;
+    si (   lexema->spatia_ante != NIHIL
+        && xar_numerus(lexema->spatia_ante) > ZEPHYRUM)
+    {
+        constans SilvaToken* trivium;
+
+        trivium = *(SilvaToken**)xar_obtinere(lexema->spatia_ante,
+            ZEPHYRUM);
+        si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
+        {
+            initium = trivium;
+        }
+    }
+
     _attributum_numeri(scriptor, elementum, "b",
-        (i32)lexema->byte_offset);
-    _attributum_numeri(scriptor, elementum, "linea", lexema->linea);
+        (i32)initium->byte_offset);
+    _attributum_numeri(scriptor, elementum, "linea", initium->linea);
     _attributum_numeri(scriptor, elementum, "columna",
-        lexema->columna);
+        initium->columna);
+    /* initium_lineae LEXEMATIS, non trivii - proprietas lexematis
+     * est (M1 idem facit) */
     si (lexema->initium_lineae)
     {
         stml_attributum_boolean_addere(elementum, scriptor->piscina,
