@@ -4660,6 +4660,41 @@ _parsura_ancoram_legere (
     {
         cursor->columna = numerus;
     }
+
+    /* INDEX LACUNARUM RE-QUAERENDUS.
+     *
+     * 'lacuna_proxima' index MONOTONUS est - semel ultra lacunam
+     * provectus numquam redit. Id rectum esset si ambulatio una
+     * linearis per octetos esset; NON EST. Liberi supremi ordine
+     * ARBORIS stant, non ordine octetorum: contentum capitis inter
+     * eos iacet (e.g. 'declaratio b=8135 linea=403' plagulae
+     * ALTERIUS), ergo ancora cursorem RETRO quoque ponit.
+     *
+     * Sine re-quaesitione lacunae iam praeteritae perduntur, et
+     * lexema post eas sedem NIMIS PARVAM accipit.
+     * MENSURATUM (T7, tempus.c): regio '#ifndef M_PI / #define /
+     * #endif'. Directiva '#define' lacunam [XCIII, CXXIX) ponit,
+     * sed cum conditionalis ad ancoram LXXIX legeretur, index iam
+     * ultra eam erat - ergo '#endif' sedem XCIII accepit, id est
+     * sedem ipsius '#define'. Delta XXXVI = illa linea exacte. */
+    si (cursor->lacunae != NIHIL)
+    {
+        i32 i;
+
+        cursor->lacuna_proxima = xar_numerus(cursor->lacunae);
+        per (i = ZEPHYRUM; i < xar_numerus(cursor->lacunae); i++)
+        {
+            constans ParsuraLacuna* lacuna;
+
+            lacuna = (constans ParsuraLacuna*)
+                xar_obtinere(cursor->lacunae, i);
+            si (lacuna != NIHIL && lacuna->finis > cursor->offset)
+            {
+                cursor->lacuna_proxima = i;
+                frange;
+            }
+        }
+    }
 }
 
 /* Lexemata liberorum elementi in laminam novam. Directivae et

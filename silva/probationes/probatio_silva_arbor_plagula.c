@@ -545,6 +545,27 @@ _plagulam_probare (
 
     /* DIVERGENTIA: comparator campum nominat */
     census->octeti_divergentes++;
+    {
+        /* Documentum plagulae NOMINATAE effundere (diagnosis):
+         * ARBOR_DEFIGERE_NOMEN=tempus.c ARBOR_DEFIGERE=/via/ad/exitum */
+        constans character* nomen_petitum;
+
+        nomen_petitum = getenv("ARBOR_DEFIGERE_NOMEN");
+        si (   nomen_petitum != NIHIL
+            && getenv("ARBOR_DEFIGERE") != NIHIL
+            && strstr(via, nomen_petitum) != NIHIL)
+        {
+            FILE* effusio = fopen(getenv("ARBOR_DEFIGERE"), "wb");
+
+            si (effusio != NIHIL)
+            {
+                fwrite(scriptura.textus.datum, I,
+                    (memoriae_index)scriptura.textus.mensura, effusio);
+                fclose(effusio);
+                imprimere("    (documentum effusum: %s)\n", via);
+            }
+        }
+    }
     si (silva_arbor_parsurae_aequales(origo, lecta,
             SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia))
     {
