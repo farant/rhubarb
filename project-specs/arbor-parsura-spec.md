@@ -138,6 +138,16 @@ and `linea-initium` because a subtree cannot know what precedes it. A
 file *is* the beginning: at file scope every position derives from
 offset 0, line 1, and both attributes disappear.
 
+> **STATUS 2026-08-21 (T7 complete): all SIX closure elements of
+> §0.1 are now built and gated.** `extenta` — the function-like
+> invocation laminae — was the one shipped last; T1–T6 built five of
+> six, and no plain-C fixture could expose the gap. Latinized corpus
+> now round-trips **154/154 through STML, matching silva's own
+> 154/154**. A seventh case was added that §0.1 did not name:
+> **empty macro invocations**, which produce no token and so are
+> carried as reinserenda (`<invocatio-vacua>`) exactly like consumed
+> directive lines.
+
 > **CORRECTED BY MEASUREMENT (2026-08-21, T3b + T6b).** The claim
 > above is right about the **envelope** and wrong about everything
 > inside it. Two cases make derivation *impossible*, not merely

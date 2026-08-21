@@ -37,8 +37,8 @@ before T1, §3 before T6, §6 before T5.
 | T5 M2 gate | shipped `e70f2588` |
 | T6 nested origin | shipped `befe0d71` |
 | T6b anchor follows origin chain | shipped `913299ee` |
-| **T7 latinized tier + apparatus gate** | **next** |
-| T8 amalgam | pending |
+| T7 latinized tier + apparatus gate | **DONE** — 154/154 both oracles |
+| **T8 amalgam** | **next** — but amalgam was regenerated + verified twice on 2026-08-21 (hospes 38/38, nm-intersection 0), so less remains than written |
 
 **Both gates at full coverage**: M1 281/281 both oracles, M2 78/78
 byte-exact, zero refusals, zero divergences on either.
