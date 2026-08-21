@@ -142,6 +142,15 @@ would start — name it in every downstream spec.
 - **M2 — full parsura**: directives, conditional regions, strata,
   origo chains via fragments/`#id` (§3c); gate = the VISIO oracle
   itself, code→STML→load→emit == code over the corpus.
+  - *2026-08-21 — §2 SHIPPED and the gate is GREEN* (78/78 files
+    byte-exact; M1's subtree gate rose to 281/281 both oracles).
+    **`strata` were deliberately dropped from the document**: layers
+    are OUTPUTS of expansion, so a document meant to be edited must
+    not contain them — a document holding an edited file beside an
+    unedited stratum could lie. Name reserved, nothing owed. Origin
+    is **nested inside the token**, not pooled. See
+    `arbor-parsura-spec.md`. Remaining in M2: latinized corpus tier,
+    amalgam integration, canon projection.
 - **M3 — the explorer** (§3a) on M1's output; laboratorium-first.
 - **M4 — components/mining door** (§3b) — opens toward mutatio-visio
   and speculum; not before M2's gate is green.

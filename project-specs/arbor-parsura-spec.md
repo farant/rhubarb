@@ -130,6 +130,30 @@ and `linea-initium` because a subtree cannot know what precedes it. A
 file *is* the beginning: at file scope every position derives from
 offset 0, line 1, and both attributes disappear.
 
+> **CORRECTED BY MEASUREMENT (2026-08-21, T3b + T6b).** The claim
+> above is right about the **envelope** and wrong about everything
+> inside it. Two cases make derivation *impossible*, not merely
+> inconvenient, so positions there are **carried**:
+>
+> 1. **Top-level children carry their own anchor.** Non-tree content
+>    (a degraded region's laminae) can sit *inside* a node's byte
+>    span — a region inside an initializer, say — so document order
+>    cannot express byte order, and one linear cursor mis-places
+>    everything after the first such node.
+> 2. **Expanded tokens carry `b`/`linea`/`columna`, and only they
+>    do.** `silva_token_ex_expansione` (`silva_token.c:78`) copies
+>    the *def-site's* coordinates onto an expanded token, so its
+>    position belongs to a **different file** and is absent from this
+>    byte stream entirely. Deriving it would be invention.
+>
+> The law "a canonical document must not be able to lie" is intact:
+> it governs where derivation is *possible*. A third consequence —
+> an anchor must follow the origin chain to the stratum-0 invocation,
+> because that is where emission actually begins — is why
+> `_parsura_lexema_emissionis` exists. See the worklog's
+> "ANCHOR LAW" section; this rule has now failed three times in
+> three different faces.
+
 ### 1.1 Doctrine paragraph (required restatement)
 
 `arbor-stml-visio.md` §4 requires this be named in every downstream

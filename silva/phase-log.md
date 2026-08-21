@@ -13377,3 +13377,93 @@ CONSILIUM MUTATUM: proiectionem canonis 'initium vile M2' dixeram.
 Independens manet, sed vilis non est et emendationem canon-lateris
 prius petit. Interim piscina originum ex 'maximi pretii' in 'sine qua
 arbor codicem nostrum omnino tangere nequit' mota est.
+
+## 2026-08-21 — RELATIO: M2 §2 forma <parsura> (T1-T6b)
+
+**ORACULUM VISIONIS VIVIT.** 'code->STML->load->emit == code' super
+corpus totum viret, et dimidium dormiens oraculi fidelitatis (quod
+parcum 01M0DMSTEJ nominat) dormit non amplius.
+
+| porta | ante M2 | nunc |
+|---|---|---|
+| M1 subarbores | CCLXX/CCLXXXI, XI recusatae | **CCLXXXI/CCLXXXI utroque** |
+| M2 plagulae | — | **LXXVIII/LXXVIII octetim** |
+
+Utraque: recusationes NULLAE, divergentiae NULLAE, comparator nusquam
+caecus. silva XLVI/XLVI; radix CXXXIV; censor PURUS; amalgama
+VERIFICATUM.
+
+Commissa: 2f9b8e1e spec · d5e77deb planum · 90d4e417 correctio plani ·
+bcd8a80f T1 · 117a58b8 T2 · d1799aed T3a · 3db61828 T3b-I · 6171d8eb
+T3b · 87b1eee3 T4 · e70f2588 T5 · befe0d71 T6 · 913299ee T6b ·
+cde30fca worklog. Narratio plena in
+`silva/fontes/silva_arbor.worklog.md` (introitus 2026-08-21).
+
+### LEX ANCORAE - TER FEFELLIT, TRIBUS FACIEBUS
+
+'Ancora est ubi EMISSIO INCIPIT, non ubi lexema stat.'
+
+1. **M1 T6** trivia ducentia — CLXXVIII divergentiae.
+2. **M2 T5** IDEM vitium REINTRODUCTUM, quia adiutorem NOVUM scripsi
+   pro parsura potius quam rationem M1 adhibui — IV plagulae.
+3. **M2 T6b** lexema EXPANSUM emissionem ab invocatione strati 0
+   incipit, sed `silva_token_ex_expansione` (silva_token.c:78) campos
+   lexicales A CORPORE copiat — ergo sedem DEF-SITE fert, plagulae
+   ALTERIUS. Mensuratum: latina.h linea CCCXLIX ancoram lineae XXXIX
+   accipiebat.
+
+**LEX GENERALIS (facies secunda):** superficies nova quae conceptum
+vetustum RE-IMPLET vitia eius RE-INVENIT. Ratio COPIANDA est, non
+re-cogitanda. `_parsura_lexema_emissionis` nunc AMBABUS ancoris
+servit — una functio, non duae rationes.
+
+### COMPLEXITATES SOLUTAE
+
+- **Sedes: deriva ubi possibile, PORTA ubi impossibile.** Lex M1 stat,
+  sed duo loca inventa ubi derivatio non incommoda sed IMPOSSIBILIS
+  est: liberi supremi (contentum non-arboreum intra spatium octetorum
+  nodi iacere potest, ergo ordo documenti ordinem octetorum exprimere
+  nequit) et lexemata expansa (ordinatae plagulae ALTERIUS).
+- **Cursor lacunarum conscius + DUO PASSUS.** Arbor octetos contiguos
+  emittit sed lexemata eius INTERRUMPUNTUR. Lacuna NON est sedes
+  portata — ex derivatione LAMINAE IPSIUS computatur. Laminae lacunas
+  FACIUNT, ergo ante arborem legendae.
+- **Ordo documenti ≠ structura ONERATA.** Tensio inter 'directivae ubi
+  scriptae' et 'arbor pura' dissolvitur cum haec separantur: lector
+  eas RETRAHIT; puritas proprietas arboris ONERATAE est.
+- **Regiones: mensura laborem minuit.** Regio TEXTA lineas ex ARBORE
+  emittit, ergo semita M1 eam iam tractabat — III ex V formis iam
+  virides ANTE codicem.
+
+### LACUNAE REPRAESENTATIONALES NOMINATAE (non tacitae)
+
+Regiones TEXTAE in expansione onerata non renascuntur (laminae earum
+lexemata EADEM monstrant quae nodus conditionalis fert; reficere
+identitatem frangeret — referentiae `#id` TRANS SECTIONES opus
+essent). `expressio` non portata. Caecatio exclusa (`cauda="#c7"`
+reservata). Documenta plagularum inclusarum RECUSANT NOMINATIM.
+Strata CONSULTO exclusa (exitus expansionis sunt; documentum mutabile
+ea ferre non debet) — nomen reservatum, nihil debitum.
+
+### CAUTIO PRO SESSIONE PROXIMA
+
+**Hypothesis in commisso scripta 'nondum probata' dicere DEBET.** In
+befe0d71 scripsi residuum ex lexematibus expansis obiectum def-site
+COMMUNICANTIBUS venire. Plausibile, FALSUM — constructor lexema NOVUM
+omni expansione creat. Una lectio id refutavit. Si ante compactationem
+non probavissem, haec sessio ductum falsum ex COMMISSO accepisset,
+artificio maxime fidendo. Solvenda sunt dum solvere vile est.
+
+### IN VOLATU
+
+T7 (gradus latinizatus + porta apparatus) PROXIMA, et NON formalitas:
+prima vice arbor `lib/*.c` cum clausuris veris occurrit, et assertio
+vetus 'codex latinizatus C% recusatur' nunc falsa esse DEBET — sed
+'debet' non est 'est'. Eadem forma quae in T5 quattuor mirationes
+peperit. Porta apparatus ibi aedificanda: plagula latina.h transitive
+includens quae ZERO lexemata EXPANSIO reddit CADAT CLARE (bis iam
+incendit, duabus causis diversis).
+Deinde T8 amalgama (CADENDA_TYPEDEF + hospes per caput;
+`silva_arbor_parsurae_aequales` API publica NOVA).
+M2 §3 proiectio canonis independens manet, emendationem canon-lateris
+prius petens.
