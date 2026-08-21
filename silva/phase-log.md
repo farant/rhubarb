@@ -13467,3 +13467,79 @@ Deinde T8 amalgama (CADENDA_TYPEDEF + hospes per caput;
 `silva_arbor_parsurae_aequales` API publica NOVA).
 M2 §3 proiectio canonis independens manet, emendationem canon-lateris
 prius petens.
+
+## RELATIO — M2 §2 T7 (gradus latinizatus), 2026-08-21
+
+Corpus planum (LXXVIII plagulae) C PURUM est. T7 arborem ad `lib`
+duxit: CLIV plagulae, OMNES latinizatae, CXXIX DCCCLXXXIV lexemata
+ex latina.h expansa.
+
+**OCTETIM EXACTAE: 0 -> CXL ex CLIV.** Scriptura recusata 0.
+Lectio recusata XXXII -> I. Nulla regressio: M1 CCLXXXI/CCLXXXI
+ambo oracula, M2 planum LXXVIII/LXXVIII.
+
+### PORTA APPARATUS FORAMEN HABEBAT
+
+Aedificata prius, deinde CALIBRATA clausuram NEGANDO - et calibratio
+statim pretium suum solvit. Prima forma lexemata expansa OMNIA
+numerabat, ergo LIX ex CLIV transibant dum latina.h numquam aperta
+esset: plagula quaeque suum '#define' ferens expansiones sine ulla
+clausura parit. XLIII plagulae ut circuitus mundi codicis latinizati
+CERTIFICATAE essent, quae latinizatae non erant.
+
+**LEX: porta quae PROXIMUM rei mensurat nihil mensurat.** 'An ullum
+macrum expansum sit' proximum est; 'an HUIUS plagulae macra expansa
+sint' res ipsa. Nunc def-site in latina.h petitur.
+
+### QUATTUOR VITIA, NULLUM PROBATIONI UNITATIS VISIBILE
+
+I. **Defaltum asymmetricum ('f').** Scriptor contra `ancora_fons`
+   omittit, lector ad `fons-princeps` restituit. Uno fonte idem
+   numerus - ergo LXXVIII/LXXVIII virebant vitio praesente. Insuper
+   statutio initialis a `_numerare_lexema` TACITE delebatur.
+II. **Trivia fontem non ferebant** - IMPOSITUS, non portatus (lex M1
+    integra: derivabile est).
+III. **Origo fragmenta non aperiebat** (XXXI plagulae). Semita
+     arboris id iam agebat. TERTIA VICE hac sessione superficies
+     nova vitium superficiei veteris RE-INVENIT.
+IV. **`extenta` NUMQUAM LATA** - sextum clausurae elementum. Spec
+    0.1 SEX nominat; QUINQUE aedificaveram. Invocatio
+    functio-similis octetos [nomen..')'] tegit sed lexema nomen
+    SOLUM est; argumenta a NULLO lexemate arboris monstrantur.
+    ARITHMETICA causam nominavit ubi coniectura BIS erraverat:
+    `ROUTA_METHODUS_BIT(m)` delta III = '(m)'; `SHA1_ROL(...)`
+    delta LV = argumenta. Macra OBIECTUM-SIMILIA id perfecte
+    celant - pro 'si' nomen IPSUM tota invocatio est.
+
+### IN VOLATU (XIV plagulae, IV classes - FORMAE, non coniecturae)
+
+- lacunae regionum (III): `#ifndef X / #define X / #endif`;
+  `tempus.c` delta XXXVI = illa linea `#define` cum nova linea
+- regiones intra functiones (IV): `uuid.c` `#ifdef __APPLE__`
+  utroque bracchio retento, delta CXII
+- spatium ordinatarum (II): lexema capitis (f=2, princeps VI),
+  octetus propinquus sed linea longe aberrans (CCCXII pro CDIV)
+- numerus directivarum (III): NOVITER APERTUM ab extentis, non
+  necessario ab eis CAUSATUM
+- I initium-lineae; I transclusio (`arbor2_glr_tabula.c`, tabula
+  generata - documentum maximum corporis, linea STML MDCCCXVI
+  CDLXX)
+
+**NUMERI PAVIMENTUM SUNT, NON AESTIMATIO.** Comparator primam solam
+divergentiam per plagulam nuntiat, ergo omnis sanatio adhuc stratum
+ulterius aperuit, non numerum clausit.
+
+### INSTRUMENTA
+
+`ARBOR_DEFIGERE=<via>` in probatione plagulae documentum STML
+plagulae recusatae effundit et lineam STML recusationis imprimit -
+sic vitium fragmenti inventum est. `praebere` in `_plagulam_probare`
+sutura calibrationis PERMANENS est; polaritas tuta (positio falsa
+portam CLAMARE facit).
+
+Lexicon POSIX sanatus: popen/pclose in systema_posix.h - sanatio,
+non pinna, ut doctrina silvae iubet.
+
+Deinde: T8 amalgama (CADENDA_TYPEDEF + hospes per caput;
+`silva_arbor_parsurae_aequales` API publica NOVA). M2 §3 proiectio
+canonis independens manet.

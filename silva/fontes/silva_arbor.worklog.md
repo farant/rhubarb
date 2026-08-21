@@ -820,3 +820,113 @@ settling it is still cheap.**
 - **The formatter reformats between edits**, so `Edit`/`replace`
   anchors go stale constantly. Line-range replacement with an
   assertion is the reliable shape.
+
+---
+
+## 2026-08-21 (later) — T7: the latinized tier
+
+The plain-C corpus (78 files) is **pure C**: no `latina.h`, so no expanded
+tokens at all. Everything M2 proved, it proved on code that looks nothing
+like ours. T7 points the gate at `lib/*.c` — 154 files, **all** latinized,
+**129,884** tokens expanded from `latina.h`.
+
+**Byte-exact went 0/154 → 140/154.** Write refusals 0. Read refusals 32 → 1.
+
+### The apparatus gate had a hole in it
+
+Built first, per spec §6.5, then calibrated by **withholding** the closure.
+That calibration paid for itself immediately: the first version counted
+*any* EXPANSIO token, which let **59 of 154 files pass** while `latina.h`
+was never opened — because any file with a local `#define` of its own
+(`XAR_FACTOR_DUPLICANDI` in `lib/xar.c`) produces expansions with no
+closure supplied. It would have certified 43 files as clean round trips of
+latinized code that was never latinized.
+
+The gate now counts only expansions whose **def-site is latina.h**
+(`origo.datum.expansio.corpus->fons_index`). Re-calibrated: 154/154 caught,
+zero false passes.
+
+**Law: a gate that measures a proxy for the thing measures nothing. "Did
+any macro expand" is a proxy; "did THIS file's macros expand" is the fact.**
+
+The `praebere` parameter on `_plagulam_probare` is a permanent calibration
+seam. Its polarity is safe: the wrong setting makes the gate SCREAM, not
+go quiet.
+
+### Four defects, none findable by unit tests
+
+**1. Asymmetric default on `f` (122 files).** The writer omits a token's
+`fons_index` when it equals `scriptor->ancora_fons`; the reader restores an
+absent one to `lector->fons_ordinarius` = `fons-princeps`. **Two different
+defaults for the same absence.** With one source those are the same number
+— which is exactly why 78/78 stayed green with the bug present. Supply a
+closure and `fons_princeps` is the LAST index (provided sources take
+earlier ones), so every token of source 0 silently became the main file.
+
+Second layer: setting `ancora_fons` at scriptor init was **silently
+clobbered** by `_numerare_lexema`, which re-anchors from the first token of
+the walk — and in a latinized file that token comes from a *header*. The
+assignment had to move to after `_numerare_valorem`.
+
+**2. Trivia carried no source (7 files).** `_trivium_legere` creates them
+with `fons_ordinarius`, so a header's newline became a main-file newline
+and the emitter filed it under the wrong file. Fixed by **inheritance**,
+not by carrying: trivia demonstrably live in their token's file, so M1's
+"derive where possible" holds.
+
+**3. The origin path didn't unwrap fragments (31 files).** An invocation is
+usually written `<#lexN>`; `_origo_legere` handed the wrapper straight to
+`_lexema_legere`, which looked up `#lexN` in the token registry. The tree
+walk already called `_fragmentum_aperire`. **Third time this session a new
+surface re-earned a problem the old surface had solved.**
+
+**4. `extenta` was never built — the sixth closure element.** Spec §0.1
+names six things the emitter reads; I shipped five. `expansio->extenta`
+(function-like invocation laminae) was not among them, and no plain-C
+fixture could expose it.
+
+`SHA1_ROL(a, b)` covers bytes `[nomen..')']`, but the invocation token is
+the **name alone**. Arguments, parens and commas are consumed — referenced
+by *no* tree token — so they cannot be derived. Carried, per M1's law.
+
+**Arithmetic named the cause; guessing had failed twice before it:**
+
+| file | invocation | uncounted | delta |
+|---|---|---|---|
+| `hospitium.c:677` | `ROUTA_METHODUS_BIT(m)` | `(m)` = 3 | **3** |
+| `friatio.c:145` | `SHA1_ROL(w[i-III] ^ …, I)` | 55 | **55** |
+
+Object-like macros hide this completely: for `si`/`NIHIL` the name *is* the
+whole invocation. Built as `<extentum>` inside `<expansio>`, written once
+per invocation (later uses transclude), and **derivation walks the lamina
+too** — emission and derivation must traverse the same bytes, so
+`ArborCursor` now carries the expansio.
+
+M1 subtree documents deliberately do NOT carry extents: the M1 gate
+compares silva output against silva output, so it is symmetric. Named
+limit, not a hidden one.
+
+### Also
+
+- **Healed silva's POSIX lexicon** (`popen`/`pclose` in `systema_posix.h`'s
+  stdio section) rather than pinning them — that section's own comment
+  documents this same class from the 2026-08-03 glibc sweep.
+- `ARBOR_DEFIGERE=<path>` on the plagula test dumps the STML of a
+  read-refusing file and prints the refusal's STML line. That is how the
+  fragment bug was found: line 1,816,470 of a 1.8M-line document.
+
+### Still open (14 files, four classes — all shapes, not guesses)
+
+| class | files | shape |
+|---|---|---|
+| region gaps | 3 | `via 55.1`; `#ifndef X / #define X / #endif`. `tempus.c` delta 36 = exactly that `#define` line + newline |
+| in-function regions | 4 | deep paths; `uuid.c` `#ifdef __APPLE__` with both arms retained, delta 112 |
+| coordinate space | 2 | `tcp_posix.c`, `imago_opus.c`: token from a header (`f=2`, princeps 6), byte close but line wildly off (312 vs 404) |
+| directive count | 3 | `directivae/numerus` — NEWLY EXPOSED by the extenta fix, not necessarily caused by it |
+| + | 1 | `initium-lineae`; 1 transclusion refusal (`arbor2_glr_tabula.c`, the generated table — biggest doc in the corpus) |
+
+**Read these counts as a FLOOR, not an estimate.** The comparator reports
+only the first divergence per file, so every fix so far has revealed a
+further layer rather than closing the count: `lexema/fons` became
+`lexema/offset`; clearing 31 read refusals turned them into 20 new
+divergences.
