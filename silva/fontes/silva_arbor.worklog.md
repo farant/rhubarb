@@ -930,3 +930,35 @@ only the first divergence per file, so every fix so far has revealed a
 further layer rather than closing the count: `lexema/fons` became
 `lexema/offset`; clearing 31 read refusals turned them into 20 new
 divergences.
+
+### The separating oracle — whose gap was it?
+
+Fran asked whether the function-like macro gap was OUR projection or
+silva's AST construction. That deserved a measurement, not a reading of
+the code, so the plagula test now emits **directly** from the original
+parsura (`parsare -> silva_scribere_fontem`, no STML) beside the full
+round trip:
+
+| corpus | silva alone | through STML |
+|---|---|---|
+| plain C (78) | 78/78 | 78/78 |
+| latinized (154) | **153/154** | 140/154 |
+
+**The gap is ours.** Silva records invocation extents correctly
+(`silva_expandere.c` populates `exp->extenta`; `silva_scribere.c`
+consults it) and emits our own latinized code at 153/154. Every
+divergence the STML round trip shows is the projection layer losing
+something silva already had. Spec §0.1 had named `extenta` as part of
+the closure; the miss was in the build, not the design.
+
+**Keep this oracle permanently.** Without it, a core defect and a
+projection defect are indistinguishable in one number — and the whole
+value of the M2 gate is that its expected value is external to silva.
+This splits the *other* axis: silva-vs-us.
+
+**New finding it exposed:** `lib/arbor2_glr_tabula.c` (1.5 MB, the
+generated GLR table) fails silva's **own** direct emission —
+`successus=0`, output length 0. That is a silva-core defect, not a
+projection one, and it is the same file that fails our transclusion
+path. Its size makes it the likely pathological case. Recorded, not
+fixed — it is out of T7's scope and belongs to silva proper.

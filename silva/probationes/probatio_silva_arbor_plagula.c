@@ -72,6 +72,9 @@ nomen structura {
     i32 octeti_divergentes;
     i32 comparator_tacuit;   /* octeti divergunt, arbor 'aequalis' */
 
+    /* ORACULUM SEPARANS: emissio directa (silva sola, sine STML) */
+    i32 directa_exacta;
+
     /* PORTA APPARATUS (spec 6.5) */
     i32 latinizatae;         /* plagulae quarum clausura latina.h fert */
     i32 apparatus_fracti;    /* latinizatae, sed ZERO lexemata expansa */
@@ -449,6 +452,40 @@ _plagulam_probare (
         }
     }
 
+    /* ==========================================================
+     * ORACULUM SEPARANS: emissio DIRECTA ex parsura originali,
+     * sine circuitu STML.
+     *
+     * Respondet quaestioni quae aliter coniectura maneret: cum
+     * plagula circuitum non superat, utrum SILVA ipsa eam emittere
+     * nequit, an PROIECTIO NOSTRA aliquid amittit? Emissio directa
+     * silvam solam probat (parsare -> scribere_fontem); si ea
+     * exacta est dum circuitus STML divergit, vitium NOSTRUM est.
+     * Sine hoc numero utrumque stratum uno numero involvitur.
+     * ========================================================== */
+    {
+        SilvaScriptura directa;
+
+        directa = silva_scribere_fontem(opus, origo,
+            &SILVA_C89_REGISTRUM, origo->fons_princeps);
+        si (   directa.successus
+            && directa.textus.mensura == mensura
+            && memcmp(directa.textus.datum, fons,
+                   (memoriae_index)mensura) == ZEPHYRUM)
+        {
+            census->directa_exacta++;
+        }
+        alioquin si (clausura != NIHIL)
+        {
+            /* VITIUM SILVAE IPSIUS, non proiectionis nostrae -
+             * nominandum, ne in numero circuitus lateat. */
+            imprimere("    DIRECTA RECUSATA (vitium SILVAE): %s"
+                " [successus=%d mensura=%d/%d]\n", via,
+                (integer)directa.successus,
+                (integer)directa.textus.mensura, (integer)mensura);
+        }
+    }
+
     scriptura = silva_arbor_scribere_parsuram(opus, origo,
         &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps, NIHIL);
     si (!scriptura.successus)
@@ -628,7 +665,9 @@ principale (vacuum)
     closedir(corpus);
 
     imprimere("  plagulae:            %d\n", (integer)census.plagulae);
-    imprimere("  OCTETIM EXACTAE:     %d / %d\n",
+    imprimere("  DIRECTA exacta:      %d / %d  (silva sola)\n",
+        (integer)census.directa_exacta, (integer)census.plagulae);
+    imprimere("  OCTETIM EXACTAE:     %d / %d  (per STML)\n",
         (integer)census.octetim_exactae, (integer)census.plagulae);
     imprimere("  scriptura recusata:  %d\n",
         (integer)census.scriptura_recusata);
@@ -699,7 +738,10 @@ principale (vacuum)
         (integer)census_latinus.apparatus_fracti);
     imprimere("  clausurae truncatae: %d\n",
         (integer)census_latinus.clausurae_truncatae);
-    imprimere("  OCTETIM EXACTAE:     %d / %d\n",
+    imprimere("  DIRECTA exacta:      %d / %d  (silva sola)\n",
+        (integer)census_latinus.directa_exacta,
+        (integer)census_latinus.plagulae);
+    imprimere("  OCTETIM EXACTAE:     %d / %d  (per STML)\n",
         (integer)census_latinus.octetim_exactae,
         (integer)census_latinus.plagulae);
     imprimere("  scriptura recusata:  %d\n",
