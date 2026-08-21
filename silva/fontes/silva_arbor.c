@@ -611,6 +611,33 @@ _numerare_lexema (
          * (T6: X divergentiae 'lexema/initium-lineae' hinc.) */
         scriptor->ancora_initium_lineae = lexema->initium_lineae;
     }
+
+    /* LEXEMATA ORIGINIS quoque numeranda. Invocatio UNA plura
+     * lexemata expansa gignere potest (macro functio-simile:
+     * credo.h CR(x)), et si quodque suam copiam scriberet emissor
+     * invocationem PLURIES redderet - identitas duplicata
+     * mentiretur (lex duplex, spec v1 §6). Hic numerata, machina
+     * fragmentorum eandem rem agit quam bracchiis ambiguis agit.
+     *
+     * Post creationem notae SOLUM: lexema bis visum originem
+     * eandem habet, ergo bis numerare usus inflaret. */
+    commutatio (lexema->origo.genus)
+    {
+    casus SILVA_ORIGO_EXPANSIO:
+        _numerare_lexema(scriptor,
+            lexema->origo.datum.expansio.invocatio);
+        frange;
+    casus SILVA_ORIGO_PASTA:
+        _numerare_lexema(scriptor, lexema->origo.datum.pasta.sinister);
+        _numerare_lexema(scriptor, lexema->origo.datum.pasta.dexter);
+        frange;
+    casus SILVA_ORIGO_CHORDA:
+        _numerare_lexema(scriptor,
+            lexema->origo.datum.stringificatio.primus);
+        frange;
+    ordinarius:
+        frange;
+    }
 }
 
 interior vacuum
@@ -899,6 +926,127 @@ constans character* titulus)
 interior StmlNodus*
 _scribere_lexema (
           ArborScriptor* scriptor,
+    constans SilvaToken* lexema);
+
+/* Originem lexematis in elementum eius NESTARE.
+ *
+ * FONS nihil fert - ~XC% lexematum nihil solvit.
+ *
+ * Liberum NESTATUM lexema PLENUM est, non nomen: invocatio trivia
+ * FERT (silva_nodus.h), ergo spatia ducentia in ea vivunt.
+ *
+ * DEF-SITE per REFERENTIAM (def-f/def-l), numquam inlinatum: aliter
+ * quaeque plagula latina.h utens lexemata latina.h COPIARET.
+ * Honeste: referentia pendere potest si plagula definiens huic
+ * documento non adest - limes nominatus, non celatus.
+ *
+ * CAECATIO EXCLUSA: hidesets recursionem expansionis prohibent et
+ * refectio eos NUMQUAM consulit, ergo clausurae emissionis non
+ * pertinent (spec §3). Reservata ut 'cauda="#c7"'. */
+interior b32
+_origo_scribere (
+           ArborScriptor* scriptor,
+               StmlNodus* elementum,
+     constans SilvaOrigo* origo)
+{
+     constans character* tag;
+        constans chorda* titulus_macro;
+    constans SilvaToken* primus;
+    constans SilvaToken* secundus;
+    constans SilvaToken* definitio;
+              StmlNodus* elem;
+              StmlNodus* scriptum;
+
+    primus     = NIHIL;
+    secundus   = NIHIL;
+    definitio  = NIHIL;
+
+    commutatio (origo->genus)
+    {
+    casus SILVA_ORIGO_FONS:
+        redde VERUM;
+    casus SILVA_ORIGO_EXPANSIO:
+        tag            = SILVA_ARBOR_TAG_EXPANSIO;
+        titulus_macro  = origo->datum.expansio.nomen_macro;
+        primus         = origo->datum.expansio.invocatio;
+        definitio      = origo->datum.expansio.corpus;
+        frange;
+    casus SILVA_ORIGO_PASTA:
+        tag            = SILVA_ARBOR_TAG_PASTA;
+        titulus_macro  = origo->datum.pasta.nomen_macro;
+        primus         = origo->datum.pasta.sinister;
+        secundus       = origo->datum.pasta.dexter;
+        frange;
+    casus SILVA_ORIGO_CHORDA:
+        tag            = SILVA_ARBOR_TAG_STRINGIFICATIO;
+        titulus_macro  = origo->datum.stringificatio.nomen_macro;
+        primus         = origo->datum.stringificatio.primus;
+        frange;
+    casus SILVA_ORIGO_API:
+        tag            = SILVA_ARBOR_TAG_API;
+        titulus_macro  = origo->datum.api.nomen_macro;
+        frange;
+    ordinarius:
+        scriptor->causa = "genus originis ignotum";
+        redde FALSUM;
+    }
+
+    elem = stml_elementum_creare(scriptor->piscina, scriptor->intern,
+        tag);
+    si (elem == NIHIL)
+    {
+        scriptor->causa = "elementum originis creari non potuit";
+        redde FALSUM;
+    }
+    si (titulus_macro != NIHIL && titulus_macro->mensura > ZEPHYRUM)
+    {
+        stml_attributum_addere_chorda(elem, scriptor->piscina,
+            scriptor->intern, "macro", *titulus_macro);
+    }
+    si (definitio != NIHIL)
+    {
+        _attributum_numeri(scriptor, elem, "def-f",
+            (i32)definitio->fons_index);
+        _attributum_numeri(scriptor, elem, "def-l", definitio->linea);
+        _attributum_numeri(scriptor, elem, "def-c", definitio->columna);
+    }
+    si (primus != NIHIL)
+    {
+        scriptum = _scribere_lexema(scriptor, primus);
+        si (scriptum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!stml_liberum_addere(elem, scriptum))
+        {
+            scriptor->causa = "invocatio in originem addi non potuit";
+            redde FALSUM;
+        }
+    }
+    si (secundus != NIHIL)
+    {
+        scriptum = _scribere_lexema(scriptor, secundus);
+        si (scriptum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (!stml_liberum_addere(elem, scriptum))
+        {
+            scriptor->causa = "dexter in originem addi non potuit";
+            redde FALSUM;
+        }
+    }
+    si (!stml_liberum_addere(elementum, elem))
+    {
+        scriptor->causa = "origo in lexema addi non potuit";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior StmlNodus*
+_scribere_lexema (
+          ArborScriptor* scriptor,
     constans SilvaToken* lexema)
 {
              character  tag[SILVA_ARBOR_TAG_CAPACITAS];
@@ -915,13 +1063,8 @@ _scribere_lexema (
         redde NIHIL;
     }
 
-    /* LIMES EXPANSIONIS - sicut silva_scribere. M1 clare refutat;
-     * forma 'origo=' M2 reservata est, ergo extensio, non fractura */
-    si (lexema->origo.genus != SILVA_ORIGO_FONS)
-    {
-        scriptor->causa = "lexema non-FONS (limes expansionis)";
-        redde NIHIL;
-    }
+    /* LIMES EXPANSIONIS TOLLITUR (T6): lexema non-FONS originem
+     * NESTATAM fert, non fracturam. Vide _origo_scribere. */
 
     nota = _nota_lexematis(scriptor, lexema);
 
@@ -1081,6 +1224,40 @@ _scribere_lexema (
             scriptor->causa = "scissura addi non potuit";
             redde NIHIL;
         }
+    }
+
+    /* SEDES PORTATA pro lexemate NON-FONS, et SOLUM pro eo.
+     *
+     * Lexema expansum sedem DEF-SITE fert - id est, sedem in
+     * plagula ALIA (latina.h, exempli gratia). Ex hoc fluxu
+     * octetorum derivari NEQUIT, quia in hoc fluxu OMNINO NON EST:
+     * octetos hic invocatio tenet, non expansio. Lex 'sedes
+     * derivatae' integra manet ubi derivatio POSSIBILIS est; ubi
+     * non est, portare honestius quam fingere. */
+    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    {
+        si (lexema->byte_offset >= ZEPHYRUM)
+        {
+            _attributum_numeri(scriptor, elementum, "b",
+                (i32)lexema->byte_offset);
+        }
+        _attributum_numeri(scriptor, elementum, "linea",
+            lexema->linea);
+        _attributum_numeri(scriptor, elementum, "columna",
+            lexema->columna);
+        si (lexema->initium_lineae)
+        {
+            stml_attributum_boolean_addere(elementum,
+                scriptor->piscina, scriptor->intern,
+                "linea-initium");
+        }
+    }
+
+    /* ORIGO nestata - post trivia, ante involucrum fragmenti (ut
+     * fragmentum lexema TOTUM cum origine sua ferat) */
+    si (!_origo_scribere(scriptor, elementum, &lexema->origo))
+    {
+        redde NIHIL;
     }
 
     /* Usus primus lexematis COMMUNICATI: fragmentum nominatum.
@@ -1848,6 +2025,165 @@ interior SilvaToken*
 _lexema_legere (
      ArborLector* lector,
        StmlNodus* elementum,
+          chorda* fragmenti_id);
+
+/* Originem ex elemento nestato reficere.
+ *
+ * ASYMMETRIA HONESTA circa DEF-SITE: documentum eum per
+ * REFERENTIAM fert (def-f/def-l), non per lexemata. Ergo 'corpus'
+ * lexema SYNTHETICUM fit - fontem et lineam ferens, sedem VERAM
+ * non ferens (byte_offset -I). Id est quod referentia praestare
+ * potest; plus fingere mendacium esset. Emissio corpus numquam
+ * legit (invocatio strati 0 emittitur), ergo octeti intacti. */
+interior b32
+_origo_legere (
+    ArborLector* lector,
+      StmlNodus* elementum,
+     SilvaToken* lexema)
+{
+    SilvaOrigoGenus  genus;
+         SilvaToken* primus;
+         SilvaToken* secundus;
+         SilvaToken* definitio;
+          StmlNodus* liberum;
+             chorda* attributum;
+             chorda* titulus_macro;
+                i32  cursor;
+                i32  numerus;
+
+    primus     = NIHIL;
+    secundus   = NIHIL;
+    definitio  = NIHIL;
+
+    si (chorda_aequalis_literis(*elementum->titulus,
+            SILVA_ARBOR_TAG_EXPANSIO))
+    {
+        genus = SILVA_ORIGO_EXPANSIO;
+    }
+    alioquin si (chorda_aequalis_literis(*elementum->titulus,
+                     SILVA_ARBOR_TAG_PASTA))
+    {
+        genus = SILVA_ORIGO_PASTA;
+    }
+    alioquin si (chorda_aequalis_literis(*elementum->titulus,
+                     SILVA_ARBOR_TAG_STRINGIFICATIO))
+    {
+        genus = SILVA_ORIGO_CHORDA;
+    }
+    alioquin si (chorda_aequalis_literis(*elementum->titulus,
+                     SILVA_ARBOR_TAG_API))
+    {
+        genus = SILVA_ORIGO_API;
+    }
+    alioquin
+    {
+        _recusare(lector, "genus originis ignotum", elementum->linea);
+        redde FALSUM;
+    }
+
+    titulus_macro = stml_attributum_capere(elementum, "macro");
+
+    /* Lexemata nestata: invocatio (et dexter pro PASTA) */
+    cursor   = ZEPHYRUM;
+    numerus  = stml_numerus_liberorum(elementum);
+    per (;;)
+    {
+        SilvaToken* lectum;
+
+        si (cursor >= numerus)
+        {
+            frange;
+        }
+        liberum = stml_liberum_ad_indicem(elementum, cursor);
+        cursor++;
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        si (   liberum->genus != STML_NODUS_ELEMENTUM
+            && liberum->genus != STML_NODUS_TRANSCLUSIO)
+        {
+            perge;
+        }
+        lectum = _lexema_legere(lector, liberum, NIHIL);
+        si (lectum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (primus == NIHIL)
+        {
+            primus = lectum;
+        }
+        alioquin si (secundus == NIHIL)
+        {
+            secundus = lectum;
+        }
+    }
+
+    /* DEF-SITE: lexema syntheticum ex referentia */
+    attributum = stml_attributum_capere(elementum, "def-l");
+    si (attributum != NIHIL)
+    {
+           i32 linea;
+           i32 fons;
+           i32 columna;
+        chorda vacua;
+
+        linea    = ZEPHYRUM;
+        fons     = ZEPHYRUM;
+        columna  = ZEPHYRUM;
+        (vacuum)_numerus_ex_chorda(attributum, &linea);
+        attributum = stml_attributum_capere(elementum, "def-f");
+        si (attributum != NIHIL)
+        {
+            (vacuum)_numerus_ex_chorda(attributum, &fons);
+        }
+        attributum = stml_attributum_capere(elementum, "def-c");
+        si (attributum != NIHIL)
+        {
+            (vacuum)_numerus_ex_chorda(attributum, &columna);
+        }
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        definitio = silva_token_ex_fonte(lector->piscina,
+            SILVA_LEX_IDENTIFICATOR, vacua, -I, linea, columna,
+            (s32)fons);
+    }
+
+    lexema->origo.genus = genus;
+    commutatio (genus)
+    {
+    casus SILVA_ORIGO_EXPANSIO:
+        lexema->origo.datum.expansio.invocatio    = primus;
+        lexema->origo.datum.expansio.corpus       = definitio;
+        lexema->origo.datum.expansio.nomen_macro  = titulus_macro;
+        /* CAECATIO consulto NIHIL - vide _origo_scribere */
+        lexema->origo.datum.expansio.caecatio     = NIHIL;
+        frange;
+    casus SILVA_ORIGO_PASTA:
+        lexema->origo.datum.pasta.sinister     = primus;
+        lexema->origo.datum.pasta.dexter       = secundus;
+        lexema->origo.datum.pasta.nomen_macro  = titulus_macro;
+        lexema->origo.datum.pasta.caecatio     = NIHIL;
+        frange;
+    casus SILVA_ORIGO_CHORDA:
+        lexema->origo.datum.stringificatio.primus       = primus;
+        lexema->origo.datum.stringificatio.nomen_macro  =
+            titulus_macro;
+        frange;
+    casus SILVA_ORIGO_API:
+        lexema->origo.datum.api.nomen_macro = titulus_macro;
+        frange;
+    ordinarius:
+        frange;
+    }
+    redde VERUM;
+}
+
+interior SilvaToken*
+_lexema_legere (
+     ArborLector* lector,
+       StmlNodus* elementum,
           chorda* fragmenti_id)
 {
     SilvaLexemaGenus  genus;
@@ -1960,6 +2296,49 @@ _lexema_legere (
         lexema->fons_index = (s32)fons;
     }
 
+    /* SEDES PORTATA (lexema non-FONS solum - vide scriptorem) */
+    attributum = stml_attributum_capere(elementum, "b");
+    si (attributum != NIHIL)
+    {
+        i32 sedes_portata;
+
+        si (!_numerus_ex_chorda(attributum, &sedes_portata))
+        {
+            _recusare(lector, "b non numerus", elementum->linea);
+            redde NIHIL;
+        }
+        lexema->byte_offset = (s32)sedes_portata;
+    }
+    attributum = stml_attributum_capere(elementum, "linea");
+    si (attributum != NIHIL)
+    {
+        i32 numerus_lineae;
+
+        si (!_numerus_ex_chorda(attributum, &numerus_lineae))
+        {
+            _recusare(lector, "linea non numerus", elementum->linea);
+            redde NIHIL;
+        }
+        lexema->linea = numerus_lineae;
+    }
+    attributum = stml_attributum_capere(elementum, "columna");
+    si (attributum != NIHIL)
+    {
+        i32 numerus_columnae;
+
+        si (!_numerus_ex_chorda(attributum, &numerus_columnae))
+        {
+            _recusare(lector, "columna non numerus",
+                elementum->linea);
+            redde NIHIL;
+        }
+        lexema->columna = numerus_columnae;
+    }
+    si (stml_attributum_habet(elementum, "linea-initium"))
+    {
+        lexema->initium_lineae = VERUM;
+    }
+
     /* liberi: <ante>, <post>, <scissura> */
     cursor   = ZEPHYRUM;
     numerus  = stml_numerus_liberorum(elementum);
@@ -1991,6 +2370,20 @@ _lexema_legere (
                          SILVA_ARBOR_TAG_POST))
         {
             si (!_trivia_legere(lector, liberum, &lexema->spatia_post))
+            {
+                redde NIHIL;
+            }
+        }
+        alioquin si (   chorda_aequalis_literis(*liberum->titulus,
+                            SILVA_ARBOR_TAG_EXPANSIO)
+                     || chorda_aequalis_literis(*liberum->titulus,
+                            SILVA_ARBOR_TAG_PASTA)
+                     || chorda_aequalis_literis(*liberum->titulus,
+                            SILVA_ARBOR_TAG_STRINGIFICATIO)
+                     || chorda_aequalis_literis(*liberum->titulus,
+                            SILVA_ARBOR_TAG_API))
+        {
+            si (!_origo_legere(lector, liberum, lexema))
             {
                 redde NIHIL;
             }
@@ -2501,6 +2894,43 @@ _positiones_lexematis (
     {
         redde;
     }
+    /* LEXEMA EXPANSUM OCTETOS NON TENET. In fluxu octetorum
+     * invocatio strati 0 stat (silva_scribere.h:22: 'lexema cuius
+     * origo non FONS est non se emittit - invocatio strati 0
+     * emittitur'), ergo derivatio idem facere DEBET: invocationem
+     * ponere, expansionem praeterire. Aliter cursor bis promovetur
+     * - semel expansione, semel invocatione - et sedes omnes
+     * post primam macro labuntur.
+     *
+     * Dedup 'semel per instantiam' custodia 'iam positum' supra
+     * gratis venit: invocatio inter lexemata expansa COMMUNICATA
+     * est, ergo secundo visu sedem iam habet. */
+    si (lexema->origo.genus != SILVA_ORIGO_FONS)
+    {
+        SilvaToken* invocatio;
+
+        invocatio = NIHIL;
+        commutatio (lexema->origo.genus)
+        {
+        casus SILVA_ORIGO_EXPANSIO:
+            invocatio = lexema->origo.datum.expansio.invocatio;
+            frange;
+        casus SILVA_ORIGO_PASTA:
+            invocatio = lexema->origo.datum.pasta.sinister;
+            frange;
+        casus SILVA_ORIGO_CHORDA:
+            invocatio = lexema->origo.datum.stringificatio.primus;
+            frange;
+        ordinarius:
+            frange;
+        }
+        si (invocatio != NIHIL)
+        {
+            _positiones_lexematis(cursor, invocatio);
+        }
+        redde;
+    }
+
     /* IAM POSITUM: lexema communicatum (bracchia ambigua obiecta
      * eadem ferunt) eosdem octetos fontis tegit, ergo cursor bis
      * promoveri NON debet - alioquin bracchium secundum omnia post

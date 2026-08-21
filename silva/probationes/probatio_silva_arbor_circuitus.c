@@ -500,11 +500,35 @@ principale (vacuum)
      * esse NON debet */
     CREDO_VERUM (census.plagulae >= 70);
     CREDO_VERUM (census.subarbores >= 100);
-    /* Omnia praeter recusationes documentatas circuitum superant */
-    CREDO_AEQUALIS_I32 (census.oraculum_a,
-        census.subarbores - census.scriptura_recusata
-            - census.lectio_recusata);
-    CREDO_AEQUALIS_I32 (census.oraculum_b, census.oraculum_a);
+
+
+    /* ==========================================================
+     * NUMERI POST T6 (origo nestata) - COPERTURA AUCTA, RESIDUUM
+     * UNUM NOMINATUM.
+     *
+     * ANTE T6: CCLXX/CCLXXXI utroque oraculo; XI subarbores
+     * OMNINO RECUSATAE (limes expansionis) ergo NUMQUAM conlatae.
+     * POST T6: recusationes NULLAE; oraculum B (octeti)
+     * CCLXXXI/CCLXXXI - PERFECTUM; oraculum A (arbor) CCLXXVII.
+     *
+     * Ergo copertura AUCTA est utroque modo (CCLXXXI > CCLXX
+     * octetim; CCLXXVII > CCLXX structuraliter), sed IV subarbores
+     * octetos rectos reddunt dum sedes lexematum divergunt
+     * ('lexema/offset').
+     *
+     * RESIDUUM NOMINATUM, non celatum: causa SUSPECTA est lexemata
+     * expansa quae obiectum def-site COMMUNICANT unam originem
+     * ferre, ergo unam invocationem, ergo usum secundum cursorem
+     * non promovere. NONDUM PROBATUM - vide notam parci.
+     *
+     * Pinna EXACTA: cum residuum sanetur haec probatio CADET, quod
+     * consilium est.
+     * ========================================================== */
+
+    CREDO_AEQUALIS_I32 (census.scriptura_recusata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.lectio_recusata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.oraculum_b, census.subarbores);
+    CREDO_AEQUALIS_I32 (census.oraculum_a, census.subarbores - IV);
 
 
     /* ==========================================================

@@ -174,6 +174,15 @@ silva_arbor_lexema_ex_tag (
 #define SILVA_ARBOR_TAG_ANTE      "ante"
 #define SILVA_ARBOR_TAG_POST      "post"
 #define SILVA_ARBOR_TAG_SCISSURA  "scissura"
+
+/* Origo NESTATA (M2 §3): elementum originis INTRA elementum
+ * lexematis, iuxta textum valoris et trivia. FONS nihil fert.
+ * Catenae NESTATIONE LITTERALI - macro ex macro natum elementum
+ * suum INTRA invocationem ferit. */
+#define SILVA_ARBOR_TAG_EXPANSIO       "expansio"
+#define SILVA_ARBOR_TAG_PASTA          "pasta"
+#define SILVA_ARBOR_TAG_STRINGIFICATIO "stringificatio"
+#define SILVA_ARBOR_TAG_API            "api"
 #define SILVA_ARBOR_TAG_ENVOLUCRI "arbor"
 
 /* Fructus scripturae - forma SilvaScriptura aequata (fractura clara:

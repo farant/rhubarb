@@ -384,19 +384,21 @@ principale (vacuum)
     /* Corpus vere lectum - aliter porta tota vacua esset */
     CREDO_AEQUALIS_I32 (census.plagulae, 78);
 
-    /* OCTETIM EXACTAE: LXXIII ex LXXVIII. Quinque recusatae solae
-     * restant, omnes ad LIMITEM EXPANSIONIS - id est scopus T6.
-     * Cum T6 originem nestatam tulerit hi numeri MUTABUNTUR et
-     * haec probatio CADET: consilium est. */
-    CREDO_AEQUALIS_I32 (census.octetim_exactae, 73);
-    CREDO_AEQUALIS_I32 (census.scriptura_recusata, 5);
-    CREDO_AEQUALIS_I32 (census.numerus_recusationum, I);
-    CREDO_VERUM (strcmp(census.recusationes[0].causa,
-        "lexema non-FONS (limes expansionis)") == ZEPHYRUM);
+    /* T6: LIMES EXPANSIONIS SUBLATUS - recusationes V -> 0.
+     * Origo nestata lexemata non-FONS fert, ergo scriptor nihil
+     * amplius recusat. */
+    CREDO_AEQUALIS_I32 (census.scriptura_recusata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census.numerus_recusationum, ZEPHYRUM);
 
-    /* NULLA divergentia octetorum: quod scribitur et relegitur
-     * plagulam IPSAM reddit */
-    CREDO_AEQUALIS_I32 (census.octeti_divergentes, ZEPHYRUM);
+    /* LXXVII ex LXXVIII octetim exactae. UNA superest: latina.h,
+     * casus pathologicus - plagula DEFINITIONUM ipsa, seorsum
+     * parsata, ergo macra sua per se ipsam expandit. Causa
+     * SUSPECTA (nondum probata): lexemata expansa quae obiectum
+     * def-site COMMUNICANT originem UNAM ferunt, ergo invocationem
+     * UNAM, et usus secundus cursorem non promovet. Numerus hic
+     * PINNATUS est ut emendatio ANNUNTIETUR. */
+    CREDO_AEQUALIS_I32 (census.octetim_exactae, 77);
+    CREDO_AEQUALIS_I32 (census.octeti_divergentes, I);
     CREDO_AEQUALIS_I32 (census.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census.emissio_recusata, ZEPHYRUM);
 
