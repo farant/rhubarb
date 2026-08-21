@@ -95,10 +95,24 @@ mostly data, not latinized keywords. So ~70× is the NORMAL latinized
 rate, not a pathological outlier; the 83 MB document is simply 70×
 applied to a 1.5 MB input.
 
+**CAVEAT, found 2026-08-21 after the fact**: the M2 gate parses with
+`oraculum = NIHIL` (`probatio_silva_arbor_plagula.c`), so these
+documents carry MAXIMAL retained ambiguity. Measured on `lib/chorda.c`:
+**392 AMBIGUUS nodes with no oracle vs 3 under `ambigua.sh`'s
+max-knowledge lexicon — ~130×.** Each AMBIGUUS holds every
+interpretation in full, so an unknown but material share of the ratios
+above is retained alternatives, not baseline structure.
+
+Parsing oracle-free is the RIGHT choice for this gate — more AMBIGUUS
+means more shared tokens and more transclusion machinery exercised, so
+the byte-exact bar is harder, not easier. But the inflation figures are
+therefore an UPPER bound for a consumer that supplies an oracle. Do not
+quote them as the cost of the format without this qualification.
+
 **Consequence for a real consumer**: an 83 MB / 1.9M-line document for
-one source file is a genuine constraint for solarium, and the first
-lever is still conclusion 2 below (the hardcoded pretty flag), not
-fragments.
+one source file is a genuine constraint for solarium — though see the
+caveat above — and the first lever is still conclusion 2 below (the
+hardcoded pretty flag), not fragments.
 
 Three conclusions, all acted on below:
 
