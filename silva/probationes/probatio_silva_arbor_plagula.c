@@ -890,17 +890,20 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 154);
 
     /* PROIECTIO NIHIL AMITTIT: circuitus STML numerum silvae
-     * AEQUAT. Quidquid silva emittere potest, per STML circuit. */
-    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 153);
+     * AEQUAT - CLIV/CLIV utrobique. Quidquid silva emittere potest,
+     * per STML circuit, ET NIHIL RECUSATUR. */
+    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 154);
     CREDO_AEQUALIS_I32 (census_latinus.octeti_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.emissio_recusata, ZEPHYRUM);
 
-    /* Una recusatio lectionis, adhuc arbor2_glr_tabula.c sed causa
-     * ALIA: 'transclusio ad fragmentum ignotum' in lectore NOSTRO
-     * (documentum MDCCCXVI milia linearum). Vitium PASTAE solutum
-     * est; hoc separatum manet. */
-    CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, I);
+    /* NULLA recusatio. arbor2_glr_tabula.c (documentum MDCCCXXXVI
+     * milia linearum) ultima cecidit: ordinatio supremorum offset
+     * LEXEMATIS utebatur dum ancora triviis INCLUSIS scriberetur,
+     * ergo directiva commento magno praeeunte post nodum ordinabatur
+     * quem praecedere debebat - unde transclusio ad fragmentum in
+     * arbore definitum ante definitionem legebatur. */
+    CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
 
     /* Comparator nusquam caecus */
     CREDO_AEQUALIS_I32 (census_latinus.comparator_tacuit, ZEPHYRUM);

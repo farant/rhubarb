@@ -3894,6 +3894,50 @@ _parsura_ancoram_scribere (
 /* Offset primi lexematis ordine AMBULATIONIS; -I si nullum lexema.
  * Ordo ambulationis (non minimum octetorum) eligitur ut idem sit
  * ordo quo scriptor emittit. */
+/* Offset ubi EMISSIO lexematis INCIPIT: catena originis ad stratum
+ * 0 secuta, deinde trivium DUCENS si adest.
+ *
+ * LEX ANCORAE, FACIES QUARTA. Ordinatio supremorum offset LEXEMATIS
+ * CRUDI utebatur dum ancora scripta triviis inclusis ordinaretur -
+ * DUAE notiones 'ubi hoc incipit'. Directiva commento magno praeeunte
+ * ergo post nodum ordinabatur quem PRAECEDERE debebat, et ordo
+ * documenti (qui ordo PLAGULAE esse debet) frangebatur.
+ * MENSURATUM (T7): lib/arbor2_glr_tabula.c - directiva ad octetum
+ * MCIII CCLXI post declarationem ad MCIII DCCCXLVII scripta est,
+ * unde transclusio ad fragmentum in arbore definitum ante suam
+ * definitionem lecta est (laminae passu ZERO leguntur).
+ *
+ * EADEM SANATIO QUA ANCORA TER: functio UNA ambabus servit, ratio
+ * COPIATUR non re-cogitatur. */
+interior s32
+_parsura_offset_emissionis (
+    constans SilvaToken* lexema)
+{
+    constans SilvaToken* initium;
+
+    si (lexema == NIHIL)
+    {
+        redde -I;
+    }
+    initium = _parsura_lexema_emissionis(lexema);
+    si (initium == NIHIL)
+    {
+        redde -I;
+    }
+    si (   initium->spatia_ante != NIHIL
+        && xar_numerus(initium->spatia_ante) > ZEPHYRUM)
+    {
+        constans SilvaToken* trivium = *(SilvaToken**)
+            xar_obtinere(initium->spatia_ante, ZEPHYRUM);
+
+        si (trivium != NIHIL && trivium->byte_offset >= ZEPHYRUM)
+        {
+            redde trivium->byte_offset;
+        }
+    }
+    redde initium->byte_offset;
+}
+
 interior s32
 _parsura_primum_offset (
     SilvaValor valor)
@@ -3907,7 +3951,7 @@ _parsura_primum_offset (
         {
             redde -I;
         }
-        redde valor.datum.token->byte_offset;
+        redde _parsura_offset_emissionis(valor.datum.token);
     }
     si (valor.genus == SILVA_VALOR_NODUS && valor.datum.nodus != NIHIL)
     {
@@ -4042,7 +4086,7 @@ _parsura_reinserendum_addere (
     {
         redde FALSUM;
     }
-    r->offset       = primum->byte_offset;
+    r->offset       = _parsura_offset_emissionis(primum);
     r->genus        = genus;
     r->lamina       = lamina;
     r->regio_index  = regio_index;
@@ -4875,8 +4919,22 @@ _parsura_laminam_legere (
     {
          SilvaToken*  lexema;
          SilvaToken** sedes_lexematis;
+             chorda*  id_fragmenti;
 
-        lexema = _lexema_legere(lector, liber, NIHIL);
+        /* FRAGMENTUM APERIENDUM - eadem lex, FACIES TERTIA.
+         * Semita arboris hoc agebat; origo non (sanata T7); lamina
+         * neque. Lamina fragmentum DEFINIRE potest (lexema eius cum
+         * arbore communicatum) et sine apertione titulus '#lexN'
+         * ipse tag lexematis habebatur.
+         * Superficies nova quae conceptum vetustum re-implet vitia
+         * eius RE-INVENIT - nunc TER mensuratum. */
+        id_fragmenti = NIHIL;
+        liber = _fragmentum_aperire(lector, liber, &id_fragmenti);
+        si (liber == NIHIL)
+        {
+            perge;
+        }
+        lexema = _lexema_legere(lector, liber, id_fragmenti);
         si (lexema == NIHIL)
         {
             redde NIHIL;
@@ -5415,10 +5473,8 @@ silva_arbor_legere_parsuram (
                 && chorda_aequalis_literis(*elem->titulus,
                        SILVA_ARBOR_TAG_DIRECTIVA))
             {
-                StmlNodus*  lexema_elem;
                       Xar*  lamina;
                       Xar** sedes_laminae;
-                      i32   intra;
                       s32   initium_lacunae;
 
                 si (passus != ZEPHYRUM)
@@ -5438,37 +5494,20 @@ silva_arbor_legere_parsuram (
                         redde NIHIL;
                     }
                 }
-                lamina = xar_creare(piscina, magnitudo(SilvaToken*));
-                si (lamina == NIHIL)
-                {
-                    _recusare(&lector, "lamina creari non potuit",
-                        elem->linea);
-                    redde NIHIL;
-                }
+                /* LAMINA PER FUNCTIONEM COMMUNEM.
+                 *
+                 * Hic ansa PROPRIA stabat quae _parsura_laminam_legere
+                 * verbatim repetebat - et cum illa fragmenta aperire
+                 * disceret, haec NON didicit. Quarta superficies
+                 * eiusdem conceptus, quartum vitium eiusdem generis.
+                 * Sanatio ergo non est hanc quoque emendare sed
+                 * DELERE: unus conceptus, una functio. */
                 _parsura_ancoram_legere(elem, &sedes);
                 initium_lacunae  = sedes.offset;
-                intra            = ZEPHYRUM;
-                dum ((lexema_elem = _elementum_proximum(&lector, elem,
-                          &intra)) != NIHIL)
+                lamina = _parsura_laminam_legere(&lector, elem, &sedes);
+                si (lamina == NIHIL)
                 {
-                    SilvaToken*  lexema;
-                    SilvaToken** sedes_lexematis;
-
-                    lexema = _lexema_legere(&lector, lexema_elem, NIHIL);
-                    si (lexema == NIHIL)
-                    {
-                        redde NIHIL;
-                    }
-                    _positiones_lexematis(&sedes, lexema);
-                    sedes_lexematis = (SilvaToken**)xar_addere(lamina);
-                    si (sedes_lexematis == NIHIL)
-                    {
-                        _recusare(&lector,
-                            "lexema in laminam addi non potuit",
-                            elem->linea);
-                        redde NIHIL;
-                    }
-                    *sedes_lexematis = lexema;
+                    redde NIHIL;
                 }
                 sedes_laminae = (Xar**)xar_addere(parsura->directivae);
                 si (sedes_laminae == NIHIL)

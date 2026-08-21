@@ -1267,3 +1267,57 @@ empty invocations on one line. All pass, on both oracles.
 The single remaining STML failure is `arbor2_glr_tabula.c` —
 "transclusio ad fragmentum ignotum" in *our* reader on a 1.8M-line
 document. Unrelated to macros; next.
+
+## 2026-08-21 — T7 COMPLETE: 154/154, and the anchor law's fourth face
+
+The last file, `arbor2_glr_tabula.c`, fell to two defects — and both were
+the *same two laws* that have run through this entire phase.
+
+**1. The anchor law, fourth face.** Top-level ordering compared raw
+`primum->byte_offset`, while the anchor actually *written* is
+trivia-inclusive and origin-chain-followed. **Two notions of "where this
+starts."** A directive with a large leading comment therefore sorted
+*after* a node it must precede: `<directiva b="1103261">` landed at
+document line 1836543, a million lines below `<declaratio b="1103847">`.
+
+That inversion is what produced the transclusion failure. Laminae are read
+in **pass 0** and the tree in **pass 1**, so a lamina transcluding a
+fragment the tree defines can only work if the *lamina* carries the
+definition — which it does only if the writer emits it first. Wrong order,
+wrong definer, unresolvable reference.
+
+Fix: `_parsura_offset_emissionis`, one function serving both the ordering
+comparison and the anchor. Same remedy as `_parsura_lexema_emissionis`
+three faces ago — copy the reasoning, don't re-derive it.
+
+**2. The duplicate-surface law, fourth face.** With ordering fixed, the
+failure moved to `genus lexematis registro ignotum` on
+`<#lex510>` — a fragment definition *inside a directive lamina*. The tree
+walk unwrapped fragments; `_origo_legere` did not (fixed earlier today);
+`_parsura_laminam_legere` did not (fixed an hour ago); and the
+`<directiva>` branch turned out to hold a **fourth, inline copy** of the
+same loop, which had inherited none of those fixes.
+
+The fix was not to patch it as well but to **delete it** and call
+`_parsura_laminam_legere`. Four surfaces, one concept, three separate
+bug-fixes that never propagated — the strongest evidence yet that the
+right response to this class is deletion, not another patch.
+
+### Final state
+
+| | silva alone | through STML |
+|---|---|---|
+| plain C (78) | 78/78 | 78/78 |
+| latinized (154) | **154/154** | **154/154** |
+
+0 refusals, 0 divergences, comparator never blind. The projection now
+matches silva exactly: everything silva can emit, round-trips through
+canonical STML.
+
+Adversarial cases: 24, all passing, gate calibrated in both directions.
+
+**Pre-existing, NOT from this work** (verified by mtime — both Aug 19,
+two days before this session): `probatio_natura_glossae` fails because
+`bin/natura_glossae` is older than `lib/stml.c` (needs
+`./tools/natura_struere.sh`); `probatio_planta_lectio` is the known
+flaky. Root suite otherwise 134 passing.
