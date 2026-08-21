@@ -102,6 +102,11 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
+./silva/arbor.sh <fons.c> [-nudum] [-tacitus] (documentum STML
+canonicum in stdout; compendium in stderr numerat lexemata /
+expansa / ambigua / ERRORES. Cave: -nudum super codicem
+latinizatum ZERO ambigua reddit quia PARSURA FRANGITUR - XLV
+nodi ERROR - non quia resoluta sit),
 ./silva/nexus.sh <symbol> (who-uses/which-file; -similis fuzzy;
 -renovare rebuilds build/nexus.tsv),
 ./silva/examen.sh <file> [-posix|-nudum] [-machina] (C89 judgment:
