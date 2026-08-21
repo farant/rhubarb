@@ -750,9 +750,11 @@ principale (vacuum)
 
             /* --- expansio vacua --- */
             { "expansio vacua",
-              "#define V(a)\nV(x)\nint n = 0;\n", FALSUM,
-              "SILVA: expansio vacua - nullum lexema originem fert, "
-              "ergo octeti invocationis a nullo monstrantur" },
+              "#define V(a)\nV(x)\nint n = 0;\n", VERUM, NIHIL },
+            { "expansio vacua obiectum-similis",
+              "#define W\nW\nint n = 0;\n", VERUM, NIHIL },
+            { "expansio vacua bis eadem linea",
+              "#define V(a)\nint n = 0; V(x) V(y)\n", VERUM, NIHIL },
 
             /* --- arma originis PASTA et CHORDA --- */
             { "stringificatio",

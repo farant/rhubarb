@@ -3969,6 +3969,7 @@ _parsura_primum_offset (
 #define PARSURA_REINS_REGIO_DIRECTIVA  1
 #define PARSURA_REINS_REGIO_CRUDA      2
 #define PARSURA_REINS_REGIO_FINIS      3
+#define PARSURA_REINS_INVOCATIO_VACUA  4
 
 nomen structura {
                 s32  offset;
@@ -4203,6 +4204,9 @@ _parsura_reinserendum_scribere (
     casus PARSURA_REINS_REGIO_FINIS:
         tag = SILVA_ARBOR_TAG_REGIO_FINIS;
         frange;
+    casus PARSURA_REINS_INVOCATIO_VACUA:
+        tag = SILVA_ARBOR_TAG_INVOCATIO_VACUA;
+        frange;
     ordinarius:
         tag = SILVA_ARBOR_TAG_DIRECTIVA;
         frange;
@@ -4214,7 +4218,8 @@ _parsura_reinserendum_scribere (
         scriptor->causa = "reinserendum creari non potuit";
         redde NIHIL;
     }
-    si (r->genus != PARSURA_REINS_DIRECTIVA)
+    si (   r->genus != PARSURA_REINS_DIRECTIVA
+        && r->genus != PARSURA_REINS_INVOCATIO_VACUA)
     {
         _attributum_numeri(scriptor, elementum, "regio",
             (i32)r->regio_index);
@@ -4416,6 +4421,33 @@ silva_arbor_scribere_parsuram (
                          fons_index))
                 {
                     fructus.causa = "directiva colligi non potuit";
+                    redde fructus;
+                }
+            }
+        }
+        /* INVOCATIONES VACUAE - eodem iure quo directivae:
+         * octetos tegunt quos arbor non fert. */
+        si (parsura->expansio != NIHIL
+            && parsura->expansio->extenta != NIHIL)
+        {
+            per (k = ZEPHYRUM;
+                 k < xar_numerus(parsura->expansio->extenta); k++)
+            {
+                SilvaExtentumInvocationis* ext =
+                    (SilvaExtentumInvocationis*)xar_obtinere(
+                        parsura->expansio->extenta, k);
+
+                si (ext == NIHIL || !ext->vacua)
+                {
+                    perge;
+                }
+                si (!_parsura_reinserendum_addere(acervus, ext->lamina,
+                         PARSURA_REINS_INVOCATIO_VACUA, -I, -I, -I,
+                         SILVA_RAMUS_IF, ZEPHYRUM, -I, ZEPHYRUM,
+                         fons_index))
+                {
+                    fructus.causa =
+                        "invocatio vacua colligi non potuit";
                     redde fructus;
                 }
             }
@@ -5316,6 +5348,61 @@ silva_arbor_legere_parsuram (
                  * sumptus est. Documentum configurationem NON portat
                  * (spec §2) - forma eam iam dicit. */
                 ramus->est_sumptum = ramus->lexemata_cruda == NIHIL;
+                perge;
+            }
+
+            /* INVOCATIO VACUA: lamina invocationis quae ZERO
+             * lexemata peperit. Ordine documenti stat et lacunam
+             * facit, prorsus ut directiva consumpta - ergo passu
+             * ZERO legenda (laminae ante arborem, ut lacunae
+             * exsistant cum arbor derivatur). */
+            si (   elem->titulus != NIHIL
+                && chorda_aequalis_literis(*elem->titulus,
+                       SILVA_ARBOR_TAG_INVOCATIO_VACUA))
+            {
+                Xar* lamina;
+                s32  initium_lacunae;
+                SilvaExtentumInvocationis* ext;
+
+                si (passus != ZEPHYRUM)
+                {
+                    perge;
+                }
+                _parsura_ancoram_legere(elem, &sedes);
+                initium_lacunae = sedes.offset;
+                lamina = _parsura_laminam_legere(&lector, elem, &sedes);
+                si (lamina == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                si (!_parsura_lacunam_notare(lacunae, initium_lacunae,
+                         &sedes, _laminae_fons(lamina)))
+                {
+                    _recusare(&lector, "lacuna notari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                si (expansio->extenta == NIHIL)
+                {
+                    _recusare(&lector, "extenta absentia", elem->linea);
+                    redde NIHIL;
+                }
+                ext = (SilvaExtentumInvocationis*)
+                    xar_addere(expansio->extenta);
+                si (ext == NIHIL)
+                {
+                    _recusare(&lector, "invocatio vacua addi non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                ext->vacua      = VERUM;
+                ext->lamina     = lamina;
+                /* Invocatio = lexema primum laminae (nomen macri).
+                 * Emissor eam non consulit pro vacuis - lamina sola
+                 * reinserenda est - sed identitas honesta manet. */
+                ext->invocatio  = (xar_numerus(lamina) > ZEPHYRUM)
+                    ? *(SilvaToken**)xar_obtinere(lamina, ZEPHYRUM)
+                    : NIHIL;
                 perge;
             }
 

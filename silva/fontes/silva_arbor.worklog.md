@@ -1213,3 +1213,57 @@ an unrelated reason in *our* reader ("transclusio ad fragmentum ignotum",
 
 silva 46/46 · root 134/134 · M1 281/281 · amalgam re-verified (hospes
 38/38, nm-intersection 0).
+
+## 2026-08-21 — Empty macro expansion: the silent byte loss (01M0JRNAMR)
+
+Fixed end to end. This was the worst defect found all session, and the
+one that looked smallest.
+
+**A macro expanding to nothing lost its invocation's bytes while silva
+reported `successus=1`.** Not a refusal — a wrong file handed back with a
+success return. `#define UNUSED(x)`, a debug macro compiled out, a
+disabled assertion: everyday C idioms. Our corpus contains none, which is
+luck rather than design, so this was a landmine waiting for the first one
+anybody wrote.
+
+**Why the tree walk could never find it.** Emission walks the *tree*, and
+an invocation's extent is consulted only when some tree token's origin
+chain leads to it. Zero tokens produced ⇒ nothing to lead there ⇒ the
+extent (when one even existed) was never pulled.
+
+**The fix reframes it rather than adding machinery.** An empty invocation
+covers bytes the tree does not carry — which is *exactly* what a consumed
+directive line is. So it becomes a **reinserendum**, and the existing
+offset-weaving path (`_reinserendum_addere` + `_reinserenda_fundere`)
+handles it with no new emitter concept and no consumption tracking.
+
+I had sketched "track which extents got consumed, weave the leftovers" in
+the ledger. Reading the seam killed that: the expander already *knows* at
+substitution time, because it can measure `xar_numerus(exitus)` before and
+after `_substituere`. Decide where the fact is known, not where the
+symptom appears.
+
+Three places had to change:
+
+- **`SilvaExtentumInvocationis` gained `vacua`** — a side table, not
+  embedded in tokens, so unlike PASTA's `invocatio` this costs nothing
+  per token and is internal-only (not in the public header).
+- **Object-like macros needed an extent for the first time.** They never
+  had one, correctly: the name *is* the whole invocation and expanded
+  tokens point at it. But when nothing is produced, nothing points at it —
+  so `#define W` / `W` is the sole case where an object-like invocation
+  must record its own span.
+- **Our document gained `<invocatio-vacua>`**, a top-level element beside
+  `<directiva>`, read in **pass 0** so its gap exists before the tree
+  derives against it.
+
+Adversarial cases 22 → 24: function-like empty, object-like empty, and two
+empty invocations on one line. All pass, on both oracles.
+
+**Score:** plain C 78/78 both oracles · latinized **154/154 silva alone**,
+153/154 through STML · silva 46/46 · root 134/134 · amalgam re-verified
+(hospes 38/38, nm-intersection 0).
+
+The single remaining STML failure is `arbor2_glr_tabula.c` —
+"transclusio ad fragmentum ignotum" in *our* reader on a 1.8M-line
+document. Unrelated to macros; next.

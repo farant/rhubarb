@@ -2437,7 +2437,31 @@ _generatio_interna (
             {
                 si (!def->est_functio)
                 {
+                    /* EXPANSIO VACUA obiectum-similis ('#define W').
+                     * Hic extentum NON praeexstat - macra
+                     * obiectum-similia nullum petunt, quia nomen ipsum
+                     * tota invocatio est et lexemata expansa id
+                     * monstrant. Sed cum NIHIL paritur, nihil id
+                     * monstrat: ergo hic solo in casu extentum
+                     * creandum est, ne octeti pereant. */
+                    i32 ante_sub = xar_numerus(exitus);
+
                     _substituere(exp, def, token, NIHIL, NIHIL, exitus);
+                    si (   xar_numerus(exitus) == ante_sub
+                        && token->origo.genus == SILVA_ORIGO_FONS)
+                    {
+                        SilvaExtentumInvocationis* ext_vac;
+
+                        ext_vac = (SilvaExtentumInvocationis*)
+                            xar_addere(exp->extenta);
+                        si (ext_vac != NIHIL)
+                        {
+                            ext_vac->invocatio  = token;
+                            ext_vac->vacua      = VERUM;
+                            ext_vac->lamina     = _lamina_capere(exp,
+                                lexemata, i, i + I);
+                        }
+                    }
                     mutatum = VERUM;
                     i++;
                     perge;
@@ -2452,6 +2476,7 @@ _generatio_interna (
                         Xar* argumenta;
                         i32 i_post;
                         s32 scissiones;
+                        SilvaExtentumInvocationis* ext_huius = NIHIL;
 
                         /* variadica: scissiones = parametra nominata
                          * (cauda manet unum argumentum __VA_ARGS__) */
@@ -2479,15 +2504,14 @@ _generatio_interna (
                              * cum nomen ipsum lexema FONTIS est */
                             si (token->origo.genus == SILVA_ORIGO_FONS)
                             {
-                                SilvaExtentumInvocationis* ext;
-
-                                ext = (SilvaExtentumInvocationis*)
+                                ext_huius = (SilvaExtentumInvocationis*)
                                     xar_addere(exp->extenta);
-                                si (ext != NIHIL)
+                                si (ext_huius != NIHIL)
                                 {
-                                    ext->invocatio = token;
-                                    ext->lamina = _lamina_capere(exp,
-                                        lexemata, i, i_post);
+                                    ext_huius->invocatio = token;
+                                    ext_huius->vacua = FALSUM;
+                                    ext_huius->lamina = _lamina_capere(
+                                        exp, lexemata, i, i_post);
                                 }
                             }
 
@@ -2512,7 +2536,22 @@ _generatio_interna (
                                 }
                             }
 
-                            _substituere(exp, def, token, expansa, argumenta, exitus);
+                            {
+                                /* EXPANSIO VACUA: si substitutio
+                                 * nihil peperit, nullum lexema hanc
+                                 * invocationem monstrabit - lamina
+                                 * ergo reinserendis danda est.
+                                 * Mensurare, non divinare. */
+                                i32 ante_sub = xar_numerus(exitus);
+
+                                _substituere(exp, def, token, expansa,
+                                    argumenta, exitus);
+                                si (   ext_huius != NIHIL
+                                    && xar_numerus(exitus) == ante_sub)
+                                {
+                                    ext_huius->vacua = VERUM;
+                                }
+                            }
                             mutatum = VERUM;
                             i = i_post;
                             perge;

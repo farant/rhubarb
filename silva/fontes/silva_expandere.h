@@ -162,6 +162,13 @@ nomen structura {
 nomen structura {
     SilvaToken* invocatio;   /* lexema nominis (origo FONS) */
     Xar*        lamina;      /* Xar de SilvaToken* - [nomen, post ')') */
+    /* VACUA: expansio ZERO lexemata peperit. Tunc NULLUM lexema
+     * arboris hanc invocationem monstrat, ergo emissio eam per
+     * ambulationem numquam invenit et octeti SILENTER perirent
+     * (successu nuntiato - vulnus in ipso oraculo fidelitatis).
+     * Lamina his in reinserenda it, sicut linea directivae
+     * consumpta: utraque octetos tegit quos arbor non fert. */
+    b32         vacua;
 } SilvaExtentumInvocationis;
 
 

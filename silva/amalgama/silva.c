@@ -3906,6 +3906,13 @@ nomen structura {
 nomen structura {
     SilvaToken* invocatio;   /* lexema nominis (origo FONS) */
     SilvaXar*        lamina;      /* Xar de SilvaToken* - [nomen, post ')') */
+    /* VACUA: expansio ZERO lexemata peperit. Tunc NULLUM lexema
+     * arboris hanc invocationem monstrat, ergo emissio eam per
+     * ambulationem numquam invenit et octeti SILENTER perirent
+     * (successu nuntiato - vulnus in ipso oraculo fidelitatis).
+     * Lamina his in reinserenda it, sicut linea directivae
+     * consumpta: utraque octetos tegit quos arbor non fert. */
+    b32         vacua;
 } SilvaExtentumInvocationis;
 
 structura SilvaExpansio {
@@ -6822,6 +6829,10 @@ silva_arbor_lexema_ex_tag (
  * elementum clausurae emissionis (spec 0.1). Octeti argumentorum
  * a NULLO lexemate arboris monstrantur, ergo PORTANDI sunt. */
 #define SILVA_ARBOR_TAG_EXTENTUM       "extentum"
+/* Invocatio macri quae ZERO lexemata peperit: octetos tegit quos
+ * arbor NON fert, sicut linea directivae consumpta. Sine ea
+ * emissio eos SILENTER omittit (successu nuntiato). */
+#define SILVA_ARBOR_TAG_INVOCATIO_VACUA "invocatio-vacua"
 #define SILVA_ARBOR_TAG_PASTA          "pasta"
 #define SILVA_ARBOR_TAG_STRINGIFICATIO "stringificatio"
 #define SILVA_ARBOR_TAG_API            "api"
@@ -17148,7 +17159,31 @@ _generatio_interna (
             {
                 si (!def->est_functio)
                 {
+                    /* EXPANSIO VACUA obiectum-similis ('#define W').
+                     * Hic extentum NON praeexstat - macra
+                     * obiectum-similia nullum petunt, quia nomen ipsum
+                     * tota invocatio est et lexemata expansa id
+                     * monstrant. Sed cum NIHIL paritur, nihil id
+                     * monstrat: ergo hic solo in casu extentum
+                     * creandum est, ne octeti pereant. */
+                    i32 ante_sub = silva_xar_numerus(exitus);
+
                     _substituere(exp, def, token, NIHIL, NIHIL, exitus);
+                    si (   silva_xar_numerus(exitus) == ante_sub
+                        && token->origo.genus == SILVA_ORIGO_FONS)
+                    {
+                        SilvaExtentumInvocationis* ext_vac;
+
+                        ext_vac = (SilvaExtentumInvocationis*)
+                            silva_xar_addere(exp->extenta);
+                        si (ext_vac != NIHIL)
+                        {
+                            ext_vac->invocatio  = token;
+                            ext_vac->vacua      = VERUM;
+                            ext_vac->lamina     = _lamina_capere(exp,
+                                lexemata, i, i + I);
+                        }
+                    }
                     mutatum = VERUM;
                     i++;
                     perge;
@@ -17163,6 +17198,7 @@ _generatio_interna (
                         SilvaXar* argumenta;
                         i32 i_post;
                         s32 scissiones;
+                        SilvaExtentumInvocationis* ext_huius = NIHIL;
 
                         /* variadica: scissiones = parametra nominata
                          * (cauda manet unum argumentum __VA_ARGS__) */
@@ -17190,15 +17226,14 @@ _generatio_interna (
                              * cum nomen ipsum lexema FONTIS est */
                             si (token->origo.genus == SILVA_ORIGO_FONS)
                             {
-                                SilvaExtentumInvocationis* ext;
-
-                                ext = (SilvaExtentumInvocationis*)
+                                ext_huius = (SilvaExtentumInvocationis*)
                                     silva_xar_addere(exp->extenta);
-                                si (ext != NIHIL)
+                                si (ext_huius != NIHIL)
                                 {
-                                    ext->invocatio = token;
-                                    ext->lamina = _lamina_capere(exp,
-                                        lexemata, i, i_post);
+                                    ext_huius->invocatio = token;
+                                    ext_huius->vacua = FALSUM;
+                                    ext_huius->lamina = _lamina_capere(
+                                        exp, lexemata, i, i_post);
                                 }
                             }
 
@@ -17223,7 +17258,22 @@ _generatio_interna (
                                 }
                             }
 
-                            _substituere(exp, def, token, expansa, argumenta, exitus);
+                            {
+                                /* EXPANSIO VACUA: si substitutio
+                                 * nihil peperit, nullum lexema hanc
+                                 * invocationem monstrabit - lamina
+                                 * ergo reinserendis danda est.
+                                 * Mensurare, non divinare. */
+                                i32 ante_sub = silva_xar_numerus(exitus);
+
+                                _substituere(exp, def, token, expansa,
+                                    argumenta, exitus);
+                                si (   ext_huius != NIHIL
+                                    && silva_xar_numerus(exitus) == ante_sub)
+                                {
+                                    ext_huius->vacua = VERUM;
+                                }
+                            }
                             mutatum = VERUM;
                             i = i_post;
                             perge;
@@ -41469,6 +41519,35 @@ silva_scribere_fontem (
     si (parsura->expansio != NIHIL)
     {
         _regiones_colligere(&st, piscina, parsura->expansio->regiones);
+    }
+    /* INVOCATIONES VACUAE: expansio quae ZERO lexemata peperit
+     * nullum lexema arboris relinquit quod eam monstret, ergo
+     * ambulatio eam numquam invenit. Lamina eius reinserendis
+     * danda est, sicut linea directivae consumpta - utraque enim
+     * octetos tegit quos arbor NON fert.
+     *
+     * Sine hoc octeti SILENTER pereunt successu nuntiato: 'V(x)'
+     * ex effusione evanescebat dum silva 'successus=1' diceret.
+     * Vulnus in ipso oraculo fidelitatis, corpore non inventum
+     * (nulla ex CLIV plagulis lib macrum vacuum habet) sed casu
+     * adversario. */
+    si (parsura->expansio != NIHIL
+        && parsura->expansio->extenta != NIHIL)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM;
+             i < silva_xar_numerus(parsura->expansio->extenta); i++)
+        {
+            SilvaExtentumInvocationis* ext =
+                (SilvaExtentumInvocationis*)silva_xar_obtinere(
+                    parsura->expansio->extenta, i);
+
+            si (ext != NIHIL && ext->vacua)
+            {
+                _reinserendum_addere(&st, piscina, ext->lamina);
+            }
+        }
     }
     si (st.reinserenda != NIHIL)
     {
@@ -69875,6 +69954,7 @@ _parsura_primum_offset (
 #define PARSURA_REINS_REGIO_DIRECTIVA  1
 #define PARSURA_REINS_REGIO_CRUDA      2
 #define PARSURA_REINS_REGIO_FINIS      3
+#define PARSURA_REINS_INVOCATIO_VACUA  4
 
 nomen structura {
                 s32  offset;
@@ -70109,6 +70189,9 @@ _parsura_reinserendum_scribere (
     casus PARSURA_REINS_REGIO_FINIS:
         tag = SILVA_ARBOR_TAG_REGIO_FINIS;
         frange;
+    casus PARSURA_REINS_INVOCATIO_VACUA:
+        tag = SILVA_ARBOR_TAG_INVOCATIO_VACUA;
+        frange;
     ordinarius:
         tag = SILVA_ARBOR_TAG_DIRECTIVA;
         frange;
@@ -70120,7 +70203,8 @@ _parsura_reinserendum_scribere (
         scriptor->causa = "reinserendum creari non potuit";
         redde NIHIL;
     }
-    si (r->genus != PARSURA_REINS_DIRECTIVA)
+    si (   r->genus != PARSURA_REINS_DIRECTIVA
+        && r->genus != PARSURA_REINS_INVOCATIO_VACUA)
     {
         _attributum_numeri(scriptor, elementum, "regio",
             (i32)r->regio_index);
@@ -70322,6 +70406,33 @@ silva_arbor_scribere_parsuram (
                          fons_index))
                 {
                     fructus.causa = "directiva colligi non potuit";
+                    redde fructus;
+                }
+            }
+        }
+        /* INVOCATIONES VACUAE - eodem iure quo directivae:
+         * octetos tegunt quos arbor non fert. */
+        si (parsura->expansio != NIHIL
+            && parsura->expansio->extenta != NIHIL)
+        {
+            per (k = ZEPHYRUM;
+                 k < silva_xar_numerus(parsura->expansio->extenta); k++)
+            {
+                SilvaExtentumInvocationis* ext =
+                    (SilvaExtentumInvocationis*)silva_xar_obtinere(
+                        parsura->expansio->extenta, k);
+
+                si (ext == NIHIL || !ext->vacua)
+                {
+                    perge;
+                }
+                si (!_parsura_reinserendum_addere(acervus, ext->lamina,
+                         PARSURA_REINS_INVOCATIO_VACUA, -I, -I, -I,
+                         SILVA_RAMUS_IF, ZEPHYRUM, -I, ZEPHYRUM,
+                         fons_index))
+                {
+                    fructus.causa =
+                        "invocatio vacua colligi non potuit";
                     redde fructus;
                 }
             }
@@ -71222,6 +71333,61 @@ silva_arbor_legere_parsuram (
                  * sumptus est. Documentum configurationem NON portat
                  * (spec §2) - forma eam iam dicit. */
                 ramus->est_sumptum = ramus->lexemata_cruda == NIHIL;
+                perge;
+            }
+
+            /* INVOCATIO VACUA: lamina invocationis quae ZERO
+             * lexemata peperit. Ordine documenti stat et lacunam
+             * facit, prorsus ut directiva consumpta - ergo passu
+             * ZERO legenda (laminae ante arborem, ut lacunae
+             * exsistant cum arbor derivatur). */
+            si (   elem->titulus != NIHIL
+                && silva_chorda_aequalis_literis(*elem->titulus,
+                       SILVA_ARBOR_TAG_INVOCATIO_VACUA))
+            {
+                SilvaXar* lamina;
+                s32  initium_lacunae;
+                SilvaExtentumInvocationis* ext;
+
+                si (passus != ZEPHYRUM)
+                {
+                    perge;
+                }
+                _parsura_ancoram_legere(elem, &sedes);
+                initium_lacunae = sedes.offset;
+                lamina = _parsura_laminam_legere(&lector, elem, &sedes);
+                si (lamina == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                si (!_parsura_lacunam_notare(lacunae, initium_lacunae,
+                         &sedes, _laminae_fons(lamina)))
+                {
+                    _recusare(&lector, "lacuna notari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                si (expansio->extenta == NIHIL)
+                {
+                    _recusare(&lector, "extenta absentia", elem->linea);
+                    redde NIHIL;
+                }
+                ext = (SilvaExtentumInvocationis*)
+                    silva_xar_addere(expansio->extenta);
+                si (ext == NIHIL)
+                {
+                    _recusare(&lector, "invocatio vacua addi non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                ext->vacua      = VERUM;
+                ext->lamina     = lamina;
+                /* Invocatio = lexema primum laminae (nomen macri).
+                 * Emissor eam non consulit pro vacuis - lamina sola
+                 * reinserenda est - sed identitas honesta manet. */
+                ext->invocatio  = (silva_xar_numerus(lamina) > ZEPHYRUM)
+                    ? *(SilvaToken**)silva_xar_obtinere(lamina, ZEPHYRUM)
+                    : NIHIL;
                 perge;
             }
 

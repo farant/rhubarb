@@ -726,6 +726,35 @@ silva_scribere_fontem (
     {
         _regiones_colligere(&st, piscina, parsura->expansio->regiones);
     }
+    /* INVOCATIONES VACUAE: expansio quae ZERO lexemata peperit
+     * nullum lexema arboris relinquit quod eam monstret, ergo
+     * ambulatio eam numquam invenit. Lamina eius reinserendis
+     * danda est, sicut linea directivae consumpta - utraque enim
+     * octetos tegit quos arbor NON fert.
+     *
+     * Sine hoc octeti SILENTER pereunt successu nuntiato: 'V(x)'
+     * ex effusione evanescebat dum silva 'successus=1' diceret.
+     * Vulnus in ipso oraculo fidelitatis, corpore non inventum
+     * (nulla ex CLIV plagulis lib macrum vacuum habet) sed casu
+     * adversario. */
+    si (parsura->expansio != NIHIL
+        && parsura->expansio->extenta != NIHIL)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM;
+             i < xar_numerus(parsura->expansio->extenta); i++)
+        {
+            SilvaExtentumInvocationis* ext =
+                (SilvaExtentumInvocationis*)xar_obtinere(
+                    parsura->expansio->extenta, i);
+
+            si (ext != NIHIL && ext->vacua)
+            {
+                _reinserendum_addere(&st, piscina, ext->lamina);
+            }
+        }
+    }
     si (st.reinserenda != NIHIL)
     {
         xar_ordinare(st.reinserenda, _reinserenda_comparare);

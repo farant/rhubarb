@@ -184,6 +184,10 @@ silva_arbor_lexema_ex_tag (
  * elementum clausurae emissionis (spec 0.1). Octeti argumentorum
  * a NULLO lexemate arboris monstrantur, ergo PORTANDI sunt. */
 #define SILVA_ARBOR_TAG_EXTENTUM       "extentum"
+/* Invocatio macri quae ZERO lexemata peperit: octetos tegit quos
+ * arbor NON fert, sicut linea directivae consumpta. Sine ea
+ * emissio eos SILENTER omittit (successu nuntiato). */
+#define SILVA_ARBOR_TAG_INVOCATIO_VACUA "invocatio-vacua"
 #define SILVA_ARBOR_TAG_PASTA          "pasta"
 #define SILVA_ARBOR_TAG_STRINGIFICATIO "stringificatio"
 #define SILVA_ARBOR_TAG_API            "api"
