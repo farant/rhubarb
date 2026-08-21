@@ -670,3 +670,153 @@ inherent to the amalgam shape, not something this gate chose to skip.
   refuse. The 11/281 rate reflects the roundtrip corpus being plain C.
   This makes the origo pool the highest-value part of M2, not a
   nice-to-have.
+
+---
+
+## 2026-08-21 — M2 §2: the `<parsura>` full-document form (T1–T6b)
+
+Both gates are now at **full coverage**:
+
+| gate | before M2 | after T6b |
+|---|---|---|
+| M1 subtrees | 270/281 both oracles, 11 refused | **281/281 both oracles**, 0 refused |
+| M2 whole files | — | **78/78 byte-exact**, 0 divergences |
+
+Shipped: `bcd8a80f` T1 envelope · `117a58b8` T2 directives+hoist ·
+`d1799aed` T3a boundary measured · `6171d8eb` T3b gap-aware cursor ·
+`87b1eee3` T4 comparator · `e70f2588` T5 gate · `befe0d71` T6 origin ·
+`913299ee` T6b anchor chain.
+
+### THE ANCHOR LAW, which has now failed three times in three faces
+
+**An anchor is where EMISSION BEGINS — not where the token is.**
+
+1. **M1 T6** — emission starts with the token's *leading trivia*, so an
+   anchor taken from the token slid everything by the indentation.
+   178 divergences.
+2. **M2 T5** — the identical bug, reintroduced, because I wrote a
+   *fresh* anchor helper for the parsura writer instead of reusing
+   M1's. 4 files, deltas equal to each file's leading comment block.
+3. **M2 T6b** — emission of an *expanded* token starts at its
+   stratum-0 **invocation**, and `silva_token_ex_expansione`
+   (`silva_token.c:78`) copies the def-site's coordinates onto the
+   expanded token. So a node whose first token is expanded anchored
+   into *another file*. In `latina.h`, `nomen insignatus brevis i16;`
+   at line 349 anchored at line 39 — where `#define nomen typedef`
+   lives.
+
+The general lesson from face 2 is the one worth keeping: **a new
+surface that re-implements an old concept re-earns the old concept's
+bugs.** The reasoning should have been copied, not re-derived.
+`_parsura_lexema_emissionis` now resolves the chain and is used by
+*both* anchor sites.
+
+### Positions: derive where derivation is possible, carry where it is not
+
+M1's law ("a canonical document must not be able to lie") stands, but
+M2 found two places where derivation is *impossible*, not merely
+inconvenient:
+
+- **Top-level children need their own anchors.** Non-tree content
+  (degraded-region laminae) can sit *inside* a node's byte span, so
+  document order cannot express byte order. The envelope still carries
+  none — a file is its own beginning.
+- **Expanded tokens carry `b`/`linea`/`columna`, and only they do.**
+  Their coordinates are the def-site's — a position in a *different
+  file*, absent from this byte stream entirely. Carrying is honest;
+  deriving would be invention.
+
+### Gap-aware cursor, and why two passes
+
+The tree emits its bytes contiguously, but its tokens are *interrupted*
+by directives and degraded-region laminae. Anchors fix the reinserenda;
+they cannot fix the tree, whose own tokens are what gets interrupted.
+
+`ArborCursor` now carries a gap list and `_positiones_lexematis` skips
+gaps the cursor has reached. All derivation funnels through that one
+leaf, so it is a single change point; subtree documents pass an empty
+list and are unaffected. A gap is **not** a carried position: it is
+computed from deriving the lamina itself (start = its anchor, end =
+where the cursor stands afterwards).
+
+This forces **two passes** in the reader: laminae *create* the gaps, so
+they must be read before the tree is derived.
+
+### An expanded token holds no bytes
+
+`silva_scribere.h:22` — a non-FONS token doesn't emit itself; its
+stratum-0 invocation does. Derivation must mirror that: place the
+invocation, skip the expansion. Otherwise the cursor advances twice.
+
+**Guard-order trap that cost a cycle**: I placed that branch *after*
+the existing "already placed" guard. Since expanded tokens now *carry*
+a position, the guard fired and the invocation was never placed. The
+delta was exactly 11 bytes = `len("MASCA_ASCII")` — the discrepancy
+named its own cause. **Adding a carried value can silently disable a
+guard that assumed it was absent.**
+
+### Document order ≠ loaded structure
+
+The tension between "directives should read where you wrote them" and
+"the loaded tree must stay structurally pure" dissolves once these are
+separated. A `<directiva>` element is distinguishable from a node, so
+the document interleaves and the loader **hoists** them back into
+`parsura->directivae`. Purity is a property of the loaded tree.
+
+### Conditional regions: only the DEGRADED case was work
+
+Measured across five shapes before writing anything: a **woven**
+region emits its lines from the tree (single owner), so
+`_regiones_colligere` skips it and M1's node path already handled it.
+**Three of five shapes were already green.** Only degraded regions —
+which own their bytes as reinserenda — needed the document elements
+and the region-tree reconstruction.
+
+`est_sumptum` is not carried: a taken arm appears as nodes, an untaken
+one as `<cruda>` tokens, so the shape already states it. VISIO also
+holds that the default track is one configuration among many.
+
+### Named representational gaps (not silent)
+
+- **Woven regions do not reappear in the loaded `expansio->regiones`.**
+  Their laminae point at the *same* tokens the conditionalis node
+  carries; rebuilding them separately would break identity, which the
+  dual law forbids. Closing this needs `#id` references **across
+  sections** — the machinery T6 introduced for origo. The comparator
+  therefore compares the flattened sequence of *degraded* regions:
+  what the format actually represents.
+- **`expressio` is not carried** — its bytes already live in
+  `directiva`, and `_regiones_colligere` never reinserts it.
+- **Caecatio (hidesets) excluded** — reconstruction never consults
+  them. Reserved as `cauda="#c7"`.
+- **Included-file documents refuse by name** (`cauda plagulae inclusae
+  nondum lata`) rather than silently omitting a tail.
+
+### A hypothesis I published and then refuted
+
+`befe0d71`'s message claims the residual divergence came from expanded
+tokens *sharing* def-site objects. Plausible, and **wrong** —
+`silva_token_ex_expansione` allocates a fresh token per expansion.
+One targeted read refuted it; had I compacted first, the next session
+would have inherited it as a lead. **A hypothesis written into a commit
+must say "unproven", and should be settled before compaction, while
+settling it is still cheap.**
+
+### Test-discipline notes
+
+- **A planted fault that breaks the build proves nothing.** My first
+  T2 fault removed a comparison and left variables unused under
+  `-Werror`; it had to be re-planted as an *inverted* comparison.
+- **Calibration says which test does the work.** Dropping `<cauda>`
+  failed exactly one of three round trips — the trailing newline after
+  `;` rides as `post` trivia on the semicolon, so only *surplus* blank
+  lines reach EOF. Two of the three tests were decorative for tails.
+- **A guard around an assertion is a silent opt-out.** A vacuity check
+  landed inside `si (causa != NIHIL)` — the branch that only runs on
+  failure. It compiled, passed, and never executed. Only the assertion
+  *count* not moving revealed it; root cause was a `python .replace()`
+  that matched nothing (the formatter had re-aligned lines) while still
+  printing "patched". **Assert that replacements land.**
+- **The formatter reformats between edits**, so `Edit`/`replace`
+  anchors go stale constantly. Line-range replacement with an
+  assertion is the reliable shape.

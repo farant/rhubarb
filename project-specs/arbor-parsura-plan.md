@@ -25,6 +25,30 @@ refusing non-FONS tokens and emits the nested origin form instead.
 **Spec:** `project-specs/arbor-parsura-spec.md` — read §1 and §2
 before T1, §3 before T6, §6 before T5.
 
+## Status (2026-08-21)
+
+| tranche | state |
+|---|---|
+| T1 envelope | shipped `bcd8a80f` |
+| T2 directives + hoist | shipped `117a58b8` |
+| T3a boundary measured + pinned | shipped `d1799aed` |
+| T3b gap-aware cursor | shipped `6171d8eb` |
+| T4 comparator | shipped `87b1eee3` |
+| T5 M2 gate | shipped `e70f2588` |
+| T6 nested origin | shipped `befe0d71` |
+| T6b anchor follows origin chain | shipped `913299ee` |
+| **T7 latinized tier + apparatus gate** | **next** |
+| T8 amalgam | pending |
+
+**Both gates at full coverage**: M1 281/281 both oracles, M2 78/78
+byte-exact, zero refusals, zero divergences on either.
+
+Two plan/spec corrections were made by measurement and are recorded
+in place: the File Structure correction below, and spec §1's anchor
+claim (the envelope carries none, but top-level children must).
+
+---
+
 ## Global Constraints
 
 - C89 only. House flags: `-std=c89 -pedantic -Wall -Wextra -Werror
