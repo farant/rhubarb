@@ -1080,3 +1080,63 @@ forever and nobody would learn the limit had lifted.
 three real findings printing before expectations existed; the SANATUM
 direction by planting `debet_transire = FALSUM` on a passing case and
 confirming it reports `SANATUM` and fails the suite.
+
+### Silva-side investigation: empty expansion, and what paste would take
+
+Probed both directly (parse → emit, no STML). Ledger:
+**01M0JRNAMR** (empty expansion) and **01M0JRPEAH** (paste design).
+
+**Empty expansion is the serious one, and it is not the one that looks
+serious.** A macro expanding to nothing loses its invocation's bytes and
+silva reports **success**:
+
+```
+IN   #define V(a)\nV(x)\nint n = 0;\n
+OUT  #define V(a)\nint n = 0;\n          successus=1
+```
+
+That is a hole in the fidelity oracle itself — "bytes in, same bytes out"
+is false here while the API says it worked. Compare `a##b`, which refuses
+loudly (`successus=0`). **A named refusal is honest; a silent drop is
+not.** Priority follows that distinction, not apparent size.
+
+Mechanism: emission walks the *tree*, and an invocation's extent is
+consulted only when some tree token's origin chain leads to it. An empty
+expansion produces no token, so nothing pulls the extent. Two sub-cases,
+unequal:
+
+| form | extenta | state |
+|---|---|---|
+| `V(x)` function-like | **1** | recorded but never consulted — data present, consumer missing |
+| `W` object-like | **0** | no record at all |
+
+Proposed rule (not built): **record an extent whenever an invocation
+yields zero tokens**, object- or function-like — that is exactly the case
+where nothing else will ever point at those bytes. Then have emission
+weave un-consumed extents in by offset, which the existing
+`_reinserenda_fundere` machinery already does for directives.
+
+Neither the 78-file roundtrip corpus nor the 154 `lib/` files contain an
+empty macro expansion. The adversarial case found it; the corpus could
+not.
+
+**Paste.** `_radix_probata` already handles CHORDA by following
+`stringificatio.primus` to the *use-site* argument and resolving by
+containment — so `silva_scribere.h:26`'s "PASTA/CHORDA/API" comment is
+**stale**, broader than the behaviour. Only PASTA and API remain.
+
+PASTA is genuinely harder: `sinister`/`dexter` may be use-site arguments
+*or* def-site body tokens (`#define C(a) pre##a` → `pre` is body, `a` is
+substituted), which is the recorded "root can wander across the definition
+file." The root defect is that **the PASTA origin carries no `invocatio`
+pointer** where EXPANSIO does, so when both operands come from the body
+there is no path back to the use site at all.
+
+Two routes, priced in the ledger item: (A) in `_radix_probata`, try
+`sinister` then `dexter` and take whichever lands inside a containing
+extent — local to `silva_scribere.c`, fixes function-like pastes with at
+least one substituted operand, keeps the honest refusal otherwise
+(extents are already recorded — measured `extenta=1` for both paste
+shapes); (B) add `invocatio` to the PASTA arm, which touches five layers
+including our `<pasta>` element. Suggested order: (A) now-ish, (B) when a
+consumer demands it — the same rule under which CHORDA was implemented.
