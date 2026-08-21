@@ -78,6 +78,28 @@ committed).
 annotation is ~16% of non-whitespace content and ~8% of the pretty
 document. Compressing it 84% wins ~7% of the file.
 
+**(C) LATINIZED inflation, measured 2026-08-21 (T7, M2 documents)** —
+(A) above measured *plain C under M1*. Latinized code under M2 runs
+roughly **3× worse**, because every `si`/`per`/`redde`/`NIHIL` is an
+expanded token carrying a nested `<expansio>` (macro name, def-site
+reference, invocation token with its trivia):
+
+| file | source | document | ratio |
+|---|---|---|---|
+| `lib/tempus.c` | 15,696 | 1,235,758 | **78.7×** |
+| `lib/flatura.c` | 56,891 | 4,217,944 | **74.1×** |
+| `lib/arbor2_glr_tabula.c` | 1,525,680 | 83,418,424 | **54.7×** |
+
+The largest file is the *least* inflated — a generated parser table is
+mostly data, not latinized keywords. So ~70× is the NORMAL latinized
+rate, not a pathological outlier; the 83 MB document is simply 70×
+applied to a 1.5 MB input.
+
+**Consequence for a real consumer**: an 83 MB / 1.9M-line document for
+one source file is a genuine constraint for solarium, and the first
+lever is still conclusion 2 below (the hardcoded pretty flag), not
+fragments.
+
 Three conclusions, all acted on below:
 
 1. **Fragment compression is not built for M2** (§4). It buys 7% and
