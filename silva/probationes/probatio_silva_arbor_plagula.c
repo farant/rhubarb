@@ -504,7 +504,10 @@ _plagulam_probare (
         _causam_notare(census->recusationes,
             &census->numerus_recusationum, vitium.causa);
         census->lectio_recusata++;
-        si (getenv("ARBOR_DEFIGERE") != NIHIL)
+        si (   getenv("ARBOR_DEFIGERE") != NIHIL
+            && (   getenv("ARBOR_DEFIGERE_NOMEN") == NIHIL
+                || strstr(via, getenv("ARBOR_DEFIGERE_NOMEN"))
+                       != NIHIL))
         {
             FILE* effusio;
 
@@ -546,6 +549,40 @@ _plagulam_probare (
     /* DIVERGENTIA: comparator campum nominat */
     census->octeti_divergentes++;
     {
+        /* OCTETUM PRIMUM DIVERGENS. Comparator caecus esse potest
+         * (campos quos NON confert - e.g. extenta); octeti numquam
+         * mentiuntur. Diagnosis ULTIMA, ergo semper praesto. */
+        i32 i;
+        i32 minor;
+
+        minor = (emissio.textus.mensura < mensura)
+              ? emissio.textus.mensura : mensura;
+        per (i = ZEPHYRUM; i < minor; i++)
+        {
+            si (emissio.textus.datum[i] != fons[i])
+            {
+                frange;
+            }
+        }
+        imprimere("      extenta: A=%d B=%d | directivae: A=%d B=%d\n",
+            (integer)((origo->expansio && origo->expansio->extenta)
+                ? xar_numerus(origo->expansio->extenta) : ZEPHYRUM),
+            (integer)((lecta->expansio && lecta->expansio->extenta)
+                ? xar_numerus(lecta->expansio->extenta) : ZEPHYRUM),
+            (integer)(origo->directivae
+                ? xar_numerus(origo->directivae) : ZEPHYRUM),
+            (integer)(lecta->directivae
+                ? xar_numerus(lecta->directivae) : ZEPHYRUM));
+        imprimere("    OCTETUS I DIVERGENS %s: %d (mensurae A=%d B=%d)\n",
+            via, (integer)i, (integer)mensura,
+            (integer)emissio.textus.mensura);
+        imprimere("      A [%.*s]\n", (integer)((minor - i > 48)
+            ? 48 : minor - i), (constans character*)(fons + i));
+        imprimere("      B [%.*s]\n", (integer)((minor - i > 48)
+            ? 48 : minor - i),
+            (constans character*)(emissio.textus.datum + i));
+    }
+    {
         /* Documentum plagulae NOMINATAE effundere (diagnosis):
          * ARBOR_DEFIGERE_NOMEN=tempus.c ARBOR_DEFIGERE=/via/ad/exitum */
         constans character* nomen_petitum;
@@ -581,6 +618,15 @@ _plagulam_probare (
     {
         _causam_notare(census->divergentiae,
             &census->numerus_divergentiarum, differentia.campus);
+        imprimere("      directivae: A=%d B=%d | lexemata: A=%d B=%d\n",
+            (integer)(origo->directivae
+                ? xar_numerus(origo->directivae) : ZEPHYRUM),
+            (integer)(lecta->directivae
+                ? xar_numerus(lecta->directivae) : ZEPHYRUM),
+            (integer)(origo->lexemata
+                ? xar_numerus(origo->lexemata) : ZEPHYRUM),
+            (integer)(lecta->lexemata
+                ? xar_numerus(lecta->lexemata) : ZEPHYRUM));
         imprimere("    %s: %s (via %s, index %d)\n", via,
             differentia.campus ? differentia.campus : "?",
             differentia.via, (integer)differentia.index);
@@ -816,6 +862,42 @@ principale (vacuum)
      * comparator 'aequales' diceret, diagnosis nostra ibi nihil
      * valeret. Zero est mensura, non praesumptio. */
     CREDO_AEQUALIS_I32 (census.comparator_tacuit, ZEPHYRUM);
+
+    /* ==========================================================
+     * PORTA GRADUS LATINIZATI (T7) - numeri PINNATI
+     *
+     * Hic numerus est quem M2 vere petit: codex NOSTER, ubi
+     * 'si'/'per'/'redde'/'NIHIL' omnia expansiones macro sunt.
+     * ========================================================== */
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, 154);
+
+    /* Clausura vere praebita. Si porta apparatus incendit, numerus
+     * circuitus NIHIL mensurat - vide _lexemata_ex_fonte_numerare:
+     * numerare expansiones OMNES LIX plagulas falso transire
+     * sinebat dum latina.h numquam aperiretur. */
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, 154);
+    CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_latinus.clausurae_truncatae, ZEPHYRUM);
+
+    /* ORACULUM SEPARANS: emissio DIRECTA (silva sola, sine STML).
+     * CLIII quia arbor2_glr_tabula.c (tabula GLR generata, MDLI KB)
+     * emissionem SILVAE IPSIUS non superat - vitium NUCLEI, extra
+     * hanc phasim. Si HIC numerus cadit, vitium silvae est; si
+     * OCTETIM EXACTAE solae cadunt, nostrum. */
+    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 153);
+
+    /* PROIECTIO NIHIL AMITTIT: circuitus STML numerum silvae
+     * AEQUAT. Quidquid silva emittere potest, per STML circuit. */
+    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 153);
+    CREDO_AEQUALIS_I32 (census_latinus.octeti_divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_latinus.emissio_recusata, ZEPHYRUM);
+
+    /* Una recusatio lectionis: eadem plagula arbor2_glr_tabula.c */
+    CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, I);
+
+    /* Comparator nusquam caecus */
+    CREDO_AEQUALIS_I32 (census_latinus.comparator_tacuit, ZEPHYRUM);
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

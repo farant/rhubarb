@@ -2255,6 +2255,31 @@ _extentum_legere (
         *sedes = lectum;
     }
 
+    /* LEXEMA PRIMUM LAMINAE *EST* INVOCATIO - identitas, non
+     * aequalitas.
+     *
+     * Scriptor nomen BIS scribit (semel in 'expansio', semel ut
+     * caput laminae) quia custodia transclusionis 'usus > I'
+     * petit, et lexemata laminae in arbore non sunt, ergo usum
+     * non accumulant. Lectio ergo DUO OBIECTA parit valore pari.
+     * Emissor autem extentum per IDENTITATEM MONSTRATORIS quaerit
+     * ('ext->invocatio == radix'), et derivatio alterum obiectum
+     * ponit quam emissor legit - ergo invocatio sedem numquam
+     * rectam accipit et emissio eam SILENTER OMITTIT.
+     * MENSURATUM (T7): IV plagulae, octeti invocationis absentes
+     * dum extenta ipsa recte numerarentur (A=X, B=X). Numerus par
+     * identitatem NON probat. */
+    si (xar_numerus(lamina) > ZEPHYRUM)
+    {
+        SilvaToken** caput;
+
+        caput = (SilvaToken**)xar_obtinere(lamina, ZEPHYRUM);
+        si (caput != NIHIL)
+        {
+            *caput = invocatio;
+        }
+    }
+
     si (lector->expansio == NIHIL || lector->expansio->extenta == NIHIL)
     {
         redde _recusare(lector, "extentum sine expansione",

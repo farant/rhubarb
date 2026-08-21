@@ -775,6 +775,82 @@ _arbor_regiones_aequales (
     redde VERUM;
 }
 
+/* Fons laminae directivae = fons lexematis primi eius. */
+interior s32
+_laminae_fons_index (
+    constans Xar* lamina)
+{
+    constans SilvaToken** sedes;
+
+    si (lamina == NIHIL || xar_numerus(lamina) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    sedes = (constans SilvaToken**)xar_obtinere(lamina, ZEPHYRUM);
+    si (sedes == NIHIL || *sedes == NIHIL)
+    {
+        redde -I;
+    }
+    redde (*sedes)->fons_index;
+}
+
+/* Numerus directivarum FONTIS DATI (vide notam ad DIRECTIVAE). */
+interior i32
+_directivae_fontis (
+    constans SilvaParsura* p,
+                      s32  fons)
+{
+    i32 numerus;
+    i32 k;
+
+    si (p == NIHIL || p->directivae == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    numerus = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < xar_numerus(p->directivae); k++)
+    {
+        si (_laminae_fons_index(*(Xar**)xar_obtinere(p->directivae, k))
+                == fons)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
+/* Directiva n-esima FONTIS DATI; NIHIL si abest. */
+interior Xar*
+_directivam_fontis (
+    constans SilvaParsura* p,
+                      s32  fons,
+                      i32  n)
+{
+    i32 visae;
+    i32 k;
+
+    si (p == NIHIL || p->directivae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    visae = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < xar_numerus(p->directivae); k++)
+    {
+        Xar* lamina = *(Xar**)xar_obtinere(p->directivae, k);
+
+        si (_laminae_fons_index(lamina) != fons)
+        {
+            perge;
+        }
+        si (visae == n)
+        {
+            redde lamina;
+        }
+        visae++;
+    }
+    redde NIHIL;
+}
+
 b32
 silva_arbor_parsurae_aequales (
         constans SilvaParsura* a,
@@ -868,11 +944,26 @@ silva_arbor_parsurae_aequales (
         }
     }
 
-    /* DIRECTIVAE */
-    numerus_a = a->directivae != NIHIL
-              ? xar_numerus(a->directivae) : (i32)ZEPHYRUM;
-    numerus_b = b->directivae != NIHIL
-              ? xar_numerus(b->directivae) : (i32)ZEPHYRUM;
+    /* DIRECTIVAE - FONTIS PRINCIPIS SOLIUS.
+     *
+     * Documentum PLAGULAE proiectio est, non PARSURAE (spec 1), et
+     * scriptor directivas per fontem filtrat
+     * (_parsura_reinserendum_addere ... fons_index). Ergo parsura
+     * originalis directivas OMNIUM plagularum fert (capita quoque)
+     * dum lecta principis solius: comparare summas est poma piris
+     * conferre.
+     *
+     * MENSURATUM (T7): A=DCXCVII, B=VII. Discrimen tantum non
+     * subtile erat, et tamen CXLIX plagulae octetim exactae -
+     * quod ipsum probat directivas deesse EMISSIONI non obstare.
+     * Comparator ergo causam VERAM harum IV plagularum CELABAT:
+     * primam divergentiam nuntiat, et haec falsa prima erat.
+     *
+     * LEX: instrumentum diagnosticum quod rem aliam comparat quam
+     * documentum repraesentat ductum falsum dat, non nullum -
+     * quod peius est. */
+    numerus_a = _directivae_fontis(a, a->fons_princeps);
+    numerus_b = _directivae_fontis(b, b->fons_princeps);
     si (numerus_a != numerus_b)
     {
         redde _arbor_divergere(&comparator, "directivae/numerus",
@@ -881,8 +972,8 @@ silva_arbor_parsurae_aequales (
     per (i = ZEPHYRUM; i < numerus_a; i++)
     {
         si (!_arbor_lamina_aequalis(&comparator,
-                 *(Xar**)xar_obtinere(a->directivae, i),
-                 *(Xar**)xar_obtinere(b->directivae, i),
+                 _directivam_fontis(a, a->fons_princeps, i),
+                 _directivam_fontis(b, b->fons_princeps, i),
                  "directiva", (s32)i))
         {
             redde FALSUM;
