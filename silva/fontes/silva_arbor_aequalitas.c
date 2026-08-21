@@ -547,3 +547,363 @@ silva_arbor_aequalis (
 
     redde _arbor_nodi_aequales(&comparator, a, b);
 }
+
+
+/* ==================================================
+ * Comparator parsurarum (M2 §2 T4)
+ *
+ * DIAGNOSIS, non verdictum - vide silva_arbor.h.
+ * ================================================== */
+
+/* Laminam lexematum conferre (linea directivae, lamina cruda).
+ * Nodi NIHIL sunt: haec lexemata ARBORI non pertinent. */
+interior b32
+_arbor_lamina_aequalis (
+         ArborComparator* comparator,
+                     Xar* a,
+                     Xar* b,
+      constans character* campus,
+                     s32  index)
+{
+    i32 numerus_a;
+    i32 numerus_b;
+    i32 i;
+
+    numerus_a = a != NIHIL ? xar_numerus(a) : (i32)ZEPHYRUM;
+    numerus_b = b != NIHIL ? xar_numerus(b) : (i32)ZEPHYRUM;
+    si (numerus_a != numerus_b)
+    {
+        redde _arbor_divergere(comparator, campus, NIHIL, NIHIL,
+            NIHIL, NIHIL, -I, index);
+    }
+    per (i = ZEPHYRUM; i < numerus_a; i++)
+    {
+        si (!_arbor_lexemata_aequalia(comparator,
+                 *(SilvaToken**)xar_obtinere(a, i),
+                 *(SilvaToken**)xar_obtinere(b, i),
+                 NIHIL, NIHIL, index, (s32)i))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_arbor_regiones_aequales (
+    ArborComparator*,
+                Xar*,
+                Xar*);
+
+interior b32
+_arbor_regio_aequalis (
+          ArborComparator* comparator,
+      constans SilvaRegio* a,
+      constans SilvaRegio* b,
+                      s32  index)
+{
+    i32 numerus_a;
+    i32 numerus_b;
+    i32 i;
+
+    si ((a == NIHIL) != (b == NIHIL))
+    {
+        redde _arbor_divergere(comparator, "regio/nullitas", NIHIL,
+            NIHIL, NIHIL, NIHIL, -I, index);
+    }
+    si (a == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (a->est_texta != b->est_texta)
+    {
+        redde _arbor_divergere(comparator, "regio/texta", NIHIL,
+            NIHIL, NIHIL, NIHIL, -I, index);
+    }
+    numerus_a = a->rami != NIHIL ? xar_numerus(a->rami) : (i32)ZEPHYRUM;
+    numerus_b = b->rami != NIHIL ? xar_numerus(b->rami) : (i32)ZEPHYRUM;
+    si (numerus_a != numerus_b)
+    {
+        redde _arbor_divergere(comparator, "regio/numerus-ramorum",
+            NIHIL, NIHIL, NIHIL, NIHIL, -I, index);
+    }
+    per (i = ZEPHYRUM; i < numerus_a; i++)
+    {
+        constans SilvaRamus* ra;
+        constans SilvaRamus* rb;
+
+        ra = *(SilvaRamus**)xar_obtinere(a->rami, i);
+        rb = *(SilvaRamus**)xar_obtinere(b->rami, i);
+        si ((ra == NIHIL) != (rb == NIHIL))
+        {
+            redde _arbor_divergere(comparator, "ramus/nullitas",
+                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+        }
+        si (ra == NIHIL)
+        {
+            perge;
+        }
+        si (ra->genus != rb->genus)
+        {
+            redde _arbor_divergere(comparator, "ramus/genus", NIHIL,
+                NIHIL, NIHIL, NIHIL, -I, (s32)i);
+        }
+        si (ra->conditio_id != rb->conditio_id)
+        {
+            redde _arbor_divergere(comparator, "ramus/conditio",
+                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+        }
+        /* est_sumptum NON confertur: structurale est (vide caput) */
+        si (!_arbor_lamina_aequalis(comparator, ra->directiva,
+                 rb->directiva, "ramus/directiva", (s32)i))
+        {
+            redde FALSUM;
+        }
+        si (!_arbor_lamina_aequalis(comparator, ra->lexemata_cruda,
+                 rb->lexemata_cruda, "ramus/cruda", (s32)i))
+        {
+            redde FALSUM;
+        }
+    }
+    si (!_arbor_lamina_aequalis(comparator, a->directiva_finis,
+             b->directiva_finis, "regio/finis", index))
+    {
+        redde FALSUM;
+    }
+    /* Filiae per PLANATIONEM iam tectae - recursio hic duplicaret */
+    redde VERUM;
+}
+
+/* Regiones DEGRADATAS solas planare, ordine praefixo.
+ *
+ * LACUNA REPRAESENTATIONALIS NOMINATA: regiones TEXTAE in
+ * expansione ONERATA non renascuntur, quia lineae earum ex ARBORE
+ * emittuntur - laminae earum lexemata EADEM monstrant quae nodus
+ * conditionalis fert, et ea seorsum reficere IDENTITATEM frangeret
+ * (duplicatio mentiretur - lex duplex, spec v1 §6). Ut serventur
+ * referentiae '#id' TRANS SECTIONES opus essent - eadem machina
+ * quam T6 pro origine introducit.
+ *
+ * Ergo comparator id confert QUOD FORMA REPRAESENTAT: seriem
+ * regionum degradatarum. Recensio T5 lacunam NUMERABIT. */
+interior b32
+_arbor_regiones_planare (
+    Xar* regiones,
+    Xar* acervus)
+{
+    i32 i;
+
+    si (regiones == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(regiones); i++)
+    {
+        SilvaRegio*  regio;
+        SilvaRegio** sedes;
+
+        regio = *(SilvaRegio**)xar_obtinere(regiones, i);
+        si (regio == NIHIL)
+        {
+            perge;
+        }
+        si (!regio->est_texta)
+        {
+            sedes = (SilvaRegio**)xar_addere(acervus);
+            si (sedes == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *sedes = regio;
+        }
+        si (!_arbor_regiones_planare(regio->filiae, acervus))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_arbor_regiones_aequales (
+    ArborComparator* comparator,
+                Xar* a,
+                Xar* b)
+{
+     Piscina* piscina;
+         Xar* plana_a;
+         Xar* plana_b;
+         i32  numerus_a;
+         i32  numerus_b;
+         i32  i;
+
+    piscina = piscina_generare_dynamicum("aequalitas_regionum",
+        1048576);
+    si (piscina == NIHIL)
+    {
+        redde VERUM;
+    }
+    plana_a = xar_creare(piscina, magnitudo(SilvaRegio*));
+    plana_b = xar_creare(piscina, magnitudo(SilvaRegio*));
+    si (   plana_a == NIHIL || plana_b == NIHIL
+        || !_arbor_regiones_planare(a, plana_a)
+        || !_arbor_regiones_planare(b, plana_b))
+    {
+        piscina_destruere(piscina);
+        redde VERUM;
+    }
+
+    numerus_a = xar_numerus(plana_a);
+    numerus_b = xar_numerus(plana_b);
+    si (numerus_a != numerus_b)
+    {
+        piscina_destruere(piscina);
+        redde _arbor_divergere(comparator, "regiones/numerus", NIHIL,
+            NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+    }
+    per (i = ZEPHYRUM; i < numerus_a; i++)
+    {
+        si (!_arbor_regio_aequalis(comparator,
+                 *(SilvaRegio**)xar_obtinere(plana_a, i),
+                 *(SilvaRegio**)xar_obtinere(plana_b, i), (s32)i))
+        {
+            piscina_destruere(piscina);
+            redde FALSUM;
+        }
+    }
+    piscina_destruere(piscina);
+    redde VERUM;
+}
+
+b32
+silva_arbor_parsurae_aequales (
+        constans SilvaParsura* a,
+        constans SilvaParsura* b,
+    SilvaArborComparatioModus  modus,
+        SilvaArborDifferentia* differentia)
+{
+    ArborComparator comparator;
+                i32 numerus_a;
+                i32 numerus_b;
+                i32 i;
+
+    si (differentia != NIHIL)
+    {
+        differentia->campus    = NIHIL;
+        differentia->nodus_a   = NIHIL;
+        differentia->nodus_b   = NIHIL;
+        differentia->lexema_a  = NIHIL;
+        differentia->lexema_b  = NIHIL;
+        differentia->locus     = -I;
+        differentia->index     = -I;
+        differentia->via[0]    = '\0';
+    }
+
+    comparator.modus          = modus;
+    comparator.differentia    = differentia;
+    comparator.via_longitudo  = ZEPHYRUM;
+    comparator.profunditas    = ZEPHYRUM;
+    comparator.via[0]         = '\0';
+
+    si ((a == NIHIL) != (b == NIHIL))
+    {
+        redde _arbor_divergere(&comparator, "parsura/nullitas",
+            NIHIL, NIHIL, NIHIL, NIHIL, -I, -I);
+    }
+    si (a == NIHIL)
+    {
+        redde VERUM;
+    }
+    si ((a->commissio == NIHIL) != (b->commissio == NIHIL))
+    {
+        redde _arbor_divergere(&comparator, "commissio/nullitas",
+            NIHIL, NIHIL, NIHIL, NIHIL, -I, -I);
+    }
+
+    /* ARBOR: per nodum supremum. Radix LISTA est, ergo profunditas
+     * a I incipit - aliter comparator patrem ad RADICEM conferret,
+     * ubi responsum EXTRA comparationem iacet (vitium M1 T6, CIX
+     * divergentiae falsae). */
+    si (a->commissio != NIHIL)
+    {
+        numerus_a = silva_valor_lista_numerus(a->commissio->radix);
+        numerus_b = silva_valor_lista_numerus(b->commissio->radix);
+        si (numerus_a != numerus_b)
+        {
+            redde _arbor_divergere(&comparator, "radix/numerus",
+                NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+        }
+        per (i = ZEPHYRUM; i < numerus_a; i++)
+        {
+            SilvaValor* ea;
+            SilvaValor* eb;
+
+            ea = silva_valor_lista_obtinere(a->commissio->radix, i);
+            eb = silva_valor_lista_obtinere(b->commissio->radix, i);
+            si (ea == NIHIL || eb == NIHIL)
+            {
+                perge;
+            }
+            si (ea->genus != eb->genus)
+            {
+                redde _arbor_divergere(&comparator, "radix/genus",
+                    NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)i);
+            }
+            si (ea->genus != SILVA_VALOR_NODUS)
+            {
+                perge;
+            }
+            comparator.via_longitudo  = ZEPHYRUM;
+            comparator.via[0]         = '\0';
+            comparator.profunditas    = ZEPHYRUM;
+            si (!_arbor_nodi_aequales(&comparator, ea->datum.nodus,
+                     eb->datum.nodus))
+            {
+                si (differentia != NIHIL && differentia->index < ZEPHYRUM)
+                {
+                    differentia->index = (s32)i;
+                }
+                redde FALSUM;
+            }
+        }
+    }
+
+    /* DIRECTIVAE */
+    numerus_a = a->directivae != NIHIL
+              ? xar_numerus(a->directivae) : (i32)ZEPHYRUM;
+    numerus_b = b->directivae != NIHIL
+              ? xar_numerus(b->directivae) : (i32)ZEPHYRUM;
+    si (numerus_a != numerus_b)
+    {
+        redde _arbor_divergere(&comparator, "directivae/numerus",
+            NIHIL, NIHIL, NIHIL, NIHIL, -I, (s32)numerus_a);
+    }
+    per (i = ZEPHYRUM; i < numerus_a; i++)
+    {
+        si (!_arbor_lamina_aequalis(&comparator,
+                 *(Xar**)xar_obtinere(a->directivae, i),
+                 *(Xar**)xar_obtinere(b->directivae, i),
+                 "directiva", (s32)i))
+        {
+            redde FALSUM;
+        }
+    }
+
+    /* REGIONES */
+    si (a->expansio != NIHIL && b->expansio != NIHIL)
+    {
+        si (!_arbor_regiones_aequales(&comparator,
+                 a->expansio->regiones, b->expansio->regiones))
+        {
+            redde FALSUM;
+        }
+    }
+
+    /* CAUDA: trivia caudae campus est qui tacite cadere solet */
+    si (!_arbor_lexemata_aequalia(&comparator, a->lexema_finis,
+             b->lexema_finis, NIHIL, NIHIL, -I, -I))
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}

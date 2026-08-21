@@ -459,6 +459,35 @@ silva_arbor_scribere_parsuram (
  * ponuntur - numquam non-initializati relinquuntur.
  *
  * Reddit NIHIL + vitium nominatum in recusatione. */
+/* Parsuras duas conferre. VERUM si aequales.
+ *
+ * MUNUS: DIAGNOSIS, non verdictum. Verdictum portae M2 aequalitas
+ * OCTETORUM contra plagulam in disco est (valor expectatus EXTRA
+ * silvam - vitium symmetricum inter scriptorem et lectorem in eo
+ * latere nequit). Cum ille cadit, HAEC functio dicit QUIS CAMPUS
+ * divergat - quod in M1 omnem divergentiam uno cursu solvit, ter,
+ * post ter falsam divinationem.
+ *
+ * QUAE CONFERUNTUR: radix (per nodum supremum, delegando), lineae
+ * directivarum, arbor regionum (rami, laminae crudae, linea finis,
+ * filiae), lexema caudae cum triviis.
+ *
+ * QUAE NON, ET CUR:
+ *   est_sumptum  - STRUCTURALE est (ramus sine lamina cruda sumptus
+ *                  est), ergo comparatio eius rem bis diceret; et
+ *                  VISIO tenet viam defaltam unam inter multas esse.
+ *   expressio    - documentum eam NON fert (octeti eius in
+ *                  'directiva' iam sunt; _regiones_colligere eam
+ *                  numquam reinserit). Lacuna REPRAESENTATIONALIS
+ *                  nominata, non tacita - recensio T5 eam numerabit.
+ */
+b32
+silva_arbor_parsurae_aequales (
+          constans SilvaParsura* a,
+          constans SilvaParsura* b,
+      SilvaArborComparatioModus  modus,
+          SilvaArborDifferentia* differentia);
+
 SilvaParsura*
 silva_arbor_legere_parsuram (
                            Piscina* piscina,

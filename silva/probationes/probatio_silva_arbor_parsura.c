@@ -463,6 +463,208 @@ principale (vacuum)
         CREDO_VERUM (vitium.causa != NIHIL);
     }
 
+
+    /* ========================================================
+     * PROBARE: comparator parsurarum (T4)
+     *
+     * DIAGNOSIS, non verdictum. Assertio PRIMA est aequalitas -
+     * sine ea probationes vitiorum plantatorum vacuae essent
+     * (comparator qui semper 'inaequales' dicit omnia 'caperet').
+     * ======================================================== */
+
+    {
+        constans character* fons_t4 =
+            "#include \"a.h\"\nint a = 1;\n#if 0\nint m = ;\n"
+            "#endif\nint b = 2;\n";
+              SilvaParsura* origo;
+              SilvaParsura* lecta;
+       SilvaArborScriptura  scriptura;
+          SilvaArborVitium  vitium;
+     SilvaArborDifferentia  differentia;
+
+        origo = silva_parsare(piscina, "t4.c", fons_t4,
+            (i32)strlen(fons_t4), &SILVA_C89_GRAMMATICA, NIHIL,
+            NIHIL, NIHIL);
+        CREDO_NON_NIHIL (origo);
+
+        scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+            &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+            NIHIL);
+        CREDO_VERUM (scriptura.successus);
+
+        lecta = silva_arbor_legere_parsuram(piscina, NIHIL,
+            scriptura.textus, &SILVA_C89_REGISTRUM, "c89", &vitium);
+        CREDO_NON_NIHIL (lecta);
+
+        si (lecta != NIHIL)
+        {
+            /* AEQUALITAS - fundamentum omnium sequentium */
+            CREDO_VERUM (silva_arbor_parsurae_aequales(origo, lecta,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            si (differentia.campus != NIHIL)
+            {
+                imprimere("  T4 divergentia inexspectata: %s"
+                    " (via %s, index %d)\n", differentia.campus,
+                    differentia.via, (integer)differentia.index);
+            }
+
+            /* VITIUM PLANTATUM I: lexema directivae mutatum.
+             * INTERIUS plantatum (lexema II, non primum) - vitium
+             * ad limitem plantatum tacere potest si emendatio
+             * limitem eximat (lectio M1 T4). */
+            {
+                       Xar* lamina;
+                SilvaToken* lexema;
+                    chorda  servata;
+
+                lamina = *(Xar**)xar_obtinere(lecta->directivae,
+                    ZEPHYRUM);
+                CREDO_VERUM (xar_numerus(lamina) > I);
+                lexema   = *(SilvaToken**)xar_obtinere(lamina, I);
+                servata  = lexema->valor;
+                lexema->valor = chorda_ex_literis("MUTATUM",
+                    piscina);
+                CREDO_FALSUM (silva_arbor_parsurae_aequales(origo,
+                    lecta, SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                    &differentia));
+                CREDO_VERUM (differentia.lexema_a != NIHIL);
+                lexema->valor = servata;
+            }
+
+            /* VITIUM PLANTATUM II: numerus directivarum */
+            {
+                Xar** sedes;
+                Xar*  servata;
+
+                sedes = (Xar**)xar_obtinere(lecta->directivae,
+                    ZEPHYRUM);
+                servata  = *sedes;
+                *sedes   = NIHIL;
+                CREDO_FALSUM (silva_arbor_parsurae_aequales(origo,
+                    lecta, SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                    &differentia));
+                *sedes = servata;
+            }
+
+            /* VITIUM PLANTATUM III: cauda (trivia caudae campus
+             * est qui tacite cadere solet) */
+            {
+                SilvaToken* servatum;
+
+                servatum             = lecta->lexema_finis;
+                lecta->lexema_finis  = NIHIL;
+                CREDO_FALSUM (silva_arbor_parsurae_aequales(origo,
+                    lecta, SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                    &differentia));
+                lecta->lexema_finis = servatum;
+            }
+
+            /* RESTITUTIO probata: post omnia vitia sanata parsurae
+             * iterum aequales. Sine hac assertione vitium plantatum
+             * non restitutum sequentia tacite inquinaret. */
+            CREDO_VERUM (silva_arbor_parsurae_aequales(origo, lecta,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+    }
+
+    /* T4 pars II: campi qui in forma T4-I absunt - lamina regionis
+     * DEGRADATAE, et delegatio per nodum supremum (index). */
+
+    {
+        constans character* fons_t4b =
+            "int x[] = {\n#if 0\n1,\n#endif\n2\n};\nint y = 3;\n";
+              SilvaParsura* origo;
+              SilvaParsura* lecta;
+       SilvaArborScriptura  scriptura;
+          SilvaArborVitium  vitium;
+     SilvaArborDifferentia  differentia;
+
+        origo = silva_parsare(piscina, "t4b.c", fons_t4b,
+            (i32)strlen(fons_t4b), &SILVA_C89_GRAMMATICA, NIHIL,
+            NIHIL, NIHIL);
+        CREDO_NON_NIHIL (origo);
+        /* Regio vere DEGRADATA - aliter vitium infra vacuum esset */
+        CREDO_VERUM (origo->regiones_omissae > ZEPHYRUM);
+
+        scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+            &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+            NIHIL);
+        CREDO_VERUM (scriptura.successus);
+        lecta = silva_arbor_legere_parsuram(piscina, NIHIL,
+            scriptura.textus, &SILVA_C89_REGISTRUM, "c89", &vitium);
+        CREDO_NON_NIHIL (lecta);
+
+        si (lecta != NIHIL && lecta->expansio != NIHIL)
+        {
+            CREDO_VERUM (silva_arbor_parsurae_aequales(origo, lecta,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+            si (differentia.campus != NIHIL)
+            {
+                imprimere("  T4b divergentia inexspectata: %s\n",
+                    differentia.campus);
+            }
+
+            /* VITIUM: lamina cruda regionis degradatae */
+            si (xar_numerus(lecta->expansio->regiones) > ZEPHYRUM)
+            {
+                SilvaRegio* regio;
+                SilvaRamus* ramus;
+
+                regio = *(SilvaRegio**)xar_obtinere(
+                    lecta->expansio->regiones, ZEPHYRUM);
+                CREDO_NON_NIHIL (regio);
+                CREDO_VERUM (xar_numerus(regio->rami) > ZEPHYRUM);
+                ramus = *(SilvaRamus**)xar_obtinere(regio->rami,
+                    ZEPHYRUM);
+                CREDO_NON_NIHIL (ramus);
+                si (ramus != NIHIL && ramus->lexemata_cruda != NIHIL)
+                {
+                    Xar* servata;
+
+                    servata                = ramus->lexemata_cruda;
+                    ramus->lexemata_cruda  = NIHIL;
+                    CREDO_FALSUM (silva_arbor_parsurae_aequales(
+                        origo, lecta,
+                        SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                        &differentia));
+                    ramus->lexemata_cruda = servata;
+                }
+            }
+
+            /* VITIUM: nodus supremus SECUNDUS ('int y = 3;') -
+             * index in differentia probat delegationem per nodum
+             * rectam esse, non solum primum conferri */
+            si (silva_valor_lista_numerus(lecta->commissio->radix)
+                    > I)
+            {
+                SilvaValor* elementum;
+                SilvaNodus* nodus;
+
+                elementum = silva_valor_lista_obtinere(
+                    lecta->commissio->radix, I);
+                CREDO_NON_NIHIL (elementum);
+                nodus = elementum->datum.nodus;
+                CREDO_NON_NIHIL (nodus);
+                si (nodus != NIHIL)
+                {
+                    s32 servatum;
+
+                    servatum      = nodus->genus;
+                    nodus->genus  = servatum + I;
+                    CREDO_FALSUM (silva_arbor_parsurae_aequales(
+                        origo, lecta,
+                        SILVA_ARBOR_COMPARATIO_FIDELITAS,
+                        &differentia));
+                    CREDO_AEQUALIS_S32 (differentia.index, I);
+                    nodus->genus = servatum;
+                }
+            }
+
+            CREDO_VERUM (silva_arbor_parsurae_aequales(origo, lecta,
+                SILVA_ARBOR_COMPARATIO_FIDELITAS, &differentia));
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
