@@ -67342,12 +67342,34 @@ nomen structura {
  * EMISSIONIS. Documentum positiones non fert - involucrum ancoram
  * solam - ergo hic eas reficimus. Lex: documentum canonicum
  * mentiri non possit. */
+/* LACUNA: intervallum octetorum quod ARBORI non pertinet sed in
+ * fluxu octetorum INTER lexemata eius iacet (laminae directivarum,
+ * laminae regionum degradatarum).
+ *
+ * CUR OPUS SIT: arbor octetos suos CONTIGUOS emittit, sed in
+ * plagula vera lexemata eius interrumpi possunt - regio in
+ * initiatore, exempli gratia. Sine lacunis derivatio lexemati post
+ * interruptionem sedem nimis parvam daret, et
+ * silva_scribere_fontem (quae reinserenda per offset intertexit)
+ * ordinem falsum refecisset. MENSURATUM, non divinatum (T3b). */
+nomen structura {
+    s32 offset;                 /* initium lacunae */
+    s32 finis;                  /* post ultimum octetum */
+    i32 linea_finalis;
+    i32 columna_finalis;
+    b32 post_lineam_finalis;
+} ParsuraLacuna;
+
 nomen structura {
     s32 offset;
     i32 linea;
     i32 columna;
     b32 post_lineam;   /* nova linea VERA visa (logica, non physica) */
     b32 sedes_notae;   /* ancora adest: ordinatas scribere licet */
+
+    /* Lacunae, ordine offset; NIHIL = nullae (casus subarboris) */
+    SilvaXar* lacunae;
+    i32  lacuna_proxima;
 } ArborCursor;
 
 /* Recusare: causam et lineam figere. Semper FALSUM reddit ut
@@ -68320,6 +68342,31 @@ _positiones_lexematis (
         redde;
     }
 
+    /* LACUNAS transilire ad quas cursor pervenit. Omnis derivatio
+     * per hanc functionem fluit, ergo unum punctum mutationis. */
+    dum (   cursor->lacunae != NIHIL
+         && cursor->lacuna_proxima < silva_xar_numerus(cursor->lacunae))
+    {
+        ParsuraLacuna* lacuna;
+
+        lacuna = (ParsuraLacuna*)silva_xar_obtinere(cursor->lacunae,
+            cursor->lacuna_proxima);
+        si (lacuna == NIHIL || lacuna->finis <= cursor->offset)
+        {
+            cursor->lacuna_proxima++;
+            perge;
+        }
+        si (lacuna->offset > cursor->offset)
+        {
+            frange;
+        }
+        cursor->offset       = lacuna->finis;
+        cursor->linea        = lacuna->linea_finalis;
+        cursor->columna      = lacuna->columna_finalis;
+        cursor->post_lineam  = lacuna->post_lineam_finalis;
+        cursor->lacuna_proxima++;
+    }
+
     numerus = lexema->spatia_ante
         ? silva_xar_numerus(lexema->spatia_ante) : (i32)ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -68483,11 +68530,13 @@ silva_arbor_legere (
     /* ANCORA: sedes lexematis PRIMI ordine ambulationis. Absens =
      * arbor AUCTORATA (sine fonte) - positiones -I manent, quod
      * legitimum est et quod comparator per provenientiam custodit. */
-    ancora_adest       = FALSUM;
-    sedes.offset       = ZEPHYRUM;
-    sedes.linea        = I;
-    sedes.columna      = I;
-    sedes.post_lineam  = VERUM;
+    ancora_adest          = FALSUM;
+    sedes.offset          = ZEPHYRUM;
+    sedes.linea           = I;
+    sedes.columna         = I;
+    sedes.post_lineam     = VERUM;
+    sedes.lacunae         = NIHIL;
+    sedes.lacuna_proxima  = ZEPHYRUM;
 
     attributum = silva_stml_attributum_capere(involucrum, "b");
     si (attributum != NIHIL && _numerus_ex_chorda(attributum, &numerus))
@@ -69517,6 +69566,56 @@ _parsura_fontes_legere (
     redde VERUM;
 }
 
+/* Lacunas ordine offset */
+interior s32
+_parsura_lacunas_conferre (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans ParsuraLacuna* la;
+    constans ParsuraLacuna* lb;
+
+    la = (constans ParsuraLacuna*)a;
+    lb = (constans ParsuraLacuna*)b;
+    si (la->offset < lb->offset)
+    {
+        redde -I;
+    }
+    si (la->offset > lb->offset)
+    {
+        redde I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* Lacunam notare: ab initio dato usque ad sedem quam cursor post
+ * laminam lectam tenet. Extentum ergo ex DERIVATIONE IPSA venit -
+ * nullus fons veritatis secundus. */
+interior b32
+_parsura_lacunam_notare (
+                     SilvaXar* lacunae,
+                     s32  initium,
+    constans ArborCursor* post)
+{
+    ParsuraLacuna* lacuna;
+
+    si (lacunae == NIHIL || post->offset <= initium)
+    {
+        redde VERUM;
+    }
+    lacuna = (ParsuraLacuna*)silva_xar_addere(lacunae);
+    si (lacuna == NIHIL)
+    {
+        redde FALSUM;
+    }
+    lacuna->offset               = initium;
+    lacuna->finis                = post->offset;
+    lacuna->linea_finalis        = post->linea;
+    lacuna->columna_finalis      = post->columna;
+    lacuna->post_lineam_finalis  = post->post_lineam;
+    redde VERUM;
+}
+
 /* Ancoram elementi in cursorem. Absente ancora cursor ab initio
  * plagulae incipit (casus arboris auctoratae). */
 interior vacuum
@@ -69532,6 +69631,7 @@ _parsura_ancoram_legere (
     cursor->columna      = I;
     cursor->post_lineam  = VERUM;
     cursor->sedes_notae  = FALSUM;
+    /* lacunae/lacuna_proxima INTACTAE - vocans eas possidet */
 
     attributum = silva_stml_attributum_capere(elementum, "b");
     si (   attributum != NIHIL && _numerus_ex_chorda(attributum,
@@ -69735,6 +69835,8 @@ silva_arbor_legere_parsuram (
     SilvaExpansio* expansio;
               SilvaXar* regiones_tabula;
               SilvaXar* regiones_patres;
+              SilvaXar* lacunae;
+              i32  passus;
        SilvaValor  radix;
            SilvaChorda* attributum;
            SilvaChorda  sigillum;
@@ -69861,11 +69963,13 @@ silva_arbor_legere_parsuram (
      * DEBET - aliter offsets omnes post directivam primam labuntur
      * et silva_scribere_fontem (quae per offset intertexit)
      * ordinem falsum reficit. */
-    sedes.offset       = ZEPHYRUM;
-    sedes.linea        = I;
-    sedes.columna      = I;
-    sedes.post_lineam  = VERUM;
-    sedes.sedes_notae  = VERUM;
+    sedes.offset          = ZEPHYRUM;
+    sedes.linea           = I;
+    sedes.columna         = I;
+    sedes.post_lineam     = VERUM;
+    sedes.lacunae         = NIHIL;
+    sedes.lacuna_proxima  = ZEPHYRUM;
+    sedes.sedes_notae     = VERUM;
 
     /* Cursor nunc PER LIBERUM ex ancora ponitur (vide
      * _parsura_ancoram_legere); haec initializatio defaltum solum
@@ -69879,253 +69983,313 @@ silva_arbor_legere_parsuram (
         redde NIHIL;
     }
 
-    radix   = silva_valor_lista_nova(piscina);
-    cursor  = ZEPHYRUM;
-    dum ((elem = _elementum_proximum(&lector, involucrum, &cursor))
-             != NIHIL)
+    lacunae = silva_xar_creare(piscina, magnitudo(ParsuraLacuna));
+    si (lacunae == NIHIL)
     {
-        SilvaNodus* nodus;
-         SilvaStmlNodus* apertum;
+        _recusare(&lector, "lacunae creari non potuerunt",
+            involucrum->linea);
+        redde NIHIL;
+    }
 
-        si (   elem->titulus != NIHIL
-            && silva_chorda_aequalis_literis(*elem->titulus,
-                   SILVA_ARBOR_TAG_FONTES))
+    radix = silva_valor_lista_nova(piscina);
+
+    /* DUO PASSUS, et ordo eorum EST consilium: laminae (directivae,
+     * regiones degradatae) LACUNAS in fluxu octetorum arboris
+     * faciunt, ergo NOTAE esse debent antequam arbor derivetur.
+     * Passus I laminas legit et lacunas notat; passus II arborem
+     * cursore LACUNARUM CONSCIO derivat. */
+    per (passus = ZEPHYRUM; passus < II; passus++)
+    {
+        si (passus == I)
         {
-            perge;
+            silva_xar_ordinare(lacunae, _parsura_lacunas_conferre);
+            sedes.lacunae         = lacunae;
+            sedes.lacuna_proxima  = ZEPHYRUM;
         }
-        /* REGIONES DEGRADATAE: laminae quae lineas suas POSSIDENT.
-         * Arbor regionum hic REFICITUR ut _regiones_colligere
-         * (silva_scribere.c) eadem reinserenda ad easdem sedes
-         * inveniat. Regiones TEXTAE hic NUMQUAM apparent - illae in
-         * ARBORE vivunt (dominus unus). */
-        si (   elem->titulus != NIHIL
-            && (   silva_chorda_aequalis_literis(*elem->titulus,
-                       SILVA_ARBOR_TAG_REGIO_DIRECTIVA)
-                || silva_chorda_aequalis_literis(*elem->titulus,
-                       SILVA_ARBOR_TAG_REGIO_CRUDA)
-                || silva_chorda_aequalis_literis(*elem->titulus,
-                       SILVA_ARBOR_TAG_REGIO_FINIS)))
+        cursor = ZEPHYRUM;
+        dum ((elem = _elementum_proximum(&lector, involucrum, &cursor))
+                 != NIHIL)
         {
-            SilvaRegio* regio;
-            SilvaRamus* ramus;
-                   SilvaXar* lamina;
-                   s32  index_regionis;
-                   s32  index_patris;
-                   s32  regio_fons;
-                   i32  regio_linea;
-                   i32  numerus_attributi;
+            SilvaNodus* nodus;
+             SilvaStmlNodus* apertum;
 
-            index_patris  = -I;
-            regio_fons    = ZEPHYRUM;
-            regio_linea   = ZEPHYRUM;
+            si (   elem->titulus != NIHIL
+                && silva_chorda_aequalis_literis(*elem->titulus,
+                       SILVA_ARBOR_TAG_FONTES))
+            {
+                perge;
+            }
+            /* REGIONES DEGRADATAE: laminae quae lineas suas POSSIDENT.
+             * Arbor regionum hic REFICITUR ut _regiones_colligere
+             * (silva_scribere.c) eadem reinserenda ad easdem sedes
+             * inveniat. Regiones TEXTAE hic NUMQUAM apparent - illae in
+             * ARBORE vivunt (dominus unus). */
+            si (   elem->titulus != NIHIL
+                && (   silva_chorda_aequalis_literis(*elem->titulus,
+                           SILVA_ARBOR_TAG_REGIO_DIRECTIVA)
+                    || silva_chorda_aequalis_literis(*elem->titulus,
+                           SILVA_ARBOR_TAG_REGIO_CRUDA)
+                    || silva_chorda_aequalis_literis(*elem->titulus,
+                           SILVA_ARBOR_TAG_REGIO_FINIS)))
+            {
+                SilvaRegio* regio;
+                SilvaRamus* ramus;
+                       SilvaXar* lamina;
+                       s32  initium_lacunae;
+                       s32  index_regionis;
+                       s32  index_patris;
+                       s32  regio_fons;
+                       i32  regio_linea;
+                       i32  numerus_attributi;
 
-            attributum = silva_stml_attributum_capere(elem, "regio");
-            si (   attributum == NIHIL
-                || !_numerus_ex_chorda(attributum,
-                        &numerus_attributi))
-            {
-                _recusare(&lector, "regio sine indice", elem->linea);
-                redde NIHIL;
-            }
-            index_regionis = (s32)numerus_attributi;
+                si (passus != ZEPHYRUM)
+                {
+                    perge;
+                }
 
-            attributum = silva_stml_attributum_capere(elem, "pater");
-            si (   attributum != NIHIL
-                && _numerus_ex_chorda(attributum, &numerus_attributi))
-            {
-                index_patris = (s32)numerus_attributi;
-            }
-            attributum = silva_stml_attributum_capere(elem, "regio-fons");
-            si (   attributum != NIHIL
-                && _numerus_ex_chorda(attributum, &numerus_attributi))
-            {
-                regio_fons = (s32)numerus_attributi;
-            }
-            attributum = silva_stml_attributum_capere(elem, "regio-linea");
-            si (   attributum != NIHIL
-                && _numerus_ex_chorda(attributum, &numerus_attributi))
-            {
-                regio_linea = numerus_attributi;
-            }
+                index_patris  = -I;
+                regio_fons    = ZEPHYRUM;
+                regio_linea   = ZEPHYRUM;
 
-            regio = _parsura_regionem_obtinere(&lector,
-                regiones_tabula, regiones_patres, index_regionis,
-                index_patris, regio_fons, regio_linea);
-            si (regio == NIHIL)
-            {
-                _recusare(&lector, "regio creari non potuit",
-                    elem->linea);
-                redde NIHIL;
-            }
+                attributum = silva_stml_attributum_capere(elem, "regio");
+                si (   attributum == NIHIL
+                    || !_numerus_ex_chorda(attributum,
+                            &numerus_attributi))
+                {
+                    _recusare(&lector, "regio sine indice", elem->linea);
+                    redde NIHIL;
+                }
+                index_regionis = (s32)numerus_attributi;
 
-            _parsura_ancoram_legere(elem, &sedes);
-            lamina = _parsura_laminam_legere(&lector, elem, &sedes);
-            si (lamina == NIHIL)
-            {
-                redde NIHIL;
-            }
+                attributum = silva_stml_attributum_capere(elem, "pater");
+                si (   attributum != NIHIL
+                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                {
+                    index_patris = (s32)numerus_attributi;
+                }
+                attributum = silva_stml_attributum_capere(elem, "regio-fons");
+                si (   attributum != NIHIL
+                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                {
+                    regio_fons = (s32)numerus_attributi;
+                }
+                attributum = silva_stml_attributum_capere(elem, "regio-linea");
+                si (   attributum != NIHIL
+                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                {
+                    regio_linea = numerus_attributi;
+                }
 
-            si (silva_chorda_aequalis_literis(*elem->titulus,
-                    SILVA_ARBOR_TAG_REGIO_FINIS))
-            {
-                regio->directiva_finis = lamina;
+                regio = _parsura_regionem_obtinere(&lector,
+                    regiones_tabula, regiones_patres, index_regionis,
+                    index_patris, regio_fons, regio_linea);
+                si (regio == NIHIL)
+                {
+                    _recusare(&lector, "regio creari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+
+                _parsura_ancoram_legere(elem, &sedes);
+                initium_lacunae = sedes.offset;
+                lamina = _parsura_laminam_legere(&lector, elem, &sedes);
+                si (lamina == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                si (!_parsura_lacunam_notare(lacunae,
+                         initium_lacunae, &sedes))
+                {
+                    _recusare(&lector, "lacuna notari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+
+                si (silva_chorda_aequalis_literis(*elem->titulus,
+                        SILVA_ARBOR_TAG_REGIO_FINIS))
+                {
+                    regio->directiva_finis = lamina;
+                    perge;
+                }
+
+                attributum = silva_stml_attributum_capere(elem, "ramus");
+                si (   attributum == NIHIL
+                    || !_numerus_ex_chorda(attributum,
+                            &numerus_attributi))
+                {
+                    _recusare(&lector, "ramus sine indice", elem->linea);
+                    redde NIHIL;
+                }
+                ramus = _parsura_ramum_obtinere(&lector, regio,
+                    (s32)numerus_attributi);
+                si (ramus == NIHIL)
+                {
+                    _recusare(&lector, "ramus creari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                ramus->genus = _parsura_ramus_genus_ex_nomine(
+                    silva_stml_attributum_capere(elem, "genus"));
+                attributum = silva_stml_attributum_capere(elem, "conditio");
+                si (   attributum != NIHIL
+                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                {
+                    ramus->conditio_id = numerus_attributi;
+                }
+
+                si (silva_chorda_aequalis_literis(*elem->titulus,
+                        SILVA_ARBOR_TAG_REGIO_CRUDA))
+                {
+                    ramus->lexemata_cruda = lamina;
+                }
+                alioquin
+                {
+                    ramus->directiva = lamina;
+                }
+                /* est_sumptum STRUCTURALE est: ramus sine lamina cruda
+                 * sumptus est. Documentum configurationem NON portat
+                 * (spec §2) - forma eam iam dicit. */
+                ramus->est_sumptum = ramus->lexemata_cruda == NIHIL;
                 perge;
             }
 
-            attributum = silva_stml_attributum_capere(elem, "ramus");
-            si (   attributum == NIHIL
-                || !_numerus_ex_chorda(attributum,
-                        &numerus_attributi))
+            /* RETRACTIO: directivae ex ordine documenti in campum
+             * suum. Documentum eas ubi scriptae sunt fert (superficies
+             * editionis); parsura ONERATA eas seorsum fert, ut arbor
+             * PURA maneat - id est quod subarborem motam octetos suos
+             * ubicumque emittere sinit. */
+            si (   elem->titulus != NIHIL
+                && silva_chorda_aequalis_literis(*elem->titulus,
+                       SILVA_ARBOR_TAG_DIRECTIVA))
             {
-                _recusare(&lector, "ramus sine indice", elem->linea);
-                redde NIHIL;
-            }
-            ramus = _parsura_ramum_obtinere(&lector, regio,
-                (s32)numerus_attributi);
-            si (ramus == NIHIL)
-            {
-                _recusare(&lector, "ramus creari non potuit",
-                    elem->linea);
-                redde NIHIL;
-            }
-            ramus->genus = _parsura_ramus_genus_ex_nomine(
-                silva_stml_attributum_capere(elem, "genus"));
-            attributum = silva_stml_attributum_capere(elem, "conditio");
-            si (   attributum != NIHIL
-                && _numerus_ex_chorda(attributum, &numerus_attributi))
-            {
-                ramus->conditio_id = numerus_attributi;
-            }
+                SilvaStmlNodus*  lexema_elem;
+                      SilvaXar*  lamina;
+                      SilvaXar** sedes_laminae;
+                      i32   intra;
+                      s32   initium_lacunae;
 
-            si (silva_chorda_aequalis_literis(*elem->titulus,
-                    SILVA_ARBOR_TAG_REGIO_CRUDA))
-            {
-                ramus->lexemata_cruda = lamina;
-            }
-            alioquin
-            {
-                ramus->directiva = lamina;
-            }
-            /* est_sumptum STRUCTURALE est: ramus sine lamina cruda
-             * sumptus est. Documentum configurationem NON portat
-             * (spec §2) - forma eam iam dicit. */
-            ramus->est_sumptum = ramus->lexemata_cruda == NIHIL;
-            perge;
-        }
+                si (passus != ZEPHYRUM)
+                {
+                    perge;
+                }
 
-        /* RETRACTIO: directivae ex ordine documenti in campum
-         * suum. Documentum eas ubi scriptae sunt fert (superficies
-         * editionis); parsura ONERATA eas seorsum fert, ut arbor
-         * PURA maneat - id est quod subarborem motam octetos suos
-         * ubicumque emittere sinit. */
-        si (   elem->titulus != NIHIL
-            && silva_chorda_aequalis_literis(*elem->titulus,
-                   SILVA_ARBOR_TAG_DIRECTIVA))
-        {
-            SilvaStmlNodus*  lexema_elem;
-                  SilvaXar*  lamina;
-                  SilvaXar** sedes_laminae;
-                  i32   intra;
-
-            si (parsura->directivae == NIHIL)
-            {
-                parsura->directivae = silva_xar_creare(piscina,
-                    magnitudo(SilvaXar*));
                 si (parsura->directivae == NIHIL)
                 {
-                    _recusare(&lector,
-                        "xar directivarum creari non potuit",
+                    parsura->directivae = silva_xar_creare(piscina,
+                        magnitudo(SilvaXar*));
+                    si (parsura->directivae == NIHIL)
+                    {
+                        _recusare(&lector,
+                            "xar directivarum creari non potuit",
+                            elem->linea);
+                        redde NIHIL;
+                    }
+                }
+                lamina = silva_xar_creare(piscina, magnitudo(SilvaToken*));
+                si (lamina == NIHIL)
+                {
+                    _recusare(&lector, "lamina creari non potuit",
                         elem->linea);
                     redde NIHIL;
                 }
-            }
-            lamina = silva_xar_creare(piscina, magnitudo(SilvaToken*));
-            si (lamina == NIHIL)
-            {
-                _recusare(&lector, "lamina creari non potuit",
-                    elem->linea);
-                redde NIHIL;
-            }
-            _parsura_ancoram_legere(elem, &sedes);
-            intra = ZEPHYRUM;
-            dum ((lexema_elem = _elementum_proximum(&lector, elem,
-                      &intra)) != NIHIL)
-            {
-                SilvaToken*  lexema;
-                SilvaToken** sedes_lexematis;
-
-                lexema = _lexema_legere(&lector, lexema_elem, NIHIL);
-                si (lexema == NIHIL)
+                _parsura_ancoram_legere(elem, &sedes);
+                initium_lacunae  = sedes.offset;
+                intra            = ZEPHYRUM;
+                dum ((lexema_elem = _elementum_proximum(&lector, elem,
+                          &intra)) != NIHIL)
                 {
-                    redde NIHIL;
+                    SilvaToken*  lexema;
+                    SilvaToken** sedes_lexematis;
+
+                    lexema = _lexema_legere(&lector, lexema_elem, NIHIL);
+                    si (lexema == NIHIL)
+                    {
+                        redde NIHIL;
+                    }
+                    _positiones_lexematis(&sedes, lexema);
+                    sedes_lexematis = (SilvaToken**)silva_xar_addere(lamina);
+                    si (sedes_lexematis == NIHIL)
+                    {
+                        _recusare(&lector,
+                            "lexema in laminam addi non potuit",
+                            elem->linea);
+                        redde NIHIL;
+                    }
+                    *sedes_lexematis = lexema;
                 }
-                _positiones_lexematis(&sedes, lexema);
-                sedes_lexematis = (SilvaToken**)silva_xar_addere(lamina);
-                si (sedes_lexematis == NIHIL)
+                sedes_laminae = (SilvaXar**)silva_xar_addere(parsura->directivae);
+                si (sedes_laminae == NIHIL)
                 {
                     _recusare(&lector,
-                        "lexema in laminam addi non potuit",
+                        "lamina in directivas addi non potuit",
                         elem->linea);
                     redde NIHIL;
                 }
-                *sedes_lexematis = lexema;
+                *sedes_laminae = lamina;
+                si (!_parsura_lacunam_notare(lacunae,
+                         initium_lacunae, &sedes))
+                {
+                    _recusare(&lector, "lacuna notari non potuit",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                perge;
             }
-            sedes_laminae = (SilvaXar**)silva_xar_addere(parsura->directivae);
-            si (sedes_laminae == NIHIL)
+            si (   elem->titulus != NIHIL
+                && silva_chorda_aequalis_literis(*elem->titulus,
+                       SILVA_ARBOR_TAG_CAUDA))
             {
-                _recusare(&lector,
-                    "lamina in directivas addi non potuit",
-                    elem->linea);
+                SilvaStmlNodus* interius;
+                      i32  intra;
+
+                si (passus != I)
+                {
+                    perge;
+                }
+
+                intra     = ZEPHYRUM;
+                interius  = _elementum_proximum(&lector, elem, &intra);
+                si (interius == NIHIL)
+                {
+                    _recusare(&lector, "<cauda> lexema non fert",
+                        elem->linea);
+                    redde NIHIL;
+                }
+                _parsura_ancoram_legere(elem, &sedes);
+                parsura->lexema_finis = _lexema_legere(&lector, interius,
+                    NIHIL);
+                si (parsura->lexema_finis == NIHIL)
+                {
+                    redde NIHIL;
+                }
+                perge;
+            }
+            si (passus != I)
+            {
+                perge;
+            }
+            apertum = _fragmentum_aperire(&lector, elem, NIHIL);
+            si (apertum == NIHIL)
+            {
                 redde NIHIL;
             }
-            *sedes_laminae = lamina;
-            perge;
-        }
-        si (   elem->titulus != NIHIL
-            && silva_chorda_aequalis_literis(*elem->titulus,
-                   SILVA_ARBOR_TAG_CAUDA))
-        {
-            SilvaStmlNodus* interius;
-                  i32  intra;
-
-            intra     = ZEPHYRUM;
-            interius  = _elementum_proximum(&lector, elem, &intra);
-            si (interius == NIHIL)
+            nodus = _nodum_legere(&lector, apertum);
+            si (nodus == NIHIL)
             {
-                _recusare(&lector, "<cauda> lexema non fert",
-                    elem->linea);
                 redde NIHIL;
             }
             _parsura_ancoram_legere(elem, &sedes);
-            parsura->lexema_finis = _lexema_legere(&lector, interius,
-                NIHIL);
-            si (parsura->lexema_finis == NIHIL)
+            _positiones_nodi(&sedes, nodus);
+            /* PROSPECTUM NOVUM reddit (mensura + I) - lista semantica
+             * VALORIS est, ergo reassignandum, non 'successus' */
+            radix = silva_valor_lista_appendere(piscina, radix,
+                silva_valor_nodus(nodus));
+            si (radix.genus != SILVA_VALOR_LISTA)
             {
+                _recusare(&lector, "nodus in radicem addi non potuit",
+                    elem->linea);
                 redde NIHIL;
             }
-            perge;
-        }
-        apertum = _fragmentum_aperire(&lector, elem, NIHIL);
-        si (apertum == NIHIL)
-        {
-            redde NIHIL;
-        }
-        nodus = _nodum_legere(&lector, apertum);
-        si (nodus == NIHIL)
-        {
-            redde NIHIL;
-        }
-        _parsura_ancoram_legere(elem, &sedes);
-        _positiones_nodi(&sedes, nodus);
-        /* PROSPECTUM NOVUM reddit (mensura + I) - lista semantica
-         * VALORIS est, ergo reassignandum, non 'successus' */
-        radix = silva_valor_lista_appendere(piscina, radix,
-            silva_valor_nodus(nodus));
-        si (radix.genus != SILVA_VALOR_LISTA)
-        {
-            _recusare(&lector, "nodus in radicem addi non potuit",
-                elem->linea);
-            redde NIHIL;
         }
     }
 

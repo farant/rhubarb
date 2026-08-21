@@ -358,8 +358,9 @@ principale (vacuum)
             "#if 0\nint incompletus =\n#endif\n3;\n",
             "#if 1\nint p = 1;\n#else\nint q = ;\n#endif\n"
         };
-        /* VERUM = texta (circuitus viridis hodie); FALSUM =
-         * degradata (T3 eam implebit) */
+        /* VERUM = texta, FALSUM = degradata. Classificatio
+         * FACTUM SILVAE est, non arboris - asseritur ne probatio
+         * tacite formam mutet. */
         hic_manens constans b32 TEXTA_EXSPECTATA[] = {
             VERUM, FALSUM, FALSUM, VERUM, VERUM
         };
@@ -382,9 +383,17 @@ principale (vacuum)
             /* Textura ut exspectata */
             CREDO_VERUM ((pars->regiones_textae > ZEPHYRUM)
                 == (TEXTA_EXSPECTATA[f] != FALSUM));
-            /* Circuitus viridis SI ET SOLUM SI texta */
-            CREDO_VERUM (_circuitus(piscina, FORMAE[f], &causa)
-                == (TEXTA_EXSPECTATA[f] != FALSUM));
+            /* T3b: circuitus viridis pro OMNIBUS formis - textis
+             * per arborem, degradatis per laminas + cursorem
+             * lacunarum conscium. Pinna prior ('viridis si et
+             * solum si texta') hic CECIDIT, quod munus eius fuit:
+             * transitum annuntiari coegit. */
+            CREDO_VERUM (_circuitus(piscina, FORMAE[f], &causa));
+            si (causa != NIHIL)
+            {
+                imprimere("  forma %d FRACTA: %s\n", (integer)f,
+                    causa);
+            }
         }
     }
 
