@@ -1006,3 +1006,24 @@ field settled it both times.
 projection now loses exactly 4 of the files silva itself can round-trip,
 and `arbor2_glr_tabula.c` (1.5 MB generated table) is silva's own defect —
 Fran's read is arena exhaustion, plausible and untested.
+
+**CORRECTION to the entry above (same session).** I judged the per-source
+gap change a non-fix because the count stayed at 4. Wrong test: the count
+stayed, the **class moved**. Those 4 files were `lexema/offset` before it
+and are `directivae/numerus` after. So it did fix the token-position
+symptom and exposed a directive-count mismatch underneath — the same
+layer-peeling every other T7 fix showed.
+
+**Judging a fix by the total alone is the same error as trusting a
+round-trip count without asking what the oracle forgives.** The cause
+tally is the signal; the total is not.
+
+The `Piscina` / line-11-vs-line-30 lead recorded above is therefore
+**stale** — it described the pre-change symptom. Do not chase it.
+
+**The live question is now: why does the loaded parsura hold a different
+NUMBER of directive laminae than the original?** Not a position bug at
+all — something is lost or duplicated in the directive set on the round
+trip. `directivae/numerus` carries no token, which is why the divergence
+printer emits no `A b=` line for it; diagnosing it needs the two counts
+printed, which the harness does not yet do.
