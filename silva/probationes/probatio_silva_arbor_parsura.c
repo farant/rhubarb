@@ -282,6 +282,114 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: regiones conditionales - OMNES rami servantur
+     *
+     * Ramus non sumptus lexemata CRUDA fert (lexata, numquam
+     * parsata), ergo codicem qui parsari NON posset ferre potest -
+     * et octeti eius nihilominus supervivere DEBENT.
+     * ======================================================== */
+
+    {
+        constans character* causa;
+              SilvaParsura* lecta;
+              SilvaParsura* origo_regionis;
+        constans character* fons_regionis =
+            "#if 0\nint mortuus = ;\n#else\nint n = 0;\n#endif\n";
+
+        /* CUSTODIA CONTRA PROBATIONEM VACUAM: si silva regionem
+         * omnino non creat, circuitus octetim exactus transiret ET
+         * NIHIL DE REGIONIBUS PROBARET. Ergo PRIMUM asserimus
+         * regionem vere exsistere - aliter viriditas nihil dicit. */
+        origo_regionis = silva_parsare(piscina, "regio.c",
+            fons_regionis, (i32)strlen(fons_regionis),
+            &SILVA_C89_GRAMMATICA, NIHIL, NIHIL, NIHIL);
+        CREDO_NON_NIHIL (origo_regionis);
+        CREDO_NON_NIHIL (origo_regionis->expansio);
+        CREDO_VERUM (xar_numerus(
+            origo_regionis->expansio->regiones) > ZEPHYRUM);
+        imprimere("  REGIONES textae=%d omissae=%d supremae=%d\n",
+            (integer)origo_regionis->regiones_textae,
+            (integer)origo_regionis->regiones_omissae,
+            (integer)xar_numerus(
+                origo_regionis->expansio->regiones));
+
+        CREDO_VERUM (_circuitus_cum(piscina, fons_regionis,
+            &causa, &lecta));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa (regio non sumpta): %s\n", causa);
+        }
+    }
+
+    {
+        constans character* causa;
+              SilvaParsura* lecta;
+
+        CREDO_VERUM (_circuitus_cum(piscina,
+            "#ifdef IGNOTUM\nint x = 1;\n#endif\nint n = 0;\n",
+            &causa, &lecta));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa (ifdef ignotum): %s\n", causa);
+        }
+    }
+
+
+    /* ========================================================
+     * REGIONES TEXTAE vs DEGRADATAE - limes MENSURATUS
+     *
+     * Regio TEXTA lineas suas EX ARBORE emittit (dominus unus),
+     * ergo semita nodorum M1 eam iam integre tractat. Regio
+     * DEGRADATA (limes sententiae transgressus, fontes mixti,
+     * elementum opacum) eas ut REINSERENDA possidet, et illa sola
+     * opus T3 verum est.
+     *
+     * Formae infra limitem PINNANT. Cum T3 regiones degradatas
+     * impleverit, formae I et II VIRIDES fient et haec probatio
+     * CADET - quod consilium est: pinna transitum cogit
+     * annuntiari, non tacite fieri.
+     * ======================================================== */
+
+    {
+        hic_manens constans character* FORMAE[] = {
+            "int a = 1;\n#if 0\nint b = ;\n#endif\nint c = 2;\n",
+            "int x[] = {\n#if 0\n1,\n#endif\n2\n};\n",
+            "int f(void)\n{\n#if 0\n}\nint g(void)\n{\n#endif\nreturn 0;\n}\n",
+            "#if 0\nint incompletus =\n#endif\n3;\n",
+            "#if 1\nint p = 1;\n#else\nint q = ;\n#endif\n"
+        };
+        /* VERUM = texta (circuitus viridis hodie); FALSUM =
+         * degradata (T3 eam implebit) */
+        hic_manens constans b32 TEXTA_EXSPECTATA[] = {
+            VERUM, FALSUM, FALSUM, VERUM, VERUM
+        };
+        i32 f;
+
+        per (f = ZEPHYRUM; f < (i32)(magnitudo(FORMAE)
+                 / magnitudo(FORMAE[0])); f++)
+        {
+                  SilvaParsura* pars;
+            constans character* causa;
+
+            pars = silva_parsare(piscina, "forma.c", FORMAE[f],
+                (i32)strlen(FORMAE[f]), &SILVA_C89_GRAMMATICA,
+                NIHIL, NIHIL, NIHIL);
+            CREDO_NON_NIHIL (pars);
+            CREDO_NON_NIHIL (pars->expansio);
+            /* Regio vere exsistit - aliter probatio vacua esset */
+            CREDO_VERUM (xar_numerus(pars->expansio->regiones)
+                > ZEPHYRUM);
+            /* Textura ut exspectata */
+            CREDO_VERUM ((pars->regiones_textae > ZEPHYRUM)
+                == (TEXTA_EXSPECTATA[f] != FALSUM));
+            /* Circuitus viridis SI ET SOLUM SI texta */
+            CREDO_VERUM (_circuitus(piscina, FORMAE[f], &causa)
+                == (TEXTA_EXSPECTATA[f] != FALSUM));
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: sigillum - arbor vocabulario falso iudicata
      * mendacium est, ergo documentum mutatum RECUSATUR
      * ======================================================== */
