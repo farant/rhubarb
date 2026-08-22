@@ -13735,3 +13735,66 @@ recentiae, T7 porta corporis. NOTANDUM pro T6: silva_arbor_sigillum
 productiones, non NOMINA_GENERUM, non ORTHOGRAPHIAE. Canon proiectus
 sigillum SUUM super suos fontes ferat, aliter grammatica mutata
 canonem tacite falsum relinquit.
+
+## 2026-08-22 — CANON PROIECTUS (arbor M2 §3 / T5)
+
+INTENTIO: canonem c89 ex grammatica EMITTERE, ut documenta arboris
+iudicari possint. T4 vocabularium computavit; hic scribitur.
+
+RELATIO. `silva/instrumenta/silva_canon_coquere.{c,h}` addita -
+plagula NOVA, non silva_coquere aucta: proiectio canonis exitus
+alius est super idem exemplar, non varietas coctionis tabularum.
+Exitus `silva/c89.canon`, CCCXLVI elementa (XCV lexemata + CLXXVI
+loci adstricti + LVIII genera + XVII involucri).
+
+QUOD SCRIPTUM NON INVENTUM EST. Consilium dixerat emissorem
+`silva_arbor_lexema_tag` adhibere posse 'ut divergere non possint'.
+Ad SUTURAM pretium aliud fuit: silva_arbor.c commissionem, stml,
+friationem, tabulam dispersam trahit - generator ergo a MOTORE
+penderet, cui tabulas gignit. Inversio directionis, non sumptus.
+Ergo emissor mangulationem et tabulam textualium REPETIT, et
+probatio per genera XCV utramque cum arbore comparat. Repetitio
+ASSERTA repetitione tacita melior est: fractura nomen accipit.
+(silva_token.c nectitur - folium, non motor: latina/piscina/chorda/
+xar sola.)
+
+LACUNA QUAM T4 VIDERE NON POTUIT. Vocabularium RADICIS in
+impletionibus NON est. Impletiones per productiones cum 'genus='
+cuduntur; regula initialis ('elementa') PERVIA est, ergo nullum
+genus gignit et nullum par (genus, locus) meret. Sed <parsura>
+nodos supremos liberos DIRECTOS fert (scriptor eos in involucrum
+listae consulto non ponit - PASSUS II). Ergo
+`silva_gen_genera_radicis_computare` seorsum addita, clausuram T4
+super symbolum initiale adhibens. Radix vacua CLAMAT: canon qui
+documentum omne reiceret, causa latente, peior est quam nullus.
+
+MENSURA CONSILIUM CORREXIT. Spec par. 0.3 dixerat attributum nudum
+genere 'veritatis' typandum. FALSUM: stml 'true' internat, canon
+veritas 'verum|falsum' SOLUM accipit (lib/canon.c:719). Typatio
+illa documentum omne fregisset - 'linea-initium' sola MCMLV vicibus
+in gradu roundtrip. Probatio trium linearum id ostendit ante
+scriptionem. Adhibetur 'electio' cum <optio>true</optio>: sola quae
+et transit et CONSTRINGIT (textus quemlibet valorem admitteret).
+
+FRACTURA LATENS INVENTA (commissum seorsum fa9e09d1): generare.sh
+IAM FRACTUS erat, LXXXIII symbola indefinita - probatum omnibus
+mutationibus reconditis. Index EXCLUDENS instrumentorum ter
+putruerat (silva_differre, silva_formator, silva_iudicium post
+aeram LEGATUS accesserant). Index ADMITTENS substitutus: putrescere
+non potest, quia instrumentum novum nexum non intrat nisi nominatum.
+
+CALIBRATIO, quia OMNIA primo cursu transierunt (id ipsum suspectum):
+ - CLIX culpae 'genus="nmuerus"' plantatae -> CLIX vitia nominata
+ - 'declarator-abstractus' in definitio-functionis/declarator ->
+   III vitia; 'declarator-titulus' ibidem -> purum. Vocabularium
+   ergo VERE constringit, non modo praesens est
+ - SILVA_LEX_VOID in tabulam textualium emissoris additum ->
+   probatio frangitur 'TEXTUS DISCREPAT: lex-void (arbor 0, canon 1)'
+
+Tabulae generatae OCTETO TENUS pares commissis manserunt - ergo
+mutatio nexum tetigit, exitum non.
+
+RESTAT in M2 §3: T6 sigillum proprium super productiones +
+NOMINA_GENERUM + ORTHOGRAPHIAE (silva_arbor_sigillum eas NON tegit)
+cum porta recentiae; T7 porta corporis super gradum latinizatum
+(gradus roundtrip iam purus, LXXIII/LXXIII).
