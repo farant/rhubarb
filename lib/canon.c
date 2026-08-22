@@ -5,6 +5,9 @@
  */
 #include "canon.h"
 #include "similitudo.h"
+/* Explicite, quamquam stml.h eum iam trahit: causae dynamicae eo
+ * utuntur, et quod adhibetur includi debet. */
+#include "chorda_aedificator.h"
 #include <string.h>
 
 
@@ -1072,6 +1075,51 @@ canon_legere (
     redde canon_ex_nodo(r.elementum_radix, piscina, intern, causa);
 }
 
+/* Causa recusationis quae REGULAM ipsam nominat.
+ *
+ * CUR DYNAMICA, cum ceterae causae huius plagulae literae fixae
+ * sint: canon generatus maximus (natura/cocta/individua.canon)
+ * regulas MDCXLVI fert. 'unicitas attributum ignotum nominat'
+ * sine nomine venatio est per MDCXLVI candidatos, non
+ * diagnosticum - eadem querela quam canon.h de vitiis sine linea
+ * facit. Nomen regulae et nomen attributi sunt id quod scriptor
+ * revera quaerit. */
+interior chorda
+_causa_regulae (
+                Piscina* piscina,
+     constans character* genus_regulae,
+                 chorda* titulus_regulae,
+                 chorda* attributum,
+     constans character* clausula)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(piscina, CXXVIII);
+    si (a == NIHIL)
+    {
+        /* aedificator deficiens causam MUTAM parere non debet */
+        redde chorda_ex_literis(genus_regulae, piscina);
+    }
+
+    chorda_aedificator_appendere_literis(a, genus_regulae);
+    si (titulus_regulae)
+    {
+        chorda_aedificator_appendere_literis(a, " '");
+        chorda_aedificator_appendere_chorda(a, *titulus_regulae);
+        chorda_aedificator_appendere_character(a, '\'');
+    }
+    chorda_aedificator_appendere_literis(a, " attributum '");
+    si (attributum)
+    {
+        chorda_aedificator_appendere_chorda(a, *attributum);
+    }
+    chorda_aedificator_appendere_literis(a,
+        "' nominat quod nullum elementum ");
+    chorda_aedificator_appendere_literis(a, clausula);
+
+    redde chorda_aedificator_finire(a);
+}
+
 /* An attributum 'attr' ab ULLO elemento in scopo declaretur.
  *
  * SCOPUS: Xar de chorda* (super=, aut dimidium prius ipsius ad=).
@@ -1711,10 +1759,10 @@ canon_ex_nodo (
             {
                 si (causa)
                 {
-                    *causa = chorda_ex_literis(
-                        "unicitas attributum nominat quod nullum "
-                        "elementum in 'super' declarat - porta "
-                        "quae nihil custodit", piscina);
+                    *causa = _causa_regulae(piscina, "unicitas",
+                        u->titulus, u->attributum,
+                        "in 'super' declarat - porta quae nihil "
+                        "custodit");
                 }
                 redde NIHIL;
             }
@@ -1733,10 +1781,10 @@ canon_ex_nodo (
             {
                 si (causa)
                 {
-                    *causa = chorda_ex_literis(
-                        "citatio attributum citans nominat quod "
-                        "nullum elementum in 'super' declarat - "
-                        "porta quae nihil custodit", piscina);
+                    *causa = _causa_regulae(piscina, "citatio",
+                        ci->titulus, ci->attributum,
+                        "in 'super' declarat - porta quae nihil "
+                        "custodit");
                 }
                 redde NIHIL;
             }
@@ -1748,10 +1796,10 @@ canon_ex_nodo (
             {
                 si (causa)
                 {
-                    *causa = chorda_ex_literis(
-                        "citatio clavem 'ad' ad attributum dirigit "
-                        "quod nullum elementum declarat - clavis "
-                        "quae nihil aperit", piscina);
+                    *causa = _causa_regulae(piscina,
+                        "citatio (clavis 'ad')",
+                        ci->titulus, ci->ad_attributum,
+                        "declarat - clavis quae nihil aperit");
                 }
                 redde NIHIL;
             }

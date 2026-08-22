@@ -677,6 +677,15 @@ principale (vacuum)
             "</canon>", piscina), piscina, intern, &causa);
         CREDO_NIHIL (c);
         CREDO_CHORDA_NON_VACUA (causa);
+        /* CAUSA REGULAM NOMINET. Sine his assertionibus causa ad
+         * literas fixas tacite regredi posset et probationes
+         * viridis manerent - canon generatus maximus regulas
+         * MDCXLVI fert, ubi 'unicitas mala' sine nomine venatio
+         * est, non diagnosticum. */
+        CREDO_CHORDA_CONTINET (causa,
+            chorda_ex_literis("unicitas 'u'", piscina));
+        CREDO_CHORDA_CONTINET (causa,
+            chorda_ex_literis("'non-tale'", piscina));
 
         /* II. citatio/attributum (latus citans) ignotum */
         c = canon_legere(chorda_ex_literis(
@@ -704,6 +713,12 @@ principale (vacuum)
             "</canon>", piscina), piscina, intern, &causa);
         CREDO_NIHIL (c);
         CREDO_CHORDA_NON_VACUA (causa);
+        /* latus clavis se ipsum nominet, ne cum latere citante
+         * confundatur - duo latera duas causas ferunt */
+        CREDO_CHORDA_CONTINET (causa,
+            chorda_ex_literis("clavis 'ad') 'c'", piscina));
+        CREDO_CHORDA_CONTINET (causa,
+            chorda_ex_literis("'non-tale'", piscina));
 
         /* IV. STELLA non est exemptio universalis: 'quodlibet
          * elementum' exsistentiam adhuc poscit. Sine hac proba
