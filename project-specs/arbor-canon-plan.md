@@ -363,6 +363,52 @@ git commit -m "silva: clausura generum per locum ex grammatica (CLXV/CLXV)"
 
 Spec §4.2.
 
+> **RECONNAISSANCE done 2026-08-22, before implementation. Two findings
+> that change T5's shape — read both before writing the emitter.**
+>
+> **(a) Token tags ARE derivable in the generator.** Terminals declare
+> their lexeme genus in the grammar:
+> `<terminalis titulus="IDENTIFICATOR" genus="SILVA_LEX_IDENTIFICATOR"/>`
+> (`silva/grammatica/c89.stml:41-50`). The arbor tag is
+> `"lex-" + NOMINA_GENERUM[genus]` lowercased with `_`→`-`
+> (`silva_arbor.c:389-411`), and `NOMINA_GENERUM[SILVA_LEX_X] == "X"`,
+> so stripping the `SILVA_LEX_` prefix from `genus=` yields the same
+> string **by construction**. Verified against real output:
+> `SILVA_LEX_INT` → `lex-int`, `SILVA_LEX_PAREN_APERTA` →
+> `lex-paren-aperta`.
+>
+> *But that equality is an invariant nobody asserts.* If `genus=` and
+> `NOMINA_GENERUM` ever drift, the projected canon emits wrong tags
+> silently. **`NOMINA_GENERUM` is therefore a T6 seal input** — already
+> named in T6 step 1, and this is the concrete reason.
+>
+> **(b) Trivia tags are NOT in the grammar — a real gap.** `SPATIA`,
+> `NOVA_LINEA`, `COMMENTUM_CLAUSUM`, `COMMENTUM_LINEA`, `CONTINUATIO`
+> are lexeme genera that never appear as grammar terminals; they ride
+> as trivia inside `<ante>`/`<post>`. The grammar declares only the
+> terminals it parses, so a purely grammar-driven emitter cannot reach
+> them.
+>
+> Two ways out, decide at the seam: give the generator
+> `silva/fontes/silva_token.h` and enumerate the dense
+> `SilvaLexemaGenus` range directly (what `silva_arbor.c:431-441`
+> already does for the reverse lookup), or hand-author the trivia tags
+> with the rest of the envelope. The first is preferable — 95 tags from
+> one enum, and it removes a hand-list that could drift.
+>
+> **RESOLVED — take the enum route.** The dependency I was about to
+> price already exists: `silva_generare.c:7` includes `silva_nodus.h`
+> from `fontes/`, `generare.sh` already compiles with
+> `-I$SILVA_DIR/fontes`, and `silva_differre.c`, `silva_amalgama.c` and
+> `silva_iudicium.c` all include `silva_token.h` today. Adding it costs
+> nothing and introduces no new direction. (Instance of silva's own
+> rule — *price narrowings at the seam, not from memory*: the seam had
+> already dissolved the deferral.)
+>
+> Consequence for §4.2's "95 `lex-*` elements": the grammar yields only
+> the parsed subset. The count must come from the enum, not from the
+> terminal list.
+
 - [ ] **Step 1: Read the sibling.** `silva_coquere.c:691-731`, which
   emits `%s_LOCI[]`, `%s_GENERA[]`, `%s_REGISTRUM`. Copy its shape.
   Follow natura's split: **the model decides what may be said, the
