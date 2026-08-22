@@ -34,3 +34,10 @@
 .canon	canon.canon
 <grammatica>	silva/grammatica/grammatica.canon
 <quaestiones>	silva/quaestiones.canon
+
+# Documenta arboris (arbor M2 par. 3): silva/c89.canon GENERATUR ex
+# grammatica (./silva/generare.sh), ergo cum motore putrescere non
+# potest. Clavis RADICIS sola: extensio '.stml' quinque iam dialectos
+# fert, ergo nihil dicit. '<arbor>' (documentum subarboris) consulto
+# ABEST - proiectio tag eius tegit, involucrum eius non describitur.
+<parsura>	silva/c89.canon

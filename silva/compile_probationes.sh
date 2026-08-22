@@ -58,6 +58,11 @@ declare -a RADIX_FONTES=(
     "credo"
     "differentia"
     "sigillum"
+    # canon + similitudo: probatio_silva_canon canonem proiectum
+    # (silva/c89.canon) contra canon.canon iudicat - schema
+    # schematum schema generatum iudicans (arbor M2.3 / T5)
+    "canon"
+    "similitudo"
 )
 
 FILTER="${1:-}"

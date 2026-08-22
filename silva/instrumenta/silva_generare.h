@@ -142,6 +142,16 @@ Xar*
 silva_gen_impletiones_computare(
     SilvaGenGrammatica*  grammatica);
 
+/* Genera in RADICE documenti licita: clausura symboli initialis.
+ * Xar de chorda* (tituli generum); NIHIL si grammatica NIHIL.
+ *
+ * SEORSUM ab impletionibus quia regula initialis pervia est - nullum
+ * genus gignit, ergo nullum par (genus, locus) meret; vocabularium
+ * tamen reale est (scriptor liberos radicis DIRECTE emittit). */
+Xar*
+silva_gen_genera_radicis_computare(
+    SilvaGenGrammatica*  grammatica);
+
 
 /* ================================================
  * Legere Grammaticam ex STML

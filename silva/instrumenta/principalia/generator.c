@@ -14,6 +14,7 @@
 #include "internamentum.h"
 #include "silva_generare.h"
 #include "silva_coquere.h"
+#include "silva_canon_coquere.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -70,11 +71,11 @@ s32 principale (integer argc, character** argv)
     SilvaGenCollectio* collectio;
     SilvaGenTabula* tabula;
 
-    si (argc != IV && argc != VI)
+    si (argc != IV && argc != VI && argc != VIII)
     {
         fprintf(stderr,
             "usus: generator <grammatica.stml> <PRAEFIXUM> <basis_exitus>"
-            " [<caput_publicum> <hospes>]\n");
+            " [<caput_publicum> <hospes> [<canon> <dialectus>]]\n");
         redde I;
     }
 
@@ -129,11 +130,21 @@ s32 principale (integer argc, character** argv)
 
     /* Superficies publica (officina pre-M1): splicis in silva.h +
      * hospes.c - solum si viae datae (grammatica c89 sola) */
-    si (argc == VI
+    si (argc >= VI
         && !silva_gen_splicere_publica(piscina, grammatica, argv[II],
                argv[IV], argv[V]))
     {
         fprintf(stderr, "generator: splicis publicae defecit\n");
+        redde I;
+    }
+
+    /* Canon documentorum arboris (arbor M2 par. 3) - grammatica c89
+     * sola, quae sola documenta parsurae gignit */
+    si (argc == VIII
+        && !silva_gen_canonem_scribere(grammatica, argv[VII], argv[VI],
+               argv[I]))
+    {
+        fprintf(stderr, "generator: canon scribi non potuit\n");
         redde I;
     }
 

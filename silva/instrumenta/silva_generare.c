@@ -1063,6 +1063,41 @@ silva_gen_impletiones_computare(
 }
 
 
+/* Genera quae in RADICE documenti sedere possunt (T5).
+ *
+ * Radix parsurae liberos symboli initialis DIRECTE fert (scriptor
+ * eos non in involucrum listae ponit, ut ordo documenti ordo
+ * plagulae sit - silva_arbor.c PASSUS II). Ergo vocabularium
+ * radicis est clausura symboli initialis ipsius.
+ *
+ * NON in impletionibus: illae per productiones cum 'genus=' currunt,
+ * et regula initialis ('elementa') pervia est - nullum genus gignit,
+ * ergo nullum par (genus, locus) meret. Vocabularium tamen reale
+ * est, ergo hic seorsum computatur. */
+Xar*
+silva_gen_genera_radicis_computare(
+    SilvaGenGrammatica*  grammatica)
+{
+    Xar* nodi;
+    Xar* lexemata;
+    Xar* in_cursu;
+
+    si (!grammatica) redde NIHIL;
+
+    nodi      = xar_creare(grammatica->piscina, (i32)magnitudo(chorda*));
+    lexemata  = xar_creare(grammatica->piscina, (i32)magnitudo(chorda*));
+    in_cursu  = xar_creare(grammatica->piscina, (i32)magnitudo(s32));
+    si (nodi == NIHIL || lexemata == NIHIL || in_cursu == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    _genera_symboli(grammatica, grammatica->initium_index,
+                    nodi, lexemata, in_cursu);
+    redde nodi;
+}
+
+
 Xar*
 silva_gen_registrum_computare(
     SilvaGenGrammatica*  grammatica)

@@ -60,6 +60,7 @@ done
 declare -a GENERATOR_FONTES=(
     "silva_generare"        # grammaticam legere, tabulas construere
     "silva_coquere"         # tabulae -> fons C
+    "silva_canon_coquere"   # grammatica -> canon STML (arbor M2.3)
 )
 for base in "${GENERATOR_FONTES[@]}"; do
     src="$SILVA_DIR/instrumenta/$base.c"
@@ -70,6 +71,20 @@ for base in "${GENERATOR_FONTES[@]}"; do
     fi
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
         echo "  [silva] $base.c"
+        clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# silva_token: FOLIUM motoris (latina/piscina/chorda/xar solum), quod
+# nomina generum lexematum tenet - eadem quae canon in tags vertit.
+# Sola plagula fontium quam generator nectit; directio non invertitur
+# quia folium est, non motor.
+for base in "silva_token"; do
+    src="$SILVA_DIR/fontes/$base.c"
+    obj="$BUILD_DIR/fons_$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+        echo "  [silva] fontes/$base.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
     obj_files="$obj_files $obj"
@@ -89,7 +104,10 @@ else
         SILVA_SCELETUM fontes/silva_tabulae_sceleti || exit 1
     "$BUILD_DIR/generator" grammatica/sceletum_imparilis.stml \
         SILVA_IMPARILIS fontes/silva_tabulae_imparilis || exit 1
+    # c89 SOLA canonem gignit: sola documenta <parsura> producit
+    # (sceletum/imparilis grammaticae probationis sunt)
     "$BUILD_DIR/generator" grammatica/c89.stml \
         SILVA_C89 fontes/silva_tabulae_c89 \
-        amalgama/silva.h instrumenta/principalia/hospes.c || exit 1
+        amalgama/silva.h instrumenta/principalia/hospes.c \
+        c89.canon c89 || exit 1
 fi

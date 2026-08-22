@@ -359,9 +359,97 @@ git commit -m "silva: clausura generum per locum ex grammatica (CLXV/CLXV)"
 
 ---
 
-## T5 — The emitter
+## T5 — The emitter *(SHIPPED 2026-08-22)*
 
 Spec §4.2.
+
+> **EXECUTION NOTES — five things that changed T5's shape. Read
+> before T6/T7.**
+>
+> **(a) The emitter lives in a NEW file, not `silva_coquere.c`.**
+> `silva/instrumenta/silva_canon_coquere.{c,h}`. `silva_coquere.c` was
+> already ~900 lines and the canon projection is a different output
+> format over the same model, not a variation on table baking.
+> `generare.sh` no longer globs `instrumenta/*.c` (see (b)), so the new
+> file is named explicitly in the generator's closure list.
+>
+> **(b) `./silva/generare.sh` was ALREADY BROKEN at HEAD — 83
+> undefined symbols, exit 1.** Not caused by T5; confirmed by stashing
+> every T5 change and re-running. The script linked *every*
+> `instrumenta/*.c` into the generator with a hand-maintained **deny**
+> list (`silva_amalgama`, `nexus_ordines`). Three dev tools have since
+> joined instrumenta and reference runtime (`fontes/`) symbols —
+> `silva_differre`, `silva_formator`, `silva_iudicium` — and nobody
+> added them to the deny list. Its own comment already called the
+> `nexus_ordines` case *"fractura latens"*; this is the same wound,
+> three times over.
+>
+> **Fixed by inverting to an ALLOW list** (`GENERATOR_FONTES`): the
+> generator's real closure is three files. A deny list rots every time
+> someone adds a tool; an allow list cannot, because a new tool has to
+> be named to enter the link. Missing source now exits 1 by name.
+>
+> **(c) The root genus set is NOT derivable from the impletiones
+> table** — a genuine gap T4 could not have seen. Impletiones are
+> minted per production carrying `genus=`, and the start rule
+> (`elementa`, `<initium>elementa</initium>`) is **pass-through**: it
+> mints no genus, therefore no `(genus, locus)` pair, therefore no row.
+> But `<parsura>` carries top-level nodes as **direct children** (the
+> writer deliberately does not wrap them in a list element, so document
+> order equals file order), so that vocabulary is real and had to be
+> computed separately: `silva_gen_genera_radicis_computare`, reusing
+> T4's `_genera_symboli` closure on `initium_index`. It **refuses
+> loudly** if the set comes back empty — an empty root would generate a
+> canon that rejects every document, with the cause invisible.
+>
+> **(d) Two restatements, two asserted equalities — deliberately NOT
+> shared code.** The emitter cannot call `silva_arbor_lexema_tag` or
+> `silva_arbor_valor_portandus`: `silva_arbor.c` pulls in
+> `silva_commissio`/`stml`/`friatio`/`tabula_dispersa`, and linking it
+> would make the **generator depend on the engine it generates tables
+> for** — a direction reversal, not a cost. So the emitter restates the
+> `lex-` mangling and the text-bearing set, and
+> `probatio_silva_canon` asserts both against the arbor side across all
+> 95 genera. **Calibrated**: adding `SILVA_LEX_VOID` to the emitter's
+> text-bearing set fails the suite with `TEXTUS DISCREPAT: lex-void
+> (arbor 0, canon 1)`. A named failure beats silent sharing.
+>
+> `silva/fontes/silva_token.c` IS linked into the generator — it is a
+> leaf (latina/piscina/chorda/xar, all already present), so the genus
+> **names** cost nothing. Only the engine was refused.
+>
+> **(e) Spec §0.3's bare-attribute typing was wrong** — `genus="veritas"`
+> rejects `"true"`. See the correction block in the spec. The
+> projection uses `electio` + `<optio>true</optio>`.
+
+**Shipped shape** — `silva/c89.canon`, 6,178 lines, 346 elements:
+
+| layer | count | source |
+|---|---:|---|
+| `lex-*` | 95 | `SilvaLexemaGenus` enum |
+| locus elements (`intra=` their genus) | 176 | registry + T4 vocabulary |
+| genus elements | 58 | registry |
+| envelope | 17 | hand-authored policy |
+
+`<citatio>` × 4 (`f`, `def-f`, `regio-fons`, `fons-princeps` → `fons/index`),
+`<unicitas attributum="index" super="fons">` × 1.
+Registered in `canones.registrum` by **root element** `<parsura>`;
+`<arbor>` (subtree documents) deliberately absent, per spec §6.
+
+**Gates run, each falsified before being believed:**
+
+| gate | result | falsification |
+|---|---|---|
+| `canon.canon` judges the projection | 0 vitia | 159 planted `genus="nmuerus"` → 159 named vitia |
+| derived model actually constrains | — | `declarator-abstractus` in `definitio-functionis/declarator` → 3 vitia; `declarator-titulus` → clean |
+| roundtrip corpus (73 docs) | 0 vitia | same probe, via the registry route |
+| `probatio_silva_canon` | 115/115 | planted emitter divergence → fails by tag name |
+| silva suite | 48/48 | — |
+| `probatio_canon` / `probatio_natura_canones` | 259/259, 207/207 | — |
+
+Generated tables (`fontes/silva_tabulae_*`, `amalgama/silva.h`,
+`hospes.c`) came back **byte-identical** to committed — the generator
+stayed deterministic across the change.
 
 > **RECONNAISSANCE done 2026-08-22, before implementation. Two findings
 > that change T5's shape — read both before writing the emitter.**
@@ -409,18 +497,18 @@ Spec §4.2.
 > the parsed subset. The count must come from the enum, not from the
 > terminal list.
 
-- [ ] **Step 1: Read the sibling.** `silva_coquere.c:691-731`, which
+- [x] **Step 1: Read the sibling.** `silva_coquere.c:691-731`, which
   emits `%s_LOCI[]`, `%s_GENERA[]`, `%s_REGISTRUM`. Copy its shape.
   Follow natura's split: **the model decides what may be said, the
   emitter only writes what the model already says.**
 
-- [ ] **Step 2: Write the failing test.** The generated canon must be
+- [x] **Step 2: Write the failing test.** The generated canon must be
   judged clean by `canon.canon` — the schema of schemas judging the
   generated schema. That is the cheapest real gate available here.
 
-- [ ] **Step 3: Run, confirm fail** (no file yet).
+- [x] **Step 3: Run, confirm fail** (no file yet).
 
-- [ ] **Step 4: Implement.** Emit, per spec §4.2:
+- [x] **Step 4: Implement.** Emit, per spec §4.2:
   - 58 genus elements, tags verbatim from `SilvaTabGenus.titulus`;
   - locus elements declared **`intra=` their genus** — mandatory, since
     62 names cover 176 entries and a locus tag means something only
@@ -447,11 +535,11 @@ Spec §4.2.
 
   Emit a `GENERATUM — NE MANU EDITES` header.
 
-- [ ] **Step 5: Wire into `silva/generare.sh`; commit the artifact.**
+- [x] **Step 5: Wire into `silva/generare.sh`; commit the artifact.**
 
-- [ ] **Step 6: Run, confirm `canon.canon` judges it clean.**
+- [x] **Step 6: Run, confirm `canon.canon` judges it clean.**
 
-- [ ] **Step 7: Commit.**
+- [x] **Step 7: Commit.**
 
 ```bash
 git add silva/instrumenta/silva_coquere.c silva/generare.sh silva/c89.canon

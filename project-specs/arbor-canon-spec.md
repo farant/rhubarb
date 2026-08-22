@@ -115,7 +115,26 @@ Other facts that constrain the schema directly:
   observed tags carry text at all.
 - **Exactly three bare attributes exist**: `linea-initium` (4,259),
   `crlf` (3), plus emittable-but-unobserved `lexicon`/`syntheticus`.
-  STML interns these as `"true"`, so `genus="veritas"` types them.
+  STML interns these as `"true"`.
+
+  > **CORRECTION, T5 (2026-08-22): the second half of this bullet was
+  > wrong and is retracted.** It read "so `genus="veritas"` types
+  > them." It does not. STML interns a bare attribute as the string
+  > `"true"`, but canon's `veritas` accepts only `"verum"` or
+  > `"falsum"` (`lib/canon.c:719-721`) — the two vocabularies do not
+  > meet. Typing them `veritas` makes **every** arbor document fail:
+  > `linea-initium` alone occurs 1,955 times in the roundtrip tier.
+  >
+  > Measured, not reasoned: a three-line probe canon with the same
+  > bare attribute typed three ways gave `veritas` → VITIUM,
+  > `electio` + `<optio>true</optio>` → clean, `textus` → clean.
+  >
+  > **The projection uses `electio` with a single `<optio>true</optio>`.**
+  > It is the only typing that both passes and still constrains —
+  > `textus` would admit any value. Do not "fix" this by widening
+  > canon's `veritas`: `verum`/`falsum` is the house vocabulary, and
+  > `"true"` is an STML representation detail that has no business
+  > leaking into the schema language.
 - **Absent loci are legitimate** — `definitio-ansi` fills loci 0,1,3 and
   leaves 2 NIHIL; the writer skips NIHIL loci
   (`silva_arbor.c:1656-1660`). Therefore **every locus is
