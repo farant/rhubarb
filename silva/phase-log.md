@@ -13687,3 +13687,51 @@ inspiciendus ANTE aedificationem).
 INSTRUMENTUM NOVUM hodie: ./silva/arbor.sh <plagula.c> documentum in
 stdout scribit (-nudum sine clausura, -tacitus sine compendio).
 Mensurat quoque: lexemata, expansa, ambigui, errores.
+
+## 2026-08-22 — IMPLETIONES (arbor M2 §3 / T4)
+
+INTENTIO: canonem c89 ex grammatica proicere ut documenta arboris
+iudicari possint. Porta huius gradus: quae genera locum implere
+possint - quaestio quam registrum (S20) respondere NON potest.
+
+RELATIO. `silva_gen_impletiones_computare` in instrumenta/
+silva_generare.c addita, cum `SilvaGenImpletio` in capite.
+MENSURATUM primo cursu: **paria 165, genera 53, residua 0** -
+congruens arithmeticae independenti (176 ingressus locorum − 11
+extra-generum; 58 genera − 5 extra).
+
+QUOD INVENTUM EST, ET CUR HIC SEDET. Ambulatio registri iam OMNE
+tergum (genus, locus, symbolum) visitat - symbolum tamen post
+speciem computatam ABICIT. Impletio eiusdem ambulationis soror est,
+symbolo servato. Relatio ex tabulis coctis irrecuperabilis est:
+dextrum productionis (vector symbolorum) non coquitur, sola eius
+longitudo (silva_tabulae.h:67-71). Ergo hic, ubi grammatica integra
+est, aut nusquam.
+
+CLAUSURA: terminale -> lexema; productio cum genere= -> genus illud
+et SISTE (nodus nascitur); productio sine genere -> pervia, per
+atomos. Regula pervia listas gratis tegit: 'L -> L elementum'
+atomum L suum in acervo invenit et absciditur, ergo genera(L) =
+genera(elementum). Acervus, non 'visa': idem symbolum bis adhiberi
+licet (duo loci), intra se ipsum numquam.
+
+PROBATIO DUAS DIRECTIONES ERRORIS TEGIT, consulto:
+ - nimis ANGUSTA -> 'residua' supra ZEPHYRUM (par quod nihil admittit)
+ - nimis LATA    -> CREDO_FALSUM: 'declarator-abstractus' in
+                    definitio-functionis/declarator ABESSE debet
+                    (adest in parametrum/declarator, quod quoque
+                    asseritur). Praesentia sola ex clausura nimis
+                    lata AEQUE sequeretur, ergo absentia probatio
+                    vera est.
+
+CALIBRATIO, quia numeri primo cursu congruerunt (id ipsum suspectum
+est): recursione pervia abscisa, probatio FRANGITUR cum residuis
+nominatis (definitio-functionis/specificatores, si/consequens, ...).
+Porta ergo mordet.
+
+RESTAT in M2 §3: T5 emissor canonis, T6 sigillum proprium + porta
+recentiae, T7 porta corporis. NOTANDUM pro T6: silva_arbor_sigillum
+(silva_arbor.c:149-235) SOLAS tabulas generum et locorum tegit - non
+productiones, non NOMINA_GENERUM, non ORTHOGRAPHIAE. Canon proiectus
+sigillum SUUM super suos fontes ferat, aliter grammatica mutata
+canonem tacite falsum relinquit.

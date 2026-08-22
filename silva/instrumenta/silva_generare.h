@@ -116,6 +116,34 @@ nomen structura {
 } SilvaGenGrammatica;
 
 /* ================================================
+ * Impletiones (T4): QUAE genera locum implere possint.
+ *
+ * Registrum (S20) locum SPECIE typat ('nodus hic'); haec structura
+ * eum VOCABULARIO typat ('unum ex his quinque'). Distinctio non
+ * academica est: locus 'declarator' definitionis-functionis quinque
+ * genera admittit et 'declarator-abstractus' NON, quod species sola
+ * dicere non potest.
+ *
+ * CUR HIC ET NON IN TABULIS COCTIS: dextrum productionis (vector
+ * symbolorum) NON coquitur - sola eius longitudo. Ergo relatio ex
+ * tabulis absumptis irrecuperabilis est et hic, ubi grammatica
+ * adhuc integra est, computanda.
+ * ================================================ */
+
+nomen structura {
+    chorda*  genus;    /* genus continens */
+    chorda*  locus;    /* nomen loci */
+    Xar*     nodi;     /* Xar de chorda* - genera nodorum admissa */
+    Xar*     lexemata; /* Xar de chorda* - symbola terminalia admissa */
+} SilvaGenImpletio;
+
+/* Xar de SilvaGenImpletio; NIHIL si grammatica NIHIL */
+Xar*
+silva_gen_impletiones_computare(
+    SilvaGenGrammatica*  grammatica);
+
+
+/* ================================================
  * Legere Grammaticam ex STML
  * ================================================ */
 

@@ -890,6 +890,179 @@ _locum_unire(SilvaGenGenusDef* def, chorda* titulus, s32 species)
     redde VERUM;
 }
 
+/* ================================================
+ * IMPLETIONES (T4): quae genera locum implere possint
+ * ================================================ */
+
+interior vacuum
+_titulum_unire(Xar* index, chorda* titulus)
+{
+    i32 i;
+
+    si (index == NIHIL || titulus == NIHIL) redde;
+    per (i = ZEPHYRUM; i < (i32)xar_numerus(index); i++)
+    {
+        chorda** t = (chorda**)xar_obtinere(index, i);
+        si (t != NIHIL && _chordae_pares(*t, titulus)) redde;
+    }
+    {
+        chorda** locus = (chorda**)xar_addere(index);
+        si (locus != NIHIL) *locus = titulus;
+    }
+}
+
+/* Clausura: quae genera nodorum (aut lexemata) symbolum producere
+ * possit.
+ *
+ *   terminale                  -> lexema ipsum
+ *   productio cum genere=      -> genus illud (hic SISTIT: nodus
+ *                                 nascitur, ergo infra non spectamus)
+ *   productio sine genere      -> PERVIA: per atomos descendimus
+ *
+ * Regula pervia listas quoque tegit: 'L -> L elementum' atomum L
+ * suum in acervo invenit et absciditur, ergo genera(L) =
+ * genera(elementum) - quod exacte volumus.
+ *
+ * ACERVUS non 'visa': idem symbolum bis ADHIBERI licet (duo loci
+ * eiusdem generis), sed intra se ipsum numquam. Sine eo scalae
+ * expressionum sinistro-recursivae numquam terminarent. */
+interior vacuum
+_genera_symboli(
+    SilvaGenGrammatica*  g,
+                    s32  sym_idx,
+                   Xar*  nodi,
+                   Xar*  lexemata,
+                   Xar*  in_cursu)
+{
+    SilvaGenSymbolum* sym;
+    i32 i;
+    i32 p;
+
+    si (sym_idx < ZEPHYRUM) redde;
+    sym = (SilvaGenSymbolum*)xar_obtinere(g->symbola, (i32)sym_idx);
+    si (sym == NIHIL) redde;
+
+    si (sym->est_terminale)
+    {
+        _titulum_unire(lexemata, sym->titulus);
+        redde;
+    }
+
+    per (i = ZEPHYRUM; i < (i32)xar_numerus(in_cursu); i++)
+    {
+        s32* v = (s32*)xar_obtinere(in_cursu, i);
+        si (v != NIHIL && *v == sym_idx) redde;   /* circulus */
+    }
+    {
+        s32* locus = (s32*)xar_addere(in_cursu);
+        si (locus != NIHIL) *locus = sym_idx;
+    }
+
+    per (p = ZEPHYRUM; p < (i32)xar_numerus(g->productiones); p++)
+    {
+        SilvaGenProductio* prod = (SilvaGenProductio*)xar_obtinere(
+            g->productiones, p);
+        i32 k;
+
+        si (prod == NIHIL || prod->sinistrum != sym_idx) perge;
+
+        si (prod->genus != NIHIL)
+        {
+            _titulum_unire(nodi, prod->genus);
+            perge;               /* nodus nascitur: hic sistimus */
+        }
+
+        per (k = ZEPHYRUM; k < (i32)xar_numerus(prod->dextrum); k++)
+        {
+            s32* atomus = (s32*)xar_obtinere(prod->dextrum, k);
+            si (atomus == NIHIL) perge;
+            _genera_symboli(g, *atomus, nodi, lexemata, in_cursu);
+        }
+    }
+
+    xar_removere_ultimum(in_cursu);
+}
+
+interior SilvaGenImpletio*
+_impletio_capere(Xar* impletiones, chorda* genus, chorda* locus,
+                 Piscina* piscina)
+{
+    i32 i;
+    SilvaGenImpletio* imp;
+
+    per (i = ZEPHYRUM; i < (i32)xar_numerus(impletiones); i++)
+    {
+        imp = (SilvaGenImpletio*)xar_obtinere(impletiones, i);
+        si (imp != NIHIL && _chordae_pares(imp->genus, genus)
+            && _chordae_pares(imp->locus, locus))
+        {
+            redde imp;
+        }
+    }
+
+    imp = (SilvaGenImpletio*)xar_addere(impletiones);
+    si (imp == NIHIL) redde NIHIL;
+    imp->genus     = genus;
+    imp->locus     = locus;
+    imp->nodi      = xar_creare(piscina, (i32)magnitudo(chorda*));
+    imp->lexemata  = xar_creare(piscina, (i32)magnitudo(chorda*));
+    redde imp;
+}
+
+Xar*
+silva_gen_impletiones_computare(
+    SilvaGenGrammatica*  grammatica)
+{
+    Xar* impletiones;
+    i32 p;
+
+    si (!grammatica) redde NIHIL;
+
+    impletiones = xar_creare(grammatica->piscina,
+        (i32)magnitudo(SilvaGenImpletio));
+
+    /* Ambulatio eadem qua registrum utitur - sed symbolum, quod
+     * registrum post speciem computatam ABICIT, hic servatur. */
+    per (p = ZEPHYRUM;
+         p < (i32)xar_numerus(grammatica->productiones); p++)
+    {
+        SilvaGenProductio* prod = (SilvaGenProductio*)xar_obtinere(
+            grammatica->productiones, p);
+        i32 k;
+
+        si (prod == NIHIL || prod->genus == NIHIL) perge;
+
+        per (k = ZEPHYRUM; k < (i32)xar_numerus(prod->dextrum); k++)
+        {
+            SilvaGenLocusMappa* mappa;
+            s32* sym_idx;
+            SilvaGenImpletio* imp;
+            Xar* in_cursu;
+
+            mappa   = (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
+            sym_idx = (s32*)xar_obtinere(prod->dextrum, k);
+            si (mappa == NIHIL || mappa->titulus == NIHIL
+                || sym_idx == NIHIL)
+            {
+                perge;
+            }
+
+            imp = _impletio_capere(impletiones, prod->genus,
+                                   mappa->titulus,
+                                   grammatica->piscina);
+            si (imp == NIHIL) redde NIHIL;
+
+            in_cursu = xar_creare(grammatica->piscina,
+                                  (i32)magnitudo(s32));
+            _genera_symboli(grammatica, *sym_idx, imp->nodi,
+                            imp->lexemata, in_cursu);
+        }
+    }
+
+    redde impletiones;
+}
+
+
 Xar*
 silva_gen_registrum_computare(
     SilvaGenGrammatica*  grammatica)
