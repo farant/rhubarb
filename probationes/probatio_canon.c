@@ -873,17 +873,110 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (
             quot_generis(vitia, CANON_FRAGMENTUM_GEMINUM), I);
 
-        /* VI. LIMES HUIUS GRADUS, explicite notatus ne transitus
-         * tacitus pro perfectione legatur: contentum transclusum
-         * NONDUM iudicatur. Fragmentum elementum extra canonem
-         * ferens hic VITIA 0 reddit - recte pro hoc gradu (nemo
-         * de valido iam clamat), sed <ignotum> adhuc inauditum
-         * manet. Gradus proximus (iudicium pellucidum) id capiat,
-         * et haec assertio tunc MUTETUR. */
+        /* VI. LIMES GRADUS PRIORIS, NUNC TRANSITUS. Gradus prior
+         * hic ZEPHYRUM asseruit et id ipsum notavit ut mutandum:
+         * contentum transclusum inauditum manebat. Nunc auditur. */
         vitia = iudicare_literis(c_frag,
             "<r><#f><ignotum/></#><<#f>></r>", piscina, intern);
         CREDO_NON_NIHIL (vitia);
-        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), II);
+    }
+
+
+    /* ========================================================
+     * PROBARE: transclusio PELLUCIDA
+     *
+     * DEFINITIO: contentum per transclusionem adhibitum idem
+     * iudicium accipit ac contentum eodem loco INLINE scriptum.
+     * Ergo probatio prima non est proprietas transclusionis sed
+     * AEQUALITAS ipsa - aliter 'pellucidum' verbum sine mensura
+     * esset.
+     *
+     * TRABS: contentum transclusum parentem arboris '#' fert.
+     * Definitio intra= adstricta ad locum USUS resolvi debet.
+     * Augmentatio hoc semel omisit et octo fixturae id non
+     * ceperunt; hic id MENSURATUM est - override remoto,
+     * probatio 'intra' vitium I reddit pro ZEPHYRUM.
+     * ======================================================== */
+
+    {
+        Canon* c_pel;
+        Canon* c_card;
+        Canon* c_intra;
+          Xar* v_trans;
+          Xar* v_inline;
+
+        imprimere("\n--- Probans transclusionem pellucidam ---\n");
+
+        c_pel = canon_ex_literis(
+            "<canon dialectus=\"pel\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\"/>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_pel);
+
+        /* I. AEQUALITAS - contentum ILLICITUM utroque modo */
+        v_trans = iudicare_literis(c_pel,
+            "<r><#f><ignotum/></#><<#f>></r>", piscina, intern);
+        v_inline = iudicare_literis(c_pel,
+            "<r><ignotum/></r>", piscina, intern);
+        CREDO_NON_NIHIL (v_trans);
+        CREDO_NON_NIHIL (v_inline);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_trans),
+                            (i32)xar_numerus(v_inline));
+        CREDO_AEQUALIS_I32 (
+            quot_generis(v_trans, CANON_LIBERUM_ILLICITUM),
+            quot_generis(v_inline, CANON_LIBERUM_ILLICITUM));
+        CREDO_AEQUALIS_I32 (
+            quot_generis(v_trans, CANON_ELEMENTUM_IGNOTUM),
+            quot_generis(v_inline, CANON_ELEMENTUM_IGNOTUM));
+
+        /* II. AEQUALITAS - contentum LICITUM utroque modo mundum */
+        v_trans = iudicare_literis(c_pel,
+            "<r><#f><item/></#><<#f>></r>", piscina, intern);
+        v_inline = iudicare_literis(c_pel,
+            "<r><item/></r>", piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_trans), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_inline), ZEPHYRUM);
+
+        /* III. CARDINALITAS per transclusionem numeratur:
+         * minimum="1" contento transcluso SOLO impletur */
+        c_card = canon_ex_literis(
+            "<canon dialectus=\"card\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\" minimum=\"1\"/></elementum>"
+            "<elementum nomen=\"item\"/>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_card);
+        v_trans = iudicare_literis(c_card,
+            "<r><#f><item/></#><<#f>></r>", piscina, intern);
+        CREDO_NON_NIHIL (v_trans);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(v_trans, CANON_LIBERI_PAUCI), ZEPHYRUM);
+
+        /* IV. TRABS: definitio intra= ad locum USUS resolvitur */
+        c_intra = canon_ex_literis(
+            "<canon dialectus=\"intra\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"specialis\"/></elementum>"
+            "<elementum nomen=\"specialis\" intra=\"r\">"
+            "<attributum nomen=\"q\" genus=\"nomen\""
+            " necessarium=\"verum\"/></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_intra);
+        v_trans = iudicare_literis(c_intra,
+            "<r><#f><specialis q=\"x\"/></#><<#f>></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (v_trans);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_trans), ZEPHYRUM);
+
+        /* V. CIRCULUS clamat et SISTIT (expansio infinita esset) */
+        v_trans = iudicare_literis(c_pel,
+            "<r><#a><<#a>></#><<#a>></r>", piscina, intern);
+        CREDO_NON_NIHIL (v_trans);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(v_trans, CANON_TRANSCLUSIO_CIRCULARIS), I);
     }
 
 

@@ -96,6 +96,19 @@ nomen structura {
     chorda* ad_attributum;
 } CanonCitatio;
 
+/* Contextus transclusionis - per DOCUMENTUM, non per canonem.
+ *
+ * 'in_cursu' est acervus identitatum quae hoc ipso momento
+ * expanduntur. Sine eo fragmentum se ipsum transcludens
+ * expansionem infinitam pareret; cum eo catena talis semel
+ * clamat et sistit. Acervus est, non 'visa' simplex: idem
+ * fragmentum bis ADHIBERI licet (rhombus), sed intra se ipsum
+ * numquam. */
+nomen structura {
+    TabulaDispersa* fragmenta;  /* identitas -> nodus fragmenti */
+               Xar* in_cursu;   /* Xar de chorda* */
+} CanonTransclusio;
+
 
 /* ==================================================
  * Prototypa
@@ -165,11 +178,12 @@ clavis_scopi (
     constans chorda* titulus);
 interior vacuum
 nodum_iudicare (
-              Canon* c,
-          StmlNodus* n,
-                Xar* vitia,
-            Piscina* piscina,
-    constans chorda* parens_vi);
+               Canon* c,
+           StmlNodus* n,
+                 Xar* vitia,
+             Piscina* piscina,
+     constans chorda* parens_vi,
+    CanonTransclusio* tr);
 interior vacuum
 _augmenta_cusasque_colligere (
              Canon* c,
@@ -185,11 +199,12 @@ _clavigerum_stellae (
     constans chorda* attributum);
 interior vacuum
 _augmentum_iudicare (
-             Canon* c,
-         StmlNodus* a,
-    TabulaDispersa* cusa,
-               Xar* vitia,
-           Piscina* piscina);
+              Canon* c,
+          StmlNodus* a,
+     TabulaDispersa* cusa,
+                Xar* vitia,
+            Piscina* piscina,
+   CanonTransclusio* tr);
 interior b32
 album_solum (
     constans chorda* s);
@@ -224,6 +239,16 @@ _transclusiones_resolvere (
           StmlNodus* infixus,
      TabulaDispersa* fragmenta,
                 Xar* vitia);
+interior chorda
+_transclusionis_petitum (
+          StmlNodus* t);
+interior vacuum
+_liberos_effectivos (
+           StmlNodus* n,
+           StmlNodus* infixus,
+    CanonTransclusio* tr,
+                 Xar* exitus,
+                 Xar* vitia);
 
 
 /* ==================================================
@@ -1989,6 +2014,130 @@ _fragmenta_colligere (
     }
 }
 
+/* Identitas quam transclusio petit: valor nodi, sigillo '#'
+ * ducente dempto. Uno loco, quia bis eodem modo legitur. */
+interior chorda
+_transclusionis_petitum (
+    StmlNodus* t)
+{
+    chorda petitum;
+
+    petitum.datum    = NIHIL;
+    petitum.mensura  = ZEPHYRUM;
+    si (t && t->valor)
+    {
+        petitum = *t->valor;
+        si (   petitum.mensura > ZEPHYRUM
+            && (character)petitum.datum[ZEPHYRUM] == '#')
+        {
+            petitum = chorda_sectio(petitum, I, petitum.mensura);
+        }
+    }
+    redde petitum;
+}
+
+/* LIBERI EFFECTIVI: index liberorum ubi transclusio quaeque
+ * contento suo SUBSTITUTA est.
+ *
+ * HIC EST PELLUCIDITAS IPSA. Transclusio res est quam canon
+ * numquam videt: quaeritur non 'an transclusio hic liceat' sed
+ * 'an id quod significat hic liceat'. Ergo index unus struitur
+ * ante omnia, et tres ambulationes sequentes (cardinalitas,
+ * licentia, recursio) eum vident, non liberos crudos - aliter
+ * quaeque earum transclusionem seorsum discere deberet et tres
+ * responsa divergere possent.
+ *
+ * Contentum fragmenti INTEGRUM substituitur (etiam textus):
+ * documentum quod idem dicit idem iudicetur.
+ *
+ * Orphana hic TACET consulto - passus proprius eam iam clamavit
+ * (canon_iudicare); bis clamare numerum vitiorum mentiretur. */
+interior vacuum
+_liberos_effectivos (
+           StmlNodus* n,
+           StmlNodus* infixus,
+    CanonTransclusio* tr,
+                 Xar* exitus,
+                 Xar* vitia)
+{
+    i32 numerus;
+    i32 i;
+
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus*  l;
+        StmlNodus** slot;
+
+        l = stml_liberum_ad_indicem(n, i);
+        si (!l || l == infixus)
+        {
+            perge;
+        }
+
+        si (l->genus == STML_NODUS_TRANSCLUSIO)
+        {
+            chorda  petitum;
+            vacuum* inventum;
+               i32  k;
+               b32  circulus;
+
+            si (tr == NIHIL)
+            {
+                perge;
+            }
+            petitum = _transclusionis_petitum(l);
+            si (   petitum.mensura == ZEPHYRUM
+                || !tabula_dispersa_invenire(tr->fragmenta,
+                                             petitum, &inventum))
+            {
+                perge;   /* orphana: alibi clamata */
+            }
+
+            circulus = FALSUM;
+            per (k = ZEPHYRUM; k < xar_numerus(tr->in_cursu); k++)
+            {
+                chorda* c_id;
+
+                c_id = *(chorda**)xar_obtinere(tr->in_cursu, k);
+                si (c_id && chorda_aequalis(*c_id, petitum))
+                {
+                    circulus = VERUM;
+                    frange;
+                }
+            }
+            si (circulus)
+            {
+                vitium_addere(vitia, CANON_TRANSCLUSIO_CIRCULARIS,
+                              l, l->valor, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                perge;
+            }
+
+            {
+                StmlNodus*  frag;
+                   chorda** locus_id;
+
+                frag       = (StmlNodus*)inventum;
+                locus_id   = (chorda**)xar_addere(tr->in_cursu);
+                *locus_id  = frag->fragmentum_id;
+
+                _liberos_effectivos(frag, infixus, tr, exitus,
+                                    vitia);
+
+                xar_removere_ultimum(tr->in_cursu);
+            }
+            perge;
+        }
+
+        slot = (StmlNodus**)xar_addere(exitus);
+        si (slot)
+        {
+            *slot = l;
+        }
+    }
+}
+
 /* TRANSCLUSIONES resolvere - hic SOLA resolutio probatur, non
  * contentum (id gradus proximus).
  *
@@ -2022,18 +2171,7 @@ _transclusiones_resolvere (
         chorda  petitum;
         vacuum* inventum;
 
-        petitum.datum    = NIHIL;
-        petitum.mensura  = ZEPHYRUM;
-        si (n->valor)
-        {
-            petitum = *n->valor;
-            si (   petitum.mensura > ZEPHYRUM
-                && (character)petitum.datum[ZEPHYRUM] == '#')
-            {
-                petitum = chorda_sectio(petitum, I,
-                                        petitum.mensura);
-            }
-        }
+        petitum = _transclusionis_petitum(n);
 
         si (   petitum.mensura == ZEPHYRUM
             || !tabula_dispersa_invenire(fragmenta, petitum,
@@ -2065,11 +2203,12 @@ _transclusiones_resolvere (
  * liberum adstrictum = pugna, ignotum = vitium ordinarium. */
 interior vacuum
 _augmentum_iudicare (
-             Canon* c,
-         StmlNodus* a,
-    TabulaDispersa* cusa,
-               Xar* vitia,
-           Piscina* piscina)
+              Canon* c,
+          StmlNodus* a,
+     TabulaDispersa* cusa,
+                Xar* vitia,
+            Piscina* piscina,
+   CanonTransclusio* tr)
 {
     CanonElementum* genus_def;
             vacuum* valor;
@@ -2209,7 +2348,7 @@ _augmentum_iudicare (
             /* parens semanticus = genus destinatum (definitiones
              * intra= liberorum ad id adstrictae) */
             nodum_iudicare(c, l, vitia, piscina,
-                           genus_def->titulus);
+                           genus_def->titulus, tr);
         }
     }
 }
@@ -2219,16 +2358,18 @@ _augmentum_iudicare (
  * augmentationum, quibus genus destinatum traditur. */
 interior vacuum
 nodum_iudicare (
-              Canon* c,
-          StmlNodus* n,
-                Xar* vitia,
-            Piscina* piscina,
-    constans chorda* parens_vi)
+               Canon* c,
+           StmlNodus* n,
+                 Xar* vitia,
+             Piscina* piscina,
+     constans chorda* parens_vi,
+    CanonTransclusio* tr)
 {
-    CanonElementum* e;
-         StmlNodus* infixus;
-               i32  numerus;
-               i32  i;
+     CanonElementum* e;
+          StmlNodus* infixus;
+                Xar* effectivi;
+                i32  numerus;
+                i32  i;
 
     si (!n || n->genus != STML_NODUS_ELEMENTUM || !n->titulus)
     {
@@ -2418,8 +2559,18 @@ nodum_iudicare (
         }
     }
 
-    /* ---- liberi: licentia et cardinalitas ---- */
-    numerus = stml_numerus_liberorum(n);
+    /* ---- liberi: licentia et cardinalitas ----
+     *
+     * INDEX EFFECTIVUS, non liberi crudi: transclusio quaeque
+     * contento suo iam substituta est. Ambulationes tres
+     * (cardinalitas, licentia, recursio) eundem indicem vident,
+     * ergo de eodem documento divergere non possunt - quod
+     * accideret si quaeque earum transclusionem seorsum
+     * disceret. */
+    effectivi = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    _liberos_effectivos(n, infixus, tr, effectivi, vitia);
+    numerus = xar_numerus(effectivi);
+
     per (i = ZEPHYRUM; i < xar_numerus(e->liberi); i++)
     {
         CanonLiberum* lb;
@@ -2432,9 +2583,9 @@ nodum_iudicare (
         {
             StmlNodus* l;
 
-            l = stml_liberum_ad_indicem(n, j);
-            si (   l && l != infixus
-                && l->genus == STML_NODUS_ELEMENTUM
+            l = *(StmlNodus**)xar_obtinere(effectivi, j);
+            si (   l && l->genus == STML_NODUS_ELEMENTUM
+                && l->titulus
                 && chorda_aequalis(*l->titulus, *lb->titulus))
             {
                 computa++;
@@ -2459,7 +2610,7 @@ nodum_iudicare (
               b32  licet;
               i32  j;
 
-        l = stml_liberum_ad_indicem(n, i);
+        l = *(StmlNodus**)xar_obtinere(effectivi, i);
         si (!l || l == infixus)
         {
             perge;
@@ -2517,7 +2668,16 @@ nodum_iudicare (
                           ZEPHYRUM);
         }
 
-        nodum_iudicare(c, l, vitia, piscina, NIHIL);
+        /* parens_vi = titulus HUIUS nodi, non NIHIL.
+         *
+         * Pro libero directo idem prorsus dicit (parens arboris
+         * IS EST). Pro contento transcluso solum id rectum est:
+         * parens arboris eius nodus fragmenti '#' est, ergo
+         * definitio intra= adstricta ad locum USUS resolvi debet,
+         * non ad locum ubi fragmentum scriptum sedet. Haec est
+         * ipsa trabs quam augmentatio semel omisit - octo
+         * fixturae eam non ceperunt, corpus cepit. */
+        nodum_iudicare(c, l, vitia, piscina, n->titulus, tr);
     }
 }
 
@@ -2527,9 +2687,11 @@ canon_iudicare (
     StmlNodus* radix,
       Piscina* piscina)
 {
-          Xar* vitia;
-    StmlNodus* elementum_radix;
-          i32  i;
+                 Xar* vitia;
+           StmlNodus* elementum_radix;
+           StmlNodus* infixus;
+    CanonTransclusio  transclusio;
+                 i32  i;
 
     si (!canon || !piscina)
     {
@@ -2575,7 +2737,21 @@ canon_iudicare (
                       ZEPHYRUM, ZEPHYRUM);
     }
 
-    nodum_iudicare(canon, elementum_radix, vitia, piscina, NIHIL);
+    infixus = canon_infixum_invenire(elementum_radix);
+
+    /* ---- FRAGMENTA ante omnia: iudicium ipsum ea petit, quia
+     * transclusio in medio arbore resolvi debet. Duo passus, mos
+     * augmenti - definitio usum suum in ordine documenti sequi
+     * potest, ergo tabula TOTA ante primum usum stare debet. ---- */
+    transclusio.fragmenta = tabula_dispersa_creare_chorda(piscina,
+                                                          XXXII);
+    transclusio.in_cursu  = xar_creare(piscina,
+                                       (i32)magnitudo(chorda*));
+    _fragmenta_colligere(elementum_radix, infixus,
+                         transclusio.fragmenta, vitia);
+
+    nodum_iudicare(canon, elementum_radix, vitia, piscina, NIHIL,
+                   &transclusio);
 
     /* ---- unicitates et citationes: per SCOPOS iudicantur.
      * Sine intra= scopus = documentum (mos vetus); cum intra=
@@ -2583,10 +2759,6 @@ canon_iudicare (
      * quaestionem, status intra machinam). Subarbor infixi
      * ubique praetermissa. ---- */
     {
-        StmlNodus* infixus;
-
-        infixus = canon_infixum_invenire(elementum_radix);
-
         per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
         {
                  CanonUnicitas* u;
@@ -2950,22 +3122,16 @@ canon_iudicare (
             {
                 _augmentum_iudicare(canon,
                     *(StmlNodus**)xar_obtinere(augmenta, ia),
-                    cusa, vitia, piscina);
+                    cusa, vitia, piscina, &transclusio);
             }
 
-            /* ---- FRAGMENTA + TRANSCLUSIONES: colligere TOTA
-             * prius, deinde resolvere. Ordo hic ratio ipsa est -
-             * definitio usum sequi potest. ---- */
-            {
-                TabulaDispersa* fragmenta;
-
-                fragmenta = tabula_dispersa_creare_chorda(piscina,
-                                                          XXXII);
-                _fragmenta_colligere(elementum_radix, infixus,
-                                     fragmenta, vitia);
-                _transclusiones_resolvere(elementum_radix, infixus,
-                                          fragmenta, vitia);
-            }
+            /* ---- TRANSCLUSIONES: sola RESOLUTIO hic probatur
+             * (orphana clamat). Tabula fragmentorum iam supra
+             * ante iudicium structa est - eam bis struere vitium
+             * gemini BIS nuntiaret. ---- */
+            _transclusiones_resolvere(elementum_radix, infixus,
+                                      transclusio.fragmenta,
+                                      vitia);
 
             /* ---- collisio (librarium W2): cusae domi contra
              * claves externas - suppositum aequivocum esse nequit.
@@ -3074,6 +3240,9 @@ canon_nuntius (
         casus CANON_FRAGMENTUM_GEMINUM:
             redde "fragmentum idem bis definitum "
                   "(usus quisque ambiguus fit)";
+        casus CANON_TRANSCLUSIO_CIRCULARIS:
+            redde "transclusio circularis (fragmentum se ipsum "
+                  "per catenam transcludit)";
         ordinarius:
             redde "vitium ignotum";
     }

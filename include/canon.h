@@ -158,7 +158,12 @@ nomen enumeratio {
      * proximus). Haec duo autem tacere non possunt, quia
      * resolutionem ipsam frangunt: */
     CANON_TRANSCLUSIO_IRRITA  = XVIII,
-    CANON_FRAGMENTUM_GEMINUM  = XIX
+    CANON_FRAGMENTUM_GEMINUM  = XIX,
+    /* fragmentum se ipsum (per catenam) transcludens: expansio
+     * finem non habet. Clamandum est, non silentio truncandum -
+     * truncatio tacita documentum aliud iudicaret quam quod
+     * scriptum est. */
+    CANON_TRANSCLUSIO_CIRCULARIS = XX
 } CanonVitiumGenus;
 
 nomen structura {

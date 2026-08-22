@@ -223,9 +223,40 @@ git commit -m "canon: fragmenta ante iudicium colliguntur (mos augmenti)"
 
 ---
 
-## T3 — Transparent judgment
+## T3 — Transparent judgment *(SHIPPED)*
 
 Spec §3.2, second half. **The load-bearing tranche.**
+
+> **SHIPPED 2026-08-22.** Implemented as an **effective child list**:
+> `_liberos_effectivos` builds, per node, the child list with every
+> transclusion already replaced by its fragment's content. All three
+> walks (cardinality, licentia, recursion) then read that one list, so
+> they cannot diverge — the alternative was teaching each walk about
+> transclusion separately and hoping three answers agreed.
+>
+> **Both warned-of traps fired, and both were caught by measurement:**
+>
+> 1. **The equivalence test failed first time.** Transcluded gave 0
+>    vitia where inline gave 2 — because I converted the *cardinality*
+>    loop to the effective list and left the *licentia* loop walking
+>    raw children while using the effective count. An index mismatch on
+>    top of a miss. The test that *defines* transparent is what caught
+>    it; a weaker test would have passed.
+> 2. **`parens_vi` is load-bearing, measured.** With the override
+>    reverted to `NIHIL`, the `intra=` case yields **VITIA 1**; with it,
+>    0. The augmentum bug reproduced deliberately rather than assumed.
+>
+> **A bug my own restructure introduced:** moving fragment collection
+> ahead of judgment left the T2 collection call still in place, so the
+> table was built **twice** and every duplicate id would have been
+> reported twice. Caught by re-reading the call site, not by a test —
+> worth a test if this area is touched again.
+>
+> Also added: `CANON_TRANSCLUSIO_CIRCULARIS`. A fragment transcluding
+> itself clamours once and terminates instead of expanding forever.
+>
+> `probatio_canon` 259/259; full suite 136/137 (`planta_lectio`
+> pre-existing, same line/values); 41 canons load.
 
 - [ ] **Step 1: Read the precedent's trap.**
   `_augmentum_iudicare` (`lib/canon.c:1693-1842`), specifically the
