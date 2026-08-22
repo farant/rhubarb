@@ -45,16 +45,29 @@ for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
-for src in "$SILVA_DIR"/instrumenta/*.c; do
-    base="$(basename "$src" .c)"
-    # silva_amalgama (mechanismus amalgamatoris) fontes postulat -
-    # generator eo non utitur; amalgamare.sh id compilat
-    if [ "$base" = "silva_amalgama" ]; then continue; fi
-    # nexus_ordines amalgama postulat (symbola silva_c89_*) -
-    # generator eo non utitur; fractura latens ab aera LEGATUS,
-    # censu aedilis 2026-07-21 detecta
-    if [ "$base" = "nexus_ordines" ]; then continue; fi
+# CLAUSURA GENERATORIS - index ADMITTENS, non excludens.
+#
+# Erat index excludens ('salta silva_amalgama, salta nexus_ordines').
+# Ter putruit: quotiens instrumentum novum MOTOREM (fontes/) tetigit,
+# nexus generatoris tacite fractus est - symbola indefinita LXXXIII
+# ad diem 2026-08-22 (silva_differre, silva_formator, silva_iudicium
+# post aeram LEGATUS accesserunt, nemine excludente).
+#
+# Index admittens putrescere NON potest eodem modo: instrumentum
+# novum nexum generatoris non intrat nisi quis id HIC nominet, et
+# tunc symbola eius consulto ponderantur. Generator instrumenta
+# NUMQUAM adhibet praeter haec nominata.
+declare -a GENERATOR_FONTES=(
+    "silva_generare"        # grammaticam legere, tabulas construere
+    "silva_coquere"         # tabulae -> fons C
+)
+for base in "${GENERATOR_FONTES[@]}"; do
+    src="$SILVA_DIR/instrumenta/$base.c"
     obj="$BUILD_DIR/$base.o"
+    if [ ! -f "$src" ]; then
+        echo "  [silva] FONS ABEST: $src" >&2
+        exit 1
+    fi
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
         echo "  [silva] $base.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
