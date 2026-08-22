@@ -151,6 +151,27 @@ nomen structura StmlNodus {
      * linearum venatio est, non diagnosticum). */
     i32 linea;
 
+    /* EXTENSIO OCTETORUM [initium, finis) in fonte: ab primo
+     * octeto tagi aperientis usque ad ultimum tagi CLAUDENTIS
+     * (liberis inclusis). Eiusdem naturae ac 'linea' - metadatum
+     * parsationis solum, ab emissore numquam lectum, ergo
+     * fidelitas byte-exacta intacta; ZEPHYRUM utrumque si nodus
+     * non e parsatione venit.
+     *
+     * CUR SEORSUM A 'linea': linea INITIUM solum dat. Instrumentum
+     * quod nodum in fonte illuminare debet (tag, tag claudens,
+     * liberos omnes) EXTENSIONEM poscit, et instrumentum quod ex
+     * positione textus nodum quaerit continentiam poscit -
+     * neutrum ex linea sola haberi potest. Approximatio per
+     * lineas in STML pulchre scripto FERE operatur, et in
+     * contento in-lineari ('<lex-int>int</lex-int>') TACITE
+     * mentitur - unde extensio vera, non coniectura.
+     *
+     * Octeti, non puncta codicis (decretum 01M0ATF1E1: C octetos
+     * emittit, consumens ad limitem convertit). */
+    i32 positus_initium;
+    i32 positus_finis;
+
     /* STML-specific fields */
                    b32 crudus;          /* Raw content tag (! suffix) */
     StmlCaptioDirectio captio_directio;

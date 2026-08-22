@@ -1473,6 +1473,18 @@ nomen structura {
                 Piscina* piscina;
     InternamentumChorda* intern;
 
+    /* Finis octetorum tokeni ULTIMO CONSUMPTI.
+     *
+     * SUTURA UNA pro extensionibus nodorum: quisque parsator
+     * nodi, cum redit, tokenum ultimum suum iam consumpsit -
+     * ergo 'nodus->positus_finis = ctx->finis_ultimus' uno more
+     * omnibus generibus nodorum valet (elementum cum clausura,
+     * elementum crudum, fragmentum, textus, commentum...).
+     * Alternativa - finem ad quemque locum clausurae manu capere
+     * - eandem rem sexies derivaret, unde sex occasiones
+     * divergendi. */
+    i32 finis_ultimus;
+
     /* Error info */
     StmlStatus status;
            i32 linea_erroris;
@@ -1484,7 +1496,9 @@ interior vacuum
 _parser_progredi (
     StmlParserContext* ctx)
 {
-    ctx->current = _tok_proximus(&ctx->tok_ctx);
+    /* tokenum EXEUNTEM notare, antequam obruatur */
+    ctx->finis_ultimus  = ctx->current.positus_finis;
+    ctx->current        = _tok_proximus(&ctx->tok_ctx);
 }
 
 interior StmlNodus*
@@ -1519,6 +1533,15 @@ _parser_creare_nodus (
     /* nodus nascitur dum token aperiens CURRENS est - linea eius
      * est linea nodi (tokenizator lineas iam numerat, 1-basatas) */
     nodus->linea = ctx->current.linea;
+
+    /* EXTENSIO: initium ex tokeno aperiente; finis PRAEFINITUS
+     * eiusdem tokeni finis est, quod nodis uno tokeno constantibus
+     * (textus, commentum, transclusio) IAM rectum est. Nodi qui
+     * liberos et clausuram habent eum in reditu suo corrigunt ex
+     * 'finis_ultimus'. Ergo campus numquam ZEPHYRUM manet per
+     * oblivionem - praefinitum SEMPER sanum est. */
+    nodus->positus_initium  = ctx->current.positus_initium;
+    nodus->positus_finis    = ctx->current.positus_finis;
 
     redde nodus;
 }
@@ -1591,6 +1614,9 @@ _parser_legere_elementum (
         ctx->linea_erroris    = ctx->current.linea;
         ctx->columna_erroris  = ctx->current.columna;
     }
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -1674,6 +1700,9 @@ _parser_legere_elementum_crudus (
         _parser_progredi(ctx);
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -1694,6 +1723,9 @@ _parser_legere_auto_claudere (
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -1718,6 +1750,9 @@ _parser_legere_captio_ante (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -1741,6 +1776,9 @@ _parser_legere_captio_retro (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -1762,6 +1800,9 @@ _parser_legere_farcimen (
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -2107,6 +2148,9 @@ _parser_legere_textus (
     contentus_ptr  = chorda_internare(ctx->intern, unescaped);
     nodus->valor   = contentus_ptr;
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -2126,6 +2170,9 @@ _parser_legere_commentum (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -2144,6 +2191,9 @@ _parser_legere_processio (
     nodus->valor   = contentus_ptr;
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -2205,6 +2255,9 @@ _parser_legere_fragmentum (
         _parser_progredi(ctx);
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -2250,6 +2303,9 @@ _parser_legere_fragmentum_auto (
     }
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -2302,6 +2358,9 @@ _parser_legere_percentum (
         ctx->columna_erroris  = ctx->current.columna;
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -2322,6 +2381,9 @@ _parser_legere_transclusio (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -2340,6 +2402,9 @@ _parser_legere_doctype (
     nodus->valor   = contentus_ptr;
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -3773,6 +3838,8 @@ stml_elementum_creare (
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
 
     redde nodus;
 }
@@ -3822,6 +3889,8 @@ stml_textum_creare (
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
 
     redde nodus;
 }
@@ -3854,6 +3923,8 @@ stml_textum_creare_ex_chorda (
     nodus->fragmentum_id     = NIHIL;
     nodus->augmentum_clavis  = NIHIL;
     nodus->linea             = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium   = ZEPHYRUM;
+    nodus->positus_finis     = ZEPHYRUM;
 
     redde nodus;
 }
@@ -3886,6 +3957,8 @@ stml_commentum_creare (
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
 
     redde nodus;
 }

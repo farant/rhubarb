@@ -3476,6 +3476,161 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * XV. EXTENSIONES NODORUM (positus_initium/finis)
+     * ================================================== */
+
+    imprimere("\nXV. Extensiones nodorum\n");
+
+    {
+        /* A. EXTENSIO = FETTA VERA FONTIS.
+         *
+         * Oraculum quod numeros solos vincit: extensione fontem
+         * SECAMUS et cum textu exspectato comparamus. Numerus
+         * falsus qui 'probabilis' videtur (off-by-one, clausura
+         * omissa) hic CADIT; numerus contra numerum non caderet. */
+        chorda       ingressus;
+        StmlResultus res;
+        StmlNodus*   radix;
+        StmlNodus*   a;
+        chorda       fetta;
+
+        ingressus = chorda_ex_literis(
+            "<radix><a>x</a><b/></radix>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        radix = res.elementum_radix;
+        CREDO_VERUM(radix != NIHIL);
+
+        /* radix totum documentum tegit */
+        CREDO_AEQUALIS_I32(radix->positus_initium, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(radix->positus_finis, ingressus.mensura);
+
+        /* liberus primus: '<a>x</a>' EXACTE - tag, contentum,
+           clausura. Fetta comparata, non numeri. */
+        a = stml_liberum_ad_indicem(radix, ZEPHYRUM);
+        CREDO_VERUM(a != NIHIL);
+        fetta = chorda_ex_buffer(
+            ingressus.datum + a->positus_initium,
+            a->positus_finis - a->positus_initium);
+        CREDO_CHORDA_AEQUALIS_LITERIS(fetta, "<a>x</a>");
+
+        /* liberus alter: '<b/>' auto-claudens */
+        a = stml_liberum_ad_indicem(radix, I);
+        CREDO_VERUM(a != NIHIL);
+        fetta = chorda_ex_buffer(
+            ingressus.datum + a->positus_initium,
+            a->positus_finis - a->positus_initium);
+        CREDO_CHORDA_AEQUALIS_LITERIS(fetta, "<b/>");
+
+        imprimere("  A fetta: '<a>x</a>' et '<b/>' exacte\n");
+    }
+
+    {
+        /* B. NIDIFICATIO: extensio liberi INTRA parentem iacet, et
+         * fratres non se intersecant. Invarians quem lector
+         * 'nodum ex positione quaerens' PRAESUMIT - ergo
+         * asserendus, non speratus. */
+        chorda       ingressus;
+        StmlResultus res;
+        StmlNodus*   radix;
+        StmlNodus*   p;
+        StmlNodus*   q;
+
+        ingressus = chorda_ex_literis(
+            "<r>\n  <p a=\"1\">textus</p>\n  <q/>\n</r>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        radix = res.elementum_radix;
+
+        p = stml_invenire_liberum(radix, "p");
+        q = stml_invenire_liberum(radix, "q");
+        CREDO_VERUM(p != NIHIL);
+        CREDO_VERUM(q != NIHIL);
+
+        CREDO_VERUM(p->positus_initium >= radix->positus_initium);
+        CREDO_VERUM(p->positus_finis <= radix->positus_finis);
+        CREDO_VERUM(p->positus_finis > p->positus_initium);
+        /* fratres disiuncti, ordine documenti */
+        CREDO_VERUM(p->positus_finis <= q->positus_initium);
+
+        imprimere("  B nidificatio: liberus intra parentem, "
+            "fratres disiuncti\n");
+    }
+
+    {
+        /* C. QUAESTIO CONTINENTIAE - usus verus.
+         *
+         * 'Quis nodus octetum hunc tenet?' est quaestio quam
+         * inspector STML ponit cum usor in textu premit. Lineae
+         * solae eam solvere NON possunt: hic 'p' et 'q' in LINEA
+         * EADEM iacent, ergo quaesitio per lineam ambiguum
+         * redderet. Extensio discernit. */
+        chorda       ingressus;
+        StmlResultus res;
+        StmlNodus*   radix;
+        StmlNodus*   p;
+        StmlNodus*   q;
+        i32          sedes_q;
+
+        ingressus = chorda_ex_literis(
+            "<r><p>aa</p><q>bb</q></r>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        radix = res.elementum_radix;
+        p = stml_invenire_liberum(radix, "p");
+        q = stml_invenire_liberum(radix, "q");
+        CREDO_VERUM(p != NIHIL && q != NIHIL);
+
+        /* eadem linea uterque - probatio quod linea non sufficit */
+        CREDO_AEQUALIS_I32(p->linea, q->linea);
+
+        /* octetus 'b' primi intra q, non intra p */
+        sedes_q = q->positus_initium + III;   /* '<q>' -> 'b' */
+        CREDO_VERUM(sedes_q >= q->positus_initium
+                 && sedes_q <  q->positus_finis);
+        CREDO_FALSUM(sedes_q >= p->positus_initium
+                  && sedes_q <  p->positus_finis);
+
+        imprimere("  C continentia: 'p' et 'q' linea EADEM, "
+            "extensione discreti\n");
+    }
+
+    {
+        /* D. NODI NON E PARSATIONE: ZEPHYRUM utrumque - eadem
+         * conventio quam 'linea' iam tenet. */
+        StmlNodus* manu;
+
+        manu = stml_elementum_creare(piscina, intern, "manus");
+        CREDO_VERUM(manu != NIHIL);
+        CREDO_AEQUALIS_I32(manu->linea, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(manu->positus_initium, ZEPHYRUM);
+        CREDO_AEQUALIS_I32(manu->positus_finis, ZEPHYRUM);
+
+        imprimere("  D manu creatus: extensio ZEPHYRUM "
+            "(conventio lineae servata)\n");
+    }
+
+    {
+        /* E. FIDELITAS INTACTA: extensiones metadatum PARSATIONIS
+         * sunt, ergo scriptor eas numquam legit - documentum
+         * rescriptum octetim idem manet. Assertio quae campum
+         * novum ab emissore separat. */
+        chorda       ingressus;
+        StmlResultus res;
+        chorda       scriptum;
+
+        ingressus = chorda_ex_literis(
+            "<r><p a=\"1\">x</p><q/></r>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, ingressus);
+
+        imprimere("  E fidelitas: scriptio octetim eadem\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
