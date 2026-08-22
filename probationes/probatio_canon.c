@@ -796,6 +796,98 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: fragmenta et transclusiones - collectio
+     *
+     * ANTE HAEC canon de fragmentis et MENTIEBATUR et TACEBAT
+     * (mensuratum 2026-08-22, bin/canon_examen):
+     *   documentum VALIDUM  -> II vitia FALSA (nodus fragmenti
+     *                          titulum '#' fert, quem canon
+     *                          nullus declarat)
+     *   transclusio ORPHANA -> VITIA 0, exitus 0 (ambulationes
+     *                          'genus != ELEMENTUM' probant et
+     *                          pergunt - referentia pendens
+     *                          silentio transibat)
+     *   fragmentum GEMINUM  -> IV vitia falsa, nihil de gemino
+     *
+     * Clamor ubi nihil erat, silentium ubi aliquid erat.
+     * ======================================================== */
+
+    {
+        Canon* c_frag;
+          Xar* vitia;
+
+        imprimere("\n--- Probans fragmenta et transclusiones "
+                  "---\n");
+
+        c_frag = canon_ex_literis(
+            "<canon dialectus=\"frag\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_frag);
+
+        /* I. documentum validum: nulla vitia (erant II falsa) */
+        vitia = iudicare_literis(c_frag,
+            "<r><#f1><item a=\"unus\"/></#><<#f1>></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* II. USUS ANTE DEFINITIONEM - ratio ipsa duorum passuum.
+         * Definitio-ante-usum in scriptore silvae ex ordine
+         * ambulationis emergit et NUMQUAM asseritur; semel iam
+         * fracta est. Ergo nullum ordinem praesumimus. */
+        vitia = iudicare_literis(c_frag,
+            "<r><<#tardum>><#tardum><item a=\"unus\"/></#></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* III. fragmentum nidificatum transclusionem ferens, ea
+         * quoque prospiciens */
+        vitia = iudicare_literis(c_frag,
+            "<r><#ext><item a=\"x\"/><<#int>></#>"
+            "<#int><item a=\"y\"/></#><<#ext>></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* IV. ORPHANA clamat (tacebat) */
+        vitia = iudicare_literis(c_frag,
+            "<r><<#nusquam>></r>", piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_TRANSCLUSIO_IRRITA), I);
+
+        /* V. GEMINUM clamat, et 'ultimus vincit' non fit:
+         * duae definitiones unius identitatis usum quemque
+         * ambiguum faciunt */
+        vitia = iudicare_literis(c_frag,
+            "<r><#g><item a=\"unus\"/></#>"
+            "<#g><item a=\"duo\"/></#><<#g>></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_FRAGMENTUM_GEMINUM), I);
+
+        /* VI. LIMES HUIUS GRADUS, explicite notatus ne transitus
+         * tacitus pro perfectione legatur: contentum transclusum
+         * NONDUM iudicatur. Fragmentum elementum extra canonem
+         * ferens hic VITIA 0 reddit - recte pro hoc gradu (nemo
+         * de valido iam clamat), sed <ignotum> adhuc inauditum
+         * manet. Gradus proximus (iudicium pellucidum) id capiat,
+         * et haec assertio tunc MUTETUR. */
+        vitia = iudicare_literis(c_frag,
+            "<r><#f><ignotum/></#><<#f>></r>", piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: documentum sanum - nulla vitia
      * ======================================================== */
 

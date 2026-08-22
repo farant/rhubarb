@@ -212,6 +212,18 @@ _subarborem_colligere (
     constans chorda* limes,
           StmlNodus* infixus,
                 Xar* nodi);
+interior vacuum
+_fragmenta_colligere (
+          StmlNodus* n,
+          StmlNodus* infixus,
+     TabulaDispersa* fragmenta,
+                Xar* vitia);
+interior vacuum
+_transclusiones_resolvere (
+          StmlNodus* n,
+          StmlNodus* infixus,
+     TabulaDispersa* fragmenta,
+                Xar* vitia);
 
 
 /* ==================================================
@@ -1921,6 +1933,131 @@ _augmenta_cusasque_colligere (
     }
 }
 
+/* FRAGMENTA colligere, et gemina clamare.
+ *
+ * DUO PASSUS, non unus - eadem ratio qua augmenta duobus passibus
+ * tractantur: definitio usum suum in ordine documenti SEQUI
+ * potest. Definitio-ante-usum in arbore silvae ex ordine
+ * ambulationis scriptoris emergit et NUMQUAM asseritur; semel iam
+ * fracta est (silva_arbor.worklog.md:1283-1296). Ergo nullum
+ * ordinem praesumimus.
+ *
+ * GEMINUM vitium est, non 'ultimus vincit': duae definitiones
+ * unius identitatis usum quemque ambiguum faciunt, et electio
+ * tacita inter eas est mendacium de eo quod documentum dicit.
+ *
+ * Descendit IN fragmenta: fragmenta nidificantur et transclusiones
+ * ferre possunt. */
+interior vacuum
+_fragmenta_colligere (
+          StmlNodus* n,
+          StmlNodus* infixus,
+     TabulaDispersa* fragmenta,
+                Xar* vitia)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!n || n == infixus || n->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde;
+    }
+
+    si (n->fragmentum && n->fragmentum_id)
+    {
+        vacuum* prius;
+
+        si (tabula_dispersa_invenire(fragmenta, *n->fragmentum_id,
+                                     &prius))
+        {
+            vitium_addere(vitia, CANON_FRAGMENTUM_GEMINUM, n,
+                          n->fragmentum_id, NIHIL, ZEPHYRUM,
+                          ZEPHYRUM);
+        }
+        alioquin
+        {
+            tabula_dispersa_inserere(fragmenta, *n->fragmentum_id,
+                                     n);
+        }
+    }
+
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        _fragmenta_colligere(stml_liberum_ad_indicem(n, i),
+                             infixus, fragmenta, vitia);
+    }
+}
+
+/* TRANSCLUSIONES resolvere - hic SOLA resolutio probatur, non
+ * contentum (id gradus proximus).
+ *
+ * Transclusio irrita TACERE non potest. Ante hoc orphana
+ * ('<<#nusquam>>') VITIA 0 reddebat: ambulationes omnes
+ * 'genus != ELEMENTUM' probant et pergunt, ergo referentia
+ * pendens silentio transibat. Porta muta = porta mortua.
+ *
+ * Valor nodi transclusionis selectorem crudum fert; forma
+ * fragmenti sigillum '#' ducens habet, quod ante inquisitionem
+ * demitur. Selector qui fragmentum nominare NON potest hic
+ * irritus est - grammatica selectorum latior est quam quod
+ * transclusio in canone significare potest. */
+interior vacuum
+_transclusiones_resolvere (
+          StmlNodus* n,
+          StmlNodus* infixus,
+     TabulaDispersa* fragmenta,
+                Xar* vitia)
+{
+    i32 numerus;
+    i32 i;
+
+    si (!n || n == infixus)
+    {
+        redde;
+    }
+
+    si (n->genus == STML_NODUS_TRANSCLUSIO)
+    {
+        chorda  petitum;
+        vacuum* inventum;
+
+        petitum.datum    = NIHIL;
+        petitum.mensura  = ZEPHYRUM;
+        si (n->valor)
+        {
+            petitum = *n->valor;
+            si (   petitum.mensura > ZEPHYRUM
+                && (character)petitum.datum[ZEPHYRUM] == '#')
+            {
+                petitum = chorda_sectio(petitum, I,
+                                        petitum.mensura);
+            }
+        }
+
+        si (   petitum.mensura == ZEPHYRUM
+            || !tabula_dispersa_invenire(fragmenta, petitum,
+                                         &inventum))
+        {
+            vitium_addere(vitia, CANON_TRANSCLUSIO_IRRITA, n,
+                          n->valor, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+
+    si (n->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde;
+    }
+
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        _transclusiones_resolvere(stml_liberum_ad_indicem(n, i),
+                                  infixus, fragmenta, vitia);
+    }
+}
+
 /* augmentationem unam iudicare: clavis in scopo (cusae domi ∪
  * claves externae), genus destinatum per genus= clavis externae
  * aut per elementum nodi cudentis, membra ADDITIVA sola - liberum
@@ -2101,6 +2238,17 @@ nodum_iudicare (
     /* augmentatio passu proprio iudicatur (canon_iudicare) - hic
      * numquam vocabulario mensuranda */
     si (n->augmentum_clavis)
+    {
+        redde;
+    }
+
+    /* FRAGMENTUM in loco suo NON iudicatur. Nodus titulum '#'
+     * fert, quem canon nullus declarat, ergo iudicium ordinarium
+     * de documento valido bis clamabat (mensuratum). Et clamare
+     * rectum non esset etiamsi titulus notus esset: fragmentum
+     * ibi sedet ubi scriptor id posuit, qui locus contento eius
+     * legalis esse non debet. Per USUS suos iudicatur. */
+    si (n->fragmentum)
     {
         redde;
     }
@@ -2338,6 +2486,14 @@ nodum_iudicare (
          * proprius in canon_iudicare eam contra genus destinatum
          * iudicat - cusa clavium prius TOTA colligenda. */
         si (l->augmentum_clavis)
+        {
+            perge;
+        }
+
+        /* fragmentum vocabulario INVISIBILE, sicut augmentatio:
+         * nullus parens '#' in libero suo declarat. (Transclusio
+         * genere suo iam supra excluditur - elementum non est.) */
+        si (l->fragmentum)
         {
             perge;
         }
@@ -2797,6 +2953,20 @@ canon_iudicare (
                     cusa, vitia, piscina);
             }
 
+            /* ---- FRAGMENTA + TRANSCLUSIONES: colligere TOTA
+             * prius, deinde resolvere. Ordo hic ratio ipsa est -
+             * definitio usum sequi potest. ---- */
+            {
+                TabulaDispersa* fragmenta;
+
+                fragmenta = tabula_dispersa_creare_chorda(piscina,
+                                                          XXXII);
+                _fragmenta_colligere(elementum_radix, infixus,
+                                     fragmenta, vitia);
+                _transclusiones_resolvere(elementum_radix, infixus,
+                                          fragmenta, vitia);
+            }
+
             /* ---- collisio (librarium W2): cusae domi contra
              * claves externas - suppositum aequivocum esse nequit.
              * EXEMPTIO: radix fons= fontem clavium aequans =
@@ -2899,6 +3069,11 @@ canon_nuntius (
         casus CANON_CITATIO_ALIENA:
             redde "clavis exsistit sed generis alieni "
                   "(extra indicem ad= citationis)";
+        casus CANON_TRANSCLUSIO_IRRITA:
+            redde "transclusio ad fragmentum quod non exsistit";
+        casus CANON_FRAGMENTUM_GEMINUM:
+            redde "fragmentum idem bis definitum "
+                  "(usus quisque ambiguus fit)";
         ordinarius:
             redde "vitium ignotum";
     }

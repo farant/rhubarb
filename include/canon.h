@@ -145,7 +145,20 @@ nomen enumeratio {
      * exsistentiam probabat - genus= clavis tabulae iam aderat,
      * comparatio sola deerat. Citatio stellata (stella in indice)
      * genus quodvis admittit. */
-    CANON_CITATIO_ALIENA      = XVII
+    CANON_CITATIO_ALIENA      = XVII,
+    /* FRAGMENTA (transclusio, 2026-08-22): ante haec canon
+     * fragmenta et transclusiones nec videbat nec tacebat -
+     * PEIUS: de valido clamabat (nodus fragmenti titulum '#'
+     * fert, ergo 'liberum hic non licet' + 'elementum extra
+     * canonem'), de invalido tacebat (transclusio orphana VITIA
+     * 0 reddebat). Mensuratum ante emendationem.
+     *
+     * Transclusio PELLUCIDA est: involucrum ipsum numquam
+     * iudicatur, contentum quod significat iudicatur (gradus
+     * proximus). Haec duo autem tacere non possunt, quia
+     * resolutionem ipsam frangunt: */
+    CANON_TRANSCLUSIO_IRRITA  = XVIII,
+    CANON_FRAGMENTUM_GEMINUM  = XIX
 } CanonVitiumGenus;
 
 nomen structura {

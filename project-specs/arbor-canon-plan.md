@@ -156,9 +156,41 @@ right and the rule was wrong.
 
 ---
 
-## T2 — Fragment collection
+## T2 — Fragment collection *(SHIPPED — scope corrected during execution)*
 
 Spec §3.2, first half. Follows `augmentum`'s two-pass structure.
+
+> **PLAN CORRECTION, made while executing (2026-08-22).** As written,
+> T2 was *collection only* — and a collection pass whose sole consumer
+> arrives in T3 **cannot carry its own gate**, which violates this
+> plan's own rule that a task ends in an independently testable
+> deliverable. Rather than write a hollow test, T2 absorbed the three
+> things that are observable without any judgment machinery:
+>
+> - **exclude fragments/transclusions from the ordinary descent**
+>   (moved up from T3 step 4.1) — kills the false vitia;
+> - **orphan transclusion → loud vitium** (moved up from T3);
+> - **duplicate fragment id → loud vitium**.
+>
+> That leaves T3 as purely *judge the resolved content transparently*
+> (`parens_vi` + inline equivalence), which is a cleaner boundary:
+> **T2 makes canon honest about fragments, T3 makes it thorough.**
+> Orphan detection landing sooner is a straight gain.
+>
+> **Measured before/after** (`bin/canon_examen`, toy dialect):
+>
+> | case | before | after |
+> |---|---|---|
+> | valid fragment + transclusion | **2 false vitia** | 0 |
+> | orphan `<<#nusquam>>` | **0, exit 0 (silent)** | 1, exit 1 |
+> | duplicate fragment id | 4 false, 0 about the duplicate | 1 correct |
+> | use *before* definition | — | 0 (two passes work) |
+>
+> New vitium genera: `CANON_TRANSCLUSIO_IRRITA`,
+> `CANON_FRAGMENTUM_GEMINUM`. `probatio_canon` 243/243; full suite
+> 136/137 (`planta_lectio` pre-existing, reproduced at HEAD); 41 canons
+> load; **no judged document in the repo uses fragments**, so this is a
+> no-op on the existing corpus.
 
 - [ ] **Step 1: Read the precedent.**
   `_augmenta_cusasque_colligere` (`lib/canon.c:1624-1686`) — one walk
