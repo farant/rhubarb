@@ -1072,6 +1072,119 @@ canon_legere (
     redde canon_ex_nodo(r.elementum_radix, piscina, intern, causa);
 }
 
+/* An attributum 'attr' ab ULLO elemento in scopo declaretur.
+ *
+ * SCOPUS: Xar de chorda* (super=, aut dimidium prius ipsius ad=).
+ * Vacuus AUT NIHIL = elementum quodlibet (mos citationis sine
+ * super=). Ingressus 'stella' idem dicit - STELLA NOMEN ELEMENTI
+ * NON EST, et eam ut titulum legere regulam falsam facit, non
+ * corpus: natura/cocta/individua.canon formam 'ad stella-solidus-
+ * nomen' CDLXX vicibus fert, et regula stellae ignara canonem
+ * generatum maximum totius repositorii recusaret (mensuratum
+ * 2026-08-22, ante hanc emendationem).
+ *
+ * Stella tamen exemptio universalis NON est: attributum alicubi
+ * exsistere adhuc debet, aliter porta muta altera nasceretur.
+ *
+ * Forma 'parens/titulus' (super adstrictum): pars post solidum
+ * titulus elementi est. Definitiones intra= scriptae NUMERANTUR -
+ * quaestio est an ULLA definitio attributum ferat, non quae. */
+interior b32
+_attributum_declaratum (
+              Canon* c,
+             chorda  attr,
+                Xar* scopus)
+{
+               b32  quodlibet;
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+
+    quodlibet = (b32)(scopus == NIHIL
+                   || xar_numerus(scopus) == ZEPHYRUM);
+    si (!quodlibet)
+    {
+        i32 s;
+
+        per (s = ZEPHYRUM; s < xar_numerus(scopus); s++)
+        {
+            chorda* t;
+
+            t = *(chorda**)xar_obtinere(scopus, s);
+            si (   t && t->mensura == I
+                && (character)t->datum[ZEPHYRUM] == '*')
+            {
+                quodlibet = VERUM;
+                frange;
+            }
+        }
+    }
+
+    iter = tabula_dispersa_iterator_initium(c->elementa);
+    dum (tabula_dispersa_iterator_proximum(&iter, &clavis, &valor))
+    {
+        CanonElementum* e;
+                   b32  in_scopo;
+                   i32  a;
+
+        e = (CanonElementum*)valor;
+        si (e == NIHIL || e->titulus == NIHIL)
+        {
+            perge;
+        }
+
+        in_scopo = quodlibet;
+        si (!in_scopo)
+        {
+            i32 s;
+
+            per (s = ZEPHYRUM; s < xar_numerus(scopus); s++)
+            {
+                chorda* t;
+                chorda  pars;
+                   i32  k;
+
+                t     = *(chorda**)xar_obtinere(scopus, s);
+                si (t == NIHIL)
+                {
+                    perge;
+                }
+                pars  = *t;
+                per (k = ZEPHYRUM; k < t->mensura; k++)
+                {
+                    si ((character)t->datum[k] == '/')
+                    {
+                        pars = chorda_sectio(*t, k + I, t->mensura);
+                        frange;
+                    }
+                }
+                si (chorda_aequalis(*e->titulus, pars))
+                {
+                    in_scopo = VERUM;
+                    frange;
+                }
+            }
+        }
+        si (!in_scopo)
+        {
+            perge;
+        }
+
+        per (a = ZEPHYRUM; a < xar_numerus(e->attributa); a++)
+        {
+            CanonAttributum* at;
+
+            at = (CanonAttributum*)xar_obtinere(e->attributa, a);
+            si (   at && at->titulus
+                && chorda_aequalis(*at->titulus, attr))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
 Canon*
 canon_ex_nodo (
               StmlNodus* elementum,
@@ -1567,6 +1680,81 @@ canon_ex_nodo (
 
             locus   = (CanonUnicitas**)xar_addere(c->unicitates);
             *locus  = u;
+        }
+    }
+
+    /* ---- PORTA MUTA CLAUSA: regula attributum IGNOTUM nominans
+     * nihil custodit et custodire videtur.
+     *
+     * Machina 'attributum=' ut CLAVEM INQUISITIONIS adhibet. Si
+     * nomen nihil nominat, inquisitio quaeque nihil reddit, valor
+     * nullus colligitur, duplicatum nullum inveniri POTEST - ergo
+     * regula 'successum' nuntiat. Vitium IV capitis huius linguae
+     * (canon.canon) in facie altera: casus ABSENTIS clausus erat,
+     * casus FALSI NOMINIS non.
+     *
+     * POST regulas lectas iudicatur, quia regula elementa sua in
+     * ordine documenti PRAECEDERE potest.
+     *
+     * TRIA nomina, non unum - citatio duo latera fert. ---- */
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < xar_numerus(c->unicitates); i++)
+        {
+            CanonUnicitas* u;
+
+            u = *(CanonUnicitas**)xar_obtinere(c->unicitates, i);
+            si (   u->attributum
+                && !_attributum_declaratum(c, *u->attributum,
+                                           u->super))
+            {
+                si (causa)
+                {
+                    *causa = chorda_ex_literis(
+                        "unicitas attributum nominat quod nullum "
+                        "elementum in 'super' declarat - porta "
+                        "quae nihil custodit", piscina);
+                }
+                redde NIHIL;
+            }
+        }
+
+        per (i = ZEPHYRUM; i < xar_numerus(c->citationes); i++)
+        {
+            CanonCitatio* ci;
+
+            ci = *(CanonCitatio**)xar_obtinere(c->citationes, i);
+
+            /* latus citans */
+            si (   ci->attributum
+                && !_attributum_declaratum(c, *ci->attributum,
+                                           ci->super))
+            {
+                si (causa)
+                {
+                    *causa = chorda_ex_literis(
+                        "citatio attributum citans nominat quod "
+                        "nullum elementum in 'super' declarat - "
+                        "porta quae nihil custodit", piscina);
+                }
+                redde NIHIL;
+            }
+
+            /* latus clavis (dimidium alterum ipsius 'ad=') */
+            si (   ci->ad_attributum
+                && !_attributum_declaratum(c, *ci->ad_attributum,
+                                           ci->ad_elementa))
+            {
+                si (causa)
+                {
+                    *causa = chorda_ex_literis(
+                        "citatio clavem 'ad' ad attributum dirigit "
+                        "quod nullum elementum declarat - clavis "
+                        "quae nihil aperit", piscina);
+                }
+                redde NIHIL;
+            }
         }
     }
 

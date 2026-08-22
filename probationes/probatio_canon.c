@@ -16,6 +16,7 @@
 #include "filum.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Fixturae - dialectus "hortus" genera valorum omnia exercet
  * ================================================== */
@@ -347,15 +348,16 @@ interior constans character* CATALOGUS_FIXTURA =
     "<aedilis>\taedilis.canon\n"
     "<canon>\tcanon.canon\n";
 
+
 /* ==================================================
  * Auxilia
  * ================================================== */
 
 interior Canon*
-canon_ex_literis(
-    constans character*   literae,
-    Piscina*              piscina,
-    InternamentumChorda*  intern)
+canon_ex_literis (
+     constans character* literae,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     chorda causa;
 
@@ -364,11 +366,11 @@ canon_ex_literis(
 }
 
 interior Xar*
-iudicare_literis(
-    Canon*                canon,
-    constans character*   literae,
-    Piscina*              piscina,
-    InternamentumChorda*  intern)
+iudicare_literis (
+                  Canon* canon,
+     constans character* literae,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     StmlResultus r;
 
@@ -383,8 +385,8 @@ iudicare_literis(
 }
 
 interior i32
-quot_generis(
-    Xar*              vitia,
+quot_generis (
+                 Xar* vitia,
     CanonVitiumGenus  genus)
 {
     i32 summa;
@@ -404,6 +406,7 @@ quot_generis(
 
     redde summa;
 }
+
 
 /* ==================================================
  * Fixturae - fines (spec fines): constrictiones valorum
@@ -447,6 +450,7 @@ interior constans character* CANON_FINES_TEXTUS =
     "      minimum=\"0\"/>\n"
     "  </elementum>\n"
     "</canon>\n";
+
 
 /* ==================================================
  * Fixturae - super adstrictum (spec super-adstrictum): liberi
@@ -516,6 +520,7 @@ interior constans character* SUPER_PERMUTATUM =
     "  </navis>\n"
     "</radix>\n";
 
+
 /* ==================================================
  * Fixturae - glossae (spec glossae): documentatio vernacula.
  * Forma sola canonis est (lingua necessaria per machinam genericam
@@ -560,16 +565,18 @@ interior constans character* PROPRIETAS_CUM_FINIBUS =
     "  </.genus>\n"
     "</natura>\n";
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
                      b32  praeteritus;
-                Piscina*  piscina;
-    InternamentumChorda*  intern;
-                  Canon*  hortus;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                   Canon* hortus;
 
     piscina = piscina_generare_dynamicum("probatio_canon", 262144);
     si (!piscina)
@@ -586,8 +593,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Canon* c;
-        chorda causa;
+         Canon* c;
+        chorda  causa;
 
         imprimere("\n--- Probans lectionem canonis ---\n");
 
@@ -627,6 +634,149 @@ s32 principale (vacuum)
             "</canon>", piscina), piscina, intern, &causa);
         CREDO_NIHIL (c);
         CREDO_CHORDA_NON_VACUA (causa);
+    }
+
+
+    /* ========================================================
+     * PROBARE: regula quae attributum IGNOTUM nominat
+     *
+     * VITIUM IV capitis canon.canon in facie altera: auctores
+     * casum ABSENTIS ('attributum=' deest) clauserunt, casum
+     * FALSI NOMINIS non. Attributum ignotum nominare portam
+     * generat quae nihil custodit et se custodire simulat -
+     * omnis inquisitio nihil reddit, ergo duplicata nulla
+     * inveniuntur, ergo regula 'successum' nuntiat.
+     *
+     * MENSURATUM ante emendationem: unicitas cum
+     * attributum="a-b" (compositum LEGALE, attributum tamen
+     * nullum) documentum cum pari duplicato VITIIS 0 transire
+     * sinebat, et canon.canon ipse nihil dicebat.
+     *
+     * TRIA nomina probanda sunt, non unum: citatio DUO latera
+     * fert (attributum= citans, ad= clavis).
+     * ======================================================== */
+
+    {
+         Canon* c;
+        chorda  causa;
+
+        imprimere("\n--- Probans regulas attributa ignota "
+                  "nominantes ---\n");
+
+        /* --- culpae plantatae: quaeque recusari DEBET --- */
+
+        /* I. unicitas/attributum ignotum */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<unicitas nomen=\"u\" attributum=\"non-tale\""
+            " super=\"item\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NIHIL (c);
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* II. citatio/attributum (latus citans) ignotum */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"non-tale\""
+            " super=\"item\" ad=\"item/a\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NIHIL (c);
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* III. citatio/ad (latus clavis) ignotum - hoc latus
+         * prototypum primum OMISIT */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " super=\"item\" ad=\"item/non-tale\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NIHIL (c);
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* IV. STELLA non est exemptio universalis: 'quodlibet
+         * elementum' exsistentiam adhuc poscit. Sine hac proba
+         * emendatio stellae portam alteram mutam pareret. */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " ad=\"*/non-tale\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NIHIL (c);
+        CREDO_CHORDA_NON_VACUA (causa);
+
+        /* --- CUSTODES: quaeque legi DEBET.
+         * Sine his quattuor probae supra nihil probant: canon
+         * omnis recusatus easdem lineas viridis faceret. --- */
+
+        /* I'. unicitas cum attributo vero */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<unicitas nomen=\"u\" attributum=\"a\""
+            " super=\"item\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
+
+        /* II'. citatio utroque latere vero */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/>"
+            "<attributum nomen=\"b\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " super=\"item\" ad=\"item/b\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
+
+        /* III'. STELLA cum attributo vero - forma quam
+         * natura/cocta/individua.canon CDLXX vicibus fert
+         * (ad stellam, deinde solidus, deinde 'nomen'). Regula
+         * quae stellam ut titulum elementi legit canonem
+         * generatum maximum totius repositorii recusaret. */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " ad=\"*/a\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
+
+        /* IV'. super= ABSENS in citatione = elementum quodlibet
+         * (mos vetus) - idem quod stella dicit */
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"x\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "<citatio nomen=\"c\" attributum=\"a\""
+            " ad=\"item/a\"/>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
     }
 
 
@@ -784,7 +934,7 @@ s32 principale (vacuum)
 
     {
         Canon* arca;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans intra= (formae binae) ---\n");
 
@@ -815,11 +965,11 @@ s32 principale (vacuum)
 
     {
         StmlResultus  r;
-        StmlNodus*    infixus;
-        Canon*        c_inf;
-        Canon*        capsae;
-        Xar*          vitia;
-        chorda        causa;
+           StmlNodus* infixus;
+               Canon* c_inf;
+               Canon* capsae;
+                 Xar* vitia;
+              chorda  causa;
 
         imprimere("\n--- Probans canonem infixum ---\n");
 
@@ -866,8 +1016,8 @@ s32 principale (vacuum)
 
         /* contentum peccans contra infixum */
         {
-            StmlResultus r3;
-            Canon*       c3;
+            StmlResultus  r3;
+                   Canon* c3;
 
             r3 = stml_legere(chorda_ex_literis(
                 VIRIDARIUM_INFIXO_PECCANS, piscina),
@@ -900,7 +1050,7 @@ s32 principale (vacuum)
 
     {
         Canon* bib_canon;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans citationem et scopos ---\n");
 
@@ -951,7 +1101,7 @@ s32 principale (vacuum)
 
     {
         Canon* silvula;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans citationem indicis ---\n");
 
@@ -993,7 +1143,7 @@ s32 principale (vacuum)
 
     {
         Canon* c;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans claves externas ---\n");
 
@@ -1059,7 +1209,7 @@ s32 principale (vacuum)
 
     {
         Canon* c;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans augmentationem ---\n");
 
@@ -1194,7 +1344,7 @@ s32 principale (vacuum)
 
     {
         Canon* c;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans collisionem clavium ---\n");
 
@@ -1268,7 +1418,7 @@ s32 principale (vacuum)
 
     {
         Canon* c;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans genus externum et stellam ---\n");
 
@@ -1362,7 +1512,7 @@ s32 principale (vacuum)
 
     {
         Canon* grex;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans signa valorum ---\n");
 
@@ -1387,7 +1537,7 @@ s32 principale (vacuum)
 
     {
         Canon* grex2;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans dispositionem signorum ---\n");
 
@@ -1449,11 +1599,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        chorda        fons;
-        Canon*        canon_ipse;
+              chorda  fons;
+               Canon* canon_ipse;
         StmlResultus  r;
-        Xar*          vitia;
-        chorda        causa;
+                 Xar* vitia;
+              chorda  causa;
 
         imprimere("\n--- Probans canonem se hospitantem ---\n");
 
@@ -1518,8 +1668,8 @@ s32 principale (vacuum)
              * debilitatio contractus proprii CLAMAT (ambo
              * iudicant - via 'schemaLocation' XSD clausa) */
             {
-                StmlResultus r4;
-                StmlNodus*   inf4;
+                StmlResultus  r4;
+                   StmlNodus* inf4;
 
                 r4 = stml_legere(chorda_ex_literis(
                     VIRIDARIUM_INFIXUS_VITIOSUS, piscina),
@@ -1542,7 +1692,7 @@ s32 principale (vacuum)
 
     {
         Canon* adstrictus;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans super adstrictum ---\n");
 
@@ -1574,7 +1724,7 @@ s32 principale (vacuum)
 
     {
         Canon* finium;
-        Xar*   vitia;
+          Xar* vitia;
 
         imprimere("\n--- Probans fines valorum ---\n");
 
@@ -1690,11 +1840,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Canon* canon_canonum;
-        Canon* canon_naturae;
-        chorda fons;
-        chorda causa;
-        Xar*   vitia;
+         Canon* canon_canonum;
+         Canon* canon_naturae;
+        chorda  fons;
+        chorda  causa;
+           Xar* vitia;
 
         imprimere("\n--- Probans glossas in grammaticis ---\n");
 
@@ -1734,16 +1884,17 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: genus 'titulus' - nomina elementorum punctata
      * (arbor porphyriana 2026-08-10: '<.species>' etc.)
      * ======================================================== */
 
     {
-        chorda   fons;
-        chorda   causa;
-        Canon*   canon_ipse2;
-        Xar*     vitia;
+        chorda  fons;
+        chorda  causa;
+         Canon* canon_ipse2;
+           Xar* vitia;
 
         imprimere("\n--- Probans genus titulus (nomina punctata) ---\n");
 

@@ -520,7 +520,7 @@ birth.
 | pretty/compact switch | `pulchrum` parameter | one line at `silva_arbor.c:1490`; the real size lever |
 | structural compression | — | the 9.8× is where compression should aim; unmeasured |
 | PASTA / API origin arms | `<pasta>`, `<api>` | may stage behind a **named** refusal |
-| canon projection | — | M2 §3, independent of this spec; blocked on canon-side adstricta uniqueness (`canon.canon:20-27`) |
+| canon projection | — | M2 §3 — now specified in `arbor-canon-spec.md`. **The "blocked on adstricta uniqueness" claim that stood here was WRONG** (measured 2026-08-22): `intra=` is fully implemented; what is missing is composite-key uniqueness, and that blocks nothing, since canon.canon and aedilis.canon carry zero uniqueness rules and the projection needs only single-attribute `<fons index>`. See that spec §0.7 |
 
 ## 8. Open
 
