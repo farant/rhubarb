@@ -856,6 +856,49 @@ for arg in "$@"; do
     fi
 done
 
+# NORMALIZATIO FILTRI
+#
+# Filtrum in formam 'probatio_*${FILTER}*.c' inseritur, ergo
+# './compile_tests.sh probatio_canon' in
+# 'probatio_*probatio_canon*.c' vertitur et NIHIL invenit -
+# exitus II, recte sed obscure. Nomen quod operans in effusione
+# VIDET ('probatio_canon', 'Failed: probatio_canon') est ipsum
+# nomen quod re-scribere non potest: instrumentum nomen suum
+# proprium respuit.
+#
+# Formae quas homo revera scribit idem significant:
+#   canon                             (nomen suitae)
+#   probatio_canon                    (nomen ut effusum)
+#   probationes/probatio_canon.c      (via, e completione TAB)
+# Omnes ad 'canon' reducuntur.
+#
+# CLAMAT, non tacet: transformatio tacita filtri est id ipsum
+# genus quod domus vetat ('successum nuntiare sine ope facto').
+# Operans videat quid re vera quaesitum sit.
+#
+# Filtrum in NIHIL cadens ('probatio_' solum) SERVATUR: vacuum
+# 'omnes probationes' significat, et sweep totam ex mendo typico
+# incipere multo peius est quam exitus II.
+if [ -n "$FILTER" ]; then
+    FILTRUM_DATUM="$FILTER"
+    FILTRUM_NOVUM="${FILTER##*/}"        # viam demere
+    FILTRUM_NOVUM="${FILTRUM_NOVUM%.c}"  # extensionem demere
+    FILTRUM_NOVUM="${FILTRUM_NOVUM#probatio_}"
+    if [ -z "$FILTRUM_NOVUM" ]; then
+        if [ $MACHINA -eq 0 ]; then
+            echo "compile_tests: filtrum '$FILTRUM_DATUM' ad nihil" \
+                 "reducitur - servatum ut est (vacuum omnes" \
+                 "probationes vocaret)" >&2
+        fi
+    else
+        FILTER="$FILTRUM_NOVUM"
+        if [ "$FILTER" != "$FILTRUM_DATUM" ] && [ $MACHINA -eq 0 ]; then
+            echo "compile_tests: filtrum '$FILTRUM_DATUM' ->" \
+                 "'$FILTER'" >&2
+        fi
+    fi
+fi
+
 # Fistula III = canalis MACHINAE, seiunctus a canali humano.
 #
 # Cur canalis seiunctus et non sola linea plana in fine: vitium
