@@ -585,6 +585,112 @@ git commit -m "silva: sigillum canonis proprium + porta recentiae (exitus III)"
 
 ---
 
+## T6.5 — Transclusion in canon files themselves
+
+**Added 2026-08-22 (Fran, by fork), after T5 measured the repetition.**
+Defect `01M0NWBAQMFE5N6X3EZP0AK6RA`. Ordered after T6 deliberately: T6's
+seal covers *derivation inputs* (productions, `NOMINA_GENERUM`,
+`ORTHOGRAPHIAE`), not the canon's text, so changing the output's shape
+here does not invalidate it.
+
+### What is already true (measured, not assumed)
+
+A `.canon` file is STML, so fragments already **parse**. Syntax is
+`<#name>…</#>` to define and `<<#name>>` to use — *not* `&name;` (that is
+the SIGNA form for attribute values, a different mechanism; getting this
+wrong produces a parse failure that looks like "fragments are
+unsupported").
+
+| path | transclusion | status |
+|---|---|---|
+| judging (`canon_iudicare`) | resolved transparently | **T3, shipped** |
+| loading (`canon_ex_nodo`) | **silently skipped** | this tranche |
+
+**The failure mode is the worst possible pairing.** `canon.canon` judges a
+fragment-using canon **clean (0 vitia)** — correctly, because T3 sees
+through the fragment — and then the rules built from it carry an *empty*
+content model and reject every document. Green light, wrong behaviour.
+This is spec §0.4's mute gate one level up: T3 closed it for documents and
+left it open for canon files.
+
+Proof of the diagnosis, reproduce before fixing: one element carrying an
+inline `<liberum>` **and** a transcluded one. Inline → clean; transcluded
+→ `liberum hic non licet`. That isolates transclusion from every other
+cause.
+
+### Why this and not element groups
+
+Transclusion is **textual factoring** — the canon still says "one of these
+19", written once. Element groups / substitution classes would be **schema
+abstraction**, a new concept in the canon language; spec §6 reserves them
+and they touch codegen. Transclusion gets most of the benefit at a
+fraction of the cost, and needs no new vitium genera: XVIII–XX (orphan,
+duplicate, cyclic) already exist from T3, so the loading path **reuses**
+T3's collection rather than inventing a second mechanism — the same
+`augmentum` lesson that shaped T2/T3.
+
+### The repetition it addresses (measured on the shipped `c89.canon`)
+
+335 elements carry children; **123 distinct content models**; 63%
+duplication. The three biggest:
+
+| block | × | what it is |
+|---|---:|---|
+| 19 genera | 12 | the grammar's `expressio` nonterminal |
+| 14 genera | 6 | the grammar's `sententia` nonterminal |
+| all 94 lexemes | 11 | "unparsed token run" (directives, regions, extenta) |
+
+The first two are **names the grammar has and the closure erased**.
+`<<#expressio>>` at each use site restores the name — which is the point,
+beyond the ~1,300 lines saved. The remaining duplication (89 identical
+token elements, ~41 one-line loci) is emitter uniformity and should be
+left alone; factoring it buys nothing.
+
+### Steps
+
+- [ ] **Step 1: Read the T3 seam.** `_fragmenta_colligere`,
+  `_transclusionis_petitum`, `_liberos_effectivos` in `lib/canon.c` — the
+  loading path wants the same collect-then-resolve shape, not a new one.
+
+- [ ] **Step 2: Write the failing test first**, in
+  `probationes/probatio_canon.c`. The planted fault and its control are
+  the inline/transcluded pair above — a transcluded `<liberum>` must
+  behave **identically** to an inline one. Equivalence *is* the
+  definition, exactly as in T3; do not test a proxy.
+  Also assert the three T3 refusals still fire from the loading path:
+  orphan `<<#nusquam>>`, duplicate `<#x>` twice, cyclic.
+
+- [ ] **Step 3: Run, confirm the transcluded case fails** with
+  `liberum hic non licet` (not some other error).
+
+- [ ] **Step 4: Implement** in `canon_ex_nodo`: collect fragments first
+  (definitions may follow uses), then walk the effective child list.
+  `<attributum>`, `<liberum>` and `<optio>` should all resolve — a
+  fragment holding attributes is as useful as one holding children.
+
+- [ ] **Step 5: Declare it in `canon.canon`** — a fragment child of
+  `<canon>`, and the dialect must still judge itself clean.
+
+- [ ] **Step 6: Regression bar** — all 41 canons still load, 2,046 rules.
+  A change to the loading path touches every dialect.
+
+- [ ] **Step 7: Emitter factoring.** `<#expressio>`, `<#sententia>`,
+  `<#lexemata>` emitted once; use sites transclude. Derive the fragment
+  membership from the model (do not hand-list), and **name the fragments
+  after the grammar nonterminals they came from**.
+
+- [ ] **Step 8: Re-run the T5 gates.** `canon.canon` clean; roundtrip
+  corpus 73/73; `probatio_silva_canon` — its pinned counts (95/176/75)
+  will move, and moving them is the announcement, not a nuisance.
+
+```bash
+git add lib/canon.c canon.canon probationes/probatio_canon.c \
+        silva/instrumenta/silva_canon_coquere.c silva/c89.canon
+git commit -m "canon: transclusio in plagulis canonis (porta muta gradus superioris)"
+```
+
+---
+
 ## T7 — The corpus gate
 
 Spec §5. **The real gate.**
