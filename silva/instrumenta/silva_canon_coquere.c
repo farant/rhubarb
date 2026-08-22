@@ -5,8 +5,32 @@
 #include "silva_token.h"
 #include "piscina.h"
 #include "xar.h"
+#include "chorda_aedificator.h"
+#include "friatio.h"
 #include <stdio.h>
 #include <string.h>
+
+hic_manens constans character* HEX_CIFRAE = "0123456789abcdef";
+
+/* Basis viae (post ultimum solidum).
+ *
+ * CUR: artificium COMMISSUM functio PURA introituum suorum esse
+ * debet. Via exitus et via grammaticae ab INVOCATIONE pendent
+ * (generare.sh ex silva/ currit, porta ex radice), ergo eas in
+ * caput scribere duas regenerationes RECTAS dissentire faceret -
+ * et porta quae exitum confert de re innoxia clamaret. */
+interior constans character*
+_basis (constans character* via)
+{
+    constans character* ultimum;
+
+    si (via == NIHIL)
+    {
+        redde "";
+    }
+    ultimum = strrchr(via, '/');
+    redde (ultimum != NIHIL) ? ultimum + I : via;
+}
 
 /* ==================================================
  * Auxiliares
@@ -767,6 +791,232 @@ _genera_scribere (
 }
 
 /* ==================================================
+ * SIGILLUM PROPRIUM (T6)
+ *
+ * CUR NON 'registrum-sigillum': illud (silva_arbor_sigillum) SOLAS
+ * tabulas generum et locorum tegit. Productiones NON tegit. Ergo
+ * 'si/consequens' emendare ut genus novum sententiae admittat
+ * sigillum illud INTACTUM relinquit dum exemplar contenti omne
+ * proiectum tacite falsum fit (spec par. 0.2). Canon proiectus
+ * sigillum illud mutuari NEQUIT: suum poscit, super suos fontes.
+ *
+ * QUID TEGITUR: id quod emissor VERE legit, non quod spec
+ * coniecit. Spec ORTHOGRAPHIAS nominaverat - emissor eas NON legit
+ * (tabula lateris arboris est; emissor eam REPETIT, et probatio
+ * repetitionem custodit). Sigillum quod fontem non-lectum tegeret
+ * de re innoxia clamaret, et porta quae falso clamat neglegitur.
+ *
+ * DIVISIO OPERIS, consulto:
+ *   sigillum + porta recentiae -> DATUM mutatum (grammatica,
+ *     tabulae, nomina generum) artificium stalum relinquens
+ *   probatio_silva_canon       -> CODEX mutatus (emissor ab
+ *     arbore divergens)
+ * Neutrum alterum tegit; simul rimam claudunt.
+ * ================================================== */
+
+interior vacuum
+_campum (ChordaAedificator* m, constans chorda* c)
+{
+    /* Separator post CAMPUM QUEMQUE (mos silva_arbor_sigillum):
+     * sine eo 'ab'+'c' et 'a'+'bc' idem sigillum darent */
+    si (c != NIHIL)
+    {
+        chorda_aedificator_appendere_chorda(m, *c);
+    }
+    chorda_aedificator_appendere_character(m, '\n');
+}
+
+interior vacuum
+_campum_literis (ChordaAedificator* m, constans character* s)
+{
+    si (s != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(m, s);
+    }
+    chorda_aedificator_appendere_character(m, '\n');
+}
+
+interior chorda
+_sigillum_computare (
+    SilvaGenGrammatica* g,
+                  Xar*  genera)
+{
+    ChordaAedificator* m;
+    ChordaAedificator* exitus;
+                chorda friandum;
+                chorda vacua;
+                   i32 friatum;
+                   i32 i;
+                   i32 k;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum   = NIHIL;
+
+    m = chorda_aedificator_creare(g->piscina, 8192);
+    si (m == NIHIL)
+    {
+        redde vacua;
+    }
+
+    /* Versio RATIONIS ipsius: si recipe sigilli mutetur, sigillum
+     * mutari DEBET, aliter artificia duarum aetatum idem sigillum
+     * ferrent */
+    _campum_literis(m, "canon-sigillum-1");
+
+    /* I. Symbolum initiale - vocabularium radicis inde fluit */
+    {
+        SilvaGenSymbolum* initium = (SilvaGenSymbolum*)xar_obtinere(
+            g->symbola, (i32)g->initium_index);
+
+        _campum(m, initium != NIHIL ? initium->titulus : NIHIL);
+    }
+
+    /* II. PRODUCTIONES cum annotationibus - rima quam par. 0.2
+     * nominat. Dextrum symbolorum ET loci parallelae feruntur:
+     * ambo exemplar contenti mutant. */
+    per (i = ZEPHYRUM; i < xar_numerus(g->productiones); i++)
+    {
+        SilvaGenProductio* p = (SilvaGenProductio*)xar_obtinere(
+            g->productiones, i);
+        SilvaGenSymbolum*  s;
+
+        si (p == NIHIL)
+        {
+            perge;
+        }
+        s = (SilvaGenSymbolum*)xar_obtinere(g->symbola,
+                                            (i32)p->sinistrum);
+        _campum(m, s != NIHIL ? s->titulus : NIHIL);
+        _campum(m, p->genus);
+        _campum(m, p->id);
+        _campum(m, p->modus);
+
+        per (k = ZEPHYRUM; k < xar_numerus(p->dextrum); k++)
+        {
+            s32*                atomus;
+            SilvaGenLocusMappa* mappa;
+
+            atomus = (s32*)xar_obtinere(p->dextrum, k);
+            mappa  = (SilvaGenLocusMappa*)xar_obtinere(p->loci, k);
+            si (atomus != NIHIL)
+            {
+                s = (SilvaGenSymbolum*)xar_obtinere(g->symbola,
+                                                    (i32)*atomus);
+                _campum(m, s != NIHIL ? s->titulus : NIHIL);
+            }
+            alioquin
+            {
+                _campum(m, NIHIL);
+            }
+            si (mappa != NIHIL)
+            {
+                _campum(m, mappa->titulus);
+                chorda_aedificator_appendere_s32(m,
+                    mappa->appendere ? I : ZEPHYRUM);
+            }
+            chorda_aedificator_appendere_character(m, '\n');
+        }
+        chorda_aedificator_appendere_literis(m, "|\n");
+    }
+
+    /* III. Genera extra - 'slots' chorda CRUDA est, ergo verbatim */
+    per (i = ZEPHYRUM; i < xar_numerus(g->genera_extra); i++)
+    {
+        SilvaGenGenusExtra* e = (SilvaGenGenusExtra*)xar_obtinere(
+            g->genera_extra, i);
+
+        si (e == NIHIL)
+        {
+            perge;
+        }
+        _campum(m, e->titulus);
+        _campum(m, e->loci_descriptio);
+    }
+
+    /* IV. Registrum generum et locorum cum SPECIEBUS - quod
+     * 'registrum-sigillum' quoque tegit, hic retentum ut sigillum
+     * hoc illius SUPERSET sit, non alternativum */
+    per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
+    {
+        SilvaGenGenusDef* d = (SilvaGenGenusDef*)xar_obtinere(genera, i);
+
+        si (d == NIHIL)
+        {
+            perge;
+        }
+        _campum(m, d->titulus);
+        per (k = ZEPHYRUM; k < xar_numerus(d->loci); k++)
+        {
+            SilvaGenLocusDef* l = (SilvaGenLocusDef*)xar_obtinere(
+                d->loci, k);
+
+            si (l == NIHIL)
+            {
+                perge;
+            }
+            _campum(m, l->titulus);
+            chorda_aedificator_appendere_s32(m, l->species);
+            chorda_aedificator_appendere_character(m, '\n');
+        }
+        chorda_aedificator_appendere_literis(m, "|\n");
+    }
+
+    /* V. NOMINA GENERUM lexematum - tags 'lex-*' inde manant, ergo
+     * nomen mutatum canonem stalum facit */
+    per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
+    {
+        _campum_literis(m,
+            silva_lexema_genus_nomen((SilvaLexemaGenus)i));
+    }
+
+    friandum = chorda_aedificator_spectare(m);
+    friatum  = friatio_fnv1a_literis(
+        (constans character*)friandum.datum, friandum.mensura);
+    chorda_aedificator_destruere(m);
+
+    /* Hexadecimale VIII characterum, ante-implitum - longitudo FIXA
+     * quia sigilla oculo conferuntur (eadem ratio ac arbor) */
+    exitus = chorda_aedificator_creare(g->piscina, IX);
+    si (exitus == NIHIL)
+    {
+        redde vacua;
+    }
+    per (i = ZEPHYRUM; i < VIII; i++)
+    {
+        i32 gradus  = (VIII - I - i) * IV;
+        i32 nibble  = (friatum >> gradus) & (i32)0xF;
+
+        chorda_aedificator_appendere_character(exitus,
+            HEX_CIFRAE[nibble]);
+    }
+    redde chorda_aedificator_finire(exitus);
+}
+
+
+chorda
+silva_gen_canonem_sigillum (
+    SilvaGenGrammatica* grammatica)
+{
+    chorda vacua;
+    Xar*   genera;
+
+    vacua.mensura = ZEPHYRUM;
+    vacua.datum   = NIHIL;
+
+    si (grammatica == NIHIL)
+    {
+        redde vacua;
+    }
+    genera = silva_gen_registrum_computare(grammatica);
+    si (genera == NIHIL)
+    {
+        redde vacua;
+    }
+    redde _sigillum_computare(grammatica, genera);
+}
+
+
+/* ==================================================
  * Superficies
  * ================================================== */
 
@@ -820,11 +1070,12 @@ silva_gen_canonem_scribere (
 
     fprintf(pl,
         "<!--\n"
-        "  %s\n"
+        "  %s.canon\n"
         "  GENERATUM - NE MANU EDITES.\n"
         "\n"
         "  Fons: %s\n"
         "  Regeneratio: ./silva/generare.sh\n"
+        "  Recentia: ./tools/silva_canon.sh -probare\n"
         "\n"
         "  Canon documentorum <parsura> (arbor M2 par. 3): schema\n"
         "  quo documenta arboris iudicantur. Duae partes:\n"
@@ -840,9 +1091,30 @@ silva_gen_canonem_scribere (
         "  Cardinalitas: locus quisque SEMEL aut nusquam (minimum\n"
         "  ZERO ordinarius est - absentia loci canonica est, e.g.\n"
         "  definitio-ansi locum tertium NIHIL relinquit).\n"
-        "-->\n"
-        "<canon dialectus=\"%s\" versio=\"1\">\n\n",
-        via, via_grammaticae, dialectus);
+        "\n"
+        "  SIGILLUM infra fontes DERIVATIONIS tegit (productiones\n"
+        "  cum annotationibus, genera-extra, registrum, nomina\n"
+        "  generum lexematum) - NON solas tabulas, quas\n"
+        "  'registrum-sigillum' documenti tegit. Distinctio\n"
+        "  necessaria: productio mutata exemplar contenti mutat\n"
+        "  dum tabulae intactae manent.\n"
+        "-->\n",
+        dialectus, _basis(via_grammaticae));
+
+    {
+        chorda sigillum = _sigillum_computare(grammatica, genera);
+
+        si (sigillum.mensura == ZEPHYRUM)
+        {
+            fprintf(stderr, "canon: sigillum computari non potuit\n");
+            fclose(pl);
+            redde FALSUM;
+        }
+        fprintf(pl, "<canon dialectus=\"%s\" versio=\"1\""
+            " sigillum=\"%.*s\">\n\n",
+            dialectus, (int)sigillum.mensura,
+            (constans character*)sigillum.datum);
+    }
 
     _involucrum_scribere(pl, genera_radicis);
     _lexemata_scribere(pl);

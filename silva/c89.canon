@@ -2,8 +2,9 @@
   c89.canon
   GENERATUM - NE MANU EDITES.
 
-  Fons: grammatica/c89.stml
+  Fons: c89.stml
   Regeneratio: ./silva/generare.sh
+  Recentia: ./tools/silva_canon.sh -probare
 
   Canon documentorum <parsura> (arbor M2 par. 3): schema
   quo documenta arboris iudicantur. Duae partes:
@@ -19,8 +20,15 @@
   Cardinalitas: locus quisque SEMEL aut nusquam (minimum
   ZERO ordinarius est - absentia loci canonica est, e.g.
   definitio-ansi locum tertium NIHIL relinquit).
+
+  SIGILLUM infra fontes DERIVATIONIS tegit (productiones
+  cum annotationibus, genera-extra, registrum, nomina
+  generum lexematum) - NON solas tabulas, quas
+  'registrum-sigillum' documenti tegit. Distinctio
+  necessaria: productio mutata exemplar contenti mutat
+  dum tabulae intactae manent.
 -->
-<canon dialectus="c89" versio="1">
+<canon dialectus="c89" versio="1" sigillum="8b92ecb4">
 
   <!-- =============== INVOLUCRUM ===============
        Forma SCRIPTORIS (silva_arbor.c), non grammaticae:

@@ -33,4 +33,20 @@ silva_gen_canonem_scribere (
     constans character* via,
     constans character* via_grammaticae);
 
+/* Sigillum fontium DERIVATIONIS: productiones cum annotationibus,
+ * genera-extra, registrum generum/locorum, nomina generum
+ * lexematum. VIII characteres hexadecimales; chorda vacua in
+ * errore.
+ *
+ * NON idem ac 'registrum-sigillum' documenti (silva_arbor_sigillum):
+ * illud tabulas SOLAS tegit, ergo productio mutata eum INTACTUM
+ * relinquit dum exemplar contenti proiectum mutatur (spec par. 0.2).
+ * Hoc superset illius est.
+ *
+ * Publicum ut probatio sensibilitatem eius ASSERERE possit: sigillum
+ * quem nemo frangi vidit sigillum est quem nemo scit operari. */
+chorda
+silva_gen_canonem_sigillum (
+    SilvaGenGrammatica* grammatica);
+
 #endif /* SILVA_CANON_COQUERE_H */

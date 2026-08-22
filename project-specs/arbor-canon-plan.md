@@ -548,35 +548,111 @@ git commit -m "silva: canon c89 generatus ex grammatica"
 
 ---
 
-## T6 — Its own seal, and freshness
+## T6 — Its own seal, and freshness *(SHIPPED 2026-08-22)*
 
 Spec §0.2 and §4.3. **Do not skip on the grounds that `registrum-sigillum` exists.**
 
-- [ ] **Step 1: Enumerate the real derivation inputs.** Spec §7 leaves
+> **EXECUTION NOTES.**
+>
+> **(a) Step 1 was right to distrust the spec's list.** §4.3 named
+> `ORTHOGRAPHIAE` as a seal input. **The emitter does not read it** — it
+> *restates* it (T5 note (d)), and `probatio_silva_canon` guards the
+> restatement. Sealing a source the emitter never reads would make the
+> gate fire on a change that cannot alter the output — the exact
+> "*porta quae falso clamat mox neglegitur*" failure `natura_canones.sh`
+> documents. Sealed instead: **productions with annotations,
+> genera-extra, the genus/locus registry, and `NOMINA_GENERUM`**.
+>
+> Division of labour, and neither half covers the other:
+> - **seal + freshness gate** → *data* drift (grammar, tables, names)
+>   leaving a stale artifact
+> - **`probatio_silva_canon`** → *code* drift (emitter diverging from
+>   the arbor writer)
+>
+> **(b) The §0.2 hole, demonstrated rather than asserted.** Changed
+> `sententia@consequens` → `declaratio@consequens` in `si` (both
+> nonterminals, so both project to species NODUS):
+>
+> | | before | after |
+> |---|---|---|
+> | genus/locus tables (all `registrum-sigillum` covers) | — | **byte-identical** |
+> | `si/consequens` content model | 14 statement genera | 1 |
+> | canon seal | `8b92ecb4` | `2ea300ec` |
+>
+> `registrum-sigillum` would not have moved. This is now a suite
+> assertion (§VIII of the probatio), mutating the grammar **in memory**
+> so the file on disk is never touched.
+>
+> **(c) A committed artifact must be invocation-independent — found the
+> hard way.** The header embedded the output path and the grammar path,
+> both of which vary by caller (`generare.sh` runs from `silva/`, the
+> gate from the repo root). Two *correct* regenerations therefore
+> disagreed, which would make an output-comparing gate cry wolf on the
+> first run. Fixed by emitting **basenames only**. Any generated file
+> compared byte-wise needs this property; check for it before building
+> the comparison.
+>
+> **(d) A bug in the gate's own guard list, found by trying to make it
+> fire.** I had put the grammar in the "is the binary stale?" guard.
+> The grammar is not compiled into the binary, so a grammar edit
+> reported **exit 2 (tool stale)** instead of **exit 1 (canon stale)** —
+> the gate masking the single case it exists to catch. The guard list
+> answers "is the *binary* stale", and only compiled sources belong in
+> it.
+>
+> **(e) Exit 3's honest mapping here.** Nothing is cooked *from*
+> `c89.canon` (unlike natura, which has generated readers), so 3 cannot
+> mean "downstream now stale". It keeps the other half of the contract —
+> *unknown is never reported as 0* — and means **canon written, validity
+> unexplored** (`bin/canon_examen` or `canon.canon` absent, or the
+> written canon rejected).
+>
+> **(f) `-canon` mode on the generator** writes only the canon and skips
+> LALR construction entirely (the projection reads the grammar, not the
+> baked tables). 0.02s, so the gate is cheap enough to run often.
+
+**Gates, each falsified — and note the sequencing trap below:**
+
+| planted fault | expected | got |
+|---|---|---|
+| grammar edited | 1 + seal **changed** | `8b92ecb4 → a623c699`, "fontes derivationis" |
+| canon hand-edited, grammar intact | 1 + seal **identical** | "EMISSOR mutatus, non grammatica" |
+| guard source newer than binary | 2, names the builder | ✓ |
+| guard source **absent** | 2 (the silent hole natura warned of) | ✓ |
+| `bin/canon_examen` absent | **3**, never 0 | ✓ |
+| unknown argument | 2, never a silent write | ✓ |
+
+**Sequencing trap, recorded because it nearly passed unnoticed:** the
+`touch` from the stale-binary fault was not undone, so the next two
+faults hit the stale-binary gate *first*. One of them still returned the
+expected exit code — **right answer, wrong reason**. Rebuild between
+planted faults, and check the *message*, not just the code.
+
+- [x] **Step 1: Enumerate the real derivation inputs.** Spec §7 leaves
   this deliberately to the implementer: build the seal from the tables
   the derivation *actually reads*, not from the spec's guess. At minimum
   the grammar productions, `NOMINA_GENERUM`, and `ORTHOGRAPHIAE` —
   `silva_arbor_sigillum` (`silva_arbor.c:149-235`) covers **none** of
   these, which is exactly the hole.
 
-- [ ] **Step 2: Write the failing test — the planted fault at birth.**
+- [x] **Step 2: Write the failing test — the planted fault at birth.**
   Change a production; the freshness check must fail. This test is the
   entire point of the tranche: §0.2 exists because a seal was trusted
   without anyone watching it fail.
 
-- [ ] **Step 3: Run, confirm fail.**
+- [x] **Step 3: Run, confirm fail.**
 
-- [ ] **Step 4: Implement the seal and `tools/silva_canon.sh`**, copying
+- [x] **Step 4: Implement the seal and `tools/silva_canon.sh`**, copying
   `natura_canones.sh`'s contract exactly:
   - `-probare`: 0 fresh / 1 stale / 2 nothing judged. **Never 3.**
   - bare (regenerates): 0 whole chain fresh / 2 defect / **3 = canon
     written but downstream now stale**; 3 also when the downstream gate
     could not run — *unknown is never reported as 0.*
 
-- [ ] **Step 5: Run; confirm the planted fault fails and a fresh tree
+- [x] **Step 5: Run; confirm the planted fault fails and a fresh tree
   passes.**
 
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ```bash
 git add silva/instrumenta/silva_coquere.c tools/silva_canon.sh

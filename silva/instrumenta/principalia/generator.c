@@ -70,14 +70,28 @@ s32 principale (integer argc, character** argv)
     SilvaGenGrammatica* grammatica;
     SilvaGenCollectio* collectio;
     SilvaGenTabula* tabula;
+    constans character* via_grammaticae;
+    b32 canon_solus;
 
-    si (argc != IV && argc != VI && argc != VIII)
+    /* MODUS CANONIS SOLIUS: porta recentiae canonem in locum
+     * TEMPORARIUM scribere debet ut exitum conferat, et tabulas
+     * interea NON tangere. Tabulae LALR huic nihil conferunt
+     * (proiectio grammaticam ipsam legit, non tabulas coctas),
+     * ergo hic modus collectionem omnino praeterit - quod eum
+     * etiam CELEREM facit, id quod porta saepe currenda poscit. */
+    canon_solus = (b32)(argc == V
+        && strcmp(argv[I], "-canon") == ZEPHYRUM);
+
+    si (!canon_solus && argc != IV && argc != VI && argc != VIII)
     {
         fprintf(stderr,
             "usus: generator <grammatica.stml> <PRAEFIXUM> <basis_exitus>"
-            " [<caput_publicum> <hospes> [<canon> <dialectus>]]\n");
+            " [<caput_publicum> <hospes> [<canon> <dialectus>]]\n"
+            "      generator -canon <grammatica.stml> <dialectus>"
+            " <exitus.canon>\n");
         redde I;
     }
+    via_grammaticae = canon_solus ? argv[II] : argv[I];
 
     piscina = piscina_generare_dynamicum("silva_generator", 33554432);
     si (piscina == NIHIL)
@@ -87,10 +101,11 @@ s32 principale (integer argc, character** argv)
     }
     intern = internamentum_creare(piscina);
 
-    fons = _plagulam_legere(piscina, argv[I]);
+    fons = _plagulam_legere(piscina, via_grammaticae);
     si (fons == NIHIL)
     {
-        fprintf(stderr, "generator: grammatica non lecta: %s\n", argv[I]);
+        fprintf(stderr, "generator: grammatica non lecta: %s\n",
+            via_grammaticae);
         redde I;
     }
 
@@ -99,6 +114,18 @@ s32 principale (integer argc, character** argv)
     {
         fprintf(stderr, "generator: grammatica invalida\n");
         redde I;
+    }
+
+    si (canon_solus)
+    {
+        si (!silva_gen_canonem_scribere(grammatica, argv[III], argv[IV],
+                 via_grammaticae))
+        {
+            fprintf(stderr, "generator: canon scribi non potuit\n");
+            redde I;
+        }
+        piscina_destruere(piscina);
+        redde ZEPHYRUM;
     }
 
     si (!silva_gen_first_computare(grammatica)

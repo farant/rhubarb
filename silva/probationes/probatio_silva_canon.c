@@ -28,6 +28,8 @@
 #include "canon.h"
 #include "silva_arbor.h"
 #include "silva_token.h"
+#include "silva_generare.h"
+#include "silva_canon_coquere.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -435,6 +437,114 @@ principale (vacuum)
         }
         CREDO_VERUM  (habet_titulum);
         CREDO_FALSUM (habet_abstractum);
+    }
+
+    /* ============================================================
+     * VIII. SIGILLUM PROPRIUM (T6) - SENSIBILITAS ASSERTA
+     *
+     * Spec par. 0.2: 'si/consequens' emendare ut genus aliud
+     * admittat tabulas generum et locorum INTACTAS relinquit -
+     * ergo 'registrum-sigillum' documenti immotum manet dum
+     * exemplar contenti proiectum omnino mutatur. Ea est rima
+     * propter quam hoc sigillum exsistit.
+     *
+     * Hic ea rima IPSA plantatur: grammatica in MEMORIA mutatur
+     * (plagula intacta manet), et sigillum MUTARI debet. Sigillum
+     * quem nemo frangi vidit sigillum est quem nemo scit operari -
+     * eadem lex quae hunc gradum peperit.
+     * ============================================================ */
+    {
+              character  via_grammaticae[512];
+                 chorda  fons_grammaticae;
+     SilvaGenGrammatica* g_sana;
+                 chorda  sig_sana;
+
+        sprintf(via_grammaticae, "%s/silva/grammatica/c89.stml",
+                radix_via);
+        fons_grammaticae = _plagulam_legere(piscina, via_grammaticae);
+        CREDO_NON_NIHIL (fons_grammaticae.datum);
+
+        si (fons_grammaticae.datum != NIHIL)
+        {
+            g_sana = silva_gen_grammaticam_legere(piscina, intern,
+                (constans character*)fons_grammaticae.datum);
+            CREDO_NON_NIHIL (g_sana);
+
+            si (g_sana != NIHIL)
+            {
+                sig_sana = silva_gen_canonem_sigillum(g_sana);
+                CREDO_AEQUALIS_I32 (sig_sana.mensura, (i32)8);
+
+                /* sigillum canonis commissi cum computato congruere
+                 * debet - aliter artificium rancidum est */
+                {
+                    chorda* attr = stml_attributum_capere(canon_radix,
+                                                          "sigillum");
+                    CREDO_NON_NIHIL (attr);
+                    si (attr != NIHIL)
+                    {
+                        si (!chorda_aequalis(*attr, sig_sana))
+                        {
+                            imprimere("  SIGILLUM RANCIDUM: canon %.*s,"
+                                " grammatica %.*s\n",
+                                (integer)attr->mensura,
+                                (character*)attr->datum,
+                                (integer)sig_sana.mensura,
+                                (character*)sig_sana.datum);
+                        }
+                        CREDO_VERUM (chorda_aequalis(*attr, sig_sana));
+                    }
+                }
+
+                /* CULPA PLANTATA: productio mutata, tabulae immotae */
+                {
+                    character* copia;
+                    character* sedes;
+                    constans character* VETUS =
+                        "sententia@consequens";
+                    constans character* NOVUM =
+                        "declaratio@consequens";
+
+                    copia = (character*)piscina_allocare(piscina,
+                        (memoriae_index)fons_grammaticae.mensura + I);
+                    CREDO_NON_NIHIL (copia);
+                    si (copia != NIHIL)
+                    {
+                        memcpy(copia, fons_grammaticae.datum,
+                            (memoriae_index)fons_grammaticae.mensura);
+                        copia[fons_grammaticae.mensura] = '\0';
+
+                        sedes = strstr(copia, VETUS);
+                        /* Si grammatica hoc verbum non iam fert,
+                         * probatio TACERET - ergo id asseritur */
+                        CREDO_NON_NIHIL (sedes);
+                        si (sedes != NIHIL)
+                        {
+                            SilvaGenGrammatica* g_mutata;
+                            chorda              sig_mutata;
+
+                            memcpy(sedes, NOVUM, strlen(NOVUM));
+                            g_mutata = silva_gen_grammaticam_legere(
+                                piscina, intern, copia);
+                            CREDO_NON_NIHIL (g_mutata);
+                            si (g_mutata != NIHIL)
+                            {
+                                sig_mutata =
+                                    silva_gen_canonem_sigillum(g_mutata);
+                                imprimere("  sigillum sanum %.*s ->"
+                                    " mutatum %.*s\n",
+                                    (integer)sig_sana.mensura,
+                                    (character*)sig_sana.datum,
+                                    (integer)sig_mutata.mensura,
+                                    (character*)sig_mutata.datum);
+                                CREDO_FALSUM (chorda_aequalis(sig_sana,
+                                                              sig_mutata));
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     credo_imprimere_compendium();

@@ -40,6 +40,14 @@
   <elementum nomen="canon" radix="verum">
     <attributum nomen="dialectus" genus="nomen"   necessarium="verum"/>
     <attributum nomen="versio"    genus="numerus" necessarium="verum"/>
+    <attributum nomen="sigillum"  genus="nomen"
+      nota="canonibus GENERATIS: sigillum fontium derivationis.
+            Optionale quia canon manu scriptus fontem non habet -
+            necessarium eum mentiri cogeret. Petitor primus:
+            silva/c89.canon (2026-08-22, arbor M2 par. 3), cui
+            'registrum-sigillum' documenti NON sufficit - illud
+            tabulas solas tegit, non productiones, ergo grammatica
+            mutata canonem tacite falsum relinqueret."/>
     <liberum nomen="elementum" minimum="1"
       nota="canon sine elementis nihil describit"/>
     <liberum nomen="unicitas"/>
