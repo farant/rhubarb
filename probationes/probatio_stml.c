@@ -3316,6 +3316,166 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * XIV. LEXEMATA - fluxus publicus sine arbore
+     * ================================================== */
+
+    imprimere("\nXIV. Lexemata (stml_lexemata_colligere)\n");
+
+    {
+        /* A. TOTALITAS: lexemata input CONTIGUE et TOTUM tegunt.
+         *
+         * Oraculum fortius quam numerus lexematum: hiatus inter
+         * finem unius et initium proximi = octeti quos pictor
+         * numquam coloraret et nemo desideraret - vitium quod
+         * numerando invisibile est. */
+        chorda      ingressus;
+        Xar*        fluxus;
+        i32         k;
+        i32         tectum;
+        StmlLexema* lx;
+
+        ingressus = chorda_ex_literis(
+            "<radix a=\"1\">textus<#f/><<#f>></radix>", piscina);
+        fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
+        CREDO_VERUM(fluxus != NIHIL);
+        CREDO_VERUM(xar_numerus(fluxus) > ZEPHYRUM);
+
+        tectum = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < xar_numerus(fluxus); k++)
+        {
+            lx = (StmlLexema*)xar_obtinere(fluxus, k);
+            CREDO_AEQUALIS_I32(lx->initium, tectum);
+            CREDO_VERUM(lx->finis > lx->initium);
+            tectum = lx->finis;
+        }
+        CREDO_AEQUALIS_I32(tectum, ingressus.mensura);
+
+        imprimere("  A totalitas: %d lexemata, %d octeti tecti\n",
+            (integer)xar_numerus(fluxus), (integer)tectum);
+    }
+
+    {
+        /* B. SIGILLA DISCERNUNTUR - id ipsum propter quod lexator
+         * HTML STML colorare non potest: ille '<#f/>' et '<<#f>>'
+         * in 'tag' unum planaret. */
+        chorda      ingressus;
+        Xar*        fluxus;
+        i32         k;
+        b32         fragmentum;
+        b32         transclusio;
+        b32         crudus;
+        b32         percentum;
+        StmlLexema* lx;
+
+        ingressus = chorda_ex_literis(
+            "<#f/><<#f>><x!>crudum</x><% &clavis;></%>", piscina);
+        fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
+        CREDO_VERUM(fluxus != NIHIL);
+
+        fragmentum  = FALSUM;
+        transclusio = FALSUM;
+        crudus      = FALSUM;
+        percentum   = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(fluxus); k++)
+        {
+            lx = (StmlLexema*)xar_obtinere(fluxus, k);
+            si (lx->genus == STML_TOKEN_FRAGMENTUM_AUTO)
+            {
+                fragmentum = VERUM;
+            }
+            si (lx->genus == STML_TOKEN_TRANSCLUSIO)
+            {
+                transclusio = VERUM;
+            }
+            si (lx->genus == STML_TOKEN_CRUDUS)
+            {
+                crudus = VERUM;
+            }
+            si (lx->genus == STML_TOKEN_PERCENTUM_APERIRE)
+            {
+                percentum = VERUM;
+            }
+        }
+        CREDO_VERUM(fragmentum);
+        CREDO_VERUM(transclusio);
+        CREDO_VERUM(crudus);
+        CREDO_VERUM(percentum);
+
+        imprimere("  B sigilla: fragmentum/transclusio/crudus/"
+            "percentum omnia discreta\n");
+    }
+
+    {
+        /* C. CONTENTUM CRUDUM SINE PARSATORE: '<b>' intra '<x!>'
+         * textus est, non tag. Haec est proprietas quae gyrum
+         * nudum tokenum omnino possibilem facit - modum crudum
+         * '_tok_proximus' ipse regit. Si parsator eum regeret,
+         * haec assertio caderet. */
+        chorda      ingressus;
+        Xar*        fluxus;
+        i32         k;
+        i32         aperturae;
+        StmlLexema* lx;
+
+        ingressus = chorda_ex_literis("<x!>a<b>c</x>", piscina);
+        fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
+        CREDO_VERUM(fluxus != NIHIL);
+
+        aperturae = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < xar_numerus(fluxus); k++)
+        {
+            lx = (StmlLexema*)xar_obtinere(fluxus, k);
+            si (lx->genus == STML_TOKEN_APERIRE)
+            {
+                aperturae++;
+            }
+        }
+        CREDO_AEQUALIS_I32(aperturae, ZEPHYRUM);
+
+        imprimere("  C crudum: '<b>' intra '<x!>' tag NON est\n");
+    }
+
+    {
+        /* D. PARSATIO NULLA: input quem 'stml_legere' iure
+         * RECUSAT fluxum tamen reddit - unde instrumenta textum
+         * semiplenum (qualis est dum scribitur) tractare possunt.
+         * Par oraculorum: alterum recusat, alterum non. */
+        chorda       ingressus;
+        Xar*         fluxus;
+        StmlResultus res;
+
+        ingressus = chorda_ex_literis("<a><b>", piscina);
+
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_FALSUM(res.successus);
+
+        fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
+        CREDO_VERUM(fluxus != NIHIL);
+        CREDO_AEQUALIS_I32(xar_numerus(fluxus), II);
+
+        imprimere("  D sine parsatione: arbor recusat, fluxus "
+            "II lexemata reddit\n");
+    }
+
+    {
+        /* E. RECUSATIONES: argumentum absens NIHIL reddit (non
+         * Xar vacuum - 'nihil dedi' et 'nihil inveni' duo sunt). */
+        chorda vacua;
+
+        vacua.datum   = NIHIL;
+        vacua.mensura = ZEPHYRUM;
+
+        CREDO_VERUM(stml_lexemata_colligere(vacua, piscina, intern)
+            == NIHIL);
+        CREDO_VERUM(stml_lexemata_colligere(
+            chorda_ex_literis("<a/>", piscina), NIHIL, intern)
+            == NIHIL);
+
+        imprimere("  E recusatio: input vacuum / piscina absens "
+            "-> NIHIL\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

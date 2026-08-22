@@ -1382,6 +1382,88 @@ _tok_proximus (
 
 
 /* ==================================================
+ * Lexemata - fluxus publicus (sine arbore)
+ * ==================================================
+ *
+ * Modum CRUDUM ('<tag!') tokenizator IPSE regit (_tok_proximus eum
+ * ponit cum tag crudum legit, et exit cum clausuram congruentem
+ * videt) - ergo gyrus nudus tokenum eum recte tractat, parsatore
+ * non opus. Id ipsum hanc superficiem possibilem facit.
+ */
+
+Xar*
+stml_lexemata_colligere (
+                 chorda  input,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    StmlTokenContext  ctx;
+                 Xar* exitus;
+
+    si (   input.datum == NIHIL || input.mensura <= ZEPHYRUM
+        || piscina     == NIHIL || intern == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    ctx.input                   = input;
+    ctx.positus                 = ZEPHYRUM;
+    ctx.linea                   = I;
+    ctx.columna                 = I;
+    ctx.in_crudus               = FALSUM;
+    ctx.crudus_titulus.datum    = NIHIL;
+    ctx.crudus_titulus.mensura  = ZEPHYRUM;
+    ctx.piscina                 = piscina;
+    ctx.intern                  = intern;
+
+    exitus = xar_creare(piscina, (i32)magnitudo(StmlLexema));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    per (;;)
+    {
+          StmlToken  token;
+         StmlLexema* sedes;
+                i32  ante;
+
+        ante   = ctx.positus;
+        token  = _tok_proximus(&ctx);
+        si (token.genus == STML_TOKEN_FINIS)
+        {
+            frange;
+        }
+
+        sedes = (StmlLexema*)xar_addere(exitus);
+        si (sedes == NIHIL)
+        {
+            redde NIHIL;
+        }
+        sedes->genus    = token.genus;
+        sedes->valor    = token.valor;
+        sedes->initium  = token.positus_initium;
+        sedes->finis    = token.positus_finis;
+        sedes->linea    = token.linea;
+        sedes->columna  = token.columna;
+
+        /* CUSTOS PROGRESSUS: lexema quod positum non promovet
+         * gyrum infinitum faceret. Comparatio POST vocationem
+         * contra positum ANTE captum fit - non contra sentinellam
+         * negativam, quia 'i32' INSIGNATUS est (latina.h) et '-I'
+         * in 0xFFFFFFFF verteretur, unde custos semper verus et
+         * fluxus semper vacuus - ramus qui tacite numquam currit. */
+        si (ctx.positus <= ante)
+        {
+            frange;
+        }
+    }
+
+    redde exitus;
+}
+
+
+/* ==================================================
  * Parser
  * ================================================== */
 

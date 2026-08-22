@@ -208,6 +208,58 @@ stml_legere_ex_literis (
 
 
 /* ==================================================
+ * Lexemata - fluxus tokenum sine arbore
+ * ==================================================
+ *
+ * CUR SEORSUM AB ARBORE: nodus 'linea' solam fert (initium, sine
+ * columna, sine fine) - metadatum diagnostici, quod diagnostico
+ * sufficit et COLORATIONI non sufficit. Instrumentum quod textum
+ * pingit extensionem OCTETORUM poscit, et eam tokenizator iam
+ * habet; hactenus interior sola erat.
+ *
+ * CONSUMENS PRIMUS: coloratio syntaxis (laboratorium 0028) - eadem
+ * suturas quas css/html/js lexatores praebent, ut STML quinta
+ * lingua libri adumbrationum fiat. Consumentes futuri: editores,
+ * diagnostica cum extensionibus, plicatura.
+ *
+ * PARSATIO NULLA: nulla structura probatur, nulla clausura
+ * postulatur, nullus error redditur - input QUODLIBET fluxum
+ * reddit. Ideo instrumenta textum SEMIPLENUM (qualis est dum
+ * scribitur) tractare possunt, ubi stml_legere iure recusaret.
+ */
+
+/* StmlLexema - token cum extensione octetorum.
+ *
+ * 'initium'/'finis' extensio CRUDA in input est [initium, finis) -
+ * octeti, non indices punctorum codicis (decretum columnarum
+ * 01M0ATF1E1: C octetos emittit, consumens ad limitem convertit).
+ * 'valor' valorem SEMANTICUM fert (textus entitatibus solutis),
+ * ergo pictor extensionem adhibeat, non valorem.
+ */
+nomen structura {
+    StmlTokenGenus genus;
+            chorda valor;
+               i32 initium;   /* offset octetorum, INCLUSIVUS */
+               i32 finis;     /* offset octetorum, EXCLUSIVUS */
+               i32 linea;     /* 1-basata */
+               i32 columna;   /* 1-basata, OCTETI */
+} StmlLexema;
+
+/* Fluxum lexematum colligere. Xar de StmlLexema; NIHIL si
+ * argumentum abest aut input vacuum est.
+ *
+ * STML_TOKEN_FINIS non additur (finis fluxus, non lexema).
+ * Contentum CRUDUM ('<tag!') recte tractatur: tokenizator modum
+ * crudum ipse regit, parsatore non opus.
+ */
+Xar*
+stml_lexemata_colligere (
+                 chorda  input,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
+
+/* ==================================================
  * Quaestio - Invenire in Arbore
  * ================================================== */
 
