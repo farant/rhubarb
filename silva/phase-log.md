@@ -13798,3 +13798,80 @@ RESTAT in M2 §3: T6 sigillum proprium super productiones +
 NOMINA_GENERUM + ORTHOGRAPHIAE (silva_arbor_sigillum eas NON tegit)
 cum porta recentiae; T7 porta corporis super gradum latinizatum
 (gradus roundtrip iam purus, LXXIII/LXXIII).
+
+## 2026-08-22 — M2 §3 COMPLETUS (T6, T6.5, T7)
+
+INTENTIO: canonem proiectum sigillo suo munire, transclusionem in
+plagulis canonis aperire, et proiectionem contra corpus VERUM probare.
+
+### T6 — sigillum proprium + porta recentiae (bb38fba7)
+
+RIMA MENSURATA, non asserta. 'sententia@consequens' in regula 'si' ad
+'declaratio@consequens' mutata (ambae non-terminales -> species NODUS
+utraque):
+  tabulae generum/locorum  OCTETO TENUS PARES  (quod solum
+                                                registrum-sigillum tegit)
+  exemplar si/consequens   XIV genera -> I
+  sigillum canonis         8b92ecb4 -> 2ea300ec
+Sigillum documenti IMMOTUM mansisset. Id est par. 0.2, nunc probatione
+assertum (grammatica in MEMORIA mutatur; plagula intacta).
+
+SPEC CORRECTA: par. 4.3 ORTHOGRAPHIAS inter fontes sigilli nominaverat.
+Emissor eas NON legit - repetit. Fontem non-lectum sigillare portam
+faceret quae de mutatione innoxia clamaret. DIVISIO OPERIS:
+  sigillum + porta recentiae -> DATUM mutatum
+  probatio_silva_canon       -> CODEX mutatus (emissor ab arbore)
+Neutrum alterum tegit; simul rimam claudunt.
+
+DUAE RES QUAS SOLA CONSTRUCTIO DOCUIT:
+ - ARTIFICIUM COMMISSUM AB INVOCATIONE LIBERUM ESSE DEBET. Caput vias
+   exitus et grammaticae ferebat, quae a vocante pendent (generare.sh
+   ex silva/, porta ex radice) - ergo duae regenerationes RECTAE
+   dissentiebant. Porta exitum conferens primo cursu falso clamasset.
+   Bases solae nunc.
+ - INDEX CUSTODUM rogat 'an BINARIUM stalum sit'. Grammaticam ei
+   addideram; sed grammatica in binarium non compilatur, ergo emendatio
+   eius exitum 2 ('instrumentum stalum') pariebat ubi 1 ('canon
+   rancidus') debetur - porta casum PRIMARIUM tegens. Soli fontes
+   compilati eo pertinent.
+
+### T6.5 — transclusio in plagulis canonis (1e563d1a)
+
+Semita LECTIONIS (canon_ex_nodo) nodum TRANSCLUSIO tacite praeteribat
+ad canon.c:1323, ut iudicium ante T3. Forma pessima: canon.canon talem
+plagulam PURAM iudicabat et regula deinde liberis VACUIS struebatur -
+documentum omne reiciebatur. Lumen viride, mores falsi.
+
+Machina T3 integra reusurpata; involucrum unum additum quod
+definitiones fragmentorum omittit. QUATTUOR ambulationes (claves-externae
+quarta). CIRCULUS post ambulationem probandus - eum sola EXPANSIO videt.
+canon.canon mutandus NON erat, quod defectum periculosum faciebat.
+
+FACTORING: VI CLXXVIII -> IV DCXLVII lineae. Nomina ex grammatica
+('expressio', 'sententia' nonterminalia quae clausura T4 DELEBAT).
+Comparatio TEXTUALIS ergo substitutio falsa impossibilis.
+
+### T7 — porta corporis (8cd61643)
+
+Apparatus COMMUNIS in probationes/apparatus.{c,h} - porta quae bis
+incendit exemplar secundum habere non debet.
+
+Gradus planus LXXIII/LXXIII, latinizatus CLIV/CLIV, vitia ZERO utrobique
+PRIMO CURSU. Defectus praedixeram; non fuerunt.
+
+QUOD INVENTUM EST NON PURITAS SED TEGMEN. 'CLIV/CLIV purae' significare
+posset 'elementa illa numquam apparuerunt'. Mensuratum:
+  expansio 219013, pasta 11322, extentum 2827, stringificatio 4,
+  conditionalis 144, error 41 (gradu plano)
+  invocatio-vacua 0, scissura 0  <- A NEUTRO GRADU TACTA
+Sex ex octo elementis involucri manu scripti vere exercentur; duo NON,
+et id ASSERITUR (== 0) ut lacuna visibilis maneat.
+
+LEX GENERALIS INDE: numerus 'N/N purus' duas res significare potest -
+rem probatam, aut rem NUMQUAM VISAM. Porta quae tegmen suum non
+mensurat inter eas discernere non potest.
+
+RESTANT (reservata, non omissa): unicitas clavis compositae, classes
+substitutionis (transclusio pressionem abstulit), co-occurrentia, lector
+arboris generatus, documenta <arbor> subarborum, et fixa pro
+invocatio-vacua/scissura.
