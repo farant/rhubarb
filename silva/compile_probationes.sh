@@ -103,6 +103,24 @@ for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# ---- 2b. adiumenta probationum (probationes/*.c non probatio_*) ----
+# Porta apparatus BIS incendit et utroque numerum peperit qui datum
+# simulabat; exemplar eius SECUNDUM in probatione altera tertiam
+# occasionem erroris INDEPENDENTIS daret. Ergo unum exemplar hic
+# compilatur et in probationes omnes nectitur.
+for src in "$SILVA_DIR"/probationes/*.c; do
+    base="$(basename "$src" .c)"
+    case "$base" in probatio_*) continue ;; esac
+    obj="$BUILD_DIR/$base.o"
+    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [adiumentum] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
+        fi
+    fi
+    obj_files="$obj_files $obj"
+done
+
 # ---- 3. discover, compile, run probationes ----
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$SILVA_DIR"/probationes/probatio_*.c; do

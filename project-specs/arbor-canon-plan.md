@@ -845,28 +845,88 @@ git commit -m "canon: transclusio in plagulis canonis (porta muta gradus superio
 
 ---
 
-## T7 — The corpus gate
+## T7 — The corpus gate *(SHIPPED 2026-08-22)*
 
 Spec §5. **The real gate.**
 
-- [ ] **Step 1: Write the falsification FIRST.** Before any green sweep
+> **EXECUTION NOTES.**
+>
+> **(a) Shared apparatus, by Fran's call.** The closure + apparatus
+> machinery moved to `silva/probationes/apparatus.{c,h}`, used by both
+> `probatio_silva_arbor_plagula` and the new
+> `probatio_silva_canon_corpus`. A gate that has already fired twice
+> must not get a second independent implementation. `compile_probationes.sh`
+> gained a step compiling non-`probatio_*` sources in `probationes/`.
+> **Regression bar for the refactor: plagula still 154/154, 0 apparatus
+> broken.**
+>
+> **(b) I dropped `radix` while moving the header loop** — the closure
+> paths are repo-root-relative, so every header would have failed to
+> open. Caught by re-reading the moved code, and note the apparatus gate
+> would have caught it loudly anyway: no headers → no expansion → refuse.
+> The gate protecting its own extraction is the design working.
+>
+> **(c) `lib/` + `*` inside a comment is `/*`.** Bit me a third time,
+> in a new disguise — a directory glob in prose, not syntax being
+> described. The rule generalises past its original form.
+>
+> **(d) BOTH TIERS CLEAN ON THE FIRST RUN** — 73/73 and 154/154, zero
+> vitia. I had predicted defects. That prediction being wrong is not
+> the finding; **the finding is what the coverage census showed.**
+
+**Coverage of the hand-authored envelope — measured, because "154/154
+clean" could equally mean "those elements never appeared":**
+
+| element | plain tier | latinized tier |
+|---|---:|---:|
+| `expansio` | 28 | **219,013** |
+| `pasta` | 0 | **11,322** |
+| `extentum` | 0 | **2,827** |
+| `stringificatio` | 0 | **4** |
+| `conditionalis` | 3 | 144 |
+| `error` | **41** | 0 |
+| `invocatio-vacua` | 0 | **0** |
+| `scissura` | 0 | **0** |
+
+Six of eight are genuinely exercised, and the T5 policy claims they
+encode are therefore validated — including §0.1's INFERRED
+"ERROR root-level only", which the plain tier's 41 `<error>` nodes
+exercise and confirm.
+
+**Two are not covered, and this is asserted rather than left implicit:**
+`invocatio-vacua` (a macro yielding zero tokens) and `scissura` (a
+line-continuation inside a token) appear nowhere in either corpus. The
+test pins them at **0** so the hole stays visible; adding a fixture will
+break the assertion, which is the correct announcement. Landing spot:
+purpose-built fixtures in `probationes/fixa/`.
+
+Presence is asserted with `> 0` rather than pinned counts — `lib/` grows,
+and a pinned 219,013 would cry wolf on every unrelated edit. Presence is
+the property the gate actually needs.
+
+**Falsification ran first**, per Step 1: a valid document with
+`<declaratores>` corrupted to `<declaratoreel>` produces 2 vitia
+(`liberum hic non licet`, `elementum extra canonem: an declaratores?`)
+while the uncorrupted document produces 0.
+
+- [x] **Step 1: Write the falsification FIRST.** Before any green sweep
   is trusted: take a valid arbor document, move a node into an illegal
   locus, and confirm a vitium. A sweep from an unfalsified gate measures
   nothing — this is why the T1 corpus run planted a fault before running
   41 files.
 
-- [ ] **Step 2: Write the sweep.** Generate arbor documents from both
+- [x] **Step 2: Write the sweep.** Generate arbor documents from both
   tiers and judge every one: 73 plain-C files in
   `probationes/fixa/roundtrip/`, then the latinized `lib/` tier.
 
-- [ ] **Step 3: The apparatus refusal** (inherited from
+- [x] **Step 3: The apparatus refusal** (inherited from
   `arbor-parsura-spec.md` §6.5). The latinized tier needs the include
   closure; without it nothing expands and every number is confidently
   wrong. **Refuse loudly when a file transitively including `latina.h`
   yields zero EXPANSIO tokens.** This has already failed twice — it is a
   gate, not a habit.
 
-- [ ] **Step 4: Run. Expected: zero vitia, both tiers.**
+- [x] **Step 4: Run. Expected: zero vitia, both tiers.**
 
   If there are vitia, **judge by the cause tally, not the total** — a
   headline count can hold steady while the reasons underneath change
@@ -874,7 +934,7 @@ Spec §5. **The real gate.**
   hand-authored policy (T5), the INFERRED root-level-only claim for
   ERROR/CONDITIONALIS, and T4's cycle-cutting.
 
-- [ ] **Step 5: Pin the numbers** so a future change must be announced,
+- [x] **Step 5: Pin the numbers** so a future change must be announced,
   and commit.
 
 ```bash
