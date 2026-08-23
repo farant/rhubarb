@@ -57,6 +57,43 @@ mkdir -p "$TMPD" || exit 2
 # consentire cogeret, et RELATIVA est).
 trap 'rm -rf "$TMPD"' EXIT
 
+# FORMA PARS ARTIFICII EST, non gradus posterior.
+#
+# lib/ et include/ FORMATORE purgata sunt, sed lector coctus
+# GENERATUR et emissor formam domus nescit. Sine hoc gradu circulus
+# oritur: regeneratio opus formatoris delet, formatio recentiam
+# frangit - neuter status quietus, ergo lectores RANCIDI perpetuo
+# stabant (mensuratum 2026-08-22, res 01M0NXT3QD).
+#
+# Emissorem regulas formatoris docere fontem formae SECUNDUM
+# faceret. Hic formator unus manet et emissor earum ignarus - una
+# forma, unus custos.
+#
+# EXITUS I EXSPECTATUS EST, non defectus: formator lineas nimis
+# longas (longitudo-lxxii) in littera generata NUNTIAT sed non
+# refingit. Ergo I patimur, II solum clamat. Gradum in exitu
+# formatoris ponere portam nostram perpetuo frangeret.
+#
+# Formator PUNCTUM FIXUM est (scriptio secunda octetos non mutat -
+# probatum), ergo collatio post formationem stabilis est.
+FORMATOR=./silva/formator.sh
+
+_formare () {
+    local via="$1"
+    local rc
+    if [ ! -x "$FORMATOR" ]; then
+        echo "canon_coquere: $FORMATOR abest - forma pars artificii est" >&2
+        exit 2
+    fi
+    "$FORMATOR" "$via" -scribere > /dev/null 2>&1
+    rc=$?
+    if [ "$rc" -ge 2 ]; then
+        echo "canon_coquere: formator '$via' legere non potuit (exitus $rc)" >&2
+        exit 2
+    fi
+    return 0
+}
+
 rancidi=0
 facti=0
 while IFS='	' read -r canon praefixum caput corpus; do
@@ -80,6 +117,11 @@ while IFS='	' read -r canon praefixum caput corpus; do
             -e "s|$TMPD/probandum.c|$corpus|g" \
             -e "s|\"probandum.h\"|\"$caput_basis\"|g" \
             "$TMPD/probandum.c" > "$TMPD/probandum2.c"
+        # Formatio POST substitutionem, ordine eodem quo semita
+        # scriptionis: aliter probandum et verum per gradum unum
+        # differrent et porta rancorem falsum nuntiaret.
+        _formare "$TMPD/probandum2.h"
+        _formare "$TMPD/probandum2.c"
         if ! cmp -s "$TMPD/probandum2.h" "$caput" \
            || ! cmp -s "$TMPD/probandum2.c" "$corpus"; then
             echo "canon_coquere: RANCIDUS $caput / $corpus (fons: $canon) - regenera: ./tools/canon_coquere.sh" >&2
@@ -89,6 +131,8 @@ while IFS='	' read -r canon praefixum caput corpus; do
     else
         "$PORTA" "$canon" -praefixum "$praefixum" \
             -caput "$caput" -corpus "$corpus" || exit 2
+        _formare "$caput"
+        _formare "$corpus"
         facti=$((facti + 1))
     fi
 done < "$MANIFESTUM"
