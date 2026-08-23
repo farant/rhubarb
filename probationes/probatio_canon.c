@@ -981,6 +981,141 @@ principale (vacuum)
 
 
     /* ========================================================
+     * TRANSCLUSIO IN PLAGULA CANONIS IPSA (T6.5)
+     *
+     * Plagula .canon STML est, ergo fragmenta ferre POTEST. Semita
+     * IUDICII eas ab T3 resolvit - sed semita LECTIONIS
+     * (canon_ex_nodo) eas TACITE praeteribat, sicut iudicium ante
+     * T3 faciebat.
+     *
+     * PESSIMA FORMA DEFECTUS: canon.canon talem plagulam PURAM
+     * iudicabat (recte - per T3 pellucide videt), et regula deinde
+     * liberis VACUIS struebatur, ergo documentum OMNE reiciebatur.
+     * Lumen viride, mores falsi. Porta muta gradu uno superiore.
+     *
+     * AEQUALITAS EST DEFINITIO, hic sicut in T3: canon per
+     * fragmentum scriptus idem iudicare DEBET ac canon inline.
+     * Probatio de re ipsa, non de proxima.
+     * ======================================================== */
+
+    {
+        Canon* c_frag;
+        Canon* c_inline;
+          Xar* v_f;
+          Xar* v_i;
+
+        imprimere("\n--- Probans transclusionem in canone ipso ---\n");
+
+        /* I. LIBERI per fragmentum: aequalitas cum inline */
+        c_frag = canon_ex_literis(
+            "<canon dialectus=\"cf\" versio=\"1\">"
+            "<#vocab><liberum nomen=\"alpha\"/>"
+            "<liberum nomen=\"beta\"/></#>"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#vocab>></elementum>"
+            "<elementum nomen=\"alpha\"/>"
+            "<elementum nomen=\"beta\"/>"
+            "</canon>", piscina, intern);
+        c_inline = canon_ex_literis(
+            "<canon dialectus=\"ci\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"alpha\"/><liberum nomen=\"beta\"/></elementum>"
+            "<elementum nomen=\"alpha\"/>"
+            "<elementum nomen=\"beta\"/>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_frag);
+        CREDO_NON_NIHIL (c_inline);
+
+        v_f = iudicare_literis(c_frag,  "<r><alpha/><beta/></r>",
+                               piscina, intern);
+        v_i = iudicare_literis(c_inline, "<r><alpha/><beta/></r>",
+                               piscina, intern);
+        CREDO_NON_NIHIL (v_f);
+        CREDO_NON_NIHIL (v_i);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_i), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f),
+                            (i32)xar_numerus(v_i));
+
+        /* et REICERE quoque pariter debet - purgatio sola nihil
+         * probat (canon liberis vacuis omnia reicit, ergo casus
+         * licitus SOLUS defectum monstrat, non absentiam eius) */
+        v_f = iudicare_literis(c_frag,   "<r><ignotum/></r>",
+                               piscina, intern);
+        v_i = iudicare_literis(c_inline, "<r><ignotum/></r>",
+                               piscina, intern);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f),
+                            (i32)xar_numerus(v_i));
+        CREDO_VERUM (xar_numerus(v_i) > ZEPHYRUM);
+
+        /* II. ATTRIBUTA per fragmentum - fragmentum attributa ferens
+         * tam utile est quam liberos ferens */
+        c_frag = canon_ex_literis(
+            "<canon dialectus=\"ca\" versio=\"1\">"
+            "<#comm><attributum nomen=\"id\" genus=\"nomen\""
+            " necessarium=\"verum\"/></#>"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#comm>></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_frag);
+        v_f = iudicare_literis(c_frag, "<r id=\"x\"/>", piscina, intern);
+        CREDO_NON_NIHIL (v_f);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f), ZEPHYRUM);
+        /* necessarium= per fragmentum quoque MORDET */
+        v_f = iudicare_literis(c_frag, "<r/>", piscina, intern);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(v_f, CANON_ATTRIBUTUM_DEEST), I);
+
+        /* III. OPTIONES per fragmentum (intra <attributum>) */
+        c_frag = canon_ex_literis(
+            "<canon dialectus=\"co\" versio=\"1\">"
+            "<#opts><optio>unus</optio><optio>duo</optio></#>"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<attributum nomen=\"q\" genus=\"electio\">"
+            "<<#opts>></attributum></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_frag);
+        v_f = iudicare_literis(c_frag, "<r q=\"duo\"/>", piscina, intern);
+        CREDO_NON_NIHIL (v_f);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f), ZEPHYRUM);
+        v_f = iudicare_literis(c_frag, "<r q=\"tres\"/>", piscina, intern);
+        CREDO_VERUM (xar_numerus(v_f) > ZEPHYRUM);
+
+        /* IV-VI. TRES RECUSATIONES: lectio tacere non potest.
+         * Canon fractus NIHIL reddere debet - aliter regula
+         * mutilata struitur et documentum omne falso reicitur. */
+
+        /* IV. orphana */
+        CREDO_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"orph\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#nusquam>></elementum>"
+            "</canon>", piscina, intern));
+
+        /* V. fragmentum geminum */
+        CREDO_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"gem\" versio=\"1\">"
+            "<#g><liberum nomen=\"a\"/></#>"
+            "<#g><liberum nomen=\"b\"/></#>"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#g>></elementum>"
+            "<elementum nomen=\"a\"/><elementum nomen=\"b\"/>"
+            "</canon>", piscina, intern));
+
+        /* VI. circulus */
+        CREDO_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"circ\" versio=\"1\">"
+            "<#a><<#a>></#>"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#a>></elementum>"
+            "</canon>", piscina, intern));
+
+        /* CONTROLLUM: canon sanus fragmenta ferens ONERATUR -
+         * aliter recusationes supra ex causa ALIA venire possent */
+        CREDO_NON_NIHIL (canon_ex_literis(
+            "<canon dialectus=\"sanus\" versio=\"1\">"
+            "<#g><liberum nomen=\"a\"/></#>"
+            "<elementum nomen=\"r\" radix=\"verum\"><<#g>></elementum>"
+            "<elementum nomen=\"a\"/>"
+            "</canon>", piscina, intern));
+    }
+
+
+    /* ========================================================
      * PROBARE: documentum sanum - nulla vitia
      * ======================================================== */
 

@@ -250,6 +250,27 @@ _liberos_effectivos (
                  Xar* exitus,
                  Xar* vitia);
 
+/* LECTIO (T6.5): liberi elementi canonis cum transclusionibus
+ * substitutis, definitionibus fragmentorum omissis.
+ *
+ * Plagula .canon STML est, ergo fragmenta ferre potest - et
+ * ferre DEBET, quia proiectio c89 exemplaria contenti eadem
+ * duodecies repetit. Ante hoc semita lectionis nodum
+ * TRANSCLUSIO praeteribat sicut iudicium ante T3 faciebat, ergo
+ * regula liberis VACUIS struebatur: canon a canon.canon PURUS
+ * iudicabatur (per T3 pellucide visus) et deinde documentum omne
+ * reiciebat. Lumen viride, mores falsi.
+ *
+ * MACHINA T3 REUSURPATUR, non altera cuditur: eadem collectio,
+ * eadem resolutio, idem acervus circuli. Duo mechanismi eiusdem
+ * rei divergere possent; unus non potest. */
+interior Xar*
+_liberos_canonis (
+           StmlNodus* n,
+    CanonTransclusio* tr,
+             Piscina* piscina,
+                 Xar* vitia);
+
 
 /* ==================================================
  * Auxilia
@@ -1277,9 +1298,14 @@ canon_ex_nodo (
     InternamentumChorda* intern,
                  chorda* causa)
 {
-    Canon* c;
-      i32  numerus;
-      i32  i;
+               Canon* c;
+                 i32  numerus;
+                 i32  i;
+    CanonTransclusio  tr;
+                 Xar* vitia_frag;
+                 Xar* liberi;
+                 Xar* liberi_n;
+                 Xar* liberi_l;
 
     si (causa)
     {
@@ -1300,6 +1326,55 @@ canon_ex_nodo (
         redde NIHIL;
     }
 
+    /* FRAGMENTA ANTE OMNIA (T6.5), mos idem quem canon_iudicare
+     * tenet: definitiones usus SEQUI possunt, ergo collectio
+     * ambulationem praecedere debet.
+     *
+     * Vitia hic CANONIS sunt, non documenti: canon qui fragmentum
+     * absens nominat, aut idem bis definit, aut se ipsum
+     * transcludit, regulam MUTILATAM pareret - et regula mutilata
+     * documentum omne tacite reicit. Ergo RECUSATIO, non nota. */
+    tr.fragmenta  = tabula_dispersa_creare_chorda(piscina, LXIV);
+    tr.in_cursu   = xar_creare(piscina, (i32)magnitudo(chorda*));
+    vitia_frag    = xar_creare(piscina, (i32)magnitudo(CanonVitium));
+    si (   tr.fragmenta == NIHIL || tr.in_cursu == NIHIL
+        || vitia_frag   == NIHIL)
+    {
+        si (causa)
+        {
+            *causa = chorda_ex_literis("memoria defecit", piscina);
+        }
+        redde NIHIL;
+    }
+    _fragmenta_colligere(elementum, NIHIL, tr.fragmenta, vitia_frag);
+    _transclusiones_resolvere(elementum, NIHIL, tr.fragmenta,
+                              vitia_frag);
+    si (xar_numerus(vitia_frag) > ZEPHYRUM)
+    {
+        CanonVitium* v = (CanonVitium*)xar_obtinere(vitia_frag,
+                                                    ZEPHYRUM);
+
+        si (causa && v)
+        {
+            ChordaAedificator* ae;
+
+            ae = chorda_aedificator_creare(piscina, CXXVIII);
+            si (ae)
+            {
+                chorda_aedificator_appendere_literis(ae,
+                    canon_nuntius(v->genus));
+                si (v->elementum)
+                {
+                    chorda_aedificator_appendere_literis(ae, ": ");
+                    chorda_aedificator_appendere_chorda(ae,
+                        *v->elementum);
+                }
+                *causa = chorda_aedificator_finire(ae);
+            }
+        }
+        redde NIHIL;
+    }
+
     c = (Canon*)piscina_allocare(piscina, magnitudo(Canon));
     c->piscina = piscina;
     c->intern = intern;
@@ -1313,13 +1388,22 @@ canon_ex_nodo (
     c->claves_externae = NIHIL;
     c->claves_fons = NIHIL;
 
-    numerus = stml_numerus_liberorum(elementum);
+    liberi = _liberos_canonis(elementum, &tr, piscina, vitia_frag);
+    si (liberi == NIHIL)
+    {
+        si (causa)
+        {
+            *causa = chorda_ex_literis("memoria defecit", piscina);
+        }
+        redde NIHIL;
+    }
+    numerus = xar_numerus(liberi);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* n;
            chorda* titulus;
 
-        n = stml_liberum_ad_indicem(elementum, i);
+        n = *(StmlNodus**)xar_obtinere(liberi, i);
         si (!n || n->genus != STML_NODUS_ELEMENTUM)
         {
             perge;
@@ -1339,14 +1423,15 @@ canon_ex_nodo (
                 c->claves_externae = tabula_dispersa_creare_chorda(
                     piscina, CXXVIII);
             }
-            nl = stml_numerus_liberorum(n);
+            liberi_n = _liberos_canonis(n, &tr, piscina, vitia_frag);
+            nl = (liberi_n != NIHIL) ? xar_numerus(liberi_n) : ZEPHYRUM;
             per (j = ZEPHYRUM; j < nl; j++)
             {
                          StmlNodus* cl;
                 CanonClavisExterna* ce;
                             chorda  textus;
 
-                cl = stml_liberum_ad_indicem(n, j);
+                cl = *(StmlNodus**)xar_obtinere(liberi_n, j);
                 si (   !cl || cl->genus != STML_NODUS_ELEMENTUM
                     || !cl->titulus
                     || !chorda_aequalis_literis(*cl->titulus, "clavis"))
@@ -1437,13 +1522,14 @@ canon_ex_nodo (
                 *locus_t  = titulus;
             }
 
-            nl = stml_numerus_liberorum(n);
+            liberi_n = _liberos_canonis(n, &tr, piscina, vitia_frag);
+            nl = (liberi_n != NIHIL) ? xar_numerus(liberi_n) : ZEPHYRUM;
             per (j = ZEPHYRUM; j < nl; j++)
             {
                 StmlNodus* l;
                    chorda* lt;
 
-                l = stml_liberum_ad_indicem(n, j);
+                l = *(StmlNodus**)xar_obtinere(liberi_n, j);
                 si (!l || l->genus != STML_NODUS_ELEMENTUM)
                 {
                     perge;
@@ -1473,14 +1559,21 @@ canon_ex_nodo (
                     a->optiones = xar_creare(piscina,
                                     (i32)magnitudo(chorda*));
 
-                    no = stml_numerus_liberorum(l);
+                    /* liberi_l SEORSUM a liberi_n: haec ansa INTRA
+                     * illam sedet, ergo variabilem communem
+                     * conculcaret et ambulatio exterior media
+                     * abrumperetur */
+                    liberi_l = _liberos_canonis(l, &tr, piscina,
+                                                vitia_frag);
+                    no = (liberi_l != NIHIL) ? xar_numerus(liberi_l)
+                                             : ZEPHYRUM;
                     per (k = ZEPHYRUM; k < no; k++)
                     {
                         StmlNodus*  o;
                            chorda** locus;
                            chorda   t;
 
-                        o = stml_liberum_ad_indicem(l, k);
+                        o = *(StmlNodus**)xar_obtinere(liberi_l, k);
                         si (   !o
                             || o->genus != STML_NODUS_ELEMENTUM
                             || !chorda_aequalis_literis(*o->titulus,
@@ -1843,6 +1936,25 @@ canon_ex_nodo (
         }
     }
 
+    /* CIRCULUS post ambulationem probatur, non ante: eum sola
+     * EXPANSIO invenit (acervus in_cursu intra _liberos_effectivos
+     * vivit), ergo collectio et resolutio eum videre non possunt.
+     * Vitia hic accumulata ergo iterum inspicienda sunt - aliter
+     * canon se ipsum transcludens ONERARETUR, regula liberis
+     * mutilatis structa. */
+    si (xar_numerus(vitia_frag) > ZEPHYRUM)
+    {
+        CanonVitium* v = (CanonVitium*)xar_obtinere(vitia_frag,
+                                                    ZEPHYRUM);
+
+        si (causa && v)
+        {
+            *causa = chorda_ex_literis(canon_nuntius(v->genus),
+                                       piscina);
+        }
+        redde NIHIL;
+    }
+
     redde c;
 }
 
@@ -2136,6 +2248,50 @@ _liberos_effectivos (
             *slot = l;
         }
     }
+}
+
+interior Xar*
+_liberos_canonis (
+           StmlNodus* n,
+    CanonTransclusio* tr,
+             Piscina* piscina,
+                 Xar* vitia)
+{
+    Xar* crudi;
+    Xar* exitus;
+    i32  numerus;
+    i32  i;
+
+    crudi   = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    exitus  = xar_creare(piscina, (i32)magnitudo(StmlNodus*));
+    si (crudi == NIHIL || exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    _liberos_effectivos(n, NIHIL, tr, crudi, vitia);
+
+    /* Definitiones fragmentorum ipsae liberi NON sunt: locus
+     * declarationis est, non usus. Sine hoc filtro '<#vocab>' in
+     * <canon> ut elementum ignotum caderet. */
+    numerus = xar_numerus(crudi);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus*  l;
+        StmlNodus** slot;
+
+        l = *(StmlNodus**)xar_obtinere(crudi, i);
+        si (l == NIHIL || l->fragmentum)
+        {
+            perge;
+        }
+        slot = (StmlNodus**)xar_addere(exitus);
+        si (slot)
+        {
+            *slot = l;
+        }
+    }
+    redde exitus;
 }
 
 /* TRANSCLUSIONES resolvere - hic SOLA resolutio probatur, non

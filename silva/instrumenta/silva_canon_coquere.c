@@ -138,23 +138,116 @@ _trivium_est (SilvaLexemaGenus genus)
     }
 }
 
-/* Omnia lexemata ut liberos emittere (vocabularium clausum:
- * canon classes substitutionis non habet - consulto, spec par. 6) */
+/* Idem quod _lexema_tag, in aedificatorem - ut exemplar contenti
+ * comparari possit ante emissionem */
 interior vacuum
-_lexemata_liberos (FILE* pl, constans character* margo)
+_lexema_tag_ae (ChordaAedificator* ae, SilvaLexemaGenus genus)
 {
-    i32 i;
+    constans character* titulus;
+                   i32  i;
 
+    titulus = silva_lexema_genus_nomen(genus);
+    si (titulus == NIHIL)
+    {
+        redde;
+    }
+    chorda_aedificator_appendere_literis(ae, "lex-");
+    per (i = ZEPHYRUM; titulus[i] != '\0'; i++)
+    {
+        character c = titulus[i];
+
+        si (c >= 'A' && c <= 'Z')
+        {
+            c = (character)(c - 'A' + 'a');
+        }
+        alioquin si (c == '_')
+        {
+            c = '-';
+        }
+        chorda_aedificator_appendere_character(ae, c);
+    }
+}
+
+/* ==================================================
+ * FRAGMENTA (T6.5): vocabularia saepe repetita semel scripta
+ *
+ * Proiectio exemplar contenti idem duodecies repetebat, et duo
+ * maxima NOMEN in grammatica habent - 'expressio' et 'sententia'.
+ * Clausura (T4) id nomen DELET: per nonterminale ad folia
+ * descendit, quod schema praecisum facit et categoriam perdit.
+ *
+ * Fragmentum utrumque reddit: octetos (unum exemplar pro
+ * duodecim) et NOMEN ad locum usus ('<<#expressio>>' categoriam
+ * NOMINAT ubi enumeratio XIX generum eam tacet).
+ *
+ * FACTORING TEXTUALE, non abstractio schematis: canon idem dicit
+ * quod dicebat, semel scriptum. Classes substitutionis (spec
+ * par. 6) linguam canonis mutarent; hoc nihil mutat.
+ *
+ * MEMBRA DERIVANTUR, non manu scribuntur: clausura symboli
+ * nominati computatur et contentum loci cum ea CONFERTUR. Si
+ * grammatica mutetur ita ut locus non iam congruat, inline
+ * emittitur - minus factum, numquam falsum.
+ * ================================================== */
+
+nomen structura {
+    chorda lexemata;    /* omnia lexemata (XCIV) */
+    chorda expressio;   /* clausura nonterminalis 'expressio' */
+    chorda sententia;   /* clausura nonterminalis 'sententia' */
+} CanonFragmenta;
+
+interior chorda
+_lexemata_textus (Piscina* p, constans character* margo)
+{
+    ChordaAedificator* ae;
+                   i32 i;
+
+    ae = chorda_aedificator_creare(p, 4096);
+    si (ae == NIHIL)
+    {
+        chorda vacua;
+        vacua.datum   = NIHIL;
+        vacua.mensura = ZEPHYRUM;
+        redde vacua;
+    }
     per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
     {
         si ((SilvaLexemaGenus)i == SILVA_LEX_EOF)
         {
             perge;    /* EOF in <cauda> solum sedet */
         }
-        fprintf(pl, "%s<liberum nomen=\"", margo);
-        _lexema_tag(pl, (SilvaLexemaGenus)i);
-        fprintf(pl, "\"/>\n");
+        chorda_aedificator_appendere_literis(ae, margo);
+        chorda_aedificator_appendere_literis(ae, "<liberum nomen=\"");
+        _lexema_tag_ae(ae, (SilvaLexemaGenus)i);
+        chorda_aedificator_appendere_literis(ae, "\"/>\n");
     }
+    redde chorda_aedificator_finire(ae);
+}
+
+/* Chordam in plagulam effundere (non nullo terminata) */
+interior vacuum
+_effundere (FILE* pl, chorda c)
+{
+    si (c.datum != NIHIL && c.mensura > ZEPHYRUM)
+    {
+        fprintf(pl, "%.*s", (int)c.mensura, (constans character*)c.datum);
+    }
+}
+
+/* Omnia lexemata ut liberos emittere - per fragmentum, si iam
+ * definitum est */
+interior vacuum
+_lexemata_liberos (
+                 FILE* pl,
+    constans character* margo,
+     CanonFragmenta*  fr)
+{
+    si (fr != NIHIL && fr->lexemata.mensura > ZEPHYRUM)
+    {
+        fprintf(pl, "%s<<#lexemata>>\n", margo);
+        redde;
+    }
+    fprintf(pl, "%s(lexemata desunt)\n", margo);
 }
 
 /* Attributa sedis, communia nodis et lexematibus portatis */
@@ -182,7 +275,10 @@ _attributa_sedis (FILE* pl, constans character* margo)
  * ================================================== */
 
 interior vacuum
-_involucrum_scribere (FILE* pl, Xar* genera_radicis)
+_involucrum_scribere (
+              FILE* pl,
+              Xar*  genera_radicis,
+    CanonFragmenta* fr)
 {
     i32 i;
 
@@ -271,7 +367,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
 
     fprintf(pl, "  <elementum nomen=\"directiva\">\n");
     _attributa_sedis(pl, "    ");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -279,7 +375,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    nota=\"invocatio macri quae ZERO lexemata peperit:\n"
         "          octetos tegit quos arbor non fert\">\n");
     _attributa_sedis(pl, "    ");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -303,7 +399,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"conditio\"    genus=\"numerus\"\n"
         "      necessarium=\"verum\"/>\n");
     _attributa_sedis(pl, "    ");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -327,7 +423,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"conditio\"    genus=\"numerus\"\n"
         "      necessarium=\"verum\"/>\n");
     _attributa_sedis(pl, "    ");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -340,7 +436,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"regio-linea\" genus=\"numerus\"\n"
         "      necessarium=\"verum\"/>\n");
     _attributa_sedis(pl, "    ");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     /* --- trivia --- */
@@ -385,7 +481,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"def-l\" genus=\"numerus\"/>\n"
         "    <attributum nomen=\"def-c\" genus=\"numerus\"/>\n"
         "    <liberum nomen=\"extentum\" maximum=\"1\"/>\n");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -395,7 +491,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"def-l\" genus=\"numerus\"/>\n"
         "    <attributum nomen=\"def-c\" genus=\"numerus\"/>\n"
         "    <liberum nomen=\"extentum\" maximum=\"1\"/>\n");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -405,7 +501,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"def-l\" genus=\"numerus\"/>\n"
         "    <attributum nomen=\"def-c\" genus=\"numerus\"/>\n"
         "    <liberum nomen=\"extentum\" maximum=\"1\"/>\n");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -417,7 +513,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    <attributum nomen=\"def-l\" genus=\"numerus\"/>\n"
         "    <attributum nomen=\"def-c\" genus=\"numerus\"/>\n"
         "    <liberum nomen=\"extentum\" maximum=\"1\"/>\n");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 
     fprintf(pl,
@@ -425,7 +521,7 @@ _involucrum_scribere (FILE* pl, Xar* genera_radicis)
         "    nota=\"octeti invocationis [nomen..')'] quos NULLUM\n"
         "          lexema arboris monstrat - portandi, non\n"
         "          derivandi\">\n");
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
     fprintf(pl, "  </elementum>\n\n");
 }
 
@@ -548,6 +644,83 @@ _species_nodum_fert (s32 species)
                 || species == (s32)SILVA_LOCUS_LISTA_MIXTA);
 }
 
+/* Contentum loci (liberi eius) in chordam, ut EMITTERETUR.
+ *
+ * Textus, non coniunctum: fragmentum eodem modo redditur, ergo
+ * comparatio exacta est et substitutio falsa fieri non potest. */
+interior chorda
+_impletionis_textus (
+    SilvaGenImpletio* imp,
+                 s32  species,
+            Piscina*  piscina)
+{
+    ChordaAedificator* ae;
+                   i32 n;
+                chorda vacua;
+
+    vacua.datum   = NIHIL;
+    vacua.mensura = ZEPHYRUM;
+
+    ae = chorda_aedificator_creare(piscina, 1024);
+    si (ae == NIHIL)
+    {
+        redde vacua;
+    }
+
+    per (n = ZEPHYRUM; n < xar_numerus(imp->nodi); n++)
+    {
+        chorda** t = (chorda**)xar_obtinere(imp->nodi, n);
+
+        si (t == NIHIL || *t == NIHIL)
+        {
+            perge;
+        }
+        chorda_aedificator_appendere_literis(ae, "    <liberum nomen=\"");
+        chorda_aedificator_appendere_chorda(ae, **t);
+        chorda_aedificator_appendere_literis(ae,
+            _species_lista(species) ? "\"/>\n" : "\" maximum=\"1\"/>\n");
+    }
+    per (n = ZEPHYRUM; n < xar_numerus(imp->lexemata); n++)
+    {
+        chorda** t = (chorda**)xar_obtinere(imp->lexemata, n);
+        i32      c_i;
+
+        si (t == NIHIL || *t == NIHIL)
+        {
+            perge;
+        }
+        /* Terminale grammaticae -> tag lexematis: NOMINA_GENERUM
+         * idem verbum fert quod 'genus=' terminalis nominat,
+         * praefixo 'SILVA_LEX_' dempto */
+        chorda_aedificator_appendere_literis(ae,
+            "    <liberum nomen=\"lex-");
+        per (c_i = ZEPHYRUM; c_i < (*t)->mensura; c_i++)
+        {
+            character c = (character)(*t)->datum[c_i];
+
+            si (c >= 'A' && c <= 'Z')
+            {
+                c = (character)(c - 'A' + 'a');
+            }
+            alioquin si (c == '_')
+            {
+                c = '-';
+            }
+            chorda_aedificator_appendere_character(ae, c);
+        }
+        chorda_aedificator_appendere_literis(ae,
+            _species_lista(species) ? "\"/>\n" : "\" maximum=\"1\"/>\n");
+    }
+    /* AMBIGUUS ubicumque nodus sedere potest: fabrica GLR
+     * quamlibet reductionem involvere potest */
+    si (_species_nodum_fert(species))
+    {
+        chorda_aedificator_appendere_literis(ae,
+            "    <liberum nomen=\"ambiguus\"/>\n");
+    }
+    redde chorda_aedificator_finire(ae);
+}
+
 /* Vocabularium loci generis EXTRA: nulla derivatio possibilis
  * (slots= chorda cruda est, spec par. 4.2), ergo POLITIA - quam
  * porta corporis falsificat. */
@@ -557,7 +730,8 @@ _extra_vocabularium (
        constans character* genus,
        constans character* locus,
                      Xar*  genera,
-                     Xar*  genera_radicis)
+                     Xar*  genera_radicis,
+          CanonFragmenta*  fr)
 {
     i32 i;
 
@@ -611,15 +785,17 @@ _extra_vocabularium (
     }
     /* Reliqua (error/tokens, conditionalis/finis, directiva, cruda)
      * laminae lexematum crudae sunt */
-    _lexemata_liberos(pl, "    ");
+    _lexemata_liberos(pl, "    ", fr);
 }
 
 interior vacuum
 _genera_scribere (
-     FILE* pl,
-     Xar*  genera,
-     Xar*  impletiones,
-     Xar*  genera_radicis)
+              FILE* pl,
+              Xar*  genera,
+              Xar*  impletiones,
+              Xar*  genera_radicis,
+    CanonFragmenta* fr,
+           Piscina* piscina)
 {
     i32 g_i;
 
@@ -712,77 +888,33 @@ _genera_scribere (
                 titulus_g[mg] = '\0';
                 titulus_l[ml] = '\0';
                 _extra_vocabularium(pl, titulus_g, titulus_l,
-                                    genera, genera_radicis);
+                                    genera, genera_radicis, fr);
             }
             alioquin
             {
-                i32 n;
+                chorda contentum;
 
-                per (n = ZEPHYRUM; n < xar_numerus(imp->nodi); n++)
+                contentum = _impletionis_textus(imp, locus->species,
+                                                piscina);
+                /* Comparatio TEXTUALIS, non per coniuncta: quod
+                 * emitteretur cum fragmento confertur, ergo
+                 * substitutio falsa fieri NON potest - si vel unus
+                 * octetus differat, inline emittitur. */
+                si (   fr != NIHIL && contentum.mensura > ZEPHYRUM
+                    && chorda_aequalis(contentum, fr->expressio))
                 {
-                    chorda** t = (chorda**)xar_obtinere(imp->nodi, n);
-
-                    si (t == NIHIL || *t == NIHIL)
-                    {
-                        perge;
-                    }
-                    fprintf(pl, "    <liberum nomen=\"");
-                    _ch(pl, *t);
-                    si (_species_lista(locus->species))
-                    {
-                        fprintf(pl, "\"/>\n");
-                    }
-                    alioquin
-                    {
-                        fprintf(pl, "\" maximum=\"1\"/>\n");
-                    }
+                    fprintf(pl, "    <<#expressio>>\n");
                 }
-                per (n = ZEPHYRUM; n < xar_numerus(imp->lexemata); n++)
+                alioquin si (   fr != NIHIL
+                             && contentum.mensura > ZEPHYRUM
+                             && chorda_aequalis(contentum,
+                                                fr->sententia))
                 {
-                    chorda** t =
-                        (chorda**)xar_obtinere(imp->lexemata, n);
-
-                    si (t == NIHIL || *t == NIHIL)
-                    {
-                        perge;
-                    }
-                    /* Terminale grammaticae -> tag lexematis:
-                     * NOMINA_GENERUM idem verbum fert quod
-                     * 'genus=' terminalis nominat, prefixo
-                     * 'SILVA_LEX_' dempto */
-                    fprintf(pl, "    <liberum nomen=\"lex-");
-                    {
-                        i32 c_i;
-
-                        per (c_i = ZEPHYRUM; c_i < (*t)->mensura; c_i++)
-                        {
-                            character c = (character)(*t)->datum[c_i];
-
-                            si (c >= 'A' && c <= 'Z')
-                            {
-                                c = (character)(c - 'A' + 'a');
-                            }
-                            alioquin si (c == '_')
-                            {
-                                c = '-';
-                            }
-                            fputc(c, pl);
-                        }
-                    }
-                    si (_species_lista(locus->species))
-                    {
-                        fprintf(pl, "\"/>\n");
-                    }
-                    alioquin
-                    {
-                        fprintf(pl, "\" maximum=\"1\"/>\n");
-                    }
+                    fprintf(pl, "    <<#sententia>>\n");
                 }
-                /* AMBIGUUS ubicumque nodus sedere potest: fabrica
-                 * GLR quamlibet reductionem involvere potest */
-                si (_species_nodum_fert(locus->species))
+                alioquin
                 {
-                    fprintf(pl, "    <liberum nomen=\"ambiguus\"/>\n");
+                    _effundere(pl, contentum);
                 }
             }
             fprintf(pl, "  </elementum>\n\n");
@@ -1027,16 +1159,24 @@ silva_gen_canonem_scribere (
     constans character* via,
     constans character* via_grammaticae)
 {
-    FILE* pl;
-    Xar*  genera;
-    Xar*  impletiones;
-    Xar*  genera_radicis;
+    FILE*          pl;
+    Xar*           genera;
+    Xar*           impletiones;
+    Xar*           genera_radicis;
+    CanonFragmenta fragmenta;
 
     si (   grammatica == NIHIL || dialectus == NIHIL
         || via        == NIHIL || via_grammaticae == NIHIL)
     {
         redde FALSUM;
     }
+
+    fragmenta.lexemata.datum    = NIHIL;
+    fragmenta.lexemata.mensura  = ZEPHYRUM;
+    fragmenta.expressio.datum   = NIHIL;
+    fragmenta.expressio.mensura = ZEPHYRUM;
+    fragmenta.sententia.datum   = NIHIL;
+    fragmenta.sententia.mensura = ZEPHYRUM;
 
     genera = silva_gen_registrum_computare(grammatica);
     si (genera == NIHIL || xar_numerus(genera) == ZEPHYRUM)
@@ -1116,9 +1256,73 @@ silva_gen_canonem_scribere (
             (constans character*)sigillum.datum);
     }
 
-    _involucrum_scribere(pl, genera_radicis);
+    /* --- FRAGMENTA (T6.5) --- */
+    {
+        SilvaGenImpletio ficta;
+        Xar*             vacuum_lex;
+
+        vacuum_lex = xar_creare(grammatica->piscina,
+                                (i32)magnitudo(chorda*));
+        fragmenta.lexemata = _lexemata_textus(grammatica->piscina,
+                                              "    ");
+
+        /* Clausura nonterminalis, EODEM modo reddita quo locus -
+         * ergo comparatio octetorum recta est per constructionem */
+        ficta.genus     = NIHIL;
+        ficta.locus     = NIHIL;
+        ficta.lexemata  = vacuum_lex;
+
+        ficta.nodi = silva_gen_genera_symboli_computare(grammatica,
+                                                        "expressio");
+        fragmenta.expressio = (ficta.nodi != NIHIL)
+            ? _impletionis_textus(&ficta, (s32)SILVA_LOCUS_NODUS,
+                                  grammatica->piscina)
+            : fragmenta.expressio;
+
+        ficta.nodi = silva_gen_genera_symboli_computare(grammatica,
+                                                        "sententia");
+        fragmenta.sententia = (ficta.nodi != NIHIL)
+            ? _impletionis_textus(&ficta, (s32)SILVA_LOCUS_NODUS,
+                                  grammatica->piscina)
+            : fragmenta.sententia;
+
+        fprintf(pl,
+            "  <!-- =============== FRAGMENTA ===============\n"
+            "       Vocabularia saepe repetita semel scripta.\n"
+            "       'expressio' et 'sententia' NONTERMINALIA\n"
+            "       grammaticae sunt: clausura (T4) per ea ad folia\n"
+            "       descendit, quod schema praecisum facit et\n"
+            "       CATEGORIAM delet. Fragmentum nomen reddit -\n"
+            "       '<<#expressio>>' dicit quod enumeratio XIX\n"
+            "       generum tacet.\n"
+            "\n"
+            "       Factoring TEXTUALE: canon idem dicit quod\n"
+            "       diceret enumeratus, semel scriptum. Membra\n"
+            "       DERIVANTUR (clausura), non manu scripta.\n"
+            "       -->\n\n");
+
+        fprintf(pl, "  <#lexemata>\n");
+        _effundere(pl, fragmenta.lexemata);
+        fprintf(pl, "  </#>\n\n");
+
+        si (fragmenta.expressio.mensura > ZEPHYRUM)
+        {
+            fprintf(pl, "  <#expressio>\n");
+            _effundere(pl, fragmenta.expressio);
+            fprintf(pl, "  </#>\n\n");
+        }
+        si (fragmenta.sententia.mensura > ZEPHYRUM)
+        {
+            fprintf(pl, "  <#sententia>\n");
+            _effundere(pl, fragmenta.sententia);
+            fprintf(pl, "  </#>\n\n");
+        }
+    }
+
+    _involucrum_scribere(pl, genera_radicis, &fragmenta);
     _lexemata_scribere(pl);
-    _genera_scribere(pl, genera, impletiones, genera_radicis);
+    _genera_scribere(pl, genera, impletiones, genera_radicis,
+                     &fragmenta, grammatica->piscina);
 
     /* --- claves --- */
     fprintf(pl,

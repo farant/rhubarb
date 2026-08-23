@@ -30,6 +30,156 @@
 -->
 <canon dialectus="c89" versio="1" sigillum="8b92ecb4">
 
+  <!-- =============== FRAGMENTA ===============
+       Vocabularia saepe repetita semel scripta.
+       'expressio' et 'sententia' NONTERMINALIA
+       grammaticae sunt: clausura (T4) per ea ad folia
+       descendit, quod schema praecisum facit et
+       CATEGORIAM delet. Fragmentum nomen reddit -
+       '<<#expressio>>' dicit quod enumeratio XIX
+       generum tacet.
+
+       Factoring TEXTUALE: canon idem dicit quod
+       diceret enumeratus, semel scriptum. Membra
+       DERIVANTUR (clausura), non manu scripta.
+       -->
+
+  <#lexemata>
+    <liberum nomen="lex-octetus-ignotus"/>
+    <liberum nomen="lex-string-imperfectum"/>
+    <liberum nomen="lex-character-imperfectum"/>
+    <liberum nomen="lex-identificator"/>
+    <liberum nomen="lex-integer"/>
+    <liberum nomen="lex-float"/>
+    <liberum nomen="lex-character-lit"/>
+    <liberum nomen="lex-string-lit"/>
+    <liberum nomen="lex-auto"/>
+    <liberum nomen="lex-break"/>
+    <liberum nomen="lex-case"/>
+    <liberum nomen="lex-char"/>
+    <liberum nomen="lex-const"/>
+    <liberum nomen="lex-continue"/>
+    <liberum nomen="lex-default"/>
+    <liberum nomen="lex-do"/>
+    <liberum nomen="lex-double"/>
+    <liberum nomen="lex-else"/>
+    <liberum nomen="lex-enum"/>
+    <liberum nomen="lex-extern"/>
+    <liberum nomen="lex-float-kw"/>
+    <liberum nomen="lex-for"/>
+    <liberum nomen="lex-goto"/>
+    <liberum nomen="lex-if"/>
+    <liberum nomen="lex-int"/>
+    <liberum nomen="lex-long"/>
+    <liberum nomen="lex-register"/>
+    <liberum nomen="lex-return"/>
+    <liberum nomen="lex-short"/>
+    <liberum nomen="lex-signed"/>
+    <liberum nomen="lex-sizeof"/>
+    <liberum nomen="lex-static"/>
+    <liberum nomen="lex-struct"/>
+    <liberum nomen="lex-switch"/>
+    <liberum nomen="lex-typedef"/>
+    <liberum nomen="lex-union"/>
+    <liberum nomen="lex-unsigned"/>
+    <liberum nomen="lex-void"/>
+    <liberum nomen="lex-volatile"/>
+    <liberum nomen="lex-while"/>
+    <liberum nomen="lex-quadra-aperta"/>
+    <liberum nomen="lex-quadra-clausa"/>
+    <liberum nomen="lex-paren-aperta"/>
+    <liberum nomen="lex-paren-clausa"/>
+    <liberum nomen="lex-brace-aperta"/>
+    <liberum nomen="lex-brace-clausa"/>
+    <liberum nomen="lex-punctum"/>
+    <liberum nomen="lex-sagitta"/>
+    <liberum nomen="lex-incrementum"/>
+    <liberum nomen="lex-decrementum"/>
+    <liberum nomen="lex-ampersand"/>
+    <liberum nomen="lex-star"/>
+    <liberum nomen="lex-plus"/>
+    <liberum nomen="lex-minus"/>
+    <liberum nomen="lex-tilde"/>
+    <liberum nomen="lex-exclamatio"/>
+    <liberum nomen="lex-solidus"/>
+    <liberum nomen="lex-percentum"/>
+    <liberum nomen="lex-sinistrorsum"/>
+    <liberum nomen="lex-dextrorsum"/>
+    <liberum nomen="lex-minor"/>
+    <liberum nomen="lex-maior"/>
+    <liberum nomen="lex-minor-aequalis"/>
+    <liberum nomen="lex-maior-aequalis"/>
+    <liberum nomen="lex-aequalis-aequalis"/>
+    <liberum nomen="lex-non-aequalis"/>
+    <liberum nomen="lex-caret"/>
+    <liberum nomen="lex-barra"/>
+    <liberum nomen="lex-et-et"/>
+    <liberum nomen="lex-vel-vel"/>
+    <liberum nomen="lex-quaestio"/>
+    <liberum nomen="lex-colon"/>
+    <liberum nomen="lex-semicolon"/>
+    <liberum nomen="lex-ellipsis"/>
+    <liberum nomen="lex-assignatio"/>
+    <liberum nomen="lex-star-assignatio"/>
+    <liberum nomen="lex-solidus-assignatio"/>
+    <liberum nomen="lex-percentum-assignatio"/>
+    <liberum nomen="lex-plus-assignatio"/>
+    <liberum nomen="lex-minus-assignatio"/>
+    <liberum nomen="lex-sinistrorsum-assignatio"/>
+    <liberum nomen="lex-dextrorsum-assignatio"/>
+    <liberum nomen="lex-ampersand-assignatio"/>
+    <liberum nomen="lex-caret-assignatio"/>
+    <liberum nomen="lex-barra-assignatio"/>
+    <liberum nomen="lex-comma"/>
+    <liberum nomen="lex-cancellum"/>
+    <liberum nomen="lex-cancellum-cancellum"/>
+    <liberum nomen="lex-spatia"/>
+    <liberum nomen="lex-tabulae"/>
+    <liberum nomen="lex-nova-linea"/>
+    <liberum nomen="lex-continuatio"/>
+    <liberum nomen="lex-commentum-clausum"/>
+    <liberum nomen="lex-commentum-linea"/>
+  </#>
+
+  <#expressio>
+    <liberum nomen="virgula" maximum="1"/>
+    <liberum nomen="assignatio" maximum="1"/>
+    <liberum nomen="ternarius" maximum="1"/>
+    <liberum nomen="binarium" maximum="1"/>
+    <liberum nomen="conversio" maximum="1"/>
+    <liberum nomen="unarium" maximum="1"/>
+    <liberum nomen="magnitudo-expressionis" maximum="1"/>
+    <liberum nomen="magnitudo-typi" maximum="1"/>
+    <liberum nomen="subscriptio" maximum="1"/>
+    <liberum nomen="vocatio" maximum="1"/>
+    <liberum nomen="accessus" maximum="1"/>
+    <liberum nomen="postcrementum" maximum="1"/>
+    <liberum nomen="folium-identificator" maximum="1"/>
+    <liberum nomen="folium-integer" maximum="1"/>
+    <liberum nomen="folium-fluitans" maximum="1"/>
+    <liberum nomen="folium-character" maximum="1"/>
+    <liberum nomen="folium-chorda" maximum="1"/>
+    <liberum nomen="parenthesis" maximum="1"/>
+    <liberum nomen="ambiguus"/>
+  </#>
+
+  <#sententia>
+    <liberum nomen="sententia-expressionis" maximum="1"/>
+    <liberum nomen="sententia-vacua" maximum="1"/>
+    <liberum nomen="corpus" maximum="1"/>
+    <liberum nomen="si" maximum="1"/>
+    <liberum nomen="dum" maximum="1"/>
+    <liberum nomen="fac-dum" maximum="1"/>
+    <liberum nomen="per" maximum="1"/>
+    <liberum nomen="commutatio" maximum="1"/>
+    <liberum nomen="titulatum" maximum="1"/>
+    <liberum nomen="salta" maximum="1"/>
+    <liberum nomen="frange" maximum="1"/>
+    <liberum nomen="perge" maximum="1"/>
+    <liberum nomen="redde" maximum="1"/>
+    <liberum nomen="ambiguus"/>
+  </#>
+
   <!-- =============== INVOLUCRUM ===============
        Forma SCRIPTORIS (silva_arbor.c), non grammaticae:
        nullum eius vestigium in c89.stml est, ergo manu
@@ -124,100 +274,7 @@
             'verum|falsum' poscit)">
       <optio>true</optio>
     </attributum>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="invocatio-vacua"
@@ -232,100 +289,7 @@
             'verum|falsum' poscit)">
       <optio>true</optio>
     </attributum>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="regio-directiva">
@@ -356,100 +320,7 @@
             'verum|falsum' poscit)">
       <optio>true</optio>
     </attributum>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="regio-cruda">
@@ -480,100 +351,7 @@
             'verum|falsum' poscit)">
       <optio>true</optio>
     </attributum>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="regio-finis">
@@ -593,100 +371,7 @@
             'verum|falsum' poscit)">
       <optio>true</optio>
     </attributum>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <!-- TRIVIA: unius domini semper (invariatum roundtrip) -->
@@ -729,100 +414,7 @@
     <attributum nomen="def-l" genus="numerus"/>
     <attributum nomen="def-c" genus="numerus"/>
     <liberum nomen="extentum" maximum="1"/>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="pasta">
@@ -831,100 +423,7 @@
     <attributum nomen="def-l" genus="numerus"/>
     <attributum nomen="def-c" genus="numerus"/>
     <liberum nomen="extentum" maximum="1"/>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="stringificatio">
@@ -933,100 +432,7 @@
     <attributum nomen="def-l" genus="numerus"/>
     <attributum nomen="def-c" genus="numerus"/>
     <liberum nomen="extentum" maximum="1"/>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="api"
@@ -1037,200 +443,14 @@
     <attributum nomen="def-l" genus="numerus"/>
     <attributum nomen="def-c" genus="numerus"/>
     <liberum nomen="extentum" maximum="1"/>
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="extentum"
     nota="octeti invocationis [nomen..')'] quos NULLUM
           lexema arboris monstrat - portandi, non
           derivandi">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <!-- =============== LEXEMATA ===============
@@ -3350,25 +2570,7 @@
   </elementum>
 
   <elementum nomen="conditio" intra="si">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_clausum" intra="si">
@@ -3376,20 +2578,7 @@
   </elementum>
 
   <elementum nomen="consequens" intra="si">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="tok_alioquin" intra="si">
@@ -3397,20 +2586,7 @@
   </elementum>
 
   <elementum nomen="alioquin" intra="si">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="dum">
@@ -3439,25 +2615,7 @@
   </elementum>
 
   <elementum nomen="conditio" intra="dum">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_clausum" intra="dum">
@@ -3465,20 +2623,7 @@
   </elementum>
 
   <elementum nomen="corpus" intra="dum">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="fac-dum">
@@ -3505,20 +2650,7 @@
   </elementum>
 
   <elementum nomen="corpus" intra="fac-dum">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="tok_dum" intra="fac-dum">
@@ -3530,25 +2662,7 @@
   </elementum>
 
   <elementum nomen="conditio" intra="fac-dum">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_clausum" intra="fac-dum">
@@ -3594,20 +2708,7 @@
   </elementum>
 
   <elementum nomen="corpus" intra="per">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="per-clausula">
@@ -3628,25 +2729,7 @@
   </elementum>
 
   <elementum nomen="initium" intra="per-clausula">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_terminator_i" intra="per-clausula">
@@ -3654,25 +2737,7 @@
   </elementum>
 
   <elementum nomen="conditio" intra="per-clausula">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_terminator_ii" intra="per-clausula">
@@ -3680,25 +2745,7 @@
   </elementum>
 
   <elementum nomen="passus" intra="per-clausula">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="commutatio">
@@ -3727,25 +2774,7 @@
   </elementum>
 
   <elementum nomen="discrimen" intra="commutatio">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_clausum" intra="commutatio">
@@ -3886,20 +2915,7 @@
   </elementum>
 
   <elementum nomen="sententia" intra="titulatum">
-    <liberum nomen="sententia-expressionis" maximum="1"/>
-    <liberum nomen="sententia-vacua" maximum="1"/>
-    <liberum nomen="corpus" maximum="1"/>
-    <liberum nomen="si" maximum="1"/>
-    <liberum nomen="dum" maximum="1"/>
-    <liberum nomen="fac-dum" maximum="1"/>
-    <liberum nomen="per" maximum="1"/>
-    <liberum nomen="commutatio" maximum="1"/>
-    <liberum nomen="titulatum" maximum="1"/>
-    <liberum nomen="salta" maximum="1"/>
-    <liberum nomen="frange" maximum="1"/>
-    <liberum nomen="perge" maximum="1"/>
-    <liberum nomen="redde" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#sententia>>
   </elementum>
 
   <elementum nomen="salta">
@@ -3993,25 +3009,7 @@
   </elementum>
 
   <elementum nomen="valor" intra="redde">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_terminator" intra="redde">
@@ -4697,25 +3695,7 @@
   </elementum>
 
   <elementum nomen="expressio" intra="sententia-expressionis">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_terminator" intra="sententia-expressionis">
@@ -4738,25 +3718,7 @@
   </elementum>
 
   <elementum nomen="sinister" intra="virgula">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_operator" intra="virgula">
@@ -4892,25 +3854,7 @@
   </elementum>
 
   <elementum nomen="verum" intra="ternarius">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_colon" intra="ternarius">
@@ -5270,25 +4214,7 @@
   </elementum>
 
   <elementum nomen="index" intra="subscriptio">
-    <liberum nomen="virgula" maximum="1"/>
-    <liberum nomen="assignatio" maximum="1"/>
-    <liberum nomen="ternarius" maximum="1"/>
-    <liberum nomen="binarium" maximum="1"/>
-    <liberum nomen="conversio" maximum="1"/>
-    <liberum nomen="unarium" maximum="1"/>
-    <liberum nomen="magnitudo-expressionis" maximum="1"/>
-    <liberum nomen="magnitudo-typi" maximum="1"/>
-    <liberum nomen="subscriptio" maximum="1"/>
-    <liberum nomen="vocatio" maximum="1"/>
-    <liberum nomen="accessus" maximum="1"/>
-    <liberum nomen="postcrementum" maximum="1"/>
-    <liberum nomen="folium-identificator" maximum="1"/>
-    <liberum nomen="folium-integer" maximum="1"/>
-    <liberum nomen="folium-fluitans" maximum="1"/>
-    <liberum nomen="folium-character" maximum="1"/>
-    <liberum nomen="folium-chorda" maximum="1"/>
-    <liberum nomen="parenthesis" maximum="1"/>
-    <liberum nomen="ambiguus"/>
+    <<#expressio>>
   </elementum>
 
   <elementum nomen="tok_clausum" intra="subscriptio">
@@ -5526,100 +4452,7 @@
   </elementum>
 
   <elementum nomen="tokens" intra="error">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="ambiguus">
@@ -5715,100 +4548,7 @@
   </elementum>
 
   <elementum nomen="finis" intra="conditionalis">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="ramus-sumptus">
@@ -5827,100 +4567,7 @@
   </elementum>
 
   <elementum nomen="directiva" intra="ramus-sumptus">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="contentum" intra="ramus-sumptus">
@@ -5961,197 +4608,11 @@
   </elementum>
 
   <elementum nomen="directiva" intra="ramus-omissus">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="cruda" intra="ramus-omissus">
-    <liberum nomen="lex-octetus-ignotus"/>
-    <liberum nomen="lex-string-imperfectum"/>
-    <liberum nomen="lex-character-imperfectum"/>
-    <liberum nomen="lex-identificator"/>
-    <liberum nomen="lex-integer"/>
-    <liberum nomen="lex-float"/>
-    <liberum nomen="lex-character-lit"/>
-    <liberum nomen="lex-string-lit"/>
-    <liberum nomen="lex-auto"/>
-    <liberum nomen="lex-break"/>
-    <liberum nomen="lex-case"/>
-    <liberum nomen="lex-char"/>
-    <liberum nomen="lex-const"/>
-    <liberum nomen="lex-continue"/>
-    <liberum nomen="lex-default"/>
-    <liberum nomen="lex-do"/>
-    <liberum nomen="lex-double"/>
-    <liberum nomen="lex-else"/>
-    <liberum nomen="lex-enum"/>
-    <liberum nomen="lex-extern"/>
-    <liberum nomen="lex-float-kw"/>
-    <liberum nomen="lex-for"/>
-    <liberum nomen="lex-goto"/>
-    <liberum nomen="lex-if"/>
-    <liberum nomen="lex-int"/>
-    <liberum nomen="lex-long"/>
-    <liberum nomen="lex-register"/>
-    <liberum nomen="lex-return"/>
-    <liberum nomen="lex-short"/>
-    <liberum nomen="lex-signed"/>
-    <liberum nomen="lex-sizeof"/>
-    <liberum nomen="lex-static"/>
-    <liberum nomen="lex-struct"/>
-    <liberum nomen="lex-switch"/>
-    <liberum nomen="lex-typedef"/>
-    <liberum nomen="lex-union"/>
-    <liberum nomen="lex-unsigned"/>
-    <liberum nomen="lex-void"/>
-    <liberum nomen="lex-volatile"/>
-    <liberum nomen="lex-while"/>
-    <liberum nomen="lex-quadra-aperta"/>
-    <liberum nomen="lex-quadra-clausa"/>
-    <liberum nomen="lex-paren-aperta"/>
-    <liberum nomen="lex-paren-clausa"/>
-    <liberum nomen="lex-brace-aperta"/>
-    <liberum nomen="lex-brace-clausa"/>
-    <liberum nomen="lex-punctum"/>
-    <liberum nomen="lex-sagitta"/>
-    <liberum nomen="lex-incrementum"/>
-    <liberum nomen="lex-decrementum"/>
-    <liberum nomen="lex-ampersand"/>
-    <liberum nomen="lex-star"/>
-    <liberum nomen="lex-plus"/>
-    <liberum nomen="lex-minus"/>
-    <liberum nomen="lex-tilde"/>
-    <liberum nomen="lex-exclamatio"/>
-    <liberum nomen="lex-solidus"/>
-    <liberum nomen="lex-percentum"/>
-    <liberum nomen="lex-sinistrorsum"/>
-    <liberum nomen="lex-dextrorsum"/>
-    <liberum nomen="lex-minor"/>
-    <liberum nomen="lex-maior"/>
-    <liberum nomen="lex-minor-aequalis"/>
-    <liberum nomen="lex-maior-aequalis"/>
-    <liberum nomen="lex-aequalis-aequalis"/>
-    <liberum nomen="lex-non-aequalis"/>
-    <liberum nomen="lex-caret"/>
-    <liberum nomen="lex-barra"/>
-    <liberum nomen="lex-et-et"/>
-    <liberum nomen="lex-vel-vel"/>
-    <liberum nomen="lex-quaestio"/>
-    <liberum nomen="lex-colon"/>
-    <liberum nomen="lex-semicolon"/>
-    <liberum nomen="lex-ellipsis"/>
-    <liberum nomen="lex-assignatio"/>
-    <liberum nomen="lex-star-assignatio"/>
-    <liberum nomen="lex-solidus-assignatio"/>
-    <liberum nomen="lex-percentum-assignatio"/>
-    <liberum nomen="lex-plus-assignatio"/>
-    <liberum nomen="lex-minus-assignatio"/>
-    <liberum nomen="lex-sinistrorsum-assignatio"/>
-    <liberum nomen="lex-dextrorsum-assignatio"/>
-    <liberum nomen="lex-ampersand-assignatio"/>
-    <liberum nomen="lex-caret-assignatio"/>
-    <liberum nomen="lex-barra-assignatio"/>
-    <liberum nomen="lex-comma"/>
-    <liberum nomen="lex-cancellum"/>
-    <liberum nomen="lex-cancellum-cancellum"/>
-    <liberum nomen="lex-spatia"/>
-    <liberum nomen="lex-tabulae"/>
-    <liberum nomen="lex-nova-linea"/>
-    <liberum nomen="lex-continuatio"/>
-    <liberum nomen="lex-commentum-clausum"/>
-    <liberum nomen="lex-commentum-linea"/>
+    <<#lexemata>>
   </elementum>
 
   <elementum nomen="conditio_id" intra="ramus-omissus" textus="numerus"/>

@@ -1074,6 +1074,53 @@ silva_gen_impletiones_computare(
  * et regula initialis ('elementa') pervia est - nullum genus gignit,
  * ergo nullum par (genus, locus) meret. Vocabularium tamen reale
  * est, ergo hic seorsum computatur. */
+/* Genera quae symbolum NOMINATUM producere potest (T6.5).
+ *
+ * Eadem clausura ac impletiones, sed per symboli titulum vocata -
+ * ut emissor exemplar contenti repetitum ad NONTERMINALE unde
+ * venit reducere possit. Vocabularium quod duodecies iteratur
+ * plerumque nomen in grammatica HABET ('expressio', 'sententia');
+ * clausura id nomen delet, et haec functio reddit. */
+Xar*
+silva_gen_genera_symboli_computare(
+    SilvaGenGrammatica*  grammatica,
+           constans character* titulus)
+{
+    Xar* nodi;
+    Xar* lexemata;
+    Xar* in_cursu;
+    i32  i;
+    s32  index;
+
+    si (!grammatica || !titulus) redde NIHIL;
+
+    index = -I;
+    per (i = ZEPHYRUM; i < (i32)xar_numerus(grammatica->symbola); i++)
+    {
+        SilvaGenSymbolum* s = (SilvaGenSymbolum*)xar_obtinere(
+            grammatica->symbola, i);
+
+        si (   s != NIHIL && !s->est_terminale && s->titulus != NIHIL
+            && chorda_aequalis_literis(*s->titulus, titulus))
+        {
+            index = (s32)i;
+            frange;
+        }
+    }
+    si (index < ZEPHYRUM) redde NIHIL;
+
+    nodi      = xar_creare(grammatica->piscina, (i32)magnitudo(chorda*));
+    lexemata  = xar_creare(grammatica->piscina, (i32)magnitudo(chorda*));
+    in_cursu  = xar_creare(grammatica->piscina, (i32)magnitudo(s32));
+    si (nodi == NIHIL || lexemata == NIHIL || in_cursu == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _genera_symboli(grammatica, index, nodi, lexemata, in_cursu);
+    redde nodi;
+}
+
+
 Xar*
 silva_gen_genera_radicis_computare(
     SilvaGenGrammatica*  grammatica)

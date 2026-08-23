@@ -152,6 +152,18 @@ Xar*
 silva_gen_genera_radicis_computare(
     SilvaGenGrammatica*  grammatica);
 
+/* Genera quae symbolum NOMINATUM producere potest; NIHIL si
+ * symbolum ignotum aut terminale. Xar de chorda*.
+ *
+ * Emissori: exemplar contenti saepe repetitum plerumque NOMEN in
+ * grammatica habet ('expressio' duodecies, 'sententia' sexies) -
+ * clausura id nomen delet, haec functio reddit, ergo fragmentum
+ * emissum nomen VERUM ferre potest. */
+Xar*
+silva_gen_genera_symboli_computare(
+    SilvaGenGrammatica*  grammatica,
+    constans character*  titulus);
+
 
 /* ================================================
  * Legere Grammaticam ex STML

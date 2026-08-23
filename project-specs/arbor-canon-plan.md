@@ -661,7 +661,85 @@ git commit -m "silva: sigillum canonis proprium + porta recentiae (exitus III)"
 
 ---
 
-## T6.5 — Transclusion in canon files themselves
+## T6.5 — Transclusion in canon files themselves *(SHIPPED 2026-08-22)*
+
+> **EXECUTION NOTES.**
+>
+> **(a) The loader's silent drop was at `canon.c:1323`** — `si (!n ||
+> n->genus != STML_NODUS_ELEMENTUM) perge;`. A TRANSCLUSIO node is not
+> an ELEMENTUM, so it fell out there, exactly as the judging path did
+> before T3.
+>
+> **(b) All three T3 helpers were reused unchanged** —
+> `_fragmenta_colligere`, `_transclusiones_resolvere`,
+> `_liberos_effectivos`. The loader adds one wrapper,
+> `_liberos_canonis`, whose only extra job is **skipping fragment
+> definitions** (a `<#vocab>` at `<canon>` level is a declaration, not a
+> child; without the skip it fell through as an unknown element). No new
+> vitium genus was needed.
+>
+> **(c) FOUR child-walks needed converting, not three.** The plan named
+> `<elementum>`, `<attributum>`/`<optio>`, and the `<canon>` top level;
+> `claves-externae` → `<clavis>` is a fourth. Leaving it raw would have
+> recreated the very defect in miniature — a place where a fragment is
+> silently ignored.
+>
+> **(d) Cycles are caught AFTER the walks, not before.** Only expansion
+> can see a cycle (the `in_cursu` stack lives inside
+> `_liberos_effectivos`), so collection and resolution cannot. The
+> vitia list therefore needs a **second** check at the end of
+> `canon_ex_nodo`. Without it, a self-transcluding canon loaded happily —
+> this was the one test still red after the first implementation.
+>
+> **(e) `canon.canon` needed NO change.** T3 already skips fragment
+> definitions when judging, and a transclusion resolves at its *use*
+> site, where `<liberum>` is legal. So a fragment-bearing canon was
+> already judged clean — which was precisely what made the defect
+> dangerous, and is why no declaration is required now.
+>
+> **(f) Factoring is by TEXT comparison, not set comparison.** The
+> emitter renders what it *would* emit for a locus and compares bytes
+> against the rendered fragment. A false substitution is therefore
+> impossible: one byte different and it emits inline. If the grammar
+> changes so a locus no longer matches, the result is *less factoring,
+> never wrongness*.
+>
+> **(g) Fragment membership is derived, names come from the grammar.**
+> `silva_gen_genera_symboli_computare(g, "expressio")` runs T4's closure
+> on a named nonterminal, rendered through the *same* function the loci
+> use — so the comparison is exact by construction.
+
+**Result:** `silva/c89.canon` **6,178 → 4,647 lines (−25%)**, 34
+transclusions: `lexemata` ×15, `expressio` ×13, `sententia` ×6. More
+sites than the census predicted (11/12/6), because exact-render matching
+found cases the approximate set census missed.
+
+The readability payoff, and the erased category name restored:
+
+```xml
+<elementum nomen="conditio" intra="si">
+  <<#expressio>>
+</elementum>
+```
+
+**Gates:** `canon.canon` clean · corpus 73/73 · `probatio_canon`
+**279/279** (was 259; +20) · `probatio_silva_canon` 124/124 with counts
+unmoved (95/176/75 — factoring changes content, not element counts) ·
+silva 48/48 · natura_canones 207/207 · all 42 canons load ·
+`silva_canon.sh -probare` 0 · `canon_coquere.sh -probare` 0.
+
+**Calibrated, not assumed:** a clean corpus would also result from a
+canon that admits everything, so the discriminating probes were re-run
+against the *factored* canon — `declarator-abstractus` in
+`definitio-functionis/declarator` still rejected, and `declaratio` in an
+expression slot rejected **through** `<<#expressio>>`, proving the
+fragment resolves to a real constraining vocabulary.
+
+**The seal did not move** (`8b92ecb4`), correctly: T6 seals *derivation
+inputs*, and this changed only the emitter's output form. That is the
+division of labour in (a) of T6 working as designed.
+
+---
 
 **Added 2026-08-22 (Fran, by fork), after T5 measured the repetition.**
 Defect `01M0NWBAQMFE5N6X3EZP0AK6RA`. Ordered after T6 deliberately: T6's
@@ -724,11 +802,11 @@ left alone; factoring it buys nothing.
 
 ### Steps
 
-- [ ] **Step 1: Read the T3 seam.** `_fragmenta_colligere`,
+- [x] **Step 1: Read the T3 seam.** `_fragmenta_colligere`,
   `_transclusionis_petitum`, `_liberos_effectivos` in `lib/canon.c` — the
   loading path wants the same collect-then-resolve shape, not a new one.
 
-- [ ] **Step 2: Write the failing test first**, in
+- [x] **Step 2: Write the failing test first**, in
   `probationes/probatio_canon.c`. The planted fault and its control are
   the inline/transcluded pair above — a transcluded `<liberum>` must
   behave **identically** to an inline one. Equivalence *is* the
@@ -736,26 +814,26 @@ left alone; factoring it buys nothing.
   Also assert the three T3 refusals still fire from the loading path:
   orphan `<<#nusquam>>`, duplicate `<#x>` twice, cyclic.
 
-- [ ] **Step 3: Run, confirm the transcluded case fails** with
+- [x] **Step 3: Run, confirm the transcluded case fails** with
   `liberum hic non licet` (not some other error).
 
-- [ ] **Step 4: Implement** in `canon_ex_nodo`: collect fragments first
+- [x] **Step 4: Implement** in `canon_ex_nodo`: collect fragments first
   (definitions may follow uses), then walk the effective child list.
   `<attributum>`, `<liberum>` and `<optio>` should all resolve — a
   fragment holding attributes is as useful as one holding children.
 
-- [ ] **Step 5: Declare it in `canon.canon`** — a fragment child of
+- [x] **Step 5: Declare it in `canon.canon`** — a fragment child of
   `<canon>`, and the dialect must still judge itself clean.
 
-- [ ] **Step 6: Regression bar** — all 41 canons still load, 2,046 rules.
+- [x] **Step 6: Regression bar** — all 41 canons still load, 2,046 rules.
   A change to the loading path touches every dialect.
 
-- [ ] **Step 7: Emitter factoring.** `<#expressio>`, `<#sententia>`,
+- [x] **Step 7: Emitter factoring.** `<#expressio>`, `<#sententia>`,
   `<#lexemata>` emitted once; use sites transclude. Derive the fragment
   membership from the model (do not hand-list), and **name the fragments
   after the grammar nonterminals they came from**.
 
-- [ ] **Step 8: Re-run the T5 gates.** `canon.canon` clean; roundtrip
+- [x] **Step 8: Re-run the T5 gates.** `canon.canon` clean; roundtrip
   corpus 73/73; `probatio_silva_canon` — its pinned counts (95/176/75)
   will move, and moving them is the announcement, not a nuisance.
 
