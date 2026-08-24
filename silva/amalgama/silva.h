@@ -1724,12 +1724,18 @@ typedef enum {
     STML_ERROR_TAG_IMPROPRIE        = 4,
     STML_ERROR_ATTRIBUTUM            = 5,
     STML_ERROR_VACUUM_INPUT          = 6,
-    STML_ERROR_CAPTIO                = 7
+    STML_ERROR_CAPTIO                = 7,
+    /* recusationes '<tag\>' (spec triviae §1.4) - causa in
+     * result.error nominatur */
+    STML_ERROR_MULTILINEA            = 8
 } SilvaStmlStatus;
 
 typedef struct {
     SilvaChorda* titulus;    /* internata */
     SilvaChorda* valor;      /* internata ("true" pro boolean) */
+    SilvaChorda* spatia_ante; /* trivia intra tagum (§1.6): spatium
+                               * ante attributum; NIHIL = unicum
+                               * canonicum */
 } SilvaStmlAttributum;
 
 typedef struct SilvaStmlNodus {
@@ -1760,6 +1766,23 @@ typedef struct SilvaStmlNodus {
                                                * sigillata; NIHIL =
                                                * elementum
                                                * ordinarium */
+
+    /* TRIVIA (spec triviae §1): valor est sensus, spatium album
+     * dispositio iuxta eum lata. NIHIL = nullum. Lex possessoris
+     * §1.2: cursus inter nodos per primam '\n' INCLUSIVE prioris
+     * est (post), residuum sequentis (ante). Scriptor fidelis
+     * verbatim reassuit. */
+    SilvaChorda*            spatia_ante;
+    SilvaChorda*            spatia_post;
+    SilvaChorda*            spatia_clausurae; /* interius ante tag
+                                               * claudens; documento
+                                               * cauda plagulae */
+    SilvaChorda*            spatia_intra_tagum; /* ante '>' (§1.6) */
+
+    /* '<tag\>' (§1.4): lineae novae contentum, dedentatio in
+     * parsatione, praefixum in 'indentatio' conditum */
+    int                     multilinea;
+    SilvaChorda*            indentatio;
 } SilvaStmlNodus;
 
 typedef struct {
@@ -1770,6 +1793,8 @@ typedef struct {
     unsigned int     linea_erroris;
     unsigned int     columna_erroris;
     SilvaChorda      error;
+    int              crlf_canonicalizatum; /* '\r\n' -> '\n' in
+                                            * introitu factum (§3) */
 } SilvaStmlResultus;
 
 SilvaStmlResultus silva_stml_legere(SilvaChorda input,
