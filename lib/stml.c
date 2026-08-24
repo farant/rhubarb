@@ -778,16 +778,14 @@ _tok_legere_tag (
         _tok_progredi(ctx, I);
     }
 
-    /* Skip whitespace after capture parens */
+    /* Skip whitespace after capture parens (spatium '( >' non
+     * modellatur - exceptio angusta nominata, §1.6) */
     _tok_praeterire_spatium(ctx);
 
-    /* forma capturae: dispositio canonica - spatium prae fine non
-     * notatur (§1.6) */
-    si (captio_numerus > ZEPHYRUM)
-    {
-        token.spatia_prae_finem.datum    = NIHIL;
-        token.spatia_prae_finem.mensura  = ZEPHYRUM;
-    }
+    /* Forma capturae: spatium prae parenthesibus NOTATUR (§1.6
+     * emendatum 2026-08-24) - '<tag(>' glutinata et '<tag (>'
+     * spatiata ambae octetim redduntur; olim delebatur (foramen
+     * fidelitatis latens). */
 
     /* Check for self-closing /> */
     si (   captio_numerus               == ZEPHYRUM
@@ -910,7 +908,9 @@ _tok_legere_fragmentum (
     }
 
     /* Numerare parentheses capturae <# (> / <#id (> (post
-     * attributa, sicut in tags normalibus) */
+     * attributa, sicut in tags normalibus). Spatium prae
+     * parenthesibus notatur (§1.6 emendatum); spatium '( >' non
+     * modellatur. */
     captio_numerus = ZEPHYRUM;
     dum (_tok_aspicere(ctx, ZEPHYRUM) == '(')
     {
@@ -918,11 +918,6 @@ _tok_legere_fragmentum (
         _tok_progredi(ctx, I);
     }
     _tok_praeterire_spatium(ctx);
-    si (captio_numerus > ZEPHYRUM)
-    {
-        token.spatia_prae_finem.datum    = NIHIL;
-        token.spatia_prae_finem.mensura  = ZEPHYRUM;
-    }
 
     /* Check for self-closing <#/> or <#id/> */
     si (   captio_numerus               == ZEPHYRUM
@@ -2036,6 +2031,11 @@ _parser_legere_captio_ante (
     titulus_ptr = chorda_internare(ctx->intern, ctx->current.valor);
     nodus->titulus = titulus_ptr;
     nodus->attributa = ctx->current.attributa;
+    si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
+    {
+        nodus->spatia_intra_tagum = chorda_internare(ctx->intern,
+            ctx->current.spatia_prae_finem);
+    }
     nodus->captio_directio = STML_CAPTIO_ANTE;
     nodus->captio_numerus = ctx->current.captio_numerus;
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
@@ -2366,17 +2366,38 @@ _spatia_apponere (
     }
 }
 
+/* Regula capturae (§1.2 emendatum 2026-08-24, collapsus): post
+ * tagum formae capturae spatium EIUSDEM LINEAE ad spatia_post
+ * captoris pertinet - separator syntaxis capturae, non contentum.
+ * Numquam nodus textus, numquam pars valoris: '<a(> <b/>'
+ * elementum capit (non spatium), '<a(> foo' valorem "foo" fert.
+ * Captor crudus exclusus (linea capta octetos crudos suos fert;
+ * casus per constructionem mutus - cursus post lineam crudam '\n'
+ * incipit). Praecedens: casus lineifer iam per legem generalem in
+ * post captoris cadit; §6 ordo emissionis [tag][post][capti]
+ * sedem probat. */
+interior b32
+_prior_est_captor (
+    constans StmlNodus* prior)
+{
+    redde (b32)(prior != NIHIL
+        && prior->captio_directio != STML_CAPTIO_NIHIL
+        && !prior->crudus);
+}
+
 /* Classificatio cursus textus (§1.3), ab ansa liberorum vocata.
  *
  * - cursus TOTUS albus lineam-ferens: NULLUS nodus - octeti per
  *   §1.2 distribuuntur (elisio quae vectigal ambulatorum delet et
  *   numerationem captionum constructione sanat)
  * - cursus albus UNIUS lineae: nodus manet, valor integer
- *   ('<sep>   </sep>' tria spatia sua tenet)
+ *   ('<sep>   </sep>' tria spatia sua tenet) - NISI captorem
+ *   sequitur (regula capturae supra: spatia_post eius fit)
  * - cursus contentum ferens: margo (praefixum/suffixum album
  *   maximale) e valore exit SI lineam novam fert; octeti exeuntes
  *   per §1.2 distribuuntur (pars prioris -> spatia_post eius,
- *   residuum -> spatia_ante huius/sequentis)
+ *   residuum -> spatia_ante huius/sequentis); margo ducens sine
+ *   linea nova post captorem = spatia_post captoris
  *
  * Extensio positus cursum TOTUM tegit margine incluso (nodus ANTE
  * progressionem creatur - fons-honesta; via vetus extensionem
@@ -2432,6 +2453,17 @@ _textum_tractare (
         redde NIHIL;
     }
 
+    si (_cursus_albus(crudum) && _prior_est_captor(prior))
+    {
+        /* Regula capturae (§1.2 emendatum): cursus solum-albus
+         * eiusdem lineae post captorem = spatia_post captoris
+         * (separator formae) - nullus nodus. '<a(> <b/>'
+         * elementum capit, non spatium. */
+        _spatia_apponere(ctx, &prior->spatia_post, crudum);
+        _parser_progredi(ctx);
+        redde NIHIL;
+    }
+
     init                    = ZEPHYRUM;
     fin                     = crudum.mensura;
     ante_mea.datum          = NIHIL;
@@ -2469,6 +2501,14 @@ _textum_tractare (
             {
                 ante_mea = margo;
             }
+        }
+        alioquin si (   margo.mensura > ZEPHYRUM
+                     && _prior_est_captor(prior))
+        {
+            /* Regula capturae (§1.2 emendatum): margo ducens sine
+             * linea nova post captorem = spatia_post captoris -
+             * '<a(> foo' valorem "foo" fert, non " foo" */
+            _spatia_apponere(ctx, &prior->spatia_post, margo);
         }
         alioquin
         {
@@ -3403,6 +3443,64 @@ _xar_liberum_obtinere (
     redde NIHIL;
 }
 
+/* Captorem ANTE satiare: liberos ex flumine fratrum [j..num)
+ * capere; indicem primum non consumptum reddit.
+ *
+ * SATIATIO RECURSIVA (T3, 2026-08-24): captus qui IPSE captor
+ * ANTE insatiatus est prius ex flumine reliquo satiatur - spinae
+ * '<a(> <b(> x' resolvuntur (a capit b, b capit x). Ansa vetus
+ * plana erat: a capiebat b NUDUM et x frater manebat - catenae
+ * numquam probatae erant (corpus formam spinae nondum fert;
+ * collapsus eam paritura est).
+ *
+ * COMMENTA: transparentia numerationi sed SERVATA - liberos
+ * captoris intrant ordine fluminis (§6 'skipped-but-preserved';
+ * ansa vetus ea tacite perdebat: saltabantur nec usquam
+ * addebantur). */
+interior i32
+_captorem_ante_satiare (
+    StmlNodus* captor,
+          Xar* flumen,
+          i32  j,
+          i32  num)
+{
+    i32 capti;
+
+    capti = ZEPHYRUM;
+    dum (j < num && capti < captor->captio_numerus)
+    {
+        StmlNodus*  captus;
+        StmlNodus** slot;
+
+        captus = _xar_liberum_obtinere(flumen, j);
+        si (captus == NIHIL)
+        {
+            j++;
+            perge;
+        }
+        si (_est_commentum(captus))
+        {
+            captus->parens  = captor;
+            slot            = xar_addere(captor->liberi);
+            si (slot) *slot = captus;
+            j++;
+            perge;
+        }
+        j++;
+        si (   captus->genus           == STML_NODUS_ELEMENTUM
+            && captus->captio_directio == STML_CAPTIO_ANTE
+            && !captus->crudus)
+        {
+            j = _captorem_ante_satiare(captus, flumen, j, num);
+        }
+        captus->parens  = captor;
+        slot            = xar_addere(captor->liberi);
+        si (slot) *slot = captus;
+        capti++;
+    }
+    redde j;
+}
+
 /* Process capture operators - restructure tree */
 interior vacuum
 _processare_captiones (
@@ -3461,29 +3559,14 @@ _processare_captiones (
         si (liberum->genus == STML_NODUS_ELEMENTUM)
         {
             /* Forward capture (crudae iam satiatae tempore
-             * parsationis - linea intus, fratres non capiendi) */
+             * parsationis - linea intus, fratres non capiendi).
+             * Satiatio recursiva: spinae + commenta servata (vide
+             * _captorem_ante_satiare). */
             si (   liberum->captio_directio == STML_CAPTIO_ANTE
                 && !liberum->crudus)
             {
-                StmlNodus** slot_c;
-                captio_count    = liberum->captio_numerus;
-                captured_count  = ZEPHYRUM;
-
-                /* Capture next N non-comment siblings */
-                j = i + I;
-                dum (j < num && captured_count < captio_count)
-                {
-                    captus = _xar_liberum_obtinere(nodus->liberi, j);
-                    si (captus && !_est_commentum(captus))
-                    {
-                        captus->parens  = liberum;
-                        slot_c          = xar_addere(liberum->liberi);
-                        si (slot_c) *slot_c = captus;
-                        captured_count++;
-                    }
-                    j++;
-                }
-
+                j = _captorem_ante_satiare(liberum, nodus->liberi,
+                                           i + I, num);
                 {
                     StmlNodus** slot_n = xar_addere(novi_liberi);
                     si (slot_n) *slot_n = liberum;
@@ -5472,7 +5555,15 @@ _scribere_nucleus (
                 si (nodus->captio_directio == STML_CAPTIO_ANTE)
                 {
                     i32 j;
-                    chorda_aedificator_appendere_character(aedificator, ' ');
+                    /* spatium prae parenthesibus: fidelitas octetos
+                     * conditos SUPRA reddidit (spatia_intra_tagum);
+                     * pulcher canonicam generat (§0.2) */
+                    si (   !fidelitas
+                        && nodus->attributa != NIHIL
+                        && xar_numerus(nodus->attributa) > ZEPHYRUM)
+                    {
+                        chorda_aedificator_appendere_character(aedificator, ' ');
+                    }
                     per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                     {
                         chorda_aedificator_appendere_character(aedificator, '(');
@@ -5626,8 +5717,25 @@ _scribere_nucleus (
                     chorda_aedificator_appendere_character(aedificator, '!');
                 }
                 /* Attributes */
-                                _attributa_scribere(aedificator, nodus, fidelitas);
-                chorda_aedificator_appendere_character(aedificator, ' ');
+                _attributa_scribere(aedificator, nodus, fidelitas);
+                /* spatium prae parenthesibus (§1.6 emendatum):
+                 * fidelitas octetos conditos reddit (NIHIL =
+                 * glutinata '<tag(>'); pulcher formam canonicam
+                 * generat - glutinata sine attributis, spatium
+                 * unicum post attributa (decretum §0.2) */
+                si (fidelitas)
+                {
+                    si (nodus->spatia_intra_tagum != NIHIL)
+                    {
+                        chorda_aedificator_appendere_chorda(
+                            aedificator, *nodus->spatia_intra_tagum);
+                    }
+                }
+                alioquin si (   nodus->attributa != NIHIL
+                             && xar_numerus(nodus->attributa) > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_character(aedificator, ' ');
+                }
                 per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                 {
                     chorda_aedificator_appendere_character(aedificator, '(');

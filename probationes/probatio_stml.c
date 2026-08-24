@@ -2300,6 +2300,124 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Regula capturae (§1.2 emendatum) + parens glutinata (§1.6)
+     * - collapsus T3, 2026-08-24
+     * ================================================== */
+
+    imprimere("\n--- Probans regulam capturae + parentheses"
+              " glutinatas ---\n");
+
+    {
+        /* spatium post captorem = spatia_post captoris, elementum
+         * capitur (non spatium) */
+        StmlResultus res;
+        StmlNodus* captor;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<radix><t(> <a/></radix>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        captor = stml_invenire_liberum(res.elementum_radix, "t");
+        CREDO_NON_NIHIL(captor);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(captor), I);
+        CREDO_NON_NIHIL(stml_invenire_liberum(captor, "a"));
+        CREDO_NON_NIHIL(captor->spatia_post);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*captor->spatia_post, " ");
+
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<radix><t(> <a/></radix>");
+
+        imprimere("  regula capturae: elementum capitur:"
+                  " PRAETERITUM\n");
+    }
+
+    {
+        /* margo ducens post captorem: valor sine spatio */
+        StmlResultus res;
+        StmlNodus* captor;
+        StmlNodus* textus;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<radix><t(> foo</radix>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        captor = stml_invenire_liberum(res.elementum_radix, "t");
+        CREDO_NON_NIHIL(captor);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(captor), I);
+        textus = stml_liberum_ad_indicem(captor, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_NON_NIHIL(textus->valor);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*textus->valor, "foo");
+        CREDO_NON_NIHIL(captor->spatia_post);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*captor->spatia_post, " ");
+
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<radix><t(> foo</radix>");
+
+        imprimere("  regula capturae: valor purus: PRAETERITUM\n");
+    }
+
+    {
+        /* spina glutinata: t1 -> t2 -> t3 -> textus */
+        StmlResultus res;
+        StmlNodus* t1;
+        StmlNodus* t2;
+        StmlNodus* t3;
+        StmlNodus* textus;
+        chorda serialized;
+
+        res = stml_legere_ex_literis(
+            "<radix><t1(> <t2(> <t3(> foo</radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        t1 = stml_invenire_liberum(res.elementum_radix, "t1");
+        CREDO_NON_NIHIL(t1);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(t1), I);
+        t2 = stml_invenire_liberum(t1, "t2");
+        CREDO_NON_NIHIL(t2);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(t2), I);
+        t3 = stml_invenire_liberum(t2, "t3");
+        CREDO_NON_NIHIL(t3);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(t3), I);
+        textus = stml_liberum_ad_indicem(t3, ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_NON_NIHIL(textus->valor);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*textus->valor, "foo");
+
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<radix><t1(> <t2(> <t3(> foo</radix>");
+
+        imprimere("  spina glutinata octetim: PRAETERITUM\n");
+    }
+
+    {
+        /* formae prae parenthesibus: spatiata et cum attributis -
+         * octeti conditi redduntur (§1.6 emendatum) */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<radix><t (><a/></radix>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<radix><t (><a/></radix>");
+
+        res = stml_legere_ex_literis(
+            "<radix><t attr=\"v\" (><a/></radix>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<radix><t attr=\"v\" (><a/></radix>");
+
+        imprimere("  spatium prae parenthesibus conditum:"
+                  " PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 
@@ -2471,7 +2589,8 @@ s32 principale(vacuum)
 
     {
         /* Saccharum <(>: fragmentum anonymum capturans; scriptor
-         * ad <# (> normalizat (forma authoris ephemera) */
+         * ad <#(> normalizat (forma authoris ephemera; NIHIL =
+         * glutinata canonica, §1.6 emendatum) */
         StmlResultus res;
         StmlResultus relectum;
         StmlNodus* frag;
@@ -2491,7 +2610,7 @@ s32 principale(vacuum)
         serialized = stml_scribere(res.elementum_radix, piscina,
             FALSUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
-            "<doc><# (>textus</doc>");
+            "<doc><#(>textus</doc>");
 
         /* forma normalizata = punctum fixum */
         relectum = stml_legere(serialized, piscina, intern);
