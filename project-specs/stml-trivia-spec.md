@@ -75,6 +75,16 @@ Four patches and a standing tax = a category. The fix is the model.
   single spaces (each captor's `spatia_post`). Width budget: 72
   columns from the current indent, all-or-nothing — a spine that
   does not fit stays in plain block form.
+- **Vertical collapse (second collapse decree, 2026-08-24, at M2
+  close).** Capture form is UNIVERSAL for single-child elements
+  with an element child — width decides only inline vs STACKED
+  (`<tag(>` + newline + child at indent+1). When a chain reaches
+  a multi-child element, that element takes block form with its
+  close tag at its own level (option 2: the captor never absorbs
+  the block's open tag onto its line). The invariant this buys:
+  close tags exist exactly where block form does — multi-child
+  and mixed elements only. Vertical compression is the payoff:
+  every converted wrapper level deletes a `</>` line.
 
 ### §0.3 The model in one sentence
 
@@ -372,12 +382,43 @@ remains the raw total stream (over canonicalized input).
   children; the child is an element (spine continues) or a
   single-line flow text node (the terminal — the §6 inner-value
   refusal is RESCINDED for this narrow case; text with interior
-  newlines keeps the open form). Over budget = plain block form
-  (all-or-nothing; capture form with newline separation is legal
-  INPUT but never formatter-produced). Capture form is FORM
-  MEMORY: non-pretty preserves the author's choice byte-exact;
-  pretty re-derives it — the clausura tacita doctrine applied to
-  captures.
+  newlines keeps the open form). Capture form is FORM MEMORY:
+  non-pretty preserves the author's choice byte-exact; pretty
+  re-derives it — the clausura tacita doctrine applied to
+  captures. SHIPPED in M2 T3c with the over-budget fallback =
+  plain block form; that fallback is superseded by the vertical
+  decree below.
+- **Vertical collapse (§0.2 second decree — DECREED at M2 close,
+  NOT YET IMPLEMENTED; first tranche of the next session).** A
+  single-child element whose child is an ELEMENT takes capture
+  form even when the inline tail does not fit: `<tag(>` +
+  newline + child at indent+1, pretty-recursive — the child
+  re-attempts an inline tail at its own indent, so deep chains
+  become stacked captors ending in one inline spine line. A chain
+  reaching a multi-child element leaves it in block form with its
+  close tag at its own level:
+
+      <a(>
+        <b>
+          <c/>
+          <d/>
+        </>
+
+  A single TEXT child stays inline-only: capture-inline when
+  capturable (§1.2 T3 refinements) and within budget, else the
+  plain open/close form — bare text on its own line under a
+  captor is legal INPUT but never formatter-produced (the 72/73
+  boundary fixtures stand unchanged). AUTHORED single-paren ANTE
+  captors re-derive their layout through the SAME routine — form
+  memory fully re-derived; this unification is what keeps the
+  fixed point, since a reparsed stacked document is full of
+  captors that must reproduce their own layout. (Today's pretty
+  inlines authored captees unconditionally, width-blind — that
+  path merges into the new routine.) Multi-paren authored
+  captors keep glued inline emission (M4 corners). Stacked
+  captees parse by the existing ownership law: newline → the
+  captor's post, indent → the captee's ante — the §0.1.3 fixture
+  shape, no parser changes.
 - **Pretty's text liberties follow the kind ladder** (§1.4): flow
   text may be RE-WRAPPED at will (newline runs are semantically one
   space — the mixed-content corruption class dies at the root);
@@ -492,6 +533,11 @@ unchanged, now structurally enforced.
 - `<tag(> foo` — captured text: valor `"foo"`, captor post `" "`
 - width boundary: a spine at exactly 72 columns collapses, at 73
   stays block; both are fixed-point stable
+- vertical (M2b): `<a><b><c/><d/></b></a>` → stacked captor +
+  block interior; double-stack `<x><a><b>…`; over-budget chain
+  ending in an inline terminal → stacked captors + one inline
+  spine line; stacked form fixed-point stable and tree-equal;
+  authored `<a (>` + newline captee re-derives its own layout
 
 ## §9 Consumer migration (M3)
 
@@ -520,7 +566,13 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   + glued parens (§0.2) + the §1.2 capture-post amendment + §1.6
   pre-paren trivia; fixed point + tree equivalence gates land.
   Flow re-wrap NOT exercised (reserved with the formator width
-  policy).
+  policy). SHIPPED 2026-08-24 (71b09525, ec1f20d0, 2048a784) —
+  plus, unplanned: chained ANTE captures fixed (never worked)
+  and captor-adjacent comments preserved (silently vanished).
+- **M2b** — vertical collapse (§4 second decree): stacked
+  capture form for over-budget and block-terminated single-child
+  chains; authored-captor layout unification. DECREED at M2
+  close; first tranche of the next session.
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
   lab.
 - **M4** — captures: counting policy, including the same-line
