@@ -2811,6 +2811,24 @@ stml_legere (
     ctx.error.datum      = NIHIL;
     ctx.error.mensura    = ZEPHYRUM;
 
+    /* ctx.current VACUUM adhuc est - _parser_creare_nodus campos
+     * lineae/extensionis ex tokeno CURRENTE legit, et documentum
+     * ante tokenum primum nascitur. Sine hac praeparatione campi
+     * documenti e trunco indeterminato veniebant (mensuratum
+     * 2026-08-24: aurea internus non-deterministica). Documentum
+     * conventione 'non e parsatione': linea I, extensio ZEPHYRUM. */
+    ctx.current.genus            = STML_TOKEN_FINIS;
+    ctx.current.valor.datum      = NIHIL;
+    ctx.current.valor.mensura    = ZEPHYRUM;
+    ctx.current.positus_initium  = ZEPHYRUM;
+    ctx.current.positus_finis    = ZEPHYRUM;
+    ctx.current.linea            = I;
+    ctx.current.columna          = I;
+    ctx.current.attributa        = NIHIL;
+    ctx.current.captio_numerus   = ZEPHYRUM;
+    ctx.current.habet_captus     = FALSUM;
+    ctx.finis_ultimus            = ZEPHYRUM;
+
     /* Create document node */
     documentum = _parser_creare_nodus(&ctx, STML_NODUS_DOCUMENTUM);
     si (!documentum)
