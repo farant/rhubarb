@@ -58,6 +58,14 @@ Four patches and a standing tax = a category. The fix is the model.
 - **v1 `\` is text-only**; inline child elements inside multiline
   content are deferred (§11) — and they are the long-term
   differentiator from `!`, which can never have children.
+- **Tag-interior trivia is MODELED, not disclosed away** (§1.6):
+  the formatter should someday be able to emit
+  `<a\n  attr="123"\n  attr2="abc">` for attribute-heavy tags, and
+  that requires per-attribute layout to survive round trips.
+- **CRLF: input canonicalization.** One document-wide CRLF→LF
+  normalization at parse entry; the fidelity contract is defined
+  over the canonicalized bytes; a flag on the parse result reports
+  that it happened. No per-kind CRLF rules anywhere.
 
 ### §0.3 The model in one sentence
 
@@ -180,6 +188,22 @@ lines are fine; trailing whitespace after content on a line is fine
 (reserved, §11). `\` with capture parens = vitium. `\!` order =
 vitium. Each refusal names itself.
 
+**Form details.** `\` is a KIND FLAG, never part of the tag name —
+selectors match `multiline` plain (our own selector engine shares
+the CSS syntax family where `\` is the escape character; a marker
+in the name would make marked elements selector-unaddressable, the
+`.species` registry caution replayed). With attributes the marker
+sits between name and attribute list: `<multiline\ clavis="v">`.
+Anonymous close `</>` is legal for `\` (it does not change
+lexing); `!\` REQUIRES the named close (raw mode scans for
+`</tag` to find its end) — asymmetry deliberate and fixtured.
+Self-close with the marker is legal and empty. All-whitespace
+`\` content elides under §1.3 — the element is genuinely empty.
+Dedent's common prefix is **bytes, never columns** — no tab
+expansion; a `\t`-indented line and a space-indented line share
+no prefix, so nothing is stripped and everything stays in the
+valor, deterministically.
+
 ### §1.5 Comments, raw, attributes, sigils
 
 - **Comments stay nodes** (content with structure — this is where
@@ -192,6 +216,28 @@ vitium. Each refusal names itself.
 - **Attribute values**: untouched, raw both ways, as today.
 - **Sigils, fragments, transclusion, augmentation**: no semantic
   change; the nodes gain trivia fields like all others.
+
+### §1.6 Tag-interior trivia
+
+The lexer accepts newlines between attributes; the writer today
+normalizes them away — a standing fidelity hole this spec closes
+by MODELING it (decretum Franis: the formatter should someday emit
+multi-line attribute layouts for attribute-heavy tags):
+
+- `StmlAttributum` gains `spatia_ante` — the whitespace before
+  this attribute (after the name or the previous attribute).
+  NIHIL = canonical single space.
+- The node gains one pre-close chorda — whitespace before the
+  tag's `>` or `/>`. NIHIL = none (canonical).
+- Non-pretty reassembles stored tag layout byte-exact; pretty
+  regenerates (single-space today; a multi-line attribute layout
+  rule is a RESERVED formatter policy, §11).
+- **Named narrow exception**: whitespace around `=` inside an
+  attribute (`attr = "v"`) is NORMALIZED to the tight form, both
+  modes — modeling it would cost two more chordas per attribute
+  for a shape no house document uses. The goldens run measures
+  whether that claim holds; if a document disagrees, it gets
+  reformatted once, loudly.
 
 ## §2 Accessor contract (the triad + the bridge)
 
@@ -211,9 +257,15 @@ returns the valor untouched; the document's declaration wins):
 - `stml_textus_fluxus` — NEW: the prose reading (parent-level,
   mixed content): joins child text, emitting ONE SPACE wherever a
   newline-bearing boundary or interior newline-bearing run sat.
-  Deliberate divergence from HTML: same-line runs stay literal
-  (`a  b` keeps two spaces) — one rule everywhere, we are a data
-  format.
+  Three edge rules: EDGE trivia (ante of the first content, post
+  of the last) contributes NO soft space — `<p>\n salve\n</p>`
+  flows to `"salve"`, not `" salve "`; CONSECUTIVE soft boundaries
+  merge to one space — `salve\n<!-- nota -->\nmunde` flows to
+  `"salve munde"`; recursion is textContent-shaped — an element
+  child contributes its own fluxus, so `<p>a<br/>b</p>` flows to
+  `"ab"`. Deliberate divergence from HTML: same-line runs stay
+  literal (`a  b` keeps two spaces) — one rule everywhere, we are
+  a data format.
 - `stml_textus_normalizatus` — the shipped read-time dedent
   (`_normalizare_spatium_album`): unchanged, and remains the pre
   reading AGAINST unmarked elements (compat). On `\` content it is
@@ -222,12 +274,21 @@ returns the valor untouched; the document's declaration wins):
 
 ## §3 Parser
 
+**Input canonicalization first**: CRLF→LF over the whole document
+before lexing; `StmlResultus` gains a flag reporting it happened.
+The fidelity contract (§4, §7) is defined over the canonicalized
+bytes — byte-exact for every LF document, deterministic
+one-time normalization for CRLF input. No per-kind CRLF rules
+exist anywhere downstream.
+
 Whitespace classification happens at tree assembly (where text nodes
 are created today): whitespace-only runs route to trivia by §1.2;
-content runs split edges by §1.3. `positus` semantics for elements
-unchanged (open tag through close; trivia OUTSIDE extents — the
-sedes table and 0032's addressing keep their meaning). No lexer
-changes: `stml_lexemata_colligere` remains the raw total stream.
+content runs split edges by §1.3; tag-interior runs attach per
+§1.6. `positus` semantics for elements unchanged (open tag through
+close; trivia OUTSIDE extents — the sedes table and 0032's
+addressing keep their meaning). Lexer changes are limited to the
+`\` tag flag and CRLF canonicalization; `stml_lexemata_colligere`
+remains the raw total stream (over canonicalized input).
 
 ## §4 Writer
 
@@ -330,6 +391,15 @@ unchanged, now structurally enforced.
   capture parens, `\!` order — each vitium NAMED
 - flow re-wrap: pretty output with different wrap points parses to
   an IDENTICAL tree (fluxus-stable)
+- multi-line tag `<a\n  attr="1"\n  attr2="2">` — reassembles
+  byte-exact (§1.6); pre-`>` whitespace
+- CRLF document — canonicalized once, flag set, then byte-exact
+  over the LF form
+- mixed tab/space dedent — no shared prefix, nothing stripped
+- `<multiline\ clavis="v">` — marker with attributes
+- `</>` on `\` legal; missing named close on `!\` refused
+- fluxus: edge-trivia no-space, consecutive-boundary merge,
+  `<p>a<br/>b</p>` → "ab"
 
 ## §9 Consumer migration (M3)
 
@@ -349,9 +419,10 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
 ## §10 Milestones
 
 - **M1** — model + parser + non-pretty writer, INCLUDING the kind
-  ladder (`\` lexing, dedent-at-parse, indentatio, refusals);
-  golden bridge + byte-fidelity corpus green throughout; arbor
-  gate green.
+  ladder (`\` lexing, dedent-at-parse, indentatio, refusals),
+  tag-interior trivia (§1.6), and CRLF canonicalization; golden
+  bridge + byte-fidelity corpus green throughout; arbor gate
+  green.
 - **M2** — pretty = trivia regeneration; TERMINI deleted; flow
   re-wrap liberty + `\` block re-indent; fixed point gate lands.
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
@@ -373,6 +444,12 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
 - **Per-element kind declaration in canon** ("element X must be
   `\`"): RESERVED — the document declares today; the schema may
   someday constrain.
+- **Multi-line attribute layout as a formatter RULE** (when to
+  break attribute-heavy tags across lines): RESERVED — §1.6 builds
+  the carrying capacity; the pretty policy comes when the formator
+  rule is designed.
+- **Whitespace around `=` in attributes**: normalized, not
+  modeled (§1.6's named narrow exception).
 - **`normalizatus` deprecation path**: RESERVED — it stays as the
   read-time dedent against unmarked elements; revisit once marked
   documents dominate.
