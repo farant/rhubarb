@@ -634,3 +634,55 @@ gates are trusted:
    re-planted) → probatio_stml (circuitus crudae) RED; aurea
    correctly blind (writer output is not internus's domain)
 All restored; all green after restoration.
+
+## 2026-08-24 (M2 T1+T2) — TERMINI deleted; pretty = one layout decision per element
+
+T1 built the gates BEFORE surgery (probatio_stml_pulchrum: fixed
+point §5 + tree-equivalence-modulo-trivia §7.7 over the aurea
+corpus + 18 litterae). Born red on 3 real bug classes — the honest
+work map:
+
+1. **Drop-class**: TERMINI's pretty skipped same-line
+   whitespace-only text nodes. Post-M1 those are DELIBERATE CONTENT
+   (`<sep>   </sep>` decree) — the skip silently deleted values.
+   Corpus hit: rhubarb.census `</glossa>  </facultas>`.
+2. **Retro form-dishonesty**: pretty emitted `<) a>` captor-first
+   with the captured child AFTER — reparse reversed the capture
+   direction (captor grabbed nothing, child became a sibling).
+   The old "roundtrip" never was one.
+3. **Farcimen**: same disease — child[0] must precede the tag.
+
+Fixes (T2): the TERMINI state machine deleted wholesale; replaced
+by ONE decision per element — any text child → INLINE (children on
+the tag line, pulchrum=FALSUM, text KEPT), else BLOCK (one child
+per line). Retro/farcimen now emit stream order in BOTH modes.
+Document level got the same inline-if-text rule (a '\n' separator
+before a same-line text child would convert it to trivia on
+reparse). Pretty multilinea (`\`) now REGENERATES the indent prefix
+to nesting depth (_valorem_pulchre_indentare) instead of emitting
+the stored one — moved nodes reformat correctly; fidelity still
+uses the stored prefix byte-exact.
+
+Finds for the next reader:
+
+- The flag-extinguish trick (inline children get pulchrum=FALSUM)
+  SURVIVES the deletion and is now harmless: since M1 split
+  fidelitas from pulchrum, "don't self-indent" no longer drags
+  "fidelity" along. The 2026-08-19 "pretium nominatum" debt is
+  paid, not just documented.
+- `_spatium_album_solum` deleted (both callers were the disease).
+  If pretty ever wants to special-case whitespace again, that is
+  the smell of a new TERMINI.
+- WORKSHOP.taxonomy.stml does not parse (status 4, predecessor-
+  generation reference file). The aurea golden RECORDS the refusal
+  (`arbor successus:0`) so refusal-change is guarded there; the
+  pulchrum gate skips it LOUDLY (recusatio_licet only for corpus
+  files — litterae must parse).
+- Expectation churn: 8 of 13 TERMINI-battery cases in
+  probatio_stml rewrote to inline expectations; case VI's doctrine
+  INVERTED (whitespace "transparens" → "servatus").
+- Planted fault (stored ante emitted in pretty block) reddened the
+  fixed point across litterae AND corpus; reverted.
+
+Gates after: stml family 4/4, full suite 140/140, amalgam
+re-verified (hospes 39/39), silva suite green.

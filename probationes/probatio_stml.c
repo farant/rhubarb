@@ -3202,39 +3202,35 @@ s32 principale(vacuum)
     /* ==================================================
      * Scriptio pulchra: contentum MIXTUM (textus + elementa)
      *
-     * CONTRACTUS: liberus TEXTUS qui non-solum-albus est VERBATIM
-     * emittitur, nullo spatio ab utraque parte iniecto. Liberi
-     * TEXTUS solum-albi TRANSPARENTES sunt (omittuntur; termini
-     * contra vicinos VEROS computantur). Liberi ELEMENTUM et
-     * similes lineam novam + indentationem retinent.
+     * CONTRACTUS M2 (spec triviae §4, TERMINI deleti): decisio UNA
+     * per elementum - liberum textus QUODVIS -> INLINE (liberi
+     * omnes in linea tagi, sine terminis additis; textus
+     * solum-albus eiusdem lineae CONTENTUM est et SERVATUR);
+     * aliter -> BLOCUS (liberum per lineam, indentatum).
      *
-     * Cum terminus collabitur, vicinus elementalis se indentare NON
-     * debet - indentatio hodie a CASU liberi ipsius emittitur, non
-     * ab ansa, ergo utrumque supprimendum est (exemplar exstat:
-     * ramus crudus/textus-unicus FALSUM liberis imponit).
-     * ================================================== */
+     * Liberi inline pulchrum=FALSUM accipiunt ('ne te indentes') -
+     * fidelitas SEORSUM fluit (vexillum proprium ab M1), ergo
+     * pretium vetus 'forma interna plana' pretium manet sed fides
+     * numquam laeditur. */
 
     imprimere("\n--- Probans scriptionem pulchram contenti mixti ---\n");
 
     /* NOTA DE CLAUSURIS: modus pulcher clausuram TACITAM ('</>')
      * eligit dum contentum breve sit (vide STML_CLAUSURA_TACITA_
-     * LINEAE). Elementum super terminum COLLAPSUM tamen
-     * pulchrum=FALSUM accipit, ergo formam AUTHORIS retinet -
-     * unde '</post>' in casibus II et X iuxta '</>' stat. Vexillum
-     * unum duo nunc portat ('ne te indentes' et 'fidelitas'):
-     * inaequalitas nominata, non incidens. */
+     * LINEAE). Liberi inline pulchrum=FALSUM ferunt, ergo formam
+     * AUTHORIS retinent - unde '</ante>'/'</post>' iuxta '</>'
+     * stat. */
 
-    /* I. elementum, deinde textus - terminus dexter collabitur */
+    /* I. elementum, deinde textus -> inline totum */
     _pulchrum_probare(piscina, intern,
         "<t><ante>x</ante>n</t>",
-        "<t>\n  <ante>x</>n</>",
+        "<t><ante>x</ante>n</>",
         "I elementum-tum-textus: PRAETERITUM");
 
-    /* II. textus, deinde elementum - speculum casus I. NOTA
-     * '</post>': post super terminum collapsum sedet */
+    /* II. textus, deinde elementum - speculum casus I */
     _pulchrum_probare(piscina, intern,
         "<t>n<post>y</post></t>",
-        "<t>n<post>y</post>\n</>",
+        "<t>n<post>y</post></>",
         "II textus-tum-elementum: PRAETERITUM");
 
     /* III. textus utrimque: elementum interpositum indentationem
@@ -3258,12 +3254,14 @@ s32 principale(vacuum)
         "<t>textus solus</>",
         "V textus-unicus (custos): PRAETERITUM");
 
-    /* VI. albus solus inter elementa: TRANSPARENS esse debet -
-     * exitus casui IV par */
+    /* VI. albus solus eiusdem lineae inter elementa: CONTENTUM
+     * deliberatum est (§1.3) et SERVATUR - elementum inline fit.
+     * (Transparentia vetus TERMINI eum delebat - classis vitii
+     * quam porta arborum in T1 deprehendit.) */
     _pulchrum_probare(piscina, intern,
         "<t><a/>  <b/></t>",
-        "<t>\n  <a/>\n  <b/>\n</>",
-        "VI albus-solus transparens: PRAETERITUM");
+        "<t><a/>  <b/></>",
+        "VI albus-eiusdem-lineae servatus: PRAETERITUM");
 
     /* VII. termini plures: omnis terminus textum tangit */
     _pulchrum_probare(piscina, intern,
@@ -3271,11 +3269,11 @@ s32 principale(vacuum)
         "<t>a<b/>c<d/>e</>",
         "VII termini plures: PRAETERITUM");
 
-    /* VIII. nidificatio: indentatio + I recte componi debet.
-     * Catena '</>' contigua est - vide invariantem infra */
+    /* VIII. nidificatio: radix BLOCUS (sine textu), 't' interius
+     * INLINE (textum fert) - regulae per gradum componuntur */
     _pulchrum_probare(piscina, intern,
         "<root><t><ante>x</ante>n</t></root>",
-        "<root>\n  <t>\n    <ante>x</>n</>\n</>",
+        "<root>\n  <t><ante>x</ante>n</>\n</>",
         "VIII nidificatio componens: PRAETERITUM");
 
     /* IX. elementum-TEXTUS-elementum: forma quam ARBOR ipsa fert
@@ -3283,27 +3281,27 @@ s32 principale(vacuum)
      * veri, ab octo prioribus NON tactus */
     _pulchrum_probare(piscina, intern,
         "<t><a/>n<b/></t>",
-        "<t>\n  <a/>n<b/>\n</>",
+        "<t><a/>n<b/></>",
         "IX elementum-textus-elementum (forma arboris): PRAETERITUM");
 
-    /* X. PRETIUM NOMINATUM figendum: vicinus termini collapsi
-     * pulchrum=FALSUM accipit, ergo formam suam INTERNAM planam
-     * reddit ET clausuram nominatam retinet. Mensuratum */
+    /* X. PRETIUM NOMINATUM: liberus inline pulchrum=FALSUM accipit,
+     * ergo formam suam INTERNAM planam reddit ET clausuram
+     * nominatam retinet. Mensuratum */
     _pulchrum_probare(piscina, intern,
         "<t>n<post><alta><altior/></alta></post></t>",
-        "<t>n<post><alta><altior/></alta></post>\n</>",
+        "<t>n<post><alta><altior/></alta></post></>",
         "X planatio vicini (pretium fixum): PRAETERITUM");
 
     /* XI. effugium entium per semitam mixtam */
     _pulchrum_probare(piscina, intern,
         "<t><a/>x &amp; y</t>",
-        "<t>\n  <a/>x &amp; y</>",
+        "<t><a/>x &amp; y</>",
         "XI effugium entium in contento mixto: PRAETERITUM");
 
-    /* XII. COMMENTUM textui adiacens */
+    /* XII. COMMENTUM textui adiacens - inline cum ceteris */
     _pulchrum_probare(piscina, intern,
         "<t><!--c-->n</t>",
-        "<t>\n  <!--c-->n</>",
+        "<t><!--c-->n</>",
         "XII commentum textui adiacens: PRAETERITUM");
 
     {

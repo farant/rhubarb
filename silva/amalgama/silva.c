@@ -3276,19 +3276,26 @@ silva_stml_attributum_habet (
              SilvaStmlNodus* nodus,
     constans character* titulus);
 
-/* Capere textum internum (concatenatum), VERBATIM
+/* Capere textum internum - octeti interiores EXACTI
  * "Get inner text content"
  *
- * Omnes nodos textus posterorum ordine documenti concatenat,
- * SINE mutatione - id quod textContent (DOM) et string() (XPath)
- * significant. Spatium album CONTENTUS est.
+ * Octetos contenti interioris quales in fonte stabant reddit - id
+ * quod textContent (DOM) et string() (XPath) significant.
+ * MECHANICA (exemplar triviae, 2026-08-24): trivia reassuuntur
+ * (ante + valor + clausurae + post, recursive; praefixum '<tag\>'
+ * reinsertum) - resultus octetim IDEM ac aetas ante-triviam: PONS
+ * migrationis EXACTUS, aureis (probationes/fixa/stml_aurea)
+ * pinnatus. Lectio DISPOSITIONI SENSIBILIS consulto - reformatio
+ * documenti valores internus mutat; lectiones formatione stabiles
+ * accessoribus sensus pertinent (normalizatus hodie, valor/fluxus
+ * in M3). Angustia nominata: in nodo TEXTUS directo quaesitus,
+ * pars marginis ducentis quae priori fratri cessit (§1.2)
+ * inattingibilis est (in corpore absens, mensurata).
  *
- * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat
- * (nodi praecidebantur, nodi spatii albi solius abiciebantur).
- * Gradu falso stabat: circuitum frangebat et contentum mixtum
- * conglutinabat ('salve <b>munde</b> iterum' -> 'salvemundeiterum';
- * optiones -> 'disciplinastructuracryptographica'). Nunc arbor
- * documentum fideliter refert et normalizatio HIC eligitur.
+ * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat -
+ * gradu falso stabat, contentum mixtum conglutinabat. Ad lectionem
+ * migravit (stml_textus_normalizatus); exemplar triviae deinde
+ * spatium ipsum e nodis in trivia movit (2026-08-24).
  */
 SilvaChorda
 silva_stml_textus_internus (
@@ -13418,27 +13425,6 @@ _valorem_praefixo_scribere (
     }
 }
 
-/* an chorda spatium album SOLUM ferat (vacua quoque) */
-interior b32
-_spatium_album_solum (
-    constans SilvaChorda* s)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; i < s->mensura; i++)
-    {
-        character c;
-
-        c = (character)s->datum[i];
-        si (c != ' ' && c != '\t' && c != '\n' && c != '\r')
-        {
-            redde FALSUM;
-        }
-    }
-
-    redde VERUM;
-}
-
 static SilvaChorda
 silva_stml_textus_normalizatus (
     SilvaStmlNodus* nodus,
@@ -13855,6 +13841,87 @@ _intra_multilineam (
         && nodus->parens->multilinea);
 }
 
+/* an elementum liberum textus quodvis ferat - decisio dispositionis
+ * M2 (§4): textus praesens -> INLINE, aliter BLOCUS */
+interior b32
+_habet_liberum_textus (
+    constans SilvaStmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->liberi == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = silva_xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum != NIHIL && liberum->genus == STML_NODUS_TEXTUS)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Interius '\' modo pulchro (§4 M2): lineas valoris ad nivel
+ * REGENERATUM indentare - praefixum conditum ignoratur, ergo nodi
+ * moti recte reformantur. Linea 0 sine praefixo novo si in linea
+ * tagi sedet (prima_quoque FALSUM); lineae vacuae sine praefixo
+ * (forma normativa §1.4 - reassemblatio praefixum lineis non-vacuis
+ * solis inserit). */
+interior vacuum
+_valorem_pulchre_indentare (
+     SilvaChordaAedificator* aed,
+                SilvaChorda  valor,
+                   i32  nivel,
+                   b32  evadendum,
+                   b32  prima_quoque)
+{
+    i32 initium;
+    i32 i;
+    b32 prima;
+
+    initium  = ZEPHYRUM;
+    prima    = VERUM;
+    per (i = ZEPHYRUM; i <= valor.mensura; i++)
+    {
+        si (i == valor.mensura || (character)valor.datum[i] == '\n')
+        {
+            SilvaChorda linea;
+
+            linea.datum    = valor.datum + initium;
+            linea.mensura  = i - initium;
+
+            si (!prima || prima_quoque)
+            {
+                silva_chorda_aedificator_appendere_character(aed, '\n');
+                si (linea.mensura > ZEPHYRUM)
+                {
+                    _scribere_indentatio(aed, nivel);
+                }
+            }
+            si (linea.mensura > ZEPHYRUM)
+            {
+                si (evadendum)
+                {
+                    _scribere_evasus(aed, &linea);
+                }
+                alioquin
+                {
+                    silva_chorda_aedificator_appendere_chorda(aed, linea);
+                }
+            }
+            prima    = FALSUM;
+            initium  = i + I;
+        }
+    }
+}
+
 interior b32
 _scribere_nucleus (
             SilvaStmlNodus* nodus,
@@ -13895,14 +13962,22 @@ _scribere_nucleus (
         casus STML_NODUS_DOCUMENTUM:
             si (nodus->liberi)
             {
-                num = silva_xar_numerus(nodus->liberi);
+                b32 in_linea;
+
+                /* eadem regula ac elementa (M2 §4): textus in
+                 * gradu documenti -> INLINE (separator '\n' textum
+                 * eiusdem-lineae in trivia verteret relectum) */
+                in_linea  = _habet_liberum_textus(nodus);
+                num       = silva_xar_numerus(nodus->liberi);
                 per (i = ZEPHYRUM; i < num; i++)
                 {
                     liberum = _xar_liberum_obtinere(nodus->liberi, i);
                     si (liberum)
                     {
-                        _scribere_nucleus(liberum, aedificator, pulchrum, fidelitas, indentatio, sedes);
-                        si (pulchrum && i < num - I)
+                        _scribere_nucleus(liberum, aedificator,
+                            in_linea ? FALSUM : pulchrum, fidelitas,
+                            indentatio, sedes);
+                        si (pulchrum && !in_linea && i < num - I)
                         {
                             silva_chorda_aedificator_appendere_character(aedificator, '\n');
                         }
@@ -14051,12 +14126,14 @@ _scribere_nucleus (
                 /* Backward capture: <) tag> or <)) tag> */
                 i32 j;
 
-                /* ordo fluminis (§6, in M1 tractum): liberi capti
-                 * RETRO in fonte ANTE tagum captoris stant -
-                 * fidelitas non-pulchra ordinem authoris reddit
-                 * (quisque liberum trivia sua secum fert); pulcher
-                 * formam captor-primum generat ut hodie */
-                si (fidelitas && nodus->liberi)
+                /* ordo fluminis (§6): liberi capti RETRO in fonte
+                 * ANTE tagum captoris stant - AMBO modi eum ordinem
+                 * reddunt (M2: forma captor-primum pulchri erat
+                 * mendax - relecta directionem capturae invertebat,
+                 * captor nihil capiebat et liberum frater fiebat).
+                 * Fidelitas trivia liberorum fert; pulcher eos
+                 * inline emittit. */
+                si (nodus->liberi)
                 {
                     num = silva_xar_numerus(nodus->liberi);
                     per (i = ZEPHYRUM; i < num; i++)
@@ -14081,29 +14158,15 @@ _scribere_nucleus (
                 /* Attributes */
                                 _attributa_scribere(aedificator, nodus, fidelitas);
                 silva_chorda_aedificator_appendere_character(aedificator, '>');
-                /* Serialize children inline - modo pulchro solo
-                 * (non-pulcher eos IAM ante tagum emisit) */
-                si (!fidelitas && nodus->liberi)
-                {
-                    num = silva_xar_numerus(nodus->liberi);
-                    per (i = ZEPHYRUM; i < num; i++)
-                    {
-                        liberum = _xar_liberum_obtinere(nodus->liberi, i);
-                        si (liberum)
-                        {
-                            _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
-                        }
-                    }
-                }
             }
             alioquin si (nodus->captio_directio == STML_CAPTIO_FARCIMEN)
             {
                 /* Sandwich capture: <= tag =>. Ordo fluminis in
                  * fonte: liberum primum (captum retro) ANTE tagum,
-                 * reliqua post - non-pulcher eum ordinem reddit;
-                 * pulcher captor-primum generat ut hodie. */
-                si (   fidelitas
-                    && nodus->liberi
+                 * reliqua post - AMBO modi eum ordinem reddunt (M2:
+                 * captor-primum pulchri relectum liberum primum in
+                 * fratrem vertebat). */
+                si (   nodus->liberi
                     && silva_xar_numerus(nodus->liberi) > ZEPHYRUM)
                 {
                     liberum = _xar_liberum_obtinere(nodus->liberi,
@@ -14122,12 +14185,12 @@ _scribere_nucleus (
                 /* Attributes */
                                 _attributa_scribere(aedificator, nodus, fidelitas);
                 silva_chorda_aedificator_appendere_literis(aedificator, " =>");
-                /* Serialize children inline: non-pulcher ab indice
-                 * I (liberum 0 iam ante tagum), pulcher omnes */
+                /* Liberi reliqui ab indice I (liberum 0 iam ante
+                 * tagum, ambobus modis) */
                 si (nodus->liberi)
                 {
                     num = silva_xar_numerus(nodus->liberi);
-                    per (i = fidelitas ? I : ZEPHYRUM; i < num; i++)
+                    per (i = I; i < num; i++)
                     {
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
@@ -14282,30 +14345,62 @@ _scribere_nucleus (
                 }
                 alioquin
                 {
-                         SilvaStmlNodus* first_child;
-                    memoriae_index  initium_contenti;
-                               b32  clausura_tacita;
+                    memoriae_index initium_contenti;
+                               b32 clausura_tacita;
 
                     silva_chorda_aedificator_appendere_character(aedificator, '>');
                     initium_contenti = silva_chorda_aedificator_longitudo(aedificator);
 
                     num = nodus->liberi
                         ? silva_xar_numerus(nodus->liberi) : ZEPHYRUM;
-                    first_child = (num > ZEPHYRUM)
-                        ? _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM)
-                        : NIHIL;
 
-                    /* For raw content or single text child, don't add newlines */
-                    si (   nodus->crudus
-                        || (num == I && first_child
-                        && first_child->genus == STML_NODUS_TEXTUS))
+                    /* DISPOSITIO M2 (§4): decisio UNA per elementum,
+                     * ex liberis derivata - liberum textus quodvis
+                     * -> INLINE (liberi in linea tagi, sine terminis
+                     * additis; textus solum-albus eiusdem lineae
+                     * CONTENTUM est et SERVATUR, §1.3); aliter ->
+                     * BLOCUS (liberum per lineam, indentatum).
+                     * Machina TERMINI (2026-08-19) DELETA - vitium
+                     * quartum familiae deletionem meruit:
+                     * transparentia albi mortua quia cursus albi
+                     * lineiferi nodi esse desierunt (§1.3), et
+                     * vexillum liberi extinctum fidem iam non
+                     * laedit quia fidelitas seorsum fluit. */
+                    si (pulchrum && nodus->multilinea)
                     {
+                        /* interius '\' et '!\': dispositio contenti
+                         * declarata, sed praefixum ad profunditatem
+                         * nidificationis REGENERATUM (§4) - nodi
+                         * moti recte reformantur; interior numquam
+                         * refluit. */
+                        per (i = ZEPHYRUM; i < num; i++)
+                        {
+                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            si (   liberum
+                                && liberum->genus == STML_NODUS_TEXTUS
+                                && liberum->valor)
+                            {
+                                _valorem_pulchre_indentare(
+                                    aedificator,
+                                    *liberum->valor,
+                                    indentatio + I,
+                                    nodus->crudus ? FALSUM : VERUM,
+                                    liberum->spatia_ante != NIHIL
+                                        ? VERUM : FALSUM);
+                            }
+                        }
+                        silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                        _scribere_indentatio(aedificator, indentatio);
+                    }
+                    alioquin si (nodus->crudus)
+                    {
+                        /* crudus: interior verbatim, numquam tactus */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                si (nodus->crudus && liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
+                                si (liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
                                 {
                                     /* Raw content - non evasus; interius '!\'
                                      * trivia sua et praefixum secum fert */
@@ -14333,83 +14428,34 @@ _scribere_nucleus (
                             }
                         }
                     }
-                    alioquin
+                    alioquin si (!pulchrum || _habet_liberum_textus(nodus))
                     {
-                        /* TERMINI, non liberi singuli (2026-08-19).
-                         *
-                         * Regula: terminus spatium album fert NISI
-                         * utravis pars textus SIGNIFICANS est. Textus
-                         * solum-albus TRANSPARENS est - nec emittitur
-                         * nec terminos afficit, ergo vicini VERI inter
-                         * se conveniunt.
-                         *
-                         * Ansa prior spatium per liberum incondite
-                         * emittebat, generis immemor, et duo vitia
-                         * pariebat: (i) textus verus lineis novis
-                         * circumdatus, quae VALORIS eius pars fiebant
-                         * ('n' -> '\nn\n' -> '\n\nn\n\n' - CUMULABAT);
-                         * (ii) liberus albus, contento recte
-                         * suppresso, lineam suam nihilominus addebat -
-                         * unde scriptio pulchra puncto fixo carebat
-                         * pro OMNI elemento plus quam unum liberum
-                         * ferente.
-                         *
-                         * Indentatio a CASU liberi ipsius emittitur,
-                         * non ab hac ansa; ergo termino collapso
-                         * vexillum pulchri liberi extingui DEBET,
-                         * aliter spatia indentationis textui
-                         * agglutinantur - eadem corruptio, habitu
-                         * alio. Exemplar: ramus crudus/textus-unicus
-                         * supra idem FALSUM iam imponit. Pretium
-                         * nominatum: liberus sic vocatus formam suam
-                         * INTERNAM quoque planam reddit. */
-                        b32 aliquid_emissum;
-                        b32 textus_ante;
-
-                        aliquid_emissum  = FALSUM;
-                        textus_ante      = FALSUM;
-
+                        /* series plana: fidelitas semper (liberi
+                         * trivia sua ordine ferunt); pulcher INLINE
+                         * quia textus adest */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
-                            b32 est_textus;
-                            b32 arte;
-
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
-                            si (!liberum)
+                            si (liberum)
                             {
-                                perge;
+                                _scribere_nucleus(liberum, aedificator, FALSUM, fidelitas, ZEPHYRUM, sedes);
                             }
-
-                            si (   pulchrum
-                                && liberum->genus == STML_NODUS_TEXTUS
-                                && (   liberum->valor == NIHIL
-                                    || _spatium_album_solum(liberum->valor)))
-                            {
-                                perge;
-                            }
-
-                            est_textus = (liberum->genus == STML_NODUS_TEXTUS)
-                                ? VERUM : FALSUM;
-                            arte = (est_textus || textus_ante) ? VERUM : FALSUM;
-
-                            si (pulchrum && !arte)
+                        }
+                    }
+                    alioquin
+                    {
+                        /* BLOCUS: liberum per lineam, indentatum */
+                        per (i = ZEPHYRUM; i < num; i++)
+                        {
+                            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+                            si (liberum)
                             {
                                 silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                                _scribere_nucleus(liberum, aedificator, VERUM, fidelitas, indentatio + I, sedes);
                             }
-
-                            _scribere_nucleus(liberum, aedificator,
-                                (pulchrum && !arte) ? VERUM : FALSUM, fidelitas,
-                                indentatio + I, sedes);
-
-                            aliquid_emissum  = VERUM;
-                            textus_ante      = est_textus;
                         }
-
-                        si (pulchrum && aliquid_emissum && !textus_ante)
-                        {
-                            silva_chorda_aedificator_appendere_character(aedificator, '\n');
-                            _scribere_indentatio(aedificator, indentatio);
-                        }
+                        silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                        _scribere_indentatio(aedificator, indentatio);
                     }
 
                     /* Clausura TACITA (2026-08-19): in modo pulchro
@@ -14448,32 +14494,27 @@ _scribere_nucleus (
             frange;
 
         casus STML_NODUS_TEXTUS:
-            /* DUO MODI, DUAE PROMISSIONES (2026-08-06):
-             * non-pulcher FIDEM praestat (circuitus octetim), ergo
-             * textum verbatim scribit; pulcher LEGIBILITATEM
-             * praestat et dispositionem SUAM generat, ergo nodos
-             * spatii albi SOLIUS omittit.
-             * Aliter compugnant: indentatio servata et indentatio
-             * generata se cumulant, et circuitus
-             * scribere->legere->rescribere quoque cursu CRESCIT
-             * (mensuratum: lineae vacuae duplicantes).
-             * Pulcher fidem numquam promisit - reformator est. */
+            /* Textus CONTENTUM est et SEMPER emittitur (M2 §4):
+             * omissio pulchra nodorum solum-alborum deleta cum
+             * TERMINIS - post §1.3 nodus textus superstes aut
+             * contentum verum aut spatium eiusdem-lineae
+             * DELIBERATUM est ('<sep>   </sep>'); utrumque sensus,
+             * neutrum dispositio. Cumulatio vetus non redit quia
+             * cursus albi lineiferi nodi esse desierunt. */
             si (nodus->valor)
             {
                 si (   nodus->parens != NIHIL
                     && nodus->parens->multilinea)
                 {
-                    /* interius '<tag\>': dispositio DECLARATA
-                     * contenti est - praefixum (indentatio)
-                     * reinseritur AMBOBUS modis (pulcher blocum
-                     * integrum M2 re-indentabit, interius numquam
-                     * refluit) */
+                    /* interius '<tag\>' in fidelitate: praefixum
+                     * CONDITUM reinseritur (pulcher hunc casum non
+                     * attingit - parens eum ipse emittit, praefixo
+                     * ad profunditatem regenerato) */
                     _valorem_praefixo_scribere(aedificator,
                         *nodus->valor, nodus->parens->indentatio, VERUM,
                         nodus->spatia_ante != NIHIL ? VERUM : FALSUM);
                 }
-                alioquin si (   !pulchrum
-                             || !_spatium_album_solum(nodus->valor))
+                alioquin
                 {
                     _scribere_evasus(aedificator, nodus->valor);
                 }
