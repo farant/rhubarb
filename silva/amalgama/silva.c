@@ -1754,6 +1754,12 @@ typedef struct SilvaStmlNodus {
     struct SilvaStmlNodus*  parens;
     unsigned int            linea;       /* linea fontis, 1-basata;
                                           * 0 = non e parsatione */
+    unsigned int            positus_initium; /* extensio octetorum
+                                          * [initium, finis) in fonte
+                                          * PARSATO: tag aperiens
+                                          * usque post claudens; 0/0
+                                          * si non e parsatione */
+    unsigned int            positus_finis;
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;
@@ -1882,6 +1888,24 @@ unsigned int silva_arbor_lexema_tag(SilvaLexemaGenus genus,
 SilvaLexemaGenus silva_arbor_lexema_ex_tag(const char* tag,
     unsigned int mensura);
 
+/* Where a silva value landed in the EMITTED document: byte extent
+ * [initium, finis) of ITS element (opening tag through closing).
+ * The document itself deliberately carries no positions (sedes
+ * derivatae); this table is how a consumer maps tree values to
+ * document bytes without re-deriving the writer's layout.
+ * clavis is the same SilvaNodus* / SilvaToken* the caller already
+ * holds in the parse tree (est_lexema selects which). A shared
+ * lexeme appears ONCE - its definition site; transclusions point,
+ * they do not repeat. Locus wrappers and trivia are not recorded:
+ * values, not document furniture. First consumer: the laboratorium
+ * inspector (0032). */
+typedef struct SilvaArborSedes {
+    const void*  clavis;      /* SilvaNodus* or SilvaToken* */
+    int          est_lexema;
+    unsigned int initium;     /* byte offset, INCLUSIVE */
+    unsigned int finis;       /* byte offset, EXCLUSIVE */
+} SilvaArborSedes;
+
 /* Writer result - same shape as SilvaScriptura (loud failure: a
  * static causa plus the offending node, never a silent omission). */
 typedef struct SilvaArborScriptura {
@@ -1889,6 +1913,12 @@ typedef struct SilvaArborScriptura {
     SilvaChorda       textus;   /* STML bytes; empty on failure */
     const char*       causa;    /* static diagnostic; NULL if well */
     const SilvaNodus* sedes;    /* failing node; NULL permitted */
+
+    /* Sedes table (SilvaXar of SilvaArborSedes), in write order
+     * (post-order of closing). Filled by scribere_parsuram; NULL
+     * on failure AND from the subtree writer - a NAMED privation,
+     * door open when a consumer pulls. */
+    SilvaXar*         sedes_valorum;
 } SilvaArborScriptura;
 
 /* grammatica is a PARAMETER, not derived: the registry cannot name
@@ -3153,6 +3183,45 @@ silva_stml_legere (
 
 
 /* ==================================================
+ * Lexemata - fluxus tokenum sine arbore
+ * ==================================================
+ *
+ * CUR SEORSUM AB ARBORE: nodus 'linea' solam fert (initium, sine
+ * columna, sine fine) - metadatum diagnostici, quod diagnostico
+ * sufficit et COLORATIONI non sufficit. Instrumentum quod textum
+ * pingit extensionem OCTETORUM poscit, et eam tokenizator iam
+ * habet; hactenus interior sola erat.
+ *
+ * CONSUMENS PRIMUS: coloratio syntaxis (laboratorium 0028) - eadem
+ * suturas quas css/html/js lexatores praebent, ut STML quinta
+ * lingua libri adumbrationum fiat. Consumentes futuri: editores,
+ * diagnostica cum extensionibus, plicatura.
+ *
+ * PARSATIO NULLA: nulla structura probatur, nulla clausura
+ * postulatur, nullus error redditur - input QUODLIBET fluxum
+ * reddit. Ideo instrumenta textum SEMIPLENUM (qualis est dum
+ * scribitur) tractare possunt, ubi stml_legere iure recusaret.
+ */
+
+/* StmlLexema - token cum extensione octetorum.
+ *
+ * 'initium'/'finis' extensio CRUDA in input est [initium, finis) -
+ * octeti, non indices punctorum codicis (decretum columnarum
+ * 01M0ATF1E1: C octetos emittit, consumens ad limitem convertit).
+ * 'valor' valorem SEMANTICUM fert (textus entitatibus solutis),
+ * ergo pictor extensionem adhibeat, non valorem.
+ */
+nomen structura {
+    StmlTokenGenus genus;
+            SilvaChorda valor;
+               i32 initium;   /* offset octetorum, INCLUSIVUS */
+               i32 finis;     /* offset octetorum, EXCLUSIVUS */
+               i32 linea;     /* 1-basata */
+               i32 columna;   /* 1-basata, OCTETI */
+} StmlLexema;
+
+
+/* ==================================================
  * Quaestio - Invenire in Arbore
  * ================================================== */
 
@@ -3348,15 +3417,44 @@ silva_stml_scribere (
       SilvaPiscina* piscina,
           b32  pulchrum);
 
-/* Scribere nodum ad ChordaAedificator
- * "Serialize node to string builder"
+
+/* ==================================================
+ * Sedes scripturae - ubi scriptor nodum posuit
+ * ==================================================
+ *
+ * CUR: 'positus_initium/finis' PARSATOR ponit - in arbore manu
+ * aedificata ZEPHYRUM manent, ergo "ubi nodus in textu EMISSO
+ * iacet" responderi non poterat. Scriptor autem id iam novit dum
+ * scribit; hic tabula laterali reddit - nodos ipsos numquam
+ * mutat (scriptio pura manet).
+ *
+ * ELEMENTA SOLA notantur (fragmenta et captiones inclusa - genus
+ * ELEMENTUM ferunt); textus/commenta/transclusiones non. Extensio
+ * [initium, finis) in chorda emissa, ab primo octeto tagi
+ * aperientis (post indentationem) usque post tagum claudentem -
+ * eadem semantica ac positus parsatoris, quod probatio paritatis
+ * (scribere -> relegere -> conferre) adfirmat.
+ *
+ * CONSUMENS PRIMUS: inspector nexus (laboratorium 0032) - nodus
+ * silvae extensionem C ET extensionem STML simul ferat.
  */
-static b32
-silva_stml_scribere_ad_aedificator (
-            SilvaStmlNodus* nodus,
-    SilvaChordaAedificator* aedificator,
-                  b32  pulchrum,
-                  i32  indentatio);
+
+nomen structura {
+    constans SilvaStmlNodus* nodus;
+                   i32  initium;   /* offset octetorum, INCLUSIVUS */
+                   i32  finis;     /* offset octetorum, EXCLUSIVUS */
+} StmlSedesNodi;
+
+/* Scribere ut stml_scribere, tabula sedium impleta.
+ * 'sedes' = Xar de StmlSedesNodi, a vocante creatum; NIHIL licet
+ * (tunc idem ac stml_scribere). Ordo tabulae = ordo CLAUSURAE
+ * (post-ordo), quia nodus notatur ubi scriptio eius finitur. */
+static SilvaChorda
+silva_stml_scribere_sedibus (
+    SilvaStmlNodus* nodus,
+      SilvaPiscina* piscina,
+          b32  pulchrum,
+          SilvaXar* sedes);
 
 
 /* ==================================================
@@ -10736,6 +10834,18 @@ nomen structura {
                 SilvaPiscina* piscina;
     SilvaInternamentumChorda* intern;
 
+    /* Finis octetorum tokeni ULTIMO CONSUMPTI.
+     *
+     * SUTURA UNA pro extensionibus nodorum: quisque parsator
+     * nodi, cum redit, tokenum ultimum suum iam consumpsit -
+     * ergo 'nodus->positus_finis = ctx->finis_ultimus' uno more
+     * omnibus generibus nodorum valet (elementum cum clausura,
+     * elementum crudum, fragmentum, textus, commentum...).
+     * Alternativa - finem ad quemque locum clausurae manu capere
+     * - eandem rem sexies derivaret, unde sex occasiones
+     * divergendi. */
+    i32 finis_ultimus;
+
     /* Error info */
     SilvaStmlStatus status;
            i32 linea_erroris;
@@ -10747,7 +10857,9 @@ interior vacuum
 _parser_progredi (
     StmlParserContext* ctx)
 {
-    ctx->current = _tok_proximus(&ctx->tok_ctx);
+    /* tokenum EXEUNTEM notare, antequam obruatur */
+    ctx->finis_ultimus  = ctx->current.positus_finis;
+    ctx->current        = _tok_proximus(&ctx->tok_ctx);
 }
 
 interior SilvaStmlNodus*
@@ -10782,6 +10894,15 @@ _parser_creare_nodus (
     /* nodus nascitur dum token aperiens CURRENS est - linea eius
      * est linea nodi (tokenizator lineas iam numerat, 1-basatas) */
     nodus->linea = ctx->current.linea;
+
+    /* EXTENSIO: initium ex tokeno aperiente; finis PRAEFINITUS
+     * eiusdem tokeni finis est, quod nodis uno tokeno constantibus
+     * (textus, commentum, transclusio) IAM rectum est. Nodi qui
+     * liberos et clausuram habent eum in reditu suo corrigunt ex
+     * 'finis_ultimus'. Ergo campus numquam ZEPHYRUM manet per
+     * oblivionem - praefinitum SEMPER sanum est. */
+    nodus->positus_initium  = ctx->current.positus_initium;
+    nodus->positus_finis    = ctx->current.positus_finis;
 
     redde nodus;
 }
@@ -10854,6 +10975,9 @@ _parser_legere_elementum (
         ctx->linea_erroris    = ctx->current.linea;
         ctx->columna_erroris  = ctx->current.columna;
     }
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -10937,6 +11061,9 @@ _parser_legere_elementum_crudus (
         _parser_progredi(ctx);
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -10957,6 +11084,9 @@ _parser_legere_auto_claudere (
     nodus->liberi = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -10981,6 +11111,9 @@ _parser_legere_captio_ante (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11004,6 +11137,9 @@ _parser_legere_captio_retro (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11025,6 +11161,9 @@ _parser_legere_farcimen (
     nodus->liberi = silva_xar_creare(ctx->piscina, magnitudo(SilvaStmlNodus*));
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -11370,6 +11509,9 @@ _parser_legere_textus (
     contentus_ptr  = silva_chorda_internare(ctx->intern, unescaped);
     nodus->valor   = contentus_ptr;
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11389,6 +11531,9 @@ _parser_legere_commentum (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11407,6 +11552,9 @@ _parser_legere_processio (
     nodus->valor   = contentus_ptr;
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -11468,6 +11616,9 @@ _parser_legere_fragmentum (
         _parser_progredi(ctx);
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11513,6 +11664,9 @@ _parser_legere_fragmentum_auto (
     }
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -11565,6 +11719,9 @@ _parser_legere_percentum (
         ctx->columna_erroris  = ctx->current.columna;
     }
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11585,6 +11742,9 @@ _parser_legere_transclusio (
 
     _parser_progredi(ctx);
 
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
+
     redde nodus;
 }
 
@@ -11603,6 +11763,9 @@ _parser_legere_doctype (
     nodus->valor   = contentus_ptr;
 
     _parser_progredi(ctx);
+
+    /* extensio: finis = tokenum ultimum consumptum */
+    nodus->positus_finis = ctx->finis_ultimus;
 
     redde nodus;
 }
@@ -12385,6 +12548,8 @@ silva_stml_elementum_creare (
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
 
     redde nodus;
 }
@@ -12417,6 +12582,8 @@ silva_stml_textum_creare (
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
 
     redde nodus;
 }
@@ -12449,6 +12616,8 @@ silva_stml_textum_creare_ex_chorda (
     nodus->fragmentum_id     = NIHIL;
     nodus->augmentum_clavis  = NIHIL;
     nodus->linea             = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium   = ZEPHYRUM;
+    nodus->positus_finis     = ZEPHYRUM;
 
     redde nodus;
 }
@@ -12623,15 +12792,22 @@ _scribere_evasus (
     }
 }
 
-static b32
-silva_stml_scribere_ad_aedificator (
+/* Nucleus scriptionis - UNUS ambulator recursivus (lex superficiei
+ * duplicatae: numquam alter). 'sedes' optionalis (NIHIL licet):
+ * Xar de StmlSedesNodi, elementum quodque notatum ubi scriptio
+ * eius FINITUR (post-ordo), extensione [initium, finis) in
+ * aedificatore - semantica positus parsatoris. */
+interior b32
+_scribere_nucleus (
             SilvaStmlNodus* nodus,
     SilvaChordaAedificator* aedificator,
                   b32  pulchrum,
-                  i32  indentatio)
+                  i32  indentatio,
+                  SilvaXar* sedes)
 {
                i32  i;
                i32  num;
+               s32  initium_sedis;
          SilvaStmlNodus* liberum;
     SilvaStmlAttributum* attr;
                b32  habet_liberos;
@@ -12640,6 +12816,7 @@ silva_stml_scribere_ad_aedificator (
     {
         redde FALSUM;
     }
+    initium_sedis = -I;
 
     commutatio (nodus->genus)
     {
@@ -12652,7 +12829,7 @@ silva_stml_scribere_ad_aedificator (
                     liberum = _xar_liberum_obtinere(nodus->liberi, i);
                     si (liberum)
                     {
-                        silva_stml_scribere_ad_aedificator(liberum, aedificator, pulchrum, indentatio);
+                        _scribere_nucleus(liberum, aedificator, pulchrum, indentatio, sedes);
                         si (pulchrum && i < num - I)
                         {
                             silva_chorda_aedificator_appendere_character(aedificator, '\n');
@@ -12667,6 +12844,10 @@ silva_stml_scribere_ad_aedificator (
             {
                 _scribere_indentatio(aedificator, indentatio);
             }
+            /* sedes: ab primo octeto tagi, POST indentationem -
+             * semantica positus_initium parsatoris */
+            initium_sedis =
+                (s32)silva_chorda_aedificator_longitudo(aedificator);
 
             /* Augmentatio <% &clavis;>: clavis sola, sine
              * attributis; liberi inline, clausura </%> semper.
@@ -12689,8 +12870,8 @@ silva_stml_scribere_ad_aedificator (
                             nodus->liberi, i);
                         si (liberum)
                         {
-                            silva_stml_scribere_ad_aedificator(liberum,
-                                aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum,
+                                aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -12751,7 +12932,7 @@ silva_stml_scribere_ad_aedificator (
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -12777,7 +12958,7 @@ silva_stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
 
@@ -12832,7 +13013,7 @@ silva_stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -12875,7 +13056,7 @@ silva_stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -12935,7 +13116,7 @@ silva_stml_scribere_ad_aedificator (
                             }
                             alioquin
                             {
-                                silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -13044,7 +13225,7 @@ silva_stml_scribere_ad_aedificator (
                                 }
                                 alioquin
                                 {
-                                    silva_stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                    _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                                 }
                             }
                         }
@@ -13113,9 +13294,9 @@ silva_stml_scribere_ad_aedificator (
                                 silva_chorda_aedificator_appendere_character(aedificator, '\n');
                             }
 
-                            silva_stml_scribere_ad_aedificator(liberum, aedificator,
+                            _scribere_nucleus(liberum, aedificator,
                                 (pulchrum && !arte) ? VERUM : FALSUM,
-                                indentatio + I);
+                                indentatio + I, sedes);
 
                             aliquid_emissum  = VERUM;
                             textus_ante      = est_textus;
@@ -13236,6 +13417,23 @@ silva_stml_scribere_ad_aedificator (
             frange;
     }
 
+    /* Elementum notare ubi CLAUDITUR (unde post-ordo tabulae);
+     * initium_sedis in casu ELEMENTI solo ponitur, cetera genera
+     * sentinellam -I tenent et praetereunt. */
+    si (sedes != NIHIL && initium_sedis >= ZEPHYRUM)
+    {
+        StmlSedesNodi* nota;
+
+        nota = silva_xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = (i32)initium_sedis;
+            nota->finis   =
+                (i32)silva_chorda_aedificator_longitudo(aedificator);
+        }
+    }
+
     redde VERUM;
 }
 
@@ -13244,6 +13442,16 @@ silva_stml_scribere (
     SilvaStmlNodus* nodus,
       SilvaPiscina* piscina,
           b32  pulchrum)
+{
+    redde silva_stml_scribere_sedibus(nodus, piscina, pulchrum, NIHIL);
+}
+
+static SilvaChorda
+silva_stml_scribere_sedibus (
+    SilvaStmlNodus* nodus,
+      SilvaPiscina* piscina,
+          b32  pulchrum,
+          SilvaXar* sedes)
 {
     SilvaChordaAedificator* aed;
                SilvaChorda  result;
@@ -13262,7 +13470,7 @@ silva_stml_scribere (
         redde result;
     }
 
-    silva_stml_scribere_ad_aedificator(nodus, aed, pulchrum, ZEPHYRUM);
+    _scribere_nucleus(nodus, aed, pulchrum, ZEPHYRUM, sedes);
 
     redde silva_chorda_aedificator_finire(aed);
 }
@@ -66487,13 +66695,24 @@ nomen structura {
     b32 emissum;
 } ArborLexematisNota;
 
+/* Par valoris silvae et elementi documenti, in scriptione
+ * collectum; post serializationem cum tabula sedium
+ * (StmlSedesNodi) iungitur ut SilvaArborSedes fiat. */
+nomen structura {
+       constans vacuum* clavis;      /* SilvaNodus* aut SilvaToken* */
+                   b32  est_lexema;
+    constans SilvaStmlNodus* elementum;
+} ArborParElementi;
+
 nomen structura {
                            SilvaPiscina* piscina;
                SilvaInternamentumChorda* intern;
      constans SilvaRegistrumCoctum* tabularium;
             constans SilvaExpansio* expansio;
                     SilvaTabulaDispersa* lexemata;
-                               i32  numerus_notarum;
+                               SilvaXar* paria;  /* ArborParElementi;
+                                             * NIHIL = non colligere */
+                               i32 numerus_notarum;
 
     /* Ancora: primum lexema ordine AMBULATIONIS (non ordine
      * octetorum) - lector eundem ordinem replicat */
@@ -66553,6 +66772,120 @@ _nota_lexematis (
         redde (ArborLexematisNota*)inventum;
     }
     redde NIHIL;
+}
+
+/* Clavis tabulae = OCTETI monstratoris cuiuslibet (exemplar
+ * _clavis_lexematis, generalius - pro indice elementorum) */
+interior SilvaChorda
+_clavis_monstratoris (
+            SilvaPiscina* piscina,
+    constans vacuum* monstrator)
+{
+    vacuum* cella;
+    SilvaChorda  clavis;
+
+    cella = silva_piscina_allocare(piscina, magnitudo(constans vacuum*));
+    si (cella == NIHIL)
+    {
+        clavis.mensura  = ZEPHYRUM;
+        clavis.datum    = NIHIL;
+        redde clavis;
+    }
+    *(constans vacuum**)cella = monstrator;
+
+    clavis.mensura  = (i32)magnitudo(constans vacuum*);
+    clavis.datum    = (i8*)cella;
+    redde clavis;
+}
+
+/* Iunctio duarum tabularum: paria (valor silvae -> StmlNodus*,
+ * in scriptione collecta) cum tabula sedium serializatoris
+ * (StmlNodus* -> extensio, stml_scribere_sedibus) - fructus
+ * tabula SilvaArborSedes (valor -> extensio), ordine
+ * serializationis (post-ordo clausurae). Elementa sine pari
+ * (involucra locorum, trivia, involucrum ipsum) praetereuntur:
+ * tabula valores fert, non ornamenta. */
+interior b32
+_sedes_valorum_iungere (
+    SilvaPiscina*  piscina,
+        SilvaXar*  paria,
+        SilvaXar*  tabula_sedium,
+        SilvaXar** exitus)
+{
+    SilvaTabulaDispersa* index_parium;
+               i32  i;
+
+    *exitus = NIHIL;
+    si (paria == NIHIL)
+    {
+        redde VERUM;
+    }
+
+    index_parium = silva_tabula_dispersa_creare_chorda(piscina, 256);
+    si (index_parium == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(paria); i++)
+    {
+        ArborParElementi* par_elementi;
+                  SilvaChorda  clavis;
+
+        par_elementi = (ArborParElementi*)silva_xar_obtinere(paria, i);
+        si (par_elementi == NIHIL)
+        {
+            redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)par_elementi->elementum);
+        si (clavis.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        silva_tabula_dispersa_inserere(index_parium, clavis, par_elementi);
+    }
+
+    *exitus = silva_xar_creare(piscina, magnitudo(SilvaArborSedes));
+    si (*exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(tabula_sedium); i++)
+    {
+        StmlSedesNodi* nota;
+               SilvaChorda  clavis;
+               vacuum* inventum;
+
+        nota = (StmlSedesNodi*)silva_xar_obtinere(tabula_sedium, i);
+        si (nota == NIHIL)
+        {
+            redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)nota->nodus);
+        si (clavis.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (silva_tabula_dispersa_invenire(index_parium, clavis,
+                &inventum))
+        {
+            ArborParElementi* par_elementi;
+             SilvaArborSedes* sedes_valoris;
+
+            par_elementi   = (ArborParElementi*)inventum;
+            sedes_valoris  = silva_xar_addere(*exitus);
+            si (sedes_valoris == NIHIL)
+            {
+                redde FALSUM;
+            }
+            sedes_valoris->clavis      = par_elementi->clavis;
+            sedes_valoris->est_lexema  = par_elementi->est_lexema;
+            sedes_valoris->initium     = nota->initium;
+            sedes_valoris->finis       = nota->finis;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -66972,9 +67305,9 @@ _extentum_laminam_quaerere (
 {
     i32 k;
 
-    si (   expansio           == NIHIL
-        || expansio->extenta  == NIHIL
-        || invocatio          == NIHIL)
+    si (   expansio          == NIHIL
+        || expansio->extenta == NIHIL
+        || invocatio         == NIHIL)
     {
         redde NIHIL;
     }
@@ -66998,8 +67331,8 @@ _extentum_laminam_quaerere (
 interior b32
 _extentum_scribere (
     ArborScriptor* scriptor,
-       SilvaStmlNodus* parens,
-             SilvaXar* lamina)
+        SilvaStmlNodus* parens,
+              SilvaXar* lamina)
 {
     SilvaStmlNodus* elem;
           i32  k;
@@ -67286,6 +67619,22 @@ _scribere_lexema (
     {
         scriptor->causa = "elementum lexematis creari non potuit";
         redde NIHIL;
+    }
+
+    /* Par pro tabula sedium. Semita transclusionis supra iam
+     * rediit, ergo lexema communicatum hic SEMEL solum venit -
+     * sedes definitionis, sponte. */
+    si (scriptor->paria != NIHIL)
+    {
+        ArborParElementi* par_elementi;
+
+        par_elementi = silva_xar_addere(scriptor->paria);
+        si (par_elementi != NIHIL)
+        {
+            par_elementi->clavis      = (constans vacuum*)lexema;
+            par_elementi->est_lexema  = VERUM;
+            par_elementi->elementum   = elementum;
+        }
     }
 
     /* 'standard' et 'f' SOLUM cum non-ordinaria */
@@ -67670,6 +68019,19 @@ _scribere_nodum_internum (
         redde NIHIL;
     }
 
+    si (scriptor->paria != NIHIL)
+    {
+        ArborParElementi* par_elementi;
+
+        par_elementi = silva_xar_addere(scriptor->paria);
+        si (par_elementi != NIHIL)
+        {
+            par_elementi->clavis      = (constans vacuum*)nodus;
+            par_elementi->est_lexema  = FALSUM;
+            par_elementi->elementum   = elementum;
+        }
+    }
+
     per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
     {
         constans SilvaTabLocus* locus;
@@ -67735,6 +68097,7 @@ silva_arbor_scribere_nodum (
     fructus.textus.datum    = NIHIL;
     fructus.causa           = NIHIL;
     fructus.sedes           = NIHIL;
+    fructus.sedes_valorum   = NIHIL;
 
     si (piscina == NIHIL || nodus == NIHIL || tabularium == NIHIL)
     {
@@ -67771,6 +68134,9 @@ silva_arbor_scribere_nodum (
     scriptor.sedes            = NIHIL;
     scriptor.lexemata        = silva_tabula_dispersa_creare_chorda(piscina,
         256);
+    /* Scriptor subtaxi tabulam sedium NON fert (privatio nominata
+     * in silva_arbor.h ad sedes_valorum) */
+    scriptor.paria           = NIHIL;
     si (scriptor.lexemata == NIHIL)
     {
         fructus.causa = "tabula lexematum creari non potuit";
@@ -68253,8 +68619,8 @@ _fragmentum_aperire (
  * e.g. 'ROUTA_METHODUS_BIT(m)' delta III = '(m)'). */
 interior b32
 _extentum_legere (
-    ArborLector* lector,
-      SilvaStmlNodus* elementum,
+     ArborLector* lector,
+       SilvaStmlNodus* elementum,
       SilvaToken* invocatio)
 {
                           SilvaXar* lamina;
@@ -68277,10 +68643,10 @@ _extentum_legere (
     numerus  = silva_stml_numerus_liberorum(elementum);
     per (; cursor < numerus; cursor++)
     {
-        SilvaStmlNodus* liberum;
-       SilvaToken* lectum;
-          SilvaChorda*  id;
-      SilvaToken** sedes;
+        SilvaStmlNodus*  liberum;
+       SilvaToken*  lectum;
+           SilvaChorda*  id;
+       SilvaToken** sedes;
 
         liberum = silva_stml_liberum_ad_indicem(elementum, cursor);
         si (liberum == NIHIL)
@@ -69377,9 +69743,9 @@ _positiones_lexematis (
                 frange;
             }
             /* FONS CONGRUAT. Offset sine fonte sensu caret. */
-            si (   lacuna->fons >= ZEPHYRUM
+            si (   lacuna->fons       >= ZEPHYRUM
                 && lexema->fons_index >= ZEPHYRUM
-                && lacuna->fons != lexema->fons_index)
+                && lacuna->fons       != lexema->fons_index)
             {
                 i++;
                 perge;
@@ -70361,6 +70727,7 @@ silva_arbor_scribere_parsuram (
     fructus.textus.mensura  = ZEPHYRUM;
     fructus.causa           = NIHIL;
     fructus.sedes           = NIHIL;
+    fructus.sedes_valorum   = NIHIL;
 
     si (   piscina            == NIHIL || parsura == NIHIL
         || tabularium         == NIHIL || grammatica == NIHIL
@@ -70379,15 +70746,15 @@ silva_arbor_scribere_parsuram (
         }
     }
 
-    scriptor.piscina                = piscina;
-    scriptor.intern                 = intern;
-    scriptor.tabularium             = tabularium;
-    scriptor.expansio               = parsura->expansio;
-    scriptor.numerus_notarum        = ZEPHYRUM;
-    scriptor.ancora_nota            = FALSUM;
-    scriptor.ancora_offset          = -I;
-    scriptor.ancora_linea           = ZEPHYRUM;
-    scriptor.ancora_columna         = ZEPHYRUM;
+    scriptor.piscina          = piscina;
+    scriptor.intern           = intern;
+    scriptor.tabularium       = tabularium;
+    scriptor.expansio         = parsura->expansio;
+    scriptor.numerus_notarum  = ZEPHYRUM;
+    scriptor.ancora_nota      = FALSUM;
+    scriptor.ancora_offset    = -I;
+    scriptor.ancora_linea     = ZEPHYRUM;
+    scriptor.ancora_columna   = ZEPHYRUM;
     /* FONS ORDINARIUS = fons PRINCEPS, non ZEPHYRUM.
      *
      * Scriptor 'f' OMITTIT cum fons_index ancoram aequat; lector
@@ -70404,7 +70771,9 @@ silva_arbor_scribere_parsuram (
     scriptor.sedes                  = NIHIL;
     scriptor.lexemata         = silva_tabula_dispersa_creare_chorda(
         piscina, 256);
-    si (scriptor.lexemata == NIHIL)
+    scriptor.paria            = silva_xar_creare(piscina,
+        magnitudo(ArborParElementi));
+    si (scriptor.lexemata == NIHIL || scriptor.paria == NIHIL)
     {
         fructus.causa = "tabula lexematum creari non potuit";
         redde fructus;
@@ -70494,7 +70863,7 @@ silva_arbor_scribere_parsuram (
         }
         /* INVOCATIONES VACUAE - eodem iure quo directivae:
          * octetos tegunt quos arbor non fert. */
-        si (parsura->expansio != NIHIL
+        si (   parsura->expansio          != NIHIL
             && parsura->expansio->extenta != NIHIL)
         {
             per (k = ZEPHYRUM;
@@ -70680,7 +71049,26 @@ silva_arbor_scribere_parsuram (
         }
     }
 
-    fructus.textus     = silva_stml_scribere(involucrum, piscina, VERUM);
+    {
+        SilvaXar* tabula_sedium;
+
+        tabula_sedium = silva_xar_creare(piscina,
+            magnitudo(StmlSedesNodi));
+        si (tabula_sedium == NIHIL)
+        {
+            fructus.causa = "tabula sedium creari non potuit";
+            redde fructus;
+        }
+        fructus.textus = silva_stml_scribere_sedibus(involucrum, piscina,
+            VERUM, tabula_sedium);
+
+        si (!_sedes_valorum_iungere(piscina, scriptor.paria,
+                tabula_sedium, &fructus.sedes_valorum))
+        {
+            fructus.causa = "sedes valorum iungi non potuerunt";
+            redde fructus;
+        }
+    }
     fructus.successus  = VERUM;
     redde fructus;
 }
@@ -71441,8 +71829,8 @@ silva_arbor_legere_parsuram (
                 && silva_chorda_aequalis_literis(*elem->titulus,
                        SILVA_ARBOR_TAG_INVOCATIO_VACUA))
             {
-                SilvaXar* lamina;
-                s32  initium_lacunae;
+                                      SilvaXar* lamina;
+                                      s32  initium_lacunae;
                 SilvaExtentumInvocationis* ext;
 
                 si (passus != ZEPHYRUM)
@@ -71476,8 +71864,8 @@ silva_arbor_legere_parsuram (
                         elem->linea);
                     redde NIHIL;
                 }
-                ext->vacua      = VERUM;
-                ext->lamina     = lamina;
+                ext->vacua   = VERUM;
+                ext->lamina  = lamina;
                 /* Invocatio = lexema primum laminae (nomen macri).
                  * Emissor eam non consulit pro vacuis - lamina sola
                  * reinserenda est - sed identitas honesta manet. */
@@ -71526,7 +71914,7 @@ silva_arbor_legere_parsuram (
                  * Sanatio ergo non est hanc quoque emendare sed
                  * DELERE: unus conceptus, una functio. */
                 _parsura_ancoram_legere(elem, &sedes);
-                initium_lacunae  = sedes.offset;
+                initium_lacunae = sedes.offset;
                 lamina = _parsura_laminam_legere(&lector, elem, &sedes);
                 si (lamina == NIHIL)
                 {

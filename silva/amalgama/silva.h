@@ -1741,6 +1741,12 @@ typedef struct SilvaStmlNodus {
     struct SilvaStmlNodus*  parens;
     unsigned int            linea;       /* linea fontis, 1-basata;
                                           * 0 = non e parsatione */
+    unsigned int            positus_initium; /* extensio octetorum
+                                          * [initium, finis) in fonte
+                                          * PARSATO: tag aperiens
+                                          * usque post claudens; 0/0
+                                          * si non e parsatione */
+    unsigned int            positus_finis;
     int                     crudus;
     SilvaStmlCaptioDirectio captio_directio;
     unsigned int            captio_numerus;
@@ -1869,6 +1875,24 @@ unsigned int silva_arbor_lexema_tag(SilvaLexemaGenus genus,
 SilvaLexemaGenus silva_arbor_lexema_ex_tag(const char* tag,
     unsigned int mensura);
 
+/* Where a silva value landed in the EMITTED document: byte extent
+ * [initium, finis) of ITS element (opening tag through closing).
+ * The document itself deliberately carries no positions (sedes
+ * derivatae); this table is how a consumer maps tree values to
+ * document bytes without re-deriving the writer's layout.
+ * clavis is the same SilvaNodus* / SilvaToken* the caller already
+ * holds in the parse tree (est_lexema selects which). A shared
+ * lexeme appears ONCE - its definition site; transclusions point,
+ * they do not repeat. Locus wrappers and trivia are not recorded:
+ * values, not document furniture. First consumer: the laboratorium
+ * inspector (0032). */
+typedef struct SilvaArborSedes {
+    const void*  clavis;      /* SilvaNodus* or SilvaToken* */
+    int          est_lexema;
+    unsigned int initium;     /* byte offset, INCLUSIVE */
+    unsigned int finis;       /* byte offset, EXCLUSIVE */
+} SilvaArborSedes;
+
 /* Writer result - same shape as SilvaScriptura (loud failure: a
  * static causa plus the offending node, never a silent omission). */
 typedef struct SilvaArborScriptura {
@@ -1876,6 +1900,12 @@ typedef struct SilvaArborScriptura {
     SilvaChorda       textus;   /* STML bytes; empty on failure */
     const char*       causa;    /* static diagnostic; NULL if well */
     const SilvaNodus* sedes;    /* failing node; NULL permitted */
+
+    /* Sedes table (SilvaXar of SilvaArborSedes), in write order
+     * (post-order of closing). Filled by scribere_parsuram; NULL
+     * on failure AND from the subtree writer - a NAMED privation,
+     * door open when a consumer pulls. */
+    SilvaXar*         sedes_valorum;
 } SilvaArborScriptura;
 
 /* grammatica is a PARAMETER, not derived: the registry cannot name

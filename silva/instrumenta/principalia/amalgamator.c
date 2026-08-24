@@ -94,7 +94,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
      * publicos possidet; enumeratio modorum quoque cadit (C89
      * enumeratores duplicatos vetat, non solum typedef) */
     "SilvaArborScriptura", "SilvaArborComparatioModus",
-    "SilvaArborDifferentia", "SilvaArborVitium",
+    "SilvaArborDifferentia", "SilvaArborVitium", "SilvaArborSedes",
     NIHIL
 };
 

@@ -1652,6 +1652,7 @@ int main(void)
         SilvaScriptura  emissio;
         unsigned int    mensura;
         int             bene_parsura = 0;
+        int             bene_sedes   = 0;
 
         summa++;
         mensura = (unsigned int)strlen(fons);
@@ -1669,6 +1670,34 @@ int main(void)
             }
             else
             {
+                /* Superficies sedium (0032) per silva.h tacta:
+                 * tabula adest, intrans primum extensionem sanam
+                 * fert et tagum aperit. Prototypum mendax hic
+                 * frangeret; silva.c caput non includit. */
+                if (scriptura.sedes_valorum != NULL
+                    && silva_xar_numerus(scriptura.sedes_valorum) > 0)
+                {
+                    const SilvaArborSedes* sedes_prima =
+                        (const SilvaArborSedes*)silva_xar_obtinere(
+                            scriptura.sedes_valorum, 0);
+
+                    if (sedes_prima != NULL
+                        && sedes_prima->clavis != NULL
+                        && sedes_prima->finis > sedes_prima->initium
+                        && sedes_prima->finis
+                               <= scriptura.textus.mensura
+                        && scriptura.textus.datum
+                               [sedes_prima->initium] == '<')
+                    {
+                        bene_sedes = 1;
+                    }
+                }
+                if (!bene_sedes)
+                {
+                    fprintf(stderr,
+                        "hospes: sedes valorum absentes aut"
+                        " insanae\n");
+                }
                 lecta = silva_arbor_legere_parsuram(piscina, NULL,
                     scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
                     &vitium);
@@ -1687,7 +1716,8 @@ int main(void)
                                (size_t)mensura) == 0
                         && silva_arbor_parsurae_aequales(parsura, lecta,
                                SILVA_ARBOR_COMPARATIO_FIDELITAS,
-                               &differentia))
+                               &differentia)
+                        && bene_sedes)
                     {
                         bene_parsura = 1;
                     }
