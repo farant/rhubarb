@@ -13875,3 +13875,34 @@ RESTANT (reservata, non omissa): unicitas clavis compositae, classes
 substitutionis (transclusio pressionem abstulit), co-occurrentia, lector
 arboris generatus, documenta <arbor> subarborum, et fixa pro
 invocatio-vacua/scissura.
+
+## Addendum 2026-08-24 — sedes valorum (superficies 0032)
+
+INTENTIO: inspector laboratorii (0032) nodum arboris ad extensionem
+STML referre debebat; documentum sedes consulto non fert (sedes
+derivatae) et positus parsatoris in arboribus lectis solum vivit.
+Ergo: serializator ipse notet ubi elementa posuerit.
+
+RELATIO: stml_scribere_sedibus (lib/stml.c - nucleus unus recursivus,
+tabula lateralis StmlSedesNodi, post-ordo clausurae; 346ab557) +
+iunctio in silva_arbor.c: paria valor->elementum in scriptione
+collecta, cum tabula serializatoris per octetos monstratoris iuncta,
+SilvaArborScriptura.sedes_valorum (additivum; scriptor subtaxi
+privationem nominatam fert; 1cda4d31). Amalgama: SilvaArborSedes in
+silva.h + CADENDA_TYPEDEF + exercitium hospitis QUOD CONDICIONEM
+PARSURAE REQUIRIT (superficies inverificata navigare non potest).
+Obiter debitum solutum: speculum manuale SilvaStmlNodus positus
+carebat (bd623d46 numquam vectum) - messis excludendorum id nominavit,
+regenerationem quamvis obstruens (70359f41).
+
+Probationes: paritas parsatoris relecti (oracula independentia duo)
+205/205 + ancora absoluta manu numerata; census ambulationis
+independentis (nec deficiens nec superflua) + fetta-tag ex registro
+66/66; silva 50/50 - corpus octetim immotum (mutatio serializatoris
+octetis neutralis).
+
+INSTRUMENTA: adhibita corpus/emitte/nexus (calida omnia); fructus
+maximus = corpus super TYPOS (SilvaArborScriptura uno vocamine);
+asperitas: excludenda-messis errorem in speculo manuali nominavit
+LONGE ante quam suite ulla - porta quae primum frangi debet ea est
+quae fontes VERE compilat. Desideratum: nullum novum.

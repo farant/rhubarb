@@ -469,3 +469,35 @@ capture's 22, so the whole benefit survives at none of the cost.
 Capture stays what it already is: an authoring affordance, used by the
 47 hand-written `<via (>path` lines in aedilis.stml, whose only reader
 already normalizes them.
+
+## 2026-08-24 — trivia-model design session: where the bodies are
+
+Full design: project-specs/stml-trivia-spec.md (parcum 01M0T5XYC3).
+Code-level finds an implementer should NOT re-derive:
+
+- **The capture/whitespace bug lives at `_processare_captiones`**
+  (~lib/stml.c:2545): the capture loop skips comments
+  (`!_est_commentum`) but COUNTS text nodes — `<a (>` + newline
+  captures the whitespace text node, not the element. This is the
+  precise reason the earlier capture-collapse run deferred.
+- **`stml_textus_normalizatus` IS the dedent** — the accessor's
+  body `_normalizare_spatium_album` (~:1984) already does
+  trim-empty-edge-lines + strip-common-indent + preserve-relative.
+  The spec's "pre reading" exists; only `fluxus` (prose) is new.
+- **Raw multi-capture is half-implemented**: lexer note at :737 —
+  `captio_numerus > 1 notatur sed adhuc UNAM lineam capit`. The
+  spec supersedes it with `<tag!\>` and turns multi-paren raw into
+  a loud refusal.
+- **Tag-interior whitespace is a standing fidelity hole**: the
+  lexer accepts newlines between attributes, the writer normalizes
+  to single spaces — non-pretty round-trip is NOT byte-exact for
+  multi-line tags today. Spec §1.6 models it (per-attribute
+  spatia_ante + pre-`>` chorda); whitespace around `=` stays a
+  named normalized exception.
+- The four-member bug family that motivated the model: raw-capture
+  accumulating newline (fixed 2026-08-06, "SED SEMEL TANTUM"),
+  TERMINI (2026-08-19), capture counting (above), clausura tacita
+  line-counting. All one root: whitespace lives inside text nodes.
+- **M1 order matters**: capture `stml_textus_internus` GOLDENS over
+  the fixture corpus BEFORE any surgery — they are the old
+  behavior's testimony, unobtainable afterwards.
