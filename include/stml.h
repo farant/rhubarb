@@ -566,6 +566,45 @@ stml_scribere_ad_aedificator (
 
 
 /* ==================================================
+ * Sedes scripturae - ubi scriptor nodum posuit
+ * ==================================================
+ *
+ * CUR: 'positus_initium/finis' PARSATOR ponit - in arbore manu
+ * aedificata ZEPHYRUM manent, ergo "ubi nodus in textu EMISSO
+ * iacet" responderi non poterat. Scriptor autem id iam novit dum
+ * scribit; hic tabula laterali reddit - nodos ipsos numquam
+ * mutat (scriptio pura manet).
+ *
+ * ELEMENTA SOLA notantur (fragmenta et captiones inclusa - genus
+ * ELEMENTUM ferunt); textus/commenta/transclusiones non. Extensio
+ * [initium, finis) in chorda emissa, ab primo octeto tagi
+ * aperientis (post indentationem) usque post tagum claudentem -
+ * eadem semantica ac positus parsatoris, quod probatio paritatis
+ * (scribere -> relegere -> conferre) adfirmat.
+ *
+ * CONSUMENS PRIMUS: inspector nexus (laboratorium 0032) - nodus
+ * silvae extensionem C ET extensionem STML simul ferat.
+ */
+
+nomen structura {
+    constans StmlNodus* nodus;
+                   i32  initium;   /* offset octetorum, INCLUSIVUS */
+                   i32  finis;     /* offset octetorum, EXCLUSIVUS */
+} StmlSedesNodi;
+
+/* Scribere ut stml_scribere, tabula sedium impleta.
+ * 'sedes' = Xar de StmlSedesNodi, a vocante creatum; NIHIL licet
+ * (tunc idem ac stml_scribere). Ordo tabulae = ordo CLAUSURAE
+ * (post-ordo), quia nodus notatur ubi scriptio eius finitur. */
+chorda
+stml_scribere_sedibus (
+    StmlNodus* nodus,
+      Piscina* piscina,
+          b32  pulchrum,
+          Xar* sedes);
+
+
+/* ==================================================
  * Tituli - Labels (class-like attribute)
  *
  * Labels stored in "labels" attribute (or "class" for HTML compat)

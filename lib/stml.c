@@ -4133,15 +4133,22 @@ _scribere_evasus (
     }
 }
 
-b32
-stml_scribere_ad_aedificator (
+/* Nucleus scriptionis - UNUS ambulator recursivus (lex superficiei
+ * duplicatae: numquam alter). 'sedes' optionalis (NIHIL licet):
+ * Xar de StmlSedesNodi, elementum quodque notatum ubi scriptio
+ * eius FINITUR (post-ordo), extensione [initium, finis) in
+ * aedificatore - semantica positus parsatoris. */
+interior b32
+_scribere_nucleus (
             StmlNodus* nodus,
     ChordaAedificator* aedificator,
                   b32  pulchrum,
-                  i32  indentatio)
+                  i32  indentatio,
+                  Xar* sedes)
 {
                i32  i;
                i32  num;
+               s32  initium_sedis;
          StmlNodus* liberum;
     StmlAttributum* attr;
                b32  habet_liberos;
@@ -4150,6 +4157,7 @@ stml_scribere_ad_aedificator (
     {
         redde FALSUM;
     }
+    initium_sedis = -I;
 
     commutatio (nodus->genus)
     {
@@ -4162,7 +4170,7 @@ stml_scribere_ad_aedificator (
                     liberum = _xar_liberum_obtinere(nodus->liberi, i);
                     si (liberum)
                     {
-                        stml_scribere_ad_aedificator(liberum, aedificator, pulchrum, indentatio);
+                        _scribere_nucleus(liberum, aedificator, pulchrum, indentatio, sedes);
                         si (pulchrum && i < num - I)
                         {
                             chorda_aedificator_appendere_character(aedificator, '\n');
@@ -4177,6 +4185,10 @@ stml_scribere_ad_aedificator (
             {
                 _scribere_indentatio(aedificator, indentatio);
             }
+            /* sedes: ab primo octeto tagi, POST indentationem -
+             * semantica positus_initium parsatoris */
+            initium_sedis =
+                (s32)chorda_aedificator_longitudo(aedificator);
 
             /* Augmentatio <% &clavis;>: clavis sola, sine
              * attributis; liberi inline, clausura </%> semper.
@@ -4199,8 +4211,8 @@ stml_scribere_ad_aedificator (
                             nodus->liberi, i);
                         si (liberum)
                         {
-                            stml_scribere_ad_aedificator(liberum,
-                                aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum,
+                                aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -4261,7 +4273,7 @@ stml_scribere_ad_aedificator (
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
-                                stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -4287,7 +4299,7 @@ stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
 
@@ -4342,7 +4354,7 @@ stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -4385,7 +4397,7 @@ stml_scribere_ad_aedificator (
                         liberum = _xar_liberum_obtinere(nodus->liberi, i);
                         si (liberum)
                         {
-                            stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                            _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                         }
                     }
                 }
@@ -4445,7 +4457,7 @@ stml_scribere_ad_aedificator (
                             }
                             alioquin
                             {
-                                stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                             }
                         }
                     }
@@ -4554,7 +4566,7 @@ stml_scribere_ad_aedificator (
                                 }
                                 alioquin
                                 {
-                                    stml_scribere_ad_aedificator(liberum, aedificator, FALSUM, ZEPHYRUM);
+                                    _scribere_nucleus(liberum, aedificator, FALSUM, ZEPHYRUM, sedes);
                                 }
                             }
                         }
@@ -4623,9 +4635,9 @@ stml_scribere_ad_aedificator (
                                 chorda_aedificator_appendere_character(aedificator, '\n');
                             }
 
-                            stml_scribere_ad_aedificator(liberum, aedificator,
+                            _scribere_nucleus(liberum, aedificator,
                                 (pulchrum && !arte) ? VERUM : FALSUM,
-                                indentatio + I);
+                                indentatio + I, sedes);
 
                             aliquid_emissum  = VERUM;
                             textus_ante      = est_textus;
@@ -4746,7 +4758,35 @@ stml_scribere_ad_aedificator (
             frange;
     }
 
+    /* Elementum notare ubi CLAUDITUR (unde post-ordo tabulae);
+     * initium_sedis in casu ELEMENTI solo ponitur, cetera genera
+     * sentinellam -I tenent et praetereunt. */
+    si (sedes != NIHIL && initium_sedis >= ZEPHYRUM)
+    {
+        StmlSedesNodi* nota;
+
+        nota = xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = (i32)initium_sedis;
+            nota->finis   =
+                (i32)chorda_aedificator_longitudo(aedificator);
+        }
+    }
+
     redde VERUM;
+}
+
+b32
+stml_scribere_ad_aedificator (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  b32  pulchrum,
+                  i32  indentatio)
+{
+    redde _scribere_nucleus(nodus, aedificator, pulchrum,
+                            indentatio, NIHIL);
 }
 
 chorda
@@ -4754,6 +4794,16 @@ stml_scribere (
     StmlNodus* nodus,
       Piscina* piscina,
           b32  pulchrum)
+{
+    redde stml_scribere_sedibus(nodus, piscina, pulchrum, NIHIL);
+}
+
+chorda
+stml_scribere_sedibus (
+    StmlNodus* nodus,
+      Piscina* piscina,
+          b32  pulchrum,
+          Xar* sedes)
 {
     ChordaAedificator* aed;
                chorda  result;
@@ -4772,7 +4822,7 @@ stml_scribere (
         redde result;
     }
 
-    stml_scribere_ad_aedificator(nodus, aed, pulchrum, ZEPHYRUM);
+    _scribere_nucleus(nodus, aed, pulchrum, ZEPHYRUM, sedes);
 
     redde chorda_aedificator_finire(aed);
 }
