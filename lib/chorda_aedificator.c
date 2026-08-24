@@ -554,6 +554,21 @@ chorda_aedificator_longitudo (
     redde aedificator ? aedificator->offset : ZEPHYRUM;
 }
 
+vacuum
+chorda_aedificator_truncare (
+    ChordaAedificator* aedificator,
+       memoriae_index  longitudo_nova)
+{
+    si (aedificator == NIHIL)
+    {
+        redde;
+    }
+    si (longitudo_nova < aedificator->offset)
+    {
+        aedificator->offset = longitudo_nova;
+    }
+}
+
 chorda
 chorda_aedificator_spectare (
     ChordaAedificator* aedificator)

@@ -205,6 +205,15 @@ chorda
 chorda_aedificator_spectare (
     ChordaAedificator* aedificator);
 
+/* truncare: longitudinem ad valorem minorem reducere (numquam
+ * auget; capacitas servatur). Pro redditione optimistica cum
+ * reversione: signum = longitudo(), scribe, si displicet
+ * truncare(signum). */
+vacuum
+chorda_aedificator_truncare (
+    ChordaAedificator* aedificator,
+       memoriae_index  longitudo_nova);
+
 
 /* ==================================================
  * Cyclus Vitae

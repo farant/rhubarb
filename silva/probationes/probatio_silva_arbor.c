@@ -747,17 +747,18 @@ principale (vacuum)
             "<typus-primitivus>") == I);
 
         /* lexema orthographiae FIXAE: tag solus, NULLUS textus
-         * (orthographia in genere ipso vivit). Clausurae tacitae
-         * '</>' sunt - vide sanationem T0 */
-        CREDO_VERUM (_quotiens(scriptura.textus, "<lex-int>") == I);
+         * (orthographia in genere ipso vivit). Collapsus spinae
+         * (stml M2 T3c) vincula unigena in formam capturae vertit -
+         * '<lex-int(>' pro '<lex-int>' */
+        CREDO_VERUM (_quotiens(scriptura.textus, "<lex-int(>") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<lex-semicolon>") == I);
+            "<lex-semicolon(>") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<lex-assignatio>") == I);
+            "<lex-assignatio(>") == I);
 
-        /* lexema orthographiae VARIAE: valor ut TEXTUS */
+        /* lexema orthographiae VARIAE: valor ut TEXTUS captus */
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<lex-integer>0</>") == I);
+            "<lex-integer(> 0") == I);
 
         /* CONTENTUM MIXTUM (textus IUXTA elementa): forma quam
          * sanatio T0 possibilem fecit. Ante eam scriptor pulcher
@@ -837,9 +838,10 @@ principale (vacuum)
             CREDO_VERUM (_quotiens(scriptura.textus,
                 "<sententia-expressionis>") >= I);
 
-            /* locus INDEX ut textus arabicus */
+            /* locus INDEX ut textus arabicus (collapsus: forma
+             * capturae) */
             CREDO_VERUM (_quotiens(scriptura.textus,
-                "<canonica>") == I);
+                "<canonica(>") == I);
 
             /* COMMUNICATIO: lexemata communicata fragmenta accipiunt,
              * usus sequentes transclusiones. Numeri congruere DEBENT -
@@ -1459,10 +1461,12 @@ principale (vacuum)
                 == ZEPHYRUM);
 
         /* valor in genere orthographiae FIXAE - documentum quod
-         * orthographiam portat fontem veritatis tertium faceret */
+         * orthographiam portat fontem veritatis tertium faceret.
+         * Corruptio in forma collapsa: '<lex-int(> xyz' textum
+         * capit (regula capturae valorem purum dat) */
         CREDO_NIHIL (silva_arbor_legere(piscina, NIHIL,
-            _substituere(piscina, documentum, "<lex-int>",
-                "<lex-int>xyz"),
+            _substituere(piscina, documentum, "<lex-int(> ",
+                "<lex-int(> xyz "),
             &SILVA_C89_REGISTRUM, "c89", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa,

@@ -1108,16 +1108,17 @@ s32 principale(vacuum)
         StmlResultus res;
         chorda       output;
 
-        /* Pretty print with indentation */
+        /* Pretty print: spina unigena COLLABITUR (§4 T3c) - forma
+         * capturae in linea una intra tectum columnarum */
         res = stml_legere_ex_literis("<root><child><inner/></child></root>", piscina, intern);
         CREDO_VERUM(res.successus);
 
         output = stml_scribere(res.elementum_radix, piscina, VERUM);
         CREDO_CHORDA_NON_VACUA(output);
 
-        /* Should contain newlines and indentation */
-        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("\n", piscina)));
-        imprimere("  Pretty print: VERUM\n");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<root(> <child(> <inner/>");
+        imprimere("  Pretty print (collapsus spinae): VERUM\n");
     }
 
     {
@@ -2417,6 +2418,36 @@ s32 principale(vacuum)
                   " PRAETERITUM\n");
     }
 
+    {
+        /* limen tecti collapsus (§0.2): LXXII columnae exactae
+         * collabuntur, LXXIII non (totum-aut-nihil; ambae partes
+         * puncto fixo stabiles - portae pulchrae id tegunt) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaa</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<t(> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaaa");
+
+        res = stml_legere_ex_literis(
+            "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaa</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaa</>");
+
+        imprimere("  limen tecti LXXII/LXXIII: PRAETERITUM\n");
+    }
+
     /* ==================================================
      * Fragment Tests
      * ================================================== */
@@ -3370,7 +3401,7 @@ s32 principale(vacuum)
      * tangit; forma brevissima quam Fran petivit ('<foo>abc</>') */
     _pulchrum_probare(piscina, intern,
         "<t>textus solus</t>",
-        "<t>textus solus</>",
+        "<t(> textus solus",
         "V textus-unicus (custos): PRAETERITUM");
 
     /* VI. albus solus eiusdem lineae inter elementa: CONTENTUM
@@ -4208,8 +4239,10 @@ s32 principale(vacuum)
             "<r><a\n  b=\"1\">x</a></r>", piscina, intern);
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
+        /* collapsus formam capturae dat; dispositio attributi ad
+         * spatium unicum rediit intra eam */
         CREDO_VERUM(chorda_continet(scriptum,
-            chorda_ex_literis("<a b=\"1\">", piscina)));
+            chorda_ex_literis("<a b=\"1\" (>", piscina)));
 
         imprimere("  D pulcher dispositionem regenerat: VERUM\n");
     }

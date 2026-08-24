@@ -131,10 +131,18 @@ capturable — `<a (> <b/>` captures `<b/>`, killing the §0.1.3 bug
 reborn in same-line form (deliberately: capturing a lone space is
 the absurd corner); (ii) the rule diverges from a normal open tag
 (`<p> salve` keeps its space in the valor) — after `(>` the space
-is capture syntax's separator, not content. Same-line interleaving
-inside MULTI-paren captures and before RETRO captors has the same
-disease and is NOT addressed here — deferred to M4's counting
-policy; pretty produces only single-paren forward spines.
+is capture syntax's separator, not content. Refinements from
+implementation (T3): CRUDUS captors are excluded (the raw line
+carries its own bytes; the case is mute by construction — the
+following run always starts at the terminating newline), and a
+directly-captured TEXT value must be non-empty, single-line, and
+start with a non-whitespace byte (`_valor_capturabilis`) — a
+leading whitespace byte would migrate to the captor's post on
+re-read and change the value, so such terminals refuse collapse.
+Same-line interleaving inside MULTI-paren captures and before
+RETRO captors has the same disease and is NOT addressed here —
+deferred to M4's counting policy; pretty produces only
+single-paren forward spines.
 
 ### §1.3 Text runs
 

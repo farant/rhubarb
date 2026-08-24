@@ -5417,6 +5417,271 @@ _valorem_pulchre_indentare (
     }
 }
 
+
+/* ==================================================
+ * COLLAPSUS SPINAE (§4, T3c 2026-08-24)
+ *
+ * Pulcher spinam unigenam in formam capturae in linea una
+ * convertit - '<t1(> <t2(> <t3(> foo' - si intra tectum LXXII
+ * columnarum ab indentatione currenti cadit (totum-aut-nihil,
+ * §0.2). Redditio optimistica in aedificatorem principalem;
+ * reversio per truncare (aedificator + tabula sedium). Forma
+ * capturae memoria formae est: non-pulcher formam authoris
+ * octetim servat, pulcher re-derivat - doctrina clausurae
+ * tacitae capturis adhibita. Post redditum, transitus pulchri
+ * sequentes formam per ramum captoris servant (separator
+ * canonicus ' ' pro captoribus unigenis) - punctum fixum tenet.
+ * ================================================== */
+
+interior b32
+_scribere_nucleus (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  b32  pulchrum,
+                  b32  fidelitas,
+                  i32  indentatio,
+                  Xar* sedes);
+
+/* an valor lineam novam non ferat */
+interior b32
+_valor_unilinearis (
+    constans chorda* valor)
+{
+    i32 i;
+
+    si (valor == NIHIL)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < valor->mensura; i++)
+    {
+        si ((character)valor->datum[i] == '\n')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* an valor textus capi directe possit: non vacuus, unilinearis,
+ * octeto primo non albo - margo ducens alba in relectione ad post
+ * captoris migraret (regula capturae) et valor mutaretur; valor
+ * solum-albus ('<sep>   </sep>') totus periret */
+interior b32
+_valor_capturabilis (
+    constans chorda* valor)
+{
+    si (   valor          == NIHIL
+        || valor->mensura == ZEPHYRUM
+        || _est_spatium((character)valor->datum[ZEPHYRUM]))
+    {
+        redde FALSUM;
+    }
+    redde _valor_unilinearis(valor);
+}
+
+/* Liberum unicum vinculi spinae reddere; NIHIL si nodus vinculum
+ * non est. Vinculum = elementum normale (sine captura, fragmento,
+ * augmento), non crudum nec multilineum, liberum unicum
+ * non-commentum ferens. */
+interior StmlNodus*
+_spinae_liberum_unicum (
+    constans StmlNodus* nodus)
+{
+    StmlNodus* liberum;
+
+    si (   nodus->genus               != STML_NODUS_ELEMENTUM
+        || nodus->captio_directio     != STML_CAPTIO_NIHIL
+        || nodus->fragmentum
+        || nodus->augmentum_clavis    != NIHIL
+        || nodus->crudus
+        || nodus->multilinea
+        || nodus->liberi              == NIHIL
+        || xar_numerus(nodus->liberi) != I)
+    {
+        redde NIHIL;
+    }
+    liberum = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
+    si (liberum == NIHIL || _est_commentum(liberum))
+    {
+        redde NIHIL;
+    }
+    redde liberum;
+}
+
+/* an elementum terminale inline unilineare reddatur: folium aut
+ * liberi omnes textus unilineares (recusatio conservativa v1 -
+ * crudus/multilinea/fragmentum/captio excluduntur) */
+interior b32
+_terminalis_inline (
+    constans StmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+
+    si (   nodus->genus            != STML_NODUS_ELEMENTUM
+        || nodus->captio_directio  != STML_CAPTIO_NIHIL
+        || nodus->fragmentum
+        || nodus->augmentum_clavis != NIHIL
+        || nodus->crudus
+        || nodus->multilinea)
+    {
+        redde FALSUM;
+    }
+    num = nodus->liberi ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (   liberum        == NIHIL
+            || liberum->genus != STML_NODUS_TEXTUS
+            || !_valor_unilinearis(liberum->valor))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Spinam collapsam scribere (recursivum): tag vinculi ut captor
+ * unigena + separator canonicus + interius; sedes post-ordine
+ * notatae (interius primum, vincula intus-foras - extensio
+ * vinculi ad finem spinae pertinet, semantica parsatoris). */
+interior vacuum
+_spinam_scribere (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  Xar* sedes)
+{
+     StmlNodus* liberum;
+           i32  initium;
+
+    initium = (i32)chorda_aedificator_longitudo(aedificator);
+
+    chorda_aedificator_appendere_character(aedificator, '<');
+    si (nodus->titulus)
+    {
+        chorda_aedificator_appendere_chorda(aedificator,
+                                            *nodus->titulus);
+    }
+    _attributa_scribere(aedificator, nodus, FALSUM);
+    si (   nodus->attributa != NIHIL
+        && xar_numerus(nodus->attributa) > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(aedificator, ' ');
+    }
+    chorda_aedificator_appendere_literis(aedificator, "(>");
+
+    /* sedes vinculi ANTE separatorem: extensio captoris apud
+     * parsatorem TAGUM SOLUM tegit (positus_finis in consumptione
+     * tokeni ponitur, ante reparentationem capturae) - scriptor
+     * eandem semanticam reddit, probatio paritatis iudex */
+    si (sedes != NIHIL)
+    {
+        StmlSedesNodi* nota;
+
+        nota = xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = initium;
+            nota->finis   =
+                (i32)chorda_aedificator_longitudo(aedificator);
+        }
+    }
+    chorda_aedificator_appendere_character(aedificator, ' ');
+
+    liberum = _spinae_liberum_unicum(nodus);
+    si (liberum == NIHIL)
+    {
+        redde;  /* numquam - praevisio custodit */
+    }
+    si (liberum->genus == STML_NODUS_TEXTUS)
+    {
+        _scribere_evasus(aedificator, liberum->valor);
+    }
+    alioquin si (_spinae_liberum_unicum(liberum) != NIHIL)
+    {
+        _spinam_scribere(liberum, aedificator, sedes);
+    }
+    alioquin
+    {
+        _scribere_nucleus(liberum, aedificator, FALSUM, FALSUM,
+                          ZEPHYRUM, sedes);
+    }
+}
+
+/* Collapsum conari: praevisio structurae (catena vinculorum ad
+ * terminalem idoneum), tum redditio optimistica cum tecto
+ * columnarum; super tectum reversio plena (truncare) et FALSUM -
+ * vocans formam blocorum solitam scribit. */
+interior b32
+_spinam_collabere_conari (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  i32  indentatio,
+                  Xar* sedes)
+{
+         StmlNodus* currens;
+         StmlNodus* liberum;
+    memoriae_index  signum;
+               i32  signum_sedes;
+               i32  latitudo;
+
+    si (_spinae_liberum_unicum(nodus) == NIHIL)
+    {
+        redde FALSUM;
+    }
+    currens = nodus;
+    dum (VERUM)
+    {
+        liberum = _spinae_liberum_unicum(currens);
+        si (liberum->genus == STML_NODUS_TEXTUS)
+        {
+            si (!_valor_capturabilis(liberum->valor))
+            {
+                redde FALSUM;
+            }
+            frange;
+        }
+        si (liberum->genus != STML_NODUS_ELEMENTUM)
+        {
+            redde FALSUM;
+        }
+        si (_spinae_liberum_unicum(liberum) != NIHIL)
+        {
+            currens = liberum;
+            perge;
+        }
+        si (_terminalis_inline(liberum))
+        {
+            frange;
+        }
+        redde FALSUM;
+    }
+
+    signum        = chorda_aedificator_longitudo(aedificator);
+    signum_sedes  = (sedes != NIHIL)
+        ? xar_numerus(sedes) : ZEPHYRUM;
+
+    _spinam_scribere(nodus, aedificator, sedes);
+
+    latitudo = (i32)(chorda_aedificator_longitudo(aedificator)
+                     - signum)
+             + indentatio * II;
+    si (latitudo > LXXII)
+    {
+        chorda_aedificator_truncare(aedificator, signum);
+        si (sedes != NIHIL)
+        {
+            xar_truncare(sedes, signum_sedes);
+        }
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 interior b32
 _scribere_nucleus (
             StmlNodus* nodus,
@@ -5491,6 +5756,16 @@ _scribere_nucleus (
             si (pulchrum)
             {
                 _scribere_indentatio(aedificator, indentatio);
+            }
+            /* COLLAPSUS (§4 T3c): spina unigena -> forma capturae
+             * in linea una si intra tectum cadit; sedes suas ipse
+             * notat (initium_sedis sentinellam -I tenet, ne bis
+             * notetur) */
+            si (   pulchrum
+                && _spinam_collabere_conari(nodus, aedificator,
+                                            indentatio, sedes))
+            {
+                frange;
             }
             /* sedes: ab primo octeto tagi, POST indentationem -
              * semantica positus_initium parsatoris */
@@ -5761,6 +6036,19 @@ _scribere_nucleus (
                             aedificator, *nodus->spatia_post);
                     }
                     post_iam_emissum = VERUM;
+                }
+                alioquin si (   !nodus->crudus
+                             && nodus->captio_numerus == I)
+                {
+                    /* pulcher: separator canonicus post '(>' pro
+                     * captoribus UNIGENIS (§0.2; regula capturae
+                     * eum relegit in spatia_post). Multi-captei
+                     * glutinati manent: spatium inter captos nodus
+                     * textus fieret et numerationem corrumperet
+                     * (angulus M4). Punctum fixum collapsus hinc
+                     * pendet. */
+                    chorda_aedificator_appendere_character(
+                        aedificator, ' ');
                 }
 
                 /* Serialize children inline (no closing tag for captures) */

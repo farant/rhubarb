@@ -71,7 +71,11 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
     { "processio_cauda",
       "<?xml version=\"1.0\"?>\n<radix><a/></radix>\n" },
     { "fragmentum",
-      "<#pars attr=\"1\"><a/>textus</#>" }
+      "<#pars attr=\"1\"><a/>textus</#>" },
+    { "collapsus_auctoris",
+      "<radix><t1(> <t2(> foo</radix>" },
+    { "collapsus_mixtus",
+      "<radix>\n  <par(> <filius/>\n  <b>x</b>\n</radix>" }
 };
 
 /* Plagulam totam in piscinam legere */

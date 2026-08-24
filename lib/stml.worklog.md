@@ -686,3 +686,52 @@ Finds for the next reader:
 
 Gates after: stml family 4/4, full suite 140/140, amalgam
 re-verified (hospes 39/39), silva suite green.
+
+## 2026-08-24 (M2 T3) — the collapse: glued parens, rule A, chained captures, spine emission
+
+The feature Fran asked for (`<t1(> <t2(> <t3(> foo`) landed in three
+tranches. Finds for the next reader:
+
+- **`<tag(>` always lexed** — `(` is a name terminator (line ~185).
+  M1 explicitly DISCARDED the pre-paren span for capture forms and
+  the writer hardcoded `" ("`, so glued input silently reformatted.
+  Now stored (spatia_intra_tagum), NIHIL = glued canonical; pretty
+  emits glued-sans-attrs / spaced-after-attrs (§0.2). The `<(>`
+  sugar's canonical form changed `<# (>` → `<#(>`.
+- **`_parser_legere_captio_ante` was the one node path missing the
+  spatia_prae_finem attach** — elementum/crudus/fragment paths all
+  copied it. Symptom: authored `<wrapper (>` re-emitted glued.
+- **Chained forward captures NEVER worked.** The flat left-to-right
+  pass had `<a(> <b(> x` resolve as a→[b-bare], x orphaned. No
+  corpus document uses spines (the formatter is what will produce
+  them), so nothing ever tested it. `_captorem_ante_satiare` is the
+  recursive fix: a captee that is itself an unsatisfied ANTE captor
+  satiates from the remaining stream first.
+- **Comments between captor and captee VANISHED** — the old loop
+  skipped them in counting but never preserved them anywhere. §6's
+  "skipped-but-preserved" was half-implemented. They now enter the
+  captor's children in stream order. Aurea recorded the buggy
+  4-node tree; judged + regenerated. Farcimen/retro comment
+  interleaving still has the disease — M4 (counting policy).
+- **A captor's parse extent covers ONLY ITS TAG** (positus_finis
+  set at token consumption, before reparenting). The collapse
+  writer's sedes entries must match — spine link finis is recorded
+  after `(>`, BEFORE the separator. The sedes parity gate caught
+  the full-spine-extent version immediately.
+- **`_valor_capturabilis`**: text terminals must be non-empty,
+  single-line, first byte non-whitespace — otherwise rule A
+  re-attributes the leading bytes on re-read (the `<sep>   </sep>`
+  fixed-point break the gates caught on first run).
+- **The canonical separator after `(>` must ALSO come from the
+  plain ANTE branch in pretty** (captio_numerus == 1 only) — else
+  pass 2 emits `<x(>foo` where pass 1 wrote `<x(> foo` and the
+  fixed point dies. Multi-captee captors stay glued: a space
+  between captees would parse to a text node and corrupt counting
+  (M4 corner).
+- **chorda_aedificator_truncare** added (offset clamp) — enables
+  optimistic-render + rollback (aedificator + xar_truncare on the
+  sedes table) for the all-or-nothing width check.
+- Silva arbor probationes string-match the STML text — collapsed
+  forms churned ~11 assertions (`<lex-int(>` etc.). The 154-file
+  memcmp gate and both canon freshness gates never flinched: tree
+  meaning is what they eat, and Gate B guards exactly that.

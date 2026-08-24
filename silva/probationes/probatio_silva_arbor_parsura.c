@@ -451,8 +451,10 @@ principale (vacuum)
         /* Involucrum <parsura> adest, non <arbor> */
         CREDO_CHORDA_CONTINET (scriptura.textus,
             chorda_ex_literis("<parsura", piscina));
+        /* sine '>' - collapsus '<fontes(>' aut blocus '<fontes>'
+         * pro latitudine viae fontis */
         CREDO_CHORDA_CONTINET (scriptura.textus,
-            chorda_ex_literis("<fontes>", piscina));
+            chorda_ex_literis("<fontes", piscina));
 
         /* INVOLUCRUM ancoram non fert: plagula ipsa initium est
          * (spec §1). Liberi SUPREMI tamen ancoras FERUNT, et
