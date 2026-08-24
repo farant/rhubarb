@@ -377,19 +377,26 @@ stml_attributum_habet (
              StmlNodus* nodus,
     constans character* titulus);
 
-/* Capere textum internum (concatenatum), VERBATIM
+/* Capere textum internum - octeti interiores EXACTI
  * "Get inner text content"
  *
- * Omnes nodos textus posterorum ordine documenti concatenat,
- * SINE mutatione - id quod textContent (DOM) et string() (XPath)
- * significant. Spatium album CONTENTUS est.
+ * Octetos contenti interioris quales in fonte stabant reddit - id
+ * quod textContent (DOM) et string() (XPath) significant.
+ * MECHANICA (exemplar triviae, 2026-08-24): trivia reassuuntur
+ * (ante + valor + clausurae + post, recursive; praefixum '<tag\>'
+ * reinsertum) - resultus octetim IDEM ac aetas ante-triviam: PONS
+ * migrationis EXACTUS, aureis (probationes/fixa/stml_aurea)
+ * pinnatus. Lectio DISPOSITIONI SENSIBILIS consulto - reformatio
+ * documenti valores internus mutat; lectiones formatione stabiles
+ * accessoribus sensus pertinent (normalizatus hodie, valor/fluxus
+ * in M3). Angustia nominata: in nodo TEXTUS directo quaesitus,
+ * pars marginis ducentis quae priori fratri cessit (§1.2)
+ * inattingibilis est (in corpore absens, mensurata).
  *
- * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat
- * (nodi praecidebantur, nodi spatii albi solius abiciebantur).
- * Gradu falso stabat: circuitum frangebat et contentum mixtum
- * conglutinabat ('salve <b>munde</b> iterum' -> 'salvemundeiterum';
- * optiones -> 'disciplinastructuracryptographica'). Nunc arbor
- * documentum fideliter refert et normalizatio HIC eligitur.
+ * MIGRATIO 2026-08-06: normalizatio prius in PARSATIONE fiebat -
+ * gradu falso stabat, contentum mixtum conglutinabat. Ad lectionem
+ * migravit (stml_textus_normalizatus); exemplar triviae deinde
+ * spatium ipsum e nodis in trivia movit (2026-08-24).
  */
 chorda
 stml_textus_internus (

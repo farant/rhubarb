@@ -13906,3 +13906,36 @@ maximus = corpus super TYPOS (SilvaArborScriptura uno vocamine);
 asperitas: excludenda-messis errorem in speculo manuali nominavit
 LONGE ante quam suite ulla - porta quae primum frangi debet ea est
 quae fontes VERE compilat. Desideratum: nullum novum.
+
+## ADDENDUM 2026-08-24 — amalgama trivia STML fert (stml M1)
+
+lib/stml gained the trivia model (spec: project-specs/stml-trivia-spec.md,
+M1 complete, 7 commits c7476a72..d3959eab). Silva-side consequence: the
+hand mirror silva/amalgama/silva.h was extended in exact ABI order —
+SilvaStmlNodus += spatia_ante/post/clausurae/intra_tagum + multilinea +
+indentatio; SilvaStmlAttributum += spatia_ante; SilvaStmlResultus +=
+crlf_canonicalizatum; SilvaStmlStatus += STML_ERROR_MULTILINEA.
+Excludenda re-harvested (135 nomina); amalgamare gates all green
+(standalone + hospes 39/39 + nm 0 + censura); suite 50/50 including
+probatio_silva_arbor_plagula (154-file memcmp) over the new stml —
+the arbor documents' whitespace now rides as trivia and the C-byte
+gate held without a single arbor-side edit.
+
+Relevant to the VISIO trivia pin: STML now has the same
+single-owner whitespace doctrine silva proved (its §1.2 is
+silva_lexema.h's law transcribed), with one deliberate divergence —
+STML comments stay NODES (content with structure), silva's are
+trivia. Arbor M2 §3's canon and the sedes tables are unaffected
+(extents exclude trivia on both sides — measured by the sedes
+probatio staying green through the whole surgery).
+
+Instrumenta debrief: adhibita — legati corpus (warm re-entry),
+canon_examen (planta diagnosis last arc), formator -scribere
+(constant companion), examen/censor hooks (caught transitional
+states throughout), silva suite as the M1 gate. Fructus: the
+per-node golden harness (probationes/probatio_stml_aurea.c, root
+side) is a pattern silva could borrow for its own accessor
+surfaces. Asperitates: post-edit hook noise during multi-edit
+surgery is loud but proved honest — every complaint resolved to a
+real transitional state; the formator's report-only mode on
+not-yet-migrated trees (probationes/) is the right default.
