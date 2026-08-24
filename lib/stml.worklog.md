@@ -501,3 +501,64 @@ Code-level finds an implementer should NOT re-derive:
 - **M1 order matters**: capture `stml_textus_internus` GOLDENS over
   the fixture corpus BEFORE any surgery — they are the old
   behavior's testimony, unobtainable afterwards.
+
+## 2026-08-24 — trivia M1 T2: the heart landed, and what it taught
+
+Implementation session, tranches: T1 CRLF (2fd925bb), T2 model +
+parser + non-pretty reassembly (this entry). Finds an implementer
+of M2+ should not re-derive:
+
+- **The §2 clausurae exclusion was WRONG and is rescinded.** The
+  spec excluded `spatia_clausurae` from internus so `<a>\n</a>`
+  reads "" — "the ONE bridge change." The goldens measured ~6,000
+  divergent element records: the close-tag indentation of every
+  nested element lives in clausurae. internus now reassembles
+  clausurae too (recursively) and the bridge is EXACT. The
+  empty-reads-empty semantics belongs to `stml_textus_valor` (M3),
+  whose trim yields "" anyway. Spec §1.3/§2/§8 amended in place.
+- **`pulchrum` was carrying a third meaning and it broke.** The
+  TERMINI pretty path renders inline-mixed children with
+  pulchrum=FALSUM ("don't self-indent"); reassembly read that as
+  "fidelity" and emitted their trivia → doubled newlines on the
+  pretty fixed point. `_scribere_nucleus` now threads a separate
+  `fidelitas` flag (immutable down the recursion) — the hoist the
+  2026-08-19 worklog entry predicted. Trivia emission and
+  stream-order decisions key on fidelitas; layout keys on pulchrum.
+- **Capture emission is stream-order now (spec §6, pulled into M1
+  by fidelity):** non-crudus ANTE captor emits [tag][post][capti];
+  CRUDUS captor emits [tag][linea capta][post] — the captured line
+  sits BEFORE its terminating newline, the reverse of the normal
+  case (first implementation got this wrong; probatio_stml caught
+  it). RETRO emits children BEFORE the tag; FARCIMEN emits
+  child[0], tag, rest. Pretty keeps captor-first (reformatter).
+  The SED-SEMEL-TANTUM hack is deleted; a grammar guard remains
+  for hand-built raw captors with no spatia_post (emit '\n' or the
+  next sibling is devoured on re-read).
+- **Old retro/farcimen "roundtrips" were reorderings.** The old
+  writer emitted captor-first, so `<b/>\n<) a>` came back as
+  `<) a>\n<b/>` — probatio_stml PINNED that as expected. Now
+  byte-exact; expectations updated.
+- **Childless element with clausurae must NOT self-close** —
+  `<root>   \n   </root>` has zero children after elision; `/>`
+  would drop the interior bytes. habet_liberos treats non-NIHIL
+  clausurae as content in fidelity mode.
+- **Text node extents were degenerate** ([finis,finis) — node
+  created AFTER progredi read the NEXT token's start). Fixed:
+  created before progredi, extent covers the full run. The spec's
+  "extents continue to cover the FULL run" was aspirational.
+- **stml_legere built the document node from uninitialized
+  ctx.current** (stack garbage in linea/positus) — found because
+  the goldens wobbled between builds (c7476a72).
+- **Distribution mechanism**: one child-loop `_liberos_legere`
+  (elementum/fragmentum/percentum/documentum — the quadruplicated
+  loops collapsed); `_textum_tractare` classifies runs (§1.3) and
+  distributes via a loop-local `pendens` chorda — no parser-global
+  state, so nesting can't mis-own across levels. prior==NIHIL
+  (after open tag) gives the whole run to the next node's ante,
+  per §1.2.
+- **Corpus audit result**: 61 files elision-count-only; 7 files
+  with internus deltas, all capture-bearing (aedilis ×2, WORKSHOP
+  ×5) — trailing indentation moved from captured text values to
+  the next sibling's ante (the §0.1.3 fix), plus retro captures no
+  longer relocating whitespace. Root-level same-length hash
+  changes = retro-captured whitespace no longer moves position.

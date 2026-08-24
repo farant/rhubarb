@@ -118,12 +118,17 @@ the reassembly in §4 is the proof obligation.
   construction.) A same-line whitespace-only run remains a text
   node with its valor — `<sep>   </sep>` keeps its deliberate
   three-space value (scenario I refinement, 2026-08-24).
-- **Named `internus` carve-out**: an element whose entire content
-  was newline-bearing whitespace (`<a>\n</a>`) becomes genuinely
-  empty — `internus` returns `""` where it returned `"\n"`. This is
-  the ONE bridge behavior change; the golden audit (§7.1) must
-  enumerate every affected fixture, and empty-with-layout reading
-  as empty is the least-surprise verdict.
+- **The `internus` carve-out is RESCINDED** (M1 audit,
+  2026-08-24). As designed, `internus` excluded `spatia_clausurae`
+  so `<a>\n</a>` would read `""` — believed to be the ONE bridge
+  change. The goldens measured the true cost: ~6,000 divergent
+  element records, because the close-tag indentation of EVERY
+  nested element in a pretty-printed document lives in clausurae.
+  `internus` is the BYTES reading — it reassembles clausurae too,
+  and the bridge is EXACT (zero divergence outside capture
+  reshapes). The empty-with-layout-reads-empty semantics Fran
+  approved lives where it belongs: `stml_textus_valor`, whose trim
+  produces `""` for `<a>\n</a>` naturally.
 - A run with content: an edge (maximal whitespace prefix/suffix)
   **leaves the valor iff it contains a newline** (§0.2). Bytes that
   leave the valor then distribute by §1.2 exactly like any other
@@ -245,12 +250,17 @@ Three readings, one per text kind — and **the declared kind
 outranks the accessor** (reading marked content through `fluxus`
 returns the valor untouched; the document's declaration wins):
 
-- `stml_textus_internus` — bytes: reassembles ante + valor + post
-  (+ indentatio re-insertion for `\`). **Result bytes UNCHANGED**
-  except the §1.3 carve-out. A probatio captures today's outputs
-  over a fixture corpus as goldens BEFORE surgery and asserts
-  equality after (§7). Canon's identity-sensitive sites (keys,
-  citations — `lib/canon.c:1444,1585`) see no change.
+- `stml_textus_internus` — bytes: reassembles ante + valor +
+  clausurae + post (+ indentatio re-insertion for `\`). **Result
+  bytes UNCHANGED — the bridge is EXACT** (amended 2026-08-24: the
+  clausurae exclusion and its `<a>\n</a>` carve-out are rescinded,
+  see §1.3 — the goldens measured them as ~6k divergences, not
+  one). Canon's identity-sensitive sites (keys, citations —
+  `lib/canon.c:1444,1585`) see no change. Direct queries on TEXT
+  nodes reassemble the node's own ante+valor+post; the share of a
+  leading edge that §1.2 assigns to the PRIOR sibling is
+  unreachable from the text node — a named narrow divergence,
+  absent from the corpus.
 - `stml_textus_valor` — NEW: the value itself. For `\` content this
   is already dedented with newlines intact — the least-surprise
   code/poetry reading lives in the MODEL, not an accessor.
@@ -377,7 +387,9 @@ unchanged, now structurally enforced.
 - `</>` anonymous close and clausura tacita interaction
 - a text run whose edge is spaces-only (no newline) — NOT trimmed
 - `<sep>   </sep>` — same-line whitespace-only VALUE, preserved
-- `<a>\n</a>` — the internus carve-out case, enumerated by goldens
+- `<a>\n</a>` — childless-with-clausurae: internus reads `"\n"`
+  (exact bridge), writer keeps the open form (`/>` would drop the
+  interior bytes), `valor` reads `""`
 - `<versus\>` block: dedent + relative indentation survives +
   byte-exact reassembly; interior EMPTY lines
 - trailing equivalence: `123</>` vs `123\n</>` vs `123\n  </>` —

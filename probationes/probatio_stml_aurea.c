@@ -1,17 +1,17 @@
 /* probatio_stml_aurea.c - PONS AUREUS accessoris stml_textus_internus
  *
- * TESTIMONIUM MORIS VETERIS (spec: project-specs/stml-trivia-spec.md
- * §7.1): ante chirurgiam triviae, quid internus HODIE reddat super
- * corpore vero capitur; post quamque tranchem chirurgiae aequalitas
- * stricta asseritur. Divergentia UNA nominata exspectatur (exceptio
- * §1.3: elementum cuius contentum totum spatium album lineam-ferens
- * erat - '<a>\n</a>' - vacuum fit). Cum ea tranche cadat, haec
- * probatio RUBET consulto: index divergentiarum IPSE est enumeratio
- * quam spec poscit. Ordo tunc: differentias legere (probatio
- * '.novum' scribit - 'diff' eas enumerat), contra spec §1.3/§2/§6
- * iudicare, in worklog notare, aurea regenerare per
- * tools/stml_aurea_generare.sh. NUMQUAM regenerare sine iudicio -
- * aurum est testimonium, non speculum.
+ * TESTIMONIUM (spec: project-specs/stml-trivia-spec.md §7.1): quid
+ * internus reddat super corpore vero capitur; aequalitas stricta
+ * asseritur trans omnem chirurgiam sequentem. IUDICIUM M1 FACTUM
+ * (2026-08-24): aurum praesens arborem triviae fert; divergentiae
+ * tranchis T2 iudicatae erant - exclusio clausurae RESCISSA (VI
+ * milia nodorum, non exceptio una - vide §1.3/§2 emendata), unde
+ * pons internus EXACTUS; reliquum = plagulae capturis gravidae
+ * septem (familia §0.1.3 sanata) et elisiones numeratae. Si haec
+ * probatio rubet: differentias legere (probatio '.novum' scribit -
+ * 'diff' eas enumerat), contra spec iudicare, in worklog notare,
+ * aurea regenerare per tools/stml_aurea_generare.sh. NUMQUAM
+ * regenerare sine iudicio - aurum est testimonium, non speculum.
  *
  * FORMA AUREI: pro plagulis corporis lineae per-nodum D/E solum
  * (mensura + fnv - octeti pleni O(textus x profunditas) inflarent;

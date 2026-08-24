@@ -9,16 +9,16 @@ salve munde iterum
 N @0 E 1 18 315b0ffb
 V 18
 salve munde iterum
-N @9 T 1 6 e5cf6bce
+N @3 T 1 6 e5cf6bce
 V 6
 salve 
 N @9 E 1 5 68a44458
 V 5
 munde
-N @17 T 1 5 68a44458
+N @12 T 1 5 68a44458
 V 5
 munde
-N @28 T 1 7 fd0b8bf7
+N @21 T 1 7 fd0b8bf7
 V 7
  iterum
 @ sep_spatia
@@ -29,20 +29,16 @@ V 3
 N @0 E 1 3 87384657 A:202020
 V 3
    
-N @8 T 1 3 87384657 A:202020
+N @5 T 1 3 87384657 A:202020
 V 3
    
 @ vacuum_linea
-arbor successus:1 status:0 nodi:3 notati:3
+arbor successus:1 status:0 nodi:2 notati:2
 N @0 D 1 1 0f0c6cdd A:0a
 V 1
 
 
 N @0 E 1 1 0f0c6cdd A:0a
-V 1
-
-
-N @4 T 2 1 0f0c6cdd A:0a
 V 1
 
 
@@ -60,14 +56,14 @@ V 19
   prima
   secunda
 
-N @22 T 4 19 e4407fbb
+N @3 T 1 19 e4407fbb
 V 19
 
   prima
   secunda
 
 @ spatia_ubique
-arbor successus:1 status:0 nodi:9 notati:9
+arbor successus:1 status:0 nodi:5 notati:5
 N @0 D 1 9 4058b1c7
 V 9
 
@@ -81,33 +77,17 @@ V 8
   
   x
 
-N @10 T 2 3 a0037825 A:0a2020
-V 3
-
-  
 N @10 E 2 0 811c9dc5
 V 0
 
-N @17 T 3 3 a0037825 A:0a2020
-V 3
-
-  
 N @17 E 3 1 fd0c5087
 V 1
 x
-N @21 T 3 1 fd0c5087
+N @20 T 3 1 fd0c5087
 V 1
 x
-N @26 T 4 1 0f0c6cdd A:0a
-V 1
-
-
-N @35 T 5 1 0f0c6cdd A:0a
-V 1
-
-
 @ cauda_documenti
-arbor successus:1 status:0 nodi:3 notati:3
+arbor successus:1 status:0 nodi:2 notati:2
 N @0 D 1 2 878f5675 A:0a0a
 V 2
 
@@ -116,13 +96,8 @@ V 2
 N @0 E 1 0 811c9dc5
 V 0
 
-N @10 T 3 2 878f5675 A:0a0a
-V 2
-
-
-
 @ captio_ante_linea
-arbor successus:1 status:0 nodi:5 notati:5
+arbor successus:1 status:0 nodi:4 notati:4
 N @0 D 1 1 0f0c6cdd A:0a
 V 1
 
@@ -131,13 +106,8 @@ N @0 E 1 1 0f0c6cdd A:0a
 V 1
 
 
-N @7 E 1 1 0f0c6cdd A:0a
-V 1
-
-
-N @13 T 2 1 0f0c6cdd A:0a
-V 1
-
+N @7 E 1 0 811c9dc5
+V 0
 
 N @13 E 2 0 811c9dc5
 V 0
@@ -160,7 +130,7 @@ N @16 E 1 0 811c9dc5
 V 0
 
 @ captio_multiplex
-arbor successus:1 status:0 nodi:8 notati:8
+arbor successus:1 status:0 nodi:5 notati:5
 N @0 D 1 3 e5a529ed A:0a0a0a
 V 3
 
@@ -173,30 +143,19 @@ V 3
 
 
 
-N @7 E 1 1 0f0c6cdd A:0a
-V 1
+N @7 E 1 2 878f5675 A:0a0a
+V 2
 
-
-N @14 T 2 1 0f0c6cdd A:0a
-V 1
 
 
 N @14 E 2 0 811c9dc5
 V 0
 
-N @19 T 3 1 0f0c6cdd A:0a
-V 1
-
-
 N @19 E 3 0 811c9dc5
 V 0
 
-N @24 T 4 1 0f0c6cdd A:0a
-V 1
-
-
 @ captio_retro
-arbor successus:1 status:0 nodi:5 notati:5
+arbor successus:1 status:0 nodi:4 notati:4
 N @0 D 1 1 0f0c6cdd A:0a
 V 1
 
@@ -205,19 +164,15 @@ N @0 E 1 1 0f0c6cdd A:0a
 V 1
 
 
-N @7 E 1 0 811c9dc5
-V 0
-
 N @12 E 2 1 0f0c6cdd A:0a
 V 1
 
 
-N @12 T 2 1 0f0c6cdd A:0a
-V 1
-
+N @7 E 1 0 811c9dc5
+V 0
 
 @ farcimen
-arbor successus:1 status:0 nodi:7 notati:7
+arbor successus:1 status:0 nodi:5 notati:5
 N @0 D 1 2 878f5675 A:0a0a
 V 2
 
@@ -228,21 +183,12 @@ V 2
 
 
 
+N @12 E 2 1 0f0c6cdd A:0a
+V 1
+
+
 N @7 E 1 0 811c9dc5
 V 0
-
-N @12 E 2 2 878f5675 A:0a0a
-V 2
-
-
-
-N @12 T 2 1 0f0c6cdd A:0a
-V 1
-
-
-N @20 T 3 1 0f0c6cdd A:0a
-V 1
-
 
 N @20 E 3 0 811c9dc5
 V 0
@@ -262,7 +208,7 @@ N @25 E 1 0 811c9dc5
 V 0
 
 @ cruda_linea
-arbor successus:1 status:0 nodi:6 notati:6
+arbor successus:1 status:0 nodi:5 notati:5
 N @0 D 1 14 70f90eaa
 V 14
 crudus textus
@@ -277,15 +223,11 @@ crudus textus
 N @7 T 1 13 b04908e4
 V 13
 crudus textus
-N @29 T 2 1 0f0c6cdd A:0a
-V 1
-
-
 N @29 E 2 0 811c9dc5
 V 0
 
 @ cruda_linea_cauda
-arbor successus:1 status:0 nodi:5 notati:5
+arbor successus:1 status:0 nodi:4 notati:4
 N @0 D 1 7 0793d765
 V 7
 crudus
@@ -300,10 +242,6 @@ crudus
 N @7 T 1 6 06463e2d
 V 6
 crudus
-N @22 T 2 1 0f0c6cdd A:0a
-V 1
-
-
 @ crudus_plenus
 arbor successus:1 status:0 nodi:3 notati:3
 N @0 D 1 14 3235b041
@@ -323,7 +261,7 @@ salve <mundus> & amici
 N @0 E 1 22 8c82e35b
 V 22
 salve <mundus> & amici
-N @35 T 1 22 8c82e35b
+N @3 T 1 22 8c82e35b
 V 22
 salve <mundus> & amici
 @ commentum_inter
@@ -334,10 +272,10 @@ antepost
 N @0 E 1 8 5c88538b
 V 8
 antepost
-N @11 T 1 4 c1e4dac9
+N @7 T 1 4 c1e4dac9
 V 4
 ante
-N @25 T 1 4 89e7fa47
+N @21 T 1 4 89e7fa47
 V 4
 post
 @ fragmentum
@@ -351,7 +289,7 @@ textus
 N @16 E 1 0 811c9dc5
 V 0
 
-N @26 T 1 6 b45c5a46
+N @20 T 1 6 b45c5a46
 V 6
 textus
 @ fragmentum_captans
@@ -379,10 +317,10 @@ ante  post
 N @0 E 1 10 be889ca3
 V 10
 ante  post
-N @12 T 1 5 24449ccb
+N @7 T 1 5 24449ccb
 V 5
 ante 
-N @25 T 1 5 bb1f5eb1
+N @20 T 1 5 bb1f5eb1
 V 5
  post
 @ augmentum
@@ -396,7 +334,7 @@ textus additus
 N @7 E 1 14 3f29f248
 V 14
 textus additus
-N @41 T 1 14 3f29f248
+N @27 T 1 14 3f29f248
 V 14
 textus additus
 @ titulus_punctatus
@@ -407,7 +345,7 @@ x
 N @0 E 1 1 fd0c5087
 V 1
 x
-N @11 T 1 1 fd0c5087
+N @10 T 1 1 fd0c5087
 V 1
 x
 @ clausura_anonyma
@@ -421,18 +359,14 @@ x
 N @7 E 1 1 fd0c5087
 V 1
 x
-N @11 T 1 1 fd0c5087
+N @10 T 1 1 fd0c5087
 V 1
 x
 @ processio
-arbor successus:1 status:0 nodi:6 notati:5
+arbor successus:1 status:0 nodi:4 notati:3
 N @0 D 1 2 878f5675 A:0a0a
 V 2
 
-
-
-N @22 T 2 1 0f0c6cdd A:0a
-V 1
 
 
 N @22 E 2 0 811c9dc5
@@ -440,10 +374,6 @@ V 0
 
 N @29 E 2 0 811c9dc5
 V 0
-
-N @42 T 3 1 0f0c6cdd A:0a
-V 1
-
 
 @ attributa_multilinea
 arbor successus:1 status:0 nodi:3 notati:3
@@ -453,12 +383,12 @@ x
 N @0 E 1 1 fd0c5087
 V 1
 x
-N @20 T 3 1 fd0c5087
+N @19 T 3 1 fd0c5087
 V 1
 x
 FONTES 148
 F ./aedilis.canon mensura:4181 fnv:5e859329
-arbor successus:1 status:0 nodi:90 notati:33
+arbor successus:1 status:0 nodi:40 notati:33
 N @0 D 1 200 d494879d
 N @1566 E 34 198 50874b0d
 N @1608 E 36 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -493,29 +423,29 @@ N @3844 E 105 0 811c9dc5
 N @3911 E 106 0 811c9dc5
 N @3969 E 109 0 811c9dc5
 F ./aedilis.stml mensura:2204 fnv:b36a8def
-arbor successus:1 status:0 nodi:160 notati:60
+arbor successus:1 status:0 nodi:108 notati:60
 N @0 D 1 1092 ab6f8089
 N @0 E 1 1091 1b2336f9
 N @12 E 2 372 2cfe9359
-N @26 E 3 12 2146acc7
-N @45 E 4 16 73c4a4e7
-N @68 E 5 16 617d8f36
-N @91 E 6 30 ec9a540b
-N @128 E 7 31 f9520f83
-N @166 E 8 15 d836a8ef
-N @188 E 9 22 14ae9f79
-N @217 E 10 15 796a1bcc
-N @239 E 11 22 4535efb8
-N @268 E 12 16 14d72004
-N @291 E 13 23 f7236710
-N @321 E 14 11 072a370b
-N @339 E 15 17 38a93b8f
-N @363 E 16 19 3f79fa78
-N @389 E 17 22 5183cfed
-N @418 E 18 20 c3e8a6e2
-N @445 E 19 21 d43e95cc
-N @473 E 20 19 6fe8dd34
-N @499 E 21 20 aaf0f354
+N @26 E 3 8 28dbb997
+N @45 E 4 12 44cfb937
+N @68 E 5 12 d97a4cd6
+N @91 E 6 26 c33d651b
+N @128 E 7 27 a2c24b13
+N @166 E 8 11 74ed4d3f
+N @188 E 9 18 3b414ea9
+N @217 E 10 11 84a8ab0c
+N @239 E 11 18 e4a43fb8
+N @268 E 12 12 ce4ee9c4
+N @291 E 13 19 4a1cfb10
+N @321 E 14 7 2445181b
+N @339 E 15 13 75042b5f
+N @363 E 16 15 c0c91e78
+N @389 E 17 18 7312565d
+N @418 E 18 16 75a39a82
+N @445 E 19 17 9fc9850c
+N @473 E 20 15 c17cbdf4
+N @499 E 21 18 d01939b4
 N @539 E 23 259 a4b31a5c
 N @553 E 24 8 fc64b4ca
 N @579 E 25 9 80dcb406
@@ -555,7 +485,7 @@ N @1789 E 64 24 87c32958
 N @1833 E 65 34 553d0359
 N @2162 E 72 3 a0037825 A:0a2020
 F ./canon.canon mensura:9714 fnv:367763dc
-arbor successus:1 status:0 nodi:181 notati:71
+arbor successus:1 status:0 nodi:93 notati:71
 N @0 D 1 537 c0364bd0
 N @1745 E 38 535 f8795c62
 N @1785 E 40 38 c6f64d3d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -628,7 +558,7 @@ N @9424 E 204 0 811c9dc5
 N @9579 E 209 8 6e01626d A:0a202020200a2020
 N @9625 E 210 0 811c9dc5
 F ./lib/lapifex_grammatica_test.stml mensura:841 fnv:b76d44df
-arbor successus:1 status:0 nodi:52 notati:20
+arbor successus:1 status:0 nodi:27 notati:20
 N @0 D 1 189 39d927e7
 N @0 E 1 188 d8d884d7
 N @15 E 2 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -650,7 +580,7 @@ N @695 E 21 18 0103c56a
 N @743 E 22 6 f33c07a0
 N @803 E 26 4 d62712ae
 F ./natura/cocta/acta.canon mensura:35594 fnv:6cde651c
-arbor successus:1 status:0 nodi:1502 notati:612
+arbor successus:1 status:0 nodi:761 notati:612
 N @0 D 1 8333 2b6365fc
 N @143 E 4 8330 d791d7ee
 N @182 E 6 98 63b325dd
@@ -1264,7 +1194,7 @@ N @35092 E 828 0 811c9dc5
 N @35258 E 829 0 811c9dc5
 N @35426 E 830 0 811c9dc5
 F ./natura/cocta/actus.canon mensura:45499 fnv:ff181aa3
-arbor successus:1 status:0 nodi:1826 notati:796
+arbor successus:1 status:0 nodi:916 notati:796
 N @0 D 1 9483 4579dc0e
 N @144 E 4 9480 dd174ea0
 N @184 E 6 143 158a7085
@@ -2062,7 +1992,7 @@ N @44220 E 1017 0 811c9dc5
 N @44625 E 1018 0 811c9dc5
 N @45058 E 1019 0 811c9dc5
 F ./natura/cocta/animal.canon mensura:11953 fnv:3826d92e
-arbor successus:1 status:0 nodi:589 notati:231
+arbor successus:1 status:0 nodi:299 notati:231
 N @0 D 1 2375 d72ef20e
 N @145 E 4 2372 bb5839e0
 N @186 E 6 28 854c294d A:0a202020200a202020200a202020200a202020200a202020200a2020
@@ -2295,7 +2225,7 @@ N @11616 E 317 0 811c9dc5
 N @11725 E 318 0 811c9dc5
 N @11836 E 319 0 811c9dc5
 F ./natura/cocta/architectura_machinae.canon mensura:7869 fnv:e0140b84
-arbor successus:1 status:0 nodi:240 notati:97
+arbor successus:1 status:0 nodi:124 notati:97
 N @0 D 1 2732 34a89bb1
 N @160 E 4 2729 09835d51
 N @216 E 6 23 170211c5 A:0a202020200a202020200a202020200a202020200a2020
@@ -2394,7 +2324,7 @@ N @7465 E 166 0 811c9dc5
 N @7602 E 167 0 811c9dc5
 N @7736 E 168 0 811c9dc5
 F ./natura/cocta/causa.canon mensura:7884 fnv:5b965257
-arbor successus:1 status:0 nodi:266 notati:117
+arbor successus:1 status:0 nodi:123 notati:117
 N @0 D 1 1398 abd1726e
 N @144 E 4 1395 19b62fc0
 N @184 E 6 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -2513,7 +2443,7 @@ N @7354 E 175 0 811c9dc5
 N @7528 E 176 0 811c9dc5
 N @7704 E 177 0 811c9dc5
 F ./natura/cocta/cliens.canon mensura:18623 fnv:a6cac925
-arbor successus:1 status:0 nodi:647 notati:262
+arbor successus:1 status:0 nodi:325 notati:262
 N @0 D 1 6736 16c252d0
 N @145 E 4 6733 b64bdb6a
 N @186 E 6 78 a9f339fd
@@ -2777,7 +2707,7 @@ N @18073 E 425 0 811c9dc5
 N @18251 E 426 0 811c9dc5
 N @18429 E 427 0 811c9dc5
 F ./natura/cocta/commercium.canon mensura:29653 fnv:b0c65c6e
-arbor successus:1 status:0 nodi:1062 notati:436
+arbor successus:1 status:0 nodi:532 notati:436
 N @0 D 1 9878 c6572ac5
 N @149 E 4 9875 c604fffd
 N @194 E 6 103 31457e45
@@ -3215,7 +3145,7 @@ N @29290 E 668 0 811c9dc5
 N @29419 E 669 0 811c9dc5
 N @29536 E 670 0 811c9dc5
 F ./natura/cocta/communicatio.canon mensura:11771 fnv:a6c109f2
-arbor successus:1 status:0 nodi:399 notati:170
+arbor successus:1 status:0 nodi:190 notati:170
 N @0 D 1 3703 a1a89d53
 N @151 E 4 3700 3c47d55b
 N @198 E 6 48 925d9d2d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -3387,7 +3317,7 @@ N @11461 E 276 0 811c9dc5
 N @11554 E 277 0 811c9dc5
 N @11657 E 278 0 811c9dc5
 F ./natura/cocta/corporalia.canon mensura:20890 fnv:6a4ac001
-arbor successus:1 status:0 nodi:856 notati:344
+arbor successus:1 status:0 nodi:444 notati:344
 N @0 D 1 7146 1654c6eb
 N @149 E 4 7143 e4fdbc33
 N @194 E 6 78 a9f339fd
@@ -3733,7 +3663,7 @@ N @20564 E 510 0 811c9dc5
 N @20672 E 511 0 811c9dc5
 N @20770 E 512 0 811c9dc5
 F ./natura/cocta/documentatio.canon mensura:15684 fnv:94cab28f
-arbor successus:1 status:0 nodi:527 notati:221
+arbor successus:1 status:0 nodi:263 notati:221
 N @0 D 1 6020 23d28e2b
 N @151 E 4 6017 b06aa5f3
 N @198 E 6 58 d7547d1d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -3956,7 +3886,7 @@ N @14828 E 348 0 811c9dc5
 N @14888 E 351 0 811c9dc5
 N @15517 E 362 0 811c9dc5
 F ./natura/cocta/elementa_programmatis.canon mensura:52157 fnv:635e530e
-arbor successus:1 status:0 nodi:1774 notati:750
+arbor successus:1 status:0 nodi:862 notati:750
 N @0 D 1 16304 209f8757
 N @160 E 4 16301 4b16b1b7
 N @216 E 6 233 8248e0d5
@@ -4708,7 +4638,7 @@ N @51694 E 1149 0 811c9dc5
 N @51806 E 1150 0 811c9dc5
 N @52003 E 1151 0 811c9dc5
 F ./natura/cocta/fabricatio.canon mensura:31978 fnv:ecc95651
-arbor successus:1 status:0 nodi:1120 notati:464
+arbor successus:1 status:0 nodi:564 notati:464
 N @0 D 1 12473 b6ae951d
 N @149 E 4 12470 bed44715
 N @194 E 6 113 27923c15
@@ -5174,7 +5104,7 @@ N @31612 E 730 0 811c9dc5
 N @31725 E 731 0 811c9dc5
 N @31860 E 732 0 811c9dc5
 F ./natura/cocta/formae_datorum.canon mensura:5392 fnv:d5244b35
-arbor successus:1 status:0 nodi:216 notati:93
+arbor successus:1 status:0 nodi:97 notati:93
 N @0 D 1 1216 fdb34c39
 N @153 E 4 1213 c6fea979
 N @202 E 6 43 68b56665 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -5269,7 +5199,7 @@ N @5068 E 143 0 811c9dc5
 N @5113 E 144 0 811c9dc5
 N @5173 E 147 0 811c9dc5
 F ./natura/cocta/identificatio.canon mensura:34308 fnv:183312e8
-arbor successus:1 status:0 nodi:1305 notati:569
+arbor successus:1 status:0 nodi:627 notati:569
 N @0 D 1 4193 1c428424
 N @152 E 4 4190 b797eb96
 N @200 E 6 93 00b0c375
@@ -5840,7 +5770,7 @@ N @33696 E 723 0 811c9dc5
 N @33890 E 724 0 811c9dc5
 N @34090 E 725 0 811c9dc5
 F ./natura/cocta/individua.canon mensura:870958 fnv:d6ece0e2
-arbor successus:1 status:0 nodi:29583 notati:12525
+arbor successus:1 status:0 nodi:14956 notati:12525
 N @0 D 1 211134 c180ca52
 N @2025 E 46 211130 69135354
 N @2069 E 48 2348 1318a8cd
@@ -18367,7 +18297,7 @@ N @870767 E 17099 24 53f03739
 N @870833 E 17100 11 a38083c2
 N @870878 E 17101 19 3e7a9038
 F ./natura/cocta/iudicium.canon mensura:64873 fnv:e235eaed
-arbor successus:1 status:0 nodi:2527 notati:1065
+arbor successus:1 status:0 nodi:1254 notati:1065
 N @0 D 1 17897 022cb4ef
 N @147 E 4 17894 8931988f
 N @190 E 6 278 b00921bd
@@ -19434,7 +19364,7 @@ N @64408 E 1509 0 811c9dc5
 N @64558 E 1510 0 811c9dc5
 N @64699 E 1511 0 811c9dc5
 F ./natura/cocta/laboratorium.canon mensura:7219 fnv:d37559b4
-arbor successus:1 status:0 nodi:273 notati:112
+arbor successus:1 status:0 nodi:136 notati:112
 N @0 D 1 1888 af86c6ea
 N @151 E 4 1885 14e21b14
 N @198 E 6 28 854c294d A:0a202020200a202020200a202020200a202020200a202020200a2020
@@ -19548,7 +19478,7 @@ N @6886 E 174 0 811c9dc5
 N @6990 E 175 0 811c9dc5
 N @7102 E 176 0 811c9dc5
 F ./natura/cocta/lingua_programmandi.canon mensura:13489 fnv:e6f84b36
-arbor successus:1 status:0 nodi:449 notati:179
+arbor successus:1 status:0 nodi:237 notati:179
 N @0 D 1 4591 06b7051f
 N @158 E 4 4588 07778a7f
 N @212 E 6 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -19729,7 +19659,7 @@ N @13073 E 281 0 811c9dc5
 N @13227 E 282 0 811c9dc5
 N @13363 E 283 0 811c9dc5
 F ./natura/cocta/locus.canon mensura:6841 fnv:826ac7ad
-arbor successus:1 status:0 nodi:195 notati:83
+arbor successus:1 status:0 nodi:94 notati:83
 N @0 D 1 2297 153c9458
 N @144 E 4 2294 74b37eb2
 N @184 E 6 28 854c294d A:0a202020200a202020200a202020200a202020200a202020200a2020
@@ -19814,7 +19744,7 @@ N @6515 E 151 0 811c9dc5
 N @6616 E 152 0 811c9dc5
 N @6715 E 153 0 811c9dc5
 F ./natura/cocta/mensura.canon mensura:13806 fnv:0849e0df
-arbor successus:1 status:0 nodi:452 notati:192
+arbor successus:1 status:0 nodi:218 notati:192
 N @0 D 1 4541 c8d6643b
 N @146 E 4 4538 a19ec363
 N @188 E 6 63 6f1db405 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -20008,7 +19938,7 @@ N @13408 E 312 0 811c9dc5
 N @13523 E 313 0 811c9dc5
 N @13643 E 314 0 811c9dc5
 F ./natura/cocta/morbus.canon mensura:7858 fnv:97d29200
-arbor successus:1 status:0 nodi:341 notati:141
+arbor successus:1 status:0 nodi:175 notati:141
 N @0 D 1 1846 d9a26299
 N @145 E 4 1843 a4d3b639
 N @186 E 6 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -20151,7 +20081,7 @@ N @7518 E 188 0 811c9dc5
 N @7563 E 189 0 811c9dc5
 N @7623 E 192 0 811c9dc5
 F ./natura/cocta/norma.canon mensura:24644 fnv:33f63452
-arbor successus:1 status:0 nodi:934 notati:389
+arbor successus:1 status:0 nodi:468 notati:389
 N @0 D 1 5986 5dcb1338
 N @144 E 4 5983 1eed0692
 N @184 E 6 83 6646fca5
@@ -20542,7 +20472,7 @@ N @24283 E 548 0 811c9dc5
 N @24386 E 549 0 811c9dc5
 N @24505 E 550 0 811c9dc5
 F ./natura/cocta/obligatio.canon mensura:61069 fnv:dc103987
-arbor successus:1 status:0 nodi:2392 notati:988
+arbor successus:1 status:0 nodi:1244 notati:988
 N @0 D 1 18454 ebe1f273
 N @148 E 4 18451 f8a7763b
 N @192 E 6 213 0376ec35
@@ -21532,7 +21462,7 @@ N @60626 E 1372 0 811c9dc5
 N @60740 E 1373 0 811c9dc5
 N @60952 E 1374 0 811c9dc5
 F ./natura/cocta/operatio.canon mensura:12335 fnv:ef8c9957
-arbor successus:1 status:0 nodi:469 notati:190
+arbor successus:1 status:0 nodi:234 notati:190
 N @0 D 1 3694 55fe2160
 N @147 E 4 3691 fd55763a
 N @190 E 6 43 68b56665 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -21724,7 +21654,7 @@ N @11914 E 295 0 811c9dc5
 N @12068 E 296 0 811c9dc5
 N @12171 E 297 0 811c9dc5
 F ./natura/cocta/opus_scriptum.canon mensura:11938 fnv:51aa45b7
-arbor successus:1 status:0 nodi:419 notati:170
+arbor successus:1 status:0 nodi:217 notati:170
 N @0 D 1 4242 60a11909
 N @152 E 4 4239 76a27049
 N @200 E 6 38 c6f64d3d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -21896,7 +21826,7 @@ N @11573 E 266 0 811c9dc5
 N @11693 E 267 0 811c9dc5
 N @11816 E 268 0 811c9dc5
 F ./natura/cocta/organizatio.canon mensura:33605 fnv:1a473e71
-arbor successus:1 status:0 nodi:1231 notati:519
+arbor successus:1 status:0 nodi:610 notati:519
 N @0 D 1 8521 3f20342d
 N @150 E 4 8518 fd942125
 N @196 E 6 93 00b0c375
@@ -22417,7 +22347,7 @@ N @33000 E 732 0 811c9dc5
 N @33205 E 733 0 811c9dc5
 N @33398 E 734 0 811c9dc5
 F ./natura/cocta/persona.canon mensura:2755 fnv:7f3420aa
-arbor successus:1 status:0 nodi:104 notati:42
+arbor successus:1 status:0 nodi:51 notati:42
 N @0 D 1 604 68040bce
 N @146 E 4 601 bdf540a0
 N @188 E 6 13 eab7daf5 A:0a202020200a202020200a2020
@@ -22461,7 +22391,7 @@ N @2489 E 64 0 811c9dc5
 N @2534 E 65 0 811c9dc5
 N @2594 E 68 0 811c9dc5
 F ./natura/cocta/pharmacon.canon mensura:17737 fnv:c9268cb4
-arbor successus:1 status:0 nodi:698 notati:284
+arbor successus:1 status:0 nodi:356 notati:284
 N @0 D 1 4491 6558b60d
 N @148 E 4 4488 a7213d45
 N @192 E 6 58 d7547d1d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -22747,7 +22677,7 @@ N @17237 E 405 0 811c9dc5
 N @17378 E 406 0 811c9dc5
 N @17589 E 407 0 811c9dc5
 F ./natura/cocta/plagula_computatralis.canon mensura:32079 fnv:0bb829ac
-arbor successus:1 status:0 nodi:1199 notati:496
+arbor successus:1 status:0 nodi:606 notati:496
 N @0 D 1 8157 9793a18b
 N @160 E 4 8154 68a14133
 N @216 E 6 118 586a5ebd
@@ -23245,7 +23175,7 @@ N @31169 E 702 0 811c9dc5
 N @31567 E 703 0 811c9dc5
 N @31684 E 704 0 811c9dc5
 F ./natura/cocta/planta.canon mensura:24503 fnv:ad5bcb56
-arbor successus:1 status:0 nodi:1279 notati:496
+arbor successus:1 status:0 nodi:665 notati:496
 N @0 D 1 5993 b6e57dc1
 N @145 E 4 5990 0de8e0a1
 N @186 E 6 43 68b56665 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -23743,7 +23673,7 @@ N @24177 E 652 0 811c9dc5
 N @24222 E 653 0 811c9dc5
 N @24282 E 656 0 811c9dc5
 F ./natura/cocta/praescriptum.canon mensura:15526 fnv:55b4b366
-arbor successus:1 status:0 nodi:555 notati:228
+arbor successus:1 status:0 nodi:280 notati:228
 N @0 D 1 4826 dcc7745a
 N @151 E 4 4823 055c03e4
 N @198 E 6 48 925d9d2d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -23973,7 +23903,7 @@ N @15125 E 347 0 811c9dc5
 N @15249 E 348 0 811c9dc5
 N @15377 E 349 0 811c9dc5
 F ./natura/cocta/schema.canon mensura:7104 fnv:90acef34
-arbor successus:1 status:0 nodi:249 notati:106
+arbor successus:1 status:0 nodi:117 notati:106
 N @0 D 1 2113 062954a6
 N @145 E 4 2110 3896e4d8
 N @186 E 6 53 0483db35 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -24081,7 +24011,7 @@ N @6269 E 172 0 811c9dc5
 N @6854 E 183 0 811c9dc5
 N @6949 E 184 0 811c9dc5
 F ./natura/cocta/semina.census mensura:24325 fnv:c8649c17
-arbor successus:1 status:0 nodi:950 notati:348
+arbor successus:1 status:0 nodi:462 notati:348
 N @0 D 1 5718 bfefad42
 N @119 E 3 5716 8ee9a324
 N @148 E 5 85 9f29a042
@@ -24431,7 +24361,7 @@ N @24126 E 663 54 2086a2a3
 N @24164 E 664 46 011bd40b
 N @24181 E 665 34 111da943
 F ./natura/cocta/systema_operativum.canon mensura:11220 fnv:b8c57a0d
-arbor successus:1 status:0 nodi:362 notati:146
+arbor successus:1 status:0 nodi:189 notati:146
 N @0 D 1 3565 a5deb225
 N @157 E 4 3562 826f157d
 N @210 E 6 28 854c294d A:0a202020200a202020200a202020200a202020200a202020200a2020
@@ -24579,7 +24509,7 @@ N @10802 E 229 0 811c9dc5
 N @10940 E 230 0 811c9dc5
 N @11087 E 231 0 811c9dc5
 F ./natura/cocta/tempus.canon mensura:17409 fnv:d9728f60
-arbor successus:1 status:0 nodi:631 notati:259
+arbor successus:1 status:0 nodi:325 notati:259
 N @0 D 1 6498 f6678e8a
 N @145 E 4 6495 5e937f14
 N @186 E 6 78 a9f339fd
@@ -24840,7 +24770,7 @@ N @16952 E 406 0 811c9dc5
 N @17050 E 407 0 811c9dc5
 N @17282 E 408 0 811c9dc5
 F ./natura/cocta/vectura.canon mensura:18391 fnv:1e6a9684
-arbor successus:1 status:0 nodi:755 notati:317
+arbor successus:1 status:0 nodi:371 notati:317
 N @0 D 1 4294 729b2944
 N @146 E 4 4291 b2751f56
 N @188 E 6 63 6f1db405 A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -25159,7 +25089,7 @@ N @17959 E 443 0 811c9dc5
 N @18111 E 444 0 811c9dc5
 N @18243 E 445 0 811c9dc5
 F ./natura/cocta/versio.canon mensura:4046 fnv:776bf47f
-arbor successus:1 status:0 nodi:128 notati:50
+arbor successus:1 status:0 nodi:67 notati:50
 N @0 D 1 1703 e01793e9
 N @145 E 4 1700 0ff5b129
 N @186 E 6 13 eab7daf5 A:0a202020200a202020200a2020
@@ -25211,7 +25141,7 @@ N @3781 E 87 0 811c9dc5
 N @3826 E 88 0 811c9dc5
 N @3886 E 91 0 811c9dc5
 F ./natura/exempla/documentatio.census mensura:1454 fnv:c3d071d8
-arbor successus:1 status:0 nodi:33 notati:14
+arbor successus:1 status:0 nodi:16 notati:14
 N @0 D 1 60 3500219d A:0a0a0a0a20200a0a20200a0a20200a0a20200a202020200a202020200a202020200a202020200a20200a0a20200a0a20200a0a20200a0a20200a0a0a
 N @425 E 11 57 526621f5 A:0a0a20200a0a20200a0a20200a0a20200a202020200a202020200a202020200a202020200a20200a0a20200a0a20200a0a20200a0a20200a0a
 N @440 E 13 0 811c9dc5
@@ -25227,7 +25157,7 @@ N @1061 E 32 0 811c9dc5
 N @1201 E 36 0 811c9dc5
 N @1346 E 40 0 811c9dc5
 F ./natura/exempla/hortus.census mensura:1265 fnv:9d350516
-arbor successus:1 status:0 nodi:18 notati:7
+arbor successus:1 status:0 nodi:8 notati:7
 N @0 D 1 35 aadff76d A:0a0a20200a202020200a202020200a2020202020200a202020200a20200a0a20200a0a
 N @922 E 23 33 8ee4fcfd A:0a20200a202020200a202020200a2020202020200a202020200a20200a0a20200a
 N @936 E 24 25 069849ad A:0a202020200a202020200a2020202020200a202020200a2020
@@ -25236,7 +25166,7 @@ N @1096 E 28 12 ba5359bd A:0a2020202020200a20202020
 N @1113 E 29 0 811c9dc5
 N @1194 E 33 0 811c9dc5
 F ./natura/natura.canon mensura:16886 fnv:5434e175
-arbor successus:1 status:0 nodi:497 notati:218
+arbor successus:1 status:0 nodi:236 notati:218
 N @0 D 1 1202 dea03c91
 N @1153 E 29 1199 d72d3e91
 N @1248 E 33 33 d7762b95 A:0a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -25696,12 +25626,12 @@ F ./officina/build/census/probatio_xml.census mensura:630 fnv:93e0343b
 arbor successus:1 status:0 nodi:2 notati:1
 N @0 D 1 630 93e0343b
 F ./probationes/fixa/aedilis/aedilis.stml mensura:524 fnv:aea631b5
-arbor successus:1 status:0 nodi:48 notati:18
+arbor successus:1 status:0 nodi:25 notati:18
 N @0 D 1 179 449a6782
 N @0 E 1 178 8a3333bc
 N @12 E 2 26 45a2b215
-N @26 E 3 12 2146acc7
-N @45 E 4 9 a058dbd3
+N @26 E 3 8 28dbb997
+N @45 E 4 7 2445181b
 N @74 E 6 26 41b33bbb
 N @88 E 7 8 fc64b4ca
 N @114 E 8 5 861bab0c
@@ -25714,9 +25644,9 @@ N @306 E 17 26 565537d5
 N @341 E 18 14 d5bd47bd
 N @395 E 21 37 16ac50e6
 N @413 E 22 29 bf2164b0
-N @452 E 23 22 c12847a0
+N @452 E 23 18 a8936920
 F ./project-specs/documentatio-probatio.census mensura:19330 fnv:3659d23a
-arbor successus:1 status:0 nodi:300 notati:111
+arbor successus:1 status:0 nodi:142 notati:111
 N @0 D 1 1259 bb8f012f
 N @1448 E 31 1257 528c7c07
 N @1892 E 42 0 811c9dc5
@@ -25829,7 +25759,7 @@ N @19047 E 467 0 811c9dc5
 N @19140 E 470 0 811c9dc5
 N @19231 E 473 0 811c9dc5
 F ./rhubarb.census mensura:81113 fnv:dd64edb2
-arbor successus:1 status:0 nodi:1484 notati:538
+arbor successus:1 status:0 nodi:821 notati:538
 N @0 D 1 36516 6b90fcc9
 N @1444 E 33 36513 2092d289
 N @1520 E 37 257 a2d169a9
@@ -26369,7 +26299,7 @@ N @75528 E 1508 517 3102cd9b
 N @75705 E 1511 214 e69e8a13
 N @75953 E 1515 290 a75b0b69
 F ./silva/c89.canon mensura:178180 fnv:9e91431b
-arbor successus:1 status:0 nodi:7050 notati:3139
+arbor successus:1 status:0 nodi:3356 notati:3139
 N @0 D 1 18451 9797dc7d
 N @1083 E 31 18449 7f6467cd
 N @1674 E 47 473 dbfb2255
@@ -29510,7 +29440,7 @@ N @177744 E 4635 0 811c9dc5
 N @177941 E 4640 0 811c9dc5
 N @178073 E 4644 0 811c9dc5
 F ./silva/grammatica/c89.stml mensura:51036 fnv:502e1e50
-arbor successus:1 status:0 nodi:1291 notati:432
+arbor successus:1 status:0 nodi:724 notati:432
 N @0 D 1 17438 5e82832f
 N @0 E 1 17437 8f81e97f
 N @1958 E 41 470 fd9a11ed
@@ -29944,7 +29874,7 @@ N @50767 E 1212 0 811c9dc5
 N @50874 E 1213 0 811c9dc5
 N @50994 E 1216 8 6c94cd22
 F ./silva/grammatica/grammatica.canon mensura:6378 fnv:e693d4c1
-arbor successus:1 status:0 nodi:107 notati:39
+arbor successus:1 status:0 nodi:49 notati:39
 N @0 D 1 286 1cf19365
 N @2433 E 52 284 7faa7db5
 N @2478 E 54 28 854c294d A:0a202020200a202020200a202020200a202020200a202020200a2020
@@ -29985,7 +29915,7 @@ N @5671 E 140 0 811c9dc5
 N @5881 E 147 0 811c9dc5
 N @6110 E 153 0 811c9dc5
 F ./silva/grammatica/sceletum.stml mensura:4885 fnv:ab743131
-arbor successus:1 status:0 nodi:133 notati:46
+arbor successus:1 status:0 nodi:69 notati:46
 N @0 D 1 1035 afd44412
 N @0 E 1 1034 0c91feec
 N @737 E 17 48 925d9d2d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -30033,7 +29963,7 @@ N @4614 E 116 0 811c9dc5
 N @4721 E 117 0 811c9dc5
 N @4841 E 120 10 0244217d
 F ./silva/grammatica/sceletum_imparilis.stml mensura:4160 fnv:21496494
-arbor successus:1 status:0 nodi:131 notati:48
+arbor successus:1 status:0 nodi:68 notati:48
 N @0 D 1 1043 0be0bb95
 N @0 E 1 1042 0ab1273d
 N @609 E 13 48 925d9d2d A:0a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a202020200a2020
@@ -30083,7 +30013,7 @@ N @3889 E 104 0 811c9dc5
 N @3996 E 105 0 811c9dc5
 N @4116 E 108 10 0244217d
 F ./silva/quaestiones.canon mensura:2998 fnv:845b5c82
-arbor successus:1 status:0 nodi:44 notati:18
+arbor successus:1 status:0 nodi:21 notati:18
 N @0 D 1 109 5d080e3e
 N @1312 E 30 107 557baa78
 N @1358 E 32 8 6e01626d A:0a202020200a2020
@@ -30103,7 +30033,7 @@ N @2357 E 60 0 811c9dc5
 N @2523 E 65 0 811c9dc5
 N @2668 E 69 0 811c9dc5
 F ./silva/quaestiones.stml mensura:2041 fnv:a1997788
-arbor successus:1 status:0 nodi:48 notati:17
+arbor successus:1 status:0 nodi:26 notati:17
 N @0 D 1 831 7e1fe8a0
 N @675 E 15 829 425d4892
 N @692 E 17 184 e096e92f
@@ -30122,307 +30052,307 @@ N @1580 E 39 336 d00ca01d
 N @1646 E 40 95 6a74d3fa
 N @1767 E 41 228 a8d2ab5c
 F ./stml-parser-reference/WORKSHOP-backup.stml mensura:4801 fnv:7675028e
-arbor successus:1 status:0 nodi:142 notati:64
-N @0 D 1 2854 3c4736e4
-N @0 E 1 2854 3c4736e4
-N @77 E 2 80 8304b160
+arbor successus:1 status:0 nodi:111 notati:64
+N @0 D 1 2854 7d4052ec
+N @0 E 1 2854 7d4052ec
+N @77 E 2 77 4f440758
 N @169 E 4 450 77afd284
 N @200 E 5 241 fd1990c9
-N @296 E 6 64 e53aeffd
-N @375 E 7 56 689d897a
-N @461 E 8 51 4b702dfa
-N @542 E 9 63 4c0421f7
+N @296 E 6 58 a9db3625
+N @375 E 7 50 962bd84a
+N @461 E 8 45 9771c0ca
+N @542 E 9 59 b86a8507
 N @629 E 11 196 94fa4c0a
-N @723 E 12 53 4e56dbc6
-N @791 E 13 41 127e9892
-N @844 E 14 63 dc6b9f4e
-N @919 E 15 32 997a49bf
+N @723 E 12 47 0e0d86f6
+N @791 E 13 35 185b7c62
+N @844 E 14 57 958d7ffe
+N @919 E 15 28 af6c1dcf
 N @984 E 18 491 41e022df
 N @1020 E 19 118 390dc43d
-N @1083 E 20 51 4905a245
-N @1149 E 21 51 c603971d
-N @1209 E 22 9 819a2065
+N @1083 E 20 45 b765256d
+N @1149 E 21 45 6693f445
+N @1209 E 22 5 5b0bbfd5
 N @1252 E 24 192 e7e7c062
-N @1308 E 25 63 9d4ab0d2
-N @1386 E 26 61 dadee22f
-N @1461 E 27 61 2865f9cf
+N @1308 E 25 57 5c44e6a2
+N @1386 E 26 55 4a7a4567
+N @1461 E 27 57 f575859f
 N @1546 E 29 163 fd6974fc
-N @1600 E 30 60 be69496f
-N @1675 E 31 54 13b1f753
-N @1741 E 32 42 24335f34
-N @1818 E 35 1583 22ba7930
+N @1600 E 30 54 cbae36a7
+N @1675 E 31 48 4dccc82b
+N @1741 E 32 38 ef431ff4
+N @1818 E 35 1583 a18b9e22
 N @1861 E 36 336 504aa536
-N @1952 E 37 47 0c40cb97
-N @2014 E 38 63 2c807ad9
-N @2089 E 39 48 f672411f
-N @2149 E 40 46 6d3038d3
-N @2207 E 41 61 4ea67fd2
-N @2280 E 42 64 4eb540a7
-N @2368 E 44 267 3d2c5ac1
-N @2498 E 45 44 d710f4df
-N @2557 E 46 76 11fd1d20
-N @2663 E 48 65 927afab9
-N @2758 E 49 75 2a37ee76
-N @2875 E 52 197 0b0b1f16
-N @2969 E 53 48 0fe1e9d8
-N @3032 E 54 91 5737e414
-N @3135 E 56 51 520f7624
-N @3210 E 58 215 e38feff2
-N @3302 E 59 41 1e08152c
-N @3358 E 60 87 30d40ea5
-N @3457 E 62 80 8c20dfd1
+N @1952 E 37 41 98d806cf
+N @2014 E 38 57 713917e1
+N @2089 E 39 42 80ecf257
+N @2149 E 40 40 d4f475ab
+N @2207 E 41 55 5d78eda2
+N @2280 E 42 60 018a18f7
+N @2368 E 44 267 1ee47911
+N @2498 E 45 38 f32fb417
+N @2557 E 46 69 33da5938
+N @2663 E 48 59 712642c1
+N @2758 E 49 70 72ddaa4e
+N @2875 E 52 197 4439e020
+N @2969 E 53 42 56c72258
+N @3032 E 54 84 93d51adc
+N @3135 E 56 47 64d119e4
+N @3210 E 58 215 2ed1e442
+N @3302 E 59 35 b8f81a0c
+N @3358 E 60 80 2ff5dc05
+N @3457 E 62 75 1c10d969
 N @3579 E 65 300 deb9c4c2
-N @3683 E 66 60 292163d9
-N @3758 E 67 63 98dee8bb
-N @3833 E 68 48 4a2c4f8d
-N @3893 E 69 64 340d1570
-N @3969 E 70 58 5ea78701
+N @3683 E 66 54 cfc588e1
+N @3758 E 67 57 efe47d93
+N @3833 E 68 42 2927d4b5
+N @3893 E 69 58 e4cdf370
+N @3969 E 70 54 87a626f1
 N @4051 E 72 235 f6f89e4c
-N @4148 E 73 66 aa496fcc
-N @4229 E 74 54 8203df80
-N @4295 E 75 64 0d752069
-N @4371 E 76 44 d77554dc
+N @4148 E 73 60 372000ac
+N @4229 E 74 48 87313f40
+N @4295 E 75 58 12004531
+N @4371 E 76 40 c82d011c
 N @4454 E 79 237 6df5b231
-N @4498 E 80 60 a3c9e853
-N @4569 E 81 55 57d99455
-N @4635 E 82 63 97df186f
-N @4709 E 83 54 a4cf9549
+N @4498 E 80 56 a8745de3
+N @4569 E 81 51 b372d4c5
+N @4635 E 82 59 f9a5c4bf
+N @4709 E 83 52 f11394a1
 F ./stml-parser-reference/WORKSHOP-direct-test.stml mensura:4635 fnv:b97cb7ab
-arbor successus:1 status:0 nodi:142 notati:64
+arbor successus:1 status:0 nodi:111 notati:64
 N @0 D 1 2689 df6575ea
 N @0 E 1 2689 df6575ea
 N @74 E 2 73 77243848
 N @159 E 3 436 f24f294c
 N @186 E 4 239 23e61653
-N @276 E 5 65 d2c7c1d5
-N @356 E 7 57 1fff5b50
-N @443 E 9 52 b19850d0
-N @525 E 11 64 a7818147
+N @276 E 5 58 a9db3625
+N @356 E 7 50 962bd84a
+N @443 E 9 45 9771c0ca
+N @525 E 11 59 b86a8507
 N @609 E 14 194 593ac2fc
-N @697 E 15 54 1ebc0224
-N @766 E 17 42 b54a3748
-N @820 E 19 64 416bb80c
-N @896 E 21 33 508207ef
+N @697 E 15 47 0e0d86f6
+N @766 E 17 35 185b7c62
+N @820 E 19 57 958d7ffe
+N @896 E 21 28 af6c1dcf
 N @958 E 25 468 741ba941
 N @990 E 26 115 4cd5106d
-N @1047 E 27 52 42de825d
-N @1114 E 29 52 cea6d935
-N @1175 E 31 10 74a10ebd
+N @1047 E 27 45 b765256d
+N @1114 E 29 45 6693f445
+N @1175 E 31 5 5b0bbfd5
 N @1215 E 34 189 d481c544
-N @1265 E 35 64 74946408
-N @1344 E 37 62 b1de003f
-N @1420 E 39 62 5d88311f
+N @1265 E 35 57 5c44e6a2
+N @1344 E 37 55 4a7a4567
+N @1420 E 39 57 f575859f
 N @1502 E 42 160 527a26f2
-N @1550 E 43 61 24be89ff
-N @1626 E 45 55 5a28611b
-N @1693 E 47 43 3adeee9a
+N @1550 E 43 54 cbae36a7
+N @1626 E 45 48 4dccc82b
+N @1693 E 47 38 ef431ff4
 N @1767 E 51 1470 328bb94c
 N @1806 E 52 336 aeda4772
-N @1891 E 53 48 e7008827
-N @1954 E 55 64 e1415a29
-N @2030 E 57 49 0adc740f
-N @2091 E 59 47 bbe97d9b
-N @2150 E 61 62 a81b4108
-N @2224 E 63 65 9454d057
+N @1891 E 53 41 98d806cf
+N @1954 E 55 57 713917e1
+N @2030 E 57 42 80ecf257
+N @2091 E 59 40 d4f475ab
+N @2150 E 61 55 5d78eda2
+N @2224 E 63 60 018a18f7
 N @2309 E 66 235 25cc1d59
-N @2433 E 67 45 64b16b4f
+N @2433 E 67 38 f32fb417
 N @2493 E 69 61 5f6fc618
-N @2584 E 70 66 4a98a7c9
+N @2584 E 70 59 712642c1
 N @2680 E 72 62 620c872e
 N @2780 E 74 178 ca5ea9d4
-N @2868 E 75 49 d2a31596
+N @2868 E 75 42 56c72258
 N @2932 E 77 76 e137c4bc
-N @3020 E 78 52 5c570a6a
+N @3020 E 78 47 64d119e4
 N @3092 E 81 182 cac0e34c
-N @3178 E 82 42 6cb94ad2
+N @3178 E 82 35 b8f81a0c
 N @3235 E 84 72 c08c59e5
 N @3319 E 85 67 9a631789
 N @3424 E 87 299 69514f62
-N @3522 E 88 61 92902529
-N @3598 E 90 64 57e84ea3
-N @3674 E 92 49 4ac13185
-N @3735 E 94 65 6a98cf0e
-N @3812 E 96 59 0cb99651
+N @3522 E 88 54 cfc588e1
+N @3598 E 90 57 efe47d93
+N @3674 E 92 42 2927d4b5
+N @3735 E 94 58 e4cdf370
+N @3812 E 96 54 87a626f1
 N @3891 E 99 233 8b241a9c
-N @3982 E 100 67 d79af4b2
-N @4064 E 102 55 3618e63e
-N @4131 E 104 65 9261fbd9
-N @4208 E 106 45 03b48ce2
+N @3982 E 100 60 372000ac
+N @4064 E 102 48 87313f40
+N @4131 E 104 58 12004531
+N @4208 E 106 40 c82d011c
 N @4288 E 110 237 f59d7b79
-N @4328 E 111 61 2fd8c41b
-N @4400 E 113 56 aa84918d
-N @4467 E 115 64 793366ff
-N @4542 E 117 55 b5c7f879
+N @4328 E 111 56 a8745de3
+N @4400 E 113 51 b372d4c5
+N @4467 E 115 59 f9a5c4bf
+N @4542 E 117 52 f11394a1
 F ./stml-parser-reference/WORKSHOP-messy.stml mensura:5118 fnv:e254c7e2
-arbor successus:1 status:0 nodi:142 notati:64
-N @0 D 1 3171 d1a359c6
-N @0 E 1 3171 d1a359c6
-N @77 E 2 80 8304b160
-N @169 E 4 516 c7dbb948
-N @200 E 5 277 3fa25b5b
-N @296 E 6 73 36392cc5
-N @384 E 8 65 081397d2
-N @479 E 10 60 a5db7cf2
-N @569 E 12 72 770397cf
-N @665 E 15 226 b96e5be0
-N @759 E 16 62 2da82cae
-N @836 E 18 48 aa44d748
-N @896 E 20 72 4d802f26
-N @980 E 22 37 dd47f9df
-N @1050 E 26 562 169b25fb
-N @1086 E 27 139 cdbf2add
-N @1149 E 28 60 f395e5ad
-N @1224 E 30 58 4e8f300d
-N @1291 E 32 14 b7bf4ccd
-N @1339 E 35 219 8a214756
-N @1395 E 36 72 7f80540a
-N @1482 E 38 70 6e9f8267
-N @1566 E 40 70 32a54cb7
-N @1660 E 43 186 ecdb69da
-N @1714 E 44 69 a0ca2647
-N @1798 E 46 63 dbf7c50b
-N @1873 E 48 47 ea0c8a3a
-N @1955 E 52 1741 69b817ee
-N @1998 E 53 384 f755312c
-N @2089 E 54 54 cd9d0eef
-N @2158 E 56 72 2068d171
-N @2242 E 58 55 7e37ced7
-N @2309 E 60 53 8f4625c3
-N @2374 E 62 70 129bf37a
-N @2456 E 64 73 fb004f2f
-N @2553 E 67 283 6471d027
-N @2683 E 68 51 712b0c17
-N @2749 E 70 76 11fd1d20
-N @2855 E 72 74 48165891
-N @2959 E 74 75 2a37ee76
-N @3076 E 77 209 fe334b4a
-N @3170 E 78 55 6ef87c66
-N @3240 E 80 91 5737e414
-N @3343 E 82 56 b4e1fc0a
-N @3423 E 85 222 fb310768
-N @3515 E 86 48 4a4d04c2
-N @3578 E 88 87 30d40ea5
-N @3677 E 90 80 8c20dfd1
-N @3799 E 93 343 7312498c
-N @3903 E 94 69 2d775511
-N @3987 E 96 72 cb80c583
-N @4071 E 98 55 b25cea5d
-N @4138 E 100 73 4c128888
-N @4223 E 102 67 e45dda29
-N @4314 E 105 267 ee0e94b4
-N @4411 E 106 75 a8d15a14
-N @4501 E 108 63 c6add0a8
-N @4576 E 110 73 fe227f81
-N @4661 E 112 49 01d392c2
-N @4749 E 116 259 9b984161
-N @4793 E 117 67 d1b89683
-N @4871 E 119 60 8988c39d
-N @4942 E 121 70 31036ddf
-N @5023 E 123 57 221178e1
+arbor successus:1 status:0 nodi:111 notati:64
+N @0 D 1 3171 17f60354
+N @0 E 1 3171 17f60354
+N @77 E 2 77 4f440758
+N @169 E 4 516 e006ef84
+N @200 E 5 277 04a10a6b
+N @296 E 6 66 df095ec5
+N @384 E 8 58 e6468fea
+N @479 E 10 53 872f12ea
+N @569 E 12 67 f19a1927
+N @665 E 15 226 1963242c
+N @759 E 16 55 0beb5516
+N @836 E 18 35 185b7c62
+N @896 E 20 65 ea9f24de
+N @980 E 22 28 af6c1dcf
+N @1050 E 26 562 707cf391
+N @1086 E 27 139 8d39810d
+N @1149 E 28 53 4a6f568d
+N @1224 E 30 45 6693f445
+N @1291 E 32 5 5b0bbfd5
+N @1339 E 35 219 907bb70c
+N @1395 E 36 65 d94e3042
+N @1482 E 38 63 8610c107
+N @1566 E 40 65 566c333f
+N @1660 E 43 186 9a0edb7a
+N @1714 E 44 62 8810b287
+N @1798 E 46 56 1f0a194b
+N @1873 E 48 38 ef431ff4
+N @1955 E 52 1741 df6f7e04
+N @1998 E 53 384 be50d7d2
+N @2089 E 54 41 98d806cf
+N @2158 E 56 65 42fded01
+N @2242 E 58 42 80ecf257
+N @2309 E 60 40 d4f475ab
+N @2374 E 62 63 2b9b1342
+N @2456 E 64 68 48439117
+N @2553 E 67 283 5be22f07
+N @2683 E 68 38 f32fb417
+N @2749 E 70 69 33da5938
+N @2855 E 72 67 3c260ce1
+N @2959 E 74 70 72ddaa4e
+N @3076 E 77 209 0b0fac8c
+N @3170 E 78 42 56c72258
+N @3240 E 80 84 93d51adc
+N @3343 E 82 47 64d119e4
+N @3423 E 85 222 7ade2768
+N @3515 E 86 35 b8f81a0c
+N @3578 E 88 80 2ff5dc05
+N @3677 E 90 75 1c10d969
+N @3799 E 93 343 2cf0e492
+N @3903 E 94 62 9aee7701
+N @3987 E 96 65 673021b3
+N @4071 E 98 42 2927d4b5
+N @4138 E 100 66 5f3d4810
+N @4223 E 102 62 fc7aca91
+N @4314 E 105 267 4e7fe6b4
+N @4411 E 106 68 e6e320cc
+N @4501 E 108 56 fcbe8060
+N @4576 E 110 66 4d2d4fd1
+N @4661 E 112 40 c82d011c
+N @4749 E 116 259 70f7bb41
+N @4793 E 117 62 f430a12b
+N @4871 E 119 51 b372d4c5
+N @4942 E 121 65 dc136f27
+N @5023 E 123 52 f11394a1
 F ./stml-parser-reference/WORKSHOP.stml mensura:2247 fnv:eacd3c9e
-arbor successus:1 status:0 nodi:75 notati:35
-N @0 D 1 1341 78e4742b
-N @0 E 1 1341 78e4742b
-N @77 E 2 80 8304b160
+arbor successus:1 status:0 nodi:58 notati:35
+N @0 D 1 1341 c81a99d1
+N @0 E 1 1341 c81a99d1
+N @77 E 2 77 4f440758
 N @169 E 4 0 811c9dc5
-N @200 E 5 573 95b52bd1
+N @200 E 5 573 324729e1
 N @236 E 6 118 390dc43d
-N @299 E 7 51 4905a245
-N @365 E 8 51 c603971d
-N @425 E 9 9 819a2065
+N @299 E 7 45 b765256d
+N @365 E 8 45 6693f445
+N @425 E 9 5 5b0bbfd5
 N @468 E 11 192 e7e7c062
-N @524 E 12 63 9d4ab0d2
-N @602 E 13 61 dadee22f
-N @677 E 14 61 2865f9cf
+N @524 E 12 57 5c44e6a2
+N @602 E 13 55 4a7a4567
+N @677 E 14 57 f575859f
 N @762 E 16 163 fd6974fc
-N @816 E 17 60 be69496f
-N @891 E 18 54 13b1f753
-N @957 E 19 42 24335f34
-N @1019 E 21 7 a8271d35 A:0a202020202020
-N @1070 E 22 21 c706f838
-N @1106 E 23 7 a8271d35 A:0a202020202020
-N @1160 E 24 45 71496192
-N @1237 E 26 5 16a8ce6d A:0a20202020
-N @1282 E 27 375 e562cb03
-N @1378 E 28 42 1f3068e6
-N @1435 E 29 60 36f4076b
-N @1507 E 30 66 da9dfdf0
-N @1585 E 31 54 d1849fc6
-N @1651 E 32 66 aecd7faa
-N @1729 E 33 80 c9950ae7
+N @816 E 17 54 cbae36a7
+N @891 E 18 48 4dccc82b
+N @957 E 19 38 ef431ff4
+N @1019 E 21 6 b7faf49d A:202020202020
+N @1070 E 22 0 811c9dc5
+N @1106 E 23 6 b7faf49d A:202020202020
+N @1160 E 24 0 811c9dc5
+N @1237 E 26 380 eb79fe93
+N @1282 E 27 375 d7ce237b
+N @1378 E 28 36 971a8616
+N @1435 E 29 54 56f2b243
+N @1507 E 30 60 1e3d3ff0
+N @1585 E 31 48 b0026af6
+N @1651 E 32 60 ad9e5bfa
+N @1729 E 33 75 d19380ef
 N @1831 E 36 295 4a006b0a
-N @1875 E 37 60 a3c9e853
-N @1946 E 38 55 57d99455
-N @2012 E 39 63 97df186f
-N @2086 E 40 56 672a8471
-N @2153 E 41 56 cd04728e
+N @1875 E 37 56 a8745de3
+N @1946 E 38 51 b372d4c5
+N @2012 E 39 59 f9a5c4bf
+N @2086 E 40 52 f11394a1
+N @2153 E 41 54 ed46ecde
 F ./stml-parser-reference/WORKSHOP.taxonomy.stml mensura:3158 fnv:2e2cbb43
-arbor successus:0 status:4 nodi:193 notati:86
-N @0 D 1 751 9ed2d51d
-N @0 E 1 158 6cb0e43d
+arbor successus:0 status:4 nodi:86 notati:86
+N @0 D 1 751 8492bc7d
+N @0 E 1 158 d03f07bd
 N @13 E 2 0 811c9dc5
-N @55 E 3 68 0baa2e1d
-N @66 E 4 37 149dc51d A:0a2020202020200a20202020202020200a2020202020200a20202020202020200a20202020
-N @94 E 5 9 141121fd A:0a2020202020202020
+N @55 E 3 68 6148787d
+N @66 E 4 37 0292181d A:0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020
+N @94 E 5 9 d1c3373d A:20202020202020200a
 N @126 E 6 0 811c9dc5
-N @177 E 7 9 141121fd A:0a2020202020202020
+N @177 E 7 9 d1c3373d A:20202020202020200a
 N @197 E 8 0 811c9dc5
-N @235 E 10 7 a8271d35 A:0a202020202020
-N @270 E 11 9 141121fd A:0a2020202020202020
+N @235 E 10 7 370f09b5 A:2020202020200a
+N @270 E 11 0 811c9dc5
 N @290 E 12 0 811c9dc5
-N @329 E 14 53 b8559c85 A:0a2020202020200a20202020202020200a2020202020200a20202020202020200a2020202020200a20202020202020200a20202020
-N @363 E 15 9 141121fd A:0a2020202020202020
+N @329 E 14 53 44edc545 A:0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020
+N @363 E 15 9 d1c3373d A:20202020202020200a
 N @395 E 16 0 811c9dc5
-N @452 E 17 9 141121fd A:0a2020202020202020
+N @452 E 17 9 d1c3373d A:20202020202020200a
 N @482 E 18 0 811c9dc5
-N @511 E 19 9 141121fd A:0a2020202020202020
+N @511 E 19 9 d1c3373d A:20202020202020200a
 N @531 E 20 0 811c9dc5
-N @575 E 22 7 a8271d35 A:0a202020202020
-N @608 E 23 9 141121fd A:0a2020202020202020
+N @575 E 22 7 370f09b5 A:2020202020200a
+N @608 E 23 0 811c9dc5
 N @628 E 24 0 811c9dc5
-N @669 E 26 7 a8271d35 A:0a202020202020
-N @705 E 27 9 141121fd A:0a2020202020202020
+N @669 E 26 7 370f09b5 A:2020202020200a
+N @705 E 27 0 811c9dc5
 N @725 E 28 0 811c9dc5
-N @765 E 30 53 b8559c85 A:0a2020202020200a20202020202020200a2020202020200a20202020202020200a2020202020200a20202020202020200a20202020
-N @800 E 31 9 141121fd A:0a2020202020202020
+N @765 E 30 53 44edc545 A:0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020
+N @800 E 31 9 d1c3373d A:20202020202020200a
 N @832 E 32 0 811c9dc5
-N @889 E 33 9 141121fd A:0a2020202020202020
+N @889 E 33 9 d1c3373d A:20202020202020200a
 N @919 E 34 0 811c9dc5
-N @951 E 35 9 141121fd A:0a2020202020202020
+N @951 E 35 9 d1c3373d A:20202020202020200a
 N @971 E 36 0 811c9dc5
-N @1016 E 38 7 a8271d35 A:0a202020202020
-N @1049 E 39 9 141121fd A:0a2020202020202020
+N @1016 E 38 7 370f09b5 A:2020202020200a
+N @1049 E 39 0 811c9dc5
 N @1069 E 40 0 811c9dc5
-N @1106 E 42 7 a8271d35 A:0a202020202020
-N @1139 E 43 9 141121fd A:0a2020202020202020
+N @1106 E 42 7 370f09b5 A:2020202020200a
+N @1139 E 43 0 811c9dc5
 N @1159 E 44 0 811c9dc5
-N @1196 E 46 7 a8271d35 A:0a202020202020
-N @1239 E 47 9 141121fd A:0a2020202020202020
+N @1196 E 46 7 370f09b5 A:2020202020200a
+N @1239 E 47 0 811c9dc5
 N @1259 E 48 0 811c9dc5
-N @1306 E 50 53 b8559c85 A:0a2020202020200a20202020202020200a2020202020200a20202020202020200a2020202020200a20202020202020200a20202020
-N @1340 E 51 9 141121fd A:0a2020202020202020
+N @1306 E 50 53 44edc545 A:0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020202020202020202020200a0a20202020
+N @1340 E 51 9 d1c3373d A:20202020202020200a
 N @1372 E 52 0 811c9dc5
-N @1422 E 53 9 141121fd A:0a2020202020202020
+N @1422 E 53 9 d1c3373d A:20202020202020200a
 N @1452 E 54 0 811c9dc5
-N @1481 E 55 9 141121fd A:0a2020202020202020
+N @1481 E 55 9 d1c3373d A:20202020202020200a
 N @1501 E 56 0 811c9dc5
-N @1545 E 58 7 a8271d35 A:0a202020202020
-N @1575 E 59 9 141121fd A:0a2020202020202020
+N @1545 E 58 7 370f09b5 A:2020202020200a
+N @1575 E 59 0 811c9dc5
 N @1595 E 60 0 811c9dc5
-N @1629 E 62 7 a8271d35 A:0a202020202020
-N @1658 E 63 9 141121fd A:0a2020202020202020
+N @1629 E 62 7 370f09b5 A:2020202020200a
+N @1658 E 63 0 811c9dc5
 N @1678 E 64 0 811c9dc5
-N @1711 E 66 7 a8271d35 A:0a202020202020
-N @1743 E 67 9 141121fd A:0a2020202020202020
+N @1711 E 66 7 370f09b5 A:2020202020200a
+N @1743 E 67 0 811c9dc5
 N @1763 E 68 0 811c9dc5
-N @1807 E 70 185 d8b71875
+N @1807 E 70 185 f1680a35
 N @1834 E 71 25 2c026bc5 A:0a20202020202020200a20202020202020200a202020202020
 N @1864 E 72 0 811c9dc5
 N @1976 E 73 0 811c9dc5
 N @2067 E 75 25 2c026bc5 A:0a20202020202020200a20202020202020200a202020202020
 N @2097 E 76 0 811c9dc5
 N @2154 E 77 0 811c9dc5
-N @2231 E 79 9 141121fd A:0a2020202020202020
+N @2231 E 79 9 d1c3373d A:20202020202020200a
 N @2261 E 80 0 811c9dc5
 N @2297 E 81 61 903194e5 A:0a20202020202020200a20202020202020200a20202020202020200a20202020202020200a20202020202020200a20202020202020200a202020202020
 N @2325 E 82 0 811c9dc5
@@ -30445,7 +30375,7 @@ N @2986 E 102 0 811c9dc5
 N @3021 E 103 0 811c9dc5
 N @3060 E 104 0 811c9dc5
 F ./stml-parser-reference/examples/sample-stml-files/component.stml mensura:619 fnv:0f6905fc
-arbor successus:1 status:0 nodi:28 notati:12
+arbor successus:1 status:0 nodi:15 notati:12
 N @0 D 1 90 c8618355
 N @0 E 1 90 c8618355
 N @15 E 2 14 8b73460d
@@ -30459,7 +30389,7 @@ N @456 E 17 13 eab7daf5 A:0a202020200a202020200a2020
 N @475 E 18 0 811c9dc5
 N @528 E 19 0 811c9dc5
 F ./stml-parser-reference/examples/sample-stml-files/page1.stml mensura:785 fnv:ad9e0586
-arbor successus:1 status:0 nodi:56 notati:19
+arbor successus:1 status:0 nodi:30 notati:19
 N @0 D 1 296 abbc2db9
 N @0 E 1 296 abbc2db9
 N @32 E 2 50 e4f5203f
@@ -30480,7 +30410,7 @@ N @615 E 20 17 da42b840
 N @703 E 26 28 81c23edb
 N @717 E 27 20 33c1c703
 F ./stml-parser-reference/examples/sample-stml-files/page2.stml mensura:813 fnv:07949f00
-arbor successus:1 status:0 nodi:58 notati:19
+arbor successus:1 status:0 nodi:31 notati:19
 N @0 D 1 301 10bff08c
 N @0 E 1 301 10bff08c
 N @33 E 2 50 e4f5203f
@@ -30501,12 +30431,12 @@ N @632 E 21 58 fc0584ed
 N @666 E 22 3 ebcba174
 N @689 E 23 24 8aef0412
 F ./stml-parser-reference/test-capture-format.stml mensura:28 fnv:ddbb3763
-arbor successus:1 status:0 nodi:5 notati:3
+arbor successus:1 status:0 nodi:4 notati:3
 N @0 D 1 5 1b37bc46
 N @0 E 1 0 811c9dc5
 N @13 E 2 4 bde64e3e
 F ./stml-parser-reference/test-files/complex-resolved.stml mensura:1486 fnv:53fd1eac
-arbor successus:1 status:0 nodi:129 notati:41
+arbor successus:1 status:0 nodi:69 notati:41
 N @0 D 1 701 6e6980ae
 N @0 E 1 701 6e6980ae
 N @13 E 2 59 ee7c0cd4
@@ -30549,7 +30479,7 @@ N @1372 E 56 0 811c9dc5
 N @1385 E 57 19 b6497782
 N @1418 E 58 28 97d6da05
 F ./stml-parser-reference/test-files/complex.stml mensura:982 fnv:4880d111
-arbor successus:1 status:0 nodi:76 notati:19
+arbor successus:1 status:0 nodi:38 notati:19
 N @0 D 1 370 2311573e
 N @0 E 1 370 2311573e
 N @13 E 2 59 ee7c0cd4
@@ -30570,14 +30500,14 @@ N @642 E 30 25 2c026bc5 A:0a20202020202020200a20202020202020200a202020202020
 N @825 E 37 12 ba5359bd A:0a2020202020200a20202020
 N @920 E 43 8 6e01626d A:0a202020200a2020
 F ./stml-parser-reference/test-files/components/button.stml mensura:223 fnv:49b398c3
-arbor successus:1 status:0 nodi:16 notati:5
+arbor successus:1 status:0 nodi:9 notati:5
 N @0 D 1 43 1e7d67d1
 N @0 E 1 12 56575f5f
 N @62 E 5 10 1cb10083
 N @124 E 9 17 7eedabcd A:0a20200a202020200a202020200a20200a
 N @142 E 10 13 eab7daf5 A:0a202020200a202020200a2020
 F ./stml-parser-reference/test-files/header.stml mensura:394 fnv:52691913
-arbor successus:1 status:0 nodi:47 notati:17
+arbor successus:1 status:0 nodi:27 notati:17
 N @0 D 1 195 3a042f2a
 N @0 E 1 62 26a6891a
 N @12 E 2 15 79c8f65e
@@ -30596,7 +30526,7 @@ N @304 E 19 15 d7ac78be
 N @333 E 20 8 6f8737b6
 N @355 E 21 13 cfdecdba
 F ./stml-parser-reference/test-files/main.stml mensura:869 fnv:80797d90
-arbor successus:1 status:0 nodi:55 notati:14
+arbor successus:1 status:0 nodi:28 notati:14
 N @0 D 1 403 3024863d
 N @0 E 1 403 3024863d
 N @66 E 3 8 6e01626d A:0a202020200a2020

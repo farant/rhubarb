@@ -1445,8 +1445,19 @@ s32 principale(vacuum)
         CREDO_VERUM(chorda_aequalis_literis(
             stml_textus_normalizatus(res.elementum_radix, piscina),
             "line one\nline two"));
-        /* arbor autem fontem servat */
+        /* EXEMPLAR TRIVIAE (spec §1.3): margines lineam-ferentes e
+         * valore exeunt et ut trivia iuxta eum vivunt - internus
+         * eos reassuit, ergo octeti fontis immoti manent */
         CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "line one\n    line two"));
+        CREDO_NON_NIHIL(textus->spatia_ante);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->spatia_ante,
+            "\n    "));
+        CREDO_NON_NIHIL(textus->spatia_post);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->spatia_post,
+            "\n"));
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_internus(res.elementum_radix, piscina),
             "\n    line one\n    line two\n"));
 
         imprimere("  Multiline normalization (ad lectionem): VERUM\n");
@@ -1506,20 +1517,33 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
+        chorda       scriptum;
 
-        /* SPATIUM ALBUM CONTENTUS EST (2026-08-06): nodus servatur,
-         * aliter circuitus frangitur et fratres conglutinantur */
+        /* EXEMPLAR TRIVIAE (spec §1.3, supersedet 2026-08-06):
+         * cursus totus albus lineam-ferens NULLUM nodum parit -
+         * octeti in spatia_clausurae parentis vivunt et circuitus
+         * eos verbatim reddit. Fratres non conglutinantur quia
+         * spatium in dispositione servatur, non in nodo. */
         res = stml_legere_ex_literis("<root>   \n   \n   </root>", piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
-        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
-        /* sed lectio normalizata eum ad nihil redigit */
+        CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi),
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(res.elementum_radix->spatia_clausurae);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            res.elementum_radix->spatia_clausurae, "   \n   \n   "));
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<root>   \n   \n   </root>");
+        /* lectio normalizata: nihil (internus octetos clausurae
+         * exacte reddit - "   \n   \n   " - quos normalizatio ad
+         * nihil praecidit) */
         CREDO_AEQUALIS_I32(
             stml_textus_normalizatus(res.elementum_radix, piscina).mensura,
             ZEPHYRUM);
 
-        imprimere("  Whitespace-only servatum, lectio purgat: VERUM\n");
+        imprimere("  Spatium album -> clausurae, circuitus exactus: VERUM\n");
     }
 
     /* ==================================================
@@ -2236,11 +2260,14 @@ s32 principale(vacuum)
         StmlResultus res;
         chorda serialized;
 
-        /* Backward capture roundtrip */
+        /* Backward capture roundtrip - ORDO FLUMINIS (spec triviae
+         * §6): liberi capti retro in fonte ANTE tagum stant; emissio
+         * non-pulchra ordinem authoris nunc reddit OCTETIM (olim ad
+         * captor-primum reordinabat - circuitus non erat) */
         res = stml_legere_ex_literis("<root><item/><) wrapper></root>", piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><) wrapper><item/></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><item/><) wrapper></root>");
 
         imprimere("  Backward capture roundtrip: VERUM\n");
     }
@@ -2249,11 +2276,12 @@ s32 principale(vacuum)
         StmlResultus res;
         chorda serialized;
 
-        /* Sandwich capture roundtrip */
+        /* Sandwich capture roundtrip - ordo fluminis (§6): liberum
+         * primum ante tagum, reliqua post - octetim exactus nunc */
         res = stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>", piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><= wrapper =><a/><b/></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><a/><= wrapper =><b/></root>");
 
         imprimere("  Sandwich capture roundtrip: VERUM\n");
     }

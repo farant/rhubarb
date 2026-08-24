@@ -130,6 +130,13 @@ nomen enumeratio {
 nomen structura {
     chorda* titulus;    /* Attribute name (interned) */
     chorda* valor;      /* Attribute value (interned) */
+
+    /* Trivia intra tagum (spec triviae §1.6): spatium album ANTE
+     * hoc attributum (post titulum tagi aut attributum prius).
+     * NIHIL = spatium unicum canonicum. Spatium circa '=' NON
+     * modellatur - ad formam strictam normalizatur (exceptio
+     * angusta nominata). */
+    chorda* spatia_ante;
 } StmlAttributum;
 
 /* StmlNodus - Nodus in arbore STML
@@ -189,6 +196,41 @@ nomen structura StmlNodus {
      * ordinarium; genus manet ELEMENTUM (titulus "%" geritur),
      * ergo consumptores generum intacti. */
     chorda* augmentum_clavis;
+
+
+    /* ==================================================
+     * TRIVIA (spec triviae §1) - valor est SENSUS, spatium album
+     * DISPOSITIO iuxta valorem lata, numquam intra eum. Octeti
+     * CRUDI spatii albi (numquam entia), internati; NIHIL =
+     * nullum ubique - documentum sine dispositione trivia nulla
+     * fert. LEX POSSESSORIS (§1.2, e silva transcripta): cursus
+     * spatii inter nodos ad primam '\n' INCLUSIVE prioris est
+     * (spatia_post), residuum sequentis (spatia_ante); inter tag
+     * apertum et liberum primum = liberi ante TOTUM; inter
+     * liberum ultimum et tag claudens = post liberi + clausurae
+     * parentis. Scriptor non-pulcher haec verbatim reassuit
+     * (fidelitas); pulcher ea ignorat et dispositionem generat.
+     * ================================================== */
+
+    chorda* spatia_ante;       /* ante octetum primum nodi */
+    chorda* spatia_post;       /* post nodum, per primam '\n'
+                                * inclusive (silva tie-break) */
+    chorda* spatia_clausurae;  /* ELEMENTA: interius, inter liberum
+                                * ultimum (aut tag apertum si sine
+                                * liberis) et tag claudens.
+                                * DOCUMENTUM: cauda plagulae.
+                                * Ab internus NUMQUAM reassutum -
+                                * exceptio §1.3 nominata */
+    chorda* spatia_intra_tagum;/* intra tag apertum, ante '>' aut
+                                * '/>' (§1.6); NIHIL = nullum */
+
+    /* Scala generum textus (§1.4): '<tag\>' - lineae novae
+     * CONTENTUM sunt, dedentatio in parsatione facta, praefixum
+     * commune in 'indentatio' conditum (reassemblatio praefixum
+     * lineis non-vacuis reinserit). FALSUM/NIHIL = fluxus
+     * ordinarius (lineae novae molles). Cum crudus: '<tag!\>'. */
+        b32  multilinea;
+     chorda* indentatio;
 } StmlNodus;
 
 /* StmlResultus - Resultus parsationis
