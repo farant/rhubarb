@@ -193,6 +193,31 @@ silva_arbor_lexema_ex_tag (
 #define SILVA_ARBOR_TAG_API            "api"
 #define SILVA_ARBOR_TAG_ENVOLUCRI "arbor"
 
+/* Sedes valoris silvae in textu EMISSO: [initium, finis) octeti
+ * elementi eius (tag aperiens usque post claudens).
+ *
+ * CUR: documentum sedes proprias consulto NON fert (sedes
+ * derivatae - ancora una, cetera cursore), et positus parsatoris
+ * in arbore relecta solum vivit. Scriptor autem utramque partem
+ * novit: quem valorem in quod elementum verterit, et ubi
+ * serializator elementum posuerit (stml_scribere_sedibus).
+ * Iunctio harum = haec tabula.
+ *
+ * CLAVIS: monstrator SilvaNodus* (est_lexema FALSUM) aut
+ * SilvaToken* (VERUM) - idem monstrator quem consumens iam in
+ * arbore parsurae tenet. Lexema communicatum SEMEL apparet
+ * (sedes definitionis - fragmentum; transclusiones monstrant,
+ * non iterant). Involucra locorum et trivia non notantur:
+ * tabula VALORES fert, non ornamenta documenti.
+ *
+ * CONSUMENS PRIMUS: inspector nexus (laboratorium 0032). */
+nomen structura {
+    constans vacuum* clavis;      /* SilvaNodus* aut SilvaToken* */
+                b32  est_lexema;
+                i32  initium;     /* offset octetorum, INCLUSIVUS */
+                i32  finis;       /* offset octetorum, EXCLUSIVUS */
+} SilvaArborSedes;
+
 /* Fructus scripturae - forma SilvaScriptura aequata (fractura clara:
  * successus FALSUM + causa STATICA + sedes, numquam praetermissio
  * tacita). */
@@ -201,6 +226,12 @@ nomen structura {
                   chorda  textus;  /* octeti STML; vacua in fractura */
       constans character* causa;   /* diagnosticum staticum; NIHIL si bene */
      constans SilvaNodus* sedes;   /* nodus fracturae; NIHIL licet */
+
+    /* Tabula sedium (Xar de SilvaArborSedes), ordine scriptionis
+     * (post-ordo clausurae). A scribere_parsuram impleta; NIHIL in
+     * fractura ET a scriptore subtaxi (silva_arbor_scribere) -
+     * privatio NOMINATA, porta aperta si consumens trahat. */
+                     Xar* sedes_valorum;
 } SilvaArborScriptura;
 
 /* Subarborem in documentum STML canonicum scribere.

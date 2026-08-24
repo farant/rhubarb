@@ -464,13 +464,24 @@ nomen structura {
     b32 emissum;
 } ArborLexematisNota;
 
+/* Par valoris silvae et elementi documenti, in scriptione
+ * collectum; post serializationem cum tabula sedium
+ * (StmlSedesNodi) iungitur ut SilvaArborSedes fiat. */
+nomen structura {
+       constans vacuum* clavis;      /* SilvaNodus* aut SilvaToken* */
+                   b32  est_lexema;
+    constans StmlNodus* elementum;
+} ArborParElementi;
+
 nomen structura {
                            Piscina* piscina;
                InternamentumChorda* intern;
      constans SilvaRegistrumCoctum* tabularium;
             constans SilvaExpansio* expansio;
                     TabulaDispersa* lexemata;
-                               i32  numerus_notarum;
+                               Xar* paria;  /* ArborParElementi;
+                                             * NIHIL = non colligere */
+                               i32 numerus_notarum;
 
     /* Ancora: primum lexema ordine AMBULATIONIS (non ordine
      * octetorum) - lector eundem ordinem replicat */
@@ -530,6 +541,120 @@ _nota_lexematis (
         redde (ArborLexematisNota*)inventum;
     }
     redde NIHIL;
+}
+
+/* Clavis tabulae = OCTETI monstratoris cuiuslibet (exemplar
+ * _clavis_lexematis, generalius - pro indice elementorum) */
+interior chorda
+_clavis_monstratoris (
+            Piscina* piscina,
+    constans vacuum* monstrator)
+{
+    vacuum* cella;
+    chorda  clavis;
+
+    cella = piscina_allocare(piscina, magnitudo(constans vacuum*));
+    si (cella == NIHIL)
+    {
+        clavis.mensura  = ZEPHYRUM;
+        clavis.datum    = NIHIL;
+        redde clavis;
+    }
+    *(constans vacuum**)cella = monstrator;
+
+    clavis.mensura  = (i32)magnitudo(constans vacuum*);
+    clavis.datum    = (i8*)cella;
+    redde clavis;
+}
+
+/* Iunctio duarum tabularum: paria (valor silvae -> StmlNodus*,
+ * in scriptione collecta) cum tabula sedium serializatoris
+ * (StmlNodus* -> extensio, stml_scribere_sedibus) - fructus
+ * tabula SilvaArborSedes (valor -> extensio), ordine
+ * serializationis (post-ordo clausurae). Elementa sine pari
+ * (involucra locorum, trivia, involucrum ipsum) praetereuntur:
+ * tabula valores fert, non ornamenta. */
+interior b32
+_sedes_valorum_iungere (
+    Piscina*  piscina,
+        Xar*  paria,
+        Xar*  tabula_sedium,
+        Xar** exitus)
+{
+    TabulaDispersa* index_parium;
+               i32  i;
+
+    *exitus = NIHIL;
+    si (paria == NIHIL)
+    {
+        redde VERUM;
+    }
+
+    index_parium = tabula_dispersa_creare_chorda(piscina, 256);
+    si (index_parium == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(paria); i++)
+    {
+        ArborParElementi* par_elementi;
+                  chorda  clavis;
+
+        par_elementi = (ArborParElementi*)xar_obtinere(paria, i);
+        si (par_elementi == NIHIL)
+        {
+            redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)par_elementi->elementum);
+        si (clavis.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        tabula_dispersa_inserere(index_parium, clavis, par_elementi);
+    }
+
+    *exitus = xar_creare(piscina, magnitudo(SilvaArborSedes));
+    si (*exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(tabula_sedium); i++)
+    {
+        StmlSedesNodi* nota;
+               chorda  clavis;
+               vacuum* inventum;
+
+        nota = (StmlSedesNodi*)xar_obtinere(tabula_sedium, i);
+        si (nota == NIHIL)
+        {
+            redde FALSUM;
+        }
+        clavis = _clavis_monstratoris(piscina,
+            (constans vacuum*)nota->nodus);
+        si (clavis.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (tabula_dispersa_invenire(index_parium, clavis,
+                &inventum))
+        {
+            ArborParElementi* par_elementi;
+             SilvaArborSedes* sedes_valoris;
+
+            par_elementi   = (ArborParElementi*)inventum;
+            sedes_valoris  = xar_addere(*exitus);
+            si (sedes_valoris == NIHIL)
+            {
+                redde FALSUM;
+            }
+            sedes_valoris->clavis      = par_elementi->clavis;
+            sedes_valoris->est_lexema  = par_elementi->est_lexema;
+            sedes_valoris->initium     = nota->initium;
+            sedes_valoris->finis       = nota->finis;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -949,9 +1074,9 @@ _extentum_laminam_quaerere (
 {
     i32 k;
 
-    si (   expansio           == NIHIL
-        || expansio->extenta  == NIHIL
-        || invocatio          == NIHIL)
+    si (   expansio          == NIHIL
+        || expansio->extenta == NIHIL
+        || invocatio         == NIHIL)
     {
         redde NIHIL;
     }
@@ -975,8 +1100,8 @@ _extentum_laminam_quaerere (
 interior b32
 _extentum_scribere (
     ArborScriptor* scriptor,
-       StmlNodus* parens,
-             Xar* lamina)
+        StmlNodus* parens,
+              Xar* lamina)
 {
     StmlNodus* elem;
           i32  k;
@@ -1263,6 +1388,22 @@ _scribere_lexema (
     {
         scriptor->causa = "elementum lexematis creari non potuit";
         redde NIHIL;
+    }
+
+    /* Par pro tabula sedium. Semita transclusionis supra iam
+     * rediit, ergo lexema communicatum hic SEMEL solum venit -
+     * sedes definitionis, sponte. */
+    si (scriptor->paria != NIHIL)
+    {
+        ArborParElementi* par_elementi;
+
+        par_elementi = xar_addere(scriptor->paria);
+        si (par_elementi != NIHIL)
+        {
+            par_elementi->clavis      = (constans vacuum*)lexema;
+            par_elementi->est_lexema  = VERUM;
+            par_elementi->elementum   = elementum;
+        }
     }
 
     /* 'standard' et 'f' SOLUM cum non-ordinaria */
@@ -1647,6 +1788,19 @@ _scribere_nodum_internum (
         redde NIHIL;
     }
 
+    si (scriptor->paria != NIHIL)
+    {
+        ArborParElementi* par_elementi;
+
+        par_elementi = xar_addere(scriptor->paria);
+        si (par_elementi != NIHIL)
+        {
+            par_elementi->clavis      = (constans vacuum*)nodus;
+            par_elementi->est_lexema  = FALSUM;
+            par_elementi->elementum   = elementum;
+        }
+    }
+
     per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
     {
         constans SilvaTabLocus* locus;
@@ -1712,6 +1866,7 @@ silva_arbor_scribere_nodum (
     fructus.textus.datum    = NIHIL;
     fructus.causa           = NIHIL;
     fructus.sedes           = NIHIL;
+    fructus.sedes_valorum   = NIHIL;
 
     si (piscina == NIHIL || nodus == NIHIL || tabularium == NIHIL)
     {
@@ -1748,6 +1903,9 @@ silva_arbor_scribere_nodum (
     scriptor.sedes            = NIHIL;
     scriptor.lexemata        = tabula_dispersa_creare_chorda(piscina,
         256);
+    /* Scriptor subtaxi tabulam sedium NON fert (privatio nominata
+     * in silva_arbor.h ad sedes_valorum) */
+    scriptor.paria           = NIHIL;
     si (scriptor.lexemata == NIHIL)
     {
         fructus.causa = "tabula lexematum creari non potuit";
@@ -2230,8 +2388,8 @@ _fragmentum_aperire (
  * e.g. 'ROUTA_METHODUS_BIT(m)' delta III = '(m)'). */
 interior b32
 _extentum_legere (
-    ArborLector* lector,
-      StmlNodus* elementum,
+     ArborLector* lector,
+       StmlNodus* elementum,
       SilvaToken* invocatio)
 {
                           Xar* lamina;
@@ -2254,10 +2412,10 @@ _extentum_legere (
     numerus  = stml_numerus_liberorum(elementum);
     per (; cursor < numerus; cursor++)
     {
-        StmlNodus* liberum;
-       SilvaToken* lectum;
-          chorda*  id;
-      SilvaToken** sedes;
+        StmlNodus*  liberum;
+       SilvaToken*  lectum;
+           chorda*  id;
+       SilvaToken** sedes;
 
         liberum = stml_liberum_ad_indicem(elementum, cursor);
         si (liberum == NIHIL)
@@ -3354,9 +3512,9 @@ _positiones_lexematis (
                 frange;
             }
             /* FONS CONGRUAT. Offset sine fonte sensu caret. */
-            si (   lacuna->fons >= ZEPHYRUM
+            si (   lacuna->fons       >= ZEPHYRUM
                 && lexema->fons_index >= ZEPHYRUM
-                && lacuna->fons != lexema->fons_index)
+                && lacuna->fons       != lexema->fons_index)
             {
                 i++;
                 perge;
@@ -4338,6 +4496,7 @@ silva_arbor_scribere_parsuram (
     fructus.textus.mensura  = ZEPHYRUM;
     fructus.causa           = NIHIL;
     fructus.sedes           = NIHIL;
+    fructus.sedes_valorum   = NIHIL;
 
     si (   piscina            == NIHIL || parsura == NIHIL
         || tabularium         == NIHIL || grammatica == NIHIL
@@ -4356,15 +4515,15 @@ silva_arbor_scribere_parsuram (
         }
     }
 
-    scriptor.piscina                = piscina;
-    scriptor.intern                 = intern;
-    scriptor.tabularium             = tabularium;
-    scriptor.expansio               = parsura->expansio;
-    scriptor.numerus_notarum        = ZEPHYRUM;
-    scriptor.ancora_nota            = FALSUM;
-    scriptor.ancora_offset          = -I;
-    scriptor.ancora_linea           = ZEPHYRUM;
-    scriptor.ancora_columna         = ZEPHYRUM;
+    scriptor.piscina          = piscina;
+    scriptor.intern           = intern;
+    scriptor.tabularium       = tabularium;
+    scriptor.expansio         = parsura->expansio;
+    scriptor.numerus_notarum  = ZEPHYRUM;
+    scriptor.ancora_nota      = FALSUM;
+    scriptor.ancora_offset    = -I;
+    scriptor.ancora_linea     = ZEPHYRUM;
+    scriptor.ancora_columna   = ZEPHYRUM;
     /* FONS ORDINARIUS = fons PRINCEPS, non ZEPHYRUM.
      *
      * Scriptor 'f' OMITTIT cum fons_index ancoram aequat; lector
@@ -4381,7 +4540,9 @@ silva_arbor_scribere_parsuram (
     scriptor.sedes                  = NIHIL;
     scriptor.lexemata         = tabula_dispersa_creare_chorda(
         piscina, 256);
-    si (scriptor.lexemata == NIHIL)
+    scriptor.paria            = xar_creare(piscina,
+        magnitudo(ArborParElementi));
+    si (scriptor.lexemata == NIHIL || scriptor.paria == NIHIL)
     {
         fructus.causa = "tabula lexematum creari non potuit";
         redde fructus;
@@ -4471,7 +4632,7 @@ silva_arbor_scribere_parsuram (
         }
         /* INVOCATIONES VACUAE - eodem iure quo directivae:
          * octetos tegunt quos arbor non fert. */
-        si (parsura->expansio != NIHIL
+        si (   parsura->expansio          != NIHIL
             && parsura->expansio->extenta != NIHIL)
         {
             per (k = ZEPHYRUM;
@@ -4657,7 +4818,26 @@ silva_arbor_scribere_parsuram (
         }
     }
 
-    fructus.textus     = stml_scribere(involucrum, piscina, VERUM);
+    {
+        Xar* tabula_sedium;
+
+        tabula_sedium = xar_creare(piscina,
+            magnitudo(StmlSedesNodi));
+        si (tabula_sedium == NIHIL)
+        {
+            fructus.causa = "tabula sedium creari non potuit";
+            redde fructus;
+        }
+        fructus.textus = stml_scribere_sedibus(involucrum, piscina,
+            VERUM, tabula_sedium);
+
+        si (!_sedes_valorum_iungere(piscina, scriptor.paria,
+                tabula_sedium, &fructus.sedes_valorum))
+        {
+            fructus.causa = "sedes valorum iungi non potuerunt";
+            redde fructus;
+        }
+    }
     fructus.successus  = VERUM;
     redde fructus;
 }
@@ -5418,8 +5598,8 @@ silva_arbor_legere_parsuram (
                 && chorda_aequalis_literis(*elem->titulus,
                        SILVA_ARBOR_TAG_INVOCATIO_VACUA))
             {
-                Xar* lamina;
-                s32  initium_lacunae;
+                                      Xar* lamina;
+                                      s32  initium_lacunae;
                 SilvaExtentumInvocationis* ext;
 
                 si (passus != ZEPHYRUM)
@@ -5453,8 +5633,8 @@ silva_arbor_legere_parsuram (
                         elem->linea);
                     redde NIHIL;
                 }
-                ext->vacua      = VERUM;
-                ext->lamina     = lamina;
+                ext->vacua   = VERUM;
+                ext->lamina  = lamina;
                 /* Invocatio = lexema primum laminae (nomen macri).
                  * Emissor eam non consulit pro vacuis - lamina sola
                  * reinserenda est - sed identitas honesta manet. */
@@ -5503,7 +5683,7 @@ silva_arbor_legere_parsuram (
                  * Sanatio ergo non est hanc quoque emendare sed
                  * DELERE: unus conceptus, una functio. */
                 _parsura_ancoram_legere(elem, &sedes);
-                initium_lacunae  = sedes.offset;
+                initium_lacunae = sedes.offset;
                 lamina = _parsura_laminam_legere(&lector, elem, &sedes);
                 si (lamina == NIHIL)
                 {
