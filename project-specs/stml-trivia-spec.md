@@ -43,6 +43,21 @@ Four patches and a standing tax = a category. The fix is the model.
 - **One arc, compatibility accessors.** Single project; the verbatim
   accessor keeps byte-identical semantics throughout so consumers
   migrate at leisure. No shipped intermediate stage.
+- **Flow is the DEFAULT text kind** (the HTML instinct): unmarked
+  text has soft newlines — newline-bearing whitespace runs read as
+  one space. Newline-preserving content is the exception and must
+  DECLARE itself (§1.4); supporting preservation everywhere is bad
+  for formatting ergonomics and confusing.
+- **The `\` multiline marker, GLUED to the tag name** (`<versus\>`):
+  scans fast, jumps out even with attributes present — one could
+  argue capture-style space separation (`<tag \>`), but the kind of
+  a tag's content is name-adjacent information.
+- **One legal sigil order, `!\`** (`<code!\>`); `\!` is a loud parse
+  error — `!` changes lexing so it binds first, and fidelity should
+  never have to remember which order an author typed.
+- **v1 `\` is text-only**; inline child elements inside multiline
+  content are deferred (§11) — and they are the long-term
+  differentiator from `!`, which can never have children.
 
 ### §0.3 The model in one sentence
 
@@ -89,9 +104,18 @@ the reassembly in §4 is the proof obligation.
 
 ### §1.3 Text runs
 
-- A run that is **entirely whitespace** produces **no node at all**
-  — its bytes distribute by §1.2. (This is what deletes the
-  child-walker tax and fixes capture counting by construction.)
+- A run that is **entirely whitespace AND contains a newline**
+  produces **no node at all** — its bytes distribute by §1.2. (This
+  deletes the child-walker tax and fixes capture counting by
+  construction.) A same-line whitespace-only run remains a text
+  node with its valor — `<sep>   </sep>` keeps its deliberate
+  three-space value (scenario I refinement, 2026-08-24).
+- **Named `internus` carve-out**: an element whose entire content
+  was newline-bearing whitespace (`<a>\n</a>`) becomes genuinely
+  empty — `internus` returns `""` where it returned `"\n"`. This is
+  the ONE bridge behavior change; the golden audit (§7.1) must
+  enumerate every affected fixture, and empty-with-layout reading
+  as empty is the least-surprise verdict.
 - A run with content: an edge (maximal whitespace prefix/suffix)
   **leaves the valor iff it contains a newline** (§0.2). Bytes that
   leave the valor then distribute by §1.2 exactly like any other
@@ -104,7 +128,41 @@ the reassembly in §4 is the proof obligation.
   continue to cover the FULL original run including its edges
   (source-honest; a valor sub-extent is RESERVED, not built).
 
-### §1.4 Comments, raw, attributes, sigils
+### §1.4 The kind ladder (what newlines MEAN, declared in the tag)
+
+| form | kind | newlines | dedent | entities/tags | pretty writer may |
+|---|---|---|---|---|---|
+| `<tag>` | flow (default) | soft (≡ one space) | n/a | live | re-wrap freely |
+| `<tag\>` | multiline | content | at parse | live | re-indent block only |
+| `<tag!>` | raw | content | no | dead | touch nothing |
+| `<tag!\>` | raw multiline | content | at parse | dead | re-indent block only |
+
+The marker is what makes the formatter SOUND: without a declared
+kind, pretty mode can never safely re-flow any text (it cannot know
+whether a newline is meaning) — the root of the mixed-content
+corruption family. With it, the document carries the contract and
+every tool reads the same declaration.
+
+**`\` semantics.** Edge rule clips the first/last newline as usual
+(§1.3). Dedent runs AT PARSE: the common indentation of interior
+non-empty lines is stripped from the valor and stored as the node's
+`indentatio` trivia (one chorda); relative indentation deeper than
+the common prefix stays in the valor. Reassembly re-inserts the
+prefix on non-empty lines — deterministic and byte-exact because of
+the normative-form refusal below. `StmlNodus` gains `indentatio`
+(NIHIL for unmarked/raw nodes) and a kind flag for `\`.
+
+**Normative-form refusal.** Inside `\` content, an interior line
+that is whitespace-only but NOT empty is a named vitium (the one
+class that would make prefix reassembly ambiguous). Truly empty
+lines are fine; trailing whitespace after content on a line is fine
+(those bytes live in the valor). Loud beats lossy.
+
+**Composition refusals (v1).** `\` with child elements = vitium
+(reserved, §11). `\` with capture parens = vitium. `\!` order =
+vitium. Each refusal names itself.
+
+### §1.5 Comments, raw, attributes, sigils
 
 - **Comments stay nodes** (content with structure — this is where
   STML deliberately differs from silva, whose comments are trivia).
@@ -117,16 +175,32 @@ the reassembly in §4 is the proof obligation.
 - **Sigils, fragments, transclusion, augmentation**: no semantic
   change; the nodes gain trivia fields like all others.
 
-## §2 Accessor contract (the compatibility bridge)
+## §2 Accessor contract (the triad + the bridge)
 
-- `stml_textus_internus` — **result bytes UNCHANGED**: reassembles
-  ante + valor + post. A probatio captures today's outputs over a
-  fixture corpus as goldens BEFORE surgery and asserts equality
-  after (§7). Canon's identity-sensitive sites (keys, citations —
-  `lib/canon.c:1444,1585`) therefore see no change.
-- `stml_textus_valor` — NEW: the trimmed value (the least-surprise
-  accessor consumers migrate toward).
-- `stml_textus_normalizatus` — semantics unchanged (and cheaper).
+Three readings, one per text kind — and **the declared kind
+outranks the accessor** (reading marked content through `fluxus`
+returns the valor untouched; the document's declaration wins):
+
+- `stml_textus_internus` — bytes: reassembles ante + valor + post
+  (+ indentatio re-insertion for `\`). **Result bytes UNCHANGED**
+  except the §1.3 carve-out. A probatio captures today's outputs
+  over a fixture corpus as goldens BEFORE surgery and asserts
+  equality after (§7). Canon's identity-sensitive sites (keys,
+  citations — `lib/canon.c:1444,1585`) see no change.
+- `stml_textus_valor` — NEW: the value itself. For `\` content this
+  is already dedented with newlines intact — the least-surprise
+  code/poetry reading lives in the MODEL, not an accessor.
+- `stml_textus_fluxus` — NEW: the prose reading (parent-level,
+  mixed content): joins child text, emitting ONE SPACE wherever a
+  newline-bearing boundary or interior newline-bearing run sat.
+  Deliberate divergence from HTML: same-line runs stay literal
+  (`a  b` keeps two spaces) — one rule everywhere, we are a data
+  format.
+- `stml_textus_normalizatus` — the shipped read-time dedent
+  (`_normalizare_spatium_album`): unchanged, and remains the pre
+  reading AGAINST unmarked elements (compat). On `\` content it is
+  near-identity since the parser already dedented. Expected to go
+  quiet as documents adopt markers (§11).
 
 ## §3 Parser
 
@@ -149,6 +223,12 @@ changes: `stml_lexemata_colligere` remains the raw total stream.
   whitespace-transparency special cases are **DELETED** (the
   fourth-fix-is-deletion law); comment placement derives from tree
   order. Clausura tacita policy unchanged.
+- **Pretty's text liberties follow the kind ladder** (§1.4): flow
+  text may be RE-WRAPPED at will (newline runs are semantically one
+  space — the mixed-content corruption class dies at the root);
+  `\` blocks may only be re-indented as a whole (indentatio
+  regenerated to nesting depth, interior untouched); raw content
+  is never touched.
 - The raw-capture "SED SEMEL TANTUM" delimiter hack is DELETED —
   the delimiter is the capture node's `post` now, explicit.
 
@@ -161,19 +241,29 @@ unchanged, now structurally enforced.
 
 ## §6 Captures (M4 — lands on top)
 
-- **Counting**: trivially clean — whitespace is no longer a node, so
-  `_processare_captiones` counts only real nodes. Comments remain
-  skipped-but-preserved (today's rule, unchanged).
+- **Counting**: trivially clean — newline-bearing whitespace is no
+  longer a node, so `_processare_captiones` counts only real nodes.
+  Comments remain skipped-but-preserved (today's rule, unchanged).
+- **Trivia distribution and capture ORDER**: trivia distributes on
+  the PRE-capture sibling stream; capture-form emission replays
+  stream order (open tag, then the captor's post, then captured
+  children each with their own trivia). Without this sentence,
+  "post of a capture node" is ambiguous since its children
+  serialize after its open tag (scenario F, 2026-08-24).
 - **Collapse policy** (pretty writer may emit `<tag (>` for a node
   it judges collapsible): all children structural (any significant
   text blocks — the inner-value refusal), no comment children, not
-  crudus, and **single child only** in v1 — the wrapper-spine case
-  (`<functio (><corpus (><sententia …/>`), which is where arbor
-  documents win. Multi-paren collapse is parse-supported but not
-  formatter-produced until it earns legibility.
-- **Raw multi-capture**: complete it — `<tag! ((>` captures N raw
-  lines (the lexer already notes the count and captures one; the
-  silent middle state is the only wrong answer).
+  crudus/multiline, and **single child only** in v1 — the
+  wrapper-spine case (`<functio (><corpus (><sententia …/>`),
+  which is where arbor documents win. Multi-paren collapse is
+  parse-supported but not formatter-produced until it earns
+  legibility.
+- **Raw multi-capture is SUPERSEDED by `<tag!\>`** (§1.4): the
+  multi-line-code use case the lexer deferred ("multi-linea +
+  dedentatio = futura", `lib/stml.c:737`) lands as declared syntax
+  instead of capture magic. Multi-paren on raw-line capture
+  (`<tag! ((>`) becomes a LOUD refusal — the silent
+  noted-but-ignored middle state is the only wrong answer.
 
 ## §7 Gates and oracles
 
@@ -207,6 +297,15 @@ unchanged, now structurally enforced.
   siblings, before close, document tail
 - `</>` anonymous close and clausura tacita interaction
 - a text run whose edge is spaces-only (no newline) — NOT trimmed
+- `<sep>   </sep>` — same-line whitespace-only VALUE, preserved
+- `<a>\n</a>` — the internus carve-out case, enumerated by goldens
+- `<versus\>` block: dedent + relative indentation survives +
+  byte-exact reassembly; interior EMPTY lines
+- `<code!\>` with `<`, `&`, `*` — raw lexing + dedent
+- `\` refusals: whitespace-only interior line, child element,
+  capture parens, `\!` order — each vitium NAMED
+- flow re-wrap: pretty output with different wrap points parses to
+  an IDENTICAL tree (fluxus-stable)
 
 ## §9 Consumer migration (M3)
 
@@ -225,13 +324,16 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
 
 ## §10 Milestones
 
-- **M1** — model + parser + non-pretty writer; golden bridge +
-  byte-fidelity corpus green throughout; arbor gate green.
-- **M2** — pretty = trivia regeneration; TERMINI deleted; fixed
-  point gate lands.
-- **M3** — consumer migration (§9); amalgam + lab.
-- **M4** — captures: counting (free), collapse policy, raw
-  multi-capture completion (§6).
+- **M1** — model + parser + non-pretty writer, INCLUDING the kind
+  ladder (`\` lexing, dedent-at-parse, indentatio, refusals);
+  golden bridge + byte-fidelity corpus green throughout; arbor
+  gate green.
+- **M2** — pretty = trivia regeneration; TERMINI deleted; flow
+  re-wrap liberty + `\` block re-indent; fixed point gate lands.
+- **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
+  lab.
+- **M4** — captures: counting (free), stream-order emission,
+  collapse policy, raw multi-paren refusal (§6).
 
 ## §11 Non-goals / reserved
 
@@ -241,6 +343,15 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
 - Valor sub-extents on text nodes: RESERVED.
 - Multi-paren collapse in the formatter: RESERVED until legibility
   earns it.
-- The lab's mini `_stml_generale_legere` is NOT taught trivia or
-  captures — real parsers arrive over the bridge (0029 doctrine);
-  named consequence, not an obligation.
+- **Inline child elements inside `\` content**: RESERVED for v2 —
+  the long-term differentiator from raw (poetry with `<em>`,
+  dedent across interleaved tags). Refused loudly in v1.
+- **Per-element kind declaration in canon** ("element X must be
+  `\`"): RESERVED — the document declares today; the schema may
+  someday constrain.
+- **`normalizatus` deprecation path**: RESERVED — it stays as the
+  read-time dedent against unmarked elements; revisit once marked
+  documents dominate.
+- The lab's mini `_stml_generale_legere` is NOT taught trivia,
+  captures, or `\` — real parsers arrive over the bridge (0029
+  doctrine); named consequence, not an obligation.

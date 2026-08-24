@@ -61,6 +61,7 @@ reference sigils carve three spaces:
 | sigil | meaning | status |
 |---|---|---|
 | `!` suffix | raw content tag | **VIVIT** (C + TS; C adds raw line capture `<tag! (>`) |
+| `\` suffix | multiline content tag — newlines are CONTENT + dedent at parse (common indentation = trivia; relative indent survives); the opt-out from flow-default text. Glued to the name (`<versus\>` — "should jump out", Fran 2026-08-24); composes raw-first only (`<tag!\>`, `\!` refused). v1 text-only; INLINE CHILDREN are the v2 differentiator from `!` (raw can never have children, multiline eventually can) | **PARCATUM** — stml-trivia-spec.md §1.5, approved 2026-08-24 (parcum 01M0T5XYC3) |
 | `(>` / `((>` … | forward capture, arity = paren count | **VIVIT** (C: `captio_numerus`; TS per spec; G2 origin) |
 | `<) tag>` | backward capture | **VIVIT** (C + TS) |
 | `<= tag =>` | sandwich capture | **VIVIT** (C + TS) |
