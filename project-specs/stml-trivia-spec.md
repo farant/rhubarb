@@ -77,14 +77,24 @@ Four patches and a standing tax = a category. The fix is the model.
   does not fit stays in plain block form.
 - **Vertical collapse (second collapse decree, 2026-08-24, at M2
   close).** Capture form is UNIVERSAL for single-child elements
-  with an element child — width decides only inline vs STACKED
-  (`<tag(>` + newline + child at indent+1). When a chain reaches
-  a multi-child element, that element takes block form with its
-  close tag at its own level (option 2: the captor never absorbs
-  the block's open tag onto its line). The invariant this buys:
-  close tags exist exactly where block form does — multi-child
-  and mixed elements only. Vertical compression is the payoff:
-  every converted wrapper level deletes a `</>` line.
+  with an element child — width decides only LAYOUT, never form.
+  Captor links pack GREEDILY onto a line within the budget; a
+  line break indents ONE step (per line, not per link); the
+  chain's block terminal opens on a fresh line one step deeper
+  than the last captor line, in block form with its close tag at
+  its own level (option 2: the captor never absorbs the block's
+  open tag onto its line):
+
+      <a(> <b(>
+        <c>
+          <d/>
+          <e/>
+        </>
+
+  The invariant this buys: close tags exist exactly where block
+  form does — multi-child and mixed elements only. Vertical
+  compression is the payoff: every converted wrapper level
+  deletes a `</>` line.
 
 ### §0.3 The model in one sentence
 
@@ -391,18 +401,26 @@ remains the raw total stream (over canonicalized input).
 - **Vertical collapse (§0.2 second decree — DECREED at M2 close,
   NOT YET IMPLEMENTED; first tranche of the next session).** A
   single-child element whose child is an ELEMENT takes capture
-  form even when the inline tail does not fit: `<tag(>` +
-  newline + child at indent+1, pretty-recursive — the child
-  re-attempts an inline tail at its own indent, so deep chains
-  become stacked captors ending in one inline spine line. A chain
-  reaching a multi-child element leaves it in block form with its
-  close tag at its own level:
+  form even when the inline tail does not fit. Layout is GREEDY
+  LINE PACKING: captor links accumulate on the current line while
+  the budget holds (`<a(> <b(>`); a break starts a new line ONE
+  indent step deeper (per LINE, not per link — a line of captors
+  consumes one step together); the packing recurses until the
+  chain ends. An INLINE terminal rides at the end of the final
+  captor line; a BLOCK terminal (multi-child element) opens on a
+  fresh line one step below the last captor line, in block form
+  with its close tag at its own level:
 
-      <a(>
-        <b>
-          <c/>
+      <a(> <b(>
+        <c>
           <d/>
+          <e/>
         </>
+
+  Deep chains with inline terminals pack the same way:
+
+      <t1(> <t2(> <t3(>
+        <t4(> foo
 
   A single TEXT child stays inline-only: capture-inline when
   capturable (§1.2 T3 refinements) and within budget, else the
@@ -533,10 +551,12 @@ unchanged, now structurally enforced.
 - `<tag(> foo` — captured text: valor `"foo"`, captor post `" "`
 - width boundary: a spine at exactly 72 columns collapses, at 73
   stays block; both are fixed-point stable
-- vertical (M2b): `<a><b><c/><d/></b></a>` → stacked captor +
-  block interior; double-stack `<x><a><b>…`; over-budget chain
-  ending in an inline terminal → stacked captors + one inline
-  spine line; stacked form fixed-point stable and tree-equal;
+- vertical (M2b): `<a><b><c/><d/></b></a>` → packed captors +
+  block interior (`<a(> <b(>` / block c at +1 — the §0.2
+  exemplar); over-budget chain ending in an inline terminal →
+  packed captor lines + final spine line; line-packing boundary
+  at the budget (a chain that fits on one captor line never
+  splits); stacked form fixed-point stable and tree-equal;
   authored `<a (>` + newline captee re-derives its own layout
 
 ## §9 Consumer migration (M3)
