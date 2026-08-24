@@ -4010,6 +4010,94 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Trivia intra tagum (spec triviae §1.6)
+     * ================================================== */
+
+    imprimere("\n--- Probans trivia intra tagum ---\n");
+
+    {
+        /* A. TAG MULTILINEARIS: dispositio attributorum circuitum
+         * octetim superest (foramen fidelitatis vetus clausum) */
+        StmlResultus res;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<a\n  b=\"1\"\n  c=\"2\">x</a>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<a\n  b=\"1\"\n  c=\"2\">x</a>");
+
+        imprimere("  A tag multilinearis octetim: VERUM\n");
+    }
+
+    {
+        /* B. SPATIUM ANTE FINEM: '<a b="1" >' et '<a />' formam
+         * suam tenent; spatium unicum canonicum NIHIL manet */
+        StmlResultus res;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis("<a b=\"1\" >x</a>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<a b=\"1\" >x</a>");
+
+        res = stml_legere_ex_literis("<a />", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<a />");
+
+        res = stml_legere_ex_literis("<a b=\"1\">x</a>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        {
+            StmlAttributum* attr;
+
+            attr = (StmlAttributum*)xar_obtinere(
+                res.elementum_radix->attributa, ZEPHYRUM);
+            CREDO_NON_NIHIL(attr);
+            CREDO_NIHIL(attr->spatia_ante);
+        }
+        CREDO_NIHIL(res.elementum_radix->spatia_intra_tagum);
+
+        imprimere("  B spatium prae finem + canonicum: VERUM\n");
+    }
+
+    {
+        /* C. SPATIUM CIRCA '=' NORMALIZATUM (exceptio angusta
+         * nominata §1.6): 'attr = "v"' fit 'attr="v"' ambobus
+         * modis */
+        StmlResultus res;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis("<a b = \"1\">x</a>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<a b=\"1\">x</a>");
+
+        imprimere("  C '=' normalizatum: VERUM\n");
+    }
+
+    {
+        /* D. PULCHER REGENERAT: dispositio multilinearis tagi ad
+         * spatium unicum redit (§1.6 - regula dispositionis
+         * multilinearis formatoris RESERVATA) */
+        StmlResultus res;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<r><a\n  b=\"1\">x</a></r>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_VERUM(chorda_continet(scriptum,
+            chorda_ex_literis("<a b=\"1\">", piscina)));
+
+        imprimere("  D pulcher dispositionem regenerat: VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

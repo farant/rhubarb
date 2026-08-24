@@ -597,3 +597,40 @@ of M2+ should not re-derive:
 - Refusals live in the parser, not the lexer, so they can NAME
   themselves (status MULTILINEA + causa in result.error). Only
   `\!` is lexer-level ERRATUM (it would change lexing itself).
+
+## 2026-08-24 — trivia M1 T4+T5: tag-interior trivia, planted faults
+
+T4 (§1.6): lexer records inter-attribute whitespace
+(StmlAttributum.spatia_ante, single-space-canonical = NIHIL) and
+the pre-'>' span (token → nodus->spatia_intra_tagum; capture forms
+excluded — their layout stays canonical). The multi-line tag
+fidelity hole is CLOSED: `<a\n  b="1"\n  c="2">x</a>` round-trips
+byte-exact. `=`-whitespace normalizes both ways (named exception).
+Finds:
+
+- **The five duplicated attribute-emission loops are now ONE
+  surface** (`_attributa_scribere`) — they had already drifted
+  (one had a comment the others lacked); §1.6 would have needed
+  the same edit five times.
+- **The token-struct uninit family bit AGAIN**: StmlToken grew
+  twice this session (multilinea, spatia_prae_finem) and only the
+  two tag constructors initialized the new fields — `<(>`'s
+  bare-capture token carried stack garbage into chorda_internare →
+  friatio crash. Same disease as the uninit documentum (c7476a72).
+  Fixed by initializing in ALL constructors at the
+  habet_captus anchor. If StmlToken grows again: grep
+  `token.habet_captus` and extend EVERY site, or introduce a
+  single token-zeroing constructor.
+- The pre-attribute `_tok_praeterire_spatium` calls in tag and
+  fragment readers were DELETED — the attribute loop's own span
+  capture must see the first attribute's whitespace.
+
+T5 (§7.6) — planted faults, each must redden a gate before the
+gates are trusted:
+1. mis-owned newline (partiri exclusive instead of inclusive) →
+   probatio_stml (tree assertions) + aurea (per-node records) RED
+2. dropped trailing edge → probatio_stml + aurea RED
+3. doubled raw-capture delimiter (the SED SEMEL disease
+   re-planted) → probatio_stml (circuitus crudae) RED; aurea
+   correctly blind (writer output is not internus's domain)
+All restored; all green after restoration.
