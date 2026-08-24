@@ -6277,3 +6277,29 @@ explicitly in a document.
 (`peractum` outside `coeptum|factum|conclusum`) and a dead citation
 were both caught with line numbers; the corrected document reaches
 VITIA 0.
+
+## 2026-08-24 — probatio_planta_lectio: the two-week red was a fixture predating W2
+
+`probatio_planta_lectio` failed deterministically since 2026-08-10
+(mislabeled "flaky" until 08-22): `canon_iudicare(individua.canon,
+hortus.census)` returned 1 vitium where line 128 pins 0. The vitium
+named itself precisely — `bin/canon_examen natura/exempla/hortus.census`
+reproduced it in one call with rule + line: `<persona>` re-minting
+library key `&carl_linnaeus;` (CANON_CLAVIS_COLLISA, librarium W2).
+
+Timeline: the library gained `carl_linnaeus` on 08-06 (c6b80d41); the
+fixture's seating line `<persona nomen="&carl_linnaeus;"/>` — written
+under the pre-W2 INSCRIPTIO doctrine "census sodales suos sedet" —
+survived the signa migration at 08-10 14:42 (f8c6dcc1); W2 (6b760391)
+outlawed home-minting at 21:15 the same day. W2's own commit message
+NAMES `&carl_linnaeus;` as a collision its tripwire found — but its
+sweep only covered in-test fixtures (probatio_natura_canones.c) and
+`natura/cocta/`, never `natura/exempla/`. Same lesson as arbor T7:
+**a sweep must measure its own coverage** — "mundus vivus VITIA 0"
+was true of the world the sweep saw.
+
+Fix: drop the seating line, rely on W1 — the citation
+`auctor-nominis="&carl_linnaeus;"` resolves against the canon's
+embedded `<claves-externae>` table, which is W1's entire purpose.
+Comment rewritten from INSCRIPTIO to CITATIO doctrine. VITIA 0,
+49/49.

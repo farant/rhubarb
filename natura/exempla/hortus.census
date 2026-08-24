@@ -10,19 +10,17 @@
   in declaratione ET in referentia, congruentia verbatim; '.'
   genus e vocabulario; valor nudus litteralis est.
 
-  INSCRIPTIO (spec census): census sodales suos sedet - linea una
-  <persona nomen="&carl_linnaeus;"/> Linnaeum praesentat, et
-  auctor-nominis="&carl_linnaeus;" RESOLVITUR. (Sub extensione
-  .planta retirata haec referentia trans modulos inresolubilis
-  erat - verruca classis D, mortua cum extensione.)
+  CITATIO (librarium W1/W2): auctor-nominis="&carl_linnaeus;"
+  contra claves-externas canonis RESOLVITUR - Linnaeus in
+  bibliotheca cusus est (semina.census), ergo hic CITATUR, non
+  sedetur. Sedes propria ('census sodales suos sedet', ante W2)
+  hic collisio esset: 'cita aut auge, ne itera'.
 
   Quae absunt PROBANT: habitus et altitudo-matura tacent, ergo
   ordinarius= (ex <valor> naturae per catenam vectus) apparere
   debet - et diversus per genus (frutex rosae, arbor mali).
 -->
 <individua>
-  <persona nomen="&carl_linnaeus;"/>
-
   <rosa-canina nomen="&rosa-ad-murum;"
                status-vita="florens"
                auctor-nominis="&carl_linnaeus;">
