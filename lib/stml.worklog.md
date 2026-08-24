@@ -562,3 +562,38 @@ of M2+ should not re-derive:
   the next sibling's ante (the §0.1.3 fix), plus retro captures no
   longer relocating whitespace. Root-level same-length hash
   changes = retro-captured whitespace no longer moves position.
+
+## 2026-08-24 — trivia M1 T3: the kind ladder, and two traps
+
+`\` lexing + dedent-at-parse + indentatio + refusals landed. Finds:
+
+- **The transform rides ON the trivia machinery, not beside it.**
+  `<tag\>` content is still one text child; the general §1.3 edge
+  clip runs first, then `_multilineam_transformare` reconstructs
+  interior = ante+valor, re-clips the LEADING edge to the first
+  newline ALONE (the general maximal clip would eat line 1's
+  indentation and destroy relative structure), and re-applies the
+  general TRAILING clip (needed for `!\`, whose raw interior never
+  went through classification; idempotent for the non-raw path).
+  Trailing remainder lands in element clausurae per §1.2 — so the
+  trailing-equivalence decree (`123</>` ≡ `123\n</>` ≡
+  `123\n  </>`) holds mechanically, no special case.
+- **Prefix reinsertion must skip line 0 for tag-line content.**
+  `<m\>abc\n  def` — line 0 never carried the prefix (excluded
+  from dedent, PEP-257), so `_valorem_praefixo_scribere` takes
+  `prima_quoque` = (spatia_ante != NIHIL). First emission got this
+  wrong: `<m\>  abc`.
+- **First error wins, now enforced** (`_errorem_ponere`): a
+  refusal that denies a node leaves its close tag orphaned, and
+  the orphan's TAG_IMPROPRIE was OVERWRITING the named MULTILINEA
+  status (same for `\!` → SYNTAXIS). All parser status setters
+  route through the guard: later errors are usually cascata of the
+  first.
+- Multilinea interior layout is DECLARED content: text-child
+  ante/post + prefix emit in BOTH writer modes (`_intra_
+  multilineam`), unlike ordinary trivia (fidelitas-gated). M2's
+  re-indent liberty will regenerate the prefix, never the
+  interior.
+- Refusals live in the parser, not the lexer, so they can NAME
+  themselves (status MULTILINEA + causa in result.error). Only
+  `\!` is lexer-level ERRATUM (it would change lexing itself).

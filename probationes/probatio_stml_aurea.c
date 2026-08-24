@@ -113,7 +113,15 @@ interior constans LitteraAurea LITTERAE_AUREAE[] = {
     { "processio",
       "<?xml version=\"1.0\"?>\n<radix><a/></radix>\n" },
     { "attributa_multilinea",
-      "<a\n  b=\"1\"\n  c=\"2\">x</a>" }
+      "<a\n  b=\"1\"\n  c=\"2\">x</a>" },
+    { "multilinea_versus",
+      "<versus\\>\n  prima\n    altior\n  ultima\n</>" },
+    { "multilinea_linea_tagi",
+      "<m\\>abc\n  def\n</>" },
+    { "multilinea_cruda",
+      "<code!\\>\n  a < b && c > d\n</code>" },
+    { "multilinea_aequivalentia",
+      "<m\\>\n  abc\n  123\n  </>" }
 };
 
 /* FNV-1a XXXII-bitorum */

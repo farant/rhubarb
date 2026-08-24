@@ -84,7 +84,13 @@ nomen enumeratio {
     STML_ERROR_TAG_IMPROPRIE         = IV,
     STML_ERROR_ATTRIBUTUM            = V,
     STML_ERROR_VACUUM_INPUT          = VI,
-    STML_ERROR_CAPTIO                = VII   /* Capture operator error */
+    STML_ERROR_CAPTIO                = VII,  /* Capture operator error */
+    /* Recusationes '<tag\>' (spec triviae §1.4) - quaeque causam
+     * suam in result.error NOMINAT: linea interior spatio sola nec
+     * vacua (reassemblatio ambigua fieret); liberi inlineares (v2
+     * reservati); captura in multilinea. Ordo '\!' = SYNTAXIS
+     * (lexatio ipsa mutaretur). */
+    STML_ERROR_MULTILINEA            = VIII
 } StmlStatus;
 
 

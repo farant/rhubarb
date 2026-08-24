@@ -1,6 +1,6 @@
 AUREA STML INTERNUS I
 MONSTRA FONTIUM >1MB EXCLUSA (vide tools/stml_aurea_generare.sh)
-LITTERAE 25
+LITTERAE 29
 @ mixtus_inline
 arbor successus:1 status:0 nodi:6 notati:6
 N @0 D 1 18 315b0ffb
@@ -386,6 +386,83 @@ x
 N @19 T 3 1 fd0c5087
 V 1
 x
+@ multilinea_versus
+arbor successus:1 status:0 nodi:3 notati:3
+N @0 D 1 29 1baedec9
+V 29
+
+  prima
+    altior
+  ultima
+
+N @0 E 1 29 1baedec9
+V 29
+
+  prima
+    altior
+  ultima
+
+N @9 T 1 29 1baedec9
+V 29
+
+  prima
+    altior
+  ultima
+
+@ multilinea_linea_tagi
+arbor successus:1 status:0 nodi:3 notati:3
+N @0 D 1 10 111ea6a0
+V 10
+abc
+  def
+
+N @0 E 1 10 111ea6a0
+V 10
+abc
+  def
+
+N @4 T 1 10 111ea6a0
+V 10
+abc
+  def
+
+@ multilinea_cruda
+arbor successus:1 status:0 nodi:3 notati:3
+N @0 D 1 18 8663e3b1
+V 18
+
+  a < b && c > d
+
+N @0 E 1 18 8663e3b1
+V 18
+
+  a < b && c > d
+
+N @8 T 1 18 8663e3b1
+V 18
+
+  a < b && c > d
+
+@ multilinea_aequivalentia
+arbor successus:1 status:0 nodi:3 notati:3
+N @0 D 1 15 4978fa85
+V 15
+
+  abc
+  123
+  
+N @0 E 1 15 4978fa85
+V 15
+
+  abc
+  123
+  
+N @4 T 1 13 bfa6f73d
+V 13
+
+  abc
+  123
+
 FONTES 148
 F ./aedilis.canon mensura:4181 fnv:5e859329
 arbor successus:1 status:0 nodi:40 notati:33

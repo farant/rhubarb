@@ -102,6 +102,11 @@ nomen structura {
     /* For raw tags with forward capture: captured content */
     chorda captus_contentus;
        b32 habet_captus;
+
+    /* Signum '\' generi textus (spec triviae §1.4): '<tag\>' aut
+     * '<tag!\>' - lineae novae CONTENTUM, dedentatio in
+     * parsatione. Ordo '\!' = ERRATUM (lexatio mutaretur). */
+    b32 multilinea;
 } StmlToken;
 
 
@@ -549,6 +554,7 @@ _tok_legere_tag (
     token.habet_captus              = FALSUM;
     token.captus_contentus.datum    = NIHIL;
     token.captus_contentus.mensura  = ZEPHYRUM;
+    token.multilinea                = FALSUM;
 
     /* Skip < */
     _tok_progredi(ctx, I);
@@ -684,6 +690,28 @@ _tok_legere_tag (
     {
         est_crudus = VERUM;
         _tok_progredi(ctx, I);
+    }
+
+    /* Signum '\' (multilinea, §1.4) - nomini agglutinatum, post
+     * '!' si adest ('<tag\>', '<tag!\>'). Ordo inversus '\!' =
+     * ERRATUM clarum: '!' lexationem ipsam mutat, ergo primus
+     * ligare debet - fidelitas ordinem authoris meminisse non
+     * debet. */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '\\')
+    {
+        token.multilinea = VERUM;
+        _tok_progredi(ctx, I);
+
+        si (_tok_aspicere(ctx, ZEPHYRUM) == '!')
+        {
+            token.genus            = STML_TOKEN_ERRATUM;
+            token.valor            = titulus;
+            token.positus_initium  = initium;
+            token.positus_finis    = ctx->positus;
+            token.linea            = initium_linea;
+            token.columna          = initium_columna;
+            redde token;
+        }
     }
 
     _tok_praeterire_spatium(ctx);
@@ -1568,6 +1596,26 @@ _parser_progredi (
     ctx->current        = _tok_proximus(&ctx->tok_ctx);
 }
 
+/* Errorem PRIMUM servare (2026-08-24): errores sequentes saepe
+ * CASCATA prioris sunt (recusatio nodum negat -> clausura orba
+ * TAG_IMPROPRIE superscribebat causam veram). Primus nominat,
+ * ceteri tacent. */
+interior vacuum
+_errorem_ponere (
+    StmlParserContext* ctx,
+           StmlStatus  status,
+                  i32  linea,
+                  i32  columna)
+{
+    si (ctx->status != STML_SUCCESSUS)
+    {
+        redde;
+    }
+    ctx->status           = status;
+    ctx->linea_erroris    = linea;
+    ctx->columna_erroris  = columna;
+}
+
 interior StmlNodus*
 _parser_creare_nodus (
     StmlParserContext* ctx,
@@ -1637,6 +1685,33 @@ _liberos_legere (
              StmlNodus* parens,
         StmlTokenGenus  terminator);
 
+/* Transformatio '<tag\>' (§1.4) post ansam liberorum et recusatio
+ * nominata - definitiones infra apud adiutores textus. */
+interior vacuum
+_multilineam_transformare (
+    StmlParserContext* ctx,
+            StmlNodus* nodus);
+
+/* prototypa (definitiones infra - sectiones capturae/scriptionis) */
+interior StmlNodus*
+_xar_liberum_obtinere (
+    Xar* xar,
+    i32  index);
+
+interior vacuum
+_valorem_praefixo_scribere (
+    ChordaAedificator* aed,
+               chorda  valor,
+      constans chorda* praefixum,
+                  b32  evadendum,
+                  b32  prima_quoque);
+
+interior vacuum
+_multilineam_recusare (
+     StmlParserContext* ctx,
+    constans character* causa,
+                   i32  linea);
+
 /* Parse an element */
 interior StmlNodus*
 _parser_legere_elementum (
@@ -1649,10 +1724,11 @@ _parser_legere_elementum (
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
-    titulus           = ctx->current.valor;
-    titulus_ptr       = chorda_internare(ctx->intern, titulus);
-    nodus->titulus    = titulus_ptr;
-    nodus->attributa  = ctx->current.attributa;
+    titulus            = ctx->current.valor;
+    titulus_ptr        = chorda_internare(ctx->intern, titulus);
+    nodus->titulus     = titulus_ptr;
+    nodus->attributa   = ctx->current.attributa;
+    nodus->multilinea  = ctx->current.multilinea;
 
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
@@ -1675,22 +1751,25 @@ _parser_legere_elementum (
         alioquin si (!chorda_aequalis(ctx->current.valor,
                      *titulus_ptr))
         {
-            ctx->status           = STML_ERROR_TAG_IMPROPRIE;
-            ctx->linea_erroris    = ctx->current.linea;
-            ctx->columna_erroris  = ctx->current.columna;
+            _errorem_ponere(ctx, STML_ERROR_TAG_IMPROPRIE,
+                            ctx->current.linea, ctx->current.columna);
         }
         _parser_progredi(ctx);  /* Consume close tag */
     }
     alioquin si (ctx->current.genus == STML_TOKEN_FINIS)
     {
         /* Unclosed tag at EOF */
-        ctx->status           = STML_ERROR_TAG_NON_CLAUSUM;
-        ctx->linea_erroris    = ctx->current.linea;
-        ctx->columna_erroris  = ctx->current.columna;
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
     }
 
     /* extensio: finis = tokenum ultimum consumptum */
     nodus->positus_finis = ctx->finis_ultimus;
+
+    si (nodus->multilinea)
+    {
+        _multilineam_transformare(ctx, nodus);
+    }
 
     redde nodus;
 }
@@ -1705,6 +1784,18 @@ _parser_legere_elementum_crudus (
        chorda  titulus;
        chorda* titulus_ptr;
 
+    /* recusatio composita (§1.4): captura in '<tag!\>' vetita -
+     * forma '<tag!\>' ipsa capturam lineae crudae supersedet */
+    si (   ctx->current.multilinea
+        && ctx->current.captio_numerus > ZEPHYRUM)
+    {
+        _multilineam_recusare(ctx,
+            "captura in elemento multilineae ('<tag!\\ (>') vetita",
+            ctx->current.linea);
+        _parser_progredi(ctx);
+        redde NIHIL;
+    }
+
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
@@ -1713,6 +1804,7 @@ _parser_legere_elementum_crudus (
     nodus->titulus         = titulus_ptr;
     nodus->attributa       = ctx->current.attributa;
     nodus->crudus          = VERUM;
+    nodus->multilinea      = ctx->current.multilinea;
     nodus->captio_numerus  = ctx->current.captio_numerus;
 
     si (ctx->current.captio_numerus > ZEPHYRUM)
@@ -1777,6 +1869,11 @@ _parser_legere_elementum_crudus (
     /* extensio: finis = tokenum ultimum consumptum */
     nodus->positus_finis = ctx->finis_ultimus;
 
+    si (nodus->multilinea)
+    {
+        _multilineam_transformare(ctx, nodus);
+    }
+
     redde nodus;
 }
 
@@ -1794,6 +1891,7 @@ _parser_legere_auto_claudere (
     titulus_ptr = chorda_internare(ctx->intern, ctx->current.valor);
     nodus->titulus = titulus_ptr;
     nodus->attributa = ctx->current.attributa;
+    nodus->multilinea = ctx->current.multilinea;
     nodus->liberi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
 
     _parser_progredi(ctx);
@@ -1811,6 +1909,16 @@ _parser_legere_captio_ante (
 {
     StmlNodus* nodus;
        chorda* titulus_ptr;
+
+    /* recusatio composita (§1.4): captura in '<tag\ (>' vetita */
+    si (ctx->current.multilinea)
+    {
+        _multilineam_recusare(ctx,
+            "captura in elemento multilineae ('<tag\\ (>') vetita",
+            ctx->current.linea);
+        _parser_progredi(ctx);
+        redde NIHIL;
+    }
 
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
@@ -2364,6 +2472,286 @@ _liberos_legere (
     }
 }
 
+
+/* ==================================================
+ * Multilinea '<tag\>' (spec triviae §1.4)
+ * ================================================== */
+
+interior vacuum
+_multilineam_recusare (
+     StmlParserContext* ctx,
+    constans character* causa,
+                   i32  linea)
+{
+    si (ctx->status != STML_SUCCESSUS)
+    {
+        redde;  /* error primus iam nominat */
+    }
+    ctx->status           = STML_ERROR_MULTILINEA;
+    ctx->linea_erroris    = linea;
+    ctx->columna_erroris  = I;
+    ctx->error            = chorda_ex_literis(causa, ctx->piscina);
+}
+
+/* Transformatio '<tag\>' post ansam liberorum (crudo et non-crudo
+ * communis - liber textus unus aut nullus post elisionem).
+ *
+ * MARGO DUCENS ad primam '\n' SOLAM reducitur - regula generalis
+ * (praefixum maximale) indentationem lineae primae devoraret et
+ * structuram relativam deleret ubi linea prima profundius quam
+ * sequentes indentata est. Contentum in linea tagi
+ * ('<m\>abc...') legale sed a computatione dedentationis EXCLUSUM
+ * (regula PEP-257: indentationem nullam constructione habet et
+ * praefixum ad nihil figeret).
+ *
+ * MARGO CAUDALIS = regula generalis §1.3 (suffixum maximale
+ * lineam-ferens exit totum; hic pro CRUDO applicatur cui
+ * classificatio generalis numquam currit; non-crudo iam facta -
+ * iteratio innocua).
+ *
+ * DEDENTATIO: praefixum album commune linearum non vacuarum
+ * (OCTETIM - tab et spatium praefixum commune nullum habent, ergo
+ * mixtura nihil demit, deterministice) e valore demptum, in
+ * elemento conditum (indentatio). Linea interior spatio sola NEC
+ * vacua = vitium nominatum - sola classis quae reassemblationem
+ * praefixi ambiguam faceret. Lineae vere vacuae manent vacuae
+ * (scriptor praefixum lineis non vacuis solis reinserit). */
+interior vacuum
+_multilineam_transformare (
+    StmlParserContext* ctx,
+            StmlNodus* nodus)
+{
+                StmlNodus* textus;
+    chorda_fissio_fructus  lineae;
+        ChordaAedificator* aed;
+                   chorda  interior_totum;
+                   chorda  corpus;
+                   chorda  praefixum;
+                   chorda  linea;
+                      b32  prima_exclusa;
+                      b32  praefixum_visum;
+                      i32  numerus_liberorum;
+                      i32  i;
+                      i32  ab;
+
+    numerus_liberorum = nodus->liberi
+        ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+
+    /* liberi textus soli (v1): elementum/commentum interius =
+     * recusatio nominata (liberi inlineares v2 reservati) */
+    per (i = ZEPHYRUM; i < numerus_liberorum; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum != NIHIL && liberum->genus != STML_NODUS_TEXTUS)
+        {
+            _multilineam_recusare(ctx,
+                "liberi inlineares in '<tag\\>' v2 reservati "
+                "(textus solus licet)", nodus->linea);
+            redde;
+        }
+    }
+
+    si (numerus_liberorum == ZEPHYRUM)
+    {
+        redde;  /* contentum totum album elisum - vacuum genuinum */
+    }
+
+    textus = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
+    si (textus == NIHIL)
+    {
+        redde;
+    }
+
+    /* interius reconstruere: margo ducens generalis (ante) + valor.
+     * Pro crudo ante NIHIL est et valor verbatim - via eadem. */
+    {
+        chorda ante_vetus;
+        chorda valor_vetus;
+
+        ante_vetus.datum    = NIHIL;
+        ante_vetus.mensura  = ZEPHYRUM;
+        si (textus->spatia_ante != NIHIL)
+        {
+            ante_vetus = *textus->spatia_ante;
+        }
+        valor_vetus.datum    = NIHIL;
+        valor_vetus.mensura  = ZEPHYRUM;
+        si (textus->valor != NIHIL)
+        {
+            valor_vetus = *textus->valor;
+        }
+        interior_totum = _chordae_iungere(ctx, ante_vetus,
+                                          valor_vetus);
+    }
+
+    si (interior_totum.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+
+    /* margo caudalis (crudo necessaria, non-crudo iam facta):
+     * suffixum album maximale lineam-ferens exit - pars per primam
+     * '\n' fit spatia_post, residuum clausurae parentis (§1.2) */
+    {
+        i32 fin;
+
+        fin = interior_totum.mensura;
+        dum (   fin > ZEPHYRUM
+             && _est_spatium(
+                    (character)interior_totum.datum[fin - I]))
+        {
+            fin--;
+        }
+        si (fin < interior_totum.mensura)
+        {
+            chorda margo;
+
+            margo.datum    = interior_totum.datum + fin;
+            margo.mensura  = interior_totum.mensura - fin;
+            si (_continet_novam_lineam(margo))
+            {
+                chorda pars_post;
+                chorda residuum;
+
+                _spatium_partiri(margo, &pars_post, &residuum);
+                _spatia_apponere(ctx, &textus->spatia_post,
+                                 pars_post);
+                _spatia_apponere(ctx, &nodus->spatia_clausurae,
+                                 residuum);
+                interior_totum.mensura = fin;
+            }
+        }
+    }
+
+    si (interior_totum.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+
+    /* margo ducens multilineae: prima '\n' SOLA */
+    si ((character)interior_totum.datum[ZEPHYRUM] == '\n')
+    {
+        textus->spatia_ante = chorda_internare_ex_literis(
+            ctx->intern, "\n");
+        corpus.datum    = interior_totum.datum + I;
+        corpus.mensura  = interior_totum.mensura - I;
+        prima_exclusa   = FALSUM;
+    }
+    alioquin
+    {
+        textus->spatia_ante  = NIHIL;
+        corpus               = interior_totum;
+        prima_exclusa        = VERUM;  /* linea tagi - extra dedentationem */
+    }
+
+    lineae = chorda_fissio(corpus, '\n', ctx->piscina);
+    si (lineae.numerus == ZEPHYRUM || lineae.elementa == NIHIL)
+    {
+        textus->valor = chorda_internare(ctx->intern, corpus);
+        redde;
+    }
+
+    /* praefixum commune (octetim) linearum participantium non
+     * vacuarum; linea spatio sola nec vacua = vitium */
+    praefixum.datum    = NIHIL;
+    praefixum.mensura  = ZEPHYRUM;
+    praefixum_visum    = FALSUM;
+    ab                 = prima_exclusa ? I : ZEPHYRUM;
+
+    per (i = ab; i < lineae.numerus; i++)
+    {
+        i32 albi;
+
+        linea = lineae.elementa[i];
+        si (linea.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+
+        albi = ZEPHYRUM;
+        dum (   albi < linea.mensura
+             && (   (character)linea.datum[albi] == ' '
+                 || (character)linea.datum[albi] == '\t'))
+        {
+            albi++;
+        }
+        si (albi == linea.mensura)
+        {
+            _multilineam_recusare(ctx,
+                "linea interior spatio sola nec vacua in '<tag\\>' "
+                "(reassemblatio praefixi ambigua fieret)",
+                nodus->linea);
+            redde;
+        }
+
+        si (!praefixum_visum)
+        {
+            praefixum.datum    = linea.datum;
+            praefixum.mensura  = albi;
+            praefixum_visum    = VERUM;
+        }
+        alioquin
+        {
+            i32 commune;
+            i32 tectum;
+
+            tectum = (praefixum.mensura < albi)
+                ? praefixum.mensura : albi;
+            commune = ZEPHYRUM;
+            dum (   commune < tectum
+                 && praefixum.datum[commune]
+                        == linea.datum[commune])
+            {
+                commune++;
+            }
+            praefixum.mensura = commune;
+        }
+    }
+
+    /* valorem dedentatum reaedificare */
+    aed = chorda_aedificator_creare(ctx->piscina,
+                                    corpus.mensura);
+    si (aed == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < lineae.numerus; i++)
+    {
+        linea = lineae.elementa[i];
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(aed, '\n');
+        }
+        si (linea.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (   i             >= ab
+            && praefixum.mensura > ZEPHYRUM
+            && linea.mensura >= praefixum.mensura)
+        {
+            chorda pars;
+
+            pars.datum    = linea.datum + praefixum.mensura;
+            pars.mensura  = linea.mensura - praefixum.mensura;
+            chorda_aedificator_appendere_chorda(aed, pars);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_chorda(aed, linea);
+        }
+    }
+
+    textus->valor = chorda_internare(ctx->intern,
+                        chorda_aedificator_finire(aed));
+    si (praefixum.mensura > ZEPHYRUM)
+    {
+        nodus->indentatio = chorda_internare(ctx->intern, praefixum);
+    }
+}
+
 /* Smart whitespace normalization:
  * - Trim leading/trailing empty lines
  * - Normalize indentation to least-indented non-empty line
@@ -2711,9 +3099,8 @@ _parser_legere_percentum (
     }
     alioquin
     {
-        ctx->status           = STML_ERROR_TAG_NON_CLAUSUM;
-        ctx->linea_erroris    = ctx->current.linea;
-        ctx->columna_erroris  = ctx->current.columna;
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
     }
 
     /* extensio: finis = tokenum ultimum consumptum */
@@ -2819,9 +3206,8 @@ _parser_legere_nodus (
         casus STML_TOKEN_ERRATUM:
             /* Titulus illegaliter incipiens ('<.x>', '<9bad>') -
              * olim arbor tacite corrumpebatur (2026-08-10) */
-            ctx->status = STML_ERROR_SYNTAXIS;
-            ctx->linea_erroris = ctx->current.linea;
-            ctx->columna_erroris = ctx->current.columna;
+            _errorem_ponere(ctx, STML_ERROR_SYNTAXIS,
+                ctx->current.linea, ctx->current.columna);
             _parser_progredi(ctx);  /* Consume to avoid infinite loop */
             redde NIHIL;
 
@@ -2829,9 +3215,8 @@ _parser_legere_nodus (
         casus STML_TOKEN_FRAGMENTUM_CLAUDERE:
         casus STML_TOKEN_PERCENTUM_CLAUDERE:
             /* Orphan closing tag - no matching open tag */
-            ctx->status = STML_ERROR_TAG_IMPROPRIE;
-            ctx->linea_erroris = ctx->current.linea;
-            ctx->columna_erroris = ctx->current.columna;
+            _errorem_ponere(ctx, STML_ERROR_TAG_IMPROPRIE,
+                ctx->current.linea, ctx->current.columna);
             _parser_progredi(ctx);  /* Consume to avoid infinite loop */
             redde NIHIL;
 
@@ -3431,8 +3816,19 @@ _internus_liberi_contribuere (
         }
         si (liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
         {
-            chorda_aedificator_appendere_chorda(aed,
-                *liberum->valor);
+            /* interius '<tag\>': praefixum (indentatio) lineis
+             * reinsertum - octeti veteres exacti (§2) */
+            si (nodus->multilinea && nodus->indentatio != NIHIL)
+            {
+                _valorem_praefixo_scribere(aed, *liberum->valor,
+                    nodus->indentatio, FALSUM,
+                    liberum->spatia_ante != NIHIL ? VERUM : FALSUM);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    *liberum->valor);
+            }
         }
         alioquin
         {
@@ -3485,7 +3881,19 @@ stml_textus_internus (
         }
         si (nodus->valor != NIHIL)
         {
-            chorda_aedificator_appendere_chorda(aed, *nodus->valor);
+            si (   nodus->parens             != NIHIL
+                && nodus->parens->multilinea
+                && nodus->parens->indentatio != NIHIL)
+            {
+                _valorem_praefixo_scribere(aed, *nodus->valor,
+                    nodus->parens->indentatio, FALSUM,
+                    nodus->spatia_ante != NIHIL ? VERUM : FALSUM);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(aed,
+                    *nodus->valor);
+            }
         }
         si (nodus->spatia_post != NIHIL)
         {
@@ -3545,6 +3953,65 @@ _lineae_contenti (
         }
     }
     redde lineae;
+}
+
+/* prototypum (definitio in sectione scriptionis) */
+interior vacuum
+_scribere_evasus (
+    ChordaAedificator* aed,
+               chorda* s);
+
+/* Valorem '<tag\>' cum praefixo (indentatio) reinserito emittere:
+ * praefixum lineis NON VACUIS solis praeponitur (spec §1.4 -
+ * lineae vacuae vacuae manent), forma evasa (textus ordinarius)
+ * aut cruda (interius '!\' et internus). Praefixum NIHIL =
+ * emissio simplex. 'prima_quoque' FALSUM = linea prima sine
+ * praefixo (contentum lineae tagi - a dedentatione exclusum erat,
+ * ergo praefixum numquam tulit). */
+interior vacuum
+_valorem_praefixo_scribere (
+    ChordaAedificator* aed,
+               chorda  valor,
+      constans chorda* praefixum,
+                  b32  evadendum,
+                  b32  prima_quoque)
+{
+    i32 initium;
+    i32 i;
+
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= valor.mensura; i++)
+    {
+        si (i == valor.mensura || (character)valor.datum[i] == '\n')
+        {
+            chorda pars;
+
+            pars.datum    = valor.datum + initium;
+            pars.mensura  = i - initium;
+            si (pars.mensura > ZEPHYRUM)
+            {
+                si (   praefixum != NIHIL
+                    && (prima_quoque || initium > ZEPHYRUM))
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                        *praefixum);
+                }
+                si (evadendum)
+                {
+                    _scribere_evasus(aed, &pars);
+                }
+                alioquin
+                {
+                    chorda_aedificator_appendere_chorda(aed, pars);
+                }
+            }
+            si (i < valor.mensura)
+            {
+                chorda_aedificator_appendere_character(aed, '\n');
+            }
+            initium = i + I;
+        }
+    }
 }
 
 /* an chorda spatium album SOLUM ferat (vacua quoque) */
@@ -4622,6 +5089,18 @@ _scribere_evasus (
  * respondet (reassemblatio §4) et per recursionem totam IMMOTUM
  * fluit. Olim vexillum unum ambas quaestiones ferebat - liberus
  * arte vocatus ('ne te indentes') trivia sua falso emittebat. */
+
+/* an nodus textus interius elementi '<tag\>' sit - dispositio
+ * eius DECLARATA est (§1.4), ambobus modis emittitur */
+interior b32
+_intra_multilineam (
+    constans StmlNodus* nodus)
+{
+    redde (b32)(nodus->genus == STML_NODUS_TEXTUS
+        && nodus->parens != NIHIL
+        && nodus->parens->multilinea);
+}
+
 interior b32
 _scribere_nucleus (
             StmlNodus* nodus,
@@ -4649,8 +5128,10 @@ _scribere_nucleus (
     /* reassemblatio (§4): modus non-pulcher trivia verbatim
      * reassuit. spatia_ante ANTE octetum primum nodi - extensio
      * sedium ea excludit (initium post haec capitur). Pulcher
-     * trivia IGNORAT et dispositionem suam generat. */
-    si (fidelitas && nodus->spatia_ante != NIHIL)
+     * trivia IGNORAT et dispositionem suam generat - PRAETER
+     * interius '<tag\>', cuius dispositio declarata est. */
+    si (   (fidelitas || _intra_multilineam(nodus))
+        && nodus->spatia_ante != NIHIL)
     {
         chorda_aedificator_appendere_chorda(aedificator,
                                             *nodus->spatia_ante);
@@ -5022,8 +5503,24 @@ _scribere_nucleus (
                         {
                             si (nodus->crudus && liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
                             {
-                                /* Raw content - don't escape */
-                                chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                /* Raw content - non evasus; interius '!\'
+                                 * trivia sua et praefixum secum fert */
+                                si (nodus->multilinea)
+                                {
+                                    si (liberum->spatia_ante != NIHIL)
+                                    {
+                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_ante);
+                                    }
+                                    _valorem_praefixo_scribere(aedificator, *liberum->valor, nodus->indentatio, FALSUM, liberum->spatia_ante != NIHIL ? VERUM : FALSUM);
+                                    si (liberum->spatia_post != NIHIL)
+                                    {
+                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_post);
+                                    }
+                                }
+                                alioquin
+                                {
+                                    chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                }
                             }
                             alioquin
                             {
@@ -5062,6 +5559,12 @@ _scribere_nucleus (
                 si (nodus->crudus)
                 {
                     chorda_aedificator_appendere_character(aedificator, '!');
+                }
+
+                /* Signum multilineae (§1.4) - post '!' si adest */
+                si (nodus->multilinea)
+                {
+                    chorda_aedificator_appendere_character(aedificator, '\\');
                 }
 
                 /* Attributes */
@@ -5129,8 +5632,24 @@ _scribere_nucleus (
                             {
                                 si (nodus->crudus && liberum->genus == STML_NODUS_TEXTUS && liberum->valor)
                                 {
-                                    /* Raw content - don't escape */
-                                    chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                    /* Raw content - non evasus; interius '!\'
+                                     * trivia sua et praefixum secum fert */
+                                    si (nodus->multilinea)
+                                    {
+                                        si (liberum->spatia_ante != NIHIL)
+                                        {
+                                            chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_ante);
+                                        }
+                                        _valorem_praefixo_scribere(aedificator, *liberum->valor, nodus->indentatio, FALSUM, liberum->spatia_ante != NIHIL ? VERUM : FALSUM);
+                                        si (liberum->spatia_post != NIHIL)
+                                        {
+                                            chorda_aedificator_appendere_chorda(aedificator, *liberum->spatia_post);
+                                        }
+                                    }
+                                    alioquin
+                                    {
+                                        chorda_aedificator_appendere_chorda(aedificator, *liberum->valor);
+                                    }
                                 }
                                 alioquin
                                 {
@@ -5266,8 +5785,20 @@ _scribere_nucleus (
              * Pulcher fidem numquam promisit - reformator est. */
             si (nodus->valor)
             {
-                si (   !pulchrum
-                    || !_spatium_album_solum(nodus->valor))
+                si (   nodus->parens != NIHIL
+                    && nodus->parens->multilinea)
+                {
+                    /* interius '<tag\>': dispositio DECLARATA
+                     * contenti est - praefixum (indentatio)
+                     * reinseritur AMBOBUS modis (pulcher blocum
+                     * integrum M2 re-indentabit, interius numquam
+                     * refluit) */
+                    _valorem_praefixo_scribere(aedificator,
+                        *nodus->valor, nodus->parens->indentatio, VERUM,
+                        nodus->spatia_ante != NIHIL ? VERUM : FALSUM);
+                }
+                alioquin si (   !pulchrum
+                             || !_spatium_album_solum(nodus->valor))
                 {
                     _scribere_evasus(aedificator, nodus->valor);
                 }
@@ -5352,7 +5883,7 @@ _scribere_nucleus (
 
     /* spatia_post EXTRA extensionem sedium (post notationem);
      * captores ANTE ea iam intra formam emiserunt (§6) */
-    si (   fidelitas
+    si (   (fidelitas || _intra_multilineam(nodus))
         && !post_iam_emissum
         && nodus->spatia_post != NIHIL)
     {

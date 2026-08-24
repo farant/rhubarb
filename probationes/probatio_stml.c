@@ -3752,6 +3752,264 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Scala generum textus: '<tag\>' (spec triviae §1.4)
+     * ================================================== */
+
+    imprimere("\n--- Probans multilineam '<tag\\>' ---\n");
+
+    {
+        /* A. BLOCUS VERSUUM: dedentatio in parsatione, structura
+         * relativa servata, circuitus octetim, internus exactus */
+        StmlResultus res;
+        StmlNodus*   textus;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<versus\\>\n  prima\n    altior\n  ultima\n</>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_VERUM(res.elementum_radix->multilinea);
+        CREDO_NON_NIHIL(res.elementum_radix->indentatio);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            res.elementum_radix->indentatio, "  "));
+
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "prima\n  altior\nultima"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->spatia_ante,
+            "\n"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->spatia_post,
+            "\n"));
+
+        CREDO_VERUM(chorda_aequalis_literis(
+            stml_textus_internus(res.elementum_radix, piscina),
+            "\n  prima\n    altior\n  ultima\n"));
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<versus\\>\n  prima\n    altior\n  ultima\n</>");
+
+        imprimere("  A versus: dedentatio + circuitus: VERUM\n");
+    }
+
+    {
+        /* B. AEQUIVALENTIA CAUDALIS (decretum Franis): '123</>',
+         * '123\n</>', '123\n  </>' - valor IDEM, octeti sui cuique
+         * circuitu redditi */
+        constans character* fontes[III];
+        i32                 f;
+
+        fontes[ZEPHYRUM] = "<m\\>\n  abc\n  123</>";
+        fontes[I]        = "<m\\>\n  abc\n  123\n</>";
+        fontes[II]       = "<m\\>\n  abc\n  123\n  </>";
+
+        per (f = ZEPHYRUM; f < III; f++)
+        {
+            StmlResultus res;
+            StmlNodus*   textus;
+            chorda       scriptum;
+
+            res = stml_legere_ex_literis(fontes[f], piscina,
+                intern);
+            CREDO_VERUM(res.successus);
+            textus = stml_liberum_ad_indicem(res.elementum_radix,
+                ZEPHYRUM);
+            CREDO_NON_NIHIL(textus);
+            CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+                "abc\n123"));
+
+            scriptum = stml_scribere(res.radix, piscina, FALSUM);
+            CREDO_VERUM(chorda_aequalis_literis(scriptum,
+                fontes[f]));
+        }
+
+        imprimere("  B aequivalentia caudalis (III formae): VERUM\n");
+    }
+
+    {
+        /* C. LINEA PRIMA PROFUNDIOR: praecisio ducens = '\n' SOLA,
+         * ergo indentatio lineae primae in dedentationem intrat et
+         * structura relativa superest */
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        res = stml_legere_ex_literis(
+            "<m\\>\n      alta\n  ima\n</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "    alta\nima"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            res.elementum_radix->indentatio, "  "));
+
+        imprimere("  C linea prima profundior servata: VERUM\n");
+    }
+
+    {
+        /* D. CONTENTUM IN LINEA TAGI: legale, a dedentatione
+         * exclusum (regula PEP-257), circuitus octetim */
+        StmlResultus res;
+        StmlNodus*   textus;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<m\\>abc\n  def\n</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "abc\ndef"));
+        CREDO_NIHIL(textus->spatia_ante);
+        CREDO_VERUM(_chorda_ptr_eq_literis(
+            res.elementum_radix->indentatio, "  "));
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<m\\>abc\n  def\n</>");
+
+        imprimere("  D contentum lineae tagi exclusum: VERUM\n");
+    }
+
+    {
+        /* E. CRUDUM MULTILINEA '<code!\>': entia mortua, tags
+         * mortui, dedentatio viva, circuitus octetim */
+        StmlResultus res;
+        StmlNodus*   textus;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<code!\\>\n  a < b && c > d\n</code>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->crudus);
+        CREDO_VERUM(res.elementum_radix->multilinea);
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "a < b && c > d"));
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<code!\\>\n  a < b && c > d\n</code>");
+
+        imprimere("  E crudum multilinea: VERUM\n");
+    }
+
+    {
+        /* F. RECUSATIONES NOMINATAE (§1.4): quaeque causam suam
+         * fert (status MULTILINEA); ordo '\!' = SYNTAXIS (lexatio
+         * ipsa mutaretur) */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis(
+            "<m\\>\n  a\n   \n  b\n</m>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+            (i32)STML_ERROR_MULTILINEA);
+        CREDO_VERUM(res.error.mensura > ZEPHYRUM);
+
+        res = stml_legere_ex_literis(
+            "<m\\>\n  <b/>\n</m>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+            (i32)STML_ERROR_MULTILINEA);
+
+        res = stml_legere_ex_literis(
+            "<m\\ (><x/></m>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+            (i32)STML_ERROR_MULTILINEA);
+
+        res = stml_legere_ex_literis(
+            "<c!\\ (>linea\n<post/>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+            (i32)STML_ERROR_MULTILINEA);
+
+        res = stml_legere_ex_literis(
+            "<m\\!>x</m>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+            (i32)STML_ERROR_SYNTAXIS);
+
+        imprimere("  F recusationes V nominatae: VERUM\n");
+    }
+
+    {
+        /* G. TAB/SPATIUM MIXTA: praefixum commune octetim nullum -
+         * nihil demptum, deterministice */
+        StmlResultus res;
+        StmlNodus*   textus;
+
+        res = stml_legere_ex_literis(
+            "<m\\>\n\tuna\n  duo\n</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "\tuna\n  duo"));
+        CREDO_NIHIL(res.elementum_radix->indentatio);
+
+        imprimere("  G tab/spatium mixta - nihil demptum: VERUM\n");
+    }
+
+    {
+        /* H. FORMAE: signum cum attributis; auto-clausum; contentum
+         * totum album -> elementum vacuum genuinum (clausurae
+         * octetos fert); lineae interiores VACUAE manent */
+        StmlResultus res;
+        StmlNodus*   textus;
+        chorda       scriptum;
+
+        res = stml_legere_ex_literis(
+            "<m\\ clavis=\"v\">\n  x\n</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->multilinea);
+        CREDO_NON_NIHIL(stml_attributum_capere(
+            res.elementum_radix, "clavis"));
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<m\\ clavis=\"v\">\n  x\n</>");
+
+        res = stml_legere_ex_literis("<m\\/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.elementum_radix->multilinea);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<m\\/>");
+
+        res = stml_legere_ex_literis("<m\\>\n</m>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(
+            res.elementum_radix), ZEPHYRUM);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<m\\>\n</m>");
+
+        res = stml_legere_ex_literis(
+            "<m\\>\n  a\n\n  b\n</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        textus = stml_liberum_ad_indicem(res.elementum_radix,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL(textus);
+        CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
+            "a\n\nb"));
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<m\\>\n  a\n\n  b\n</>");
+
+        imprimere("  H formae (attributa/auto/vacuum/lineae "
+                  "vacuae): VERUM\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
