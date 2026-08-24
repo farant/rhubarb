@@ -1,8 +1,9 @@
 # STML Trivia Model — Spec
 
-*2026-08-24. Status: APPROVED direction, pre-implementation.
-Decisions §0.2 made by Fran in conversation; everything else is
-proposed design for review.*
+*2026-08-24. Status: M1 SHIPPED (c7476a72..d3959eab, goldens +
+corpus green). M2 amendments added 2026-08-24: capture collapse
+pulled forward from M4 as the trivia stress test. Decisions §0.2
+made by Fran in conversation.*
 
 ## §0 Motivation
 
@@ -66,6 +67,14 @@ Four patches and a standing tax = a category. The fix is the model.
   normalization at parse entry; the fidelity contract is defined
   over the canonicalized bytes; a flag on the parse result reports
   that it happened. No per-kind CRLF rules anywhere.
+- **Collapse aesthetics (M2 pull-forward, 2026-08-24).** Pretty
+  may collapse a single-child spine to capture form on one line:
+  `<tag(> <tag(> <tag(> foo`. The paren GLUES to the name when the
+  tag has no attributes (`<tag(>`); after attributes it stays
+  space-separated (`<tag attr="v" (>`). Spine segments separate by
+  single spaces (each captor's `spatia_post`). Width budget: 72
+  columns from the current indent, all-or-nothing — a spine that
+  does not fit stays in plain block form.
 
 ### §0.3 The model in one sentence
 
@@ -109,6 +118,23 @@ last child and the close tag: the last child's `post` takes its
 same-line-through-newline share; the remainder is the parent's
 `spatia_clausurae`. Every whitespace byte has exactly one owner;
 the reassembly in §4 is the proof obligation.
+
+**Capture-tag amendment (2026-08-24, the collapse pull-forward).**
+After a capture-form open tag, SAME-LINE whitespace belongs to the
+captor's `spatia_post`: a whitespace-only run in full, and the
+newline-free leading edge of a content run. It never forms a text
+node and never joins the next valor. Precedent: the newline case
+already lands in the captor's post via the general split, and §6's
+emission order ([tag][post][capti]) is the slot this rule feeds.
+Two named consequences: (i) a bare same-line space is no longer
+capturable — `<a (> <b/>` captures `<b/>`, killing the §0.1.3 bug
+reborn in same-line form (deliberately: capturing a lone space is
+the absurd corner); (ii) the rule diverges from a normal open tag
+(`<p> salve` keeps its space in the valor) — after `(>` the space
+is capture syntax's separator, not content. Same-line interleaving
+inside MULTI-paren captures and before RETRO captors has the same
+disease and is NOT addressed here — deferred to M4's counting
+policy; pretty produces only single-paren forward spines.
 
 ### §1.3 Text runs
 
@@ -243,6 +269,16 @@ multi-line attribute layouts for attribute-heavy tags):
   for a shape no house document uses. The goldens run measures
   whether that claim holds; if a document disagrees, it gets
   reformatted once, loudly.
+- **Capture tags (amended 2026-08-24)**: the whitespace between
+  the name/attributes and the paren group is MODELED — M1
+  discarded it, a latent fidelity hole: `<tag(>` (glued `(` has
+  always lexed; `(` is a name terminator) parsed fine but
+  re-emitted as `<tag (>`, invisible because no corpus file glues.
+  NIHIL = glued canonical. Fidelity emits the stored bytes; pretty
+  regenerates: GLUED when the tag has no attributes, single space
+  after attributes (decretum Franis, §0.2). Whitespace between the
+  parens and `>` stays normalized-away (named narrow exception,
+  like `=`).
 
 ## §2 Accessor contract (the triad + the bridge)
 
@@ -312,6 +348,28 @@ remains the raw total stream (over canonicalized input).
   whitespace-transparency special cases are **DELETED** (the
   fourth-fix-is-deletion law); comment placement derives from tree
   order. Clausura tacita policy unchanged.
+- **M2 layout rule** (replaces TERMINI): ONE decision per element,
+  derived from its children — any text child → INLINE (children
+  emitted on the tag line, no boundaries introduced); otherwise →
+  BLOCK (one child per line, indented). No per-boundary state
+  machine, no transparency. Same-line whitespace-only text nodes
+  are CONTENT and are kept — TERMINI dropped them, a bug under the
+  M1 decree. M2 does NOT exercise flow re-wrap: flow valor is
+  emitted verbatim; the re-wrap liberty stays reserved with the
+  formator width policy (§11).
+- **Collapse (pulled from M4, 2026-08-24, §0.2)**: pretty emits a
+  single-child spine in capture form on one line when the whole
+  line fits the 72-column budget from the current indent.
+  Eligible: exactly one child; not crudus/multilinea; no comment
+  children; the child is an element (spine continues) or a
+  single-line flow text node (the terminal — the §6 inner-value
+  refusal is RESCINDED for this narrow case; text with interior
+  newlines keeps the open form). Over budget = plain block form
+  (all-or-nothing; capture form with newline separation is legal
+  INPUT but never formatter-produced). Capture form is FORM
+  MEMORY: non-pretty preserves the author's choice byte-exact;
+  pretty re-derives it — the clausura tacita doctrine applied to
+  captures.
 - **Pretty's text liberties follow the kind ladder** (§1.4): flow
   text may be RE-WRAPPED at will (newline runs are semantically one
   space — the mixed-content corruption class dies at the root);
@@ -339,14 +397,13 @@ unchanged, now structurally enforced.
   children each with their own trivia). Without this sentence,
   "post of a capture node" is ambiguous since its children
   serialize after its open tag (scenario F, 2026-08-24).
-- **Collapse policy** (pretty writer may emit `<tag (>` for a node
-  it judges collapsible): all children structural (any significant
-  text blocks — the inner-value refusal), no comment children, not
-  crudus/multiline, and **single child only** in v1 — the
-  wrapper-spine case (`<functio (><corpus (><sententia …/>`),
-  which is where arbor documents win. Multi-paren collapse is
-  parse-supported but not formatter-produced until it earns
-  legibility.
+- **Collapse policy — MOVED TO M2** (2026-08-24, chosen as the
+  trivia stress test; the policy now lives in §4). The inner-value
+  refusal is relaxed there for single-line flow text terminals.
+  Multi-paren collapse remains parse-supported but never
+  formatter-produced. What stays M4: the counting policy for the
+  same-line corners the §1.2 capture amendment defers (multi-paren
+  interleaving, retro captors).
 - **Raw multi-capture is SUPERSEDED by `<tag!\>`** (§1.4): the
   multi-line-code use case the lexer deferred ("multi-linea +
   dedentatio = futura", `lib/stml.c:737`) lands as declared syntax
@@ -371,6 +428,13 @@ unchanged, now structurally enforced.
 6. **Planted faults at birth**: mis-own one newline (post vs ante),
    drop one trailing edge, double one delimiter — each must turn a
    gate red before the fix is trusted (silent gate ≡ dead gate).
+7. **Tree equivalence** (M2): `legere(scribere(x, pretty))` must be
+   tree-equal to `x` modulo trivia and form-memory fields
+   (`captio_*`, `clausura_anonyma`, tag-interior layout) — pretty
+   may move bytes, never meaning. New comparator; also the oracle
+   the §8 flow re-wrap fixture was waiting for. M2's planted
+   fault: emit one stored trivia chorda in pretty — the fixed
+   point and/or this gate must go red.
 
 ## §8 Fixtures (new, minimum set)
 
@@ -412,6 +476,14 @@ unchanged, now structurally enforced.
 - `</>` on `\` legal; missing named close on `!\` refused
 - fluxus: edge-trivia no-space, consecutive-boundary merge,
   `<p>a<br/>b</p>` → "ab"
+- glued capture `<tag(>` — byte-exact round trip (the M1 hole)
+- `<tag attr="blah" (>` — spaced form after attributes preserved
+- spine `<tag(> <tag(> <tag(> foo` — captures ELEMENTS not
+  spaces (§1.2 amendment), reassembles byte-exact, and is
+  tree-equal (modulo form memory) to the nested block form
+- `<tag(> foo` — captured text: valor `"foo"`, captor post `" "`
+- width boundary: a spine at exactly 72 columns collapses, at 73
+  stays block; both are fixed-point stable
 
 ## §9 Consumer migration (M3)
 
@@ -435,12 +507,18 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   tag-interior trivia (§1.6), and CRLF canonicalization; golden
   bridge + byte-fidelity corpus green throughout; arbor gate
   green.
-- **M2** — pretty = trivia regeneration; TERMINI deleted; flow
-  re-wrap liberty + `\` block re-indent; fixed point gate lands.
+- **M2** — pretty = trivia regeneration; TERMINI deleted;
+  inline/block layout rule; `\` block re-indent; capture collapse
+  + glued parens (§0.2) + the §1.2 capture-post amendment + §1.6
+  pre-paren trivia; fixed point + tree equivalence gates land.
+  Flow re-wrap NOT exercised (reserved with the formator width
+  policy).
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
   lab.
-- **M4** — captures: counting (free), stream-order emission,
-  collapse policy, raw multi-paren refusal (§6).
+- **M4** — captures: counting policy, including the same-line
+  corners the §1.2 amendment defers (multi-paren interleaving,
+  retro captors); raw multi-paren refusal (§6). (Stream-order
+  emission landed in M1; collapse moved to M2.)
 
 ## §11 Non-goals / reserved
 
