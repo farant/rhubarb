@@ -3631,6 +3631,99 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Canonicalizatio CRLF (spec triviae §3)
+     * ================================================== */
+
+    imprimere("\n--- Probans canonicalizationem CRLF ---\n");
+
+    {
+        /* A. DOCUMENTUM CRLF: vexillum positum, arbor formam LF
+         * videt, scriptio non-pulchra formam LF octetim reddit -
+         * contractus fidelitatis super octetos CANONICALIZATOS. */
+        chorda       ingressus;
+        chorda       expectatum;
+        StmlResultus res;
+        chorda       scriptum;
+
+        ingressus = chorda_ex_literis(
+            "<r>\r\n  <p>salve\r\nmunde</p>\r\n</r>", piscina);
+        expectatum = chorda_ex_literis(
+            "<r>\n  <p>salve\nmunde</p>\n</r>", piscina);
+
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.crlf_canonicalizatum);
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, expectatum);
+
+        imprimere("  A CRLF: vexillum + scriptio forma LF\n");
+    }
+
+    {
+        /* B. DOCUMENTUM LF PURUM: vexillum FALSUM, nulla copia
+         * facta (fidelitas octetim intacta). */
+        chorda       ingressus;
+        StmlResultus res;
+        chorda       scriptum;
+
+        ingressus = chorda_ex_literis("<r>\n  <p>x</p>\n</r>",
+            piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_FALSUM(res.crlf_canonicalizatum);
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, ingressus);
+
+        imprimere("  B LF purum: vexillum FALSUM, octetim idem\n");
+    }
+
+    {
+        /* C. '\r' SOLIVAGUM (sine '\n'): CONTENTUM manet - regula
+         * angusta CRLF sola est, nulla purgatio generalis. */
+        chorda       ingressus;
+        StmlResultus res;
+        chorda       scriptum;
+
+        ingressus = chorda_ex_literis("<r>a\rb</r>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_FALSUM(res.crlf_canonicalizatum);
+
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS(scriptum, ingressus);
+
+        imprimere("  C '\\r' solivagum: contentum servatum\n");
+    }
+
+    {
+        /* D. CAPTURA LINEAE CRUDAE sub CRLF: praecisio '\r'
+         * per-genus DELETA est - canonicalizatio introitus eandem
+         * rem uno loco facit. Valor captus sine '\r'. */
+        chorda       ingressus;
+        StmlResultus res;
+        StmlNodus*   imp;
+        chorda       textus;
+
+        ingressus = chorda_ex_literis(
+            "<r><imp! (>via/crudi\r\n<post/></r>", piscina);
+        res = stml_legere(ingressus, piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_VERUM(res.crlf_canonicalizatum);
+
+        imp = stml_invenire_liberum(res.elementum_radix, "imp");
+        CREDO_VERUM(imp != NIHIL);
+        si (imp != NIHIL)
+        {
+            textus = stml_textus_internus(imp, piscina);
+            CREDO_CHORDA_AEQUALIS_LITERIS(textus, "via/crudi");
+        }
+
+        imprimere("  D captura cruda sub CRLF: valor sine '\\r'\n");
+    }
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

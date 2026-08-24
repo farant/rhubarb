@@ -202,6 +202,15 @@ nomen structura {
            i32  linea_erroris;
            i32  columna_erroris;
         chorda  error;
+
+    /* CRLF -> LF canonicalizatio UNA super documentum totum in
+     * introitu parsationis facta est (spec triviae §3). Contractus
+     * fidelitatis (scribere(legere(x)) == x) super octetos
+     * CANONICALIZATOS definitur: documentum LF octetim exactum,
+     * documentum CRLF semel deterministice normalizatum. Regulae
+     * CRLF per-genus NUSQUAM infra exsistunt; '\r' solivagum (sine
+     * '\n' sequente) contentum manet. */
+    b32 crlf_canonicalizatum;
 } StmlResultus;
 
 

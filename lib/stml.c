@@ -749,12 +749,9 @@ _tok_legere_tag (
                 ctx->input.datum + contentum_initium;
             token.captus_contentus.mensura =
                 ctx->positus - contentum_initium;
-            si (   token.captus_contentus.mensura > ZEPHYRUM
-                && token.captus_contentus.datum[
-                    token.captus_contentus.mensura - I] == (i8)'\r')
-            {
-                token.captus_contentus.mensura--;
-            }
+            /* praecisio '\r' finalis olim hic - post
+             * canonicalizationem CRLF in introitu (§3) '\r' ante
+             * '\n' exsistere nequit; regula per-genus DELETA */
             token.habet_captus = VERUM;
         }
         alioquin
@@ -1382,6 +1379,71 @@ _tok_proximus (
 
 
 /* ==================================================
+ * Canonicalizatio CRLF (spec triviae §3)
+ * ==================================================
+ *
+ * UNA transformatio, in INTROITU solo: "\r\n" -> "\n" super
+ * documentum totum, ANTE lexationem. Contractus fidelitatis super
+ * octetos canonicalizatos definitur - regulae CRLF per-genus infra
+ * NUSQUAM exsistunt ('\r' solivagum contentum manet). Sine '\r\n'
+ * input INTACTUM redditur (nulla copia, nulla allocatio).
+ */
+
+interior chorda
+_crlf_canonicalizare (
+     chorda  input,
+    Piscina* piscina,
+        b32* factum)
+{
+    chorda exitus;
+       i32 i;
+       i32 scriptum;
+       b32 inventum;
+
+    *factum = FALSUM;
+
+    inventum = FALSUM;
+    per (i = ZEPHYRUM; i + I < input.mensura; i++)
+    {
+        si (   input.datum[i]     == (i8)'\r'
+            && input.datum[i + I] == (i8)'\n')
+        {
+            inventum = VERUM;
+            frange;
+        }
+    }
+    si (!inventum)
+    {
+        redde input;
+    }
+
+    exitus.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)input.mensura);
+    si (exitus.datum == NIHIL)
+    {
+        redde input;
+    }
+
+    scriptum = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < input.mensura; i++)
+    {
+        si (   input.datum[i]     == (i8)'\r'
+            && i + I < input.mensura
+            && input.datum[i + I] == (i8)'\n')
+        {
+            perge;  /* '\r' ante '\n' cadit; '\n' ipse sequetur */
+        }
+        exitus.datum[scriptum] = input.datum[i];
+        scriptum++;
+    }
+    exitus.mensura = scriptum;
+
+    *factum = VERUM;
+    redde exitus;
+}
+
+
+/* ==================================================
  * Lexemata - fluxus publicus (sine arbore)
  * ==================================================
  *
@@ -1399,12 +1461,17 @@ stml_lexemata_colligere (
 {
     StmlTokenContext  ctx;
                  Xar* exitus;
+                 b32  crlf_factum;
 
     si (   input.datum == NIHIL || input.mensura <= ZEPHYRUM
         || piscina     == NIHIL || intern == NIHIL)
     {
         redde NIHIL;
     }
+
+    /* fluxus super octetos CANONICALIZATOS - extensiones lexematum
+     * ad formam LF referuntur, eandem quam arbor videt (§3) */
+    input = _crlf_canonicalizare(input, piscina, &crlf_factum);
 
     ctx.input                   = input;
     ctx.positus                 = ZEPHYRUM;
@@ -2775,14 +2842,15 @@ stml_legere (
                   i32  num;
 
     /* Initialize result */
-    result.successus        = FALSUM;
-    result.radix            = NIHIL;
-    result.elementum_radix  = NIHIL;
-    result.status           = STML_SUCCESSUS;
-    result.linea_erroris    = ZEPHYRUM;
-    result.columna_erroris  = ZEPHYRUM;
-    result.error.datum      = NIHIL;
-    result.error.mensura    = ZEPHYRUM;
+    result.successus             = FALSUM;
+    result.radix                 = NIHIL;
+    result.elementum_radix       = NIHIL;
+    result.status                = STML_SUCCESSUS;
+    result.linea_erroris         = ZEPHYRUM;
+    result.columna_erroris       = ZEPHYRUM;
+    result.error.datum           = NIHIL;
+    result.error.mensura         = ZEPHYRUM;
+    result.crlf_canonicalizatum  = FALSUM;
 
     /* Check for empty input */
     si (input.mensura == ZEPHYRUM || !input.datum)
@@ -2790,6 +2858,11 @@ stml_legere (
         result.status = STML_ERROR_VACUUM_INPUT;
         redde result;
     }
+
+    /* canonicalizatio CRLF -> LF, semel, ante omnia (§3): arbor,
+     * extensiones, et contractus fidelitatis formam LF vident */
+    input = _crlf_canonicalizare(input, piscina,
+                                 &result.crlf_canonicalizatum);
 
     /* Initialize tokenizer context */
     ctx.tok_ctx.input                   = input;
@@ -2900,14 +2973,15 @@ stml_legere_ex_literis (
     si (!cstr)
     {
         StmlResultus result;
-        result.successus        = FALSUM;
-        result.radix            = NIHIL;
-        result.elementum_radix  = NIHIL;
-        result.status           = STML_ERROR_VACUUM_INPUT;
-        result.linea_erroris    = ZEPHYRUM;
-        result.columna_erroris  = ZEPHYRUM;
-        result.error.datum      = NIHIL;
-        result.error.mensura    = ZEPHYRUM;
+        result.successus             = FALSUM;
+        result.radix                 = NIHIL;
+        result.elementum_radix       = NIHIL;
+        result.status                = STML_ERROR_VACUUM_INPUT;
+        result.linea_erroris         = ZEPHYRUM;
+        result.columna_erroris       = ZEPHYRUM;
+        result.error.datum           = NIHIL;
+        result.error.mensura         = ZEPHYRUM;
+        result.crlf_canonicalizatum  = FALSUM;
         redde result;
     }
 
