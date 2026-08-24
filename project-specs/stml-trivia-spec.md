@@ -143,14 +143,32 @@ whether a newline is meaning) — the root of the mixed-content
 corruption family. With it, the document carries the contract and
 every tool reads the same declaration.
 
-**`\` semantics.** Edge rule clips the first/last newline as usual
-(§1.3). Dedent runs AT PARSE: the common indentation of interior
-non-empty lines is stripped from the valor and stored as the node's
-`indentatio` trivia (one chorda); relative indentation deeper than
-the common prefix stays in the valor. Reassembly re-inserts the
-prefix on non-empty lines — deterministic and byte-exact because of
-the normative-form refusal below. `StmlNodus` gains `indentatio`
-(NIHIL for unmarked/raw nodes) and a kind flag for `\`.
+**`\` semantics.** Edges diverge deliberately from the general
+§1.3 rule at the LEADING end: the leading clip is **the first
+newline ALONE** — line indentation stays in the run so every line
+participates in the dedent computation. (The general
+maximal-prefix rule would eat line 1's indentation into trivia and
+silently destroy relative structure when line 1 is indented deeper
+than its siblings.) Content on the tag line itself
+(`<multiline\>abc`) is legal but EXCLUDED from the dedent
+computation (the PEP-257 docstring rule — it has no indentation by
+construction and would pin the prefix to zero). The TRAILING clip
+is the general rule: the maximal newline-bearing suffix exits
+entirely, so `123</>`, `123\n</>`, and `123\n  </>` all yield the
+same valor — close-tag placement never matters for content
+(decretum Franis, 2026-08-24).
+
+Dedent runs AT PARSE over the lines after the first newline: the
+common indentation of non-empty lines is stripped from the valor
+and stored as the node's `indentatio` trivia (one chorda);
+relative indentation deeper than the common prefix stays in the
+valor. Reassembly re-inserts the prefix on non-empty lines —
+deterministic and byte-exact because of the normative-form refusal
+below. Because the prefix is STORED, the pretty writer re-indents
+a `\` block to its current nesting depth without touching interior
+structure — moved elements reformat correctly, which `<pre>` never
+got right. `StmlNodus` gains `indentatio` (NIHIL for unmarked/raw
+nodes) and a kind flag for `\`.
 
 **Normative-form refusal.** Inside `\` content, an interior line
 that is whitespace-only but NOT empty is a named vitium (the one
@@ -301,6 +319,12 @@ unchanged, now structurally enforced.
 - `<a>\n</a>` — the internus carve-out case, enumerated by goldens
 - `<versus\>` block: dedent + relative indentation survives +
   byte-exact reassembly; interior EMPTY lines
+- trailing equivalence: `123</>` vs `123\n</>` vs `123\n  </>` —
+  same valor, each reassembles its own bytes
+- line 1 indented DEEPER than line 2 — relative structure survives
+  (the leading-clip divergence earns its keep)
+- content on the tag line (`<multiline\>abc`) — excluded from
+  dedent computation, rides untrimmed
 - `<code!\>` with `<`, `&`, `*` — raw lexing + dedent
 - `\` refusals: whitespace-only interior line, child element,
   capture parens, `\!` order — each vitium NAMED
