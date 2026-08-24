@@ -13939,3 +13939,52 @@ surfaces. Asperitates: post-edit hook noise during multi-edit
 surgery is loud but proved honest — every complaint resolved to a
 real transitional state; the formator's report-only mode on
 not-yet-migrated trees (probationes/) is the right default.
+
+## 2026-08-24 — ADDENDUM: arbor documents now emit collapsed capture spines (stml M2)
+
+RELATIO (stml-side change, silva-side consequence). The stml pretty
+writer was rebuilt (TERMINI deleted; one layout rule; spine
+collapse): single-child wrapper chains now serialize as capture
+forms — `<tok_verba(> <lex-int(> <post(> <lex-spatia n="1"/>` on
+one line where five open/close pairs used to stack. Arbor documents
+are the biggest beneficiary (the §6 "wrapper-spine case"). Silva
+consequences:
+
+- `probatio_silva_arbor.c` / `probatio_silva_arbor_parsura.c`
+  string-match assertions converted to collapsed forms
+  (`<lex-int(>` etc.) — committed with the stml change (2048a784).
+- The 154-file memcmp gate and both canon freshness gates never
+  moved: the tree-equivalence gate (stml side) guarantees pretty
+  layout changes cannot alter meaning, which is exactly what
+  arbor round-trips consume.
+- Amalgam re-verified twice this session (TERMINI deletion, then
+  collapse + chorda_aedificator_truncare). No mirror changes —
+  no new types/fields.
+- COMING (M2b, decreed): vertical collapse — stacked captor lines
+  (`<a(> <b(>` / block child at +1). Arbor documents will
+  compress further and the arbor assertions will churn once more
+  (`<specificatores(>` etc.). Spec: stml-trivia-spec.md §4.
+
+INSTRUMENTA DEBRIEF (M2 session):
+- adhibita: legati corpus/renovare; arbor.sh -nudum; formator.sh;
+  examen.sh; censor.sh; compile_tests + compile_probationes;
+  stml_aurea_generare; silva_canon/natura_canones -probare.
+- fructus: `arbor.sh -nudum` settled the assertion-churn question
+  EMPIRICALLY in one call (dumped the live document instead of
+  reasoning about it). The gates-first pattern paid three times
+  over: the new pulchrum gates caught 3 pre-existing bug classes
+  at birth and 2 design errors (whitespace-value capture, sedes
+  extent) within minutes of writing them.
+- asperitates: (1) the censor/examen post-edit hooks emit EMPTY
+  "?" verdicts whenever the file transiently fails to compile
+  mid-edit-sequence — noise that reads like a censor hit but is
+  just "unused function so far"; (2) the formator hook re-reports
+  ALL ~430 pre-existing divergences of probatio_stml.c on every
+  edit — the signal (new divergences in MY hunk) drowns;
+  (3) lib/stml.c carries ~139 standing longitudo-lxxii
+  report-only divergences — "lib/ formator DONE" is true only for
+  the auto-fixable classes.
+- desiderata: formator hook reporting NEW divergences vs a
+  baseline (git HEAD?) would make it a real per-edit signal;
+  censor hook could suppress output when the examen verdict is
+  "?" (transient non-compiling state).
