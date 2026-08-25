@@ -74,7 +74,14 @@ Four patches and a standing tax = a category. The fix is the model.
   space-separated (`<tag attr="v" (>`). Spine segments separate by
   single spaces (each captor's `spatia_post`). Width budget: 72
   columns from the current indent, all-or-nothing — a spine that
-  does not fit stays in plain block form.
+  does not fit stays in plain block form. **Content floor (third
+  decree, 2026-08-24): tectum = max(72, indent + 40)** — under
+  heavy indentation the budget grows with depth so at least 40
+  columns of content room always remain; without it, deep wraps
+  compound (each wrapped line is one step deeper and two columns
+  narrower) into a staircase of one-link overflowing lines. The
+  floor derives only from tree depth, so the fixed point is
+  unaffected; nothing changes at indent ≤ 16.
 - **Vertical collapse (second collapse decree, 2026-08-24, at M2
   close).** Capture form is UNIVERSAL for single-child elements
   with an element child — width decides only LAYOUT, never form.
@@ -621,10 +628,13 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   (parser untouched), the all-or-nothing fallback deleted, the
   72/73 text fixtures unmoved. Churn: 2 root expectations +
   9 silva arbor assertions (finds in lib/stml.worklog.md).
-  Follow-on same day: blank-line preservation (§4) — decreed on
+  Follow-ons same day: blank-line preservation (§4) — decreed on
   first live run over c89.stml, where pretty ate every paragraph
-  break. N authored blanks → min(N, 2), derived from the
-  follower's spatia_ante over a positional baseline.
+  break; N authored blanks → min(N, 2), derived from the
+  follower's spatia_ante over a positional baseline. And the
+  depth floor (§0.2 third decree): tectum = max(72, indent + 40),
+  killing the deep-wrap staircase (arbor documents reach 36
+  columns of indent in mid-size lib files).
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
   lab.
 - **M4** — captures: counting policy, including the same-line

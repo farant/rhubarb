@@ -2608,6 +2608,57 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Tectum profundum (§0.2 decretum tertium): sub
+     * indentatione gravi minimum XL columnarum contenti -
+     * tectum = max(LXXII, indentatio + XL)
+     * ================================================== */
+
+    imprimere("\n--- Probans tectum profundum ---\n");
+
+    {
+        /* gradus XX (XL columnae indentationis): spina '<t(> '
+         * + XXX litterae = XXXV columnae contenti - tectum
+         * planum LXXII (spatium XXXII) recusaret, fundus XL
+         * capit. Fons programmatice: XX gradus '<n><z/>'
+         * (liberi bini = blocus quisque gradus), tum spina */
+        ChordaAedificator* aed;
+        StmlResultus res;
+        StmlResultus res2;
+        chorda fons;
+        chorda scriptum;
+        chorda rescriptum;
+        i32 k;
+
+        aed = chorda_aedificator_creare(piscina, 4096);
+        CREDO_NON_NIHIL(aed);
+        per (k = ZEPHYRUM; k < XX; k++)
+        {
+            chorda_aedificator_appendere_literis(aed, "<n><z/>");
+        }
+        chorda_aedificator_appendere_literis(aed,
+            "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</t>");
+        per (k = ZEPHYRUM; k < XX; k++)
+        {
+            chorda_aedificator_appendere_literis(aed, "</n>");
+        }
+        fons = chorda_aedificator_finire(aed);
+
+        res = stml_legere(fons, piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_CONTINET(scriptum, chorda_ex_literis(
+            "<t(> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", piscina));
+
+        /* punctum fixum profundum */
+        res2 = stml_legere(scriptum, piscina, intern);
+        CREDO_VERUM(res2.successus);
+        rescriptum = stml_scribere(res2.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS(rescriptum, scriptum);
+
+        imprimere("  fundus XL sub gradu XX: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 

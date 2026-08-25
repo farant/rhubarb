@@ -814,3 +814,27 @@ MEANING-adjacent, not regenerable layout. Finds:
   compile.
 - c89.stml live: 1217 → 843 lines (was 748 blank-less) — the
   structural compression stays, ~95 paragraph breaks return.
+
+## 2026-08-24 (M2b sequela II) — the depth floor: tectum = max(72, indent + 40)
+
+Fran named the degenerate zone: under heavy indentation the flat
+72-column budget leaves almost no content room. Measurement showed
+it is not hypothetical — lib/xar.c's arbor document reaches
+36 columns of indent (36 of room), and the packer's wrap rule
+COMPOUNDS the problem at depth: each wrapped line is one step
+deeper and two columns narrower, so past ~34 indent the output
+degenerates into a staircase of one-link overflowing lines.
+
+The fix is a content floor: tectum = max(LXXII, gradus*2 + XL),
+computed per LINE (gradus, so a wrap's fresh line gets its full
+room). Nothing changes at indent ≤ 16; deeper, total line length
+grows with depth but content room never drops below 40. The
+budget derives only from tree depth → deterministic → fixed point
+unaffected. One site (the packer's single width check).
+
+Fixture: programmatically built 20-level block nest (`<n><z/>` ×20
+— two children per level so no collapse) with a 35-column spine at
+indent 20: flat-72 refused it (32 of room), the floor captures it;
+plus a deep fixed-point assert. Gates: stml 4/4, silva 50/50
+(arbor gates re-derive both sides, no goldens flinched), canons
+recentes.

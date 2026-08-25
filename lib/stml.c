@@ -5716,6 +5716,7 @@ _spinam_pulchre_scribere (
     {
         memoriae_index signum;
                    i32 signum_sedes;
+                   i32 tectum;
                    b32 finalis_textus;
                    b32 finalis_inline;
                    b32 finalis_blocus;
@@ -5757,8 +5758,18 @@ _spinam_pulchre_scribere (
                               ZEPHYRUM, sedes);
         }
 
+        /* tectum lineae: LXXII planum, sed sub indentatione gravi
+         * minimum XL columnarum contenti manet (decretum tertium
+         * §0.2) - sine fundo fracturae profundae cumularentur
+         * (linea quaeque fracta gradu altior duabusque columnis
+         * angustior) in scalas linearum unius vinculi */
+        tectum = gradus * II + XL;
+        si (tectum < LXXII)
+        {
+            tectum = LXXII;
+        }
         si (chorda_aedificator_longitudo(aedificator)
-                - initium_lineae > (memoriae_index)LXXII)
+                - initium_lineae > (memoriae_index)tectum)
         {
             si (!primum_lineae)
             {
