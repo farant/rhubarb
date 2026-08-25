@@ -14050,3 +14050,33 @@ files); a backgrounded `cmd | tail` nearly passed a suite on tail's
 exit code — pipestatus doctrine reaffirmed. Desiderata: a real STML
 formatter CLI (the session's eyeballing ran through a scratchpad
 binary; filed in the tabularium).
+
+## Addendum (2026-08-25, stml decretum quintum): arbor document format changed a THIRD time — multiline attributes
+
+The stml pretty writer now breaks a block-position tag whose
+inline rendering exceeds the tectum into one-attribute-per-line
+form (names right-aligned into an `=` column after the tag name;
+capture closers take their own aligned line). Arbor documents and
+the AEDILIS MANIFEST both carry attr-heavy tags, so their
+serialized shape changed. The plagula gate (78+154, byte-exact
+C through pretty) held with zero divergences — arbor documents
+remain reformat-safe.
+
+Churn, and the lesson that generalizes:
+- probatio_silva_arbor asserted `<arbor grammatica="c89"` — a
+  pattern SPANNING the tag-name→attribute seam. Under multiline
+  attrs that seam is a line break. Fixed by splitting into
+  `<arbor` + `grammatica="c89"` (each survives both layouts).
+  This EXTENDS the M2b substitution doctrine: patterns must not
+  only avoid trailing `>`/space, they must not cross the
+  titulus-attribute seam at all.
+- tools/speculum_generare.sh scraped the aedilis manifest with
+  line-based awk (`/<obiectum via=/`) — silently lost every
+  entry whose tag went multiline (capsula 48 entries, missing
+  lib/piscina.c; two speculum suites red). Fixed by moving to
+  the tool's QUERY surface: `bin/aedilis <app> --partes` emits
+  the same O/C/S/V TSV the scrape was reconstructing. Repo-wide
+  sweep found no other seam-crossing scrapers (within-attribute
+  patterns like `sigillum="..."` are safe). Rule for new
+  scripts: when a tool has a query verb, use it; never regex
+  its STML document.
