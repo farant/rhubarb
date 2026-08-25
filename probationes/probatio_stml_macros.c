@@ -259,6 +259,190 @@ principale (
         }
     }
 
+    /* --- (T4 a+b) loculi: impletio attributi tota + interpolata --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- loculi: impletio attributorum ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#f p=\"@p\">"
+            "<a x=\"&@p;\" y=\"pre-&@p;-post\"/></#>"
+            "<<#f p=\"123\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><a x=\"123\" y=\"pre-123-post\"/></radix>");
+            }
+        }
+    }
+
+    /* --- (T4 c) loculi: impletio textus --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- loculi: impletio textus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#t v=\"@v\"><m>&@v;!</m></#>"
+            "<<#t v=\"salve\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><m>salve!</m></radix>");
+            }
+        }
+    }
+
+    /* --- (T4 d) LOCULUS_NON_IMPLETUS --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- loculus non impletus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#f>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (!expansio.successus);
+            CREDO_AEQUALIS_I32 (expansio.vitium,
+                                STML_EXPANSIO_LOCULUS_NON_IMPLETUS);
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "p");
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
+                                           "f");
+        }
+    }
+
+    /* --- (T4 e) ARGUMENTUM_SUPERFLUUM --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- argumentum superfluum ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#f p=\"1\" q=\"2\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (!expansio.successus);
+            CREDO_AEQUALIS_I32 (expansio.vitium,
+                                STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM);
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "q");
+        }
+    }
+
+    /* --- (T4 f) LOCULUS_IGNOTUS (collectione, sine vocatione) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- loculus ignotus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#f p=\"@p\"><a x=\"&@ignotum;\"/></#></radix>",
+            piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (!expansio.successus);
+            CREDO_AEQUALIS_I32 (expansio.vitium,
+                                STML_EXPANSIO_LOCULUS_IGNOTUS);
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus,
+                                           "ignotum");
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
+                                           "f");
+        }
+    }
+
+    /* --- (T4 g) '&@x;' EXTRA corpus = littera --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- template-spatium extra corpus ---\n");
+        fons  = chorda_ex_literis("<radix>&@x;</radix>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                /* '&@x;' extra corpus littera manet - expansio
+                 * emissionem originalis non turbat (ens ignotum:
+                 * 'circuitus mutat, sensus non' - stml.h strictum) */
+                CREDO_CHORDA_AEQUALIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    stml_scribere(res.radix, piscina, FALSUM));
+            }
+        }
+    }
+
+    /* --- (T4 h) argumentum cum '>>' in valore (T1 compositum) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- argumentum cum '>>' ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#f p=\"a>>b\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><a x=\"a>>b\"/></radix>");
+            }
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

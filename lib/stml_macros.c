@@ -14,17 +14,28 @@
  */
 
 #include "stml_macros.h"
+#include "chorda_aedificator.h"
 
 /* Definitio collecta: id internatum -> nodus definitionis.
  * 'praeterita' = ambulatio expansionis eam iam demisit - vocationes
  * eam vident (strata ordine documenti: vocatio ante definitionem =
  * FRAGMENTUM_POSTERIUS, non IGNOTUM). Xar cum scansione lineari -
- * definitiones per documentum paucae. */
+ * definitiones per documentum paucae. 'loculi' = nomina declarata
+ * in tago aperienti (attr valor '@nomen'; '@.' recusatum - formae
+ * sparsae reservatae). */
 nomen structura {
         chorda* id;          /* internatum */
      StmlNodus* definitio;
+           Xar* loculi;      /* chorda* internata */
            b32  praeterita;
 } StmlMacroDefinitio;
+
+/* Argumentum vocationis: par nomen-valor ex interiore
+ * transclusionis parsatum ('p="123"'). */
+nomen structura {
+    chorda* titulus;  /* internatum */
+    chorda* valor;    /* internatum */
+} StmlMacroArgumentum;
 
 nomen structura {
                  Piscina* piscina;
@@ -38,7 +49,8 @@ _vitium_ponere (
     StmlMacroContextus* ctx,
     StmlExpansioVitium  vitium,
              StmlNodus* nodus,
-                chorda* fragmentum)
+                chorda* fragmentum,
+                chorda* loculus)
 {
     /* primum vincit */
     si (ctx->resultus->vitium != STML_EXPANSIO_BENE)
@@ -50,6 +62,10 @@ _vitium_ponere (
     si (fragmentum != NIHIL)
     {
         ctx->resultus->fragmentum = *fragmentum;
+    }
+    si (loculus != NIHIL)
+    {
+        ctx->resultus->loculus = *loculus;
     }
 }
 
@@ -88,6 +104,223 @@ _definitionem_invenire (
     redde NIHIL;
 }
 
+/* Nomen loculi: [A-Za-z0-9_.-]+. '.' INCLUSUM consulto: formae
+ * sparsae reservatae ('&@...liberi;') ut nomina ordinaria
+ * scanduntur, numquam declarari possunt ('@.' recusatum infra),
+ * ergo LOCULUS_IGNOTUS clamant - reservatio clara, non tacita. */
+interior b32
+_character_nominis (
+    i8 c)
+{
+    redde    (c >= (i8)'a' && c <= (i8)'z')
+          || (c >= (i8)'A' && c <= (i8)'Z')
+          || (c >= (i8)'0' && c <= (i8)'9')
+          || c == (i8)'_'
+          || c == (i8)'-'
+          || c == (i8)'.';
+}
+
+/* Extensionem '&@nomen;' proximam invenire. Formae imperfectae
+ * (sine ';', nomen vacuum) litterae manent - regula entis ignoti.
+ * GRAMMATICA UNA collectionis et impletionis: quod collectio
+ * iudicat, impletio substituit - numquam divergant. */
+interior b32
+_loculum_invenire (
+    constans chorda* textus,
+                i32  ab,
+                i32* initium,
+                i32* post,
+             chorda* titulus)
+{
+    i32 i;
+
+    i = ab;
+    dum (i + II < textus->mensura)
+    {
+        si (   textus->datum[i]     == (i8)'&'
+            && textus->datum[i + I] == (i8)'@')
+        {
+            i32 n;
+
+            n = i + II;
+            dum (   n < textus->mensura
+                 && _character_nominis(textus->datum[n]))
+            {
+                n++;
+            }
+            si (   n > i + II
+                && n < textus->mensura
+                && textus->datum[n] == (i8)';')
+            {
+                *initium          = i;
+                *post             = n + I;
+                titulus->datum    = textus->datum + i + II;
+                titulus->mensura  = n - (i + II);
+                redde VERUM;
+            }
+        }
+        i++;
+    }
+    redde FALSUM;
+}
+
+interior b32
+_loculus_declaratus (
+    StmlMacroDefinitio* def,
+                chorda* titulus)  /* internatum */
+{
+    i32 i;
+    i32 num;
+
+    num = xar_numerus(def->loculi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        chorda** cella;
+
+        cella = (chorda**)xar_obtinere(def->loculi, i);
+        si (cella != NIHIL && *cella == titulus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Declarationes loculorum ex tago aperienti definitionis: attributa
+ * quorum valor '@nomen' est ('@' solum aut '@.' = attributum
+ * ordinarium, non declaratio). */
+interior vacuum
+_loculos_declaratos_legere (
+             StmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->attributa == NIHIL)
+    {
+        redde;
+    }
+    num = xar_numerus(nodus->attributa);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlAttributum* attr;
+
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+        si (   attr                         != NIHIL
+            && attr->valor                  != NIHIL
+            && attr->valor->mensura > I
+            && attr->valor->datum[ZEPHYRUM] == (i8)'@'
+            && attr->valor->datum[I]        != (i8)'.')
+        {
+            chorda   titulus;
+            chorda** cella;
+
+            titulus.datum    = attr->valor->datum + I;
+            titulus.mensura  = attr->valor->mensura - I;
+            cella            = (chorda**)xar_addere(def->loculi);
+            si (cella != NIHIL)
+            {
+                *cella = chorda_internare(ctx->intern, titulus);
+            }
+        }
+    }
+}
+
+/* Chordam contra loculos declaratos perscrutari (collectione:
+ * referentia non declarata = LOCULUS_IGNOTUS in loco definitionis,
+ * ante vocationem ullam). */
+interior b32
+_chordam_perscrutari (
+       constans chorda* textus,
+             StmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    chorda titulus;
+       i32 ab;
+       i32 initium;
+       i32 post;
+
+    ab = ZEPHYRUM;
+    dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        chorda* titulus_internatus;
+
+        titulus_internatus = chorda_internare(ctx->intern, titulus);
+        si (!_loculus_declaratus(def, titulus_internatus))
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS,
+                           nodus, def->id, titulus_internatus);
+            redde FALSUM;
+        }
+        ab = post;
+    }
+    redde VERUM;
+}
+
+/* Corpus definitionis perscrutari: valores textus et attributorum
+ * recursive (attributa tagi definitionis IPSIUS non - ea
+ * declarationes sunt). */
+interior b32
+_corpus_perscrutari (
+             StmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->liberi == NIHIL)
+    {
+        redde VERUM;
+    }
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+         StmlNodus* liberum;
+               i32  j;
+               i32  num_attr;
+
+        liberum = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        si (   liberum->genus == STML_NODUS_TEXTUS
+            && liberum->valor != NIHIL
+            && !_chordam_perscrutari(liberum->valor, liberum, def,
+                                     ctx))
+        {
+            redde FALSUM;
+        }
+        si (liberum->attributa != NIHIL)
+        {
+            num_attr = xar_numerus(liberum->attributa);
+            per (j = ZEPHYRUM; j < num_attr; j++)
+            {
+                StmlAttributum* attr;
+
+                attr = (StmlAttributum*)xar_obtinere(
+                    liberum->attributa, j);
+                si (   attr        != NIHIL
+                    && attr->valor != NIHIL
+                    && !_chordam_perscrutari(attr->valor, liberum,
+                                             def, ctx))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+        si (!_corpus_perscrutari(liberum, def, ctx))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* Praetransitus: definitiones colligere ordine documenti (in
  * corpora definitionum NON descendit - fragmentum intra corpus
  * contentum est, non definitio). GEMINUM hic capitur (linea =
@@ -113,7 +346,7 @@ _definitiones_colligere (
         si (prior != NIHIL)
         {
             _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_GEMINUM,
-                           nodus, nodus->fragmentum_id);
+                           nodus, nodus->fragmentum_id, NIHIL);
             redde FALSUM;
         }
         nova = (StmlMacroDefinitio*)xar_addere(ctx->definitiones);
@@ -124,6 +357,17 @@ _definitiones_colligere (
         nova->id          = nodus->fragmentum_id;
         nova->definitio   = nodus;
         nova->praeterita  = FALSUM;
+        nova->loculi      = xar_creare(ctx->piscina,
+                                       magnitudo(chorda*));
+        si (nova->loculi == NIHIL)
+        {
+            redde FALSUM;
+        }
+        _loculos_declaratos_legere(nodus, nova, ctx);
+        si (!_corpus_perscrutari(nodus, nova, ctx))
+        {
+            redde FALSUM;
+        }
         redde VERUM;  /* in corpus non descendere */
     }
     si (nodus->liberi != NIHIL)
@@ -155,13 +399,21 @@ _est_vocatio (
           && nodus->valor->datum[ZEPHYRUM] == (i8)'#';
 }
 
+interior b32
+_est_spatium_interius (
+    i8 c)
+{
+    redde c == (i8)' ' || c == (i8)'\t' || c == (i8)'\n';
+}
+
 /* Id vocationis ex interiore transclusionis: post '#' usque ad
- * spatium primum aut finem ('#f p="123"' -> 'f'). Argumenta post
- * id T4 parsabit. */
+ * spatium primum aut finem ('#f p="123"' -> 'f'). 'post' = index
+ * in valore ubi argumenta incipiunt. */
 interior chorda*
 _vocationis_id (
     StmlMacroContextus* ctx,
-             StmlNodus* vocatio)
+             StmlNodus* vocatio,
+                   i32* post)
 {
     chorda id;
        i32 finis;
@@ -170,14 +422,237 @@ _vocationis_id (
     id.mensura  = vocatio->valor->mensura - I;
     finis       = ZEPHYRUM;
     dum (   finis < id.mensura
-         && id.datum[finis] != (i8)' '
-         && id.datum[finis] != (i8)'\t'
-         && id.datum[finis] != (i8)'\n')
+         && !_est_spatium_interius(id.datum[finis]))
     {
         finis++;
     }
-    id.mensura = finis;
+    id.mensura  = finis;
+    *post       = I + finis;
     redde chorda_internare(ctx->intern, id);
+}
+
+/* Argumenta vocationis parsare: paria 'nomen="valor"' post id
+ * (citationes ambae; valor sine citationibus usque ad spatium -
+ * lenitas attributorum). Verbum nudum sine '=' = argumentum quod
+ * loculum nullum nominat -> ARGUMENTUM_SUPERFLUUM (clarum, non
+ * tacite praeteritum). */
+interior b32
+_argumenta_parsare (
+    StmlMacroContextus* ctx,
+             StmlNodus* vocatio,
+                   i32  ab,
+                   Xar* argumenta)
+{
+    constans chorda* textus;
+                i32  i;
+
+    textus  = vocatio->valor;
+    i       = ab;
+    dum (VERUM)
+    {
+        chorda titulus;
+        chorda valor;
+           i32 initium;
+
+        dum (   i < textus->mensura
+             && _est_spatium_interius(textus->datum[i]))
+        {
+            i++;
+        }
+        si (i >= textus->mensura)
+        {
+            frange;
+        }
+        initium = i;
+        dum (   i < textus->mensura
+             && textus->datum[i] != (i8)'='
+             && !_est_spatium_interius(textus->datum[i]))
+        {
+            i++;
+        }
+        titulus.datum    = textus->datum + initium;
+        titulus.mensura  = i - initium;
+        si (i >= textus->mensura || textus->datum[i] != (i8)'=')
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM,
+                           vocatio, NIHIL,
+                           chorda_internare(ctx->intern, titulus));
+            redde FALSUM;
+        }
+        i++;  /* '=' */
+        si (   i < textus->mensura
+            && (   textus->datum[i] == (i8)'"'
+                || textus->datum[i] == (i8)'\''))
+        {
+            i8 citatio;
+
+            citatio  = textus->datum[i];
+            i++;
+            initium  = i;
+            dum (i < textus->mensura && textus->datum[i] != citatio)
+            {
+                i++;
+            }
+            valor.datum    = textus->datum + initium;
+            valor.mensura  = i - initium;
+            si (i < textus->mensura)
+            {
+                i++;  /* citatio claudens */
+            }
+        }
+        alioquin
+        {
+            initium = i;
+            dum (   i < textus->mensura
+                 && !_est_spatium_interius(textus->datum[i]))
+            {
+                i++;
+            }
+            valor.datum    = textus->datum + initium;
+            valor.mensura  = i - initium;
+        }
+        {
+            StmlMacroArgumentum* arg;
+
+            arg = (StmlMacroArgumentum*)xar_addere(argumenta);
+            si (arg == NIHIL)
+            {
+                redde FALSUM;
+            }
+            arg->titulus  = chorda_internare(ctx->intern, titulus);
+            arg->valor    = chorda_internare(ctx->intern, valor);
+        }
+    }
+    redde VERUM;
+}
+
+interior StmlMacroArgumentum*
+_argumentum_invenire (
+        Xar* argumenta,
+     chorda* titulus)  /* internatum */
+{
+    i32 i;
+    i32 num;
+
+    num = xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroArgumentum* arg;
+
+        arg = (StmlMacroArgumentum*)xar_obtinere(argumenta, i);
+        si (arg != NIHIL && arg->titulus == titulus)
+        {
+            redde arg;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Chordam substituere: extensiones '&@nomen;' valoribus
+ * argumentorum substitutae (grammatica eadem ac collectio -
+ * nomina iam iudicata declarata et impleta). Sine extensione:
+ * chorda originalis immutata redditur. */
+interior chorda*
+_chordam_substituere (
+    StmlMacroContextus* ctx,
+                chorda* textus,
+                   Xar* argumenta)
+{
+    ChordaAedificator* aed;
+               chorda  titulus;
+               chorda  fetta;
+                  i32  ab;
+                  i32  initium;
+                  i32  post;
+
+    ab = ZEPHYRUM;
+    si (!_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        redde textus;
+    }
+    aed = chorda_aedificator_creare(ctx->piscina,
+                                    textus->mensura + XXXII);
+    si (aed == NIHIL)
+    {
+        redde textus;
+    }
+    dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        StmlMacroArgumentum* arg;
+
+        fetta.datum    = textus->datum + ab;
+        fetta.mensura  = initium - ab;
+        chorda_aedificator_appendere_chorda(aed, fetta);
+        arg = _argumentum_invenire(
+            argumenta, chorda_internare(ctx->intern, titulus));
+        si (arg != NIHIL)
+        {
+            chorda_aedificator_appendere_chorda(aed, *arg->valor);
+        }
+        alioquin
+        {
+            /* defensivum: numquam per constructionem (collectio
+             * iudicavit) - extensio litteralis manet */
+            fetta.datum    = textus->datum + initium;
+            fetta.mensura  = post - initium;
+            chorda_aedificator_appendere_chorda(aed, fetta);
+        }
+        ab = post;
+    }
+    fetta.datum    = textus->datum + ab;
+    fetta.mensura  = textus->mensura - ab;
+    chorda_aedificator_appendere_chorda(aed, fetta);
+    redde chorda_internare(ctx->intern,
+                           chorda_aedificator_finire(aed));
+}
+
+/* Substitutionem in clone corporis applicare: valores textus et
+ * attributorum, recursive. */
+interior vacuum
+_substituere_in_nodo (
+    StmlMacroContextus* ctx,
+             StmlNodus* nodus,
+                   Xar* argumenta)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->genus == STML_NODUS_TEXTUS && nodus->valor != NIHIL)
+    {
+        nodus->valor = _chordam_substituere(ctx, nodus->valor,
+                                            argumenta);
+    }
+    si (nodus->attributa != NIHIL)
+    {
+        num = xar_numerus(nodus->attributa);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlAttributum* attr;
+
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+                                                 i);
+            si (attr != NIHIL && attr->valor != NIHIL)
+            {
+                attr->valor = _chordam_substituere(ctx, attr->valor,
+                                                   argumenta);
+            }
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        num = xar_numerus(nodus->liberi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlNodus* liberum;
+
+            liberum = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
+            si (liberum != NIHIL)
+            {
+                _substituere_in_nodo(ctx, liberum, argumenta);
+            }
+        }
+    }
 }
 
 interior StmlNodus*
@@ -198,22 +673,71 @@ _vocationem_implere (
     StmlMacroDefinitio* def;
       StmlExpansioNota* nota;
              StmlNodus* primus;
+                   Xar* argumenta;
+                   i32  post_id;
                    i32  i;
                    i32  num;
 
-    id   = _vocationis_id(ctx, vocatio);
+    id   = _vocationis_id(ctx, vocatio, &post_id);
     def  = _definitionem_invenire(ctx, id);
     si (def == NIHIL)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_IGNOTUM,
-                       vocatio, id);
+                       vocatio, id, NIHIL);
         redde FALSUM;
     }
     si (!def->praeterita)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
-                       vocatio, id);
+                       vocatio, id, NIHIL);
         redde FALSUM;
+    }
+
+    /* argumenta parsare et utroque modo iudicare: quisque
+     * argumentum loculum declaratum nominat (SUPERFLUUM), quisque
+     * loculus declaratus impletur (NON_IMPLETUS) */
+    argumenta = xar_creare(ctx->piscina,
+                           magnitudo(StmlMacroArgumentum));
+    si (argumenta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_argumenta_parsare(ctx, vocatio, post_id, argumenta))
+    {
+        si (ctx->resultus->vitium != STML_EXPANSIO_BENE)
+        {
+            ctx->resultus->fragmentum = *def->id;
+        }
+        redde FALSUM;
+    }
+    num = xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroArgumentum* arg;
+
+        arg = (StmlMacroArgumentum*)xar_obtinere(argumenta, i);
+        si (arg != NIHIL && !_loculus_declaratus(def, arg->titulus))
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM,
+                           vocatio, def->id, arg->titulus);
+            redde FALSUM;
+        }
+    }
+    num = xar_numerus(def->loculi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        chorda** cella;
+
+        cella = (chorda**)xar_obtinere(def->loculi, i);
+        si (   cella                                   != NIHIL
+            && _argumentum_invenire(argumenta, *cella) == NIHIL)
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_LOCULUS_NON_IMPLETUS,
+                           vocatio, def->id, *cella);
+            redde FALSUM;
+        }
     }
 
     primus = NIHIL;
@@ -236,6 +760,10 @@ _vocationem_implere (
             si (clonis == NIHIL)
             {
                 redde FALSUM;
+            }
+            si (xar_numerus(argumenta) > ZEPHYRUM)
+            {
+                _substituere_in_nodo(ctx, clonis, argumenta);
             }
             si (primus == NIHIL)
             {
