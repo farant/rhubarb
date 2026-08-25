@@ -141,6 +141,43 @@ Four patches and a standing tax = a category. The fix is the model.
   keep inline attributes (report-only overflow, M4 corner). No
   trailing whitespace anywhere: the tag-name line ends at the
   name, attribute lines end at the closing quote.
+- **Multi-captee capture (sixth decree, 2026-08-25).** An
+  element with TWO or THREE children — all plain elements (no
+  comments: a comment is a NODE and would steal a captee slot;
+  no retro/farcimen children: their capture reaches backward
+  across the boundary; no fragments, v1) — whose children's
+  estimated height fits `STML_CAPTURA_MULTIPLEX_LINEAE` (12;
+  Fran: "~10-15") takes multi-paren capture form: `<t((>` /
+  `<t(((>`, children on FOLLOWING lines in ordinary block
+  position, NO close tag. Never on the tag line: a same-line
+  space between captees would be a whitespace-only TEXT NODE and
+  corrupt the capture count — the stacked form dodges the M4
+  counting corner entirely, because newline-bearing runs are not
+  nodes (§1.3). Never beyond three. Four-plus children,
+  over-height groups, and ineligible children keep block form
+  with `</>`. Attribute-heavy multi-captors compose with the
+  fifth decree (`((>` on its own aligned line). Blank lines
+  between captees are preserved; the first captee's blank
+  BASELINE depends on the parent's authored form (open tag gave
+  the whole run to the first child = baseline 1; a captor keeps
+  the first newline in its own post = baseline 0 — without this
+  the fixed point loses a blank per pass). Trailing blanks drop
+  (no closer line anchors them). HEIGHT IS ESTIMATED FROM THE
+  TREE, never by rendering — render-and-rollback was
+  EXPONENTIAL (a rolled-back parent re-renders children at
+  every nesting level; the arbor plagula gate ran for hours).
+  The estimate is conservative (it does not simulate
+  spine/multiplex collapse), so deeply-chained content
+  over-estimates and stays block — acceptable aesthetic price,
+  and why arbor documents largely keep their block shapes. The
+  spine chain accepts a multiplex-eligible element as a BLOCK
+  terminal (without this, reparsing `((>` under a spine fell
+  into the glued CAPTIO_ANTE cascade and broke the fixed
+  point). Sedes: tag only, appended AFTER the children — the
+  sedes table contract is post-order. The close-tag invariant
+  is now: `</>` exists only where block form remains — 4+
+  children, over-height, mixed/inline content, or ineligible
+  children.
 
 ### §0.3 The model in one sentence
 
@@ -779,7 +816,16 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   assertion (`<arbor grammatica=` spanned the titulus-attribute
   seam; patterns must not cross it — the M2b substitution
   doctrine extended). Plagula gate 78+154 byte-exact through the
-  new layout.
+  new layout. Same day: HANGING FILL (fourth decree amended —
+  the closer line is a tag line) and MULTI-CAPTEE CAPTURE
+  (sixth decree, §0.2): 2-3 plain-element children within the
+  height estimate collapse to `((>`/`(((>` stacked, no closer —
+  c89.stml pretty 1091 → 1041 lines (50 closers deleted). The
+  gates earned their keep three times in one decree: Gate A
+  caught the blank-baseline drift AND the reparsed-`((>`-under-
+  spine glued cascade; the plagula gate caught the exponential
+  render-and-rollback height check (replaced by tree-derived
+  estimate).
 - **M4** — captures: counting policy, including the same-line
   corners the §1.2 amendment defers (multi-paren interleaving,
   retro captors); raw multi-paren refusal (§6). (Stream-order

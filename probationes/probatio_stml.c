@@ -2470,7 +2470,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>");
+            "<a(> <b(>\n  <c((>\n    <d/>\n    <e/>");
 
         imprimere("  exemplar verticale: PRAETERITUM\n");
     }
@@ -2486,7 +2486,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<a(>\n  <b>\n    <c/>\n    <d/>\n  </>");
+            "<a(>\n  <b((>\n    <c/>\n    <d/>");
 
         imprimere("  vinculum solitarium + blocus: PRAETERITUM\n");
     }
@@ -2526,12 +2526,12 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<a(> <x/>");
 
         res = stml_legere_ex_literis(
-            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>",
+            "<a(> <b(>\n  <c((>\n    <d/>\n    <e/>",
             piscina, intern);
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>");
+            "<a(> <b(>\n  <c((>\n    <d/>\n    <e/>");
 
         imprimere("  re-derivatio auctoris: PRAETERITUM\n");
     }
@@ -2571,7 +2571,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<radix>\n  <a/>\n\n\n  <b/>\n</>");
+            "<radix((>\n  <a/>\n\n\n  <b/>");
 
         imprimere("  vacuae plures ad duas: PRAETERITUM\n");
     }
@@ -2588,7 +2588,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<radix>\n\n  <a/>\n  <b/>\n\n</>");
+            "<radix((>\n\n  <a/>\n  <b/>");
 
         imprimere("  vacuae apud tagos: PRAETERITUM\n");
     }
@@ -2604,7 +2604,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<?xml version=\"1.0\"?>\n\n<radix>\n  <a/>\n  <b/>\n</>");
+            "<?xml version=\"1.0\"?>\n\n<radix((>\n  <a/>\n  <b/>");
 
         imprimere("  vacua gradus documenti: PRAETERITUM\n");
     }
@@ -2886,7 +2886,7 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<radix>\n  <t>foo </>\n  <u/>\n</>");
+            "<radix((>\n  <t>foo </>\n  <u/>");
 
         imprimere("  margines sordidi verbatim: PRAETERITUM\n");
     }
@@ -3008,18 +3008,103 @@ s32 principale(vacuum)
 
     {
         /* liberi bloci: '>' valori ultimo glutinata, liberi forma
-         * bloci solita sub tagO */
+         * bloci solita sub tago (IV liberi - captura multiplex
+         * tres non excedit, §0.2 decretum sextum) */
+        _pulchrum_probare(piscina, intern,
+            "<productio genus=\"per-clausula-longissima-valde-nimis\""
+            " id=\"per-clausula-p-longissima-item\">"
+            "<a/><b/><c/><d/></productio>",
+            "<productio\n"
+            "     genus=\"per-clausula-longissima-valde-nimis\"\n"
+            "        id=\"per-clausula-p-longissima-item\">\n"
+            "  <a/>\n"
+            "  <b/>\n"
+            "  <c/>\n"
+            "  <d/>\n"
+            "</>",
+            "'>' glutinata + liberi bloci: PRAETERITUM");
+    }
+
+    /* ==================================================
+     * Captura multiplex (§0.2 decretum sextum): II aut III
+     * liberi elementares intra tectum altitudinis -> '((>' /
+     * '(((>', liberi lineis sequentibus, SINE clausura.
+     * Numquam in linea tagi (spatium inter captos eiusdem
+     * lineae nodus textus fieret - numeratio corrumperetur);
+     * numquam ultra tres.
+     * ================================================== */
+
+    imprimere("\n--- Probans capturam multiplicem ---\n");
+
+    {
+        /* tres liberi -> '(((>' */
+        _pulchrum_probare(piscina, intern,
+            "<t><a/><b/><c/></t>",
+            "<t(((>\n  <a/>\n  <b/>\n  <c/>",
+            "tres liberi '(((>' : PRAETERITUM");
+    }
+
+    {
+        /* quattuor liberi: forma bloci manet (tectum numeri) */
+        _pulchrum_probare(piscina, intern,
+            "<t><a/><b/><c/><d/></t>",
+            "<t>\n  <a/>\n  <b/>\n  <c/>\n  <d/>\n</>",
+            "quattuor liberi blocus manet: PRAETERITUM");
+    }
+
+    {
+        /* captor multiplex authoratus planus -> canonicus
+         * (re-derivatio; basis vacuarum ZEPHYRUM sub captore
+         * authorato - lex proprietatis lineam primam post
+         * captoris dat) */
+        _pulchrum_probare(piscina, intern,
+            "<t((>\n<a/>\n<b/>",
+            "<t((>\n  <a/>\n  <b/>",
+            "authoratus re-derivatur: PRAETERITUM");
+    }
+
+    {
+        /* lineae vacuae inter captos servatae - post captorem ET
+         * inter fratres; punctum fixum per cyclos duos (basis
+         * formae authoratae pendet: tagum apertum I, captor 0) */
+        _pulchrum_probare(piscina, intern,
+            "<t>\n\n  <a/>\n\n  <b/>\n</t>",
+            "<t((>\n\n  <a/>\n\n  <b/>",
+            "vacuae inter captos: PRAETERITUM");
+    }
+
+    {
+        /* attributa lata + captura multiplex: clausura '((>'
+         * linea propria alineata (decretum quintum componitur) */
         _pulchrum_probare(piscina, intern,
             "<productio genus=\"per-clausula-longissima-valde-nimis\""
             " id=\"per-clausula-p-longissima-item\">"
             "<a/><b/></productio>",
             "<productio\n"
             "     genus=\"per-clausula-longissima-valde-nimis\"\n"
-            "        id=\"per-clausula-p-longissima-item\">\n"
+            "        id=\"per-clausula-p-longissima-item\"\n"
+            "        ((>\n"
             "  <a/>\n"
+            "  <b/>",
+            "attributa lata + '((>' alineata: PRAETERITUM");
+    }
+
+    {
+        /* tectum altitudinis: liberi ultra XII lineas formam
+         * bloci tenent (liberum interius XII liberorum = XIV
+         * lineae subtree) */
+        _pulchrum_probare(piscina, intern,
+            "<t><a><x/><x/><x/><x/><x/><x/><x/><x/><x/><x/><x/>"
+            "<x/></a><b/></t>",
+            "<t>\n"
+            "  <a>\n"
+            "    <x/>\n    <x/>\n    <x/>\n    <x/>\n"
+            "    <x/>\n    <x/>\n    <x/>\n    <x/>\n"
+            "    <x/>\n    <x/>\n    <x/>\n    <x/>\n"
+            "  </>\n"
             "  <b/>\n"
             "</>",
-            "'>' glutinata + liberi bloci: PRAETERITUM");
+            "tectum altitudinis blocus manet: PRAETERITUM");
     }
 
     {
@@ -3979,11 +4064,12 @@ s32 principale(vacuum)
         "<t>a<b/>c</>",
         "III textus-elementum-textus: PRAETERITUM");
 
-    /* IV. CUSTOS: nullus textus - dispositio (lineae, indentatio)
-     * manere DEBET; sola clausura tacita fit */
+    /* IV. CUSTOS: nullus textus - dispositio lineata manet (liberum
+     * per lineam, indentatum); duo liberi -> captura multiplex
+     * (§0.2 decretum sextum), clausura perit */
     _pulchrum_probare(piscina, intern,
         "<t><a/><b/></t>",
-        "<t>\n  <a/>\n  <b/>\n</>",
+        "<t((>\n  <a/>\n  <b/>",
         "IV omnia-elementa (custos): PRAETERITUM");
 
     /* V. CUSTOS: textus unicus - casum specialem praeexsistentem

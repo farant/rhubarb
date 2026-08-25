@@ -110,7 +110,11 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
     { "attributa_multilinea_spina",
       "<productio genus=\"per-clausula-longissima-valde-nimis\""
       " id=\"per-clausula-p-longissima-item\"><b><c/></b>"
-      "</productio>" }
+      "</productio>" },
+    { "captura_multiplex",
+      "<t((>\n  <a/>\n  <b/>" },
+    { "captura_multiplex_vacuae",
+      "<radix>\n\n  <a/>\n\n\n\n  <b/>\n\n</radix>" }
 };
 
 /* Plagulam totam in piscinam legere */

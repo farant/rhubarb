@@ -1012,3 +1012,51 @@ about to be needed twice); the fill loop parameterized on
 (indent+1)*2) so one loop serves both forms. c89-formatted:
 1105 → 1091 lines, the productio blocks now read exactly as
 Fran sketched. Fixed point verified on the full document.
+
+## 2026-08-25 (decretum sextum) — multi-captee capture: `((>` and `(((>`
+
+Fran's decree: 2-3 children under ~10-15 lines collapse to
+multi-paren capture form, children stacked on following lines,
+never on the tag line, never beyond three. The stacking instinct
+is what makes it SOUND: same-line captees would need a space
+between them, and a same-line whitespace run is a text NODE that
+corrupts the capture count — the M4 counting corner. Stacked,
+the inter-captee whitespace bears newlines and is trivia (§1.3),
+so counting is exact. `STML_CAPTURA_MULTIPLEX_LINEAE = XII`.
+
+Three bugs the gates caught before shipping, each a lesson:
+
+1. **Blank baseline drift (Gate A).** The first captee's blank
+   count baseline must depend on the parent's AUTHORED form: an
+   open tag gives the whole whitespace run to its first child
+   (baseline 1); a captor keeps the first newline in its own
+   post (§1.2), so a reparsed captee carries one fewer
+   positional newline (baseline 0). With a fixed baseline the
+   fixed point lost one authored blank per pass.
+2. **Glued cascade under spines (Gate A).** `_spina_idonea`'s
+   chain test refused a multi-paren captor child (neither link
+   nor planum), so reparsing our own `<a(> <b(>\n  <c((>...`
+   made the WHOLE spine refuse and fall into the CAPTIO_ANTE
+   glued cascade (`<a(> <b(> <c((><d/><e/>`). Fix: the chain
+   accepts a multiplex-ELIGIBLE element as a block terminal
+   (`_capturae_multiplicis_idoneum`, structure only).
+3. **Exponential height check (plagula gate, by hanging).**
+   Height-by-rendering with rollback re-renders children at
+   every nesting level a rollback occurs — 2^depth on deep
+   over-height trees; probatio_silva_arbor_plagula burned 10+
+   CPU-minutes before I killed it. Replaced with
+   `_lineas_aestimare`: tree-derived, early-bail, conservative
+   (does not simulate spine/multiplex collapse — deeply chained
+   content over-estimates and stays block, which is why arbor
+   documents kept their shapes and silva churn was ZERO).
+
+Sedes: the captor's nota is appended AFTER its children — the
+sedes table contract is post-order (elements note at close), and
+the parity fixtures hit a capture conversion for the first time.
+NOTE the latent sibling issue: SPINE link notas are appended in
+pre-order (link-by-link) and would violate the same contract —
+unexercised by any fixture today, filed as a quaestio.
+
+c89-formatted: 1091 → 1041 (50 `</>` lines deleted); the
+close-tag invariant is now "block form only": 4+ children,
+over-height, mixed content, or ineligible children.

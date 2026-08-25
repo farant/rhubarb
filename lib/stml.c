@@ -4125,6 +4125,12 @@ stml_textus_internus (
  * nomen repetitum strepitus merus est et '</>' sufficit. */
 #define STML_CLAUSURA_TACITA_LINEAE XXX
 
+/* Captura multiplex (§0.2 decretum sextum): elementum II aut III
+ * liberorum intra hoc tectum altitudinis formam '((>'/'(((>'
+ * capit - ultra, forma bloci cum clausura manet (Fran: "~10-15
+ * lineae"; numquam ultra tres liberos). */
+#define STML_CAPTURA_MULTIPLEX_LINEAE XII
+
 /* Quot lineas contentum iam emissum occupet, ab 'initium' ad finem
  * buffri. Numeratur ex OCTETIS EMISSIS, non ex arbore: sic mensura
  * eadem est quam lector in schermo videt, et decisio a dispositione
@@ -6115,11 +6121,58 @@ _elementum_planum (
                 && !nodus->multilinea);
 }
 
+/* an elementum capturae multiplici structuraliter idoneum sit
+ * (§0.2 decretum sextum): II aut III liberi, omnes elementa
+ * simplicia (commentum sedem captei raperet; retro/farcimen
+ * retrorsum attingunt; fragmenta extra ambitum). Altitudo
+ * SEORSUM probatur (redditio + reversio in
+ * _capturam_multiplicem_conari). */
+interior b32
+_capturae_multiplicis_idoneum (
+    constans StmlNodus* nodus)
+{
+    i32 num;
+    i32 i;
+
+    si (   nodus->genus            != STML_NODUS_ELEMENTUM
+        || nodus->crudus
+        || nodus->multilinea
+        || nodus->fragmentum
+        || nodus->augmentum_clavis != NIHIL
+        || (   nodus->captio_directio != STML_CAPTIO_NIHIL
+            && nodus->captio_directio != STML_CAPTIO_ANTE))
+    {
+        redde FALSUM;
+    }
+    num = nodus->liberi ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+    si (num < II || num > III)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (   liberum                  == NIHIL
+            || liberum->genus           != STML_NODUS_ELEMENTUM
+            || liberum->fragmentum
+            || liberum->captio_directio == STML_CAPTIO_RETRO
+            || liberum->captio_directio == STML_CAPTIO_FARCIMEN)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* an nodus spinam capturae incipere possit (§4 verticalis):
  * vinculum cuius liberum aut textus capturabilis (terminalis) aut
  * vinculum ulterius aut elementum planum (terminalis inline aut
- * bloci). Liberum exoticum spinam recusat - nodus formam solitam
- * retinet. */
+ * bloci) aut capturae multiplici idoneum (terminalis bloci -
+ * sine hoc relectio formae '((>' sub spina in cascadem glutinatam
+ * CAPTIO_ANTE caderet et punctum fixum periret). Liberum exoticum
+ * spinam recusat - nodus formam solitam retinet. */
 interior b32
 _spina_idonea (
     constans StmlNodus* nodus)
@@ -6139,7 +6192,9 @@ _spina_idonea (
     {
         redde FALSUM;
     }
-    redde (b32)(_spina_idonea(liberum) || _elementum_planum(liberum));
+    redde (b32)(   _spina_idonea(liberum)
+                || _elementum_planum(liberum)
+                || _capturae_multiplicis_idoneum(liberum));
 }
 
 /* an elementum terminale inline unilineare reddatur: folium aut
@@ -6580,6 +6635,208 @@ _lineae_vacuae (
     redde (numerus > II) ? II : numerus;
 }
 
+/* Altitudinem nodi aestimare (positione bloci), tecto dato -
+ * maturius exit ubi tectum exceditur. EX ARBORE, non redditione:
+ * mensura per redditionem EXPONENTIALIS erat (parens limitaneus
+ * reversus liberos in forma blocorum re-reddebat, quisque gradus
+ * nidificationis opus duplicabat - porta plagulae arboris in
+ * horas abiit). Aestimatio conservativa: collapsus veros
+ * (spinae, multiplex, suspensio) non simulat, ergo aestimatum
+ * >= altitudo vera - coetus limitaneus formam blocorum tenet,
+ * pretium aestheticum leve, punctum fixum sanum (arbor eadem ->
+ * aestimatum idem). */
+interior i32
+_lineas_aestimare (
+    constans StmlNodus* nodus,
+                   i32  tectum)
+{
+    i32 summa;
+    i32 num;
+    i32 i;
+
+    si (   nodus->genus == STML_NODUS_TEXTUS
+        || nodus->genus == STML_NODUS_COMMENTUM)
+    {
+        summa = I;
+        si (nodus->valor != NIHIL)
+        {
+            per (i = ZEPHYRUM;
+                 i < nodus->valor->mensura && summa <= tectum;
+                 i++)
+            {
+                si ((character)nodus->valor->datum[i] == '\n')
+                {
+                    summa++;
+                }
+            }
+        }
+        redde summa;
+    }
+    si (nodus->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde I;
+    }
+    num = nodus->liberi ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+    si (num == ZEPHYRUM || _habet_liberum_textus(nodus))
+    {
+        /* folium aut dispositio inline: linea una */
+        redde I;
+    }
+    summa = I;   /* linea tagi */
+    per (i = ZEPHYRUM; i < num && summa <= tectum; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum)
+        {
+            summa += _lineae_vacuae(liberum->spatia_ante, I)
+                + _lineas_aestimare(liberum, tectum - summa);
+        }
+    }
+    redde summa + I;   /* clausura potentialis */
+}
+
+/* Captura multiplex stackata (§0.2 decretum sextum, 2026-08-25):
+ * elementum II aut III liberorum, omnium elementorum simplicium
+ * (commentum nodus est et sedem captei raperet; captura retro/
+ * farcimen trans limitem retrorsum attingit; fragmenta extra
+ * ambitum v1), intra tectum altitudinis - forma capturae
+ * multiplicis: '<t((>' aut '<t(((>', liberi lineis sequentibus
+ * positione bloci solita, SINE clausura. NUMQUAM in linea tagi:
+ * spatium inter captos eiusdem lineae nodus textus fieret et
+ * numerationem corrumperet - forma stackata angulum M4 vitat
+ * (cursus albi lineiferi nodi non sunt, §1.3). Altitudo ex
+ * arbore AESTIMATA (vide _lineas_aestimare - redditio cum
+ * reversione exponentialis erat); liberi octetim iidem ac forma
+ * bloci, sola clausura perit. Lineae vacuae inter captos
+ * servatae (basis eadem ac blocus); vacuae caudales cadunt
+ * (nihil eas ancorat). Sedes TAGUM SOLUM (semantica captoris). */
+interior b32
+_capturam_multiplicem_conari (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  i32  indentatio,
+                  Xar* sedes)
+{
+         StmlNodus* liberum;
+    memoriae_index  signum_originis;
+    memoriae_index  initium_liberorum;
+               i32  num;
+               i32  i;
+               i32  altitudo;
+
+    si (!_capturae_multiplicis_idoneum(nodus))
+    {
+        redde FALSUM;
+    }
+    num = xar_numerus(nodus->liberi);
+
+    /* tectum altitudinis: summa aestimata liberorum (ex arbore -
+     * ante ullam redditionem, ergo sine reversione) */
+    altitudo = ZEPHYRUM;
+    per (i = ZEPHYRUM;
+         i < num && altitudo <= STML_CAPTURA_MULTIPLEX_LINEAE;
+         i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum)
+        {
+            altitudo += _lineae_vacuae(liberum->spatia_ante, I)
+                + _lineas_aestimare(liberum,
+                      STML_CAPTURA_MULTIPLEX_LINEAE - altitudo);
+        }
+    }
+    si (altitudo > STML_CAPTURA_MULTIPLEX_LINEAE)
+    {
+        redde FALSUM;
+    }
+
+    signum_originis = chorda_aedificator_longitudo(aedificator);
+
+    /* tagum captoris; attributa lata stackata cum clausura
+     * alineata (§0.2 decretum quintum; latitudo inline = spatium
+     * + parentheses + '>') */
+    chorda_aedificator_appendere_character(aedificator, '<');
+    si (nodus->titulus)
+    {
+        chorda_aedificator_appendere_chorda(aedificator,
+                                            *nodus->titulus);
+    }
+    si (_attributa_multilinea_oportet(nodus, indentatio, II + num))
+    {
+        _attributa_multilinea_scribere(aedificator, nodus,
+                                       indentatio * II, num);
+    }
+    alioquin
+    {
+        _attributa_scribere(aedificator, nodus, FALSUM);
+        si (   nodus->attributa != NIHIL
+            && xar_numerus(nodus->attributa) > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(aedificator,
+                                                   ' ');
+        }
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            chorda_aedificator_appendere_character(aedificator,
+                                                   '(');
+        }
+        chorda_aedificator_appendere_character(aedificator, '>');
+    }
+    initium_liberorum = chorda_aedificator_longitudo(aedificator);
+
+    /* liberi positione bloci solita (altitudo iam supra
+     * aestimata). Basis linearum vacuarum liberi primi:
+     * forma authorata parentis eam regit - tagum apertum cursum
+     * TOTUM libero primo dat (basis I), captor authoratus lineam
+     * primam in POST suo fert (lex proprietatis §1.2), ergo
+     * capteus relectus uno '\n' positionali minus portat (basis
+     * ZEPHYRUM). Sine hoc punctum fixum periret: linea vacua
+     * authorata transitu secundo evanesceret. */
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum)
+        {
+            i32 vacuae;
+
+            chorda_aedificator_appendere_character(aedificator,
+                                                   '\n');
+            per (vacuae = _lineae_vacuae(
+                     liberum->spatia_ante,
+                     (   i == ZEPHYRUM
+                      && nodus->captio_directio
+                             == STML_CAPTIO_NIHIL)
+                         ? I : ZEPHYRUM);
+                 vacuae > ZEPHYRUM; vacuae--)
+            {
+                chorda_aedificator_appendere_character(aedificator,
+                                                       '\n');
+            }
+            _scribere_nucleus(liberum, aedificator, VERUM, FALSUM,
+                              indentatio + I, sedes);
+        }
+    }
+
+    /* nota sedium POST liberos appensa - tabula post-ordinem
+     * servat (elementum ubi clauditur notatur; captor clausuram
+     * non fert, sed ordo contractus est) */
+    si (sedes != NIHIL)
+    {
+        StmlSedesNodi* nota;
+
+        nota = xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = (i32)signum_originis;
+            nota->finis    = (i32)initium_liberorum;
+        }
+    }
+    redde VERUM;
+}
+
 /* Spinam pulchre scribere (§4 collapsus verticalis, M2b): forma
  * capturae UNIVERSALIS spinis idoneis - latitudo dispositionem
  * eligit, non formam. Vincula in linea currenti avare sarcinantur
@@ -6879,6 +7136,14 @@ _scribere_nucleus (
                 }
                 si (_textum_refluere_conari(nodus, aedificator,
                                             indentatio, sedes))
+                {
+                    frange;
+                }
+                /* II-III liberi -> captura multiplex stackata
+                 * (§0.2 decretum sextum); recusatio (altitudo,
+                 * liberi inidonei) in formam bloci cadit */
+                si (_capturam_multiplicem_conari(nodus, aedificator,
+                                                 indentatio, sedes))
                 {
                     frange;
                 }
