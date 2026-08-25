@@ -2881,6 +2881,152 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Attributa multilinea (§0.2 decretum quintum)
+     *
+     * Tagum positione bloci quod tectum inline fallit attributum
+     * per lineam frangit, nomina dextro-alineata in columnam '='
+     * communem (aesthetica columnarum declarationum C89 domus).
+     * Columna post titulum tagi cadit (margine minimo duorum
+     * spatiorum a '<'); nomen longissimum aut clausura capturae
+     * lata eam dextrorsum trudit. Clausurae glutinantes ('>', '/>')
+     * valori ultimo agglutinatae manent; clausurae CAPTURAE lineam
+     * propriam capiunt, '>' in columna '='. Latitudine ambabus
+     * directionibus (semper canonica): forma multilinea authorata
+     * quae inline cadit recolligitur.
+     * ================================================== */
+
+    imprimere("\n--- Probans attributa multilinea ---\n");
+
+    {
+        /* columna basalis: post titulum tagi ('=' col. XI),
+         * clausura '/>' glutinata */
+        _pulchrum_probare(piscina, intern,
+            "<terminalis titulus=\"QUADRA_CLAUSA\""
+            " genus=\"SILVA_LEX_QUADRA_CLAUSA\""
+            " alterum=\"salve\"/>",
+            "<terminalis\n"
+            "    titulus=\"QUADRA_CLAUSA\"\n"
+            "      genus=\"SILVA_LEX_QUADRA_CLAUSA\"\n"
+            "    alterum=\"salve\"/>",
+            "columna basalis + '/>' glutinata: PRAETERITUM");
+    }
+
+    {
+        /* nomen longum columnam trudit: margine minimo duorum
+         * spatiorum sedet, ceteri ad columnam eius alineantur */
+        _pulchrum_probare(piscina, intern,
+            "<terminalis titulus-longissimus-valde=\"QUADRA_CLAUSA\""
+            " genus=\"SILVA_LEX_QUADRA_CLAUSA\"/>",
+            "<terminalis\n"
+            "  titulus-longissimus-valde=\"QUADRA_CLAUSA\"\n"
+            "                      genus=\"SILVA_LEX_QUADRA_CLAUSA\"/>",
+            "nomen longum columnam trudit: PRAETERITUM");
+    }
+
+    {
+        /* attributum boolean nomine solo in columna participat */
+        _pulchrum_probare(piscina, intern,
+            "<terminalis titulus=\"QUADRA_CLAUSA_LONGA_SATIS\""
+            " genus=\"SILVA_LEX_QUADRA_CLAUSA\" clausus/>",
+            "<terminalis\n"
+            "    titulus=\"QUADRA_CLAUSA_LONGA_SATIS\"\n"
+            "      genus=\"SILVA_LEX_QUADRA_CLAUSA\"\n"
+            "    clausus/>",
+            "attributum boolean in columna: PRAETERITUM");
+    }
+
+    {
+        /* intra tectum: forma inline manet (custos) */
+        _pulchrum_probare(piscina, intern,
+            "<t a=\"1\" b=\"2\"/>",
+            "<t a=\"1\" b=\"2\"/>",
+            "intra tectum inline manet (custos): PRAETERITUM");
+    }
+
+    {
+        /* semper canonica: forma multilinea authorata quae inline
+         * cadit recolligitur */
+        _pulchrum_probare(piscina, intern,
+            "<t\n  a=\"1\"\n  b=\"2\"/>",
+            "<t a=\"1\" b=\"2\"/>",
+            "multilinea authorata recolligitur: PRAETERITUM");
+    }
+
+    {
+        /* captor re-involutionis: clausura '(>' linea propria, '>'
+         * in columna '='; impletio sub eo ut solet */
+        _pulchrum_probare(piscina, intern,
+            "<productio genus=\"per-clausula-longissima-valde-nimis\""
+            " id=\"per-clausula-p-longissima-item\">"
+            "alfa beta gamma delta</productio>",
+            "<productio\n"
+            "     genus=\"per-clausula-longissima-valde-nimis\"\n"
+            "        id=\"per-clausula-p-longissima-item\"\n"
+            "         (>\n"
+            "  alfa beta gamma delta",
+            "captor refluxus multilineus: PRAETERITUM");
+    }
+
+    {
+        /* vinculum spinae ultra tectum in linea prima: forma
+         * multilinea in situ, spina in linea clausurae pergit */
+        _pulchrum_probare(piscina, intern,
+            "<productio genus=\"per-clausula-longissima-valde-nimis\""
+            " id=\"per-clausula-p-longissima-item\">"
+            "<b><c/></b></productio>",
+            "<productio\n"
+            "     genus=\"per-clausula-longissima-valde-nimis\"\n"
+            "        id=\"per-clausula-p-longissima-item\"\n"
+            "         (> <b(> <c/>",
+            "vinculum spinae multilineum: PRAETERITUM");
+    }
+
+    {
+        /* captor crudus (ramus ANTE nuclei - spina crudum
+         * recusat): '(>' linea propria, linea capta '>' directe
+         * sequitur */
+        _pulchrum_probare(piscina, intern,
+            "<v! genus=\"per-clausula-longissima-valde-nimis\""
+            " id=\"per-clausula-p-longissima-item\" (>lineacapta",
+            "<v!\n"
+            "  genus=\"per-clausula-longissima-valde-nimis\"\n"
+            "     id=\"per-clausula-p-longissima-item\"\n"
+            "      (>lineacapta",
+            "captor crudus multilineus: PRAETERITUM");
+    }
+
+    {
+        /* liberi bloci: '>' valori ultimo glutinata, liberi forma
+         * bloci solita sub tagO */
+        _pulchrum_probare(piscina, intern,
+            "<productio genus=\"per-clausula-longissima-valde-nimis\""
+            " id=\"per-clausula-p-longissima-item\">"
+            "<a/><b/></productio>",
+            "<productio\n"
+            "     genus=\"per-clausula-longissima-valde-nimis\"\n"
+            "        id=\"per-clausula-p-longissima-item\">\n"
+            "  <a/>\n"
+            "  <b/>\n"
+            "</>",
+            "'>' glutinata + liberi bloci: PRAETERITUM");
+    }
+
+    {
+        /* fidelitas: tagum multilineum authoratum octetim
+         * redditur (trivia M1 - custos, non novum) */
+        StmlResultus res;
+        chorda scriptum;
+        constans character* fons = "<t\n  a=\"1\"\n  b=\"2\"/>";
+
+        res = stml_legere_ex_literis(fons, piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, fons);
+
+        imprimere("  fidelitas multilinea (custos): PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 

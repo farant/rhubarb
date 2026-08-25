@@ -57,22 +57,21 @@ INITIUM=$(date +%s)
 echo -e "${CAERULEUS}speculum ($TITULUS): genero...${NULLUS}"
 
 # ------------------------------------------------------------------
-# clausura vera ab aedile: derivatio recens -> manifestum ->
-# sectiones obiecta/capita/vendores (awk sectionum-conscium).
-# systemata omissa (capita systematis non sunt plagulae nostrae);
+# clausura vera ab aedile: derivatio recens -> manifestum in
+# capsulam, partes ex SUPERFICIE QUAESTIONIS (--partes: O/C/S/V
+# via, TSV) - NON ex manifesto STML rasili. Forma pulchra
+# attributa trans lineas frangit (stml decretum quintum
+# 2026-08-25); exemplaria linearum suturam tagum-attributum
+# transeuntia ('<obiectum via=') tacite mendacia fiunt. S omissa
+# ut olim (capita systematis non sunt plagulae nostrae);
 # obiecta sub build/ = generata (annotationes) -> exclusa.
 # ------------------------------------------------------------------
 [ -x bin/aedilis ] || ./tools/aedilis_struere.sh || si_fracta "aedilis non structus"
 ./bin/aedilis "$APP" > /dev/null || si_fracta "derivatio aedilis fracta: $APP"
 [ -f "$MANIFESTUM" ] || si_fracta "manifestum deest: $MANIFESTUM"
 
-PARTES=$(awk -F'"' '
-    /<obiecta>/   { s = "o" }  /<capita>/   { s = "c" }
-    /<systemata>/ { s = "s" }  /<vendores>/ { s = "v" }
-    s == "o" && /<obiectum via=/ { print "O\t" $2 }
-    s == "c" && /<caput via=/    { print "C\t" $2 }
-    s == "v" && /<fons via=/     { print "V\t" $2 }
-' "$MANIFESTUM")
+PARTES=$(./bin/aedilis "$APP" --partes | awk -F'\t' '$1 != "S"') \
+    || si_fracta "partes aedilis fractae: $APP"
 
 CLAUSURA=$( { echo "$APP"
     printf '%s\n' "$PARTES" | awk -F'\t' \

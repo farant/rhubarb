@@ -99,7 +99,18 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
       "iiii jjjj kkkk llll mmmm nnnn oooo pppp\n"
       "qqqq rrrr ssss tttt</t>" },
     { "refluxus_marginis_sordidi",
-      "<radix>\n  <t>foo </t>\n  <u/>\n</radix>" }
+      "<radix>\n  <t>foo </t>\n  <u/>\n</radix>" },
+    { "attributa_multilinea_ultra",
+      "<terminalis titulus=\"QUADRA_CLAUSA\""
+      " genus=\"SILVA_LEX_QUADRA_CLAUSA\" alterum=\"salve\"/>" },
+    { "attributa_multilinea_captor",
+      "<productio genus=\"per-clausula-longissima-valde-nimis\""
+      " id=\"per-clausula-p-longissima-item\">"
+      "alfa beta gamma delta</productio>" },
+    { "attributa_multilinea_spina",
+      "<productio genus=\"per-clausula-longissima-valde-nimis\""
+      " id=\"per-clausula-p-longissima-item\"><b><c/></b>"
+      "</productio>" }
 };
 
 /* Plagulam totam in piscinam legere */

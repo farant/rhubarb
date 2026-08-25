@@ -733,9 +733,14 @@ principale (vacuum)
         CREDO_VERUM (scriptura.successus);
         CREDO_VERUM (scriptura.textus.mensura > ZEPHYRUM);
 
-        /* involucrum: grammatica + sigillum + ancora */
+        /* involucrum: grammatica + sigillum + ancora. Exemplaria
+         * suturam titulus-attributum non transeunt: forma
+         * multilinea attributorum (stml decretum quintum) tagum
+         * intra frangit, ergo '<arbor' et attributum seorsum
+         * quaeruntur - ambabus formis superstites */
+        CREDO_VERUM (_quotiens(scriptura.textus, "<arbor") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<arbor grammatica=\"c89\"") == I);
+            "grammatica=\"c89\"") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
             "registrum-sigillum=\"") == I);
 

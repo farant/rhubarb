@@ -947,3 +947,39 @@ closer block is deleted. The M2b invariant is now exact: close
 tags exist precisely where multi-child block form does — EVERY
 single-child element is capture form. c89.stml pretty:
 1197 → 1021 lines (one `</>` per filled element).
+
+## 2026-08-25 (decretum quintum) — multiline attributes: the §1.6 promise redeemed
+
+The last formatting frontier c89-formatted.stml exposed: 33
+over-72 lines, every one an attribute-heavy `<terminalis .../>`.
+Fran's decree: one attribute per line, names RIGHT-ALIGNED into a
+shared `=` column (the C89 declaration-column aesthetic), column
+directly after the tag name with a two-space floor from `<`; long
+names or wide capture closers push the column right. Gluing
+closers (`>`, `/>`) stay glued to the last value; CAPTURE closers
+take their own line, `>` landing in the `=` column.
+
+Implementation notes:
+- The decision is ARITHMETIC (`_tagum_latitudo_inline` +
+  `_attributorum_columna`), not render-and-rollback — attribute
+  values never carry newlines, so inline width is a plain sum.
+  Cheaper and clearer than the packer's truncare pattern.
+- FOUR emission sites, one shared writer
+  (`_attributa_multilinea_scribere`): the normal-element branch,
+  the ANTE-captor branch (both pulchrum-only — inline children
+  mid-line never break), the refluere captor
+  (`_vinculum_multilineum_scribere`), and the packer's line-start
+  acceptance point — a link ALONE over budget converts in situ,
+  `initium_lineae` re-bases to the closer line (length = columna
+  + 1) and the spine continues there.
+- The parser needed NOTHING: `_tok_legere_attributa` already
+  skips newlines between attributes and banks pre-closer
+  whitespace in spatia_prae_finem/spatia_intra_tagum — M1's §1.6
+  modeling was built for exactly this day. All 9 born-red
+  fixtures went green on the first full implementation pass.
+- `_tectum_lineae` extracted (the depth-floor formula existed
+  twice; lex superficiei duplicatae).
+- c89-formatted.stml: 33 → 2 long lines (both single attributes
+  whose VALUES exceed 72 alone — values never break, report-only
+  per decree), 1021 → 1105 lines, full-document fixed point
+  verified by running the formatter on its own output.

@@ -102,6 +102,45 @@ Four patches and a standing tax = a category. The fix is the model.
   form does — multi-child and mixed elements only. Vertical
   compression is the payoff: every converted wrapper level
   deletes a `</>` line.
+- **Multiline attributes (fifth decree, 2026-08-25 — the §1.6
+  promise redeemed).** A block-position tag whose inline
+  rendering (through its closer) misses the tectum breaks to ONE
+  ATTRIBUTE PER LINE, names RIGHT-ALIGNED into a shared `=`
+  column — the declaration-column aesthetic of house C89. The
+  column sits directly after the tag name (attributes tuck under
+  the tag), with a floor of two spaces in from the tag's `<`; a
+  long name — or a wide capture closer — pushes the whole column
+  right just enough. Gluing closers (`>`, `/>`) stay glued to
+  the last attribute's value; CAPTURE closers take their own
+  final line, right-aligned so `>` lands in the `=` column
+  (Fran's sketch):
+
+      <terminalis
+          titulus="QUADRA_CLAUSA"
+            genus="SILVA_LEX_QUADRA_CLAUSA"
+          another="hello"/>
+
+      <terminalis
+        very-long-titulus="QUADRA_CLAUSA"
+                    genus="SILVA_LEX_QUADRA_CLAUSA"/>
+
+      <productio
+           genus="per-clausula"
+              id="per-clausula-p"
+               (>
+
+  Width-driven BOTH directions (always-canonical): an authored
+  multiline tag that fits inline collapses back; authored blank
+  lines between attributes vanish (the blank-line decree governs
+  between NODES — attributes are not nodes). Boolean attributes
+  join the column by name alone. An attribute line may still
+  overflow — a long value never breaks (values are meaning) —
+  accepted, report-only, like other longitudo residue. Scope v1:
+  normal elements, ANTE captors, spine captor links at line
+  start, and the refluere captor; fragments, retro, and farcimen
+  keep inline attributes (report-only overflow, M4 corner). No
+  trailing whitespace anywhere: the tag-name line ends at the
+  name, attribute lines end at the closing quote.
 
 ### §0.3 The model in one sentence
 
@@ -510,6 +549,25 @@ remains the raw total stream (over canonicalized input).
   text requires the LAST byte non-white too (latent M2b hole —
   a trailing space in a captured text died into post on
   reparse; never bitten, now pinned).
+- **Multiline attributes (fifth decree §0.2 — writer mechanics).**
+  The decision is ARITHMETIC, not render-and-rollback: attribute
+  values never carry newlines, so the inline width is a plain sum
+  (indent + tag prefix incl. `!`/`\` sigils + Σ per attr of
+  1+name[+2+value+1] + closer width) compared against the tectum
+  (depth floor included). The `=` column: C = max(after-tag-prefix,
+  base+2+longest-name, base+2+captio_numerus), base = the tag's
+  `<` column. Emission sites: the normal-element branch and the
+  ANTE-captor branch of the nucleus (block position only —
+  pulchrum VERUM; inline children mid-line never break), the
+  refluere captor, and the packer's line-start acceptance point
+  (a link alone over budget converts in place; initium_lineae
+  re-bases to the closer line and the spine continues there).
+  The parser was ALREADY READY: `_tok_legere_attributa` skips
+  newlines between attributes and banks pre-closer whitespace in
+  spatia_prae_finem/spatia_intra_tagum (§1.6 modeled it in M1) —
+  fidelity replays authored multiline tags byte-exact; pretty
+  re-derives layout from tree data alone, so the fixed point is
+  deterministic by construction.
 - The raw-capture "SED SEMEL TANTUM" delimiter hack is DELETED —
   the delimiter is the capture node's `post` now, explicit.
 
@@ -698,6 +756,17 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   paragraph filling; §1.6 multi-line attribute layout (the only
   remaining width feature — 33 residual long lines in c89.stml
   pretty are all attr-heavy open tags).
+  MULTILINE ATTRIBUTES SHIPPED 2026-08-25 (fifth decree, §0.2 +
+  §4 writer mechanics): one attribute per line, right-aligned
+  `=` column after the tag name (two-space floor), capture
+  closers on their own aligned line; arithmetic decision, four
+  emission sites, one shared writer; parser needed NOTHING (M1's
+  §1.6 modeling). c89.stml pretty: 33 → 2 long lines (both
+  unbreakable long VALUES, report-only). Churn: ONE silva arbor
+  assertion (`<arbor grammatica=` spanned the titulus-attribute
+  seam; patterns must not cross it — the M2b substitution
+  doctrine extended). Plagula gate 78+154 byte-exact through the
+  new layout.
 - **M4** — captures: counting policy, including the same-line
   corners the §1.2 amendment defers (multi-paren interleaving,
   retro captors); raw multi-paren refusal (§6). (Stream-order

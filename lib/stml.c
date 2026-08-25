@@ -5661,6 +5661,248 @@ _attributa_scribere (
     }
 }
 
+/* Tectum lineae pulchrae (§0.2 decretum tertium): LXXII planum,
+ * sub indentatione gravi minimum XL columnarum contenti manet -
+ * sine fundo fracturae profundae in scalas cumularentur */
+interior i32
+_tectum_lineae (
+    i32 gradus)
+{
+    i32 tectum;
+
+    tectum = gradus * II + XL;
+    si (tectum < LXXII)
+    {
+        tectum = LXXII;
+    }
+    redde tectum;
+}
+
+/* an attributa visibilia adsint (titulus praesens) */
+interior b32
+_attributa_adsunt (
+    StmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->attributa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = xar_numerus(nodus->attributa);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlAttributum* attr;
+
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+        si (attr != NIHIL && attr->titulus != NIHIL)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Latitudo tagi inline ('<' per attributa, SINE clausura) -
+ * arithmetica pura: valores attributorum lineam novam numquam
+ * ferunt (§0.2 decretum quintum) */
+interior i32
+_tagum_latitudo_inline (
+    StmlNodus* nodus)
+{
+    i32 latitudo;
+    i32 i;
+    i32 num;
+
+    latitudo = I;
+    si (nodus->titulus != NIHIL)
+    {
+        latitudo += nodus->titulus->mensura;
+    }
+    si (nodus->crudus)
+    {
+        latitudo += I;
+    }
+    si (nodus->multilinea)
+    {
+        latitudo += I;
+    }
+    si (nodus->attributa != NIHIL)
+    {
+        num = xar_numerus(nodus->attributa);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlAttributum* attr;
+
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+                                                 i);
+            si (attr == NIHIL || attr->titulus == NIHIL)
+            {
+                perge;
+            }
+            latitudo += I + attr->titulus->mensura;
+            si (   attr->valor != NIHIL
+                && !_chorda_ptr_aequalis_literis(attr->valor,
+                                                 "true"))
+            {
+                latitudo += III + attr->valor->mensura;
+            }
+        }
+    }
+    redde latitudo;
+}
+
+/* Columna '=' formae multilineae (§0.2 decretum quintum): post
+ * titulum tagi cadit (attributa sub tago conduntur), margine
+ * minimo duorum spatiorum a '<'; nomen longissimum aut clausura
+ * capturae lata (clausura_lata = numerus parenthesium) columnam
+ * dextrorsum trudit quantum necesse */
+interior i32
+_attributorum_columna (
+    StmlNodus* nodus,
+          i32  basis,
+          i32  clausura_lata)
+{
+    i32 columna;
+    i32 candidata;
+    i32 i;
+    i32 num;
+
+    columna = basis + I;
+    si (nodus->titulus != NIHIL)
+    {
+        columna += nodus->titulus->mensura;
+    }
+    si (nodus->crudus)
+    {
+        columna += I;
+    }
+    si (nodus->multilinea)
+    {
+        columna += I;
+    }
+    si (nodus->attributa != NIHIL)
+    {
+        num = xar_numerus(nodus->attributa);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlAttributum* attr;
+
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
+                                                 i);
+            si (attr == NIHIL || attr->titulus == NIHIL)
+            {
+                perge;
+            }
+            candidata = basis + II + attr->titulus->mensura;
+            si (candidata > columna)
+            {
+                columna = candidata;
+            }
+        }
+    }
+    candidata = basis + II + clausura_lata;
+    si (candidata > columna)
+    {
+        columna = candidata;
+    }
+    redde columna;
+}
+
+interior vacuum
+_spatia_scribere (
+    ChordaAedificator* aed,
+                  i32  quantum)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < quantum; i++)
+    {
+        chorda_aedificator_appendere_character(aed, ' ');
+    }
+}
+
+/* Attributa multilinea scribere (§0.2 decretum quintum):
+ * attributum per lineam, nomina dextro-alineata in columnam '='
+ * communem. Vocans praefixum tagi ('<titulus' cum sigillis) iam
+ * emisit; clausuram glutinantem ('>', '/>') vocans post appendit,
+ * clausuram capturae (clausura_lata > ZEPHYRUM) haec functio
+ * linea propria emittit - '>' in columna '='. Columnam reddit
+ * (linea clausurae basis mensurae nova sarcinatori). */
+interior i32
+_attributa_multilinea_scribere (
+    ChordaAedificator* aedificator,
+            StmlNodus* nodus,
+                  i32  basis,
+                  i32  clausura_lata)
+{
+    i32 columna;
+    i32 i;
+    i32 num;
+
+    columna = _attributorum_columna(nodus, basis, clausura_lata);
+    num     = (nodus->attributa != NIHIL)
+        ? xar_numerus(nodus->attributa) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlAttributum* attr;
+
+        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+        si (attr == NIHIL || attr->titulus == NIHIL)
+        {
+            perge;
+        }
+        chorda_aedificator_appendere_character(aedificator, '\n');
+        _spatia_scribere(aedificator,
+                         columna - attr->titulus->mensura);
+        chorda_aedificator_appendere_chorda(aedificator,
+                                            *attr->titulus);
+        si (   attr->valor != NIHIL
+            && !_chorda_ptr_aequalis_literis(attr->valor, "true"))
+        {
+            chorda_aedificator_appendere_literis(aedificator,
+                                                 "=\"");
+            chorda_aedificator_appendere_chorda(aedificator,
+                                                *attr->valor);
+            chorda_aedificator_appendere_character(aedificator,
+                                                   '"');
+        }
+    }
+    si (clausura_lata > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_character(aedificator, '\n');
+        _spatia_scribere(aedificator, columna - clausura_lata);
+        per (i = ZEPHYRUM; i < clausura_lata; i++)
+        {
+            chorda_aedificator_appendere_character(aedificator,
+                                                   '(');
+        }
+        chorda_aedificator_appendere_character(aedificator, '>');
+    }
+    redde columna;
+}
+
+/* an tagum formam multilineam capiat (§0.2 decretum quintum):
+ * attributa adsunt et redditio inline (clausura inclusa) tectum
+ * gradus fallit. Positione bloci sola vocatur (pulchrum VERUM) -
+ * liberi inline mediis lineis numquam franguntur. */
+interior b32
+_attributa_multilinea_oportet (
+    StmlNodus* nodus,
+          i32  indentatio,
+          i32  latitudo_clausurae)
+{
+    si (!_attributa_adsunt(nodus))
+    {
+        redde FALSUM;
+    }
+    redde (b32)(indentatio * II
+                    + _tagum_latitudo_inline(nodus)
+                    + latitudo_clausurae
+                > _tectum_lineae(indentatio));
+}
+
 /* an nodus textus interius elementi '<tag\>' sit - dispositio
  * eius DECLARATA est (§1.4), ambobus modis emittitur */
 interior b32
@@ -5981,6 +6223,50 @@ _vinculum_scribere (
     }
 }
 
+/* Vinculum captoris forma multilinea (§0.2 decretum quintum):
+ * '<titulus' + attributa stackata + '(>' linea propria, '>' in
+ * columna '='. Sedes tagum totum notat (initium '<', finis post
+ * '>' - extensio parsatoris eadem, lineis interioribus inclusis).
+ * Columnam '=' reddit - vocans lineam clausurae basim mensurae
+ * novam facit. Spina sola huc venit (non-crudus, parenthesis
+ * una), ergo sigilla nulla. */
+interior i32
+_vinculum_multilineum_scribere (
+            StmlNodus* nodus,
+    ChordaAedificator* aedificator,
+                  i32  basis,
+                  Xar* sedes)
+{
+    i32 initium;
+    i32 columna;
+
+    initium = (i32)chorda_aedificator_longitudo(aedificator);
+
+    chorda_aedificator_appendere_character(aedificator, '<');
+    si (nodus->titulus)
+    {
+        chorda_aedificator_appendere_chorda(aedificator,
+                                            *nodus->titulus);
+    }
+    columna = _attributa_multilinea_scribere(aedificator, nodus,
+                                             basis, I);
+
+    si (sedes != NIHIL)
+    {
+        StmlSedesNodi* nota;
+
+        nota = xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = initium;
+            nota->finis   =
+                (i32)chorda_aedificator_longitudo(aedificator);
+        }
+    }
+    redde columna;
+}
+
 /* Valorem fluminis IUNCTUM evasumque scribere (§4 M3): cursus
  * albi lineam ferentes spatio uni fiunt (lectio fluxus - pulcher
  * prosam possidet); segmenta cetera litteralia per evasionem
@@ -6093,15 +6379,21 @@ _textum_refluere_conari (
      * canonicus + impletio sub eo, SINE clausura - invariams M2b
      * completur (clausurae ibi solae ubi forma blocorum
      * multi-liberorum). Sedes TAGUM SOLUM (_vinculum_scribere
-     * eas notat - semantica captoris). */
-    _vinculum_scribere(nodus, aedificator, sedes);
+     * eas notat - semantica captoris). Captor ipse ultra tectum:
+     * attributa stackata, '(>' linea propria (§0.2 decretum
+     * quintum; III = spatium + parenthesis + '>'). */
+    si (_attributa_multilinea_oportet(nodus, indentatio, III))
+    {
+        _vinculum_multilineum_scribere(nodus, aedificator,
+                                       indentatio * II, sedes);
+    }
+    alioquin
+    {
+        _vinculum_scribere(nodus, aedificator, sedes);
+    }
 
     gradus = indentatio + I;
-    tectum = gradus * II + XL;
-    si (tectum < LXXII)
-    {
-        tectum = LXXII;
-    }
+    tectum = _tectum_lineae(gradus);
 
     chorda_aedificator_appendere_character(aedificator, '\n');
     initium_lineae = chorda_aedificator_longitudo(aedificator);
@@ -6268,6 +6560,7 @@ _spinam_pulchre_scribere (
     dum (VERUM)
     {
         memoriae_index signum;
+        memoriae_index post_vinculum;
                    i32 signum_sedes;
                    i32 tectum;
                    b32 finalis_textus;
@@ -6299,6 +6592,7 @@ _spinam_pulchre_scribere (
             chorda_aedificator_appendere_character(aedificator, ' ');
         }
         _vinculum_scribere(currens, aedificator, sedes);
+        post_vinculum = chorda_aedificator_longitudo(aedificator);
         si (finalis_textus)
         {
             chorda_aedificator_appendere_character(aedificator, ' ');
@@ -6319,11 +6613,7 @@ _spinam_pulchre_scribere (
          * §0.2) - sine fundo fracturae profundae cumularentur
          * (linea quaeque fracta gradu altior duabusque columnis
          * angustior) in scalas linearum unius vinculi */
-        tectum = gradus * II + XL;
-        si (tectum < LXXII)
-        {
-            tectum = LXXII;
-        }
+        tectum = _tectum_lineae(gradus);
         si (chorda_aedificator_longitudo(aedificator)
                 - initium_lineae > (memoriae_index)tectum)
         {
@@ -6371,8 +6661,38 @@ _spinam_pulchre_scribere (
                                   FALSUM, gradus, sedes);
                 redde VERUM;
             }
-            /* vinculum aut terminalis inline primum lineae ultra
-             * tectum: acceptum - nihil angustius praesto est */
+            si (   post_vinculum - initium_lineae
+                       > (memoriae_index)tectum
+                && _attributa_adsunt(currens))
+            {
+                /* vinculum SOLUM ultra tectum cum attributis:
+                 * forma multilinea in situ (§0.2 decretum
+                 * quintum) - linea clausurae basis mensurae
+                 * nova, spina in ea pergit */
+                i32 columna;
+
+                chorda_aedificator_truncare(aedificator, signum);
+                si (sedes != NIHIL)
+                {
+                    xar_truncare(sedes, signum_sedes);
+                }
+                columna = _vinculum_multilineum_scribere(
+                    currens, aedificator, gradus * II, sedes);
+                initium_lineae =
+                    chorda_aedificator_longitudo(aedificator)
+                        - (memoriae_index)(columna + I);
+                si (finalis_inline)
+                {
+                    chorda_aedificator_appendere_character(
+                        aedificator, ' ');
+                    _scribere_nucleus(liberum, aedificator,
+                                      FALSUM, FALSUM, ZEPHYRUM,
+                                      sedes);
+                }
+            }
+            /* aliter: vinculum aut terminalis inline primum
+             * lineae ultra tectum acceptum - nihil angustius
+             * praesto est */
         }
 
         si (finalis_textus || finalis_inline)
@@ -6726,7 +7046,21 @@ _scribere_nucleus (
                 {
                     chorda_aedificator_appendere_character(aedificator, '!');
                 }
-                /* Attributes */
+                /* Attributes (§0.2 decretum quintum: positione
+                 * bloci ultra tectum - attributa stackata,
+                 * clausura capturae linea propria; latitudo
+                 * inline = spatium + parentheses + '>') */
+                si (   pulchrum
+                    && _attributa_multilinea_oportet(nodus,
+                           indentatio,
+                           II + nodus->captio_numerus))
+                {
+                    _attributa_multilinea_scribere(aedificator,
+                        nodus, indentatio * II,
+                        nodus->captio_numerus);
+                }
+                alioquin
+                {
                 _attributa_scribere(aedificator, nodus, fidelitas);
                 /* spatium prae parenthesibus (§1.6 emendatum):
                  * fidelitas octetos conditos reddit (NIHIL =
@@ -6751,6 +7085,7 @@ _scribere_nucleus (
                     chorda_aedificator_appendere_character(aedificator, '(');
                 }
                 chorda_aedificator_appendere_character(aedificator, '>');
+                }
 
                 /* ORDO FLUMINIS (§6, in M1 tractum): captor NON
                  * crudus - post inter tagum et captos in fonte
@@ -6861,8 +7196,25 @@ _scribere_nucleus (
                     chorda_aedificator_appendere_character(aedificator, '\\');
                 }
 
-                /* Attributes */
-                _attributa_scribere(aedificator, nodus, fidelitas);
+                /* Attributes (§0.2 decretum quintum: positione
+                 * bloci ultra tectum - attributum per lineam,
+                 * clausura glutinata valori ultimo; latitudo
+                 * clausurae I = '>', II = '/>') */
+                si (   pulchrum
+                    && _attributa_multilinea_oportet(nodus,
+                           indentatio,
+                           (   nodus->liberi != NIHIL
+                            && xar_numerus(nodus->liberi)
+                                   > ZEPHYRUM) ? I : II))
+                {
+                    _attributa_multilinea_scribere(aedificator,
+                        nodus, indentatio * II, ZEPHYRUM);
+                }
+                alioquin
+                {
+                    _attributa_scribere(aedificator, nodus,
+                                        fidelitas);
+                }
 
                 /* trivia intra tagum ante '>' aut '/>' (§1.6) */
                 si (fidelitas && nodus->spatia_intra_tagum != NIHIL)
