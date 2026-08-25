@@ -785,3 +785,32 @@ ownership law). Finds:
 Gates after: stml family 4/4 (incl. sedes parity on stacked
 extents), silva 50/50 (corpus 73+154 at 0 vitia), both canon
 freshness gates, amalgam re-verified (hospes 39/39).
+
+## 2026-08-24 (M2b sequela) — blank lines are paragraph separators, not layout
+
+Fran ran the formatter over silva/grammatica/c89.stml and spotted
+pretty eating every authored blank line. Decree: N authored blanks
+at block level → min(N, 2) emitted — paragraph separation is
+MEANING-adjacent, not regenerable layout. Finds:
+
+- **The blank count lives entirely in the FOLLOWER's spatia_ante**
+  by the ownership law — the prior's post takes exactly the first
+  newline of the gap, everything beyond lands in the next node's
+  ante. So `_lineae_vacuae` counts ante newlines over a baseline.
+- **The baseline is positional and asymmetric**: I for the first
+  block child (open-tag→first-child gets the WHOLE run, so one
+  newline is just the line break), ZEPHYRUM between siblings AND
+  before the close tag (the last child's post already took the
+  first newline; clausurae holds only the extra). Getting
+  clausurae's baseline wrong (I) would silently delete
+  single-blank-before-close.
+- Three call sites: element block branch (per-child + clausurae)
+  and the documentum loop (i > 0 only — leading file blanks
+  drop). Collapsed spines and inline content stay tight by
+  design.
+- Fixed-point stable by construction: the emitted form reparses
+  to the same ante newline counts. The 148-file pulchrum corpus
+  (which carries real paragraph breaks) went green on the first
+  compile.
+- c89.stml live: 1217 → 843 lines (was 748 blank-less) — the
+  structural compression stays, ~95 paragraph breaks return.

@@ -87,7 +87,13 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
     { "verticalis_ultra_tectum",
       "<vinculumprimum><vinculumsecundum><vinculumtertium>"
       "<vinculumquartum>foo</vinculumquartum></vinculumtertium>"
-      "</vinculumsecundum></vinculumprimum>" }
+      "</vinculumsecundum></vinculumprimum>" },
+    { "lineae_vacuae",
+      "<radix>\n  <a/>\n\n  <!-- nota -->\n  <b/>\n</radix>" },
+    { "lineae_vacuae_multae",
+      "<radix>\n\n  <a/>\n\n\n\n  <b/>\n\n</radix>" },
+    { "lineae_vacuae_documenti",
+      "<?xml version=\"1.0\"?>\n\n<radix><a/><b/></radix>" }
 };
 
 /* Plagulam totam in piscinam legere */

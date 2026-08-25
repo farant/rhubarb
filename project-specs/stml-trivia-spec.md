@@ -385,6 +385,20 @@ remains the raw total stream (over canonicalized input).
   M1 decree. M2 does NOT exercise flow re-wrap: flow valor is
   emitted verbatim; the re-wrap liberty stays reserved with the
   formator width policy (§11).
+- **Blank-line preservation (decreed 2026-08-24, on seeing pretty
+  eat every paragraph break in c89.stml).** Authored blank lines
+  at BLOCK level are paragraph separators, not layout to
+  regenerate: pretty preserves one or two, and collapses three or
+  more to two (N → min(N, 2)). Applies between block siblings
+  (elements AND comments), after an open tag before the first
+  block child, before the closing tag, and between document-level
+  children; never inside collapsed spines or inline content;
+  leading blanks of the FILE drop. Derivation is trivia-honest
+  and fixed-point stable: blank count = newlines in the
+  follower's `spatia_ante` (the ownership law sends the prior's
+  single line-break newline to its post, every extra newline to
+  the follower's ante), minus the one baseline newline in
+  first-child and clausurae positions, clamped to [0, 2].
 - **Collapse (pulled from M4, 2026-08-24, §0.2)**: pretty emits a
   single-child spine in capture form on one line when the whole
   line fits the 72-column budget from the current indent.
@@ -558,6 +572,10 @@ unchanged, now structurally enforced.
 - `<tag(> foo` — captured text: valor `"foo"`, captor post `" "`
 - width boundary: a spine at exactly 72 columns collapses, at 73
   stays block; both are fixed-point stable
+- blank lines: one authored blank between block siblings (and
+  before a comment) survives pretty; three or more collapse to
+  two; blanks after the open tag and before the close tag
+  survive with the same clamp; all fixed-point stable
 - vertical (M2b): `<a><b><c/><d/></b></a>` → packed captors +
   block interior (`<a(> <b(>` / block c at +1 — the §0.2
   exemplar); over-budget chain ending in an inline terminal →
@@ -603,6 +621,10 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   (parser untouched), the all-or-nothing fallback deleted, the
   72/73 text fixtures unmoved. Churn: 2 root expectations +
   9 silva arbor assertions (finds in lib/stml.worklog.md).
+  Follow-on same day: blank-line preservation (§4) — decreed on
+  first live run over c89.stml, where pretty ate every paragraph
+  break. N authored blanks → min(N, 2), derived from the
+  follower's spatia_ante over a positional baseline.
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
   lab.
 - **M4** — captures: counting policy, including the same-line

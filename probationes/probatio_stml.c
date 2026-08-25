@@ -2535,6 +2535,79 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Lineae vacuae (§4): separatio paragraphorum superstes
+     * - una aut duae servantur, plures ad duas cadunt
+     * ================================================== */
+
+    imprimere("\n--- Probans lineas vacuas ---\n");
+
+    {
+        /* linea vacua inter fratres blocorum (et ante commentum)
+         * servatur */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<radix>\n  <a/>\n\n  <!-- nota -->\n  <b/>\n</radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<radix>\n  <a/>\n\n  <!-- nota -->\n  <b/>\n</>");
+
+        imprimere("  linea vacua servata: PRAETERITUM\n");
+    }
+
+    {
+        /* tres vacuae ad duas cadunt (tectum) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<radix>\n  <a/>\n\n\n\n  <b/>\n</radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<radix>\n  <a/>\n\n\n  <b/>\n</>");
+
+        imprimere("  vacuae plures ad duas: PRAETERITUM\n");
+    }
+
+    {
+        /* post tagum apertum et ante tagum claudentem: eadem
+         * clausula (basis = linea prima ordinaria) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<radix>\n\n  <a/>\n  <b/>\n\n</radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<radix>\n\n  <a/>\n  <b/>\n\n</>");
+
+        imprimere("  vacuae apud tagos: PRAETERITUM\n");
+    }
+
+    {
+        /* gradus documenti: vacua inter processionem et radicem */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<?xml version=\"1.0\"?>\n\n<radix><a/><b/></radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<?xml version=\"1.0\"?>\n\n<radix>\n  <a/>\n  <b/>\n</>");
+
+        imprimere("  vacua gradus documenti: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 

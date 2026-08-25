@@ -14251,6 +14251,41 @@ _vinculum_scribere (
     }
 }
 
+/* Lineae vacuae authoratae (§4): separatio paragraphorum non
+ * deletur - pulcher unam aut duas servat, plures ad duas cadunt.
+ * Numeratio ex spatia_ante sequentis (lex proprietatis: '\n'
+ * primum fractionis ad post prioris it, omne ultra ad ante
+ * sequentis) supra lineam basalem: basis I positione liberi primi
+ * (tagum apertum totum cursum ei dat), ZEPHYRUM inter fratres et
+ * ante tagum claudentem. */
+interior i32
+_lineae_vacuae (
+    constans SilvaChorda* spatia,
+                i32  basis)
+{
+    i32 i;
+    i32 numerus;
+
+    si (spatia == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < spatia->mensura; i++)
+    {
+        si ((character)spatia->datum[i] == '\n')
+        {
+            numerus++;
+        }
+    }
+    si (numerus <= basis)
+    {
+        redde ZEPHYRUM;
+    }
+    numerus -= basis;
+    redde (numerus > II) ? II : numerus;
+}
+
 /* Spinam pulchre scribere (§4 collapsus verticalis, M2b): forma
  * capturae UNIVERSALIS spinis idoneis - latitudo dispositionem
  * eligit, non formam. Vincula in linea currenti avare sarcinantur
@@ -14454,6 +14489,20 @@ _scribere_nucleus (
                     liberum = _xar_liberum_obtinere(nodus->liberi, i);
                     si (liberum)
                     {
+                        /* lineae vacuae inter liberos gradus
+                         * documenti servatae (§4); vacuae plagulae
+                         * ducentes cadunt (i == 0 praeteritur) */
+                        si (pulchrum && !in_linea && i > ZEPHYRUM)
+                        {
+                            i32 vacuae;
+
+                            per (vacuae = _lineae_vacuae(
+                                     liberum->spatia_ante, ZEPHYRUM);
+                                 vacuae > ZEPHYRUM; vacuae--)
+                            {
+                                silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                            }
+                        }
                         _scribere_nucleus(liberum, aedificator,
                             in_linea ? FALSUM : pulchrum, fidelitas,
                             indentatio, sedes);
@@ -14974,18 +15023,41 @@ _scribere_nucleus (
                     }
                     alioquin
                     {
-                        /* BLOCUS: liberum per lineam, indentatum */
+                        /* BLOCUS: liberum per lineam, indentatum;
+                         * lineae vacuae authoratae servatae (§4 -
+                         * basis I libero primo: tagum apertum
+                         * cursum totum ei dat) */
                         per (i = ZEPHYRUM; i < num; i++)
                         {
                             liberum = _xar_liberum_obtinere(nodus->liberi, i);
                             si (liberum)
                             {
+                                i32 vacuae;
+
                                 silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                                per (vacuae = _lineae_vacuae(
+                                         liberum->spatia_ante,
+                                         (i == ZEPHYRUM) ? I : ZEPHYRUM);
+                                     vacuae > ZEPHYRUM; vacuae--)
+                                {
+                                    silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                                }
                                 _scribere_nucleus(liberum, aedificator, VERUM, fidelitas, indentatio + I, sedes);
                             }
                         }
-                        silva_chorda_aedificator_appendere_character(aedificator, '\n');
-                        _scribere_indentatio(aedificator, indentatio);
+                        {
+                            i32 vacuae;
+
+                            silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                            per (vacuae = _lineae_vacuae(
+                                     nodus->spatia_clausurae,
+                                     ZEPHYRUM);
+                                 vacuae > ZEPHYRUM; vacuae--)
+                            {
+                                silva_chorda_aedificator_appendere_character(aedificator, '\n');
+                            }
+                            _scribere_indentatio(aedificator, indentatio);
+                        }
                     }
 
                     /* Clausura TACITA (2026-08-19): in modo pulchro
