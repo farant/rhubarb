@@ -13988,3 +13988,21 @@ INSTRUMENTA DEBRIEF (M2 session):
   baseline (git HEAD?) would make it a real per-edit signal;
   censor hook could suppress output when the examen verdict is
   "?" (transient non-compiling state).
+
+---
+
+**Addendum 2026-08-24 (sero): stml M2b landed — the forecast churn came and went.**
+Vertical collapse (capture form universal, width picks packing) shipped
+in stml as 61e4b7b2. Arbor documents now stack deep single-child chains:
+`<specificatores(> <typus-primitivus(> <tok_verba(> <lex-int(>` with a
+greedy break to `<post(> <lex-spatia n="1"/>` one step deeper. Silva-side
+churn was exactly the predicted class — 9 assertions in
+probatio_silva_arbor + the canon_corpus falsification probe, all
+string-matching non-collapsed forms. Two portable lessons for future
+substitution-style probes: (1) the packer may put a line break where a
+trailing space was, so patterns like `"<lex-int(> "` silently stop
+matching; (2) corrupt INSIDE the tag name (`<declaratores` → sedes[1])
+rather than replacing whole tags, so the probe survives either emission
+form. The 154-file memcmp gate and both canon freshness gates never
+flinched — tree meaning is what they eat. Suite: silva 50/50, root
+140/140.
