@@ -78,9 +78,24 @@ declare -a RADIX_FONTES=(
 FILTER="${1:-}"
 
 # ---- 1. compile dependency objects (incremental) ----
+# CAPUT RECENTISSIMUM SEMEL (exemplar radicis 2026-08-25): find
+# per obiectum retiratum - aequivalentia: aliquod caput recentius
+# obiecto <=> recentissimum recentius obiecto. Custos: nihil
+# inventum = viae find pravae = custodia capitum MORTUA - CLAMAT.
+CAPUT_RECENS=""
+while IFS= read -r caput_via; do
+    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
+        CAPUT_RECENS="$caput_via"
+    fi
+done < <(find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' 2>/dev/null)
+if [ -z "$CAPUT_RECENS" ]; then
+    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
+fi
+
 newest_header () {
-    # newest mtime among include headers + silva headers
-    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
+    if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+        echo "$CAPUT_RECENS"
+    fi
 }
 
 obj_files=""
