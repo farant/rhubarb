@@ -70129,15 +70129,18 @@ _textus_directus (
     {
         SilvaStmlNodus* liberum = silva_stml_liberum_ad_indicem(elementum, i);
 
-        /* Textus spatii albi SOLIUS praeteritur: scriptor pulcher
-         * lineas novas et indentationem inter elementa iniicit, et
-         * illae nodi textus DIRECTI sunt - sine hoc omne elementum
-         * lexematis pulchre scriptum valorem ferre videretur.
-         * TUTUM est quia scriptor valorem spatii-albi-solius
-         * REFUTAT (_textus_tutus): textus talis valor esse NON
-         * potest, ergo ambiguitas nulla. Refutatio scriptoris est
-         * quae hanc lectionem univocam facit - contractus unus per
-         * duas partes. */
+        /* Textus spatii albi SOLIUS praeteritur. NB ratio prisca
+         * (scriptor pulcher lineas novas ut nodos textus iniicit)
+         * exemplari triviae M1 MORTUA est - cursus albi lineam
+         * ferentes trivia sunt, numquam nodi. Classis superstes:
+         * nodi albi eiusdem-lineae ('<t>  </t>' manu scripti) -
+         * illi CONTENTUM sunt (doctrina M2) sed valores lexematum
+         * esse non possunt. TUTUM quia scriptor valorem
+         * spatii-albi-solius REFUTAT (_textus_tutus): ambiguitas
+         * nulla - contractus unus per duas partes. Ideo NON
+         * stml_textus_valor (M3): ille albos-solius ut contentum
+         * confert, ambitus posterorum omnium - contractus noster
+         * angustior consulto manet. */
         si (   liberum        != NIHIL
             && liberum->genus == STML_NODUS_TEXTUS
             && liberum->valor != NIHIL

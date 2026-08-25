@@ -4233,6 +4233,342 @@ stml_textus_normalizatus (
     redde _normalizare_spatium_album(crudus, piscina);
 }
 
+/* Contributio ad VALOREM (§2 M3): valores nodorum textus ordine
+ * documenti, recursivi, sine triviis. Commenta et processiones
+ * nihil conferunt. Genus declaratum in exemplari vivit (contentum
+ * '\' dedentatum conditur, crudum verbatim) - hic nihil de
+ * generibus sciendum. */
+interior vacuum
+_valorem_contribuere (
+            StmlNodus* nodus,
+    ChordaAedificator* aed)
+{
+           i32  i;
+           i32  num;
+     StmlNodus* liberum;
+
+    si (nodus->genus == STML_NODUS_TEXTUS)
+    {
+        si (nodus->valor != NIHIL)
+        {
+            chorda_aedificator_appendere_chorda(aed, *nodus->valor);
+        }
+        redde;
+    }
+    si (   nodus->genus != STML_NODUS_ELEMENTUM
+        && nodus->genus != STML_NODUS_DOCUMENTUM)
+    {
+        redde;
+    }
+    si (nodus->liberi == NIHIL)
+    {
+        redde;
+    }
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum != NIHIL)
+        {
+            _valorem_contribuere(liberum, aed);
+        }
+    }
+}
+
+chorda
+stml_textus_valor (
+    StmlNodus* nodus,
+      Piscina* piscina)
+{
+    ChordaAedificator* aed;
+               chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (nodus == NIHIL)
+    {
+        redde vacua;
+    }
+    aed = chorda_aedificator_creare(piscina, CXXVIII);
+    si (aed == NIHIL)
+    {
+        redde vacua;
+    }
+    _valorem_contribuere(nodus, aed);
+    redde chorda_aedificator_finire(aed);
+}
+
+/* Octetos verbatim in fluxum appendere (contentum generis marcati
+ * intra fluxum): octetus primus spatium molle debitum solvit. */
+interior vacuum
+_fluxum_octetos_appendere (
+    ChordaAedificator* aed,
+      constans chorda* valor,
+                  b32* pendens,
+                  b32* emissum)
+{
+    si (valor == NIHIL || valor->mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (*pendens && *emissum)
+    {
+        chorda_aedificator_appendere_character(aed, ' ');
+    }
+    *pendens = FALSUM;
+    *emissum = VERUM;
+    chorda_aedificator_appendere_chorda(aed, *valor);
+}
+
+/* Valorem fluminis appendere: cursus albi lineam ferentes fiunt
+ * spatium molle unum (cum limitibus vicinis coalescens); cursus
+ * albi eiusdem lineae LITTERALES manent (§2 - forma datorum
+ * sumus). */
+interior vacuum
+_fluxum_valorem_appendere (
+    ChordaAedificator* aed,
+      constans chorda* valor,
+                  b32* pendens,
+                  b32* emissum)
+{
+    i32 i;
+
+    si (valor == NIHIL)
+    {
+        redde;
+    }
+    i = ZEPHYRUM;
+    dum (i < valor->mensura)
+    {
+        si (_est_spatium((character)valor->datum[i]))
+        {
+            i32 finis;
+            b32 fert_lineam;
+
+            finis        = i;
+            fert_lineam  = FALSUM;
+            dum (   finis < valor->mensura
+                 && _est_spatium((character)valor->datum[finis]))
+            {
+                si ((character)valor->datum[finis] == '\n')
+                {
+                    fert_lineam = VERUM;
+                }
+                finis++;
+            }
+            si (fert_lineam)
+            {
+                *pendens = VERUM;
+            }
+            alioquin
+            {
+                si (*pendens && *emissum)
+                {
+                    chorda_aedificator_appendere_character(aed, ' ');
+                }
+                *pendens = FALSUM;
+                *emissum = VERUM;
+                dum (i < finis)
+                {
+                    chorda_aedificator_appendere_character(aed,
+                        (character)valor->datum[i]);
+                    i++;
+                }
+            }
+            i = finis;
+        }
+        alioquin
+        {
+            si (*pendens && *emissum)
+            {
+                chorda_aedificator_appendere_character(aed, ' ');
+            }
+            *pendens = FALSUM;
+            *emissum = VERUM;
+            chorda_aedificator_appendere_character(aed,
+                (character)valor->datum[i]);
+            i++;
+        }
+    }
+}
+
+/* Contentum generis marcati ('\' aut crudum) in fluxum: valor
+ * intactus - genus declaratum accessorem vincit (§2). */
+interior vacuum
+_fluxum_marcatum_contribuere (
+    ChordaAedificator* aed,
+            StmlNodus* nodus,
+                  b32* pendens,
+                  b32* emissum)
+{
+           i32  i;
+           i32  num;
+     StmlNodus* liberum;
+
+    si (nodus->genus == STML_NODUS_TEXTUS)
+    {
+        _fluxum_octetos_appendere(aed, nodus->valor, pendens,
+                                  emissum);
+        redde;
+    }
+    si (   nodus->genus != STML_NODUS_ELEMENTUM
+        && nodus->genus != STML_NODUS_DOCUMENTUM)
+    {
+        redde;
+    }
+    si (nodus->liberi == NIHIL)
+    {
+        redde;
+    }
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum != NIHIL && !_est_commentum(liberum))
+        {
+            _fluxum_marcatum_contribuere(aed, liberum, pendens,
+                                         emissum);
+        }
+    }
+}
+
+/* an trivia lineam ferant */
+interior b32
+_trivia_ferunt_lineam (
+    constans chorda* spatia)
+{
+    i32 i;
+
+    si (spatia == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < spatia->mensura; i++)
+    {
+        si ((character)spatia->datum[i] == '\n')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Fluxum elementi fluminis contribuere (§2): liberi ordine, limes
+ * lineam ferens inter eos (post prioris + ante sequentis) spatium
+ * molle UNUM debet; commenta contentum nullum conferunt sed
+ * limites eorum numerantur (coalescentia); liberum marcatum
+ * valorem intactum confert; liberum planum recursive. Trivia
+ * orae (ante primi, post ultimi, clausurae) numquam spatium dant:
+ * spatium molle solum inter contentum solvitur. */
+interior vacuum
+_fluxum_contribuere (
+    ChordaAedificator* aed,
+            StmlNodus* nodus,
+                  b32* pendens,
+                  b32* emissum)
+{
+           i32  i;
+           i32  num;
+     StmlNodus* liberum;
+     StmlNodus* prior;
+
+    si (nodus->liberi == NIHIL)
+    {
+        redde;
+    }
+    num    = xar_numerus(nodus->liberi);
+    prior  = NIHIL;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        /* limes ante liberum: post prioris + ante liberi (prior
+         * NIHIL = ora - trivia orae spatium nullum dant, sed
+         * *emissum id iam custodit trans recursiones) */
+        si (   (prior != NIHIL
+                && _trivia_ferunt_lineam(prior->spatia_post))
+            || _trivia_ferunt_lineam(liberum->spatia_ante))
+        {
+            *pendens = VERUM;
+        }
+        si (_est_commentum(liberum))
+        {
+            prior = liberum;
+            perge;
+        }
+        si (liberum->genus == STML_NODUS_TEXTUS)
+        {
+            _fluxum_valorem_appendere(aed, liberum->valor, pendens,
+                                      emissum);
+        }
+        alioquin si (liberum->genus == STML_NODUS_ELEMENTUM)
+        {
+            si (liberum->crudus || liberum->multilinea)
+            {
+                _fluxum_marcatum_contribuere(aed, liberum, pendens,
+                                             emissum);
+            }
+            alioquin
+            {
+                _fluxum_contribuere(aed, liberum, pendens, emissum);
+            }
+        }
+        prior = liberum;
+    }
+}
+
+chorda
+stml_textus_fluxus (
+    StmlNodus* nodus,
+      Piscina* piscina)
+{
+    ChordaAedificator* aed;
+               chorda  vacua;
+                  b32  pendens;
+                  b32  emissum;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (nodus == NIHIL)
+    {
+        redde vacua;
+    }
+    aed = chorda_aedificator_creare(piscina, CXXVIII);
+    si (aed == NIHIL)
+    {
+        redde vacua;
+    }
+    pendens = FALSUM;
+    emissum = FALSUM;
+    si (nodus->genus == STML_NODUS_TEXTUS)
+    {
+        si (   nodus->parens != NIHIL
+            && (nodus->parens->crudus || nodus->parens->multilinea))
+        {
+            _fluxum_octetos_appendere(aed, nodus->valor, &pendens,
+                                      &emissum);
+        }
+        alioquin
+        {
+            _fluxum_valorem_appendere(aed, nodus->valor, &pendens,
+                                      &emissum);
+        }
+    }
+    alioquin si (nodus->crudus || nodus->multilinea)
+    {
+        _fluxum_marcatum_contribuere(aed, nodus, &pendens,
+                                     &emissum);
+    }
+    alioquin
+    {
+        _fluxum_contribuere(aed, nodus, &pendens, &emissum);
+    }
+    redde chorda_aedificator_finire(aed);
+}
+
 i32
 stml_numerus_liberorum (
     StmlNodus* nodus)

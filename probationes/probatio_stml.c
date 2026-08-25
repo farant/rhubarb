@@ -2659,6 +2659,119 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Accessores sensus M3 (§2): stml_textus_valor +
+     * stml_textus_fluxus - genus declaratum accessorem vincit
+     * ================================================== */
+
+    imprimere("\n--- Probans accessores valor/fluxus (M3) ---\n");
+
+    {
+        /* VALOR: concatenatio valorum textus, sine triviis.
+         * Contentum '\' iam dedentatum in exemplari vivit */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis(
+            "<carmen\\>\n  prima\n    altior\n  ultima\n</>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_valor(res.elementum_radix, piscina),
+            "prima\n  altior\nultima");
+
+        res = stml_legere_ex_literis(
+            "<p>salve <b>munde</b> iterum</p>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_valor(res.elementum_radix, piscina),
+            "salve munde iterum");
+
+        res = stml_legere_ex_literis("<t>\n  salve\n</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_valor(res.elementum_radix, piscina),
+            "salve");
+
+        res = stml_legere_ex_literis("<code!>a < b && c > d</code>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_valor(res.elementum_radix, piscina),
+            "a < b && c > d");
+
+        res = stml_legere_ex_literis("<p>a<br/>b</p>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_valor(res.elementum_radix, piscina), "ab");
+
+        imprimere("  valor: exemplar legitur: PRAETERITUM\n");
+    }
+
+    {
+        /* FLUXUS: lectio prosae. Margines nihil (trivia orae),
+         * limites molles consecutivi in unum, recursio formae
+         * textContent, cursus eiusdem lineae LITTERALES */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis("<p>\n salve\n</p>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "salve");
+
+        res = stml_legere_ex_literis(
+            "<radix>salve\n<!-- nota -->\nmunde</radix>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "salve munde");
+
+        res = stml_legere_ex_literis("<p>a<br/>b</p>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "ab");
+
+        res = stml_legere_ex_literis("<t>a  b</t>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "a  b");
+
+        res = stml_legere_ex_literis("<t>salve\nmunde</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "salve munde");
+
+        /* genus declaratum vincit: '\' per fluxum = valor intactus */
+        res = stml_legere_ex_literis(
+            "<carmen\\>\n  prima\n    altior\n  ultima\n</>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "prima\n  altior\nultima");
+
+        /* recursio + limites: liberum elementare fluxum suum fert */
+        res = stml_legere_ex_literis(
+            "<p>alpha <b>beta\ngamma</b>\ndelta</p>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        CREDO_CHORDA_AEQUALIS_LITERIS(
+            stml_textus_fluxus(res.elementum_radix, piscina),
+            "alpha beta gamma delta");
+
+        imprimere("  fluxus: lectio prosae: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 

@@ -417,6 +417,39 @@ stml_textus_normalizatus (
     StmlNodus* nodus,
       Piscina* piscina);
 
+/* Capere VALOREM textus - lectio sensus (M3, spec triviae §2)
+ * "Get the text VALUE - the meaning reading"
+ *
+ * Concatenatio valorum nodorum textus ordine documenti,
+ * recursiva, sine triviis sineque reassutione: accessor exemplar
+ * purum legit. Genus declaratum in exemplari ipso vivit -
+ * contentum '<tag\>' iam dedentatum conditur (praefixum in
+ * indentatione), crudum verbatim - ergo accessor nihil de
+ * generibus scit. Commenta nihil conferunt. Lectio formatione
+ * STABILIS: reformatio documenti valorem numquam mutat. */
+chorda
+stml_textus_valor (
+    StmlNodus* nodus,
+      Piscina* piscina);
+
+/* Capere FLUXUM textus - lectio prosae (M3, spec triviae §2)
+ * "Get the text FLOW - the prose reading"
+ *
+ * Forma textContent: textus liberorum iunctus, spatio UNO ubi
+ * limes lineam ferens aut cursus interior lineam ferens sedebat.
+ * Regulae orae tres: trivia orae (ante contenti primi, post
+ * ultimi) spatium NULLUM conferunt; limites molles consecutivi
+ * in unum spatium coalescunt (commenta transparentia); liberum
+ * elementare fluxum SUUM confert. Divergentia consulta ab HTML:
+ * cursus eiusdem lineae LITTERALES manent ('a  b' spatia duo
+ * servat) - regula una ubique, forma datorum sumus. Genus
+ * declaratum accessorem VINCIT: contentum '\' aut crudum per
+ * fluxum lectum valorem intactum reddit. */
+chorda
+stml_textus_fluxus (
+    StmlNodus* nodus,
+      Piscina* piscina);
+
 /* Numerus liberorum
  * "Number of children"
  */

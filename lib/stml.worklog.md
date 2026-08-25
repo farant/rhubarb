@@ -838,3 +838,42 @@ indent 20: flat-72 refused it (32 of room), the floor captures it;
 plus a deep fixed-point assert. Gates: stml 4/4, silva 50/50
 (arbor gates re-derive both sides, no goldens flinched), canons
 recentes.
+
+## 2026-08-24 (M3 accessores) — valor + fluxus: the meaning readings land
+
+The triad is complete (§2). Finds:
+
+- **`stml_textus_valor` needed ZERO kind logic** — it is a pure
+  recursive concatenation of text-node valors (comments and
+  processing instructions contribute nothing). M1 put the truth
+  in the model: `\` content is stored dedented, raw is stored
+  verbatim, flow edges live in trivia. The accessor just reads.
+- **`stml_textus_fluxus` is a two-flag state machine** (pendens =
+  a soft space is owed, emissum = content has been emitted).
+  Every §2 edge rule falls out of the flag discipline: edge
+  trivia never emits (pendens without emissum is dropped),
+  consecutive soft boundaries merge (pendens is idempotent),
+  comments are transparent (contribute no content, their
+  boundaries still set pendens). Same-line ws runs are literal —
+  INCLUDING ws-only text nodes (`<sep>   </sep>` flows to
+  "   "), consistent with the M2 content doctrine.
+- **Kind outranks the accessor**: marked (`\`/`!`) elements
+  contribute their valor verbatim through `_fluxum_octetos_
+  appendere` — first byte flushes the pending space, empty
+  contributions never flush (so a marked element with no text is
+  boundary-transparent like a comment).
+- **Migration (§9) was smaller than the spec guessed.** canon:
+  ONE site (typed-text judging) moved to valor — behavior-neutral
+  because the call site's own praecidere already did the trim;
+  the two internus sites are identity-sensitive (sealed keys) and
+  stay on the bridge FOREVER. silva arbor: NO migration — its
+  `_textus_directus` carries a two-part contract (writer refuses
+  ws-only values ⇄ reader skips ws-only nodes) that valor
+  deliberately does not share; only its stale rationale comment
+  was fixed (the newline-injection class it feared died in M1 —
+  those are trivia now, never nodes). The remaining ~17 consumers
+  migrate when touched, never forced.
+- **Amalgam note**: the new accessors are unused by silva, so the
+  excludenda harvest prunes them (regenerated, 143 names). No
+  struct changes → no silva.h hand-mirror work, no lab re-vendor
+  needed this milestone.

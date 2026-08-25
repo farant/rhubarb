@@ -2682,13 +2682,17 @@ nodum_iudicare (
         }
     }
 
-    /* ---- textus typatus: non vacuus generi congruere debet ---- */
+    /* ---- textus typatus: non vacuus generi congruere debet ----
+     * stml_textus_valor (M3 §9): lectio valoris formatione
+     * stabilis - praecidere marginum eiusdem-lineae manet.
+     * Sedes identitatis (claves sigillatae, citationes) in
+     * stml_textus_internus manent consulto - ponte, non hic. */
     si (e->textus_licet && e->textus_genus != CANON_GENUS_TEXTUS)
     {
         chorda textus_totus;
 
         textus_totus = chorda_praecidere(
-            stml_textus_normalizatus(n, piscina));
+            stml_textus_valor(n, piscina));
         si (textus_totus.mensura > ZEPHYRUM)
         {
             CanonAttributum tmp;

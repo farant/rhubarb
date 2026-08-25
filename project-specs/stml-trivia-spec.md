@@ -636,7 +636,17 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   killing the deep-wrap staircase (arbor documents reach 36
   columns of indent in mid-size lib files).
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
-  lab.
+  lab. ACCESSORS + MANDATED MIGRATION SHIPPED 2026-08-24: valor
+  (pure model read, zero kind logic) + fluxus (two-flag state
+  machine; every §2 edge rule falls out of pendens/emissum).
+  canon's one value-read moved to valor (behavior-neutral, its
+  internus identity sites stay on the bridge forever); silva
+  arbor deliberately NOT migrated — its `_textus_directus`
+  carries a two-part ws-only contract valor does not share (only
+  the stale rationale comment fixed). Remaining consumers at
+  leisure per §9. No struct changes → no lab re-vendor needed.
+  REMAINING for the milestone: flow re-wrap (the fluxus-gated
+  liberty, §4/§11 formator width policy).
 - **M4** — captures: counting policy, including the same-line
   corners the §1.2 amendment defers (multi-paren interleaving,
   retro captors); raw multi-paren refusal (§6). (Stream-order
