@@ -1138,3 +1138,33 @@ Trap for the future: "tag-only" is the RULE but the crudus
 captor is the exception — the extent contract is "the capture
 token's span", which for crudus includes the captured line.
 Any new capture form should ask what its TOKEN spans first.
+
+## 2026-08-25 (later still): the 8.6s sedes suite — unsigned underflow spin
+
+probatio_stml_sedes sat at a rock-stable ~8.6s for 465 tiny
+assertions — insensitive to adding circuits, which is the tell
+for a FIXED cost, not workload. sample(1) put 100% of it in
+`_sedes_postordinare` → `_sedes_revertere` → `xar_obtinere`;
+per-section timestamps convicted ordinaria(pulchrum=1) alone.
+
+The chain: radix is multiplex, so captee `caput` emits while the
+sedes table is EMPTY (captor notes post-children). caput is a
+one-link spine with a TEXT terminal — text carries no nota, so
+totum == vincula and the second reversal gets quantum ZEPHYRUM
+at initium ZEPHYRUM. In `_sedes_revertere`,
+`b = initium + quantum - I` = 0+0-1 → i32 is UNSIGNED → b ≈ 2^32
+→ `dum (a < b)` spins ~2^31 bounds-checked no-op iterations.
+Zero swaps (the indices are never in range together), so every
+gate stayed green — pure heat, 8.4s of it, since the suite's
+birth. Only fires when a text-terminal spine is the document's
+FIRST emission (any other position: b = initium-1 < a, loop
+never entered) — hence exactly one circuit burning.
+
+Fix: quantum < II guard in `_sedes_revertere` (nothing to
+reverse; makes the underflow arithmetic unreachable for every
+caller). 8.59s → 0.25s, verdict identical 465/465.
+
+House landmine census: this is the same "i32 is unsigned" class
+as the clock-delta bug — subtraction in index/count arithmetic
+needs either a guard proving minuend ≥ subtrahend or s32/s64.
+A loop bound derived by subtraction deserves suspicion on sight.

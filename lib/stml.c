@@ -6842,7 +6842,11 @@ _capturam_multiplicem_conari (
  * spina tota = vinculum unicum cum textu ultra tectum (fixum
  * LXXII/LXXIII - forma aperta manet). */
 /* Segmentum tabulae sedium revertere in situ (permutationes
- * cellularum, sine allocatione) */
+ * cellularum, sine allocatione). Custos quantum < II: nihil
+ * revertendum - et 'initium + quantum - I' cum quantum ZEPHYRUM
+ * et initio ZEPHYRUM in i32 INSIGNATO ad ~2^32 subfluebat, unde
+ * ansa ~2^31 iterationum vacuarum (8s in probatio_stml_sedes:
+ * spina terminali textus prima documenti - totum == vincula). */
 interior vacuum
 _sedes_revertere (
     Xar* sedes,
@@ -6852,6 +6856,10 @@ _sedes_revertere (
     i32 a;
     i32 b;
 
+    si (quantum < II)
+    {
+        redde;
+    }
     a = initium;
     b = initium + quantum - I;
     dum (a < b)
