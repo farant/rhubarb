@@ -176,14 +176,30 @@ compile_libraries() {
     # antea vexillum globale needs_compile solum accendebatur sed
     # condiciones per-plagulam capita ignorabant - vexillum
     # decorativum, nihil recompilabatur)
+    #
+    # CAPUT RECENTISSIMUM SEMEL (mensura 2026-08-25): ansa
+    # nidificata prior (150 capita x 130 fontes cum $(basename)
+    # FURCA per iterationem = ~20k furcae) ~30s cursu QUOVIS
+    # solvebat, etiam calido. Aequivalentia: aliquod caput
+    # recentius obiecto <=> caput RECENTISSIMUM recentius obiecto.
+    CAPUT_RECENS=""
+    for header in include/*.h; do
+        if [ -z "$CAPUT_RECENS" ] || [ "$header" -nt "$CAPUT_RECENS" ]; then
+            CAPUT_RECENS="$header"
+        fi
+    done
+
     newest_header () {
-        find include -name '*.h' -newer "$1" 2>/dev/null | head -1
+        if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+            echo "$CAPUT_RECENS"
+        fi
     }
 
     # Check if any source file is newer than its object file
+    # (expansio parametrorum, non $(basename) - furca per fontem)
     for src_file in "${SOURCE_FILES[@]}"; do
-        obj_name=$(basename "$src_file" .c).o
-        obj_file="$BUILD_DIR/$obj_name"
+        obj_name="${src_file##*/}"
+        obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
         if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ]; then
             needs_compile=1
@@ -193,25 +209,26 @@ compile_libraries() {
 
     # Also check Objective-C files
     for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
-        obj_file="$BUILD_DIR/$obj_name"
+        obj_name="${objc_file##*/}"
+        obj_file="$BUILD_DIR/${obj_name%.m}.o"
         if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ]; then
             needs_compile=1
             break
         fi
     done
 
-    # Check if any header changed
-    for header in include/*.h; do
+    # Check if any header changed (una transitio contra caput
+    # recentissimum - ansa nidificata retirata)
+    if [ $needs_compile -eq 0 ] && [ -n "$CAPUT_RECENS" ]; then
         for src_file in "${SOURCE_FILES[@]}"; do
-            obj_name=$(basename "$src_file" .c).o
-            obj_file="$BUILD_DIR/$obj_name"
-            if [ -f "$obj_file" ] && [ "$header" -nt "$obj_file" ]; then
+            obj_name="${src_file##*/}"
+            obj_file="$BUILD_DIR/${obj_name%.c}.o"
+            if [ -f "$obj_file" ] && [ "$CAPUT_RECENS" -nt "$obj_file" ]; then
                 needs_compile=1
-                break 2
+                break
             fi
         done
-    done
+    fi
 
     if [ $needs_compile -eq 0 ] && [ $LIBS_COMPILED -eq 0 ]; then
         echo -e "${BLUE}Libraries up to date${RESET}"
