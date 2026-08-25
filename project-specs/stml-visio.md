@@ -242,3 +242,105 @@ Build nothing before it fires. Consensed design, all from 2026-08-10:
    future notes), the construct's semantics may enter the data plane
    only if it keeps documents non-computing; otherwise it enters as a
    tool.
+
+## 9. The 2026-08-25 conversation — control plane, substrate, pipes, SGML mining
+
+One session's design talk (Fran + Fable, the day formatter decrees
+V/VI shipped). Raw notes: forum 01M0WY4G8Z, desideratum 01M0VNSZC6,
+parcum 01M0T5XYC3. Nothing here is implemented; everything below
+passed the §8 laws at the door.
+
+### 9.1 Macros — the §6 "parameterized fragments" trigger is firing
+
+Fran: macros = "fragments if they could take arguments"; work starts
+imminently. Decisions bound in conversation:
+
+- **Tree-level substitution with provenance** (origo-style, recorded
+  per expansion), never string-level — the correction of SGML
+  entities and the C preprocessor (the disease silva was built to
+  cure), not an imitation.
+- **Expansion in strata** (silva's expansion-generations model): a
+  stratum sees only earlier strata. Termination by construction;
+  intermediate layers stay queryable.
+- **Query fragments** (a fragment filled with query matches at
+  expansion time) subsume conditional inclusion (SGML
+  INCLUDE/IGNORE) — with the arms-retained doctrine, not SGML's
+  discard.
+
+### 9.2 The declarative control plane (RESERVATUM — trigger: first lint slice)
+
+STML as a Datalog-flavored control plane: a heartbeat collects data
+AS TAGS; the document (macros + query fragments) derives; the result
+tree is a PLAN carrying effect verbs; a dumb executor performs it.
+
+- Expansion PURE (tree→tree); effects at the rim only. **Canon
+  judges the plan before execution** — schema-validated side
+  effects, the property no make/shell system has.
+- **Datalog, not Prolog**: stratified, terminating, no backtracking.
+- Effects = decreed verbs; `processus_exsequi` is the exec seam;
+  tabularium K3's RECEPTA SUNT CODEX ("agere exsequitur, numquam
+  definit") is this doctrine already in law.
+- Convergent organs: fabrica (declared artifacts + content hashes =
+  the incrementality layer), metrum (threshold crossings emit tags),
+  tabularium agere/processus.
+- **First consumer decreed: declarative lint + autofix** (query
+  match + canon judgment + mutatio template) — satisfies
+  mutatio-visio's walking-skeleton trigger. silex/vitrea templates
+  second.
+
+### 9.3 The substrate thesis
+
+Every parser projecting its AST into STML (arbor for C89; web
+lexers next) makes detailed file state just another tag input to
+the plane. Depth is managed two ways: **named patterns as the API
+boundary** (macro-compressed queries — arbor's format changed twice
+in ONE DAY and only interface-consumers survived; the speculum seam
+lesson generalized) and **decreed shallow projections** (census,
+indices, differre deltas — you don't always query the deep tree).
+Patterns judged against the SOURCE canon catch dead queries
+statically. Prior art: CodeQL; our differentiator is the byte-exact
+round trip — the plane can FIX, not just find. Protect the
+**pattern/constructor duality** when the 2D query language lands:
+one vocabulary that both matches and builds (Prolog-term style)
+makes autofix definitional.
+
+### 9.4 The stml CLI and structured pipes (PARCATUM — 01M0VNSZC6)
+
+One `stml` tool with subcommands (format, quaerere, mutare,
+emittere, legere, formare, spargere/colligere, iudicare). The pipe
+thesis: **"PowerShell pipes you can cat"** — record = top-level
+element, one per line in a COMPACT writer mode (the formatter's
+width machinery inverted); `genus=` as the pipeline's type
+discipline; `iudicare` as a canon FIREWALL STAGE mid-pipe (typed
+pipelines — novel vs PowerShell/jq/Nushell); grep's exit contract
+(0 matched / 1 clean no-match / 2 refusal, loud). Selector syntax
+survives as sugar desugaring to patterns — ONE engine underneath.
+Decreed risks: never become a shell (zsh stays conductor); **the
+stream framing contract is the API** — Eskil-first, half a page,
+decided before any subcommand ships.
+
+### 9.5 SGML mining report (meanings, not embeddings — law 8 applied)
+
+- **SHORTREF/USEMAP** (context-sensitive surface sugar → markup):
+  adopt as a PROJECTION layer (the sententiae one-way-parse
+  doctrine), never in the parser.
+- **Architectural forms**: already reborn as natura + canon; the
+  actionable residue is **query-by-genus** in the 2D language.
+- **LINK (LPDs)** — declared source→result mappings: reborn as
+  mutatio patterns judged against source AND result canons
+  (transformation typechecking).
+- **Marked sections**: subsumed by query fragments; TEMP's
+  provisional-text instinct noted for document lifecycles.
+- **Content-model +/− exceptions and the `&` connector**: canon
+  vocabulary candidates — free for us (post-parse judgment) where
+  SGML paid in parse ambiguity.
+- **#CURRENT** (inherit-from-previous attributes): only ever tamed
+  as canon-DECLARED inheritance; ambient statefulness refused.
+- **CONCUR**: refused — multiple projections over one truth is the
+  house answer to overlapping hierarchies.
+- **RCDATA**: a possible fourth rung of the kind ladder if
+  entities-in-raw ever pulls.
+- **Comments transparent to capture COUNTING** (Fran's M4
+  directive): comments stay NODES (the silva pin holds); they stop
+  consuming captee slots — the fluxus-transparency precedent
+  applied to the parser's captee collection.
