@@ -6848,6 +6848,64 @@ _capturam_multiplicem_conari (
  * sorbet). FALSUM solum si spina non idonea aut casus degener:
  * spina tota = vinculum unicum cum textu ultra tectum (fixum
  * LXXII/LXXIII - forma aperta manet). */
+/* Segmentum tabulae sedium revertere in situ (permutationes
+ * cellularum, sine allocatione) */
+interior vacuum
+_sedes_revertere (
+    Xar* sedes,
+    i32  initium,
+    i32  quantum)
+{
+    i32 a;
+    i32 b;
+
+    a = initium;
+    b = initium + quantum - I;
+    dum (a < b)
+    {
+        StmlSedesNodi* pa;
+        StmlSedesNodi* pb;
+        StmlSedesNodi  medium;
+
+        pa = (StmlSedesNodi*)xar_obtinere(sedes, a);
+        pb = (StmlSedesNodi*)xar_obtinere(sedes, b);
+        si (pa != NIHIL && pb != NIHIL)
+        {
+            medium  = *pa;
+            *pa     = *pb;
+            *pb     = medium;
+        }
+        a++;
+        b--;
+    }
+}
+
+/* Post-ordinem tabulae sedium restituere (quaestio 01M0WVG98N):
+ * sarcinator vincula PRAE-ordine notat (vinculum dum scribitur -
+ * extensio eius tunc iam tota nota est, tagum solum), contractus
+ * tabulae autem POST-ordO est (nodus notatur ubi clauditur;
+ * ambulatio post-ordinis parsatoris ordinem eundem parit).
+ * Segmentum ab initio: [L1..Lk, T...] ubi T (subtree terminalis,
+ * si adest) intus iam post-ordinatum; optatum [T..., Lk..L1].
+ * Reversio duplex in situ: totum reverte -> [rev(T), Lk..L1],
+ * deinde partem T reverte -> [T..., Lk..L1]. */
+interior vacuum
+_sedes_postordinare (
+    Xar* sedes,
+    i32  initium,
+    i32  vincula)
+{
+    i32 totum;
+
+    si (sedes == NIHIL || vincula == ZEPHYRUM)
+    {
+        redde;
+    }
+    totum = xar_numerus(sedes) - initium;
+    _sedes_revertere(sedes, initium, totum);
+    _sedes_revertere(sedes, initium, totum - vincula);
+}
+
 interior b32
 _spinam_pulchre_scribere (
             StmlNodus* nodus,
@@ -6860,12 +6918,18 @@ _spinam_pulchre_scribere (
     memoriae_index  signum_originis;
     memoriae_index  initium_lineae;
                i32  gradus;
+               i32  sedes_originis;
+               i32  vincula;
                b32  primum_lineae;
 
     si (!_spina_idonea(nodus))
     {
         redde FALSUM;
     }
+
+    sedes_originis = (sedes != NIHIL)
+        ? xar_numerus(sedes) : ZEPHYRUM;
+    vincula        = ZEPHYRUM;
 
     signum_originis  = chorda_aedificator_longitudo(aedificator);
     /* vocans indentationem iam emisit - linea ibi incepit */
@@ -6977,6 +7041,10 @@ _spinam_pulchre_scribere (
                                             initium_lineae);
                 _scribere_nucleus(currens, aedificator, VERUM,
                                   FALSUM, gradus, sedes);
+                /* nota conatus currentis truncata - vincula
+                 * priora sola supersunt */
+                _sedes_postordinare(sedes, sedes_originis,
+                                    vincula);
                 redde VERUM;
             }
             si (   post_vinculum - initium_lineae
@@ -7015,6 +7083,10 @@ _spinam_pulchre_scribere (
 
         si (finalis_textus || finalis_inline)
         {
+            /* vinculum currentis stat - numeratur, deinde ordo
+             * post-ordinis restituitur (01M0WVG98N) */
+            vincula++;
+            _sedes_postordinare(sedes, sedes_originis, vincula);
             redde VERUM;
         }
         si (finalis_blocus)
@@ -7023,9 +7095,12 @@ _spinam_pulchre_scribere (
                                                    '\n');
             _scribere_nucleus(liberum, aedificator, VERUM, FALSUM,
                               gradus + I, sedes);
+            vincula++;
+            _sedes_postordinare(sedes, sedes_originis, vincula);
             redde VERUM;
         }
         primum_lineae  = FALSUM;
+        vincula++;
         currens        = liberum;
     }
 }

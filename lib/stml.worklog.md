@@ -1060,3 +1060,32 @@ unexercised by any fixture today, filed as a quaestio.
 c89-formatted: 1091 → 1041 (50 `</>` lines deleted); the
 close-tag invariant is now "block form only": 4+ children,
 over-height, mixed content, or ineligible children.
+
+## 2026-08-25 (sedes spinae) — post-order restored via double reversal
+
+The quaestio filed during the sixth decree (01M0WVG98N), closed
+same day while the packer knowledge was warm. The spine packer
+noted link sedes PRE-order (each link as written — a captor's
+tag-only extent is fully known at emission, which is exactly the
+convenience that created the drift; normal elements can't note
+early, so the post-order contract was enforced by necessity
+everywhere except here). Born-red fixture: FIXTURA_SPINAE
+(`<a><b><c><d/><e/></c></b></a>`) — the first sedes fixture whose
+pretty form contains a spine; writer table [a,b,d,e,c] vs
+post-order [d,e,c,b,a].
+
+Fix: `_sedes_postordinare` — in-place DOUBLE REVERSAL over the
+slice appended since spine entry, no allocation: [L1..Lk, T...]
+→ reverse whole → [rev(T), Lk..L1] → reverse the T part →
+[T..., Lk..L1]. Link counting (`vincula`) increments at the loop
+bottom and at each terminal success; rollback paths never count
+(their notas are truncated). Reorder called at every success
+exit; full refusal needs none (everything truncated). Verified:
+[a,b,d,e,c] → [d,e,c,b,a] on the fixture, exercising spine +
+multiplex composition in one shape.
+
+DISCOVERED WHILE FIXING (filed, not fixed - 01M0X12PWS): the
+nucleus end-of-case notation includes CAPTEES in authored
+captors' extents (CAPTIO_ANTE glued branch, retro, farcimen) —
+parser records tag-only. Same latent-contract family; no fixture
+exercises authored captors in the sedes suite yet.

@@ -185,6 +185,15 @@ principale (
         "  <par clavis=\"valor\"/>\n"
         "</summa>\n";
 
+    /* elementa: d, e, c, b, a = V. Modo pulchro spina fit
+     * ('<a(> <b(>' + c multiplex '((>' stackata) - fixtura prima
+     * quae conversionem capturae in porta sedium exercet: ordo
+     * post-ordinis notarum captorum hic iudicatur (quaestio
+     * 01M0WVG98N - sarcinator vincula dum scribit notabat,
+     * prae-ordine). */
+    constans character* FIXTURA_SPINAE =
+        "<a><b><c><d/><e/></c></b></a>";
+
     piscina = piscina_generare_dynamicum("probatio_stml_sedes",
                                          1048576);
     si (!piscina)
@@ -203,6 +212,10 @@ principale (
                        FIXTURA_EXOTICA, FALSUM, (i32)VI);
     _circuitum_probare(piscina, intern, "exotica",
                        FIXTURA_EXOTICA, VERUM, (i32)VI);
+    _circuitum_probare(piscina, intern, "spinae",
+                       FIXTURA_SPINAE, FALSUM, (i32)V);
+    _circuitum_probare(piscina, intern, "spinae",
+                       FIXTURA_SPINAE, VERUM, (i32)V);
 
     /* sedes NIHIL = stml_scribere ad octetum; et ANCORA ABSOLUTA:
      * paritas duorum oraculorum consensum probat, extensio manu
