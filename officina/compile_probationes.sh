@@ -255,6 +255,14 @@ if [ -n "$failed_names" ]; then
     exit 1
 fi
 
+# NULLA probatio cursa = error operantis (filtrum male
+# scriptum), NON successus - exitus II ut radix (01M0XDNTN6;
+# contractus 0/1/2, vide compile_tests.sh radicis).
+if [ "$total" -eq 0 ]; then
+    echo "NULLA PROBATIO CURSA (filtrum sine paribus?) - exitus II"
+    exit 2
+fi
+
 # canalis excubitoris: verdictum post-constructionem (tacet nisi
 # stala - obiecta stala POST constructionem = foramen regularum)
 "$RADIX_DIR/excubitor.sh" -tacitus "officina/build/" >&2 || true
