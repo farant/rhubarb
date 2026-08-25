@@ -735,3 +735,53 @@ tranches. Finds for the next reader:
   forms churned ~11 assertions (`<lex-int(>` etc.). The 154-file
   memcmp gate and both canon freshness gates never flinched: tree
   meaning is what they eat, and Gate B guards exactly that.
+
+## 2026-08-24 (M2b) — vertical collapse: capture form universal, width picks layout
+
+The second collapse decree landed as a writer-only change (parser
+untouched — stacked captees were already legal input via the
+ownership law). Finds:
+
+- **The all-or-nothing core is GONE.** `_spinam_collabere_conari`
+  (optimistic render + full rollback) was replaced by
+  `_spinam_pulchre_scribere`: capture form is universal for
+  eligible spines; the 72-column budget only picks between packing
+  captor links on the current line and breaking to a new line ONE
+  step deeper (per LINE, not per link). Rollback machinery
+  (builder + sedes truncate) survives, but per-LINK now, for the
+  greedy wrap decision.
+- **The ANTE unification was structurally free.** The collapse
+  hook sits at the top of casus ELEMENTUM, BEFORE the
+  augmentum/fragmentum/captio dispatch. Extending
+  `_spinae_liberum_unicum` to accept single-paren non-crudus ANTE
+  captors meant authored captors route through the same
+  width-aware routine with no changes to the flat ANTE branch —
+  it survives only as the fallback for multi-paren, crudus,
+  comment-children, and captee-less shapes.
+- **The final captor and its inline terminal are measured
+  TOGETHER.** Placing the last link by its own width would leave
+  the terminal overflowing past it; the spec's deep-chain exemplar
+  (`<t3(>` wraps with `foo`) pins this.
+- **Text terminals keep the 72/73 fixture exactly** via the one
+  remaining FALSUM path: a spine that IS a single link whose text
+  doesn't fit even at line start refuses, and the caller emits the
+  plain open form. Mid-chain, the same condition renders the last
+  element in plain form one step below the captor line (captors
+  above it still capture).
+- **Only 2 root expectations churned** (probatio_stml case VIII:
+  wrapper `</>` line deleted) and 9 silva arbor assertions — all
+  the same disease: string-matching non-collapsed forms.
+  Corruption-substitution patterns need care: after M2b the
+  packing can put a line break where a trailing space was
+  (`"<lex-int(> "` matched nothing — the break landed right after
+  it), and `strstr` targets should drop the trailing `>` and
+  mutate INSIDE the name so the tag form (captor or plain)
+  survives in either emission.
+- Eligibility stays conservative: exotic children
+  (crudus/multilinea/fragmentum/retro/farcimen/multi-paren,
+  comment children) refuse conversion and keep today's forms —
+  M4 corners.
+
+Gates after: stml family 4/4 (incl. sedes parity on stacked
+extents), silva 50/50 (corpus 73+154 at 0 vitia), both canon
+freshness gates, amalgam re-verified (hospes 39/39).

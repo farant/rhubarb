@@ -75,7 +75,19 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
     { "collapsus_auctoris",
       "<radix><t1(> <t2(> foo</radix>" },
     { "collapsus_mixtus",
-      "<radix>\n  <par(> <filius/>\n  <b>x</b>\n</radix>" }
+      "<radix>\n  <par(> <filius/>\n  <b>x</b>\n</radix>" },
+    { "verticalis_exemplar",
+      "<a><b><c><d/><e/></c></b></a>" },
+    { "verticalis_stackata",
+      "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>" },
+    { "verticalis_auctoris",
+      "<a (>\n<x/>" },
+    { "verticalis_textus_multilineus",
+      "<a><b><t>prima\nsecunda</t></b></a>" },
+    { "verticalis_ultra_tectum",
+      "<vinculumprimum><vinculumsecundum><vinculumtertium>"
+      "<vinculumquartum>foo</vinculumquartum></vinculumtertium>"
+      "</vinculumsecundum></vinculumprimum>" }
 };
 
 /* Plagulam totam in piscinam legere */

@@ -5481,9 +5481,11 @@ _valor_capturabilis (
 }
 
 /* Liberum unicum vinculi spinae reddere; NIHIL si nodus vinculum
- * non est. Vinculum = elementum normale (sine captura, fragmento,
- * augmento), non crudum nec multilineum, liberum unicum
- * non-commentum ferens. */
+ * non est. Vinculum = elementum sine fragmento/augmento, non
+ * crudum nec multilineum, liberum unicum non-commentum ferens -
+ * aut sine captura (forma convertitur) aut captor ANTE unigenis
+ * (M2b: dispositio auctoris via eadem re-derivatur, unificatio
+ * §4). Multi-parentheses angulis M4 relinquuntur. */
 interior StmlNodus*
 _spinae_liberum_unicum (
     constans StmlNodus* nodus)
@@ -5491,7 +5493,6 @@ _spinae_liberum_unicum (
     StmlNodus* liberum;
 
     si (   nodus->genus               != STML_NODUS_ELEMENTUM
-        || nodus->captio_directio     != STML_CAPTIO_NIHIL
         || nodus->fragmentum
         || nodus->augmentum_clavis    != NIHIL
         || nodus->crudus
@@ -5501,12 +5502,60 @@ _spinae_liberum_unicum (
     {
         redde NIHIL;
     }
+    si (   nodus->captio_directio != STML_CAPTIO_NIHIL
+        && !(   nodus->captio_directio == STML_CAPTIO_ANTE
+             && nodus->captio_numerus == I))
+    {
+        redde NIHIL;
+    }
     liberum = _xar_liberum_obtinere(nodus->liberi, ZEPHYRUM);
     si (liberum == NIHIL || _est_commentum(liberum))
     {
         redde NIHIL;
     }
     redde liberum;
+}
+
+/* an elementum forma exotica careat: captee tutum formae blocorum
+ * aut inline (captura, fragmentum, augmentum, crudus, multilinea
+ * excluduntur - conversio conservativa, formae auctoris manent) */
+interior b32
+_elementum_planum (
+    constans StmlNodus* nodus)
+{
+    redde (b32)(   nodus->genus == STML_NODUS_ELEMENTUM
+                && nodus->captio_directio == STML_CAPTIO_NIHIL
+                && !nodus->fragmentum
+                && nodus->augmentum_clavis == NIHIL
+                && !nodus->crudus
+                && !nodus->multilinea);
+}
+
+/* an nodus spinam capturae incipere possit (§4 verticalis):
+ * vinculum cuius liberum aut textus capturabilis (terminalis) aut
+ * vinculum ulterius aut elementum planum (terminalis inline aut
+ * bloci). Liberum exoticum spinam recusat - nodus formam solitam
+ * retinet. */
+interior b32
+_spina_idonea (
+    constans StmlNodus* nodus)
+{
+    StmlNodus* liberum;
+
+    liberum = _spinae_liberum_unicum(nodus);
+    si (liberum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (liberum->genus == STML_NODUS_TEXTUS)
+    {
+        redde _valor_capturabilis(liberum->valor);
+    }
+    si (liberum->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde FALSUM;
+    }
+    redde (b32)(_spina_idonea(liberum) || _elementum_planum(liberum));
 }
 
 /* an elementum terminale inline unilineare reddatur: folium aut
@@ -5544,18 +5593,20 @@ _terminalis_inline (
     redde VERUM;
 }
 
-/* Spinam collapsam scribere (recursivum): tag vinculi ut captor
- * unigena + separator canonicus + interius; sedes post-ordine
- * notatae (interius primum, vincula intus-foras - extensio
- * vinculi ad finem spinae pertinet, semantica parsatoris). */
+/* Vinculum unum spinae scribere: tag ut captor unigena forma
+ * canonica (§0.2: glutinata sine attributis, spatium post
+ * attributa). Separator sequens (spatium aut fractio lineae) a
+ * vocante emittitur - post captoris in relectione fit. Sedes
+ * vinculi TAGUM SOLUM tegunt (extensio captoris apud parsatorem
+ * in consumptione tokeni ponitur, ante reparentationem capturae) -
+ * scriptor eandem semanticam reddit, probatio paritatis iudex. */
 interior vacuum
-_spinam_scribere (
+_vinculum_scribere (
             StmlNodus* nodus,
     ChordaAedificator* aedificator,
                   Xar* sedes)
 {
-     StmlNodus* liberum;
-           i32  initium;
+    i32 initium;
 
     initium = (i32)chorda_aedificator_longitudo(aedificator);
 
@@ -5573,10 +5624,6 @@ _spinam_scribere (
     }
     chorda_aedificator_appendere_literis(aedificator, "(>");
 
-    /* sedes vinculi ANTE separatorem: extensio captoris apud
-     * parsatorem TAGUM SOLUM tegit (positus_finis in consumptione
-     * tokeni ponitur, ante reparentationem capturae) - scriptor
-     * eandem semanticam reddit, probatio paritatis iudex */
     si (sedes != NIHIL)
     {
         StmlSedesNodi* nota;
@@ -5590,34 +5637,21 @@ _spinam_scribere (
                 (i32)chorda_aedificator_longitudo(aedificator);
         }
     }
-    chorda_aedificator_appendere_character(aedificator, ' ');
-
-    liberum = _spinae_liberum_unicum(nodus);
-    si (liberum == NIHIL)
-    {
-        redde;  /* numquam - praevisio custodit */
-    }
-    si (liberum->genus == STML_NODUS_TEXTUS)
-    {
-        _scribere_evasus(aedificator, liberum->valor);
-    }
-    alioquin si (_spinae_liberum_unicum(liberum) != NIHIL)
-    {
-        _spinam_scribere(liberum, aedificator, sedes);
-    }
-    alioquin
-    {
-        _scribere_nucleus(liberum, aedificator, FALSUM, FALSUM,
-                          ZEPHYRUM, sedes);
-    }
 }
 
-/* Collapsum conari: praevisio structurae (catena vinculorum ad
- * terminalem idoneum), tum redditio optimistica cum tecto
- * columnarum; super tectum reversio plena (truncare) et FALSUM -
- * vocans formam blocorum solitam scribit. */
+/* Spinam pulchre scribere (§4 collapsus verticalis, M2b): forma
+ * capturae UNIVERSALIS spinis idoneis - latitudo dispositionem
+ * eligit, non formam. Vincula in linea currenti avare sarcinantur
+ * dum tectum LXXII tenet; fractio lineae gradum UNUM addit (per
+ * LINEAM, non per vinculum). Terminalis inline in fine lineae
+ * ultimae vehitur (cum vinculo suo mensuratus); terminalis bloci
+ * lineam recentem gradu uno altius aperit forma solita, clausura
+ * suo gradu (optio 2 - captor tagum aperiens bloci numquam
+ * sorbet). FALSUM solum si spina non idonea aut casus degener:
+ * spina tota = vinculum unicum cum textu ultra tectum (fixum
+ * LXXII/LXXIII - forma aperta manet). */
 interior b32
-_spinam_collabere_conari (
+_spinam_pulchre_scribere (
             StmlNodus* nodus,
     ChordaAedificator* aedificator,
                   i32  indentatio,
@@ -5625,61 +5659,135 @@ _spinam_collabere_conari (
 {
          StmlNodus* currens;
          StmlNodus* liberum;
-    memoriae_index  signum;
-               i32  signum_sedes;
-               i32  latitudo;
+    memoriae_index  signum_originis;
+    memoriae_index  initium_lineae;
+               i32  gradus;
+               b32  primum_lineae;
 
-    si (_spinae_liberum_unicum(nodus) == NIHIL)
+    si (!_spina_idonea(nodus))
     {
         redde FALSUM;
     }
-    currens = nodus;
+
+    signum_originis  = chorda_aedificator_longitudo(aedificator);
+    /* vocans indentationem iam emisit - linea ibi incepit */
+    initium_lineae   = signum_originis
+        - (memoriae_index)(indentatio * II);
+    gradus         = indentatio;
+    primum_lineae  = VERUM;
+    currens        = nodus;
+
     dum (VERUM)
     {
-        liberum = _spinae_liberum_unicum(currens);
-        si (liberum->genus == STML_NODUS_TEXTUS)
+        memoriae_index signum;
+                   i32 signum_sedes;
+                   b32 finalis_textus;
+                   b32 finalis_inline;
+                   b32 finalis_blocus;
+
+        liberum         = _spinae_liberum_unicum(currens);
+        finalis_textus  = (b32)(liberum->genus == STML_NODUS_TEXTUS);
+        finalis_inline  = FALSUM;
+        finalis_blocus  = FALSUM;
+        si (!finalis_textus && !_spina_idonea(liberum))
         {
-            si (!_valor_capturabilis(liberum->valor))
+            si (_terminalis_inline(liberum))
             {
-                redde FALSUM;
+                finalis_inline = VERUM;
             }
-            frange;
+            alioquin
+            {
+                finalis_blocus = VERUM;
+            }
         }
-        si (liberum->genus != STML_NODUS_ELEMENTUM)
+
+        /* conatus: [separator] vinculum [+ terminalis inline] */
+        signum        = chorda_aedificator_longitudo(aedificator);
+        signum_sedes  = (sedes != NIHIL)
+            ? xar_numerus(sedes) : ZEPHYRUM;
+        si (!primum_lineae)
         {
-            redde FALSUM;
+            chorda_aedificator_appendere_character(aedificator, ' ');
         }
-        si (_spinae_liberum_unicum(liberum) != NIHIL)
+        _vinculum_scribere(currens, aedificator, sedes);
+        si (finalis_textus)
         {
-            currens = liberum;
-            perge;
+            chorda_aedificator_appendere_character(aedificator, ' ');
+            _scribere_evasus(aedificator, liberum->valor);
         }
-        si (_terminalis_inline(liberum))
+        alioquin si (finalis_inline)
         {
-            frange;
+            chorda_aedificator_appendere_character(aedificator, ' ');
+            _scribere_nucleus(liberum, aedificator, FALSUM, FALSUM,
+                              ZEPHYRUM, sedes);
         }
-        redde FALSUM;
+
+        si (chorda_aedificator_longitudo(aedificator)
+                - initium_lineae > (memoriae_index)LXXII)
+        {
+            si (!primum_lineae)
+            {
+                /* fractio lineae: gradus unus altius, conatum
+                 * itera in linea recenti */
+                chorda_aedificator_truncare(aedificator, signum);
+                si (sedes != NIHIL)
+                {
+                    xar_truncare(sedes, signum_sedes);
+                }
+                chorda_aedificator_appendere_character(aedificator,
+                                                       '\n');
+                gradus++;
+                initium_lineae =
+                    chorda_aedificator_longitudo(aedificator);
+                _scribere_indentatio(aedificator, gradus);
+                primum_lineae = VERUM;
+                perge;
+            }
+            si (finalis_textus)
+            {
+                /* textus ne primo lineae quidem cadit: vinculum
+                 * ultimum formam apertam retinet (fixum
+                 * LXXII/LXXIII) */
+                chorda_aedificator_truncare(aedificator, signum);
+                si (sedes != NIHIL)
+                {
+                    xar_truncare(sedes, signum_sedes);
+                }
+                si (signum == signum_originis)
+                {
+                    /* spina tota = vinculum hoc: recusatio plena,
+                     * vocans formam solitam scribit */
+                    redde FALSUM;
+                }
+                /* vincula priora manent; linea fracta iam indentata
+                 * - indentationem tollere, nucleus se ipse gradu
+                 * fractionis indentat (gradu uno sub linea captorum
+                 * ultima) */
+                chorda_aedificator_truncare(aedificator,
+                                            initium_lineae);
+                _scribere_nucleus(currens, aedificator, VERUM,
+                                  FALSUM, gradus, sedes);
+                redde VERUM;
+            }
+            /* vinculum aut terminalis inline primum lineae ultra
+             * tectum: acceptum - nihil angustius praesto est */
+        }
+
+        si (finalis_textus || finalis_inline)
+        {
+            redde VERUM;
+        }
+        si (finalis_blocus)
+        {
+            chorda_aedificator_appendere_character(aedificator,
+                                                   '\n');
+            _scribere_nucleus(liberum, aedificator, VERUM, FALSUM,
+                              gradus + I, sedes);
+            redde VERUM;
+        }
+        primum_lineae  = FALSUM;
+        currens        = liberum;
     }
-
-    signum        = chorda_aedificator_longitudo(aedificator);
-    signum_sedes  = (sedes != NIHIL)
-        ? xar_numerus(sedes) : ZEPHYRUM;
-
-    _spinam_scribere(nodus, aedificator, sedes);
-
-    latitudo = (i32)(chorda_aedificator_longitudo(aedificator)
-                     - signum)
-             + indentatio * II;
-    si (latitudo > LXXII)
-    {
-        chorda_aedificator_truncare(aedificator, signum);
-        si (sedes != NIHIL)
-        {
-            xar_truncare(sedes, signum_sedes);
-        }
-        redde FALSUM;
-    }
-    redde VERUM;
 }
 
 interior b32
@@ -5757,12 +5865,14 @@ _scribere_nucleus (
             {
                 _scribere_indentatio(aedificator, indentatio);
             }
-            /* COLLAPSUS (§4 T3c): spina unigena -> forma capturae
-             * in linea una si intra tectum cadit; sedes suas ipse
+            /* COLLAPSUS (§4 M2b): spina unigena -> forma capturae,
+             * latitudine dispositionem (unam lineam aut sarcinatam
+             * verticalem) eligente; captores ANTE auctoris unigenae
+             * via eadem re-derivantur (unificatio). Sedes suas ipse
              * notat (initium_sedis sentinellam -I tenet, ne bis
              * notetur) */
             si (   pulchrum
-                && _spinam_collabere_conari(nodus, aedificator,
+                && _spinam_pulchre_scribere(nodus, aedificator,
                                             indentatio, sedes))
             {
                 frange;

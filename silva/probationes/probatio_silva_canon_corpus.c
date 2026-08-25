@@ -397,16 +397,19 @@ principale (vacuum)
                 (memoriae_index)doc.mensura + I);
             memcpy(copia, doc.datum, (memoriae_index)doc.mensura);
             copia[doc.mensura] = '\0';
-            sedes = strstr(copia, "<declaratores>");
+            /* sine '>' caudali: collapsus verticalis (stml M2b)
+             * formam '<declaratores(>' dat - quaestio utrique
+             * formae robusta, mutatio INTRA nomen ne forma tagi
+             * (captor aut planum) laedatur */
+            sedes = strstr(copia, "<declaratores");
             CREDO_NON_NIHIL (sedes);
             si (sedes != NIHIL)
             {
                 chorda corrupta;
 
-                /* 'declaratores' -> 'declaratorel' : elementum quod
+                /* 'declaratores' -> 'xeclaratores' : elementum quod
                  * canon omnino non novit */
-                sedes[12] = 'e';
-                sedes[13] = 'l';
+                sedes[1] = 'x';
                 corrupta.datum   = (i8*)copia;
                 corrupta.mensura = doc.mensura;
                 vitia_corrupta = _documentum_iudicare(opus, canon,

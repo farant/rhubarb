@@ -398,8 +398,8 @@ remains the raw total stream (over canonicalized input).
   captures. SHIPPED in M2 T3c with the over-budget fallback =
   plain block form; that fallback is superseded by the vertical
   decree below.
-- **Vertical collapse (§0.2 second decree — DECREED at M2 close,
-  NOT YET IMPLEMENTED; first tranche of the next session).** A
+- **Vertical collapse (§0.2 second decree — SHIPPED 2026-08-24,
+  the session after M2).** A
   single-child element whose child is an ELEMENT takes capture
   form even when the inline tail does not fit. Layout is GREEDY
   LINE PACKING: captor links accumulate on the current line while
@@ -430,13 +430,20 @@ remains the raw total stream (over canonicalized input).
   captors re-derive their layout through the SAME routine — form
   memory fully re-derived; this unification is what keeps the
   fixed point, since a reparsed stacked document is full of
-  captors that must reproduce their own layout. (Today's pretty
-  inlines authored captees unconditionally, width-blind — that
-  path merges into the new routine.) Multi-paren authored
-  captors keep glued inline emission (M4 corners). Stacked
-  captees parse by the existing ownership law: newline → the
-  captor's post, indent → the captee's ante — the §0.1.3 fixture
-  shape, no parser changes.
+  captors that must reproduce their own layout. (Pre-M2b pretty
+  inlined authored captees unconditionally, width-blind — that
+  path merged into the new routine: the collapse hook precedes
+  the captio dispatch, so extending the link test to single-paren
+  ANTE captors routed them with no branch changes.) Multi-paren
+  authored captors keep glued inline emission (M4 corners).
+  Stacked captees parse by the existing ownership law: newline →
+  the captor's post, indent → the captee's ante — the §0.1.3
+  fixture shape, no parser changes. Implementation notes: the
+  final captor and its inline terminal are width-measured
+  TOGETHER (else the terminal overflows past a link that "fit");
+  exotic children (crudus/multilinea/fragmentum/retro/farcimen/
+  multi-paren, comment children) refuse conversion and keep
+  their authored forms.
 - **Pretty's text liberties follow the kind ladder** (§1.4): flow
   text may be RE-WRAPPED at will (newline runs are semantically one
   space — the mixed-content corruption class dies at the root);
@@ -592,7 +599,10 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
 - **M2b** — vertical collapse (§4 second decree): stacked
   capture form for over-budget and block-terminated single-child
   chains; authored-captor layout unification. DECREED at M2
-  close; first tranche of the next session.
+  close; SHIPPED 2026-08-24 the following session — writer-only
+  (parser untouched), the all-or-nothing fallback deleted, the
+  72/73 text fixtures unmoved. Churn: 2 root expectations +
+  9 silva arbor assertions (finds in lib/stml.worklog.md).
 - **M3** — consumer migration (§9) + `fluxus` accessor; amalgam +
   lab.
 - **M4** — captures: counting policy, including the same-line

@@ -2449,6 +2449,92 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Collapsus verticalis (§0.2 decretum alterum, M2b):
+     * forma capturae UNIVERSALIS liberis elementaribus -
+     * latitudo dispositionem eligit, non formam
+     * ================================================== */
+
+    imprimere("\n--- Probans collapsum verticalem ---\n");
+
+    {
+        /* exemplar §0.2: catena captorum + terminalis bloci in
+         * linea recenti, gradu uno altius, clausura suo gradu
+         * (optio 2: captor tagum aperiens bloci numquam sorbet) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<a><b><c><d/><e/></c></b></a>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>");
+
+        imprimere("  exemplar verticale: PRAETERITUM\n");
+    }
+
+    {
+        /* catena unius vinculi cum terminali bloci: etiam vinculum
+         * solitarium formam capturae capit (linea '</>' deletur) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<a><b><c/><d/></b></a>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<a(>\n  <b>\n    <c/>\n    <d/>\n  </>");
+
+        imprimere("  vinculum solitarium + blocus: PRAETERITUM\n");
+    }
+
+    {
+        /* sarcinatio avara ultra tectum: vincula in linea currenti
+         * accumulantur dum tectum tenet; fractio lineae gradum UNUM
+         * addit (per LINEAM); terminalis inline in fine lineae
+         * ultimae vehitur */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<vinculumprimum><vinculumsecundum><vinculumtertium>"
+            "<vinculumquartum>foo</vinculumquartum></vinculumtertium>"
+            "</vinculumsecundum></vinculumprimum>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<vinculumprimum(> <vinculumsecundum(> <vinculumtertium(>"
+            "\n  <vinculumquartum(> foo");
+
+        imprimere("  sarcinatio avara: PRAETERITUM\n");
+    }
+
+    {
+        /* captor auctoris dispositionem suam re-derivat via eadem
+         * (unificatio §4): captee lineae novae in lineam redit si
+         * cadit; forma stackata canonica sese reproducit */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis("<a (>\n<x/>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<a(> <x/>");
+
+        res = stml_legere_ex_literis(
+            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<a(> <b(>\n  <c>\n    <d/>\n    <e/>\n  </>");
+
+        imprimere("  re-derivatio auctoris: PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragment Tests
      * ================================================== */
 
@@ -3419,11 +3505,13 @@ s32 principale(vacuum)
         "<t>a<b/>c<d/>e</>",
         "VII termini plures: PRAETERITUM");
 
-    /* VIII. nidificatio: radix BLOCUS (sine textu), 't' interius
-     * INLINE (textum fert) - regulae per gradum componuntur */
+    /* VIII. nidificatio: radix vinculum spinae (liberum unicum) ->
+     * forma capturae (M2b); 't' terminalis bloci gradu uno altius,
+     * ipse INLINE (textum fert) - regulae per gradum componuntur,
+     * linea '</>' radicis deleta */
     _pulchrum_probare(piscina, intern,
         "<root><t><ante>x</ante>n</t></root>",
-        "<root>\n  <t><ante>x</ante>n</>\n</>",
+        "<root(>\n  <t><ante>x</ante>n</>",
         "VIII nidificatio componens: PRAETERITUM");
 
     /* IX. elementum-TEXTUS-elementum: forma quam ARBOR ipsa fert

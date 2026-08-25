@@ -739,12 +739,16 @@ principale (vacuum)
         CREDO_VERUM (_quotiens(scriptura.textus,
             "registrum-sigillum=\"") == I);
 
-        /* genus = tag, locus = involucrum */
+        /* genus = tag, locus = involucrum. Collapsus verticalis
+         * (stml M2b) vincula unigena in captores vertit etiam cum
+         * interius in lineam non cadat - '<specificatores(>' pro
+         * '<specificatores>'; declaratio liberis pluribus blocus
+         * manet */
         CREDO_VERUM (_quotiens(scriptura.textus, "<declaratio>") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<specificatores>") == I);
+            "<specificatores(>") == I);
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<typus-primitivus>") == I);
+            "<typus-primitivus(>") == I);
 
         /* lexema orthographiae FIXAE: tag solus, NULLUS textus
          * (orthographia in genere ipso vivit). Collapsus spinae
@@ -1437,14 +1441,14 @@ principale (vacuum)
             && strcmp(vitium.causa, "grammatica non congruit")
                 == ZEPHYRUM);
 
-        /* genus ignotum. NB elementum CLAUSURAE TACITAE eligendum
-         * est: '<declaratio>' tag claudentem NOMINATUM fert (supra
-         * limen XXX linearum), ergo tag apertum solum substituere
-         * tags dispares faceret et vitium PARSATIONIS daret, non
-         * vitium vocabularii - probatio causam falsam probaret */
+        /* genus ignotum. NB elementum SINE tag claudente eligendum
+         * est ('<declaratio>' tag claudentem NOMINATUM fert - tag
+         * apertum solum substituere vitium PARSATIONIS daret, non
+         * vocabularii). Forma capturae (M2b) tag claudentem omnino
+         * caret - captor fictus tuto substituitur */
         CREDO_NIHIL (silva_arbor_legere(piscina, NIHIL,
-            _substituere(piscina, documentum, "<typus-primitivus>",
-                "<genus-fictum>"),
+            _substituere(piscina, documentum, "<typus-primitivus(>",
+                "<genus-fictum(>"),
             &SILVA_C89_REGISTRUM, "c89", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa, "genus registro ignotum")
@@ -1453,8 +1457,8 @@ principale (vacuum)
 
         /* locus generi ignotus */
         CREDO_NIHIL (silva_arbor_legere(piscina, NIHIL,
-            _substituere(piscina, documentum, "<specificatores>",
-                "<locus-fictus>"),
+            _substituere(piscina, documentum, "<specificatores(>",
+                "<locus-fictus(>"),
             &SILVA_C89_REGISTRUM, "c89", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa, "locus generi ignotus")
@@ -1463,10 +1467,11 @@ principale (vacuum)
         /* valor in genere orthographiae FIXAE - documentum quod
          * orthographiam portat fontem veritatis tertium faceret.
          * Corruptio in forma collapsa: '<lex-int(> xyz' textum
-         * capit (regula capturae valorem purum dat) */
+         * capit (regula capturae valorem purum dat). NB sine spatio
+         * caudali: sarcinatio M2b lineam post '<lex-int(>' frangit */
         CREDO_NIHIL (silva_arbor_legere(piscina, NIHIL,
-            _substituere(piscina, documentum, "<lex-int(> ",
-                "<lex-int(> xyz "),
+            _substituere(piscina, documentum, "<lex-int(>",
+                "<lex-int(> xyz"),
             &SILVA_C89_REGISTRUM, "c89", &vitium));
         CREDO_VERUM (vitium.causa != NIHIL
             && strcmp(vitium.causa,
