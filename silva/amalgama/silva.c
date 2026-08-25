@@ -14508,6 +14508,31 @@ _terminalis_inline (
     redde VERUM;
 }
 
+/* Notam sedium unam appendere - derivatio UNA pro locis omnibus
+ * (vinculum, multiplex, rami capturae nuclei, finis-casus), ne
+ * quinque occasiones divergendi sint. */
+interior vacuum
+_sedes_notare (
+          SilvaXar* sedes,
+    SilvaStmlNodus* nodus,
+          i32  initium,
+          i32  finis)
+{
+    StmlSedesNodi* nota;
+
+    si (sedes == NIHIL)
+    {
+        redde;
+    }
+    nota = silva_xar_addere(sedes);
+    si (nota != NIHIL)
+    {
+        nota->nodus    = nodus;
+        nota->initium  = initium;
+        nota->finis    = finis;
+    }
+}
+
 /* Vinculum unum spinae scribere: tag ut captor unigena forma
  * canonica (§0.2: glutinata sine attributis, spatium post
  * attributa). Separator sequens (spatium aut fractio lineae) a
@@ -14539,19 +14564,8 @@ _vinculum_scribere (
     }
     silva_chorda_aedificator_appendere_literis(aedificator, "(>");
 
-    si (sedes != NIHIL)
-    {
-        StmlSedesNodi* nota;
-
-        nota = silva_xar_addere(sedes);
-        si (nota != NIHIL)
-        {
-            nota->nodus    = nodus;
-            nota->initium  = initium;
-            nota->finis   =
-                (i32)silva_chorda_aedificator_longitudo(aedificator);
-        }
-    }
+    _sedes_notare(sedes, nodus, initium,
+                  (i32)silva_chorda_aedificator_longitudo(aedificator));
 }
 
 /* Vinculum captoris forma multilinea (§0.2 decretum quintum):
@@ -14582,19 +14596,8 @@ _vinculum_multilineum_scribere (
     columna = _attributa_multilinea_scribere(aedificator, nodus,
                                              basis, I);
 
-    si (sedes != NIHIL)
-    {
-        StmlSedesNodi* nota;
-
-        nota = silva_xar_addere(sedes);
-        si (nota != NIHIL)
-        {
-            nota->nodus    = nodus;
-            nota->initium  = initium;
-            nota->finis   =
-                (i32)silva_chorda_aedificator_longitudo(aedificator);
-        }
-    }
+    _sedes_notare(sedes, nodus, initium,
+                  (i32)silva_chorda_aedificator_longitudo(aedificator));
     redde columna;
 }
 
@@ -15098,18 +15101,8 @@ _capturam_multiplicem_conari (
     /* nota sedium POST liberos appensa - tabula post-ordinem
      * servat (elementum ubi clauditur notatur; captor clausuram
      * non fert, sed ordo contractus est) */
-    si (sedes != NIHIL)
-    {
-        StmlSedesNodi* nota;
-
-        nota = silva_xar_addere(sedes);
-        si (nota != NIHIL)
-        {
-            nota->nodus    = nodus;
-            nota->initium  = (i32)signum_originis;
-            nota->finis    = (i32)initium_liberorum;
-        }
-    }
+    _sedes_notare(sedes, nodus, (i32)signum_originis,
+                  (i32)initium_liberorum);
     redde VERUM;
 }
 
@@ -15562,6 +15555,7 @@ _scribere_nucleus (
                 si (nodus->captio_directio == STML_CAPTIO_ANTE)
                 {
                     i32 j;
+                    i32 finis_tagi;
                     /* spatium prae parenthesibus: fidelitas octetos
                      * conditos SUPRA reddidit (spatia_intra_tagum);
                      * pulcher canonicam generat (§0.2) */
@@ -15576,6 +15570,8 @@ _scribere_nucleus (
                         silva_chorda_aedificator_appendere_character(aedificator, '(');
                     }
                     silva_chorda_aedificator_appendere_character(aedificator, '>');
+                    finis_tagi =
+                        (i32)silva_chorda_aedificator_longitudo(aedificator);
                     /* post captoris inter tagum et captos (§6) */
                     si (fidelitas)
                     {
@@ -15598,6 +15594,11 @@ _scribere_nucleus (
                             }
                         }
                     }
+                    /* extensio: tagum solum - notata POST captos,
+                     * unde post-ordo tabulae (01M0X12PWS) */
+                    _sedes_notare(sedes, nodus, (i32)initium_sedis,
+                                  finis_tagi);
+                    initium_sedis = -I;
                     frange;
                 }
 
@@ -15635,6 +15636,7 @@ _scribere_nucleus (
             {
                 /* Backward capture: <) tag> or <)) tag> */
                 i32 j;
+                i32 initium_tagi;
 
                 /* ordo fluminis (§6): liberi capti RETRO in fonte
                  * ANTE tagum captoris stant - AMBO modi eum ordinem
@@ -15655,6 +15657,8 @@ _scribere_nucleus (
                         }
                     }
                 }
+                initium_tagi =
+                    (i32)silva_chorda_aedificator_longitudo(aedificator);
                 silva_chorda_aedificator_appendere_character(aedificator, '<');
                 per (j = ZEPHYRUM; j < nodus->captio_numerus; j++)
                 {
@@ -15668,6 +15672,12 @@ _scribere_nucleus (
                 /* Attributes */
                                 _attributa_scribere(aedificator, nodus, fidelitas);
                 silva_chorda_aedificator_appendere_character(aedificator, '>');
+                /* extensio: tagum solum, quod POST captos in fonte
+                 * stat - captis iam notatis post-ordo tenet
+                 * (01M0X12PWS) */
+                _sedes_notare(sedes, nodus, initium_tagi,
+                              (i32)silva_chorda_aedificator_longitudo(aedificator));
+                initium_sedis = -I;
             }
             alioquin si (nodus->captio_directio == STML_CAPTIO_FARCIMEN)
             {
@@ -15676,6 +15686,9 @@ _scribere_nucleus (
                  * reliqua post - AMBO modi eum ordinem reddunt (M2:
                  * captor-primum pulchri relectum liberum primum in
                  * fratrem vertebat). */
+                i32 initium_tagi;
+                i32 finis_tagi;
+
                 si (   nodus->liberi
                     && silva_xar_numerus(nodus->liberi) > ZEPHYRUM)
                 {
@@ -15687,6 +15700,8 @@ _scribere_nucleus (
                             FALSUM, fidelitas, ZEPHYRUM, sedes);
                     }
                 }
+                initium_tagi =
+                    (i32)silva_chorda_aedificator_longitudo(aedificator);
                 silva_chorda_aedificator_appendere_literis(aedificator, "<= ");
                 si (nodus->titulus)
                 {
@@ -15695,6 +15710,8 @@ _scribere_nucleus (
                 /* Attributes */
                                 _attributa_scribere(aedificator, nodus, fidelitas);
                 silva_chorda_aedificator_appendere_literis(aedificator, " =>");
+                finis_tagi =
+                    (i32)silva_chorda_aedificator_longitudo(aedificator);
                 /* Liberi reliqui ab indice I (liberum 0 iam ante
                  * tagum, ambobus modis) */
                 si (nodus->liberi)
@@ -15709,11 +15726,18 @@ _scribere_nucleus (
                         }
                     }
                 }
+                /* extensio: tagum solum (inter captum retro et
+                 * captos ante in fonte) - notata POST captos
+                 * omnes, unde post-ordo tabulae (01M0X12PWS) */
+                _sedes_notare(sedes, nodus, initium_tagi,
+                              finis_tagi);
+                initium_sedis = -I;
             }
             alioquin si (nodus->captio_directio == STML_CAPTIO_ANTE)
             {
                 /* Forward capture: <tag (> or <tag ((> */
                 i32 j;
+                i32 finis_tagi;
                 silva_chorda_aedificator_appendere_character(aedificator, '<');
                 si (nodus->titulus)
                 {
@@ -15763,6 +15787,8 @@ _scribere_nucleus (
                 }
                 silva_chorda_aedificator_appendere_character(aedificator, '>');
                 }
+                finis_tagi =
+                    (i32)silva_chorda_aedificator_longitudo(aedificator);
 
                 /* ORDO FLUMINIS (§6, in M1 tractum): captor NON
                  * crudus - post inter tagum et captos in fonte
@@ -15836,6 +15862,14 @@ _scribere_nucleus (
                     }
                 }
 
+                si (nodus->crudus)
+                {
+                    /* crudus: lexema capturae lineam captam IPSAM
+                     * fert ('\n' flumini relicto) - extensio
+                     * parsatoris eam includit, scriptor congruit */
+                    finis_tagi =
+                        (i32)silva_chorda_aedificator_longitudo(aedificator);
+                }
                 si (fidelitas && nodus->crudus)
                 {
                     si (nodus->spatia_post != NIHIL)
@@ -15851,6 +15885,12 @@ _scribere_nucleus (
                     }
                     post_iam_emissum = VERUM;
                 }
+                /* extensio: tagum solum (crudus: + linea capta) -
+                 * notata POST captos, unde post-ordo tabulae
+                 * (01M0X12PWS) */
+                _sedes_notare(sedes, nodus, (i32)initium_sedis,
+                              finis_tagi);
+                initium_sedis = -I;
             }
             alioquin
             {
@@ -16176,20 +16216,15 @@ _scribere_nucleus (
     }
 
     /* Elementum notare ubi CLAUDITUR (unde post-ordo tabulae);
-     * initium_sedis in casu ELEMENTI solo ponitur, cetera genera
-     * sentinellam -I tenent et praetereunt. */
+     * initium_sedis in casu ELEMENTI solo ponitur - rami capturae
+     * (ANTE/RETRO/FARCIMEN/fragmentum capturans) notam propriam
+     * scribunt et sentinellam -I reponunt (extensio eorum tagum
+     * solum est, non captos - quaestio 01M0X12PWS), cetera genera
+     * sentinellam numquam tangunt. */
     si (sedes != NIHIL && initium_sedis >= ZEPHYRUM)
     {
-        StmlSedesNodi* nota;
-
-        nota = silva_xar_addere(sedes);
-        si (nota != NIHIL)
-        {
-            nota->nodus    = nodus;
-            nota->initium  = (i32)initium_sedis;
-            nota->finis   =
-                (i32)silva_chorda_aedificator_longitudo(aedificator);
-        }
+        _sedes_notare(sedes, nodus, (i32)initium_sedis,
+                      (i32)silva_chorda_aedificator_longitudo(aedificator));
     }
 
     /* spatia_post EXTRA extensionem sedium (post notationem);

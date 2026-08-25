@@ -1089,3 +1089,52 @@ nucleus end-of-case notation includes CAPTEES in authored
 captors' extents (CAPTIO_ANTE glued branch, retro, farcimen) —
 parser records tag-only. Same latent-contract family; no fixture
 exercises authored captors in the sedes suite yet.
+
+## 2026-08-25 (later): captor extents — nucleus branches note tag-only (01M0X12PWS)
+
+The sister lie filed during the spine-order fix, now retired.
+The nucleus's bracket notation (grab `initium_sedis` at case
+start, note `[initium_sedis, longitudo)` at end-of-case) spans
+tag + captees for every authored captor, because capture
+branches emit their captees INSIDE the case. The parser records
+the capture TOKEN only (`_parser_creare_nodus` presets the
+token's span; capture parsers pin `finis_ultimus` right after
+consuming their own token; reparenting never touches positus).
+RETRO/FARCIMEN were worse: captees emit BEFORE the tag, so
+`initium_sedis` didn't even point at `<` — the fixture's
+`emissum.datum[initium] == '<'` anchor caught that face.
+
+Born-red first: FIXTURA_CAPTORUM (authored ANTE, retro,
+farcimen, fragment captor, crudus captor — XI elements, both
+modes) + a hand-numbered absolute anchor (`<r><t (> <a/></r>`,
+t = [3,8)) so both oracles can't share the "extents include
+captees" falsehood. 13 red, all four defect faces.
+
+Fix shape: extracted `_sedes_notare` (the nota block existed
+verbatim 4×: vinculum, vinculum multilineum, multiplex,
+end-of-case — one derivation now), then each capture branch
+notes its OWN extent and resets `initium_sedis` to the -I
+sentinel so the end-of-case bracket skips:
+
+- ANTE element: `finis_tagi` right after the closer (both attr
+  paths converge there); nota AFTER captees (post-order).
+- ANTE crudus: the capture LEXEME carries the captured line
+  itself ('\n' left to the stream), so parser extent = tag +
+  line; `finis_tagi` re-grabbed after the children loop, before
+  the fidelity terminator. NOT tag-only — match the token, not
+  a slogan.
+- RETRO: `initium_tagi` grabbed after captees (tag stands after
+  them in flow order); nota right after `>` — captees already
+  noted, post-order free.
+- FARCIMEN: tag extent bracketed between captee[0] and the
+  rest; nota after the trailing loop.
+- Fragment ANTE: same as ANTE element, before its `frange`.
+
+Post-order came free everywhere because every branch's nota is
+emitted after its captees' recursion — no `_sedes_postordinare`
+needed here (that machinery stays spine-only).
+
+Trap for the future: "tag-only" is the RULE but the crudus
+captor is the exception — the extent contract is "the capture
+token's span", which for crudus includes the captured line.
+Any new capture form should ask what its TOKEN spans first.

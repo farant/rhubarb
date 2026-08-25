@@ -194,6 +194,23 @@ principale (
     constans character* FIXTURA_SPINAE =
         "<a><b><c><d/><e/></c></b></a>";
 
+    /* elementa: a, ante, b, retro, c, d, farc, e, frag, v, summa
+     * = XI. Captores AUTHORATI per ramos nuclei fluunt (ANTE,
+     * RETRO, FARCIMEN, fragmentum capturans, crudus) - extensio
+     * scriptoris TAGUM SOLUM notare debet (crudus: tagum + lineam
+     * captam sine '\n' - lexema contentum captum ipsum fert), non
+     * captos (quaestio 01M0X12PWS: notatio finis-casus nuclei
+     * captos includebat; RETRO/FARCIMEN etiam initium ante captos
+     * capiebant). */
+    constans character* FIXTURA_CAPTORUM =
+        "<summa>\n"
+        "  <ante (> <a/>\n"
+        "  <b/><) retro>\n"
+        "  <c/><= farc =><d/>\n"
+        "  <#frag (><e/>\n"
+        "  <v!(>capta cruda\n"
+        "</summa>\n";
+
     piscina = piscina_generare_dynamicum("probatio_stml_sedes",
                                          1048576);
     si (!piscina)
@@ -216,6 +233,10 @@ principale (
                        FIXTURA_SPINAE, FALSUM, (i32)V);
     _circuitum_probare(piscina, intern, "spinae",
                        FIXTURA_SPINAE, VERUM, (i32)V);
+    _circuitum_probare(piscina, intern, "captorum",
+                       FIXTURA_CAPTORUM, FALSUM, (i32)XI);
+    _circuitum_probare(piscina, intern, "captorum",
+                       FIXTURA_CAPTORUM, VERUM, (i32)XI);
 
     /* sedes NIHIL = stml_scribere ad octetum; et ANCORA ABSOLUTA:
      * paritas duorum oraculorum consensum probat, extensio manu
@@ -260,6 +281,45 @@ principale (
                 n = (StmlSedesNodi*)xar_obtinere(tabula, II);
                 CREDO_AEQUALIS_I32 (n->initium, (i32)ZEPHYRUM);
                 CREDO_AEQUALIS_I32 (n->finis,   (i32)XXVII);
+            }
+        }
+    }
+
+    /* ANCORA ABSOLUTA CAPTORIS (quaestio 01M0X12PWS): extensio
+     * captoris authorati TAGUM SOLUM est - manu numerata, ne
+     * scriptor et parsator idem falsum (captos includere)
+     * concedant. "<r><t (> <a/></r>" non-pulchre:
+     * a=[9,13) t=[3,8) r=[0,17), post-ordo a,t,r. */
+    {
+        StmlResultus  res;
+              chorda  fons;
+                 Xar* tabula;
+
+        imprimere("\n--- ancora absoluta captoris ---\n");
+        fons  = chorda_ex_literis("<r><t (> <a/></r>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            tabula = xar_creare(piscina,
+                                magnitudo(StmlSedesNodi));
+            (vacuum)stml_scribere_sedibus(res.radix, piscina,
+                                          FALSUM, tabula);
+            CREDO_AEQUALIS_I32 (xar_numerus(tabula), (i32)III);
+            si (xar_numerus(tabula) == (i32)III)
+            {
+                StmlSedesNodi* n;
+
+                n = (StmlSedesNodi*)xar_obtinere(tabula,
+                                                 ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (n->initium, (i32)IX);
+                CREDO_AEQUALIS_I32 (n->finis,   (i32)XIII);
+                n = (StmlSedesNodi*)xar_obtinere(tabula, I);
+                CREDO_AEQUALIS_I32 (n->initium, (i32)III);
+                CREDO_AEQUALIS_I32 (n->finis,   (i32)VIII);
+                n = (StmlSedesNodi*)xar_obtinere(tabula, II);
+                CREDO_AEQUALIS_I32 (n->initium, (i32)ZEPHYRUM);
+                CREDO_AEQUALIS_I32 (n->finis,   (i32)XVII);
             }
         }
     }
