@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Effusio cursus ULTIMI semper in plagulam scripta (stdout +
+# stderr ambo) - visibilis etiam si fistulam paravimus male.
+# Involucrum se-ipsum-exsequens: cursus verus filius per tee
+# fluit, ergo plagula INTEGRA est cum promptum redit (nulla
+# certatio effusionis), et codex exitus per PIPESTATUS servatur
+# (contractus 0/1/2 intactus: 2 = NIHIL cucurrit). Invocatio
+# quaevis plagulam obruit - cursus ultimus vincit.
+if [ -z "$COMPILE_TESTS_EFFUSIO" ]; then
+    export COMPILE_TESTS_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/build"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/build/last_compile_tests_run.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # Compiler flags (same strict settings as compile_chorda.sh)
 declare -a GCC_FLAGS=(
     "-std=c89"
