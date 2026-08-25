@@ -14006,3 +14006,47 @@ rather than replacing whole tags, so the probe survives either emission
 form. The 154-file memcmp gate and both canon freshness gates never
 flinched — tree meaning is what they eat. Suite: silva 50/50, root
 140/140.
+
+---
+
+**Addendum 2026-08-25: arbor's document format changed twice (stml M3 arc) — re-entry reader take note.**
+
+1. **Carried values are now RAW (`!`).** stml's flow re-wrap made
+   pretty OWN flow prose — and the plagula gate immediately caught
+   arbor declaring code bytes (comments, lexeme values) as flow: the
+   formatter joined multi-line comments and re-filled long ones. The
+   kind ladder was the answer, but finding the right rung took three
+   gated attempts: `\`-marking (works only in the canonical
+   ante-"\n" shape — glued first lines exit the dedent computation
+   and continuation lines lose a space each); raw everywhere (the
+   raw scan ATE `<post>`/`<expansio>` involucra as text in mixed
+   lexeme elements); raw conditional on single-child — which must be
+   decided AFTER `_origo_scribere`, because origo attaches late.
+   Final law: trivium elements always raw; lexeme elements raw iff
+   still single-child at the END of `_lexema_scribere`; mixed stay
+   flow (v1 re-flow skips mixed); `_valorem_crudum_notare` refuses
+   LOUDLY if a value contains its own closing sequence. Result: the
+   plagula gate holds 78+154 files byte-exact THROUGH a pretty-print
+   — arbor documents are reformat-safe, the strongest form of the
+   §6 vision claim, with no temporary weakening.
+2. **Filled text elements use capture-stacked form** (stml decretum
+   IV): `<tag (>` + filled lines, no `</>`. Assertion churn:
+   `<lex-integer(> 0` → `<lex-integer!>0</lex-integer>` (raw), plus
+   the M2b-era corruption-substitution guidance stands.
+
+Instrument debrief: adhibita — arbor.sh (live-shape verification
+before every assertion edit), plagula/circuitus gates (the collision
+detector and the verdict), a scratchpad valor-probe (settled the
+dedent question in one run), formator -scribere, amalgamare,
+natura_struere. Fructus: the gates refuted two wrong fix shapes
+within minutes each — the whole raw arc took three tries and none
+of the wrong tries survived to a commit; the root-lib probe recipe
+(clang -Iinclude probe.c build/*.o -framework Cocoa/Security/
+WebKit) beats aedilis for scratchpad probes, since aedilis refuses
+extra-repo files. Asperitates: censor/examen post-edit hooks still
+emit empty "?" verdicts mid-edit-sequence (standing noise); the
+`nomen` macro bit the scratch probe (censor does not see scratchpad
+files); a backgrounded `cmd | tail` nearly passed a suite on tail's
+exit code — pipestatus doctrine reaffirmed. Desiderata: a real STML
+formatter CLI (the session's eyeballing ran through a scratchpad
+binary; filed in the tabularium).

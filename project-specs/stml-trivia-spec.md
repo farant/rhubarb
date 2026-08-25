@@ -685,9 +685,10 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   the stale rationale comment fixed). Remaining consumers at
   leisure per §9. No struct changes → no lab re-vendor needed.
   Flow re-wrap SHIPPED 2026-08-25 (§4 decree above): joined
-  capture + block-with-text fill; Gate B modulo fluxus for flow
-  text; `_valor_capturabilis` clean-edges-both-ends (latent
-  trailing-space hole closed). COMPANION: arbor now declares
+  capture + capture-stacked fill (fourth decree — `<t (>` +
+  filled lines, no closer; the M2b invariant exact); Gate B
+  modulo fluxus for flow text; `_valor_capturabilis`
+  clean-edges-both-ends (latent trailing-space hole closed). COMPANION: arbor now declares
   carried values RAW (`!`) — code bytes are not prose; trivium
   elements always, lexeme elements when single-child after ALL
   involucra attach (mixed stay flow, safe under v1 scope); loud
