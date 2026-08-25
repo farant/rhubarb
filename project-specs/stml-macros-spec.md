@@ -1,0 +1,193 @@
+# STML Macros v1 — Parameterized Fragments (expansio)
+
+2026-08-25. Interview: `stml-macros-interview.md` (raw transcript,
+four rounds). Lineage: stml-visio.md §9.1 (the decreed pins),
+arbor-parsura-spec.md §4 (the blessed `&@` slot design), visio §6
+(the RESERVATUM this fulfills). Consumer: arbor (decided round 1).
+
+Fran's definition anchors scope: **macros = fragments that take
+arguments.** V1 is exactly that — no query fragments (staged), no
+children-args (reserved), no cross-document (reserved).
+
+## 0. What measurement decided
+
+- **The transclusion lexer already carries arguments.**
+  `_tok_legere_transclusio` (lib/stml.c:1189) scans `<<` … `>>`
+  blindly and stores the whole interior as `valor` — so
+  `<<#f versio="2">>` lexes TODAY; the interior grammar is the
+  expander's to parse. Writer emits `<<` + valor + `>>` back —
+  arguments round-trip byte-exact with zero writer changes.
+- **Fragments already parse attributes** (`nodus->attributa`,
+  lib/stml.c:3206) — slot declarations (`<#f position="@position">`)
+  ride the existing parse.
+- **`&@name;` in text is literal today** (unknown-entity passthrough,
+  visio §3) and attribute values are raw both ways — the expander
+  interprets `&@…;` at expansion time; the parser never learns it.
+- **One real parser change**: the `>>` close-scan is not quote-aware,
+  so an argument value containing `>>` would truncate the token.
+  Upgrade the scan to skip quoted spans. Existing corpus unaffected
+  (a quoted `>>` inside `<<…>>` is today a broken document).
+
+## 1. Doctrine (inherited, restated once)
+
+Files are truth: **the file keeps the macro form.** Expansion is a
+pure tree→tree projection at load (`legere → expandere → consumer`),
+in the caller's piscina; the original tree is untouched and stays
+queryable (the strata decree); the writer only ever sees unexpanded
+trees. No computation in templates: no conditionals, loops,
+defaults, or expressions — substitution and (later) queries are
+structural. Every reference failure is LOUD. Tree-level substitution
+with provenance, never string-level.
+
+## 2. Surface
+
+### 2.1 Definition side (parsura §4, blessed as-is)
+
+```stml
+<#lex-zephyrum position="@position">
+  <lex-integer position="&@position;">0</lex-integer>
+</#lex-zephyrum>
+```
+
+- Slots are DECLARED on the fragment's opening tag (`attr="@name"`),
+  never inferred — a typo cannot mint an empty slot.
+- `&@name;` = template-space reference (the three-space carve gains
+  a fourth mark INSIDE the `&…;` delimiter: `#` document · `&x;`
+  world · `.` kind · `&@x;` template).
+- Body positions: attribute value (whole or interpolated —
+  `via="&@basis;/x.c"`), and text/children position.
+- `&@...children;` spread: RESERVED (semantics banked in parsura §4),
+  not in v1.
+- Define-side and use-side stay visually distinct (`&@x;` appears
+  only inside definition bodies) — the surviving `:`/`::` discipline.
+
+### 2.2 Call side (decided round 2)
+
+```stml
+<<#lex-zephyrum position="123">>
+```
+
+Transclusion-with-arguments: interior = `#id` + attribute-syntax
+pairs. `<#id>` stays purely definitional; invocation is
+reference-shaped. A no-argument call to a slotless fragment is plain
+transclusion resolution — the visio §6 arbor pull, satisfied by the
+same machinery. Selector-form transclusion (valor not starting `#`)
+passes through as an unresolved node, RESERVATUM unchanged.
+
+### 2.3 Strata (decided round 2)
+
+Document order. A call may reference only fragments defined EARLIER
+in the document; a body may therefore only call earlier macros.
+Forward reference = vitium. Termination by construction, zero graph
+machinery. Nested calls expand recursively during the fill; a nota's
+`stratum` = fill-recursion depth.
+
+### 2.4 Vitium taxonomy (all loud, first error wins)
+
+| vitium | trigger |
+|---|---|
+| `FRAGMENTUM_IGNOTUM` | call to an id defined nowhere |
+| `FRAGMENTUM_POSTERIUS` | call to an id defined LATER (strata violation) |
+| `FRAGMENTUM_GEMINUM` | two definitions with the same id |
+| `LOCULUS_NON_IMPLETUS` | declared slot the call did not fill |
+| `ARGUMENTUM_SUPERFLUUM` | call argument naming no declared slot |
+| `LOCULUS_IGNOTUS` | body references a slot not declared |
+
+`&@x;` OUTSIDE any fragment body stays literal text (the entity
+passthrough rule; the parsura canon will refuse it per-dialect —
+canon gating is the reservation, not the expander's job).
+
+## 3. Semantics
+
+One left-to-right walk over the document:
+
+1. `<#id>` definition encountered → recorded (id → node), DROPPED
+   from output (round 3: the expanded tree is the CONTENT view;
+   definitions remain queryable in the unexpanded tree).
+2. Transclusion whose valor starts `#` → parse interior (id + args,
+   quote-aware), look up (must already exist), judge slots both
+   directions, CLONE the body with substitution, splice in place of
+   the call, record a nota. Bodies containing calls recurse (depth =
+   stratum).
+3. Everything else → cloned verbatim. Non-`#` transclusions pass
+   through as nodes.
+
+Cloning: fresh nodes in the caller's piscina (originals immutable;
+the token-sharing-forbidden lesson from mutatio simulatio I).
+Interned chordae are shared by pointer — immutable, safe.
+Substitution in attribute values replaces `&@name;` spans within the
+leaf string; in text positions the reference is replaced by the
+argument's text. Argument values are STRINGS in v1 (attribute
+syntax carries no trees) — tree-valued arguments arrive with
+children-args, reserved.
+
+## 4. API (lib/stml_macros.c — new TU, round 3)
+
+Depends only on the public stml.h tree surface (which this build
+proves sufficient). Sketch, refinable at implementation:
+
+```c
+nomen structura {
+    StmlNodus* nodus;          /* radix insertionis in arbore expansa */
+    chorda*    fragmentum_id;
+    StmlNodus* vocatio;        /* nodus transclusionis in arbore ORIGINALI */
+    i32        stratum;        /* profunditas impletionis, I-basata */
+} StmlExpansioNota;
+
+nomen structura {
+    b32         successus;
+    StmlNodus*  radix_expansa;     /* arbor nova; originalis intacta */
+    Xar*        tabula_expansionum; /* StmlExpansioNota, ordine splicis */
+    /* vitium: genus + linea + fragmentum/loculus nominati */
+} StmlExpansioResultus;
+
+StmlExpansioResultus
+stml_expandere (StmlNodus* radix, Piscina* piscina,
+                InternamentumChorda* intern);
+```
+
+The side table is the sedes precedent: StmlNodus untouched, queries
+join the table. Nota granularity = splice ROOT (descendants implied;
+inner splices carry their own notas).
+
+## 5. Gates
+
+- **probatio_stml_macros.c** (born-red first, house pattern):
+  attribute fill · interpolated fill · text fill · nested call
+  (stratum II asserted) · zero-arg slotless call (= transclusion
+  resolution) · definitions dropped · original tree untouched
+  (pre/post comparison) · tabula asserted (count, ids, strata,
+  vocatio identity) · all six vitia · quote-aware `>>` fixture ·
+  unexpanded roundtrip byte-exact (writer never sees expansion).
+- **Arbor slice** (round 4: in this milestone): the emitter authors
+  ONE shared shape as fragment + calls in a generated parsura
+  document; the loader expands on read; the M2 byte-gate holds on
+  the macro-form file; the loaded semantics equal the unshared form.
+- **Amalgam duty**: new lib → fontes_generare → excludenda →
+  CADENDA_TYPEDEF for the two new public types → hospes exercise →
+  amalgamare VERIFICATUM. New probatio →
+  tools/compile_tests_fontes_generare.sh.
+
+## 6. Reserved, with landing spots
+
+| what | where it lands |
+|---|---|
+| `&@...children;` + call-site children | parsura §4 semantics banked; candidate call syntax: capturing transclusion (capture machinery reused) — noted round 3, undesigned |
+| query fragments | visio §9.1; forces the STML-side query engine; subsumes conditional inclusion, arms retained |
+| cross-document libraries | the declared-world arc (visio §5); v1 is same-document only |
+| selector transclusion resolution | RESERVATUM continues (needs the selector engine) |
+| canon gating of loculi | parsura-canon work; expander stays consumer-opt-in |
+| attribute-NAME sugar `<lex-x &@position;/>` | parsura §4 — reserved, never required |
+
+## 7. Milestone plan
+
+1. Quote-aware `>>` scan (one lexer touch + fixture).
+2. lib/stml_macros.c: interior parser (id + args) → definition
+   collection → clone-with-substitution → notas. Gates born red,
+   then green.
+3. Amalgam + suite wiring.
+4. Arbor slice: pick the shared shape (lex-zephyrum-class), emitter
+   authors it, loader expands, byte-gate + semantics-equality green.
+5. Bookkeeping: visio §9.1 pointer flips to VIVIT-partial, parsura
+   §4 "reserved" note gains the pointer here, ledger res for the
+   milestone.
