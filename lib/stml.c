@@ -1218,11 +1218,31 @@ _tok_legere_transclusio (
     _tok_praeterire_spatium(ctx);
     selector_initium = ctx->positus;
 
-    /* Read until >> */
+    /* Ad '>>' legere - citationum-conscius (macros v1): '>>' intra
+     * valorem citatum argumenti ('<<#f a="x>>y">>') lexema non
+     * claudit. Citatio non clausa = scansio ad finem (lexema tunc
+     * non clauditur - lenitas exsistens intacta). */
     dum (ctx->positus < ctx->input.mensura)
     {
-        si (   _tok_aspicere(ctx, ZEPHYRUM) == '>'
-            && _tok_aspicere(ctx, I)        == '>')
+        character citatio;
+
+        citatio = _tok_aspicere(ctx, ZEPHYRUM);
+        si (citatio == '"' || citatio == '\'')
+        {
+            _tok_progredi(ctx, I);
+            dum (   ctx->positus < ctx->input.mensura
+                 && _tok_aspicere(ctx, ZEPHYRUM) != citatio)
+            {
+                _tok_progredi(ctx, I);
+            }
+            si (ctx->positus < ctx->input.mensura)
+            {
+                _tok_progredi(ctx, I);
+            }
+            perge;
+        }
+        si (   citatio               == '>'
+            && _tok_aspicere(ctx, I) == '>')
         {
             frange;
         }

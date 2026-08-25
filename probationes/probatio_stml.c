@@ -3499,6 +3499,32 @@ s32 principale(vacuum)
     }
 
     {
+        /* Scan '>>' citationum-conscius (macros v1): valores
+         * argumentorum '>>' continere possunt - antea lexema in
+         * '>>' interiore praemature secabatur */
+        StmlResultus res;
+        StmlNodus* trans;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<radix><<#f a=\"x>>y\">></radix>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        si (res.successus)
+        {
+            trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
+            CREDO_NON_NIHIL(trans);
+            si (trans != NIHIL)
+            {
+                CREDO_AEQUALIS_I32(trans->genus, STML_NODUS_TRANSCLUSIO);
+                CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, "#f a=\"x>>y\"");
+            }
+            serialized = stml_scribere(res.radix, piscina, FALSUM);
+            CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<radix><<#f a=\"x>>y\">></radix>");
+        }
+
+        imprimere("  Transclusio citationum-conscia: PRAETERITUM\n");
+    }
+
+    {
         /* Multiple transclusions */
         StmlResultus res;
 
