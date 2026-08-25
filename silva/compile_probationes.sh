@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Effusio cursus ultimi semper in build/test_logs/silva.log
+# radicis (stdout + stderr; codex exitus per PIPESTATUS
+# servatus). Ratio plena: compile_tests.sh radicis.
+if [ -z "${SILVA_PROBATIONES_EFFUSIO:-}" ]; then
+    export SILVA_PROBATIONES_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/../build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/silva.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # silva/compile_probationes.sh - Probationes silvae compilare et currere
 #
 # Usage:

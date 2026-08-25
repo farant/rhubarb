@@ -6,11 +6,13 @@
 # fluit, ergo plagula INTEGRA est cum promptum redit (nulla
 # certatio effusionis), et codex exitus per PIPESTATUS servatur
 # (contractus 0/1/2 intactus: 2 = NIHIL cucurrit). Invocatio
-# quaevis plagulam obruit - cursus ultimus vincit.
-if [ -z "$COMPILE_TESTS_EFFUSIO" ]; then
+# quaevis plagulam obruit - cursus ultimus vincit. Schema:
+# build/test_logs/<cursor>.log, cursor quisque suam (radix,
+# silva, officina, gesta, saltuarius, tessera, linux).
+if [ -z "${COMPILE_TESTS_EFFUSIO:-}" ]; then
     export COMPILE_TESTS_EFFUSIO=1
-    mkdir -p "$(dirname "$0")/build"
-    "$0" "$@" 2>&1 | tee "$(dirname "$0")/build/last_compile_tests_run.log"
+    mkdir -p "$(dirname "$0")/build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/build/test_logs/radix.log"
     exit "${PIPESTATUS[0]}"
 fi
 

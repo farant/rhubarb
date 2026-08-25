@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Effusio cursus ultimi semper in build/test_logs/gesta.log
+# radicis (stdout + stderr; codex exitus per PIPESTATUS
+# servatus). Ratio plena: compile_tests.sh radicis.
+if [ -z "${GESTA_PROBATIONES_EFFUSIO:-}" ]; then
+    export GESTA_PROBATIONES_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/../build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/gesta.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # gesta/compile_probationes.sh - Probationes gestae compilare et currere
 #
 # Usage:

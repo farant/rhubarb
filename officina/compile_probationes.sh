@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Effusio cursus ultimi semper in build/test_logs/officina.log
+# radicis (stdout + stderr; codex exitus per PIPESTATUS
+# servatus). Ratio plena: compile_tests.sh radicis.
+if [ -z "${OFFICINA_PROBATIONES_EFFUSIO:-}" ]; then
+    export OFFICINA_PROBATIONES_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/../build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/officina.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # officina/compile_probationes.sh - Probationes officinae compilare
 # et currere
 #

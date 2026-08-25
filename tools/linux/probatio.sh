@@ -1,4 +1,16 @@
 #!/bin/bash
+
+# Effusio cursus ultimi semper in build/test_logs/linux.log
+# radicis (stdout + stderr; codex exitus per PIPESTATUS
+# servatus). Ante 'cd' infra stat, ne "$0" relativum pereat.
+# Ratio plena: compile_tests.sh radicis.
+if [ -z "${LINUX_PROBATIO_EFFUSIO:-}" ]; then
+    export LINUX_PROBATIO_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/../../build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../../build/test_logs/linux.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # tools/linux/probatio.sh - probationes sub Linux (glibc) currere
 #
 # Usus: ./tools/linux/probatio.sh <nomina...>     # e.g. piscina chorda xar

@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# Effusio cursus ultimi semper in build/test_logs/tessera.log
+# radicis (stdout + stderr; codex exitus per PIPESTATUS
+# servatus). Ratio plena: compile_tests.sh radicis.
+if [ -z "${TESSERA_PROBATIONES_EFFUSIO:-}" ]; then
+    export TESSERA_PROBATIONES_EFFUSIO=1
+    mkdir -p "$(dirname "$0")/../build/test_logs"
+    "$0" "$@" 2>&1 | tee "$(dirname "$0")/../build/test_logs/tessera.log"
+    exit "${PIPESTATUS[0]}"
+fi
+
 # tessera/compile_probationes.sh - Probationes tesserae compilare et currere
 #
 # Usage:
