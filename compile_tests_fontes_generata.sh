@@ -132,6 +132,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_parser.c"
     "lib/sputnik_syntaxis.c"
     "lib/stml.c"
+    "lib/stml_macros.c"
     "lib/symbola.c"
     "lib/tabellarius.c"
     "lib/tabula_characterum.c"
