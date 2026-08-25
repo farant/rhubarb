@@ -522,13 +522,26 @@ remains the raw total stream (over canonicalized input).
   eaten by edge-trimming on reparse); mixed content, ws-only
   text, and document-level text stay verbatim-inline (named
   follow-on: mixed-content paragraph filling). Layout is
-  width-driven with NO hanging form: the joined text is judged
+  width-driven: the joined text is judged
   by the existing machinery — capture-inline when it fits
   (`_valor_capturabilis` drops its unilinear requirement; the
   spine emits the JOINED reading), else CAPTURE-STACKED FILL
   (fourth decree, 2026-08-25, from Fran eyeballing
   c89-formatted): `<tag (>` with canonical paren placement, text
-  greedily filled at indent+1 within the tectum, NO close tag.
+  greedily filled, NO close tag. AMENDED same day (HANGING FILL,
+  Fran): the closer line is a TAG line — content follows it when
+  it fits, exactly as the packer already continues element
+  captees after a multiline closer. The text starts ON the
+  closer line (`<tag (> primus ...`, or the aligned `(>` line of
+  a multiline-attr captor) and continuation lines HANG aligned
+  under the first text column, iff (a) the first atom fits on
+  that line within the tectum and (b) the hanging column leaves
+  at least XL columns of content room (the depth-floor number) —
+  otherwise the VERTICAL form stands: fill at indent+1 on fresh
+  lines. The first-atom test preserves the 72/73 boundary
+  fixtures (a single over-wide atom is narrower in vertical
+  form); the room guard keeps wide inline captors and deep
+  indentation from hanging text in a sliver.
   One text run = one node (runs split only at markup, never at
   spaces), rule A owns the leading boundary, so the stacked
   captee parses whole; the writer can never produce the

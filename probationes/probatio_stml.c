@@ -2831,35 +2831,46 @@ s32 principale(vacuum)
     }
 
     {
-        /* impletio capturae stackatae (decretum quartum §4):
-         * textus ultra tectum -> '<t(>' linea sua, textus avare
-         * impletus gradu uno altius, SINE clausura - cursus
-         * textus uno nodo (fracturae solum apud notationem),
-         * regula capturae limitem ducentem possidet. Fons
-         * laceratus consulto (semper canonica) */
+        /* impletio capturae stackatae (decretum quartum §4,
+         * emendatum: impletio SUSPENSA): textus ultra tectum ->
+         * textus clausuram in linea eadem sequitur, lineae
+         * sequentes sub textu primo alineatae, SINE clausura -
+         * cursus textus uno nodo (fracturae solum apud
+         * notationem), regula capturae limitem ducentem
+         * possidet. Fons laceratus consulto (semper canonica) */
         _pulchrum_probare(piscina, intern,
             "<t>aaaa bbbb cccc dddd eeee ffff gggg hhhh\n"
             "iiii jjjj kkkk llll mmmm nnnn oooo pppp\n"
             "qqqq rrrr ssss tttt</t>",
-            "<t(>\n"
-            "  aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj"
-            " kkkk llll mmmm nnnn\n"
-            "  oooo pppp qqqq rrrr ssss tttt",
-            "impletio capturae stackatae: PRAETERITUM");
+            "<t(> aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii"
+            " jjjj kkkk llll mmmm\n"
+            "     nnnn oooo pppp qqqq rrrr ssss tttt",
+            "impletio suspensa: PRAETERITUM");
     }
 
     {
-        /* eadem cum attributis: parenthesis spatiata post ea
-         * (§0.2) */
+        /* eadem cum attributis: columna suspensionis post
+         * clausuram latiorem cadit */
         _pulchrum_probare(piscina, intern,
             "<t a=\"1\">aaaa bbbb cccc dddd eeee ffff gggg hhhh"
             " iiii jjjj kkkk llll mmmm nnnn oooo pppp qqqq rrrr"
             " ssss tttt</t>",
-            "<t a=\"1\" (>\n"
-            "  aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj"
-            " kkkk llll mmmm nnnn\n"
-            "  oooo pppp qqqq rrrr ssss tttt",
-            "impletio cum attributis: PRAETERITUM");
+            "<t a=\"1\" (> aaaa bbbb cccc dddd eeee ffff gggg hhhh"
+            " iiii jjjj kkkk llll\n"
+            "            mmmm nnnn oooo pppp qqqq rrrr ssss tttt",
+            "impletio suspensa cum attributis: PRAETERITUM");
+    }
+
+    {
+        /* custos columnae latae: captor inline latus (columna
+         * suspensionis XL columnas non relinquit) formam
+         * VERTICALEM tenet - impletio gradu uno altius */
+        _pulchrum_probare(piscina, intern,
+            "<t a=\"0123456789012345678901234567890123456789\">"
+            "textus primus secundus tertius</t>",
+            "<t a=\"0123456789012345678901234567890123456789\" (>\n"
+            "  textus primus secundus tertius",
+            "suspensio recusata (columna lata): PRAETERITUM");
     }
 
     {
@@ -2954,7 +2965,8 @@ s32 principale(vacuum)
 
     {
         /* captor re-involutionis: clausura '(>' linea propria, '>'
-         * in columna '='; impletio sub eo ut solet */
+         * in columna '='; textus clausuram in linea eadem sequitur
+         * (impletio suspensa - linea clausurae linea tagi est) */
         _pulchrum_probare(piscina, intern,
             "<productio genus=\"per-clausula-longissima-valde-nimis\""
             " id=\"per-clausula-p-longissima-item\">"
@@ -2962,8 +2974,7 @@ s32 principale(vacuum)
             "<productio\n"
             "     genus=\"per-clausula-longissima-valde-nimis\"\n"
             "        id=\"per-clausula-p-longissima-item\"\n"
-            "         (>\n"
-            "  alfa beta gamma delta",
+            "         (> alfa beta gamma delta",
             "captor refluxus multilineus: PRAETERITUM");
     }
 

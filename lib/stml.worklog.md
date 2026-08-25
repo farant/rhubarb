@@ -983,3 +983,32 @@ Implementation notes:
   whose VALUES exceed 72 alone — values never break, report-only
   per decree), 1021 → 1105 lines, full-document fixed point
   verified by running the formatter on its own output.
+
+## 2026-08-25 (decretum quartum emendatum) — hanging fill: the closer line is a tag line
+
+Fran's refinement, eyeballing the fifth-decree output: the
+capture-stacked fill opened a fresh line under `(>` even when the
+text had room beside it. Now the text starts ON the closer line
+(`<t(> primus ...`, or the aligned `(>` line of a multiline-attr
+captor) and continuation lines hang aligned under the first text
+column — the same behavior the spine packer already had for
+ELEMENT captees after a multiline closer, now uniform for text.
+
+Two guards make "if it has the width budget" precise:
+- FIRST-ATOM TEST: hang only if the first atom fits on the closer
+  line within the tectum (render + truncare — escaping can change
+  length). This preserved the 72/73 boundary fixtures untouched:
+  a single over-wide atom is genuinely narrower in vertical form
+  (indent+1 < hang column).
+- ROOM GUARD: hang only if the hanging column leaves ≥ XL columns
+  under the tectum (the depth-floor number). Without it a wide
+  INLINE captor (`<t a="...40..." (>`, column 51) would hang its
+  continuation in a sliver; those and deep indentation keep the
+  vertical fill.
+
+Implementation: `_atomi_finis` extracted (the atom scanner was
+about to be needed twice); the fill loop parameterized on
+`columna_impletionis` (spaces count — hang column or
+(indent+1)*2) so one loop serves both forms. c89-formatted:
+1105 → 1091 lines, the productio blocks now read exactly as
+Fran sketched. Fixed point verified on the full document.

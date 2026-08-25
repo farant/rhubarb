@@ -6340,17 +6340,68 @@ _fluxu_evasum_scribere (
     }
 }
 
-/* Re-involutio stackata (§4 M3, decretum quartum): elementum
- * liberi textus unici mundi quod inline non cadit - captor
- * canonicus ('<t(>' / '<t attrs (>') linea sua, textus avare
- * impletus gradu uno altius intra tectum, SINE clausura (cursus
- * textus nodo uno parsatur - fracturae solum apud notationem;
- * regula capturae limitem ducentem possidet). Invariams M2b
- * completur: clausurae ibi solae ubi forma blocorum
- * multi-liberorum. Candidati fracturae: cursus lineiferi et
- * spatia SINGULA; verba et cursus spatiorum multiplicium atomi
- * infrangibiles (fractura intra eos lectionem fluxus mutaret).
- * Sedes tagum solum (semantica captoris, via _vinculum_scribere). */
+/* Atomum proximum ab initio dato: finis exclusivus redditur -
+ * usque ad candidatum fracturae (cursus lineifer aut spatium
+ * SINGULUM); cursus spatiorum multiplicium eiusdem lineae intra
+ * atomum manent (§4: infrangibiles - fractura intra eos lectionem
+ * fluxus mutaret). */
+interior i32
+_atomi_finis (
+    constans chorda* valor,
+                i32  initium)
+{
+    i32 finis;
+
+    finis = initium;
+    dum (finis < valor->mensura)
+    {
+        si (_est_spatium((character)valor->datum[finis]))
+        {
+            i32 f2;
+            b32 fert;
+
+            f2    = finis;
+            fert  = FALSUM;
+            dum (   f2 < valor->mensura
+                 && _est_spatium((character)valor->datum[f2]))
+            {
+                si ((character)valor->datum[f2] == '\n')
+                {
+                    fert = VERUM;
+                }
+                f2++;
+            }
+            si (fert || f2 - finis == I)
+            {
+                frange;   /* candidatus fracturae */
+            }
+            finis = f2;   /* cursus multiplex: pars atomi */
+        }
+        alioquin
+        {
+            finis++;
+        }
+    }
+    redde finis;
+}
+
+/* Re-involutio stackata (§4 M3, decretum quartum; emendatum
+ * 2026-08-25 impletio SUSPENSA): elementum liberi textus unici
+ * mundi quod inline non cadit - captor canonicus ('<t(>' /
+ * attributa stackata cum '(>' linea propria), textus avare
+ * impletus SINE clausura. Linea clausurae linea TAGI est:
+ * contentum eam sequitur ubi cadit (sicut sarcinator captis
+ * elementis iam facit) - textus in linea clausurae incipit et
+ * lineae sequentes sub textu primo SUSPENSAE alineantur, si (a)
+ * atomum primum intra tectum cadit ET (b) columna suspensionis
+ * XL columnas contenti sub tecto relinquit (numerus fundi
+ * profunditatis - captores inline lati et indentatio gravis in
+ * fasciam non suspendunt). Aliter forma VERTICALIS: impletio
+ * gradu uno altius in lineis recentibus. Conatus atomi primi
+ * per redditionem + reversionem (evasio longitudinem mutare
+ * potest). Invariams M2b tenet: clausurae ibi solae ubi forma
+ * blocorum multi-liberorum. Sedes tagum solum (semantica
+ * captoris, via _vinculum_scribere). */
 interior b32
 _textum_refluere_conari (
             StmlNodus* nodus,
@@ -6361,9 +6412,10 @@ _textum_refluere_conari (
           StmlNodus* liberum;
      memoriae_index  initium_lineae;
     constans chorda* valor;
-                i32  gradus;
                 i32  tectum;
+                i32  columna_impletionis;
                 i32  i;
+                b32  suspensum;
                 b32  primum_lineae;
 
     liberum = _spinae_liberum_unicum(nodus);
@@ -6375,70 +6427,79 @@ _textum_refluere_conari (
     }
     valor = liberum->valor;
 
-    /* forma capturae stackata (decretum quartum §4): captor
-     * canonicus + impletio sub eo, SINE clausura - invariams M2b
-     * completur (clausurae ibi solae ubi forma blocorum
-     * multi-liberorum). Sedes TAGUM SOLUM (_vinculum_scribere
-     * eas notat - semantica captoris). Captor ipse ultra tectum:
-     * attributa stackata, '(>' linea propria (§0.2 decretum
-     * quintum; III = spatium + parenthesis + '>'). */
+    /* captor: canonicus in linea, aut attributa stackata cum
+     * '(>' linea propria (§0.2 decretum quintum; III = spatium
+     * + parenthesis + '>'). Sedes TAGUM SOLUM utrimque. Linea
+     * currens notatur - basis mensurae suspensionis. */
+    initium_lineae = chorda_aedificator_longitudo(aedificator)
+        - (memoriae_index)(indentatio * II);
     si (_attributa_multilinea_oportet(nodus, indentatio, III))
     {
-        _vinculum_multilineum_scribere(nodus, aedificator,
-                                       indentatio * II, sedes);
+        i32 columna;
+
+        columna = _vinculum_multilineum_scribere(
+            nodus, aedificator, indentatio * II, sedes);
+        initium_lineae = chorda_aedificator_longitudo(aedificator)
+            - (memoriae_index)(columna + I);
     }
     alioquin
     {
         _vinculum_scribere(nodus, aedificator, sedes);
     }
 
-    gradus = indentatio + I;
-    tectum = _tectum_lineae(gradus);
+    /* conatus suspensionis: custos columnae, deinde atomum
+     * primum in linea clausurae per redditionem + reversionem */
+    tectum               = _tectum_lineae(indentatio);
+    columna_impletionis  = (i32)(chorda_aedificator_longitudo(
+        aedificator) - initium_lineae) + I;
+    suspensum      = FALSUM;
+    primum_lineae  = FALSUM;
+    i              = ZEPHYRUM;
+    si (columna_impletionis + XL <= tectum)
+    {
+        memoriae_index signum;
+                   i32 finis;
+                chorda pars;
 
-    chorda_aedificator_appendere_character(aedificator, '\n');
-    initium_lineae = chorda_aedificator_longitudo(aedificator);
-    _scribere_indentatio(aedificator, gradus);
-    primum_lineae = VERUM;
+        finis   = _atomi_finis(valor, ZEPHYRUM);
+        signum  = chorda_aedificator_longitudo(aedificator);
+        chorda_aedificator_appendere_character(aedificator, ' ');
+        pars.datum    = valor->datum;
+        pars.mensura  = finis;
+        _scribere_evasus(aedificator, &pars);
+        si (   chorda_aedificator_longitudo(aedificator)
+                   - initium_lineae <= (memoriae_index)tectum)
+        {
+            suspensum  = VERUM;
+            i          = finis;
+            dum (   i < valor->mensura
+                 && _est_spatium((character)valor->datum[i]))
+            {
+                i++;
+            }
+        }
+        alioquin
+        {
+            chorda_aedificator_truncare(aedificator, signum);
+        }
+    }
+    si (!suspensum)
+    {
+        /* forma verticalis: impletio gradu uno altius */
+        tectum               = _tectum_lineae(indentatio + I);
+        columna_impletionis  = (indentatio + I) * II;
+        chorda_aedificator_appendere_character(aedificator, '\n');
+        initium_lineae = chorda_aedificator_longitudo(aedificator);
+        _spatia_scribere(aedificator, columna_impletionis);
+        primum_lineae = VERUM;
+    }
 
-    i = ZEPHYRUM;
     dum (i < valor->mensura)
     {
         memoriae_index signum;
                    i32 finis;
 
-        /* atomum proximum: usque ad candidatum fracturae (cursus
-         * lineifer aut spatium singulum); cursus multiplices
-         * eiusdem lineae intra atomum manent */
-        finis = i;
-        dum (finis < valor->mensura)
-        {
-            si (_est_spatium((character)valor->datum[finis]))
-            {
-                i32 f2;
-                b32 f;
-
-                f2  = finis;
-                f   = FALSUM;
-                dum (   f2 < valor->mensura
-                     && _est_spatium((character)valor->datum[f2]))
-                {
-                    si ((character)valor->datum[f2] == '\n')
-                    {
-                        f = VERUM;
-                    }
-                    f2++;
-                }
-                si (f || f2 - finis == I)
-                {
-                    frange;   /* candidatus fracturae */
-                }
-                finis = f2;   /* cursus multiplex: pars atomi */
-            }
-            alioquin
-            {
-                finis++;
-            }
-        }
+        finis = _atomi_finis(valor, i);
 
         /* atomum emittere (conatus + reversio) */
         signum = chorda_aedificator_longitudo(aedificator);
@@ -6462,7 +6523,7 @@ _textum_refluere_conari (
                                                    '\n');
             initium_lineae =
                 chorda_aedificator_longitudo(aedificator);
-            _scribere_indentatio(aedificator, gradus);
+            _spatia_scribere(aedificator, columna_impletionis);
             {
                 chorda pars;
 
