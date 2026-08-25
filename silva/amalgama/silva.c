@@ -14075,21 +14075,27 @@ _valor_unilinearis (
     redde VERUM;
 }
 
-/* an valor textus capi directe possit: non vacuus, unilinearis,
- * octeto primo non albo - margo ducens alba in relectione ad post
- * captoris migraret (regula capturae) et valor mutaretur; valor
- * solum-albus ('<sep>   </sep>') totus periret */
+/* an valor textus capi aut reflui possit (§4 M3): non vacuus,
+ * margines MUNDI - octetus primus ET ultimus non albi. Margo
+ * ducens sordidus in relectione ad post captoris migraret (regula
+ * capturae), caudalis in trivia sequentia praecideretur - valor
+ * mutaretur et fluxus cum eo; valor solum-albus ('<sep>   </sep>')
+ * totus periret. Cauda alba = foramen M2b latens, numquam morsum,
+ * nunc pinnatum. Multilinearis LICET (M3): emissio lectionem
+ * IUNCTAM scribit - cursus lineam ferentes spatium unum sunt. */
 interior b32
 _valor_capturabilis (
     constans SilvaChorda* valor)
 {
     si (   valor          == NIHIL
         || valor->mensura == ZEPHYRUM
-        || _est_spatium((character)valor->datum[ZEPHYRUM]))
+        || _est_spatium((character)valor->datum[ZEPHYRUM])
+        || _est_spatium((character)
+               valor->datum[valor->mensura - I]))
     {
         redde FALSUM;
     }
-    redde _valor_unilinearis(valor);
+    redde VERUM;
 }
 
 /* Liberum unicum vinculi spinae reddere; NIHIL si nodus vinculum
@@ -14251,6 +14257,250 @@ _vinculum_scribere (
     }
 }
 
+/* Valorem fluminis IUNCTUM evasumque scribere (§4 M3): cursus
+ * albi lineam ferentes spatio uni fiunt (lectio fluxus - pulcher
+ * prosam possidet); segmenta cetera litteralia per evasionem
+ * solitam. */
+interior vacuum
+_fluxu_evasum_scribere (
+    SilvaChordaAedificator* aedificator,
+      constans SilvaChorda* valor)
+{
+    i32 i;
+
+    i = ZEPHYRUM;
+    dum (i < valor->mensura)
+    {
+        i32 finis;
+
+        /* segmentum litterale usque ad cursum lineiferum */
+        finis = i;
+        dum (finis < valor->mensura)
+        {
+            si (_est_spatium((character)valor->datum[finis]))
+            {
+                i32 f2;
+                b32 f;
+
+                f2  = finis;
+                f   = FALSUM;
+                dum (   f2 < valor->mensura
+                     && _est_spatium((character)valor->datum[f2]))
+                {
+                    si ((character)valor->datum[f2] == '\n')
+                    {
+                        f = VERUM;
+                    }
+                    f2++;
+                }
+                si (f)
+                {
+                    frange;
+                }
+                finis = f2;
+            }
+            alioquin
+            {
+                finis++;
+            }
+        }
+        si (finis > i)
+        {
+            SilvaChorda pars;
+
+            pars.datum    = valor->datum + i;
+            pars.mensura  = finis - i;
+            _scribere_evasus(aedificator, &pars);
+        }
+        i = finis;
+        si (i < valor->mensura)
+        {
+            /* cursus lineifer -> spatium unum */
+            dum (   i < valor->mensura
+                 && _est_spatium((character)valor->datum[i]))
+            {
+                i++;
+            }
+            si (i < valor->mensura)
+            {
+                silva_chorda_aedificator_appendere_character(aedificator,
+                                                       ' ');
+            }
+        }
+    }
+}
+
+/* Re-involutio bloci (§4 M3): elementum liberi textus unici mundi
+ * quod inline non cadit - tag apertum linea sua, textus avare
+ * impletus gradu uno altius intra tectum, clausura gradu elementi.
+ * Candidati fracturae: cursus lineiferi et spatia SINGULA; verba
+ * et cursus spatiorum multiplicium atomi infrangibiles (fractura
+ * intra eos lectionem fluxus mutaret). Forma capturae hic
+ * re-derivatur ad planam (captor auctoris unigena qui non cadit
+ * formam bloci accipit). Sedes elementi tota (tag ad clausuram) -
+ * semantica parsatoris pro elementis planis. */
+interior b32
+_textum_refluere_conari (
+            SilvaStmlNodus* nodus,
+    SilvaChordaAedificator* aedificator,
+                  i32  indentatio,
+                  SilvaXar* sedes)
+{
+          SilvaStmlNodus* liberum;
+     memoriae_index  initium_contenti;
+     memoriae_index  initium_lineae;
+    constans SilvaChorda* valor;
+                i32  initium_tagi;
+                i32  gradus;
+                i32  tectum;
+                i32  i;
+                b32  primum_lineae;
+                b32  clausura_tacita;
+
+    liberum = _spinae_liberum_unicum(nodus);
+    si (   liberum        == NIHIL
+        || liberum->genus != STML_NODUS_TEXTUS
+        || !_valor_capturabilis(liberum->valor))
+    {
+        redde FALSUM;
+    }
+    valor = liberum->valor;
+
+    initium_contenti  = silva_chorda_aedificator_longitudo(aedificator);
+    initium_tagi      = (i32)initium_contenti;
+
+    silva_chorda_aedificator_appendere_character(aedificator, '<');
+    si (nodus->titulus)
+    {
+        silva_chorda_aedificator_appendere_chorda(aedificator,
+                                            *nodus->titulus);
+    }
+    _attributa_scribere(aedificator, nodus, FALSUM);
+    silva_chorda_aedificator_appendere_character(aedificator, '>');
+
+    gradus = indentatio + I;
+    tectum = gradus * II + XL;
+    si (tectum < LXXII)
+    {
+        tectum = LXXII;
+    }
+
+    silva_chorda_aedificator_appendere_character(aedificator, '\n');
+    initium_lineae = silva_chorda_aedificator_longitudo(aedificator);
+    _scribere_indentatio(aedificator, gradus);
+    primum_lineae = VERUM;
+
+    i = ZEPHYRUM;
+    dum (i < valor->mensura)
+    {
+        memoriae_index signum;
+                   i32 finis;
+
+        /* atomum proximum: usque ad candidatum fracturae (cursus
+         * lineifer aut spatium singulum); cursus multiplices
+         * eiusdem lineae intra atomum manent */
+        finis = i;
+        dum (finis < valor->mensura)
+        {
+            si (_est_spatium((character)valor->datum[finis]))
+            {
+                i32 f2;
+                b32 f;
+
+                f2  = finis;
+                f   = FALSUM;
+                dum (   f2 < valor->mensura
+                     && _est_spatium((character)valor->datum[f2]))
+                {
+                    si ((character)valor->datum[f2] == '\n')
+                    {
+                        f = VERUM;
+                    }
+                    f2++;
+                }
+                si (f || f2 - finis == I)
+                {
+                    frange;   /* candidatus fracturae */
+                }
+                finis = f2;   /* cursus multiplex: pars atomi */
+            }
+            alioquin
+            {
+                finis++;
+            }
+        }
+
+        /* atomum emittere (conatus + reversio) */
+        signum = silva_chorda_aedificator_longitudo(aedificator);
+        si (!primum_lineae)
+        {
+            silva_chorda_aedificator_appendere_character(aedificator, ' ');
+        }
+        {
+            SilvaChorda pars;
+
+            pars.datum    = valor->datum + i;
+            pars.mensura  = finis - i;
+            _scribere_evasus(aedificator, &pars);
+        }
+        si (   silva_chorda_aedificator_longitudo(aedificator)
+                   - initium_lineae > (memoriae_index)tectum
+            && !primum_lineae)
+        {
+            silva_chorda_aedificator_truncare(aedificator, signum);
+            silva_chorda_aedificator_appendere_character(aedificator,
+                                                   '\n');
+            initium_lineae =
+                silva_chorda_aedificator_longitudo(aedificator);
+            _scribere_indentatio(aedificator, gradus);
+            {
+                SilvaChorda pars;
+
+                pars.datum    = valor->datum + i;
+                pars.mensura  = finis - i;
+                _scribere_evasus(aedificator, &pars);
+            }
+        }
+        primum_lineae = FALSUM;
+
+        /* candidatum consumere */
+        i = finis;
+        dum (   i < valor->mensura
+             && _est_spatium((character)valor->datum[i]))
+        {
+            i++;
+        }
+    }
+
+    silva_chorda_aedificator_appendere_character(aedificator, '\n');
+    _scribere_indentatio(aedificator, indentatio);
+    clausura_tacita =
+        (_lineae_contenti(aedificator, initium_contenti)
+            <= STML_CLAUSURA_TACITA_LINEAE) ? VERUM : FALSUM;
+    silva_chorda_aedificator_appendere_literis(aedificator, "</");
+    si (nodus->titulus && !clausura_tacita)
+    {
+        silva_chorda_aedificator_appendere_chorda(aedificator,
+                                            *nodus->titulus);
+    }
+    silva_chorda_aedificator_appendere_character(aedificator, '>');
+
+    si (sedes != NIHIL)
+    {
+        StmlSedesNodi* nota;
+
+        nota = silva_xar_addere(sedes);
+        si (nota != NIHIL)
+        {
+            nota->nodus    = nodus;
+            nota->initium  = initium_tagi;
+            nota->finis   =
+                (i32)silva_chorda_aedificator_longitudo(aedificator);
+        }
+    }
+    redde VERUM;
+}
+
 /* Lineae vacuae authoratae (§4): separatio paragraphorum non
  * deletur - pulcher unam aut duas servat, plures ad duas cadunt.
  * Numeratio ex spatia_ante sequentis (lex proprietatis: '\n'
@@ -14361,7 +14611,10 @@ _spinam_pulchre_scribere (
         si (finalis_textus)
         {
             silva_chorda_aedificator_appendere_character(aedificator, ' ');
-            _scribere_evasus(aedificator, liberum->valor);
+            /* lectio IUNCTA (§4 M3): cursus lineiferi spatio uni -
+             * valor multilinearis captus prosam suam unam lineam
+             * scribit */
+            _fluxu_evasum_scribere(aedificator, liberum->valor);
         }
         alioquin si (finalis_inline)
         {
@@ -14540,14 +14793,23 @@ _scribere_nucleus (
             /* COLLAPSUS (§4 M2b): spina unigena -> forma capturae,
              * latitudine dispositionem (unam lineam aut sarcinatam
              * verticalem) eligente; captores ANTE auctoris unigenae
-             * via eadem re-derivantur (unificatio). Sedes suas ipse
-             * notat (initium_sedis sentinellam -I tenet, ne bis
-             * notetur) */
-            si (   pulchrum
-                && _spinam_pulchre_scribere(nodus, aedificator,
-                                            indentatio, sedes))
+             * via eadem re-derivantur (unificatio). Recusatio spinae
+             * (textus ultra tectum) in RE-INVOLUTIONEM cadit (§4
+             * M3): forma bloci, textus impletus. Sedes suas uterque
+             * ipse notat (initium_sedis sentinellam -I tenet, ne
+             * bis notetur) */
+            si (pulchrum)
             {
-                frange;
+                si (_spinam_pulchre_scribere(nodus, aedificator,
+                                             indentatio, sedes))
+                {
+                    frange;
+                }
+                si (_textum_refluere_conari(nodus, aedificator,
+                                            indentatio, sedes))
+                {
+                    frange;
+                }
             }
             /* sedes: ab primo octeto tagi, POST indentationem -
              * semantica positus_initium parsatoris */
@@ -68952,6 +69214,52 @@ _textus_tutus (
  * SOLUM est, ergo ut textus emissus a scriptore pulchro tacite
  * praeteriretur. Lens numerum fert; nihil perit (valor numero
  * plene determinatur). */
+
+/* Valorem portatum genere CRUDO ('!') notare (stml M3, §4
+ * re-involutio): fluxus prosa formatoris est - pulcher cursus
+ * lineiferos iungit ET textum longum re-implet; valores arboris
+ * autem OCTETI CODICIS sunt, non prosa. Genus crudum declaratio
+ * honesta est: pulcher crudum numquam tangit (nec spina nec
+ * captura nec re-involutio), emissio verbatim sine entibus,
+ * lectio verbatim - lineae unae et plures uniformiter. Custos
+ * CLARUS: valor sequentiam claudentem propriam ('</tag>') ferre
+ * non potest - scriptura recusatur, numquam corrumpitur (angulus
+ * absurdus sed limes tree-sitter). */
+interior b32
+_valorem_crudum_notare (
+         ArborScriptor* scriptor,
+             SilvaStmlNodus* elementum,
+    constans character* tag,
+       constans SilvaChorda* valor)
+{
+    character clausura[SILVA_ARBOR_TAG_CAPACITAS + IV];
+          i32 longitudo;
+          i32 i;
+
+    longitudo           = (i32)strlen(tag);
+    clausura[ZEPHYRUM]  = '<';
+    clausura[I]         = '/';
+    memcpy(clausura + II, tag, (size_t)longitudo);
+    clausura[II + longitudo]  = '>';
+    longitudo                 += III;
+
+    si (valor->mensura >= longitudo)
+    {
+        per (i = ZEPHYRUM; i <= valor->mensura - longitudo; i++)
+        {
+            si (memcmp(valor->datum + i, clausura,
+                    (size_t)longitudo) == ZEPHYRUM)
+            {
+                scriptor->causa =
+                    "valor sequentiam claudentem fert";
+                redde FALSUM;
+            }
+        }
+    }
+    elementum->crudus = VERUM;
+    redde VERUM;
+}
+
 interior SilvaStmlNodus*
 _trivium_scribere (
           ArborScriptor* scriptor,
@@ -69021,6 +69329,13 @@ _trivium_scribere (
                     || !silva_stml_liberum_addere(elementum, textus))
                 {
                     scriptor->causa = "textus trivii addi non potuit";
+                    redde NIHIL;
+                }
+                /* octeti codicis, non prosa: genus crudum (stml
+                 * M3 - re-involutio fluxum possidet) */
+                si (!_valorem_crudum_notare(scriptor, elementum,
+                        tag, &trivium->valor))
+                {
                     redde NIHIL;
                 }
             }
@@ -69562,6 +69877,21 @@ _scribere_lexema (
     /* ORIGO nestata - post trivia, ante involucrum fragmenti (ut
      * fragmentum lexema TOTUM cum origine sua ferat) */
     si (!_origo_scribere(scriptor, elementum, &lexema->origo))
+    {
+        redde NIHIL;
+    }
+
+    /* octeti codicis: genus crudum cum elementum SOLUM textum
+     * ferat (stml M3 - chordae longae a re-involutione tutae).
+     * POST liberos OMNES (involucra, scissurae, origo) - elementum
+     * mixtum crudum esse NON potest, scan crudus liberos
+     * elementares ut textum voraret; ibi flumen manet, tutum quia
+     * re-involutio contentum mixtum non tangit (ambitus v1). */
+    si (   silva_arbor_valor_portandus(lexema->genus)
+        && lexema->valor.mensura > ZEPHYRUM
+        && silva_stml_numerus_liberorum(elementum) == I
+        && !_valorem_crudum_notare(scriptor, elementum, tag,
+               &lexema->valor))
     {
         redde NIHIL;
     }

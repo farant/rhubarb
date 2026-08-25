@@ -760,9 +760,11 @@ principale (vacuum)
         CREDO_VERUM (_quotiens(scriptura.textus,
             "<lex-assignatio(>") == I);
 
-        /* lexema orthographiae VARIAE: valor ut TEXTUS captus */
+        /* lexema orthographiae VARIAE: valor ut textus CRUDUS
+         * (stml M3 - octeti codicis a re-involutione fluxus tuti;
+         * crudus a spina et captura exclusus, clausura nominata) */
         CREDO_VERUM (_quotiens(scriptura.textus,
-            "<lex-integer(> 0") == I);
+            "<lex-integer!>0</lex-integer>") == I);
 
         /* CONTENTUM MIXTUM (textus IUXTA elementa): forma quam
          * sanatio T0 possibilem fecit. Ante eam scriptor pulcher

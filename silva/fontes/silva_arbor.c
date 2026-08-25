@@ -934,6 +934,52 @@ _textus_tutus (
  * SOLUM est, ergo ut textus emissus a scriptore pulchro tacite
  * praeteriretur. Lens numerum fert; nihil perit (valor numero
  * plene determinatur). */
+
+/* Valorem portatum genere CRUDO ('!') notare (stml M3, §4
+ * re-involutio): fluxus prosa formatoris est - pulcher cursus
+ * lineiferos iungit ET textum longum re-implet; valores arboris
+ * autem OCTETI CODICIS sunt, non prosa. Genus crudum declaratio
+ * honesta est: pulcher crudum numquam tangit (nec spina nec
+ * captura nec re-involutio), emissio verbatim sine entibus,
+ * lectio verbatim - lineae unae et plures uniformiter. Custos
+ * CLARUS: valor sequentiam claudentem propriam ('</tag>') ferre
+ * non potest - scriptura recusatur, numquam corrumpitur (angulus
+ * absurdus sed limes tree-sitter). */
+interior b32
+_valorem_crudum_notare (
+         ArborScriptor* scriptor,
+             StmlNodus* elementum,
+    constans character* tag,
+       constans chorda* valor)
+{
+    character clausura[SILVA_ARBOR_TAG_CAPACITAS + IV];
+          i32 longitudo;
+          i32 i;
+
+    longitudo           = (i32)strlen(tag);
+    clausura[ZEPHYRUM]  = '<';
+    clausura[I]         = '/';
+    memcpy(clausura + II, tag, (size_t)longitudo);
+    clausura[II + longitudo]  = '>';
+    longitudo                 += III;
+
+    si (valor->mensura >= longitudo)
+    {
+        per (i = ZEPHYRUM; i <= valor->mensura - longitudo; i++)
+        {
+            si (memcmp(valor->datum + i, clausura,
+                    (size_t)longitudo) == ZEPHYRUM)
+            {
+                scriptor->causa =
+                    "valor sequentiam claudentem fert";
+                redde FALSUM;
+            }
+        }
+    }
+    elementum->crudus = VERUM;
+    redde VERUM;
+}
+
 interior StmlNodus*
 _trivium_scribere (
           ArborScriptor* scriptor,
@@ -1003,6 +1049,13 @@ _trivium_scribere (
                     || !stml_liberum_addere(elementum, textus))
                 {
                     scriptor->causa = "textus trivii addi non potuit";
+                    redde NIHIL;
+                }
+                /* octeti codicis, non prosa: genus crudum (stml
+                 * M3 - re-involutio fluxum possidet) */
+                si (!_valorem_crudum_notare(scriptor, elementum,
+                        tag, &trivium->valor))
+                {
                     redde NIHIL;
                 }
             }
@@ -1544,6 +1597,21 @@ _scribere_lexema (
     /* ORIGO nestata - post trivia, ante involucrum fragmenti (ut
      * fragmentum lexema TOTUM cum origine sua ferat) */
     si (!_origo_scribere(scriptor, elementum, &lexema->origo))
+    {
+        redde NIHIL;
+    }
+
+    /* octeti codicis: genus crudum cum elementum SOLUM textum
+     * ferat (stml M3 - chordae longae a re-involutione tutae).
+     * POST liberos OMNES (involucra, scissurae, origo) - elementum
+     * mixtum crudum esse NON potest, scan crudus liberos
+     * elementares ut textum voraret; ibi flumen manet, tutum quia
+     * re-involutio contentum mixtum non tangit (ambitus v1). */
+    si (   silva_arbor_valor_portandus(lexema->genus)
+        && lexema->valor.mensura > ZEPHYRUM
+        && stml_numerus_liberorum(elementum) == I
+        && !_valorem_crudum_notare(scriptor, elementum, tag,
+               &lexema->valor))
     {
         redde NIHIL;
     }

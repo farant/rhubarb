@@ -471,6 +471,36 @@ remains the raw total stream (over canonicalized input).
   `\` blocks may only be re-indented as a whole (indentatio
   regenerated to nesting depth, interior untouched); raw content
   is never touched.
+- **Flow re-wrap (M3, decreed 2026-08-24 — the fluxus-gated
+  liberty exercised).** Pretty OWNS flow prose layout:
+  ALWAYS-CANONICAL — authored breaks in flow text are not
+  preserved (they are semantically one space; `\` is the opt-out
+  for authored line structure, and a blank line INSIDE one flow
+  valor is prose, not a paragraph break — the §4 blank-line
+  decree governs BETWEEN nodes only). Scope v1: elements whose
+  children are exactly ONE flow text node with CLEAN EDGES
+  (first and last valor byte non-white — dirty edges would be
+  eaten by edge-trimming on reparse); mixed content, ws-only
+  text, and document-level text stay verbatim-inline (named
+  follow-on: mixed-content paragraph filling). Layout is
+  width-driven with NO hanging form: the joined text is judged
+  by the existing machinery — capture-inline when it fits
+  (`_valor_capturabilis` drops its unilinear requirement; the
+  spine emits the JOINED reading), else BLOCK-WITH-TEXT: open
+  tag on its own line, text greedily filled at indent+1 within
+  the tectum, close tag at element level. Break candidates are
+  single-space runs and newline-bearing runs ONLY — words and
+  same-line multi-space runs are unbreakable atoms (breaking one
+  would change the fluxus reading; the gate enforces this
+  mechanically), and over-budget atoms overflow, accepted. A
+  wrapped line's indentation rides inside a newline-bearing run
+  in the valor — soft under fluxus, never literal content. Gate
+  relaxation (§7.7): tree equivalence compares FLOW text valors
+  modulo fluxus-equality (newline-bearing runs ≡ one space);
+  `\`/`!` content stays byte-exact. Companion fix: capturable
+  text requires the LAST byte non-white too (latent M2b hole —
+  a trailing space in a captured text died into post on
+  reparse; never bitten, now pinned).
 - The raw-capture "SED SEMEL TANTUM" delimiter hack is DELETED —
   the delimiter is the capture node's `post` now, explicit.
 
@@ -645,8 +675,19 @@ build/inclusiones.tsv` (31 direct includers at spec time). Order:
   carries a two-part ws-only contract valor does not share (only
   the stale rationale comment fixed). Remaining consumers at
   leisure per §9. No struct changes → no lab re-vendor needed.
-  REMAINING for the milestone: flow re-wrap (the fluxus-gated
-  liberty, §4/§11 formator width policy).
+  Flow re-wrap SHIPPED 2026-08-25 (§4 decree above): joined
+  capture + block-with-text fill; Gate B modulo fluxus for flow
+  text; `_valor_capturabilis` clean-edges-both-ends (latent
+  trailing-space hole closed). COMPANION: arbor now declares
+  carried values RAW (`!`) — code bytes are not prose; trivium
+  elements always, lexeme elements when single-child after ALL
+  involucra attach (mixed stay flow, safe under v1 scope); loud
+  refusal if a value contains its own closing sequence. The
+  plagula gate holds 78+154 at 0 divergences THROUGH a
+  pretty-print. M3 COMPLETE. Named follow-ons: mixed-content
+  paragraph filling; §1.6 multi-line attribute layout (the only
+  remaining width feature — 33 residual long lines in c89.stml
+  pretty are all attr-heavy open tags).
 - **M4** — captures: counting policy, including the same-line
   corners the §1.2 amendment defers (multi-paren interleaving,
   retro captors); raw multi-paren refusal (§6). (Stream-order

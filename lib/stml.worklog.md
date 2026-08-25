@@ -877,3 +877,56 @@ The triad is complete (§2). Finds:
   excludenda harvest prunes them (regenerated, 143 names). No
   struct changes → no silva.h hand-mirror work, no lab re-vendor
   needed this milestone.
+
+## 2026-08-24/25 (M3 re-involutio) — flow re-wrap + the arbor collision
+
+The fluxus-gated liberty landed: pretty OWNS flow prose
+(always-canonical). Finds:
+
+- **The writer machinery composed cleanly**: `_fluxu_evasum_scribere`
+  (joined emission) in the spine's text terminal + a new
+  `_textum_refluere_conari` (block-with-text greedy fill) as the
+  hook's fallback after spine refusal. `_valor_capturabilis` v2:
+  unilinear requirement DROPPED (joined at emission), LAST-byte
+  non-white ADDED — closing a latent M2b hole (a trailing space in
+  a captured text died into post on reparse; never bitten, now
+  pinned) and guarding block-fill edges the same way.
+- **Gate B relaxed modulo fluxus for FLOW text only** (harness-side
+  `_fluxu_pares`, newline-bearing runs ≡ one space) — `\`/`!`
+  content stays byte-exact.
+- **The arbor collision — the session's big find.** The plagula
+  gate (C → STML → pretty → reparse → emit C → memcmp) reds the
+  moment pretty owns prose: arbor stored CODE BYTES (comments,
+  lexeme values) as flow text. Doctrine says the DOCUMENT was
+  mis-declaring; the kind ladder is the fix. THREE attempts,
+  each taught something:
+  1. `\`-marking multi-line values: valor round-trip exact ONLY
+     in the canonical shape — a hand-built text node needs
+     `spatia_ante="\n"` or the writer glues line 1 to the tag,
+     line 1 exits the dedent's common-prefix computation, and
+     continuation lines lose their own leading space.
+  2. Even so, LONG SINGLE-LINE comments hit the block-fill —
+     width-based marking is unprincipled. The honest kind for
+     code bytes is RAW (`!`): never touched, verbatim both ways,
+     uniform for one line or many. With a LOUD guard: a value
+     containing its own closing sequence (`</tag>`) refuses.
+  3. Raw is only legal for TEXT-ONLY elements — mixed lexeme
+     elements (value + involucra) had the raw scan EAT the
+     `<post>`/`<expansio>` markup as text. And the single-child
+     test must run AFTER ALL children attach (origo lands late —
+     the first placement marked, then expansio joined, boom).
+     Final shape: trivium elements always raw; lexeme elements
+     raw IFF still single-child at the END of the builder; mixed
+     lexeme values stay flow — safe because v1 re-flow skips
+     mixed content.
+- Result: plagula gate 78+154 at 0 divergences THROUGH a
+  pretty-print — reformat-safety of arbor documents HOLDS. The
+  planned "fidelity-mode fallback" was never needed (and was
+  mechanically impossible anyway: a fresh tree has no trivia, so
+  arbor's only emission IS pretty).
+- c89.stml pretty: 197 → 33 over-72 lines; every survivor is an
+  attr-heavy open tag = the reserved §1.6 multi-line-attribute
+  layout, now the ONLY remaining width feature.
+- Churn: 1 arbor assertion (`<lex-integer(> 0` → raw form), the
+  73-boundary fixture (over-budget text now block-fills instead
+  of overflowing inline).

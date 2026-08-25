@@ -2420,8 +2420,10 @@ s32 principale(vacuum)
 
     {
         /* limen tecti collapsus (§0.2): LXXII columnae exactae
-         * collabuntur, LXXIII non (totum-aut-nihil; ambae partes
-         * puncto fixo stabiles - portae pulchrae id tegunt) */
+         * collabuntur; LXXIII (verbum unum infrangibile) formam
+         * bloci re-fluxam capit (M3 - nihil ultra tectum manet
+         * quod frangi potest; verbum ipsum in linea impletionis
+         * LXX columnarum cadit) */
         StmlResultus res;
         chorda scriptum;
 
@@ -2442,8 +2444,8 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            "aaaaaaaaaaaaaaaaaaaa</>");
+            "<t>\n  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaaaaaa\n</>");
 
         imprimere("  limen tecti LXXII/LXXIII: PRAETERITUM\n");
     }
@@ -2769,6 +2771,98 @@ s32 principale(vacuum)
             "alpha beta gamma delta");
 
         imprimere("  fluxus: lectio prosae: PRAETERITUM\n");
+    }
+
+    /* ==================================================
+     * Re-involutio fluxus (§4 M3): pulcher prosam fluminis
+     * POSSIDET - semper canonica, fracturae authoratae non
+     * servatae ('\' = exceptio authoris)
+     * ================================================== */
+
+    imprimere("\n--- Probans re-involutionem fluxus ---\n");
+
+    {
+        /* iunctio + cascas capturae: valor multilineus iunctus
+         * intra tectum cadit -> forma capturae */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis("<t>prima\nsecunda</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<t(> prima secunda");
+
+        imprimere("  iunctio + captura: PRAETERITUM\n");
+    }
+
+    {
+        /* linea vacua INTRA valorem fluminis prosa est, non
+         * separatio paragraphorum (decretum §4 vacuas INTER nodos
+         * regit) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<t>pars una\n\npars altera</t>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<t(> pars una pars altera");
+
+        imprimere("  vacua intra fluxum iungitur: PRAETERITUM\n");
+    }
+
+    {
+        /* cursus multiplicium spatiorum INFRANGIBILIS et
+         * litteralis (fluxus eum servat) */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis("<t>foo  bar baz</t>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<t(> foo  bar baz");
+
+        imprimere("  spatia multiplicia litteralia: PRAETERITUM\n");
+    }
+
+    {
+        /* impletio bloci: textus ultra tectum -> tag apertum linea
+         * sua, textus avare impletus gradu uno altius, clausura
+         * gradu elementi. Fons laceratus consulto (semper
+         * canonica: fracturae authoratae NON servatae) */
+        _pulchrum_probare(piscina, intern,
+            "<t>aaaa bbbb cccc dddd eeee ffff gggg hhhh\n"
+            "iiii jjjj kkkk llll mmmm nnnn oooo pppp\n"
+            "qqqq rrrr ssss tttt</t>",
+            "<t>\n"
+            "  aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj"
+            " kkkk llll mmmm nnnn\n"
+            "  oooo pppp qqqq rrrr ssss tttt\n"
+            "</>",
+            "impletio bloci canonica: PRAETERITUM");
+    }
+
+    {
+        /* margines sordidi: spatium litterale ducens aut caudale
+         * re-involutionem ET capturam vetat (praecisio marginum in
+         * relectione id ederet) - forma inline verbatim manet */
+        StmlResultus res;
+        chorda scriptum;
+
+        res = stml_legere_ex_literis(
+            "<radix>\n  <t>foo </t>\n  <u/>\n</radix>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, VERUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<radix>\n  <t>foo </>\n  <u/>\n</>");
+
+        imprimere("  margines sordidi verbatim: PRAETERITUM\n");
     }
 
     /* ==================================================

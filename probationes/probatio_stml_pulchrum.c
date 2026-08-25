@@ -93,7 +93,13 @@ interior constans LitteraPulchra LITTERAE_PULCHRAE[] = {
     { "lineae_vacuae_multae",
       "<radix>\n\n  <a/>\n\n\n\n  <b/>\n\n</radix>" },
     { "lineae_vacuae_documenti",
-      "<?xml version=\"1.0\"?>\n\n<radix><a/><b/></radix>" }
+      "<?xml version=\"1.0\"?>\n\n<radix><a/><b/></radix>" },
+    { "refluxus_plenus",
+      "<t>aaaa bbbb cccc dddd eeee ffff gggg hhhh\n"
+      "iiii jjjj kkkk llll mmmm nnnn oooo pppp\n"
+      "qqqq rrrr ssss tttt</t>" },
+    { "refluxus_marginis_sordidi",
+      "<radix>\n  <t>foo </t>\n  <u/>\n</radix>" }
 };
 
 /* Plagulam totam in piscinam legere */
@@ -272,6 +278,99 @@ _chordae_pares (
     redde (b32)(memcmp(a->datum, b->datum, (size_t)ma) == ZEPHYRUM);
 }
 
+/* aequalitas valorum modulo fluxum (§4 re-involutio, M3): in
+ * textu FLUMINIS cursus albi lineam ferentes utrimque spatio UNI
+ * aequivalent - pulcher prosam possidet, octetos movet, fluxum
+ * numquam. Ceteri octeti exacti; genera marcata ('\'/'!') hac via
+ * numquam veniunt (byte-aequalitas manet). */
+interior b32
+_est_albus_octetus (
+    character c)
+{
+    redde (b32)(c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
+
+interior s32
+_fluxu_normatum (
+    constans chorda* s,
+                i32* i)
+{
+    si (*i >= s->mensura)
+    {
+        redde -I;
+    }
+    si (_est_albus_octetus((character)s->datum[*i]))
+    {
+        i32 finis;
+        b32 fert;
+
+        finis  = *i;
+        fert   = FALSUM;
+        dum (   finis < s->mensura
+             && _est_albus_octetus((character)s->datum[finis]))
+        {
+            si ((character)s->datum[finis] == '\n')
+            {
+                fert = VERUM;
+            }
+            finis++;
+        }
+        si (fert)
+        {
+            *i = finis;
+            redde (s32)' ';
+        }
+    }
+    {
+        s32 c;
+
+        c = (s32)s->datum[*i];
+        (*i)++;
+        redde c;
+    }
+}
+
+interior b32
+_fluxu_pares (
+    constans chorda* a,
+    constans chorda* b)
+{
+    i32 ia;
+    i32 ib;
+
+    si (a == NIHIL || b == NIHIL)
+    {
+        redde (b32)(a == b);
+    }
+    ia = ZEPHYRUM;
+    ib = ZEPHYRUM;
+    dum (VERUM)
+    {
+        s32 ca;
+        s32 cb;
+
+        ca = _fluxu_normatum(a, &ia);
+        cb = _fluxu_normatum(b, &ib);
+        si (ca != cb)
+        {
+            redde FALSUM;
+        }
+        si (ca == -I)
+        {
+            redde VERUM;
+        }
+    }
+}
+
+interior b32
+_textus_fluminis (
+    constans StmlNodus* n)
+{
+    redde (b32)(n->genus == STML_NODUS_TEXTUS
+        && (   n->parens == NIHIL
+            || (!n->parens->crudus && !n->parens->multilinea)));
+}
+
 interior vacuum
 _incongruentiam_nuntiare (
     constans  character* campus,
@@ -336,7 +435,10 @@ _arbores_congruae (
         _incongruentiam_nuntiare("titulus", a, b, profunditas);
         redde FALSUM;
     }
-    si (!_chordae_pares(a->valor, b->valor))
+    si (   !_chordae_pares(a->valor, b->valor)
+        && !(   _textus_fluminis(a)
+             && _textus_fluminis(b)
+             && _fluxu_pares(a->valor, b->valor)))
     {
         _incongruentiam_nuntiare("valor", a, b, profunditas);
         si (a->valor != NIHIL)
