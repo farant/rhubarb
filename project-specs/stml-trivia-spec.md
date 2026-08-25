@@ -486,9 +486,18 @@ remains the raw total stream (over canonicalized input).
   width-driven with NO hanging form: the joined text is judged
   by the existing machinery — capture-inline when it fits
   (`_valor_capturabilis` drops its unilinear requirement; the
-  spine emits the JOINED reading), else BLOCK-WITH-TEXT: open
-  tag on its own line, text greedily filled at indent+1 within
-  the tectum, close tag at element level. Break candidates are
+  spine emits the JOINED reading), else CAPTURE-STACKED FILL
+  (fourth decree, 2026-08-25, from Fran eyeballing
+  c89-formatted): `<tag (>` with canonical paren placement, text
+  greedily filled at indent+1 within the tectum, NO close tag.
+  One text run = one node (runs split only at markup, never at
+  spaces), rule A owns the leading boundary, so the stacked
+  captee parses whole; the writer can never produce the
+  text-sibling merging hazard because text-bearing parents lay
+  out inline. This COMPLETES the M2b invariant: close tags exist
+  exactly where MULTI-child block form does — every single-child
+  element, text or element child, is capture form. Sedes: tag
+  only (captor semantics). Break candidates are
   single-space runs and newline-bearing runs ONLY — words and
   same-line multi-space runs are unbreakable atoms (breaking one
   would change the fluxus reading; the gate enforces this

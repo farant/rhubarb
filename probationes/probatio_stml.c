@@ -2444,8 +2444,8 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         scriptum = stml_scribere(res.radix, piscina, VERUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
-            "<t>\n  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            "aaaaaaaaaaaaaaaaaaaaaaaa\n</>");
+            "<t(>\n  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            "aaaaaaaaaaaaaaaaaaaaaaaaa");
 
         imprimere("  limen tecti LXXII/LXXIII: PRAETERITUM\n");
     }
@@ -2831,20 +2831,35 @@ s32 principale(vacuum)
     }
 
     {
-        /* impletio bloci: textus ultra tectum -> tag apertum linea
-         * sua, textus avare impletus gradu uno altius, clausura
-         * gradu elementi. Fons laceratus consulto (semper
-         * canonica: fracturae authoratae NON servatae) */
+        /* impletio capturae stackatae (decretum quartum §4):
+         * textus ultra tectum -> '<t(>' linea sua, textus avare
+         * impletus gradu uno altius, SINE clausura - cursus
+         * textus uno nodo (fracturae solum apud notationem),
+         * regula capturae limitem ducentem possidet. Fons
+         * laceratus consulto (semper canonica) */
         _pulchrum_probare(piscina, intern,
             "<t>aaaa bbbb cccc dddd eeee ffff gggg hhhh\n"
             "iiii jjjj kkkk llll mmmm nnnn oooo pppp\n"
             "qqqq rrrr ssss tttt</t>",
-            "<t>\n"
+            "<t(>\n"
             "  aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj"
             " kkkk llll mmmm nnnn\n"
-            "  oooo pppp qqqq rrrr ssss tttt\n"
-            "</>",
-            "impletio bloci canonica: PRAETERITUM");
+            "  oooo pppp qqqq rrrr ssss tttt",
+            "impletio capturae stackatae: PRAETERITUM");
+    }
+
+    {
+        /* eadem cum attributis: parenthesis spatiata post ea
+         * (§0.2) */
+        _pulchrum_probare(piscina, intern,
+            "<t a=\"1\">aaaa bbbb cccc dddd eeee ffff gggg hhhh"
+            " iiii jjjj kkkk llll mmmm nnnn oooo pppp qqqq rrrr"
+            " ssss tttt</t>",
+            "<t a=\"1\" (>\n"
+            "  aaaa bbbb cccc dddd eeee ffff gggg hhhh iiii jjjj"
+            " kkkk llll mmmm nnnn\n"
+            "  oooo pppp qqqq rrrr ssss tttt",
+            "impletio cum attributis: PRAETERITUM");
     }
 
     {

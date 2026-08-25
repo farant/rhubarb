@@ -6054,15 +6054,17 @@ _fluxu_evasum_scribere (
     }
 }
 
-/* Re-involutio bloci (§4 M3): elementum liberi textus unici mundi
- * quod inline non cadit - tag apertum linea sua, textus avare
- * impletus gradu uno altius intra tectum, clausura gradu elementi.
- * Candidati fracturae: cursus lineiferi et spatia SINGULA; verba
- * et cursus spatiorum multiplicium atomi infrangibiles (fractura
- * intra eos lectionem fluxus mutaret). Forma capturae hic
- * re-derivatur ad planam (captor auctoris unigena qui non cadit
- * formam bloci accipit). Sedes elementi tota (tag ad clausuram) -
- * semantica parsatoris pro elementis planis. */
+/* Re-involutio stackata (§4 M3, decretum quartum): elementum
+ * liberi textus unici mundi quod inline non cadit - captor
+ * canonicus ('<t(>' / '<t attrs (>') linea sua, textus avare
+ * impletus gradu uno altius intra tectum, SINE clausura (cursus
+ * textus nodo uno parsatur - fracturae solum apud notationem;
+ * regula capturae limitem ducentem possidet). Invariams M2b
+ * completur: clausurae ibi solae ubi forma blocorum
+ * multi-liberorum. Candidati fracturae: cursus lineiferi et
+ * spatia SINGULA; verba et cursus spatiorum multiplicium atomi
+ * infrangibiles (fractura intra eos lectionem fluxus mutaret).
+ * Sedes tagum solum (semantica captoris, via _vinculum_scribere). */
 interior b32
 _textum_refluere_conari (
             StmlNodus* nodus,
@@ -6071,15 +6073,12 @@ _textum_refluere_conari (
                   Xar* sedes)
 {
           StmlNodus* liberum;
-     memoriae_index  initium_contenti;
      memoriae_index  initium_lineae;
     constans chorda* valor;
-                i32  initium_tagi;
                 i32  gradus;
                 i32  tectum;
                 i32  i;
                 b32  primum_lineae;
-                b32  clausura_tacita;
 
     liberum = _spinae_liberum_unicum(nodus);
     si (   liberum        == NIHIL
@@ -6090,17 +6089,12 @@ _textum_refluere_conari (
     }
     valor = liberum->valor;
 
-    initium_contenti  = chorda_aedificator_longitudo(aedificator);
-    initium_tagi      = (i32)initium_contenti;
-
-    chorda_aedificator_appendere_character(aedificator, '<');
-    si (nodus->titulus)
-    {
-        chorda_aedificator_appendere_chorda(aedificator,
-                                            *nodus->titulus);
-    }
-    _attributa_scribere(aedificator, nodus, FALSUM);
-    chorda_aedificator_appendere_character(aedificator, '>');
+    /* forma capturae stackata (decretum quartum §4): captor
+     * canonicus + impletio sub eo, SINE clausura - invariams M2b
+     * completur (clausurae ibi solae ubi forma blocorum
+     * multi-liberorum). Sedes TAGUM SOLUM (_vinculum_scribere
+     * eas notat - semantica captoris). */
+    _vinculum_scribere(nodus, aedificator, sedes);
 
     gradus = indentatio + I;
     tectum = gradus * II + XL;
@@ -6193,33 +6187,6 @@ _textum_refluere_conari (
              && _est_spatium((character)valor->datum[i]))
         {
             i++;
-        }
-    }
-
-    chorda_aedificator_appendere_character(aedificator, '\n');
-    _scribere_indentatio(aedificator, indentatio);
-    clausura_tacita =
-        (_lineae_contenti(aedificator, initium_contenti)
-            <= STML_CLAUSURA_TACITA_LINEAE) ? VERUM : FALSUM;
-    chorda_aedificator_appendere_literis(aedificator, "</");
-    si (nodus->titulus && !clausura_tacita)
-    {
-        chorda_aedificator_appendere_chorda(aedificator,
-                                            *nodus->titulus);
-    }
-    chorda_aedificator_appendere_character(aedificator, '>');
-
-    si (sedes != NIHIL)
-    {
-        StmlSedesNodi* nota;
-
-        nota = xar_addere(sedes);
-        si (nota != NIHIL)
-        {
-            nota->nodus    = nodus;
-            nota->initium  = initium_tagi;
-            nota->finis   =
-                (i32)chorda_aedificator_longitudo(aedificator);
         }
     }
     redde VERUM;

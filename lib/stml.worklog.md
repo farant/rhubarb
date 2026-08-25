@@ -930,3 +930,20 @@ The fluxus-gated liberty landed: pretty OWNS flow prose
 - Churn: 1 arbor assertion (`<lex-integer(> 0` → raw form), the
   73-boundary fixture (over-budget text now block-fills instead
   of overflowing inline).
+
+## 2026-08-25 (decretum quartum) — capture-stacked fill: the M2b invariant completes
+
+Fran, eyeballing c89-formatted.stml, saw that the block-filled
+text form could drop its close tag by using capture syntax:
+`<productio ... (>` + filled lines, no `</>`. Confirmed sound:
+a text RUN splits only at markup — never at spaces — so the
+stacked fill parses as ONE captured text node; rule A owns the
+leading boundary; and the writer cannot produce the text-sibling
+merging hazard (text-bearing parents lay out inline, never
+stacked). Now canonical: `_textum_refluere_conari` emits the
+captor frame via `_vinculum_scribere` (canonical paren + TAG-ONLY
+sedes — captor semantics, the parity gate confirmed) and the
+closer block is deleted. The M2b invariant is now exact: close
+tags exist precisely where multi-child block form does — EVERY
+single-child element is capture form. c89.stml pretty:
+1197 → 1021 lines (one `</>` per filled element).
