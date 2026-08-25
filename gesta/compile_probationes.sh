@@ -75,6 +75,18 @@ declare -a VENDOR_FLAGS=(
 
 FILTER="${1:-}"
 
+# NORMALIZATIO FILTRI (exemplar radicis): formae quas homo revera
+# scribit ('silva/probationes/probatio_x.c' e completione TAB,
+# '.c' appensum) ad substringam rediguntur - CLAMAT, non tacet.
+if [ -n "$FILTER" ]; then
+    FILTRUM_DATUM="$FILTER"
+    FILTER="${FILTER##*/}"
+    FILTER="${FILTER%.c}"
+    if [ "$FILTER" != "$FILTRUM_DATUM" ]; then
+        echo "compile_probationes: filtrum '$FILTRUM_DATUM' -> '$FILTER'" >&2
+    fi
+fi
+
 # CAPUT RECENTISSIMUM SEMEL (exemplar radicis 2026-08-25): find
 # per obiectum retiratum - aequivalentia: aliquod caput recentius
 # obiecto <=> recentissimum recentius obiecto. Custos: nihil
