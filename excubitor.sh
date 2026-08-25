@@ -70,9 +70,24 @@ if [ "$SANATIO" = "1" ]; then
         -not -path '*/build/*' -not -path './.git/*' \
         2>/dev/null | head -1)
     if [ -n "$RECENTIOR" ]; then
-        echo "EXCUBITOR: graphus stalus ($RECENTIOR recentior) - oculos renovo" >&2
-        ./silva/nexus.sh -renovare >&2 \
-            || echo "EXCUBITOR: renovatio FRACTA - oculi veteres (cautio in relatione)" >&2
+        if [ "$TACITUS" = "1" ]; then
+            # -tacitus: tabula percursus (100+ lineis, post
+            # compendium cursoris) verdictum sepeliebat - folklore
+            # "curre bis" hinc natum (cursus VERUS erat, cauda
+            # truncata mentiebatur). Relatio in plagulam, linea
+            # una in flumine.
+            RENOVATIO_ACTA="build/nexus_renovatio.log"
+            RENOVATIO_INITIUM=$(date +%s)
+            if ./silva/nexus.sh -renovare > "$RENOVATIO_ACTA" 2>&1; then
+                echo "EXCUBITOR: graphus stalus ($RECENTIOR recentior) - renovatus ($(($(date +%s) - RENOVATIO_INITIUM))s; acta: $RENOVATIO_ACTA)" >&2
+            else
+                echo "EXCUBITOR: renovatio FRACTA - oculi veteres (cautio in relatione; acta: $RENOVATIO_ACTA)" >&2
+            fi
+        else
+            echo "EXCUBITOR: graphus stalus ($RECENTIOR recentior) - oculos renovo" >&2
+            ./silva/nexus.sh -renovare >&2 \
+                || echo "EXCUBITOR: renovatio FRACTA - oculi veteres (cautio in relatione)" >&2
+        fi
     fi
 fi
 
