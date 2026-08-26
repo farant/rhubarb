@@ -1168,3 +1168,69 @@ House landmine census: this is the same "i32 is unsigned" class
 as the clock-delta bug — subtraction in index/count arithmetic
 needs either a guard proving minuend ≥ subtrahend or s32/s64.
 A loop bound derived by subtraction deserves suspicion on sight.
+
+## 2026-08-26 — attribute-elements `<@titulus=>` (macros spec §6.3, v1.5 step 1)
+
+Base-format repair shipped end to end: any element may spell an
+attribute in element form; a `"` in an attribute value is finally
+representable (inline attr values are RAW both ways per the header
+doctrine, so `"` was irrepresentable inline — text children decode
+entities, so `<@t=>x"y</>` carries it).
+
+Shape (percentum pattern exactly): ordinary ELEMENTUM, titulus `"@"`
+shared, name in new field `attributum_titulus` (interned; non-NIHIL =
+the marker). Lexer blessing is LOCAL to the opening-tag path in
+`_tok_legere_tag` — closing tags, retro/farcimen captures still refuse
+`@`, so undecreed forms stay unlexable. `=` after the name is tag
+syntax, consumed; the `@` stays part of the token valor and the parser
+splits it in `_titulum_ex_tokeno_ponere` (three sites: elementum,
+auto_claudere, captio_ante). `!` and `\` refused on attr-elements
+(raw-mode close matching needs a named closer they can never have).
+
+Traps found and decided this session:
+
+- **The writer normalizes ALL empty pairs to self-closing**
+  (`<a></a>` → `<a/>`, measured) — so the planned two-spelling
+  distinction (empty-pair = `""`, self-closing = tombstone) was
+  unrepresentable without a new fidelity bit. Resolution (decree
+  amended in spec §6.3): BOTH empty spellings = TOMBSTONE (explicit
+  absence; capere NIHIL; blocks future inheritance); empty-STRING has
+  no element spelling and needs none — inline `m=""` always works.
+- **Pretty: attr-elements join the exotic-form family** (same
+  exclusion list as augmentum in `_spinae_liberum_unicum`,
+  `_elementum_planum`, `_capturae_multiplicis_idoneum` parent+child,
+  `_terminalis_inline`). Reason it is a LAW not a convenience: spine
+  terminal collapse (`_fluxu_evasum_scribere`) and refluere re-wrap
+  text BYTES, which is canonical layout for prose but VALUE CORRUPTION
+  for an attribute (a string literal, not flow). Capture-form pretty
+  for unilinear values is a possible later refinement — the guard to
+  keep is: never let reflow touch an attr value.
+- **Position law runs as a POST-PARSE pass** (`_attributa_elementa_
+  probare`, called after `_processare_captiones`): prefix-of-children
+  = parent's attribute (TEXT-only children, no duplicate vs inline or
+  element form), immediately-after-`#@`-call = call argument
+  (subtrees legal, run continues through consecutive attr-elements),
+  else loud STML_ERROR_ATTRIBUTUM with named cause (multilinea
+  pattern). Post-parse because captures REPARENT: `<a (> <@m=>x</>`
+  is legal — the final tree is judged, which is also what consumers
+  see. Third copy of the `#@` guard (stml_macros `_est_vocatio`,
+  canon `_transclusionis_petitum`, now this) — one law, three sites.
+- **capere dual lookup**: attributa scan, then child-PREFIX scan
+  (stops at first non-attr child); tombstone (empty liberi) → NIHIL;
+  value = single text child's valor (already entity-decoded).
+  Equivalence is in MEANING, not bytes: inline spells raw, element
+  spells text-law.
+- **Canon dual view**: attr-elements never in `_liberos_effectivos`
+  (parent-bound = attributes, call-bound = quoted call material);
+  parent-bound judged AS attributes via extracted
+  `_attributum_praesens_iudicare` (shared with the inline loop —
+  suggestion machinery included); required-attr check needed ZERO
+  work — it already goes through `stml_attributum_capere`, so the
+  dual lookup satisfied it for free ("equivalence free for accessor
+  users", as the decree predicted). Tombstone: DEEST fires via capere,
+  name still judged (unknown tombstone = IGNOTUM).
+- Amalgam: hand-mirror `SilvaStmlNodus` in silva/amalgama/silva.h
+  needed the new field (compile clamavit, as designed).
+
+Gates at close: root 141/141, silva 50/50, canon corpus untouched,
+amalgamare VERIFICATUM (hospes 39/39), natura rebuilt.

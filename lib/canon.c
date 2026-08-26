@@ -2207,6 +2207,15 @@ _liberos_effectivos (
             perge;
         }
 
+        /* Elementa attributorum (par. 6.3) liberi NUMQUAM sunt:
+         * ligata parenti ATTRIBUTA sunt (visio altera eorum in
+         * iudicio attributorum), ligata vocationi templi materia
+         * vocationis citata (par. 6.1, invisibilis prorsus). */
+        si (l->attributum_titulus != NIHIL)
+        {
+            perge;
+        }
+
         si (l->genus == STML_NODUS_TRANSCLUSIO)
         {
             chorda  petitum;
@@ -2541,6 +2550,98 @@ _augmentum_iudicare (
     }
 }
 
+/* Attributum praesens UNUM iudicare (nomen contra definitiones
+ * elementi cum suggestione, genus valoris) - communis formae
+ * inscriptae (attributa Xar) et formae elementi ('<@titulus=>',
+ * par. 6.3). Valor NIHIL = sepulcrum: nomen solum iudicatur
+ * (absentia explicita; DEEST per capere alibi clamat). */
+interior vacuum
+_attributum_praesens_iudicare (
+    CanonElementum* e,
+         StmlNodus* n,
+            chorda* titulus,
+            chorda* valor,
+           Piscina* piscina,
+               Xar* vitia)
+{
+    CanonAttributum* def;
+                i32  j;
+
+    def = NIHIL;
+    per (j = ZEPHYRUM; j < xar_numerus(e->attributa); j++)
+    {
+        CanonAttributum* cand;
+
+        cand = (CanonAttributum*)xar_obtinere(e->attributa, j);
+        si (chorda_aequalis(*cand->titulus, *titulus))
+        {
+            def = cand;
+            frange;
+        }
+    }
+
+    si (!def)
+    {
+        chorda* detail;
+        chorda* sug;
+
+        detail  = titulus;
+        sug     = NIHIL;
+        si (xar_numerus(e->attributa) > ZEPHYRUM)
+        {
+            chorda* acies;
+               i32  na;
+               i32  ia;
+
+            na = xar_numerus(e->attributa);
+            acies = (chorda*)piscina_allocare(piscina,
+                magnitudo(chorda) * (memoriae_index)na);
+            per (ia = ZEPHYRUM; ia < na; ia++)
+            {
+                acies[ia] = *((CanonAttributum*)
+                    xar_obtinere(e->attributa, ia))->titulus;
+            }
+            sug = _suggestio(titulus, acies, na, piscina);
+        }
+        si (sug)
+        {
+            /* "nomen (an X?)" - nomen ignotum SERVATUR */
+            detail = (chorda*)piscina_allocare(piscina,
+                magnitudo(chorda));
+            detail->mensura = titulus->mensura + II
+                + sug->mensura + I;
+            detail->datum = (i8*)piscina_allocare(piscina,
+                (memoriae_index)detail->mensura);
+            memcpy(detail->datum, titulus->datum,
+                   (memoriae_index)titulus->mensura);
+            memcpy(detail->datum + titulus->mensura,
+                   " (", II);
+            memcpy(detail->datum + titulus->mensura + II,
+                   sug->datum, (memoriae_index)sug->mensura);
+            detail->datum[detail->mensura - I] = (i8)')';
+        }
+        vitium_addere(vitia, CANON_ATTRIBUTUM_IGNOTUM, n,
+                      e->titulus, detail, ZEPHYRUM,
+                      ZEPHYRUM);
+        redde;
+    }
+    si (valor == NIHIL)
+    {
+        redde;   /* sepulcrum: genus sine valore non iudicatur */
+    }
+    si (!valor_congruit(valor, def))
+    {
+        vitium_addere(vitia, CANON_VALOR_MALUS, n, e->titulus,
+                      titulus, ZEPHYRUM, ZEPHYRUM);
+    }
+    alioquin si (!_intra_fines(valor, def))
+    {
+        vitium_addere(vitia, CANON_VALOR_EXTRA_FINES, n,
+                      e->titulus, titulus, ZEPHYRUM,
+                      ZEPHYRUM);
+    }
+}
+
 /* parens_vi: parens semanticus pro definitionibus intra= (vide
  * _elementum_quaerere_vi) - NIHIL ubique praeter liberos
  * augmentationum, quibus genus destinatum traditur. */
@@ -2567,6 +2668,14 @@ nodum_iudicare (
     /* augmentatio passu proprio iudicatur (canon_iudicare) - hic
      * numquam vocabulario mensuranda */
     si (n->augmentum_clavis)
+    {
+        redde;
+    }
+
+    /* elementum attributi (par. 6.3) elementum vocabularii non
+     * est - visio eius altera in iudicio attributorum parentis;
+     * titulus '@' ELEMENTUM_IGNOTUM falso clamaret */
+    si (n->attributum_titulus)
     {
         redde;
     }
@@ -2622,80 +2731,43 @@ nodum_iudicare (
     /* ---- attributa praesentia ---- */
     per (i = ZEPHYRUM; i < xar_numerus(n->attributa); i++)
     {
-         StmlAttributum* a;
-        CanonAttributum* def;
-                    i32  j;
+        StmlAttributum* a;
 
-        a    = (StmlAttributum*)xar_obtinere(n->attributa, i);
-        def  = NIHIL;
-        per (j = ZEPHYRUM; j < xar_numerus(e->attributa); j++)
+        a = (StmlAttributum*)xar_obtinere(n->attributa, i);
+        _attributum_praesens_iudicare(e, n, a->titulus, a->valor,
+                                      piscina, vitia);
+    }
+
+    /* ---- attributa praesentia: forma elementi (par. 6.3) ----
+     * praefixum liberorum CRUDORUM ambulatur (non effectivorum:
+     * elementa attributorum parentis ante omnia stant et per
+     * transclusiones numquam veniunt); liberum primum quod
+     * elementum attributi non est praefixum finit. Sepulcrum
+     * (sine liberis) valorem NIHIL fert - nomen solum. */
+    numerus = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        StmlNodus* l;
+           chorda* valor_ae;
+
+        l = stml_liberum_ad_indicem(n, i);
+        si (l == NIHIL || l->attributum_titulus == NIHIL)
         {
-            CanonAttributum* cand;
+            frange;
+        }
+        valor_ae = NIHIL;
+        si (stml_numerus_liberorum(l) > ZEPHYRUM)
+        {
+            StmlNodus* textus;
 
-            cand = (CanonAttributum*)xar_obtinere(e->attributa, j);
-            si (chorda_aequalis(*cand->titulus, *a->titulus))
+            textus = stml_liberum_ad_indicem(l, ZEPHYRUM);
+            si (textus && textus->genus == STML_NODUS_TEXTUS)
             {
-                def = cand;
-                frange;
+                valor_ae = textus->valor;
             }
         }
-
-        si (!def)
-        {
-            chorda* detail;
-            chorda* sug;
-
-            detail  = a->titulus;
-            sug     = NIHIL;
-            si (xar_numerus(e->attributa) > ZEPHYRUM)
-            {
-                chorda* acies;
-                   i32  na;
-                   i32  ia;
-
-                na = xar_numerus(e->attributa);
-                acies = (chorda*)piscina_allocare(piscina,
-                    magnitudo(chorda) * (memoriae_index)na);
-                per (ia = ZEPHYRUM; ia < na; ia++)
-                {
-                    acies[ia] = *((CanonAttributum*)
-                        xar_obtinere(e->attributa, ia))->titulus;
-                }
-                sug = _suggestio(a->titulus, acies, na, piscina);
-            }
-            si (sug)
-            {
-                /* "nomen (an X?)" - nomen ignotum SERVATUR */
-                detail = (chorda*)piscina_allocare(piscina,
-                    magnitudo(chorda));
-                detail->mensura = a->titulus->mensura + II
-                    + sug->mensura + I;
-                detail->datum = (i8*)piscina_allocare(piscina,
-                    (memoriae_index)detail->mensura);
-                memcpy(detail->datum, a->titulus->datum,
-                       (memoriae_index)a->titulus->mensura);
-                memcpy(detail->datum + a->titulus->mensura,
-                       " (", II);
-                memcpy(detail->datum + a->titulus->mensura + II,
-                       sug->datum, (memoriae_index)sug->mensura);
-                detail->datum[detail->mensura - I] = (i8)')';
-            }
-            vitium_addere(vitia, CANON_ATTRIBUTUM_IGNOTUM, n,
-                          e->titulus, detail, ZEPHYRUM,
-                          ZEPHYRUM);
-            perge;
-        }
-        si (!valor_congruit(a->valor, def))
-        {
-            vitium_addere(vitia, CANON_VALOR_MALUS, n, e->titulus,
-                          a->titulus, ZEPHYRUM, ZEPHYRUM);
-        }
-        alioquin si (!_intra_fines(a->valor, def))
-        {
-            vitium_addere(vitia, CANON_VALOR_EXTRA_FINES, n,
-                          e->titulus, a->titulus, ZEPHYRUM,
-                          ZEPHYRUM);
-        }
+        _attributum_praesens_iudicare(e, n, l->attributum_titulus,
+                                      valor_ae, piscina, vitia);
     }
 
     /* ---- attributa necessaria ---- */

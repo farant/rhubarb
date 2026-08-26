@@ -726,17 +726,63 @@ _tok_legere_tag (
         redde token;
     }
 
-    /* Regular opening tag */
-    titulus = _tok_legere_nomen(ctx);
-    si (_titulus_male_incipit(ctx, titulus))
+    /* Regular opening tag. Elementum attributi <@titulus=> (spec
+     * macronum par. 6.3): '@' ducens HIC SOLUM benedicitur -
+     * clausurae, capturae retro, farcimina '@' recusare pergunt
+     * (formae non decretae). Signum '=' post nomen pars formae
+     * tagi est et consumitur; '@' pars valoris manet - parsator
+     * eo formam agnoscit (ut fragmenta sigillo suo). */
+    si (_tok_aspicere(ctx, ZEPHYRUM) == '@')
     {
-        token.genus            = STML_TOKEN_ERRATUM;
-        token.valor            = titulus;
-        token.positus_initium  = initium;
-        token.positus_finis    = ctx->positus;
-        token.linea            = initium_linea;
-        token.columna          = initium_columna;
-        redde token;
+        i32 initium_nominis;
+
+        initium_nominis = ctx->positus;
+        _tok_progredi(ctx, I);
+        titulus = _tok_legere_nomen(ctx);
+        si (   titulus.mensura              == ZEPHYRUM
+            || _tok_aspicere(ctx, ZEPHYRUM) != '=')
+        {
+            token.genus            = STML_TOKEN_ERRATUM;
+            token.valor            = titulus;
+            token.positus_initium  = initium;
+            token.positus_finis    = ctx->positus;
+            token.linea            = initium_linea;
+            token.columna          = initium_columna;
+            redde token;
+        }
+        _tok_progredi(ctx, I);  /* '=' consumptum */
+        titulus.datum    = ctx->input.datum + initium_nominis;
+        titulus.mensura  += I;
+
+        /* Formae '!' (crudus) et '\' (multilinea) in elementis
+         * attributorum non decretae - recusatio clara, ne forma
+         * semifracta nasceretur (clausura cruda titulum nominatum
+         * poscit quem elementum attributi numquam habet). */
+        si (   _tok_aspicere(ctx, ZEPHYRUM) == '!'
+            || _tok_aspicere(ctx, ZEPHYRUM) == '\\')
+        {
+            token.genus            = STML_TOKEN_ERRATUM;
+            token.valor            = titulus;
+            token.positus_initium  = initium;
+            token.positus_finis    = ctx->positus;
+            token.linea            = initium_linea;
+            token.columna          = initium_columna;
+            redde token;
+        }
+    }
+    alioquin
+    {
+        titulus = _tok_legere_nomen(ctx);
+        si (_titulus_male_incipit(ctx, titulus))
+        {
+            token.genus            = STML_TOKEN_ERRATUM;
+            token.valor            = titulus;
+            token.positus_initium  = initium;
+            token.positus_finis    = ctx->positus;
+            token.linea            = initium_linea;
+            token.columna          = initium_columna;
+            redde token;
+        }
     }
 
     /* Check for ! suffix (raw content) */
@@ -1760,9 +1806,10 @@ _parser_creare_nodus (
     /* olim fragmentum/fragmentum_id hic NON initiabantur - piscina
      * recens zephyrata eos texit, sed piscina reusa non spondet.
      * Omnes campi explicite (2026-08-10). */
-    nodus->fragmentum        = FALSUM;
-    nodus->fragmentum_id     = NIHIL;
-    nodus->augmentum_clavis  = NIHIL;
+    nodus->fragmentum          = FALSUM;
+    nodus->fragmentum_id       = NIHIL;
+    nodus->augmentum_clavis    = NIHIL;
+    nodus->attributum_titulus  = NIHIL;
 
     /* trivia (§1): nulla nativitate - distributio in _liberos_legere
      * et classificatio in _textum_tractare eas ponunt */
@@ -1793,6 +1840,35 @@ _parser_creare_nodus (
 interior StmlNodus*
 _parser_legere_nodus (
     StmlParserContext* ctx);
+
+/* Titulum nodi ex valore tokeni ponere. Valor '@' ducente =
+ * elementum attributi (par. 6.3): titulus communis '@' geritur,
+ * nomen attributi in campo proprio (exemplar percenti: '%' +
+ * augmentum_clavis) - numquam in attributa normalizatum
+ * (fidelitas; stml_attributum_capere viam alteram habet). Aliter
+ * titulus ordinarie internatur. */
+interior vacuum
+_titulum_ex_tokeno_ponere (
+    StmlParserContext* ctx,
+            StmlNodus* nodus,
+               chorda  valor)
+{
+    si (valor.mensura > I && valor.datum[ZEPHYRUM] == '@')
+    {
+        chorda nomen_attributi;
+
+        nomen_attributi.datum    = valor.datum + I;
+        nomen_attributi.mensura  = valor.mensura - I;
+        nodus->titulus = chorda_internare_ex_literis(ctx->intern,
+                                                     "@");
+        nodus->attributum_titulus = chorda_internare(ctx->intern,
+                                                     nomen_attributi);
+    }
+    alioquin
+    {
+        nodus->titulus = chorda_internare(ctx->intern, valor);
+    }
+}
 
 /* Ansa liberorum UNA pro omnibus parentibus (elementum, fragmentum,
  * percentum, documentum) - distributio triviae §1.2 hic vivit, uno
@@ -1836,15 +1912,13 @@ _parser_legere_elementum (
     StmlParserContext* ctx)
 {
     StmlNodus* nodus;
-       chorda  titulus;
        chorda* titulus_ptr;
 
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
-    titulus            = ctx->current.valor;
-    titulus_ptr        = chorda_internare(ctx->intern, titulus);
-    nodus->titulus     = titulus_ptr;
+    _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
+    titulus_ptr        = nodus->titulus;
     nodus->attributa   = ctx->current.attributa;
     nodus->multilinea  = ctx->current.multilinea;
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
@@ -2011,15 +2085,13 @@ _parser_legere_auto_claudere (
     StmlParserContext* ctx)
 {
     StmlNodus* nodus;
-       chorda* titulus_ptr;
 
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
-    titulus_ptr = chorda_internare(ctx->intern, ctx->current.valor);
-    nodus->titulus = titulus_ptr;
-    nodus->attributa = ctx->current.attributa;
-    nodus->multilinea = ctx->current.multilinea;
+    _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
+    nodus->attributa   = ctx->current.attributa;
+    nodus->multilinea  = ctx->current.multilinea;
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
         nodus->spatia_intra_tagum = chorda_internare(ctx->intern,
@@ -2041,7 +2113,6 @@ _parser_legere_captio_ante (
     StmlParserContext* ctx)
 {
     StmlNodus* nodus;
-       chorda* titulus_ptr;
 
     /* recusatio composita (§1.4): captura in '<tag\ (>' vetita */
     si (ctx->current.multilinea)
@@ -2056,8 +2127,7 @@ _parser_legere_captio_ante (
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
-    titulus_ptr = chorda_internare(ctx->intern, ctx->current.valor);
-    nodus->titulus = titulus_ptr;
+    _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
     nodus->attributa = ctx->current.attributa;
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
     {
@@ -2647,6 +2717,182 @@ _liberos_legere (
     si (pendens.mensura > ZEPHYRUM)
     {
         _spatia_apponere(ctx, &parens->spatia_clausurae, pendens);
+    }
+}
+
+/* Recusatio attributi nominata (par. 6.3) - exemplar multilineae:
+ * error primus nominat, ceteri tacent. */
+interior vacuum
+_attributum_recusare (
+     StmlParserContext* ctx,
+    constans character* causa,
+                   i32  linea)
+{
+    si (ctx->status != STML_SUCCESSUS)
+    {
+        redde;
+    }
+    ctx->status           = STML_ERROR_ATTRIBUTUM;
+    ctx->linea_erroris    = linea;
+    ctx->columna_erroris  = I;
+    ctx->error            = chorda_ex_literis(causa, ctx->piscina);
+}
+
+/* Lex positionis elementorum attributorum (par. 6.3), super
+ * arborem PERFECTAM (post resolutionem capturarum - ordo fratrum
+ * FINALIS iudicatur, quem consumptores vident; arca capturae
+ * elementum attributi in praefixum parentis transferre potest).
+ * Tres sedes:
+ *   praefixum liberorum = attributum PARENTIS (liberi TEXTUS
+ *     soli - valor chorda est, non arbor; nomen non geminatum)
+ *   statim post vocationem templi '#@' = argumentum VOCATIONIS
+ *     (subarbores licitae, par. 6.1 - vocatio atomica est, ergo
+ *     argumenta eam sequuntur)
+ *   aliter = VITIUM clarum, numquam coniectura
+ * Custodia '#@' eadem quam stml_macros (_est_vocatio) et canon
+ * (_transclusionis_petitum) - lex una, sedes tres. */
+interior vacuum
+_attributa_elementa_probare (
+    StmlParserContext* ctx,
+            StmlNodus* parens)
+{
+    i32 i;
+    i32 num;
+    i32 modus;  /* ZEPHYRUM praefixum, I vocatio, II clausum */
+
+    si (parens->liberi == NIHIL || ctx->status != STML_SUCCESSUS)
+    {
+        redde;
+    }
+
+    num    = xar_numerus(parens->liberi);
+    modus  = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(parens->liberi, i);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+
+        si (liberum->attributum_titulus != NIHIL)
+        {
+            si (modus == II)
+            {
+                _attributum_recusare(ctx,
+                    "elementum attributi extra praefixum liberorum "
+                    "nec post vocationem templi (par. 6.3)",
+                    liberum->linea);
+                redde;
+            }
+            si (modus == ZEPHYRUM)
+            {
+                /* ligatum PARENTI */
+                i32 j;
+                i32 n2;
+
+                si (   parens->genus              != STML_NODUS_ELEMENTUM
+                    || parens->augmentum_clavis   != NIHIL
+                    || parens->attributum_titulus != NIHIL)
+                {
+                    _attributum_recusare(ctx,
+                        "parens elementi attributi sedes "
+                        "attributorum non est (par. 6.3)",
+                        liberum->linea);
+                    redde;
+                }
+                si (parens->attributa != NIHIL)
+                {
+                    n2 = xar_numerus(parens->attributa);
+                    per (j = ZEPHYRUM; j < n2; j++)
+                    {
+                        StmlAttributum* attr;
+
+                        attr = (StmlAttributum*)xar_obtinere(
+                            parens->attributa, j);
+                        si (   attr && attr->titulus
+                            && chorda_aequalis(*attr->titulus,
+                                   *liberum->attributum_titulus))
+                        {
+                            _attributum_recusare(ctx,
+                                "attributum bis nominatum: "
+                                "inscriptum et elementum (par. 6.3)",
+                                liberum->linea);
+                            redde;
+                        }
+                    }
+                }
+                per (j = ZEPHYRUM; j < i; j++)
+                {
+                    StmlNodus* prius;
+
+                    prius = _xar_liberum_obtinere(parens->liberi, j);
+                    si (   prius
+                        && prius->attributum_titulus != NIHIL
+                        && chorda_aequalis(
+                               *prius->attributum_titulus,
+                               *liberum->attributum_titulus))
+                    {
+                        _attributum_recusare(ctx,
+                            "attributum bis nominatum: elementa "
+                            "bina (par. 6.3)", liberum->linea);
+                        redde;
+                    }
+                }
+                si (liberum->liberi != NIHIL)
+                {
+                    n2 = xar_numerus(liberum->liberi);
+                    per (j = ZEPHYRUM; j < n2; j++)
+                    {
+                        StmlNodus* nepos;
+
+                        nepos = _xar_liberum_obtinere(
+                            liberum->liberi, j);
+                        si (   nepos        != NIHIL
+                            && nepos->genus != STML_NODUS_TEXTUS)
+                        {
+                            _attributum_recusare(ctx,
+                                "liberi elementi attributi parenti "
+                                "ligati textus soli (par. 6.3)",
+                                liberum->linea);
+                            redde;
+                        }
+                    }
+                }
+            }
+            /* modus I: argumentum vocationis - subarbores licitae,
+             * machina expansionis (par. 6.1) ea iudicabit */
+        }
+        alioquin si (   liberum->genus == STML_NODUS_TRANSCLUSIO
+                     && liberum->valor                  != NIHIL
+                     && liberum->valor->mensura > II
+                     && liberum->valor->datum[ZEPHYRUM] == '#'
+                     && liberum->valor->datum[I]        == '@')
+        {
+            modus = I;
+        }
+        alioquin
+        {
+            modus = II;
+        }
+    }
+
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = _xar_liberum_obtinere(parens->liberi, i);
+        si (liberum != NIHIL && liberum->liberi != NIHIL)
+        {
+            _attributa_elementa_probare(ctx, liberum);
+            si (ctx->status != STML_SUCCESSUS)
+            {
+                redde;
+            }
+        }
     }
 }
 
@@ -3831,6 +4077,13 @@ stml_legere (
         _processare_captiones(documentum, piscina);
     }
 
+    /* Lex positionis elementorum attributorum (par. 6.3) - super
+     * arborem perfectam, post capturas (ordo fratrum finalis) */
+    si (ctx.status == STML_SUCCESSUS)
+    {
+        _attributa_elementa_probare(&ctx, documentum);
+    }
+
     /* Find first element child */
     num = xar_numerus(documentum->liberi);
     per (i = ZEPHYRUM; i < num; i++)
@@ -3976,20 +4229,66 @@ stml_attributum_capere (
                i32  num;
     StmlAttributum* attr;
 
-    si (!nodus || !nodus->attributa || !titulus)
+    si (!nodus || !titulus)
     {
         redde NIHIL;
     }
 
-    num = xar_numerus(nodus->attributa);
-
-    per (i = ZEPHYRUM; i < num; i++)
+    si (nodus->attributa)
     {
-        attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
-        si (   attr && attr->titulus
-            && _chorda_ptr_aequalis_literis(attr->titulus, titulus))
+        num = xar_numerus(nodus->attributa);
+
+        per (i = ZEPHYRUM; i < num; i++)
         {
-            redde attr->valor;
+            attr = (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+            si (   attr && attr->titulus
+                && _chorda_ptr_aequalis_literis(attr->titulus, titulus))
+            {
+                redde attr->valor;
+            }
+        }
+    }
+
+    /* Via altera (par. 6.3): elementa attributorum in PRAEFIXO
+     * liberorum - liberum primum quod elementum attributi non est
+     * quaestionem finit (lex positionis). Vacuum = SEPULCRUM:
+     * absentia explicita, NIHIL. Valor = valor liberi textus
+     * unici; lector entia in textu iam solvit, valores inscripti
+     * legem crudam suam sequuntur - capere SENSUM ambobus reddit
+     * (aequivalentia in significatione, non in octetis). */
+    si (nodus->liberi)
+    {
+        num = xar_numerus(nodus->liberi);
+
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlNodus* liberum;
+
+            liberum = _xar_liberum_obtinere(nodus->liberi, i);
+            si (   !liberum
+                || liberum->genus              != STML_NODUS_ELEMENTUM
+                || liberum->attributum_titulus == NIHIL)
+            {
+                frange;
+            }
+            si (_chorda_ptr_aequalis_literis(
+                    liberum->attributum_titulus, titulus))
+            {
+                StmlNodus* textus;
+
+                si (   liberum->liberi              == NIHIL
+                    || xar_numerus(liberum->liberi) == ZEPHYRUM)
+                {
+                    redde NIHIL;  /* sepulcrum */
+                }
+                textus = _xar_liberum_obtinere(liberum->liberi,
+                                               ZEPHYRUM);
+                si (textus && textus->genus == STML_NODUS_TEXTUS)
+                {
+                    redde textus->valor;
+                }
+                redde NIHIL;
+            }
         }
     }
 
@@ -5183,10 +5482,11 @@ _duplicare_recursivum (
     /* fragmentum/augmentum: olim NON copiabantur - duplicatum
      * fragmenti elementum ordinarium '#' tacite fiebat (piscina
      * zephyrata culpam texit). Explicite (2026-08-10). */
-    novum->fragmentum        = nodus->fragmentum;
-    novum->fragmentum_id     = nodus->fragmentum_id;  /* Internatum */
-    novum->augmentum_clavis  = nodus->augmentum_clavis;  /* Internatum */
-    novum->parens            = NIHIL;  /* Novum non habet parentem */
+    novum->fragmentum          = nodus->fragmentum;
+    novum->fragmentum_id       = nodus->fragmentum_id;  /* Internatum */
+    novum->augmentum_clavis    = nodus->augmentum_clavis;  /* Internatum */
+    novum->attributum_titulus  = nodus->attributum_titulus;  /* Internatum */
+    novum->parens              = NIHIL;  /* Novum non habet parentem */
     /* trivia copiantur (internata) - subarbor duplicata
      * dispositionem suam secum fert */
     novum->spatia_ante         = nodus->spatia_ante;
@@ -5310,6 +5610,7 @@ stml_elementum_creare (
     nodus->fragmentum = FALSUM;
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
+    nodus->attributum_titulus = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
     nodus->positus_initium = ZEPHYRUM;
     nodus->positus_finis = ZEPHYRUM;
@@ -5325,8 +5626,8 @@ stml_elementum_creare (
 
 StmlNodus*
 stml_transclusionem_creare (
-                Piscina* piscina,
-    InternamentumChorda* intern,
+                 Piscina* piscina,
+     InternamentumChorda* intern,
                   chorda  valor)
 {
     StmlNodus* nodus;
@@ -5337,28 +5638,29 @@ stml_transclusionem_creare (
         redde NIHIL;
     }
 
-    nodus->genus = STML_NODUS_TRANSCLUSIO;
-    nodus->titulus = NIHIL;
-    nodus->valor = chorda_internare(intern, valor);
-    nodus->attributa = NIHIL;
-    nodus->liberi = NIHIL;
-    nodus->parens = NIHIL;
-    nodus->crudus = FALSUM;
-    nodus->captio_directio = STML_CAPTIO_NIHIL;
-    nodus->captio_numerus = ZEPHYRUM;
-    nodus->clausura_anonyma = FALSUM;
-    nodus->fragmentum = FALSUM;
-    nodus->fragmentum_id = NIHIL;
-    nodus->augmentum_clavis = NIHIL;
-    nodus->linea = ZEPHYRUM;   /* non e parsatione */
-    nodus->positus_initium = ZEPHYRUM;
-    nodus->positus_finis = ZEPHYRUM;
-    nodus->spatia_ante = NIHIL;
-    nodus->spatia_post = NIHIL;
-    nodus->spatia_clausurae = NIHIL;
-    nodus->spatia_intra_tagum = NIHIL;
-    nodus->multilinea = FALSUM;
-    nodus->indentatio = NIHIL;
+    nodus->genus               = STML_NODUS_TRANSCLUSIO;
+    nodus->titulus             = NIHIL;
+    nodus->valor               = chorda_internare(intern, valor);
+    nodus->attributa           = NIHIL;
+    nodus->liberi              = NIHIL;
+    nodus->parens              = NIHIL;
+    nodus->crudus              = FALSUM;
+    nodus->captio_directio     = STML_CAPTIO_NIHIL;
+    nodus->captio_numerus      = ZEPHYRUM;
+    nodus->clausura_anonyma    = FALSUM;
+    nodus->fragmentum          = FALSUM;
+    nodus->fragmentum_id       = NIHIL;
+    nodus->augmentum_clavis    = NIHIL;
+    nodus->attributum_titulus  = NIHIL;
+    nodus->linea               = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium     = ZEPHYRUM;
+    nodus->positus_finis       = ZEPHYRUM;
+    nodus->spatia_ante         = NIHIL;
+    nodus->spatia_post         = NIHIL;
+    nodus->spatia_clausurae    = NIHIL;
+    nodus->spatia_intra_tagum  = NIHIL;
+    nodus->multilinea          = FALSUM;
+    nodus->indentatio          = NIHIL;
 
     si (!nodus->valor)
     {
@@ -5411,6 +5713,7 @@ stml_textum_creare (
     nodus->fragmentum = FALSUM;
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
+    nodus->attributum_titulus = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
     nodus->positus_initium = ZEPHYRUM;
     nodus->positus_finis = ZEPHYRUM;
@@ -5451,6 +5754,7 @@ stml_textum_creare_ex_chorda (
     nodus->fragmentum          = FALSUM;
     nodus->fragmentum_id       = NIHIL;
     nodus->augmentum_clavis    = NIHIL;
+    nodus->attributum_titulus  = NIHIL;
     nodus->linea               = ZEPHYRUM;   /* non e parsatione */
     nodus->positus_initium     = ZEPHYRUM;
     nodus->positus_finis       = ZEPHYRUM;
@@ -5491,6 +5795,7 @@ stml_commentum_creare (
     nodus->fragmentum = FALSUM;
     nodus->fragmentum_id = NIHIL;
     nodus->augmentum_clavis = NIHIL;
+    nodus->attributum_titulus = NIHIL;
     nodus->linea = ZEPHYRUM;   /* non e parsatione */
     nodus->positus_initium = ZEPHYRUM;
     nodus->positus_finis = ZEPHYRUM;
@@ -6157,6 +6462,7 @@ _spinae_liberum_unicum (
     si (   nodus->genus               != STML_NODUS_ELEMENTUM
         || nodus->fragmentum
         || nodus->augmentum_clavis    != NIHIL
+        || nodus->attributum_titulus  != NIHIL
         || nodus->crudus
         || nodus->multilinea
         || nodus->liberi              == NIHIL
@@ -6189,6 +6495,7 @@ _elementum_planum (
                 && nodus->captio_directio == STML_CAPTIO_NIHIL
                 && !nodus->fragmentum
                 && nodus->augmentum_clavis == NIHIL
+                && nodus->attributum_titulus == NIHIL
                 && !nodus->crudus
                 && !nodus->multilinea);
 }
@@ -6206,11 +6513,12 @@ _capturae_multiplicis_idoneum (
     i32 num;
     i32 i;
 
-    si (   nodus->genus            != STML_NODUS_ELEMENTUM
+    si (   nodus->genus              != STML_NODUS_ELEMENTUM
         || nodus->crudus
         || nodus->multilinea
         || nodus->fragmentum
-        || nodus->augmentum_clavis != NIHIL
+        || nodus->augmentum_clavis   != NIHIL
+        || nodus->attributum_titulus != NIHIL
         || (   nodus->captio_directio != STML_CAPTIO_NIHIL
             && nodus->captio_directio != STML_CAPTIO_ANTE))
     {
@@ -6226,11 +6534,12 @@ _capturae_multiplicis_idoneum (
         StmlNodus* liberum;
 
         liberum = _xar_liberum_obtinere(nodus->liberi, i);
-        si (   liberum                  == NIHIL
-            || liberum->genus           != STML_NODUS_ELEMENTUM
+        si (   liberum                     == NIHIL
+            || liberum->genus              != STML_NODUS_ELEMENTUM
             || liberum->fragmentum
-            || liberum->captio_directio == STML_CAPTIO_RETRO
-            || liberum->captio_directio == STML_CAPTIO_FARCIMEN)
+            || liberum->attributum_titulus != NIHIL
+            || liberum->captio_directio    == STML_CAPTIO_RETRO
+            || liberum->captio_directio    == STML_CAPTIO_FARCIMEN)
         {
             redde FALSUM;
         }
@@ -6279,10 +6588,11 @@ _terminalis_inline (
     i32 i;
     i32 num;
 
-    si (   nodus->genus            != STML_NODUS_ELEMENTUM
-        || nodus->captio_directio  != STML_CAPTIO_NIHIL
+    si (   nodus->genus              != STML_NODUS_ELEMENTUM
+        || nodus->captio_directio    != STML_CAPTIO_NIHIL
         || nodus->fragmentum
-        || nodus->augmentum_clavis != NIHIL
+        || nodus->augmentum_clavis   != NIHIL
+        || nodus->attributum_titulus != NIHIL
         || nodus->crudus
         || nodus->multilinea)
     {
@@ -7547,6 +7857,15 @@ _scribere_nucleus (
                 {
                     chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
                 }
+                /* Elementum attributi: nomen + '=' titulum '@'
+                 * sequuntur - '<@m=(' (par. 6.3) */
+                si (nodus->attributum_titulus != NIHIL)
+                {
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->attributum_titulus);
+                    chorda_aedificator_appendere_character(
+                        aedificator, '=');
+                }
                 si (nodus->crudus)
                 {
                     chorda_aedificator_appendere_character(aedificator, '!');
@@ -7703,6 +8022,16 @@ _scribere_nucleus (
                 si (nodus->titulus)
                 {
                     chorda_aedificator_appendere_chorda(aedificator, *nodus->titulus);
+                }
+
+                /* Elementum attributi: nomen + '=' titulum '@'
+                 * sequuntur - '<@m=' (par. 6.3) */
+                si (nodus->attributum_titulus != NIHIL)
+                {
+                    chorda_aedificator_appendere_chorda(aedificator,
+                        *nodus->attributum_titulus);
+                    chorda_aedificator_appendere_character(
+                        aedificator, '=');
                 }
 
                 /* Raw content marker */
@@ -7913,6 +8242,13 @@ _scribere_nucleus (
                             (_lineae_contenti(aedificator, initium_contenti)
                                 <= STML_CLAUSURA_TACITA_LINEAE)
                             ? VERUM : FALSUM;
+                    }
+                    /* Elementum attributi clausuram nominatam
+                     * numquam habet ('</@>' non lexatur) - '</>'
+                     * SEMPER, post regulam pulchram (par. 6.3) */
+                    si (nodus->attributum_titulus != NIHIL)
+                    {
+                        clausura_tacita = VERUM;
                     }
 
                     /* interius ante tagum claudentem (§1.1) */

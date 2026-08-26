@@ -907,6 +907,85 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: elementa attributorum (par. 6.3) - visio duplex
+     *
+     * Ligatum PARENTI ut ATTRIBUTUM iudicatur: nomen contra
+     * canonem elementi, genus valoris; ut LIBERUM invisibile.
+     * Post vocationem templi invisibile PRORSUS (pars vocationis,
+     * materia citata - par. 6.1, tactus quartus lineae
+     * doctrinalis spatii templi). Sepulcrum ('<@a=/>') absentiam
+     * significat: necessarium DEEST clamat, nomen tamen probatur.
+     * ======================================================== */
+
+    {
+        Canon* c_ae;
+          Xar* vitia;
+
+        imprimere("\n--- Probans elementa attributorum (canon) "
+                  "---\n");
+
+        c_ae = canon_ex_literis(
+            "<canon dialectus=\"ae\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\""
+            " necessarium=\"verum\"/>"
+            "<attributum nomen=\"b\" genus=\"numerus\"/>"
+            "</elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_ae);
+
+        /* I. necessarium per formam elementi impletum; elementum
+         * attributi liberum ignotum NON est */
+        vitia = iudicare_literis(c_ae,
+            "<r><item><@a=>unus</></item></r>", piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* II. nomen ignotum forma elementi CLAMAT */
+        vitia = iudicare_literis(c_ae,
+            "<r><item a=\"x\"><@ignotum=>y</></item></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_ATTRIBUTUM_IGNOTUM), I);
+
+        /* III. genus valoris probatur (b numerus est) */
+        vitia = iudicare_literis(c_ae,
+            "<r><item a=\"x\"><@b=>non-numerus</></item></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_VALOR_MALUS), I);
+
+        /* IV. sepulcrum = absentia: necessarium DEEST */
+        vitia = iudicare_literis(c_ae,
+            "<r><item><@a=/></item></r>", piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_ATTRIBUTUM_DEEST), I);
+
+        /* V. sepulcrum nominis ignoti: nomen tamen probatur */
+        vitia = iudicare_literis(c_ae,
+            "<r><item a=\"x\"><@nusquam=/></item></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_ATTRIBUTUM_IGNOTUM), I);
+
+        /* VI. argumentum vocationis invisibile prorsus (subarbor
+         * legalis par. 6.1, materia citata) */
+        vitia = iudicare_literis(c_ae,
+            "<r><#@t n=\"@n\"><item a=\"&@n;\"/></#>"
+            "<<#@t>><@n=>1</></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: transclusio PELLUCIDA
      *
      * DEFINITIO: contentum per transclusionem adhibitum idem

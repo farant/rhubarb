@@ -306,6 +306,24 @@ on ordinary tags therefore take TEXT-ONLY children — element
 children there are a vitium. Subtree values remain a macro-call
 power, living in the engine's transient argument map only.
 
+**Empty = TOMBSTONE (decreed 2026-08-26)**: an attr-element with
+zero children (`<@m=/>`, and the pair spelling `<@m=></>` which the
+writer normalizes to it — MEASURED: the base writer already
+canonicalizes ALL empty pairs to self-closing, `<a></a>` emits
+`<a/>`) means the attribute is explicitly ABSENT — capere returns
+NIHIL, canon judges it missing (though the NAME is still checked
+against the element's canon entry — tombstoning an unknown
+attribute is still speaking about it), and any future attribute
+INHERITANCE (template-provided attrs, DISTRIBUTIO carry-down) is
+blocked by it. Motivation (Fran): nodes need a delete verb, not
+just override, if attrs ever flow down from templates/wrappers —
+this strengthens DISTRIBUTIO's leaned item-wins collision rule.
+The empty-STRING value has no element spelling and needs none:
+inline `m=""` always represents it (the element form exists for
+values that NEED it — quotes, layout — and an empty value never
+does). Tombstone + inline same name = the duplicate-attribute
+vitium (present-and-absent is a contradiction).
+
 **Implementation postures fixed now:**
 - Fidelity via the augmentation pattern: the attr-element stays a
   child node with a marker, NEVER normalized into attributa at

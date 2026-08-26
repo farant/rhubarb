@@ -203,6 +203,17 @@ nomen structura StmlNodus {
      * ergo consumptores generum intacti. */
     chorda* augmentum_clavis;
 
+    /* Elementum attributi '<@titulus=>...</>' (spec macronum par.
+     * 6.3, reparatio formati basalis): attributum forma elementi
+     * scriptum - '"' in valore repraesentabilis fit, valores longi
+     * dispositionem veram habent. Exemplar percenti: titulus
+     * communis '@' geritur, nomen attributi HIC; NIHIL = elementum
+     * ordinarium. Numquam in attributa normalizatum (fidelitas) -
+     * stml_attributum_capere viam alteram habet. Vacuum
+     * ('<@m=/>') = SEPULCRUM: absentia explicita (capere NIHIL;
+     * hereditatem futuram obstruit). */
+    chorda* attributum_titulus;
+
 
     /* ==================================================
      * TRIVIA (spec triviae §1) - valor est SENSUS, spatium album

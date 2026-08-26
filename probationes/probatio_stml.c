@@ -3284,6 +3284,230 @@ s32 principale(vacuum)
     }
 
     /* ==================================================
+     * Elementa Attributorum: <@titulus=> (par. 6.3 spec macronum)
+     * Reparatio formati basalis: '"' in valore attributi inscripto
+     * antea irrepresentabilis; valores longi dispositionem veram
+     * habent. Exemplar percenti: ELEMENTUM ordinarium titulo '@' +
+     * titulus attributi in campo proprio (numquam in attributa
+     * normalizatum - fidelitas). Vacuum = SEPULCRUM (absentia
+     * explicita; hereditatem futuram obstruit).
+     * ================================================== */
+
+    imprimere("\n--- Probans elementa attributorum ---\n");
+
+    {
+        /* Forma parsatur: liberum titulo '@', titulus attributi
+         * in campo proprio */
+        StmlResultus res;
+        StmlNodus* ae;
+
+        res = stml_legere_ex_literis("<a><@m=>x</></a>", piscina,
+                                     intern);
+        CREDO_VERUM(res.successus);
+        ae = stml_invenire_liberum(res.elementum_radix, "@");
+        CREDO_NON_NIHIL(ae);
+        si (ae != NIHIL)
+        {
+            CREDO_NON_NIHIL(ae->attributum_titulus);
+            si (ae->attributum_titulus != NIHIL)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS(
+                    *ae->attributum_titulus, "m");
+            }
+        }
+
+        imprimere("  Elementum attributi parsatur: PRAETERITUM\n");
+    }
+
+    {
+        /* Aequivalentia capere: forma inscripta et forma elementi
+         * eundem valorem reddunt - cum fructu decreti: '"' in
+         * valore, inscripte irrepresentabilis */
+        StmlResultus res;
+        chorda* valor;
+
+        res = stml_legere_ex_literis("<a><@m=>x</></a>", piscina,
+                                     intern);
+        CREDO_VERUM(res.successus);
+        valor = stml_attributum_capere(res.elementum_radix, "m");
+        CREDO_NON_NIHIL(valor);
+        si (valor != NIHIL)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "x");
+        }
+
+        res = stml_legere_ex_literis("<b><@t=>x\"y</></b>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        valor = stml_attributum_capere(res.elementum_radix, "t");
+        CREDO_NON_NIHIL(valor);
+        si (valor != NIHIL)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "x\"y");
+        }
+
+        imprimere("  Aequivalentia capere: PRAETERITUM\n");
+    }
+
+    {
+        /* Sepulcrum: elementum attributi vacuum = absentia
+         * explicita (decretum 2026-08-26) - capere NIHIL reddit */
+        StmlResultus res;
+        StmlNodus* ae;
+
+        res = stml_legere_ex_literis("<a><@m=/></a>", piscina,
+                                     intern);
+        CREDO_VERUM(res.successus);
+        ae = stml_invenire_liberum(res.elementum_radix, "@");
+        CREDO_NON_NIHIL(ae);
+        CREDO_NIHIL(stml_attributum_capere(res.elementum_radix,
+                                           "m"));
+
+        imprimere("  Sepulcrum (<@m=/>): PRAETERITUM\n");
+    }
+
+    {
+        /* Par vacuum ad sepulcrum normalizatur (scriptor omnia
+         * paria vacua se-claudentia scribit - mensuratum in
+         * '<a></a>' -> '<a/>') */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<a><@m=></></a>", piscina,
+                                     intern);
+        CREDO_VERUM(res.successus);
+        CREDO_NIHIL(stml_attributum_capere(res.elementum_radix,
+                                           "m"));
+        serialized = stml_scribere(res.elementum_radix, piscina,
+                                   FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<a><@m=/></a>");
+
+        imprimere("  Par vacuum -> sepulcrum: PRAETERITUM\n");
+    }
+
+    {
+        /* Circuitus octetim: forma compacta cum fratre ordinario */
+        StmlResultus res;
+        chorda serialized;
+
+        res = stml_legere_ex_literis("<a><@m=>x</><b/></a>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        serialized = stml_scribere(res.elementum_radix, piscina,
+                                   FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<a><@m=>x</><b/></a>");
+
+        imprimere("  Circuitus elementi attributi: PRAETERITUM\n");
+    }
+
+    {
+        /* Forma capturae '<@m=(>': machina capturae ordinaria
+         * post '=' currit - circuitus octetim */
+        StmlResultus res;
+        chorda serialized;
+        chorda* valor;
+
+        res = stml_legere_ex_literis("<a><@m=(> hello</a>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+        valor = stml_attributum_capere(res.elementum_radix, "m");
+        CREDO_NON_NIHIL(valor);
+        si (valor != NIHIL)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS(*valor, "hello");
+        }
+        serialized = stml_scribere(res.elementum_radix, piscina,
+                                   FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<a><@m=(> hello</a>");
+
+        imprimere("  Forma capturae elementi attributi: "
+                  "PRAETERITUM\n");
+    }
+
+    /* Pulcher: elementa attributorum formae exoticae sunt (ut
+     * augmenta) - collapsus spinae/multiplicis/refluxus ea numquam
+     * tangit, quia refluxus octetos VALORIS mutaret (attributum
+     * chorda literalis est, non prosa). Forma plana semper;
+     * valor verbatim. */
+    _pulchrum_probare(piscina, intern,
+        "<a><@m=>hello</></a>",
+        "<a>\n  <@m=>hello</>\n</>",
+        "Pulcher elementi attributi: PRAETERITUM");
+    _pulchrum_probare(piscina, intern,
+        "<a><@m=/></a>",
+        "<a>\n  <@m=/>\n</>",
+        "Pulcher sepulcri: PRAETERITUM");
+
+    {
+        /* Lex positionis (par. 6.3): praefixum liberorum aut
+         * statim post vocationem templi '#@' - aliter VITIUM.
+         * Super arborem PERFECTAM iudicata (post capturas). */
+        StmlResultus res;
+
+        /* extra praefixum: post liberum ordinarium */
+        res = stml_legere_ex_literis("<a><b/><@m=>x</></a>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        /* liberi textus soli (ligatum parenti): elementum = vitium */
+        res = stml_legere_ex_literis("<a><@m=><b/></></a>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        /* nomen geminatum: inscriptum + elementum */
+        res = stml_legere_ex_literis("<a m=\"1\"><@m=>x</></a>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        /* nomen geminatum: elementum + elementum */
+        res = stml_legere_ex_literis("<a><@m=>x</><@m=>y</></a>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        /* radix documenti sedes attributi non est */
+        res = stml_legere_ex_literis("<@m=>x</>", piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        imprimere("  Lex positionis (vitia): PRAETERITUM\n");
+    }
+
+    {
+        /* Positiones licitae: praefixum plurium + liberum
+         * ordinarium post; argumentum vocationis cum SUBARBORE
+         * (par. 6.1 - vocatio atomica, argumenta sequuntur);
+         * captura elementum attributi in praefixum transfert
+         * (arbor perfecta iudicatur, non ordo authoris) */
+        StmlResultus res;
+
+        res = stml_legere_ex_literis(
+            "<a><@m=>x</><@n=>y</><b/></a>", piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        res = stml_legere_ex_literis(
+            "<doc><<#@f p=\"1\">><@q=><sub/></></doc>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        res = stml_legere_ex_literis("<a (> <@m=>x</>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+
+        imprimere("  Lex positionis (licitae): PRAETERITUM\n");
+    }
+
+    /* ==================================================
      * Fragmenta Capturantia: <#id (> / <# (> / saccharum <(>
      * (natalis 2026-07-30: bloci capturarum in articulis fori -
      * linea stampata '<#01KYRF (> textus' res tabularii gignit)

@@ -1766,6 +1766,14 @@ typedef struct SilvaStmlNodus {
                                                * sigillata; NIHIL =
                                                * elementum
                                                * ordinarium */
+    SilvaChorda*            attributum_titulus; /* '<@titulus=>' -
+                                               * elementum attributi
+                                               * (par. 6.3): titulus
+                                               * '@' geritur, nomen
+                                               * attributi HIC;
+                                               * NIHIL = elementum
+                                               * ordinarium; vacuum
+                                               * = sepulcrum */
 
     /* TRIVIA (spec triviae §1): valor est sensus, spatium album
      * dispositio iuxta eum lata. NIHIL = nullum. Lex possessoris
