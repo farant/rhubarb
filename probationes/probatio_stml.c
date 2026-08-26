@@ -3218,6 +3218,29 @@ s32 principale(vacuum)
     }
 
     {
+        /* Transclusionem creare (constructio manualis, macros v1):
+         * scriptor arboris vocationes templi auctorat sine
+         * parsatione - antea nodi transclusionis a parsatore solo
+         * nascebantur */
+        StmlNodus* trans;
+        chorda serialized;
+
+        trans = stml_transclusionem_creare(piscina, intern,
+            chorda_ex_literis("#@post-spatia n=\"1\"", piscina));
+        CREDO_NON_NIHIL(trans);
+        si (trans != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)trans->genus,
+                (i32)STML_NODUS_TRANSCLUSIO);
+            serialized = stml_scribere(trans, piscina, FALSUM);
+            CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+                "<<#@post-spatia n=\"1\">>");
+        }
+
+        imprimere("  Transclusionem creare: PRAETERITUM\n");
+    }
+
+    {
         /* Fragment with attributes */
         StmlResultus res;
         StmlNodus* frag;

@@ -2127,7 +2127,12 @@ _fragmenta_colligere (
 }
 
 /* Identitas quam transclusio petit: valor nodi, sigillo '#'
- * ducente dempto. Uno loco, quia bis eodem modo legitur. */
+ * ducente dempto. Uno loco, quia bis eodem modo legitur.
+ *
+ * Spatium templi (stml macros v1): vocatio '<<#@id arg="v">>'
+ * argumenta fert quae identitatis pars NON sunt - id ad spatium
+ * interius primum secatur ('@' pars id manet, ut definitiones
+ * '<#@id>' congruant). */
 interior chorda
 _transclusionis_petitum (
     StmlNodus* t)
@@ -2143,6 +2148,21 @@ _transclusionis_petitum (
             && (character)petitum.datum[ZEPHYRUM] == '#')
         {
             petitum = chorda_sectio(petitum, I, petitum.mensura);
+        }
+        si (   petitum.mensura > ZEPHYRUM
+            && (character)petitum.datum[ZEPHYRUM] == '@')
+        {
+            i32 finis;
+
+            finis = ZEPHYRUM;
+            dum (   finis < petitum.mensura
+                 && (character)petitum.datum[finis] != ' '
+                 && (character)petitum.datum[finis] != '\t'
+                 && (character)petitum.datum[finis] != '\n')
+            {
+                finis++;
+            }
+            petitum = chorda_sectio(petitum, ZEPHYRUM, finis);
         }
     }
     redde petitum;
@@ -2199,6 +2219,18 @@ _liberos_effectivos (
                 perge;
             }
             petitum = _transclusionis_petitum(l);
+
+            /* Vocatio TEMPLI ('#@'): contentum tempore onerationis
+             * INSTANTIATUR (stml_expandere), non transcluditur -
+             * corpus definitionis materia citata est (loculi
+             * '&@n;' nondum impleti canoni mentirentur). Resolutio
+             * supra probata; contentum hic nihil confert. Custodia
+             * canonis loculorum: reservatio spec macronum §6. */
+            si (   petitum.mensura > ZEPHYRUM
+                && (character)petitum.datum[ZEPHYRUM] == '@')
+            {
+                perge;
+            }
             si (   petitum.mensura == ZEPHYRUM
                 || !tabula_dispersa_invenire(tr->fragmenta,
                                              petitum, &inventum))

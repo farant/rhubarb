@@ -14118,3 +14118,69 @@ the engine in passthrough mode before any macro is emitted. Then the
 emitter (definition after <fontes>, calls at the post-single-spatia
 trivia branch), born-red fixture first. M2 byte-gate (78+154) must
 hold throughout.
+
+## 2026-08-26 — RELATIO: arbor macro slice SHIPPED (T7) + the template-space decree it forced
+
+**Shipped.** Parsura documents now author the measured common shape
+as a parameterized fragment: `<#@post-spatia n="@n">` (definition
+once, line ~6, right after `<fontes>`) + `<<#@post-spatia n="N">>`
+at every post-single-spatia site (~10k/tier; 108 in arrays.c
+alone). The loader expands at load (stml_expandere after
+stml_legere in silva_arbor_legere_parsuram) — the file keeps macro
+form, consumers see the content view. Gates: silva 50/50, root
+141/141, plagula byte-gate 78+155 byte-exact THROUGH pretty with
+macros live, canon corpus 155/155 purae, amalgam VERIFICATUM
+(stml_macros vendored automatically; hospes 39/39 exercises the
+path via legere_parsuram).
+
+**The forced decree (the real finding).** The plan's "macro-free
+passthrough" premise was FALSE: corpus documents already carry
+`<#lexN>`/`<<#lexN>>` (shared-lexeme identity). One surface, two
+opposite semantics — bare transclusion is ALIASING (Nelson: one
+object, many windows; "identitas res est, duplicatio mentiretur"),
+a macro call is INSTANTIATION (fresh copy, divergent under
+arguments). Blanket expansion would have deleted first uses and
+cloned identities. Decree (Fran, 2026-08-26): **template-space ids
+begin `@`** (`<#@f>` / `<<#@f ...>>`, the `@` PART of the id);
+content fragments untouched by the engine, consumer-resolved. The
+interview's "same apparatus" claim narrowed to template space.
+Commit e284bbcb; spec §2.0 carries the full reasoning.
+
+**Canon learned template space** (lib/canon.c): call identity = id
+cut at first interior space (arguments are not identity); template
+calls contribute NOTHING to the judged content view (definition
+body = quoted material; `&@n;` unfilled would lie to the canon).
+Resolution IS still judged — `<<#@nusquam>>` fires
+TRANSCLUSIO_IRRITA. Deeper loculus gating stays the named spec §6
+reservation. New API: `stml_transclusionem_creare` (writers can now
+author transclusion nodes; parser-only before).
+
+**Narrowings, named with landing spots:** (1) subtree writer
+(scribere_nodum) emits NO templates — subtree documents have no
+definition head; landing spot: whichever future slice gives
+subtree documents a head. (2) `<ante>` single-spatia wrapper
+(~1.9k/tier) and the latina-macro expansio leaves (`<<#@m-nihil>>`
+— 189B×118 in 6 lib files, byte-identical INCLUDING def-site
+positions) are the banked follow-up shapes. (3) `<#@>`-empty-id is
+_est_definitio-refused (mensura > I), rides as content.
+
+**Instrumenta debrief.** adhibita: legati corpus (SilvaParsura +
+StmlNodus warm re-entry), census probe (scratchpad
+t7_mensura/mensura_formarum.c — tree-level exact+masked shape
+census, the T7.2 measurement), proba_pulchrum (cleared the
+01M0GR6Y1T tripwire BEFORE emitter design), arbor.sh (live
+document verification), formator/censor/examen hooks,
+silva_fontes_generare (instrument link lists), amalgama
+fontes/excludenda generators. fructus: the census probe settled
+the shape choice EMPIRICALLY (the plan's lex-zephyrum guess was
+wrong for the plain tier — trivia wrappers dominate); loader-first
+put 233 real documents through the engine in passthrough before
+any macro existed — the corpus caught the lexN collision the plan
+missed, on a revertable commit. asperitates: censor/examen
+post-edit hooks still emit empty "?" verdicts mid-edit-sequence
+(standing noise); a stale instrument link-list surfaced as a
+LINKER error inside censor.sh (fix: tools/silva_fontes_generare.sh
+— the hook could name that script when the failure is
+undefined-symbol). desiderata: formator divergence-vs-baseline
+reporting (the 480-line standing reports on probationes/ drown new
+hunks — repeat of the 08-24 wish, now twice-felt).

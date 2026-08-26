@@ -558,6 +558,16 @@ stml_elementum_crudum_creare (
     InternamentumChorda* intern,
      constans character* titulus);
 
+/* Creare transclusionem ('<<valor>>') - constructio manualis pro
+ * scriptoribus qui vocationes templi (macros v1) aut relationes
+ * contenti auctorant; antea nodi transclusionis a parsatore solo
+ * nascebantur. Valor internatur. */
+StmlNodus*
+stml_transclusionem_creare (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                  chorda  valor);
+
 /* Creare nodum textus
  * "Create text node"
  */

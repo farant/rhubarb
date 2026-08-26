@@ -880,6 +880,29 @@ principale (vacuum)
             "<r><#f><ignotum/></#><<#f>></r>", piscina, intern);
         CREDO_NON_NIHIL (vitia);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), II);
+
+        /* VII. SPATIUM TEMPLI (stml macros v1): vocatio
+         * '<<#@id arg="v">>' argumenta fert quae identitatis pars
+         * non sunt (id ad spatium primum secatur); corpus
+         * definitionis materia CITATA est - loculi '&@n;' nondum
+         * impleti canoni mentirentur - ergo contentum nihil
+         * confert, resolutio sola probatur. Instantiatum tempore
+         * onerationis iudicat stml_expandere; custodia canonis
+         * loculorum = reservatio spec macronum §6. */
+        vitia = iudicare_literis(c_frag,
+            "<r><#@t n=\"@n\"><item a=\"&@n;\"/></#>"
+            "<<#@t n=\"1\">></r>",
+            piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* VIII. orphana spatii templi CLAMAT aeque ac contenti */
+        vitia = iudicare_literis(c_frag,
+            "<r><<#@nusquam n=\"1\">></r>", piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_TRANSCLUSIO_IRRITA), I);
     }
 
 

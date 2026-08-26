@@ -484,6 +484,11 @@ nomen structura {
                                              * NIHIL = non colligere */
                                i32 numerus_notarum;
 
+    /* Templa macronea (stml macros v1): scriptor PARSURAE solus ea
+     * activat - documentum subarboris caput definitionum non fert,
+     * ergo vocatio sine definitione ibi mendacium esset. */
+                               b32 templa_activa;
+
     /* Ancora: primum lexema ordine AMBULATIONIS (non ordine
      * octetorum) - lector eundem ordinem replicat */
                                b32 ancora_nota;
@@ -1065,6 +1070,90 @@ _trivium_scribere (
     redde elementum;
 }
 
+/* Vocatio templi '<<#@post-spatia n="N">>' - forma communis
+ * '<post><lex-spatia n="N"/></post>' (mensurata 2026-08-26: ~10k
+ * sedes per corpus planum, ~7k per fettam lib). Onerator expandit
+ * (visio contenti), ergo arbor lecta a directa non differt. */
+interior StmlNodus*
+_vocatio_post_spatia (
+    ArborScriptor* scriptor,
+              i32  numerus_spatiorum)
+{
+     constans character* praefixum = "#@post-spatia n=\"";
+              character  numeri[XVI];
+              character  buffer[48];
+                 chorda  valor;
+                    i32  lp;
+                    i32  ln;
+
+    si (_numerus_ad_literas(numerus_spatiorum, numeri,
+            (i32)magnitudo(numeri)) == ZEPHYRUM)
+    {
+        scriptor->causa = "numerus spatiorum scribi non potuit";
+        redde NIHIL;
+    }
+    lp = (i32)strlen(praefixum);
+    ln = (i32)strlen(numeri);
+    memcpy(buffer, praefixum, (memoriae_index)lp);
+    memcpy(buffer + lp, numeri, (memoriae_index)ln);
+    buffer[lp + ln]  = '"';
+    valor.datum      = (i8*)buffer;
+    valor.mensura    = lp + ln + I;
+    redde stml_transclusionem_creare(scriptor->piscina,
+        scriptor->intern, valor);
+}
+
+/* Definitio templi '#@post-spatia' - scripta UNA post <fontes>,
+ * ante vocationes omnes (strata ordine documenti: vocatio ad
+ * definitionem PRIOREM solum resolvit). */
+interior b32
+_templum_post_spatia_scribere (
+    ArborScriptor* scriptor,
+        StmlNodus* involucrum)
+{
+    StmlNodus* definitio;
+    StmlNodus* post;
+    StmlNodus* spatia;
+    character  tag[SILVA_ARBOR_TAG_CAPACITAS];
+
+    /* tag 'lex-spatia' ex genere mangulatum - littera hic tabula
+     * QUARTA veritatis esset */
+    si (silva_arbor_lexema_tag(SILVA_LEX_SPATIA, tag,
+            (i32)magnitudo(tag)) == ZEPHYRUM)
+    {
+        scriptor->causa = "tag spatiorum mangulari non potuit";
+        redde FALSUM;
+    }
+
+    definitio = stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, "fragmentum");
+    post      = stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, SILVA_ARBOR_TAG_POST);
+    spatia    = stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, tag);
+    si (definitio == NIHIL || post == NIHIL || spatia == NIHIL)
+    {
+        scriptor->causa = "definitio templi creari non potuit";
+        redde FALSUM;
+    }
+    definitio->fragmentum    = VERUM;
+    definitio->fragmentum_id = chorda_internare_ex_literis(
+        scriptor->intern, "@post-spatia");
+    si (   definitio->fragmentum_id == NIHIL
+        || !stml_attributum_addere(definitio, scriptor->piscina,
+                scriptor->intern, "n", "@n")
+        || !stml_attributum_addere(spatia, scriptor->piscina,
+                scriptor->intern, "n", "&@n;")
+        || !stml_liberum_addere(post, spatia)
+        || !stml_liberum_addere(definitio, post)
+        || !stml_liberum_addere(involucrum, definitio))
+    {
+        scriptor->causa = "definitio templi construi non potuit";
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Involucrum <ante>/<post>; NIHIL si series vacua (nihil emittendum)
  * aut in fractura - vocans causam inspicit ut discernat. */
 interior StmlNodus*
@@ -1085,6 +1174,23 @@ constans character* titulus)
     si (numerus == ZEPHYRUM)
     {
         redde NIHIL;
+    }
+
+    /* TEMPLUM (macros v1): 'post' cum spatio UNO SOLO ut vocatio
+     * scribitur - parsura sola (templa_activa), quia documentum
+     * subarboris definitionem non fert. */
+    si (   scriptor->templa_activa
+        && numerus                               == I
+        && strcmp(titulus, SILVA_ARBOR_TAG_POST) == ZEPHYRUM)
+    {
+        SilvaToken* trivium =
+            *(SilvaToken**)xar_obtinere(trivia, ZEPHYRUM);
+
+        si (trivium != NIHIL && trivium->genus == SILVA_LEX_SPATIA)
+        {
+            redde _vocatio_post_spatia(scriptor,
+                trivium->valor.mensura);
+        }
     }
 
     involucrum = stml_elementum_creare(scriptor->piscina,
@@ -1963,6 +2069,7 @@ silva_arbor_scribere_nodum (
     scriptor.tabularium       = tabularium;
     scriptor.expansio         = expansio;
     scriptor.numerus_notarum  = ZEPHYRUM;
+    scriptor.templa_activa    = FALSUM;
     scriptor.ancora_nota      = FALSUM;
     scriptor.ancora_offset    = -I;
     scriptor.ancora_linea     = ZEPHYRUM;
@@ -4592,6 +4699,7 @@ silva_arbor_scribere_parsuram (
     scriptor.tabularium       = tabularium;
     scriptor.expansio         = parsura->expansio;
     scriptor.numerus_notarum  = ZEPHYRUM;
+    scriptor.templa_activa    = VERUM;
     scriptor.ancora_nota      = FALSUM;
     scriptor.ancora_offset    = -I;
     scriptor.ancora_linea     = ZEPHYRUM;
@@ -4662,6 +4770,16 @@ silva_arbor_scribere_parsuram (
              parsura->expansio))
     {
         fructus.causa = "sectio fontium scribi non potuit";
+        redde fructus;
+    }
+
+    /* TEMPLA (macros v1): definitio post <fontes>, ante vocationes
+     * omnes - strata ordine documenti. */
+    si (!_templum_post_spatia_scribere(&scriptor, involucrum))
+    {
+        fructus.causa = scriptor.causa != NIHIL
+            ? scriptor.causa
+            : "definitio templi scribi non potuit";
         redde fructus;
     }
 

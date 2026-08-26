@@ -5324,6 +5324,50 @@ stml_elementum_creare (
 }
 
 StmlNodus*
+stml_transclusionem_creare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                  chorda  valor)
+{
+    StmlNodus* nodus;
+
+    nodus = (StmlNodus*)piscina_allocare(piscina, magnitudo(StmlNodus));
+    si (!nodus)
+    {
+        redde NIHIL;
+    }
+
+    nodus->genus = STML_NODUS_TRANSCLUSIO;
+    nodus->titulus = NIHIL;
+    nodus->valor = chorda_internare(intern, valor);
+    nodus->attributa = NIHIL;
+    nodus->liberi = NIHIL;
+    nodus->parens = NIHIL;
+    nodus->crudus = FALSUM;
+    nodus->captio_directio = STML_CAPTIO_NIHIL;
+    nodus->captio_numerus = ZEPHYRUM;
+    nodus->clausura_anonyma = FALSUM;
+    nodus->fragmentum = FALSUM;
+    nodus->fragmentum_id = NIHIL;
+    nodus->augmentum_clavis = NIHIL;
+    nodus->linea = ZEPHYRUM;   /* non e parsatione */
+    nodus->positus_initium = ZEPHYRUM;
+    nodus->positus_finis = ZEPHYRUM;
+    nodus->spatia_ante = NIHIL;
+    nodus->spatia_post = NIHIL;
+    nodus->spatia_clausurae = NIHIL;
+    nodus->spatia_intra_tagum = NIHIL;
+    nodus->multilinea = FALSUM;
+    nodus->indentatio = NIHIL;
+
+    si (!nodus->valor)
+    {
+        redde NIHIL;
+    }
+    redde nodus;
+}
+
+StmlNodus*
 stml_elementum_crudum_creare (
                 Piscina* piscina,
     InternamentumChorda* intern,

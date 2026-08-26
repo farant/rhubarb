@@ -838,6 +838,48 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (fracti, ZEPHYRUM);
     }
 
+    /* --- T7c: templa macronea (stml macros v1) - scriptor parsurae
+     * formam communem '<post><lex-spatia n="N"/></post>' ut
+     * fragmentum templi '#@post-spatia' auctorat: definitio UNA
+     * post <fontes>, vocationes ad sedes. Onerator expandit
+     * (visio contenti), ergo circuitus C-octetorum tenet.
+     * Cave iuncturam tituli-attributi (doctrina M2b): definitio
+     * attributa fert, ergo nomen SOLUM asseritur; vocatio
+     * transclusio est (valor verbatim), tota asseritur. --- */
+    {
+        SilvaParsura*        origo;
+        SilvaArborScriptura  scriptura;
+        constans character*  causa;
+        constans character*  fons = "int x = 1;\n";
+
+        imprimere("\n--- T7c: templa macronea (post-spatia) ---\n");
+        origo = silva_parsare(piscina, "probatio.c", fons,
+            (i32)strlen(fons), &SILVA_C89_GRAMMATICA, NIHIL, NIHIL,
+            NIHIL);
+        CREDO_NON_NIHIL (origo);
+        si (origo != NIHIL)
+        {
+            scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+                &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<#@post-spatia", piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<<#@post-spatia n=\"1\">>",
+                        piscina));
+            }
+        }
+        causa = NIHIL;
+        CREDO_VERUM (_circuitus(piscina, fons, &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
