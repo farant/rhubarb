@@ -15,6 +15,7 @@ declare -a RADIX_FONTES=(
     "selectio"
     "sigillum"
     "stml"
+    "stml_macros"
     "tabula_dispersa"
     "via"
     "xar"

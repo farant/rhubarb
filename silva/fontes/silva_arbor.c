@@ -10,6 +10,7 @@
 #include "xar.h"
 #include "tabula_dispersa.h"
 #include "stml.h"
+#include "stml_macros.h"
 #include <string.h>
 
 
@@ -5320,6 +5321,35 @@ _parsura_ramum_obtinere (
     redde *sedes;
 }
 
+/* Elementum radix arboris EXPANSAE invenire. Expansio arborem NOVAM
+ * reddit (documentum clonatum), ergo commoditas 'elementum_radix'
+ * resultatus lectionis ad arborem VETEREM monstrat - hic primus
+ * liberorum ELEMENTUM quaeritur. */
+interior StmlNodus*
+_expansae_elementum_radix (
+    StmlNodus* radix)
+{
+    i32 i;
+    i32 num;
+
+    si (radix == NIHIL || radix->liberi == NIHIL)
+    {
+        redde NIHIL;
+    }
+    num = xar_numerus(radix->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = *(StmlNodus**)xar_obtinere(radix->liberi, i);
+        si (liberum != NIHIL && liberum->genus == STML_NODUS_ELEMENTUM)
+        {
+            redde liberum;
+        }
+    }
+    redde NIHIL;
+}
+
 SilvaParsura*
 silva_arbor_legere_parsuram (
                            Piscina* piscina,
@@ -5385,7 +5415,23 @@ silva_arbor_legere_parsuram (
         redde NIHIL;
     }
 
-    involucrum = resultus.elementum_radix;
+    /* EXPANSIO TEMPLORUM (macros v1): documentum formam macroneam
+     * servat, lector visionem CONTENTI legit. Documentum sine
+     * templis = transitio pura (fragmenta contenti <#lexN> et
+     * transclusiones eorum INTACTA - spatium templi '#@' solum
+     * tangitur, vide stml_macros.h). */
+    {
+        StmlExpansioResultus expansio;
+
+        expansio = stml_expandere(resultus.radix, piscina, intern);
+        si (!expansio.successus)
+        {
+            _recusare(&lector, "expansio templorum fracta",
+                expansio.linea);
+            redde NIHIL;
+        }
+        involucrum = _expansae_elementum_radix(expansio.radix_expansa);
+    }
     si (   involucrum == NIHIL || involucrum->titulus == NIHIL
         || !chorda_aequalis_literis(*involucrum->titulus,
                SILVA_ARBOR_TAG_PARSURA))

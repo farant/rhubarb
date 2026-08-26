@@ -11,6 +11,7 @@ declare -a RADIX_FONTES=(
     "piscina"
     "selectio"
     "stml"
+    "stml_macros"
     "tabula_dispersa"
     "via"
     "xar"

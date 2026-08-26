@@ -10,6 +10,7 @@ declare -a RADIX_FONTES=(
     "selectio"
     "similitudo"
     "stml"
+    "stml_macros"
     "tabula_dispersa"
     "xar"
 )

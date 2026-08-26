@@ -65,6 +65,9 @@ declare -a RADIX_FONTES=(
     "internamentum"
     "selectio"
     "stml"
+    # stml_macros: expansio templorum in silva_arbor_legere_parsuram
+    # (macros v1, 2026-08-26 - lector visionem contenti legit)
+    "stml_macros"
     "credo"
     "differentia"
     "sigillum"

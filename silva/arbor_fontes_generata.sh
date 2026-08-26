@@ -1,5 +1,6 @@
 # arbor_fontes_generata.sh - GENERATUM AB AEDILE - NE MANU EDITES
-# regeneratio: ./tools/fontes_generare.sh silva/arbor_fontes_generata.sh silva/instrumenta/principalia/arbor.c
+# regeneratio: ./tools/silva_fontes_generare.sh
+# principalia: silva/instrumenta/principalia/arbor.c 
 declare -a RADIX_FONTES=(
     "chorda"
     "chorda_aedificator"
@@ -9,6 +10,7 @@ declare -a RADIX_FONTES=(
     "selectio"
     "similitudo"
     "stml"
+    "stml_macros"
     "tabula_dispersa"
     "xar"
 )

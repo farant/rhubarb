@@ -17,7 +17,8 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/internamentum.h", NIHIL, EXCLUDENDA_INTERNAMENTI, FALSUM, VERUM },
     { "include/stml.h", NIHIL, EXCLUDENDA_STML, FALSUM, VERUM },
     { "include/selectio.h", NIHIL, EXCLUDENDA_SELECTIONIS, FALSUM, VERUM },
-    { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM }
+    { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
+    { "include/stml_macros.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -28,7 +29,8 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/tabula_dispersa.c", NIHIL, EXCLUDENDA_TABULAE, VERUM, VERUM },
     { "lib/xar.c", NIHIL, EXCLUDENDA_XARIS, VERUM, VERUM },
     { "lib/internamentum.c", NIHIL, EXCLUDENDA_INTERNAMENTI, VERUM, VERUM },
-    { "lib/stml.c", NIHIL, EXCLUDENDA_STML, VERUM, VERUM }
+    { "lib/stml.c", NIHIL, EXCLUDENDA_STML, VERUM, VERUM },
+    { "lib/stml_macros.c", NIHIL, NIHIL, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {

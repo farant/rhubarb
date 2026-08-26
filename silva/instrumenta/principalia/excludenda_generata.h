@@ -132,7 +132,6 @@ interior constans character* constans EXCLUDENDA_SELECTIONIS[] = {
 };
 
 interior constans character* constans EXCLUDENDA_STML[] = {
-    "_duplicare_recursivum",
     "_fluxum_contribuere",
     "_fluxum_marcatum_contribuere",
     "_fluxum_octetos_appendere",
@@ -147,8 +146,6 @@ interior constans character* constans EXCLUDENDA_STML[] = {
     "_trivia_ferunt_lineam",
     "_valorem_contribuere",
     "stml_commentum_creare",
-    "stml_duplicare",
-    "stml_duplicare_superficialiter",
     "stml_elementum_crudum_creare",
     "stml_frater_prior",
     "stml_frater_proximus",

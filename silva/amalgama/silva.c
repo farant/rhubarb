@@ -3487,6 +3487,31 @@ silva_stml_scribere_sedibus (
 
 
 /* ==================================================
+ * Duplicatio - Cloning
+ * ================================================== */
+
+/* Duplicare nodum (profunde)
+ * "Deep clone node"
+ * Includit omnes liberos, attributa, etc.
+ */
+static SilvaStmlNodus*
+silva_stml_duplicare (
+              SilvaStmlNodus* nodus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern);
+
+/* Duplicare nodum (superficialiter)
+ * "Shallow clone node"
+ * Non includit liberos
+ */
+static SilvaStmlNodus*
+silva_stml_duplicare_superficialiter (
+              SilvaStmlNodus* nodus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern);
+
+
+/* ==================================================
  * Strictum - forma BENE FORMATA super parsationem
  *
  * Parser consulto LENIS est. Haec probationes ea nominant quae
@@ -3655,6 +3680,64 @@ nomen structura {
 #define _DEFAULT_SOURCE 1
 
 #endif /* POSTULATA_POSIX_H */
+
+/* ================= ex include/stml_macros.h ================= */
+#ifndef STML_MACROS_H
+#define STML_MACROS_H
+
+/* Vitia expansionis - primum inventum vincit */
+nomen enumeratio {
+    STML_EXPANSIO_BENE                  = ZEPHYRUM,
+    /* vocatio ad id nusquam definitum */
+    STML_EXPANSIO_FRAGMENTUM_IGNOTUM    = I,
+    /* vocatio ad id POSTERIUS definitum (violatio stratorum) */
+    STML_EXPANSIO_FRAGMENTUM_POSTERIUS  = II,
+    /* definitiones duae eodem id */
+    STML_EXPANSIO_FRAGMENTUM_GEMINUM    = III,
+    /* loculus declaratus quem vocatio non implevit */
+    STML_EXPANSIO_LOCULUS_NON_IMPLETUS  = IV,
+    /* argumentum vocationis loculum nullum declaratum nominans */
+    STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM = V,
+    /* corpus loculum non declaratum refert (in COLLECTIONE
+     * iudicatum - linea definitionis) */
+    STML_EXPANSIO_LOCULUS_IGNOTUS       = VI
+} StmlExpansioVitium;
+
+/* Nota provenientiae - una per splicem, radix splicis (liberi
+ * implicati; splices interiores notas proprias ferunt). Tabula
+ * lateralis, exemplar sedium: StmlNodus intactus, quaestiones
+ * tabulam iungunt. */
+nomen structura {
+     SilvaStmlNodus* nodus;          /* radix splicis in arbore expansa */
+        SilvaChorda* fragmentum_id;  /* internatum */
+     SilvaStmlNodus* vocatio;        /* nodus transclusionis ORIGINALIS */
+           i32  stratum;        /* profunditas impletionis, I-basata */
+} StmlExpansioNota;
+
+nomen structura {
+                   b32  successus;
+             SilvaStmlNodus* radix_expansa;      /* arbor NOVA; originalis
+                                             * intacta */
+                  SilvaXar* tabula_expansionum; /* StmlExpansioNota,
+                                             * ordine splicis */
+    StmlExpansioVitium vitium;
+                   i32 linea;              /* nodi peccantis (aut 0) */
+                SilvaChorda fragmentum;         /* id in quaestione
+                                             * (aut vacua) */
+                SilvaChorda loculus;            /* loculus in quaestione
+                                             * (aut vacua) */
+} StmlExpansioResultus;
+
+/* Expandere documentum: arbor nova in piscina vocantis; definitiones
+ * demissae (visio contenti); vocationes corporibus impletis
+ * substitutae; transclusiones non-'#' transeunt ut nodi. */
+static StmlExpansioResultus
+silva_stml_expandere (
+              SilvaStmlNodus* radix,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern);
+
+#endif /* STML_MACROS_H */
 
 /* assertio derivae: silva.h SilvaXar.segmenta[64] ==
  * XAR_MAXIMUS_SEGMENTORUM internum */
@@ -13613,6 +13696,140 @@ silva_stml_liberum_ad_indicem (
 
 
 /* ==================================================
+ * Public API - Cloning
+ * ================================================== */
+
+interior SilvaStmlNodus*
+_duplicare_recursivum (
+              SilvaStmlNodus* nodus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+                    b32  profundum)
+{
+    SilvaStmlNodus* novum;
+          i32  i;
+          i32  num;
+
+    si (!nodus || !piscina || !intern)
+    {
+        redde NIHIL;
+    }
+
+    novum = (SilvaStmlNodus*)silva_piscina_allocare(piscina, magnitudo(SilvaStmlNodus));
+    si (!novum)
+    {
+        redde NIHIL;
+    }
+
+    /* Copiare campos basicos */
+    novum->genus             = nodus->genus;
+    novum->titulus           = nodus->titulus;  /* Iam internatum */
+    novum->valor             = nodus->valor;      /* Iam internatum */
+    novum->crudus            = nodus->crudus;
+    novum->captio_directio   = nodus->captio_directio;
+    novum->captio_numerus    = nodus->captio_numerus;
+    novum->clausura_anonyma  = nodus->clausura_anonyma;
+    novum->linea             = nodus->linea;
+    /* fragmentum/augmentum: olim NON copiabantur - duplicatum
+     * fragmenti elementum ordinarium '#' tacite fiebat (piscina
+     * zephyrata culpam texit). Explicite (2026-08-10). */
+    novum->fragmentum        = nodus->fragmentum;
+    novum->fragmentum_id     = nodus->fragmentum_id;  /* Internatum */
+    novum->augmentum_clavis  = nodus->augmentum_clavis;  /* Internatum */
+    novum->parens            = NIHIL;  /* Novum non habet parentem */
+    /* trivia copiantur (internata) - subarbor duplicata
+     * dispositionem suam secum fert */
+    novum->spatia_ante         = nodus->spatia_ante;
+    novum->spatia_post         = nodus->spatia_post;
+    novum->spatia_clausurae    = nodus->spatia_clausurae;
+    novum->spatia_intra_tagum  = nodus->spatia_intra_tagum;
+    novum->multilinea          = nodus->multilinea;
+    novum->indentatio          = nodus->indentatio;
+    /* linea/extensio: metadatum parsationis - duplicatum non e
+     * parsatione venit */
+    novum->positus_initium  = ZEPHYRUM;
+    novum->positus_finis    = ZEPHYRUM;
+
+    /* Copiare attributa */
+    si (nodus->attributa && silva_xar_numerus(nodus->attributa) > ZEPHYRUM)
+    {
+        novum->attributa = silva_xar_creare(piscina, magnitudo(SilvaStmlAttributum));
+        si (novum->attributa)
+        {
+            num = silva_xar_numerus(nodus->attributa);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                SilvaStmlAttributum* attr_orig;
+                SilvaStmlAttributum* attr_new;
+
+                attr_orig = (SilvaStmlAttributum*)silva_xar_obtinere(nodus->attributa, i);
+                attr_new = (SilvaStmlAttributum*)silva_xar_addere(novum->attributa);
+                si (attr_new && attr_orig)
+                {
+                    attr_new->titulus      = attr_orig->titulus;  /* Internatum */
+                    attr_new->valor        = attr_orig->valor;      /* Internatum */
+                    attr_new->spatia_ante  = attr_orig->spatia_ante;
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        novum->attributa = NIHIL;
+    }
+
+    /* Copiare liberos (si profundum) */
+    si (profundum && nodus->liberi && silva_xar_numerus(nodus->liberi) > ZEPHYRUM)
+    {
+        novum->liberi = silva_xar_creare(piscina, magnitudo(SilvaStmlNodus*));
+        si (novum->liberi)
+        {
+            num = silva_xar_numerus(nodus->liberi);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                SilvaStmlNodus*  liberum_orig;
+                SilvaStmlNodus*  liberum_novum;
+                SilvaStmlNodus** slot;
+
+                liberum_orig = *((SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i));
+                liberum_novum = _duplicare_recursivum(liberum_orig, piscina, intern, VERUM);
+                si (liberum_novum)
+                {
+                    liberum_novum->parens  = novum;
+                    slot                   = silva_xar_addere(novum->liberi);
+                    si (slot) *slot = liberum_novum;
+                }
+            }
+        }
+    }
+    alioquin
+    {
+        novum->liberi = NIHIL;
+    }
+
+    redde novum;
+}
+
+static SilvaStmlNodus*
+silva_stml_duplicare (
+              SilvaStmlNodus* nodus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern)
+{
+    redde _duplicare_recursivum(nodus, piscina, intern, VERUM);
+}
+
+static SilvaStmlNodus*
+silva_stml_duplicare_superficialiter (
+              SilvaStmlNodus* nodus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern)
+{
+    redde _duplicare_recursivum(nodus, piscina, intern, FALSUM);
+}
+
+
+/* ==================================================
  * Public API - Node Creation
  * ================================================== */
 
@@ -16313,6 +16530,978 @@ silva_stml_scribere_sedibus (
                       pulchrum ? FALSUM : VERUM, ZEPHYRUM, sedes);
 
     redde silva_chorda_aedificator_finire(aed);
+}
+
+/* ================= ex lib/stml_macros.c ================= */
+
+/* Definitio collecta: id internatum -> nodus definitionis.
+ * 'praeterita' = ambulatio expansionis eam iam demisit - vocationes
+ * eam vident (strata ordine documenti: vocatio ante definitionem =
+ * FRAGMENTUM_POSTERIUS, non IGNOTUM). Xar cum scansione lineari -
+ * definitiones per documentum paucae. 'loculi' = nomina declarata
+ * in tago aperienti (attr valor '@nomen'; '@.' recusatum - formae
+ * sparsae reservatae). */
+nomen structura {
+        SilvaChorda* id;          /* internatum */
+     SilvaStmlNodus* definitio;
+           SilvaXar* loculi;      /* chorda* internata */
+           i32  ordo;        /* index collectionis = ordo documenti */
+           b32  praeterita;
+} StmlMacroDefinitio;
+
+/* Argumentum vocationis: par nomen-valor ex interiore
+ * transclusionis parsatum ('p="123"'). */
+nomen structura {
+    SilvaChorda* titulus;  /* internatum */
+    SilvaChorda* valor;    /* internatum */
+} StmlMacroArgumentum;
+
+nomen structura {
+                 SilvaPiscina* piscina;
+     SilvaInternamentumChorda* intern;
+                     SilvaXar* definitiones;  /* StmlMacroDefinitio */
+    StmlExpansioResultus* resultus;      /* campi vitii hic ponuntur */
+} StmlMacroContextus;
+
+interior vacuum
+_vitium_ponere (
+    StmlMacroContextus* ctx,
+    StmlExpansioVitium  vitium,
+             SilvaStmlNodus* nodus,
+                SilvaChorda* fragmentum,
+                SilvaChorda* loculus)
+{
+    /* primum vincit */
+    si (ctx->resultus->vitium != STML_EXPANSIO_BENE)
+    {
+        redde;
+    }
+    ctx->resultus->vitium  = vitium;
+    ctx->resultus->linea   = nodus != NIHIL ? nodus->linea : ZEPHYRUM;
+    si (fragmentum != NIHIL)
+    {
+        ctx->resultus->fragmentum = *fragmentum;
+    }
+    si (loculus != NIHIL)
+    {
+        ctx->resultus->loculus = *loculus;
+    }
+}
+
+/* Estne nodus definitio TEMPLI? Spatium templi sigillo '@' ducenti
+ * signatur ('<#@f>'); fragmenta sine '@' (anonyma aut nominata,
+ * e.g. '<#lex1>' arboris) fragmenta CONTENTI sunt - transclusio
+ * eorum ALIAS est (identitas rei consumentis), non instantiatio,
+ * ergo machina ea numquam tangit. Decretum 2026-08-26:
+ * transclusio = alias, templum = instantiatio. */
+interior b32
+_est_definitio (
+    constans SilvaStmlNodus* nodus)
+{
+    redde    nodus->genus == STML_NODUS_ELEMENTUM
+          && nodus->fragmentum
+          && nodus->fragmentum_id != NIHIL
+          && nodus->fragmentum_id->mensura > I
+          && nodus->fragmentum_id->datum[ZEPHYRUM] == (i8)'@';
+}
+
+interior StmlMacroDefinitio*
+_definitionem_invenire (
+    StmlMacroContextus* ctx,
+                SilvaChorda* id)
+{
+    i32 i;
+    i32 num;
+
+    num = silva_xar_numerus(ctx->definitiones);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroDefinitio* def;
+
+        def = (StmlMacroDefinitio*)silva_xar_obtinere(ctx->definitiones, i);
+        /* punctatores internati: aequalitas contenti = aequalitas
+         * punctatoris */
+        si (def != NIHIL && def->id == id)
+        {
+            redde def;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Nomen loculi: [A-Za-z0-9_.-]+. '.' INCLUSUM consulto: formae
+ * sparsae reservatae ('&@...liberi;') ut nomina ordinaria
+ * scanduntur, numquam declarari possunt ('@.' recusatum infra),
+ * ergo LOCULUS_IGNOTUS clamant - reservatio clara, non tacita. */
+interior b32
+_character_nominis (
+    i8 c)
+{
+    redde    (c >= (i8)'a' && c <= (i8)'z')
+          || (c >= (i8)'A' && c <= (i8)'Z')
+          || (c >= (i8)'0' && c <= (i8)'9')
+          || c == (i8)'_'
+          || c == (i8)'-'
+          || c == (i8)'.';
+}
+
+/* Extensionem '&@nomen;' proximam invenire. Formae imperfectae
+ * (sine ';', nomen vacuum) litterae manent - regula entis ignoti.
+ * GRAMMATICA UNA collectionis et impletionis: quod collectio
+ * iudicat, impletio substituit - numquam divergant. */
+interior b32
+_loculum_invenire (
+    constans SilvaChorda* textus,
+                i32  ab,
+                i32* initium,
+                i32* post,
+             SilvaChorda* titulus)
+{
+    i32 i;
+
+    i = ab;
+    dum (i + II < textus->mensura)
+    {
+        si (   textus->datum[i]     == (i8)'&'
+            && textus->datum[i + I] == (i8)'@')
+        {
+            i32 n;
+
+            n = i + II;
+            dum (   n < textus->mensura
+                 && _character_nominis(textus->datum[n]))
+            {
+                n++;
+            }
+            si (   n > i + II
+                && n < textus->mensura
+                && textus->datum[n] == (i8)';')
+            {
+                *initium          = i;
+                *post             = n + I;
+                titulus->datum    = textus->datum + i + II;
+                titulus->mensura  = n - (i + II);
+                redde VERUM;
+            }
+        }
+        i++;
+    }
+    redde FALSUM;
+}
+
+interior b32
+_loculus_declaratus (
+    StmlMacroDefinitio* def,
+                SilvaChorda* titulus)  /* internatum */
+{
+    i32 i;
+    i32 num;
+
+    num = silva_xar_numerus(def->loculi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaChorda** cella;
+
+        cella = (SilvaChorda**)silva_xar_obtinere(def->loculi, i);
+        si (cella != NIHIL && *cella == titulus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Declarationes loculorum ex tago aperienti definitionis: attributa
+ * quorum valor '@nomen' est ('@' solum aut '@.' = attributum
+ * ordinarium, non declaratio). */
+interior vacuum
+_loculos_declaratos_legere (
+             SilvaStmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->attributa == NIHIL)
+    {
+        redde;
+    }
+    num = silva_xar_numerus(nodus->attributa);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlAttributum* attr;
+
+        attr = (SilvaStmlAttributum*)silva_xar_obtinere(nodus->attributa, i);
+        si (   attr                         != NIHIL
+            && attr->valor                  != NIHIL
+            && attr->valor->mensura > I
+            && attr->valor->datum[ZEPHYRUM] == (i8)'@'
+            && attr->valor->datum[I]        != (i8)'.')
+        {
+            SilvaChorda   titulus;
+            SilvaChorda** cella;
+
+            titulus.datum    = attr->valor->datum + I;
+            titulus.mensura  = attr->valor->mensura - I;
+            cella            = (SilvaChorda**)silva_xar_addere(def->loculi);
+            si (cella != NIHIL)
+            {
+                *cella = silva_chorda_internare(ctx->intern, titulus);
+            }
+        }
+    }
+}
+
+/* Chordam contra loculos declaratos perscrutari (collectione:
+ * referentia non declarata = LOCULUS_IGNOTUS in loco definitionis,
+ * ante vocationem ullam). */
+interior b32
+_chordam_perscrutari (
+       constans SilvaChorda* textus,
+             SilvaStmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    SilvaChorda titulus;
+       i32 ab;
+       i32 initium;
+       i32 post;
+
+    ab = ZEPHYRUM;
+    dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        SilvaChorda* titulus_internatus;
+
+        titulus_internatus = silva_chorda_internare(ctx->intern, titulus);
+        si (!_loculus_declaratus(def, titulus_internatus))
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS,
+                           nodus, def->id, titulus_internatus);
+            redde FALSUM;
+        }
+        ab = post;
+    }
+    redde VERUM;
+}
+
+/* Corpus definitionis perscrutari: valores textus et attributorum
+ * recursive (attributa tagi definitionis IPSIUS non - ea
+ * declarationes sunt). */
+interior b32
+_corpus_perscrutari (
+             SilvaStmlNodus* nodus,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus->liberi == NIHIL)
+    {
+        redde VERUM;
+    }
+    num = silva_xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+         SilvaStmlNodus* liberum;
+               i32  j;
+               i32  num_attr;
+
+        liberum = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
+        si (liberum == NIHIL)
+        {
+            perge;
+        }
+        si (_est_definitio(liberum))
+        {
+            /* fragmentum nidificatum = materia definitionis
+             * citata, OPACA: eius '&@' ad loculos SUOS futuros
+             * refert, non ad nostros - nec scanditur nec
+             * substituitur (regula una utrimque) */
+            perge;
+        }
+        si (   (   liberum->genus == STML_NODUS_TEXTUS
+                || liberum->genus == STML_NODUS_TRANSCLUSIO)
+            && liberum->valor != NIHIL
+            && !_chordam_perscrutari(liberum->valor, liberum, def,
+                                     ctx))
+        {
+            redde FALSUM;
+        }
+        si (liberum->attributa != NIHIL)
+        {
+            num_attr = silva_xar_numerus(liberum->attributa);
+            per (j = ZEPHYRUM; j < num_attr; j++)
+            {
+                SilvaStmlAttributum* attr;
+
+                attr = (SilvaStmlAttributum*)silva_xar_obtinere(
+                    liberum->attributa, j);
+                si (   attr        != NIHIL
+                    && attr->valor != NIHIL
+                    && !_chordam_perscrutari(attr->valor, liberum,
+                                             def, ctx))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+        si (!_corpus_perscrutari(liberum, def, ctx))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Praetransitus: definitiones colligere ordine documenti (in
+ * corpora definitionum NON descendit - fragmentum intra corpus
+ * contentum est, non definitio). GEMINUM hic capitur (linea =
+ * definitionis secundae). */
+interior b32
+_definitiones_colligere (
+             SilvaStmlNodus* nodus,
+    StmlMacroContextus* ctx)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (_est_definitio(nodus))
+    {
+        StmlMacroDefinitio* prior;
+        StmlMacroDefinitio* nova;
+
+        prior = _definitionem_invenire(ctx, nodus->fragmentum_id);
+        si (prior != NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_GEMINUM,
+                           nodus, nodus->fragmentum_id, NIHIL);
+            redde FALSUM;
+        }
+        nova = (StmlMacroDefinitio*)silva_xar_addere(ctx->definitiones);
+        si (nova == NIHIL)
+        {
+            redde FALSUM;
+        }
+        nova->id          = nodus->fragmentum_id;
+        nova->definitio   = nodus;
+        nova->ordo        = silva_xar_numerus(ctx->definitiones) - I;
+        nova->praeterita  = FALSUM;
+        nova->loculi      = silva_xar_creare(ctx->piscina,
+                                       magnitudo(SilvaChorda*));
+        si (nova->loculi == NIHIL)
+        {
+            redde FALSUM;
+        }
+        _loculos_declaratos_legere(nodus, nova, ctx);
+        si (!_corpus_perscrutari(nodus, nova, ctx))
+        {
+            redde FALSUM;
+        }
+        redde VERUM;  /* in corpus non descendere */
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        num = silva_xar_numerus(nodus->liberi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            SilvaStmlNodus* liberum;
+
+            liberum = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
+            si (   liberum != NIHIL
+                && !_definitiones_colligere(liberum, ctx))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* Estne transclusio vocatio templi? (valor incipit '#@' - spatium
+ * templi solum; '<<#lex1>>' transclusio contenti manet, quam
+ * consumens resolvit) */
+interior b32
+_est_vocatio (
+    constans SilvaStmlNodus* nodus)
+{
+    redde    nodus->genus == STML_NODUS_TRANSCLUSIO
+          && nodus->valor != NIHIL
+          && nodus->valor->mensura > II
+          && nodus->valor->datum[ZEPHYRUM] == (i8)'#'
+          && nodus->valor->datum[I] == (i8)'@';
+}
+
+interior b32
+_est_spatium_interius (
+    i8 c)
+{
+    redde c == (i8)' ' || c == (i8)'\t' || c == (i8)'\n';
+}
+
+/* Id vocationis ex interiore transclusionis: post '#' usque ad
+ * spatium primum aut finem ('#f p="123"' -> 'f'). 'post' = index
+ * in valore ubi argumenta incipiunt. 'valor' = interior EFFECTIVUS
+ * (in impletionibus iam substitutus - transitio argumentorum). */
+interior SilvaChorda*
+_vocationis_id (
+    StmlMacroContextus* ctx,
+                SilvaChorda* valor,
+                   i32* post)
+{
+    SilvaChorda id;
+       i32 finis;
+
+    id.datum    = valor->datum + I;
+    id.mensura  = valor->mensura - I;
+    finis       = ZEPHYRUM;
+    dum (   finis < id.mensura
+         && !_est_spatium_interius(id.datum[finis]))
+    {
+        finis++;
+    }
+    id.mensura  = finis;
+    *post       = I + finis;
+    redde silva_chorda_internare(ctx->intern, id);
+}
+
+/* Argumenta vocationis parsare: paria 'nomen="valor"' post id
+ * (citationes ambae; valor sine citationibus usque ad spatium -
+ * lenitas attributorum). Verbum nudum sine '=' = argumentum quod
+ * loculum nullum nominat -> ARGUMENTUM_SUPERFLUUM (clarum, non
+ * tacite praeteritum). */
+interior b32
+_argumenta_parsare (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* vocatio,   /* pro linea vitii solum */
+                SilvaChorda* valor,     /* interior effectivus */
+                   i32  ab,
+                   SilvaXar* argumenta)
+{
+    constans SilvaChorda* textus;
+                i32  i;
+
+    textus  = valor;
+    i       = ab;
+    dum (VERUM)
+    {
+        SilvaChorda titulus;
+        SilvaChorda valor;
+           i32 initium;
+
+        dum (   i < textus->mensura
+             && _est_spatium_interius(textus->datum[i]))
+        {
+            i++;
+        }
+        si (i >= textus->mensura)
+        {
+            frange;
+        }
+        initium = i;
+        dum (   i < textus->mensura
+             && textus->datum[i] != (i8)'='
+             && !_est_spatium_interius(textus->datum[i]))
+        {
+            i++;
+        }
+        titulus.datum    = textus->datum + initium;
+        titulus.mensura  = i - initium;
+        si (i >= textus->mensura || textus->datum[i] != (i8)'=')
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM,
+                           vocatio, NIHIL,
+                           silva_chorda_internare(ctx->intern, titulus));
+            redde FALSUM;
+        }
+        i++;  /* '=' */
+        si (   i < textus->mensura
+            && (   textus->datum[i] == (i8)'"'
+                || textus->datum[i] == (i8)'\''))
+        {
+            i8 citatio;
+
+            citatio  = textus->datum[i];
+            i++;
+            initium  = i;
+            dum (i < textus->mensura && textus->datum[i] != citatio)
+            {
+                i++;
+            }
+            valor.datum    = textus->datum + initium;
+            valor.mensura  = i - initium;
+            si (i < textus->mensura)
+            {
+                i++;  /* citatio claudens */
+            }
+        }
+        alioquin
+        {
+            initium = i;
+            dum (   i < textus->mensura
+                 && !_est_spatium_interius(textus->datum[i]))
+            {
+                i++;
+            }
+            valor.datum    = textus->datum + initium;
+            valor.mensura  = i - initium;
+        }
+        {
+            StmlMacroArgumentum* arg;
+
+            arg = (StmlMacroArgumentum*)silva_xar_addere(argumenta);
+            si (arg == NIHIL)
+            {
+                redde FALSUM;
+            }
+            arg->titulus  = silva_chorda_internare(ctx->intern, titulus);
+            arg->valor    = silva_chorda_internare(ctx->intern, valor);
+        }
+    }
+    redde VERUM;
+}
+
+interior StmlMacroArgumentum*
+_argumentum_invenire (
+        SilvaXar* argumenta,
+     SilvaChorda* titulus)  /* internatum */
+{
+    i32 i;
+    i32 num;
+
+    num = silva_xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroArgumentum* arg;
+
+        arg = (StmlMacroArgumentum*)silva_xar_obtinere(argumenta, i);
+        si (arg != NIHIL && arg->titulus == titulus)
+        {
+            redde arg;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Chordam substituere: extensiones '&@nomen;' valoribus
+ * argumentorum substitutae (grammatica eadem ac collectio -
+ * nomina iam iudicata declarata et impleta). Sine extensione:
+ * chorda originalis immutata redditur. */
+interior SilvaChorda*
+_chordam_substituere (
+    StmlMacroContextus* ctx,
+                SilvaChorda* textus,
+                   SilvaXar* argumenta)
+{
+    SilvaChordaAedificator* aed;
+               SilvaChorda  titulus;
+               SilvaChorda  fetta;
+                  i32  ab;
+                  i32  initium;
+                  i32  post;
+
+    ab = ZEPHYRUM;
+    si (!_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        redde textus;
+    }
+    aed = silva_chorda_aedificator_creare(ctx->piscina,
+                                    textus->mensura + XXXII);
+    si (aed == NIHIL)
+    {
+        redde textus;
+    }
+    dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
+    {
+        StmlMacroArgumentum* arg;
+
+        fetta.datum    = textus->datum + ab;
+        fetta.mensura  = initium - ab;
+        silva_chorda_aedificator_appendere_chorda(aed, fetta);
+        arg = _argumentum_invenire(
+            argumenta, silva_chorda_internare(ctx->intern, titulus));
+        si (arg != NIHIL)
+        {
+            silva_chorda_aedificator_appendere_chorda(aed, *arg->valor);
+        }
+        alioquin
+        {
+            /* defensivum: numquam per constructionem (collectio
+             * iudicavit) - extensio litteralis manet */
+            fetta.datum    = textus->datum + initium;
+            fetta.mensura  = post - initium;
+            silva_chorda_aedificator_appendere_chorda(aed, fetta);
+        }
+        ab = post;
+    }
+    fetta.datum    = textus->datum + ab;
+    fetta.mensura  = textus->mensura - ab;
+    silva_chorda_aedificator_appendere_chorda(aed, fetta);
+    redde silva_chorda_internare(ctx->intern,
+                           silva_chorda_aedificator_finire(aed));
+}
+
+
+interior SilvaStmlNodus*
+_expandere_nodum (
+             SilvaStmlNodus* nodus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta);
+
+interior b32
+_liberum_expandere (
+             SilvaStmlNodus* parens_novus,
+             SilvaStmlNodus* liberum,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta);
+
+/* Vocationem implere: corpus definitionis per AMBULATIONEM in
+ * parentem splicare (copia caeca vocationes interiores verbatim
+ * ferret - ambulatio eas expandit), notam registrare.
+ * 'valor_effectivus' = interior iam substitutus (transitio
+ * argumentorum trans strata - grammatica una, quod collectio
+ * iudicat impletio substituit); 'tectum' = resolutio solum ad
+ * definitiones ordine < tectum (documenti: numerus totus,
+ * praeterita discernit; interiores: ordo definitionis continentis
+ * - tectum stricte decrescens, terminatio per constructionem).
+ * Nota.nodus = clonis primus splicis, per indicem parentis captus
+ * (vocatio interior liberos plures DIRECTE addit). */
+interior b32
+_vocationem_implere (
+             SilvaStmlNodus* parens_novus,
+             SilvaStmlNodus* vocatio,
+                SilvaChorda* valor_effectivus,
+                   i32  stratum,
+                   i32  tectum,
+    StmlMacroContextus* ctx)
+{
+                SilvaChorda* id;
+    StmlMacroDefinitio* def;
+      StmlExpansioNota* nota;
+                   SilvaXar* argumenta;
+                   i32  post_id;
+                   i32  ante_numerus;
+                   i32  i;
+                   i32  num;
+
+    id   = _vocationis_id(ctx, valor_effectivus, &post_id);
+    def  = _definitionem_invenire(ctx, id);
+    si (def == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_IGNOTUM,
+                       vocatio, id, NIHIL);
+        redde FALSUM;
+    }
+    si (def->ordo >= tectum || !def->praeterita)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
+                       vocatio, id, NIHIL);
+        redde FALSUM;
+    }
+
+    /* argumenta parsare et utroque modo iudicare: quisque
+     * argumentum loculum declaratum nominat (SUPERFLUUM), quisque
+     * loculus declaratus impletur (NON_IMPLETUS) */
+    argumenta = silva_xar_creare(ctx->piscina,
+                           magnitudo(StmlMacroArgumentum));
+    si (argumenta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (!_argumenta_parsare(ctx, vocatio, valor_effectivus, post_id,
+                            argumenta))
+    {
+        si (ctx->resultus->vitium != STML_EXPANSIO_BENE)
+        {
+            ctx->resultus->fragmentum = *def->id;
+        }
+        redde FALSUM;
+    }
+    num = silva_xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroArgumentum* arg;
+
+        arg = (StmlMacroArgumentum*)silva_xar_obtinere(argumenta, i);
+        si (arg != NIHIL && !_loculus_declaratus(def, arg->titulus))
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM,
+                           vocatio, def->id, arg->titulus);
+            redde FALSUM;
+        }
+    }
+    num = silva_xar_numerus(def->loculi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaChorda** cella;
+
+        cella = (SilvaChorda**)silva_xar_obtinere(def->loculi, i);
+        si (   cella                                   != NIHIL
+            && _argumentum_invenire(argumenta, *cella) == NIHIL)
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_LOCULUS_NON_IMPLETUS,
+                           vocatio, def->id, *cella);
+            redde FALSUM;
+        }
+    }
+
+    /* nota ANTE impletionem appensa (spec: tabula ordine splicis -
+     * ordo vocationum, non perfectionis); punctatores cellularum
+     * Xar stabiles trans appensiones, ergo nota trans impletionem
+     * tenetur et nodus post impletur */
+    nota = (StmlExpansioNota*)silva_xar_addere(
+        ctx->resultus->tabula_expansionum);
+    si (nota == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nota->nodus          = NIHIL;
+    nota->fragmentum_id  = def->id;
+    nota->vocatio        = vocatio;
+    nota->stratum        = stratum + I;
+
+    ante_numerus = parens_novus->liberi != NIHIL
+        ? silva_xar_numerus(parens_novus->liberi) : ZEPHYRUM;
+    si (def->definitio->liberi != NIHIL)
+    {
+        num = silva_xar_numerus(def->definitio->liberi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            SilvaStmlNodus* corporis;
+
+            corporis = *(SilvaStmlNodus**)silva_xar_obtinere(
+                def->definitio->liberi, i);
+            si (corporis == NIHIL)
+            {
+                perge;
+            }
+            si (!_liberum_expandere(parens_novus, corporis, ctx,
+                                    stratum + I, def->ordo,
+                                    argumenta))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    si (   parens_novus->liberi != NIHIL
+        && silva_xar_numerus(parens_novus->liberi) > ante_numerus)
+    {
+        nota->nodus = silva_stml_liberum_ad_indicem(parens_novus,
+                                              ante_numerus);
+    }
+    redde VERUM;
+}
+
+/* Ambulatio expansionis: superficialiter duplicare, substitutio
+ * inline (in impletionibus: valores textus/transclusionis/
+ * attributorum), liberos per _liberum_expandere. 'argumenta' NIHIL
+ * = ambulatio documenti; non-NIHIL (etiam vacua) = intra
+ * impletionem. Cave: stml_duplicare_superficialiter liberos NIHIL
+ * relinquit - Xar liberorum hic creatur. */
+interior SilvaStmlNodus*
+_expandere_nodum (
+             SilvaStmlNodus* nodus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta)
+{
+    SilvaStmlNodus* novum;
+          i32  i;
+          i32  num;
+
+    novum = silva_stml_duplicare_superficialiter(nodus, ctx->piscina,
+                                           ctx->intern);
+    si (novum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (argumenta != NIHIL && silva_xar_numerus(argumenta) > ZEPHYRUM)
+    {
+        si (   (   novum->genus == STML_NODUS_TEXTUS
+                || novum->genus == STML_NODUS_TRANSCLUSIO)
+            && novum->valor != NIHIL)
+        {
+            novum->valor = _chordam_substituere(ctx, novum->valor,
+                                                argumenta);
+        }
+        si (novum->attributa != NIHIL)
+        {
+            num = silva_xar_numerus(novum->attributa);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                SilvaStmlAttributum* attr;
+
+                attr = (SilvaStmlAttributum*)silva_xar_obtinere(
+                    novum->attributa, i);
+                si (attr != NIHIL && attr->valor != NIHIL)
+                {
+                    attr->valor = _chordam_substituere(
+                        ctx, attr->valor, argumenta);
+                }
+            }
+        }
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        novum->liberi = silva_xar_creare(ctx->piscina,
+                                   magnitudo(SilvaStmlNodus*));
+        si (novum->liberi == NIHIL)
+        {
+            redde NIHIL;
+        }
+        num = silva_xar_numerus(nodus->liberi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            SilvaStmlNodus* liberum;
+
+            liberum = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
+            si (liberum == NIHIL)
+            {
+                perge;
+            }
+            si (!_liberum_expandere(novum, liberum, ctx, stratum,
+                                    tectum, argumenta))
+            {
+                redde NIHIL;
+            }
+        }
+    }
+    redde novum;
+}
+
+/* Liberum unum expandere - interceptio COMMUNIS ambulationis
+ * documenti et impletionis corporum (vocatio liberos plures parit,
+ * ergo in ansa liberorum vivit, non in casu nodi):
+ * - definitio: ambulatione documenti demissa + praeterita notata;
+ *   in impletione materia citata OPACA, verbatim clonata;
+ * - vocatio: interior effectivus (substitutus in impletione -
+ *   transitio argumentorum), deinde impleta;
+ * - cetera: recursio ambulationis. */
+interior b32
+_liberum_expandere (
+             SilvaStmlNodus* parens_novus,
+             SilvaStmlNodus* liberum,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   SilvaXar* argumenta)
+{
+    SilvaStmlNodus* liberum_novum;
+
+    si (_est_definitio(liberum))
+    {
+        si (argumenta == NIHIL)
+        {
+            StmlMacroDefinitio* def;
+
+            def = _definitionem_invenire(ctx,
+                                         liberum->fragmentum_id);
+            si (def != NIHIL)
+            {
+                def->praeterita = VERUM;
+            }
+            redde VERUM;  /* demissa - visio contenti */
+        }
+        liberum_novum = silva_stml_duplicare(liberum, ctx->piscina,
+                                       ctx->intern);
+        si (liberum_novum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        (vacuum)silva_stml_liberum_addere(parens_novus, liberum_novum);
+        redde VERUM;
+    }
+    si (_est_vocatio(liberum))
+    {
+        SilvaChorda* valor_effectivus;
+
+        valor_effectivus =
+            (argumenta != NIHIL && silva_xar_numerus(argumenta) > ZEPHYRUM)
+                ? _chordam_substituere(ctx, liberum->valor,
+                                       argumenta)
+                : liberum->valor;
+        redde _vocationem_implere(parens_novus, liberum,
+                                  valor_effectivus, stratum, tectum,
+                                  ctx);
+    }
+    liberum_novum = _expandere_nodum(liberum, ctx, stratum, tectum,
+                                     argumenta);
+    si (liberum_novum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    (vacuum)silva_stml_liberum_addere(parens_novus, liberum_novum);
+    redde VERUM;
+}
+
+static StmlExpansioResultus
+silva_stml_expandere (
+              SilvaStmlNodus* radix,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern)
+{
+    StmlExpansioResultus resultus;
+      StmlMacroContextus ctx;
+
+    resultus.successus           = FALSUM;
+    resultus.radix_expansa       = NIHIL;
+    resultus.tabula_expansionum  = NIHIL;
+    resultus.vitium              = STML_EXPANSIO_BENE;
+    resultus.linea               = ZEPHYRUM;
+    resultus.fragmentum.datum    = NIHIL;
+    resultus.fragmentum.mensura  = ZEPHYRUM;
+    resultus.loculus.datum       = NIHIL;
+    resultus.loculus.mensura     = ZEPHYRUM;
+
+    si (radix == NIHIL || piscina == NIHIL || intern == NIHIL)
+    {
+        redde resultus;
+    }
+    resultus.tabula_expansionum =
+        silva_xar_creare(piscina, magnitudo(StmlExpansioNota));
+    si (resultus.tabula_expansionum == NIHIL)
+    {
+        redde resultus;
+    }
+
+    ctx.piscina  = piscina;
+    ctx.intern   = intern;
+    ctx.definitiones  = silva_xar_creare(piscina,
+                                   magnitudo(StmlMacroDefinitio));
+    ctx.resultus      = &resultus;
+    si (ctx.definitiones == NIHIL)
+    {
+        redde resultus;
+    }
+
+    /* praetransitus: definitiones + GEMINUM */
+    si (!_definitiones_colligere(radix, &ctx))
+    {
+        redde resultus;
+    }
+
+    resultus.radix_expansa = _expandere_nodum(
+        radix, &ctx, ZEPHYRUM, silva_xar_numerus(ctx.definitiones),
+        NIHIL);
+    si (resultus.radix_expansa == NIHIL)
+    {
+        redde resultus;
+    }
+    resultus.successus = VERUM;
+    redde resultus;
 }
 
 /* ================= ex silva/fontes/silva_token.c ================= */
@@ -74391,6 +75580,35 @@ _parsura_ramum_obtinere (
     redde *sedes;
 }
 
+/* Elementum radix arboris EXPANSAE invenire. Expansio arborem NOVAM
+ * reddit (documentum clonatum), ergo commoditas 'elementum_radix'
+ * resultatus lectionis ad arborem VETEREM monstrat - hic primus
+ * liberorum ELEMENTUM quaeritur. */
+interior SilvaStmlNodus*
+_expansae_elementum_radix (
+    SilvaStmlNodus* radix)
+{
+    i32 i;
+    i32 num;
+
+    si (radix == NIHIL || radix->liberi == NIHIL)
+    {
+        redde NIHIL;
+    }
+    num = silva_xar_numerus(radix->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* liberum;
+
+        liberum = *(SilvaStmlNodus**)silva_xar_obtinere(radix->liberi, i);
+        si (liberum != NIHIL && liberum->genus == STML_NODUS_ELEMENTUM)
+        {
+            redde liberum;
+        }
+    }
+    redde NIHIL;
+}
+
 SilvaParsura*
 silva_arbor_legere_parsuram (
                            SilvaPiscina* piscina,
@@ -74456,7 +75674,23 @@ silva_arbor_legere_parsuram (
         redde NIHIL;
     }
 
-    involucrum = resultus.elementum_radix;
+    /* EXPANSIO TEMPLORUM (macros v1): documentum formam macroneam
+     * servat, lector visionem CONTENTI legit. Documentum sine
+     * templis = transitio pura (fragmenta contenti <#lexN> et
+     * transclusiones eorum INTACTA - spatium templi '#@' solum
+     * tangitur, vide stml_macros.h). */
+    {
+        StmlExpansioResultus expansio;
+
+        expansio = silva_stml_expandere(resultus.radix, piscina, intern);
+        si (!expansio.successus)
+        {
+            _recusare(&lector, "expansio templorum fracta",
+                expansio.linea);
+            redde NIHIL;
+        }
+        involucrum = _expansae_elementum_radix(expansio.radix_expansa);
+    }
     si (   involucrum == NIHIL || involucrum->titulus == NIHIL
         || !silva_chorda_aequalis_literis(*involucrum->titulus,
                SILVA_ARBOR_TAG_PARSURA))
