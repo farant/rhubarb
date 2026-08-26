@@ -264,6 +264,12 @@ Template-space `#@` decree: spec §2.0 (transclusio=alias,
 templum=instantiatio). Query fragments (below) remain the v2 pull —
 the pattern-cardinality thesis (parcum 01M0XJQAVP notas) is their
 design seed. Cross-document libraries banked on the same parcum.
+**The v2 pattern language is now MOSTLY DESIGNED**: four informal
+interview rounds (EXEMPLAR/PER, `$`-captures, bridge-as-scoping,
+sigil-typed output=, the type ladder, wildcards/quantifiers,
+DISTRIBUTIO) preserved in `stml-exemplaria-interview.md` — assemble
+the v2 spec FROM that file after a short formal interview on its
+open list; do not re-invent.
 
 Fran: macros = "fragments if they could take arguments"; work starts
 imminently. Decisions bound in conversation:
