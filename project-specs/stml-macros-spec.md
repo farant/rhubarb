@@ -239,6 +239,51 @@ nesting; positional spreads retired above). Decisions bound:
 - **Canon**: argument-elements are part of the call, not content of
   the parent (third touch in the template-space doctrinal line).
 
+### 6.2 COMMUTATIO — arm selection in template bodies (decreed 2026-08-26, unbuilt)
+
+**CAPS-Latin tags are hereby the BUILTIN-VERB grammar**: data tags
+stay lowercase kebab; template-layer builtins SCREAM. Zero new
+lexing; every future builtin has a home without spending a sigil.
+(`<!switch>` rejected — `<!` is comment/DOCTYPE lexer territory.)
+
+First builtin — value-driven arm selection inside definition bodies:
+
+```stml
+<COMMUTATIO de="&@con-stella;">
+  <CASUS est="verum"><tok_stella>&@stella;</tok_stella></CASUS>
+  <CASUS nihil/>
+  <ORDINARIUS>...</ORDINARIUS>
+</COMMUTATIO>
+```
+
+- **THE LINE (the no-expression-language law, restated for arms):
+  cases are LITERALS (`est="..."`) or PRESENCE-tests (`nihil`,
+  `non-nihil` boolean attrs) — never predicates over values.** Every
+  arm's body is statically declared, so a future canon can judge
+  every alternative before expansion ("judge the plan" survives).
+  When richer cases arrive they arrive as PATTERNS (enumerable,
+  judgeable), never expressions. CASUS-vs-subtree-argument matching
+  is the same lockstep matcher as emitter recognition and future
+  query patterns — one machinery, three seams.
+- **What it uniquely buys**: conditional WRAPPERS. (Conditional
+  CONTENT is already free — an empty forest argument splices
+  nothing.) Collapses structural-variant axes in fragment families
+  (par-stella/par-planus → one fragment, one arm choice). Tradeoff
+  noted: the emitter matcher must match THROUGH switches (try arms);
+  flat families may READ better — decide per family, not by law.
+- **Optional slots (the hidden contract change)**: `nihil` arms
+  require absence to be legal → optional declaration `p="@p?"`, and
+  the NARROWING rule keeps it loud: an optional loculus referenced
+  OUTSIDE an arm establishing its presence = collection-time vitium
+  (flow-narrowing, the honest optionality — never silent empty).
+- **Exhaustiveness**: no arm matches and no ORDINARIUS = loud
+  fill-time vitium. Never silent emptiness.
+- First-match-wins in document order; ORDINARIUS last.
+- Surface details (attr spellings, vitium numbering) adjustable at
+  build time; the LINE and the CAPS-builtin mint are the decree.
+
+## 7. Milestone plan
+
 1. Quote-aware `>>` scan (one lexer touch + fixture).
 2. lib/stml_macros.c: interior parser (id + args) → definition
    collection → clone-with-substitution → notas. Gates born red,
