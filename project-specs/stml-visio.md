@@ -71,6 +71,8 @@ reference sigils carve three spaces:
 | `</>` | anonymous close (author's form preserved byte-wise) | **VIVIT** (C) |
 | `<<selector>>` | transclusion | **VIVIT-as-node** in C (`STML_NODUS_TRANSCLUSIO` — parsed, carried); **RESOLUTION = RESERVATUM** (TS resolves with CSS selectors; C consumers don't yet) |
 | `<<x \| transform>>` | transclusion with pipe-transform (G1) | **RESERVATUM** — earmarked as the textual form of computed VIEWS in generated projections ("`&c;` with augmentations applied"); never in truth-files |
+| `<#@id p="@n">` / `<<#@id p="v">>` | TEMPLATE-space fragment definition / call (stml macros v1). The `@` is PART of the id. Doctrine (decretum 2026-08-26, e284bbcb): **transclusio = alias** (content-space, consumer-resolved, identity — Nelson's meaning, arbor lexN), **templum = instantiatio** (engine-resolved fresh copy). Forced by the first consumer: one surface carried both semantics and blanket expansion would have deleted arbor's shared-lexeme first uses | **VIVIT** (C: engine lib/stml_macros.c T1-T6 + arbor parsura slice T7 2026-08-26; canon judges call resolution, treats definition bodies as quoted material — loculus gating reserved, macros spec §6) |
+| `&@n;` | loculus reference inside template bodies (text + attribute positions, whole or interpolated); literal outside definitions (unknown-entity rule) | **VIVIT** (C, template-space; `&@...;` spread forms refused loud — reserved) |
 | `#id` | document-internal identity/anchor | **VIVIT** as the ruled MEANING of `#` (decretum 01KZPEXT74: `#` belongs to document-space — fragments, CSS/URL-fragment convention, future sententiae anchors) |
 | `&nomen;` | entity reference — named singleton, deduplicated, "semantically a wikilink" (STML_SPEC reservation) | **VIVIT in attribute-space** (2026-08-10, f8c6dcc: natura individua — identity, citation, canon-validated, `;` in ALL positions); **RESERVATUM in prose-space** (the wikilink layer for sententiae/forum/notae — rides the unknown-entity-literal rule until resolution exists) |
 | `.genus` | kind reference (vocabulary) | **VIVIT** (canon signa; resolves against generated canons) |
@@ -80,7 +82,7 @@ reference sigils carve three spaces:
 | `%` family | operations on what exists elsewhere (G1: `%remove/%replace-with/%append/%wrap/%set-attr…`) | **ALIBI VIVIT** as tools (renominare/emendare); **PARCATUM** as data-plane augmentation — see §5 |
 | `<% &x;>` | augmentation (single lawful data-plane verb of the `%` family) | **VIVIT** — W3 SHIPPED 2026-08-10 (87b5944 grammar, 320aab8 judgment, e7a41ab migration); strict at birth (`<%>`/`<% laika>`/`<% .canis>` = vitium, unclosed = TAG_NON_CLAUSUM); additive-only mechanical (AUGMENTUM_PUGNANS XV); W2 collision tripwire remains (spec librarium-spec.md §3, COLLISA = XVI) |
 | `<-->` + `$var` | selector combinator blocks + pattern extraction (G1) | **ALIBI VIVIT** (silva selectors; TOLERA forward-capture); remainder feeds the future transform tool (§6) |
-| `@x` | value interpolation (G2) | **MORTUUM** — data documents do not compute; no successor wanted |
+| `@x` | value interpolation (G2) | **MORTUUM** as data-plane computation — data documents do not compute. The `@` CHARACTER is reborn as the template-space marker (`#@id` ids, `@n` declarations, `&@n;` refs — see the template row above): expansion is a pure load-time projection, never a document that computes |
 | `:` / `::` | parameter definition vs invocation (G1/G2) | syntax **MORTUUM**; the DISCIPLINE (define-side and use-side must be visually distinct) **VIVIT** as doctrine — it is the ancestor of the loud tripartition (§5) |
 | `<{> <}>`, infix `</ op />`, postfix `<) op>` | expression notation in XML (G2) | **MORTUUM** — C89 is the notation for code; nothing mourns this |
 | `$:` positional args, `<@$1/>` | macro plumbing (G2) | **MORTUUM** with the macro plane |
@@ -251,6 +253,15 @@ parcum 01M0T5XYC3. Nothing here is implemented; everything below
 passed the §8 laws at the door.
 
 ### 9.1 Macros — the §6 "parameterized fragments" trigger is firing
+
+**STATUS 2026-08-26: VIVIT-partial.** Engine SHIPPED (lib/stml_macros.c,
+spec project-specs/stml-macros-spec.md, T1-T6 2026-08-25) + the arbor
+consumer slice (T7: parsura loader expands, emitter authors
+`<#@post-spatia n="@n">`, 78+155 byte-gate holds through pretty).
+Template-space `#@` decree: spec §2.0 (transclusio=alias,
+templum=instantiatio). Query fragments (below) remain the v2 pull —
+the pattern-cardinality thesis (parcum 01M0XJQAVP notas) is their
+design seed. Cross-document libraries banked on the same parcum.
 
 Fran: macros = "fragments if they could take arguments"; work starts
 imminently. Decisions bound in conversation:

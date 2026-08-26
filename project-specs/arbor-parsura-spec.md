@@ -339,6 +339,14 @@ the union, filling all four may be cheaper than three plus a gate.
 
 ## 4. Slots — reserved, not built
 
+> **BUILT 2026-08-26** — see `stml-macros-spec.md` (the engine:
+> lib/stml_macros.c, T1-T6) + the arbor slice (T7: loader expands in
+> silva_arbor_legere_parsuram, emitter authors `<#@post-spatia
+> n="@n">`). One amendment over this section's sketch: template-space
+> ids carry a `#@` sigil (spec §2.0 — transclusio=alias,
+> templum=instantiatio; forced by the lexN collision). The `&@x;`
+> reference form below shipped as sketched.
+
 `&…;` is the reference delimiter; the sigil inside names the space.
 `&x;` world-space, **`&@x;` template-space**. This keeps the
 2026-08-10 three-space carve (`#` document · `&nomen;` world · `.`
