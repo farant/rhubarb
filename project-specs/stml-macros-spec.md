@@ -282,6 +282,43 @@ First builtin — value-driven arm selection inside definition bodies:
 - Surface details (attr spellings, vitium numbering) adjustable at
   build time; the LINE and the CAPS-builtin mint are the decree.
 
+### 6.3 Attribute-elements on ALL tags (decreed 2026-08-26, unbuilt) — a BASE-format repair
+
+`<@attr=>` generalizes beyond calls: any element may spell any
+attribute in element form. This lands in lib/stml.c (base grammar),
+not the macro layer — it repairs a documented hole (a double-quote
+in an attribute value is irrepresentable; text children have
+escaping) and gives long values real layout.
+
+**The two bindings, made non-overlapping by position:**
+
+1. PARENT-binding: attr-elements must be a PREFIX of the child list
+   (they belong to the tag's head, before all ordinary children).
+2. CALL-binding: argument-elements immediately follow their call
+   (§6.1, unchanged — calls are atomic transclusions).
+3. Any other position = LOUD vitium, never a guess. Deterministic,
+   zero lookahead. Capture arity counts attr-elements as ordinary
+   children (`<hello ((>` = attr-element + one real child).
+
+**The data-model line**: ordinary elements' attributes remain
+STRING-valued (StmlAttributum.valor stays a chorda). Attr-elements
+on ordinary tags therefore take TEXT-ONLY children — element
+children there are a vitium. Subtree values remain a macro-call
+power, living in the engine's transient argument map only.
+
+**Implementation postures fixed now:**
+- Fidelity via the augmentation pattern: the attr-element stays a
+  child node with a marker, NEVER normalized into attributa at
+  parse; `stml_attributum_capere` grows a second lookup path
+  (equivalence free for accessor users; direct attributa-Xar
+  iterators get a one-time audit). Same name in both forms = the
+  existing duplicate-attribute vitium.
+- Canon: two judgment postures keyed by what the element is — on
+  CALLS argument-elements are invisible (quoted call-material,
+  §6.1); on ORDINARY elements they are judged AS attributes (name
+  against the element's canon entry, value genus checked). Fourth
+  canon touch in the template-space doctrinal line.
+
 ## 7. Milestone plan
 
 1. Quote-aware `>>` scan (one lexer touch + fixture).
