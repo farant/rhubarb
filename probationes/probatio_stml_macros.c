@@ -443,6 +443,171 @@ principale (
         }
     }
 
+    /* --- (T5 a) corpus vocat macronem priorem: stratum II --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- vocatio nidificata ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#a><x/></#><#b><<#a>><y/></#>"
+            "<<#b>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                StmlExpansioNota* nota;
+
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><x/><y/></radix>");
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(expansio.tabula_expansionum), II);
+                nota = (StmlExpansioNota*)xar_obtinere(
+                    expansio.tabula_expansionum, ZEPHYRUM);
+                si (nota != NIHIL)
+                {
+                    CREDO_CHORDA_AEQUALIS_LITERIS (
+                        *nota->fragmentum_id, "b");
+                    CREDO_AEQUALIS_I32 (nota->stratum, I);
+                }
+                nota = (StmlExpansioNota*)xar_obtinere(
+                    expansio.tabula_expansionum, I);
+                si (nota != NIHIL)
+                {
+                    CREDO_CHORDA_AEQUALIS_LITERIS (
+                        *nota->fragmentum_id, "a");
+                    CREDO_AEQUALIS_I32 (nota->stratum, II);
+                }
+            }
+        }
+    }
+
+    /* --- (T5 b) corpus vocat macronem POSTERIOREM --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- posterius in corpore ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#b><<#a>></#><#a><x/></#><<#b>></radix>",
+            piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (!expansio.successus);
+            CREDO_AEQUALIS_I32 (expansio.vitium,
+                                STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
+                                           "a");
+        }
+    }
+
+    /* --- (T5 c) loculus trans strata NON declaratus = IGNOTUS --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- trans strata non declaratus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#a p=\"@p\"><x v=\"&@p;\"/></#>"
+            "<#b><<#a p=\"&@q;\">></#></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (!expansio.successus);
+            CREDO_AEQUALIS_I32 (expansio.vitium,
+                                STML_EXPANSIO_LOCULUS_IGNOTUS);
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "q");
+            CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
+                                           "b");
+        }
+    }
+
+    /* --- (T5 c2) loculus trans strata declaratus = transitio --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- trans strata declaratus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#a p=\"@p\"><x v=\"&@p;\"/></#>"
+            "<#b q=\"@q\"><<#a p=\"&@q;\">></#>"
+            "<<#b q=\"7\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><x v=\"7\"/></radix>");
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(expansio.tabula_expansionum), II);
+            }
+        }
+    }
+
+    /* --- (T5 d) catena trium stratorum (terminatio) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- catena trium stratorum ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#a><x/></#><#b><<#a>></#><#c><<#b>></#>"
+            "<<#c>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                StmlExpansioNota* nota;
+
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><x/></radix>");
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(expansio.tabula_expansionum), III);
+                nota = (StmlExpansioNota*)xar_obtinere(
+                    expansio.tabula_expansionum, II);
+                si (nota != NIHIL)
+                {
+                    CREDO_CHORDA_AEQUALIS_LITERIS (
+                        *nota->fragmentum_id, "a");
+                    CREDO_AEQUALIS_I32 (nota->stratum, III);
+                }
+            }
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

@@ -27,6 +27,7 @@ nomen structura {
         chorda* id;          /* internatum */
      StmlNodus* definitio;
            Xar* loculi;      /* chorda* internata */
+           i32  ordo;        /* index collectionis = ordo documenti */
            b32  praeterita;
 } StmlMacroDefinitio;
 
@@ -288,7 +289,16 @@ _corpus_perscrutari (
         {
             perge;
         }
-        si (   liberum->genus == STML_NODUS_TEXTUS
+        si (_est_definitio(liberum))
+        {
+            /* fragmentum nidificatum = materia definitionis
+             * citata, OPACA: eius '&@' ad loculos SUOS futuros
+             * refert, non ad nostros - nec scanditur nec
+             * substituitur (regula una utrimque) */
+            perge;
+        }
+        si (   (   liberum->genus == STML_NODUS_TEXTUS
+                || liberum->genus == STML_NODUS_TRANSCLUSIO)
             && liberum->valor != NIHIL
             && !_chordam_perscrutari(liberum->valor, liberum, def,
                                      ctx))
@@ -356,6 +366,7 @@ _definitiones_colligere (
         }
         nova->id          = nodus->fragmentum_id;
         nova->definitio   = nodus;
+        nova->ordo        = xar_numerus(ctx->definitiones) - I;
         nova->praeterita  = FALSUM;
         nova->loculi      = xar_creare(ctx->piscina,
                                        magnitudo(chorda*));
@@ -408,18 +419,19 @@ _est_spatium_interius (
 
 /* Id vocationis ex interiore transclusionis: post '#' usque ad
  * spatium primum aut finem ('#f p="123"' -> 'f'). 'post' = index
- * in valore ubi argumenta incipiunt. */
+ * in valore ubi argumenta incipiunt. 'valor' = interior EFFECTIVUS
+ * (in impletionibus iam substitutus - transitio argumentorum). */
 interior chorda*
 _vocationis_id (
     StmlMacroContextus* ctx,
-             StmlNodus* vocatio,
+                chorda* valor,
                    i32* post)
 {
     chorda id;
        i32 finis;
 
-    id.datum    = vocatio->valor->datum + I;
-    id.mensura  = vocatio->valor->mensura - I;
+    id.datum    = valor->datum + I;
+    id.mensura  = valor->mensura - I;
     finis       = ZEPHYRUM;
     dum (   finis < id.mensura
          && !_est_spatium_interius(id.datum[finis]))
@@ -439,14 +451,15 @@ _vocationis_id (
 interior b32
 _argumenta_parsare (
     StmlMacroContextus* ctx,
-             StmlNodus* vocatio,
+             StmlNodus* vocatio,   /* pro linea vitii solum */
+                chorda* valor,     /* interior effectivus */
                    i32  ab,
                    Xar* argumenta)
 {
     constans chorda* textus;
                 i32  i;
 
-    textus  = vocatio->valor;
+    textus  = valor;
     i       = ab;
     dum (VERUM)
     {
@@ -607,78 +620,54 @@ _chordam_substituere (
                            chorda_aedificator_finire(aed));
 }
 
-/* Substitutionem in clone corporis applicare: valores textus et
- * attributorum, recursive. */
-interior vacuum
-_substituere_in_nodo (
-    StmlMacroContextus* ctx,
-             StmlNodus* nodus,
-                   Xar* argumenta)
-{
-    i32 i;
-    i32 num;
-
-    si (nodus->genus == STML_NODUS_TEXTUS && nodus->valor != NIHIL)
-    {
-        nodus->valor = _chordam_substituere(ctx, nodus->valor,
-                                            argumenta);
-    }
-    si (nodus->attributa != NIHIL)
-    {
-        num = xar_numerus(nodus->attributa);
-        per (i = ZEPHYRUM; i < num; i++)
-        {
-            StmlAttributum* attr;
-
-            attr = (StmlAttributum*)xar_obtinere(nodus->attributa,
-                                                 i);
-            si (attr != NIHIL && attr->valor != NIHIL)
-            {
-                attr->valor = _chordam_substituere(ctx, attr->valor,
-                                                   argumenta);
-            }
-        }
-    }
-    si (nodus->liberi != NIHIL)
-    {
-        num = xar_numerus(nodus->liberi);
-        per (i = ZEPHYRUM; i < num; i++)
-        {
-            StmlNodus* liberum;
-
-            liberum = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
-            si (liberum != NIHIL)
-            {
-                _substituere_in_nodo(ctx, liberum, argumenta);
-            }
-        }
-    }
-}
 
 interior StmlNodus*
 _expandere_nodum (
              StmlNodus* nodus,
-    StmlMacroContextus* ctx);
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta);
 
-/* Vocationem implere: corpus definitionis clonatum in parentem
- * splicare, notam registrare. Nota.nodus = clonis PRIMUS splicis
- * (NIHIL si corpus vacuum); liberi implicati. */
+interior b32
+_liberum_expandere (
+             StmlNodus* parens_novus,
+             StmlNodus* liberum,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta);
+
+/* Vocationem implere: corpus definitionis per AMBULATIONEM in
+ * parentem splicare (copia caeca vocationes interiores verbatim
+ * ferret - ambulatio eas expandit), notam registrare.
+ * 'valor_effectivus' = interior iam substitutus (transitio
+ * argumentorum trans strata - grammatica una, quod collectio
+ * iudicat impletio substituit); 'tectum' = resolutio solum ad
+ * definitiones ordine < tectum (documenti: numerus totus,
+ * praeterita discernit; interiores: ordo definitionis continentis
+ * - tectum stricte decrescens, terminatio per constructionem).
+ * Nota.nodus = clonis primus splicis, per indicem parentis captus
+ * (vocatio interior liberos plures DIRECTE addit). */
 interior b32
 _vocationem_implere (
              StmlNodus* parens_novus,
              StmlNodus* vocatio,
+                chorda* valor_effectivus,
+                   i32  stratum,
+                   i32  tectum,
     StmlMacroContextus* ctx)
 {
                 chorda* id;
     StmlMacroDefinitio* def;
       StmlExpansioNota* nota;
-             StmlNodus* primus;
                    Xar* argumenta;
                    i32  post_id;
+                   i32  ante_numerus;
                    i32  i;
                    i32  num;
 
-    id   = _vocationis_id(ctx, vocatio, &post_id);
+    id   = _vocationis_id(ctx, valor_effectivus, &post_id);
     def  = _definitionem_invenire(ctx, id);
     si (def == NIHIL)
     {
@@ -686,7 +675,7 @@ _vocationem_implere (
                        vocatio, id, NIHIL);
         redde FALSUM;
     }
-    si (!def->praeterita)
+    si (def->ordo >= tectum || !def->praeterita)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
                        vocatio, id, NIHIL);
@@ -702,7 +691,8 @@ _vocationem_implere (
     {
         redde FALSUM;
     }
-    si (!_argumenta_parsare(ctx, vocatio, post_id, argumenta))
+    si (!_argumenta_parsare(ctx, vocatio, valor_effectivus, post_id,
+                            argumenta))
     {
         si (ctx->resultus->vitium != STML_EXPANSIO_BENE)
         {
@@ -740,14 +730,29 @@ _vocationem_implere (
         }
     }
 
-    primus = NIHIL;
+    /* nota ANTE impletionem appensa (spec: tabula ordine splicis -
+     * ordo vocationum, non perfectionis); punctatores cellularum
+     * Xar stabiles trans appensiones, ergo nota trans impletionem
+     * tenetur et nodus post impletur */
+    nota = (StmlExpansioNota*)xar_addere(
+        ctx->resultus->tabula_expansionum);
+    si (nota == NIHIL)
+    {
+        redde FALSUM;
+    }
+    nota->nodus          = NIHIL;
+    nota->fragmentum_id  = def->id;
+    nota->vocatio        = vocatio;
+    nota->stratum        = stratum + I;
+
+    ante_numerus = parens_novus->liberi != NIHIL
+        ? xar_numerus(parens_novus->liberi) : ZEPHYRUM;
     si (def->definitio->liberi != NIHIL)
     {
         num = xar_numerus(def->definitio->liberi);
         per (i = ZEPHYRUM; i < num; i++)
         {
             StmlNodus* corporis;
-            StmlNodus* clonis;
 
             corporis = *(StmlNodus**)xar_obtinere(
                 def->definitio->liberi, i);
@@ -755,58 +760,72 @@ _vocationem_implere (
             {
                 perge;
             }
-            clonis = stml_duplicare(corporis, ctx->piscina,
-                                    ctx->intern);
-            si (clonis == NIHIL)
+            si (!_liberum_expandere(parens_novus, corporis, ctx,
+                                    stratum + I, def->ordo,
+                                    argumenta))
             {
                 redde FALSUM;
             }
-            si (xar_numerus(argumenta) > ZEPHYRUM)
-            {
-                _substituere_in_nodo(ctx, clonis, argumenta);
-            }
-            si (primus == NIHIL)
-            {
-                primus = clonis;
-            }
-            (vacuum)stml_liberum_addere(parens_novus, clonis);
         }
     }
-
-    nota = (StmlExpansioNota*)xar_addere(
-        ctx->resultus->tabula_expansionum);
-    si (nota == NIHIL)
+    si (   parens_novus->liberi != NIHIL
+        && xar_numerus(parens_novus->liberi) > ante_numerus)
     {
-        redde FALSUM;
+        nota->nodus = stml_liberum_ad_indicem(parens_novus,
+                                              ante_numerus);
     }
-    nota->nodus          = primus;
-    nota->fragmentum_id  = def->id;
-    nota->vocatio        = vocatio;
-    nota->stratum        = I;
     redde VERUM;
 }
 
-/* Ambulatio expansionis: superficialiter duplicare, liberos
- * recursive. Ambulatio iterationem liberorum POSSIDET quia
- * fragmenta (demissa) et vocationes (impletae) in EA
- * intercipiuntur - vocatio liberos plures parit, ergo interceptio
- * in ansa liberorum vivit, non in casu nodi. Cave:
- * stml_duplicare_superficialiter liberos NIHIL relinquit - Xar
- * liberorum hic creatur. */
+/* Ambulatio expansionis: superficialiter duplicare, substitutio
+ * inline (in impletionibus: valores textus/transclusionis/
+ * attributorum), liberos per _liberum_expandere. 'argumenta' NIHIL
+ * = ambulatio documenti; non-NIHIL (etiam vacua) = intra
+ * impletionem. Cave: stml_duplicare_superficialiter liberos NIHIL
+ * relinquit - Xar liberorum hic creatur. */
 interior StmlNodus*
 _expandere_nodum (
              StmlNodus* nodus,
-    StmlMacroContextus* ctx)
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta)
 {
-     StmlNodus* novum;
-           i32  i;
-           i32  num;
+    StmlNodus* novum;
+          i32  i;
+          i32  num;
 
     novum = stml_duplicare_superficialiter(nodus, ctx->piscina,
                                            ctx->intern);
     si (novum == NIHIL)
     {
         redde NIHIL;
+    }
+    si (argumenta != NIHIL && xar_numerus(argumenta) > ZEPHYRUM)
+    {
+        si (   (   novum->genus == STML_NODUS_TEXTUS
+                || novum->genus == STML_NODUS_TRANSCLUSIO)
+            && novum->valor != NIHIL)
+        {
+            novum->valor = _chordam_substituere(ctx, novum->valor,
+                                                argumenta);
+        }
+        si (novum->attributa != NIHIL)
+        {
+            num = xar_numerus(novum->attributa);
+            per (i = ZEPHYRUM; i < num; i++)
+            {
+                StmlAttributum* attr;
+
+                attr = (StmlAttributum*)xar_obtinere(
+                    novum->attributa, i);
+                si (attr != NIHIL && attr->valor != NIHIL)
+                {
+                    attr->valor = _chordam_substituere(
+                        ctx, attr->valor, argumenta);
+                }
+            }
+        }
     }
     si (nodus->liberi != NIHIL)
     {
@@ -820,42 +839,85 @@ _expandere_nodum (
         per (i = ZEPHYRUM; i < num; i++)
         {
             StmlNodus* liberum;
-            StmlNodus* liberum_novum;
 
             liberum = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
             si (liberum == NIHIL)
             {
                 perge;
             }
-            si (_est_definitio(liberum))
-            {
-                StmlMacroDefinitio* def;
-
-                def = _definitionem_invenire(ctx,
-                                             liberum->fragmentum_id);
-                si (def != NIHIL)
-                {
-                    def->praeterita = VERUM;
-                }
-                perge;  /* demissa - visio contenti */
-            }
-            si (_est_vocatio(liberum))
-            {
-                si (!_vocationem_implere(novum, liberum, ctx))
-                {
-                    redde NIHIL;
-                }
-                perge;
-            }
-            liberum_novum = _expandere_nodum(liberum, ctx);
-            si (liberum_novum == NIHIL)
+            si (!_liberum_expandere(novum, liberum, ctx, stratum,
+                                    tectum, argumenta))
             {
                 redde NIHIL;
             }
-            (vacuum)stml_liberum_addere(novum, liberum_novum);
         }
     }
     redde novum;
+}
+
+/* Liberum unum expandere - interceptio COMMUNIS ambulationis
+ * documenti et impletionis corporum (vocatio liberos plures parit,
+ * ergo in ansa liberorum vivit, non in casu nodi):
+ * - definitio: ambulatione documenti demissa + praeterita notata;
+ *   in impletione materia citata OPACA, verbatim clonata;
+ * - vocatio: interior effectivus (substitutus in impletione -
+ *   transitio argumentorum), deinde impleta;
+ * - cetera: recursio ambulationis. */
+interior b32
+_liberum_expandere (
+             StmlNodus* parens_novus,
+             StmlNodus* liberum,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta)
+{
+    StmlNodus* liberum_novum;
+
+    si (_est_definitio(liberum))
+    {
+        si (argumenta == NIHIL)
+        {
+            StmlMacroDefinitio* def;
+
+            def = _definitionem_invenire(ctx,
+                                         liberum->fragmentum_id);
+            si (def != NIHIL)
+            {
+                def->praeterita = VERUM;
+            }
+            redde VERUM;  /* demissa - visio contenti */
+        }
+        liberum_novum = stml_duplicare(liberum, ctx->piscina,
+                                       ctx->intern);
+        si (liberum_novum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        (vacuum)stml_liberum_addere(parens_novus, liberum_novum);
+        redde VERUM;
+    }
+    si (_est_vocatio(liberum))
+    {
+        chorda* valor_effectivus;
+
+        valor_effectivus =
+            (argumenta != NIHIL && xar_numerus(argumenta) > ZEPHYRUM)
+                ? _chordam_substituere(ctx, liberum->valor,
+                                       argumenta)
+                : liberum->valor;
+        redde _vocationem_implere(parens_novus, liberum,
+                                  valor_effectivus, stratum, tectum,
+                                  ctx);
+    }
+    liberum_novum = _expandere_nodum(liberum, ctx, stratum, tectum,
+                                     argumenta);
+    si (liberum_novum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    (vacuum)stml_liberum_addere(parens_novus, liberum_novum);
+    redde VERUM;
 }
 
 StmlExpansioResultus
@@ -904,7 +966,9 @@ stml_expandere (
         redde resultus;
     }
 
-    resultus.radix_expansa = _expandere_nodum(radix, &ctx);
+    resultus.radix_expansa = _expandere_nodum(
+        radix, &ctx, ZEPHYRUM, xar_numerus(ctx.definitiones),
+        NIHIL);
     si (resultus.radix_expansa == NIHIL)
     {
         redde resultus;
