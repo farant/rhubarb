@@ -200,14 +200,44 @@ inner splices carry their own notas).
 
 | what | where it lands |
 |---|---|
-| `&@...children;` + call-site children | parsura §4 semantics banked; candidate call syntax: capturing transclusion (capture machinery reused) — noted round 3, undesigned |
+| ~~`&@...children;` + call-site children~~ | **RETIRED (decree 2026-08-26)** — superseded by NAMED argument-elements (§6.1 below). The `&@...x;` spread surface stays permanently refused (LOCULUS_IGNOTUS) — now as a dead form, not a reservation |
 | query fragments | visio §9.1; forces the STML-side query engine; subsumes conditional inclusion, arms retained |
 | cross-document libraries | the declared-world arc (visio §5); v1 is same-document only |
 | selector transclusion resolution | RESERVATUM continues (needs the selector engine) |
 | canon gating of loculi | parsura-canon work; expander stays consumer-opt-in |
 | attribute-NAME sugar `<lex-x &@position;/>` | parsura §4 — reserved, never required |
 
-## 7. Milestone plan
+### 6.1 Argument-form equivalence (decreed 2026-08-26, undesigned in detail)
+
+Every call gets two EQUIVALENT spellings the body never distinguishes:
+inline (`<<#@f attr="v">>`, scalars) and BLOCK — argument-elements as
+immediately-following siblings, tag `@`-prefixed `=`-suffixed:
+
+```stml
+<<#@f>>
+<@attr=>123</>
+<@type=><some-tag><child/></some-tag></>
+```
+
+A tag-form argument's value is its CHILDREN — arguments generalize
+from strings to subtrees, which answers the children-slot question
+with NAMED subtree arguments (Fran: better in general than anonymous
+nesting; positional spreads retired above). Decisions bound:
+
+- **Association**: a call consumes the maximal run of
+  immediately-following argument-elements. Self-delimiting — no
+  capture parens (arity-brittle, the M2b churn class), no `<</>>`
+  closer (`<<#@f>>` is already a complete call). Lexer only blesses
+  the `<@attr=>` name form (precedent: `<% &clavis;>` — ordinary
+  ELEMENTUM + marker field, consumers intact).
+- **Equivalence lives in the ENGINE's argument map**, never the
+  parser — fidelity keeps the authored spelling byte-exact; the
+  emitter chooses per site (scalars inline, subtrees block).
+- **Seventh vitium**: a subtree argument filling an ATTRIBUTE
+  position refuses loud — never silent stringification. Slots stay
+  untyped; body positions constrain.
+- **Canon**: argument-elements are part of the call, not content of
+  the parent (third touch in the template-space doctrinal line).
 
 1. Quote-aware `>>` scan (one lexer touch + fixture).
 2. lib/stml_macros.c: interior parser (id + args) → definition
