@@ -1070,21 +1070,24 @@ _trivium_scribere (
     redde elementum;
 }
 
-/* Vocatio templi '<<#@post-spatia n="N">>' - forma communis
- * '<post><lex-spatia n="N"/></post>' (mensurata 2026-08-26: ~10k
- * sedes per corpus planum, ~7k per fettam lib). Onerator expandit
- * (visio contenti), ergo arbor lecta a directa non differt. */
+/* Vocatio templi spatiorum '<<#@post-spatia n="N">>' aut
+ * '<<#@ante-spatia n="N">>' - formae communes
+ * '<post|ante><lex-spatia n="N"/></>' (mensuratae 2026-08-26:
+ * post ~10k, ante ~1.9k sedes per corpus planum). Onerator
+ * expandit (visio contenti), ergo arbor lecta a directa non
+ * differt. 'praefixum' = interior vocationis usque ad citationem
+ * aperientem ('#@post-spatia n="'). */
 interior StmlNodus*
-_vocatio_post_spatia (
-    ArborScriptor* scriptor,
-              i32  numerus_spatiorum)
+_vocatio_spatiorum (
+     ArborScriptor* scriptor,
+constans character* praefixum,
+               i32  numerus_spatiorum)
 {
-     constans character* praefixum = "#@post-spatia n=\"";
-              character  numeri[XVI];
-              character  buffer[48];
-                 chorda  valor;
-                    i32  lp;
-                    i32  ln;
+    character numeri[XVI];
+    character buffer[48];
+       chorda valor;
+          i32 lp;
+          i32 ln;
 
     si (_numerus_ad_literas(numerus_spatiorum, numeri,
             (i32)magnitudo(numeri)) == ZEPHYRUM)
@@ -1103,16 +1106,18 @@ _vocatio_post_spatia (
         scriptor->intern, valor);
 }
 
-/* Definitio templi '#@post-spatia' - scripta UNA post <fontes>,
- * ante vocationes omnes (strata ordine documenti: vocatio ad
- * definitionem PRIOREM solum resolvit). */
+/* Definitio templi spatiorum ('@post-spatia'/'@ante-spatia') -
+ * scripta UNA post <fontes>, ante vocationes omnes (strata ordine
+ * documenti: vocatio ad definitionem PRIOREM solum resolvit). */
 interior b32
-_templum_post_spatia_scribere (
-    ArborScriptor* scriptor,
-        StmlNodus* involucrum)
+_templum_spatiorum_scribere (
+     ArborScriptor* scriptor,
+         StmlNodus* involucrum,
+constans character* id_templi,
+constans character* titulus_involucri)
 {
     StmlNodus* definitio;
-    StmlNodus* post;
+    StmlNodus* intus;
     StmlNodus* spatia;
     character  tag[SILVA_ARBOR_TAG_CAPACITAS];
 
@@ -1127,25 +1132,25 @@ _templum_post_spatia_scribere (
 
     definitio = stml_elementum_creare(scriptor->piscina,
         scriptor->intern, "fragmentum");
-    post      = stml_elementum_creare(scriptor->piscina,
-        scriptor->intern, SILVA_ARBOR_TAG_POST);
+    intus     = stml_elementum_creare(scriptor->piscina,
+        scriptor->intern, titulus_involucri);
     spatia    = stml_elementum_creare(scriptor->piscina,
         scriptor->intern, tag);
-    si (definitio == NIHIL || post == NIHIL || spatia == NIHIL)
+    si (definitio == NIHIL || intus == NIHIL || spatia == NIHIL)
     {
         scriptor->causa = "definitio templi creari non potuit";
         redde FALSUM;
     }
     definitio->fragmentum    = VERUM;
     definitio->fragmentum_id = chorda_internare_ex_literis(
-        scriptor->intern, "@post-spatia");
+        scriptor->intern, id_templi);
     si (   definitio->fragmentum_id == NIHIL
         || !stml_attributum_addere(definitio, scriptor->piscina,
                 scriptor->intern, "n", "@n")
         || !stml_attributum_addere(spatia, scriptor->piscina,
                 scriptor->intern, "n", "&@n;")
-        || !stml_liberum_addere(post, spatia)
-        || !stml_liberum_addere(definitio, post)
+        || !stml_liberum_addere(intus, spatia)
+        || !stml_liberum_addere(definitio, intus)
         || !stml_liberum_addere(involucrum, definitio))
     {
         scriptor->causa = "definitio templi construi non potuit";
@@ -1176,20 +1181,27 @@ constans character* titulus)
         redde NIHIL;
     }
 
-    /* TEMPLUM (macros v1): 'post' cum spatio UNO SOLO ut vocatio
-     * scribitur - parsura sola (templa_activa), quia documentum
-     * subarboris definitionem non fert. */
-    si (   scriptor->templa_activa
-        && numerus                               == I
-        && strcmp(titulus, SILVA_ARBOR_TAG_POST) == ZEPHYRUM)
+    /* TEMPLUM (macros v1): involucrum cum spatio UNO SOLO ut
+     * vocatio scribitur ('post' aut 'ante') - parsura sola
+     * (templa_activa), quia documentum subarboris definitiones
+     * non fert. */
+    si (scriptor->templa_activa && numerus == I)
     {
         SilvaToken* trivium =
             *(SilvaToken**)xar_obtinere(trivia, ZEPHYRUM);
 
         si (trivium != NIHIL && trivium->genus == SILVA_LEX_SPATIA)
         {
-            redde _vocatio_post_spatia(scriptor,
-                trivium->valor.mensura);
+            si (strcmp(titulus, SILVA_ARBOR_TAG_POST) == ZEPHYRUM)
+            {
+                redde _vocatio_spatiorum(scriptor,
+                    "#@post-spatia n=\"", trivium->valor.mensura);
+            }
+            si (strcmp(titulus, SILVA_ARBOR_TAG_ANTE) == ZEPHYRUM)
+            {
+                redde _vocatio_spatiorum(scriptor,
+                    "#@ante-spatia n=\"", trivium->valor.mensura);
+            }
         }
     }
 
@@ -4653,6 +4665,438 @@ _parsura_reinserendum_scribere (
     redde elementum;
 }
 
+
+/* ==================================================
+ * Folia macronum - compressio formarum repetitarum (macros v1)
+ *
+ * Folium = elementum lexematis originem <expansio> ferens. Lexemata
+ * trans-fontes sedes DEFINITIONIS ferunt (non usus), ergo folia
+ * eiusdem expansionis octetim IDENTICA sunt (mensuratum 2026-08-26:
+ * NIHIL 189B x118 in sex plagulis lib). Forma quae bis pluriesve
+ * apparet in definitionem capitis '<#@m-<macro>>' levatur (occursus
+ * PRIMUS in definitionem MOVETUR - sedes definitionis, exemplar
+ * lexN), sedes omnes vocationes '<<#@m-<macro>>>' fiunt. Ex
+ * contento derivatum, ergo independens invocationis.
+ * ================================================== */
+
+nomen structura {
+         chorda* clavis;   /* signum: scriptio compacta internata */
+      StmlNodus* nodus;
+      StmlNodus* parens;
+            i32  index;    /* in parens->liberi */
+} FoliumOccursus;
+
+nomen structura {
+        chorda* clavis;
+        chorda* id;       /* '@m-...' internatum */
+     StmlNodus* primus;   /* corpus definitionis (nodus MOTUS) */
+} FoliumForma;
+
+/* Par substitutionis - clavis tabulae in campum 'vetus' monstrat
+ * (cellae Xaris stabiles; tabula chordam SINE copia servat) */
+nomen structura {
+     StmlNodus* vetus;
+     StmlNodus* novus;
+} FoliumPar;
+
+interior b32
+_folium_candidatum (
+    StmlNodus* n)
+{
+    i32 i;
+    i32 num;
+
+    si (   n->genus != STML_NODUS_ELEMENTUM
+        || n->fragmentum
+        || !_est_tag_lexematis(n->titulus))
+    {
+        redde FALSUM;
+    }
+    num = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(n, i);
+
+        si (   l          != NIHIL
+            && l->genus   == STML_NODUS_ELEMENTUM
+            && l->titulus != NIHIL
+            && chorda_aequalis_literis(*l->titulus,
+                   SILVA_ARBOR_TAG_EXPANSIO))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_folia_colligere (
+    ArborScriptor* scriptor,
+        StmlNodus* n,
+              Xar* occursus)
+{
+    i32 i;
+    i32 num;
+
+    si (n == NIHIL || n->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde;
+    }
+    num = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(n, i);
+
+        si (l == NIHIL)
+        {
+            perge;
+        }
+        si (_folium_candidatum(l))
+        {
+            FoliumOccursus* o;
+                    chorda  scriptum;
+
+            scriptum  = stml_scribere(l, scriptor->piscina, FALSUM);
+            o         = (FoliumOccursus*)xar_addere(occursus);
+            si (o == NIHIL)
+            {
+                redde;
+            }
+            o->clavis  = chorda_internare(scriptor->intern, scriptum);
+            o->nodus   = l;
+            o->parens  = n;
+            o->index   = i;
+            perge;  /* in candidatum non descendere (extimus vincit) */
+        }
+        _folia_colligere(scriptor, l, occursus);
+    }
+}
+
+/* Subarbores parallelas (isomorphas - signa octetim aequalia id
+ * spondent) in tabulam substitutionis mappare: elementum vetus ->
+ * elementum novum, ut paria sedium repungantur. */
+interior vacuum
+_folia_paria_mappare (
+         StmlNodus* vetus,
+         StmlNodus* novus,
+               Xar* mappae,
+    TabulaDispersa* substituti)
+{
+    FoliumPar* par;
+       chorda  clavis;
+          i32  i;
+          i32  num;
+
+    par = (FoliumPar*)xar_addere(mappae);
+    si (par == NIHIL)
+    {
+        redde;
+    }
+    par->vetus      = vetus;
+    par->novus      = novus;
+    clavis.datum    = (i8*)&par->vetus;
+    clavis.mensura  = (i32)magnitudo(par->vetus);
+    tabula_dispersa_inserere(substituti, clavis, novus);
+
+    num = stml_numerus_liberorum(vetus);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* lv = stml_liberum_ad_indicem(vetus, i);
+        StmlNodus* ln = stml_liberum_ad_indicem(novus, i);
+
+        si (   lv        != NIHIL && ln != NIHIL
+            && lv->genus == STML_NODUS_ELEMENTUM
+            && ln->genus == STML_NODUS_ELEMENTUM)
+        {
+            _folia_paria_mappare(lv, ln, mappae, substituti);
+        }
+    }
+}
+
+interior b32
+_folia_macronum_comprimere (
+    ArborScriptor* scriptor,
+        StmlNodus* involucrum)
+{
+               Xar* occursus;      /* FoliumOccursus */
+               Xar* formae;        /* FoliumForma */
+               Xar* mappae;        /* FoliumPar */
+    TabulaDispersa* numeri;        /* clavis -> numerus occursuum */
+    TabulaDispersa* electae;       /* clavis -> FoliumForma* */
+    TabulaDispersa* substituti;    /* &vetus -> novus */
+    TabulaDispersa* nomina;        /* id basis -> numerus formarum
+                                    * eodem titulo (suffixum '-K') */
+               i32 i;
+
+    occursus = xar_creare(scriptor->piscina,
+        magnitudo(FoliumOccursus));
+    formae      = xar_creare(scriptor->piscina, magnitudo(FoliumForma));
+    mappae      = xar_creare(scriptor->piscina, magnitudo(FoliumPar));
+    numeri      = tabula_dispersa_creare_chorda(scriptor->piscina, 256);
+    electae     = tabula_dispersa_creare_chorda(scriptor->piscina, 64);
+    substituti  = tabula_dispersa_creare_chorda(scriptor->piscina, 256);
+    nomina      = tabula_dispersa_creare_chorda(scriptor->piscina, 64);
+    si (   occursus   == NIHIL || formae == NIHIL || mappae == NIHIL
+        || numeri     == NIHIL || electae == NIHIL
+        || substituti == NIHIL || nomina == NIHIL)
+    {
+        scriptor->causa = "compressio foliorum parari non potuit";
+        redde FALSUM;
+    }
+
+    _folia_colligere(scriptor, involucrum, occursus);
+
+    /* numeratio per formam */
+    per (i = ZEPHYRUM; i < xar_numerus(occursus); i++)
+    {
+        FoliumOccursus* o =
+            (FoliumOccursus*)xar_obtinere(occursus, i);
+                vacuum* valor;
+        memoriae_index  n;
+
+        n = tabula_dispersa_invenire(numeri, *o->clavis, &valor)
+                ? (memoriae_index)valor : ZEPHYRUM;
+        tabula_dispersa_inserere(numeri, *o->clavis,
+            (vacuum*)(n + I));
+    }
+
+    /* electio + definitio (ordine occursus primi - determinatum) */
+    per (i = ZEPHYRUM; i < xar_numerus(occursus); i++)
+    {
+        FoliumOccursus* o =
+            (FoliumOccursus*)xar_obtinere(occursus, i);
+             vacuum* valor;
+             chorda* macro;
+          StmlNodus* nodus_expansionis;
+          StmlNodus* definitio;
+        FoliumForma* forma;
+          character  id_litterae[96];
+             chorda  id;
+                i32  j;
+                i32  num;
+                i32  basis;
+
+        si (   !tabula_dispersa_invenire(numeri, *o->clavis, &valor)
+            || (memoriae_index)valor < II
+            || tabula_dispersa_continet(electae, *o->clavis))
+        {
+            perge;
+        }
+
+        /* titulus macronis ex libero <expansio> primo */
+        nodus_expansionis  = NIHIL;
+        num                = stml_numerus_liberorum(o->nodus);
+        per (j = ZEPHYRUM; j < num; j++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(o->nodus, j);
+
+            si (   l          != NIHIL
+                && l->genus   == STML_NODUS_ELEMENTUM
+                && l->titulus != NIHIL
+                && chorda_aequalis_literis(*l->titulus,
+                       SILVA_ARBOR_TAG_EXPANSIO))
+            {
+                nodus_expansionis = l;
+                frange;
+            }
+        }
+        macro = nodus_expansionis != NIHIL
+            ? stml_attributum_capere(nodus_expansionis, "macro")
+            : NIHIL;
+        si (   macro == NIHIL || macro->mensura == ZEPHYRUM
+            || macro->mensura > 64)
+        {
+            perge;  /* sine titulo tuto: formam praeterire */
+        }
+
+        /* id '@m-<macro>'; formae distinctae eiusdem macronis
+         * suffixum '-K' capiunt per NUMERATOREM tituli - tabulae
+         * grammaticae macronem unum centies argumentis diversis
+         * vocant, ergo scansio limitata (tectum '-99') GEMINUM
+         * peperit (mensuratum: lapifex_c89_grammatica). Titulus
+         * macronis '-' ferre nequit (identificator C), ergo
+         * suffixum collidi non potest. */
+        memcpy(id_litterae, "@m-", 3);
+        memcpy(id_litterae + III, macro->datum,
+            (memoriae_index)macro->mensura);
+        basis       = III + macro->mensura;
+        id.datum    = (i8*)id_litterae;
+        id.mensura  = basis;
+        {
+                    chorda* basis_internata;
+                    vacuum* prior;
+            memoriae_index  n;
+
+            basis_internata = chorda_internare(scriptor->intern, id);
+            si (basis_internata == NIHIL)
+            {
+                redde FALSUM;
+            }
+            n = tabula_dispersa_invenire(nomina, *basis_internata,
+                    &prior)
+                    ? (memoriae_index)prior : ZEPHYRUM;
+            tabula_dispersa_inserere(nomina, *basis_internata,
+                (vacuum*)(n + I));
+            si (n > ZEPHYRUM)
+            {
+                character num_lit[XVI];
+                      i32 ln;
+
+                si (_numerus_ad_literas((i32)(n + I), num_lit,
+                        (i32)magnitudo(num_lit)) == ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                id_litterae[basis]  = '-';
+                ln                  = (i32)strlen(num_lit);
+                memcpy(id_litterae + basis + I, num_lit,
+                    (memoriae_index)ln);
+                id.mensura = basis + I + ln;
+            }
+        }
+
+        definitio = stml_elementum_creare(scriptor->piscina,
+            scriptor->intern, "fragmentum");
+        si (definitio == NIHIL)
+        {
+            scriptor->causa = "definitio folii creari non potuit";
+            redde FALSUM;
+        }
+        definitio->fragmentum    = VERUM;
+        definitio->fragmentum_id = chorda_internare(scriptor->intern,
+            id);
+        /* occursus primus in definitionem MOVETUR (sedes
+         * definitionis); cella parentis vocationem infra accipit */
+        si (   definitio->fragmentum_id == NIHIL
+            || !stml_liberum_addere(definitio, o->nodus))
+        {
+            scriptor->causa = "definitio folii construi non potuit";
+            redde FALSUM;
+        }
+
+        forma = (FoliumForma*)xar_addere(formae);
+        si (forma == NIHIL)
+        {
+            redde FALSUM;
+        }
+        forma->clavis  = o->clavis;
+        forma->id      = definitio->fragmentum_id;
+        forma->primus  = o->nodus;
+        tabula_dispersa_inserere(electae, *o->clavis, forma);
+    }
+
+    /* substitutio: occursus quisque formae electae vocatio fit */
+    per (i = ZEPHYRUM; i < xar_numerus(occursus); i++)
+    {
+        FoliumOccursus* o =
+            (FoliumOccursus*)xar_obtinere(occursus, i);
+             vacuum* valor;
+        FoliumForma* forma;
+          StmlNodus* vocatio;
+          character  valor_litterae[100];
+             chorda  interior_vocationis;
+
+        si (!tabula_dispersa_invenire(electae, *o->clavis, &valor))
+        {
+            perge;
+        }
+        forma = (FoliumForma*)valor;
+
+        valor_litterae[0] = '#';
+        memcpy(valor_litterae + I, forma->id->datum,
+            (memoriae_index)forma->id->mensura);
+        interior_vocationis.datum    = (i8*)valor_litterae;
+        interior_vocationis.mensura  = I + forma->id->mensura;
+        vocatio = stml_transclusionem_creare(scriptor->piscina,
+            scriptor->intern, interior_vocationis);
+        si (vocatio == NIHIL)
+        {
+            scriptor->causa = "vocatio folii creari non potuit";
+            redde FALSUM;
+        }
+        *(StmlNodus**)xar_obtinere(o->parens->liberi, o->index) =
+            vocatio;
+        vocatio->parens = o->parens;
+
+        si (o->nodus != forma->primus)
+        {
+            _folia_paria_mappare(o->nodus, forma->primus, mappae,
+                substituti);
+        }
+    }
+
+    /* paria sedium repungere: elementa substituta ad corpus
+     * definitionis monstrant (sedes definitionis, exemplar lexN) */
+    si (   scriptor->paria != NIHIL
+        && tabula_dispersa_numerus(substituti) > ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(scriptor->paria); i++)
+        {
+            ArborParElementi* par =
+                (ArborParElementi*)xar_obtinere(scriptor->paria, i);
+            constans StmlNodus* elem = par->elementum;
+                        vacuum* novus;
+                        chorda  clavis;
+
+            clavis.datum    = (i8*)&elem;
+            clavis.mensura  = (i32)magnitudo(elem);
+            si (tabula_dispersa_invenire(substituti, clavis, &novus))
+            {
+                par->elementum = (StmlNodus*)novus;
+            }
+        }
+    }
+
+    /* definitiones in caput inserere: [fontes, post, ante] + novae
+     * + reliqua (liberi novi - insertio media Xari non est) */
+    si (xar_numerus(formae) > ZEPHYRUM)
+    {
+        Xar* liberi_novi;
+        i32  caput_finis = III;  /* fontes + def-post + def-ante */
+
+        liberi_novi = xar_creare(scriptor->piscina,
+            magnitudo(StmlNodus*));
+        si (liberi_novi == NIHIL)
+        {
+            scriptor->causa = "liberi novi creari non potuerunt";
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < xar_numerus(involucrum->liberi); i++)
+        {
+            StmlNodus** cella;
+
+            si (i == caput_finis)
+            {
+                i32 k;
+
+                per (k = ZEPHYRUM; k < xar_numerus(formae); k++)
+                {
+                    FoliumForma* f =
+                        (FoliumForma*)xar_obtinere(formae, k);
+                    StmlNodus* definitio = f->primus->parens;
+
+                    cella = (StmlNodus**)xar_addere(liberi_novi);
+                    si (cella == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    *cella             = definitio;
+                    definitio->parens  = involucrum;
+                }
+            }
+            cella = (StmlNodus**)xar_addere(liberi_novi);
+            si (cella == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *cella = *(StmlNodus**)xar_obtinere(involucrum->liberi,
+                i);
+        }
+        involucrum->liberi = liberi_novi;
+    }
+    redde VERUM;
+}
+
 SilvaArborScriptura
 silva_arbor_scribere_parsuram (
                           Piscina* piscina,
@@ -4773,9 +5217,15 @@ silva_arbor_scribere_parsuram (
         redde fructus;
     }
 
-    /* TEMPLA (macros v1): definitio post <fontes>, ante vocationes
-     * omnes - strata ordine documenti. */
-    si (!_templum_post_spatia_scribere(&scriptor, involucrum))
+    /* TEMPLA (macros v1): definitiones post <fontes>, ante
+     * vocationes omnes - strata ordine documenti. Ordo gravis:
+     * folia macronum (infra, post arborem constructam) vocationes
+     * spatiorum in corporibus ferre possunt - definitiones
+     * spatiorum PRIORES esse debent. */
+    si (   !_templum_spatiorum_scribere(&scriptor, involucrum,
+               "@post-spatia", SILVA_ARBOR_TAG_POST)
+        || !_templum_spatiorum_scribere(&scriptor, involucrum,
+               "@ante-spatia", SILVA_ARBOR_TAG_ANTE))
     {
         fructus.causa = scriptor.causa != NIHIL
             ? scriptor.causa
@@ -5006,6 +5456,16 @@ silva_arbor_scribere_parsuram (
             fructus.causa = "cauda in involucrum addi non potuit";
             redde fructus;
         }
+    }
+
+    /* FOLIA MACRONUM: post arborem INTEGRAM constructam (formae ex
+     * contento finali numerantur), ante scriptionem. */
+    si (!_folia_macronum_comprimere(&scriptor, involucrum))
+    {
+        fructus.causa = scriptor.causa != NIHIL
+            ? scriptor.causa
+            : "folia macronum comprimi non potuerunt";
+        redde fructus;
     }
 
     {

@@ -97,3 +97,20 @@ ever be). Corpus pins in probatio_silva_arbor_plagula /
 probatio_silva_canon_corpus bumped 154→155: first silva-suite run
 since lib/stml_macros.c was born; the gate found the new file and
 judged it 155/155 pure.
+
+## 2026-08-26 (later) — ante-spatia + folia macronum shipped; the corpus found the cap bug
+
+Two more arbor shapes on the v1 engine (see silva/phase-log.md same
+date): the ante mirror, and the m-leaf compressor (repeated
+expansio-carrying lexeme elements hoisted to `<#@m-<macro>>` head
+definitions, zero-arg calls, first-occurrence MOVED as definition
+body, sedes paria repointed via parallel-subtree map). Engine
+unchanged — both shapes ride T1-T6 machinery as-is; nested calls in
+definition bodies (m-bodies contain `<<#@post-spatia>>`) worked by
+construction via document-order strata.
+
+Trap recorded: id-collision suffixes need a PER-NAME COUNTER, not a
+capped scan — grammar tables invoke one macro 100+ times with
+distinct arguments; the capped loop reused `-99` → GEMINUM in 3 of
+155 files. The corpus gate caught it within the hour; the unit
+fixtures never could (no fixture has 100 shapes of one macro).

@@ -880,6 +880,83 @@ principale (vacuum)
         }
     }
 
+    /* --- T7c-b: templum ante-spatia (speculum post-spatia) -
+     * indentatio: post lineam novam possidet, residuum spatii
+     * ante lexema sequens cadit ('<ante><lex-spatia n="4"/>'). --- */
+    {
+        SilvaParsura*        origo;
+        SilvaArborScriptura  scriptura;
+        constans character*  causa;
+        constans character*  fons =
+            "int f(void)\n{\n    int x;\n    return x;\n}\n";
+
+        imprimere("\n--- T7c-b: templum ante-spatia ---\n");
+        origo = silva_parsare(piscina, "probatio.c", fons,
+            (i32)strlen(fons), &SILVA_C89_GRAMMATICA, NIHIL, NIHIL,
+            NIHIL);
+        CREDO_NON_NIHIL (origo);
+        si (origo != NIHIL)
+        {
+            scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+                &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<#@ante-spatia", piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<<#@ante-spatia n=\"4\">>",
+                        piscina));
+            }
+        }
+        causa = NIHIL;
+        CREDO_VERUM (_circuitus(piscina, fons, &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+    }
+
+    /* --- T7d: folia macronum - folium lexematis expansionem
+     * ferens quod BIS identice apparet (positiones ex sede
+     * DEFINITIONIS - ergo octetim aequale) in definitionem
+     * '<#@m-<macro>>' capitis levatur, sedes vocationes fiunt.
+     * Compressio ex contento derivata (independens invocationis). --- */
+    {
+        SilvaParsura*        origo;
+        SilvaArborScriptura  scriptura;
+        constans character*  causa;
+        constans character*  fons =
+            "#define N 0\nint a = N;\nint b = N;\n";
+
+        imprimere("\n--- T7d: folia macronum (m-fragmenta) ---\n");
+        origo = silva_parsare(piscina, "probatio.c", fons,
+            (i32)strlen(fons), &SILVA_C89_GRAMMATICA, NIHIL, NIHIL,
+            NIHIL);
+        CREDO_NON_NIHIL (origo);
+        si (origo != NIHIL)
+        {
+            scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+                &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<#@m-N", piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<<#@m-N>>", piscina));
+            }
+        }
+        causa = NIHIL;
+        CREDO_VERUM (_circuitus(piscina, fons, &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

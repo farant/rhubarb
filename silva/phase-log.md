@@ -14184,3 +14184,39 @@ LINKER error inside censor.sh (fix: tools/silva_fontes_generare.sh
 undefined-symbol). desiderata: formator divergence-vs-baseline
 reporting (the 480-line standing reports on probationes/ drown new
 hunks — repeat of the 08-24 wish, now twice-felt).
+
+## 2026-08-26 — ADDENDUM: two more template shapes shipped (ante-spatia + folia macronum)
+
+**`<#@ante-spatia n="@n">`** — mirror of post-spatia (indentation
+residue after the newline-owning post). Helpers parameterized
+(`_vocatio_spatiorum`/`_templum_spatiorum_scribere`); T7c-b fixture.
+Discipline note: this fixture was never observed red in isolation
+(emitter landed in the same breath) — mirror of a proven path, but
+recorded.
+
+**Folia macronum (`<#@m-<macro>>`)** — the compressor: a post-build
+pass over the finished document tree collects lexeme elements
+carrying an `<expansio>` origin, keys them by compact trivia-free
+serialization, and hoists any shape occurring ≥2× into a head
+definition named from the macro (`@m-redde`, `@m-I`, `@m-nomen-2`…),
+zero-arg calls at every site. First occurrence is MOVED into the
+definition (sedes definitionis — the lexN posture); sedes paria for
+replaced occurrences repointed at the definition body via a
+parallel-subtree map (isomorphism guaranteed by byte-equal
+signatures). Definitions insert after the spatia defs — order
+matters, m-bodies contain spatia calls (strata). Derived from
+content → invocation-independent.
+
+**The bug the corpus caught in one round:** the id-collision
+suffix loop was capped (`-99`) and linear-scanned; lapifex grammar
+tables invoke one macro hundreds of times with distinct arguments →
+GEMINUM on `@m-VALOR_EX-99` in 3 files (plagula 152/155). Fix =
+per-name counter tabula (no cap, O(1)); a macro name cannot contain
+`-`, so suffixes cannot collide with names. Corpus green same hour:
+silva 50/50, plagula 78+155 byte-exact, canon 155/155 purae,
+amalgam VERIFICATUM.
+
+Measured effect (lib/piscina.c document): 399KB → 365KB (−8.5%);
+39 m-definitions serving 195 call sites (avg 5 uses/shape) + 614
+spatia calls. Remaining banked shape: `<post>` single nova-linea
+(zero-loculi, ~9.5k/tier) and the far-end `<#@parametrum>`.
