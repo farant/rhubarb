@@ -3186,6 +3186,38 @@ s32 principale(vacuum)
     }
 
     {
+        /* Spatium templi '#@' (macros v1): id fragmenti '@' DUCENS
+         * ferre potest - '<#@f>' = definitio templi (instantiatio),
+         * '<#f>' = fragmentum contenti (alias/identitas). Sigillum
+         * partem id est - '@f' internatur, non 'f'. */
+        StmlResultus res;
+        StmlNodus* frag;
+        chorda serialized;
+
+        res = stml_legere_ex_literis(
+            "<doc><#@post-spatia n=\"@n\"><x/></#></doc>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        frag = stml_invenire_liberum(res.elementum_radix, "#");
+        CREDO_NON_NIHIL(frag);
+        si (frag != NIHIL)
+        {
+            CREDO_VERUM(frag->fragmentum);
+            CREDO_NON_NIHIL(frag->fragmentum_id);
+            si (frag->fragmentum_id != NIHIL)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS(*frag->fragmentum_id,
+                    "@post-spatia");
+            }
+        }
+        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#@post-spatia n=\"@n\"><x/></#></doc>");
+
+        imprimere("  Fragmentum spatii templi (#@): PRAETERITUM\n");
+    }
+
+    {
         /* Fragment with attributes */
         StmlResultus res;
         StmlNodus* frag;

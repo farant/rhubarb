@@ -41,12 +41,39 @@ with provenance, never string-level.
 
 ## 2. Surface
 
-### 2.1 Definition side (parsura §4, blessed as-is)
+### 2.0 Template-space sigil `#@` (decided 2026-08-26 — the arbor forcing case)
+
+Fragment ids beginning `@` are TEMPLATE-space; everything the rest
+of this spec describes (collection, dropping, filling, vitia,
+provenance) applies to template-space ONLY. Fragments without the
+sigil (`<#lex1>`, `<#>`) are CONTENT fragments and the engine never
+touches them: the definition stays in the content view, its
+transclusions stay unresolved nodes, no vitium fires.
+
+WHY: the first consumer (arbor, T7) exposed that one surface carried
+two opposite semantics. Arbor's `<#lexN>` + `<<#lexN>>` is
+TRANSCLUSION in the original (Nelson) sense — aliasing: one object,
+many windows, identity preserved ("identitas res est, duplicatio
+mentiretur" — silva_arbor.c). A macro call is INSTANTIATION: fresh
+copy per site, divergent under arguments. Blanket expansion would
+have deleted every shared lexeme's first use and cloned every
+identity. The split is not a workaround, it is a correction: the
+NEW thing (templates) carries the mark; bare `<<#id>>` keeps meaning
+what transclusion always meant. Doctrine: **transclusio = alias
+(consumer-resolved, identity); templum = instantiatio
+(engine-resolved, `#@`)**. The interview's "same apparatus" claim is
+hereby narrowed to template space.
+
+Mechanics: the `@` is PART of the id (`@f` is interned; definition
+`<#@f>` and call `<<#@f>>` match on it). The stml lexer accepts `@`
+only as the FIRST character of a fragment id.
+
+### 2.1 Definition side (parsura §4, blessed as-is; re-spelled `#@` 2026-08-26)
 
 ```stml
-<#lex-zephyrum position="@position">
+<#@lex-zephyrum position="@position">
   <lex-integer position="&@position;">0</lex-integer>
-</#lex-zephyrum>
+</#>
 ```
 
 - Slots are DECLARED on the fragment's opening tag (`attr="@name"`),
@@ -64,15 +91,16 @@ with provenance, never string-level.
 ### 2.2 Call side (decided round 2)
 
 ```stml
-<<#lex-zephyrum position="123">>
+<<#@lex-zephyrum position="123">>
 ```
 
-Transclusion-with-arguments: interior = `#id` + attribute-syntax
-pairs. `<#id>` stays purely definitional; invocation is
-reference-shaped. A no-argument call to a slotless fragment is plain
-transclusion resolution — the visio §6 arbor pull, satisfied by the
-same machinery. Selector-form transclusion (valor not starting `#`)
-passes through as an unresolved node, RESERVATUM unchanged.
+Transclusion-with-arguments: interior = `#@id` + attribute-syntax
+pairs. `<#@id>` stays purely definitional; invocation is
+reference-shaped. A no-argument call to a slotless TEMPLATE is plain
+splice-resolution by the same machinery — but content-space
+transclusion (`<<#lex1>>`, `<<selector>>`) passes through as an
+unresolved node for the CONSUMER to resolve (§2.0: alias semantics
+cannot be served by a cloning engine).
 
 ### 2.3 Strata (decided round 2)
 
@@ -82,7 +110,7 @@ Forward reference = vitium. Termination by construction, zero graph
 machinery. Nested calls expand recursively during the fill; a nota's
 `stratum` = fill-recursion depth.
 
-### 2.4 Vitium taxonomy (all loud, first error wins)
+### 2.4 Vitium taxonomy (all loud, first error wins; template-space only per §2.0)
 
 | vitium | trigger |
 |---|---|

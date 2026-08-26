@@ -70,15 +70,21 @@ _vitium_ponere (
     }
 }
 
-/* Estne nodus definitio macronis? (fragmentum cum id; fragmenta
- * anonyma contentum manent - nihil ea vocare potest) */
+/* Estne nodus definitio TEMPLI? Spatium templi sigillo '@' ducenti
+ * signatur ('<#@f>'); fragmenta sine '@' (anonyma aut nominata,
+ * e.g. '<#lex1>' arboris) fragmenta CONTENTI sunt - transclusio
+ * eorum ALIAS est (identitas rei consumentis), non instantiatio,
+ * ergo machina ea numquam tangit. Decretum 2026-08-26:
+ * transclusio = alias, templum = instantiatio. */
 interior b32
 _est_definitio (
     constans StmlNodus* nodus)
 {
     redde    nodus->genus == STML_NODUS_ELEMENTUM
           && nodus->fragmentum
-          && nodus->fragmentum_id != NIHIL;
+          && nodus->fragmentum_id != NIHIL
+          && nodus->fragmentum_id->mensura > I
+          && nodus->fragmentum_id->datum[ZEPHYRUM] == (i8)'@';
 }
 
 interior StmlMacroDefinitio*
@@ -399,15 +405,18 @@ _definitiones_colligere (
     redde VERUM;
 }
 
-/* Estne transclusio vocatio macronis? (valor incipit '#') */
+/* Estne transclusio vocatio templi? (valor incipit '#@' - spatium
+ * templi solum; '<<#lex1>>' transclusio contenti manet, quam
+ * consumens resolvit) */
 interior b32
 _est_vocatio (
     constans StmlNodus* nodus)
 {
     redde    nodus->genus == STML_NODUS_TRANSCLUSIO
           && nodus->valor != NIHIL
-          && nodus->valor->mensura > ZEPHYRUM
-          && nodus->valor->datum[ZEPHYRUM] == (i8)'#';
+          && nodus->valor->mensura > II
+          && nodus->valor->datum[ZEPHYRUM] == (i8)'#'
+          && nodus->valor->datum[I] == (i8)'@';
 }
 
 interior b32

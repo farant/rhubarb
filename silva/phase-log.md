@@ -14080,3 +14080,41 @@ Churn, and the lesson that generalizes:
   patterns like `sigillum="..."` are safe). Rule for new
   scripts: when a tool has a query verb, use it; never regex
   its STML document.
+
+## 2026-08-26 — INTENTIO: arbor macro slice (stml macros v1, T7)
+
+The stml macros engine (parameterized fragments — `<#f p="@p">` /
+`<<#f p="v">>` / `stml_expandere`; lib/stml_macros.c, T1-T6 complete
+2026-08-25) gets its first real consumer: the arbor parsura documents.
+
+**Measured (T7.2, census probe over generated documents — trivia-free
+canonical signatures, exact + value-masked, scratchpad
+t7_mensura/mensura_formarum.c):** 73-file roundtrip tier = 193,027
+elements, 62,302 unique exact shapes; 6-lib-file sample = 143,386
+elements. Top candidates: `<post><lex-spatia n="1"/></post>` ×9,481
+(+6,378 lib); `<lex-spatia n=*>` masked ×16,127 with 29 variants;
+semicolon-terminator subtree ×746/1,186 (65B); latina-macro expansio
+leaves (e.g. NIHIL, 189B ×118 in 6 files) — byte-identical INCLUDING
+positions because cross-fons lexemes carry DEFINITION-site coords.
+
+**Chosen shape (Fran-approved):** `<#post-spatia n="@n">` — body
+`<post><lex-spatia n="&@n;"/></post>`, one loculus, ~18k call sites
+across tiers. Rationale: smallest emitter surgery that proves the
+PARAMETERIZED engine at the arbor seam (zero-arg machinery already
+exists via <#lexN>); banked follow-ups: per-latina-macro fragments
+(best semantic story), <#parametrum> (full DSL demo, 4+ loculi).
+
+**Tripwire cleared:** pretty-writer probe (t7_mensura/proba_pulchrum.c)
+— definition + calls through pretty = stable; compact = byte-exact vs
+source; call inside raw (`!`) element roundtrips; `&@n;` in attribute
+position rides verbatim. Desideratum 01M0GR6Y1T does NOT activate for
+this shape class.
+
+**Plan:** loader first (silva_arbor_legere_parsuram calls
+stml_expandere post-legere; macro-free passthrough = zero behavior
+change; amalgam duty incl. CADENDA_TYPEDEF for the three Expansio
+types) as a standalone commit — 232 corpus files then flow through
+the engine in passthrough mode before any macro is emitted. Then the
+emitter (definition after <fontes>, calls at the post-single-spatia
+trivia branch), born-red fixture first. M2 byte-gate (78+154) must
+hold throughout.

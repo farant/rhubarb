@@ -56,3 +56,44 @@ noted, not handled).
 Gates at birth: probatio_stml_macros 92/92 (20 fixture groups, all
 born red first); root suite 141/141; formator CONFORMIS on all
 three files; no amalgam duty until T7 makes silva a consumer.
+
+## 2026-08-26 — Template-space split (`#@`): the first consumer immediately corrected the design
+
+T7 (arbor slice) began with the planned "loader-first, macro-free
+passthrough" step and instantly hit a wall the plan had not seen:
+**arbor documents are not macro-free.** Every corpus document with
+ambigui carries `<#lexN>` + `<<#lexN>>` — the shared-lexeme identity
+machinery ("identitas res est, duplicatio mentiretur"). Blanket
+`stml_expandere` would have (a) DROPPED each `<#lexN>` definition —
+which sits at the first USE site, i.e. it IS content — deleting the
+lexeme, and (b) replaced identity pointers with clones.
+
+Root cause, named with Fran: one surface, two opposite semantics.
+Bare transclusion is ALIASING (Nelson's transclusion: one object,
+many windows — identity is the payload); a macro call is
+INSTANTIATION (fresh copy, divergent under arguments). The
+interview's "zero-arg call = plain transclusion resolution, same
+apparatus" conflated them — plausible because our pure-projection
+design makes macros reference-like at the FILE level; the difference
+only appears at the TREE level when a consumer asks "same object?".
+Arbor is the first consumer that asks.
+
+Fix (Fran chose the sigil): template-space ids begin `@` —
+`<#@post-spatia>` defines, `<<#@post-spatia n="1">>` instantiates;
+the `@` is PART of the interned id. Content fragments and their
+transclusions pass through the engine untouched. Surgery was two
+predicates (`_est_definitio` requires leading `@`;
+`_est_vocatio` requires `#@`) + a one-`si` lexer extension
+(`_tok_legere_fragmentum_id` accepts leading `@`). Nested-opacity
+consequence, intended: a CONTENT fragment inside a template body is
+now scanned/filled like ordinary content; only nested TEMPLATE
+definitions stay quoted.
+
+Fixtures: three born-red passthrough groups (content fragments
+survive; `<<#solus>>` without definition is NOT a vitium; mixed
+template+content doc — the arbor case itself); all prior fixtures
+re-spelled `#@` (engine one day old — cheapest re-spell there will
+ever be). Corpus pins in probatio_silva_arbor_plagula /
+probatio_silva_canon_corpus bumped 154→155: first silva-suite run
+since lib/stml_macros.c was born; the gate found the new file and
+judged it 155/155 pure.

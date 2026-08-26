@@ -586,13 +586,13 @@ principale (vacuum)
      * Hic numerus est quem M2 vere petit: codex NOSTER, ubi
      * 'si'/'per'/'redde'/'NIHIL' omnia expansiones macro sunt.
      * ========================================================== */
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, 154);
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, 155);
 
     /* Clausura vere praebita. Si porta apparatus incendit, numerus
      * circuitus NIHIL mensurat - vide _lexemata_ex_fonte_numerare:
      * numerare expansiones OMNES LIX plagulas falso transire
      * sinebat dum latina.h numquam aperiretur. */
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, 154);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, 155);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.clausurae_truncatae, ZEPHYRUM);
 
@@ -604,12 +604,12 @@ principale (vacuum)
      * addito, silva plagulas OMNES emittit.
      * Si HIC numerus cadit, vitium silvae est; si OCTETIM EXACTAE
      * solae cadunt, nostrum. */
-    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 154);
+    CREDO_AEQUALIS_I32 (census_latinus.directa_exacta, 155);
 
     /* PROIECTIO NIHIL AMITTIT: circuitus STML numerum silvae
      * AEQUAT - CLIV/CLIV utrobique. Quidquid silva emittere potest,
      * per STML circuit, ET NIHIL RECUSATUR. */
-    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 154);
+    CREDO_AEQUALIS_I32 (census_latinus.octetim_exactae, 155);
     CREDO_AEQUALIS_I32 (census_latinus.octeti_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.emissio_recusata, ZEPHYRUM);

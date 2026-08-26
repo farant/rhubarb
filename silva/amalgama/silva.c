@@ -9702,7 +9702,10 @@ _tok_legere_nomen (
     redde result;
 }
 
-/* Read fragment ID (alphanumeric, underscore, hyphen) */
+/* Read fragment ID (alphanumeric, underscore, hyphen). Sigillum
+ * spatii templi '@' DUCENS solum licet (macros v1: '<#@f>' =
+ * definitio templi, '<#f>' = fragmentum contenti/aliasis) - pars
+ * id est, ergo '@f' internatur et vocationes '#@f' congruunt. */
 interior SilvaChorda
 _tok_legere_fragmentum_id (
     StmlTokenContext* ctx)
@@ -9712,6 +9715,11 @@ _tok_legere_fragmentum_id (
 
     initium = ctx->positus;
 
+    si (   ctx->positus < ctx->input.mensura
+        && _tok_aspicere(ctx, ZEPHYRUM) == '@')
+    {
+        _tok_progredi(ctx, I);
+    }
     dum (   ctx->positus < ctx->input.mensura
          && _est_fragmentum_id_character(_tok_aspicere(ctx, ZEPHYRUM)))
     {

@@ -514,14 +514,14 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_planus.vitia_summa, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planus.purae, (i32)73);
 
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)154);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)154);
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)155);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)155);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)154);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)155);
 
     /* ============================================================
      * QUID PORTA REVERA VIDERIT

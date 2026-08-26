@@ -78,7 +78,7 @@ principale (
 
         imprimere("\n--- definitio + vocatio nuda ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f><a/><b/></#><<#f>></radix>", piscina);
+            "<radix><#@f><a/><b/></#><<#@f>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -114,7 +114,7 @@ principale (
                     && radix_expansa_elem != NIHIL)
                 {
                     CREDO_CHORDA_AEQUALIS_LITERIS (
-                        *nota->fragmentum_id, "f");
+                        *nota->fragmentum_id, "@f");
                     CREDO_AEQUALIS_I32 (nota->stratum, I);
                     /* vocatio = nodus in arbore ORIGINALI */
                     CREDO_VERUM (nota->vocatio
@@ -129,7 +129,7 @@ principale (
                 /* (f) arbor originalis intacta */
                 CREDO_CHORDA_AEQUALIS_LITERIS (
                     stml_scribere(res.radix, piscina, FALSUM),
-                    "<radix><#f><a/><b/></#><<#f>></radix>");
+                    "<radix><#@f><a/><b/></#><<#@f>></radix>");
             }
         }
     }
@@ -169,7 +169,7 @@ principale (
               chorda fons;
 
         imprimere("\n--- fragmentum ignotum ---\n");
-        fons = chorda_ex_literis("<radix><<#nemo>></radix>",
+        fons = chorda_ex_literis("<radix><<#@nemo>></radix>",
                                  piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -182,7 +182,7 @@ principale (
             CREDO_AEQUALIS_I32 (expansio.vitium,
                                 STML_EXPANSIO_FRAGMENTUM_IGNOTUM);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "nemo");
+                                           "@nemo");
             CREDO_VERUM (expansio.radix_expansa == NIHIL);
         }
     }
@@ -194,7 +194,7 @@ principale (
 
         imprimere("\n--- fragmentum posterius ---\n");
         fons = chorda_ex_literis(
-            "<radix><<#f>><#f><a/></#></radix>", piscina);
+            "<radix><<#@f>><#@f><a/></#></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -206,7 +206,7 @@ principale (
             CREDO_AEQUALIS_I32 (expansio.vitium,
                                 STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "f");
+                                           "@f");
         }
     }
 
@@ -217,7 +217,7 @@ principale (
 
         imprimere("\n--- fragmentum geminum ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f><a/></#><#f><b/></#></radix>", piscina);
+            "<radix><#@f><a/></#><#@f><b/></#></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -229,7 +229,7 @@ principale (
             CREDO_AEQUALIS_I32 (expansio.vitium,
                                 STML_EXPANSIO_FRAGMENTUM_GEMINUM);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "f");
+                                           "@f");
         }
     }
 
@@ -240,7 +240,7 @@ principale (
 
         imprimere("\n--- fragmentum intra corpus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f><#g/></#><<#f>></radix>", piscina);
+            "<radix><#@f><#g/></#><<#@f>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -259,6 +259,96 @@ principale (
         }
     }
 
+    /* --- SPATIUM CONTENTI: '<#id>' sine '@' = fragmentum
+     * contenti/aliasis (transclusio = alias, non templum -
+     * identitas rei consumentis est, e.g. lexN arboris). Machina
+     * expansionis ea NON tangit: definitio manet ut contentum,
+     * transclusio manet ut nodus, tabula vacua. --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- fragmenta contenti transeunt ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#lex1><a/></#><<#lex1>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><#lex1><a/></#><<#lex1>></radix>");
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(expansio.tabula_expansionum),
+                    ZEPHYRUM);
+            }
+        }
+    }
+
+    /* --- transclusio contenti ad nusquam: res consumentis, non
+     * vitium machinae (FRAGMENTUM_IGNOTUM spatio templi solum) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- transclusio contenti sine definitione ---\n");
+        fons = chorda_ex_literis(
+            "<radix><<#solus>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><<#solus>></radix>");
+            }
+        }
+    }
+
+    /* --- spatia mixta: templum et contentum in documento uno -
+     * casus arboris ipse (post-spatia iuxta lexN) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- spatia mixta (templum + contentum) ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@t><x/></#><#lex1><a/></#>"
+            "<<#@t>><<#lex1>></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><#lex1><a/></#><x/><<#lex1>></radix>");
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(expansio.tabula_expansionum), I);
+            }
+        }
+    }
+
     /* --- (T4 a+b) loculi: impletio attributi tota + interpolata --- */
     {
         StmlResultus res;
@@ -266,9 +356,9 @@ principale (
 
         imprimere("\n--- loculi: impletio attributorum ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f p=\"@p\">"
+            "<radix><#@f p=\"@p\">"
             "<a x=\"&@p;\" y=\"pre-&@p;-post\"/></#>"
-            "<<#f p=\"123\">></radix>", piscina);
+            "<<#@f p=\"123\">></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -294,8 +384,8 @@ principale (
 
         imprimere("\n--- loculi: impletio textus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#t v=\"@v\"><m>&@v;!</m></#>"
-            "<<#t v=\"salve\">></radix>", piscina);
+            "<radix><#@t v=\"@v\"><m>&@v;!</m></#>"
+            "<<#@t v=\"salve\">></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -321,8 +411,8 @@ principale (
 
         imprimere("\n--- loculus non impletus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
-            "<<#f>></radix>", piscina);
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -335,7 +425,7 @@ principale (
                                 STML_EXPANSIO_LOCULUS_NON_IMPLETUS);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "p");
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "f");
+                                           "@f");
         }
     }
 
@@ -346,8 +436,8 @@ principale (
 
         imprimere("\n--- argumentum superfluum ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
-            "<<#f p=\"1\" q=\"2\">></radix>", piscina);
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f p=\"1\" q=\"2\">></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -369,7 +459,7 @@ principale (
 
         imprimere("\n--- loculus ignotus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f p=\"@p\"><a x=\"&@ignotum;\"/></#></radix>",
+            "<radix><#@f p=\"@p\"><a x=\"&@ignotum;\"/></#></radix>",
             piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -384,7 +474,7 @@ principale (
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus,
                                            "ignotum");
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "f");
+                                           "@f");
         }
     }
 
@@ -423,8 +513,8 @@ principale (
 
         imprimere("\n--- argumentum cum '>>' ---\n");
         fons = chorda_ex_literis(
-            "<radix><#f p=\"@p\"><a x=\"&@p;\"/></#>"
-            "<<#f p=\"a>>b\">></radix>", piscina);
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f p=\"a>>b\">></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -450,8 +540,8 @@ principale (
 
         imprimere("\n--- vocatio nidificata ---\n");
         fons = chorda_ex_literis(
-            "<radix><#a><x/></#><#b><<#a>><y/></#>"
-            "<<#b>></radix>", piscina);
+            "<radix><#@a><x/></#><#@b><<#@a>><y/></#>"
+            "<<#@b>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -475,7 +565,7 @@ principale (
                 si (nota != NIHIL)
                 {
                     CREDO_CHORDA_AEQUALIS_LITERIS (
-                        *nota->fragmentum_id, "b");
+                        *nota->fragmentum_id, "@b");
                     CREDO_AEQUALIS_I32 (nota->stratum, I);
                 }
                 nota = (StmlExpansioNota*)xar_obtinere(
@@ -483,7 +573,7 @@ principale (
                 si (nota != NIHIL)
                 {
                     CREDO_CHORDA_AEQUALIS_LITERIS (
-                        *nota->fragmentum_id, "a");
+                        *nota->fragmentum_id, "@a");
                     CREDO_AEQUALIS_I32 (nota->stratum, II);
                 }
             }
@@ -497,7 +587,7 @@ principale (
 
         imprimere("\n--- posterius in corpore ---\n");
         fons = chorda_ex_literis(
-            "<radix><#b><<#a>></#><#a><x/></#><<#b>></radix>",
+            "<radix><#@b><<#@a>></#><#@a><x/></#><<#@b>></radix>",
             piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
@@ -510,7 +600,7 @@ principale (
             CREDO_AEQUALIS_I32 (expansio.vitium,
                                 STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "a");
+                                           "@a");
         }
     }
 
@@ -521,8 +611,8 @@ principale (
 
         imprimere("\n--- trans strata non declaratus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#a p=\"@p\"><x v=\"&@p;\"/></#>"
-            "<#b><<#a p=\"&@q;\">></#></radix>", piscina);
+            "<radix><#@a p=\"@p\"><x v=\"&@p;\"/></#>"
+            "<#@b><<#@a p=\"&@q;\">></#></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -535,7 +625,7 @@ principale (
                                 STML_EXPANSIO_LOCULUS_IGNOTUS);
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.loculus, "q");
             CREDO_CHORDA_AEQUALIS_LITERIS (expansio.fragmentum,
-                                           "b");
+                                           "@b");
         }
     }
 
@@ -546,9 +636,9 @@ principale (
 
         imprimere("\n--- trans strata declaratus ---\n");
         fons = chorda_ex_literis(
-            "<radix><#a p=\"@p\"><x v=\"&@p;\"/></#>"
-            "<#b q=\"@q\"><<#a p=\"&@q;\">></#>"
-            "<<#b q=\"7\">></radix>", piscina);
+            "<radix><#@a p=\"@p\"><x v=\"&@p;\"/></#>"
+            "<#@b q=\"@q\"><<#@a p=\"&@q;\">></#>"
+            "<<#@b q=\"7\">></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -576,8 +666,8 @@ principale (
 
         imprimere("\n--- catena trium stratorum ---\n");
         fons = chorda_ex_literis(
-            "<radix><#a><x/></#><#b><<#a>></#><#c><<#b>></#>"
-            "<<#c>></radix>", piscina);
+            "<radix><#@a><x/></#><#@b><<#@a>></#><#@c><<#@b>></#>"
+            "<<#@c>></radix>", piscina);
         res  = stml_legere(fons, piscina, intern);
         CREDO_VERUM (res.successus);
         si (res.successus)
@@ -601,7 +691,7 @@ principale (
                 si (nota != NIHIL)
                 {
                     CREDO_CHORDA_AEQUALIS_LITERIS (
-                        *nota->fragmentum_id, "a");
+                        *nota->fragmentum_id, "@a");
                     CREDO_AEQUALIS_I32 (nota->stratum, III);
                 }
             }
