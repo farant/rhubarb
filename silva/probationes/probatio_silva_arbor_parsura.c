@@ -957,6 +957,53 @@ principale (vacuum)
         }
     }
 
+    /* --- T7e: familia parametrorum - parametrum formae summae
+     * (monstrator: 'T* x') in vocationem templi cum argumentis
+     * BLOCI comprimitur: structura (involucra specificatores/
+     * declarator/tok) in definitionem capitis semel, contenta tok
+     * in argumenta subarborea (par. 6.1 - axis participationis
+     * lexN in argumentum solvitur). Sceletum ambulans v2:
+     * congruentia = definitio retro currens. --- */
+    {
+        SilvaParsura*        origo;
+        SilvaArborScriptura  scriptura;
+        constans character*  causa;
+        constans character*  fons =
+            "typedef int T;\nint f(T* x)\n{\n    return *x;\n}\n";
+
+        imprimere("\n--- T7e: familia parametrorum ---\n");
+        origo = silva_parsare(piscina, "probatio.c", fons,
+            (i32)strlen(fons), &SILVA_C89_GRAMMATICA, NIHIL, NIHIL,
+            NIHIL);
+        CREDO_NON_NIHIL (origo);
+        si (origo != NIHIL)
+        {
+            scriptura = silva_arbor_scribere_parsuram(piscina, origo,
+                &SILVA_C89_REGISTRUM, "c89", origo->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<#@par-monstratum",
+                        piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<<#@par-monstratum>>",
+                        piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<@typus=", piscina));
+                CREDO_CHORDA_CONTINET (scriptura.textus,
+                    chorda_ex_literis("<@nomen=", piscina));
+            }
+        }
+        causa = NIHIL;
+        CREDO_VERUM (_circuitus(piscina, fons, &causa));
+        si (causa != NIHIL)
+        {
+            imprimere("  causa: %s\n", causa);
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

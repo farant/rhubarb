@@ -14220,3 +14220,83 @@ Measured effect (lib/piscina.c document): 399KB → 365KB (−8.5%);
 39 m-definitions serving 195 call sites (avg 5 uses/shape) + 614
 spatia calls. Remaining banked shape: `<post>` single nova-linea
 (zero-loculi, ~9.5k/tier) and the far-end `<#@parametrum>`.
+
+## 2026-08-26 — INTENTIO + RELATIO: familia parametrorum (v1.5 consummata + sceletum ambulans v2)
+
+**INTENTIO.** The far-end shape from the T7 measurement arc: compress
+the top parametrum skeletons into template calls with BLOCK arguments
+(the §6.1 machinery built earlier today). The lexN-sharing axis —
+which multiplied 52/189 skeletons out of a handful of structures —
+dissolves into subtree arguments: templates own the wrapper
+structure, each tok_* content becomes an argument, and one template
+covers shared-call/inline/first-use variants alike (product → sum,
+as the T7.2 analysis predicted). The matcher is the v2 walking
+skeleton: "the definition run backwards," structured as
+match→argument-map so the general pattern engine can replace it.
+
+**RELATIO. Shipped** (same day as the three v1.5 decrees it consumes
+— the full arc decree→engine→consumer in one session):
+
+- Fresh census on post-compressor documents (probe rebuilt from the
+  T7 method): plain tier 4,328 parametra / 52 skeletons; lib tier
+  106,117 / 189; top-3 structures = 81-87% both tiers, same shapes
+  same order. Full shape-3 extraction caught `<internum>` inside
+  declarator-monstrator that the truncated census output had hidden
+  — the concrete-instance extraction step earned its place.
+- IDENTITY PROBES before building (both passed): a `<#lexN>`
+  content-fragment definition INSIDE an argument-element (a)
+  survives stml_expandere into the expanded tree exactly once with
+  the later `<<#lexN>>` alias intact, and (b) is FOUND by canon's
+  fragment collection so later aliases resolve — zero vitia. The
+  captured forests can carry first-use definitions safely.
+- Family: `_par_familia_fons` literal parsed once per scriptura —
+  three templates (par-nomina / par-declaratum / par-monstratum),
+  loculi declared on the def tags, bodies = wrapper structure with
+  `&@x;` tok-content slots.
+- Matcher `_par_congruere`: lockstep definition-body vs candidate;
+  literal elements compare titulus/genus/fragmentum/crudus/
+  attributa byte-wise; a def child list that is EXACTLY one
+  whole-`&@x;` text = forest capture of ALL candidate children
+  (≥1 — empty would make a tombstone argument and break
+  expansion); repeated loculus → forests must serialize equal
+  (rule V honored though the family never triggers it). Pairs
+  (candidate wrapper → definition element) recorded during the
+  walk for sedes repointing — the match walk IS the isomorphism
+  map, no second pass needed (folia needed byte-equal signatures
+  for that guarantee; here the match itself proves it).
+- Compressor `_parametra_comprimere` (folia's sibling, runs after
+  it): collect → match (first template wins; matched parametra not
+  descended into) → per-parent liberi rebuild replacing each
+  matched parametrum with call + argument-elements (captures MOVED,
+  never cloned — lexN identity) → sedes sweep → used definitions
+  inserted at caput III in family order (invocation-independent).
+  Memory-failure inside matching = skip candidate (compression is
+  OPTIONAL; uncompressed output stays valid) — writer-error style
+  hard failure only for construction steps.
+- Gates: T7e born-red → green; silva 50/50 with the FULL corpus
+  byte-exact through the circuit (fons → STML with three
+  compression layers → load+expand → fons bytes); root suite +
+  amalgam in flight at RELATIO time.
+- Measured (this pass alone, on top of spatia+folia): piscina
+  −3.4% (74 calls), chorda −4.0%, http −4.8%, tabula_dispersa
+  −7.9%; cumulative piscina 399KB → 353KB (−11.7%).
+
+**Instrumenta debrief.** adhibita: census probes (rebuilt from the
+documented T7 method — the method note paid for itself one session
+later), exempla extractor (concrete instances beat truncated
+signatures), identity probes (retired both design risks before any
+code), arbor.sh, formator/censor/examen hooks. fructus: the
+`<internum>` catch; the probe-before-build discipline turned the
+two scariest unknowns into two green lines. asperitates: census
+output truncation at 150 chars hid a structural element — the
+extractor should print full skeletons for elected shapes.
+desiderata: an attr-element CONSTRUCTOR in stml's public API
+(writer-side authoring currently sets attributum_titulus by hand
+after elementum_creare — third site will want
+stml_attributum_elementum_creare).
+
+**Narrowings, named:** tail shapes (const-prefixed, primitivus+
+declarator, arrays: rows 4-10 of the census ≈ 10-14%) are banked
+family growth — same machinery, add templates when the compression
+is worth the head bytes. Subtree-writer documents still have no
+definition head (standing T7 narrowing, unchanged landing spot).
