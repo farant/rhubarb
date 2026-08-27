@@ -33,7 +33,7 @@
 #include "internamentum.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
-#include "silva_tabulae.h"
+#include "silva_registrum.h"
 #include "silva_expandere.h"
 #include "silva_parsare.h"   /* SilvaParsura - superficies parsurae (M2) */
 

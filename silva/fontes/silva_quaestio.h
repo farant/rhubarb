@@ -86,7 +86,7 @@
 #include "xar.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
-#include "silva_tabulae.h"
+#include "silva_registrum.h"
 
 /* ==================================================
  * IR selectoris (QB/QC partes iam in formis - API primum)

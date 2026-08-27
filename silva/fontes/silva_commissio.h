@@ -30,7 +30,7 @@
 #include "tabula_dispersa.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
-#include "silva_tabulae.h"
+#include "silva_registrum.h"
 
 /* ==================================================
  * Oraculum typorum (binarium in M1: novit/ignotum;

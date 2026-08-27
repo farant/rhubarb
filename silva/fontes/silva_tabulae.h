@@ -20,6 +20,7 @@
 
 #include "latina.h"
 #include "silva_token.h"
+#include "silva_registrum.h"   /* SilvaTabGenus/Locus/RegistrumCoctum (M4) */
 
 /* ==================================================
  * Genus actionis
@@ -83,26 +84,16 @@ nomen structura {
 
 
 /* ==================================================
- * Registrum generum coctum (layouts nodorum, S21/S20)
+ * Registrum generum coctum -> silva_registrum.h
+ *
+ * SCISSUM (M4): SilvaTabLocus, SilvaTabGenus,
+ * SilvaRegistrumCoctum in caput proprium migraverunt, quod
+ * NIHIL includit praeter latina.h. Vocabularium nodorum
+ * motorem parsandi nescit; consumens qui registro SOLO eget
+ * silva_registrum.h includat, non hoc caput.
+ *
+ * Hic re-includitur ut vocantes exsistentes intacti maneant.
  * ================================================== */
-
-nomen structura {
-    constans character* titulus;     /* nomen loci */
-    s32                 species;     /* SilvaLocusSpecies */
-} SilvaTabLocus;
-
-nomen structura {
-    constans character* titulus;     /* nomen generis */
-    i32                 loci_offset; /* in seriem planam locorum */
-    i32                 loci_numerus;
-} SilvaTabGenus;
-
-nomen structura {
-    constans SilvaTabGenus* genera;
-    i32                     numerus_generum;
-    constans SilvaTabLocus* loci;
-    i32                     numerus_locorum;
-} SilvaRegistrumCoctum;
 
 
 /* ==================================================

@@ -43,7 +43,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
-#include "silva_tabulae.h"
+#include "silva_registrum.h"
 #include "silva_quaestio.h"
 
 /* ==================================================
