@@ -1926,6 +1926,18 @@ typedef struct SilvaArborSedes {
     unsigned int finis;       /* byte offset, EXCLUSIVE */
 } SilvaArborSedes;
 
+/* Compression census - the writer measures its own coverage (a
+ * dead template family leaves VALID uncompressed output: byte
+ * gates stay green, only size grows - so presence is asserted,
+ * never pinned counts). */
+typedef struct SilvaArborCensusCompressionis {
+    unsigned int spatia_vocationes;    /* <<#@post/ante-spatia>> */
+    unsigned int folia_formae;         /* '@m-' head definitions */
+    unsigned int folia_vocationes;     /* '@m-' call sites */
+    unsigned int parametra_visa;       /* <parametrum> candidates */
+    unsigned int parametra_compressa;  /* family matches */
+} SilvaArborCensusCompressionis;
+
 /* Writer result - same shape as SilvaScriptura (loud failure: a
  * static causa plus the offending node, never a silent omission). */
 typedef struct SilvaArborScriptura {
@@ -1939,6 +1951,10 @@ typedef struct SilvaArborScriptura {
      * on failure AND from the subtree writer - a NAMED privation,
      * door open when a consumer pulls. */
     SilvaXar*         sedes_valorum;
+
+    /* Filled by scribere_parsuram; zeroed by the subtree writer
+     * (subtree documents carry no definition head). */
+    SilvaArborCensusCompressionis census;
 } SilvaArborScriptura;
 
 /* grammatica is a PARAMETER, not derived: the registry cannot name

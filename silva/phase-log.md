@@ -14300,3 +14300,37 @@ declarator, arrays: rows 4-10 of the census ≈ 10-14%) are banked
 family growth — same machinery, add templates when the compression
 is worth the head bytes. Subtree-writer documents still have no
 definition head (standing T7 narrowing, unchanged landing spot).
+
+## 2026-08-26 — ADDENDUM: census compressionis (the zero-par-calls instrument)
+
+The writer now measures its own coverage
+(SilvaArborCensusCompressionis on SilvaArborScriptura: spatia
+calls, folia defs/calls, parametra seen/compressed). Three
+surfaces: counters at the emission sites; the arbor instrument's
+stderr compendium prints a compression line on every invocation;
+the plagula corpus fixture accumulates the aggregate and asserts
+PRESENCE per tier. Polarity deliberately differs from the circuit
+gates' pinned numbers (their doctrine: exact counts announce
+transitions over a FIXED corpus) — compression counts measure
+writer behavior over CHANGING content; a pin would rot with every
+lib/ edit, and the failure mode is collapse-to-zero (dead template
+family = valid uncompressed output, all byte gates green, only
+size grows). Folia are asserted on the latinized tier only (plain
+C has no expansions — legitimate zero).
+
+PLANTED-FAULT DISCIPLINE, satisfied at birth by construction: the
+born-red run WAS the planted fault — counters absent produces
+exactly the census state a dead family produces (all zeros), and
+all six presence assertions were observed FRACTA before the
+counters were wired. The live run then showed real accumulation.
+Both links of the chain observed; no separate fault run needed.
+
+First corpus-wide coverage measurement (previously only scratchpad
+estimates): lib tier parametra 89,897/106,117 = 84.7% (the census
+prediction was 84%); folia 13,843 definitions serving 105,560
+calls; spatia 947,176 calls. Plain tier parametra 141/272 — small
+test files skew exotic; presence polarity absorbs it.
+
+DISTRIBUTIO ratified by Fran at this session's close (item-wins +
+tombstone-delete collision rule; `<>` rehabilitation as `<#` sugar
+approved) — build is parcum step 4, not yet started.

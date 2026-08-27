@@ -498,6 +498,10 @@ nomen structura {
                                s32 ancora_fons;
                                b32 ancora_initium_lineae;
 
+    /* Census compressionis - scriptor mensuram suam fert (porta
+     * praesentiae in probatio_plagula; compendium instrumenti) */
+    SilvaArborCensusCompressionis census;
+
     /* Fractura */
                constans character* causa;
               constans SilvaNodus* sedes;
@@ -1102,6 +1106,7 @@ constans character* praefixum,
     buffer[lp + ln]  = '"';
     valor.datum      = (i8*)buffer;
     valor.mensura    = lp + ln + I;
+    scriptor->census.spatia_vocationes++;
     redde stml_transclusionem_creare(scriptor->piscina,
         scriptor->intern, valor);
 }
@@ -2048,12 +2053,17 @@ silva_arbor_scribere_nodum (
               StmlNodus* radix;
                  chorda  sigillum;
 
-    fructus.successus       = FALSUM;
-    fructus.textus.mensura  = ZEPHYRUM;
-    fructus.textus.datum    = NIHIL;
-    fructus.causa           = NIHIL;
-    fructus.sedes           = NIHIL;
-    fructus.sedes_valorum   = NIHIL;
+    fructus.successus                   = FALSUM;
+    fructus.textus.mensura              = ZEPHYRUM;
+    fructus.textus.datum                = NIHIL;
+    fructus.causa                       = NIHIL;
+    fructus.sedes                       = NIHIL;
+    fructus.sedes_valorum               = NIHIL;
+    fructus.census.spatia_vocationes    = ZEPHYRUM;
+    fructus.census.folia_formae         = ZEPHYRUM;
+    fructus.census.folia_vocationes     = ZEPHYRUM;
+    fructus.census.parametra_visa       = ZEPHYRUM;
+    fructus.census.parametra_compressa  = ZEPHYRUM;
 
     si (piscina == NIHIL || nodus == NIHIL || tabularium == NIHIL)
     {
@@ -2088,6 +2098,7 @@ silva_arbor_scribere_nodum (
     scriptor.ancora_columna   = ZEPHYRUM;
     scriptor.ancora_fons      = ZEPHYRUM;
     scriptor.causa            = NIHIL;
+    memset(&scriptor.census, 0, magnitudo(scriptor.census));
     scriptor.sedes            = NIHIL;
     scriptor.lexemata        = tabula_dispersa_creare_chorda(piscina,
         256);
@@ -5017,6 +5028,7 @@ _folia_macronum_comprimere (
         *(StmlNodus**)xar_obtinere(o->parens->liberi, o->index) =
             vocatio;
         vocatio->parens = o->parens;
+        scriptor->census.folia_vocationes++;
 
         si (o->nodus != forma->primus)
         {
@@ -5046,6 +5058,8 @@ _folia_macronum_comprimere (
             }
         }
     }
+
+    scriptor->census.folia_formae += xar_numerus(formae);
 
     /* definitiones in caput inserere: [fontes, post, ante] + novae
      * + reliqua (liberi novi - insertio media Xari non est) */
@@ -5516,11 +5530,14 @@ _parametra_colligere (
         }
         si (   l->genus   == STML_NODUS_ELEMENTUM
             && l->titulus != NIHIL
-            && chorda_aequalis_literis(*l->titulus, "parametrum")
-            && _par_temptare(scriptor, l, templa, congruentiae,
-                   paria) != NIHIL)
+            && chorda_aequalis_literis(*l->titulus, "parametrum"))
         {
-            perge;  /* congruens - non descendere */
+            scriptor->census.parametra_visa++;
+            si (_par_temptare(scriptor, l, templa, congruentiae,
+                    paria) != NIHIL)
+            {
+                perge;  /* congruens - non descendere */
+            }
         }
         _parametra_colligere(scriptor, l, templa, congruentiae,
             paria);
@@ -5590,6 +5607,8 @@ _parametra_comprimere (
 
     _parametra_colligere(scriptor, involucrum, templa,
         congruentiae, paria);
+    scriptor->census.parametra_compressa +=
+        xar_numerus(congruentiae);
     si (xar_numerus(congruentiae) == ZEPHYRUM)
     {
         redde VERUM;
@@ -5856,12 +5875,17 @@ silva_arbor_scribere_parsuram (
                     i32  numerus;
                     i32  i;
 
-    fructus.successus       = FALSUM;
-    fructus.textus.datum    = NIHIL;
-    fructus.textus.mensura  = ZEPHYRUM;
-    fructus.causa           = NIHIL;
-    fructus.sedes           = NIHIL;
-    fructus.sedes_valorum   = NIHIL;
+    fructus.successus                   = FALSUM;
+    fructus.textus.datum                = NIHIL;
+    fructus.textus.mensura              = ZEPHYRUM;
+    fructus.causa                       = NIHIL;
+    fructus.sedes                       = NIHIL;
+    fructus.sedes_valorum               = NIHIL;
+    fructus.census.spatia_vocationes    = ZEPHYRUM;
+    fructus.census.folia_formae         = ZEPHYRUM;
+    fructus.census.folia_vocationes     = ZEPHYRUM;
+    fructus.census.parametra_visa       = ZEPHYRUM;
+    fructus.census.parametra_compressa  = ZEPHYRUM;
 
     si (   piscina            == NIHIL || parsura == NIHIL
         || tabularium         == NIHIL || grammatica == NIHIL
@@ -5903,6 +5927,7 @@ silva_arbor_scribere_parsuram (
     scriptor.ancora_fons            = parsura->fons_princeps;
     scriptor.ancora_initium_lineae  = FALSUM;
     scriptor.causa                  = NIHIL;
+    memset(&scriptor.census, 0, magnitudo(scriptor.census));
     scriptor.sedes                  = NIHIL;
     scriptor.lexemata         = tabula_dispersa_creare_chorda(
         piscina, 256);
@@ -6240,6 +6265,7 @@ silva_arbor_scribere_parsuram (
             redde fructus;
         }
     }
+    fructus.census     = scriptor.census;
     fructus.successus  = VERUM;
     redde fructus;
 }

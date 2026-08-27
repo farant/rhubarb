@@ -95,6 +95,7 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
      * enumeratores duplicatos vetat, non solum typedef) */
     "SilvaArborScriptura", "SilvaArborComparatioModus",
     "SilvaArborDifferentia", "SilvaArborVitium", "SilvaArborSedes",
+    "SilvaArborCensusCompressionis",
     NIHIL
 };
 

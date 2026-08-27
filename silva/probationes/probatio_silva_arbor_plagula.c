@@ -63,6 +63,12 @@ nomen structura {
     i32 clausurae_truncatae;
     i32 lexemata_expansa;    /* summa - mensura pervasionis macro */
 
+    /* PORTA COMPRESSIONIS: scriptor mensuram suam fert - familia
+     * templorum mortua exitum VALIDUM incompressum relinquit
+     * (portae octetorum virides manent, sola magnitudo crescit),
+     * ergo PRAESENTIA aggregata asseritur. */
+    SilvaArborCensusCompressionis compressio;
+
     CausaNumerata recusationes[CAUSAE_MAXIMAE];
               i32 numerus_recusationum;
     CausaNumerata divergentiae[CAUSAE_MAXIMAE];
@@ -192,6 +198,16 @@ _plagulam_probare (
         piscina_destruere(opus);
         redde;
     }
+    census->compressio.spatia_vocationes +=
+        scriptura.census.spatia_vocationes;
+    census->compressio.folia_formae +=
+        scriptura.census.folia_formae;
+    census->compressio.folia_vocationes +=
+        scriptura.census.folia_vocationes;
+    census->compressio.parametra_visa +=
+        scriptura.census.parametra_visa;
+    census->compressio.parametra_compressa +=
+        scriptura.census.parametra_compressa;
 
     {
         /* Documentum plagulae NOMINATAE effundere, EXITU QUOLIBET -
@@ -624,6 +640,49 @@ principale (vacuum)
 
     /* Comparator nusquam caecus */
     CREDO_AEQUALIS_I32 (census_latinus.comparator_tacuit, ZEPHYRUM);
+
+    /* ==========================================================
+     * PORTA COMPRESSIONIS - PRAESENTIA, non numeri pincti
+     *
+     * Polaritas consulto DIVERSA a portis circuitus supra: illae
+     * teguntur corpus FIXUM (numeri exacti transitum annuntiant),
+     * haec mores scriptoris super contentum MUTABILE metitur -
+     * pinna quaeque editione lib/ putresceret. Modus fracturae =
+     * collapsus ad zephyrum (familia templorum mortua, portae
+     * octetorum virides, sola magnitudo crescens), quem praesentia
+     * aggregata capit. Folia gradu PLANO nulla (sine latina.h
+     * nullum lexema expansum) - praesentia eorum gradu latinizato
+     * solo asseritur.
+     * ========================================================== */
+    imprimere("\n  compressio (planum):  spatia %d | parametra %d/%d\n",
+        (integer)census.compressio.spatia_vocationes,
+        (integer)census.compressio.parametra_compressa,
+        (integer)census.compressio.parametra_visa);
+    imprimere("  compressio (latinus): spatia %d | folia %d def / %d voc"
+        " | parametra %d/%d\n",
+        (integer)census_latinus.compressio.spatia_vocationes,
+        (integer)census_latinus.compressio.folia_formae,
+        (integer)census_latinus.compressio.folia_vocationes,
+        (integer)census_latinus.compressio.parametra_compressa,
+        (integer)census_latinus.compressio.parametra_visa);
+
+    CREDO_VERUM (census.compressio.spatia_vocationes > ZEPHYRUM);
+    CREDO_VERUM (census.compressio.parametra_visa > ZEPHYRUM);
+    CREDO_VERUM (census.compressio.parametra_compressa > ZEPHYRUM);
+    CREDO_VERUM (census.compressio.parametra_compressa
+                     <= census.compressio.parametra_visa);
+
+    CREDO_VERUM (census_latinus.compressio.spatia_vocationes
+                     > ZEPHYRUM);
+    CREDO_VERUM (census_latinus.compressio.folia_formae > ZEPHYRUM);
+    CREDO_VERUM (census_latinus.compressio.folia_vocationes
+                     > ZEPHYRUM);
+    CREDO_VERUM (census_latinus.compressio.parametra_visa
+                     > ZEPHYRUM);
+    CREDO_VERUM (census_latinus.compressio.parametra_compressa
+                     > ZEPHYRUM);
+    CREDO_VERUM (census_latinus.compressio.parametra_compressa
+                     <= census_latinus.compressio.parametra_visa);
 
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();

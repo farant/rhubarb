@@ -142,8 +142,14 @@ quaestio).
 
 ## Round IV — DISTRIBUTIO (anonymous-item lists)
 
-Fran's proposal, PROPOSED + REFINED (ratification pending — the one
-round not yet decreed):
+**RATUM 2026-08-26 (Fran, at parametrum close)** — including the
+two open calls: collision rule = ITEM-WINS, completed by the §6.3
+tombstone (`<@attr=/>` in an item's prefix DELETES the inherited
+attribute — override AND delete verbs both exist); `<>`
+rehabilitation as `<#` sugar approved (named strictum fixture
+change). Build = parcum step 4.
+
+Fran's proposal, PROPOSED + REFINED:
 
 ```stml
 <nota label="todo">

@@ -274,7 +274,9 @@ principale (
             "  capita praebita:  %d%s\n"
             "  lexemata:         %d (expansa %d)\n"
             "  ambigui:          %d\n"
-            "  errores:          %d  (nodi ERROR in arbore)\n",
+            "  errores:          %d  (nodi ERROR in arbore)\n"
+            "  compressio:       spatia %d | folia %d def / %d voc"
+            " | parametra %d/%d\n",
             via, (integer)scriptura.textus.mensura, (integer)mensura,
             mensura > ZEPHYRUM
                 ? (duplex)scriptura.textus.mensura / (duplex)mensura
@@ -287,7 +289,12 @@ principale (
             (integer)(parsura->commissio->ambigui
                 ? xar_numerus(parsura->commissio->ambigui)
                 : ZEPHYRUM),
-            (integer)parsura->numerus_errorum);
+            (integer)parsura->numerus_errorum,
+            (integer)scriptura.census.spatia_vocationes,
+            (integer)scriptura.census.folia_formae,
+            (integer)scriptura.census.folia_vocationes,
+            (integer)scriptura.census.parametra_compressa,
+            (integer)scriptura.census.parametra_visa);
     }
 
     piscina_destruere(piscina);

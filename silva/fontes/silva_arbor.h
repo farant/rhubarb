@@ -218,6 +218,20 @@ nomen structura {
                 i32  finis;       /* offset octetorum, EXCLUSIVUS */
 } SilvaArborSedes;
 
+/* Census compressionis - scriptor mensuram SUAM fert (doctrina:
+ * ambulatio tegumentum suum metiatur; familia templorum mortua
+ * exitum VALIDUM incompressum relinquit - portae octetorum virides
+ * manent, sola magnitudo crescit, ergo praesentia asserenda est,
+ * numquam numeri pincti). Compendium instrumenti arbor eam
+ * monstrat; porta corporis praesentiam aggregatam asserit. */
+nomen structura {
+    i32 spatia_vocationes;    /* <<#@post/ante-spatia>> emissae */
+    i32 folia_formae;         /* definitiones '@m-' capitis */
+    i32 folia_vocationes;     /* sedes vocationum '@m-' */
+    i32 parametra_visa;       /* candidati <parametrum> ambulati */
+    i32 parametra_compressa;  /* familiae congruentes */
+} SilvaArborCensusCompressionis;
+
 /* Fructus scripturae - forma SilvaScriptura aequata (fractura clara:
  * successus FALSUM + causa STATICA + sedes, numquam praetermissio
  * tacita). */
@@ -232,6 +246,10 @@ nomen structura {
      * fractura ET a scriptore subtaxi (silva_arbor_scribere) -
      * privatio NOMINATA, porta aperta si consumens trahat. */
                      Xar* sedes_valorum;
+
+    /* A scribere_parsuram impleta; zephyra a scriptore subtaxi
+     * (subarbores caput definitionum non habent). */
+    SilvaArborCensusCompressionis census;
 } SilvaArborScriptura;
 
 /* Subarborem in documentum STML canonicum scribere.
