@@ -690,6 +690,124 @@ Xar is SEGMENTED (stable element pointers, non-contiguous
 storage); copy contiguous before sorting, always. Bit this probe
 at 681 sites/file (first segment masked it below that).
 
+## Colloquium formale (2026-08-27) — THE SEVEN DECISIONS, SEALED
+
+The formal interview ran against the ratified agenda, measurement in
+hand. Every recommendation below was accepted by Fran as presented
+(syntax on the page, per V.5). These are DECISIONS now, not leans.
+
+**1a. STAGING = INTERLEAVED.** The matcher is an engine subroutine;
+stml_expandere resolves EXEMPLAR where it finds it; a lint is ONE
+pure call over (lint-doc + corpus doc). The boundary law rides the
+CAPS grammar unchanged.
+
+**1b. v1 `de=` resolution set = root default + prior output.**
+`de=` absent → document scope; `de="$x"` → a prior EXEMPLAR's
+output relation (piping = naming the previous output). The
+argument→scope conversion (`de="@arg"`) is the NAMED DOOR for the
+composition/dispatch increment — not v1.
+
+**2a. Match relation = in-memory only; PER sole consumer.**
+Match set = Xar of binding environments: {radix: StmlNodus*,
+ligamina: Xar of {titulus (interned) → nodus | valor | silva}}.
+Every match implicitly binds its root. No serialized relation form
+in v1 (the lint REPORT is already a document PER produces); the
+V.2 relation SCHEMA is still designed in the v2 spec for the
+joins/antijoin increment.
+
+**2b. Provenance = linea-grade in v1; the EXTENT rule decreed.**
+Matches carry nodes + linea (survives expansion cloning — measured).
+The expansion provenance rule (positus carried through for
+untouched content, or an expanded↔document side table;
+tabula_expansionum is the precedent) is DECREED in the v2 spec as
+a named obligation and BUILT when the first transform/mutation
+consumer pulls.
+
+**3a. Application mode = bare flag `ancorata`; absent = FLOATING.**
+Floating = try the pattern at every subtree root within the scope
+(the query case, and what all three measured queries were);
+`ancorata` = the scope root itself must match (the dispatch case).
+Least surprise decided the default: anchored-by-default would give
+the bare query zero matches against a <parsura> root.
+
+**3b. Floating bodies are single-rooted, loud.** A forest body
+under floating application = named vitium naming the alternatives
+(wrap in the real parent element, or ancorata). Keeps floating
+strictly linear; sibling-run matching = named future increment.
+
+**3c. `<**>` OUT of v1** — reserved; floating covers the lint uses;
+descendant wildcards inside a pattern reintroduce search into the
+lockstep walk.
+
+**4a. Quantifier subset: root `modus=` IN; `<*>` IN (one lockstep
+rule); child occurrence suffixes (`? * +`) OUT** (next increment —
+loose omitted-is-unconstrained covers most of `?` already).
+
+**4b. Loose child discipline = ORDERED SUBSEQUENCE.** Written
+children must match in the same relative order, gaps allowed;
+omitted children unconstrained. AST child order is meaning; a lint
+that says "A before C" can say so. (Alternatives on the page:
+unordered existential — rejected, silently accepts order-swapped
+code; exact run — rejected, barely loosens.)
+
+**4c. `modus=` absent = omnia.** optional = 0 or 1, ≥2 = loud
+vitium; unum = exactly one else vitium; primum = first in document
+order.
+
+**5a. Strict mode ENGINE-INTERNAL in v1.** EXEMPLAR documents are
+always loose; strict matching lives where it already lives —
+templates run backwards ("the definition IS the pattern"). Surface
+flag `strictum` RESERVED, spelled now, exposed when a document
+consumer pulls.
+
+**5b. The loose escape hatch ("exactly these children, no others")
+RESERVED, unspelled** — no consumer yet; per-node polarity is
+exactly what the root-polarity law warns against, so the eventual
+spelling gets its own care at pull time.
+
+**6a. Matcher extraction RATIFIED; home = lib/stml_macros.c.**
+`_par_congruere` promoted from silva_arbor.c into the engine as
+the general lockstep matcher (strict mode); loose mode built
+beside it; parametrum recognition rebuilt ON it. No new object
+file (the canon.o→stml_macros.o link-list lesson); split later if
+taste demands. DONE = the plagula gate (78+155 byte-exact +
+compression presence) green through the extracted matcher — the
+parametrum corpus is EXEMPLAR's day-one regression gate.
+
+**6b. TRANSPARENTIA — NEW DECREE, measurement-earned.** The engine
+learns which tags are metadata from a DOCUMENT-LEVEL declaration,
+strata-scoped like template definitions:
+`<TRANSPARENTIA tags="expansio pasta stringificatio api extentum
+ante post"/>`. Loose matching does not see into declared-transparent
+subtrees (`@`-space is engine-inherent, not declared). The engine
+stays dialect-ignorant; dialect knowledge stays in dialect
+documents; the declaration is shareable across lint docs as a
+fragment/macro. The probe PROVED the need: without these skips a
+loose query for identifier NULL also sees the NIHIL spelling
+inside the token's own <expansio> wrapper — wrong content, wrong
+sites, silently. (Canon-declared was rejected for the circular
+runtime coupling; per-EXEMPLAR attribute rejected because
+forgetting it is a silent wrong-content bug.)
+
+**7a. Consumer order: parametrum recognition first (L0), then one
+lint (L1).** Byte-identical corpus is L0's oracle; each level
+inherits its oracle from the previous.
+
+**7b. The L1 lint = a PROBE QUERY PROMOTED** (si-vs-NIHIL or
+piscina_allocare-with-magnitudo): its differential oracle already
+exists and is proven green (the probe's silva-side walk, 233/233).
+An examen codex re-expression is the SECOND lint, chosen at spec
+time by fit (v1 subset; has a C oracle).
+
+**7c. All NOT-v1 deferrals RATIFIED as they stand**: CASUS
+pattern-cases; PARSE builtin; antijoin / serialized relations /
+joins; mutation verbs; DISTRIBUTIO-identity decree (item 12);
+aggregates (item 13). The v1 fence is CLOSED: engine + matcher +
+EXEMPLAR/PER + TRANSPARENTIA + the two consumers, nothing else.
+
+**Next: assemble the v2 spec FROM this file** — rounds I–V +
+simulatio + agenda + Q3 mensura + these seals. Never re-invent.
+
 ## Build order (v1.5 before v2)
 
 1. `<@attr=>` lexer blessing + capere dual lookup (base stml, own
