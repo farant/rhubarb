@@ -422,6 +422,10 @@ before ratification.
    **SEQUENCING DECIDED (Round V): the measurement runs BEFORE the
    formal interview.** Note V.3's staging question feeds this item:
    the interleaved model strengthens the one-engine case.
+
+   **MEASURED 2026-08-27 — see "Q3 mensura peracta" section below.
+   The prediction survived: one engine, with two named engineering
+   obligations (expansion provenance rule; document caching).**
 4. How CASUS patterns share this grammar (COMMUTATIO's literal
    cases → pattern cases; presumably `<CASUS>` body IS an EXEMPLAR
    body in loose mode). Fran's sketch (2026-08-26, at COMMUTATIO
@@ -596,6 +600,95 @@ turns observations into content."
 
 Each level inherits its oracle from the previous one: identity
 first, then differential, then derivation.
+
+## Q3 mensura peracta (2026-08-27) — the numbers item 3 asked for
+
+Probe: `scratchpad mensura_q3/mensura_q3.c` (~1750 lines, C89,
+links the real silva/build objects + apparatus; runs both corpus
+tiers: 78 roundtrip plain-C + 155 lib/*.c with closures). Pipeline
+per file: apparatus_parsare → silva_arbor_scribere_parsuram →
+stml_legere → stml_expandere; three queries hand-written BOTH ways
+(proto-EXEMPLAR walks over the expanded StmlNodus tree, _par_congruere
+style; native walks over SilvaValor/SilvaNodus); differential gate =
+sorted signature multisets; join audit = writer sedes_valorum
+(pointer-keyed) vs reader positus. Zero pipeline fractures.
+
+Queries: Q1 pointer-params (`<parametrum>` containing
+`<declarator-monstrator>`; sig = last identifier = param name);
+Q2 `piscina_allocare` calls with a `magnitudo()` argument
+(`<vocatio>` + `<functio>` first-identifier + `<argumenta>`
+contains `<lex-sizeof>`; sig = first arg identifier); Q3 si-vs-NIHIL
+(`<si>` + `<conditio>` contains identifier `NULL`; sig = first
+identifier of the condition).
+
+**B. CORRECTNESS — the headline: 233/233 files, all three queries,
+IDENTICAL site multisets including captured signatures** (latinized
+tier: Q1 40,965 sites, Q2 689, Q3 2,861 — sites span the include
+closure, both sides walk the same TU). The projection + template
+expansion is semantically complete for matching: compression
+(parametrum family, folia, spatia) round-trips through the content
+view invisibly. The walks needed exactly the rules the engine will
+need, all derivable from banked doctrine: skip origin wrappers
+(expansio/pasta/stringificatio/api — provenance is metadata, not
+content; silva carries it in fields so a symmetric walk must skip
+the elements), skip ante/post trivia, count fragment DEFINITIONS
+and skip transclusions (identity dedup — the ambiguus-arms sharing
+law), skip `@`-space fragments, dedup sites by node identity.
+
+**A. Projection tax (latinized tier, whole corpus)**: parse 12.0 s;
+scriptura 26.6 s + stml_legere 18.0 s + expansio 8.1 s =
+**projection 4.4× parse** (plain tier: 1.03×). Documents 32× source
+bytes (12.7 MB → 414 MB — pretty indentation ~55% + NIHIL-oracle
+maximal ambiguity, both known upper-bound caveats). Arena peaks
+per file avg: parse 179 MB / scriptura 124 MB / lectio+expansio
+278 MB (monster-file-dominated).
+
+**Warm walk tax**: expanded tree = 10.1 M elements vs 3.7 M silva
+nodes+tokens (**2.7× nodes** — locus wrappers, trivia elements,
+origin elements, tok_ wrappers); full walk 19× slower. Queries with
+ENGINE-GRADE tag comparison (interned pointers — the tree's own
+intern, the canon lesson again; naive byte-compares cost a further
+1.3–1.5×): **Q1 2.0×, Q2 10.6×, Q3 11.1× native**. Absolute warm
+cost is practical: each query over all 155 files ≈ 0.8–1.2 s.
+LOC of hand-written implementations ≈ equal (315 silva / 265 stml).
+
+**C. Amortization**: cold pipeline+walk 65 s vs warm walk 1.4 s =
+**45×** — with cached/resident expanded documents the one-engine
+path collapses to "how often do files change," as the plan
+conjectured. Warm is NOT ≈ native (2–11×), but constant-factor.
+
+**THE FINDING WORTH MORE THAN THE TIMINGS (the predicted provenance
+hole, measured at 100%)**: the expanded content view carries ZERO
+document coordinates — 0/44,515 STML-side sites had positus.
+Mechanism confirmed in code: `_duplicare_recursivum` (lib/stml.c)
+deliberately zeroes positus on every clone ("duplicatum non e
+parsatione venit") and `_expandere_nodum` superficially duplicates
+EVERY node it walks, so expansion strips coordinates from the whole
+tree — including untouched content. Silva-side sedes_valorum joins
+only uncompressed values: Q2/Q3 100%, but Q1 31% (12,563/40,965 —
+compressed parametra lose node-level sedes). Consequences for the
+interview: (1) the v2 spec must decree an EXPANSION PROVENANCE rule
+— carry positus through for untouched/moved content, or a side
+table joining expanded↔document nodes (tabula_expansionum is the
+precedent) — BEFORE formator-first transforms or mutation verbs can
+ride EXEMPLAR matches; (2) linea IS copied by the duplicator, so
+line-grade provenance survives today, but the house already ruled
+line-approximation "tacite mentitur" for extents.
+
+**Verdict for item 3**: one engine. Correctness equivalence is
+measured, the warm tax is a practical constant factor, the cold tax
+amortizes behind caching, and the one-engine dividends (canon
+judges patterns; macros compose inside patterns; one grammar) stand
+unrefuted. The two-engine fallback remains what it was — one
+pattern grammar, two backend walks — to be revisited only if a
+consumer needs sub-100 ms cold latency per file. Named
+obligations: expansion provenance rule (above), resident/cached
+documents, and eventually the pretty-flag lever on document size.
+
+Probe trap for the record: qsort on a Xar is memory corruption —
+Xar is SEGMENTED (stable element pointers, non-contiguous
+storage); copy contiguous before sorting, always. Bit this probe
+at 681 sites/file (first segment masked it below that).
 
 ## Build order (v1.5 before v2)
 
