@@ -513,6 +513,90 @@ result: the morning's advisory staleness flag and the afternoon's
 shipped bug were THE SAME PHENOMENON — the simulation generated an
 argument, not just findings.
 
+## The v1 agenda (2026-08-27) — triage + first applications
+
+The 13 open items sorted by a builder's question: what blocks the
+FIRST EXEMPLAR implementation? Ratified by Fran as the interview's
+spine ("that all makes sense to me").
+
+**Already decreed, no decision needed**: capture forms (`$x`
+bool-attr = node, value position = value); modus vocabulary
+(omnia/unum/primum/optional); non-linear captures = equality (the
+parametrum matcher already enforces forests-equal); the bridge
+(captures → argument map, built + fixture-pinned); PER's per-row
+instantiation shape; loose-by-default polarity for query patterns.
+
+**v1-BLOCKING (the seven interview questions, in order):**
+
+1. Staging commitment (ratify interleaved) + the v1 `de=`
+   resolution set: document root default / macro argument / prior
+   `output=` — which subset; includes the argument→scope
+   conversion (the missing bridge direction).
+2. The match relation's C representation: binding environment =
+   name → node/value/forest + provenance; PER sole v1 consumer,
+   or also a serialized form?
+3. **Anchored vs floating application** (NEW — nothing banked
+   covers it): match at scope root only, or try at every subtree
+   root? Lint wants floating; dispatch wants anchored. Floating
+   substitutes for `<**>` in lint cases — and `<**>` is the
+   algorithmic cliff (lockstep is linear; descendant wildcards
+   introduce search). Rec: explicit attribute, both modes in v1,
+   NO `<**>` in v1.
+4. The v1 quantifier subset: root `modus=` yes; child occurrence
+   suffixes (`? * +`) rec OUT (next increment); `<*>` rec IN
+   (one lockstep rule); `<**>` OUT per item 3.
+5. Polarity flag spelling + whether v1 exposes strict-mode
+   EXEMPLAR or strict stays implicit in template matching.
+6. Matcher extraction (ratify): promote `_par_congruere` out of
+   silva_arbor.c into the engine as the general lockstep matcher;
+   parametrum recognition rebuilt ON it — the parametrum corpus
+   measurements become EXEMPLAR's day-one regression gate.
+7. First consumer: rec parametrum-on-EXEMPLAR first (gate exists,
+   zero new surface), then the decreed §9.2 slice (ONE
+   declarative lint end-to-end) second. Vitium enum falls out
+   mechanically at spec time.
+
+**Explicitly NOT v1** (designed enough to wait): CASUS
+pattern-cases (spelling decreed); PARSE builtin (harness hands
+trees in, arbor-loader precedent); antijoin / serialized
+relations / joins; mutation verbs; the DISTRIBUTIO-identity
+decree (item 12); aggregates (item 13).
+
+**First applications — the three-level ladder (how EXEMPLAR
+changes resolved STML):**
+
+INVARIANT: EXEMPLAR never appears in resolved STML (a match set
+is not emittable; engine-space material is consumed, not
+emitted). Resolution's contract is unchanged — resolved documents
+stay plain, sigil-free, canon-judgeable content. What widens is
+where instantiation ARGUMENTS come from: macros take them from
+the call site, EXEMPLAR from matches. "Macros let a document
+abbreviate itself; EXEMPLAR lets a document observe itself; PER
+turns observations into content."
+
+- **Level 0 — changes nothing, on purpose**: parametrum (then
+  folia) recognition rebuilt on EXEMPLAR; resolved output
+  byte-identical; the corpus is the oracle. Authorship migrates
+  from C recognizers to declared patterns.
+- **Level 1 — new derived documents**: expandere(lint-doc,
+  corpus) → report-doc; artifacts with no authored source. First
+  candidate: one examen codex re-expressed as a pattern document,
+  DIFFERENTIALLY gated against the C codex (identical site sets —
+  measurement B in miniature).
+- **Level 2 — in-document derivation**: content as a function of
+  the document's own content (self-maintaining indexes, summary
+  tables; eventually arbor `<fontes>`, speculum listings — the
+  regex-scrape victim replaced by patterns). Lawful by the macro
+  precedent (recipe on the page, total, deterministic — NOT the
+  computed-views violation); SAFE by strata (EXEMPLAR observes
+  only content ABOVE itself — the spliced result can never be
+  re-matched; cycles impossible by construction). Note: the
+  self-index example needs FLOATING application — item 3 above is
+  load-bearing here.
+
+Each level inherits its oracle from the previous one: identity
+first, then differential, then derivation.
+
 ## Build order (v1.5 before v2)
 
 1. `<@attr=>` lexer blessing + capere dual lookup (base stml, own
