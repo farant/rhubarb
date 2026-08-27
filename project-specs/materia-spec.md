@@ -532,16 +532,79 @@ pointer. **This is why the fork is cheap.**
 
 ### Phase 0 — specify the surgery *(in silva, ~2 tasks)*
 
-- 0.1 Enumerate every `SilvaRegio` / `SilvaExpansio` / `SilvaFons` use
-  site in arbor + scribere; classify each as *universal*, *reinserenda*,
-  or *origin-hook*. The 24 `SilvaRegio` uses are the unknown — regions
-  are conditional-compilation shaped and may not reduce cleanly.
-- 0.2 Settle `MateriaContextus` and the origin-hook signature from that
-  classification.
+#### 0.1 DONE 2026-08-27 — GATE PASSED, better than predicted
 
-**Gate:** every use site classified, none left "unclear". If the
-`SilvaRegio` uses do not reduce to reinserenda + hook, stop — the
-decomposition is wrong and Phase 1 would build on sand.
+**Measured, `silva_arbor.c` (7,310 lines):**
+
+```
+earliest SilvaFons  : 4048        earliest SilvaRegio : 4385
+core writer entry   : 2042 (silva_arbor_scribere_nodum)
+SilvaRegio|SilvaRamus|SilvaFons in lines 1..4029 : ZERO
+```
+
+**The core walk never touches them.** Every site sits inside a
+`_parsura_*` function:
+
+| site | function |
+|---|---|
+| 4033, 6281 | `_parsura_fontes_scribere`, `_parsura_fontes_legere` |
+| 4385, 4480 | `_parsura_primum_offset`, `_parsura_regiones_colligere` |
+| 6568, 6636 | `_parsura_laminam_legere`, `_parsura_regionem_obtinere` |
+| 6943, 7250 | `silva_arbor_legere_parsuram` |
+
+And in `silva_scribere.c`, `_regiones_colligere` does exactly one thing:
+walk the region tree calling `_reinserendum_addere(st, piscina,
+<Xar of SilvaToken*>)`. **The scriptor never sees a `SilvaRegio`** — the
+whole region-to-emitter interaction is *laminae become reinserenda*.
+
+**The prediction was wrong in a useful direction.** §10 guessed the 24
+`SilvaRegio` uses would reduce to *reinserenda + origin hook*. They
+reduce to a **third category the spec never named: a frontend-owned
+document section.** `<fontes>`, `<regio-directiva>`, `<regio-cruda>`,
+`<regio-finis>` are C89 document sections, and they were **already
+factored out** — the `_parsura_` prefix has been the layer boundary all
+along. Nobody had noticed.
+
+**Final classification, nothing left "unclear":**
+
+| concern | category | destination |
+|---|---|---|
+| `SilvaRegio` / `SilvaRamus` | frontend document section | C89 frontend |
+| `SilvaFons` / fontes table | frontend document section | C89 frontend |
+| region laminae -> reinserenda | frontend collector | C89 frontend; materia takes the list |
+| **`ArborCursor.expansio`** (extenta) | **origin hook** | **the one genuine core intrusion** |
+| origin chains (`<expansio>`, `<pasta>`, ...) | origin hook | frontend token extension |
+
+#### 0.2 The revised contract
+
+`MateriaContextus` needs **neither** `regiones` **nor** `origo` — origin
+is a per-token hook, not a document field:
+
+```c
+nomen structura {
+    MateriaNodus*  radix;
+    MateriaToken*  lexema_finis;
+    Xar*           reinserenda;   /* octeti extra ordinem arboris */
+    s32            fons_princeps;
+} MateriaContextus;
+
+/* Uncini frontis - OMNES optionales (NIHIL = lingua eos non habet) */
+nomen structura {
+    vacuum* datum;                                    /* status frontis */
+    b32   (*sectiones_scribere)(vacuum*, StmlNodus*); /* <fontes>, <regio-*> */
+    b32   (*sectiones_legere) (vacuum*, StmlNodus*);
+    b32   (*origo_scribere)   (vacuum*, StmlNodus*, MateriaToken*);
+    b32   (*origo_legere)     (vacuum*, StmlNodus*, MateriaToken*);
+    Xar*  (*extentum_quaerere)(vacuum*, constans MateriaToken*);
+} MateriaFrons;
+```
+
+Four callbacks plus one extent lookup. CSS and HTML pass `NIHIL` for
+every field. **The surgery is smaller than par. IV estimated** — not
+because the estimate was careless, but because the `_parsura_` factoring
+had already done most of it.
+
+**Gate:** every use site classified, none left "unclear". **PASSED.**
 
 ### Phase 1 — the fork *(~10 tasks)*
 
