@@ -194,6 +194,185 @@ position — the wrapper DICTATES the item type, then dissolves.
 - **Canon**: judges the DISTRIBUTED meaning (fifth touch in the
   "canon judges what the document means, not its surface" line).
 
+## Round V — scope addendum: mutation, relations, dispatch, ingress
+## (2026-08-27, pre-formal-interview)
+
+Provenance: the post-DISTRIBUTIO scoping conversation (Fran +
+Claude). Sequencing DECIDED: the Q3 measurement runs BEFORE the
+formal interview, so Q3 closes on numbers. Fran's framing prompts:
+(1) mutation commands (`<%`) as a PRIMARY long-term consumer of
+EXEMPLAR patterns; (2) work BACKWARDS from operations the
+multi-dialect substrate should support (silva-style parsers
+eventually for C, obj-C, JS, CSS, HTML, bash, filetrees — STML as
+one substrate for lint/transform across all of them); (3) macros as
+the abstraction ladder over AST granularity, composable "eventually
+very high, almost business level"; (4) EXEMPLAR-as-tag composing
+inside macros = a pure functional language; (5) PARSE ingress
+sketches; (6) least surprise for authors human or LLM.
+
+### V.1 Mutation commands = the in-place consumer family
+
+Settled doctrine already forces most of the interop. Round I:
+mutation targets = bindings; copy-vs-in-place is the CONSUMER's
+verb. Mutatio-visio: closed decreed-verb vocabulary, G1 `%`
+ancestral names. Ergo `%` verbs ARE the alias-consumers of EXEMPLAR
+matches (templates are the copy-consumers). The sigil TRIANGLE:
+`$` binds (match side), `&@x;` fills (template side), `%` acts on
+what is bound (mutation side) — consistent with data-plane `%`
+(augmentation also operates on an existing thing; it stays the lone
+data-plane admit).
+
+The one real fork ("resolving to / feeding into" — Fran's two
+prepositions): commands-AT-positions (mutatio-visio §3 — verbs
+interspersed in the pattern; the pattern IS the address space;
+match-one-edit-another unrepresentable) vs bridge-consumer (a
+mutation form consumes an output= relation the way PER does —
+per-match instantiation that LANDS AS AN EDIT; "a PER that writes
+back", the degenerate-PER rhyme a third time). Proposed synthesis
+(Claude, unratified): positional form = SUGAR over the bridge
+(implicit capture at the command's position + per-match command
+instantiation); one IR. The bridge form must exist regardless —
+cross-position edits (definition + call sites) fill verb bodies with
+`&@n;` template material captured at OTHER positions.
+
+Convergences to PIN at the interview:
+- Quantifier vocabularies are ALREADY IDENTICAL (`modus=`
+  omnia/unum/primum/optional ≡ mutatio's scope quantifiers). Decree
+  ONE vocabulary; the mutation consumer adds the transactional
+  reading (unum = exactly-one-else-refuse; fan-out failure =
+  abort-all; pattern = transaction; zero partial edits).
+- Plan-first becomes STRUCTURAL: the match relation IS the plan
+  (renominare culture as type system). Open: is relation-consumption
+  MANDATORY for verbs?
+- Non-linear capture equality = token-series equality = the differre
+  normalized seal; one definition serves both sides.
+- Verbs stay tool-plane FOREVER (doctrine 8); augmentation remains
+  the lone data-plane `%`.
+- Components-with-slots (mutatio §5) vs parameterized fragments =
+  the same reuse layer approached from two directions; the interview
+  decides whether they ARE the same thing (see V.3 — third pull).
+
+### V.2 The relational layer (worked scenarios)
+
+Three scenarios run backwards (typed-allocation lint; cross-language
+internuntius audit — dead handlers / unbound calls between C
+registration and JS voca; convention/policy lints, e.g. "new genus
+in code needs its seed row same commit"). Every gap found was
+RELATIONAL; none was pattern-side:
+
+1. ANTIJOIN/DIFFERENCE pulled early: inequality constraints
+   decompose into equality (non-linear captures) + set difference
+   ("in A but not B") — the no-expression law survives ONLY if a
+   difference projection exists. Rounds I-IV are silent on
+   absence-across-relations. Stratification makes negation lawful
+   (document-order strata = the stratified-Datalog condition,
+   already house law).
+2. Joins move from "reserved" to "v2 must design the RELATION
+   SCHEMA" even if operators lag: first-class provenance (document
+   + sedes span), serialized STML form, canon-judged. ONE artifact
+   = lint report = mutation plan = join operand.
+3. DOCTRINE candidate: patterns are PER-DIALECT; relations are the
+   LINGUA FRANCA. No universal AST genus (the tree-sitter trap) —
+   trees stay honest per dialect; sameness is manufactured in
+   relations + the shared pattern GRAMMAR. Nothing in EXEMPLAR may
+   ever mention a language or a file.
+4. examen's 88 codices = hand-coded C at exactly this layer;
+   endgame = codices as pattern documents.
+5. The abstraction ladder: L1 syntax shapes → L2 idioms → L3
+   conventions → L4 policy. Lower rungs = macros; upper rungs =
+   relations. The relational algebra cannot tell policy from lint —
+   which is why the ladder reaches "business level".
+
+### V.3 Language identity, dispatch, staging
+
+The macro layer is a TOTAL pure functional language: document-order
+strata forbid recursion → termination guaranteed; single assignment
+→ referential transparency; subtree arguments → higher-order-ish
+composition; EXEMPLAR-as-tag adds structural matching;
+pattern-cases add case analysis. Totality is WHY canon can judge
+the plan — sub-Turing by design, stated as identity, not accident.
+
+Dialect dispatch scenario (Fran): a macro receives a parsed file as
+a subtree argument WITHOUT knowing its language; root tags are the
+CONSTRUCTORS of a sum type (`<parsura>` = C, etc.); COMMUTATIO with
+pattern-cases (item 4's block form — Fran's own 2026-08-26 sketch)
+discriminates and delegates to per-dialect macros. The INTERFACE is
+the capture schema (each arm produces `$nomen/$sedes/...`;
+downstream never knows which arm ran) — typeclass dispatch. Purity
+survives dispatch: patterns match ARGUMENTS (bridge-scoped), never
+the world; file-ignorance holds. Item 4 is hereby PROMOTED:
+load-bearing, not a door. ("One lockstep matcher at three seams"
+reserved CASUS dispatch before its use case arrived.)
+
+NEW questions exposed:
+- STAGING (now the central architecture question, feeding Q3):
+  STAGED (expansion EMITS patterns; a downstream engine runs them;
+  macros = pattern compilers; two evaluation times, one grammar —
+  Lisp's macroexpansion-time vs runtime) vs INTERLEAVED (matcher =
+  engine subroutine; the whole lint = ONE pure call,
+  expandere(lint-doc, file-doc) → report-doc; no separate pattern
+  engine on this path). FRAN LEANS INTERLEAVED (closer to the
+  mental model); tradeoffs to table at the interview: expansion
+  cost no longer bounded by the document (parsing + matching
+  inside); the vitium taxonomy grows world-state classes;
+  determinism becomes relative to a world snapshot; the
+  caching/resident story. The boundary law SURVIVES interleaving
+  verbatim via §6.2's CAPS grammar: the engine acts only on
+  @-space + CAPS builtins; unmarked content stays untouched (the
+  DISTRIBUTIO boundary argument, restated).
+- The bridge's MISSING DIRECTION: captures→arguments exists;
+  dispatch needs argument→scope (`@fons` becoming what `de=`
+  denotes). The one conversion no decree covers.
+- User-raisable vitium (`<VITIUM nuntius=>`?): "unknown dialect" in
+  ORDINARIUS must be LOUD (a silently-empty ORDINARIUS is a silent
+  gate). Small new surface; needs a decree.
+- Declared capture signatures: THIRD independent pull (macro
+  hygiene when captures thread through composition textually;
+  mutatio §5's private-by-default + declared exports; the dispatch
+  interface). Three pulls from three directions = real.
+
+### V.4 Ingress: PARSE (Fran's sketches)
+
+`<PARSE output="$fons" via="something.c"/>` and inline
+`<PARSE output="$snippet" lingua="c">c code here...</>`.
+
+Readings banked (Claude, unratified):
+- A parsed document enters as a SINGLETON RELATION (one row, root
+  binding) so `de=` consumes it uniformly — everything `de=` takes
+  is a relation; piping stays "reference the previous output".
+  Multi-file ingress = an N-row relation with `via` as a PROVENANCE
+  COLUMN (glob vs harness-bound: open). EXEMPLAR over an N-row
+  scope = per-row matching that EXTENDS the input rows —
+  composition as relational extension, not a new join operator.
+- PARSE fits stratification: another output=-producing builtin,
+  single-assignment, referenceable only below — the leaf-most
+  producer, binding from the WORLD instead of from a match.
+- Purity becomes DECLARED-INGRESS purity: expansion = a function of
+  (document + named world snapshot). Because the language is total,
+  expansion can complete before any ingress happens → the ingress
+  set is statically enumerable per document (expand → enumerate
+  PARSE tags → hash/approve → ingress → match). Direct fabrica
+  rhyme (01KZYN4VPZ: declared IO + content hashes); a lint document
+  is a fabrica artifact with declared inputs.
+- The INLINE form is the QUASI-QUOTATION door: patterns/templates
+  in CONCRETE dialect syntax with capture holes — the Coccinelle
+  precedent (semantic patches = C with declared metavariables;
+  decades of kernel practice; the known-good authoring UX).
+  Requires per-dialect hole-blessing in the parser (`$names` legal
+  under a flag) — open. The AST-element form remains the desugared
+  truth.
+
+### V.5 The acceptance criterion (Fran, decree-adjacent)
+
+Every surface decision above is judged by LEAST SURPRISE for the
+authoring party, HUMAN OR LLM — "which is why it's important to see
+the syntax in front of us." For LLM authors, surprise ≈ distance
+from the training distribution (concrete-syntax-with-holes is
+in-distribution; deep genus trees are not); canon loudness is the
+other half (surprise converted to load-time error, never silent
+misbehavior). Interview method: candidate syntaxes go ON THE PAGE
+before ratification.
+
 ## Consolidated: still open for the FORMAL interview
 
 1. Strictness escape hatches inside loose mode ("exactly these
@@ -239,6 +418,10 @@ position — the wrapper DICTATES the item type, then dissolves.
      concentrated, not eliminated). PREDICTION (labeled as such):
      one engine wins — the byte-circuit already pays projection
      over 233 files in seconds. Measure before believing.
+
+   **SEQUENCING DECIDED (Round V): the measurement runs BEFORE the
+   formal interview.** Note V.3's staging question feeds this item:
+   the interleaved model strengthens the one-engine case.
 4. How CASUS patterns share this grammar (COMMUTATIO's literal
    cases → pattern cases; presumably `<CASUS>` body IS an EXEMPLAR
    body in loose mode). Fran's sketch (2026-08-26, at COMMUTATIO
@@ -247,12 +430,34 @@ position — the wrapper DICTATES the item type, then dissolves.
    `est` a subtree-valued case on a BUILTIN with zero new syntax,
    exactly as calls take subtree arguments. v1 `est` stays literal
    scalar equality; the block-form-on-builtins door stays open.
+   **PROMOTED (Round V): load-bearing, not a door — the
+   dialect-dispatch scenario (V.3) depends on it.**
 5. ~~DISTRIBUTIO ratification + the item-attr collision rule.~~
    RATUM 2026-08-26, BUILT 2026-08-27 (spec §6.4).
 6. `<MATCH/>` / computed views (decide the reservation's fate before
    any splice syntax).
 7. Joins (`$abc.n`) — reserved; revisit when the control plane
-   pulls.
+   pulls. (Narrowed by item 9: the relation SCHEMA lands in v2;
+   join operators still wait for the pull.)
+8. Mutation interop (V.1): positional vs bridge surface (one IR?);
+   the unified quantifier decree + transactional reading;
+   plan-first as law (mandatory relation consumption for verbs?);
+   the components/signatures merge.
+9. The relational layer (V.2): the antijoin/difference projection;
+   the relation schema (provenance columns, serialized STML form,
+   canon) — schema in v2 even if operators lag; the
+   per-dialect-patterns / lingua-franca-relations doctrine.
+10. Staging (V.3): interleaved vs staged (Fran leans interleaved);
+    the argument→scope conversion; user-raisable vitium; declared
+    capture signatures (exports).
+11. Ingress (V.4): PARSE both forms; the singleton-relation +
+    N-row-provenance reading; static ingress enumerability
+    (fabrica); concrete-syntax capture holes (per-dialect
+    hole-blessing).
+
+All of the above are judged under V.5's least-surprise criterion
+(human or LLM author); candidate syntax goes on the page before
+ratification.
 
 ## Build order (v1.5 before v2)
 
