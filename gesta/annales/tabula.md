@@ -1,42 +1,68 @@
 # TABULA (proiectio tabularii - GENERATUM, noli manu edere)
 
-seq 286 - 2026-07-18T16:08:22.318Z
+seq 1418 - 2026-08-27T21:45:38.057Z
 
 ## QUAESTIONES
 
-- [apertum] Diagnostica phantasma specimen_usus.c  `legatus lsp messis-2026-07`
 - [apertum] Exclusiones -corpus deriva tacita  `examen vectis silva messis-2026-07`
+- [apertum] Instrumentum Bash sub zsh: verbum '===' nudum expansionem aequalis evocat  `ergonomia meta`
 - [apertum] Nomina scrinium sigillum insigillata  `gesta meta messis-2026-07`
 - [apertum] Novum Fundamentum 1x11 Nuntium  `fundamentum messis-2026-07`
 - [apertum] Phase-log silvae 407KB  `silva meta messis-2026-07`
-- [apertum] TU book_assets/capsula_libri degradata examini (REICE, 293 typi ignoti) - clang -Iinclude resolvit, praebita non  `silva examen lint`
+- [apertum] documentatio-probatio.census: VITIA 7 praeexsistentia (citationes insolutae + attributum causat extra canonem)  `natura canon census citatio documentatio`
+- [apertum] examen lacuna: declaratio post sententiam (C99) non deprehenditur - clang reicit, examen ACCIPIT  `silva examen lint quaestio`
+- [apertum] genera_biblia derivavit: biblia_dr.c functiones fert quas generator non emittit  `fixa gesta lint`
+- [apertum] http.c cliens Content-Length neglegit: legit donec connexio claudatur
+- [apertum] laboratorium fumus totus: lapsus temporis sub onere - plica ALIA quaque vice (0003, deinde 0014)  `laboratorium fumus lapsus onus`
+- [apertum] legatus LSP: superpositio ordinum sine reclamatione - O(k^2) per didChange, 17G post XVI dies  `legatus superpositio xar perficientia lsp silens`
+- [apertum] librarium_collector STML manu concatenat - entia non effugiuntur (recte per fortunam)  `stml entia librarium rectum-per-fortunam latens`
+- [apertum] natura: absentia structuralis - nullum genus pro CAUDA EVENTUUM SOLUM-APPENDE (ratio_rationaria species eius pecuniaria est)  `natura semantica volumen silex vocabularium`
+- [apertum] natura: catena FRBR declarata sed inadhibita - editiones 'editio_de' non ferunt  `natura semantica frbr vocabularium`
+- [apertum] natura: proprietas SCHEMATE typata - apparatus schema describit, non valorem  `natura semantica quaestio`
+- [apertum] natura_canones.sh 'canones N cocti' uno errat (36 dictum, 35 in disco)  `natura instrumenta census numerus`
 - [apertum] probatio_tcp_servus fluctuans  `tcp messis-2026-07`
+- [apertum] stml: titulus non-ASCII SILENTER male parsatur (successus=1, arbor falsa) - defectus REFUSAL-LOUD  `stml unicode parsatio refusal-loud census latina`
 
 ## PARCA
 
 - [parcatum] 'post' saccharum super portas  `gesta k3`
-- [parcatum] AEDILIS stratum constructionis  `aedilis officina messis-2026-07`
+- [parcatum] Agens subsidiarius ut USOR PROBANS: personam gerens applicationem per manum agitat, confusionem refert  `manus apps probationes agentes ergonomia mensor visio`
+- [parcatum] Ambulatio XVII censūs: sex decisiones Franis ex advena II pendentes  `census semen regeneratio ambulatio documentatio`
 - [parcatum] Annotationes commentariorum: C89 cum typis profundis (visio TypeScript-formae)  `silva examen visio annotationes lint`
+- [parcatum] Arca: daemon secretorum domesticus (cifrata quiescens, sera ut ssh-agent)  `visio tcp instrumenta apps`
 - [parcatum] Cancellatio cascadens (opera orba)  `gesta k3`
+- [parcatum] Clausura inclusionum propria: manifesta vigiliae sine clang -MM  `silva vigilia instrumenta visio`
+- [parcatum] Codex paris: 'A vocatum, B debitum' (processus_incipere -> pulsare|metere|abrumpere)
 - [parcatum] Columna species in tabula generum  `gesta k3 perf`
 - [parcatum] Configuratio exclusionum unificata (viae/plagulae tractatu speciali)  `officina silva ergonomia meta aedilis`
 - [parcatum] Configuratio filtrorum per proiectum  `legatus examen aedilis messis-2026-07`
 - [parcatum] Corpora macronum plena in corpus  `legatus mcp messis-2026-07`
 - [parcatum] Ergonomia tabularii residua: tabula {tag}, vetustissima, filtra dierum  `gesta ergonomia mcp`
+- [parcatum] Fabrica: annotatio DECLARET artificium + recipe, non semitam exitus (staleness tacita mensurata bis)  `aedilis fabrica generata stml annotationes atrium visio staleness`
+- [parcatum] Fila in domo: quid addendum sit ut concurrentia possibilis fiat (arenae iam paene sufficiunt)  `visio fundamentum perf`
+- [parcatum] Forum online: Amanda + MCP oauth mobilis  `forum tabulariumd tcp visio`
+- [parcatum] Generationes praecedentes in archivum movendae (arbor v1/v2 + suites lapifex)  `archivum lapifex nuntium arbor silva messis-barrarum`
+- [parcatum] Genus 'proiectum/inceptum' - inceptum cum fine, participibus, opibus  `natura census genera kaos`
+- [parcatum] Genus ministri machinalis: nomen et sedes dilata donec census verus tag poscat  `natura documentatio persona agentes`
 - [parcatum] Gesta K5: palatium  `gesta palace`
 - [parcatum] Gradus fetch + ramus (par substrati contextūs)  `gesta k3`
 - [parcatum] Hover commentarium ducens rider  `legatus lsp messis-2026-07`
+- [parcatum] Inventarium machinarum: quid INSTALLATUM sit, per planum moderandi renovatum (tertia forma post gesta et metrum)  `villa visio gesta`
 - [parcatum] LEGATUSD daemon socketorum  `legatus mcp lsp messis-2026-07`
+- [parcatum] Laboratorium ad atrium: prima applicatio EXTRA rhubarb - et collisio vocis '-vivum'  `laboratorium atrium silex vitrea manus silicetum vivarium`
 - [parcatum] Legatus: field references  `legatus lsp silva messis-2026-07`
+- [parcatum] Lint numeralium: NUMERALE_NUDUM (consistentia Romana) + MAGICUS_NUDUS (numeri magici nominandi)  `lint examen silva`
 - [parcatum] M5 dorsum aarch64  `officina machinula messis-2026-07`
 - [parcatum] MC/DC: mensura tectionis conditionum super machinulam (horizon DO-178B)  `officina machinula silva visio probationes`
 - [parcatum] Menu analyseos staticae: fructus pendentes post TOLERA  `examen silva lint ergonomia`
+- [parcatum] Metrum: bibliotheca serierum temporalium (forma RRD - magnitudo fixa in aeternum)  `visio instrumenta apps perf`
 - [parcatum] Mtimes nanosecundorum  `officina legatus messis-2026-07`
 - [parcatum] Nexus: instrumenta MCP propria  `gesta mcp messis-2026-07`
+- [parcatum] Passus Dependable C: charta regularum contra examen - codices novi V + divergentiae II  `silva examen lint visio messis-2026-07`
 - [parcatum] Piscina mundi sub agere copioso  `gesta k3 perf`
 - [parcatum] Piscina residentis: disciplina scratch  `gesta perf messis-2026-07`
+- [parcatum] Post-scalam annotationum: entia &nomen; + proiectiones (visus derivati)  `stml silva annotationes visio`
 - [parcatum] Praedefinitum attributorum  `gesta messis-2026-07`
-- [parcatum] Quaestio in legati: selectores nominati et parametrizati  `silva legatus quaestio mcp messis-2026-07`
 - [parcatum] Rami: copia plicaturae ramalis  `gesta k4 rami perf`
 - [parcatum] Rami: processus speculativi in ramis  `gesta k4 rami machinula`
 - [parcatum] Rami: quaerere conscium ramorum + nexus in ramo  `gesta k4 rami`
@@ -44,53 +70,155 @@ seq 286 - 2026-07-18T16:08:22.318Z
 - [parcatum] Rami: resolutio confligentiae per-res  `gesta k4 rami`
 - [parcatum] Reducers machinulae: mores-ut-data  `gesta machinula officina`
 - [parcatum] Rung 4 furcae + debounce unci  `nexus perf silva messis-2026-07`
+- [parcatum] S6: substratum neutrum ex silva extrahere (post html_arbor)  `silva css html architectura debitum refactor`
+- [parcatum] STML trivia - exemplar triviae pro textu STML (valor/spatium seiuncti)  `stml trivia formator captiones`
+- [parcatum] STML v1.5 (formae argumentorum + COMMUTATIO + elementa-attributa) + v2 exemplaria  `stml macros exemplaria v2`
 - [parcatum] Saltuarius v0.1  `saltuarius tessera messis-2026-07`
 - [parcatum] Salus per sordidas  `gesta perf messis-2026-07`
 - [parcatum] Sessio et actor ut entia  `gesta k4`
 - [parcatum] Sigillum ancorae symboli  `gesta legatus messis-2026-07`
-- [parcatum] Silva quaestio QB-QD  `silva saltuarius messis-2026-07`
+- [parcatum] Silva typedef-USES exportatio  `silva saltuarius quaestio`
 - [parcatum] Superficies MCP definitionis receptorum  `gesta k3 mcp`
 - [parcatum] Susceptum in provectione (si susceptio umquam refert)  `gesta k3`
 - [parcatum] Sync: replicatio machinarum super branch_id  `gesta k4 fundamentum`
 - [parcatum] Tabula: nexus multi-partium redditio  `gesta messis-2026-07`
+- [parcatum] Tags-normae populatio + pseudos normae (:c89/:c99/:extensio)  `silva quaestio grammatica visio`
+- [parcatum] Vitrea: structura app documentalis (multi-fenestra, multi-documentum)  `vitrea fenestra visio`
+- [parcatum] formator automaticus ANTE perficiendum silvae: casus usus magnus nondum exercitus, et probator vivus curarum informationis RP  `silva formator ordo perficiendum`
+- [parcatum] mutatio arborum: verba decreta + formae nidificatae + componentia (visio banked)  `silva stml mutatio quaestio transformatio visio`
+- [parcatum] protocollum stratorum derivatorum: pagina una canonica (nunc in sex implementationibus per morem fertur)  `strata-derivata protocollum consilium-colorum regula-trium`
+- [parcatum] silva perficiendum: consilium RP integrum parcatum (quattuor constantes + harnesium + arenae phasium + parallelismus plagularum)  `silva perficiendum piscina xar consilium`
+- [parcatum] silva: arbor ⇄ STML canonicum (dimidium dormiens oraculi fidelitatis)  `silva stml serialisatio fidelitas speculum staging`
+- [tractum] Externa per plagulam declarata: .d.ts in commentario STML (annotatio proxima)  `silva examen annotationes visio lint`
+- [tractum] Genera per app definita: FileMaker-similis in foro  `forum gesta apps visio erp`
+- [tractum] Gesta K4.5: affordantiae nuclei  `gesta mcp ergonomia k4`
 
 ## DESIDERATA
 
 - Ancorae ut tabulatum typatum  `gesta mcp ergonomia`
+- Articuli: bloci STML capturarum -> res generatae (stampatio <#nid (> in textum)  `forum stml gesta visio ergonomia apps`
 - Batch-symbolum multiplex  `legatus mcp messis-2026-07`
-- Calibratio.sh: cursor speciminum oraculi (matrix vexillorum -> tabula)  `silva examen instrumenta ergonomia`
-- Censor: culpam intra fracturam parsationis nominare (nomen-ut-campus PURUS transit)  `silva censor lint ergonomia`
+- CAUTIO VIGILIAE falsa: residens binarium SUUM stalum nuntiat cum omnia recentia sint
+- CLI quaestionis STML (jq-pro-STML) — consumptores V+ awk manu-volutum  `stml ergonomia instrumenta aedilis`
+- Fluxus formae: reticulum provenientiae ut compages - quinque analyses ex uno fundamento  `silva examen fluxus visio lint annotationes`
+- Formator STML verus (CLI) - pulchrator e scratchpad promovendus  `stml formator instrumenta`
+- Forum: arca diurni crescat ut editor articulorum (editor_crescere ad plures arcas)  `forum apps ergonomia`
+- Legati: responsa diagnosticorum CAUTIONEM vigiliae ferant - staleness ad punctum usus visibilis  `legatus mcp ergonomia vigilia instrumenta`
+- Legatus: messor indicis referentiarum positiones typorum colligat - quaestio auditus contractuum plena  `legatus lsp ergonomia instrumenta`
 - MEMORY.md in tabularium migratio  `gesta meta messis-2026-07`
-- Percursus: vexillum modi in compendio nominatum  `silva ergonomia examen`
+- Natura in foro: UI ergonomica + tutorial - accessibilitas summa  `natura forum ergonomia visio`
+- Praevolatus suitae: LXVI secunda quae filtrum NEGLEGUNT (probationes JS/oraculi + generare)  `probationes perf mensura praevolatus instrumenta`
+- Proiectio entitatum: nexus-ligamina inter plagulas obsolescunt post renominationem/retag (reconciliatio inversa)  `gesta ergonomia`
+- Sententiae: documenta locis inscripta in foro - liber ut res, arbor ut proiectio  `forum sententiae visio apps`
+- Signa (# / .) in .genera quoque - dictionarium grammaticam census adoptet  `canon natura signa referentia futurum`
+- Tabularium: status contra genus validatus CLARE in responso - eventus pravus tacite scriptus  `tabulariumd gesta ergonomia mcp`
 - Tokenizator FTS Latinus  `gesta fts messis-2026-07`
+- Unci post-editionem: nuntii identici in responso uno semel dicantur; censor culpam NOMINET  `unci examen censor ergonomia lint instrumenta`
+- Uncus examen-custos exclusiones statim honoret + doctrina mutationis datum  `examen mcp ergonomia`
+- Verba identitatum MCP-lateralia: mintare/solvere ex colloquio  `mcp identitas ergonomia`
 - Vigilia legati: distinguere lectionem tutam a iudicio vetusto (binario stali)  `legatus mcp ergonomia vigilia`
-- arbor.sh: via plagulae ut argumentum  `silva ergonomia`
+- aedilis --partes tacet de vexillis frameworkorum (.m in clausura) - compile_tests ea CAECE omnibus addit  `aedilis instrumenta ergonomia machinula`
+- amalgama_fontes_generare sine argumento: usus impressus sed EXITUS 0 - refusio quieta  `amalgama instrumenta ergonomia`
+- amalgamator tesserae: prologum postulata_posix.h INLINEARE, non includere  `tessera amalgama posix`
+- analyzator CSS + machina selectorum communis  `grammatica visio silva`
+- analyzator HTML (subsetum strictum; fortasse stml-cognatus)  `grammatica visio`
+- analyzator JavaScript (silva-formis, subsetum domesticum)  `grammatica visio`
+- app vitrea: administratio et provisio servi remoti  `vitrea visio tcp`
+- bibliotheca componentium web: JS vanilla, semantica, sine shadow DOM  `vitrea visio`
+- bibliotheca s3-compatibilis (praerequisitum: sha256/hmac)  `visio tcp`
+- bin/aedilis vigilia-sui: CAUTIO binarii stali (classis optio-ignota)  `aedilis vigilia ergonomia`
+- colloquium bibliothecas domus agere NEQUIT (piscina decipulam vocat) - promissum bancae plus pollicetur quam praestat  `officina instrumenta ergonomia machinula`
+- differre: ianuae nominatae (brachia conditionalia, par symboli, radius efflatus)  `silva differre differentia instrumenta`
+- examen -census: exclusio plagularum generatarum immanium (capsula_libri OOM omni percursu)  `silva examen instrumenta ergonomia`
+- examen: annotationes portabile/sutura/vernaculum - limes platformae in grapho inclusionum  `silva examen annotationes posix visio`
+- examen: codex pro chorda-ad-litteras (terminatio) et lotione constantiae  `examen fluxus lint silva chorda`
+- examen: comparatio CONTRA subtractionem insignatam (i minor len minus K) - frater codicis 80 sine zephyro  `examen silva lint fluxus visio`
+- examen: contractus 'servat' - vita monstratorum (acervus/arena) ut secundum membrum familiae contractuum  `examen silva visio annotationes lint`
+- examen: externus-sine-capite-sine-annotatione (classis tempus.c ad tempus editionis)  `examen aedilis silva lint`
+- excubitor: margo bibliotheca-vendicata -> amalgama (deriva dormiens classis StmlNodus)  `excubitor amalgama silva vigilia`
+- filum_directorium_delere (involucrum rmdir): asymmetria API filum  `gesta ergonomia`
+- fines_tactae in verdictis legati et percursus: fratres recusationis examinis  `silva examen legatus lint vigilia`
+- forum tags: res intra tagum grupatae (scholia sub codice + lineae monstratae)  `forum ergonomia apps`
+- forum: @ mentiones in commentariis (attentionem Claudii trahere)  `forum ergonomia apps`
+- forum: libellus editoris sponte servatus (autosave)  `forum apps ergonomia`
+- frigida.sh: index obiectorum manu-scriptus -> generatio aedilis (index mentitus est)  `gesta aedilis instrumenta ergonomia`
+- genera: relationes semantice typatae (incrementaliter)  `forum gesta visio apps`
+- git lector: ianuae nominatae (sha breve, status arboris laborantis, differre_git viscera)  `git bibliotheca lectio differre`
+- legati: metrum usus + instrumentum contextus (unitas quaestionis vera = sutura, non symbolum)  `legatus mcp instrumenta ergonomia visio`
+- manus: scribere focum in campo relinquat (semantica usoris scribentis)  `manus vitrea probationes laboratorium`
+- porcellana git: repositorium ut basis datorum (post lectorem nativum)  `git porcellana differre historia census`
+- porta syntaxis JS non tegit JS a manu GENERATUM  `manus portae js laboratorium`
+- renovatio residentium uno gestu (post commissum gestae: bini vocationes sexies hodie)  `vigilia mcp ergonomia gesta`
+- sententiae primae classis: punctis addressabilibus parsatae  `forum visio apps`
+- silex renovare: CONFLICTUS falsus cum ambae partes octetim aequales sunt  `silex renovare conflictus instrumenta`
+- silex ut VCS: additamenta vitae ex usu vero (dogfood 2026-08-17)  `silex vcs ergonomia silicetum`
+- silex: exemplar -vitrea generatorem capsulae cum lib/imperium.c superfluo ligat + generator vetus sine globis segmentorum  `silex capsula laboratorium semen`
+- silex: fabricam sponte invenire (ascensus e cwd) + .silexignore  `silex ergonomia`
+- silex: fons unicus vexillorum (vexilla-ut-datum) + custodia staleness ordinum generatorum  `silex compages ergonomia dilatum`
+- silex: politura introitus - relatio ex primo contactu vero (laboratorium seminatum)  `silex introitus documentatio usabilitas silicetum`
+- silva: oraculum nomina localia non-typos registret - classis '(nomen) * x' in macris  `silva oraculum ambigua census`
+- silva: stratum objc (dialectus domestica, scala trium graduum)  `silva visio grammatica examen`
+- stml: interiora fragmentorum numquam pulchre scribuntur + copertura transclusionis tenuis  `stml arbor transclusio fragmenta copertura`
+- stratum thematum componentium (more vscode)  `vitrea visio`
 
 ## DECRETA
 
+- AEDILIS V1 navatum et signatum 2026-07-20: stratum constructionis derivativum — clausurae, manifesta STML, scripta emissa, differentia contra clang, porta corporis 119/119. Consumptores: gesta RADIX_FONTES generatum (utf8 adeps remotus), interpretare -derivare experimentale. Folklor quadruplicatus (listae manuales) in artificia migrare coepit; adoptio suite et absorptio fabricae = decisiones futurae Frani cum historia in manu.
 - Actio: porta obstat, effectus recordant  `gesta messis-2026-07`
+- Arbor Porphyriana: species sunt genera (unum spatium generum) + signum '.' in nomine elementi generantis  `natura taxinomia proprium signa stml decretum migratio`
+- Atrium: stratum applicationis super vitream (baculi inclusi) - vitrea PRIMITIVUM manet  `atrium vitrea speculum imperium apps visio decretum invenibilitas`
 - COMPARATIO_DEGRADATA dormit usque ad analysim fluxus - idioma vacuitatis formam possidet  `examen silva lint messis-2026-07`
+- Catena frustorum 0-E tota navata (commissa d00ec5c..f93d5c7): grammatica UNA = STML in commentariis; familiae novae = vocabularium numquam grammatica (exspecta/tolera/aedilis/contractus/nid/intentio probant); identitas = ULID spatium UNUM tabulae et codicis, anulus bidirectionalis vivus; parseres proprii tres MORTUI (awk pinnarum, octeti tolerarum, spica aedilis) - typographum quod prosa tacita fiebat nunc clamat. Post-scalam separatim parcatum: entia+proiectiones (parcum novum); contractus selector-scopati in 01KXTX7FA3 (porta QC sola restat).
 - Censor-variant macro-domesticum declinata  `examen silva messis-2026-07`
+- Census: individua seminata (non tags), extensio .census universalis, extensiones moduli retiratae  `canon natura census individua semina`
 - Clausa manent in indice FTS  `gesta fts messis-2026-07`
 - Codex congelatus (arbor2/lapifex/praeparator) manet ut est - sedes VANA caudae acceptae  `examen silva lint messis-2026-07`
 - Codex congelatus VANA: familia arbor/arbor2/lapifex UT EST manet  `silva examen lint messis-2026-07`
+- Derivatio ex inclusionibus (varians a): POSIX solum derivetur, ISO semper adsit  `silva examen lint decretum annotationes`
+- Dialectus ObjC: blocos RECEPTOS vocare licet; litterae blocorum vetitae manent  `vitrea fenestra decretum`
+- Directio necessitudinis: citatio DIRECTIONEM nominat, non familiam  `natura necessitudines taxinomia decisio-franis`
+- Documentatio: quinque furcae decisae - genus intentum in opere, verdictum in ambulatione  `natura documentatio genera circuitus`
 - Effectus = verba clausa in eventus 1:1  `gesta messis-2026-07`
 - Emendatio-generis manet integra-substitutio  `gesta messis-2026-07`
 - Executio actionis = eventus, non tabulae  `gesta messis-2026-07`
 - Fluxus-0: decisiones colloquii (CFG gradus 0, codices 63-67)  `silva fluxus lint examen`
 - Genera ut eventus  `gesta messis-2026-07`
+- Glossae: documentatio localizata generum - forma decisa  `natura canon glossae documentatio`
+- Identificatores reservati: _minuscula scopi plagulae TOLERATA (divergentia consulta); __x et _Maiuscula VETITA (codex)  `decretum lint examen silva vocabularium`
 - K3 sigillatum 2026-07-16: actiones + processus in nucleo gestarum - fascis atomicus (N eventus, transactio una), porta obstat / effectus scribunt, provectio avida se-sanans per indicem membrorum; frusta tria primo cursu viridia (612 asserta, examen ACCIPE, sigillum ipsum per agere factum)
 - K4.2 navata (2026-07-18): similia-in-addere (custos duplicationum FTS), res breviter (compendium pro lectore context-budgetato), origo in addere/gerere (provenientia structuralis - messis-tag retiratur pro backfills futuris); residua tria re-parcata ut 01KXTZQG2A
+- Manipulus vilis circuitus documentationis decretus et impletus (L2/L5/L6/L14 + nota universalis)  `natura documentatio circuitus fabricatio`
+- Natura: duae catenae distinctae - apparatus (genus_suum) et taxinomia (continens)  `natura onerator taxinomia apparatus`
+- Necessitudines: relationes primae classis - quattuor furcae decisae  `natura relationes necessitudines munus taxinomia decretum`
 - Nexus subsumptus: machinamentum unum vinculorum  `gesta messis-2026-07`
+- Nomen sigillatum: hospitium (servus HTTP domesticus)  `tcp visio grammatica`
+- Nomen sigillatum: speculum (modus-debug se-fontis vitreae)  `vitrea visio decretum`
 - Nullum CLI geminum tabularii  `gesta mcp messis-2026-07`
 - Opera vocabularium sunt, non API  `gesta messis-2026-07`
+- POSIX postulata: caput prologi unum (postulata_posix.h, sutura), non definitiones per plagulam  `posix examen silva decretum fundamentum`
 - Recepta sunt codex  `gesta mcp messis-2026-07`
 - Recordare-non-obstare extenditur ad membra  `gesta messis-2026-07`
+- SCALA QUAESTIONIS QA-QD COMPLETA (2026-07-22, commissa 03398a7 QC + 5fc63bd QD): machina selectorum quarta generatione - tags/combinatores/unio (QA), attributa/capturae/fratres (QB), pseudo-classes tredecim + registratio usoris ante compilationem (QC), messis barrae v1 103 assertis Latinis + trias arbor_quaestio deleta (QD). Barrae: 160 quaestionis + 103 messis, omnia primo cursu; insecta v1 quattuor exstirpata. Tractus superstites in parca propria migrati: selecta CLI -> 01KY53MP5X, typedef-USES exportatio -> 01KY53MV2F (impedimentum saltuarii secum), norma pseudos -> 01KY47F797. Sequentia aperta: 01KXPV9FPK (quaestio in legati), 01KXTX7FA3 (contractus selector-scopati - porta sola QC nunc aperta).
+- SELECTA NATUM UNO DIE (commissum e928ec1, 2026-07-22): ./silva/selecta.sh <plagula> '<selector>' [-intra sym] [-omnia] [-proba] - grep structura-formatum, congruentia octetim exacta [via:linea-linea]. Receptae 2026-07-11 tres solutae (hiatus accessus-membrorum: grep textualis 'segment' 120 ictus in xar.c, quaestio structuralis II accessus veros in xar_locare). -intra = zuccharum QC purum (ascensus patrum + :definit - ambulatio tabulae ligaminum schizzi originalis DISSOLUTA, lex suturae iterum). Porta -proba in ortu (doctrina instrumentorum); exclusio examinis dirent ut emitte. Futura in selecta.worklog.md: capturae impressae, plagulae plures, -breviter.
 - SIGNUM_FORMATI: directio %d-cum-insignato non iudicatur - involutio negativa visibilis diagnostica  `examen silva lint messis-2026-07`
+- STML macros v1 PERFECTUM (2026-08-26): machina expansionis (lib/stml_macros.c) + fetta arboris (onerator + emissor post-spatia) + decretum spatii templi '#@' (transclusio=alias/consumens, templum=instantiatio/machina - '@' pars id). Canon spatium templi novit. V2 semina in notis: fragmenta quaestionis (fluxus imperii ex cardinalitate congruentiae), bibliothecae inter-documenta, formae sequentes (ante-spatia, m-nihil, parametrum).
 - Salus sine genere erratorum  `gesta messis-2026-07`
+- Signa: '#' fragmentis redditum, individua ad '&nomen;' migrant (semicolon ubique), '.' generibus manet  `natura canon signa individua stml migratio decretum`
+- Stratum causale: causa= lens in necessitudines + familia informat  `natura necessitudines census taxinomia decisio-franis causa`
+- Unitas canonica temporis = MILLISECUNDA ab epocha; Momentum/Mora nomina canonica  `fluxus annotationes decretum visio fundamentum`
 - Vigilia una bibliotheca; invarians manifesti  `gesta legatus mcp officina`
+- columnae ancorarum = OCTETI (UTF-8); JS convertit ad limitem  `laboratorium componentia scholar decretum`
+- css_arbor: analyzator manu scriptus super arborem silvae (D1-D7)  `css silva arbor grammatica stml decretum`
+- formator: regulae formandi decretae - lint primum, fix trivia-solum, differre porta  `formator silva differre regulae`
+- imago_collatio: differentia imaginum a regressione visuali SOLUTA  `imago collatio probationes vitrea manus visio decretum`
+- imago_png: codificator portabilis - limes platformae ad PIXELA, non ad formam plagulae  `imago png vitrea portabile probationes decretum oraculum`
+- materia: substratum generale ex silva furcandum; C89 = porta acceptionis (M1-M8)  `materia silva css html architectura furca s6`
 - mcp_servus: copia non extractio  `mcp legatus gesta messis-2026-07`
+- natura regula I: contractus est STML BENE FORMATUM, non XML (gradus II xmllint tollet)  `natura stml silva decretum visio`
+- rhubarb.census SEMEN est: regeneratio ut heuristica implendi  `census natura documentatio semen decisio-franis`
 - sigillum ritus: K4 sigillandum: rami + palatium (aut quod interrogatio K4 decernet) - ritus per processum ipsum ductus, instantia prima viva
+- silex = binarium unum praeparatus-omnibus; silva intrat  `silex silva differre doctrina architectura`
+- vitrea_servus: transportus HTTP ut sutura secunda missoris (non portatio)  `vitrea apps forum hospitium villa`
 
 ## OPERA
 
@@ -102,10 +230,66 @@ seq 286 - 2026-07-18T16:08:22.318Z
 ## NEXUS
 
 - Sigillum ancorae symboli --impeditur-a--> LEGATUSD daemon socketorum
-- Saltuarius v0.1 --impeditur-a--> Silva quaestio QB-QD
 - Signum versionis residentis --pertinet-ad--> Vigilia binarii tabularii
 - K3 sigillatum 2026-07-16: actiones + processus in nucleo gestarum - fascis atomicus (N eventus, transactio una), porta obstat / effectus scribunt, provectio avida se-sanans per indicem membrorum; frusta tria primo cursu viridia (612 asserta, examen ACCIPE, sigillum ipsum per agere factum) --natum-de--> Gesta K3: actiones + processus
 - 01KXP19AC2GP2G6AFVR6A8PECA: ops:propositum=Gesta K4: rami interrogatio=interrogatio spec=spec exploratores=exploratores frusta=frusta
 - sigillum ritus: K4 sigillandum: rami + palatium (aut quod interrogatio K4 decernet) - ritus per processum ipsum ductus, instantia prima viva --natum-de--> Gesta K4: rami
 - Ergonomia tabularii residua: tabula {tag}, vetustissima, filtra dierum --natum-de--> Ergonomia tabularii sub crescentia: quinque parva ante K5 palatium
 - K4.2 navata (2026-07-18): similia-in-addere (custos duplicationum FTS), res breviter (compendium pro lectore context-budgetato), origo in addere/gerere (provenientia structuralis - messis-tag retiratur pro backfills futuris); residua tria re-parcata ut 01KXTZQG2A --natum-de--> Ergonomia tabularii sub crescentia: quinque parva ante K5 palatium
+- Proiectio entitatum: una plagula per rem in arboribus tagorum (arca navigabilis) --extendit--> Tabula.md proiectio plicata
+- Clausura inclusionum propria: manifesta vigiliae sine clang -MM --succedit--> Vigilia: manifestum = clausura vera inclusionum, non glob include/
+- Servus HTTP domesticus: medium desiderans super tcp/http/router/reactor --tangit--> probatio_tcp_servus fluctuans
+- binarium se-fons: fontem C proprium intra binarium portare --seminat--> bibliotheca componentium web: JS vanilla, semantica, sine shadow DOM
+- amalgamare generale: bibliotheca quaelibet ex clausura in plagulam unam --pertinet-ad--> AEDILIS stratum constructionis
+- AEDILIS V1 navatum et signatum 2026-07-20: stratum constructionis derivativum — clausurae, manifesta STML, scripta emissa, differentia contra clang, porta corporis 119/119. Consumptores: gesta RADIX_FONTES generatum (utf8 adeps remotus), interpretare -derivare experimentale. Folklor quadruplicatus (listae manuales) in artificia migrare coepit; adoptio suite et absorptio fabricae = decisiones futurae Frani cum historia in manu. --natum-de--> AEDILIS stratum constructionis
+- Stratum identitatis et intentionis: grammatica annotationum STML in commentariis --complectitur--> Annotationes commentariorum: C89 cum typis profundis (visio TypeScript-formae)
+- Catena frustorum 0-E tota navata (commissa d00ec5c..f93d5c7): grammatica UNA = STML in commentariis; familiae novae = vocabularium numquam grammatica (exspecta/tolera/aedilis/contractus/nid/intentio probant); identitas = ULID spatium UNUM tabulae et codicis, anulus bidirectionalis vivus; parseres proprii tres MORTUI (awk pinnarum, octeti tolerarum, spica aedilis) - typographum quod prosa tacita fiebat nunc clamat. Post-scalam separatim parcatum: entia+proiectiones (parcum novum); contractus selector-scopati in 01KXTX7FA3 (porta QC sola restat). --natum-de--> Stratum identitatis et intentionis: grammatica annotationum STML in commentariis
+- Saltuarius v0.1 --impeditur-a--> Silva typedef-USES exportatio
+- SCALA QUAESTIONIS QA-QD COMPLETA (2026-07-22, commissa 03398a7 QC + 5fc63bd QD): machina selectorum quarta generatione - tags/combinatores/unio (QA), attributa/capturae/fratres (QB), pseudo-classes tredecim + registratio usoris ante compilationem (QC), messis barrae v1 103 assertis Latinis + trias arbor_quaestio deleta (QD). Barrae: 160 quaestionis + 103 messis, omnia primo cursu; insecta v1 quattuor exstirpata. Tractus superstites in parca propria migrati: selecta CLI -> 01KY53MP5X, typedef-USES exportatio -> 01KY53MV2F (impedimentum saltuarii secum), norma pseudos -> 01KY47F797. Sequentia aperta: 01KXPV9FPK (quaestio in legati), 01KXTX7FA3 (contractus selector-scopati - porta sola QC nunc aperta). --natum-de--> Silva quaestio QB-QD
+- SELECTA NATUM UNO DIE (commissum e928ec1, 2026-07-22): ./silva/selecta.sh <plagula> '<selector>' [-intra sym] [-omnia] [-proba] - grep structura-formatum, congruentia octetim exacta [via:linea-linea]. Receptae 2026-07-11 tres solutae (hiatus accessus-membrorum: grep textualis 'segment' 120 ictus in xar.c, quaestio structuralis II accessus veros in xar_locare). -intra = zuccharum QC purum (ascensus patrum + :definit - ambulatio tabulae ligaminum schizzi originalis DISSOLUTA, lex suturae iterum). Porta -proba in ortu (doctrina instrumentorum); exclusio examinis dirent ut emitte. Futura in selecta.worklog.md: capturae impressae, plagulae plures, -breviter. --natum-de--> Quaestio selecta CLI
+- Externa per plagulam declarata: .d.ts in commentario STML (annotatio proxima) --cognatum-cum--> examen: externus-sine-capite-sine-annotatione (classis tempus.c ad tempus editionis)
+- censor: macrum latinum ut IDENTIFICATOREM adhibitum nominare (nunc omnia in fractura enumerat, culpam non discernit) --duplicat--> Censor: culpam intra fracturam parsationis nominare (nomen-ut-campus PURUS transit)
+- Inventarium machinarum: quid INSTALLATUM sit, per planum moderandi renovatum (tertia forma post gesta et metrum) --cognatum-cum--> Metrum: bibliotheca serierum temporalium (forma RRD - magnitudo fixa in aeternum)
+- Sententiae: documenta locis inscripta in foro - liber ut res, arbor ut proiectio --implet--> sententiae primae classis: punctis addressabilibus parsatae
+- examen: contractus 'servat' - vita monstratorum (acervus/arena) ut secundum membrum familiae contractuum --extendit--> Annotationes commentariorum: C89 cum typis profundis (visio TypeScript-formae)
+- examen_vectis -corpus FRACTUS iam ante hodiernum: duae plagulae tesserae in corpore REICE sed non pinnatae --confirmat--> Exclusiones -corpus deriva tacita
+- Fluxus formae: reticulum provenientiae ut compages - quinque analyses ex uno fundamento --extendit--> Annotationes commentariorum: C89 cum typis profundis (visio TypeScript-formae)
+- Fluxus formae: reticulum provenientiae ut compages - quinque analyses ex uno fundamento --implet--> examen: contractus 'servat' - vita monstratorum (acervus/arena) ut secundum membrum familiae contractuum
+- http.c:851 - body_len involutus: caput malformatum corpus giganteum 'validum' parit --cognatum--> http: ansa hauriens EOF/tempus/errorem non distinguit - corpus truncatum ut successus refertur
+- Fluxus intervalla (gradus 2): analysis intervallorum super CFG - domain quantitativum compagis --extendit--> Fluxus formae: reticulum provenientiae ut compages - quinque analyses ex uno fundamento
+- examen: comparatio CONTRA subtractionem insignatam (i minor len minus K) - frater codicis 80 sine zephyro --pendet-ex--> Fluxus intervalla (gradus 2): analysis intervallorum super CFG - domain quantitativum compagis
+- Fluxus intervalla: cliens annotationum - contractus param intra fines seminat introitum --extendit--> Fluxus intervalla (gradus 2): analysis intervallorum super CFG - domain quantitativum compagis
+- Fluxus intervalla: membra ut pseudo-variabiles (chorda.mensura) - extensio post locales --extendit--> Fluxus intervalla (gradus 2): analysis intervallorum super CFG - domain quantitativum compagis
+- Genera intervallorum nominata: intervallum ad TYPEDEF ligatum - declarationes C ipsae sedes applicationis --reformat--> 01KYMY2FRSS91WE95VDRHEV81M
+- Articuli: bloci STML capturarum -> res generatae (stampatio <#nid (> in textum) --pendet-ex--> stml: captio anonyma <(> hodie CASU parsatur (titulus vacuus, circuitus fractus) - aut forma vera aut recusatio
+- stml: tagus claudens anonymus </> - tagum apertum proximum claudit --natum-de--> Articuli: bloci STML capturarum -> res generatae (stampatio <#nid (> in textum)
+- genus 'diurnum' sine semine: omne acta-diurna ens violationem custodiae trahit --sequitur-ex--> forum: Acta Diurna nata - decisa et formae (2026-07-31)
+- examen: annotationes portabile/sutura/vernaculum - limes platformae in grapho inclusionum --cognatum--> examen: custos macronum probationis proprietatum (glibc) + emendator primus
+- POSIX postulata: caput prologi unum (postulata_posix.h, sutura), non definitiones per plagulam --gubernat--> examen: custos macronum probationis proprietatum (glibc) + emendator primus
+- POSIX postulata: caput prologi unum (postulata_posix.h, sutura), non definitiones per plagulam --gubernat--> examen: annotationes portabile/sutura/vernaculum - limes platformae in grapho inclusionum
+- Silex: binarium unum distributionis - fontes omnium bibliothecarum in se (capsula), et semen VCS --aedificat-super--> binarium se-fons: fontem C proprium intra binarium portare
+- Silex: binarium unum distributionis - fontes omnium bibliothecarum in se (capsula), et semen VCS --cognatum--> Visio: rhubarb ut compages (framework Rails-figurae, sine IoC)
+- Mensa: pilae frontis reusabiles - tabulae cogitationum (thinkboards) --cognatum--> Silex: binarium unum distributionis - fontes omnium bibliothecarum in se (capsula), et semen VCS
+- natura -> canon proiectio COMPLETA (e301ae6): probatio corporis, catena unci, monolithus NON coquendus --sequitur--> canon_coquere pilotus (d6aef09): lectores C ex canone generantur
+- natura -> canon proiectio COMPLETA (e301ae6): probatio corporis, catena unci, monolithus NON coquendus --tangit--> natura: 'inversa' duobus modis adhibetur (booleanum contra nomen relationis inversae)
+- Documentatio: quinque furcae decisae - genus intentum in opere, verdictum in ambulatione --respondet-ad--> Modulus documentatio: status ante brainstorm - quid decisum, quid apertum
+- silex: scaffoldum volumen-ferens - ordo venditorius in aedificare.sh genito + vendicatio voluminis --dilata_in--> silex: fons unicus vexillorum (vexilla-ut-datum) + custodia staleness ordinum generatorum
+- Necessitudines: relationes primae classis - quattuor furcae decisae --respondet-ad--> Primitiva taxinomiae: quattuor lacunae mensuratae, nihil decretum
+- Citatio individuorum trans documenta: unicitas globalis + augmentatio '%' (tripartitio creatio/augmentatio/citatio) --natum-ex--> Ambulatio XVI: rhubarb.census - familia iustificationis pauper mensurata
+- Arbor Porphyriana: species sunt genera (unum spatium generum) + signum '.' in nomine elementi generantis --respondet-ad--> Primitiva taxinomiae: quattuor lacunae mensuratae, nihil decretum
+- Arbor Porphyriana: species sunt genera (unum spatium generum) + signum '.' in nomine elementi generantis --mutat--> Natura: duae catenae distinctae - apparatus (genus_suum) et taxinomia (continens)
+- Directio necessitudinis: citatio DIRECTIONEM nominat, non familiam --respondet-ad--> Directio citationum conversarum: nihil in sede directionem signat
+- Regeneratio I (advena): relatio et index lacunarum censūs --respondet-ad--> rhubarb.census SEMEN est: regeneratio ut heuristica implendi
+- Regeneratio II (advena-ii): relatio - catechismus XIV/XV, censura structuralis --respondet-ad--> rhubarb.census SEMEN est: regeneratio ut heuristica implendi
+- Ambulatio XVII censūs: sex decisiones Franis ex advena II pendentes --respondet-ad--> Regeneratio II (advena-ii): relatio - catechismus XIV/XV, censura structuralis
+- Semen vitreum silicis ad atrium; nexus deficiebat sine -framework Security; porta fumi nata --pertinet-ad--> Fabrica: annotatio DECLARET artificium + recipe, non semitam exitus (staleness tacita mensurata bis)
+- stml pulchrum contentum mixtum corrumpit (et cumulat) --impedit--> silva: arbor ⇄ STML canonicum (dimidium dormiens oraculi fidelitatis)
+- Generationes praecedentes in archivum movendae (arbor v1/v2 + suites lapifex) --pertinet-ad--> Codex congelatus VANA: familia arbor/arbor2/lapifex UT EST manet
+- STML trivia - exemplar triviae pro textu STML (valor/spatium seiuncti) --sanat-classem--> stml pulchrum contentum mixtum corrumpit (et cumulat)
+- STML macros v1 - fragmenta parametrizata (expansio, loculi, arbor consumens) --tangit--> stml: interiora fragmentorum numquam pulchre scribuntur + copertura transclusionis tenuis
+- STML macros v1 PERFECTUM (2026-08-26): machina expansionis (lib/stml_macros.c) + fetta arboris (onerator + emissor post-spatia) + decretum spatii templi '#@' (transclusio=alias/consumens, templum=instantiatio/machina - '@' pars id). Canon spatium templi novit. V2 semina in notis: fragmenta quaestionis (fluxus imperii ex cardinalitate congruentiae), bibliothecae inter-documenta, formae sequentes (ante-spatia, m-nihil, parametrum). --natum-de--> STML macros v1 - fragmenta parametrizata (expansio, loculi, arbor consumens)
+- STML v1.5 (formae argumentorum + COMMUTATIO + elementa-attributa) + v2 exemplaria --sequitur--> STML macros v1 PERFECTUM (2026-08-26): machina expansionis (lib/stml_macros.c) + fetta arboris (onerator + emissor post-spatia) + decretum spatii templi '#@' (transclusio=alias/consumens, templum=instantiatio/machina - '@' pars id). Canon spatium templi novit. V2 semina in notis: fragmenta quaestionis (fluxus imperii ex cardinalitate congruentiae), bibliothecae inter-documenta, formae sequentes (ante-spatia, m-nihil, parametrum).
+- Accipitne silva_coquere grammaticam sine productionibus (genera-extra sola)? --impedit--> css_arbor: analyzator manu scriptus super arborem silvae (D1-D7)
+- S6: substratum neutrum ex silva extrahere (post html_arbor) --oritur-ex--> css_arbor: analyzator manu scriptus super arborem silvae (D1-D7)
+- Proba suturae HTML in charta: IV inventa, II correctiones, sutura superest --testificatur--> S6: substratum neutrum ex silva extrahere (post html_arbor)
+- S6: substratum neutrum ex silva extrahere (post html_arbor) --superatur-a--> materia: substratum generale ex silva furcandum; C89 = porta acceptionis (M1-M8)
