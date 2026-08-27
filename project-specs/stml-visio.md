@@ -363,3 +363,108 @@ decided before any subcommand ships.
   directive): comments stay NODES (the silva pin holds); they stop
   consuming captee slots — the fluxus-transparency precedent
   applied to the parser's captee collection.
+
+## 10. The strangler doctrine (2026-08-27 conversation) — trajectory, not project
+
+Fran's frame: STML enters a codebase as a vine on the tree —
+structure matching the code (arbor today: code is truth, the
+projection byte-faithful and erasable) — and over time becomes the
+source of truth, "the code kind of the negative space around the
+stml," until high-level transformations of the codebase are
+operations in STML over the library of transformational macros and
+their compositions. Recorded with consequences; the primitives all
+live in the v2 interview items (stml-exemplaria-interview.md Round
+V) — nothing here adds v2 scope.
+
+### 10.1 The vine grows per-region, and truth is earned by a gate
+
+The inversion of authority is never an event and never a policy:
+
+- A region whose STML form is a macro call with arguments is
+  ALREADY effectively STML-truth (edit the call, regenerate); a
+  raw-AST region is still code-truth. The boundary moves as the
+  emitter learns forms — the compression measurements (parametrum
+  family 81-87% coverage, top-3 skeletons 83%) are the vine's
+  growth chart. "Code as negative space" reads precisely: the
+  residue no named form captures is where the real decisions live
+  — compression as comprehension.
+- A region is STML-truth IFF regeneration reproduces the live code
+  (roundtrip + differre) modulo DECLARED overrides. Fail the gate →
+  loudly revert to code-truth. Authority is a verdict, continuously
+  re-earned, never an assertion — the two-truths transition failure
+  that kills classic strangler migrations dissolves.
+- TWO transformation regimes, one moving boundary: mutation verbs
+  (mutatio-visio — surgical, verb-contracted, differre-exactness)
+  for the code-truth residue; REGENERATION (edit the definition or
+  the call, re-expand) for strangled regions. The strangler
+  progression IS the migration of regions from the first regime to
+  the second.
+- Cross-cutting dividend: when the cut points are named forms, an
+  aspect edit is ONE definition edit + regeneration — the AOP
+  pointcut, except the pointcut is the form's definition site, not
+  a regex over someone else's code.
+- REMOVABILITY is the safety property the classic pattern lacks:
+  any region can expand-and-freeze back to plain code-truth at any
+  time. The vine is peelable because projection is the primitive
+  and both directions are gated. In-house cautionary tale: lapifex
+  (codegen that outlived its understanding, still load-bearing
+  under nuntium_schema). Escaped here because the generator is
+  DATA under canon, not a program, and erasability is doctrine.
+
+Worked examples (from the conversation, compressed):
+
+- "Log request/response normalized at every API call site; harvest
+  a mock library": EXEMPLAR relation over call sites → insere verb
+  (unstrangled regions) or one-line form edit (strangled);
+  harvested structures land as STML under a response canon → the
+  mock corpus is JUDGED; re-harvest drift = canon vitia =
+  consumer-driven contract testing falling out for free.
+- "Schema → scaffold UI/DB/code, except named overrides": schema =
+  one relation feeding per-dialect template libraries (the
+  lingua-franca doctrine); overrides = item-wins + tombstone
+  generalized from attributes to REGIONS; override anchoring = the
+  sententiae anchor problem (authored address + sigillum, CAUTIO
+  on unresolved) already solved once; hand-edit drift caught by
+  regenerate-and-differre — the gate classic codegen cannot have
+  because classic codegen does not roundtrip.
+
+### 10.2 The META-strangler (Fran): semantics over structure
+
+The same pattern recurses INSIDE STML: the semantic story (natura
+genera, censuses, the Porphyrian taxonomy — §4's G4 stack) grows
+over the structural story exactly as the structural story grew
+over code. Today natura/census DESCRIBE what exists (projection);
+the trajectory ends with the semantic description as the ADEQUATE
+BASIS for generating the lower levels — "describing things
+semantically based on what they are and the logic of different
+kinds of things and their relationships." Because everything is
+tags, the tower is HOMOGENEOUS: the same EXEMPLAR/macro/canon
+machinery operates at every story — no per-level machinery. (The
+property Lisp had, without judgment; here every story carries its
+judge.) Three stories, one relationship repeated: truth-by-gate,
+projection down, conformance up.
+
+### 10.3 Known-unknowns linting (the strength Fran named)
+
+A semantic document that recognizes its own loose ends and "errors
+with known unknowns" where it is semantically underspecified:
+
+- NEW VITIUM CLASS: **INCOMPLETUM**, distinct from MALFORMATUM —
+  the document is well-formed but inadequate relative to its
+  declared ambitions. Computable only against a CLOSURE
+  declaration (closed-world per kind: "these are ALL the
+  casus/genera/arms" — the registry as the closure surface;
+  §6.2's exhaustiveness vitium and canon FINES are the existing
+  embryos; stratification keeps the negation lawful).
+- ADEQUACY IS CONSUMER-RELATIVE (teleological): a semantic
+  document is adequate FOR a generator iff the generator's
+  demanded slots are all satisfiable — the generator itself
+  enumerates the holes. "Cannot scaffold the DB: these three
+  kinds lack a key" beats generating garbage.
+- The natural OUTPUT of an INCOMPLETUM vitium is a QUAESTIO: the
+  document files its own interview questions (tabularium as the
+  known-unknowns queue; the /interview culture is the manual form
+  of this lint, mechanized — the document interviews its author).
+  Lived precedent: the 2026-08-10 necessitudinum burn-down (263
+  sedes solutae → 0, worked genus by genus off a machine-produced
+  hole list) was exactly this loop, run by hand.
