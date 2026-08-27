@@ -205,6 +205,40 @@ position — the wrapper DICTATES the item type, then dissolves.
    silva patterns; quaestio stays the fast 1D path with
    pattern→pseudo promotion either way. Deserves a measured
    argument, not a preference.
+
+   **MEASUREMENT PLAN (banked 2026-08-27, pre-interview; ~1 day —
+   run BEFORE or DURING the interview so Q3 closes on numbers):**
+   - **A. Projection tax**, per corpus file over both tiers:
+     silva parse (RP baselines exist) → arbor scriptura →
+     stml_legere → stml_expandere (compressed docs need the content
+     view), time + peak piscina per stage. Folds in the banked
+     "mensor: expansion load cost" item for free. Output: the tax
+     as a multiplier over a native silva walk.
+   - **B. Same real queries, both ways**: 2-3 pattern shapes we
+     actually want (pointer-to-T params; piscina_allocare calls
+     with a magnitudo() argument; si-conditions vs NIHIL), each
+     hand-written as a walk over the arbor STML tree (proto-
+     EXEMPLAR; _par_congruere is the style guide) AND over the
+     silva tree. Measure wall time + LOC per implementation, and —
+     the part that matters most — a DIFFERENTIAL GATE: both walks
+     must yield the SAME site set, cross-checked through the
+     coordinate join. Disagreement = projection-fidelity finding,
+     worth more than the timings. The join audit doubles as the
+     transform-direction check (formator-first: matches must map
+     back to silva nodes; macro-expansion provenance is the likely
+     hole).
+   - **C. Amortization**: cold (project + match) vs warm (match
+     only, doc cached — arbor docs are the canonical artifacts;
+     a resident can hold them). If warm ≈ native, performance
+     collapses to "how often do files change" and the decision is
+     purely semantic.
+   - **What tips it beyond speed**: one-engine dividends — patterns
+     ARE STML documents, so canon judges patterns and the macro
+     engine works inside patterns for free; two-engine honest
+     fallback = one pattern GRAMMAR, two backend walks (drift risk
+     concentrated, not eliminated). PREDICTION (labeled as such):
+     one engine wins — the byte-circuit already pays projection
+     over 233 files in seconds. Measure before believing.
 4. How CASUS patterns share this grammar (COMMUTATIO's literal
    cases → pattern cases; presumably `<CASUS>` body IS an EXEMPLAR
    body in loose mode). Fran's sketch (2026-08-26, at COMMUTATIO

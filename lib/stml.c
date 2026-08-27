@@ -352,9 +352,10 @@ _tok_legere_attributa (
 
         /* Check for end of tag */
         si (   _tok_aspicere(ctx, ZEPHYRUM) == '>'
-            || (_tok_aspicere(ctx, ZEPHYRUM) == '/' && _tok_aspicere(ctx, I) == '>')
-            || _tok_aspicere(ctx, ZEPHYRUM) == '(' ||  /* Forward capture */
-            _tok_aspicere(ctx, ZEPHYRUM) == '=')    /* Sandwich capture (after <=) */
+            || (   _tok_aspicere(ctx, ZEPHYRUM) == '/'
+                && _tok_aspicere(ctx, I) == '>')
+            || _tok_aspicere(ctx, ZEPHYRUM) == '('  /* captura versa */
+            || _tok_aspicere(ctx, ZEPHYRUM) == '=') /* captura interposita */
         {
             *cauda_spatii = spatium;
             frange;
