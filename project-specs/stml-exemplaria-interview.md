@@ -194,7 +194,12 @@ position — the wrapper DICTATES the item type, then dissolves.
    argument, not a preference.
 4. How CASUS patterns share this grammar (COMMUTATIO's literal
    cases → pattern cases; presumably `<CASUS>` body IS an EXEMPLAR
-   body in loose mode).
+   body in loose mode). Fran's sketch (2026-08-26, at COMMUTATIO
+   build time): the §6.3 attribute-element BLOCK form is the
+   growth path — `<CASUS><@est=><EXEMPLAR>...</></>...` gives
+   `est` a subtree-valued case on a BUILTIN with zero new syntax,
+   exactly as calls take subtree arguments. v1 `est` stays literal
+   scalar equality; the block-form-on-builtins door stays open.
 5. DISTRIBUTIO ratification + the item-attr collision rule.
 6. `<MATCH/>` / computed views (decide the reservation's fate before
    any splice syntax).

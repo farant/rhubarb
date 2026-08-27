@@ -892,6 +892,232 @@ principale (
         }
     }
 
+
+    /* ================================================
+     * COMMUTATIO (par. 6.2): selectio bracchiorum in corporibus
+     * definitionum. LINEA: casus LITTERAE ('est="..."') aut
+     * probationes PRAESENTIAE ('nihil'/'non-nihil') - numquam
+     * praedicata. Primus congruens vincit; ORDINARIUS ultimus;
+     * nullus congruens sine ORDINARIO = vitium clarum. Loculi
+     * optionales 'p="@p?"' + REGULA ANGUSTATIONIS: loculus
+     * optionalis extra bracchium praesentiam statuens relatus =
+     * vitium collectionis (angustatio fluxus - optionalitas
+     * honesta, numquam vacuum tacitum).
+     * ================================================ */
+
+    /* --- (6.2 a) selectio per est + ORDINARIUS --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- COMMUTATIO: selectio est ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f x=\"@x\"><COMMUTATIO de=\"&@x;\">"
+            "<CASUS est=\"a\"><unus/></CASUS>"
+            "<CASUS est=\"b\"><duo/></CASUS>"
+            "<ORDINARIUS><tres/></ORDINARIUS>"
+            "</COMMUTATIO></#>"
+            "<<#@f x=\"b\">><<#@f x=\"z\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><duo/><tres/></radix>");
+            }
+        }
+    }
+
+    /* --- (6.2 b) bracchia praesentiae + loculus optionalis:
+     * quattuor vocationes (congruens est; alia praesens; absens;
+     * sepulcrum = absens). Bracchia est/non-nihil praesentiam
+     * statuunt - '&@p;' intra ea licitum. --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- COMMUTATIO: praesentia + optionalis ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p?\"><COMMUTATIO de=\"&@p;\">"
+            "<CASUS est=\"1\"><unus v=\"&@p;\"/></CASUS>"
+            "<CASUS non-nihil><habet>&@p;</habet></CASUS>"
+            "<CASUS nihil><caret/></CASUS>"
+            "</COMMUTATIO></#>"
+            "<<#@f p=\"1\">><<#@f p=\"2\">><<#@f>>"
+            "<<#@f>><@p=/></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><unus v=\"1\"/><habet>2</habet>"
+                    "<caret/><caret/></radix>");
+            }
+        }
+    }
+
+    /* --- (6.2 c) exhaustio: nullus congruens, nullus ORDINARIUS
+     * -> vitium impletionis --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- COMMUTATIO: casus nullus ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f x=\"@x\"><COMMUTATIO de=\"&@x;\">"
+            "<CASUS est=\"a\"><unus/></CASUS>"
+            "</COMMUTATIO></#><<#@f x=\"z\">></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_CASUS_NULLUS);
+        }
+    }
+
+    /* --- (6.2 d) angustatio: loculus optionalis extra bracchium
+     * statuens relatus = vitium COLLECTIONIS (etiam ORDINARIUS
+     * praesentiam NON statuit - exsequitur et praesente et
+     * absente) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- angustatio violata (extra) ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p?\"><a v=\"&@p;\"/></#></radix>",
+            piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS);
+        }
+    }
+
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- angustatio violata (ORDINARIUS) ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p?\"><COMMUTATIO de=\"&@p;\">"
+            "<CASUS nihil><caret/></CASUS>"
+            "<ORDINARIUS><a v=\"&@p;\"/></ORDINARIUS>"
+            "</COMMUTATIO></#></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS);
+        }
+    }
+
+    /* --- (6.2 e) malformatio: est cum referentia (LINEA - numquam
+     * praedicata computata); de litterale (non totus-ref) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- COMMUTATIO malformata ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f x=\"@x\" y=\"@y\">"
+            "<COMMUTATIO de=\"&@x;\">"
+            "<CASUS est=\"&@y;\"><a/></CASUS>"
+            "</COMMUTATIO></#></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+        }
+
+        fons = chorda_ex_literis(
+            "<radix><#@f x=\"@x\">"
+            "<COMMUTATIO de=\"litterale\">"
+            "<CASUS est=\"a\"><a/></CASUS>"
+            "</COMMUTATIO></#></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+        }
+    }
+
+    /* --- (6.2 f) COMMUTATIO gradu documenti INTACTA transit
+     * (machina eam solum in impletione interpretatur - regula
+     * eadem ac '&@x;' extra corpora littera manens) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- COMMUTATIO gradu documenti ---\n");
+        fons = chorda_ex_literis(
+            "<radix><COMMUTATIO de=\"x\">"
+            "<CASUS est=\"a\"><a/></CASUS>"
+            "</COMMUTATIO></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><COMMUTATIO de=\"x\">"
+                    "<CASUS est=\"a\"><a/></CASUS>"
+                    "</COMMUTATIO></radix>");
+            }
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

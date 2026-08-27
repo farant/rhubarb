@@ -272,7 +272,7 @@ nesting; positional spreads retired above). Decisions bound:
   nota (collection precedes the outer nota append) — unpinned by
   fixtures, revisit if a consumer cares.
 
-### 6.2 COMMUTATIO — arm selection in template bodies (decreed 2026-08-26, unbuilt)
+### 6.2 COMMUTATIO — arm selection in template bodies (decreed 2026-08-26; BUILT same day)
 
 **CAPS-Latin tags are hereby the BUILTIN-VERB grammar**: data tags
 stay lowercase kebab; template-layer builtins SCREAM. Zero new
@@ -314,6 +314,44 @@ First builtin — value-driven arm selection inside definition bodies:
 - First-match-wins in document order; ORDINARIUS last.
 - Surface details (attr spellings, vitium numbering) adjustable at
   build time; the LINE and the CAPS-builtin mint are the decree.
+
+**Build decisions (2026-08-26 eve, engine shipped)**:
+- `de=` must be EXACTLY one whole `&@x;` reference naming a
+  declared loculus — a literal de makes every arm statically dead,
+  and mixed text+ref makes presence incoherent. The de reference is
+  the SCRUTINIZING reference: exempt from narrowing (legal present
+  or absent). `est=` may contain no `&@` reference — THE LINE
+  enforced at collection.
+- Vitia: IX `COMMUTATIO_MALFORMATA` (collection: bad de, est with
+  ref, non-CASUS child, ORDINARIUS not last, wrong CASUS attr
+  count/shape — the plan stays statically judgeable); X
+  `CASUS_NULLUS` (fill: nothing matched, no ORDINARIUS); XI
+  `LOCULUS_NON_ANGUSTATUS` (collection: optional loculus referenced
+  outside a presence-establishing arm).
+- Narrowing scope: `est` AND `non-nihil` arms establish presence of
+  the de loculus (est can only match a present value); `nihil` arms
+  and ORDINARIUS do NOT (ORDINARIUS runs for present AND absent
+  values). The construction proves fill-safety: refs to optional
+  slots only execute inside arms whose selection guarantees
+  presence.
+- Evaluation with a SUBTREE value: an `est` arm encountered = the
+  seventh vitium (comparing a forest to a literal); a `non-nihil`
+  arm placed before any est arm matches first, legally — presence
+  switching on forests works.
+- Comments between arms are skipped; any other non-CASUS child is
+  IX. Document-level COMMUTATIO passes through untouched (engine
+  interprets it only inside impletio — same rule as `&@x;` staying
+  literal outside bodies). COMMUTATIO/CASUS/ORDINARIUS nodes never
+  appear in the expanded tree (structure machinery, like
+  argument-elements).
+- Optional declaration `p="@p?"`: `?` stripped at collection,
+  `optionalis` flag on the loculus; NON_IMPLETUS skips optional
+  slots; the §6.3 tombstone composes (explicitly absent → nihil arm
+  matches).
+- Growth path recorded (Fran, at build time): pattern-valued cases
+  arrive via the §6.3 BLOCK form on builtins —
+  `<CASUS><@est=><EXEMPLAR>...</></>` — zero new syntax; v1 `est`
+  stays literal scalar equality (exemplaria interview, open item 4).
 
 ### 6.3 Attribute-elements on ALL tags (decreed 2026-08-26, unbuilt) — a BASE-format repair
 

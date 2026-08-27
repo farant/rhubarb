@@ -51,7 +51,22 @@ nomen enumeratio {
     STML_EXPANSIO_ARGUMENTUM_ARBOREUM   = VII,
     /* nomen argumenti bis datum (inscriptum + blocum, aut bloca
      * bina) - 'ultimus vincit' numquam fit */
-    STML_EXPANSIO_ARGUMENTUM_GEMINUM    = VIII
+    STML_EXPANSIO_ARGUMENTUM_GEMINUM    = VIII,
+    /* COMMUTATIO forma mala (in COLLECTIONE iudicata - planum
+     * statice iudicabile manet): de non totus-ref '&@x;'; est cum
+     * referentia (LINEA: casus litterae, numquam praedicata
+     * computata); liberum non-CASUS/ORDINARIUS; ORDINARIUS non
+     * ultimus; attributum casus ignotum (par. 6.2) */
+    STML_EXPANSIO_COMMUTATIO_MALFORMATA = IX,
+    /* impletione: nullum bracchium congruit nec ORDINARIUS adest -
+     * numquam vacuum tacitum (par. 6.2) */
+    STML_EXPANSIO_CASUS_NULLUS          = X,
+    /* loculus OPTIONALIS ('p="@p?"') extra bracchium praesentiam
+     * statuens relatus (bracchia est/non-nihil statuunt; nihil et
+     * ORDINARIUS non - ORDINARIUS et praesente et absente
+     * exsequitur). In COLLECTIONE iudicatum: angustatio fluxus,
+     * optionalitas honesta - numquam vacuum tacitum (par. 6.2) */
+    STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS = XI
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

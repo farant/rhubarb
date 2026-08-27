@@ -164,3 +164,45 @@ session-worth of design compressed into the map:
   before believing the hook's one-liner.)
 
 All seven born-red fixtures went green on the first full compile.
+
+## 2026-08-26 (nocte) — COMMUTATIO + optional slots (spec §6.2, v1.5 step 3)
+
+First CAPS-Latin builtin shipped: value-driven arm selection in
+definition bodies, plus the hidden contract change it forces —
+optional slots `p="@p?"` with flow-narrowing.
+
+Shape: `_commutationem_perscrutari` (collection: shape validation +
+narrowing scope) and `_commutationem_implere` (fill: first-match +
+arm splice). COMMUTATIO/CASUS/ORDINARIUS never reach the expanded
+tree — structure machinery, same class as argument-elements. Both
+sides skip comments between arms.
+
+Decisions locked (spec §6.2 build block has the full list):
+- `de` = exactly one whole `&@x;` ref, declared; it is the
+  SCRUTINIZING reference and therefore exempt from narrowing —
+  the one place an optional slot may be touched presence-agnostic.
+  Handled by intercepting COMMUTATIO in `_corpus_perscrutari`
+  BEFORE the generic attr scan (which would have fired XI on de
+  itself — the subtle bit of the whole build).
+- est AND non-nihil arms establish presence (est only matches
+  present values); nihil and ORDINARIUS do not — ORDINARIUS runs
+  for both present and absent, so refs to the optional slot there
+  are XI at collection. Fill-safety falls out by construction: an
+  optional ref only executes inside an arm whose selection proved
+  presence, so `_chordam_substituere`'s defensive path stays
+  defensive.
+- Narrowing = `angustati` stack (interned chorda*) threaded through
+  `_corpus_perscrutari`/`_chordam_perscrutari`; push/pop around
+  presence-establishing arms; `_in_angustatis` pointer-compare.
+- Subtree value meets est arm at fill = vitium VII (forest vs
+  literal comparison); non-nihil BEFORE est arms matches first
+  legally — presence-switching on forests works.
+- Loculi list upgraded chorda* → StmlMacroLoculus {titulus,
+  optionalis}; NON_IMPLETUS skips optional; tombstone composes
+  (explicitly absent → nihil arm).
+
+Vitia IX/X/XI minted. Seven new fixture blocks born red (three via
+unknown enum identifiers), all green on first full compile — third
+time today. The engine's seams (child-loop interception, one
+substitution grammar, first-vitium-wins) are absorbing new verbs
+without resistance, which is what the T1-T6 shape promised.
