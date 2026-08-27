@@ -454,10 +454,64 @@ before ratification.
     N-row-provenance reading; static ingress enumerability
     (fabrica); concrete-syntax capture holes (per-dialect
     hole-blessing).
+12. Identity-bearing genera vs anonymous DISTRIBUTIO (Simulatio
+    baubellarium, finding 12): distributed siblings are
+    indistinguishable except by position; genera whose instances
+    are citable individua need a decree — refuse wrapper-form
+    authoring (loud, named alternative), demand per-item ids, or
+    (dangerous) mint at distribution. Refusal leaned.
+13. Business-data querying (Simulatio, findings 13-15): the
+    decreed-aggregate vocabulary (numerus/summa/minimum/maximum —
+    Round II's "aggregations = decreed projections" gets its first
+    pull; the closed-verb house pattern, fourth appearance), AND
+    the underlying fork: is EXEMPLAR the query surface for
+    value-heavy business data at all, or does the store own
+    values while patterns own structure? Q3's sibling — measured
+    argument, not preference (keep it a SEPARATE measurement from
+    the pre-interview Q3 run).
 
 All of the above are judged under V.5's least-surprise criterion
 (human or LLM author); candidate syntax goes on the page before
 ratification.
+
+## Simulatio: baubellarium (2026-08-27) — the pretend-SaaS exercise
+
+House technique (the mutatio-visio §9 precedent): a fictional
+domain — baubellarium, a SaaS for bauble businesses (baubellum =
+genuine medieval Latin for trinket) — C89/hospitium backend,
+volumen store, vitrea desktop POS, JS/HTML/CSS web client, mid-
+strangle semantic layer (~70% generated with declared overrides).
+Simulated: one brownfield feature (gift wrap through the whole
+stack), one shipped bug (#412: rush fee $0.00 on desktop only),
+one greenfield feature (delivery routes with a lifecycle machine).
+FIFTEEN findings; none contradicted a banked decision — all edges.
+
+Interview-feeding (now items 12-13 above): identity vs anonymous
+distribution; aggregate vocabulary + the query-surface fork.
+
+Trajectory-feeding (recorded in stml-visio.md §10.4): instance-
+migration doc form demanded by the adequacy loop; PRAETERITUM =
+third verdict class (override complete against an OLD schema) and
+the shipped-bug proof that it must GATE; severity policy for
+verdict classes; lintability in dynamic dialects MANUFACTURED by
+strangling seams (generated accessors, perimeter lints — never
+dataflow analysis of arbitrary JS); L4 policies = COMPOSITE named
+units (generation decision + perimeter patterns, apparatus-
+shaped); version skew = deployment-granularity staleness (fabrica
+stamps + census-style CI gate); greenfield adequacy = the spec
+interview mechanized; machine-driven scaffolding = tabularium's
+architecture generalized (lived precedent); adequacy ≠ omniscience
+(closure catches structural holes, not semantic omissions);
+overrides declared AT BIRTH beat retrofitted ones.
+
+Confirmations: the composition property held throughout (every
+wished-for affordance assembled from banked tools — differre +
+scratch generation, harvest + canon = contract tests); DISTRIBUTIO
+item-wins/tombstone did exactly its job on seed data; INCOMPLETUM
+checklists read as pleasant to-dos, not errors. Best structural
+result: the morning's advisory staleness flag and the afternoon's
+shipped bug were THE SAME PHENOMENON — the simulation generated an
+argument, not just findings.
 
 ## Build order (v1.5 before v2)
 

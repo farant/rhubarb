@@ -468,3 +468,65 @@ with known unknowns" where it is semantically underspecified:
   Lived precedent: the 2026-08-10 necessitudinum burn-down (263
   sedes solutae → 0, worked genus by genus off a machine-produced
   hole list) was exactly this loop, run by hand.
+
+### 10.4 Simulatio: baubellarium (2026-08-27) — trajectory findings
+
+Same-day pretend-SaaS exercise (full record + interview-feeding
+items: stml-exemplaria-interview.md, Simulatio section). The
+findings that bind THIS doctrine:
+
+- **Instance migration belongs in the adequacy loop**: "optional
+  property" is ambiguous over EXISTING rows (absent = none? or
+  unknown?); the answer is a decreed migratio document (declared
+  meaning-of-absence, canon-judged, consumed by the reader
+  generator) that INCOMPLETUM can DEMAND like any other hole. The
+  banked corpus-migration tool (mutatio §6) is the engine; the
+  wiring is what is missing.
+- **PRAETERITUM = the third verdict class**: an override complete
+  against an OLD schema — not MALFORMATUM, not INCOMPLETUM,
+  *behind*. The simulated shipped bug (#412) was a PRAETERITUM
+  defect: the same override flagged advisory-stale in the morning
+  shipped the $0.00 bug in the afternoon. Ergo staleness verdicts
+  must be able to GATE, which opens the severity-policy question
+  (which verdict classes block which pipelines, decreed where?).
+  The wished-for affordance — diff an override against the fresh
+  generated default — composes from differre + generation-to-
+  scratch; wants a single verb, needs no new engine.
+- **Lintability in dynamic dialects is MANUFACTURED, not
+  analyzed**: raw field reads in JS are unjudgeable without
+  dataflow; the strangler answer is generated typed accessors +
+  a structural perimeter lint (no raw schema'd-data access
+  outside accessor modules). The vine need not cover the JS —
+  only the SEAMS where hand code touches schema'd data.
+- **L4 policies are COMPOSITES**: a generation decision (loud
+  accessors: absent field = error channel, never a default) + 
+  perimeter patterns, bundled as ONE named unit with shared
+  provenance — apparatus-shaped ("policy = a thing you enable,
+  not five rules you remember").
+- **Version skew = staleness at deployment granularity**: shipped
+  bundles frozen at schema vN talking to a v(N+k) API — same
+  phenomenon as PRAETERITUM, one level up. Home: fabrica stamps
+  (bundle carries its schema version at build) + a census-style
+  health-as-exit-code CI gate.
+- **Greenfield adequacy = the spec interview mechanized** (§10.3
+  confirmed on contact): scaffolding a new genus is answering the
+  generators' enumerated known-unknowns; overrides declared AT
+  BIRTH beat retrofitted ones.
+- **Machine-driven scaffolding = tabularium generalized**: genus-
+  declared lifecycles (natura actions/machines) generate status
+  columns, transition guards, per-state UI affordances, API verbs
+  — status flows + affordatae actiones is tabularium's living
+  architecture; the house has been building the business-app
+  generator all along.
+- **Adequacy ≠ omniscience** (honest limit, keep it in the
+  doctrine): closure catches STRUCTURAL holes (unreachable
+  states, undeclared transitions, unsatisfied consumer demands);
+  a forgotten business case is only catchable if some consumer
+  demands it. Semantic omissions still need domain review.
+
+The staleness findings (PRAETERITUM, version skew, relation
+freshness, instance migration) are plausibly ONE relation worn at
+four granularities — "X was adequate against Y at version N; Y
+moved" — suggesting a single version-stamped adequacy algebra
+rather than four ad-hoc checks. Unify before building any of them
+separately.
