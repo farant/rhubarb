@@ -530,3 +530,52 @@ four granularities — "X was adequate against Y at version N; Y
 moved" — suggesting a single version-stamped adequacy algebra
 rather than four ad-hoc checks. Unify before building any of them
 separately.
+
+### 10.5 Vocabulary epistemics (same conversation, the deeper cut)
+
+Fran's observation: the whole edifice rests on a shared dialect as
+stable as possible (the 1.0-and-done echo) — yet a document cannot
+tell you, from itself, whether its vocabulary matches yours. Skew
+is SYMMETRIC IGNORANCE: when there is a mismatch, neither party
+knows who moved. Version stamps presuppose a trusted stamper and a
+shared version authority.
+
+- **The house edge**: vocabularies are themselves DOCUMENTS (canon,
+  natura genera) — de jure comparison is canon-diff, decidable
+  whenever both declarations are in hand.
+- **Fran's primitive: the corpus-vocabulary diff.** Census a corpus
+  into its DE FACTO vocabulary (the T7.2 value-masked shape-
+  signature probe is the embryo; a usage census = an INFERRED loose
+  canon), then diff: de facto vs de facto (two corpora), or de
+  facto vs de jure (drift in both directions — usage beyond
+  declaration, and dead declared vocabulary nothing uses).
+- **Output is FOUR-QUADRANT, never a version delta**: shared-same /
+  shared-SHIFTED (same tag, different shape — the dangerous
+  quadrant) / only-A / only-B.
+- **Doctrine: compare USAGE, never stamps** — the compare-output-
+  never-timestamps reflex generalized to vocabularies. fabrica
+  stamps remain the cheap declarative layer; the corpus diff is
+  the audit that need not believe them.
+- **Long-horizon**: version numbers assume linear time and a
+  central authority; over generations, lineage BRANCHES (forks,
+  dialects-of-dialects). The primitive that survives branching is
+  the pairwise diff, from which lineage is RECONSTRUCTED —
+  vocabulary stemmatics (Lachmannian recensio: manuscript kinship
+  inferred from shared variants, because no manuscript carries a
+  trustworthy stamp).
+- **The stability reconciliation**: 1.0-and-done is correct for
+  LOGIC (programs do not rot); a vocabulary is a BOUNDARY between
+  parties and cannot be unilaterally frozen. Its stability is
+  manufactured by making every departure loud, cheap, and
+  accounted — and the change DISCIPLINE is the 1.0-and-done
+  artifact. The vocabulary is what it superintends.
+- **Position in the algebra**: the vocabulary delta is the ATOM of
+  §10.4's staleness algebra — regeneration scheduling, migration
+  demands, override review (PRAETERITUM), and bundle skew are the
+  same delta observed at four granularities.
+- **Generation confirmed as the center of gravity** (Fran's
+  question; the simulation's evidence agrees): generation is the
+  metabolism, lint/mutation the immune system — and generation is
+  what AMPLIFIES vocabulary deltas into everything downstream,
+  which is why vocabulary change is the master question of the
+  trajectory.
