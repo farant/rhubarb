@@ -619,7 +619,11 @@ had already done most of it.
 
 **Gate — the one that matters:** a C89 **shim** passes the M1 subtree
 round trip **281/281 through materia**, without migrating silva.
-Because materia's types are silva's renamed, the shim is thin.
+Because materia's types are silva's renamed, the shim should be thin —
+**UNPROVEN, and load-bearing.** It is the assumption that makes this
+gate affordable; if the shim turns out expensive, the gate is still
+right but phase 1 is bigger than costed. Settle it FIRST inside phase 1,
+before the surgery, while a wrong answer is still cheap.
 **This buys a C89 measurement four phases before the C89 migration** —
 the mitigation for the ordering risk below.
 

@@ -7,6 +7,33 @@ sessions is the project's biggest process risk — technical decisions made on
 smoothed-over assumptions quietly shave the maximalist scope. That shaving is
 how the three previous parsers died.*
 
+## ⚠ GELATIO — furca materiae in cursu (2026-08-27)
+
+**Silva ad EMENDATIONES SOLAS gelata est** dum substratum generale
+(`materia`) ex ea furcatur. Consilium: `project-specs/materia-spec.md`;
+decretum `01M12FJR` in tabulario.
+
+Quid hoc significat si silvam nunc tangis:
+
+- **Emendatio vitii**: fac, sed nota quod in materiam REPLICANDA est
+  cum furca vivat. Si replicatio onerosa fit, furca nimis diu currit —
+  scopum SECA, noli extendere.
+- **Opus novum in nucleo** (nodus, token, arbor, scribere,
+  arbor_aequalitas, quaestio, quaestiones, commissio): **noli**, nisi
+  Fran aliter dicat. Hi moduli in materiam migrant; opus hic factum bis
+  fiet.
+- **Frons C89** (lexema, expandere, conditio, semantica, formator,
+  fluxus, tabulae_c89) **et instrumentarium LR** (glr, generare,
+  coquere): manent, opus licet.
+
+Quid IAM factum est: `silva_tabulae.h` scissum (M4, `6b5ca0a3` et
+`4f1584e2`) — typi registri in `silva_registrum.h`, quod NIHIL includit
+praeter `latina.h`. Phasis 0 peracta: chirurgia classificata.
+
+Gelatio finit cum phasis V peracta sit (silva materiam consumens,
+portis omnibus viridibus). Si hoc caput adhuc gelationem dicit et
+mensis abiit, ROGA — furca superstes esse debet, non pendere.
+
 ## Quid sit
 
 Silva is the 4th-generation C89 parsing substrate of the rhubarb monorepo,

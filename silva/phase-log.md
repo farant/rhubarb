@@ -14334,3 +14334,85 @@ test files skew exotic; presence polarity absorbs it.
 DISTRIBUTIO ratified by Fran at this session's close (item-wins +
 tombstone-delete collision rule; `<>` rehabilitation as `<#` sugar
 approved) — build is parcum step 4, not yet started.
+
+
+========================================================================
+ADDENDUM 2026-08-27 (ante compactionem) — FURCA MATERIAE, phasis 0
+========================================================================
+
+Not a silva phase. Silva was TOUCHED (one header split) in service of a
+decision made above it: fork the general substrate out of silva as
+`materia`, with CSS and HTML as its first clients and C89 migrated last
+as the ACCEPTANCE GATE. Recording it here because a silva session
+starting cold must know silva is frozen and why.
+
+Canonical documents (read in this order):
+  project-specs/materia-spec.md      the fork: M1-M8, three layers,
+                                     phase 0 results, six-phase roadmap
+  project-specs/css-arbor-spec.md    first client
+  project-specs/css-arbor-plan.md    XVII tasks (partly retargeted —
+                                     see its header note)
+  project-specs/html-arbor-spec.md   second client + the seam probe
+Ledger: 01M12FJR (materia decree) · 01M12BCD (CSS) · 01M12BD0 (S6, now
+superseded) · 01M12BDH (G4, closed) · 01M12EF6 (HTML probe).
+
+WHAT WAS DONE IN SILVA (committed 4f1584e2):
+
+silva_tabulae.h was two headers under one name — LR table types
+(actio/goto/status/symbolum/productio/tabula) and registry types
+(genus/locus/registrum-coctum). Split; silva_registrum.h now holds the
+latter and includes nothing but latina.h. silva_tabulae.h re-includes
+it, so no caller broke; five registry-only headers switched to include
+silva_registrum.h directly.
+
+Boundary is ENFORCED, not merely declared (planted-fault checked both
+ways): commissio/quaestio/quaestiones naming an LR type are REFUSED;
+arbor/scribere still see them, because they include silva_parsare.h,
+which uses both halves. Those are the SAME two modules that pull in
+silva_expandere — two independent measurements, one target.
+
+THREE MEASUREMENTS THAT CHANGED THE PLAN (all reading, no building):
+
+1. G4 — silva_coquere refuses a productions-free grammar in three
+   stages (no <initium>; <initium> naming a genera-extra genus; missing
+   structural genera). Works with one vestigial production + the five
+   required structural genera. BUT the generator already EMITS the genus
+   enum (<PRAEFIXUM>_GENUS_<X>) — anonymous, no count member. Later
+   retired: under the three-layer split, hand-written frontends never
+   invoke the LR generator at all.
+
+2. MG1 — measured BOTH directions. Negative: silva_scribere_nodum emits
+   in TREE order (source "AAABBB" -> "BBBAAA"), so out-of-order content
+   fails today. Positive: silva_scribere_fontem round-trips a consumed
+   #define 27/27, so reinserenda are LIVE. The correction: the mechanism
+   is UNREACHABLE from the subtree path — silva_scribere.c:686 passes
+   fons_index = -I, which disables the skip, and _scriptor_parare
+   hardcodes reinserenda = NIHIL. Three named edits, all in
+   silva_scribere.c. THE POSITIVE CONTROL IS WHAT SEPARATED "broken"
+   FROM "unreachable"; without it I would have concluded the mechanism
+   does not work, which is false.
+
+3. Phase 0.1 — silva_arbor.c lines 1..4029 contain ZERO
+   SilvaRegio/SilvaRamus/SilvaFons. The core writer (2042) never touches
+   them; every site is inside a _parsura_* function. And
+   _regiones_colligere (scribere) only ever turns laminae into
+   reinserenda — the scriptor never sees a SilvaRegio. So regions and
+   the fontes table are a FRONTEND-OWNED DOCUMENT SECTION, a category
+   the spec had not named, and the `_parsura_` prefix has been the layer
+   boundary all along.
+
+A METHOD NOTE WORTH KEEPING: the first post-split run reported 50/50
+against objects SIX HOURS STALE. compile_probationes.sh tracks .c
+mtimes, not header dependencies, so a header-only edit rebuilds
+nothing. The excubitor staleness guard caught it (VERDICTUM: STALA 17).
+A header-only change needs a FORCED rebuild before its suite result
+means anything.
+
+WHAT REMAINS IN SILVA: nothing in flight. Suite 50/50 on a clean
+rebuild, root suite green, amalgam re-verified (standalone + hospes
+40/40 + nm-intersection 0). The freeze notice at the top of
+silva/CLAUDE.md is the operative instruction.
+
+NEXT: materia phase 1 (the fork), ~10 tasks, ending at the gate that
+matters — a C89 shim passing the M1 subtree round trip 281/281 THROUGH
+materia, before CSS exists. That gate is a GO/NO-GO.

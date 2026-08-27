@@ -10,6 +10,26 @@
 
 **Spec:** `project-specs/css-arbor-spec.md`
 
+> ## ⚠ RETARGETED — read `materia-spec.md` §6 before executing
+>
+> This plan was written against **silva**. The decision above it changed
+> (decree `01M12FJR`): the substrate is being **forked out of silva as
+> `materia`**, and CSS is materia's first client, not silva's.
+>
+> **Do not execute this plan as written.** What changed:
+>
+> | task | status |
+> |---|---|
+> | **T1** (G4, vestigial production) | **RETIRED** — hand-written frontends never invoke the LR generator (materia M6) |
+> | **T4** (lexicon seam) | **RELOCATED** to materia phase 1. Note its `genus_identificator` correction still applies |
+> | **T5** (widen genus to `s32`) | **RELOCATED** to materia phase 1 |
+> | **T6** (amalgam export) | **DELETED** — CSS links materia directly |
+> | **T2, T3, T7–T17** | **survive**, retargeted from `silva.h` to `materia.h` |
+>
+> Also superseded: spec D4's placement (`css/` consumes `materia.h`, not
+> `silva.h`) and G1's layering inversion, which is now never incurred.
+> Roughly 13 of 17 tasks stand.
+
 ## Global Constraints
 
 - **Latin throughout** — identifiers, function names, comments, messages. Untranslated technical terms permitted: `offset`, `css`, `stml`, `token` (per house precedent in `silva_token.h`).
