@@ -22,8 +22,10 @@ declare -a GCC_FLAGS=(
 )
 declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 
+# stml_macros: canon.c stml_expandere vocat (iudicium expansum)
 FONTES=(
-    canon stml similitudo chorda chorda_aedificator piscina xar
+    canon stml stml_macros similitudo chorda chorda_aedificator
+    piscina xar
     internamentum tabula_dispersa friatio selectio filum
 )
 

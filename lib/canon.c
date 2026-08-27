@@ -4,6 +4,7 @@
  * PRAESTAT consulto (citationes, hereditas, co-occurrentiae).
  */
 #include "canon.h"
+#include "stml_macros.h"
 #include "similitudo.h"
 /* Explicite, quamquam stml.h eum iam trahit: causae dynamicae eo
  * utuntur, et quod adhibetur includi debet. */
@@ -3456,6 +3457,65 @@ canon_iudicare (
     redde vitia;
 }
 
+Xar*
+canon_iudicare_expansum (
+                  Canon* canon,
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    StmlExpansioResultus expansio;
+
+    si (!canon || !piscina || !intern)
+    {
+        redde NIHIL;
+    }
+    si (!radix)
+    {
+        redde xar_creare(piscina, (i32)magnitudo(CanonVitium));
+    }
+
+    /* intern = internamentum ARBORIS ipsius (contractus in
+     * canon.h): machina expansionis identitates definitionum et
+     * vocationum per punctatores internatos comparat -
+     * internamentum alienum vocationes omnes IGNOTAS faceret
+     * (mensuratum nativitate huius functionis). */
+    expansio = stml_expandere(radix, piscina, intern);
+    si (!expansio.successus || expansio.radix_expansa == NIHIL)
+    {
+        Xar* vitia;
+
+        vitia = xar_creare(piscina, (i32)magnitudo(CanonVitium));
+        si (vitia == NIHIL)
+        {
+            redde NIHIL;
+        }
+        /* documentum quod instantiari nequit sensum iudicabilem
+         * non habet - vitium unum clarum; detail = fragmentum aut
+         * loculus peccans, numerus = StmlExpansioVitium, limes =
+         * linea (contractus in canon.h) */
+        {
+            chorda* detail;
+
+            detail = NIHIL;
+            si (expansio.fragmentum.mensura > ZEPHYRUM)
+            {
+                detail = chorda_internare(intern,
+                                          expansio.fragmentum);
+            }
+            alioquin si (expansio.loculus.mensura > ZEPHYRUM)
+            {
+                detail = chorda_internare(intern, expansio.loculus);
+            }
+            vitium_addere(vitia, CANON_EXPANSIO_FRACTA, NIHIL,
+                          NIHIL, detail, (i32)expansio.vitium,
+                          (i32)expansio.linea);
+        }
+        redde vitia;
+    }
+    redde canon_iudicare(canon, expansio.radix_expansa, piscina);
+}
+
 constans character*
 canon_nuntius (
     CanonVitiumGenus genus)
@@ -3507,6 +3567,10 @@ canon_nuntius (
         casus CANON_TRANSCLUSIO_CIRCULARIS:
             redde "transclusio circularis (fragmentum se ipsum "
                   "per catenam transcludit)";
+        casus CANON_EXPANSIO_FRACTA:
+            redde "expansio templorum fracta (documentum "
+                  "instantiari nequit - sensus iudicari non "
+                  "potest)";
         ordinarius:
             redde "vitium ignotum";
     }

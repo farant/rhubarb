@@ -163,7 +163,12 @@ nomen enumeratio {
      * finem non habet. Clamandum est, non silentio truncandum -
      * truncatio tacita documentum aliud iudicaret quam quod
      * scriptum est. */
-    CANON_TRANSCLUSIO_CIRCULARIS = XX
+    CANON_TRANSCLUSIO_CIRCULARIS = XX,
+    /* expansio templorum ipsa fracta (canon_iudicare_expansum):
+     * documentum instantiari non potest, ergo sensus eius iudicari
+     * non potest. detail = fragmentum/loculus peccans; numerus =
+     * StmlExpansioVitium; limes = linea. */
+    CANON_EXPANSIO_FRACTA = XXI
 } CanonVitiumGenus;
 
 nomen structura {
@@ -250,6 +255,26 @@ canon_iudicare (
         Canon* canon,
     StmlNodus* radix,
       Piscina* piscina);
+
+/* Documentum EXPANSUM iudicare: stml_expandere primum (arbor
+ * instantiata = documentum contenti ordinarium - vocationes,
+ * argumenta, definitiones templorum omnia soluta), deinde iudicium
+ * ordinarium super eam. Visio altera consulto: canon_iudicare
+ * PLAGULAM iudicat (materia vocationum citata - quo compressio
+ * crescit, eo minus videt); haec functio SENSUM iudicat (quod
+ * consumens post onerationem videt). Expansio fracta =
+ * CANON_EXPANSIO_FRACTA (vitium unum, clarum - documentum quod
+ * instantiari nequit sensum iudicabilem non habet).
+ * intern DEBET internamentum arboris ipsius esse (quo parsata
+ * est): machina expansionis identitates per punctatores internatos
+ * comparat - internamentum alienum vocationes omnes IGNOTAS
+ * faceret (mensuratum nativitate huius functionis). */
+Xar*
+canon_iudicare_expansum (
+                  Canon* canon,
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern);
 
 /* Nuntius legibilis pro genere vitii */
 constans character*

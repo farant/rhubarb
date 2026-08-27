@@ -442,3 +442,43 @@ cited a nonexistent key BECAUSE apertae were unchecked ("clavis
 nulla" in its own comment) — now cites &laika;, proving
 quamlibet-ness with an existing key. Audit updates: emissae =
 citatae + apertae; star is a lawful index entry.
+
+## 2026-08-26 (nocte) — canon_iudicare_expansum: canon judges the SENSE
+
+The doctrinal debt of the compression arc, paid same-day: template
+calls contribute nothing to the file-view judgment (quoted
+material), so at 84.7% parametrum compression canon effectively
+stopped seeing parametra in files. New entry
+`canon_iudicare_expansum(canon, radix, piscina, intern)`: runs
+stml_expandere, then the ORDINARY judgment on the instantiated
+tree — which needs zero new canon logic, because the expanded tree
+is an ordinary content document (calls instantiated, arguments
+consumed, template definitions dropped; content fragments/aliases
+remain and the existing transclusion transparency handles them).
+Expansion failure = CANON_EXPANSIO_FRACTA (XXI), one loud vitium
+(detail = offending fragment/loculus, numerus = StmlExpansioVitium,
+limes = linea).
+
+THE TRAP FOUND AT BIRTH: my first version created an ephemeral
+internamentum for the expansion, on the claim "judgment compares
+values, not pointers." Wrong layer — the EXPANSION ENGINE compares
+definition ids to call ids by interned-pointer equality
+(fragmentum_id interned at PARSE time vs call id interned at
+expansion time), so a foreign intern made every call
+FRAGMENTUM_IGNOTUM. The probe caught it in one run (direct
+stml_expandere with the shared intern succeeded; the new function
+failed). Contract now explicit in canon.h: intern MUST be the
+tree's own internamentum. This is the same pointer-identity
+discipline the engine documents internally — now it has a
+consumer-facing statement.
+
+Link-list ripple: canon.o now pulls stml_macros.o —
+tools/natura_struere.sh and tools/canon_struere.sh FONTES lists
+extended (hand-maintained lists; the aedilis-derived test closures
+picked it up automatically).
+
+Corpus gate: probatio_silva_canon_corpus now judges the EXPANDED
+view of every document too — 73+155 purae_expansae PINNED. First
+canonical judgment of the real content since compression began;
+the probe's corrupted-document section is caught by the expanded
+view as well.

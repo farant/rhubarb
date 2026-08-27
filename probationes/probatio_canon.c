@@ -986,6 +986,73 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: iudicium EXPANSUM (canon_iudicare_expansum)
+     *
+     * Visio plagulae materiam vocationum citatam habet - quo
+     * compressio crescit, eo minus canon videt (84,7% parametrorum
+     * lib iam vocationes sunt). Haec functio SENSUM iudicat: arbor
+     * instantiata = documentum contenti ordinarium, iudicium
+     * ordinarium sufficit. Expansio fracta = EXPANSIO_FRACTA.
+     * ======================================================== */
+
+    {
+               Canon* c_ex;
+                 Xar* vitia;
+        StmlResultus  res;
+
+        imprimere("\n--- Probans iudicium expansum ---\n");
+
+        c_ex = canon_ex_literis(
+            "<canon dialectus=\"ex\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"item\"/></elementum>"
+            "<elementum nomen=\"item\">"
+            "<attributum nomen=\"a\" genus=\"nomen\"/></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_ex);
+
+        /* I. FIXTURA DISCERNENS: contentum instantiatum vitiosum -
+         * visio plagulae 0 (materia citata), visio expansa CLAMAT */
+        res = stml_legere(chorda_ex_literis(
+            "<r><#@t><ignotum/></#><<#@t>></r>", piscina),
+            piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare(c_ex, res.elementum_radix, piscina);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = canon_iudicare_expansum(c_ex, res.elementum_radix,
+                                        piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_VERUM (xar_numerus(vitia) > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_ELEMENTUM_IGNOTUM), I);
+
+        /* II. documentum validum: loculi IMPLETI iudicantur (quod
+         * visio plagulae numquam potuit - '&@n;' ei mentiretur) */
+        res = stml_legere(chorda_ex_literis(
+            "<r><#@t n=\"@n\"><item a=\"&@n;\"/></#>"
+            "<<#@t n=\"unus\">></r>", piscina),
+            piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare_expansum(c_ex, res.elementum_radix,
+                                        piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* III. expansio fracta (orphana) = vitium unum clarum */
+        res = stml_legere(chorda_ex_literis(
+            "<r><<#@nusquam>></r>", piscina), piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare_expansum(c_ex, res.elementum_radix,
+                                        piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_EXPANSIO_FRACTA), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: transclusio PELLUCIDA
      *
      * DEFINITIO: contentum per transclusionem adhibitum idem

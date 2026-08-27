@@ -45,6 +45,11 @@
 nomen structura {
     i32 plagulae;
     i32 purae;             /* documenta sine ullo vitio */
+    i32 purae_expansae;    /* visio EXPANSA sine vitio (sensus -
+                            * quod consumens post onerationem
+                            * videt; visio plagulae materiam
+                            * vocationum citatam habet) */
+    i32 vitia_expansa_summa;
     i32 vitia_summa;
     i32 latinizatae;
     i32 apparatus_fracti;
@@ -214,6 +219,43 @@ _documentum_iudicare (
         apparatus_causam_notare(census->causae,
             &census->numerus_causarum, "iudicium NIHIL reddidit");
         redde -I;
+    }
+
+    /* IUDICIUM EXPANSUM: sensus quoque purus esse debet - visio
+     * plagulae materiam vocationum citatam habet, ergo quo
+     * compressio crescit eo minus videt (84,7% parametrorum lib
+     * iam vocationes). Intern = internamentum arboris huius
+     * (contractus canon.h - punctatores internati). */
+    {
+        Xar* vitia_expansa;
+
+        vitia_expansa = canon_iudicare_expansum(canon,
+            res.elementum_radix, opus, intern);
+        si (   vitia_expansa != NIHIL
+            && xar_numerus(vitia_expansa) == ZEPHYRUM)
+        {
+            census->purae_expansae++;
+        }
+        alioquin
+        {
+            i32 j;
+            i32 ne = vitia_expansa != NIHIL
+                ? xar_numerus(vitia_expansa) : I;
+
+            census->vitia_expansa_summa += ne;
+            per (j = ZEPHYRUM;
+                 vitia_expansa != NIHIL && j < ne && j < III; j++)
+            {
+                CanonVitium* ve = (CanonVitium*)xar_obtinere(
+                    vitia_expansa, j);
+
+                si (ve != NIHIL)
+                {
+                    imprimere("    VITIUM EXPANSUM %s  [%s]\n",
+                        canon_nuntius(ve->genus), via);
+                }
+            }
+        }
     }
 
     numerus = (s32)xar_numerus(vitia);
@@ -513,6 +555,10 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_planus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planus.vitia_summa, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planus.purae, (i32)73);
+    /* SENSUS quoque purus: canon per expansionem videt quod
+     * consumens videt - primum iudicium canonicum contenti veri
+     * post compressionem (arcus 2026-08-26) */
+    CREDO_AEQUALIS_I32 (census_planus.purae_expansae, (i32)73);
 
     CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)155);
     CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)155);
@@ -522,6 +568,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)155);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)155);
 
     /* ============================================================
      * QUID PORTA REVERA VIDERIT

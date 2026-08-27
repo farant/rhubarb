@@ -23,8 +23,10 @@ declare -a GCC_FLAGS=(
 declare -a INCLUDE_FLAGS=( "-I$RADIX_DIR/include" )
 
 # clausura oneratoris (bin/aedilis --partes natura.c congruens)
+# stml_macros: canon.c stml_expandere vocat (iudicium expansum)
 FONTES=(
-    natura canon stml similitudo chorda chorda_aedificator piscina xar
+    natura canon stml stml_macros similitudo chorda
+    chorda_aedificator piscina xar
     internamentum tabula_dispersa friatio selectio
     filum iter_directoria via
 )
