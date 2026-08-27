@@ -96,6 +96,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaArborScriptura", "SilvaArborComparatioModus",
     "SilvaArborDifferentia", "SilvaArborVitium", "SilvaArborSedes",
     "SilvaArborCensusCompressionis",
+    /* distributio (2026-08-27): silva.h typos publicos possidet */
+    "StmlDistributioVitium", "StmlDistributioResultus",
     NIHIL
 };
 
@@ -118,7 +120,9 @@ interior constans character* constans NON_STATICA[] = {
     "stml_legere", "stml_invenire_liberum",
     "stml_attributum_capere", "stml_attributum_habet",
     "stml_textus_internus", "stml_numerus_liberorum",
-    "stml_liberum_ad_indicem", "internamentum_creare", NIHIL
+    "stml_liberum_ad_indicem", "internamentum_creare",
+    /* distributio (2026-08-27) */
+    "stml_distribuere", NIHIL
 };
 
 /* Renominationes typorum (exactae). Typi symbola nexus non creant,
@@ -144,6 +148,8 @@ interior constans Renominatio TYPI_EXACTI[] = {
     { "StmlCaptioDirectio",    "SilvaStmlCaptioDirectio" },
     { "StmlAttributum",        "SilvaStmlAttributum" },
     { "StmlResultus",          "SilvaStmlResultus" },
+    { "StmlDistributioVitium",   "SilvaStmlDistributioVitium" },
+    { "StmlDistributioResultus", "SilvaStmlDistributioResultus" },
     { "InternamentumChorda",   "SilvaInternamentumChorda" }
 };
 

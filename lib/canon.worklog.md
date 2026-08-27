@@ -482,3 +482,22 @@ view of every document too — 73+155 purae_expansae PINNED. First
 canonical judgment of the real content since compression began;
 the probe's corrupted-document section is caught by the expanded
 view as well.
+
+## 2026-08-27 — canon_iudicare_distributum (fifth touch of the sense line)
+
+expand → distribute → judge, mirroring canon_iudicare_expansum;
+the expansion-failure vitia builder is now a shared helper
+(`_vitia_expansionis_fractae`). New vitium XXII
+CANON_DISTRIBUTIO_FRACTA (detail = wrapper titulus, numerus =
+StmlDistributioVitium, limes = linea). Same intern contract as
+expansum: the tree's OWN internamentum.
+
+The distinguishing fixtures pin what the file view CANNOT see:
+- cardinality — one wrapper with two items is ONE child to the file
+  view (maximum=1 satisfied) and TWO siblings distributed
+  (LIBERI_MULTI);
+- attribute presence — the wrapper's t carries down, an item
+  tombstone deletes it, and only the distributed view reports
+  ATTRIBUTUM_DEEST on the second nota.
+Both fixtures assert the file view is 0 vitia first, so each is a
+differential oracle, not a single opinion.

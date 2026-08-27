@@ -1118,6 +1118,378 @@ principale (
         }
     }
 
+
+    /* ==================================================
+     * DISTRIBUTIO (ronda IV, rata 2026-08-26) - proiectio contenti
+     * SECUNDA: legere -> expandere -> distribuere -> consumens.
+     * NON intra stml_expandere (contractus machinae = spatium
+     * templi '@' solum; distributio spatium contenti innotatum).
+     *
+     * Involucrum (elementum NOMINATUM cuius liberi post praefixum
+     * attributorum fragmenta anonyma OMNES sunt) dissolvitur: item
+     * N -> fratres N typo involucri; attributa descendunt;
+     * collisio ITEM-VINCIT, sepulcro '<@x=/>' completa (verbum
+     * delendi); mixtura anonymi/nominati = vitium CLARUM; item
+     * vacuum = elementum vacuum; item silvae sunt; nidificatio
+     * recursiva (listae anonymae nidificatae typo eodem PLANANTUR).
+     * Arbor originalis INTACTA (contractus duarum arborum).
+     * ================================================== */
+
+    /* --- distributio: documentum sine involucris == clonatio --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: sine involucris ---\n");
+        fons = chorda_ex_literis("<radix><a x=\"1\"/>t</radix>",
+                                 piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            CREDO_NON_NIHIL (dist.radix_distributa);
+            si (dist.successus && dist.radix_distributa != NIHIL)
+            {
+                CREDO_VERUM (dist.radix_distributa != res.radix);
+                CREDO_CHORDA_AEQUALIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    stml_scribere(res.radix, piscina, FALSUM));
+            }
+        }
+    }
+
+    /* --- distributio basalis: involucrum dissolvitur, typus
+     * descendit; originalis intacta --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio basalis ---\n");
+        fons = chorda_ex_literis(
+            "<nota t=\"a\"><#>emere lac</#><#>ianuam</#></nota>",
+            piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<nota t=\"a\">emere lac</nota>"
+                    "<nota t=\"a\">ianuam</nota>");
+                /* originalis: involucrum unum, item fragmenta duo */
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(res.radix->liberi), I);
+                CREDO_AEQUALIS_I32 (
+                    xar_numerus(res.elementum_radix->liberi), II);
+            }
+        }
+    }
+
+    /* --- attributa descendunt; collisio ITEM-VINCIT --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: item vincit ---\n");
+        fons = chorda_ex_literis(
+            "<a t=\"x\" u=\"y\"><#>p</#><# u=\"z\">q</#></a>",
+            piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                StmlNodus* alterum;
+
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a t=\"x\" u=\"y\">p</a>"
+                    "<a t=\"x\" u=\"z\">q</a>");
+                alterum = *(StmlNodus**)xar_obtinere(
+                    dist.radix_distributa->liberi, I);
+                CREDO_NON_NIHIL (
+                    stml_attributum_capere(alterum, "t"));
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    *stml_attributum_capere(alterum, "u"), "z");
+            }
+        }
+    }
+
+    /* --- sepulcrum '<@u=/>' in praefixo item attributum
+     * hereditatum DELET (verbum delendi par. 6.3) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: sepulcrum delet ---\n");
+        fons = chorda_ex_literis(
+            "<a t=\"1\" u=\"2\"><#><@u=/>x</#></a>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                StmlNodus* e;
+
+                e = *(StmlNodus**)xar_obtinere(
+                    dist.radix_distributa->liberi, ZEPHYRUM);
+                CREDO_NON_NIHIL (stml_attributum_capere(e, "t"));
+                /* absentia explicita: capere NIHIL */
+                CREDO_NIHIL (stml_attributum_capere(e, "u"));
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a t=\"1\"><@u=/>x</a>");
+            }
+        }
+    }
+
+    /* --- praefixum attributorum involucri quoque descendit;
+     * item eadem lege vincit --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: praefixum involucri ---\n");
+        fons = chorda_ex_literis(
+            "<a><@t=>v</><#>x</#><# t=\"w\">y</#></a>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a><@t=>v</>x</a><a t=\"w\">y</a>");
+            }
+        }
+    }
+
+    /* --- homogeneitas CLARA: mixtura anonymi/nominati = vitium --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: mixtura ---\n");
+        fons  = chorda_ex_literis("<a><#>x</#><b/></a>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (!dist.successus);
+            CREDO_AEQUALIS_I32 ((i32)dist.vitium,
+                                (i32)STML_DISTRIBUTIO_MIXTA);
+            CREDO_CHORDA_AEQUALIS_LITERIS (dist.titulus, "a");
+            CREDO_NIHIL (dist.radix_distributa);
+        }
+    }
+
+    /* --- item vacuum = elementum vacuum --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: item vacuum ---\n");
+        fons  = chorda_ex_literis("<a t=\"1\"><#/></a>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a t=\"1\"/>");
+            }
+        }
+    }
+
+    /* --- item silvae sunt: liberi plures --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: item silva ---\n");
+        fons  = chorda_ex_literis("<a><#><b/><c/></#></a>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a><b/><c/></a>");
+            }
+        }
+    }
+
+    /* --- nidificatio recursiva: involucrum nominatum intra item --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: nidificatio nominata ---\n");
+        fons = chorda_ex_literis(
+            "<r><a><#><b><#>k</#></b></#></a></r>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<r><a><b>k</b></a></r>");
+            }
+        }
+    }
+
+    /* --- nidificatio recursiva: listae anonymae typo eodem
+     * PLANANTUR (rithmus PER degeneratae) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: planatio anonyma ---\n");
+        fons = chorda_ex_literis(
+            "<r><a><#><#>x</#><#>y</#></#></a></r>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<r><a>x</a><a>y</a></r>");
+            }
+        }
+    }
+
+    /* --- fragmenta anonyma sine parente nominato transeunt
+     * (gradu documenti; intra fragmentum nominatum) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: sine parente nominato ---\n");
+        fons  = chorda_ex_literis("<#>x</#>", piscina);
+        res   = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<#>x</#>");
+            }
+        }
+
+        fons = chorda_ex_literis("<x><#f><#>i</#></#></x>",
+                                 piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<x><#f><#>i</#></#></x>");
+            }
+        }
+    }
+
+    /* --- commenta inter item transeunt positione servata --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- distributio: commenta inter item ---\n");
+        fons = chorda_ex_literis(
+            "<a t=\"1\"><#>x</#><!--n--><#>y</#></a>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlDistributioResultus dist;
+
+            dist = stml_distribuere(res.radix, piscina, intern);
+            CREDO_VERUM (dist.successus);
+            si (dist.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(dist.radix_distributa, piscina,
+                                  FALSUM),
+                    "<a t=\"1\">x</a><!--n--><a t=\"1\">y</a>");
+            }
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

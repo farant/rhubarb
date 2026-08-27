@@ -1537,6 +1537,57 @@ int main(void)
         }
     }
 
+    /* DISTRIBUTIO STML (2026-08-27): proiectio contenti secunda
+     * per silva.h - involucrum cum item duobus in fratres duos
+     * typo involucri dissolvitur, attributum descendit. Eadem
+     * causa ac ARBOR infra: prototypum manu scriptum contra corpus
+     * amalgamatum solum per vocationem capitis nectitur. */
+    {
+        static unsigned char DIST_TAMPON[] =
+            "<nota t=\"a\"><#>x</#><#>y</#></nota>";
+        SilvaInternamentumChorda* intern_dist =
+            silva_internamentum_creare(piscina);
+        SilvaChorda input_dist;
+        SilvaStmlResultus r_dist;
+        SilvaStmlDistributioResultus d_dist;
+        int bene_dist = 0;
+
+        summa++;
+        input_dist.mensura = (unsigned int)strlen(
+            (const char*)DIST_TAMPON);
+        input_dist.datum = DIST_TAMPON;
+        if (intern_dist != NULL)
+        {
+            r_dist = silva_stml_legere(input_dist, piscina,
+                intern_dist);
+            if (r_dist.successus && r_dist.radix != NULL)
+            {
+                d_dist = silva_stml_distribuere(r_dist.radix,
+                    piscina, intern_dist);
+                if (d_dist.successus
+                    && d_dist.radix_distributa != NULL
+                    && d_dist.vitium == STML_DISTRIBUTIO_BENE
+                    && silva_stml_numerus_liberorum(
+                           d_dist.radix_distributa) == 2u
+                    && silva_stml_attributum_capere(
+                           silva_stml_liberum_ad_indicem(
+                               d_dist.radix_distributa, 1u),
+                           "t") != NULL)
+                {
+                    bene_dist = 1;
+                }
+            }
+        }
+        if (bene_dist)
+        {
+            fideles++;
+        }
+        else
+        {
+            fprintf(stderr, "hospes: INFIDELIS: distributio\n");
+        }
+    }
+
     /* ARBOR: circuitus STML per silva.h (M1).
      *
      * NON ornamentum. silva.c caput silva.h NON includit, ergo

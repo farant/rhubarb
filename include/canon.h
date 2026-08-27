@@ -168,7 +168,13 @@ nomen enumeratio {
      * documentum instantiari non potest, ergo sensus eius iudicari
      * non potest. detail = fragmentum/loculus peccans; numerus =
      * StmlExpansioVitium; limes = linea. */
-    CANON_EXPANSIO_FRACTA = XXI
+    CANON_EXPANSIO_FRACTA = XXI,
+    /* distributio ipsa fracta (canon_iudicare_distributum):
+     * involucrum liberi mixtos fert aut memoria defecit - visio
+     * distributa non exsistit, ergo iudicari nequit. detail =
+     * titulus involucri peccantis; numerus =
+     * StmlDistributioVitium; limes = linea. */
+    CANON_DISTRIBUTIO_FRACTA = XXII
 } CanonVitiumGenus;
 
 nomen structura {
@@ -271,6 +277,22 @@ canon_iudicare (
  * faceret (mensuratum nativitate huius functionis). */
 Xar*
 canon_iudicare_expansum (
+                  Canon* canon,
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
+/* Documentum DISTRIBUTUM iudicare: cursus contenti plenus -
+ * stml_expandere deinde stml_distribuere deinde iudicium
+ * ordinarium. Tactus quintus lineae 'canon sensum iudicat, non
+ * superficiem': involucra dissoluta, item elementa typata facta -
+ * canon quod consumens post cursum totum videt iudicat. Expansio
+ * fracta = CANON_EXPANSIO_FRACTA; distributio fracta =
+ * CANON_DISTRIBUTIO_FRACTA (vitium unum, clarum). intern DEBET
+ * internamentum arboris ipsius esse (contractus idem ac
+ * canon_iudicare_expansum). */
+Xar*
+canon_iudicare_distributum (
                   Canon* canon,
               StmlNodus* radix,
                 Piscina* piscina,

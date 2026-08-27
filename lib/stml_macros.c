@@ -1683,3 +1683,500 @@ stml_expandere (
     resultus.successus = (resultus.vitium == STML_EXPANSIO_BENE);
     redde resultus;
 }
+
+
+/* ==================================================
+ * DISTRIBUTIO (contractus et leges in stml_macros.h)
+ *
+ * Ambulatio secunda, a machina expansionis SEIUNCTA: involucra
+ * (elementa nominata quorum liberi item fragmenta anonyma sunt)
+ * in fratres typo involucri dissolvuntur. Clonatio ubique - arbor
+ * originalis intacta (contractus duarum arborum). Liberi item in
+ * elementa constructa MOVENTUR (clones proiectionis sunt, numquam
+ * nodi originales).
+ * ================================================== */
+
+nomen structura {
+                    Piscina* piscina;
+        InternamentumChorda* intern;
+    StmlDistributioResultus* resultus;
+} StmlDistContextus;
+
+/* item = fragmentum anonymum */
+interior b32
+_dist_est_item (
+    StmlNodus* nodus)
+{
+    redde nodus != NIHIL
+        && nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->fragmentum
+        && nodus->fragmentum_id == NIHIL;
+}
+
+/* involucrabile = elementum contenti NOMINATUM (non fragmentum,
+ * non elementum attributi '@', non augmentatio '%') */
+interior b32
+_dist_est_nominatum (
+    StmlNodus* nodus)
+{
+    redde nodus != NIHIL
+        && nodus->genus == STML_NODUS_ELEMENTUM
+        && !nodus->fragmentum
+        && nodus->attributum_titulus == NIHIL
+        && nodus->augmentum_clavis == NIHIL
+        && nodus->titulus != NIHIL
+        && nodus->titulus->mensura > ZEPHYRUM;
+}
+
+/* Nominatne item attributum? Inscriptum AUT elementum praefixi
+ * (sepulcra inclusa) - collisio ITEM-VINCIT per suppressionem
+ * attributi involucri eiusdem nominis. */
+interior b32
+_dist_item_nominat (
+    StmlNodus* item,
+       chorda* titulus)
+{
+    i32 i;
+    i32 num;
+
+    si (item == NIHIL || titulus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (item->attributa != NIHIL)
+    {
+        num = xar_numerus(item->attributa);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlAttributum* a;
+
+            a = (StmlAttributum*)xar_obtinere(item->attributa, i);
+            si (   a->titulus != NIHIL
+                && chorda_aequalis(*a->titulus, *titulus))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    si (item->liberi != NIHIL)
+    {
+        num = xar_numerus(item->liberi);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlNodus* l;
+
+            l = *(StmlNodus**)xar_obtinere(item->liberi, i);
+            si (   l->genus              != STML_NODUS_ELEMENTUM
+                || l->attributum_titulus == NIHIL)
+            {
+                frange;  /* praefixum finitur */
+            }
+            si (chorda_aequalis(*l->attributum_titulus, *titulus))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_dist_vitium (
+        StmlDistContextus* ctx,
+    StmlDistributioVitium  vitium,
+                      i32  linea,
+                   chorda* titulus)
+{
+    si (ctx->resultus->vitium != STML_DISTRIBUTIO_BENE)
+    {
+        redde;  /* primum vincit */
+    }
+    ctx->resultus->vitium  = vitium;
+    ctx->resultus->linea   = linea;
+    si (titulus != NIHIL)
+    {
+        ctx->resultus->titulus = *titulus;
+    }
+}
+
+interior b32
+_dist_appendere (
+    StmlDistContextus* ctx,
+            StmlNodus* parens,
+            StmlNodus* nodus)
+{
+    StmlNodus** cella;
+
+    si (parens->liberi == NIHIL)
+    {
+        parens->liberi = xar_creare(ctx->piscina,
+                                    magnitudo(StmlNodus*));
+        si (parens->liberi == NIHIL)
+        {
+            _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA, ZEPHYRUM,
+                         NIHIL);
+            redde FALSUM;
+        }
+    }
+    cella = (StmlNodus**)xar_addere(parens->liberi);
+    si (cella == NIHIL)
+    {
+        _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA, ZEPHYRUM,
+                     NIHIL);
+        redde FALSUM;
+    }
+    *cella         = nodus;
+    nodus->parens  = parens;
+    redde VERUM;
+}
+
+interior b32
+_dist_nodum (
+    StmlDistContextus* ctx,
+            StmlNodus* parens,
+            StmlNodus* nodus);
+
+/* Dissolutio: novum (liberi iam distributi) aut appenditur
+ * intactum (nulla item) aut in fratres typo involucri
+ * dissolvitur. Auto-recursiva: elementum constructum ipsum
+ * involucrum esse potest (listae anonymae nidificatae typo eodem
+ * PLANANTUR). */
+interior b32
+_dist_dissolvere (
+    StmlDistContextus* ctx,
+            StmlNodus* parens,
+            StmlNodus* novum)
+{
+    i32 i;
+    i32 num;
+    i32 praefixum;
+    i32 numerus_item;
+    b32 mixtum;
+    i32 linea_mixti;
+
+    num = (novum->liberi != NIHIL) ? xar_numerus(novum->liberi)
+                                   : ZEPHYRUM;
+
+    /* praefixum elementorum attributi = attributa involucri ipsius */
+    praefixum = ZEPHYRUM;
+    dum (praefixum < num)
+    {
+        StmlNodus* l;
+
+        l = *(StmlNodus**)xar_obtinere(novum->liberi, praefixum);
+        si (   l->genus              != STML_NODUS_ELEMENTUM
+            || l->attributum_titulus == NIHIL)
+        {
+            frange;
+        }
+        praefixum++;
+    }
+
+    /* census: item omnia aut nulla (commenta transeunt) */
+    numerus_item  = ZEPHYRUM;
+    mixtum        = FALSUM;
+    linea_mixti   = ZEPHYRUM;
+    per (i = praefixum; i < num; i++)
+    {
+        StmlNodus* l;
+
+        l = *(StmlNodus**)xar_obtinere(novum->liberi, i);
+        si (_dist_est_item(l))
+        {
+            numerus_item++;
+        }
+        alioquin si (l->genus != STML_NODUS_COMMENTUM && !mixtum)
+        {
+            mixtum       = VERUM;
+            linea_mixti  = l->linea;
+        }
+    }
+
+    si (numerus_item == ZEPHYRUM)
+    {
+        redde _dist_appendere(ctx, parens, novum);
+    }
+    si (mixtum)
+    {
+        _dist_vitium(ctx, STML_DISTRIBUTIO_MIXTA, linea_mixti,
+                     novum->titulus);
+        redde FALSUM;
+    }
+
+    per (i = praefixum; i < num; i++)
+    {
+        StmlNodus* l;
+
+        l = *(StmlNodus**)xar_obtinere(novum->liberi, i);
+        si (l->genus == STML_NODUS_COMMENTUM)
+        {
+            si (!_dist_appendere(ctx, parens, l))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+
+        /* elementum novum: typus et attributa involucri, corpus
+         * et dispositio item */
+        {
+            StmlNodus* e;
+                  i32  j;
+                  i32  num_j;
+
+            e = stml_duplicare_superficialiter(novum, ctx->piscina,
+                                               ctx->intern);
+            si (e == NIHIL)
+            {
+                _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA,
+                             ZEPHYRUM, NIHIL);
+                redde FALSUM;
+            }
+            e->spatia_ante       = l->spatia_ante;
+            e->spatia_post       = l->spatia_post;
+            e->spatia_clausurae  = l->spatia_clausurae;
+            e->clausura_anonyma  = l->clausura_anonyma;
+            e->linea             = l->linea;
+
+            /* attributa inscripta: involucrum (item-vincit
+             * filtratum) deinde item */
+            e->attributa = NIHIL;
+            si (   (   novum->attributa != NIHIL
+                    && xar_numerus(novum->attributa) > ZEPHYRUM)
+                || (   l->attributa != NIHIL
+                    && xar_numerus(l->attributa) > ZEPHYRUM))
+            {
+                e->attributa = xar_creare(ctx->piscina,
+                                          magnitudo(StmlAttributum));
+                si (e->attributa == NIHIL)
+                {
+                    _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA,
+                                 ZEPHYRUM, NIHIL);
+                    redde FALSUM;
+                }
+                num_j = (novum->attributa != NIHIL)
+                            ? xar_numerus(novum->attributa)
+                            : ZEPHYRUM;
+                per (j = ZEPHYRUM; j < num_j; j++)
+                {
+                    StmlAttributum* a;
+                    StmlAttributum* cella;
+
+                    a = (StmlAttributum*)xar_obtinere(
+                        novum->attributa, j);
+                    si (_dist_item_nominat(l, a->titulus))
+                    {
+                        perge;
+                    }
+                    cella = (StmlAttributum*)xar_addere(
+                        e->attributa);
+                    si (cella == NIHIL)
+                    {
+                        _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA,
+                                     ZEPHYRUM, NIHIL);
+                        redde FALSUM;
+                    }
+                    *cella = *a;
+                }
+                num_j = (l->attributa != NIHIL)
+                            ? xar_numerus(l->attributa)
+                            : ZEPHYRUM;
+                per (j = ZEPHYRUM; j < num_j; j++)
+                {
+                    StmlAttributum* a;
+                    StmlAttributum* cella;
+
+                    a = (StmlAttributum*)xar_obtinere(l->attributa,
+                                                      j);
+                    cella = (StmlAttributum*)xar_addere(
+                        e->attributa);
+                    si (cella == NIHIL)
+                    {
+                        _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA,
+                                     ZEPHYRUM, NIHIL);
+                        redde FALSUM;
+                    }
+                    *cella = *a;
+                }
+            }
+
+            /* liberi: praefixum involucri (filtratum, clonatum per
+             * item - nodus communis parentes plures habere nequit)
+             * deinde liberi item MOTI */
+            e->liberi = NIHIL;
+            per (j = ZEPHYRUM; j < praefixum; j++)
+            {
+                StmlNodus* ae;
+                StmlNodus* clon;
+
+                ae = *(StmlNodus**)xar_obtinere(novum->liberi, j);
+                si (_dist_item_nominat(l, ae->attributum_titulus))
+                {
+                    perge;
+                }
+                clon = stml_duplicare(ae, ctx->piscina, ctx->intern);
+                si (clon == NIHIL)
+                {
+                    _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA,
+                                 ZEPHYRUM, NIHIL);
+                    redde FALSUM;
+                }
+                si (!_dist_appendere(ctx, e, clon))
+                {
+                    redde FALSUM;
+                }
+            }
+            num_j = (l->liberi != NIHIL) ? xar_numerus(l->liberi)
+                                         : ZEPHYRUM;
+            per (j = ZEPHYRUM; j < num_j; j++)
+            {
+                StmlNodus* liberum;
+
+                liberum = *(StmlNodus**)xar_obtinere(l->liberi, j);
+                si (!_dist_appendere(ctx, e, liberum))
+                {
+                    redde FALSUM;
+                }
+            }
+
+            /* recursio planationis */
+            si (!_dist_dissolvere(ctx, parens, e))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_dist_liberos (
+    StmlDistContextus* ctx,
+            StmlNodus* parens_novus,
+                  Xar* fratres)
+{
+    i32 i;
+    i32 num;
+
+    num = xar_numerus(fratres);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* liberum;
+
+        liberum = *(StmlNodus**)xar_obtinere(fratres, i);
+        si (!_dist_nodum(ctx, parens_novus, liberum))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_dist_nodum (
+    StmlDistContextus* ctx,
+            StmlNodus* parens,
+            StmlNodus* nodus)
+{
+    StmlNodus* novum;
+
+    si (nodus == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (nodus->genus != STML_NODUS_ELEMENTUM)
+    {
+        novum = stml_duplicare(nodus, ctx->piscina, ctx->intern);
+        si (novum == NIHIL)
+        {
+            _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA, ZEPHYRUM,
+                         NIHIL);
+            redde FALSUM;
+        }
+        redde _dist_appendere(ctx, parens, novum);
+    }
+
+    novum = stml_duplicare_superficialiter(nodus, ctx->piscina,
+                                           ctx->intern);
+    si (novum == NIHIL)
+    {
+        _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA, ZEPHYRUM,
+                     NIHIL);
+        redde FALSUM;
+    }
+    si (nodus->liberi != NIHIL)
+    {
+        novum->liberi = xar_creare(ctx->piscina,
+                                   magnitudo(StmlNodus*));
+        si (novum->liberi == NIHIL)
+        {
+            _dist_vitium(ctx, STML_DISTRIBUTIO_MEMORIA, ZEPHYRUM,
+                         NIHIL);
+            redde FALSUM;
+        }
+        si (!_dist_liberos(ctx, novum, nodus->liberi))
+        {
+            redde FALSUM;
+        }
+    }
+    si (_dist_est_nominatum(novum))
+    {
+        redde _dist_dissolvere(ctx, parens, novum);
+    }
+    redde _dist_appendere(ctx, parens, novum);
+}
+
+StmlDistributioResultus
+stml_distribuere (
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    StmlDistributioResultus  resultus;
+          StmlDistContextus  ctx;
+                  StmlNodus* radix_nova;
+
+    resultus.successus         = FALSUM;
+    resultus.radix_distributa  = NIHIL;
+    resultus.vitium            = STML_DISTRIBUTIO_BENE;
+    resultus.linea             = ZEPHYRUM;
+    resultus.titulus.datum     = NIHIL;
+    resultus.titulus.mensura   = ZEPHYRUM;
+
+    si (radix == NIHIL || piscina == NIHIL || intern == NIHIL)
+    {
+        redde resultus;
+    }
+
+    ctx.piscina   = piscina;
+    ctx.intern    = intern;
+    ctx.resultus  = &resultus;
+
+    radix_nova = stml_duplicare_superficialiter(radix, piscina,
+                                                intern);
+    si (radix_nova == NIHIL)
+    {
+        resultus.vitium = STML_DISTRIBUTIO_MEMORIA;
+        redde resultus;
+    }
+    si (radix->liberi != NIHIL)
+    {
+        radix_nova->liberi = xar_creare(piscina,
+                                        magnitudo(StmlNodus*));
+        si (radix_nova->liberi == NIHIL)
+        {
+            resultus.vitium = STML_DISTRIBUTIO_MEMORIA;
+            redde resultus;
+        }
+        si (!_dist_liberos(&ctx, radix_nova, radix->liberi))
+        {
+            redde resultus;  /* vitium iam positum */
+        }
+    }
+    resultus.successus = (resultus.vitium == STML_DISTRIBUTIO_BENE);
+    si (resultus.successus)
+    {
+        resultus.radix_distributa = radix_nova;
+    }
+    redde resultus;
+}

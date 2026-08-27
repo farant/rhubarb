@@ -1234,3 +1234,29 @@ Traps found and decided this session:
 
 Gates at close: root 141/141, silva 50/50, canon corpus untouched,
 amalgamare VERIFICATUM (hospes 39/39), natura rebuilt.
+
+## 2026-08-27 — `<>` rehabilitated as anonymous-fragment sugar (DISTRIBUTIO step 1)
+
+`<>` was a tolerated form with no meaning (empty-titulus element,
+strictum TITULUS_VACUUS). Now it lexes as an anonymous fragment —
+sugar for `<#>`, exactly parallel to `<(>` = `<# (>`: ephemeral,
+writer-normalized. One new lexer function (`_tok_legere_fragmentum_nudum`,
+dispatched on `<` + `>`), no writer change at all.
+
+The companion widening: the anonymous closer `</>` now closes
+fragments. MEASURED before building: `<#>x</>` was a parse FAILURE
+(status 4), so this is a pure widening, not a behavior change. Two
+sites: an extra break in `_liberos_legere` (guarded by the
+FRAGMENTUM_CLAUDERE terminator, so element parsing is untouched)
+and the consume in `_parser_legere_fragmentum`. `</#>` remains
+canonical; a named false closer (`<a><>x</a>`) still fails loudly.
+
+NAMED strictum fixture change: the TITULUS_VACUUS fixture moved
+from `<>x</>` to `< >x</>` (verified still condemned). The vitium
+survives for genuinely malformed elements; `<>` never reaches the
+element path anymore.
+
+Trap for the future: elements PRESERVE an authored `</>`
+(clausura_anonyma — first-class form), fragments NORMALIZE it away.
+My first fixture expected `</nota>` from an authored `</>` and the
+writer correctly disagreed.

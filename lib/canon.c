@@ -3457,6 +3457,41 @@ canon_iudicare (
     redde vitia;
 }
 
+/* Vitia unica pro expansione fracta - communis inter
+ * canon_iudicare_expansum et canon_iudicare_distributum.
+ * documentum quod instantiari nequit sensum iudicabilem non habet
+ * - vitium unum clarum; detail = fragmentum aut loculus peccans,
+ * numerus = StmlExpansioVitium, limes = linea (contractus in
+ * canon.h). */
+interior Xar*
+_vitia_expansionis_fractae (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+    StmlExpansioResultus* expansio)
+{
+       Xar* vitia;
+    chorda* detail;
+
+    vitia = xar_creare(piscina, (i32)magnitudo(CanonVitium));
+    si (vitia == NIHIL)
+    {
+        redde NIHIL;
+    }
+    detail = NIHIL;
+    si (expansio->fragmentum.mensura > ZEPHYRUM)
+    {
+        detail = chorda_internare(intern, expansio->fragmentum);
+    }
+    alioquin si (expansio->loculus.mensura > ZEPHYRUM)
+    {
+        detail = chorda_internare(intern, expansio->loculus);
+    }
+    vitium_addere(vitia, CANON_EXPANSIO_FRACTA, NIHIL, NIHIL,
+                  detail, (i32)expansio->vitium,
+                  (i32)expansio->linea);
+    redde vitia;
+}
+
 Xar*
 canon_iudicare_expansum (
                   Canon* canon,
@@ -3483,6 +3518,46 @@ canon_iudicare_expansum (
     expansio = stml_expandere(radix, piscina, intern);
     si (!expansio.successus || expansio.radix_expansa == NIHIL)
     {
+        redde _vitia_expansionis_fractae(piscina, intern,
+                                         &expansio);
+    }
+    redde canon_iudicare(canon, expansio.radix_expansa, piscina);
+}
+
+Xar*
+canon_iudicare_distributum (
+                  Canon* canon,
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+       StmlExpansioResultus expansio;
+    StmlDistributioResultus distributio;
+
+    si (!canon || !piscina || !intern)
+    {
+        redde NIHIL;
+    }
+    si (!radix)
+    {
+        redde xar_creare(piscina, (i32)magnitudo(CanonVitium));
+    }
+
+    /* cursus plenus contenti: expandere deinde distribuere -
+     * canon quod consumens videt iudicat (tactus quintus lineae
+     * 'canon sensum iudicat, non superficiem'). intern = arboris
+     * ipsius (contractus idem ac canon_iudicare_expansum). */
+    expansio = stml_expandere(radix, piscina, intern);
+    si (!expansio.successus || expansio.radix_expansa == NIHIL)
+    {
+        redde _vitia_expansionis_fractae(piscina, intern,
+                                         &expansio);
+    }
+    distributio = stml_distribuere(expansio.radix_expansa, piscina,
+                                   intern);
+    si (   !distributio.successus
+        || distributio.radix_distributa == NIHIL)
+    {
         Xar* vitia;
 
         vitia = xar_creare(piscina, (i32)magnitudo(CanonVitium));
@@ -3490,30 +3565,26 @@ canon_iudicare_expansum (
         {
             redde NIHIL;
         }
-        /* documentum quod instantiari nequit sensum iudicabilem
-         * non habet - vitium unum clarum; detail = fragmentum aut
-         * loculus peccans, numerus = StmlExpansioVitium, limes =
-         * linea (contractus in canon.h) */
+        /* detail = titulus involucri peccantis; numerus =
+         * StmlDistributioVitium; limes = linea (contractus in
+         * canon.h) */
         {
             chorda* detail;
 
             detail = NIHIL;
-            si (expansio.fragmentum.mensura > ZEPHYRUM)
+            si (distributio.titulus.mensura > ZEPHYRUM)
             {
                 detail = chorda_internare(intern,
-                                          expansio.fragmentum);
+                                          distributio.titulus);
             }
-            alioquin si (expansio.loculus.mensura > ZEPHYRUM)
-            {
-                detail = chorda_internare(intern, expansio.loculus);
-            }
-            vitium_addere(vitia, CANON_EXPANSIO_FRACTA, NIHIL,
-                          NIHIL, detail, (i32)expansio.vitium,
-                          (i32)expansio.linea);
+            vitium_addere(vitia, CANON_DISTRIBUTIO_FRACTA, NIHIL,
+                          NIHIL, detail, (i32)distributio.vitium,
+                          (i32)distributio.linea);
         }
         redde vitia;
     }
-    redde canon_iudicare(canon, expansio.radix_expansa, piscina);
+    redde canon_iudicare(canon, distributio.radix_distributa,
+                         piscina);
 }
 
 constans character*
@@ -3571,6 +3642,9 @@ canon_nuntius (
             redde "expansio templorum fracta (documentum "
                   "instantiari nequit - sensus iudicari non "
                   "potest)";
+        casus CANON_DISTRIBUTIO_FRACTA:
+            redde "distributio fracta (involucrum liberos mixtos "
+                  "fert - visio distributa non exsistit)";
         ordinarius:
             redde "vitium ignotum";
     }

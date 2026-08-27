@@ -353,7 +353,7 @@ First builtin — value-driven arm selection inside definition bodies:
   `<CASUS><@est=><EXEMPLAR>...</></>` — zero new syntax; v1 `est`
   stays literal scalar equality (exemplaria interview, open item 4).
 
-### 6.3 Attribute-elements on ALL tags (decreed 2026-08-26, unbuilt) — a BASE-format repair
+### 6.3 Attribute-elements on ALL tags (decreed 2026-08-26; BUILT same day) — a BASE-format repair
 
 `<@attr=>` generalizes beyond calls: any element may spell any
 attribute in element form. This lands in lib/stml.c (base grammar),
@@ -407,6 +407,73 @@ vitium (present-and-absent is a contradiction).
   §6.1); on ORDINARY elements they are judged AS attributes (name
   against the element's canon entry, value genus checked). Fourth
   canon touch in the template-space doctrinal line.
+
+### 6.4 DISTRIBUTIO — anonymous-item lists (ratified 2026-08-26; BUILT 2026-08-27)
+
+The SECOND content projection: `legere → expandere → distribuere →
+consumer`. Deliberately NOT inside stml_expandere — the engine's
+contract is template-space (`@`) only; distribution is unmarked
+content-space, and the boundary stays clean. The source tree keeps
+the authored sugar byte-exact; consumers opt into the pipeline.
+
+```stml
+<nota t="a">
+  <> emere lac </>      ≡  two sibling <nota t="a"> elements —
+  <> ianuam figere </>     the wrapper DICTATES the type, then
+</>                        dissolves
+```
+
+**`<>` rehabilitation (base stml, built first)**: `<>` lexes as an
+anonymous fragment — sugar for `<#>`, parallel to `<(>` = `<# (>`,
+writer-normalized (ephemeral). ALL anonymous forms are fragments:
+one model. The anonymous closer `</>` now closes fragments too
+(measured: previously a parse FAILURE, status 4 — a pure widening;
+`</#>` remains canonical). TITULUS_VACUUS survives for genuinely
+malformed elements (`< >` — the NAMED strictum fixture change).
+
+**Semantics (as ratified, all built):**
+- wrapper = NAMED ordinary element whose children (after the
+  attr-element prefix, §6.3) are ALL anonymous fragments (≥1)
+- wrapper dissolves: N items → N wrapper-typed siblings; attrs
+  carry down (inline AND the wrapper's own attr-element prefix)
+- collision = ITEM-WINS: an item attr of the same name (inline or
+  prefix attr-element) suppresses the wrapper's; the §6.3 tombstone
+  `<@x=/>` in an item's prefix DELETES the inherited attr and
+  remains in the output (explicit absence) — override and delete
+  verbs both exist
+- homogeneity LOUD: mixed anonymous/named children = vitium
+  (STML_DISTRIBUTIO_MIXTA); comments pass through positionally
+- empty item = empty element; items are forests; nesting recursive
+  — nested anonymous lists FLATTEN with the same type (the
+  degenerate-PER rhyme: wrapper = one-element template)
+- anonymous fragments with no named parent (document level, inside
+  named fragments) pass through untouched
+
+**Build decisions (2026-08-27):**
+- distributed elements take the ITEM's trivia (spatia_ante/post/
+  clausurae, linea) and the wrapper's everything-else; the item's
+  clausura flag wins, so distributed output normalizes to named
+  closers unless the item carried `</>`
+- non-mutating throughout: clones only; item children are MOVED
+  into built elements but items are themselves projection-owned
+  clones — the original tree is never touched (duarum arborum)
+- API mirrors stml_expandere: `stml_distribuere(radix, piscina,
+  intern)` → StmlDistributioResultus {successus, radix_distributa,
+  vitium, linea, titulus}; vitia BENE/MIXTA/MEMORIA, first wins
+- canon: `canon_iudicare_distributum` = expand → distribute →
+  judge (CANON_DISTRIBUTIO_FRACTA = XXII when the projection
+  itself fails). FIFTH touch of "canon judges what the document
+  means": distribution changes CARDINALITY (one wrapper → N
+  siblings) and attribute presence (carry-down, tombstone), which
+  the file view can never see — the distinguishing fixtures pin
+  both (LIBERI_MULTI and ATTRIBUTUM_DEEST visible only distributed)
+- MEASURED: the arbor corpus contains ZERO anonymous fragments
+  (352KB doc, thousands of named `@`-forms) — distribution over
+  real content is identity today, so no corpus purae_distributae
+  pin; the gate follows the first real consumer
+- amalgam: public surface (silva_stml_distribuere + mirror types in
+  silva.h, NON_STATICA + CADENDA_TYPEDEF + TYPI_EXACTI in the
+  amalgamator); hospes exercise #40
 
 ## 7. Milestone plan
 

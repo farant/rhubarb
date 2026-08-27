@@ -1053,6 +1053,104 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: iudicium DISTRIBUTUM (canon_iudicare_distributum)
+     *
+     * Distributio CARDINALITATEM mutat (involucrum unum -> fratres
+     * N) et attributa movet (descensus, sepulcrum) - quod visio
+     * plagulae videre numquam potest: fragmenta pellucida contentum
+     * idem dant sed numerum et attributa non. Tactus quintus lineae
+     * 'canon sensum iudicat, non superficiem'.
+     * ======================================================== */
+
+    {
+               Canon* c_di;
+               Canon* c_dimax;
+                 Xar* vitia;
+        StmlResultus  res;
+
+        imprimere("\n--- Probans iudicium distributum ---\n");
+
+        c_di = canon_ex_literis(
+            "<canon dialectus=\"di\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"nota\"/></elementum>"
+            "<elementum nomen=\"nota\" textus=\"verum\">"
+            "<attributum nomen=\"t\" genus=\"nomen\""
+            " necessarium=\"verum\"/></elementum>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_di);
+
+        /* I. FIXTURA DISCERNENS: sepulcrum obviam canoni -
+         * item alterum t hereditatum delet; visio plagulae 0
+         * (involucrum t fert), visio distributa ATTRIBUTUM_DEEST
+         * in nota altera sola */
+        res = stml_legere(chorda_ex_literis(
+            "<r><nota t=\"a\"><#>x</#><#><@t=/>y</#></nota></r>",
+            piscina), piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare(c_di, res.elementum_radix, piscina);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = canon_iudicare_distributum(c_di,
+                                           res.elementum_radix,
+                                           piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_ATTRIBUTUM_DEEST), I);
+
+        /* II. documentum validum: descensus attributorum notas
+         * ambas implet - visio distributa 0 */
+        res = stml_legere(chorda_ex_literis(
+            "<r><nota t=\"a\"><#>x</#><# t=\"b\">y</#></nota></r>",
+            piscina), piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare_distributum(c_di,
+                                           res.elementum_radix,
+                                           piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+
+        /* III. cardinalitas: maximum 1 - visio plagulae notam UNAM
+         * videt (sana), distributa duas (LIBERI_MULTI) */
+        c_dimax = canon_ex_literis(
+            "<canon dialectus=\"dimax\" versio=\"1\">"
+            "<elementum nomen=\"r\" radix=\"verum\">"
+            "<liberum nomen=\"nota\" maximum=\"1\"/></elementum>"
+            "<elementum nomen=\"nota\" textus=\"verum\"/>"
+            "</canon>", piscina, intern);
+        CREDO_NON_NIHIL (c_dimax);
+        res = stml_legere(chorda_ex_literis(
+            "<r><nota><#>x</#><#>y</#></nota></r>",
+            piscina), piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare(c_dimax, res.elementum_radix,
+                               piscina);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), ZEPHYRUM);
+        vitia = canon_iudicare_distributum(c_dimax,
+                                           res.elementum_radix,
+                                           piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_LIBERI_MULTI), I);
+
+        /* IV. distributio fracta (mixtura) = vitium unum clarum */
+        res = stml_legere(chorda_ex_literis(
+            "<r><nota t=\"a\"><#>x</#><b/></nota></r>",
+            piscina), piscina, intern);
+        CREDO_VERUM (res.successus);
+        vitia = canon_iudicare_distributum(c_di,
+                                           res.elementum_radix,
+                                           piscina, intern);
+        CREDO_NON_NIHIL (vitia);
+        CREDO_AEQUALIS_I32 ((i32)xar_numerus(vitia), I);
+        CREDO_AEQUALIS_I32 (
+            quot_generis(vitia, CANON_DISTRIBUTIO_FRACTA), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: transclusio PELLUCIDA
      *
      * DEFINITIO: contentum per transclusionem adhibitum idem

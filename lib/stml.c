@@ -1186,6 +1186,46 @@ _tok_legere_percentum_claudere (
     redde token;
 }
 
+/* Parse bare fragment sugar <> - anonymous fragment (DISTRIBUTIO
+ * 2026-08-27). Saccharum authoris: scriptor ad <#> normalizat
+ * (forma nuda ephemera, ut <(> infra). Olim elementum sine titulo
+ * toleratum (strictum TITULUS_VACUUS) - forma sine significatu;
+ * '< >' (spatio) elementum malformatum manet. */
+interior StmlToken
+_tok_legere_fragmentum_nudum (
+    StmlTokenContext* ctx)
+{
+    StmlToken token;
+          i32 initium;
+          i32 initium_linea;
+          i32 initium_columna;
+
+    initium          = ctx->positus;
+    initium_linea    = ctx->linea;
+    initium_columna  = ctx->columna;
+
+    token.attributa                  = NIHIL;
+    token.captio_numerus             = ZEPHYRUM;
+    token.habet_captus               = FALSUM;
+    token.multilinea                 = FALSUM;
+    token.spatia_prae_finem.datum    = NIHIL;
+    token.spatia_prae_finem.mensura  = ZEPHYRUM;
+    token.captus_contentus.datum     = NIHIL;
+    token.captus_contentus.mensura   = ZEPHYRUM;
+
+    /* Skip <> */
+    _tok_progredi(ctx, II);
+
+    token.genus            = STML_TOKEN_FRAGMENTUM_APERIRE;
+    token.valor.datum      = NIHIL;
+    token.valor.mensura    = ZEPHYRUM;
+    token.positus_initium  = initium;
+    token.positus_finis    = ctx->positus;
+    token.linea            = initium_linea;
+    token.columna          = initium_columna;
+    redde token;
+}
+
 /* Parse bare capture sugar <(> or <((> - anonymous fragment.
  * Saccharum authoris: scriptor ad <# (> normalizat (forma nuda
  * ephemera est - stampatio gestarum lineam rescribit). */
@@ -1550,6 +1590,13 @@ _tok_proximus (
         si (_tok_aspicere(ctx, I) == '(')
         {
             redde _tok_legere_captio_nuda(ctx);
+        }
+
+        /* Saccharum fragmenti nudi <> - fragmentum anonymum
+         * (rehabilitatio DISTRIBUTIONIS; '< >' non tangitur) */
+        si (_tok_aspicere(ctx, I) == '>')
+        {
+            redde _tok_legere_fragmentum_nudum(ctx);
         }
 
         /* Regular tag */
@@ -2687,6 +2734,16 @@ _liberos_legere (
     {
         StmlNodus* liberum;
 
+        /* Clausura anonyma '</>' fragmentum quoque claudit (par
+         * formae apertae '<>' - saccharum DISTRIBUTIONIS; clausura
+         * nominata falsa vitium clarum manet, infra) */
+        si (   terminator                 == STML_TOKEN_FRAGMENTUM_CLAUDERE
+            && ctx->current.genus         == STML_TOKEN_CLAUDERE
+            && ctx->current.valor.mensura == ZEPHYRUM)
+        {
+            frange;
+        }
+
         si (ctx->current.genus == STML_TOKEN_TEXTUS)
         {
             liberum = _textum_tractare(ctx, prior, &pendens);
@@ -3433,11 +3490,14 @@ _parser_legere_fragmentum (
 
     _parser_progredi(ctx);
 
-    /* Parse children until </#> */
+    /* Parse children until </#> (aut clausura anonyma </>) */
     _liberos_legere(ctx, nodus, STML_TOKEN_FRAGMENTUM_CLAUDERE);
 
-    /* Consume closing tag </#> */
-    si (ctx->current.genus == STML_TOKEN_FRAGMENTUM_CLAUDERE)
+    /* Consume closing tag </#> aut </> (clausura anonyma fragmenta
+     * quoque claudit - par saccharo '<>') */
+    si (   ctx->current.genus == STML_TOKEN_FRAGMENTUM_CLAUDERE
+        || (   ctx->current.genus == STML_TOKEN_CLAUDERE
+            && ctx->current.valor.mensura == ZEPHYRUM))
     {
         _parser_progredi(ctx);
     }

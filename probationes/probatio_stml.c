@@ -4110,8 +4110,11 @@ s32 principale(vacuum)
         vitia = stml_strictum(r.radix, piscina);
         CREDO_AEQUALIS_I32(xar_numerus(vitia), ZEPHYRUM);
 
-        /* titulus vacuus: '<>' */
-        r = stml_legere_ex_literis("<>x</>", piscina, intern);
+        /* titulus vacuus: '< >' (spatium - elementum sine nomine
+         * VERE malformatum). '<>' olim hic iudicabatur - 2026-08-27
+         * rehabilitatum ut saccharum fragmenti anonymi (DISTRIBUTIO;
+         * mutatio strictae NOMINATA) - sectio propria infra. */
+        r = stml_legere_ex_literis("< >x</>", piscina, intern);
         CREDO_VERUM(r.successus);
         vitia = stml_strictum(r.radix, piscina);
         CREDO_AEQUALIS_I32(xar_numerus(vitia), I);
@@ -4155,7 +4158,8 @@ s32 principale(vacuum)
      * Olim: '<.x>' vel '<9bad>' nomen VACUUM legebat, positus non
      * progrediebatur, et clausura anonyma vitium TACITE devorabat
      * (successus=VERUM, arbor corrupta). Nunc: vitium clarum.
-     * '<>' lenis MANET (strictum TITULUS_VACUUS iudicat, supra).
+     * '<>' saccharum fragmenti anonymi est (2026-08-27); '< >'
+     * lenis manet (strictum TITULUS_VACUUS iudicat, supra).
      * ================================================== */
     imprimere("\n--- Probans titulum illegaliter incipientem ---\n");
     {
@@ -5228,6 +5232,88 @@ s32 principale(vacuum)
 
         imprimere("  D pulcher dispositionem regenerat: VERUM\n");
     }
+
+
+    /* ==================================================
+     * Saccharum fragmenti nudi '<>' (rehabilitatio 2026-08-27)
+     *
+     * Olim '<>' elementum sine titulo tolerata erat (strictum
+     * TITULUS_VACUUS) - forma tolerata sine significatu.
+     * DISTRIBUTIO eam rehabilitat: '<>' = saccharum '<#>' (par
+     * '<(>' = '<#(>', scriptor normalizat - forma nuda ephemera).
+     * Clausura anonyma '</>' fragmenta quoque claudit (par formae
+     * apertae; olim parsura FRANGEBAT, status 4). Formae anonymae
+     * OMNES fragmenta sunt - exemplar unum.
+     * ================================================== */
+    imprimere("\n--- Probans saccharum fragmenti nudi <> ---\n");
+
+    {
+        StmlResultus  res;
+           StmlNodus* nodus;
+              chorda  scriptum;
+
+        /* '<>' = fragmentum anonymum (non elementum sine titulo) */
+        res = stml_legere_ex_literis("<>x</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        nodus = *(StmlNodus**)xar_obtinere(res.radix->liberi,
+            ZEPHYRUM);
+        CREDO_VERUM(nodus->fragmentum);
+        CREDO_NIHIL(nodus->fragmentum_id);
+        CREDO_AEQUALIS_I32(xar_numerus(nodus->liberi), I);
+        CREDO_AEQUALIS_I32(
+            xar_numerus(stml_strictum(res.radix, piscina)),
+            ZEPHYRUM);
+
+        /* scriptor ad formam plenam normalizat (saccharum
+         * ephemera, ut '<(>') */
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<#>x</#>");
+
+        /* forma plena = punctum fixum (circuitus stabilis) */
+        res = stml_legere_ex_literis("<#>x</#>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum, "<#>x</#>");
+
+        /* clausura anonyma fragmentum expressum quoque claudit */
+        res = stml_legere_ex_literis("<#>x</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        nodus = *(StmlNodus**)xar_obtinere(res.radix->liberi,
+            ZEPHYRUM);
+        CREDO_VERUM(nodus->fragmentum);
+
+        /* et fragmentum nominatum (clausura anonyma quodlibet
+         * claudit, ut apud elementa) */
+        res = stml_legere_ex_literis("<#f>x</>", piscina, intern);
+        CREDO_VERUM(res.successus);
+        nodus = *(StmlNodus**)xar_obtinere(res.radix->liberi,
+            ZEPHYRUM);
+        CREDO_VERUM(nodus->fragmentum);
+        CREDO_NON_NIHIL(nodus->fragmentum_id);
+
+        /* figura authoris DISTRIBUTIONIS: item plures intra
+         * parentem nominatum, clausurae anonymae ubique */
+        res = stml_legere_ex_literis(
+            "<nota><>emere lac</><>ianuam figere</></>",
+            piscina, intern);
+        CREDO_VERUM(res.successus);
+        nodus = *(StmlNodus**)xar_obtinere(res.radix->liberi,
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32(xar_numerus(nodus->liberi), II);
+        /* clausura anonyma ELEMENTI servatur (forma prima, non
+         * saccharum) - fragmenta solae normalizantur */
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<nota><#>emere lac</#><#>ianuam figere</#></>");
+
+        /* clausura nominata falsa fragmentum NON claudit -
+         * vitium clarum manet */
+        res = stml_legere_ex_literis("<a><>x</a>", piscina, intern);
+        CREDO_VERUM(!res.successus);
+
+        imprimere("  saccharum <> + clausura anonyma: VERUM\n");
+    }
+
 
     /* ==================================================
      * Compendium

@@ -206,3 +206,46 @@ unknown enum identifiers), all green on first full compile — third
 time today. The engine's seams (child-loop interception, one
 substitution grammar, first-vitium-wins) are absorbing new verbs
 without resistance, which is what the T1-T6 shape promised.
+
+## 2026-08-27 — DISTRIBUTIO built (`stml_distribuere`, ronda IV → §6.4)
+
+The second content projection: legere → expandere → distribuere →
+consumer. Deliberately a SEPARATE entry point beside stml_expandere
+— the engine's contract stays template-space (`@`) only. Mirror
+shapes: StmlDistributioResultus / vitia BENE-MIXTA-MEMORIA /
+first-wins / ctx struct, all copied from the expansion idiom.
+
+Shape of the walk: `_dist_nodum` clones (shallow + fresh children
+for elements, deep for the rest), then `_dist_dissolvere` decides:
+no items → append; mixed → MIXTA loud; else each item becomes a
+wrapper-typed element and the result RECURSES through
+`_dist_dissolvere` itself — that recursion is what makes nested
+anonymous lists flatten with the same type (the degenerate-PER
+rhyme fell out of the structure rather than being coded).
+
+Decisions worth remembering:
+- item-wins is implemented as SUPPRESSION: wrapper attrs/prefix
+  attr-elements named by the item are simply not copied; the item's
+  own material rides along verbatim. The tombstone needs ZERO
+  special code here — it suppresses by name like any override and
+  stays in the output as explicit absence (§6.3 semantics do the
+  rest via capere).
+- distributed elements take the ITEM's trivia + linea (position
+  identity) and the wrapper's type/attrs; item clausura flag wins.
+- item children are MOVED, wrapper prefix attr-elements are CLONED
+  per item (a shared node cannot have N parents).
+- comments among items pass through positionally; TEXT among items
+  = MIXTA (post-parse, inter-element whitespace is trivia, so a
+  text node there is real content).
+- MEASURED at close: arbor corpus has ZERO anonymous fragments
+  (352KB doc, 0 hits vs thousands of named @-forms) — distribution
+  is identity over real content today; no corpus pin, the gate
+  follows the first consumer. (Also measured: my first "0 hits" was
+  an empty file from a stale cwd — assert the sweep's own coverage
+  before believing its zero.)
+
+Fixture set: 12 blocks incl. the flattening rhyme, tombstone-delete,
+wrapper-prefix carry-down, and both passthrough classes. One fixture
+bug found by the suite: I authored `</#f>` as a closer — fragment
+closers never carry the id; the "0 vitia" received bytes were the
+parser faithfully preserving my malformed input.

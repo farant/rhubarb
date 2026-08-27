@@ -103,4 +103,66 @@ stml_expandere (
                 Piscina* piscina,
     InternamentumChorda* intern);
 
+
+/* ==================================================
+ * DISTRIBUTIO (ronda IV colloquii exemplarium, rata 2026-08-26) -
+ * proiectio contenti SECUNDA: legere -> expandere -> distribuere ->
+ * consumens. NON intra stml_expandere: contractus machinae =
+ * spatium templi '@' solum; distributio spatium contenti innotatum
+ * est - limes purus manet. Arbor originalis saccharum authoris
+ * octetim servat; consumentes in cursum sponte inscribuntur.
+ *
+ *   <nota t="a">          duo fratres <nota t="a"> fiunt -
+ *     <> emere lac </>    involucrum typum DICTAT, deinde
+ *     <> ianuam </>       dissolvitur
+ *   </>
+ *
+ * Involucrum = elementum NOMINATUM cuius liberi (post praefixum
+ * elementorum attributorum) fragmenta anonyma OMNES sunt (item).
+ * Leges:
+ *   - attributa involucri descendunt in item singula; collisio
+ *     ITEM-VINCIT (attributum item eodem nomine - inscriptum aut
+ *     elementum praefixi - involucrum supprimit); sepulcrum
+ *     '<@x=/>' in praefixo item attributum hereditatum DELET
+ *     (verbum delendi, par. 6.3) et in exitu manet (absentia
+ *     explicita)
+ *   - mixtura anonymi/nominati sub involucro = VITIUM clarum
+ *     (homogeneitas; commenta transeunt positione servata)
+ *   - item vacuum = elementum vacuum; item silvae sunt
+ *   - nidificatio recursiva: involucra intra item distribuuntur;
+ *     listae anonymae nidificatae typo eodem PLANANTUR (rithmus
+ *     PER degeneratae - involucrum = templum uni-elementi)
+ *   - fragmenta anonyma sine parente nominato (gradus documenti,
+ *     intra fragmenta nominata) TRANSEUNT intacta
+ * ================================================== */
+
+/* Vitia distributionis - primum inventum vincit */
+nomen enumeratio {
+    STML_DISTRIBUTIO_BENE    = ZEPHYRUM,
+    /* item et liberi nominati mixti sub involucro eodem */
+    STML_DISTRIBUTIO_MIXTA   = I,
+    /* memoria defecit */
+    STML_DISTRIBUTIO_MEMORIA = II
+} StmlDistributioVitium;
+
+nomen structura {
+                      b32  successus;
+                StmlNodus* radix_distributa; /* arbor NOVA; originalis
+                                             * intacta */
+    StmlDistributioVitium vitium;
+                      i32 linea;           /* liberi peccantis
+                                             * (aut 0) */
+                   chorda titulus;         /* involucri peccantis
+                                             * (aut vacua) */
+} StmlDistributioResultus;
+
+/* Distribuere documentum: arbor nova in piscina vocantis;
+ * involucra dissolvuntur, cetera clonantur. Super arborem EXPANSAM
+ * plerumque vocatur (cursus plenus); in arbore quavis totalis. */
+StmlDistributioResultus
+stml_distribuere (
+              StmlNodus* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern);
+
 #endif /* STML_MACROS_H */

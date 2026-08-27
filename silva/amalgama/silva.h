@@ -1819,6 +1819,29 @@ unsigned int silva_stml_numerus_liberorum(SilvaStmlNodus* nodus);
 SilvaStmlNodus* silva_stml_liberum_ad_indicem(SilvaStmlNodus* nodus,
     unsigned int index);
 
+/* DISTRIBUTIO (proiectio contenti secunda, 2026-08-27): involucra
+ * (elementa nominata quorum liberi fragmenta anonyma sunt) in
+ * fratres typo involucri dissolvuntur; attributa descendunt
+ * (item-vincit; sepulcrum '<@x=/>' delet); mixtura = vitium.
+ * Arbor originalis intacta - proiectio clonat. */
+typedef enum {
+    STML_DISTRIBUTIO_BENE    = 0,
+    STML_DISTRIBUTIO_MIXTA   = 1,  /* anonymi/nominati mixti */
+    STML_DISTRIBUTIO_MEMORIA = 2
+} SilvaStmlDistributioVitium;
+
+typedef struct {
+    int                         successus;
+    SilvaStmlNodus*             radix_distributa; /* arbor NOVA */
+    SilvaStmlDistributioVitium  vitium;
+    unsigned int                linea;    /* liberi peccantis */
+    SilvaChorda                 titulus;  /* involucri peccantis */
+} SilvaStmlDistributioResultus;
+
+SilvaStmlDistributioResultus silva_stml_distribuere(
+    SilvaStmlNodus* radix, SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern);
+
 typedef enum {
     SILVA_ANNOTATIO_SUPRA = 0,   /* supra unitatem sequentem */
     SILVA_ANNOTATIO_INTERIOR,    /* intra unitatem continentem */

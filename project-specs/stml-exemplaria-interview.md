@@ -149,6 +149,13 @@ attribute — override AND delete verbs both exist); `<>`
 rehabilitation as `<#` sugar approved (named strictum fixture
 change). Build = parcum step 4.
 
+**BUILT 2026-08-27** — spec §6.4 carries the full build record
+(`stml_distribuere` in lib/stml_macros.c;
+`canon_iudicare_distributum` = the fifth canon touch; `<>`
+rehabilitated in base stml with `</>` closing fragments; amalgam
+public surface + hospes #40). Build order steps 1-5 now ALL built;
+only step 6 (formal interview → v2 spec) remains.
+
 Fran's proposal, PROPOSED + REFINED:
 
 ```stml
@@ -206,7 +213,8 @@ position — the wrapper DICTATES the item type, then dissolves.
    `est` a subtree-valued case on a BUILTIN with zero new syntax,
    exactly as calls take subtree arguments. v1 `est` stays literal
    scalar equality; the block-form-on-builtins door stays open.
-5. DISTRIBUTIO ratification + the item-attr collision rule.
+5. ~~DISTRIBUTIO ratification + the item-attr collision rule.~~
+   RATUM 2026-08-26, BUILT 2026-08-27 (spec §6.4).
 6. `<MATCH/>` / computed views (decide the reservation's fate before
    any splice syntax).
 7. Joins (`$abc.n`) — reserved; revisit when the control plane
