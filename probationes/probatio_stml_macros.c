@@ -698,6 +698,200 @@ principale (
         }
     }
 
+
+    /* ================================================
+     * FORMAE ARGUMENTORUM (par. 6.1): vocatio duas formas
+     * aequivalentes habet - inscriptam ('p="v"', scalares) et
+     * BLOCUM (elementa argumentorum statim sequentia, valor =
+     * liberi -> argumenta SUBARBOREA nominata). Aequivalentia in
+     * TABULA machinae vivit; elementa argumentorum pars vocationis
+     * sunt et CONSUMUNTUR (in arbore expansa non apparent).
+     * Vitium septimum: subarbor in positione CHORDAE (attributum,
+     * valor transclusionis, textus interpolatus) clare recusat.
+     * ================================================ */
+
+    /* --- (6.1 a) argumentum bloci scalare == inscriptum --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- argumentum bloci scalare ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f>><@p=>123</></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><a x=\"123\"/></radix>");
+            }
+        }
+    }
+
+    /* --- (6.1 b) argumentum subarboreum: splex silvae in
+     * positione liberorum (textus totus '&@c;') --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- argumentum subarboreum ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f c=\"@c\"><wrap>&@c;</wrap></#>"
+            "<<#@f>><@c=><x/><y/></></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><wrap><x/><y/></wrap></radix>");
+            }
+        }
+    }
+
+    /* --- (6.1 c) vitium septimum: subarbor in attributo --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- vitium septimum (subarbor in chorda) ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f c=\"@c\"><a x=\"&@c;\"/></#>"
+            "<<#@f>><@c=><x/></></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_ARGUMENTUM_ARBOREUM);
+        }
+    }
+
+    /* --- (6.1 d) forma mixta: inscriptum + blocum una vocatione --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- forma mixta ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p\" q=\"@q\">"
+            "<a x=\"&@p;\" y=\"&@q;\"/></#>"
+            "<<#@f p=\"1\">><@q=>2</></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><a x=\"1\" y=\"2\"/></radix>");
+            }
+        }
+    }
+
+    /* --- (6.1 e) nomen geminatum (inscriptum + blocum) clamat --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- argumentum geminum ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f p=\"1\">><@p=>2</></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_ARGUMENTUM_GEMINUM);
+        }
+    }
+
+    /* --- (6.1 f) sepulcrum = absentia explicita -> loculus
+     * declaratus NON impletur --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- sepulcrum argumenti ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@f p=\"@p\"><a x=\"&@p;\"/></#>"
+            "<<#@f>><@p=/></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_FALSUM (expansio.successus);
+            CREDO_AEQUALIS_I32 ((i32)expansio.vitium,
+                (i32)STML_EXPANSIO_LOCULUS_NON_IMPLETUS);
+        }
+    }
+
+    /* --- (6.1 g) transitio subarboris trans strata: argumentum
+     * bloci in corpore, textus totus '&@d;' ubi d subarbor -
+     * silva transit (classificatio POST considerationem
+     * referentiae: totus-ref ad subarborem = subarbor, non
+     * scalaris) --- */
+    {
+        StmlResultus res;
+              chorda fons;
+
+        imprimere("\n--- transitio subarboris ---\n");
+        fons = chorda_ex_literis(
+            "<radix><#@inner c=\"@c\"><wrap>&@c;</wrap></#>"
+            "<#@outer d=\"@d\"><<#@inner>><@c=>&@d;</></#>"
+            "<<#@outer>><@d=><z/></></radix>", piscina);
+        res  = stml_legere(fons, piscina, intern);
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            StmlExpansioResultus expansio;
+
+            expansio = stml_expandere(res.radix, piscina, intern);
+            CREDO_VERUM (expansio.successus);
+            si (expansio.successus)
+            {
+                CREDO_CHORDA_AEQUALIS_LITERIS (
+                    stml_scribere(expansio.radix_expansa, piscina,
+                                  FALSUM),
+                    "<radix><wrap><z/></wrap></radix>");
+            }
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

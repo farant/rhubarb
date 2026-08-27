@@ -207,7 +207,7 @@ inner splices carry their own notas).
 | canon gating of loculi | parsura-canon work; expander stays consumer-opt-in |
 | attribute-NAME sugar `<lex-x &@position;/>` | parsura §4 — reserved, never required |
 
-### 6.1 Argument-form equivalence (decreed 2026-08-26, undesigned in detail)
+### 6.1 Argument-form equivalence (decreed 2026-08-26; BUILT 2026-08-26 eve)
 
 Every call gets two EQUIVALENT spellings the body never distinguishes:
 inline (`<<#@f attr="v">>`, scalars) and BLOCK — argument-elements as
@@ -238,6 +238,39 @@ nesting; positional spreads retired above). Decisions bound:
   untyped; body positions constrain.
 - **Canon**: argument-elements are part of the call, not content of
   the parent (third touch in the template-space doctrinal line).
+
+**Build decisions (2026-08-26, engine shipped)**:
+- ONE argument map both spellings feed (`StmlMacroArgumentum` +
+  `arbores` forest field); classification of a block argument:
+  zero children = TOMBSTONE → explicitly absent, consumed but not
+  in the map (LOCULUS_NON_IMPLETUS fires for declared slots — the
+  §6.3 delete-verb applied to arguments); exactly-one-TEXT child =
+  scalar, identical to inline — UNLESS the text is a WHOLE `&@x;`
+  reference to a subtree argument of the caller, which classifies
+  as SUBTREE (forest THREADING across strata; classification runs
+  after reference consideration); anything else = subtree, children
+  expanded with the CALLER's context, forest stored.
+- Fill: whole-text `&@n;` in child position naming a subtree →
+  forest splice, fresh `stml_duplicare` clones per site
+  (instantiation; the stored forest is immutable). Any STRING
+  position (interpolated text, attribute value, transclusion
+  valor) naming a subtree → vitium VII
+  `STML_EXPANSIO_ARGUMENTUM_ARBOREUM`; the literal stays and the
+  end-of-expansion guard fails `successus` (soft-set vitia never
+  pass silently). A splice into a parent-bound attr-element's
+  children is ALSO vitium VII (text-only law, §6.3).
+- **Eighth vitium** `STML_EXPANSIO_ARGUMENTUM_GEMINUM`: the same
+  name twice (inline+inline, inline+block, block+block) — never
+  last-wins.
+- Consumption lives in the shared child-loop
+  (`_liberos_expandere` + `saltus` protocol): the maximal
+  argument-element run after a call is collected into the map and
+  skipped — it never reaches the expanded tree. The run is
+  collected BEFORE the superfluum/non-impletus judgments so the
+  complete map is judged. Nota ordering caveat: calls inside
+  argument subtrees register their notas before the outer call's
+  nota (collection precedes the outer nota append) — unpinned by
+  fixtures, revisit if a consumer cares.
 
 ### 6.2 COMMUTATIO — arm selection in template bodies (decreed 2026-08-26, unbuilt)
 

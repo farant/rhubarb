@@ -114,3 +114,53 @@ capped scan — grammar tables invoke one macro 100+ times with
 distinct arguments; the capped loop reused `-99` → GEMINUM in 3 of
 155 files. The corpus gate caught it within the hour; the unit
 fixtures never could (no fixture has 100 shapes of one macro).
+
+## 2026-08-26 (eve) — argument forms (spec §6.1, v1.5 step 2)
+
+The engine argument map generalized to both call spellings. One
+session-worth of design compressed into the map:
+
+- `StmlMacroArgumentum` grew `arbores` (Xar of EXPANDED StmlNodus*;
+  NIHIL = scalar). One map, both forms feed it, the body never
+  distinguishes — the §6.1 equivalence lives exactly where the
+  decree said it would.
+- Consumption: the maximal run of argument-elements after a call is
+  collected and SKIPPED via the new `_liberos_expandere` +
+  `saltus` out-param protocol (the shared child loop, factored from
+  the document walk, the body fill, and subtree-argument expansion —
+  three call sites, one loop). Argument-elements never reach the
+  expanded tree.
+- Classification (the design-forcing case was fixture 6.1g):
+  zero children = tombstone → consumed, absent, NOT in the map
+  (NON_IMPLETUS fires for declared slots — §6.3's delete verb);
+  one TEXT child = scalar UNLESS its whole text is `&@x;` naming a
+  SUBTREE argument of the caller — then the forest THREADS
+  (classification after reference consideration; without this rule
+  forests could not cross strata and the scalar path would fire
+  vitium VII on a legitimate hand-off);
+  else = subtree, children expanded with the CALLER's context into
+  an ephemeral wrapper element (stml_elementum_creare — it creates
+  the liberi Xar; stml_liberum_addere refuses NIHIL liberi, so the
+  known duplicare-superficialiter trap does not bite here).
+- Fill: whole-text `&@n;` in child position → forest splice, fresh
+  stml_duplicare per site (stored forest immutable). String
+  positions (interpolated text / attr / transclusion valor) naming
+  a subtree → vitium VII ARGUMENTUM_ARBOREUM via
+  `_chordam_substituere` (gained a nodus param for the line); the
+  literal stays and the END GUARD in stml_expandere fails
+  successus — soft-set vitia can never pass silently. Splice into a
+  parent-bound attr-element's children = also VII (text-only law).
+- Vitium VIII ARGUMENTUM_GEMINUM: same name twice, any combination
+  (inline dup check added to _argumenta_parsare too). Never
+  last-wins.
+- Nota-ordering caveat recorded in spec: calls inside argument
+  subtrees register notas before the outer call's nota. Unpinned;
+  revisit if a consumer cares.
+- Trap: `_argumenta_parsare`'s new duplicate check called
+  `_argumentum_invenire` before its definition — implicit-decl
+  error. Forward declaration added. (The censor hook's one-line
+  summary said "latina macro in name position" but the actual
+  effusor output was the implicit call — always run the effusor
+  before believing the hook's one-liner.)
+
+All seven born-red fixtures went green on the first full compile.

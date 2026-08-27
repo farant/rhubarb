@@ -31,11 +31,17 @@ nomen structura {
            b32  praeterita;
 } StmlMacroDefinitio;
 
-/* Argumentum vocationis: par nomen-valor ex interiore
- * transclusionis parsatum ('p="123"'). */
+/* Argumentum vocationis - UNA tabula ambabus formis (par. 6.1:
+ * aequivalentia in tabula machinae vivit, corpus formam numquam
+ * discernit): inscripta ('p="123"' ex interiore transclusionis)
+ * et bloci ('<@p=>...</>' elementa statim sequentia). Scalaris:
+ * valor non-NIHIL, arbores NIHIL. Subarboreus: valor NIHIL,
+ * arbores = silva EXPANSA (contextu vocantis; splices clonant -
+ * fons immutabilis manet, instantiatio quaque sede). */
 nomen structura {
     chorda* titulus;  /* internatum */
-    chorda* valor;    /* internatum */
+    chorda* valor;    /* internatum; NIHIL si subarboreus */
+       Xar* arbores;  /* StmlNodus* expansi; NIHIL si scalaris */
 } StmlMacroArgumentum;
 
 nomen structura {
@@ -426,6 +432,16 @@ _est_spatium_interius (
     redde c == (i8)' ' || c == (i8)'\t' || c == (i8)'\n';
 }
 
+/* Estne nodus elementum argumenti? ('<@titulus=>' - par. 6.3;
+ * statim post vocationem = argumentum VOCATIONIS, par. 6.1) */
+interior b32
+_est_argumentum_elementi (
+    constans StmlNodus* nodus)
+{
+    redde    nodus->genus == STML_NODUS_ELEMENTUM
+          && nodus->attributum_titulus != NIHIL;
+}
+
 /* Id vocationis ex interiore transclusionis: post '#' usque ad
  * spatium primum aut finem ('#f p="123"' -> 'f'). 'post' = index
  * in valore ubi argumenta incipiunt. 'valor' = interior EFFECTIVUS
@@ -451,6 +467,11 @@ _vocationis_id (
     *post       = I + finis;
     redde chorda_internare(ctx->intern, id);
 }
+
+interior StmlMacroArgumentum*
+_argumentum_invenire (
+        Xar* argumenta,
+     chorda* titulus);
 
 /* Argumenta vocationis parsare: paria 'nomen="valor"' post id
  * (citationes ambae; valor sine citationibus usque ad spatium -
@@ -536,14 +557,26 @@ _argumenta_parsare (
         }
         {
             StmlMacroArgumentum* arg;
+                         chorda* titulus_internatus;
 
+            titulus_internatus = chorda_internare(ctx->intern,
+                                                  titulus);
+            si (_argumentum_invenire(argumenta, titulus_internatus)
+                    != NIHIL)
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_ARGUMENTUM_GEMINUM,
+                               vocatio, NIHIL, titulus_internatus);
+                redde FALSUM;
+            }
             arg = (StmlMacroArgumentum*)xar_addere(argumenta);
             si (arg == NIHIL)
             {
                 redde FALSUM;
             }
-            arg->titulus  = chorda_internare(ctx->intern, titulus);
+            arg->titulus  = titulus_internatus;
             arg->valor    = chorda_internare(ctx->intern, valor);
+            arg->arbores  = NIHIL;
         }
     }
     redde VERUM;
@@ -574,12 +607,16 @@ _argumentum_invenire (
 /* Chordam substituere: extensiones '&@nomen;' valoribus
  * argumentorum substitutae (grammatica eadem ac collectio -
  * nomina iam iudicata declarata et impleta). Sine extensione:
- * chorda originalis immutata redditur. */
+ * chorda originalis immutata redditur. 'nodus' pro linea vitii:
+ * argumentum SUBARBOREUM in positione chordae = vitium septimum
+ * (par. 6.1) - numquam chordificatio tacita; littera manet et
+ * custos successus in fine expansionis cadere facit. */
 interior chorda*
 _chordam_substituere (
     StmlMacroContextus* ctx,
                 chorda* textus,
-                   Xar* argumenta)
+                   Xar* argumenta,
+             StmlNodus* nodus)
 {
     ChordaAedificator* aed;
                chorda  titulus;
@@ -608,7 +645,15 @@ _chordam_substituere (
         chorda_aedificator_appendere_chorda(aed, fetta);
         arg = _argumentum_invenire(
             argumenta, chorda_internare(ctx->intern, titulus));
-        si (arg != NIHIL)
+        si (arg != NIHIL && arg->arbores != NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_ARGUMENTUM_ARBOREUM,
+                           nodus, NIHIL, arg->titulus);
+            fetta.datum    = textus->datum + initium;
+            fetta.mensura  = post - initium;
+            chorda_aedificator_appendere_chorda(aed, fetta);
+        }
+        alioquin si (arg != NIHIL)
         {
             chorda_aedificator_appendere_chorda(aed, *arg->valor);
         }
@@ -639,13 +684,187 @@ _expandere_nodum (
                    Xar* argumenta);
 
 interior b32
-_liberum_expandere (
+_liberos_expandere (
              StmlNodus* parens_novus,
-             StmlNodus* liberum,
+                   Xar* fratres,
     StmlMacroContextus* ctx,
                    i32  stratum,
                    i32  tectum,
                    Xar* argumenta);
+
+interior b32
+_liberum_expandere (
+             StmlNodus* parens_novus,
+                   Xar* fratres,
+                   i32  index,
+                   i32* saltus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta);
+
+/* Argumenta BLOCI colligere (par. 6.1): cursus maximalis
+ * elementorum argumentorum statim post vocationem sequentium pars
+ * VOCATIONIS est - hic in tabulam colligitur, in arbore expansa
+ * numquam apparet (vocans 'saltus' fratres consumptos praeterit).
+ * Classificatio:
+ *   liberi nulli (sepulcrum '<@p=/>') -> absentia explicita:
+ *     tabulae NON additur, NON_IMPLETUS postea clamat si loculus
+ *     declaratus (verbum delendi, decretum par. 6.3);
+ *   liberum unum TEXTUS -> scalaris (aequivalentia cum forma
+ *     inscripta) - NISI textus TOTUS '&@x;' ad subarborem
+ *     vocantis refert: tunc silva TRANSIT (transitio trans
+ *     strata; classificatio post considerationem referentiae);
+ *   ceteri -> subarboreus: liberi contextu VOCANTIS expansi
+ *     (involucrum effimerum liberos colligit), silva in tabula.
+ * Nomen bis datum (inscriptum + blocum aut bloca bina) =
+ * ARGUMENTUM_GEMINUM - 'ultimus vincit' numquam fit. */
+interior b32
+_argumenta_bloci_colligere (
+    StmlMacroContextus* ctx,
+    StmlMacroDefinitio* def,
+                   Xar* fratres,
+                   i32  index,
+                   i32* saltus,
+                   Xar* argumenta,
+                   Xar* argumenta_vocantis,
+                   i32  stratum,
+                   i32  tectum)
+{
+    i32 j;
+    i32 num;
+
+    si (fratres == NIHIL)
+    {
+        redde VERUM;
+    }
+    num  = xar_numerus(fratres);
+    j    = index + I;
+    dum (j < num)
+    {
+        StmlNodus* frater;
+           chorda* titulus;
+              i32  n_liberorum;
+
+        frater = *(StmlNodus**)xar_obtinere(fratres, j);
+        si (frater == NIHIL || !_est_argumentum_elementi(frater))
+        {
+            frange;
+        }
+        (*saltus)++;
+        titulus = frater->attributum_titulus;
+        si (_argumentum_invenire(argumenta, titulus) != NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_ARGUMENTUM_GEMINUM,
+                           frater, def->id, titulus);
+            redde FALSUM;
+        }
+        n_liberorum = frater->liberi != NIHIL
+            ? xar_numerus(frater->liberi) : ZEPHYRUM;
+        si (n_liberorum == ZEPHYRUM)
+        {
+            j++;
+            perge;  /* sepulcrum: absentia explicita */
+        }
+        {
+            StmlNodus* primum;
+
+            primum = *(StmlNodus**)xar_obtinere(frater->liberi,
+                                                ZEPHYRUM);
+            si (   n_liberorum   == I
+                && primum        != NIHIL
+                && primum->genus == STML_NODUS_TEXTUS
+                && primum->valor != NIHIL)
+            {
+                chorda referentia;
+                   i32 initium;
+                   i32 post;
+
+                si (   argumenta_vocantis != NIHIL
+                    && _loculum_invenire(primum->valor, ZEPHYRUM,
+                                         &initium, &post,
+                                         &referentia)
+                    && initium            == ZEPHYRUM
+                    && post               == primum->valor->mensura)
+                {
+                    StmlMacroArgumentum* arg_relatum;
+
+                    arg_relatum = _argumentum_invenire(
+                        argumenta_vocantis,
+                        chorda_internare(ctx->intern, referentia));
+                    si (   arg_relatum          != NIHIL
+                        && arg_relatum->arbores != NIHIL)
+                    {
+                        StmlMacroArgumentum* arg;
+
+                        arg = (StmlMacroArgumentum*)xar_addere(
+                            argumenta);
+                        si (arg == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        arg->titulus  = titulus;
+                        arg->valor    = NIHIL;
+                        /* fons immutabilis - splices clonant */
+                        arg->arbores  = arg_relatum->arbores;
+                        j++;
+                        perge;
+                    }
+                }
+                {
+                    StmlMacroArgumentum* arg;
+                                 chorda* valor;
+
+                    valor = (   argumenta_vocantis != NIHIL
+                             && xar_numerus(argumenta_vocantis)
+                                    > ZEPHYRUM)
+                        ? _chordam_substituere(ctx, primum->valor,
+                                               argumenta_vocantis,
+                                               primum)
+                        : primum->valor;
+                    arg = (StmlMacroArgumentum*)xar_addere(
+                        argumenta);
+                    si (arg == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    arg->titulus  = titulus;
+                    arg->valor    = valor;
+                    arg->arbores  = NIHIL;
+                    j++;
+                    perge;
+                }
+            }
+        }
+        {
+                      StmlNodus* involucrum;
+            StmlMacroArgumentum* arg;
+
+            involucrum = stml_elementum_creare(ctx->piscina,
+                                               ctx->intern, "arg");
+            si (involucrum == NIHIL)
+            {
+                redde FALSUM;
+            }
+            si (!_liberos_expandere(involucrum, frater->liberi,
+                                    ctx, stratum, tectum,
+                                    argumenta_vocantis))
+            {
+                redde FALSUM;
+            }
+            arg = (StmlMacroArgumentum*)xar_addere(argumenta);
+            si (arg == NIHIL)
+            {
+                redde FALSUM;
+            }
+            arg->titulus  = titulus;
+            arg->valor    = NIHIL;
+            arg->arbores  = involucrum->liberi;
+            j++;
+        }
+    }
+    redde VERUM;
+}
 
 /* Vocationem implere: corpus definitionis per AMBULATIONEM in
  * parentem splicare (copia caeca vocationes interiores verbatim
@@ -663,9 +882,13 @@ _vocationem_implere (
              StmlNodus* parens_novus,
              StmlNodus* vocatio,
                 chorda* valor_effectivus,
+                   Xar* fratres,
+                   i32  index,
+                   i32* saltus,
                    i32  stratum,
                    i32  tectum,
-    StmlMacroContextus* ctx)
+    StmlMacroContextus* ctx,
+                   Xar* argumenta_vocantis)
 {
                 chorda* id;
     StmlMacroDefinitio* def;
@@ -707,6 +930,15 @@ _vocationem_implere (
         {
             ctx->resultus->fragmentum = *def->id;
         }
+        redde FALSUM;
+    }
+    /* argumenta bloci ANTE iudicia colliguntur (tabula completa
+     * iudicatur: superfluum + non-impletus formas ambas vident) */
+    si (!_argumenta_bloci_colligere(ctx, def, fratres, index,
+                                    saltus, argumenta,
+                                    argumenta_vocantis, stratum,
+                                    tectum))
+    {
         redde FALSUM;
     }
     num = xar_numerus(argumenta);
@@ -756,26 +988,11 @@ _vocationem_implere (
 
     ante_numerus = parens_novus->liberi != NIHIL
         ? xar_numerus(parens_novus->liberi) : ZEPHYRUM;
-    si (def->definitio->liberi != NIHIL)
+    si (!_liberos_expandere(parens_novus, def->definitio->liberi,
+                            ctx, stratum + I, def->ordo,
+                            argumenta))
     {
-        num = xar_numerus(def->definitio->liberi);
-        per (i = ZEPHYRUM; i < num; i++)
-        {
-            StmlNodus* corporis;
-
-            corporis = *(StmlNodus**)xar_obtinere(
-                def->definitio->liberi, i);
-            si (corporis == NIHIL)
-            {
-                perge;
-            }
-            si (!_liberum_expandere(parens_novus, corporis, ctx,
-                                    stratum + I, def->ordo,
-                                    argumenta))
-            {
-                redde FALSUM;
-            }
-        }
+        redde FALSUM;
     }
     si (   parens_novus->liberi != NIHIL
         && xar_numerus(parens_novus->liberi) > ante_numerus)
@@ -817,7 +1034,7 @@ _expandere_nodum (
             && novum->valor != NIHIL)
         {
             novum->valor = _chordam_substituere(ctx, novum->valor,
-                                                argumenta);
+                                                argumenta, novum);
         }
         si (novum->attributa != NIHIL)
         {
@@ -831,7 +1048,7 @@ _expandere_nodum (
                 si (attr != NIHIL && attr->valor != NIHIL)
                 {
                     attr->valor = _chordam_substituere(
-                        ctx, attr->valor, argumenta);
+                        ctx, attr->valor, argumenta, novum);
                 }
             }
         }
@@ -844,45 +1061,48 @@ _expandere_nodum (
         {
             redde NIHIL;
         }
-        num = xar_numerus(nodus->liberi);
-        per (i = ZEPHYRUM; i < num; i++)
+        si (!_liberos_expandere(novum, nodus->liberi, ctx, stratum,
+                                tectum, argumenta))
         {
-            StmlNodus* liberum;
-
-            liberum = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
-            si (liberum == NIHIL)
-            {
-                perge;
-            }
-            si (!_liberum_expandere(novum, liberum, ctx, stratum,
-                                    tectum, argumenta))
-            {
-                redde NIHIL;
-            }
+            redde NIHIL;
         }
     }
     redde novum;
 }
 
 /* Liberum unum expandere - interceptio COMMUNIS ambulationis
- * documenti et impletionis corporum (vocatio liberos plures parit,
- * ergo in ansa liberorum vivit, non in casu nodi):
+ * documenti et impletionis corporum (vocatio liberos plures parit
+ * et fratres sequentes CONSUMIT, ergo in ansa liberorum vivit,
+ * non in casu nodi; 'saltus' = fratres consumpti quos vocans
+ * praeterit):
  * - definitio: ambulatione documenti demissa + praeterita notata;
  *   in impletione materia citata OPACA, verbatim clonata;
  * - vocatio: interior effectivus (substitutus in impletione -
- *   transitio argumentorum), deinde impleta;
+ *   transitio argumentorum), deinde impleta cum argumentis bloci
+ *   ex fratribus;
+ * - textus TOTUS '&@x;' ad subarborem (in impletione): SPLEX
+ *   SILVAE - clones recentes quaque sede (instantiatio);
  * - cetera: recursio ambulationis. */
 interior b32
 _liberum_expandere (
              StmlNodus* parens_novus,
-             StmlNodus* liberum,
+                   Xar* fratres,
+                   i32  index,
+                   i32* saltus,
     StmlMacroContextus* ctx,
                    i32  stratum,
                    i32  tectum,
                    Xar* argumenta)
 {
+    StmlNodus* liberum;
     StmlNodus* liberum_novum;
 
+    *saltus = ZEPHYRUM;
+    liberum = *(StmlNodus**)xar_obtinere(fratres, index);
+    si (liberum == NIHIL)
+    {
+        redde VERUM;
+    }
     si (_est_definitio(liberum))
     {
         si (argumenta == NIHIL)
@@ -913,11 +1133,71 @@ _liberum_expandere (
         valor_effectivus =
             (argumenta != NIHIL && xar_numerus(argumenta) > ZEPHYRUM)
                 ? _chordam_substituere(ctx, liberum->valor,
-                                       argumenta)
+                                       argumenta, liberum)
                 : liberum->valor;
         redde _vocationem_implere(parens_novus, liberum,
-                                  valor_effectivus, stratum, tectum,
-                                  ctx);
+                                  valor_effectivus, fratres, index,
+                                  saltus, stratum, tectum, ctx,
+                                  argumenta);
+    }
+    si (   argumenta      != NIHIL
+        && liberum->genus == STML_NODUS_TEXTUS
+        && liberum->valor != NIHIL)
+    {
+        chorda referentia;
+           i32 initium;
+           i32 post;
+
+        si (   _loculum_invenire(liberum->valor, ZEPHYRUM,
+                                 &initium, &post, &referentia)
+            && initium == ZEPHYRUM
+            && post    == liberum->valor->mensura)
+        {
+            StmlMacroArgumentum* arg;
+
+            arg = _argumentum_invenire(
+                argumenta,
+                chorda_internare(ctx->intern, referentia));
+            si (arg != NIHIL && arg->arbores != NIHIL)
+            {
+                i32 k;
+                i32 num_arborum;
+
+                /* custos: parens elementum attributi liberos
+                 * TEXTUS solos fert (par. 6.3) - silva ibi vitium
+                 * septimum est, non splex */
+                si (parens_novus->attributum_titulus != NIHIL)
+                {
+                    _vitium_ponere(
+                        ctx, STML_EXPANSIO_ARGUMENTUM_ARBOREUM,
+                        liberum, NIHIL, arg->titulus);
+                    redde FALSUM;
+                }
+                num_arborum = xar_numerus(arg->arbores);
+                per (k = ZEPHYRUM; k < num_arborum; k++)
+                {
+                    StmlNodus* fons_arboris;
+                    StmlNodus* clon;
+
+                    fons_arboris = *(StmlNodus**)xar_obtinere(
+                        arg->arbores, k);
+                    si (fons_arboris == NIHIL)
+                    {
+                        perge;
+                    }
+                    clon = stml_duplicare(fons_arboris,
+                                          ctx->piscina,
+                                          ctx->intern);
+                    si (clon == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    (vacuum)stml_liberum_addere(parens_novus,
+                                                clon);
+                }
+                redde VERUM;
+            }
+        }
     }
     liberum_novum = _expandere_nodum(liberum, ctx, stratum, tectum,
                                      argumenta);
@@ -926,6 +1206,39 @@ _liberum_expandere (
         redde FALSUM;
     }
     (vacuum)stml_liberum_addere(parens_novus, liberum_novum);
+    redde VERUM;
+}
+
+/* Ansa liberorum communis: quisque liberum per _liberum_expandere,
+ * fratres consumptos (argumenta bloci vocationum) praeteriens. */
+interior b32
+_liberos_expandere (
+             StmlNodus* parens_novus,
+                   Xar* fratres,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum,
+                   Xar* argumenta)
+{
+    i32 i;
+    i32 num;
+    i32 saltus;
+
+    si (fratres == NIHIL)
+    {
+        redde VERUM;
+    }
+    num = xar_numerus(fratres);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        saltus = ZEPHYRUM;
+        si (!_liberum_expandere(parens_novus, fratres, i, &saltus,
+                                ctx, stratum, tectum, argumenta))
+        {
+            redde FALSUM;
+        }
+        i += saltus;
+    }
     redde VERUM;
 }
 
@@ -982,6 +1295,9 @@ stml_expandere (
     {
         redde resultus;
     }
-    resultus.successus = VERUM;
+    /* custos vitii mollis: _chordam_substituere vitium ponit sed
+     * ambulationem non frangit (littera manet) - successus hic
+     * cadit, non tacite transit */
+    resultus.successus = (resultus.vitium == STML_EXPANSIO_BENE);
     redde resultus;
 }

@@ -44,7 +44,14 @@ nomen enumeratio {
     STML_EXPANSIO_ARGUMENTUM_SUPERFLUUM = V,
     /* corpus loculum non declaratum refert (in COLLECTIONE
      * iudicatum - linea definitionis) */
-    STML_EXPANSIO_LOCULUS_IGNOTUS       = VI
+    STML_EXPANSIO_LOCULUS_IGNOTUS       = VI,
+    /* argumentum SUBARBOREUM positionem CHORDAE implens
+     * (attributum, valor transclusionis, textus interpolatus) -
+     * numquam chordificatio tacita (par. 6.1, vitium septimum) */
+    STML_EXPANSIO_ARGUMENTUM_ARBOREUM   = VII,
+    /* nomen argumenti bis datum (inscriptum + blocum, aut bloca
+     * bina) - 'ultimus vincit' numquam fit */
+    STML_EXPANSIO_ARGUMENTUM_GEMINUM    = VIII
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
