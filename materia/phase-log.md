@@ -364,3 +364,91 @@ NEXT: the arbor/scribere surgery — the phase's real mass. Now with one
 correction banked: the origin seam is TWO hooks, not one. Phase 0.1's
 `extentum_quaerere` for arbor/scribere, and this `sedes_quaerere` for
 the node query layer.
+
+========================================================================
+PHASIS I.2 + I.3a — MATERIA_SCRIBERE. RELATIO (2026-08-27)
+========================================================================
+
+Suite 4/4, 250 assertions, exit 0. MG1 edit 1 done; the byte emitter is
+off the preprocessor.
+
+CORRECTION TO M2/§2.1 — "HG2 evaporates" IS HALF TRUE.
+
+§2.1 argues the five mandatory structural genera live in
+`silva_generare.c:1315` — the LR toolkit — so hand-written frontends
+never invoke it and HG2 evaporates. True of the GENERATOR. False of the
+WRITER: `silva_scribere.c:625`, `_scriptor_parare` ends with
+
+    redde _formam_ambigui_invenire(st);
+
+and BOTH public entry points treat FALSE as fatal ("tabularium sine
+forma ambigui"). So a registry with no `ambiguus` genus breaks silva's
+writer — in a MATERIA-CORE module, not the LR toolkit. CSS and HTML
+would have had to declare `ambiguus` anyway.
+
+In materia `ambiguus` is OPTIONAL, with the distinction kept:
+  absent            -> accepted (recursive descent produces no ambiguity)
+  present + intact  -> accepted, canonical interpretation only
+  present + BROKEN  -> REFUSED (missing `canonica` slot)
+"I don't have one" and "I have a broken one" must not collapse into the
+same answer. Both directions asserted.
+
+This is the same pattern as the nodus finding, one layer over: a
+requirement was located in one module and concluded to be confined
+there. §2.1 traced where the genera are ENFORCED at generation and
+concluded where they are REQUIRED at runtime.
+
+MG1 EDIT 1 — DONE, AND TESTED THE ONLY WAY THAT MEANS ANYTHING.
+
+silva `_scriptor_parare:613` hardcodes `reinserenda = NIHIL`; only
+`silva_scribere_fontem` fills it; the subtree entries pass
+`fons_index = -I` (:686), which disables the skip predicate (:299). So
+the mechanism was LIVE but UNREACHABLE from the path CSS and HTML use.
+
+In materia both are CONSILIUM fields. The test is the earlier
+measurement inverted: a subtree whose tokens cover offsets 12..18 of
+`"#define X 1\nint f;\n"`, with the directive line supplied as a
+reinserendum at offset 0.
+
+  without reinserenda:  7 bytes   ("int f;\n")   - the gap is real
+  with reinserenda:    19 bytes   byte-exact vs the true source
+
+Both asserted. The first number matters as much as the second: without
+it, "19 bytes came out" would not prove the reinserenda did anything.
+
+THE UNIFICATION THE FORK PAID FOR.
+
+silva's `_lexema_scribere` carries two paths — an ORIGO_FONS branch
+(token emits itself) and an expansion branch (root emits instead, with
+extent and dedup). materia has ONE: ask the hook for the emission root
+(no hook => the token itself), then branch on whether the root IS the
+token. silva's FONS branch is the case `radix == token`. One branch
+fewer, nothing lost, and a language with no derivation runs the same
+path rather than a special-cased one.
+
+Three callbacks now on MateriaOrigoUncus, all optional:
+  sedes_quaerere     effective site      (node queries)
+  radix_quaerere     emission root       (byte emitter)
+  extentum_quaerere  root's full span    (function-like invocations)
+
+WHAT WAS BUILT
+  materia/fontes/materia_registrum.h            port of silva_registrum.h
+  materia/fontes/materia_scribere.{h,c}         133 + 470 lines
+  materia/probationes/probatio_materia_scribere.c  50 assertions
+
+GATES
+  - ambiguus: all three registry shapes asserted (absent / intact /
+    broken), so the "optional" change cannot silently become "ignored".
+  - MG1: measured both with and without reinserenda, byte-exact.
+  - Origin hook: no-hook path, hook path, DEDUP (two derived tokens,
+    one root, emitted once — 2 bytes not 4), extent path, and refusal
+    carrying the HOOK'S OWN cause string rather than a generic one.
+  - Unknown genus: clear break with `sedes` pointing at the node and
+    empty text, never a silent skip.
+
+NEXT: materia_arbor — the STML writer/reader, 7,310 lines and the
+phase's remaining mass. Phase 0.1 measured the core walk (lines
+1..4029) as free of SilvaRegio/SilvaRamus/SilvaFons, with every site
+inside a `_parsura_*` function, so the split line is already known;
+what is NOT yet measured is how much of the writer depends on the
+lexeme-genus tag mangling that materia_lexicon now owns.

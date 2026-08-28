@@ -125,8 +125,23 @@ nomen structura {
  * Frons C89 hunc catenam originis ad radicem ambulare implet. */
 nomen structura {
     vacuum* datum;
+
+    /* Sedes efficax - quaestiones nodi (extensio, puritas,
+     * geometria, commentarium). NIHIL = lexema origo sua est. */
     vacuum (*sedes_quaerere)(vacuum*, constans MateriaToken*,
                              MateriaSedes*);
+
+    /* Radix EMISSIONIS: quod lexema loco huius octetos dat. Idem
+     * lexema reddere = 'se ipsum emittit' (casus omnium linguarum
+     * sine derivatione). NIHIL + causa = recuperari non potest.
+     * NIHIL uncus = radix semper lexema ipsum. */
+    MateriaToken* (*radix_quaerere)(vacuum*, MateriaToken*,
+                                    constans character** causa);
+
+    /* Lamina octetorum quam radix TOTA occupat, cum radix plus
+     * quam se ipsam tegit (C89: invocatio functio-similis cum
+     * argumentis). NIHIL = radix se solam tegit. */
+    Xar* (*extentum_quaerere)(vacuum*, constans MateriaToken*);
 } MateriaOrigoUncus;
 
 /* Sedes efficax lexematis. Uncum adhibet si adest; aliter campos
