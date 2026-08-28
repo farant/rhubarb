@@ -14416,3 +14416,41 @@ silva/CLAUDE.md is the operative instruction.
 NEXT: materia phase 1 (the fork), ~10 tasks, ending at the gate that
 matters — a C89 shim passing the M1 subtree round trip 281/281 THROUGH
 materia, before CSS exists. That gate is a GO/NO-GO.
+
+
+========================================================================
+ADDENDUM 2026-08-27 — EMENDATIO VITII SUB GELATIONE (cursor probationum)
+========================================================================
+
+Not silva work; a bug fix permitted by the GELATIO notice, found in
+materia and replayed here in the same commit as the notice requires.
+
+`compile_probationes.sh` asked `[ "$src" -nt "$obj" ]`. mtimes are
+SECOND-GRANULAR, so a source and its object written in the SAME SECOND
+are not "newer" — the rebuild is silently skipped and the suite runs
+against the PREVIOUS object. Small file, fast machine; not rare.
+
+Found the hard way in materia: a planted fault was restored, the source
+verified byte-identical to the known-good copy, and the test STAYED
+RED — against a stale object, both files stamped 21:27:07.
+
+This is the twin of the false green this same script produced earlier
+today (header-only edits rebuilding nothing), and it is the worse of
+the two. A false green makes you believe you are finished; a FALSE RED
+makes you distrust code that is correct, and the natural next move is
+to "fix" what was never broken.
+
+FIXED IN TWO PLACES, not one:
+  - source vs object (3 sites): `! [ "$obj" -nt "$src" ]`
+  - `newest_header` (1 site):   `! [ "$1" -nt "$CAPUT_RECENS" ]`
+The header guard had the SAME tie bug and was easy to miss, because the
+obvious fix only addresses the source/object pair. A header sharing a
+second with an object would not have triggered its rebuild either.
+
+Rule: on a timestamp TIE, REBUILD. The tie-break belongs on the safe
+side — recompiling once too often costs seconds, trusting a stale
+object costs a debugging session.
+
+Verified: silva 50/50 after the change; materia 5/5, and the header tie
+demonstrated by touching a header and an object to the same second and
+confirming the rebuild now fires.

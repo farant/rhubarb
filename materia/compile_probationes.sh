@@ -101,8 +101,14 @@ if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
 
+# AEQUALITAS: mtimes secundo mensurantur, ergo fons et obiectum
+# EODEM SECUNDO scripta '-nt' non satisfaciunt et recompilatio
+# TACITE omittitur - suite contra obiectum PRIUS currit. Id
+# 2026-08-27 in materia RUBRUM FALSUM peperit (vitium plantatum,
+# restitutum, probatio adhuc rubra contra .o vetus; .c et .o ambo
+# 21:27:07). Remedium ubique: in aequalitate RECOMPILA.
 newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
         echo "$CAPUT_RECENS"
     fi
 }

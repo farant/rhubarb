@@ -107,8 +107,14 @@ if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
 
+# AEQUALITAS: mtimes secundo mensurantur, ergo fons et obiectum
+# EODEM SECUNDO scripta '-nt' non satisfaciunt et recompilatio
+# TACITE omittitur - suite contra obiectum PRIUS currit. Id
+# 2026-08-27 in materia RUBRUM FALSUM peperit (vitium plantatum,
+# restitutum, probatio adhuc rubra contra .o vetus; .c et .o ambo
+# 21:27:07). Remedium ubique: in aequalitate RECOMPILA.
 newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && [ "$CAPUT_RECENS" -nt "$1" ]; then
+    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
         echo "$CAPUT_RECENS"
     fi
 }
@@ -117,7 +123,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
@@ -134,7 +140,7 @@ for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     # cum officina/legatus) — contra capita fontium non compilat.
     if [ "$base" = "nexus_ordines" ]; then continue; fi
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [silva] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
@@ -152,7 +158,7 @@ for src in "$SILVA_DIR"/probationes/*.c; do
     base="$(basename "$src" .c)"
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [adiumentum] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
