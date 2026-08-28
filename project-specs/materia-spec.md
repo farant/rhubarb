@@ -81,7 +81,7 @@ of the STML writer and the byte emitter IS the project.** Everything
 else moves nearly clean:
 
 ```
-silva_nodus            -> silva_token                CLEAN
+silva_nodus            -> silva_token                see 2.2 ↓
 silva_token            -> (none)                     CLEAN
 silva_commissio        -> nodus tabulae token        registry types only
 silva_quaestio         -> nodus tabulae token        registry types only
@@ -90,6 +90,37 @@ silva_arbor_aequalitas -> arbor                      follows arbor
 silva_arbor            -> ... expandere parsare      ← SURGERY
 silva_scribere         -> ... expandere parsare      ← SURGERY
 ```
+
+### 2.2 CORRECTION 2026-08-27 — `silva_nodus` is NOT clean
+
+The table above measured **includes**. `silva_nodus.c` includes only
+`silva_token.h`, so it read as clean. It is not: **five query families
+walk the origin chain**, measured against the source —
+
+| site | function | question |
+|---|---|---|
+| 375 | `silva_valor_extensionem` | byte extent |
+| 434 | `_extensionem_lineis_valoris` | line/column extent |
+| 537 | `silva_valor_est_fons_purus` | source purity |
+| 630 | `_sedes_colligere` | geometry fidelity |
+| 795 | `_lexema_primum_valoris` | leading comment block |
+
+— because the extent of an *expanded* token is not the token's own
+site but its **invocation's**. Phase 0.1 named one genuine core
+intrusion (`ArborCursor.expansio`); **this is a second, in a module
+this table called clean.**
+
+**Same error class as the coupling census** (§1 item 4): the
+measurement answered a *narrower* question than the conclusion drawn
+from it. Includes were measured; semantics were concluded. Worth
+stating as a standing rule for this fork — *an include graph is a
+lower bound on coupling, never a description of it.*
+
+**Resolved by ONE hook.** All five ask the same thing: *what is this
+token's effective source site?* `MateriaOrigoUncus` answers it; a
+frontend with no derivation leaves it `NIHIL` and gets the token's own
+fields, which is correct for CSS and HTML rather than degraded.
+Shipped in `materia/fontes/materia_nodus.h`.
 
 ### 2.1 What M2 dissolves
 

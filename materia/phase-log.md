@@ -273,3 +273,94 @@ NEXT: the shim needs a source-file identity type. SilvaFons splits the
 same way the token did — `via` and `est_syntheticus` are general;
 `est_lexicon`, `est_custos`, `custos_titulus` are preprocessor-shaped.
 Then the arbor/scribere surgery, which is the phase's real mass.
+
+========================================================================
+PHASIS I.1b — SILVAFONS (NULLUM), MATERIA_NODUS. RELATIO (2026-08-27)
+========================================================================
+
+Suite 3/3, 200 assertions, exit 0.
+
+SILVAFONS: A NULL RESULT, AND I PREDICTED IT WRONG.
+
+Last entry said "SilvaFons splits the same way the token did." It does
+not split. It LEAVES WHOLE. Measured — every site in the two surgery
+targets:
+
+  silva_arbor.c 4048, 4051, 6306, 6347   _parsura_fontes_scribere /
+                                         _parsura_fontes_legere
+  silva_scribere.c 777                   inside silva_scribere_fontem,
+                                         resolving fons_index -> via ->
+                                         `includenda` map -> trailing
+                                         EOF token
+
+All five are frontend document-section or #include machinery. Nothing
+in the core walk ever dereferences a SilvaFons.
+
+And the reason is worth keeping: of 20 `fons_index` uses in
+silva_scribere.c, exactly ONE dereferences the table. The rest are
+equality comparison ("is this token from the emission target's
+source?"), assignment, or the -1 "any" sentinel. So **materia needs
+`fons_index` as an opaque s32 with equality semantics and a -1
+sentinel, and nothing else.** No table, no struct, no split. A frontend
+with multiple sources owns its own table; CSS and HTML have one source
+and always pass 0.
+
+MATERIA_NODUS, AND THE FINDING THAT ACTUALLY MATTERED.
+
+materia-spec.md §2's table says `silva_nodus -> silva_token  CLEAN`.
+That is true of INCLUDES and false of SEMANTICS. Five query families in
+silva_nodus.c walk the origin chain:
+
+  375  silva_valor_extensionem        byte extent
+  434  _extensionem_lineis_valoris    line/column extent
+  537  silva_valor_est_fons_purus     source purity
+  630  _sedes_colligere               geometry fidelity  (geometria_fida)
+  795  _lexema_primum_valoris         leading comment    (commentarium_ducens)
+
+Because the extent of an EXPANDED token is not its own site but its
+INVOCATION's. Phase 0.1 named one genuine core intrusion
+(ArborCursor.expansio). This is a SECOND, in a module the spec called
+clean.
+
+SAME ERROR CLASS, THIRD TIME THIS SESSION. The coupling census measured
+lexical coupling and concluded structural. RP 17 measured field equality
+and concluded field redundancy. §2 measured includes and concluded
+semantics. All three: THE MEASUREMENT ANSWERED A NARROWER QUESTION THAN
+THE CONCLUSION DRAWN FROM IT. Recorded in the spec as a standing rule —
+an include graph is a LOWER BOUND on coupling, never a description of
+it. Worth asking, of any measurement here: what would have to be true
+for this to be false, and did I look for it?
+
+RESOLVED BY ONE HOOK. All five ask the same question — "what is this
+token's effective source site?" MateriaOrigoUncus answers it. A
+frontend with no derivation leaves it NIHIL and gets the token's own
+fields, which for CSS and HTML is CORRECT, not degraded. One callback
+makes all five language-neutral.
+
+WHAT WAS BUILT
+  materia/fontes/materia_nodus.{h,c}          207 + 385 lines
+  materia/probationes/probatio_materia_nodus.c  68 assertions
+
+Ported faithfully from silva_nodus.c; two changes only — node genus is
+an s32 registry index (as before), and effective site comes from the
+hook rather than a hardcoded origin walk.
+
+GATES
+  - All four node guards planted and refusal required: slot out of
+    bounds, species mismatch, DOUBLE WRITE (single-owner), and append
+    to a non-list species. Verified the guards' stderr messages
+    actually EMIT, with correct slot/species detail — 5 of 5 in the log.
+    A guard that returns FALSUM silently is half a guard.
+  - FORK-SAFE PROSPECTUS tested for real, not asserted: two forks
+    append from one base; the second must copy because the repository
+    has moved past its view. Confirmed the copy path FIRED (different
+    Xar pointers), both forks see their own element at index 2, and the
+    base still reports mensura 2 with NIHIL at index 2. Without this
+    the {xar, mensura} design is just a claim.
+  - Sedes hook: NIHIL path, NIHIL-field path, hook path, and NIHIL
+    token (site is FILLED as unknowable, never left stale).
+
+NEXT: the arbor/scribere surgery — the phase's real mass. Now with one
+correction banked: the origin seam is TWO hooks, not one. Phase 0.1's
+`extentum_quaerere` for arbor/scribere, and this `sedes_quaerere` for
+the node query layer.
