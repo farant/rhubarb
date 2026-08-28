@@ -452,3 +452,81 @@ phase's remaining mass. Phase 0.1 measured the core walk (lines
 inside a `_parsura_*` function, so the split line is already known;
 what is NOT yet measured is how much of the writer depends on the
 lexeme-genus tag mangling that materia_lexicon now owns.
+
+========================================================================
+PHASIS I — PORTA SHIM, DIMIDIUM OCTETORUM. RELATIO (2026-08-27)
+========================================================================
+
+346/346 byte-identical against silva itself, across 336 real files.
+Gate committed as `materia/shim_probare.sh`. materia suite still 4/4.
+
+WHY THIS BEFORE materia_arbor, AND NOT AFTER.
+
+Measured first: silva_arbor.c is 68 core functions / 5,573 lines plus
+19 `_parsura_*` / 911 lines. That is an order of magnitude more than
+anything ported so far (materia_scribere was 470). Porting 5,573 lines
+onto an unvalidated hook design would be the expensive way to be wrong.
+
+The phase gate wants the STML round trip, which needs materia_arbor.
+But the BYTE half of that gate needs only what already exists — and it
+is precisely the half that exercises the origin hooks. So it was
+available now, and it was the thing most likely to invalidate the
+design.
+
+WHAT THE PROBE DOES. Parses real C89 with silva, converts the tree to
+materia types, emits through materia_scribere with C89 hooks, and
+compares byte-for-byte against silva_scribere_valorem on silva's own
+tree.
+
+SILVA IS THE ORACLE, NOT A FIXTURE I WROTE. A fixture shares my
+assumptions; silva does not. This is the separating-oracle discipline
+the M2 arbor work already proved out, applied one layer down.
+
+RESULT
+  10 inline cases (macros object/function-like/nested, directives,
+     conditionals, comments, a line splice inside a token)
+  336 real files (lib/*.c, include/*.h, silva/fontes/*.c)
+  346/346 IDEM, ~16s.  lib/stml.c alone: 274,721 bytes / 56,495 tokens.
+
+THE PROBE CAN FAIL — DEMONSTRATED, NOT ASSERTED. Three faults planted,
+each caught by exactly the case it should break:
+
+  extentum_quaerere disabled  -> "macro functio"      16 vs 11 bytes
+  valorem_emittere disabled   -> "lamina intra lexema" 12 vs 10 bytes
+  radix_quaerere disabled     -> nested macros AND lib/piscina.c
+                                 (13136 vs 13129)
+
+So all three hooks are load-bearing, individually, on real data. A
+green probe that cannot go red proves nothing; this one goes red three
+different ways.
+
+TWO MISTAKES OF MY OWN, BOTH INSTRUCTIVE
+
+1. The first version looked up SilvaToken -> MateriaToken by LINEAR
+   SCAN. Fine on 5-token snippets, quadratic on real files: the corpus
+   run TIMED OUT at 2 minutes. Replaced with a tabula_dispersa keyed on
+   the pointer bytes; the same corpus now runs in 0.15s for four files
+   and ~16s for 336. A defect of the probe, not of the design — but it
+   would have read as "materia is slow" if I had not looked.
+
+2. I checked the gate's refusal path with `./shim_probare.sh | tail`
+   and read `$?` — which is TAIL's status, not the script's, so a
+   refusal reported EXITUS=0. Re-verified without the pipe. This is the
+   documented house trap and I walked into it anyway; the fix is to
+   never read `$?` after a pipe, and the tell is that a refusal path
+   reporting success should never be believed on the first reading.
+
+EXIT CONTRACT VERIFIED, all three paths, unpiped:
+  0  clean corpus
+  2  silva/build absent (refuses loudly, names the fix)
+  1  a file diverges or cannot be read
+
+WHAT IS AND IS NOT PROVEN. Proven: token model, node model, the byte
+emitter, and all three origin hooks reproduce silva exactly on real C89
+including macro expansion, conditionals, and splices. NOT proven: the
+STML round trip, which is materia_arbor's job and remains the phase's
+real gate. This is half the gate, arriving four steps early.
+
+NEXT: materia_arbor. Now with the hook design validated on 336 files
+rather than on argument, and with the split line already measured (68
+core functions, 19 `_parsura_*`).
