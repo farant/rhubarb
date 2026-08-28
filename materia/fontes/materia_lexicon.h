@@ -209,22 +209,22 @@ materia_lexicon_munera_habet (
 constans character*
 materia_lexicon_titulus (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 constans character*
 materia_lexicon_orthographia (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 MateriaLexSpecies
 materia_lexicon_species (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 MateriaLexMunus
 materia_lexicon_munus (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 /* An genus contentum ut TEXTUM ferat. Aequivalens
  * species==VERBATIM; substituit et _textum_fert et
@@ -232,12 +232,12 @@ materia_lexicon_munus (
 b32
 materia_lexicon_textum_fert (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 /* An genus trivium sit (munus SPATIUM|LINEA|LAMINA|COMMENTUM). */
 b32
 materia_lexicon_trivium_est (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus);
+                             s32  genus);
 
 #endif /* MATERIA_LEXICON_H */

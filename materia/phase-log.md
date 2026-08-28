@@ -530,3 +530,70 @@ real gate. This is half the gate, arriving four steps early.
 NEXT: materia_arbor. Now with the hook design validated on 336 files
 rather than on argument, and with the split line already measured (68
 core functions, 19 `_parsura_*`).
+
+========================================================================
+PHASIS I.3b — MATERIA_ARBOR, SCRIPTOR. RELATIO (2026-08-27)
+========================================================================
+
+Suite 5/5, 290 assertions, exit 0. Shim gate still 346/346.
+
+The arbor WRITER is ported: 1,309 lines (materia_arbor.{h,c}), plus 40
+assertions of its own. The reader is not yet started.
+
+FOUR CHANGES FROM SILVA, AND ONE NEW SEAM
+
+  - lexeme genus resolves through materia_lexicon; the ORTHOGRAPHIAE
+    and NOMINA_GENERUM tables do not come along
+  - "value carried" is species == VERBATIM, not "orthography NIHIL and
+    not EOF"
+  - trivia FORM comes from species: REPETITUM -> n=, TERMINATOR ->
+    crlf, VERBATIM -> text. silva switched on four named genera; a
+    language whose whitespace is one genus (CSS) works unchanged
+  - anchor and derived-token detection go through MateriaOrigoUncus
+
+MateriaArborFrons is the new seam, and it has TWO hooks rather than
+one, for a reason that is byte-visible: attributes and children are
+separate lists, and silva writes `standard` BEFORE `f` but scissurae
+and origo AFTER <post>. One hook at either end could not reproduce
+both orders. So attributes_ornare runs first, liberos_ornare last, and
+materia's own attributes sit between them.
+
+THE ANCHOR LAW, CARRIED OVER WITH ITS WARNING. silva_arbor.c:715-760
+records that using the token rather than its leading trivium produced
+178 'lexema/offset' divergences over the corpus — and that a small
+test MISSED it, because `int n = 0;` has its first token at offset 0
+with no leading trivia, the case where the bug vanishes. So the test
+here asserts BOTH cases explicitly, and the planted fault confirmed it:
+removing the leading-trivium lookup fails three assertions (b="4"
+present, b="8" absent, columna="1").
+
+A FALSE RED, AND IT IS THE WORSE TWIN
+
+After restoring the good file the test STAYED red. The source was
+verified byte-identical to the good copy, and it still failed. Cause:
+
+    materia_arbor.c   21:27:07
+    materia_arbor.o   21:27:07
+
+The runner asked `[ "$src" -nt "$obj" ]`. mtimes are second-granular,
+so a source and object written in the SAME SECOND are not "newer", the
+rebuild is silently skipped, and the suite runs against the previous
+object. Small file, fast machine — not rare.
+
+This is the twin of the false green that bit silva earlier today, and
+it is worse. A false green makes you believe you are finished; a FALSE
+RED makes you distrust code that is correct, and the natural next move
+is to "fix" something that was never broken.
+
+Fix: `! [ "$obj" -nt "$src" ]` — on a tie, REBUILD. One word, and the
+tie-break now falls on the safe side. Verified by planting and
+restoring WITHOUT a forced rebuild: 3 failures, then 40 passing.
+
+**silva/compile_probationes.sh carries the same `-nt` pattern and the
+same bug.** Not touched — silva is frozen and this is Fran's call, but
+it is a live hazard there, not a theoretical one: it is the same script
+that produced today's false green by a different route.
+
+NEXT: the arbor READER (STML -> arbor), then the shim extended to
+compare STML documents and finally to round-trip — which is the phase
+gate proper.

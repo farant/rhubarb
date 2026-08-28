@@ -55,6 +55,10 @@ declare -a RADIX_FONTES=(
     "xar"
     "friatio"
     "tabula_dispersa"
+    "internamentum"
+    "selectio"
+    "stml"
+    "stml_macros"
     "credo"
 )
 
@@ -68,6 +72,18 @@ if [ -n "$FILTER" ]; then
         echo "compile_probationes: filtrum '$FILTRUM_DATUM' -> '$FILTER'" >&2
     fi
 fi
+
+# ---- custodia vetustatis ----
+# '$src -nt $obj' AEQUALITATEM PERDIT: mtimes secundo mensurantur,
+# ergo fons et obiectum in EODEM secundo scripta 'non novius'
+# dant et recompilatio TACITE OMITTITUR. Id me momordit
+# 2026-08-27: vitium plantatum, restitutum, et probatio adhuc
+# rubra - contra obiectum vitiosum, quia .c et .o ambo 21:27:07
+# ferebant. FALSUM RUBRUM, geminum falsi viridis quod eodem die
+# silvam momordit, et peius: viride falsum te 'peractum' putare
+# facit, rubrum falsum codici RECTO diffidere.
+# Remedium: '! [ $obj -nt $src ]' - in aequalitate RECOMPILA.
+# CAUTIO: silva/compile_probationes.sh idem exemplar '-nt' fert.
 
 # ---- custodia capitum ----
 # Mutatio capitis SOLA nihil recompilat si tantum mtimes .c
@@ -95,7 +111,7 @@ obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [dep] $f.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
@@ -108,7 +124,7 @@ shopt -s nullglob
 for src in "$MATERIA_DIR"/fontes/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [materia] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
@@ -123,7 +139,7 @@ for src in "$MATERIA_DIR"/probationes/*.c; do
     base="$(basename "$src" .c)"
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [adiumentum] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1

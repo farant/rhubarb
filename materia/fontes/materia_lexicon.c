@@ -226,23 +226,26 @@ materia_lexicon_munera_habet (
 interior constans MateriaLexGenus*
 _genus_capere (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     si (ratum == NIHIL || !ratum->ratum || ratum->lexicon == NIHIL)
     {
         redde NIHIL;
     }
-    si (genus >= ratum->lexicon->numerus_generum)
+    /* Genus SIGNATUM est quia lexemata id ita ferunt (MateriaToken.
+     * genus). Custodia negativi ergo REALIS est: sine ea -I in
+     * i32 versum ad 4294967295 fit et casu solo fines excedit. */
+    si (genus < ZEPHYRUM || (i32)genus >= ratum->lexicon->numerus_generum)
     {
         redde NIHIL;
     }
-    redde &ratum->lexicon->genera[genus];
+    redde &ratum->lexicon->genera[(i32)genus];
 }
 
 constans character*
 materia_lexicon_titulus (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 
@@ -252,7 +255,7 @@ materia_lexicon_titulus (
 constans character*
 materia_lexicon_orthographia (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 
@@ -262,7 +265,7 @@ materia_lexicon_orthographia (
 MateriaLexSpecies
 materia_lexicon_species (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 
@@ -276,7 +279,7 @@ materia_lexicon_species (
 MateriaLexMunus
 materia_lexicon_munus (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 
@@ -288,7 +291,7 @@ materia_lexicon_munus (
 b32
 materia_lexicon_textum_fert (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 
@@ -302,7 +305,7 @@ materia_lexicon_textum_fert (
 b32
 materia_lexicon_trivium_est (
     constans MateriaLexiconRatum* ratum,
-                             i32  genus)
+                             s32  genus)
 {
     constans MateriaLexGenus* g = _genus_capere(ratum, genus);
 

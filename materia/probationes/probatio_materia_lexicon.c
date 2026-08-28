@@ -92,7 +92,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (iudicium.vitium, (s32)MATERIA_LEX_SANUM);
         CREDO_VERUM (ratum.ratum);
         CREDO_AEQUALIS_I32 (ratum.lexicon->numerus_generum,
-            (i32)LEXICON_C89_NUMERUS_GENERUM);
+            (s32)LEXICON_C89_NUMERUS_GENERUM);
     }
 
 
@@ -274,63 +274,63 @@ s32 principale (vacuum)
 
         /* Valores noti - erratum generationis grossum caperent */
         CREDO_VERUM (strcmp(materia_lexicon_titulus(&ratum,
-            (i32)LEXICON_C89_GENUS_IDENTIFICATOR), "IDENTIFICATOR") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_IDENTIFICATOR), "IDENTIFICATOR") == ZEPHYRUM);
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_AUTO), "auto") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_AUTO), "auto") == ZEPHYRUM);
         CREDO_NIHIL (materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_IDENTIFICATOR));
+            (s32)LEXICON_C89_GENUS_IDENTIFICATOR));
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_SPATIA), " ") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_SPATIA), " ") == ZEPHYRUM);
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_NOVA_LINEA), "\n") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_NOVA_LINEA), "\n") == ZEPHYRUM);
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_CONTINUATIO), "\\\n") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_CONTINUATIO), "\\\n") == ZEPHYRUM);
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
-            (i32)LEXICON_C89_GENUS_EOF), "") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_EOF), "") == ZEPHYRUM);
 
         /* Munera propria */
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
-            (i32)LEXICON_C89_GENUS_NOVA_LINEA), (s32)MATERIA_MUNUS_LINEA);
+            (s32)LEXICON_C89_GENUS_NOVA_LINEA), (s32)MATERIA_MUNUS_LINEA);
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
-            (i32)LEXICON_C89_GENUS_CONTINUATIO), (s32)MATERIA_MUNUS_LAMINA);
+            (s32)LEXICON_C89_GENUS_CONTINUATIO), (s32)MATERIA_MUNUS_LAMINA);
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
-            (i32)LEXICON_C89_GENUS_COMMENTUM_LINEA),
+            (s32)LEXICON_C89_GENUS_COMMENTUM_LINEA),
             (s32)MATERIA_MUNUS_COMMENTUM);
 
         /* textum_fert: VERBATIM sola. Commenta VERUM, spatia FALSUM -
          * id est ipsa divergentia a valor_portandus (quae utrisque
          * VERUM dabat) quam descriptor tollit. */
         CREDO_VERUM  (materia_lexicon_textum_fert(&ratum,
-            (i32)LEXICON_C89_GENUS_COMMENTUM_CLAUSUM));
+            (s32)LEXICON_C89_GENUS_COMMENTUM_CLAUSUM));
         CREDO_VERUM  (materia_lexicon_textum_fert(&ratum,
-            (i32)LEXICON_C89_GENUS_IDENTIFICATOR));
+            (s32)LEXICON_C89_GENUS_IDENTIFICATOR));
         CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
-            (i32)LEXICON_C89_GENUS_SPATIA));
+            (s32)LEXICON_C89_GENUS_SPATIA));
         CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
-            (i32)LEXICON_C89_GENUS_NOVA_LINEA));
+            (s32)LEXICON_C89_GENUS_NOVA_LINEA));
         CREDO_FALSUM (materia_lexicon_textum_fert(&ratum,
-            (i32)LEXICON_C89_GENUS_AUTO));
+            (s32)LEXICON_C89_GENUS_AUTO));
 
         /* trivium_est: commenta ET spatia, non identificator */
         CREDO_VERUM  (materia_lexicon_trivium_est(&ratum,
-            (i32)LEXICON_C89_GENUS_COMMENTUM_CLAUSUM));
+            (s32)LEXICON_C89_GENUS_COMMENTUM_CLAUSUM));
         CREDO_VERUM  (materia_lexicon_trivium_est(&ratum,
-            (i32)LEXICON_C89_GENUS_SPATIA));
+            (s32)LEXICON_C89_GENUS_SPATIA));
         CREDO_FALSUM (materia_lexicon_trivium_est(&ratum,
-            (i32)LEXICON_C89_GENUS_IDENTIFICATOR));
+            (s32)LEXICON_C89_GENUS_IDENTIFICATOR));
 
         /* Genus extra fines: nihil, non ruina */
         CREDO_NIHIL (materia_lexicon_titulus(&ratum,
-            (i32)LEXICON_C89_NUMERUS_GENERUM));
+            (s32)LEXICON_C89_NUMERUS_GENERUM));
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_species(&ratum,
-            (i32)LEXICON_C89_NUMERUS_GENERUM),
+            (s32)LEXICON_C89_NUMERUS_GENERUM),
             (s32)MATERIA_LEX_NUMERUS_SPECIERUM);
 
         /* DISTRIBUTIO - mensurata 2026-08-27 ante furcam.
          * Numeri pinnati: generatio quae eos movet AUDIRI debet. */
-        per (i = ZEPHYRUM; i < (i32)LEXICON_C89_NUMERUS_GENERUM; i++)
+        per (i = ZEPHYRUM; i < (s32)LEXICON_C89_NUMERUS_GENERUM; i++)
         {
-            commutatio ((s32)materia_lexicon_species(&ratum, i))
+            commutatio ((s32)materia_lexicon_species(&ratum, (s32)i))
             {
             casus (s32)MATERIA_LEX_VERBATIM:   numerus_verbatim++;   frange;
             casus (s32)MATERIA_LEX_FIXUM:      numerus_fixum++;      frange;
@@ -345,7 +345,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (numerus_terminator, (i32)2);
         CREDO_AEQUALIS_I32 (numerus_verbatim + numerus_fixum
                           + numerus_repetitum + numerus_terminator,
-                            (i32)LEXICON_C89_NUMERUS_GENERUM);
+                            (s32)LEXICON_C89_NUMERUS_GENERUM);
     }
 
 
