@@ -597,3 +597,72 @@ that produced today's false green by a different route.
 NEXT: the arbor READER (STML -> arbor), then the shim extended to
 compare STML documents and finally to round-trip — which is the phase
 gate proper.
+
+========================================================================
+PHASIS I.3c — MATERIA_ARBOR, LECTOR + CIRCUITUS. RELATIO (2026-08-27)
+========================================================================
+
+Suite 5/5, 321 assertions, exit 0. Shim gate 346/346. materia_arbor is
+now 2,595 lines and the STML round trip closes.
+
+WHAT THE READER NEEDED THAT THE WRITER DID NOT
+
+Four hooks, all mirrors of writer-side concerns except the last:
+
+  attributa_legere  <- attributa_ornare      (C89: `standard`)
+  liberum_legere    <- liberos_ornare        (scissurae, origo)
+  cursorem_movere   -- NEW                   (C89 splices cover more
+                                              bytes than the value)
+  perficere         -- NEW                   (silva calls
+                                              silva_committere here)
+
+`liberum_legere` returns a TRI-STATE, not a bool: IGNOTUM / ACCEPTUM /
+FRACTUM. A bool cannot distinguish "the frontend does not recognise
+this element" from "the frontend recognised it and it was malformed" —
+and collapsing them means either materia silently accepts unknown
+elements or it reports the frontend's error as its own.
+
+LACUNAE: the reader-side twin of reinserenda. Same shape, opposite
+direction — reinserenda WRITE foreign bytes, lacunae make the cursor
+JUMP them. Both are now config fields rather than hardcoded NIHIL.
+Carried over with silva's hard-won note: a lacuna needs a FONS, because
+byte 192 of file 2 and byte 192 of file 6 have nothing in common
+(silva measured 4 files, delta 835, from exactly that).
+
+MUNUS LINEA vs LAMINA EARNS ITS KEEP. `_trivium_ponere` sets
+post_lineam only for munus LINEA, never LAMINA — a C89 continuation
+advances the physical line but not the logical one. That distinction
+was designed in materia_lexicon on the strength of a single silva
+site; here is the second consumer, and it needed exactly the split
+that was already there.
+
+THE ROUND TRIP IS TESTED TWICE, DELIBERATELY. A defect that COMPOUNDS
+(a position off by one, a dropped trivium) often survives one cycle
+and only shows on the second: write->read once returns the document's
+own shape; twice returns the shape of its shape. Both cycles asserted
+byte-identical against the first document. Derived positions asserted
+too — the document carries no positions but the anchor, so the reader
+reconstructs them, and the leading trivium must land at 0 with its
+token at 4.
+
+A CRASH, AND THE RIGHT FIX FOR IT
+
+First run: EXC_BAD_ACCESS in xar_numerus, via _positiones_lexematis.
+Cause: I added `lacunae` to MateriaArborConsilium and did not add it to
+materia_arbor_consilium_nudum. The constructor enumerated fields, so a
+new field arrived UNINITIALISED — and uninitialised garbage in an Xar*
+is a wild pointer the moment anything reads it.
+
+The point fix is one line. The CLASS fix is memset-then-assign, applied
+to BOTH consilium constructors: zero the struct, then set only the
+fields whose default is not zero. An enumerating constructor invites
+this every time a field is added; a memset makes the omission harmless.
+Both constructors now carry the note.
+
+Worth naming as a rule: a zero-constructor that lists fields is a
+maintenance trap. Zero the whole thing first, then override.
+
+NEXT: extend the shim to compare STML documents (writer) and then to
+round-trip real C89 (reader) — which needs the C89 MateriaArborFrons,
+i.e. porting `_origo_scribere` / `_origo_legere` / `_extentum_*` into
+the shim as frontend hooks. That closes the phase gate: 281/281.

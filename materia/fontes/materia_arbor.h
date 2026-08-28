@@ -137,6 +137,19 @@ materia_arbor_lexema_ex_tag (
                              i32  mensura);
 
 
+/* Declarationes anticipatae: Frons utramque partem (scripturam et
+ * lectionem) tangit, ergo ante utramque stare debet. */
+nomen structura MateriaArborLector MateriaArborLector;
+
+nomen structura {
+    s32 offset;
+    i32 linea;
+    i32 columna;
+    b32 post_lineam;   /* nova linea LOGICA visa */
+    b32 sedes_notae;   /* ancora adest: ordinatas scribere licet */
+} MateriaArborCursor;
+
+
 /* ==================================================
  * Frons - quod lingua de lexemate scribit quod materia nescit
  * ================================================== */
@@ -180,6 +193,38 @@ nomen structura {
         MateriaArborScriptor* scriptor,
         StmlNodus* elementum,
         constans MateriaToken* lexema);
+
+    /* --- lectio, specula scripturae --- */
+
+    /* Attributa frontis propria ex elemento (C89: standard). */
+    b32 (*attributa_legere)(
+        vacuum* datum,
+        MateriaArborLector* lector,
+        constans StmlNodus* elementum,
+        MateriaToken* lexema);
+
+    /* Liberum quod materia non agnoscit (C89: scissura, expansio,
+     * pasta, stringificatio, api). Tri-status - vide
+     * MateriaLectioFructus. */
+    s32 (*liberum_legere)(
+        vacuum* datum,
+        MateriaArborLector* lector,
+        constans StmlNodus* liberum,
+        MateriaToken* lexema);
+
+    /* Cursorem per octetos lexematis movere. VERUM = frons id egit
+     * (C89: scissurae laminas reinserunt, ergo plus quam valor);
+     * FALSUM = materia valorem simpliciter percurrat. */
+    b32 (*cursorem_movere)(
+        vacuum* datum,
+        MateriaArborCursor* cursor,
+        constans MateriaToken* lexema);
+
+    /* Post arborem lectam et positiones derivatas. NIHIL licet. */
+    b32 (*perficere)(
+        vacuum* datum,
+        MateriaArborLector* lector,
+        MateriaNodus* radix);
 } MateriaArborFrons;
 
 
@@ -212,6 +257,10 @@ nomen structura {
                 InternamentumChorda*  intern;     /* NIHIL = pigre */
                                  b32  templa_activa;
                                  b32  sedes_colligere;
+
+    /* LECTIO: Xar de MateriaLacuna, per offset ORDINATUS. NIHIL
+     * licet (casus subarboris). */
+                                Xar*  lacunae;
 } MateriaArborConsilium;
 
 vacuum
@@ -226,5 +275,80 @@ materia_arbor_scribere_nodum (
                         Piscina* piscina,
           constans MateriaNodus* nodus,
     constans MateriaArborConsilium* consilium);
+
+
+
+/* ==================================================
+ * LECTOR: STML canonicum -> arbor
+ * ================================================== */
+
+nomen structura {
+    constans character* causa;   /* NIHIL = sanum */
+                   i32  linea;   /* linea documenti */
+} MateriaArborVitium;
+
+/* LACUNA: intervallum octetorum quod ARBORI non pertinet sed in
+ * fluxu INTER lexemata eius iacet. Gemella reinserendorum
+ * (materia_scribere.h) in latere LECTIONIS: illa octetos alienos
+ * SCRIBIT, haec cursorem trans eos SALIRE facit.
+ *
+ * CUR OPUS SIT: arbor octetos suos CONTIGUOS emittit, sed in
+ * plagula vera lexemata eius interrumpi possunt. Sine lacunis
+ * lexema post interruptionem sedem nimis parvam accipit.
+ *
+ * FONS NECESSARIUS: offset sine fonte SENSU CARET - octetus CXCII
+ * plagulae II et octetus CXCII plagulae VI nihil commune habent.
+ * Silva id dura via didicit (MENSURATUM: IV plagulae, delta
+ * DCCCXXXV, quia lacuna plagulae principis lexemati capitis
+ * applicabatur). */
+nomen structura {
+    s32 offset;                 /* initium */
+    s32 finis;                  /* post ultimum octetum */
+    i32 linea_finalis;
+    i32 columna_finalis;
+    b32 post_lineam_finalis;
+    s32 fons;                   /* -I = quaelibet */
+} MateriaLacuna;
+
+/* Cursor derivationis (MateriaArborCursor) supra declaratus est:
+ * documentum positiones NON fert - involucrum ancoram solam - ergo
+ * eas hic reficimus. Lex: documentum canonicum mentiri non possit.
+ * PUBLICUS quia frons eum movere potest (C89: scissurae plus quam
+ * valorem tegunt). */
+
+Piscina*
+materia_arbor_lector_piscina (MateriaArborLector* lector);
+
+/* Semper FALSUM reddit, ut vocantes 'redde ...recusare(...)'
+ * scribere possint. PRIMA causa vincit - profundissima est et
+ * proxima vero vitio. */
+b32
+materia_arbor_lector_recusare (
+     MateriaArborLector* lector,
+     constans character* causa,
+                    i32  linea);
+
+/* Numerum decimalem ex chorda attributi; FALSUM si non totus. */
+b32
+materia_arbor_numerus_ex_chorda (
+    constans chorda* valor,
+                i32* exitus);
+
+/* Tri-status: frons 'ignotum' a 'fractum' DISCERNERE debet -
+ * aliter materia elementum ignotum tacite acciperet aut frontis
+ * vitium ut suum nuntiaret. */
+nomen enumeratio {
+    MATERIA_LECTIO_IGNOTUM = 0,  /* frons hoc non agnoscit */
+    MATERIA_LECTIO_ACCEPTUM,     /* agnitum et lectum */
+    MATERIA_LECTIO_FRACTUM       /* agnitum sed pravum */
+} MateriaLectioFructus;
+
+MateriaNodus*
+materia_arbor_legere (
+                        Piscina* piscina,
+            InternamentumChorda* intern,
+                          chorda textus,
+    constans MateriaArborConsilium* consilium,
+             MateriaArborVitium* vitium);
 
 #endif /* MATERIA_ARBOR_H */

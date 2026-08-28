@@ -279,6 +279,150 @@ MateriaLexiconRatum  ratum;
     }
 
 
+    /* ========================================================
+     * PROBARE: CIRCUITUS - scribe, lege, scribe iterum
+     *
+     * DUO circuitus, non unus. Vitium quod se COMPOUNDAT (sedes
+     * per unum octetum lapsae, trivium amissum) primo circuitu
+     * saepe latet et secundo apparet: 'scribe -> lege' semel
+     * documentum SUUM reddit, bis documentum SUI DOCUMENTI.
+     * (Lex ex stml-text-semantics: 'circuitus unus testimonium
+     * NON est cum vitium compoundat'.)
+     * ======================================================== */
+    {
+        MateriaArborConsilium c;
+        MateriaNodus*         n;
+        MateriaToken*         t1;
+        MateriaToken*         t2;
+        MateriaToken*         tr[2];
+        MateriaArborScriptura s1;
+        MateriaArborScriptura s2;
+        MateriaArborScriptura s3;
+        MateriaNodus*         lecta;
+        MateriaNodus*         lecta2;
+        MateriaArborVitium    vitium;
+
+        imprimere("\n--- Probans circuitum (BIS) ---\n");
+
+        /* '    a+b' : trivium ducens, duo lexemata, unum fixum */
+        tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I, (i32)I);
+        t1    = _lex(piscina, (s32)G_IDENT, "a", (s32)4, (i32)I, (i32)5);
+        t2    = _lex(piscina, (s32)G_PLUS,  "+", (s32)5, (i32)I, (i32)6);
+        CREDO_VERUM (materia_token_trivia_ante_ponere(t1, piscina, tr, (i32)I));
+
+        n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
+            materia_valor_token(t1), MATERIA_LOCUS_LISTA_MIXTA));
+        CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
+            materia_valor_token(t2), MATERIA_LOCUS_LISTA_MIXTA));
+
+        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        s1 = materia_arbor_scribere_nodum(piscina, n, &c);
+        CREDO_VERUM (s1.successus);
+
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c, &vitium);
+        CREDO_NON_NIHIL (lecta);
+        CREDO_NIHIL (vitium.causa);
+
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        CREDO_VERUM (s2.successus);
+        CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
+        CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
+            (size_t)s1.textus.mensura) == ZEPHYRUM);
+
+        /* CIRCUITUS SECUNDUS */
+        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c, &vitium);
+        CREDO_NON_NIHIL (lecta2);
+        s3 = materia_arbor_scribere_nodum(piscina, lecta2, &c);
+        CREDO_VERUM (s3.successus);
+        CREDO_AEQUALIS_I32 (s3.textus.mensura, s1.textus.mensura);
+        CREDO_VERUM (memcmp(s1.textus.datum, s3.textus.datum,
+            (size_t)s1.textus.mensura) == ZEPHYRUM);
+
+        /* SEDES DERIVATAE: documentum eas non fert, lector eas
+         * reficit. Lexema primum ad IV (post trivium), '+' ad V. */
+        {
+            MateriaValor* e0 = materia_valor_lista_obtinere(lecta->loci[0],
+                ZEPHYRUM);
+            MateriaValor* e1 = materia_valor_lista_obtinere(lecta->loci[0],
+                (i32)I);
+
+            CREDO_NON_NIHIL (e0);
+            CREDO_NON_NIHIL (e1);
+            CREDO_AEQUALIS_S32 (e0->datum.token->byte_offset, (s32)4);
+            CREDO_AEQUALIS_I32 (e0->datum.token->columna, (i32)5);
+            CREDO_AEQUALIS_S32 (e1->datum.token->byte_offset, (s32)5);
+            /* trivium ducens ad ZEPHYRUM - ubi emissio incipit */
+            CREDO_AEQUALIS_S32 (e0->datum.token->spatia_ante[0]->byte_offset,
+                ZEPHYRUM);
+            /* PATER fixus */
+            CREDO_NIHIL (lecta->pater);
+        }
+    }
+
+
+    /* ========================================================
+     * PROBARE: custodiae lectoris
+     * ======================================================== */
+    {
+        MateriaArborConsilium c;
+        MateriaArborVitium    vitium;
+        MateriaNodus*         n;
+        MateriaArborScriptura s;
+
+        imprimere("\n--- Probans custodias lectoris ---\n");
+        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+
+        n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
+            materia_valor_token(_lex(piscina, (s32)G_IDENT, "q",
+                ZEPHYRUM, (i32)I, (i32)I)), MATERIA_LOCUS_LISTA_MIXTA));
+        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        CREDO_VERUM (s.successus);
+
+        /* STML pravum */
+        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
+            chorda_ex_literis("<arbor", piscina), &c, &vitium));
+        CREDO_NON_NIHIL (vitium.causa);
+
+        /* involucrum alienum */
+        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL,
+            chorda_ex_literis("<aliud/>", piscina), &c, &vitium));
+        CREDO_NON_NIHIL (vitium.causa);
+
+        /* grammatica dispar - documentum sanum, nomen aliud */
+        c.grammatica = "aliud";
+        CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus, &c,
+            &vitium));
+        CREDO_NON_NIHIL (vitium.causa);
+        c.grammatica = "probatio";
+
+        /* SIGILLUM: registrum ALIUD, arbor eadem. Vocabulario falso
+         * iudicata arbor mendacium est - ergo recusatur. */
+        {
+            hic_manens constans MateriaTabLocus L2[] = {
+                { "alius", (s32)MATERIA_LOCUS_LISTA_MIXTA }
+            };
+            hic_manens constans MateriaTabGenus G2[] = {
+                { "radix", ZEPHYRUM, (i32)I }
+            };
+            hic_manens constans MateriaRegistrumCoctum REG2 = {
+                G2, (i32)I, L2, (i32)I
+            };
+
+            c.tabularium = &REG2;
+            CREDO_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
+                &c, &vitium));
+            CREDO_NON_NIHIL (vitium.causa);
+            c.tabularium = &REG;
+        }
+
+        /* sanum iterum - custodiae statum non corruperunt */
+        CREDO_NON_NIHIL (materia_arbor_legere(piscina, NIHIL, s.textus,
+            &c, &vitium));
+    }
+
+
     imprimere("\n");
     credo_imprimere_compendium();
 

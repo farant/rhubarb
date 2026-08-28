@@ -421,11 +421,10 @@ materia_scriptura_consilium_nudum (
     {
         redde;
     }
+    /* MEMSET PRIMUM: campus consilio additus sed hic oblitus
+     * garbage fert. Deinde campi quorum ordinarium NON zephyrum est. */
+    memset(consilium, ZEPHYRUM, magnitudo(*consilium));
     consilium->tabularium       = tabularium;
-    consilium->origo            = NIHIL;
-    consilium->valorem_emittere = NIHIL;
-    consilium->valorem_datum    = NIHIL;
-    consilium->reinserenda      = NIHIL;
     consilium->fons_index       = (s32)-I;
 }
 
