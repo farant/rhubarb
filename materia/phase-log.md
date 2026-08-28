@@ -666,3 +666,65 @@ NEXT: extend the shim to compare STML documents (writer) and then to
 round-trip real C89 (reader) — which needs the C89 MateriaArborFrons,
 i.e. porting `_origo_scribere` / `_origo_legere` / `_extentum_*` into
 the shim as frontend hooks. That closes the phase gate: 281/281.
+
+========================================================================
+PHASIS I — SHIM STML: CCCXLV/CCCXLV. RELATIO (2026-08-27)
+========================================================================
+
+`./materia/shim_probare.sh -stml`: **345/345 STML documents
+byte-identical to silva's**, over the same 336 real files, alongside
+346/346 on byte emission. materia suite 5/5.
+
+THE METHOD THAT MADE THIS CHEAP
+
+I did NOT port silva's 340 lines of origin serialization first. I wired
+a MINIMAL C89 frontend — `standard` only — and let the comparison say
+what was missing. It said, precisely:
+
+  macro obiectum/functio/nidificata   origin chains absent
+  lamina intra lexema                 scissurae absent
+
+Nothing else. Six of ten cases were already byte-identical, which meant
+trivia, fragments, transclusions, anchors, sigillum and attribute
+ORDER were all correct before a line of origin code existed. That is
+the difference between porting 340 lines blind and porting them against
+a list.
+
+THREE DEFECTS THE ORACLE FOUND THAT A FIXTURE WOULD NOT HAVE
+
+1. **Raw marker missing on trivia values.** silva emits
+   `<lex-commentum-clausum!>`; materia emitted it unmarked. I had
+   dropped `_valorem_crudum_notare` from `_trivium_scribere`'s VERBATIM
+   branch when porting. It matters: without the raw genus the pretty
+   printer may REFLOW a comment, and comment bytes are code, not prose.
+   A fixture I wrote would have had whatever I believed; silva had what
+   is true.
+
+2. **`sedes_quaerere` left NIHIL made every token look source-origin.**
+   The writer carries `b`/`linea`/`columna` only for DERIVED tokens, and
+   with the hook unset `est_fons` was always VERUM, so those attributes
+   silently vanished. The sedes hook is load-bearing for the WRITER too,
+   not only for node queries — which the design note did not say.
+
+3. **API gap: the reader had nowhere to put what a frontend reads.**
+   `_lexema_legere` created tokens with `NIHIL` forma, i.e. no tail. A
+   frontend's `liberum_legere` could parse origin and then have nowhere
+   to store it. `MateriaArborConsilium` now carries a
+   `MateriaTokenForma`. Found only by trying to use both sides; a test
+   that exercises one direction cannot surface it.
+
+AND ONE IN THE HARNESS. `shim_probare.sh -stml` treated `-stml` as a
+FILE, so the default corpus was replaced by nothing and only the ten
+inline cases ran — reporting a cheerful `idem 10, dispar 0`. Flags and
+files are now separated. A gate that quietly shrinks its own corpus
+reports success for work it never did; this is the same family as the
+false green and the false red, and it is the third member found today.
+
+CARRIED FORWARD, NOT YET USED: silva's note that the extent lamina's
+HEAD *IS* the invocation object — identity, not equality — because the
+emitter looks up extents by pointer. Silva measured 4 files failing
+from exactly that. The reader-side port must honour it.
+
+NEXT: the reader-side C89 frontend (`_origo_legere`, `_extentum_legere`,
+scissurae, cursor advance), then the full round trip. That closes the
+phase gate.

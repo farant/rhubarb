@@ -22,7 +22,7 @@ if [ -z "$OBIECTA" ]; then
     exit 2
 fi
 
-for m in materia_token materia_nodus materia_scribere; do
+for m in materia_token materia_nodus materia_scribere materia_arbor materia_lexicon; do
     src="$RADIX/materia/fontes/$m.c"
     obj="$BUILD/$m.o"
     if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
@@ -34,17 +34,38 @@ for m in materia_token materia_nodus materia_scribere; do
     fi
 done
 
+if [ ! -f "$BUILD/lexicon_c89.o" ] \
+   || ! [ "$BUILD/lexicon_c89.o" -nt "$RADIX/materia/probationes/lexicon_c89.c" ]; then
+    clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
+          -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
+          -Wmissing-prototypes -Wwrite-strings -Wno-long-long \
+          -I"$RADIX/include" -I"$RADIX/materia/fontes" \
+          -I"$RADIX/materia/probationes" \
+          -c "$RADIX/materia/probationes/lexicon_c89.c" \
+          -o "$BUILD/lexicon_c89.o" || { echo "FRACTA: lexicon_c89.c" >&2; exit 1; }
+fi
+
 BIN="$BUILD/shim_c89"
 clang -std=c89 -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 \
   -I"$RADIX/include" -I"$RADIX/silva/fontes" -I"$RADIX/silva/instrumenta" \
-  -I"$RADIX/materia/fontes" \
+  -I"$RADIX/materia/fontes" -I"$RADIX/materia/probationes" \
   "$RADIX/materia/instrumenta/shim_c89.c" \
   "$BUILD/materia_token.o" "$BUILD/materia_nodus.o" "$BUILD/materia_scribere.o" \
+  "$BUILD/materia_arbor.o" "$BUILD/materia_lexicon.o" "$BUILD/lexicon_c89.o" \
   $OBIECTA -o "$BIN" || { echo "FRACTA: nexus shim" >&2; exit 1; }
 
-if [ $# -gt 0 ]; then
-    PLAGULAE=("$@")
-else
+# Vexilla a plagulis SEPARANDA: '-stml' corpus ordinarium tollere
+# non debet (id semel me fefellit - X casus inlinei soli cucurrerunt
+# et 'idem 10' viride videbatur).
+VEXILLA=()
+PLAGULAE=()
+for a in "$@"; do
+    case "$a" in
+        -*) VEXILLA+=("$a") ;;
+        *)  PLAGULAE+=("$a") ;;
+    esac
+done
+if [ "${#PLAGULAE[@]}" -eq 0 ]; then
     PLAGULAE=($(ls "$RADIX"/lib/*.c "$RADIX"/include/*.h "$RADIX"/silva/fontes/*.c 2>/dev/null))
 fi
 if [ "${#PLAGULAE[@]}" -eq 0 ]; then
@@ -52,4 +73,4 @@ if [ "${#PLAGULAE[@]}" -eq 0 ]; then
     exit 2
 fi
 
-"$BIN" "${PLAGULAE[@]}"
+"$BIN" "${VEXILLA[@]}" "${PLAGULAE[@]}"

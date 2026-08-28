@@ -595,6 +595,17 @@ _trivium_scribere (MateriaArborScriptor* st, constans MateriaToken* trivium)
                 st->causa = "textus trivii addi non potuit";
                 redde NIHIL;
             }
+            /* OCTETI CODICIS, NON PROSA. Commentum ut textus nudus
+             * scriptum a pulchro RE-IMPLERI potest; genus crudum id
+             * prohibet. Silva id agit et ego portans OMISI - shim
+             * differentiam cepit ('<lex-commentum-clausum!>' contra
+             * sine '!'), quod est ipsum officium oraculi separantis:
+             * fixtura a me scripta hunc campum non habuisset. */
+            si (!_valorem_crudum_notare(st, elementum, tag,
+                     &trivium->valor))
+            {
+                redde NIHIL;
+            }
         }
         frange;
     }
@@ -627,6 +638,11 @@ _vocatio_spatiorum (MateriaArborScriptor* st, constans character* praefixum,
     st->census.spatia_vocationes++;
     redde stml_transclusionem_creare(st->piscina, st->intern, valor);
 }
+
+interior StmlNodus* _scribere_lexema (MateriaArborScriptor*,
+    constans MateriaToken*);
+interior MateriaToken* _lexema_legere (MateriaArborLector*, StmlNodus*,
+    chorda*);
 
 interior StmlNodus*
 _involucrum_triviorum (
@@ -688,6 +704,22 @@ _involucrum_triviorum (
 /* ==================================================
  * Lexema
  * ================================================== */
+
+StmlNodus*
+materia_arbor_lexema_scribere (MateriaArborScriptor* scriptor,
+                               constans MateriaToken* lexema)
+{
+    si (scriptor == NIHIL) { redde NIHIL; }
+    redde _scribere_lexema(scriptor, lexema);
+}
+
+MateriaToken*
+materia_arbor_lexema_legere (MateriaArborLector* lector,
+                             StmlNodus* elementum, chorda* fragmenti_id)
+{
+    si (lector == NIHIL || elementum == NIHIL) { redde NIHIL; }
+    redde _lexema_legere(lector, elementum, fragmenti_id);
+}
 
 interior StmlNodus*
 _scribere_lexema (MateriaArborScriptor* st, constans MateriaToken* lexema)
@@ -1545,7 +1577,8 @@ _trivium_legere (MateriaArborLector* lector, StmlNodus* elementum)
         frange;
     }
 
-    redde materia_token_creare(lector->piscina, NIHIL, genus, valor,
+    redde materia_token_creare(lector->piscina,
+        &lector->consilium->forma, genus, valor,
         (s32)-I, ZEPHYRUM, ZEPHYRUM, lector->fons_ordinarius);
 }
 
@@ -1734,7 +1767,8 @@ _lexema_legere (MateriaArborLector* lector, StmlNodus* elementum,
         }
     }
 
-    lexema = materia_token_creare(lector->piscina, NIHIL, genus, valor,
+    lexema = materia_token_creare(lector->piscina,
+        &lector->consilium->forma, genus, valor,
         (s32)-I, ZEPHYRUM, ZEPHYRUM, lector->fons_ordinarius);
     si (lexema == NIHIL)
     {

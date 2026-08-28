@@ -96,6 +96,7 @@ nomen structura {
  * ================================================== */
 
 nomen structura MateriaArborScriptor MateriaArborScriptor;
+nomen structura MateriaArborLector   MateriaArborLector;
 
 Piscina*
 materia_arbor_scriptor_piscina (MateriaArborScriptor* scriptor);
@@ -118,6 +119,26 @@ materia_arbor_attributum_numeri (
       constans character* titulus,
                      i32  numerus);
 
+/* SUTURA RECURSIONIS. Catenae originis lexemata INTRA lexemata
+ * nestant (C89: <expansio> invocationem suam plenam fert, cum
+ * triviis), ergo frons scriptorem/lectorem lexematis RE-INTRARE
+ * potest. Sine his uncus 'liberos_ornare' elementum lexematis
+ * fabricare NON posset et frons scriptorem suum duplicaret -
+ * secunda descriptio quae a prima divergeret.
+ *
+ * Fragmenta et transclusiones per has vias UNA machina tractantur:
+ * lexema iam scriptum transclusionem reddit, identitate servata. */
+StmlNodus*
+materia_arbor_lexema_scribere (
+    MateriaArborScriptor* scriptor,
+   constans MateriaToken* lexema);
+
+MateriaToken*
+materia_arbor_lexema_legere (
+    MateriaArborLector* lector,
+             StmlNodus* elementum,
+                chorda* fragmenti_id);
+
 /* Tag lexematis ex genere mangulatum (praefixum lexici + titulus
  * minusculus, '_' -> '-'). ZEPHYRUM = genus ignotum. */
 i32
@@ -137,10 +158,8 @@ materia_arbor_lexema_ex_tag (
                              i32  mensura);
 
 
-/* Declarationes anticipatae: Frons utramque partem (scripturam et
- * lectionem) tangit, ergo ante utramque stare debet. */
-nomen structura MateriaArborLector MateriaArborLector;
-
+/* Cursor: Frons utramque partem (scripturam et lectionem) tangit,
+ * ergo ante utramque stare debet. */
 nomen structura {
     s32 offset;
     i32 linea;
@@ -261,6 +280,13 @@ nomen structura {
     /* LECTIO: Xar de MateriaLacuna, per offset ORDINATUS. NIHIL
      * licet (casus subarboris). */
                                 Xar*  lacunae;
+
+    /* LECTIO: forma lexematum creandorum. Sine hac lector lexemata
+     * SINE cauda creat et frons quod legit reponere NON habet -
+     * uncus 'liberum_legere' scribere posset sed non conservare.
+     * Hiatus API inventus dum shim C89 scriberetur: probatio quae
+     * unum latus solum exercet eum non ostendisset. */
+                  MateriaTokenForma  forma;
 } MateriaArborConsilium;
 
 vacuum
