@@ -809,3 +809,177 @@ round trip) and weaker in kind: it runs materia's writer/reader beside
 silva's, rather than silva's suites ON materia. Closing that is phase 5
 (migration), not phase 1. Phase 1's stated gate — "a C89 shim passes
 the round trip through materia, without migrating silva" — is MET.
+
+
+########################################################################
+PHASIS I — RELATIO OMNIUM (2026-08-27)
+########################################################################
+
+GATE MET, as written: "a C89 shim passes the round trip through
+materia, without migrating silva."
+
+  ./materia/shim_probare.sh          346/346 octeti      exit 0
+  ./materia/shim_probare.sh -stml    345/345 STML
+                                     345/345 circuitus bis
+  ./materia/compile_probationes.sh   5/5, 321 assertions
+  ./silva/compile_probationes.sh     50/50
+
+Ten commits, 8f189369..27ac1e91. materia 5,256 lines across five
+modules; 2,994 lines of tests and instruments.
+
+WHAT IS *NOT* PORTED — read this before believing the above
+
+  arbor_aequalitas  1,000 lines   not started
+  quaestio          2,106         not started
+  quaestiones         942         not started
+  commissio           828         not started
+  contextus           281         not started
+  nodus' five query families      DESIGNED (the sedes hook) but NOT
+                                  ported: extensionem,
+                                  extensionem_lineis, est_fons_purus,
+                                  geometria_fida, commentarium_ducens
+
+materia is ~60% of the substrate by line count and **0% of the query
+surface** — which is what the LSP, formator and tools actually consume.
+"Phase 1 gate met" is true. "materia is nearly done" is not.
+
+THE DIVERGENCES FROM SILVA, and they are all at ONE seam
+
+Nothing changed in the wire format or the tree model; the gate enforces
+that. Everything that changed sits between "substrate" and "language".
+
+  NEW MODELLING
+   1 lexicon descriptor: three hand-maintained tables + a 95-genus
+     guard test -> one table on two axes (species x munus) with a
+     load-time invariant. The only place I designed rather than
+     ported, and it paid twice: LINEA vs LAMINA was split on ONE
+     silva site and a second consumer then needed exactly that split.
+   2 token layout 128 -> 64 bytes (RP 14-17 taken, because the fork
+     pays their churn regardless)
+
+  INVERSIONS (same behaviour, control moved outward)
+   3 origin: three hooks, not a struct field read inline
+   4 MateriaArborFrons: six hooks for what silva does in the walker
+   5 ambiguus OPTIONAL; silva's writer requires it
+   6 reinserenda / lacunae as config, not hardcoded NIHIL
+   7 fons_index opaque - no SilvaFons at all
+
+  SIMPLIFICATIONS THE FORK ENABLED
+   8 one emission path, not two (silva's FONS branch is radix==token)
+   9 fragment opening moved INTO the exported seam, so silva's
+     31-file bug is structurally unavailable to a frontend
+
+ASSESSMENT OF THE PREMISE
+
+Feasibility validated. Worth NOT yet validated, and the distinction
+matters.
+
+The byte-identical result is simultaneously the strongest and the
+weakest evidence. Strongest: nothing was lost, and the seam suffices
+for the hardest client that exists. Weakest: materia currently does
+exactly what silva does. Phase 1 produced no new capability BY DESIGN,
+so the entire payoff is deferred to clients that do not exist.
+
+For: the decomposition is real — three independent measurements (M4's
+include split, phase 0.1's `_parsura_` boundary, the expandere/parsare
+census) converged on the same two modules, and that convergence was
+found, not constructed. Nine hooks removed a preprocessor from ~3,200
+lines of walker.
+
+Against: the spec mislocated the coupling SIX times, every correction
+in the direction of MORE coupling than predicted, in places the
+measurement had not looked. Nothing fatal — but phases 2-5 estimates
+deserve the same discount, especially `quaestio` (2,106 lines,
+unmeasured, and the surface everything downstream uses).
+
+The real payoff claim, stated so it can be tested: materia gives every
+new language the arbor/STML projection for free, and per spec par. VIII
+that projection is the novel half of this whole project (tree-sitter,
+Roslyn and rowan all have the uniform-node model; none has a readable,
+diffable, schema-gated serialization). If CSS gets it for the cost of a
+recursive-descent parser, the fork paid. UNTESTED — and phase 3 is what
+tests it.
+
+RISK TO WATCH: materia is 5,256 lines heading for perhaps 9,000, and
+the seam is nine hooks. If CSS and HTML each add two or three more, the
+seam becomes the thing one must understand to use it — the PSI failure
+mode M8 was written against. Each new hook deserves the question: does
+this belong to the SUBSTRATE, or is it a language leaking through?
+
+THE METHOD THAT WORKED, worth carrying into phase 3
+
+  - silva as a SEPARATING ORACLE, never fixtures I wrote. A fixture
+    carries my assumptions; silva carries what is true. It caught a
+    missing raw marker, an unset hook that silently dropped attributes,
+    and a fragment bug silva had already measured.
+  - MINIMAL-THEN-DIAGNOSE, never port-then-hope. A `standard`-only
+    frontend made the STML comparison name the two missing things
+    precisely, turning 340 lines of blind porting into 340 against a
+    list.
+  - PLANT THE FAULT. Every gate this phase was made to fail on purpose
+    before being believed.
+
+AND THE RECURRING DEFECT CLASS, five instances in one phase: stale
+objects (false green), mtime tie (false red), corpus silently emptied
+by a flag, exit code blind to its own findings, empty-array expansion
+under set -u. Not carelessness in any one. The lesson is that a GATE'S
+OWN CORRECTNESS needs the same adversarial treatment as the code it
+guards, and the cheap test is always "make it fail on purpose".
+
+DECISION FOR WHAT FOLLOWS — see the next entry.
+
+
+========================================================================
+DECRETUM — ORDO RETARGETATUS: CSS ANTE FABRUM (Fran, 2026-08-27)
+========================================================================
+
+Spec par. X ordinem ponit: faber (II) -> CSS (III) -> HTML (IV) ->
+silva (V). ORDO MUTATUR: **faber DIFFERTUR; CSS manu scribitur; faber
+ex eo quod CSS revera poposcit ORITUR.**
+
+Tres optiones ponderatae:
+  A  faber prior, ut spec dicit
+  B  silvam migrare prius (gelationem finire)
+  C  fabrum omittere, CSS manu, fabrum ex usu oriri
+
+CUR C. Tria:
+
+ 1. Faber constructores generaret quos NEMO ADHUC ADHIBUIT. Spec
+    par. 5.5 ipsa contra generationem speculativam monet ('generate
+    only what is UNIFORM'), et quod uniforme sit ex UNO cliente sciri
+    non potest. CSS manu scriptum dicet quae pars revera mechanica
+    fuerit; illa sola generanda est.
+
+ 2. Assertio pretii NONDUM PROBATA est - 'materia proiectionem
+    arbor/STML omni linguae GRATIS dat'. C eo citissime pervenit.
+    A moram unius phasis interponit ante rem quae totam furcam
+    iustificat.
+
+ 3. B non urget. Periculum ordinis quod B tolleret ('C89 ultima venit
+    et nihil dicit') porta phasis I sicut DESIGNATA est retiratum -
+    CCCXXXVI plagulae per materiam eunt. Gelatio adhuc vilis est: una
+    emendatio vitii replicata, trivialiter.
+
+SIGNUM QUOD B EXCITET: si gelatio silvae carior fiat - emendationes
+plures replicandae, aut opus in nucleo silvae revera necessarium -
+tunc B ordo rectus fit. Signum NUNC nominatur ne postea inveniendum
+sit.
+
+QUID C POSCAT QUOD NONDUM ADEST. Probandum ANTE inceptum:
+  - CSS registrum HAND-SCRIPTUM (T3 semitam generatam sumebat, quae
+    T1 pendebat, quod RETIRATUM est)
+  - descriptor lexicalis CSS: species x munus. CSS_LEX_SPATIA
+    VERBATIM/SPATIUM est (spatia+tabulae+lineas novas absorbet), ergo
+    munus LINEA DEEST - larva capacitatis id nominatim recusabit, quod
+    RECTUM est, non defectus
+  - constructores manu scripti (faber eos postea generabit)
+  - quaestiones nodi (extensionem etc.) NON portatae sunt: an CSS eas
+    poscat ANTE inceptum quaerendum est. Portae CSS (circuitus
+    octetorum, circuitus STML, canon, selectores) eas fortasse non
+    tangunt.
+
+CONSILIUM CSS (css-arbor-plan.md) BIS RETARGETANDUM. Caput primum
+T1/T4/T5/T6 iam notat; C addit: T3 semitam MANU-SCRIPTAM sumat, et
+omnis mentio 'SilvaLexicon' (T4/T7/T14/T16) ad MateriaLexiconRatum
+vertatur - cuius FORMA ALIA est (species x munus, non genus_eof +
+trivia + numerus_triviorum).

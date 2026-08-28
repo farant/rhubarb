@@ -661,7 +661,28 @@ the mitigation for the ordering risk below.
 **GO/NO-GO.** If the shim cannot reach 281/281, stop and reconsider
 before CSS exists.
 
-### Phase 2 — faber, minimal *(~5 tasks)*
+### ⚠ ORDER RETARGETED 2026-08-27 (Fran) — faber DEFERRED
+
+**CSS is written by hand; faber emerges from what CSS actually needed.**
+Phase 2 below is not next; phase 3 is.
+
+Three options were weighed: (A) faber first as written, (B) migrate
+silva first and end the freeze, (C) skip faber, hand-write CSS.
+
+**C, because:** faber would generate constructors **no one has used
+yet**, and §5.5 already warns against speculative generation — what is
+*uniform* cannot be known from one client. Because the payoff claim
+("materia gives every language the arbor/STML projection for free") is
+**still untested**, and C reaches it fastest. And because B is not
+urgent: the ordering risk it would remove was retired by the phase 1
+gate **exactly as designed** — 336 files round-trip through materia —
+while the freeze has so far cost one bug fix, replayed trivially.
+
+**Trigger that promotes B:** if the freeze gets expensive — more fixes
+needing replay, or work genuinely required inside silva's core — then B
+becomes the right order. Named now so it is not rediscovered later.
+
+### Phase 2 — faber, minimal *(~5 tasks, DEFERRED — see above)*
 
 - 2.1 Registry-only output; `<exitus>` declaration (M6).
 - 2.2 **Typed constructors** (§5.2) — what hand-written parsers need.

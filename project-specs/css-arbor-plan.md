@@ -29,6 +29,24 @@
 > Also superseded: spec D4's placement (`css/` consumes `materia.h`, not
 > `silva.h`) and G1's layering inversion, which is now never incurred.
 > Roughly 13 of 17 tasks stand.
+>
+> ## ⚠ SECOND RETARGET 2026-08-27 — faber DEFERRED, CSS BY HAND
+>
+> The order changed again (materia-spec.md §10 header): faber is
+> deferred and **CSS is written by hand**, so faber can be generated
+> from what CSS actually needed rather than from a guess.
+>
+> | item | now |
+> |---|---|
+> | **T3** registry | **HAND-WRITTEN**, not generated. Its generated path assumed T1, which is retired. The genus enum is hand-written too — so unlike silva it *can* have a typedef and a count member; the plan's warnings about the anonymous enum no longer bind. |
+> | every `SilvaLexicon` reference (T4, T7, T14, T16) | → `MateriaLexiconRatum`, and **the shape is different**: two axes (`species` × `munus`), not `genus_eof` + `trivia` + `numerus_triviorum` + `orthographia`. Re-read `materia_lexicon.h` before using these tasks. |
+> | CSS's own descriptor | `CSS_LEX_SPATIA` is `VERBATIM`/`SPATIUM` (it absorbs spaces, tabs **and** newlines), so **munus `LINEA` is absent**. The capability mask will refuse line-sensitive capabilities by name — that is correct behaviour, not a defect. |
+>
+> **Unmeasured before starting:** materia's node query families
+> (`extensionem`, `est_fons_purus`, `geometria_fida`,
+> `commentarium_ducens`) are **not ported**. CSS's stated gates (byte
+> round trip, STML round trip, canon, selectors) may not need them —
+> check before assuming either way.
 
 ## Global Constraints
 
