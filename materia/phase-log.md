@@ -1045,3 +1045,153 @@ depends on the plan and materia's headers, both readable cold, whereas
 the descriptor/registry depended on knowing materia's constraints from
 having just built them. Fresh context spent where only fresh context
 was cheap.
+
+========================================================================
+PHASIS III — CSS: ADAPTATOR + LIGATOR TRIVIORUM. RELATIO (2026-08-27)
+========================================================================
+
+`./css/compile_probationes.sh`: 2/2, 213 + 189 assertiones, exitus 0.
+materia 5/5, silva 50/50.
+
+CONSILII T8 SIGNATURA AGI NON POTEST, ET RATIO STRUCTURALIS EST
+
+T8 unam functionem bimodalem petit —
+`css_adaptare(piscina, lexemata, b32 spatia_ut_contentum)` — quae
+trivia aut absorbeat aut non, semel pro plagula tota. Illa forma
+REGULAM D7 IMPLERE NON POTEST:
+
+  spec par. VI spatia intra praeludia et valores CONTENTUM facit,
+  ALIBI trivia. Quae regio praeludium sit CONTEXTU PARSURAE constat.
+  Modo globali 'non-verbatim', spatium in `a b { }` iam trivium
+  factum esset antequam parsator praeludium agnosceret — ergo in
+  nodum `lexema-servatum` promoveri non posset.
+
+Alter modus — bis adaptare, semel structurae, iterum praeludiis —
+DUO lexemata materiae pro octetis IISDEM pareret, et invariatum
+'domini unius' conventio fieret, non structura.
+
+Consilium ipsum viam alteram nominat (T11 gradus III: "or
+equivalently do not absorb trivia while inside a value"). Ea sumpta
+est, et fortior quam alternativa:
+
+  css_adaptare      UNUM PRO UNO, nihil absorbet
+  CssLigator        status inter significantia; parsator eum tenet
+                    quia SOLUS parsator scit quando spatium
+                    contentum sit
+
+'Dominus unus' non asseritur sed AEDIFICATUR: octetus bis converti
+non potest quia bis conversus non est.
+
+REGULA DIVISIONIS: PROSA CONSILII ET PROBATIO CONSILII DISSENTIUNT,
+ET PROBATIO RECTA EST
+
+T8 regulam prosa describit ("...NISI eodem in versu post lexema
+praecedens stet ET NULLUM LEXEMA SIGNIFICANS SEQUATUR"), sed eadem
+tabula `t0->spatia_post` NON-NIHIL pro `a { color : red }` asserit —
+ubi `{` sequitur, ergo prosa 'ante' postularet. Contradictio.
+
+Mensuratum in silva_lexema.c:950-1000 potius quam ex prosa sumptum.
+Regula VERA: divisio ad primam NOVA_LINEA; quae ante eam INCLUSIVE
+stant priori ut 'post', cetera sequenti ut 'ante'; SINE linea nova
+OMNIA priori. Ergo probatio consilii recta, prosa laxa.
+
+Notandum generaliter: cum consilium regulam BIS dicat — prosa et
+probatione — et dissentiant, CODEX ORIGINALIS arbiter est, non
+utravis.
+
+DUAE DIVERGENTIAE CONSULTAE A SILVA, quia CSS lexema NOVA_LINEA
+NON HABET (unum genus SPATIA lineas novas INTRA se absorbet):
+
+  I. Silva lineam novam ipsam PRIORI dat (divisio = j + I); nos
+     totum lexema SEQUENTI (divisio = j). Scindere non possumus,
+     ergo eligendum — et indentatio lexematis sequentis pars maior
+     et legibilior est quam terminator qui nihil legit.
+
+ II. Divisor munus SPATIUM ferre DEBET. Sine ea condicione
+     commentarium MULTILINEUM divisor fieret, et `a{} /* n\np */ b{}`
+     commentarium ad `b` migraret. Silva id non facit
+     (COMMENTUM_CLAUSUM lexema NOVA_LINEA non est), et lectio
+     falsa esset.
+
+Utraque per vitium plantatum probata (2 assertiones utraque).
+
+VEXILLUM initium_lineae NON PONITUR, ET DISCREPANTIA OCTETIM
+INVISIBILIS ESSET
+
+CSS munus LINEA caret, ergo signum illud lingua dicere non potest.
+Sed maius est: ETIAM SI PONERETUR, CIRCUITUM NON SUPERARET.
+materia_arbor.c:908 attributa sedis (b, linea, columna,
+linea-initium) SOLUM pro lexemate DERIVATO scribit
+(`si (!sedes.est_fons)`). CSS derivationem non habet, ergo omne
+lexema fons est, ergo documentum 'linea-initium' NUMQUAM fert;
+lector eam ex cursore reficit (materia_arbor.c:2305), et cursor per
+munus LINEA SOLUM movetur.
+
+Discrepantia ergo scriptura->lectio->scriptura OCTETIM IDEM
+redderet. Solum COMPARATOR ARBORUM eam videret.
+
+Id EXEMPLUM CONCRETUM est eius quod phasis III initium abstracte
+notavit: comparatio documentorum pro porta III substituit sed
+GENUS EVIDENTIAE ALIUD est. Hic casus primus qui differentiam
+ostendit, et argumentum pro `arbor_aequalitas` portanda quod
+antea coniectura sola erat.
+
+PORTA TEGUMENTI OCTETORUM (spec par. IX.7) ANTE TEMPUS
+
+Consilium eam T10 ponit, post parsatorem. Hic advenit ANTE eum
+quia iam agi POTEST: adaptatio et ligatio sunt ubi octetus perdi
+potest; parsator eas solum ADHIBET. Vitium hic inventum vitium
+UNIUS moduli est; idem post parsatorem inventum inter duos sederet.
+
+Currit XVII casus inlineos (NUL inclusus, CRLF, \f, omnia trunca)
+et V plagulas VERAS (fixa/css tres + speculum.css + style.css,
+~XXIV milia octetorum), UTROQUE REGIMINE — structurali et contenti.
+Regimen contenti probat suturam D7 EXPRIMI POSSE, non solum
+describi.
+
+Corpus SUUM mensurat: `lectae > II` assertum, quia porta quae
+corpus suum non numerat 'N/N mundum' dicere potest cum NIHIL
+legerit.
+
+VITIUM PLANTATUM QUOD NON ARSIT, ET QUID MENSURATIO INVENIT
+
+Quattuor vitia plantata; TRIA statim arserunt. Quartum —
+`xar_obtinere` ut initium seriei CONTIGUAE tractare, dum Xar
+SEGMENTATUS sit (xar.h:59) — NIHIL fregit, etiam casu triviorum
+XXIII quae segmentum primum (XVI elementa) TRANSEUNT.
+
+Non coniectatum sed MENSURATUM per probam:
+
+  segmenta=3  primum=0x128008240  secundum=0x1280082c0  delta=128
+  (XVI * VIII = 128)
+
+Segmentum secundum IMMEDIATE post primum in piscina iacet, ergo
+lectio ultra limitem in segmentum secundum CASU cadit et rectum
+valorem reddit. FORTUNA, NON CONTRACTUS — eadem forma quam
+materia_token.h de ordinatione notat ("luck, not contract").
+
+Remedium probationis: probatio contractus quae inter cumulationes
+ALIUD ex eadem piscina allocat, ut segmenta DISIUNGANTUR. Tunc
+vitium plantatum ARDET. Contractus 'Xar contiguus non est' nunc
+PROBATUS, non solum observatus.
+
+Generalisandum: cum vitium plantatum non ardeat, responsum non est
+'ergo codex ille otiosus est'. Quaerendum quid casu rectum
+faciat — et si fortuna sit, PROBATIO fortunam removere debet.
+Vitium plantatum quod non ardet est mensura de PROBATIONE, non de
+codice.
+
+VITIA PLANTATA, omnia ARSA
+  I   Xar ut series contigua        1 assertio  (probatio contractus)
+  II  divisio = j + I               2           (scissio vera)
+  III divisor sine munere SPATIUM   2           (comment. multilineum)
+  IV  trivium ultimum omissum      20           (porta tegumenti)
+
+QUOD AEDIFICATUM EST
+  css/fontes/css_adaptare.{h,c}              121 + 223 lineae
+  css/probationes/probatio_css_adaptare.c    213 assertiones
+
+PROXIMUM: spina parsatoris (T9), deinde regulae qualificatae (T10).
+Porta tegumenti iam stat, ergo T10 eam ADHIBEBIT non aedificabit —
+et oraculum separans (par. IX.4) iam habet quod separet: si porta
+STML postea cadat, haec dicet analyzatorem sanum esse.
