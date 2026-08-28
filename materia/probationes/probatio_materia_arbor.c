@@ -26,6 +26,11 @@ hic_manens constans MateriaTokenForma FORMA = { ZEPHYRUM };
 /* Lexicon probationis: species omnes quattuor */
 enumeratio {
     G_FINIS = 0, G_IDENT, G_SPATIA, G_NOVA_LINEA, G_COMMENTUM, G_PLUS,
+    /* ALBUM: spatium album genere VERBATIM - forma CSS, ubi unum
+     * genus spatia+tabulas+lineas absorbet et numerus solus octetos
+     * determinare non potest. ULTIMUM ponitur ut indices priorum
+     * IMMOTI maneant. */
+    G_ALBUM,
     G_NUMERUS_GENERUM
 };
 
@@ -35,7 +40,8 @@ hic_manens constans MateriaLexGenus GENERA[] = {
     { "SPATIA",     " ",   MATERIA_LEX_REPETITUM,  MATERIA_MUNUS_SPATIUM },
     { "NOVA_LINEA", "\n",  MATERIA_LEX_TERMINATOR, MATERIA_MUNUS_LINEA },
     { "COMMENTUM",  NIHIL, MATERIA_LEX_VERBATIM,   MATERIA_MUNUS_COMMENTUM },
-    { "PLUS",       "+",   MATERIA_LEX_FIXUM,      MATERIA_MUNUS_SUBSTANTIVUM }
+    { "PLUS",       "+",   MATERIA_LEX_FIXUM,      MATERIA_MUNUS_SUBSTANTIVUM },
+    { "ALBUM",      NIHIL, MATERIA_LEX_VERBATIM,   MATERIA_MUNUS_SPATIUM }
 };
 hic_manens constans MateriaLexiconCoctum LEXICON = {
     GENERA, (i32)G_NUMERUS_GENERUM, "lex-", (s32)G_SPATIA
@@ -422,6 +428,109 @@ MateriaLexiconRatum  ratum;
             &c, &vitium));
     }
 
+
+    /* ========================================================
+     * PROBARE: spatium album VERBATIM per crudum (2026-08-28)
+     *
+     * Contractus prius NIMIS LATUS erat UTRAQUE parte: scriptor
+     * valorem albi-solius refutabat, lector eum praeteribat, et
+     * partes CONGRUEBANT - sed congruentia partium veritatem non
+     * probat. Pulcher dispositionem possidet EXTRA crudum; intra
+     * crudum octeti verbatim sunt.
+     *
+     * Sine hac emendatione lingua cuius spatium genus VERBATIM est
+     * (CSS) plagulam quamlibet spatium ferentem proicere NON
+     * POTERAT - centesimam partem CSS veri.
+     * ======================================================== */
+    {
+        MateriaArborConsilium c;
+        MateriaArborVitium vitium;
+        MateriaArborScriptura s1;
+        MateriaArborScriptura s2;
+        MateriaNodus* radix;
+        MateriaNodus* lecta;
+        MateriaToken* ident;
+        MateriaToken* album;
+
+        imprimere("\n--- Probans spatium album VERBATIM (crudum) ---\n");
+
+        album = _lex(piscina, (s32)G_ALBUM, "\n\n  ", ZEPHYRUM,
+            (i32)I, (i32)I);
+        ident = _lex(piscina, (s32)G_IDENT, "x", (s32)IV, (i32)III,
+            (i32)III);
+        CREDO_VERUM (materia_token_trivia_ante_ponere(ident, piscina,
+            &album, (i32)I));
+
+        radix = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+        CREDO_VERUM (materia_nodus_appendere(piscina, radix, ZEPHYRUM,
+            materia_valor_token(ident), MATERIA_LOCUS_LISTA_MIXTA));
+
+        materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
+        s1 = materia_arbor_scribere_nodum(piscina, radix, &c);
+        CREDO_VERUM (s1.successus);
+        si (!s1.successus)
+        {
+            imprimere("  causa: %s\n", s1.causa ? s1.causa : "(nulla)");
+        }
+
+        /* Elementum CRUDUM esse DEBET - id est quod valorem album
+         * inambiguum facit. Sine '!' pulcher eum absorberet. */
+        CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,
+            "lex-album!"));
+
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+            &vitium);
+        CREDO_NON_NIHIL (lecta);
+        CREDO_NIHIL (vitium.causa);
+
+        /* OCTETI SERVATI, non solum 'lectio successit' */
+        {
+            MateriaValor* e = materia_valor_lista_obtinere(
+                lecta->loci[ZEPHYRUM], ZEPHYRUM);
+            MateriaToken* t;
+
+            CREDO_NON_NIHIL (e);
+            t = e->datum.token;
+            CREDO_NON_NIHIL (t);
+            CREDO_AEQUALIS_I32 (t->numerus_ante, (i32)I);
+            CREDO_AEQUALIS_I32 (t->spatia_ante[ZEPHYRUM]->valor.mensura,
+                (i32)IV);
+            CREDO_VERUM (memcmp(t->spatia_ante[ZEPHYRUM]->valor.datum,
+                "\n\n  ", (size_t)IV) == ZEPHYRUM);
+        }
+
+        /* CIRCUITUS SECUNDUS: vitium compoundens circuitum unum
+         * superat */
+        s2 = materia_arbor_scribere_nodum(piscina, lecta, &c);
+        CREDO_VERUM (s2.successus);
+        CREDO_AEQUALIS_I32 (s2.textus.mensura, s1.textus.mensura);
+        CREDO_VERUM (memcmp(s1.textus.datum, s2.textus.datum,
+            (size_t)s1.textus.mensura) == ZEPHYRUM);
+
+        /* NUL ADHUC REFUTATUR - cruditas eum sanare non potest,
+         * quia chorda longitudinem fert et textus terminatore
+         * legitur. Relaxatio albi hoc NON tetigit. */
+        {
+            MateriaToken* malum;
+            MateriaNodus* r2;
+            chorda cum_nul;
+            MateriaArborScriptura s3;
+
+            cum_nul.mensura = (i32)II;
+            cum_nul.datum   = (i8*)piscina_allocare(piscina,
+                (memoriae_index)II);
+            cum_nul.datum[ZEPHYRUM] = (i8)' ';
+            cum_nul.datum[I]        = (i8)'\0';
+
+            malum = materia_token_creare(piscina, &FORMA, (s32)G_ALBUM,
+                cum_nul, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
+            r2 = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+            CREDO_VERUM (materia_nodus_appendere(piscina, r2, ZEPHYRUM,
+                materia_valor_token(malum), MATERIA_LOCUS_LISTA_MIXTA));
+            s3 = materia_arbor_scribere_nodum(piscina, r2, &c);
+            CREDO_FALSUM (s3.successus);
+        }
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

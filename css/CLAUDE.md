@@ -14,13 +14,30 @@ it can be generated from what CSS actually needed):
 - `css_lexicon` — lexical descriptor · `css_registrum` — node vocabulary
 - `css_adaptare` — `CssLexema` → `MateriaToken` **one for one**, plus
   `CssLigator`, the trivia-binding state
+- `css_arbor` — the stylesheet **spine** (T9): lex → adapt → bind →
+  `plagula` node with `cauda`. Rules are **not** parsed yet
 
-402 assertions across two suites. A minimal CSS tree round-trips
-through materia's STML, and the **byte-coverage gate already runs on
-real CSS** (5 files, ~24k bytes, both whitespace regimes).
+522 assertions across three suites. The **byte-coverage gate runs on
+real CSS** (5 files, ~24k bytes, both whitespace regimes), and the
+separating oracle (§9.4) emits directly from the parse.
 
-Not built: the parser itself (plan T9–T12), selectors (T16), canon
-(T15), the remaining corpus gates (T13–T14).
+Not built: rules (T10), declarations (T11), at-rules (T12),
+selectors (T16), canon (T15), the remaining corpus gates (T13–T14).
+
+**The spine's incompleteness is asserted, not silent.**
+`probatio_css_arbor` carries `CREDO_FALSUM(_octetos_probare(…,
+"a{}"))` — the gate *must* stay red until T10 lands, and T10 flips
+those assertions. Quietly sweeping unparsed tokens into `regula-mala`
+would have turned the gate green while nothing was parsed.
+
+## Named slot indices — use them, never bare numbers
+
+`css_registrum.h` carries an enum per genus (`CSS_DECL_VALOR`,
+`CSS_SAEPTUM_CONTENTUM`, …). `probatio_css_arbor` checks **all 24**
+against the table's titles and asserts the count matches
+`numerus_locorum`, so no slot can go unnamed. Without that check the
+enums would be a *third* hand-written table free to drift — and the
+drift is silent: a value lands in someone else's slot.
 
 ## The plan's T8 signature cannot work — read this before T9
 
@@ -88,16 +105,36 @@ the first concrete case showing why `arbor_aequalitas` is a different
 one run (`lib/css_lexema.c:513`). So it is `VERBATIM`/`SPATIUM`, not
 `REPETITUM` like C89's, and **CSS has no `munus LINEA` at all.**
 
-Consequences, both asserted:
+Consequences, all asserted:
 - materia's capability mask **refuses** line-sensitive capabilities by
   name. That is the degradation policy working, not a defect. If CSS
   ever wants them, the fix is to split whitespace into genera — the
-  refusal says so.
+  refusal says so. **This is now a capability question only, not a
+  projection one** (see below).
 - `genus_spatii` is `-I` deliberately. The STML template compression
   (`#@ante-spatia n="4"`) requires `REPETITUM`, since the reader
   inverts it by species. materia guards this now; before the guard it
   would have written a count and read back text — a silently broken
   round trip.
+- **`VERBATIM` + `SPATIUM` used to be unprojectable, and no longer
+  is.** T9 found that *every* CSS file containing whitespace failed
+  STML projection with `valor trivii textui non tutus`. C89 never hits
+  it: its whitespace genera are `REPETITUM`/`TERMINATOR`, and its only
+  `VERBATIM` genera are comments, which carry non-whitespace bytes.
+  Fixed in materia — see `materia/CLAUDE.md`, "The whitespace contract".
+
+## The remaining whitespace constraint, named before it bites (T11)
+
+The fix above covers **trivia**. The *lexeme* path
+(`materia_arbor.c:945`) raw-marks only when the text is the element's
+**sole** child — `elementum mixtum crudum esse NON potest`, which is
+true of STML, not an oversight.
+
+So in content mode (D7), a whitespace token that becomes a
+`lexema-servatum` **and also carries trivia** (a comment binding to it
+as `spatia_post`) cannot be raw, and its value would still be lost.
+T11 has to keep content-mode whitespace lexemes text-only, or handle
+it in materia. Known in advance rather than after the fact.
 
 ## Hand-written tables need drift guards, not faith
 

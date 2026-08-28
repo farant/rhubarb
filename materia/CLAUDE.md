@@ -49,6 +49,43 @@ conditional here."
   loudly, with a named cause — because the alternative is a confident
   wrong answer (the CSS comment-block case; see `materia_lexicon.h`).
 
+## The whitespace contract (2026-08-28)
+
+**A `VERBATIM` trivium whose value is whitespace-only projects to
+STML, because the element is raw.** Pretty owns layout *outside* raw;
+inside raw the bytes are verbatim. Measured, not argued:
+
+```
+<lex-spatia!>\n\n  </lex-spatia>   pretty  ->  "\n\n  "  IDEM
+<lex-spatia>\n\n  </>              pretty  ->  TEXT LOST
+```
+
+The writer refuses only **NUL** (`_nul_fert`) for trivia — NUL is
+unrepresentable raw or not. The reader (`_textus_directus`) skips
+whitespace-only text **unless `elementum->crudus`**. Both halves are
+load-bearing; both were verified by planting.
+
+*How it was wrong before, and why that shape is worth recognising:*
+the writer refused whitespace-only and the reader skipped it, and the
+reader's comment cited the writer as its justification — "contractus
+unus per duas partes". They agreed, and **both were too wide**. Two
+halves that cite each other as the reason look like a principle and
+are not one. The writer's refusal sat two lines above
+`_valorem_crudum_notare`, i.e. it guarded a condition the very next
+statement removed.
+
+The cost was real and invisible: any language whose whitespace genus
+is `VERBATIM` — CSS, where one genus absorbs spaces, tabs and
+newlines — could not project **any** file containing whitespace. C89
+never hit it, so no C89 gate could have found it. Found by CSS's
+second client, exactly as the fork predicted.
+
+**Still constrained:** the *lexeme* path (`materia_arbor.c:945`)
+raw-marks only when text is the element's sole child (`elementum
+mixtum crudum esse NON potest`). A significant whitespace token that
+also carries trivia therefore still cannot project — CSS content mode
+(D7), a T11 problem, named ahead of time.
+
 ## Currere
 
 ```

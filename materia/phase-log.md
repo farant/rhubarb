@@ -1195,3 +1195,131 @@ PROXIMUM: spina parsatoris (T9), deinde regulae qualificatae (T10).
 Porta tegumenti iam stat, ergo T10 eam ADHIBEBIT non aedificabit —
 et oraculum separans (par. IX.4) iam habet quod separet: si porta
 STML postea cadat, haec dicet analyzatorem sanum esse.
+
+========================================================================
+PHASIS III — SPINA PLAGULAE (T9), ET CONTRACTUS ALBI EMENDATUS.
+RELATIO (2026-08-28)
+========================================================================
+
+css 3/3, materia 5/5, silva 50/50, shim CCCXLVI + CCCXLV + CCCXLV.
+
+Spina aedificata (css_arbor.{h,c}, css_arbor_parsare), et STATIM
+vitium substrati invenit quod nulla probatio C89 invenire poterat.
+
+QUOD SPINA INVENIT
+
+Casus degeneres — plagula vacua, spatia sola, commentarium solum —
+per portam octetorum transierunt et per STML CECIDERUNT:
+
+    causa: 'valor trivii textui non tutus'
+
+Mensuratum, non coniectatum:
+
+  C89   SPATIA       " "     REPETITUM    SPATIUM
+        TABULAE      "\t"    REPETITUM    SPATIUM
+        NOVA_LINEA   "\n"    TERMINATOR   LINEA
+        CONTINUATIO  "\\\n"  TERMINATOR   LAMINA
+        COMMENTUM_*  NIHIL   VERBATIM     COMMENTUM
+  CSS   SPATIA       NIHIL   VERBATIM     SPATIUM   <- sola combinatio
+
+Ergo PLAGULA CSS QUAELIBET SPATIUM FERENS proici non poterat, id
+est CSS verum totum. C89 id numquam tangit quia genera eius spatii
+REPETITUM aut TERMINATOR sunt; genera VERBATIM eius sola commenta
+sunt, quae contentum non-album ferunt.
+
+QUAESTIO FRAN QUAE FURCAM DISSOLVIT
+
+Tres vias proposui — spatia CSS scindere, contractum STML laxare,
+speciem novam addere — et Fran quaesivit: "an '<tag!> </tag>'
+temptavimus?"
+
+Illa quaestio furcam DESIGNI in MENSURATIONEM vertit. Proba stml
+directa (scratchpad, non ratiocinatio):
+
+  <lex-spatia!>\n\n  </lex-spatia>   pulchrum   -> "\n\n  " IDEM
+  <lex-spatia>\n\n  </>              pulchrum   -> TEXTUS PERDITUS
+  nidificatum, pulcher indentationem REVERA generans:
+     liberum crudum   -> "\n\n  " servatum
+     liberum non-crudum -> perditum
+
+Ergo contractus RECTUS EST SUBSTANTIA, NIMIS LATUS AMBITU. Pulcher
+dispositionem possidet EXTRA crudum; intra crudum octeti verbatim
+sunt, et materia_arbor.c ipsa id iam dicebat duabus lineis infra
+refutationem: "pulcher crudum numquam tangit".
+
+CUSTODIA CONDICIONIS QUAE ACCIDERE NON POTEST
+
+Semita triviorum sic stabat:
+
+    si (!_textus_tutus(valor)) refutare;      <- album refutat
+    ... nodum textus addere ...
+    _valorem_crudum_notare(...)               <- elementum CRUDUM fit
+
+Refutatio custodiebat ambiguitatem quam sententia proxima
+REMOVEBAT. Et si notatio cruda fallat (valor sequentiam claudentem
+fert) scriptor NIHIL reddit — ergo textus albus sine cruditate
+numquam emittitur. Custodia mera erat.
+
+DUAE PARTES CONGRUENTES, AMBAE NIMIS LATAE
+
+Scriptor album refutabat; lector album praeteribat. Commentarium
+lectoris id ut virtutem nominabat: "contractus unus per duas
+partes". Congruebant — et AMBAE nimis latae erant.
+
+CONGRUENTIA PARTIUM VERITATEM NON PROBAT. Duo dimidia inter se
+consentientia speciem principii ferunt; hic species sola erat, et
+species ipsa est quod inquisitionem per menses distulit. Genus
+proprium: cum duae partes se mutuo citent ut rationem, neutra
+rationem habet.
+
+EMENDATIO, in materia (non in CSS)
+
+  _nul_fert         quaestio NOVA, seorsum: NUL numquam
+                    repraesentabilis, crudus an non
+  scriptor triviorum  NUL SOLUM refutat; cruditas album licet
+  lector            album praeterit NISI 'elementum->crudus'
+
+C89 INTACTUS: shim CCCXLV/CCCXLV octetim, quod praedictum erat
+(C89 spatium VERBATIM non habet) et nunc MENSURATUM est.
+
+VITIA PLANTATA, omnia ARSA
+  I   lector album inconditionaliter praeterit   4 assertiones
+  II  scriptor album iterum refutat              suite fracta
+  III NUL non amplius refutatur                  1 assertio
+Utrumque dimidium ergo ONUS FERT, et NUL seorsum stat.
+
+CONSTRAINTUM RELIQUUM, NOMINATUM ANTEQUAM MORDEAT
+
+Semita LEXEMATIS (materia_arbor.c:945) crudum notat SOLUM cum
+elementum textum SOLUM ferat — "elementum mixtum crudum esse NON
+potest", quod verum est de STML, non incuria. Ergo lexema
+significans cuius valor albus est ET quod trivia fert crudum esse
+non potest, et valor eius adhuc perit.
+
+Id CSS in regimine CONTENTI (D7) tangit: spatium ibi
+'lexema-servatum' fit, et commentarium ei ut 'post' adhaerere
+potest. T11 est, non T9 — sed nunc ANTE tempus notum, non post
+casum.
+
+QUOD AEDIFICATUM EST
+  css/fontes/css_arbor.{h,c}              34 + 152 lineae
+  css/fontes/css_registrum.h              enumerationes LOCORUM
+  css/probationes/probatio_css_arbor.c    120 assertiones
+  materia/fontes/materia_arbor.c          contractus albi
+  materia/probationes/probatio_materia_arbor.c  16 assertiones novae
+
+INCOMPLETUM NOMINATUM, non tacitum. Spina regulas non parsat, ergo
+'a{}' octetos PERDIT. Probatio id ASSERIT (CREDO_FALSUM), ut porta
+rubra esse DEBEAT donec T10 adveniat. Alternativa — lexemata in
+'regula-mala' tacite congerere — portam VIRIDEM faceret dum nihil
+parsatum esset. T10 has assertiones vertat.
+
+LOCI NOMINATI: css_registrum.h nunc enumerationes indicum locorum
+fert (CSS_DECL_VALOR etc.) et probatio eas contra TITULOS tabulae
+retiret, OMNES XXIV. Sine ea probatione enumerationes tertia tabula
+manu scripta essent quae tacite labi posset — et lapsus valorem in
+locum alienum poneret sine querela.
+
+PROXIMUM: T10 — regulae qualificatae et saepta. Porta tegumenti iam
+stat (T8) et oraculum separans quoque (hic), ergo T10 eas ADHIBEBIT,
+non aedificabit.

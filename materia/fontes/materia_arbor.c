@@ -458,10 +458,38 @@ materia_arbor_attributum_numeri (
         scriptor->intern, titulus, buffer);
 }
 
-/* An chorda TEXTUI tuta sit. Duo pericula, ambo TACITA: spatium
- * album SOLUM (scriptor pulcher tales nodos PRAETERIT, ergo octeti
- * sine querela perirent) et NUL (chorda longitudinem fert, textus
- * emissus terminatore legetur). */
+/* An chorda NUL ferat. Periculum TACITUM et INSANABILE: chorda
+ * longitudinem fert, textus emissus terminatore legetur. Crudus an
+ * non nihil refert - NUL nusquam repraesentabilis est. */
+interior b32
+_nul_fert (constans chorda* valor)
+{
+    i32 i;
+
+    si (valor == NIHIL) { redde FALSUM; }
+    per (i = ZEPHYRUM; i < valor->mensura; i++)
+    {
+        si (valor->datum[i] == (i8)'\0') { redde VERUM; }
+    }
+    redde FALSUM;
+}
+
+/* Textus TUTUS pro elemento NON-CRUDO.
+ *
+ * DUAE QUAESTIONES DISTINCTAE, olim in una functione confusae:
+ *
+ *   NUL          numquam repraesentabilis, crudus an non
+ *   album solum  ambiguum cum DISPOSITIONE pulchri - SED SOLUM
+ *                si elementum crudum non sit
+ *
+ * MENSURATUM 2026-08-28, non ratiocinatum:
+ *   <lex-spatia>\n\n  </>    pulchrum, non crudum -> TEXTUS PERDITUR
+ *   <lex-spatia!>\n\n  </>   pulchrum, CRUDUM     -> "\n\n  " IDEM
+ * et idem nidificatum, ubi pulcher indentationem revera generat.
+ *
+ * Ergo refutatio albi recta est HIC et NIMIS LATA in semita
+ * triviorum, quae elementum CRUDUM facit duas lineas infra. Vide
+ * ibi. */
 interior b32
 _textus_tutus (constans chorda* valor)
 {
@@ -469,12 +497,12 @@ _textus_tutus (constans chorda* valor)
     b32 album_solum;
 
     si (valor == NIHIL || valor->mensura == ZEPHYRUM) { redde VERUM; }
+    si (_nul_fert(valor)) { redde FALSUM; }
     album_solum = VERUM;
     per (i = ZEPHYRUM; i < valor->mensura; i++)
     {
         character c = (character)valor->datum[i];
 
-        si (c == '\0') { redde FALSUM; }
         si (   c != ' ' && c != '\t' && c != '\n'
             && c != '\r' && c != '\f' && c != '\v')
         {
@@ -579,10 +607,27 @@ _trivium_scribere (MateriaArborScriptor* st, constans MateriaToken* trivium)
         frange;
 
     ordinarius:
-        /* VERBATIM: commenta et cetera - valor ut textus */
-        si (!_textus_tutus(&trivium->valor))
+        /* VERBATIM: commenta, spatia verbatim, cetera - valor ut textus.
+         *
+         * NUL SOLUM refutatur. Album solum NON refutatur, quia hoc
+         * elementum CRUDUM fit duabus lineis infra
+         * (_valorem_crudum_notare), et pulcher crudum NUMQUAM tangit.
+         *
+         * OLIM _textus_tutus hic vocabatur, quod album refutat -
+         * custodia condicionis quae accidere NON POTEST, quia
+         * notatio cruda semper sequitur. Pretium erat REALE: lingua
+         * cuius spatium genus VERBATIM est (CSS, ubi unum genus
+         * spatia+tabulas+lineas absorbet) plagulam quamlibet spatium
+         * ferentem proicere NON POTERAT - centesimam partem CSS
+         * veri. Inventum a CSS T9, MENSURATUM per probam stml
+         * directam (vide _textus_tutus supra), non coniectatum.
+         *
+         * Si notatio cruda FALLAT (valor sequentiam claudentem fert),
+         * scriptor infra NIHIL reddit - ergo textus albus numquam
+         * sine cruditate emittitur. */
+        si (_nul_fert(&trivium->valor))
         {
-            st->causa = "valor trivii textui non tutus";
+            st->causa = "valor trivii NUL fert";
             redde NIHIL;
         }
         si (trivium->valor.mensura > ZEPHYRUM)
@@ -1456,13 +1501,23 @@ _textus_directus (MateriaArborLector* lector, constans StmlNodus* elementum)
         StmlNodus* liberum = stml_liberum_ad_indicem(
             (StmlNodus*)(size_t)elementum, i);
 
-        /* Textus spatii albi SOLIUS praeteritur; scriptor valorem
-         * spatii-albi-solius REFUTAT (_textus_tutus), ergo
-         * ambiguitas nulla - contractus unus per duas partes. */
+        /* Textus spatii albi SOLIUS praeteritur NISI elementum
+         * CRUDUM sit.
+         *
+         * CONTRACTUS UNUS PER DUAS PARTES, nunc recte enuntiatus:
+         * pulcher DISPOSITIONEM possidet - EXTRA crudum. Intra
+         * crudum octeti verbatim sunt, ergo spatium album ibi
+         * CONTENTUM est, non dispositio, et ambiguitas quam haec
+         * omissio vitabat simpliciter non exsistit.
+         *
+         * Prius omissio erat inconditionalis, et scriptor album
+         * inconditionaliter refutabat - duae partes CONGRUEBANT sed
+         * AMBAE nimis latae erant. Congruentia partium veritatem
+         * non probat. */
         si (   liberum        != NIHIL
             && liberum->genus == STML_NODUS_TEXTUS
             && liberum->valor != NIHIL
-            && !_spatium_solum(liberum->valor))
+            && (elementum->crudus || !_spatium_solum(liberum->valor)))
         {
             chorda_aedificator_appendere_chorda(aed, *liberum->valor);
         }

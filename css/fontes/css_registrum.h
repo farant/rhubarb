@@ -43,6 +43,71 @@ nomen enumeratio {
     CSS_GENUS_NUMERUS
 } CssGenus;
 
+/* ==================================================
+ * Indices LOCORUM intra nodum
+ *
+ * Registrum fenestram nominat (loci_offset + loci_numerus);
+ * hi indices INTRA fenestram sunt, quos materia_nodus_ponere et
+ * materia_nodus_appendere accipiunt.
+ *
+ * CUR NOMINATI: sine his parsator numeros nudos scriberet -
+ * 'materia_nodus_ponere(decl, II, ...)' - et permutatio locorum
+ * TACITE valores in alienum locum poneret. Probatio hos contra
+ * TITULOS tabulae retiret, ne tertia tabula manu scripta fiant
+ * quae per se labi possit.
+ * ================================================== */
+
+nomen enumeratio {
+    CSS_PLAGULA_REGULAE = 0,
+    CSS_PLAGULA_CAUDA
+} CssLocusPlagulae;
+
+nomen enumeratio {
+    CSS_REGULA_PRAELUDIUM = 0,
+    CSS_REGULA_CORPUS
+} CssLocusRegulae;
+
+nomen enumeratio {
+    CSS_APUD_TOK_NOMEN = 0,
+    CSS_APUD_PRAELUDIUM,
+    CSS_APUD_CORPUS,
+    CSS_APUD_TOK_TERMINATOR
+} CssLocusApud;
+
+nomen enumeratio {
+    CSS_DECL_TOK_NOMEN = 0,
+    CSS_DECL_TOK_COLON,
+    CSS_DECL_VALOR,
+    CSS_DECL_PRAEVALENTIA,
+    CSS_DECL_TOK_TERMINATOR
+} CssLocusDeclarationis;
+
+nomen enumeratio {
+    CSS_PRAEVALENTIA_TOK_CLAMOR = 0,
+    CSS_PRAEVALENTIA_TOK_VERBUM
+} CssLocusPraevalentiae;
+
+nomen enumeratio {
+    CSS_SERVATUM_TOK = 0
+} CssLocusServati;
+
+nomen enumeratio {
+    CSS_FUNCTIO_TOK_NOMEN = 0,
+    CSS_FUNCTIO_ARGUMENTA,
+    CSS_FUNCTIO_TOK_CLAUSUM
+} CssLocusFunctionis;
+
+nomen enumeratio {
+    CSS_SAEPTUM_TOK_APERTUM = 0,
+    CSS_SAEPTUM_CONTENTUM,
+    CSS_SAEPTUM_TOK_CLAUSUM
+} CssLocusSaepti;
+
+nomen enumeratio {
+    CSS_MALUM_TOKENS = 0
+} CssLocusMali;
+
+
 externus constans MateriaRegistrumCoctum CSS_REGISTRUM;
 
 #endif /* CSS_REGISTRUM_H */
