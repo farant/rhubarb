@@ -983,3 +983,65 @@ T1/T4/T5/T6 iam notat; C addit: T3 semitam MANU-SCRIPTAM sumat, et
 omnis mentio 'SilvaLexicon' (T4/T7/T14/T16) ad MateriaLexiconRatum
 vertatur - cuius FORMA ALIA est (species x munus, non genus_eof +
 trivia + numerus_triviorum).
+
+
+========================================================================
+PHASIS III INCEPTA — CSS: DESCRIPTOR + REGISTRUM (2026-08-27)
+========================================================================
+
+`./css/compile_probationes.sh`: 1/1, 189 assertions, exit 0.
+
+THE UNMEASURED QUESTION, ANSWERED FIRST. CSS's nine gates (spec §9)
+resolve to `materia_scribere_nodum`, `materia_arbor_scribere_nodum`,
+`materia_arbor_legere` — all present. **The unported query families are
+not needed.** One nuance: gate 3 says "comparator equal", and silva's
+comparator (`silva_arbor_aequalis`, in the unported `arbor_aequalitas`)
+compares TREES. Document-byte comparison substitutes for the gate but
+is a different KIND of evidence; worth porting eventually as a second
+oracle, does not block CSS.
+
+A LATENT MATERIA BUG, FOUND BY WRITING THE DESCRIPTOR
+
+The STML template compression writes `#@ante-spatia n="4"` for a
+single-space trivia wrapper. The READER inverts it **by species**, and
+only `REPETITUM` turns a count back into bytes. CSS's space genus is
+`VERBATIM` — so CSS would have written a count and read back text, a
+silently broken round trip.
+
+`materia_arbor.c` now requires `species == REPETITUM`, not just the
+right genus, before compressing. Found by writing a second language's
+descriptor, NOT by a test: `templa_activa` is false for CSS, so the
+fault was latent and would have detonated for whichever consumer first
+turned templates on. **A second client is a kind of test the first
+client cannot be.**
+
+WHAT WAS BUILT
+  css/fontes/css_lexicon.{h,c}     27 genera, species x munus
+  css/fontes/css_registrum.{h,c}   10 genera, 24 slots
+  css/probationes/probatio_css_registrum.c   189 assertions
+  css/compile_probationes.sh       consumes materia; 0/1/2 contract
+  css/CLAUDE.md
+
+TWO CONSEQUENCES OF HAND-WRITING, both good:
+ - the genus enum can have a TYPEDEF and a COUNT, which silva's
+   generator-emitted anonymous enum could not
+ - the five structural genera are simply absent; `ambiguus` is optional
+   in materia and recursive descent produces no ambiguity. Robustness
+   is spec-defined (`regula-mala`, `declaratio-mala`), not a generic
+   error node
+
+DRIFT GUARDS, PLANTED AND SEEN TO FIRE. A hand-written table's real
+failure is a silent one, so both are asserted and both were verified by
+planting:
+ - lexicon order vs `CssLexemaGenus`, BY TITLE — swapped COLON/SEMICOLON
+   fails 2 assertions
+ - registry `loci_offset` CONTIGUOUS and exactly filling the loci table
+   — one-slot shift fails. This is where a hand-written registry
+   actually breaks, and the break is silent: a node reads someone
+   else's slot layout
+
+NEXT: the parser (plan T7-T12). Deliberately NOT started here — it
+depends on the plan and materia's headers, both readable cold, whereas
+the descriptor/registry depended on knowing materia's constraints from
+having just built them. Fresh context spent where only fresh context
+was cheap.

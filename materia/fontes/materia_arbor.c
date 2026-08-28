@@ -666,8 +666,21 @@ _involucrum_triviorum (
         constans MateriaToken* trivium = trivia[0];
         s32 gs = st->consilium->lexicon->lexicon->genus_spatii;
 
+        /* SPECIES REPETITUM POSCITUR, non genus solum.
+         *
+         * Vocatio 'n="4"' scribit; lector eam per speciem invertit,
+         * et REPETITUM sola numerum in octetos vertit. Lingua cuius
+         * genus spatii VERBATIM est (CSS: CSS_LEX_SPATIA spatia,
+         * tabulas, lineas novas simul absorbet) numerum scriberet et
+         * textum relegeret - circuitus TACITE frangeretur.
+         *
+         * Inventum descriptorem CSS scribendo, non probatione:
+         * templa_activa CSS falsum est, ergo vitium LATENS erat et
+         * primo consumptori qui ea accenderet erupisset. */
         si (   trivium != NIHIL && gs >= ZEPHYRUM
-            && trivium->genus == gs)
+            && trivium->genus == gs
+            && materia_lexicon_species(st->consilium->lexicon, gs)
+                   == MATERIA_LEX_REPETITUM)
         {
             si (strcmp(titulus, MATERIA_ARBOR_TAG_POST) == ZEPHYRUM)
             {
