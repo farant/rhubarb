@@ -73,4 +73,7 @@ if [ "${#PLAGULAE[@]}" -eq 0 ]; then
     exit 2
 fi
 
-"$BIN" "${VEXILLA[@]}" "${PLAGULAE[@]}"
+# Expansio seriei VACUAE sub 'set -u' 'unbound variable' dat -
+# ergo forma '${A[@]+"${A[@]}"}'. Semita sine vexillis SOLA hoc
+# ferebat, et sola semita cum vexillo probata erat.
+"$BIN" ${VEXILLA[@]+"${VEXILLA[@]}"} ${PLAGULAE[@]+"${PLAGULAE[@]}"}

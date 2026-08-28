@@ -643,6 +643,8 @@ interior StmlNodus* _scribere_lexema (MateriaArborScriptor*,
     constans MateriaToken*);
 interior MateriaToken* _lexema_legere (MateriaArborLector*, StmlNodus*,
     chorda*);
+interior StmlNodus* _fragmentum_aperire (MateriaArborLector*, StmlNodus*,
+    chorda**);
 
 interior StmlNodus*
 _involucrum_triviorum (
@@ -717,8 +719,28 @@ MateriaToken*
 materia_arbor_lexema_legere (MateriaArborLector* lector,
                              StmlNodus* elementum, chorda* fragmenti_id)
 {
+    chorda* id_apertum;
+
     si (lector == NIHIL || elementum == NIHIL) { redde NIHIL; }
-    redde _lexema_legere(lector, elementum, fragmenti_id);
+
+    /* FRAGMENTUM HIC APERITUR, non a vocante.
+     *
+     * Lexema saepe fragmentum est (scriptor id sub '#lexN' deponit ut
+     * transclusiones sequentes IDEM OBIECTUM inveniant). Ambulatio
+     * arboris id iam aperit; superficies frontis, si aperire oblita
+     * esset, titulum '#lexN' ipsum tag lexematis haberet et registrum
+     * recte nesciret.
+     *
+     * SILVA ID EXACTE PASSA EST: _origo_legere superficies NOVA erat
+     * et apertionem NON hereditavit - XXXI plagulae latinae hinc
+     * RECUSABANTUR (silva_arbor.c:2795). Ergo hic in SUTURA ipsa
+     * agitur, non in vocante: frons hoc errare non potest quia
+     * facultas errandi ei non datur. */
+    id_apertum = NIHIL;
+    elementum  = _fragmentum_aperire(lector, elementum, &id_apertum);
+    si (elementum == NIHIL) { redde NIHIL; }
+    redde _lexema_legere(lector, elementum,
+        (fragmenti_id != NIHIL) ? fragmenti_id : id_apertum);
 }
 
 interior StmlNodus*

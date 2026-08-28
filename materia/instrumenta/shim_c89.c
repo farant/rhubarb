@@ -40,8 +40,37 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Cauda lexematis materiae: lexema silvae unde venit */
-nomen structura { SilvaToken* silva; } CaudaShim;
+/* Cauda lexematis materiae = DATUM FRONTIS C89.
+ *
+ * SYMMETRICA CONSULTO. Prius 'SilvaToken* silva' sola erat, quod
+ * semitae CONVERSIONIS sufficiebat sed lectioni non: lexema ex
+ * documento lectum lexema silvae unde veniret NON habet. Uncus
+ * scripturae qui '->silva' legit ergo circuitum claudere non
+ * posset.
+ *
+ * Nunc cauda id fert quod DOCUMENTUM fert, et utraque semita eam
+ * implet - conversio ex silva, lectio ex STML. Uncus scripturae
+ * caudam solam legit, silvam numquam. Ea est ipsa forma quam frons
+ * C89 phasis V habebit. */
+nomen structura {
+    SilvaToken*   silva;        /* semita conversionis; NIHIL in lectione */
+    s32           origo_genus;  /* SilvaOrigoGenus; FONS = 0 */
+    MateriaToken* primus;
+    MateriaToken* secundus;
+    MateriaToken* tertius;
+    chorda*       nomen_macro;
+    b32           def_adest;
+    s32           def_f;
+    s32           def_l;
+    s32           def_c;
+    Xar*          extentum;     /* Xar de MateriaToken*; NIHIL */
+    Xar*          scissurae;    /* Xar de SilvaScissura; NIHIL */
+    i8            standard;
+} CaudaShim;
+
+#define CAUDA(t) ((CaudaShim*)materia_token_cauda(t))
+
+hic_manens Xar* _extentum_laminam_silvae (constans SilvaToken*);
 hic_manens constans MateriaTokenForma FORMA = { (i32)magnitudo(CaudaShim) };
 
 nomen structura {
@@ -132,7 +161,37 @@ _token_convertere (SilvaToken* s)
     m = materia_token_creare(SHIM.piscina, &FORMA, (s32)s->genus,
         s->valor, s->byte_offset, s->linea, s->columna, s->fons_index);
     si (m == NIHIL) { redde NIHIL; }
-    ((CaudaShim*)materia_token_cauda(m))->silva = s;
+    {
+        CaudaShim* cd = CAUDA(m);
+
+        cd->silva       = s;
+        cd->origo_genus = (s32)s->origo.genus;
+        cd->standard    = s->standard;
+        cd->scissurae   = s->scissurae;
+        commutatio (s->origo.genus)
+        {
+        casus SILVA_ORIGO_EXPANSIO:
+            cd->nomen_macro = s->origo.datum.expansio.nomen_macro;
+            si (s->origo.datum.expansio.corpus != NIHIL)
+            {
+                SilvaToken* d = s->origo.datum.expansio.corpus;
+
+                cd->def_adest = VERUM;
+                cd->def_f = d->fons_index;
+                cd->def_l = (s32)d->linea;
+                cd->def_c = (s32)d->columna;
+            }
+            frange;
+        casus SILVA_ORIGO_PASTA:
+            cd->nomen_macro = s->origo.datum.pasta.nomen_macro; frange;
+        casus SILVA_ORIGO_CHORDA:
+            cd->nomen_macro = s->origo.datum.stringificatio.nomen_macro;
+            frange;
+        casus SILVA_ORIGO_API:
+            cd->nomen_macro = s->origo.datum.api.nomen_macro; frange;
+        ordinarius: frange;
+        }
+    }
     materia_token_initium_lineae_ponere(m, s->initium_lineae);
     *(MateriaToken**)xar_addere(SHIM.lexemata) = m;
     tabula_dispersa_inserere(SHIM.index, _clavis(s), m);
@@ -165,6 +224,51 @@ _token_convertere (SilvaToken* s)
                     *(SilvaToken**)xar_obtinere(s->spatia_post, i));
             }
             materia_token_trivia_post_ponere(m, SHIM.piscina, ser, n);
+        }
+    }
+
+    /* Catena originis POST insertionem in indicem: lexema catenam
+     * suam per se ipsum attingere potest (recursio infinita aliter). */
+    {
+        CaudaShim* cd = CAUDA(m);
+
+        commutatio (s->origo.genus)
+        {
+        casus SILVA_ORIGO_EXPANSIO:
+            cd->primus = _token_convertere(s->origo.datum.expansio.invocatio);
+            frange;
+        casus SILVA_ORIGO_PASTA:
+            cd->primus   = _token_convertere(s->origo.datum.pasta.sinister);
+            cd->secundus = _token_convertere(s->origo.datum.pasta.dexter);
+            cd->tertius  = _token_convertere(s->origo.datum.pasta.invocatio);
+            frange;
+        casus SILVA_ORIGO_CHORDA:
+            cd->primus =
+                _token_convertere(s->origo.datum.stringificatio.primus);
+            frange;
+        ordinarius: frange;
+        }
+        si (cd->primus != NIHIL || cd->tertius != NIHIL)
+        {
+            SilvaToken* anc = (s->origo.genus == SILVA_ORIGO_PASTA)
+                ? s->origo.datum.pasta.invocatio
+                : ((s->origo.genus == SILVA_ORIGO_EXPANSIO)
+                    ? s->origo.datum.expansio.invocatio : NIHIL);
+            Xar* lam = _extentum_laminam_silvae(anc);
+
+            si (lam != NIHIL && xar_numerus(lam) > I)
+            {
+                i32 k;
+
+                cd->extentum = xar_creare(SHIM.piscina,
+                    magnitudo(MateriaToken*));
+                per (k = ZEPHYRUM; k < xar_numerus(lam); k++)
+                {
+                    *(MateriaToken**)xar_addere(cd->extentum) =
+                        _token_convertere(
+                            *(SilvaToken**)xar_obtinere(lam, k));
+                }
+            }
         }
     }
     redde m;
@@ -248,30 +352,37 @@ _radix_silvae (SilvaToken* t, b32* impurum)
     redde NIHIL;
 }
 
+/* Radix per CAUDAM, non per silvam - ergo eadem via lexemata
+ * conversa et lexemata LECTA tractat. */
 hic_manens MateriaToken*
 _radix_quaerere (vacuum* datum, MateriaToken* token,
                  constans character** causa)
 {
-    SilvaToken* s;
-    SilvaToken* r;
-    b32 impurum = FALSUM;
+    MateriaToken* t = token;
 
     (vacuum)datum;
-    s = ((CaudaShim*)materia_token_cauda(token))->silva;
-    si (s->origo.genus == SILVA_ORIGO_FONS) { redde token; }
-    si (SHIM.expansio == NIHIL)
+    per (;;)
     {
-        *causa = "lexema expansum sine contextu expansionis";
-        redde NIHIL;
+        CaudaShim*    cd = CAUDA(t);
+        MateriaToken* proximum;
+
+        si (cd->origo_genus == (s32)SILVA_ORIGO_FONS) { redde t; }
+
+        commutatio (cd->origo_genus)
+        {
+        casus SILVA_ORIGO_EXPANSIO: proximum = cd->primus;  frange;
+        casus SILVA_ORIGO_CHORDA:   proximum = cd->primus;  frange;
+        casus SILVA_ORIGO_PASTA:    proximum = cd->tertius; frange;
+        ordinarius:                 proximum = NIHIL;       frange;
+        }
+        si (proximum == NIHIL)
+        {
+            *causa = "origo pasta/chorda/api - stratum 0 non "
+                     "recuperabile (deferral nominatum)";
+            redde NIHIL;
+        }
+        t = proximum;
     }
-    r = _radix_silvae(s, &impurum);
-    si (impurum || r == NIHIL)
-    {
-        *causa = "origo pasta/chorda/api - stratum 0 non "
-                 "recuperabile (deferral nominatum)";
-        redde NIHIL;
-    }
-    redde _token_convertere(r);
 }
 
 /* SEDES: materia hinc discit an lexema DERIVATUM sit. Sine hoc unco
@@ -282,68 +393,38 @@ hic_manens vacuum
 _sedes_quaerere (vacuum* datum, constans MateriaToken* token,
                  MateriaSedes* sedes)
 {
-    SilvaToken* s = ((CaudaShim*)materia_token_cauda(token))->silva;
+    CaudaShim* cd = CAUDA(token);
 
     (vacuum)datum;
     sedes->byte_offset = token->byte_offset;
     sedes->linea       = token->linea;
     sedes->columna     = token->columna;
     sedes->fons_index  = token->fons_index;
-    sedes->est_fons    = (b32)(s->origo.genus == SILVA_ORIGO_FONS);
+    sedes->est_fons    = (b32)(cd->origo_genus == (s32)SILVA_ORIGO_FONS);
 }
 
+/* Extentum per CAUDAM. Cauda RADICIS eum non fert - lexema DERIVATUM
+ * eum fert (invocatio eius) - ergo per lexemata omnia quaerendum est
+ * quorum radix haec sit. Scansio linearis; numeri parvi. */
 hic_manens Xar*
 _extentum_quaerere (vacuum* datum, constans MateriaToken* radix)
 {
-    SilvaToken* r;
-    Xar* lamina = NIHIL;
-    i32 k;
+    i32 i;
 
     (vacuum)datum;
-    r = ((CaudaShim*)materia_token_cauda(radix))->silva;
-    si (SHIM.expansio == NIHIL || SHIM.expansio->extenta == NIHIL)
-    { redde NIHIL; }
-
-    per (k = ZEPHYRUM; k < xar_numerus(SHIM.expansio->extenta); k++)
+    per (i = ZEPHYRUM; i < xar_numerus(SHIM.lexemata); i++)
     {
-        SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
-            xar_obtinere(SHIM.expansio->extenta, k);
+        MateriaToken* m = *(MateriaToken**)xar_obtinere(SHIM.lexemata, i);
+        CaudaShim*    cd = CAUDA(m);
 
-        si (e != NIHIL && e->invocatio == r) { lamina = e->lamina; frange; }
-    }
-    si (lamina == NIHIL)
-    {
-        /* continentia (via CHORDA) */
-        per (k = ZEPHYRUM; k < xar_numerus(SHIM.expansio->extenta); k++)
+        si (cd->extentum == NIHIL) { perge; }
+        si (   cd->primus  == radix
+            || cd->tertius == radix)
         {
-            SilvaExtentumInvocationis* e = (SilvaExtentumInvocationis*)
-                xar_obtinere(SHIM.expansio->extenta, k);
-            SilvaToken* pri; SilvaToken* ult;
-
-            si (e == NIHIL || e->lamina == NIHIL
-                || xar_numerus(e->lamina) == ZEPHYRUM) { perge; }
-            pri = *(SilvaToken**)xar_obtinere(e->lamina, ZEPHYRUM);
-            ult = *(SilvaToken**)xar_obtinere(e->lamina,
-                (i32)(xar_numerus(e->lamina) - I));
-            si (pri->fons_index == r->fons_index
-                && r->byte_offset >= pri->byte_offset
-                && r->byte_offset < ult->byte_offset + (s32)ult->longitudo)
-            { lamina = e->lamina; frange; }
+            redde cd->extentum;
         }
     }
-    si (lamina == NIHIL) { redde NIHIL; }
-
-    /* laminam silvae in laminam materiae vertere */
-    {
-        Xar* m = xar_creare(SHIM.piscina, magnitudo(MateriaToken*));
-
-        per (k = ZEPHYRUM; k < xar_numerus(lamina); k++)
-        {
-            *(MateriaToken**)xar_addere(m) = _token_convertere(
-                *(SilvaToken**)xar_obtinere(lamina, k));
-        }
-        redde m;
-    }
+    redde NIHIL;
 }
 
 /* scissurae: valorem lexematis cum laminis reinsertis */
@@ -351,10 +432,10 @@ hic_manens b32
 _valorem_emittere (vacuum* datum, ChordaAedificator* aed,
                    constans MateriaToken* token)
 {
-    SilvaToken* s;
+    CaudaShim* s;
 
     (vacuum)datum;
-    s = ((CaudaShim*)materia_token_cauda(token))->silva;
+    s = CAUDA(token);
     si (s->scissurae == NIHIL)
     {
         chorda_aedificator_appendere_chorda(aed, token->valor);
@@ -388,13 +469,13 @@ hic_manens b32
 _attributa_ornare (vacuum* datum, MateriaArborScriptor* st,
                    StmlNodus* elementum, constans MateriaToken* lexema)
 {
-    SilvaToken* s = ((CaudaShim*)materia_token_cauda(lexema))->silva;
+    CaudaShim* cd = CAUDA(lexema);
 
     (vacuum)datum;
-    si (s->standard != (i8)SILVA_STANDARD_C89)
+    si (cd->standard != (i8)SILVA_STANDARD_C89)
     {
         redde materia_arbor_attributum_numeri(st, elementum, "standard",
-            (i32)s->standard);
+            (i32)cd->standard);
     }
     redde VERUM;
 }
@@ -404,29 +485,12 @@ _origo_numerare (vacuum* datum, constans MateriaToken* lexema,
                  vacuum (*numerare)(vacuum*, constans MateriaToken*),
                  vacuum* ctx)
 {
-    SilvaToken* s = ((CaudaShim*)materia_token_cauda(lexema))->silva;
+    CaudaShim* cd = CAUDA(lexema);
 
     (vacuum)datum;
-    commutatio (s->origo.genus)
-    {
-    casus SILVA_ORIGO_EXPANSIO:
-        si (s->origo.datum.expansio.invocatio != NIHIL)
-        { numerare(ctx, _token_convertere(s->origo.datum.expansio.invocatio)); }
-        frange;
-    casus SILVA_ORIGO_PASTA:
-        si (s->origo.datum.pasta.sinister != NIHIL)
-        { numerare(ctx, _token_convertere(s->origo.datum.pasta.sinister)); }
-        si (s->origo.datum.pasta.dexter != NIHIL)
-        { numerare(ctx, _token_convertere(s->origo.datum.pasta.dexter)); }
-        si (s->origo.datum.pasta.invocatio != NIHIL)
-        { numerare(ctx, _token_convertere(s->origo.datum.pasta.invocatio)); }
-        frange;
-    casus SILVA_ORIGO_CHORDA:
-        si (s->origo.datum.stringificatio.primus != NIHIL)
-        { numerare(ctx, _token_convertere(s->origo.datum.stringificatio.primus)); }
-        frange;
-    ordinarius: frange;
-    }
+    si (cd->primus   != NIHIL) { numerare(ctx, cd->primus); }
+    si (cd->secundus != NIHIL) { numerare(ctx, cd->secundus); }
+    si (cd->tertius  != NIHIL) { numerare(ctx, cd->tertius); }
 }
 
 
@@ -472,11 +536,11 @@ _extentum_ornare (MateriaArborScriptor* st, StmlNodus* parens, Xar* lamina)
     }
     per (k = ZEPHYRUM; k < xar_numerus(lamina); k++)
     {
-        SilvaToken* t = *(SilvaToken**)xar_obtinere(lamina, k);
-        StmlNodus*  scriptum;
+        MateriaToken* t = *(MateriaToken**)xar_obtinere(lamina, k);
+        StmlNodus*    scriptum;
 
         si (t == NIHIL) { perge; }
-        scriptum = materia_arbor_lexema_scribere(st, _token_convertere(t));
+        scriptum = materia_arbor_lexema_scribere(st, t);
         si (scriptum == NIHIL) { redde FALSUM; }
         si (!stml_liberum_addere(elem, scriptum))
         {
@@ -498,15 +562,10 @@ hic_manens b32
 _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
                  StmlNodus* elementum, constans MateriaToken* lexema)
 {
-    SilvaToken*  s = ((CaudaShim*)materia_token_cauda(lexema))->silva;
+    CaudaShim*   cd = CAUDA(lexema);
     Piscina*     p = materia_arbor_scriptor_piscina(st);
     InternamentumChorda* in = materia_arbor_scriptor_intern(st);
     constans character* tag;
-    chorda*      titulus_macro;
-    SilvaToken*  primus;
-    SilvaToken*  secundus;
-    SilvaToken*  tertius;
-    SilvaToken*  definitio;
     StmlNodus*   elem;
     StmlNodus*   scriptum;
     i32          i;
@@ -514,11 +573,11 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
     (vacuum)datum;
 
     /* --- scissurae --- */
-    si (s->scissurae != NIHIL)
+    si (cd->scissurae != NIHIL)
     {
-        per (i = ZEPHYRUM; i < xar_numerus(s->scissurae); i++)
+        per (i = ZEPHYRUM; i < xar_numerus(cd->scissurae); i++)
         {
-            SilvaScissura* sc = (SilvaScissura*)xar_obtinere(s->scissurae, i);
+            SilvaScissura* sc = (SilvaScissura*)xar_obtinere(cd->scissurae, i);
             StmlNodus*     es;
 
             si (sc == NIHIL || sc->offset < ZEPHYRUM)
@@ -549,33 +608,14 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
     }
 
     /* --- origo nestata --- */
-    si (s->origo.genus == SILVA_ORIGO_FONS) { redde VERUM; }
+    si (cd->origo_genus == (s32)SILVA_ORIGO_FONS) { redde VERUM; }
 
-    primus = secundus = tertius = definitio = NIHIL;
-    commutatio (s->origo.genus)
+    commutatio (cd->origo_genus)
     {
-    casus SILVA_ORIGO_EXPANSIO:
-        tag = "expansio";
-        titulus_macro = s->origo.datum.expansio.nomen_macro;
-        primus        = s->origo.datum.expansio.invocatio;
-        definitio     = s->origo.datum.expansio.corpus;
-        frange;
-    casus SILVA_ORIGO_PASTA:
-        tag = "pasta";
-        titulus_macro = s->origo.datum.pasta.nomen_macro;
-        primus        = s->origo.datum.pasta.sinister;
-        secundus      = s->origo.datum.pasta.dexter;
-        tertius       = s->origo.datum.pasta.invocatio;
-        frange;
-    casus SILVA_ORIGO_CHORDA:
-        tag = "stringificatio";
-        titulus_macro = s->origo.datum.stringificatio.nomen_macro;
-        primus        = s->origo.datum.stringificatio.primus;
-        frange;
-    casus SILVA_ORIGO_API:
-        tag = "api";
-        titulus_macro = s->origo.datum.api.nomen_macro;
-        frange;
+    casus SILVA_ORIGO_EXPANSIO:      tag = "expansio";       frange;
+    casus SILVA_ORIGO_PASTA:         tag = "pasta";          frange;
+    casus SILVA_ORIGO_CHORDA:        tag = "stringificatio"; frange;
+    casus SILVA_ORIGO_API:           tag = "api";            frange;
     ordinarius:
         materia_arbor_scriptor_recusare(st, "genus originis ignotum");
         redde FALSUM;
@@ -588,23 +628,21 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
             "elementum originis creari non potuit");
         redde FALSUM;
     }
-    si (titulus_macro != NIHIL && titulus_macro->mensura > ZEPHYRUM)
+    si (cd->nomen_macro != NIHIL && cd->nomen_macro->mensura > ZEPHYRUM)
     {
-        stml_attributum_addere_chorda(elem, p, in, "macro", *titulus_macro);
+        stml_attributum_addere_chorda(elem, p, in, "macro", *cd->nomen_macro);
     }
-    si (definitio != NIHIL)
+    si (cd->def_adest)
     {
         /* DEF-SITE per REFERENTIAM, numquam inlinatum: aliter quaeque
          * plagula latina.h utens lexemata latina.h COPIARET. */
-        materia_arbor_attributum_numeri(st, elem, "def-f",
-            (i32)definitio->fons_index);
-        materia_arbor_attributum_numeri(st, elem, "def-l", definitio->linea);
-        materia_arbor_attributum_numeri(st, elem, "def-c", definitio->columna);
+        materia_arbor_attributum_numeri(st, elem, "def-f", (i32)cd->def_f);
+        materia_arbor_attributum_numeri(st, elem, "def-l", (i32)cd->def_l);
+        materia_arbor_attributum_numeri(st, elem, "def-c", (i32)cd->def_c);
     }
-    si (primus != NIHIL)
+    si (cd->primus != NIHIL)
     {
-        scriptum = materia_arbor_lexema_scribere(st,
-            _token_convertere(primus));
+        scriptum = materia_arbor_lexema_scribere(st, cd->primus);
         si (scriptum == NIHIL) { redde FALSUM; }
         si (!stml_liberum_addere(elem, scriptum))
         {
@@ -615,21 +653,16 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
         /* EXTENTUM semel per invocationem: si transclusio, invocatio
          * iam scripta est et extentum cum ea. */
         si (   scriptum->genus != STML_NODUS_TRANSCLUSIO
-            && s->origo.genus  == SILVA_ORIGO_EXPANSIO)
+            && cd->origo_genus == (s32)SILVA_ORIGO_EXPANSIO
+            && cd->extentum != NIHIL && xar_numerus(cd->extentum) > I
+            && !_extentum_ornare(st, elem, cd->extentum))
         {
-            Xar* lamina = _extentum_laminam_silvae(primus);
-
-            si (lamina != NIHIL && xar_numerus(lamina) > I
-                && !_extentum_ornare(st, elem, lamina))
-            {
-                redde FALSUM;
-            }
+            redde FALSUM;
         }
     }
-    si (secundus != NIHIL)
+    si (cd->secundus != NIHIL)
     {
-        scriptum = materia_arbor_lexema_scribere(st,
-            _token_convertere(secundus));
+        scriptum = materia_arbor_lexema_scribere(st, cd->secundus);
         si (scriptum == NIHIL) { redde FALSUM; }
         si (!stml_liberum_addere(elem, scriptum))
         {
@@ -638,10 +671,9 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
             redde FALSUM;
         }
     }
-    si (tertius != NIHIL)
+    si (cd->tertius != NIHIL)
     {
-        scriptum = materia_arbor_lexema_scribere(st,
-            _token_convertere(tertius));
+        scriptum = materia_arbor_lexema_scribere(st, cd->tertius);
         si (scriptum == NIHIL) { redde FALSUM; }
         si (!stml_liberum_addere(elem, scriptum))
         {
@@ -649,15 +681,11 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
                 "invocatio pastae addi non potuit");
             redde FALSUM;
         }
-        si (scriptum->genus != STML_NODUS_TRANSCLUSIO)
+        si (   scriptum->genus != STML_NODUS_TRANSCLUSIO
+            && cd->extentum != NIHIL && xar_numerus(cd->extentum) > I
+            && !_extentum_ornare(st, elem, cd->extentum))
         {
-            Xar* lamina = _extentum_laminam_silvae(tertius);
-
-            si (lamina != NIHIL && xar_numerus(lamina) > I
-                && !_extentum_ornare(st, elem, lamina))
-            {
-                redde FALSUM;
-            }
+            redde FALSUM;
         }
     }
     si (!stml_liberum_addere(elementum, elem))
@@ -669,15 +697,228 @@ _liberos_ornare (vacuum* datum, MateriaArborScriptor* st,
     redde VERUM;
 }
 
+
+/* ---------- frons C89: LECTIO ---------- */
+
+hic_manens b32
+_attributa_legere (vacuum* datum, MateriaArborLector* lector,
+                   constans StmlNodus* elementum, MateriaToken* lexema)
+{
+    chorda* a;
+    i32     n;
+
+    (vacuum)datum;
+    CAUDA(lexema)->standard = (i8)SILVA_STANDARD_C89;
+    a = stml_attributum_capere((StmlNodus*)(size_t)elementum, "standard");
+    si (a != NIHIL)
+    {
+        si (!materia_arbor_numerus_ex_chorda(a, &n))
+        {
+            redde materia_arbor_lector_recusare(lector,
+                "standard non numerus", elementum->linea);
+        }
+        CAUDA(lexema)->standard = (i8)n;
+    }
+    redde VERUM;
+}
+
+hic_manens b32
+_extentum_legere_shim (MateriaArborLector* lector, StmlNodus* elementum,
+                       MateriaToken* invocatio, CaudaShim* cd)
+{
+    Xar* lamina;
+    i32  cursor;
+    i32  numerus;
+
+    si (invocatio == NIHIL)
+    {
+        redde materia_arbor_lector_recusare(lector,
+            "extentum sine invocatione", elementum->linea);
+    }
+    lamina  = xar_creare(materia_arbor_lector_piscina(lector),
+        magnitudo(MateriaToken*));
+    numerus = stml_numerus_liberorum(elementum);
+    per (cursor = ZEPHYRUM; cursor < numerus; cursor++)
+    {
+        StmlNodus*    liberum = stml_liberum_ad_indicem(elementum, cursor);
+        MateriaToken* lectum;
+
+        si (liberum == NIHIL) { perge; }
+        si (   liberum->genus != STML_NODUS_ELEMENTUM
+            && liberum->genus != STML_NODUS_TRANSCLUSIO) { perge; }
+        lectum = materia_arbor_lexema_legere(lector, liberum, NIHIL);
+        si (lectum == NIHIL) { redde FALSUM; }
+        *(MateriaToken**)xar_addere(lamina) = lectum;
+    }
+
+    /* LEXEMA PRIMUM LAMINAE *EST* INVOCATIO - IDENTITAS, non
+     * aequalitas. Scriptor nomen BIS scribit (semel in 'expansio',
+     * semel ut caput laminae), ergo lectio DUO OBIECTA valore pari
+     * pareret; emissor autem extentum per IDENTITATEM MONSTRATORIS
+     * quaerit, et sic invocatio sedem numquam rectam acciperet et
+     * emissio eam SILENTER OMITTERET. Silva id mensuravit: IV
+     * plagulae, octeti invocationis absentes dum extenta ipsa recte
+     * numerarentur. NUMERUS PAR IDENTITATEM NON PROBAT. */
+    si (xar_numerus(lamina) > ZEPHYRUM)
+    {
+        *(MateriaToken**)xar_obtinere(lamina, ZEPHYRUM) = invocatio;
+    }
+    cd->extentum = lamina;
+    redde VERUM;
+}
+
+hic_manens s32
+_liberum_legere (vacuum* datum, MateriaArborLector* lector,
+                 constans StmlNodus* liberum, MateriaToken* lexema)
+{
+    CaudaShim* cd = CAUDA(lexema);
+    StmlNodus* el = (StmlNodus*)(size_t)liberum;
+    chorda*    a;
+    s32        genus;
+    i32        cursor;
+    i32        numerus;
+
+    (vacuum)datum;
+    si (liberum->titulus == NIHIL) { redde (s32)MATERIA_LECTIO_IGNOTUM; }
+
+    /* --- scissura --- */
+    si (chorda_aequalis_literis(*liberum->titulus, "scissura"))
+    {
+        SilvaScissura sc;
+        i32           offset;
+
+        a = stml_attributum_capere(el, "offset");
+        si (!materia_arbor_numerus_ex_chorda(a, &offset))
+        {
+            materia_arbor_lector_recusare(lector, "scissura sine offset",
+                liberum->linea);
+            redde (s32)MATERIA_LECTIO_FRACTUM;
+        }
+        sc.offset = (s32)offset;
+        sc.crlf   = stml_attributum_habet(el, "crlf");
+        si (cd->scissurae == NIHIL)
+        {
+            cd->scissurae = xar_creare(
+                materia_arbor_lector_piscina(lector),
+                magnitudo(SilvaScissura));
+        }
+        *(SilvaScissura*)xar_addere(cd->scissurae) = sc;
+        redde (s32)MATERIA_LECTIO_ACCEPTUM;
+    }
+
+    /* --- origo --- */
+    si      (chorda_aequalis_literis(*liberum->titulus, "expansio"))
+    { genus = (s32)SILVA_ORIGO_EXPANSIO; }
+    alioquin si (chorda_aequalis_literis(*liberum->titulus, "pasta"))
+    { genus = (s32)SILVA_ORIGO_PASTA; }
+    alioquin si (chorda_aequalis_literis(*liberum->titulus,
+                     "stringificatio"))
+    { genus = (s32)SILVA_ORIGO_CHORDA; }
+    alioquin si (chorda_aequalis_literis(*liberum->titulus, "api"))
+    { genus = (s32)SILVA_ORIGO_API; }
+    alioquin
+    { redde (s32)MATERIA_LECTIO_IGNOTUM; }
+
+    cd->origo_genus = genus;
+    cd->nomen_macro = stml_attributum_capere(el, "macro");
+
+    a = stml_attributum_capere(el, "def-l");
+    si (a != NIHIL)
+    {
+        i32 n = ZEPHYRUM;
+
+        cd->def_adest = VERUM;
+        (vacuum)materia_arbor_numerus_ex_chorda(a, &n);
+        cd->def_l = (s32)n;
+        n = ZEPHYRUM;
+        a = stml_attributum_capere(el, "def-f");
+        si (a != NIHIL) { (vacuum)materia_arbor_numerus_ex_chorda(a, &n); }
+        cd->def_f = (s32)n;
+        n = ZEPHYRUM;
+        a = stml_attributum_capere(el, "def-c");
+        si (a != NIHIL) { (vacuum)materia_arbor_numerus_ex_chorda(a, &n); }
+        cd->def_c = (s32)n;
+    }
+
+    numerus = stml_numerus_liberorum(el);
+    per (cursor = ZEPHYRUM; cursor < numerus; cursor++)
+    {
+        StmlNodus*    n_lib = stml_liberum_ad_indicem(el, cursor);
+        MateriaToken* lectum;
+
+        si (n_lib == NIHIL) { perge; }
+        si (   n_lib->genus != STML_NODUS_ELEMENTUM
+            && n_lib->genus != STML_NODUS_TRANSCLUSIO) { perge; }
+
+        /* EXTENTUM post invocationem stat, ergo 'primus'/'tertius'
+         * iam noti sunt. */
+        si (   n_lib->genus   == STML_NODUS_ELEMENTUM
+            && n_lib->titulus != NIHIL
+            && chorda_aequalis_literis(*n_lib->titulus, "extentum"))
+        {
+            si (!_extentum_legere_shim(lector, n_lib,
+                     (genus == (s32)SILVA_ORIGO_PASTA)
+                         ? cd->tertius : cd->primus, cd))
+            {
+                redde (s32)MATERIA_LECTIO_FRACTUM;
+            }
+            perge;
+        }
+        lectum = materia_arbor_lexema_legere(lector, n_lib, NIHIL);
+        si (lectum == NIHIL) { redde (s32)MATERIA_LECTIO_FRACTUM; }
+        si      (cd->primus   == NIHIL) { cd->primus   = lectum; }
+        alioquin si (cd->secundus == NIHIL) { cd->secundus = lectum; }
+        alioquin si (cd->tertius  == NIHIL) { cd->tertius  = lectum; }
+    }
+    redde (s32)MATERIA_LECTIO_ACCEPTUM;
+}
+
+/* Cursor per valorem CUM laminis reinsertis: sedes eas numerare
+ * debent, aliter omnia post lexema lamina-ferens labuntur. */
+hic_manens b32
+_cursorem_movere (vacuum* datum, MateriaArborCursor* c,
+                  constans MateriaToken* lexema)
+{
+    CaudaShim* cd = CAUDA(lexema);
+    i32        i;
+    i32        s_idx;
+    i32        n_sc;
+
+    (vacuum)datum;
+    si (cd->scissurae == NIHIL) { redde FALSUM; }
+    n_sc  = xar_numerus(cd->scissurae);
+    s_idx = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= lexema->valor.mensura; i++)
+    {
+        dum (s_idx < n_sc)
+        {
+            SilvaScissura* sc = (SilvaScissura*)xar_obtinere(
+                cd->scissurae, s_idx);
+
+            si (sc == NIHIL || sc->offset != (s32)i) { frange; }
+            c->offset += sc->crlf ? III : II;
+            c->linea++;
+            c->columna = I;
+            s_idx++;
+        }
+        si (i == lexema->valor.mensura) { frange; }
+        si ((character)lexema->valor.datum[i] == '\n')
+        { c->linea++; c->columna = I; }
+        alioquin { c->columna++; }
+        c->offset++;
+    }
+    redde VERUM;
+}
+
 hic_manens constans MateriaArborFrons FRONS_C89 = {
     NIHIL,
     _origo_numerare,
     _attributa_ornare,
     _liberos_ornare,
-    NIHIL,   /* attributa_legere */
-    NIHIL,   /* liberum_legere */
-    NIHIL,   /* cursorem_movere */
-    NIHIL    /* perficere */
+    _attributa_legere,
+    _liberum_legere,
+    _cursorem_movere,
+    NIHIL    /* perficere: patres materia ipsa figit */
 };
 
 /* Nodum ex valore radicis eruere (radix commissionis VALOR est) */
@@ -707,6 +948,8 @@ hic_manens i32 STML_IDEM = 0;
 hic_manens i32 STML_DISPAR = 0;
 hic_manens b32 STML_AGERE = FALSUM;
 hic_manens b32 STML_VERBOSE = FALSUM;
+hic_manens i32 CIRC_IDEM = 0;
+hic_manens i32 CIRC_DISPAR = 0;
 
 hic_manens vacuum
 _probare (constans character* titulus, constans character* fons)
@@ -835,7 +1078,55 @@ _probare (constans character* titulus, constans character* fons)
                     }
                     STML_DISPAR++;
                 }
-                alioquin { STML_IDEM++; }
+                alioquin
+                {
+                    /* --- CIRCUITUS: lege, scribe iterum, confer ---
+                     * BIS, quia vitium quod se compoundat primum
+                     * circuitum saepe superat. */
+                    MateriaArborVitium vit;
+                    MateriaNodus*      relecta;
+                    MateriaArborScriptura mb;
+                    i32 gyrus;
+                    b32 sanus = VERUM;
+                    chorda prior = ma.textus;
+
+                    ac.forma = FORMA;
+                    per (gyrus = ZEPHYRUM; gyrus < (i32)II; gyrus++)
+                    {
+                        relecta = materia_arbor_legere(p, NIHIL, prior,
+                            &ac, &vit);
+                        si (relecta == NIHIL)
+                        {
+                            imprimere("  %-28s CIRCUITUS lectio fracta"
+                                " (gyrus %d): %s (linea %d)\n", titulus,
+                                (int)gyrus + 1,
+                                vit.causa ? vit.causa : "-",
+                                (int)vit.linea);
+                            sanus = FALSUM; frange;
+                        }
+                        mb = materia_arbor_scribere_nodum(p, relecta, &ac);
+                        si (!mb.successus)
+                        {
+                            imprimere("  %-28s CIRCUITUS scriptio fracta"
+                                " (gyrus %d): %s\n", titulus,
+                                (int)gyrus + 1, mb.causa ? mb.causa : "-");
+                            sanus = FALSUM; frange;
+                        }
+                        si (mb.textus.mensura != ma.textus.mensura
+                            || memcmp(mb.textus.datum, ma.textus.datum,
+                                      (size_t)ma.textus.mensura) != 0)
+                        {
+                            imprimere("  %-28s CIRCUITUS DISPAR (gyrus %d:"
+                                " %d contra %d)\n", titulus,
+                                (int)gyrus + 1, (int)ma.textus.mensura,
+                                (int)mb.textus.mensura);
+                            sanus = FALSUM; frange;
+                        }
+                        prior = mb.textus;
+                    }
+                    si (sanus) { CIRC_IDEM++; } alioquin { CIRC_DISPAR++; }
+                    STML_IDEM++;
+                }
             }
         }
     }
@@ -897,8 +1188,15 @@ s32 principale (integer argc, character** argv)
     {
         imprimere("  STML: idem %d, dispar %d\n", (int)STML_IDEM,
             (int)STML_DISPAR);
+        imprimere("  CIRCUITUS (bis): idem %d, dispar %d\n",
+            (int)CIRC_IDEM, (int)CIRC_DISPAR);
     }
 
     imprimere("\n  probatae %d, fractae %d\n\n", (int)PROBATAE, (int)FRACTAE);
-    redde (FRACTAE == 0) ? ZEPHYRUM : I;
+    /* EXITUS OMNIA numerat. Prius FRACTAE solas numerabat, ergo
+     * STML_DISPAR et CIRC_DISPAR nuntiabantur sed exitum NON
+     * movebant - porta quae in assertione sua PRINCIPALI cadere
+     * non potest. Tertium huius generis hodie. */
+    redde (FRACTAE == 0 && STML_DISPAR == 0 && CIRC_DISPAR == 0)
+        ? ZEPHYRUM : I;
 }

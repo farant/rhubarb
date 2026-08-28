@@ -728,3 +728,84 @@ from exactly that. The reader-side port must honour it.
 NEXT: the reader-side C89 frontend (`_origo_legere`, `_extentum_legere`,
 scissurae, cursor advance), then the full round trip. That closes the
 phase gate.
+
+========================================================================
+PHASIS I — CIRCUITUS PLENUS: CCCXLV/CCCXLV. RELATIO (2026-08-27)
+========================================================================
+
+  ./materia/shim_probare.sh -stml
+    STML: idem 345, dispar 0
+    CIRCUITUS (bis): idem 345, dispar 0
+    probatae 346, fractae 0
+
+Real C89 — 336 files — writes to STML byte-identically to silva, reads
+back through materia, and re-writes byte-identically. TWICE. Every
+C89-specific part lives in a frontend; materia contains no notion of a
+macro. materia suite 5/5, silva 50/50.
+
+THE REFACTOR THAT MADE THE READER POSSIBLE
+
+The shim's token tail held `SilvaToken* silva`. Fine for the conversion
+path; USELESS for reading, because a token parsed out of a document has
+no silva token behind it. A write hook that reads `->silva` therefore
+could not close the loop.
+
+The tail now holds what the DOCUMENT holds — origin genus, the three
+nested tokens, macro name, def-site triple, extent, scissurae,
+standard — and BOTH paths fill it: conversion from silva, reading from
+STML. The write hooks read only the tail.
+
+That is not a shim trick. It is the shape the real C89 frontend will
+have after phase 5, and it fell out of being forced to make both
+directions work against one structure.
+
+TWO DEFECTS, BOTH SILVA HAD MEASURED FIRST
+
+1. **Fragment opening on the origin surface.** Round trip failed with
+   "genus lexematis lexico ignotum": an invocation is usually wrapped
+   in `<fragmentum id="lexN">`, and my origin reader passed the wrapper
+   straight to the lexeme reader, which saw `#lexN` as a tag.
+
+   silva hit this EXACTLY — `silva_arbor.c:2795` records 31 latinized
+   files refused, with the diagnosis that `_origo_legere` was a NEW
+   SURFACE that did not inherit what the tree walk already did.
+
+   So I did not fix it in the shim. I fixed it in
+   `materia_arbor_lexema_legere` — the EXPORTED seam — which now opens
+   fragments itself. A frontend cannot repeat silva's mistake because
+   it is not given the opportunity. Verified by planting: removing the
+   call fails the round trip and exits 1.
+
+2. **Extent head identity.** Carried over deliberately: the lamina's
+   first token must BE the invocation object, not an equal one, because
+   the emitter looks up extents by POINTER. silva measured 4 files
+   losing invocation bytes while extent COUNTS matched — "numerus par
+   identitatem non probat".
+
+TWO HOLES IN MY OWN GATE, FOUND BY CHECKING RATHER THAN TRUSTING
+
+- The shim's exit code counted only `FRACTAE`. `STML_DISPAR` and
+  `CIRC_DISPAR` were PRINTED but did not move it — a gate that cannot
+  fail on its principal assertion. Now all three count; planted fault
+  confirms exit 1.
+- `shim_probare.sh` expanded an empty array under `set -u`:
+  `VEXILLA[@]: unbound variable`. Only the NO-FLAG path hit it, and I
+  had only ever tested the flag path. Fixed with
+  `${A[@]+"${A[@]}"}`, and all three invocation forms (bare, `-stml`,
+  named file) are now checked.
+
+Running tally of this class today: stale objects (false green), mtime
+tie (false red), corpus silently emptied by a flag, exit code blind to
+its own findings, empty-array expansion. FIVE. The pattern is not
+carelessness in any one of them — it is that a gate's OWN correctness
+needs the same adversarial treatment as the code it guards, and the
+cheap test is always "make it fail on purpose".
+
+WHAT REMAINS FOR THE PHASE GATE PROPER. The spec's bar is silva's own
+suites green THROUGH materia (281/281 subtree round trip, 78/78,
+154/154, hospes 39/39, adversarial 24/24, haruspex 243 TUs). What is
+proven here is stronger in breadth (336 files, byte + STML + double
+round trip) and weaker in kind: it runs materia's writer/reader beside
+silva's, rather than silva's suites ON materia. Closing that is phase 5
+(migration), not phase 1. Phase 1's stated gate — "a C89 shim passes
+the round trip through materia, without migrating silva" — is MET.
