@@ -1348,3 +1348,66 @@ would have wedged the runner permanently.
   introduced a FRESH hang had I returned NIHIL without consuming the
   token first. A guard would have caught that automatically instead
   of relying on me noticing.
+
+
+## 2026-08-29 (later) — "unterminated" made uniform
+
+Follow-up to the entry above, and it revises one of its decisions.
+
+Fran asked the right question after the merge: *did we fix everything
+correctly in terms of how the existing layers work?* The honest
+answer was no. The two crash fixes made the parser MORE LENIENT
+without making anything the judge — `<x!>a` and `<!--x` succeeded
+with no vitium anywhere, and the WRITER then invented the missing
+terminator.
+
+I first proposed two new `stml_strictum` genera. That was wrong too,
+and measuring settled it in one command:
+
+```
+<a>x        -> status 3 (TAG_NON_CLAUSUM)   <- the house convention
+<x!>a       -> OK
+<!--x       -> OK
+<?x         -> OK
+<!DOCTYPE x -> OK
+```
+
+**Unterminated is already a parse ERROR here** — for ordinary
+elements, which are the primary construct. Raw elements, comments,
+PIs and doctype were the four that disagreed. So this needed no new
+vocabulary and no new node state; it needed the other four to agree
+with the one that was already right.
+
+The danger being fixed is concrete: forget a `-->` mid-edit and the
+formatter would close the comment FOR you, swallowing everything
+after it into comment content and then terminating it. A silent,
+content-destroying repair.
+
+### Where the flag lives, and why not the obvious place
+
+Raw elements needed no state at all — `_parser_legere_elementum_crudus`
+had `/* Expect close tag */` above an `si` with no `alioquin`. The
+comment asserted an expectation the code never enforced.
+
+Comments/PIs/doctype do need a signal, because the LEXER knows and
+the PARSER raises. The obvious home is a field on `StmlToken`. Do
+not put it there: **14 functions construct a StmlToken and there is
+no shared initializer**, so a fifteenth field invites exactly the
+uninitialized-read defect that 01M16Z03YE was, earlier the same day.
+
+It lives on `StmlTokenContext` instead — two init sites, both
+explicit. Cleared at the top of every `_tok_proximus` so it cannot
+go stale (only three lexers ever set it), and read in the parser
+BEFORE `_parser_progredi`, since advancing fetches the next token
+and clears it.
+
+### Result
+
+All five construct kinds now agree. Zero fallout: root 143/143,
+silva 50/50, materia 5/5, and no fixture anywhere depended on the
+lenient behavior. Terminated edge cases still pass unchanged
+(`<!-- x --->`, `<!-- a -- b -->`, `<!---->`).
+
+The "left open" item in the entry above about unterminated
+constructs succeeding is hereby CLOSED. The `<!doctype html>`
+remainder and the `finis_ultimus` progress guard are still open.

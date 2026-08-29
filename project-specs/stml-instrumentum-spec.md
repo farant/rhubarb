@@ -692,6 +692,10 @@ crashes. `<!-- x --->`, `<!-- x ---->`, `<!-- a -- b -->` and `<!---->` all
 parse cleanly — the terminator search finds `-->` wherever it sits and extra
 dashes are content.
 
+**SEMANTICA POSTEA CORRECTA (Fran, 2026-08-29, commissum `180eceb7`).**
+This fix first made unterminated comment/PI *succeed* with content-to-EOF,
+matching doctype. That was the wrong convention to copy — see §7.5.5.
+
 **`<?` note:** PROCESSIO is live but trivially — 37 sites across 37 files,
 every one the identical `<?xml version="1.0" encoding="UTF-8"?>` declaration.
 `<?` is NOT in the sigil registry (`stml-visio.md` §2); it is inherited XML,
@@ -764,6 +768,41 @@ Not fixed here (out of Plan A's scope). It matters for `vertere`: Fran decreed
 STML files carry no doctype line (§5), so an author who writes one out of
 habit gets silence instead of a diagnosis. **OPEN — Fran to decide** whether
 the raw-element parser should refuse an empty title.
+
+### §7.5.5 CONSTRUCTIO NON CLAUSA = ERRATUM (Fran, `180eceb7`)
+
+Fran's question after the merge — *did we fix everything correctly in terms
+of how the existing layers work?* — exposed that §7.5.1 and §7.5.2 had made
+the parser more LENIENT without making anything the JUDGE. `<x!>a` and
+`<!--x` succeeded with no vitium, and the writer then invented the missing
+terminator.
+
+The first proposal was two new `stml_strictum` genera. Measuring killed it:
+
+```
+<a>x        -> status 3 (TAG_NON_CLAUSUM)   <- the house convention
+<x!>a  ·  <!--x  ·  <?x  ·  <!DOCTYPE x     -> all OK
+```
+
+**Unterminated is ALREADY a parse error** — for ordinary elements, the
+primary construct. The other four were the outliers. So: no new vocabulary,
+no new node state; make the four agree with the one already right.
+
+The danger is concrete: forget a `-->` mid-edit and the formatter closes the
+comment FOR you, swallowing what followed and then terminating it.
+
+**Raw:** an `alioquin` in `_parser_legere_elementum_crudus`. No state — the
+`/* Expect close tag */` comment sat above an `si` with no `alioquin`.
+
+**Comment/PI/doctype:** `b32 non_clausum` on **`StmlTokenContext`**, NOT on
+`StmlToken`. **14 functions construct a StmlToken with no shared
+initializer**, so a 15th field there invites exactly the uninitialized-read
+defect of §7.5.2. The context has 2 explicit init sites. Cleared at the top
+of every `_tok_proximus` (cannot go stale); read in the parser BEFORE
+`_parser_progredi`, since advancing fetches the next token and clears it.
+
+**Result:** all five agree. Zero fallout — root 143/143, silva 50/50,
+materia 5/5; no fixture depended on the lenient behavior.
 
 ### §7.5.4 Effugium nimium — decretum Franis
 
