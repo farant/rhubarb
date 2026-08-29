@@ -40,6 +40,35 @@ probatio_stml_incolumitas_parsare (
     piscina_destruere(p);
 }
 
+
+/* Statum parsationis reddere (ZEPHYRUM si successit). Pro sectione
+ * recusationum, ubi non RUINA sed IUDICIUM probatur - haec inputa
+ * iam non ruunt, ergo furca hic supervacua est. */
+s32
+probatio_stml_incolumitas_status (
+    constans character* fons);
+
+s32
+probatio_stml_incolumitas_status (
+    constans character* fons)
+{
+                 Piscina* p;
+     InternamentumChorda* it;
+            StmlResultus  r;
+                     s32  status;
+
+    p = piscina_generare_dynamicum("incolumitas_status", 1048576);
+    si (!p)
+    {
+        redde -I;
+    }
+    it      = internamentum_creare(p);
+    r       = stml_legere_ex_literis(fons, p, it);
+    status  = r.successus ? (s32)ZEPHYRUM : (s32)r.status;
+    piscina_destruere(p);
+    redde status;
+}
+
 s32
 principale (vacuum)
 {
@@ -179,6 +208,67 @@ principale (vacuum)
     CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a <b</p>"));
     CREDO_NON_RUIT(
         probatio_stml_incolumitas_parsare("<p>5 &lt; 3</p>"));
+
+
+    /* ==================================================
+     * RECUSATIONES: constructio NON CLAUSA erratum est
+     *
+     * Elementum ordinarium non clausum ('<a>x') TAG_NON_CLAUSUM iam
+     * semper dedit. Crudum, commentum, processio, doctypus autem
+     * TACITE succedebant et scriptor terminatorem INVENIEBAT
+     * ('<!--x' -> '<!--x-->'). Periculosum: qui '-->' inter
+     * edendum omittit, formatorem commentum pro se CLAUDENTEM
+     * accipit, quidquid sequebatur devoratum.
+     *
+     * Nunc omnia quattuor consentiunt.
+     * ================================================== */
+
+    imprimere("\n--- Recusationes: non clausum = erratum ---\n");
+
+    /* norma iam exsistens - custos ne mutetur */
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<a>x"),
+        (s32)STML_ERROR_TAG_NON_CLAUSUM);
+
+    /* crudum */
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<x!>a"),
+        (s32)STML_ERROR_TAG_NON_CLAUSUM);
+
+    /* commentum */
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<!--x"),
+        (s32)STML_ERROR_TAG_NON_CLAUSUM);
+
+    /* processio */
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<?x"),
+        (s32)STML_ERROR_TAG_NON_CLAUSUM);
+
+    /* doctypus */
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<!DOCTYPE x"),
+        (s32)STML_ERROR_TAG_NON_CLAUSUM);
+
+
+    /* ==================================================
+     * CUSTODES: formae CLAUSAE succedere DEBENT
+     * ================================================== */
+
+    imprimere("\n--- Custodes recusationum ---\n");
+
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<a>x</a>"), ZEPHYRUM);
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<x!>a</x>"), ZEPHYRUM);
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<!-- x -->"), ZEPHYRUM);
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<r><?x?></r>"), ZEPHYRUM);
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<!DOCTYPE html>"), ZEPHYRUM);
+    CREDO_AEQUALIS_S32(
+        probatio_stml_incolumitas_status("<x!>a</x><y/>"), ZEPHYRUM);
 
 
     /* ==================================================

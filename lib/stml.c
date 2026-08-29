@@ -80,6 +80,17 @@ nomen structura {
        b32 in_crudus;
     chorda crudus_titulus;  /* Tag name we're looking for to close */
 
+    /* Tokenum modo redditum terminatorem suum NON invenit
+     * (commentum sine '-->', processio sine '?>', doctypus sine '>').
+     * In CONTEXTU sedet, non in StmlToken: XIV loca tokena struunt et
+     * nullum initiatorem communem habent, ergo campus quintus decimus
+     * ibi lectionem non initializatam invitaret - ipsam classem
+     * defectus quam 01M16Z03YE fuit. Contextus bina loca sola habet.
+     *
+     * _tok_proximus eum ad initium CUIUSQUE vocationis purgat, ergo
+     * stalus esse non potest; tres lectores soli eum ponunt. */
+       b32 non_clausum;
+
     /* Piscina and intern for allocations */
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -478,6 +489,10 @@ _tok_legere_commentum (
     {
         _tok_progredi(ctx, III);  /* Skip --> */
     }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '-->' numquam venit */
+    }
 
     token.genus                      = STML_TOKEN_COMMENTUM;
     token.positus_initium            = initium;
@@ -534,6 +549,10 @@ _tok_legere_processio (
         && _tok_aspicere(ctx, I)        == '>')
     {
         _tok_progredi(ctx, II);  /* Skip ?> */
+    }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '?>' numquam venit */
     }
 
     token.genus                      = STML_TOKEN_PROCESSIO;
@@ -596,6 +615,10 @@ _tok_legere_doctype (
     si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
     {
         _tok_progredi(ctx, I);  /* Skip final > */
+    }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '>' numquam venit */
     }
 
     token.genus                      = STML_TOKEN_DOCTYPE;
@@ -1510,6 +1533,11 @@ _tok_proximus (
 {
     StmlToken token;
 
+    /* Vexillum per tokenum purgandum: tres lectores soli id ponunt,
+     * ceteri non tangunt - sine purgatione hic, commentum non clausum
+     * vexillum suum tokeni SEQUENTI relinqueret. */
+    ctx->non_clausum = FALSUM;
+
     /* If in raw content mode, get raw content until close tag.
      *
      * CONDICIO EOF OBLIGATORIA (01M16YP7W1): sine ea, hic ramus
@@ -1765,6 +1793,7 @@ stml_lexemata_colligere (
     ctx.linea                   = I;
     ctx.columna                 = I;
     ctx.in_crudus               = FALSUM;
+    ctx.non_clausum             = FALSUM;
     ctx.crudus_titulus.datum    = NIHIL;
     ctx.crudus_titulus.mensura  = ZEPHYRUM;
     ctx.piscina                 = piscina;
@@ -2179,6 +2208,25 @@ _parser_legere_elementum_crudus (
     si (ctx->current.genus == STML_TOKEN_CLAUDERE)
     {
         _parser_progredi(ctx);
+    }
+    alioquin
+    {
+        /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29). Commentarium
+         * supra clausuram 'exspectat' sed codex eam non exigebat:
+         * '<x!>a' TACITE succedebat et scriptor '</x>' INVENIEBAT.
+         * Periculosum in usu vero - qui clausuram inter edendum
+         * omittit, formatorem elementum pro se claudentem accipit,
+         * quidquid sequebatur devoratum.
+         *
+         * _parser_legere_elementum idem iam semper faciebat ('<a>x'
+         * -> TAG_NON_CLAUSUM); crudum, commentum, processio,
+         * doctypus soli dissentiebant. Nunc omnia quinque consentiunt.
+         *
+         * NB captura lineae crudae ('<v! (>') hic NON attingitur -
+         * ramus eius supra redit, et talia elementa clausuram propriam
+         * consulto non habent (CLAUDERE sequens PARENTIS est). */
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
     }
 
     /* extensio: finis = tokenum ultimum consumptum */
@@ -3485,6 +3533,16 @@ _parser_legere_commentum (
     contentus_ptr  = chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
 
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
+
     _parser_progredi(ctx);
 
     /* extensio: finis = tokenum ultimum consumptum */
@@ -3506,6 +3564,16 @@ _parser_legere_processio (
 
     contentus_ptr  = chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
+
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
 
     _parser_progredi(ctx);
 
@@ -3705,6 +3773,16 @@ _parser_legere_doctype (
 
     contentus_ptr  = chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
+
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
 
     _parser_progredi(ctx);
 
@@ -4148,6 +4226,7 @@ stml_legere (
     ctx.tok_ctx.linea                   = I;
     ctx.tok_ctx.columna                 = I;
     ctx.tok_ctx.in_crudus               = FALSUM;
+    ctx.tok_ctx.non_clausum             = FALSUM;
     ctx.tok_ctx.crudus_titulus.datum    = NIHIL;
     ctx.tok_ctx.crudus_titulus.mensura  = ZEPHYRUM;
     ctx.tok_ctx.piscina                 = piscina;
