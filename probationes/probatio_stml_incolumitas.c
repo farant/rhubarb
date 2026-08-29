@@ -144,6 +144,44 @@ principale (vacuum)
 
 
     /* ==================================================
+     * RUINAE: tagum apertum sine nomine
+     *
+     * '<' spatio sequente nomen VACUUM dat; chorda_internare vacuae
+     * NIHIL reddit; comparatio clausurae *titulus_ptr sine custode
+     * dereferenciabat. Prosa vulgaris hoc producit.
+     * ================================================== */
+
+    imprimere("\n--- Ruinae: tagum sine nomine ---\n");
+
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a < b</p>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>x < 10</p>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a < </p>"));
+
+
+    /* ==================================================
+     * CUSTODES: formae anonymae LEGITIMAE
+     *
+     * Hae ante et post transire DEBENT. '</>' praesertim: per
+     * _tok_legere_tag cadit et nomen VACUUM eius est ipsum signum
+     * clausurae anonymae - recusatio ad tempus lexationis eam
+     * frangeret (IX usus in probatio_stml_macros.c solo).
+     * ================================================== */
+
+    imprimere("\n--- Custodes formarum anonymarum ---\n");
+
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<r><a>x</></r>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<r><>a</></r>"));
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<r><(> <a/></r>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare(
+        "<r><tag><>a</><>b</></tag></r>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<p>a <b</p>"));
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<p>5 &lt; 3</p>"));
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 

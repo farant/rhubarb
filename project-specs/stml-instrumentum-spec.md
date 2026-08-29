@@ -708,34 +708,62 @@ clean errors today. The parser already concludes "malformed"; it crashes on
 the way to *saying so*, because `titulus_ptr` (`1969`) is dereferenced at
 `1997` with no NIHIL guard.
 
-**Fix — reject a nameless OPENING tag where it happens**, in
-`_parser_legere_elementum`, so the diagnostic lands on the `<` rather than on
-the closing tag that follows:
+**AN EMPTY TITLE IS A MODELLED STATE, NOT A DEFECT.** This is the load-bearing
+fact, and two proposed fixes died on it. `stml.h` declares
+`STML_STRICTUM_TITULUS_VACUUS = IV`, and `probatio_stml.c` (~4118) pins BOTH
+halves of a deliberate two-layer design:
 
 ```c
-    _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
-    titulus_ptr = nodus->titulus;
-    si (titulus_ptr == NIHIL)
-    {
-        /* '<' sine nomine = prosa, non tagum: '&lt;' scribendum */
-        _errorem_ponere(ctx, STML_ERROR_SYNTAXIS,
-                        ctx->current.linea, ctx->current.columna);
-        redde NIHIL;
-    }
+r = stml_legere_ex_literis("< >x</>", piscina, intern);
+CREDO_VERUM(r.successus);                       /* parser is LENIENT */
+vitia = stml_strictum(r.radix, piscina);
+CREDO_AEQUALIS_I32(xar_numerus(vitia), I);      /* strictum is the JUDGE */
 ```
 
-Retain a NIHIL guard at `1997` as defence in depth.
+The parser accepts; `stml_strictum` judges. Making the parser reject collapses
+that. (The same test's comment records that `<>` used to be judged here too,
+until 2026-08-27 rehabilitated it as anonymous-fragment sugar for DISTRIBUTIO.)
 
-**CAUTIO — the fix that was WITHDRAWN.** An earlier proposal rejected empty
-tag names at LEX time in `_tok_legere_tag`. **That breaks `</>`.** The
-dispatch table in `_tok_proximus` routes `<<`, `<!--`, `<?`, `<!D`, `</#`,
-`</%`, `<#`, `<%`, `<(`, `<>` to dedicated readers — but **`</>` falls
-through to `_tok_legere_tag`**, and its empty name is exactly the signal
-`_parser_legere_elementum` reads at `1988` to set `clausura_anonyma`.
-`</>` is load-bearing: 9 uses in `probatio_stml_macros.c` alone.
+**Fix — guard the dereference ONLY**, at the close-tag comparison:
 
-The correct fix is parser-side and opening-tag-only, where the two cases are
-naturally separable (`nodus->titulus` vs `ctx->current`).
+```c
+        alioquin si (   titulus_ptr == NIHIL
+                     || !chorda_aequalis(ctx->current.valor,
+                                         *titulus_ptr))
+        {
+            _errorem_ponere(ctx, STML_ERROR_TAG_IMPROPRIE, ...);
+        }
+```
+
+A NIHIL title can never match a closing name, so `TAG_IMPROPRIE` — the same
+verdict given for any mismatched close — is the honest answer. The document
+still parses; `stml_strictum` still reports the empty title.
+
+**DUAE FORMAE RECUSATAE — ne quis eas iterum temptet:**
+
+1. **Reject empty names at LEX time** in `_tok_legere_tag`. **Breaks `</>`.**
+   The dispatch table in `_tok_proximus` routes `<<`, `<!--`, `<?`, `<!D`,
+   `</#`, `</%`, `<#`, `<%`, `<(`, `<>` to dedicated readers — but `</>`
+   falls through to `_tok_legere_tag`, and its empty name is exactly the
+   signal read at `1988` to set `clausura_anonyma`. 9 uses in
+   `probatio_stml_macros.c` alone.
+2. **Reject a nameless OPENING tag** in `_parser_legere_elementum`. **Breaks
+   the strictum layer** — measured: `probatio_stml` red at 4118 and 4123.
+   It also needs `_parser_progredi` before returning NIHIL or
+   `_liberos_legere` spins on the unconsumed token, trading a crash for a
+   hang.
+
+### §7.5.3.1 RELIQUUM: '&lt;!doctype html&gt;' TACITE ineptit
+
+After §7.5.3, `<!doctype html>` no longer hangs — but it parses as the
+nonsense element `<! doctype html/>` and REPORTS SUCCESS. It is lexed as a
+RAW tag with an empty title, so it flows through
+`_parser_legere_elementum_crudus`, which the guard above does not cover.
+
+Not fixed here (out of Plan A's scope). It matters for `vertere`: Fran decreed
+STML files carry no doctype line (§5), so an author who writes one out of
+habit gets silence instead of a diagnosis. **OPEN — Fran to decide** whether
+the raw-element parser should refuse an empty title.
 
 ### §7.5.4 Effugium nimium — decretum Franis
 

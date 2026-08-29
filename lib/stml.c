@@ -2014,6 +2014,7 @@ _parser_legere_elementum (
 
     _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
     titulus_ptr        = nodus->titulus;
+
     nodus->attributa   = ctx->current.attributa;
     nodus->multilinea  = ctx->current.multilinea;
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
@@ -2040,8 +2041,25 @@ _parser_legere_elementum (
              * scriptore servatur. 01KYSPRF9R */
             nodus->clausura_anonyma = VERUM;
         }
-        alioquin si (!chorda_aequalis(ctx->current.valor,
-                     *titulus_ptr))
+        /* CUSTOS NIHIL (01M171YAEP): titulus VACUUS status MODELLATUS
+         * est, non vitium parsationis - '< >' munde parsat et
+         * stml_strictum eum ut STML_STRICTUM_TITULUS_VACUUS iudicat
+         * (probatio_stml.c ~MMMMCXVIII id figit; parsator lenis,
+         * strictum iudex - stratificatio consulta).
+         *
+         * Sed chorda_internare chordae vacuae NIHIL reddit, ergo
+         * '*titulus_ptr' hic sine custode ruebat: '<p>x < 10</p>' -
+         * prosa vulgaris - SIGSEGV dabat. Duae condiciones simul
+         * opus erant: titulus vacuus ET tagum claudens quod
+         * compararetur (ideo '< >' solum tutum erat - nihil sequitur
+         * ante EOF).
+         *
+         * Titulus NIHIL clausurae numquam congruit, ergo TAG_IMPROPRIE
+         * recta sententia est - eadem quam pro nominibus discordibus
+         * damus. */
+        alioquin si (   titulus_ptr == NIHIL
+                     || !chorda_aequalis(ctx->current.valor,
+                                         *titulus_ptr))
         {
             _errorem_ponere(ctx, STML_ERROR_TAG_IMPROPRIE,
                             ctx->current.linea, ctx->current.columna);
