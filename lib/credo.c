@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
+#include <signal.h>
+#include <time.h>
+#include <sys/wait.h>
 
 
 /* ======================================================
@@ -622,4 +626,174 @@ _credo_notare_f64_proximus (
     praeteritus = (differentia <= epsilon);
 
     _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+}
+
+
+/* ==================================================
+ * Assertiones processus (spec stml-instrumentum 7.5.0)
+ * ================================================== */
+
+interior constans character*
+_credo_signi_nomen (
+    s32 signum)
+{
+    commutatio (signum)
+    {
+        casus SIGSEGV:
+            redde "SEGV";
+        casus SIGBUS:
+            redde "BUS";
+        casus SIGABRT:
+            redde "ABRT";
+        casus SIGFPE:
+            redde "FPE";
+        casus SIGILL:
+            redde "ILL";
+        casus SIGKILL:
+            redde "KILL (mora excessa)";
+        ordinarius:
+            redde "signum ignotum";
+    }
+}
+
+CredoProcessusFructus
+credo_processus_incipere (
+    vacuum)
+{
+    CredoProcessusFructus fructus;
+                    pid_t pid;
+
+    fructus.in_filio  = FALSUM;
+    fructus.pid       = -I;
+
+    /* Buffra ANTE furcam eicienda: aliter quidquid pendet in
+     * filium transcribitur et BIS emittitur. */
+    fflush(NIHIL);
+
+    pid = fork();
+    si (pid == ZEPHYRUM)
+    {
+        fructus.in_filio  = VERUM;
+        fructus.pid       = ZEPHYRUM;
+        redde fructus;
+    }
+
+    fructus.pid = (s32)pid;   /* -I si furca defecit */
+    redde fructus;
+}
+
+vacuum
+credo_processus_filium_finire (
+    vacuum)
+{
+    /* _exit, NON exit: buffra parentis hereditata sunt, et exit()
+     * ea eiceret. */
+    _exit(ZEPHYRUM);
+}
+
+vacuum
+credo_processus_iudicare (
+    CredoProcessusFructus* fructus,
+       constans character* genus,
+       constans character* expressio,
+                      i32  mora_ms,
+                      s32  signum_exspectatum,
+       constans character* filum,
+                      s32  versus)
+{
+              integer status;
+                pid_t peractus;
+                  i32 elapsum_ms;
+                  b32 praeteritus;
+                  s32 signum_acceptum;
+    structura timespec pausa;
+  constans character* exspectatum;
+  constans character* acceptum;
+
+    si (fructus == NIHIL || fructus->in_filio)
+    {
+        redde;   /* filius numquam iudicat */
+    }
+
+    si (fructus->pid < ZEPHYRUM)
+    {
+        _credo_notare(genus, expressio, "furca defecit", "",
+                      filum, versus, FALSUM);
+        redde;
+    }
+
+    /* Terminus per POLLATIONEM, non per alarm(): SIGALRM cum omni
+     * usu signorum in codice probato colliditur, et manubria sua
+     * problemata reentrantiae ferunt. */
+    status           = ZEPHYRUM;
+    elapsum_ms       = ZEPHYRUM;
+    signum_acceptum  = ZEPHYRUM;
+    pausa.tv_sec     = (time_t)ZEPHYRUM;
+    pausa.tv_nsec    = (longus)(M * M);   /* I ms */
+
+    dum (VERUM)
+    {
+        peractus = waitpid((pid_t)fructus->pid, &status, WNOHANG);
+        si (peractus == (pid_t)fructus->pid)
+        {
+            frange;
+        }
+        si (elapsum_ms >= mora_ms)
+        {
+            /* SIGKILL, non SIGTERM: processus impeditus manubrium
+             * numquam curret. Praeterea SIGKILL in relatione
+             * inambiguus est - NOS eum occidimus, non ipse ruit. */
+            kill((pid_t)fructus->pid, SIGKILL);
+            waitpid((pid_t)fructus->pid, &status, ZEPHYRUM);
+            frange;
+        }
+        (vacuum)nanosleep(&pausa, NIHIL);
+        elapsum_ms = elapsum_ms + I;
+    }
+
+    si (WIFSIGNALED(status))
+    {
+        signum_acceptum = (s32)WTERMSIG(status);
+    }
+
+    si (signum_exspectatum == ZEPHYRUM)
+    {
+        /* Praeterit SOLUM si normaliter exiit. Codex exitus ruinam
+         * NARRARE NON POTEST - processus signo occisus nullum
+         * habet; ergo WIFSIGNALED est mechanismus, non
+         * WEXITSTATUS. */
+        praeteritus = (b32)(WIFEXITED(status) != ZEPHYRUM);
+    }
+    alioquin
+    {
+        praeteritus = (b32)(signum_acceptum == signum_exspectatum);
+    }
+
+    /* 'Speratus' nominandus est, non vacuus relinquendus: relatio
+     * 'Receptus SEGV / Speratus (null)' dimidiam narrat solum -
+     * legens quid EXSPECTAVERIMUS scire debet. */
+    si (signum_exspectatum == ZEPHYRUM)
+    {
+        exspectatum = "exitus normalis (nullum signum)";
+    }
+    alioquin
+    {
+        exspectatum = _credo_signi_nomen(signum_exspectatum);
+    }
+
+    si (signum_acceptum != ZEPHYRUM)
+    {
+        acceptum = _credo_signi_nomen(signum_acceptum);
+    }
+    alioquin si (WIFEXITED(status))
+    {
+        acceptum = "exitus normalis";
+    }
+    alioquin
+    {
+        acceptum = "status ignotus";
+    }
+
+    _credo_notare(genus, expressio, acceptum, exspectatum,
+                  filum, versus, praeteritus);
 }

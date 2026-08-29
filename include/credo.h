@@ -507,4 +507,90 @@ _credo_notare_f64_proximus (
                       constans character* filum,
                                      s32  versus);
 
+
+/* ==================================================
+ * Assertiones processus - "hoc NON ruit, hoc NON pendet"
+ * ==================================================
+ *
+ * Expressio in filio FURCATO curritur, ergo ruina aut gyrus
+ * probationem non occidit. Spec: stml-instrumentum-spec.md par.
+ * 7.5.0.
+ *
+ * CUR MACRO SENTENTIAE, NON VOCATIO FUNCTIONIS: argumenta apud
+ * VOCANTEM aestimantur. Si expressio argumentum esset, ruina in
+ * PARENTE fieret et suitem totam secum traheret - id ipsum quod
+ * vitare conamur. Ergo furca PRIMA, aestimatio in filio SOLO.
+ *
+ * NUMQUAM SIGSEGV intra processum capere (manubrium signi +
+ * longjmp): mos ille INDEFINITUS est - a manubrio exceptionis
+ * computatricis redire non licet, et post culpam veram status
+ * piscinae atque allocatoris ignotus est. Praeterea gyros omnino
+ * non videt. Furca sola sana est.
+ */
+
+nomen structura {
+    b32 in_filio;   /* VERUM in filio furcato SOLO */
+    s32 pid;        /* in parente: pid filii; -I si furca defecit */
+} CredoProcessusFructus;
+
+/* fflush(NIHIL) deinde fork(). In filio {VERUM, ZEPHYRUM} redit. */
+CredoProcessusFructus
+credo_processus_incipere (vacuum);
+
+/* _exit(0) - NUMQUAM exit(): filius buffra parentis hereditavit,
+ * et exit() ea eiceret, ergo omnis linea prior BIS emitteretur. */
+vacuum
+credo_processus_filium_finire (vacuum);
+
+/* In parente: filium ad terminum exspectat, deinde iudicat.
+ * signum_exspectatum == ZEPHYRUM => praeterit si NORMALITER exiit.
+ * signum_exspectatum != ZEPHYRUM => praeterit si EO signo periit. */
+vacuum
+credo_processus_iudicare (
+                CredoProcessusFructus* fructus,
+                   constans character* genus,
+                   constans character* expressio,
+                                  i32  mora_ms,
+                                  s32  signum_exspectatum,
+                   constans character* filum,
+                                  s32  versus);
+
+#define CREDO_MORA_ORDINARIA_MS 5000
+
+#define CREDO_NON_RUIT(expressio) \
+    fac { \
+        CredoProcessusFructus _cpf = credo_processus_incipere(); \
+        si (_cpf.in_filio) \
+        { \
+            (expressio); \
+            credo_processus_filium_finire(); \
+        } \
+        credo_processus_iudicare(&_cpf, "credo_non_ruit", #expressio, \
+            CREDO_MORA_ORDINARIA_MS, ZEPHYRUM, __FILE__, __LINE__); \
+    } dum (FALSUM)
+
+#define CREDO_NON_PENDET(expressio, mora_ms) \
+    fac { \
+        CredoProcessusFructus _cpf = credo_processus_incipere(); \
+        si (_cpf.in_filio) \
+        { \
+            (expressio); \
+            credo_processus_filium_finire(); \
+        } \
+        credo_processus_iudicare(&_cpf, "credo_non_pendet", \
+            #expressio, (mora_ms), ZEPHYRUM, __FILE__, __LINE__); \
+    } dum (FALSUM)
+
+#define CREDO_RUIT_CUM(expressio, signum) \
+    fac { \
+        CredoProcessusFructus _cpf = credo_processus_incipere(); \
+        si (_cpf.in_filio) \
+        { \
+            (expressio); \
+            credo_processus_filium_finire(); \
+        } \
+        credo_processus_iudicare(&_cpf, "credo_ruit_cum", #expressio, \
+            CREDO_MORA_ORDINARIA_MS, (signum), __FILE__, __LINE__); \
+    } dum (FALSUM)
+
 #endif /* CREDO_H */
