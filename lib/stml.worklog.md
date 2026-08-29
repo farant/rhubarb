@@ -1260,3 +1260,91 @@ Trap for the future: elements PRESERVE an authored `</>`
 (clausura_anonyma — first-class form), fragments NORMALIZE it away.
 My first fixture expected `</nota>` from an authored `</>` and the
 writer correctly disagreed.
+
+
+## 2026-08-29 — three crash/hang defects, and what hid them
+
+Found while designing the `stml` CLI (spec:
+project-specs/stml-instrumentum-spec.md). None was known. All three
+were reachable from ordinary input, and none of the ~196 existing
+tests could see any of them.
+
+**The loop (01M16YP7W1).** `_tok_proximus` checks raw mode BEFORE the
+EOF check. Once `in_crudus` is set, `STML_TOKEN_FINIS` becomes
+permanently unreachable: at EOF `_tok_legere_contentus_crudus`
+returns a zero-width token without advancing, and the child loop
+waits for FINIS forever. 100% CPU, RSS flat at 1264 KB across 12s —
+that flatness is what proves it is a true fixed point rather than
+slow work. Seven inputs, through two doors: genuinely unterminated
+raw content, and `<!` fallthrough, which is mis-lexed as a raw tag
+with an EMPTY raw title and then falls into the first door. Fix is
+one condition on the raw branch.
+
+**The uninitialized read (01M16Z03YE).** `_tok_legere_commentum` and
+`_tok_legere_processio` assigned `token.valor` only inside the
+terminator-found branch; at EOF they returned a stack local never
+written, which `chorda_internare` dereferenced. `<!--x` — five bytes.
+`_tok_legere_doctype` never had the bug because it assigns
+unconditionally outside its loop; the fix is to copy its shape.
+Worth noting this was the most dangerous of the three despite being
+the smallest: an uninitialized read is nondeterministic in
+principle, so a different stack layout could intern adjacent memory
+into the tree and return successus=1.
+
+**The NIHIL title (01M171YAEP).** `<` + space yields an empty name;
+`chorda_internare` of an empty chorda returns NIHIL; the close-tag
+comparison dereferenced it. `<p>x < 10</p>` — ordinary prose.
+
+### Why nothing caught them
+
+The recurring answer, and it generalizes past STML: **the goldens
+were produced by the writer itself**, so the oracle forgives
+whatever the writer does consistently. No test ever AUTHORED the
+failing forms. `="true"` appears in 0 of 67 corpus files. No test
+writes `<x></x>` and asserts it survives. "N/N clean" meant "never
+appeared."
+
+### The trap I fell into twice
+
+Both times I departed from the conservative fix toward a more
+"principled" one, I was wrong, and the tests said so:
+
+1. A generic progress guard in `_liberos_legere` keyed on
+   `ctx->tok_ctx.positus`. Broke 26 tests. That field is the
+   LOOKAHEAD cursor — it saturates at EOF while the parser is still
+   consuming already-fetched tokens, so the last iteration of every
+   document trips it.
+2. Rejecting a nameless opening tag in `_parser_legere_elementum`.
+   Broke the strictum layer. An empty title is a MODELLED STATE:
+   `STML_STRICTUM_TITULUS_VACUUS` exists, and probatio_stml.c ~4118
+   pins both halves — parser LENIENT, `stml_strictum` JUDGE. The
+   entry directly above this one documents that very fixture.
+
+The signal for (2) was in stml.h before I wrote the fix; I had read
+that enum an hour earlier building the construct inventory and did
+not connect it. Fran had also warned, in the same session, "be
+careful we're not assuming behavior as intended is a bug."
+
+**Standing guard**: probationes/probatio_stml_incolumitas.c, 32
+assertions over the whole malformed-input class, using the new
+fork-based `CREDO_NON_RUIT` / `CREDO_NON_PENDET` (credo, spec
+§7.5.0). Before the fixes it could not have been written at all — a
+segfault would have taken all 141 root tests with it, and a hang
+would have wedged the runner permanently.
+
+### Left open
+
+- Unterminated comment/PI/doctype now SUCCEED with content-to-EOF
+  rather than erroring. Chosen for consistency with doctype's
+  long-standing behavior; whether all three should instead give
+  TAG_NON_CLAUSUM is Fran's call.
+- `<!doctype html>` no longer hangs but parses silently as the
+  nonsense element `<! doctype html/>`. It is lexed RAW, so it flows
+  through `_parser_legere_elementum_crudus`, which the NIHIL guard
+  does not cover. Spec §7.5.3.1.
+- The generic progress guard is still wanted as defense in depth,
+  keyed on `finis_ultimus` rather than the lookahead cursor. The
+  case for it was proven the same day: the 01M171YAEP fix would have
+  introduced a FRESH hang had I returned NIHIL without consuming the
+  token first. A guard would have caught that automatically instead
+  of relying on me noticing.
