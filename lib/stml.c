@@ -450,12 +450,33 @@ _tok_legere_commentum (
             && _tok_aspicere(ctx, I)        == '-'
             && _tok_aspicere(ctx, II)       == '>')
         {
-            token.valor.datum    = ctx->input.datum + contentus_initium;
-            token.valor.mensura  = ctx->positus - contentus_initium;
-            _tok_progredi(ctx, III);  /* Skip --> */
             frange;
         }
         _tok_progredi(ctx, I);
+    }
+
+    /* VALOR EXTRA ANSAM (01M16Z03YE): olim intra ramum terminatoris
+     * SOLUM assignabatur, ergo commentum non clausum ('<!--x', V
+     * octeti) locale stacki NON INITIALIZATUM reddebat - punctatorem
+     * fortuitum et mensuram fortuitam - quod _parser_legere_commentum
+     * deinde ad chorda_internare tradebat. SIGSEGV; peius, lectio
+     * memoriae non initializatae INDETERMINATA est, ergo sub alia
+     * dispositione stacki memoriam adiacentem internare ET
+     * successus=1 reddere posset.
+     *
+     * Forma _tok_legere_doctype (infra) sequitur: ansa terminatorem
+     * invenit sed NON consumit; valor semper assignatur; terminator
+     * postea consumitur si adest. Commentum non clausum ergo
+     * contentum usque ad EOF fert - contentum servamus, non
+     * abicimus, ut doctypus iam faciebat. */
+    token.valor.datum    = ctx->input.datum + contentus_initium;
+    token.valor.mensura  = ctx->positus - contentus_initium;
+
+    si (   _tok_aspicere(ctx, ZEPHYRUM) == '-'
+        && _tok_aspicere(ctx, I)        == '-'
+        && _tok_aspicere(ctx, II)       == '>')
+    {
+        _tok_progredi(ctx, III);  /* Skip --> */
     }
 
     token.genus                      = STML_TOKEN_COMMENTUM;
@@ -498,12 +519,21 @@ _tok_legere_processio (
         si (   _tok_aspicere(ctx, ZEPHYRUM) == '?'
             && _tok_aspicere(ctx, I)        == '>')
         {
-            token.valor.datum    = ctx->input.datum + contentus_initium;
-            token.valor.mensura  = ctx->positus - contentus_initium;
-            _tok_progredi(ctx, II);  /* Skip ?> */
             frange;
         }
         _tok_progredi(ctx, I);
+    }
+
+    /* VALOR EXTRA ANSAM (01M16Z03YE): gemina causa ac in
+     * _tok_legere_commentum supra - '<?x' non clausum locale stacki
+     * non initializatum reddebat. Eadem forma _tok_legere_doctype. */
+    token.valor.datum    = ctx->input.datum + contentus_initium;
+    token.valor.mensura  = ctx->positus - contentus_initium;
+
+    si (   _tok_aspicere(ctx, ZEPHYRUM) == '?'
+        && _tok_aspicere(ctx, I)        == '>')
+    {
+        _tok_progredi(ctx, II);  /* Skip ?> */
     }
 
     token.genus                      = STML_TOKEN_PROCESSIO;

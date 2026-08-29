@@ -105,6 +105,45 @@ principale (vacuum)
 
 
     /* ==================================================
+     * RUINAE: commentum / processio non clausa
+     *
+     * Valor SOLUM intra ramum terminatoris assignabatur, ergo ad
+     * EOF locale stacki NON INITIALIZATUM reddebatur, quod
+     * chorda_internare dereferenciabat. V octeti sufficiebant.
+     * ================================================== */
+
+    imprimere("\n--- Ruinae: commentum / processio non clausa ---\n");
+
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!--x"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<?x"));
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<r><!-- x</r>"));
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<r><?php echo 1; </r>"));
+
+
+    /* ==================================================
+     * CUSTODES: haec CLAUSA sunt et parsare DEBENT
+     *
+     * Terminator ubicumque sedet invenitur; lineolae superfluae
+     * contentum sunt. '<!DOCTYPE x' non clausum iam transibat -
+     * _tok_legere_doctype extra ansam assignat, forma recta quam
+     * duo alia sequi debent.
+     * ================================================== */
+
+    imprimere("\n--- Custodes commentorum ---\n");
+
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x -->"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x --->"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!-- x ---->"));
+    CREDO_NON_RUIT(
+        probatio_stml_incolumitas_parsare("<!-- a -- b -->"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!---->"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<r><?x?></r>"));
+    CREDO_NON_RUIT(probatio_stml_incolumitas_parsare("<!DOCTYPE x"));
+
+
+    /* ==================================================
      * Compendium
      * ================================================== */
 
