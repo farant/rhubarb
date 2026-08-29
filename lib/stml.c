@@ -1480,8 +1480,25 @@ _tok_proximus (
 {
     StmlToken token;
 
-    /* If in raw content mode, get raw content until close tag */
-    si (ctx->in_crudus)
+    /* If in raw content mode, get raw content until close tag.
+     *
+     * CONDICIO EOF OBLIGATORIA (01M16YP7W1): sine ea, hic ramus
+     * ANTE probationem EOF infra sedet, ergo cum 'in_crudus'
+     * positum est STML_TOKEN_FINIS INATTINGIBILE fit: ad finem
+     * inputi _tok_legere_contentus_crudus tokenum latitudinis
+     * ZEPHYRUM sine cursoris promotione in aeternum reddit, et
+     * ansa parsatoris FINIS exspectans gyrat (CPU C centesimae,
+     * RSS planum - punctum fixum verum).
+     *
+     * Cum EOF hic excluditur, probatio infra FINIS emittit et
+     * parsator TAG_NON_CLAUSUM more suo refert - quod verum est:
+     * elementum crudum clausuram numquam accepit.
+     *
+     * VII inputa per portas AMBAS claudit: contentum crudum non
+     * clausum ('<x!>a'), et lapsum '<!' ('<!doctype html>',
+     * '<![CDATA[', '<!ENTITY') quod ut tagus crudus tituli VACUI
+     * male lexatur et deinde in eandem foveam cadit. */
+    si (ctx->in_crudus && ctx->positus < ctx->input.mensura)
     {
         /* Check if we're at the closing tag */
         si (   _tok_aspicere(ctx, ZEPHYRUM) == '<'

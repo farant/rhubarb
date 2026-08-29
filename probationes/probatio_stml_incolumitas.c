@@ -1,0 +1,124 @@
+/* probatio_stml_incolumitas.c - Inputa male formata parsatorem NEC
+ * occidere NEC impedire debent.
+ *
+ * Omnia haec ante reparationes 01M16YP7W1 (gyri), 01M16Z03YE (ruina
+ * commenti/processionis) et 01M171YAEP (ruina tituli NIHIL) aut
+ * pendebant aut ruebant. Assertiones per FURCAM currunt (credo par.
+ * 7.5.0), ergo regressio suitem non trahit nec cursorem impedit.
+ *
+ * Spec: project-specs/stml-instrumentum-spec.md par. 7.5.1-7.5.3
+ */
+#include "postulata_posix.h"
+#include "latina.h"
+#include "credo.h"
+#include "stml.h"
+#include "piscina.h"
+#include "internamentum.h"
+#include <stdio.h>
+
+
+/* Parsare et abicere. Fructus non interest - sola quaestio est an
+ * stml_legere REDEAT omnino. */
+vacuum
+probatio_stml_incolumitas_parsare (
+    constans character* fons);
+
+vacuum
+probatio_stml_incolumitas_parsare (
+    constans character* fons)
+{
+                Piscina* p;
+    InternamentumChorda* it;
+
+    p = piscina_generare_dynamicum("incolumitas", 1048576);
+    si (!p)
+    {
+        redde;
+    }
+    it = internamentum_creare(p);
+    (vacuum)stml_legere_ex_literis(fons, p, it);
+    piscina_destruere(p);
+}
+
+s32
+principale (vacuum)
+{
+         b32  praeteritus;
+     Piscina* piscina;
+
+    piscina = piscina_generare_dynamicum("probatio_stml_incolumitas",
+                                         65536);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+
+
+    /* ==================================================
+     * GYRI porta I: contentum crudum non clausum
+     * ================================================== */
+
+    imprimere("\n--- Gyri I: contentum crudum non clausum ---\n");
+
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a"), 3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</y>"),
+                     3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</>"),
+                     3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</#>"),
+                     3000);
+
+
+    /* ==================================================
+     * GYRI porta II: lapsus '<!'
+     *
+     * Haec non recta pendent: ut tagus crudus tituli VACUI male
+     * lexantur, deinde in portam I cadunt.
+     * ================================================== */
+
+    imprimere("\n--- Gyri II: lapsus '<!' ---\n");
+
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!x>"), 3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!!>"), 3000);
+    CREDO_NON_PENDET(
+        probatio_stml_incolumitas_parsare("<!doctype html>"), 3000);
+    CREDO_NON_PENDET(
+        probatio_stml_incolumitas_parsare("<![CDATA[x]]>"), 3000);
+    CREDO_NON_PENDET(
+        probatio_stml_incolumitas_parsare("<!ENTITY a \"b\">"), 3000);
+
+
+    /* ==================================================
+     * CUSTODES: haec parsare DEBENT, ante et post
+     * ================================================== */
+
+    imprimere("\n--- Custodes gyrorum ---\n");
+
+    CREDO_NON_PENDET(
+        probatio_stml_incolumitas_parsare("<!DOCTYPE html>"), 3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<!-- x -->"),
+                     3000);
+    CREDO_NON_PENDET(probatio_stml_incolumitas_parsare("<x!>a</x>"),
+                     3000);
+
+
+    /* ==================================================
+     * Compendium
+     * ================================================== */
+
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
+
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
+}
