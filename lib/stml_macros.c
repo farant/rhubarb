@@ -1049,6 +1049,16 @@ _diribitio_implere (
                    i32  tectum);
 
 interior b32
+_sine_processare (
+    StmlMacroContextus*  ctx,
+             StmlNodus*  nodus,
+                   i32   stratum,
+                   i32   tectum,
+                chorda*  titulus,
+                   Xar*  fons,
+                   Xar** exitus);
+
+interior b32
 _liberum_expandere (
              StmlNodus* parens_novus,
                    Xar* fratres,
@@ -2845,6 +2855,21 @@ _catena_corpus_processare (
             (*numerus)++;
             perge;
         }
+        si (_est_titulo(l, "SINE"))
+        {
+            Xar* exitus;
+
+            /* nexus filtrans NUDUS (attributa intus iudicantur -
+             * vitium proprium XXIII) */
+            si (!_sine_processare(ctx, l, stratum, tectum,
+                                  titulus, *fons, &exitus))
+            {
+                redde FALSUM;
+            }
+            *fons = exitus;
+            (*numerus)++;
+            perge;
+        }
         /* liber alienus (textus, elementum non-nexus, transclusio
          * contenti) - CLARE, non tacite */
         _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA, l,
@@ -3514,6 +3539,181 @@ _ligamina_ad_argumenta (
         }
     }
     redde argumenta;
+}
+
+/* SINE filare (antiiunctio - decretum 2026-08-31): filtrum purum
+ * relationis, gradus catenae signo versus. Gradus ordinarius
+ * ordines congruentiis interioribus multiplicat; SINE ordinem
+ * servat si congruentiae interiores ZEPHYRUM sunt (NOT-EXISTS
+ * plene correlatum). Corpus = exemplar NUDUM unum; pons '&@n;'
+ * capturas ordinis cuiusque in formam implet (PONS IPSE IUNCTIO
+ * EST - correlatio in forma scripta, sine machina clavium), forma
+ * impleta intra subarborem RADICIS ordinis petita (fluitans;
+ * ancorata = ianua nominata - attributa formae litterae
+ * congruentiae sunt, vexillum machinae ferre nequeunt).
+ * Superstites INTACTI transeunt (radix eadem, capturae eaedem -
+ * ligamina corporis in ordinibus servatis per definitionem numquam
+ * ligantur, ergo capturae in forma = pandiculae licitae). Fons
+ * NIHIL (nexus primus catenae documenti sine de=) = absentia lata
+ * documenti = ianua posterior nominata, CLARE recusata. */
+interior b32
+_sine_processare (
+    StmlMacroContextus*  ctx,
+             StmlNodus*  nodus,
+                   i32   stratum,
+                   i32   tectum,
+                chorda*  titulus,
+                   Xar*  fons,
+                   Xar** exitus)
+{
+    StmlNodus* forma;
+          Xar* superstites;
+          Xar* congruentiae;
+          Xar* opus;
+          i32  i;
+          i32  num;
+
+    *exitus = NIHIL;
+    si (   stml_attributum_capere(nodus, "de")       != NIHIL
+        || stml_attributum_capere(nodus, "output")   != NIHIL
+        || stml_attributum_capere(nodus, "modus")    != NIHIL
+        || stml_attributum_capere(nodus, "ancorata") != NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM, nodus,
+                       NIHIL, titulus);
+        redde FALSUM;
+    }
+    si (fons == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM, nodus,
+                       NIHIL, titulus);
+        redde FALSUM;
+    }
+    /* corpus: elementum UNUM (lex nuclei eadem) */
+    forma = NIHIL;
+    num   = nodus->liberi != NIHIL
+          ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l = *(StmlNodus**)xar_obtinere(nodus->liberi, i);
+
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (forma != NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM,
+                           nodus, NIHIL, titulus);
+            redde FALSUM;
+        }
+        forma = l;
+    }
+    si (forma == NIHIL || forma->genus != STML_NODUS_ELEMENTUM)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM, nodus,
+                       NIHIL, titulus);
+        redde FALSUM;
+    }
+
+    superstites  = xar_creare(ctx->piscina,
+                              magnitudo(StmlExemplarCongruentia));
+    congruentiae = xar_creare(ctx->piscina,
+                              magnitudo(StmlExemplarCongruentia));
+    opus = xar_creare(ctx->piscina,
+                      magnitudo(StmlExemplarLigamen));
+    si (   superstites == NIHIL || congruentiae == NIHIL
+        || opus        == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = xar_numerus(fons);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlExemplarCongruentia* ordo =
+            (StmlExemplarCongruentia*)xar_obtinere(fons, i);
+                      StmlNodus* involucrum;
+                      StmlNodus* impleta;
+                            Xar* argumenta;
+                            b32  bene;
+                            i32  j;
+                            i32  num_liberorum;
+
+        si (ordo == NIHIL)
+        {
+            perge;
+        }
+        /* pontem implere: capturae ordinis ut argumenta, corpus
+         * sub PORTATIONE instantiatum (mandata inerta manent) */
+        argumenta = _ligamina_ad_argumenta(ctx, ordo->ligamina);
+        si (argumenta == NIHIL)
+        {
+            redde FALSUM;
+        }
+        involucrum = stml_elementum_creare(ctx->piscina,
+                                           ctx->intern,
+                                           "sine-corpus");
+        si (involucrum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        ctx->applicatio++;
+        bene = _liberos_expandere(involucrum, nodus->liberi, ctx,
+                                  stratum + I, tectum, argumenta);
+        ctx->applicatio--;
+        si (!bene)
+        {
+            redde FALSUM;
+        }
+        /* forma impleta: elementum unum (constructione; defensivum
+         * contra impletionem quae numerum mutat) */
+        impleta       = NIHIL;
+        num_liberorum = involucrum->liberi != NIHIL
+                      ? xar_numerus(involucrum->liberi) : ZEPHYRUM;
+        per (j = ZEPHYRUM; j < num_liberorum; j++)
+        {
+            StmlNodus* l = *(StmlNodus**)xar_obtinere(
+                involucrum->liberi, j);
+
+            si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+            {
+                perge;
+            }
+            si (impleta != NIHIL)
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_SINE_MALFORMATUM,
+                               nodus, NIHIL, titulus);
+                redde FALSUM;
+            }
+            impleta = l;
+        }
+        si (impleta == NIHIL || impleta->genus != STML_NODUS_ELEMENTUM)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM,
+                           nodus, NIHIL, titulus);
+            redde FALSUM;
+        }
+        xar_truncare(congruentiae, ZEPHYRUM);
+        si (!_exemplar_petere(ctx, impleta, ordo->radix, FALSUM,
+                              congruentiae, opus))
+        {
+            redde FALSUM;
+        }
+        si (xar_numerus(congruentiae) == ZEPHYRUM)
+        {
+            StmlExemplarCongruentia* cella =
+                (StmlExemplarCongruentia*)xar_addere(superstites);
+
+            si (cella == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *cella = *ordo;
+        }
+    }
+    *exitus = superstites;
+    redde VERUM;
 }
 
 /* PER implere: instantiatio per congruentiam - corpus inscriptum

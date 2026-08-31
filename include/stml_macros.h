@@ -113,7 +113,15 @@ nomen enumeratio {
      * trans gradus = collisio CLARA (correlatio ponti '&@n;'
      * pertinet, numquam iterationi fortuitae; iunctio-per-
      * nominationem = ianua nominata, non v1). */
-    STML_EXPANSIO_CAPTURA_COLLISA          = XXII
+    STML_EXPANSIO_CAPTURA_COLLISA          = XXII,
+    /* SINE malformatum (antiiunctio - decretum 2026-08-31): nexus
+     * catenae solus, filtrum purum (ordines cum ZEPHYRO
+     * congruentiis interioribus servati, INTACTI). Vitia: attributa
+     * machinae in SINE (de/output/modus/ancorata - nihil fert,
+     * nihil vertit); corpus non exemplar unum; fons NIHIL (nexus
+     * primus catenae documenti sine de= - absentia lata documenti
+     * = ianua posterior nominata, CLARE recusata). */
+    STML_EXPANSIO_SINE_MALFORMATUM         = XXIII
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

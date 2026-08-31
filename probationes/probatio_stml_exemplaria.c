@@ -1169,6 +1169,306 @@ principale (
         CREDO_VERUM (e.vitium == STML_EXPANSIO_CAPTURA_COLLISA);
     }
 
+
+    /* =============== SINE (antiiunctio, XXIII) =============== */
+
+    /* --- SINE: filtrum fundamentale (servare in ZEPHYRO) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: filtrum fundamentale ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p t=\"A\"><q/></p><p t=\"B\"/>"
+            "<CATENA output=\"$pp\">"
+            "<EXEMPLAR><p t=\"$t\"/></EXEMPLAR>"
+            "<SINE><q/></SINE>"
+            "</CATENA>"
+            "<PER congruentia=\"$pp\"><n>&@t;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"A\"><q/></p><p t=\"B\"/><n>B</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- SINE: PONS IPSE IUNCTIO EST (correlatio per ordinem) ---
+     * probatio incorrelata ambos necaret (u adest utrobique);
+     * pons '&@n;' solum ordinem primum necat */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: pons = iunctio ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
+            "<s><d n=\"y\"/><u n=\"x\"/></s>"
+            "<CATENA output=\"$mm\">"
+            "<EXEMPLAR><s><d n=\"$n\"/></s></EXEMPLAR>"
+            "<SINE><u n=\"&@n;\"/></SINE>"
+            "</CATENA>"
+            "<PER congruentia=\"$mm\"><mortuum>&@n;</mortuum></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
+                "<s><d n=\"y\"/><u n=\"x\"/></s>"
+                "<mortuum>y</mortuum></radix>");
+        }
+    }
+
+    /* --- SINE medio catenae: filtrum purum (radix eadem,
+     * capturae hereditatae per SINE fluunt) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: medio catenae ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
+            "<s><d n=\"y\"/><m v=\"1\"/></s>"
+            "<CATENA output=\"$rr\">"
+            "<EXEMPLAR><s><d n=\"$n\"/></s></EXEMPLAR>"
+            "<SINE><u n=\"&@n;\"/></SINE>"
+            "<EXEMPLAR><m v=\"$v\"/></EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$rr\"><x>&@n;-&@v;</x></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d n=\"x\"/><u n=\"x\"/></s>"
+                "<s><d n=\"y\"/><m v=\"1\"/></s>"
+                "<x>y-1</x></radix>");
+        }
+    }
+
+    /* --- SINE: vacuitas propagata (relatio vacua influens) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: vacuitas propagata ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<CATENA output=\"$rr\">"
+            "<EXEMPLAR><nusquam/></EXEMPLAR>"
+            "<SINE><q/></SINE>"
+            "</CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><a/></radix>");
+        }
+    }
+
+    /* --- SINE: '<(>' ornamentum (dissolutio fragmentorum) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: '<(>' ornamentum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p t=\"A\"><q/></p><p t=\"B\"/>"
+            "<CATENA output=\"$pp\">"
+            "<(><EXEMPLAR><p t=\"$t\"/></EXEMPLAR>"
+            "<(><SINE><q/></SINE>"
+            "</CATENA>"
+            "<PER congruentia=\"$pp\"><n>&@t;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"A\"><q/></p><p t=\"B\"/><n>B</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- SINE ex templo portatum (vocatio -> nexus filtrans) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: portatio templorum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@gf><SINE><q/></SINE></#>"
+            "<p t=\"A\"><q/></p><p t=\"B\"/>"
+            "<CATENA output=\"$pp\">"
+            "<EXEMPLAR><p t=\"$t\"/></EXEMPLAR>"
+            "<<#@gf>>"
+            "</CATENA>"
+            "<PER congruentia=\"$pp\"><n>&@t;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"A\"><q/></p><p t=\"B\"/><n>B</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- dualitas: catena SINE ferens ut conditio DIRIBITIONIS
+     * ('si quid DEEST, bracchium hoc sume') --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: conditio DIRIBITIONIS ---\n");
+        /* usus deest -> conditio vera -> bracchium sumptum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s t=\"S1\"><d n=\"x\"/></s>"
+            "<EXEMPLAR output=\"$ss\"><s t=\"$t\"/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$ss\" output=\"$m\">"
+            "<CASUS><EST><CATENA>"
+            "<EXEMPLAR><s><d n=\"$n\"/></s></EXEMPLAR>"
+            "<SINE><u n=\"&@n;\"/></SINE>"
+            "</CATENA></EST>"
+            "<EXEMPLAR><d n=\"$k\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><clamor>&@k;</clamor></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s t=\"S1\"><d n=\"x\"/></s>"
+                "<clamor>x</clamor></radix>");
+        }
+
+        /* usus adest -> conditio falsa -> relatio vacua, nihil */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s t=\"S1\"><d n=\"x\"/><u n=\"x\"/></s>"
+            "<EXEMPLAR output=\"$ss\"><s t=\"$t\"/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$ss\" output=\"$m\">"
+            "<CASUS><EST><CATENA>"
+            "<EXEMPLAR><s><d n=\"$n\"/></s></EXEMPLAR>"
+            "<SINE><u n=\"&@n;\"/></SINE>"
+            "</CATENA></EST>"
+            "<EXEMPLAR><d n=\"$k\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><clamor>&@k;</clamor></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s t=\"S1\"><d n=\"x\"/><u n=\"x\"/></s>"
+                "</radix>");
+        }
+    }
+
+    /* --- XXIII: attributa machinae in SINE --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: vitia attributorum XXIII ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE de=\"$pp\"><q/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE output=\"$oo\"><q/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE modus=\"unum\"><q/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE ancorata=\"vera\"><q/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+    }
+
+    /* --- XXIII: corpus malformatum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: vitia corporis XXIII ---\n");
+        /* corpus vacuum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE/></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+
+        /* elementa duo */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE><q/><r/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+
+        /* textus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE>textus</SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+    }
+
+    /* --- XXIII: fons NIHIL (absentia lata documenti = ianua
+     * posterior, CLARE recusata) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: fons NIHIL XXIII ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$rr\">"
+            "<SINE><q/></SINE></CATENA>"
+            "<PER congruentia=\"$rr\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_SINE_MALFORMATUM);
+    }
+
+    /* --- SINE ut mandatum bracchii directum = XXI (lex vetus:
+     * mandata pura EXEMPLAR/CATENA/DIRIBITIO sola; catena SINE
+     * ferens via composita est) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- SINE: bracchium directum XXI ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<EXEMPLAR output=\"$ss\"><a/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$ss\" output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><a/></EXEMPLAR></EST>"
+            "<SINE><q/></SINE></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><x/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();
