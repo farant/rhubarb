@@ -96,7 +96,17 @@ nomen enumeratio {
      * contenti), nexus cum de=/output= (uncus RESERVATUS -
      * ratificationes III/IV 2026-08-31), aut CATENA nidificata cum
      * attributis (nexus catenatus NUDUS solum - plananda) */
-    STML_EXPANSIO_CATENA_MALFORMATA        = XX
+    STML_EXPANSIO_CATENA_MALFORMATA        = XX,
+    /* DIRIBITIO malformata (dispensatio plani catenae - decretum
+     * 2026-08-31): liber non-bracchium; CASUS sine <@est=> aut
+     * cum pluribus; corpus bracchii non unum mandatum purum;
+     * radix conditionis cum output=/de=/modus (probatio boolea
+     * nuda - ancorata licet); ORDINARIUS non ultimus (bracchia
+     * posteriora obumbraret); diribitio sine bracchiis; mandatum
+     * ignotum (nec EXEMPLAR nec CATENA nec DIRIBITIO); involucrum
+     * cum modus=/ancorata=; adsignatio gemina; nexus catenae
+     * DIRIBITIO cum attributis. */
+    STML_EXPANSIO_DIRIBITIO_MALFORMATA     = XXI
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
