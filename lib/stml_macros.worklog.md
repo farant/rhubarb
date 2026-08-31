@@ -335,3 +335,46 @@ here, worklog is their record):
 - modus="primum" truncates the relation to one row; absent modus =
   omnia; matching runs over the EXPANDED (content) view, so
   template-compressed material matches in its resolved form.
+
+## 2026-08-31 — L1: the first derived report document (exemplaria step 4)
+
+`silva/probationes/fixa/exemplaria/conditio_nihilum.stml` — four
+lines of STML: TRANSPARENTIA + a two-stage chain (all <conditio/>
+wrappers, then NULL identifiers within each row via de=) + a
+<relatum> built by PER. The harness
+(probatio_silva_exemplaria_lint.c) concatenates each corpus file's
+arbor document with the lint text and runs ONE stml_expandere —
+the whole lint is a single pure call, as the interleaved decree
+promised. Differential gate: per-file site-count equality against
+an independent silva-side walk. **GREEN over 233/233 files (78
+plain + 155 latinized), 3,639 sites both ways, apparatus gate
+clean, invariant asserted (zero EXEMPLAR/PER/TRANSPARENTIA
+elements survive into any expanded tree).**
+
+**The gate's first catch was a SEMANTICS question, not a bug.**
+One file diverged by one (lib/stml.c, lint 147 / oracle 146). Not
+shared-token identity (the suppression trace printed nothing) —
+NESTED conditio scopes: a NULL inside a TERNARY's conditio locus
+inside an enclosing condition. The lint's per-row semantics
+legitimately observe it twice (it IS inside two conditions — two
+rows of $conditiones contain the element); the oracle had counted
+per distinct token. Mirror fix: count `+= altitudo` (one per
+enclosing conditio scope) at a token's first appearance.
+Measured: exactly one such site in the whole corpus, genus
+ternarius (named by the walk itself, not guessed). The probe
+lineage repeats: the differential disagreement was worth more
+than the count — it forced the lint's meaning to be stated
+precisely.
+
+Diagnosis seams kept, env-gated: LINT_INDAGO=1 prints suppressed
+shared tokens, nested-scope sites (with genus name), and
+first-use coordinates. Note for readers: an expanded token's
+b/linea are DEF-SITE coordinates (latina.h line 45 for every
+NIHIL) — useless for locating the source site; that is the §1.3
+extent-provenance obligation talking.
+
+v1 status per spec §10: L0 identity ✓ (step 1), engine surface +
+vitia fixtures ✓ (step 2), L1 derivation ✓ (this). REMAINING:
+canon vocabulary for the CAPS builtins so canon judges the lint
+documents (§6) — the one open §10 item. CATENA is now unblocked
+(its precondition — the lint in explicit-name form — exists).

@@ -1,0 +1,4 @@
+<TRANSPARENTIA tags="expansio pasta stringificatio api extentum ante post"/>
+<EXEMPLAR output="$conditiones"><conditio/></EXEMPLAR>
+<EXEMPLAR de="$conditiones" output="$nihila"><lex-identificator $n>NULL</lex-identificator></EXEMPLAR>
+<relatum lint="conditio-contra-nihilum"><PER congruentia="$nihila"><situs>&@n;</situs></PER></relatum>

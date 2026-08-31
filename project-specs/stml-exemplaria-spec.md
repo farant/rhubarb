@@ -419,6 +419,16 @@ is site-set equality against that walk, plus report-document shape.
 The SECOND lint re-expresses an examen codex, chosen at build time by
 fit (v1 subset; has a C oracle to gate against differentially).
 
+**BUILT + GREEN 2026-08-31** (probatio_silva_exemplaria_lint.c;
+fixture fixa/exemplaria/conditio_nihilum.stml): 233/233 files,
+3,639 sites both ways, apparatus gate clean, invariant asserted.
+The gate's first catch was a SEMANTICS clarification, now law:
+**relation counting is PER-ROW — an occurrence inside nested
+conditio scopes (ternarius-in-condition; one site in the corpus)
+is observed once per enclosing row**, and an oracle must mirror
+that, not count distinct tokens. Details:
+lib/stml_macros.worklog.md 2026-08-31 (L1 entry).
+
 ### §7.3 L2 — the door (not v1 build)
 
 In-document derivation (self-maintaining indexes, summary tables;
