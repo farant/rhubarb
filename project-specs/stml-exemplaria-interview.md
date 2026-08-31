@@ -435,7 +435,10 @@ before ratification.
    exactly as calls take subtree arguments. v1 `est` stays literal
    scalar equality; the block-form-on-builtins door stays open.
    **PROMOTED (Round V): load-bearing, not a door — the
-   dialect-dispatch scenario (V.3) depends on it.**
+   dialect-dispatch scenario (V.3) depends on it.** Full residue
+   for the decree + CATENA-as-condition + the composability
+   requirement (macro-produced patterns in est slots): see the
+   "CASUS-conditio addendum" section (2026-08-31).
 5. ~~DISTRIBUTIO ratification + the item-attr collision rule.~~
    RATUM 2026-08-26, BUILT 2026-08-27 (spec §6.4).
 6. `<MATCH/>` / computed views (decide the reservation's fate before
@@ -871,6 +874,70 @@ its own desugaring. Also to note in the decree: visio §9.4's
 parked CLI pipe verbs are a different plane (shell tool vs document
 construct); the spec should say so explicitly since "pipe" will
 mean something in both.
+
+## CASUS-conditio addendum (2026-08-31) — the pattern-case residue,
+## CATENA-as-condition, and the composability requirement
+
+Recorded so the CASUS decree finds everything in one place when the
+door opens (coupled with `de="@arg"` — they open together).
+
+**Already pinned**: the block-form spelling (Fran 2026-08-26,
+`<CASUS><@est=><EXEMPLAR>…</></>` — zero new syntax); load-bearing
+status (Round V, dialect dispatch); THE LINE preserved (a match is
+enumerable structure, not a computed predicate); boolean = set
+non-empty (cardinality thesis); first-congruent-arm-wins carries
+over from literal COMMUTATIO.
+
+**Unpinned residue for the decree**:
+- Is `ancorata` the DEFAULT in case position? (Dispatch wants
+  root-only discrimination; the flag now exists to say so.)
+- Captures→arm-body mechanism: almost certainly the bridge again
+  (arm body filled with the match's argument map, PER-like), but
+  never formally stated. The arm interface = capture schema.
+- A case-position EXEMPLAR carrying `output=` should be LOUD
+  (it is a predicate + capture source, not a binding) — decree it,
+  don't let it be silent.
+- Exhaustiveness: unknown-constructor-reaches-ORDINARIUS must be
+  raisable LOUD — the `<VITIUM nuntius=>` instrument, itself
+  undecreed.
+
+**CATENA as condition (minted this conversation)**: coherent for
+free — a chain's tail yields a relation, non-empty = arm taken;
+since CATENA desugars to named EXEMPLARs, a CATENA-valued case
+desugars to a chain feeding the case test. Buys expressive
+predicates ("a C file THAT USES the arena idiom") while staying
+inside the no-expression law: every stage is still enumerable
+structure. Nothing decreed yet; record only.
+
+**THE COMPOSABILITY REQUIREMENT (Fran, 2026-08-31)**: fragments
+and macros that EXPAND TO EXEMPLAR/CATENA must work in the `est`
+slot — pattern-cases must receive patterns through the macro
+layer, not only literally. Technical facts for the decree:
+
+1. TODAY'S GUARD IS THE PLACEHOLDER: gradus II made
+   EXEMPLAR/PER/TRANSPARENTIA inside a fill context a LOUD vitium
+   XIII. When @arg lands, that guard REFINES (not merely lifts):
+   application inside bodies binds to the argument scope; and —
+   distinctly —
+2. CONVEYANCE vs APPLICATION: a pattern being carried INTO an
+   engine-space consumer slot (an est block) is INERT — quoted,
+   not applied. Patterns apply only at their consumption site
+   (the case judge). Mirrors "nested template definitions opaque
+   in bodies." Without this rule, est-block expansion would try
+   to resolve the EXEMPLAR mid-conveyance.
+3. Order in the est slot: block children EXPAND first (a template
+   call resolves to its EXEMPLAR/CATENA body — genus in = genus
+   out), THEN the judge requires an engine-space root. A macro-
+   produced pattern must be indistinguishable from a literal one.
+4. The ALIAS flavor is a sub-decision: content transclusions
+   (`<<#x>>`) survive expansion UNRESOLVED (no library resolver
+   exists; every consumer rolls its own). The case judge either
+   resolves transparently (the canon precedent — it resolves for
+   judging) or refuses loud. Pick one at decree time.
+5. THE GATE when built: the same dispatch fixture written THREE
+   ways — literal EXEMPLAR in est / template call in est /
+   transclusion in est — must behave identically (a composability
+   differential, the CATENA-gate pattern again).
 
 ## Build order (v1.5 before v2)
 
