@@ -875,6 +875,43 @@ parked CLI pipe verbs are a different plane (shell tool vs document
 construct); the spec should say so explicitly since "pipe" will
 mean something in both.
 
+**REUSE ADDENDUM (Fran, 2026-08-31)**: links may be macros
+expanding to EXEMPLAR, may be CATENA, and may be macros expanding
+to CATENA — the chain is the natural REUSE mechanism for stored
+pattern libraries. Consequences worked out, unratified where
+marked:
+
+- **Nested chains FLATTEN** — the DISTRIBUTIO same-type-flattening
+  law, third appearance: `CATENA[A, CATENA[B,C], D]` ≡
+  `CATENA[A,B,C,D]`. Inner head receives the enclosing incoming
+  relation; inner tail feeds the next outer link. Associativity by
+  construction; trivial in the desugared IR (all intermediate
+  names engine-minted). A link-position macro expanding to a
+  FOREST of stages splices as consecutive links — stored
+  multi-stage narrowings work bare or CATENA-wrapped.
+- **Genus in = genus out in link position**: link expands first
+  (call → EXEMPLAR/CATENA), then the chain reads the result; a
+  macro-produced link is indistinguishable from a literal one.
+  The vitium-XIII refinement covers link positions the way it
+  covers est slots (application context = the chain).
+- **OUTPUT PLACEMENT NOW IN TENSION (Fran to decide at decree)**:
+  the original sketch put `output=` on the LAST stage; the reuse
+  story wants stored fragments OPEN AT BOTH ENDS (no de= on head,
+  no output= on tail; the use site decides both), which pulls the
+  name onto the CATENA element itself (`<CATENA output="$x">`).
+  Wrapper-placement keeps stored fragments name-free, makes
+  nesting clean, and separates the tee question crisply (a STAGE
+  carrying output= = a tee). Engine-native reading makes it safe
+  (no literal attr carry-down). Claude leans wrapper; reverses the
+  first sketch, so it is Fran's call.
+- **Capture threading across links = the SECOND pull on
+  relational extension** (V.4's per-row-matching-EXTENDS-rows):
+  as modeled, each link's relation carries its own ligamina, so a
+  stored fragment's mid-chain captures are invisible at the tail
+  unless re-captured. Row-extension is what would let upstream
+  captures flow through a chain — name the pull, build at its own
+  decree.
+
 ## CASUS-conditio addendum (2026-08-31) — the pattern-case residue,
 ## CATENA-as-condition, and the composability requirement
 
