@@ -2205,11 +2205,12 @@ _diribitio_bracchia_iudicare (
 /* Nexus catenae statice iudicare (ratificatio VI 2026-08-31):
  * nexus EXEMPLAR in FORMA NEXUS iudicatur (utrimque apertus -
  * sine output=/de=, modus licitus, corpus unum elementum CITATUM),
- * CATENA nidificata NUDA + recursa, fragmenta dissoluta
- * (definitiones templorum praeteritae), vocationes '#@' statice
- * iniudicabiles (numerantur - catena omnium-vocationum vacua
- * statice non clamatur), transclusio contenti et cetera
- * malformata. */
+ * CATENA nidificata NUDA + recursa, SINE NUDUM (nexus filtrans -
+ * nulla attributa machinae, corpus exemplar unum CITATUM),
+ * fragmenta dissoluta (definitiones templorum praeteritae),
+ * vocationes '#@' statice iniudicabiles (numerantur - catena
+ * omnium-vocationum vacua statice non clamatur), transclusio
+ * contenti et cetera malformata. */
 interior vacuum
 _catena_nexus_iudicare (
     StmlNodus* n,
@@ -2353,6 +2354,56 @@ _catena_nexus_iudicare (
                 perge;
             }
             _diribitio_bracchia_iudicare(l, vitia, &bracchia);
+            (*numerus)++;
+            perge;
+        }
+        si (   l->titulus != NIHIL
+            && chorda_aequalis_literis(*l->titulus, "SINE"))
+        {
+            StmlNodus* forma;
+                  i32  j;
+                  i32  m;
+
+            /* nexus filtrans NUDUS (antiiunctio - filtrum purum,
+             * nihil fert nihil vertit): attributa machinae vetita,
+             * corpus exemplar unum CITATUM */
+            si (   stml_attributum_capere(l, "output")   != NIHIL
+                || stml_attributum_capere(l, "de")       != NIHIL
+                || stml_attributum_capere(l, "modus")    != NIHIL
+                || stml_attributum_capere(l, "ancorata") != NIHIL)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              l, l->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                perge;
+            }
+            forma  = NIHIL;
+            m      = stml_numerus_liberorum(l);
+            per (j = ZEPHYRUM; j < m; j++)
+            {
+                StmlNodus* f = stml_liberum_ad_indicem(l, j);
+
+                si (   f                     == NIHIL
+                    || f->genus              == STML_NODUS_COMMENTUM
+                    || f->attributum_titulus != NIHIL)
+                {
+                    perge;
+                }
+                si (forma != NIHIL)
+                {
+                    forma = NIHIL;
+                    frange;
+                }
+                forma = f;
+            }
+            si (   forma        == NIHIL
+                || forma->genus != STML_NODUS_ELEMENTUM)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              l, l->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                perge;
+            }
             (*numerus)++;
             perge;
         }

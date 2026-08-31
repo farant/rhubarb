@@ -2577,6 +2577,7 @@ principale (vacuum)
                 "<CATENA de=\"$m\" output=\"$c\">"
                 "<(><EXEMPLAR modus=\"primum\"><y/></EXEMPLAR>"
                 "<CATENA><EXEMPLAR><z/></EXEMPLAR></CATENA>"
+                "<SINE><y-absens n=\"&@v;\"/></SINE>"
                 "<<#@nexus-conditus>>"
                 "</CATENA>"
                 "<DIRIBITIO de=\"$c\" output=\"$d\">"
@@ -2599,7 +2600,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XIV];
+                constans character* mala[XVII];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2635,7 +2636,18 @@ principale (vacuum)
                            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR>"
                            "</EST><EXEMPLAR><s/></EXEMPLAR>"
                            "</CASUS></DIRIBITIO>";
-                per (m = ZEPHYRUM; m < XIV; m++)
+                /* SINE (antiiunctio - decretum 2026-08-31) */
+                mala[14] = "<CATENA output=\"$c\">"
+                           "<EXEMPLAR><s/></EXEMPLAR>"
+                           "<SINE modus=\"primum\"><q/></SINE>"
+                           "</CATENA>";
+                mala[15] = "<CATENA output=\"$c\">"
+                           "<EXEMPLAR><s/></EXEMPLAR>"
+                           "<SINE/></CATENA>";
+                mala[16] = "<CATENA output=\"$c\">"
+                           "<EXEMPLAR><s/></EXEMPLAR>"
+                           "<SINE><q/><r/></SINE></CATENA>";
+                per (m = ZEPHYRUM; m < XVII; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

@@ -185,7 +185,10 @@ nomen enumeratio {
      * CATENA - involucrum sine output=/cum modus=/ancorata=,
      * catena statice vacua, nexus cum output=/de= (uncus
      * reservatus), CATENA nidificata cum attributis, liber
-     * non-nexus. Forma sana vocabulario cuiusvis canonis
+     * non-nexus; SINE (nexus filtrans, antiiunctio) - attributum
+     * machinae quodvis (output/de/modus/ancorata - filtrum purum
+     * nudum), corpus non exemplar unum. Forma sana vocabulario
+     * cuiusvis canonis
      * INVISIBILIS est (ut fragmenta/augmentationes) - materia
      * machinae, non contentum; corpus exemplaris dialectum ALIENAM
      * citat, numquam contra canonem vocantem iudicatur. detail =
