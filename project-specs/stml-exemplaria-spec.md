@@ -552,3 +552,17 @@ expandere call with site-set equality against the C oracle (L1);
 every §5 vitium has a firing fixture; canon judges the two lint
 documents; and no EXEMPLAR, PER, or TRANSPARENTIA element survives
 into any resolved document (§0's invariant, asserted in the gates).
+
+**v1 COMPLETE 2026-08-31.** L0: plagula 78+155 byte-exact through
+the engine matcher (step 1). Surface + vitia: 51/51 fixtures
+(step 2; step 3 absorbed). L1: 233/233 files, 3,639 sites both
+ways, invariant asserted (step 4). Canon: the CAPS builtins enter
+canon ENGINE-SIDE (the template-space precedent) —
+`CANON_MACHINAE_MALFORMATUM` (XXIII) judges their form statically
+at load; well-formed CAPS are INVISIBLE to every dialect's
+vocabulary (the fragment/augmentation precedent); pattern bodies
+are QUOTED, never judged against the calling canon (per-dialect
+patterns doctrine); gated in probatio_canon.c (354/354) with the
+lint-document shape judged clean and five malformed constructs
+each raising exactly one XXIII. Lint II (post-v1, §7.2) will be
+judged by this same vocabulary when it lands.

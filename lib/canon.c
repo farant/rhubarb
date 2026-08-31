@@ -2169,6 +2169,158 @@ _transclusionis_petitum (
     redde petitum;
 }
 
+
+/* ==================================================
+ * SPATIUM MACHINAE (CAPS - spec exemplarium par. 6)
+ *
+ * EXEMPLAR/PER/TRANSPARENTIA vocabularium canonis vocantis non
+ * sunt: constructa machinae expansionis, ante contentum consumpta.
+ * Canon formam eorum PROPRIAM statice iudicat (planum iudicabile -
+ * subcopia par. 5 machinae tempore onerationis), et corpora
+ * NUMQUAM descendit: corpus exemplaris dialectum alienam CITAT
+ * (exemplaria per-dialectum, relationes lingua franca), corpus
+ * PER materia templi est. Mos idem quo spatium templi supra:
+ * citatum, non contentum.
+ * ================================================== */
+
+interior b32
+_est_caps_machinae (
+    constans StmlNodus* n)
+{
+    redde n->titulus != NIHIL
+        && (   chorda_aequalis_literis(*n->titulus, "EXEMPLAR")
+            || chorda_aequalis_literis(*n->titulus, "PER")
+            || chorda_aequalis_literis(*n->titulus,
+                                       "TRANSPARENTIA"));
+}
+
+interior vacuum
+_caps_iudicare (
+    StmlNodus* n,
+          Xar* vitia)
+{
+    si (chorda_aequalis_literis(*n->titulus, "EXEMPLAR"))
+    {
+           chorda* output;
+           chorda* modus;
+           chorda* de;
+        StmlNodus* forma;
+              i32  i;
+              i32  numerus;
+
+        output = stml_attributum_capere(n, "output");
+        si (   output                             == NIHIL || output->mensura < II
+            || (character)output->datum[ZEPHYRUM] != '$')
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, output, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        modus = stml_attributum_capere(n, "modus");
+        si (   modus != NIHIL
+            && !chorda_aequalis_literis(*modus, "omnia")
+            && !chorda_aequalis_literis(*modus, "unum")
+            && !chorda_aequalis_literis(*modus, "primum")
+            && !chorda_aequalis_literis(*modus, "optional"))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, modus, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        de = stml_attributum_capere(n, "de");
+        si (   de != NIHIL
+            && (   de->mensura < II
+                || (character)de->datum[ZEPHYRUM] != '$'))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, de, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        /* corpus: elementum UNUM (regula machinae par. 2.4
+         * speculata - commenta praeterita, cetera numerata) */
+        forma    = NIHIL;
+        numerus  = stml_numerus_liberorum(n);
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(n, i);
+
+            si (   l                     == NIHIL
+                || l->genus              == STML_NODUS_COMMENTUM
+                || l->attributum_titulus != NIHIL)
+            {
+                perge;
+            }
+            si (forma != NIHIL)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              n, n->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                redde;
+            }
+            forma = l;
+        }
+        si (forma == NIHIL || forma->genus != STML_NODUS_ELEMENTUM)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+    si (chorda_aequalis_literis(*n->titulus, "PER"))
+    {
+        chorda* congruentia;
+        chorda* voca;
+
+        congruentia = stml_attributum_capere(n, "congruentia");
+        si (   congruentia                             == NIHIL || congruentia->mensura < II
+            || (character)congruentia->datum[ZEPHYRUM] != '$')
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, congruentia, ZEPHYRUM,
+                          ZEPHYRUM);
+            redde;
+        }
+        voca = stml_attributum_capere(n, "voca");
+        si (   voca != NIHIL
+            && (   voca->mensura < III
+                || (character)voca->datum[ZEPHYRUM] != '#'
+                || (character)voca->datum[I] != '@'))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, voca, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+    /* TRANSPARENTIA: tags= praesens et non-vacuum */
+    {
+        chorda* tags;
+           b32  verbum;
+           i32  i;
+
+        tags    = stml_attributum_capere(n, "tags");
+        verbum  = FALSUM;
+        si (tags != NIHIL)
+        {
+            per (i = ZEPHYRUM; i < tags->mensura; i++)
+            {
+                character c = (character)tags->datum[i];
+
+                si (   c != ' ' && c != '\t' && c != '\n'
+                    && c != '\r')
+                {
+                    verbum = VERUM;
+                    frange;
+                }
+            }
+        }
+        si (!verbum)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, tags, ZEPHYRUM, ZEPHYRUM);
+        }
+    }
+}
+
 /* LIBERI EFFECTIVI: index liberorum ubi transclusio quaeque
  * contento suo SUBSTITUTA est.
  *
@@ -2491,6 +2643,11 @@ _augmentum_iudicare (
              * eodem) */
             perge;
         }
+        si (_est_caps_machinae(l))
+        {
+            _caps_iudicare(l, vitia);
+            perge;
+        }
 
         legale  = FALSUM;
         pugna   = FALSUM;
@@ -2689,6 +2846,15 @@ nodum_iudicare (
      * legalis esse non debet. Per USUS suos iudicatur. */
     si (n->fragmentum)
     {
+        redde;
+    }
+
+    /* spatium machinae (CAPS): forma propria iudicata, corpus
+     * citatum - numquam contra vocabularium vocantis (vide caput
+     * sectionis CAPS supra) */
+    si (_est_caps_machinae(n))
+    {
+        _caps_iudicare(n, vitia);
         redde;
     }
 
@@ -2911,6 +3077,14 @@ nodum_iudicare (
          * genere suo iam supra excluditur - elementum non est.) */
         si (l->fragmentum)
         {
+            perge;
+        }
+
+        /* spatium machinae (CAPS) vocabulario invisibile - forma
+         * sua tamen hic iudicatur (parens non descendit) */
+        si (_est_caps_machinae(l))
+        {
+            _caps_iudicare(l, vitia);
             perge;
         }
 
@@ -3595,6 +3769,8 @@ canon_nuntius (
     {
         casus CANON_ELEMENTUM_IGNOTUM:
             redde "elementum extra canonem";
+        casus CANON_MACHINAE_MALFORMATUM:
+            redde "constructum machinae (CAPS) malformatum";
         casus CANON_ATTRIBUTUM_IGNOTUM:
             redde "attributum extra canonem";
         casus CANON_ATTRIBUTUM_DEEST:

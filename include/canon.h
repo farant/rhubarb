@@ -174,7 +174,17 @@ nomen enumeratio {
      * distributa non exsistit, ergo iudicari nequit. detail =
      * titulus involucri peccantis; numerus =
      * StmlDistributioVitium; limes = linea. */
-    CANON_DISTRIBUTIO_FRACTA = XXII
+    CANON_DISTRIBUTIO_FRACTA = XXII,
+    /* constructum machinae (CAPS: EXEMPLAR/PER/TRANSPARENTIA,
+     * spec exemplarium par. 6) forma mala IUDICIO STATICO: output=
+     * absens aut sine '$'; modus ignotus; de=/congruentia= sine
+     * '$'; corpus non unum elementum; tags= absens/vacuum. Forma
+     * sana vocabulario cuiusvis canonis INVISIBILIS est (ut
+     * fragmenta/augmentationes) - materia machinae, non contentum;
+     * corpus exemplaris dialectum ALIENAM citat, numquam contra
+     * canonem vocantem iudicatur. detail = attributum peccans
+     * (aut NIHIL si absens/corpus). */
+    CANON_MACHINAE_MALFORMATUM = XXIII
 } CanonVitiumGenus;
 
 nomen structura {

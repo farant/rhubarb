@@ -2543,6 +2543,83 @@ principale (vacuum)
 
 
     imprimere("\n");
+
+
+    /* ========================================================
+     * SPATIUM MACHINAE (CAPS): forma statice iudicata,
+     * vocabulario invisibilis (spec exemplarium par. 6)
+     * ======================================================== */
+
+    {
+         Canon* c;
+        chorda  causa;
+           Xar* vitia;
+
+        imprimere("\n--- CAPS: EXEMPLAR/PER/TRANSPARENTIA ---\n");
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"lint\" versio=\"1\">"
+            "<elementum nomen=\"relatum\">"
+            "<attributum nomen=\"lint\"/>"
+            "</elementum>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
+        si (c != NIHIL)
+        {
+            /* documentum lint sanum: vitia NULLA - CAPS se ipsa
+             * iudicant (nullum ELEMENTUM_IGNOTUM), corpus
+             * exemplaris CITATUR (conditio numquam contra canonem
+             * lint iudicata), PER liberum relati invisibile */
+            vitia = iudicare_literis(c,
+                "<TRANSPARENTIA tags=\"expansio ante post\"/>"
+                "<EXEMPLAR output=\"$m\"><conditio/></EXEMPLAR>"
+                "<EXEMPLAR de=\"$m\" modus=\"unum\" ancorata"
+                " output=\"$n\"><x v=\"$v\"/></EXEMPLAR>"
+                "<relatum lint=\"x\">"
+                "<PER congruentia=\"$n\"><situs>&@v;</situs></PER>"
+                "</relatum>",
+                piscina, intern);
+            CREDO_NON_NIHIL (vitia);
+            si (vitia != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (xar_numerus(vitia), ZEPHYRUM);
+            }
+
+            /* malformata: quodque vitium UNUM XXIII */
+            {
+                constans character* mala[V];
+                               i32  m;
+
+                mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
+                mala[1] = "<EXEMPLAR modus=\"cuncta\""
+                          " output=\"$m\"><s/></EXEMPLAR>";
+                mala[2] = "<EXEMPLAR output=\"$m\"><a/><b/>"
+                          "</EXEMPLAR>";
+                mala[3] = "<PER><n/></PER>";
+                mala[4] = "<TRANSPARENTIA/>";
+                per (m = ZEPHYRUM; m < V; m++)
+                {
+                    vitia = iudicare_literis(c, mala[m], piscina,
+                                             intern);
+                    CREDO_NON_NIHIL (vitia);
+                    si (vitia != NIHIL)
+                    {
+                        CanonVitium* v;
+
+                        CREDO_AEQUALIS_I32 (xar_numerus(vitia), I);
+                        v = (CanonVitium*)xar_obtinere(vitia,
+                                                       ZEPHYRUM);
+                        CREDO_NON_NIHIL (v);
+                        si (v != NIHIL)
+                        {
+                            CREDO_VERUM (v->genus
+                                == CANON_MACHINAE_MALFORMATUM);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();
