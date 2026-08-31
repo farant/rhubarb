@@ -216,6 +216,18 @@ _tok_legere_nomen (
     {
         _tok_progredi(ctx, I);
     }
+    /* '*' SOLUS = elementum quodlibet (spec exemplarium par. 2.6:
+     * '<*>' regula una gradaria). Titulus unius characteris HIC
+     * SOLUM; '*' charactere nominis sequente recusatur ut ante.
+     * Attributa numquam huc veniunt (custos _est_nomen_initium). */
+    alioquin si (   _tok_aspicere(ctx, ZEPHYRUM) == '*'
+                 && !_est_nomen_character(_tok_aspicere(ctx, I)))
+    {
+        _tok_progredi(ctx, I);
+        result.datum    = ctx->input.datum + initium;
+        result.mensura  = ctx->positus - initium;
+        redde result;
+    }
     alioquin si (!_est_nomen_initium(_tok_aspicere(ctx, ZEPHYRUM)))
     {
         result.datum    = NIHIL;
@@ -372,8 +384,13 @@ _tok_legere_attributa (
             frange;
         }
 
-        /* Check if this looks like an attribute name */
-        si (!_est_nomen_initium(_tok_aspicere(ctx, ZEPHYRUM)))
+        /* Check if this looks like an attribute name. '$' ducens
+         * cum charactere nominis sequente benedicitur (spec
+         * exemplarium par. 2.5: '$x' = captura nodi; sigillum pars
+         * NOMINIS fit, ut '.' in titulis elementorum). */
+        si (   !_est_nomen_initium(_tok_aspicere(ctx, ZEPHYRUM))
+            && !(   _tok_aspicere(ctx, ZEPHYRUM) == '$'
+                 && _est_nomen_initium(_tok_aspicere(ctx, I))))
         {
             *cauda_spatii = spatium;
             frange;
@@ -387,8 +404,25 @@ _tok_legere_attributa (
             spatium_ptr = chorda_internare(ctx->intern, spatium);
         }
 
-        /* Read attribute name */
-        titulus_ch = _tok_legere_nomen(ctx);
+        /* Read attribute name ('$' ducens consumptum et in nomen
+         * inclusum - vide custodem supra) */
+        si (_tok_aspicere(ctx, ZEPHYRUM) == '$')
+        {
+            i32 initium_sigilli = ctx->positus;
+
+            _tok_progredi(ctx, I);
+            titulus_ch = _tok_legere_nomen(ctx);
+            si (titulus_ch.mensura > ZEPHYRUM)
+            {
+                titulus_ch.datum = ctx->input.datum
+                                 + initium_sigilli;
+                titulus_ch.mensura += I;
+            }
+        }
+        alioquin
+        {
+            titulus_ch = _tok_legere_nomen(ctx);
+        }
         si (titulus_ch.mensura == ZEPHYRUM)
         {
             frange;

@@ -66,7 +66,30 @@ nomen enumeratio {
      * ORDINARIUS non - ORDINARIUS et praesente et absente
      * exsequitur). In COLLECTIONE iudicatum: angustatio fluxus,
      * optionalitas honesta - numquam vacuum tacitum (par. 6.2) */
-    STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS = XI
+    STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS = XI,
+    /* EXEMPLARIA (spec stml-exemplaria-spec.md par. 5, gradus II).
+     * Dura omnia praeter XVIII (custos finis, mollis): */
+    /* EXEMPLAR sine output= aut output sine sigillo '$' */
+    STML_EXPANSIO_EXEMPLAR_SINE_EXITU      = XII,
+    /* EXEMPLAR/PER/TRANSPARENTIA malformata: modus ignotus,
+     * adsignatio output gemina, de/congruentia sine '$', voca
+     * malformatum, aut constructum intra corpus templi (porta
+     * 'de=@arg' nondum aedificata - spec par. 8.5) */
+    STML_EXPANSIO_EXEMPLAR_MALFORMATUM     = XIII,
+    /* de= aut congruentia= relationem nullam priorem nominans */
+    STML_EXPANSIO_SCOPUS_IGNOTUS           = XIV,
+    /* corpus exemplaris non unum elementum (silva sub applicatione
+     * fluitanti - involve in parentem verum aut ancorata adhibe) */
+    STML_EXPANSIO_CORPUS_SILVESTRE         = XV,
+    /* modus="unum" cum 0 aut >=2 congruentiis */
+    STML_EXPANSIO_UNUM_VIOLATUM            = XVI,
+    /* modus="optional" cum >=2 congruentiis */
+    STML_EXPANSIO_OPTIONAL_MULTIPLEX       = XVII,
+    /* relatio output= quam nihil inferius consumit (codex mortuus;
+     * custos finis - ambulatio pergit, successus cadit) */
+    STML_EXPANSIO_EXITUS_NON_CONSUMPTUS    = XVIII,
+    /* TRANSPARENTIA sine tags= aut tags vacuis */
+    STML_EXPANSIO_TRANSPARENTIA_MALFORMATA = XIX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

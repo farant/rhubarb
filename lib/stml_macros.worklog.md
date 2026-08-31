@@ -280,3 +280,58 @@ duplicates `_loculum_invenire`'s whole-reference grammar — the two
 copies of that law now at least live in ONE file (the arbor comment
 used to say "lex una, sedes altera"). Unify when loose mode lands,
 not before.
+
+## 2026-08-31 — EXEMPLAR/PER/TRANSPARENTIA: gradus II built (loose mode + the bridge)
+
+The §2-§5 surface of stml-exemplaria-spec.md, in the engine
+(interleaved: EXEMPLAR resolves during the one expansion walk,
+document level only — inside a fill context all three CAPS raise
+vitium XIII, the named @arg door). 51/51 unit fixtures
+(probatio_stml_exemplaria.c); all prior suites + plagula gate +
+materia + amalgam green.
+
+**THE FINDING: "partial tree = content above" was FALSE until
+ADNEXIO PRAECOX.** The walk attached a child to its parent only
+after the child's whole subtree finished, so the expanded root's
+spine above the current position was unlinked — every floating
+match over radix_expansa saw an empty tree (15/51 red, all
+zero-match shaped). Fix: _expandere_nodum now attaches the shallow
+duplicate BEFORE walking its children (extra param parens_novus;
+same final tree, only intermediate visibility changed; failure
+paths discard the whole expansion so partial attachment is
+harmless). The strata law now falls out of the implementation for
+real, not just in prose.
+
+**Two lexer blessings in lib/stml.c** (the `.`-tag / `@`-attr
+precedent, both narrow):
+- `*` as a COMPLETE tag name (`<*/>` wildcard) — only when NOT
+  followed by a name character; attributes never reach it.
+- `$` leading an ATTRIBUTE NAME (`<p $n/>` node capture) — only
+  when followed by a name-initial character; the sigil becomes part
+  of the name. Trap met on the way: writing `<*/>` inside a C
+  comment ends the comment at `*/`.
+
+**Implementation laws set at the edges** (spec-consistent, decided
+here, worklog is their record):
+- Loose child matching is GREEDY ordered subsequence — each pattern
+  child consumes the FIRST matching effective candidate child; no
+  backtracking across choices. Failed trials truncate their
+  ligamina (caller-truncates discipline, as the strict matcher).
+- Effective children (content view): content fragments DISSOLVE
+  in place; TRANSCLUSIO skipped (identity counted at definition);
+  attribute-elements skipped; TRANSPARENTIA-declared tags and
+  @-space skipped whole. Floating descent uses the same skips.
+- Candidate attr matching reads INLINE attributa only (capere dual
+  view not consulted); a="" (valor NIHIL) never satisfies a value
+  capture — written = required means a present, valued attribute.
+- Hard vs soft: XII-XVII and XIX are HARD (walk stops — the
+  transactional reading of unum/optional); XVIII
+  (EXITUS_NON_CONSUMPTUS) is the end-guard, soft.
+- PER = the bridge literally: ligamina → StmlMacroArgumentum map →
+  _liberos_expandere over the inline body (stratum+1), or over a
+  definition body for voca="#@f" (with the full loculus judgments +
+  a provenance nota per instantiation, exactly like a call). Node
+  captures splice as CLONES (PER is the copy consumer).
+- modus="primum" truncates the relation to one row; absent modus =
+  omnia; matching runs over the EXPANDED (content) view, so
+  template-compressed material matches in its resolved form.

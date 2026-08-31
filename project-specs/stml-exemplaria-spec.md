@@ -337,6 +337,15 @@ precedent rather than the computed-views violation.
 - **Determinism**: expansion is a pure function of (document + scope
   snapshot). With the v1 `de=` set, every scope is in-document, so
   v1 expansion remains a pure function of the document alone.
+- **ADNEXIO PRAECOX** (build finding, 2026-08-31): the walk
+  attaches each shallow duplicate to its parent BEFORE filling its
+  children, so the spine above the current position is always
+  linked and the partial expanded tree IS "content above" —
+  without this the scope law holds only in prose (measured: every
+  floating match saw an empty tree). Final trees are unchanged;
+  only mid-walk visibility differs. Details + the two lexer
+  blessings (`*` tag, `$` attribute name) and the edge laws set at
+  build time: lib/stml_macros.worklog.md 2026-08-31.
 
 ### §4.1 Performance envelope (measured, Q3 2026-08-27)
 
