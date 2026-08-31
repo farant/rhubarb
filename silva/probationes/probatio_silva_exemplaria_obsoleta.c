@@ -62,6 +62,7 @@ nomen structura {
           i32 fracturae;
           i32 recusae;
           i32 divergentes;
+          i32 diribitio_divergentes;
           i32 summa_lint;
           i32 summa_oraculi;
           i32 invariata_violata;
@@ -395,6 +396,7 @@ _invariata_numerare (
         && (   chorda_aequalis_literis(*n->titulus, "EXEMPLAR")
             || chorda_aequalis_literis(*n->titulus, "PER")
             || chorda_aequalis_literis(*n->titulus, "CATENA")
+            || chorda_aequalis_literis(*n->titulus, "DIRIBITIO")
             || chorda_aequalis_literis(*n->titulus,
                    "TRANSPARENTIA")))
     {
@@ -425,6 +427,73 @@ _divergentiam_notare (
     census->numerus_divergentiarum++;
 }
 
+/* Documentum lint alterum contra textum arboris eundem expandere;
+ * relatum expansum reddit (NIHIL = fractura, iam numerata). */
+interior StmlNodus*
+_relatum_alterum_expandere (
+                Piscina* opus,
+     constans character* via,
+        constans chorda* textus_arboris,
+        constans chorda* lint_textus,
+             LintCensus* census)
+{
+                      i8* buffer;
+                  chorda  textus_iunctus;
+     InternamentumChorda* intern;
+            StmlResultus  lectio;
+    StmlExpansioResultus  expansio;
+               StmlNodus* relatum;
+
+    buffer = (i8*)piscina_allocare(opus,
+        (memoriae_index)(textus_arboris->mensura
+                         + lint_textus->mensura));
+    si (buffer == NIHIL)
+    {
+        census->fracturae++;
+        redde NIHIL;
+    }
+    memcpy(buffer, textus_arboris->datum,
+           (memoriae_index)textus_arboris->mensura);
+    memcpy(buffer + textus_arboris->mensura, lint_textus->datum,
+           (memoriae_index)lint_textus->mensura);
+    textus_iunctus.datum    = buffer;
+    textus_iunctus.mensura  = textus_arboris->mensura
+                            + lint_textus->mensura;
+
+    intern = internamentum_creare(opus);
+    si (intern == NIHIL)
+    {
+        census->fracturae++;
+        redde NIHIL;
+    }
+    lectio = stml_legere(textus_iunctus, opus, intern);
+    si (!lectio.successus)
+    {
+        census->fracturae++;
+        imprimere("    LECTIO ALTERA FRACTA: %s (linea %d)\n", via,
+                  (integer)lectio.linea_erroris);
+        redde NIHIL;
+    }
+    expansio = stml_expandere(lectio.radix, opus, intern);
+    si (!expansio.successus)
+    {
+        census->fracturae++;
+        imprimere("    EXPANSIO ALTERA FRACTA: %s (vitium %d,"
+                  " linea %d)\n", via, (integer)expansio.vitium,
+                  (integer)expansio.linea);
+        redde NIHIL;
+    }
+    census->invariata_violata +=
+        _invariata_numerare(expansio.radix_expansa);
+    relatum = _elementum_invenire(expansio.radix_expansa, "relatum");
+    si (relatum == NIHIL)
+    {
+        census->fracturae++;
+        imprimere("    RELATUM ALTERUM DEEST: %s\n", via);
+    }
+    redde relatum;
+}
+
 
 /* ==================================================
  * Plagula una: recipe -> oraculum + latus lint -> comparatio
@@ -435,6 +504,7 @@ _plagulam_probare (
      constans character* via,
      constans character* radix,
         constans chorda* lint_textus,
+        constans chorda* lint_diribitio,
              LintCensus* census)
 {
                  Piscina* opus;
@@ -536,6 +606,34 @@ _plagulam_probare (
     }
     n_lint = _liberos_titulo_numerare(relatum, "situs");
 
+    /* PORTA DIRIBITIONIS: catena sui-custodita byte-pro-byte */
+    {
+        StmlNodus* relatum_diribitionis;
+
+        relatum_diribitionis = _relatum_alterum_expandere(opus,
+            via, &scriptura.textus, lint_diribitio, census);
+        si (relatum_diribitionis == NIHIL)
+        {
+            piscina_destruere(opus);
+            redde;
+        }
+        {
+            chorda scriptum_planum;
+            chorda scriptum_diribitionis;
+
+            scriptum_planum        = stml_scribere(relatum, opus,
+                                                   FALSUM);
+            scriptum_diribitionis  = stml_scribere(
+                relatum_diribitionis, opus, FALSUM);
+            si (!chorda_aequalis(scriptum_planum,
+                                 scriptum_diribitionis))
+            {
+                census->diribitio_divergentes++;
+                imprimere("    DIRIBITIO DIVERGIT: %s\n", via);
+            }
+        }
+    }
+
     census->summa_lint     += n_lint;
     census->summa_oraculi  += n_oraculi;
     si (n_lint != n_oraculi)
@@ -561,10 +659,11 @@ _censum_referre (
 
     imprimere("  [%s] plagulae %d | fracturae %d | recusae %d |"
         " situs lint %d / oraculi %d | divergentes %d |"
-        " invariata violata %d\n",
+        " diribitio divergentes %d | invariata violata %d\n",
         titulus, (integer)c->plagulae, (integer)c->fracturae,
         (integer)c->recusae, (integer)c->summa_lint,
         (integer)c->summa_oraculi, (integer)c->divergentes,
+        (integer)c->diribitio_divergentes,
         (integer)c->invariata_violata);
     monstranda = c->numerus_divergentiarum;
     si (monstranda > DIVERGENTIAE_MAX)
@@ -602,6 +701,9 @@ principale (vacuum)
                      i8* lint_datum;
                      i32 lint_mensura;
                   chorda lint_textus;
+                     i8* diribitio_datum;
+                     i32 diribitio_mensura;
+                  chorda lint_diribitio;
                      i32 i;
                      b32 praeteritus;
 
@@ -636,6 +738,22 @@ principale (vacuum)
     lint_textus.datum    = lint_datum;
     lint_textus.mensura  = lint_mensura;
 
+    sprintf(via_plagulae,
+        "%s/silva/probationes/fixa/exemplaria/"
+        "obsoletum_usleep_diribitio.stml", radix);
+    diribitio_datum = apparatus_plagulam_legere(piscina,
+        via_plagulae, &diribitio_mensura);
+    si (diribitio_datum == NIHIL || diribitio_mensura <= ZEPHYRUM)
+    {
+        imprimere("FRACTA: documentum diribitionis non lectum:"
+                  " %s\n", via_plagulae);
+        credo_imprimere_compendium();
+        piscina_destruere(piscina);
+        redde I;
+    }
+    lint_diribitio.datum    = diribitio_datum;
+    lint_diribitio.mensura  = diribitio_mensura;
+
     imprimere("\n--- PORTA LINT II: obsoletum-adhibitum"
               " (codex 87) ---\n");
 
@@ -660,7 +778,7 @@ principale (vacuum)
         sprintf(via_plagulae, "%s/lib/%s", radix,
                 introitus->d_name);
         _plagulam_probare(via_plagulae, radix, &lint_textus,
-                          &census_bibliothecae);
+                          &lint_diribitio, &census_bibliothecae);
     }
     closedir(corpus);
     _censum_referre("bibliotheca", &census_bibliothecae);
@@ -674,7 +792,7 @@ principale (vacuum)
     {
         sprintf(via_plagulae, "%s/%s", radix, PROBATIONES_VIVAE[i]);
         _plagulam_probare(via_plagulae, radix, &lint_textus,
-                          &census_probationum);
+                          &lint_diribitio, &census_probationum);
     }
     _censum_referre("probationes", &census_probationum);
 
@@ -687,6 +805,8 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_bibliothecae.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_bibliothecae.diribitio_divergentes,
+                        ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.invariata_violata,
                         ZEPHYRUM);
 
@@ -694,6 +814,8 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_probationum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_probationum.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_probationum.divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_probationum.diribitio_divergentes,
+                        ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_probationum.invariata_violata,
                         ZEPHYRUM);
 
