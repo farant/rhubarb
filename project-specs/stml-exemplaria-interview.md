@@ -1230,6 +1230,57 @@ door's first pull, with concrete codices waiting on it. Codex 83
 text-matching. Codex 86 (vernaculum) falls out free after 87 but
 has zero live sites today.
 
+## SINE — the antijoin seed (Fran + design conversation,
+## 2026-08-31, after DIRIBITIO shipped)
+
+The relational door's first operator, sketched from Fran's
+composition question ("could you do <EXEMPLAR>… <SINE><EXEMPLAR>…
+</SINE> if you need a pair?"). THE ANSWER RESHAPED THE DESIGN:
+
+**Negation doctrine**: a pattern cannot match absence — a general
+NOT would smuggle in a predicate language. Antijoin is the only
+lawful not: rows of A with no partner in B, both sides enumerable
+match-sets, the negation living in a SET COMBINATOR. Stratified
+negation's soundness condition (negate only completed relations)
+is already guaranteed by single assignment + the strata law —
+the doctrine was ready before the operator.
+
+**THE LINK FORM (Fran's instinct, refined)**: in chain position
+SINE carries only the B side — the chain already threads A:
+
+    <CATENA output="$inutilia">
+      <(><EXEMPLAR><declaratio-localis>
+           <lex-identificator $n/></declaratio-localis></EXEMPLAR>
+      <(><SINE><expressio><lex-identificator>&@n;
+           </lex-identificator></expressio></SINE>
+    </CATENA>
+
+**THE BRIDGE IS THE JOIN**: the row's captures fill the body
+pattern via `&@n;` (PER's existing per-row instantiation), then
+the filled pattern runs; zero matches = row kept. Fully
+correlated NOT-EXISTS with no clavis=/key machinery — the
+correlation is SPELLED IN THE PATTERN by where `&@n;` appears.
+Dissolves the keyed form entirely.
+
+**THE DUALITY**: an ordinary chain stage multiplies rows by their
+inner matches; SINE is the same per-row step sign-flipped (keep on
+ZERO inner matches). It is the negation of the chaining step
+itself — hence pure-command-class membership for free (SINE-
+bearing chains as DIRIBITIO conditions: "if anything is MISSING,
+take this arm").
+
+**Residue for the decree**: (1) test scope — row subtree (the
+per-row law, lean) vs document; with row-extension + scope-rows,
+subtree scoping does codices 69/70 exactly; (2) body = bare
+pattern vs one pure command; (3) the uncorrelated flavor
+(subtract a NAMED relation by row identity) = separate smaller
+operator, parked unnamed; (4) SINE = pure FILTER (rows pass
+unchanged, no new captures) — lean yes; (5) sequencing: the door
+opens rows-as-tuples → extension law → SINE, gate = codex 69
+differential (CAVEAT: census shows all 35 sites in fixa/ — the
+gate corpus must include examen fixtures for presence; and
+SHADOWING is a named expressibility risk for exact agreement).
+
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 
 Not previously banked (nearest: V.2's codices-as-pattern-documents
