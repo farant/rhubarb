@@ -529,3 +529,21 @@ execution — the file view structurally cannot see it.
 
 Note: silex bundles canon — it picks up multi-root judgment at its
 next silex_struere (compile_tests first, per the house rule).
+
+## 2026-08-31 — CATENA joins the CAPS vocabulary
+
+`_est_caps_machinae` now names CATENA; well-formed chains are
+invisible to every dialect like the other machine constructs.
+Static form (engine ratifications 2026-08-31): output= required
+$-spelled, de= $-spelled when present, modus=/ancorata= forbidden
+on the wrapper (they belong to stages), links judged in LINK form —
+EXEMPLAR links open at both ends (no output=/de=, modus ∈ 4, body
+one quoted element), nested CATENA links bare and recursed,
+fragments dissolved (definitions skipped), `#@` invocations counted
+but statically unjudgeable, content transclusions and alien
+children malformed. One trap found by the probatio: the static
+emptiness rule double-fired beside a malformed-link vitium (flagged
+links don't count as links) — ante-guard added so emptiness clamat
+only when the link walk itself was clean. probatio_canon 385/385.
+Silex's bundled canon unaffected (CAPS are engine-side, not canon
+rows).

@@ -378,3 +378,72 @@ vitia fixtures ✓ (step 2), L1 derivation ✓ (this). REMAINING:
 canon vocabulary for the CAPS builtins so canon judges the lint
 documents (§6) — the one open §10 item. CATENA is now unblocked
 (its precondition — the lint in explicit-name form — exists).
+
+## 2026-08-31 — CATENA shipped (the first post-v1 increment)
+
+The full arc landed in one session: four residues ratified at build
+start (tee RESERVED vitium-loud; wrapper carries de=/output= under
+EXEMPLAR's law while links carry neither but may carry modus=; `<(>`
+is permitted decoration, never load-bearing; canon CAPS row
+same-pattern), then engine, fixtures, canon, and the differential
+gate. Commits: 88fe15d7 (decree) → 23bdc532 (engine) → a77b0055
+(fixtures, 96/96) → 9b46902f (canon, 385/385) → 5359c5e2 (THE GATE:
+conditio_nihilum_catena.stml byte-identical relatum vs the named
+form, 233/233 plagulae, 3691 sites — which now include the CATENA
+engine's own conditionals, the corpus having grown under the lint).
+
+Build findings worth keeping:
+
+**The conveyance refinement crystallized during the design trace,
+before code.** "Link expands first" cannot mean running the normal
+expansion path over literal links: a literal EXEMPLAR link must be
+used RAW (like a document-level EXEMPLAR's forma — patterns are
+never macro-expanded), while a macro-PRODUCED link gets full
+instantiation semantics (loculus substitution, nested calls — that
+is what instantiation means; fill-vs-quote is a distinction the
+language already had). Consequence: ctx->applicatio wraps ONLY the
+invocation expansion in the link collector, and the interception's
+conveyance check (EXEMPLAR/PER/TRANSPARENTIA/CATENA fall through to
+plain-element expansion when applicatio > 0) is the entire vitium-
+XIII refinement. Literal links never touch the flag.
+
+**`<(>` in chain position nests.** The anonymous capturing fragment
+auto-closes at parent close, so the second `<(>` sits INSIDE the
+first — but recursive fragment dissolve preserves link order
+exactly, so Fran's original sketch spelling works verbatim with
+zero new lexer machinery. The gate document uses it deliberately.
+
+**One engine subtlety: pointer threading makes the desugaring the
+mental model only.** Stage N's congruentiae Xar is handed to stage
+N+1 as its fons; no minted names exist, "intermediates consumed by
+construction" is literally true, and the tail relation alone is
+registered under the wrapper's output= — so the XVIII end-guard
+concentrates on the tail exactly as the dead-code argument wanted.
+_exemplar_nucleus (extracted from _exemplar_implere) is the shared
+stage core; the only behavioral delta of the refactor is vitium
+ORDER (de= resolution now precedes modus/forma checks) — no fixture
+pinned the old order.
+
+**Canon lesson (the double-count trap):** a collected-vitia judge
+cannot mirror the engine's first-vitium-wins shape. The static
+emptiness rule ("no links could bind output") double-fired when a
+link was malformed (flagged links don't increment the counter) —
+fixed with an ante-guard: emptiness clamat only when the link walk
+added no vitia of its own. Same lesson as the orphan rule's "bis
+clamare numerum vitiorum mentiretur".
+
+**Inner empty CATENA = identity.** Under flattening, a nested empty
+chain contributes zero links and is algebraically harmless (only
+the top-level total is judged at runtime); the static canon rule
+catches the literal-empty-body authoring error instead. Runtime
+stays algebraic, statics stay strict — a clean division.
+
+Latina bite of the session: `nomen` as a parameter name (the #1
+forbidden identifier, expands to typedef) — censor hook caught it
+at write time, renamed to `titulus`.
+
+NEXT: lint II (an examen codex re-expressed as a pattern document,
+differentially gated) — now judged by the extended CAPS vocabulary
+for free. CATENA's open sub-questions live in the interview file:
+the tee (reserved), capture threading across links (second pull on
+V.4 relational extension).

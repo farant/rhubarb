@@ -486,23 +486,33 @@ decision:
 11. **DISTRIBUTIO-identity decree** (interview item 12) and the
     **user-raisable vitium** (`<VITIUM nuntius=>`) — each waits for
     its consumer.
-12. **CATENA** (sketched 2026-08-31, interview file "CATENA
-    sketched" + addenda) — pipe sugar over named chaining: stages
+12. **CATENA — BUILT 2026-08-31** (decree: interview file "CATENA
+    sketched" + addenda + build-time ratifications; commits
+    88fe15d7→5359c5e2) — pipe sugar over named chaining: stages
     thread output→scope implicitly; **`output=` lives on the
-    CATENA element (ratified)** — stored fragments open at both
-    ends; engine reads the wrapper form (COMMUTATIO precedent; NOT
-    literal DISTRIBUTIO — distribution runs after expansion).
-    Desugars to minted intermediate names — one IR, Round I's
-    "piping = naming the previous output" survives as the target.
-    Nested chains FLATTEN (the DISTRIBUTIO same-type law); links
-    may be macros expanding to EXEMPLAR/CATENA. **THE PURITY LAW
-    (ratified): every link is a PURE relation→relation function —
-    conservative link vocabulary, mutation verbs excluded; effects
-    consume the TAIL relation at one point outside the chain**
-    (verb-as-consumer, never verb-as-stage). Pull: the FIRST
-    post-v1 increment, after the L1 lint ships in explicit-name
-    form; gate = the lint rewritten in CATENA form yields a
-    byte-identical report (sugar vs its own desugaring).
+    CATENA element**, wrapper also takes `de=` under EXEMPLAR's
+    law; links carry NO de=/output= (a link output= is the
+    RESERVED tee, vitium-loud) but MAY carry modus=; engine reads
+    the wrapper form (COMMUTATIO precedent). The minted-names
+    desugaring is the MENTAL MODEL — the code threads the relation
+    pointer stage-to-stage ("consumed by construction" literally
+    true; only the tail registers, so XVIII concentrates there).
+    Nested chains FLATTEN; links may be macros expanding to
+    EXEMPLAR/CATENA (forest splices); literal links used RAW,
+    macro-produced links get instantiation semantics — the
+    conveyance rule (ctx->applicatio, vitium-XIII refinement).
+    `<(>` = permitted decoration (fragments dissolve; the sketch
+    spelling works verbatim). **THE PURITY LAW (ratified): every
+    link is a PURE relation→relation function — conservative link
+    vocabulary, mutation verbs excluded; effects consume the TAIL
+    relation at one point outside the chain** (verb-as-consumer,
+    never verb-as-stage). Vitium XX = CATENA_MALFORMATA; canon
+    CAPS row judges the static form (links in LINK form, bodies
+    quoted). GATE GREEN: conditio_nihilum_catena.stml (the `<(>`
+    spelling) yields a byte-identical relatum vs the named form
+    over 233/233 plagulae, 3691 sites. Open sub-questions: the tee
+    (reserved); capture threading across links (second pull on
+    V.4).
 
 ---
 

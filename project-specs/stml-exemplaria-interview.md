@@ -467,13 +467,16 @@ before ratification.
     are citable individua need a decree — refuse wrapper-form
     authoring (loud, named alternative), demand per-item ids, or
     (dangerous) mint at distribution. Refusal leaned.
-13a. **CATENA** (Fran, 2026-08-31 — name chosen over PIPE/FISTULA;
-    post-v1, sketch banked): pipe SUGAR over named chaining — see
-    the "CATENA sketched" section below. Sequencing decided: the L1
-    lint builds FIRST with explicit names (proving the desugared
-    form), CATENA follows as the first post-v1 increment, gated by
-    the two-spellings differential (pipe form vs named form,
-    byte-identical reports).
+13a. **CATENA — BUILT AND GATED 2026-08-31** (name chosen over
+    PIPE/FISTULA; decree in the "CATENA sketched" section below +
+    build-time ratifications; commits 88fe15d7→5359c5e2): pipe
+    SUGAR over named chaining, engine-read wrapper, pointer-
+    threaded stages, `<(>` decoration works as sketched. The
+    sequencing held: L1 lint shipped first with explicit names,
+    then the differential gate — conditio_nihilum_catena.stml
+    yields a byte-identical relatum vs the named form, 233/233
+    plagulae. Still open: the tee (reserved vitium-loud); capture
+    threading across links (second pull on V.4).
 13. Business-data querying (Simulatio, findings 13-15): the
     decreed-aggregate vocabulary (numerus/summa/minimum/maximum —
     Round II's "aggregations = decreed projections" gets its first
