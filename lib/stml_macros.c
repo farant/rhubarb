@@ -3092,7 +3092,11 @@ _diribitio_processare (
         }
         bracchia_visa = VERUM;
 
-        /* liberos bracchii partiri: sedes <@est=> + mandatum unum */
+        /* liberos bracchii partiri: sedes <EST> + mandatum unum.
+         * Sedes elementum CAPS, NON '<@est=>': attributa-elementa
+         * subarbores extra positionem vocationis non ferunt (lex
+         * par. 6.3 tempore parsurae) - decretum revisum, Fran
+         * 2026-08-31, retroportandum etiam ad CASUS plani impleti. */
         est_sedes  = NIHIL;
         candidati  = xar_creare(ctx->piscina,
                                 magnitudo(StmlNodus*));
@@ -3111,12 +3115,9 @@ _diribitio_processare (
             {
                 perge;
             }
-            si (   lb->genus              == STML_NODUS_ELEMENTUM
-                && lb->attributum_titulus != NIHIL)
+            si (_est_titulo(lb, "EST"))
             {
-                si (   !chorda_aequalis_literis(
-                           *lb->attributum_titulus, "est")
-                    || est_sedes != NIHIL)
+                si (est_sedes != NIHIL)
                 {
                     _vitium_ponere(ctx,
                         STML_EXPANSIO_DIRIBITIO_MALFORMATA, lb,

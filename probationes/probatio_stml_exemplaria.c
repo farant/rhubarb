@@ -746,6 +746,333 @@ principale (
         CREDO_NON_NIHIL (e.radix_expansa);
     }
 
+    /* --- DIRIBITIO: custos verus -> bracchium applicatum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: custos verus ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><k/><s v=\"1\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><k/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><k/><s v=\"1\"/><n>1</n></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: custos falsus -> relatio vacua effluens --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: custos falsus ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s v=\"1\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><k/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s v=\"1\"/></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: primum-congruens-vincit --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: primum vincit ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><k/><s v=\"1\"/><t v=\"2\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><k/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CASUS>"
+            "<CASUS><EST><EXEMPLAR><k/></EXEMPLAR></EST>"
+            "<EXEMPLAR><t v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><k/><s v=\"1\"/><t v=\"2\"/><n>1</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: ORDINARIUS = bracchium-semper --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: ORDINARIUS ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s v=\"1\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><nusquam/></EXEMPLAR></EST>"
+            "<EXEMPLAR><t/></EXEMPLAR></CASUS>"
+            "<ORDINARIUS><EXEMPLAR><s v=\"$v\"/></EXEMPLAR>"
+            "</ORDINARIUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s v=\"1\"/><n>1</n></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: bracchium relationem ORIGINALEM accipit
+     *     (custos, non angustator - decretum) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: relatio originalis ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p><q/></p><p><r v=\"2\"/></p>"
+            "<EXEMPLAR output=\"$pp\"><p/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$pp\" output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><q/></EXEMPLAR></EST>"
+            "<EXEMPLAR><r v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            /* conditio in ordine PRIMO vera; bracchium r in ordine
+             * ALTERO invenit - relationem totam vidit */
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p><q/></p><p><r v=\"2\"/></p><n>2</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: catena ut conditio et ut bracchium --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: catenae interius ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><f><g/></f><s v=\"1\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><CATENA><EXEMPLAR><f/></EXEMPLAR>"
+            "<EXEMPLAR><g/></EXEMPLAR></CATENA></EST>"
+            "<CATENA><EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CATENA>"
+            "</CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><f><g/></f><s v=\"1\"/><n>1</n></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO ut nexus catenae + diribitio in est --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: nexus + est recursivum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><k/><p><s v=\"1\"/></p>"
+            "<CATENA output=\"$m\">"
+            "<EXEMPLAR><p/></EXEMPLAR>"
+            "<DIRIBITIO>"
+            "<CASUS><EST><DIRIBITIO>"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></EST>"
+            "<EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "</CATENA>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><k/><p><s v=\"1\"/></p><n>1</n></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO ex templo (nexus) + templum in est --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: portatio templorum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@cust><EXEMPLAR><k/></EXEMPLAR></#>"
+            "<#@disp><DIRIBITIO>"
+            "<CASUS><EST><<#@cust>></EST>"
+            "<EXEMPLAR><s v=\"$v\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></#>"
+            "<k/><s v=\"1\"/>"
+            "<CATENA output=\"$m\"><<#@disp>></CATENA>"
+            "<PER congruentia=\"$m\"><n>&@v;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><k/><s v=\"1\"/><n>1</n></radix>");
+        }
+    }
+
+    /* --- DIRIBITIO: conditio ancorata + modus in bracchio --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: ancorata + modus bracchii ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix r=\"1\"><s k=\"1\"/><s k=\"2\"/>"
+            "<DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR ancorata><radix r=\"1\"/>"
+            "</EXEMPLAR></EST>"
+            "<EXEMPLAR modus=\"primum\"><s k=\"$k\"/></EXEMPLAR>"
+            "</CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@k;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix r=\"1\"><s k=\"1\"/><s k=\"2\"/><n>1</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- vitia XXI + XVIII --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- DIRIBITIO: vitia ---\n");
+        /* XXI: liber non-bracchium */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\"><alienum/>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: CASUS sine <EST> */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<CASUS><EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: corpus bracchii mandata duo */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR><EXEMPLAR><s/></EXEMPLAR>"
+            "</CASUS></DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: radix conditionis cum modus= (probatio nuda) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR modus=\"unum\"><s/></EXEMPLAR>"
+            "</EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: radix conditionis cum output= */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR output=\"$x\"><s/></EXEMPLAR>"
+            "</EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: ORDINARIUS non ultimus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<ORDINARIUS><EXEMPLAR><s/></EXEMPLAR></ORDINARIUS>"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: ORDINARIUS cum <EST> */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<ORDINARIUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></ORDINARIUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: diribitio sine bracchiis */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><DIRIBITIO output=\"$m\"></DIRIBITIO>"
+            "</radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XXI: modus= in involucro */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO modus=\"unum\" output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+
+        /* XII: involucrum sine output= */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO>"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_EXEMPLAR_SINE_EXITU);
+
+        /* XVIII: exitus non consumptus (custos caudae) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s/><DIRIBITIO output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR></EST>"
+            "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+                         == STML_EXPANSIO_EXITUS_NON_CONSUMPTUS);
+        CREDO_NON_NIHIL (e.radix_expansa);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

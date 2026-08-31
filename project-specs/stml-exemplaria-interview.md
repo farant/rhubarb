@@ -1159,6 +1159,24 @@ Vitium XXI = DIRIBITIO_MALFORMATA reserved for the construct's
 form family; document-level output= reuses XII (sine exitu) and
 unknown de= reuses XIV, as CATENA did.
 
+**SPELLING REVISED AT BUILD (Fran, 2026-08-31, same night)**: the
+pinned `<@est=>` block form CANNOT PARSE in arm position —
+attr-elements carry tree children only in invocation-argument
+position (modus I); elsewhere the §6.3 text-only law is enforced
+AT PARSE TIME, and generic STML cannot special-case CASUS without
+a layering violation. The 2026-08-26 "zero new syntax" claim was
+false for structured conditions. **Ratified: the est slot is the
+CAPS element `<EST>`** — `<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>
+<EXEMPLAR>…</EXEMPLAR></CASUS>`; zero parser change, engine-owned
+space, no content collision. **Backport (Fran): the fill-plane
+CASUS door's pinned spelling is REVISED to `<EST>` as well** (the
+same wall applies there — structured patterns in est). Named small
+increment recorded, undecreed in detail: migrating live
+COMMUTATIO's value-form `est="x"` ATTRIBUTE to `<EST>x</EST>`
+(text children parse trivially; a mechanical migration with a
+compatibility question — both forms during transition, or
+flag-day).
+
 ## Lint II — BUILT AND GATED (2026-08-31, same evening; ffcc6837).
 ## The gate went green on the FIRST full run: 155 lib + 6 named
 ## probationes, 27/27 sites, zero divergence — the minimal
