@@ -535,3 +535,34 @@ by CATENA (AND) and dispatches by DIRIBITIO (OR), all three
 conveyable, all three link-eligible, all three canon-judged.
 Open doors unchanged: per-row routing, alternation, capture flow,
 guard-narrows-arm, the tee.
+
+## 2026-08-31 — THE EXTENSION LAW (the relational door's first
+## slice, deep night)
+
+Decree db57e9f8 (two four-question rounds) → build 9d8c0e7e.
+Rows are now TUPLES: `_ligamina_hereditare` merges the source
+row's captures into every row a per-fons match produces
+(inherited first, own after; interned-pointer collision =
+vitium XXII, loud — correlation belongs to the `&@n;` bridge,
+join-by-naming stays a named door). The hook lives in
+`_exemplar_nucleus`'s fons loop, so de= chaining, CATENA stages,
+DIRIBITIO conditions AND arms all inherit uniformly. PER's map
+widened FOR FREE — `_ligamina_ad_argumenta` already iterates all
+ligamina, so accumulated captures reach reports with zero new
+code (the fixture splices stage-1's t beside stage-2's k).
+
+THE RE-VERIFICATION WAS THE POINT: all seven stml suites, canon,
+the L1 gate (3772/3772 sites — the corpus now contains the
+extension code itself), lint II (27/27), and every byte-identical
+differential (catena, diribitio) stayed green. Carry-forward is
+observably invisible to every existing document — no current doc
+reuses capture names across stages, and richer PER maps only
+matter when referenced.
+
+Numbering note: XXII = CAPTURA_COLLISA (this law); SINE will
+mint XXIII (the interview build-shape line said XXII for SINE —
+superseded here).
+
+NEXT: SINE itself (bare-pattern body, bridge-filled, row-subtree
+scope, pure filter) + vitium XXIII + canon row + the codex 69
+gate over fixa/examinis + lib.
