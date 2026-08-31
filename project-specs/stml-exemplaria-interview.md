@@ -1002,6 +1002,48 @@ layer, not only literally. Technical facts for the decree:
    transclusion in est — must behave identically (a composability
    differential, the CATENA-gate pattern again).
 
+## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
+
+Not previously banked (nearest: V.2's codices-as-pattern-documents
+endgame — but that is EXAMEN, the language judge; this is CANON,
+the schema judge, in the reverse of the banked direction).
+
+**The shape**: canon today = grammar-shaped schema (closed row
+vocabulary, engine-interpreted) with a long tail it cannot reach
+("X must contain Y before Z"; "no A inside B unless C"). A
+pattern-rule = **pattern + cardinality constraint + verdict**:
+`modus=` is already the cardinality language (prohibition =
+must-match-zero; requirement = unum/non-empty); the undecreed
+`<VITIUM nuntius=>` is exactly the verdict instrument; everything
+stays enumerable structure — canon's no-expression law unbroken.
+
+**The precedent**: the grammar-vs-pattern schema split — RelaxNG
+on one side, SCHEMATRON on the other; decades of practice say
+LAYERED COEXISTENCE: grammar rows for the spine, `<regula>`
+pattern sections for the tail. One judge machinery underneath
+(homogeneous tower §10.2 applied to canon itself — the same
+lockstep matcher).
+
+**Convergences making it cheap**: canon already judges the SENSE
+(expanded/distributed projections) — pattern-rules run over the
+same views, zero new plumbing; judging is pure, so rules satisfy
+the CATENA purity law trivially; existing rules migrate
+DIFFERENTIALLY (the L1 method); and **the v1-closing canon
+vocabulary slice is this arc's load-bearing first step
+regardless** — canon.canon self-hosts, so canon files CONTAINING
+exemplar rules presupposes canon judging EXEMPLAR as content.
+
+**Tensions to honor at decree time**: canon's load-time REFUSAL
+discipline (unknown rule vocabulary refuses loudly — pattern-rule
+rows must keep that); the generated-canon path (natura_canones
+projections — do generated canons ever EMIT pattern rules, or are
+they hand-authored only at first?); and rule provenance in
+verdicts (a vitium naming the RULE that raised it — the
+user-raisable VITIUM decree should carry this).
+
+Status: recorded, no decree. Pull: the first structural rule that
+canon's row vocabulary cannot express without engine code.
+
 ## Build order (v1.5 before v2)
 
 1. `<@attr=>` lexer blessing + capere dual lookup (base stml, own
