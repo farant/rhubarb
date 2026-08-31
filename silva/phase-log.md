@@ -14471,3 +14471,16 @@ duplicat (porta shim codicem silvae ipsius currit).
 Portae: arbor 5/5 (plagula 78+155 octetim per matcher machinae),
 canon corporis 2/2, radix stml+canon virides, amalgama VERIFICATUM
 (hospes 40/40, nm 0, manifesta generata immota).
+
+## 2026-08-31 — porta L1 exemplarium in probationibus silvae
+
+Sub gelatione, opus probationum solum (nucleus intactus):
+probatio_silva_exemplaria_lint.c + fixa/exemplaria/
+conditio_nihilum.stml — documentum lint declarativum IV linearum
+contra corpus utrumque (233 plagulae), oraculum = ambulatio silvae
+independens, aequalitas numerorum per plagulam (3639 situs utroque
+modo). Captura prima portae = quaestio semantica (numeratio
+per-ordinem, scopi conditionum nidificati - genus ternarius, situs
+unus in corpore). Etiam: canon nunc radices OMNES documenti
+iudicat (foramen tegumenti primae-radicis; corpus canonis silvae
+uni-radicale, portae immotae 2/2).

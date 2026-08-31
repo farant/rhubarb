@@ -501,3 +501,31 @@ The distinguishing fixtures pin what the file view CANNOT see:
   ATTRIBUTUM_DEEST on the second nota.
 Both fixtures assert the file view is 0 vitia first, so each is a
 differential oracle, not a single opinion.
+
+## 2026-08-31 — CAPS vocabulary (XXIII) + the multi-root coverage hole
+
+EXEMPLAR/PER/TRANSPARENTIA entered canon ENGINE-SIDE (the
+template-space precedent, not canon rows): static form judgment
+(`CANON_MACHINAE_MALFORMATUM` = XXIII), well-formed CAPS invisible
+to every dialect's vocabulary (fragment/augmentation precedent —
+interception in nodum_iudicare + self-judging skips in both
+licentia walks), bodies QUOTED never descended (a pattern cites
+another dialect; judging it against the calling canon would be a
+category error).
+
+The expanded sense composes for free — canon_iudicare_expansum
+EXECUTES patterns now (interleaving put resolution inside
+stml_expandere) — and pinning that claim found a real hole:
+**canon_iudicare judged only the FIRST element root of a document
+node.** Every historical consumer is single-rooted (canon files,
+natura docs, parsura docs) so nothing ever noticed; lint documents
+are multi-root, and the "0 vitia" pin was vacuous until the fix
+(all roots judged, fragments collected cross-root). The
+radix-check, infixed canon, and key scopes stay FIRST-ROOT — a
+named narrowing, their consumers being single-root dialects.
+The pin that exposed it is the one worth keeping: a PER splicing
+an illegal element = a vitium in content that exists ONLY after
+execution — the file view structurally cannot see it.
+
+Note: silex bundles canon — it picks up multi-root judgment at its
+next silex_struere (compile_tests first, per the house rule).
