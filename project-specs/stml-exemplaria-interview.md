@@ -938,6 +938,48 @@ marked:
    effectful verbs chain, under different rules — the two planes
    now differ by exactly this law.
 
+**BUILD-TIME RATIFICATIONS (Fran, 2026-08-31 — the four residues,
+settled at build start; numbering continues)**:
+
+3. **The tee is RESERVED, vitium-loud**: a stage carrying its own
+   `output=` is a loud vitium until the tee's own decree. Lawful
+   under single assignment but added surface — the door stays
+   marked, not open.
+
+4. **Attribute law**: the CATENA element takes `de=` under the
+   SAME law as EXEMPLAR (root default + $prior), feeding the head
+   link, plus required `output=`. Links carry NO `de=`/`output=`
+   (vitium either way — a link `de=` would break threading, a link
+   `output=` is the reserved tee) but MAY carry `modus=` per stage
+   (mid-chain `unum` = a transactional assertion on the pipeline's
+   premise).
+
+5. **`<(>` is permitted DECORATION, never load-bearing**: found at
+   build start that `<(>` already lexes as the anonymous capturing
+   fragment, and fragments DISSOLVE in the effective-children
+   computation — so the original sketch parses as written AND bare
+   element children work identically. The engine reads effective
+   children; fragment grouping is harmless because a forest
+   splices as consecutive links anyway. Zero new lexer machinery.
+
+6. **Canon CAPS row, same pattern**: CATENA's static form judged
+   engine-side under CANON_MACHINAE_MALFORMATUM (XXIII) like
+   EXEMPLAR/PER/TRANSPARENTIA — `output=` required and $-spelled,
+   `de=` $-spelled when present, body non-empty, links judged as
+   elements, nested EXEMPLAR bodies stay QUOTED per the existing
+   law. probatio_canon gets the malformed set; silex's bundled
+   canon stays stale until its next rebuild, as before.
+
+**Implementation note (recorded before code)**: the minted-names
+desugaring stays the MENTAL model; the code threads the
+`StmlExemplarRelatio*` pointer stage-to-stage directly — same
+semantics, "intermediates consumed by construction" becomes
+literally true, and no reserved-spelling problem for names users
+cannot write. Only the tail relation is registered in
+`ctx.relationes` under the wrapper's `output=` name, so the
+XVIII end-guard (unconsumed output) concentrates on the tail
+exactly as the sketch's dead-code argument wanted.
+
 ## CASUS-conditio addendum (2026-08-31) — the pattern-case residue,
 ## CATENA-as-condition, and the composability requirement
 
