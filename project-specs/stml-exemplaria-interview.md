@@ -1117,6 +1117,51 @@ Status: banked with reasoning; no decree. Pull: the first stored
 chain that needs per-shape narrowing mid-pipeline (dialect
 dispatch inside a lint chain is the standing candidate).
 
+## Lint II candidate chosen: codex 87 (2026-08-31, evening)
+
+Survey of the examen codex inventory (89 codices, census over 820
+plagulae) against the v1 pattern subset. THE FINDING: the inventory
+is overwhelmingly type-driven (54 conversio signi), flow-driven
+(71-73 ininitiata), or symbol-stateful (51 vocatio implicita) —
+none pattern-expressible; the structural tail is thin, exactly as
+the strangler doctrine predicts (per-region truth-by-gate — the
+pattern plane eats what it can judge exactly).
+
+**CHOSEN (Fran): codex 87 OBSOLETUM_ADHIBITUM** — obsolete POSIX
+symbol used (table = `<gradus>` rows in fontes/systema_posix.h;
+currently ONE entry: usleep→nanosleep). 27 live sites / 7 files
+(24 in probationes, 1 in lib/tcp_posix.c). Why it fits: exact-text
+lexeme match (`<lex-identificator>usleep</>`), and the oracle is
+the SHIPPING ANALYZER in-process — a far stronger differential
+than L1's hand-written walk.
+
+**The scoping question RESOLVED by scouting**: examen counts the
+principal file's stratum-0, taken branches only. Measured on
+lib/tcp_posix.c's parsura document (18512 lines): system headers
+NEVER enter the tree; the document carries exactly ONE usleep
+lexeme, bare — already agreeing with examen's count. Omitted
+conditional arms appear as **`<regio-cruda>`** wrappers — hidden
+by the EXISTING TRANSPARENTIA mechanism (skipped whole), no new
+vocabulary needed. So the lint document is L1's shape: a
+TRANSPARENTIA row (L1's origin wrappers + regio-cruda, possibly
+directiva/regio-directiva if divergence appears), one EXEMPLAR,
+one relatum/PER. The `pro=` replacement (nanosleep) can ride as
+static relatum content.
+
+**Build sketch**: corpus = the L1 tiers PLUS a probationes tier
+(without it presence is 1 site — the coverage law); oracle =
+semantica diagnostics filtered to codex 87 per file, count
+equality (positions stay blocked by the extent-provenance hole,
+as in L1); diagnosis seams = the LINT_INDAGO pattern carried over.
+
+**Recorded regardless of the pick**: codices 69/70 (unused
+var/param — the census's best distribution, 35 sites/16 files) are
+ANTIJOIN-shaped: the survey independently confirmed the relational
+door's first pull, with concrete codices waiting on it. Codex 83
+(reserved identifiers) names a second vocabulary door: PREFIX
+text-matching. Codex 86 (vernaculum) falls out free after 87 but
+has zero live sites today.
+
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 
 Not previously banked (nearest: V.2's codices-as-pattern-documents
