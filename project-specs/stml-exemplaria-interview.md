@@ -1329,7 +1329,9 @@ SINE; gate = codex 69 differential.
 Build shape: extension in `_exemplar_petere`/row construction
 (ligamina inherit + collision check), PER map widening,
 `_sine_implere`/link-branch on the `_mandata_colligere` substrate,
-vitium XXII, canon CAPS row, fixtures, then the gate probatio.
+vitium XXIII (XXII went to CAPTURA_COLLISA at build), canon CAPS
+row, fixtures, then the gate probatio. [Extension law SHIPPED
+9d8c0e7e — all gates re-verified green; SINE NOT yet built.]
 
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 
