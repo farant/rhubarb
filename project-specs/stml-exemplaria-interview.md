@@ -1281,6 +1281,56 @@ differential (CAVEAT: census shows all 35 sites in fixa/ — the
 gate corpus must include examen fixtures for presence; and
 SHADOWING is a named expressibility risk for exact agreement).
 
+## THE RELATIONAL DOOR — DECREED (Fran, 2026-08-31, late night;
+## two four-question rounds, all recommended options ratified)
+
+The door opens in order: rows-as-tuples → the extension law →
+SINE; gate = codex 69 differential.
+
+**Round I — the row model:**
+1. **CARRY-FORWARD IS THE LAW**: every chain stage's output rows
+   inherit the incoming row's captures and add their own — rows
+   are tuples accumulating down the chain. No flag surface; one
+   semantics. (Existing gates stay green: no current document
+   reuses names across stages; PER just sees a richer map —
+   VERIFY at build with all three corpus gates.)
+2. **Cross-stage name collision = VITIUM, loud.** Distinct names
+   required along a chain; correlation is spelled via the `&@n;`
+   bridge, never by accidental reuse. **Join-by-naming (regula V
+   lifted across stages: reused name = equality constraint) is a
+   NAMED DOOR**, not v1.
+3. **Row radix = the LATEST stage's match**, always; earlier
+   stage roots survive only if explicitly captured. The chain
+   keeps narrowing; history rides in captures.
+4. **PER's substitution map = ALL accumulated captures** — a
+   report splices stage-1's scope name beside stage-3's site.
+
+**Round II — SINE:**
+5. **Test scope = the ROW'S SUBTREE** (the per-row law,
+   consistent with de= chaining and PER; scope-rows + subtree
+   scoping do codices 69/70 exactly). Document-wide absence = a
+   later spelled door.
+6. **Body v1 = bare PATTERN** (one element, bridge-filled, may
+   use ancorata). Widening to full pure-command bodies
+   (CATENA/DIRIBITIO absence tests) = additive later.
+7. **SINE is a pure FILTER**: surviving rows pass UNCHANGED
+   (same radix, same captures); SINE itself carries no
+   modus=/ancorata; a capture-adding SINE explicitly rejected
+   (kept rows are those where the body matched nothing — there
+   is nothing to capture).
+8. **Gate = the codex 69 attempt**: corpus = examen fixa/
+   fixtures (all 35 live sites) + lib (zero-agreement breadth);
+   the SHADOWING expressibility risk is NAMED and
+   divergence-driven refinement is the method; fallback recorded
+   (house absence-lint with hand oracle) so a wall cannot strand
+   the increment. Oracle = the examen recipe in-process, the
+   lint-II pattern.
+
+Build shape: extension in `_exemplar_petere`/row construction
+(ligamina inherit + collision check), PER map widening,
+`_sine_implere`/link-branch on the `_mandata_colligere` substrate,
+vitium XXII, canon CAPS row, fixtures, then the gate probatio.
+
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 
 Not previously banked (nearest: V.2's codices-as-pattern-documents
