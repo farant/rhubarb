@@ -464,6 +464,13 @@ before ratification.
     are citable individua need a decree — refuse wrapper-form
     authoring (loud, named alternative), demand per-item ids, or
     (dangerous) mint at distribution. Refusal leaned.
+13a. **CATENA** (Fran, 2026-08-31 — name chosen over PIPE/FISTULA;
+    post-v1, sketch banked): pipe SUGAR over named chaining — see
+    the "CATENA sketched" section below. Sequencing decided: the L1
+    lint builds FIRST with explicit names (proving the desugared
+    form), CATENA follows as the first post-v1 increment, gated by
+    the two-spellings differential (pipe form vs named form,
+    byte-identical reports).
 13. Business-data querying (Simulatio, findings 13-15): the
     decreed-aggregate vocabulary (numerus/summa/minimum/maximum —
     Round II's "aggregations = decreed projections" gets its first
@@ -807,6 +814,63 @@ EXEMPLAR/PER + TRANSPARENTIA + the two consumers, nothing else.
 
 **Next: assemble the v2 spec FROM this file** — rounds I–V +
 simulatio + agenda + Q3 mensura + these seals. Never re-invent.
+
+## CATENA sketched (2026-08-31) — pipe sugar over named chaining
+
+Fran's proposal (spelled `<PIPE>` in the raw sketch; **name chosen:
+CATENA** — the CAPS vocabulary is Latin throughout, and FISTULA was
+the other candidate, being the house word for pipeline in
+silva_parsare):
+
+```stml
+<CATENA>
+  <(><EXEMPLAR><conditio/></EXEMPLAR>
+  <(><EXEMPLAR output="$nihila">
+       <lex-identificator $n>NULL</lex-identificator>
+     </EXEMPLAR>
+</CATENA>
+```
+
+Sibling stages thread implicitly: each stage's output becomes the
+next stage's scope; the LAST stage carries the explicit `output=`
+a later PER (or, eventually, a mutation verb) consumes.
+
+**Doctrine check, recorded**: Round I's finding "PIPE does not need
+to exist — piping = referencing the previous output" SURVIVES as
+the desugaring target. CATENA is sugar, not semantics: the engine
+mints internal names for the intermediate seams (stage N `output=`
+= stage N+1 `de=`); single assignment, strata, and the consumption
+law apply unchanged; intermediates are consumed BY CONSTRUCTION so
+the dead-code vitium concentrates on the tail. One IR — the same
+synthesis move as mutation's positional-form-over-the-bridge (V.1).
+
+**Mechanical fact**: the engine must read the WRAPPER form
+directly — distribution runs AFTER expansion, so the
+wrapper→siblings transform cannot literally be DISTRIBUTIO's
+(and literal attr carry-down would wrongly stamp `output=` onto
+every stage). Precedent: COMMUTATIO reads its own CASUS children.
+The `<(>` item sugar remains the stage delimiter, engine-read; the
+DISTRIBUTIO rhyme survives as the mental model (wrapper dictates,
+items are instances), not as machinery.
+
+**Falls out free**: `modus=` per stage (`unum` mid-chain = a
+transactional assertion on the pipeline's premise); stages later
+generalize to mutation verbs (the V.1 one-IR landing site: match
+stages narrow, a verb stage consumes the relation as its plan).
+
+**Named open sub-question**: may an INTERMEDIATE stage also carry
+an explicit `output=` (a tee — lawful under single assignment, but
+added surface)? Decide at decree time, not by accident.
+
+**Sequencing (Fran, ratified)**: the L1 lint builds FIRST with
+explicit names — proving the desugared form. CATENA is the first
+post-v1 increment, and its gate is free and fitting: the lint
+document rewritten in CATENA form must produce a byte-identical
+report to the named form — the sugar differentially gated against
+its own desugaring. Also to note in the decree: visio §9.4's
+parked CLI pipe verbs are a different plane (shell tool vs document
+construct); the spec should say so explicitly since "pipe" will
+mean something in both.
 
 ## Build order (v1.5 before v2)
 

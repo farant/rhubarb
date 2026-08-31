@@ -476,6 +476,16 @@ decision:
 11. **DISTRIBUTIO-identity decree** (interview item 12) and the
     **user-raisable vitium** (`<VITIUM nuntius=>`) — each waits for
     its consumer.
+12. **CATENA** (sketched 2026-08-31, interview file "CATENA
+    sketched") — pipe sugar over named chaining: stages thread
+    output→scope implicitly, tail carries the explicit `output=`,
+    engine reads the wrapper form (COMMUTATIO precedent; NOT
+    literal DISTRIBUTIO — distribution runs after expansion).
+    Desugars to minted intermediate names — one IR, Round I's
+    "piping = naming the previous output" survives as the target.
+    Pull: the FIRST post-v1 increment, after the L1 lint ships in
+    explicit-name form; gate = the lint rewritten in CATENA form
+    yields a byte-identical report (sugar vs its own desugaring).
 
 ---
 
