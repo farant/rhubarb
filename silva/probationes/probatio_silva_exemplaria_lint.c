@@ -23,7 +23,15 @@
  * est quam nullus.
  *
  * INVARIATUM (spec par. 0/par. 10): nullum EXEMPLAR/PER/
- * TRANSPARENTIA in arbore expansa - hic numeratum, non praesumptum.
+ * TRANSPARENTIA/CATENA in arbore expansa - hic numeratum, non
+ * praesumptum.
+ *
+ * PORTA CATENAE (ratificationes 2026-08-31): documentum lint
+ * ALTERUM (conditio_nihilum_catena.stml - eadem lint in forma
+ * CATENA, saccharo '<(>' ut in schizzo originali) contra plagulam
+ * eandem expanditur; relatum utriusque formae scriptum BYTE-PRO-
+ * BYTE aequale esse debet - saccharum contra desaccharationem suam
+ * differentialiter portatum.
  */
 
 #include "postulata_posix.h"
@@ -61,6 +69,7 @@ nomen structura {
           i32 plagulae;
           i32 fracturae;
           i32 divergentes;
+          i32 catena_divergentes;
           i32 summa_lint;
           i32 summa_oraculi;
           i32 invariata_violata;
@@ -312,7 +321,8 @@ _liberos_titulo_numerare (
     redde numerus;
 }
 
-/* Invariatum: EXEMPLAR/PER/TRANSPARENTIA in arbore expansa = 0 */
+/* Invariatum: EXEMPLAR/PER/TRANSPARENTIA/CATENA in arbore
+ * expansa = 0 */
 interior i32
 _invariata_numerare (
     StmlNodus* n)
@@ -329,6 +339,7 @@ _invariata_numerare (
         && n->titulus != NIHIL
         && (   chorda_aequalis_literis(*n->titulus, "EXEMPLAR")
             || chorda_aequalis_literis(*n->titulus, "PER")
+            || chorda_aequalis_literis(*n->titulus, "CATENA")
             || chorda_aequalis_literis(*n->titulus,
                    "TRANSPARENTIA")))
     {
@@ -364,6 +375,73 @@ _divergentiam_notare (
     census->numerus_divergentiarum++;
 }
 
+/* Documentum lint alterum contra textum arboris eundem expandere;
+ * relatum expansum reddit (NIHIL = fractura, iam numerata). */
+interior StmlNodus*
+_relatum_alterum_expandere (
+                Piscina* opus,
+     constans character* via,
+        constans chorda* textus_arboris,
+        constans chorda* lint_textus,
+             LintCensus* census)
+{
+                      i8* buffer;
+                  chorda  textus_iunctus;
+     InternamentumChorda* intern;
+            StmlResultus  lectio;
+    StmlExpansioResultus  expansio;
+               StmlNodus* relatum;
+
+    buffer = (i8*)piscina_allocare(opus,
+        (memoriae_index)(textus_arboris->mensura
+                         + lint_textus->mensura));
+    si (buffer == NIHIL)
+    {
+        census->fracturae++;
+        redde NIHIL;
+    }
+    memcpy(buffer, textus_arboris->datum,
+           (memoriae_index)textus_arboris->mensura);
+    memcpy(buffer + textus_arboris->mensura, lint_textus->datum,
+           (memoriae_index)lint_textus->mensura);
+    textus_iunctus.datum    = buffer;
+    textus_iunctus.mensura  = textus_arboris->mensura
+                            + lint_textus->mensura;
+
+    intern = internamentum_creare(opus);
+    si (intern == NIHIL)
+    {
+        census->fracturae++;
+        redde NIHIL;
+    }
+    lectio = stml_legere(textus_iunctus, opus, intern);
+    si (!lectio.successus)
+    {
+        census->fracturae++;
+        imprimere("    LECTIO CATENAE FRACTA: %s (linea %d)\n", via,
+                  (integer)lectio.linea_erroris);
+        redde NIHIL;
+    }
+    expansio = stml_expandere(lectio.radix, opus, intern);
+    si (!expansio.successus)
+    {
+        census->fracturae++;
+        imprimere("    EXPANSIO CATENAE FRACTA: %s (vitium %d,"
+                  " linea %d)\n", via, (integer)expansio.vitium,
+                  (integer)expansio.linea);
+        redde NIHIL;
+    }
+    census->invariata_violata +=
+        _invariata_numerare(expansio.radix_expansa);
+    relatum = _elementum_invenire(expansio.radix_expansa, "relatum");
+    si (relatum == NIHIL)
+    {
+        census->fracturae++;
+        imprimere("    RELATUM CATENAE DEEST: %s\n", via);
+    }
+    redde relatum;
+}
+
 interior vacuum
 _plagulam_probare (
      constans character* via,
@@ -371,6 +449,7 @@ _plagulam_probare (
       constans Clausura* clausura,
                     b32  praebere,
         constans chorda* lint_textus,
+        constans chorda* lint_catena,
                     Xar* conditio_pares,
              LintCensus* census)
 {
@@ -490,6 +569,35 @@ _plagulam_probare (
     }
     n_lint = _liberos_titulo_numerare(relatum, "situs");
 
+    /* PORTA CATENAE: forma catenata contra formam nominatam -
+     * relatum scriptum byte-pro-byte aequale */
+    {
+        StmlNodus* relatum_catenae;
+
+        relatum_catenae = _relatum_alterum_expandere(opus, via,
+            &scriptura.textus, lint_catena, census);
+        si (relatum_catenae == NIHIL)
+        {
+            piscina_destruere(opus);
+            redde;
+        }
+        {
+            chorda scriptum_nominatum;
+            chorda scriptum_catenae;
+
+            scriptum_nominatum  = stml_scribere(relatum, opus,
+                                                FALSUM);
+            scriptum_catenae    = stml_scribere(relatum_catenae,
+                                                opus, FALSUM);
+            si (!chorda_aequalis(scriptum_nominatum,
+                                 scriptum_catenae))
+            {
+                census->catena_divergentes++;
+                imprimere("    CATENA DIVERGIT: %s\n", via);
+            }
+        }
+    }
+
     /* oraculum independens */
     n_oraculi = ZEPHYRUM;
     {
@@ -531,10 +639,11 @@ _censum_referre (
 
     imprimere("  [%s] plagulae %d | fracturae %d | apparatus fracti"
         " %d | situs lint %d / oraculi %d | divergentes %d |"
-        " invariata violata %d\n",
+        " catena divergentes %d | invariata violata %d\n",
         titulus, (integer)c->plagulae, (integer)c->fracturae,
         (integer)c->apparatus_fracti, (integer)c->summa_lint,
         (integer)c->summa_oraculi, (integer)c->divergentes,
+        (integer)c->catena_divergentes,
         (integer)c->invariata_violata);
     monstranda = c->numerus_divergentiarum;
     si (monstranda > DIVERGENTIAE_MAX)
@@ -563,6 +672,9 @@ principale (vacuum)
                      i8* lint_datum;
                      i32 lint_mensura;
                   chorda lint_textus;
+                     i8* catena_datum;
+                     i32 catena_mensura;
+                  chorda lint_catena;
                     Xar* conditio_pares;
                      b32 praeteritus;
 
@@ -606,6 +718,23 @@ principale (vacuum)
     lint_textus.datum    = lint_datum;
     lint_textus.mensura  = lint_mensura;
 
+    /* documentum lint CATENATUM - forma altera eiusdem lint */
+    sprintf(via_plagulae,
+        "%s/silva/probationes/fixa/exemplaria/"
+        "conditio_nihilum_catena.stml", radix);
+    catena_datum = apparatus_plagulam_legere(piscina, via_plagulae,
+                                             &catena_mensura);
+    si (catena_datum == NIHIL || catena_mensura <= ZEPHYRUM)
+    {
+        imprimere("FRACTA: documentum catenae non lectum: %s\n",
+                  via_plagulae);
+        credo_imprimere_compendium();
+        piscina_destruere(piscina);
+        redde I;
+    }
+    lint_catena.datum    = catena_datum;
+    lint_catena.mensura  = catena_mensura;
+
     conditio_pares = xar_creare(piscina, magnitudo(ConditioPar));
     si (conditio_pares == NIHIL)
     {
@@ -637,8 +766,8 @@ principale (vacuum)
         sprintf(via_plagulae, "%s/%s", via_corporis,
                 introitus->d_name);
         _plagulam_probare(via_plagulae, radix, NIHIL, FALSUM,
-                          &lint_textus, conditio_pares,
-                          &census_planum);
+                          &lint_textus, &lint_catena,
+                          conditio_pares, &census_planum);
     }
     closedir(corpus);
     _censum_referre("planum", &census_planum);
@@ -664,8 +793,8 @@ principale (vacuum)
         sprintf(via_plagulae, "%s/%s", radix, via_relativa);
         apparatus_clausuram_petere(radix, via_relativa, &clausura);
         _plagulam_probare(via_plagulae, radix, &clausura, VERUM,
-                          &lint_textus, conditio_pares,
-                          &census_latinum);
+                          &lint_textus, &lint_catena,
+                          conditio_pares, &census_latinum);
     }
     closedir(corpus);
     _censum_referre("latinum", &census_latinum);
@@ -678,12 +807,15 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_planum.plagulae, 78);
     CREDO_AEQUALIS_I32 (census_planum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planum.divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_planum.catena_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planum.invariata_violata, ZEPHYRUM);
 
     CREDO_AEQUALIS_I32 (census_latinum.plagulae, 155);
     CREDO_AEQUALIS_I32 (census_latinum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.divergentes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (census_latinum.catena_divergentes,
+                        ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.invariata_violata, ZEPHYRUM);
 
     /* CUSTOS TEGUMENTI: 'N/N purae' sine apparitione nihil probat -
