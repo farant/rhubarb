@@ -1117,6 +1117,48 @@ Status: banked with reasoning; no decree. Pull: the first stored
 chain that needs per-shape narrowing mid-pipeline (dialect
 dispatch inside a lint chain is the standing candidate).
 
+**DECREE (Fran, 2026-08-31, late evening — the four-question
+round, all recommended options ratified)**:
+
+1. **Name: DIRIBITIO** (the sorting of ballots — dispatch).
+   Distinct from COMMUTATIO so the two planes stay visually
+   unconfusable; arms reuse the CASUS/ORDINARIUS spellings.
+2. **Scope: chain-plane ONLY this increment** — DIRIBITIO works
+   at document level (output= required, de= optional, same law as
+   CATENA), as a CATENA link (bare), and as a condition inside
+   est slots (which in this increment exist only inside DIRIBITIO
+   itself — recursion covers it). Fill-plane pattern-cases
+   (COMMUTATIO + de="@arg" + captures→arm) stay behind their own
+   door.
+3. **Semantics bundle, all ratified as leaned**: SET-LEVEL
+   dispatch (one arm wins for the WHOLE relation); GUARDED
+   combinator (condition separate; the arm receives the ORIGINAL
+   incoming relation, never the condition's matches);
+   first-congruent-arm-wins in document order; no arm taken =
+   EMPTY relation out (the chain's emptiness algebra);
+   ORDINARIUS = optional always-arm, must be LAST (an ORDINARIUS
+   shadowing later arms = dead code, loud); condition ROOT is
+   BARE — no output=/de=/modus (a pure boolean test; `ancorata`
+   IS allowed — it is pattern semantics, not relation plumbing;
+   a chain-condition's internal stages may still use modus=, and
+   a mid-chain unum violation there is the ordinary hard vitium);
+   arm body = the est slot plus exactly ONE pure command (wrap
+   forests in CATENA — the one-element law again); condition
+   captures do NOT flow to arms. Per-row routing, alternation
+   (first-non-empty), guard-narrows-arm, and capture-flow each
+   remain named doors.
+4. **Gate: the corpus differential, third apparition** — lint II
+   re-expressed as a SELF-GUARDED chain (a DIRIBITIO link whose
+   condition is the usleep pattern, arm = the capturing
+   narrowing) must yield a byte-identical relatum vs the plain
+   lint II document across the 161-file corpus; plus the
+   composability fixture (literal switch ≡ template-produced
+   switch).
+
+Vitium XXI = DIRIBITIO_MALFORMATA reserved for the construct's
+form family; document-level output= reuses XII (sine exitu) and
+unknown de= reuses XIV, as CATENA did.
+
 ## Lint II — BUILT AND GATED (2026-08-31, same evening; ffcc6837).
 ## The gate went green on the FIRST full run: 155 lib + 6 named
 ## probationes, 27/27 sites, zero divergence — the minimal
