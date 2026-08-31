@@ -89,7 +89,14 @@ nomen enumeratio {
      * custos finis - ambulatio pergit, successus cadit) */
     STML_EXPANSIO_EXITUS_NON_CONSUMPTUS    = XVIII,
     /* TRANSPARENTIA sine tags= aut tags vacuis */
-    STML_EXPANSIO_TRANSPARENTIA_MALFORMATA = XIX
+    STML_EXPANSIO_TRANSPARENTIA_MALFORMATA = XIX,
+    /* CATENA malformata: adsignatio output gemina, de= sine '$',
+     * modus=/ancorata= in involucro (gradibus pertinent), catena
+     * vacua, liber non-nexus (textus/elementum alienum/transclusio
+     * contenti), nexus cum de=/output= (uncus RESERVATUS -
+     * ratificationes III/IV 2026-08-31), aut CATENA nidificata cum
+     * attributis (nexus catenatus NUDUS solum - plananda) */
+    STML_EXPANSIO_CATENA_MALFORMATA        = XX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

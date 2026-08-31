@@ -69,6 +69,12 @@ nomen structura {
      * partialis == 'contentum SUPRA' exacte: scopus exemplaris
      * defaltus, lex stratorum gratis (spec par. 2.1/par. 3). */
               StmlNodus* radix_expansa;
+    /* Altitudo PORTATIONIS (>0 = intra instantiationem nexus
+     * catenae): exemplaria INERTA dum portantur - EXEMPLAR/PER/
+     * TRANSPARENTIA/CATENA producta ut datum emittuntur, numquam
+     * consumpta nec vitium XIII (refinamentum portationis-contra-
+     * applicationem, ratificatio 2026-08-31). */
+                    i32 applicatio;
 } StmlMacroContextus;
 
 /* Ligamen unum congruentiae laxae: gradus I (nodus) aut II (valor).
@@ -1019,6 +1025,13 @@ _per_implere (
                    i32  tectum);
 
 interior b32
+_catena_implere (
+             StmlNodus* nodus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum);
+
+interior b32
 _liberum_expandere (
              StmlNodus* parens_novus,
                    Xar* fratres,
@@ -1594,27 +1607,40 @@ _liberum_expandere (
     /* EXEMPLARIA (gradus II): gradu DOCUMENTI interpretata -
      * consumpta, numquam emissa (invariatum spec par. 0). Intra
      * corpora templorum = porta 'de=@arg' nondum aedificata -
-     * CLARE, non tacite (spec par. 8.5). */
+     * CLARE, non tacite (spec par. 8.5). Sub PORTATIONE
+     * (applicatio > 0, instantiatio nexus catenae) INERTA: cadunt
+     * ad expansionem planam infra - ut datum emittuntur, semantica
+     * instantiationis in corporibus (refinamentum vitii XIII). */
     si (   _est_titulo(liberum, "EXEMPLAR")
         || _est_titulo(liberum, "PER")
-        || _est_titulo(liberum, "TRANSPARENTIA"))
+        || _est_titulo(liberum, "TRANSPARENTIA")
+        || _est_titulo(liberum, "CATENA"))
     {
-        si (argumenta != NIHIL)
+        si (ctx->applicatio == ZEPHYRUM)
         {
-            _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
-                           liberum, NIHIL, NIHIL);
-            redde FALSUM;
+            si (argumenta != NIHIL)
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                               liberum, NIHIL, NIHIL);
+                redde FALSUM;
+            }
+            si (_est_titulo(liberum, "EXEMPLAR"))
+            {
+                redde _exemplar_implere(liberum, ctx);
+            }
+            si (_est_titulo(liberum, "PER"))
+            {
+                redde _per_implere(parens_novus, liberum, ctx,
+                                   stratum, tectum);
+            }
+            si (_est_titulo(liberum, "CATENA"))
+            {
+                redde _catena_implere(liberum, ctx, stratum,
+                                      tectum);
+            }
+            redde _transparentiam_legere(ctx, liberum);
         }
-        si (_est_titulo(liberum, "EXEMPLAR"))
-        {
-            redde _exemplar_implere(liberum, ctx);
-        }
-        si (_est_titulo(liberum, "PER"))
-        {
-            redde _per_implere(parens_novus, liberum, ctx, stratum,
-                               tectum);
-        }
-        redde _transparentiam_legere(ctx, liberum);
     }
     si (   argumenta      != NIHIL
         && liberum->genus == STML_NODUS_TEXTUS
@@ -2316,47 +2342,29 @@ _relationem_invenire (
     redde NIHIL;
 }
 
-/* EXEMPLAR implere (gradu documenti): congruentias colligere,
- * modum applicare, relationem registrare. Nodus CONSUMITUR -
- * numquam emissus (invariatum spec par. 0). */
+/* Nucleus gradus exemplaris: modus/ancorata/forma legere,
+ * congruentias super fontem colligere, modum applicare. Communis
+ * inter EXEMPLAR nominatum (fons = de= resolutum aut NIHIL = radix
+ * expansa) et gradus CATENAE (fons = relatio gradus prioris
+ * filata). 'titulus' nuntiis vitiorum solis servit. */
 interior b32
-_exemplar_implere (
-             StmlNodus* nodus,
-    StmlMacroContextus* ctx)
+_exemplar_nucleus (
+    StmlMacroContextus*  ctx,
+             StmlNodus*  nodus,
+                   Xar*  fons,
+                chorda*  titulus,
+                   Xar** exitus)
 {
-                    chorda* output;
-                    chorda* de;
                     chorda* modus;
-                    chorda* output_internatum;
                  StmlNodus* forma;
                        Xar* congruentiae;
                        Xar* opus;
-       StmlExemplarRelatio* rel;
                        b32  ancorata;
                        i32  i;
                        i32  num;
 
-    output = stml_attributum_capere(nodus, "output");
-    si (   output                  == NIHIL || output->mensura < II
-        || output->datum[ZEPHYRUM] != (i8)'$')
-    {
-        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_SINE_EXITU,
-                       nodus, NIHIL, output);
-        redde FALSUM;
-    }
-    output_internatum = chorda_internare(ctx->intern, *output);
-    si (output_internatum == NIHIL)
-    {
-        redde FALSUM;
-    }
-    si (_relationem_invenire(ctx, output_internatum) != NIHIL)
-    {
-        /* adsignatio unica (strata) - nomen bis ligatum */
-        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
-                       nodus, NIHIL, output_internatum);
-        redde FALSUM;
-    }
-    modus = stml_attributum_capere(nodus, "modus");
+    *exitus  = NIHIL;
+    modus    = stml_attributum_capere(nodus, "modus");
     si (   modus != NIHIL
         && !chorda_aequalis_literis(*modus, "omnia")
         && !chorda_aequalis_literis(*modus, "unum")
@@ -2406,33 +2414,13 @@ _exemplar_implere (
         redde FALSUM;
     }
 
-    de = stml_attributum_capere(nodus, "de");
-    si (de != NIHIL)
+    si (fons != NIHIL)
     {
-        chorda* de_internatum;
-
-        si (de->mensura < II || de->datum[ZEPHYRUM] != (i8)'$')
-        {
-            _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
-                           nodus, NIHIL, de);
-            redde FALSUM;
-        }
-        de_internatum = chorda_internare(ctx->intern, *de);
-        rel = de_internatum != NIHIL
-            ? _relationem_invenire(ctx, de_internatum) : NIHIL;
-        si (rel == NIHIL)
-        {
-            _vitium_ponere(ctx, STML_EXPANSIO_SCOPUS_IGNOTUS,
-                           nodus, NIHIL, de);
-            redde FALSUM;
-        }
-        rel->consumpta  = VERUM;
-        num             = xar_numerus(rel->congruentiae);
+        num = xar_numerus(fons);
         per (i = ZEPHYRUM; i < num; i++)
         {
             StmlExemplarCongruentia* ordo =
-                (StmlExemplarCongruentia*)xar_obtinere(
-                    rel->congruentiae, i);
+                (StmlExemplarCongruentia*)xar_obtinere(fons, i);
 
             si (   ordo != NIHIL
                 && !_exemplar_petere(ctx, forma, ordo->radix,
@@ -2459,7 +2447,7 @@ _exemplar_implere (
         && num   != I)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_UNUM_VIOLATUM, nodus,
-                       NIHIL, output_internatum);
+                       NIHIL, titulus);
         redde FALSUM;
     }
     si (   modus != NIHIL
@@ -2467,7 +2455,7 @@ _exemplar_implere (
         && num > I)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_OPTIONAL_MULTIPLEX,
-                       nodus, NIHIL, output_internatum);
+                       nodus, NIHIL, titulus);
         redde FALSUM;
     }
     si (   modus != NIHIL
@@ -2475,6 +2463,76 @@ _exemplar_implere (
         && num > I)
     {
         xar_truncare(congruentiae, I);
+    }
+    *exitus = congruentiae;
+    redde VERUM;
+}
+
+/* EXEMPLAR implere (gradu documenti): congruentias colligere,
+ * modum applicare, relationem registrare. Nodus CONSUMITUR -
+ * numquam emissus (invariatum spec par. 0). */
+interior b32
+_exemplar_implere (
+             StmlNodus* nodus,
+    StmlMacroContextus* ctx)
+{
+                    chorda* output;
+                    chorda* de;
+                    chorda* output_internatum;
+                       Xar* fons;
+                       Xar* congruentiae;
+       StmlExemplarRelatio* rel;
+
+    output = stml_attributum_capere(nodus, "output");
+    si (   output                  == NIHIL || output->mensura < II
+        || output->datum[ZEPHYRUM] != (i8)'$')
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_SINE_EXITU,
+                       nodus, NIHIL, output);
+        redde FALSUM;
+    }
+    output_internatum = chorda_internare(ctx->intern, *output);
+    si (output_internatum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (_relationem_invenire(ctx, output_internatum) != NIHIL)
+    {
+        /* adsignatio unica (strata) - nomen bis ligatum */
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, output_internatum);
+        redde FALSUM;
+    }
+
+    fons  = NIHIL;
+    de    = stml_attributum_capere(nodus, "de");
+    si (de != NIHIL)
+    {
+        chorda* de_internatum;
+
+        si (de->mensura < II || de->datum[ZEPHYRUM] != (i8)'$')
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                           nodus, NIHIL, de);
+            redde FALSUM;
+        }
+        de_internatum = chorda_internare(ctx->intern, *de);
+        rel = de_internatum != NIHIL
+            ? _relationem_invenire(ctx, de_internatum) : NIHIL;
+        si (rel == NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_SCOPUS_IGNOTUS,
+                           nodus, NIHIL, de);
+            redde FALSUM;
+        }
+        rel->consumpta  = VERUM;
+        fons            = rel->congruentiae;
+    }
+
+    si (!_exemplar_nucleus(ctx, nodus, fons, output_internatum,
+                           &congruentiae))
+    {
+        redde FALSUM;
     }
 
     si (ctx->relationes == NIHIL)
@@ -2493,6 +2551,259 @@ _exemplar_implere (
     }
     rel->titulus       = output_internatum;
     rel->congruentiae  = congruentiae;
+    rel->origo         = nodus;
+    rel->consumpta     = FALSUM;
+    redde VERUM;
+}
+
+/* Corpus catenae processare: liberos ambulare, nexus ordine
+ * filare. Fragmenta DISSOLVUNTUR (saccharum '<(>' = ornamentum,
+ * numquam onus - ratificatio V), commenta et definitiones
+ * praetermissa (praetransitus definitiones iam collegit),
+ * vocationes sub PORTATIONE instantiatae (exemplaria producta
+ * inerta emittuntur, deinde ut nexus leguntur - genus intrans =
+ * genus exiens), CATENA nidificata PLANATUR (lex DISTRIBUTIO,
+ * tertia apparitio: caput interius relationem influentem accipit,
+ * cauda interior nexui exteriori proximo alimentum dat). Filum
+ * per 'fons' geritur: nexus quisque relationem gradus prioris
+ * legit, novam gignit - nomina intermedia numquam exsistunt
+ * ('consumpta per constructionem'). */
+interior b32
+_catena_corpus_processare (
+    StmlMacroContextus*  ctx,
+                   Xar*  fratres,
+                   i32   stratum,
+                   i32   tectum,
+                chorda*  titulus,
+                   Xar** fons,
+                   i32*  numerus)
+{
+    i32 i;
+    i32 num;
+
+    si (fratres == NIHIL)
+    {
+        redde VERUM;
+    }
+    num = xar_numerus(fratres);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l;
+
+        l = *(StmlNodus**)xar_obtinere(fratres, i);
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (_est_definitio(l))
+        {
+            perge;
+        }
+        si (l->genus == STML_NODUS_ELEMENTUM && l->fragmentum)
+        {
+            si (!_catena_corpus_processare(ctx, l->liberi, stratum,
+                                           tectum, titulus, fons,
+                                           numerus))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        si (_est_vocatio(l))
+        {
+            StmlNodus* involucrum;
+                  i32  saltus;
+                  b32  bene;
+
+            involucrum = stml_elementum_creare(ctx->piscina,
+                                               ctx->intern,
+                                               "catena-nexus");
+            si (involucrum == NIHIL)
+            {
+                redde FALSUM;
+            }
+            ctx->applicatio++;
+            bene = _liberum_expandere(involucrum, fratres, i,
+                                      &saltus, ctx, stratum,
+                                      tectum, NIHIL);
+            ctx->applicatio--;
+            si (!bene)
+            {
+                redde FALSUM;
+            }
+            i += saltus;
+            si (!_catena_corpus_processare(ctx, involucrum->liberi,
+                                           stratum, tectum,
+                                           titulus,
+                                           fons, numerus))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        si (_est_titulo(l, "EXEMPLAR"))
+        {
+            Xar* exitus;
+
+            /* nexus utrimque apertus: de=/output= vetita in nexu
+             * (output in nexu = uncus RESERVATUS - ratificationes
+             * III/IV); modus= gradui licet */
+            si (   stml_attributum_capere(l, "de")     != NIHIL
+                || stml_attributum_capere(l, "output") != NIHIL)
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_CATENA_MALFORMATA,
+                               l, NIHIL, titulus);
+                redde FALSUM;
+            }
+            si (!_exemplar_nucleus(ctx, l, *fons, titulus,
+                                   &exitus))
+            {
+                redde FALSUM;
+            }
+            *fons = exitus;
+            (*numerus)++;
+            perge;
+        }
+        si (_est_titulo(l, "CATENA"))
+        {
+            /* nexus catenatus NUDUS solum: attributa sedi usus
+             * pertinent, non fragmento condito (utrimque apertus) */
+            si (   stml_attributum_capere(l, "de")       != NIHIL
+                || stml_attributum_capere(l, "output")   != NIHIL
+                || stml_attributum_capere(l, "modus")    != NIHIL
+                || stml_attributum_capere(l, "ancorata") != NIHIL)
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_CATENA_MALFORMATA,
+                               l, NIHIL, titulus);
+                redde FALSUM;
+            }
+            si (!_catena_corpus_processare(ctx, l->liberi, stratum,
+                                           tectum, titulus, fons,
+                                           numerus))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        /* liber alienus (textus, elementum non-nexus, transclusio
+         * contenti) - CLARE, non tacite */
+        _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA, l,
+                       NIHIL, titulus);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* CATENA implere (gradu documenti): involucrum quod nexus ordine
+ * filat - exitus gradus N = fons gradus N+1. Saccharum super
+ * catenationem nominatam (inventum Rotae I: fistulatio =
+ * nominatio); punctator relationis directe filatur, relatio
+ * caudae sola sub output= registratur, ergo custos XVIII in cauda
+ * concentratur. Involucrum ipsum output= fert (fragmenta condita
+ * utrimque aperta - ratificatio I) et de= sub lege eadem ac
+ * EXEMPLAR (defaltus radix). Spec par. 8 ianua XII. */
+interior b32
+_catena_implere (
+             StmlNodus* nodus,
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum)
+{
+                    chorda* output;
+                    chorda* de;
+                    chorda* output_internatum;
+                       Xar* fons;
+                       i32  numerus;
+       StmlExemplarRelatio* rel;
+
+    output = stml_attributum_capere(nodus, "output");
+    si (   output                  == NIHIL || output->mensura < II
+        || output->datum[ZEPHYRUM] != (i8)'$')
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_SINE_EXITU,
+                       nodus, NIHIL, output);
+        redde FALSUM;
+    }
+    output_internatum = chorda_internare(ctx->intern, *output);
+    si (output_internatum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (_relationem_invenire(ctx, output_internatum) != NIHIL)
+    {
+        /* adsignatio unica (strata) - nomen bis ligatum */
+        _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA, nodus,
+                       NIHIL, output_internatum);
+        redde FALSUM;
+    }
+    si (   stml_attributum_capere(nodus, "modus")    != NIHIL
+        || stml_attributum_capere(nodus, "ancorata") != NIHIL)
+    {
+        /* modus/ancorata GRADIBUS pertinent, non involucro */
+        _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA, nodus,
+                       NIHIL, output_internatum);
+        redde FALSUM;
+    }
+
+    fons  = NIHIL;
+    de    = stml_attributum_capere(nodus, "de");
+    si (de != NIHIL)
+    {
+        chorda* de_internatum;
+
+        si (de->mensura < II || de->datum[ZEPHYRUM] != (i8)'$')
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA,
+                           nodus, NIHIL, de);
+            redde FALSUM;
+        }
+        de_internatum = chorda_internare(ctx->intern, *de);
+        rel = de_internatum != NIHIL
+            ? _relationem_invenire(ctx, de_internatum) : NIHIL;
+        si (rel == NIHIL)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_SCOPUS_IGNOTUS,
+                           nodus, NIHIL, de);
+            redde FALSUM;
+        }
+        rel->consumpta  = VERUM;
+        fons            = rel->congruentiae;
+    }
+
+    numerus = ZEPHYRUM;
+    si (!_catena_corpus_processare(ctx, nodus->liberi, stratum,
+                                   tectum, output_internatum,
+                                   &fons, &numerus))
+    {
+        redde FALSUM;
+    }
+    si (numerus == ZEPHYRUM)
+    {
+        /* catena vacua: nihil output ligaret (interior vacua sub
+         * planatione = identitas licita; totalis vacua = vitium) */
+        _vitium_ponere(ctx, STML_EXPANSIO_CATENA_MALFORMATA, nodus,
+                       NIHIL, output_internatum);
+        redde FALSUM;
+    }
+
+    si (ctx->relationes == NIHIL)
+    {
+        ctx->relationes = xar_creare(
+            ctx->piscina, magnitudo(StmlExemplarRelatio));
+        si (ctx->relationes == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    rel = (StmlExemplarRelatio*)xar_addere(ctx->relationes);
+    si (rel == NIHIL)
+    {
+        redde FALSUM;
+    }
+    rel->titulus       = output_internatum;
+    rel->congruentiae  = fons;
     rel->origo         = nodus;
     rel->consumpta     = FALSUM;
     redde VERUM;
@@ -2754,8 +3065,9 @@ stml_expandere (
     ctx.resultus    = &resultus;
     ctx.relationes  = NIHIL;   /* pigre - documentum sine
                                    * exemplaribus nihil solvit */
-    ctx.transparentia = NIHIL;
-    ctx.radix_expansa = NIHIL;
+    ctx.transparentia  = NIHIL;
+    ctx.radix_expansa  = NIHIL;
+    ctx.applicatio     = ZEPHYRUM;
     si (ctx.definitiones == NIHIL)
     {
         redde resultus;
