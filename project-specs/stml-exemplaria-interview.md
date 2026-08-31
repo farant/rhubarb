@@ -1047,6 +1047,76 @@ layer, not only literally. Technical facts for the decree:
    transclusion in est — must behave identically (a composability
    differential, the CATENA-gate pattern again).
 
+## The pure-command CLASS: switches as links (Fran, 2026-08-31,
+## post-CATENA-gate)
+
+Fran's proposal, minted the evening CATENA shipped: **a switch
+whose children are only other switches, CATENA, or EXEMPLAR is
+itself a pure resolution command** — and should therefore be
+admissible wherever pure commands go: as a CATENA link, stored in
+fragments/templates, conveyed through the macro layer.
+
+**What this IS**: the closure of the purity law's category. The
+ratified link vocabulary was an ENUMERATION (EXEMPLAR, CATENA,
+macros-to-those); this names the CLASS — pure commands are
+inductively built from EXEMPLAR by sequential composition (CATENA
+= the pipeline's AND) and case analysis (pure-CASUS = the missing
+OR: dispatch, alternatives, fallbacks). Chains-as-conditions is
+already banked above; switches-as-links is its mirror — the
+constructs interpenetrate symmetrically. Purity is enforced
+STRUCTURALLY (arm vocabulary = the closed class, recursively —
+the chain collector's link check pointed at arm bodies), never by
+analysis.
+
+**THE SEQUENCING INSIGHT — decoupled from `de="@arg"`**: the
+fill-context pattern-case door needs the argument bridge because
+its scrutinee is a macro argument. The CHAIN-PLANE switch's
+scrutinee is the incoming relation the chain already threads —
+condition = pattern/chain run against it, non-empty = arm taken,
+first-congruent-arm-wins from COMMUTATIO. No @arg, no fill-context
+refinement; it can ship BEFORE the CASUS-in-fill door, on the
+ctx->applicatio conveyance substrate (the new construct joins the
+conveyed-CAPS set + the link vocabulary + the canon CAPS rows).
+
+**Decree residue (recorded, undecreed)**:
+1. SET-LEVEL vs PER-ROW dispatch: one arm wins for the whole
+   relation (v1 lean — mirrors "tail non-empty = arm taken") vs
+   each row routed through its first matching arm (partition;
+   later door, rhymes with PER's per-row shape).
+2. GUARD ≠ ALTERNATION: a guarded switch (condition separate,
+   arm receives the incoming relation) is NOT "try each chain,
+   first non-empty output wins" — under first-non-empty, an arm
+   whose correct result is legitimately EMPTY falls through to
+   the wrong arm. Fran's framing = the guarded combinator;
+   alternation is a possible SECOND combinator, not a spelling
+   of the same one.
+3. No-match semantics: ORDINARIUS optional; without it, lean =
+   empty relation out (the chain's emptiness algebra), ORDINARIUS
+   as the explicit always-arm. Loud-on-no-match stays available
+   via the undecreed `<VITIUM nuntius=>`.
+4. Spelling: COMMUTATIO is TAKEN by the fill plane (value
+   dispatch during instantiation). Position-determines-plane has
+   precedent (engine-read wrapper forms), but a distinct CAPS
+   name for the pure-plane switch may be cleaner — Fran's call.
+5. Condition captures do NOT flow to arms in v1 — that is the
+   captures→arm bridge residue of the fill door; decree it ONCE
+   for both planes when either opens.
+6. Does the arm receive the ORIGINAL incoming relation (condition
+   purely boolean — lean) or the condition's matched output
+   (guard-and-narrow, collapses condition into arm head)? Decide
+   at decree; option (i) keeps guard/transform orthogonal.
+
+**Gate when built**: the CATENA-gate pattern a third time — a
+dispatch lint expressed (a) as a pure-CASUS link in a chain and
+(b) as N separate named-form documents whose reports are
+concatenated by hand; byte-identical per-arm reports. Plus the
+composability differential (literal switch in link position /
+template expanding to one).
+
+Status: banked with reasoning; no decree. Pull: the first stored
+chain that needs per-shape narrowing mid-pipeline (dialect
+dispatch inside a lint chain is the standing candidate).
+
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 
 Not previously banked (nearest: V.2's codices-as-pattern-documents
