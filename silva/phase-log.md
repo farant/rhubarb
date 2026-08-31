@@ -14500,3 +14500,13 @@ sine additionibus. Gradus roundtrip consulto omissus; index sex
 probationum fixus (ruptura clara). Cauda inventionum: codices
 69/70 formam ANTIJOIN habent (tractus ianuae relationalis), codex
 83 congruentiam praefixorum vult.
+
+## Addendum 2026-08-31 (nox): porta DIRIBITIONIS
+
+Sub gelatione (probationes solae): lint II nunc etiam ut catena
+sui-custodita (fixa/exemplaria/obsoletum_usleep_diribitio.stml) —
+DIRIBITIO cuius conditio = exemplar usleep, bracchium = angustatio
+capturans; relatum byte-pro-byte aequale documento plano, 161/161
+(ae55eb75). Porta L1 recursa post ambulatorem invariatorum
+DIRIBITIONEM discentem: situs 3763/3763 (corpus machinam
+diribitionis ipsam nunc continet), divergentiae 0.

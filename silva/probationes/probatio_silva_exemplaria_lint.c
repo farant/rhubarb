@@ -340,6 +340,7 @@ _invariata_numerare (
         && (   chorda_aequalis_literis(*n->titulus, "EXEMPLAR")
             || chorda_aequalis_literis(*n->titulus, "PER")
             || chorda_aequalis_literis(*n->titulus, "CATENA")
+            || chorda_aequalis_literis(*n->titulus, "DIRIBITIO")
             || chorda_aequalis_literis(*n->titulus,
                    "TRANSPARENTIA")))
     {

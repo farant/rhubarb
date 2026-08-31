@@ -486,3 +486,52 @@ Survey residue recorded in the interview file: codices 69/70
 pull, independently confirmed; codex 83 wants prefix matching (a
 pattern-vocabulary door); codex 86 falls out free after 87 but has
 zero live sites.
+
+## 2026-08-31 — DIRIBITIO shipped (the pure-plane switch, night of
+## the same day as CATENA and lint II)
+
+The four-question decree round (name DIRIBITIO — the sorting of
+ballots; chain-plane only; the conservative semantics bundle;
+corpus differential gate) → engine → 41 fixtures (137/137) →
+canon (401/401) → gate, in one pass. Commits 0c4d159b (decree) →
+36b6045a (engine) → e02a7bf8 (fixtures + EST revision) → e368e68b
+(canon) → ae55eb75 (THE GATE: lint II as a SELF-GUARDED chain —
+DIRIBITIO whose condition is the usleep pattern, arm re-collects
+with capture — byte-identical relatum vs the plain document,
+161/161, zero divergence).
+
+**The build's one real discovery: the pinned `<@est=>` spelling
+cannot parse.** Attr-elements carry tree children ONLY in
+invocation-argument position (modus I); everywhere else the §6.3
+text-only law is enforced AT PARSE TIME (lib/stml.c
+_attributa_elementa_probare), and generic STML cannot special-case
+CASUS without a layering violation. The 2026-08-26 "zero new
+syntax" claim was false for structured conditions. Fran's call:
+**`<EST>` CAPS element** (`<CASUS><EST>pattern</EST>command
+</CASUS>`), zero parser change, BACKPORTED to the fill-plane CASUS
+door's pinned spelling; migrating live COMMUTATIO's value-form
+est= attribute to <EST> recorded as a named mechanical increment.
+
+Engine shape: `_mandatum_exsequi` = the shared pure-command
+executor (EXEMPLAR via nucleus, CATENA via corpus walk, DIRIBITIO
+via recursion — the closed class in one dispatcher, with the
+est_conditio flag enforcing bare-condition law);
+`_mandata_colligere` = the est/arm collector (fragments dissolve,
+templates instantiate under applicatio — composability for free);
+`_diribitio_processare` = the arm walk (form-checks ALL arms,
+evaluates until first-congruent wins, ORDINARIUS-last mirrored
+from COMMUTATIO, no-arm = empty relation out). Document-level
+wrapper law identical to CATENA's. Vitium XXI.
+
+Canon: `_mandatum_forma_iudicare` (static link-form judge for the
+command class, conditio flag for the modus ban) +
+`_diribitio_bracchia_iudicare`; DIRIBITIO also joined
+`_catena_nexus_iudicare`'s link vocabulary — it was falling to
+the alien-child vitium otherwise. Both lint probatios' invariata
+walkers gained DIRIBITIO.
+
+The pure-command class is now CLOSED AND LIVE: EXEMPLAR composes
+by CATENA (AND) and dispatches by DIRIBITIO (OR), all three
+conveyable, all three link-eligible, all three canon-judged.
+Open doors unchanged: per-row routing, alternation, capture flow,
+guard-narrows-arm, the tee.

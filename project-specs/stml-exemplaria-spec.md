@@ -529,6 +529,25 @@ decision:
     over 233/233 plagulae, 3691 sites. Open sub-questions: the tee
     (reserved); capture threading across links (second pull on
     V.4).
+13. **DIRIBITIO — BUILT 2026-08-31, same night** (decree +
+    ratifications: interview file "pure-command CLASS" section;
+    commits 0c4d159b→ae55eb75) — the pure-plane switch closing the
+    command class: set-level GUARDED dispatch (condition in an
+    `<EST>` CAPS element — the pinned `<@est=>` spelling CANNOT
+    parse outside invocation position, §6.3; revised + backported
+    to the fill door), first-congruent-arm-wins, ORDINARIUS
+    optional-always-LAST, arm receives the ORIGINAL relation,
+    no-arm = empty relation out, condition roots bare (ancorata
+    allowed), arm = one pure command. Works at document level
+    (CATENA's wrapper law), as a CATENA link, and recursively in
+    est slots; conditions and arms may be EXEMPLAR/CATENA/
+    DIRIBITIO or templates expanding to those. Vitium XXI; canon
+    CAPS row (`_mandatum_forma_iudicare` = the class's static
+    link-form judge). GATE GREEN: lint II as a self-guarded chain,
+    byte-identical relatum, 161/161. Doors that stay named:
+    per-row routing, alternation (first-non-empty), capture flow
+    condition→arm, guard-narrows-arm, COMMUTATIO est= → `<EST>`
+    migration.
 
 ---
 
