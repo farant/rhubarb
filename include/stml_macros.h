@@ -106,7 +106,14 @@ nomen enumeratio {
      * ignotum (nec EXEMPLAR nec CATENA nec DIRIBITIO); involucrum
      * cum modus=/ancorata=; adsignatio gemina; nexus catenae
      * DIRIBITIO cum attributis. */
-    STML_EXPANSIO_DIRIBITIO_MALFORMATA     = XXI
+    STML_EXPANSIO_DIRIBITIO_MALFORMATA     = XXI,
+    /* Collisio capturarum trans gradus (lex extensionis, decretum
+     * 2026-08-31): ordines tabulata sunt - gradus quisque capturas
+     * ordinis influentis HEREDITAT et suas addit; titulus iteratus
+     * trans gradus = collisio CLARA (correlatio ponti '&@n;'
+     * pertinet, numquam iterationi fortuitae; iunctio-per-
+     * nominationem = ianua nominata, non v1). */
+    STML_EXPANSIO_CAPTURA_COLLISA          = XXII
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

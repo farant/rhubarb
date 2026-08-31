@@ -1073,6 +1073,102 @@ principale (
         CREDO_NON_NIHIL (e.radix_expansa);
     }
 
+    /* --- LEX EXTENSIONIS: capturae per catenam accumulantur,
+     *     tabula PER omnia accumulata fert (decretum) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- extensio: de= hereditat ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p t=\"X\"><q k=\"1\"/></p>"
+            "<EXEMPLAR output=\"$pp\"><p t=\"$t\"/></EXEMPLAR>"
+            "<EXEMPLAR de=\"$pp\" output=\"$qq\"><q k=\"$k\"/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$qq\"><n>&@t;-&@k;</n></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"X\"><q k=\"1\"/></p><n>X-1</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- extensio per gradus CATENAE --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- extensio: catena hereditat ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p t=\"X\"><q k=\"1\"/></p>"
+            "<CATENA output=\"$qq\">"
+            "<EXEMPLAR><p t=\"$t\"/></EXEMPLAR>"
+            "<EXEMPLAR><q k=\"$k\"/></EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$qq\"><n>&@t;-&@k;</n></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"X\"><q k=\"1\"/></p><n>X-1</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- extensio per bracchium DIRIBITIONIS --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- extensio: bracchium hereditat ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p t=\"X\"><q k=\"1\"/></p>"
+            "<EXEMPLAR output=\"$pp\"><p t=\"$t\"/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$pp\" output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><q/></EXEMPLAR></EST>"
+            "<EXEMPLAR><q k=\"$k\"/></EXEMPLAR></CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><n>&@t;-&@k;</n></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><p t=\"X\"><q k=\"1\"/></p><n>X-1</n>"
+                "</radix>");
+        }
+    }
+
+    /* --- XXII: collisio capturarum trans gradus --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- extensio: collisio XXII ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p n=\"A\"><q n=\"B\"/></p>"
+            "<EXEMPLAR output=\"$pp\"><p n=\"$n\"/></EXEMPLAR>"
+            "<EXEMPLAR de=\"$pp\" output=\"$qq\"><q n=\"$n\"/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$qq\"><x>&@n;</x></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_CAPTURA_COLLISA);
+
+        /* eadem per nexus catenae */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><p n=\"A\"><q n=\"B\"/></p>"
+            "<CATENA output=\"$qq\">"
+            "<EXEMPLAR><p n=\"$n\"/></EXEMPLAR>"
+            "<EXEMPLAR><q n=\"$n\"/></EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$qq\"><x>&@n;</x></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_CAPTURA_COLLISA);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

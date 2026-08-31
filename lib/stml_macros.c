@@ -2365,6 +2365,91 @@ _relationem_invenire (
     redde NIHIL;
 }
 
+/* Lex extensionis (decretum 2026-08-31): ordines TABULATA sunt -
+ * ordo novus capturas ordinis fontis HEREDITAT (hereditatae
+ * primae, propriae post), ergo capturae per catenam accumulantur
+ * et tabula PER omnia accumulata fert. Titulus proprius qui
+ * hereditatum iterat = COLLISIO CLARA (XXII) - correlatio ponti
+ * '&@n;' pertinet, numquam iterationi fortuitae. Propria inter
+ * se non iudicantur (regula V intra formam unam iam regit). */
+interior b32
+_ligamina_hereditare (
+         StmlMacroContextus* ctx,
+                  StmlNodus* origo,
+                        Xar* hereditanda,
+    StmlExemplarCongruentia* ordo_novus)
+{
+    Xar* mixta;
+    i32  num_hereditatae;
+    i32  i;
+
+    mixta = xar_creare(ctx->piscina,
+                       magnitudo(StmlExemplarLigamen));
+    si (mixta == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num_hereditatae = xar_numerus(hereditanda);
+    per (i = ZEPHYRUM; i < num_hereditatae; i++)
+    {
+        StmlExemplarLigamen* vetus =
+            (StmlExemplarLigamen*)xar_obtinere(hereditanda, i);
+        StmlExemplarLigamen* cella;
+
+        si (vetus == NIHIL)
+        {
+            perge;
+        }
+        cella = (StmlExemplarLigamen*)xar_addere(mixta);
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = *vetus;
+    }
+    num_hereditatae = xar_numerus(mixta);
+    si (ordo_novus->ligamina != NIHIL)
+    {
+        i32 num_propria = xar_numerus(ordo_novus->ligamina);
+        i32 j;
+
+        per (i = ZEPHYRUM; i < num_propria; i++)
+        {
+            StmlExemplarLigamen* proprium =
+                (StmlExemplarLigamen*)xar_obtinere(
+                    ordo_novus->ligamina, i);
+            StmlExemplarLigamen* cella;
+
+            si (proprium == NIHIL)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; j < num_hereditatae; j++)
+            {
+                StmlExemplarLigamen* h =
+                    (StmlExemplarLigamen*)xar_obtinere(mixta, j);
+
+                si (h != NIHIL && h->titulus == proprium->titulus)
+                {
+                    _vitium_ponere(ctx,
+                                   STML_EXPANSIO_CAPTURA_COLLISA,
+                                   origo, NIHIL,
+                                   proprium->titulus);
+                    redde FALSUM;
+                }
+            }
+            cella = (StmlExemplarLigamen*)xar_addere(mixta);
+            si (cella == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *cella = *proprium;
+        }
+    }
+    ordo_novus->ligamina = mixta;
+    redde VERUM;
+}
+
 /* Nucleus gradus exemplaris: modus/ancorata/forma legere,
  * congruentias super fontem colligere, modum applicare. Communis
  * inter EXEMPLAR nominatum (fons = de= resolutum aut NIHIL = radix
@@ -2444,12 +2529,38 @@ _exemplar_nucleus (
         {
             StmlExemplarCongruentia* ordo =
                 (StmlExemplarCongruentia*)xar_obtinere(fons, i);
+            i32 ante;
+            i32 j;
 
-            si (   ordo != NIHIL
-                && !_exemplar_petere(ctx, forma, ordo->radix,
-                        ancorata, congruentiae, opus))
+            si (ordo == NIHIL)
+            {
+                perge;
+            }
+            ante = xar_numerus(congruentiae);
+            si (!_exemplar_petere(ctx, forma, ordo->radix,
+                    ancorata, congruentiae, opus))
             {
                 redde FALSUM;
+            }
+            /* lex extensionis: ordines novi capturas fontis
+             * hereditant (vide _ligamina_hereditare) */
+            si (   ordo->ligamina              == NIHIL
+                || xar_numerus(ordo->ligamina) == ZEPHYRUM)
+            {
+                perge;
+            }
+            per (j = ante; j < xar_numerus(congruentiae); j++)
+            {
+                StmlExemplarCongruentia* novus =
+                    (StmlExemplarCongruentia*)xar_obtinere(
+                        congruentiae, j);
+
+                si (   novus != NIHIL
+                    && !_ligamina_hereditare(ctx, nodus,
+                           ordo->ligamina, novus))
+                {
+                    redde FALSUM;
+                }
             }
         }
     }
