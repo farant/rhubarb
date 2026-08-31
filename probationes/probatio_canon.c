@@ -2579,6 +2579,14 @@ principale (vacuum)
                 "<CATENA><EXEMPLAR><z/></EXEMPLAR></CATENA>"
                 "<<#@nexus-conditus>>"
                 "</CATENA>"
+                "<DIRIBITIO de=\"$c\" output=\"$d\">"
+                "<CASUS><EST><EXEMPLAR ancorata><w/></EXEMPLAR>"
+                "</EST>"
+                "<CATENA><EXEMPLAR><y2/></EXEMPLAR></CATENA>"
+                "</CASUS>"
+                "<ORDINARIUS><EXEMPLAR modus=\"primum\"><z2/>"
+                "</EXEMPLAR></ORDINARIUS>"
+                "</DIRIBITIO>"
                 "<relatum lint=\"x\">"
                 "<PER congruentia=\"$n\"><situs>&@v;</situs></PER>"
                 "</relatum>",
@@ -2591,7 +2599,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[X];
+                constans character* mala[XIV];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2612,7 +2620,22 @@ principale (vacuum)
                           "</CATENA>";
                 mala[9] = "<CATENA modus=\"unum\" output=\"$c\">"
                           "<EXEMPLAR><s/></EXEMPLAR></CATENA>";
-                per (m = ZEPHYRUM; m < X; m++)
+                /* DIRIBITIO (decretum 2026-08-31) */
+                mala[10] = "<DIRIBITIO><CASUS><EST><EXEMPLAR>"
+                           "<s/></EXEMPLAR></EST><EXEMPLAR><s/>"
+                           "</EXEMPLAR></CASUS></DIRIBITIO>";
+                mala[11] = "<DIRIBITIO output=\"$d\"><alienum/>"
+                           "</DIRIBITIO>";
+                mala[12] = "<DIRIBITIO output=\"$d\"><CASUS>"
+                           "<EXEMPLAR><s/></EXEMPLAR></CASUS>"
+                           "</DIRIBITIO>";
+                mala[13] = "<DIRIBITIO output=\"$d\">"
+                           "<ORDINARIUS><EXEMPLAR><s/></EXEMPLAR>"
+                           "</ORDINARIUS>"
+                           "<CASUS><EST><EXEMPLAR><s/></EXEMPLAR>"
+                           "</EST><EXEMPLAR><s/></EXEMPLAR>"
+                           "</CASUS></DIRIBITIO>";
+                per (m = ZEPHYRUM; m < XIV; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

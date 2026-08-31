@@ -2191,9 +2191,16 @@ _est_caps_machinae (
         && (   chorda_aequalis_literis(*n->titulus, "EXEMPLAR")
             || chorda_aequalis_literis(*n->titulus, "PER")
             || chorda_aequalis_literis(*n->titulus, "CATENA")
+            || chorda_aequalis_literis(*n->titulus, "DIRIBITIO")
             || chorda_aequalis_literis(*n->titulus,
                                        "TRANSPARENTIA"));
 }
+
+interior vacuum
+_diribitio_bracchia_iudicare (
+    StmlNodus* n,
+          Xar* vitia,
+          i32* numerus);
 
 /* Nexus catenae statice iudicare (ratificatio VI 2026-08-31):
  * nexus EXEMPLAR in FORMA NEXUS iudicatur (utrimque apertus -
@@ -2330,8 +2337,293 @@ _catena_nexus_iudicare (
             (*numerus)++;
             perge;
         }
+        si (   l->titulus != NIHIL
+            && chorda_aequalis_literis(*l->titulus, "DIRIBITIO"))
+        {
+            i32 bracchia = ZEPHYRUM;
+
+            si (   stml_attributum_capere(l, "output")   != NIHIL
+                || stml_attributum_capere(l, "de")       != NIHIL
+                || stml_attributum_capere(l, "modus")    != NIHIL
+                || stml_attributum_capere(l, "ancorata") != NIHIL)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              l, l->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                perge;
+            }
+            _diribitio_bracchia_iudicare(l, vitia, &bracchia);
+            (*numerus)++;
+            perge;
+        }
         vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
                       n->titulus, l->titulus, ZEPHYRUM, ZEPHYRUM);
+    }
+}
+
+/* Mandatum purum in forma NEXUS statice iudicare (bracchia et
+ * sedes EST diribitionis): EXEMPLAR utrimque apertum (corpus unum
+ * elementum CITATUM; conditio etiam modus= vetat), CATENA/
+ * DIRIBITIO nuda + recursa, vocationes iniudicabiles (tacent). */
+interior vacuum
+_mandatum_forma_iudicare (
+    StmlNodus* l,
+          Xar* vitia,
+          b32  conditio)
+{
+    si (l->genus == STML_NODUS_TRANSCLUSIO)
+    {
+        redde;  /* vocatio - statice iniudicabilis */
+    }
+    si (l->genus != STML_NODUS_ELEMENTUM || l->titulus == NIHIL)
+    {
+        vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                      NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+    si (   stml_attributum_capere(l, "output") != NIHIL
+        || stml_attributum_capere(l, "de")     != NIHIL)
+    {
+        vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                      l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        redde;
+    }
+    si (chorda_aequalis_literis(*l->titulus, "EXEMPLAR"))
+    {
+           chorda* modus;
+        StmlNodus* forma;
+              i32  j;
+              i32  m;
+
+        modus = stml_attributum_capere(l, "modus");
+        si (   modus != NIHIL
+            && (   conditio
+                || (   !chorda_aequalis_literis(*modus, "omnia")
+                    && !chorda_aequalis_literis(*modus, "unum")
+                    && !chorda_aequalis_literis(*modus, "primum")
+                    && !chorda_aequalis_literis(*modus,
+                                                "optional"))))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, modus, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        forma  = NIHIL;
+        m      = stml_numerus_liberorum(l);
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            StmlNodus* f = stml_liberum_ad_indicem(l, j);
+
+            si (   f                     == NIHIL
+                || f->genus              == STML_NODUS_COMMENTUM
+                || f->attributum_titulus != NIHIL)
+            {
+                perge;
+            }
+            si (forma != NIHIL)
+            {
+                forma = NIHIL;
+                frange;
+            }
+            forma = f;
+        }
+        si (forma == NIHIL || forma->genus != STML_NODUS_ELEMENTUM)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+    si (chorda_aequalis_literis(*l->titulus, "CATENA"))
+    {
+        i32 nexus = ZEPHYRUM;
+
+        si (   stml_attributum_capere(l, "modus")    != NIHIL
+            || stml_attributum_capere(l, "ancorata") != NIHIL)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        _catena_nexus_iudicare(l, vitia, &nexus);
+        redde;
+    }
+    si (chorda_aequalis_literis(*l->titulus, "DIRIBITIO"))
+    {
+        i32 bracchia = ZEPHYRUM;
+
+        si (   stml_attributum_capere(l, "modus")    != NIHIL
+            || stml_attributum_capere(l, "ancorata") != NIHIL)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        _diribitio_bracchia_iudicare(l, vitia, &bracchia);
+        redde;
+    }
+    vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                  l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+}
+
+/* Bracchia diribitionis statice iudicare (decretum 2026-08-31):
+ * liberi CASUS/ORDINARIUS soli (vocationes numerantur, fragmenta
+ * dissoluta); CASUS = sedes <EST> una (mandatum unum, conditio)
+ * + mandatum unum; ORDINARIUS sine <EST>, ULTIMUS. */
+interior vacuum
+_diribitio_bracchia_iudicare (
+    StmlNodus* n,
+          Xar* vitia,
+          i32* numerus)
+{
+    i32 quantum;
+    i32 i;
+    b32 post_ordinarium;
+
+    post_ordinarium  = FALSUM;
+    quantum          = stml_numerus_liberorum(n);
+    per (i = ZEPHYRUM; i < quantum; i++)
+    {
+        StmlNodus* l = stml_liberum_ad_indicem(n, i);
+        StmlNodus* est_sedes;
+              i32  mandata;
+              i32  j;
+              i32  m;
+
+        si (   l                     == NIHIL
+            || l->genus              == STML_NODUS_COMMENTUM
+            || l->attributum_titulus != NIHIL)
+        {
+            perge;
+        }
+        si (l->genus == STML_NODUS_TRANSCLUSIO)
+        {
+            si (   l->valor                             != NIHIL
+                && l->valor->mensura > II
+                && (character)l->valor->datum[ZEPHYRUM] == '#'
+                && (character)l->valor->datum[I]        == '@')
+            {
+                (*numerus)++;
+                perge;
+            }
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          n->titulus, l->valor, ZEPHYRUM,
+                          ZEPHYRUM);
+            perge;
+        }
+        si (l->genus != STML_NODUS_ELEMENTUM)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+            perge;
+        }
+        si (l->fragmentum)
+        {
+            si (   l->fragmentum_id          == NIHIL
+                || l->fragmentum_id->mensura <= I
+                || (character)l->fragmentum_id->datum[ZEPHYRUM]
+                       != '@')
+            {
+                _diribitio_bracchia_iudicare(l, vitia, numerus);
+            }
+            perge;
+        }
+        si (post_ordinarium)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          n->titulus, l->titulus, ZEPHYRUM,
+                          ZEPHYRUM);
+            perge;
+        }
+        si (   l->titulus == NIHIL
+            || (   !chorda_aequalis_literis(*l->titulus, "CASUS")
+                && !chorda_aequalis_literis(*l->titulus,
+                                            "ORDINARIUS")))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          n->titulus, l->titulus, ZEPHYRUM,
+                          ZEPHYRUM);
+            perge;
+        }
+        (*numerus)++;
+
+        est_sedes  = NIHIL;
+        mandata    = ZEPHYRUM;
+        m          = stml_numerus_liberorum(l);
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            StmlNodus* lb = stml_liberum_ad_indicem(l, j);
+
+            si (   lb                     == NIHIL
+                || lb->genus              == STML_NODUS_COMMENTUM
+                || lb->attributum_titulus != NIHIL)
+            {
+                perge;
+            }
+            si (   lb->genus   == STML_NODUS_ELEMENTUM
+                && lb->titulus != NIHIL
+                && chorda_aequalis_literis(*lb->titulus, "EST"))
+            {
+                si (est_sedes != NIHIL)
+                {
+                    vitium_addere(vitia,
+                                  CANON_MACHINAE_MALFORMATUM, lb,
+                                  l->titulus, NIHIL, ZEPHYRUM,
+                                  ZEPHYRUM);
+                    perge;
+                }
+                est_sedes = lb;
+                perge;
+            }
+            mandata++;
+            _mandatum_forma_iudicare(lb, vitia, FALSUM);
+        }
+        si (chorda_aequalis_literis(*l->titulus, "ORDINARIUS"))
+        {
+            post_ordinarium = VERUM;
+            si (est_sedes != NIHIL)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              l, l->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+            }
+        }
+        alioquin si (est_sedes == NIHIL)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        si (est_sedes != NIHIL)
+        {
+            i32 conditiones = ZEPHYRUM;
+            i32 k;
+            i32 q = stml_numerus_liberorum(est_sedes);
+
+            per (k = ZEPHYRUM; k < q; k++)
+            {
+                StmlNodus* lc = stml_liberum_ad_indicem(est_sedes,
+                                                        k);
+
+                si (   lc        == NIHIL
+                    || lc->genus == STML_NODUS_COMMENTUM)
+                {
+                    perge;
+                }
+                conditiones++;
+                _mandatum_forma_iudicare(lc, vitia, VERUM);
+            }
+            si (conditiones != I)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              est_sedes, l->titulus, NIHIL,
+                              ZEPHYRUM, ZEPHYRUM);
+            }
+        }
+        si (mandata != I)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
     }
 }
 
@@ -2472,6 +2764,49 @@ _caps_iudicare (
             /* catena statice vacua: nihil output ligaret (nexus
              * malformatus iam clamavit - bis clamare numerum
              * vitiorum mentiretur) */
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+    si (chorda_aequalis_literis(*n->titulus, "DIRIBITIO"))
+    {
+        chorda* output;
+        chorda* de;
+           i32  numerus;
+           i32  ante;
+
+        output = stml_attributum_capere(n, "output");
+        si (   output                             == NIHIL
+            || output->mensura < II
+            || (character)output->datum[ZEPHYRUM] != '$')
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, output, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        de = stml_attributum_capere(n, "de");
+        si (   de != NIHIL
+            && (   de->mensura < II
+                || (character)de->datum[ZEPHYRUM] != '$'))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, de, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        si (   stml_attributum_capere(n, "modus")    != NIHIL
+            || stml_attributum_capere(n, "ancorata") != NIHIL)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        numerus  = ZEPHYRUM;
+        ante     = xar_numerus(vitia);
+        _diribitio_bracchia_iudicare(n, vitia, &numerus);
+        si (numerus == ZEPHYRUM && xar_numerus(vitia) == ante)
+        {
+            /* diribitio statice sine bracchiis */
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
                           n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
         }
