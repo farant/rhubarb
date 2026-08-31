@@ -447,3 +447,42 @@ differentially gated) — now judged by the extended CAPS vocabulary
 for free. CATENA's open sub-questions live in the interview file:
 the tee (reserved), capture threading across links (second pull on
 V.4 relational extension).
+
+## 2026-08-31 — Lint II shipped: the first REAL codex as a pattern
+## document (evening, same session as CATENA)
+
+Codex 87 (OBSOLETUM_ADHIBITUM — usleep, the one-entry `<gradus>`
+table in silva/fontes/systema_posix.h) re-expressed as
+fixa/exemplaria/obsoletum_usleep.stml: ONE TRANSPARENTIA row (L1's
+origin wrappers + regio-cruda), ONE EXEMPLAR
+(`<lex-identificator $n>usleep</>`), one relatum carrying
+pro="nanosleep". Gate = probatio_silva_exemplaria_obsoleta
+(commit ffcc6837): GREEN ON THE FIRST FULL RUN — 155 lib files
+(1/1 sites, tcp_posix.c) + 6 named probationes files (26/26
+sites), zero divergence, zero fracturae, zero recusae.
+
+What made it a step up from L1: the oracle is the SHIPPING
+ANALYZER — the examen recipe copied verbatim into the probatio
+(lexicon compose + capita praebita + oraculum + bis-analysis post
+recanonicare), diagnostics filtered to the codex. ONE parse feeds
+BOTH judges (arbor writes the lint view from the same parsura
+semantica judges) — same tree, two independent judgments.
+
+The scoping worry dissolved as scouted: system headers never enter
+the tree, omitted #ifdef arms are `<regio-cruda>` (TRANSPARENTIA
+skips whole), and the minimal transparency needed NO
+divergence-driven additions. The apparatus path (apparatus_parsare)
+would have been a FALSE-GREEN trap — it composes no systema, so
+codex 87 never fires on it; the recipe copy is load-bearing, not
+ceremony. Cost: ~0.3s/file × 161 (examen binary parity).
+
+Corpus decision recorded: roundtrip tier OMITTED (lib already
+supplies broad zero-site agreement; 78 recipe runs for nothing
+this codex can see); probationes tier = a FIXED six-file index
+(loud rot: a moved file = FRACTA, never silent).
+
+Survey residue recorded in the interview file: codices 69/70
+(unused var/param) are ANTIJOIN-shaped — the relational door's
+pull, independently confirmed; codex 83 wants prefix matching (a
+pattern-vocabulary door); codex 86 falls out free after 87 but has
+zero live sites.

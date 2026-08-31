@@ -14484,3 +14484,19 @@ per-ordinem, scopi conditionum nidificati - genus ternarius, situs
 unus in corpore). Etiam: canon nunc radices OMNES documenti
 iudicat (foramen tegumenti primae-radicis; corpus canonis silvae
 uni-radicale, portae immotae 2/2).
+
+## Addendum 2026-08-31 (vesper): porta lint II — codex 87 ut documentum exemplarium
+
+Sub gelatione (probationes + fixa sola, nucleus intactus): codex
+87 (usleep obsoletum) nunc documentum exemplarium
+(fixa/exemplaria/obsoletum_usleep.stml), porta
+probatio_silva_exemplaria_obsoleta (ffcc6837). Oraculum = recipe
+examinis VERBATIM in probatione (fidelitas: quod binarium facit —
+apparatus_parsare systema non componit, ergo via apparatus codex
+87 numquam flagraret = viriditas falsa utroque latere). Parsura
+una, iudices duo. 161/161 plagulae, 27/27 situs, divergentiae 0,
+primo cursu. TRANSPARENTIA minima (involucra L1 + regio-cruda)
+sine additionibus. Gradus roundtrip consulto omissus; index sex
+probationum fixus (ruptura clara). Cauda inventionum: codices
+69/70 formam ANTIJOIN habent (tractus ianuae relationalis), codex
+83 congruentiam praefixorum vult.

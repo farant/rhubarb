@@ -419,6 +419,22 @@ is site-set equality against that walk, plus report-document shape.
 The SECOND lint re-expresses an examen codex, chosen at build time by
 fit (v1 subset; has a C oracle to gate against differentially).
 
+**LINT II BUILT + GREEN 2026-08-31** (ffcc6837;
+probatio_silva_exemplaria_obsoleta.c; fixture
+fixa/exemplaria/obsoletum_usleep.stml): **codex 87
+OBSOLETUM_ADHIBITUM** (usleep — the one-entry `<gradus>` table) as
+one TRANSPARENTIA row (L1 wrappers + regio-cruda) + one EXEMPLAR +
+one relatum. The oracle is the SHIPPING ANALYZER — the examen
+recipe verbatim in the probatio (the apparatus path composes no
+systema, so the codex never fires on it = false-green; the recipe
+copy is load-bearing). ONE parse feeds BOTH judges. 155 lib + 6
+named probationes files, 27/27 sites, ZERO divergence on the
+first full run; count-equality only (positions wait on §1.3).
+Survey residue: codices 69/70 are ANTIJOIN-shaped (§8 relational
+door's confirmed pull); codex 83 wants prefix matching (a
+pattern-vocabulary door). Selection + scouting record: interview
+file "Lint II candidate chosen".
+
 **BUILT + GREEN 2026-08-31** (probatio_silva_exemplaria_lint.c;
 fixture fixa/exemplaria/conditio_nihilum.stml): 233/233 files,
 3,639 sites both ways, apparatus gate clean, invariant asserted.

@@ -1117,6 +1117,14 @@ Status: banked with reasoning; no decree. Pull: the first stored
 chain that needs per-shape narrowing mid-pipeline (dialect
 dispatch inside a lint chain is the standing candidate).
 
+## Lint II — BUILT AND GATED (2026-08-31, same evening; ffcc6837).
+## The gate went green on the FIRST full run: 155 lib + 6 named
+## probationes, 27/27 sites, zero divergence — the minimal
+## TRANSPARENTIA (L1 wrappers + regio-cruda) needed no additions.
+## One parse feeds both judges; the oracle is the examen recipe
+## verbatim (the apparatus path would be false-green: it composes
+## no systema, so codex 87 never fires on it). Selection record:
+
 ## Lint II candidate chosen: codex 87 (2026-08-31, evening)
 
 Survey of the examen codex inventory (89 codices, census over 820
