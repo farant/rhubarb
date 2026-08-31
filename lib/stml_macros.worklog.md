@@ -249,3 +249,34 @@ wrapper-prefix carry-down, and both passthrough classes. One fixture
 bug found by the suite: I authored `</#f>` as a closer — fragment
 closers never carry the id; the "0 vitia" received bytes were the
 parser faithfully preserving my malformed input.
+
+## 2026-08-31 — stml_congruere_strictum: the matcher extraction (exemplaria build step 1)
+
+`_par_congruere` + its three helpers promoted VERBATIM out of
+silva_arbor.c into the engine (spec: stml-exemplaria-spec.md §4/§9
+step 1). Extraction moves, never improves: logic byte-for-byte, only
+ownership renamed — `scriptor` dissolved into explicit
+`piscina` + `intern` params; `ParCaptura` → public `StmlCaptura`;
+`FoliumPar` (par path) → public `StmlCongruentiaPar`. One behavioral
+widening: `paria` may now be NIHIL (pair recording skipped) — the
+arbor caller passes its Xar as before, so its path is unchanged.
+
+Contract carried in the header: capturae appended in discovery
+order; repeated loculus = forests-equal (regula V — non-linear
+captures ARE equality); pairs appended on success, the CALLER
+truncates on failure (xar_truncare to its own mark) — the matcher
+never rolls back.
+
+Gates: silva arbor 5/5 (the plagula gate — 78+155 octetim exactae +
+compression presence — green through the engine matcher, which is
+step 1's definition of done), root stml + canon suites green, silva
+canon corpus 2/2, amalgam VERIFICATUM (standalone + hospes 40/40 +
+nm-intersection 0). Generated amalgam manifests UNCHANGED — the new
+symbol is used from birth, so the excludenda harvest never saw it as
+dead.
+
+Unification note for step 2: `_congruentia_referentia_tota`
+duplicates `_loculum_invenire`'s whole-reference grammar — the two
+copies of that law now at least live in ONE file (the arbor comment
+used to say "lex una, sedes altera"). Unify when loose mode lands,
+not before.

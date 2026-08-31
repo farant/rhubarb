@@ -3839,6 +3839,50 @@ silva_stml_distribuere (
                 SilvaPiscina* piscina,
     SilvaInternamentumChorda* intern);
 
+
+/* ==================================================
+ * CONGRUENTIA STRICTA (spec exemplarium par. 4, gradus
+ * aedificationis I) - matcher gradarius generalis, ex
+ * silva_arbor.c promotus ('definitio retro currit' - templum
+ * contra candidatum, permissivitate NULLA). Modus STRICTUS
+ * machinae; modus laxus (EXEMPLAR) iuxta aedificabitur.
+ *
+ * Regulae (quinque, ex recognitione parametrorum probatae):
+ *   - genus/titulus/fragmentum/crudus/attributa aequalia exacte
+ *   - liberum definitionis UNICUM textus totus '&@x;' = captura
+ *     silvae (liberi candidati OMNES, saltem unus)
+ *   - loculus ITERATUS = silvae octetim aequales (regula V -
+ *     capturae non-lineares aequalitas sunt)
+ *   - textus/transclusio per valorem; cetera liberi gradatim
+ * ================================================== */
+
+/* Captura congruentiae: loculus + silva capta */
+nomen structura {
+    SilvaChorda* titulus;   /* nomen loculi, internatum */
+       SilvaXar* nodi;      /* StmlNodus* capti, ordine candidati */
+} StmlCaptura;
+
+/* Par nodorum (vetus = candidati, novus = definitionis) - pro
+ * consumentibus qui sedes vel tabulas laterales repungunt */
+nomen structura {
+    SilvaStmlNodus* vetus;
+    SilvaStmlNodus* novus;
+} StmlCongruentiaPar;
+
+/* Congruentia stricta gradaria: corpus templi contra candidatum.
+ * capturae (Xar de StmlCaptura, non NIHIL): capturae appenduntur
+ * ordine inventionis. paria (Xar de StmlCongruentiaPar, NIHIL
+ * licet): paria appenduntur successu; VOCANS defectu truncat
+ * (xar_truncare ad initium suum) - matcher numquam retro tollit. */
+static b32
+silva_stml_congruere_strictum (
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+              SilvaStmlNodus* templum,
+              SilvaStmlNodus* candidatus,
+                    SilvaXar* capturae,
+                    SilvaXar* paria);
+
 #endif /* STML_MACROS_H */
 
 /* assertio derivae: silva.h SilvaXar.segmenta[64] ==
@@ -9800,6 +9844,17 @@ nomen structura {
        b32 in_crudus;
     SilvaChorda crudus_titulus;  /* Tag name we're looking for to close */
 
+    /* Tokenum modo redditum terminatorem suum NON invenit
+     * (commentum sine '-->', processio sine '?>', doctypus sine '>').
+     * In CONTEXTU sedet, non in StmlToken: XIV loca tokena struunt et
+     * nullum initiatorem communem habent, ergo campus quintus decimus
+     * ibi lectionem non initializatam invitaret - ipsam classem
+     * defectus quam 01M16Z03YE fuit. Contextus bina loca sola habet.
+     *
+     * _tok_proximus eum ad initium CUIUSQUE vocationis purgat, ergo
+     * stalus esse non potest; tres lectores soli eum ponunt. */
+       b32 non_clausum;
+
     /* Piscina and intern for allocations */
                 SilvaPiscina* piscina;
     SilvaInternamentumChorda* intern;
@@ -10170,12 +10225,37 @@ _tok_legere_commentum (
             && _tok_aspicere(ctx, I)        == '-'
             && _tok_aspicere(ctx, II)       == '>')
         {
-            token.valor.datum    = ctx->input.datum + contentus_initium;
-            token.valor.mensura  = ctx->positus - contentus_initium;
-            _tok_progredi(ctx, III);  /* Skip --> */
             frange;
         }
         _tok_progredi(ctx, I);
+    }
+
+    /* VALOR EXTRA ANSAM (01M16Z03YE): olim intra ramum terminatoris
+     * SOLUM assignabatur, ergo commentum non clausum ('<!--x', V
+     * octeti) locale stacki NON INITIALIZATUM reddebat - punctatorem
+     * fortuitum et mensuram fortuitam - quod _parser_legere_commentum
+     * deinde ad chorda_internare tradebat. SIGSEGV; peius, lectio
+     * memoriae non initializatae INDETERMINATA est, ergo sub alia
+     * dispositione stacki memoriam adiacentem internare ET
+     * successus=1 reddere posset.
+     *
+     * Forma _tok_legere_doctype (infra) sequitur: ansa terminatorem
+     * invenit sed NON consumit; valor semper assignatur; terminator
+     * postea consumitur si adest. Commentum non clausum ergo
+     * contentum usque ad EOF fert - contentum servamus, non
+     * abicimus, ut doctypus iam faciebat. */
+    token.valor.datum    = ctx->input.datum + contentus_initium;
+    token.valor.mensura  = ctx->positus - contentus_initium;
+
+    si (   _tok_aspicere(ctx, ZEPHYRUM) == '-'
+        && _tok_aspicere(ctx, I)        == '-'
+        && _tok_aspicere(ctx, II)       == '>')
+    {
+        _tok_progredi(ctx, III);  /* Skip --> */
+    }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '-->' numquam venit */
     }
 
     token.genus                      = STML_TOKEN_COMMENTUM;
@@ -10218,12 +10298,25 @@ _tok_legere_processio (
         si (   _tok_aspicere(ctx, ZEPHYRUM) == '?'
             && _tok_aspicere(ctx, I)        == '>')
         {
-            token.valor.datum    = ctx->input.datum + contentus_initium;
-            token.valor.mensura  = ctx->positus - contentus_initium;
-            _tok_progredi(ctx, II);  /* Skip ?> */
             frange;
         }
         _tok_progredi(ctx, I);
+    }
+
+    /* VALOR EXTRA ANSAM (01M16Z03YE): gemina causa ac in
+     * _tok_legere_commentum supra - '<?x' non clausum locale stacki
+     * non initializatum reddebat. Eadem forma _tok_legere_doctype. */
+    token.valor.datum    = ctx->input.datum + contentus_initium;
+    token.valor.mensura  = ctx->positus - contentus_initium;
+
+    si (   _tok_aspicere(ctx, ZEPHYRUM) == '?'
+        && _tok_aspicere(ctx, I)        == '>')
+    {
+        _tok_progredi(ctx, II);  /* Skip ?> */
+    }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '?>' numquam venit */
     }
 
     token.genus                      = STML_TOKEN_PROCESSIO;
@@ -10286,6 +10379,10 @@ _tok_legere_doctype (
     si (_tok_aspicere(ctx, ZEPHYRUM) == '>')
     {
         _tok_progredi(ctx, I);  /* Skip final > */
+    }
+    alioquin
+    {
+        ctx->non_clausum = VERUM;   /* '>' numquam venit */
     }
 
     token.genus                      = STML_TOKEN_DOCTYPE;
@@ -11200,8 +11297,30 @@ _tok_proximus (
 {
     StmlToken token;
 
-    /* If in raw content mode, get raw content until close tag */
-    si (ctx->in_crudus)
+    /* Vexillum per tokenum purgandum: tres lectores soli id ponunt,
+     * ceteri non tangunt - sine purgatione hic, commentum non clausum
+     * vexillum suum tokeni SEQUENTI relinqueret. */
+    ctx->non_clausum = FALSUM;
+
+    /* If in raw content mode, get raw content until close tag.
+     *
+     * CONDICIO EOF OBLIGATORIA (01M16YP7W1): sine ea, hic ramus
+     * ANTE probationem EOF infra sedet, ergo cum 'in_crudus'
+     * positum est STML_TOKEN_FINIS INATTINGIBILE fit: ad finem
+     * inputi _tok_legere_contentus_crudus tokenum latitudinis
+     * ZEPHYRUM sine cursoris promotione in aeternum reddit, et
+     * ansa parsatoris FINIS exspectans gyrat (CPU C centesimae,
+     * RSS planum - punctum fixum verum).
+     *
+     * Cum EOF hic excluditur, probatio infra FINIS emittit et
+     * parsator TAG_NON_CLAUSUM more suo refert - quod verum est:
+     * elementum crudum clausuram numquam accepit.
+     *
+     * VII inputa per portas AMBAS claudit: contentum crudum non
+     * clausum ('<x!>a'), et lapsum '<!' ('<!doctype html>',
+     * '<![CDATA[', '<!ENTITY') quod ut tagus crudus tituli VACUI
+     * male lexatur et deinde in eandem foveam cadit. */
+    si (ctx->in_crudus && ctx->positus < ctx->input.mensura)
     {
         /* Check if we're at the closing tag */
         si (   _tok_aspicere(ctx, ZEPHYRUM) == '<'
@@ -11600,6 +11719,7 @@ _parser_legere_elementum (
 
     _titulum_ex_tokeno_ponere(ctx, nodus, ctx->current.valor);
     titulus_ptr        = nodus->titulus;
+
     nodus->attributa   = ctx->current.attributa;
     nodus->multilinea  = ctx->current.multilinea;
     si (ctx->current.spatia_prae_finem.mensura > ZEPHYRUM)
@@ -11626,8 +11746,25 @@ _parser_legere_elementum (
              * scriptore servatur. 01KYSPRF9R */
             nodus->clausura_anonyma = VERUM;
         }
-        alioquin si (!silva_chorda_aequalis(ctx->current.valor,
-                     *titulus_ptr))
+        /* CUSTOS NIHIL (01M171YAEP): titulus VACUUS status MODELLATUS
+         * est, non vitium parsationis - '< >' munde parsat et
+         * stml_strictum eum ut STML_STRICTUM_TITULUS_VACUUS iudicat
+         * (probatio_stml.c ~MMMMCXVIII id figit; parsator lenis,
+         * strictum iudex - stratificatio consulta).
+         *
+         * Sed chorda_internare chordae vacuae NIHIL reddit, ergo
+         * '*titulus_ptr' hic sine custode ruebat: '<p>x < 10</p>' -
+         * prosa vulgaris - SIGSEGV dabat. Duae condiciones simul
+         * opus erant: titulus vacuus ET tagum claudens quod
+         * compararetur (ideo '< >' solum tutum erat - nihil sequitur
+         * ante EOF).
+         *
+         * Titulus NIHIL clausurae numquam congruit, ergo TAG_IMPROPRIE
+         * recta sententia est - eadem quam pro nominibus discordibus
+         * damus. */
+        alioquin si (   titulus_ptr == NIHIL
+                     || !silva_chorda_aequalis(ctx->current.valor,
+                                         *titulus_ptr))
         {
             _errorem_ponere(ctx, STML_ERROR_TAG_IMPROPRIE,
                             ctx->current.linea, ctx->current.columna);
@@ -11747,6 +11884,25 @@ _parser_legere_elementum_crudus (
     si (ctx->current.genus == STML_TOKEN_CLAUDERE)
     {
         _parser_progredi(ctx);
+    }
+    alioquin
+    {
+        /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29). Commentarium
+         * supra clausuram 'exspectat' sed codex eam non exigebat:
+         * '<x!>a' TACITE succedebat et scriptor '</x>' INVENIEBAT.
+         * Periculosum in usu vero - qui clausuram inter edendum
+         * omittit, formatorem elementum pro se claudentem accipit,
+         * quidquid sequebatur devoratum.
+         *
+         * _parser_legere_elementum idem iam semper faciebat ('<a>x'
+         * -> TAG_NON_CLAUSUM); crudum, commentum, processio,
+         * doctypus soli dissentiebant. Nunc omnia quinque consentiunt.
+         *
+         * NB captura lineae crudae ('<v! (>') hic NON attingitur -
+         * ramus eius supra redit, et talia elementa clausuram propriam
+         * consulto non habent (CLAUDERE sequens PARENTIS est). */
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
     }
 
     /* extensio: finis = tokenum ultimum consumptum */
@@ -13053,6 +13209,16 @@ _parser_legere_commentum (
     contentus_ptr  = silva_chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
 
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
+
     _parser_progredi(ctx);
 
     /* extensio: finis = tokenum ultimum consumptum */
@@ -13074,6 +13240,16 @@ _parser_legere_processio (
 
     contentus_ptr  = silva_chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
+
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
 
     _parser_progredi(ctx);
 
@@ -13273,6 +13449,16 @@ _parser_legere_doctype (
 
     contentus_ptr  = silva_chorda_internare(ctx->intern, ctx->current.valor);
     nodus->valor   = contentus_ptr;
+
+    /* CONSTRUCTIO NON CLAUSA = ERRATUM (2026-08-29): lector vexillum
+     * posuit cum terminatorem suum ('-->', '?>', '>') non invenit.
+     * ANTE progressionem legendum - progressio tokenum SEQUENS petit
+     * et vexillum ad initium _tok_proximus purgatur. */
+    si (ctx->tok_ctx.non_clausum)
+    {
+        _errorem_ponere(ctx, STML_ERROR_TAG_NON_CLAUSUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
 
     _parser_progredi(ctx);
 
@@ -13716,6 +13902,7 @@ silva_stml_legere (
     ctx.tok_ctx.linea                   = I;
     ctx.tok_ctx.columna                 = I;
     ctx.tok_ctx.in_crudus               = FALSUM;
+    ctx.tok_ctx.non_clausum             = FALSUM;
     ctx.tok_ctx.crudus_titulus.datum    = NIHIL;
     ctx.tok_ctx.crudus_titulus.mensura  = ZEPHYRUM;
     ctx.tok_ctx.piscina                 = piscina;
@@ -19295,6 +19482,290 @@ silva_stml_distribuere (
         resultus.radix_distributa = radix_nova;
     }
     redde resultus;
+}
+
+
+/* ==================================================
+ * CONGRUENTIA STRICTA (spec exemplarium par. 4, gradus I)
+ *
+ * Ex silva_arbor.c promota (recognitio parametrorum, 2026-08-26)
+ * - extractio MOVET, non emendat: logica verbatim, possessio
+ * sola mutata (scriptor -> piscina + intern explicita).
+ *
+ * NOTA UNIFICATIONIS: grammatica referentiae totius
+ * (_congruentia_referentia_tota) eadem est ac _loculum_invenire
+ * supra - lex una, sedes DUAE adhuc in plagula una. Unificatio
+ * suo tempore, cum modus laxus aedificetur, non hic.
+ * ================================================== */
+
+/* Estne valor textus TOTUS extensio '&@x;'? Nomen (sine
+ * sigillis) redditur. */
+interior b32
+_congruentia_referentia_tota (
+    constans SilvaChorda* valor,
+             SilvaChorda* titulus_exitus)
+{
+    i32 i;
+
+    si (   valor                            == NIHIL
+        || valor->mensura < IV
+        || valor->datum[ZEPHYRUM]           != (i8)'&'
+        || valor->datum[I]                  != (i8)'@'
+        || valor->datum[valor->mensura - I] != (i8)';')
+    {
+        redde FALSUM;
+    }
+    per (i = II; i < valor->mensura - I; i++)
+    {
+        i8 c = valor->datum[i];
+
+        si (!(   (c >= (i8)'a' && c <= (i8)'z')
+              || (c >= (i8)'A' && c <= (i8)'Z')
+              || (c >= (i8)'0' && c <= (i8)'9')
+              || c == (i8)'_'
+              || c == (i8)'-'
+              || c == (i8)'.'))
+        {
+            redde FALSUM;
+        }
+    }
+    titulus_exitus->datum    = valor->datum + II;
+    titulus_exitus->mensura  = valor->mensura - III;
+    redde VERUM;
+}
+
+interior b32
+_congruentia_attributa_aequalia (
+    constans SilvaStmlNodus* a,
+    constans SilvaStmlNodus* b)
+{
+    i32 na;
+    i32 nb;
+    i32 i;
+
+    na = a->attributa != NIHIL ? silva_xar_numerus(a->attributa)
+                               : ZEPHYRUM;
+    nb = b->attributa != NIHIL ? silva_xar_numerus(b->attributa)
+                               : ZEPHYRUM;
+    si (na != nb)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < na; i++)
+    {
+        SilvaStmlAttributum* aa;
+        SilvaStmlAttributum* ab;
+
+        aa = (SilvaStmlAttributum*)silva_xar_obtinere(a->attributa, i);
+        ab = (SilvaStmlAttributum*)silva_xar_obtinere(b->attributa, i);
+        si (   aa          == NIHIL || ab == NIHIL
+            || aa->titulus == NIHIL || ab->titulus == NIHIL
+            || !silva_chorda_aequalis(*aa->titulus, *ab->titulus))
+        {
+            redde FALSUM;
+        }
+        si ((aa->valor != NIHIL) != (ab->valor != NIHIL))
+        {
+            redde FALSUM;
+        }
+        si (   aa->valor != NIHIL
+            && !silva_chorda_aequalis(*aa->valor, *ab->valor))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Silvae binae octetim aequales? (loculus iteratus - regula V:
+ * capturae non-lineares aequalitas sunt, ne tacite divergant) */
+interior b32
+_congruentia_silvae_aequales (
+    SilvaPiscina* piscina,
+        SilvaXar* a,
+        SilvaXar* b)
+{
+    i32 i;
+
+    si (silva_xar_numerus(a) != silva_xar_numerus(b))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(a); i++)
+    {
+        SilvaStmlNodus* na = *(SilvaStmlNodus**)silva_xar_obtinere(a, i);
+        SilvaStmlNodus* nb = *(SilvaStmlNodus**)silva_xar_obtinere(b, i);
+           SilvaChorda  sa;
+           SilvaChorda  sb;
+
+        si (na == NIHIL || nb == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sa = silva_stml_scribere(na, piscina, FALSUM);
+        sb = silva_stml_scribere(nb, piscina, FALSUM);
+        si (!silva_chorda_aequalis(sa, sb))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+static b32
+silva_stml_congruere_strictum (
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+              SilvaStmlNodus* templum,
+              SilvaStmlNodus* candidatus,
+                    SilvaXar* capturae,
+                    SilvaXar* paria)
+{
+    i32 nd;
+    i32 nc;
+    i32 i;
+
+    si (   piscina  == NIHIL || intern == NIHIL
+        || templum  == NIHIL || candidatus == NIHIL
+        || capturae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (templum->genus != candidatus->genus)
+    {
+        redde FALSUM;
+    }
+    si (   templum->genus == STML_NODUS_TEXTUS
+        || templum->genus == STML_NODUS_TRANSCLUSIO)
+    {
+        redde templum->valor != NIHIL && candidatus->valor != NIHIL
+            && silva_chorda_aequalis(*templum->valor, *candidatus->valor);
+    }
+    si (templum->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde FALSUM;
+    }
+    si (   templum->titulus    == NIHIL
+        || candidatus->titulus == NIHIL
+        || !silva_chorda_aequalis(*templum->titulus, *candidatus->titulus)
+        || templum->fragmentum != candidatus->fragmentum
+        || templum->crudus     != candidatus->crudus
+        || (templum->attributum_titulus != NIHIL)
+               != (candidatus->attributum_titulus != NIHIL)
+        || !_congruentia_attributa_aequalia(templum, candidatus))
+    {
+        redde FALSUM;
+    }
+
+    /* captura silvae: liberum templi UNICUM textus totus '&@x;' -
+     * liberi candidati OMNES capti (saltem unus, ne argumentum
+     * vacuum sepulcrum fieret) */
+    nd = silva_stml_numerus_liberorum(templum);
+    nc = silva_stml_numerus_liberorum(candidatus);
+    si (nd == I)
+    {
+        SilvaStmlNodus* ld = silva_stml_liberum_ad_indicem(templum, ZEPHYRUM);
+           SilvaChorda  titulus_capturae;
+
+        si (   ld        != NIHIL
+            && ld->genus == STML_NODUS_TEXTUS
+            && ld->valor != NIHIL
+            && _congruentia_referentia_tota(ld->valor,
+                   &titulus_capturae))
+        {
+            StmlCaptura* captura;
+                 SilvaChorda* titulus_internatus;
+                    SilvaXar* nodi;
+                    i32  j;
+
+            si (nc < I)
+            {
+                redde FALSUM;
+            }
+            titulus_internatus = silva_chorda_internare(intern,
+                titulus_capturae);
+            nodi = silva_xar_creare(piscina, magnitudo(SilvaStmlNodus*));
+            si (titulus_internatus == NIHIL || nodi == NIHIL)
+            {
+                redde FALSUM;
+            }
+            per (j = ZEPHYRUM; j < nc; j++)
+            {
+                SilvaStmlNodus** cella =
+                    (SilvaStmlNodus**)silva_xar_addere(nodi);
+
+                si (cella == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *cella = silva_stml_liberum_ad_indicem(candidatus, j);
+            }
+            /* loculus iteratus: silvae aequales (regula V) */
+            per (j = ZEPHYRUM; j < silva_xar_numerus(capturae); j++)
+            {
+                StmlCaptura* prior =
+                    (StmlCaptura*)silva_xar_obtinere(capturae, j);
+
+                si (   prior          != NIHIL
+                    && prior->titulus == titulus_internatus)
+                {
+                    redde _congruentia_silvae_aequales(piscina,
+                        prior->nodi, nodi);
+                }
+            }
+            captura = (StmlCaptura*)silva_xar_addere(capturae);
+            si (captura == NIHIL)
+            {
+                redde FALSUM;
+            }
+            captura->titulus  = titulus_internatus;
+            captura->nodi     = nodi;
+            /* par pro involucro capturante (elementum candidati ad
+             * elementum templi) */
+            si (paria != NIHIL)
+            {
+                StmlCongruentiaPar* par =
+                    (StmlCongruentiaPar*)silva_xar_addere(paria);
+
+                si (par == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                par->vetus = candidatus;
+                par->novus = templum;
+            }
+            redde VERUM;
+        }
+    }
+    si (nd != nc)
+    {
+        redde FALSUM;
+    }
+    si (paria != NIHIL)
+    {
+        StmlCongruentiaPar* par =
+            (StmlCongruentiaPar*)silva_xar_addere(paria);
+
+        si (par == NIHIL)
+        {
+            redde FALSUM;
+        }
+        par->vetus = candidatus;
+        par->novus = templum;
+    }
+    per (i = ZEPHYRUM; i < nd; i++)
+    {
+        SilvaStmlNodus* ld = silva_stml_liberum_ad_indicem(templum, i);
+        SilvaStmlNodus* lc = silva_stml_liberum_ad_indicem(candidatus, i);
+
+        si (   ld == NIHIL || lc == NIHIL
+            || !silva_stml_congruere_strictum(piscina, intern, ld, lc,
+                   capturae, paria))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 /* ================= ex silva/fontes/silva_token.c ================= */
@@ -77221,11 +77692,6 @@ interior constans character* _par_familia_fons =
     "</familia>";
 
 nomen structura {
-    SilvaChorda* titulus;   /* loculi nomen internatum */
-       SilvaXar* nodi;      /* StmlNodus* capti, ordine candidati */
-} ParCaptura;
-
-nomen structura {
      SilvaStmlNodus* definitio;  /* <#@par-...> */
      SilvaStmlNodus* corpus;     /* liberum primum (parametrum) */
         SilvaChorda* id;
@@ -77236,270 +77702,12 @@ nomen structura {
      SilvaStmlNodus* nodus;      /* parametrum congruens */
      SilvaStmlNodus* parens;     /* cella stabilis - clavis tabulae */
     ParTemplum* templum;
-           SilvaXar* capturae;   /* ParCaptura */
+           SilvaXar* capturae;   /* StmlCaptura */
 } ParCongruentia;
 
-/* Estne valor textus TOTUS extensio '&@x;'? Nomen (sine
- * sigillis) redditur. Grammatica eadem ac machina expansionis
- * (stml_macros _loculum_invenire) - lex una, sedes altera. */
-interior b32
-_par_referentia_tota (
-    constans SilvaChorda* valor,
-             SilvaChorda* titulus_exitus)
-{
-    i32 i;
-
-    si (   valor                            == NIHIL
-        || valor->mensura < IV
-        || valor->datum[ZEPHYRUM]           != (i8)'&'
-        || valor->datum[I]                  != (i8)'@'
-        || valor->datum[valor->mensura - I] != (i8)';')
-    {
-        redde FALSUM;
-    }
-    per (i = II; i < valor->mensura - I; i++)
-    {
-        i8 c = valor->datum[i];
-
-        si (!(   (c >= (i8)'a' && c <= (i8)'z')
-              || (c >= (i8)'A' && c <= (i8)'Z')
-              || (c >= (i8)'0' && c <= (i8)'9')
-              || c == (i8)'_'
-              || c == (i8)'-'
-              || c == (i8)'.'))
-        {
-            redde FALSUM;
-        }
-    }
-    titulus_exitus->datum    = valor->datum + II;
-    titulus_exitus->mensura  = valor->mensura - III;
-    redde VERUM;
-}
-
-interior b32
-_par_attributa_aequalia (
-    constans SilvaStmlNodus* a,
-    constans SilvaStmlNodus* b)
-{
-    i32 na;
-    i32 nb;
-    i32 i;
-
-    na = a->attributa != NIHIL ? silva_xar_numerus(a->attributa)
-                               : ZEPHYRUM;
-    nb = b->attributa != NIHIL ? silva_xar_numerus(b->attributa)
-                               : ZEPHYRUM;
-    si (na != nb)
-    {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < na; i++)
-    {
-        SilvaStmlAttributum* aa;
-        SilvaStmlAttributum* ab;
-
-        aa = (SilvaStmlAttributum*)silva_xar_obtinere(a->attributa, i);
-        ab = (SilvaStmlAttributum*)silva_xar_obtinere(b->attributa, i);
-        si (   aa          == NIHIL || ab == NIHIL
-            || aa->titulus == NIHIL || ab->titulus == NIHIL
-            || !silva_chorda_aequalis(*aa->titulus, *ab->titulus))
-        {
-            redde FALSUM;
-        }
-        si ((aa->valor != NIHIL) != (ab->valor != NIHIL))
-        {
-            redde FALSUM;
-        }
-        si (   aa->valor != NIHIL
-            && !silva_chorda_aequalis(*aa->valor, *ab->valor))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* Silvae binae octetim aequales? (loculus iteratus - regula V
- * congruentiae; familia praesens loculos distinctos habet, regula
- * tamen impletur ne tacite divergat) */
-interior b32
-_par_silvae_aequales (
-    ArborScriptor* scriptor,
-              SilvaXar* a,
-              SilvaXar* b)
-{
-    i32 i;
-
-    si (silva_xar_numerus(a) != silva_xar_numerus(b))
-    {
-        redde FALSUM;
-    }
-    per (i = ZEPHYRUM; i < silva_xar_numerus(a); i++)
-    {
-        SilvaStmlNodus* na = *(SilvaStmlNodus**)silva_xar_obtinere(a, i);
-        SilvaStmlNodus* nb = *(SilvaStmlNodus**)silva_xar_obtinere(b, i);
-           SilvaChorda  sa;
-           SilvaChorda  sb;
-
-        si (na == NIHIL || nb == NIHIL)
-        {
-            redde FALSUM;
-        }
-        sa = silva_stml_scribere(na, scriptor->piscina, FALSUM);
-        sb = silva_stml_scribere(nb, scriptor->piscina, FALSUM);
-        si (!silva_chorda_aequalis(sa, sb))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
-
-/* Congruentia gradaria: corpus definitionis contra candidatum.
- * Successu paria (vetus=candidati, novus=definitionis) pro sedibus
- * repungendis appenduntur - vocans defectu truncat. */
-interior b32
-_par_congruere (
-    ArborScriptor* scriptor,
-        SilvaStmlNodus* defn,
-        SilvaStmlNodus* cand,
-              SilvaXar* capturae,
-              SilvaXar* paria)
-{
-    i32 nd;
-    i32 nc;
-    i32 i;
-
-    si (defn->genus != cand->genus)
-    {
-        redde FALSUM;
-    }
-    si (   defn->genus == STML_NODUS_TEXTUS
-        || defn->genus == STML_NODUS_TRANSCLUSIO)
-    {
-        redde defn->valor != NIHIL && cand->valor != NIHIL
-            && silva_chorda_aequalis(*defn->valor, *cand->valor);
-    }
-    si (defn->genus != STML_NODUS_ELEMENTUM)
-    {
-        redde FALSUM;
-    }
-    si (   defn->titulus    == NIHIL || cand->titulus == NIHIL
-        || !silva_chorda_aequalis(*defn->titulus, *cand->titulus)
-        || defn->fragmentum != cand->fragmentum
-        || defn->crudus     != cand->crudus
-        || (defn->attributum_titulus != NIHIL)
-               != (cand->attributum_titulus != NIHIL)
-        || !_par_attributa_aequalia(defn, cand))
-    {
-        redde FALSUM;
-    }
-
-    /* captura silvae: liberum definitionis UNICUM textus totus
-     * '&@x;' - liberi candidati OMNES capti (saltem unus, ne
-     * argumentum vacuum sepulcrum fieret) */
-    nd = silva_stml_numerus_liberorum(defn);
-    nc = silva_stml_numerus_liberorum(cand);
-    si (nd == I)
-    {
-        SilvaStmlNodus* ld = silva_stml_liberum_ad_indicem(defn, ZEPHYRUM);
-           SilvaChorda  titulus_capturae;
-
-        si (   ld        != NIHIL
-            && ld->genus == STML_NODUS_TEXTUS
-            && ld->valor != NIHIL
-            && _par_referentia_tota(ld->valor, &titulus_capturae))
-        {
-            ParCaptura* captura;
-                SilvaChorda* titulus_internatus;
-                   SilvaXar* nodi;
-                   i32  j;
-
-            si (nc < I)
-            {
-                redde FALSUM;
-            }
-            titulus_internatus = silva_chorda_internare(scriptor->intern,
-                titulus_capturae);
-            nodi = silva_xar_creare(scriptor->piscina,
-                magnitudo(SilvaStmlNodus*));
-            si (titulus_internatus == NIHIL || nodi == NIHIL)
-            {
-                redde FALSUM;
-            }
-            per (j = ZEPHYRUM; j < nc; j++)
-            {
-                SilvaStmlNodus** cella =
-                    (SilvaStmlNodus**)silva_xar_addere(nodi);
-
-                si (cella == NIHIL)
-                {
-                    redde FALSUM;
-                }
-                *cella = silva_stml_liberum_ad_indicem(cand, j);
-            }
-            /* loculus iteratus: silvae aequales (regula V) */
-            per (j = ZEPHYRUM; j < silva_xar_numerus(capturae); j++)
-            {
-                ParCaptura* prior =
-                    (ParCaptura*)silva_xar_obtinere(capturae, j);
-
-                si (   prior          != NIHIL
-                    && prior->titulus == titulus_internatus)
-                {
-                    redde _par_silvae_aequales(scriptor,
-                        prior->nodi, nodi);
-                }
-            }
-            captura = (ParCaptura*)silva_xar_addere(capturae);
-            si (captura == NIHIL)
-            {
-                redde FALSUM;
-            }
-            captura->titulus  = titulus_internatus;
-            captura->nodi     = nodi;
-            /* par pro involucro capturante (elementum candidati ad
-             * elementum definitionis) */
-            {
-                FoliumPar* par = (FoliumPar*)silva_xar_addere(paria);
-
-                si (par == NIHIL)
-                {
-                    redde FALSUM;
-                }
-                par->vetus = cand;
-                par->novus = defn;
-            }
-            redde VERUM;
-        }
-    }
-    si (nd != nc)
-    {
-        redde FALSUM;
-    }
-    {
-        FoliumPar* par = (FoliumPar*)silva_xar_addere(paria);
-
-        si (par == NIHIL)
-        {
-            redde FALSUM;
-        }
-        par->vetus = cand;
-        par->novus = defn;
-    }
-    per (i = ZEPHYRUM; i < nd; i++)
-    {
-        SilvaStmlNodus* ld = silva_stml_liberum_ad_indicem(defn, i);
-        SilvaStmlNodus* lc = silva_stml_liberum_ad_indicem(cand, i);
-
-        si (   ld == NIHIL || lc == NIHIL
-            || !_par_congruere(scriptor, ld, lc, capturae, paria))
-        {
-            redde FALSUM;
-        }
-    }
-    redde VERUM;
-}
+/* Matcher gradarius in MACHINAM promotus (stml_congruere_strictum,
+ * lib/stml_macros.c - spec exemplarium par. 4, gradus I): logica
+ * verbatim mota, recognitio hic VOCANS tenuis facta. */
 
 /* Candidatum contra familiam temptare - primum templum congruens
  * vincit (structurae disiunctae, ordo indifferens). Defectus
@@ -77527,13 +77735,14 @@ _par_temptare (
             perge;
         }
         capturae = silva_xar_creare(scriptor->piscina,
-            magnitudo(ParCaptura));
+            magnitudo(StmlCaptura));
         si (capturae == NIHIL)
         {
             redde NIHIL;
         }
         paria_initium = silva_xar_numerus(paria);
-        si (_par_congruere(scriptor, templum->corpus, cand,
+        si (silva_stml_congruere_strictum(scriptor->piscina,
+                scriptor->intern, templum->corpus, cand,
                 capturae, paria))
         {
             ParCongruentia* con =
@@ -77604,7 +77813,7 @@ _parametra_comprimere (
       SilvaStmlResultus  familia_res;
                SilvaXar* templa;        /* ParTemplum */
                SilvaXar* congruentiae;  /* ParCongruentia */
-               SilvaXar* paria;         /* FoliumPar */
+               SilvaXar* paria;         /* StmlCongruentiaPar */
     SilvaTabulaDispersa* congruentium;  /* &con->nodus -> con */
     SilvaTabulaDispersa* substituti;    /* &par->vetus -> novus */
     SilvaTabulaDispersa* refecti;       /* &con->parens -> VERUM */
@@ -77623,7 +77832,8 @@ _parametra_comprimere (
     templa = silva_xar_creare(scriptor->piscina, magnitudo(ParTemplum));
     congruentiae = silva_xar_creare(scriptor->piscina,
         magnitudo(ParCongruentia));
-    paria = silva_xar_creare(scriptor->piscina, magnitudo(FoliumPar));
+    paria = silva_xar_creare(scriptor->piscina,
+        magnitudo(StmlCongruentiaPar));
     si (templa == NIHIL || congruentiae == NIHIL || paria == NIHIL)
     {
         scriptor->causa = "familia parametrorum parari non potuit";
@@ -77760,8 +77970,8 @@ _parametra_comprimere (
                 per (k = ZEPHYRUM;
                      k < silva_xar_numerus(cx->capturae); k++)
                 {
-                    ParCaptura* captura =
-                        (ParCaptura*)silva_xar_obtinere(cx->capturae, k);
+                    StmlCaptura* captura =
+                        (StmlCaptura*)silva_xar_obtinere(cx->capturae, k);
                      SilvaStmlNodus* argumentum;
                            i32  m;
 
@@ -77814,7 +78024,8 @@ _parametra_comprimere (
      * definitionis (sedes definitionis, exemplar foliorum) */
     per (i = ZEPHYRUM; i < silva_xar_numerus(paria); i++)
     {
-        FoliumPar* par = (FoliumPar*)silva_xar_obtinere(paria, i);
+        StmlCongruentiaPar* par =
+            (StmlCongruentiaPar*)silva_xar_obtinere(paria, i);
            SilvaChorda  clavis;
 
         clavis.datum    = (i8*)&par->vetus;

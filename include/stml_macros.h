@@ -165,4 +165,48 @@ stml_distribuere (
                 Piscina* piscina,
     InternamentumChorda* intern);
 
+
+/* ==================================================
+ * CONGRUENTIA STRICTA (spec exemplarium par. 4, gradus
+ * aedificationis I) - matcher gradarius generalis, ex
+ * silva_arbor.c promotus ('definitio retro currit' - templum
+ * contra candidatum, permissivitate NULLA). Modus STRICTUS
+ * machinae; modus laxus (EXEMPLAR) iuxta aedificabitur.
+ *
+ * Regulae (quinque, ex recognitione parametrorum probatae):
+ *   - genus/titulus/fragmentum/crudus/attributa aequalia exacte
+ *   - liberum definitionis UNICUM textus totus '&@x;' = captura
+ *     silvae (liberi candidati OMNES, saltem unus)
+ *   - loculus ITERATUS = silvae octetim aequales (regula V -
+ *     capturae non-lineares aequalitas sunt)
+ *   - textus/transclusio per valorem; cetera liberi gradatim
+ * ================================================== */
+
+/* Captura congruentiae: loculus + silva capta */
+nomen structura {
+    chorda* titulus;   /* nomen loculi, internatum */
+       Xar* nodi;      /* StmlNodus* capti, ordine candidati */
+} StmlCaptura;
+
+/* Par nodorum (vetus = candidati, novus = definitionis) - pro
+ * consumentibus qui sedes vel tabulas laterales repungunt */
+nomen structura {
+    StmlNodus* vetus;
+    StmlNodus* novus;
+} StmlCongruentiaPar;
+
+/* Congruentia stricta gradaria: corpus templi contra candidatum.
+ * capturae (Xar de StmlCaptura, non NIHIL): capturae appenduntur
+ * ordine inventionis. paria (Xar de StmlCongruentiaPar, NIHIL
+ * licet): paria appenduntur successu; VOCANS defectu truncat
+ * (xar_truncare ad initium suum) - matcher numquam retro tollit. */
+b32
+stml_congruere_strictum (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+              StmlNodus* templum,
+              StmlNodus* candidatus,
+                    Xar* capturae,
+                    Xar* paria);
+
 #endif /* STML_MACROS_H */

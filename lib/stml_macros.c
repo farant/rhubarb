@@ -2180,3 +2180,287 @@ stml_distribuere (
     }
     redde resultus;
 }
+
+
+/* ==================================================
+ * CONGRUENTIA STRICTA (spec exemplarium par. 4, gradus I)
+ *
+ * Ex silva_arbor.c promota (recognitio parametrorum, 2026-08-26)
+ * - extractio MOVET, non emendat: logica verbatim, possessio
+ * sola mutata (scriptor -> piscina + intern explicita).
+ *
+ * NOTA UNIFICATIONIS: grammatica referentiae totius
+ * (_congruentia_referentia_tota) eadem est ac _loculum_invenire
+ * supra - lex una, sedes DUAE adhuc in plagula una. Unificatio
+ * suo tempore, cum modus laxus aedificetur, non hic.
+ * ================================================== */
+
+/* Estne valor textus TOTUS extensio '&@x;'? Nomen (sine
+ * sigillis) redditur. */
+interior b32
+_congruentia_referentia_tota (
+    constans chorda* valor,
+             chorda* titulus_exitus)
+{
+    i32 i;
+
+    si (   valor                            == NIHIL
+        || valor->mensura < IV
+        || valor->datum[ZEPHYRUM]           != (i8)'&'
+        || valor->datum[I]                  != (i8)'@'
+        || valor->datum[valor->mensura - I] != (i8)';')
+    {
+        redde FALSUM;
+    }
+    per (i = II; i < valor->mensura - I; i++)
+    {
+        i8 c = valor->datum[i];
+
+        si (!(   (c >= (i8)'a' && c <= (i8)'z')
+              || (c >= (i8)'A' && c <= (i8)'Z')
+              || (c >= (i8)'0' && c <= (i8)'9')
+              || c == (i8)'_'
+              || c == (i8)'-'
+              || c == (i8)'.'))
+        {
+            redde FALSUM;
+        }
+    }
+    titulus_exitus->datum    = valor->datum + II;
+    titulus_exitus->mensura  = valor->mensura - III;
+    redde VERUM;
+}
+
+interior b32
+_congruentia_attributa_aequalia (
+    constans StmlNodus* a,
+    constans StmlNodus* b)
+{
+    i32 na;
+    i32 nb;
+    i32 i;
+
+    na = a->attributa != NIHIL ? xar_numerus(a->attributa)
+                               : ZEPHYRUM;
+    nb = b->attributa != NIHIL ? xar_numerus(b->attributa)
+                               : ZEPHYRUM;
+    si (na != nb)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < na; i++)
+    {
+        StmlAttributum* aa;
+        StmlAttributum* ab;
+
+        aa = (StmlAttributum*)xar_obtinere(a->attributa, i);
+        ab = (StmlAttributum*)xar_obtinere(b->attributa, i);
+        si (   aa          == NIHIL || ab == NIHIL
+            || aa->titulus == NIHIL || ab->titulus == NIHIL
+            || !chorda_aequalis(*aa->titulus, *ab->titulus))
+        {
+            redde FALSUM;
+        }
+        si ((aa->valor != NIHIL) != (ab->valor != NIHIL))
+        {
+            redde FALSUM;
+        }
+        si (   aa->valor != NIHIL
+            && !chorda_aequalis(*aa->valor, *ab->valor))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Silvae binae octetim aequales? (loculus iteratus - regula V:
+ * capturae non-lineares aequalitas sunt, ne tacite divergant) */
+interior b32
+_congruentia_silvae_aequales (
+    Piscina* piscina,
+        Xar* a,
+        Xar* b)
+{
+    i32 i;
+
+    si (xar_numerus(a) != xar_numerus(b))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(a); i++)
+    {
+        StmlNodus* na = *(StmlNodus**)xar_obtinere(a, i);
+        StmlNodus* nb = *(StmlNodus**)xar_obtinere(b, i);
+           chorda  sa;
+           chorda  sb;
+
+        si (na == NIHIL || nb == NIHIL)
+        {
+            redde FALSUM;
+        }
+        sa = stml_scribere(na, piscina, FALSUM);
+        sb = stml_scribere(nb, piscina, FALSUM);
+        si (!chorda_aequalis(sa, sb))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+stml_congruere_strictum (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+              StmlNodus* templum,
+              StmlNodus* candidatus,
+                    Xar* capturae,
+                    Xar* paria)
+{
+    i32 nd;
+    i32 nc;
+    i32 i;
+
+    si (   piscina  == NIHIL || intern == NIHIL
+        || templum  == NIHIL || candidatus == NIHIL
+        || capturae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (templum->genus != candidatus->genus)
+    {
+        redde FALSUM;
+    }
+    si (   templum->genus == STML_NODUS_TEXTUS
+        || templum->genus == STML_NODUS_TRANSCLUSIO)
+    {
+        redde templum->valor != NIHIL && candidatus->valor != NIHIL
+            && chorda_aequalis(*templum->valor, *candidatus->valor);
+    }
+    si (templum->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde FALSUM;
+    }
+    si (   templum->titulus    == NIHIL
+        || candidatus->titulus == NIHIL
+        || !chorda_aequalis(*templum->titulus, *candidatus->titulus)
+        || templum->fragmentum != candidatus->fragmentum
+        || templum->crudus     != candidatus->crudus
+        || (templum->attributum_titulus != NIHIL)
+               != (candidatus->attributum_titulus != NIHIL)
+        || !_congruentia_attributa_aequalia(templum, candidatus))
+    {
+        redde FALSUM;
+    }
+
+    /* captura silvae: liberum templi UNICUM textus totus '&@x;' -
+     * liberi candidati OMNES capti (saltem unus, ne argumentum
+     * vacuum sepulcrum fieret) */
+    nd = stml_numerus_liberorum(templum);
+    nc = stml_numerus_liberorum(candidatus);
+    si (nd == I)
+    {
+        StmlNodus* ld = stml_liberum_ad_indicem(templum, ZEPHYRUM);
+           chorda  titulus_capturae;
+
+        si (   ld        != NIHIL
+            && ld->genus == STML_NODUS_TEXTUS
+            && ld->valor != NIHIL
+            && _congruentia_referentia_tota(ld->valor,
+                   &titulus_capturae))
+        {
+            StmlCaptura* captura;
+                 chorda* titulus_internatus;
+                    Xar* nodi;
+                    i32  j;
+
+            si (nc < I)
+            {
+                redde FALSUM;
+            }
+            titulus_internatus = chorda_internare(intern,
+                titulus_capturae);
+            nodi = xar_creare(piscina, magnitudo(StmlNodus*));
+            si (titulus_internatus == NIHIL || nodi == NIHIL)
+            {
+                redde FALSUM;
+            }
+            per (j = ZEPHYRUM; j < nc; j++)
+            {
+                StmlNodus** cella =
+                    (StmlNodus**)xar_addere(nodi);
+
+                si (cella == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *cella = stml_liberum_ad_indicem(candidatus, j);
+            }
+            /* loculus iteratus: silvae aequales (regula V) */
+            per (j = ZEPHYRUM; j < xar_numerus(capturae); j++)
+            {
+                StmlCaptura* prior =
+                    (StmlCaptura*)xar_obtinere(capturae, j);
+
+                si (   prior          != NIHIL
+                    && prior->titulus == titulus_internatus)
+                {
+                    redde _congruentia_silvae_aequales(piscina,
+                        prior->nodi, nodi);
+                }
+            }
+            captura = (StmlCaptura*)xar_addere(capturae);
+            si (captura == NIHIL)
+            {
+                redde FALSUM;
+            }
+            captura->titulus  = titulus_internatus;
+            captura->nodi     = nodi;
+            /* par pro involucro capturante (elementum candidati ad
+             * elementum templi) */
+            si (paria != NIHIL)
+            {
+                StmlCongruentiaPar* par =
+                    (StmlCongruentiaPar*)xar_addere(paria);
+
+                si (par == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                par->vetus = candidatus;
+                par->novus = templum;
+            }
+            redde VERUM;
+        }
+    }
+    si (nd != nc)
+    {
+        redde FALSUM;
+    }
+    si (paria != NIHIL)
+    {
+        StmlCongruentiaPar* par =
+            (StmlCongruentiaPar*)xar_addere(paria);
+
+        si (par == NIHIL)
+        {
+            redde FALSUM;
+        }
+        par->vetus = candidatus;
+        par->novus = templum;
+    }
+    per (i = ZEPHYRUM; i < nd; i++)
+    {
+        StmlNodus* ld = stml_liberum_ad_indicem(templum, i);
+        StmlNodus* lc = stml_liberum_ad_indicem(candidatus, i);
+
+        si (   ld == NIHIL || lc == NIHIL
+            || !stml_congruere_strictum(piscina, intern, ld, lc,
+                   capturae, paria))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}

@@ -14454,3 +14454,20 @@ object costs a debugging session.
 Verified: silva 50/50 after the change; materia 5/5, and the header tie
 demonstrated by touching a header and an object to the same second and
 confirming the rebuild now fires.
+
+## 2026-08-31 — matcher parametrorum in machinam promotus (exemplaria gradus I)
+
+Sub gelatione, decreto Franis (exemplaria pergunt; materia =
+ambitus): `_par_congruere` + adiutores III ex silva_arbor.c in
+lib/stml_macros.c promoti ut `stml_congruere_strictum`
+(stml-exemplaria-spec.md §9 gradus 1). Mutatio SUBTRACTIVA —
+silva_arbor.c 7310 → 7050 lineae; recognitio parametrorum vocans
+tenuis facta (typi machinae StmlCaptura / StmlCongruentiaPar).
+Migrationem materiae MINUIT, non onerat: quod migrat minus est, et
+matcher iam lib-laterale sedet quo materia_arbor eum aeque vocabit.
+Replicatio in materiam: NULLA debita — materia recognitionem non
+duplicat (porta shim codicem silvae ipsius currit).
+
+Portae: arbor 5/5 (plagula 78+155 octetim per matcher machinae),
+canon corporis 2/2, radix stml+canon virides, amalgama VERIFICATUM
+(hospes 40/40, nm 0, manifesta generata immota).
