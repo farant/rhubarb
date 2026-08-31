@@ -1,0 +1,3 @@
+<TRANSPARENTIA tags="expansio pasta stringificatio api extentum ante post regio-cruda"/>
+<EXEMPLAR output="$obsoleta"><lex-identificator $n>usleep</lex-identificator></EXEMPLAR>
+<relatum lint="obsoletum-adhibitum" pro="nanosleep"><PER congruentia="$obsoleta"><situs>&@n;</situs></PER></relatum>
