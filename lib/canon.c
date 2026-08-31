@@ -3186,11 +3186,46 @@ canon_iudicare (
                                                           XXXII);
     transclusio.in_cursu  = xar_creare(piscina,
                                        (i32)magnitudo(chorda*));
-    _fragmenta_colligere(elementum_radix, infixus,
-                         transclusio.fragmenta, vitia);
 
-    nodum_iudicare(canon, elementum_radix, vitia, piscina, NIHIL,
-                   &transclusio);
+    /* DOCUMENTUM MULTI-RADICALE (documenta lint, spec exemplarium):
+     * radices OMNES iudicantur, non prima sola - '0 vitia' super
+     * radicem primam solam vacuum esset (lex tegumenti). Fragmenta
+     * trans radices omnes ante colliguntur (transclusio radicem
+     * transgredi potest). Radix-probatio, canon infixus, scopi
+     * clavium in radice PRIMA manent - consumentes eorum dialecti
+     * uni-radicales sunt (angustatio nominata). */
+    si (radix->genus != STML_NODUS_ELEMENTUM)
+    {
+        i32 numerus_r = stml_numerus_liberorum(radix);
+
+        per (i = ZEPHYRUM; i < numerus_r; i++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(radix, i);
+
+            si (l && l->genus == STML_NODUS_ELEMENTUM)
+            {
+                _fragmenta_colligere(l, infixus,
+                                     transclusio.fragmenta, vitia);
+            }
+        }
+        per (i = ZEPHYRUM; i < numerus_r; i++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(radix, i);
+
+            si (l && l->genus == STML_NODUS_ELEMENTUM)
+            {
+                nodum_iudicare(canon, l, vitia, piscina, NIHIL,
+                               &transclusio);
+            }
+        }
+    }
+    alioquin
+    {
+        _fragmenta_colligere(elementum_radix, infixus,
+                             transclusio.fragmenta, vitia);
+        nodum_iudicare(canon, elementum_radix, vitia, piscina,
+                       NIHIL, &transclusio);
+    }
 
     /* ---- unicitates et citationes: per SCOPOS iudicantur.
      * Sine intra= scopus = documentum (mos vetus); cum intra=

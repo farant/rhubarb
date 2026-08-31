@@ -564,5 +564,17 @@ vocabulary (the fragment/augmentation precedent); pattern bodies
 are QUOTED, never judged against the calling canon (per-dialect
 patterns doctrine); gated in probatio_canon.c (354/354) with the
 lint-document shape judged clean and five malformed constructs
-each raising exactly one XXIII. Lint II (post-v1, §7.2) will be
-judged by this same vocabulary when it lands.
+each raising exactly one XXIII. **The EXPANDED SENSE is judged
+too, and pinned**: `canon_iudicare_expansum` EXECUTES the commands
+(interleaving put pattern resolution inside stml_expandere) and
+judges the result — including a vitium in content that exists
+ONLY after execution (a PER splicing an illegal element), and
+failed execution surfacing as CANON_EXPANSIO_FRACTA with the
+engine's vitium number. Pinning this exposed and fixed a
+coverage hole: canon_iudicare judged only the FIRST root of a
+document node — lint documents are multi-root, so all top-level
+elements are now judged (fragments collected across roots;
+radix-check/infixum/key-scopes stay first-root, their consumers
+being single-root dialects — a named narrowing). Lint II
+(post-v1, §7.2) will be judged by this same vocabulary when it
+lands.

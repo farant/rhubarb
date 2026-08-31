@@ -2620,6 +2620,128 @@ principale (vacuum)
         }
     }
 
+
+    /* ========================================================
+     * SENSUS EXPANSUS: canon iudicat quod praecepta PARIUNT
+     *
+     * canon_iudicare_expansum = expandere primum (praecepta
+     * CURRUNT - exemplaria congruunt, PER relatum splicat, CAPS
+     * consumpta) deinde iudicium ordinarium super fructum. Pinna
+     * pretiosa: vitium in contento quod solum POST executionem
+     * exsistit.
+     * ======================================================== */
+
+    {
+         Canon* c;
+        chorda  causa;
+           Xar* vitia;
+
+        imprimere("\n--- CAPS: sensus expansus iudicatus ---\n");
+        c = canon_legere(chorda_ex_literis(
+            "<canon dialectus=\"lint2\" versio=\"1\">"
+            "<elementum nomen=\"s\">"
+            "<attributum nomen=\"v\"/>"
+            "</elementum>"
+            "<elementum nomen=\"relatum\">"
+            "<liberum nomen=\"situs\"/>"
+            "</elementum>"
+            "<elementum nomen=\"situs\">"
+            "<attributum nomen=\"g\"/>"
+            "</elementum>"
+            "</canon>", piscina), piscina, intern, &causa);
+        CREDO_NON_NIHIL (c);
+        si (c != NIHIL)
+        {
+            StmlResultus r;
+
+            /* sanum: relatum expansum = <situs g="bona"/> - a
+             * canone iudicatum POST executionem, vitia 0 */
+            r = stml_legere(chorda_ex_literis(
+                "<s v=\"bona\"/>"
+                "<EXEMPLAR output=\"$m\"><s v=\"$v\"/></EXEMPLAR>"
+                "<relatum>"
+                "<PER congruentia=\"$m\"><situs g=\"&@v;\"/></PER>"
+                "</relatum>", piscina), piscina, intern);
+            CREDO_VERUM (r.successus);
+            si (r.successus)
+            {
+                vitia = canon_iudicare_expansum(c, r.radix,
+                                                piscina, intern);
+                CREDO_NON_NIHIL (vitia);
+                si (vitia != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32 (xar_numerus(vitia),
+                                        ZEPHYRUM);
+                }
+            }
+
+            /* vitium in contento quod solum post executionem
+             * exsistit: PER elementum ILLICITUM splicat - visio
+             * plagulae id numquam videret (corpus PER citatum),
+             * sensus expansus id capit */
+            r = stml_legere(chorda_ex_literis(
+                "<s v=\"bona\"/>"
+                "<EXEMPLAR output=\"$m\"><s v=\"$v\"/></EXEMPLAR>"
+                "<relatum>"
+                "<PER congruentia=\"$m\"><alienum/></PER>"
+                "</relatum>", piscina), piscina, intern);
+            CREDO_VERUM (r.successus);
+            si (r.successus)
+            {
+                vitia = canon_iudicare_expansum(c, r.radix,
+                                                piscina, intern);
+                CREDO_NON_NIHIL (vitia);
+                si (vitia != NIHIL)
+                {
+                    b32 captum;
+                    i32 k;
+
+                    captum = FALSUM;
+                    per (k = ZEPHYRUM; k < xar_numerus(vitia); k++)
+                    {
+                        CanonVitium* v = (CanonVitium*)
+                            xar_obtinere(vitia, k);
+
+                        si (   v != NIHIL
+                            && (   v->genus == CANON_LIBERUM_ILLICITUM
+                                || v->genus
+                                       == CANON_ELEMENTUM_IGNOTUM))
+                        {
+                            captum = VERUM;
+                        }
+                    }
+                    CREDO_VERUM (captum);
+                }
+            }
+
+            /* executio FRACTA (output non consumptum) = vitium
+             * canonis XXI, numero machinae portato */
+            r = stml_legere(chorda_ex_literis(
+                "<s v=\"bona\"/>"
+                "<EXEMPLAR output=\"$m\"><s v=\"$v\"/></EXEMPLAR>",
+                piscina), piscina, intern);
+            CREDO_VERUM (r.successus);
+            si (r.successus)
+            {
+                vitia = canon_iudicare_expansum(c, r.radix,
+                                                piscina, intern);
+                CREDO_NON_NIHIL (vitia);
+                si (vitia != NIHIL && xar_numerus(vitia) > ZEPHYRUM)
+                {
+                    CanonVitium* v = (CanonVitium*)
+                        xar_obtinere(vitia, ZEPHYRUM);
+
+                    CREDO_NON_NIHIL (v);
+                    si (v != NIHIL)
+                    {
+                        CREDO_VERUM (v->genus
+                                     == CANON_EXPANSIO_FRACTA);
+                    }
+                }
+            }
+        }
+    }
+
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();
