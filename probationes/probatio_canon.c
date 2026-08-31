@@ -2574,6 +2574,11 @@ principale (vacuum)
                 "<EXEMPLAR output=\"$m\"><conditio/></EXEMPLAR>"
                 "<EXEMPLAR de=\"$m\" modus=\"unum\" ancorata"
                 " output=\"$n\"><x v=\"$v\"/></EXEMPLAR>"
+                "<CATENA de=\"$m\" output=\"$c\">"
+                "<(><EXEMPLAR modus=\"primum\"><y/></EXEMPLAR>"
+                "<CATENA><EXEMPLAR><z/></EXEMPLAR></CATENA>"
+                "<<#@nexus-conditus>>"
+                "</CATENA>"
                 "<relatum lint=\"x\">"
                 "<PER congruentia=\"$n\"><situs>&@v;</situs></PER>"
                 "</relatum>",
@@ -2586,7 +2591,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[V];
+                constans character* mala[X];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2596,7 +2601,18 @@ principale (vacuum)
                           "</EXEMPLAR>";
                 mala[3] = "<PER><n/></PER>";
                 mala[4] = "<TRANSPARENTIA/>";
-                per (m = ZEPHYRUM; m < V; m++)
+                /* CATENA (ratificationes 2026-08-31) */
+                mala[5] = "<CATENA><EXEMPLAR><s/></EXEMPLAR>"
+                          "</CATENA>";
+                mala[6] = "<CATENA output=\"$c\"></CATENA>";
+                mala[7] = "<CATENA output=\"$c\"><alienum/>"
+                          "</CATENA>";
+                mala[8] = "<CATENA output=\"$c\">"
+                          "<EXEMPLAR output=\"$x\"><s/></EXEMPLAR>"
+                          "</CATENA>";
+                mala[9] = "<CATENA modus=\"unum\" output=\"$c\">"
+                          "<EXEMPLAR><s/></EXEMPLAR></CATENA>";
+                per (m = ZEPHYRUM; m < X; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);
