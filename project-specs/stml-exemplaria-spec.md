@@ -487,15 +487,22 @@ decision:
     **user-raisable vitium** (`<VITIUM nuntius=>`) — each waits for
     its consumer.
 12. **CATENA** (sketched 2026-08-31, interview file "CATENA
-    sketched") — pipe sugar over named chaining: stages thread
-    output→scope implicitly, tail carries the explicit `output=`,
-    engine reads the wrapper form (COMMUTATIO precedent; NOT
+    sketched" + addenda) — pipe sugar over named chaining: stages
+    thread output→scope implicitly; **`output=` lives on the
+    CATENA element (ratified)** — stored fragments open at both
+    ends; engine reads the wrapper form (COMMUTATIO precedent; NOT
     literal DISTRIBUTIO — distribution runs after expansion).
     Desugars to minted intermediate names — one IR, Round I's
     "piping = naming the previous output" survives as the target.
-    Pull: the FIRST post-v1 increment, after the L1 lint ships in
-    explicit-name form; gate = the lint rewritten in CATENA form
-    yields a byte-identical report (sugar vs its own desugaring).
+    Nested chains FLATTEN (the DISTRIBUTIO same-type law); links
+    may be macros expanding to EXEMPLAR/CATENA. **THE PURITY LAW
+    (ratified): every link is a PURE relation→relation function —
+    conservative link vocabulary, mutation verbs excluded; effects
+    consume the TAIL relation at one point outside the chain**
+    (verb-as-consumer, never verb-as-stage). Pull: the FIRST
+    post-v1 increment, after the L1 lint ships in explicit-name
+    form; gate = the lint rewritten in CATENA form yields a
+    byte-identical report (sugar vs its own desugaring).
 
 ---
 

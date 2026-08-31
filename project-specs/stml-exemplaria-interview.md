@@ -912,6 +912,32 @@ marked:
   captures flow through a chain — name the pull, build at its own
   decree.
 
+**RATIFICATIONS (Fran, 2026-08-31)**:
+
+1. **`output=` lives ON THE CATENA ELEMENT** — wrapper placement
+   ratified. Stored chain fragments are open at both ends; the
+   use site decides scope and name. (The tee sub-question — a
+   STAGE carrying its own output= — remains open, now cleanly
+   separated.)
+
+2. **THE PURITY LAW: every CATENA link is a PURE function of the
+   incoming relation producing an output relation for the next
+   link.** The link vocabulary is CONSERVATIVE: EXEMPLAR, CATENA,
+   and macros expanding to those — nothing effect-like, mutation
+   verbs explicitly excluded. **This SUPERSEDES the earlier
+   "stages later generalize to mutation verbs" phrasing above**:
+   the correct V.1 one-IR reading is verb-as-CONSUMER-of-the-
+   chain, never verb-as-stage — the chain produces the PLAN
+   (mutatio's plan-first doctrine made structural), and effects
+   consume the tail relation at a SINGLE point outside the chain.
+   What this buys, recorded: chains stay inside the total-pure-
+   language identity (every prefix deterministic, re-runnable,
+   cacheable, canon-judgeable); transactional semantics (abort-
+   all) concentrate at the one consumption seam; and the TOOL
+   plane's pipes (visio §9.4) remain the separate place where
+   effectful verbs chain, under different rules — the two planes
+   now differ by exactly this law.
+
 ## CASUS-conditio addendum (2026-08-31) — the pattern-case residue,
 ## CATENA-as-condition, and the composability requirement
 
