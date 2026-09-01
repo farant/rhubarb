@@ -3477,6 +3477,27 @@ s32 principale(vacuum)
                                      piscina, intern);
         CREDO_VERUM(res.successus);
 
+        /* Titulus vacuus in via cruda (par. 7.5.3.1, decretum
+         * 2026-09-01): '<!doctype html>' minusculum olim ut
+         * elementum ineptum '<! doctype html/>' TACITE transibat;
+         * nunc SYNTAXIS clamat. '<!DOCTYPE html>' maiusculum
+         * doctype verus manet. */
+        res = stml_legere_ex_literis("<!doctype html>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_SYNTAXIS);
+
+        res = stml_legere_ex_literis("<r><!x>y</></r>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_SYNTAXIS);
+
+        res = stml_legere_ex_literis("<!DOCTYPE html>\n<r/>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
+
         /* nomen geminatum: elementum + elementum */
         res = stml_legere_ex_literis("<a><@m=>x</><@m=>y</></a>",
                                      piscina, intern);

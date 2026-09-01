@@ -824,11 +824,13 @@ RAW tag with an empty title, so it flows through
 `_parser_legere_elementum_crudus`, which the guard above does not cover.
 
 Not fixed in Plan A. **DECRETUM (Fran, 2026-09-01): the raw-element
-parser REFUSES an empty title.** No legitimate construct reaches the
-raw path titleless (`<!DOCTYPE` uppercase lexes as doctype, `<!--` as
-comment; the rest is always a typo) — a parse error naming the line
-replaces the silent nonsense element, for every consumer at once.
-Lands as its own increment before `vertere`.
+parser REFUSES an empty title — EXECUTUM eodem die.** No legitimate
+construct reaches the raw path titleless (`<!DOCTYPE` uppercase lexes
+as doctype, `<!--` as comment; the rest is always a typo) —
+`STML_ERROR_SYNTAXIS` naming the line replaces the silent nonsense
+element, for every consumer at once. Progression-before-return per
+§7.5.3's rejected-form-II warning; incolumitas no-hang pins verify.
+Pinned: lowercase refused, `<!x>` refused, uppercase doctype intact.
 
 ### §7.5.5 CONSTRUCTIO NON CLAUSA = ERRATUM (Fran, `180eceb7`)
 

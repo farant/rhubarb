@@ -2217,6 +2217,22 @@ _parser_legere_elementum_crudus (
         redde NIHIL;
     }
 
+    /* Titulus vacuus in via cruda = RECUSATIO (decretum Franis
+     * 2026-09-01, instrumentum par. 7.5.3.1): nulla constructio
+     * legitima huc sine titulo pervenit ('<!DOCTYPE' maiusculum ut
+     * doctype lexitur, '<!--' ut commentum) - '<!doctype html>'
+     * minusculum et '<!x>' semper lapsus calami sunt, qui olim ut
+     * elementum ineptum '<! .../>' TACITE transibant. Progressio
+     * ante reditum obligatoria (par. 7.5.3 forma reiecta II:
+     * sine ea _liberos_legere in tokeno non consumpto gyrat). */
+    si (ctx->current.valor.mensura == ZEPHYRUM)
+    {
+        _errorem_ponere(ctx, STML_ERROR_SYNTAXIS,
+                        ctx->current.linea, ctx->current.columna);
+        _parser_progredi(ctx);
+        redde NIHIL;
+    }
+
     nodus = _parser_creare_nodus(ctx, STML_NODUS_ELEMENTUM);
     si (!nodus) redde NIHIL;
 
