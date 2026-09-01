@@ -1489,3 +1489,45 @@ strongest reason Plan B has had to exist. Name: indagare = the
 deep tier of INDAGO (one word, two depths). Worth its build the
 day someone is deep in matcher-semantics questions — i.e. every
 future codex-as-pattern gate.
+
+## SECOND-LOOK PRICING of the simulation doors (design
+## conversation, 2026-08-31 night) — three dissolutions
+
+Pricing the doors at the seam instead of by their symptom-names:
+
+1. **"Multi-binding enumeration" DISSOLVES into RADIX RETENTION**
+   — the nucleus already enumerates every match per row (one row
+   per declaration); only the radix narrows. The door = a stage
+   flag (`radix="fontis"`-shaped) keeping the incoming row's
+   radix — near one assignment in `_exemplar_nucleus`. Unlocks
+   second-same-shape declarations AND the sibling
+   cross-reference/dangling-ref lint family.
+2. **"Join-by-naming" DISSOLVES into BRIDGE UNIFORMITY** — not
+   name-reuse-as-equality (rightly rejected; XXII stays loud) but
+   lifting the restriction that `&@n;` fills only SINE bodies:
+   a positive stage whose pattern carries references gets per-row
+   instantiation (SINE's machinery, opposite sign). Correlation
+   stays SPELLED, never coincidental. Compat note: literal
+   `&@n;` in a link body currently matches literal transclusion
+   nodes (raw-transclusion law) — vanishingly rare.
+3. **"Positional descent" DISSOLVES into COMPOSITION** (Fran's
+   observation closed it: no positional vocabulary exists beyond
+   implicit sibling order + spelled containment) — `<**>` inside
+   a `<*>` occupying a cursor slot = positional descent, spelled
+   visibly. Existential composes up; positional could never
+   compose down. Pinned by the fixture pair.
+
+Remaining doors after the axis: radix retention (top,
+value/cost), bridge uniformity, guard-narrows-arm (`<CASUS
+angustans>`-shaped, five lines), per-row routing (parked - the
+parallel-literal-guard-chains workaround is honest).
+
+## DESCENSUS BUILT (same night — four-question round, all
+## recommended ratified)
+
+Existential bundle (hoisted, one-child, first-COMPATIBLE,
+no joint backtracking); visibility = petere's exactly; star-run
+lexer + XXV + strict refusal; gate document unified as its own
+MEASURED step (identical 1/1 + 0/0; residue shifted to
+first-per-block-any-shape; plurality = radix retention's job).
+The leak-lint family and deep self-joins are now writable.

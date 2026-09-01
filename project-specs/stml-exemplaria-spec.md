@@ -587,6 +587,31 @@ decision:
     describes. Vitium XXIV; canon CAPS row; invariata walkers
     extended. 197/197 + all gates green; zero change without the
     element.
+16. **DESCENSUS `<**>` — BUILT 2026-08-31, same night** (four-
+    question decree, all recommended ratified; the positional
+    question DISSOLVED first: the language has no positional
+    vocabulary beyond implicit sibling order + spelled
+    containment, and positional descent = the `<*>`-hosts-`<**>`
+    composition, so existential is the primitive that builds the
+    other). Lexer: star-RUN names (`**` joins `*` as the
+    pattern-space family; glob intuition; no prior document could
+    contain it). Semantics: `<**>` children HOISTED out of the
+    sibling subsequence — independent "P somewhere in my subtree"
+    constraints (SINE's body law, sign-flipped), exactly one
+    element child, binding = first COMPATIBLE descendant in
+    document order (regula V conflicts walk on — deep self-joins
+    free), no joint backtracking across shared-name constraints
+    (documented). Visibility = EXACTLY petere's (one law for both
+    walkers; blindness, template-space, no alias-descent).
+    Setup-time form probe = vitium XXV, loud, never silent
+    non-match; strict matcher refuses. 219/219; positional-
+    composition fixture pair pins the cursor coupling. CONSUMER
+    ON DAY ONE: the codex 69 gate document unified to ONE descent
+    chain (three shape-chains retired), all declarator shapes
+    covered by construction, measured IDENTICAL (1/1, 0/0, 0
+    divergence, pins intact); residue shifted from
+    first-per-shape-per-block to first-per-block-any-shape;
+    per-declaration plurality = the radix-retention door.
 
 ---
 

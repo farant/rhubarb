@@ -667,3 +667,28 @@ Commands BEFORE the element in document order are untraced
 green through the traced engine — zero behavior change without
 the element (the 189 pre-existing exact-output pins are the
 proof).
+
+## 2026-08-31 (night III, later) — the descendant axis `<**>`
+
+Existential descent shipped exactly as decreed. Implementation
+notes worth keeping: the lexer's `'*' SOLUS` carve-out became a
+star-RUN (the pattern-space name family; `<**>` previously
+MIS-PARSED as `<*` + text `*>`, so no document could contain it —
+compat free). Form errors are SETUP-TIME (`_descensus_probare`
+at nucleus/SINE body collection → vitium XXV) so matching stays
+a pure b32 — a malformed `<**>` can never masquerade as a silent
+non-match. `_alicubi_congruere` mirrors petere's walk exactly
+(same skips, no alias-descent) with early exit; the try-at-node
+failure path truncates ligamina and WALKS ON, which is what makes
+"first COMPATIBLE descendant" (and deep regula-V self-joins)
+fall out with zero extra code. The partition in
+`_laxa_liberos_congruere` leaves the cursor untouched — the
+positional-composition fixture pair (`<**>` inside `<*>` in a
+cursor slot: matches after `a`, refuses before) pins that the
+composition, not the primitive, carries position.
+
+The gate-doc unification measured IDENTICAL (1/1, 0/0) with the
+residue class shifted: first-declaration-per-block-any-shape
+(was: per-shape). Canon needed NOTHING — pattern bodies are
+quoted, and `<**>` in content is just an odd element name, same
+as `<*>` always was.

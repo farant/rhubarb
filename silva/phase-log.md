@@ -14527,3 +14527,10 @@ ad nihilum redegerunt. Lectio pro silva: provenientia arboris
 REPRAESENTATIO — planum congruentiae contentum videre debet; ianuae
 scriptoris (formae fragmentorum, aliasa) nunc a machina exemplarium
 transpiciuntur.
+
+## Addendum 2026-08-31 (nox tertia): documentum codicis 69 unificatum
+
+Sub gelatione (fixa solae): inutilis_localis.stml catena una
+'<**>' (axis descendens, stml_macros) tres catenas formarum
+substituit; mensura EADEM (1/1, 0/0, divergentiae 0), pinnae
+intactae; residuum mutatum ad 'prima scopi formae cuiusvis'.
