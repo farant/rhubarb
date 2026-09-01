@@ -634,6 +634,27 @@ decision:
     divergence, byte gates intact. Named residues: second
     declarator of one declaration (`int a, b;`), members of
     function-local struct definitions, shadowing.
+18. **UNIFORMITAS PONTIS — BUILT 2026-09-01** (ratified: the
+    reference IS the opt-in) — a positive stage whose pattern
+    carries any `&@n;` reference gets per-row instantiation:
+    SINE's fill machinery with the opposite sign, factored into
+    the shared `_corpus_ordini_implere` (SINE refactored onto it).
+    Correlated positive stages = cross-stage joins; correlated
+    DIRIBITIO conditions come free (uniform law through the
+    nucleus, which gained stratum/tectum). References with no
+    incoming rows = vitium XIII. Compat note: a literal `&@n;`
+    in a link body no longer matches literal transclusion nodes;
+    non-`&@` transclusions keep the raw law. The join-by-naming
+    door is CLOSED as decreed — correlation is always SPELLED.
+19. **ANGUSTANS — BUILT 2026-09-01** (`<CASUS angustans>`,
+    ancorata-style valueless) — the taken arm receives the
+    CONDITION'S output relation; guard-semantics stays the
+    default; ORDINARIUS+angustans = vitium XXI, canon mirrors.
+    Bonus idiom now pinned: `<EXEMPLAR ancorata>` with the
+    wildcard is the IDENTITY command — each row maps to itself —
+    so 'report the offenders' is condition-filter + identity arm,
+    the filter spelled ONCE. INDAGO writes 'bracchium
+    angustatum'. The guard-narrows-arm door is CLOSED.
 
 ---
 
