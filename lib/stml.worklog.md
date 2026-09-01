@@ -1459,3 +1459,17 @@ Trap hit and recognized: the specifier-hijack Edit trap (anchor began
 at the function NAME, leaving the original `interior vacuum` header
 dangling above the inserted prototype → "duplicate static"). The
 censor hook caught it at edit time; recorded lesson did its job.
+
+### Addendum (same day): the sweep's blind spot
+
+"Migration vacuous, 57 files, zero refusals" was true and INCOMPLETE:
+the parse-based sweep covered committed `.stml`/`.canon` FILES, but
+single-quote wrappers also lived in C STRING FIXTURES — invisible to
+any file sweep. The full root suite was the instrument with that
+coverage: `probatio_layout` failed loudly (28 fixture sites, migrated
+mechanically; every other grep hit repo-wide was prose in comments).
+The two natura "failures" alongside it were the staleness guard
+correctly demanding a `natura_struere` rebuild after the later parser
+edits. Lesson shape: a corpus sweep measures ITS OWN corpus — name
+what it cannot see (in-code fixtures, generated-at-runtime documents)
+before calling a migration done.

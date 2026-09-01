@@ -56,7 +56,7 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
-            "  <pagina id='editor' x=0 y=0 latitudo=71 altitudo=60/>"
+            "  <pagina id=\"editor\" x=0 y=0 latitudo=71 altitudo=60/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -78,7 +78,7 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
-            "  <pagina id='mea-pagina' x=10 y=5 latitudo=80 altitudo=40/>"
+            "  <pagina id=\"mea-pagina\" x=10 y=5 latitudo=80 altitudo=40/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -119,7 +119,7 @@ s32 principale(vacuum)
         /* Creare layout cum navigator */
         dom = layout_creare(ctx,
             "<layout>"
-            "  <navigator id='nav' x=0 y=0 latitudo=71 altitudo=60/>"
+            "  <navigator id=\"nav\" x=0 y=0 latitudo=71 altitudo=60/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -150,8 +150,8 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <pagina id='editor' x=0 y=0 latitudo=71 altitudo=60/>"
-            "  <navigator id='browser' x=71 y=0 latitudo=71 altitudo=60/>"
+            "  <pagina id=\"editor\" x=0 y=0 latitudo=71 altitudo=60/>"
+            "  <navigator id=\"browser\" x=71 y=0 latitudo=71 altitudo=60/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -181,7 +181,7 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
-            "  <pagina id='test' x=0 y=0 latitudo=50 altitudo=30/>"
+            "  <pagina id=\"test\" x=0 y=0 latitudo=50 altitudo=30/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -208,7 +208,7 @@ s32 principale(vacuum)
         /* Navigator sine repositorium non debet creari */
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
-            "  <navigator id='nav' x=0 y=0 latitudo=71 altitudo=60/>"
+            "  <navigator id=\"nav\" x=0 y=0 latitudo=71 altitudo=60/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);  /* Layout creatur */
@@ -232,7 +232,7 @@ s32 principale(vacuum)
         /* Pagina sine attributa explicita */
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
-            "  <pagina id='minimal'/>"
+            "  <pagina id=\"minimal\"/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -263,7 +263,7 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Page' slug='test'/>"
+            "  <entitas genus=\"Page\" slug=\"test\"/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
@@ -295,9 +295,9 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Page' slug='intro'>"
-            "    <proprietas clavis='name' valor='Introduction'/>"
-            "    <proprietas clavis='author' valor='Fran'/>"
+            "  <entitas genus=\"Page\" slug=\"intro\">"
+            "    <proprietas clavis=\"name\" valor=\"Introduction\"/>"
+            "    <proprietas clavis=\"author\" valor=\"Fran\"/>"
             "  </entitas>"
             "</layout>");
 
@@ -337,7 +337,7 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Note' slug='important'>"
+            "  <entitas genus=\"Note\" slug=\"important\">"
             "    <nota>#urgent</nota>"
             "    <nota>#project::alpha</nota>"
             "  </entitas>"
@@ -371,11 +371,11 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Page' slug='one'>"
-            "    <relatio genus='next' ad='Page::two'/>"
+            "  <entitas genus=\"Page\" slug=\"one\">"
+            "    <relatio genus=\"next\" ad=\"Page::two\"/>"
             "  </entitas>"
-            "  <entitas genus='Page' slug='two'>"
-            "    <relatio genus='prev' ad='Page::one'/>"
+            "  <entitas genus=\"Page\" slug=\"two\">"
+            "    <relatio genus=\"prev\" ad=\"Page::one\"/>"
             "  </entitas>"
             "</layout>");
 
@@ -423,8 +423,8 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Content::Document::Article' slug='post'>"
-            "    <proprietas clavis='title' valor='My Post'/>"
+            "  <entitas genus=\"Content::Document::Article\" slug=\"post\">"
+            "    <proprietas clavis=\"title\" valor=\"My Post\"/>"
             "  </entitas>"
             "</layout>");
 
@@ -462,11 +462,11 @@ s32 principale(vacuum)
         /* Duo declarationes pro eadem entitas */
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Page' slug='same'>"
-            "    <proprietas clavis='a' valor='1'/>"
+            "  <entitas genus=\"Page\" slug=\"same\">"
+            "    <proprietas clavis=\"a\" valor=\"1\"/>"
             "  </entitas>"
-            "  <entitas genus='Page' slug='same'>"
-            "    <proprietas clavis='b' valor='2'/>"
+            "  <entitas genus=\"Page\" slug=\"same\">"
+            "    <proprietas clavis=\"b\" valor=\"2\"/>"
             "  </entitas>"
             "</layout>");
 
@@ -509,9 +509,9 @@ s32 principale(vacuum)
 
         dom = layout_creare(ctx,
             "<layout>"
-            "  <pagina id='editor' x=0 y=0 latitudo=80 altitudo=40/>"
-            "  <entitas genus='Page' slug='content'>"
-            "    <proprietas clavis='title' valor='Test'/>"
+            "  <pagina id=\"editor\" x=0 y=0 latitudo=80 altitudo=40/>"
+            "  <entitas genus=\"Page\" slug=\"content\">"
+            "    <proprietas clavis=\"title\" valor=\"Test\"/>"
             "  </entitas>"
             "</layout>");
 
@@ -549,7 +549,7 @@ s32 principale(vacuum)
         /* Entitas sine genus - debet ignorari */
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas slug='orphan'/>"
+            "  <entitas slug=\"orphan\"/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);  /* Layout creatur sed entitas non */
@@ -557,7 +557,7 @@ s32 principale(vacuum)
         /* Entitas sine slug - debet ignorari */
         dom = layout_creare(ctx,
             "<layout>"
-            "  <entitas genus='Page'/>"
+            "  <entitas genus=\"Page\"/>"
             "</layout>");
 
         CREDO_NON_NIHIL(dom);
