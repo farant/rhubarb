@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# fumus.sh - porta natalis unci pre-commit (examen): plantat REICE,
+# exspectat obstare. Porta muta et porta mortua idem videntur - ergo
+# culpa plantata ab ortu.
+#
+#   I   viae explicitae (UNCUS_VIAE): sanum -> 0, malum -> 1
+#   II  via INDICIS (GIT_INDEX_FILE temporarius): malum additum ->
+#       uncus obstat (1); index sine .c -> 0 cum 'nihil iudicatum'
+# Planta = declaratio in 'per' (C99): examen 'nodi erroris' REICE
+# (mensuratum 2026-09-01; '//' et declaratio post sententiam ACCIPE -
+# lacunae examinis, non plantae).
+#
+# Usage: ./tools/unci-git/fumus.sh     exit 0 sanum | 1 fractum
+
+set -u
+RADIX="$(git rev-parse --show-toplevel)" || exit 2
+cd "$RADIX" || exit 2
+UNCUS=tools/unci-git/pre-commit
+T=build/uncus_fumus
+mkdir -p "$T"
+fracta=0
+
+printf '#include "latina.h"\n\ninteger\nprincipale (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$T/sanum.c"
+printf '#include "latina.h"\n\ninteger\nprincipale (vacuum)\n{\n    per (integer i = ZEPHYRUM; i < I; i++) { }\n    redde ZEPHYRUM;\n}\n' > "$T/malum.c"
+
+# I - viae explicitae
+UNCUS_VIAE="$T/sanum.c" "$UNCUS" > "$T/sanum.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ]; then echo "  I.a sanum -> 0            OK"; else echo "  I.a sanum -> $rc  FRACTUM"; fracta=1; fi
+UNCUS_VIAE="$T/malum.c" "$UNCUS" > "$T/malum.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'REICE' "$T/malum.out"; then echo "  I.b malum -> 1 (REICE)    OK"; else echo "  I.b malum -> $rc  FRACTUM"; cat "$T/malum.out"; fracta=1; fi
+
+# II - via indicis temporarii (index verus intactus)
+MALUM="tools/unci-git/.fumus_malum.c"
+cp "$T/malum.c" "$MALUM"
+export GIT_INDEX_FILE="$T/index"
+rm -f "$GIT_INDEX_FILE"
+git read-tree HEAD
+"$UNCUS" > "$T/index_vacuus.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q 'nihil iudicatum' "$T/index_vacuus.out"; then echo "  II.a index sine .c -> 0    OK"; else echo "  II.a index sine .c -> $rc  FRACTUM"; cat "$T/index_vacuus.out"; fracta=1; fi
+git add -f "$MALUM"
+"$UNCUS" > "$T/index_malum.out" 2>&1; rc=$?
+if [ "$rc" -eq 1 ] && grep -q 'OBSTATA' "$T/index_malum.out"; then echo "  II.b index cum malo -> 1   OK"; else echo "  II.b index cum malo -> $rc  FRACTUM"; cat "$T/index_malum.out"; fracta=1; fi
+unset GIT_INDEX_FILE
+rm -f "$MALUM" "$T/index"
+
+if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
+echo "fumus unci: sanum (IV/IV)"
+exit 0

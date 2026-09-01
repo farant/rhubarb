@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# pre-commit - EXAMEN C89 super plagulas .c commissioni traditas.
+#
+# CUR: uncus post-editionem (.claude/hooks/examen-custos.sh) Edit/
+# Write solum videt; scriptura per Bash (heredoc, python, sed) eum
+# TACITE praeterit - 2026-09-01 quater eodem die examen manu vocatum
+# est. Porta quae praeteriri potest porta muta est; commissio est
+# sedes quam nulla via editionis praeterit.
+#
+# QUID: git diff --cached (ACMR, *.c *.m) -> ./silva/examen.sh -machina
+#   ACCIPE          -> tacet
+#   REICE           -> OBSTAT (exit 1), ordines impressi
+#   REICE + exclusa -> monet, non obstat (exclusiones.txt = strepitus
+#                      lexici notus, ut in custode)
+#   RECUSO (fines)  -> monet, non obstat (iudicium impossibile != malum)
+#   apparatus       -> OBSTAT (porta fracta clamat, numquam tacet)
+#   .m              -> censor (examen ObjC non iudicat), ut custos
+# Capita .h sola non iudicantur (per includentes). Viae exclusae ut
+# custos: scratchpad/build/fixa/amalgama. Nulla plagula = nuntius
+# 'nihil iudicatum' (silentium ambiguum vetitum).
+# Arbor operis ab indice differens (commissio partialis): examen DISCUM
+# legit, ergo ARBOR iudicatur et monetur.
+#
+# Evasio: git commit --no-verify (causam in nuntio commissionis nota).
+# Porta natalis: ./tools/unci-git/fumus.sh (plantat REICE, exspectat
+# obstare - via explicita ET via indicis).
+# Installatio: git config core.hooksPath tools/unci-git (iam facta).
+#
+# UNCUS_VIAE="a.c b.c" = viae explicitae SINE filtro (probationi).
+# NB: viae cum spatiis non feruntur (domus nullas habet).
+
+RADIX="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+cd "$RADIX" || exit 0
+
+if [ -n "${UNCUS_VIAE:-}" ]; then
+    VIAE="$UNCUS_VIAE"
+else
+    VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/')"
+fi
+if [ -z "$VIAE" ]; then
+    echo "examen (pre-commit): nulla plagula .c/.m in commissione - nihil iudicatum" >&2
+    exit 0
+fi
+
+EXCL="silva/probationes/fixa/examinis/exclusiones.txt"
+obstat=0
+iudicatae=0
+for via in $VIAE; do
+    [ -f "$via" ] || continue
+    iudicatae=$((iudicatae + 1))
+    if [ -z "${UNCUS_VIAE:-}" ] && [ -n "$(git diff --name-only -- "$via" 2>/dev/null)" ]; then
+        echo "examen (pre-commit): $via - arbor operis ab indice differt; ARBOR iudicatur" >&2
+    fi
+    case "$via" in
+        *.m)
+            out=$(./silva/censor.sh "$via" 2>/dev/null)
+            rows=$(printf '%s\n' "$out" | grep -E '^\[(CENSURA|CULPA PROBABILIS)\]' | head -5)
+            if [ -n "$rows" ]; then
+                { echo "CENSOR LATINAE (pre-commit) $via:"; echo "$rows"; } >&2
+                obstat=1
+            fi
+            continue
+            ;;
+    esac
+    out=$(./silva/examen.sh "$via" -machina 2>/dev/null)
+    rc=$?
+    verd=$(printf '%s\n' "$out" | awk -F'\t' '$1=="VERDICTUM"{print $2}')
+    case "$verd" in
+        ACCIPE) ;;
+        REICE)
+            rows=$(printf '%s\n' "$out" | awk -F'\t' \
+                '$1!="VERDICTUM" && $1!~/^#/ && $4=="violatio" {print "  "$1":"$2":"$3": "$7}' | head -8)
+            if [ -f "$EXCL" ] && grep -v '^#' "$EXCL" | cut -f1 | grep -qxF "./$via"; then
+                { echo "examen (pre-commit): $via REICE sed EXCLUSA (strepitus notus) - non obstat"; echo "$rows"; } >&2
+            else
+                { echo "examen (pre-commit): $via REICE:"; echo "$rows"; } >&2
+                obstat=1
+            fi
+            ;;
+        RECUSO)
+            echo "examen (pre-commit): $via RECUSO (fines silvae) - iudicium impossibile, non obstat; iudex efficax: clang -std=c89 -Werror" >&2
+            ;;
+        *)
+            echo "examen (pre-commit): $via - APPARATUS FRACTUS (exit $rc, verdictum '${verd:-nullum}') - porta clamat, obstat" >&2
+            obstat=1
+            ;;
+    esac
+done
+
+if [ "$obstat" -ne 0 ]; then
+    echo "examen (pre-commit): COMMISSIO OBSTATA ($iudicatae iudicatae). Evasio consulta: git commit --no-verify" >&2
+    exit 1
+fi
+echo "examen (pre-commit): $iudicatae plagulae ACCIPE" >&2
+exit 0
