@@ -351,7 +351,7 @@ measured at materia_arbor.c:1185). Trailing `!` + ident `important`
 value list closes. Missing `:` → `declaratio-mala` consuming to the next
 `;`/`}` (spec-defined recovery, not an error node).
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
     imprimere("\n--- Probans spatia UT CONTENTUM in valoribus ---\n");
@@ -395,16 +395,16 @@ value list closes. Missing `:` → `declaratio-mala` consuming to the next
         "a{color:red ! important }", XXV));
 ```
 
-- [ ] **Step 2: Run and verify it fails**
+- [x] **Step 2: Run and verify it fails**
 
 Run: `./css/compile_probationes.sh arbor` — Expected: FAIL.
 
-- [ ] **Step 3: Implement** (grammar above; B2's mechanism, no new seams).
+- [x] **Step 3: Implement** (grammar above; B2's mechanism, no new seams).
 
-- [ ] **Step 4: Run the WHOLE suite** — `./css/compile_probationes.sh`
+- [x] **Step 4: Run the WHOLE suite** — `./css/compile_probationes.sh`
   Expected: exit 0; the coverage gate and B2's tests must still hold.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/fontes/css_arbor.c css/probationes/probatio_css_arbor.c

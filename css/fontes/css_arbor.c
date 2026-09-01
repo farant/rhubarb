@@ -308,6 +308,510 @@ _valorem_componentem_consumere (
 
 
 /* ==================================================
+ * Declarationes (L3 5.4.4-5.4.6, B3)
+ * ================================================== */
+
+/* Lexema modo lectum reddere: index retro. Lexema iterum per
+ * solvere ibit (prior idem ponitur - innocuum, pendentia post
+ * significans semper vacua). */
+interior vacuum
+_retrocedere (
+    CssParsura* p)
+{
+    p->index = p->index - I;
+}
+
+interior b32
+_est_delim_clamor (
+    constans MateriaToken* token)
+{
+    redde (b32)(   token->genus == (s32)CSS_LEX_DELIM
+                && token->valor.mensura == I
+                && token->valor.datum[ZEPHYRUM] == '!');
+}
+
+/* 'important', ASCII sine casu (L3). */
+interior b32
+_est_important (
+    constans MateriaToken* token)
+{
+    constans character* exemplar = "important";
+                   i32  i;
+
+    si (   token->genus         != (s32)CSS_LEX_IDENTIFICATOR
+        || token->valor.mensura != IX)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < IX; i++)
+    {
+        character c = (character)token->valor.datum[i];
+
+        si (c >= 'A' && c <= 'Z')
+        {
+            c = (character)(c + XXXII);
+        }
+        si (c != exemplar[i])
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Folium servatum (et alterum si adest) valori appendere; in
+ * fractura regimen contenti claudit. */
+interior b32
+_folia_appendere (
+      CssParsura* p,
+    MateriaValor* valor,
+    MateriaToken* primum,
+    MateriaToken* alterum)
+{
+    MateriaNodus* folium;
+
+    folium = _servatum_creare(p, primum);
+    si (folium == NIHIL)
+    {
+        p->contentum = FALSUM;
+        redde FALSUM;
+    }
+    *valor = materia_valor_lista_appendere(p->piscina, *valor,
+        materia_valor_nodus(folium));
+    si (alterum != NIHIL)
+    {
+        folium = _servatum_creare(p, alterum);
+        si (folium == NIHIL)
+        {
+            p->contentum = FALSUM;
+            redde FALSUM;
+        }
+        *valor = materia_valor_lista_appendere(p->piscina, *valor,
+            materia_valor_nodus(folium));
+    }
+    redde VERUM;
+}
+
+/* Mala sine consumptione ulteriore (FINIS aut '}' iam visum). */
+interior MateriaNodus*
+_malam_consumere_finita (
+      CssParsura* p,
+    MateriaToken* titulus)
+{
+    MateriaNodus* mala;
+     MateriaValor lexemata;
+
+    mala = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_DECLARATIO_MALA, (i32)I);
+    si (mala == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lexemata = materia_valor_lista_nova(p->piscina);
+    lexemata = materia_valor_lista_appendere(p->piscina, lexemata,
+        materia_valor_token(titulus));
+    si (!materia_nodus_ponere(mala, (i32)CSS_MALUM_TOKENS, lexemata,
+            MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde NIHIL;
+    }
+    redde mala;
+}
+
+/* Recuperatio spec-definita: lexemata CRUDA usque ad ';' (inclusum)
+ * aut '}' congruens (retrocessum) aut FINIS. Profunditas saeptorum
+ * numeratur ne '}' nidificatum recuperationem claudat; FUNCTIO
+ * quoque aperit (lexator 'ident(' unum lexema fudit). */
+interior MateriaNodus*
+_malam_consumere (
+      CssParsura* p,
+    MateriaToken* primum,
+    MateriaToken* secundum)
+{
+    MateriaNodus* mala;
+     MateriaValor lexemata;
+              i32 profunditas;
+
+    mala = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_DECLARATIO_MALA, (i32)I);
+    si (mala == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lexemata = materia_valor_lista_nova(p->piscina);
+    lexemata = materia_valor_lista_appendere(p->piscina, lexemata,
+        materia_valor_token(primum));
+    si (secundum != NIHIL)
+    {
+        lexemata = materia_valor_lista_appendere(p->piscina,
+            lexemata, materia_valor_token(secundum));
+    }
+    profunditas = ZEPHYRUM;
+
+    per (;;)
+    {
+        MateriaToken* token;
+
+        token = _significans_proximum(p);
+        si (token == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (_finis_est(p, token))
+        {
+            p->finis = token;
+            frange;
+        }
+        si (   _clausum_congruens(token->genus) >= ZEPHYRUM
+            || token->genus                     == (s32)CSS_LEX_FUNCTIO)
+        {
+            profunditas = profunditas + I;
+        }
+        alioquin si (   token->genus == (s32)CSS_LEX_PAREN_CLAUSA
+                     || token->genus == (s32)CSS_LEX_QUADRA_CLAUSA)
+        {
+            si (profunditas > ZEPHYRUM)
+            {
+                profunditas = profunditas - I;
+            }
+        }
+        alioquin si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            si (profunditas > ZEPHYRUM)
+            {
+                profunditas = profunditas - I;
+            }
+            alioquin
+            {
+                _retrocedere(p);
+                frange;
+            }
+        }
+        lexemata = materia_valor_lista_appendere(p->piscina,
+            lexemata, materia_valor_token(token));
+        si (   token->genus == (s32)CSS_LEX_SEMICOLON
+            && profunditas  == ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+
+    si (!materia_nodus_ponere(mala, (i32)CSS_MALUM_TOKENS, lexemata,
+            MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde NIHIL;
+    }
+    redde mala;
+}
+
+/* "Consume a declaration" (L3 5.4.5): titulus, ':', valor REGIMINE
+ * CONTENTI usque ad ';' aut '}' (retrocessum) aut FINIS.
+ *
+ * PRAEVALENTIA ('!' + 'important') syntaxis est, non valor - ergo
+ * lexemata eius trivia STRUCTURALIA ferunt: spatium medium
+ * ('! important') ante lexematis 'important' fit, spatium sequens
+ * post eius. Folia contenta trivia ferre non possunt (constrictum
+ * proiectionis); lexemata praevalentiae possunt quia loci TOKEN
+ * sunt, non servata. Confirmatio ante constructionem: nisi post
+ * 'important' statim ';'/'}'/'FINIS' (spatio interposito licito)
+ * sequatur, OMNIA folia contenta ordinaria fiunt - ordo octetorum
+ * utroque tramite servatur quia nihil transponitur. */
+interior MateriaNodus*
+_declarationem_consumere (
+      CssParsura* p,
+    MateriaToken* titulus)
+{
+    MateriaNodus* decl;
+    MateriaToken* token;
+     MateriaValor valor;
+
+    token = _significans_proximum(p);
+    si (token == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (_finis_est(p, token))
+    {
+        /* titulus solus ante FINIS: mala uni-lexematis */
+        p->finis = token;
+        redde _malam_consumere_finita(p, titulus);
+    }
+    si (token->genus != (s32)CSS_LEX_COLON)
+    {
+        si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            _retrocedere(p);
+            redde _malam_consumere_finita(p, titulus);
+        }
+        redde _malam_consumere(p, titulus, token);
+    }
+
+    decl = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_DECLARATIO, (i32)V);
+    si (decl == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (   !materia_nodus_ponere(decl, (i32)CSS_DECL_TOK_NOMEN,
+               materia_valor_token(titulus), MATERIA_LOCUS_TOKEN)
+        || !materia_nodus_ponere(decl, (i32)CSS_DECL_TOK_COLON,
+               materia_valor_token(token), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+
+    valor         = materia_valor_lista_nova(p->piscina);
+    p->contentum  = VERUM;
+    token         = NIHIL;
+
+    per (;;)
+    {
+        MateriaNodus* elementum;
+
+        si (token == NIHIL)
+        {
+            token = _significans_proximum(p);
+        }
+        si (token == NIHIL)
+        {
+            p->contentum = FALSUM;
+            redde NIHIL;
+        }
+        si (_finis_est(p, token))
+        {
+            p->finis = token;
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_SEMICOLON)
+        {
+            si (!materia_nodus_ponere(decl,
+                    (i32)CSS_DECL_TOK_TERMINATOR,
+                    materia_valor_token(token), MATERIA_LOCUS_TOKEN))
+            {
+                p->contentum = FALSUM;
+                redde NIHIL;
+            }
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            _retrocedere(p);
+            frange;
+        }
+        si (_est_delim_clamor(token))
+        {
+            MateriaToken* clamor = token;
+            MateriaToken* medium = NIHIL;
+            MateriaToken* verbum;
+            MateriaToken* caudale = NIHIL;
+            MateriaToken* proximum;
+
+            verbum = _significans_proximum(p);
+            si (verbum == NIHIL)
+            {
+                p->contentum = FALSUM;
+                redde NIHIL;
+            }
+            si (verbum->genus == (s32)CSS_LEX_SPATIA)
+            {
+                medium = verbum;
+                verbum = _significans_proximum(p);
+                si (verbum == NIHIL)
+                {
+                    p->contentum = FALSUM;
+                    redde NIHIL;
+                }
+            }
+            si (_est_important(verbum))
+            {
+                proximum = _significans_proximum(p);
+                si (proximum == NIHIL)
+                {
+                    p->contentum = FALSUM;
+                    redde NIHIL;
+                }
+                si (proximum->genus == (s32)CSS_LEX_SPATIA)
+                {
+                    caudale   = proximum;
+                    proximum  = _significans_proximum(p);
+                    si (proximum == NIHIL)
+                    {
+                        p->contentum = FALSUM;
+                        redde NIHIL;
+                    }
+                }
+                si (   _finis_est(p, proximum)
+                    || proximum->genus == (s32)CSS_LEX_SEMICOLON
+                    || proximum->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+                {
+                    /* CONFIRMATUM */
+                    MateriaNodus* praevalentia;
+
+                    praevalentia = materia_nodus_creare(p->piscina,
+                        (s32)CSS_GENUS_PRAEVALENTIA, (i32)II);
+                    si (praevalentia == NIHIL)
+                    {
+                        p->contentum = FALSUM;
+                        redde NIHIL;
+                    }
+                    si (   medium != NIHIL
+                        && !materia_token_trivia_ante_ponere(verbum,
+                               p->piscina, &medium, (i32)I))
+                    {
+                        p->contentum = FALSUM;
+                        redde NIHIL;
+                    }
+                    si (   caudale != NIHIL
+                        && !materia_token_trivia_post_ponere(verbum,
+                               p->piscina, &caudale, (i32)I))
+                    {
+                        p->contentum = FALSUM;
+                        redde NIHIL;
+                    }
+                    si (   !materia_nodus_ponere(praevalentia,
+                               (i32)CSS_PRAEVALENTIA_TOK_CLAMOR,
+                               materia_valor_token(clamor),
+                               MATERIA_LOCUS_TOKEN)
+                        || !materia_nodus_ponere(praevalentia,
+                               (i32)CSS_PRAEVALENTIA_TOK_VERBUM,
+                               materia_valor_token(verbum),
+                               MATERIA_LOCUS_TOKEN)
+                        || !materia_nodus_ponere(decl,
+                               (i32)CSS_DECL_PRAEVALENTIA,
+                               materia_valor_nodus(praevalentia),
+                               MATERIA_LOCUS_NODUS))
+                    {
+                        p->contentum = FALSUM;
+                        redde NIHIL;
+                    }
+                    token = proximum;
+                    perge;   /* ; aut } aut FINIS - ansa tractabit */
+                }
+                /* NON CONFIRMATUM: omnia folia contenta fiunt,
+                 * ordine fontis - nihil transponitur. */
+                si (!_folia_appendere(p, &valor, clamor, medium))
+                {
+                    redde NIHIL;
+                }
+                si (!_folia_appendere(p, &valor, verbum, caudale))
+                {
+                    redde NIHIL;
+                }
+                token = proximum;
+                perge;
+            }
+            /* post '!' non 'important': folia contenta */
+            si (!_folia_appendere(p, &valor, clamor, medium))
+            {
+                redde NIHIL;
+            }
+            token = verbum;
+            perge;
+        }
+
+        elementum = _valorem_componentem_consumere(p, token);
+        si (elementum == NIHIL)
+        {
+            p->contentum = FALSUM;
+            redde NIHIL;
+        }
+        valor = materia_valor_lista_appendere(p->piscina, valor,
+            materia_valor_nodus(elementum));
+        token = NIHIL;
+    }
+
+    p->contentum = FALSUM;
+    si (!materia_nodus_ponere(decl, (i32)CSS_DECL_VALOR, valor,
+            MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde NIHIL;
+    }
+    redde decl;
+}
+
+/* "Consume a style block's contents" (L3 5.4.4): declarationes,
+ * ';' errantia (L3 ea ABICIT - nos folia servata facimus, sine
+ * iactura), recuperatio. Regulae apud intra corpora B4 sunt. */
+interior MateriaNodus*
+_corpus_regulae_consumere (
+      CssParsura* p,
+    MateriaToken* apertum)
+{
+    MateriaNodus* saeptum;
+     MateriaValor contentum;
+
+    saeptum = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_SAEPTUM, (i32)III);
+    si (saeptum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!materia_nodus_ponere(saeptum, (i32)CSS_SAEPTUM_TOK_APERTUM,
+            materia_valor_token(apertum), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+    contentum = materia_valor_lista_nova(p->piscina);
+
+    per (;;)
+    {
+        MateriaToken* token;
+        MateriaNodus* elementum;
+
+        token = _significans_proximum(p);
+        si (token == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (_finis_est(p, token))
+        {
+            p->finis = token;
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            si (!materia_nodus_ponere(saeptum,
+                    (i32)CSS_SAEPTUM_TOK_CLAUSUM,
+                    materia_valor_token(token), MATERIA_LOCUS_TOKEN))
+            {
+                redde NIHIL;
+            }
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_SEMICOLON)
+        {
+            elementum = _servatum_creare(p, token);
+        }
+        alioquin si (token->genus == (s32)CSS_LEX_IDENTIFICATOR)
+        {
+            elementum = _declarationem_consumere(p, token);
+        }
+        alioquin
+        {
+            elementum = _malam_consumere(p, token, NIHIL);
+        }
+        si (elementum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        contentum = materia_valor_lista_appendere(p->piscina,
+            contentum, materia_valor_nodus(elementum));
+        si (p->finis != NIHIL)
+        {
+            frange;
+        }
+    }
+
+    si (!materia_nodus_ponere(saeptum, (i32)CSS_SAEPTUM_CONTENTUM,
+            contentum, MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde NIHIL;
+    }
+    redde saeptum;
+}
+
+
+/* ==================================================
  * Regula qualificata (L3 5.4.3)
  * ================================================== */
 
@@ -346,7 +850,7 @@ _regulam_qualificatam_consumere (
             MateriaNodus* corpus;
 
             p->contentum  = FALSUM;
-            corpus        = _saeptum_consumere(p, token);
+            corpus        = _corpus_regulae_consumere(p, token);
             si (corpus == NIHIL)
             {
                 redde NIHIL;

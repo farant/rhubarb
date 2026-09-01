@@ -309,6 +309,135 @@ principale (vacuum)
     }
 
 
+    /* ==================================================
+     * DECLARATIONES (B3)
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans spatia UT CONTENTUM in valore ---\n");
+        {
+            /* 'a{margin:1px 2px}' - valor III elementa: 1px,
+             * SPATIUM, 2px. Spatium NODUS est (D7). */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "a{margin:1px 2px}", XVII);
+            MateriaNodus* regula;
+            MateriaNodus* corpus;
+            MateriaNodus* decl;
+
+            CREDO_NON_NIHIL (plagula);
+            regula = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            corpus = regula->loci[CSS_REGULA_CORPUS].datum.nodus;
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM]), I);
+            decl = materia_valor_lista_obtinere(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (decl->genus,
+                (s32)CSS_GENUS_DECLARATIO);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                decl->loci[CSS_DECL_VALOR]), III);
+
+            /* Terminator ABSENS: '}' declarationem clausit. Locus
+             * non positus VALOR_NIHIL - scriptores eum omittunt. */
+            CREDO_AEQUALIS_S32 (
+                (s32)decl->loci[CSS_DECL_TOK_TERMINATOR].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+        }
+
+        imprimere("\n--- Probans spatia UT TRIVIA ---\n");
+        {
+            /* Spatium INTER regulas trivium manet: II regulae */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "a{} b{}", VII);
+
+            CREDO_NON_NIHIL (plagula);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                plagula->loci[CSS_PLAGULA_REGULAE]), II);
+        }
+        CREDO_VERUM (_octetos_probare(piscina, "a{} b{}", VII));
+
+        imprimere("\n--- Probans commentarium UT CONTENTUM ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a{margin:1px /* c */ 2px}", XXV));
+
+        imprimere("\n--- Probans praevalentiam ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a{color:red !important}", XXIII));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a{color:red ! important }", XXV));
+        {
+            /* Structura: praevalentia nodus; spatium MEDIUM ('! i')
+             * domum habet - ante lexematis 'important'. Ea est
+             * decisio designi: praevalentia syntaxis est, non
+             * valor, ergo lexemata eius trivia STRUCTURALIA ferre
+             * possunt quae folia contenta ferre non possunt. */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "a{color:red ! important ;}", XXVI);
+            MateriaNodus* regula;
+            MateriaNodus* corpus;
+            MateriaNodus* decl;
+            MateriaNodus* praevalentia;
+            MateriaToken* verbum;
+
+            CREDO_NON_NIHIL (plagula);
+            regula = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            corpus = regula->loci[CSS_REGULA_CORPUS].datum.nodus;
+            decl = materia_valor_lista_obtinere(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (decl->genus,
+                (s32)CSS_GENUS_DECLARATIO);
+            praevalentia =
+                decl->loci[CSS_DECL_PRAEVALENTIA].datum.nodus;
+            CREDO_NON_NIHIL (praevalentia);
+            CREDO_AEQUALIS_S32 (praevalentia->genus,
+                (s32)CSS_GENUS_PRAEVALENTIA);
+            verbum = praevalentia
+                ->loci[CSS_PRAEVALENTIA_TOK_VERBUM].datum.token;
+            CREDO_AEQUALIS_S32 (verbum->genus,
+                (s32)CSS_LEX_IDENTIFICATOR);
+            CREDO_AEQUALIS_I32 (verbum->numerus_ante, I);
+            CREDO_AEQUALIS_I32 (verbum->numerus_post, I);
+
+            /* Terminator PRAESENS: ';' */
+            CREDO_AEQUALIS_S32 (
+                (s32)decl->loci[CSS_DECL_TOK_TERMINATOR].genus,
+                (s32)MATERIA_VALOR_TOKEN);
+
+            /* Valor: red + spatium ANTE clamorem (servatum) */
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                decl->loci[CSS_DECL_VALOR]), II);
+        }
+
+        imprimere("\n--- Probans declarationem malam (sine ':') ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "a{color red}", XII));
+        {
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "a{color red}", XII);
+            MateriaNodus* regula;
+            MateriaNodus* corpus;
+            MateriaNodus* mala;
+
+            CREDO_NON_NIHIL (plagula);
+            regula = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            corpus = regula->loci[CSS_REGULA_CORPUS].datum.nodus;
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM]), I);
+            mala = materia_valor_lista_obtinere(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (mala->genus,
+                (s32)CSS_GENUS_DECLARATIO_MALA);
+        }
+    }
+
+
     /* ========================================================
      * STML: circuitus BIS
      * ======================================================== */

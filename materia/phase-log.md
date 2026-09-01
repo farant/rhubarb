@@ -1512,3 +1512,43 @@ sex T9 gratis). Regula manet: metire baseline, adde zephyrum.
 
 PROXIMUM: B3 - declarationes, praevalentia, valores contenti
 (mechanismus iam stat; B3 eum solum ADHIBET intra corpora).
+
+========================================================================
+B3 — DECLARATIONES + PRAEVALENTIA. RELATIO (2026-09-01)
+========================================================================
+
+css 3/3 (155 assertiones in probatione arboris) · viridis primo cursu
+completo post implementationem (uncus examinis duos adiutores
+nondum scriptos in ipso limine cepit - _folia_appendere,
+_malam_consumere_finita - ante ullum cursum).
+
+QUOD AEDIFICATUM EST
+  _corpus_regulae_consumere  L3 5.4.4: declarationes; ';' errantia
+                             folia servata fiunt (L3 abicit, nos
+                             servamus - sine iactura octetorum)
+  _declarationem_consumere   L3 5.4.5: titulus, ':', valor CONTENTUS
+                             usque ';'/'}'(retro)/FINIS; terminator
+                             absens licet (scriptores omittunt)
+  _malam_consumere(+_finita) L3 5.4.6: lexemata CRUDA cum
+                             profunditate saeptorum (FUNCTIO quoque
+                             aperit); ';' inclusum, '}' retrocessum
+  _retrocedere               index retro; re-solvere innocuum
+
+DECISIO DESIGNI: PRAEVALENTIA SYNTAXIS EST, NON VALOR. '!' et
+'important' loci TOKEN sunt, ergo trivia STRUCTURALIA ferre possunt
+quae folia contenta ferre non possunt: spatium medium
+('! important') ante lexematis 'important' fit, spatium sequens
+post eius - MANU adfixa (materia_token_trivia_*_ponere), sine
+ligatore, quia regio contenti pendentia numquam habet. Confirmatio
+ANTE constructionem: nisi post 'important' statim ';'/'}'/FINIS
+(spatio licito) sequatur, omnia folia contenta ordinaria fiunt -
+ordo octetorum utroque tramite servatur quia NIHIL transponitur.
+Probatio pinxit: verbum->numerus_ante == I (spatium medium domum
+habet) - id ipsum quod vitium plantatum fregit.
+
+VITIUM PLANTATUM ARSIT: adfixio spatii medii omissa -> porta
+octetorum ("! important" XXV) ET pinna structurae (numerus_ante)
+ambae rubrae. Duo oracula, unum vitium, ambo arserunt.
+
+PROXIMUM: B4 - regulae apud (tabula trium classium), CDO/CDC,
+'}' supremum, recuperatio regula-mala.
