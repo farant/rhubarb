@@ -248,23 +248,64 @@ principale (vacuum)
 
 
     /* ========================================================
-     * INCOMPLETUM NOMINATUM (T10 hoc vertet)
+     * REGULAE QUALIFICATAE (B2) - pinnae T9 VERSAE
      * ======================================================== */
     {
-        imprimere("\n--- Probans INCOMPLETUM: regulae nondum ---\n");
+        imprimere("\n--- Probans circuitum octetorum, regulae ---\n");
 
-        /* Spina regulas NON parsat, ergo lexemata earum CADUNT et
-         * emissio brevior est. Id ASSERITUR ut porta rubra esse
-         * DEBEAT donec T10 adveniat.
-         *
-         * Alternativa - lexemata in 'regula-mala' tacite congerere -
-         * portam VIRIDEM faceret dum nihil parsatum esset. Porta
-         * quae rubra esse debet et viridis est peior quam nulla.
-         *
-         * T10 has assertiones ad CREDO_VERUM vertat. */
-        CREDO_FALSUM (_octetos_probare(piscina, "a{}", III));
-        CREDO_FALSUM (_octetos_probare(piscina, "a{color:red}",
+        /* Hae duae CREDO_FALSUM natae sunt (T9): porta rubra donec
+         * regulae parsarentur. B2 eas vertit - id ipsum quod pinna
+         * rubra promittebat. */
+        CREDO_VERUM (_octetos_probare(piscina, "a{}", III));
+        CREDO_VERUM (_octetos_probare(piscina, "a{color:red}",
             XII));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a , b > c { color : red ; }", XXVII));
+        CREDO_VERUM (_octetos_probare(piscina, "\n/* c */\na{}\n",
+            XIII));
+        CREDO_VERUM (_octetos_probare(piscina, "a b{}", V));
+
+        imprimere("\n--- Probans praeludium CONTENTUM (D7) ---\n");
+        {
+            /* 'a b{}' - praeludium III elementa: a, SPATIUM, b.
+             * Spatium NODUS est (lexema-servatum), non trivium -
+             * intra praeludia trivia NON exsistunt (D7 auctum, vide
+             * css_arbor.c). */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "a b{}", V);
+            MateriaNodus* regula;
+            MateriaNodus* servatum;
+            MateriaValor  regulae;
+            MateriaValor  praeludium;
+
+            CREDO_NON_NIHIL (plagula);
+            regulae = plagula->loci[CSS_PLAGULA_REGULAE];
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(regulae),
+                I);
+            regula = materia_valor_lista_obtinere(regulae,
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (regula->genus,
+                (s32)CSS_GENUS_REGULA_QUALIFICATA);
+            praeludium = regula->loci[CSS_REGULA_PRAELUDIUM];
+            CREDO_AEQUALIS_I32 (
+                materia_valor_lista_numerus(praeludium), III);
+
+            /* Elementum medium: servatum SPATII, SINE triviis */
+            servatum = materia_valor_lista_obtinere(praeludium,
+                I)->datum.nodus;
+            CREDO_AEQUALIS_S32 (servatum->genus,
+                (s32)CSS_GENUS_LEXEMA_SERVATUM);
+            CREDO_AEQUALIS_S32 (
+                servatum->loci[CSS_SERVATUM_TOK].datum.token->genus,
+                (s32)CSS_LEX_SPATIA);
+            CREDO_AEQUALIS_I32 (servatum->loci[CSS_SERVATUM_TOK]
+                .datum.token->numerus_ante, ZEPHYRUM);
+
+            /* Corpus: saeptum */
+            CREDO_AEQUALIS_S32 (
+                regula->loci[CSS_REGULA_CORPUS].datum.nodus->genus,
+                (s32)CSS_GENUS_SAEPTUM);
+        }
     }
 
 

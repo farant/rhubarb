@@ -267,7 +267,7 @@ fails). Declarations arrive in B3 and will re-shape qualified-rule block
 interiors — so B2 asserts byte coverage and rule/prelude counts, NOT
 block-interior tree shape.
 
-- [ ] **Step 1: Flip the red pins and write the failing tests** — the
+- [x] **Step 1: Flip the red pins and write the failing tests** — the
   incompleteness assertions at probatio_css_arbor.c:265-266 flip
   `CREDO_FALSUM` → `CREDO_VERUM` (this is the moment T9 built them for).
   Add, using the EXISTING `_octetos_probare` helper (css_arbor.c gate,
@@ -298,12 +298,12 @@ block-interior tree shape.
     }
 ```
 
-- [ ] **Step 2: Run and verify the right failures**
+- [x] **Step 2: Run and verify the right failures**
 
 Run: `./css/compile_probationes.sh arbor`
 Expected: FAIL — the flipped pins and new asserts red; nothing else.
 
-- [ ] **Step 3: Implement** — "consume a qualified rule": component
+- [x] **Step 3: Implement** — "consume a qualified rule": component
   values into `praeludium` (content mode ON) until `{`; then `saeptum`
   into `corpus` (tok_apertum / contentum / tok_clausum; content mode OFF
   inside the block at this stage — structural trivia between block-level
@@ -311,16 +311,16 @@ Expected: FAIL — the flipped pins and new asserts red; nothing else.
   until then unparseable top-level tokens still fall out (coverage for
   those inputs stays red-capable — do not sweep into regula-mala yet).
 
-- [ ] **Step 4: Run and verify**
+- [x] **Step 4: Run and verify**
 
 Run: `./css/compile_probationes.sh`
 Expected: exit 0 — including the T8 coverage gate and both regimes.
 
-- [ ] **Step 5: Plant the fault** — drop the `tok_clausum` assignment in
+- [x] **Step 5: Plant the fault** — drop the `tok_clausum` assignment in
   the block builder. `_octetos_probare` MUST fail with a length mismatch.
   Restore. A gate that stays green with a dropped token is not a gate.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add css/fontes/css_arbor.c css/probationes/probatio_css_arbor.c

@@ -1466,3 +1466,49 @@ causis OPPOSITIS (primum a-latus sine patre ex defectu conversoris,
 deinde a-latus sine patre ex artificio silvae). Titulus idem, causae
 diversae - iudica per tally causarum ET directionem mensuratam,
 numquam per titulum solum.
+
+========================================================================
+B2 — REGULAE QUALIFICATAE + REGIMEN CONTENTI. RELATIO (2026-09-01)
+========================================================================
+
+css 3/3 (pinnae T9 VERSAE - id ipsum quod promittebant) · materia 6/6.
+Viridis PRIMO CURSU post implementationem.
+
+QUOD AEDIFICATUM EST (css_arbor.c, ~370 lineae novae)
+  _significans_proximum   regimen duplex: structurali trivia
+                          cumulantur; contenti OMNE lexema per
+                          solvere it (pendentia vacua = prior solum
+                          ponitur) et significans redditur
+  _valorem_componentem_consumere   L3 5.4.7: FUNCTIO -> functio,
+                          apertum -> saeptum, cetera -> servatum
+  _saeptum_consumere      L3 5.4.8: clausura CONGRUENS sola claudit;
+                          FINIS claudit (totalitas), tok_clausum
+                          absens manet quem scriptores omittunt
+  _functionem_consumere   L3 5.4.9 (lexator 'ident(' iam fudit)
+  _regulam_qualificatam_consumere  praeludium CONTENTUM usque '{',
+                          corpus saeptum structuralis
+
+REGIMEN CONTENTI (D7 AUCTUM) EXSECUTUM: intra praeludia spatia ET
+commentaria folia servata sunt, ligator praeteritur, trivia intra
+regiones contenti NON exsistunt. Ratio triplex in capite plagulae
+(ordo octetorum / constrictum T9 numquam ardet / modellum L3).
+Mechanismi cardo MENSURATUS ante usum: css_ligator_solvere cum
+pendentibus vacuis prior solum ponit (css_adaptare.c:162), ergo
+omne lexema contentum per eam ire potest et prior trans limitem
+regiminum numquam obsolescit - ordo octetorum ab hoc pendet.
+
+FINIS intra regulam: campus p->finis in statu parsurae; regula cum
+corpore absente redditur (octeti servati). TOTALITAS interim, non
+forma finalis - B4 recuperationem (regula-mala) adfert, ut '}'
+supremum et CDO/CDC.
+
+VITIUM PLANTATUM ARSIT: tok_clausum omissum -> QUINQUE casus
+tegumenti rubri (discrepantia mensurae). Restitutum, 3/3.
+
+NOTA FORMATORIS: linea T9 quam imitabar ipsa divergens erat -
+imitatio vicinorum divergentias ADDIT in plagula cum baseline.
+Emendationes meae plagulam 23 -> 17 duxerunt (delta mea zero,
+sex T9 gratis). Regula manet: metire baseline, adde zephyrum.
+
+PROXIMUM: B3 - declarationes, praevalentia, valores contenti
+(mechanismus iam stat; B3 eum solum ADHIBET intra corpora).
