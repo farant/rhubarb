@@ -560,15 +560,15 @@ principale (vacuum)
      * post compressionem (arcus 2026-08-26) */
     CREDO_AEQUALIS_I32 (census_planus.purae_expansae, (i32)73);
 
-    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)155);
-    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)155);
+    CREDO_AEQUALIS_I32 (census_latinus.plagulae, (i32)156);
+    CREDO_AEQUALIS_I32 (census_latinus.latinizatae, (i32)156);
     CREDO_AEQUALIS_I32 (census_latinus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.parsura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.scriptura_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.lectio_recusata, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vitia_summa, ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)155);
-    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)155);
+    CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)156);
+    CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)156);
 
     /* ============================================================
      * QUID PORTA REVERA VIDERIT

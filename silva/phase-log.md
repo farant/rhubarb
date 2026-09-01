@@ -14543,3 +14543,11 @@ occidit in arbor2_glr; functiones in C89 non nidificant, classis
 structura linguae dissolvitur) + retentio radicis (ordo per
 declarationem — formae.c 4/4 exacte) + SINE per _alicubi_congruere
 (existentia sola, 31s→8s). Porta: 1/1 + 0/0, divergentiae 0.
+
+## 2026-09-01 — corpus-pin 155→156 (probationes edit under gelatio)
+
+`probatio_silva_canon_corpus` pins the latinized lib-corpus count;
+`lib/stml_html.c` was born today (the STML→HTML emitter for `stml
+vertere`) and is file 156. All zeros held on first contact — the new
+file latinizes, parses, and judges PURE through the expanded sense —
+only the four count pins moved (563/564/570/571). No fontes touched.

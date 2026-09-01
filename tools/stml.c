@@ -5,6 +5,7 @@
  * Verba:
  *   stml formare   <via.stml> [-ad <exitus>] [-probare]
  *   stml expandere <via.stml> [-ad <exitus>]
+ *   stml vertere   <via.stml> [-ad <exitus>]
  *
  * formare = forma pulchra (semita pulchra, stml_scribere VERUM)
  * in stdout emissa; -ad <via> in plagulam scribit (numquam viam
@@ -29,7 +30,12 @@
  * numquam in radice (lex II - vitium VII molliter ponitur);
  * radix DOCUMENTI pascitur (lex III).
  *
- * Contractus exitus (verba ambo):
+ * vertere = catena eadem, deinde emissio HTML per lib/stml_html.c
+ * (doctype sponte; clausura per leges HTML; effugium duplex;
+ * recusationes nominatae; singularia emittuntur ut scripta -
+ * decretum Franis 2026-09-01).
+ *
+ * Contractus exitus (verba omnia):
  *   0 = emissum / conformis
  *   1 = divergentiae (-probare solum)
  *   2 = recusatio (usus / illegibilis / non parsabilis / vitium
@@ -47,6 +53,7 @@
 #include "internamentum.h"
 #include "stml.h"
 #include "stml_macros.h"
+#include "stml_html.h"
 #include "filum.h"
 
 #include <stdio.h>
@@ -57,7 +64,8 @@ _usus_imprimere (vacuum)
 {
     fputs("usus: stml <verbum> <via.stml> ...\n"
           "  stml formare   <via.stml> [-ad <exitus>] [-probare]\n"
-          "  stml expandere <via.stml> [-ad <exitus>]\n", stderr);
+          "  stml expandere <via.stml> [-ad <exitus>]\n"
+          "  stml vertere   <via.stml> [-ad <exitus>]\n", stderr);
 }
 
 /* Argumenta communia verbi: via una, -ad, fortasse -probare. */
@@ -367,44 +375,29 @@ _vitium_expansionis_titulus (
     }
 }
 
-/* expandere: catena tota (legere -> expandere -> distribuere) et
- * fructus pulchre emissus. Reddit codicem exitus. */
+/* Catena spec par. 3 (expandere -> distribuere) cum nuntiis suis.
+ * Porta in successu, NUMQUAM in radice: vitium VII molliter
+ * ponitur et radix_expansa non-NIHIL sed falsa manet (lex II).
+ * Distributio NON optionalis: cardinalitatem et praesentiam
+ * attributorum mutat (lex V). ZEPHYRUM = bene (radix_exitus
+ * impleta); alioquin codex exitus (nuntius iam emissus). */
 interior s32
-_expandere_currere (
-      integer   argc,
-    character** argv)
+_catenam_exsequi (
+     constans character*  verbum,
+     constans character*  via,
+                Piscina*  piscina,
+    InternamentumChorda*  intern,
+              StmlNodus*  radix,
+              StmlNodus** radix_exitus)
 {
-                    Piscina* piscina;
-        InternamentumChorda* intern;
-         StmlVerbiArgumenta  arg;
-                     chorda  textus;
-               StmlResultus  lectum;
-       StmlExpansioResultus  expansio;
-    StmlDistributioResultus  distributio;
-                     chorda  emissum;
-                        s32  codex;
+       StmlExpansioResultus expansio;
+    StmlDistributioResultus distributio;
 
-    codex = _argumenta_verbi_parsare("expandere", argc, argv,
-                                     FALSUM, &arg);
-    si (codex != ZEPHYRUM)
-    {
-        redde codex;
-    }
-    codex = _fons_parsare("expandere", arg.via, &piscina, &intern,
-                          &textus, &lectum);
-    si (codex != ZEPHYRUM)
-    {
-        redde codex;
-    }
-
-    /* Porta in successu, NUMQUAM in radice: vitium VII molliter
-     * ponitur et radix_expansa non-NIHIL sed falsa manet (spec
-     * par. 3.1 lex II). */
-    expansio = stml_expandere(lectum.radix, piscina, intern);
+    expansio = stml_expandere(radix, piscina, intern);
     si (!expansio.successus)
     {
-        fprintf(stderr, "stml expandere: %s:%u: %s",
-            arg.via, expansio.linea,
+        fprintf(stderr, "stml %s: %s:%u: %s",
+            verbum, via, expansio.linea,
             _vitium_expansionis_titulus(expansio.vitium));
         si (expansio.fragmentum.mensura > ZEPHYRUM)
         {
@@ -422,15 +415,12 @@ _expandere_currere (
         redde II;
     }
 
-    /* NON optionalis: distributio cardinalitatem et praesentiam
-     * attributorum mutat; sine ea documentum aliud emitteretur
-     * quam canon iudicavit (spec par. 3.1 lex V). */
     distributio = stml_distribuere(expansio.radix_expansa, piscina,
                                    intern);
     si (!distributio.successus)
     {
-        fprintf(stderr, "stml expandere: %s:%u: distributio %s",
-            arg.via, distributio.linea,
+        fprintf(stderr, "stml %s: %s:%u: distributio %s",
+            verbum, via, distributio.linea,
             distributio.vitium == STML_DISTRIBUTIO_MIXTA
                 ? "MIXTA" : "MEMORIA");
         si (distributio.titulus.mensura > ZEPHYRUM)
@@ -442,9 +432,46 @@ _expandere_currere (
         fputc('\n', stderr);
         redde II;
     }
+    *radix_exitus = distributio.radix_distributa;
+    redde ZEPHYRUM;
+}
 
-    emissum = stml_scribere(distributio.radix_distributa, piscina,
-                            VERUM);
+/* expandere: catena tota (legere -> expandere -> distribuere) et
+ * fructus pulchre emissus. Reddit codicem exitus. */
+interior s32
+_expandere_currere (
+      integer   argc,
+    character** argv)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     StmlVerbiArgumenta  arg;
+                 chorda  textus;
+           StmlResultus  lectum;
+              StmlNodus* radix;
+                 chorda  emissum;
+                    s32  codex;
+
+    codex = _argumenta_verbi_parsare("expandere", argc, argv,
+                                     FALSUM, &arg);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+    codex = _fons_parsare("expandere", arg.via, &piscina, &intern,
+                          &textus, &lectum);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+    codex = _catenam_exsequi("expandere", arg.via, piscina, intern,
+                             lectum.radix, &radix);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+
+    emissum = stml_scribere(radix, piscina, VERUM);
     si (emissum.datum == NIHIL && textus.mensura > ZEPHYRUM)
     {
         fprintf(stderr, "stml expandere: '%s' - emissio defecit\n",
@@ -452,6 +479,59 @@ _expandere_currere (
         redde II;
     }
     redde _exitum_emittere("expandere", emissum, arg.ad);
+}
+
+/* vertere: catena tota, deinde emissio HTML (lib/stml_html.c).
+ * Recusationes emissoris NOMINE cum detail (tagum/attributum/ens
+ * peccans). */
+interior s32
+_vertere_currere (
+      integer   argc,
+    character** argv)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+     StmlVerbiArgumenta  arg;
+                 chorda  textus;
+           StmlResultus  lectum;
+              StmlNodus* radix;
+       StmlHtmlResultus  versio;
+                    s32  codex;
+
+    codex = _argumenta_verbi_parsare("vertere", argc, argv,
+                                     FALSUM, &arg);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+    codex = _fons_parsare("vertere", arg.via, &piscina, &intern,
+                          &textus, &lectum);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+    codex = _catenam_exsequi("vertere", arg.via, piscina, intern,
+                             lectum.radix, &radix);
+    si (codex != ZEPHYRUM)
+    {
+        redde codex;
+    }
+
+    versio = stml_html_vertere(radix, piscina);
+    si (!versio.successus)
+    {
+        fprintf(stderr, "stml vertere: %s: %s",
+            arg.via, stml_html_vitium_titulus(versio.vitium));
+        si (versio.detail.mensura > ZEPHYRUM)
+        {
+            fprintf(stderr, " ('%.*s')",
+                (integer)versio.detail.mensura,
+                (constans character*)versio.detail.datum);
+        }
+        fputc('\n', stderr);
+        redde II;
+    }
+    redde _exitum_emittere("vertere", versio.html, arg.ad);
 }
 
 integer
@@ -471,6 +551,10 @@ principale (
     si (strcmp(argv[I], "expandere") == ZEPHYRUM)
     {
         redde (integer)_expandere_currere(argc, argv);
+    }
+    si (strcmp(argv[I], "vertere") == ZEPHYRUM)
+    {
+        redde (integer)_vertere_currere(argc, argv);
     }
     fprintf(stderr, "stml: verbum ignotum '%s'\n", argv[I]);
     _usus_imprimere();

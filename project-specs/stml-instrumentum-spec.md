@@ -1,10 +1,14 @@
 # STML — instrumentum crustae (`stml`) — spec V1
 
-**Status:** `formare` ET `expandere` AEDIFICATA 2026-09-01
-(`tools/stml.c` + `tools/stml_struere.sh`, institutum `~/.bin/stml`;
-§7.5.4 quoque executum eodem die). `vertere` nondum; `indagare`
-in scopo (Fran 2026-09-01), nondum aedificatum — §9.4 framing
-half-pager first, or v1 = non-interactive trace dump.
+**Status:** `formare`, `expandere`, `vertere` OMNIA AEDIFICATA
+2026-09-01 (`tools/stml.c` + `tools/stml_struere.sh`, institutum
+`~/.bin/stml`). Emissor HTML = **`lib/stml_html.c`** (bibliotheca,
+decretum Franis; porta `probatio_stml_html.c` 50/50 — lex spatii
+albi, relectio per html_lexema, recusationes omnes, decretum
+singulariorum pinnatum). Eodem die executa: §7.5.4 (effugium quot),
+§7.3 (quota simplex recusata, migratio vacua mensurata), §7.5.3.1
+(titulus vacuus crudus recusatus). Reliquum: `indagare` — §9.4
+framing half-pager first, or v1 = non-interactive trace dump.
 Sessio designationis 2026-08-29 (Fran + Opus 5).
 **Parcum matris:** `01M0VNSZC6` (Formator STML verus — CLI).
 **Visio:** `project-specs/stml-visio.md` §9.4 (instrumentum + canales).
