@@ -548,6 +548,31 @@ decision:
     per-row routing, alternation (first-non-empty), capture flow
     condition→arm, guard-narrows-arm, COMMUTATIO est= → `<EST>`
     migration.
+14. **SINE — BUILT 2026-08-31, third night** (decree: interview
+    "SINE seed" + relational-door rounds; commits 6ea2eccb,
+    8f0bbbda, 14ea9405, + gate) — the antijoin as a pure chain
+    FILTER: body = one bare pattern, `&@n;` bridge-filled per row
+    (THE BRIDGE IS THE JOIN — fully correlated NOT-EXISTS, no key
+    machinery), filled pattern petitioned floating within the
+    ROW'S SUBTREE, zero matches = row kept UNCHANGED. Vitium
+    XXIII (engine attrs / malformed body / fons NIHIL — document-
+    wide absence stays a named door, loud); canon CAPS link row.
+    THE GATE DELIVERED: codex 69 (variabilis inutilis) as a
+    three-chain pattern document vs the examen recipe in-process —
+    first run 865 false sites, all one insight (the bridge
+    promotes captured DOCUMENT material into the pattern plane,
+    carrying representation baggage hand-written patterns never
+    had), killed by three matcher refinements: symmetric blindness
+    (forma children filtered like candidate children),
+    `TRANSPARENTIA attributa=` (declared attribute blindness for
+    provenance b/linea/columna/f), and content-alias resolution
+    (`<<#lexN>>` resolved in effective children; sharing =
+    representation). Final: EXACT agreement, 206 files, 0
+    divergence, L1 + lint II byte gates intact. Named doors:
+    document-scope SINE, uncorrelated named-relation subtract,
+    pure-command SINE bodies, anchored SINE, petere-through-alias
+    enumeration, second-same-shape-declaration rows (multi-binding
+    enumeration).
 
 ---
 

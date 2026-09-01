@@ -566,3 +566,64 @@ superseded here).
 NEXT: SINE itself (bare-pattern body, bridge-filled, row-subtree
 scope, pure filter) + vitium XXIII + canon row + the codex 69
 gate over fixa/examinis + lib.
+
+## 2026-08-31 (later) — SINE shipped + the three matcher refinements the codex 69 gate forced
+
+SINE (the antijoin) landed exactly as decreed: `_sine_processare`
+on the chain plane — body = one bare pattern, `_ligamina_ad_argumenta`
++ `_liberos_expandere` under portatio fill the `&@n;` bridge PER ROW,
+`_exemplar_petere` (floating) runs the filled pattern inside the
+row's radix subtree, zero matches = row kept UNCHANGED. Vitium
+XXIII covers engine attrs on SINE, malformed body, and fons NIHIL
+(SINE as first link of a document CATENA without de= — document-wide
+absence stays a named door, refused loudly). A SINE link IS lawful
+as first link when de=/a DIRIBITIO condition feeds the chain.
+
+USAGE TRAP (found by my own fixture): a SINE right after a
+narrowing stage tests absence inside the NARROWED subtree. If the
+absence lives beside the match (declaration vs sibling uses), the
+capturing stage must keep the SCOPE element as its pattern root —
+`<s><d n="$n"/></s>`, not `<d n="$n"/>`. "Scope-rows" is a
+discipline the document author carries.
+
+THE BIG FINDING — the codex 69 differential's first run produced
+865 false positives across lib, and every one traced to a single
+insight: **the bridge promotes captured document material into the
+pattern plane, and document material carries representation-layer
+baggage that hand-written patterns never had.** Three baggage kinds,
+three refinements:
+
+1. SYMMETRIC BLINDNESS: `_laxa_liberos_congruere` filtered only the
+   CANDIDATE's children through `_liberi_effectivi`; spliced trivia
+   children (`<post>`) in the pattern demanded matches no candidate
+   could supply (transparent tags never survive candidate-side).
+   Pattern children now go through the same filter. 858 of the 865
+   died here.
+2. `TRANSPARENTIA attributa=`: captured lexemes carry provenance
+   attributes (b/linea/columna/f/def-*) which the attribute law
+   ("littera: adsit et aequet") turned into constraints — "an
+   identifier AT ITS OWN BYTE", unsatisfiable by any use. The
+   document now declares attribute blindness the way it declares
+   tag blindness; empty attributa= = vitium XIX; canon checks the
+   same form.
+3. CONTENT-ALIAS RESOLUTION: `<<#lexN>>` shared-lexeme transclusions
+   (ambiguus arms, expansion strata) resolve to their fragment's
+   content inside `_liberi_effectivi` (lazy id→node table over the
+   expanded root, depth cap XVI). Sharing is representation, not
+   content. Sites like `sizeof(x)`-as-only-use (expression arm holds
+   x via alias) now witness uses correctly. Enumeration through
+   aliases in petere is NOT done — a named door, taken only when a
+   case demands it.
+
+After the three: exact agreement, 206 files, zero divergence —
+examinis 1/1, lib 0/0 — with L1 (3772 sites) and lint II byte
+gates INTACT. The residue classes (second same-shape declaration
+per block, ordinatio/initiated-pointer shapes, shadowing) are
+measurably absent from the corpus; the pinned divergentes==0 will
+announce their arrival.
+
+NEXT: no decreed increment — the relational arc (rows-as-tuples →
+extension law → SINE → codex 69 gate) is COMPLETE. Open doors live
+in the interview file (tee, per-row routing, alternation,
+join-by-naming, document-scope SINE, uncorrelated subtract,
+COMMUTATIO est= migration, codices 83/86, petere-through-alias).

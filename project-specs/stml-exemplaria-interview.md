@@ -1331,7 +1331,21 @@ Build shape: extension in `_exemplar_petere`/row construction
 `_sine_implere`/link-branch on the `_mandata_colligere` substrate,
 vitium XXIII (XXII went to CAPTURA_COLLISA at build), canon CAPS
 row, fixtures, then the gate probatio. [Extension law SHIPPED
-9d8c0e7e — all gates re-verified green; SINE NOT yet built.]
+9d8c0e7e — all gates re-verified green.]
+
+**[SINE BUILT 2026-08-31, third night — the arc is COMPLETE.**
+Engine `_sine_processare` (6ea2eccb): all eight seals honored;
+ancorata resolved floating-only (seal 7 governs — pattern-element
+attributes are match literals, so there is nowhere lawful to put
+an engine flag; anchored SINE = named door). Canon row 8f0bbbda.
+THE CODEX 69 GATE (probatio_silva_exemplaria_inutilia): first run
+865 false sites → THREE MATCHER REFINEMENTS (14ea9405: symmetric
+blindness; TRANSPARENTIA attributa=, Fran-ratified; content-alias
+resolution, Fran-ratified) → EXACT agreement, 206 files, 0
+divergence, L1/lint II byte gates intact. The shadowing/first-
+binding residue classes are measurably ABSENT from the corpus;
+divergentes==0 pinned. The fallback (house absence-lint) was
+never needed.]**
 
 ## EXEMPLAR as canon-rule vocabulary (2026-08-31, Fran's question)
 

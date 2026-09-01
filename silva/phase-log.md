@@ -14510,3 +14510,20 @@ capturans; relatum byte-pro-byte aequale documento plano, 161/161
 (ae55eb75). Porta L1 recursa post ambulatorem invariatorum
 DIRIBITIONEM discentem: situs 3763/3763 (corpus machinam
 diribitionis ipsam nunc continet), divergentiae 0.
+
+## Addendum 2026-08-31 (nox altera): PORTA CODEX 69 — antiiunctio
+
+Sub gelatione (probationes solae): probatio_silva_exemplaria_inutilia
+— codex 69 (variabilis inutilis) ut documentum exemplarium SINE
+ferens (fixa/exemplaria/inutilis_localis.stml: catenae tres per
+formam declaratoris, ordines scoporum, pons '&@n;' folium usus
+petens). Oraculum = recipe examinis verbatim (exemplar lint II).
+Consensus mensuratus EXACTUS (examinis 51: 1/1; lib 155: 0/0;
+divergentiae 0) — sed via eo duxit per 865 situs falsos, quos tria
+refinamenta machinae stml_macros (caecitas symmetrica, TRANSPARENTIA
+attributa=, aliasa contenti resoluta — vide lib/stml_macros.worklog)
+ad nihilum redegerunt. Lectio pro silva: provenientia arboris
+(b/linea/columna/f) et communicatio lexematum (#lexN) sunt
+REPRAESENTATIO — planum congruentiae contentum videre debet; ianuae
+scriptoris (formae fragmentorum, aliasa) nunc a machina exemplarium
+transpiciuntur.

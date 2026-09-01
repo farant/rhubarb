@@ -547,3 +547,14 @@ links don't count as links) — ante-guard added so emptiness clamat
 only when the link walk itself was clean. probatio_canon 385/385.
 Silex's bundled canon unaffected (CAPS are engine-side, not canon
 rows).
+
+## 2026-08-31 (later) — SINE link row + TRANSPARENTIA attributa=
+
+`_catena_nexus_iudicare` gained the SINE branch: bare filter link
+(all four engine attrs banned — output/de/modus/ancorata), body =
+exactly one element, CITATUM like every pattern body. Judged only
+in chain-link position; a stray top-level SINE stays an unknown
+element to whatever dialect owns the position (loud). TRANSPARENTIA
+now also accepts attributa= (attribute blindness for the match
+plane) — present-but-empty = machinae malformatum, mirroring the
+engine's XIX. probatio_canon 417/417 (SINE sane link + mala 14-17).
