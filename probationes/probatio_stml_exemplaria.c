@@ -1552,6 +1552,85 @@ principale (
         CREDO_VERUM (e.vitium == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
     }
 
+
+    /* =============== INDAGO (vestigatio, XXIV) =============== */
+
+    /* --- lapis sepulcralis catenae + PER intra relatum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- INDAGO: catena + PER ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d/></s><s/>"
+            "<INDAGO/>"
+            "<CATENA output=\"$rr\"><EXEMPLAR><s $c/></EXEMPLAR>"
+            "<SINE><d/></SINE></CATENA>"
+            "<relatum><PER congruentia=\"$rr\"><x/></PER>"
+            "</relatum></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d/></s><s/>"
+                "<!--indago CATENA $rr (radix);"
+                " 1 EXEMPLAR s radix->2 (capturae: c);"
+                " 2 SINE d 2->1 (necati 1); exitus 1-->"
+                "<relatum><x/>"
+                "<!--indago PER $rr: ordines 1--></relatum>"
+                "</radix>");
+        }
+    }
+
+    /* --- lapis DIRIBITIONIS: praeteritum + ORDINARIUS + fabula
+     * bracchii --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- INDAGO: diribitio ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<INDAGO/>"
+            "<EXEMPLAR output=\"$ss\"><a $x/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$ss\" output=\"$m\">"
+            "<CASUS><EST><EXEMPLAR><nusquam/></EXEMPLAR></EST>"
+            "<EXEMPLAR><b/></EXEMPLAR></CASUS>"
+            "<ORDINARIUS><EXEMPLAR><a/></EXEMPLAR></ORDINARIUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><y/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><a/>"
+                "<!--indago EXEMPLAR $ss (radix): ordines 1"
+                " (capturae: x)-->"
+                "<!--indago DIRIBITIO $m (de $ss 1):"
+                " CASUS 1 conditio 0 praeteritum;"
+                " ORDINARIUS SUMPTUM; bracchium;"
+                " EXEMPLAR a 1->1; exitus 1-->"
+                "<y/>"
+                "<!--indago PER $m: ordines 1--></radix>");
+        }
+    }
+
+    /* --- XXIV: INDAGO non nudum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- INDAGO: vitia XXIV ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><INDAGO malum=\"1\"/><a/></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_INDAGO_MALFORMATUM);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><INDAGO><a/></INDAGO></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium == STML_EXPANSIO_INDAGO_MALFORMATUM);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

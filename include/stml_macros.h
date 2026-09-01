@@ -123,7 +123,14 @@ nomen enumeratio {
      * nihil vertit); corpus non exemplar unum; fons NIHIL (nexus
      * primus catenae documenti sine de= - absentia lata documenti
      * = ianua posterior nominata, CLARE recusata). */
-    STML_EXPANSIO_SINE_MALFORMATUM         = XXIII
+    STML_EXPANSIO_SINE_MALFORMATUM         = XXIII,
+    /* INDAGO malformatum (vestigatio resolutionis - decretum
+     * 2026-08-31): elementum NUDUM solum ('<INDAGO/>') - attributum
+     * quodvis aut liber non-commentum = vitium. Documento ferente,
+     * mandata consumpta commenta fabulae suae in sedibus suis
+     * relinquunt (bytes consulto differunt - vestigium in medio
+     * ipso vivit, commentum = invisibile natura). */
+    STML_EXPANSIO_INDAGO_MALFORMATUM       = XXIV
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
