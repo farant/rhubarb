@@ -40,6 +40,21 @@ nomen enumeratio {
     CSS_GENUS_REGULA_MALA,
     CSS_GENUS_DECLARATIO_MALA,
 
+    /* Selectores (spec par. V, B8) - arbor ANALYSEOS super lexemata
+     * praeludii (css_selector), non emissionis. APPENSA post genera
+     * priora: interpositio indices registri TACITE moveret. */
+    CSS_GENUS_SELECTOR_LISTA,
+    CSS_GENUS_SELECTOR_COMPLEXUS,
+    CSS_GENUS_SELECTOR_COMPOSITUS,
+    CSS_GENUS_SELECTOR_TYPI,
+    CSS_GENUS_SELECTOR_UNIVERSALIS,
+    CSS_GENUS_SELECTOR_CLASSIS,
+    CSS_GENUS_SELECTOR_IDENTITATIS,
+    CSS_GENUS_SELECTOR_ATTRIBUTI,
+    CSS_GENUS_PSEUDO_CLASSIS,
+    CSS_GENUS_PSEUDO_ELEMENTUM,
+    CSS_GENUS_SELECTOR_MALUS,
+
     CSS_GENUS_NUMERUS
 } CssGenus;
 
@@ -106,6 +121,58 @@ nomen enumeratio {
 nomen enumeratio {
     CSS_MALUM_TOKENS = 0
 } CssLocusMali;
+
+/* Selectores (B8). selector-malus locum 'tokens' cum malis
+ * prioribus communicat (CssLocusMali). */
+nomen enumeratio {
+    CSS_SEL_LISTA_SELECTORES = 0
+} CssLocusSelectorisListae;
+
+nomen enumeratio {
+    CSS_COMPLEXUS_SINISTER = 0,
+    CSS_COMPLEXUS_COMBINATOR,
+    CSS_COMPLEXUS_DEXTER
+} CssLocusComplexi;
+
+nomen enumeratio {
+    CSS_COMPOSITUS_PARTES = 0
+} CssLocusCompositi;
+
+nomen enumeratio {
+    CSS_TYPI_TOK = 0
+} CssLocusTypi;
+
+nomen enumeratio {
+    CSS_UNIVERSALIS_TOK = 0
+} CssLocusUniversalis;
+
+nomen enumeratio {
+    CSS_CLASSIS_TOK_PUNCTUM = 0,
+    CSS_CLASSIS_TOK_NOMEN
+} CssLocusClassis;
+
+nomen enumeratio {
+    CSS_IDENTITATIS_TOK = 0
+} CssLocusIdentitatis;
+
+nomen enumeratio {
+    CSS_ATTRIBUTI_TOK_APERTUM = 0,
+    CSS_ATTRIBUTI_TOK_NOMEN,
+    CSS_ATTRIBUTI_TOK_OPERATOR,
+    CSS_ATTRIBUTI_VALOR,
+    CSS_ATTRIBUTI_TOK_CLAUSUM
+} CssLocusAttributi;
+
+nomen enumeratio {
+    CSS_PSEUDO_CLASSIS_TOK_COLON = 0,
+    CSS_PSEUDO_CLASSIS_TOK_NOMEN,
+    CSS_PSEUDO_CLASSIS_ARGUMENTA
+} CssLocusPseudoClassis;
+
+nomen enumeratio {
+    CSS_PSEUDO_ELEMENTI_TOK_COLON = 0,
+    CSS_PSEUDO_ELEMENTI_TOK_NOMEN
+} CssLocusPseudoElementi;
 
 
 externus constans MateriaRegistrumCoctum CSS_REGISTRUM;

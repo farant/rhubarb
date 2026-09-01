@@ -108,6 +108,33 @@
     <liberum nomen="functio"/>
   </#>
 
+  <!-- genera selectorum (B8) - radix subarboris aut locus NODUS -->
+  <#selectores>
+    <liberum nomen="selector-lista"       maximum="1"/>
+    <liberum nomen="selector-complexus"   maximum="1"/>
+    <liberum nomen="selector-compositus"  maximum="1"/>
+    <liberum nomen="selector-typi"        maximum="1"/>
+    <liberum nomen="selector-universalis" maximum="1"/>
+    <liberum nomen="selector-classis"     maximum="1"/>
+    <liberum nomen="selector-identitatis" maximum="1"/>
+    <liberum nomen="selector-attributi"   maximum="1"/>
+    <liberum nomen="pseudo-classis"       maximum="1"/>
+    <liberum nomen="pseudo-elementum"     maximum="1"/>
+    <liberum nomen="selector-malus"       maximum="1"/>
+  </#>
+
+  <!-- partes compositi (quotlibet) -->
+  <#partes-compositi>
+    <liberum nomen="selector-typi"/>
+    <liberum nomen="selector-universalis"/>
+    <liberum nomen="selector-classis"/>
+    <liberum nomen="selector-identitatis"/>
+    <liberum nomen="selector-attributi"/>
+    <liberum nomen="pseudo-classis"/>
+    <liberum nomen="pseudo-elementum"/>
+    <liberum nomen="selector-malus"/>
+  </#>
+
   <!-- trivia liberi: munus SPATIUM aut COMMENTUM -->
   <#trivia>
     <liberum nomen="lex-spatia"/>
@@ -127,12 +154,13 @@
     </attributum>
     <attributum nomen="registrum-sigillum" genus="electio"
       necessarium="verum"
-      nota="PINNA: sigillum FNV-1a tabularum css_registrum.c.
+      nota="PINNA: sigillum FNV-1a tabularum css_registrum.c
+            (B8: XXI genera, XLV loci).
             Tabula mutata sine hac optione mutata rubet in
             iudicio (documentum sigillum vivum fert) ET in custode
             derivae (probatio_css_canon optionem contra
             materia_arbor_sigillum vivum confert). B8 eam re-pinnat.">
-      <optio>2354fe63</optio>
+      <optio>fb55041d</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -148,6 +176,7 @@
     <liberum nomen="saeptum"            maximum="1"/>
     <liberum nomen="regula-mala"        maximum="1"/>
     <liberum nomen="declaratio-mala"    maximum="1"/>
+    <<#selectores>>
   </elementum>
 
   <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
@@ -343,6 +372,181 @@
   </elementum>
 
   <elementum nomen="tokens" intra="declaratio-mala">
+    <<#lexemata-multa>>
+  </elementum>
+
+  <!-- =============== SELECTORES (B8) ===============
+       Arbor ANALYSEOS super lexemata praeludii (css_selector, B9):
+       lexemata cum arbore plagulae COMMUNICAT, ergo porta octetorum
+       ei consulto NULLA - spatia iuxta combinatores punctuatos et
+       colon alterum '::' non referuntur. Constrictiones ex spec
+       par. V et ex css_selector.c (B9), species-level.
+       -->
+
+  <elementum nomen="selector-lista"
+    nota="alternativae commate separatae: 'a, b'">
+    <liberum nomen="selectores" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selectores" intra="selector-lista">
+    <liberum nomen="selector-complexus"/>
+    <liberum nomen="selector-compositus"/>
+    <liberum nomen="selector-malus"/>
+  </elementum>
+
+  <elementum nomen="selector-complexus"
+    nota="binarius, sinistrorsum nidificatus: 'a > b c' =
+          ((a > b) c). Combinator = '>' '+' '~' (lex-delim) AUT
+          lexema spatiorum IPSUM (descendens, spec par. VI a)">
+    <liberum nomen="sinister"   maximum="1"/>
+    <liberum nomen="combinator" maximum="1"/>
+    <liberum nomen="dexter"     maximum="1"/>
+  </elementum>
+
+  <elementum nomen="sinister" intra="selector-complexus">
+    <liberum nomen="selector-complexus"  maximum="1"/>
+    <liberum nomen="selector-compositus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="combinator" intra="selector-complexus">
+    <liberum nomen="lex-delim"  maximum="1"/>
+    <liberum nomen="lex-spatia" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="dexter" intra="selector-complexus">
+    <liberum nomen="selector-compositus" maximum="1"/>
+    <liberum nomen="selector-complexus"  maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-compositus"
+    nota="'div.foo#bar:hover' - partes sine combinatore">
+    <liberum nomen="partes" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="selector-compositus">
+    <<#partes-compositi>>
+  </elementum>
+
+  <elementum nomen="selector-typi">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="selector-typi">
+    <liberum nomen="lex-identificator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-universalis">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="selector-universalis">
+    <liberum nomen="lex-delim" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-classis"
+    nota="'.foo' = lex-delim '.' + lex-identificator (lexator duo
+          lexemata fundit)">
+    <liberum nomen="tok_punctum" maximum="1"/>
+    <liberum nomen="tok_nomen"   maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_punctum" intra="selector-classis">
+    <liberum nomen="lex-delim" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_nomen" intra="selector-classis">
+    <liberum nomen="lex-identificator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-identitatis"
+    nota="'#bar' = lex-cancellum unum">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="selector-identitatis">
+    <liberum nomen="lex-cancellum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-attributi"
+    nota="'[nomen op valor]' - operator et valor absentes in forma
+          nuda '[nomen]'. Operator duorum octetorum ('^=') lexema
+          PRIMUM refert ('^'), alterum '=' non refertur (arbor
+          analyseos)">
+    <liberum nomen="tok_apertum"  maximum="1"/>
+    <liberum nomen="tok_nomen"    maximum="1"/>
+    <liberum nomen="tok_operator" maximum="1"/>
+    <liberum nomen="valor"        maximum="1"/>
+    <liberum nomen="tok_clausum"  maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertum" intra="selector-attributi">
+    <liberum nomen="lex-quadra-aperta" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_nomen" intra="selector-attributi">
+    <liberum nomen="lex-identificator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_operator" intra="selector-attributi">
+    <liberum nomen="lex-delim" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="valor" intra="selector-attributi">
+    <liberum nomen="lex-identificator" maximum="1"/>
+    <liberum nomen="lex-chorda"        maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausum" intra="selector-attributi">
+    <liberum nomen="lex-quadra-clausa" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pseudo-classis"
+    nota="':hover' aut ':not(...)' - nomen functionale lex-functio
+          ('not(' lexema unum), argumenta selectores aut lexemata
+          servata cruda (':nth-child(2n+1)')">
+    <liberum nomen="tok_colon" maximum="1"/>
+    <liberum nomen="tok_nomen" maximum="1"/>
+    <liberum nomen="argumenta" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_colon" intra="pseudo-classis">
+    <liberum nomen="lex-colon" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_nomen" intra="pseudo-classis">
+    <liberum nomen="lex-identificator" maximum="1"/>
+    <liberum nomen="lex-functio"       maximum="1"/>
+  </elementum>
+
+  <elementum nomen="argumenta" intra="pseudo-classis">
+    <liberum nomen="selector-lista"/>
+    <liberum nomen="selector-complexus"/>
+    <liberum nomen="selector-compositus"/>
+    <liberum nomen="selector-malus"/>
+    <liberum nomen="lexema-servatum"/>
+  </elementum>
+
+  <elementum nomen="pseudo-elementum"
+    nota="'::before' - colon PRIMUM refertur, alterum non (arbor
+          analyseos, nulla porta octetorum)">
+    <liberum nomen="tok_colon" maximum="1"/>
+    <liberum nomen="tok_nomen" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_colon" intra="pseudo-elementum">
+    <liberum nomen="lex-colon" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_nomen" intra="pseudo-elementum">
+    <liberum nomen="lex-identificator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="selector-malus"
+    nota="recuperatio: quod parsari nequit, lexemata cruda">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="selector-malus">
     <<#lexemata-multa>>
   </elementum>
 

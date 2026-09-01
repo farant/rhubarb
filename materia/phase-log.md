@@ -1845,3 +1845,30 @@ FRUCTUS: tally proiectionis vocabularium totum uno cursu dedit
 (47 elementa, 7 attributa) - regulae ex mensura, non ex memoria;
 plantae IV portam falsificaverunt priusquam viridi crederem.
 ASPERITATES: supra. DESIDERATA: nihil novum.
+
+========================================================================
+RELATIO B8 - GENERA SELECTORUM XI IN REGISTRO (2026-09-01)
+========================================================================
+
+FACTUM: css_registrum.h/.c + XI genera (XXI), + XXI loci (XLV),
+enumerationes locorum nominatae (CSS_COMPLEXUS_COMBINATOR etc.;
+selector-malus CssLocusMali communicat). css.canon + XXXII regulae
+(XCVI), fragmenta #selectores/#partes-compositi, pinna sigilli
+2354fe63 -> fb55041d. Custodes RUBRI PRIMUM: registrum (XXI contra
+X), canon (genera XI sine regula + sigillum motum - vivum ex ipsa
+porta lectum et re-pinnatum). Deinde 7/7.
+
+DECISIONES CANONIS (species-level, B9 falsificet): combinator =
+lex-delim | lex-spatia; sinister/dexter = complexus | compositus
+(nidificatio sinistrorsum); tok_nomen pseudo-classis = identificator
+| functio ('not(' lexema unum); argumenta = selectores | servata
+cruda; valor attributi = identificator | chorda; operator = lex-delim
+PRIMUM ('^=' alterum non refertur); '::' colon primum solum. Ambo
+'non refertur' ex natura arboris analyseos: praeludium octetos
+omnes possidet, arbor selectorum nullam portam octetorum habet.
+
+FORMATOR: probatio_css_arbor 59 -> 82 (rows LOCI_NOMINATI XXI
+longae, ut vicinae XXIV quae iam divergunt) -> bilineares -> 59.
+Imitatio vicinorum divergentium divergentias ADDIT - lex iterum.
+
+PROXIMUM: B9 css_selector.

@@ -706,20 +706,20 @@ CSS_COMPLEXUS_COMBINATOR, CSS_COMPLEXUS_DEXTER`, …). Append AFTER the
 existing 10 genera, before `CSS_GENUS_NUMERUS` — reordering would move
 every registry index silently.
 
-- [ ] **Step 1: Extend the drift guards FIRST and watch them fail** —
+- [x] **Step 1: Extend the drift guards FIRST and watch them fail** —
   the existing probatio asserts loci_offset contiguity + all-loci titles
   + count == numerus; extend the expected tables to the new 21/new slot
   count, run, verify red (the guard sees genera the table lacks). B7's
   canon guard goes red too — both reds are the system working.
 
-- [ ] **Step 2: Add the rows** — table entries + loci enums.
+- [x] **Step 2: Add the rows** — table entries + loci enums.
 
-- [ ] **Step 3: Extend css.canon** with the 11 rules; re-pin the
+- [x] **Step 3: Extend css.canon** with the 11 rules; re-pin the
   sigillum (it covers the registry, which just changed).
 
-- [ ] **Step 4: Run whole suite** — exit 0 including B7's canon gate.
+- [x] **Step 4: Run whole suite** — exit 0 including B7's canon gate.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/fontes/css_registrum.h css/fontes/css_registrum.c \

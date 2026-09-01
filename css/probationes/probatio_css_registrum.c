@@ -44,7 +44,12 @@ hic_manens constans character* ORDO_EXSPECTATUS[] = {
 hic_manens constans character* GENERA_EXSPECTATA[] = {
     "plagula", "regula-qualificata", "regula-apud", "declaratio",
     "praevalentia", "lexema-servatum", "functio", "saeptum",
-    "regula-mala", "declaratio-mala"
+    "regula-mala", "declaratio-mala",
+    /* B8: selectores (spec par. V) - APPENSA, numquam interposita */
+    "selector-lista", "selector-complexus", "selector-compositus",
+    "selector-typi", "selector-universalis", "selector-classis",
+    "selector-identitatis", "selector-attributi", "pseudo-classis",
+    "pseudo-elementum", "selector-malus"
 };
 
 s32 principale (vacuum)

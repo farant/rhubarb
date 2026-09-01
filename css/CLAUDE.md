@@ -10,10 +10,19 @@ its T1–T9 are the historical record.
 
 ## Praesens status (2026-09-01, post B1-B6)
 
-PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B7 COMPLETE; next =
-**B8 (selector genera in the registry)**, then B9 (css_selector),
+PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B8 COMPLETE; next =
+**B9 (css_selector, the analysis tree over prelude tokens)**, then
 B10 (wire-up). Suites: css 7/7 (registrum, adaptare, arbor, corpus,
-stml, totalitas, **canon**).
+stml, totalitas, canon).
+
+B8 (2026-09-01): 11 selector genera APPENDED to the registry (21
+genera, 45 slots), named slot enums, canon +32 rules (96 total),
+sigillum re-pinned fb55041d. Guards went red first (registry count;
+canon: 11 rule-less genera + moved sigillum), then green. Two
+analysis-view facts baked into the canon notes for B9: `::before`
+references its FIRST colon only, and a two-byte attribute operator
+(`^=`) references its first delim only - the selector tree has no
+byte gate BY DESIGN, the prelude owns every byte.
 
 B7 (2026-09-01): `css/grammatica/css.canon` HAND-WRITTEN, 64 rules
 (3 envelope + 10 genera + 24 slots + 27 lexemes), slot constraints
