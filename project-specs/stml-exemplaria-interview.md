@@ -1552,3 +1552,21 @@ across two engine increments and produced a false regression
 gate binary (always fresh-built) was the only honest oracle.
 Rebuild probes before believing them; recorded in
 debugging-lessons.
+
+## PONS UNIFORMIS + ANGUSTANS BUILT (2026-09-01 — two-question
+## round, both recommended ratified)
+
+Bridge uniformity: THE REFERENCE IS THE OPT-IN (no ceremony);
+shared fill machine `_corpus_ordini_implere`, SINE refactored
+onto it (NON-EXSTAT and EXSTAT are one correlation machine with
+opposite signs — the symmetry completed); nucleus gained
+stratum/tectum (mechanical ripple). Cross-stage joins live
+(fixture: per-declaration rows joined to their own probatio).
+Angustans: `<CASUS angustans>`; ORDINARIUS+angustans = XXI both
+judges; the IDENTITY IDIOM discovered and pinned — `<EXEMPLAR
+ancorata>` + wildcard = each row maps to itself, so the alarm
+document spells its filter ONCE (condition filters, identity arm
+carries). Two doors closed; remaining named doors: per-row
+routing (parked), document-scope SINE, tee, anchored SINE,
+petere-through-alias, multi-binding-within-one-candidate,
+indagare (the debugger), descensus cost measurement (mensor).

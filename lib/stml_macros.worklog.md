@@ -724,3 +724,28 @@ was the only honest oracle in the room.
 formae.c now measures 4/4 EXACT (index_mortuus — the
 second-declaration-per-block case — is retention's proof); the
 full gate holds 1/1 + 0/0 at zero divergence.
+
+## 2026-09-01 (later) — bridge uniformity + angustans: the last small doors
+
+Bridge uniformity closed join-by-naming the SPELLED way: any
+`&@n;` in a positive stage's pattern flips that stage to per-row
+instantiation — the same fill machine SINE always used, now
+factored into `_corpus_ordini_implere` and shared. The pleasing
+part: SINE and positive stages are now literally one correlation
+machine with opposite signs, and the nucleus ripple
+(stratum/tectum) was the entire cost. Reference with no rows =
+XIII loud. Compat corner recorded: literal `&@n;` in a link body
+previously matched literal transclusion nodes (raw law) — now it
+means correlation, as it always should have.
+
+Angustans (`<CASUS angustans>`): the arm takes the condition's
+output; five lines in _diribitio_processare exactly as priced.
+The build's small discovery is the IDENTITY IDIOM: `<EXEMPLAR
+ancorata>` with the wildcard body maps each row to itself
+(anchored = radix-only candidate, wildcard = always matches), so
+"report the offenders" = condition-filter + identity arm — the
+alarm document from the simulation now spells its filter ONCE.
+Comment trap for the record: `<*/>` inside a BLOCK COMMENT
+terminates it (the -Wcomment cousin, caught by examen REICE).
+
+235/235; canon both judges; three byte gates intact.
