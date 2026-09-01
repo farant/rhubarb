@@ -1410,3 +1410,59 @@ QUOD TENUIT - et auditum id dicere debet
   custodes derivae tabularum manu scriptarum plantati et arsi;
   documenta CLAUDE.md ambo VERA et profunda - melior fons quam
   spec ipsa pro statu currenti.
+
+========================================================================
+B1 — COMPARATOR ARBORUM PORTATUS. RELATIO (2026-09-01)
+========================================================================
+
+materia 6/6 (nova probatio 46 assertiones) · css 3/3 · shim: octeti
+347/347 + STML 347/347 + circuitus bis 347/347 + **ARBOR (comparator)
+347/347**, exitus 0. Desideratum 01M1EZKKP0 clausum.
+
+QUOD AEDIFICATUM EST
+  materia/fontes/materia_arbor_aequalitas.c   portatio ex silva
+    (dimidium ARBORIS solum; dimidium parsurae = frons C89, manet)
+  materia/fontes/materia_arbor.h              contractus + declarationes
+  materia/probationes/probatio_materia_aequalitas.c
+  shim: oraculum arboris in circuitu (mnodus contra relectam,
+    STRUCTURALIS), numeratores ARBOR_IDEM/DISPAR in exitum iuncti
+
+MODUS FISSUS MENSURATUS, NON PRAESUMPTUS: FIDELITAS addit byte_offset,
+linea, columna (et longitudo, quae in caudam abiit); OMNIA CETERA
+utroque modo - series triviorum inclusa, et signum provenientiae
+(offset < 0) consulto utroque. Pinctum in probatione ne portatio a
+fonte divergat. Consequentia pro B9 confirmata: 'a>b' et 'a > b'
+arbores selectorum aequales erunt quia folia spatii omissa numquam
+intrant et offsets in STRUCTURALI non conferuntur.
+
+EXCLUSA CONSULTO: standard, scissurae, longitudo - cauda frontis,
+cuius formam materia non videt. Sedes descensus nominata: uncus
+comparationis frontis, phasis V.
+
+ORACULUM BIS ARSIT PRIMO TACTU - plantatio per ignem vivum satisfacta
+(porta quae in defectibus VERIS bis rubuit plantatione synthetica non
+eget; ambae causae campum et viam nominaverunt, quod instrumentum
+probat):
+
+ 1. CCXXXIV plagulae: conversor shim patres NON copiabat. Lector
+    materiae (_patres_figere) arborem totam parentat; arbor conversa
+    'non commissa' videbatur. Emendatum: conversor parentat.
+
+ 2. LXXVIII plagulae (capita omnia - nodi AMBIGUI retenti), via
+    0.3>2.1>54.0, genus 54 = ambiguus: speculando nullitatem silvae
+    inventa est DIVERGENTIA POLITICAE VERA - commissio silvae
+    bracchia ambigui non canonica SINE patre relinquit (artificium
+    ambulationis spinae), materia arborem TOTAM parentat. Directio
+    MENSURATA proba una plagula ([a:nihil b:pater]), non coniectata.
+
+    Documentum patrem NON fert - reconstructio utrimque est, ergo
+    quaestio non 'quis mentitur' sed 'quae politica'. Shim politicam
+    materiae sumit (arbores commensurabiles); DECISIO VERA ad phasim
+    V nominatur: silva in materiam migrans decernat utrum consumptores
+    eius a nullitate patris in bracchiis pendeant. Nota in conversore.
+
+METHODUS NOTANDA: divergentia 'nodus/pater-nullitas' bis apparuit
+causis OPPOSITIS (primum a-latus sine patre ex defectu conversoris,
+deinde a-latus sine patre ex artificio silvae). Titulus idem, causae
+diversae - iudica per tally causarum ET directionem mensuratam,
+numquam per titulum solum.

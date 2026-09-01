@@ -27,10 +27,12 @@ if [ -z "$OBIECTA" ]; then
     exit 2
 fi
 
-for m in materia_token materia_nodus materia_scribere materia_arbor materia_lexicon; do
+for m in materia_token materia_nodus materia_scribere materia_arbor \
+         materia_arbor_aequalitas materia_lexicon; do
     src="$RADIX/materia/fontes/$m.c"
     obj="$BUILD/$m.o"
-    if [ ! -f "$obj" ] || [ "$src" -nt "$obj" ]; then
+    # in aequalitate temporum RECOMPILA (vitium falsi rubri I.3b)
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
         clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
               -Wsign-conversion -Wcast-qual -Wstrict-prototypes \
               -Wmissing-prototypes -Wwrite-strings -Wno-long-long \
@@ -56,7 +58,8 @@ clang -std=c89 -Wno-long-long -Wno-overlength-strings -fbracket-depth=512 \
   -I"$RADIX/materia/fontes" -I"$RADIX/materia/probationes" \
   "$RADIX/materia/instrumenta/shim_c89.c" \
   "$BUILD/materia_token.o" "$BUILD/materia_nodus.o" "$BUILD/materia_scribere.o" \
-  "$BUILD/materia_arbor.o" "$BUILD/materia_lexicon.o" "$BUILD/lexicon_c89.o" \
+  "$BUILD/materia_arbor.o" "$BUILD/materia_arbor_aequalitas.o" \
+  "$BUILD/materia_lexicon.o" "$BUILD/lexicon_c89.o" \
   $OBIECTA -o "$BIN" || { echo "FRACTA: nexus shim" >&2; exit 1; }
 
 # Vexilla a plagulis SEPARANDA: '-stml' corpus ordinarium tollere

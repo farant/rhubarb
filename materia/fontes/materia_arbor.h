@@ -377,4 +377,66 @@ materia_arbor_legere (
     constans MateriaArborConsilium* consilium,
              MateriaArborVitium* vitium);
 
+
+/* ==================================================
+ * COMPARATOR ARBORUM (portatus ex silva_arbor_aequalitas.c)
+ *
+ * Oraculum SECUNDUM praeter octetos: dislocatio dominii triviorum
+ * (commentarium ex 'post' prioris in 'ante' sequentis migrans)
+ * fluxum octetorum EXACTE servat - sola arbor eam videt.
+ *
+ * MODI, MENSURATI ex silva (non praesumpti): STRUCTURALIS confert
+ * genus nodi, numerum locorum, genus valoris per locum, listas per
+ * mensuram PROSPECTUS (numquam xar_numerus repositorii - commune
+ * inter furcas est), lexemata per genus + octetos valoris +
+ * fons_index + initium_lineae + PROVENIENTIAM (signum byte_offset,
+ * utroque modo - custodia quae aliter transiret quia subiectum
+ * abesset), seriem triviorum (genus + valor, ORDINE, ambae
+ * series). FIDELITAS his addit: byte_offset, linea, columna.
+ *
+ * QUAE SILVA CONFERT ET HIC ABSUNT, CONSULTO: 'standard',
+ * 'scissurae', 'longitudo' - in cauda frontis vivunt, cuius formam
+ * materia non videt. Sedes descensus NOMINATA: uncus comparationis
+ * frontis, phasis V (migratio C89 eum poscet; CSS et HTML numquam).
+ *
+ * PATER: nullitas sola, et INTERIORIBUS solis (profunditas > 0).
+ * Radices conferre CIX divergentias falsas dedit - subarbor electa
+ * patrem habet, arbor seorsum lecta habere non potest.
+ *
+ * QUOD NON VIDET, CONSULTO: dominium GEMINUM triviorum (lexema in
+ * duabus seriebus spatia_*) - id oraculum octetorum capit. Noli
+ * hunc comparatorem 'emendare' ut id capiat: oracula duo classes
+ * defectuum DISIUNCTAS tegunt.
+ * ================================================== */
+
+#define MATERIA_ARBOR_VIA_CAPACITAS 256
+
+nomen enumeratio {
+    MATERIA_ARBOR_COMPARATIO_STRUCTURALIS = 0,
+    MATERIA_ARBOR_COMPARATIO_FIDELITAS
+} MateriaArborComparatioModus;
+
+/* Divergentia PRIMA nominata. Booleanum solum inutile est -
+ * 'inaequales' sine campo et via bisectionem manualem petit. */
+nomen structura {
+      constans character* campus;    /* nomen campi divergentis */
+   constans MateriaNodus* nodus_a;   /* nodi continentes */
+   constans MateriaNodus* nodus_b;
+   constans MateriaToken* lexema_a;  /* NIHIL nisi lexicalis */
+   constans MateriaToken* lexema_b;
+                     s32  locus;     /* index loci; -I absens */
+                     s32  index;     /* index seriei; -I absens */
+               character  via[MATERIA_ARBOR_VIA_CAPACITAS];
+} MateriaArborDifferentia;
+
+/* Arbores duas conferre. VERUM si aequales. differentia NIHIL
+ * licet; alioquin in inaequalitate impletur (in aequalitate
+ * campus = NIHIL ponitur). */
+b32
+materia_arbor_aequalis (
+          constans MateriaNodus* a,
+          constans MateriaNodus* b,
+    MateriaArborComparatioModus  modus,
+        MateriaArborDifferentia* differentia);
+
 #endif /* MATERIA_ARBOR_H */

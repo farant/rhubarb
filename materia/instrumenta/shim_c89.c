@@ -323,6 +323,41 @@ _nodus_convertere (SilvaNodus* s)
     per (i = ZEPHYRUM; i < s->numerus_locorum; i++)
     {
         m->loci[i] = _valor_convertere(s->loci[i]);
+
+        /* PATER: politica RECONSTRUCTIONIS materiae, non speculum
+         * silvae. Documentum patrem NON fert - uterque latus eum
+         * reficit, et politicae DIFFERUNT: commissio silvae
+         * bracchia ambigui non canonica SINE patre relinquit
+         * (artificium ambulationis spinae), lector materiae
+         * (_patres_figere) arborem TOTAM parentat. Speculari
+         * silvam hic LXXVIII plagulas capitum (nodi AMBIGUI
+         * retenti) falso divergentes dedit. Divergentia politicae
+         * ad phasim V NOMINATA (phase-log): silva in materiam
+         * migrans semel decernat. Oraculum arboris ambas vias
+         * primo tactu invenit: CCXXXIV, deinde LXXVIII. */
+        si (   m->loci[i].genus       == MATERIA_VALOR_NODUS
+            && m->loci[i].datum.nodus != NIHIL)
+        {
+            m->loci[i].datum.nodus->pater = m;
+        }
+        alioquin si (m->loci[i].genus == MATERIA_VALOR_LISTA)
+        {
+            i32 j;
+            i32 n = materia_valor_lista_numerus(m->loci[i]);
+
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                MateriaValor* f =
+                    materia_valor_lista_obtinere(m->loci[i], j);
+
+                si (   f              != NIHIL
+                    && f->genus       == MATERIA_VALOR_NODUS
+                    && f->datum.nodus != NIHIL)
+                {
+                    f->datum.nodus->pater = m;
+                }
+            }
+        }
     }
     redde m;
 }
@@ -950,6 +985,8 @@ hic_manens b32 STML_AGERE = FALSUM;
 hic_manens b32 STML_VERBOSE = FALSUM;
 hic_manens i32 CIRC_IDEM = 0;
 hic_manens i32 CIRC_DISPAR = 0;
+hic_manens i32 ARBOR_IDEM = 0;
+hic_manens i32 ARBOR_DISPAR = 0;
 
 hic_manens vacuum
 _probare (constans character* titulus, constans character* fons)
@@ -1088,6 +1125,7 @@ _probare (constans character* titulus, constans character* fons)
                     MateriaArborScriptura mb;
                     i32 gyrus;
                     b32 sanus = VERUM;
+                    b32 arbor_sana = VERUM;
                     chorda prior = ma.textus;
 
                     ac.forma = FORMA;
@@ -1122,9 +1160,39 @@ _probare (constans character* titulus, constans character* fons)
                                 (int)mb.textus.mensura);
                             sanus = FALSUM; frange;
                         }
+                        /* ORACULUM ARBORIS (B1): dislocatio dominii
+                         * triviorum octetos servat - sola comparatio
+                         * structuralis eam videt. */
+                        {
+                            MateriaArborDifferentia diff;
+
+                            si (!materia_arbor_aequalis(mnodus, relecta,
+                                    MATERIA_ARBOR_COMPARATIO_STRUCTURALIS,
+                                    &diff))
+                            {
+                                imprimere("  %-28s ARBOR DISPAR (gyrus %d:"
+                                    " %s @ %s) [a:%s b:%s]\n", titulus,
+                                    (int)gyrus + 1,
+                                    diff.campus ? diff.campus : "-",
+                                    diff.via,
+                                    (diff.nodus_a && diff.nodus_a->pater)
+                                        ? "pater" : "nihil",
+                                    (diff.nodus_b && diff.nodus_b->pater)
+                                        ? "pater" : "nihil");
+                                arbor_sana = FALSUM;
+                            }
+                        }
                         prior = mb.textus;
                     }
                     si (sanus) { CIRC_IDEM++; } alioquin { CIRC_DISPAR++; }
+                    si (arbor_sana)
+                    {
+                        ARBOR_IDEM++;
+                    }
+                    alioquin
+                    {
+                        ARBOR_DISPAR++;
+                    }
                     STML_IDEM++;
                 }
             }
@@ -1190,6 +1258,8 @@ s32 principale (integer argc, character** argv)
             (int)STML_DISPAR);
         imprimere("  CIRCUITUS (bis): idem %d, dispar %d\n",
             (int)CIRC_IDEM, (int)CIRC_DISPAR);
+        imprimere("  ARBOR (comparator): idem %d, dispar %d\n",
+            (int)ARBOR_IDEM, (int)ARBOR_DISPAR);
     }
 
     imprimere("\n  probatae %d, fractae %d\n\n", (int)PROBATAE, (int)FRACTAE);
@@ -1197,6 +1267,7 @@ s32 principale (integer argc, character** argv)
      * STML_DISPAR et CIRC_DISPAR nuntiabantur sed exitum NON
      * movebant - porta quae in assertione sua PRINCIPALI cadere
      * non potest. Tertium huius generis hodie. */
-    redde (FRACTAE == 0 && STML_DISPAR == 0 && CIRC_DISPAR == 0)
+    redde (FRACTAE == 0 && STML_DISPAR == 0 && CIRC_DISPAR == 0
+        && ARBOR_DISPAR == 0)
         ? ZEPHYRUM : I;
 }

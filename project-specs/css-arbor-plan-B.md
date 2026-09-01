@@ -93,7 +93,7 @@ piscina, chorda, Xar, materia.
 - Produces (mirror of silva_arbor.h:338-391, renamed):
 
 ```c
-#define MATERIA_ARBOR_VIA_CAPACITAS 128   /* = silva's value; verify at port */
+#define MATERIA_ARBOR_VIA_CAPACITAS 256   /* = silva's value; VERIFIED at port */
 
 nomen enumeratio {
     MATERIA_ARBOR_COMPARATIO_STRUCTURALIS = 0,
@@ -132,7 +132,7 @@ compared by NULLITY only (:370-376). The STRUCTURALIS/FIDELITAS split is
 the header lists what is compared but not per-mode; transcribe the actual
 branches.
 
-- [ ] **Step 1: Write the failing test** — hand-built trees (the SOLUTUM
+- [x] **Step 1: Write the failing test** — hand-built trees (the SOLUTUM
   precedent from probatio_stml_html: build with `materia_nodus_creare` +
   `materia_nodus_ponere` + `materia_token_creare`). One equal pair asserts
   VERUM. Then one planted divergence per compared field, each asserting
@@ -157,26 +157,26 @@ branches.
   fons_index · initium_lineae · trivia series (genus + valor, order, both
   lists) · pater nullity.
 
-- [ ] **Step 2: Run and verify it fails**
+- [x] **Step 2: Run and verify it fails**
 
 Run: `./materia/compile_probationes.sh aequalitas`
 Expected: FAIL — `materia_arbor_aequalis` undefined. (Exit 2 = filter
 matched nothing = you misnamed the file.)
 
-- [ ] **Step 3: Port** — silva_arbor_aequalitas.c is 1,000 lines,
+- [x] **Step 3: Port** — silva_arbor_aequalitas.c is 1,000 lines,
   includes only silva_arbor.h + xar + string.h, zero preprocessor
   references (measured 2026-09-01). Mechanical rename pass
   (Silva→Materia), delete the standard/scissurae comparisons with a
   comment naming the phase-5 landing spot, trivia comparison walks the
   exact arrays (`spatia_ante`/`numerus_ante`) instead of silva's Xars.
 
-- [ ] **Step 4: Run and verify all divergence cases fire**
+- [x] **Step 4: Run and verify all divergence cases fire**
 
 Run: `./materia/compile_probationes.sh aequalitas`
 Expected: exit 0, every planted case red-capable (they are separate
 assertions, all green because each asserts FALSUM).
 
-- [ ] **Step 5: Wire into the shim as the tree oracle** — in
+- [x] **Step 5: Wire into the shim as the tree oracle** — in
   `materia/instrumenta/shim_c89.c`, after the CIRCUITUS read-back,
   compare the converted tree against the read-back tree:
 
@@ -192,18 +192,18 @@ assertions, all green because each asserts FALSUM).
   code blind to a finding class is half a gate). Assert coverage:
   trees compared == files read back, printed in the tally.
 
-- [ ] **Step 6: Plant a shim fault** — temporarily skip trivia
+- [x] **Step 6: Plant a shim fault** — temporarily skip trivia
   restoration for one genus in the shim's read path; the tree oracle
   MUST catch it (this divergence is byte-invisible on write-back only
   when ownership migrates — if bytes catch it first, move the plant to
   a divisio-style ownership migration, which bytes cannot see). Restore.
 
-- [ ] **Step 7: Run the full belts**
+- [x] **Step 7: Run the full belts**
 
 Run: `./materia/compile_probationes.sh && ./materia/shim_probare.sh -stml`
 Expected: suites green; shim tally gains `ARBOR: idem N, dispar 0`.
 
-- [ ] **Step 8: Commit + close the desideratum**
+- [x] **Step 8: Commit + close the desideratum**
 
 ```bash
 git add materia/fontes/materia_arbor_aequalitas.c materia/fontes/materia_arbor.h \
