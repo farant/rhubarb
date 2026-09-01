@@ -1,9 +1,10 @@
 # STML — instrumentum crustae (`stml`) — spec V1
 
-**Status:** `formare` AEDIFICATUM 2026-09-01 (`tools/stml.c` +
-`tools/stml_struere.sh`, institutum `~/.bin/stml`; §7.5.4 quoque
-executum eodem die). `vertere` nondum; verba `expandere` et
-`indagare` addita in scopo (Fran 2026-09-01), nondum aedificata.
+**Status:** `formare` ET `expandere` AEDIFICATA 2026-09-01
+(`tools/stml.c` + `tools/stml_struere.sh`, institutum `~/.bin/stml`;
+§7.5.4 quoque executum eodem die). `vertere` nondum; `indagare`
+in scopo (Fran 2026-09-01), nondum aedificatum — §9.4 framing
+half-pager first, or v1 = non-interactive trace dump.
 Sessio designationis 2026-08-29 (Fran + Opus 5).
 **Parcum matris:** `01M0VNSZC6` (Formator STML verus — CLI).
 **Visio:** `project-specs/stml-visio.md` §9.4 (instrumentum + canales).
@@ -211,6 +212,29 @@ Form changes are the formatter's **job**, not a defect: `<x a="1"></x>` →
   does not converge is not a formatter.
 - **Relectio**: the emitted form must re-parse. (This is the gate that would
   have caught §7.3.)
+
+### §4b `expandere` — AEDIFICATUM 2026-09-01
+
+`stml expandere <via.stml> [-ad <exitus>]` — the §3 chain whole:
+legere → `stml_expandere` (templates filled, relational commands
+consumed, INDAGO leaves tombstones) → `stml_distribuere` (NOT
+optional, law 5) → pretty emit. Exit 0/2 (no `-probare`).
+
+- **Vitia are named, not numbered**: the tool carries a 25-entry
+  name table (`FRAGMENTUM_IGNOTUM (fragmentum '@nemo')`,
+  `ARGUMENTUM_SUPERFLUUM (loculus 'munus')`, …) plus fragmentum/
+  loculus context when present. Distribution failures name the
+  offending wrapper.
+- **Idempotent** (measured): expansion consumes definitions and
+  vocations, so `expandere` of its own output is byte-identical.
+- **Runs lints from the shell**: relational commands execute during
+  expansion, so a lint document's relatum comes out of stdout; with
+  `<INDAGO/>` the stage stories are visible in place. This is the
+  "half a debugger" property — measured live (CATENA tombstone with
+  per-stage in/out counts through the CLI).
+- Caveat: a lint over C code needs the arbor document in scope;
+  cross-file transclusion is still deferred (§5.6), so that usage
+  waits on concatenation or a future `-adiunge` flag.
 
 ### §4.2 Cautio de corpore
 
@@ -456,10 +480,10 @@ parse-side loss entirely and already exists.
 <body>
   <h1>Instrumenta</h1>
 
-  <#@card nomen="@n" munus="@m">
+  <#@card nomen="@nomen" munus="@munus">
     <div class="card">
-      <h3>&@n;</h3>
-      <p>&@m;</p>
+      <h3>&@nomen;</h3>
+      <p>&@munus;</p>
     </div>
   </#>
 
@@ -510,6 +534,14 @@ is the "the tags are yours" instinct. Fran to decide.
 - **Vocatio bloci:** `<<#@nomen>><@p=>valor</>` — for values containing `"`
   or wanting real layout.
 - **`@param` declares, `&@param;` references. NOT interchangeable.**
+- **CORRECTIO MENSURATA (2026-09-01):** call arguments address the
+  SLOT name (the value after `@`), NEVER the declaring attribute's
+  name. `<#@card nomen="@n">` called with `nomen="silva"` fails
+  `ARGUMENTUM_SUPERFLUUM (loculus 'nomen')` — the slot is `n`. This
+  spec's §6 example originally made exactly that mistake; the fix
+  above names slots after their attributes (`nomen="@nomen"`), which
+  is the house convention: mirror the names and the distinction
+  disappears.
 
 ### §6.2 Laquei auctoris — omnes clamosi nisi primus
 
