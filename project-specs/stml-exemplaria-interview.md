@@ -1400,3 +1400,45 @@ canon's row vocabulary cannot express without engine code.
    structured as match→argument-map, replaceable by the general
    matcher) — the v2 walking skeleton.
 6. Formal interview on the open list → v2 spec → EXEMPLAR/PER.
+
+## Simulatio findings + the INDAGO seed (Fran + design
+## conversation, 2026-08-31, after the arc completed)
+
+Usage simulation of the shipped algebra (theorem-lint + guarded
+alarm ran live; leak-lint + cross-stage join on paper). THE
+META-FINDING: everything that chafed was REACH (descent) or
+PLURALITY (bindings, routing) — never the algebra; composition
+held in every scene including untested ones.
+
+**NEW DOOR — DESCENDANT AXIS (head of the list):** patterns match
+level-by-level; "X somewhere below Y" is unwritable when paths
+vary by context (calls: assignatio-RHS vs init vs statement...).
+Blocked the paired-call antijoin family (leak lints) outright;
+codex 69's three shape-chains are hand-unrolled descent. Note:
+selecta/quaestio CSS selectors HAVE descent — the gap between the
+two query planes is measured, not suspected.
+
+**NEW SEED — INDAGO (Fran's shape: commands resolve into trace
+COMMENTS):** document-declared `<INDAGO/>` CAPS element; each
+consumed command leaves a tombstone comment at its site with
+per-stage counts (rows in->out, capture names, SINE `necati`,
+DIRIBITIO per-arm verdicts + SUMPTUM). Comment-not-element is
+LOAD-BEARING: traces must be invisible to the semantics they
+describe by NATURE (the attributa= bug = cost of
+visibility-plus-forgotten-blindness); arbor's element-provenance
+is the queryable tier, traces are the erasable tier (rhymes with
+annotation vision 01KXTX7FA3). Counts already computed at every
+stage; zero cost when absent. Would have made the 865-hunt a
+one-glance find (`necati 0`). Open for decree: PER-inside-relatum
+trace placement (probably yes, opt-in bytes differ by design);
+per-command narrowing (collides with bare-link laws — doc-wide
+first); INDAGO's own canon/vitium rows. Cost-benefit likely #1
+of all open doors.
+
+Felt-evidence re-rank of known doors: guard-narrows-arm (the
+alarm doc contains its own filter TWICE — condition and arm);
+multi-binding (sibling plurality in one scope = dangling-ref
+lints); join-by-naming (regula V works WITHIN a form today —
+self-proof `<punctum index="$i"><probatio ref="$i"/></punctum>`
+is live; cross-STAGE equality is the door); per-row routing
+(parallel literal-guard chains = today's workaround).
