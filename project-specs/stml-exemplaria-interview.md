@@ -1449,3 +1449,43 @@ lints); join-by-naming (regula V works WITHIN a form today —
 self-proof `<punctum index="$i"><probatio ref="$i"/></punctum>`
 is live; cross-STAGE equality is the door); per-row routing
 (parallel literal-guard chains = today's workaround).
+
+## INDAGARE — the debugger seed (Fran's shape, 2026-08-31,
+## after INDAGO shipped)
+
+Fran: a step-through STML debugger, CLI, run a document — and the
+key instinct: NOT re-reading the document per step, but a STREAM
+OF EVENTS ("compared such-and-such", "emitted such-and-such").
+
+**The stream is the substrate; everything is a consumer.** The
+gesta/metrum doctrine applied to the engine: the event stream =
+gesta (lossless, what happened); INDAGO = metrum (lossy fold —
+counts per stage, materialized as comments). One auditor callback
+seam in the engine (the silva aux-seam pattern), firing at the
+INDAGO sites PLUS the per-candidate comparison sites in the
+matcher — the cause layer INDAGO deliberately omits. INDAGO
+eventually reimplementable as a fold over the seam.
+
+**Events as STML** (multi-root, streamed, tail-able):
+`<comparatio forma= candidatus= exitus=/>`, `<necatus ordo=
+causa=/>`, `<captura titulus= valor=/>`, `<emissio/>`, `<relatio
+titulus= ordines= consumpta=/>`. Then breakpoints ARE patterns —
+the exemplar language filtering its own execution — and the
+breakpoint doubles as the EMISSION FILTER (per-candidate volume
+demands source-side filtering; journal one file's run, never a
+corpus).
+
+**Determinism = time travel free.** No clock, no randomness,
+single assignment: step-backward = re-run to event N-1, zero
+state capture.
+
+**Two consumers, one stream**: interactive stepper (human) +
+filtered journal dump (agent/CI: `stml indagare -acta doc |
+grep NEGATUM`).
+
+**Landing spot**: the PARKED stml CLI (Plan A substrate shipped
+on stml-incolumitas; Plan B never written) — the debugger is the
+strongest reason Plan B has had to exist. Name: indagare = the
+deep tier of INDAGO (one word, two depths). Worth its build the
+day someone is deep in matcher-semantics questions — i.e. every
+future codex-as-pattern gate.
