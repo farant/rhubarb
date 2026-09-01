@@ -1436,3 +1436,26 @@ Note for the fidelity contract: this IMPROVES it for bare `"` in
 text (previously `"` → `&quot;` broke byte-exactness; now bytes pass
 through) and breaks it only for source spelled `&quot;`, of which
 the corpus has none.
+
+## 2026-09-01 — single-quote attribute wrappers REFUSED (spec §7.3 executed)
+
+`<x a='v'/>` is now `STML_ERROR_ATTRIBUTUM` at parse; `'` inside a
+double-quoted value stays content. Mechanism = the §7.5.5 pattern
+verbatim: `b32 quota_simplex` on **StmlTokenContext** (never
+StmlToken — 14 constructors, no shared initializer), set in
+`_tok_legere_valor_attributi` (the value is still lexed so the token
+stream stays coherent), cleared at the top of every `_tok_proximus`,
+and read at ONE choke point — `_parser_progredi`, before the token is
+overwritten. First-error-wins keeps the earliest site.
+
+The migration the spec planned was VACUOUS: all ~15 grep candidates
+were single quotes inside prose/double-quoted values. Measured, not
+assumed: swept all 57 committed `.stml`/`.canon` files through the
+flipped parser via `bin/stml formare -probare` exit codes — zero
+refusals. Two fixtures pinned the old leniency ("cum apostrophis"
+flipped to a rejection pin; one incidental `id='main'` migrated).
+
+Trap hit and recognized: the specifier-hijack Edit trap (anchor began
+at the function NAME, leaving the original `interior vacuum` header
+dangling above the inserted prototype → "duplicate static"). The
+censor hook caught it at edit time; recorded lesson did its job.

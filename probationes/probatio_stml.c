@@ -318,21 +318,16 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda*      val;
 
+        /* OLIM sustentati, NUNC RECUSATI (decretum 2026-08-29,
+         * instrumentum par. 7.3): involucra simplicia classem
+         * emissionis non re-parsabilis aperiebant. */
         res = stml_legere_ex_literis("<item id='42' name='test'/>", piscina, intern);
-        CREDO_VERUM(res.successus);
-        CREDO_NON_NIHIL(res.elementum_radix);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
 
-        val = stml_attributum_capere(res.elementum_radix, "id");
-        CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_ptr_eq_literis(val, "42"));
-
-        val = stml_attributum_capere(res.elementum_radix, "name");
-        CREDO_NON_NIHIL(val);
-        CREDO_VERUM(_chorda_ptr_eq_literis(val, "test"));
-
-        imprimere("  Parsatio cum apostrophis: VERUM\n");
+        imprimere("  Recusatio apostrophorum: VERUM\n");
     }
 
     /* ==================================================
@@ -374,7 +369,7 @@ s32 principale(vacuum)
         StmlResultus res;
         chorda*      val;
 
-        res = stml_legere_ex_literis("<widget id='main' x=0 name=\"test\" active/>", piscina, intern);
+        res = stml_legere_ex_literis("<widget id=\"main\" x=0 name=\"test\" active/>", piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -3466,6 +3461,21 @@ s32 principale(vacuum)
         CREDO_FALSUM(res.successus);
         CREDO_AEQUALIS_I32((i32)res.status,
                           (i32)STML_ERROR_ATTRIBUTUM);
+
+        /* Quota simplex ut involucrum valoris RECUSATUR (decretum
+         * 2026-08-29, instrumentum par. 7.3): scriptor '"' solum
+         * emittit, ergo valor '"' per involucrum simplex continens
+         * emissionem non re-parsabilem gigneret. Quota simplex
+         * INTRA valorem duplici cinctum autem contentum manet. */
+        res = stml_legere_ex_literis("<a m='v'/>",
+                                     piscina, intern);
+        CREDO_FALSUM(res.successus);
+        CREDO_AEQUALIS_I32((i32)res.status,
+                          (i32)STML_ERROR_ATTRIBUTUM);
+
+        res = stml_legere_ex_literis("<a m=\"dixit 'v' ita\"/>",
+                                     piscina, intern);
+        CREDO_VERUM(res.successus);
 
         /* nomen geminatum: elementum + elementum */
         res = stml_legere_ex_literis("<a><@m=>x</><@m=>y</></a>",

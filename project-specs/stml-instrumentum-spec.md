@@ -515,12 +515,13 @@ already law 5 of the chain (§3.1).
 It applies at **any** level, including the wrapper nearest the root:
 `<r><>a</><>b</></r>` → `<r>a</r><r>b</r>`.
 
-**ACIES — singularia HTML.** Because the wrapper multiplies, writing
-`<body><>x</><>y</></body>` emits **two `<body>` elements** — valid STML,
-invalid HTML. OPEN QUESTION (§9.5): does `vertere` refuse distribution that
-multiplies an HTML singleton (`html`, `head`, `body`, `title`, `base`), or
-does it emit what the author wrote? Refusing is the house instinct; emitting
-is the "the tags are yours" instinct. Fran to decide.
+**ACIES — singularia HTML: EMITTITUR UT SCRIPTUM (decretum Franis
+2026-09-01).** `<body><>x</><>y</></body>` emits two `<body>` elements.
+The "tags are yours" principle governs FULLY: `vertere` never judges
+HTML validity anywhere (invalid attributes and invented tags already
+pass), so singletons pass too. No singleton table exists in the
+emitter. (The house-instinct alternative — refuse — was presented and
+declined; do not re-add the check.)
 
 ### §6.1 Syntaxis templorum (verificata contra fixuras virides)
 
@@ -595,7 +596,19 @@ doctype is the pattern to follow.
 in principle. Here it segfaults reliably; under a different stack layout it
 could intern adjacent memory into the tree and return `successus=1`.
 
-### §7.3 Attributa quota simplici — DECRETUM DATUM, mutatio parsatoris postulatur
+### §7.3 Attributa quota simplici — EXECUTUM 2026-09-01
+
+**Done.** `quota_simplex` flag on `StmlTokenContext` (the §7.5.5
+`non_clausum` pattern exactly: set in `_tok_legere_valor_attributi`,
+cleared at the top of every `_tok_proximus`, read at the single choke
+point `_parser_progredi` before the token is overwritten) →
+`STML_ERROR_ATTRIBUTUM` naming the line. Single quotes INSIDE
+double-quoted values stay content (pinned).
+
+**The migration was VACUOUS, measured**: the ~15 grep candidates below
+were all prose-internal quotes; a parse-based sweep of all 57 committed
+`.stml`/`.canon` files through the flipped parser found ZERO refusals.
+The grep-cannot-distinguish caveat below was exactly right.
 
 `<x a='say "hi"'/>` parses, then emits `<x a="say "hi""/>` which does NOT
 re-parse — on the fidelity path AND the pretty path (measured). A file that
@@ -810,10 +823,12 @@ nonsense element `<! doctype html/>` and REPORTS SUCCESS. It is lexed as a
 RAW tag with an empty title, so it flows through
 `_parser_legere_elementum_crudus`, which the guard above does not cover.
 
-Not fixed here (out of Plan A's scope). It matters for `vertere`: Fran decreed
-STML files carry no doctype line (§5), so an author who writes one out of
-habit gets silence instead of a diagnosis. **OPEN — Fran to decide** whether
-the raw-element parser should refuse an empty title.
+Not fixed in Plan A. **DECRETUM (Fran, 2026-09-01): the raw-element
+parser REFUSES an empty title.** No legitimate construct reaches the
+raw path titleless (`<!DOCTYPE` uppercase lexes as doctype, `<!--` as
+comment; the rest is always a typo) — a parse error naming the line
+replaces the silent nonsense element, for every consumer at once.
+Lands as its own increment before `vertere`.
 
 ### §7.5.5 CONSTRUCTIO NON CLAUSA = ERRATUM (Fran, `180eceb7`)
 

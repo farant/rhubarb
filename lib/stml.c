@@ -91,6 +91,15 @@ nomen structura {
      * stalus esse non potest; tres lectores soli eum ponunt. */
        b32 non_clausum;
 
+    /* Quota simplex ' ut involucrum valoris attributi (decretum
+     * Franis 2026-08-29, spec instrumenti par. 7.3): scriptor '"'
+     * solum emittit, ergo valor '"' continens per involucrum
+     * simplex emissionem non re-parsabilem gigneret - classis
+     * dissolvitur recusando. Vita eadem ac non_clausum: purgatur
+     * initio _tok_proximus, legitur in _parser_progredi ANTE
+     * obrutionem tokeni. */
+       b32 quota_simplex;
+
     /* Piscina and intern for allocations */
                 Piscina* piscina;
     InternamentumChorda* intern;
@@ -299,10 +308,16 @@ _tok_legere_valor_attributi (
 
     ch = _tok_aspicere(ctx, ZEPHYRUM);
 
-    /* Valor cum quotis (quoted value) */
+    /* Valor cum quotis (quoted value). Involucrum simplex '
+     * RECUSATUR (par. 7.3) - valor tamen legitur ne fluxus
+     * tokenum claudicet; parsator in progressione clamat. */
     si (ch == '"' || ch == '\'')
     {
         quota = ch;
+        si (quota == '\'')
+        {
+            ctx->quota_simplex = VERUM;
+        }
         _tok_progredi(ctx, I);  /* Skip opening quote */
         initium = ctx->positus;
 
@@ -1583,7 +1598,8 @@ _tok_proximus (
     /* Vexillum per tokenum purgandum: tres lectores soli id ponunt,
      * ceteri non tangunt - sine purgatione hic, commentum non clausum
      * vexillum suum tokeni SEQUENTI relinqueret. */
-    ctx->non_clausum = FALSUM;
+    ctx->non_clausum    = FALSUM;
+    ctx->quota_simplex  = FALSUM;
 
     /* If in raw content mode, get raw content until close tag.
      *
@@ -1841,6 +1857,7 @@ stml_lexemata_colligere (
     ctx.columna                 = I;
     ctx.in_crudus               = FALSUM;
     ctx.non_clausum             = FALSUM;
+    ctx.quota_simplex           = FALSUM;
     ctx.crudus_titulus.datum    = NIHIL;
     ctx.crudus_titulus.mensura  = ZEPHYRUM;
     ctx.piscina                 = piscina;
@@ -1922,10 +1939,28 @@ nomen structura {
         chorda error;
 } StmlParserContext;
 
+/* prototypum (definitio statim infra) - progressio eo utitur */
+interior vacuum
+_errorem_ponere (
+    StmlParserContext* ctx,
+           StmlStatus  status,
+                  i32  linea,
+                  i32  columna);
+
 interior vacuum
 _parser_progredi (
     StmlParserContext* ctx)
 {
+    /* Quota simplex in attributo tokeni EXEUNTIS (par. 7.3):
+     * strangulum unum pro consumptoribus omnibus - vexillum ANTE
+     * obrutionem legendum, nam _tok_proximus id purgat. Error
+     * primus vincit (cascatae infra tacent). */
+    si (ctx->tok_ctx.quota_simplex)
+    {
+        _errorem_ponere(ctx, STML_ERROR_ATTRIBUTUM,
+                        ctx->current.linea, ctx->current.columna);
+    }
+
     /* tokenum EXEUNTEM notare, antequam obruatur */
     ctx->finis_ultimus  = ctx->current.positus_finis;
     ctx->current        = _tok_proximus(&ctx->tok_ctx);
@@ -4274,6 +4309,7 @@ stml_legere (
     ctx.tok_ctx.columna                 = I;
     ctx.tok_ctx.in_crudus               = FALSUM;
     ctx.tok_ctx.non_clausum             = FALSUM;
+    ctx.tok_ctx.quota_simplex           = FALSUM;
     ctx.tok_ctx.crudus_titulus.datum    = NIHIL;
     ctx.tok_ctx.crudus_titulus.mensura  = ZEPHYRUM;
     ctx.tok_ctx.piscina                 = piscina;
