@@ -1,6 +1,7 @@
 <TRANSPARENTIA tags="expansio pasta stringificatio api extentum ante post regio-cruda" attributa="f b linea columna def-f def-l def-c"/>
 <CATENA output="$inutilia">
-  <(><EXEMPLAR><corpus><elementa><declaratio><declaratores><**><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></**></declaratores></declaratio></elementa></corpus></EXEMPLAR>
+  <(><EXEMPLAR><definitio-functionis/></EXEMPLAR>
+  <(><EXEMPLAR radix="fontis"><declaratio><declaratores><**><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></**></declaratores></declaratio></EXEMPLAR>
   <(><SINE><folium-identificator><tok_valor>&@n;</tok_valor></folium-identificator></SINE>
 </CATENA>
 <relatum lint="variabilis-inutilis">

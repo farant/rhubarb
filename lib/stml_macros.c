@@ -4412,7 +4412,6 @@ _sine_processare (
 {
     StmlNodus* forma;
           Xar* superstites;
-          Xar* congruentiae;
           Xar* opus;
           i32  i;
           i32  num;
@@ -4464,14 +4463,11 @@ _sine_processare (
         redde FALSUM;
     }
 
-    superstites  = xar_creare(ctx->piscina,
-                              magnitudo(StmlExemplarCongruentia));
-    congruentiae = xar_creare(ctx->piscina,
-                              magnitudo(StmlExemplarCongruentia));
-    opus = xar_creare(ctx->piscina,
-                      magnitudo(StmlExemplarLigamen));
-    si (   superstites == NIHIL || congruentiae == NIHIL
-        || opus        == NIHIL)
+    superstites = xar_creare(ctx->piscina,
+                             magnitudo(StmlExemplarCongruentia));
+    opus        = xar_creare(ctx->piscina,
+                             magnitudo(StmlExemplarLigamen));
+    si (superstites == NIHIL || opus == NIHIL)
     {
         redde FALSUM;
     }
@@ -4542,13 +4538,12 @@ _sine_processare (
                            nodus, NIHIL, titulus);
             redde FALSUM;
         }
-        xar_truncare(congruentiae, ZEPHYRUM);
-        si (!_exemplar_petere(ctx, impleta, ordo->radix, FALSUM,
-                              congruentiae, opus))
-        {
-            redde FALSUM;
-        }
-        si (xar_numerus(congruentiae) == ZEPHYRUM)
+        /* NON-EXSTAT per quaesitionem EXSTAT: _alicubi_congruere
+         * (visio EADEM ac petere per ratificationem, exitus
+         * maturus primo successu) - SINE existentiam solam rogat,
+         * numquam copiam congruentiarum; ligamina reiecta */
+        xar_truncare(opus, ZEPHYRUM);
+        si (!_alicubi_congruere(ctx, impleta, ordo->radix, opus))
         {
             StmlExemplarCongruentia* cella =
                 (StmlExemplarCongruentia*)xar_addere(superstites);
