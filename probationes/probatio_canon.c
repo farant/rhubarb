@@ -2602,7 +2602,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XXI];
+                constans character* mala[XXII];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2659,7 +2659,11 @@ principale (vacuum)
                            " radix=\"malus\"><s/></EXEMPLAR>";
                 mala[20] = "<EXEMPLAR output=\"$r3\""
                            " radix=\"fontis\"><s/></EXEMPLAR>";
-                per (m = ZEPHYRUM; m < XXI; m++)
+                /* ORDINARIUS angustans (nihil angustandum) */
+                mala[21] = "<DIRIBITIO output=\"$d2\">"
+                           "<ORDINARIUS angustans><EXEMPLAR><s/>"
+                           "</EXEMPLAR></ORDINARIUS></DIRIBITIO>";
+                per (m = ZEPHYRUM; m < XXII; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

@@ -73,8 +73,12 @@ nomen enumeratio {
     STML_EXPANSIO_EXEMPLAR_SINE_EXITU      = XII,
     /* EXEMPLAR/PER/TRANSPARENTIA malformata: modus ignotus,
      * adsignatio output gemina, de/congruentia sine '$', voca
-     * malformatum, aut constructum intra corpus templi (porta
-     * 'de=@arg' nondum aedificata - spec par. 8.5) */
+     * malformatum, constructum intra corpus templi (porta
+     * 'de=@arg' nondum aedificata - spec par. 8.5); retentio
+     * radicis 'radix=' valore ignoto aut sine ordine intrante;
+     * pons '&@n;' in forma sine ordinibus (uniformitas pontis,
+     * decretum 2026-09-01: referentia ipsa = electio impletionis
+     * per ordinem) */
     STML_EXPANSIO_EXEMPLAR_MALFORMATUM     = XIII,
     /* de= aut congruentia= relationem nullam priorem nominans */
     STML_EXPANSIO_SCOPUS_IGNOTUS           = XIV,
@@ -107,7 +111,9 @@ nomen enumeratio {
      * posteriora obumbraret); diribitio sine bracchiis; mandatum
      * ignotum (nec EXEMPLAR nec CATENA nec DIRIBITIO); involucrum
      * cum modus=/ancorata=; adsignatio gemina; nexus catenae
-     * DIRIBITIO cum attributis. */
+     * DIRIBITIO cum attributis; ORDINARIUS angustans (angustans
+     * in CASU = bracchium sumptum relationem CONDITIONIS accipit
+     * - decretum 2026-09-01; ORDINARIO nihil angustandum). */
     STML_EXPANSIO_DIRIBITIO_MALFORMATA     = XXI,
     /* Collisio capturarum trans gradus (lex extensionis, decretum
      * 2026-08-31): ordines tabulata sunt - gradus quisque capturas

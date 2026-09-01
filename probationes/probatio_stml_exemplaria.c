@@ -1553,6 +1553,109 @@ principale (
     }
 
 
+    /* ===== UNIFORMITAS PONTIS (referentia = electio) ===== */
+
+    /* --- gradus positivus correlatus: iunctio trans gradus ---
+     * pons '&@n;' in gradu positivo = impletio per ordinem
+     * (machina SINE signo positivo) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- pons: gradus positivus ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d n=\"x\"/><probatio de-quo=\"x\"/></s>"
+            "<s><d n=\"y\"/><probatio de-quo=\"z\"/></s>"
+            "<CATENA output=\"$rr\">"
+            "<EXEMPLAR><s/></EXEMPLAR>"
+            "<EXEMPLAR radix=\"fontis\"><d n=\"$n\"/></EXEMPLAR>"
+            "<EXEMPLAR><probatio de-quo=\"&@n;\"/></EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$rr\"><iuncta>&@n;</iuncta></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d n=\"x\"/><probatio de-quo=\"x\"/>"
+                "</s>"
+                "<s><d n=\"y\"/><probatio de-quo=\"z\"/></s>"
+                "<iuncta>x</iuncta></radix>");
+        }
+    }
+
+    /* --- XIII: referentia sine ordinibus (scopus documenti) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- pons: vitium sine ordinibus ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<EXEMPLAR output=\"$r\"><u n=\"&@n;\"/></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+    }
+
+
+    /* ========= ANGUSTANS (custos fit angustator) ========= */
+
+    /* --- vigilia UNA VICE scripta: conditio filtrat, bracchium
+     * angustans identitatem accipit (EXEMPLAR ancorata cum
+     * stella = mandatum identitatis) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- angustans: filtrum semel ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<punctum gradus=\"theorema\" index=\"4.1\">"
+            "<probatio/></punctum>"
+            "<punctum gradus=\"theorema\" index=\"4.3\"/>"
+            "<EXEMPLAR output=\"$th\">"
+            "<punctum gradus=\"theorema\" index=\"$i\"/>"
+            "</EXEMPLAR>"
+            "<DIRIBITIO de=\"$th\" output=\"$v\">"
+            "<CASUS angustans>"
+            "<EST><CATENA><SINE><probatio/></SINE></CATENA></EST>"
+            "<EXEMPLAR ancorata><*/></EXEMPLAR>"
+            "</CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$v\"><clamor>&@i;</clamor></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<punctum gradus=\"theorema\" index=\"4.1\">"
+                "<probatio/></punctum>"
+                "<punctum gradus=\"theorema\" index=\"4.3\"/>"
+                "<clamor>4.3</clamor></radix>");
+        }
+    }
+
+    /* --- XXI: ORDINARIUS angustans (nihil angustandum) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- angustans: ORDINARIUS XXI ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<EXEMPLAR output=\"$ss\"><a/></EXEMPLAR>"
+            "<DIRIBITIO de=\"$ss\" output=\"$m\">"
+            "<ORDINARIUS angustans><EXEMPLAR><a/></EXEMPLAR>"
+            "</ORDINARIUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$m\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_DIRIBITIO_MALFORMATA);
+    }
+
+
     /* ========= RETENTIO RADICIS 'radix="fontis"' ========= */
 
     /* --- pluralitas in scopo uno: ordo per declarationem, radix

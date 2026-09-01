@@ -1032,7 +1032,9 @@ _transparentiam_legere (
 interior b32
 _exemplar_implere (
              StmlNodus* nodus,
-    StmlMacroContextus* ctx);
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum);
 
 interior b32
 _per_implere (
@@ -1075,6 +1077,20 @@ _sine_processare (
                 chorda*  titulus,
                    Xar*  fons,
                    Xar** exitus);
+
+interior b32
+_formam_pontem_habere (
+    constans StmlNodus* nodus);
+
+interior StmlNodus*
+_corpus_ordini_implere (
+          StmlMacroContextus* ctx,
+                   StmlNodus* nodus,
+     StmlExemplarCongruentia* ordo,
+                         i32  stratum,
+                         i32  tectum,
+                      chorda* titulus,
+          StmlExpansioVitium  vitium);
 
 interior b32
 _liberum_expandere (
@@ -1776,7 +1792,7 @@ _mandatum_vestigatum (
     _indago_literis(ctx, "indago ");
     si (_est_titulo(liberum, "EXEMPLAR"))
     {
-        bene = _exemplar_implere(liberum, ctx);
+        bene = _exemplar_implere(liberum, ctx, stratum, tectum);
     }
     alioquin si (_est_titulo(liberum, "PER"))
     {
@@ -1941,7 +1957,8 @@ _liberum_expandere (
             }
             si (_est_titulo(liberum, "EXEMPLAR"))
             {
-                redde _exemplar_implere(liberum, ctx);
+                redde _exemplar_implere(liberum, ctx, stratum,
+                                        tectum);
             }
             si (_est_titulo(liberum, "PER"))
             {
@@ -3121,6 +3138,8 @@ _exemplar_nucleus (
     StmlMacroContextus*  ctx,
              StmlNodus*  nodus,
                    Xar*  fons,
+                   i32   stratum,
+                   i32   tectum,
                 chorda*  titulus,
                    Xar** exitus)
 {
@@ -3131,6 +3150,7 @@ _exemplar_nucleus (
                        Xar* opus;
                        b32  ancorata;
                        b32  retinens;
+                       b32  pons;
                        i32  i;
                        i32  num;
 
@@ -3200,6 +3220,16 @@ _exemplar_nucleus (
     {
         redde FALSUM;
     }
+    /* uniformitas pontis: referentia in forma = impletio per
+     * ordinem (gradus positivus correlatus); sine ordinibus
+     * implendum nihil est - vitium clarum */
+    pons = _formam_pontem_habere(forma);
+    si (pons && fons == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, titulus);
+        redde FALSUM;
+    }
 
     congruentiae = xar_creare(ctx->piscina,
                               magnitudo(StmlExemplarCongruentia));
@@ -3225,10 +3255,24 @@ _exemplar_nucleus (
                 perge;
             }
             ante = xar_numerus(congruentiae);
-            si (!_exemplar_petere(ctx, forma, ordo->radix,
-                    ancorata, congruentiae, opus))
             {
-                redde FALSUM;
+                StmlNodus* forma_ordinis = forma;
+
+                si (pons)
+                {
+                    forma_ordinis = _corpus_ordini_implere(ctx,
+                        nodus, ordo, stratum, tectum, titulus,
+                        STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+                    si (forma_ordinis == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                }
+                si (!_exemplar_petere(ctx, forma_ordinis,
+                        ordo->radix, ancorata, congruentiae, opus))
+                {
+                    redde FALSUM;
+                }
             }
             /* lex extensionis: ordines novi capturas fontis
              * hereditant (vide _ligamina_hereditare); sub
@@ -3307,7 +3351,9 @@ _exemplar_nucleus (
 interior b32
 _exemplar_implere (
              StmlNodus* nodus,
-    StmlMacroContextus* ctx)
+    StmlMacroContextus* ctx,
+                   i32  stratum,
+                   i32  tectum)
 {
                     chorda* output;
                     chorda* de;
@@ -3362,8 +3408,8 @@ _exemplar_implere (
         fons            = rel->congruentiae;
     }
 
-    si (!_exemplar_nucleus(ctx, nodus, fons, output_internatum,
-                           &congruentiae))
+    si (!_exemplar_nucleus(ctx, nodus, fons, stratum, tectum,
+                           output_internatum, &congruentiae))
     {
         redde FALSUM;
     }
@@ -3508,8 +3554,8 @@ _catena_corpus_processare (
                                l, NIHIL, titulus);
                 redde FALSUM;
             }
-            si (!_exemplar_nucleus(ctx, l, *fons, titulus,
-                                   &exitus))
+            si (!_exemplar_nucleus(ctx, l, *fons, stratum,
+                                   tectum, titulus, &exitus))
             {
                 redde FALSUM;
             }
@@ -3881,8 +3927,8 @@ _mandatum_exsequi (
                            mandatum, NIHIL, titulus);
             redde FALSUM;
         }
-        bene = _exemplar_nucleus(ctx, mandatum, fons, titulus,
-                                 exitus);
+        bene = _exemplar_nucleus(ctx, mandatum, fons, stratum,
+                                 tectum, titulus, exitus);
         si (bene && ctx->indago_scriptor != NIHIL)
         {
             _indago_literis(ctx, "; EXEMPLAR ");
@@ -3966,13 +4012,15 @@ _diribitio_processare (
                    Xar*  fons,
                    Xar** exitus)
 {
-    i32 i;
-    i32 num;
-    b32 post_ordinarium;
-    b32 bracchia_visa;
-    b32 sumptum;
-    i32 numerus_casus;
-    b32 vestigium_primum;
+    i32  i;
+    i32  num;
+    b32  post_ordinarium;
+    b32  bracchia_visa;
+    b32  sumptum;
+    i32  numerus_casus;
+    b32  vestigium_primum;
+    b32  angustans;
+    Xar* fons_bracchii;
 
     *exitus           = NIHIL;
     post_ordinarium   = FALSUM;
@@ -4015,6 +4063,13 @@ _diribitio_processare (
         {
             numerus_casus++;
         }
+        /* angustans (decretum 2026-09-01): bracchium sumptum
+         * relationem CONDITIONIS accipit, non originalem (custos
+         * fit angustator electione clara); ORDINARIO sine
+         * conditione nihil angustandum est */
+        angustans = stml_attributum_capere(bracchium, "angustans")
+                        != NIHIL;
+        fons_bracchii = fons;
 
         /* liberos bracchii partiri: sedes <EST> + mandatum unum.
          * Sedes elementum CAPS, NON '<@est=>': attributa-elementa
@@ -4079,6 +4134,13 @@ _diribitio_processare (
         }
         si (_est_titulo(bracchium, "ORDINARIUS"))
         {
+            si (angustans)
+            {
+                _vitium_ponere(ctx,
+                    STML_EXPANSIO_DIRIBITIO_MALFORMATA, bracchium,
+                    NIHIL, titulus);
+                redde FALSUM;
+            }
             si (est_sedes != NIHIL)
             {
                 /* ORDINARIUS sine conditione (semper) */
@@ -4169,6 +4231,10 @@ _diribitio_processare (
                 _indago_literis(ctx, " praeteritum");
                 perge;  /* conditio falsa - bracchium proximum */
             }
+            si (angustans)
+            {
+                fons_bracchii = congruentiae_conditionis;
+            }
         }
         si (!sumptum)
         {
@@ -4183,12 +4249,15 @@ _diribitio_processare (
                     vestigium_primum = FALSUM;
                     _indago_literis(ctx, "ORDINARIUS");
                 }
-                _indago_literis(ctx, " SUMPTUM; bracchium");
+                _indago_literis(ctx, angustans
+                    ? " SUMPTUM; bracchium angustatum"
+                    : " SUMPTUM; bracchium");
             }
-            /* bracchium sumptum: mandatum contra relationem
-             * ORIGINALEM (decretum - custos, non angustator) */
+            /* bracchium sumptum: relatio ORIGINALIS (custos) aut
+             * conditionis (angustans - electio clara) */
             si (!_mandatum_exsequi(ctx, mandatum, stratum, tectum,
-                                   titulus, FALSUM, fons, exitus))
+                                   titulus, FALSUM, fons_bracchii,
+                                   exitus))
             {
                 redde FALSUM;
             }
@@ -4385,6 +4454,132 @@ _ligamina_ad_argumenta (
     redde argumenta;
 }
 
+/* Pons in forma? Referentia '&@x;' quaevis in valoribus textus
+ * aut attributorum (lex uniformitatis pontis, decretum 2026-09-01:
+ * REFERENTIA IPSA est electio - gradus eam ferens impletionem per
+ * ordinem accipit; caerimonia nulla). */
+interior b32
+_formam_pontem_habere (
+    constans StmlNodus* nodus)
+{
+       i32 initium;
+       i32 post;
+       i32 i;
+       i32 num;
+    chorda referentia;
+
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   nodus->genus == STML_NODUS_TEXTUS
+        && nodus->valor != NIHIL
+        && _loculum_invenire(nodus->valor, ZEPHYRUM, &initium,
+                             &post, &referentia))
+    {
+        redde VERUM;
+    }
+    si (   nodus->genus     == STML_NODUS_ELEMENTUM
+        && nodus->attributa != NIHIL)
+    {
+        num = xar_numerus(nodus->attributa);
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlAttributum* attr =
+                (StmlAttributum*)xar_obtinere(nodus->attributa, i);
+
+            si (   attr        != NIHIL
+                && attr->valor != NIHIL
+                && _loculum_invenire(attr->valor, ZEPHYRUM,
+                       &initium, &post, &referentia))
+            {
+                redde VERUM;
+            }
+        }
+    }
+    num = nodus->liberi != NIHIL
+        ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (_formam_pontem_habere(
+                *(StmlNodus**)xar_obtinere(nodus->liberi, i)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Corpus mandati ordini UNI implere: capturae ordinis ut argumenta
+ * (pons = _ligamina_ad_argumenta), liberi mandati sub PORTATIONE
+ * instantiati, elementum unum recollectum (defensivum contra
+ * impletionem numerum mutantem = vitium datum). NIHIL = fractura.
+ * Communis SINE (semper impletur) et gradibus positivis pontem
+ * ferentibus (uniformitas pontis: NON-EXSTAT et EXSTAT eadem
+ * machina correlationis). */
+interior StmlNodus*
+_corpus_ordini_implere (
+          StmlMacroContextus* ctx,
+                   StmlNodus* nodus,
+     StmlExemplarCongruentia* ordo,
+                         i32  stratum,
+                         i32  tectum,
+                      chorda* titulus,
+          StmlExpansioVitium  vitium)
+{
+           Xar* argumenta;
+     StmlNodus* involucrum;
+     StmlNodus* impleta;
+           b32  bene;
+           i32  j;
+           i32  num;
+
+    argumenta = _ligamina_ad_argumenta(ctx, ordo->ligamina);
+    si (argumenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    involucrum = stml_elementum_creare(ctx->piscina, ctx->intern,
+                                       "ordo-corpus");
+    si (involucrum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    ctx->applicatio++;
+    bene = _liberos_expandere(involucrum, nodus->liberi, ctx,
+                              stratum + I, tectum, argumenta);
+    ctx->applicatio--;
+    si (!bene)
+    {
+        redde NIHIL;
+    }
+    impleta = NIHIL;
+    num     = involucrum->liberi != NIHIL
+            ? xar_numerus(involucrum->liberi) : ZEPHYRUM;
+    per (j = ZEPHYRUM; j < num; j++)
+    {
+        StmlNodus* l = *(StmlNodus**)xar_obtinere(
+            involucrum->liberi, j);
+
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (impleta != NIHIL)
+        {
+            _vitium_ponere(ctx, vitium, nodus, NIHIL, titulus);
+            redde NIHIL;
+        }
+        impleta = l;
+    }
+    si (impleta == NIHIL || impleta->genus != STML_NODUS_ELEMENTUM)
+    {
+        _vitium_ponere(ctx, vitium, nodus, NIHIL, titulus);
+        redde NIHIL;
+    }
+    redde impleta;
+}
+
 /* SINE filare (antiiunctio - decretum 2026-08-31): filtrum purum
  * relationis, gradus catenae signo versus. Gradus ordinarius
  * ordines congruentiis interioribus multiplicat; SINE ordinem
@@ -4476,66 +4671,19 @@ _sine_processare (
     {
         StmlExemplarCongruentia* ordo =
             (StmlExemplarCongruentia*)xar_obtinere(fons, i);
-                      StmlNodus* involucrum;
                       StmlNodus* impleta;
-                            Xar* argumenta;
-                            b32  bene;
-                            i32  j;
-                            i32  num_liberorum;
 
         si (ordo == NIHIL)
         {
             perge;
         }
-        /* pontem implere: capturae ordinis ut argumenta, corpus
-         * sub PORTATIONE instantiatum (mandata inerta manent) */
-        argumenta = _ligamina_ad_argumenta(ctx, ordo->ligamina);
-        si (argumenta == NIHIL)
+        /* pontem implere (machina communis - vide
+         * _corpus_ordini_implere) */
+        impleta = _corpus_ordini_implere(
+            ctx, nodus, ordo, stratum, tectum, titulus,
+            STML_EXPANSIO_SINE_MALFORMATUM);
+        si (impleta == NIHIL)
         {
-            redde FALSUM;
-        }
-        involucrum = stml_elementum_creare(ctx->piscina,
-                                           ctx->intern,
-                                           "sine-corpus");
-        si (involucrum == NIHIL)
-        {
-            redde FALSUM;
-        }
-        ctx->applicatio++;
-        bene = _liberos_expandere(involucrum, nodus->liberi, ctx,
-                                  stratum + I, tectum, argumenta);
-        ctx->applicatio--;
-        si (!bene)
-        {
-            redde FALSUM;
-        }
-        /* forma impleta: elementum unum (constructione; defensivum
-         * contra impletionem quae numerum mutat) */
-        impleta       = NIHIL;
-        num_liberorum = involucrum->liberi != NIHIL
-                      ? xar_numerus(involucrum->liberi) : ZEPHYRUM;
-        per (j = ZEPHYRUM; j < num_liberorum; j++)
-        {
-            StmlNodus* l = *(StmlNodus**)xar_obtinere(
-                involucrum->liberi, j);
-
-            si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
-            {
-                perge;
-            }
-            si (impleta != NIHIL)
-            {
-                _vitium_ponere(ctx,
-                               STML_EXPANSIO_SINE_MALFORMATUM,
-                               nodus, NIHIL, titulus);
-                redde FALSUM;
-            }
-            impleta = l;
-        }
-        si (impleta == NIHIL || impleta->genus != STML_NODUS_ELEMENTUM)
-        {
-            _vitium_ponere(ctx, STML_EXPANSIO_SINE_MALFORMATUM,
-                           nodus, NIHIL, titulus);
             redde FALSUM;
         }
         /* NON-EXSTAT per quaesitionem EXSTAT: _alicubi_congruere

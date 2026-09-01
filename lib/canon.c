@@ -2618,6 +2618,16 @@ _diribitio_bracchia_iudicare (
                           ZEPHYRUM);
             perge;
         }
+        /* angustans: CASUS solum - ORDINARIO sine conditione
+         * nihil angustandum est (machina idem) */
+        si (   chorda_aequalis_literis(*l->titulus, "ORDINARIUS")
+            && stml_attributum_capere(l, "angustans") != NIHIL)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          n->titulus, l->titulus, ZEPHYRUM,
+                          ZEPHYRUM);
+            perge;
+        }
         (*numerus)++;
 
         est_sedes  = NIHIL;
