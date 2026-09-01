@@ -549,6 +549,85 @@ principale (vacuum)
     }
 
 
+    /* ==================================================
+     * TOTALITAS: saepta non clausa ad FINEM (01M1FACW)
+     *
+     * Consumens interior FINEM videt et frangit; exterior deinde
+     * lexema aliud petit - fluxus exhaustus, NIHIL usque ad
+     * radicem. 'a{b:(}' sufficiebat. FINIS HAERENS: semel visus,
+     * omni petenti iterum redditur.
+     * ================================================== */
+
+    {
+        hic_manens constans character* APERTA[] = {
+            "a{b:(}",
+            "a{b:((c)}",
+            "a{b:f(}",
+            "a{b:f(f(",
+            "a{b:[[}",
+            "a{b:(c",
+            "a(",
+            "@media("
+        };
+        i32 numerus = (i32)(magnitudo(APERTA) / magnitudo(APERTA[0]));
+        i32 i;
+
+        imprimere("\n--- Probans saepta non clausa ad FINEM ---\n");
+
+        per (i = ZEPHYRUM; i < numerus; i++)
+        {
+            MateriaNodus* radix;
+                     i32  mensura;
+
+            mensura  = (i32)strlen(APERTA[i]);
+            radix    = css_arbor_parsare(piscina, APERTA[i], mensura);
+            CREDO_NON_NIHIL (radix);
+            CREDO_VERUM (_octetos_probare(piscina, APERTA[i], mensura));
+            si (radix != NIHIL)
+            {
+                /* FINIS radicem attigit: cauda LEXEMA est */
+                CREDO_AEQUALIS_S32 (
+                    (s32)radix->loci[CSS_PLAGULA_CAUDA].genus,
+                    (s32)MATERIA_VALOR_TOKEN);
+            }
+        }
+
+        /* Structura 'a{b:(}': saeptum '(' contentum I ('}' servatum),
+         * tok_clausum ABSENS; corpus '{' quoque sine clausura */
+        {
+            MateriaNodus* plagula = css_arbor_parsare(piscina, "a{b:(}",
+                VI);
+            MateriaNodus* regula;
+            MateriaNodus* corpus;
+            MateriaNodus* decl;
+            MateriaNodus* saeptum;
+
+            CREDO_NON_NIHIL (plagula);
+            regula = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            corpus = regula->loci[CSS_REGULA_CORPUS].datum.nodus;
+            CREDO_AEQUALIS_S32 (
+                (s32)corpus->loci[CSS_SAEPTUM_TOK_CLAUSUM].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+            decl = materia_valor_lista_obtinere(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (decl->genus, (s32)CSS_GENUS_DECLARATIO);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                decl->loci[CSS_DECL_VALOR]), I);
+            saeptum = materia_valor_lista_obtinere(
+                decl->loci[CSS_DECL_VALOR], ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (saeptum->genus, (s32)CSS_GENUS_SAEPTUM);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                saeptum->loci[CSS_SAEPTUM_CONTENTUM]), I);
+            CREDO_AEQUALIS_S32 (
+                (s32)saeptum->loci[CSS_SAEPTUM_TOK_CLAUSUM].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+        }
+    }
+
+
     /* ========================================================
      * STML: circuitus BIS
      * ======================================================== */

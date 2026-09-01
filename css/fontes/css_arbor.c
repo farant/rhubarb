@@ -62,6 +62,13 @@ nomen structura {
  * cumulantur et ligantur; REGIMINE CONTENTI omne lexema
  * significans est (vide caput).
  *
+ * FINIS HAERENS (01M1FACW): semel visus, OMNI petenti iterum
+ * redditur. Consumens interior (saeptum, functio) FINEM videt et
+ * frangit; exterior deinde lexema aliud petit - sine haesione
+ * fluxus exhaustus NIHIL daret et 'a{b:(}' parsuram totam
+ * perderet. Ligator FINEM semel solvit (trivia caudae ad eum
+ * ligantur), deinde numquam iterum.
+ *
  * NIHIL significat fluxum SINE lexemate FINIS, quod vitium
  * css_lexare esset, non fontis - css_lexema.h FINIS ultimum
  * promittit. Ergo ansa vocantis semper terminatur. */
@@ -69,6 +76,10 @@ interior MateriaToken*
 _significans_proximum (
     CssParsura* p)
 {
+    si (p->finis != NIHIL)
+    {
+        redde p->finis;
+    }
     dum (p->index < xar_numerus(p->plana))
     {
         MateriaToken* token;
@@ -88,6 +99,11 @@ _significans_proximum (
         si (!css_ligator_solvere(&p->ligator, token))
         {
             redde NIHIL;
+        }
+        si (materia_lexicon_munus(&p->lexicon, token->genus)
+            == MATERIA_MUNUS_FINIS)
+        {
+            p->finis = token;
         }
         redde token;
     }
