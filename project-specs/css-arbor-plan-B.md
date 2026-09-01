@@ -477,7 +477,7 @@ git commit -m "css: regulae apud + recuperatio spec-definita; L3 totalis"
 
 Unchanged in substance from old T13 — it was already type-agnostic.
 
-- [ ] **Step 1: Write the failing corpus gate**
+- [x] **Step 1: Write the failing corpus gate**
 
 ```c
 hic_manens constans character* CORPUS[] = {
@@ -501,19 +501,19 @@ lines). Then the self-measurement, which is the part that matters:
     CREDO_MAIOR_I32 (octeti_probati, MMMM);
 ```
 
-- [ ] **Step 2: Write `adversarius_2.css`** — what adversarius.css lacks:
+- [x] **Step 2: Write `adversarius_2.css`** — what adversarius.css lacks:
   `}` at top level, `@` at EOF, deeply nested blocks, CDO/CDC
   (`<!--`/`-->`), mixed `\r\n` and `\n`, non-ASCII identifiers, a bare
   `!`, `!important` with a comment inside it. NUL rides inline in the
   probatio, never as a fixture.
 
-- [ ] **Step 3: Run and read failure #1 first** — it may be upstream of
+- [x] **Step 3: Run and read failure #1 first** — it may be upstream of
   what you think you are testing. Judge by the CAUSE TALLY, not the
   total.
 
-- [ ] **Step 4: Fix causes until green, one cause per commit.**
+- [x] **Step 4: Fix causes until green, one cause per commit.**
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/probationes/probatio_css_corpus.c probationes/fixa/css/adversarius_2.css

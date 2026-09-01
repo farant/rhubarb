@@ -1593,3 +1593,33 @@ VITIUM PLANTATUM ARSIT: terminator '@import' omissus -> porta
 octetorum (XIX) ET pinna structurae ambae rubrae.
 
 PROXIMUM: B5 - porta corporis (VI plagulae reales + adversarius_2).
+
+========================================================================
+B5 — PORTA CORPORIS. RELATIO (2026-09-01)
+========================================================================
+
+css 4/4 (porta corporis nova: 24 assertiones). VI plagulae verae -
+componentia 11517 + thema 2731 + adversarius 277 + adversarius_2
+151 (novus: '}' supremum, CDO/CDC, CRLF mixtum, nidificatio
+profunda, identificatores non-ASCII, '!' nudum, important cum
+commento interrupto, '@' ad FINEM ipsum) + speculum.css 7680 +
+style.css 1743 = 24099 octeti, OMNES octetim exacti.
+
+PRAEDICTUM STANS 'corpus > fixturae' hac vice VACUUM cecidit:
+corpus NIHIL invenit quod probationes unitatis non tetigerunt -
+primum in historia portarum huius arcus. Non fortuna: totalitas
+per constructionem (B2-B4 machinam generalem primum struxerunt;
+B4 iam mensuravit IV/V probationes recuperationis ante
+implementationem virides).
+
+SED VIRIDIS INTERROGATA, non celebrata (lex domus: quid oraculum
+IGNOSCIT?): oraculum octetorum parsatori qui omnia in 'mala'
+congereret adhuc faveret. Ergo porta structuram quoque asserit:
+plagulae MUNDAE quattuor (non adversariae) nullas malas et
+declarationes veras ferre DEBENT - viridis vacua fieri non potest.
+Vitium plantatum (ambulatio listas omittens) IV assertiones
+fregit: numerator vivus, non vacuus.
+
+PROXIMUM: B6 - circuitus STML super corpus, comparator B1 ut
+oraculum secundum (classis quam octeti videre non possunt:
+migratio dominii triviorum).
