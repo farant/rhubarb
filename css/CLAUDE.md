@@ -8,29 +8,35 @@ CSS parser built on **materia** (not silva). Design:
 the old `css-arbor-plan.md` T10–T17 are superseded (stale types);
 its T1–T9 are the historical record.
 
-## Praesens status (2026-08-27)
+## Praesens status (2026-09-01, post B1-B6)
 
-Built, all **hand-written** per decree `01M134M3` (faber deferred so
-it can be generated from what CSS actually needed):
+PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B6 COMPLETE in one
+session; next = **B7 (hand-written css.canon)**, then B8+B9
+(selectors), B10 (wire-up). Suites: css 5/5 (registrum, adaptare,
+arbor 188 assertions, corpus 24, stml 29).
 
-- `css_lexicon` — lexical descriptor · `css_registrum` — node vocabulary
-- `css_adaptare` — `CssLexema` → `MateriaToken` **one for one**, plus
-  `CssLigator`, the trivia-binding state
-- `css_arbor` — the stylesheet **spine** (T9): lex → adapt → bind →
-  `plagula` node with `cauda`. Rules are **not** parsed yet
+Built: the FULL L3 parser - qualified rules, declarations,
+`!important` (praevalentia = SYNTAX, its tokens carry structural
+trivia; mid-space lives as verbum.ante), at-rules (three-class
+table + unknown->saeptum), CDO/CDC as servata, top-level `}` =
+single-token regula-mala (modern-draft semantics, named), total
+recovery (mala with block-depth tracking). CONTENT MODE (D7
+STRENGTHENED): inside preludes AND declaration values, whitespace
+AND comments are lexema-servatum leaves, ligator bypassed, zero
+trivia in content regions - byte order forces this.
 
-522 assertions across three suites. The **byte-coverage gate runs on
-real CSS** (5 files, ~24k bytes, both whitespace regimes), and the
-separating oracle (§9.4) emits directly from the parse.
+Gates: byte oracle (parse->emit->memcmp, 24099 corpus bytes) +
+structure (clean files: zero malae, real declarations) + STML
+double round trip + COMPARATOR (materia_arbor_aequalis, B1) +
+measured oracle-separation pin (trivia migration: bytes IDEM,
+tree DISPAR). Parser calls materia_arbor_patres_figere (exported
+B6) - reconstruction policy parity with the reader.
 
-Not built: rules (T10), declarations (T11), at-rules (T12),
-selectors (T16), canon (T15), the remaining corpus gates (T13–T14).
-
-**The spine's incompleteness is asserted, not silent.**
-`probatio_css_arbor` carries `CREDO_FALSUM(_octetos_probare(…,
-"a{}"))` — the gate *must* stay red until T10 lands, and T10 flips
-those assertions. Quietly sweeping unparsed tokens into `regula-mala`
-would have turned the gate green while nothing was parsed.
+Substrate fixes CSS forced (client-two paying, 4x): template
+compression species guard (T3) - whitespace contract (T9) -
+lexeme-path raw marking (B6) - **CR representation: `cr` attribute
+(offsets), STML normalizes CRLF even in raw (measured); silva has
+the same LATENT bug for C89 comments (phase-5 replay)**.
 
 ## Named slot indices — use them, never bare numbers
 
