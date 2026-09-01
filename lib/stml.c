@@ -6223,9 +6223,6 @@ _scribere_evasus (
             casus '&':
                 chorda_aedificator_appendere_literis(aed, "&amp;");
                 frange;
-            casus '"':
-                chorda_aedificator_appendere_literis(aed, "&quot;");
-                frange;
             ordinarius:
                 chorda_aedificator_appendere_character(aed, c);
                 frange;

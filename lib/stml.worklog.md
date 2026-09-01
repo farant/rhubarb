@@ -1411,3 +1411,28 @@ lenient behavior. Terminated edge cases still pass unchanged
 The "left open" item in the entry above about unterminated
 constructs succeeding is hereby CLOSED. The `<!doctype html>`
 remainder and the `finis_ultimus` progress guard are still open.
+
+## 2026-09-01 — `&quot;` escape deleted from the writer (spec §7.5.4 executed)
+
+The `casus '"'` arm of `_scribere_evasus` is gone. The writer now
+escapes three characters (`&`, `<`, `>`); the DECODER still accepts
+all five entities, so existing files carrying `&quot;` parse to the
+same trees they always did — the change is emission-only and
+strictly convergent (first reformat rewrites `&quot;` to `"`, every
+run after is a fixed point).
+
+Ratified by Fran 2026-08-29 (spec §7.5.4); executed today because
+`stml formare` shipped and demonstrated the damage live on its first
+quote-carrying input (`dixit "salve"` → `dixit &quot;salve&quot;`).
+
+Exposure measured before the edit, not assumed: zero committed
+`.stml`/`.canon` files contain `&quot;` (grep over probationes,
+silva, natura, book_assets), and the only `&quot;` sites in test
+code are parser-side unescaping pins, which the decoder keeps
+honest. Suite verdict matched: stml filter 7/7 including pulchrum
+(pretty corpus gate) and aurea, zero fixture changes needed.
+
+Note for the fidelity contract: this IMPROVES it for bare `"` in
+text (previously `"` → `&quot;` broke byte-exactness; now bytes pass
+through) and breaks it only for source spelled `&quot;`, of which
+the corpus has none.

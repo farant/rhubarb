@@ -1,6 +1,10 @@
 # STML — instrumentum crustae (`stml`) — spec V1
 
-**Status:** DESIGNATUM, nondum aedificatum. Sessio 2026-08-29 (Fran + Opus 5).
+**Status:** `formare` AEDIFICATUM 2026-09-01 (`tools/stml.c` +
+`tools/stml_struere.sh`, institutum `~/.bin/stml`; §7.5.4 quoque
+executum eodem die). `vertere` nondum; verba `expandere` et
+`indagare` addita in scopo (Fran 2026-09-01), nondum aedificata.
+Sessio designationis 2026-08-29 (Fran + Opus 5).
 **Parcum matris:** `01M0VNSZC6` (Formator STML verus — CLI).
 **Visio:** `project-specs/stml-visio.md` §9.4 (instrumentum + canales).
 
@@ -179,7 +183,17 @@ not short coverage.**
 
 ## §4 `formare`
 
-Read → (chain §3) → `stml_scribere(radix, piscina, VERUM)` → stdout or `-ad`.
+Read → `stml_scribere(radix, piscina, VERUM)` → stdout or `-ad`.
+
+**CORRECTIO (2026-09-01, at build time):** `formare` does NOT run
+the §3 chain — no expansion, no distribution. Measured basis: the
+pretty gate (`probatio_stml_pulchrum.c`) never calls `stml_expandere`,
+so the formatter's fixed-point contract is defined over SOURCE trees.
+If `formare` expanded, it would consume template definitions (the
+formatter would DESTROY macro-carrying sources), collapse into the
+future `expandere` verb, and `-probare` would report every
+template-carrying file divergent forever. The §3 chain belongs to
+`vertere` and `expandere`.
 
 **The pretty path, not the fidelity path.** This matters: the fidelity path
 (`pulchrum=FALSUM`) carries ~22 divergence classes (`01M16XGV45`) which are
@@ -804,7 +818,12 @@ of every `_tok_proximus` (cannot go stale); read in the parser BEFORE
 **Result:** all five agree. Zero fallout — root 143/143, silva 50/50,
 materia 5/5; no fixture depended on the lenient behavior.
 
-### §7.5.4 Effugium nimium — decretum Franis
+### §7.5.4 Effugium nimium — decretum Franis — EXECUTUM 2026-09-01
+
+**Done.** The `casus '"'` arm is deleted; decoder untouched. Exposure
+measured first: zero committed `.stml`/`.canon` files carried
+`&quot;`, zero fixture changes needed, stml suites 7/7 (pulchrum +
+aurea included). Details: `lib/stml.worklog.md` 2026-09-01.
 
 `_scribere_evasus` (`lib/stml.c:6029-6037`) escapes four characters; the
 parser decodes five. **Delete the `"` case. Keep `<` and `>`.**
