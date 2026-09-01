@@ -2570,6 +2570,7 @@ principale (vacuum)
              * exemplaris CITATUR (conditio numquam contra canonem
              * lint iudicata), PER liberum relati invisibile */
             vitia = iudicare_literis(c,
+                "<INDAGO/>"
                 "<TRANSPARENTIA tags=\"expansio ante post\"/>"
                 "<EXEMPLAR output=\"$m\"><conditio/></EXEMPLAR>"
                 "<EXEMPLAR de=\"$m\" modus=\"unum\" ancorata"
@@ -2600,7 +2601,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XVIII];
+                constans character* mala[XIX];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2650,7 +2651,9 @@ principale (vacuum)
                 /* attributa= vacuum (caecitas attributorum) */
                 mala[17] = "<TRANSPARENTIA tags=\"t\""
                            " attributa=\" \"/>";
-                per (m = ZEPHYRUM; m < XVIII; m++)
+                /* INDAGO non nudum (vestigatio) */
+                mala[18] = "<INDAGO malum=\"1\"/>";
+                per (m = ZEPHYRUM; m < XIX; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

@@ -176,7 +176,7 @@ nomen enumeratio {
      * StmlDistributioVitium; limes = linea. */
     CANON_DISTRIBUTIO_FRACTA = XXII,
     /* constructum machinae (CAPS: EXEMPLAR/PER/TRANSPARENTIA/
-     * CATENA/DIRIBITIO, spec exemplarium par. 6) forma mala
+     * CATENA/DIRIBITIO/INDAGO, spec exemplarium par. 6) forma mala
      * IUDICIO STATICO - DIRIBITIO: bracchia CASUS/ORDINARIUS sola,
      * CASUS = sedes <EST> una + mandatum unum, ORDINARIUS sine
      * <EST> et ULTIMUS, conditio sine modus. Cetera:

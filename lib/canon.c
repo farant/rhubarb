@@ -2192,6 +2192,7 @@ _est_caps_machinae (
             || chorda_aequalis_literis(*n->titulus, "PER")
             || chorda_aequalis_literis(*n->titulus, "CATENA")
             || chorda_aequalis_literis(*n->titulus, "DIRIBITIO")
+            || chorda_aequalis_literis(*n->titulus, "INDAGO")
             || chorda_aequalis_literis(*n->titulus,
                                        "TRANSPARENTIA"));
 }
@@ -2860,6 +2861,35 @@ _caps_iudicare (
             /* diribitio statice sine bracchiis */
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
                           n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+        }
+        redde;
+    }
+    /* INDAGO (vestigatio - decretum 2026-08-31): elementum NUDUM
+     * solum - attributum quodvis aut liber non-commentum = vitium */
+    si (chorda_aequalis_literis(*n->titulus, "INDAGO"))
+    {
+        i32 i;
+        i32 m;
+
+        si (   n->attributa != NIHIL
+            && xar_numerus(n->attributa) > ZEPHYRUM)
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, NIHIL, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        m = stml_numerus_liberorum(n);
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            StmlNodus* l = stml_liberum_ad_indicem(n, i);
+
+            si (l != NIHIL && l->genus != STML_NODUS_COMMENTUM)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              n, n->titulus, NIHIL, ZEPHYRUM,
+                              ZEPHYRUM);
+                redde;
+            }
         }
         redde;
     }
