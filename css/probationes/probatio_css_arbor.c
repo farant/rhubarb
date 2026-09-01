@@ -415,6 +415,117 @@ principale (vacuum)
 
         imprimere("\n--- Probans declarationem malam (sine ':') ---\n");
         CREDO_VERUM (_octetos_probare(piscina, "a{color red}", XII));
+    }
+
+
+    /* ==================================================
+     * REGULAE APUD + RECUPERATIO (B4)
+     * ================================================== */
+
+    {
+        imprimere("\n--- Probans regulas apud ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "@import url(a.css);", XIX));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "@media screen{a{color:red}}", XXVII));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "@ignotum (x) { y z }", XX));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "@page{@top-left{}}", XVIII));
+
+        {
+            /* @media: corpus REGULIS - regula nidificata intus */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "@media screen{a{color:red}}", XXVII);
+            MateriaNodus* apud;
+            MateriaNodus* corpus;
+
+            CREDO_NON_NIHIL (plagula);
+            apud = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (apud->genus,
+                (s32)CSS_GENUS_REGULA_APUD);
+            corpus = apud->loci[CSS_APUD_CORPUS].datum.nodus;
+            CREDO_AEQUALIS_S32 (corpus->genus, (s32)CSS_GENUS_SAEPTUM);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM]), I);
+            CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+                corpus->loci[CSS_SAEPTUM_CONTENTUM],
+                ZEPHYRUM)->datum.nodus->genus,
+                (s32)CSS_GENUS_REGULA_QUALIFICATA);
+
+            /* Terminator ABSENS: corpus regulam clausit */
+            CREDO_AEQUALIS_S32 (
+                (s32)apud->loci[CSS_APUD_TOK_TERMINATOR].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+        }
+        {
+            /* @import: sententia - terminator ';', corpus absens */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "@import url(a.css);", XIX);
+            MateriaNodus* apud;
+
+            CREDO_NON_NIHIL (plagula);
+            apud = materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus;
+            CREDO_AEQUALIS_S32 (apud->genus,
+                (s32)CSS_GENUS_REGULA_APUD);
+            CREDO_AEQUALIS_S32 (
+                (s32)apud->loci[CSS_APUD_CORPUS].genus,
+                (s32)MATERIA_VALOR_NIHIL);
+            CREDO_AEQUALIS_S32 (
+                (s32)apud->loci[CSS_APUD_TOK_TERMINATOR].genus,
+                (s32)MATERIA_VALOR_TOKEN);
+        }
+
+        imprimere("\n--- Probans functiones nidificatas ---\n");
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a{color:rgba(1,2,3,.4)}", XXIII));
+        CREDO_VERUM (_octetos_probare(piscina,
+            "a{w:calc((1px + 2px) * 3)}", XXVI));
+
+        imprimere("\n--- Probans recuperationem spec-definitam ---\n");
+        CREDO_VERUM (_octetos_probare(piscina, "}a{}", IV));
+        CREDO_VERUM (_octetos_probare(piscina, "a{;;color:red}", XIV));
+        CREDO_VERUM (_octetos_probare(piscina, "a{color}", VIII));
+        CREDO_VERUM (_octetos_probare(piscina, "a{", II));
+        CREDO_VERUM (_octetos_probare(piscina, "a{b:\"unterminated",
+            XVIII));
+        CREDO_VERUM (_octetos_probare(piscina, "<!--a{}-->", X));
+
+        {
+            /* '}' supremum: regula-mala uni-lexematis, deinde
+             * regula sana - error localis manet, non contagiosus */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "}a{}", IV);
+
+            CREDO_NON_NIHIL (plagula);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                plagula->loci[CSS_PLAGULA_REGULAE]), II);
+            CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus->genus,
+                (s32)CSS_GENUS_REGULA_MALA);
+            CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                I)->datum.nodus->genus,
+                (s32)CSS_GENUS_REGULA_QUALIFICATA);
+        }
+        {
+            /* CDO/CDC: legalia, ignorata a L3, servata a nobis */
+            MateriaNodus* plagula = css_arbor_parsare(piscina,
+                "<!--a{}-->", X);
+
+            CREDO_NON_NIHIL (plagula);
+            CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(
+                plagula->loci[CSS_PLAGULA_REGULAE]), III);
+            CREDO_AEQUALIS_S32 (materia_valor_lista_obtinere(
+                plagula->loci[CSS_PLAGULA_REGULAE],
+                ZEPHYRUM)->datum.nodus->genus,
+                (s32)CSS_GENUS_LEXEMA_SERVATUM);
+        }
         {
             MateriaNodus* plagula = css_arbor_parsare(piscina,
                 "a{color red}", XII);

@@ -1552,3 +1552,44 @@ ambae rubrae. Duo oracula, unum vitium, ambo arserunt.
 
 PROXIMUM: B4 - regulae apud (tabula trium classium), CDO/CDC,
 '}' supremum, recuperatio regula-mala.
+
+========================================================================
+B4 — REGULAE APUD + RECUPERATIO: L3 TOTALIS. RELATIO (2026-09-01)
+========================================================================
+
+css 3/3 (188 assertiones in probatione arboris). Parsator nunc
+TOTALIS est: octeti quilibet intrant, arbor exit, numquam cadit.
+
+QUOD AEDIFICATUM EST
+  APUD_TABULA + _apud_classis   tres classes (spec par. IV): corpus
+                                REGULIS (@media...) / DECLARATIONIBUS
+                                (@font-face, @page, @top-left...) /
+                                SENTENTIA (@import...); ignota ->
+                                saeptum genericum. Crescere = ordinem
+                                docere, numquam re-parsare. Congruentia
+                                ASCII sine casu (L3).
+  _regulam_apud_consumere       L3 5.4.2: praeludium CONTENTUM usque
+                                ';' (terminator) / '{' (corpus per
+                                classem) / '}' patris (retro) / FINIS
+  _corpus_regularum_consumere   regulae nidificatae intra @media;
+                                apud intra apud; CDO/CDC et ';' folia
+  _corpus_regulae_consumere     + apud nidificata (@page{@top-left{}})
+  suprema: CDO/CDC              folia servata (legalia, L3 ignorat,
+                                nos servamus)
+  suprema: '}'                  regula-mala UNI-lexematis (schema
+                                recentius; CR vetus praeludio dabat -
+                                divergentia NOMINATA in commento).
+                                Error localis manet: '}a{}' = mala
+                                deinde regula SANA.
+
+MENSURA NOTANDA: ante implementationem QUATTUOR ex quinque
+probationibus octetorum recuperationis IAM virides erant per viam
+genericam B2/B3 ('}a{}', 'a{', 'a{color}', 'a{b:"…') - totalitas
+per constructionem, non per casus speciales. Sola structura eas
+distinguebat, et probatio structurae rubra CECIDIT (segfault in
+arbore formae falsae) - rubor clamans, non tacens.
+
+VITIUM PLANTATUM ARSIT: terminator '@import' omissus -> porta
+octetorum (XIX) ET pinna structurae ambae rubrae.
+
+PROXIMUM: B5 - porta corporis (VI plagulae reales + adversarius_2).

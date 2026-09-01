@@ -392,17 +392,19 @@ _folia_appendere (
     redde VERUM;
 }
 
-/* Mala sine consumptione ulteriore (FINIS aut '}' iam visum). */
+/* Mala sine consumptione ulteriore (FINIS aut '}' iam visum).
+ * Genus datur: DECLARATIO_MALA intra corpora, REGULA_MALA suprema -
+ * forma eadem (tokens:lista-token), sedes alia. */
 interior MateriaNodus*
 _malam_consumere_finita (
       CssParsura* p,
+             s32  genus,
     MateriaToken* titulus)
 {
     MateriaNodus* mala;
      MateriaValor lexemata;
 
-    mala = materia_nodus_creare(p->piscina,
-        (s32)CSS_GENUS_DECLARATIO_MALA, (i32)I);
+    mala = materia_nodus_creare(p->piscina, genus, (i32)I);
     si (mala == NIHIL)
     {
         redde NIHIL;
@@ -534,14 +536,16 @@ _declarationem_consumere (
     {
         /* titulus solus ante FINIS: mala uni-lexematis */
         p->finis = token;
-        redde _malam_consumere_finita(p, titulus);
+        redde _malam_consumere_finita(p,
+                (s32)CSS_GENUS_DECLARATIO_MALA, titulus);
     }
     si (token->genus != (s32)CSS_LEX_COLON)
     {
         si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
         {
             _retrocedere(p);
-            redde _malam_consumere_finita(p, titulus);
+            redde _malam_consumere_finita(p,
+                (s32)CSS_GENUS_DECLARATIO_MALA, titulus);
         }
         redde _malam_consumere(p, titulus, token);
     }
@@ -729,9 +733,15 @@ _declarationem_consumere (
     redde decl;
 }
 
+interior MateriaNodus*
+_regulam_apud_consumere (
+      CssParsura* p,
+    MateriaToken* titulus);
+
 /* "Consume a style block's contents" (L3 5.4.4): declarationes,
- * ';' errantia (L3 ea ABICIT - nos folia servata facimus, sine
- * iactura), recuperatio. Regulae apud intra corpora B4 sunt. */
+ * regulae apud nidificatae (@page { @top-left {...} }), ';'
+ * errantia (L3 ea ABICIT - nos folia servata facimus, sine
+ * iactura), recuperatio. */
 interior MateriaNodus*
 _corpus_regulae_consumere (
       CssParsura* p,
@@ -782,6 +792,10 @@ _corpus_regulae_consumere (
         {
             elementum = _servatum_creare(p, token);
         }
+        alioquin si (token->genus == (s32)CSS_LEX_APUD_VERBUM)
+        {
+            elementum = _regulam_apud_consumere(p, token);
+        }
         alioquin si (token->genus == (s32)CSS_LEX_IDENTIFICATOR)
         {
             elementum = _declarationem_consumere(p, token);
@@ -808,6 +822,294 @@ _corpus_regulae_consumere (
         redde NIHIL;
     }
     redde saeptum;
+}
+
+
+/* ==================================================
+ * Regulae apud (L3 5.4.2, B4)
+ * ================================================== */
+
+interior MateriaNodus*
+_regulam_qualificatam_consumere (
+      CssParsura* p,
+    MateriaToken* primum);
+
+interior MateriaNodus*
+_regulam_apud_consumere (
+      CssParsura* p,
+    MateriaToken* titulus);
+
+/* Corpus regulae apud tribus classibus (spec par. IV): regulas
+ * fert (@media), declarationes fert (@font-face), aut sententia
+ * sola est (@import). Ignota -> saeptum genericum valorum
+ * componentium, quod totale et honestum est. CRESCERE = ordinem
+ * tabulae docere, NUMQUAM re-parsare. */
+nomen enumeratio {
+    CSS_APUD_IGNOTA = 0,
+    CSS_APUD_REGULIS,
+    CSS_APUD_DECLARATIONIBUS,
+    CSS_APUD_SENTENTIA
+} CssApudClassis;
+
+nomen structura {
+    constans character* titulus;
+        CssApudClassis  classis;
+} ApudNota;
+
+hic_manens constans ApudNota APUD_TABULA[] = {
+    { "@media",         CSS_APUD_REGULIS },
+    { "@supports",      CSS_APUD_REGULIS },
+    { "@document",      CSS_APUD_REGULIS },
+    { "@layer",         CSS_APUD_REGULIS },
+    { "@font-face",     CSS_APUD_DECLARATIONIBUS },
+    { "@page",          CSS_APUD_DECLARATIONIBUS },
+    { "@property",      CSS_APUD_DECLARATIONIBUS },
+    { "@counter-style", CSS_APUD_DECLARATIONIBUS },
+    { "@top-left",      CSS_APUD_DECLARATIONIBUS },
+    { "@import",        CSS_APUD_SENTENTIA },
+    { "@charset",       CSS_APUD_SENTENTIA },
+    { "@namespace",     CSS_APUD_SENTENTIA }
+};
+
+/* ASCII sine casu, chorda contra litteras (verba apud L3 casum
+ * non curant). */
+interior b32
+_chorda_aequalis_sine_casu (
+       constans chorda* valor,
+    constans character* literis)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < valor->mensura; i++)
+    {
+        character a = (character)valor->datum[i];
+        character b = literis[i];
+
+        si (b == '\0')
+        {
+            redde FALSUM;
+        }
+        si (a >= 'A' && a <= 'Z')
+        {
+            a = (character)(a + XXXII);
+        }
+        si (a != b)
+        {
+            redde FALSUM;
+        }
+    }
+    redde (b32)(literis[valor->mensura] == '\0');
+}
+
+interior CssApudClassis
+_apud_classis (
+    constans MateriaToken* token)
+{
+    i32 numerus = (i32)(magnitudo(APUD_TABULA)
+                      / magnitudo(APUD_TABULA[0]));
+    i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (_chorda_aequalis_sine_casu(&token->valor,
+                APUD_TABULA[i].titulus))
+        {
+            redde APUD_TABULA[i].classis;
+        }
+    }
+    redde CSS_APUD_IGNOTA;
+}
+
+/* Corpus regularum (@media): regulae qualificatae et apud intra
+ * saeptum; ';' errantia et CDO/CDC folia servata fiunt. */
+interior MateriaNodus*
+_corpus_regularum_consumere (
+      CssParsura* p,
+    MateriaToken* apertum)
+{
+    MateriaNodus* saeptum;
+     MateriaValor contentum;
+
+    saeptum = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_SAEPTUM, (i32)III);
+    si (saeptum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!materia_nodus_ponere(saeptum, (i32)CSS_SAEPTUM_TOK_APERTUM,
+            materia_valor_token(apertum), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+    contentum = materia_valor_lista_nova(p->piscina);
+
+    per (;;)
+    {
+        MateriaToken* token;
+        MateriaNodus* elementum;
+
+        token = _significans_proximum(p);
+        si (token == NIHIL)
+        {
+            redde NIHIL;
+        }
+        si (_finis_est(p, token))
+        {
+            p->finis = token;
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            si (!materia_nodus_ponere(saeptum,
+                    (i32)CSS_SAEPTUM_TOK_CLAUSUM,
+                    materia_valor_token(token), MATERIA_LOCUS_TOKEN))
+            {
+                redde NIHIL;
+            }
+            frange;
+        }
+        si (   token->genus == (s32)CSS_LEX_SEMICOLON
+            || token->genus == (s32)CSS_LEX_CDO
+            || token->genus == (s32)CSS_LEX_CDC)
+        {
+            elementum = _servatum_creare(p, token);
+        }
+        alioquin si (token->genus == (s32)CSS_LEX_APUD_VERBUM)
+        {
+            elementum = _regulam_apud_consumere(p, token);
+        }
+        alioquin
+        {
+            elementum = _regulam_qualificatam_consumere(p, token);
+        }
+        si (elementum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        contentum = materia_valor_lista_appendere(p->piscina,
+            contentum, materia_valor_nodus(elementum));
+        si (p->finis != NIHIL)
+        {
+            frange;
+        }
+    }
+
+    si (!materia_nodus_ponere(saeptum, (i32)CSS_SAEPTUM_CONTENTUM,
+            contentum, MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde NIHIL;
+    }
+    redde saeptum;
+}
+
+/* "Consume an at-rule" (L3 5.4.2): praeludium CONTENTUM usque ad
+ * ';' (terminator - sententia) aut '{' (corpus per classem) aut
+ * '}' patris (retrocessum) aut FINIS. */
+interior MateriaNodus*
+_regulam_apud_consumere (
+      CssParsura* p,
+    MateriaToken* titulus)
+{
+    MateriaNodus*  regula;
+    MateriaToken*  token;
+     MateriaValor  praeludium;
+    CssApudClassis classis;
+
+    regula = materia_nodus_creare(p->piscina,
+        (s32)CSS_GENUS_REGULA_APUD, (i32)IV);
+    si (regula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!materia_nodus_ponere(regula, (i32)CSS_APUD_TOK_NOMEN,
+            materia_valor_token(titulus), MATERIA_LOCUS_TOKEN))
+    {
+        redde NIHIL;
+    }
+    classis       = _apud_classis(titulus);
+    praeludium    = materia_valor_lista_nova(p->piscina);
+    p->contentum  = VERUM;
+
+    per (;;)
+    {
+        MateriaNodus* valor;
+
+        token = _significans_proximum(p);
+        si (token == NIHIL)
+        {
+            p->contentum = FALSUM;
+            redde NIHIL;
+        }
+        si (_finis_est(p, token))
+        {
+            p->finis = token;
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_SEMICOLON)
+        {
+            si (!materia_nodus_ponere(regula,
+                    (i32)CSS_APUD_TOK_TERMINATOR,
+                    materia_valor_token(token), MATERIA_LOCUS_TOKEN))
+            {
+                p->contentum = FALSUM;
+                redde NIHIL;
+            }
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            _retrocedere(p);
+            frange;
+        }
+        si (token->genus == (s32)CSS_LEX_BRACE_APERTA)
+        {
+            MateriaNodus* corpus;
+
+            p->contentum = FALSUM;
+            si (classis == CSS_APUD_REGULIS)
+            {
+                corpus = _corpus_regularum_consumere(p, token);
+            }
+            alioquin si (classis == CSS_APUD_DECLARATIONIBUS)
+            {
+                corpus = _corpus_regulae_consumere(p, token);
+            }
+            alioquin
+            {
+                corpus = _saeptum_consumere(p, token);
+            }
+            si (corpus == NIHIL)
+            {
+                redde NIHIL;
+            }
+            si (!materia_nodus_ponere(regula, (i32)CSS_APUD_CORPUS,
+                    materia_valor_nodus(corpus), MATERIA_LOCUS_NODUS))
+            {
+                redde NIHIL;
+            }
+            frange;
+        }
+        valor = _valorem_componentem_consumere(p, token);
+        si (valor == NIHIL)
+        {
+            p->contentum = FALSUM;
+            redde NIHIL;
+        }
+        praeludium = materia_valor_lista_appendere(p->piscina,
+            praeludium, materia_valor_nodus(valor));
+        si (p->finis != NIHIL)
+        {
+            frange;
+        }
+    }
+
+    p->contentum = FALSUM;
+    si (!materia_nodus_ponere(regula, (i32)CSS_APUD_PRAELUDIUM,
+            praeludium, MATERIA_LOCUS_LISTA_NODUS))
+    {
+        redde NIHIL;
+    }
+    redde regula;
 }
 
 
@@ -952,9 +1254,11 @@ css_arbor_parsare (
         redde NIHIL;
     }
 
-    /* "consume a list of rules" (L3 5.4.1). B2: omne lexema
-     * significans regulam QUALIFICATAM incipit - regulae apud,
-     * '}' supremum, CDO/CDC recuperatioque B4 sunt. */
+    /* "consume a list of rules" (L3 5.4.1). CDO/CDC legalia et a
+     * L3 ignorata - folia servata fiunt (sine iactura). '}'
+     * supremum error est (schema recentius; CR vetus id praeludio
+     * dabat): regula-mala UNI-lexematis, ut error localis maneat
+     * nec regulam sequentem contaminet. */
     per (;;)
     {
         MateriaNodus* regula;
@@ -963,7 +1267,24 @@ css_arbor_parsare (
         si (token == NIHIL) { redde NIHIL; }
         si (_finis_est(&p, token)) { frange; }
 
-        regula = _regulam_qualificatam_consumere(&p, token);
+        si (token->genus == (s32)CSS_LEX_APUD_VERBUM)
+        {
+            regula = _regulam_apud_consumere(&p, token);
+        }
+        alioquin si (   token->genus == (s32)CSS_LEX_CDO
+                     || token->genus == (s32)CSS_LEX_CDC)
+        {
+            regula = _servatum_creare(&p, token);
+        }
+        alioquin si (token->genus == (s32)CSS_LEX_BRACE_CLAUSA)
+        {
+            regula = _malam_consumere_finita(&p,
+                (s32)CSS_GENUS_REGULA_MALA, token);
+        }
+        alioquin
+        {
+            regula = _regulam_qualificatam_consumere(&p, token);
+        }
         si (regula == NIHIL) { redde NIHIL; }
         si (!materia_nodus_appendere(piscina, plagula,
                 (i32)CSS_PLAGULA_REGULAE, materia_valor_nodus(regula),

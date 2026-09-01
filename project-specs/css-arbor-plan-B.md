@@ -432,7 +432,7 @@ growth = a table row, never a re-parse). Recovery: top-level `}` and
 prelude-less garbage → `regula-mala`; bad declaration → `declaratio-mala`
 (already in B3). EOF inside anything closes it.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```c
     imprimere("\n--- Probans regulas apud ---\n");
@@ -454,13 +454,13 @@ prelude-less garbage → `regula-mala`; bad declaration → `declaratio-mala`
     CREDO_VERUM (_octetos_probare(piscina, "a{b:\"unterminated", XVIII));
 ```
 
-- [ ] **Step 2: Run and verify it fails** — `./css/compile_probationes.sh arbor`
+- [x] **Step 2: Run and verify it fails** — `./css/compile_probationes.sh arbor`
 
-- [ ] **Step 3: Implement** (table + recovery above).
+- [x] **Step 3: Implement** (table + recovery above).
 
-- [ ] **Step 4: Run the whole suite** — exit 0.
+- [x] **Step 4: Run the whole suite** — exit 0.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/fontes/css_arbor.c css/probationes/probatio_css_arbor.c
