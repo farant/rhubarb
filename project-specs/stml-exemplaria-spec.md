@@ -612,6 +612,28 @@ decision:
     divergence, pins intact); residue shifted from
     first-per-shape-per-block to first-per-block-any-shape;
     per-declaration plurality = the radix-retention door.
+17. **RETENTIO RADICIS `radix="fontis"` — BUILT 2026-09-01**
+    (three-question decree, all recommended ratified) — the stage
+    that narrows captures without narrowing scope: output rows
+    keep the INCOMING row's radix (one assignment in the nucleus
+    under a flag); the match's own root survives only via explicit
+    capture; rows may share a radix — PLURALITY IN ONE SCOPE (one
+    row per declaration). Value `fontis` only; without an incoming
+    row = vitium XIII loud; canon's three judges mirror it (the
+    doc-level judge also catches `fontis`-without-`de=`
+    statically). THE GATE'S THIRD GENERATION taught two lessons
+    the hard way: (a) corpus-scoped rows NEST — row-multiplication
+    x subtree-walks OOM-killed the gate on arbor2_glr (723
+    corpora); scope rows must be `definitio-functionis`, which
+    C89 forbids to nest — the nested-duplicate class dissolves by
+    the language's own structure; (b) SINE only asks EXISTENCE —
+    it now runs on `_alicubi_congruere` (same visibility law,
+    early exit): arbor2_glr 31s -> 8s. Result: true
+    per-declaration codex 69 (formae.c 4/4 exact, the
+    second-declaration residue KILLED), gate 1/1 + 0/0, 0
+    divergence, byte gates intact. Named residues: second
+    declarator of one declaration (`int a, b;`), members of
+    function-local struct definitions, shadowing.
 
 ---
 

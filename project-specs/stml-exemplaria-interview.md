@@ -1531,3 +1531,24 @@ lexer + XXV + strict refusal; gate document unified as its own
 MEASURED step (identical 1/1 + 0/0; residue shifted to
 first-per-block-any-shape; plurality = radix retention's job).
 The leak-lint family and deep self-joins are now writable.
+
+## RETENTIO RADICIS BUILT (2026-09-01 — three-question round,
+## all recommended ratified)
+
+radix="fontis" bundle; canon's three judges mirror (doc judge
+catches fontis-without-de statically); gate as consumer. THE
+BUILD'S TWO HARD LESSONS: (1) corpus-scoped rows NEST — the
+row-multiplication x subtree-walk product OOM-killed the gate on
+arbor2_glr (723 corpora, 811 declarations); scope rows =
+definitio-functionis, which C89 CANNOT nest — the
+nested-duplicate residue class dissolves by language structure,
+not workaround. (2) SINE asks existence only — swapped onto
+_alicubi_congruere (ratified same-visibility, early exit):
+31s -> 8s on the killer file. Per-declaration codex 69 is REAL
+now (formae.c 4/4 exact; second-declaration residue killed).
+PROCESS LESSON, expensive: scratchpad probe binaries went STALE
+across two engine increments and produced a false regression
+(unified doc "0 on formae") + a false cost figure (1.3s) — the
+gate binary (always fresh-built) was the only honest oracle.
+Rebuild probes before believing them; recorded in
+debugging-lessons.

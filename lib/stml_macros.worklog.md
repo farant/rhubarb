@@ -692,3 +692,35 @@ residue class shifted: first-declaration-per-block-any-shape
 (was: per-shape). Canon needed NOTHING — pattern bodies are
 quoted, and `<**>` in content is just an odd element name, same
 as `<*>` always was.
+
+## 2026-09-01 — radix retention + the gate's third generation
+
+`radix="fontis"` landed as priced: one assignment in the nucleus
+fons loop under a flag (plus validation and canon's three
+mirrored judges). The gate consumer then taught two lessons:
+
+1. **Corpus-scoped rows NEST.** Scope rows over `<corpus>` meant
+   every declaration got a row per ANCESTOR block, and each row
+   pays a SINE walk of that ancestor's subtree —
+   row-multiplication x subtree-walks OOM-killed (SIGKILL) the
+   gate on arbor2_glr (723 corpora / 811 declarations / 9.4k
+   lines). The fix is structural, not palliative: scope rows =
+   `definitio-functionis`, which C89 forbids to nest. The
+   nested-duplicate residue class from the decree DISSOLVED by
+   the language's own grammar.
+2. **SINE asks existence, never a match set.** It now runs on
+   `_alicubi_congruere` (the axis's exists-searcher — identical
+   visibility by ratification, early exit on first success):
+   arbor2_glr 31s -> 8s, and the allocation profile collapses
+   for the common used-variable case.
+
+Also an expensive process lesson: the scratchpad probe binaries
+(proba_relatum/proba_totum) silently went stale across the
+descensus and retention increments — `<**>` parsed but never
+matched — producing a FALSE regression and a false cost number
+until rebuilt. The gate binary, rebuilt by its runner every run,
+was the only honest oracle in the room.
+
+formae.c now measures 4/4 EXACT (index_mortuus — the
+second-declaration-per-block case — is retention's proof); the
+full gate holds 1/1 + 0/0 at zero divergence.
