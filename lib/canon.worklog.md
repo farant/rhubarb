@@ -564,3 +564,11 @@ engine's XIX. probatio_canon 417/417 (SINE sane link + mala 14-17).
 INDAGO joined the CAPS machine list (invisible to every dialect);
 static form = bare element (any attribute or non-comment child =
 machinae malformatum). Sane doc carries <INDAGO/>; mala XVIII.
+
+## 2026-09-01 — radix= and angustans in the judges
+
+Three EXEMPLAR sites mirror the engine's radix= law (value
+`fontis` only; the doc-level judge also catches fontis-without-de
+STATICALLY — the engine can only see it at runtime). Arm judge:
+ORDINARIUS+angustans = malformatum (CASUS angustans lawful,
+attribute unpoliced otherwise per CAPS custom). Mala rows 19-21.

@@ -14534,3 +14534,12 @@ Sub gelatione (fixa solae): inutilis_localis.stml catena una
 '<**>' (axis descendens, stml_macros) tres catenas formarum
 substituit; mensura EADEM (1/1, 0/0, divergentiae 0), pinnae
 intactae; residuum mutatum ad 'prima scopi formae cuiusvis'.
+
+## Addendum 2026-09-01: documentum codicis 69 — generatio tertia
+
+Sub gelatione (fixa solae): ordines scoporum = definitio-functionis
+(corpora nidificant — multiplicatio ordinum × subarbores memoriam
+occidit in arbor2_glr; functiones in C89 non nidificant, classis
+structura linguae dissolvitur) + retentio radicis (ordo per
+declarationem — formae.c 4/4 exacte) + SINE per _alicubi_congruere
+(existentia sola, 31s→8s). Porta: 1/1 + 0/0, divergentiae 0.
