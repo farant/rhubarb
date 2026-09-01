@@ -1677,3 +1677,29 @@ tangere non poterat.
 
 PROXIMUM: B7 (canon manu scriptum) sessione RECENTI - vide
 consilium B.
+
+========================================================================
+DEBRIEF INSTRUMENTORUM SESSIONIS (B1-B6, 2026-09-01)
+========================================================================
+
+ADHIBITA: formator (delta-metiendi disciplina per git stash, omni
+tactu); examen post-editionem (uncus); comparator B1 ut oraculum
+novum; proba stml directa (lex CRLF mensurata uno mandato);
+probator scratchpad contra css/build (vitium B6 in documenta
+diagnosi); shim tres-oraculorum; tabularium (desiderata).
+
+FRUCTUS: examen adiutores nondum scriptos IN LIMINE cepit (bis);
+formator-delta baseline-metire-adde-zephyrum bene functum est -
+plagulae etiam MELIORES relictae (css_arbor 23->17, materia_arbor
+462->455); proba stml directa quaestionem designi in mensuram
+vertit (iterum - ars Frani T9).
+
+ASPERITATES: (1) indices modulorum manu tenti TER momorderunt ->
+desideratum 01M1F8M5XY. (2) Alineatio formatoris in plagulis cum
+baseline magno (materia_arbor 462) laboriosa manu - anchorae
+glomerum se movent dum emendo; forte formator '-scribere -intra
+functio' (ambitus functionis unius) mereatur - non filatum, semel
+tantum passus. (3) comm super indices linearum mutatos fallax -
+tally classium solus fidelis.
+
+DESIDERATA: 01M1F8M5XY (indices ex aedilis).
