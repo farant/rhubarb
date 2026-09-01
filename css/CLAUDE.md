@@ -3,8 +3,10 @@
 *You are reading this because you touched a file in `css/`.*
 
 CSS parser built on **materia** (not silva). Design:
-`project-specs/css-arbor-spec.md`; plan: `css-arbor-plan.md` —
-**read BOTH retarget headers at its top before executing any task.**
+`project-specs/css-arbor-spec.md`; plan for remaining work:
+**`css-arbor-plan-B.md` (B1–B10, materia-native, 2026-09-01)** —
+the old `css-arbor-plan.md` T10–T17 are superseded (stale types);
+its T1–T9 are the historical record.
 
 ## Praesens status (2026-08-27)
 

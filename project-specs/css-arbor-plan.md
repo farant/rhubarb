@@ -30,6 +30,15 @@
 > `silva.h`) and G1's layering inversion, which is now never incurred.
 > Roughly 13 of 17 tasks stand.
 >
+> ## ⚠ THIRD NOTICE 2026-09-01 — T10–T17 SUPERSEDED by `css-arbor-plan-B.md`
+>
+> The materia audit found the T10–T17 task bodies stale under the two
+> retargets below plus the T8/T9 findings: their code steps still carry
+> silva types, T10 step 1 builds a gate T8 already built, T11 step 3
+> names the impossible bimodal signature first, and T12's `@media` byte
+> count is wrong (XXVI → XXVII). **Execute `css-arbor-plan-B.md` (tasks
+> B1–B10) instead.** T1–T9 below remain the historical record.
+>
 > ## ⚠ SECOND RETARGET 2026-08-27 — faber DEFERRED, CSS BY HAND
 >
 > The order changed again (materia-spec.md §10 header): faber is
