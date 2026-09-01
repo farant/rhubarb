@@ -2462,9 +2462,185 @@ _laxa_congruere (
              StmlNodus* candidatus,
                    Xar* ligamina);
 
+
+/* ==================================================
+ * Descensus '<**>' (axis descendens - decretum 2026-08-31):
+ * involucrum existentiale plani exemplarium. Liberi formae '<**>'
+ * e subsequentia fratrum SUBLATI - quisque = 'P alicubi infra me',
+ * cursor immotus (lex corporis SINE signo verso: '<**>' = EXSTAT
+ * infra, SINE = NON EXSTAT infra). Descensus positionalis =
+ * compositio ('<**>' intra '<*>' in sede cursoris), numquam
+ * primitivum.
+ * ================================================== */
+
+interior b32
+_est_descensus (
+    constans StmlNodus* nodus)
+{
+    redde    nodus->genus == STML_NODUS_ELEMENTUM
+          && nodus->titulus != NIHIL
+          && chorda_aequalis_literis(*nodus->titulus, "**");
+}
+
+/* Forma descensus: elementum UNUM nudum (NIHIL = malformatus -
+ * probatio praeparationis XXV clamat, congruentia numquam tacet) */
+interior StmlNodus*
+_descensus_forma (
+    constans StmlNodus* descensus)
+{
+      StmlNodus* forma;
+            i32  i;
+            i32  num;
+
+    si (   descensus->attributa != NIHIL
+        && xar_numerus(descensus->attributa) > ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    forma = NIHIL;
+    num   = descensus->liberi != NIHIL
+          ? xar_numerus(descensus->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l = *(StmlNodus**)xar_obtinere(
+            descensus->liberi, i);
+
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (forma != NIHIL)
+        {
+            redde NIHIL;
+        }
+        forma = l;
+    }
+    si (forma == NIHIL || forma->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde NIHIL;
+    }
+    redde forma;
+}
+
+/* Probatio praeparationis: descensus omnes formae validi (vitium
+ * XXV CLARUM ante congruentiam ullam - numquam non-congruentia
+ * tacita ex forma mala) */
+interior b32
+_descensus_probare (
+    StmlMacroContextus* ctx,
+             StmlNodus* forma,
+                chorda* titulus)
+{
+    i32 i;
+    i32 num;
+
+    si (forma == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (_est_descensus(forma) && _descensus_forma(forma) == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_DESCENSUS_MALFORMATUS,
+                       forma, NIHIL, titulus);
+        redde FALSUM;
+    }
+    num = forma->liberi != NIHIL
+        ? xar_numerus(forma->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        si (!_descensus_probare(ctx,
+                *(StmlNodus**)xar_obtinere(forma->liberi, i),
+                titulus))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Quaesitio existentialis: forma alicubi in nodo aut subarbore
+ * eius? VISIO EADEM AC PETERE (lex una ambulatorum, ratificatio
+ * 2026-08-31): commenta/transclusiones praeterita (aliasa non
+ * descensa - ianua petere-per-alias ambobus simul), attributa-
+ * elementa et spatium templi opaca, fragmenta contenti descensa,
+ * perspicua NUMQUAM intrata. Exitus = descendens primus
+ * COMPATIBILIS ordine documenti: temptatio cadens (etiam per
+ * conflictum regulae V) ligamina truncat et pergit - iunctiones
+ * sui profundae gratis. Exitus maturus (primo successu). */
+interior b32
+_alicubi_congruere (
+    StmlMacroContextus* ctx,
+             StmlNodus* forma,
+             StmlNodus* nodus,
+                   Xar* ligamina)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   nodus->genus              == STML_NODUS_ELEMENTUM
+        && !nodus->fragmentum
+        && nodus->attributum_titulus == NIHIL
+        && !_est_perspicuum(ctx, nodus->titulus))
+    {
+        i32 ante = xar_numerus(ligamina);
+
+        si (_laxa_congruere(ctx, forma, nodus, ligamina))
+        {
+            redde VERUM;
+        }
+        xar_truncare(ligamina, ante);
+    }
+    si (nodus->liberi == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l =
+            *(StmlNodus**)xar_obtinere(nodus->liberi, i);
+
+        si (   l        == NIHIL
+            || l->genus == STML_NODUS_COMMENTUM
+            || l->genus == STML_NODUS_TRANSCLUSIO)
+        {
+            perge;
+        }
+        si (l->genus == STML_NODUS_ELEMENTUM)
+        {
+            si (l->attributum_titulus != NIHIL)
+            {
+                perge;
+            }
+            si (   l->fragmentum
+                && l->fragmentum_id                  != NIHIL
+                && l->fragmentum_id->mensura > ZEPHYRUM
+                && l->fragmentum_id->datum[ZEPHYRUM] == (i8)'@')
+            {
+                perge;  /* spatium templi opacum */
+            }
+            si (_est_perspicuum(ctx, l->titulus))
+            {
+                perge;
+            }
+        }
+        si (_alicubi_congruere(ctx, forma, l, ligamina))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* Liberi formae contra liberos effectivos candidati: subsequentia
  * ordinata AVARA - quodque liberum formae candidatum congruentem
- * PRIMUM consumit; saltus liberi. Temptationes cadentes ligamina
+ * PRIMUM consumit; saltus liberi. Liberi '<**>' e subsequentia
+ * SUBLATI (existentiales - vide caput descensus supra).
+ * Temptationes cadentes ligamina
  * sua truncant (matcher numquam retro tollit - vocans truncat). */
 interior b32
 _laxa_liberos_congruere (
@@ -2512,6 +2688,39 @@ _laxa_liberos_congruere (
 
         si (pf == NIHIL || pf->genus == STML_NODUS_COMMENTUM)
         {
+            perge;
+        }
+        si (_est_descensus(pf))
+        {
+            /* existentiale SUBLATUM e subsequentia: P alicubi
+             * infra candidatum, cursor immotus (ordo inter
+             * ordinarios intactus) */
+            StmlNodus* forma_d = _descensus_forma(pf);
+                  b32  inventum;
+                  i32  di;
+
+            si (forma_d == NIHIL)
+            {
+                redde FALSUM;  /* XXV praeparatione iam positum */
+            }
+            inventum = FALSUM;
+            per (di = ZEPHYRUM; di < cnum; di++)
+            {
+                StmlNodus* cd =
+                    *(StmlNodus**)xar_obtinere(effectivi, di);
+
+                si (   cd != NIHIL
+                    && _alicubi_congruere(ctx, forma_d, cd,
+                                          ligamina))
+                {
+                    inventum = VERUM;
+                    frange;
+                }
+            }
+            si (!inventum)
+            {
+                redde FALSUM;
+            }
             perge;
         }
         congruit = FALSUM;
@@ -2962,6 +3171,10 @@ _exemplar_nucleus (
     {
         _vitium_ponere(ctx, STML_EXPANSIO_CORPUS_SILVESTRE, nodus,
                        NIHIL, NIHIL);
+        redde FALSUM;
+    }
+    si (!_descensus_probare(ctx, forma, titulus))
+    {
         redde FALSUM;
     }
 
@@ -4212,6 +4425,10 @@ _sine_processare (
                        NIHIL, titulus);
         redde FALSUM;
     }
+    si (!_descensus_probare(ctx, forma, titulus))
+    {
+        redde FALSUM;
+    }
 
     superstites  = xar_creare(ctx->piscina,
                               magnitudo(StmlExemplarCongruentia));
@@ -5221,6 +5438,13 @@ stml_congruere_strictum (
     si (   piscina  == NIHIL || intern == NIHIL
         || templum  == NIHIL || candidatus == NIHIL
         || capturae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    /* '<**>' modo laxo pertinet: templa descensum non habent -
+     * numquam congruit hic (recusatio; in machina probatio
+     * praeparationis XXV clamat) */
+    si (_est_descensus(templum))
     {
         redde FALSUM;
     }

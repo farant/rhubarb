@@ -216,14 +216,27 @@ _tok_legere_nomen (
     {
         _tok_progredi(ctx, I);
     }
-    /* '*' SOLUS = elementum quodlibet (spec exemplarium par. 2.6:
-     * '<*>' regula una gradaria). Titulus unius characteris HIC
-     * SOLUM; '*' charactere nominis sequente recusatur ut ante.
-     * Attributa numquam huc veniunt (custos _est_nomen_initium). */
-    alioquin si (   _tok_aspicere(ctx, ZEPHYRUM) == '*'
-                 && !_est_nomen_character(_tok_aspicere(ctx, I)))
+    /* Cursus stellarum = familia nominum plani exemplarium ('<*>' =
+     * elementum quodlibet, spec exemplarium par. 2.6; '<**>' =
+     * descensus existentialis, decretum 2026-08-31 - intuitio
+     * glob gratis). Stellae solae HIC SOLUM; stella charactere
+     * nominis sequente recusatur ut ante. Attributa numquam huc
+     * veniunt (custos _est_nomen_initium). */
+    alioquin si (_tok_aspicere(ctx, ZEPHYRUM) == '*')
     {
-        _tok_progredi(ctx, I);
+        i32 stellae = ZEPHYRUM;
+
+        dum (_tok_aspicere(ctx, stellae) == '*')
+        {
+            stellae++;
+        }
+        si (_est_nomen_character(_tok_aspicere(ctx, stellae)))
+        {
+            result.datum    = NIHIL;
+            result.mensura  = ZEPHYRUM;
+            redde result;
+        }
+        _tok_progredi(ctx, stellae);
         result.datum    = ctx->input.datum + initium;
         result.mensura  = ctx->positus - initium;
         redde result;

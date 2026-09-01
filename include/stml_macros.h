@@ -130,7 +130,16 @@ nomen enumeratio {
      * mandata consumpta commenta fabulae suae in sedibus suis
      * relinquunt (bytes consulto differunt - vestigium in medio
      * ipso vivit, commentum = invisibile natura). */
-    STML_EXPANSIO_INDAGO_MALFORMATUM       = XXIV
+    STML_EXPANSIO_INDAGO_MALFORMATUM       = XXIV,
+    /* Descensus '<**>' malformatus (axis descendens - decretum
+     * 2026-08-31): involucrum existentiale plani exemplarium -
+     * liberi extra subsequentiam SUBLATI, 'P alicubi infra me'.
+     * Vitia (tempore praeparationis formae, CLARE): attributum
+     * quodvis in '<**>'; liberi non unum elementum. Ligatio =
+     * descendens primus COMPATIBILIS ordine documenti (conflictus
+     * regulae V pergit - iunctiones sui profundae gratis); modus
+     * strictus '<**>' numquam congruit (templa sine descensu). */
+    STML_EXPANSIO_DESCENSUS_MALFORMATUS    = XXV
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

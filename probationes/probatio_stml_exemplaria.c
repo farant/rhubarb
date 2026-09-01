@@ -1553,6 +1553,199 @@ principale (
     }
 
 
+    /* ============ DESCENSUS '<**>' (axis, XXV) ============ */
+
+    /* --- pertinentia: captura per profunditatem ignotam --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: pertinentia ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><x><m><n><b v=\"1\"/></n></m></x>"
+            "<EXEMPLAR output=\"$r\"><x><**><b v=\"$v\"/></**>"
+            "</x></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><f>&@v;</f></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><m><n><b v=\"1\"/></n></m></x>"
+                "<f>1</f></radix>");
+        }
+    }
+
+    /* --- sublatio: existentiale extra ordinem fratrum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: sublatio ordinis ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><x><alte><b/></alte><a/></x>"
+            "<EXEMPLAR output=\"$r\"><x><a/><**><b/></**></x>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$r\"><est/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><alte><b/></alte><a/></x><est/>"
+                "</radix>");
+        }
+    }
+
+    /* --- ligatio prima COMPATIBILIS: regula V per descensum
+     * (iunctio sui profunda - probatio se citans) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: regula V compatibilis ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<punctum index=\"4\"><probatio ref=\"9\"/>"
+            "<s><probatio ref=\"4\"/></s></punctum>"
+            "<punctum index=\"7\"><probatio ref=\"9\"/></punctum>"
+            "<EXEMPLAR output=\"$r\"><punctum index=\"$i\">"
+            "<**><probatio ref=\"$i\"/></**></punctum></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><se>&@i;</se></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<punctum index=\"4\"><probatio ref=\"9\"/>"
+                "<s><probatio ref=\"4\"/></s></punctum>"
+                "<punctum index=\"7\"><probatio ref=\"9\"/>"
+                "</punctum>"
+                "<se>4</se></radix>");
+        }
+    }
+
+    /* --- caecitas: descensus perspicua numquam intrat --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: caecitas ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<TRANSPARENTIA tags=\"celatum\"/>"
+            "<x><celatum><b/></celatum></x>"
+            "<EXEMPLAR output=\"$r\"><x><**><b/></**></x>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$r\"><est/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><celatum><b/></celatum></x></radix>");
+        }
+    }
+
+    /* --- descensus in corpore SINE (absentia profunda) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: in SINE ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s t=\"A\"><w><x><malum/></x></w></s>"
+            "<s t=\"B\"><w><x/></w></s>"
+            "<CATENA output=\"$rr\">"
+            "<EXEMPLAR><s t=\"$t\"/></EXEMPLAR>"
+            "<SINE><w><**><malum/></**></w></SINE>"
+            "</CATENA>"
+            "<PER congruentia=\"$rr\"><n>&@t;</n></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s t=\"A\"><w><x><malum/></x></w></s>"
+                "<s t=\"B\"><w><x/></w></s>"
+                "<n>B</n></radix>");
+        }
+    }
+
+    /* --- compositio positionalis: '<**>' intra '<*>' in sede
+     * cursoris (descensus positionalis numquam primitivum) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: compositio cursoris ---\n");
+        /* p sub liberO POST a: congruit */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><x><a/><w><d><p/></d></w><b/></x>"
+            "<EXEMPLAR output=\"$r\"><x><a/><*><**><p/></**>"
+            "</*><b/></x></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><est/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><a/><w><d><p/></d></w><b/></x><est/>"
+                "</radix>");
+        }
+
+        /* p solum sub libero ANTE a: cursor non attingit */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><x><w><d><p/></d></w><a/><b/></x>"
+            "<EXEMPLAR output=\"$r\"><x><a/><*><**><p/></**>"
+            "</*><b/></x></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><est/></PER></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><x><w><d><p/></d></w><a/><b/></x>"
+                "</radix>");
+        }
+    }
+
+    /* --- XXV: forma descensus mala (praeparatione, CLARE) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- descensus: vitia XXV ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><EXEMPLAR output=\"$r\"><x><**/></x>"
+            "</EXEMPLAR><PER congruentia=\"$r\"><y/></PER>"
+            "</radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_DESCENSUS_MALFORMATUS);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><EXEMPLAR output=\"$r\"><x><**><a/><b/>"
+            "</**></x></EXEMPLAR><PER congruentia=\"$r\"><y/></PER>"
+            "</radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_DESCENSUS_MALFORMATUS);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><EXEMPLAR output=\"$r\"><x>"
+            "<** malum=\"1\"><a/></**></x></EXEMPLAR>"
+            "<PER congruentia=\"$r\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_DESCENSUS_MALFORMATUS);
+
+        /* etiam in corpore SINE */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$r\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<SINE><x><**/></x></SINE></CATENA>"
+            "<PER congruentia=\"$r\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_DESCENSUS_MALFORMATUS);
+    }
+
+
     /* =============== INDAGO (vestigatio, XXIV) =============== */
 
     /* --- lapis sepulcralis catenae + PER intra relatum --- */
