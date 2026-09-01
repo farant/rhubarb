@@ -94,4 +94,25 @@ if [ "$obstat" -ne 0 ]; then
     exit 1
 fi
 echo "examen (pre-commit): $iudicatae plagulae ACCIPE" >&2
+
+# ---- formator -delta: MONET, non obstat (lex basis: adde zephyrum) ----
+# Divergentiae formae NOVAE contra HEAD per plagulam .c/.h commissioni
+# traditam (contentum, non numeri). Monitum solum: lex basis iudicium
+# hominis manet (plagula nova = omnia nova, -scribere eam).
+if [ -z "${UNCUS_VIAE:-}" ]; then
+    FVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/')"
+else
+    FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$')"
+fi
+for via in $FVIAE; do
+    [ -f "$via" ] || continue
+    d=$(./silva/formator.sh "$via" -delta HEAD -machina 2>/dev/null)
+    summa=$(printf '%s\n' "$d" | awk -F'\t' '$1=="DELTA"{print $3" "$4" (basis "$5" -> "$6")"}')
+    novae=$(printf '%s\n' "$d" | awk -F'\t' '$1!="DELTA" && $1!=""{print "  "$1":"$2": ["$3"] "$4}' | head -12)
+    case "$summa" in
+        "+0 "*) ;;
+        *) { echo "formator (pre-commit): $via divergentiae formae NOVAE $summa - lex basis: adde zephyrum"; echo "$novae"; } >&2 ;;
+    esac
+done
 exit 0

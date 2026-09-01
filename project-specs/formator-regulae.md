@@ -479,3 +479,22 @@ _valor_radix reliquae (ancorae sententiarum) mundae trans lib/
 include; si evolutio probationum (terra CREDO-densa) classes novas
 accendit, consilium generale = tabula SEDIUM MENTIENTIUM per
 parsuram (transitus linearis unus; honestas per lexema O(1)).
+
+## Lex basis mensurabilis: `-delta` (2026-09-01)
+
+`./silva/formator.sh <via> -delta [ref]` (ref = HEAD) reddit
+divergentias NOVAS contra versionem ref: clavis = regula + contentum
+lineae, numquam numerus lineae (labitur editione). Effusum: summa
+`basis N -> nunc M (+a novae, -b evanidae)` et sedes novae nominatae;
+`-machina` = TSV + ordo `DELTA`. Exitus 0 = nihil novum, 1 = novum.
+`-contra <basis.c>` = basis explicita ex disco. Plagula extra ref =
+basis vacua ("basis absens" - omnia nova; `-scribere` eam).
+
+Cur per contentum: tally classium permutationem celat (+I -I = zephyrum
+mendax); numeri linearum in campis inventum/exspectatum regulae
+`parametra-singula` comparationem per positionem polluunt.
+
+Uncus pre-commit (tools/unci-git) `-delta` super plagulas .c/.h
+commissionis currit et MONET (+N, sedes usque ad XII) - numquam obstat:
+lex basis iudicium hominis manet. Porta natalis:
+`silva/formator_delta_fumus.sh`.

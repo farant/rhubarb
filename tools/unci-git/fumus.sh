@@ -44,6 +44,12 @@ if [ "$rc" -eq 1 ] && grep -q 'OBSTATA' "$T/index_malum.out"; then echo "  II.b 
 unset GIT_INDEX_FILE
 rm -f "$MALUM" "$T/index"
 
+# V - formator -delta MONET (exitus 0 manet): plagula C89 sana cum
+# divergentia formae nova (linea longa) -> monitum 'formator', non obstat
+printf '#include "latina.h"\n\n/* commentarium valde longum quod limitem septuaginta duorum octetorum excedit */\ninteger\nprincipale (vacuum)\n{\n    redde ZEPHYRUM;\n}\n' > "$T/forma.c"
+UNCUS_VIAE="$T/forma.c" "$UNCUS" > "$T/forma.out" 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q 'formator (pre-commit)' "$T/forma.out" && grep -q 'longitudo-lxxii' "$T/forma.out"; then echo "  V   formator delta monet, non obstat OK"; else echo "  V   FRACTUM (rc=$rc)"; cat "$T/forma.out"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus unci: FRACTUM"; exit 1; fi
-echo "fumus unci: sanum (IV/IV)"
+echo "fumus unci: sanum (V/V)"
 exit 0
