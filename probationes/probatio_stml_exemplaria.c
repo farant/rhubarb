@@ -1637,6 +1637,48 @@ principale (
         }
     }
 
+    /* --- vestigium angustationis (INDAGO): 'bracchium
+     * angustatum' + relatio conditionis in numeris visa --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- angustans: vestigium INDAGO ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><INDAGO/>"
+            "<punctum gradus=\"theorema\" index=\"4.1\">"
+            "<probatio/></punctum>"
+            "<punctum gradus=\"theorema\" index=\"4.3\"/>"
+            "<EXEMPLAR output=\"$th\">"
+            "<punctum gradus=\"theorema\" index=\"$i\"/>"
+            "</EXEMPLAR>"
+            "<DIRIBITIO de=\"$th\" output=\"$v\">"
+            "<CASUS angustans>"
+            "<EST><CATENA><SINE><probatio/></SINE></CATENA></EST>"
+            "<EXEMPLAR ancorata><*/></EXEMPLAR>"
+            "</CASUS>"
+            "</DIRIBITIO>"
+            "<PER congruentia=\"$v\"><clamor>&@i;</clamor></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<punctum gradus=\"theorema\" index=\"4.1\">"
+                "<probatio/></punctum>"
+                "<punctum gradus=\"theorema\" index=\"4.3\"/>"
+                "<!--indago EXEMPLAR $th (radix): ordines 2"
+                " (capturae: i)-->"
+                "<!--indago DIRIBITIO $v (de $th 2):"
+                " CASUS 1 conditio 1 SUMPTUM;"
+                " bracchium angustatum; EXEMPLAR * 1->1;"
+                " exitus 1-->"
+                "<clamor>4.3</clamor>"
+                "<!--indago PER $v: ordines 1--></radix>");
+        }
+    }
+
     /* --- XXI: ORDINARIUS angustans (nihil angustandum) --- */
     {
         StmlExpansioResultus e;
