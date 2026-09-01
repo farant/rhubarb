@@ -10,10 +10,25 @@ its T1–T9 are the historical record.
 
 ## Praesens status (2026-09-01, post B1-B6)
 
-PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B6 COMPLETE in one
-session; next = **B7 (hand-written css.canon)**, then B8+B9
-(selectors), B10 (wire-up). Suites: css 6/6 (registrum, adaptare,
-arbor, corpus, stml, **totalitas**).
+PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B7 COMPLETE; next =
+**B8 (selector genera in the registry)**, then B9 (css_selector),
+B10 (wire-up). Suites: css 7/7 (registrum, adaptare, arbor, corpus,
+stml, totalitas, **canon**).
+
+B7 (2026-09-01): `css/grammatica/css.canon` HAND-WRITTEN, 64 rules
+(3 envelope + 10 genera + 24 slots + 27 lexemes), slot constraints
+species-level from the parser's code (header says why, G3). NOT in
+canones.registrum by design (`<arbor>` root would also claim silva's
+subtree documents); judge by hand with
+`bin/canon_examen -canon css/grammatica/css.canon <doc.stml>`.
+`probatio_css_canon` = bidirectional drift guard (every genus, slot
+[intra=genus], lexeme, envelope has exactly one rule; every rule
+matches one of those tables) + sigillum pin (canon's `<optio>` vs
+live `materia_arbor_sigillum`) + judgment of 16 inline + 6 corpus
+documents. Falsified by four plants: deleted genus rule (guard AND
+judgment), false pin (guard AND judgment), removed child permission
+(judgment), stale extra rule (reverse guard). **B8 must re-pin the
+sigillum and add 11 genus + slot rules, or this gate goes red.**
 
 ROBUSTITAS (2026-09-01, between B6 and B7): the parser was NOT
 total - `a{b:(}` returned NIHIL (end-of-input consumed once by the

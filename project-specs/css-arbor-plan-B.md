@@ -635,7 +635,7 @@ per the CSS lexicon's tag mangling. **State in the file header that slot
 constraints are species-level and why** (no productions to close over —
 G3), so a later reader does not mistake the weakness for an oversight.
 
-- [ ] **Step 1: Write the failing gate**
+- [x] **Step 1: Write the failing gate**
 
 ```c
     vitia = canon_iudicare(canon, stml_radix, piscina);
@@ -648,11 +648,11 @@ G3), so a later reader does not mistake the weakness for an oversight.
 
 Every document the B6 corpus loop produces gets judged.
 
-- [ ] **Step 2: Run and verify it fails** — no canon exists yet.
+- [x] **Step 2: Run and verify it fails** — no canon exists yet.
 
-- [ ] **Step 3: Write the canon** (shape above).
+- [x] **Step 3: Write the canon** (shape above).
 
-- [ ] **Step 4: The drift guard** — in the probatio: walk the canon's
+- [x] **Step 4: The drift guard** — in the probatio: walk the canon's
   genus rules and assert (a) every `CssGenus` title has exactly one
   rule, count == `CSS_GENUS_NUMERUS`; (b) the canon's pinned
   `registrum-sigillum` equals `materia_arbor_sigillum(piscina,
@@ -660,14 +660,14 @@ Every document the B6 corpus loop produces gets judged.
   silent absence; this makes absence loud. B8's new genera will
   fail (a) until the canon learns them — that is the design.
 
-- [ ] **Step 5: Plant the fault** — delete one genus rule; the guard and
+- [x] **Step 5: Plant the fault** — delete one genus rule; the guard and
   the judgment must BOTH fire (a document using that genus is now
   unjudgeable-clean). Restore.
 
-- [ ] **Step 6: Run whole suite + natura** —
+- [x] **Step 6: Run whole suite + natura** —
   `./css/compile_probationes.sh && ./tools/natura_struere.sh`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add css/grammatica/css.canon css/probationes/probatio_css_canon.c

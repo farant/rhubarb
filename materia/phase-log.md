@@ -1774,3 +1774,74 @@ aestimat (21 vs 22) - regula non documentata in nuntio; empirice
 inventa. (3) formator -scribere parametros functionis additae POST
 scripturam non tangit nisi iterum curratur - bis currendum.
 DESIDERATA: nihil novum (01M1FAE2 iam apertum).
+
+========================================================================
+RELATIO B7 - css.canon MANU SCRIPTUM + CUSTOS DERIVAE (2026-09-01)
+========================================================================
+
+FACTUM: css/grammatica/css.canon (510 lineae, 64 regulae: involucrum
+III, genera X, loci XXIV [intra=genus], lexemata XXVII), fragmenta
+IV (#lexema-unum maximum=1, #lexemata-multa, #valores, #trivia).
+Sigillum registri PINNATUM ut electio unius optionis (2354fe63).
+Se ipsum contra canon.canon iudicat: VITIA 0. Porta:
+probatio_css_canon (100 assertiones) = custos derivae
+bidirectionalis + pinna sigilli + iudicium XVI documentorum
+inlinearium et VI corporis.
+
+DECISIONES:
+- <arbor> radix, NON in canones.registrum: clavis radicis '<arbor>'
+  documentis subarboris silvae quoque competeret (registrum id
+  consulto omittit). Canon per viam oneratur (probatio) aut
+  'canon_examen -canon'.
+- Collisio nominis locus/genus ('praevalentia' utrumque): intra=
+  eam solvit - iudex clavem adstrictam 'parens/nomen' prius
+  quaerit, deinde globalem (lib/canon.c _elementum_quaerere_vi).
+  Locus 'praevalentia intra=declaratio' liberum 'praevalentia'
+  globale fert. Idem exemplar quo c89.canon 'corpus' tractat.
+- Constrictiones locorum MANU ex css_arbor.c (quid parsator
+  ponat), non species nudae: 'tok_colon' lex-colon solum, etc.
+  Ubi parsator quodlibet ponit (tok servati, tokens malarum)
+  fragmentum totum. 'contentum' saepti = UNIO trium regiminum
+  (valores / corpus regulae / corpus regularum) - species-level
+  ex necessitate: genus unum tribus sedibus.
+- Attributa positionis lexematum ABSUNT (derivatis solis) - si
+  appareant, 'attributum ignotum' clamet. 'cr' in VERBATIM omnibus.
+- Custos derivae per STML canonis ipsius ambulat (stml_legere +
+  attributum_capere), non per interna Canon* (CanonElementum in
+  lib/canon.c opacum) - contractus publicus solus.
+- Tag lexematis in probatione ITERUM mangulatur (regula duplicata
+  consulto): scriptor aliter -> iudicium rubet; probatio aliter ->
+  custos rubet. Ambo simul mentiri nequeunt.
+
+FALSIFICATIO (IV plantae, omnes arserunt ubi debebant):
+  I   regula 'functio' deleta -> custos (a) ET iudicium (elementum
+      extra canonem <functio> 'an lex-functio?' x21)
+  II  pinna 'deadbeef' -> custos (II) ET iudicium (valor generi
+      attributi non congruit <arbor> 'registrum-sigillum' x22)
+  III 'declaratio' ex contentum remotum -> iudicium solum
+      (liberum hic non licet <contentum> 'declaratio' x52)
+  IV  regula 'fantasma' addita -> custos reversus solum
+Restitutio cmp idem. Viridis primo cursu vero - quod sine plantis
+nihil mensurasset.
+
+ASPERITATES: runner RADIX_FONTES bis manu (canon, deinde
+similitudo quam canon.o poscit) - ictus IV desiderati 01M1F8M5XY.
+chorda_ex_literis allocat (piscina) - prospectus sine cast
+-Wcast-qual violat; comparatio literalis (_aequalis_literis)
+recta via. Slice-replace pythonis structuram inter ancoras
+devoravit - ancora angustior.
+
+PROXIMUM: B8 (genera selectorum XI + loci + custodes rubri primum
++ canon extensus + sigillum re-pinnatum).
+
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: dump_stml sonda (proiectio vera ante regulas - tally
+elementorum/attributorum corporis: vocabularium mensuratum, non
+aestimatum); canon_examen (auto-iudicium canonis); lib/canon.c
+lectio pro ordine quaerendi intra=; formator -scribere bis;
+censor (PURUS); tabularium ictus.
+FRUCTUS: tally proiectionis vocabularium totum uno cursu dedit
+(47 elementa, 7 attributa) - regulae ex mensura, non ex memoria;
+plantae IV portam falsificaverunt priusquam viridi crederem.
+ASPERITATES: supra. DESIDERATA: nihil novum.
