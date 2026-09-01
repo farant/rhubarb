@@ -144,7 +144,6 @@ interior constans character* constans EXCLUDENDA_STML[] = {
     "_strictum_nodum",
     "_trivia_ferunt_lineam",
     "_valorem_contribuere",
-    "stml_commentum_creare",
     "stml_elementum_crudum_creare",
     "stml_frater_prior",
     "stml_frater_proximus",

@@ -2108,6 +2108,10 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "int x;\n/* commentarium */\nint y;\n",
         (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, ZEPHYRUM);
+    /* in fine plagulae: trivium in FINE pendet - semel, non bis */
+    _codicem_probare(piscina,
+        "int x;\n// finis",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
     _codicem_probare(piscina,
         "int f(_Bool b) { return b; }\n",
         (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);

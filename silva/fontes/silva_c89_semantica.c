@@ -6333,8 +6333,17 @@ _standarda_examinare (
         radix_prior = radix;
         _standarda_lexematis(sem, parsura, radix);
     }
-    _standarda_lexematis(sem, parsura,
-        silva_token_radix(parsura->lexema_finis));
+    /* FINIS: in lexematibus saepe ultimum iam est - bis ne visatur
+     * ('//x' in fine plagulae bis nuntiabatur, mensuratum) */
+    {
+        constans SilvaToken* finis = silva_token_radix(
+            parsura->lexema_finis);
+
+        si (finis != NIHIL && finis != radix_prior)
+        {
+            _standarda_lexematis(sem, parsura, finis);
+        }
+    }
     si (parsura->directivae != NIHIL)
     {
         m = xar_numerus(parsura->directivae);
