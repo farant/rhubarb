@@ -1570,3 +1570,48 @@ carries). Two doors closed; remaining named doors: per-row
 routing (parked), document-scope SINE, tee, anchored SINE,
 petere-through-alias, multi-binding-within-one-candidate,
 indagare (the debugger), descensus cost measurement (mensor).
+
+## COMPOSITION PREMISE EXPLORED (2026-09-01, conversation — not yet
+## built; banked so the design survives compact)
+
+Fran's premise to test: climb the abstraction ladder by capturing
+query shapes as `#@` templates and composing them, instead of always
+writing raw arbor vocabulary. Grounding measurements taken:
+
+1. **Subtree-valued template arguments EXIST** (fixture 6.1b:
+   `<<#@f>><@c=><x/><y/></>` splices a subtree, expanded in the
+   CALLER's context). The load-bearing feature for pattern-valued
+   parameters — a lint SCHEMA is mechanically possible today.
+2. **THE WALL: the two planes share the `&@x;` namespace.** The macro
+   expander runs first and claims every reference in a template BODY:
+   `&@ignotum;` = LOCULUS_IGNOTUS **at collection time, without any
+   vocation** (probatio_stml_macros.c, T4 f). So a template cannot
+   bake a relational bridge (`&@n;`) into its body — it dies at load.
+3. **THE DOORWAY: relational references travel in ARGUMENT SUBTREES,
+   never template bodies.** Caller-side argument blocks expand in the
+   caller's (top-level) context where `&@n;` passes untouched. Schema
+   shape: `#@non-usitatum` takes `ordines=` and `absens=` as subtree
+   args carrying the stages (bridges included); the body is pure
+   CATENA skeleton with only `$` captures. Discipline, not mechanism.
+   If it chafes, the named resolutions are: an escape form for
+   literal `&@` in bodies, or a declared pass-through namespace on
+   the definition. Silent pass-through of unknown slots is ruled out
+   (refusal-loud).
+4. **Slot-name law measured the same day** (vertere §6 example was
+   broken by it): call arguments address SLOT names (the `@`-value),
+   never the declaring attribute's name. Convention: mirror them.
+
+**THE EXPERIMENT, ready to run**: codex 70 (unused parameters)
+written TWICE — once raw like the codex 69 doc, once through the
+`#@non-usitatum` schema — with the examen recipe as differential
+oracle for BOTH. Same truth anchor, two abstraction levels; the
+unused-static lint nearly free as a third instantiation (it pulls
+document-scope/anchored SINE — a parked door gets its consumer).
+Predicted next chafe: the PRELUDE problem — level-1 shape atoms want
+one shared file that lint documents import; macros are per-document
+today (same shape as silva/quaestiones.stml incl. its promotion
+doctrine). Lint taxonomy from the same conversation: correlation
+lints = the sweet spot; ordering lints come FREE (sibling
+subsequences are ordered — codex 85 include-order is writable);
+blocked classes = counting (M4) and value predicates (decreed dead).
+`stml expandere` is the shell harness for all of it.

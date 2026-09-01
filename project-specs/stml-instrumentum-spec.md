@@ -988,3 +988,40 @@ Yet the trivia spec §4 says, unqualified: *"This IS the fidelity oracle:
 `silva/grammatica/c89.stml` violates it at seven sites with every test
 green. Not a writer that broke — a promise nobody checks. Worth its own
 decision independent of this tool.
+
+---
+
+## §10 `indagare` — semen designationis (2026-09-01, nondum decretum)
+
+The fourth verb, and the only one the §9.4 framing decree was written
+to guard. The design insight from the 2026-09-01 conversation, banked
+before building: **the framing gate may dissolve entirely.**
+
+A debugger needs a live protocol only when execution is slow or
+side-effectful — you steer it while it runs. STML expansion is fast
+and PURE, so **record everything, then browse** beats live stepping:
+
+- **v1 = a recorder**: `stml indagare <via.stml>` runs the chain
+  fully instrumented and emits the complete event stream AS AN STML
+  DOCUMENT. File-in/file-out — exempt from §9.4 exactly as the other
+  three verbs were. "Stepping" = reading the recording; "time
+  travel" = free, the whole timeline is a document; any future
+  stepper UI is a CONSUMER of recordings, not a protocol peer.
+- **The event vocabulary is the API** (Eskil-first, its own decree
+  round before code). Candidates fall out of the engine: comparison
+  attempted (forma vs candidate, verdict) · binding made · binding
+  truncated (regula-V walk-on) · row born · row killed (SINE) · arm
+  taken/passed (DIRIBITIO) · emission — each with site coordinates.
+  INDAGO's tombstones are the per-stage SUMMARY of exactly these;
+  indagare is the same story at full grain.
+- **Volume is the real constraint**: raw comparison events on a
+  corpus-scale document reach millions. The seed's "pattern
+  breakpoints" become RECORDING FILTERS (only events touching a
+  named forma/capture recorded). Aggregated, the event stream IS the
+  cost profile — this subsumes the parked descensus-cost mensura
+  (one instrument, two parked doors).
+
+Sequencing note: the lint-composition experiment (exemplaria
+interview, 2026-09-01 section) is indagare's natural first hard
+consumer; debugger-first slightly favored because everything else in
+the vein becomes observable.
