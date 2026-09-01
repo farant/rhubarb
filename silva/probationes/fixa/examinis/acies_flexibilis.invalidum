@@ -1,0 +1,3 @@
+/* <exspecta codex="STANDARDUM_ALIENUM"/> */
+struct F { int n; int d[]; };
+int f(struct F* p) { return p->n; }

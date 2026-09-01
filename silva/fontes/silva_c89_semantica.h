@@ -512,6 +512,22 @@ nomen enumeratio {
      * professionum = portae nominatae).
      * 88 = portabile vernaculum includit. */
     EXAMEN_CODEX_PORTABILE_VIOLATUM,          /* DOMESTICUM */
+
+    /* Standarda aliena (2026-09-01, indagatio fugarum): quod lexator
+     * et parsator C99/GNU ACCIPIUNT (byte-conservativi - arbor
+     * quaelibet), iudex ut VIOLATIONEM nominat. Fugae XII
+     * (fixa/examinis/fugae) oraculo SOLO probabantur - examen
+     * quinque accipiebat dum vectis tenebat; nunc examini quoque.
+     * 89 = standardum alienum: '//' (trivium standard=C99 a
+     *      lexatore signatum, filum pendens ab ortu), clavis C99
+     *      ut typus (_Bool/_Complex/inline/restrict), macro
+     *      variadica ('...' in parametris #define), acies
+     *      flexibilis (membrum 'int d[]');
+     * 90 = declaratio post sententiam in corpore (C99 6.8.2) -
+     *      corpus quodque ordinem suum incipit (quaestio
+     *      01KZBYEHJP, ictus 01KZE66N8X). */
+    EXAMEN_CODEX_STANDARDUM_ALIENUM,          /* VIOLATIO */
+    EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM,  /* VIOLATIO */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

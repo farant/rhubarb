@@ -2093,6 +2093,57 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "static int operator = 0;\n",
         (s32)EXAMEN_CODEX_IDENTIFICATOR_ALIENUS, ZEPHYRUM);
+
+
+    /* ==================================================
+     * STANDARDA ALIENA (89) + DECLARATIO POST SENTENTIAM (90):
+     * fugae XII (fixa/examinis/fugae) oraculo solo probabantur -
+     * examen V accipiebat. Positiva ET negativa (C89 legale tacet).
+     * ================================================== */
+
+    imprimere("\n--- Probans standarda aliena (89) ---\n");
+    _codicem_probare(piscina,
+        "int x;\n// commentarium\nint y;\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    _codicem_probare(piscina,
+        "int x;\n/* commentarium */\nint y;\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "int f(_Bool b) { return b; }\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    _codicem_probare(piscina,
+        "struct F { int n; int d[]; };\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    _codicem_probare(piscina,
+        "struct F { int n; int d[3]; };\nextern int a[];\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "#define V(...) f(__VA_ARGS__)\nint f(int a);\n"
+        "int g(void) { return V(1); }\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    _codicem_probare(piscina,
+        "#define V(a) f(a)\nint f(int a);\n"
+        "int g(void) { return V(1); }\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, ZEPHYRUM);
+
+    imprimere("\n--- Probans declarationem post sententiam (90) ---\n");
+    _codicem_probare(piscina,
+        "int f(void) { int a = 1; a = 2; int b = 3; return a + b; }\n",
+        (s32)EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM, I);
+    _codicem_probare(piscina,
+        "int f(void) { int a = 1; int b = 3; a = 2; return a + b; }\n",
+        (s32)EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM, ZEPHYRUM);
+    /* corpus nidificatum ordinem suum incipit */
+    _codicem_probare(piscina,
+        "int f(void) { int a = 1; a = 2; { int b = 3; a = b; }"
+        " return a; }\n",
+        (s32)EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM, ZEPHYRUM);
+    /* duae declarationes post sententiam = duae violationes */
+    _codicem_probare(piscina,
+        "int f(void) { int a = 1; a = 2; int b = 3; int c = 4;"
+        " return a + b + c; }\n",
+        (s32)EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM, II);
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

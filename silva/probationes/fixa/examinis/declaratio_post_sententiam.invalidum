@@ -1,0 +1,8 @@
+int f(void)
+{
+    int a = 1;
+    a = 2;
+/* <exspecta codex="DECLARATIO_POST_SENTENTIAM"/> */
+    int b = 3;
+    return a + b;
+}

@@ -1925,3 +1925,9 @@ negativa functionem SIGNATAM poscit; examen hoc scit, clang non.
 adiutores extracti (_est_operator_praefixus, _est_valor_attributi,
 _est_functio, _est_saeptum_attributi, _pseudo_classem_creare)
 codicem meliorem reliquerunt quam fractio nuda.
+
+------------------------------------------------------------------------
+REPLICATIO-VERDICTUM (silva/fontes tactum sub gelu, 2026-09-01):
+silva_c89_semantica.{c,h} codices 89/90 — frons C89 (iudex), extra
+subset portatum (materia = substratum arboris). NULLA replicatio
+debita. Vide silva/phase-log eodem die.

@@ -315,8 +315,31 @@ interior constans ExamenCodexInformatio _codices[] = {
       " postulata_posix.h)",                    EXAMEN_DOMESTICUM },
     { "symbolum vernaculum Darwin adhibitum",   EXAMEN_DOMESTICUM },
     { "symbolum obsoletum adhibitum",           EXAMEN_DOMESTICUM },
-    { "plagula portabilis vernaculum includit", EXAMEN_DOMESTICUM }
+    { "plagula portabilis vernaculum includit", EXAMEN_DOMESTICUM },
+    { "standardum alienum (C99/GNU) - C89 solum", EXAMEN_VIOLATIO },
+    { "declaratio post sententiam in corpore (C99) - declarationes"
+      " initio corporis",                       EXAMEN_VIOLATIO }
 };
+
+/* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
+ * definitiones suas iacent */
+interior b32
+_typus_alienus_est (
+    constans SilvaToken* token);
+
+interior b32
+_iam_notatum (
+    constans SilvaSemantica* sem,
+                        s32  codex,
+        constans SilvaToken* sedes);
+
+interior vacuum
+_portabilitatis_diagnosticum (
+            SilvaSemantica* sem,
+     constans SilvaParsura* parsura,
+       constans SilvaToken* sedes,
+                       s32  codex,
+        constans character* nuntius);
 
 /* assertum: tabula == enumeratio (acies negativa si discrepant) */
 nomen character _assertum_codicum[
@@ -324,7 +347,8 @@ nomen character _assertum_codicum[
         == (memoriae_index)EXAMEN_CODEX_NUMERUS) ? I : -I];
 
 constans character*
-silva_c89_codicis_causa (s32 codex)
+silva_c89_codicis_causa (
+    s32 codex)
 {
     si (codex < ZEPHYRUM || codex >= (s32)EXAMEN_CODEX_NUMERUS)
     {
@@ -3786,6 +3810,18 @@ _typus_ex_membris (SilvaSemantica* sem, TypusC89* typus,
             }
             t = silva_c89_typus_ex_declaratore(sem, basis,
                 declarator, &tok);
+            /* acies flexibilis 'int d[]' in membro = C99 (codex 89,
+             * fuga acies_flexibilis.fuga); parametra/extern licent */
+            si (   t        != NIHIL
+                && tok      != NIHIL
+                && t->genus == (s32)TYPUS_C89_ACIES
+                && t->datum.acies.numerus < ZEPHYRUM)
+            {
+                _portabilitatis_diagnosticum(sem, sem->parsura_currens,
+                    tok, (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM,
+                    "acies flexibilis in membro (int d[]) C99 est -"
+                    " C89 mensuram poscit");
+            }
             novum = (TypusC89Membrum*)xar_addere(colligenda);
             si (novum != NIHIL)
             {
@@ -4051,8 +4087,27 @@ _typus_ex_specificatoribus_interior (SilvaSemantica* sem,
                     }
                     si (nominatus == NIHIL)
                     {
-                        silva_c89_diagnosticum_addere(sem, n,
-                            EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS);
+                        /* clavis C99 ut typus (_Bool, inline...):
+                         * VIOLATIO nominata, non 'ignotus' INFRA
+                         * (codex 89 - fuga bool.fuga) */
+                        si (   _typus_alienus_est(tok_v.datum.token)
+                            && !_iam_notatum(sem,
+                                   (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM,
+                                   tok_v.datum.token))
+                        {
+                            _portabilitatis_diagnosticum(sem,
+                                sem->parsura_currens,
+                                tok_v.datum.token,
+                                (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM,
+                                "clavis C99 ut typus - C89 eam nescit"
+                                " (_Bool/_Complex/inline/restrict)");
+                        }
+                        alioquin si (!_typus_alienus_est(
+                                         tok_v.datum.token))
+                        {
+                            silva_c89_diagnosticum_addere(sem, n,
+                                EXAMEN_CODEX_TYPUS_NOMINATUS_IGNOTUS);
+                        }
                     }
                 }
                 frange;
@@ -4650,10 +4705,49 @@ _nodalem_ambulare (SilvaSemantica* sem, SilvaValor v)
     }
 }
 
+/* Ordo corporis (codex 90): post sententiam primam declaratio
+ * quaelibet violatio C89 est (6.8.2 C99 eam solvit). Corpus
+ * quodque nidificatum ordinem suum incipit. */
+interior vacuum
+_ordinem_corporis_examinare (
+    SilvaSemantica* sem,
+        SilvaValor  elementa)
+{
+    b32 sententia_visa = FALSUM;
+    i32 i;
+    i32 m = (i32)silva_valor_lista_numerus(elementa);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+                 SilvaValor* v =
+                     silva_valor_lista_obtinere(elementa, i);
+        constans SilvaNodus* c;
+
+        si (v == NIHIL || v->genus != SILVA_VALOR_NODUS)
+        {
+            perge;
+        }
+        c = _canonicum(v->datum.nodus);
+        si (c->genus == (s32)SILVA_C89_GENUS_DECLARATIO)
+        {
+            si (sententia_visa)
+            {
+                silva_c89_diagnosticum_addere(sem, c,
+                    EXAMEN_CODEX_DECLARATIO_POST_SENTENTIAM);
+            }
+        }
+        alioquin
+        {
+            sententia_visa = VERUM;
+        }
+    }
+}
+
 interior vacuum
 _corpus_ambulare (SilvaSemantica* sem, constans SilvaNodus* corpus)
 {
     _scopum_aperire(sem);
+    _ordinem_corporis_examinare(sem, silva_c89_corpus_elementa(corpus));
     _listam_ambulare(sem, silva_c89_corpus_elementa(corpus));
     _scopum_claudere(sem);
 }
@@ -6035,6 +6129,223 @@ _via_postulata_est (constans chorda* via)
         + (via->mensura - n), acus, (memoriae_index)n) == ZEPHYRUM;
 }
 
+
+/* ==================================================
+ * Standarda aliena (codex 89): quod lexator signat (trivium
+ * standard != C89 - '//' ab ortu signatum, numquam lectum) et
+ * quod praeprocessus fert ('...' in parametris #define). Super
+ * lexemata strati principalis (radicibus, semel) + directivas.
+ * ================================================== */
+
+hic_manens constans character* constans _typi_alieni[] = {
+    "_Bool", "_Complex", "_Imaginary", "inline", "restrict"
+};
+
+/* an diagnosticum codicis dati in sede eadem iam stet - parametrum
+ * bis typatur (typus functionis + symbolum), sedes una nominanda */
+interior b32
+_iam_notatum (
+    constans SilvaSemantica* sem,
+                        s32  codex,
+        constans SilvaToken* sedes)
+{
+    i32 i;
+    i32 m = xar_numerus(sem->diagnostica);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            (constans SemanticaDiagnosticum*)xar_obtinere(
+                sem->diagnostica, i);
+
+        si (   d->codex   == codex
+            && d->linea   == sedes->linea
+            && d->columna == sedes->columna)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+_typus_alienus_est (
+    constans SilvaToken* token)
+{
+    i32 numerus = (i32)(magnitudo(_typi_alieni)
+                      / magnitudo(_typi_alieni[0]));
+    i32 i;
+
+    si (token == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        si (_chorda_par_literis(token->valor, _typi_alieni[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_standardum_trivii (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+      constans SilvaToken* trivium)
+{
+    si (   trivium             == NIHIL
+        || trivium->standard   == SILVA_STANDARD_C89
+        || trivium->fons_index != parsura->fons_princeps)
+    {
+        redde;
+    }
+    _portabilitatis_diagnosticum(sem, parsura, trivium,
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM,
+        trivium->genus == SILVA_LEX_COMMENTUM_LINEA
+            ? "commentarium lineae '//' C99 est - C89 '/* */' solum"
+            : "lexema standardi alieni (C99/extensio)");
+}
+
+interior vacuum
+_standarda_lexematis (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+      constans SilvaToken* radix)
+{
+    i32 j;
+    i32 k;
+
+    si (radix == NIHIL)
+    {
+        redde;
+    }
+    si (   radix->standard   != SILVA_STANDARD_C89
+        && radix->fons_index == parsura->fons_princeps)
+    {
+        _standardum_trivii(sem, parsura, radix);
+    }
+    si (radix->spatia_ante != NIHIL)
+    {
+        k = xar_numerus(radix->spatia_ante);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _standardum_trivii(sem, parsura, *(SilvaToken**)
+                xar_obtinere(radix->spatia_ante, j));
+        }
+    }
+    si (radix->spatia_post != NIHIL)
+    {
+        k = xar_numerus(radix->spatia_post);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            _standardum_trivii(sem, parsura, *(SilvaToken**)
+                xar_obtinere(radix->spatia_post, j));
+        }
+    }
+}
+
+/* '#define NOMEN(' ... '...' ... ')' - macro variadica C99 */
+interior vacuum
+_standarda_directivae (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+                      Xar* linea)
+{
+                    i32  m;
+                    i32  i;
+    constans SilvaToken* t;
+
+    si (linea == NIHIL)
+    {
+        redde;
+    }
+    m = xar_numerus(linea);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        _standarda_lexematis(sem, parsura,
+            silva_token_radix(*(SilvaToken**)xar_obtinere(linea, i)));
+    }
+    si (m < V)
+    {
+        redde;
+    }
+    t = *(SilvaToken**)xar_obtinere(linea, I);
+    si (   t        == NIHIL
+        || t->genus != SILVA_LEX_IDENTIFICATOR
+        || !_chorda_par_literis(t->valor, "define"))
+    {
+        redde;
+    }
+    t = *(SilvaToken**)xar_obtinere(linea, III);
+    si (   t        == NIHIL
+        || t->genus != SILVA_LEX_PAREN_APERTA)
+    {
+        redde;
+    }
+    per (i = IV; i < m; i++)
+    {
+        t = *(SilvaToken**)xar_obtinere(linea, i);
+        si (   t        == NIHIL
+            || t->genus == SILVA_LEX_PAREN_CLAUSA)
+        {
+            frange;
+        }
+        si (   t->genus      == SILVA_LEX_ELLIPSIS
+            && t->fons_index == parsura->fons_princeps)
+        {
+            _portabilitatis_diagnosticum(sem, parsura, t,
+                (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM,
+                "macro variadica ('...' in parametris #define) C99"
+                " est");
+            frange;
+        }
+    }
+}
+
+interior vacuum
+_standarda_examinare (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    constans SilvaToken* radix_prior = NIHIL;
+                    i32  i;
+                    i32  m;
+
+    si (   parsura           == NIHIL
+        || parsura->lexemata == NIHIL
+        || parsura->fons_princeps < ZEPHYRUM)
+    {
+        redde;
+    }
+    m = xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans SilvaToken* radix = silva_token_radix(
+            *(SilvaToken**)xar_obtinere(parsura->lexemata, i));
+
+        si (radix == NIHIL || radix == radix_prior)
+        {
+            perge;
+        }
+        radix_prior = radix;
+        _standarda_lexematis(sem, parsura, radix);
+    }
+    _standarda_lexematis(sem, parsura,
+        silva_token_radix(parsura->lexema_finis));
+    si (parsura->directivae != NIHIL)
+    {
+        m = xar_numerus(parsura->directivae);
+        per (i = ZEPHYRUM; i < m; i++)
+        {
+            _standarda_directivae(sem, parsura,
+                *(Xar**)xar_obtinere(parsura->directivae, i));
+        }
+    }
+}
+
 interior vacuum
 _portabilitatem_examinare (SilvaSemantica* sem,
     constans SilvaParsura* parsura)
@@ -6597,6 +6908,8 @@ silva_c89_semantica_analysare_cum_systemate (Piscina* piscina,
     /* portabilitas (85-87): stratum 0 contra tabulas nominum -
      * post ambulationem totam (tabulae ex systemate impletae) */
     _portabilitatem_examinare(sem, parsura);
+    /* standarda aliena (89): lexator signat, iudex nominat */
+    _standarda_examinare(sem, parsura);
     /* professiones (88): sine systemate quoque - professio se
      * ipsam fert */
     _professiones_colligere(sem, parsura);

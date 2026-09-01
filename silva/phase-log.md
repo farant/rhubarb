@@ -14567,3 +14567,55 @@ Lesson, again: a pinned count is DUPLICATED STATE — when it moves,
 grep the number across probationes/, don't fix the file that
 happened to fail first. Last session fixed the first file the gate
 named and stopped.
+
+## 2026-09-01 — EXAMEN: codices 89/90 (standarda aliena, declaratio post sententiam) — FUGAE EXAMINI QUOQUE
+
+**Ortus.** Uncus pre-commit (tools/unci-git) natus; planta eius
+quaerenda: examen '//' et declarationem post sententiam ACCIPIEBAT.
+Fran: oblivio an regressio? NEUTRUM — consilium dimidiatum cum
+porta latus alterum metiente. Chunk D (2026-07-11) fugas XII
+definivit (fixa/examinis/fugae: commentum_linea, decl_mixtae,
+bool, acies_flexibilis, macro_variadica, for_decl, designator,
+hex_fluitans, inline_verbum, litterale_compositum, restrict_verbum,
+vla); lexator '//' ut COMMENTUM_LINEA fudit et trivia->standard =
+C99 signavit 'substrato lint postea' — iudex signum numquam legit.
+examen_vectis.sh ① fugas ORACULO SOLO probabat (chordam clang
+sigillatam calibrans); examen ipsum numquam interrogatum. Mensuratum:
+examen V/XII accipiebat dum VECTIS TENEBAT. Quaestio 01KZBYEHJP
+(2026-08-06) casum declarationis sine fugarum indice rediscoperuerat;
+ictus 01KZE66N8X classem claudendam proposuerat.
+
+**Factum.**
+- vectis: fugae REICI debent a clang ET ab examine (assertio quae
+  deerat — V rubrae statim, porta primum).
+- codex 89 STANDARDUM_ALIENUM (VIOLATIO), sedes IV: trivium
+  standard != C89 super lexemata strati principalis + directivas
+  (radicibus, semel; `_standarda_examinare`); clavis C99 ut typus
+  (`_typi_alieni`: _Bool/_Complex/_Imaginary/inline/restrict) in
+  sede 'typus nominatus ignotus' — VIOLATIO nominata pro INFRA,
+  dedupe per sedem (`_iam_notatum`: parametrum bis typatur); macro
+  variadica ('...' in parametris #define, directivae); acies
+  flexibilis (membrum typi ACIES numerus < 0 in `_typus_ex_membris`;
+  parametra/extern licent). Nuntii per `_portabilitatis_diagnosticum`
+  (sedes lexematis, nuntius proprius).
+- codex 90 DECLARATIO_POST_SENTENTIAM (VIOLATIO):
+  `_ordinem_corporis_examinare` ante ambulationem corporis —
+  post elementum primum non-declaratorium declaratio quaelibet;
+  corpus nidificatum ordinem suum incipit.
+- Fixturae .invalidum V cum pinnis (commentum_linea,
+  declaratio_post_sententiam, typus_alienus, macro_variadica,
+  acies_flexibilis) — oraculum consentit; probatio_silva_examen
+  +XI casus (positiva ET negativa: '/* */', d[3]/extern a[],
+  V(a), declaratio prima, corpus nidificatum, II violationes).
+- Tabula examen XII/XII REICE (ante VII/XII: V per nodos erroris,
+  vla per codicem 8, inline casu INFRA). VECTIS TENET cum assertione
+  nova. Suite examen 1482/1482.
+
+**Lex.** Porta quae latus unum metitur latus alterum tacite
+permittit — fixturae 'omnes reiciendae' a QUO reiciendae dicant.
+Signum a lexatore positum sine consumptore filum pendens est ab
+ortu: ubi 'postea' scribitur, desideratum scribatur.
+
+**Freeze.** Silva fontes tacta (semantica.c/.h) = emendatio
+iudicis (defectus), extra subset materiae portatum — replicatio
+nulla debita (nota in materia/phase-log).

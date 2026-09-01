@@ -1,0 +1,2 @@
+/* <exspecta codex="STANDARDUM_ALIENUM"/> */
+int f(_Bool b) { return b; }

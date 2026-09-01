@@ -734,7 +734,11 @@ principale (vacuum)
      * formae eiusdem in scopo uno; formae ordinatio/monstrator-
      * initiatus; umbratio) in corpore hoc non occurrunt -
      * divergentes==0 adventum eorum clamabit. */
-    CREDO_AEQUALIS_I32 (census_examinis.plagulae, 51);
+    /* LVI = LI + V fixturae 2026-09-01 (codices 89/90: commentum_linea,
+     * declaratio_post_sententiam, typus_alienus, macro_variadica,
+     * acies_flexibilis) - pinna = status duplicatus, mutatio corporis
+     * eam movet consulto */
+    CREDO_AEQUALIS_I32 (census_examinis.plagulae, 56);
     CREDO_AEQUALIS_I32 (census_examinis.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_examinis.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_examinis.excedentes, ZEPHYRUM);

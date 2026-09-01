@@ -54,13 +54,22 @@ _pinnae_solvere () {
 
 # ① percursus fugarum: C99/GNU contra oraculum - omnes REICI
 echo "--- percursus fugarum oraculi ---"
+# ...ET ab examine (2026-09-01): ante hoc fugae oraculum solum
+# calibrabant - examen V ex XII accipiebat dum vectis tenebat
+# (indagatio 01KZBYEHJP). Assertio quae deerat: iudex noster ipse.
 for f in "$FIXA"/fugae/*.fuga; do
     if "${ORACULUM[@]}" "$f" >/dev/null 2>&1; then
         echo "  FUGA: $(basename "$f") oraculo ACCEPTUM (C99/GNU!)"
         fracta=1
     fi
+    verdictum="$("$SILVA_DIR/build/examen" "$f" -machina 2>/dev/null \
+        | awk -F'\t' '$1=="VERDICTUM"{print $2}')"
+    if [ "$verdictum" != "REICE" ]; then
+        echo "  FUGA: $(basename "$f") EXAMINI accepta (verdictum ${verdictum:-nullum})"
+        fracta=1
+    fi
 done
-[ "$fracta" -eq 0 ] && echo "  fugae: 0 (omnes reiectae)"
+[ "$fracta" -eq 0 ] && echo "  fugae: 0 (omnes reiectae - oraculo ET examine)"
 
 # tabula nominum codicum ex capite (numerus = ordo enumerationis)
 MAPPA="$SILVA_DIR/build/codices_mappa.txt"

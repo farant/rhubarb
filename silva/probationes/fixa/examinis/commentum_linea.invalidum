@@ -1,0 +1,4 @@
+int x;
+/* <exspecta codex="STANDARDUM_ALIENUM"/> */
+// commentarium lineae C99
+int y;

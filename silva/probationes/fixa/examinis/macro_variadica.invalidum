@@ -1,0 +1,4 @@
+/* <exspecta codex="STANDARDUM_ALIENUM"/> */
+#define V(...) f(__VA_ARGS__)
+int f(int a);
+int g(void) { return V(1); }
