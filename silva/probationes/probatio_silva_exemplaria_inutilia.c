@@ -15,12 +15,14 @@
  * attributa= (provenientia b/linea/columna/f in nodis captis
  * littera congruentiae non fit); (3) aliasa contenti '<<#id>>'
  * in liberis effectivis resoluta (communicatio lexematum =
- * repraesentatio). Latus lint per scopum declarationem PRIMAM
- * formae cuiusque temptat (ligatio prima subsequentiae) - formae
- * tres (nuda / initiata / monstrata); residua nominata (declaratio
- * secunda formae eiusdem in scopo uno, formae ceterae, umbratio)
- * in corpore hoc NON occurrunt - consensus mensuratus EXACTUS,
- * divergentes==0 pinnatum adventum eorum clamabit.
+ * repraesentatio). Documentum UNIFICATUM per axem descendentem
+ * (2026-08-31 nocte: catena una '<**>' tres catenas formarum
+ * substituit - formae OMNES declaratorum tectae constructione,
+ * mensura EADEM 1/1 + 0/0); residuum MUTATUM: declaratio prima
+ * scopi cuiusque FORMAE CUIUSVIS (ante: prima formae cuiusque) +
+ * umbratio - in corpore hoc NON occurrunt, divergentes==0
+ * pinnatum adventum clamabit. Pluralitas per-declarationem =
+ * ianua retentionis radicis.
  *
  * Oraculum = ANALYSATOR IPSE: recipe examinis verbatim (ut porta
  * lint II) - lexicon compositum + capita praebita + oraculum +

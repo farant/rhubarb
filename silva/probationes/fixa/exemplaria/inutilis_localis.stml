@@ -1,18 +1,8 @@
 <TRANSPARENTIA tags="expansio pasta stringificatio api extentum ante post regio-cruda" attributa="f b linea columna def-f def-l def-c"/>
-<CATENA output="$plana">
-  <(><EXEMPLAR><corpus><elementa><declaratio><declaratores><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></declaratores></declaratio></elementa></corpus></EXEMPLAR>
-  <(><SINE><folium-identificator><tok_valor>&@n;</tok_valor></folium-identificator></SINE>
-</CATENA>
-<CATENA output="$initiata">
-  <(><EXEMPLAR><corpus><elementa><declaratio><declaratores><declarator-initiatus><declarator><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></declarator></declarator-initiatus></declaratores></declaratio></elementa></corpus></EXEMPLAR>
-  <(><SINE><folium-identificator><tok_valor>&@n;</tok_valor></folium-identificator></SINE>
-</CATENA>
-<CATENA output="$monstrata">
-  <(><EXEMPLAR><corpus><elementa><declaratio><declaratores><declarator-monstrator><internum><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></internum></declarator-monstrator></declaratores></declaratio></elementa></corpus></EXEMPLAR>
+<CATENA output="$inutilia">
+  <(><EXEMPLAR><corpus><elementa><declaratio><declaratores><**><declarator-titulus><tok_titulus><lex-identificator $n/></tok_titulus></declarator-titulus></**></declaratores></declaratio></elementa></corpus></EXEMPLAR>
   <(><SINE><folium-identificator><tok_valor>&@n;</tok_valor></folium-identificator></SINE>
 </CATENA>
 <relatum lint="variabilis-inutilis">
-  <PER congruentia="$plana"><situs>&@n;</situs></PER>
-  <PER congruentia="$initiata"><situs>&@n;</situs></PER>
-  <PER congruentia="$monstrata"><situs>&@n;</situs></PER>
+  <PER congruentia="$inutilia"><situs>&@n;</situs></PER>
 </relatum>
