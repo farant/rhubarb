@@ -1703,3 +1703,74 @@ tantum passus. (3) comm super indices linearum mutatos fallax -
 tally classium solus fidelis.
 
 DESIDERATA: 01M1F8M5XY (indices ex aedilis).
+
+========================================================================
+RELATIO - ROBUSTITAS CSS: FINIS HAERENS + PORTA TOTALITATIS (2026-09-01)
+========================================================================
+
+ORTUS: quaestio Frani 'quantum materia de tractatione erroris more
+tree-sitter praestat?' in sondam versa (scratchpad, ~XL lineae:
+parsare -> materia_scribere_nodum -> memcmp, processus singulus per
+plagulam). Responsum mensuratum, non aestimatum: materia dimidium
+contractus (emissio octetim) STRUCTURALITER tenet - ubi arbor
+redditur, IDEM semper, etiam super octetos fortuitos; dimidium
+alterum ('semper arborem') parsatoris est, et css_arbor id NON
+praestabat, dupliciter:
+
+  (1) 01M1FACW - 'a{b:(}' NIHIL. Consumens interior (saeptum /
+      functio) FINEM videbat, p->finis ponebat, frangebat; exterior
+      lexema aliud petebat, fluxus exhaustus, NIHIL usque ad
+      radicem. Effectus: octeti fortuiti ~L% NIHIL, corpus mutatum
+      II/IV, truncationes II/X. Portae IV numquam viderunt: corpus
+      bene formatum; probatio B4 'non terminata' ad gradum regulae
+      solum. REMEDIUM: FINIS HAERENS in _significans_proximum -
+      semel visus (munus FINIS), omni petenti iterum redditur;
+      ligator eum semel solvit. Lineae VI.
+  (2) 01M1FAD8 - SIGSEGV sub nidificatione (parentheses clausae
+      XX-XXX milia, @media{ ~XII milia). In PARSATORE, non in
+      emissore (signum 'parsatum' + SOLUM_PARSARE: emissio x20000
+      IDEM). Via mala iterativa (a{a{ x1,000,000 = IDEM 2MB) -
+      forma iterativa probata. SILVA EANDEM CLASSEM habet (x20000
+      SIGNUM 11). NON remediatum - decisio politicae profunditatis
+      omnibus clientibus semel facienda (custos -> folia plana).
+      PINNA in porta: CREDO_RUIT_CUM(..., SIGSEGV) x50000 - rubet
+      cum remedium veniat.
+
+PORTA SEXTA NATA: probatio_css_totalitas - generatores
+linguae-agnostici (LCG seminatus, mutatio I/XL, truncatio XXIII
+gradus, nidificatio VI formae x {clausa,aperta} x {I,X,C,M}),
+assertiones tres (CREDO_NON_RUIT furca; non-NIHIL; memcmp), fons
+peccans in css/build/totalitas_fractum.css scriptus. Casus CCCXLII.
+RUBRA ante remedium (octeti fortuiti X/XXXII NIHIL), viridis post -
+porta natalis quae defectum natalem cepisset. Semen desiderati
+01M1FAE2 (harmonium transversale materiae: parsator + registrum ->
+eadem porta; css nunc, html phasi IV, silva per shim phasi V).
+
+SILVA SUB EISDEM FORMIS (arbor.sh): non clausum ad FINEM -> nodus
+erroris, arbor completa (quod css non faciebat); octeti fortuiti ->
+parsatio sana, scriptor STML clare recusat (NUL non textus).
+CONTRACTUS DUO DISTINGUENDI: circuitus octetim totalis esse potest;
+circuitus STML 'totalis SALVO NUL' - recusatio clara recta est.
+
+LEX: caput quod 'TOTALIS' clamat sine porta commentarium mendax
+est - css_arbor.h clamabat, mendax erat. Instrumenta nova portam
+a nativitate accipiunt; PARSATORES QUOQUE.
+
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: sonda scratchpad contra css/build (link list runner);
+credo furca (NON_RUIT / RUIT_CUM - primus usus in css/materia/silva:
+antea 0 plagulae); censor (casus = macro latina - momordit, cepit);
+formator delta (arbor 59 held per duas iterationes; harness
+-scribere bis, residua manu); examen calidum (ACCIPE IV/IV);
+silva/arbor.sh ut oraculum alterius linguae.
+FRUCTUS: sonda XL linearum duos defectus uno cursu; signum gradus
+(SOLUM_PARSARE) parsatorem ab emissore separavit uno cursu;
+CREDO_RUIT_CUM ruinam notam in pinnam vertit sine remedio.
+ASPERITATES: (1) 'casus' identificator - macro latina; censor
+cepit sed post compilationem fractam, non ante. (2) formator
+-scribere glomera assignationum ad columnam +I ordinat quam manus
+aestimat (21 vs 22) - regula non documentata in nuntio; empirice
+inventa. (3) formator -scribere parametros functionis additae POST
+scripturam non tangit nisi iterum curratur - bis currendum.
+DESIDERATA: nihil novum (01M1FAE2 iam apertum).

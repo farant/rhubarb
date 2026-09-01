@@ -12,8 +12,20 @@ its T1–T9 are the historical record.
 
 PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B6 COMPLETE in one
 session; next = **B7 (hand-written css.canon)**, then B8+B9
-(selectors), B10 (wire-up). Suites: css 5/5 (registrum, adaptare,
-arbor 188 assertions, corpus 24, stml 29).
+(selectors), B10 (wire-up). Suites: css 6/6 (registrum, adaptare,
+arbor, corpus, stml, **totalitas**).
+
+ROBUSTITAS (2026-09-01, between B6 and B7): the parser was NOT
+total - `a{b:(}` returned NIHIL (end-of-input consumed once by the
+innermost block consumer; fixed: STICKY FINIS in
+`_significans_proximum`, 01M1FACW). `probatio_css_totalitas` is the
+sixth gate: random bytes, mutated and truncated corpus, nesting,
+under the fork-based credo macros + memcmp - red before the fix,
+green after. KNOWN, UNFIXED: nesting beyond ~20k levels overflows
+the C stack (01M1FAD8, silva shares it) - pinned RED-on-fix with
+`CREDO_RUIT_CUM`; the depth policy is a decision for all clients,
+not a per-parser patch. Byte round trip is total; STML round trip
+is total EXCEPT NUL (loud refusal, correct).
 
 Built: the FULL L3 parser - qualified rules, declarations,
 `!important` (praevalentia = SYNTAX, its tokens carry structural
