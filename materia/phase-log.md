@@ -1872,3 +1872,56 @@ longae, ut vicinae XXIV quae iam divergunt) -> bilineares -> 59.
 Imitatio vicinorum divergentium divergentias ADDIT - lex iterum.
 
 PROXIMUM: B9 css_selector.
+
+========================================================================
+RELATIO B9 - css_selector: ARBOR ANALYSEOS SELECTORUM (2026-09-01)
+========================================================================
+
+FACTUM: css/fontes/css_selector.{h,c} (~640 ll.), probatio
+(CCXXXIII assertiones: structura, aequalitas per comparatorem,
+canon, corpus CLI praeludiorum). 8/8 suites.
+
+DESIGNUM (spec par. V/VI + consilium B9): lexemata communicata,
+NODI NUMQUAM - pater unus (materia_arbor_patres_figere in arbore
+selectorum vocatur; nodus communis patrem plagulae raperet). Folia
+servata NOVA super lexemata argumentorum crudorum. Combinator super
+folia servata: spatium ipsum combinator nisi punctuato adiacet.
+Nidificatio sinistrorsum; sinister/dexter absentes pro relativo /
+caudali; combinatores consecutivi = complexus dextro absente.
+Functiones selectorum (tabula VII) argumenta recursione per
+introitum publicum parsant; ceterae cruda. Attributum ex saepto
+'[': forma IDENT (op valor)? flag? - aliter malus ex saepto toto;
+operator lexema PRIMUM ('^' de '^='). '::' colon primum.
+
+LECTIO NATALIS: adiutor probationis fontem in buffer acervi
+struebat - parsator octetos NON copiat (css_arbor.h dicit), ergo
+lexemata post reditum in compagem mortuam spectabant. Genera
+sana (in piscina), octeti mendaces: 'a b' viridis (genus solum),
+'a>b' rubra (octeti), scriptor 'NUL fert'. VIII fracturae uno
+vitio - octeti in piscina, 233/233. Lex: fons cuius arbor vivit
+in piscina vivat; probatio quae genera sola inspicit octetos non
+custodit.
+
+CANON B8 FALSIFICATUS: CLI praeludia corporis + XI casus inlineares
+contra css.canon 0 vitia - constrictiones species-level tenent
+(nihil mutandum fuit). Planta: spatium numquam combinator -> rubra.
+
+PROXIMUM: B10 (registratio runners, emendationes spec, worklog,
+parcum S6, memoria).
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: dump_stml (forma praeludii vera ante grammaticam);
+comparator ut oraculum aequalitatis; canon ut oraculum formae
+(porta B7 re-usa in probatione nova); formator -scribere bis;
+censor PURUS; planta una.
+FRUCTUS: forma praeludii mensurata grammaticam uno cursu dedit
+(functio nodus pro ':not(', saeptum pro '['); porta natalis
+vitium adiutoris cepit ante quam modulum culparem.
+ASPERITATES: (1) examen DOMESTICUM cepit quod compilator tacuit:
+sentinella '-I' ex functione i32 (INSIGNATO domus) reddita, deinde
+'i < ZEPHYRUM' semper falsum - remedium s32. Lex: sentinella
+negativa functionem SIGNATAM poscit; examen hoc scit, clang non.
+(2) formator -scribere lineas longas non frangit - LVI manu;
+adiutores extracti (_est_operator_praefixus, _est_valor_attributi,
+_est_functio, _est_saeptum_attributi, _pseudo_classem_creare)
+codicem meliorem reliquerunt quam fractio nuda.

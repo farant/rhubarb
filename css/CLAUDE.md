@@ -10,10 +10,26 @@ its T1–T9 are the historical record.
 
 ## Praesens status (2026-09-01, post B1-B6)
 
-PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B8 COMPLETE; next =
-**B9 (css_selector, the analysis tree over prelude tokens)**, then
-B10 (wire-up). Suites: css 7/7 (registrum, adaptare, arbor, corpus,
-stml, totalitas, canon).
+PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B9 COMPLETE; next =
+**B10 (wire-up, spec closure, debrief)**. Suites: css 8/8
+(registrum, adaptare, arbor, corpus, stml, totalitas, canon,
+**selector**).
+
+B9 (2026-09-01): `css_selector` - ANALYSIS tree over the prelude's
+component values. Shares TOKENS with the stylesheet tree, never
+NODES (a node has one parent; raw pseudo-class arguments get NEW
+servatum leaves over the same tokens). No byte gate BY DESIGN and
+the header says so. Combinator over servatum leaves: `>` `+` `~` or
+the whitespace token itself when not adjacent to one of those, so
+`a>b` ≡ `a > b` (comparator) and `a b` ≠ `ab`. Left-nested.
+Relative selector `> b` = absent sinister; trailing `a >` = absent
+dexter. Functional pseudo-classes: not/is/where/has/host/
+host-context/slotted parse arguments as selectors (recursion via
+the public entry); everything else keeps raw servata. Gate: 233
+assertions incl. canon judgment of selector documents and ALL 151
+corpus preludes (never NIHIL, 0 canon faults). Birth lesson: the
+test helper built the source on the stack - the parser does not
+copy bytes, so tokens pointed into a dead frame; 8 reds said so.
 
 B8 (2026-09-01): 11 selector genera APPENDED to the registry (21
 genera, 45 slots), named slot enums, canon +32 rules (96 total),

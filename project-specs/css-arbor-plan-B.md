@@ -767,7 +767,7 @@ css_selector_parsare (
    leaves never enter it — and the equality assertion needs no trivia
    subtleties at all.
 
-- [ ] **Step 1: Write the failing test — the distinction the module
+- [x] **Step 1: Write the failing test — the distinction the module
   exists for**
 
 ```c
@@ -800,17 +800,17 @@ css_selector_parsare (
   (`_selectorem_parsare` = test helper: `css_arbor_parsare` the wrapped
   source `"<sel>{}"`, walk to the prelude, call `css_selector_parsare`.)
 
-- [ ] **Step 2: Run and verify it fails** — undefined symbol.
+- [x] **Step 2: Run and verify it fails** — undefined symbol.
 
-- [ ] **Step 3: Implement** — split on top-level commas →
+- [x] **Step 3: Implement** — split on top-level commas →
   `selector-lista`; within each, compounds separated by combinators
   (adjacency rule above); compound parts: type/universal/class/id/
   attribute/pseudo per spec §5; unparseable → `selector-malus`.
 
-- [ ] **Step 4: Run whole suite** — exit 0; corpus and STML gates
+- [x] **Step 4: Run whole suite** — exit 0; corpus and STML gates
   untouched (selector trees are on-demand, nothing upstream changed).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add css/fontes/css_selector.h css/fontes/css_selector.c \
