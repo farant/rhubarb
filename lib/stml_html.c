@@ -438,7 +438,16 @@ _elementum_emittere (
 
     si (nodus->crudus)
     {
-        /* contentum VERBATIM (par. 5.5) - tagum sine '!' */
+        /* Contentum crudum FURCATUR (Fran, 2026-09-01): script/
+         * style = RAWTEXT HTML - navigator contentum numquam
+         * decoquit, ergo VERBATIM (effugium 'a && b' in
+         * 'a &amp;&amp; b' litterale corrumperet). Tagi CETERI
+         * ('<pre!>', '<code!>'): navigator contentum ut NOTATIONEM
+         * legit, ergo crudum STML = textus litteralis -> EVADITUR
+         * ('&' '<' '>'). Entia hic numquam ambigua (crudum numquam
+         * decoquitur, '&' auctoris semper litteralis), ergo
+         * recusatio par. 5.10 NON currit - ianua ad textum DE
+         * entibus: '<code!>&nbsp;</code>' litterale ostendit. */
         i32 i;
         i32 num;
 
@@ -455,8 +464,15 @@ _elementum_emittere (
                     && l->genus == STML_NODUS_TEXTUS
                     && l->valor != NIHIL)
                 {
-                    chorda_aedificator_appendere_chorda(ctx->aed,
-                                                        *l->valor);
+                    si (crudus_requisitus)
+                    {
+                        chorda_aedificator_appendere_chorda(
+                            ctx->aed, *l->valor);
+                    }
+                    alioquin
+                    {
+                        _textum_evadere(ctx, *l->valor);
+                    }
                 }
             }
         }

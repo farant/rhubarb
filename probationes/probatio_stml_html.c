@@ -300,6 +300,52 @@ principale (
         }
     }
 
+    /* --- (4b) CONTENTUM CRUDUM FURCATUM (Fran, 2026-09-01):
+     * script/style = RAWTEXT, verbatim; tagi ceteri = textus
+     * litteralis, evasus. Ianua entium: crudum numquam decoquitur,
+     * ergo '&nbsp;' litterale scribi potest --- */
+    {
+        StmlHtmlResultus res;
+
+        imprimere("\n--- par. 5.5: crudum furcatum ---\n");
+
+        res = _vertere_litteras(piscina, intern,
+            "<r><pre!>si (a<b && c) { x(); }</pre></r>");
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (res.html,
+                "<!DOCTYPE html>\n"
+                "<r><pre>si (a&lt;b &amp;&amp; c) { x(); }"
+                "</pre></r>");
+        }
+
+        /* ianua par. 5.10: in textu ordinario '&nbsp;' recusatur
+         * (ambiguum), in crudo litterale est - pagina textum DE
+         * entibus tandem ostendere potest */
+        res = _vertere_litteras(piscina, intern,
+            "<r><code!>&nbsp;</code></r>");
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (res.html,
+                "<!DOCTYPE html>\n"
+                "<r><code>&amp;nbsp;</code></r>");
+        }
+
+        /* script VERBATIM manet - navigator rawtext numquam
+         * decoquit, effugium id corrumperet */
+        res = _vertere_litteras(piscina, intern,
+            "<r><script!>a<b && c</script></r>");
+        CREDO_VERUM (res.successus);
+        si (res.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (res.html,
+                "<!DOCTYPE html>\n"
+                "<r><script>a<b && c</script></r>");
+        }
+    }
+
     /* --- (5) ATTRIBUTA: effugium DUPLEX (par. 5.4) - inscripta
      * CRUDA transeunt, elementa attributorum decocta evadunt;
      * sepulcrum omittit; alt="" servatur; booleanum nudum --- */

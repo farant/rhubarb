@@ -363,6 +363,28 @@ both are emitted, matching the source.
 A non-prefix attribute-element is a call argument that expansion should have
 consumed; post-expansion it is anomalous → **RECUSATIO**, never a silent drop.
 
+### §5.5.1 CONTENTUM CRUDUM FURCATUR (Fran, 2026-09-01 — post V1)
+
+Raw content emission is SPLIT by HTML's own rawtext set:
+
+- `script`/`style` (RAWTEXT): **verbatim** — the browser never
+  entity-decodes there; escaping would corrupt JS (`a && b` →
+  literal `a &amp;&amp; b`).
+- **Every other `<tag!>`** (`<pre!>`, `<code!>`, …): the browser
+  parses the content as markup, so STML-raw means LITERAL TEXT →
+  **escaped** (`&` `<` `>`).
+
+The §5.10 entity refusal does NOT run inside raw blocks: raw content
+is never entity-decoded by the STML parser, so the author's `&` is
+literal by construction — which finally opens the §5.10 dead corner:
+`<code!>&nbsp;</code>` emits `&amp;nbsp;` and the page can DISPLAY
+the literal text "&nbsp;". Pinned in probatio_stml_html (4b).
+
+KNOWN ADJACENT HAZARD, not yet decided: a `</script` byte-run inside
+script raw content terminates the element early in the browser (the
+classic inline-script trap). Verbatim emission preserves it silently.
+A refusal would be cheap; Fran to decide if it bites.
+
 ### §5.5 Tagi crudi — `!` est obligatorium pro `<script>` et `<style>`
 
 JavaScript is full of `<` and `&`. Without the raw marker, STML parses your

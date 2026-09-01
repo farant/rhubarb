@@ -41,3 +41,17 @@ round-trip.
 ATTRIBUTUM_SOLUTUM is only reachable on post-expansion/manual
 trees (the parser itself judges attr-element position, §6.3), so
 its pin builds the tree by hand with stml_elementum_creare.
+
+## 2026-09-01 (later) — raw content FORKED by HTML's rawtext set
+
+Fran caught the gap: `<tag!>` content emitted verbatim was only
+right for script/style. The fork: RAWTEXT (script/style) stays
+verbatim (the browser never decodes there — escaping would corrupt
+JS); every OTHER raw tag means LITERAL TEXT and is now escaped
+(`<pre!>`, `<code!>` = code samples). Bonus discovered at design
+time: since STML never entity-decodes raw content, the author's `&`
+is literal by construction — so the §5.10 refusal doesn't run in raw
+blocks, and `<code!>&nbsp;</code>` → `&amp;nbsp;` finally lets a
+page display literal entity text (the dead corner got its door;
+pinned). Adjacent hazard flagged in spec §5.5.1, undecided: `</script`
+inside script raw content still terminates the element browser-side.
