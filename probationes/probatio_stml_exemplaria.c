@@ -1553,6 +1553,86 @@ principale (
     }
 
 
+    /* ========= RETENTIO RADICIS 'radix="fontis"' ========= */
+
+    /* --- pluralitas in scopo uno: ordo per declarationem, radix
+     * scopi retenta - antiiunctio per-declarationem (forma codicis
+     * 69 in parvo), deinde gradus ulterior ex radice retenta --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- retentio: pluralitas scopi ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d n=\"x\"/><d n=\"y\"/><u n=\"x\"/>"
+            "<m v=\"1\"/></s>"
+            "<CATENA output=\"$mm\">"
+            "<EXEMPLAR><s/></EXEMPLAR>"
+            "<EXEMPLAR radix=\"fontis\"><d n=\"$n\"/></EXEMPLAR>"
+            "<SINE><u n=\"&@n;\"/></SINE>"
+            "<EXEMPLAR><m v=\"$v\"/></EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$mm\"><x>&@n;-&@v;</x></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d n=\"x\"/><d n=\"y\"/><u n=\"x\"/>"
+                "<m v=\"1\"/></s>"
+                "<x>y-1</x></radix>");
+        }
+    }
+
+    /* --- radix congruentiae ipsius per capturam claram --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- retentio: captura radicis propriae ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><s><d n=\"x\"/></s>"
+            "<CATENA output=\"$mm\">"
+            "<EXEMPLAR><s/></EXEMPLAR>"
+            "<EXEMPLAR radix=\"fontis\"><d $d n=\"$n\"/>"
+            "</EXEMPLAR>"
+            "</CATENA>"
+            "<PER congruentia=\"$mm\"><cella>&@d;</cella></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><s><d n=\"x\"/></s>"
+                "<cella><d n=\"x\"/></cella></radix>");
+        }
+    }
+
+    /* --- XIII: valor ignotus; fontis sine ordine intrante --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- retentio: vitia XIII ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/><CATENA output=\"$r\">"
+            "<EXEMPLAR><a/></EXEMPLAR>"
+            "<EXEMPLAR radix=\"alienum\"><a/></EXEMPLAR></CATENA>"
+            "<PER congruentia=\"$r\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><a/>"
+            "<EXEMPLAR output=\"$r\" radix=\"fontis\"><a/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$r\"><y/></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_VERUM (e.vitium
+            == STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+    }
+
+
     /* ============ DESCENSUS '<**>' (axis, XXV) ============ */
 
     /* --- pertinentia: captura per profunditatem ignotam --- */

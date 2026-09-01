@@ -2576,7 +2576,8 @@ principale (vacuum)
                 "<EXEMPLAR de=\"$m\" modus=\"unum\" ancorata"
                 " output=\"$n\"><x v=\"$v\"/></EXEMPLAR>"
                 "<CATENA de=\"$m\" output=\"$c\">"
-                "<(><EXEMPLAR modus=\"primum\"><y/></EXEMPLAR>"
+                "<(><EXEMPLAR modus=\"primum\" radix=\"fontis\">"
+                "<y/></EXEMPLAR>"
                 "<CATENA><EXEMPLAR><z/></EXEMPLAR></CATENA>"
                 "<SINE><y-absens n=\"&@v;\"/></SINE>"
                 "<<#@nexus-conditus>>"
@@ -2601,7 +2602,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XIX];
+                constans character* mala[XXI];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2653,7 +2654,12 @@ principale (vacuum)
                            " attributa=\" \"/>";
                 /* INDAGO non nudum (vestigatio) */
                 mala[18] = "<INDAGO malum=\"1\"/>";
-                per (m = ZEPHYRUM; m < XIX; m++)
+                /* retentio radicis (valor malus; fontis sine de=) */
+                mala[19] = "<EXEMPLAR de=\"$m\" output=\"$r2\""
+                           " radix=\"malus\"><s/></EXEMPLAR>";
+                mala[20] = "<EXEMPLAR output=\"$r3\""
+                           " radix=\"fontis\"><s/></EXEMPLAR>";
+                per (m = ZEPHYRUM; m < XXI; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);

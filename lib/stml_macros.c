@@ -3125,10 +3125,12 @@ _exemplar_nucleus (
                    Xar** exitus)
 {
                     chorda* modus;
+                    chorda* radix_regula;
                  StmlNodus* forma;
                        Xar* congruentiae;
                        Xar* opus;
                        b32  ancorata;
+                       b32  retinens;
                        i32  i;
                        i32  num;
 
@@ -3142,6 +3144,27 @@ _exemplar_nucleus (
     {
         _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
                        nodus, NIHIL, modus);
+        redde FALSUM;
+    }
+    /* retentio radicis (decretum 2026-08-31): 'radix="fontis"' =
+     * ordines exeuntes radicem ordinis INTRANTIS servant (radix
+     * congruentiae ipsius solum per capturam claram superstes -
+     * lex decreti speculata). Pluralitas in scopo uno: ordines
+     * radicem communicare possunt. Sine ordine intrante (scopus
+     * documenti) retinendum nihil est - vitium clarum. */
+    radix_regula = stml_attributum_capere(nodus, "radix");
+    si (   radix_regula != NIHIL
+        && !chorda_aequalis_literis(*radix_regula, "fontis"))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, radix_regula);
+        redde FALSUM;
+    }
+    retinens = radix_regula != NIHIL;
+    si (retinens && fons == NIHIL)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL, radix_regula);
         redde FALSUM;
     }
     ancorata = stml_attributum_capere(nodus, "ancorata") != NIHIL;
@@ -3208,9 +3231,11 @@ _exemplar_nucleus (
                 redde FALSUM;
             }
             /* lex extensionis: ordines novi capturas fontis
-             * hereditant (vide _ligamina_hereditare) */
-            si (   ordo->ligamina              == NIHIL
-                || xar_numerus(ordo->ligamina) == ZEPHYRUM)
+             * hereditant (vide _ligamina_hereditare); sub
+             * retentione radix fontis quoque servatur */
+            si (   !retinens
+                && (   ordo->ligamina == NIHIL
+                    || xar_numerus(ordo->ligamina) == ZEPHYRUM))
             {
                 perge;
             }
@@ -3220,7 +3245,16 @@ _exemplar_nucleus (
                     (StmlExemplarCongruentia*)xar_obtinere(
                         congruentiae, j);
 
-                si (   novus != NIHIL
+                si (novus == NIHIL)
+                {
+                    perge;
+                }
+                si (retinens)
+                {
+                    novus->radix = ordo->radix;
+                }
+                si (   ordo->ligamina != NIHIL
+                    && xar_numerus(ordo->ligamina) > ZEPHYRUM
                     && !_ligamina_hereditare(ctx, nodus,
                            ordo->ligamina, novus))
                 {

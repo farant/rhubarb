@@ -2268,6 +2268,7 @@ _catena_nexus_iudicare (
             && chorda_aequalis_literis(*l->titulus, "EXEMPLAR"))
         {
                chorda* modus;
+               chorda* radix_regula;
             StmlNodus* forma;
                   i32  j;
                   i32  m;
@@ -2290,6 +2291,16 @@ _catena_nexus_iudicare (
                 vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
                               l, l->titulus, modus, ZEPHYRUM,
                               ZEPHYRUM);
+                perge;
+            }
+            radix_regula = stml_attributum_capere(l, "radix");
+            si (   radix_regula != NIHIL
+                && !chorda_aequalis_literis(*radix_regula,
+                                            "fontis"))
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              l, l->titulus, radix_regula,
+                              ZEPHYRUM, ZEPHYRUM);
                 perge;
             }
             forma  = NIHIL;
@@ -2443,6 +2454,7 @@ _mandatum_forma_iudicare (
     si (chorda_aequalis_literis(*l->titulus, "EXEMPLAR"))
     {
            chorda* modus;
+           chorda* radix_regula;
         StmlNodus* forma;
               i32  j;
               i32  m;
@@ -2458,6 +2470,15 @@ _mandatum_forma_iudicare (
         {
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
                           l->titulus, modus, ZEPHYRUM, ZEPHYRUM);
+            redde;
+        }
+        radix_regula = stml_attributum_capere(l, "radix");
+        si (   radix_regula != NIHIL
+            && !chorda_aequalis_literis(*radix_regula, "fontis"))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, l,
+                          l->titulus, radix_regula, ZEPHYRUM,
+                          ZEPHYRUM);
             redde;
         }
         forma  = NIHIL;
@@ -2689,6 +2710,7 @@ _caps_iudicare (
            chorda* output;
            chorda* modus;
            chorda* de;
+           chorda* radix_regula;
         StmlNodus* forma;
               i32  i;
               i32  numerus;
@@ -2713,6 +2735,19 @@ _caps_iudicare (
             redde;
         }
         de = stml_attributum_capere(n, "de");
+        /* retentio radicis: valor 'fontis' solus; sine de= nihil
+         * retinendum est (iudicium staticum - machina idem) */
+        radix_regula = stml_attributum_capere(n, "radix");
+        si (   radix_regula != NIHIL
+            && (   de == NIHIL
+                || !chorda_aequalis_literis(*radix_regula,
+                                            "fontis")))
+        {
+            vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
+                          n->titulus, radix_regula, ZEPHYRUM,
+                          ZEPHYRUM);
+            redde;
+        }
         si (   de != NIHIL
             && (   de->mensura < II
                 || (character)de->datum[ZEPHYRUM] != '$'))
