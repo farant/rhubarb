@@ -2418,6 +2418,17 @@ probatio_mcp (Piscina* p)
         "{\"jsonrpc\":\"2.0\",\"id\":24,\"method\":\"tools/call\","
         "\"params\":{\"name\":\"quaestio\",\"arguments\":"
         "{\"nomen\":\"nusquam\",\"via\":\"lib/piscina.c\"}}}");
+    /* caput (compendium capitis, 2026-09-01): declarationes
+     * ordine, commentaria, prototypi in lineam contracti; via
+     * ignota = error clarus */
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":25,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"caput\",\"arguments\":"
+        "{\"via\":\"include/piscina.h\"}}}");
+    _scribe_lineam(intra, p,
+        "{\"jsonrpc\":\"2.0\",\"id\":26,\"method\":\"tools/call\","
+        "\"params\":{\"name\":\"caput\",\"arguments\":"
+        "{\"via\":\"nusquam/phantasma.h\"}}}");
     /* nullum "exit" - EOF fistulae = exitus ordinatus */
 
     rewind(intra);
@@ -2460,7 +2471,7 @@ probatio_mcp (Piscina* p)
 
         CREDO_VERUM(instrumenta != NIHIL
             && json_est_tabulatum(instrumenta)
-            && json_tabulatum_numerus(instrumenta) == IX);
+            && json_tabulatum_numerus(instrumenta) == X);
         CREDO_VERUM(_chorda_est(json_ad_chorda(json_objectum_capere(
             json_tabulatum_obtinere(instrumenta, ZEPHYRUM),
             "name")), "diagnostica"));
@@ -2725,6 +2736,31 @@ probatio_mcp (Piscina* p)
         chorda textus = _mcp_textus(&n);
 
         CREDO_VERUM(_chorda_continet(textus, "nomen ignotum"));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* caput piscina.h */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus,
+            "caput include/piscina.h"));
+        CREDO_VERUM(_chorda_continet(textus, "[functio] "));
+        CREDO_VERUM(_chorda_continet(textus,
+            "piscina_generare_dynamicum"));
+        CREDO_VERUM(_chorda_continet(textus, "piscina_destruere"));
+        /* prototypus in lineam UNAM contractus: nomen et ';' in
+         * eadem linea, sine linea nova inter typum et nomen */
+        CREDO_VERUM(_chorda_continet(textus,
+            "Piscina* piscina_generare_dynamicum ("));
+    }
+
+    n = _lege_lineam(extra, p, &bene);   /* caput via ignota */
+    CREDO_VERUM(bene);
+    {
+        chorda textus = _mcp_textus(&n);
+
+        CREDO_VERUM(_chorda_continet(textus, "non reperta"));
     }
 
     fclose(intra);

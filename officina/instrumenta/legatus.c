@@ -5320,6 +5320,16 @@ _mcp_toolslist_tractare (Legatus* l, Piscina* pn, JsonValor* id)
         "via",
         "OPTIONALE: suffixum viae sedis (e.g. probatio_piscina.c) -"
         " titulos multi-definitos disambiguat"));
+    json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
+        "caput",
+        "Compendium plagulae (caput .h aut .c): declarationes gradus"
+        " supremi ordine plagulae - commentarium ducens (tectum VIII"
+        " lineis) + declaratio in lineam unam contracta (corpora"
+        " '{...}'). Pro 'quid praestat hoc caput?' sine grep. Macra"
+        " exclusa (symbolum/corpus).",
+        "via",
+        "via plagulae .h/.c, relativa radici aut absoluta",
+        NIHIL, NIHIL));
     json_tabulatum_addere(instrumenta,
         _mcp_instrumentum_quaestionis(pn));
     json_tabulatum_addere(instrumenta, _mcp_instrumentum(pn,
@@ -6268,6 +6278,303 @@ _legati_corpus (Legatus* l, Piscina* pn, JsonValor* id,
         }
         _verbatim_appendere(aed, corpus,
             (i32)LEGATI_CORPORIS_LINEAE);
+    }
+    _mcp_textum_respondere(l, pn, id,
+        chorda_aedificator_finire(aed), FALSUM);
+}
+
+
+/* ==================================================
+ * caput {via}: COMPENDIUM plagulae - declarationes gradus
+ * supremi ordine plagulae, commentarium ducens (tectum) +
+ * declaratio in lineam unam contracta. Pro 'quid praestat hoc
+ * caput?' - quod ante grep octies per sessionem faciebat
+ * (debrief 2026-09-01). Macra EXCLUSA (extenta symbolorum
+ * semanticorum sola): symbolum/corpus ea praestant.
+ * ================================================== */
+
+#define LEGATI_CAPITIS_COMMENTARII_LINEAE 8
+#define LEGATI_CAPITIS_DECLARATIONIS_OCTETI 240
+
+/* linea contracta in buffer fixo: spatia alba in unum, tectum
+ * octetorum (praecisa = VERUM ultra) - aedificator longitudinem
+ * suam non reddit, ergo buffer localis */
+nomen structura {
+    character datum[LEGATI_CAPITIS_DECLARATIONIS_OCTETI + I];
+          i32 n;
+          b32 spatium;    /* ultimum scriptum spatium fuit */
+          b32 praecisa;
+} LegatiLinea;
+
+interior vacuum
+_lineae_contracte_appendere (
+    LegatiLinea* lin,
+         chorda  c)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        character ch = (character)c.datum[k];
+
+        si (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+        {
+            si (lin->spatium || lin->n == ZEPHYRUM)
+            {
+                perge;
+            }
+            ch            = ' ';
+            lin->spatium  = VERUM;
+        }
+        alioquin
+        {
+            lin->spatium = FALSUM;
+        }
+        si (lin->n >= (i32)LEGATI_CAPITIS_DECLARATIONIS_OCTETI)
+        {
+            lin->praecisa = VERUM;
+            redde;
+        }
+        lin->datum[lin->n] = ch;
+        lin->n++;
+    }
+}
+
+/* Declarationem in lineam unam: si '{' adest (definitio functionis,
+ * structura, enumeratio), caput ante '{' + " {...}" + cauda post
+ * '}' ultimum (nomen typedefi); aliter tota. Ultra tectum: "...". */
+interior vacuum
+_declarationem_contrahere (
+    ChordaAedificator* aed,
+               chorda  c)
+{
+    LegatiLinea lin;
+            s32 a = (s32)-I;
+            s32 b = (s32)-I;
+            i32 k;
+
+    lin.n         = ZEPHYRUM;
+    lin.spatium   = FALSUM;
+    lin.praecisa  = FALSUM;
+    per (k = ZEPHYRUM; k < c.mensura; k++)
+    {
+        si (c.datum[k] == (i8)'{' && a < ZEPHYRUM)
+        {
+            a = (s32)k;
+        }
+        si (c.datum[k] == (i8)'}')
+        {
+            b = (s32)k;
+        }
+    }
+    si (a >= ZEPHYRUM && b > a)
+    {
+        chorda pars;
+
+        pars          = c;
+        pars.mensura  = (i32)a;
+        _lineae_contracte_appendere(&lin, pars);
+        {
+            hic_manens character SEPARATOR[] = " {...} ";
+                          chorda sep;
+
+            sep.datum    = (i8*)SEPARATOR;
+            sep.mensura  = (i32)(magnitudo(SEPARATOR) - I);
+            _lineae_contracte_appendere(&lin, sep);
+        }
+        pars.datum    = c.datum + (i32)b + I;
+        pars.mensura  = c.mensura - (i32)b - I;
+        _lineae_contracte_appendere(&lin, pars);
+    }
+    alioquin
+    {
+        _lineae_contracte_appendere(&lin, c);
+    }
+    dum (lin.n > ZEPHYRUM && lin.datum[lin.n - I] == ' ')
+    {
+        lin.n--;
+    }
+    {
+        chorda linea;
+
+        linea.datum    = (i8*)lin.datum;
+        linea.mensura  = lin.n;
+        (vacuum)chorda_aedificator_appendere_chorda(aed, linea);
+    }
+    si (lin.praecisa)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(aed, " ...");
+    }
+}
+
+interior constans character*
+_genus_extenti_verbum (
+    constans LegatusFunctioExtentum* e)
+{
+    si (e->est_definitio)
+    {
+        redde "definitio";
+    }
+    commutatio (e->genus)
+    {
+        casus (s32)SYMBOLUM_FUNCTIO:   redde "functio";
+        casus (s32)SYMBOLUM_TYPEDEF:   redde "typus";
+        casus (s32)SYMBOLUM_VARIABILE: redde "variabile";
+        casus (s32)SYMBOLUM_CONSTANS:  redde "constans";
+        ordinarius:                    redde "symbolum";
+    }
+}
+
+interior vacuum
+_legati_caput (
+      Legatus* l,
+      Piscina* pn,
+    JsonValor* id,
+    JsonValor* argumenta)
+{
+    chorda via_arg = json_ad_chorda(json_objectum_capere(argumenta,
+        "via"));
+               chorda  via_sine;
+    ChordaAedificator* aed;
+            character  linea_b[LEGATUS_VIA_MAXIMA + LXIV];
+                  Xar* extenta;
+                  i32  n;
+                  i32  i;
+                  i32* ordo;
+                  i32  numerus_ostensarum = ZEPHYRUM;
+
+    si (!_legati_viam_normare(l, via_arg, &via_sine))
+    {
+        _mcp_textum_respondere(l, pn, id, chorda_ex_literis(
+            "argumentum 'via' pravum aut extra radicem", pn),
+            VERUM);
+        redde;
+    }
+    aed = chorda_aedificator_creare(pn, (memoriae_index)16384);
+    si (aed == NIHIL)
+    {
+        redde;
+    }
+    extenta = _extenta_viae(l, pn, via_sine);
+    si (extenta == NIHIL)
+    {
+        sprintf(linea_b, "caput %.*s: plagula non reperta aut non"
+            " parsabilis (via relativa radici?)",
+            (int)via_sine.mensura,
+            (constans character*)via_sine.datum);
+        _mcp_textum_respondere(l, pn, id,
+            chorda_ex_literis(linea_b, pn), VERUM);
+        redde;
+    }
+    n = xar_numerus(extenta);
+    /* ordo plagulae per lineam - extenta semantica ordinem suum
+     * ferunt; ordinatio insertionis (n parvum) */
+    ordo = (i32*)piscina_allocare(pn,
+        (memoriae_index)magnitudo(i32) * (memoriae_index)(n + I));
+    si (ordo == NIHIL)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans LegatusFunctioExtentum* e =
+            (constans LegatusFunctioExtentum*)xar_obtinere(extenta, i);
+        i32 j = i;
+
+        dum (j > ZEPHYRUM)
+        {
+            constans LegatusFunctioExtentum* prior =
+                (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
+                    ordo[j - I]);
+
+            /* linea prior aut eadem cum genere NON constantis:
+             * enumeratores (CONSTANS) eundem corpus quam typus
+             * enumerationis ferunt - typus primus, constantes
+             * deinde dedupe infra tacent */
+            si (   prior->linea_a < e->linea_a
+                || (   prior->linea_a == e->linea_a
+                    && (   prior->genus != (s32)SYMBOLUM_CONSTANS
+                        || e->genus == (s32)SYMBOLUM_CONSTANS)))
+            {
+                frange;
+            }
+            ordo[j] = ordo[j - I];
+            j--;
+        }
+        ordo[j] = i;
+    }
+    /* numerus declarationum UNICARUM (extenta eiusdem corporis =
+     * enumeratores) - transitus primus */
+    {
+        s32 initium_prius  = (s32)-I;
+        i32 unicae         = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            constans LegatusFunctioExtentum* e =
+                (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
+                    ordo[i]);
+
+            si (   e                 != NIHIL
+                && e->corpus_initium >= ZEPHYRUM
+                && e->corpus_initium != initium_prius)
+            {
+                unicae++;
+                initium_prius = e->corpus_initium;
+            }
+        }
+        sprintf(linea_b, "caput %.*s (%d declarationes gradus"
+            " supremi; macra exclusa - symbolum/corpus)\n",
+            (int)via_sine.mensura,
+            (constans character*)via_sine.datum, (int)unicae);
+        (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+    }
+    {
+    s32 initium_prius = (s32)-I;
+
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans LegatusFunctioExtentum* e =
+            (constans LegatusFunctioExtentum*)xar_obtinere(extenta,
+                ordo[i]);
+        chorda commentarium;
+        chorda corpus;
+
+        si (   e                 == NIHIL
+            || e->corpus_initium < ZEPHYRUM
+            || e->corpus_initium == initium_prius)
+        {
+            perge;
+        }
+        initium_prius = e->corpus_initium;
+        corpus = _extentum_viae_capere(l, pn, via_sine,
+            e->corpus_initium, e->corpus_finis);
+        si (corpus.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
+        commentarium = _extentum_viae_capere(l, pn, via_sine,
+            e->commentarium_initium, e->commentarium_finis);
+        si (commentarium.mensura > ZEPHYRUM)
+        {
+            _verbatim_appendere(aed, commentarium,
+                (i32)LEGATI_CAPITIS_COMMENTARII_LINEAE);
+        }
+        sprintf(linea_b, "L%u [%s] ", e->linea_a,
+            _genus_extenti_verbum(e));
+        (vacuum)chorda_aedificator_appendere_literis(aed, linea_b);
+        _declarationem_contrahere(aed, corpus);
+        (vacuum)chorda_aedificator_appendere_literis(aed, "\n");
+        numerus_ostensarum++;
+    }
+    }
+    si (numerus_ostensarum == ZEPHYRUM)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(aed,
+            "(nulla declaratio gradus supremi cum extento -"
+            " plagula vacua, macra sola, aut parsura fracta:"
+            " diagnostica {via} dicet)\n");
     }
     _mcp_textum_respondere(l, pn, id,
         chorda_aedificator_finire(aed), FALSUM);
@@ -7595,6 +7902,10 @@ _mcp_toolscall_tractare (Legatus* l, Piscina* pn, JsonValor* id,
         alioquin si (_methodus_est(titulus, "corpus"))
         {
             _legati_corpus(l, pn, id, argumenta);
+        }
+        alioquin si (_methodus_est(titulus, "caput"))
+        {
+            _legati_caput(l, pn, id, argumenta);
         }
         alioquin si (_methodus_est(titulus, "quaestio"))
         {
