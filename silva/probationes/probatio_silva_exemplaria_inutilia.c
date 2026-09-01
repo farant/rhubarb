@@ -15,14 +15,20 @@
  * attributa= (provenientia b/linea/columna/f in nodis captis
  * littera congruentiae non fit); (3) aliasa contenti '<<#id>>'
  * in liberis effectivis resoluta (communicatio lexematum =
- * repraesentatio). Documentum UNIFICATUM per axem descendentem
- * (2026-08-31 nocte: catena una '<**>' tres catenas formarum
- * substituit - formae OMNES declaratorum tectae constructione,
- * mensura EADEM 1/1 + 0/0); residuum MUTATUM: declaratio prima
- * scopi cuiusque FORMAE CUIUSVIS (ante: prima formae cuiusque) +
+ * repraesentatio). GENERATIO TERTIA documenti (2026-09-01):
+ * ordines scoporum = DEFINITIO-FUNCTIONIS (in C89 functiones non
+ * nidificant - classis ordinum duplicatorum quae versionem
+ * corporum-ut-scopi ad mortem memoriae duxit [arbor2_glr: ordines
+ * x maiores x subarbores = SIGKILL] structura linguae ipsius
+ * dissolvitur), retentio radicis ordinem PER DECLARATIONEM dat
+ * (residuum primae-per-scopum NECATUM - formae.c 4/4 exacte),
+ * descensus '<**>' formas declaratorum omnes tegit, SINE per
+ * _alicubi_congruere (exitus maturus - existentia sola;
+ * arbor2_glr 31s -> 8s). Residua nominata: declarator secundus
+ * declarationis unius ('int a, b;'), membra structurarum in
+ * functione definitarum (declaratio fluitans eas videret),
  * umbratio - in corpore hoc NON occurrunt, divergentes==0
- * pinnatum adventum clamabit. Pluralitas per-declarationem =
- * ianua retentionis radicis.
+ * pinnatum adventum clamabit.
  *
  * Oraculum = ANALYSATOR IPSE: recipe examinis verbatim (ut porta
  * lint II) - lexicon compositum + capita praebita + oraculum +
