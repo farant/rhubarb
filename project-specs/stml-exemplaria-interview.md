@@ -1435,6 +1435,13 @@ per-command narrowing (collides with bare-link laws — doc-wide
 first); INDAGO's own canon/vitium rows. Cost-benefit likely #1
 of all open doors.
 
+**[INDAGO BUILT same night — three-question decree (switch form
+= <INDAGO/> CAPS element; full stage story; PER uniform incl.
+in-relatum), all recommended ratified. Format live-verified then
+pinned exact (197/197). Vitium XXIV; canon row; DIRIBITIO
+conditions = verdict count only (scriptor suspended); unreached
+arms absent from trace. The stage-census door is CLOSED.]**
+
 Felt-evidence re-rank of known doors: guard-narrows-arm (the
 alarm doc contains its own filter TWICE — condition and arm);
 multi-binding (sibling plurality in one scope = dangling-ref

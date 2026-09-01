@@ -627,3 +627,43 @@ extension law → SINE → codex 69 gate) is COMPLETE. Open doors live
 in the interview file (tee, per-row routing, alternation,
 join-by-naming, document-scope SINE, uncorrelated subtract,
 COMMUTATIO est= migration, codices 83/86, petere-through-alias).
+
+## 2026-08-31 (night III) — INDAGO shipped: commands resolve into trace comments
+
+Fran's shape, built same evening: `<INDAGO/>` (bare CAPS element,
+document-declared — zero API change, erasable) makes every consumed
+command leave a TOMBSTONE COMMENT at its site. One scriptor per
+top-level command (`_mandatum_vestigatum` at the interception);
+inner links/arms append to the same comment. Format, live-verified
+before pinning:
+
+  <!--indago CATENA $improbata (radix); 1 EXEMPLAR punctum
+      radix->3 (capturae: i); 2 SINE probatio 3->1 (necati 2);
+      exitus 1-->
+  <!--indago DIRIBITIO $v (de $th 2): CASUS 1 conditio 0
+      praeteritum; ORDINARIUS SUMPTUM; bracchium; EXEMPLAR
+      punctum 2->2; exitus 2-->
+  <!--indago PER $improbata: ordines 1-->
+
+Decisions that shaped it: comment-not-element is LOAD-BEARING
+(traces must be invisible to the semantics they describe BY
+NATURE — the attributa= bug was the cost of visibility with
+forgotten blindness); PER traces uniformly, including inside
+<relatum> (bytes differ only when the document opts in — that IS
+the feature); DIRIBITIO conditions report the VERDICT COUNT only
+(scriptor suspended around the condition's _mandatum_exsequi —
+boolean tests don't narrate their stages; lift the chain out if
+you need its story); skipped/unreached arms are absent from the
+trace (evaluated and taken arms only). Counts were already
+computed at every stage — the whole feature is chorda_aedificator
+formatting plus one stml_commentum_creare per command.
+
+Vitium XXIV = INDAGO non nudum (any attribute / non-comment
+child). Under portatio INDAGO is inert like every command.
+Commands BEFORE the element in document order are untraced
+(contentum-supra law; put INDAGO first).
+
+197/197; all seven suites + canon + L1 + lint II + codex 69 gate
+green through the traced engine — zero behavior change without
+the element (the 189 pre-existing exact-output pins are the
+proof).

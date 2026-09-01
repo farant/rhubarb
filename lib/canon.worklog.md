@@ -558,3 +558,9 @@ element to whatever dialect owns the position (loud). TRANSPARENTIA
 now also accepts attributa= (attribute blindness for the match
 plane) — present-but-empty = machinae malformatum, mirroring the
 engine's XIX. probatio_canon 417/417 (SINE sane link + mala 14-17).
+
+## 2026-08-31 (night III) — INDAGO CAPS row
+
+INDAGO joined the CAPS machine list (invisible to every dialect);
+static form = bare element (any attribute or non-comment child =
+machinae malformatum). Sane doc carries <INDAGO/>; mala XVIII.

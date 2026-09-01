@@ -573,6 +573,20 @@ decision:
     pure-command SINE bodies, anchored SINE, petere-through-alias
     enumeration, second-same-shape-declaration rows (multi-binding
     enumeration).
+15. **INDAGO — BUILT 2026-08-31, same night** (Fran's shape from
+    the ergonomics simulatio; three-question decree, all
+    recommended ratified) — commands resolve into TRACE COMMENTS:
+    document-declared `<INDAGO/>` (bare CAPS element, erasable,
+    zero API surface); every consumed command leaves a tombstone
+    comment at its site with the full stage story (rows in->out,
+    capture names, SINE necati, DIRIBITIO per-arm verdicts +
+    SUMPTUM, exitus). Uniform law: PER traces too, inside
+    <relatum> — opt-in bytes differ by design. Conditions report
+    verdict counts only (scriptor suspended). Comment-not-element
+    is load-bearing: invisible BY NATURE to the semantics it
+    describes. Vitium XXIV; canon CAPS row; invariata walkers
+    extended. 197/197 + all gates green; zero change without the
+    element.
 
 ---
 
