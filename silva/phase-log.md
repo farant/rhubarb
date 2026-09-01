@@ -14551,3 +14551,19 @@ declarationem — formae.c 4/4 exacte) + SINE per _alicubi_congruere
 vertere`) and is file 156. All zeros held on first contact — the new
 file latinizes, parses, and judges PURE through the expanded sense —
 only the four count pins moved (563/564/570/571). No fontes touched.
+
+## Addendum 2026-09-01: the SAME pin, three sibling suites (audit find)
+
+The corpus-pin entry above was incomplete — the identical `155` pin
+lives in FOUR files, and only canon_corpus was updated. Found by the
+materia audit's full-suite verification run (49/53): four suites red,
+one cause, zero substance — `probatio_silva_arbor_plagula` (4 pins,
+round trip itself 156/156 OCTETIM with 0 divergent),
+`probatio_silva_exemplaria_lint` (lint sites 3912/3912
+oracle-agreed), `_obsoleta`, `_inutilia` (1 pin each + a comment).
+All seven pins now 156. No fontes touched.
+
+Lesson, again: a pinned count is DUPLICATED STATE — when it moves,
+grep the number across probationes/, don't fix the file that
+happened to fail first. Last session fixed the first file the gate
+named and stopped.

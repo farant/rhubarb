@@ -1323,3 +1323,90 @@ locum alienum poneret sine querela.
 PROXIMUM: T10 — regulae qualificatae et saepta. Porta tegumenti iam
 stat (T8) et oraculum separans quoque (hic), ergo T10 eas ADHIBEBIT,
 non aedificabit.
+
+========================================================================
+AUDITUM CONSILII ET OPERIS (2026-09-01) — post arcum stml, ante T10
+========================================================================
+
+Fran petiit: consilium et opus facta huc usque AUDIRE. Methodus:
+quattuor documenta orientationis frigide relecta, PORTAE OMNES ad
+HEAD recursae (prima verificatio plena post mutationes substrati
+stml 2026-09-01), gelatio contra git probata, artificia generata
+RE-DERIVATA et differentiata (numquam per mtime).
+
+STATUS AD HEAD, MENSURATUS HODIE
+  materia 5/5 · css 3/3 · silva 53/53 (post emendationem infra)
+  shim: octeti 348/348 · STML 347/347 · circuitus bis 347/347
+  Corpus shim CREVIT sponte (336->338 plagulae: stml_macros.c et
+  stml_html.c, ambae hac hebdomade natae, ambae IDEM primo tactu).
+  lexicon_c89 generatum RECENS: generator recursus, differentia
+  nulla contra silvam post-gelationem.
+
+DUO VITIA PORTARUM INVENTA ET EMENDATA (ambo extra materiam ipsam)
+
+1. QUATTUOR suites silvae rubrae ad HEAD - causa UNA, substantia
+   NULLA: pinnae corporis 155 in QUATTUOR plagulis, cum
+   lib/stml_html.c plagula 156 facta sit. Sessio prior plagulam
+   primam quam porta nominavit (canon_corpus) emendavit et stetit.
+   Septem pinnae nunc 156; suites 1/1 + 3/3. Lectio: numerus
+   pinctus est STATUS DUPLICATUS - cum movetur, numerum per
+   probationes/ TOTAS quaere.
+
+2. Porta shim NON CURRIBILIS ab 2026-08-31: obiecta aliena in
+   silva/build (amalgama_verificatio.o = silva tota, 359 duplicata;
+   instr_silva_formator.o) globum nexus fregerunt. Nemo eam inter
+   08-28 et hodie cucurrit, ergo fractura INVISIBILIS erat.
+   Exclusio ampliata (amalgama_verificatio + praefixum instr_).
+   Familia vitiorum portae, membrum VI: index nexus globo pastus
+   frangitur cum directorium commune obiectum novum accipit - et
+   porta quae non curritur de statu suo NIHIL dicit.
+
+INVENTA AUDITUS, DECISIONES FRANI EXSPECTANT
+
+A. PORTA PHASIS I: verba specis (par. X) et memoriae adhuc dicunt
+   "M1 subtree 281/281 per materiam, GO/NO-GO". Quod cucurrit est
+   substitutum honestum sed ALIUD: latius (338 plagulae, octeti +
+   STML + circuitus bis) et debilius GENERE (sine comparatore -
+   arbor_aequalitas NON portata; sine subarboribus arbitrariis).
+   RELATIO phasis I id candide dixit; spec et memoria non
+   emendatae. T8 casum primum mensuravit quem soli octeti videre
+   NON possunt (initium_lineae). Desideratum 01M1EZKKP0 conditum:
+   comparatorem portare ANTE T14.
+
+B. CONSILIUM CSS T10-T17: corpora taskorum STALA sub TRIBUS stratis
+   deviationis - typi silvae (SilvaNodus, silva_scribere_nodum) in
+   codice taskorum; gradus 1 taski X iam factus (porta tegumenti ad
+   T8 ante tempus); T11 gradus 3 signaturam impossibilem primam
+   nominat. css/CLAUDE.md monet, sed disciplina consilii-ut-fontis
+   dicit valores exacti in corpore taski vivunt - et hi falsi sunt.
+   Suadetur: T10-T17 re-scribere materia-nativa ANTE T10 (breve -
+   octo taski), aut ex spec + css/CLAUDE.md exsequi, non ex plano.
+
+C. GELATIO: 1373a3e8 (2026-08-31) 288 lineas ex silva_arbor.c
+   sustulit (promotio matcher exemplarium) - REFACTIO, non fixum
+   vitii, in zona gelata. Verificatum: extra subcopiam portatam,
+   nulla replicatio debita. Sed iudicium illud NUSQUAM scriptum
+   erat - habitus, non porta. Suadetur: omne commissum tangens
+   silva/fontes lineam unam iudicii replicationis in hoc
+   phase-log accipiat.
+
+D. SPEC par. X dimidium posterius iam non describit quod aedificatum
+   est: MateriaContextus (0.2) numquam exstitit - dissolutus in
+   consilium + uncos frontis + campos config; schema 5 vocaminum
+   facta est 7 (frons) + 3 (origo) = X unci; ambiguus optionalis
+   facta est mutatione codicis, non stratificatione. Correctiones
+   priores (2.2, 4.1, 0.1) in spec redierunt; posteriores in
+   phase-log solo vivunt. Suadetur: nota "ut-aedificatum" in par. X
+   quae ad phase-log ut testem operis monstrat.
+
+QUOD TENUIT - et auditum id dicere debet
+
+  M7 (tabula, numquam programma): ubique tenet. M8 (tenue): CSS
+  uncos NULLOS addidit; ambae mutationes materiae a CSS actae
+  (custodia speciei compressionis, contractus albi) praesumptiones
+  C89 REMOVERUNT, non commoda CSS addiderunt - cliens secundus iam
+  bis solvit ut probatio quam cliens primus esse non potest.
+  Disciplina assertionis rubrae (spina T9 incompleta ASSERITUR);
+  custodes derivae tabularum manu scriptarum plantati et arsi;
+  documenta CLAUDE.md ambo VERA et profunda - melior fons quam
+  spec ipsa pro statu currenti.

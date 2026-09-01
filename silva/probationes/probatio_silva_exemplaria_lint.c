@@ -812,7 +812,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_planum.catena_divergentes, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planum.invariata_violata, ZEPHYRUM);
 
-    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 155);
+    CREDO_AEQUALIS_I32 (census_latinum.plagulae, 156);
     CREDO_AEQUALIS_I32 (census_latinum.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinum.divergentes, ZEPHYRUM);

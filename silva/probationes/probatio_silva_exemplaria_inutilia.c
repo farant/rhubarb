@@ -742,7 +742,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_examinis.invariata_violata,
                         ZEPHYRUM);
 
-    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 155);
+    CREDO_AEQUALIS_I32 (census_bibliothecae.plagulae, 156);
     CREDO_AEQUALIS_I32 (census_bibliothecae.fracturae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.recusae, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_bibliothecae.excedentes, ZEPHYRUM);

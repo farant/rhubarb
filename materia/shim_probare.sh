@@ -15,8 +15,13 @@ RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD="$RADIX/materia/build"
 mkdir -p "$BUILD"
 
+# amalgama_verificatio.o = silva TOTA in obiecto uno (359 symbola
+# duplicata); instr_* = obiecta instrumentorum quae fontem suum
+# duplicant (instr_silva_formator vs silva_formator). Lista
+# exclusionis contra glob: obiectum alienum NOVUM in silva/build
+# portam frangit, non fallit.
 OBIECTA=$(ls "$RADIX"/silva/build/*.o 2>/dev/null \
-          | grep -v -E "/(fons_|nexus_|silva_amalgama\.o|apparatus\.o)")
+          | grep -v -E "/(fons_|nexus_|instr_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
 if [ -z "$OBIECTA" ]; then
     echo "DEEST: silva/build/*.o - curre ./silva/compile_probationes.sh primum" >&2
     exit 2
