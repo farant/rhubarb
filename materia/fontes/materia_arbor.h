@@ -439,4 +439,14 @@ materia_arbor_aequalis (
     MateriaArborComparatioModus  modus,
         MateriaArborDifferentia* differentia);
 
+/* Patres omnium filiorum interiorum ponere (ambulatio generalis).
+ * Lector eam ipse adhibet; parsatores linguarum eam post
+ * constructionem vocent ut politicae reconstructionis congruant -
+ * aliter comparator arbores parsatas contra lectas falso
+ * divergentes nuntiat (nodus/pater-nullitas). */
+vacuum
+materia_arbor_patres_figere (
+         Piscina* piscina,
+    MateriaNodus* radix);
+
 #endif /* MATERIA_ARBOR_H */

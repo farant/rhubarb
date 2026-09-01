@@ -1623,3 +1623,57 @@ fregit: numerator vivus, non vacuus.
 PROXIMUM: B6 - circuitus STML super corpus, comparator B1 ut
 oraculum secundum (classis quam octeti videre non possunt:
 migratio dominii triviorum).
+
+========================================================================
+B6 — CIRCUITUS STML + ORACULUM DUPLEX; '\r' IN SUBSTRATO. RELATIO
+(2026-09-01)
+========================================================================
+
+css 5/5 (probatio stml nova: 29 assertiones - XI casus inlinei +
+discrimen oraculorum + corpus VI plagularum, circuitus BIS +
+comparator + lectio->emissio). materia 6/6 · shim 348/348 (tres
+oraculi). Porta paritatis CSS ad HEAD tota.
+
+TRIA INVENTA, gradibus:
+
+ 1. PATER ITERUM (praedictum ab audito): parsator CSS patres non
+    ponebat, lector omnes ponit - comparator primo casu inlineo
+    arsit (nodus/pater-nullitas @ 0.0). Remedium SUBSTRATI:
+    materia_arbor_patres_figere EXPORTATA (ambulatio interna
+    lectoris publica facta), parsator CSS eam vocat. Idem remedium
+    quod conversor shim (B1) - politica reconstructionis UNA.
+
+ 2. PROBATIO IPSA FALSA: divisio sine linea nova omnia PRIORI dat,
+    ergo spatium caudale 'a{} ' ad '}' ligatur, non ad caudam -
+    versio prima probationis contrarium credidit. Mensura vicit
+    praesumptionem; probatio castigata directionem migrat inversam.
+
+ 3. '\r' IN TEXTU STML NON VIVIT - INVENTUM MAIUS. Duae plagulae
+    adversariae (CRLF ferentes) circuitum documentorum I/II
+    frangebant (delta II et I octeti). MENSURATUM per probam stml
+    directam: 'a\r\nb' crudum ut 'a\nb' redit - lector STML CRLF
+    ad LF normat, CRUDUS AN NON. Silva id sciebat pro TERMINATORE
+    suo (attributum booleanum 'crlf'); generibus VERBATIM positio
+    QUAEQUE opus est. REMEDIUM GENERALE in substrato: attributum
+    'cr' (offsets decimales in valore vero), textus SINE '\r'
+    scriptus, lector reinserit (_cr_exuere/_cr_induere, semitae
+    triviorum ET lexematum, scriptor ET lector). Attributum abest =
+    pretium nullum.
+
+    VITIUM LATENS SILVAE PAR NOMINATUM: commentum C89 CR ferens
+    circuitum STML silvae ipsius corrumperet - corpus id numquam
+    continuit (348/348 shim viridis id probat). Materia nunc
+    tractat quod silva tacite nequit; replicatio ad phasim V.
+
+DISCRIMEN ORACULORUM MENSURATUM, non assertum: trivium ex '}'.post
+in cauda.ante motum - octeti IDEM (memcmp), arbor DISPAR
+(comparator). Classis tota ob quam B1 portatus est, nunc pinna
+stans in probatione.
+
+CLIENS SECUNDUS ITERUM SOLVIT: quartum vitium substrati a CSS
+inventum (compressio-species T3, contractus albi T9, semita
+lexematis B6-initio, normatio CR B6) - quodque C89 structuraliter
+tangere non poterat.
+
+PROXIMUM: B7 (canon manu scriptum) sessione RECENTI - vide
+consilium B.

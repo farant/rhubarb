@@ -561,7 +561,7 @@ from bytes, and the document never carries stale offsets (positions law),
 so this is accepted, and STRUCTURALIS is the asserted mode. Say so in a
 comment; do not "fix" it by hand-carrying coordinates.
 
-- [ ] **Step 1: Write the failing gate — two cycles + comparator**
+- [x] **Step 1: Write the failing gate — two cycles + comparator**
 
 ```c
     scriptura_a = materia_arbor_scribere_nodum(piscina, radix, &consilium);
@@ -586,19 +586,19 @@ comment; do not "fix" it by hand-carrying coordinates.
     CREDO_VERUM (scriptura_a.textus.mensura > ZEPHYRUM);
 ```
 
-- [ ] **Step 2: Run and verify it fails** — `./css/compile_probationes.sh stml`
+- [x] **Step 2: Run and verify it fails** — `./css/compile_probationes.sh stml`
 
-- [ ] **Step 3: Fix what the refusals name** — writer refusals carry
+- [x] **Step 3: Fix what the refusals name** — writer refusals carry
   causes; fix the cause, never the assertion.
 
-- [ ] **Step 4: Extend over the whole B5 corpus**, beside the
+- [x] **Step 4: Extend over the whole B5 corpus**, beside the
   direct-emission gate — when one fails and the other passes, you know
   which half broke (the separating oracle earning its place). Self-
   measure: documents round-tripped == corpus size.
 
-- [ ] **Step 5: Run the whole suite** — exit 0.
+- [x] **Step 5: Run the whole suite** — exit 0.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add css/probationes/probatio_css_stml.c

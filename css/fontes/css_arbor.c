@@ -36,6 +36,7 @@
 #include "css_lexicon.h"
 #include "css_lexema.h"
 #include "css_registrum.h"
+#include "materia_arbor.h"
 #include "materia_lexicon.h"
 #include "materia_token.h"
 #include "xar.h"
@@ -1298,6 +1299,11 @@ css_arbor_parsare (
             frange;
         }
     }
+
+    /* Patres figere: politica reconstructionis materiae - lector
+     * patres omnes ponit, ergo parsator quoque (aliter comparator
+     * B1 falso divergeret: nodus/pater-nullitas). */
+    materia_arbor_patres_figere(piscina, plagula);
 
     /* CAUDA: lexema FINIS spatia caudalia plagulae ut 'ante' fert
      * (spec par. VII). Dominus unus servatus, nulla sectio nova
