@@ -15,6 +15,7 @@
 
 #include "stml_macros.h"
 #include "chorda_aedificator.h"
+#include "tabula_dispersa.h"
 
 /* Loculus declaratus: titulus (sine '?') + optionalis ('p="@p?"',
  * par. 6.2). Optionalis absens licite manet: NON_IMPLETUS eum
@@ -64,6 +65,17 @@ nomen structura {
      * exemplaribus nihil solvit */
                      Xar* relationes;     /* StmlExemplarRelatio */
                      Xar* transparentia;  /* chorda* (tagi internati) */
+    /* Caecitas attributorum (TRANSPARENTIA attributa= - decretum
+     * 2026-08-31): attributa formae his titulis constricta non
+     * sunt. Necessarium ponti SINE: nodi capti provenientiam
+     * ferunt (b/linea/columna/f) quae littera congruentiae fieret
+     * - 'identificator AD byte suum' quem usus numquam satisfacit. */
+                     Xar* transparentia_attributa;  /* chorda* */
+    /* Aliasa contenti '<#id>' (pigre ex radice expansa lecta):
+     * congruentia per repraesentationem videt - communicatio
+     * lexematum (bracchia ambigua, strata) contentum non mutat. */
+          TabulaDispersa* aliasa;
+                     b32  aliasa_constructa;
     /* Radix arboris expansae SUB CONSTRUCTIONE - nodus primus
      * creatus. Ambulatio ordine documenti aedificat, ergo arbor
      * partialis == 'contentum SUPRA' exacte: scopus exemplaris
@@ -1798,21 +1810,20 @@ _liberos_expandere (
  * ================================================== */
 
 interior b32
-_est_perspicuum (
-    StmlMacroContextus* ctx,
-       constans chorda* titulus)
+_titulus_in_copia (
+                Xar* copia,
+    constans chorda* titulus)
 {
     i32 i;
 
-    si (ctx->transparentia == NIHIL || titulus == NIHIL)
+    si (copia == NIHIL || titulus == NIHIL)
     {
         redde FALSUM;
     }
-    per (i = ZEPHYRUM; i < xar_numerus(ctx->transparentia); i++)
+    per (i = ZEPHYRUM; i < xar_numerus(copia); i++)
     {
         /* internati: aequalitas punctatoris */
-        si (*(chorda**)xar_obtinere(ctx->transparentia, i)
-                == titulus)
+        si (*(chorda**)xar_obtinere(copia, i) == titulus)
         {
             redde VERUM;
         }
@@ -1821,50 +1832,58 @@ _est_perspicuum (
 }
 
 interior b32
-_transparentiam_legere (
+_est_perspicuum (
     StmlMacroContextus* ctx,
-             StmlNodus* nodus)
+       constans chorda* titulus)
 {
-    chorda* tags;
-       i32  i;
-       i32  additi;
+    redde _titulus_in_copia(ctx->transparentia, titulus);
+}
 
-    tags = stml_attributum_capere(nodus, "tags");
-    si (tags == NIHIL || tags->mensura == ZEPHYRUM)
+interior b32
+_est_perspicuum_attributum (
+    StmlMacroContextus* ctx,
+       constans chorda* titulus)
+{
+    redde _titulus_in_copia(ctx->transparentia_attributa, titulus);
+}
+
+interior b32
+_titulos_internare (
+    StmlMacroContextus*  ctx,
+       constans chorda*  valor,
+                   Xar** copia,
+                   i32*  additi)
+{
+    i32 i;
+
+    si (*copia == NIHIL)
     {
-        _vitium_ponere(ctx, STML_EXPANSIO_TRANSPARENTIA_MALFORMATA,
-                       nodus, NIHIL, NIHIL);
-        redde FALSUM;
-    }
-    si (ctx->transparentia == NIHIL)
-    {
-        ctx->transparentia = xar_creare(ctx->piscina,
-                                        magnitudo(chorda*));
-        si (ctx->transparentia == NIHIL)
+        *copia = xar_creare(ctx->piscina, magnitudo(chorda*));
+        si (*copia == NIHIL)
         {
             redde FALSUM;
         }
     }
-    additi  = ZEPHYRUM;
-    i       = ZEPHYRUM;
-    dum (i < tags->mensura)
+    *additi  = ZEPHYRUM;
+    i        = ZEPHYRUM;
+    dum (i < valor->mensura)
     {
         i32 initium;
 
-        dum (   i < tags->mensura
-             && (   tags->datum[i] == (i8)' '
-                 || tags->datum[i] == (i8)'\t'
-                 || tags->datum[i] == (i8)'\n'
-                 || tags->datum[i] == (i8)'\r'))
+        dum (   i < valor->mensura
+             && (   valor->datum[i] == (i8)' '
+                 || valor->datum[i] == (i8)'\t'
+                 || valor->datum[i] == (i8)'\n'
+                 || valor->datum[i] == (i8)'\r'))
         {
             i++;
         }
         initium = i;
-        dum (   i < tags->mensura
-             && tags->datum[i] != (i8)' '
-             && tags->datum[i] != (i8)'\t'
-             && tags->datum[i] != (i8)'\n'
-             && tags->datum[i] != (i8)'\r')
+        dum (   i < valor->mensura
+             && valor->datum[i] != (i8)' '
+             && valor->datum[i] != (i8)'\t'
+             && valor->datum[i] != (i8)'\n'
+             && valor->datum[i] != (i8)'\r')
         {
             i++;
         }
@@ -1874,17 +1893,41 @@ _transparentiam_legere (
             chorda*  internatum;
             chorda** cella;
 
-            pars.datum    = tags->datum + initium;
+            pars.datum    = valor->datum + initium;
             pars.mensura  = i - initium;
             internatum    = chorda_internare(ctx->intern, pars);
-            cella         = (chorda**)xar_addere(ctx->transparentia);
+            cella         = (chorda**)xar_addere(*copia);
             si (internatum == NIHIL || cella == NIHIL)
             {
                 redde FALSUM;
             }
             *cella = internatum;
-            additi++;
+            (*additi)++;
         }
+    }
+    redde VERUM;
+}
+
+interior b32
+_transparentiam_legere (
+    StmlMacroContextus* ctx,
+             StmlNodus* nodus)
+{
+    chorda* tags;
+    chorda* attributa;
+       i32  additi;
+
+    tags = stml_attributum_capere(nodus, "tags");
+    si (tags == NIHIL || tags->mensura == ZEPHYRUM)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_TRANSPARENTIA_MALFORMATA,
+                       nodus, NIHIL, NIHIL);
+        redde FALSUM;
+    }
+    si (!_titulos_internare(ctx, tags, &ctx->transparentia,
+                            &additi))
+    {
+        redde FALSUM;
     }
     si (additi == ZEPHYRUM)
     {
@@ -1892,16 +1935,115 @@ _transparentiam_legere (
                        nodus, NIHIL, NIHIL);
         redde FALSUM;
     }
+    /* attributa= (optionale): caecitas attributorum - tituli hic
+     * scripti in formis littera congruentiae non fiunt (pons SINE
+     * nodos captos cum provenientia splicat) */
+    attributa = stml_attributum_capere(nodus, "attributa");
+    si (attributa != NIHIL)
+    {
+        si (!_titulos_internare(ctx, attributa,
+                &ctx->transparentia_attributa, &additi))
+        {
+            redde FALSUM;
+        }
+        si (additi == ZEPHYRUM)
+        {
+            _vitium_ponere(ctx,
+                           STML_EXPANSIO_TRANSPARENTIA_MALFORMATA,
+                           nodus, NIHIL, NIHIL);
+            redde FALSUM;
+        }
+    }
     redde VERUM;
 }
 
+/* Aliasa contenti colligere (pigre, semel per expansionem):
+ * fragmenta '<#id>' (sine '@' - spatium contenti) per arborem
+ * expansam, id -> nodus. Radix partialis sufficit: definitio
+ * SUPRA usum stat (lex stratorum eadem ac scopus exemplaris). */
+interior vacuum
+_aliasa_colligere (
+    StmlMacroContextus* ctx,
+             StmlNodus* nodus)
+{
+    i32 i;
+    i32 num;
+
+    si (nodus == NIHIL)
+    {
+        redde;
+    }
+    si (   nodus->genus                          == STML_NODUS_ELEMENTUM
+        && nodus->fragmentum
+        && nodus->fragmentum_id                  != NIHIL
+        && nodus->fragmentum_id->mensura > ZEPHYRUM
+        && nodus->fragmentum_id->datum[ZEPHYRUM] != (i8)'@')
+    {
+        (vacuum)tabula_dispersa_inserere(ctx->aliasa,
+            *nodus->fragmentum_id, nodus);
+    }
+    si (nodus->liberi == NIHIL)
+    {
+        redde;
+    }
+    num = xar_numerus(nodus->liberi);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        _aliasa_colligere(ctx,
+            *(StmlNodus**)xar_obtinere(nodus->liberi, i));
+    }
+}
+
+interior StmlNodus*
+_alias_resolvere (
+    StmlMacroContextus* ctx,
+    constans StmlNodus* transclusio)
+{
+    chorda  id;
+    vacuum* valor;
+
+    si (   transclusio->valor                  == NIHIL
+        || transclusio->valor->mensura         <= I
+        || transclusio->valor->datum[ZEPHYRUM] != (i8)'#'
+        || transclusio->valor->datum[I]        == (i8)'@')
+    {
+        redde NIHIL;  /* vocatio templi aut malformata - opaca */
+    }
+    si (!ctx->aliasa_constructa)
+    {
+        ctx->aliasa_constructa = VERUM;
+        ctx->aliasa = tabula_dispersa_creare_chorda(ctx->piscina,
+                                                    DXII);
+        si (ctx->aliasa != NIHIL)
+        {
+            _aliasa_colligere(ctx, ctx->radix_expansa);
+        }
+    }
+    si (ctx->aliasa == NIHIL)
+    {
+        redde NIHIL;
+    }
+    id.datum    = transclusio->valor->datum + I;
+    id.mensura  = transclusio->valor->mensura - I;
+    valor       = NIHIL;
+    si (!tabula_dispersa_invenire(ctx->aliasa, id, &valor))
+    {
+        redde NIHIL;
+    }
+    redde (StmlNodus*)valor;
+}
+
 /* Liberi EFFECTIVI candidati (visio contenti - vide caput
- * sectionis). Fragmenta contenti recursione dissolvuntur. */
+ * sectionis). Fragmenta contenti recursione dissolvuntur; aliasa
+ * contenti '<<#id>>' RESOLVUNTUR (communicatio lexematum =
+ * repraesentatio, non contentum - decretum 2026-08-31; cap
+ * profunditatis contra circulos, superatio = opaca tacite). */
 interior b32
 _liberi_effectivi (
     StmlMacroContextus* ctx,
     constans StmlNodus* nodus,
-                   Xar* exitus)
+                   Xar* exitus,
+                   i32  profunditas)
 {
     i32 i;
     i32 num;
@@ -1917,10 +2059,22 @@ _liberi_effectivi (
             *(StmlNodus**)xar_obtinere(nodus->liberi, i);
         StmlNodus** cella;
 
-        si (   l        == NIHIL
-            || l->genus == STML_NODUS_COMMENTUM
-            || l->genus == STML_NODUS_TRANSCLUSIO)
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
         {
+            perge;
+        }
+        si (l->genus == STML_NODUS_TRANSCLUSIO)
+        {
+            StmlNodus* contentum;
+
+            contentum = profunditas < XVI
+                      ? _alias_resolvere(ctx, l) : NIHIL;
+            si (   contentum != NIHIL
+                && !_liberi_effectivi(ctx, contentum, exitus,
+                                      profunditas + I))
+            {
+                redde FALSUM;
+            }
             perge;
         }
         si (l->genus == STML_NODUS_ELEMENTUM)
@@ -1937,7 +2091,8 @@ _liberi_effectivi (
                 {
                     perge;  /* spatium templi opacum */
                 }
-                si (!_liberi_effectivi(ctx, l, exitus))
+                si (!_liberi_effectivi(ctx, l, exitus,
+                                       profunditas))
                 {
                     redde FALSUM;
                 }
@@ -2049,6 +2204,7 @@ _laxa_liberos_congruere (
                    Xar* ligamina)
 {
     Xar* effectivi;
+    Xar* effectivi_formae;
     i32  pi;
     i32  ci;
     i32  pnum;
@@ -2059,19 +2215,29 @@ _laxa_liberos_congruere (
     {
         redde VERUM;  /* nihil scriptum = nihil requisitum */
     }
-    effectivi = xar_creare(ctx->piscina, magnitudo(StmlNodus*));
-    si (   effectivi == NIHIL
-        || !_liberi_effectivi(ctx, candidatus, effectivi))
+    effectivi        = xar_creare(ctx->piscina,
+                                  magnitudo(StmlNodus*));
+    effectivi_formae = xar_creare(ctx->piscina,
+                                  magnitudo(StmlNodus*));
+    si (   effectivi        == NIHIL
+        || effectivi_formae == NIHIL
+        || !_liberi_effectivi(ctx, candidatus, effectivi, ZEPHYRUM)
+        || !_liberi_effectivi(ctx, forma, effectivi_formae,
+                              ZEPHYRUM))
     {
         redde FALSUM;
     }
-    pnum  = xar_numerus(forma->liberi);
+    /* caecitas SYMMETRICA: perspicua/trivia in FORMA quoque
+     * cadunt - forma ex captura splicata (pons SINE) trivia fert
+     * quae candidatus effectivus numquam praebet; asymmetria =
+     * congruentia numquam possibilis, silentio */
+    pnum  = xar_numerus(effectivi_formae);
     cnum  = xar_numerus(effectivi);
     ci    = ZEPHYRUM;
     per (pi = ZEPHYRUM; pi < pnum; pi++)
     {
         StmlNodus* pf =
-            *(StmlNodus**)xar_obtinere(forma->liberi, pi);
+            *(StmlNodus**)xar_obtinere(effectivi_formae, pi);
               b32 congruit;
 
         si (pf == NIHIL || pf->genus == STML_NODUS_COMMENTUM)
@@ -2175,6 +2341,12 @@ _laxa_congruere (
             StmlAttributum* ca;
 
             si (fa == NIHIL || fa->titulus == NIHIL)
+            {
+                perge;
+            }
+            /* caecitas attributorum (TRANSPARENTIA attributa=):
+             * provenientia in formis splicatis littera non fit */
+            si (_est_perspicuum_attributum(ctx, fa->titulus))
             {
                 perge;
             }
@@ -3919,9 +4091,12 @@ stml_expandere (
     ctx.resultus    = &resultus;
     ctx.relationes  = NIHIL;   /* pigre - documentum sine
                                    * exemplaribus nihil solvit */
-    ctx.transparentia  = NIHIL;
-    ctx.radix_expansa  = NIHIL;
-    ctx.applicatio     = ZEPHYRUM;
+    ctx.transparentia            = NIHIL;
+    ctx.transparentia_attributa  = NIHIL;
+    ctx.aliasa                   = NIHIL;
+    ctx.aliasa_constructa        = FALSUM;
+    ctx.radix_expansa            = NIHIL;
+    ctx.applicatio               = ZEPHYRUM;
     si (ctx.definitiones == NIHIL)
     {
         redde resultus;

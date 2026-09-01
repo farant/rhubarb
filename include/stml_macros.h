@@ -88,7 +88,9 @@ nomen enumeratio {
     /* relatio output= quam nihil inferius consumit (codex mortuus;
      * custos finis - ambulatio pergit, successus cadit) */
     STML_EXPANSIO_EXITUS_NON_CONSUMPTUS    = XVIII,
-    /* TRANSPARENTIA sine tags= aut tags vacuis */
+    /* TRANSPARENTIA sine tags= aut tags vacuis; attributa=
+     * (caecitas attributorum - tituli formae littera congruentiae
+     * non facti, decretum 2026-08-31) praesens sed vacuum */
     STML_EXPANSIO_TRANSPARENTIA_MALFORMATA = XIX,
     /* CATENA malformata: adsignatio output gemina, de= sine '$',
      * modus=/ancorata= in involucro (gradibus pertinent), catena

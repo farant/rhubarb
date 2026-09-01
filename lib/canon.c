@@ -2863,9 +2863,11 @@ _caps_iudicare (
         }
         redde;
     }
-    /* TRANSPARENTIA: tags= praesens et non-vacuum */
+    /* TRANSPARENTIA: tags= praesens et non-vacuum; attributa=
+     * (caecitas attributorum) optionale sed non-vacuum */
     {
         chorda* tags;
+        chorda* attributa;
            b32  verbum;
            i32  i;
 
@@ -2889,6 +2891,28 @@ _caps_iudicare (
         {
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
                           n->titulus, tags, ZEPHYRUM, ZEPHYRUM);
+        }
+        attributa = stml_attributum_capere(n, "attributa");
+        si (attributa != NIHIL)
+        {
+            verbum = FALSUM;
+            per (i = ZEPHYRUM; i < attributa->mensura; i++)
+            {
+                character c = (character)attributa->datum[i];
+
+                si (   c != ' ' && c != '\t' && c != '\n'
+                    && c != '\r')
+                {
+                    verbum = VERUM;
+                    frange;
+                }
+            }
+            si (!verbum)
+            {
+                vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM,
+                              n, n->titulus, attributa, ZEPHYRUM,
+                              ZEPHYRUM);
+            }
         }
     }
 }

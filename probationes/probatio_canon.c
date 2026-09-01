@@ -2600,7 +2600,7 @@ principale (vacuum)
 
             /* malformata: quodque vitium UNUM XXIII */
             {
-                constans character* mala[XVII];
+                constans character* mala[XVIII];
                                i32  m;
 
                 mala[0] = "<EXEMPLAR><s/></EXEMPLAR>";
@@ -2647,7 +2647,10 @@ principale (vacuum)
                 mala[16] = "<CATENA output=\"$c\">"
                            "<EXEMPLAR><s/></EXEMPLAR>"
                            "<SINE><q/><r/></SINE></CATENA>";
-                per (m = ZEPHYRUM; m < XVII; m++)
+                /* attributa= vacuum (caecitas attributorum) */
+                mala[17] = "<TRANSPARENTIA tags=\"t\""
+                           " attributa=\" \"/>";
+                per (m = ZEPHYRUM; m < XVIII; m++)
                 {
                     vitia = iudicare_literis(c, mala[m], piscina,
                                              intern);
