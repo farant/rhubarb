@@ -492,6 +492,55 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: piscina_numerus_alveorum / _allocationum (2026-09-02:
+     * instrumentum computus - imago memoriae parseris)
+     * ======================================================== */
+
+    {
+         Piscina* p_num;
+             i32  i;
+
+        imprimere("\n--- Probans numerus_alveorum / numerus_allocationum ---\n");
+        p_num = piscina_generare_dynamicum("probatio_numeri", CCLVI);
+        CREDO_NON_NIHIL (p_num);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_alveorum(p_num), I);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p_num),
+            ZEPHYRUM);
+
+        /* XL allocationes C octetorum in alveo CCLVI: alvei crescunt,
+         * numerus allocationum exacte XL */
+        per (i = ZEPHYRUM; i < XL; i++)
+        {
+            CREDO_NON_NIHIL (piscina_allocare(p_num, C));
+        }
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p_num),
+            XL);
+        CREDO_VERUM ((i32)piscina_numerus_alveorum(p_num) >= II);
+        /* commissum = usus + inutilis, per alveos omnes */
+        CREDO_VERUM (piscina_summa_usus(p_num)
+            >= (memoriae_index)(XL * C));
+
+        /* reficere usum minuit, historiam allocationum non */
+        piscina_vacare(p_num);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p_num),
+            XL);
+
+        /* allocatio fracta (piscina fixa) NON numeratur */
+        piscina_destruere(p_num);
+        p_num =
+            piscina_generare_certae_magnitudinis("probatio_numeri_fixa",
+            CXXVIII);
+        CREDO_NON_NIHIL (p_num);
+        CREDO_NON_NIHIL (piscina_conari_allocare(p_num, LXIV));
+        CREDO_NIHIL     (piscina_conari_allocare(p_num, CCLVI));
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p_num),
+            I);
+        CREDO_AEQUALIS_I32 ((i32)piscina_numerus_alveorum(p_num), I);
+        piscina_destruere(p_num);
+    }
+
+
+    /* ========================================================
      * Compendium
      * ======================================================== */
 

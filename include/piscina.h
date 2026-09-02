@@ -99,6 +99,21 @@ memoriae_index
 piscina_summa_apex_usus (
         constans Piscina* piscina);
 
+/* Numerus alveorum (alvei omnes, ab primo). Cum summa_usus +
+ * summa_inutilis_allocatus imaginem memoriae dat: quot alvei,
+ * quantum commissum (usus + inutilis), quantum otiosum. */
+memoriae_index
+piscina_numerus_alveorum (
+        constans Piscina* piscina);
+
+/* Numerus allocationum successarum ab ortu piscinae (reficere eum
+ * non minuit - historia est, non status). Instrumentis: piscina
+ * allocationibus, non octetis, ligata est (RP 2.4 - Xar per
+ * lexema quattuor), ergo numerus ipse mensura celeritatis est. */
+memoriae_index
+piscina_numerus_allocationum (
+        constans Piscina* piscina);
+
 
 /* ===============================================
  * Notatio - mark/reset pattern

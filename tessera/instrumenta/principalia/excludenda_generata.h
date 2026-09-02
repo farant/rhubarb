@@ -12,6 +12,8 @@ interior constans character* constans EXCLUDENDA_PISCINAE[] = {
     "piscina_conari_allocare_ordinatum",
     "piscina_generare_certae_magnitudinis",
     "piscina_notare",
+    "piscina_numerus_allocationum",
+    "piscina_numerus_alveorum",
     "piscina_potesne_allocare",
     "piscina_reficere",
     "piscina_reliqua_antequam_cresca_alvei",

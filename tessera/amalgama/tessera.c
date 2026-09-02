@@ -1363,6 +1363,7 @@ structura TesseraPiscina {
          character* titulus;
                b32  est_dynamicum;
     memoriae_index  maximus_usus;
+    memoriae_index  numerus_allocationum;   /* historia, numquam minuitur */
 };
 
 
@@ -1460,7 +1461,8 @@ _allocare_interna (
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
-    ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
+    ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
+        ordinatio);
     necessaria = ordinatus_offset + mensura;
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
@@ -1470,7 +1472,8 @@ _allocare_interna (
         {
             /* Transire ad alveum sequentem */
             piscina->nunc = piscina->nunc->sequens;
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
+            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
+                ordinatio);
             necessaria = ordinatus_offset + mensura;
         }
         alioquin si (piscina->est_dynamicum)
@@ -1478,13 +1481,15 @@ _allocare_interna (
             Alveus* alveus_novum;
 
             /* Generare alveum novum */
-            memoriae_index capacitas_nova = piscina->mensura_alvei_initia * II;
+            memoriae_index capacitas_nova =
+                piscina->mensura_alvei_initia * II;
 
             /* Si petitio magnitudinem duplicatam superat, allocare 
              * petitionem + sequentem, et mensuram */
             si (necessaria > capacitas_nova)
             {
-                capacitas_nova = necessaria + piscina->mensura_alvei_initia;
+                capacitas_nova = necessaria
+                    + piscina->mensura_alvei_initia;
                 piscina->mensura_alvei_initia = capacitas_nova;
             }
 
@@ -1503,7 +1508,8 @@ _allocare_interna (
             piscina->nunc->sequens  = alveus_novum;
             piscina->nunc           = alveus_novum;
 
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset, ordinatio);
+            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
+                ordinatio);
             necessaria = ordinatus_offset + mensura;
 
             _debug_imprimere(
@@ -1540,8 +1546,10 @@ _allocare_interna (
     {
         piscina->maximus_usus = summa_nunc;
     }
+    piscina->numerus_allocationum += I;
 
-    _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo", "allocare", mensura);
+    _debug_imprimere(piscina->titulus ? piscina->titulus : "nemo",
+        "allocare", mensura);
 
     redde ptr;
 }
@@ -1573,11 +1581,13 @@ tessera_piscina_generare_dynamicum (
     piscina->mensura_alvei_initia  = mensura_alvei_initia;
     piscina->est_dynamicum         = VERUM;
     piscina->maximus_usus          = ZEPHYRUM;
+    piscina->numerus_allocationum  = ZEPHYRUM;
 
     si (piscinae_titulum)
     {
         memoriae_index mensura_tituli = strlen(piscinae_titulum);
-        piscina->titulus = (character*)memoriae_allocare(mensura_tituli + I);
+        piscina->titulus = (character*)memoriae_allocare(mensura_tituli
+            + I);
 
         si (piscina->titulus)
         {
