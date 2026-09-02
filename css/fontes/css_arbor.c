@@ -1228,13 +1228,15 @@ css_arbor_parsare (
     constans character* fons,
                    i32  mensura)
 {
-              CssParsura p;
-      MateriaLexIudicium iudicium;
-                    Xar* lexemata;
+              CssParsura  p;
+      MateriaLexIudicium  iudicium;
+                     Xar* lexemata;
            MateriaNodus* plagula;
            MateriaToken* token;
 
-    si (piscina == NIHIL) { redde NIHIL; }
+    si (piscina == NIHIL)
+    { redde NIHIL;
+    }
 
     /* ZEPHYRUM PRIMUM (vide css_ligator_incipere pro ratione). */
     memset(&p, ZEPHYRUM, magnitudo(CssParsura));
@@ -1250,14 +1252,20 @@ css_arbor_parsare (
     }
 
     lexemata = css_lexare(piscina, fons, mensura);
-    si (lexemata == NIHIL) { redde NIHIL; }
+    si (lexemata == NIHIL)
+    { redde NIHIL;
+    }
     p.plana = css_adaptare(piscina, lexemata, NIHIL);
-    si (p.plana == NIHIL) { redde NIHIL; }
+    si (p.plana == NIHIL)
+    { redde NIHIL;
+    }
     css_ligator_incipere(&p.ligator, piscina, &p.lexicon);
 
     plagula = materia_nodus_creare(piscina, (s32)CSS_GENUS_PLAGULA,
         (i32)II);
-    si (plagula == NIHIL) { redde NIHIL; }
+    si (plagula == NIHIL)
+    { redde NIHIL;
+    }
 
     /* LISTA VACUA PONITUR CONSULTO. Locus non positus VALOR_NIHIL
      * manet, quem uterque scriptor TACITE OMITTIT
@@ -1281,8 +1289,12 @@ css_arbor_parsare (
         MateriaNodus* regula;
 
         token = _significans_proximum(&p);
-        si (token == NIHIL) { redde NIHIL; }
-        si (_finis_est(&p, token)) { frange; }
+        si (token == NIHIL)
+        { redde NIHIL;
+        }
+        si (_finis_est(&p, token))
+        { frange;
+        }
 
         si (token->genus == (s32)CSS_LEX_APUD_VERBUM)
         {
@@ -1302,7 +1314,9 @@ css_arbor_parsare (
         {
             regula = _regulam_qualificatam_consumere(&p, token);
         }
-        si (regula == NIHIL) { redde NIHIL; }
+        si (regula == NIHIL)
+        { redde NIHIL;
+        }
         si (!materia_nodus_appendere(piscina, plagula,
                 (i32)CSS_PLAGULA_REGULAE, materia_valor_nodus(regula),
                 MATERIA_LOCUS_LISTA_NODUS))

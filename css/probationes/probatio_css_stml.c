@@ -138,7 +138,8 @@ _circuitum_probare (
     s2 = materia_arbor_scribere_nodum(piscina, lecta, consilium);
     si (!s2.successus)
     {
-        imprimere("    (scriptura II: %s)\n", s2.causa ? s2.causa : "-");
+        imprimere("    (scriptura II: %s)\n",
+            s2.causa ? s2.causa : "-");
         redde FALSUM;
     }
     si (   s1.textus.mensura != s2.textus.mensura

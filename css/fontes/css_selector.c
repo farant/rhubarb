@@ -79,7 +79,7 @@ interior MateriaToken*
 _folium (
     constans MateriaNodus* n)
 {
-    si (   n                               == NIHIL
+    si (   n == NIHIL
         || n->genus != (s32)CSS_GENUS_LEXEMA_SERVATUM
         || n->loci[CSS_SERVATUM_TOK].genus != MATERIA_VALOR_TOKEN)
     {

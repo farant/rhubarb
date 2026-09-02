@@ -44,30 +44,38 @@ nomen enumeratio {
  * in fractura), et 'tokens' plana per punctatorem exitus. */
 hic_manens Xar*
 _parare (
-                       Piscina* piscina,
-    constans MateriaLexiconRatum* lexicon,
-            constans character* fons,
-                            i32  mensura,
-                        Regimen  regimen,
-                           Xar** plana_exitus)
+                         Piscina*  piscina,
+    constans MateriaLexiconRatum*  lexicon,
+              constans character*  fons,
+                             i32   mensura,
+                         Regimen   regimen,
+                             Xar** plana_exitus)
 {
-    Xar* lexemata;
-    Xar* plana;
-    Xar* significantia;
-    CssLigator ligator;
-    i32 i;
-    i32 numerus;
+           Xar* lexemata;
+           Xar* plana;
+           Xar* significantia;
+    CssLigator  ligator;
+           i32  i;
+           i32  numerus;
 
     lexemata = css_lexare(piscina, fons, mensura);
-    si (lexemata == NIHIL) { redde NIHIL; }
+    si (lexemata == NIHIL)
+    { redde NIHIL;
+    }
 
     plana = css_adaptare(piscina, lexemata, &FORMA);
-    si (plana == NIHIL) { redde NIHIL; }
-    si (plana_exitus != NIHIL) { *plana_exitus = plana; }
+    si (plana == NIHIL)
+    { redde NIHIL;
+    }
+    si (plana_exitus != NIHIL)
+    { *plana_exitus = plana;
+    }
 
     css_ligator_incipere(&ligator, piscina, lexicon);
     significantia = xar_creare(piscina, magnitudo(MateriaToken*));
-    si (significantia == NIHIL) { redde NIHIL; }
+    si (significantia == NIHIL)
+    { redde NIHIL;
+    }
 
     numerus = xar_numerus(plana);
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -76,11 +84,12 @@ _parare (
         b32 trivium_est;
 
         token = *(MateriaToken**)xar_obtinere(plana, i);
-        trivium_est = materia_lexicon_trivium_est(lexicon, token->genus);
+        trivium_est = materia_lexicon_trivium_est(lexicon,
+            token->genus);
 
         /* REGIMEN CONTENTUM: spatia significantia fiunt, commentaria
          * trivia manent. Parsator id intra praeludia et valores agit. */
-        si (regimen == REGIMEN_CONTENTUM
+        si (   regimen == REGIMEN_CONTENTUM
             && materia_lexicon_munus(lexicon, token->genus)
                    == MATERIA_MUNUS_SPATIUM)
         {
@@ -89,14 +98,20 @@ _parare (
 
         si (trivium_est)
         {
-            si (!css_ligator_cumulare(&ligator, token)) { redde NIHIL; }
+            si (!css_ligator_cumulare(&ligator, token))
+            { redde NIHIL;
+            }
         }
         alioquin
         {
             MateriaToken** locus;
-            si (!css_ligator_solvere(&ligator, token)) { redde NIHIL; }
+            si (!css_ligator_solvere(&ligator, token))
+            { redde NIHIL;
+            }
             locus = (MateriaToken**)xar_addere(significantia);
-            si (locus == NIHIL) { redde NIHIL; }
+            si (locus == NIHIL)
+            { redde NIHIL;
+            }
             *locus = token;
         }
     }
@@ -108,11 +123,11 @@ _parare (
  * offset, ab octeto ZEPHYRUM ad mensuram. */
 hic_manens b32
 _tegumentum_probare (
-                       Piscina* piscina,
+                         Piscina* piscina,
     constans MateriaLexiconRatum* lexicon,
-            constans character* fons,
-                            i32  mensura,
-                        Regimen  regimen)
+              constans character* fons,
+                             i32  mensura,
+                         Regimen  regimen)
 {
     Xar* significantia;
     s32  exspectatus = ZEPHYRUM;
@@ -121,7 +136,9 @@ _tegumentum_probare (
 
     significantia = _parare(piscina, lexicon, fons, mensura, regimen,
         NIHIL);
-    si (significantia == NIHIL) { redde FALSUM; }
+    si (significantia == NIHIL)
+    { redde FALSUM;
+    }
 
     numerus = xar_numerus(significantia);
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -134,15 +151,19 @@ _tegumentum_probare (
         per (j = ZEPHYRUM; j < token->numerus_ante; j++)
         {
             si (token->spatia_ante[j]->byte_offset != exspectatus)
-            { redde FALSUM; }
+            { redde FALSUM;
+            }
             exspectatus += (s32)token->spatia_ante[j]->valor.mensura;
         }
-        si (token->byte_offset != exspectatus) { redde FALSUM; }
+        si (token->byte_offset != exspectatus)
+        { redde FALSUM;
+        }
         exspectatus += (s32)token->valor.mensura;
         per (j = ZEPHYRUM; j < token->numerus_post; j++)
         {
             si (token->spatia_post[j]->byte_offset != exspectatus)
-            { redde FALSUM; }
+            { redde FALSUM;
+            }
             exspectatus += (s32)token->spatia_post[j]->valor.mensura;
         }
     }
@@ -163,32 +184,40 @@ _plagulam_legere (
     size_t lecti;
 
     f = fopen(via, "rb");
-    si (f == NIHIL) { redde NIHIL; }
-    si (fseek(f, 0L, SEEK_END) != ZEPHYRUM) { fclose(f); redde NIHIL; }
+    si (f == NIHIL)
+    { redde NIHIL;
+    }
+    si (fseek(f, 0L, SEEK_END) != ZEPHYRUM)
+    { fclose(f); redde NIHIL;
+    }
     longitudo = ftell(f);
-    si (longitudo < 0L) { fclose(f); redde NIHIL; }
+    si (longitudo < 0L)
+    { fclose(f); redde NIHIL;
+    }
     rewind(f);
 
     memoria = (character*)piscina_allocare(piscina,
         (memoriae_index)longitudo + I);
     lecti = fread(memoria, I, (size_t)longitudo, f);
     fclose(f);
-    si (lecti != (size_t)longitudo) { redde NIHIL; }
+    si (lecti != (size_t)longitudo)
+    { redde NIHIL;
+    }
 
     *mensura = (i32)longitudo;
     redde memoria;
 }
 
-
 integer
 principale (vacuum)
 {
-    Piscina* piscina;
-    MateriaLexiconRatum ratum;
-    MateriaLexIudicium iudicium;
-    b32 praeteritus;
+                Piscina* piscina;
+    MateriaLexiconRatum  ratum;
+     MateriaLexIudicium  iudicium;
+                    b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_css_adaptare", 65536);
+    piscina = piscina_generare_dynamicum("probatio_css_adaptare",
+        65536);
     credo_aperire(piscina);
 
     si (!materia_lexicon_ratum_facere(&ratum, &CSS_LEXICON, &iudicium))
@@ -202,12 +231,13 @@ principale (vacuum)
     /* ========================================================
      * PROBARE: adaptatio UNUM PRO UNO
      * ======================================================== */
+
     {
-        constans character* fons = "a { color : red }";
-        i32 mensura = (i32)strlen(fons);
-        Xar* lexemata;
-        Xar* plana;
-        i32 i;
+        constans character* fons     = "a { color : red }";
+                       i32  mensura  = (i32)strlen(fons);
+                       Xar* lexemata;
+                       Xar* plana;
+                       i32  i;
 
         imprimere("\n--- Probans adaptationem unum-pro-uno ---\n");
 
@@ -227,17 +257,19 @@ principale (vacuum)
             constans CssLexema* lexema;
             MateriaToken* token;
 
-            lexema = (constans CssLexema*)xar_obtinere(lexemata, i);
-            token  = *(MateriaToken**)xar_obtinere(plana, i);
+            lexema  = (constans CssLexema*)xar_obtinere(lexemata, i);
+            token   = *(MateriaToken**)xar_obtinere(plana, i);
 
             CREDO_AEQUALIS_S32 (token->genus, (s32)lexema->genus);
-            CREDO_AEQUALIS_S32 (token->byte_offset, (s32)lexema->offset);
+            CREDO_AEQUALIS_S32 (token->byte_offset,
+                (s32)lexema->offset);
             CREDO_AEQUALIS_I32 (token->linea, lexema->linea);
             CREDO_AEQUALIS_I32 (token->columna, lexema->columna);
             CREDO_AEQUALIS_I32 (token->valor.mensura,
                 lexema->valor.mensura);
             /* Valor in FONTEM spectat - idem punctator, non copia */
-            CREDO_AEQUALIS_PTR (token->valor.datum, lexema->valor.datum);
+            CREDO_AEQUALIS_PTR (token->valor.datum,
+                lexema->valor.datum);
             /* fons unus (spec par. II) */
             CREDO_AEQUALIS_S32 (token->fons_index, ZEPHYRUM);
 
@@ -254,6 +286,7 @@ principale (vacuum)
     /* ========================================================
      * PROBARE: regula divisionis, omnes rami
      * ======================================================== */
+
     {
         Xar* significantia;
         MateriaToken* t;
@@ -388,11 +421,11 @@ principale (vacuum)
             constans character* fons =
                 "a /*a*/ /*b*/ /*c*/ /*d*/ /*e*/ /*f*/ /*g*/ /*h*/"
                 " /*i*/ /*j*/ /*k*/ b{}";
-            Xar* plana;
-            CssLigator ligator;
-            MateriaToken* ultimum_trivium = NIHIL;
-            MateriaToken* significans = NIHIL;
-            i32 i;
+                     Xar* plana;
+              CssLigator  ligator;
+            MateriaToken* ultimum_trivium  = NIHIL;
+            MateriaToken* significans      = NIHIL;
+                     i32  i;
 
             plana = css_adaptare(piscina,
                 css_lexare(piscina, fons, (i32)strlen(fons)), &FORMA);
@@ -408,9 +441,12 @@ principale (vacuum)
                     CREDO_VERUM (css_ligator_cumulare(&ligator, token));
                     ultimum_trivium = token;
                     /* DISIUNCTOR: allocatio aliena inter elementa */
-                    (vacuum)piscina_allocare(piscina, (memoriae_index)LXIV);
+                    (vacuum)piscina_allocare(piscina,
+                        (memoriae_index)LXIV);
                 }
-                alioquin { significans = token; frange; }
+                alioquin
+                { significans = token; frange;
+                }
             }
             CREDO_NON_NIHIL (significans);
             CREDO_NON_NIHIL (ultimum_trivium);
@@ -432,8 +468,8 @@ principale (vacuum)
              * fiunt, ergo in serie apparent et trivia nulla sunt.
              * Haec est via quam parsator intra praeludia adhibet. */
             constans character* fons = "1px 2px";
-            Xar* structurale;
-            Xar* contentum;
+                           Xar* structurale;
+                           Xar* contentum;
 
             structurale = _parare(piscina, &ratum, fons,
                 (i32)strlen(fons), REGIMEN_STRUCTURALE, NIHIL);
@@ -459,6 +495,7 @@ principale (vacuum)
     /* ========================================================
      * PORTA: TEGUMENTUM OCTETORUM (spec par. IX.7)
      * ======================================================== */
+
     {
         hic_manens constans character* CASUS[] = {
             "",
@@ -479,7 +516,8 @@ principale (vacuum)
             "a\r\nb{}",
             "a{}\f b{}"
         };
-        i32 numerus_casuum = (i32)(magnitudo(CASUS) / magnitudo(CASUS[0]));
+        i32 numerus_casuum = (i32)(magnitudo(CASUS)
+            / magnitudo(CASUS[0]));
         i32 i;
         i32 probata = ZEPHYRUM;
 
@@ -513,6 +551,7 @@ principale (vacuum)
     /* ========================================================
      * PORTA: TEGUMENTUM super CORPUS VERUM
      * ======================================================== */
+
     {
         hic_manens constans character* PLAGULAE[] = {
             "probationes/fixa/css/componentia_2026-08-18.css",
@@ -524,19 +563,21 @@ principale (vacuum)
         i32 numerus_plagularum =
             (i32)(magnitudo(PLAGULAE) / magnitudo(PLAGULAE[0]));
         constans character* radix;
-        i32 i;
-        i32 lectae = ZEPHYRUM;
+                       i32  i;
+                       i32  lectae = ZEPHYRUM;
 
         imprimere("\n--- PORTA: tegumentum super corpus verum ---\n");
 
         radix = getenv("RHUBARB_RADIX");
-        si (radix == NIHIL) { radix = "."; }
+        si (radix == NIHIL)
+        { radix = ".";
+        }
 
         per (i = ZEPHYRUM; i < numerus_plagularum; i++)
         {
-            character via[DXII];
+            character  via[DXII];
             character* textus;
-            i32 mensura = ZEPHYRUM;
+                  i32  mensura = ZEPHYRUM;
 
             sprintf(via, "%s/%s", radix, PLAGULAE[i]);
             textus = _plagulam_legere(piscina, via, &mensura);
@@ -545,7 +586,8 @@ principale (vacuum)
                 imprimere("  OMISSA (abest): %s\n", PLAGULAE[i]);
                 perge;
             }
-            imprimere("  %s (%d octeti)\n", PLAGULAE[i], (integer)mensura);
+            imprimere("  %s (%d octeti)\n", PLAGULAE[i],
+                (integer)mensura);
             CREDO_VERUM (_tegumentum_probare(piscina, &ratum, textus,
                 mensura, REGIMEN_STRUCTURALE));
             CREDO_VERUM (_tegumentum_probare(piscina, &ratum, textus,

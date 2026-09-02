@@ -52,14 +52,16 @@ hic_manens constans character* GENERA_EXSPECTATA[] = {
     "pseudo-elementum", "selector-malus"
 };
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
                 b32  praeteritus;
-           Piscina*  piscina;
+            Piscina* piscina;
 MateriaLexiconRatum  ratum;
  MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_css_registrum", 32768);
+    piscina = piscina_generare_dynamicum("probatio_css_registrum",
+        32768);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -71,6 +73,7 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: lexicon portam transit, et ORDINEM servat
      * ======================================================== */
+
     {
         i32 i;
 
@@ -90,7 +93,8 @@ MateriaLexiconRatum  ratum;
         /* ORDO per titulos - permutatio capitur */
         per (i = ZEPHYRUM; i < (i32)CSS_LEX_NUMERUS_GENERUM; i++)
         {
-            constans character* t = materia_lexicon_titulus(&ratum, (s32)i);
+            constans character* t = materia_lexicon_titulus(&ratum,
+                (s32)i);
 
             CREDO_NON_NIHIL (t);
             CREDO_VERUM (strcmp(t, ORDO_EXSPECTATUS[i]) == ZEPHYRUM);
@@ -113,6 +117,7 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: CSS munere LINEA CARET - et id RECTUM est
      * ======================================================== */
+
     {
         i32 postulata;
 
@@ -156,6 +161,7 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: registrum - ordo et CONTIGUITAS locorum
      * ======================================================== */
+
     {
         i32 i;
         i32 exspectatus_offset;
@@ -208,6 +214,7 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: circuitus per materiam (arbor CSS minima)
      * ======================================================== */
+
     {
         MateriaArborConsilium c;
         MateriaNodus*         plagula;
@@ -226,12 +233,14 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_ponere(saeptum, ZEPHYRUM,
             materia_valor_token(materia_token_creare(piscina, &FORMA,
                 (s32)CSS_LEX_BRACE_APERTA,
-                chorda_ex_literis("{", piscina), (s32)I, (i32)I, (i32)II,
+                chorda_ex_literis("{", piscina), (s32)I, (i32)I,
+                (i32)II,
                 ZEPHYRUM)), MATERIA_LOCUS_TOKEN));
         CREDO_VERUM (materia_nodus_ponere(saeptum, (i32)II,
             materia_valor_token(materia_token_creare(piscina, &FORMA,
                 (s32)CSS_LEX_BRACE_CLAUSA,
-                chorda_ex_literis("}", piscina), (s32)II, (i32)I, (i32)III,
+                chorda_ex_literis("}", piscina), (s32)II, (i32)I,
+                (i32)III,
                 ZEPHYRUM)), MATERIA_LOCUS_TOKEN));
 
         regula = materia_nodus_creare(piscina,
@@ -250,7 +259,8 @@ MateriaLexiconRatum  ratum;
 
             CREDO_NON_NIHIL (e);
             CREDO_VERUM (materia_nodus_ponere(e->datum.nodus, ZEPHYRUM,
-                materia_valor_token(materia_token_creare(piscina, &FORMA,
+                materia_valor_token(materia_token_creare(piscina,
+                &FORMA,
                     (s32)CSS_LEX_IDENTIFICATOR,
                     chorda_ex_literis("a", piscina), ZEPHYRUM, (i32)I,
                     (i32)I, ZEPHYRUM)), MATERIA_LOCUS_TOKEN));
@@ -261,7 +271,8 @@ MateriaLexiconRatum  ratum;
         CREDO_VERUM (materia_nodus_appendere(piscina, plagula, ZEPHYRUM,
             materia_valor_nodus(regula), MATERIA_LOCUS_LISTA_NODUS));
 
-        materia_arbor_consilium_nudum(&c, &CSS_REGISTRUM, &ratum, "css");
+        materia_arbor_consilium_nudum(&c, &CSS_REGISTRUM, &ratum,
+            "css");
         s1 = materia_arbor_scribere_nodum(piscina, plagula, &c);
         CREDO_VERUM (s1.successus);
         CREDO_NON_NIHIL (strstr((character*)s1.textus.datum,

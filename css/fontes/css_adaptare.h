@@ -98,8 +98,8 @@ nomen structura {
 
 vacuum
 css_ligator_incipere (
-                CssLigator* ligator,
-                   Piscina* piscina,
+                      CssLigator* ligator,
+                         Piscina* piscina,
     constans MateriaLexiconRatum* lexicon);
 
 /* Trivium differre. Nihil ligatur donec significans adveniat. */

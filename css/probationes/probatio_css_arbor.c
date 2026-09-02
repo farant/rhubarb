@@ -41,36 +41,60 @@
  * scripta essent, quae per se labi posset - et lapsus TACITUS
  * (valor in locum alienum poneretur). */
 nomen structura {
-                    s32 genus;
-                    i32 locus;
-    constans character* titulus;
+                    s32  genus;
+                    i32  locus;
+     constans character* titulus;
 } LocusNominatus;
 
 hic_manens constans LocusNominatus LOCI_NOMINATI[] = {
-    { (s32)CSS_GENUS_PLAGULA,            (i32)CSS_PLAGULA_REGULAE,        "regulae" },
-    { (s32)CSS_GENUS_PLAGULA,            (i32)CSS_PLAGULA_CAUDA,          "cauda" },
-    { (s32)CSS_GENUS_REGULA_QUALIFICATA, (i32)CSS_REGULA_PRAELUDIUM,      "praeludium" },
-    { (s32)CSS_GENUS_REGULA_QUALIFICATA, (i32)CSS_REGULA_CORPUS,          "corpus" },
-    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_TOK_NOMEN,         "tok_nomen" },
-    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_PRAELUDIUM,        "praeludium" },
-    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_CORPUS,            "corpus" },
-    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_TOK_TERMINATOR,    "tok_terminator" },
-    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_NOMEN,         "tok_nomen" },
-    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_COLON,         "tok_colon" },
-    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_VALOR,             "valor" },
-    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_PRAEVALENTIA,      "praevalentia" },
-    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_TERMINATOR,    "tok_terminator" },
-    { (s32)CSS_GENUS_PRAEVALENTIA,       (i32)CSS_PRAEVALENTIA_TOK_CLAMOR,"tok_clamor" },
-    { (s32)CSS_GENUS_PRAEVALENTIA,       (i32)CSS_PRAEVALENTIA_TOK_VERBUM,"tok_verbum" },
-    { (s32)CSS_GENUS_LEXEMA_SERVATUM,    (i32)CSS_SERVATUM_TOK,           "tok" },
-    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_TOK_NOMEN,      "tok_nomen" },
-    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_ARGUMENTA,      "argumenta" },
-    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_TOK_CLAUSUM,    "tok_clausum" },
-    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_TOK_APERTUM,    "tok_apertum" },
-    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_CONTENTUM,      "contentum" },
-    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_TOK_CLAUSUM,    "tok_clausum" },
-    { (s32)CSS_GENUS_REGULA_MALA,        (i32)CSS_MALUM_TOKENS,           "tokens" },
-    { (s32)CSS_GENUS_DECLARATIO_MALA,    (i32)CSS_MALUM_TOKENS,           "tokens" },
+    { (s32)CSS_GENUS_PLAGULA,            (i32)CSS_PLAGULA_REGULAE,
+        "regulae" },
+    { (s32)CSS_GENUS_PLAGULA,            (i32)CSS_PLAGULA_CAUDA,
+        "cauda" },
+    { (s32)CSS_GENUS_REGULA_QUALIFICATA, (i32)CSS_REGULA_PRAELUDIUM,
+        "praeludium" },
+    { (s32)CSS_GENUS_REGULA_QUALIFICATA, (i32)CSS_REGULA_CORPUS,
+        "corpus" },
+    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_TOK_NOMEN,
+        "tok_nomen" },
+    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_PRAELUDIUM,
+        "praeludium" },
+    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_CORPUS,
+        "corpus" },
+    { (s32)CSS_GENUS_REGULA_APUD,        (i32)CSS_APUD_TOK_TERMINATOR,
+        "tok_terminator" },
+    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_NOMEN,
+        "tok_nomen" },
+    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_COLON,
+        "tok_colon" },
+    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_VALOR,
+        "valor" },
+    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_PRAEVALENTIA,
+        "praevalentia" },
+    { (s32)CSS_GENUS_DECLARATIO,         (i32)CSS_DECL_TOK_TERMINATOR,
+        "tok_terminator" },
+    { (s32)CSS_GENUS_PRAEVALENTIA,
+        (i32)CSS_PRAEVALENTIA_TOK_CLAMOR, "tok_clamor" },
+    { (s32)CSS_GENUS_PRAEVALENTIA,
+        (i32)CSS_PRAEVALENTIA_TOK_VERBUM, "tok_verbum" },
+    { (s32)CSS_GENUS_LEXEMA_SERVATUM,    (i32)CSS_SERVATUM_TOK,
+        "tok" },
+    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_TOK_NOMEN,
+        "tok_nomen" },
+    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_ARGUMENTA,
+        "argumenta" },
+    { (s32)CSS_GENUS_FUNCTIO,            (i32)CSS_FUNCTIO_TOK_CLAUSUM,
+        "tok_clausum" },
+    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_TOK_APERTUM,
+        "tok_apertum" },
+    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_CONTENTUM,
+        "contentum" },
+    { (s32)CSS_GENUS_SAEPTUM,            (i32)CSS_SAEPTUM_TOK_CLAUSUM,
+        "tok_clausum" },
+    { (s32)CSS_GENUS_REGULA_MALA,        (i32)CSS_MALUM_TOKENS,
+        "tokens" },
+    { (s32)CSS_GENUS_DECLARATIO_MALA,    (i32)CSS_MALUM_TOKENS,
+        "tokens" },
     /* selectores (B8) - bilineares, ne lineae LXXII excedant */
     { (s32)CSS_GENUS_SELECTOR_LISTA,
       (i32)CSS_SEL_LISTA_SELECTORES,         "selectores" },
@@ -129,25 +153,32 @@ _octetos_probare (
     MateriaScripturaConsilium consilium;
 
     radix = css_arbor_parsare(piscina, fons, mensura);
-    si (radix == NIHIL) { redde FALSUM; }
+    si (radix == NIHIL)
+    { redde FALSUM;
+    }
 
     materia_scriptura_consilium_nudum(&consilium, &CSS_REGISTRUM);
     emissa = materia_scribere_nodum(piscina, radix, &consilium);
-    si (!emissa.successus) { redde FALSUM; }
-    si (emissa.textus.mensura != mensura) { redde FALSUM; }
-    si (mensura == ZEPHYRUM) { redde VERUM; }
+    si (!emissa.successus)
+    { redde FALSUM;
+    }
+    si (emissa.textus.mensura != mensura)
+    { redde FALSUM;
+    }
+    si (mensura == ZEPHYRUM)
+    { redde VERUM;
+    }
     redde (b32)(memcmp(emissa.textus.datum, fons,
                        (size_t)mensura) == ZEPHYRUM);
 }
 
-
 integer
 principale (vacuum)
 {
-    Piscina* piscina;
-    MateriaLexiconRatum ratum;
-    MateriaLexIudicium iudicium;
-    b32 praeteritus;
+                Piscina* piscina;
+    MateriaLexiconRatum  ratum;
+     MateriaLexIudicium  iudicium;
+                    b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_css_arbor", 65536);
     credo_aperire(piscina);
@@ -162,6 +193,7 @@ principale (vacuum)
     /* ========================================================
      * CUSTODIA: loci nominati contra TITULOS tabulae
      * ======================================================== */
+
     {
         i32 numerus = (i32)(magnitudo(LOCI_NOMINATI)
                           / magnitudo(LOCI_NOMINATI[0]));
@@ -177,7 +209,7 @@ principale (vacuum)
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             constans MateriaTabGenus* genus;
-            constans character* titulus;
+                  constans character* titulus;
 
             genus = &CSS_REGISTRUM.genera[LOCI_NOMINATI[i].genus];
             CREDO_MINOR_I32 (LOCI_NOMINATI[i].locus,
@@ -193,6 +225,7 @@ principale (vacuum)
     /* ========================================================
      * STRUCTURA: casus degeneres
      * ======================================================== */
+
     {
         MateriaNodus* radix;
 
@@ -262,6 +295,7 @@ principale (vacuum)
     /* ========================================================
      * OCTETI: oraculum separans (par. IX.4)
      * ======================================================== */
+
     {
         hic_manens constans character* DEGENERES[] = {
             "",
@@ -293,6 +327,7 @@ principale (vacuum)
     /* ========================================================
      * REGULAE QUALIFICATAE (B2) - pinnae T9 VERSAE
      * ======================================================== */
+
     {
         imprimere("\n--- Probans circuitum octetorum, regulae ---\n");
 
@@ -674,6 +709,7 @@ principale (vacuum)
     /* ========================================================
      * STML: circuitus BIS
      * ======================================================== */
+
     {
         hic_manens constans character* DEGENERES[] = {
             "",
@@ -747,7 +783,7 @@ principale (vacuum)
 
             /* Octeti ex arbore LECTA quoque fontem reddunt */
             {
-                MateriaScriptura emissa;
+                         MateriaScriptura emissa;
                 MateriaScripturaConsilium cs;
 
                 materia_scriptura_consilium_nudum(&cs, &CSS_REGISTRUM);

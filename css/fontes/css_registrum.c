@@ -22,14 +22,14 @@ hic_manens constans MateriaTabLocus LOCI_CSS[] = {
     { "tok_nomen",     (s32)MATERIA_LOCUS_TOKEN },
     { "praeludium",    (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "corpus",        (s32)MATERIA_LOCUS_NODUS },
-    { "tok_terminator",(s32)MATERIA_LOCUS_TOKEN },
+    { "tok_terminator", (s32)MATERIA_LOCUS_TOKEN },
 
     /* declaratio (8..12) */
     { "tok_nomen",     (s32)MATERIA_LOCUS_TOKEN },
     { "tok_colon",     (s32)MATERIA_LOCUS_TOKEN },
     { "valor",         (s32)MATERIA_LOCUS_LISTA_NODUS },
     { "praevalentia",  (s32)MATERIA_LOCUS_NODUS },
-    { "tok_terminator",(s32)MATERIA_LOCUS_TOKEN },
+    { "tok_terminator", (s32)MATERIA_LOCUS_TOKEN },
 
     /* praevalentia (13..14) */
     { "tok_clamor",    (s32)MATERIA_LOCUS_TOKEN },

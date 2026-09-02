@@ -41,11 +41,15 @@ css_adaptare (
     i32  numerus;
     i32  i;
 
-    si (piscina == NIHIL || lexemata_css == NIHIL) { redde NIHIL; }
+    si (piscina == NIHIL || lexemata_css == NIHIL)
+    { redde NIHIL;
+    }
 
-    numerus = xar_numerus(lexemata_css);
-    exitus  = xar_creare(piscina, magnitudo(MateriaToken*));
-    si (exitus == NIHIL) { redde NIHIL; }
+    numerus  = xar_numerus(lexemata_css);
+    exitus   = xar_creare(piscina, magnitudo(MateriaToken*));
+    si (exitus == NIHIL)
+    { redde NIHIL;
+    }
 
     per (i = ZEPHYRUM; i < numerus; i++)
     {
@@ -54,17 +58,23 @@ css_adaptare (
              MateriaToken** locus;
 
         lexema = (constans CssLexema*)xar_obtinere(lexemata_css, i);
-        si (lexema == NIHIL) { redde NIHIL; }
+        si (lexema == NIHIL)
+        { redde NIHIL;
+        }
 
         /* fons_index ZEPHYRUM: CSS fontem UNUM habet (spec par. II).
          * materia eum opacum tenet - aequalitas et -I solum. */
         token = materia_token_creare(piscina, forma,
             (s32)lexema->genus, lexema->valor, (s32)lexema->offset,
             lexema->linea, lexema->columna, ZEPHYRUM);
-        si (token == NIHIL) { redde NIHIL; }
+        si (token == NIHIL)
+        { redde NIHIL;
+        }
 
         locus = (MateriaToken**)xar_addere(exitus);
-        si (locus == NIHIL) { redde NIHIL; }
+        si (locus == NIHIL)
+        { redde NIHIL;
+        }
         *locus = token;
     }
 
@@ -78,11 +88,13 @@ css_adaptare (
 
 vacuum
 css_ligator_incipere (
-                CssLigator* ligator,
-                   Piscina* piscina,
+                      CssLigator* ligator,
+                         Piscina* piscina,
     constans MateriaLexiconRatum* lexicon)
 {
-    si (ligator == NIHIL) { redde; }
+    si (ligator == NIHIL)
+    { redde;
+    }
 
     /* ZEPHYRUM PRIMUM, deinde campi non-zephyri. Constructor qui
      * campos ENUMERAT laqueus est: campus additus INCONDITUS
@@ -108,14 +120,16 @@ css_ligator_cumulare (
 {
     MateriaToken** locus;
 
-    si (ligator == NIHIL || ligator->pendentia == NIHIL
+    si (   ligator == NIHIL || ligator->pendentia == NIHIL
         || trivium == NIHIL)
     {
         redde FALSUM;
     }
 
     locus = (MateriaToken**)xar_addere(ligator->pendentia);
-    si (locus == NIHIL) { redde FALSUM; }
+    si (locus == NIHIL)
+    { redde FALSUM;
+    }
     *locus = trivium;
     redde VERUM;
 }
@@ -129,7 +143,9 @@ _terminatorem_lineae_fert (
 {
     i32 i;
 
-    si (trivium->valor.datum == NIHIL) { redde FALSUM; }
+    si (trivium->valor.datum == NIHIL)
+    { redde FALSUM;
+    }
 
     per (i = ZEPHYRUM; i < trivium->valor.mensura; i++)
     {
@@ -152,7 +168,7 @@ css_ligator_solvere (
     i32 divisio;
     i32 j;
 
-    si (ligator == NIHIL || ligator->pendentia == NIHIL
+    si (   ligator          == NIHIL || ligator->pendentia == NIHIL
         || ligator->lexicon == NIHIL || sequens == NIHIL)
     {
         redde FALSUM;
@@ -173,7 +189,9 @@ css_ligator_solvere (
         ligator->piscina,
         (memoriae_index)magnitudo(MateriaToken*) * (memoriae_index)numerus,
         (memoriae_index)magnitudo(MateriaToken*));
-    si (plana == NIHIL) { redde FALSUM; }
+    si (plana == NIHIL)
+    { redde FALSUM;
+    }
 
     per (j = ZEPHYRUM; j < numerus; j++)
     {
