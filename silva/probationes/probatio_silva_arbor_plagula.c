@@ -422,6 +422,7 @@ principale (vacuum)
               character  via_relativa[1024];
                     DIR* corpus;
          structura dirent* introitus;
+    ClausuraeCorporis* clausurae_corporis;
                 Clausura  clausura;
                      b32  praeteritus;
 
@@ -505,6 +506,9 @@ principale (vacuum)
 
     memset(&census_latinus, 0, magnitudo(PlagulaCensus));
     sprintf(via_corporis, "%s/lib", radix);
+    /* clausurae corporis uno cursu aedilis (apparatus.h) */
+    clausurae_corporis = apparatus_clausuras_petere(radix, "lib",
+        piscina);
 
     imprimere("\n--- GRADUS LATINIZATUS: lib/*.c cum clausuris ---\n");
     imprimere("  corpus: %s\n", via_corporis);
@@ -526,7 +530,8 @@ principale (vacuum)
         }
         sprintf(via_relativa, "lib/%s", introitus->d_name);
         sprintf(via_plagulae, "%s/%s", radix, via_relativa);
-        apparatus_clausuram_petere(radix, via_relativa, &clausura);
+        (vacuum)apparatus_clausuram_ex_corpore(clausurae_corporis,
+            via_relativa, &clausura);
         _plagulam_probare(via_plagulae, radix, &clausura, VERUM,
             &census_latinus);
     }

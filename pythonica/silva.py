@@ -607,6 +607,8 @@ PORTAE = {
                       r'aequivalentia: (sana|FRACTA)'),
     'amalgamata': (['./tools/amalgamata_probare.sh'],
                    r'amalgamata: \d+ compilata, \d+ fracta'),
+    'aedilis': (['./tools/aedilis_porta.sh'],
+                r'PORTA AEDILIS: \d+ probationes'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
@@ -615,7 +617,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'materia': 'suita', 'officina': 'suita', 'gesta': 'suita',
-          'tessera': 'suita', 'saltuarius': 'suita'}
+          'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
                          r'Praeteriti|Fracti|Conditio|error:|Segmentation|'
                          r'Abort|exitus|FAILED|SINE VERDICTO')

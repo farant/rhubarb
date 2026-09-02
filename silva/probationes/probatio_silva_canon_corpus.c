@@ -351,6 +351,7 @@ principale (vacuum)
                   chorda  causa;
                     DIR* corpus;
           structura dirent* introitus;
+    ClausuraeCorporis* clausurae_corporis;
              CanonCensus  census_planus;
              CanonCensus  census_latinus;
 
@@ -517,6 +518,9 @@ principale (vacuum)
 
     memset(&census_latinus, 0, magnitudo(CanonCensus));
     sprintf(via_corporis, "%s/lib", radix);
+    /* clausurae corporis uno cursu aedilis (apparatus.h) */
+    clausurae_corporis = apparatus_clausuras_petere(radix, "lib",
+        piscina);
     imprimere("\n--- GRADUS LATINIZATUS: %s ---\n", via_corporis);
 
     corpus = opendir(via_corporis);
@@ -535,7 +539,8 @@ principale (vacuum)
             }
             sprintf(via_relativa, "lib/%s", introitus->d_name);
             sprintf(via_plagulae, "%s/%s", radix, via_relativa);
-            apparatus_clausuram_petere(radix, via_relativa, &clausura);
+            (vacuum)apparatus_clausuram_ex_corpore(clausurae_corporis,
+                via_relativa, &clausura);
 
             opus = piscina_generare_dynamicum("gradus_latinus",
                                               (memoriae_index)256 * M * M);

@@ -668,6 +668,7 @@ principale (vacuum)
                character  via_relativa[1024];
                     DIR* corpus;
        structura dirent* introitus;
+    ClausuraeCorporis* clausurae_corporis;
                 Clausura clausura;
               LintCensus census_planum;
               LintCensus census_latinum;
@@ -777,6 +778,9 @@ principale (vacuum)
     /* gradus latinum */
     memset(&census_latinum, 0, magnitudo(census_latinum));
     sprintf(via_corporis, "%s/lib", radix);
+    /* clausurae corporis uno cursu aedilis (apparatus.h) */
+    clausurae_corporis = apparatus_clausuras_petere(radix, "lib",
+        piscina);
     corpus = opendir(via_corporis);
     si (corpus == NIHIL)
     {
@@ -793,7 +797,8 @@ principale (vacuum)
         }
         sprintf(via_relativa, "lib/%s", introitus->d_name);
         sprintf(via_plagulae, "%s/%s", radix, via_relativa);
-        apparatus_clausuram_petere(radix, via_relativa, &clausura);
+        (vacuum)apparatus_clausuram_ex_corpore(clausurae_corporis,
+            via_relativa, &clausura);
         _plagulam_probare(via_plagulae, radix, &clausura, VERUM,
                           &lint_textus, &lint_catena,
                           conditio_pares, &census_latinum);

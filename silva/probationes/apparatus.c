@@ -134,6 +134,57 @@ apparatus_plagulam_legere (
     redde buffer;
 }
 
+/* Linea 'C<tab>via' aedilis in clausuram; ceterae praetereuntur.
+ * Truncatio NUMQUAM tacita: numerus tectus datum simularet. */
+interior vacuum
+_lineam_clausurae_addere (
+     Clausura* clausura,
+    character* linea)
+{
+    memoriae_index m;
+
+    si (linea[ZEPHYRUM] != 'C' || linea[I] != '\t')
+    {
+        redde;
+    }
+    m = strlen(linea);
+    dum (   m > ZEPHYRUM
+         && (linea[m - I] == '\n' || linea[m - I] == '\r'))
+    {
+        linea[m - I] = '\0';
+        m--;
+    }
+    si (m <= II)
+    {
+        redde;
+    }
+    si (clausura->numerus >= CLAUSURA_MAXIMA)
+    {
+        clausura->truncata = VERUM;
+        redde;
+    }
+    si (m - II >= VIA_MAXIMA)
+    {
+        clausura->truncata = VERUM;
+        redde;
+    }
+    strcpy(clausura->series[clausura->numerus], linea + II);
+    si (apparatus_desinit_in(linea + II, "latina.h"))
+    {
+        clausura->latina_inest = VERUM;
+    }
+    clausura->numerus++;
+}
+
+interior vacuum
+_clausuram_vacuare (
+    Clausura* clausura)
+{
+    clausura->numerus       = ZEPHYRUM;
+    clausura->latina_inest  = FALSUM;
+    clausura->truncata      = FALSUM;
+}
+
 vacuum
 apparatus_clausuram_petere (
     constans character* radix,
@@ -144,10 +195,7 @@ apparatus_clausuram_petere (
     character linea[VIA_MAXIMA + 64];
         FILE* tubus;
 
-    clausura->numerus       = ZEPHYRUM;
-    clausura->latina_inest  = FALSUM;
-    clausura->truncata      = FALSUM;
-
+    _clausuram_vacuare(clausura);
     sprintf(mandatum,
         "cd '%s' && ./bin/aedilis '%s' --partes 2>/dev/null",
         radix, via_relativa);
@@ -158,43 +206,112 @@ apparatus_clausuram_petere (
     }
     dum (fgets(linea, (integer)magnitudo(linea), tubus) != NIHIL)
     {
-        memoriae_index m;
-
-        si (linea[ZEPHYRUM] != 'C' || linea[I] != '\t')
-        {
-            perge;
-        }
-        m = strlen(linea);
-        dum (   m > ZEPHYRUM
-             && (linea[m - I] == '\n' || linea[m - I] == '\r'))
-        {
-            linea[m - I] = '\0';
-            m--;
-        }
-        si (m <= II)
-        {
-            perge;
-        }
-        si (clausura->numerus >= CLAUSURA_MAXIMA)
-        {
-            /* NON tacite truncandum: numerus tectus numerum falsum
-             * pareret qui datum simulat. */
-            clausura->truncata = VERUM;
-            perge;
-        }
-        si (m - II >= VIA_MAXIMA)
-        {
-            clausura->truncata = VERUM;
-            perge;
-        }
-        strcpy(clausura->series[clausura->numerus], linea + II);
-        si (apparatus_desinit_in(linea + II, "latina.h"))
-        {
-            clausura->latina_inest = VERUM;
-        }
-        clausura->numerus++;
+        _lineam_clausurae_addere(clausura, linea);
     }
     pclose(tubus);
+}
+
+ClausuraeCorporis*
+apparatus_clausuras_petere (
+    constans character* radix,
+    constans character* directorium,
+               Piscina* piscina)
+{
+    character mandatum[1024];
+    character linea[VIA_MAXIMA + 64];
+    FILE*              tubus;
+    ClausuraeCorporis* corpus;
+    Clausura*          currens;
+
+    corpus = (ClausuraeCorporis*)piscina_allocare(piscina,
+        magnitudo(ClausuraeCorporis));
+    si (corpus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    corpus->viae       = xar_creare(piscina, VIA_MAXIMA);
+    corpus->clausurae  = xar_creare(piscina, (i32)magnitudo(Clausura));
+    si (corpus->viae == NIHIL || corpus->clausurae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    sprintf(mandatum,
+        "cd '%s' && ./bin/aedilis --corpus '%s' --partes 2>/dev/null",
+        radix, directorium);
+    tubus = popen(mandatum, "r");
+    si (tubus == NIHIL)
+    {
+        redde corpus;   /* vacuum - consumptor clamat */
+    }
+    currens = NIHIL;
+    dum (fgets(linea, (integer)magnitudo(linea), tubus) != NIHIL)
+    {
+        si (linea[ZEPHYRUM] == 'F' && linea[I] == '\t')
+        {
+                 character* via;
+            memoriae_index  m;
+
+            via      = (character*)xar_addere(corpus->viae);
+            currens  = (Clausura*)xar_addere(corpus->clausurae);
+            si (via == NIHIL || currens == NIHIL)
+            {
+                currens = NIHIL;
+                frange;
+            }
+            m = strlen(linea + II);
+            dum (   m > ZEPHYRUM
+                 && (   linea[II + m - I] == '\n'
+                     || linea[II + m - I] == '\r'))
+            {
+                linea[II + m - I] = '\0';
+                m--;
+            }
+            si (m >= VIA_MAXIMA)
+            {
+                m = VIA_MAXIMA - I;
+            }
+            memcpy(via, linea + II, m);
+            via[m] = '\0';
+            _clausuram_vacuare(currens);
+            perge;
+        }
+        si (currens != NIHIL)
+        {
+            _lineam_clausurae_addere(currens, linea);
+        }
+    }
+    pclose(tubus);
+    redde corpus;
+}
+
+b32
+apparatus_clausuram_ex_corpore (
+    constans ClausuraeCorporis* corpus,
+            constans character* via_relativa,
+                      Clausura* clausura)
+{
+    i32 i;
+    i32 n;
+
+    _clausuram_vacuare(clausura);
+    si (corpus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    n = xar_numerus(corpus->viae);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans character* via;
+
+        via = (constans character*)xar_obtinere(corpus->viae, i);
+        si (strcmp(via, via_relativa) == 0)
+        {
+            *clausura = *(constans Clausura*)xar_obtinere(
+                corpus->clausurae, i);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 SilvaParsura*

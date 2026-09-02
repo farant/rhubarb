@@ -314,6 +314,28 @@ AW    tools/aedilis.worklog.md
       silva/probationes/fixa/computus/basis.tsv; deterministic
       figures compared exactly, times printed only. Regeneration is
       COMPUTUS_SCRIBERE=1 and must name its cause. [observed]
+10.12. Closure fetch once per corpus (2026-09-02, night). Sampling
+      the three heavy corpus tests through the new one-test launcher
+      showed 26-49% of their samples in a blocking read: each test
+      spawned a shell and bin/aedilis once PER FILE (156 x 3 per
+      suite run) to fetch the include closure, and the tool re-parsed
+      every header with silva for every scope. Fix in two places:
+      the tool gained --corpus <dir> --partes (all .c of a directory
+      in one run, sections "F<tab>via", name order) with a memoizing
+      extractor (path -> what the silva extractor returned, kept in
+      the long-lived arena; derivare only reads it), and the test
+      apparatus gained apparatus_clausuras_petere (one popen per
+      test) with apparatus_clausuram_ex_corpore (missing file =
+      EMPTY closure, the apparatus gate refuses it - no per-file
+      fallback). Proof: both modes byte-identical to a per-file
+      snapshot, 156/156; the corpus run takes 2.6 s for what took
+      18 s as separate runs. Serial: canon_corpus 53.5 -> 37.8 s,
+      exemplaria_lint 44.8 -> 27.5, arbor_plagula 40.0 -> 22.8.
+      Suite at 4 workers 97 -> 80 s (54/54). The remaining time in
+      those tests is the canon/lint judgment engine (accessor calls
+      on the growable array, subtree collection per rule), not
+      parsing (~3 s per test) - that is the next lever, and it is
+      a canon/lint profile, not a silva one.
 11.8. Re-measured on this toolchain, with the include closure:
       lib/stml.c (285,866 B) parses in 176 ms into 436 MB handed out,
       606 MB committed, 1,141,283 allocations, 11 blocks; lib/piscina.c

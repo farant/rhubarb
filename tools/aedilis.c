@@ -28,6 +28,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -468,6 +469,67 @@ _extractor_silvae (
     redde VERUM;
 }
 
+/* Memoria extractoris: via -> quod _extractor_silvae reddidit.
+ * aedilis_derivare caput quodque per scopum SEMEL scandit, sed per
+ * corpus (--corpus) idem caput in clausuris CLVI scoporum CLVI
+ * vicibus parsaretur - portae corporis silvae in hoc XVI s per
+ * probationem consumebant (2026-09-02). Fructus in piscina longaeva
+ * vivunt; derivare eos legit tantum, numquam mutat. */
+nomen structura {
+    Xar* directivae;
+    Xar* annotationes;
+    b32  ex_oraculo;
+    b32  fructus;
+} MemoriaExtractoris;
+
+nomen structura {
+    ExtractorDatum* intus;
+           Piscina* piscina;   /* longaeva: memoriae et fructus */
+    TabulaDispersa* tabula;    /* via -> MemoriaExtractoris* */
+} ExtractorMemor;
+
+interior b32
+_extractor_memor (
+                vacuum*  datum,
+    constans character*  via,
+               Piscina*  piscina,
+                   Xar** directivae_out,
+                   Xar** annotationes_out,
+                   b32*  ex_oraculo_out)
+{
+        ExtractorMemor* memor;
+    MemoriaExtractoris* m;
+                vacuum* inventum;
+
+    memor = (ExtractorMemor*)datum;
+    (vacuum)piscina;
+    si (tabula_dispersa_invenire_literis(memor->tabula, via, &inventum))
+    {
+        m = (MemoriaExtractoris*)inventum;
+    }
+    alioquin
+    {
+        m = (MemoriaExtractoris*)piscina_allocare(memor->piscina,
+            magnitudo(MemoriaExtractoris));
+        si (m == NIHIL)
+        {
+            redde FALSUM;
+        }
+        m->directivae    = NIHIL;
+        m->annotationes  = NIHIL;
+        m->ex_oraculo    = FALSUM;
+        m->fructus = _extractor_silvae(memor->intus, via,
+            memor->piscina,
+            &m->directivae, &m->annotationes, &m->ex_oraculo);
+        (vacuum)tabula_dispersa_inserere(memor->tabula,
+            chorda_ex_literis(via, memor->piscina), m);
+    }
+    *directivae_out    = m->directivae;
+    *annotationes_out  = m->annotationes;
+    *ex_oraculo_out    = m->ex_oraculo;
+    redde m->fructus;
+}
+
 /* Differentia-clausurae: sextum capitum nostrum (silva-cursus)
  * contra clang -MM oraculum. CONSENSUS / NOS-SOLI / ORACULUM-SOLUM;
  * exitus 0 = consensus purus (porta per codicem exitus). */
@@ -648,6 +710,186 @@ _commissum_obtinere (
     redde chorda_ut_cstr(textus, piscina);
 }
 
+/* Partes fructus ut TSV: O obiecta, C capita, S systemata, V vendores */
+interior vacuum
+_partes_imprimere (
+    constans AedilisFructus* fructus)
+{
+    i32 i;
+    i32 numerus;
+
+    numerus = xar_numerus(fructus->obiecta);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisObiectum* obiectum;
+
+        obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta, i);
+        imprimere("O\t%.*s\n", (s32)obiectum->via.mensura,
+            (constans character*)obiectum->via.datum);
+    }
+    numerus = xar_numerus(fructus->capita);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisCaput* caput;
+
+        caput = (AedilisCaput*)xar_obtinere(fructus->capita, i);
+        imprimere("C\t%.*s\n", (s32)caput->via.mensura,
+            (constans character*)caput->via.datum);
+    }
+    numerus = xar_numerus(fructus->systemata);
+    per (i = 0; i < numerus; i++)
+    {
+        chorda via;
+
+        via = *(chorda*)xar_obtinere(fructus->systemata, i);
+        imprimere("S\t%.*s\n", (s32)via.mensura,
+            (constans character*)via.datum);
+    }
+    numerus = xar_numerus(fructus->vendores);
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisVendor* vendor;
+
+        vendor = (AedilisVendor*)xar_obtinere(fructus->vendores, i);
+        imprimere("V\t%.*s\n", (s32)vendor->fons.mensura,
+            (constans character*)vendor->fons.datum);
+    }
+}
+
+interior b32
+_desinit_in_c (
+    constans character* titulus)
+{
+    memoriae_index l;
+
+    l = strlen(titulus);
+    redde l > 2 && titulus[l - 2] == '.' && titulus[l - 1] == 'c';
+}
+
+interior integer
+_chordas_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans chorda* ca;
+    constans chorda* cb;
+     memoriae_index  minima;
+            integer  r;
+
+    ca = (constans chorda*)a;
+    cb = (constans chorda*)b;
+    minima = (memoriae_index)((ca->mensura < cb->mensura)
+        ? ca->mensura : cb->mensura);
+    r = memcmp(ca->datum, cb->datum, minima);
+    si (r != 0)
+    {
+        redde r;
+    }
+    si (ca->mensura < cb->mensura)
+    {
+        redde -1;
+    }
+    si (ca->mensura > cb->mensura)
+    {
+        redde 1;
+    }
+    redde 0;
+}
+
+/* --corpus: clausurae OMNIUM fontium .c directorii uno cursu - sectio
+ * 'F<tab>via' per fontem, deinde partes ut --partes; ordine nominum.
+ * Extractor memor capita semel parsat trans scopos (cursus unus pro
+ * CLVI). Fons recusatus: 'RECUSAT<tab>causa' sub sectione sua, ceteri
+ * perguntur, exitus 1 in fine - consumptor sectionem vacuam clamat. */
+interior integer
+_corpus_currere (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* directorium,
+              constans character* varians_cstr,
+                  ExtractorMemor* memor)
+{
+    DIR*              d;
+    structura dirent* introitus;
+    chorda*           viae;
+    i32               numerus;
+    i32               i;
+    integer           exitus;
+
+    d = opendir(directorium);
+    si (d == NIHIL)
+    {
+        fprintf(stderr,
+            "AEDILIS RECUSAT: directorium non apertum: %s\n",
+            directorium);
+        redde 1;
+    }
+    numerus = 0;
+    dum ((introitus = readdir(d)) != NIHIL)
+    {
+        si (_desinit_in_c(introitus->d_name))
+        {
+            numerus++;
+        }
+    }
+    viae = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)(numerus
+            > 0 ? numerus : 1) * magnitudo(chorda));
+    si (viae == NIHIL)
+    {
+        closedir(d);
+        redde 1;
+    }
+    rewinddir(d);
+    i = 0;
+    dum ((introitus = readdir(d)) != NIHIL && i < numerus)
+    {
+             character* via;
+        memoriae_index  l;
+
+        si (!_desinit_in_c(introitus->d_name))
+        {
+            perge;
+        }
+        l    = strlen(directorium) + strlen(introitus->d_name) + 2;
+        via  = (character*)piscina_allocare(piscina, l);
+        si (via == NIHIL)
+        {
+            closedir(d);
+            redde 1;
+        }
+        sprintf(via, "%s/%s", directorium, introitus->d_name);
+        viae[i++] = chorda_ex_literis(via, piscina);
+    }
+    closedir(d);
+    numerus = i;
+    qsort(viae, (memoriae_index)numerus, magnitudo(chorda),
+        _chordas_comparare);
+    exitus = 0;
+    per (i = 0; i < numerus; i++)
+    {
+        AedilisFructus* fructus;
+                chorda  causa;
+             character* via_cstr;
+
+        causa.datum    = NIHIL;
+        causa.mensura  = 0;
+        via_cstr       = chorda_ut_cstr(viae[i], piscina);
+        imprimere("F\t%s\n", via_cstr);
+        fructus = aedilis_derivare(piscina, configuratio, via_cstr,
+            varians_cstr, _extractor_memor, memor, &causa);
+        si (fructus == NIHIL)
+        {
+            imprimere("RECUSAT\t%.*s\n", (s32)causa.mensura,
+                (constans character*)causa.datum);
+            exitus = 1;
+            perge;
+        }
+        _partes_imprimere(fructus);
+    }
+    redde exitus;
+}
+
 s32
 principale (
           s32   numerus_argumentorum,
@@ -659,7 +901,9 @@ principale (
     AedilisConfiguratio* configuratio;
          AedilisFructus* fructus;
          ExtractorDatum  extractoris;
-    SilvaPiscina*        contextus_piscina;
+         ExtractorMemor  memor;
+                 chorda  corpus_dir;
+    SilvaPiscina* contextus_piscina;
     SilvaContextus*      contextus;
     chorda               causa;
     chorda               scopus;
@@ -696,6 +940,8 @@ principale (
         "Obiecta clausurae nuda imprimere (consumptoribus)");
     argumenta_addere_vexillum(parser, NIHIL, "--partes",
         "Partes fructus ut TSV imprimere (O/C/S/V via)");
+    argumenta_addere_optionem(parser, NIHIL, "--corpus",
+        "Directorium: clausurae OMNIUM fontium .c eius (sectiones F via; cum --partes)");
     argumenta_addere_vexillum(parser, NIHIL, "--aristae",
         "Aristas graphi inclusionum imprimere (includens inclusum)");
     argumenta_addere_vexillum(parser, NIHIL, "--ordo",
@@ -708,14 +954,33 @@ principale (
     lecta = argumenta_parsere(parser, (i32)numerus_argumentorum,
         (constans character* constans*)argumenta_cruda);
 
-    si (argumenta_numerus_positionalium(lecta) != 1)
+    corpus_dir = argumenta_obtinere_optionem(lecta, "--corpus",
+        piscina);
+    si (corpus_dir.mensura > 0)
     {
-        fprintf(stderr,
-            "usus: aedilis <fons.c> [--varians <verbum>]\n");
-        redde 1;
+        si (   argumenta_numerus_positionalium(lecta) != 0
+            || !argumenta_habet_vexillum(lecta, "--partes"))
+        {
+            fprintf(stderr,
+                "usus: aedilis --corpus <directorium> --partes\n");
+            redde 1;
+        }
+        scopus.datum    = NIHIL;
+        scopus.mensura  = 0;
+        scopus_cstr     = NIHIL;
     }
-    scopus       = argumenta_obtinere_positionalem(lecta, 0, piscina);
-    scopus_cstr  = chorda_ut_cstr(scopus, piscina);
+    alioquin
+    {
+        si (argumenta_numerus_positionalium(lecta) != 1)
+        {
+            fprintf(stderr,
+                "usus: aedilis <fons.c> [--varians <verbum>] | --corpus <dir> --partes\n");
+            redde 1;
+        }
+        scopus       = argumenta_obtinere_positionalem(lecta, 0,
+            piscina);
+        scopus_cstr  = chorda_ut_cstr(scopus, piscina);
+    }
     varians = argumenta_obtinere_optionem(lecta, "--varians",
         piscina);
     varians_cstr = (varians.mensura > 0)
@@ -748,12 +1013,24 @@ principale (
         fprintf(stderr, "AEDILIS RECUSAT: contextus deest\n");
         redde 1;
     }
-    extractoris.contextus     = contextus;
-    extractoris.configuratio  = configuratio;
-
+    extractoris.contextus = contextus;
+    extractoris.configuratio = configuratio;
+    memor.intus = &extractoris;
+    memor.piscina = piscina;
+    memor.tabula = tabula_dispersa_creare_chorda(piscina, 512);
+    si (memor.tabula == NIHIL)
+    {
+        fprintf(stderr, "AEDILIS RECUSAT: memoria extractoris deest\n");
+        redde 1;
+    }
+    si (scopus_cstr == NIHIL)
+    {
+        redde _corpus_currere(piscina, configuratio,
+            chorda_ut_cstr(corpus_dir, piscina), varians_cstr, &memor);
+    }
     initium = clock();
     fructus = aedilis_derivare(piscina, configuratio, scopus_cstr,
-        varians_cstr, _extractor_silvae, &extractoris, &causa);
+        varians_cstr, _extractor_memor, &memor, &causa);
     finis = clock();
     si (fructus == NIHIL)
     {
@@ -788,48 +1065,7 @@ principale (
 
     si (argumenta_habet_vexillum(lecta, "--partes"))
     {
-        i32 i;
-        i32 numerus;
-
-        numerus = xar_numerus(fructus->obiecta);
-        per (i = 0; i < numerus; i++)
-        {
-            AedilisObiectum* obiectum;
-
-            obiectum = (AedilisObiectum*)xar_obtinere(
-                fructus->obiecta, i);
-            imprimere("O\t%.*s\n", (s32)obiectum->via.mensura,
-                (constans character*)obiectum->via.datum);
-        }
-        numerus = xar_numerus(fructus->capita);
-        per (i = 0; i < numerus; i++)
-        {
-            AedilisCaput* caput;
-
-            caput = (AedilisCaput*)xar_obtinere(fructus->capita,
-                i);
-            imprimere("C\t%.*s\n", (s32)caput->via.mensura,
-                (constans character*)caput->via.datum);
-        }
-        numerus = xar_numerus(fructus->systemata);
-        per (i = 0; i < numerus; i++)
-        {
-            chorda via;
-
-            via = *(chorda*)xar_obtinere(fructus->systemata, i);
-            imprimere("S\t%.*s\n", (s32)via.mensura,
-                (constans character*)via.datum);
-        }
-        numerus = xar_numerus(fructus->vendores);
-        per (i = 0; i < numerus; i++)
-        {
-            AedilisVendor* vendor;
-
-            vendor = (AedilisVendor*)xar_obtinere(
-                fructus->vendores, i);
-            imprimere("V\t%.*s\n", (s32)vendor->fons.mensura,
-                (constans character*)vendor->fons.datum);
-        }
+        _partes_imprimere(fructus);
         redde 0;
     }
 

@@ -725,3 +725,25 @@ obiectum chain), PORTA AEDILIS 119/119, root 103/103. Alien
 elements (nid/intentio/tolera) pass through the extractor
 untouched — headers can now carry mixed annotation families
 above the same unit.
+
+## 2026-09-02 (night) — --corpus: one run for a whole directory
+
+The silva corpus tests fetched each file's include closure through
+`bin/aedilis <fons> --partes` in a popen, 156 times per test, three
+tests per suite run; sampled, that was 26-49% of their wall time in a
+blocking read. Each run parsed every header in the closure with silva
+afresh — derivare dedups headers within a scope (`visa_capitum`) but
+the extractor cached nothing across scopes, so a header in 156
+closures was parsed 156 times. Now `--corpus <dir> --partes` derives
+every `.c` in the directory in one process, name order, sections
+`F<tab>via` then the usual O/C/S/V rows, and both modes go through
+`_extractor_memor`: path → what `_extractor_silvae` returned, kept in
+the main arena (derivare only reads the Xars, never mutates). A
+refused source prints `RECUSAT<tab>causa` under its section and the
+run exits 1 at the end; consumers treat an empty section as loud.
+Proof: single-file output byte-identical to a pre-change snapshot for
+all 156 lib sources, and every corpus section identical to the same
+snapshot; 2.6 s for the directory against 18 s as separate runs.
+Refusals: `--corpus` without `--partes`, a positional with `--corpus`,
+an unreadable directory. Consumer side: `apparatus_clausuras_petere`
+in silva/probationes/apparatus.c.

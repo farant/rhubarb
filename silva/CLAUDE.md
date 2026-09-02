@@ -133,8 +133,13 @@ Suita (compile_probationes.sh) probationes PARALLELAS currit
 (2026-09-02): PROBATIONES_FILA=N operarii (ordinarius nuclei
 performantes = IV; =1 seriatim), acta per probationem in
 build/singulae/<nomen>.log, collectio ordine nominum; murus ~96 s pro
-239 s seriatim. Res inter probationes communis = classis vitii (aedilis
-plagulas temporarias fixas habebat - nunc per PID).
+239 s seriatim; 80 s post clausuras corporis. Res inter probationes
+communis = classis vitii (aedilis plagulas temporarias fixas habebat -
+nunc per PID). Probationes corporis (canon_corpus, exemplaria_lint,
+arbor_plagula) clausuras inclusionum UNO cursu petunt:
+`bin/aedilis --corpus lib --partes` (extractor memor, sectiones F via)
+per apparatus_clausuras_petere - per plagulam popen CLVI vicibus XVI s
+per probationem consumebat (2026-09-02).
 NB tabulae coctae (generare.sh) indices densos ferunt (actiones_index,
 goto_index; 2026-09-02) et a probationibus validantur, non per
 parsuram - mutatio contractus silva_tabulae.h SEMPER regenerationem

@@ -78,6 +78,30 @@ apparatus_clausuram_petere (
     constans character* via_relativa,
               Clausura* clausura);
 
+/* Clausurae CORPORIS totius uno cursu aedilis (--corpus dir --partes):
+ * extractor memor capita semel parsat trans scopos - per plagulam
+ * popen CLVI vicibus XVI s per probationem consumebat (2026-09-02).
+ * viae = character[VIA_MAXIMA] valore, clausurae = Clausura valore,
+ * indice pari. Plagula in corpore absens = clausura VACUA (numerus 0,
+ * latina_inest FALSUM) et FALSUM - porta apparatus eam clamat, nihil
+ * tacite per plagulam suppletur. */
+nomen structura {
+    Xar* viae;
+    Xar* clausurae;
+} ClausuraeCorporis;
+
+ClausuraeCorporis*
+apparatus_clausuras_petere (
+    constans character* radix,
+    constans character* directorium,
+               Piscina* piscina);
+
+b32
+apparatus_clausuram_ex_corpore (
+    constans ClausuraeCorporis* corpus,
+            constans character* via_relativa,
+                      Clausura* clausura);
+
 /* Plagulam parsare, clausura praebita si petitur.
  *
  * 'praebere' est SUTURA CALIBRATIONIS, consulto permanens: FALSUM
