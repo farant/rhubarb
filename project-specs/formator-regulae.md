@@ -567,3 +567,20 @@ IV`). Textus ad XXXII octetos decurtatur. Clavis `-delta` (regula +
 contentum lineae) nuntium non tangit; uncus regulam solam legit.
 Porta: probatio sectio "ancoras in nuntiis" (IV regulae; vitium
 plantatum IV rubrae).
+
+## Scriptura in commissione: `-lineae` + uncus (2026-09-01)
+
+`formator -lineae a-b` (repetibile): functiones radicis quarum
+extentum lineas tangit (`formator_extenta` - idem ambitus quem
+`-intra`) nominantur et ut `-intra` iudicantur; nomina ANTE passum
+punctum-fixum resolvuntur. Lineae extra functiones (structurae,
+tabulae) monentur, non formantur; nihil intra functiones = plagula
+intacta, exitus 0.
+
+Uncus pre-commit (tools/unci-git): plagulae .c/.h commissioni traditae
+-> hunks `git diff --cached -U0` -> `-scribere -lineae` -> index
+repositus. Plagula nova = scriptura tota. Arbor operis ab indice
+differens (commissio partialis) NON formatur, monetur. Ordo: scriptura,
+examen, monitum `-delta`. Evasio `--no-verify`. Porta:
+`tools/unci-git/fumus.sh` VI-VIII (fixum tractum fumus_formae.c).
+Porta post evolutionem totam: scriptura tota (structurae inclusae).

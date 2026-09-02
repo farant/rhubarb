@@ -940,3 +940,39 @@ marker, which is unchanged). Real sample from semantica.c:
 `columna titulorum non ordinata (ancora 'constans SilvaNodus'
 l.4210 + I + stellae 1)`. Gate: probatio section with one assertion
 per rule; plant (formatter returns the bare basis) → 4 red.
+
+## 2026-09-01 — Format at commit: `-lineae` + the pre-commit writes
+
+Fran's step one of "formatting should not need attention": the
+pre-commit now formats the functions whose lines changed and re-stages.
+Pieces: `formator_extenta` (public; root definitions and prototypes
+with the same extent rule `-intra` uses, so the two can never
+disagree), CLI `-lineae a-b` (repeatable; resolved to function names
+by extent intersection BEFORE the fixpoint loop, since lines shift and
+names do not; ranges outside every function warn and are left alone;
+no function at all → file untouched, exit 0), and the hook: staged
+diff hunks → `-lineae`, new files → whole write, worktree ≠ index →
+warn, never format (a partial commit must not drag unstaged edits into
+the index). Ordering in the hook: format → examen → delta warning, so
+the examen judges what is committed.
+
+The commit that introduced it was its own first run: four files
+formatted inside their changed functions, examen ACCIPE, tree clean
+afterwards (the re-add leaves worktree == index).
+
+Gates: probatio section for `formator_extenta` (four extents, broken
+parse → empty not NIHIL); intra smoke V/VI (`-lineae` ≡ `-intra`;
+struct lines warn); hook smoke VI–VIII on a tracked fixture
+(`tools/unci-git/fumus_formae.c`, restored by checkout): appended
+mis-formatted function is formatted in worktree AND index; partial
+commit untouched with warning; new file formatted whole.
+
+Fixture lesson: my first "outside any function" case used the blank
+line between a prototype and the next definition — which by the
+extent rule belongs to that definition. Structs between functions are
+the genuine outside. The rule is right; the fixture was wrong.
+
+Door: after the rollout (step two) every baseline is zero and the hook
+can write whole files, which also covers structs and tables. Generated
+files need exclusions first (`capsula_*`, tabulae, amalgams) or the
+hook formats what the generator will overwrite.

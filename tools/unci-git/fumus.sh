@@ -66,7 +66,7 @@ if git diff --quiet -- "$FIX" && git diff --cached --quiet -- "$FIX"; then
     "$UNCUS" > "$T/forma_auto.out" 2>&1; rc=$?
     if [ "$rc" -eq 0 ] && grep -q 'FORMATA' "$T/forma_auto.out" && grep -q '^fumus_nova (vacuum)$' "$FIX" \
        && git show ":$FIX" | grep -q '^fumus_nova (vacuum)$'; then echo "  VI  scriptura automatica: formata + index OK"; else echo "  VI  FRACTUM (rc=$rc)"; cat "$T/forma_auto.out"; fracta=1; fi
-    git checkout -- "$FIX"
+    git checkout HEAD -- "$FIX"   # HEAD, non index temporarius (qui appensum fert)
     # VII - commissio partialis (arbor != index): NON formata, monitum
     git read-tree HEAD
     printf '\nvacuum\nfumus_nova(vacuum)\n{\n    redde;\n}\n' >> "$FIX"
@@ -74,7 +74,7 @@ if git diff --quiet -- "$FIX" && git diff --cached --quiet -- "$FIX"; then
     printf '/* mutatio arboris non tradita */\n' >> "$FIX"
     "$UNCUS" > "$T/forma_part.out" 2>&1; rc=$?
     if [ "$rc" -eq 0 ] && grep -q 'NON formata' "$T/forma_part.out" && git show ":$FIX" | grep -q '^fumus_nova(vacuum)$'; then echo "  VII commissio partialis: intacta, monet  OK"; else echo "  VII FRACTUM (rc=$rc)"; cat "$T/forma_part.out"; fracta=1; fi
-    git checkout -- "$FIX"
+    git checkout HEAD -- "$FIX"   # HEAD, non index temporarius (qui appensum fert)
     # VIII - plagula nova: scriptura tota
     NOVA="tools/unci-git/.fumus_nova.c"
     printf '#include "latina.h"\n\ninterior vacuum\nf(vacuum)\n{\n    redde;\n}\n' > "$NOVA"
@@ -84,6 +84,7 @@ if git diff --quiet -- "$FIX" && git diff --cached --quiet -- "$FIX"; then
     if [ "$rc" -eq 0 ] && grep -q 'FORMATA' "$T/forma_nova.out" && git show ":$NOVA" | grep -q '^f (vacuum)$'; then echo "  VIII plagula nova: tota formata          OK"; else echo "  VIII FRACTUM (rc=$rc)"; cat "$T/forma_nova.out"; fracta=1; fi
     rm -f "$NOVA" "$T/index2"
     unset GIT_INDEX_FILE
+    git checkout HEAD -- "$FIX"
 else
     echo "  VI-VIII OMISSI: $FIX in arbore mutata"; fracta=1
 fi
