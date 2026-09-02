@@ -56,8 +56,10 @@ for f in $(git diff --name-only -- $FILES 2>/dev/null); do
     mutatae=$((mutatae + 1))
     git show "HEAD:$f" > "$T/basis.c" 2>/dev/null || { echo "  $f: basis absens (nova?)"; continue; }
     d=$(./silva/differre.sh "$T/basis.c" "$f" 2>/dev/null)
-    sub=$(printf '%s\n' "$d" | grep -c 'substantiva' || true)
-    doc=$(printf '%s\n' "$d" | grep -c 'documentaria' || true)
+    # tituli classium sunt '[substantiva]' - verbum nudum in corpore
+    # diff apparet (silva_differre.c ipsa 'redde "substantiva"' fert)
+    sub=$(printf '%s\n' "$d" | grep -c '\[substantiva\]' || true)
+    doc=$(printf '%s\n' "$d" | grep -c '\[documentaria\]' || true)
     if [ "$sub" -ne 0 ] || [ "$doc" -ne 0 ]; then
         echo "  FRACTUM $f: substantiva $sub, documentaria $doc" >&2; fracta=1
     else
