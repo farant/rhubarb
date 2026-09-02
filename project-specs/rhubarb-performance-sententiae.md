@@ -242,6 +242,22 @@ AW    tools/aedilis.worklog.md
       GLR core: xar_locare's segment loop, the arena's per-allocation
       block walk, double zeroing, and the linear action/goto scans
       are the next levers. [observed]
+10.10. Three levers landed 2026-09-02 (evening), each measured as
+      min-of-7 on lib/stml.c with the phase clocks, proven by the
+      aequivalentia differential and the computus golden:
+      (a) the arena's per-allocation block walk for the peak figure
+      became a running total: 53.2 -> 49.0 ms;
+      (b) xar_locare's doubling loop became a highest-bit scan:
+      50.3 -> 43.1 ms, json.c 13.4 -> 11.8;
+      (c) the GLR's three per-step scratch Xars (reducenda,
+      frons_nova, index) are reused across steps (front double-
+      buffered, the others xar_vacare'd): 45.3 -> 39.8 ms,
+      allocations 1.18 M -> 0.95 M, handed out 150 -> 106 MB.
+      Silva suite 285 -> 259 s after (a)+(b). Phase clocks say GLR is
+      two thirds of the parse; the sampler now puts _nodum_processare
+      first and xar_creare second, the latter dominated by one
+      praedecessores Xar per GSS node (mostly one element) and the
+      two trivia Xars per token (15). [observed]
 10.8. Equivalence demonstrated as 5.1 demands: arbor.sh canonical
       STML byte-identical for 154 of 156 lib/*.c, the two exceptions
       being lib/xar.c and lib/piscina.c themselves, whose text

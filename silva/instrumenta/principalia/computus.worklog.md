@@ -40,3 +40,21 @@ commit, read by computus). First reading on stml.c at -O2: GLR 36.5 of
 54 ms, lexing 6, expansion 4.4, commit 4.7. Combined with the sampler
 (Xar and arena operations ~48% of leaf samples) the picture is: the
 GLR loop's container traffic, not the automaton, is the cost.
+
+## 2026-09-02 (evening) — three levers, one method
+
+Each: min-of-7 computus before, one change, tests, min-of-7 after,
+sample.sh, aequivalentia.sh -conferre, golden regenerated only when
+allocation counts were meant to move, three shadow gates, commit.
+
+- Arena peak walk -> running total: 53.2 -> 49.0 ms.
+- xar_locare loop -> bit scan: 50.3 -> 43.1 ms (json 13.4 -> 11.8).
+- GLR per-step scratch Xars reused: 45.3 -> 39.8 ms, allocations
+  -20%, handed out 150 -> 106 MB. The surprise was the memory: each
+  recreated Xar re-grew its segments from 4 every step, so the reuse
+  also keeps the largest step's capacity.
+
+Lessons: token anchors must include the comments inside a block
+(extract the exact text instead); measure on a quiet CPU or the
+number is noise; the basis of aequivalentia.sh should be refreshed
+after every landing so "mutatae ipsae" stays empty.

@@ -1131,6 +1131,10 @@ silva_glr_parsare (
                 Xar* acceptati;
                 i32  numerus_lexematum;
                 i32  positio;
+                Xar* frons_prima;
+                Xar* frons_altera;
+                Xar* reducenda;
+                Xar* index;
 
     fructus.successus                = FALSUM;
     fructus.valor                    = silva_valor_nihil();
@@ -1173,9 +1177,24 @@ silva_glr_parsare (
             *slot = initialis;
         }
     }
-    acceptati = xar_creare(glr->piscina,
+        acceptati = xar_creare(glr->piscina,
+            (i32)magnitudo(SilvaGSSNodus*));
+    /* Scriptoria passus REUSA (2026-09-02): olim tria Xar per passum
+     * lexematis creabantur (reducenda, frons_nova, index) - CV M
+     * creationes in lib/stml.c, X% foliorum profili. Contenta intra
+     * passum consumuntur (index per _index_quaerere passus sui,
+     * reducenda exhausta, frons_nova frons proximi fit; introitus
+     * indicis campos OMNES in creatione ponunt, ergo memoria stalis
+     * innocua), ergo frons duplici alveo alternat et ceteri
+     * xar_vacare purgantur - segmenta manent, capacitas passus
+     * maximi servatur. */
+    frons_prima   = frons;
+    frons_altera  = xar_creare(glr->piscina,
         (i32)magnitudo(SilvaGSSNodus*));
-
+    reducenda     = xar_creare(glr->piscina,
+        (i32)magnitudo(SilvaGSSNodus*));
+    index         = xar_creare(glr->piscina,
+        (i32)magnitudo(SilvaIndexIntroitus));
     dum (VERUM)
     {
         SilvaGLRPassus passus;
@@ -1220,12 +1239,14 @@ silva_glr_parsare (
             }
         }
 
-        passus.reducenda = xar_creare(glr->piscina,
-            (i32)magnitudo(SilvaGSSNodus*));
-        passus.frons_nova = xar_creare(glr->piscina,
-            (i32)magnitudo(SilvaGSSNodus*));
-        passus.index = xar_creare(glr->piscina,
-            (i32)magnitudo(SilvaIndexIntroitus));
+                passus.frons_nova = (frons
+                    == frons_altera) ? frons_prima
+                                                    : frons_altera;
+        xar_vacare(passus.frons_nova);
+        passus.reducenda  = reducenda;
+        xar_vacare(reducenda);
+        passus.index      = index;
+        xar_vacare(index);
         passus.acceptati        = acceptati;
         passus.piscina_arborum  = piscina_arborum;
         xar_vacare(acceptati);
