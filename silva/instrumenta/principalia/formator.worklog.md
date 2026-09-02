@@ -1022,3 +1022,47 @@ What the rollout found, in order:
 - zsh does not word-split `$var` in `for` — `${=var}`. Bit twice.
 - The probationes pass exceeds the 10-minute foreground limit;
   background it.
+
+## 2026-09-01 — pythonica, differre -verdictum, hooks flipped, R13 fixed
+
+Fran's read of the day: MCP edit tools are not reached for; my reflex
+is a script. So the structural primitives went where the reflex is:
+`pythonica/silva.py`, stdlib only, subprocess over the house CLIs with
+`-machina` output. `extenta(via)`, `corpus(via, nomen)`, `Editio` with
+`replace` (whitespace-tolerant anchors: runs of whitespace in the
+anchor match any whitespace, nowhere else), `substituere(nomen, text)`,
+`inserere_post/ante(nomen, text)`, all in memory with ONE write in
+`applicare()` (a failing anchor leaves the file untouched and raises),
+`verdictum(via)` = examen + `-delta`, `differre(a, b)` with
+`cosmetica_solum`. Gate: `pythonica/probare.sh`, 27 assertions
+including the two planted failures (bad anchor → disk untouched;
+substantive change → verdict denied).
+
+C side that made it possible: `formator -extenta` (TSV of
+`formator_extenta`, now with `linea_nodi` = the node's own first line
+so `corpus` excludes the leading comment); an 8th `-machina` column,
+emendation count, so consumers can tell fixable from not without
+knowing rule names; `differre -verdictum [cosmetica|documentaria]` =
+one exit code for "only trivia changed" (MOTA/ADDITA/REMOTA are always
+substantive: structure moved). Smoke `silva/differre_fumus.sh` VI/VI.
+
+Hooks, as agreed: the post-edit hook now shows ONLY rows with zero
+emendations (what the formatter cannot fix), since the commit hook
+fixes the rest; the pre-commit writes whole files everywhere except
+knotapel/ and vendor/, so structs and tables you touch are formatted
+too. Hook smoke VIII/VIII unchanged.
+
+Live test: R13's define-between-functions false positive (quaestio
+01M1FQ0JTN). `_regio_directivam_habet` inserted before
+`_regio_vexillum_habet` BY NAME, the R13 condition patched through a
+tolerant anchor, `formare` on the new function, `verdictum` ACCIPE,
+and differre named exactly three units: the helper ADDITA,
+`formator_lint_intra` MUTATA substantiva, `_regio_vexillum_habet`
+MUTATA cosmetica (the inserted blank line). The CLI file that carried
+the +1 row now reports 0. Fixture pinned; first plant broke the BUILD
+(unused variable) instead of the test — a plant must leave the code
+compiling, so plant at the first statement.
+
+Found: a lone assignment `x  = I;` (cluster of one) is governed by no
+rule — R9 is silent below two members and R10 excludes `=`. Minor,
+noted.

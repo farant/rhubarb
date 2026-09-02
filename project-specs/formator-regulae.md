@@ -599,3 +599,17 @@ drift non videt. Terra evoluta 2026-09-01: tools, css, materia, gesta,
 tessera, saltuarius, officina, apps, lint, instrumenta, silva,
 probationes; omissa: knotapel (demonstrationes Anglicae), vendor.
 Definitiones ex macro expansae (geometria infida) non iudicantur.
+
+## -extenta, columna emendationum, differre -verdictum, pythonica (2026-09-01)
+
+`formator -extenta`: TSV `via titulus linea_a linea_nodi linea_b genus`
+(extenta radicis; linea_nodi = linea prima nodi, sine commentario
+ducente). `-machina` columna VIII = numerus emendationum (0 = quod
+formator sanare nequit; uncus post-editionem ea sola ostendit).
+`differre -verdictum [cosmetica|documentaria]`: exitus 0 si paria omnia
+intra gradum, 1 aliter, ordo `VERDICTUM <gradus> cos doc sub mota add
+rem`; MOTA/ADDITA/REMOTA semper substantiva. Uncus pre-commit: scriptura
+TOTA praeter knotapel/vendor. `pythonica/silva.py`: facies Pythonica
+(extenta, Editio omnia-aut-nihil cum ancoris tolerantibus, substituere/
+inserere nomine, verdictum, differre) - porta `pythonica/probare.sh`.
+R13: acervus directivarum inter functiones = separator (nullus ordo).
