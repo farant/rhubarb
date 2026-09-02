@@ -31,12 +31,9 @@ RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
 BUILD_DIR="$SILVA_DIR/build"
 mkdir -p "$BUILD_DIR"
 
-declare -a GCC_FLAGS=(
-    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
-    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
-    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
-    "-Wno-long-long" "-Wno-overlength-strings"
-)
+# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
+source "$RADIX_DIR/tools/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$SILVA_DIR/fontes"

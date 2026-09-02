@@ -15,12 +15,9 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
-declare -a GCC_FLAGS=(
-    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
-    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
-    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
-    "-Wno-long-long"
-)
+# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
+source "$SCRIPT_DIR/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 if [ ! -x bin/aedilis ]; then
     echo "stml_struere: bin/aedilis deest - suite prima curre" \

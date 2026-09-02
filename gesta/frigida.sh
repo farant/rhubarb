@@ -17,13 +17,9 @@ mkdir -p "$BUILD_DIR" "$GESTA_DIR/annales"
 # = servus statim EOF exit 0 post constructionem, scrinium intactum)
 "$GESTA_DIR/tabularium.sh" </dev/null >/dev/null 2>&1 || true
 
-declare -a GCC_FLAGS=(
-    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
-    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
-    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
-    "-Wno-long-long" "-Wno-overlength-strings"
-    "-fbracket-depth=512"
-)
+# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
+source "$RADIX_DIR/tools/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 main_src="$GESTA_DIR/instrumenta/nota_frigida.c"
 obj_files="$BUILD_DIR/sqlite3.o"

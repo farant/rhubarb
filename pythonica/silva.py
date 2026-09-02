@@ -539,6 +539,7 @@ PORTAE = {
     'unci': (['./tools/unci-git/fumus.sh'], r'fumus unci: (sanum|FRACTUM)'),
     'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
                       r'fumus mensor_suitae: (sanum|FRACTUM)'),
+    'vexilla': (['./tools/vexilla_fumus.sh'], r'fumus vexilla: (sanum|FRACTUM)'),
     'amalgamata': (['./tools/amalgamata_probare.sh'],
                    r'amalgamata: \d+ compilata, \d+ fracta'),
 }

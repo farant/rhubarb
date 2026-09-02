@@ -473,10 +473,16 @@ credo(any(v == orph and st.startswith('mortua') for v, st in silva.portae_penden
 silva.receptum_delere(orph)
 credo(all(v != via_r for v, _ in silva.portae_pendentes()),
       'portae_pendentes: receptum abiit')
-# commissio_umbra siccum: portae seriatim, recepta deleta, nihil commissum
+# commissio_umbra siccum: portae seriatim, recepta SUA deleta, nihil
+# commissum. Ante/post conferuntur: recepta ALIENA (cursus umbrae
+# exterior qui hanc probationem ipsam ut portam currit) manere licet -
+# 2026-09-02 assertum 'nullum receptum formator-intra' extra cursum
+# falso rubuit.
+ante_u = set(v for v, _ in silva.portae_pendentes())
 h_u, rr = silva.commissio_umbra('nihil', ['pythonica/README.md'], ['formator-intra'], siccum=True)
 credo(h_u is None and len(rr) == 1 and rr[0][0] == 'formator-intra' and 'sanum' in rr[0][1], 'commissio_umbra siccum: porta sana, nihil commissum')
-credo(not any('formator-intra' in v for v, _ in silva.portae_pendentes()), 'commissio_umbra: recepta deleta')
+post_u = set(v for v, _ in silva.portae_pendentes())
+credo(post_u <= ante_u, 'commissio_umbra: recepta sua deleta (aliena intacta)')
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

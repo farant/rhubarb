@@ -7,21 +7,9 @@
 #   Default: 100 MB
 
 # Compiler flags
-declare -a GCC_FLAGS=(
-    "-std=c89"
-    "-pedantic"
-    "-Wall"
-    "-Wextra"
-    "-Werror"
-    "-Wconversion"
-    "-Wsign-conversion"
-    "-Wcast-qual"
-    "-Wstrict-prototypes"
-    "-Wmissing-prototypes"
-    "-Wwrite-strings"
-    "-Wno-long-long"
-    "-O2"
-)
+# vexilla: tools/vexilla.sh (una sedes; LVII copiae olim, 2026-09-02)
+source "$(dirname "$0")/tools/vexilla.sh"
+declare -a GCC_FLAGS=("${VEXILLA_C89[@]}" "-O2")
 
 # Include paths
 declare -a INCLUDE_FLAGS=(
