@@ -976,3 +976,49 @@ Door: after the rollout (step two) every baseline is zero and the hook
 can write whole files, which also covers structs and tables. Generated
 files need exclusions first (`capsula_*`, tabulae, amalgams) or the
 hook formats what the generator will overwrite.
+
+## 2026-09-01 — Rollout (step two): the whole tree outside lib/include
+
+Fran's step two. `tools/forma_evolutio.sh <dir> [-scribere]`: tracked
+.c/.h under the directory minus fixa/vendor/build/amalgama/scratchpad
+and `capsula_*` bundles, headers of every directory inside passed as
+`-capita`, one formator invocation, then differre against HEAD per
+changed file — the second oracle of a different kind. Generated files
+(tabulae, latina_datum, *_generata.h, lexicon_c89, two generated
+probationes, amalgama_ligator) went into the formator exclusions with
+their generator named, because formatting what a generator overwrites
+is churn. Commits are whitespace-only and bypass the hook (the oracle
+is differre, not the examen); their hashes go to
+`.git-blame-ignore-revs` and `git config blame.ignoreRevsFile` is set.
+
+Order and verdicts: tools 26 (compile_tools.sh is STALE — it needs a
+tool name and a dozen tools fail on the pre-format commit too, so the
+gate was "no clang error in the formatted build"), css 11 (8/8),
+materia 18 (6/6), gesta 13 (4/4), tessera 17 (5/5), saltuarius 42
+(13/13), officina 45 + machinula (13/13), apps 3 (tabs → spaces; GUI
+smokes not run), lint/instrumenta 2, silva 127 (suite pending),
+probationes (pending). knotapel skipped: research demos in English C,
+not house code. vendor skipped.
+
+What the rollout found, in order:
+- `-capita`: outside silva the CLI had only the silva header dirs, so
+  every non-silva type was unknown and R7 silently skipped those
+  declarations. The CLI now provides each input file's own directory
+  plus explicit `-capita`.
+- Oscillation, officina_machinula.c: two multi-line macros expand to
+  function definitions; R1/R2/R8/R13 judged the expanded tree and
+  aimed edits at the invocation line forever. The INDAGO trace
+  (`FORMATOR_INDAGO=1`, per-iteration armed divergences) read it off
+  in one run. Fix: definitions and root prototypes whose geometry is
+  not faithful are not judged — the same `silva_nodus_geometria_fida`
+  gate R2-vocatio already used. Fixture pinned, plant red.
+- The differre counter in the rollout script matched the WORD
+  "substantiva" in diff bodies (silva_differre.c contains
+  `redde "substantiva"`); the labels are bracketed. Count labels.
+- Amalgams drift silently: amalgamata_probare only compiles the
+  committed artifact. After formatting officina/tessera/silva fontes,
+  each needed `amalgama_excludenda_generare` (manifests were stale
+  anyway) then `amalgamare.sh`. Regenerated and committed.
+- zsh does not word-split `$var` in `for` — `${=var}`. Bit twice.
+- The probationes pass exceeds the 10-minute foreground limit;
+  background it.

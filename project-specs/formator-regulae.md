@@ -584,3 +584,18 @@ differens (commissio partialis) NON formatur, monetur. Ordo: scriptura,
 examen, monitum `-delta`. Evasio `--no-verify`. Porta:
 `tools/unci-git/fumus.sh` VI-VIII (fixum tractum fumus_formae.c).
 Porta post evolutionem totam: scriptura tota (structurae inclusae).
+
+## Evolutio totius terrae (2026-09-01)
+
+`./tools/forma_evolutio.sh <dir> [-scribere]`: census aut scriptura
+tota directorii (plagulae tractae .c/.h sine fixa/vendor/build/
+amalgama/scratchpad/capsula_*; capita directoriorum interiorum per
+`-capita`), oraculum alterum `differre` per plagulam mutatam
+(`[substantiva]`/`[documentaria]` = FRACTUM). Generata in exclusionibus
+(generator nominatus). Commissiones formae solae `--no-verify`
+(oraculum = differre), hashes in `.git-blame-ignore-revs`. Post formam
+fontium amalgamata REGENERANDA (excludenda primum) - amalgamata_probare
+drift non videt. Terra evoluta 2026-09-01: tools, css, materia, gesta,
+tessera, saltuarius, officina, apps, lint, instrumenta, silva,
+probationes; omissa: knotapel (demonstrationes Anglicae), vendor.
+Definitiones ex macro expansae (geometria infida) non iudicantur.
