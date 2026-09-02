@@ -3,6 +3,11 @@
  * Usus:
  *   formator <via.c> [viae ...] [-machina] [-scribere]
  *            [-intra functio ...] [-lineae a-b ...]
+ *            [-capita directorium ...]
+ *
+ * Capita: include/, silva/fontes, silva/instrumenta SEMPER; directorium
+ * plagulae ipsius quoque (css/fontes etc. - typi ignoti R7 exemptos
+ * facerent); -capita alia addit.
  *
  * -lineae a-b: ambitus per lineas - functiones radicis quarum
  * extentum lineas tangit nominantur (formator_extenta) et ut -intra
@@ -91,6 +96,43 @@ _capita_praebere (
 
 #define INTRA_MAXIMAE 64
 #define LINEAE_MAXIMAE 256
+#define CAPITA_MAXIMA 32
+
+/* directorium plagulae praebere semel (titulus sine '/' = ".") */
+interior vacuum
+_directorium_plagulae_praebere (
+        SilvaContextus* contextus,
+               Piscina* piscina,
+    constans character* via,
+             character  praebita[][256],
+                   i32* numerus_praebitorum)
+{
+             character  directorium[256];
+    constans character* solidus;
+        memoriae_index  n;
+                   i32  k;
+
+    solidus  = strrchr(via, '/');
+    n        = solidus ? (memoriae_index)(solidus - via) : ZEPHYRUM;
+    si (n >= magnitudo(directorium)) redde;
+    si (n == (memoriae_index)ZEPHYRUM)
+    {
+        strcpy(directorium, ".");
+    }
+    alioquin
+    {
+        memcpy(directorium, via, n);
+        directorium[n] = '\0';
+    }
+    per (k = ZEPHYRUM; k < *numerus_praebitorum; k += I)
+    {
+        si (strcmp(praebita[k], directorium) == ZEPHYRUM) redde;
+    }
+    si (*numerus_praebitorum >= (i32)CAPITA_MAXIMA) redde;
+    strcpy(praebita[*numerus_praebitorum], directorium);
+    *numerus_praebitorum += I;
+    _capita_praebere(contextus, piscina, directorium);
+}
 
 /* exclusiones: via<TAB>causa (radici-relativae); '#' et lineae
  * vacuae omissae. Exemptio numquam tacita - vocator clamat. */
@@ -226,6 +268,8 @@ principale (
                        i32  lineae_b[LINEAE_MAXIMAE];
                        i32  numerus_lineae;
                        i32  numerus_intra;
+                 character  praebita[CAPITA_MAXIMA][256];
+                       i32  numerus_praebitorum;
                        b32  machina;
                        b32  scriptura;
                        b32  recusatio;
@@ -233,13 +277,14 @@ principale (
                        i32  summa;
                    integer  i;
 
-    machina         = FALSUM;
-    scriptura       = FALSUM;
-    recusatio       = FALSUM;
-    ulla_plagula    = FALSUM;
-    summa           = ZEPHYRUM;
-    numerus_intra   = ZEPHYRUM;
-    numerus_lineae  = ZEPHYRUM;
+    machina              = FALSUM;
+    scriptura            = FALSUM;
+    recusatio            = FALSUM;
+    ulla_plagula         = FALSUM;
+    summa                = ZEPHYRUM;
+    numerus_intra        = ZEPHYRUM;
+    numerus_lineae       = ZEPHYRUM;
+    numerus_praebitorum  = ZEPHYRUM;
 
     per (i = I; i < numerus; i += I)
     {
@@ -267,6 +312,16 @@ principale (
             functiones_intra[numerus_intra].mensura =
                 (i32)strlen(argumenta[i]);
             numerus_intra += I;
+        }
+        si (strcmp(argumenta[i], "-capita") == ZEPHYRUM)
+        {
+            si (i + I >= numerus)
+            {
+                fprintf(stderr, "formator: -capita directorium"
+                    " poscit\n");
+                redde II;
+            }
+            i += I;   /* praebetur post contextum creatum */
         }
         si (strcmp(argumenta[i], "-lineae") == ZEPHYRUM)
         {
@@ -328,6 +383,15 @@ principale (
         _capita_praebere(contextus, piscina, "silva/fontes");
         _capita_praebere(contextus, piscina,
             "silva/instrumenta");
+        per (i = I; i + I < numerus; i += I)
+        {
+            si (strcmp(argumenta[i], "-capita") == ZEPHYRUM)
+            {
+                i += I;
+                _directorium_plagulae_praebere(contextus, piscina,
+                    argumenta[i], praebita, &numerus_praebitorum);
+            }
+        }
     }
 
     si (machina)
@@ -343,7 +407,8 @@ principale (
 
         via = argumenta[i];
         si (   strcmp(via, "-intra")  == ZEPHYRUM
-            || strcmp(via, "-lineae") == ZEPHYRUM)
+            || strcmp(via, "-lineae") == ZEPHYRUM
+            || strcmp(via, "-capita") == ZEPHYRUM)
         {
             i += I;
             perge;
@@ -372,6 +437,11 @@ principale (
             redde II;
         }
         ulla_plagula = VERUM;
+        si (contextus)
+        {
+            _directorium_plagulae_praebere(contextus, piscina, via,
+                praebita, &numerus_praebitorum);
+        }
 
         /* piscina operis PER PLAGULAM in AMBOBUS modis: modus lint
          * olim in piscinam longaevam parsabat - cursus corporis
@@ -549,7 +619,7 @@ principale (
     {
         fprintf(stderr, "usus: formator <via.c> [viae ...]"
             " [-machina] [-scribere] [-intra functio ...]"
-            " [-lineae a-b ...]\n");
+            " [-lineae a-b ...] [-capita directorium ...]\n");
         piscina_destruere(piscina);
         redde II;
     }

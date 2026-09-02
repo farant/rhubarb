@@ -24,3 +24,25 @@ lib/lapifex_glr.c	generatio gelata: praedecessor referentiae (deletur post messe
 lib/lapifex_lexere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
 lib/lapifex_parsere.c	generatio gelata: praedecessor referentiae (deletur post messem paritatis)
 include/latina.h	fons lexici - mensa macro tab-ordinata deliberata (datum generatum ex eo)
+# --- generata (evolutio 2026-09-01): forma quam generator superscribit ---
+materia/probationes/lexicon_c89.c	generatum (lexicon ex latina)
+materia/probationes/lexicon_c89.h	generatum (lexicon ex latina)
+silva/fontes/silva_latina_datum.c	generatum ex latina.h
+silva/fontes/silva_latina_datum.h	generatum ex latina.h
+silva/fontes/silva_tabulae.h	generatum (generare.sh)
+silva/fontes/silva_tabulae_c89.c	generatum (generare.sh)
+silva/fontes/silva_tabulae_c89.h	generatum (generare.sh)
+silva/fontes/silva_tabulae_imparilis.c	generatum (generare.sh)
+silva/fontes/silva_tabulae_imparilis.h	generatum (generare.sh)
+silva/fontes/silva_tabulae_sceleti.c	generatum (generare.sh)
+silva/fontes/silva_tabulae_sceleti.h	generatum (generare.sh)
+silva/probationes/probatio_silva_tabulae.c	generatum (generare.sh)
+silva/instrumenta/principalia/excludenda_generata.h	generatum (amalgama_excludenda_generare)
+silva/instrumenta/principalia/fontes_generata.h	generatum (aedilis)
+officina/instrumenta/principalia/excludenda_generata.h	generatum (amalgama_excludenda_generare)
+officina/instrumenta/principalia/fontes_generata.h	generatum (aedilis)
+tessera/instrumenta/principalia/excludenda_generata.h	generatum (amalgama_excludenda_generare)
+tessera/instrumenta/principalia/fontes_generata.h	generatum (aedilis)
+probationes/probatio_natura_canones.c	generatum (natura_canones)
+probationes/probatio_quaestiones_lectio.c	generatum (quaestiones)
+tools/amalgama_ligator.c	generatum
