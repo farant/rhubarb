@@ -18,6 +18,11 @@ plica pendet — veritas in C manet.
   `.unitates()`); `strictum=True` REICE revertit
 - `silva.verdictum(via)` — examen + `-delta` uno vocamine
 - `silva.differre(a, b)` — paria unitatum + `cosmetica_solum`
+- `silva.Refactio()` — transactio trans plagulas: `.editio(via)` una per
+  viam, `.prototypum_synchronizare(via_c, via_h, nomen)` (caput
+  definitionis -> prototypum; `si_absens='finis'` ante `#endif`),
+  `.applicare()` unum: custos in omnibus, scriptura omnium, forma,
+  iudicium post omnes scriptas; `strictum` omnes restituit
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

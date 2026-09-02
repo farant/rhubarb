@@ -12,6 +12,10 @@ Usus typicus in scripto editionis:
     e.substituere('chorda_mensura', NOVUM)      # corpus functionis nomine
     e.replace('x  = I;', 'x = II;')             # ancora spatiis tolerans
     f = e.applicare()                           # omnia aut nihil; portae
+    r = silva.Refactio()                         # trans plagulas, unum applicare
+    r.editio('lib/x.c').substituere('f', NOVUM)
+    r.prototypum_synchronizare('lib/x.c', 'include/x.h', 'f')
+    fructus = r.applicare()                      # [Fructus] post omnes scriptas
     print(f)                                    # examen, forma, unitates, diff
     assert f.sana and f.unitates() == [('MUTATA', 'chorda_mensura', 'substantiva')]
 
@@ -217,6 +221,38 @@ class Editio(object):
     def mutata(self):
         return self.textus != self.originalis
 
+    # -- phases (Refactio eas trans plagulas ordinat) --
+    def _custodire(self):
+        """custos lectionis rancidae: discus == textus lectus"""
+        if open(_absoluta(self.via)).read() != self.originalis:
+            raise SilvaError('plagula in disco mutata post lectionem'
+                             ' (%s) - relege ante editionem' % self.via)
+
+    def _scribere(self):
+        """scriptura cruda; reddit textum ante"""
+        ante = self.originalis
+        with open(_absoluta(self.via), 'w') as f:
+            f.write(self.textus)
+        return ante
+
+    def _formare(self):
+        formata = formare(self.via)
+        self.textus = open(_absoluta(self.via)).read()
+        return formata
+
+    def _restituere(self, ante):
+        with open(_absoluta(self.via), 'w') as f:
+            f.write(ante)
+        self.textus = ante
+
+    def _fructus(self, ante, formata, iudica):
+        d = ''.join(difflib.unified_diff(
+            ante.splitlines(True), self.textus.splitlines(True),
+            'a/' + self.via, 'b/' + self.via))
+        verd = examen(self.via) if iudica else None
+        dif = differre(ante, self.via) if iudica else None
+        return Fructus(self.via, d, verd, formata, dif)
+
     def applicare(self, forma=True, iudica=True, strictum=False):
         """Scribit SEMEL (omnia aut nihil) et Fructum reddit.
 
@@ -230,36 +266,18 @@ class Editio(object):
         editionem restituitur et SilvaError. Ordinarius: refertur,
         numquam tacite revertitur (status medius refactionis licitus
         est; uncus commissionis porta manet)."""
-        via = _absoluta(self.via)
-        in_disco = open(via).read()
-        if in_disco != self.originalis:
-            raise SilvaError('plagula in disco mutata post lectionem'
-                             ' (%s) - relege ante editionem' % self.via)
+        self._custodire()
         if not self.mutata():
             return Fructus(self.via, '', None, False, None)
-        ante = self.originalis
-        with open(via, 'w') as f:
-            f.write(self.textus)
-        formata = False
-        if forma:
-            formata = formare(self.via)
-            self.textus = open(via).read()
-        d = ''.join(difflib.unified_diff(
-            ante.splitlines(True), self.textus.splitlines(True),
-            'a/' + self.via, 'b/' + self.via))
-        verd = None
-        dif = None
-        if iudica:
-            verd = examen(self.via)
-            dif = differre(ante, self.via)
-            if strictum and verd != 'ACCIPE':
-                with open(via, 'w') as f:
-                    f.write(ante)
-                self.textus = ante
-                raise SilvaError('examen %s - scriptura restituta (strictum)'
-                                 % verd)
+        ante = self._scribere()
+        formata = self._formare() if forma else False
+        f = self._fructus(ante, formata, iudica)
+        if strictum and not f.sana:
+            self._restituere(ante)
+            raise SilvaError('examen %s - scriptura restituta (strictum)'
+                             % f.examen)
         self.originalis = self.textus
-        return Fructus(self.via, d, verd, formata, dif)
+        return f
 
 
 class Fructus(object):
@@ -294,6 +312,105 @@ class Fructus(object):
             lineae.append('  differre: %s %s' % (
                 self.differentia.verdictum, self.unitates()))
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
+
+
+# ---------------------------------------------------------------- refactio
+
+def _caput_definitionis(textus_nodi):
+    """caput definitionis (specificatores + declarator) sine corpore:
+    lineae ante primam '{' solam in columna I"""
+    lineae = textus_nodi.splitlines(True)
+    for i, l in enumerate(lineae):
+        if l.rstrip('\n') == '{':
+            return ''.join(lineae[:i]).rstrip()
+    raise SilvaError('caput definitionis: brachium apertum in columna I'
+                     ' non inventum (forma domus?)')
+
+
+class Refactio(object):
+    """Transactio trans plagulas: Editio una per viam (editio(via)),
+    applicare() unum - custos lectionis rancidae in OMNIBUS ante
+    scripturam ullam, tum scriptura omnium, forma omnium, iudicium
+    omnium (examen post omnes scriptas: plagula A functionem in B
+    additam vocans B scriptam requirit). strictum: examen ullum non
+    ACCIPE -> omnes restitutae. Reddit [Fructus]."""
+
+    def __init__(self):
+        self.editiones = {}
+        self.ordo = []
+
+    def editio(self, via):
+        if via not in self.editiones:
+            self.editiones[via] = Editio(via)
+            self.ordo.append(via)
+        return self.editiones[via]
+
+    def prototypum_synchronizare(self, via_c, via_h, nomen,
+                                 si_absens='error'):
+        """prototypum functionis in via_h ex capite definitionis in via_c
+        (textus PRAESENS transactionis) regenerare. via_h == via_c =
+        acervus prototyporum localium. si_absens: 'error' | 'finis'
+        (ante '#endif' ultimum inseritur, capitibus solis)."""
+        ec = self.editio(via_c)
+        x = _extentum_nominis(ec._extenta_praesentia(), nomen, True)
+        lineae = ec._lineae()
+        caput = _caput_definitionis(''.join(lineae[x.linea_nodi - 1:
+                                                   x.linea_b]))
+        prototypum = caput + ';\n'
+        eh = self.editio(via_h)
+        try:
+            px = _extentum_nominis(eh._extenta_praesentia(), nomen, False)
+        except SilvaError:
+            if si_absens != 'finis':
+                raise
+            k = eh.textus.rfind('#endif')
+            if k < 0:
+                raise SilvaError('prototypum absens et #endif absens: %s'
+                                 % via_h)
+            eh.textus = eh.textus[:k] + prototypum + '\n' + eh.textus[k:]
+            eh.acta.append('prototypum %s insertum' % nomen)
+            return self
+        lh = eh._lineae()
+        eh.textus = ''.join(lh[:px.linea_nodi - 1]) + prototypum \
+            + ''.join(lh[px.linea_b:])
+        eh.acta.append('prototypum %s synchronizatum' % nomen)
+        return self
+
+    def applicare(self, forma=True, iudica=True, strictum=False):
+        for via in self.ordo:
+            self.editiones[via]._custodire()
+        mutatae = [v for v in self.ordo if self.editiones[v].mutata()]
+        antea = {}
+        for via in mutatae:
+            antea[via] = self.editiones[via]._scribere()
+        formatae = {}
+        for via in mutatae:
+            formatae[via] = self.editiones[via]._formare() if forma \
+                else False
+        fructus = []
+        for via in self.ordo:
+            e = self.editiones[via]
+            if via not in antea:
+                fructus.append(Fructus(via, '', None, False, None))
+                continue
+            fructus.append(e._fructus(antea[via], formatae[via], iudica))
+        if strictum and any(not f.sana for f in fructus):
+            for via in mutatae:
+                self.editiones[via]._restituere(antea[via])
+            raise SilvaError('examen non ACCIPE in %s - omnes restitutae'
+                             ' (strictum)' % [f.via for f in fructus
+                                              if not f.sana])
+        for via in mutatae:
+            self.editiones[via].originalis = self.editiones[via].textus
+        return fructus
+
+
+def prototypum_synchronizare(via_c, via_h, nomen, si_absens='error',
+                             **optiones):
+    """forma brevis: transactio unius operationis"""
+    r = Refactio()
+    r.prototypum_synchronizare(via_c, via_h, nomen, si_absens)
+    return r.applicare(**optiones)
 
 
 # ---------------------------------------------------------------- iudicia

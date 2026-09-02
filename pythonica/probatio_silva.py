@@ -175,6 +175,68 @@ t = open(via).read()
 credo('beta (vacuum)' in t and 'vacuum beta(vacuum);' in t and 'b (vacuum)' not in t,
       'renominare -scribere: definitio et prototypum')
 
+print('--- Refactio + prototypum_synchronizare ---')
+# ordo domus: custos primum, inclusiones intra (inclusio ANTE custodem
+# prototypum extentis celat - quaestio silvae, vide worklog)
+CAPUT = ('#ifndef DUO_H\n'
+         '#define DUO_H\n'
+         '\n'
+         '#include "latina.h"\n'
+         '\n'
+         'vacuum\n'
+         'b (vacuum);\n'
+         '\n'
+         '#endif /* DUO_H */\n')
+via_h = os.path.join(T, 'duo.h')
+open(via, 'w').write(FONS); open(via_h, 'w').write(CAPUT)
+# signatura mutata in .c: sine synchronizatione examen REICE (typi pugnantes)
+r = silva.Refactio()
+r.editio(via).substituere('b', 'vacuum\nb (i32 x)\n{\n    (vacuum)x;\n    redde;\n}\n')
+r.editio(via).replace('vacuum b(vacuum);', 'vacuum b(i32 x);')     # prototypum locale
+r.prototypum_synchronizare(via, via_h, 'b')
+credo(open(via).read() == FONS and open(via_h).read() == CAPUT, 'nihil scriptum ante applicare')
+fr = r.applicare()
+credo(len(fr) == 2 and all(f.sana for f in fr), 'ambae scriptae, examen ACCIPE')
+credo('b (i32 x);' in open(via_h).read() or 'i32 x' in silva.corpus(via_h, 'b', definitio=False),
+      'prototypum capitis ex capite definitionis')
+credo(any(('MUTATA', 'b', 'substantiva') in f.unitates() for f in fr), 'unitas b in fructu')
+# synchronizatio eadem plagula (acervus prototyporum localium)
+open(via, 'w').write(FONS)
+r = silva.Refactio()
+r.editio(via).substituere('b', 'vacuum\nb (i32 x)\n{\n    (vacuum)x;\n    redde;\n}\n')
+r.prototypum_synchronizare(via, via, 'b')
+fr = r.applicare()
+credo(fr[0].sana and 'i32 x' in silva.corpus(via, 'b', definitio=False), 'prototypum locale synchronizatum, ACCIPE')
+# absens: error; finis inserit
+open(via_h, 'w').write(CAPUT)
+r = silva.Refactio(); r.editio(via)
+try:
+    r.prototypum_synchronizare(via, via_h, 'a')
+    credo(False, 'prototypum absens levat')
+except silva.SilvaError:
+    credo(True, 'prototypum absens levat (ordinarius)')
+r = silva.Refactio(); r.prototypum_synchronizare(via, via_h, 'a', si_absens='finis'); r.applicare()
+credo('a (vacuum);' in open(via_h).read() and open(via_h).read().rstrip().endswith('#endif /* DUO_H */'), 'finis: ante #endif insertum')
+# lectio rancida in plagula altera: NIHIL scriptum
+open(via, 'w').write(FONS); open(via_h, 'w').write(CAPUT)
+r = silva.Refactio()
+r.editio(via).replace('redde;', 'frange;', numerus=2)
+r.editio(via_h).replace('b (vacuum);', 'b (i32 x);')
+open(via_h, 'a').write('/* alius */\n')
+try:
+    r.applicare(); credo(False, 'transactio: lectio rancida refutatur')
+except silva.SilvaError:
+    credo(open(via).read() == FONS, 'transactio: plagula prima intacta quoque')
+# strictum: REICE in una -> ambae restitutae
+open(via, 'w').write(FONS); open(via_h, 'w').write(CAPUT)
+r = silva.Refactio()
+r.editio(via).replace('redde;', 'frange;', numerus=2)
+r.editio(via_h).replace('b (vacuum);', '// C99\nvacuum\nb (vacuum);', tolerans=False)
+try:
+    r.applicare(strictum=True); credo(False, 'strictum trans plagulas')
+except silva.SilvaError:
+    credo(open(via).read() == FONS and open(via_h).read() == CAPUT, 'strictum: ambae restitutae')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')
