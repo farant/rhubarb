@@ -3104,29 +3104,179 @@ _continuationes_censere (
     }
 }
 
+
+/* ==================================================
+ * ambitus nominatus (-intra): extenta functionum
+ * titulo datarum; divergentiae extra ea cadunt
+ * ================================================== */
+
+nomen structura {
+    i32 linea_a;
+    i32 linea_b;
+} ExtentumIntra;
+
+/* titulus nodi radicis: definitio functionis aut prototypum
+ * verum (_prototypi_functionis); NIHIL ceteris */
+interior SilvaToken*
+_titulus_radicis (
+    SilvaNodus* nodus_radicis)
+{
+    SilvaNodus* functionis;
+
+    si (!nodus_radicis) redde NIHIL;
+    si (nodus_radicis->genus
+        == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+    {
+        functionis = _declarator_functionis(_valor_nodus(
+            silva_c89_definitio_functionis_declarator(
+                nodus_radicis)));
+    }
+    alioquin
+    {
+        functionis = _prototypi_functionis(nodus_radicis);
+    }
+    si (!functionis) redde NIHIL;
+    redde _titulus_declaratoris(_valor_nodus(
+        silva_c89_declarator_functionis_internum(functionis)));
+}
+
+/* extentum nodi radicis registrare si titulus congruit; inventae
+ * notare. Extentum a linea post nodum priorem incipit. */
+interior vacuum
+_intra_registrare (
+    constans FormatorIntra* intra,
+                       Xar* extenta,
+                SilvaNodus* nodus_radicis,
+                       i32  linea_a,
+                       i32  linea_b)
+{
+    SilvaToken* titulus;
+           i32  k;
+
+    titulus = _titulus_radicis(nodus_radicis);
+    si (!titulus) redde;
+    per (k = ZEPHYRUM; k < intra->numerus; k += I)
+    {
+        ExtentumIntra* e;
+
+        si (!chorda_aequalis(titulus->valor,
+            intra->functiones[k]))
+        {
+            perge;
+        }
+        si (intra->inventae) intra->inventae[k] = VERUM;
+        e = (ExtentumIntra*)xar_addere(extenta);
+        si (!e) redde;
+        e->linea_a = linea_a;
+        e->linea_b = linea_b;
+    }
+}
+
+/* divergentia TOTA intra extentum aliquod (sedes et emendationes
+ * omnes)? Transgredientes cadunt - conservative: dimidium
+ * editionis extra ambitum numquam applicatur. */
+interior b32
+_intra_continetur (
+    constans FormatorDivergentia* d,
+                             Xar* extenta)
+{
+    i32 n;
+    i32 i;
+
+    n = xar_numerus(extenta);
+    per (i = ZEPHYRUM; i < n; i += I)
+    {
+        constans ExtentumIntra* e;
+                           b32  intus;
+                           i32  j;
+
+        e      = (constans ExtentumIntra*)xar_obtinere(extenta, i);
+        intus  = d->linea >= e->linea_a && d->linea <= e->linea_b;
+        per (j = ZEPHYRUM; intus && j < d->numerus_emendationum;
+            j += I)
+        {
+            si (   d->emendationes[j].linea_a < e->linea_a
+                || d->emendationes[j].linea_b > e->linea_b)
+            {
+                intus = FALSUM;
+            }
+        }
+        si (intus) redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* divergentias extra extenta demere (copia nova; NIHIL si piscina
+ * fracta - contractus formator_lint) */
+interior Xar*
+_intra_servare (
+    Piscina* piscina,
+        Xar* divergentiae,
+        Xar* extenta)
+{
+    Xar* servatae;
+    i32  n;
+    i32  i;
+
+    servatae = xar_creare(piscina,
+        magnitudo(FormatorDivergentia));
+    si (!servatae) redde NIHIL;
+    n = xar_numerus(divergentiae);
+    per (i = ZEPHYRUM; i < n; i += I)
+    {
+        FormatorDivergentia* d;
+        FormatorDivergentia* copia;
+
+        d = (FormatorDivergentia*)xar_obtinere(divergentiae, i);
+        si (!_intra_continetur(d, extenta)) perge;
+        copia = (FormatorDivergentia*)xar_addere(servatae);
+        si (!copia) redde NIHIL;
+        *copia = *d;
+    }
+    redde servatae;
+}
+
+
 /* ==================================================
  * introitus
  * ================================================== */
 
 Xar*
-formator_lint (
-              Piscina* piscina,
-       SilvaContextus* contextus,
-    constans character* fons,
-                   i32  mensura)
+formator_lint_intra (
+                   Piscina* piscina,
+            SilvaContextus* contextus,
+        constans character* fons,
+                       i32  mensura,
+    constans FormatorIntra* intra)
 {
-    Xar*          divergentiae;
-    Xar*          cruda;
+             Xar* divergentiae;
+             Xar* cruda;
+             Xar* extenta_intra;
     SilvaParsura* parsura;
-    i32           numerus;
-    i32           i;
+             i32  numerus;
+             i32  i;
+
+    extenta_intra = NIHIL;
+    si (intra)
+    {
+        si (intra->inventae)
+        {
+            per (i = ZEPHYRUM; i < intra->numerus; i += I)
+            {
+                intra->inventae[i] = FALSUM;
+            }
+        }
+        extenta_intra = xar_creare(piscina,
+            magnitudo(ExtentumIntra));
+        si (!extenta_intra) redde NIHIL;
+    }
 
     divergentiae = xar_creare(piscina,
         magnitudo(FormatorDivergentia));
     si (!divergentiae || !fons) redde divergentiae;
 
-    cruda = silva_lexare_cruda(piscina, fons, mensura, ZEPHYRUM);
-    numerus = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
+    cruda    = silva_lexare_cruda(piscina, fons, mensura, ZEPHYRUM);
+    numerus  = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
@@ -3150,14 +3300,14 @@ formator_lint (
         }
 
         /* R12: spatia in cauda lineae */
-        si ((lexema->genus == SILVA_LEX_SPATIA
+        si (   (lexema->genus == SILVA_LEX_SPATIA
                 || lexema->genus == SILVA_LEX_TABULAE)
             && i + I < numerus)
         {
             SilvaToken* sequens;
 
             sequens = _lexema(cruda, i + I);
-            si (sequens->genus == SILVA_LEX_NOVA_LINEA
+            si (   sequens->genus == SILVA_LEX_NOVA_LINEA
                 || sequens->genus == SILVA_LEX_EOF)
             {
                 _addere(divergentiae, "spatia-caudae",
@@ -3173,7 +3323,7 @@ formator_lint (
         }
 
         /* R6: spatium unicum inter clavem et parenthesim */
-        si (_clavis_ante_parenthesim(lexema)
+        si (   _clavis_ante_parenthesim(lexema)
             && i + I < numerus)
         {
             SilvaToken* sequens;
@@ -3190,11 +3340,11 @@ formator_lint (
                     sequens->columna,
                     _textus_emendationis(piscina, ZEPHYRUM, I));
             }
-            alioquin si (sequens->genus == SILVA_LEX_SPATIA
-                && sequens->valor.mensura != (i32)I
-                && i + II < numerus
-                && _lexema(cruda, i + II)->genus
-                    == SILVA_LEX_PAREN_APERTA)
+            alioquin si (   sequens->genus         == SILVA_LEX_SPATIA
+                         && sequens->valor.mensura != (i32)I
+                         && i + II < numerus
+                         && _lexema(cruda, i + II)->genus
+                         == SILVA_LEX_PAREN_APERTA)
             {
                 _addere(divergentiae, "spatium-post-claves",
                     "spatium unicum post clavem exspectatum",
@@ -3208,7 +3358,7 @@ formator_lint (
         }
 
         /* R14: vexilla intra commenta sola */
-        si (lexema->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+        si (   lexema->genus == SILVA_LEX_COMMENTUM_CLAUSUM
             || lexema->genus == SILVA_LEX_COMMENTUM_LINEA)
         {
             _vexilla_censere(divergentiae, lexema);
@@ -3217,7 +3367,7 @@ formator_lint (
         /* R10 (virgula): nullum spatium ante, spatium post */
         si (lexema->genus == SILVA_LEX_COMMA)
         {
-            si (i != (i32)ZEPHYRUM
+            si (   i != (i32)ZEPHYRUM
                 && _lexema(cruda, i - I)->genus
                     == SILVA_LEX_SPATIA)
             {
@@ -3239,7 +3389,7 @@ formator_lint (
                 SilvaLexemaGenus g;
 
                 g = _lexema(cruda, i + I)->genus;
-                si (g != SILVA_LEX_SPATIA
+                si (   g != SILVA_LEX_SPATIA
                     && g != SILVA_LEX_NOVA_LINEA
                     && g != SILVA_LEX_CONTINUATIO
                     && g != SILVA_LEX_COMMENTUM_CLAUSUM
@@ -3275,13 +3425,14 @@ formator_lint (
     }
     parsura = silva_c89_parsare_cum_contextu(piscina, contextus,
         "lint", fons, mensura, NIHIL);
-    si (parsura && parsura->successus
+    si (   parsura && parsura->successus
         && parsura->numerus_errorum == ZEPHYRUM
         && parsura->commissio)
     {
         FormatorAmbitus ambitus;
-        SilvaValor      radix;
-        i32             lb_prior;
+             SilvaValor radix;
+                    i32 lb_prior;
+                    i32 lb_radicis_prior;
 
         ambitus.divergentiae   = divergentiae;
         ambitus.piscina        = piscina;
@@ -3290,8 +3441,9 @@ formator_lint (
             magnitudo(ContinuatioSpatium));
         ambitus.catena_ops     = xar_creare(piscina,
             magnitudo(CatenaSedes));
-        radix = parsura->commissio->radix;
-        lb_prior = ZEPHYRUM;
+        radix             = parsura->commissio->radix;
+        lb_prior          = ZEPHYRUM;
+        lb_radicis_prior  = ZEPHYRUM;
 
         si (radix.genus == SILVA_VALOR_LISTA)
         {
@@ -3310,6 +3462,27 @@ formator_lint (
                     ? _valor_nodus(*elementum) : NIHIL;
                 si (!nodus_radicis) perge;
 
+                /* ambitus nominatus: extentum radicis a linea
+                 * post nodum priorem (commentarium ducens et
+                 * intervalla supra ad hanc functionem pertinent) */
+                si (intra)
+                {
+                    i32 la_r;
+                    i32 ca_r;
+                    i32 lb_r;
+                    i32 cb_r;
+
+                    si (_extensio(nodus_radicis,
+                        ambitus.fons_princeps, &la_r, &ca_r,
+                        &lb_r, &cb_r))
+                    {
+                        _intra_registrare(intra, extenta_intra,
+                            nodus_radicis, lb_radicis_prior + I,
+                            lb_r);
+                        lb_radicis_prior = lb_r;
+                    }
+                }
+
                 /* R13: una linea vacua inter functiones
                  * (commentarium ducens ad functionem
                  * pertinet; vexillum interpositum = regula
@@ -3327,10 +3500,10 @@ formator_lint (
                         &cb))
                     {
                         SilvaCommentariumVista vista;
-                        i32 la_effectiva;
+                                           i32 la_effectiva;
 
                         la_effectiva = la;
-                        si (silva_commentarium_ducens(
+                        si (   silva_commentarium_ducens(
                             nodus_radicis,
                             ambitus.fons_princeps, &vista)
                             != ZEPHYRUM
@@ -3338,7 +3511,7 @@ formator_lint (
                         {
                             la_effectiva = (i32)vista.linea;
                         }
-                        si (lb_prior != (i32)ZEPHYRUM
+                        si (   lb_prior != (i32)ZEPHYRUM
                             && !_regio_vexillum_habet(fons,
                                 mensura, lb_prior + I,
                                 la_effectiva - I)
@@ -3414,7 +3587,23 @@ formator_lint (
             ambitus.continuationes);
     }
 
+    si (intra)
+    {
+        redde _intra_servare(piscina, divergentiae,
+            extenta_intra);
+    }
     redde divergentiae;
+}
+
+Xar*
+formator_lint (
+               Piscina* piscina,
+        SilvaContextus* contextus,
+    constans character* fons,
+                   i32  mensura)
+{
+    redde formator_lint_intra(piscina, contextus, fons, mensura,
+        NIHIL);
 }
 
 /* ==================================================
@@ -3837,23 +4026,25 @@ _series_aequalis (
 }
 
 FormatorScriptum
-formator_scribere (
-              Piscina* piscina,
-       SilvaContextus* contextus,
-    constans character* fons,
-                   i32  mensura)
+formator_scribere_intra (
+                   Piscina* piscina,
+            SilvaContextus* contextus,
+        constans character* fons,
+                       i32  mensura,
+    constans FormatorIntra* intra)
 {
     FormatorScriptum fructus;
+       FormatorIntra intra_localis;
               chorda originalis;
               chorda curr;
                  i32 iteratio;
                  b32 convergit;
 
-    fructus.successus   = FALSUM;
-    fructus.mutatum     = FALSUM;
-    fructus.iterationes = ZEPHYRUM;
-    fructus.applicatae  = ZEPHYRUM;
-    fructus.querela     = NIHIL;
+    fructus.successus    = FALSUM;
+    fructus.mutatum      = FALSUM;
+    fructus.iterationes  = ZEPHYRUM;
+    fructus.applicatae   = ZEPHYRUM;
+    fructus.querela      = NIHIL;
 
     /* copia laboris - fons ipse numquam tangitur */
     originalis.mensura = mensura;
@@ -3867,35 +4058,65 @@ formator_scribere (
     }
     memcpy(originalis.datum, fons, (memoriae_index)mensura);
 
-    curr      = originalis;
-    convergit = FALSUM;
+    /* inventae propriae si vocator nullas dedit - recusatio
+     * ignoti proprietas MACHINAE est, non CLI */
+    si (   intra && intra->inventae == NIHIL
+        && intra->numerus > (i32)ZEPHYRUM)
+    {
+        intra_localis = *intra;
+        intra_localis.inventae = (b32*)piscina_allocare(piscina,
+            (memoriae_index)intra->numerus * magnitudo(b32));
+        si (!intra_localis.inventae)
+        {
+            fructus.querela = "piscina fracta";
+            redde fructus;
+        }
+        intra = &intra_localis;
+    }
+
+    curr       = originalis;
+    convergit  = FALSUM;
 
     per (iteratio = ZEPHYRUM; iteratio < ITERATIONES_MAXIMAE;
         iteratio += I)
     {
-        Xar*            divergentiae;
-        IndexLinearum   index;
+                   Xar* divergentiae;
+         IndexLinearum  index;
         EmendatioPlana* planae;
-        i32             numerus_planarum;
-        b32             violatio;
-        chorda          nova;
-        i32             applicatae;
+                   i32  numerus_planarum;
+                   b32  violatio;
+                chorda  nova;
+                   i32  applicatae;
 
         fructus.iterationes = iteratio + I;
-        divergentiae = formator_lint(piscina, contextus,
-            (constans character*)curr.datum, curr.mensura);
+        divergentiae = formator_lint_intra(piscina, contextus,
+            (constans character*)curr.datum, curr.mensura, intra);
         si (!divergentiae)
         {
-            fructus.querela = "lint fractum";
-            fructus.textus  = originalis;
+            fructus.querela  = "lint fractum";
+            fructus.textus   = originalis;
             redde fructus;
+        }
+        si (intra && iteratio == (i32)ZEPHYRUM)
+        {
+            i32 k;
+
+            per (k = ZEPHYRUM; k < intra->numerus; k += I)
+            {
+                si (!intra->inventae[k])
+                {
+                    fructus.querela  = "functio intra ignota";
+                    fructus.textus   = originalis;
+                    redde fructus;
+                }
+            }
         }
         si (!_lineas_metiri(piscina,
             (constans character*)curr.datum, curr.mensura,
             &index))
         {
-            fructus.querela = "piscina fracta";
-            fructus.textus  = originalis;
+            fructus.querela  = "piscina fracta";
+            fructus.textus   = originalis;
             redde fructus;
         }
         numerus_planarum = _emendationes_complanare(piscina,
@@ -3906,8 +4127,8 @@ formator_scribere (
         {
             fructus.querela =
                 "emendatio non-spatialis (vitium detectoris)";
-            fructus.textus  = originalis;
-            fructus.mutatum = FALSUM;
+            fructus.textus   = originalis;
+            fructus.mutatum  = FALSUM;
             redde fructus;
         }
         si (numerus_planarum == (i32)ZEPHYRUM)
@@ -3925,35 +4146,46 @@ formator_scribere (
         }
         si (nova.datum == NIHIL)
         {
-            fructus.querela = "piscina fracta";
-            fructus.textus  = originalis;
-            fructus.mutatum = FALSUM;
+            fructus.querela  = "piscina fracta";
+            fructus.textus   = originalis;
+            fructus.mutatum  = FALSUM;
             redde fructus;
         }
         si (!_series_aequalis(piscina, fons, mensura,
             (constans character*)nova.datum, nova.mensura))
         {
-            fructus.querela = "series lexematum mutata";
-            fructus.textus  = originalis;
-            fructus.mutatum = FALSUM;
+            fructus.querela  = "series lexematum mutata";
+            fructus.textus   = originalis;
+            fructus.mutatum  = FALSUM;
             redde fructus;
         }
-        curr = nova;
+        curr                = nova;
         fructus.mutatum     = VERUM;
-        fructus.applicatae += applicatae;
+        fructus.applicatae  += applicatae;
     }
 
     si (!convergit)
     {
         fructus.querela =
             "punctum fixum intra XII iterationes non attinctum";
-        fructus.textus  = originalis;
-        fructus.mutatum = FALSUM;
+        fructus.textus   = originalis;
+        fructus.mutatum  = FALSUM;
         redde fructus;
     }
-    fructus.textus    = curr;
-    fructus.successus = VERUM;
+    fructus.textus     = curr;
+    fructus.successus  = VERUM;
     redde fructus;
+}
+
+FormatorScriptum
+formator_scribere (
+               Piscina* piscina,
+        SilvaContextus* contextus,
+    constans character* fons,
+                   i32  mensura)
+{
+    redde formator_scribere_intra(piscina, contextus, fons,
+        mensura, NIHIL);
 }
 
 /* (formator_latinam_praebere hic vivebat - custos LATINA_H

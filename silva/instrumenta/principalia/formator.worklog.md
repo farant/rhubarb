@@ -781,3 +781,55 @@ custode" differential test became "typus lexici (radix sanata)":
 a plain-C typedef added via silva_contextus_lexicon_addere, same
 two columnae-binae assertions. Gates: probatio 210/210, silva
 41/41, corpus census 6,491 byte-identical.
+
+## 2026-09-01 — `-scribere -intra <functio>`: scope by NAME, resolved on every parse
+
+Roadmap item I of desideratum 01M1FMEKZG. Yesterday's emulation
+(scratch copy, `-scribere` twice, splice the new functions back by
+name) is now the tool. The design decision that mattered: the scope
+lives in the MACHINE (`formator_lint_intra` / `formator_scribere_intra`
++ `FormatorIntra`), not in the wrapper or the CLI, because the
+fixpoint loop reparses on every iteration and line numbers shift as
+emendations land — a line range goes stale after round one, a
+function title does not. Extents are recomputed from each parse.
+
+Extent = [previous root node's last line + 1, this node's last line]:
+the leading comment and the blank lines ABOVE a function belong to
+it, which is exactly R13's own attribution (`la_effectiva`). Root
+prototypes of the same title are in scope too. A divergence survives
+only if its site AND every emendation line sit inside one extent;
+straddlers drop (conservative: half an edit outside the scope is
+never applied). Unknown name = machine-side refusal in scribere_intra
+(`functio intra ignota`; the CLI names the function, exit 2);
+lint_intra reports through `inventae`. A parse failure finds nothing
+and therefore refuses — a scoped write on a fragment never degrades
+into a raw-stream sweep of the whole file.
+
+Gate: probatio section "ambitum nominatum" (24 assertions: scope b
+leaves a byte-identical incl. its prototype; scope a leaves the
+blanks above b alone; both names == unscoped write; lint rows all
+inside the extents; unknown name refuses with the original text;
+inventae NIHIL refuses equally). Planted fault (containment always
+VERUM) → 5 red. The feature then formatted itself: 8 names in
+silva_formator.c, 103 emendationes, `-delta` +0 new / −64 old
+residuals inside the two renamed bodies, every hunk inside a named
+function; header and CLI likewise (+0).
+
+Found on the way:
+- R13 `intervalla` counts DIRECTIVE lines as blank lines between
+  functions: a `#define` block between two functions reads "N pro 1",
+  and its tolerant emendation drops silently — a lint-forever false
+  positive. Workaround today: keep the define block where the
+  baseline had it. Real fix is a door: skip directive lines (or treat
+  a directive block as a separator, like a banner).
+- `-delta` site listing: identical-content keys (banner lines,
+  `FormatorScriptum s;`) list EVERY site in the file for one new
+  row. The multiset count is right; the sites are not. Door: mark
+  shared keys ("clavis communis ×N") or list only the surplus.
+- Idempotence (roadmap item IV) MEASURED: full `-scribere` on
+  silva_formator.c three times — 417 emendationes on run one,
+  checksum identical after runs two and three. The note behind item
+  IV was editing between passes. Retired.
+- A scope smaller than a function (a section inside a probatio's
+  principale) still needs the scratch-copy splice. Door: block or
+  section scope.

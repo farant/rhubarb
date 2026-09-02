@@ -88,4 +88,40 @@ formator_scribere (
     constans character* fons,
                    i32  mensura);
 
+/* Ambitus nominatus (-intra): functiones quarum extenta SOLA
+ * iudicantur - editio plagulae communis baseline magno intra
+ * functionem novam solam. Extentum = a linea post nodum radicis
+ * priorem (commentarium ducens et intervalla supra ad functionem
+ * infra pertinent) ad lineam ultimam definitionis; prototypa
+ * radicis eiusdem tituli quoque. NOMINA, non lineae: passus
+ * punctum-fixum quaque iteratione reparsat et lineae labuntur -
+ * titulus manet.
+ *
+ * inventae [numerus] (NIHIL licet - scribere_intra suas facit):
+ * exitus, titulus in radice visus (definitio aut prototypum).
+ * Ignotus ambitum tacite non angustat: scribere_intra recusat
+ * (querela 'functio intra ignota'), lint_intra per inventae
+ * clamare sinit. Parsura fracta = nihil inventum = recusatio. */
+nomen structura {
+    constans chorda* functiones;
+                i32  numerus;
+                b32* inventae;
+} FormatorIntra;
+
+Xar*
+formator_lint_intra (
+                   Piscina* piscina,
+            SilvaContextus* contextus,
+        constans character* fons,
+                       i32  mensura,
+    constans FormatorIntra* intra);
+
+FormatorScriptum
+formator_scribere_intra (
+                   Piscina* piscina,
+            SilvaContextus* contextus,
+        constans character* fons,
+                       i32  mensura,
+    constans FormatorIntra* intra);
+
 #endif /* SILVA_FORMATOR_H */

@@ -498,3 +498,25 @@ Uncus pre-commit (tools/unci-git) `-delta` super plagulas .c/.h
 commissionis currit et MONET (+N, sedes usque ad XII) - numquam obstat:
 lex basis iudicium hominis manet. Porta natalis:
 `silva/formator_delta_fumus.sh`.
+
+## Ambitus nominatus: `-scribere -intra <functio>` (2026-09-01)
+
+`./silva/formator.sh <via> [-scribere] -intra <functio> [-intra ...]`:
+lint et scriptura intra extenta functionum nominatarum SOLA. Extentum =
+a linea post nodum radicis priorem (commentarium ducens et intervalla
+supra ad functionem infra pertinent - eadem attributio quam R13 facit)
+ad lineam ultimam definitionis; prototypum radicis eiusdem tituli
+quoque. NOMINA, non lineae: passus punctum-fixum quaque iteratione
+reparsat, lineae labuntur, titulus manet - ergo in machina
+(`formator_lint_intra` / `formator_scribere_intra`, `FormatorIntra`),
+non in involucro. Divergentia extra extentum TOTA (sedes + emendationes
+omnes) cadit; transgrediens cadit (conservative). Functio ignota =
+recusatio clamosa (exitus 2; machina ipsa recusat, CLI nomen dat);
+parsura fracta = nihil inventum = recusatio.
+
+Porta natalis: `probatio_silva_formator` sectio "ambitum nominatum"
+(vitium plantatum in `_intra_continetur` → V rubrae). Usus cum lege
+basis: plagula communis baseline magno - `-scribere -intra` functiones
+novas, `-delta` postea zephyrum novum. Quod NON attingit: ambitus
+minor functione (sectio intra principale probationis) - copia scratch
++ insertio manet (porta: ambitus corporis/sectionis).

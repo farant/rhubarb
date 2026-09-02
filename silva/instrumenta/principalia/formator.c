@@ -2,6 +2,14 @@
  *
  * Usus:
  *   formator <via.c> [viae ...] [-machina] [-scribere]
+ *            [-intra functio ...]
+ *
+ * -intra: ambitus nominatus - lint et scriptura intra extenta
+ * functionum datarum SOLA (definitio cum commentario ducente et
+ * intervallis supra; prototypum radicis eiusdem tituli). Editio
+ * plagulae communis baseline magno sine tactu vicinorum. Functio
+ * non inventa = recusatio clamosa (exitus 2), numquam ambitus
+ * tacite angustior.
  *
  * -scribere: emendationes fixabiles applicat et plagulam IN SITU
  * superscribit (portae in machina: series lexematum, custodia
@@ -75,6 +83,8 @@ _capita_praebere (
 #define EXCLUSIONES_VIA \
     "silva/probationes/fixa/formatoris/exclusiones.txt"
 
+#define INTRA_MAXIMAE 64
+
 /* exclusiones: via<TAB>causa (radici-relativae); '#' et lineae
  * vacuae omissae. Exemptio numquam tacita - vocator clamat. */
 interior b32
@@ -130,6 +140,30 @@ _exempta (
     redde FALSUM;
 }
 
+/* functiones -intra in plagula non inventas clamare; numerus */
+interior i32
+_ignotas_clamare (
+        constans character* via,
+    constans FormatorIntra* intra)
+{
+    i32 n;
+    i32 k;
+
+    n = ZEPHYRUM;
+    si (!intra) redde n;
+    per (k = ZEPHYRUM; k < intra->numerus; k += I)
+    {
+        si (intra->inventae[k]) perge;
+        fprintf(stderr,
+            "formator: -intra functio ignota: %.*s (%s)\n",
+            (integer)intra->functiones[k].mensura,
+            (constans character*)intra->functiones[k].datum,
+            via);
+        n += I;
+    }
+    redde n;
+}
+
 /* ordines divergentiarum imprimere; reddit numerum */
 interior i32
 _divergentias_imprimere (
@@ -169,24 +203,30 @@ _divergentias_imprimere (
 
 integer
 principale (
-     integer  numerus,
+      integer   numerus,
     character** argumenta)
 {
-    Piscina*        piscina;
-    SilvaContextus* contextus;
-    chorda          exclusiones;
-    b32             machina;
-    b32             scriptura;
-    b32             recusatio;
-    b32             ulla_plagula;
-    i32             summa;
-    integer         i;
+                   Piscina* piscina;
+            SilvaContextus* contextus;
+                    chorda  exclusiones;
+                    chorda  functiones_intra[INTRA_MAXIMAE];
+                       b32  inventae_intra[INTRA_MAXIMAE];
+             FormatorIntra  intra;
+    constans FormatorIntra* ambitus_intra;
+                       i32  numerus_intra;
+                       b32  machina;
+                       b32  scriptura;
+                       b32  recusatio;
+                       b32  ulla_plagula;
+                       i32  summa;
+                   integer  i;
 
-    machina      = FALSUM;
-    scriptura    = FALSUM;
-    recusatio    = FALSUM;
-    ulla_plagula = FALSUM;
-    summa        = ZEPHYRUM;
+    machina        = FALSUM;
+    scriptura      = FALSUM;
+    recusatio      = FALSUM;
+    ulla_plagula   = FALSUM;
+    summa          = ZEPHYRUM;
+    numerus_intra  = ZEPHYRUM;
 
     per (i = I; i < numerus; i += I)
     {
@@ -198,6 +238,32 @@ principale (
         {
             scriptura = VERUM;
         }
+        si (strcmp(argumenta[i], "-intra") == ZEPHYRUM)
+        {
+            si (   i + I         >= numerus
+                || numerus_intra >= (i32)INTRA_MAXIMAE)
+            {
+                fprintf(stderr, "formator: -intra functionem"
+                    " poscit (maxime %d)\n",
+                    (integer)INTRA_MAXIMAE);
+                redde II;
+            }
+            i += I;
+            functiones_intra[numerus_intra].datum =
+                (i8*)argumenta[i];
+            functiones_intra[numerus_intra].mensura =
+                (i32)strlen(argumenta[i]);
+            numerus_intra += I;
+        }
+    }
+
+    ambitus_intra = NIHIL;
+    si (numerus_intra > (i32)ZEPHYRUM)
+    {
+        intra.functiones  = functiones_intra;
+        intra.numerus     = numerus_intra;
+        intra.inventae    = inventae_intra;
+        ambitus_intra     = &intra;
     }
 
     piscina = piscina_generare_dynamicum("formator", 67108864);
@@ -207,8 +273,8 @@ principale (
         redde II;
     }
 
-    exclusiones.mensura = ZEPHYRUM;
-    exclusiones.datum   = NIHIL;
+    exclusiones.mensura  = ZEPHYRUM;
+    exclusiones.datum    = NIHIL;
     si (filum_existit(EXCLUSIONES_VIA))
     {
         exclusiones = filum_legere_totum(EXCLUSIONES_VIA,
@@ -237,6 +303,11 @@ principale (
                     chorda  textus;
 
         via = argumenta[i];
+        si (strcmp(via, "-intra") == ZEPHYRUM)
+        {
+            i += I;
+            perge;
+        }
         si (via[ZEPHYRUM] == '-') perge;
 
         si (exclusiones.mensura != (i32)ZEPHYRUM)
@@ -285,11 +356,12 @@ principale (
         {
             FormatorScriptum s;
 
-            s = formator_scribere(opus, contextus,
+            s = formator_scribere_intra(opus, contextus,
                 (constans character*)textus.datum,
-                textus.mensura);
+                textus.mensura, ambitus_intra);
             si (!s.successus)
             {
+                (vacuum)_ignotas_clamare(via, ambitus_intra);
                 fprintf(stderr,
                     "formator: recusatum %s (%s)\n", via,
                     s.querela);
@@ -315,16 +387,27 @@ principale (
                     (insignatus integer)s.iterationes);
             }
             summa += _divergentias_imprimere(via,
-                formator_lint(opus, contextus,
+                formator_lint_intra(opus, contextus,
                     (constans character*)s.textus.datum,
-                    s.textus.mensura), machina);
+                    s.textus.mensura, ambitus_intra), machina);
         }
         alioquin
         {
-            summa += _divergentias_imprimere(via,
-                formator_lint(opus, contextus,
-                    (constans character*)textus.datum,
-                    textus.mensura), machina);
+            Xar* divergentiae;
+
+            divergentiae = formator_lint_intra(opus, contextus,
+                (constans character*)textus.datum,
+                textus.mensura, ambitus_intra);
+            si (_ignotas_clamare(via, ambitus_intra)
+                > (i32)ZEPHYRUM)
+            {
+                recusatio = VERUM;
+            }
+            alioquin
+            {
+                summa += _divergentias_imprimere(via,
+                    divergentiae, machina);
+            }
         }
             piscina_destruere(opus);
         }
@@ -333,14 +416,20 @@ principale (
     si (!ulla_plagula)
     {
         fprintf(stderr, "usus: formator <via.c> [viae ...]"
-            " [-machina] [-scribere]\n");
+            " [-machina] [-scribere] [-intra functio ...]\n");
         piscina_destruere(piscina);
         redde II;
     }
 
     si (!machina)
     {
-        si (summa == (i32)ZEPHYRUM)
+        si (recusatio)
+        {
+            /* recusatio clamavit in stderr; summa in stdout
+             * mentiri nequit (CONFORMIS post recusationem) */
+            imprimere("RECUSATUM\n");
+        }
+        alioquin si (summa == (i32)ZEPHYRUM)
         {
             imprimere("CONFORMIS\n");
         }

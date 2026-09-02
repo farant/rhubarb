@@ -1596,6 +1596,144 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(linea_inventa, (i32)7);
     }
 
+    imprimere("\n--- Probans ambitum nominatum (-intra) ---\n");
+    {
+        /* duae functiones male formatae cum prototypis; ambitus
+         * 'b' b SOLAM tangit (prototypum, commentarium ducens,
+         * intervalla supra - ad functionem infra pertinent), 'a'
+         * octetim intacta manet. Nomina, non lineae: lineae inter
+         * iterationes labuntur (prototypum b scissum lineam
+         * definitionis movet - titulus eam denuo invenit). */
+        constans character* fons =
+            "vacuum a(vacuum);\n"
+            "vacuum b(vacuum);\n"
+            "\n"
+            "/* a */\n"
+            "vacuum\n"
+            "a(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "\n"
+            "\n"
+            "/* b */\n"
+            "vacuum\n"
+            "b(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n";
+                  chorda  nomina[II];
+                     b32  inventae[II];
+           FormatorIntra  intra;
+        FormatorScriptum  s;
+        FormatorScriptum  s_tota;
+                     Xar* d;
+                     i32  k;
+
+        intra.functiones  = nomina;
+        intra.inventae    = inventae;
+
+        /* ambitus b */
+        nomina[ZEPHYRUM]  = chorda_ex_literis("b", piscina);
+        intra.numerus     = I;
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(inventae[ZEPHYRUM]);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum a(vacuum);\n"
+            "vacuum\n"
+            "b (vacuum);\n"
+            "\n"
+            "/* a */\n"
+            "vacuum\n"
+            "a(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "/* b */\n"
+            "vacuum\n"
+            "b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+
+        /* ambitus a: b et intervalla supra b intacta */
+        nomina[ZEPHYRUM] = chorda_ex_literis("a", piscina);
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "a (vacuum);\n"
+            "vacuum b(vacuum);\n"
+            "\n"
+            "/* a */\n"
+            "vacuum\n"
+            "a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "\n"
+            "\n"
+            "/* b */\n"
+            "vacuum\n"
+            "b(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+
+        /* ambo = scriptura tota */
+        nomina[I]      = chorda_ex_literis("b", piscina);
+        intra.numerus  = II;
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        s_tota = _scribere(piscina, fons);
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s_tota.successus);
+        CREDO_VERUM(chorda_aequalis(s.textus, s_tota.textus));
+
+        /* lint intra b: ordines omnes intra extenta b (prototypum
+         * linea 2; definitio 10-18 - a linea post '}' functionis
+         * a) */
+        nomina[ZEPHYRUM]  = chorda_ex_literis("b", piscina);
+        intra.numerus     = I;
+        d = formator_lint_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_NON_NIHIL(d);
+        CREDO_VERUM(xar_numerus(d) > (i32)ZEPHYRUM);
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            i32 lin;
+
+            lin = _divergentia(d, k)->linea;
+            CREDO_VERUM(lin == (i32)II
+                || (lin >= (i32)10 && lin <= (i32)18));
+        }
+
+        /* ignota: recusatio clamosa, textus originalis */
+        nomina[ZEPHYRUM] = chorda_ex_literis("nemo", piscina);
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_FALSUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_FALSUM(inventae[ZEPHYRUM]);
+        CREDO_NON_NIHIL(s.querela);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus, fons));
+
+        /* inventae NIHIL: machina suas facit - recusat aeque */
+        intra.inventae = NIHIL;
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_FALSUM(s.successus);
+        CREDO_NON_NIHIL(s.querela);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 
