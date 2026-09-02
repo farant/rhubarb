@@ -331,7 +331,9 @@ compile_gui_app() {
 
     # Compile test file and link with object files
     # -Wno-overlength-strings: GUI apps may have long STML layout strings
-    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} "$app_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+    # seorsum ut probationes (dsymutil vitatur)
+    if ! clang ${GCC_FLAGS[@]} -Wno-overlength-strings ${INCLUDE_FLAGS[@]} -c "$app_file" -o "build/$app_name.o" 2>&1 \
+       || ! clang ${GCC_FLAGS[@]} "build/$app_name.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ BUILD FAILED: $app_name${RESET}"
         GUI_APPS_FAILED=$((GUI_APPS_FAILED + 1))
         FAILED_GUI_APPS="$FAILED_GUI_APPS $app_name"
@@ -413,7 +415,12 @@ compile_and_run_test() {
     local compilatio_initium
     local compilatio_finis
     compilatio_initium=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
-    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$test_file" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
+    # COMPILATIO ET NEXUS SEORSUM (2026-09-02): fons + nexus uno
+    # vocamine cum -g = clang dsymutil post nexum currit (~0.2 s per
+    # probationem, CXLI probationes = XXV s); ex obiecto nexus eum
+    # omittit, et lldb per tabulam depurationis obiecta tamen legit.
+    if ! clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} -c "$test_file" -o "$output_binary.o" 2>&1 \
+       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"

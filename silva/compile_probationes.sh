@@ -174,7 +174,10 @@ for test_file in "$SILVA_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    # compilatio et nexus seorsum: uno vocamine cum -g clang dsymutil
+    # post nexum currit (~0.2 s per probationem) - vide radicem
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$test_file" -o "$bin.o" \
+       || ! clang "${GCC_FLAGS[@]}" "$bin.o" $obj_files -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue
