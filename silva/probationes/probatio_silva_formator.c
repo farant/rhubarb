@@ -2405,6 +2405,31 @@ principale (vacuum)
         CREDO_AEQUALIS_I32(xar_numerus(x), (i32)0);
     }
 
+    imprimere("\n--- Probans definitiones ex macro expansas ---\n");
+    {
+        /* macro quod functionem parit, invocationes indentatae: arbor
+         * definitiones videt, lexemata ad invocationem collabuntur -
+         * R1/R2/R8/R13 columnas mendaces iudicabant et in aeternum
+         * pugnabant (officina_machinula.c, evolutio 2026-09-01:
+         * 'punctum fixum intra XII iterationes non attinctum').
+         * Geometria infida = nodus non iudicatur: punctum fixum
+         * statim, textus intactus. */
+        FormatorScriptum s = _scribere(piscina,
+            "#define DEFINIRE(t) \\\n"
+            "    interior vacuum \\\n"
+            "    t (vacuum) \\\n"
+            "    { \\\n"
+            "        redde; \\\n"
+            "    }\n"
+            "\n"
+            "    DEFINIRE(a)\n"
+            "    DEFINIRE(b)\n"
+            "    DEFINIRE(c)\n");
+
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

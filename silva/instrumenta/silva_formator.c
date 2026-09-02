@@ -2978,6 +2978,16 @@ _nodum_percurrere (
         {
             SilvaNodus* corpus;
 
+            /* definitio ex macro expansa (AED_CTYPE(x, f) -> functio):
+             * lexemata omnia ad invocationem collabuntur - R1/R2/R8 et
+             * corpus columnas mendaces iudicarent et in aeternum
+             * pugnarent (officina_machinula.c: punctum fixum XII non
+             * attinctum). Geometria infida = nodus non iudicatur. */
+            si (!silva_nodus_geometria_fida(ambitus->piscina, nodus,
+                ambitus->fons_princeps))
+            {
+                frange;
+            }
             corpus = _valor_nodus(
                 silva_c89_definitio_functionis_corpus(nodus));
             _definitionem_censere(ambitus, nodus);
@@ -3013,7 +3023,7 @@ _nodum_percurrere (
                         la, ca, clausum->linea);
                 }
             }
-            si (corpus
+            si (   corpus
                 && corpus->genus == SILVA_C89_GENUS_CORPUS)
             {
                 _corpus_censere(ambitus, corpus, nodus);
@@ -3047,7 +3057,7 @@ _nodum_percurrere (
                         la, ca, clausum->linea);
                 }
             }
-            si (corpus
+            si (   corpus
                 && corpus->genus == SILVA_C89_GENUS_CORPUS)
             {
                 _corpus_censere(ambitus, corpus, nodus);
@@ -3065,7 +3075,7 @@ _nodum_percurrere (
 
             corpus = _valor_nodus(
                 silva_c89_commutatio_corpus(nodus));
-            si (corpus
+            si (   corpus
                 && corpus->genus == SILVA_C89_GENUS_CORPUS)
             {
                 _corpus_censere(ambitus, corpus, nodus);
@@ -3120,7 +3130,7 @@ _nodum_percurrere (
                     e = silva_valor_lista_obtinere(
                         specificatores, s);
                     n_s = e ? _valor_nodus(*e) : NIHIL;
-                    si (n_s && (n_s->genus
+                    si (   n_s && (n_s->genus
                             == SILVA_C89_GENUS_STRUCTURA
                         || n_s->genus == SILVA_C89_GENUS_UNIO
                         || n_s->genus
@@ -3131,7 +3141,7 @@ _nodum_percurrere (
                     }
                 }
             }
-            si (nodus->genus == SILVA_C89_GENUS_DECLARATIO
+            si (   nodus->genus == SILVA_C89_GENUS_DECLARATIO
                 && !forma_bloccalis)
             {
                 SilvaValor declaratores;
@@ -3150,7 +3160,7 @@ _nodum_percurrere (
                     e = silva_valor_lista_obtinere(
                         declaratores, d);
                     n_d_nodus = e ? _valor_nodus(*e) : NIHIL;
-                    si (n_d_nodus && n_d_nodus->genus
+                    si (   n_d_nodus && n_d_nodus->genus
                         == SILVA_C89_GENUS_DECLARATOR_INITIATUS
                         && _valor_nodus(
                             silva_c89_declarator_initiatus_initiator(
@@ -3169,7 +3179,7 @@ _nodum_percurrere (
                      * tacite falso numerabat, fix prototypum
                      * physice indentavit et differre unitates
                      * iungere non potuit) */
-                    si (n_d_nodus
+                    si (   n_d_nodus
                         && _declarator_functionis(n_d_nodus)
                             != NIHIL)
                     {
@@ -3177,7 +3187,7 @@ _nodum_percurrere (
                     }
                 }
             }
-            si (!forma_bloccalis
+            si (   !forma_bloccalis
                 && _extensio(nodus, ambitus->fons_princeps,
                     &la, &ca, &lb, &cb))
             {
@@ -3206,8 +3216,8 @@ _nodum_percurrere (
         i32  numerus;
         i32  i;
 
-        liberi = silva_nodus_liberi(ambitus->piscina, nodus);
-        numerus = liberi ? xar_numerus(liberi) : (i32)ZEPHYRUM;
+        liberi   = silva_nodus_liberi(ambitus->piscina, nodus);
+        numerus  = liberi ? xar_numerus(liberi) : (i32)ZEPHYRUM;
         per (i = ZEPHYRUM; i < numerus; i += I)
         {
             _nodum_percurrere(ambitus,
@@ -4218,8 +4228,10 @@ formator_lint_intra (
                  * (commentarium ducens ad functionem
                  * pertinet; vexillum interpositum = regula
                  * vexillorum, par omissum) */
-                si (nodus_radicis->genus
-                    == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
+                si (   nodus_radicis->genus
+                    == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS
+                    && silva_nodus_geometria_fida(ambitus.piscina,
+                        nodus_radicis, ambitus.fons_princeps))
                 {
                     i32 la;
                     i32 ca;
@@ -4297,7 +4309,9 @@ formator_lint_intra (
 
                     functionis = _prototypi_functionis(
                         nodus_radicis);
-                    si (functionis)
+                    si (   functionis
+                        && silva_nodus_geometria_fida(ambitus.piscina,
+                            nodus_radicis, ambitus.fons_princeps))
                     {
                         _functionis_caput_censere(&ambitus,
                             functionis);
@@ -4930,6 +4944,34 @@ formator_scribere_intra (
             divergentiae, &index,
             (constans character*)curr.datum, curr.mensura,
             &planae, &violatio);
+        /* INDAGO (FORMATOR_INDAGO=1): iteratio, emendationes planae,
+         * divergentiae armatae (regula:linea:columna) - oscillatio
+         * legibilis sine debugger (venatio officina_machinula.c) */
+        si (getenv("FORMATOR_INDAGO") != NIHIL)
+        {
+            i32 di;
+            i32 nd;
+            i32 impressae;
+
+            nd = xar_numerus(divergentiae);
+            fprintf(stderr, "indago iteratio %u: planae %u\n",
+                (insignatus integer)(iteratio + I),
+                (insignatus integer)numerus_planarum);
+            impressae = ZEPHYRUM;
+            per (di = ZEPHYRUM; di < nd && impressae < (i32)24;
+                di += I)
+            {
+                constans FormatorDivergentia* dv;
+
+                dv = (constans FormatorDivergentia*)xar_obtinere(
+                    divergentiae, di);
+                si (dv->numerus_emendationum == (i32)ZEPHYRUM) perge;
+                fprintf(stderr, "  %s:%u:%u %s\n", dv->regula,
+                    (insignatus integer)dv->linea,
+                    (insignatus integer)dv->columna, dv->nuntius);
+                impressae += I;
+            }
+        }
         si (violatio)
         {
             fructus.querela =
