@@ -471,6 +471,19 @@ class Fructus(object):
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
 
 
+class FructusOmnes(list):
+    """fructus transactionis (Refactio): lista Fructus per plagulam, cum
+    .sana (omnes sanae) et str = compendia omnium - eadem assertio ac
+    Fructus unius (f.sana), ne lista muta assertionem fallat"""
+
+    @property
+    def sana(self):
+        return all(f.sana for f in self)
+
+    def __str__(self):
+        return '\n'.join(str(f) for f in self)
+
+
 # ---------------------------------------------------------------- textus
 
 class Textus(object):
@@ -1080,6 +1093,147 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
     return rubrum, viridis.compendium
 
 
+# ---------------------------------------------------------------- probatio una
+
+# suita -> (directorium fontium, porta, via binarii (% nomen)). Cursores
+# omnes probationem e RADICE incipiunt; sub-suitae radicem per
+# RHUBARB_RADIX praebent (defaltum in probationibus '..' = cursus manualis
+# ex silva/ - e radice sine ambitu 'corpus non apertum' fallit, 2026-09-02);
+# radix binaria in /tmp/<nomen> aedificat.
+SUITAE = {
+    'radix': ('probationes', '/tmp/%s'),
+    'silva': ('silva/probationes', 'silva/build/%s'),
+    'css': ('css/probationes', 'css/build/%s'),
+    'materia': ('materia/probationes', 'materia/build/%s'),
+    'officina': ('officina/probationes', 'officina/build/%s'),
+    'gesta': ('gesta/probationes', 'gesta/build/%s'),
+    'tessera': ('tessera/probationes', 'tessera/build/%s'),
+    'saltuarius': ('saltuarius/probationes', 'saltuarius/build/%s'),
+}
+Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae profilum')
+
+
+def probatio_suita(nomen):
+    """suita cui probatio nominata pertinet (fons <dir>/<nomen>.c)"""
+    for suita, (fontes, _) in SUITAE.items():
+        if os.path.exists(os.path.join(RADIX, fontes, nomen + '.c')):
+            return suita
+    raise SilvaError('probatio ignota: %s (fons in nulla suita: %s)'
+                     % (nomen, ', '.join(sorted(SUITAE))))
+
+
+def _profilum(pid, secunda, via_effusus):
+    """sample <pid> <secunda> -> [(numerus, functio, bibliotheca)] ex tabula
+    'Sort by top of stack' (folia: ubi tempus consumitur), ordine ponderis;
+    effusus crudus in via_effusus (arbor vocationum tota)"""
+    r = _curre(['sample', str(pid), str(secunda), '-mayDie', '-file',
+                via_effusus])
+    if r.returncode != 0 or not os.path.exists(via_effusus):
+        raise SilvaError('sample fractum (rc=%d): %s'
+                         % (r.returncode, (r.stdout + r.stderr).strip()[-300:]))
+    folia = []
+    f = False
+    for l in open(via_effusus, errors='replace'):
+        if l.startswith('Sort by top of stack'):
+            f = True
+            continue
+        if not f:
+            continue
+        m = re.match(r'\s+(\S+)\s+\(in ([^)]+)\)\s+(\d+)\s*$', l)
+        if m:
+            folia.append((int(m.group(3)), m.group(1), m.group(2)))
+        elif folia and not l.strip():
+            break
+    return folia
+
+
+def profilum_textus(profilum, tectum=15):
+    """tabula foliorum: pars centesima, numerus, functio (bibliotheca)"""
+    summa = sum(n for n, _, _ in profilum) or 1
+    return '\n'.join('  %5.1f%%  %6d  %s  (%s)' % (100.0 * n / summa, n, fn, bib)
+                     for n, fn, bib in profilum[:tectum])
+
+
+def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
+                     tectum=1800):
+    """probationem UNAM currere sicut cursor eius: e radice, RHUBARB_RADIX
+    praebita, binarium suitae. nomen = nomen probationis (suita ex fonte
+    invenitur) aut via binarii exsecutabilis. aedificare: cursorem suitae
+    cum filtro primum currere (aedificat ET currit semel - pretium
+    acceptum; error aedificationis SilvaError cum relatione). secunda > 0:
+    post moram (s) processum vivum per 'sample' secunda profilare ->
+    Cursus.profilum = folia [(numerus, functio, bibliotheca)], effusus
+    crudus build/sample/<nomen>.probatio.txt. Reddit Cursus(nomen, suita,
+    rc, secunda cursus, acta, fracturae (generica, si rc != 0), profilum)."""
+    if '/' in nomen and os.path.exists(nomen):
+        suita, binarium = '?', os.path.abspath(nomen)
+        titulus = os.path.basename(nomen)
+    else:
+        suita = probatio_suita(nomen)
+        titulus = nomen
+        if aedificare:
+            p = porta(suita, nomen)
+            if not p.cucurrit or re.search(r'\berror:|COMPILATION FAILED|'
+                                           r'FRACTA \(compilatio\)', p.acta):
+                raise SilvaError('aedificatio %s fracta (%s)%s' % (
+                    nomen, p.compendium,
+                    relatio_fracturarum(p.fracturae) or '\n' + p.acta[-800:]))
+        binarium = os.path.join(RADIX, SUITAE[suita][1] % nomen)
+        if not os.path.exists(binarium):
+            raise SilvaError('binarium absens: %s (aedificare=True ut cursor'
+                             ' suitae id aedificet)' % binarium)
+    ambitus = dict(os.environ)
+    ambitus['RHUBARB_RADIX'] = RADIX
+    via_acta = tempfile.NamedTemporaryFile(prefix='cursus.', suffix='.log',
+                                           delete=False)
+    via_acta.close()
+    t0 = time.time()
+    with open(via_acta.name, 'wb') as effusus:
+        proc = subprocess.Popen([binarium], cwd=RADIX, env=ambitus,
+                                stdin=subprocess.DEVNULL, stdout=effusus,
+                                stderr=subprocess.STDOUT)
+        profilum = []
+        if secunda > 0:
+            finis_morae = time.time() + mora
+            while time.time() < finis_morae and proc.poll() is None:
+                time.sleep(0.05)
+            if proc.poll() is None:
+                os.makedirs(os.path.join(RADIX, 'build', 'sample'),
+                            exist_ok=True)
+                profilum = _profilum(proc.pid, secunda, os.path.join(
+                    RADIX, 'build', 'sample', titulus + '.probatio.txt'))
+        try:
+            rc = proc.wait(timeout=tectum)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            rc = proc.wait()
+            raise SilvaError('probatio %s tectum %ds excessit (occisa)'
+                             % (titulus, tectum))
+    t1 = time.time()
+    acta = _ANSI.sub('', open(via_acta.name, errors='replace').read())
+    os.unlink(via_acta.name)
+    fr = [] if rc == 0 else fracturae(acta, titulus, forma='generica')
+    return Cursus(titulus, suita, rc, t1 - t0, acta, fr, profilum)
+
+
+def cursus_textus(c, tectum=15):
+    """compendium cursus: verdictum, tempus, compendium credo, fracturae,
+    profilum (si sumptum)"""
+    m = re.search(r'Totalis:\s*(\d+).*?Fracti:\s*(\d+).*?Conditio: ([^\n]*)',
+                  c.acta, re.S)
+    credo_ = ('assertiones %s, fractae %s, %s' % m.groups()) if m \
+        else '(compendium credo absens)'
+    lineae = ['%s (%s): exitus %d, %.2f s - %s'
+              % (c.nomen, c.suita, c.rc, c.secunda, credo_)]
+    if c.fracturae:
+        lineae.append(relatio_fracturarum(c.fracturae).lstrip('\n'))
+    if c.profilum:
+        lineae.append('profilum (folia, %d exempla):'
+                      % sum(n for n, _, _ in c.profilum))
+        lineae.append(profilum_textus(c.profilum, tectum))
+    return '\n'.join(lineae)
+
+
 # ---------------------------------------------------------------- mensurae
 
 VOLUMEN_MENSURARUM = os.path.expanduser('~/.rhubarb/mensurae.volumen')
@@ -1446,7 +1600,7 @@ class Refactio(object):
                                               if not f.sana])
         for via in mutatae:
             self.editiones[via].originalis = self.editiones[via].textus
-        return fructus
+        return FructusOmnes(fructus)
 
 
 def prototypum_synchronizare(via_c, via_h, nomen, si_absens='error',

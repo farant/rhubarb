@@ -70,6 +70,16 @@ plica pendet — veritas in C manet.
   `receptum_relatio(via)` post cursum legit; errores commissionis et
   commissio_umbra eas ferunt pro cauda actorum; planta compendium
   rubrum 'fractae: X (Conditio: ...)' reddit et imprimit
+- `silva.probatio_currere(nomen, aedificare=, secunda=, mora=)` —
+  probatio UNA sicut cursor eius (e radice, RHUBARB_RADIX, binarium
+  suitae: radix /tmp/<nomen>, ceterae <suita>/build/<nomen>); nomen aut
+  via binarii; `secunda>0` = profilum per `sample` post moram ->
+  `Cursus.profilum` folia [(numerus, functio, bibliotheca)], effusus
+  build/sample/<nomen>.probatio.txt; `cursus_textus(c)` compendium
+  (assertiones/fractae/conditio + fracturae + profilum);
+  `probatio_suita(nomen)`
+- `Refactio.applicare()` reddit `FructusOmnes` (lista Fructus cum
+  `.sana` omnium et str) — eadem assertio ac Fructus unius
 - `silva.mensurae(praefixum, quantum)` — sessiones voluminis mensoris
   ('' radix, 'silva.' silva; tituli praefixo exuti; plenae solae);
   `compendium_mensurae(sessio)` = totum/cursus/compilatio/praevolatus

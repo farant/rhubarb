@@ -596,6 +596,72 @@ finally:
     del os.environ['PYTHONICA_PORTAE_FICTAE']
     os.unlink(scriptum)
 
+print('--- FructusOmnes: transactio .sana ---')
+r = silva.Refactio()
+r.editio(via).replace('x  = I;', 'x  = II;')
+fo = r.applicare()
+credo(isinstance(fo, list) and hasattr(fo, 'sana') and fo.sana and len(fo) == 1
+      and 'applicare' in str(fo), 'Refactio.applicare: lista cum .sana et str')
+open(via, 'w').write(FONS)
+
+print('--- probatio_currere: probatio una sicut cursor ---')
+credo(silva.probatio_suita('probatio_credo') == 'radix'
+      and silva.probatio_suita('probatio_silva_lexema') == 'silva'
+      and silva.probatio_suita('probatio_css_lexema') == 'css'
+      if os.path.exists(os.path.join(silva.RADIX, 'css/probationes/probatio_css_lexema.c'))
+      else silva.probatio_suita('probatio_silva_lexema') == 'silva',
+      'probatio_suita: suita ex fonte')
+try:
+    silva.probatio_suita('probatio_nemo')
+    credo(False, 'probatio ignota levat')
+except silva.SilvaError as ex:
+    credo('probatio ignota' in str(ex), 'probatio_suita: ignota nominata')
+# via binarii: scriptum rubrum fictum (exitus 1) - fracturae genericae
+scriptum = os.path.join(silva.RADIX, 'pythonica', '.cursus_ruber.tmp.sh')
+open(scriptum, 'w').write("#!/bin/sh\necho \"radix: $RHUBARB_RADIX\"\npwd\ncat <<'ACTA'\n"
+                          + ACTA_RADIX + "ACTA\nexit 1\n")
+os.chmod(scriptum, 0o755)
+try:
+    c = silva.probatio_currere(scriptum)
+    credo(c.rc == 1 and c.suita == '?' and 'radix: ' + silva.RADIX in c.acta
+          and c.acta.splitlines()[1].strip() == silva.RADIX,
+          'probatio_currere: e radice, RHUBARB_RADIX praebita, rc lectus')
+    credo(len(c.fracturae) == 1 and 'Totalis:    3' in c.fracturae[0].relatio
+          and 'assertiones 3, fractae 1' in silva.cursus_textus(c),
+          'probatio_currere: fracturae + cursus_textus')
+finally:
+    os.unlink(scriptum)
+# binarium absens sine aedificare: refusio quae remedium nominat
+try:
+    silva.probatio_currere('probatio_silva_lexema') if not os.path.exists(
+        os.path.join(silva.RADIX, 'silva/build/probatio_silva_lexema')) else (_ for _ in ()).throw(
+        silva.SilvaError('binarium absens (fictum)'))
+    credo(False, 'binarium absens levat')
+except silva.SilvaError as ex:
+    credo('binarium absens' in str(ex), 'probatio_currere: binarium absens nominat aedificare')
+# probatio vera radicis, aedificata per cursorem suitae (filtrum), deinde cursa
+c = silva.probatio_currere('probatio_piscina', aedificare=True)
+credo(c.rc == 0 and c.suita == 'radix' and 'Conditio: OMNIA PRAETERIERUNT' in c.acta
+      and c.fracturae == [] and 'exitus 0' in silva.cursus_textus(c),
+      'probatio_currere: probatio_piscina aedificata et viridis')
+# profilum: processus vivus per sample (dormiens: folium syscall)
+scriptum = os.path.join(silva.RADIX, 'pythonica', '.cursus_dormiens.tmp.sh')
+open(scriptum, 'w').write("#!/bin/sh\nsleep 3\necho Totalis: 1\necho Conditio: OMNIA PRAETERIERUNT\n")
+os.chmod(scriptum, 0o755)
+try:
+    c = silva.probatio_currere(scriptum, secunda=1, mora=0.2)
+    credo(c.rc == 0 and c.profilum and sum(n for n, _, _ in c.profilum) > 0
+          and 'profilum (folia' in silva.cursus_textus(c),
+          'probatio_currere: profilum sumptum (%s)' % (c.profilum[0][1] if c.profilum else '-'))
+    credo(os.path.exists(os.path.join(silva.RADIX, 'build', 'sample', '.cursus_dormiens.tmp.sh.probatio.txt')),
+          'profilum: effusus crudus in build/sample')
+finally:
+    os.unlink(scriptum)
+    try:
+        os.unlink(os.path.join(silva.RADIX, 'build', 'sample', '.cursus_dormiens.tmp.sh.probatio.txt'))
+    except OSError:
+        pass
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')

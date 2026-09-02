@@ -124,3 +124,28 @@ Proof on the live runner: plant the early return in probatio_credo,
 `planta` printed "fractae: probatio_credo (Conditio: NIHIL PROBATUM)"
 from the real colored output. Small API note found the same night:
 `Refactio.applicare()` returns a list of Fructus, not one.
+
+## 2026-09-02 (later still) — run one test the way the runner does
+
+Profiling the slow silva tests by hand cost two false starts: the
+binaries live in different places per suite (root builds into
+/tmp/<name>, the sub-suites into <suite>/build), every runner starts
+the test from the repo root, and the sub-suite tests find the root
+through RHUBARB_RADIX with a fallback of ".." that only works from
+inside silva/ — launched bare from the root they print "corpus non
+apertum" and exit 1, which looks like a real failure. Then the
+sampler: sample.sh only wraps computus, so the profile was `sample
+<pid>` plus awk over the call tree, three times. `probatio_currere`
+folds all of it: name → suite by source file → binary path → launch
+from the root with the environment → Cursus(rc, seconds, output,
+fracturae, profilum). `secunda>0` samples the live process after a
+grace period and returns the leaf table; `cursus_textus` prints
+assertions/failures/condition, the fractures, and the profile.
+`aedificare=True` builds through the suite's own runner with the name
+as filter (which also runs it once — accepted). A path instead of a
+name runs any executable the same way, which is what the tests use
+for the red and the sleeping cases. Live check: canon_corpus through
+the launcher, sampled 8 s — 26% blocked read, 24% xar accessors — the
+same table I built by hand earlier tonight, in one call. Also
+`Refactio.applicare` now returns `FructusOmnes`, a list with `.sana`,
+so the multi-file assertion reads like the single-file one.
