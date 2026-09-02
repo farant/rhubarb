@@ -552,3 +552,18 @@ Portae natales: probatio sectiones "custodiam LXXII glomerum" et
 "fracturam linearum" (XVII fixa mensurata; vitia plantata XX/IV/II
 rubrae). Oraculum alterum: differre super legatus.c et semantica.c
 scriptas = cosmetica omnia.
+
+## Ancorae in nuntiis ordinationis (2026-09-01)
+
+Ordines R7 (columnae-binae), R9 (aequatio-assignationum), R17 C
+(catena-logica comparatio) et R11 (continuatio) ancoram nominant et
+regulam ipsam ferunt: `<basis> (ancora '<textus>' l.<linea><cauda>)`.
+Ancora = membrum ad quod ceterae ordinantur: R7 typus latissimus
+(`: typus latissimus`, `: stella ad oram typi latissimi`, `+ I +
+stellae N`); R9 sinistrum longissimum (`+ II`, `+ I (aequilata)`,
+`, minimum (LXXII)`); R17 C sinistrum longissimum catenae (`+ I`,
+`, minimum (LXXII)`); R11 lexema primum sententiae ancorantis (`+
+IV`). Textus ad XXXII octetos decurtatur. Clavis `-delta` (regula +
+contentum lineae) nuntium non tangit; uncus regulam solam legit.
+Porta: probatio sectio "ancoras in nuntiis" (IV regulae; vitium
+plantatum IV rubrae).

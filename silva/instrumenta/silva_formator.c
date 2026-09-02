@@ -18,6 +18,7 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -271,12 +272,14 @@ _vexilla_censere (
  * R7; semantica.c catenae LXXV-LXXXV post R17 A/C) */
 interior constans i32*
 _longitudines_metiri (
-               Piscina* piscina,
-    constans character* fons,
-                   i32  mensura,
-                   i32* numerus_exitus)
+               Piscina*  piscina,
+    constans character*  fons,
+                   i32   mensura,
+                   i32*  numerus_exitus,
+          constans i32** initia_exitus)
 {
     i32* tabula;
+    i32* initia;
     i32  numerus;
     i32  i;
     i32  linea;
@@ -289,8 +292,11 @@ _longitudines_metiri (
     }
     tabula = (i32*)piscina_allocare(piscina,
         (memoriae_index)(numerus + I) * magnitudo(i32));
-    si (!tabula) redde NIHIL;
+    initia = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(i32));
+    si (!tabula || !initia) redde NIHIL;
     tabula[ZEPHYRUM] = ZEPHYRUM;
+    initia[ZEPHYRUM] = ZEPHYRUM;
 
     linea    = I;
     initium  = ZEPHYRUM;
@@ -305,12 +311,17 @@ _longitudines_metiri (
         {
             longitudo -= I;
         }
-        si (linea <= numerus) tabula[linea] = longitudo;
+        si (linea <= numerus)
+        {
+            tabula[linea] = longitudo;
+            initia[linea] = initium;
+        }
         linea    += I;
         initium  = i + I;
         si (i == mensura) frange;
     }
-    *numerus_exitus = numerus;
+    *numerus_exitus  = numerus;
+    *initia_exitus   = initia;
     redde tabula;
 }
 
@@ -747,7 +758,10 @@ nomen structura {
              s32  fons_princeps;
     constans i32* longitudines;     /* [numerus_linearum + I],
                                      * 1-basatae - custodia LXXII */
-             i32 numerus_linearum;
+    constans i32* initia_linearum;  /* offset initii lineae - ancorae
+                                     * nuntiorum */
+                   i32  numerus_linearum;
+    constans character* fons;
 } FormatorAmbitus;
 
 interior i32
@@ -761,6 +775,89 @@ _longitudo_lineae (
         redde ZEPHYRUM;
     }
     redde ambitus->longitudines[linea];
+}
+
+/* visus textus lineae [columna_a, columna_b) (1-basatae, b exclusiva),
+ * ad lineam clausus; reddit mensuram (ZEPHYRUM = nihil) */
+interior i32
+_textus_lineae (
+    constans FormatorAmbitus*  ambitus,
+                         i32   linea,
+                         i32   columna_a,
+                         i32   columna_b,
+          constans character** textus)
+{
+    i32 longitudo;
+
+    *textus = "";
+    si (   !ambitus->fons || !ambitus->initia_linearum
+        || linea < (i32)I || linea > ambitus->numerus_linearum)
+    {
+        redde ZEPHYRUM;
+    }
+    longitudo = ambitus->longitudines[linea];
+    si (columna_a < (i32)I) columna_a = I;
+    si (columna_b > longitudo + I) columna_b = longitudo + I;
+    si (columna_b <= columna_a) redde ZEPHYRUM;
+    *textus = ambitus->fons + ambitus->initia_linearum[linea]
+        + columna_a - I;
+    redde columna_b - columna_a;
+}
+
+/* idem, ab octeto primo non-spatiali lineae (sinistrum sententiae) */
+interior i32
+_textus_lineae_sine_indentatione (
+    constans FormatorAmbitus*  ambitus,
+                         i32   linea,
+                         i32   columna_b,
+          constans character** textus)
+{
+    i32 n;
+    i32 i;
+
+    n = _textus_lineae(ambitus, linea, I, columna_b, textus);
+    i = ZEPHYRUM;
+    dum (i < n && ((*textus)[i] == ' ' || (*textus)[i] == '\t'))
+    {
+        i += I;
+    }
+    *textus += i;
+    redde n - i;
+}
+
+/* nuntius cum ancora: "<basis> (ancora '<textus>' l.<linea><cauda>)" -
+ * textus ad XXXII octetos decurtatus. Ancora = membrum ad quod
+ * ceterae ordinantur (typus latissimus, sinistrum longissimum);
+ * cauda = regula ipsa (' + II', ': typus latissimus') - lector
+ * regulam non iterum derivet (ter male derivata 2026-09-01). Piscina
+ * fracta = basis nuda. */
+interior constans character*
+_nuntius_ancorae (
+               Piscina* piscina,
+    constans character* basis,
+    constans character* ancora,
+                   i32  mensura_ancorae,
+                   i32  linea,
+    constans character* cauda)
+{
+             character* buffer;
+    constans character* ellipsis;
+        memoriae_index  capacitas;
+
+    ellipsis = "";
+    si (mensura_ancorae > (i32)32)
+    {
+        mensura_ancorae  = 32;
+        ellipsis         = "...";
+    }
+    capacitas = strlen(basis) + strlen(cauda)
+        + (memoriae_index)mensura_ancorae + 48;
+    buffer = (character*)piscina_allocare(piscina, capacitas);
+    si (!buffer) redde basis;
+    sprintf(buffer, "%s (ancora '%.*s%s' l.%u%s)", basis,
+        (integer)mensura_ancorae, ancora, ellipsis,
+        (insignatus integer)linea, cauda);
+    redde buffer;
 }
 
 /* R17: sedes operatoris comparationis a catena vindicata -
@@ -1510,10 +1607,14 @@ _ordinem_censere (
           R7Membrum* membra,
                 i32  numerus)
 {
-    i32 cb_maxima;
-    i32 stellae_maximae;
-    i32 hiatus;
-    i32 i;
+    constans character* ancora_textus;
+                   i32  ancora_mensura;
+                   i32  ancora_linea;
+             character  cauda_tituli[48];
+                   i32  cb_maxima;
+                   i32  stellae_maximae;
+                   i32  hiatus;
+                   i32  i;
 
     si (numerus == (i32)ZEPHYRUM) redde;
 
@@ -1531,6 +1632,21 @@ _ordinem_censere (
         }
     }
     hiatus = I + stellae_maximae;
+
+    /* ancora nuntiorum: membrum typo latissimo (primum) */
+    ancora_textus   = "";
+    ancora_mensura  = ZEPHYRUM;
+    ancora_linea    = membra[ZEPHYRUM].linea;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        si (membra[i].cb != cb_maxima) perge;
+        ancora_linea   = membra[i].linea;
+        ancora_mensura = _textus_lineae(ambitus, membra[i].linea,
+            membra[i].ca, membra[i].cb, &ancora_textus);
+        frange;
+    }
+    sprintf(cauda_tituli, " + I + stellae %u",
+        (insignatus integer)stellae_maximae);
 
     /* custodia LXXII GLOMERIS TOTIUS (ut R9): ordinatio lineam
      * ullam (TOTAM metitam - commentarium caudae inclusum) ultra
@@ -1584,7 +1700,10 @@ _ordinem_censere (
             /* typi dextre ordinati: totum membrum dextrorsum
              * trudere (cb < maxima semper - maxima est) */
             _addere(ambitus->divergentiae, "columnae-binae",
-                "columna typorum dextra non ordinata",
+                _nuntius_ancorae(ambitus->piscina,
+                    "columna typorum dextra non ordinata",
+                    ancora_textus, ancora_mensura, ancora_linea,
+                    ": typus latissimus"),
                 membra[i].linea, membra[i].cb - I,
                 (s32)(membra[i].cb - I), (s32)(cb_maxima - I));
             si (membra[i].cb < cb_maxima)
@@ -1602,7 +1721,10 @@ _ordinem_censere (
         si (!stella_recta)
         {
             _addere(ambitus->divergentiae, "columnae-binae",
-                "stella in hiatu post typum exspectata",
+                _nuntius_ancorae(ambitus->piscina,
+                    "stella in hiatu post typum exspectata",
+                    ancora_textus, ancora_mensura, ancora_linea,
+                    ": stella ad oram typi latissimi"),
                 membra[i].linea, membra[i].stella_prima,
                 (s32)membra[i].stella_prima, (s32)cb_maxima);
             si (membra[i].stella_prima > cb_maxima)
@@ -1618,7 +1740,10 @@ _ordinem_censere (
         si (membra[i].titulus_columna != cb_maxima + hiatus)
         {
             _addere(ambitus->divergentiae, "columnae-binae",
-                "columna titulorum non ordinata",
+                _nuntius_ancorae(ambitus->piscina,
+                    "columna titulorum non ordinata",
+                    ancora_textus, ancora_mensura, ancora_linea,
+                    cauda_tituli),
                 membra[i].linea, membra[i].titulus_columna,
                 (s32)membra[i].titulus_columna,
                 (s32)(cb_maxima + hiatus));
@@ -1753,11 +1878,15 @@ _aequationes_censere (
       constans  i32* fines,
                 i32  numerus)
 {
-    i32 cb_maxima;
-    i32 columna_recta;
-    b32 aequilata;
-    b32 cadit;
-    i32 i;
+    constans character* ancora_textus;
+    constans character* cauda;
+                   i32  ancora_mensura;
+                   i32  ancora_linea;
+                   i32  cb_maxima;
+                   i32  columna_recta;
+                   b32  aequilata;
+                   b32  cadit;
+                   i32  i;
 
     si (numerus < (i32)II) redde;
 
@@ -1788,6 +1917,21 @@ _aequationes_censere (
         }
     }
 
+    /* ancora nuntiorum: sinistrum longissimum (primum) et regula */
+    ancora_textus   = "";
+    ancora_mensura  = ZEPHYRUM;
+    ancora_linea    = lineae[ZEPHYRUM];
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        si (cb[i] != cb_maxima) perge;
+        ancora_linea   = lineae[i];
+        ancora_mensura = _textus_lineae_sine_indentatione(ambitus,
+            lineae[i], cb[i], &ancora_textus);
+        frange;
+    }
+    cauda = cadit ? ", minimum (LXXII)"
+        : (aequilata ? " + I (aequilata)" : " + II");
+
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
         i32 exspectata;
@@ -1796,7 +1940,9 @@ _aequationes_censere (
         si (operator_columnae[i] == exspectata) perge;
         _addere(ambitus->divergentiae,
             "aequatio-assignationum",
-            "operator '=' glomeris non ordinatus",
+            _nuntius_ancorae(ambitus->piscina,
+                "operator '=' glomeris non ordinatus",
+                ancora_textus, ancora_mensura, ancora_linea, cauda),
             lineae[i], operator_columnae[i],
             (s32)operator_columnae[i],
             (s32)exspectata);
@@ -2360,10 +2506,15 @@ _catenam_censere (
      * non exceptio per membrum (quae CV octetos in legatus.c
      * peperit: extensio rami lineam non videbat). */
     {
-        SilvaToken* part_op[CATENA_MEMBRA_MAXIMA];
-               i32  part_scb[CATENA_MEMBRA_MAXIMA];
-               i32  part_n;
-               b32  cadit;
+            SilvaToken* part_op[CATENA_MEMBRA_MAXIMA];
+                   i32  part_scb[CATENA_MEMBRA_MAXIMA];
+                   i32  part_sca[CATENA_MEMBRA_MAXIMA];
+    constans character* ancora_textus;
+    constans character* cauda;
+                   i32  ancora_mensura;
+                   i32  ancora_linea;
+                   i32  part_n;
+                   b32  cadit;
 
         part_n     = ZEPHYRUM;
         cb_maxima  = ZEPHYRUM;
@@ -2408,6 +2559,7 @@ _catenam_censere (
             si (part_n >= (i32)CATENA_MEMBRA_MAXIMA) frange;
             part_op[part_n]   = op;
             part_scb[part_n]  = scb;
+            part_sca[part_n]  = sca;
             part_n            += I;
             si (scb > cb_maxima) cb_maxima = scb;
         }
@@ -2428,6 +2580,21 @@ _catenam_censere (
                 frange;
             }
         }
+
+        /* ancora nuntiorum: sinistrum longissimum (primum) et regula */
+        ancora_textus   = "";
+        ancora_mensura  = ZEPHYRUM;
+        ancora_linea    = part_op[ZEPHYRUM]->linea;
+        per (i = ZEPHYRUM; i < part_n; i += I)
+        {
+            si (part_scb[i] != cb_maxima) perge;
+            ancora_linea   = part_op[i]->linea;
+            ancora_mensura = _textus_lineae(ambitus,
+                part_op[i]->linea, part_sca[i], part_scb[i],
+                &ancora_textus);
+            frange;
+        }
+        cauda = cadit ? ", minimum (LXXII)" : " + I";
 
         per (i = ZEPHYRUM; i < part_n; i += I)
         {
@@ -2453,8 +2620,11 @@ _catenam_censere (
                 : cb_maxima + I;
             si (op->columna == columna_recta) perge;
             _addere(ambitus->divergentiae, "catena-logica",
-                "comparatio catenae non ordinata", op->linea,
-                op->columna, (s32)op->columna,
+                _nuntius_ancorae(ambitus->piscina,
+                    "comparatio catenae non ordinata",
+                    ancora_textus, ancora_mensura, ancora_linea,
+                    cauda),
+                op->linea, op->columna, (s32)op->columna,
                 (s32)columna_recta);
             si (op->columna < columna_recta)
             {
@@ -3109,6 +3279,28 @@ _spatium_invenire (
     redde NIHIL;
 }
 
+/* lexema primum (non-trivia) lineae datae in fluxu crudo; NIHIL */
+interior SilvaToken*
+_lexema_primum_lineae (
+    Xar* cruda,
+    i32  linea)
+{
+    i32 numerus;
+    i32 i;
+
+    numerus = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i += I)
+    {
+        SilvaToken* t;
+
+        t = _lexema(cruda, i);
+        si (t->linea < linea) perge;
+        si (t->linea > linea) frange;
+        si (t->initium_lineae) redde t;
+    }
+    redde NIHIL;
+}
+
 interior vacuum
 _continuationes_censere (
     Piscina* piscina,
@@ -3119,7 +3311,7 @@ _continuationes_censere (
     i32 numerus;
     i32 i;
 
-    si (!continuationes
+    si (   !continuationes
         || xar_numerus(continuationes) == (i32)ZEPHYRUM)
     {
         redde;
@@ -3128,7 +3320,7 @@ _continuationes_censere (
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        SilvaToken* lexema;
+                         SilvaToken* lexema;
         constans ContinuatioSpatium* spatium;
 
         lexema = _lexema(cruda, i);
@@ -3138,11 +3330,20 @@ _continuationes_censere (
         {
             spatium = _spatium_invenire(continuationes,
                 lexema->linea, VERUM);
-            si (spatium
+            si (   spatium
                 && lexema->columna < spatium->ca + IV)
             {
+                SilvaToken* ancora;
+
+                ancora = _lexema_primum_lineae(cruda, spatium->la);
                 _addere(divergentiae, "continuatio",
-                    "continuatio parum indentata",
+                    _nuntius_ancorae(piscina,
+                        "continuatio parum indentata",
+                        ancora ? (constans character*)
+                            ancora->valor.datum : "",
+                        ancora ? ancora->valor.mensura
+                            : (i32)ZEPHYRUM,
+                        spatium->la, " + IV"),
                     lexema->linea, lexema->columna,
                     (s32)lexema->columna,
                     (s32)(spatium->ca + IV));
@@ -3154,16 +3355,16 @@ _continuationes_censere (
         }
 
         /* operator claudens lineam intra sententiam */
-        si (_operator_ducibilis(lexema->genus)
+        si (   _operator_ducibilis(lexema->genus)
             && i + I < numerus)
         {
             i32 j;
             b32 commentum_visum;
 
-            j = i + I;
-            commentum_visum = FALSUM;
-            dum (j < numerus
-                && (_lexema(cruda, j)->genus == SILVA_LEX_SPATIA
+            j                = i + I;
+            commentum_visum  = FALSUM;
+            dum (   j < numerus
+                 && (_lexema(cruda, j)->genus == SILVA_LEX_SPATIA
                     || _lexema(cruda, j)->genus
                         == SILVA_LEX_COMMENTUM_CLAUSUM))
             {
@@ -3174,7 +3375,7 @@ _continuationes_censere (
                 }
                 j += I;
             }
-            si (j < numerus && _lexema(cruda, j)->genus
+            si (   j < numerus && _lexema(cruda, j)->genus
                 == SILVA_LEX_NOVA_LINEA)
             {
                 spatium = _spatium_invenire(continuationes,
@@ -3192,18 +3393,18 @@ _continuationes_censere (
 
                     /* motus bi-span: ambo aut neuter (commentum
                      * aut continuatio '\\' in via = neuter) */
-                    sequens = NIHIL;
-                    k = j + I;
+                    sequens  = NIHIL;
+                    k        = j + I;
                     dum (k < numerus)
                     {
                         SilvaLexemaGenus g;
 
                         g = _lexema(cruda, k)->genus;
-                        si (g != SILVA_LEX_SPATIA
+                        si (   g != SILVA_LEX_SPATIA
                             && g != SILVA_LEX_TABULAE
                             && g != SILVA_LEX_NOVA_LINEA)
                         {
-                            si (g != SILVA_LEX_EOF
+                            si (   g != SILVA_LEX_EOF
                                 && g != SILVA_LEX_CONTINUATIO
                                 && g != SILVA_LEX_COMMENTUM_CLAUSUM
                                 && g != SILVA_LEX_COMMENTUM_LINEA)
@@ -3768,6 +3969,7 @@ formator_lint_intra (
              Xar* extenta_intra;
              Xar* sententiae;
     constans i32* longitudines;
+    constans i32* initia_linearum;
     SilvaParsura* parsura;
              i32  numerus;
              i32  numerus_linearum;
@@ -3794,7 +3996,7 @@ formator_lint_intra (
         magnitudo(FormatorDivergentia));
     si (!divergentiae || !fons) redde divergentiae;
     longitudines = _longitudines_metiri(piscina, fons, mensura,
-        &numerus_linearum);
+        &numerus_linearum, &initia_linearum);
     si (!longitudines) redde NIHIL;
 
     cruda    = silva_lexare_cruda(piscina, fons, mensura, ZEPHYRUM);
@@ -3968,6 +4170,8 @@ formator_lint_intra (
             magnitudo(ContinuatioSpatium));
         ambitus.longitudines      = longitudines;
         ambitus.numerus_linearum  = numerus_linearum;
+        ambitus.initia_linearum   = initia_linearum;
+        ambitus.fons              = fons;
         radix                     = parsura->commissio->radix;
         lb_prior                  = ZEPHYRUM;
         lb_radicis_prior          = ZEPHYRUM;

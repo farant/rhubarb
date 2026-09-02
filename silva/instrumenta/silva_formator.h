@@ -38,6 +38,7 @@ nomen structura {
     chorda insertum;
 } FormatorEmendatio;
 
+/* nuntius ordinationum ancoram nominat: "(ancora 'x' l.N + II)" */
 nomen structura {
     constans character* regula;      /* nomen stabile regulae */
     constans character* nuntius;     /* descriptio brevis */

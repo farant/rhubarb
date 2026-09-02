@@ -2246,6 +2246,109 @@ s32 principale (vacuum)
         }
     }
 
+    imprimere("\n--- Probans ancoras in nuntiis ordinationis ---\n");
+    {
+        /* nuntius ancoram nominat (membrum ad quod ceterae
+         * ordinantur) et regulam ipsam - lector eam non iterum
+         * derivet (desideratum 01M1FMEKZG III). */
+        Xar* d;
+        i32  k;
+        b32  visa;
+
+        /* R7: typus latissimus */
+        d = _lint(piscina,
+            "nomen structura {\n"
+            "    vacuum* memoria;\n"
+            "    i32 cursor;\n"
+            "} Probandum;\n");
+        CREDO_NON_NIHIL(d);
+        visa = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (   strcmp(_divergentia(d, k)->regula, "columnae-binae")
+                    == ZEPHYRUM
+                && strstr(_divergentia(d, k)->nuntius,
+                    "(ancora 'vacuum' l.2: typus latissimus)")
+                    != NIHIL)
+            {
+                visa = VERUM;
+            }
+        }
+        CREDO_VERUM(visa);
+
+        /* R9: sinistrum longissimum + II */
+        d = _lint(piscina,
+            "vacuum\n"
+            "probare (vacuum)\n"
+            "{\n"
+            "    i32 a;\n"
+            "    i32 b_longa;\n"
+            "\n"
+            "    a = I;\n"
+            "    b_longa = II;\n"
+            "}\n");
+        CREDO_NON_NIHIL(d);
+        visa = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (   strcmp(_divergentia(d, k)->regula,
+                    "aequatio-assignationum") == ZEPHYRUM
+                && strstr(_divergentia(d, k)->nuntius,
+                    "(ancora 'b_longa' l.8 + II)") != NIHIL)
+            {
+                visa = VERUM;
+            }
+        }
+        CREDO_VERUM(visa);
+
+        /* R17 C: sinistrum longissimum catenae + I */
+        d = _lint(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   alpha_longissima == beta\n"
+            "        && g  == d)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_NON_NIHIL(d);
+        visa = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (   strcmp(_divergentia(d, k)->regula, "catena-logica")
+                    == ZEPHYRUM
+                && strstr(_divergentia(d, k)->nuntius,
+                    "(ancora 'alpha_longissima' l.4 + I)") != NIHIL)
+            {
+                visa = VERUM;
+            }
+        }
+        CREDO_VERUM(visa);
+
+        /* R11: sententia ancorans + IV */
+        d = _lint(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    fructus = functio(a,\n"
+            "    b);\n"
+            "}\n");
+        CREDO_NON_NIHIL(d);
+        visa = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (   strcmp(_divergentia(d, k)->regula, "continuatio")
+                    == ZEPHYRUM
+                && strstr(_divergentia(d, k)->nuntius,
+                    "(ancora 'fructus' l.4 + IV)") != NIHIL)
+            {
+                visa = VERUM;
+            }
+        }
+        CREDO_VERUM(visa);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

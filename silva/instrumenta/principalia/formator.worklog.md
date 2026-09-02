@@ -917,3 +917,26 @@ proves nothing until the implementation has been seen to change
 the pin — here the fix turned the pinned fixture red first, which is
 the only reason the mistake was caught. Long scripts get `set -e`;
 regenerated pins get eyeballed.
+
+## 2026-09-01 — Anchor names in alignment messages (roadmap item III)
+
+The desideratum's complaint: "columna typorum dextra non ordinata
+24/25" gives a column and no rule, and I derived the rule wrong three
+times before measuring it. Now the walk context carries the source
+and per-line start offsets (alongside the length table), and the
+four alignment rules format their message through `_nuntius_ancorae`:
+`<basis> (ancora '<textus>' l.<linea><cauda>)`, where the anchor is
+the member everything else aligns to (first member with cb ==
+cb_maxima for R7/R9/R17 C; the statement's first token for R11) and
+the tail is the rule itself (`+ II`, `+ I (aequilata)`, `: typus
+latissimus`, `+ I + stellae N`, `, minimum (LXXII)` when the cluster
+fell to the 72 guard). Text is a view into the source, truncated at
+32 bytes. R11 takes its anchor from the raw token stream since it
+runs without the ambitus.
+
+Nothing downstream keys on message text: `-delta` keys are rule +
+line content, the hook filters by rule (plus the `frangibilis`
+marker, which is unchanged). Real sample from semantica.c:
+`columna titulorum non ordinata (ancora 'constans SilvaNodus'
+l.4210 + I + stellae 1)`. Gate: probatio section with one assertion
+per rule; plant (formatter returns the bare basis) → 4 red.
