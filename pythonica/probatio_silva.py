@@ -273,6 +273,20 @@ except silva.SilvaError:
 open(via_t, 'w').write('#include "latina.h"\n\n#ifndef CUSTOS_Y\n#define CUSTOS_Y\n\nvacuum\nb (vacuum);\n\n#endif\n')
 credo([x.titulus for x in silva.extenta(via_t)] == ['b'], 'custos post inclusionem: prototypum visum')
 
+print('--- legati (pons MCP) ---')
+import time
+t0 = time.time()
+sy = silva.symbolum('formator_lint')
+credo('silva_formator.c' in sy, 'symbolum per legatum (%.1fs natus)' % (time.time() - t0))
+credo('formator_lint' in silva.vocantes('formator_lint_intra'), 'vocantes')
+credo('silva_formator.h' in silva.inclusiones('silva/instrumenta/silva_formator.c'), 'inclusiones')
+credo('ACCIPE' in silva.diagnostica('silva/instrumenta/silva_formator.c'), 'diagnostica')
+try:
+    silva.legati('nemo_instrumentum')
+    credo(False, 'instrumentum ignotum levat')
+except silva.SilvaError:
+    credo(True, 'instrumentum ignotum levat SilvaError')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')

@@ -26,6 +26,10 @@ plica pendet — veritas in C manet.
   definitionis -> prototypum; `si_absens='finis'` ante `#endif`),
   `.applicare()` unum: custos in omnibus, scriptura omnium, forma,
   iudicium post omnes scriptas; `strictum` omnes restituit
+- `silva.legati(instrumentum, **args)` — pons ad legatum (servus MCP
+  silvae, processus proprius pigre natus ~1.5s): `vocantes(t)`,
+  `vocata(t)`, `inclusiones(via)`, `caput(via)`, `symbolum(t)`,
+  `diagnostica(via)` — idem apparatus quem Claude per MCP videt
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

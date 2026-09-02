@@ -350,6 +350,108 @@ class Fructus(object):
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
 
 
+# ---------------------------------------------------------------- legati
+
+import atexit
+import json
+
+
+class Legati(object):
+    """Pons ad legatum (servum MCP silvae) per stdio JSON-RPC (lineae):
+    idem apparatus quem Claude per MCP videt - vocantes/vocata/
+    inclusiones/caput/symbolum/corpus/diagnostica/quaestio - scriptis
+    patens. Processus proprius (non residens sessionis), pigre natus,
+    in exitu clausus. Effusum = textus fragmenti primi."""
+
+    def __init__(self):
+        self.proc = None
+        self.id = 0
+
+    def _nasci(self):
+        if self.proc is not None:
+            return
+        self.proc = subprocess.Popen(
+            ['./officina/legatus.sh', '-mcp'], cwd=RADIX,
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL, text=True, bufsize=1)
+        atexit.register(self.claudere)
+        self._petere('initialize', {
+            'protocolVersion': '2024-11-05', 'capabilities': {},
+            'clientInfo': {'name': 'pythonica', 'version': '0'}})
+        self._mittere({'jsonrpc': '2.0',
+                       'method': 'notifications/initialized'})
+
+    def _mittere(self, nuntius):
+        self.proc.stdin.write(json.dumps(nuntius) + '\n')
+        self.proc.stdin.flush()
+
+    def _petere(self, methodus, params):
+        self.id += 1
+        self._mittere({'jsonrpc': '2.0', 'id': self.id,
+                       'method': methodus, 'params': params})
+        while True:
+            linea = self.proc.stdout.readline()
+            if not linea:
+                raise SilvaError('legatus tacuit (processus mortuus?)')
+            try:
+                n = json.loads(linea)
+            except ValueError:
+                continue
+            if n.get('id') == self.id:
+                if 'error' in n:
+                    raise SilvaError('legatus: %s' % n['error'])
+                return n.get('result')
+
+    def voca(self, instrumentum, **argumenta):
+        self._nasci()
+        r = self._petere('tools/call', {'name': instrumentum,
+                                        'arguments': argumenta})
+        partes = (r or {}).get('content') or []
+        return '\n'.join(p.get('text', '') for p in partes)
+
+    def claudere(self):
+        if self.proc is not None:
+            try:
+                self.proc.stdin.close()
+                self.proc.wait(timeout=5)
+            except Exception:
+                self.proc.kill()
+            self.proc = None
+
+
+_legati = Legati()
+
+
+def legati(instrumentum, **argumenta):
+    """vocatio cruda instrumenti legati (textus)"""
+    return _legati.voca(instrumentum, **argumenta)
+
+
+def vocantes(titulus):
+    return legati('vocantes', titulus=titulus)
+
+
+def vocata(titulus):
+    return legati('vocata', titulus=titulus)
+
+
+def inclusiones(via):
+    return legati('inclusiones', via=via)
+
+
+def caput(via):
+    return legati('caput', via=via)
+
+
+def symbolum(titulus, via=None):
+    return legati('symbolum', titulus=titulus, **({'via': via} if via
+                                                     else {}))
+
+
+def diagnostica(via):
+    return legati('diagnostica', via=via)
+
+
 # ---------------------------------------------------------------- refactio
 
 def _caput_definitionis(textus_nodi):
