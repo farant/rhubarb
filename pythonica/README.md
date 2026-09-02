@@ -49,6 +49,19 @@ plica pendet — veritas in C manet.
   `exspectare(via)`, `portae_pendentes()`, `commissio(portae=[via.json])`
   receptum accipit nisi arbor mutata (rancidum); `receptum_delere(via)`
   post consumptionem
+- `silva.Textus(via)` — editio textus PLANI (sh, md, html, toml):
+  ancorae exactae numero asserto (`tolerans='spatia'`), omnia aut
+  nihil, custos lectionis rancidae, sine formatore/examine
+- ancorae `.replace` Editionis: commentum = lexema unum, spatia INTRA
+  collapsa (tabulae, lineae refractae indifferentes)
+- `silva.commissio_umbra(nuntius, viae, ['radix', 'silva'])` — portae
+  umbrae SERIATIM (tempora fida), commissio contra recepta omnia,
+  recepta deleta; `siccum=True` = portae solae; reddit (hash, [(porta,
+  compendium, totum_s)])
+- `silva.mensurae(praefixum, quantum)` — sessiones voluminis mensoris
+  ('' radix, 'silva.' silva; tituli praefixo exuti; plenae solae);
+  `compendium_mensurae(sessio)` = totum/cursus/compilatio/praevolatus
+  + tardissimae
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

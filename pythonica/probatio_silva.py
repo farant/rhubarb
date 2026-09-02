@@ -345,6 +345,46 @@ except silva.SilvaError:
 e = silva.Editio(via); e.replace('x  = I;', 'x = II;', tolerans='spatia')
 credo('x = II;' in e.textus, "tolerans='spatia' forma vetus manet")
 
+print('--- Textus: textus planus ---')
+via_t2 = os.path.join(T, 'planus.md')
+open(via_t2, 'w').write('# titulus\n\nalpha beta\nalpha gamma\n')
+tx = silva.Textus(via_t2)
+tx.replace('alpha beta', 'ALPHA beta')
+credo(open(via_t2).read().startswith('# titulus'), 'Textus: discus intactus ante applicare')
+try:
+    tx.replace('alpha', 'x')          # bis (una iam mutata: 'alpha gamma' + nihil) -> 1? 'ALPHA beta' non congruit -> 1
+    credo(True, 'Textus: numerus exactus post mutationem')
+except silva.SilvaError:
+    credo(False, 'Textus: numerus exactus post mutationem')
+try:
+    silva.Textus(via_t2).replace('alpha', 'x')   # in disco adhuc bis
+    credo(False, 'Textus: ancora ambigua levat')
+except silva.SilvaError:
+    credo(True, 'Textus: ancora ambigua (2) levat')
+tx.appendere('cauda\n')
+f = tx.applicare()
+credo(open(via_t2).read() == '# titulus\n\nALPHA beta\nx gamma\ncauda\n' and f.diff, 'Textus: scriptum semel, diff')
+tx2 = silva.Textus(via_t2); open(via_t2, 'a').write('alius\n')
+try:
+    tx2.replace('cauda', 'c'); tx2.applicare(); credo(False, 'Textus: lectio rancida')
+except silva.SilvaError:
+    credo(True, 'Textus: lectio rancida refutatur')
+
+print('--- ancorae: commenta spatiis indifferentia ---')
+open(via, 'w').write(FONS.replace('/* b */', '/*\tb   nota\n   */'))
+e = silva.Editio(via)
+e.replace('/* b nota */\nvacuum\nb (vacuum)', '/* B */\nvacuum\nb (vacuum)')
+credo('/* B */' in e.textus and '\tb   nota' not in e.textus, 'commentum: tabulae et lineae refractae in ancora indifferentes')
+
+print('--- mensurae (volumen verum) ---')
+ms = silva.mensurae('', 1)
+credo(len(ms) == 1 and ms[0].mensurae.get('suita.tempus.totum', 0) > 0, 'mensurae radix: sessio plena cum toto')
+ms2 = silva.mensurae('silva.', 2)
+credo(len(ms2) >= 1 and all('suita.tempus.totum' in s.mensurae for s in ms2)
+      and any(k.startswith('probatio.cursus.probatio_silva_') for k in ms2[0].mensurae), 'mensurae silva: tituli praefixo exuti')
+credo('totum' in silva.compendium_mensurae(ms[0]) and 'probatio_' in silva.compendium_mensurae(ms[0]), 'compendium_mensurae')
+credo(silva.mensurae('nemo.', 1) == [], 'mensurae: praefixum ignotum vacuum')
+
 print('--- portae + commissio + planta ---')
 pp = silva.porta('formator-intra')
 credo(pp.cucurrit and pp.sana and 'sanum' in pp.compendium, 'porta formator-intra sana (%s)' % pp.compendium)
@@ -433,6 +473,10 @@ credo(any(v == orph and st.startswith('mortua') for v, st in silva.portae_penden
 silva.receptum_delere(orph)
 credo(all(v != via_r for v, _ in silva.portae_pendentes()),
       'portae_pendentes: receptum abiit')
+# commissio_umbra siccum: portae seriatim, recepta deleta, nihil commissum
+h_u, rr = silva.commissio_umbra('nihil', ['pythonica/README.md'], ['formator-intra'], siccum=True)
+credo(h_u is None and len(rr) == 1 and rr[0][0] == 'formator-intra' and 'sanum' in rr[0][1], 'commissio_umbra siccum: porta sana, nihil commissum')
+credo(not any('formator-intra' in v for v, _ in silva.portae_pendentes()), 'commissio_umbra: recepta deleta')
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

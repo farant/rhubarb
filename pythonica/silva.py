@@ -168,13 +168,22 @@ def _lexemata(textus):
     return [(m.group(0), m.start(), m.end()) for m in _LEX.finditer(textus)]
 
 
+def _lexema_norma(t):
+    """commentum = lexema unum: spatia INTRA collapsa (tabulae, lineae
+    refractae, indentatio commenti ancoram non frangunt - 2026-09-02);
+    cetera exacta"""
+    if t.startswith('/*'):
+        return ' '.join(t.split())
+    return t
+
+
 def _sedes_lexematum(textus, vetus):
     """spatia [initium, finis) ubi series lexematum ancorae in textu
     apparet"""
-    anc = [t for t, _, _ in _lexemata(vetus)]
+    anc = [_lexema_norma(t) for t, _, _ in _lexemata(vetus)]
     if not anc:
         raise SilvaError('ancora sine lexematis')
-    lex = _lexemata(textus)
+    lex = [(_lexema_norma(t), a, b) for t, a, b in _lexemata(textus)]
     n = len(anc)
     sedes = []
     for i in range(len(lex) - n + 1):
@@ -427,6 +436,74 @@ class Fructus(object):
             lineae.append('  differre: %s %s' % (
                 self.differentia.verdictum, self.unitates()))
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
+
+
+# ---------------------------------------------------------------- textus
+
+class Textus(object):
+    """Editio textus PLANI (sh, md, html, toml, py): ancorae exactae
+    numero asserto (tolerans='spatia' cursus spatiorum), omnia aut
+    nihil, custos lectionis rancidae, applicare() scribit SEMEL -
+    sine formatore, sine examine: pro plagulis quas silva non legit.
+    Idem mos ac Editio, ne 'lege, conta, substitue, scribe' sexies
+    per diem manu iteretur."""
+
+    def __init__(self, via):
+        self.via = via
+        self.originalis = open(_absoluta(via)).read()
+        self.textus = self.originalis
+        self.acta = []
+
+    def replace(self, vetus, novus, numerus=1, tolerans=False):
+        if tolerans == 'spatia':
+            sedes = [m.span() for m in
+                     _exemplar_tolerans(vetus).finditer(self.textus)]
+        else:
+            sedes = []
+            i = self.textus.find(vetus)
+            while i >= 0:
+                sedes.append((i, i + len(vetus)))
+                i = self.textus.find(vetus, i + 1)
+        if len(sedes) != numerus:
+            raise SilvaError("ancora %d vicibus inventa (exspectatae %d):"
+                             " %r" % (len(sedes), numerus, vetus[:60]))
+        for a, b in reversed(sedes):
+            self.textus = self.textus[:a] + novus + self.textus[b:]
+        self.acta.append('replace %r' % vetus[:40])
+        return self
+
+    def inserere_post(self, vetus, novus, numerus=1):
+        return self.replace(vetus, vetus + novus, numerus)
+
+    def inserere_ante(self, vetus, novus, numerus=1):
+        return self.replace(vetus, novus + vetus, numerus)
+
+    def appendere(self, novus):
+        self.textus += novus
+        self.acta.append('appendere')
+        return self
+
+    def diff(self):
+        return ''.join(difflib.unified_diff(
+            self.originalis.splitlines(True), self.textus.splitlines(True),
+            'a/' + self.via, 'b/' + self.via))
+
+    def mutata(self):
+        return self.textus != self.originalis
+
+    def applicare(self):
+        """custos lectionis rancidae, scriptura semel; Fructus sine
+        examine/forma/differentia"""
+        if open(_absoluta(self.via)).read() != self.originalis:
+            raise SilvaError('plagula in disco mutata post lectionem'
+                             ' (%s) - relege ante editionem' % self.via)
+        if not self.mutata():
+            return Fructus(self.via, '', None, False, None)
+        d = self.diff()
+        with open(_absoluta(self.via), 'w') as f:
+            f.write(self.textus)
+        self.originalis = self.textus
+        return Fructus(self.via, d, None, False, None)
 
 
 # ---------------------------------------------------------------- portae
@@ -735,6 +812,37 @@ def portae_pendentes():
     return exitus
 
 
+def _totum_actorum(acta):
+    m = re.search(r'Total Time:\s*\S*?([\d.]+)s', acta)
+    return float(m.group(1)) if m else None
+
+
+def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
+                    siccum=False):
+    """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
+    fidae manent), deinde commissio contra recepta OMNIA, recepta
+    deleta. Porta fracta: SilvaError cum cauda actorum, recepta
+    servata ad inspectionem. siccum: portae solae, nihil commissum.
+    Reddit (hash | None, [(nomen, compendium, totum_secunda)])."""
+    recepta = []
+    for p in portae:
+        nomen, filtrum = (p, None) if isinstance(p, str) else p
+        via = porta_umbra(nomen, filtrum)
+        r = exspectare(via, tectum)
+        acta = open(via + '.acta').read()
+        recepta.append((via, nomen, r, _totum_actorum(acta)))
+        if not r.sana:
+            raise SilvaError('porta umbrae %s non sana: %s\n%s'
+                             % (nomen, r.compendium, acta[-1500:]))
+    h = None
+    if not siccum:
+        h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
+                      verificare=verificare)
+    for v, _, _, _ in recepta:
+        receptum_delere(v)
+    return h, [(n, r.compendium, tot) for _, n, r, tot in recepta]
+
+
 # ---------------------------------------------------------------- planta
 
 def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
@@ -774,6 +882,81 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
         raise SilvaError('porta post reversionem non viridis: %s'
                          % viridis.compendium)
     return rubra.compendium, viridis.compendium
+
+
+# ---------------------------------------------------------------- mensurae
+
+VOLUMEN_MENSURARUM = os.path.expanduser('~/.rhubarb/mensurae.volumen')
+Sessio = namedtuple('Sessio', 'clavis momentum commissio mensurae')
+
+
+def mensurae(praefixum='', quantum=1, plenae=True, via=None):
+    """Sessiones suitae ex volumine mensoris, recentissimae primum:
+    praefixum '' = radix, 'silva.' = silva (tools/mensor_suitae.sh).
+    Tituli praefixo EXUTI (suita.tempus.totum, probatio.cursus.X ...)
+    ut claves suitarum omnium eaedem sint. plenae: solae sessiones cum
+    suita.probationes.totae >= dimidium maximi (cursus filtrati
+    exclusi, ut facies). [] si volumen abest."""
+    import sqlite3
+    v = via or VOLUMEN_MENSURARUM
+    if not os.path.exists(v):
+        return []
+    db = sqlite3.connect(v)
+    rows = db.execute("select momentum, genus, datum from acta"
+                      " where genus in ('sessio','mensura') order by seq"
+                      ).fetchall()
+    db.close()
+    meta = {}
+    mens = {}
+    ordo = []
+    for mom, g, d in rows:
+        p = d.split('\t')
+        if g == 'sessio':
+            meta[p[0]] = (mom, p[2][:8] if len(p) > 2 else '')
+            continue
+        if len(p) < 6 or not p[3].startswith(praefixum):
+            continue
+        cauda = p[3][len(praefixum):]
+        if cauda.split('.')[0] not in ('suita', 'probatio'):
+            continue
+        if p[0] not in mens:
+            mens[p[0]] = {}
+            ordo.append(p[0])
+        try:
+            mens[p[0]][cauda] = float(p[4])
+        except ValueError:
+            pass
+    sessiones = [s for s in ordo if 'suita.tempus.totum' in mens[s]]
+    if plenae and sessiones:
+        maximum = max(mens[s].get('suita.probationes.totae', 0)
+                      for s in sessiones)
+        sessiones = [s for s in sessiones
+                     if mens[s].get('suita.probationes.totae', 0) * 2
+                     >= maximum]
+    exitus = []
+    for s in reversed(sessiones[-quantum:]):
+        mom, comm = meta.get(s, ('', ''))
+        exitus.append(Sessio(s, mom, comm, mens[s]))
+    return exitus
+
+
+def compendium_mensurae(sessio, quantum=5):
+    """textus: totum/cursus/compilatio/praevolatus + probationes
+    tardissimae"""
+    m = sessio.mensurae
+    lineae = ['sessio %s %s %s: totum %.1fs cursus %.1fs compilatio %.1fs'
+              ' praevolatus %.1fs probationes %d' % (
+                  sessio.clavis, sessio.momentum[:16], sessio.commissio,
+                  m.get('suita.tempus.totum', 0),
+                  m.get('suita.tempus.cursus', 0),
+                  m.get('suita.tempus.compilatio', 0),
+                  m.get('suita.tempus.praevolatus', 0),
+                  int(m.get('suita.probationes.totae', 0)))]
+    tarda = sorted(((v, k) for k, v in m.items()
+                    if k.startswith('probatio.cursus.')), reverse=True)
+    for v, k in tarda[:quantum]:
+        lineae.append('  %8.2fs  %s' % (v, k[len('probatio.cursus.'):]))
+    return '\n'.join(lineae)
 
 
 # ---------------------------------------------------------------- selecta

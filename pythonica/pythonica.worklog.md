@@ -62,3 +62,21 @@ staged (pass the new paths). Two doctrine notes: the receipt hashes
 tracked diffs, and the ledger file is tracked, so file ledger notes
 AFTER the commit, never between launch and commit; and `substituere`
 gained `genus=` for types.
+
+## 2026-09-02 (later) — what a day of use asked for
+
+Eleven commits and seven shadow receipts in one day, all through the
+module. Three gaps it kept exposing, now closed: (1) plain-text files
+(runner scripts, the mensor page, markdown) had no Editio, so I wrote
+the same count-and-replace helper six times — `Textus` is that helper
+with the stale-read guard and all-or-nothing write; (2) the
+wait-for-receipt / commit / print-breakdown script was retyped five
+times — `commissio_umbra` runs shadow gates one after another (so
+suite timings stay honest) and commits against all receipts; (3) the
+sqlite reader for the measurement volume — `mensurae` and
+`compendium_mensurae`, checked against the real store. Also: a comment
+is one anchor token, so tabs or reflowed lines inside it broke exact
+matching once; comments now compare whitespace-collapsed. Fran's
+longer answer is a trivia-tolerant plain-text/markdown parser next to
+the sententiae outline parser, so prose gets structural anchors the
+way C has them; not started.
