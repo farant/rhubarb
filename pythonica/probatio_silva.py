@@ -406,6 +406,31 @@ credo(silva.receptum_validum(via_r).sana, 'receptum iterum validum post reversio
 silva.receptum_delere(via_r)
 credo(not os.path.exists(via_r) and not os.path.exists(via_r + '.acta'),
       'receptum deletum cum actis')
+# effusum non-UTF-8 (radix 2026-09-02: probatio octetos crudos imprimit)
+# - porta non ruit, verdictum legitur
+silva.PORTAE['ficta-octeti'] = (['printf', 'fictum: sanum \\246\\321\\n'],
+                                r'fictum: (sanum|FRACTUM)')
+try:
+    po = silva.porta('ficta-octeti')
+    credo(po.cucurrit and po.sana, 'porta: octeti non-UTF-8 in effusu tolerati')
+except Exception as ex:
+    credo(False, 'porta: octeti non-UTF-8 levant %s' % type(ex).__name__)
+# operarius umbrae ruens (porta parenti nota, operario ignota - PORTAE
+# in processu mutatae operarium non attingunt): receptum FRACTUM
+# scribitur, signum pendens tollitur - numquam 'pendens' in perpetuum
+via_u = silva.porta_umbra('ficta-octeti')
+ru = silva.exspectare(via_u, tectum=60)
+credo(not ru.sana and not ru.cucurrit and 'UMBRA FRACTA' in ru.compendium
+      and not os.path.exists(via_u + '.pendens'),
+      'umbra: ruina operarii = receptum fractum, pendens sublatum')
+credo('porta ignota' in open(via_u + '.acta').read(), 'umbra: traceback in actis')
+silva.receptum_delere(via_u)
+# signum pendens orphanum (operarius mortuus sine recepto) nominatur
+orph = os.path.join(silva.PORTAE_DIR, 'ficta.0.json')
+open(orph + '.pendens', 'w').write('999999')
+credo(any(v == orph and st.startswith('mortua') for v, st in silva.portae_pendentes()),
+      'portae_pendentes: pendens sine operario = mortua')
+silva.receptum_delere(orph)
 credo(all(v != via_r for v, _ in silva.portae_pendentes()),
       'portae_pendentes: receptum abiit')
 

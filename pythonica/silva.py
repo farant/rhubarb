@@ -59,8 +59,11 @@ Differentia = namedtuple('Differentia',
 
 
 def _curre(args, stdin=None):
+    # errors='replace': effusum portae octetos non-UTF-8 ferre potest
+    # (probatio octetos crudos imprimens) - decodificatio stricta
+    # operarium umbrae 2026-09-02 tacite necavit, signum pendens mansit
     return subprocess.run(args, cwd=RADIX, capture_output=True,
-                          text=True, input=stdin)
+                          text=True, errors='replace', input=stdin)
 
 
 def _absoluta(via):
@@ -588,26 +591,56 @@ def porta_umbra(nomen, filtrum=None):
         raise SilvaError('porta ignota: %s' % nomen)
     os.makedirs(PORTAE_DIR, exist_ok=True)
     via = _receptum_via(nomen, filtrum)
-    open(via + '.pendens', 'w').write(str(time.time()))
-    subprocess.Popen(
+    p = subprocess.Popen(
         [sys.executable, os.path.abspath(__file__), '-umbra', nomen,
          filtrum or '', via], cwd=RADIX, start_new_session=True,
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
+    # signum pendens = PID operarii: operarius mortuus sine recepto
+    # nominatur (portae_pendentes 'mortua', exspectare levat statim)
+    open(via + '.pendens', 'w').write(str(p.pid))
     return via
 
 
+def _pendens_mortua(via):
+    """VERUM si signum pendens PID mortuum fert (operarius abiit sine
+    recepto); FALSUM si vivus aut signum vetus sine PID"""
+    try:
+        pid = int(open(via + '.pendens').read().strip())
+    except (IOError, OSError, ValueError):
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return True
+    except OSError:
+        return False
+    return False
+
+
 def _umbra_currere(nomen, filtrum, via):
-    """corpus operarii umbrae (processus separatus)"""
-    sig = sigillum_arboris()
-    p = porta(nomen, filtrum or None)
+    """corpus operarii umbrae (processus separatus). Ruina QUAELIBET
+    receptum FRACTUM scribit (traceback in .acta) et signum pendens
+    tollit - operarius numquam tacite abit."""
+    import traceback
+    sig = '?'
+    try:
+        sig = sigillum_arboris()
+        p = porta(nomen, filtrum or None)
+        acta = p.acta
+        d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
+             'cucurrit': p.cucurrit, 'compendium': p.compendium,
+             'rc': p.rc, 'sigillum': sig,
+             'rancida': sig != sigillum_arboris(), 'finis': time.time()}
+    except Exception:
+        acta = traceback.format_exc()
+        ultima = acta.strip().splitlines()[-1][:200]
+        d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': False,
+             'cucurrit': False, 'compendium': 'UMBRA FRACTA: ' + ultima,
+             'rc': -1, 'sigillum': sig, 'rancida': False,
+             'finis': time.time()}
     with open(via + '.acta', 'w') as f:
-        f.write(p.acta)
-    sig_finis = sigillum_arboris()
-    d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
-         'cucurrit': p.cucurrit, 'compendium': p.compendium, 'rc': p.rc,
-         'sigillum': sig, 'rancida': sig != sig_finis,
-         'finis': time.time()}
+        f.write(acta)
     with open(via + '.tmp', 'w') as f:
         json.dump(d, f)
     os.rename(via + '.tmp', via)
@@ -660,6 +693,9 @@ def exspectare(via, tectum=1800, intervallum=2.0):
     while time.time() < finis:
         if os.path.exists(via):
             return receptum_legere(via)
+        if _pendens_mortua(via):
+            raise SilvaError('operarius umbrae mortuus sine recepto: %s'
+                             % via)
         time.sleep(intervallum)
     raise SilvaError('receptum non venit intra %ds: %s' % (tectum, via))
 
@@ -674,7 +710,9 @@ def portae_pendentes():
     for f in sorted(os.listdir(PORTAE_DIR)):
         via = os.path.join(PORTAE_DIR, f)
         if f.endswith('.pendens'):
-            exitus.append((via[:-8], 'pendens'))
+            exitus.append((via[:-8], 'mortua (operarius abest, receptum'
+                           ' nullum)' if _pendens_mortua(via[:-8])
+                           else 'pendens'))
         elif f.endswith('.json'):
             r = receptum_legere(via)
             if r.rancida or r.sigillum != sig:
