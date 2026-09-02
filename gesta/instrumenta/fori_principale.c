@@ -26,8 +26,11 @@
 /* frustum receptionis (responsa fluunt - tectum nullum) */
 #define FORI_FRUSTUM 8192
 
-interior TcpConnexio* _conectere_aut_gignere (i32 portus,
-    b32 generatio_licita, Piscina* pn);
+interior TcpConnexio*
+_conectere_aut_gignere (
+        i32  portus,
+        b32  generatio_licita,
+    Piscina* pn);
 
 /* connexio per-petitionem; recusatio -> daemon genitus per
  * launcher portu eodem. Custos tempestatis: generatio UNA per
@@ -37,12 +40,15 @@ interior TcpConnexio* _conectere_aut_gignere (i32 portus,
  * renovare obstruxit). generatio_licita FALSUM
  * (-sine-generatione, probationes) = defectus statim. */
 interior TcpConnexio*
-_conectere_aut_gignere (i32 portus, b32 generatio_licita,
+_conectere_aut_gignere (
+        i32  portus,
+        b32  generatio_licita,
     Piscina* pn)
 {
-    hic_manens b32 genitus = FALSUM;
-    TcpResultus rc = tcp_connectere("127.0.0.1", portus, pn);
-    integer k;
+    hic_manens b32 genitus  = FALSUM;
+       TcpResultus rc       = tcp_connectere("127.0.0.1", portus,
+           pn);
+           integer k;
 
     si (rc.successus)
     {
@@ -77,10 +83,13 @@ _conectere_aut_gignere (i32 portus, b32 generatio_licita,
     redde NIHIL;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    i32 portus = FORI_PORTUS_ORDINARIUS;
-    b32 generatio_licita = VERUM;
+        i32 portus            = FORI_PORTUS_ORDINARIUS;
+        b32 generatio_licita  = VERUM;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -91,7 +100,7 @@ s32 principale (integer argc, character** argv)
             k++;
         }
         alioquin si (strcmp(argv[k], "-sine-generatione")
-            == ZEPHYRUM)
+                     == ZEPHYRUM)
         {
             generatio_licita = FALSUM;
         }
@@ -102,11 +111,11 @@ s32 principale (integer argc, character** argv)
     {
         Piscina* pn = piscina_generare_dynamicum("fori_nuntius",
             LXIV * 1024);
-        b32 finitus = FALSUM;
-        chorda linea;
-        TabellariusNuntius nuntius;
-        b32 responsum_exspectatur;
-        TcpConnexio* conn;
+                       b32  finitus = FALSUM;
+                    chorda  linea;
+        TabellariusNuntius  nuntius;
+                       b32  responsum_exspectatur;
+               TcpConnexio* conn;
 
         si (pn == NIHIL)
         {
@@ -141,7 +150,7 @@ s32 principale (integer argc, character** argv)
             piscina_destruere(pn);
             perge;
         }
-        si (tcp_mittere_omnia(conn, (constans i8*)linea.datum,
+        si (   tcp_mittere_omnia(conn, (constans i8*)linea.datum,
                 linea.mensura)
             && tcp_mittere_omnia(conn, (constans i8*)"\n", I)
             && responsum_exspectatur)
@@ -150,7 +159,7 @@ s32 principale (integer argc, character** argv)
              * responsum unum per petitionem (framing daemonis) */
             per (;;)
             {
-                i8 frustum[FORI_FRUSTUM];
+                 i8 frustum[FORI_FRUSTUM];
                 s32 n = tcp_recipere(conn, frustum,
                     (i32)FORI_FRUSTUM);
                 s32 j;

@@ -40,7 +40,10 @@ _purgare (vacuum)
 
 /* lineam mittere, responsum ad novam lineam legere (obstruens) */
 interior constans character*
-_petere (TcpConnexio* conn, Piscina* pn, constans character* linea)
+_petere (
+           TcpConnexio* conn,
+               Piscina* pn,
+    constans character* linea)
 {
     character* buf = (character*)piscina_allocare(pn,
         (memoriae_index)RESPONSUM_CAPACITAS);
@@ -83,12 +86,13 @@ _petere (TcpConnexio* conn, Piscina* pn, constans character* linea)
     redde buf;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
-    integer portus_int = 0;
-    integer k;
+        b32  praeteritus;
+    integer  portus_int = 0;
+    integer  k;
 
     piscina = piscina_generare_dynamicum("probatio_tabd",
         16777216);
@@ -116,7 +120,7 @@ s32 principale (vacuum)
 
         si (pf != NIHIL)
         {
-            si (fscanf(pf, "portus %d", &portus_int) == I
+            si (   fscanf(pf, "portus %d", &portus_int) == I
                 && portus_int > 0)
             {
                 fclose(pf);
@@ -130,7 +134,7 @@ s32 principale (vacuum)
 
     si (portus_int > 0)
     {
-        TcpResultus rc;
+               TcpResultus  rc;
         constans character* r;
 
         /* connexio prima: initialize + pipatum signatum + acta */
@@ -172,7 +176,7 @@ s32 principale (vacuum)
         {
             character linea[DXII];
             character longum[CCXLII];
-            s32 i;
+                  s32 i;
 
             r = _petere(rc.connexio, piscina,
                 "{\"jsonrpc\":\"2.0\",\"id\":4,\"method\":"

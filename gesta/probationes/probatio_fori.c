@@ -38,10 +38,12 @@ _purgare (vacuum)
 
 /* plagulam totam ut litterae (vacuae si abest) */
 interior constans character*
-_plagula_litterae (Piscina* piscina, constans character* via)
+_plagula_litterae (
+               Piscina* piscina,
+    constans character* via)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura;
+         FILE* pl = fopen(via, "rb");
+         long  mensura;
     character* textus;
 
     si (pl == NIHIL)
@@ -53,7 +55,7 @@ _plagula_litterae (Piscina* piscina, constans character* via)
     fseek(pl, 0L, SEEK_SET);
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > 0L ? mensura + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura > 0L
             && fread(textus, I, (memoriae_index)mensura, pl)
                 != (memoriae_index)mensura))
@@ -68,9 +70,10 @@ _plagula_litterae (Piscina* piscina, constans character* via)
 
 /* numerus eventuum '\n' in textu */
 interior s32
-_lineas_numerare (constans character* textus)
+_lineas_numerare (
+    constans character* textus)
 {
-    s32 n = ZEPHYRUM;
+                   s32  n = ZEPHYRUM;
     constans character* p;
 
     per (p = textus; *p != '\0'; p++)
@@ -83,12 +86,13 @@ _lineas_numerare (constans character* textus)
     redde n;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
-    integer portus_int = 0;
-    integer k;
+        b32  praeteritus;
+    integer  portus_int = 0;
+    integer  k;
 
     piscina = piscina_generare_dynamicum("probatio_fori",
         16777216);
@@ -115,7 +119,7 @@ s32 principale (vacuum)
 
         si (pf != NIHIL)
         {
-            si (fscanf(pf, "portus %d", &portus_int) == I
+            si (   fscanf(pf, "portus %d", &portus_int) == I
                 && portus_int > 0)
             {
                 fclose(pf);
@@ -129,7 +133,7 @@ s32 principale (vacuum)
 
     si (portus_int > 0)
     {
-        character imperium[IMPERIUM_MENSURA];
+                 character  imperium[IMPERIUM_MENSURA];
         constans character* exitus;
 
         /* petitio + NUNTIATIO + petitio signata una serie:

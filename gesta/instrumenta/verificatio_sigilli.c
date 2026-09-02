@@ -20,7 +20,9 @@ nomen structura {
 } OrdoCaptus;
 
 interior Xar*
-_res_capere_omnes (GestaMundus* m, Piscina* piscina)
+_res_capere_omnes (
+    GestaMundus* m,
+        Piscina* piscina)
 {
     Xar* fructus = xar_creare(piscina, (i32)magnitudo(OrdoCaptus));
     ScriniumEnuntiatum* e = scrinium_praeparare(gesta_scrinium(m),
@@ -36,9 +38,9 @@ _res_capere_omnes (GestaMundus* m, Piscina* piscina)
 
         si (o != NIHIL)
         {
-            o->res_id = scrinium_columna_textus(e, 0, piscina);
-            o->datum = scrinium_columna_textus(e, I, piscina);
-            o->status = scrinium_columna_textus(e, II, piscina);
+            o->res_id  = scrinium_columna_textus(e, 0, piscina);
+            o->datum   = scrinium_columna_textus(e, I, piscina);
+            o->status  = scrinium_columna_textus(e, II, piscina);
         }
     }
     scrinium_finire(e);
@@ -46,7 +48,9 @@ _res_capere_omnes (GestaMundus* m, Piscina* piscina)
 }
 
 interior b32
-_pares (chorda a, chorda b)
+_pares (
+    chorda a,
+    chorda b)
 {
     redde a.mensura == b.mensura
         && (a.mensura == ZEPHYRUM
@@ -55,14 +59,16 @@ _pares (chorda a, chorda b)
 }
 
 s32
-principale (integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
+        Piscina* piscina;
     GestaMundus* m;
-    Xar* ante;
-    Xar* post;
-    i32 i;
-    b32 sanum = VERUM;
+            Xar* ante;
+            Xar* post;
+            i32  i;
+            b32  sanum = VERUM;
 
     si (argc < III)
     {
@@ -113,7 +119,7 @@ principale (integer argc, character** argv)
         OrdoCaptus* a = (OrdoCaptus*)xar_obtinere(ante, i);
         OrdoCaptus* p = (OrdoCaptus*)xar_obtinere(post, i);
 
-        si (a == NIHIL || p == NIHIL
+        si (   a == NIHIL || p == NIHIL
             || !_pares(a->res_id, p->res_id)
             || !_pares(a->datum, p->datum)
             || !_pares(a->status, p->status))

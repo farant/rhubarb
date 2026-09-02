@@ -17,19 +17,21 @@ interior constans character* VIA_AN =
 
 /* res_id per titulum exactum (chorda vacua = absens) */
 interior chorda
-_per_titulum (GestaMundus* m, constans character* titulus,
-    Piscina* piscina)
+_per_titulum (
+           GestaMundus* m,
+    constans character* titulus,
+               Piscina* piscina)
 {
     ScriniumEnuntiatum* e;
-    chorda fructus;
-    chorda t;
+                chorda  fructus;
+                chorda  t;
     unio { constans character* l; i8* d; } u;
 
-    fructus.mensura = ZEPHYRUM;
-    fructus.datum = NIHIL;
-    u.l = titulus;
-    t.datum = u.d;
-    t.mensura = (i32)strlen(titulus);
+    fructus.mensura  = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    u.l              = titulus;
+    t.datum          = u.d;
+    t.mensura        = (i32)strlen(titulus);
     e = scrinium_praeparare(gesta_scrinium(m),
         "SELECT res_id FROM res WHERE titulus = ? LIMIT 2");
     si (e == NIHIL)
@@ -46,8 +48,8 @@ _per_titulum (GestaMundus* m, constans character* titulus,
              * titulorum duplicatorum; res_id discernit) */
             fprintf(stderr, "nota_frigida: titulus ambiguus"
                 " (plures res) - res_id adhibe\n");
-            fructus.mensura = ZEPHYRUM;
-            fructus.datum = NIHIL;
+            fructus.mensura  = ZEPHYRUM;
+            fructus.datum    = NIHIL;
         }
     }
     scrinium_finire(e);
@@ -55,12 +57,15 @@ _per_titulum (GestaMundus* m, constans character* titulus,
 }
 
 interior constans character*
-_textus_iungere (Piscina* piscina, character** argv,
-    integer initium, integer argc)
+_textus_iungere (
+      Piscina*  piscina,
+    character** argv,
+      integer   initium,
+      integer   argc)
 {
-    memoriae_index mensura = I;
-    character* textus;
-    integer k;
+    memoriae_index  mensura = I;
+         character* textus;
+           integer  k;
 
     per (k = initium; k < argc; k++)
     {
@@ -83,13 +88,16 @@ _textus_iungere (Piscina* piscina, character** argv,
     redde textus;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina = piscina_generare_dynamicum("frigida",
         33554432);
-    GestaMundus* m;
-    GestaEventum e;
-    character res_id[GESTA_RES_ID_MENSURA];
+     GestaMundus* m;
+    GestaEventum  e;
+       character  res_id[GESTA_RES_ID_MENSURA];
 
     si (piscina == NIHIL)
     {
@@ -112,11 +120,11 @@ s32 principale (integer argc, character** argv)
     si (strcmp(argv[I], "-crea") == ZEPHYRUM)
     {
         {
-            character datum[2048];
+                     character  datum[2048];
             constans character* corpus = argc > IV
                 ? _textus_iungere(piscina, argv, IV, argc) : NIHIL;
 
-            si (argc < IV || strlen(argv[II]) > (memoriae_index)128
+            si (   argc < IV || strlen(argv[II]) > (memoriae_index)128
                 || strlen(argv[III]) > (memoriae_index)256
                 || (corpus != NIHIL
                     && strlen(corpus) > (memoriae_index)1024))
@@ -139,11 +147,11 @@ s32 principale (integer argc, character** argv)
                 sprintf(datum, "{\"genus\":\"%s\",\"titulus\":"
                     "\"%s\"}", argv[II], argv[III]);
             }
-            e.res_id = NIHIL;
-            e.genus_eventus = "creatio";
-            e.datum = datum;
-            e.actor = "fran";
-            e.origo = "frigida";
+            e.res_id         = NIHIL;
+            e.genus_eventus  = "creatio";
+            e.datum          = datum;
+            e.actor          = "fran";
+            e.origo          = "frigida";
             si (!gesta_scribere(m, &e, res_id))
             {
                 fprintf(stderr, "nota_frigida: %s\n",
@@ -177,8 +185,8 @@ s32 principale (integer argc, character** argv)
 
                 memcpy(copia, per_t.datum,
                     (memoriae_index)per_t.mensura);
-                copia[per_t.mensura] = '\0';
-                res_effectiva = copia;
+                copia[per_t.mensura]  = '\0';
+                res_effectiva         = copia;
             }
         }
         si (strlen(textus) > (memoriae_index)3800)
@@ -187,11 +195,11 @@ s32 principale (integer argc, character** argv)
             redde II;
         }
         sprintf(datum, "{\"textus\":\"%s\"}", textus);
-        e.res_id = res_effectiva;
-        e.genus_eventus = "nota";
-        e.datum = datum;
-        e.actor = "fran";
-        e.origo = "frigida";
+        e.res_id         = res_effectiva;
+        e.genus_eventus  = "nota";
+        e.datum          = datum;
+        e.actor          = "fran";
+        e.origo          = "frigida";
         si (!gesta_scribere(m, &e, NIHIL))
         {
             fprintf(stderr, "nota_frigida: %s\n", gesta_error(m));

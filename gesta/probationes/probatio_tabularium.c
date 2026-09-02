@@ -56,7 +56,8 @@ _purgare (vacuum)
 
 /* plagulam scribere (fixtura vigiliae) */
 interior b32
-_plagulam_scribere (constans character* via,
+_plagulam_scribere (
+    constans character* via,
     constans character* contentum)
 {
     FILE* pl = fopen(via, "wb");
@@ -72,10 +73,12 @@ _plagulam_scribere (constans character* via,
 
 /* plagulam totam ut litterae (vacuae si abest) */
 interior constans character*
-_plagula_litterae (Piscina* piscina, constans character* via)
+_plagula_litterae (
+               Piscina* piscina,
+    constans character* via)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura;
+         FILE* pl = fopen(via, "rb");
+         long  mensura;
     character* textus;
 
     si (pl == NIHIL)
@@ -87,7 +90,7 @@ _plagula_litterae (Piscina* piscina, constans character* via)
     fseek(pl, 0L, SEEK_SET);
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > 0L ? mensura + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura > 0L
             && fread(textus, I, (memoriae_index)mensura, pl)
                 != (memoriae_index)mensura))
@@ -103,11 +106,14 @@ _plagula_litterae (Piscina* piscina, constans character* via)
 /* prima plagula .md in directorio (recens tagi) - textus totus,
  * vacuum "" si directorium abest aut nulla plagula .md continet */
 interior constans character*
-_prima_plagula_md (Piscina* piscina, constans character* dir)
+_prima_plagula_md (
+               Piscina* piscina,
+    constans character* dir)
 {
-    DirectoriumIterator* it = directorium_iterator_aperire(dir, piscina);
+    DirectoriumIterator* it = directorium_iterator_aperire(dir,
+        piscina);
     DirectoriumIntroitus* e;
-    chorda exemplar = chorda_ex_literis("*.md", piscina);
+                  chorda  exemplar = chorda_ex_literis("*.md", piscina);
 
     si (it == NIHIL)
     {
@@ -115,7 +121,7 @@ _prima_plagula_md (Piscina* piscina, constans character* dir)
     }
     dum ((e = directorium_iterator_proximum(it)) != NIHIL)
     {
-        si (e->genus == INTROITUS_FILUM
+        si (   e->genus            == INTROITUS_FILUM
             && e->titulus.mensura > ZEPHYRUM
             && e->titulus.datum[0] != '.'
             && directorium_titulus_congruit(e->titulus, exemplar))
@@ -140,12 +146,15 @@ _prima_plagula_md (Piscina* piscina, constans character* dir)
  * plura entia coexsistunt (probatum empirice: XXIIIb infra sine hac
  * functione fracta) */
 interior constans character*
-_plagula_cum_continente (Piscina* piscina, constans character* dir,
+_plagula_cum_continente (
+               Piscina* piscina,
+    constans character* dir,
     constans character* substantia)
 {
-    DirectoriumIterator* it = directorium_iterator_aperire(dir, piscina);
+    DirectoriumIterator* it = directorium_iterator_aperire(dir,
+        piscina);
     DirectoriumIntroitus* e;
-    chorda exemplar = chorda_ex_literis("*.md", piscina);
+                  chorda  exemplar = chorda_ex_literis("*.md", piscina);
 
     si (it == NIHIL)
     {
@@ -153,12 +162,12 @@ _plagula_cum_continente (Piscina* piscina, constans character* dir,
     }
     dum ((e = directorium_iterator_proximum(it)) != NIHIL)
     {
-        si (e->genus == INTROITUS_FILUM
+        si (   e->genus            == INTROITUS_FILUM
             && e->titulus.mensura > ZEPHYRUM
             && e->titulus.datum[0] != '.'
             && directorium_titulus_congruit(e->titulus, exemplar))
         {
-            character semita[PROBATIO_SEMITA_MENSURA];
+                     character  semita[PROBATIO_SEMITA_MENSURA];
             constans character* contentum;
 
             sprintf(semita, "%s/%s", dir,
@@ -178,7 +187,9 @@ _plagula_cum_continente (Piscina* piscina, constans character* dir,
 /* an ULLA plagula .md in directorio substantiam continet (saccharum
  * super _plagula_cum_continente pro assertionibus booleis) */
 interior b32
-_ulla_plagula_continet (Piscina* piscina, constans character* dir,
+_ulla_plagula_continet (
+               Piscina* piscina,
+    constans character* dir,
     constans character* substantia)
 {
     redde _plagula_cum_continente(piscina, dir, substantia)[0]
@@ -187,21 +198,24 @@ _ulla_plagula_continet (Piscina* piscina, constans character* dir,
 
 /* lineam mittere, responsum totum (litterae) recipere */
 interior constans character*
-_mitte (Tabularium* t, Piscina* pn, constans character* linea)
+_mitte (
+            Tabularium* t,
+               Piscina* pn,
+    constans character* linea)
 {
-    FILE* effusio = tmpfile();
-    chorda corpus;
+      FILE* effusio = tmpfile();
+    chorda  corpus;
     unio { constans character* l; i8* m; } u;
-    long mensura;
+         long  mensura;
     character* fructus;
 
     si (effusio == NIHIL)
     {
         redde "";
     }
-    u.l = linea;
-    corpus.datum = u.m;
-    corpus.mensura = (i32)strlen(linea);
+    u.l             = linea;
+    corpus.datum    = u.m;
+    corpus.mensura  = (i32)strlen(linea);
     (vacuum)tabularium_tractare(t, pn, corpus, effusio);
     fseek(effusio, 0L, SEEK_END);
     mensura = ftell(effusio);
@@ -213,7 +227,7 @@ _mitte (Tabularium* t, Piscina* pn, constans character* linea)
         fclose(effusio);
         redde "";
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(fructus, I, (memoriae_index)mensura, effusio)
             != (memoriae_index)mensura)
     {
@@ -228,10 +242,12 @@ _mitte (Tabularium* t, Piscina* pn, constans character* linea)
 /* stampam primam ex responso extrahere ('<#' sequitur usque ad
  * spatium; captura fragmentorum) */
 interior vacuum
-_stampa_ex_responso (constans character* r, character* quaternio)
+_stampa_ex_responso (
+    constans character* r,
+             character* quaternio)
 {
     constans character* p = strstr(r, "<#");
-    i32 i;
+                   i32  i;
 
     quaternio[0] = '\0';
     si (p == NIHIL)
@@ -250,10 +266,12 @@ _stampa_ex_responso (constans character* r, character* quaternio)
 /* res_id ex responso "res <ID> creata" extrahere (primum "res "
  * in textu responsi = nostrum) */
 interior vacuum
-_res_id_ex_responso (constans character* r, character* quaternio)
+_res_id_ex_responso (
+    constans character* r,
+             character* quaternio)
 {
     constans character* p = strstr(r, "res ");
-    i32 i;
+                   i32  i;
 
     quaternio[0] = '\0';
     si (p == NIHIL)
@@ -269,13 +287,14 @@ _res_id_ex_responso (constans character* r, character* quaternio)
     quaternio[i] = '\0';
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    Piscina* piscina;
-    Tabularium* t;
-    TabulariumConfiguratio cfg;
-    b32 praeteritus;
-    constans character* r;
+                   Piscina* piscina;
+                Tabularium* t;
+    TabulariumConfiguratio  cfg;
+                       b32  praeteritus;
+        constans character* r;
 
     piscina = piscina_generare_dynamicum("probatio_tab",
         134217728);
@@ -287,21 +306,21 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     _purgare();
 
-    cfg.radix = ".";
-    cfg.via_scrinii = VIA_DB;
-    cfg.via_annalium = VIA_AN;
-    cfg.via_nexus = VIA_NX;
-    cfg.via_identitatum = VIA_ID;
-    cfg.via_citationum = VIA_CIT;
-    cfg.via_tabulae = VIA_TB;
-    cfg.signum = NIHIL;
-    cfg.via_binarii = NIHIL;
-    cfg.via_manifesti = NIHIL;
-    cfg.via_entitatum = VIA_ENT;
-    cfg.via_renovatoris = NIHIL;
-    cfg.renovatio_exitus = FALSUM;
-    cfg.renatus = FALSUM;
-    t = tabularium_creare(piscina, &cfg);
+    cfg.radix             = ".";
+    cfg.via_scrinii       = VIA_DB;
+    cfg.via_annalium      = VIA_AN;
+    cfg.via_nexus         = VIA_NX;
+    cfg.via_identitatum   = VIA_ID;
+    cfg.via_citationum    = VIA_CIT;
+    cfg.via_tabulae       = VIA_TB;
+    cfg.signum            = NIHIL;
+    cfg.via_binarii       = NIHIL;
+    cfg.via_manifesti     = NIHIL;
+    cfg.via_entitatum     = VIA_ENT;
+    cfg.via_renovatoris   = NIHIL;
+    cfg.renovatio_exitus  = FALSUM;
+    cfg.renatus           = FALSUM;
+    t                     = tabularium_creare(piscina, &cfg);
     CREDO_NON_NIHIL (t);
     si (t == NIHIL)
     {
@@ -489,7 +508,7 @@ s32 principale (vacuum)
         si (p != NIHIL)
         {
             character vid[GESTA_RES_ID_MENSURA];
-            i32 k;
+                  i32 k;
 
             p += VI;
             per (k = ZEPHYRUM; k < (i32)(GESTA_RES_ID_MENSURA - I)
@@ -552,8 +571,8 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (p);
         si (p != NIHIL)
         {
-            character vid[GESTA_RES_ID_MENSURA];
-            i32 k;
+                     character  vid[GESTA_RES_ID_MENSURA];
+                           i32  k;
             constans character* md;
 
             p += VI;
@@ -667,6 +686,7 @@ s32 principale (vacuum)
             }
         }
     }
+
 
     /* ========================================================
      * K3 CHUNK C (aureae G20-G23)
@@ -878,23 +898,23 @@ s32 principale (vacuum)
      * promotio + CAUTIO glutinosa. Semantica profunda in
      * probatio_vigilia (unitas); hic = integratio superficierum. */
     {
-        Tabularium* t3;
-        TabulariumConfiguratio cfg3 = cfg;
-        Sigillum s;
-        character hex[SIGILLUM_HEX_MENSURA];
-        character breve[XVII];
-        constans character* contentum = "binarium fictum primum";
+                    Tabularium* t3;
+        TabulariumConfiguratio  cfg3 = cfg;
+                      Sigillum  s;
+                     character  hex[SIGILLUM_HEX_MENSURA];
+                     character  breve[XVII];
+            constans character* contentum = "binarium fictum primum";
 
         CREDO_VERUM (_plagulam_scribere(VIA_BN, contentum));
         CREDO_VERUM (_plagulam_scribere(VIA_MN, VIA_FN "\n"));
         s = sigillum_computare(contentum, strlen(contentum));
         sigillum_hex(&s, hex);
         memcpy(breve, hex, XVI);
-        breve[XVI] = '\0';
-        cfg3.signum = hex;
-        cfg3.via_binarii = VIA_BN;
-        cfg3.via_manifesti = VIA_MN;
-        t3 = tabularium_creare(piscina, &cfg3);
+        breve[XVI]          = '\0';
+        cfg3.signum         = hex;
+        cfg3.via_binarii    = VIA_BN;
+        cfg3.via_manifesti  = VIA_MN;
+        t3                  = tabularium_creare(piscina, &cfg3);
         CREDO_NON_NIHIL (t3);
         si (t3 != NIHIL)
         {
@@ -1158,17 +1178,19 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ================================================
      * praefixum ULID inambiguum (ergonomia 2026-07-17):
      * recessus ultimus post id exactum + titulum
      * ================================================ */
+
     {
-        character id_a[27];
-        character id_b[27];
-        character praefixum[27];
-        character vocatio[512];
+                 character  id_a[27];
+                 character  id_b[27];
+                 character  praefixum[27];
+                 character  vocatio[512];
         constans character* p;
-        i32 k;
+                       i32  k;
 
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":90,"
             "\"method\":\"tools/call\",\"params\":{\"name\":\"res\","
@@ -1239,9 +1261,11 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "res ignota") != NIHIL);
     }
 
+
     /* ================================================
      * XXII. K4.2 ergonomia: origo + similia + breviter
      * ================================================ */
+
     {
         /* schemata nova in tools/list */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":100,"
@@ -1330,11 +1354,13 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "annales") != NIHIL);
     }
 
+
     /* ================================================
      * XXIII. proiectio entitatum (per rem, per tag) - vita
      * completa: creatio cum duobus tags, nota, mutatio status,
      * retag (folder vetus purgatur, novum apparet)
      * ================================================ */
+
     {
         constans character* md;
 
@@ -1392,6 +1418,7 @@ s32 principale (vacuum)
             == '\0');   /* folder silva purgatum (vacuum aut abest) */
     }
 
+
     /* ================================================
      * XXIIIb. _sine_tag saccharum: ens sine argumento 'tags' - nulla
      * clavis 'tags' in dato, ergo n_tags == 0 in
@@ -1400,6 +1427,7 @@ s32 principale (vacuum)
      * quia _sine_tag iam multas res antecedentes fert (parca/notae
      * sine tag + vincula nexus/denexus post review fix 1) - ordo
      * iteratoris non certus, "prima" plagula alia esse potest */
+
     {
         (vacuum)_mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":204,"
             "\"method\":\"tools/call\",\"params\":{\"name\":\"addere\","
@@ -1409,6 +1437,7 @@ s32 principale (vacuum)
             VIA_ENT "/_sine_tag", "Probatio Sine Tag"));
     }
 
+
     /* ================================================
      * XXIIIc. reconciliatio omnium (transitus plenus): actus 'ramus
      * creare' _entitates_reconciliare_omnes ciet (purgatio +
@@ -1417,6 +1446,7 @@ s32 principale (vacuum)
      * plagulam suam POST transitum RETINET: hoc probat rescriptionem
      * plenam ex scrinio, non modo scripturam incrementalem (iam
      * probatam in XXIII per singula actus) */
+
     {
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":205,"
             "\"method\":\"tools/call\",\"params\":{\"name\":\"ramus\","
@@ -1427,17 +1457,19 @@ s32 principale (vacuum)
             "Probatio Entitatum Alpha"));
     }
 
+
     /* ================================================
      * XXIIId (review fix 2): _titulum_ad_slug numquam summam XL
      * (40) octetorum slug superat - etiam cum lineola pendens +
      * character alphanumericus in eodem gradu incidunt (ante
      * fixuram: XXXIX alnum + confinium + alnum unum = slug XLI
      * octetorum, pactum documentatum violans) */
+
     {
         DirectoriumIterator* it;
         DirectoriumIntroitus* e;
-        chorda exemplar = chorda_ex_literis("*.md", piscina);
-        i32 longitudo_nominis = ZEPHYRUM;
+        chorda exemplar        = chorda_ex_literis("*.md", piscina);
+        i32 longitudo_nominis  = ZEPHYRUM;
 
         /* titulus: XXXIX 'a' + spatium (confinium) + 'b' - gradus
          * ubi lineola pendens + 'b' simul incidunt post XXXIX octeti
@@ -1454,7 +1486,7 @@ s32 principale (vacuum)
         {
             dum ((e = directorium_iterator_proximum(it)) != NIHIL)
             {
-                si (e->genus == INTROITUS_FILUM
+                si (   e->genus            == INTROITUS_FILUM
                     && e->titulus.mensura > ZEPHYRUM
                     && e->titulus.datum[0] != '.'
                     && directorium_titulus_congruit(e->titulus,
@@ -1472,12 +1504,14 @@ s32 principale (vacuum)
             <= (i32)(IV + I + XL + I + XXVI + III));
     }
 
+
     /* ================================================
      * XXIIIe. nexus inter duas entitates -> ## Nexus in plagula
      * socii redditur ut LIGAMEN RELATIVUM markdown (non modo
      * textus planus): "](../<tag>/<genus>-..." (spec: semita
      * relativa _entitatem_semita_relativa, tabularium.c:1550)
      * ================================================ */
+
     {
         constans character* md;
 
@@ -1508,12 +1542,14 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(md, "](../silva/nota-") != NIHIL);
     }
 
+
     /* ================================================
      * XXIIIf. remotio: clavis 'corpus' delet EX DATO REI (non rem
      * ipsam - nullum actus totam entitatem delet in instrumentis
      * expositis) -> plagula ipsa manet (titulus adhuc invenitur),
      * corpus solum evanescit
      * ================================================ */
+
     {
         constans character* md;
 
@@ -1537,6 +1573,7 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(md, "corpus removendum epsilon") == NIHIL);
     }
 
+
     /* ================================================
      * XXIIIg. puritas trunci in proiectione: res nata in ramo et
      * fusa (XX: 'cogitatio ramalis' cum nota 'adnotatio ramalis'
@@ -1546,6 +1583,7 @@ s32 principale (vacuum)
      * Notae bis redderetur (insectum repertum in recensione
      * 2026-07-20 - artefactum generatum ipsum id monstravit).
      * ================================================ */
+
     {
         constans character* md = _plagula_cum_continente(piscina,
             VIA_ENT "/_sine_tag", "cogitatio ramalis");
@@ -1571,6 +1609,7 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ================================================
      * XXIIIh. DETERMINISMUS OCTETORUM (spec gesta-entitates,
      * sectio Testing): reconciliatio BIS facta octeta PARIA
@@ -1593,6 +1632,7 @@ s32 principale (vacuum)
      * filtrum trunci XXIIIg supra). Si quid non-deterministicum
      * usquam irrepit, hic primum apparebit.
      * ================================================ */
+
     {
         constans character* ante;
         constans character* post;
@@ -1614,9 +1654,9 @@ s32 principale (vacuum)
 
     /* FRUSTUM D (01KY3D7EJP): ancorae nid + citationes ex codice */
     {
-        character rid[27];
+                 character  rid[27];
         constans character* p;
-        i32 k;
+                       i32  k;
 
         /* res cum ancoris nid: una resoluta (fixtura
          * identitates_specimen), una inresoluta */
@@ -1629,8 +1669,8 @@ s32 principale (vacuum)
             "\\\"01KY3TESTAA\\\"},{\\\"genus\\\":\\\"nid\\\","
             "\\\"scopus\\\":\\\"01KY3TESTZZ\\\"}]\"}}}");
         CREDO_VERUM (strstr(r, "creata") != NIHIL);
-        rid[ZEPHYRUM] = '\0';
-        p = strstr(r, "res 01");
+        rid[ZEPHYRUM]  = '\0';
+        p              = strstr(r, "res 01");
         CREDO_NON_NIHIL (p);
         si (p != NIHIL)
         {
@@ -1696,7 +1736,7 @@ s32 principale (vacuum)
         character linea[PROBATIO_SEMITA_MENSURA];
         character longum[CCXLII];
         character multibyte[DXII];
-        i32 i;
+              i32 i;
 
         /* articulus: status initialis conditum, machina plena */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":950,"
@@ -1737,8 +1777,8 @@ s32 principale (vacuum)
         _res_id_ex_responso(r, pipi);
 
         /* CCXLI = recusatio nominata */
-        longum[CCXL] = 'a';
-        longum[CCXLI] = '\0';
+        longum[CCXL]   = 'a';
+        longum[CCXLI]  = '\0';
         sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":954,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
             "\"addere\",\"arguments\":{\"genus\":\"pipatum\","
@@ -1753,8 +1793,8 @@ s32 principale (vacuum)
          * CODICILLI numerantur, non bytes (decisio Franis) */
         per (i = ZEPHYRUM; i < CCXL; i++)
         {
-            multibyte[i * II] = (character)0xC3;
-            multibyte[i * II + I] = (character)0xA9; /* é */
+            multibyte[i * II]      = (character)0xC3;
+            multibyte[i * II + I]  = (character)0xA9; /* é */
         }
         multibyte[CDLXXX] = '\0';
         sprintf(linea, "{\"jsonrpc\":\"2.0\",\"id\":955,"
@@ -1884,6 +1924,7 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "NOVA:") == NIHIL);
     }
 
+
     /* ========================================================
      * XVII. GENERA PER APP DEFINITA (G0): registrum dynamicum ex
      * entibus definitionis, iudicium camporum (iudicat-non-
@@ -1891,6 +1932,7 @@ s32 principale (vacuum)
      * ab_lecto discriminat (entia = data, definitiones =
      * epistulae)
      * ======================================================== */
+
     {
         character def_auctor[GESTA_RES_ID_MENSURA];
         character auctor_a[GESTA_RES_ID_MENSURA];
@@ -2060,6 +2102,7 @@ s32 principale (vacuum)
         CREDO_VERUM (strstr(r, "\\\"ad_titulus\\\":\\\"Gaius"
             " Iulius Caesar\\\"") != NIHIL);
 
+
         /* ================================================
          * 'sine_campis' + 'res' in legere (01KYCMQMED): lista
          * tacere potest, apertio complet.
@@ -2072,11 +2115,12 @@ s32 principale (vacuum)
          * campum recipiendum habere DEBET, alioquin sartura datum
          * simpliciter perdit - inde 'res'.
          * ================================================ */
+
         {
             constans character* s;
             constans character* p;
-            character rid_l[27];
-            i32 numerus = ZEPHYRUM;
+                     character  rid_l[27];
+                           i32  numerus = ZEPHYRUM;
 
             /* (a) campus nominatus TOLLITUR; mensura in clave nova
              * manet; ceteri INTACTI */
@@ -2437,7 +2481,7 @@ s32 principale (vacuum)
         character imperium[PROBATIO_SEMITA_MENSURA];
         character capitulum_a[GESTA_RES_ID_MENSURA];
         character capitulum_b[GESTA_RES_ID_MENSURA];
-        i32       k;
+              i32 k;
 
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":820,"
             "\"method\":\"tools/call\",\"params\":{\"name\":"
@@ -2640,11 +2684,11 @@ s32 principale (vacuum)
      * exitus). Stipulae pro launchero - semantica launcheri veri
      * in fumo vivo probatur. */
     {
-        Tabularium* tr;
-        TabulariumConfiguratio cfgr = cfg;
-        Sigillum s;
-        character hex[SIGILLUM_HEX_MENSURA];
-        constans character* contentum = "binarium renovandum";
+                    Tabularium* tr;
+        TabulariumConfiguratio  cfgr = cfg;
+                      Sigillum  s;
+                     character  hex[SIGILLUM_HEX_MENSURA];
+            constans character* contentum = "binarium renovandum";
 
         /* recens (vigilia quieta): nihil agendum */
         r = _mitte(t, piscina, "{\"jsonrpc\":\"2.0\",\"id\":990,"
@@ -2671,13 +2715,13 @@ s32 principale (vacuum)
         CREDO_VERUM (_plagulam_scribere(VIA_MN2, VIA_FN2 "\n"));
         s = sigillum_computare(contentum, strlen(contentum));
         sigillum_hex(&s, hex);
-        cfgr.signum = hex;
-        cfgr.via_binarii = VIA_BN2;
-        cfgr.via_manifesti = VIA_MN2;
+        cfgr.signum         = hex;
+        cfgr.via_binarii    = VIA_BN2;
+        cfgr.via_manifesti  = VIA_MN2;
 
         /* stipula fracta: RECUSATA, residens vivus */
-        cfgr.via_renovatoris = VIA_STIPULA_FRACTA;
-        tr = tabularium_creare(piscina, &cfgr);
+        cfgr.via_renovatoris  = VIA_STIPULA_FRACTA;
+        tr                    = tabularium_creare(piscina, &cfgr);
         CREDO_NON_NIHIL (tr);
         si (tr != NIHIL)
         {
@@ -2695,8 +2739,8 @@ s32 principale (vacuum)
         }
 
         /* stipula sana, modus stdio: parata + transformatio */
-        cfgr.via_renovatoris = VIA_STIPULA_SANA;
-        tr = tabularium_creare(piscina, &cfgr);
+        cfgr.via_renovatoris  = VIA_STIPULA_SANA;
+        tr                    = tabularium_creare(piscina, &cfgr);
         CREDO_NON_NIHIL (tr);
         si (tr != NIHIL)
         {
@@ -2715,8 +2759,8 @@ s32 principale (vacuum)
         }
 
         /* stipula sana, modus daemon: exitus pro exec */
-        cfgr.renovatio_exitus = VERUM;
-        tr = tabularium_creare(piscina, &cfgr);
+        cfgr.renovatio_exitus  = VERUM;
+        tr                     = tabularium_creare(piscina, &cfgr);
         CREDO_NON_NIHIL (tr);
         si (tr != NIHIL)
         {

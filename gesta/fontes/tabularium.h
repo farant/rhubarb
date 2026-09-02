@@ -60,10 +60,10 @@ nomen structura {
      * campos ponere debet. */
     constans character* via_renovatoris; /* NIHIL = derivata ex
                                         * radice per modum */
-    b32                 renovatio_exitus; /* VERUM = daemon: post
+    b32 renovatio_exitus; /* VERUM = daemon: post
                                         * responsum exitus mundus
                                         * (exec nullus) */
-    b32                 renatus;       /* post exec sui: initiatio
+    b32 renatus;       /* post exec sui: initiatio
                                         * synthetica sponte (cliens
                                         * initialize non remittit) */
 } TabulariumConfiguratio;
@@ -73,7 +73,7 @@ nomen structura Tabularium Tabularium;
 /* NIHIL = fractum (piscina vivit quamdiu servus) */
 Tabularium*
 tabularium_creare (
-    Piscina*                        piscina,
+                            Piscina* piscina,
     constans TabulariumConfiguratio* cfg);
 
 /* nuntium unum tractare: corpus lineae -> responsa in effusionem
@@ -83,26 +83,28 @@ tabularium_creare (
 b32
 tabularium_tractare (
     Tabularium* tabularium,
-    Piscina*    pn,
-    chorda      corpus,
-    FILE*       effusio);
+       Piscina* pn,
+        chorda  corpus,
+          FILE* effusio);
 
 /* circuitus stdio integer (principale eum vocat); fructus = codex
  * exitus (EOF cliente claudente = 0 ordinatus) */
 integer
 tabularium_currere (
     constans TabulariumConfiguratio* cfg,
-    FILE*                            intra,
-    FILE*                            extra);
+                               FILE* intra,
+                               FILE* extra);
 
 /* initiatio synthetica per tractare - machina intacta (responsum
  * in tmpfile captum); daemon et renatus stdio eadem surgunt */
 b32
-tabularium_se_initiare (Tabularium* tabularium);
+tabularium_se_initiare (
+    Tabularium* tabularium);
 
 /* renovatio petita est? (post tractare consulendum: stdio = exec
  * in currere; daemon = exitus post connexionem clausam) */
 b32
-tabularium_renovandum (constans Tabularium* tabularium);
+tabularium_renovandum (
+    constans Tabularium* tabularium);
 
 #endif /* TABULARIUM_H */

@@ -6,15 +6,18 @@
 #include <string.h>
 #include <stdio.h>
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    TabulariumConfiguratio cfg;
-    constans character* radix = ".";
-    constans character* signum = NIHIL;
-    constans character* via_binarii = NIHIL;
-    constans character* via_manifesti = NIHIL;
-    b32 renatus = FALSUM;
-    integer k;
+    TabulariumConfiguratio  cfg;
+        constans character* radix          = ".";
+        constans character* signum         = NIHIL;
+        constans character* via_binarii    = NIHIL;
+        constans character* via_manifesti  = NIHIL;
+                       b32  renatus        = FALSUM;
+                   integer  k;
 
     per (k = I; k < argc; k++)
     {
@@ -27,39 +30,39 @@ s32 principale (integer argc, character** argv)
         {
             renatus = VERUM;
         }
-        alioquin si (strcmp(argv[k], "-signum") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-signum") == ZEPHYRUM
+                     && k + I < argc)
         {
             signum = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-binarium") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-binarium") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_binarii = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-manifestum") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-manifestum") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_manifesti = argv[k + I];
             k++;
         }
         /* -mcp acceptum et omissum (modus unicus) */
     }
-    cfg.radix = radix;
-    cfg.via_scrinii = "tabularium.db";
-    cfg.via_annalium = "gesta/annales/tabularium.jsonl";
-    cfg.via_nexus = "build/nexus.tsv";
-    cfg.via_identitatum = "build/identitates.tsv";
-    cfg.via_citationum = "build/citationes.tsv";
-    cfg.via_tabulae = "gesta/annales/tabula.md";
-    cfg.via_entitatum = "gesta/annales/entities";
-    cfg.signum = signum;
-    cfg.via_binarii = via_binarii;
-    cfg.via_manifesti = via_manifesti;
-    cfg.via_renovatoris = NIHIL;   /* derivata: radix + launcher */
-    cfg.renovatio_exitus = FALSUM; /* stdio: exec, non exitus */
-    cfg.renatus = renatus;
+    cfg.radix             = radix;
+    cfg.via_scrinii       = "tabularium.db";
+    cfg.via_annalium      = "gesta/annales/tabularium.jsonl";
+    cfg.via_nexus         = "build/nexus.tsv";
+    cfg.via_identitatum   = "build/identitates.tsv";
+    cfg.via_citationum    = "build/citationes.tsv";
+    cfg.via_tabulae       = "gesta/annales/tabula.md";
+    cfg.via_entitatum     = "gesta/annales/entities";
+    cfg.signum            = signum;
+    cfg.via_binarii       = via_binarii;
+    cfg.via_manifesti     = via_manifesti;
+    cfg.via_renovatoris   = NIHIL;   /* derivata: radix + launcher */
+    cfg.renovatio_exitus  = FALSUM; /* stdio: exec, non exitus */
+    cfg.renatus           = renatus;
     redde tabularium_currere(&cfg, stdin, stdout);
 }

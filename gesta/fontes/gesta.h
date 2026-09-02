@@ -65,7 +65,7 @@ nomen structura {
  * annales (via plagulae JSONL; creatur si abest). NIHIL = fractum. */
 GestaMundus*
 gesta_aperire (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via_scrinii,
     constans character* via_annalium);
 
@@ -80,9 +80,10 @@ gesta_claudere (
  * (gesta_error consule). */
 b32
 gesta_scribere (
-    GestaMundus*         mundus,
+              GestaMundus* mundus,
     constans GestaEventum* eventum,
-    character*           res_id_out);
+                character* res_id_out);
+
 
 /* ==================================================
  * Fascis atomicus (K3 chunk A) - eventus N, transactio una
@@ -100,7 +101,7 @@ gesta_scribere (
 
 nomen structura {
     constans character* event_id;   /* NIHIL = ULID cuditur */
-    GestaEventum        eventum;
+          GestaEventum  eventum;
 } GestaFascisEventum;
 
 /* res_ids_out: NIHIL aut tabulatum numerus * GESTA_RES_ID_MENSURA
@@ -108,10 +109,10 @@ nomen structura {
  * custodiae interpositae locum non occupant). */
 b32
 gesta_fascis_scribere (
-    GestaMundus*                 mundus,
+                    GestaMundus* mundus,
     constans GestaFascisEventum* eventa,
-    i32                          numerus,
-    character*                   res_ids_out);
+                            i32  numerus,
+                      character* res_ids_out);
 
 /* Plicaturas provehere (genera PRIMUM, deinde res - ordo portans;
  * quaeque transactione sua cum provectione HWM = exacte-semel). */
@@ -136,9 +137,10 @@ gesta_annales_verificare (
  * conservata, deinde replicatio). NIHIL = fractum. */
 GestaMundus*
 gesta_ex_annalibus_restituere (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via_annalium,
     constans character* via_scrinii_novi);
+
 
 /* ==================================================
  * Quaestio + census (chunk B)
@@ -154,12 +156,12 @@ nomen structura {
 nomen structura {
     chorda genus;
     chorda status;
-    s64    numerus;
+       s64 numerus;
 } GestaCensusOrdo;
 
 nomen structura {
     chorda tag;
-    s64    numerus;
+       s64 numerus;
 } GestaTagNumerus;
 
 /* Sordidas exhaurire: quaeque res sordida relegi, in res_fts
@@ -180,30 +182,30 @@ gesta_fts_exhaurire (
  * MCP). NIHIL = apparatus fractus. */
 Xar*
 gesta_quaerere (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* textus,
     constans character* genus,
     constans character* status,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* Census generum x statuum (ex plicatura res) */
 Xar*
 gesta_census_generum (
     GestaMundus* mundus,
-    Piscina*     piscina);
+        Piscina* piscina);
 
 /* Census tagorum (datum omnium rerum percurritur - volumen parvum) */
 Xar*
 gesta_census_tagorum (
     GestaMundus* mundus,
-    Piscina*     piscina);
+        Piscina* piscina);
 
 nomen structura {
     chorda res_id;
     chorda genus;
     chorda titulus;
     chorda status;
-    s64    ictus;
+       s64 ictus;
 } GestaIctusOrdo;
 
 /* Res APERTAE saepissime ICTAE (ordine ictuum descendente).
@@ -218,8 +220,9 @@ nomen structura {
 Xar*
 gesta_census_ictuum (
     GestaMundus* mundus,
-    i32          tectum,
-    Piscina*     piscina);
+            i32  tectum,
+        Piscina* piscina);
+
 
 /* ==================================================
  * Nexus generibus (K2 chunk A) - vincula ut res propriae
@@ -245,17 +248,18 @@ nomen structura {
  * smaragda.ts:4008; ordines crudi - duplicata apparent) */
 Xar*
 gesta_nexus_rei (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 /* Socii per vincula communia (TS getRelatedEntities,
  * smaragda.ts:4119) */
 Xar*
 gesta_socii_rei (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Salus (K2 chunk B) - aestimatio pura status contra genus
@@ -273,17 +277,17 @@ gesta_socii_rei (
 nomen structura {
     chorda typus;     /* index querelae supra */
     chorda nuntius;
-    b32    gravis;    /* VERUM erratum, FALSUM cautio */
+       b32 gravis;    /* VERUM erratum, FALSUM cautio */
 } GestaQuerela;
 
 nomen structura {
-    b32           sanus;
+             b32  sanus;
     GestaQuerela* querelae;   /* tabulatum in piscina data */
-    i32           numerus;
+             i32  numerus;
 } GestaSalus;
 
 nomen structura {
-    chorda     res_id;
+        chorda res_id;
     GestaSalus salus;
 } GestaInsalubris;
 
@@ -291,19 +295,20 @@ nomen structura {
  * ignotum = sanum (nihil iudicandum) */
 b32
 gesta_salutem_aestimare (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina,
-    GestaSalus*         exitus);
+               Piscina* piscina,
+            GestaSalus* exitus);
 
 /* Res insalubres solae redduntur (Xar de GestaInsalubris);
  * genus NIHIL = omnia. Percursus plenus - satis parvis
  * copiis (via sordidarum parcata). */
 Xar*
 gesta_insalubres_enumerare (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* genus,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Actiones (K3 chunk A) - recepta ut data
@@ -331,17 +336,17 @@ gesta_insalubres_enumerare (
  * materializatur (eventus ignoti reductori = nihil agunt). */
 
 nomen structura {
-    b32                 facta;         /* FALSUM = recusata */
+                   b32  facta;         /* FALSUM = recusata */
     constans character* causa;         /* si recusata */
-    b32                 mechanica;     /* recusata: FALSUM = porta
+                   b32  mechanica;     /* recusata: FALSUM = porta
                                         * (retenta - K3 decisio 16),
                                         * VERUM = error mechanicus */
     constans character* facta_id;      /* id eventus actio-facta
                                         * (prae-cusum; "" si
                                         * recusata) */
-    chorda*             res_novae;     /* res creatae, ordine
+    chorda* res_novae;     /* res creatae, ordine
                                         * effectuum */
-    i32                 novae_numerus;
+    i32 novae_numerus;
 } GestaActioFructus;
 
 /* FALSUM solum apparatu fracto aut actione ignota / non-actione;
@@ -351,22 +356,23 @@ nomen structura {
  * mechanismum fert: "actio:<titulus>"). NIHIL = machina. */
 b32
 gesta_agere (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* actio_titulus,
     constans character* ligamina_json,
     constans character* argumenta_json,
     constans character* actor,
-    Piscina*            piscina,
-    GestaActioFructus*  exitus);
+               Piscina* piscina,
+     GestaActioFructus* exitus);
 
 /* Affordantiae: tituli actionum quarum ops aliquis rem datam NUNC
  * ligare potest (genus et status_necessarius congruunt). Xar de
  * chorda; percursus generum plenus (copiae parvae - E2 par 5). */
 Xar*
 gesta_actiones_rei (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Processus (K3 chunk B) - orchestratio ut data
@@ -402,9 +408,9 @@ gesta_actiones_rei (
  * vivit - replicatio eventus ut data replicat (decisio 10). */
 
 nomen structura {
-    b32                 facta;        /* FALSUM = recusata */
+                   b32  facta;        /* FALSUM = recusata */
     constans character* causa;
-    character           instantia[GESTA_RES_ID_MENSURA];
+             character  instantia[GESTA_RES_ID_MENSURA];
 } GestaProcessusFructus;
 
 /* Instantiam incipere: porta (opes + argumenta) -> photographia ->
@@ -414,27 +420,28 @@ nomen structura {
  * ferunt. FALSUM solum apparatu fracto / processu ignoto. */
 b32
 gesta_processum_incipere (
-    GestaMundus*        mundus,
-    constans character* processus_titulus,
-    constans character* ligamina_json,
-    constans character* argumenta_json,
-    constans character* actor,
-    Piscina*            piscina,
+              GestaMundus* mundus,
+       constans character* processus_titulus,
+       constans character* ligamina_json,
+       constans character* argumenta_json,
+       constans character* actor,
+                  Piscina* piscina,
     GestaProcessusFructus* exitus);
 
 /* Lectiones (pro probationibus et stratis superioribus; textus in
  * piscinam datam copiatur; chorda vacua = absens) */
 chorda
 gesta_res_datum (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 chorda
 gesta_res_status (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Lectio in ramo (K4 frustum A) - plicatura pigra
@@ -450,17 +457,18 @@ gesta_res_status (
 
 chorda
 gesta_res_in_ramo_datum (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
     constans character* ramus,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 chorda
 gesta_res_in_ramo_status (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* res_id,
     constans character* ramus,
-    Piscina*            piscina);
+               Piscina* piscina);
+
 
 /* ==================================================
  * Scriptura et vita ramorum (K4 frustum B)
@@ -484,38 +492,38 @@ gesta_res_in_ramo_status (
 
 b32
 gesta_in_ramo_scribere (
-    GestaMundus*           mundus,
+              GestaMundus* mundus,
     constans GestaEventum* eventum,
-    constans character*    ramus,      /* res_id rami */
-    character*             res_id_out);
+       constans character* ramus,      /* res_id rami */
+                character* res_id_out);
 
 b32
 gesta_ramum_creare (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* titulus,
     constans character* parens,   /* res_id rami aut NIHIL/"" */
     constans character* actor,    /* NIHIL = machina */
-    Piscina*            piscina,
-    character*          res_id_out);
+               Piscina* piscina,
+             character* res_id_out);
 
 nomen structura {
     chorda res_id;
     chorda titulus;
     chorda parens;    /* res_id parentis; "" = truncus */
-    s64    punctum;   /* seq furcae */
+       s64 punctum;   /* seq furcae */
     chorda status;    /* activus | fusus | abiectus */
 } GestaRamusOrdo;
 
 Xar*
 gesta_ramos_enumerare (
     GestaMundus* mundus,
-    Piscina*     piscina);
+        Piscina* piscina);
 
 /* FLAGSHIP: eventus status unus (activus -> abiectus); acta
  * manent, lectiones catenae laborant, scripturae recusantur. */
 b32
 gesta_ramum_abicere (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* ramus,
     constans character* actor);
 
@@ -527,15 +535,15 @@ nomen structura {
 
 Xar*
 gesta_confligentia (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* ramus,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 nomen structura {
-    b32                 fusa;
+                   b32  fusa;
     constans character* causa;      /* si non fusa */
-    i32                 confligentia_numerus;
-    i32                 copiata;    /* eventus in truncum copiati */
+                   i32  confligentia_numerus;
+                   i32  copiata;    /* eventus in truncum copiati */
 } GestaFusioFructus;
 
 /* FALSUM solum apparatu fracto / ramo ignoto; recusatio (non
@@ -543,18 +551,18 @@ nomen structura {
  * exitus->fusa FALSUM et causa posita. */
 b32
 gesta_ramum_fundere (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* ramus,
-    b32                 vis,
+                   b32  vis,
     constans character* actor,
-    Piscina*            piscina,
-    GestaFusioFructus*  exitus);
+               Piscina* piscina,
+     GestaFusioFructus* exitus);
 
 chorda
 gesta_genus_datum (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* titulus,
-    Piscina*            piscina);
+               Piscina* piscina);
 
 s64
 gesta_seq_ultima (
@@ -562,7 +570,7 @@ gesta_seq_ultima (
 
 s64
 gesta_hwm (
-    GestaMundus*        mundus,
+           GestaMundus* mundus,
     constans character* consumptor);   /* "genera" | "res" |
                                         * "membra" */
 

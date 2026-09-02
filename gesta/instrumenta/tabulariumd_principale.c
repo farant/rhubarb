@@ -27,21 +27,27 @@
 
 #define TABULARIUMD_PORTUS_ORDINARIUS 8753
 
-interior vacuum _connexionem_servire (Tabularium* t, FILE* intra,
-    FILE* extra);
+interior vacuum
+_connexionem_servire (
+    Tabularium* t,
+          FILE* intra,
+          FILE* extra);
 
 /* ansa per-lineam ad EOF - exemplar tabularium_currere (pn recens
  * per nuntium); tabellarius fluit post scriptionem quamque.
  * Renovatio petita -> connexio finita (responsum iam effusum) -
  * principale exit post clausuram. */
 interior vacuum
-_connexionem_servire (Tabularium* t, FILE* intra, FILE* extra)
+_connexionem_servire (
+    Tabularium* t,
+          FILE* intra,
+          FILE* extra)
 {
     per (;;)
     {
         Piscina* pn = piscina_generare_dynamicum(
             "tabulariumd_nuntius", LXIV * 1024);
-        b32 finitus = FALSUM;
+           b32 finitus = FALSUM;
         chorda corpus;
 
         si (pn == NIHIL)
@@ -64,20 +70,25 @@ _connexionem_servire (Tabularium* t, FILE* intra, FILE* extra)
     }
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    TabulariumConfiguratio cfg;
-    constans character* radix = ".";
-    constans character* via_scrinii = "forum.db";
-    constans character* via_annalium = "gesta/annales/forum.jsonl";
-    constans character* signum = NIHIL;
-    constans character* via_binarii = NIHIL;
-    constans character* via_manifesti = NIHIL;
-    i32 portus = TABULARIUMD_PORTUS_ORDINARIUS;
-    integer k;
-    Piscina* piscina;
-    Tabularium* t;
-    TcpServus* servus;
+    TabulariumConfiguratio  cfg;
+        constans character* radix        = ".";
+        constans character* via_scrinii  = "forum.db";
+        constans character* via_annalium =
+            "gesta/annales/forum.jsonl";
+        constans character* signum         = NIHIL;
+        constans character* via_binarii    = NIHIL;
+        constans character* via_manifesti  = NIHIL;
+                       i32  portus =
+                           TABULARIUMD_PORTUS_ORDINARIUS;
+                   integer  k;
+                   Piscina* piscina;
+                Tabularium* t;
+                 TcpServus* servus;
 
     per (k = I; k < argc; k++)
     {
@@ -86,56 +97,56 @@ s32 principale (integer argc, character** argv)
             radix = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-portus") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-portus") == ZEPHYRUM
+                     && k + I < argc)
         {
             portus = (i32)atoi(argv[k + I]);
             k++;
         }
-        alioquin si (strcmp(argv[k], "-scrinium") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-scrinium") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_scrinii = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-annales") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-annales") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_annalium = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-signum") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-signum") == ZEPHYRUM
+                     && k + I < argc)
         {
             signum = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-binarium") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-binarium") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_binarii = argv[k + I];
             k++;
         }
-        alioquin si (strcmp(argv[k], "-manifestum") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-manifestum") == ZEPHYRUM
+                     && k + I < argc)
         {
             via_manifesti = argv[k + I];
             k++;
         }
     }
-    cfg.radix = radix;
-    cfg.via_scrinii = via_scrinii;
-    cfg.via_annalium = via_annalium;
-    cfg.via_nexus = NIHIL;
-    cfg.via_identitatum = NIHIL;
-    cfg.via_citationum = NIHIL;
-    cfg.via_tabulae = NIHIL;
-    cfg.via_entitatum = NIHIL;
-    cfg.signum = signum;
-    cfg.via_binarii = via_binarii;
-    cfg.via_manifesti = via_manifesti;
-    cfg.via_renovatoris = NIHIL;  /* derivata: radix + launcher */
-    cfg.renovatio_exitus = VERUM; /* daemon: exitus post responsum
+    cfg.radix             = radix;
+    cfg.via_scrinii       = via_scrinii;
+    cfg.via_annalium      = via_annalium;
+    cfg.via_nexus         = NIHIL;
+    cfg.via_identitatum   = NIHIL;
+    cfg.via_citationum    = NIHIL;
+    cfg.via_tabulae       = NIHIL;
+    cfg.via_entitatum     = NIHIL;
+    cfg.signum            = signum;
+    cfg.via_binarii       = via_binarii;
+    cfg.via_manifesti     = via_manifesti;
+    cfg.via_renovatoris   = NIHIL;  /* derivata: radix + launcher */
+    cfg.renovatio_exitus  = VERUM; /* daemon: exitus post responsum
                                    * - start-if-absent respawnat */
     cfg.renatus = FALSUM;
 
@@ -207,9 +218,9 @@ s32 principale (integer argc, character** argv)
         {
             /* dup bis: FILE* uterque descriptorem proprium
              * possidet; originalis tcp_claudere clauditur */
-            integer fd = (integer)tcp_obtinere_fd(rc.connexio);
-            FILE* intra = fdopen(dup(fd), "r");
-            FILE* extra = fdopen(dup(fd), "w");
+            integer  fd     = (integer)tcp_obtinere_fd(rc.connexio);
+               FILE* intra  = fdopen(dup(fd), "r");
+               FILE* extra  = fdopen(dup(fd), "w");
 
             si (intra != NIHIL && extra != NIHIL)
             {
