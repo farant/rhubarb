@@ -4075,7 +4075,15 @@ _intra_registrare (
     SilvaToken* titulus;
            i32  k;
 
-    titulus = _titulus_radicis(nodus_radicis);
+        titulus = _titulus_radicis(nodus_radicis);
+    si (!titulus)
+    {
+        /* typi cum corpore quoque (structura/unio/enumeratio) - quod
+         * extenta nominant, -intra tangere potest */
+        constans character* genus_typi;
+
+        titulus = _titulus_typi_radicis(nodus_radicis, &genus_typi);
+    }
     si (!titulus) redde;
     per (k = ZEPHYRUM; k < intra->numerus; k += I)
     {

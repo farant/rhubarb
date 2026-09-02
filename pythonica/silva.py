@@ -141,6 +141,44 @@ def _exemplar_tolerans(vetus):
     return re.compile(r'\s+'.join(re.escape(v) for v in verba))
 
 
+# lexator C rudis pro ANCORIS (non pro veritate): litterae chordae et
+# characteris, commenta, identificatores, numeri, interpunctiones
+# longissimae primum. Ancora et plagula ambae lexantur; series
+# lexematum ancorae in serie plagulae quaeritur - spatia ubique
+# indifferentia (formator spatia addit, aufert, lineas findit: nihil
+# horum seriem lexematum tangit).
+_LEX = re.compile(r"""
+    /\*.*?\*/                      # commentum
+  | "(?:\\.|[^"\\])*"             # littera chordae
+  | '(?:\\.|[^'\\])*'             # littera characteris
+  | [A-Za-z_]\w*                   # identificator
+  | 0[xX][0-9A-Fa-f]+[uUlL]*        # numerus hex
+  | \d+(?:\.\d*)?(?:[eE][+-]?\d+)?[uUlLfF]*  # numerus
+  | \.\.\.|<<=|>>=|->|\+\+|--|<<|>>|<=|>=|==|!=|&&|\|\||[-+*/%&|^]=
+  | [-+*/%&|^~!<>=?:;,.(){}\[\]\#\\]
+""", re.S | re.X)
+
+
+def _lexemata(textus):
+    """[(lexema, initium, finis)] - spatia omissa"""
+    return [(m.group(0), m.start(), m.end()) for m in _LEX.finditer(textus)]
+
+
+def _sedes_lexematum(textus, vetus):
+    """spatia [initium, finis) ubi series lexematum ancorae in textu
+    apparet"""
+    anc = [t for t, _, _ in _lexemata(vetus)]
+    if not anc:
+        raise SilvaError('ancora sine lexematis')
+    lex = _lexemata(textus)
+    n = len(anc)
+    sedes = []
+    for i in range(len(lex) - n + 1):
+        if all(lex[i + k][0] == anc[k] for k in range(n)):
+            sedes.append((lex[i][1], lex[i + n - 1][2]))
+    return sedes
+
+
 class Editio(object):
     """Editiones unius plagulae in memoria; applicare() scribit semel.
 
@@ -159,7 +197,14 @@ class Editio(object):
 
     # -- ancorae textuales --
     def replace(self, vetus, novus, tolerans=True, numerus=1):
-        if tolerans:
+        """tolerans=True (ordinarius): ancora ut SERIES LEXEMATUM - spatia
+        ubique indifferentia, etiam addita/ablata ('a(vacuum)' congruit
+        'a (vacuum)', parametra in lineas fissa congruunt); litterae
+        chordae exacte. 'spatia': cursus spatiorum solum (forma vetus).
+        False: octeti exacti."""
+        if tolerans is True:
+            sedes = _sedes_lexematum(self.textus, vetus)
+        elif tolerans == 'spatia':
             sedes = [m.span() for m in
                      _exemplar_tolerans(vetus).finditer(self.textus)]
         else:
@@ -372,6 +417,160 @@ class Fructus(object):
             lineae.append('  differre: %s %s' % (
                 self.differentia.verdictum, self.unitates()))
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
+
+
+# ---------------------------------------------------------------- portae
+
+Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta')
+
+# porta: (imperium, signum 'cucurrit' (regex)). 'cucurrit' = porta
+# suam mensuram edidit - rc 0 sine signo = nihil cucurrit (exitus 2
+# in cursoribus domus, sed signum id probat, non rc).
+PORTAE = {
+    'radix': (['./compile_tests.sh'],
+              r'Tests Passed:|PROBATIONES: \d+/\d+'),
+    'silva': (['./silva/compile_probationes.sh'],
+              r'SILVA PROBATIONES: \d+/\d+ praeteritae'),
+    'css': (['./css/compile_probationes.sh'], r'CSS PROBATIONES: \d+/\d+'),
+    'materia': (['./materia/compile_probationes.sh'],
+                r'MATERIA PROBATIONES: \d+/\d+'),
+    'officina': (['./officina/compile_probationes.sh'],
+                 r'OFFICINA PROBATIONES: \d+/\d+'),
+    'gesta': (['./gesta/compile_probationes.sh'],
+              r'GESTA PROBATIONES: \d+/\d+'),
+    'tessera': (['./tessera/compile_probationes.sh'],
+                r'TESSERA PROBATIONES: \d+/\d+'),
+    'saltuarius': (['./saltuarius/compile_probationes.sh'],
+                   r'SALTUARIUS PROBATIONES: \d+/\d+'),
+    'pythonica': (['./pythonica/probare.sh'], r'PYTHONICA: (sana|FRACTA)'),
+    'formator-intra': (['./silva/formator_intra_fumus.sh'],
+                       r'fumus intra: (sanum|FRACTUM)'),
+    'formator-delta': (['./silva/formator_delta_fumus.sh'],
+                       r'fumus delta: (sanum|FRACTUM)'),
+    'differre': (['./silva/differre_fumus.sh'],
+                 r'fumus differre: (sanum|FRACTUM)'),
+    'unci': (['./tools/unci-git/fumus.sh'], r'fumus unci: (sanum|FRACTUM)'),
+    'amalgamata': (['./tools/amalgamata_probare.sh'],
+                   r'amalgamata: \d+ compilata, \d+ fracta'),
+}
+_ANSI = re.compile(r'\x1b\[[0-9;]*m')
+
+
+def porta_viae(via):
+    """porta directorii plagulae: radix pro lib/include/probationes/tools"""
+    v = via.replace('\\', '/')
+    prima = v.split('/')[0]
+    if prima in ('lib', 'include', 'probationes', 'tools'):
+        return 'radix'
+    if prima in PORTAE:
+        return prima
+    raise SilvaError('porta viae ignota: %s' % via)
+
+
+def porta(nomen, filtrum=None):
+    """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
+    acta). sana SOLUM si cucurrit ET rc == 0 ET signum non fractum.
+    NB: suites totae (radix, silva) minuta capiunt - in vocamine
+    instrumenti tectum X minutorum: filtrum da aut in umbra curre."""
+    if nomen not in PORTAE:
+        raise SilvaError('porta ignota: %s (nota: %s)'
+                         % (nomen, ', '.join(sorted(PORTAE))))
+    imperium, signum = PORTAE[nomen]
+    args = list(imperium) + ([filtrum] if filtrum else [])
+    r = _curre(args)
+    acta = _ANSI.sub('', r.stdout + r.stderr)
+    m = re.search(signum, acta)
+    cucurrit = m is not None
+    compendium = m.group(0) if m else '(signum absens)'
+    sana = cucurrit and r.returncode == 0 \
+        and not re.search(r'FRACT|Fracti:\s*[1-9]|Failed:\s*[1-9]',
+                          compendium)
+    return Porta(nomen, cucurrit, sana, compendium, r.returncode, acta)
+
+
+VETITAE = ('FAQ.md', 'gesta/annales/tabula.md',
+           'gesta/annales/tabularium.jsonl',
+           'officina/instrumenta/legatus.worklog.md',
+           'silva/grammatica/c89-formatted.stml')
+
+
+def _trailer():
+    r = _curre(['git', 'log', '-30', '--format=%B'])
+    for linea in r.stdout.splitlines():
+        if linea.startswith('Co-Authored-By:'):
+            return linea
+    return 'Co-Authored-By: Claude <noreply@anthropic.com>'
+
+
+def commissio(nuntius, viae, portae=(), verificare=True):
+    """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
+    non honorat; pipestatus fallit). portae: nomina aut (nomen,
+    filtrum); OMNES sanae esse debent (cucurrit ET rc 0) aliter
+    SilvaError et nihil commissum. Viae explicitae solae (numquam -A);
+    VETITAE (plagulae Frani in cursu) refutantur. verificare=False =
+    --no-verify (commissiones formae solae). Reddit hash brevem."""
+    for v in viae:
+        if v in VETITAE:
+            raise SilvaError('via vetita commissioni: %s' % v)
+    for p in portae:
+        nomen, filtrum = (p, None) if isinstance(p, str) else p
+        f = porta(nomen, filtrum)
+        if not f.sana:
+            raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
+                             ' commissum' % (nomen, f.compendium, f.rc))
+    r = _curre(['git', 'add', '--'] + list(viae))
+    if r.returncode != 0:
+        raise SilvaError('git add: %s' % r.stderr.strip())
+    args = ['git', 'commit', '-q']
+    if not verificare:
+        args.append('--no-verify')
+    args += ['-F', '-']
+    r = _curre(args, stdin=nuntius.rstrip('\n') + '\n\n' + _trailer() + '\n')
+    if r.returncode != 0:
+        raise SilvaError('git commit rc=%d: %s'
+                         % (r.returncode, (r.stdout + r.stderr).strip()[-600:]))
+    return _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+
+
+# ---------------------------------------------------------------- planta
+
+def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
+    """ritus culpae plantatae uno vocamine: ancora vetus -> novus, porta
+    RUBRA esse debet (et cucurrisse, et aedificatio non fracta),
+    reversio, porta VIRIDIS esse debet - reversio in 'finally' etiam
+    per errorem. porta_nomen: nomen portae aut functio (via) -> Porta.
+    Reddit (rubra, viridis) compendia."""
+    e = Editio(via)
+    e.replace(vetus, novus, tolerans=tolerans)
+    ante = e.originalis
+    plantata = e.textus
+
+    def currere():
+        if callable(porta_nomen):
+            return porta_nomen(via)
+        return porta(porta_nomen, filtrum)
+
+    with open(_absoluta(via), 'w') as f:
+        f.write(plantata)
+    try:
+        rubra = currere()
+        if re.search(r'\berror:', rubra.acta or ''):
+            raise SilvaError('planta AEDIFICATIONEM fregit (error:) - '
+                             'nihil probat; planta compilans quaeritur')
+        if not rubra.cucurrit:
+            raise SilvaError('porta cum planta non cucurrit (%s)'
+                             % rubra.compendium)
+        if rubra.sana:
+            raise SilvaError('porta cum planta VIRIDIS - porta muta:'
+                             ' %s' % rubra.compendium)
+    finally:
+        with open(_absoluta(via), 'w') as f:
+            f.write(ante)
+    viridis = currere()
+    if not viridis.sana:
+        raise SilvaError('porta post reversionem non viridis: %s'
+                         % viridis.compendium)
+    return rubra.compendium, viridis.compendium
 
 
 # ---------------------------------------------------------------- selecta

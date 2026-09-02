@@ -2515,6 +2515,48 @@ principale (vacuum)
         CREDO_VERUM(r1);
     }
 
+        imprimere("\n--- Probans -intra typum ---\n");
+    {
+        /* structura nomine: quod extenta nominant, -intra tangit -
+         * uncus commissionis lineas structurae mutatae ei tradit */
+        constans character* fons =
+            "nomen structura {\n"
+            "    i32  x;\n"
+            "    vacuum* memoria;\n"
+            "} S;\n"
+            "\n"
+            "vacuum\n"
+            "f(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n";
+                  chorda nomen_s;
+                     b32 inventae[I];
+           FormatorIntra intra;
+        FormatorScriptum s;
+
+        nomen_s           = chorda_ex_literis("S", piscina);
+        intra.functiones  = &nomen_s;
+        intra.numerus     = I;
+        intra.inventae    = inventae;
+        s = formator_scribere_intra(piscina, NIHIL, fons,
+            (i32)strlen(fons), &intra);
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(inventae[ZEPHYRUM]);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "nomen structura {\n"
+            "       i32  x;\n"
+            "    vacuum* memoria;\n"
+            "} S;\n"
+            "\n"
+            "vacuum\n"
+            "f(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

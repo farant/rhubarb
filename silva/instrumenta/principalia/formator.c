@@ -577,7 +577,7 @@ principale (
                     si (!inventum)
                     {
                         fprintf(stderr, "formator: %s lineae %u-%u"
-                            " extra functiones (structura/tabula?)"
+                            " extra extenta (commentarium? directiva?)"
                             " - non formatae\n", via,
                             (insignatus integer)lineae_a[r],
                             (insignatus integer)lineae_b[r]);

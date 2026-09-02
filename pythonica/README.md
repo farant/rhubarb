@@ -34,6 +34,15 @@ plica pendet — veritas in C manet.
   exactae; `.replace_selecta(selector, novus, intra=)` ancora sine
   textu; `silva.differre_git(via, ref)` verdictum contra historiam;
   `silva.origo(via, linea)`, `silva.arbor(via)` textus crudi
+- ancorae `.replace` ordinariae = SERIES LEXEMATUM (spatia ubique
+  indifferentia, litterae exactae); `tolerans='spatia'` cursus, `False`
+  octeti
+- `silva.porta(nomen, filtrum=None)` — portam currere (tabula PORTAE:
+  radix/silva/css/.../pythonica/fumi/amalgamata): cucurrit (signum) +
+  sana; `silva.commissio(nuntius, viae, portae=[...])` — portae omnes
+  sanae aut nihil commissum; viae vetitae refutatae; `verificare=False`
+- `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
+  rubra (non aedificatio fracta) -> reversio (finally) -> viridis
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

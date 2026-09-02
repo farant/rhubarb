@@ -83,7 +83,7 @@ if [ -z "${UNCUS_VIAE:-}" ]; then
             git add -- "$via"
             echo "formator (pre-commit): $via FORMATA ($modus), index repositus" >&2
         fi
-        printf '%s\n' "$fout" | grep -E 'extra functiones|recusat|ignota|maxime|malformata|fracta' | sed 's/^/  /' >&2 || true
+        printf '%s\n' "$fout" | grep -E 'extra extenta|recusat|ignota|maxime|malformata|fracta' | sed 's/^/  /' >&2 || true
     done
 fi
 

@@ -8,8 +8,10 @@
 #   III -intra a -machina: nullus ordo in extentis b (lineae >= 10)
 #   IV  -intra a -intra b == -scribere sine ambitu (octetim)
 #   V   -lineae 15-16 (definitio b) == -intra b (octetim)
-#   VI  -lineae 3-5 (structura inter functiones): monet 'extra
-#       functiones', plagula intacta, exitus 0
+#   VI  -lineae 3-5 (structura inter functiones): structura formata
+#       (typi in extentis -> -intra eos tangit), a intacta
+#   VII -lineae 7-7 (commentarium post functionem ultimam): monet
+#       'extra extenta', plagula intacta, exitus 0
 # Machina ipsa in probatio_silva_formator probatur; hic CLI sola.
 # Usage: ./silva/formator_intra_fumus.sh      exit 0 sanum | 1 fractum
 
@@ -49,8 +51,14 @@ if cmp -s "$T/lineae.c" "$T/b.c"; then echo "  V   -lineae 15-16 == -intra b    
 # extra omne extentum (extentum functionis sequentis POST eam incipit)
 printf 'vacuum a(vacuum);\n\nnomen structura {\n    i32  x;\n} S;\n\nvacuum\na(vacuum)\n{\n    redde;\n}\n' > "$T/extra_fons.c"
 cp "$T/extra_fons.c" "$T/extra.c"
-err=$(./silva/formator.sh "$T/extra.c" -scribere -lineae 3-5 2>&1 >/dev/null); rc=$?
-if [ "$rc" -eq 0 ] && printf '%s\n' "$err" | grep -q 'extra functiones' && cmp -s "$T/extra.c" "$T/extra_fons.c"; then echo "  VI  -lineae extra functiones: monet, intacta OK"; else echo "  VI  FRACTUM (rc=$rc)"; printf '%s\n' "$err"; fracta=1; fi
+./silva/formator.sh "$T/extra.c" -scribere -lineae 3-5 >/dev/null 2>&1; rc=$?
+if [ "$rc" -eq 0 ] && grep -q '^    i32 x;$' "$T/extra.c" && grep -q '^a(vacuum)$' "$T/extra.c"; then echo "  VI  -lineae structurae: structura formata, a intacta OK"; else echo "  VI  FRACTUM (rc=$rc)"; cat "$T/extra.c"; fracta=1; fi
+
+# lineae extra omne extentum: commentarium post functionem ultimam
+printf 'vacuum\na(vacuum)\n{\n    redde;\n}\n\n/* cauda */\n' > "$T/cauda_fons.c"
+cp "$T/cauda_fons.c" "$T/cauda.c"
+err=$(./silva/formator.sh "$T/cauda.c" -scribere -lineae 7-7 2>&1 >/dev/null); rc=$?
+if [ "$rc" -eq 0 ] && printf '%s\n' "$err" | grep -q 'extra extenta' && cmp -s "$T/cauda.c" "$T/cauda_fons.c"; then echo "  VII -lineae extra extenta: monet, intacta   OK"; else echo "  VII FRACTUM (rc=$rc)"; printf '%s\n' "$err"; fracta=1; fi
 
 [ "$fracta" -ne 0 ] && { echo "fumus intra: FRACTUM"; exit 1; }
-echo "fumus intra: sanum (VI/VI)"; exit 0
+echo "fumus intra: sanum (VII/VII)"; exit 0

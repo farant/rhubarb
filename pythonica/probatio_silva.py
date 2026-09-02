@@ -307,6 +307,69 @@ credo('<parsura' in silva.arbor(via), 'arbor: documentum STML')
 dg = silva.differre_git('pythonica/silva.py' if False else 'lib/piscina.c')
 credo(dg.verdictum == 'cosmetica' and dg.cosmetica_solum, 'differre_git: piscina.c == HEAD')
 
+print('--- ancorae lexematum ---')
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.replace('vacuum b (vacuum);', 'vacuum b(i32 x);')           # plagula: 'vacuum b(vacuum);'
+credo('vacuum b(i32 x);' in e.textus and 'vacuum b(vacuum);' not in e.textus,
+      'lexemata: spatium additum in ancora congruit')
+e = silva.Editio(via)
+e.replace('a(vacuum)\n{', 'a (vacuum)\n{')                     # plagula: 'a (vacuum)\n{'
+credo(e.textus.count('a (vacuum)') == 1, 'lexemata: spatium ablatum in ancora congruit')
+e = silva.Editio(via)
+e.replace('x  =  I ;', 'x = II;')                               # plagula: 'x  = I;'
+credo('x = II;' in e.textus, 'lexemata: spatia ubique indifferentia')
+try:
+    silva.Editio(via).replace('"/* b */"', 'x')
+    credo(False, 'littera exacta')
+except silva.SilvaError:
+    credo(True, 'lexemata: ancora absens levat')
+try:
+    silva.Editio(via).replace('redde ;', 'frange;')
+    credo(False, 'ambigua levat')
+except silva.SilvaError:
+    credo(True, 'lexemata: ambigua (2) levat')
+e = silva.Editio(via); e.replace('x  = I;', 'x = II;', tolerans='spatia')
+credo('x = II;' in e.textus, "tolerans='spatia' forma vetus manet")
+
+print('--- portae + commissio + planta ---')
+pp = silva.porta('formator-intra')
+credo(pp.cucurrit and pp.sana and 'sanum' in pp.compendium, 'porta formator-intra sana (%s)' % pp.compendium)
+credo(silva.porta_viae('silva/fontes/x.c') == 'silva' and silva.porta_viae('lib/x.c') == 'radix',
+      'porta_viae')
+try:
+    silva.porta('nemo')
+    credo(False, 'porta ignota levat')
+except silva.SilvaError:
+    credo(True, 'porta ignota levat SilvaError')
+try:
+    silva.commissio('nihil', ['FAQ.md'])
+    credo(False, 'via vetita levat')
+except silva.SilvaError:
+    credo(True, 'commissio: via vetita refutata')
+open(via, 'w').write(FONS)
+def porta_ficta(v):
+    t = open(v).read()
+    return silva.Porta('ficta', True, 'PLANTATUM' not in t, 'ficta', 0, '')
+ANC = 'redde;\n}\n\n/* b */'
+PLA = 'redde; /* PLANTATUM */\n}\n\n/* b */'
+r, g = silva.planta(via, ANC, PLA, porta_ficta)
+credo(open(via).read() == FONS, 'planta: reversa post ritum')
+def porta_muta(v):
+    return silva.Porta('muta', True, True, 'muta', 0, '')
+try:
+    silva.planta(via, ANC, PLA, porta_muta)
+    credo(False, 'porta muta levat')
+except silva.SilvaError:
+    credo(open(via).read() == FONS, 'planta: porta muta levat ET reversa')
+def porta_fracta(v):
+    return silva.Porta('fracta', True, False, 'fracta', 1, 'x.c:1:1: error: fictus')
+try:
+    silva.planta(via, ANC, PLA, porta_fracta)
+    credo(False, 'aedificatio fracta levat')
+except silva.SilvaError as ex:
+    credo('AEDIFICATIONEM' in str(ex) and open(via).read() == FONS, 'planta: aedificatio fracta nominata ET reversa')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')
