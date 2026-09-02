@@ -58,3 +58,19 @@ Lessons: token anchors must include the comments inside a block
 (extract the exact text instead); measure on a quiet CPU or the
 number is noise; the basis of aequivalentia.sh should be refreshed
 after every landing so "mutatae ipsae" stays empty.
+
+## 2026-09-02 (late) — the table side
+
+Two changes on the cooked-table side of the GLR, same proof kit.
+Validation per parse was a 14-million-iteration pass over the
+committed table on every GLR creation; it moved to the suite (which
+had validated the skeleton and the small grammar but never the C89
+table itself — fixed). Then the dense indices: the cook now writes a
+state-by-terminal and a state-by-nonterminal grid next to the packed
+rows, computed from the same rows as they are emitted; the engine
+uses them when present and scans otherwise, and the validator checks
+every cell. 38.2 -> 33.6 ms on stml.c. The pythonica transaction
+wrote all four files and then refused its own judgment because the
+not-yet-regenerated table lacked the new fields — the right order of
+failure, and a reminder that a contract change and its regeneration
+are one step.

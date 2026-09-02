@@ -264,9 +264,13 @@ silva_gen_coquere (
     i32 i;
     i32 offset_actionum;
     i32 offset_goto;
-    s32 productio_augmentata;
-
+        s32 productio_augmentata;
     Xar* genera;
+    s32* idx_act;
+    s32* idx_goto;
+    i32  num_terminalium;
+    i32  num_nt;
+    i32  lat_act;
 
     si (grammatica == NIHIL || tabula == NIHIL)
     {
@@ -280,10 +284,32 @@ silva_gen_coquere (
         redde FALSUM;
     }
 
-    basis             = _basis_tituli(basis_via);
-    num_status        = xar_numerus(tabula->status_tabulae);
-    num_symbolorum    = xar_numerus(grammatica->symbola);
-    num_productionum  = xar_numerus(grammatica->productiones);
+    basis                 = _basis_tituli(basis_via);
+    num_status            = xar_numerus(tabula->status_tabulae);
+    num_symbolorum        = xar_numerus(grammatica->symbola);
+        num_productionum  = xar_numerus(grammatica->productiones);
+
+    /* Indices densi (2026-09-02): cella (status, terminale + I) ->
+     * index primae actionis in laminis planis; (status, non_terminale
+     * - terminalia) -> status novus; -I = nulla. Ex laminis EISDEM
+     * dum emittuntur computati - congruentia constructione; validator
+     * motoris eam tamen probat. */
+    num_terminalium  = (i32)grammatica->numerus_terminalium;
+    num_nt           = num_symbolorum - num_terminalium;
+    si (num_nt < I) num_nt = I;
+    lat_act         = num_terminalium + I;
+    idx_act  = (s32*)piscina_allocare(grammatica->piscina,
+        (memoriae_index)num_status * (memoriae_index)lat_act
+        * magnitudo(s32));
+    idx_goto = (s32*)piscina_allocare(grammatica->piscina,
+        (memoriae_index)num_status * (memoriae_index)num_nt
+        * magnitudo(s32));
+    si (idx_act == NIHIL || idx_goto == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < num_status * lat_act; i++) idx_act[i] = -I;
+    per (i = ZEPHYRUM; i < num_status * num_nt; i++) idx_goto[i] = -I;
 
     /* Custos includendi: BASIS_H maiusculis */
     {
@@ -553,8 +579,17 @@ silva_gen_coquere (
             st->habet_conflictum ? " [CONFLICTUS SERVATUS]" : "");
         per (i = ZEPHYRUM; i < num_act; i++)
         {
-            SilvaGenActioIntroitus* actio =
-                (SilvaGenActioIntroitus*)xar_obtinere(st->actiones, i);
+                        SilvaGenActioIntroitus* actio =
+                            (SilvaGenActioIntroitus*)xar_obtinere(st->actiones,
+                            i);
+            {
+                i32 cella = s * lat_act + (i32)(actio->terminalis + I);
+
+                si (idx_act[cella] < ZEPHYRUM)
+                {
+                    idx_act[cella] = (s32)(offset_actionum + i);
+                }
+            }
 
             fprintf(pl, "    { %3d, %s, %3d, 0 },  /* ",
                 (int)actio->terminalis,
@@ -617,8 +652,17 @@ silva_gen_coquere (
             SilvaGenGotoIntroitus* g =
                 (SilvaGenGotoIntroitus*)xar_obtinere(st->goto_introitus,
                 i);
-            SilvaGenSymbolum* sym = (SilvaGenSymbolum*)xar_obtinere(
-                grammatica->symbola, (i32)g->non_terminalis);
+                        SilvaGenSymbolum* sym =
+                            (SilvaGenSymbolum*)xar_obtinere(
+                            grammatica->symbola,
+                            (i32)g->non_terminalis);
+            si (   g->non_terminalis >= (s32)num_terminalium
+                && g->non_terminalis < (s32)num_symbolorum)
+            {
+                idx_goto[s * num_nt
+                    + (i32)(g->non_terminalis - (s32)num_terminalium)]
+                    = (s32)g->status_novus;
+            }
 
             fprintf(pl, "    { %3d, %3d },  /* ",
                 (int)g->non_terminalis, (int)g->status_novus);
@@ -655,6 +699,36 @@ silva_gen_coquere (
     }
     fprintf(pl, "};\n\n");
 
+        /* --- Indices densi --- */
+    fprintf(pl,
+        "/* ==================================================\n"
+        " * Indices densi: actiones (status x (terminalia + I), columna 0 = $)\n"
+        " * -> index primae actionis laminae planae; goto (status x\n"
+        " * non-terminale) -> status novus; -1 = nulla\n"
+        " * ================================================== */\n\n"
+        "hic_manens constans s32 %s_ACTIONES_INDEX[] = {\n", praefixum);
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        fprintf(pl, "    ");
+        per (i = ZEPHYRUM; i < lat_act; i++)
+        {
+            fprintf(pl, "%d,", (int)idx_act[s * lat_act + i]);
+        }
+        fprintf(pl, "  /* st%d */\n", (int)s);
+    }
+    fprintf(pl, "};\n\n"
+        "hic_manens constans s32 %s_GOTO_INDEX[] = {\n", praefixum);
+    per (s = ZEPHYRUM; s < num_status; s++)
+    {
+        fprintf(pl, "    ");
+        per (i = ZEPHYRUM; i < num_nt; i++)
+        {
+            fprintf(pl, "%d,", (int)idx_goto[s * num_nt + i]);
+        }
+        fprintf(pl, "  /* st%d */\n", (int)s);
+    }
+    fprintf(pl, "};\n\n");
+
     /* --- Tabula integra --- */
     fprintf(pl,
         "/* ==================================================\n"
@@ -669,7 +743,8 @@ silva_gen_coquere (
         "    %s_GOTO, %d,\n"
         "    %d,  /* initium (augmentatum) */\n"
         "    %d,  /* productio augmentata */\n"
-        "    %d   /* conflictus servati */\n"
+                "    %d,  /* conflictus servati */\n"
+        "    %s_ACTIONES_INDEX, %s_GOTO_INDEX\n"
         "};\n",
         praefixum,
         praefixum, (int)num_symbolorum,
@@ -679,8 +754,9 @@ silva_gen_coquere (
         praefixum, (int)offset_actionum,
         praefixum, (int)offset_goto,
         (int)grammatica->initium_index,
-        (int)productio_augmentata,
-        (int)tabula->numerus_conflictuum);
+                (int)productio_augmentata,
+        (int)tabula->numerus_conflictuum,
+        praefixum, praefixum);
 
     /* --- Cellae praelatae (solum si adsunt) --- */
     si (tabula->numerus_praelatarum > ZEPHYRUM)

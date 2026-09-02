@@ -115,6 +115,17 @@ nomen structura {
     s32                          initium_index;         /* symbolum augmentatum */
     s32                          productio_augmentata;  /* index productionis S' */
     s32                          numerus_conflictuum;   /* servati (GLR) */
+
+    /* Indices densi (2026-09-02): actiones_index[status x (terminalia
+     * + I) + (terminale + I)] = index PRIMAE actionis eius terminalis in
+     * laminis planis (cursus ordinatus adiacens sequitur), -I = nulla;
+     * columna 0 = $ (terminale -I). goto_index[status x (symbola -
+     * terminalia) + (non_terminale - terminalia)] = status novus aut
+     * -I. NIHIL licet: motor tunc laminas scandit ut olim (tabulae
+     * manu structae). Ex laminis EISDEM a silva_coquere computati;
+     * validator congruentiam cellae cuiusque cum scansione probat. */
+    constans s32*                actiones_index;
+    constans s32*                goto_index;
 } SilvaTabulaCocta;
 
 #endif /* SILVA_TABULAE_H */

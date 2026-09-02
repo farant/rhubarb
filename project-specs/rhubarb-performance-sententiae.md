@@ -258,6 +258,22 @@ AW    tools/aedilis.worklog.md
       first and xar_creare second, the latter dominated by one
       praedecessores Xar per GSS node (mostly one element) and the
       two trivia Xars per token (15). [observed]
+10.11. Table lookups (2026-09-02, late): (a) the engine no longer
+      validates the cooked table on every parse (an O(actions x
+      gotos) pass plus an allocation); the three committed tables are
+      validated by the suite instead, the C89 one newly so. Fixed cost
+      0.45 ms per parse removed: piscina.c 3.63 -> 3.21 ms. (b) The
+      cook emits two dense indices alongside the packed rows:
+      state x (terminal+1) -> first action of the run, and state x
+      non-terminal -> goto state, -1 for none; the engine takes them
+      when present and scans the rows otherwise; the validator checks
+      every cell against the scan. 412 states x 85 columns as 32-bit
+      = 140 KB each. stml.c 38.2 -> 33.6 ms, json.c 10.5 -> 9.2 ms;
+      allocation counts unchanged, output byte-identical 156/156,
+      regeneration idempotent. The grid is the only lever so far that
+      crosses the generator boundary; the workflow for a grammar
+      change is unchanged (generare.sh emits the grid from the same
+      rows). [observed]
 10.8. Equivalence demonstrated as 5.1 demands: arbor.sh canonical
       STML byte-identical for 154 of 156 lib/*.c, the two exceptions
       being lib/xar.c and lib/piscina.c themselves, whose text

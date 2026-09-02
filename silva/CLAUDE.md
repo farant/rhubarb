@@ -129,6 +129,10 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
+NB tabulae coctae (generare.sh) indices densos ferunt (actiones_index,
+goto_index; 2026-09-02) et a probationibus validantur, non per
+parsuram - mutatio contractus silva_tabulae.h SEMPER regenerationem
+trium tabularum sequitur.
 ./silva/computus.sh <fons.c> [-nudum] [-machina] [-iter N] (imago
 memoriae et temporis parseris: lexemata, dati/commissa/otiosa, alvei,
 allocationes, ms lexandi/parsandi + HOROLOGIA PHASIUM lex/expansio/

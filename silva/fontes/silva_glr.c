@@ -456,12 +456,42 @@ _actiones_invenire (
                         i32  i;
                         i32  numerus = ZEPHYRUM;
 
-    *prima_out = NIHIL;
+        *prima_out = NIHIL;
     si (status < ZEPHYRUM || status >= (s32)tabula->numerus_statuum)
     {
         redde ZEPHYRUM;
     }
     lamina = &tabula->status[status];
+
+    /* Index densus (2026-09-02): cella -> prima actio, cursus adiacens
+     * numeratur; sine indice scansio laminae ut olim */
+    si (tabula->actiones_index != NIHIL)
+    {
+        s32 cella;
+        i32 finis;
+
+        si (   terminale < -I
+            || terminale >= (s32)tabula->numerus_terminalium)
+        {
+            redde ZEPHYRUM;
+        }
+        cella = tabula->actiones_index[
+            status * ((s32)tabula->numerus_terminalium + I)
+            + (terminale + I)];
+        si (cella < ZEPHYRUM)
+        {
+            redde ZEPHYRUM;
+        }
+        *prima_out = &tabula->actiones[cella];
+        finis = lamina->actiones_offset + lamina->actiones_numerus;
+        per (i = (i32)cella;
+             i < finis && tabula->actiones[i].terminalis == terminale;
+             i++)
+        {
+            numerus++;
+        }
+        redde numerus;
+    }
 
     per (i = ZEPHYRUM; i < lamina->actiones_numerus; i++)
     {
@@ -493,11 +523,24 @@ _goto_quaerere (
     constans SilvaTabStatus* lamina;
                         i32  i;
 
-    si (status < ZEPHYRUM || status >= (s32)tabula->numerus_statuum)
-    {
+        si (status < ZEPHYRUM || status >= (s32)tabula->numerus_statuum)
+        {
         redde -I;
-    }
+        }
     lamina = &tabula->status[status];
+
+    si (tabula->goto_index != NIHIL)
+    {
+        s32 nt  = non_terminalis - (s32)tabula->numerus_terminalium;
+        s32 lat = (s32)tabula->numerus_symbolorum
+                - (s32)tabula->numerus_terminalium;
+
+        si (nt < ZEPHYRUM || nt >= lat)
+        {
+            redde -I;
+        }
+        redde tabula->goto_index[status * lat + nt];
+    }
 
     per (i = ZEPHYRUM; i < lamina->goto_numerus; i++)
     {
@@ -695,6 +738,82 @@ silva_glr_tabulam_validare (
      * index reducendorum praesumit (nodi translatione creati cum
      * nodis reductione creatis in statu collidere non possunt).
      * Assertio ex tabulis, non assumptio ex theoria. */
+        /* Indices densi (si adsunt): cella quaeque cum scansione laminae
+     * congruat - artificium ex laminis eisdem coctum, sed probatum,
+     * non creditum */
+    si (tabula->actiones_index != NIHIL || tabula->goto_index != NIHIL)
+    {
+        si (   tabula->actiones_index == NIHIL
+            || tabula->goto_index     == NIHIL)
+        {
+            fprintf(stderr, "silva_glr: index densus dimidiatus\n");
+            redde FALSUM;
+        }
+        per (st = ZEPHYRUM; st < tabula->numerus_statuum; st++)
+        {
+            constans SilvaTabStatus* lamina = &tabula->status[st];
+            s32 t;
+            s32 nt;
+            s32 lat_act = (s32)tabula->numerus_terminalium + I;
+            s32 lat_nt  = (s32)tabula->numerus_symbolorum
+                        - (s32)tabula->numerus_terminalium;
+
+            per (t = -I; t < (s32)tabula->numerus_terminalium; t++)
+            {
+                s32 exspectata = -I;
+                s32 cella;
+
+                per (i = ZEPHYRUM; i < lamina->actiones_numerus; i++)
+                {
+                    si (tabula->actiones[lamina->actiones_offset + i]
+                            .terminalis == t)
+                    {
+                        exspectata = (s32)(lamina->actiones_offset + i);
+                        frange;
+                    }
+                }
+                cella = tabula->actiones_index[(s32)st * lat_act + (t
+                    + I)];
+                si (cella != exspectata)
+                {
+                    fprintf(stderr,
+                        "silva_glr: index actionum st%d t%d: %d"
+                        " pro %d\n", (int)st, (int)t, (int)cella,
+                        (int)exspectata);
+                    redde FALSUM;
+                }
+            }
+            per (nt = ZEPHYRUM; nt < lat_nt; nt++)
+            {
+                s32 exspectata = -I;
+                s32 cella;
+
+                per (i = ZEPHYRUM; i < lamina->goto_numerus; i++)
+                {
+                    constans SilvaTabGoto* g =
+                        &tabula->goto_introitus[lamina->goto_offset
+                            + i];
+
+                    si (g->non_terminalis
+                        == nt + (s32)tabula->numerus_terminalium)
+                    {
+                        exspectata = g->status_novus;
+                        frange;
+                    }
+                }
+                cella = tabula->goto_index[(s32)st * lat_nt + nt];
+                si (cella != exspectata)
+                {
+                    fprintf(stderr,
+                        "silva_glr: index goto st%d nt%d: %d"
+                        " pro %d\n", (int)st, (int)nt, (int)cella,
+                        (int)exspectata);
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+
     {
         s32* accessus;
         i32  st2;
