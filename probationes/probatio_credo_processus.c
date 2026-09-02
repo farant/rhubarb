@@ -15,11 +15,13 @@
 #include <signal.h>
 
 
-/* Externa consulto, non interior: si scriptor optimizans videret
- * scriptionem ad NIHIL numquam legi, eam plicare posset - tunc
- * culpa inserta evanesceret et porta TACERET. Definitio in unitate
- * alia latere non potest (una plagula sumus), ergo vinculum externum
- * optimizatorem prohibet. */
+/* VOLATILIS, non vinculum externum: sub -O2 (vexilla 2026-09-02)
+ * clang functionem in eadem unitate inlineavit, monstratorem NIHIL
+ * constantem vidit, scriptionem indefinitam DELEVIT - filius normaliter
+ * exiit, porta 'Speratus SEGV, Receptus exitus normalis' rubuit. Per
+ * variabilem volatilem valor tempore cursus legendus est: scriptio
+ * fit, SIGSEGV venit. Culpa plantata optimizatori invisibilis esse
+ * debet, non modo lectori. */
 vacuum
 probatio_credo_processus_scribere_ad_nihil (
     integer* p);
@@ -28,11 +30,14 @@ vacuum
 probatio_credo_processus_scribere_ad_nihil (
     integer* p)
 {
-    *p = XI;
+    integer* volatilis opacus = p;
+
+    *opacus = XI;
 }
 
 
-/* Gyrus verus - nulla exitus via. Terminum excedere DEBET. */
+/* Gyrus verus - nulla exitus via. Terminum excedere DEBET. Numerator
+ * volatilis: effectus lateralis quem optimizator tollere nequit. */
 vacuum
 probatio_credo_processus_pendere_semper (vacuum);
 
@@ -40,9 +45,11 @@ vacuum
 probatio_credo_processus_pendere_semper (
     vacuum)
 {
+    volatilis i32 gyrus = ZEPHYRUM;
+
     dum (VERUM)
     {
-        /* consulto vacuum */
+        gyrus = gyrus + I;
     }
 }
 
