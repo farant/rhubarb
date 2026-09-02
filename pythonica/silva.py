@@ -532,9 +532,20 @@ def commissio(nuntius, viae, portae=(), verificare=True):
         if not f.sana:
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
                              ' commissum' % (nomen, f.compendium, f.rc))
-    r = _curre(['git', 'add', '--'] + list(viae))
-    if r.returncode != 0:
-        raise SilvaError('git add: %s' % r.stderr.strip())
+    # renominationes/deletiones per git mv/rm iam in indice: via absens
+    # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
+    deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
+                          '--no-renames', '--diff-filter=D']).stdout.split())
+    addendae = []
+    for v in viae:
+        if os.path.exists(_absoluta(v)):
+            addendae.append(v)
+        elif v not in deletae:
+            raise SilvaError('via nec in disco nec deleta in indice: %s' % v)
+    if addendae:
+        r = _curre(['git', 'add', '--'] + addendae)
+        if r.returncode != 0:
+            raise SilvaError('git add: %s' % r.stderr.strip())
     args = ['git', 'commit', '-q']
     if not verificare:
         args.append('--no-verify')

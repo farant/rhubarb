@@ -44,3 +44,21 @@ implementation proves nothing until seen red; `git add <dir>` sweeps
 `__pycache__`. Next (desideratum): snapshot-bound umbra (`git stash
 create` + temporary worktree) so editing may continue while a suite
 runs; LSP format-on-save for Fran.
+
+## 2026-09-02 — the umbra meets the real suite
+
+First receipt-backed full root run: the suite finished green and the
+worker died silently. `subprocess.run(text=True)` decodes strictly and
+one test (`probatio_eventus_inspector`) prints raw bytes; the
+UnicodeDecodeError killed the detached worker after the 3.5-minute run,
+no receipt, `.pendens` forever, `exspectare` timed out at 600 s. Three
+fixes, each seen red first: `errors='replace'` on every gate output; a
+crashed worker now writes a FRACTA receipt with the traceback in
+`.acta`; `.pendens` carries the worker PID so `portae_pendentes`
+reports 'mortua' and `exspectare` raises at once instead of waiting.
+Later the same day `commissio` refused a `git mv` commit because the
+old paths no longer exist — it now accepts paths whose deletion is
+staged (pass the new paths). Two doctrine notes: the receipt hashes
+tracked diffs, and the ledger file is tracked, so file ledger notes
+AFTER the commit, never between launch and commit; and `substituere`
+gained `genus=` for types.

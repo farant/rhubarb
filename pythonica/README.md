@@ -40,7 +40,8 @@ plica pendet — veritas in C manet.
 - `silva.porta(nomen, filtrum=None)` — portam currere (tabula PORTAE:
   radix/silva/css/.../pythonica/fumi/amalgamata): cucurrit (signum) +
   sana; `silva.commissio(nuntius, viae, portae=[...])` — portae omnes
-  sanae aut nihil commissum; viae vetitae refutatae; `verificare=False`
+  sanae aut nihil commissum; viae vetitae refutatae; renominationes
+  per `git mv` acceptae (viae NOVAE dantur); `verificare=False`
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
   rubra (non aedificatio fracta) -> reversio (finally) -> viridis
 - `silva.porta_umbra(nomen)` — porta in umbra (processus separatus),
