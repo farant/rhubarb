@@ -229,6 +229,19 @@ AW    tools/aedilis.worklog.md
       more often). The memory figures match 10.1-10.2; the speedup is
       smaller than 10.3 because this build is unoptimized and the
       closure dominates the token count. [observed]
+10.9. The house build had no -O flag at all until 2026-09-02; the
+      same objects at -O2 parse lib/stml.c in 53 ms against 148 ms
+      (lex 6 ms against 21.5). Flags now live in tools/vexilla.sh
+      (one table, 57 scripts source it) and are -O2 -g. Two costs
+      surfaced: a planted null write in probatio_credo_processus
+      that the optimizer deleted (fixed with a volatile pointer),
+      and dsymutil running after every one-step compile-and-link
+      with -g (fixed by linking test mains from objects). Silva
+      suite 819 -> 285 s across the day; root 219 -> 95 s. Sampled
+      at -O2 the parse is still ~48% Xar and arena operations, ~28%
+      GLR core: xar_locare's segment loop, the arena's per-allocation
+      block walk, double zeroing, and the linear action/goto scans
+      are the next levers. [observed]
 10.8. Equivalence demonstrated as 5.1 demands: arbor.sh canonical
       STML byte-identical for 154 of 156 lib/*.c, the two exceptions
       being lib/xar.c and lib/piscina.c themselves, whose text
