@@ -1734,6 +1734,504 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(s.querela);
     }
 
+    imprimere("\n--- Probans custodiam LXXII glomerum (R7/R17) ---\n");
+    {
+        /* ordinatio numquam lineam ultra LXXII trudit; linea TOTA
+         * metitur (commentarium caudae inclusum), non extensio nodi.
+         * Venatio 2026-09-01: -scribere lineas longas CREABAT
+         * (legatus.c membra LXXIV-LXXXV post R7, semantica.c catenae
+         * LXXV-LXXXV post R17 A/C). */
+        FormatorScriptum  s;
+                     Xar* d;
+                     i32  n_glomus;
+                     i32  n_alia;
+                     i32  k;
+
+        /* R7: glomus cadit - nihil ordinatur, ordo LINT unus causam
+         * nominat */
+        s = _scribere(piscina,
+            "nomen structura {\n"
+            "    i32 genus;                 /* \"functio\"/\"vari"
+            "abile\"/\"typus\" etc. */\n"
+            "    vacuum* parsura;\n"
+            "    b32 mortuus;               /* superpositio: plag"
+            "ula re-iudicat */\n"
+            "} Res;\n");
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "nomen structura {\n"
+            "    i32 genus;                 /* \"functio\"/\"vari"
+            "abile\"/\"typus\" etc. */\n"
+            "    vacuum* parsura;\n"
+            "    b32 mortuus;               /* superpositio: plag"
+            "ula re-iudicat */\n"
+            "} Res;\n"));
+
+        d = _lint(piscina,
+            "nomen structura {\n"
+            "    i32 genus;                 /* \"functio\"/\"vari"
+            "abile\"/\"typus\" etc. */\n"
+            "    vacuum* parsura;\n"
+            "    b32 mortuus;               /* superpositio: plag"
+            "ula re-iudicat */\n"
+            "} Res;\n");
+        CREDO_NON_NIHIL(d);
+        n_glomus  = ZEPHYRUM;
+        n_alia    = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (strcmp(_divergentia(d, k)->regula,
+                    "columnae-binae") != ZEPHYRUM)
+            {
+                perge;
+            }
+            si (strncmp(_divergentia(d, k)->nuntius,
+                    "glomus non ordinatum", 20) == ZEPHYRUM)
+            {
+                n_glomus += I;
+                CREDO_AEQUALIS_I32(
+                    _divergentia(d, k)->numerus_emendationum,
+                    (i32)0);
+            }
+            alioquin
+            {
+                n_alia += I;
+            }
+        }
+        CREDO_AEQUALIS_I32(n_glomus, (i32)1);
+        CREDO_AEQUALIS_I32(n_alia, (i32)0);
+
+        /* R17 A: linea prima LXXII plena - spatia tria non inseruntur;
+         * B operatorem movet */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    dum (nodus != NIHIL && nodus->genus == (s32)SILV"
+            "A_C89_GENUS_AMBIGUUS\n"
+            "        && nodus->pater != NIHIL)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    dum (nodus != NIHIL && nodus->genus == (s32)SILV"
+            "A_C89_GENUS_AMBIGUUS\n"
+            "         && nodus->pater != NIHIL)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+
+        /* R17 C: ordinatio lineam primam ad LXXXIII truderet - glomus
+         * cadit ad cb + I (linea I intacta, linea II tracta) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   a == operandum_longissimum_valde_xxxxxxxx"
+            "xxxxxxxxxxxxxxxxxx\n"
+            "        && ccccccccccccccc  == d)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   a == operandum_longissimum_valde_xxxxxxxx"
+            "xxxxxxxxxxxxxxxxxx\n"
+            "        && ccccccccccccccc == d)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+
+        /* R17 C: eadem forma, linea prima LV - ordinatur (custodia non
+         * cadit) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   a == operandum_valde_xxxxxxxxxxxxxxxxxxxx"
+            "xxx\n"
+            "        && ccccccccccccccc  == d)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   a               == operandum_valde_xxxxxx"
+            "xxxxxxxxxxxxxxxxx\n"
+            "        && ccccccccccccccc == d)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+    }
+
+    imprimere("\n--- Probans fracturam linearum (R16 FIX) ---\n");
+    {
+        /* ordo longitudo-lxxii emendationem suam fert ubi candidatus
+         * exstat: post virgulam / post '=' / ante operatorem binarium,
+         * lexematis crudis (macro-honestum). Logici profunditate minima
+         * vincunt; aliter dextimus cadens; nullo cadente sinistimus.
+         * Indentatio: linea prima ca + IV; continuata gradus suus, nisi
+         * candidatus artius ligat (+ IV). R11/R17 iteratione sequenti
+         * perficiunt. */
+        FormatorScriptum  s;
+                     Xar* d;
+                     i32  k;
+                     b32  frangibilis_visa;
+
+        /* argumenta vocationis: virgula dextima cadens; continuatio ca
+         * + IV */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum, tertium);\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum,\n"
+            "        tertium);\n"
+            "}\n"));
+
+        /* catena in si: ante && (logicus vincit); R17 A/B iteratione
+         * sequenti */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (alpha_longissima == beta_longissima && gamma"
+            "_longissima == delta_l)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   alpha_longissima == beta_longissima\n"
+            "        && gamma_longissima == delta_l)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+
+        /* declaratio initiata: virgula (dextima cadens) prae =
+         * (profundior sed dextior) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    constans character* titulus_longus = functio(arg"
+            "umentum_unum, alterum);\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    constans character* titulus_longus = functio(arg"
+            "umentum_unum,\n"
+            "        alterum);\n"
+            "}\n"));
+
+        /* logicus profunditate minima prae virgula interiore */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (alpha && functio(argumentum_primum, argument"
+            "um_secundum, tertium_x))\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   alpha\n"
+            "        && functio(argumentum_primum, argumentum_sec"
+            "undum, tertium_x))\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+
+        /* fractura una sufficit si cauda cadit */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum, tertium_longum, quartum_longum, quintum_"
+            "longum);\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum,\n"
+            "        tertium_longum, quartum_longum, quintum_long"
+            "um);\n"
+            "}\n"));
+
+        /* fracturae binae: cauda argumentorum eodem gradu manet */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum, tertium_longum, quartum_longum, quintum_"
+            "longum, sextum_longum, septimum_longum);\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum,\n"
+            "        tertium_longum, quartum_longum, quintum_long"
+            "um, sextum_longum,\n"
+            "        septimum_longum);\n"
+            "}\n"));
+
+        /* nullus candidatus cadit: sinistimus - residuum honestum
+         * manet */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_cum_titulo_valde_valde_valde_valde"
+            "_valde_valde_longissimo(a, b);\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_cum_titulo_valde_valde_valde_valde"
+            "_valde_valde_longissimo(a,\n"
+            "        b);\n"
+            "}\n"));
+
+        /* comparatio intra ramum catenae ||: gradus interior (+ IV) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   sem == NIHIL\n"
+            "        || titulus_valde_longissimus_identificator_a"
+            "lter == NIHIL_ALIUD_X\n"
+            "        || datum->titulus_longissimus->mensura_valde"
+            "_longa_ipsa == ZEPHYRUM)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    si (   sem == NIHIL\n"
+            "        || titulus_valde_longissimus_identificator_a"
+            "lter\n"
+            "            == NIHIL_ALIUD_X\n"
+            "        || datum->titulus_longissimus->mensura_valde"
+            "_longa_ipsa\n"
+            "            == ZEPHYRUM)\n"
+            "    {\n"
+            "        redde;\n"
+            "    }\n"
+            "}\n"));
+
+        /* catena + eodem gradu */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    summa = primus_valor_longus + secundus_valor_lon"
+            "gus + tertius_valor_longus + quartus;\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    summa = primus_valor_longus + secundus_valor_lon"
+            "gus\n"
+            "        + tertius_valor_longus + quartus;\n"
+            "}\n"));
+
+        /* cauda commentarii sola transgreditur: nulla fractura (codex
+         * cadit) */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    x = g(a, b);  /* commentarium longissimum quod l"
+            "imitem excedit certe */\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    x = g(a, b);  /* commentarium longissimum quod l"
+            "imitem excedit certe */\n"
+            "}\n"));
+
+        /* directiva: nulla fractura */
+        s = _scribere(piscina,
+            "#define MACRO_LONGA(a, b) ((a) + (b) + (a) * (b) - ("
+            "a) / (b) + (a) % (b) + 1)\n"
+            "\n"
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#define MACRO_LONGA(a, b) ((a) + (b) + (a) * (b) - ("
+            "a) / (b) + (a) % (b) + 1)\n"
+            "\n"
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+
+        /* littera chordae sola: nullus candidatus */
+        s = _scribere(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    imprimere(\"littera chordae longissima quae null"
+            "o modo frangi potest hic\");\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    imprimere(\"littera chordae longissima quae null"
+            "o modo frangi potest hic\");\n"
+            "}\n"));
+
+        /* corpus macri continuatum: nulla fractura */
+        s = _scribere(piscina,
+            "#define MACRO(a, b) \\\n"
+            "    ((a) + (b) + (a) * (b) - (a) / (b) + (a) % (b) +"
+            " (a) - (b) + 1)\n"
+            "\n"
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+        CREDO_VERUM(s.successus);
+        CREDO_FALSUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "#define MACRO(a, b) \\\n"
+            "    ((a) + (b) + (a) * (b) - (a) / (b) + (a) % (b) +"
+            " (a) - (b) + 1)\n"
+            "\n"
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"));
+
+        /* ordo longitudinis: frangibilis armatus (I emendatio, nuntius
+         * proprius) contra residuum (0, nuntius planus) */
+        d = _lint(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    redde functio_longa(argumentum_primum, argumentu"
+            "m_secundum, tertium);\n"
+            "}\n");
+        CREDO_NON_NIHIL(d);
+        frangibilis_visa = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (strcmp(_divergentia(d, k)->regula,
+                    "longitudo-lxxii") != ZEPHYRUM)
+            {
+                perge;
+            }
+            CREDO_AEQUALIS_I32(
+                _divergentia(d, k)->numerus_emendationum, (i32)1);
+            CREDO_VERUM(strcmp(_divergentia(d, k)->nuntius,
+                "linea nimis longa - frangibilis") == ZEPHYRUM);
+            frangibilis_visa = VERUM;
+        }
+        CREDO_VERUM(frangibilis_visa);
+        d = _lint(piscina,
+            "vacuum\n"
+            "f (vacuum)\n"
+            "{\n"
+            "    imprimere(\"littera chordae longissima quae null"
+            "o modo frangi potest hic\");\n"
+            "}\n");
+        CREDO_NON_NIHIL(d);
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (strcmp(_divergentia(d, k)->regula,
+                    "longitudo-lxxii") != ZEPHYRUM)
+            {
+                perge;
+            }
+            CREDO_AEQUALIS_I32(
+                _divergentia(d, k)->numerus_emendationum, (i32)0);
+            CREDO_VERUM(strcmp(_divergentia(d, k)->nuntius,
+                "linea nimis longa") == ZEPHYRUM);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

@@ -520,3 +520,35 @@ basis: plagula communis baseline magno - `-scribere -intra` functiones
 novas, `-delta` postea zephyrum novum. Quod NON attingit: ambitus
 minor functione (sectio intra principale probationis) - copia scratch
 + insertio manet (porta: ambitus corporis/sectionis).
+
+## Custodia LXXII glomerum + R16 FIX `fractura` (2026-09-01)
+
+**Custodia.** Ordinatio (R7 columnae, R9 aequatio, R17 A/C catena)
+numquam lineam ullam ultra LXXII trudit. Linea TOTA metitur (tabula
+longitudinum in ambitu; commentarium caudae inclusum, quod extensio
+nodi non videt), tractio = columna recta - columna praesens. Glomus
+totum cadit (uniformitas, ut R9): R7 nihil ordinat et ordinem LINT
+unum in membro latissimo dat (`glomus non ordinatum: ordinatio LXXII
+excederet`); R17 C omnes participes ad cb suum + I; R17 A omittitur
+(fractura lineam prius scindit). Praedicatum a spatiis praesentibus
+independens - non oscillat.
+
+**Fractura.** `longitudo-lxxii` emendationem fert ubi candidatus
+exstat (nuntius `linea nimis longa - frangibilis`; uncus post
+editionem eam nunc monet, residuum planum tacet). Candidati ex
+lexematis CRUDIS: SPATIA post virgulam, post `=`, ante operatorem
+binarium cuius lexema prius operandum finit (`-` unarium exclusum).
+Electio: logici (&&/||) profunditate minima, dextimus cadens; aliter
+dextimus cadens; nullo cadente sinistimus (cauda iteratione sequenti).
+Nulla fractura: directivae, continuationes `\`, litterae solae, cauda
+commentarii sola transgrediens. Indentatio: linea prima sententiae
+(sententia intima registrata, uni-lineares quoque) -> ca + IV;
+continuata -> gradus suus, nisi candidatus artius ligat quam operator
+lineam ducens (+ IV). R11/R17 iteratione sequenti perficiunt.
+Tectum LXXII planum; porta: sub indentatione gravi tectum = ca + XL
+(regula STML) - fixa primum.
+
+Portae natales: probatio sectiones "custodiam LXXII glomerum" et
+"fracturam linearum" (XVII fixa mensurata; vitia plantata XX/IV/II
+rubrae). Oraculum alterum: differre super legatus.c et semantica.c
+scriptas = cosmetica omnia.

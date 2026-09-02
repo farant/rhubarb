@@ -62,6 +62,16 @@ _addere (
     d->numerus_emendationum = ZEPHYRUM;
 }
 
+interior vacuum
+_emendationem_ponere (
+    FormatorDivergentia* d,
+                    i32  linea_a,
+                    i32  columna_a,
+                    i32  linea_b,
+                    i32  columna_b,
+                 chorda  insertum,
+                    b32  tolerans);
+
 /* emendationem divergentiae ULTIMAE addere (exemplar: _addere
  * tum _emendare - detector ipse editionem sanantem novit) */
 interior vacuum
@@ -80,15 +90,31 @@ _emendare_ipsum (
     n = xar_numerus(divergentiae);
     si (n == (i32)ZEPHYRUM) redde;
     d = (FormatorDivergentia*)xar_obtinere(divergentiae, n - I);
+    _emendationem_ponere(d, linea_a, columna_a, linea_b, columna_b,
+        insertum, tolerans);
+}
+
+/* emendationem divergentiae DATAE addere (fractura R16 ordinem
+ * longitudinis iam natum armat) */
+interior vacuum
+_emendationem_ponere (
+    FormatorDivergentia* d,
+                    i32  linea_a,
+                    i32  columna_a,
+                    i32  linea_b,
+                    i32  columna_b,
+                 chorda  insertum,
+                    b32  tolerans)
+{
     si (d->numerus_emendationum >= (i32)II) redde;
 
-    d->emendationes[d->numerus_emendationum].linea_a   = linea_a;
-    d->emendationes[d->numerus_emendationum].columna_a = columna_a;
-    d->emendationes[d->numerus_emendationum].linea_b   = linea_b;
-    d->emendationes[d->numerus_emendationum].columna_b = columna_b;
-    d->emendationes[d->numerus_emendationum].tolerans  = tolerans;
-    d->emendationes[d->numerus_emendationum].insertum  = insertum;
-    d->numerus_emendationum += I;
+    d->emendationes[d->numerus_emendationum].linea_a    = linea_a;
+    d->emendationes[d->numerus_emendationum].columna_a  = columna_a;
+    d->emendationes[d->numerus_emendationum].linea_b    = linea_b;
+    d->emendationes[d->numerus_emendationum].columna_b  = columna_b;
+    d->emendationes[d->numerus_emendationum].tolerans   = tolerans;
+    d->emendationes[d->numerus_emendationum].insertum   = insertum;
+    d->numerus_emendationum                             += I;
 }
 
 /* stricta: spatium octetos spatiales solum tegere DEBET
@@ -233,47 +259,77 @@ _vexilla_censere (
     }
 }
 
+
 /* ==================================================
  * R16: longitudo linearum (textu crudo)
  * ================================================== */
 
-interior vacuum
-_longitudinem_censere (
-                   Xar* divergentiae,
+/* longitudines linearum (octetis, sine '\n'/'\r'), 1-basatae;
+ * [0] vacua. Custodia LXXII glomerum (R7/R9/R17) lineam TOTAM
+ * metitur - commentarium caudae inclusum, quod extensio nodi non
+ * videt (venatio: legatus.c membra structurae LXXIV-LXXXV post
+ * R7; semantica.c catenae LXXV-LXXXV post R17 A/C) */
+interior constans i32*
+_longitudines_metiri (
+               Piscina* piscina,
     constans character* fons,
-                   i32  mensura)
+                   i32  mensura,
+                   i32* numerus_exitus)
 {
-    i32 i;
-    i32 linea;
-    i32 initium;
+    i32* tabula;
+    i32  numerus;
+    i32  i;
+    i32  linea;
+    i32  initium;
 
-    linea   = I;
-    initium = ZEPHYRUM;
+    numerus = I;
+    per (i = ZEPHYRUM; i < mensura; i += I)
+    {
+        si (fons[i] == '\n') numerus += I;
+    }
+    tabula = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(i32));
+    si (!tabula) redde NIHIL;
+    tabula[ZEPHYRUM] = ZEPHYRUM;
 
+    linea    = I;
+    initium  = ZEPHYRUM;
     per (i = ZEPHYRUM; i <= mensura; i += I)
     {
-        b32 finis_lineae;
         i32 longitudo;
 
-        finis_lineae = (i == mensura) || (fons[i] == '\n');
-        si (!finis_lineae) perge;
-
+        si (i != mensura && fons[i] != '\n') perge;
         longitudo = i - initium;
-        si (longitudo != (i32)ZEPHYRUM
+        si (   longitudo                     != (i32)ZEPHYRUM
             && fons[initium + longitudo - I] == '\r')
         {
             longitudo -= I;
         }
-        si (longitudo > LONGITUDO_RECTA)
+        si (linea <= numerus) tabula[linea] = longitudo;
+        linea    += I;
+        initium  = i + I;
+        si (i == mensura) frange;
+    }
+    *numerus_exitus = numerus;
+    redde tabula;
+}
+
+interior vacuum
+_longitudinem_censere (
+             Xar* divergentiae,
+    constans i32* longitudines,
+             i32  numerus_linearum)
+{
+    i32 linea;
+
+    per (linea = I; linea <= numerus_linearum; linea += I)
+    {
+        si (longitudines[linea] > (i32)LONGITUDO_RECTA)
         {
             _addere(divergentiae, "longitudo-lxxii",
                 "linea nimis longa", linea, LONGITUDO_RECTA + I,
-                (s32)longitudo, LONGITUDO_RECTA);
+                (s32)longitudines[linea], LONGITUDO_RECTA);
         }
-
-        linea += I;
-        initium = i + I;
-        si (i == mensura) frange;
     }
 }
 
@@ -681,12 +737,31 @@ _inclusiones_ordinem_censere (
  * ================================================== */
 
 nomen structura {
-        Xar* divergentiae;
-    Piscina* piscina;
-        Xar* continuationes;   /* ContinuatioSpatium (R11) */
-        Xar* catena_ops;       /* CatenaSedes (R17 vindicata) */
-        s32  fons_princeps;
+             Xar* divergentiae;
+         Piscina* piscina;
+             Xar* continuationes;   /* ContinuatioSpatium (R11) */
+             Xar* sententiae;       /* ContinuatioSpatium OMNIUM
+                                     * sententiarum (uni-lineares
+                                     * quoque) - fractura R16 */
+             Xar* catena_ops;       /* CatenaSedes (R17 vindicata) */
+             s32  fons_princeps;
+    constans i32* longitudines;     /* [numerus_linearum + I],
+                                     * 1-basatae - custodia LXXII */
+             i32 numerus_linearum;
 } FormatorAmbitus;
+
+interior i32
+_longitudo_lineae (
+    constans FormatorAmbitus* ambitus,
+                         i32  linea)
+{
+    si (   !ambitus->longitudines || linea < (i32)I
+        || linea > ambitus->numerus_linearum)
+    {
+        redde ZEPHYRUM;
+    }
+    redde ambitus->longitudines[linea];
+}
 
 /* R17: sedes operatoris comparationis a catena vindicata -
  * R10-ante ordinationi eius cedit */
@@ -712,6 +787,20 @@ _spatium_continuationis_addere (
 {
     ContinuatioSpatium* spatium;
 
+    si (lb < la) redde;
+    /* sententiae omnes (uni-lineares quoque): fractura R16
+     * sententiam intimam lineam continentem quaerit */
+    si (ambitus->sententiae)
+    {
+        spatium = (ContinuatioSpatium*)xar_addere(
+            ambitus->sententiae);
+        si (spatium)
+        {
+            spatium->la = la;
+            spatium->ca = ca;
+            spatium->lb = lb;
+        }
+    }
     si (!ambitus->continuationes || lb <= la) redde;
     spatium = (ContinuatioSpatium*)xar_addere(
         ambitus->continuationes);
@@ -1428,8 +1517,8 @@ _ordinem_censere (
 
     si (numerus == (i32)ZEPHYRUM) redde;
 
-    cb_maxima       = ZEPHYRUM;
-    stellae_maximae = ZEPHYRUM;
+    cb_maxima        = ZEPHYRUM;
+    stellae_maximae  = ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
         si (membra[i].cb > cb_maxima)
@@ -1442,6 +1531,49 @@ _ordinem_censere (
         }
     }
     hiatus = I + stellae_maximae;
+
+    /* custodia LXXII GLOMERIS TOTIUS (ut R9): ordinatio lineam
+     * ullam (TOTAM metitam - commentarium caudae inclusum) ultra
+     * LXXII truderet? Glomus non ordinatur; divergentia LINT sola
+     * in membro latissimo causam nominat. Praedicatum a spatiis
+     * praesentibus independens (tractio = columna recta - columna
+     * praesens; linea tota crescit tractione) - non oscillat. */
+    {
+        b32 cadit;
+        i32 latissimum;
+        i32 longitudo_latissima;
+
+        cadit                = FALSUM;
+        latissimum           = ZEPHYRUM;
+        longitudo_latissima  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < numerus; i += I)
+        {
+            s32 tractio;
+            i32 longitudo;
+
+            tractio = (s32)(cb_maxima + hiatus)
+                - (s32)membra[i].titulus_columna;
+            si (tractio <= (s32)ZEPHYRUM) perge;
+            longitudo = _longitudo_lineae(ambitus, membra[i].linea)
+                + (i32)tractio;
+            si (   longitudo > (i32)LONGITUDO_RECTA
+                && longitudo > longitudo_latissima)
+            {
+                cadit                = VERUM;
+                latissimum           = i;
+                longitudo_latissima  = longitudo;
+            }
+        }
+        si (cadit)
+        {
+            _addere(ambitus->divergentiae, "columnae-binae",
+                "glomus non ordinatum: ordinatio LXXII"
+                " excederet", membra[latissimum].linea,
+                membra[latissimum].titulus_columna,
+                (s32)longitudo_latissima, LONGITUDO_RECTA);
+            redde;
+        }
+    }
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
@@ -2131,30 +2263,30 @@ _catenam_censere (
     FormatorAmbitus* ambitus,
          SilvaValor  valor_apertum,
          SilvaValor  valor_clausum,
-        SilvaNodus*  conditio)
+         SilvaNodus* conditio)
 {
-    SilvaToken*     aperta;
-    SilvaToken*     clausa;
-    SilvaToken*     radix_op;
-    CatenaCollectio collectio;
-    i32             columna_operandi;
-    i32             columna_operatoris;
-    i32             cb_maxima;
-    i32             i;
-    i32             la;
-    i32             ca;
-    i32             lb;
-    i32             cb;
+         SilvaToken* aperta;
+         SilvaToken* clausa;
+         SilvaToken* radix_op;
+    CatenaCollectio  collectio;
+                i32  columna_operandi;
+                i32  columna_operatoris;
+                i32  cb_maxima;
+                i32  i;
+                i32  la;
+                i32  ca;
+                i32  lb;
+                i32  cb;
 
     aperta = _valor_radix(valor_apertum);
     clausa = _valor_radix(valor_clausum);
-    si (!_principalis(ambitus, aperta)
+    si (   !_principalis(ambitus, aperta)
         || !_principalis(ambitus, clausa))
     {
         redde;
     }
     si (clausa->linea <= aperta->linea) redde;
-    si (!conditio
+    si (   !conditio
         || conditio->genus != SILVA_C89_GENUS_BINARIUM)
     {
         redde;
@@ -2166,18 +2298,23 @@ _catenam_censere (
         redde;
     }
 
-    collectio.numerus_operatorum = ZEPHYRUM;
-    collectio.numerus_ramorum    = ZEPHYRUM;
+    collectio.numerus_operatorum  = ZEPHYRUM;
+    collectio.numerus_ramorum     = ZEPHYRUM;
     _catenam_colligere(conditio, &collectio);
 
-    columna_operandi   = aperta->columna + IV;
-    columna_operatoris = aperta->columna + I;
+    columna_operandi    = aperta->columna + IV;
+    columna_operatoris  = aperta->columna + I;
 
-    /* A: operandum primum ad parenthesim + IV */
-    si (_extensio(conditio, ambitus->fons_princeps, &la, &ca,
+    /* A: operandum primum ad parenthesim + IV. Custodia LXXII:
+     * spatia tria lineam totam (metitam) ultra LXXII non trudunt
+     * - fractura R16 eam prius scindat, A iteratione sequenti. */
+    si (   _extensio(conditio, ambitus->fons_princeps, &la, &ca,
         &lb, &cb)
         && la == aperta->linea
-        && ca != columna_operandi)
+        && ca != columna_operandi
+        && !(columna_operandi > ca
+            && _longitudo_lineae(ambitus, la)
+                + (columna_operandi - ca) > (i32)LONGITUDO_RECTA))
     {
         _addere(ambitus->divergentiae, "catena-logica",
             "spatia tria post parenthesim catenae exspectata",
@@ -2195,7 +2332,7 @@ _catenam_censere (
         SilvaToken* op;
 
         op = collectio.ops[i];
-        si (!_principalis(ambitus, op)
+        si (   !_principalis(ambitus, op)
             || !op->initium_lineae)
         {
             perge;
@@ -2216,129 +2353,125 @@ _catenam_censere (
     /* C: comparationes bi-characterum ordinatae ad
      * max(cb sinistrorum) + I; participes = rami
      * uni-lineares columnam operandi incipientes. Sedes
-     * omnium participum vindicantur (R10-ante cedit). */
-    cb_maxima = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < collectio.numerus_ramorum; i += I)
+     * omnium participum vindicantur (R10-ante cedit).
+     * Custodia LXXII GLOMERIS TOTIUS (ut R9): si linea ulla
+     * (TOTA metita - rami plures in una linea, cauda) trans-
+     * grederetur, omnes ad cb suum + I cadunt - uniformitas,
+     * non exceptio per membrum (quae CV octetos in legatus.c
+     * peperit: extensio rami lineam non videbat). */
     {
-        SilvaNodus* ramus;
-        SilvaToken* op;
-               i32  rla;
-               i32  rca;
-               i32  rlb;
-               i32  rcb;
-               i32  sla;
-               i32  sca;
-               i32  slb;
-               i32  scb;
+        SilvaToken* part_op[CATENA_MEMBRA_MAXIMA];
+               i32  part_scb[CATENA_MEMBRA_MAXIMA];
+               i32  part_n;
+               b32  cadit;
 
-        ramus = collectio.rami[i];
-        si (!ramus || ramus->genus != SILVA_C89_GENUS_BINARIUM)
+        part_n     = ZEPHYRUM;
+        cb_maxima  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < collectio.numerus_ramorum; i += I)
         {
-            perge;
-        }
-        op = _token_fons(
-            silva_c89_binarium_tok_operator(ramus));
-        si (!op || !_comparatio_bichar(op->genus)
-            || !_principalis(ambitus, op))
-        {
-            perge;
-        }
-        si (!_extensio(ramus, ambitus->fons_princeps, &rla,
-            &rca, &rlb, &rcb)
-            || rla != rlb || rca != columna_operandi)
-        {
-            perge;
-        }
-        si (!_valoris_extensio(ambitus,
-            silva_c89_binarium_sinister(ramus), &sla, &sca,
-            &slb, &scb)
-            || sla != slb || op->linea != sla)
-        {
-            perge;
-        }
-        si (scb > cb_maxima) cb_maxima = scb;
-    }
-    si (cb_maxima == (i32)ZEPHYRUM) redde;
+            SilvaNodus* ramus;
+            SilvaToken* op;
+                   i32  rla;
+                   i32  rca;
+                   i32  rlb;
+                   i32  rcb;
+                   i32  sla;
+                   i32  sca;
+                   i32  slb;
+                   i32  scb;
 
-    per (i = ZEPHYRUM; i < collectio.numerus_ramorum; i += I)
-    {
-        SilvaNodus* ramus;
-        SilvaToken* op;
-               i32  rla;
-               i32  rca;
-               i32  rlb;
-               i32  rcb;
-               i32  sla;
-               i32  sca;
-               i32  slb;
-               i32  scb;
-               i32  columna_recta;
-        CatenaSedes* sedes;
-
-        ramus = collectio.rami[i];
-        si (!ramus || ramus->genus != SILVA_C89_GENUS_BINARIUM)
-        {
-            perge;
-        }
-        op = _token_fons(
-            silva_c89_binarium_tok_operator(ramus));
-        si (!op || !_comparatio_bichar(op->genus)
-            || !_principalis(ambitus, op))
-        {
-            perge;
-        }
-        si (!_extensio(ramus, ambitus->fons_princeps, &rla,
-            &rca, &rlb, &rcb)
-            || rla != rlb || rca != columna_operandi)
-        {
-            perge;
-        }
-        si (!_valoris_extensio(ambitus,
-            silva_c89_binarium_sinister(ramus), &sla, &sca,
-            &slb, &scb)
-            || sla != slb || op->linea != sla)
-        {
-            perge;
-        }
-
-        /* vindicare (etiam sine divergentia) */
-        si (ambitus->catena_ops)
-        {
-            sedes = (CatenaSedes*)xar_addere(
-                ambitus->catena_ops);
-            si (sedes)
+            ramus = collectio.rami[i];
+            si (!ramus || ramus->genus != SILVA_C89_GENUS_BINARIUM)
             {
-                sedes->linea   = op->linea;
-                sedes->columna = op->columna;
+                perge;
+            }
+            op = _token_fons(
+                silva_c89_binarium_tok_operator(ramus));
+            si (   !op || !_comparatio_bichar(op->genus)
+                || !_principalis(ambitus, op))
+            {
+                perge;
+            }
+            si (   !_extensio(ramus, ambitus->fons_princeps, &rla,
+                &rca, &rlb, &rcb)
+                || rla != rlb || rca != columna_operandi)
+            {
+                perge;
+            }
+            si (   !_valoris_extensio(ambitus,
+                silva_c89_binarium_sinister(ramus), &sla, &sca,
+                &slb, &scb)
+                || sla != slb || op->linea != sla)
+            {
+                perge;
+            }
+            si (part_n >= (i32)CATENA_MEMBRA_MAXIMA) frange;
+            part_op[part_n]   = op;
+            part_scb[part_n]  = scb;
+            part_n            += I;
+            si (scb > cb_maxima) cb_maxima = scb;
+        }
+        si (part_n == (i32)ZEPHYRUM) redde;
+
+        cadit = FALSUM;
+        per (i = ZEPHYRUM; i < part_n; i += I)
+        {
+            s32 tractio;
+
+            tractio = (s32)(cb_maxima + I)
+                - (s32)part_op[i]->columna;
+            si (   tractio > (s32)ZEPHYRUM
+                && _longitudo_lineae(ambitus, part_op[i]->linea)
+                    + (i32)tractio > (i32)LONGITUDO_RECTA)
+            {
+                cadit = VERUM;
+                frange;
             }
         }
 
-        columna_recta = cb_maxima + I;
-        si (op->columna == columna_recta) perge;
-        si (columna_recta > op->columna
-            && (rcb - I) + (columna_recta - op->columna)
-                > (i32)LONGITUDO_RECTA)
+        per (i = ZEPHYRUM; i < part_n; i += I)
         {
-            perge;   /* exceptio LXXII (ut R9) */
-        }
-        _addere(ambitus->divergentiae, "catena-logica",
-            "comparatio catenae non ordinata", op->linea,
-            op->columna, (s32)op->columna,
-            (s32)columna_recta);
-        si (op->columna < columna_recta)
-        {
-            _emendare(ambitus->divergentiae, op->linea,
-                op->columna, op->linea, op->columna,
-                _textus_emendationis(ambitus->piscina,
-                    ZEPHYRUM, columna_recta - op->columna));
-        }
-        alioquin
-        {
-            /* tractio tolerans */
-            _emendare_tolerans(ambitus->divergentiae, op->linea,
-                columna_recta, op->linea, op->columna,
-                _textus_emendationis(ambitus->piscina,
-                    ZEPHYRUM, ZEPHYRUM));
+             SilvaToken* op;
+                    i32  columna_recta;
+            CatenaSedes* sedes;
+
+            op = part_op[i];
+
+            /* vindicare (etiam sine divergentia) */
+            si (ambitus->catena_ops)
+            {
+                sedes = (CatenaSedes*)xar_addere(
+                    ambitus->catena_ops);
+                si (sedes)
+                {
+                    sedes->linea    = op->linea;
+                    sedes->columna  = op->columna;
+                }
+            }
+
+            columna_recta = cadit ? part_scb[i] + I
+                : cb_maxima + I;
+            si (op->columna == columna_recta) perge;
+            _addere(ambitus->divergentiae, "catena-logica",
+                "comparatio catenae non ordinata", op->linea,
+                op->columna, (s32)op->columna,
+                (s32)columna_recta);
+            si (op->columna < columna_recta)
+            {
+                _emendare(ambitus->divergentiae, op->linea,
+                    op->columna, op->linea, op->columna,
+                    _textus_emendationis(ambitus->piscina,
+                        ZEPHYRUM, columna_recta - op->columna));
+            }
+            alioquin
+            {
+                /* tractio tolerans */
+                _emendare_tolerans(ambitus->divergentiae,
+                    op->linea, columna_recta, op->linea,
+                    op->columna,
+                    _textus_emendationis(ambitus->piscina,
+                        ZEPHYRUM, ZEPHYRUM));
+            }
         }
     }
 }
@@ -2608,8 +2741,7 @@ _si_censere (
         i32 cb;
 
         si (_extensio(nodus, ambitus->fons_princeps, &la, &ca,
-            &lb, &cb)
-            && clausum->linea > la)
+            &lb, &cb))
         {
             _spatium_continuationis_addere(ambitus, la, ca,
                 clausum->linea);
@@ -2705,8 +2837,7 @@ _nodum_percurrere (
                 i32 cb;
 
                 si (_extensio(nodus, ambitus->fons_princeps,
-                    &la, &ca, &lb, &cb)
-                    && clausum->linea > la)
+                    &la, &ca, &lb, &cb))
                 {
                     _spatium_continuationis_addere(ambitus,
                         la, ca, clausum->linea);
@@ -2740,8 +2871,7 @@ _nodum_percurrere (
                 i32 cb;
 
                 si (_extensio(nodus, ambitus->fons_princeps,
-                    &la, &ca, &lb, &cb)
-                    && clausum->linea > la)
+                    &la, &ca, &lb, &cb))
                 {
                     _spatium_continuationis_addere(ambitus,
                         la, ca, clausum->linea);
@@ -3106,6 +3236,353 @@ _continuationes_censere (
 
 
 /* ==================================================
+ * R16 fractura (FIX): linea longa in candidato optimo
+ * scinditur. Lexemata CRUDA (macro-honesta): candidati =
+ * SPATIA post virgulam / post '=' / ante operatorem
+ * binarium (positione: lexema prius operandum finit -
+ * '-' unarium exclusum). Electio: operator logicus
+ * profunditate minima (catenae ad &&/|| franguntur),
+ * aliter candidatus dextimus intra tectum cadens, nullo
+ * cadente sinistimus (cauda iteratione sequenti). Inden-
+ * tatio = sententia intima lineam continens, ca + IV -
+ * R11/R17 iteratione sequenti perficiunt. Nulla fractura:
+ * directivae et continuationes '\', lineae sine candidato
+ * (littera chordae sola), cauda commentarii sola trans-
+ * grediens (codex cadit; commentum intactum per
+ * contractum). Tectum = LXXII planum (porta: sub inden-
+ * tatione gravi tectum = ca + XL ut STML).
+ * ================================================== */
+
+#define FRACTURA_CANDIDATI_MAXIMI 64
+
+/* candidatus fracturae: index = lexema SPATIA in cruda;
+ * profunditas = parentheses relativa initio lineae; logicus = ante
+ * && aut ||; genus_proximi = operator sequens (COMMA/ASSIGNATIO =
+ * lexema prius: fractura post id) */
+nomen structura {
+                 i32 index;
+                 s32 profunditas;
+                 b32 logicus;
+    SilvaLexemaGenus genus_proximi;
+} FracturaCandidatus;
+
+/* gradus praecedentiae operatoris binarii (maior = artius ligat);
+ * ZEPHYRUM = non operator. Indentatio continuationis: candidatus
+ * artius quam operator lineam ducens ligans = gradus interior
+ * (+ IV), aliter idem gradus (catenae ad idem, argumenta ad idem) */
+interior i32
+_praecedentia (
+    SilvaLexemaGenus genus)
+{
+    commutatio (genus)
+    {
+        casus SILVA_LEX_VEL_VEL:            redde I;
+        casus SILVA_LEX_ET_ET:              redde II;
+        casus SILVA_LEX_BARRA:              redde III;
+        casus SILVA_LEX_CARET:              redde IV;
+        casus SILVA_LEX_AEQUALIS_AEQUALIS:
+        casus SILVA_LEX_NON_AEQUALIS:       redde VI;
+        casus SILVA_LEX_MINOR:
+        casus SILVA_LEX_MAIOR:
+        casus SILVA_LEX_MINOR_AEQUALIS:
+        casus SILVA_LEX_MAIOR_AEQUALIS:     redde VII;
+        casus SILVA_LEX_SINISTRORSUM:
+        casus SILVA_LEX_DEXTRORSUM:         redde VIII;
+        casus SILVA_LEX_PLUS:
+        casus SILVA_LEX_MINUS:              redde IX;
+        casus SILVA_LEX_SOLIDUS:
+        casus SILVA_LEX_PERCENTUM:          redde X;
+        ordinarius:                         redde ZEPHYRUM;
+    }
+}
+
+interior b32
+_operandum_finiens (
+    SilvaLexemaGenus genus)
+{
+    redde genus == SILVA_LEX_IDENTIFICATOR
+        || genus == SILVA_LEX_INTEGER
+        || genus == SILVA_LEX_FLOAT
+        || genus == SILVA_LEX_CHARACTER_LIT
+        || genus == SILVA_LEX_STRING_LIT
+        || genus == SILVA_LEX_PAREN_CLAUSA
+        || genus == SILVA_LEX_QUADRA_CLAUSA;
+}
+
+interior b32
+_commentum_est (
+    SilvaLexemaGenus genus)
+{
+    redde genus == SILVA_LEX_COMMENTUM_CLAUSUM
+        || genus == SILVA_LEX_COMMENTUM_LINEA;
+}
+
+/* sententia intima lineam continens: la maxima, pari la
+ * registrata postrema (ordo ambulationis = exterior prius);
+ * *ca == ZEPHYRUM post reditum = nulla */
+interior vacuum
+_sententiam_intimam_invenire (
+    Xar* sententiae,
+    i32  linea,
+    i32* la_exitus,
+    i32* ca_exitus)
+{
+    i32 n;
+    i32 i;
+
+    *la_exitus  = ZEPHYRUM;
+    *ca_exitus  = ZEPHYRUM;
+    n           = sententiae ? xar_numerus(sententiae) : (i32)ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i += I)
+    {
+        constans ContinuatioSpatium* s;
+
+        s = (constans ContinuatioSpatium*)xar_obtinere(
+            sententiae, i);
+        si (linea < s->la || linea > s->lb) perge;
+        si (s->la >= *la_exitus)
+        {
+            *la_exitus = s->la;
+            *ca_exitus = s->ca;
+        }
+    }
+}
+
+interior vacuum
+_fracturas_censere (
+    Piscina* piscina,
+        Xar* divergentiae,
+        Xar* cruda,
+        Xar* sententiae,
+        i32  tectum)
+{
+    i32 numerus_div;
+    i32 numerus;
+    i32 k;
+
+    numerus      = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
+    numerus_div  = xar_numerus(divergentiae);
+
+    per (k = ZEPHYRUM; k < numerus_div; k += I)
+    {
+        FormatorDivergentia* d;
+         FracturaCandidatus  candidati[FRACTURA_CANDIDATI_MAXIMI];
+                 SilvaToken* prius;
+                 SilvaToken* electum;
+           SilvaLexemaGenus  genus_primi;
+                        i32  n_cand;
+                        i32  i;
+                        i32  linea;
+                        i32  columna_primi;
+                        i32  finis_codicis;
+                        i32  ca;
+                        i32  la;
+                        i32  indentatio;
+                        i32  electus;
+                        b32  habet;
+                        b32  primum;
+                        b32  commentum_visum;
+                        b32  directiva;
+                        s32  profunditas;
+
+        d = (FormatorDivergentia*)xar_obtinere(divergentiae, k);
+        si (   strcmp(d->regula, "longitudo-lxxii") != ZEPHYRUM
+            || d->numerus_emendationum              != (i32)ZEPHYRUM)
+        {
+            perge;
+        }
+        linea = d->linea;
+
+        n_cand           = ZEPHYRUM;
+        prius            = NIHIL;
+        primum           = VERUM;
+        columna_primi    = ZEPHYRUM;
+        genus_primi      = SILVA_LEX_EOF;
+        finis_codicis    = ZEPHYRUM;
+        commentum_visum  = FALSUM;
+        directiva        = FALSUM;
+        profunditas      = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < numerus; i += I)
+        {
+                  SilvaToken* t;
+            SilvaLexemaGenus  g;
+
+            t = _lexema(cruda, i);
+            g = t->genus;
+            /* linea prior continuata ('\') = corpus macri */
+            si (t->linea == linea - I && g == SILVA_LEX_CONTINUATIO)
+            {
+                directiva = VERUM;
+            }
+            si (t->linea < linea) perge;
+            si (   t->linea > linea || g == SILVA_LEX_NOVA_LINEA
+                || g == SILVA_LEX_EOF)
+            {
+                frange;
+            }
+            si (g == SILVA_LEX_CONTINUATIO)
+            {
+                directiva = VERUM;
+                frange;
+            }
+            si (_commentum_est(g))
+            {
+                commentum_visum = VERUM;
+                perge;
+            }
+            si (g == SILVA_LEX_SPATIA || g == SILVA_LEX_TABULAE)
+            {
+                SilvaToken* proximum;
+
+                si (   prius  == NIHIL || commentum_visum
+                    || i + I  >= numerus
+                    || n_cand >= (i32)FRACTURA_CANDIDATI_MAXIMI)
+                {
+                    perge;
+                }
+                proximum = _lexema(cruda, i + I);
+                si (   proximum->linea != linea
+                    || _commentum_est(proximum->genus)
+                    || proximum->genus == SILVA_LEX_NOVA_LINEA
+                    || proximum->genus == SILVA_LEX_CONTINUATIO
+                    || proximum->genus == SILVA_LEX_SPATIA
+                    || proximum->genus == SILVA_LEX_TABULAE
+                    || proximum->genus == SILVA_LEX_EOF)
+                {
+                    perge;
+                }
+                si (   prius->genus == SILVA_LEX_COMMA
+                    || prius->genus == SILVA_LEX_ASSIGNATIO)
+                {
+                    candidati[n_cand].index          = i;
+                    candidati[n_cand].profunditas    = profunditas;
+                    candidati[n_cand].logicus        = FALSUM;
+                    candidati[n_cand].genus_proximi  = prius->genus;
+                    n_cand                           += I;
+                }
+                alioquin si (   _operator_ducibilis(proximum->genus)
+                             && _operandum_finiens(prius->genus))
+                {
+                    candidati[n_cand].index        = i;
+                    candidati[n_cand].profunditas  = profunditas;
+                    candidati[n_cand].logicus       =
+                        proximum->genus == SILVA_LEX_ET_ET
+                        || proximum->genus == SILVA_LEX_VEL_VEL;
+                    candidati[n_cand].genus_proximi =
+                        proximum->genus;
+                    n_cand += I;
+                }
+                perge;
+            }
+
+            /* lexema codicis */
+            si (primum)
+            {
+                primum         = FALSUM;
+                columna_primi  = t->columna;
+                genus_primi    = g;
+                si (g == SILVA_LEX_CANCELLUM)
+                {
+                    directiva = VERUM;
+                    frange;
+                }
+            }
+            si (!commentum_visum)
+            {
+                finis_codicis = t->columna + t->valor.mensura - I;
+            }
+            si (   g == SILVA_LEX_PAREN_APERTA
+                || g == SILVA_LEX_QUADRA_APERTA
+                || g == SILVA_LEX_BRACE_APERTA)
+            {
+                profunditas += I;
+            }
+            alioquin si (   g == SILVA_LEX_PAREN_CLAUSA
+                         || g == SILVA_LEX_QUADRA_CLAUSA
+                         || g == SILVA_LEX_BRACE_CLAUSA)
+            {
+                profunditas -= I;
+            }
+            prius = t;
+        }
+
+        si (   directiva || n_cand == (i32)ZEPHYRUM
+            || finis_codicis <= tectum)
+        {
+            perge;
+        }
+
+        /* electio I: logici cadentes - profunditas minima, tum
+         * dextimus */
+        habet    = FALSUM;
+        electus  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < n_cand; i += I)
+        {
+            SilvaToken* t;
+
+            si (!candidati[i].logicus) perge;
+            t = _lexema(cruda, candidati[i].index);
+            si (t->columna - I > tectum) perge;
+            si (   !habet
+                || candidati[i].profunditas
+                    < candidati[electus].profunditas
+                || (candidati[i].profunditas
+                        == candidati[electus].profunditas
+                    && t->columna
+                        > _lexema(cruda,
+                            candidati[electus].index)->columna))
+            {
+                habet    = VERUM;
+                electus  = i;
+            }
+        }
+        /* electio II: quilibet cadens dextimus (ordo = columnae) */
+        si (!habet)
+        {
+            per (i = ZEPHYRUM; i < n_cand; i += I)
+            {
+                si (_lexema(cruda, candidati[i].index)->columna - I
+                    <= tectum)
+                {
+                    habet    = VERUM;
+                    electus  = i;
+                }
+            }
+        }
+        /* electio III: nullus cadit - sinistimus */
+        si (!habet) electus = ZEPHYRUM;
+
+        /* indentatio: linea prima sententiae -> ca + IV; linea
+         * continuata -> gradus suus, nisi candidatus artius ligat
+         * quam operator lineam ducens (comparatio intra ramum
+         * catenae ||) -> gradus interior (+ IV). Sine sententia
+         * (parsura fracta, membra, tabulae) linea ipsa ancora. */
+        _sententiam_intimam_invenire(sententiae, linea, &la, &ca);
+        si (ca == (i32)ZEPHYRUM || la == linea)
+        {
+            si (ca == (i32)ZEPHYRUM) ca = columna_primi;
+            indentatio = ca + IV - I;
+        }
+        alioquin
+        {
+            indentatio = columna_primi - I;
+            si (_praecedentia(candidati[electus].genus_proximi)
+                > _praecedentia(genus_primi))
+            {
+                indentatio += IV;
+            }
+        }
+        electum = _lexema(cruda, candidati[electus].index);
+        _emendationem_ponere(d, linea, electum->columna, linea,
+            electum->columna + electum->valor.mensura,
+            _textus_emendationis(piscina, I, indentatio), FALSUM);
+        d->nuntius = "linea nimis longa - frangibilis";
+    }
+}
+
+
+/* ==================================================
  * ambitus nominatus (-intra): extenta functionum
  * titulo datarum; divergentiae extra ea cadunt
  * ================================================== */
@@ -3252,11 +3729,16 @@ formator_lint_intra (
              Xar* divergentiae;
              Xar* cruda;
              Xar* extenta_intra;
+             Xar* sententiae;
+    constans i32* longitudines;
     SilvaParsura* parsura;
              i32  numerus;
+             i32  numerus_linearum;
              i32  i;
 
-    extenta_intra = NIHIL;
+    extenta_intra     = NIHIL;
+    sententiae        = NIHIL;
+    numerus_linearum  = ZEPHYRUM;
     si (intra)
     {
         si (intra->inventae)
@@ -3274,6 +3756,9 @@ formator_lint_intra (
     divergentiae = xar_creare(piscina,
         magnitudo(FormatorDivergentia));
     si (!divergentiae || !fons) redde divergentiae;
+    longitudines = _longitudines_metiri(piscina, fons, mensura,
+        &numerus_linearum);
+    si (!longitudines) redde NIHIL;
 
     cruda    = silva_lexare_cruda(piscina, fons, mensura, ZEPHYRUM);
     numerus  = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
@@ -3410,7 +3895,8 @@ formator_lint_intra (
         }
     }
 
-    _longitudinem_censere(divergentiae, fons, mensura);
+    _longitudinem_censere(divergentiae, longitudines,
+        numerus_linearum);
     _finem_censere(piscina, divergentiae, fons, mensura);
     _intervalla_censere(piscina, divergentiae, cruda);
     _inclusiones_ordinem_censere(divergentiae, cruda);
@@ -3441,9 +3927,13 @@ formator_lint_intra (
             magnitudo(ContinuatioSpatium));
         ambitus.catena_ops     = xar_creare(piscina,
             magnitudo(CatenaSedes));
-        radix             = parsura->commissio->radix;
-        lb_prior          = ZEPHYRUM;
-        lb_radicis_prior  = ZEPHYRUM;
+        ambitus.sententiae     = xar_creare(piscina,
+            magnitudo(ContinuatioSpatium));
+        ambitus.longitudines      = longitudines;
+        ambitus.numerus_linearum  = numerus_linearum;
+        radix                     = parsura->commissio->radix;
+        lb_prior                  = ZEPHYRUM;
+        lb_radicis_prior          = ZEPHYRUM;
 
         si (radix.genus == SILVA_VALOR_LISTA)
         {
@@ -3585,7 +4075,13 @@ formator_lint_intra (
 
         _continuationes_censere(piscina, divergentiae, cruda,
             ambitus.continuationes);
+        sententiae = ambitus.sententiae;
     }
+
+    /* R16 fractura post arborem (sententiae) - parsura fracta =
+     * sententiae nullae, indentatio ex linea ipsa */
+    _fracturas_censere(piscina, divergentiae, cruda, sententiae,
+        (i32)LONGITUDO_RECTA);
 
     si (intra)
     {

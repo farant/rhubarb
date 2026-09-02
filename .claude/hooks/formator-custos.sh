@@ -30,10 +30,11 @@ esac
 
 OUT=$(cd "$RADIX" && ./silva/formator.sh "$REL" -machina 2>/dev/null)
 
-# regulae fixabiles solae (gradus lint-perpetuus omissus)
+# regulae fixabiles solae (gradus lint-perpetuus omissus; longitudo
+# FRANGIBILIS fixabilis est - nuntius eam signat, 2026-09-01)
 ROWS=$(printf '%s\n' "$OUT" | awk -F'\t' \
     '$1!~/^#/ && NF>=7 \
-     && $4!="longitudo-lxxii" \
+     && ($4!="longitudo-lxxii" || $7 ~ /frangibilis/) \
      && $4!="vexillum-quinquaginta" \
      && $4!="ordo-inclusionum" {
         print $2":"$3" ["$4"] "$7" ("$5" pro "$6")"

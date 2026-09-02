@@ -833,3 +833,64 @@ Found on the way:
 - A scope smaller than a function (a section inside a probatio's
   principale) still needs the scratch-copy splice. Door: block or
   section scope.
+
+## 2026-09-01 — Custodia LXXII glomerum + fractura linearum (R16 becomes FIX)
+
+Roadmap item II of 01M1FMEKZG, guard first. Reproduced yesterday's
+"-scribere CREATES long lines" on scratch copies: legatus.c 0 → 19
+(R7 pushed struct members whose TRAILING COMMENTS then crossed 72),
+semantica.c 17 → 80 (R17 part A's three spaces and part C's
+comparison alignment on lines carrying several operands). Both
+guards were measuring the wrong thing: R17 C used the ramus extent,
+R7 had nothing. Fix: a per-line length table on the walk context
+(`_longitudines_metiri`, `_longitudo_lineae`; R16 now reads it too),
+and the guard measures the WHOLE line plus the shift. R7: cluster
+falls, one LINT-only row names the widest member ("glomus non
+ordinatum: ordinatio LXXII excederet"). R17 A: skipped when it
+would overflow (the wrapper breaks the line first, A applies next
+iteration). R17 C: restructured into collect / decide / emit, with
+R9's cluster-level `cadit` → every participant at its own cb + 1.
+The predicate is spacing-independent (shift = target − present), so
+it cannot oscillate. Real files after: legatus 0 → 0, semantica
+17 → 14 (survivors: comment tails, `casus X: redde ...` with no
+candidate, an identifier wider than the remaining width).
+
+Wrapper: the `longitudo-lxxii` divergence carries its own emendation
+when a break exists (`_fracturas_censere`, after the tree walk) —
+detector IS the fixer, and the message becomes "linea nimis longa -
+frangibilis" so the post-edit hook can nudge it while plain residuals
+stay silent. Candidates come from the RAW token stream (macro-honest,
+positions never lie): a SPATIA after a comma, after `=`, or before a
+binary operator whose previous token ends an operand (so unary `-`
+never qualifies). Choice: logical operators first, at the outermost
+paren depth on the line, rightmost that fits; otherwise the rightmost
+candidate that fits; nothing fits → leftmost (the tail is judged
+again next iteration). No break on directive lines, `\`-continued
+lines, lines without a candidate (a lone string literal), or when
+only a comment tail crosses 72. Continuation indent: first line of
+the statement → anchor + 4 (the innermost registered statement,
+single-line statements now registered too, `ambitus->sententiae`);
+a continuation line keeps its own indent unless the break operator
+binds tighter than the operator leading the line (a `==` inside an
+`||` operand steps in by 4). Argument tails stay at one level across
+several breaks; `+` chains stay level. R11/R17 finish the layout on
+the next iteration — composition through iteration, as designed.
+
+Gates: 17 measured fixtures pinned in two probatio sections (guard:
+struct with comment tails, chain first line exactly 72, cluster
+overflow at 70 vs. its non-overflowing twin at 55; wrapper: call
+args, chain, declaration init, depth preference, double break,
+nothing-fits, or-chain operand, plus-chain, and the four no-break
+cases). Planted faults: wrapper disarmed → 20 red; R7 guard → 4;
+R17 C guard → 2. differre on both real-file writes: 0 substantiva,
+0 documentaria, 141 / 313 cosmetica.
+
+The feature caught its author: `-delta` on the machine file flagged
+my new candidate struct — two 74-column comment tails and the guard
+row on its own cluster. Comments moved above the struct.
+
+Doors: tectum = anchor + 40 under deep indentation (STML's rule,
+`gradus * II + XL`, floor 72) — Fran wants fixtures at deep indent
+first, then the rule; `casus X:` label as a break candidate; `?:`
+as candidates; a scope smaller than a function for the probatio
+sections (scratch splice again).
