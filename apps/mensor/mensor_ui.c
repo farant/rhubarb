@@ -34,7 +34,9 @@
 interior b32 _imago_facta = FALSUM;
 
 interior vacuum
-_imago_tractare (vacuum* datum, b32 successus)
+_imago_tractare (
+    vacuum* datum,
+       b32  successus)
 {
     (vacuum)datum;
     si (!successus)
@@ -49,7 +51,10 @@ _imago_tractare (vacuum* datum, b32 successus)
  * stat - vitium quod fenestram tacite aperiebat cum '-json' post
  * '-volumen X' veniret. */
 interior b32
-_vexillum (integer argc, character** argv, constans character* clavis)
+_vexillum (
+               integer   argc,
+             character** argv,
+    constans character*  clavis)
 {
     integer i;
 
@@ -65,7 +70,10 @@ _vexillum (integer argc, character** argv, constans character* clavis)
 }
 
 interior constans character*
-_arg (integer argc, character** argv, constans character* clavis)
+_arg (
+               integer   argc,
+             character** argv,
+    constans character*  clavis)
 {
     integer i;
 
@@ -82,7 +90,10 @@ _arg (integer argc, character** argv, constans character* clavis)
 
 /* Lineam TSV in campos secare. Redde numerum camporum. */
 interior i32
-_campos (chorda datum, chorda* campi, i32 maximum)
+_campos (
+    chorda  datum,
+    chorda* campi,
+       i32  maximum)
 {
     i32 numerus, initium, i;
 
@@ -97,8 +108,8 @@ _campos (chorda datum, chorda* campi, i32 maximum)
             {
                 frange;
             }
-            campi[numerus].datum   = datum.datum + initium;
-            campi[numerus].mensura = i - initium;
+            campi[numerus].datum    = datum.datum + initium;
+            campi[numerus].mensura  = i - initium;
             numerus++;
             initium = i + I;
         }
@@ -110,11 +121,14 @@ _campos (chorda datum, chorda* campi, i32 maximum)
 /* Numerum ex campo RELEGERE et REEMITTERE: ita JSON validum esse
  * garantitur etiam si actum aliquando corruptum sit */
 interior vacuum
-_numerum (ChordaAedificator* a, chorda campus, b32 integrum)
+_numerum (
+    ChordaAedificator* a,
+               chorda  campus,
+                  b32  integrum)
 {
-    character tabula[LXIV];
+    character  tabula[LXIV];
     character* finis;
-    duplex     valor;
+       duplex  valor;
 
     si (campus.mensura == ZEPHYRUM || campus.mensura >= (i32)LXIV)
     {
@@ -144,8 +158,11 @@ _numerum (ChordaAedificator* a, chorda campus, b32 integrum)
 }
 
 interior vacuum
-_par (ChordaAedificator* a, constans character* clavis, chorda valor,
-      b32 primus)
+_par (
+     ChordaAedificator* a,
+    constans character* clavis,
+                chorda  valor,
+                   b32  primus)
 {
     si (!primus)
     {
@@ -162,12 +179,14 @@ _par (ChordaAedificator* a, constans character* clavis, chorda valor,
  * _datum_struere - Acta in JSON vertere
  */
 interior chorda
-_datum_struere (Volumen* volumen, Piscina* piscina)
+_datum_struere (
+    Volumen* volumen,
+    Piscina* piscina)
 {
     ChordaAedificator* a;
-    Xar*               acta;
-    i32                index;
-    b32                primus;
+                  Xar* acta;
+                  i32  index;
+                  b32  primus;
 
     a = chorda_aedificator_creare(piscina, (memoriae_index)(XVI * M));
     si (a == NIHIL)
@@ -185,8 +204,8 @@ _datum_struere (Volumen* volumen, Piscina* piscina)
         per (index = ZEPHYRUM; index < xar_numerus(acta); index++)
         {
             VolumenActum* actum;
-            chorda        campi[CAMPI_MAXIMI];
-            i32           numerus;
+                  chorda  campi[CAMPI_MAXIMI];
+                     i32  numerus;
 
             actum = (VolumenActum*)xar_obtinere(acta, index);
             si (!chorda_aequalis_literis(actum->genus, "sessio"))
@@ -222,8 +241,8 @@ _datum_struere (Volumen* volumen, Piscina* piscina)
         per (index = ZEPHYRUM; index < xar_numerus(acta); index++)
         {
             VolumenActum* actum;
-            chorda        campi[CAMPI_MAXIMI];
-            i32           numerus;
+                  chorda  campi[CAMPI_MAXIMI];
+                     i32  numerus;
 
             actum = (VolumenActum*)xar_obtinere(acta, index);
             si (!chorda_aequalis_literis(actum->genus, "mensura"))
@@ -262,19 +281,21 @@ _datum_struere (Volumen* volumen, Piscina* piscina)
 }
 
 integer
-main (integer argc, character** argv)
+main (
+      integer   argc,
+    character** argv)
 {
-    Piscina*             piscina;
-    constans character*  via;
-    Volumen*             volumen;
-    chorda               datum;
-    AtriumConfiguratio   figura;
-    Atrium*              atrium;
-    chorda               causa;
-    ChordaAedificator*   iniectio;
-    character            tabula_viae[DXII];
-    constans character*  imago_via;
-    s32                  mora_picturae;   /* SIGNATUM: -I = nondum petita */
+               Piscina* piscina;
+    constans character* via;
+               Volumen* volumen;
+                chorda  datum;
+    AtriumConfiguratio  figura;
+                Atrium* atrium;
+                chorda  causa;
+     ChordaAedificator* iniectio;
+             character  tabula_viae[DXII];
+    constans character* imago_via;
+                   s32  mora_picturae;   /* SIGNATUM: -I = nondum petita */
 
     piscina = piscina_generare_dynamicum("mensor_ui", M * M * XVI);
     si (piscina == NIHIL)
@@ -301,7 +322,8 @@ main (integer argc, character** argv)
     {
         fprintf(stderr,
                 "mensor_ui: volumen aperiri non potest: %s\n"
-                "  (curre ./compile_tests.sh ut mensurae fiant)\n", via);
+                "  (curre ./compile_tests.sh ut mensurae fiant)\n",
+                via);
         piscina_destruere(piscina);
         redde I;
     }
@@ -324,11 +346,11 @@ main (integer argc, character** argv)
      * uno vocamine, ordine recto (vide atrium.h). Quod hic NON est
      * mensura est: ~LXX lineae quas quaeque app vitreae describebat. */
     memset(&figura, 0, magnitudo(figura));
-    figura.titulus       = "mensor";
-    figura.latitudo      = 1000;
-    figura.altitudo      = 760;
-    figura.capsula       = &capsula_mensor;
-    figura.via_initialis = "index.html";
+    figura.titulus        = "mensor";
+    figura.latitudo       = 1000;
+    figura.altitudo       = 760;
+    figura.capsula        = &capsula_mensor;
+    figura.via_initialis  = "index.html";
     /* Tictus CELER de industria: ordinarius atrii CC ms est, sed
      * -imago numerationem tictuum ut moram adhibet, et haec facies
      * nihil computat quod tardius pulsare mereatur. */
@@ -360,7 +382,8 @@ main (integer argc, character** argv)
      * recargatio post interitum processus interretialis eam NON amittit
      * (quod codex prior amittebat, sed nemo vidit quia datum mensoris
      * numquam mutatur). */
-    iniectio = chorda_aedificator_creare(piscina, (memoriae_index)(XVI * M));
+    iniectio = chorda_aedificator_creare(piscina,
+        (memoriae_index)(XVI * M));
     chorda_aedificator_appendere_literis(iniectio, "window.MENSURAE=");
     chorda_aedificator_appendere_chorda(iniectio, datum);
     chorda_aedificator_appendere_literis(
@@ -369,8 +392,8 @@ main (integer argc, character** argv)
     atrium_iniectionem_ponere(atrium,
         chorda_aedificator_spectare(iniectio));
 
-    imago_via     = _arg(argc, argv, "-imago");
-    mora_picturae = (s32)(-I);
+    imago_via      = _arg(argc, argv, "-imago");
+    mora_picturae  = (s32)(-I);
 
     atrium_monstrare(atrium);
 
@@ -380,7 +403,7 @@ main (integer argc, character** argv)
 
         /* Paginam pingere sinere ANTE photographiam: iniectio
          * synchrona non est */
-        si ((actum & (i32)ATRIUM_ACTUM_PARATA) != ZEPHYRUM
+        si (   (actum & (i32)ATRIUM_ACTUM_PARATA) != ZEPHYRUM
             && imago_via != NIHIL && mora_picturae < ZEPHYRUM)
         {
             mora_picturae = (s32)X;
