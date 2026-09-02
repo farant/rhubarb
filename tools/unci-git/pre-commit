@@ -22,6 +22,9 @@
 # Arbor operis ab indice differens (commissio partialis): examen DISCUM
 # legit, ergo ARBOR iudicatur et monetur.
 #
+# SCRIPTURA AUTOMATICA formae (2026-09-01): functiones mutatae per
+# formator -lineae formantur et index reponitur - vide sectionem infra.
+#
 # Evasio: git commit --no-verify (causam in nuntio commissionis nota).
 # Porta natalis: ./tools/unci-git/fumus.sh (plantat REICE, exspectat
 # obstare - via explicita ET via indicis).
@@ -42,6 +45,41 @@ fi
 if [ -z "$VIAE" ]; then
     echo "examen (pre-commit): nulla plagula .c/.m in commissione - nihil iudicatum" >&2
     exit 0
+fi
+
+# ---- formator: SCRIPTURA AUTOMATICA intra functiones mutatas ----
+# CUR: forma non est res cui editor attendat. Lineae mutatae (git diff
+# --cached -U0) -> functiones radicis (formator -lineae) -> scriptura
+# intra eas solas (baseline plagulae communis intacta), index repositus.
+# Plagula nova (extra HEAD) = scriptura tota (baseline vacua).
+# Arbor operis ab indice differens (commissio partialis) NON formatur
+# - monetur (scriptura arboris alia in indicem traheret). Lineae extra
+# functiones (structurae, tabulae) monentur, non formantur (porta:
+# post evolutionem totam scriptura tota). Modus UNCUS_VIAE (probatio
+# viarum explicitarum) non format.
+if [ -z "${UNCUS_VIAE:-}" ]; then
+    for via in $(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/'); do
+        [ -f "$via" ] || continue
+        if [ -n "$(git diff --name-only -- "$via" 2>/dev/null)" ]; then
+            echo "formator (pre-commit): $via NON formata - arbor operis ab indice differt (commissio partialis)" >&2
+            continue
+        fi
+        if git cat-file -e "HEAD:$via" 2>/dev/null; then
+            rangae=$(git diff --cached -U0 -- "$via" 2>/dev/null | awk '/^@@/ {
+                split($3, p, /[+,]/); a = p[2]; n = (p[3] == "" ? 1 : p[3]);
+                if (n > 0) printf "-lineae %d-%d ", a, a + n - 1 }')
+            [ -z "$rangae" ] && continue
+            fout=$(./silva/formator.sh "$via" -scribere $rangae 2>&1 >/dev/null)
+        else
+            fout=$(./silva/formator.sh "$via" -scribere 2>&1 >/dev/null)
+        fi
+        if printf '%s\n' "$fout" | grep -q 'formator: scriptum'; then
+            git add -- "$via"
+            echo "formator (pre-commit): $via FORMATA intra functiones mutatas, index repositus" >&2
+        fi
+        printf '%s\n' "$fout" | grep -E 'extra functiones|recusat|ignota|maxime|malformata|fracta' | sed 's/^/  /' >&2 || true
+    done
 fi
 
 EXCL="silva/probationes/fixa/examinis/exclusiones.txt"

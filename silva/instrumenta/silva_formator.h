@@ -117,6 +117,26 @@ formator_lint_intra (
                        i32  mensura,
     constans FormatorIntra* intra);
 
+/* Extenta functionum radicis (definitiones et prototypa vera) ordine
+ * fontis - IDEM ambitus quem -intra iudicat: a linea post nodum
+ * radicis priorem (commentarium ducens, intervalla supra) ad lineam
+ * ultimam. Consumptor: -lineae (uncus commissionis: lineae mutatae ->
+ * functiones nominatae -> scriptura intra eas). Xar de
+ * FormatorExtentum; vacuum si parsura fracta; NIHIL si piscina. */
+nomen structura {
+    chorda titulus;
+       i32 linea_a;
+       i32 linea_b;
+       b32 definitio;   /* VERUM = definitio, FALSUM = prototypum */
+} FormatorExtentum;
+
+Xar*
+formator_extenta (
+               Piscina* piscina,
+        SilvaContextus* contextus,
+    constans character* fons,
+                   i32  mensura);
+
 FormatorScriptum
 formator_scribere_intra (
                    Piscina* piscina,

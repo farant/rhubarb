@@ -4343,6 +4343,76 @@ formator_lint (
         NIHIL);
 }
 
+Xar*
+formator_extenta (
+               Piscina* piscina,
+        SilvaContextus* contextus,
+    constans character* fons,
+                   i32  mensura)
+{
+             Xar* extenta;
+    SilvaParsura* parsura;
+      SilvaValor  radix;
+             i32  lb_prior;
+             i32  n;
+             i32  j;
+
+    extenta = xar_creare(piscina, magnitudo(FormatorExtentum));
+    si (!extenta || !fons) redde extenta;
+    si (contextus == NIHIL)
+    {
+        contextus = silva_contextus_creare(piscina);
+        si (contextus == NIHIL) redde extenta;
+        silva_contextus_latinam_addere(contextus);
+    }
+    parsura = silva_c89_parsare_cum_contextu(piscina, contextus,
+        "extenta", fons, mensura, NIHIL);
+    si (   !parsura || !parsura->successus
+        || parsura->numerus_errorum != ZEPHYRUM || !parsura->commissio)
+    {
+        redde extenta;
+    }
+    radix = parsura->commissio->radix;
+    si (radix.genus != SILVA_VALOR_LISTA) redde extenta;
+
+    lb_prior  = ZEPHYRUM;
+    n         = silva_valor_lista_numerus(radix);
+    per (j = ZEPHYRUM; j < n; j += I)
+    {
+        SilvaValor* elementum;
+        SilvaNodus* nodus_radicis;
+        SilvaToken* titulus;
+               i32  la;
+               i32  ca;
+               i32  lb;
+               i32  cb;
+
+        elementum      = silva_valor_lista_obtinere(radix, j);
+        nodus_radicis  = elementum ? _valor_nodus(*elementum) : NIHIL;
+        si (!nodus_radicis) perge;
+        si (!_extensio(nodus_radicis, parsura->fons_princeps, &la,
+            &ca, &lb, &cb))
+        {
+            perge;
+        }
+        titulus = _titulus_radicis(nodus_radicis);
+        si (titulus)
+        {
+            FormatorExtentum* x;
+
+            x = (FormatorExtentum*)xar_addere(extenta);
+            si (!x) redde NIHIL;
+            x->titulus = titulus->valor;
+            x->linea_a = lb_prior + I;
+            x->linea_b = lb;
+            x->definitio = nodus_radicis->genus
+                == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS;
+        }
+        lb_prior = lb;
+    }
+    redde extenta;
+}
+
 /* ==================================================
  * G2 -scribere: applicatio emendationum ad punctum
  * fixum. Applicator caecus et suspiciosus: octetos

@@ -2,7 +2,13 @@
  *
  * Usus:
  *   formator <via.c> [viae ...] [-machina] [-scribere]
- *            [-intra functio ...]
+ *            [-intra functio ...] [-lineae a-b ...]
+ *
+ * -lineae a-b: ambitus per lineas - functiones radicis quarum
+ * extentum lineas tangit nominantur (formator_extenta) et ut -intra
+ * iudicantur; lineae extra functiones (structurae, tabulae) MONENTUR,
+ * non formantur; nihil intra functiones = plagula intacta (exitus 0).
+ * Consumptor: uncus commissionis (lineae mutatae ex git diff).
  *
  * -intra: ambitus nominatus - lint et scriptura intra extenta
  * functionum datarum SOLA (definitio cum commentario ducente et
@@ -39,11 +45,11 @@
  * sine hoc R7 ordines typorum ignotorum exemptos facit) */
 interior vacuum
 _capita_praebere (
-     SilvaContextus* contextus,
-           Piscina* piscina,
+        SilvaContextus* contextus,
+               Piscina* piscina,
     constans character* directorium)
 {
-    DirectoriumIterator*  iter;
+     DirectoriumIterator* iter;
     DirectoriumIntroitus* introitus;
 
     iter = directorium_iterator_aperire(directorium, piscina);
@@ -59,9 +65,9 @@ _capita_praebere (
 
         si (introitus->genus != INTROITUS_FILUM) perge;
         n = introitus->titulus.mensura;
-        si (n < (i32)II || n >= (i32)255
+        si (   n < (i32)II || n >= (i32)255
             || introitus->titulus.datum[n - II] != '.'
-            || introitus->titulus.datum[n - I] != 'h')
+            || introitus->titulus.datum[n - I]  != 'h')
         {
             perge;
         }
@@ -84,26 +90,27 @@ _capita_praebere (
     "silva/probationes/fixa/formatoris/exclusiones.txt"
 
 #define INTRA_MAXIMAE 64
+#define LINEAE_MAXIMAE 256
 
 /* exclusiones: via<TAB>causa (radici-relativae); '#' et lineae
  * vacuae omissae. Exemptio numquam tacita - vocator clamat. */
 interior b32
 _exempta (
-              chorda  exclusiones,
+                chorda  exclusiones,
     constans character* via,
-              chorda* causa_exitus)
+                chorda* causa_exitus)
 {
-    i8* datum;
-    i32 n;
-    i32 i;
-    i32 via_mensura;
+     i8* datum;
+    i32  n;
+    i32  i;
+    i32  via_mensura;
 
     dum (via[ZEPHYRUM] == '.' && via[I] == '/') via += II;
     via_mensura = (i32)strlen(via);
 
-    datum = exclusiones.datum;
-    n     = exclusiones.mensura;
-    i     = ZEPHYRUM;
+    datum  = exclusiones.datum;
+    n      = exclusiones.mensura;
+    i      = ZEPHYRUM;
 
     dum (i < n)
     {
@@ -113,21 +120,21 @@ _exempta (
 
         initium = i;
         dum (i < n && datum[i] != '\n') i += I;
-        finis_lineae = i;
-        i += I;
+        finis_lineae  = i;
+        i             += I;
 
         si (finis_lineae == initium) perge;
         si (datum[initium] == '#') perge;
 
         positus_tab = initium;
-        dum (positus_tab < finis_lineae
-            && datum[positus_tab] != '\t')
+        dum (   positus_tab < finis_lineae
+             && datum[positus_tab] != '\t')
         {
             positus_tab += I;
         }
         si (positus_tab == finis_lineae) perge;
 
-        si (positus_tab - initium == via_mensura
+        si (   positus_tab - initium == via_mensura
             && memcmp(datum + initium, via,
                 (memoriae_index)via_mensura) == ZEPHYRUM)
         {
@@ -213,6 +220,11 @@ principale (
                        b32  inventae_intra[INTRA_MAXIMAE];
              FormatorIntra  intra;
     constans FormatorIntra* ambitus_intra;
+    constans FormatorIntra* ambitus_globalis;
+             FormatorIntra  intra_plagulae;
+                       i32  lineae_a[LINEAE_MAXIMAE];
+                       i32  lineae_b[LINEAE_MAXIMAE];
+                       i32  numerus_lineae;
                        i32  numerus_intra;
                        b32  machina;
                        b32  scriptura;
@@ -221,12 +233,13 @@ principale (
                        i32  summa;
                    integer  i;
 
-    machina        = FALSUM;
-    scriptura      = FALSUM;
-    recusatio      = FALSUM;
-    ulla_plagula   = FALSUM;
-    summa          = ZEPHYRUM;
-    numerus_intra  = ZEPHYRUM;
+    machina         = FALSUM;
+    scriptura       = FALSUM;
+    recusatio       = FALSUM;
+    ulla_plagula    = FALSUM;
+    summa           = ZEPHYRUM;
+    numerus_intra   = ZEPHYRUM;
+    numerus_lineae  = ZEPHYRUM;
 
     per (i = I; i < numerus; i += I)
     {
@@ -255,15 +268,41 @@ principale (
                 (i32)strlen(argumenta[i]);
             numerus_intra += I;
         }
+        si (strcmp(argumenta[i], "-lineae") == ZEPHYRUM)
+        {
+            insignatus integer a;
+            insignatus integer b;
+                       integer lecta;
+
+            si (   i + I          >= numerus
+                || numerus_lineae >= (i32)LINEAE_MAXIMAE)
+            {
+                fprintf(stderr, "formator: -lineae a-b poscit"
+                    " (maxime %d)\n", (integer)LINEAE_MAXIMAE);
+                redde II;
+            }
+            i      += I;
+            lecta  = sscanf(argumenta[i], "%u-%u", &a, &b);
+            si (lecta < I || a == ZEPHYRUM)
+            {
+                fprintf(stderr, "formator: -lineae malformata:"
+                    " %s\n", argumenta[i]);
+                redde II;
+            }
+            si (lecta == I) b = a;
+            lineae_a[numerus_lineae]  = (i32)a;
+            lineae_b[numerus_lineae]  = (i32)(b < a ? a : b);
+            numerus_lineae            += I;
+        }
     }
 
-    ambitus_intra = NIHIL;
+    ambitus_globalis = NIHIL;
     si (numerus_intra > (i32)ZEPHYRUM)
     {
         intra.functiones  = functiones_intra;
         intra.numerus     = numerus_intra;
         intra.inventae    = inventae_intra;
-        ambitus_intra     = &intra;
+        ambitus_globalis  = &intra;
     }
 
     piscina = piscina_generare_dynamicum("formator", 67108864);
@@ -303,7 +342,8 @@ principale (
                     chorda  textus;
 
         via = argumenta[i];
-        si (strcmp(via, "-intra") == ZEPHYRUM)
+        si (   strcmp(via, "-intra")  == ZEPHYRUM
+            || strcmp(via, "-lineae") == ZEPHYRUM)
         {
             i += I;
             perge;
@@ -351,6 +391,98 @@ principale (
                 redde II;
             }
             textus = filum_legere_totum(via, opus);
+
+            /* -lineae -> nomina: extenta per parsuram unam, lineae
+             * in functiones resolutae ANTE passum punctum-fixum
+             * (lineae labuntur, nomina manent) */
+            ambitus_intra = ambitus_globalis;
+            si (numerus_lineae > (i32)ZEPHYRUM)
+            {
+                   Xar* extenta;
+                chorda* tituli;
+                   b32* inventae;
+                   i32  n_ext;
+                   i32  n_tit;
+                   i32  r;
+                   i32  e;
+
+                extenta = formator_extenta(opus, contextus,
+                    (constans character*)textus.datum,
+                    textus.mensura);
+                n_ext = extenta ? xar_numerus(extenta)
+                    : (i32)ZEPHYRUM;
+                tituli = (chorda*)piscina_allocare(opus,
+                    (memoriae_index)(n_ext + numerus_intra + I)
+                        * magnitudo(chorda));
+                inventae = (b32*)piscina_allocare(opus,
+                    (memoriae_index)(n_ext + numerus_intra + I)
+                        * magnitudo(b32));
+                si (!tituli || !inventae)
+                {
+                    fprintf(stderr, "formator: piscina fracta\n");
+                    piscina_destruere(opus);
+                    piscina_destruere(piscina);
+                    redde II;
+                }
+                n_tit = ZEPHYRUM;
+                per (e = ZEPHYRUM; e < numerus_intra; e += I)
+                {
+                    tituli[n_tit]  = functiones_intra[e];
+                    n_tit          += I;
+                }
+                per (r = ZEPHYRUM; r < numerus_lineae; r += I)
+                {
+                    b32 inventum;
+
+                    inventum = FALSUM;
+                    per (e = ZEPHYRUM; e < n_ext; e += I)
+                    {
+                        FormatorExtentum* x;
+                                     i32  t;
+
+                        x = (FormatorExtentum*)xar_obtinere(
+                            extenta, e);
+                        si (   x->linea_b < lineae_a[r]
+                            || x->linea_a > lineae_b[r])
+                        {
+                            perge;
+                        }
+                        inventum = VERUM;
+                        per (t = ZEPHYRUM; t < n_tit; t += I)
+                        {
+                            si (chorda_aequalis(tituli[t],
+                                x->titulus))
+                            {
+                                frange;
+                            }
+                        }
+                        si (t == n_tit)
+                        {
+                            tituli[n_tit]  = x->titulus;
+                            n_tit          += I;
+                        }
+                    }
+                    si (!inventum)
+                    {
+                        fprintf(stderr, "formator: %s lineae %u-%u"
+                            " extra functiones (structura/tabula?)"
+                            " - non formatae\n", via,
+                            (insignatus integer)lineae_a[r],
+                            (insignatus integer)lineae_b[r]);
+                    }
+                }
+                si (n_tit == (i32)ZEPHYRUM)
+                {
+                    fprintf(stderr, "formator: %s nihil intra"
+                        " functiones - intacta\n", via);
+                    piscina_destruere(opus);
+                    perge;
+                }
+                intra_plagulae.functiones  = tituli;
+                intra_plagulae.numerus     = n_tit;
+                intra_plagulae.inventae    = inventae;
+                ambitus_intra              = &intra_plagulae;
+            }
 
         si (scriptura)
         {
@@ -416,7 +548,8 @@ principale (
     si (!ulla_plagula)
     {
         fprintf(stderr, "usus: formator <via.c> [viae ...]"
-            " [-machina] [-scribere] [-intra functio ...]\n");
+            " [-machina] [-scribere] [-intra functio ...]"
+            " [-lineae a-b ...]\n");
         piscina_destruere(piscina);
         redde II;
     }

@@ -54,9 +54,10 @@ _divergentia (
         index);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_formatoris",
@@ -568,13 +569,13 @@ s32 principale (vacuum)
         /* DIFFERENTIALIS: typedef in capite praebito resolvitur
          * -> ordo fractus FLAGRAT (sine praebitione membrum
          * ambiguum exemptum esset et lint taceret) */
-        SilvaContextus* ctx;
+            SilvaContextus* ctx;
         constans character* caput;
         constans character* fons_probandus;
-        Xar* d;
+                       Xar* d;
 
-        caput = "nomen insignatus integer mensura_probanda;\n";
-        ctx = silva_contextus_creare(piscina);
+        caput  = "nomen insignatus integer mensura_probanda;\n";
+        ctx    = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL(ctx);
         CREDO_VERUM(silva_contextus_latinam_addere(ctx));
         CREDO_VERUM(silva_contextus_praebere(ctx,
@@ -837,8 +838,8 @@ s32 principale (vacuum)
             "    CUSTODI(a);\n"
             "    redde I;\n"
             "}\n";
-        FormatorScriptum s = _scribere(piscina, fons);
-        Xar* d = _lint(piscina, fons);
+        FormatorScriptum  s = _scribere(piscina, fons);
+                     Xar* d = _lint(piscina, fons);
 
         CREDO_AEQUALIS_I32((i32)xar_numerus(d), (i32)0);
         CREDO_VERUM(s.successus);
@@ -856,8 +857,8 @@ s32 principale (vacuum)
             "/* ================================================== */\n"
             "#include \"probandum.h\"\n"
             "i32 a;\n";
-        FormatorScriptum s = _scribere(piscina, fons);
-        Xar* d = _lint(piscina, fons);
+        FormatorScriptum  s = _scribere(piscina, fons);
+                     Xar* d = _lint(piscina, fons);
 
         CREDO_VERUM(s.successus);
         CREDO_FALSUM(s.mutatum);
@@ -1000,13 +1001,13 @@ s32 principale (vacuum)
     {
         /* typi dextre ordinati, stella in hiatu, tituli
          * sinistre - forma exemplaris Alvei */
-        SilvaContextus* ctx;
+            SilvaContextus* ctx;
         constans character* caput;
         constans character* fons;
-        FormatorScriptum s;
+          FormatorScriptum  s;
 
-        caput = "nomen insignatus integer mensura_probanda;\n";
-        ctx = silva_contextus_creare(piscina);
+        caput  = "nomen insignatus integer mensura_probanda;\n";
+        ctx    = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL(ctx);
         CREDO_VERUM(silva_contextus_latinam_addere(ctx));
         CREDO_VERUM(silva_contextus_praebere(ctx,
@@ -1232,13 +1233,13 @@ s32 principale (vacuum)
         /* compositio plena: R8 findit, R7 typos dextre
          * ordinat, stellam in hiatu ponit, titulos sinistre -
          * forma manuali exemplaris _allocare_interna */
-        SilvaContextus* ctx;
+            SilvaContextus* ctx;
         constans character* caput;
         constans character* fons;
-        FormatorScriptum s;
+          FormatorScriptum  s;
 
-        caput = "nomen insignatus integer i32;\n";
-        ctx = silva_contextus_creare(piscina);
+        caput  = "nomen insignatus integer i32;\n";
+        ctx    = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL(ctx);
         CREDO_VERUM(silva_contextus_latinam_addere(ctx));
         CREDO_VERUM(silva_contextus_praebere(ctx,
@@ -1390,9 +1391,9 @@ s32 principale (vacuum)
          * involucrum retiratum. Typus per lexicon planum visibilis:
          * stella prava + titulus pravus flagrant (ante sanationem:
          * ZEPHYRUM ordines, regio ambigua R7 caeca). */
-        SilvaContextus* ctx;
+            SilvaContextus* ctx;
         constans character* fons;
-        Xar* d;
+                       Xar* d;
 
         ctx = silva_contextus_creare(piscina);
         CREDO_NON_NIHIL(ctx);
@@ -1457,10 +1458,10 @@ s32 principale (vacuum)
     {
         /* casus arx_caeli Frani: typi parametrorum prototypi
          * dextre ordinandi (R7), spatium definitionis (R2) */
-        SilvaContextus* ctx;
+            SilvaContextus* ctx;
         constans character* caput;
         constans character* fons;
-        FormatorScriptum s;
+          FormatorScriptum  s;
 
         caput =
             "nomen structura ArcCaeli ArcCaeli;\n"
@@ -1577,9 +1578,9 @@ s32 principale (vacuum)
             "    ADFIRMA(2);\n"
             "    probare (3);\n"
             "}\n";
-        Xar* d = _lint(piscina, fons);
-        i32  numerus_vocationis = ZEPHYRUM;
-        i32  linea_inventa = ZEPHYRUM;
+        Xar* d                   = _lint(piscina, fons);
+        i32  numerus_vocationis  = ZEPHYRUM;
+        i32  linea_inventa       = ZEPHYRUM;
         i32  k;
 
         CREDO_NON_NIHIL(d);
@@ -1588,8 +1589,8 @@ s32 principale (vacuum)
             si (strcmp(_divergentia(d, k)->regula,
                     "spatium-definitionis") == ZEPHYRUM)
             {
-                numerus_vocationis = numerus_vocationis + I;
-                linea_inventa = _divergentia(d, k)->linea;
+                numerus_vocationis  = numerus_vocationis + I;
+                linea_inventa       = _divergentia(d, k)->linea;
             }
         }
         CREDO_AEQUALIS_I32(numerus_vocationis, (i32)1);
@@ -2347,6 +2348,61 @@ s32 principale (vacuum)
             }
         }
         CREDO_VERUM(visa);
+    }
+
+    imprimere("\n--- Probans extenta functionum (-lineae) ---\n");
+    {
+        /* idem ambitus quem -intra iudicat: prototypum a [1,1], b
+         * [2,2]; definitio a [3,9] (linea post prototypum b), b [10,18]
+         * (intervalla supra ad b pertinent) */
+        constans character* fons =
+            "vacuum a(vacuum);\n"
+            "vacuum b(vacuum);\n"
+            "\n"
+            "/* a */\n"
+            "vacuum\n"
+            "a(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "\n"
+            "\n"
+            "/* b */\n"
+            "vacuum\n"
+            "b(vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n";
+                     Xar* x;
+        FormatorExtentum* e;
+
+        x = formator_extenta(piscina, NIHIL, fons, (i32)strlen(fons));
+        CREDO_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), (i32)4);
+        e = (FormatorExtentum*)xar_obtinere(x, ZEPHYRUM);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "a"));
+        CREDO_AEQUALIS_I32(e->linea_a, (i32)1);
+        CREDO_AEQUALIS_I32(e->linea_b, (i32)1);
+        CREDO_FALSUM(e->definitio);
+        e = (FormatorExtentum*)xar_obtinere(x, I);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "b"));
+        CREDO_AEQUALIS_I32(e->linea_a, (i32)2);
+        CREDO_AEQUALIS_I32(e->linea_b, (i32)2);
+        e = (FormatorExtentum*)xar_obtinere(x, II);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "a"));
+        CREDO_AEQUALIS_I32(e->linea_a, (i32)3);
+        CREDO_AEQUALIS_I32(e->linea_b, (i32)9);
+        CREDO_VERUM(e->definitio);
+        e = (FormatorExtentum*)xar_obtinere(x, III);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "b"));
+        CREDO_AEQUALIS_I32(e->linea_a, (i32)10);
+        CREDO_AEQUALIS_I32(e->linea_b, (i32)18);
+
+        /* parsura fracta: vacuum, non NIHIL */
+        x = formator_extenta(piscina, NIHIL, "vacuum f(", (i32)9);
+        CREDO_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), (i32)0);
     }
 
     imprimere("\n");
