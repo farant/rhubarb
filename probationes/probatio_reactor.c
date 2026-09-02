@@ -30,16 +30,20 @@ hic_manens integer g_fd_subsidiarius = -1;
  * ======================================================================== */
 
 interior vacuum
-callback_simplex(integer fd, i32 eventus, vacuum* data)
+callback_simplex (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
 {
     (vacuum)data;
     g_callback_vocatus++;
-    g_eventus_receptus = eventus;
-    g_fd_receptus = (i32)fd;
+    g_eventus_receptus  = eventus;
+    g_fd_receptus       = (i32)fd;
 }
 
 interior vacuum
-callback_timer(vacuum* data)
+callback_timer (
+    vacuum* data)
 {
     i32* counter = (i32*)data;
     si (counter)
@@ -50,7 +54,8 @@ callback_timer(vacuum* data)
 }
 
 interior vacuum
-callback_sistere(vacuum* data)
+callback_sistere (
+    vacuum* data)
 {
     Reactor* reactor = (Reactor*)data;
     g_timer_vocatus++;
@@ -61,7 +66,10 @@ callback_sistere(vacuum* data)
 }
 
 interior vacuum
-callback_fd_clausum(integer fd, i32 eventus, vacuum* data)
+callback_fd_clausum (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
 {
     (vacuum)fd;
     (vacuum)data;
@@ -71,7 +79,10 @@ callback_fd_clausum(integer fd, i32 eventus, vacuum* data)
 
 /* Intra callback: removere se ipsum, adicere fd subsidiarium */
 interior vacuum
-callback_reentrans(integer fd, i32 eventus, vacuum* data)
+callback_reentrans (
+    integer  fd,
+        i32  eventus,
+     vacuum* data)
 {
     (vacuum)eventus;
     (vacuum)data;
@@ -79,7 +90,8 @@ callback_reentrans(integer fd, i32 eventus, vacuum* data)
     si (g_reactor_ref)
     {
         reactor_removere(g_reactor_ref, fd);
-        reactor_adicere(g_reactor_ref, g_fd_subsidiarius, REACTOR_LEGERE,
+        reactor_adicere(g_reactor_ref, g_fd_subsidiarius,
+            REACTOR_LEGERE,
                         callback_simplex, NIHIL);
     }
 }
@@ -90,13 +102,13 @@ callback_reentrans(integer fd, i32 eventus, vacuum* data)
  * ======================================================================== */
 
 interior vacuum
-reset_globals(vacuum)
+reset_globals (vacuum)
 {
-    g_callback_vocatus = 0;
-    g_eventus_receptus = 0;
-    g_fd_receptus = 0;
-    g_timer_vocatus = 0;
-    g_reactor_ref = NIHIL;
+    g_callback_vocatus  = 0;
+    g_eventus_receptus  = 0;
+    g_fd_receptus       = 0;
+    g_timer_vocatus     = 0;
+    g_reactor_ref       = NIHIL;
 }
 
 
@@ -131,8 +143,8 @@ interior vacuum
 probatio_adicere_fd(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    b32 res;
+    integer  pipe_fds[II];
+        b32  res;
 
     printf("--- Probans adicere FD ---\n");
 
@@ -165,8 +177,8 @@ interior vacuum
 probatio_modificare_fd(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    b32 res;
+    integer  pipe_fds[II];
+        b32  res;
 
     printf("--- Probans modificare FD ---\n");
 
@@ -199,8 +211,8 @@ interior vacuum
 probatio_removere_fd(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    b32 res;
+    integer  pipe_fds[II];
+        b32  res;
 
     printf("--- Probans removere FD ---\n");
 
@@ -238,10 +250,10 @@ probatio_removere_fd(Piscina* piscina)
 interior vacuum
 probatio_poll_legere(Piscina* piscina)
 {
-    Reactor* reactor;
-    integer pipe_fds[II];
+               Reactor* reactor;
+               integer  pipe_fds[II];
     constans character* msg = "Salve";
-    i32 events;
+                   i32  events;
 
     printf("--- Probans poll legere ---\n");
 
@@ -276,8 +288,8 @@ interior vacuum
 probatio_poll_scribere(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    i32 events;
+    integer  pipe_fds[II];
+        i32  events;
 
     printf("--- Probans poll scribere ---\n");
 
@@ -309,8 +321,8 @@ interior vacuum
 probatio_poll_timeout(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    i32 events;
+    integer  pipe_fds[II];
+        i32  events;
 
     printf("--- Probans poll timeout ---\n");
 
@@ -344,10 +356,10 @@ probatio_poll_timeout(Piscina* piscina)
 interior vacuum
 probatio_timer_simplex(Piscina* piscina)
 {
-    Reactor* reactor;
-    ReactorTimerId id;
-    i32 counter = 0;
-    i32 events;
+           Reactor* reactor;
+    ReactorTimerId  id;
+               i32  counter = 0;
+               i32  events;
 
     printf("--- Probans timer simplex ---\n");
 
@@ -356,7 +368,8 @@ probatio_timer_simplex(Piscina* piscina)
     CREDO_NON_NIHIL(reactor);
 
     /* Adicere timer 50ms one-shot */
-    id = reactor_timer_adicere(reactor, L, FALSUM, callback_timer, &counter);
+    id = reactor_timer_adicere(reactor, L, FALSUM, callback_timer,
+        &counter);
     CREDO_VERUM(id != REACTOR_TIMER_ERROR);
     CREDO_VERUM(reactor_numerus_timer(reactor) == I);
 
@@ -377,10 +390,10 @@ probatio_timer_simplex(Piscina* piscina)
 interior vacuum
 probatio_timer_repetens(Piscina* piscina)
 {
-    Reactor* reactor;
-    ReactorTimerId id;
-    i32 counter = 0;
-    i32 i;
+           Reactor* reactor;
+    ReactorTimerId  id;
+               i32  counter = 0;
+               i32  i;
 
     printf("--- Probans timer repetens ---\n");
 
@@ -389,7 +402,8 @@ probatio_timer_repetens(Piscina* piscina)
     CREDO_NON_NIHIL(reactor);
 
     /* Adicere timer 20ms repeating */
-    id = reactor_timer_adicere(reactor, XX, VERUM, callback_timer, &counter);
+    id = reactor_timer_adicere(reactor, XX, VERUM, callback_timer,
+        &counter);
     CREDO_VERUM(id != REACTOR_TIMER_ERROR);
 
     /* Poll multiples - debet fire multiples */
@@ -410,10 +424,10 @@ probatio_timer_repetens(Piscina* piscina)
 interior vacuum
 probatio_timer_cancellare(Piscina* piscina)
 {
-    Reactor* reactor;
-    ReactorTimerId id;
-    i32 counter = 0;
-    b32 res;
+           Reactor* reactor;
+    ReactorTimerId  id;
+               i32  counter = 0;
+               b32  res;
 
     printf("--- Probans timer cancellare ---\n");
 
@@ -422,7 +436,8 @@ probatio_timer_cancellare(Piscina* piscina)
     CREDO_NON_NIHIL(reactor);
 
     /* Adicere timer */
-    id = reactor_timer_adicere(reactor, L, FALSUM, callback_timer, &counter);
+    id = reactor_timer_adicere(reactor, L, FALSUM, callback_timer,
+        &counter);
     CREDO_VERUM(id != REACTOR_TIMER_ERROR);
     CREDO_VERUM(reactor_numerus_timer(reactor) == I);
 
@@ -450,9 +465,9 @@ probatio_timer_cancellare(Piscina* piscina)
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
-    Reactor* reactor;
-    b32 res;
-    ReactorTimerId id;
+           Reactor* reactor;
+               b32  res;
+    ReactorTimerId  id;
 
     printf("--- Probans nullum argumenta ---\n");
 
@@ -500,8 +515,8 @@ interior vacuum
 probatio_actualizare_fd(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    b32 res;
+    integer  pipe_fds[II];
+        b32  res;
 
     printf("--- Probans actualizare FD existentem ---\n");
 
@@ -537,8 +552,8 @@ probatio_actualizare_fd(Piscina* piscina)
 interior vacuum
 probatio_currere_sistere(Piscina* piscina)
 {
-    Reactor* reactor;
-    ReactorTimerId id;
+           Reactor* reactor;
+    ReactorTimerId  id;
 
     printf("--- Probans currere et sistere ---\n");
 
@@ -547,7 +562,8 @@ probatio_currere_sistere(Piscina* piscina)
     CREDO_NON_NIHIL(reactor);
 
     /* Adicere timer quod vocat sistere post 50ms */
-    id = reactor_timer_adicere(reactor, L, FALSUM, callback_sistere, reactor);
+    id = reactor_timer_adicere(reactor, L, FALSUM, callback_sistere,
+        reactor);
     CREDO_VERUM(id != REACTOR_TIMER_ERROR);
 
     /* Ante currere */
@@ -569,9 +585,9 @@ probatio_currere_sistere(Piscina* piscina)
 interior vacuum
 probatio_currere_cum_fd_et_timer(Piscina* piscina)
 {
-    Reactor* reactor;
-    integer pipe_fds[II];
-    ReactorTimerId id;
+               Reactor* reactor;
+               integer  pipe_fds[II];
+        ReactorTimerId  id;
     constans character* msg = "Probatio";
 
     printf("--- Probans currere cum FD et timer ---\n");
@@ -590,7 +606,8 @@ probatio_currere_cum_fd_et_timer(Piscina* piscina)
     write(pipe_fds[I], msg, VIII);
 
     /* Timer pro sistere post 100ms */
-    id = reactor_timer_adicere(reactor, C, FALSUM, callback_sistere, reactor);
+    id = reactor_timer_adicere(reactor, C, FALSUM, callback_sistere,
+        reactor);
     CREDO_VERUM(id != REACTOR_TIMER_ERROR);
 
     /* Currere */
@@ -610,7 +627,8 @@ probatio_currere_cum_fd_et_timer(Piscina* piscina)
 
 
 interior vacuum
-probatio_sistere_nihil(Piscina* piscina)
+probatio_sistere_nihil (
+    Piscina* piscina)
 {
     (vacuum)piscina;
 
@@ -632,10 +650,10 @@ probatio_sistere_nihil(Piscina* piscina)
 interior vacuum
 probatio_timer_capacitas(Piscina* piscina)
 {
-    Reactor* reactor;
-    ReactorTimerId id;
-    i32 i;
-    i32 successus_count = 0;
+           Reactor* reactor;
+    ReactorTimerId  id;
+               i32  i;
+               i32  successus_count = 0;
 
     printf("--- Probans timer capacitas (CXXVIII max) ---\n");
 
@@ -645,7 +663,8 @@ probatio_timer_capacitas(Piscina* piscina)
     /* Adicere CXXVIII timers */
     per (i = 0; i < CXXVIII; i++)
     {
-        id = reactor_timer_adicere(reactor, M, FALSUM, callback_timer, NIHIL);
+        id = reactor_timer_adicere(reactor, M, FALSUM, callback_timer,
+            NIHIL);
         si (id != REACTOR_TIMER_ERROR)
         {
             successus_count++;
@@ -656,7 +675,8 @@ probatio_timer_capacitas(Piscina* piscina)
     printf("  Timers additi: %u\n", successus_count);
 
     /* Proximus debet fallere */
-    id = reactor_timer_adicere(reactor, M, FALSUM, callback_timer, NIHIL);
+    id = reactor_timer_adicere(reactor, M, FALSUM, callback_timer,
+        NIHIL);
     CREDO_VERUM(id == REACTOR_TIMER_ERROR);
     printf("  Timer CXXIX recte recusatus\n");
 
@@ -673,8 +693,8 @@ interior vacuum
 probatio_fd_clausum_event(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    i32 events;
+    integer  pipe_fds[II];
+        i32  events;
 
     printf("--- Probans FD clausum event ---\n");
 
@@ -698,8 +718,8 @@ probatio_fd_clausum_event(Piscina* piscina)
     CREDO_VERUM(events >= I);
     CREDO_VERUM(g_callback_vocatus >= I);
     /* POLLHUP mapped to REACTOR_CLAUSUM */
-    CREDO_VERUM((g_eventus_receptus & (i32)REACTOR_CLAUSUM) != 0 ||
-                (g_eventus_receptus & (i32)REACTOR_LEGERE) != 0);
+    CREDO_VERUM((g_eventus_receptus & (i32)REACTOR_CLAUSUM) != 0
+        || (g_eventus_receptus & (i32)REACTOR_LEGERE) != 0);
     printf("  Eventus receptus: 0x%x\n", g_eventus_receptus);
 
     close(pipe_fds[0]);
@@ -718,9 +738,9 @@ interior vacuum
 probatio_fd_churn_reuse(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    i32 cyclus;
-    b32 res;
+    integer  pipe_fds[II];
+        i32  cyclus;
+        b32  res;
 
     printf("--- Probans churn adicere/removere (MCC cycli) ---\n");
 
@@ -766,11 +786,11 @@ probatio_fd_churn_reuse(Piscina* piscina)
 interior vacuum
 probatio_callback_reentrans(Piscina* piscina)
 {
-    Reactor* reactor;
-    integer pipa_a[II];
-    integer pipa_b[II];
+               Reactor* reactor;
+               integer  pipa_a[II];
+               integer  pipa_b[II];
     constans character* msg = "X";
-    i32 events;
+                   i32  events;
 
     printf("--- Probans callback reentrans ---\n");
 
@@ -781,8 +801,8 @@ probatio_callback_reentrans(Piscina* piscina)
     CREDO_VERUM(pipe(pipa_a) == 0);
     CREDO_VERUM(pipe(pipa_b) == 0);
 
-    g_reactor_ref = reactor;
-    g_fd_subsidiarius = pipa_b[0];
+    g_reactor_ref      = reactor;
+    g_fd_subsidiarius  = pipa_b[0];
 
     reactor_adicere(reactor, pipa_a[0], REACTOR_LEGERE,
                     callback_reentrans, NIHIL);
@@ -816,8 +836,8 @@ interior vacuum
 probatio_poll_error(Piscina* piscina)
 {
     Reactor* reactor;
-    integer pipe_fds[II];
-    i32 events;
+    integer  pipe_fds[II];
+        i32  events;
 
     printf("--- Probans poll error ---\n");
 
@@ -838,8 +858,8 @@ probatio_poll_error(Piscina* piscina)
     CREDO_VERUM(events >= I);
     CREDO_VERUM(g_callback_vocatus >= I);
     /* POLLERR -> REACTOR_ERROR; systemata etiam POLLHUP dare possunt */
-    CREDO_VERUM((g_eventus_receptus & (i32)REACTOR_ERROR) != 0 ||
-                (g_eventus_receptus & (i32)REACTOR_CLAUSUM) != 0);
+    CREDO_VERUM((g_eventus_receptus & (i32)REACTOR_ERROR) != 0
+        || (g_eventus_receptus & (i32)REACTOR_CLAUSUM) != 0);
     printf("  Eventus receptus: 0x%x\n", g_eventus_receptus);
 
     close(pipe_fds[I]);
@@ -853,10 +873,10 @@ probatio_poll_error(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");
@@ -864,7 +884,8 @@ principale(vacuum)
     printf("========================================\n");
     printf("\n");
 
-    piscina = piscina_generare_dynamicum("probatio_reactor", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_reactor",
+        CXXVIII * M);
     credo_aperire(piscina);
 
     probatio_creare_destruere(piscina);

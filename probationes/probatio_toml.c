@@ -4,6 +4,7 @@
 #include "credo.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Probationes Chordarum Simplicium
  * ================================================== */
@@ -11,9 +12,9 @@
 hic_manens vacuum
 probatio_chorda_simplex(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    chorda valor;
+            chorda  valor;
 
     doc = toml_legere_literis("Title = \"Hello World\"", p);
 
@@ -23,7 +24,8 @@ probatio_chorda_simplex(vacuum)
 
     valor = toml_capere_chorda(doc, "Title");
     CREDO_AEQUALIS_I32(valor.mensura, 11);
-    CREDO_VERUM(chorda_aequalis(valor, chorda_ex_literis("Hello World", p)));
+    CREDO_VERUM(chorda_aequalis(valor, chorda_ex_literis("Hello World",
+        p)));
 
     piscina_destruere(p);
     imprimere("  [OK] Chorda simplex\n");
@@ -32,9 +34,9 @@ probatio_chorda_simplex(vacuum)
 hic_manens vacuum
 probatio_chorda_vacua(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    chorda valor;
+            chorda  valor;
 
     doc = toml_legere_literis("Empty = \"\"", p);
 
@@ -46,6 +48,7 @@ probatio_chorda_vacua(vacuum)
     imprimere("  [OK] Chorda vacua\n");
 }
 
+
 /* ==================================================
  * Probationes Numerorum
  * ================================================== */
@@ -53,9 +56,9 @@ probatio_chorda_vacua(vacuum)
 hic_manens vacuum
 probatio_numerus_positivus(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    s32 valor;
+               s32  valor;
 
     doc = toml_legere_literis("Year = 1920", p);
 
@@ -72,9 +75,9 @@ probatio_numerus_positivus(vacuum)
 hic_manens vacuum
 probatio_numerus_negativus(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    s32 valor;
+               s32  valor;
 
     doc = toml_legere_literis("Offset = -100", p);
 
@@ -86,6 +89,7 @@ probatio_numerus_negativus(vacuum)
     imprimere("  [OK] Numerus negativus\n");
 }
 
+
 /* ==================================================
  * Probationes Tabulatorum
  * ================================================== */
@@ -93,10 +97,10 @@ probatio_numerus_negativus(vacuum)
 hic_manens vacuum
 probatio_tabulatum_simplex(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    Xar* tags;
-    chorda* tag;
+               Xar* tags;
+            chorda* tag;
 
     doc = toml_legere_literis("Tags = [\"fiction\", \"drama\"]", p);
 
@@ -120,9 +124,9 @@ probatio_tabulatum_simplex(vacuum)
 hic_manens vacuum
 probatio_tabulatum_multilinea(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    Xar* tags;
+               Xar* tags;
 
     doc = toml_legere_literis(
         "Tags = [\n"
@@ -140,6 +144,7 @@ probatio_tabulatum_multilinea(vacuum)
     imprimere("  [OK] Tabulatum multilinea\n");
 }
 
+
 /* ==================================================
  * Probationes Chordarum Multilinearum
  * ================================================== */
@@ -147,9 +152,9 @@ probatio_tabulatum_multilinea(vacuum)
 hic_manens vacuum
 probatio_chorda_multilinea(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    chorda valor;
+            chorda  valor;
 
     doc = toml_legere_literis(
         "Summary = \"\"\"\n"
@@ -167,6 +172,7 @@ probatio_chorda_multilinea(vacuum)
     imprimere("  [OK] Chorda multilinea\n");
 }
 
+
 /* ==================================================
  * Probationes Documentorum Mixtorum
  * ================================================== */
@@ -174,7 +180,7 @@ probatio_chorda_multilinea(vacuum)
 hic_manens vacuum
 probatio_documentum_mixtum(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -196,11 +202,13 @@ probatio_documentum_mixtum(vacuum)
 
     CREDO_AEQUALIS_S32(toml_capere_numerum(doc, "Year"), 1925);
 
-    CREDO_AEQUALIS_I32(xar_numerus(toml_capere_tabulatum(doc, "Tags")), 3);
+    CREDO_AEQUALIS_I32(xar_numerus(toml_capere_tabulatum(doc, "Tags")),
+        3);
 
     piscina_destruere(p);
     imprimere("  [OK] Documentum mixtum\n");
 }
+
 
 /* ==================================================
  * Probationes Commentorum
@@ -209,7 +217,7 @@ probatio_documentum_mixtum(vacuum)
 hic_manens vacuum
 probatio_commenta(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -225,6 +233,7 @@ probatio_commenta(vacuum)
     imprimere("  [OK] Commenta\n");
 }
 
+
 /* ==================================================
  * Probationes Spatii
  * ================================================== */
@@ -232,7 +241,7 @@ probatio_commenta(vacuum)
 hic_manens vacuum
 probatio_spatium(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -247,6 +256,7 @@ probatio_spatium(vacuum)
     imprimere("  [OK] Spatium\n");
 }
 
+
 /* ==================================================
  * Probationes Errorum
  * ================================================== */
@@ -254,7 +264,7 @@ probatio_spatium(vacuum)
 hic_manens vacuum
 probatio_error_sine_aequali(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis("Title \"Hello\"", p);
@@ -269,7 +279,7 @@ probatio_error_sine_aequali(vacuum)
 hic_manens vacuum
 probatio_error_chorda_non_clausa(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -282,6 +292,7 @@ probatio_error_chorda_non_clausa(vacuum)
     imprimere("  [OK] Error chorda non clausa\n");
 }
 
+
 /* ==================================================
  * Probationes Boolean et Table Headers
  * ================================================== */
@@ -289,7 +300,7 @@ probatio_error_chorda_non_clausa(vacuum)
 hic_manens vacuum
 probatio_boolean(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -308,7 +319,7 @@ probatio_boolean(vacuum)
 hic_manens vacuum
 probatio_table_headers(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
 
     doc = toml_legere_literis(
@@ -330,9 +341,9 @@ probatio_table_headers(vacuum)
 hic_manens vacuum
 probatio_numerus_negativus_magnus(vacuum)
 {
-    Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
+           Piscina* p = piscina_generare_dynamicum("test", MMMMXCVI);
     TomlDocumentum* doc;
-    s32 annus;
+               s32  annus;
 
     doc = toml_legere_literis("Year = -371", p);
 
@@ -343,6 +354,7 @@ probatio_numerus_negativus_magnus(vacuum)
     piscina_destruere(p);
     imprimere("  [OK] Numerus negativus magnus\n");
 }
+
 
 /* ==================================================
  * Probatio Formatis LLM
@@ -398,14 +410,18 @@ probatio_format_llm(vacuum)
     imprimere("  [OK] Format LLM\n");
 }
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale(s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     (vacuum)argc;
     (vacuum)argv;

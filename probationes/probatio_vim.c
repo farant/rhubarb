@@ -18,9 +18,10 @@ hic_manens vacuum
 probans_initiare(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA, TABULA_ALTITUDO_DEFALTA);
+    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+        TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
 
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
@@ -38,7 +39,7 @@ hic_manens vacuum
 probans_motus_hjkl(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello\nworld\ntest");
     status = vim_initiare(&tabula);
@@ -64,7 +65,8 @@ probans_motus_hjkl(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
 
     /* Idem cum dimensionibus parvis (8x4) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV, "ab\ncd\nef");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV,
+        "ab\ncd\nef");
     status = vim_initiare(&tabula);
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
@@ -86,7 +88,7 @@ hic_manens vacuum
 probans_motus_limites(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "ab");
     status = vim_initiare(&tabula);
@@ -106,7 +108,8 @@ probans_motus_limites(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_linea, ZEPHYRUM);
 
     /* Idem cum dimensionibus parvis (4x3) - limites strictiores */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, IV, III, "ab\ncd");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, IV, III,
+        "ab\ncd");
     status = vim_initiare(&tabula);
     CREDO_AEQUALIS_I32(tabula.latitudo, IV);
     CREDO_AEQUALIS_I32(tabula.altitudo, III);
@@ -139,7 +142,7 @@ hic_manens vacuum
 probans_motus_0_dollar(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello world");
     status = vim_initiare(&tabula);
@@ -163,7 +166,7 @@ hic_manens vacuum
 probans_motus_caret(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "   hello");
     status = vim_initiare(&tabula);
@@ -182,7 +185,7 @@ hic_manens vacuum
 probans_i_inserere(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -193,7 +196,8 @@ probans_i_inserere(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     /* Idem cum dimensionibus parvis (10x3) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III, "hi");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III,
+        "hi");
     CREDO_AEQUALIS_I32(tabula.latitudo, X);
     CREDO_AEQUALIS_I32(tabula.altitudo, III);
     status = vim_initiare(&tabula);
@@ -206,7 +210,7 @@ hic_manens vacuum
 probans_a_appendo(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -221,7 +225,7 @@ hic_manens vacuum
 probans_A_appendo_finis(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -236,7 +240,7 @@ hic_manens vacuum
 probans_I_inserere_initium(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "   hello");
     status = vim_initiare(&tabula);
@@ -259,9 +263,10 @@ hic_manens vacuum
 probans_inserere_characterem(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA, TABULA_ALTITUDO_DEFALTA);
+    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+        TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
 
     /* Transire ad modum inserere */
@@ -279,7 +284,7 @@ hic_manens vacuum
 probans_cursor_wrap_ad_finem_lineae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Parva tabula (6x3) - facile attingere finem lineae */
     tabula_initiare(&tabula, g_piscina, VI, III);
@@ -300,8 +305,10 @@ probans_cursor_wrap_ad_finem_lineae(vacuum)
     status = vim_tractare_clavem(status, 'f');
 
     /* Post 6 characteres, cursor debet esse ad finem lineae 0 */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'f');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)'f');
 
     /* Nunc typare 'g' - cursor debet saltare ad lineam 1, columna 0 */
     status = vim_tractare_clavem(status, 'g');
@@ -311,14 +318,15 @@ probans_cursor_wrap_ad_finem_lineae(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, I);  /* Post inserere 'g', cursor ad 1 */
 
     /* Verificare 'g' est ad linea 1, columna 0 */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'g');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'g');
 }
 
 hic_manens vacuum
-probans_inserere_in_medio(vacuum)
+probans_inserere_in_medio (vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hllo");
     status = vim_initiare(&tabula);
@@ -340,7 +348,7 @@ hic_manens vacuum
 probans_x_delere(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -355,7 +363,7 @@ hic_manens vacuum
 probans_dd_delere_lineam(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2\nline3");
     status = vim_initiare(&tabula);
@@ -367,10 +375,12 @@ probans_dd_delere_lineam(vacuum)
     status = vim_tractare_clavem(status, 'd');
     status = vim_tractare_clavem(status, 'd');
 
-    tabula_asserere(&tabula, g_piscina, "line1\nline3", "dd delere line2");
+    tabula_asserere(&tabula, g_piscina, "line1\nline3",
+        "dd delere line2");
 
     /* Idem cum dimensionibus parvis (8x4) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV, "aa\nbb\ncc");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, IV,
+        "aa\nbb\ncc");
     status = vim_initiare(&tabula);
 
     /* Movere ad linea 1 et delere */
@@ -380,15 +390,17 @@ probans_dd_delere_lineam(vacuum)
     status = vim_tractare_clavem(status, 'd');
 
     /* Verificare: linea 0 = "aa", linea 1 = "cc" (bb deleta) */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'c');
 }
 
 hic_manens vacuum
 probans_backspace(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -405,7 +417,8 @@ probans_backspace(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, I);
 
     /* Idem cum dimensionibus parvis (8x3) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, III, "abcd");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, VIII, III,
+        "abcd");
     status = vim_initiare(&tabula);
 
     /* Movere ad columna 2, insert mode, backspace */
@@ -416,9 +429,12 @@ probans_backspace(vacuum)
 
     status = vim_tractare_clavem(status, VIM_CLAVIS_BACKSPACE);
     CREDO_AEQUALIS_I32(status.cursor_columna, I);
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'c');  /* 'b' deleta */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)'c');  /* 'b' deleta */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'d');
 }
 
 
@@ -430,7 +446,7 @@ hic_manens vacuum
 probans_o_nova_linea_infra(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2");
     status = vim_initiare(&tabula);
@@ -442,10 +458,12 @@ probans_o_nova_linea_infra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_linea, I);
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
-    tabula_asserere(&tabula, g_piscina, "line1\n\nline2", "o inserere lineam vacuam");
+    tabula_asserere(&tabula, g_piscina, "line1\n\nline2",
+        "o inserere lineam vacuam");
 
     /* Idem cum dimensionibus parvis (10x5) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "aa\nbb");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V,
+        "aa\nbb");
     status = vim_initiare(&tabula);
 
     status = vim_tractare_clavem(status, 'o');
@@ -454,15 +472,17 @@ probans_o_nova_linea_infra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     /* Verificare: linea 0 = "aa", linea 1 = vacua, linea 2 = "bb" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'b');
 }
 
 hic_manens vacuum
 probans_O_nova_linea_supra(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2");
     status = vim_initiare(&tabula);
@@ -477,10 +497,12 @@ probans_O_nova_linea_supra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_linea, I);
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
-    tabula_asserere(&tabula, g_piscina, "line1\n\nline2", "O inserere lineam supra");
+    tabula_asserere(&tabula, g_piscina, "line1\n\nline2",
+        "O inserere lineam supra");
 
     /* Idem cum dimensionibus parvis (10x5) */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "aa\nbb\ncc");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V,
+        "aa\nbb\ncc");
     status = vim_initiare(&tabula);
 
     /* Movere ad linea 2 et O */
@@ -493,9 +515,12 @@ probans_O_nova_linea_supra(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_linea, II);  /* Nova linea supra cc */
 
     /* Verificare: aa, bb, vacua, cc */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'b');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, III, ZEPHYRUM),
+        (i32)'c');
 }
 
 
@@ -507,7 +532,7 @@ hic_manens vacuum
 probans_escape_ex_inserere(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -525,9 +550,10 @@ hic_manens vacuum
 probans_escape_in_normali(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
-    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA, TABULA_ALTITUDO_DEFALTA);
+    tabula_initiare(&tabula, g_piscina, TABULA_LATITUDO_DEFALTA,
+        TABULA_ALTITUDO_DEFALTA);
     status = vim_initiare(&tabula);
 
     /* Escape in normal mode - debet claudere */
@@ -544,7 +570,7 @@ hic_manens vacuum
 probans_w_verbum_proximum(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello world test");
     status = vim_initiare(&tabula);
@@ -561,7 +587,7 @@ hic_manens vacuum
 probans_b_verbum_praecedens(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello world test");
     status = vim_initiare(&tabula);
@@ -589,14 +615,14 @@ hic_manens vacuum
 probans_g_initium_tabulae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2\nline3");
     status = vim_initiare(&tabula);
 
     /* Movere ad medium */
-    status.cursor_linea = I;
-    status.cursor_columna = III;
+    status.cursor_linea    = I;
+    status.cursor_columna  = III;
 
     /* g - ad initium */
     status = vim_tractare_clavem(status, 'g');
@@ -608,7 +634,7 @@ hic_manens vacuum
 probans_G_finem_tabulae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2\nline3");
     status = vim_initiare(&tabula);
@@ -623,10 +649,11 @@ hic_manens vacuum
 probans_G_ad_finem_buffer(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Tabula 10x5 cum contentum solum in linea 0 */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V, "hello");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, V,
+        "hello");
     status = vim_initiare(&tabula);
     CREDO_AEQUALIS_I32(tabula.altitudo, V);
 
@@ -640,10 +667,11 @@ hic_manens vacuum
 probans_dollar_in_linea_vacua(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Tabula 10x3 cum contentum solum in linea 0 */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III, "hello");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, III,
+        "hello");
     status = vim_initiare(&tabula);
 
     /* Movere ad lineam vacuam (linea 1) */
@@ -662,10 +690,10 @@ probans_dollar_in_linea_vacua(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_d_dollar_delere_ad_finem_lineae(vacuum)
+probans_d_dollar_delere_ad_finem_lineae (vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello world");
     status = vim_initiare(&tabula);
@@ -681,10 +709,10 @@ probans_d_dollar_delere_ad_finem_lineae(vacuum)
 }
 
 hic_manens vacuum
-probans_dG_delere_ad_finem_tabulae(vacuum)
+probans_dG_delere_ad_finem_tabulae (vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "line1\nline2\nline3");
     status = vim_initiare(&tabula);
@@ -696,7 +724,8 @@ probans_dG_delere_ad_finem_tabulae(vacuum)
     status = vim_tractare_clavem(status, 'd');
     status = vim_tractare_clavem(status, 'G');
 
-    tabula_asserere(&tabula, g_piscina, "line1", "dG delere line2 et line3");
+    tabula_asserere(&tabula, g_piscina, "line1",
+        "dG delere line2 et line3");
 }
 
 
@@ -705,10 +734,10 @@ probans_dG_delere_ad_finem_tabulae(vacuum)
  * ================================================== */
 
 hic_manens vacuum
-probans_indent(vacuum)
+probans_indent (vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello");
     status = vim_initiare(&tabula);
@@ -721,10 +750,10 @@ probans_indent(vacuum)
 }
 
 hic_manens vacuum
-probans_dedent(vacuum)
+probans_dedent (vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "  hello");
     status = vim_initiare(&tabula);
@@ -745,7 +774,7 @@ hic_manens vacuum
 probans_o_auto_indent(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "  hello");
     status = vim_initiare(&tabula);
@@ -758,7 +787,8 @@ probans_o_auto_indent(vacuum)
     CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_INSERERE);
 
     /* Nova linea debet habere duo spatia */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)' ');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)' ');
 }
 
@@ -766,7 +796,7 @@ hic_manens vacuum
 probans_O_auto_indent(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "  hello");
     status = vim_initiare(&tabula);
@@ -786,7 +816,7 @@ hic_manens vacuum
 probans_enter_auto_indent(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "  hello");
     status = vim_initiare(&tabula);
@@ -810,9 +840,9 @@ hic_manens vacuum
 probans_vim_dimensiones_parvae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
-    i32 parva_latitudo = XII;   /* 12 - parva */
-    i32 parva_altitudo = IV;    /* 4 - paucae lineae */
+            VimStatus status;
+                  i32 parva_latitudo = XII;   /* 12 - parva */
+                  i32 parva_altitudo = IV;    /* 4 - paucae lineae */
 
     /* Initiare cum dimensionibus parvis */
     tabula_initiare(&tabula, g_piscina, parva_latitudo, parva_altitudo);
@@ -829,7 +859,8 @@ probans_vim_dimensiones_parvae(vacuum)
     status = vim_tractare_clavem(status, 'i');
     status = vim_tractare_clavem(status, VIM_CLAVIS_ESCAPE);
 
-    tabula_asserere(&tabula, g_piscina, "hi", "inserere in parva tabula");
+    tabula_asserere(&tabula, g_piscina, "hi",
+        "inserere in parva tabula");
 
     /* Navigare ad limitem */
     status = vim_tractare_clavem(status, 'j');
@@ -843,9 +874,9 @@ hic_manens vacuum
 probans_vim_G_dimensiones_variae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
-    i32 latitudo = XX;   /* 20 */
-    i32 altitudo = V;    /* 5 */
+            VimStatus status;
+                  i32 latitudo = XX;   /* 20 */
+                  i32 altitudo = V;    /* 5 */
 
     /* Creare tabula cum contentum */
     tabula_initiare(&tabula, g_piscina, latitudo, altitudo);
@@ -873,9 +904,9 @@ hic_manens vacuum
 probans_vim_dd_ultima_linea(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
-    i32 latitudo = XV;   /* 15 */
-    i32 altitudo = III;  /* 3 - minima */
+            VimStatus status;
+                  i32 latitudo = XV;   /* 15 */
+                  i32 altitudo = III;  /* 3 - minima */
 
     tabula_initiare(&tabula, g_piscina, latitudo, altitudo);
 
@@ -898,7 +929,8 @@ probans_vim_dd_ultima_linea(vacuum)
     /* Cursor manet ad linea 2 (nunc vacua post deletionem) */
     CREDO_AEQUALIS_I32(status.cursor_linea, II);
     /* Linea 1 habet 'B' (non mutata) */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'B');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'B');
 }
 
 /* Test 4 removed - probans_vim_o_in_ultima_linea causes segfault with small grids.
@@ -914,7 +946,7 @@ hic_manens vacuum
 probans_enter_split_line(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "si (abc) {" cum cursor ante '{' */
     tabula_ex_literis(&tabula, g_piscina, "si (abc) {");
@@ -935,22 +967,26 @@ probans_enter_split_line(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     /* Verificare: linea 0 = "si (abc) " (textus ante cursor) */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'s');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'i');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VIII), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'s');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)'i');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VIII),
+        (i32)' ');
     /* Columna 9 debet esse vacua (vel '\0') */
-    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, IX) == '\0' ||
-                tabula_cellula(&tabula, ZEPHYRUM, IX) == ' ');
+    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, IX) == '\0'
+        || tabula_cellula(&tabula, ZEPHYRUM, IX) == ' ');
 
     /* Verificare: linea 1 = "{" (textus post cursor) */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'{');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'{');
 }
 
 hic_manens vacuum
 probans_enter_split_line_in_medio(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "hello world" cum cursor post "hello " */
     tabula_ex_literis(&tabula, g_piscina, "hello world");
@@ -970,11 +1006,14 @@ probans_enter_split_line_in_medio(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     /* Verificare: linea 0 = "hello " */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)' ');
 
     /* Verificare: linea 1 = "world" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'w');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'w');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)'o');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, IV), (i32)'d');
 }
@@ -983,7 +1022,7 @@ hic_manens vacuum
 probans_enter_ad_initium_lineae(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "hello" cum cursor ad initium */
     tabula_ex_literis(&tabula, g_piscina, "hello");
@@ -1001,11 +1040,12 @@ probans_enter_ad_initium_lineae(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, ZEPHYRUM);
 
     /* Verificare: linea 0 est vacua */
-    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == '\0' ||
-                tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == ' ');
+    CREDO_VERUM(tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == '\0'
+        || tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM) == ' ');
 
     /* Verificare: linea 1 = "hello" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'h');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, IV), (i32)'o');
 }
 
@@ -1013,15 +1053,17 @@ hic_manens vacuum
 probans_backspace_join_lines(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "hello\n}" - duae lineae */
     tabula_ex_literis(&tabula, g_piscina, "hello\n}");
     status = vim_initiare(&tabula);
 
     /* Verificare setup */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'}');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'}');
 
     /* Movere ad lineam 1, columna 0 (ante '}') */
     status = vim_tractare_clavem(status, 'j');
@@ -1040,16 +1082,19 @@ probans_backspace_join_lines(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, V);
 
     /* Verificare: linea 0 = "hello}" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'o');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'}');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV),
+        (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)'}');
 }
 
 hic_manens vacuum
 probans_backspace_join_lines_cum_spatiis(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "abc\n  xyz" - secunda linea habet indentationem */
     tabula_ex_literis(&tabula, g_piscina, "abc\n  xyz");
@@ -1070,17 +1115,21 @@ probans_backspace_join_lines_cum_spatiis(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, III);
 
     /* Verificare: linea 0 = "abc  xyz" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'c');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)' ');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)'x');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III),
+        (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)'x');
 }
 
 hic_manens vacuum
 probans_enter_split_cum_indentatio(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: "  abc {" cum cursor ante '{' (2 spatia indentatio) */
     tabula_ex_literis(&tabula, g_piscina, "  abc {");
@@ -1100,13 +1149,18 @@ probans_enter_split_cum_indentatio(vacuum)
     CREDO_AEQUALIS_I32(status.cursor_columna, II);
 
     /* Verificare: linea 0 = "  abc " */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)' ');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)' ');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)' ');
 
     /* Verificare: linea 1 = "  {" (indentatio + '{') */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)' ');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)' ');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'{');
 }
@@ -1120,7 +1174,7 @@ hic_manens vacuum
 probans_V_visual_mode(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     tabula_ex_literis(&tabula, g_piscina, "hello\nworld\ntest");
     status = vim_initiare(&tabula);
@@ -1149,7 +1203,7 @@ hic_manens vacuum
 probans_V_indent_selectio(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: tres lineae */
     tabula_ex_literis(&tabula, g_piscina, "abc\ndef\nghi");
@@ -1162,23 +1216,28 @@ probans_V_indent_selectio(vacuum)
     status = vim_tractare_clavem(status, '>');
 
     /* Verificare: ambae lineae indented (2 spatia) */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)' ');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)' ');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'a');
 
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)' ');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)' ');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)' ');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'d');
 
     /* Tertia linea non debet esse indented */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'g');
 }
 
 hic_manens vacuum
 probans_V_dedent_selectio(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Setup: duae lineae cum indentatio */
     tabula_ex_literis(&tabula, g_piscina, "  abc\n  def\nghi");
@@ -1191,11 +1250,14 @@ probans_V_dedent_selectio(vacuum)
     status = vim_tractare_clavem(status, '<');
 
     /* Verificare: ambae lineae dedented */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'d');
 
     /* Tertia linea non mutata */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'g');
 }
 
 
@@ -1206,10 +1268,10 @@ probans_V_dedent_selectio(vacuum)
 hic_manens vacuum
 probans_dd_cut_et_p_paste(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     /* Initiare clipboard et undo */
     vim_clipboard_initiare(&clipboard);
@@ -1225,21 +1287,27 @@ probans_dd_cut_et_p_paste(vacuum)
 
     /* Verificare: clipboard habet "abc" */
     CREDO_AEQUALIS_I32(clipboard.numerus_linearum, I);
-    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'a');
     CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][I], (i32)'b');
     CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][II], (i32)'c');
 
     /* Verificare: tabula nunc habet "def" in prima linea */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'e');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'f');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)'e');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'f');
 
     /* p - paste post lineam currentem */
     status = vim_tractare_clavem(status, 'p');
 
     /* Verificare: "abc" inserta post "def" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'a');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, I), (i32)'b');
     CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, II), (i32)'c');
 
@@ -1250,10 +1318,10 @@ probans_dd_cut_et_p_paste(vacuum)
 hic_manens vacuum
 probans_P_paste_ante(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1273,9 +1341,12 @@ probans_P_paste_ante(vacuum)
     status = vim_tractare_clavem(status, 'P');
 
     /* Verificare: "abc" inserta ante "ghi" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'g');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'g');
 
     /* Cursor debet esse ad lineam 1 (ubi inserta) */
     CREDO_AEQUALIS_I32(status.cursor_linea, I);
@@ -1284,10 +1355,10 @@ probans_P_paste_ante(vacuum)
 hic_manens vacuum
 probans_u_undo_dd(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1300,25 +1371,30 @@ probans_u_undo_dd(vacuum)
     status = vim_tractare_clavem(status, 'd');
 
     /* Verificare: "def" nunc in prima linea */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
 
     /* u - undo */
     status = vim_tractare_clavem(status, 'u');
 
     /* Verificare: "abc" restituta */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I), (i32)'b');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'c');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, I),
+        (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'d');
 }
 
 hic_manens vacuum
 probans_u_undo_p(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1332,30 +1408,35 @@ probans_u_undo_p(vacuum)
     status = vim_tractare_clavem(status, 'p');
 
     /* Verificare: "def" in linea 0, "abc" in linea 1 */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'a');
 
     /* u - undo paste */
     status = vim_tractare_clavem(status, 'u');
 
     /* Verificare: "abc" deleta, solum "def" manet */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'d');
 
     /* u - undo dd */
     status = vim_tractare_clavem(status, 'u');
 
     /* Verificare: "abc" restituta in prima linea */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'d');
 }
 
 hic_manens vacuum
 probans_V_d_cut_multi(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1370,12 +1451,15 @@ probans_V_d_cut_multi(vacuum)
 
     /* Verificare: clipboard habet 2 lineas */
     CREDO_AEQUALIS_I32(clipboard.numerus_linearum, II);
-    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM], (i32)'a');
+    CREDO_AEQUALIS_I32((i32)clipboard.lineae[ZEPHYRUM][ZEPHYRUM],
+        (i32)'a');
     CREDO_AEQUALIS_I32((i32)clipboard.lineae[I][ZEPHYRUM], (i32)'b');
 
     /* Verificare: tabula nunc habet "ccc" in prima linea */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'d');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'d');
 
     /* Verificare: exit visual mode */
     CREDO_AEQUALIS_I32((i32)status.modo, (i32)MODO_VIM_NORMALIS);
@@ -1384,10 +1468,10 @@ probans_V_d_cut_multi(vacuum)
 hic_manens vacuum
 probans_V_d_undo_multi(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1401,25 +1485,29 @@ probans_V_d_undo_multi(vacuum)
     status = vim_tractare_clavem(status, 'd');
 
     /* Verificare: solum "ccc" manet */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'c');
 
     /* u u - undo ambo (lineae deletae singulariter) */
     status = vim_tractare_clavem(status, 'u');
     status = vim_tractare_clavem(status, 'u');
 
     /* Verificare: "aaa" et "bbb" restitutae */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'b');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'c');
 }
 
 hic_manens vacuum
 probans_p_paste_multi(vacuum)
 {
-    TabulaCharacterum tabula;
-    VimClipboard clipboard;
-    VimUndoAcervus* undo;
-    VimStatus status;
+    TabulaCharacterum  tabula;
+         VimClipboard  clipboard;
+       VimUndoAcervus* undo;
+            VimStatus  status;
 
     vim_clipboard_initiare(&clipboard);
     undo = vim_undo_creare(g_piscina);
@@ -1436,9 +1524,12 @@ probans_p_paste_multi(vacuum)
     status = vim_tractare_clavem(status, 'p');
 
     /* Verificare: "aaa" et "bbb" insertae post "ccc" */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'c');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM), (i32)'a');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'c');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, I, ZEPHYRUM),
+        (i32)'a');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, II, ZEPHYRUM),
+        (i32)'b');
 }
 
 
@@ -1446,7 +1537,7 @@ hic_manens vacuum
 probans_J_jungere_lineas(vacuum)
 {
     TabulaCharacterum tabula;
-    VimStatus status;
+            VimStatus status;
 
     /* Casus basicus: "hello" + "world" -> "hello world" */
     tabula_ex_literis(&tabula, g_piscina, "hello\nworld");
@@ -1455,10 +1546,14 @@ probans_J_jungere_lineas(vacuum)
     status = vim_tractare_clavem(status, 'J');
 
     /* Verificare: "hello world" in linea 0 */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'o');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V), (i32)' ');  /* spatium */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VI), (i32)'w');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV),
+        (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, V),
+        (i32)' ');  /* spatium */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, VI),
+        (i32)'w');
     CREDO_VERUM(status.mutatus);
 
     /* Casus cum indentatio: "foo" + "  bar" -> "foo bar" (sine leading spaces) */
@@ -1467,13 +1562,18 @@ probans_J_jungere_lineas(vacuum)
 
     status = vim_tractare_clavem(status, 'J');
 
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'f');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II), (i32)'o');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III), (i32)' ');  /* spatium */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV), (i32)'b');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'f');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, II),
+        (i32)'o');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, III),
+        (i32)' ');  /* spatium */
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, IV),
+        (i32)'b');
 
     /* Casus ad ultimam lineam buffer: nihil facere */
-    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, I, "only");
+    tabula_ex_literis_cum_dimensionibus(&tabula, g_piscina, X, I,
+        "only");
     status = vim_initiare(&tabula);
 
     status = vim_tractare_clavem(status, 'J');
@@ -1484,7 +1584,8 @@ probans_J_jungere_lineas(vacuum)
     status = vim_initiare(&tabula);
 
     status = vim_tractare_clavem(status, 'J');
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'w');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'w');
     CREDO_VERUM(status.mutatus);
 
     /* Casus linea inferior vacua */
@@ -1493,7 +1594,8 @@ probans_J_jungere_lineas(vacuum)
 
     status = vim_tractare_clavem(status, 'J');
     /* "hello" manet, sed linea vacua deleta */
-    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM), (i32)'h');
+    CREDO_AEQUALIS_I32((i32)tabula_cellula(&tabula, ZEPHYRUM, ZEPHYRUM),
+        (i32)'h');
     CREDO_VERUM(status.mutatus);
 }
 
@@ -1503,10 +1605,10 @@ probans_J_jungere_lineas(vacuum)
  * ================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("test_vim", M);  /* 1MB - pro multis tabulis */
     si (!piscina)

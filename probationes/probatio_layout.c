@@ -12,10 +12,10 @@
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    ContextusWidget*     ctx_sine_repo;  /* Contextus sine repositorium */
-    b32                  praeteritus;
+        ContextusWidget* ctx_sine_repo;  /* Contextus sine repositorium */
+                    b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_layout", M * II);  /* 2MB */
@@ -35,7 +35,8 @@ s32 principale(vacuum)
     }
 
     /* Creare contextum sine repositorium pro probationes simplices */
-    ctx_sine_repo = contextus_widget_creare(piscina, intern, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL);
+    ctx_sine_repo = contextus_widget_creare(piscina, intern, NIHIL,
+        NIHIL, NIHIL, NIHIL, NIHIL);
     si (!ctx_sine_repo)
     {
         imprimere("FRACTA: contextus_widget_creare\n");
@@ -44,6 +45,7 @@ s32 principale(vacuum)
     }
 
     credo_aperire(piscina);
+
 
     /* ==================================================
      * Probare layout_creare cum pagina simplex
@@ -66,6 +68,7 @@ s32 principale(vacuum)
         imprimere("  Layout creatum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare layout_obtinere_pagina
      * ================================================== */
@@ -74,7 +77,7 @@ s32 principale(vacuum)
 
     {
         LayoutDom* dom;
-        Pagina*    pagina;
+           Pagina* pagina;
 
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
@@ -92,6 +95,7 @@ s32 principale(vacuum)
         imprimere("  Obtinere pagina: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare layout cum navigator (requirit repositorium)
      * ================================================== */
@@ -99,11 +103,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout cum navigator ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        NavigatorEntitatum*  nav;
+            ContextusWidget* ctx;
+         NavigatorEntitatum* nav;
 
         /* Creare persistentia et repositorium */
         persistentia = persistentia_memoria_creare(piscina);
@@ -113,7 +117,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(repo);
 
         /* Creare contextum cum repositorium */
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
         CREDO_NON_NIHIL(ctx);
 
         /* Creare layout cum navigator */
@@ -130,6 +135,7 @@ s32 principale(vacuum)
         imprimere("  Navigator creatum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare layout cum pagina et navigator
      * ================================================== */
@@ -137,16 +143,17 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout cum pagina et navigator ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Pagina*              pagina;
-        NavigatorEntitatum*  nav;
+            ContextusWidget* ctx;
+                     Pagina* pagina;
+         NavigatorEntitatum* nav;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -169,6 +176,7 @@ s32 principale(vacuum)
         imprimere("  Duo widgets: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare layout_obtinere (genericum)
      * ================================================== */
@@ -177,7 +185,7 @@ s32 principale(vacuum)
 
     {
         LayoutDom* dom;
-        vacuum*    widget;
+           vacuum* widget;
 
         dom = layout_creare(ctx_sine_repo,
             "<layout>"
@@ -195,6 +203,7 @@ s32 principale(vacuum)
         imprimere("  Obtinere genericum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare layout sine repositorium (navigator fallit)
      * ================================================== */
@@ -202,7 +211,7 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout sine repositorium ---\n");
 
     {
-        LayoutDom*          dom;
+                 LayoutDom* dom;
         NavigatorEntitatum* nav;
 
         /* Navigator sine repositorium non debet creari */
@@ -219,6 +228,7 @@ s32 principale(vacuum)
         imprimere("  Navigator sine repo: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare attributa defalta
      * ================================================== */
@@ -227,7 +237,7 @@ s32 principale(vacuum)
 
     {
         LayoutDom* dom;
-        Pagina*    pagina;
+           Pagina* pagina;
 
         /* Pagina sine attributa explicita */
         dom = layout_creare(ctx_sine_repo,
@@ -243,6 +253,7 @@ s32 principale(vacuum)
         imprimere("  Attributa defalta: VERUM\n");
     }
 
+
     /* ==================================================
      * ENTITAS TESTS
      * ================================================== */
@@ -251,15 +262,16 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_simplex ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas;
+            ContextusWidget* ctx;
+                    Entitas* entitas;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -269,7 +281,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(dom);
 
         /* Verificare entitas creata - usare scaffoldare quod est idempotens */
-        entitas = repo->entitas_scaffoldare(repo->datum, "Page", "test");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Page",
+            "test");
         CREDO_NON_NIHIL(entitas);
         CREDO_CHORDA_AEQUALIS_LITERIS(*entitas->genus, "Page");
 
@@ -280,18 +293,19 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_proprietates ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas;
-        chorda*              valor;
-        chorda*              clavis_name;
-        chorda*              clavis_author;
+            ContextusWidget* ctx;
+                    Entitas* entitas;
+                     chorda* valor;
+                     chorda* clavis_name;
+                     chorda* clavis_author;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -303,12 +317,13 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(dom);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Page", "intro");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Page",
+            "intro");
         CREDO_NON_NIHIL(entitas);
 
         /* Verificare proprietates - clavis debet esse pointer internata */
-        clavis_name = chorda_internare_ex_literis(intern, "name");
-        clavis_author = chorda_internare_ex_literis(intern, "author");
+        clavis_name    = chorda_internare_ex_literis(intern, "name");
+        clavis_author  = chorda_internare_ex_literis(intern, "author");
 
         valor = entitas_proprietas_capere(entitas, clavis_name);
         CREDO_NON_NIHIL(valor);
@@ -325,15 +340,16 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_notae ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas;
+            ContextusWidget* ctx;
+                    Entitas* entitas;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -345,7 +361,8 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(dom);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Note", "important");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Note",
+            "important");
         CREDO_NON_NIHIL(entitas);
         CREDO_NON_NIHIL(entitas->notae);
         CREDO_AEQUALIS_I32(xar_numerus(entitas->notae), II);
@@ -357,17 +374,18 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_relationes ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas_one;
-        Entitas*             entitas_two;
-        Xar*                 relatae;
+            ContextusWidget* ctx;
+                    Entitas* entitas_one;
+                    Entitas* entitas_two;
+                        Xar* relatae;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -381,8 +399,10 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(dom);
 
-        entitas_one = repo->entitas_scaffoldare(repo->datum, "Page", "one");
-        entitas_two = repo->entitas_scaffoldare(repo->datum, "Page", "two");
+        entitas_one = repo->entitas_scaffoldare(repo->datum, "Page",
+            "one");
+        entitas_two = repo->entitas_scaffoldare(repo->datum, "Page",
+            "two");
         CREDO_NON_NIHIL(entitas_one);
         CREDO_NON_NIHIL(entitas_two);
 
@@ -397,7 +417,8 @@ s32 principale(vacuum)
         {
             chorda* genus_next;
             genus_next = chorda_internare_ex_literis(intern, "next");
-            relatae = repo->capere_entitates_relatae(repo->datum, entitas_one, genus_next);
+            relatae = repo->capere_entitates_relatae(repo->datum,
+                entitas_one, genus_next);
             CREDO_NON_NIHIL(relatae);
             CREDO_AEQUALIS_I32(xar_numerus(relatae), I);
         }
@@ -409,17 +430,18 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_hierarchicum ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas;
-        chorda*              valor;
-        chorda*              clavis_title;
+            ContextusWidget* ctx;
+                    Entitas* entitas;
+                     chorda* valor;
+                     chorda* clavis_title;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -430,9 +452,11 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(dom);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Content::Document::Article", "post");
+        entitas = repo->entitas_scaffoldare(repo->datum,
+            "Content::Document::Article", "post");
         CREDO_NON_NIHIL(entitas);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*entitas->genus, "Content::Document::Article");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*entitas->genus,
+            "Content::Document::Article");
 
         clavis_title = chorda_internare_ex_literis(intern, "title");
         valor = entitas_proprietas_capere(entitas, clavis_title);
@@ -446,18 +470,19 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_idempotens ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Entitas*             entitas;
-        chorda*              valor;
-        chorda*              clavis_a;
-        chorda*              clavis_b;
+            ContextusWidget* ctx;
+                    Entitas* entitas;
+                     chorda* valor;
+                     chorda* clavis_a;
+                     chorda* clavis_b;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         /* Duo declarationes pro eadem entitas */
         dom = layout_creare(ctx,
@@ -472,7 +497,8 @@ s32 principale(vacuum)
 
         CREDO_NON_NIHIL(dom);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Page", "same");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Page",
+            "same");
         CREDO_NON_NIHIL(entitas);
 
         /* Ambae proprietates debent existere */
@@ -494,18 +520,19 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_mixta ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
-        Pagina*              pagina;
-        Entitas*             entitas;
-        chorda*              valor;
-        chorda*              clavis_title;
+            ContextusWidget* ctx;
+                     Pagina* pagina;
+                    Entitas* entitas;
+                     chorda* valor;
+                     chorda* clavis_title;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         dom = layout_creare(ctx,
             "<layout>"
@@ -522,7 +549,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(pagina);
 
         /* Verificare entitas creata */
-        entitas = repo->entitas_scaffoldare(repo->datum, "Page", "content");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Page",
+            "content");
         CREDO_NON_NIHIL(entitas);
 
         clavis_title = chorda_internare_ex_literis(intern, "title");
@@ -537,14 +565,15 @@ s32 principale(vacuum)
     imprimere("\n--- Probans layout_entitas_errores ---\n");
 
     {
-        LayoutDom*           dom;
-        Persistentia*        persistentia;
+                  LayoutDom* dom;
+               Persistentia* persistentia;
         EntitasRepositorium* repo;
-        ContextusWidget*     ctx;
+            ContextusWidget* ctx;
 
         persistentia = persistentia_memoria_creare(piscina);
         repo = entitas_repositorium_creare(piscina, persistentia);
-        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repo, NIHIL,
+            NIHIL, NIHIL, NIHIL);
 
         /* Entitas sine genus - debet ignorari */
         dom = layout_creare(ctx,
@@ -564,6 +593,7 @@ s32 principale(vacuum)
 
         imprimere("  Entitas errores: VERUM\n");
     }
+
 
     /* ==================================================
      * Compendium

@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
+
 /* ==================================================
  * Custodes fontium - binarium fonti dissimile probationem de
  * codice qui iam non exsistit facit (mos probatio_natura_canones)
@@ -33,25 +34,30 @@ staticus constans character* NG_FONTES[] = {
     NIHIL
 };
 
-interior constans character* _fons_absens(vacuum);
-interior constans character* _fons_recentior_binario(
+interior constans character*
+_fons_absens (vacuum);
+interior constans character*
+_fons_recentior_binario (
                                  constans character* binarium);
-interior ProcessusResultus _censum_currere(
+interior ProcessusResultus
+_censum_currere (
                                constans character* radix,
                                constans character* arg1,
                                constans character* arg2,
                                constans character* arg3,
-                               Piscina* piscina);
-interior b32 _continet_literis(chorda effusio,
+                                          Piscina* piscina);
+interior b32
+_continet_literis (
+                                           chorda  effusio,
                                constans character* literae,
-                               Piscina* piscina);
+                                          Piscina* piscina);
 
 interior constans character*
-_fons_absens(
+_fons_absens (
     vacuum)
 {
     structura stat  f;
-    i32             i;
+    i32 i;
 
     per (i = ZEPHYRUM; NG_FONTES[i] != NIHIL; i++)
     {
@@ -64,11 +70,11 @@ _fons_absens(
 }
 
 interior constans character*
-_fons_recentior_binario(
-    constans character*  binarium)
+_fons_recentior_binario (
+    constans character* binarium)
 {
     structura stat  b;
-    i32             i;
+    i32 i;
 
     si (stat(binarium, &b) != ZEPHYRUM)
     {
@@ -94,33 +100,39 @@ _fons_recentior_binario(
 /* bin/natura_glossae super corpore dato currere; effusio (stdout)
  * capta - assertio in lineis TSV fit */
 interior ProcessusResultus
-_censum_currere(
-    constans character*  radix,
-    constans character*  arg1,
-    constans character*  arg2,
-    constans character*  arg3,
-    Piscina*             piscina)
+_censum_currere (
+    constans character* radix,
+    constans character* arg1,
+    constans character* arg2,
+    constans character* arg3,
+               Piscina* piscina)
 {
     constans character* argumenta[VIII];
-    i32                 n;
+                   i32  n;
 
-    n = ZEPHYRUM;
-    argumenta[n++] = "bin/natura_glossae";
-    argumenta[n++] = "-radix";
-    argumenta[n++] = radix;
-    si (arg1) { argumenta[n++] = arg1; }
-    si (arg2) { argumenta[n++] = arg2; }
-    si (arg3) { argumenta[n++] = arg3; }
+    n               = ZEPHYRUM;
+    argumenta[n++]  = "bin/natura_glossae";
+    argumenta[n++]  = "-radix";
+    argumenta[n++]  = radix;
+    si (arg1)
+    { argumenta[n++] = arg1;
+    }
+    si (arg2)
+    { argumenta[n++] = arg2;
+    }
+    si (arg3)
+    { argumenta[n++] = arg3;
+    }
     argumenta[n] = NIHIL;
 
     redde processus_exsequi(argumenta, 60000, piscina);
 }
 
 interior b32
-_continet_literis(
-    chorda               effusio,
-    constans character*  literae,
-    Piscina*             piscina)
+_continet_literis (
+                chorda  effusio,
+    constans character* literae,
+               Piscina* piscina)
 {
     redde chorda_continet(effusio,
                           chorda_ex_literis(literae, piscina));
@@ -129,7 +141,7 @@ _continet_literis(
 s32 principale (vacuum)
 {
          b32  praeteritus;
-    Piscina*  piscina;
+     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_natura_glossae",
                                          8388608);
@@ -152,11 +164,11 @@ s32 principale (vacuum)
         si (!filum_existit("bin/natura_glossae"))
         {
             constans character* struere[II];
-            ProcessusResultus   rs;
+             ProcessusResultus  rs;
 
             imprimere("  (bin/natura_glossae abest - struo semel)\n");
             struere[ZEPHYRUM] = "./tools/natura_struere.sh";
-            struere[I]        = NIHIL;
+            struere[I] = NIHIL;
             rs = processus_exsequi(struere, 300000, piscina);
             si (!rs.successus || rs.codex_exitus != ZEPHYRUM)
             {
@@ -302,7 +314,7 @@ s32 principale (vacuum)
 
     {
         ProcessusResultus r;
-        chorda            pagina;
+                   chorda pagina;
 
         imprimere("\n--- V. pagina html ---\n");
 

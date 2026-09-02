@@ -11,7 +11,7 @@
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("test_biblia", 4096);
@@ -37,7 +37,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(b);
         CREDO_NON_NIHIL(b->titulus);
         CREDO_NON_NIHIL(b->annus);
-        CREDO_AEQUALIS_S32(strcmp(b->titulus, "Douay-Rheims"), ZEPHYRUM);
+        CREDO_AEQUALIS_S32(strcmp(b->titulus, "Douay-Rheims"),
+            ZEPHYRUM);
         CREDO_AEQUALIS_S32(strcmp(b->annus, "1899"), ZEPHYRUM);
         CREDO_AEQUALIS_I32(b->libri_numerus, 73);
         CREDO_VERUM(b->versus_numerus > 30000);  /* circa 35811 versus */
@@ -52,7 +53,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        chorda v;
+                 chorda  v;
 
         imprimere("\n--- Probans biblia_versus ---\n");
 
@@ -64,14 +65,16 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(v.datum);
         /* Textus incipit cum "In the beginning" */
         CREDO_VERUM(v.mensura >= XVIII);
-        CREDO_VERUM(memcmp(v.datum, "In the beginning", XVI) == ZEPHYRUM);
+        CREDO_VERUM(memcmp(v.datum, "In the beginning", XVI)
+            == ZEPHYRUM);
 
         /* Joannes 1:1 */
         v = biblia_versus(b, LIBER_JOANNES, I, I);
         CREDO_VERUM(v.mensura > ZEPHYRUM);
         CREDO_NON_NIHIL(v.datum);
         /* Textus incipit cum "In the beginning" */
-        CREDO_VERUM(memcmp(v.datum, "In the beginning", XVI) == ZEPHYRUM);
+        CREDO_VERUM(memcmp(v.datum, "In the beginning", XVI)
+            == ZEPHYRUM);
 
         /* Psalmus 23:1 (Dominus regit me) */
         v = biblia_versus(b, LIBER_PSALMORUM, XXIII, I);
@@ -91,7 +94,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        chorda v;
+                 chorda  v;
 
         imprimere("\n--- Probans biblia_versus invalidi ---\n");
 
@@ -123,7 +126,7 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans Biblia* b;
+           constans Biblia* b;
         constans character* titulus;
 
         imprimere("\n--- Probans biblia_nomen_libri ---\n");
@@ -165,7 +168,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        i32 capitula;
+                    i32  capitula;
 
         imprimere("\n--- Probans biblia_capitula_in_libro ---\n");
 
@@ -202,7 +205,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        i32 versus;
+                    i32  versus;
 
         imprimere("\n--- Probans biblia_versus_in_capitulo ---\n");
 
@@ -258,8 +261,8 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans Biblia* b;
-        chorda v;
+           constans Biblia* b;
+                    chorda  v;
         constans character* titulus;
 
         imprimere("\n--- Probans libri deuterocanonici ---\n");
@@ -304,7 +307,8 @@ s32 principale(vacuum)
         v = biblia_versus(b, LIBER_I_MACHABAEORUM, I, I);
         CREDO_VERUM(v.mensura > ZEPHYRUM);
         CREDO_NON_NIHIL(v.datum);
-        CREDO_VERUM(memcmp(v.datum, "Now it came to pass", XIX) == ZEPHYRUM);
+        CREDO_VERUM(memcmp(v.datum, "Now it came to pass", XIX)
+            == ZEPHYRUM);
 
         /* 2 Maccabees 1:1 */
         v = biblia_versus(b, LIBER_II_MACHABAEORUM, I, I);
@@ -319,7 +323,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        chorda v;
+                 chorda  v;
 
         imprimere("\n--- Probans versus specifici ---\n");
 
@@ -328,7 +332,8 @@ s32 principale(vacuum)
         /* John 1:1 should have "was the Word" (not just "In the beginning") */
         v = biblia_versus(b, LIBER_JOANNES, I, I);
         CREDO_VERUM(v.mensura > XL);
-        CREDO_VERUM(memcmp(v.datum, "In the beginning was the Word", XXIX) == ZEPHYRUM);
+        CREDO_VERUM(memcmp(v.datum, "In the beginning was the Word",
+            XXIX) == ZEPHYRUM);
 
         /* Genesis 1:1 vs John 1:1 - both start same but different books */
         {
@@ -339,8 +344,10 @@ s32 principale(vacuum)
             joh_1_1 = biblia_versus(b, LIBER_JOANNES, I, I);
 
             /* Both start with "In the beginning" */
-            CREDO_VERUM(memcmp(gen_1_1.datum, "In the beginning", XVI) == ZEPHYRUM);
-            CREDO_VERUM(memcmp(joh_1_1.datum, "In the beginning", XVI) == ZEPHYRUM);
+            CREDO_VERUM(memcmp(gen_1_1.datum, "In the beginning", XVI)
+                == ZEPHYRUM);
+            CREDO_VERUM(memcmp(joh_1_1.datum, "In the beginning", XVI)
+                == ZEPHYRUM);
 
             /* But they are different texts */
             CREDO_VERUM(gen_1_1.datum != joh_1_1.datum);
@@ -355,7 +362,7 @@ s32 principale(vacuum)
 
     {
         constans Biblia* b;
-        s32 idx;
+                    s32  idx;
 
         imprimere("\n--- Probans biblia_invenire_librum ---\n");
 

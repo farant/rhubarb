@@ -10,7 +10,9 @@
 
 /* Adiutor: comparare chorda* cum literis C */
 interior b32
-_chorda_ptr_eq_literis(chorda* ch, constans character* cstr)
+_chorda_ptr_eq_literis (
+                chorda* ch,
+    constans character* cstr)
 {
     si (!ch)
     {
@@ -21,9 +23,9 @@ _chorda_ptr_eq_literis(chorda* ch, constans character* cstr)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_xml", MMMMXCVI);
@@ -43,6 +45,7 @@ s32 principale(vacuum)
 
     credo_aperire(piscina);
 
+
     /* ==================================================
      * Probare xml_elementum_creare
      * ================================================== */
@@ -61,6 +64,7 @@ s32 principale(vacuum)
         imprimere("  Elementum 'root' creatum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_textum_creare
      * ================================================== */
@@ -74,10 +78,12 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
         CREDO_AEQUALIS_I32(nodus->genus, XML_NODUS_TEXTUS);
         CREDO_NON_NIHIL(nodus->valor);
-        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->valor, "Hello World"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->valor,
+            "Hello World"));
 
         imprimere("  Textus 'Hello World' creatum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare xml_attributum_addere
@@ -87,13 +93,15 @@ s32 principale(vacuum)
 
     {
         XmlNodus* nodus;
-        chorda*   valor;
+          chorda* valor;
 
         nodus = xml_elementum_creare(piscina, intern, "element");
         CREDO_NON_NIHIL(nodus);
 
-        CREDO_VERUM(xml_attributum_addere(nodus, piscina, intern, "id", "123"));
-        CREDO_VERUM(xml_attributum_addere(nodus, piscina, intern, "class", "main"));
+        CREDO_VERUM(xml_attributum_addere(nodus, piscina, intern, "id",
+            "123"));
+        CREDO_VERUM(xml_attributum_addere(nodus, piscina, intern,
+            "class", "main"));
 
         valor = xml_attributum_capere(nodus, "id");
         CREDO_NON_NIHIL(valor);
@@ -106,6 +114,7 @@ s32 principale(vacuum)
         imprimere("  Attributa addita et obtenta: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_liberum_addere
      * ================================================== */
@@ -116,16 +125,18 @@ s32 principale(vacuum)
         XmlNodus* parens;
         XmlNodus* liberum;
 
-        parens = xml_elementum_creare(piscina, intern, "parent");
-        liberum = xml_elementum_creare(piscina, intern, "child");
+        parens   = xml_elementum_creare(piscina, intern, "parent");
+        liberum  = xml_elementum_creare(piscina, intern, "child");
 
         CREDO_VERUM(xml_liberum_addere(parens, liberum));
         CREDO_AEQUALIS_I32(xml_numerus_liberorum(parens), I);
-        CREDO_AEQUALIS_PTR(xml_liberum_ad_indicem(parens, ZEPHYRUM), liberum);
+        CREDO_AEQUALIS_PTR(xml_liberum_ad_indicem(parens, ZEPHYRUM),
+            liberum);
         CREDO_AEQUALIS_PTR(liberum->parens, parens);
 
         imprimere("  Liberum additum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare xml_invenire_liberum
@@ -139,9 +150,9 @@ s32 principale(vacuum)
         XmlNodus* lib2;
         XmlNodus* inventum;
 
-        parens = xml_elementum_creare(piscina, intern, "parent");
-        lib1 = xml_elementum_creare(piscina, intern, "alpha");
-        lib2 = xml_elementum_creare(piscina, intern, "beta");
+        parens  = xml_elementum_creare(piscina, intern, "parent");
+        lib1    = xml_elementum_creare(piscina, intern, "alpha");
+        lib2    = xml_elementum_creare(piscina, intern, "beta");
 
         xml_liberum_addere(parens, lib1);
         xml_liberum_addere(parens, lib2);
@@ -158,6 +169,7 @@ s32 principale(vacuum)
         imprimere("  Invenire liberum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_scribere simplex
      * ================================================== */
@@ -166,7 +178,7 @@ s32 principale(vacuum)
 
     {
         XmlNodus* nodus;
-        chorda    output;
+          chorda  output;
 
         nodus = xml_elementum_creare(piscina, intern, "empty");
 
@@ -177,6 +189,7 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<empty/>");
     }
 
+
     /* ==================================================
      * Probare xml_scribere cum attributis
      * ================================================== */
@@ -185,7 +198,7 @@ s32 principale(vacuum)
 
     {
         XmlNodus* nodus;
-        chorda    output;
+          chorda  output;
 
         nodus = xml_elementum_creare(piscina, intern, "item");
         xml_attributum_addere(nodus, piscina, intern, "id", "42");
@@ -197,6 +210,7 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<item id=\"42\"/>");
     }
 
+
     /* ==================================================
      * Probare xml_scribere cum liberis
      * ================================================== */
@@ -206,18 +220,20 @@ s32 principale(vacuum)
     {
         XmlNodus* parens;
         XmlNodus* liberum;
-        chorda    output;
+          chorda  output;
 
-        parens = xml_elementum_creare(piscina, intern, "parent");
-        liberum = xml_elementum_creare(piscina, intern, "child");
+        parens   = xml_elementum_creare(piscina, intern, "parent");
+        liberum  = xml_elementum_creare(piscina, intern, "child");
         xml_liberum_addere(parens, liberum);
 
         output = xml_scribere(parens, piscina, FALSUM);
         CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<parent><child/></parent>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<parent><child/></parent>");
     }
+
 
     /* ==================================================
      * Probare xml_scribere cum textu
@@ -227,7 +243,7 @@ s32 principale(vacuum)
 
     {
         XmlNodus* nodus;
-        chorda    output;
+          chorda  output;
 
         nodus = xml_elementum_creare(piscina, intern, "greeting");
         xml_textum_addere(nodus, piscina, intern, "Hello");
@@ -236,8 +252,10 @@ s32 principale(vacuum)
         CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<greeting>Hello</greeting>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<greeting>Hello</greeting>");
     }
+
 
     /* ==================================================
      * Probare xml_scribere effugium
@@ -247,7 +265,7 @@ s32 principale(vacuum)
 
     {
         XmlNodus* nodus;
-        chorda    output;
+          chorda  output;
 
         nodus = xml_elementum_creare(piscina, intern, "data");
         xml_textum_addere(nodus, piscina, intern, "<>&");
@@ -256,8 +274,10 @@ s32 principale(vacuum)
         CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<data>&lt;&gt;&amp;</data>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<data>&lt;&gt;&amp;</data>");
     }
+
 
     /* ==================================================
      * Probare xml_scribere pulchrum
@@ -269,11 +289,11 @@ s32 principale(vacuum)
         XmlNodus* radix;
         XmlNodus* lib1;
         XmlNodus* lib2;
-        chorda    output;
+          chorda  output;
 
-        radix = xml_elementum_creare(piscina, intern, "root");
-        lib1 = xml_elementum_creare(piscina, intern, "item");
-        lib2 = xml_elementum_creare(piscina, intern, "item");
+        radix  = xml_elementum_creare(piscina, intern, "root");
+        lib1   = xml_elementum_creare(piscina, intern, "item");
+        lib2   = xml_elementum_creare(piscina, intern, "item");
 
         xml_attributum_addere(lib1, piscina, intern, "id", "1");
         xml_attributum_addere(lib2, piscina, intern, "id", "2");
@@ -286,6 +306,7 @@ s32 principale(vacuum)
 
         imprimere("  Output:\n%.*s", output.mensura, output.datum);
     }
+
 
     /* ==================================================
      * Probare xml_legere simplex
@@ -305,6 +326,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio '<root/>': VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_legere cum attributis
      * ================================================== */
@@ -312,10 +334,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans xml_legere cum attributis ---\n");
 
     {
-        XmlResultus res;
-        chorda*     val;
+        XmlResultus  res;
+             chorda* val;
 
-        res = xml_legere_ex_literis("<item id=\"42\" name=\"test\"/>", piscina, intern);
+        res = xml_legere_ex_literis("<item id=\"42\" name=\"test\"/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
 
@@ -330,6 +353,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio attributa: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_legere cum liberis
      * ================================================== */
@@ -337,10 +361,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans xml_legere cum liberis ---\n");
 
     {
-        XmlResultus res;
-        XmlNodus*   lib;
+        XmlResultus  res;
+           XmlNodus* lib;
 
-        res = xml_legere_ex_literis("<parent><child/></parent>", piscina, intern);
+        res = xml_legere_ex_literis("<parent><child/></parent>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
         CREDO_AEQUALIS_I32(xml_numerus_liberorum(res.radix), I);
@@ -351,6 +376,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio liberis: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_legere cum textu
      * ================================================== */
@@ -359,9 +385,10 @@ s32 principale(vacuum)
 
     {
         XmlResultus res;
-        chorda      textus;
+             chorda textus;
 
-        res = xml_legere_ex_literis("<greeting>Hello World</greeting>", piscina, intern);
+        res = xml_legere_ex_literis("<greeting>Hello World</greeting>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
 
@@ -372,6 +399,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio textus: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_legere entity references
      * ================================================== */
@@ -380,9 +408,11 @@ s32 principale(vacuum)
 
     {
         XmlResultus res;
-        chorda      textus;
+             chorda textus;
 
-        res = xml_legere_ex_literis("<data>&lt;tag&gt; &amp; &quot;test&quot;</data>", piscina, intern);
+        res =
+            xml_legere_ex_literis("<data>&lt;tag&gt; &amp; &quot;test&quot;</data>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
 
@@ -392,6 +422,7 @@ s32 principale(vacuum)
         imprimere("  Decoded: '%.*s'\n", textus.mensura, textus.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<tag> & \"test\"");
     }
+
 
     /* ==================================================
      * Probare xml_legere complexum
@@ -407,11 +438,11 @@ s32 principale(vacuum)
             "  <nota>#activus</nota>\n"
             "</entitas>";
 
-        XmlResultus res;
-        XmlNodus*   prop;
-        XmlNodus*   nota;
-        chorda*     val;
-        chorda      text;
+        XmlResultus  res;
+           XmlNodus* prop;
+           XmlNodus* nota;
+             chorda* val;
+             chorda  text;
 
         res = xml_legere_ex_literis(xml_input, piscina, intern);
         CREDO_VERUM(res.successus);
@@ -443,6 +474,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio complexa: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare roundtrip (parse -> serialize -> parse)
      * ================================================== */
@@ -453,13 +485,13 @@ s32 principale(vacuum)
         constans character* xml_original =
             "<root attr=\"value\"><child>text</child></root>";
 
-        XmlResultus res1;
-        chorda      serialized;
-        XmlResultus res2;
-        chorda*     val1;
-        chorda*     val2;
-        chorda      text1;
-        chorda      text2;
+        XmlResultus  res1;
+             chorda  serialized;
+        XmlResultus  res2;
+             chorda* val1;
+             chorda* val2;
+             chorda  text1;
+             chorda  text2;
 
         /* Parse original */
         res1 = xml_legere_ex_literis(xml_original, piscina, intern);
@@ -469,7 +501,8 @@ s32 principale(vacuum)
         serialized = xml_scribere(res1.radix, piscina, FALSUM);
         CREDO_CHORDA_NON_VACUA(serialized);
 
-        imprimere("  Serialized: %.*s\n", serialized.mensura, serialized.datum);
+        imprimere("  Serialized: %.*s\n", serialized.mensura,
+            serialized.datum);
 
         /* Parse again */
         res2 = xml_legere(serialized, piscina, intern);
@@ -482,12 +515,15 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(val2);
         CREDO_VERUM(chorda_aequalis(*val1, *val2));
 
-        text1 = xml_textus_internus(xml_invenire_liberum(res1.radix, "child"), piscina);
-        text2 = xml_textus_internus(xml_invenire_liberum(res2.radix, "child"), piscina);
+        text1 = xml_textus_internus(xml_invenire_liberum(res1.radix,
+            "child"), piscina);
+        text2 = xml_textus_internus(xml_invenire_liberum(res2.radix,
+            "child"), piscina);
         CREDO_VERUM(chorda_aequalis(text1, text2));
 
         imprimere("  Roundtrip: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare xml_legere errores
@@ -515,6 +551,7 @@ s32 principale(vacuum)
         imprimere("  Mismatched tags detectum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_legere cum declaratione XML
      * ================================================== */
@@ -534,6 +571,7 @@ s32 principale(vacuum)
 
         imprimere("  Declaratio XML saltata: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare xml_legere cum commentis
@@ -558,6 +596,7 @@ s32 principale(vacuum)
         imprimere("  Commenta saltata: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare xml_invenire_omnes_liberos
      * ================================================== */
@@ -565,8 +604,8 @@ s32 principale(vacuum)
     imprimere("\n--- Probans xml_invenire_omnes_liberos ---\n");
 
     {
-        XmlResultus res;
-        Xar*        items;
+        XmlResultus  res;
+                Xar* items;
 
         res = xml_legere_ex_literis(
             "<list>"
@@ -582,8 +621,10 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(items);
         CREDO_AEQUALIS_I32(xar_numerus(items), III);
 
-        imprimere("  Invenire omnes 'item': %d (expected 3)\n", xar_numerus(items));
+        imprimere("  Invenire omnes 'item': %d (expected 3)\n",
+            xar_numerus(items));
     }
+
 
     /* ==================================================
      * Compendium

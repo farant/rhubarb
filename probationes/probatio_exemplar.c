@@ -6,6 +6,7 @@
 #include "credo.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Probationes: Characteres Literales
  * ================================================== */
@@ -13,21 +14,26 @@
 hic_manens vacuum
 probare_literales(Piscina* piscina)
 {
-    Exemplar* ex;
-    ExemplarFructus f;
+           Exemplar* ex;
+    ExemplarFructus  f;
 
     imprimere("\n--- Probans characteres literales ---\n");
 
     /* Congruentia exacta */
-    ex = exemplar_compilare(chorda_ex_literis("hello", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("hello", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("hello", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("hello!", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("hell", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("hello",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("hello!",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("hell",
+        piscina)));
 
     /* Invenire in chorda */
-    f = exemplar_invenire(ex, chorda_ex_literis("say hello world", piscina));
+    f = exemplar_invenire(ex, chorda_ex_literis("say hello world",
+        piscina));
     CREDO_VERUM(f.congruit);
     CREDO_AEQUALIS_I32(f.initium, 4);
     CREDO_AEQUALIS_I32(f.longitudo, 5);
@@ -45,17 +51,24 @@ probare_punctum(Piscina* piscina)
 
     imprimere("\n--- Probans punctum (.) ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("a.c", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("a.c", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a1c", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a c", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a1c",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a c",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc",
+        piscina)));
 
     /* Punctum non congruit cum newline */
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("a\nc", piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("a\nc",
+        piscina)));
 }
 
 
@@ -70,22 +83,32 @@ probare_asteriscus(Piscina* piscina)
 
     imprimere("\n--- Probans asteriscum (*) ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("ab*c", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("ab*c", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbbc", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("adc", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbbc",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("adc",
+        piscina)));
 
     /* .* pro quolibet */
-    ex = exemplar_compilare(chorda_ex_literis("a.*c", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("a.*c", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("aXYZc", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("aXYZc",
+        piscina)));
 }
 
 
@@ -100,13 +123,18 @@ probare_plus(Piscina* piscina)
 
     imprimere("\n--- Probans plus (+) ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("ab+c", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("ab+c", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbbc", piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ac",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbc",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("abbbc",
+        piscina)));
 }
 
 
@@ -121,12 +149,16 @@ probare_quaestionis(Piscina* piscina)
 
     imprimere("\n--- Probans quaestionis (?) ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("colou?r", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("colou?r", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("color", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("colour", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("colouur", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("color",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("colour",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex,
+        chorda_ex_literis("colouur", piscina)));
 }
 
 
@@ -142,32 +174,48 @@ probare_classes(Piscina* piscina)
     imprimere("\n--- Probans classes characterum ---\n");
 
     /* Classis simplex */
-    ex = exemplar_compilare(chorda_ex_literis("[aeiou]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[aeiou]", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("e", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("b", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ae", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("e",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("b",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("ae",
+        piscina)));
 
     /* Intervallum */
-    ex = exemplar_compilare(chorda_ex_literis("[a-z]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[a-z]", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("m", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("z", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("A", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("0", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("m",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("z",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("A",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("0",
+        piscina)));
 
     /* Intervalla multiplicia */
-    ex = exemplar_compilare(chorda_ex_literis("[A-Za-z0-9]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[A-Za-z0-9]", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("A", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("z", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("5", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("!", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("A",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("z",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("5",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("!",
+        piscina)));
 }
 
 
@@ -182,12 +230,16 @@ probare_classis_negata(Piscina* piscina)
 
     imprimere("\n--- Probans classem negatam ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("[^0-9]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[^0-9]", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("5", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("!", piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("5",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a",
+        piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("!",
+        piscina)));
 }
 
 
@@ -198,16 +250,18 @@ probare_classis_negata(Piscina* piscina)
 hic_manens vacuum
 probare_ancorae(Piscina* piscina)
 {
-    Exemplar* ex;
-    ExemplarFructus f;
+           Exemplar* ex;
+    ExemplarFructus  f;
 
     imprimere("\n--- Probans ancoras ---\n");
 
     /* Ancora initii */
-    ex = exemplar_compilare(chorda_ex_literis("^hello", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("^hello", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    f = exemplar_invenire(ex, chorda_ex_literis("hello world", piscina));
+    f = exemplar_invenire(ex, chorda_ex_literis("hello world",
+        piscina));
     CREDO_VERUM(f.congruit);
     CREDO_AEQUALIS_I32(f.initium, 0);
 
@@ -215,21 +269,26 @@ probare_ancorae(Piscina* piscina)
     CREDO_FALSUM(f.congruit);
 
     /* Ancora finis */
-    ex = exemplar_compilare(chorda_ex_literis("world$", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("world$", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    f = exemplar_invenire(ex, chorda_ex_literis("hello world", piscina));
+    f = exemplar_invenire(ex, chorda_ex_literis("hello world",
+        piscina));
     CREDO_VERUM(f.congruit);
     CREDO_AEQUALIS_I32(f.initium, 6);
 
-    f = exemplar_invenire(ex, chorda_ex_literis("world hello", piscina));
+    f = exemplar_invenire(ex, chorda_ex_literis("world hello",
+        piscina));
     CREDO_FALSUM(f.congruit);
 
     /* Ambae ancorae */
-    ex = exemplar_compilare(chorda_ex_literis("^exact$", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("^exact$", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("exact", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("exact",
+        piscina)));
 
     f = exemplar_invenire(ex, chorda_ex_literis("exact", piscina));
     CREDO_VERUM(f.congruit);
@@ -251,23 +310,30 @@ probare_effugium(Piscina* piscina)
     imprimere("\n--- Probans effugium ---\n");
 
     /* Effugere punctum */
-    ex = exemplar_compilare(chorda_ex_literis("a\\.b", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("a\\.b", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a.b", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("aXb", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a.b",
+        piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("aXb",
+        piscina)));
 
     /* Effugere asteriscum */
-    ex = exemplar_compilare(chorda_ex_literis("a\\*b", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("a\\*b", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a*b", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("a*b",
+        piscina)));
 
     /* Effugere bracketas */
-    ex = exemplar_compilare(chorda_ex_literis("\\[test\\]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("\\[test\\]", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("[test]", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("[test]",
+        piscina)));
 }
 
 
@@ -278,22 +344,25 @@ probare_effugium(Piscina* piscina)
 hic_manens vacuum
 probare_complexa(Piscina* piscina)
 {
-    Exemplar* ex;
-    ExemplarFructus f;
+           Exemplar* ex;
+    ExemplarFructus  f;
 
     imprimere("\n--- Probans exemplaria complexa ---\n");
 
     /* Annus: [0-9][0-9][0-9][0-9] */
-    ex = exemplar_compilare(chorda_ex_literis("[0-9][0-9][0-9][0-9]", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[0-9][0-9][0-9][0-9]",
+        piscina), NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    f = exemplar_invenire(ex, chorda_ex_literis("Published in 1847 by...", piscina));
+    f = exemplar_invenire(ex,
+        chorda_ex_literis("Published in 1847 by...", piscina));
     CREDO_VERUM(f.congruit);
     CREDO_AEQUALIS_I32(f.initium, 13);
     CREDO_AEQUALIS_I32(f.longitudo, 4);
 
     /* Digiti: [0-9]+ */
-    ex = exemplar_compilare(chorda_ex_literis("[0-9]+", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[0-9]+", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
     f = exemplar_invenire(ex, chorda_ex_literis("Page 42", piscina));
@@ -302,21 +371,27 @@ probare_complexa(Piscina* piscina)
     CREDO_AEQUALIS_I32(f.longitudo, 2);
 
     /* Verbum capitalizatum: [A-Z][a-z]* */
-    ex = exemplar_compilare(chorda_ex_literis("[A-Z][a-z]*", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[A-Z][a-z]*", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    f = exemplar_invenire(ex, chorda_ex_literis("hello World", piscina));
+    f = exemplar_invenire(ex, chorda_ex_literis("hello World",
+        piscina));
     CREDO_VERUM(f.congruit);
     CREDO_AEQUALIS_I32(f.initium, 6);
     CREDO_AEQUALIS_I32(f.longitudo, 5);
 
     /* Filum .txt: .*\\.txt$ */
-    ex = exemplar_compilare(chorda_ex_literis(".*\\.txt$", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis(".*\\.txt$", piscina),
+        NIHIL, piscina);
     CREDO_NON_NIHIL(ex);
 
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("document.txt", piscina)));
-    CREDO_VERUM(exemplar_congruit_totum(ex, chorda_ex_literis("my.file.txt", piscina)));
-    CREDO_FALSUM(exemplar_congruit_totum(ex, chorda_ex_literis("document.txt.bak", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex,
+        chorda_ex_literis("document.txt", piscina)));
+    CREDO_VERUM(exemplar_congruit_totum(ex,
+        chorda_ex_literis("my.file.txt", piscina)));
+    CREDO_FALSUM(exemplar_congruit_totum(ex,
+        chorda_ex_literis("document.txt.bak", piscina)));
 }
 
 
@@ -327,13 +402,14 @@ probare_complexa(Piscina* piscina)
 hic_manens vacuum
 probare_invenire_omnes(Piscina* piscina)
 {
-    Exemplar* ex;
+           Exemplar* ex;
     ExemplarFructus* fructus;
-    i32 numerus;
+                i32  numerus;
 
     imprimere("\n--- Probans invenire omnes ---\n");
 
-    ex = exemplar_compilare(chorda_ex_literis("[0-9]+", piscina), NIHIL, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[0-9]+", piscina), NIHIL,
+        piscina);
     CREDO_NON_NIHIL(ex);
 
     numerus = exemplar_invenire_omnes(ex,
@@ -357,28 +433,33 @@ probare_invenire_omnes(Piscina* piscina)
 hic_manens vacuum
 probare_errores(Piscina* piscina)
 {
-    Exemplar* ex;
-    ExemplarStatus status;
+          Exemplar* ex;
+    ExemplarStatus  status;
 
     imprimere("\n--- Probans errores compilationis ---\n");
 
     /* Classis non clausa */
-    ex = exemplar_compilare(chorda_ex_literis("[abc", piscina), &status, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[abc", piscina), &status,
+        piscina);
     CREDO_NIHIL(ex);
-    CREDO_AEQUALIS_I32((i32)status, (i32)EXEMPLAR_ERROR_CLASSIS_NON_CLAUSA);
+    CREDO_AEQUALIS_I32((i32)status,
+        (i32)EXEMPLAR_ERROR_CLASSIS_NON_CLAUSA);
 
     /* Effugium ad finem */
-    ex = exemplar_compilare(chorda_ex_literis("test\\", piscina), &status, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("test\\", piscina),
+        &status, piscina);
     CREDO_NIHIL(ex);
     CREDO_AEQUALIS_I32((i32)status, (i32)EXEMPLAR_ERROR_EFFUGIUM_FINIS);
 
     /* Ordo malus */
-    ex = exemplar_compilare(chorda_ex_literis("[z-a]", piscina), &status, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("[z-a]", piscina),
+        &status, piscina);
     CREDO_NIHIL(ex);
     CREDO_AEQUALIS_I32((i32)status, (i32)EXEMPLAR_ERROR_ORDO_MALUS);
 
     /* Quantificator sine praecedente */
-    ex = exemplar_compilare(chorda_ex_literis("*abc", piscina), &status, piscina);
+    ex = exemplar_compilare(chorda_ex_literis("*abc", piscina), &status,
+        piscina);
     CREDO_NIHIL(ex);
     CREDO_AEQUALIS_I32((i32)status, (i32)EXEMPLAR_ERROR_SYNTAXIS);
 }
@@ -422,12 +503,14 @@ probare_status_descriptio(Piscina* piscina)
  * Principale
  * ================================================== */
 
-s32 principale(vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_exemplar", 65536);
-    si (!piscina) {
+    si (!piscina)
+    {
         imprimere("FRACTA: piscina_generatio\n");
         redde 1;
     }

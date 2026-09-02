@@ -16,7 +16,8 @@
  * ======================================================================== */
 
 interior i32
-proba_aperire(Piscina* piscina)
+proba_aperire (
+    Piscina* piscina)
 {
     Capsula* capsula;
 
@@ -42,12 +43,12 @@ proba_aperire(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_librarium_stml(Piscina* piscina)
+proba_librarium_stml (
+    Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus res;
+           Capsula* capsula;
+    CapsulaFructus  res;
 
     printf("  proba_librarium_stml: ");
 
@@ -85,12 +86,12 @@ proba_librarium_stml(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_legere_librum(Piscina* piscina)
+proba_legere_librum (
+    Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus res;
+           Capsula* capsula;
+    CapsulaFructus  res;
 
     printf("  proba_legere_librum: ");
 
@@ -122,15 +123,15 @@ proba_legere_librum(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_parse_embedded_stml(Piscina* piscina)
+proba_parse_embedded_stml (
+    Piscina* piscina)
 {
-    Capsula*             capsula;
-    CapsulaFructus       res;
+                Capsula* capsula;
+         CapsulaFructus  res;
     InternamentumChorda* intern;
-    StmlResultus         stml_res;
-    Xar*                 libri;
+           StmlResultus  stml_res;
+                    Xar* libri;
 
     printf("  proba_parse_embedded_stml: ");
 
@@ -151,8 +152,8 @@ proba_parse_embedded_stml(Piscina* piscina)
     }
 
     /* Parse the STML */
-    intern = internamentum_creare(piscina);
-    stml_res = stml_legere(res.datum, piscina, intern);
+    intern    = internamentum_creare(piscina);
+    stml_res  = stml_legere(res.datum, piscina, intern);
 
     si (!stml_res.successus)
     {
@@ -161,7 +162,8 @@ proba_parse_embedded_stml(Piscina* piscina)
     }
 
     /* Find all liber elements */
-    libri = stml_invenire_omnes_liberos(stml_res.elementum_radix, "liber", piscina);
+    libri = stml_invenire_omnes_liberos(stml_res.elementum_radix,
+        "liber", piscina);
 
     si (xar_numerus(libri) != X)
     {
@@ -174,23 +176,23 @@ proba_parse_embedded_stml(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_via_paths_updated(Piscina* piscina)
+proba_via_paths_updated (
+    Piscina* piscina)
 {
-    Capsula*             capsula;
-    CapsulaFructus       res;
+                Capsula* capsula;
+         CapsulaFructus  res;
     InternamentumChorda* intern;
-    StmlResultus         stml_res;
-    Xar*                 libri;
-    StmlNodus*           nodus_liber;
-    StmlNodus*           nodus_via;
-    chorda               via;
+           StmlResultus  stml_res;
+                    Xar* libri;
+              StmlNodus* nodus_liber;
+              StmlNodus* nodus_via;
+                 chorda  via;
 
     printf("  proba_via_paths_updated: ");
 
-    capsula = capsula_aperire(&capsula_libri, piscina);
-    res = capsula_legere(capsula, "librarium.stml", piscina);
+    capsula  = capsula_aperire(&capsula_libri, piscina);
+    res      = capsula_legere(capsula, "librarium.stml", piscina);
 
     si (res.status != CAPSULA_OK)
     {
@@ -198,8 +200,8 @@ proba_via_paths_updated(Piscina* piscina)
         redde FALSUM;
     }
 
-    intern = internamentum_creare(piscina);
-    stml_res = stml_legere(res.datum, piscina, intern);
+    intern    = internamentum_creare(piscina);
+    stml_res  = stml_legere(res.datum, piscina, intern);
 
     si (!stml_res.successus)
     {
@@ -207,7 +209,8 @@ proba_via_paths_updated(Piscina* piscina)
         redde FALSUM;
     }
 
-    libri = stml_invenire_omnes_liberos(stml_res.elementum_radix, "liber", piscina);
+    libri = stml_invenire_omnes_liberos(stml_res.elementum_radix,
+        "liber", piscina);
 
     si (xar_numerus(libri) == 0)
     {
@@ -216,8 +219,8 @@ proba_via_paths_updated(Piscina* piscina)
     }
 
     /* Check first book's via tag */
-    nodus_liber = *(StmlNodus**)xar_obtinere(libri, 0);
-    nodus_via = stml_invenire_liberum(nodus_liber, "via");
+    nodus_liber  = *(StmlNodus**)xar_obtinere(libri, 0);
+    nodus_via    = stml_invenire_liberum(nodus_liber, "via");
 
     si (nodus_via == NIHIL)
     {
@@ -228,8 +231,9 @@ proba_via_paths_updated(Piscina* piscina)
     via = stml_textus_internus(nodus_via, piscina);
 
     /* Via should be "{numerus}.txt" format, not "../gutenberg-mirror/..." */
-    si (via.mensura < IV || via.datum[via.mensura - I] != 't' ||
-        via.datum[via.mensura - II] != 'x' || via.datum[via.mensura - III] != 't')
+    si (   via.mensura < IV || via.datum[via.mensura - I] != 't'
+        || via.datum[via.mensura - II]  != 'x'
+        || via.datum[via.mensura - III] != 't')
     {
         printf("FALSUM - via non finit cum '.txt': %.*s\n",
                (i32)via.mensura, via.datum);
@@ -260,19 +264,19 @@ proba_via_paths_updated(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    i32      successus;
-    i32      fallitae;
+        i32  successus;
+        i32  fallitae;
 
     piscina = piscina_generare_dynamicum("probatio_libri", VIII * M);
 
     printf("\nProbationes Libri (Embedded Books)\n");
     printf("===================================\n\n");
 
-    successus = 0;
-    fallitae = 0;
+    successus  = 0;
+    fallitae   = 0;
 
     si (proba_aperire(piscina)) successus++; alioquin fallitae++;
     si (proba_librarium_stml(piscina)) successus++; alioquin fallitae++;

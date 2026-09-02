@@ -16,7 +16,7 @@
 interior vacuum
 probatio_crc32_vector(Piscina* piscina)
 {
-    i32 crc;
+            i32  crc;
     constans i8* testum;
 
     (vacuum)piscina;
@@ -24,8 +24,8 @@ probatio_crc32_vector(Piscina* piscina)
     printf("--- Probans CRC-32 vector ---\n");
 
     /* Notum vector: "123456789" -> 0xCBF43926 */
-    testum = (constans i8*)"123456789";
-    crc = flatura_crc32(testum, IX);
+    testum  = (constans i8*)"123456789";
+    crc     = flatura_crc32(testum, IX);
 
     printf("  CRC-32 de \"123456789\": 0x%08X\n", crc);
     CREDO_AEQUALIS_I32(crc, (i32)0xCBF43926);
@@ -85,15 +85,15 @@ probatio_crc32_incrementalis(Piscina* piscina)
 interior vacuum
 probatio_round_trip_parvus(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
-    constans i8*   originalis;
-    i32            mensura;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
+       constans i8* originalis;
+               i32  mensura;
 
     printf("--- Probans round-trip parvus ---\n");
 
-    originalis = (constans i8*)"Hello, World!";
-    mensura = XIII;
+    originalis  = (constans i8*)"Hello, World!";
+    mensura     = XIII;
 
     compressa = flatura_deflare(originalis, mensura,
                                 FLATURA_COMPRESSIO_ORDINARIA, piscina);
@@ -105,14 +105,16 @@ probatio_round_trip_parvus(Piscina* piscina)
     CREDO_AEQUALIS_I32((i32)compressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_NON_NIHIL(compressa.datum);
 
-    decompressa = flatura_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_inflare(compressa.datum, compressa.mensura,
+        piscina);
 
     printf("  Decompressa: %d bytes (status=%d)\n",
            decompressa.mensura, decompressa.status);
 
     CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_AEQUALIS_I32(decompressa.mensura, mensura);
-    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura) == 0);
+    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura)
+        == 0);
 
     printf("\n");
 }
@@ -121,17 +123,18 @@ probatio_round_trip_parvus(Piscina* piscina)
 interior vacuum
 probatio_round_trip_magnus(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
-    i8*            originalis;
-    i32            mensura;
-    i32            i;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
+                i8* originalis;
+               i32  mensura;
+               i32  i;
 
     printf("--- Probans round-trip magnus ---\n");
 
     /* Generare datum repetitivum (bonus pro compressione) */
     mensura = MMMMXCVI;  /* 4096 */
-    originalis = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    originalis = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
 
     per (i = 0; i < mensura; i++)
     {
@@ -150,13 +153,15 @@ probatio_round_trip_magnus(Piscina* piscina)
     CREDO_NON_NIHIL(compressa.datum);
     CREDO_VERUM(compressa.mensura < mensura);  /* Debet esse minor */
 
-    decompressa = flatura_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_inflare(compressa.datum, compressa.mensura,
+        piscina);
 
     printf("  Decompressa: %d bytes\n", decompressa.mensura);
 
     CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_AEQUALIS_I32(decompressa.mensura, mensura);
-    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura) == 0);
+    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura)
+        == 0);
 
     printf("\n");
 }
@@ -165,15 +170,15 @@ probatio_round_trip_magnus(Piscina* piscina)
 interior vacuum
 probatio_stored_block(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
-    constans i8*   originalis;
-    i32            mensura;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
+       constans i8* originalis;
+               i32  mensura;
 
     printf("--- Probans stored block (sine compressione) ---\n");
 
-    originalis = (constans i8*)"Testum";
-    mensura = VI;
+    originalis  = (constans i8*)"Testum";
+    mensura     = VI;
 
     compressa = flatura_deflare(originalis, mensura,
                                 FLATURA_COMPRESSIO_NULLA, piscina);
@@ -183,11 +188,13 @@ probatio_stored_block(Piscina* piscina)
 
     CREDO_AEQUALIS_I32((i32)compressa.status, (i32)FLATURA_STATUS_OK);
 
-    decompressa = flatura_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_inflare(compressa.datum, compressa.mensura,
+        piscina);
 
     CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_AEQUALIS_I32(decompressa.mensura, mensura);
-    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura) == 0);
+    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura)
+        == 0);
 
     printf("\n");
 }
@@ -200,18 +207,20 @@ probatio_stored_block(Piscina* piscina)
 interior vacuum
 probatio_gzip_round_trip(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
-    constans i8*   originalis;
-    i32            mensura;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
+       constans i8* originalis;
+               i32  mensura;
 
     printf("--- Probans gzip round-trip ---\n");
 
-    originalis = (constans i8*)"Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    originalis =
+        (constans i8*)"Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
     mensura = LVII;
 
     compressa = flatura_gzip_deflare(originalis, mensura,
-                                     FLATURA_COMPRESSIO_ORDINARIA, piscina);
+                                     FLATURA_COMPRESSIO_ORDINARIA,
+                                     piscina);
 
     printf("  Originalis: %d bytes\n", mensura);
     printf("  Gzip:       %d bytes (status=%d)\n",
@@ -224,14 +233,16 @@ probatio_gzip_round_trip(Piscina* piscina)
     CREDO_AEQUALIS_I32((i32)compressa.datum[0], 0x1F);
     CREDO_AEQUALIS_I32((i32)compressa.datum[I], 0x8B);
 
-    decompressa = flatura_gzip_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_gzip_inflare(compressa.datum,
+        compressa.mensura, piscina);
 
     printf("  Decompressa: %d bytes (status=%d)\n",
            decompressa.mensura, decompressa.status);
 
     CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_AEQUALIS_I32(decompressa.mensura, mensura);
-    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura) == 0);
+    CREDO_VERUM(memcmp(decompressa.datum, originalis, (size_t)mensura)
+        == 0);
 
     printf("\n");
 }
@@ -240,28 +251,31 @@ probatio_gzip_round_trip(Piscina* piscina)
 interior vacuum
 probatio_gzip_crc_invalidus(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    FlaturaFructus decompressa;
-    constans i8*   originalis;
-    i32            mensura;
+    FlaturaFructus  compressa;
+    FlaturaFructus  decompressa;
+       constans i8* originalis;
+               i32  mensura;
 
     printf("--- Probans gzip CRC invalidus ---\n");
 
-    originalis = (constans i8*)"Test CRC";
-    mensura = VIII;
+    originalis  = (constans i8*)"Test CRC";
+    mensura     = VIII;
 
     compressa = flatura_gzip_deflare(originalis, mensura,
-                                     FLATURA_COMPRESSIO_ORDINARIA, piscina);
+                                     FLATURA_COMPRESSIO_ORDINARIA,
+                                     piscina);
 
     CREDO_AEQUALIS_I32((i32)compressa.status, (i32)FLATURA_STATUS_OK);
 
     /* Corrumpere CRC in trailer */
     compressa.datum[compressa.mensura - V] ^= 0xFF;
 
-    decompressa = flatura_gzip_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_gzip_inflare(compressa.datum,
+        compressa.mensura, piscina);
 
     printf("  Status post CRC corruptum: %d\n", decompressa.status);
-    CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_GZIP_FRACTA);
+    CREDO_AEQUALIS_I32((i32)decompressa.status,
+        (i32)FLATURA_STATUS_GZIP_FRACTA);
 
     printf("\n");
 }
@@ -285,7 +299,8 @@ probatio_datum_vacuus(Piscina* piscina)
     printf("  Compressa mensura: %d\n", compressa.mensura);
     CREDO_AEQUALIS_I32((i32)compressa.status, (i32)FLATURA_STATUS_OK);
 
-    decompressa = flatura_inflare(compressa.datum, compressa.mensura, piscina);
+    decompressa = flatura_inflare(compressa.datum, compressa.mensura,
+        piscina);
 
     CREDO_AEQUALIS_I32((i32)decompressa.status, (i32)FLATURA_STATUS_OK);
     CREDO_AEQUALIS_I32(decompressa.mensura, 0);
@@ -301,14 +316,19 @@ probatio_nullum_argumenta(Piscina* piscina)
 
     printf("--- Probans nullum argumenta ---\n");
 
-    fructus = flatura_deflare(NIHIL, X, FLATURA_COMPRESSIO_ORDINARIA, piscina);
-    CREDO_AEQUALIS_I32((i32)fructus.status, (i32)FLATURA_STATUS_FRACTA_DATUM);
+    fructus = flatura_deflare(NIHIL, X, FLATURA_COMPRESSIO_ORDINARIA,
+        piscina);
+    CREDO_AEQUALIS_I32((i32)fructus.status,
+        (i32)FLATURA_STATUS_FRACTA_DATUM);
 
-    fructus = flatura_deflare((constans i8*)"test", IV, FLATURA_COMPRESSIO_ORDINARIA, NIHIL);
-    CREDO_AEQUALIS_I32((i32)fructus.status, (i32)FLATURA_STATUS_FRACTA_DATUM);
+    fructus = flatura_deflare((constans i8*)"test", IV,
+        FLATURA_COMPRESSIO_ORDINARIA, NIHIL);
+    CREDO_AEQUALIS_I32((i32)fructus.status,
+        (i32)FLATURA_STATUS_FRACTA_DATUM);
 
     fructus = flatura_inflare(NIHIL, X, piscina);
-    CREDO_AEQUALIS_I32((i32)fructus.status, (i32)FLATURA_STATUS_FRACTA_DATUM);
+    CREDO_AEQUALIS_I32((i32)fructus.status,
+        (i32)FLATURA_STATUS_FRACTA_DATUM);
 
     printf("  NIHIL argumenta recte recusata\n");
 
@@ -369,16 +389,17 @@ probatio_maxima_magnitudo(Piscina* piscina)
 interior vacuum
 probatio_compressio_repetitiva(Piscina* piscina)
 {
-    FlaturaFructus compressa;
-    i8*            originalis;
-    i32            mensura;
-    i32            i;
+    FlaturaFructus  compressa;
+                i8* originalis;
+               i32  mensura;
+               i32  i;
 
     printf("--- Probans compressio repetitiva ---\n");
 
     /* Datum valde repetitivum - debet esse valde compressibile */
     mensura = MMMMXCVI;
-    originalis = (i8*)piscina_allocare(piscina, (memoriae_index)mensura);
+    originalis = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
 
     per (i = 0; i < mensura; i++)
     {
@@ -406,10 +427,10 @@ probatio_compressio_repetitiva(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32      successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");
@@ -417,7 +438,8 @@ principale(vacuum)
     printf("========================================\n");
     printf("\n");
 
-    piscina = piscina_generare_dynamicum("probatio_flatura", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_flatura",
+        CXXVIII * M);
     credo_aperire(piscina);
 
     /* CRC-32 */

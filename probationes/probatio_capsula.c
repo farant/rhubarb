@@ -16,7 +16,8 @@
  * ======================================================================== */
 
 interior i32
-proba_aperire(Piscina* piscina)
+proba_aperire (
+    Piscina* piscina)
 {
     Capsula* capsula;
 
@@ -41,9 +42,9 @@ proba_aperire(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_habet(Piscina* piscina)
+proba_habet (
+    Piscina* piscina)
 {
     Capsula* capsula;
 
@@ -79,12 +80,12 @@ proba_habet(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_legere_hello(Piscina* piscina)
+proba_legere_hello (
+    Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus res;
+               Capsula* capsula;
+        CapsulaFructus  res;
     constans character* expected = "Hello, World!\n"
                                    "This is a test file for capsula embedding.\n";
 
@@ -117,7 +118,8 @@ proba_legere_hello(Piscina* piscina)
     {
         printf("FALSUM - contentum non congruit\n");
         printf("    Expectatum: '%s'\n", expected);
-        printf("    Obtentum: '%.*s'\n", (i32)res.datum.mensura, res.datum.datum);
+        printf("    Obtentum: '%.*s'\n", (i32)res.datum.mensura,
+            res.datum.datum);
         redde FALSUM;
     }
 
@@ -125,12 +127,12 @@ proba_legere_hello(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_legere_lorem(Piscina* piscina)
+proba_legere_lorem (
+    Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus res;
+               Capsula* capsula;
+        CapsulaFructus  res;
     constans character* expected =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n"
         "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
@@ -171,12 +173,12 @@ proba_legere_lorem(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_non_inventum(Piscina* piscina)
+proba_non_inventum (
+    Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus res;
+           Capsula* capsula;
+    CapsulaFructus  res;
 
     printf("  proba_non_inventum: ");
 
@@ -201,13 +203,13 @@ proba_non_inventum(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_iter(Piscina* piscina)
+proba_iter (
+    Piscina* piscina)
 {
-    Capsula*     capsula;
+        Capsula* capsula;
     CapsulaIter  iter;
-    i32          numerus;
+            i32  numerus;
 
     printf("  proba_iter: ");
 
@@ -219,8 +221,8 @@ proba_iter(Piscina* piscina)
         redde FALSUM;
     }
 
-    iter = capsula_iter(capsula);
-    numerus = 0;
+    iter     = capsula_iter(capsula);
+    numerus  = 0;
 
     dum (capsula_iter_proximus(&iter))
     {
@@ -235,7 +237,8 @@ proba_iter(Piscina* piscina)
 
     si (numerus != II)
     {
-        printf("FALSUM - expectavit 2 iterationes, obtinuit %d\n", numerus);
+        printf("FALSUM - expectavit 2 iterationes, obtinuit %d\n",
+            numerus);
         redde FALSUM;
     }
 
@@ -243,11 +246,11 @@ proba_iter(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_indexum(Piscina* piscina)
+proba_indexum (
+    Piscina* piscina)
 {
-    Capsula*        capsula;
+           Capsula* capsula;
     CapsulaIndexum* idx;
 
     printf("  proba_indexum: ");
@@ -313,15 +316,16 @@ _aream_parare (vacuum);
 interior b32
 _aream_parare (vacuum)
 {
-    si (!filum_directorium_creare_si_necesse(AREA_DISCI)
+    si (   !filum_directorium_creare_si_necesse(AREA_DISCI)
         || !filum_directorium_creare_si_necesse(RADIX_DISCI)
         || !filum_directorium_creare_si_necesse(RADIX_DISCI "/sub"))
     {
         redde FALSUM;
     }
-    si (!filum_scribere_literis(RADIX_DISCI "/index.html", "SALVE")
+    si (   !filum_scribere_literis(RADIX_DISCI "/index.html", "SALVE")
         || !filum_scribere_literis(RADIX_DISCI "/vacuum.txt", "")
-        || !filum_scribere_literis(RADIX_DISCI "/sub/intus.txt", "INTUS")
+        || !filum_scribere_literis(RADIX_DISCI "/sub/intus.txt",
+        "INTUS")
         || !filum_scribere_literis(AREA_DISCI "/extra.txt", "EXTRA"))
     {
         redde FALSUM;
@@ -333,8 +337,8 @@ _aream_parare (vacuum)
 interior i32
 proba_disci_legere(Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus fructus;
+           Capsula* capsula;
+    CapsulaFructus  fructus;
 
     printf("  proba_disci_legere: ");
 
@@ -358,7 +362,7 @@ proba_disci_legere(Piscina* piscina)
                capsula_status_nuntium(fructus.status));
         redde FALSUM;
     }
-    si (fructus.datum.mensura != (i32)V
+    si (   fructus.datum.mensura                           != (i32)V
         || memcmp(fructus.datum.datum, "SALVE", (size_t)V) != 0)
     {
         printf("FALSUM - contentum discrepat\n");
@@ -367,7 +371,7 @@ proba_disci_legere(Piscina* piscina)
 
     /* nidus quoque: ambulatio recursiva est */
     fructus = capsula_legere(capsula, "sub/intus.txt", piscina);
-    si (fructus.status != CAPSULA_OK
+    si (   fructus.status        != CAPSULA_OK
         || fructus.datum.mensura != (i32)V)
     {
         printf("FALSUM - plagula nidificata non lecta\n");
@@ -383,9 +387,9 @@ proba_disci_legere(Piscina* piscina)
 interior i32
 proba_disci_recens(Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus prima;
-    CapsulaFructus secunda;
+           Capsula* capsula;
+    CapsulaFructus  prima;
+    CapsulaFructus  secunda;
 
     printf("  proba_disci_recens: ");
 
@@ -423,7 +427,7 @@ proba_disci_recens(Piscina* piscina)
                capsula_status_nuntium(secunda.status));
         redde FALSUM;
     }
-    si (secunda.datum.mensura != (i32)VIII
+    si (   secunda.datum.mensura != (i32)VIII
         || memcmp(secunda.datum.datum, "MUTATUM!", (size_t)VIII) != 0)
     {
         printf("FALSUM - lectio secunda VETUS est (mensura %d)"
@@ -443,8 +447,8 @@ proba_disci_recens(Piscina* piscina)
 interior i32
 proba_disci_traversalis(Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus fructus;
+           Capsula* capsula;
+    CapsulaFructus  fructus;
 
     printf("  proba_disci_traversalis: ");
 
@@ -486,8 +490,8 @@ proba_disci_traversalis(Piscina* piscina)
 interior i32
 proba_disci_vacuum(Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus fructus;
+           Capsula* capsula;
+    CapsulaFructus  fructus;
 
     printf("  proba_disci_vacuum: ");
 
@@ -540,10 +544,10 @@ interior i32
 proba_disci_enumerare(Piscina* piscina)
 {
     Capsula* capsula;
-    i32      numerus;
-    i32      i;
-    b32      index_inventus;
-    b32      nidus_inventus;
+        i32  numerus;
+        i32  i;
+        b32  index_inventus;
+        b32  nidus_inventus;
 
     printf("  proba_disci_enumerare: ");
 
@@ -623,9 +627,9 @@ proba_disci_enumerare(Piscina* piscina)
 interior i32
 proba_disci_plagula_nova(Piscina* piscina)
 {
-    Capsula*       capsula;
-    CapsulaFructus fructus;
-    i32            numerus_ante;
+           Capsula* capsula;
+    CapsulaFructus  fructus;
+               i32  numerus_ante;
 
     printf("  proba_disci_plagula_nova: ");
 
@@ -653,7 +657,7 @@ proba_disci_plagula_nova(Piscina* piscina)
 
     /* LEGI potest - semita usoris integra est */
     fructus = capsula_legere(capsula, "postnata.txt", piscina);
-    si (fructus.status != CAPSULA_OK
+    si (   fructus.status        != CAPSULA_OK
         || fructus.datum.mensura != (i32)IV)
     {
         printf("FALSUM - plagula postnata legi NON potest"
@@ -726,19 +730,19 @@ proba_disci_radix_prava(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    i32      successus;
-    i32      fallitae;
+        i32  successus;
+        i32  fallitae;
 
     piscina = piscina_generare_dynamicum("probatio_capsula", IV * M);
 
     printf("\nProbationes Capsula\n");
     printf("===================\n\n");
 
-    successus = 0;
-    fallitae = 0;
+    successus  = 0;
+    fallitae   = 0;
 
     si (proba_aperire(piscina)) successus++; alioquin fallitae++;
     si (proba_habet(piscina)) successus++; alioquin fallitae++;

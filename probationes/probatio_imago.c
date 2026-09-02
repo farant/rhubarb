@@ -17,9 +17,9 @@ principale(s32 argc, character** argv)
                  Eventus  eventus;
                      b32  currens;
             ImagoFructus  imago_fructus;
-                  Imago*  imago;
+                   Imago* imago;
                    Imago  imago_scalata;
-                  Imago*  imago_visendum;
+                   Imago* imago_visendum;
                      s32  x, y;
                      s32  dest_x, dest_y;
 
@@ -59,12 +59,12 @@ principale(s32 argc, character** argv)
     thema_initiare();
 
     /* Configurare fenestram - magna sed non plena visio */
-    configuratio.titulus  = "Probatio Imago";
-    configuratio.x        = 0;
-    configuratio.y        = 0;
-    configuratio.latitudo = 1600;
-    configuratio.altitudo = 1000;
-    configuratio.vexilla  = FENESTRA_ORDINARIA | FENESTRA_CENTRATA;
+    configuratio.titulus   = "Probatio Imago";
+    configuratio.x         = 0;
+    configuratio.y         = 0;
+    configuratio.latitudo  = 1600;
+    configuratio.altitudo  = 1000;
+    configuratio.vexilla   = FENESTRA_ORDINARIA | FENESTRA_CENTRATA;
 
     /* Creare fenestram */
     fenestra = fenestra_creare(piscina, &configuratio);
@@ -76,10 +76,12 @@ principale(s32 argc, character** argv)
     }
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CCCXX);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+        CCCXX);
     si (tabula == NIHIL)
     {
-        fprintf(stderr, "Errore: non possum creare tabulam pixelorum\n");
+        fprintf(stderr,
+            "Errore: non possum creare tabulam pixelorum\n");
         fenestra_destruere(fenestra);
         piscina_destruere(piscina);
         redde 1;
@@ -138,18 +140,23 @@ principale(s32 argc, character** argv)
         }
 
         /* Purgare tabulam cum colore background */
-        tabula_pixelorum_vacare(tabula, color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+        tabula_pixelorum_vacare(tabula,
+            color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Centrare imaginem in fenestra */
-        dest_x = ((s32)tabula->latitudo - (s32)imago_visendum->latitudo) / 2;
-        dest_y = ((s32)tabula->altitudo - (s32)imago_visendum->altitudo) / 2;
+        dest_x = ((s32)tabula->latitudo - (s32)imago_visendum->latitudo)
+            / 2;
+        dest_y = ((s32)tabula->altitudo - (s32)imago_visendum->altitudo)
+            / 2;
         si (dest_x < 0) dest_x = 0;
         si (dest_y < 0) dest_y = 0;
 
         /* Copiare pixela imaginis ad tabulam */
-        per (y = 0; y < (s32)imago_visendum->altitudo && dest_y + y < (s32)tabula->altitudo; y++)
+        per (y = 0; y < (s32)imago_visendum->altitudo
+            && dest_y + y < (s32)tabula->altitudo; y++)
         {
-            per (x = 0; x < (s32)imago_visendum->latitudo && dest_x + x < (s32)tabula->latitudo; x++)
+            per (x = 0; x < (s32)imago_visendum->latitudo
+                && dest_x + x < (s32)tabula->latitudo; x++)
             {
                 /* Skip si extra bounds */
                 si (dest_x + x < 0 || dest_y + y < 0)
@@ -159,11 +166,19 @@ principale(s32 argc, character** argv)
 
                 /* Obtinere pixel ex imagine (RGBA format) */
                 {
-                    s32 src_idx = (y * (s32)imago_visendum->latitudo + x) * 4;
-                    s32 dest_idx = (dest_y + y) * (s32)tabula->latitudo + (dest_x + x);
-                    insignatus character r = (insignatus character)imago_visendum->pixela[src_idx + 0];
-                    insignatus character g = (insignatus character)imago_visendum->pixela[src_idx + 1];
-                    insignatus character b = (insignatus character)imago_visendum->pixela[src_idx + 2];
+                    s32 src_idx = (y * (s32)imago_visendum->latitudo
+                        + x) * 4;
+                    s32 dest_idx = (dest_y + y) * (s32)tabula->latitudo
+                        + (dest_x + x);
+                    insignatus character r =
+                        (insignatus character)imago_visendum->pixela[src_idx
+                            + 0];
+                    insignatus character g =
+                        (insignatus character)imago_visendum->pixela[src_idx
+                            + 1];
+                    insignatus character b =
+                        (insignatus character)imago_visendum->pixela[src_idx
+                            + 2];
 
                     /* Scribere ad tabulam */
                     tabula->pixela[dest_idx] = (i32)RGB(r, g, b);

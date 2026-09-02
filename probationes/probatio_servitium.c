@@ -14,7 +14,8 @@
  * ================================================== */
 
 interior EntitasRepositorium*
-_creare_repo(Piscina* piscina)
+_creare_repo (
+    Piscina* piscina)
 {
     Persistentia* pers;
 
@@ -30,9 +31,9 @@ _creare_repo(Piscina* piscina)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
 
     /* Aperire credo et piscina */
@@ -60,7 +61,7 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
 
         imprimere("\n--- Probans registrum_servitii_creare ---\n");
@@ -92,20 +93,22 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             clock;
-        Entitas*             logger;
+                    Entitas* clock;
+                    Entitas* logger;
 
         imprimere("\n--- Probans servitium_registrare ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
         /* Creare entitates */
-        clock  = repo->entitas_scaffoldare(repo->datum, "System::Clock", "system::clock");
-        logger = repo->entitas_scaffoldare(repo->datum, "System::Logger", "system::logger");
+        clock = repo->entitas_scaffoldare(repo->datum, "System::Clock",
+            "system::clock");
+        logger = repo->entitas_scaffoldare(repo->datum,
+            "System::Logger", "system::logger");
         CREDO_NON_NIHIL(clock);
         CREDO_NON_NIHIL(logger);
 
@@ -128,26 +131,30 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             timer;
+                    Entitas* timer;
 
         imprimere("\n--- Probans servitium_registrare_entitatem ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        timer = repo->entitas_scaffoldare(repo->datum, "System::Timer", "system::timer");
+        timer = repo->entitas_scaffoldare(repo->datum, "System::Timer",
+            "system::timer");
         CREDO_NON_NIHIL(timer);
 
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "timer", timer));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "timer",
+            timer));
         CREDO_AEQUALIS_I32(servitium_numerus(reg), I);
 
         /* Argumenta invalida */
-        CREDO_FALSUM(servitium_registrare_entitatem(NIHIL, "test", timer));
+        CREDO_FALSUM(servitium_registrare_entitatem(NIHIL, "test",
+            timer));
         CREDO_FALSUM(servitium_registrare_entitatem(reg, NIHIL, timer));
-        CREDO_FALSUM(servitium_registrare_entitatem(reg, "test", NIHIL));
+        CREDO_FALSUM(servitium_registrare_entitatem(reg, "test",
+            NIHIL));
     }
 
 
@@ -156,24 +163,26 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             service;
+                    Entitas* service;
 
         imprimere("\n--- Probans servitium_habet ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        service = repo->entitas_scaffoldare(repo->datum, "Service", "test::service");
+        service = repo->entitas_scaffoldare(repo->datum, "Service",
+            "test::service");
         CREDO_NON_NIHIL(service);
 
         /* Ante registrationem */
         CREDO_FALSUM(servitium_habet(reg, "my_service"));
 
         /* Post registrationem */
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "my_service", service));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "my_service",
+            service));
         CREDO_VERUM(servitium_habet(reg, "my_service"));
 
         /* Servitium non existens */
@@ -190,21 +199,23 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             clock;
-        Entitas*             obtentum;
+                    Entitas* clock;
+                    Entitas* obtentum;
 
         imprimere("\n--- Probans servitium_obtinere ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        clock = repo->entitas_scaffoldare(repo->datum, "System::Clock", "services::clock");
+        clock = repo->entitas_scaffoldare(repo->datum, "System::Clock",
+            "services::clock");
         CREDO_NON_NIHIL(clock);
 
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "clock", clock));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "clock",
+            clock));
 
         /* Obtinere servitium */
         obtentum = servitium_obtinere(reg, "clock");
@@ -229,21 +240,23 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             logger;
-        chorda*              id;
+                    Entitas* logger;
+                     chorda* id;
 
         imprimere("\n--- Probans servitium_obtinere_id ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        logger = repo->entitas_scaffoldare(repo->datum, "System::Logger", "services::logger");
+        logger = repo->entitas_scaffoldare(repo->datum,
+            "System::Logger", "services::logger");
         CREDO_NON_NIHIL(logger);
 
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "logger", logger));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "logger",
+            logger));
 
         /* Obtinere ID */
         id = servitium_obtinere_id(reg, "logger");
@@ -261,20 +274,22 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             service;
+                    Entitas* service;
 
         imprimere("\n--- Probans servitium_deregistrare ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        service = repo->entitas_scaffoldare(repo->datum, "Service", "temp::service");
+        service = repo->entitas_scaffoldare(repo->datum, "Service",
+            "temp::service");
         CREDO_NON_NIHIL(service);
 
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "temp", service));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "temp",
+            service));
         CREDO_AEQUALIS_I32(servitium_numerus(reg), I);
         CREDO_VERUM(servitium_habet(reg, "temp"));
 
@@ -297,17 +312,17 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             servitia[X];
-        character            titulus_buffer[XXXII];
-        character            via_buffer[LXIV];
-        i32                  i;
+                    Entitas* servitia[X];
+                  character  titulus_buffer[XXXII];
+                  character  via_buffer[LXIV];
+                        i32  i;
 
         imprimere("\n--- Probans multa servitia ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
         /* Creare et registrare X servitia */
@@ -316,10 +331,12 @@ s32 principale(vacuum)
             sprintf(titulus_buffer, "service_%d", (integer)i);
             sprintf(via_buffer, "multi::service_%d", (integer)i);
 
-            servitia[i] = repo->entitas_scaffoldare(repo->datum, "Service", via_buffer);
+            servitia[i] = repo->entitas_scaffoldare(repo->datum,
+                "Service", via_buffer);
             CREDO_NON_NIHIL(servitia[i]);
 
-            CREDO_VERUM(servitium_registrare_entitatem(reg, titulus_buffer, servitia[i]));
+            CREDO_VERUM(servitium_registrare_entitatem(reg,
+                titulus_buffer, servitia[i]));
         }
 
         CREDO_AEQUALIS_I32(servitium_numerus(reg), X);
@@ -342,28 +359,30 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             service;
-        i32                  numerus_notarum;
-        b32                  invenit_notam;
-        i32                  i;
+                    Entitas* service;
+                        i32  numerus_notarum;
+                        b32  invenit_notam;
+                        i32  i;
 
         imprimere("\n--- Probans nota servitii ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
-        service = repo->entitas_scaffoldare(repo->datum, "Service", "noted::service");
+        service = repo->entitas_scaffoldare(repo->datum, "Service",
+            "noted::service");
         CREDO_NON_NIHIL(service);
 
         /* Registrare - debet addere notam "#service::clock" */
-        CREDO_VERUM(servitium_registrare_entitatem(reg, "clock", service));
+        CREDO_VERUM(servitium_registrare_entitatem(reg, "clock",
+            service));
 
         /* Verificare notam in entitate */
-        numerus_notarum = xar_numerus(service->notae);
-        invenit_notam   = FALSUM;
+        numerus_notarum  = xar_numerus(service->notae);
+        invenit_notam    = FALSUM;
 
         per (i = ZEPHYRUM; i < numerus_notarum; i++)
         {
@@ -391,24 +410,26 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             clock;
-        Entitas*             logger;
-        i32                  discooperti;
+                    Entitas* clock;
+                    Entitas* logger;
+                        i32  discooperti;
 
         imprimere("\n--- Probans servitium_discoperire ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
         /* Creare entitates cum notis servitii manuali */
-        clock = repo->entitas_scaffoldare(repo->datum, "Clock", "disco::clock");
+        clock = repo->entitas_scaffoldare(repo->datum, "Clock",
+            "disco::clock");
         CREDO_NON_NIHIL(clock);
         repo->nota_addere(repo->datum, clock, "#service::clock");
 
-        logger = repo->entitas_scaffoldare(repo->datum, "Logger", "disco::logger");
+        logger = repo->entitas_scaffoldare(repo->datum, "Logger",
+            "disco::logger");
         CREDO_NON_NIHIL(logger);
         repo->nota_addere(repo->datum, logger, "#service::logger");
 
@@ -434,21 +455,23 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        RegistrumServitii*   reg;
+          RegistrumServitii* reg;
         EntitasRepositorium* repo;
-        Entitas*             service;
-        i32                  discooperti;
+                    Entitas* service;
+                        i32  discooperti;
 
         imprimere("\n--- Probans discoperire sine duplicatis ---\n");
 
-        repo = _creare_repo(piscina);
-        reg  = registrum_servitii_creare(piscina, repo, intern);
+        repo  = _creare_repo(piscina);
+        reg   = registrum_servitii_creare(piscina, repo, intern);
         CREDO_NON_NIHIL(reg);
 
         /* Creare entitas cum nota */
-        service = repo->entitas_scaffoldare(repo->datum, "Service", "dup::service");
+        service = repo->entitas_scaffoldare(repo->datum, "Service",
+            "dup::service");
         CREDO_NON_NIHIL(service);
-        repo->nota_addere(repo->datum, service, "#service::dup_service");
+        repo->nota_addere(repo->datum, service,
+            "#service::dup_service");
 
         /* Prima discoperitio */
         discooperti = servitium_discoperire(reg);

@@ -77,7 +77,8 @@ probatio_connexio_invalida(Piscina* piscina)
     printf("--- Probans connexio invalida ---\n");
 
     /* DNS fallita - hospes non existens */
-    res = tls_connectere("non.existens.hospes.example", CDXL + III, piscina);
+    res = tls_connectere("non.existens.hospes.example", CDXL + III,
+        piscina);
     CREDO_FALSUM(res.successus);
     CREDO_AEQUALIS_I32(res.error, TLS_ERROR_TCP);
     CREDO_NIHIL(res.connexio);
@@ -85,7 +86,8 @@ probatio_connexio_invalida(Piscina* piscina)
     printf("  TCP error: ");
     si (res.error_descriptio.mensura > 0)
     {
-        printf("%.*s", res.error_descriptio.mensura, res.error_descriptio.datum);
+        printf("%.*s", res.error_descriptio.mensura,
+            res.error_descriptio.datum);
     }
     printf("\n");
 
@@ -100,11 +102,11 @@ probatio_connexio_invalida(Piscina* piscina)
 interior vacuum
 probatio_connexio_https(Piscina* piscina)
 {
-    TlsResultus res;
+           TlsResultus  res;
     constans character* petitio;
-    i8 buffer[MMMMXCVI];
-    s32 n;
-    b32 misit;
+                    i8  buffer[MMMMXCVI];
+                   s32  n;
+                   b32  misit;
 
     printf("--- Probans connexio HTTPS (httpbin.org:443) ---\n");
 
@@ -152,7 +154,8 @@ probatio_connexio_https(Piscina* piscina)
         printf("  Receptum %d bytes\n", n);
 
         /* Verificare HTTP responsum */
-        CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII) == 0);
+        CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII)
+            == 0);
         printf("  Status: HTTP/1.1 200 OK\n");
     }
 
@@ -198,11 +201,11 @@ probatio_connexio_https(Piscina* piscina)
 interior vacuum
 probatio_mittere_recipere(Piscina* piscina)
 {
-    TlsResultus res;
+           TlsResultus  res;
     constans character* petitio;
-    i8 buffer[MMMMXCVI];
-    s32 totalis;
-    s32 n;
+                    i8  buffer[MMMMXCVI];
+                   s32  totalis;
+                   s32  n;
 
     printf("--- Probans mittere/recipere ---\n");
 
@@ -220,7 +223,8 @@ probatio_mittere_recipere(Piscina* piscina)
               "Connection: close\r\n"
               "\r\n";
 
-    n = tls_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
+    n = tls_mittere(res.connexio, (constans i8*)petitio,
+        (i32)strlen(petitio));
     CREDO_MAIOR_S32(n, 0);
 
     /* Recipere in loop usque connexio clausa */
@@ -250,7 +254,7 @@ probatio_mittere_recipere(Piscina* piscina)
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
-    s32 n;
+            s32 n;
     TlsResultus res;
 
     printf("--- Probans nullum argumenta ---\n");
@@ -291,11 +295,11 @@ probatio_nullum_argumenta(Piscina* piscina)
 interior vacuum
 probatio_connectere_cum_optionibus(Piscina* piscina)
 {
-    TlsOptiones opt;
-    TlsResultus res;
+           TlsOptiones  opt;
+           TlsResultus  res;
     constans character* petitio;
-    i8 buffer[MMMMXCVI];
-    s32 n;
+                    i8  buffer[MMMMXCVI];
+                   s32  n;
 
     printf("--- Probans connectere cum optionibus ---\n");
 
@@ -303,7 +307,8 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
     opt = tls_optiones_default();
     CREDO_VERUM(opt.verificare_certificatum);
 
-    res = tls_connectere_cum_optionibus("httpbin.org", CDXL + III, &opt, piscina);
+    res = tls_connectere_cum_optionibus("httpbin.org", CDXL + III, &opt,
+        piscina);
     si (!res.successus)
     {
         printf("  NOTA: Connexio fallita (rete non disponibilis?)\n");
@@ -321,7 +326,8 @@ probatio_connectere_cum_optionibus(Piscina* piscina)
               "Connection: close\r\n"
               "\r\n";
 
-    n = tls_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
+    n = tls_mittere(res.connexio, (constans i8*)petitio,
+        (i32)strlen(petitio));
     CREDO_MAIOR_S32(n, 0);
 
     n = tls_recipere(res.connexio, buffer, MMMMXCVI - I);
@@ -363,10 +369,10 @@ probatio_optiones_timeout(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

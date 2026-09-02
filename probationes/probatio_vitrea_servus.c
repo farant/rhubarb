@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ========================================================================
  * PRAEBITOR PROBATIONIS
  * ======================================================================== */
@@ -28,8 +29,11 @@ hic_manens i32 g_praebitor_vocatus = ZEPHYRUM;
 hic_manens i32 g_modus_publicus_visus = ZEPHYRUM;
 
 interior JsonValor*
-_salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_salve (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     JsonValor* fructus = json_objectum_creare(piscina);
 
@@ -43,8 +47,11 @@ _salve (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 
 /* methodus harnesii: fenestrae SOLIUS - super socket abesse debet */
 interior JsonValor*
-_harnesium (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_harnesium (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     JsonValor* fructus = json_objectum_creare(piscina);
 
@@ -57,8 +64,10 @@ _harnesium (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 }
 
 interior vacuum
-_praebitor (Internuntius* inx, InternuntiusModus modus,
-    vacuum* datum)
+_praebitor (
+         Internuntius* inx,
+    InternuntiusModus  modus,
+               vacuum* datum)
 {
     g_praebitor_vocatus++;
     si (modus == INTERNUNTIUS_MODUS_PUBLICUS)
@@ -73,12 +82,15 @@ _praebitor (Internuntius* inx, InternuntiusModus modus,
     }
 }
 
+
 /* ========================================================================
  * AUXILIA
  * ======================================================================== */
 
 interior vacuum
-_pumpare (VitreaServus* s, i32 vices)
+_pumpare (
+    VitreaServus* s,
+             i32  vices)
 {
     i32 i;
 
@@ -89,7 +101,9 @@ _pumpare (VitreaServus* s, i32 vices)
 }
 
 interior TcpConnexio*
-_cliens_connectere (Piscina* piscina, i32 portus)
+_cliens_connectere (
+    Piscina* piscina,
+        i32  portus)
 {
     TcpOptiones opt = tcp_optiones_default();
     TcpResultus res;
@@ -101,8 +115,12 @@ _cliens_connectere (Piscina* piscina, i32 portus)
 }
 
 interior s32
-_commercium (VitreaServus* s, TcpConnexio* cliens,
-    constans character* petitio, character* buffer, i32 capacitas)
+_commercium (
+          VitreaServus* s,
+           TcpConnexio* cliens,
+    constans character* petitio,
+             character* buffer,
+                   i32  capacitas)
 {
     s32 n;
 
@@ -126,12 +144,16 @@ _commercium (VitreaServus* s, TcpConnexio* cliens,
  * absentes exspectabat et probatio in silentium cadebat. Mensura
  * quam machina computat mentiri non potest.) */
 interior s32
-_pons_petere_cum (VitreaServus* s, Piscina* piscina,
-    constans character* corpus, constans character* capita_extra,
-    character* buffer, i32 capacitas)
+_pons_petere_cum (
+          VitreaServus* s,
+               Piscina* piscina,
+    constans character* corpus,
+    constans character* capita_extra,
+             character* buffer,
+                   i32  capacitas)
 {
     TcpConnexio* c;
-    character    petitio[4096];
+      character  petitio[4096];
 
     c = _cliens_connectere(piscina, vitrea_servus_portus(s));
     si (c == NIHIL)
@@ -148,15 +170,20 @@ _pons_petere_cum (VitreaServus* s, Piscina* piscina,
 }
 
 interior s32
-_pons_petere (VitreaServus* s, Piscina* piscina,
-    constans character* corpus, character* buffer, i32 capacitas)
+_pons_petere (
+          VitreaServus* s,
+               Piscina* piscina,
+    constans character* corpus,
+             character* buffer,
+                   i32  capacitas)
 {
     redde _pons_petere_cum(s, piscina, corpus, NIHIL, buffer,
         capacitas);
 }
 
 interior VitreaServus*
-_servum_creare (Piscina* piscina)
+_servum_creare (
+    Piscina* piscina)
 {
     VitreaServusConfiguratio figura;
     Capsula* capsula = capsula_aperire(&capsula_templates, piscina);
@@ -166,13 +193,14 @@ _servum_creare (Piscina* piscina)
         redde NIHIL;
     }
     memset(&figura, ZEPHYRUM, magnitudo(figura));
-    figura.capsula         = capsula;
-    figura.via_initialis   = "index.html";
-    figura.praebitor       = _praebitor;
-    figura.praebitor_datum = NIHIL;
-    figura.portus          = ZEPHYRUM;   /* auto */
+    figura.capsula          = capsula;
+    figura.via_initialis    = "index.html";
+    figura.praebitor        = _praebitor;
+    figura.praebitor_datum  = NIHIL;
+    figura.portus           = ZEPHYRUM;   /* auto */
     redde vitrea_servus_creare(piscina, &figura);
 }
+
 
 /* ========================================================================
  * PROBATIONES
@@ -184,9 +212,9 @@ probatio_creare (Piscina* piscina)
     VitreaServus* s;
 
     printf("--- creare: portus auto + praebitor modo PUBLICO ---\n");
-    g_praebitor_vocatus = ZEPHYRUM;
-    g_modus_publicus_visus = ZEPHYRUM;
-    s = _servum_creare(piscina);
+    g_praebitor_vocatus     = ZEPHYRUM;
+    g_modus_publicus_visus  = ZEPHYRUM;
+    s                       = _servum_creare(piscina);
     CREDO_NON_NIHIL(s);
     CREDO_VERUM(vitrea_servus_portus(s) > ZEPHYRUM);
     CREDO_NON_NIHIL(vitrea_servus_internuntius(s));
@@ -201,8 +229,8 @@ interior vacuum
 probatio_pagina_scriptum_fert (Piscina* piscina)
 {
     VitreaServus* s = _servum_creare(piscina);
-    TcpConnexio*  c;
-    character     buffer[16384];
+     TcpConnexio* c;
+       character  buffer[16384];
 
     printf("--- pagina: scriptum pontis post <head> insertum ---\n");
     CREDO_NON_NIHIL(s);
@@ -227,7 +255,7 @@ interior vacuum
 probatio_pons_vocatio (Piscina* piscina)
 {
     VitreaServus* s = _servum_creare(piscina);
-    character     buffer[8192];
+       character  buffer[8192];
 
     printf("--- pons: vocatio -> fructus methodi ---\n");
     CREDO_NON_NIHIL(s);
@@ -248,7 +276,7 @@ interior vacuum
 probatio_porta_harnesii (Piscina* piscina)
 {
     VitreaServus* s = _servum_creare(piscina);
-    character     buffer[8192];
+       character  buffer[8192];
 
     printf("--- porta: methodus harnesii super socket ABEST ---\n");
     CREDO_NON_NIHIL(s);
@@ -265,7 +293,7 @@ interior vacuum
 probatio_culpae_non_frangunt (Piscina* piscina)
 {
     VitreaServus* s = _servum_creare(piscina);
-    character     buffer[8192];
+       character  buffer[8192];
 
     printf("--- culpae: JSON fractum -> culpa, servus vivit ---\n");
     CREDO_NON_NIHIL(s);
@@ -285,8 +313,8 @@ interior vacuum
 probatio_assetum_absens (Piscina* piscina)
 {
     VitreaServus* s = _servum_creare(piscina);
-    TcpConnexio*  c;
-    character     buffer[8192];
+     TcpConnexio* c;
+       character  buffer[8192];
 
     printf("--- asseta: via extra capsulam -> CDIV ---\n");
     CREDO_NON_NIHIL(s);
@@ -308,6 +336,7 @@ probatio_assetum_absens (Piscina* piscina)
     vitrea_servus_destruere(s);
 }
 
+
 /* ========================================================================
  * CUSTODIA
  * ======================================================================== */
@@ -316,7 +345,9 @@ probatio_assetum_absens (Piscina* piscina)
     "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789"
 
 interior VitreaServus*
-_servum_custoditum (Piscina* piscina, constans character* hospes,
+_servum_custoditum (
+               Piscina* piscina,
+    constans character* hospes,
     constans character* tessera)
 {
     VitreaServusConfiguratio figura;
@@ -327,13 +358,13 @@ _servum_custoditum (Piscina* piscina, constans character* hospes,
         redde NIHIL;
     }
     memset(&figura, ZEPHYRUM, magnitudo(figura));
-    figura.capsula         = capsula;
-    figura.via_initialis   = "index.html";
-    figura.praebitor       = _praebitor;
-    figura.praebitor_datum = NIHIL;
-    figura.portus          = ZEPHYRUM;
-    figura.hospes          = hospes;
-    figura.tessera         = tessera;
+    figura.capsula          = capsula;
+    figura.via_initialis    = "index.html";
+    figura.praebitor        = _praebitor;
+    figura.praebitor_datum  = NIHIL;
+    figura.portus           = ZEPHYRUM;
+    figura.hospes           = hospes;
+    figura.tessera          = tessera;
     redde vitrea_servus_creare(piscina, &figura);
 }
 
@@ -370,9 +401,9 @@ probatio_custodia (Piscina* piscina)
 {
     VitreaServus* s = _servum_custoditum(piscina, NIHIL,
         TESSERA_PROBATIONIS);
-    TcpConnexio*  c;
-    character     buffer[16384];
-    character     petitio[2048];
+    TcpConnexio* c;
+      character  buffer[16384];
+      character  petitio[2048];
 
     printf("--- custodia: crustulum, redirectio, CSRF ---\n");
     CREDO_NON_NIHIL(s);
@@ -457,6 +488,7 @@ probatio_custodia (Piscina* piscina)
     vitrea_servus_destruere(s);
 }
 
+
 /* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
@@ -465,7 +497,7 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32      successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

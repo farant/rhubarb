@@ -9,7 +9,7 @@
 s32 principale (vacuum)
 {
          b32  praeteritus;
-    Piscina*  piscina;
+     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_similitudo",
         4096);
@@ -20,9 +20,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: similitudo_punctare - fundamenta
      * ======================================================== */
+
     {
         s32 punctum;
 
@@ -58,9 +60,11 @@ s32 principale (vacuum)
             &punctum));
     }
 
+
     /* ========================================================
      * PROBARE: punctatio - limites, continua, casus, hiatus
      * ======================================================== */
+
     {
         s32 p_limes;
         s32 p_interior;
@@ -114,13 +118,15 @@ s32 principale (vacuum)
         CREDO_VERUM (p_hiatus_brevis > p_hiatus_longus);
     }
 
+
     /* ========================================================
      * PROBARE: similitudo_optima - casus scrutinii (natalis!)
      * ======================================================== */
+
     {
-        chorda candidati[VI];
+                   chorda candidati[VI];
         SimilitudoFructus fructus[V];
-        i32 n;
+                      i32 n;
 
         imprimere("\n--- Probans optima (casus scrutinii) ---\n");
 
@@ -153,13 +159,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (fructus[0].index, IV);
     }
 
+
     /* ========================================================
      * PROBARE: optima - ordo, fines, paritates
      * ======================================================== */
+
     {
-        chorda candidati[IV];
+                   chorda candidati[IV];
         SimilitudoFructus fructus[II];
-        i32 n;
+                      i32 n;
 
         imprimere("\n--- Probans optima ordinem finesque ---\n");
 
@@ -182,14 +190,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: optima_decurtata - cauda substituta sanata
      * (fusio trans gradus: macra competitoria in piscina!)
      * ======================================================== */
+
     {
-        chorda candidati[V];
+                   chorda candidati[V];
         SimilitudoFructus fructus[V];
-        i32 n;
+                      i32 n;
 
         imprimere("\n--- Probans optima_decurtata ---\n");
 
@@ -249,6 +259,7 @@ s32 principale (vacuum)
             candidati, V, fructus, V);
         CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
     }
+
 
     /* ========================================================
      * Compendium

@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 
+
 /* ==================================================
  * Identitas litterarum: littera eadem -> monstrator idem
  * ================================================== */
@@ -30,10 +31,12 @@ hic_manens character _alphabetum[] =
 #define LECTIO(ordo) ((constans vacuum* constans*)(ordo))
 
 interior vacuum*
-_identitas_litterae (character c);
+_identitas_litterae (
+    character c);
 
 interior vacuum*
-_identitas_litterae (character c)
+_identitas_litterae (
+    character c)
 {
     i32 i;
 
@@ -48,15 +51,19 @@ _identitas_litterae (character c)
 }
 
 interior vacuum**
-_ordo_ex_literis (Piscina* piscina, constans character* literae,
-    i32* numerus);
+_ordo_ex_literis (
+               Piscina* piscina,
+    constans character* literae,
+                   i32* numerus);
 
 interior vacuum**
-_ordo_ex_literis (Piscina* piscina, constans character* literae,
-    i32* numerus)
+_ordo_ex_literis (
+               Piscina* piscina,
+    constans character* literae,
+                   i32* numerus)
 {
-    i32      n = 0;
-    i32      i;
+       i32   n = 0;
+       i32   i;
     vacuum** ordo;
 
     dum (literae[n] != '\0')
@@ -73,18 +80,25 @@ _ordo_ex_literis (Piscina* piscina, constans character* literae,
     redde ordo;
 }
 
+
 /* ==================================================
  * Invarians partitionis (vide differentia.h)
  * ================================================== */
 
 interior b32
-_invarians_probare (constans Xar* tractus, i32 numerus_a,
-    i32 numerus_b, constans vacuum* constans* a,
+_invarians_probare (
+    constans Xar* tractus,
+    i32 numerus_a,
+    i32 numerus_b,
+    constans vacuum* constans* a,
     constans vacuum* constans* b);
 
 interior b32
-_invarians_probare (constans Xar* tractus, i32 numerus_a,
-    i32 numerus_b, constans vacuum* constans* a,
+_invarians_probare (
+    constans Xar* tractus,
+    i32 numerus_a,
+    i32 numerus_b,
+    constans vacuum* constans* a,
     constans vacuum* constans* b)
 {
     i32 pos_a = 0;
@@ -113,7 +127,7 @@ _invarians_probare (constans Xar* tractus, i32 numerus_a,
         {
             redde FALSUM;   /* vicini eiusdem generis - fusio */
         }
-        si (prior == (s32)DIFFERENTIA_ADDITA
+        si (   prior    == (s32)DIFFERENTIA_ADDITA
             && t->genus == DIFFERENTIA_DELETA)
         {
             redde FALSUM;   /* canon: DELETA ante ADDITA */
@@ -150,25 +164,28 @@ _invarians_probare (constans Xar* tractus, i32 numerus_a,
 
 /* differentia + invarians uno gestu */
 interior Xar*
-_differre_litteris (Piscina* piscina, constans character* a,
+_differre_litteris (
+               Piscina* piscina,
+    constans character* a,
     constans character* b);
 
 interior Xar*
 _differre_litteris (Piscina* piscina, constans character* a,
     constans character* b)
 {
-    i32      na;
-    i32      nb;
+       i32   na;
+       i32   nb;
     vacuum** ordo_a = _ordo_ex_literis(piscina, a, &na);
     vacuum** ordo_b = _ordo_ex_literis(piscina, b, &nb);
-    Xar*     tractus = differentia_seriei(piscina, LECTIO(ordo_a),
-        na, LECTIO(ordo_b), nb);
+       Xar*  tractus = differentia_seriei(piscina, LECTIO(ordo_a),
+           na, LECTIO(ordo_b), nb);
 
     CREDO_NON_NIHIL(tractus);
     CREDO_VERUM(_invarians_probare(tractus, na, nb,
         LECTIO(ordo_a), LECTIO(ordo_b)));
     redde tractus;
 }
+
 
 /* ==================================================
  * LCG deterministicum (fors sine tempore)
@@ -177,10 +194,12 @@ _differre_litteris (Piscina* piscina, constans character* a,
 hic_manens i32 _semen = 88;
 
 interior i32
-_fors (i32 modus);
+_fors (
+    i32 modus);
 
 interior i32
-_fors (i32 modus)
+_fors (
+    i32 modus)
 {
     _semen = _semen * (i32)1664525 + (i32)1013904223;
     redde (_semen >> 16) % modus;
@@ -188,7 +207,7 @@ _fors (i32 modus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_differentia",
@@ -199,6 +218,7 @@ s32 principale (vacuum)
         redde I;
     }
     credo_aperire(piscina);
+
 
     /* ========================================================
      * PROBARE: series - casus limitis
@@ -245,31 +265,33 @@ s32 principale (vacuum)
             2))->genus == DIFFERENTIA_ADDITA);
     }
 
+
     /* ========================================================
      * PROBARE: exemplum chartae Myersianae (distantia minima)
      * ======================================================== */
 
     {
-        Xar*             tractus;
-        DifferentiaSumma s;
+                     Xar* tractus;
+        DifferentiaSumma  s;
 
         imprimere("\n--- Probans exemplum Myersianum ---\n");
 
         /* ABCABBA -> CBABAC: distantia editionis minima = V
          * (exemplum ex charta ipsa Myersi 1986) */
-        tractus = _differre_litteris(piscina, "ABCABBA", "CBABAC");
-        s = differentia_summa(tractus);
+        tractus  = _differre_litteris(piscina, "ABCABBA", "CBABAC");
+        s        = differentia_summa(tractus);
         CREDO_AEQUALIS_I32((i32)(s.additae + s.deletae), (i32)5);
     }
+
 
     /* ========================================================
      * PROBARE: custos ipse - vitium plantatum recusatur
      * ======================================================== */
 
     {
-        Xar*     corruptus;
-        i32      na;
-        i32      nb;
+           Xar*  corruptus;
+           i32   na;
+           i32   nb;
         vacuum** ordo_a = _ordo_ex_literis(piscina, "ab", &na);
         vacuum** ordo_b = _ordo_ex_literis(piscina, "ab", &nb);
 
@@ -283,10 +305,10 @@ s32 principale (vacuum)
             DifferentiaTractus* t = (DifferentiaTractus*)
                 xar_addere(corruptus);
 
-            t->genus = DIFFERENTIA_IDEM;
-            t->index_a = 0;
-            t->index_b = 0;
-            t->numerus = 3;
+            t->genus    = DIFFERENTIA_IDEM;
+            t->index_a  = 0;
+            t->index_b  = 0;
+            t->numerus  = 3;
         }
         CREDO_FALSUM(_invarians_probare(corruptus, na, nb,
             LECTIO(ordo_a), LECTIO(ordo_b)));
@@ -303,6 +325,7 @@ s32 principale (vacuum)
             LECTIO(ordo_a), LECTIO(ordo_b)));
     }
 
+
     /* ========================================================
      * PROBARE: percursus fortuitus (invarians + symmetria)
      * ======================================================== */
@@ -315,19 +338,19 @@ s32 principale (vacuum)
 
         per (vicis = 0; vicis < 200; vicis = vicis + 1)
         {
-            character         litterae_a[32];
-            character         litterae_b[32];
-            i32               longitudo_a = _fors(25);
-            i32               longitudo_b = _fors(25);
-            i32               i;
-            i32              na;
-            i32              nb;
-            vacuum**         ordo_a;
-            vacuum**         ordo_b;
-            Xar*             rectus;
-            Xar*             conversus;
-            DifferentiaSumma s_rectus;
-            DifferentiaSumma s_conversus;
+                   character   litterae_a[32];
+                   character   litterae_b[32];
+                         i32   longitudo_a = _fors(25);
+                         i32   longitudo_b = _fors(25);
+                         i32   i;
+                         i32   na;
+                         i32   nb;
+                      vacuum** ordo_a;
+                      vacuum** ordo_b;
+                         Xar*  rectus;
+                         Xar*  conversus;
+            DifferentiaSumma   s_rectus;
+            DifferentiaSumma   s_conversus;
 
             per (i = 0; i < longitudo_a; i = i + 1)
             {
@@ -349,7 +372,7 @@ s32 principale (vacuum)
             conversus = differentia_seriei(piscina,
                 LECTIO(ordo_b), nb, LECTIO(ordo_a), na);
 
-            si (rectus == NIHIL || conversus == NIHIL
+            si (   rectus == NIHIL || conversus == NIHIL
                 || !_invarians_probare(rectus, na, nb,
                     LECTIO(ordo_a), LECTIO(ordo_b))
                 || !_invarians_probare(conversus, nb, na,
@@ -358,9 +381,9 @@ s32 principale (vacuum)
                 perge;
             }
             /* symmetria: deletae rectae = additae conversae */
-            s_rectus = differentia_summa(rectus);
-            s_conversus = differentia_summa(conversus);
-            si (s_rectus.deletae != s_conversus.additae
+            s_rectus     = differentia_summa(rectus);
+            s_conversus  = differentia_summa(conversus);
+            si (   s_rectus.deletae != s_conversus.additae
                 || s_rectus.additae != s_conversus.deletae)
             {
                 perge;
@@ -369,6 +392,7 @@ s32 principale (vacuum)
         }
         CREDO_AEQUALIS_I32((i32)praeteriti, (i32)200);
     }
+
 
     /* ========================================================
      * PROBARE: lineae - fissio et identitas finis
@@ -427,6 +451,7 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: emissio unificata contra oraculum GNU
      * (numeri @@ et lineae 'diff -U' manu verificata 2026-08-17;
@@ -435,7 +460,7 @@ s32 principale (vacuum)
 
     {
         DifferentiaLinearum* d;
-        chorda               emissum;
+                     chorda  emissum;
 
         imprimere("\n--- Probans emissionem unificatam ---\n");
 
@@ -522,6 +547,7 @@ s32 principale (vacuum)
             "+duo mutatus\n"
             "\\ sine linea nova in fine\n");
     }
+
 
     /* ========================================================
      * Compendium

@@ -27,7 +27,7 @@ hic_manens constans character* g_via_binarii = NIHIL;
  * ======================================================================== */
 
 interior i32
-proba_habet_assets(vacuum)
+proba_habet_assets (vacuum)
 {
     printf("  proba_habet_assets: ");
 
@@ -43,18 +43,18 @@ proba_habet_assets(vacuum)
     redde VERUM;
 }
 
-
 interior i32
-proba_aperire(Piscina* piscina)
+proba_aperire (
+    Piscina* piscina)
 {
     CapsulaCaudae* capsula;
-    i32            num;
-    i32            i;
-    i64            total_cruda;
-    i64            total_compressa;
-    chorda         raw_str;
-    chorda         comp_str;
-    f64            ratio;
+              i32  num;
+              i32  i;
+              i64  total_cruda;
+              i64  total_compressa;
+           chorda  raw_str;
+           chorda  comp_str;
+              f64  ratio;
 
     printf("  proba_aperire: ");
 
@@ -75,8 +75,8 @@ proba_aperire(Piscina* piscina)
     }
 
     /* Calculate total sizes */
-    total_cruda = 0;
-    total_compressa = 0;
+    total_cruda      = 0;
+    total_compressa  = 0;
     per (i = 0; i < num; i++)
     {
         CapsulaIndexum* idx;
@@ -84,14 +84,15 @@ proba_aperire(Piscina* piscina)
         idx = capsula_caudae_indexum(capsula, i);
         si (idx != NIHIL)
         {
-            total_cruda += (i64)idx->mensura_cruda;
-            total_compressa += (i64)idx->mensura_compressa;
+            total_cruda      += (i64)idx->mensura_cruda;
+            total_compressa  += (i64)idx->mensura_compressa;
         }
     }
 
-    raw_str = chorda_ex_bytes_legibilis(total_cruda, piscina);
-    comp_str = chorda_ex_bytes_legibilis(total_compressa, piscina);
-    ratio = total_cruda > 0 ? (f64)total_compressa / (f64)total_cruda * 100.0 : 0.0;
+    raw_str   = chorda_ex_bytes_legibilis(total_cruda, piscina);
+    comp_str  = chorda_ex_bytes_legibilis(total_compressa, piscina);
+    ratio = total_cruda > 0 ? (f64)total_compressa
+        / (f64)total_cruda * 100.0 : 0.0;
 
     printf("VERUM\n");
     printf("    %d fila, %.*s raw -> %.*s compressed (%.1f%%)\n",
@@ -104,15 +105,15 @@ proba_aperire(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_legere_primum(Piscina* piscina)
+proba_legere_primum (
+    Piscina* piscina)
 {
-    CapsulaCaudae*  capsula;
+     CapsulaCaudae* capsula;
     CapsulaIndexum* idx;
     CapsulaFructus  res;
-    character       via_buffer[256];
-    chorda          size_str;
+         character  via_buffer[256];
+            chorda  size_str;
 
     printf("  proba_legere_primum: ");
 
@@ -162,7 +163,8 @@ proba_legere_primum(Piscina* piscina)
         redde FALSUM;
     }
 
-    size_str = chorda_ex_bytes_legibilis((i64)res.datum.mensura, piscina);
+    size_str = chorda_ex_bytes_legibilis((i64)res.datum.mensura,
+        piscina);
     printf("VERUM (%.*s: %.*s)\n",
            (i32)idx->via.mensura, idx->via.datum,
            (i32)size_str.mensura, size_str.datum);
@@ -171,12 +173,12 @@ proba_legere_primum(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_non_inventum(Piscina* piscina)
+proba_non_inventum (
+    Piscina* piscina)
 {
-    CapsulaCaudae* capsula;
-    CapsulaFructus res;
+     CapsulaCaudae* capsula;
+    CapsulaFructus  res;
 
     printf("  proba_non_inventum: ");
 
@@ -188,7 +190,8 @@ proba_non_inventum(Piscina* piscina)
         redde FALSUM;
     }
 
-    res = capsula_caudae_legere(capsula, "non_existit_xyz_123.txt", piscina);
+    res = capsula_caudae_legere(capsula, "non_existit_xyz_123.txt",
+        piscina);
 
     si (res.status != CAPSULA_NON_INVENTUM)
     {
@@ -204,14 +207,14 @@ proba_non_inventum(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_iter(Piscina* piscina)
+proba_iter (
+    Piscina* piscina)
 {
-    CapsulaCaudae*     capsula;
+        CapsulaCaudae* capsula;
     CapsulaCaudaeIter  iter;
-    i32                numerus;
-    i32                expected;
+                  i32  numerus;
+                  i32  expected;
 
     printf("  proba_iter: ");
 
@@ -223,9 +226,9 @@ proba_iter(Piscina* piscina)
         redde FALSUM;
     }
 
-    expected = capsula_caudae_numerus(capsula);
-    iter = capsula_caudae_iter(capsula);
-    numerus = 0;
+    expected  = capsula_caudae_numerus(capsula);
+    iter      = capsula_caudae_iter(capsula);
+    numerus   = 0;
 
     dum (capsula_caudae_iter_proximus(&iter))
     {
@@ -238,7 +241,9 @@ proba_iter(Piscina* piscina)
             {
                 chorda size_str;
 
-                size_str = chorda_ex_bytes_legibilis((i64)idx->mensura_cruda, piscina);
+                size_str =
+                    chorda_ex_bytes_legibilis((i64)idx->mensura_cruda,
+                    piscina);
                 printf("\n      [%d] %.*s (%.*s)",
                        numerus, (i32)idx->via.mensura, idx->via.datum,
                        (i32)size_str.mensura, size_str.datum);
@@ -255,7 +260,8 @@ proba_iter(Piscina* piscina)
 
     si (numerus != expected)
     {
-        printf("FALSUM - expectavit %d, obtinuit %d\n", expected, numerus);
+        printf("FALSUM - expectavit %d, obtinuit %d\n", expected,
+            numerus);
         capsula_caudae_claudere(capsula);
         redde FALSUM;
     }
@@ -266,11 +272,11 @@ proba_iter(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_indexum(Piscina* piscina)
+proba_indexum (
+    Piscina* piscina)
 {
-    CapsulaCaudae*  capsula;
+     CapsulaCaudae* capsula;
     CapsulaIndexum* idx;
 
     printf("  proba_indexum: ");
@@ -322,15 +328,15 @@ proba_indexum(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_legere_omnes(Piscina* piscina)
+proba_legere_omnes (
+    Piscina* piscina)
 {
-    CapsulaCaudae*     capsula;
+        CapsulaCaudae* capsula;
     CapsulaCaudaeIter  iter;
-    i32                successus;
-    i32                fallitae;
-    i64                total_bytes;
+                  i32  successus;
+                  i32  fallitae;
+                  i64  total_bytes;
 
     printf("  proba_legere_omnes: ");
 
@@ -342,16 +348,16 @@ proba_legere_omnes(Piscina* piscina)
         redde FALSUM;
     }
 
-    iter = capsula_caudae_iter(capsula);
-    successus = 0;
-    fallitae = 0;
-    total_bytes = 0;
+    iter         = capsula_caudae_iter(capsula);
+    successus    = 0;
+    fallitae     = 0;
+    total_bytes  = 0;
 
     dum (capsula_caudae_iter_proximus(&iter))
     {
         CapsulaIndexum* idx;
         CapsulaFructus  res;
-        character       via_buffer[512];
+             character  via_buffer[512];
 
         idx = capsula_caudae_indexum(capsula, iter.positus - I);
         si (idx == NIHIL)
@@ -402,23 +408,23 @@ proba_legere_omnes(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_contentum_verificare(Piscina* piscina)
+proba_contentum_verificare (
+    Piscina* piscina)
 {
-    CapsulaCaudae*  capsula;
-    CapsulaFructus  res;
-    chorda          originale;
+         CapsulaCaudae* capsula;
+        CapsulaFructus  res;
+                chorda  originale;
     constans character* test_via_capsula;
     constans character* test_via_disco;
-    i32             i;
-    b32             aequalis;
+                   i32  i;
+                   b32  aequalis;
 
     printf("  proba_contentum_verificare: ");
 
     /* Test file: book 100 (Shakespeare) */
-    test_via_capsula = "../book_assets/100.txt";
-    test_via_disco = "book_assets/100.txt";
+    test_via_capsula  = "../book_assets/100.txt";
+    test_via_disco    = "book_assets/100.txt";
 
     /* Verify original file exists on disk */
     si (!filum_existit(test_via_disco))
@@ -448,7 +454,8 @@ proba_contentum_verificare(Piscina* piscina)
     originale = filum_legere_totum(test_via_disco, piscina);
     si (originale.mensura == 0)
     {
-        printf("FALSUM - non possum legere '%s' ex disco\n", test_via_disco);
+        printf("FALSUM - non possum legere '%s' ex disco\n",
+            test_via_disco);
         capsula_caudae_claudere(capsula);
         redde FALSUM;
     }
@@ -487,24 +494,24 @@ proba_contentum_verificare(Piscina* piscina)
     redde VERUM;
 }
 
-
 interior i32
-proba_contentum_notum(Piscina* piscina)
+proba_contentum_notum (
+    Piscina* piscina)
 {
-    CapsulaCaudae*  capsula;
-    CapsulaFructus  res;
+         CapsulaCaudae* capsula;
+        CapsulaFructus  res;
     constans character* test_via;
     constans character* quaerendum;
-    i32             i;
-    i32             quaerendum_len;
-    b32             inventum;
+                   i32  i;
+                   i32  quaerendum_len;
+                   b32  inventum;
 
     printf("  proba_contentum_notum: ");
 
     /* Test: look for "HAMLET" in Shakespeare (book 100) */
-    test_via = "../book_assets/100.txt";
-    quaerendum = "HAMLET";
-    quaerendum_len = 6;
+    test_via        = "../book_assets/100.txt";
+    quaerendum      = "HAMLET";
+    quaerendum_len  = 6;
 
     capsula = capsula_caudae_aperire(g_via_binarii, piscina);
     si (capsula == NIHIL)
@@ -526,7 +533,8 @@ proba_contentum_notum(Piscina* piscina)
     inventum = FALSUM;
     per (i = 0; i <= res.datum.mensura - quaerendum_len; i++)
     {
-        si (memcmp(res.datum.datum + i, quaerendum, (size_t)quaerendum_len) == 0)
+        si (memcmp(res.datum.datum + i, quaerendum,
+            (size_t)quaerendum_len) == 0)
         {
             inventum = VERUM;
             frange;
@@ -537,7 +545,8 @@ proba_contentum_notum(Piscina* piscina)
 
     si (!inventum)
     {
-        printf("FALSUM - '%s' non inventum in %s\n", quaerendum, test_via);
+        printf("FALSUM - '%s' non inventum in %s\n", quaerendum,
+            test_via);
         redde FALSUM;
     }
 
@@ -551,11 +560,13 @@ proba_contentum_notum(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina;
-    i32      successus;
-    i32      fallitae;
+        i32  successus;
+        i32  fallitae;
 
     si (argc < I)
     {
@@ -575,10 +586,11 @@ principale(integer argc, character** argv)
         redde I;
     }
 
-    piscina = piscina_generare_dynamicum("probatio_capsula_caudae", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_capsula_caudae",
+        CXXVIII * M);
 
-    successus = I;  /* Count habet_assets */
-    fallitae = 0;
+    successus  = I;  /* Count habet_assets */
+    fallitae   = 0;
 
     si (proba_aperire(piscina)) successus++; alioquin fallitae++;
     si (proba_legere_primum(piscina)) successus++; alioquin fallitae++;

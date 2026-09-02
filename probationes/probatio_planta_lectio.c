@@ -45,12 +45,12 @@ s32
 principale(
     vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    PlantaIndividua*     ind;
-    chorda               fons;
-    chorda               causa;
-    b32                  praeteritus;
+        PlantaIndividua* ind;
+                 chorda  fons;
+                 chorda  causa;
+                    b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_planta_lectio",
                                          1048576);
@@ -61,9 +61,9 @@ principale(
     }
     credo_aperire(piscina);
 
-    intern        = internamentum_creare(piscina);
-    causa.datum   = NIHIL;
-    causa.mensura = ZEPHYRUM;
+    intern         = internamentum_creare(piscina);
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
 
 
     /* ========================================================
@@ -104,10 +104,10 @@ principale(
      * ======================================================== */
 
     {
-        Canon* canon;
-        chorda canon_fons;
-        chorda canon_causa;
-        Xar*   vitia;
+         Canon* canon;
+        chorda  canon_fons;
+        chorda  canon_causa;
+           Xar* vitia;
 
         imprimere("\n--- Probans fixum contra canonem ---\n");
 
@@ -115,8 +115,8 @@ principale(
                          "natura/cocta/individua.canon", piscina);
         CREDO_MAIOR_I32 (canon_fons.mensura, (i32)ZEPHYRUM);
 
-        canon_causa.datum   = NIHIL;
-        canon_causa.mensura = ZEPHYRUM;
+        canon_causa.datum    = NIHIL;
+        canon_causa.mensura  = ZEPHYRUM;
         canon = canon_legere(canon_fons, piscina, intern,
                              &canon_causa);
         CREDO_NON_NIHIL (canon);
@@ -161,8 +161,8 @@ principale(
      * ind->granny_smith[0] petit. Sacco vacuo xar_obtinere NIHIL
      * reddit, et probatio ruina (139) caderet loco rubri legibilis
      * - quod mensuratum est dum vitia ficta plantantur. */
-    si (xar_numerus(ind->rosa_canina) != (i32)I ||
-        xar_numerus(ind->granny_smith) != (i32)I)
+    si (   xar_numerus(ind->rosa_canina)  != (i32)I
+        || xar_numerus(ind->granny_smith) != (i32)I)
     {
         imprimere("FRACTA: sacci generum vacui - cetera omissa\n");
         credo_imprimere_compendium();
@@ -248,7 +248,7 @@ principale(
      * ======================================================== */
 
     {
-        PlantaRosaCanina*      r;
+             PlantaRosaCanina* r;
         PlantaHistoriaEventum* ev;
 
         imprimere("\n--- Probans <historia>/<eventum> ---\n");

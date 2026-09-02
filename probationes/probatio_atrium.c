@@ -32,7 +32,7 @@
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_atrium", 4096);
@@ -43,6 +43,7 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: atrium_nuntium_discernere - casus vacui
      * ======================================================== */
@@ -52,17 +53,18 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans discretionem: vacua ---\n");
 
-        n.datum   = NIHIL;
-        n.mensura = ZEPHYRUM;
+        n.datum    = NIHIL;
+        n.mensura  = ZEPHYRUM;
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
 
         /* datum adest sed mensura ZEPHYRUM: nihil legendum */
-        n = chorda_ex_literis("paratus", piscina);
-        n.mensura = ZEPHYRUM;
+        n          = chorda_ex_literis("paratus", piscina);
+        n.mensura  = ZEPHYRUM;
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
+
 
     /* ========================================================
      * PROBARE: discretio RPC (regula primae litterae)
@@ -97,13 +99,14 @@ s32 principale (vacuum)
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
 
+
     /* ========================================================
      * PROBARE: discretio PARATUS - et chorda NON terminata
      * ======================================================== */
 
     {
         chorda n;
-        i8     tabula[XVI];
+            i8 tabula[XVI];
 
         imprimere("\n--- Probans discretionem: paratus ---\n");
 
@@ -115,8 +118,8 @@ s32 principale (vacuum)
          * tabula post 'paratus' pergit; implementatio quae strcmp
          * adhiberet ultra mensuram legeret et FALLERET. */
         memcpy(tabula, "paratusXYZ", X);
-        n.datum   = tabula;
-        n.mensura = (i32)VII;
+        n.datum    = tabula;
+        n.mensura  = (i32)VII;
         CREDO_AEQUALIS_I32 ((i32)atrium_nuntium_discernere(n),
                             (i32)ATRIUM_NUNTIUS_PARATUS);
 
@@ -141,24 +144,27 @@ s32 principale (vacuum)
                             (i32)ATRIUM_NUNTIUS_IGNOTUS);
     }
 
+
     /* ========================================================
      * PROBARE: atrium_vexilla_legere
      * ======================================================== */
 
     {
-        AtriumConfiguratio figura;
-        character          a0[] = "app";
-        character          a1[] = "-volumen";
-        character          a2[] = "/tmp/x";
-        character          a3[] = "-vivum";
-        character          a4[] = "-portus";
-        character          a5[] = "8080";
-        character*         argv[VI];
+        AtriumConfiguratio  figura;
+                 character  a0[] = "app";
+                 character  a1[] = "-volumen";
+                 character  a2[] = "/tmp/x";
+                 character  a3[] = "-vivum";
+                 character  a4[] = "-portus";
+                 character  a5[] = "8080";
+                 character* argv[VI];
 
         imprimere("\n--- Probans vexilla_legere ---\n");
 
-        argv[0] = a0; argv[1] = a1; argv[2] = a2;
-        argv[3] = a3; argv[4] = a4; argv[5] = a5;
+        argv[0] = a0; argv[1] = a1; argv[2]  = a2;
+        argv[3]                              = a3; argv[4] =
+                                                                     a4; argv[5] =
+                                                                             a5;
 
         /* sine vexillis: nihil mutatur */
         memset(&figura, 0, magnitudo(figura));
@@ -176,11 +182,11 @@ s32 principale (vacuum)
     }
 
     {
-        AtriumConfiguratio figura;
-        character          a0[] = "app";
-        character          a1[] = "-portus";
-        character          a2[] = "-5";
-        character*         argv[III];
+        AtriumConfiguratio  figura;
+                 character  a0[] = "app";
+                 character  a1[] = "-portus";
+                 character  a2[] = "-5";
+                 character* argv[III];
 
         imprimere("\n--- Probans vexilla_legere: portus pravus ---\n");
 
@@ -210,12 +216,12 @@ s32 principale (vacuum)
     }
 
     {
-        AtriumConfiguratio figura;
-        character          a0[] = "app";
-        character          a1[] = "-radix";
-        character          a2[] = "assets";
-        character          a3[] = "-vivum";
-        character*         argv[IV];
+        AtriumConfiguratio  figura;
+                 character  a0[] = "app";
+                 character  a1[] = "-radix";
+                 character  a2[] = "assets";
+                 character  a3[] = "-vivum";
+                 character* argv[IV];
 
         imprimere("\n--- Probans vexilla_legere: -radix ---\n");
 
@@ -226,14 +232,16 @@ s32 principale (vacuum)
         memset(&figura, 0, magnitudo(figura));
         atrium_vexilla_legere(&figura, (integer)III, argv);
         CREDO_VERUM (figura.capsula_radix != NIHIL);
-        CREDO_VERUM (strcmp(figura.capsula_radix, "assets") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(figura.capsula_radix, "assets")
+            == ZEPHYRUM);
         CREDO_FALSUM (figura.vivum);
 
         /* ambo simul: independentia in utramque partem */
         memset(&figura, 0, magnitudo(figura));
         atrium_vexilla_legere(&figura, (integer)IV, argv);
         CREDO_VERUM (figura.vivum);
-        CREDO_VERUM (strcmp(figura.capsula_radix, "assets") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(figura.capsula_radix, "assets")
+            == ZEPHYRUM);
 
         /* -vivum SOLUM: capsula VECTA manet (id quod probare vis) */
         memset(&figura, 0, magnitudo(figura));
@@ -249,6 +257,7 @@ s32 principale (vacuum)
         CREDO_VERUM (figura.capsula_radix == NIHIL);
     }
 
+
     /* ========================================================
      * PROBARE: atrium_creare - semitae recusationis
      *
@@ -257,10 +266,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        AtriumConfiguratio figura;
-        Atrium*            atrium;
-        chorda             causa;
-        CapsulaEmbed       capsula_ficta;
+        AtriumConfiguratio  figura;
+                    Atrium* atrium;
+                    chorda  causa;
+              CapsulaEmbed  capsula_ficta;
 
         imprimere("\n--- Probans creare: recusationes ---\n");
 
@@ -269,8 +278,8 @@ s32 principale (vacuum)
         /* piscina deest: sola semita quae causam dare NON potest
          * (chorda sedem poscit). Vacuam ponimus ne vocans stalum
          * legat - quod probamus. */
-        causa = chorda_ex_literis("immunditia praecedens", piscina);
-        atrium = atrium_creare(NIHIL, NIHIL, &causa);
+        causa   = chorda_ex_literis("immunditia praecedens", piscina);
+        atrium  = atrium_creare(NIHIL, NIHIL, &causa);
         CREDO_NIHIL (atrium);
         CREDO_CHORDA_VACUA (causa);
 
@@ -282,16 +291,16 @@ s32 principale (vacuum)
 
         /* titulus deest */
         memset(&figura, 0, magnitudo(figura));
-        figura.capsula = &capsula_ficta;
-        causa.datum = NIHIL; causa.mensura = ZEPHYRUM;
+        figura.capsula  = &capsula_ficta;
+        causa.datum     = NIHIL; causa.mensura = ZEPHYRUM;
         atrium = atrium_creare(piscina, &figura, &causa);
         CREDO_NIHIL (atrium);
         CREDO_CHORDA_NON_VACUA (causa);
 
         /* capsula deest (titulo praesente) */
         memset(&figura, 0, magnitudo(figura));
-        figura.titulus = "probatio";
-        causa.datum = NIHIL; causa.mensura = ZEPHYRUM;
+        figura.titulus  = "probatio";
+        causa.datum     = NIHIL; causa.mensura = ZEPHYRUM;
         atrium = atrium_creare(piscina, &figura, &causa);
         CREDO_NIHIL (atrium);
         CREDO_CHORDA_NON_VACUA (causa);
@@ -301,6 +310,7 @@ s32 principale (vacuum)
         atrium = atrium_creare(piscina, &figura, NIHIL);
         CREDO_NIHIL (atrium);
     }
+
 
     /* ========================================================
      * PROBARE: accessus super NIHIL
@@ -328,6 +338,7 @@ s32 principale (vacuum)
             chorda_ex_literis("window.x=1;", piscina));
         CREDO_VERUM (VERUM);
     }
+
 
     /* ========================================================
      * Compendium

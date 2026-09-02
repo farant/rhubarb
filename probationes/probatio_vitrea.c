@@ -21,23 +21,27 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * tractatores
  * ================================================== */
 
 interior JsonValor*
-_salutare (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_salutare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    JsonValor* fructus = json_objectum_creare(piscina);
-    chorda quem;
+            JsonValor* fructus = json_objectum_creare(piscina);
+               chorda  quem;
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         LXIV);
 
     (vacuum)datum;
     (vacuum)culpa;
-    quem.mensura = ZEPHYRUM;
-    quem.datum = NIHIL;
+    quem.mensura  = ZEPHYRUM;
+    quem.datum    = NIHIL;
     si (argumenta != NIHIL)
     {
         quem = json_ad_chorda(json_objectum_capere(argumenta,
@@ -55,12 +59,15 @@ _salutare (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 }
 
 interior JsonValor*
-_addere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_addere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    s64 a = ZEPHYRUM;
-    s64 b = ZEPHYRUM;
-    JsonValor* fructus = json_objectum_creare(piscina);
+          s64  a        = ZEPHYRUM;
+          s64  b        = ZEPHYRUM;
+    JsonValor* fructus  = json_objectum_creare(piscina);
 
     (vacuum)datum;
     (vacuum)culpa;
@@ -78,12 +85,15 @@ _addere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 
 /* numeratores vitreae legere - datum usoris = Vitrea* */
 interior JsonValor*
-_fructus_legere (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_fructus_legere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    Vitrea* vitrea = (Vitrea*)datum;
-    VitreaFructus fr = vitrea_fructus(vitrea);
-    JsonValor* fructus = json_objectum_creare(piscina);
+           Vitrea* vitrea   = (Vitrea*)datum;
+    VitreaFructus  fr       = vitrea_fructus(vitrea);
+        JsonValor* fructus  = json_objectum_creare(piscina);
 
     (vacuum)argumenta;
     (vacuum)culpa;
@@ -106,15 +116,18 @@ _fructus_legere (JsonValor* argumenta, Piscina* piscina,
 /* vocatur a JS POSTQUAM responsum 'salve' promissum solvit -
  * impressio probat gyrum plenum C->JS->C sine oculis */
 interior JsonValor*
-_confirmare (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_confirmare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     chorda textus;
 
     (vacuum)datum;
     (vacuum)culpa;
-    textus.mensura = ZEPHYRUM;
-    textus.datum = NIHIL;
+    textus.mensura  = ZEPHYRUM;
+    textus.datum    = NIHIL;
     si (argumenta != NIHIL)
     {
         textus = json_ad_chorda(json_objectum_capere(argumenta,
@@ -126,31 +139,32 @@ _confirmare (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
     redde json_objectum_creare(piscina);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina = piscina_generare_dynamicum("salve_vitrea",
         16777216);
     Piscina* piscina_vocationis = piscina_generare_dynamicum(
         "salve_vitrea_vocationes", 4194304);
-    FenestraConfiguratio figura_fenestrae;
-    VitreaConfiguratio figura_vitreae;
-    Fenestra* fenestra;
-    Capsula* capsula;
-    Vitrea* vitrea;
-    Internuntius* inx;
-    i64 pulsus_horologii;
-    f64 frequentia;
-    s64 ictus = ZEPHYRUM;
+    FenestraConfiguratio  figura_fenestrae;
+      VitreaConfiguratio  figura_vitreae;
+                Fenestra* fenestra;
+                 Capsula* capsula;
+                  Vitrea* vitrea;
+            Internuntius* inx;
+                     i64  pulsus_horologii;
+                     f64  frequentia;
+                     s64  ictus = ZEPHYRUM;
 
     si (piscina == NIHIL || piscina_vocationis == NIHIL)
     {
         redde I;
     }
-    figura_fenestrae.titulus = "salve vitrea";
-    figura_fenestrae.x = CC;
-    figura_fenestrae.y = CC;
-    figura_fenestrae.latitudo = 640;
-    figura_fenestrae.altitudo = 480;
+    figura_fenestrae.titulus   = "salve vitrea";
+    figura_fenestrae.x         = CC;
+    figura_fenestrae.y         = CC;
+    figura_fenestrae.latitudo  = 640;
+    figura_fenestrae.altitudo  = 480;
     figura_fenestrae.vexilla = FENESTRA_CLAUDIBILIS
         | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
     fenestra = fenestra_creare(piscina, &figura_fenestrae);
@@ -191,15 +205,15 @@ s32 principale (vacuum)
 
     imprimere("[vitrea] demo inceptum - fenestra aperta\n");
     fflush(stdout);
-    frequentia = fenestra_tempus_obtinere_frequentiam();
-    pulsus_horologii = fenestra_tempus_obtinere_pulsus();
+    frequentia        = fenestra_tempus_obtinere_frequentiam();
+    pulsus_horologii  = fenestra_tempus_obtinere_pulsus();
 
     dum (!fenestra_debet_claudere(fenestra))
     {
-        Eventus eventus;
-        chorda nuntium;
+                   Eventus eventus;
+                    chorda nuntium;
         VitreaNuntiusGenus genus;
-        PiscinaNotatio nota;
+            PiscinaNotatio nota;
 
         /* pumpa obstructiva: otium ~0%; nuntius pontis eventum
          * syntheticum ponit et nos expergefacit */
@@ -251,7 +265,7 @@ s32 principale (vacuum)
     }
 
     {
-        VitreaFructus fr = vitrea_fructus(vitrea);
+              VitreaFructus fr = vitrea_fructus(vitrea);
         InternuntiusFructus fi = internuntius_fructus(inx);
 
         imprimere("[vitrea] finis: nuntii %d (amissi %d),"

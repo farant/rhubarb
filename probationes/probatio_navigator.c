@@ -13,7 +13,7 @@
 
 /* Creare graphum probationis cum aliquot entitates */
 interior vacuum
-creare_graphum_probationis(
+creare_graphum_probationis (
     EntitasRepositorium* repo)
 {
     Entitas* radix;
@@ -25,29 +25,40 @@ creare_graphum_probationis(
     /* === Entitas Radix === */
     radix = repo->entitas_scaffoldare(repo->datum, "Root", "system");
     repo->proprietas_ponere(repo->datum, radix, "name", "System Root");
-    repo->proprietas_ponere(repo->datum, radix, "description", "Root of the entity graph");
+    repo->proprietas_ponere(repo->datum, radix, "description",
+        "Root of the entity graph");
     repo->nota_addere(repo->datum, radix, "#root");
 
     /* === Pagina 1 === */
-    pagina_1 = repo->entitas_scaffoldare(repo->datum, "Page", "introduction");
-    repo->proprietas_ponere(repo->datum, pagina_1, "name", "Introduction");
-    repo->proprietas_ponere(repo->datum, pagina_1, "content", "Welcome to the entity navigator");
+    pagina_1 = repo->entitas_scaffoldare(repo->datum, "Page",
+        "introduction");
+    repo->proprietas_ponere(repo->datum, pagina_1, "name",
+        "Introduction");
+    repo->proprietas_ponere(repo->datum, pagina_1, "content",
+        "Welcome to the entity navigator");
     repo->proprietas_ponere(repo->datum, pagina_1, "author", "Fran");
 
     /* === Pagina 2 === */
-    pagina_2 = repo->entitas_scaffoldare(repo->datum, "Page", "getting-started");
-    repo->proprietas_ponere(repo->datum, pagina_2, "name", "Getting Started");
-    repo->proprietas_ponere(repo->datum, pagina_2, "content", "Use j/k to navigate, l to enter, h to go back");
+    pagina_2 = repo->entitas_scaffoldare(repo->datum, "Page",
+        "getting-started");
+    repo->proprietas_ponere(repo->datum, pagina_2, "name",
+        "Getting Started");
+    repo->proprietas_ponere(repo->datum, pagina_2, "content",
+        "Use j/k to navigate, l to enter, h to go back");
 
     /* === Pagina 3 === */
-    pagina_3 = repo->entitas_scaffoldare(repo->datum, "Page", "navigation");
-    repo->proprietas_ponere(repo->datum, pagina_3, "name", "Navigation");
-    repo->proprietas_ponere(repo->datum, pagina_3, "content", "The graph structure allows bidirectional traversal");
+    pagina_3 = repo->entitas_scaffoldare(repo->datum, "Page",
+        "navigation");
+    repo->proprietas_ponere(repo->datum, pagina_3, "name",
+        "Navigation");
+    repo->proprietas_ponere(repo->datum, pagina_3, "content",
+        "The graph structure allows bidirectional traversal");
 
     /* === Nota === */
     nota = repo->entitas_scaffoldare(repo->datum, "Note", "important");
     repo->proprietas_ponere(repo->datum, nota, "name", "Important");
-    repo->proprietas_ponere(repo->datum, nota, "text", "Remember to test thoroughly");
+    repo->proprietas_ponere(repo->datum, nota, "text",
+        "Remember to test thoroughly");
 
     /* === Relationes === */
     /* Radix -> Paginae */
@@ -75,18 +86,18 @@ creare_graphum_probationis(
 }
 
 int
-main(void)
+main (void)
 {
-    Piscina*             piscina;
-    InternamentumChorda* intern;
-    Persistentia*        persistentia;
-    EntitasRepositorium* repositorium;
-    NavigatorEntitatum*  navigator;
-    Fenestra*            fenestra;
-    TabulaPixelorum*     tabula;
-    FenestraConfiguratio configuratio;
-    Eventus              eventus;
-    b32                  currens;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+            Persistentia* persistentia;
+     EntitasRepositorium* repositorium;
+      NavigatorEntitatum* navigator;
+                Fenestra* fenestra;
+         TabulaPixelorum* tabula;
+    FenestraConfiguratio  configuratio;
+                 Eventus  eventus;
+                     b32  currens;
 
     /* Initiare thema */
     thema_initiare();
@@ -130,7 +141,8 @@ main(void)
     {
         ContextusWidget* ctx;
 
-        ctx = contextus_widget_creare(piscina, intern, repositorium, NIHIL, NIHIL, NIHIL, NIHIL);
+        ctx = contextus_widget_creare(piscina, intern, repositorium,
+            NIHIL, NIHIL, NIHIL, NIHIL);
         si (!ctx)
         {
             imprimere("Fractura: non potest creare contextum\n");
@@ -146,12 +158,12 @@ main(void)
     }
 
     /* Configurare fenestram */
-    configuratio.titulus = "Navigator Entitatum - Probatio";
-    configuratio.x = C;
-    configuratio.y = C;
-    configuratio.latitudo = LATITUDO_FENESTRA;
-    configuratio.altitudo = ALTITUDO_FENESTRA;
-    configuratio.vexilla = FENESTRA_ORDINARIA;
+    configuratio.titulus   = "Navigator Entitatum - Probatio";
+    configuratio.x         = C;
+    configuratio.y         = C;
+    configuratio.latitudo  = LATITUDO_FENESTRA;
+    configuratio.altitudo  = ALTITUDO_FENESTRA;
+    configuratio.vexilla   = FENESTRA_ORDINARIA;
 
     /* Creare fenestram */
     fenestra = fenestra_creare(piscina, &configuratio);
@@ -162,7 +174,8 @@ main(void)
     }
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, ALTITUDO_FENESTRA);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+        ALTITUDO_FENESTRA);
     si (!tabula)
     {
         imprimere("Fractura: non potest creare tabulam\n");
@@ -191,20 +204,23 @@ main(void)
             alioquin si (eventus.genus == EVENTUS_CLAVIS_DEPRESSUS)
             {
                 /* ESC vel q = exire */
-                si (eventus.datum.clavis.typus == '\x1B' || eventus.datum.clavis.typus == 'q')
+                si (   eventus.datum.clavis.typus == '\x1B'
+                    || eventus.datum.clavis.typus == 'q')
                 {
                     currens = FALSUM;
                 }
                 alioquin
                 {
                     /* Passare ad navigator */
-                    navigator_entitatum_tractare_eventum(navigator, &eventus);
+                    navigator_entitatum_tractare_eventum(navigator,
+                        &eventus);
                 }
             }
         }
 
         /* Vacare fondum */
-        tabula_pixelorum_vacare(tabula, color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+        tabula_pixelorum_vacare(tabula,
+            color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Reddere navigator */
         navigator_entitatum_reddere(

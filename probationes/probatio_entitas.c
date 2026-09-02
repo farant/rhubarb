@@ -29,6 +29,7 @@ s32 principale(vacuum)
         redde I;
     }
 
+
     /* ==================================================
      * Probare entitas_creare
      * ================================================== */
@@ -40,17 +41,20 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans entitas_creare ---\n");
 
-        id    = chorda_internare_ex_literis(intern, "entity-1");
-        genus = chorda_internare_ex_literis(intern, "document");
+        id     = chorda_internare_ex_literis(intern, "entity-1");
+        genus  = chorda_internare_ex_literis(intern, "document");
 
         entitas = entitas_creare(piscina, id, genus);
         CREDO_NON_NIHIL(entitas);
         CREDO_AEQUALIS_PTR(entitas->id, id);
         CREDO_AEQUALIS_PTR(entitas->genus, genus);
-        CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), ZEPHYRUM);
-        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas),
+            ZEPHYRUM);
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), ZEPHYRUM);
     }
+
 
     /* ==================================================
      * Probare proprietates
@@ -68,19 +72,21 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans proprietates ---\n");
 
-        id    = chorda_internare_ex_literis(intern, "entity-2");
-        genus = chorda_internare_ex_literis(intern, "file");
+        id     = chorda_internare_ex_literis(intern, "entity-2");
+        genus  = chorda_internare_ex_literis(intern, "file");
 
         entitas = entitas_creare(piscina, id, genus);
 
         /* Addere proprietates */
-        clavis_nomen = chorda_internare_ex_literis(intern, "name");
-        valor_nomen  = chorda_internare_ex_literis(intern, "test.txt");
-        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_nomen, valor_nomen));
+        clavis_nomen  = chorda_internare_ex_literis(intern, "name");
+        valor_nomen   = chorda_internare_ex_literis(intern, "test.txt");
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_nomen,
+            valor_nomen));
 
-        clavis_color = chorda_internare_ex_literis(intern, "color");
-        valor_color  = chorda_internare_ex_literis(intern, "blue");
-        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_color, valor_color));
+        clavis_color  = chorda_internare_ex_literis(intern, "color");
+        valor_color   = chorda_internare_ex_literis(intern, "blue");
+        CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis_color,
+            valor_color));
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), II);
 
@@ -102,6 +108,7 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "nonexistent"));
         CREDO_NIHIL(resultus);
     }
+
 
     /* ==================================================
      * Probare renovatio proprietatis
@@ -140,6 +147,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_PTR(resultus, valor2);  /* Renovatus */
     }
 
+
     /* ==================================================
      * Probare relationes
      * ================================================== */
@@ -159,20 +167,26 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "folder-1"),
             chorda_internare_ex_literis(intern, "folder"));
 
-        genus_continet = chorda_internare_ex_literis(intern, "contains");
-        genus_referit  = chorda_internare_ex_literis(intern, "references");
+        genus_continet = chorda_internare_ex_literis(intern,
+            "contains");
+        genus_referit = chorda_internare_ex_literis(intern,
+            "references");
 
         dest1 = chorda_internare_ex_literis(intern, "file-1");
         dest2 = chorda_internare_ex_literis(intern, "file-2");
         dest3 = chorda_internare_ex_literis(intern, "doc-1");
 
         /* Addere relationes */
-        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest1));
-        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest2));
-        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern, genus_referit, dest3));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern,
+            genus_continet, dest1));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern,
+            genus_continet, dest2));
+        CREDO_NON_NIHIL(entitas_relatio_addere(entitas, piscina, intern,
+            genus_referit, dest3));
 
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), III);
     }
+
 
     /* ==================================================
      * Probare entitas_relatio_addere_cum_id
@@ -193,9 +207,10 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "folder"));
 
         /* Creare ID specificum pro relatione (simulans replay) */
-        relatio_id = chorda_internare_ex_literis(intern, "relatio-id-12345");
-        genus      = chorda_internare_ex_literis(intern, "contains");
-        dest_id    = chorda_internare_ex_literis(intern, "file-xyz");
+        relatio_id = chorda_internare_ex_literis(intern,
+            "relatio-id-12345");
+        genus    = chorda_internare_ex_literis(intern, "contains");
+        dest_id  = chorda_internare_ex_literis(intern, "file-xyz");
 
         /* Addere relationem cum ID specifico */
         relatio = entitas_relatio_addere_cum_id(
@@ -225,6 +240,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), II);
     }
 
+
     /* ==================================================
      * Probare relationes_generis_capere
      * ================================================== */
@@ -246,19 +262,25 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "folder-2"),
             chorda_internare_ex_literis(intern, "folder"));
 
-        genus_continet = chorda_internare_ex_literis(intern, "contains");
-        genus_referit  = chorda_internare_ex_literis(intern, "references");
+        genus_continet = chorda_internare_ex_literis(intern,
+            "contains");
+        genus_referit = chorda_internare_ex_literis(intern,
+            "references");
 
         dest1 = chorda_internare_ex_literis(intern, "file-1");
         dest2 = chorda_internare_ex_literis(intern, "file-2");
         dest3 = chorda_internare_ex_literis(intern, "doc-1");
 
-        entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest1);
-        entitas_relatio_addere(entitas, piscina, intern, genus_continet, dest2);
-        entitas_relatio_addere(entitas, piscina, intern, genus_referit, dest3);
+        entitas_relatio_addere(entitas, piscina, intern, genus_continet,
+            dest1);
+        entitas_relatio_addere(entitas, piscina, intern, genus_continet,
+            dest2);
+        entitas_relatio_addere(entitas, piscina, intern, genus_referit,
+            dest3);
 
         /* Filtrare per genus "contains" */
-        filtratae = entitas_relationes_generis_capere(entitas, genus_continet, piscina);
+        filtratae = entitas_relationes_generis_capere(entitas,
+            genus_continet, piscina);
         CREDO_NON_NIHIL(filtratae);
         CREDO_AEQUALIS_I32(xar_numerus(filtratae), II);
 
@@ -269,13 +291,15 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_PTR(relatio->destinatio_id, dest1);
 
         /* Filtrare per genus "references" */
-        filtratae = entitas_relationes_generis_capere(entitas, genus_referit, piscina);
+        filtratae = entitas_relationes_generis_capere(entitas,
+            genus_referit, piscina);
         CREDO_NON_NIHIL(filtratae);
         CREDO_AEQUALIS_I32(xar_numerus(filtratae), I);
 
         relatio = (Relatio*)xar_obtinere(filtratae, ZEPHYRUM);
         CREDO_AEQUALIS_PTR(relatio->destinatio_id, dest3);
     }
+
 
     /* ==================================================
      * Probare notae
@@ -316,6 +340,7 @@ s32 principale(vacuum)
             chorda_internare_ex_literis(intern, "#other")));
     }
 
+
     /* ==================================================
      * Probare duplicatae notae
      * ================================================== */
@@ -340,6 +365,7 @@ s32 principale(vacuum)
         /* Debet adhuc habere tantum unam */
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), I);
     }
+
 
     /* ==================================================
      * Probare nota cum praefixo
@@ -367,17 +393,21 @@ s32 principale(vacuum)
         entitas_nota_addere(entitas, nota3);
 
         /* Verificare praefixum "#project::" */
-        CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas, "#project::"));
+        CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas,
+            "#project::"));
 
         /* Verificare praefixum "#urgent" */
-        CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas, "#urgent"));
+        CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas,
+            "#urgent"));
 
         /* Verificare praefixum non existens */
-        CREDO_FALSUM(entitas_nota_cum_praefixo_habet(entitas, "#work::"));
+        CREDO_FALSUM(entitas_nota_cum_praefixo_habet(entitas,
+            "#work::"));
 
         /* Verificare praefixum vacuum */
         CREDO_VERUM(entitas_nota_cum_praefixo_habet(entitas, "#"));
     }
+
 
     /* ==================================================
      * Probare entitas_imprimere
@@ -422,6 +452,7 @@ s32 principale(vacuum)
         entitas_imprimere(entitas);
     }
 
+
     /* ==================================================
      * Probare entitas complexa
      * ================================================== */
@@ -449,7 +480,8 @@ s32 principale(vacuum)
             sprintf(buffer, "value-%d", i);
             valor = chorda_internare_ex_literis(intern, buffer);
 
-            CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis, valor));
+            CREDO_VERUM(entitas_proprietas_ponere(entitas, clavis,
+                valor));
         }
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), X);
@@ -480,16 +512,17 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), V);
     }
 
+
     /* ==================================================
      * Probare delere proprietates
      * ================================================== */
 
     {
         Entitas* entitas;
-        chorda*  clavis1;
-        chorda*  clavis2;
-        chorda*  clavis3;
-        chorda*  valor;
+         chorda* clavis1;
+         chorda* clavis2;
+         chorda* clavis3;
+         chorda* valor;
 
         imprimere("\n--- Probans delere proprietates ---\n");
 
@@ -503,9 +536,12 @@ s32 principale(vacuum)
         clavis3 = chorda_internare_ex_literis(intern, "third");
 
         /* Addere tres proprietates */
-        entitas_proprietas_ponere(entitas, clavis1, chorda_internare_ex_literis(intern, "1"));
-        entitas_proprietas_ponere(entitas, clavis2, chorda_internare_ex_literis(intern, "2"));
-        entitas_proprietas_ponere(entitas, clavis3, chorda_internare_ex_literis(intern, "3"));
+        entitas_proprietas_ponere(entitas, clavis1,
+            chorda_internare_ex_literis(intern, "1"));
+        entitas_proprietas_ponere(entitas, clavis2,
+            chorda_internare_ex_literis(intern, "2"));
+        entitas_proprietas_ponere(entitas, clavis3,
+            chorda_internare_ex_literis(intern, "3"));
 
         CREDO_AEQUALIS_I32(entitas_numerus_proprietatum(entitas), III);
 
@@ -532,6 +568,7 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(valor);
     }
 
+
     /* ==================================================
      * Probare delere relationes
      * ================================================== */
@@ -541,9 +578,9 @@ s32 principale(vacuum)
         Relatio* relatio1;
         Relatio* relatio2;
         Relatio* relatio3;
-        chorda*  id1;
-        chorda*  id2;
-        chorda*  id3;
+         chorda* id1;
+         chorda* id2;
+         chorda* id3;
 
         imprimere("\n--- Probans delere relationes ---\n");
 
@@ -606,8 +643,10 @@ s32 principale(vacuum)
 
         /* Delere ultimam */
         CREDO_VERUM(entitas_relatio_delere(entitas, id3));
-        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(entitas_numerus_relationum(entitas),
+            ZEPHYRUM);
     }
+
 
     /* ==================================================
      * Probare delere notae
@@ -615,9 +654,9 @@ s32 principale(vacuum)
 
     {
         Entitas* entitas;
-        chorda*  nota1;
-        chorda*  nota2;
-        chorda*  nota3;
+         chorda* nota1;
+         chorda* nota2;
+         chorda* nota3;
 
         imprimere("\n--- Probans delere notae ---\n");
 
@@ -657,13 +696,14 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(entitas_numerus_notarum(entitas), ZEPHYRUM);
     }
 
+
     /* ==================================================
      * Probare entitas_titulum_capere
      * ================================================== */
 
     {
         Entitas* entitas;
-        chorda*  titulum;
+         chorda* titulum;
 
         imprimere("\n--- Probans entitas_titulum_capere ---\n");
 
@@ -680,7 +720,8 @@ s32 principale(vacuum)
 
         titulum = entitas_titulum_capere(entitas);
         CREDO_NON_NIHIL(titulum);
-        CREDO_VERUM(chorda_aequalis_literis(*titulum, "My Entity Name"));
+        CREDO_VERUM(chorda_aequalis_literis(*titulum,
+            "My Entity Name"));
 
         /* Casus 2: Entitas cum "title" proprietate (sine "name") */
         entitas = entitas_creare(
@@ -695,7 +736,8 @@ s32 principale(vacuum)
 
         titulum = entitas_titulum_capere(entitas);
         CREDO_NON_NIHIL(titulum);
-        CREDO_VERUM(chorda_aequalis_literis(*titulum, "My Entity Title"));
+        CREDO_VERUM(chorda_aequalis_literis(*titulum,
+            "My Entity Title"));
 
         /* Casus 3: Entitas cum "name" et "title" - "name" habet prioritatem */
         entitas = entitas_creare(
@@ -730,24 +772,26 @@ s32 principale(vacuum)
 
         titulum = entitas_titulum_capere(entitas);
         CREDO_NON_NIHIL(titulum);
-        CREDO_VERUM(chorda_aequalis_literis(*titulum, "titulum-test-4"));
+        CREDO_VERUM(chorda_aequalis_literis(*titulum,
+            "titulum-test-4"));
 
         /* Casus 5: Entitas NIHIL */
         titulum = entitas_titulum_capere(NIHIL);
         CREDO_NIHIL(titulum);
     }
 
+
     /* ==================================================
      * Probare proprietates typificatae (typed accessors)
      * ================================================== */
 
     {
-        Entitas*    entitas;
+           Entitas* entitas;
         Proprietas* prop;
-        s32         val_s32;
-        s64         val_s64;
-        f64         val_f64;
-        b32         val_b32;
+               s32  val_s32;
+               s64  val_s64;
+               f64  val_f64;
+               b32  val_b32;
 
         imprimere("\n--- Probans proprietates typificatae ---\n");
 
@@ -944,6 +988,7 @@ s32 principale(vacuum)
             &val_s32));
         CREDO_AEQUALIS_S32(val_s32, 100);
     }
+
 
     /* ==================================================
      * Compendium

@@ -17,7 +17,7 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_moneta", 65536);
     si (piscina == NIHIL)
@@ -62,9 +62,9 @@ principale (vacuum)
 
     /* ---- octeti fortuiti: fons secretorum ---- */
     {
-        i8 a[32];
-        i8 b[32];
-        i8 sentinella[8];
+         i8 a[32];
+         i8 b[32];
+         i8 sentinella[8];
         i32 i;
         i32 differentiae = ZEPHYRUM;
 

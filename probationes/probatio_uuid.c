@@ -12,7 +12,7 @@
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_uuid", CDLVI);
@@ -22,6 +22,7 @@ s32 principale(vacuum)
         redde I;
     }
     credo_aperire(piscina);
+
 
     /* ==================================================
      * Probare uuidv7_creare
@@ -40,6 +41,7 @@ s32 principale(vacuum)
         imprimere("UUID generatus: %.*s\n", uuid.mensura, uuid.datum);
     }
 
+
     /* ==================================================
      * Probare uuid_est_validus
      * ================================================== */
@@ -53,7 +55,8 @@ s32 principale(vacuum)
         CREDO_VERUM(uuid_est_validus(uuid));
 
         /* UUID validus manualiter */
-        uuid = chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd", piscina);
+        uuid = chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd",
+            piscina);
         CREDO_VERUM(uuid_est_validus(uuid));
 
         /* UUID invalidus - mensura incorrecta */
@@ -61,13 +64,16 @@ s32 principale(vacuum)
         CREDO_FALSUM(uuid_est_validus(uuid));
 
         /* UUID invalidus - dashes in locis incorrectis */
-        uuid = chorda_ex_literis("0123456789ab7cde8f0123456789abcd--", piscina);
+        uuid = chorda_ex_literis("0123456789ab7cde8f0123456789abcd--",
+            piscina);
         CREDO_FALSUM(uuid_est_validus(uuid));
 
         /* UUID invalidus - characteres non-hex */
-        uuid = chorda_ex_literis("0123456z-89ab-7cde-8f01-23456789abcd", piscina);
+        uuid = chorda_ex_literis("0123456z-89ab-7cde-8f01-23456789abcd",
+            piscina);
         CREDO_FALSUM(uuid_est_validus(uuid));
     }
+
 
     /* ==================================================
      * Probare uuid_est_v7
@@ -82,22 +88,25 @@ s32 principale(vacuum)
         CREDO_VERUM(uuid_est_v7(uuid));
 
         /* UUIDv4 (simulatus) */
-        uuid = chorda_ex_literis("01234567-89ab-4cde-8f01-23456789abcd", piscina);
+        uuid = chorda_ex_literis("01234567-89ab-4cde-8f01-23456789abcd",
+            piscina);
         CREDO_FALSUM(uuid_est_v7(uuid));
 
         /* UUIDv7 validus */
-        uuid = chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd", piscina);
+        uuid = chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd",
+            piscina);
         CREDO_VERUM(uuid_est_v7(uuid));
     }
+
 
     /* ==================================================
      * Probare uuid_ex_chorda et uuid_ad_chordam
      * ================================================== */
 
     {
-        chorda  uuid_orig;
-        chorda  uuid_conv;
-        i8      bytes[XVI];
+        chorda uuid_orig;
+        chorda uuid_conv;
+            i8 bytes[XVI];
 
         imprimere("\n--- Probans conversio UUID ---\n");
 
@@ -114,6 +123,7 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         CREDO_CHORDA_AEQUALIS(uuid_orig, uuid_conv);
     }
+
 
     /* ==================================================
      * Probare unicitas UUIDs
@@ -141,6 +151,7 @@ s32 principale(vacuum)
         imprimere("UUID 3: %.*s\n", uuid3.mensura, uuid3.datum);
     }
 
+
     /* ==================================================
      * Probare ordinatio temporalis
      * ================================================== */
@@ -148,7 +159,7 @@ s32 principale(vacuum)
     {
         chorda uuid1;
         chorda uuid2;
-        s32    cmp;
+           s32 cmp;
 
         imprimere("\n--- Probans ordinatio temporalis ---\n");
 
@@ -172,14 +183,15 @@ s32 principale(vacuum)
         CREDO_VERUM(cmp <= ZEPHYRUM);
     }
 
+
     /* ==================================================
      * Probare generatio multiplex
      * ================================================== */
 
     {
         chorda uuids[XX];
-        i32    i;
-        i32    j;
+           i32 i;
+           i32 j;
 
         imprimere("\n--- Probans generatio multiplex ---\n");
 
@@ -209,19 +221,22 @@ s32 principale(vacuum)
         imprimere("  ...\n");
     }
 
+
     /* ==================================================
      * Probare conversio cum UUID cognito
      * ================================================== */
 
     {
-        chorda  uuid_str;
-        i8      bytes[XVI];
-        chorda  uuid_retro;
+        chorda uuid_str;
+            i8 bytes[XVI];
+        chorda uuid_retro;
 
         imprimere("\n--- Probans conversio cum UUID cognito ---\n");
 
         /* UUID cognitus */
-        uuid_str = chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd", piscina);
+        uuid_str =
+            chorda_ex_literis("01234567-89ab-7cde-8f01-23456789abcd",
+            piscina);
 
         /* Convertere ad bytes */
         CREDO_VERUM(uuid_ex_chorda(uuid_str, bytes));
@@ -237,13 +252,14 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS(uuid_str, uuid_retro);
     }
 
+
     /* ==================================================
      * Probare version bits
      * ================================================== */
 
     {
-        chorda  uuid;
-        i8      bytes[XVI];
+        chorda uuid;
+            i8 bytes[XVI];
 
         imprimere("\n--- Probans version bits ---\n");
 
@@ -257,6 +273,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(((i32)bytes[VIII] >> VI) & 0x03, 0x02);
     }
 
+
     /* ==================================================
      * Probare uuidv5_creare
      * ================================================== */
@@ -268,7 +285,9 @@ s32 principale(vacuum)
         imprimere("\n--- Probans uuidv5_creare ---\n");
 
         /* Usare namespace cognitus (DNS namespace ex RFC 4122) */
-        namespace_uuid = chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8", piscina);
+        namespace_uuid =
+            chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            piscina);
 
         uuid = uuidv5_creare(piscina, namespace_uuid, "example.com");
         CREDO_NON_NIHIL(uuid.datum);
@@ -278,6 +297,7 @@ s32 principale(vacuum)
 
         imprimere("UUIDv5 generatus: %.*s\n", uuid.mensura, uuid.datum);
     }
+
 
     /* ==================================================
      * Probare uuidv5 determinismus
@@ -291,7 +311,9 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans uuidv5 determinismus ---\n");
 
-        namespace_uuid = chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8", piscina);
+        namespace_uuid =
+            chorda_ex_literis("6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+            piscina);
 
         /* Eadem namespace + nomen = idem UUID */
         uuid1 = uuidv5_creare(piscina, namespace_uuid, "test.example");
@@ -313,6 +335,7 @@ s32 principale(vacuum)
         imprimere("UUID 3: %.*s\n", uuid3.mensura, uuid3.datum);
         imprimere("UUID 1 != UUID 3: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare uuidv5_ex_genere_et_titulo
@@ -353,13 +376,14 @@ s32 principale(vacuum)
         imprimere("Page:home:     %.*s\n", uuid4.mensura, uuid4.datum);
     }
 
+
     /* ==================================================
      * Probare uuidv5 version bits
      * ================================================== */
 
     {
         chorda uuid;
-        i8     bytes[XVI];
+            i8 bytes[XVI];
 
         imprimere("\n--- Probans uuidv5 version bits ---\n");
 
@@ -367,14 +391,17 @@ s32 principale(vacuum)
         CREDO_VERUM(uuid_ex_chorda(uuid, bytes));
 
         /* Byte 6 debet habere version bits (alto nibble = 0x5) */
-        CREDO_AEQUALIS_I32(((i32)(bytes[VI] & 0xFF) >> IV) & 0x0F, 0x05);
+        CREDO_AEQUALIS_I32(((i32)(bytes[VI] & 0xFF) >> IV) & 0x0F,
+            0x05);
 
         /* Byte 8 debet habere variant bits (duo alti bits = 10) */
-        CREDO_AEQUALIS_I32(((i32)(bytes[VIII] & 0xFF) >> VI) & 0x03, 0x02);
+        CREDO_AEQUALIS_I32(((i32)(bytes[VIII] & 0xFF) >> VI) & 0x03,
+            0x02);
 
         imprimere("Version bits: 5 (correctum)\n");
         imprimere("Variant bits: 10 (correctum)\n");
     }
+
 
     /* ==================================================
      * Probare uuid_est_v5
@@ -387,9 +414,12 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans uuid_est_v5 ---\n");
 
-        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test", "v5check");
+        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test",
+            "v5check");
         uuid_v7 = uuidv7_creare(piscina);
-        uuid_v4 = chorda_ex_literis("01234567-89ab-4cde-8f01-23456789abcd", piscina);
+        uuid_v4 =
+            chorda_ex_literis("01234567-89ab-4cde-8f01-23456789abcd",
+            piscina);
 
         CREDO_VERUM(uuid_est_v5(uuid_v5));
         CREDO_FALSUM(uuid_est_v5(uuid_v7));
@@ -399,6 +429,7 @@ s32 principale(vacuum)
         CREDO_VERUM(uuid_est_v7(uuid_v7));
     }
 
+
     /* ==================================================
      * Probare uuidv7_tempus_extrahere
      * ================================================== */
@@ -406,9 +437,9 @@ s32 principale(vacuum)
     {
         chorda uuid_v7;
         chorda uuid_v5;
-        s64    tempus_ante;
-        s64    tempus_post;
-        s64    tempus_extractum;
+           s64 tempus_ante;
+           s64 tempus_post;
+           s64 tempus_extractum;
         structura timeval tv;
 
         imprimere("\n--- Probans uuidv7_tempus_extrahere ---\n");
@@ -439,7 +470,8 @@ s32 principale(vacuum)
         CREDO_VERUM(tempus_extractum > 0);
 
         /* Probare quod UUIDv5 reddit -1 */
-        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test", "timestamp");
+        uuid_v5 = uuidv5_ex_genere_et_titulo(piscina, "Test",
+            "timestamp");
         tempus_extractum = uuidv7_tempus_extrahere(uuid_v5);
         CREDO_AEQUALIS_S64(tempus_extractum, -I);
 
@@ -453,6 +485,7 @@ s32 principale(vacuum)
 
         imprimere("  Tempus extractio: VERUM\n");
     }
+
 
     /* ==================================================
      * Compendium

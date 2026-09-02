@@ -35,12 +35,12 @@ main (
     }
 
     /* Configurare fenestram */
-    configuratio.titulus  = "Probatio Pagina";
-    configuratio.x        = C;
-    configuratio.y        = C;
-    configuratio.latitudo = DCCC;
-    configuratio.altitudo = CDLXXX;
-    configuratio.vexilla  = FENESTRA_ORDINARIA;
+    configuratio.titulus   = "Probatio Pagina";
+    configuratio.x         = C;
+    configuratio.y         = C;
+    configuratio.latitudo  = DCCC;
+    configuratio.altitudo  = CDLXXX;
+    configuratio.vexilla   = FENESTRA_ORDINARIA;
 
     /* Creare fenestram */
     fenestra = fenestra_creare(piscina, &configuratio);
@@ -52,7 +52,8 @@ main (
     }
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CDLXXX);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+        CDLXXX);
     si (tabula == NIHIL)
     {
         imprimere("Errore: non possum creare tabulam pixelorum\n");
@@ -62,13 +63,18 @@ main (
     }
 
     /* Initiare paginam */
-    pagina_initiare(&pagina, piscina, chorda_internare_ex_literis(internamentum_globale(), "Page::Test"));
+    pagina_initiare(&pagina, piscina,
+        chorda_internare_ex_literis(internamentum_globale(),
+        "Page::Test"));
 
     /* Inserere textum initialem */
-    pagina_inserere_textum(&pagina, "Salve! Hoc est probatio paginae.\n");
+    pagina_inserere_textum(&pagina,
+        "Salve! Hoc est probatio paginae.\n");
     pagina_inserere_textum(&pagina, "Preme EFFUGIUM ut claudas.\n\n");
-    pagina_inserere_textum(&pagina, "i = insert mode, ESC = normal mode\n");
-    pagina_inserere_textum(&pagina, "Normal: hjkl, wb, o/O, a/i, g/G, dd, dG, d$\n");
+    pagina_inserere_textum(&pagina,
+        "i = insert mode, ESC = normal mode\n");
+    pagina_inserere_textum(&pagina,
+        "Normal: hjkl, wb, o/O, a/i, g/G, dd, dG, d$\n");
 
     /* Monstrare fenestram */
     fenestra_monstrare(fenestra);
@@ -107,10 +113,12 @@ main (
         }
 
         /* Purgare tabulam pixelorum */
-        tabula_pixelorum_vacare(tabula, color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
+        tabula_pixelorum_vacare(tabula,
+            color_ad_pixelum(thema_color(COLOR_BACKGROUND)));
 
         /* Reddere paginam cum margine (border + status) */
-        pagina_reddere_cum_margine(piscina, tabula, &pagina, ZEPHYRUM, ZEPHYRUM, LXX, XL, I, VERUM);
+        pagina_reddere_cum_margine(piscina, tabula, &pagina, ZEPHYRUM,
+            ZEPHYRUM, LXX, XL, I, VERUM);
 
         /* Praesentare pixela ad fenestram */
         fenestra_praesentare_pixela(fenestra, tabula);

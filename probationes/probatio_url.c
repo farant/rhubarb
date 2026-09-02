@@ -93,26 +93,26 @@ probatio_decodificatio(Piscina* piscina)
     printf("--- Probans decodificatio ---\n");
 
     /* Simplex */
-    codificata = chorda_ex_literis("hello", piscina);
-    decodificata = url_decodificare(codificata, piscina);
+    codificata    = chorda_ex_literis("hello", piscina);
+    decodificata  = url_decodificare(codificata, piscina);
     CREDO_AEQUALIS_I32(decodificata.mensura, V);
     CREDO_VERUM(memcmp(decodificata.datum, "hello", V) == 0);
 
     /* %20 -> spatium */
-    codificata = chorda_ex_literis("hello%20world", piscina);
-    decodificata = url_decodificare(codificata, piscina);
+    codificata    = chorda_ex_literis("hello%20world", piscina);
+    decodificata  = url_decodificare(codificata, piscina);
     CREDO_AEQUALIS_I32(decodificata.mensura, XI);
     CREDO_VERUM(memcmp(decodificata.datum, "hello world", XI) == 0);
 
     /* + -> spatium (form encoding) */
-    codificata = chorda_ex_literis("hello+world", piscina);
-    decodificata = url_decodificare(codificata, piscina);
+    codificata    = chorda_ex_literis("hello+world", piscina);
+    decodificata  = url_decodificare(codificata, piscina);
     CREDO_AEQUALIS_I32(decodificata.mensura, XI);
     CREDO_VERUM(memcmp(decodificata.datum, "hello world", XI) == 0);
 
     /* %26 -> & */
-    codificata = chorda_ex_literis("a%26b", piscina);
-    decodificata = url_decodificare(codificata, piscina);
+    codificata    = chorda_ex_literis("a%26b", piscina);
+    decodificata  = url_decodificare(codificata, piscina);
     CREDO_AEQUALIS_I32(decodificata.mensura, III);
     CREDO_VERUM(memcmp(decodificata.datum, "a&b", III) == 0);
 
@@ -133,9 +133,10 @@ probatio_round_trip(Piscina* piscina)
 
     printf("--- Probans round trip ---\n");
 
-    originalis = chorda_ex_literis("Hello World! How are you?", piscina);
-    codificata = url_codificare(originalis, piscina);
-    decodificata = url_decodificare(codificata, piscina);
+    originalis = chorda_ex_literis("Hello World! How are you?",
+        piscina);
+    codificata    = url_codificare(originalis, piscina);
+    decodificata  = url_decodificare(codificata, piscina);
 
     CREDO_AEQUALIS_I32(decodificata.mensura, originalis.mensura);
     CREDO_VERUM(memcmp(decodificata.datum, originalis.datum,
@@ -164,25 +165,25 @@ probatio_params_construere(Piscina* piscina)
     printf("--- Probans params construere ---\n");
 
     /* Una par */
-    claves[0] = chorda_ex_literis("name", piscina);
-    valores[0] = chorda_ex_literis("John", piscina);
-    query = url_params_construere(claves, valores, I, piscina);
+    claves[0]   = chorda_ex_literis("name", piscina);
+    valores[0]  = chorda_ex_literis("John", piscina);
+    query       = url_params_construere(claves, valores, I, piscina);
     CREDO_AEQUALIS_I32(query.mensura, IX);
     CREDO_VERUM(memcmp(query.datum, "name=John", IX) == 0);
 
     /* Duae pares */
-    claves[I] = chorda_ex_literis("age", piscina);
-    valores[I] = chorda_ex_literis("30", piscina);
-    query = url_params_construere(claves, valores, II, piscina);
+    claves[I]   = chorda_ex_literis("age", piscina);
+    valores[I]  = chorda_ex_literis("30", piscina);
+    query       = url_params_construere(claves, valores, II, piscina);
     CREDO_AEQUALIS_I32(query.mensura, XVI);
     CREDO_VERUM(memcmp(query.datum, "name=John&age=30", XVI) == 0);
 
     printf("  Query: '%.*s'\n", query.mensura, query.datum);
 
     /* Cum characteres speciales */
-    claves[0] = chorda_ex_literis("q", piscina);
-    valores[0] = chorda_ex_literis("hello world", piscina);
-    query = url_params_construere(claves, valores, I, piscina);
+    claves[0]   = chorda_ex_literis("q", piscina);
+    valores[0]  = chorda_ex_literis("hello world", piscina);
+    query       = url_params_construere(claves, valores, I, piscina);
     CREDO_VERUM(query.mensura > 0);
     printf("  Query cum spatio: '%.*s'\n", query.mensura, query.datum);
 
@@ -197,14 +198,14 @@ probatio_params_construere(Piscina* piscina)
 interior vacuum
 probatio_params_parse(Piscina* piscina)
 {
-    chorda    query;
+       chorda query;
     UrlParams params;
 
     printf("--- Probans params parse ---\n");
 
     /* Una par */
-    query = chorda_ex_literis("name=John", piscina);
-    params = url_params_parse(query, piscina);
+    query   = chorda_ex_literis("name=John", piscina);
+    params  = url_params_parse(query, piscina);
     CREDO_AEQUALIS_I32(params.numerus, I);
     CREDO_AEQUALIS_I32(params.claves[0].mensura, IV);
     CREDO_VERUM(memcmp(params.claves[0].datum, "name", IV) == 0);
@@ -212,16 +213,17 @@ probatio_params_parse(Piscina* piscina)
     CREDO_VERUM(memcmp(params.valores[0].datum, "John", IV) == 0);
 
     /* Duae pares */
-    query = chorda_ex_literis("name=John&age=30", piscina);
-    params = url_params_parse(query, piscina);
+    query   = chorda_ex_literis("name=John&age=30", piscina);
+    params  = url_params_parse(query, piscina);
     CREDO_AEQUALIS_I32(params.numerus, II);
 
     /* Cum percent encoding */
-    query = chorda_ex_literis("q=hello%20world", piscina);
-    params = url_params_parse(query, piscina);
+    query   = chorda_ex_literis("q=hello%20world", piscina);
+    params  = url_params_parse(query, piscina);
     CREDO_AEQUALIS_I32(params.numerus, I);
     CREDO_AEQUALIS_I32(params.valores[0].mensura, XI);
-    CREDO_VERUM(memcmp(params.valores[0].datum, "hello world", XI) == 0);
+    CREDO_VERUM(memcmp(params.valores[0].datum, "hello world", XI)
+        == 0);
 
     printf("  Parsed: q='%.*s'\n",
            params.valores[0].mensura, params.valores[0].datum);
@@ -237,16 +239,16 @@ probatio_params_parse(Piscina* piscina)
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
-    chorda    input;
-    chorda    result;
+       chorda input;
+       chorda result;
     UrlParams params;
 
     printf("--- Probans nullum argumenta ---\n");
 
     /* Codificare cum NIHIL */
-    input.datum = NIHIL;
-    input.mensura = 0;
-    result = url_codificare(input, piscina);
+    input.datum    = NIHIL;
+    input.mensura  = 0;
+    result         = url_codificare(input, piscina);
     CREDO_NIHIL(result.datum);
 
     /* Decodificare cum NIHIL */
@@ -270,10 +272,10 @@ probatio_nullum_argumenta(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

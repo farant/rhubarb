@@ -24,7 +24,9 @@
  * ======================================================================== */
 
 interior vacuum
-_pumpare(Hospitium* h, i32 vices)
+_pumpare (
+    Hospitium* h,
+          i32  vices)
 {
     i32 i;
     per (i = 0; i < vices; i++)
@@ -34,20 +36,27 @@ _pumpare(Hospitium* h, i32 vices)
 }
 
 interior TcpConnexio*
-_cliens_connectere(Piscina* piscina, i32 portus)
+_cliens_connectere (
+    Piscina* piscina,
+        i32  portus)
 {
     TcpOptiones opt = tcp_optiones_default();
     TcpResultus res;
 
     opt.timeout_ms = MM;  /* 2s - recv fallit pro pendendo */
-    res = tcp_connectere_cum_optionibus("127.0.0.1", portus, &opt, piscina);
+    res = tcp_connectere_cum_optionibus("127.0.0.1", portus, &opt,
+        piscina);
     redde res.successus ? res.connexio : NIHIL;
 }
 
 /* Mittere petitionem, pumpare, recipere responsum (NUL-terminatum) */
 interior s32
-_commercium(Hospitium* h, TcpConnexio* cliens,
-    constans character* petitio, character* buffer, i32 capacitas)
+_commercium (
+             Hospitium* h,
+           TcpConnexio* cliens,
+    constans character* petitio,
+             character* buffer,
+                   i32  capacitas)
 {
     s32 n;
 
@@ -74,7 +83,8 @@ _commercium(Hospitium* h, TcpConnexio* cliens,
 hic_manens i32 g_tractator_vocatus = 0;
 
 interior vacuum
-_tractator_salve(HospitiumColloquium* colloquium)
+_tractator_salve (
+    HospitiumColloquium* colloquium)
 {
     chorda corpus = chorda_ex_literis("salve munde",
                                       colloquium_piscina(colloquium));
@@ -83,7 +93,8 @@ _tractator_salve(HospitiumColloquium* colloquium)
 }
 
 interior vacuum
-_tractator_resonans(HospitiumColloquium* colloquium)
+_tractator_resonans (
+    HospitiumColloquium* colloquium)
 {
     /* redde valorem parametri :id */
     chorda id = colloquium_param(colloquium, "id");
@@ -91,7 +102,8 @@ _tractator_resonans(HospitiumColloquium* colloquium)
 }
 
 interior vacuum
-_tractator_datum(HospitiumColloquium* colloquium)
+_tractator_datum (
+    HospitiumColloquium* colloquium)
 {
     /* redde datum registratum ut corpus */
     constans character* datum =
@@ -110,9 +122,9 @@ _tractator_datum(HospitiumColloquium* colloquium)
 interior vacuum
 probatio_creare_destruere(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+         HospitiumFructus  fr;
 
     printf("--- Probans creare et destruere ---\n");
 
@@ -138,12 +150,12 @@ probatio_creare_destruere(Piscina* piscina)
 interior vacuum
 probatio_gyrus_simplex(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
+         HospitiumFructus  fr;
 
     printf("--- Probans gyrum simplicem ---\n");
 
@@ -186,12 +198,12 @@ probatio_gyrus_simplex(Piscina* piscina)
 interior vacuum
 probatio_keep_alive(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
+         HospitiumFructus  fr;
 
     printf("--- Probans keep-alive (II petitiones, I connexio) ---\n");
 
@@ -199,7 +211,8 @@ probatio_keep_alive(Piscina* piscina)
     h = hospitium_creare(piscina, &cfg);
     CREDO_NON_NIHIL(h);
     hospitium_praebere(h, HTTP_GET, "/salve", _tractator_salve, NIHIL);
-    hospitium_praebere(h, HTTP_GET, "/res/:id", _tractator_resonans, NIHIL);
+    hospitium_praebere(h, HTTP_GET, "/res/:id", _tractator_resonans,
+        NIHIL);
 
     cliens = _cliens_connectere(piscina, hospitium_portus(h));
     CREDO_NON_NIHIL(cliens);
@@ -239,11 +252,11 @@ probatio_keep_alive(Piscina* piscina)
 interior vacuum
 probatio_ignotum_et_non_permissum(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
 
     printf("--- Probans CDIV et CDV + Allow ---\n");
 
@@ -272,7 +285,8 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
         "POST /salve HTTP/1.1\r\nHost: probatio\r\nContent-Length: 0\r\n\r\n",
         buffer, MMMMXCVI);
     CREDO_VERUM(n > 0);
-    CREDO_VERUM(strstr(buffer, "HTTP/1.1 405 Method Not Allowed") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "HTTP/1.1 405 Method Not Allowed")
+        != NIHIL);
     CREDO_VERUM(strstr(buffer, "Allow: GET, HEAD, OPTIONS") != NIHIL);
     tcp_claudere(cliens);
 
@@ -289,12 +303,12 @@ probatio_ignotum_et_non_permissum(Piscina* piscina)
 interior vacuum
 probatio_custos_trans_filum(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
+         HospitiumFructus  fr;
 
     printf("--- Probans custodem trans filum (versio mala) ---\n");
 
@@ -334,11 +348,11 @@ probatio_custos_trans_filum(Piscina* piscina)
 interior vacuum
 probatio_caput_sine_corpore(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
 
     printf("--- Probans HEAD = GET sine corpore ---\n");
 
@@ -377,12 +391,12 @@ probatio_caput_sine_corpore(Piscina* piscina)
 interior vacuum
 probatio_reliquiae_clausura(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
+         HospitiumFructus  fr;
 
     printf("--- Probans reliquias -> clausuram honestam ---\n");
 
@@ -427,11 +441,11 @@ probatio_reliquiae_clausura(Piscina* piscina)
 interior vacuum
 probatio_datum_et_caput(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
+            HospitiumConfiguratio  cfg;
+                        Hospitium* h;
+                      TcpConnexio* cliens;
+                        character  buffer[MMMMXCVI];
+                              s32  n;
     hic_manens constans character* datum_probationis = "datum-arcanum";
 
     printf("--- Probans datum registratum + caput proprium ---\n");
@@ -467,11 +481,11 @@ probatio_datum_et_caput(Piscina* piscina)
 interior vacuum
 probatio_directorium(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
 
     printf("--- Probans directorium staticum ---\n");
 
@@ -488,7 +502,8 @@ probatio_directorium(Piscina* piscina)
     memset(&cfg, 0, magnitudo(cfg));
     h = hospitium_creare(piscina, &cfg);
     CREDO_NON_NIHIL(h);
-    CREDO_VERUM(hospitium_directorium_servire(h, "/static", STATICA_RADIX));
+    CREDO_VERUM(hospitium_directorium_servire(h, "/static",
+        STATICA_RADIX));
 
     cliens = _cliens_connectere(piscina, hospitium_portus(h));
     CREDO_NON_NIHIL(cliens);
@@ -554,17 +569,17 @@ probatio_directorium(Piscina* piscina)
 interior vacuum
 probatio_acao(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens;
-    character buffer[MMMMXCVI];
-    s32 n;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens;
+                character  buffer[MMMMXCVI];
+                      s32  n;
 
     printf("--- Probans ACAO in omni responso ---\n");
 
     memset(&cfg, 0, magnitudo(cfg));
-    cfg.acao = VERUM;
-    h = hospitium_creare(piscina, &cfg);
+    cfg.acao  = VERUM;
+    h         = hospitium_creare(piscina, &cfg);
     CREDO_NON_NIHIL(h);
     hospitium_praebere(h, HTTP_GET, "/salve", _tractator_salve, NIHIL);
 
@@ -577,7 +592,8 @@ probatio_acao(Piscina* piscina)
         "GET /salve HTTP/1.1\r\nHost: probatio\r\n\r\n",
         buffer, MMMMXCVI);
     CREDO_VERUM(n > 0);
-    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *")
+        != NIHIL);
 
     /* etiam CDIV - uniformis in OMNI responso */
     n = _commercium(h, cliens,
@@ -585,7 +601,8 @@ probatio_acao(Piscina* piscina)
         buffer, MMMMXCVI);
     CREDO_VERUM(n > 0);
     CREDO_VERUM(strstr(buffer, "HTTP/1.1 404 Not Found") != NIHIL);
-    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "Access-Control-Allow-Origin: *")
+        != NIHIL);
 
     tcp_claudere(cliens);
     hospitium_destruere(h);
@@ -601,19 +618,19 @@ probatio_acao(Piscina* piscina)
 interior vacuum
 probatio_plenitudo(Piscina* piscina)
 {
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
-    TcpConnexio* cliens_a;
-    TcpConnexio* cliens_b;
-    character buffer[MMMMXCVI];
-    s32 n;
-    HospitiumFructus fr;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
+              TcpConnexio* cliens_a;
+              TcpConnexio* cliens_b;
+                character  buffer[MMMMXCVI];
+                      s32  n;
+         HospitiumFructus  fr;
 
     printf("--- Probans plenitudinem -> DIII ---\n");
 
     memset(&cfg, 0, magnitudo(cfg));
-    cfg.connexiones_maximae = I;
-    h = hospitium_creare(piscina, &cfg);
+    cfg.connexiones_maximae  = I;
+    h                        = hospitium_creare(piscina, &cfg);
     CREDO_NON_NIHIL(h);
     hospitium_praebere(h, HTTP_GET, "/salve", _tractator_salve, NIHIL);
 
@@ -630,7 +647,8 @@ probatio_plenitudo(Piscina* piscina)
     n = tcp_recipere(cliens_b, (i8*)buffer, MMMMXCVI - I);
     CREDO_VERUM(n > 0);
     buffer[n] = '\0';
-    CREDO_VERUM(strstr(buffer, "HTTP/1.1 503 Service Unavailable") != NIHIL);
+    CREDO_VERUM(strstr(buffer, "HTTP/1.1 503 Service Unavailable")
+        != NIHIL);
 
     fr = hospitium_fructus(h);
     CREDO_VERUM(fr.connexiones_plenae_recusatae == I);
@@ -656,10 +674,10 @@ probatio_plenitudo(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

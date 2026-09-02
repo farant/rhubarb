@@ -8,7 +8,7 @@
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("test_utf8", MMMMXCVI);
     si (!piscina)
@@ -79,10 +79,10 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans i8 ascii[] = { 'H', 'e', 'l', 'l', 'o' };
-        constans i8* ptr = ascii;
-        constans i8* finis = ascii + V;
-        s32 runa;
+        constans i8  ascii[]  = { 'H', 'e', 'l', 'l', 'o' };
+        constans i8* ptr      = ascii;
+        constans i8* finis    = ascii + V;
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere ASCII ---\n");
 
@@ -111,10 +111,10 @@ s32 principale(vacuum)
 
     {
         /* U+00E9 = e-acutum = C3 A9 */
-        constans i8 e_acutum[] = { 0xC3, 0xA9 };
-        constans i8* ptr = e_acutum;
-        constans i8* finis = e_acutum + II;
-        s32 runa;
+        constans i8  e_acutum[]  = { 0xC3, 0xA9 };
+        constans i8* ptr         = e_acutum;
+        constans i8* finis       = e_acutum + II;
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere 2-byte ---\n");
 
@@ -125,10 +125,10 @@ s32 principale(vacuum)
 
     {
         /* U+00F1 = n-tilde = C3 B1 */
-        constans i8 n_tilde[] = { 0xC3, 0xB1 };
-        constans i8* ptr = n_tilde;
-        constans i8* finis = n_tilde + II;
-        s32 runa;
+        constans i8  n_tilde[]  = { 0xC3, 0xB1 };
+        constans i8* ptr        = n_tilde;
+        constans i8* finis      = n_tilde + II;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x00F1);  /* n-tilde */
@@ -136,10 +136,10 @@ s32 principale(vacuum)
 
     {
         /* U+00FC = u-umlaut = C3 BC */
-        constans i8 u_umlaut[] = { 0xC3, 0xBC };
-        constans i8* ptr = u_umlaut;
-        constans i8* finis = u_umlaut + II;
-        s32 runa;
+        constans i8  u_umlaut[]  = { 0xC3, 0xBC };
+        constans i8* ptr         = u_umlaut;
+        constans i8* finis       = u_umlaut + II;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x00FC);  /* u-umlaut */
@@ -152,10 +152,10 @@ s32 principale(vacuum)
 
     {
         /* U+03C0 = pi = CE A0 */
-        constans i8 pi[] = { 0xCE, 0xA0 };
-        constans i8* ptr = pi;
-        constans i8* finis = pi + II;
-        s32 runa;
+        constans i8  pi[]   = { 0xCE, 0xA0 };
+        constans i8* ptr    = pi;
+        constans i8* finis  = pi + II;
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere 3-byte ---\n");
 
@@ -165,10 +165,10 @@ s32 principale(vacuum)
 
     {
         /* U+2019 = right single quote = E2 80 99 */
-        constans i8 rsquote[] = { 0xE2, 0x80, 0x99 };
-        constans i8* ptr = rsquote;
-        constans i8* finis = rsquote + III;
-        s32 runa;
+        constans i8  rsquote[]  = { 0xE2, 0x80, 0x99 };
+        constans i8* ptr        = rsquote;
+        constans i8* finis      = rsquote + III;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x2019);  /* right single quote */
@@ -176,10 +176,10 @@ s32 principale(vacuum)
 
     {
         /* U+201C = left double quote = E2 80 9C */
-        constans i8 ldquote[] = { 0xE2, 0x80, 0x9C };
-        constans i8* ptr = ldquote;
-        constans i8* finis = ldquote + III;
-        s32 runa;
+        constans i8  ldquote[]  = { 0xE2, 0x80, 0x9C };
+        constans i8* ptr        = ldquote;
+        constans i8* finis      = ldquote + III;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x201C);  /* left double quote */
@@ -187,10 +187,10 @@ s32 principale(vacuum)
 
     {
         /* U+2014 = em dash = E2 80 94 */
-        constans i8 emdash[] = { 0xE2, 0x80, 0x94 };
-        constans i8* ptr = emdash;
-        constans i8* finis = emdash + III;
-        s32 runa;
+        constans i8  emdash[]  = { 0xE2, 0x80, 0x94 };
+        constans i8* ptr       = emdash;
+        constans i8* finis     = emdash + III;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x2014);  /* em dash */
@@ -203,10 +203,10 @@ s32 principale(vacuum)
 
     {
         /* U+1F600 = grinning face = F0 9F 98 80 */
-        constans i8 emoji[] = { 0xF0, 0x9F, 0x98, 0x80 };
-        constans i8* ptr = emoji;
-        constans i8* finis = emoji + IV;
-        s32 runa;
+        constans i8  emoji[]  = { 0xF0, 0x9F, 0x98, 0x80 };
+        constans i8* ptr      = emoji;
+        constans i8* finis    = emoji + IV;
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere 4-byte ---\n");
 
@@ -222,10 +222,10 @@ s32 principale(vacuum)
 
     {
         /* Continuatio orphana */
-        constans i8 orphana[] = { 0x80 };
-        constans i8* ptr = orphana;
-        constans i8* finis = orphana + I;
-        s32 runa;
+        constans i8  orphana[]  = { 0x80 };
+        constans i8* ptr        = orphana;
+        constans i8* finis      = orphana + I;
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere invalidae ---\n");
 
@@ -236,10 +236,10 @@ s32 principale(vacuum)
 
     {
         /* Sequentia truncata (2-byte incompleta) */
-        constans i8 truncata[] = { 0xC3 };
-        constans i8* ptr = truncata;
-        constans i8* finis = truncata + I;
-        s32 runa;
+        constans i8  truncata[]  = { 0xC3 };
+        constans i8* ptr         = truncata;
+        constans i8* finis       = truncata + I;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
@@ -247,10 +247,10 @@ s32 principale(vacuum)
 
     {
         /* Sequentia truncata (3-byte incompleta) */
-        constans i8 truncata3[] = { 0xE2, 0x80 };
-        constans i8* ptr = truncata3;
-        constans i8* finis = truncata3 + II;
-        s32 runa;
+        constans i8  truncata3[]  = { 0xE2, 0x80 };
+        constans i8* ptr          = truncata3;
+        constans i8* finis        = truncata3 + II;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
@@ -258,10 +258,10 @@ s32 principale(vacuum)
 
     {
         /* Overlong encoding (2-byte pro ASCII) */
-        constans i8 overlong[] = { 0xC0, 0x80 };  /* Overlong NUL */
-        constans i8* ptr = overlong;
-        constans i8* finis = overlong + II;
-        s32 runa;
+        constans i8  overlong[]  = { 0xC0, 0x80 };  /* Overlong NUL */
+        constans i8* ptr         = overlong;
+        constans i8* finis       = overlong + II;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
@@ -269,10 +269,10 @@ s32 principale(vacuum)
 
     {
         /* Byte invalidus 0xFF */
-        constans i8 invalidus[] = { 0xFF };
-        constans i8* ptr = invalidus;
-        constans i8* finis = invalidus + I;
-        s32 runa;
+        constans i8  invalidus[]  = { 0xFF };
+        constans i8* ptr          = invalidus;
+        constans i8* finis        = invalidus + I;
+                s32  runa;
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, -I);
@@ -284,10 +284,10 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans i8 datum[] = { 'x' };
-        constans i8* ptr = datum;
-        constans i8* finis = datum;  /* ptr == finis */
-        s32 runa;
+        constans i8  datum[]  = { 'x' };
+        constans i8* ptr      = datum;
+        constans i8* finis    = datum;  /* ptr == finis */
+                s32  runa;
 
         imprimere("\n--- Probans utf8_decodere buffer vacuus ---\n");
 
@@ -303,7 +303,7 @@ s32 principale(vacuum)
     {
         /* ASCII solum */
         constans i8 ascii[] = { 'H', 'e', 'l', 'l', 'o' };
-        s32 numerus;
+                s32 numerus;
 
         imprimere("\n--- Probans utf8_numerare_runas ---\n");
 
@@ -314,7 +314,7 @@ s32 principale(vacuum)
     {
         /* Mixta: "Hé" = H + e-acutum (2 bytes) */
         constans i8 mixta[] = { 'H', 0xC3, 0xA9 };  /* H + e-acutum */
-        s32 numerus;
+                s32 numerus;
 
         numerus = utf8_numerare_runas(mixta, III);
         CREDO_AEQUALIS_S32(numerus, II);  /* 2 runae */
@@ -323,7 +323,7 @@ s32 principale(vacuum)
     {
         /* "café" = c + a + f + e-acutum */
         constans i8 cafe[] = { 'c', 'a', 'f', 0xC3, 0xA9 };
-        s32 numerus;
+                s32 numerus;
 
         numerus = utf8_numerare_runas(cafe, V);
         CREDO_AEQUALIS_S32(numerus, IV);  /* 4 runae */
@@ -343,9 +343,9 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans i8 datum[] = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
-        constans i8* ptr = datum;
-        constans i8* finis = datum + IV;
+        constans i8 datum[]  = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
+        constans i8* ptr     = datum;
+        constans i8* finis   = datum + IV;
 
         imprimere("\n--- Probans utf8_proxima_runa ---\n");
 
@@ -368,9 +368,9 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        constans i8 datum[] = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
-        constans i8* ptr = datum + IV;  /* Ad finem */
-        constans i8* initium = datum;
+        constans i8 datum[]   = { 'A', 0xC3, 0xA9, 'B' };  /* A + e-acutum + B */
+        constans i8* ptr      = datum + IV;  /* Ad finem */
+        constans i8* initium  = datum;
 
         imprimere("\n--- Probans utf8_prior_runa ---\n");
 
@@ -409,22 +409,23 @@ s32 principale(vacuum)
             'h', 'o', 'w', ' ', 'a', 'r', 'e', ' ', 'y', 'o', 'u', '?',
             0xE2, 0x80, 0x9D   /* U+201D right double quote */
         };
-        s32 numerus;
+                s32  numerus;
         constans i8* ptr;
         constans i8* finis;
-        s32 runa;
+                s32  runa;
 
         imprimere("\n--- Probans textum Gutenberg ---\n");
 
         /* Numerare runas */
-        numerus = utf8_numerare_runas(gutenberg, (s32)magnitudo(gutenberg));
+        numerus = utf8_numerare_runas(gutenberg,
+            (s32)magnitudo(gutenberg));
         /* Exspectamus: " H e l l o , " _ h e _ s a i d — " h o w _ a r e _ y o u ? "
          * = 1 + 6 + 1 + 8 + 1 + 1 + 12 + 1 = 31 runae */
         CREDO_AEQUALIS_S32(numerus, XXXI);
 
         /* Verificare primas runas */
-        ptr = gutenberg;
-        finis = gutenberg + (s32)magnitudo(gutenberg);
+        ptr    = gutenberg;
+        finis  = gutenberg + (s32)magnitudo(gutenberg);
 
         runa = utf8_decodere(&ptr, finis);
         CREDO_AEQUALIS_S32(runa, 0x201C);  /* left double quote */
@@ -437,8 +438,9 @@ s32 principale(vacuum)
     /* ==================================================
      * utf8_codere - par decodere (circuitus integer)
      * ================================================== */
+
     {
-        i8 buffer[4];
+                 i8  buffer[4];
         constans i8* ptr;
 
         imprimere("\n--- Probans codere ---\n");

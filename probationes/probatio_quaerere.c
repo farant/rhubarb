@@ -23,33 +23,33 @@ probatio_congruit_simplex(Piscina* piscina)
     printf("--- Probans congruit simplex ---\n");
 
     /* Exact match */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("abc", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("abc", piscina);
     CREDO_VERUM(quaerere_congruit(query, target));
 
     /* Subsequence match */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("aXbXc", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("aXbXc", piscina);
     CREDO_VERUM(quaerere_congruit(query, target));
 
     /* Case insensitive by default */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("ABC", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("ABC", piscina);
     CREDO_VERUM(quaerere_congruit(query, target));
 
     /* No match */
-    query = chorda_ex_literis("xyz", piscina);
-    target = chorda_ex_literis("abc", piscina);
+    query   = chorda_ex_literis("xyz", piscina);
+    target  = chorda_ex_literis("abc", piscina);
     CREDO_FALSUM(quaerere_congruit(query, target));
 
     /* Empty query matches everything */
-    query = chorda_ex_literis("", piscina);
-    target = chorda_ex_literis("anything", piscina);
+    query   = chorda_ex_literis("", piscina);
+    target  = chorda_ex_literis("anything", piscina);
     CREDO_VERUM(quaerere_congruit(query, target));
 
     /* Query longer than target */
-    query = chorda_ex_literis("abcdef", piscina);
-    target = chorda_ex_literis("abc", piscina);
+    query   = chorda_ex_literis("abcdef", piscina);
+    target  = chorda_ex_literis("abc", piscina);
     CREDO_FALSUM(quaerere_congruit(query, target));
 
     printf("\n");
@@ -59,25 +59,25 @@ probatio_congruit_simplex(Piscina* piscina)
 interior vacuum
 probatio_congruit_case_sensitive(Piscina* piscina)
 {
-    chorda           query;
-    chorda           target;
+              chorda query;
+              chorda target;
     QuaerereOptiones opt;
 
     (vacuum)piscina;
 
     printf("--- Probans congruit case sensitive ---\n");
 
-    opt.case_sensitivus = VERUM;
-    opt.intelligens_casus = FALSUM;
+    opt.case_sensitivus    = VERUM;
+    opt.intelligens_casus  = FALSUM;
 
     /* Exact case matches */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("abc", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("abc", piscina);
     CREDO_VERUM(quaerere_congruit_cum_optionibus(query, target, &opt));
 
     /* Different case does not match */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("ABC", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("ABC", piscina);
     CREDO_FALSUM(quaerere_congruit_cum_optionibus(query, target, &opt));
 
     printf("\n");
@@ -87,30 +87,30 @@ probatio_congruit_case_sensitive(Piscina* piscina)
 interior vacuum
 probatio_congruit_smart_case(Piscina* piscina)
 {
-    chorda           query;
-    chorda           target;
+              chorda query;
+              chorda target;
     QuaerereOptiones opt;
 
     (vacuum)piscina;
 
     printf("--- Probans congruit smart case ---\n");
 
-    opt.case_sensitivus = FALSUM;
-    opt.intelligens_casus = VERUM;
+    opt.case_sensitivus    = FALSUM;
+    opt.intelligens_casus  = VERUM;
 
     /* Lowercase query: case insensitive */
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("ABC", piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("ABC", piscina);
     CREDO_VERUM(quaerere_congruit_cum_optionibus(query, target, &opt));
 
     /* Uppercase in query: case sensitive */
-    query = chorda_ex_literis("Abc", piscina);
-    target = chorda_ex_literis("ABC", piscina);
+    query   = chorda_ex_literis("Abc", piscina);
+    target  = chorda_ex_literis("ABC", piscina);
     CREDO_FALSUM(quaerere_congruit_cum_optionibus(query, target, &opt));
 
     /* Uppercase in query matches exact */
-    query = chorda_ex_literis("Abc", piscina);
-    target = chorda_ex_literis("Abc", piscina);
+    query   = chorda_ex_literis("Abc", piscina);
+    target  = chorda_ex_literis("Abc", piscina);
     CREDO_VERUM(quaerere_congruit_cum_optionibus(query, target, &opt));
 
     printf("\n");
@@ -124,15 +124,15 @@ probatio_congruit_smart_case(Piscina* piscina)
 interior vacuum
 probatio_concordare_exacta(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans concordare exacta ---\n");
 
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("abc", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("abc", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
     CREDO_AEQUALIS_I32(res.numerus, III);
@@ -151,15 +151,15 @@ probatio_concordare_exacta(Piscina* piscina)
 interior vacuum
 probatio_concordare_subsequence(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans concordare subsequence ---\n");
 
-    query = chorda_ex_literis("abc", piscina);
-    target = chorda_ex_literis("aXXbXXc", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("abc", piscina);
+    target  = chorda_ex_literis("aXXbXXc", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
     CREDO_AEQUALIS_I32(res.numerus, III);
@@ -176,8 +176,8 @@ probatio_concordare_subsequence(Piscina* piscina)
 interior vacuum
 probatio_concordare_consecutive_bonus(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res_consecutive;
     QuaerereFructus res_separated;
 
@@ -186,12 +186,12 @@ probatio_concordare_consecutive_bonus(Piscina* piscina)
     query = chorda_ex_literis("abc", piscina);
 
     /* Consecutive */
-    target = chorda_ex_literis("XXXabc", piscina);
-    res_consecutive = quaerere_concordare(query, target, piscina);
+    target           = chorda_ex_literis("XXXabc", piscina);
+    res_consecutive  = quaerere_concordare(query, target, piscina);
 
     /* Separated */
-    target = chorda_ex_literis("aXbXc", piscina);
-    res_separated = quaerere_concordare(query, target, piscina);
+    target         = chorda_ex_literis("aXbXc", piscina);
+    res_separated  = quaerere_concordare(query, target, piscina);
 
     printf("  Consecutive score: %d\n", res_consecutive.puncta);
     printf("  Separated score: %d\n", res_separated.puncta);
@@ -207,16 +207,16 @@ probatio_concordare_consecutive_bonus(Piscina* piscina)
 interior vacuum
 probatio_concordare_word_boundary(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans word boundary bonus ---\n");
 
     /* foo_bar with 'fb' should get boundary bonus for 'b' */
-    query = chorda_ex_literis("fb", piscina);
-    target = chorda_ex_literis("foo_bar", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("fb", piscina);
+    target  = chorda_ex_literis("foo_bar", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
     CREDO_AEQUALIS_I32(res.positiones[0], 0);  /* 'f' at start */
@@ -231,15 +231,15 @@ probatio_concordare_word_boundary(Piscina* piscina)
 interior vacuum
 probatio_concordare_camelcase(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans CamelCase boundary ---\n");
 
-    query = chorda_ex_literis("cc", piscina);
-    target = chorda_ex_literis("CamelCase", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("cc", piscina);
+    target  = chorda_ex_literis("CamelCase", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
     CREDO_AEQUALIS_I32(res.positiones[0], 0);  /* 'C' at start */
@@ -254,15 +254,15 @@ probatio_concordare_camelcase(Piscina* piscina)
 interior vacuum
 probatio_concordare_path(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans path matching ---\n");
 
-    query = chorda_ex_literis("flth", piscina);
-    target = chorda_ex_literis("lib/flatura.h", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("flth", piscina);
+    target  = chorda_ex_literis("lib/flatura.h", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
 
@@ -284,15 +284,15 @@ probatio_concordare_path(Piscina* piscina)
 interior vacuum
 probatio_concordare_non_congruit(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans non congruit ---\n");
 
-    query = chorda_ex_literis("xyz", piscina);
-    target = chorda_ex_literis("abc", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("xyz", piscina);
+    target  = chorda_ex_literis("abc", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_NON_CONGRUIT);
     CREDO_NIHIL(res.positiones);
@@ -304,15 +304,15 @@ probatio_concordare_non_congruit(Piscina* piscina)
 interior vacuum
 probatio_concordare_vacuus(Piscina* piscina)
 {
-    chorda          query;
-    chorda          target;
+             chorda query;
+             chorda target;
     QuaerereFructus res;
 
     printf("--- Probans query vacuus ---\n");
 
-    query = chorda_ex_literis("", piscina);
-    target = chorda_ex_literis("anything", piscina);
-    res = quaerere_concordare(query, target, piscina);
+    query   = chorda_ex_literis("", piscina);
+    target  = chorda_ex_literis("anything", piscina);
+    res     = quaerere_concordare(query, target, piscina);
 
     CREDO_AEQUALIS_I32((i32)res.status, (i32)QUAERERE_OK);
     CREDO_AEQUALIS_S32(res.puncta, 0);
@@ -329,20 +329,20 @@ probatio_concordare_vacuus(Piscina* piscina)
 interior vacuum
 probatio_filtrare_simplex(Piscina* piscina)
 {
-    chorda                 query;
-    chorda                 candidati[V];
+                    chorda query;
+                    chorda candidati[V];
     QuaerereFiltrumFructus res;
 
     printf("--- Probans filtrare simplex ---\n");
 
-    candidati[0] = chorda_ex_literis("chorda.h", piscina);
-    candidati[I] = chorda_ex_literis("piscina.h", piscina);
-    candidati[II] = chorda_ex_literis("chorda.c", piscina);
-    candidati[III] = chorda_ex_literis("latina.h", piscina);
-    candidati[IV] = chorda_ex_literis("credo.h", piscina);
+    candidati[0]    = chorda_ex_literis("chorda.h", piscina);
+    candidati[I]    = chorda_ex_literis("piscina.h", piscina);
+    candidati[II]   = chorda_ex_literis("chorda.c", piscina);
+    candidati[III]  = chorda_ex_literis("latina.h", piscina);
+    candidati[IV]   = chorda_ex_literis("credo.h", piscina);
 
-    query = chorda_ex_literis("ch", piscina);
-    res = quaerere_filtrare(query, candidati, V, piscina);
+    query  = chorda_ex_literis("ch", piscina);
+    res    = quaerere_filtrare(query, candidati, V, piscina);
 
     printf("  Query: \"ch\"\n");
     printf("  Matches: %d\n", res.numerus);
@@ -368,19 +368,19 @@ probatio_filtrare_simplex(Piscina* piscina)
 interior vacuum
 probatio_filtrare_sorted(Piscina* piscina)
 {
-    chorda                 query;
-    chorda                 candidati[III];
+                    chorda query;
+                    chorda candidati[III];
     QuaerereFiltrumFructus res;
 
     printf("--- Probans filtrare sorted ---\n");
 
     /* Same query, different match quality */
-    candidati[0] = chorda_ex_literis("axxxxb", piscina);  /* Worst: big gap */
-    candidati[I] = chorda_ex_literis("a_b", piscina);     /* Medium: boundary */
-    candidati[II] = chorda_ex_literis("ab", piscina);     /* Best: consecutive */
+    candidati[0]   = chorda_ex_literis("axxxxb", piscina);  /* Worst: big gap */
+    candidati[I]   = chorda_ex_literis("a_b", piscina);     /* Medium: boundary */
+    candidati[II]  = chorda_ex_literis("ab", piscina);     /* Best: consecutive */
 
-    query = chorda_ex_literis("ab", piscina);
-    res = quaerere_filtrare(query, candidati, III, piscina);
+    query  = chorda_ex_literis("ab", piscina);
+    res    = quaerere_filtrare(query, candidati, III, piscina);
 
     CREDO_AEQUALIS_I32(res.numerus, III);
 
@@ -409,8 +409,8 @@ probatio_filtrare_sorted(Piscina* piscina)
 interior vacuum
 probatio_filtrare_empty_result(Piscina* piscina)
 {
-    chorda                 query;
-    chorda                 candidati[II];
+                    chorda query;
+                    chorda candidati[II];
     QuaerereFiltrumFructus res;
 
     printf("--- Probans filtrare empty result ---\n");
@@ -418,8 +418,8 @@ probatio_filtrare_empty_result(Piscina* piscina)
     candidati[0] = chorda_ex_literis("abc", piscina);
     candidati[I] = chorda_ex_literis("def", piscina);
 
-    query = chorda_ex_literis("xyz", piscina);
-    res = quaerere_filtrare(query, candidati, II, piscina);
+    query  = chorda_ex_literis("xyz", piscina);
+    res    = quaerere_filtrare(query, candidati, II, piscina);
 
     CREDO_AEQUALIS_I32(res.numerus, 0);
 
@@ -430,18 +430,18 @@ probatio_filtrare_empty_result(Piscina* piscina)
 interior vacuum
 probatio_filtrare_empty_query(Piscina* piscina)
 {
-    chorda                 query;
-    chorda                 candidati[III];
+                    chorda query;
+                    chorda candidati[III];
     QuaerereFiltrumFructus res;
 
     printf("--- Probans filtrare empty query ---\n");
 
-    candidati[0] = chorda_ex_literis("a", piscina);
-    candidati[I] = chorda_ex_literis("b", piscina);
-    candidati[II] = chorda_ex_literis("c", piscina);
+    candidati[0]   = chorda_ex_literis("a", piscina);
+    candidati[I]   = chorda_ex_literis("b", piscina);
+    candidati[II]  = chorda_ex_literis("c", piscina);
 
-    query = chorda_ex_literis("", piscina);
-    res = quaerere_filtrare(query, candidati, III, piscina);
+    query  = chorda_ex_literis("", piscina);
+    res    = quaerere_filtrare(query, candidati, III, piscina);
 
     /* Empty query matches all */
     CREDO_AEQUALIS_I32(res.numerus, III);
@@ -460,10 +460,10 @@ probatio_filtrare_empty_query(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32      successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");
@@ -471,7 +471,8 @@ principale(vacuum)
     printf("========================================\n");
     printf("\n");
 
-    piscina = piscina_generare_dynamicum("probatio_quaerere", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_quaerere",
+        CXXVIII * M);
     credo_aperire(piscina);
 
     /* Simplex congruentia */

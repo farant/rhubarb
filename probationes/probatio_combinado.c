@@ -15,21 +15,23 @@
  * ================================================== */
 
 int
-main(int argc, char** argv)
+main (
+     int   argc,
+    char** argv)
 {
-    Concha*             concha;
+                Concha* concha;
     ConchaConfiguratio  config;
     constans character* via_log;
-    character           via_temp[CXXVIII];
-    b32                 utere_temp;
-    i32                 i;
+             character  via_temp[CXXVIII];
+                   b32  utere_temp;
+                   i32  i;
 
     /* Verificare pro --temp-database vexillo */
     utere_temp = FALSUM;
     per (i = I; i < (i32)argc; i++)
     {
-        si (strcmp(argv[i], "--temp-database") == ZEPHYRUM ||
-            strcmp(argv[i], "-t") == ZEPHYRUM)
+        si (   strcmp(argv[i], "--temp-database") == ZEPHYRUM
+            || strcmp(argv[i], "-t")              == ZEPHYRUM)
         {
             utere_temp = VERUM;
             frange;
@@ -54,10 +56,10 @@ main(int argc, char** argv)
     }
 
     /* Configurare concha */
-    config.titulus = "LibroPaginarum + Navigator Demo";
-    config.latitudo = LATITUDO_FENESTRA;
-    config.altitudo = ALTITUDO_FENESTRA;
-    config.via_persistentia = via_log;
+    config.titulus           = "LibroPaginarum + Navigator Demo";
+    config.latitudo          = LATITUDO_FENESTRA;
+    config.altitudo          = ALTITUDO_FENESTRA;
+    config.via_persistentia  = via_log;
 
     /* Creare concha */
     concha = concha_creare(&config);

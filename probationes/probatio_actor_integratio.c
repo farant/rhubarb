@@ -44,7 +44,8 @@ hic_manens ClockState g_clock_state = {ZEPHYRUM, ZEPHYRUM};
  * ================================================== */
 
 interior b32
-clock_tractare_tick(ContextusTractandi* ctx)
+clock_tractare_tick (
+    ContextusTractandi* ctx)
 {
     g_clock_state.tick_contador++;
     g_clock_state.ultimus_tick = g_clock_state.tick_contador;
@@ -70,9 +71,9 @@ clock_tractare_tick(ContextusTractandi* ctx)
  * ================================================== */
 
 interior vacuum
-simulare_quadrum(
+simulare_quadrum (
     AdministratorTempestivi* admin,
-    CursusNuntiorum*         cursus)
+            CursusNuntiorum* cursus)
 {
     /* Processare tempestiva (mittit nuntios si tempus) */
     tempestivum_processare(admin);
@@ -84,15 +85,15 @@ simulare_quadrum(
 
 s32 principale(vacuum)
 {
-    Piscina*                 piscina;
-    InternamentumChorda*     intern;
-    Persistentia*            pers;
-    EntitasRepositorium*     repo;
-    RegistrumTractatoris*    tractator;
-    CursusNuntiorum*         cursus;
+                    Piscina* piscina;
+        InternamentumChorda* intern;
+               Persistentia* pers;
+        EntitasRepositorium* repo;
+       RegistrumTractatoris* tractator;
+            CursusNuntiorum* cursus;
     AdministratorTempestivi* tempestivum_admin;
-    RegistrumServitii*       servitium_reg;
-    b32                      praeteritus;
+          RegistrumServitii* servitium_reg;
+                        b32  praeteritus;
 
 
     /* ==================================================
@@ -101,7 +102,8 @@ s32 principale(vacuum)
 
     imprimere("\n=== PROBATIO INTEGRATIONIS ACTORUM ===\n\n");
 
-    piscina = piscina_generare_dynamicum("test_integratio", MMM * CXXVIII);
+    piscina = piscina_generare_dynamicum("test_integratio",
+        MMM * CXXVIII);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -142,7 +144,8 @@ s32 principale(vacuum)
     CREDO_NON_NIHIL(cursus);
 
     /* Timer Administrator */
-    tempestivum_admin = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+    tempestivum_admin = administrator_tempestivi_creare(piscina, repo,
+        cursus, intern);
     CREDO_NON_NIHIL(tempestivum_admin);
 
     /* Service Registry */
@@ -175,7 +178,8 @@ s32 principale(vacuum)
         imprimere("\n--- Creans Clock widget ---\n");
 
         /* Creare entitatem Clock */
-        clock = repo->entitas_scaffoldare(repo->datum, "Clock", "system::clock");
+        clock = repo->entitas_scaffoldare(repo->datum, "Clock",
+            "system::clock");
         CREDO_NON_NIHIL(clock);
         CREDO_NON_NIHIL(clock->id);
 
@@ -183,7 +187,8 @@ s32 principale(vacuum)
         repo->proprietas_ponere(repo->datum, clock, "ticks", "0");
 
         /* Registrare ut servitium */
-        CREDO_VERUM(servitium_registrare_entitatem(servitium_reg, "clock", clock));
+        CREDO_VERUM(servitium_registrare_entitatem(servitium_reg,
+            "clock", clock));
         imprimere("  Clock creatum et registratum ut servitium\n");
 
         /* Creare timer pro tick (10ms intervallum, delay initialis 10ms) */
@@ -206,25 +211,28 @@ s32 principale(vacuum)
         imprimere("\n--- Simulans cyclos ---\n");
 
         /* Reset state */
-        g_clock_state.tick_contador = ZEPHYRUM;
-        g_clock_state.ultimus_tick  = ZEPHYRUM;
+        g_clock_state.tick_contador  = ZEPHYRUM;
+        g_clock_state.ultimus_tick   = ZEPHYRUM;
 
         /* Cyclus 1: Exspectare et processare */
         usleep(15000);  /* 15ms */
         simulare_quadrum(tempestivum_admin, cursus);
-        imprimere("  Cyclus 1: ticks = %d\n", g_clock_state.tick_contador);
+        imprimere("  Cyclus 1: ticks = %d\n",
+            g_clock_state.tick_contador);
         CREDO_AEQUALIS_I32(g_clock_state.tick_contador, I);
 
         /* Cyclus 2 */
         usleep(15000);
         simulare_quadrum(tempestivum_admin, cursus);
-        imprimere("  Cyclus 2: ticks = %d\n", g_clock_state.tick_contador);
+        imprimere("  Cyclus 2: ticks = %d\n",
+            g_clock_state.tick_contador);
         CREDO_AEQUALIS_I32(g_clock_state.tick_contador, II);
 
         /* Cyclus 3 */
         usleep(15000);
         simulare_quadrum(tempestivum_admin, cursus);
-        imprimere("  Cyclus 3: ticks = %d\n", g_clock_state.tick_contador);
+        imprimere("  Cyclus 3: ticks = %d\n",
+            g_clock_state.tick_contador);
         CREDO_AEQUALIS_I32(g_clock_state.tick_contador, III);
 
 
@@ -241,7 +249,8 @@ s32 principale(vacuum)
             ticks_clavis = chorda_internare_ex_literis(intern, "ticks");
             CREDO_NON_NIHIL(ticks_clavis);
 
-            ticks_valor = entitas_proprietas_capere(clock, ticks_clavis);
+            ticks_valor = entitas_proprietas_capere(clock,
+                ticks_clavis);
             CREDO_NON_NIHIL(ticks_valor);
 
             imprimere("  Proprietas 'ticks' = %.*s\n",
@@ -261,7 +270,8 @@ s32 principale(vacuum)
         {
             Entitas* clock_servitium;
 
-            clock_servitium = servitium_obtinere(servitium_reg, "clock");
+            clock_servitium = servitium_obtinere(servitium_reg,
+                "clock");
             CREDO_NON_NIHIL(clock_servitium);
             CREDO_VERUM(clock_servitium == clock);
 
@@ -281,7 +291,8 @@ s32 principale(vacuum)
         /* Cyclus 4: Timer pausatum - non debet incrementare */
         usleep(15000);
         simulare_quadrum(tempestivum_admin, cursus);
-        imprimere("  Cyclus 4 (post pausam): ticks = %d\n", g_clock_state.tick_contador);
+        imprimere("  Cyclus 4 (post pausam): ticks = %d\n",
+            g_clock_state.tick_contador);
         CREDO_AEQUALIS_I32(g_clock_state.tick_contador, III);  /* Adhuc 3 */
 
 
@@ -308,7 +319,8 @@ s32 principale(vacuum)
 
         imprimere("\n--- Annullans timer ---\n");
 
-        CREDO_VERUM(tempestivum_annullare(tempestivum_admin, timer->id));
+        CREDO_VERUM(tempestivum_annullare(tempestivum_admin,
+            timer->id));
         imprimere("  Timer annullatum\n");
 
         /* Cyclus 6: Timer annullatum - non debet incrementare */
@@ -327,7 +339,7 @@ s32 principale(vacuum)
     {
         Entitas* widget1;
         Entitas* widget2;
-        i32      tractati_ante;
+            i32  tractati_ante;
 
         imprimere("\n--- Probans multas entitates ---\n");
 
@@ -335,8 +347,10 @@ s32 principale(vacuum)
         g_clock_state.tick_contador = ZEPHYRUM;
 
         /* Creare duo widgets */
-        widget1 = repo->entitas_scaffoldare(repo->datum, "Clock", "multi::clock1");
-        widget2 = repo->entitas_scaffoldare(repo->datum, "Clock", "multi::clock2");
+        widget1 = repo->entitas_scaffoldare(repo->datum, "Clock",
+            "multi::clock1");
+        widget2 = repo->entitas_scaffoldare(repo->datum, "Clock",
+            "multi::clock2");
         CREDO_NON_NIHIL(widget1);
         CREDO_NON_NIHIL(widget2);
 
@@ -354,7 +368,8 @@ s32 principale(vacuum)
         /* Ambae entitates debent recepisse tick */
         imprimere("  Ticks post simulationem: %d (ante: %d)\n",
                   g_clock_state.tick_contador, tractati_ante);
-        CREDO_AEQUALIS_I32(g_clock_state.tick_contador - tractati_ante, II);
+        CREDO_AEQUALIS_I32(g_clock_state.tick_contador - tractati_ante,
+            II);
     }
 
 
@@ -364,26 +379,30 @@ s32 principale(vacuum)
 
     {
         Entitas* receiver;
-        i32      tractati_ante;
+            i32  tractati_ante;
 
         imprimere("\n--- Probans nuntium directum ---\n");
 
-        receiver = repo->entitas_scaffoldare(repo->datum, "Clock", "direct::receiver");
+        receiver = repo->entitas_scaffoldare(repo->datum, "Clock",
+            "direct::receiver");
         CREDO_NON_NIHIL(receiver);
 
         /* Reset */
-        g_clock_state.tick_contador = ZEPHYRUM;
-        tractati_ante = g_clock_state.tick_contador;
+        g_clock_state.tick_contador  = ZEPHYRUM;
+        tractati_ante                = g_clock_state.tick_contador;
 
         /* Mittere nuntium directe */
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, receiver->id, "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, receiver->id,
+            "tick"));
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), I);
 
         /* Processare */
         cursus_processare(cursus, M);
 
-        imprimere("  Ticks post nuntium directum: %d\n", g_clock_state.tick_contador);
-        CREDO_AEQUALIS_I32(g_clock_state.tick_contador - tractati_ante, I);
+        imprimere("  Ticks post nuntium directum: %d\n",
+            g_clock_state.tick_contador);
+        CREDO_AEQUALIS_I32(g_clock_state.tick_contador - tractati_ante,
+            I);
     }
 
 

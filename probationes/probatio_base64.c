@@ -101,35 +101,35 @@ probatio_rfc4648_vectors(Piscina* piscina)
 interior vacuum
 probatio_decodificatio(Piscina* piscina)
 {
-    chorda        input;
+           chorda input;
     Base64Fructus fructus;
 
     printf("--- Probans decodificatio ---\n");
 
     /* "Zg==" -> "f" */
-    input = chorda_ex_literis("Zg==", piscina);
-    fructus = base64_decodificare(input, piscina);
+    input    = chorda_ex_literis("Zg==", piscina);
+    fructus  = base64_decodificare(input, piscina);
     CREDO_NON_NIHIL(fructus.datum);
     CREDO_AEQUALIS_I32(fructus.mensura, I);
     CREDO_VERUM(fructus.datum[0] == 'f');
 
     /* "Zm8=" -> "fo" */
-    input = chorda_ex_literis("Zm8=", piscina);
-    fructus = base64_decodificare(input, piscina);
+    input    = chorda_ex_literis("Zm8=", piscina);
+    fructus  = base64_decodificare(input, piscina);
     CREDO_NON_NIHIL(fructus.datum);
     CREDO_AEQUALIS_I32(fructus.mensura, II);
     CREDO_VERUM(memcmp(fructus.datum, "fo", II) == 0);
 
     /* "Zm9v" -> "foo" */
-    input = chorda_ex_literis("Zm9v", piscina);
-    fructus = base64_decodificare(input, piscina);
+    input    = chorda_ex_literis("Zm9v", piscina);
+    fructus  = base64_decodificare(input, piscina);
     CREDO_NON_NIHIL(fructus.datum);
     CREDO_AEQUALIS_I32(fructus.mensura, III);
     CREDO_VERUM(memcmp(fructus.datum, "foo", III) == 0);
 
     /* "Zm9vYmFy" -> "foobar" */
-    input = chorda_ex_literis("Zm9vYmFy", piscina);
-    fructus = base64_decodificare(input, piscina);
+    input    = chorda_ex_literis("Zm9vYmFy", piscina);
+    fructus  = base64_decodificare(input, piscina);
     CREDO_NON_NIHIL(fructus.datum);
     CREDO_AEQUALIS_I32(fructus.mensura, VI);
     CREDO_VERUM(memcmp(fructus.datum, "foobar", VI) == 0);
@@ -145,23 +145,24 @@ probatio_decodificatio(Piscina* piscina)
 interior vacuum
 probatio_round_trip(Piscina* piscina)
 {
-    constans i8*  originale;
-    i32           mensura;
-    chorda        codificata;
-    Base64Fructus decodificata;
+      constans i8* originale;
+              i32  mensura;
+           chorda  codificata;
+    Base64Fructus  decodificata;
 
     printf("--- Probans round trip ---\n");
 
     /* Textus simplex */
-    originale = (constans i8*)"Hello, World!";
-    mensura = XIII;
-    codificata = base64_codificare(originale, mensura, piscina);
+    originale   = (constans i8*)"Hello, World!";
+    mensura     = XIII;
+    codificata  = base64_codificare(originale, mensura, piscina);
     CREDO_NON_NIHIL(codificata.datum);
 
     decodificata = base64_decodificare(codificata, piscina);
     CREDO_NON_NIHIL(decodificata.datum);
     CREDO_AEQUALIS_I32(decodificata.mensura, mensura);
-    CREDO_VERUM(memcmp(decodificata.datum, originale, (size_t)mensura) == 0);
+    CREDO_VERUM(memcmp(decodificata.datum, originale, (size_t)mensura)
+        == 0);
 
     printf("  'Hello, World!' -> '%.*s' -> '%.*s'\n",
            codificata.mensura, codificata.datum,
@@ -178,22 +179,22 @@ probatio_round_trip(Piscina* piscina)
 interior vacuum
 probatio_binary_data(Piscina* piscina)
 {
-    i8            data[VIII];
-    chorda        codificata;
+               i8 data[VIII];
+           chorda codificata;
     Base64Fructus decodificata;
-    i32           i;
+              i32 i;
 
     printf("--- Probans binary data (cum nulls) ---\n");
 
     /* Data cum null bytes */
-    data[0] = 0x00;
-    data[I] = 0x01;
-    data[II] = 0x02;
-    data[III] = 0x00;
-    data[IV] = (i8)0xFF;
-    data[V] = (i8)0xFE;
-    data[VI] = 0x00;
-    data[VII] = 0x7F;
+    data[0]    = 0x00;
+    data[I]    = 0x01;
+    data[II]   = 0x02;
+    data[III]  = 0x00;
+    data[IV]   = (i8)0xFF;
+    data[V]    = (i8)0xFE;
+    data[VI]   = 0x00;
+    data[VII]  = 0x7F;
 
     codificata = base64_codificare(data, VIII, piscina);
     CREDO_NON_NIHIL(codificata.datum);
@@ -220,8 +221,8 @@ probatio_binary_data(Piscina* piscina)
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
-    chorda        codificata;
-    chorda        input;
+           chorda codificata;
+           chorda input;
     Base64Fructus fructus;
 
     printf("--- Probans nullum argumenta ---\n");
@@ -240,15 +241,15 @@ probatio_nullum_argumenta(Piscina* piscina)
     CREDO_NIHIL(codificata.datum);
 
     /* Decodificare cum NIHIL datum */
-    input.datum = NIHIL;
-    input.mensura = IV;
-    fructus = base64_decodificare(input, piscina);
+    input.datum    = NIHIL;
+    input.mensura  = IV;
+    fructus        = base64_decodificare(input, piscina);
     CREDO_NIHIL(fructus.datum);
 
     /* Decodificare cum mensura 0 */
-    input = chorda_ex_literis("Zg==", piscina);
-    input.mensura = 0;
-    fructus = base64_decodificare(input, piscina);
+    input          = chorda_ex_literis("Zg==", piscina);
+    input.mensura  = 0;
+    fructus        = base64_decodificare(input, piscina);
     CREDO_NIHIL(fructus.datum);
 
     printf("\n");
@@ -291,10 +292,10 @@ probatio_longitudo_decodificata(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

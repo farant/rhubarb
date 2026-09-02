@@ -47,7 +47,8 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
         r = sputnik_evaluare("\"hello\";", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "hello"));
     }
 
     /* Verum */
@@ -160,10 +161,12 @@ _probare_arithmeticam(Piscina* piscina, InternamentumChorda* intern)
     /* Concatenatio chordarum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\" + \" \" + \"world\";", piscina, intern);
+        r = sputnik_evaluare("\"hello\" + \" \" + \"world\";", piscina,
+            intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello world"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "hello world"));
     }
 }
 
@@ -346,7 +349,8 @@ _probare_ternariam(Piscina* piscina, InternamentumChorda* intern)
     /* Nested */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("verum ? falsum ? 1 : 2 : 3;", piscina, intern);
+        r = sputnik_evaluare("verum ? falsum ? 1 : 2 : 3;", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
     }
@@ -389,7 +393,8 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Const */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("constans PI = 3.14; PI;", piscina, intern);
+        r = sputnik_evaluare("constans PI = 3.14; PI;", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 3.14);
     }
@@ -404,7 +409,8 @@ _probare_variabiles(Piscina* piscina, InternamentumChorda* intern)
     /* Expressio cum variabilibus */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit a = 5; sit b = 3; a * b + 1;", piscina, intern);
+        r = sputnik_evaluare("sit a = 5; sit b = 3; a * b + 1;",
+            piscina, intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 16.0);
     }
@@ -585,7 +591,8 @@ _probare_frange_perge(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_incrementum_decrementum(Piscina* piscina, InternamentumChorda* intern)
+_probare_incrementum_decrementum(Piscina* piscina,
+    InternamentumChorda* intern)
 {
     imprimere("\n--- Probatio Incrementum/Decrementum ---\n");
 
@@ -672,7 +679,8 @@ _probare_incrementum_decrementum(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_assignatio_complexa(Piscina* piscina, InternamentumChorda* intern)
+_probare_assignatio_complexa(Piscina* piscina,
+    InternamentumChorda* intern)
 {
     imprimere("\n--- Probatio Assignatio Complexa ---\n");
 
@@ -773,7 +781,8 @@ _probare_assignatio_complexa(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello world"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "hello world"));
     }
 
     /* Compound assignment constans error */
@@ -883,7 +892,8 @@ _probare_arrays(Piscina* piscina, InternamentumChorda* intern)
     /* Array accessus */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit arr = [10, 20, 30]; arr[1];", piscina, intern);
+        r = sputnik_evaluare("sit arr = [10, 20, 30]; arr[1];", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 20.0);
     }
@@ -922,7 +932,8 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     /* Objectum literalis */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit obj = { a: 1, b: 2 }; obj;", piscina, intern);
+        r = sputnik_evaluare("sit obj = { a: 1, b: 2 }; obj;", piscina,
+            intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_OBJECTUM);
     }
@@ -930,7 +941,8 @@ _probare_objecta(Piscina* piscina, InternamentumChorda* intern)
     /* Objectum accessus membri */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit obj = { x: 42 }; obj.x;", piscina, intern);
+        r = sputnik_evaluare("sit obj = { x: 42 }; obj.x;", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 42.0);
     }
@@ -1004,21 +1016,24 @@ _probare_builtins(Piscina* piscina, InternamentumChorda* intern)
         r = sputnik_evaluare("typeof(42);", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "number"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "number"));
     }
 
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare("typeof(\"hello\");", piscina, intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "string"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "string"));
     }
 
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare("typeof(verum);", piscina, intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "boolean"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "boolean"));
     }
 
     {
@@ -1032,14 +1047,16 @@ _probare_builtins(Piscina* piscina, InternamentumChorda* intern)
         SputnikInterpresResultus r;
         r = sputnik_evaluare("typeof([1,2]);", piscina, intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "array"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "array"));
     }
 
     {
         SputnikInterpresResultus r;
         r = sputnik_evaluare("typeof({a:1});", piscina, intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "object"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "object"));
     }
 }
 
@@ -1193,7 +1210,8 @@ _probare_pecuniam(Piscina* piscina, InternamentumChorda* intern)
         r = sputnik_evaluare("typeof(9.99$);", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "currency"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "currency"));
     }
 
     /* Pecunia in variabili */
@@ -1264,7 +1282,8 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
     /* Index extra limites */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit arr = [1, 2]; arr[10];", piscina, intern);
+        r = sputnik_evaluare("sit arr = [1, 2]; arr[10];", piscina,
+            intern);
         CREDO(!r.successus);
     }
 
@@ -1351,7 +1370,8 @@ _probare_complex(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_functiones_sagittas(Piscina* piscina, InternamentumChorda* intern)
+_probare_functiones_sagittas(Piscina* piscina,
+    InternamentumChorda* intern)
 {
     imprimere("\n--- Probatio Functiones Sagittae ---\n");
 
@@ -1608,7 +1628,8 @@ _probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "1-2-3"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "1-2-3"));
     }
 
     /* length() methodus */
@@ -1649,7 +1670,8 @@ _probare_methodos_xar(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_methodos_callback(Piscina* piscina, InternamentumChorda* intern)
+_probare_methodos_callback(Piscina* piscina,
+    InternamentumChorda* intern)
 {
     imprimere("\n--- Probatio Methodi Callback ---\n");
 
@@ -1831,7 +1853,8 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* indexOf - inventum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".indexOf(\"l\");", piscina, intern);
+        r = sputnik_evaluare("\"hello\".indexOf(\"l\");", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, 2.0);
     }
@@ -1839,7 +1862,8 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* indexOf - non inventum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".indexOf(\"x\");", piscina, intern);
+        r = sputnik_evaluare("\"hello\".indexOf(\"x\");", piscina,
+            intern);
         CREDO(r.successus);
         CREDO_AEQUALIS_F64(r.valor.ut.numerus, -1.0);
     }
@@ -1847,7 +1871,8 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* includes - verum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".includes(\"ell\");", piscina, intern);
+        r = sputnik_evaluare("\"hello\".includes(\"ell\");", piscina,
+            intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_VERUM);
     }
@@ -1855,7 +1880,8 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* includes - falsum */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".includes(\"xyz\");", piscina, intern);
+        r = sputnik_evaluare("\"hello\".includes(\"xyz\");", piscina,
+            intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_FALSUM);
     }
@@ -1863,7 +1889,8 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* substring */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".substring(1, 4);", piscina, intern);
+        r = sputnik_evaluare("\"hello\".substring(1, 4);", piscina,
+            intern);
         CREDO(r.successus);
         CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "ell"));
     }
@@ -1871,17 +1898,21 @@ _probare_methodos_chorda(Piscina* piscina, InternamentumChorda* intern)
     /* toUpperCase */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"hello\".toUpperCase();", piscina, intern);
+        r = sputnik_evaluare("\"hello\".toUpperCase();", piscina,
+            intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "HELLO"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "HELLO"));
     }
 
     /* toLowerCase */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("\"HELLO\".toLowerCase();", piscina, intern);
+        r = sputnik_evaluare("\"HELLO\".toLowerCase();", piscina,
+            intern);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "hello"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "hello"));
     }
 
     /* split */
@@ -1933,7 +1964,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
         r = sputnik_evaluare("`Salve mundus!`;", piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve mundus!"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Salve mundus!"));
     }
 
     /* Template vacuum */
@@ -1954,7 +1986,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve Marcus!"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Salve Marcus!"));
     }
 
     /* Interpolatio cum numero */
@@ -1966,7 +1999,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Numerus: 42"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Numerus: 42"));
     }
 
     /* Interpolatio multiplex */
@@ -1979,7 +2013,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "1 + 2 = 3"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "1 + 2 = 3"));
     }
 
     /* Expressio in interpolatione */
@@ -1991,7 +2026,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Duplum: 10"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Duplum: 10"));
     }
 
     /* Vocatio functionis in interpolatione */
@@ -2003,7 +2039,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Longitudo: 3"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Longitudo: 3"));
     }
 
     /* Interpolatio ad initium (vacuum ante) */
@@ -2028,7 +2065,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Salve mundus!"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Salve mundus!"));
     }
 
     /* Interpolatio cum ternaria */
@@ -2040,7 +2078,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "x est magnus"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "x est magnus"));
     }
 
     /* Template in variabili */
@@ -2053,7 +2092,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "Ave Iulius!"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "Ave Iulius!"));
     }
 
     /* Nested template (template in template) */
@@ -2066,7 +2106,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "outer inner X Y"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "outer inner X Y"));
     }
 
     /* Objectum literalis in interpolatione (bracchium profunditas) */
@@ -2077,7 +2118,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "typus: object"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "typus: object"));
     }
 
     /* Objectum complexum in interpolatione */
@@ -2089,7 +2131,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "x=10, y=20"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "x=10, y=20"));
     }
 
     /* Array literalis in interpolatione */
@@ -2100,7 +2143,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "len: 3"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "len: 3"));
     }
 
     /* Bracchia multiplicata in interpolatione */
@@ -2112,7 +2156,8 @@ _probare_template_strings(Piscina* piscina, InternamentumChorda* intern)
             piscina, intern);
         CREDO(r.successus);
         CREDO(r.valor.genus == SPUTNIK_VALOR_CHORDA);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "result: 10"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "result: 10"));
     }
 }
 
@@ -2201,7 +2246,8 @@ _probare_effugia(Piscina* piscina, InternamentumChorda* intern)
     /* Escape in template interpolation */
     {
         SputnikInterpresResultus r;
-        r = sputnik_evaluare("sit x = \"test\"; `a\\n${x}\\nb`;", piscina, intern);
+        r = sputnik_evaluare("sit x = \"test\"; `a\\n${x}\\nb`;",
+            piscina, intern);
         CREDO(r.successus);
         /* a + newline + test + newline + b = 8 */
         CREDO_AEQUALIS_I32(r.valor.ut.chorda_valor.mensura, VIII);
@@ -2216,7 +2262,7 @@ _probare_effugia(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
 {
-    Persistentia* persistentia;
+           Persistentia* persistentia;
     EntitasRepositorium* repositorium;
 
     imprimere("\n--- Probatio Entitates ---\n");
@@ -2259,7 +2305,8 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
             "typeof(e.id);",
             piscina, intern, repositorium);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "string"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "string"));
     }
 
     /* entity.genus (proprietas) */
@@ -2445,7 +2492,8 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
             "e.titulus;",
             piscina, intern, repositorium);
         CREDO(r.successus);
-        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor, "De Rerum Natura"));
+        CREDO(chorda_aequalis_literis(r.valor.ut.chorda_valor,
+            "De Rerum Natura"));
     }
 
     /* TODO: add_tag + has_tag - non operatur cum persistentia_memoria */
@@ -2531,13 +2579,15 @@ _probare_entitates(Piscina* piscina, InternamentumChorda* intern)
  * Main
  * ================================================== */
 
-integer principale(vacuum)
+integer
+principale (vacuum)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32 praeteritus;
+                    b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_interpres", 1024 * 64);
+    piscina = piscina_generare_dynamicum("probatio_interpres",
+        1024 * 64);
     /* Usare internamentum globale ut repositorium et interpres
      * habeant eandem tabula chordae internatae */
     intern = internamentum_globale();

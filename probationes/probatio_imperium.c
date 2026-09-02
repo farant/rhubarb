@@ -23,13 +23,14 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ========================================================================
  * SUTURAE FALSAE
  * ======================================================================== */
 
 nomen structura {
     character ultimum[4096];
-    i32       numerus;
+          i32 numerus;
 } AestimatorFalsus;
 
 interior AestimatorFalsus aestimator_falsus;
@@ -47,8 +48,8 @@ _aestimator_capiens (
         ? js.mensura
         : (i32)magnitudo(aestimator_falsus.ultimum) - I;
     memcpy(aestimator_falsus.ultimum, js.datum, (memoriae_index)m);
-    aestimator_falsus.ultimum[m] = '\0';
-    aestimator_falsus.numerus = aestimator_falsus.numerus + I;
+    aestimator_falsus.ultimum[m]  = '\0';
+    aestimator_falsus.numerus     = aestimator_falsus.numerus + I;
 }
 
 /* imaginator falsus: viam servat et STATIM perficit (vera vitrea
@@ -59,10 +60,10 @@ interior i32       imaginator_numerus;
 
 interior b32
 _imaginator_falsus (
-    vacuum*             datum,
+                vacuum* datum,
     constans character* via,
     ImperiumImagoFacta  facta,
-    vacuum*             facta_datum)
+                vacuum* facta_datum)
 {
     (vacuum)datum;
     strncpy(imaginator_via, via, magnitudo(imaginator_via) - I);
@@ -90,19 +91,19 @@ interior i32 magnitudinator_numerus;
 interior b32
 _magnitudinator_falsus (
     vacuum* datum,
-    i32     latitudo,
-    i32     altitudo,
-    i32*    latitudo_facta,
-    i32*    altitudo_facta)
+       i32  latitudo,
+       i32  altitudo,
+       i32* latitudo_facta,
+       i32* altitudo_facta)
 {
     (vacuum)datum;
     si (latitudo <= ZEPHYRUM || altitudo <= ZEPHYRUM)
     {
         redde FALSUM;
     }
-    magnitudinator_lat_petita = latitudo;
-    magnitudinator_alt_petita = altitudo;
-    magnitudinator_numerus = magnitudinator_numerus + I;
+    magnitudinator_lat_petita  = latitudo;
+    magnitudinator_alt_petita  = altitudo;
+    magnitudinator_numerus     = magnitudinator_numerus + I;
 
     *latitudo_facta = latitudo;
     *altitudo_facta = (altitudo > (i32)D) ? (i32)D : altitudo;
@@ -119,12 +120,15 @@ _missor_mutus (
     (vacuum)textus;
 }
 
+
 /* ========================================================================
  * AUXILIA CLIENTIS
  * ======================================================================== */
 
 interior vacuum
-_pumpare (Hospitium* h, i32 vices)
+_pumpare (
+    Hospitium* h,
+          i32  vices)
 {
     i32 i;
 
@@ -136,16 +140,16 @@ _pumpare (Hospitium* h, i32 vices)
 
 interior s32
 _commercium (
-    Hospitium*          h,
-    Piscina*            piscina,
+             Hospitium* h,
+               Piscina* piscina,
     constans character* petitio,
-    character*          buffer,
-    i32                 capacitas)
+             character* buffer,
+                   i32  capacitas)
 {
     TcpOptiones  opt = tcp_optiones_default();
     TcpResultus  res;
     TcpConnexio* cliens;
-    s32          n;
+            s32  n;
 
     opt.timeout_ms = MM;
     res = tcp_connectere_cum_optionibus("127.0.0.1",
@@ -175,27 +179,30 @@ _commercium (
     redde n;
 }
 
+
 /* ========================================================================
  * PRINCIPALE
  * ======================================================================== */
 
-s32 principale (vacuum);
+s32
+principale (vacuum);
 
 s32
 principale (vacuum)
 {
-    b32                   praeteritus;
-    Piscina*              piscina;
-    Piscina*              pv;
-    HospitiumConfiguratio figura;
-    Hospitium*            hospitium;
-    Internuntius*         inx;
-    Imperium*             imperium;
-    ImperiumFructus       fructus;
-    character             buffer[8192];
+                      b32  praeteritus;
+                  Piscina* piscina;
+                  Piscina* pv;
+    HospitiumConfiguratio  figura;
+                Hospitium* hospitium;
+             Internuntius* inx;
+                 Imperium* imperium;
+          ImperiumFructus  fructus;
+                character  buffer[8192];
 
     piscina = piscina_generare_dynamicum("probatio_imperium", 4194304);
-    pv      = piscina_generare_dynamicum("probatio_imperium_v", 1048576);
+    pv = piscina_generare_dynamicum("probatio_imperium_v",
+        1048576);
     si (!piscina || !pv)
     {
         imprimere("FRACTA: piscina\n");
@@ -203,13 +210,13 @@ principale (vacuum)
     }
     credo_aperire(piscina);
 
-    aestimator_falsus.numerus = ZEPHYRUM;
-    aestimator_falsus.ultimum[ZEPHYRUM] = '\0';
+    aestimator_falsus.numerus            = ZEPHYRUM;
+    aestimator_falsus.ultimum[ZEPHYRUM]  = '\0';
 
     memset(&figura, 0, magnitudo(figura));
-    figura.portus = ZEPHYRUM;
-    hospitium = hospitium_creare(piscina, &figura);
-    inx = internuntius_creare(piscina, _missor_mutus, NIHIL);
+    figura.portus  = ZEPHYRUM;
+    hospitium      = hospitium_creare(piscina, &figura);
+    inx            = internuntius_creare(piscina, _missor_mutus, NIHIL);
 
     CREDO_NON_NIHIL(hospitium);
     CREDO_NON_NIHIL(inx);
@@ -368,16 +375,16 @@ principale (vacuum)
      * Vitream - eadem ratio qua imperium ipsum probari potest. */
     {
         VivariumConfiguratio fv;
-        Vivarium             v;
+                    Vivarium v;
 
         /* Omnia intus creata (casus spectatoris: nec hospitium nec
          * internuntium habet) */
         memset(&fv, 0, magnitudo(fv));
-        fv.aestimator = _aestimator_capiens;
-        fv.imaginator = _imaginator_falsus;
-        fv.missor     = _missor_mutus;
-        fv.datum      = NIHIL;
-        v = imperium_vivarium(piscina, &fv);
+        fv.aestimator  = _aestimator_capiens;
+        fv.imaginator  = _imaginator_falsus;
+        fv.missor      = _missor_mutus;
+        fv.datum       = NIHIL;
+        v              = imperium_vivarium(piscina, &fv);
 
         CREDO_VERUM(v.successus);
         CREDO_NON_NIHIL(v.hospitium);
@@ -401,34 +408,34 @@ principale (vacuum)
             CREDO_NON_NIHIL(pons_novus);
 
             memset(&fv, 0, magnitudo(fv));
-            fv.aestimator   = _aestimator_capiens;
-            fv.internuntius = pons_novus;
-            v = imperium_vivarium(piscina, &fv);
+            fv.aestimator    = _aestimator_capiens;
+            fv.internuntius  = pons_novus;
+            v                = imperium_vivarium(piscina, &fv);
             CREDO_VERUM(v.successus);
             CREDO_AEQUALIS_PTR(v.internuntius, pons_novus);
             CREDO_VERUM(v.propria);   /* hospitium tamen nostrum */
 
             /* Pontem IAM LIGATUM tradere: RECUSAT et causam nominat */
             memset(&fv, 0, magnitudo(fv));
-            fv.aestimator   = _aestimator_capiens;
-            fv.internuntius = pons_novus;
-            v = imperium_vivarium(piscina, &fv);
+            fv.aestimator    = _aestimator_capiens;
+            fv.internuntius  = pons_novus;
+            v                = imperium_vivarium(piscina, &fv);
             CREDO_FALSUM(v.successus);
             CREDO_CHORDA_NON_VACUA(v.causa);
         }
 
         /* Aestimator OBLIGATORIUS: sine eo imperium mutum esset */
         memset(&fv, 0, magnitudo(fv));
-        fv.missor = _missor_mutus;
-        v = imperium_vivarium(piscina, &fv);
+        fv.missor  = _missor_mutus;
+        v          = imperium_vivarium(piscina, &fv);
         CREDO_FALSUM(v.successus);
         CREDO_CHORDA_NON_VACUA(v.causa);
 
         /* Nec missor nec internuntius: responsa redire non possent.
          * RECUSAT et causam NOMINAT - non tacite sine ponte pergit. */
         memset(&fv, 0, magnitudo(fv));
-        fv.aestimator = _aestimator_capiens;
-        v = imperium_vivarium(piscina, &fv);
+        fv.aestimator  = _aestimator_capiens;
+        v              = imperium_vivarium(piscina, &fv);
         CREDO_FALSUM(v.successus);
         CREDO_CHORDA_NON_VACUA(v.causa);
 

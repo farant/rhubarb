@@ -1322,7 +1322,8 @@ principale (vacuum)
             "<elementum nomen=\"r\" radix=\"verum\"><<#comm>></elementum>"
             "</canon>", piscina, intern);
         CREDO_NON_NIHIL (c_frag);
-        v_f = iudicare_literis(c_frag, "<r id=\"x\"/>", piscina, intern);
+        v_f = iudicare_literis(c_frag, "<r id=\"x\"/>", piscina,
+            intern);
         CREDO_NON_NIHIL (v_f);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f), ZEPHYRUM);
         /* necessarium= per fragmentum quoque MORDET */
@@ -1339,10 +1340,12 @@ principale (vacuum)
             "<<#opts>></attributum></elementum>"
             "</canon>", piscina, intern);
         CREDO_NON_NIHIL (c_frag);
-        v_f = iudicare_literis(c_frag, "<r q=\"duo\"/>", piscina, intern);
+        v_f = iudicare_literis(c_frag, "<r q=\"duo\"/>", piscina,
+            intern);
         CREDO_NON_NIHIL (v_f);
         CREDO_AEQUALIS_I32 ((i32)xar_numerus(v_f), ZEPHYRUM);
-        v_f = iudicare_literis(c_frag, "<r q=\"tres\"/>", piscina, intern);
+        v_f = iudicare_literis(c_frag, "<r q=\"tres\"/>", piscina,
+            intern);
         CREDO_VERUM (xar_numerus(v_f) > ZEPHYRUM);
 
         /* IV-VI. TRES RECUSATIONES: lectio tacere non potest.

@@ -75,7 +75,7 @@ interior vacuum
 probatio_fluitans(Piscina* piscina)
 {
     JsonResultus res;
-    f64 val;
+             f64 val;
 
     imprimere("--- Probans fluitans ---\n");
 
@@ -104,7 +104,7 @@ interior vacuum
 probatio_chorda(Piscina* piscina)
 {
     JsonResultus res;
-    chorda val;
+          chorda val;
 
     imprimere("--- Probans chorda ---\n");
 
@@ -131,7 +131,7 @@ interior vacuum
 probatio_escapes(Piscina* piscina)
 {
     JsonResultus res;
-    chorda val;
+          chorda val;
 
     imprimere("--- Probans escapes ---\n");
 
@@ -178,8 +178,8 @@ probatio_escapes(Piscina* piscina)
 interior vacuum
 probatio_tabulatum(Piscina* piscina)
 {
-    JsonResultus res;
-    JsonValor* elem;
+    JsonResultus  res;
+       JsonValor* elem;
 
     imprimere("--- Probans tabulatum ---\n");
 
@@ -202,9 +202,11 @@ probatio_tabulatum(Piscina* piscina)
     res = json_legere_literis("[1, \"two\", true, null]", piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(json_tabulatum_numerus(res.radix) == 4);
-    CREDO_VERUM(json_est_integer(json_tabulatum_obtinere(res.radix, 0)));
+    CREDO_VERUM(json_est_integer(json_tabulatum_obtinere(res.radix,
+        0)));
     CREDO_VERUM(json_est_chorda(json_tabulatum_obtinere(res.radix, 1)));
-    CREDO_VERUM(json_est_boolean(json_tabulatum_obtinere(res.radix, 2)));
+    CREDO_VERUM(json_est_boolean(json_tabulatum_obtinere(res.radix,
+        2)));
     CREDO_VERUM(json_est_nullum(json_tabulatum_obtinere(res.radix, 3)));
 
     /* Nested arrays */
@@ -224,9 +226,9 @@ probatio_tabulatum(Piscina* piscina)
 interior vacuum
 probatio_objectum(Piscina* piscina)
 {
-    JsonResultus res;
-    JsonValor* val;
-    chorda str_val;
+    JsonResultus  res;
+       JsonValor* val;
+          chorda  str_val;
 
     imprimere("--- Probans objectum ---\n");
 
@@ -237,7 +239,8 @@ probatio_objectum(Piscina* piscina)
     CREDO_VERUM(json_objectum_numerus(res.radix) == 0);
 
     /* Simple object */
-    res = json_legere_literis("{\"name\": \"John\", \"age\": 30}", piscina);
+    res = json_legere_literis("{\"name\": \"John\", \"age\": 30}",
+        piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(json_objectum_numerus(res.radix) == 2);
 
@@ -256,7 +259,8 @@ probatio_objectum(Piscina* piscina)
     CREDO_VERUM(!json_objectum_habet(res.radix, "unknown"));
 
     /* Nested object */
-    res = json_legere_literis("{\"person\": {\"name\": \"Alice\"}}", piscina);
+    res = json_legere_literis("{\"person\": {\"name\": \"Alice\"}}",
+        piscina);
     CREDO_VERUM(res.successus);
     val = json_objectum_capere(res.radix, "person");
     CREDO_VERUM(json_est_objectum(val));
@@ -276,7 +280,8 @@ probatio_whitespace(Piscina* piscina)
 
     imprimere("--- Probans whitespace ---\n");
 
-    res = json_legere_literis("  {  \"key\"  :  \"value\"  }  ", piscina);
+    res = json_legere_literis("  {  \"key\"  :  \"value\"  }  ",
+        piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(json_objectum_habet(res.radix, "key"));
 
@@ -332,7 +337,7 @@ probatio_builder(Piscina* piscina)
     JsonValor* obj;
     JsonValor* arr;
     JsonValor* nested;
-    chorda output;
+       chorda  output;
 
     imprimere("--- Probans builder ---\n");
 
@@ -340,12 +345,16 @@ probatio_builder(Piscina* piscina)
     obj = json_objectum_creare(piscina);
     CREDO_VERUM(obj != NIHIL);
 
-    json_objectum_ponere(obj, "name", json_chorda_creare_literis(piscina, "Test"));
-    json_objectum_ponere(obj, "value", json_integer_creare(piscina, 42));
-    json_objectum_ponere(obj, "active", json_boolean_creare(piscina, VERUM));
+    json_objectum_ponere(obj, "name",
+        json_chorda_creare_literis(piscina, "Test"));
+    json_objectum_ponere(obj, "value", json_integer_creare(piscina,
+        42));
+    json_objectum_ponere(obj, "active", json_boolean_creare(piscina,
+        VERUM));
 
     CREDO_VERUM(json_objectum_numerus(obj) == 3);
-    CREDO_VERUM(json_ad_integer(json_objectum_capere(obj, "value")) == 42);
+    CREDO_VERUM(json_ad_integer(json_objectum_capere(obj, "value"))
+        == 42);
 
     /* Build array */
     arr = json_tabulatum_creare(piscina);
@@ -358,7 +367,8 @@ probatio_builder(Piscina* piscina)
     /* Nested structure */
     nested = json_objectum_creare(piscina);
     json_objectum_ponere(nested, "items", arr);
-    json_objectum_ponere(nested, "count", json_integer_creare(piscina, 3));
+    json_objectum_ponere(nested, "count", json_integer_creare(piscina,
+        3));
 
     output = json_scribere(nested, piscina);
     CREDO_VERUM(output.mensura > 0);
@@ -374,29 +384,29 @@ interior vacuum
 probatio_serialization(Piscina* piscina)
 {
     JsonValor* val;
-    chorda output;
+       chorda  output;
 
     imprimere("--- Probans serialization ---\n");
 
     /* Null */
-    val = json_nullum_creare(piscina);
-    output = json_scribere(val, piscina);
+    val     = json_nullum_creare(piscina);
+    output  = json_scribere(val, piscina);
     CREDO_VERUM(output.mensura == 4);
     CREDO_VERUM(memcmp(output.datum, "null", 4) == 0);
 
     /* Boolean */
-    val = json_boolean_creare(piscina, VERUM);
-    output = json_scribere(val, piscina);
+    val     = json_boolean_creare(piscina, VERUM);
+    output  = json_scribere(val, piscina);
     CREDO_VERUM(memcmp(output.datum, "true", 4) == 0);
 
     /* Integer */
-    val = json_integer_creare(piscina, -123);
-    output = json_scribere(val, piscina);
+    val     = json_integer_creare(piscina, -123);
+    output  = json_scribere(val, piscina);
     CREDO_VERUM(memcmp(output.datum, "-123", 4) == 0);
 
     /* String with escapes */
-    val = json_chorda_creare_literis(piscina, "hello\nworld");
-    output = json_scribere(val, piscina);
+    val     = json_chorda_creare_literis(piscina, "hello\nworld");
+    output  = json_scribere(val, piscina);
     imprimere("  Escaped: %.*s\n", output.mensura, output.datum);
     /* Should contain \n escape */
 }
@@ -409,10 +419,11 @@ probatio_serialization(Piscina* piscina)
 interior vacuum
 probatio_round_trip(Piscina* piscina)
 {
-    constans character* original = "{\"name\":\"Test\",\"values\":[1,2,3],\"nested\":{\"a\":true}}";
-    JsonResultus res1;
-    JsonResultus res2;
-    chorda serialized;
+    constans character* original =
+        "{\"name\":\"Test\",\"values\":[1,2,3],\"nested\":{\"a\":true}}";
+          JsonResultus res1;
+          JsonResultus res2;
+                chorda serialized;
 
     imprimere("--- Probans round trip ---\n");
 
@@ -423,14 +434,16 @@ probatio_round_trip(Piscina* piscina)
     /* Serialize */
     serialized = json_scribere(res1.radix, piscina);
     imprimere("  Original:   %s\n", original);
-    imprimere("  Serialized: %.*s\n", serialized.mensura, serialized.datum);
+    imprimere("  Serialized: %.*s\n", serialized.mensura,
+        serialized.datum);
 
     /* Parse again */
     res2 = json_legere(serialized, piscina);
     CREDO_VERUM(res2.successus);
 
     /* Compare structure */
-    CREDO_VERUM(json_objectum_numerus(res2.radix) == json_objectum_numerus(res1.radix));
+    CREDO_VERUM(json_objectum_numerus(res2.radix)
+        == json_objectum_numerus(res1.radix));
     CREDO_VERUM(json_objectum_habet(res2.radix, "name"));
     CREDO_VERUM(json_objectum_habet(res2.radix, "values"));
     CREDO_VERUM(json_objectum_habet(res2.radix, "nested"));
@@ -446,12 +459,13 @@ probatio_pretty_print(Piscina* piscina)
 {
     JsonValor* obj;
     JsonValor* arr;
-    chorda output;
+       chorda  output;
 
     imprimere("--- Probans pretty print ---\n");
 
     obj = json_objectum_creare(piscina);
-    json_objectum_ponere(obj, "name", json_chorda_creare_literis(piscina, "Test"));
+    json_objectum_ponere(obj, "name",
+        json_chorda_creare_literis(piscina, "Test"));
 
     arr = json_tabulatum_creare(piscina);
     json_tabulatum_addere(arr, json_integer_creare(piscina, 1));
@@ -485,15 +499,16 @@ probatio_pretty_print(Piscina* piscina)
 interior vacuum
 probatio_iterator(Piscina* piscina)
 {
-    JsonResultus res;
-    JsonObjectumIterator iter;
-    chorda clavis;
-    JsonValor* valor;
-    i32 count = 0;
+            JsonResultus  res;
+    JsonObjectumIterator  iter;
+                  chorda  clavis;
+               JsonValor* valor;
+                     i32  count = 0;
 
     imprimere("--- Probans iterator ---\n");
 
-    res = json_legere_literis("{\"a\": 1, \"b\": 2, \"c\": 3}", piscina);
+    res = json_legere_literis("{\"a\": 1, \"b\": 2, \"c\": 3}",
+        piscina);
     CREDO_VERUM(res.successus);
 
     iter = json_objectum_iterator(res.radix);
@@ -515,7 +530,7 @@ probatio_iterator(Piscina* piscina)
  * ======================================================================== */
 
 int
-main(void)
+main (void)
 {
     Piscina* piscina;
 

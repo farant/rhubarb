@@ -18,13 +18,15 @@
 /* Via temporalis pro file tests */
 constans character* VIA_PROBATIO = "/tmp/probatio_repositorium.log";
 
+
 /* ==================================================
  * Auxiliares
  * ================================================== */
 
 /* Creare repositorium cum memoria backend */
 interior EntitasRepositorium*
-_creare_repo_memoria(Piscina* piscina)
+_creare_repo_memoria (
+    Piscina* piscina)
 {
     Persistentia* pers;
 
@@ -39,7 +41,8 @@ _creare_repo_memoria(Piscina* piscina)
 
 /* Creare repositorium cum nuntium backend (novum file) */
 interior EntitasRepositorium*
-_creare_repo_nuntium(Piscina* piscina)
+_creare_repo_nuntium (
+    Piscina* piscina)
 {
     Persistentia* pers;
 
@@ -54,6 +57,7 @@ _creare_repo_nuntium(Piscina* piscina)
 
     redde entitas_repositorium_creare(piscina, pers);
 }
+
 
 /* ==================================================
  * Probationes Communes (currunt pro ambobus backends)
@@ -72,7 +76,8 @@ probare_entitas_creare(EntitasRepositorium* repo)
     CREDO_VERUM(chorda_aequalis_literis(*entitas->genus, "Document"));
 
     /* Capere per ID debet invenire */
-    CREDO_AEQUALIS_PTR(repo->capere_entitatem(repo->datum, entitas->id), entitas);
+    CREDO_AEQUALIS_PTR(repo->capere_entitatem(repo->datum, entitas->id),
+        entitas);
 }
 
 interior vacuum
@@ -103,26 +108,32 @@ interior vacuum
 probare_proprietas_ponere(EntitasRepositorium* repo)
 {
     Entitas* entitas;
-    chorda*  valor;
+     chorda* valor;
 
     imprimere("  proprietas_ponere...\n");
 
-    entitas = repo->entitas_scaffoldare(repo->datum, "Item", "test-props");
+    entitas = repo->entitas_scaffoldare(repo->datum, "Item",
+        "test-props");
     CREDO_NON_NIHIL(entitas);
 
     /* Ponere proprietas */
-    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "name", "Test Item"));
-    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "count", "42"));
+    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "name",
+        "Test Item"));
+    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "count",
+        "42"));
 
     /* Verificare */
-    valor = entitas_proprietas_capere(entitas, chorda_internare_ex_literis(
+    valor = entitas_proprietas_capere(entitas,
+        chorda_internare_ex_literis(
         internamentum_globale(), "name"));
     CREDO_NON_NIHIL(valor);
     CREDO_VERUM(chorda_aequalis_literis(*valor, "Test Item"));
 
     /* Superscribere */
-    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "name", "Updated"));
-    valor = entitas_proprietas_capere(entitas, chorda_internare_ex_literis(
+    CREDO_VERUM(repo->proprietas_ponere(repo->datum, entitas, "name",
+        "Updated"));
+    valor = entitas_proprietas_capere(entitas,
+        chorda_internare_ex_literis(
         internamentum_globale(), "name"));
     CREDO_VERUM(chorda_aequalis_literis(*valor, "Updated"));
 }
@@ -131,14 +142,16 @@ interior vacuum
 probare_proprietas_delere(EntitasRepositorium* repo)
 {
     Entitas* entitas;
-    chorda*  clavis;
+     chorda* clavis;
 
     imprimere("  proprietas_delere...\n");
 
-    entitas = repo->entitas_scaffoldare(repo->datum, "Item", "test-del-props");
+    entitas = repo->entitas_scaffoldare(repo->datum, "Item",
+        "test-del-props");
     repo->proprietas_ponere(repo->datum, entitas, "temp", "value");
 
-    clavis = chorda_internare_ex_literis(internamentum_globale(), "temp");
+    clavis = chorda_internare_ex_literis(internamentum_globale(),
+        "temp");
     CREDO_VERUM(entitas_proprietas_habet(entitas, clavis));
 
     CREDO_VERUM(repo->proprietas_delere(repo->datum, entitas, "temp"));
@@ -152,7 +165,7 @@ probare_relatio_addere(EntitasRepositorium* repo)
     Entitas* child_1;
     Entitas* child_2;
     Relatio* rel;
-    Xar*     relatae;
+        Xar* relatae;
 
     imprimere("  relatio_addere...\n");
 
@@ -160,7 +173,8 @@ probare_relatio_addere(EntitasRepositorium* repo)
     child_1 = repo->entitas_scaffoldare(repo->datum, "File", "child1");
     child_2 = repo->entitas_scaffoldare(repo->datum, "File", "child2");
 
-    rel = repo->relatio_addere(repo->datum, parent, "contains", child_1->id);
+    rel = repo->relatio_addere(repo->datum, parent, "contains",
+        child_1->id);
     CREDO_NON_NIHIL(rel);
     CREDO_VERUM(chorda_aequalis_literis(*rel->genus, "contains"));
     CREDO_AEQUALIS_PTR(rel->destinatio_id, child_1->id);
@@ -170,7 +184,8 @@ probare_relatio_addere(EntitasRepositorium* repo)
     /* Verificare capere_entitates_relatae */
     relatae = repo->capere_entitates_relatae(
         repo->datum, parent,
-        chorda_internare_ex_literis(internamentum_globale(), "contains"));
+        chorda_internare_ex_literis(internamentum_globale(),
+        "contains"));
     CREDO_NON_NIHIL(relatae);
     CREDO_AEQUALIS_I32(xar_numerus(relatae), II);
 }
@@ -181,8 +196,8 @@ probare_relatio_delere(EntitasRepositorium* repo)
     Entitas* a;
     Entitas* b;
     Relatio* rel;
-    Xar*     relatae;
-    chorda*  contains;
+        Xar* relatae;
+     chorda* contains;
 
     imprimere("  relatio_delere...\n");
 
@@ -192,7 +207,8 @@ probare_relatio_delere(EntitasRepositorium* repo)
     rel = repo->relatio_addere(repo->datum, a, "links", b->id);
     CREDO_NON_NIHIL(rel);
 
-    contains = chorda_internare_ex_literis(internamentum_globale(), "links");
+    contains = chorda_internare_ex_literis(internamentum_globale(),
+        "links");
     relatae = repo->capere_entitates_relatae(repo->datum, a, contains);
     CREDO_AEQUALIS_I32(xar_numerus(relatae), I);
 
@@ -206,7 +222,7 @@ interior vacuum
 probare_nota_addere(EntitasRepositorium* repo)
 {
     Entitas* entitas;
-    Xar*     resultus;
+        Xar* resultus;
 
     imprimere("  nota_addere...\n");
 
@@ -220,7 +236,8 @@ probare_nota_addere(EntitasRepositorium* repo)
     /* Quaerere per nota */
     resultus = repo->quaerere_cum_nota(
         repo->datum,
-        chorda_internare_ex_literis(internamentum_globale(), "#important"));
+        chorda_internare_ex_literis(internamentum_globale(),
+        "#important"));
     CREDO_NON_NIHIL(resultus);
     CREDO_AEQUALIS_I32(xar_numerus(resultus), I);
 }
@@ -229,15 +246,17 @@ interior vacuum
 probare_nota_delere(EntitasRepositorium* repo)
 {
     Entitas* entitas;
-    Xar*     resultus;
-    chorda*  nota;
+        Xar* resultus;
+     chorda* nota;
 
     imprimere("  nota_delere...\n");
 
-    entitas = repo->entitas_scaffoldare(repo->datum, "Task", "task-del");
+    entitas = repo->entitas_scaffoldare(repo->datum, "Task",
+        "task-del");
     repo->nota_addere(repo->datum, entitas, "#temp");
 
-    nota = chorda_internare_ex_literis(internamentum_globale(), "#temp");
+    nota = chorda_internare_ex_literis(internamentum_globale(),
+        "#temp");
     resultus = repo->quaerere_cum_nota(repo->datum, nota);
     CREDO_AEQUALIS_I32(xar_numerus(resultus), I);
 
@@ -251,7 +270,7 @@ interior vacuum
 probare_capere_radices(EntitasRepositorium* repo)
 {
     Entitas* root;
-    Xar*     radices;
+        Xar* radices;
 
     imprimere("  capere_radices...\n");
 
@@ -262,7 +281,8 @@ probare_capere_radices(EntitasRepositorium* repo)
     radices = repo->capere_radices(repo->datum);
     CREDO_NON_NIHIL(radices);
     CREDO_AEQUALIS_I32(xar_numerus(radices), I);
-    CREDO_AEQUALIS_PTR(*(Entitas**)xar_obtinere(radices, ZEPHYRUM), root);
+    CREDO_AEQUALIS_PTR(*(Entitas**)xar_obtinere(radices, ZEPHYRUM),
+        root);
 }
 
 interior vacuum
@@ -281,7 +301,8 @@ probare_genus_hierarchia(EntitasRepositorium* repo)
     CREDO_NON_NIHIL(article);
 
     /* Verificare genus entitates auto-scaffoldatae */
-    genus_content = repo->entitas_scaffoldare(repo->datum, "Genus", "Content");
+    genus_content = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "Content");
     genus_document = repo->entitas_scaffoldare(
         repo->datum, "Genus", "Content::Document");
     genus_article = repo->entitas_scaffoldare(
@@ -299,11 +320,12 @@ interior vacuum
 probare_entitas_delere(EntitasRepositorium* repo)
 {
     Entitas* entitas;
-    chorda*  id;
+     chorda* id;
 
     imprimere("  entitas_delere...\n");
 
-    entitas = repo->entitas_scaffoldare(repo->datum, "Temp", "to-delete");
+    entitas = repo->entitas_scaffoldare(repo->datum, "Temp",
+        "to-delete");
     CREDO_NON_NIHIL(entitas);
 
     id = entitas->id;
@@ -318,7 +340,7 @@ probare_quaerere_textum(EntitasRepositorium* repo)
 {
     Entitas* e1;
     Entitas* e2;
-    Xar*     resultus;
+        Xar* resultus;
 
     imprimere("  quaerere_textum...\n");
 
@@ -345,7 +367,7 @@ probare_quaerere_cum_praefixo_notae(EntitasRepositorium* repo)
     Entitas* e1;
     Entitas* e2;
     Entitas* e3;
-    Xar*     resultus;
+        Xar* resultus;
 
     imprimere("  quaerere_cum_praefixo_notae...\n");
 
@@ -358,17 +380,20 @@ probare_quaerere_cum_praefixo_notae(EntitasRepositorium* repo)
     repo->nota_addere(repo->datum, e3, "#task::other");
 
     /* Quaerere cum praefixo "#project::" */
-    resultus = repo->quaerere_cum_praefixo_notae(repo->datum, "#project::");
+    resultus = repo->quaerere_cum_praefixo_notae(repo->datum,
+        "#project::");
     CREDO_NON_NIHIL(resultus);
     CREDO_AEQUALIS_I32(xar_numerus(resultus), II);
 
     /* Quaerere cum praefixo "#task::" */
-    resultus = repo->quaerere_cum_praefixo_notae(repo->datum, "#task::");
+    resultus = repo->quaerere_cum_praefixo_notae(repo->datum,
+        "#task::");
     CREDO_NON_NIHIL(resultus);
     CREDO_AEQUALIS_I32(xar_numerus(resultus), I);
 
     /* Praefixum non existens */
-    resultus = repo->quaerere_cum_praefixo_notae(repo->datum, "#nonexistent::");
+    resultus = repo->quaerere_cum_praefixo_notae(repo->datum,
+        "#nonexistent::");
     CREDO_AEQUALIS_I32(xar_numerus(resultus), ZEPHYRUM);
 }
 
@@ -379,7 +404,7 @@ probare_capere_relatio(EntitasRepositorium* repo)
     Entitas* b;
     Relatio* rel;
     Relatio* found;
-    chorda*  fake_id;
+     chorda* fake_id;
 
     imprimere("  capere_relatio...\n");
 
@@ -398,7 +423,8 @@ probare_capere_relatio(EntitasRepositorium* repo)
     CREDO_AEQUALIS_PTR(found->destinatio_id, b->id);
 
     /* Capere non existentem */
-    fake_id = chorda_internare_ex_literis(internamentum_globale(), "fake-rel-id");
+    fake_id = chorda_internare_ex_literis(internamentum_globale(),
+        "fake-rel-id");
     found = repo->capere_relatio(repo->datum, fake_id);
     CREDO_NIHIL(found);
 }
@@ -409,19 +435,23 @@ probare_capere_relationes_ad(EntitasRepositorium* repo)
     Entitas* target;
     Entitas* src1;
     Entitas* src2;
-    Xar*     relationes_ad;
-    i32      numerus_ante;
+        Xar* relationes_ad;
+        i32  numerus_ante;
 
     imprimere("  capere_relationes_ad...\n");
 
-    target = repo->entitas_scaffoldare(repo->datum, "BackRefTarget", "unique-target");
+    target = repo->entitas_scaffoldare(repo->datum, "BackRefTarget",
+        "unique-target");
 
     /* Capere numerum relationum ante addere */
     relationes_ad = repo->capere_relationes_ad(repo->datum, target->id);
-    numerus_ante = relationes_ad ? xar_numerus(relationes_ad) : ZEPHYRUM;
+    numerus_ante =
+        relationes_ad ? xar_numerus(relationes_ad) : ZEPHYRUM;
 
-    src1 = repo->entitas_scaffoldare(repo->datum, "BackRefSource", "unique-src1");
-    src2 = repo->entitas_scaffoldare(repo->datum, "BackRefSource", "unique-src2");
+    src1 = repo->entitas_scaffoldare(repo->datum, "BackRefSource",
+        "unique-src1");
+    src2 = repo->entitas_scaffoldare(repo->datum, "BackRefSource",
+        "unique-src2");
 
     /* Duae relationes AD target */
     repo->relatio_addere(repo->datum, src1, "backref_test", target->id);
@@ -454,52 +484,62 @@ probare_genus_contains_relationes(EntitasRepositorium* repo)
     Entitas* genus_radix;
     Entitas* genus_unique;
     Entitas* genus_unique_deep;
-    chorda*  contains_genus;
-    Xar*     relationes;
+     chorda* contains_genus;
+        Xar* relationes;
 
     imprimere("  genus_contains_relationes...\n");
 
     /* Usare genus unicum pro evitare conflictus cum aliis tests */
     /* Scaffoldare entitatem cum genere profundo pro triggere hierarchiam */
-    repo->entitas_scaffoldare(repo->datum, "UniqueGenusTest::Deep::Hierarchy", "trigger");
+    repo->entitas_scaffoldare(repo->datum,
+        "UniqueGenusTest::Deep::Hierarchy", "trigger");
 
     /* Genus::Genus (radix) */
-    genus_radix = repo->entitas_scaffoldare(repo->datum, "Genus", "Genus");
+    genus_radix = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "Genus");
     CREDO_NON_NIHIL(genus_radix);
 
-    contains_genus = chorda_internare_ex_literis(internamentum_globale(), "contains");
+    contains_genus =
+        chorda_internare_ex_literis(internamentum_globale(),
+        "contains");
 
     /* Genus::Genus debet habere "contains" relationes */
-    relationes = repo->capere_entitates_relatae(repo->datum, genus_radix, contains_genus);
+    relationes = repo->capere_entitates_relatae(repo->datum,
+        genus_radix, contains_genus);
     CREDO_NON_NIHIL(relationes);
     CREDO_VERUM(xar_numerus(relationes) >= I);
 
     /* Genus::UniqueGenusTest debet habere "contains" ad Genus::UniqueGenusTest::Deep */
-    genus_unique = repo->entitas_scaffoldare(repo->datum, "Genus", "UniqueGenusTest");
+    genus_unique = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "UniqueGenusTest");
     CREDO_NON_NIHIL(genus_unique);
 
-    relationes = repo->capere_entitates_relatae(repo->datum, genus_unique, contains_genus);
+    relationes = repo->capere_entitates_relatae(repo->datum,
+        genus_unique, contains_genus);
     CREDO_NON_NIHIL(relationes);
     /* Saltem unam relationem (potest habere plus si test currit iterum) */
     CREDO_VERUM(xar_numerus(relationes) >= I);
 
     /* Genus::UniqueGenusTest::Deep debet habere "contains" ad Genus::UniqueGenusTest::Deep::Hierarchy */
-    genus_unique_deep = repo->entitas_scaffoldare(repo->datum, "Genus", "UniqueGenusTest::Deep");
+    genus_unique_deep = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "UniqueGenusTest::Deep");
     CREDO_NON_NIHIL(genus_unique_deep);
 
-    relationes = repo->capere_entitates_relatae(repo->datum, genus_unique_deep, contains_genus);
+    relationes = repo->capere_entitates_relatae(repo->datum,
+        genus_unique_deep, contains_genus);
     CREDO_NON_NIHIL(relationes);
     CREDO_VERUM(xar_numerus(relationes) >= I);
 }
+
 
 /* ==================================================
  * Currere omnes probationes pro uno backend
  * ================================================== */
 
 interior vacuum
-currere_probationes_backend(
+currere_probationes_backend (
     EntitasRepositorium* repo,
-    constans character*  nomen_backend)
+     constans character* nomen_backend)
 {
     imprimere("\n=== Backend: %s ===\n", nomen_backend);
 
@@ -522,6 +562,7 @@ currere_probationes_backend(
     probare_genus_contains_relationes(repo);
 }
 
+
 /* ==================================================
  * Probare Replay (solum pro nuntium backend)
  * ================================================== */
@@ -530,8 +571,8 @@ interior vacuum
 probare_replay(Piscina* piscina)
 {
     EntitasRepositorium* repo;
-    chorda*              valor;
-    Xar*                 relatae;
+                 chorda* valor;
+                    Xar* relatae;
 
     imprimere("\n=== Probare Replay (Nuntium) ===\n");
 
@@ -542,8 +583,8 @@ probare_replay(Piscina* piscina)
     imprimere("  Phase 1: Creare datum...\n");
     {
         Persistentia* pers;
-        Entitas*      root;
-        Entitas*      page;
+             Entitas* root;
+             Entitas* page;
 
         pers = persistentia_nuntium_creare(piscina, VIA_PROBATIO);
         CREDO_NON_NIHIL(pers);
@@ -552,12 +593,16 @@ probare_replay(Piscina* piscina)
         CREDO_NON_NIHIL(repo);
 
         /* Creare entitates */
-        root = repo->entitas_scaffoldare(repo->datum, "Root", "replay-root");
+        root = repo->entitas_scaffoldare(repo->datum, "Root",
+            "replay-root");
         repo->nota_addere(repo->datum, root, "#root");
-        repo->proprietas_ponere(repo->datum, root, "name", "Replay Root");
+        repo->proprietas_ponere(repo->datum, root, "name",
+            "Replay Root");
 
-        page = repo->entitas_scaffoldare(repo->datum, "Page", "replay-page");
-        repo->proprietas_ponere(repo->datum, page, "title", "Test Page");
+        page = repo->entitas_scaffoldare(repo->datum, "Page",
+            "replay-page");
+        repo->proprietas_ponere(repo->datum, page, "title",
+            "Test Page");
 
         repo->relatio_addere(repo->datum, root, "contains", page->id);
 
@@ -570,9 +615,9 @@ probare_replay(Piscina* piscina)
     imprimere("  Phase 2: Aperire et verificare...\n");
     {
         Persistentia* pers;
-        Entitas*      root;
-        Entitas*      page;
-        chorda*       contains;
+             Entitas* root;
+             Entitas* page;
+              chorda* contains;
 
         /* Nova piscina pro simulare fresh start */
         /* (in realitate usamus eadem piscina sed repo est novum) */
@@ -584,26 +629,32 @@ probare_replay(Piscina* piscina)
         CREDO_NON_NIHIL(repo);
 
         /* Verificare root existit */
-        root = repo->entitas_scaffoldare(repo->datum, "Root", "replay-root");
+        root = repo->entitas_scaffoldare(repo->datum, "Root",
+            "replay-root");
         CREDO_NON_NIHIL(root);
 
-        valor = entitas_proprietas_capere(root, chorda_internare_ex_literis(
+        valor = entitas_proprietas_capere(root,
+            chorda_internare_ex_literis(
             internamentum_globale(), "name"));
         CREDO_NON_NIHIL(valor);
         CREDO_VERUM(chorda_aequalis_literis(*valor, "Replay Root"));
 
         /* Verificare page existit */
-        page = repo->entitas_scaffoldare(repo->datum, "Page", "replay-page");
+        page = repo->entitas_scaffoldare(repo->datum, "Page",
+            "replay-page");
         CREDO_NON_NIHIL(page);
 
-        valor = entitas_proprietas_capere(page, chorda_internare_ex_literis(
+        valor = entitas_proprietas_capere(page,
+            chorda_internare_ex_literis(
             internamentum_globale(), "title"));
         CREDO_NON_NIHIL(valor);
         CREDO_VERUM(chorda_aequalis_literis(*valor, "Test Page"));
 
         /* Verificare relatio existit */
-        contains = chorda_internare_ex_literis(internamentum_globale(), "contains");
-        relatae = repo->capere_entitates_relatae(repo->datum, root, contains);
+        contains = chorda_internare_ex_literis(internamentum_globale(),
+            "contains");
+        relatae = repo->capere_entitates_relatae(repo->datum, root,
+            contains);
         CREDO_NON_NIHIL(relatae);
         CREDO_AEQUALIS_I32(xar_numerus(relatae), I);
 
@@ -627,7 +678,7 @@ probare_continuare_post_replay(Piscina* piscina)
     /* PHASE 1: Creare initiale datum */
     imprimere("  Phase 1: Creare initiale...\n");
     {
-        Persistentia*        pers;
+               Persistentia* pers;
         EntitasRepositorium* repo;
 
         pers = persistentia_nuntium_creare(piscina, VIA_PROBATIO);
@@ -646,9 +697,9 @@ probare_continuare_post_replay(Piscina* piscina)
     /* PHASE 2: Aperire, addere plus, claudere */
     imprimere("  Phase 2: Aperire et addere...\n");
     {
-        Persistentia*        pers;
+               Persistentia* pers;
         EntitasRepositorium* repo;
-        Entitas*             third;
+                    Entitas* third;
 
         pers = persistentia_nuntium_aperire(piscina, VIA_PROBATIO);
         CREDO_NON_NIHIL(pers);
@@ -657,13 +708,17 @@ probare_continuare_post_replay(Piscina* piscina)
         CREDO_NON_NIHIL(repo);
 
         /* Verificare duo existunt */
-        CREDO_NON_NIHIL(repo->entitas_scaffoldare(repo->datum, "Entity", "first"));
-        CREDO_NON_NIHIL(repo->entitas_scaffoldare(repo->datum, "Entity", "second"));
+        CREDO_NON_NIHIL(repo->entitas_scaffoldare(repo->datum, "Entity",
+            "first"));
+        CREDO_NON_NIHIL(repo->entitas_scaffoldare(repo->datum, "Entity",
+            "second"));
 
         /* Addere tertiam */
-        third = repo->entitas_scaffoldare(repo->datum, "Entity", "third");
+        third = repo->entitas_scaffoldare(repo->datum, "Entity",
+            "third");
         CREDO_NON_NIHIL(third);
-        repo->proprietas_ponere(repo->datum, third, "added", "in-phase-2");
+        repo->proprietas_ponere(repo->datum, third, "added",
+            "in-phase-2");
 
         pers->sync(pers->datum);
         pers->claudere(pers->datum);
@@ -672,12 +727,12 @@ probare_continuare_post_replay(Piscina* piscina)
     /* PHASE 3: Aperire et verificare omnia */
     imprimere("  Phase 3: Verificare omnia...\n");
     {
-        Persistentia*        pers;
+               Persistentia* pers;
         EntitasRepositorium* repo;
-        Entitas*             first;
-        Entitas*             second;
-        Entitas*             third;
-        chorda*              valor;
+                    Entitas* first;
+                    Entitas* second;
+                    Entitas* third;
+                     chorda* valor;
 
         pers = persistentia_nuntium_aperire(piscina, VIA_PROBATIO);
         CREDO_NON_NIHIL(pers);
@@ -686,16 +741,20 @@ probare_continuare_post_replay(Piscina* piscina)
         CREDO_NON_NIHIL(repo);
 
         /* Verificare omnes tres existunt */
-        first = repo->entitas_scaffoldare(repo->datum, "Entity", "first");
-        second = repo->entitas_scaffoldare(repo->datum, "Entity", "second");
-        third = repo->entitas_scaffoldare(repo->datum, "Entity", "third");
+        first = repo->entitas_scaffoldare(repo->datum, "Entity",
+            "first");
+        second = repo->entitas_scaffoldare(repo->datum, "Entity",
+            "second");
+        third = repo->entitas_scaffoldare(repo->datum, "Entity",
+            "third");
 
         CREDO_NON_NIHIL(first);
         CREDO_NON_NIHIL(second);
         CREDO_NON_NIHIL(third);
 
         /* Verificare proprietas addita in phase 2 */
-        valor = entitas_proprietas_capere(third, chorda_internare_ex_literis(
+        valor = entitas_proprietas_capere(third,
+            chorda_internare_ex_literis(
             internamentum_globale(), "added"));
         CREDO_NON_NIHIL(valor);
         CREDO_VERUM(chorda_aequalis_literis(*valor, "in-phase-2"));
@@ -709,6 +768,7 @@ probare_continuare_post_replay(Piscina* piscina)
     unlink(VIA_PROBATIO);
 }
 
+
 /* ==================================================
  * Probare Event Log Read Functions
  * ================================================== */
@@ -716,13 +776,13 @@ probare_continuare_post_replay(Piscina* piscina)
 interior vacuum
 probare_lectio_eventorum(Piscina* piscina)
 {
-    Persistentia*        pers;
+           Persistentia* pers;
     EntitasRepositorium* repo;
-    Entitas*             ent_a;
-    Entitas*             ent_b;
-    Xar*                 eventus;
-    Eventum*             e;
-    i32                  numerus;
+                Entitas* ent_a;
+                Entitas* ent_b;
+                    Xar* eventus;
+                Eventum* e;
+                    i32  numerus;
 
     imprimere("\n=== Probare Lectio Eventorum ===\n");
 
@@ -739,7 +799,8 @@ probare_lectio_eventorum(Piscina* piscina)
 
     ent_b = repo->entitas_creare(repo->datum, "Document");
     CREDO_NON_NIHIL(ent_b);
-    repo->proprietas_ponere(repo->datum, ent_b, "titulus", "Documentum B");
+    repo->proprietas_ponere(repo->datum, ent_b, "titulus",
+        "Documentum B");
     repo->nota_addere(repo->datum, ent_b, "#important");
 
     /* === Probare numerus_eventorum === */
@@ -776,12 +837,14 @@ probare_lectio_eventorum(Piscina* piscina)
     {
         i32 totalis = repo->numerus_eventorum(repo->datum);
 
-        eventus = repo->legere_eventus_post_indicem(repo->datum, totalis - II);
+        eventus = repo->legere_eventus_post_indicem(repo->datum, totalis
+            - II);
         CREDO_NON_NIHIL(eventus);
         /* Ultimi 2 eventus */
         CREDO_AEQUALIS_I32(xar_numerus(eventus), II);
 
-        eventus = repo->legere_eventus_post_indicem(repo->datum, ZEPHYRUM);
+        eventus = repo->legere_eventus_post_indicem(repo->datum,
+            ZEPHYRUM);
         CREDO_NON_NIHIL(eventus);
         CREDO_AEQUALIS_I32(xar_numerus(eventus), totalis);
     }
@@ -799,42 +862,50 @@ probare_lectio_eventorum(Piscina* piscina)
 
     /* === Probare legere_eventus_generis_entitatis === */
     imprimere("  legere_eventus_generis_entitatis...\n");
-    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Page");
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum,
+        "Page");
     CREDO_NON_NIHIL(eventus);
     /* Page: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS >= 3 */
     CREDO_VERUM(xar_numerus(eventus) >= III);
 
-    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "Document");
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum,
+        "Document");
     CREDO_NON_NIHIL(eventus);
     /* Document: 1 CREARE + 1 EST_RELATIO + 1 PROPRIETAS + 1 NOTA >= 4 */
     CREDO_VERUM(xar_numerus(eventus) >= IV);
 
-    eventus = repo->legere_eventus_generis_entitatis(repo->datum, "NonExistent");
+    eventus = repo->legere_eventus_generis_entitatis(repo->datum,
+        "NonExistent");
     CREDO_NON_NIHIL(eventus);
     CREDO_AEQUALIS_I32(xar_numerus(eventus), ZEPHYRUM);
 
     /* === Probare legere_eventus_typi === */
     imprimere("  legere_eventus_typi...\n");
-    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_CREARE_ENTITAS);
+    eventus = repo->legere_eventus_typi(repo->datum,
+        EVENTUS_CREARE_ENTITAS);
     CREDO_NON_NIHIL(eventus);
     /* Minimum 2: Page + Document (plus Genus entities) */
     CREDO_VERUM(xar_numerus(eventus) >= II);
 
-    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_PONERE_PROPRIETAS);
+    eventus = repo->legere_eventus_typi(repo->datum,
+        EVENTUS_PONERE_PROPRIETAS);
     CREDO_NON_NIHIL(eventus);
     /* Minimum 2: titulus for Page + titulus for Document (plus Genus name props) */
     CREDO_VERUM(xar_numerus(eventus) >= II);
 
-    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_ADDERE_NOTA);
+    eventus = repo->legere_eventus_typi(repo->datum,
+        EVENTUS_ADDERE_NOTA);
     CREDO_NON_NIHIL(eventus);
     CREDO_AEQUALIS_I32(xar_numerus(eventus), I);
 
-    eventus = repo->legere_eventus_typi(repo->datum, EVENTUS_DELERE_ENTITAS);
+    eventus = repo->legere_eventus_typi(repo->datum,
+        EVENTUS_DELERE_ENTITAS);
     CREDO_NON_NIHIL(eventus);
     CREDO_AEQUALIS_I32(xar_numerus(eventus), ZEPHYRUM);
 
     imprimere("  Lectio eventorum verificata!\n");
 }
+
 
 /* ==================================================
  * Probare Validation (Schema-Aware)
@@ -843,17 +914,17 @@ probare_lectio_eventorum(Piscina* piscina)
 interior vacuum
 probare_validation(Piscina* piscina)
 {
-    Persistentia*        pers;
+           Persistentia* pers;
     EntitasRepositorium* repo;
-    Entitas*             typus_sem;
-    Entitas*             prop_def;
-    Entitas*             item;
-    Entitas*             found_def;
-    Proprietas*          prop;
-    chorda*              genus_item;
-    chorda*              nomen_price;
-    s32                  valor_s32;
-    b32                  validum;
+                Entitas* typus_sem;
+                Entitas* prop_def;
+                Entitas* item;
+                Entitas* found_def;
+             Proprietas* prop;
+                 chorda* genus_item;
+                 chorda* nomen_price;
+                    s32  valor_s32;
+                    b32  validum;
 
     imprimere("\n=== Probare Validation ===\n");
 
@@ -865,10 +936,13 @@ probare_validation(Piscina* piscina)
 
     /* === Creare TypusSemanticus === */
     imprimere("  creare TypusSemanticus...\n");
-    typus_sem = repo->entitas_scaffoldare(repo->datum, "TypusSemanticus", "Currency::USD");
+    typus_sem = repo->entitas_scaffoldare(repo->datum,
+        "TypusSemanticus", "Currency::USD");
     CREDO_NON_NIHIL(typus_sem);
-    repo->proprietas_ponere(repo->datum, typus_sem, "name", "Currency::USD");
-    repo->proprietas_ponere(repo->datum, typus_sem, "typus_literalis", "s32");
+    repo->proprietas_ponere(repo->datum, typus_sem, "name",
+        "Currency::USD");
+    repo->proprietas_ponere(repo->datum, typus_sem, "typus_literalis",
+        "s32");
 
     /* === Creare ProprietasDefinitio cum relatio "est" === */
     imprimere("  creare ProprietasDefinitio...\n");
@@ -876,14 +950,17 @@ probare_validation(Piscina* piscina)
     CREDO_NON_NIHIL(prop_def);
 
     /* Definire: Item.price --[est]--> TypusSemanticus::Currency::USD */
-    repo->proprietas_ponere(repo->datum, prop_def, "entitas_genus", "Item");
+    repo->proprietas_ponere(repo->datum, prop_def, "entitas_genus",
+        "Item");
     repo->proprietas_ponere(repo->datum, prop_def, "name", "price");
     repo->relatio_addere(repo->datum, prop_def, "est", typus_sem->id);
 
     /* === Probare invenire ProprietasDefinitio === */
     imprimere("  invenire ProprietasDefinitio...\n");
-    genus_item = chorda_internare_ex_literis(internamentum_globale(), "Item");
-    nomen_price = chorda_internare_ex_literis(internamentum_globale(), "price");
+    genus_item = chorda_internare_ex_literis(internamentum_globale(),
+        "Item");
+    nomen_price = chorda_internare_ex_literis(internamentum_globale(),
+        "price");
 
     found_def = entitas_repositorium_proprietas_definitio_invenire(
         repo, genus_item, nomen_price);
@@ -897,14 +974,16 @@ probare_validation(Piscina* piscina)
     repo->proprietas_ponere(repo->datum, item, "price", "9999");
 
     /* Validare - debet succedere */
-    validum = entitas_repositorium_proprietas_validare(repo, item, nomen_price);
+    validum = entitas_repositorium_proprietas_validare(repo, item,
+        nomen_price);
     CREDO_VERUM(validum);
 
     /* Verificare typus_semanticus set */
     prop = entitas_proprietas_capere_plena(item, nomen_price);
     CREDO_NON_NIHIL(prop);
     CREDO_NON_NIHIL(prop->typus_semanticus);
-    CREDO_VERUM(chorda_aequalis_literis(*prop->typus_semanticus, "Currency::USD"));
+    CREDO_VERUM(chorda_aequalis_literis(*prop->typus_semanticus,
+        "Currency::USD"));
 
     /* Verificare parsing cache */
     CREDO_VERUM(prop->parsitus_validus);
@@ -912,7 +991,8 @@ probare_validation(Piscina* piscina)
     CREDO_AEQUALIS_S32(prop->parsitus.ut_s32, 9999);
 
     /* Verificare typed accessor */
-    CREDO_VERUM(entitas_proprietas_capere_s32(item, nomen_price, &valor_s32));
+    CREDO_VERUM(entitas_proprietas_capere_s32(item, nomen_price,
+        &valor_s32));
     CREDO_AEQUALIS_S32(valor_s32, 9999);
 
     /* === Creare Item cum proprietate invalida === */
@@ -922,7 +1002,8 @@ probare_validation(Piscina* piscina)
     repo->proprietas_ponere(repo->datum, item, "price", "not-a-number");
 
     /* Validare - debet fallere */
-    validum = entitas_repositorium_proprietas_validare(repo, item, nomen_price);
+    validum = entitas_repositorium_proprietas_validare(repo, item,
+        nomen_price);
     CREDO_FALSUM(validum);
 
     /* === Probare validare sine schema === */
@@ -930,11 +1011,15 @@ probare_validation(Piscina* piscina)
     {
         chorda* nomen_desc;
 
-        nomen_desc = chorda_internare_ex_literis(internamentum_globale(), "description");
-        repo->proprietas_ponere(repo->datum, item, "description", "Some text");
+        nomen_desc =
+            chorda_internare_ex_literis(internamentum_globale(),
+            "description");
+        repo->proprietas_ponere(repo->datum, item, "description",
+            "Some text");
 
         /* Nulla ProprietasDefinitio pro "description" - debet succedere (no schema = no validation) */
-        validum = entitas_repositorium_proprietas_validare(repo, item, nomen_desc);
+        validum = entitas_repositorium_proprietas_validare(repo, item,
+            nomen_desc);
         CREDO_VERUM(validum);
     }
 
@@ -947,14 +1032,16 @@ probare_validation(Piscina* piscina)
         /* Item cum omnibus proprietatibus validis */
         good_item = repo->entitas_creare(repo->datum, "Item");
         repo->proprietas_ponere(repo->datum, good_item, "price", "100");
-        repo->proprietas_ponere(repo->datum, good_item, "name", "Good Item");
+        repo->proprietas_ponere(repo->datum, good_item, "name",
+            "Good Item");
 
         validum = entitas_repositorium_validare(repo, good_item);
         CREDO_VERUM(validum);
 
         /* Item cum proprietate invalida */
         bad_item = repo->entitas_creare(repo->datum, "Item");
-        repo->proprietas_ponere(repo->datum, bad_item, "price", "invalid");
+        repo->proprietas_ponere(repo->datum, bad_item, "price",
+            "invalid");
 
         validum = entitas_repositorium_validare(repo, bad_item);
         CREDO_FALSUM(validum);
@@ -963,6 +1050,7 @@ probare_validation(Piscina* piscina)
     imprimere("  Validation verificata!\n");
 }
 
+
 /* ==================================================
  * Probare Automatic Genus Creation
  * ================================================== */
@@ -970,14 +1058,14 @@ probare_validation(Piscina* piscina)
 interior vacuum
 probare_genus_automaticum(Piscina* piscina)
 {
-    Persistentia*        pers;
+           Persistentia* pers;
     EntitasRepositorium* repo;
-    Entitas*             article;
-    Entitas*             genus_article;
-    Entitas*             prop_def;
-    Entitas*             genus_prop_def;
-    chorda*              genus_name;
-    chorda*              name_prop;
+                Entitas* article;
+                Entitas* genus_article;
+                Entitas* prop_def;
+                Entitas* genus_prop_def;
+                 chorda* genus_name;
+                 chorda* name_prop;
 
     imprimere("\n=== Probare Genus Automaticum ===\n");
 
@@ -993,35 +1081,41 @@ probare_genus_automaticum(Piscina* piscina)
     CREDO_NON_NIHIL(article);
 
     /* Verificare Genus::Article existit */
-    genus_article = repo->entitas_scaffoldare(repo->datum, "Genus", "Article");
+    genus_article = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "Article");
     CREDO_NON_NIHIL(genus_article);
 
     /* Verificare habet "name" proprietas */
-    genus_name = chorda_internare_ex_literis(internamentum_globale(), "name");
+    genus_name = chorda_internare_ex_literis(internamentum_globale(),
+        "name");
     name_prop = entitas_proprietas_capere(genus_article, genus_name);
     CREDO_NON_NIHIL(name_prop);
     CREDO_VERUM(chorda_aequalis_literis(*name_prop, "Article"));
 
     /* === Probare: entitas_scaffoldare debet creare Genus automatice === */
     imprimere("  entitas_scaffoldare creat Genus...\n");
-    prop_def = repo->entitas_scaffoldare(repo->datum, "ProprietasDefinitio", "test-prop");
+    prop_def = repo->entitas_scaffoldare(repo->datum,
+        "ProprietasDefinitio", "test-prop");
     CREDO_NON_NIHIL(prop_def);
 
     /* Verificare Genus::ProprietasDefinitio existit */
-    genus_prop_def = repo->entitas_scaffoldare(repo->datum, "Genus", "ProprietasDefinitio");
+    genus_prop_def = repo->entitas_scaffoldare(repo->datum, "Genus",
+        "ProprietasDefinitio");
     CREDO_NON_NIHIL(genus_prop_def);
 
     /* Verificare habet "name" proprietas */
     name_prop = entitas_proprietas_capere(genus_prop_def, genus_name);
     CREDO_NON_NIHIL(name_prop);
-    CREDO_VERUM(chorda_aequalis_literis(*name_prop, "ProprietasDefinitio"));
+    CREDO_VERUM(chorda_aequalis_literis(*name_prop,
+        "ProprietasDefinitio"));
 
     /* === Probare: Genus::Genus debet existere (meta-genus) === */
     imprimere("  Genus::Genus existit...\n");
     {
         Entitas* genus_genus;
 
-        genus_genus = repo->entitas_scaffoldare(repo->datum, "Genus", "Genus");
+        genus_genus = repo->entitas_scaffoldare(repo->datum, "Genus",
+            "Genus");
         CREDO_NON_NIHIL(genus_genus);
 
         name_prop = entitas_proprietas_capere(genus_genus, genus_name);
@@ -1032,15 +1126,16 @@ probare_genus_automaticum(Piscina* piscina)
     imprimere("  Genus automaticum verificatum!\n");
 }
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     EntitasRepositorium* repo;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
     /* Initiare */
     piscina = piscina_generare_dynamicum("probatio_repo", M * II);

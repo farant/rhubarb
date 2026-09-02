@@ -12,13 +12,15 @@ s32 principale (vacuum)
         b32  praeteritus;
 
     /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_internamentum", CDLVI);
+    piscina = piscina_generare_dynamicum("probatio_internamentum",
+        CDLVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
         redde I;
     }
     credo_aperire(piscina);
+
 
     /* ==================================================
      * Probare internamentum_creare
@@ -35,6 +37,7 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(intern->piscina);
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), ZEPHYRUM);
     }
+
 
     /* ==================================================
      * Probare chorda_internare - aequales chordas
@@ -63,6 +66,7 @@ s32 principale (vacuum)
         /* Numerus debet esse I (una chorda unica) */
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), I);
     }
+
 
     /* ==================================================
      * Probare chorda_internare - differentes chordas
@@ -97,6 +101,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), III);
     }
 
+
     /* ==================================================
      * Probare chorda_internare_ex_literis
      * ================================================== */
@@ -118,8 +123,10 @@ s32 principale (vacuum)
 
         /* Verificare contentum */
         CREDO_AEQUALIS_I32(interned1->mensura, IV);
-        CREDO_CHORDA_AEQUALIS(*interned1, chorda_ex_literis("test", piscina));
+        CREDO_CHORDA_AEQUALIS(*interned1, chorda_ex_literis("test",
+            piscina));
     }
+
 
     /* ==================================================
      * Probare chorda_est_internata
@@ -143,6 +150,7 @@ s32 principale (vacuum)
         CREDO_VERUM(chorda_est_internata(intern, s1));
         CREDO_FALSUM(chorda_est_internata(intern, s2));
     }
+
 
     /* ==================================================
      * Probare pointer equality pro comparatio
@@ -170,13 +178,14 @@ s32 principale (vacuum)
         /* Comparatio pointer est multo celerior quam chorda_aequalis */
     }
 
+
     /* ==================================================
      * Probare internamentum_vacare
      * ================================================== */
 
     {
         InternamentumChorda* intern;
-        chorda *interned;
+                     chorda* interned;
 
         imprimere("\n--- Probans internamentum_vacare ---\n");
 
@@ -198,30 +207,39 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), I);
     }
 
+
     /* ==================================================
      * Probare multa internationes
      * ================================================== */
 
     {
         InternamentumChorda* intern;
-        chorda *interned[X];
-        i32 i;
+                     chorda* interned[X];
+                        i32  i;
 
         imprimere("\n--- Probans multa internationes ---\n");
 
         intern = internamentum_creare(piscina);
 
         /* Internare X chordas differentes */
-        interned[ZEPHYRUM] = chorda_internare_ex_literis(intern, "zero");
-        interned[I]        = chorda_internare_ex_literis(intern, "unus");
-        interned[II]       = chorda_internare_ex_literis(intern, "duo");
-        interned[III]      = chorda_internare_ex_literis(intern, "tres");
-        interned[IV]       = chorda_internare_ex_literis(intern, "quattuor");
-        interned[V]        = chorda_internare_ex_literis(intern, "quinque");
-        interned[VI]       = chorda_internare_ex_literis(intern, "sex");
-        interned[VII]      = chorda_internare_ex_literis(intern, "septem");
-        interned[VIII]     = chorda_internare_ex_literis(intern, "octo");
-        interned[IX]       = chorda_internare_ex_literis(intern, "novem");
+        interned[ZEPHYRUM] = chorda_internare_ex_literis(intern,
+            "zero");
+        interned[I] = chorda_internare_ex_literis(intern,
+            "unus");
+        interned[II] = chorda_internare_ex_literis(intern, "duo");
+        interned[III] = chorda_internare_ex_literis(intern,
+            "tres");
+        interned[IV] = chorda_internare_ex_literis(intern,
+            "quattuor");
+        interned[V] = chorda_internare_ex_literis(intern,
+            "quinque");
+        interned[VI] = chorda_internare_ex_literis(intern, "sex");
+        interned[VII] = chorda_internare_ex_literis(intern,
+            "septem");
+        interned[VIII] = chorda_internare_ex_literis(intern,
+            "octo");
+        interned[IX] = chorda_internare_ex_literis(intern,
+            "novem");
 
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), X);
 
@@ -232,12 +250,15 @@ s32 principale (vacuum)
         }
 
         /* Internare duplicatos - debet redde eosdem pointers */
-        CREDO_VERUM(chorda_internare_ex_literis(intern, "zero") == interned[ZEPHYRUM]);
-        CREDO_VERUM(chorda_internare_ex_literis(intern, "quinque") == interned[V]);
+        CREDO_VERUM(chorda_internare_ex_literis(intern, "zero")
+            == interned[ZEPHYRUM]);
+        CREDO_VERUM(chorda_internare_ex_literis(intern, "quinque")
+            == interned[V]);
 
         /* Numerus adhuc X */
         CREDO_AEQUALIS_I32(internamentum_numerus(intern), X);
     }
+
 
     /* ==================================================
      * Compendium

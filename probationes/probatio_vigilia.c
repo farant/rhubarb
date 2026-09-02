@@ -27,7 +27,9 @@ _purgare (vacuum)
 }
 
 interior b32
-_scribere (constans character* via, constans character* contentum)
+_scribere (
+    constans character* via,
+    constans character* contentum)
 {
     FILE* pl = fopen(via, "wb");
 
@@ -41,8 +43,9 @@ _scribere (constans character* via, constans character* contentum)
 }
 
 interior vacuum
-_sigillum_hex (constans character* contentum,
-    character hex[SIGILLUM_HEX_MENSURA])
+_sigillum_hex (
+    constans character* contentum,
+             character  hex[SIGILLUM_HEX_MENSURA])
 {
     Sigillum s = sigillum_computare(contentum, strlen(contentum));
 
@@ -50,21 +53,22 @@ _sigillum_hex (constans character* contentum,
 }
 
 interior chorda
-_ch (constans character* litterae)
+_ch (
+    constans character* litterae)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = litterae;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(litterae);
+    u.l        = litterae;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(litterae);
     redde c;
 }
 
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_vigilia",
         16777216);
@@ -76,12 +80,14 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     _purgare();
 
+
     /* ========================================================
      * I. Quieta: cfg NIHIL / campi absentes = numquam monet
      * ======================================================== */
+
     {
-        Vigilia* v = vigilia_creare(piscina, NIHIL);
-        VigiliaConfiguratio cfg;
+                    Vigilia* v = vigilia_creare(piscina, NIHIL);
+        VigiliaConfiguratio  cfg;
 
         CREDO_NON_NIHIL (v);
         CREDO_VERUM (vigilia_inspicere(v, piscina)
@@ -90,10 +96,10 @@ s32 principale (vacuum)
         CREDO_VERUM (strcmp(vigilia_signum_breve(v), "")
             == ZEPHYRUM);
 
-        cfg.signum = "abcd";
-        cfg.via_binarii = NIHIL;
-        cfg.via_manifesti = NIHIL;
-        v = vigilia_creare(piscina, &cfg);
+        cfg.signum         = "abcd";
+        cfg.via_binarii    = NIHIL;
+        cfg.via_manifesti  = NIHIL;
+        v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
         CREDO_VERUM (vigilia_inspicere(v, piscina)
             == VIGILIA_RECENS);
@@ -102,22 +108,24 @@ s32 principale (vacuum)
             == ZEPHYRUM);
     }
 
+
     /* ========================================================
      * II. Vigilia disci: contentum idem renovat tacite; contentum
      * alium figit BINARIUM_NOVIUS (glutinosum)
      * ======================================================== */
+
     {
-        VigiliaConfiguratio cfg;
-        Vigilia* v;
-        character hex[SIGILLUM_HEX_MENSURA];
-        constans character* contentum = "binarium fictum v1";
+        VigiliaConfiguratio  cfg;
+                    Vigilia* v;
+                  character  hex[SIGILLUM_HEX_MENSURA];
+         constans character* contentum = "binarium fictum v1";
 
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
-        cfg.signum = hex;
-        cfg.via_binarii = VIA_BIN;
-        cfg.via_manifesti = NIHIL;
-        v = vigilia_creare(piscina, &cfg);
+        cfg.signum         = hex;
+        cfg.via_binarii    = VIA_BIN;
+        cfg.via_manifesti  = NIHIL;
+        v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
         CREDO_VERUM (vigilia_inspicere(v, piscina)
             == VIGILIA_RECENS);
@@ -149,16 +157,18 @@ s32 principale (vacuum)
             == VIGILIA_BINARIUM_NOVIUS);
     }
 
+
     /* ========================================================
      * III. Vigilia fontium (lex ns): fons post binarium scriptus
      * intra idem secundum detegitur; promotio FONTES ->
      * BINARIUM_NOVIUS cum discus quoque mutatur
      * ======================================================== */
+
     {
-        VigiliaConfiguratio cfg;
-        Vigilia* v;
-        character hex[SIGILLUM_HEX_MENSURA];
-        constans character* contentum = "binarium fictum fontium";
+        VigiliaConfiguratio  cfg;
+                    Vigilia* v;
+                  character  hex[SIGILLUM_HEX_MENSURA];
+         constans character* contentum = "binarium fictum fontium";
 
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
@@ -166,10 +176,10 @@ s32 principale (vacuum)
             "# manifestum probationis\n"
             "\n"
             VIA_FON "\n"));
-        cfg.signum = hex;
-        cfg.via_binarii = VIA_BIN;
-        cfg.via_manifesti = VIA_MAN;
-        v = vigilia_creare(piscina, &cfg);
+        cfg.signum         = hex;
+        cfg.via_binarii    = VIA_BIN;
+        cfg.via_manifesti  = VIA_MAN;
+        v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
 
         /* fons nondum exsistit -> quieta */
@@ -195,24 +205,26 @@ s32 principale (vacuum)
             "binarium in disco novius") != NIHIL);
     }
 
+
     /* ========================================================
      * IV. continet: congruentia suffixi cum limite '/'
      * ======================================================== */
+
     {
-        VigiliaConfiguratio cfg;
-        Vigilia* v;
-        character hex[SIGILLUM_HEX_MENSURA];
-        constans character* contentum = "binarium continet";
+        VigiliaConfiguratio  cfg;
+                    Vigilia* v;
+                  character  hex[SIGILLUM_HEX_MENSURA];
+         constans character* contentum = "binarium continet";
 
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
         CREDO_VERUM (_scribere(VIA_MAN,
             "lib/vigilia_ficta.c\n"
             "gesta/fontes/gesta_fictum.c\n"));
-        cfg.signum = hex;
-        cfg.via_binarii = VIA_BIN;
-        cfg.via_manifesti = VIA_MAN;
-        v = vigilia_creare(piscina, &cfg);
+        cfg.signum         = hex;
+        cfg.via_binarii    = VIA_BIN;
+        cfg.via_manifesti  = VIA_MAN;
+        v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
 
         CREDO_VERUM (vigilia_continet(v,
@@ -227,26 +239,28 @@ s32 principale (vacuum)
         CREDO_VERUM (!vigilia_continet(v, _ch("")));
     }
 
+
     /* ========================================================
      * V. Politica tacendi: agnitio explicita + re-armationes
      * quattuor (numerus/quies/commissio/causa) - horologium
      * iniectum, determinismus sine somnis
      * ======================================================== */
+
     {
-        VigiliaConfiguratio cfg;
-        Vigilia* v;
-        character hex[SIGILLUM_HEX_MENSURA];
-        constans character* contentum = "binarium tacendi";
-        s64 t = (s64)1000;
+        VigiliaConfiguratio  cfg;
+                    Vigilia* v;
+                  character  hex[SIGILLUM_HEX_MENSURA];
+         constans character* contentum  = "binarium tacendi";
+                        s64  t          = (s64)1000;
 
         remove(VIGILIA_VIA_COMMISSI);
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
         CREDO_VERUM (_scribere(VIA_MAN, VIA_FON "\n"));
-        cfg.signum = hex;
-        cfg.via_binarii = VIA_BIN;
-        cfg.via_manifesti = VIA_MAN;
-        v = vigilia_creare(piscina, &cfg);
+        cfg.signum         = hex;
+        cfg.via_binarii    = VIA_BIN;
+        cfg.via_manifesti  = VIA_MAN;
+        v                  = vigilia_creare(piscina, &cfg);
         CREDO_NON_NIHIL (v);
 
         /* recens: nihil tacendum; dicenda NIHIL */

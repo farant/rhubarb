@@ -9,7 +9,7 @@
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_color", CDLVI);
@@ -22,6 +22,7 @@ s32 principale (vacuum)
 
     /* Initiare thema pro palette tests */
     thema_initiare();
+
 
     /* ==================================================
      * Probare color_ex_rgb
@@ -49,6 +50,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.b, CCLV);
     }
 
+
     /* ==================================================
      * Probare color_ex_rgba
      * ================================================== */
@@ -64,6 +66,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.b, LXIV);
         CREDO_AEQUALIS_I32(color.a, XXXII);
     }
+
 
     /* ==================================================
      * Probare color_ex_palette
@@ -88,6 +91,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color.b, CCXXXIV);   /* 0x3A -> 234 */
     }
 
+
     /* ==================================================
      * Probare color_ad_pixelum et color_ex_pixelum (round trip)
      * ================================================== */
@@ -99,9 +103,9 @@ s32 principale (vacuum)
         imprimere("\n--- Probans color_ad_pixelum / color_ex_pixelum ---\n");
 
         /* Create a color, convert to pixel, convert back */
-        color1 = color_ex_rgba(CCLV, CXXVIII, LXIV, CCLV);
-        pixel = color_ad_pixelum(color1);
-        color2 = color_ex_pixelum(pixel);
+        color1  = color_ex_rgba(CCLV, CXXVIII, LXIV, CCLV);
+        pixel   = color_ad_pixelum(color1);
+        color2  = color_ex_pixelum(pixel);
 
         /* Should match after round trip */
         CREDO_AEQUALIS_I32(color2.r, CCLV);
@@ -110,17 +114,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color2.a, CCLV);
 
         /* Test with black */
-        color1 = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
-        pixel = color_ad_pixelum(color1);
-        color2 = color_ex_pixelum(pixel);
+        color1  = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+        pixel   = color_ad_pixelum(color1);
+        color2  = color_ex_pixelum(pixel);
         CREDO_VERUM(color_aequalis(color1, color2));
 
         /* Test with white */
-        color1 = color_ex_rgb(CCLV, CCLV, CCLV);
-        pixel = color_ad_pixelum(color1);
-        color2 = color_ex_pixelum(pixel);
+        color1  = color_ex_rgb(CCLV, CCLV, CCLV);
+        pixel   = color_ad_pixelum(color1);
+        color2  = color_ex_pixelum(pixel);
         CREDO_VERUM(color_aequalis(color1, color2));
     }
+
 
     /* ==================================================
      * Probare color_interpolate
@@ -153,41 +158,43 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(gray.b, CXXVII);
     }
 
+
     /* ==================================================
      * Probare color_ad_cinereum
      * ================================================== */
 
     {
         Color color;
-        i8 gray;
+           i8 gray;
 
         imprimere("\n--- Probans color_ad_cinereum ---\n");
 
         /* Black -> 0 */
-        color = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
-        gray = color_ad_cinereum(color);
+        color  = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+        gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, ZEPHYRUM);
 
         /* White -> 255 */
-        color = color_ex_rgb(CCLV, CCLV, CCLV);
-        gray = color_ad_cinereum(color);
+        color  = color_ex_rgb(CCLV, CCLV, CCLV);
+        gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, CCLV);
 
         /* Red (uses ITU-R BT.601 weights: 30% red) */
-        color = color_ex_rgb(CCLV, ZEPHYRUM, ZEPHYRUM);
-        gray = color_ad_cinereum(color);
+        color  = color_ex_rgb(CCLV, ZEPHYRUM, ZEPHYRUM);
+        gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, LXXVI);  /* 255 * 0.30 ≈ 76 */
 
         /* Green (59% green) */
-        color = color_ex_rgb(ZEPHYRUM, CCLV, ZEPHYRUM);
-        gray = color_ad_cinereum(color);
+        color  = color_ex_rgb(ZEPHYRUM, CCLV, ZEPHYRUM);
+        gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, CL);  /* 255 * 0.59 ≈ 150 */
 
         /* Blue (11% blue) */
-        color = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, CCLV);
-        gray = color_ad_cinereum(color);
+        color  = color_ex_rgb(ZEPHYRUM, ZEPHYRUM, CCLV);
+        gray   = color_ad_cinereum(color);
         CREDO_AEQUALIS_I32(gray, XXVIII);  /* 255 * 0.11 ≈ 28 */
     }
+
 
     /* ==================================================
      * Probare color_aequalis
@@ -210,6 +217,7 @@ s32 principale (vacuum)
         color2 = color_ex_rgba(CCLV, ZEPHYRUM, ZEPHYRUM, CXXVIII);
         CREDO_FALSUM(color_aequalis(color1, color2));
     }
+
 
     /* ==================================================
      * Probare colores praedefinitos
@@ -240,6 +248,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(COLOR_CAERULEUS.b, CCLV);
     }
 
+
     /* ==================================================
      * Probare accessor functions
      * ================================================== */
@@ -255,6 +264,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(color_obtinere_b(color), LXIV);
         CREDO_AEQUALIS_I32(color_obtinere_a(color), XXXII);
     }
+
 
     /* ==================================================
      * Compendium

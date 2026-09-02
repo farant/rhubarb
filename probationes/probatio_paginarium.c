@@ -44,18 +44,18 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
+          PaginariumConfig config;
         PaginariumResultus resultus;
-        chorda             textus;
+                    chorda textus;
 
         imprimere("\n--- Probans textus_vacuus ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = XL;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = XL;
+        config.altitudo  = X;
 
-        textus.datum = NIHIL;
-        textus.mensura = ZEPHYRUM;
+        textus.datum    = NIHIL;
+        textus.mensura  = ZEPHYRUM;
 
         resultus = paginarium_paginare(textus, config, piscina);
 
@@ -68,18 +68,18 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
 
         imprimere("\n--- Probans prosa_simplex ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = L;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = L;
+        config.altitudo  = X;
 
         textus = chorda_ex_literis("Haec est linea simplex.", piscina);
 
@@ -89,7 +89,8 @@ s32 principale (vacuum)
 
         pagina = paginarium_pagina_obtinere(&resultus, ZEPHYRUM);
         CREDO_NON_NIHIL(pagina);
-        CREDO_AEQUALIS_I32(paginarium_pagina_numerus_linearum(pagina), I);
+        CREDO_AEQUALIS_I32(paginarium_pagina_numerus_linearum(pagina),
+            I);
 
         linea = paginarium_linea_obtinere(pagina, ZEPHYRUM);
         CREDO_NON_NIHIL(linea);
@@ -106,21 +107,23 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
 
         imprimere("\n--- Probans prosa_involutio ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = XX;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = XX;
+        config.altitudo  = X;
 
         /* Textus longior quam latitudo - debet involvi */
-        textus = chorda_ex_literis("Haec est linea longa quae debet involvi.", piscina);
+        textus =
+            chorda_ex_literis("Haec est linea longa quae debet involvi.",
+            piscina);
 
         resultus = paginarium_paginare(textus, config, piscina);
 
@@ -148,24 +151,25 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
 
         imprimere("\n--- Probans prosa_newline_singulum ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = L;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = L;
+        config.altitudo  = X;
 
         /* Textus cum newline singulum - debet convertere ad spatium */
         /* Lineae longae ut non detegatur ut versus */
         textus = chorda_ex_literis(
             "Haec est linea prima quae est satis longa ut prosa sit.\n"
-            "Et haec est linea secunda quae etiam est satis longa.", piscina);
+            "Et haec est linea secunda quae etiam est satis longa.",
+            piscina);
 
         resultus = paginarium_paginare(textus, config, piscina);
 
@@ -188,17 +192,17 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
 
         imprimere("\n--- Probans versus_purus ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = L;
-        config.altitudo = XX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = L;
+        config.altitudo  = XX;
 
         /* Versus: lineae breves (< 80% de latitudine) */
         textus = chorda_ex_literis(
@@ -221,7 +225,8 @@ s32 principale (vacuum)
         CREDO_VERUM(linea->modus_versus);
 
         /* Debet habere V lineas (una per versum) */
-        CREDO_AEQUALIS_I32(paginarium_pagina_numerus_linearum(pagina), V);
+        CREDO_AEQUALIS_I32(paginarium_pagina_numerus_linearum(pagina),
+            V);
     }
 
 
@@ -230,19 +235,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        i32                i;
-        i32                numerus_vacuarum;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                       i32  i;
+                       i32  numerus_vacuarum;
 
         imprimere("\n--- Probans paragraph_break ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LX;
-        config.altitudo = XX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LX;
+        config.altitudo  = XX;
 
         /* Duo paragraphi separati per duas newlines */
         /* Lineae longae ut prosa detegatur */
@@ -250,7 +255,8 @@ s32 principale (vacuum)
             "Haec est linea prima paragraphi primi quae est satis longa.\n"
             "Et secunda linea paragraphi primi etiam est satis longa.\n\n"
             "Nunc incipit paragraphus secundus qui etiam habet lineas longas.\n"
-            "Et ultima linea paragraphi secundi est satis longa.", piscina);
+            "Et ultima linea paragraphi secundi est satis longa.",
+            piscina);
 
         resultus = paginarium_paginare(textus, config, piscina);
 
@@ -259,7 +265,8 @@ s32 principale (vacuum)
 
         /* Debet habere lineam vacuam inter paragraphos */
         numerus_vacuarum = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && linea->est_vacua)
@@ -276,20 +283,20 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        i32                i;
-        b32                invenit_prosa;
-        b32                invenit_versus;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                       i32  i;
+                       b32  invenit_prosa;
+                       b32  invenit_versus;
 
         imprimere("\n--- Probans mixed_prosa_versus ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = L;
-        config.altitudo = L;
+        config           = paginarium_config_defectus();
+        config.latitudo  = L;
+        config.altitudo  = L;
 
         /* Prosa, deinde versus, deinde prosa */
         /* Prosa lineae debent esse >= 80% latitudinis (40 chars) */
@@ -302,7 +309,8 @@ s32 principale (vacuum)
             "Est\n"
             "Poesis\n\n"
             "Haec est linea ultima paragraphi quae est satis longa.\n"
-            "Et alia linea ultima paragraphi quae etiam est longa.", piscina);
+            "Et alia linea ultima paragraphi quae etiam est longa.",
+            piscina);
 
         resultus = paginarium_paginare(textus, config, piscina);
 
@@ -310,10 +318,11 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(pagina);
 
         /* Verificare quod habemus et prosa et versus */
-        invenit_prosa = FALSUM;
-        invenit_versus = FALSUM;
+        invenit_prosa   = FALSUM;
+        invenit_versus  = FALSUM;
 
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
@@ -339,16 +348,16 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        chorda             textus;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+                    chorda  textus;
 
         imprimere("\n--- Probans multiplex_paginas ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = XX;
-        config.altitudo = III;  /* Tres lineae per paginam */
+        config           = paginarium_config_defectus();
+        config.latitudo  = XX;
+        config.altitudo  = III;  /* Tres lineae per paginam */
 
         /* Textus quod excedit unam paginam */
         textus = chorda_ex_literis(
@@ -366,12 +375,14 @@ s32 principale (vacuum)
         /* Verificare primam paginam */
         pagina = paginarium_pagina_obtinere(&resultus, ZEPHYRUM);
         CREDO_NON_NIHIL(pagina);
-        CREDO_VERUM(paginarium_pagina_numerus_linearum(pagina) <= config.altitudo);
+        CREDO_VERUM(paginarium_pagina_numerus_linearum(pagina)
+            <= config.altitudo);
 
         /* Verificare secundam paginam */
         pagina = paginarium_pagina_obtinere(&resultus, I);
         CREDO_NON_NIHIL(pagina);
-        CREDO_VERUM(paginarium_pagina_numerus_linearum(pagina) <= config.altitudo);
+        CREDO_VERUM(paginarium_pagina_numerus_linearum(pagina)
+            <= config.altitudo);
     }
 
 
@@ -380,19 +391,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        chorda             speratus;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                    chorda  speratus;
 
         imprimere("\n--- Probans linea_reddere_versus ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = L;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = L;
+        config.altitudo  = X;
 
         /* Versus simplex */
         textus = chorda_ex_literis(
@@ -409,8 +420,8 @@ s32 principale (vacuum)
         linea = paginarium_linea_obtinere(pagina, ZEPHYRUM);
         CREDO_NON_NIHIL(linea);
 
-        reddita = paginarium_linea_reddere(textus, linea, piscina);
-        speratus = chorda_ex_literis("Rosa", piscina);
+        reddita   = paginarium_linea_reddere(textus, linea, piscina);
+        speratus  = chorda_ex_literis("Rosa", piscina);
         CREDO_CHORDA_AEQUALIS(reddita, speratus);
     }
 
@@ -420,19 +431,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
 
         imprimere("\n--- Probans linea_vacua_reddere ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LX;
-        config.altitudo = X;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LX;
+        config.altitudo  = X;
 
         /* Lineae longae ut prosa detegatur */
         textus = chorda_ex_literis(
@@ -447,12 +458,14 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(pagina);
 
         /* Invenire lineam vacuam */
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 /* Linea vacua debet reddere chordam vacuam */
                 CREDO_AEQUALIS_I32(reddita.mensura, ZEPHYRUM);
                 frange;
@@ -466,11 +479,11 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
 
         imprimere("\n--- Probans index_invalidus ---\n");
 
@@ -497,19 +510,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
 
         imprimere("\n--- Probans versus_word_wrap ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = XV;  /* Latitudo parva */
-        config.altitudo = XX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = XV;  /* Latitudo parva */
+        config.altitudo  = XX;
 
         /* Versus cum linea longa quae excedit latitudinem */
         textus = chorda_ex_literis(
@@ -523,12 +536,14 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(pagina);
 
         /* Verificare quod omnes lineae non excedunt latitudinem */
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 CREDO_VERUM(reddita.mensura <= config.latitudo);
             }
         }
@@ -540,19 +555,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
 
         imprimere("\n--- Probans pindar_textus ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LX;   /* 60 characteres - realisticus pro widget */
-        config.altitudo = XXX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LX;   /* 60 characteres - realisticus pro widget */
+        config.altitudo  = XXX;
 
         /* Exemplum ex Pindar: titulus + introductio prosa
          * Titulus: lineae breves (versus modus)
@@ -582,17 +597,21 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL(pagina);
 
         /* Imprimere lineas pro depuratione */
-        imprimere("  Numerus linearum: %d\n", paginarium_pagina_numerus_linearum(pagina));
+        imprimere("  Numerus linearum: %d\n",
+            paginarium_pagina_numerus_linearum(pagina));
 
-        per (i = 0; i < paginarium_pagina_numerus_linearum(pagina) && i < XX; i++)
+        per (i = 0; i < paginarium_pagina_numerus_linearum(pagina)
+            && i < XX; i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 si (linea->est_vacua)
                 {
-                    imprimere("  [%d] <vacua> versus=%d\n", i, linea->modus_versus);
+                    imprimere("  [%d] <vacua> versus=%d\n", i,
+                        linea->modus_versus);
                 }
                 alioquin
                 {
@@ -610,7 +629,8 @@ s32 principale (vacuum)
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 CREDO_VERUM(reddita.mensura <= config.latitudo);
             }
         }
@@ -622,19 +642,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        i32                i;
-        i32                numerus_vacuarum;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                       i32  i;
+                       i32  numerus_vacuarum;
 
         imprimere("\n--- Probans tres_newlines ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LX;
-        config.altitudo = XX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LX;
+        config.altitudo  = XX;
 
         /* Tres newlines debent collapsare ad unam lineam vacuam */
         /* Lineae longae ut prosa detegatur */
@@ -651,7 +671,8 @@ s32 principale (vacuum)
 
         /* Numerare lineas vacuas - debet esse una */
         numerus_vacuarum = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && linea->est_vacua)
@@ -668,20 +689,20 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
-        i32                num_lineae;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
+                       i32  num_lineae;
 
         imprimere("\n--- Probans pindar_plenum_67 ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LXVII;   /* 67 characteres */
-        config.altitudo = LX;      /* 60 lineae - omnia in una pagina */
+        config           = paginarium_config_defectus();
+        config.latitudo  = LXVII;   /* 67 characteres */
+        config.altitudo  = LX;      /* 60 lineae - omnia in una pagina */
 
         /* Structura vera: tituli + poesia + INTRODUCTION + prosa */
         textus = chorda_ex_literis(
@@ -731,7 +752,8 @@ s32 principale (vacuum)
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 si (linea->est_vacua)
                 {
                     imprimere("  [%d] <vacua>\n", i);
@@ -753,14 +775,15 @@ s32 principale (vacuum)
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 si (reddita.mensura >= VIII)
                 {
                     /* Comparare primos VIII characteres */
-                    si (reddita.datum[0] == 'P' &&
-                        reddita.datum[1] == 'r' &&
-                        reddita.datum[2] == 'o' &&
-                        reddita.datum[3] == 'b')
+                    si (   reddita.datum[0] == 'P'
+                        && reddita.datum[1] == 'r'
+                        && reddita.datum[2] == 'o'
+                        && reddita.datum[3] == 'b')
                     {
                         imprimere("  -> Prosa incipit [%d] versus=%d\n",
                             i, linea->modus_versus);
@@ -777,19 +800,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
 
         imprimere("\n--- Probans prosa_gutenberg_67 ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LXVII;   /* 67 characteres - exacte ut widget */
-        config.altitudo = XXX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LXVII;   /* 67 characteres - exacte ut widget */
+        config.altitudo  = XXX;
 
         /* Prosa pura sine titulis - debet esse prosa modus */
         /* Lineae Gutenberg sunt ~70 characteres, > 80% de 67 = 53.6 */
@@ -811,14 +834,16 @@ s32 principale (vacuum)
         /* Imprimere lineas */
         imprimere("  Config: latitudo=%d, limina_versus=%d%%\n",
             config.latitudo, config.limina_versus);
-        imprimere("  Numerus linearum: %d\n", paginarium_pagina_numerus_linearum(pagina));
+        imprimere("  Numerus linearum: %d\n",
+            paginarium_pagina_numerus_linearum(pagina));
 
         per (i = 0; i < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 imprimere("  [%d] len=%d versus=%d: \"%.*s\"\n",
                     i, reddita.mensura, linea->modus_versus,
                     reddita.mensura, reddita.datum);
@@ -836,7 +861,8 @@ s32 principale (vacuum)
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 /* Si linea est "Pindar" solum, est problema */
                 si (reddita.mensura == VI)
                 {
@@ -854,19 +880,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        chorda             reddita;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                    chorda  reddita;
+                       i32  i;
 
         imprimere("\n--- Probans crlf_line_endings ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LXVII;
-        config.altitudo = XXX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LXVII;
+        config.altitudo  = XXX;
 
         /* CRLF line endings - prosa cum \r\n */
         textus = chorda_ex_literis(
@@ -880,14 +906,16 @@ s32 principale (vacuum)
         pagina = paginarium_pagina_obtinere(&resultus, ZEPHYRUM);
         CREDO_NON_NIHIL(pagina);
 
-        imprimere("  Numerus linearum: %d\n", paginarium_pagina_numerus_linearum(pagina));
+        imprimere("  Numerus linearum: %d\n",
+            paginarium_pagina_numerus_linearum(pagina));
 
         per (i = 0; i < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea && !linea->est_vacua)
             {
-                reddita = paginarium_linea_reddere(textus, linea, piscina);
+                reddita = paginarium_linea_reddere(textus, linea,
+                    piscina);
                 imprimere("  [%d] len=%d v=%d: \"%.*s\"\n",
                     i, reddita.mensura, linea->modus_versus,
                     reddita.mensura > XLV ? XLV : reddita.mensura,
@@ -907,19 +935,19 @@ s32 principale (vacuum)
      * ================================================== */
 
     {
-        PaginariumConfig   config;
-        PaginariumResultus resultus;
-        PaginariumPagina*  pagina;
-        PaginariumLinea*   linea;
-        chorda             textus;
-        i32                numerus_vacuarum;
-        i32                i;
+          PaginariumConfig  config;
+        PaginariumResultus  resultus;
+          PaginariumPagina* pagina;
+           PaginariumLinea* linea;
+                    chorda  textus;
+                       i32  numerus_vacuarum;
+                       i32  i;
 
         imprimere("\n--- Probans crlf_paragraph_break ---\n");
 
-        config = paginarium_config_defectus();
-        config.latitudo = LXVII;
-        config.altitudo = XXX;
+        config           = paginarium_config_defectus();
+        config.latitudo  = LXVII;
+        config.altitudo  = XXX;
 
         /* CRLF paragraph break: \r\n\r\n */
         textus = chorda_ex_literis(
@@ -932,11 +960,13 @@ s32 principale (vacuum)
         pagina = paginarium_pagina_obtinere(&resultus, ZEPHYRUM);
         CREDO_NON_NIHIL(pagina);
 
-        imprimere("  Numerus linearum: %d\n", paginarium_pagina_numerus_linearum(pagina));
+        imprimere("  Numerus linearum: %d\n",
+            paginarium_pagina_numerus_linearum(pagina));
 
         /* Numerare lineas vacuas - debet esse una */
         numerus_vacuarum = ZEPHYRUM;
-        per (i = ZEPHYRUM; i < paginarium_pagina_numerus_linearum(pagina); i++)
+        per (i = ZEPHYRUM; i
+            < paginarium_pagina_numerus_linearum(pagina); i++)
         {
             linea = paginarium_linea_obtinere(pagina, i);
             si (linea)
@@ -948,9 +978,11 @@ s32 principale (vacuum)
                 }
                 alioquin
                 {
-                    chorda reddita = paginarium_linea_reddere(textus, linea, piscina);
+                    chorda reddita = paginarium_linea_reddere(textus,
+                        linea, piscina);
                     imprimere("  [%d] len=%d: \"%.*s\"\n",
-                        i, reddita.mensura, reddita.mensura, reddita.datum);
+                        i, reddita.mensura, reddita.mensura,
+                        reddita.datum);
                 }
             }
         }

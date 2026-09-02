@@ -10,13 +10,16 @@
 interior Piscina* arena = NIHIL;
 
 interior IndexLibri
-_legere (constans character* textus)
+_legere (
+    constans character* textus)
 {
     redde capitula_legere(chorda_ex_literis(textus, arena), arena);
 }
 
 interior Capitulum*
-_capitulum (IndexLibri idx, i32 positio)
+_capitulum (
+    IndexLibri idx,
+           i32 positio)
 {
     redde (Capitulum*)xar_obtinere(idx.capitula, positio);
 }
@@ -33,9 +36,11 @@ s32 principale (vacuum)
     }
     credo_aperire(arena);
 
+
     /* ========================================================
      * PROBARE: index planus, nullae inscriptiones
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "Prooemium\n"
@@ -47,7 +52,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), III);
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, ZEPHYRUM);
 
-        CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx, ZEPHYRUM)->titulus,
+        CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx,
+            ZEPHYRUM)->titulus,
             "Prooemium");
         CREDO_CHORDA_VACUA (_capitulum(idx, ZEPHYRUM)->inscriptio);
         CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->ordo, I);
@@ -58,9 +64,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_capitulum(idx, II)->ordo, III);
     }
 
+
     /* ========================================================
      * PROBARE: forma <inscriptio> <separator> <titulus>
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "1 - De methodo\n"
@@ -94,9 +102,11 @@ s32 principale (vacuum)
             "Tabulae");
     }
 
+
     /* ========================================================
      * PROBARE: forma <signum><punctum> <titulus>
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "1. De methodo\n"
@@ -129,11 +139,13 @@ s32 principale (vacuum)
             "I.4");
     }
 
+
     /* ========================================================
      * PROBARE: DECIPULA SUBTITULI - separator qui inscriptionem
      * NON facit. Regula lata hic "The Long Road" ut indicem
      * scriberet, et ancora MENTIENS nasceretur.
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "The Long Road - and What Came After\n"
@@ -145,7 +157,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), III);
 
         CREDO_CHORDA_VACUA (_capitulum(idx, ZEPHYRUM)->inscriptio);
-        CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx, ZEPHYRUM)->titulus,
+        CREDO_CHORDA_AEQUALIS_LITERIS (_capitulum(idx,
+            ZEPHYRUM)->titulus,
             "The Long Road - and What Came After");
 
         CREDO_CHORDA_VACUA (_capitulum(idx, I)->inscriptio);
@@ -159,9 +172,11 @@ s32 principale (vacuum)
             "I");
     }
 
+
     /* ========================================================
      * PROBARE: nidificatio - duo spatia, quattuor, tabulus
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "Pars I\n"
@@ -176,7 +191,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(idx.capitula), VI);
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, I);
 
-        CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->gradus, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->gradus,
+            ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_capitulum(idx, I)->gradus, I);
         CREDO_AEQUALIS_I32 (_capitulum(idx, II)->gradus, I);
 
@@ -193,9 +209,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_capitulum(idx, V)->ordo, VI);
     }
 
+
     /* ========================================================
      * PROBARE: nidificatio profunda + egressus partialis
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "A\n"
@@ -206,7 +224,8 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans egressum partialem ---\n");
 
-        CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->gradus, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_capitulum(idx, ZEPHYRUM)->gradus,
+            ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_capitulum(idx, I)->gradus, I);
         CREDO_AEQUALIS_I32 (_capitulum(idx, II)->gradus, II);
         CREDO_AEQUALIS_I32 (_capitulum(idx, III)->gradus, I);
@@ -214,13 +233,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (idx.gradus_maximus, II);
     }
 
+
     /* ========================================================
      * PROBARE: fines linearum omnium generum
      * ======================================================== */
+
     {
-        IndexLibri crlf = _legere("Unum\r\nDuo\r\nTria");
-        IndexLibri cr   = _legere("Unum\rDuo\rTria");
-        IndexLibri sine = _legere("Unum\nDuo\nTria");
+        IndexLibri crlf  = _legere("Unum\r\nDuo\r\nTria");
+        IndexLibri cr    = _legere("Unum\rDuo\rTria");
+        IndexLibri sine  = _legere("Unum\nDuo\nTria");
 
         imprimere("\n--- Probans fines linearum ---\n");
 
@@ -235,9 +256,11 @@ s32 principale (vacuum)
             "Tria");
     }
 
+
     /* ========================================================
      * PROBARE: lineae vacuae et albae
      * ======================================================== */
+
     {
         IndexLibri idx = _legere(
             "Unum\n"
@@ -263,9 +286,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_capitulum(idx, I)->linea, V);
     }
 
+
     /* ========================================================
      * PROBARE: casus limitis
      * ======================================================== */
+
     {
         IndexLibri vacuus  = _legere("");
         IndexLibri albus   = _legere("\n\n   \n");
@@ -291,6 +316,7 @@ s32 principale (vacuum)
             _capitulum(longa, ZEPHYRUM)->titulus,
             "Praefatio ad editionem tertiam - De consilio");
     }
+
 
     /* ========================================================
      * Compendium

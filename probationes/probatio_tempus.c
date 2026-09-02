@@ -16,22 +16,22 @@ int
 main (
     void)
 {
-                 Piscina* piscina;
-    FenestraConfiguratio  configuratio;
-                Fenestra* fenestra;
-         TabulaPixelorum* tabula;
-      ContextusDelineandi* ctx;
-                 Eventus  eventus;
-                     b32  currens;
-                  chorda  textus;
-                     f32  tempus_currens;
-       StatisticaeQuadri* statisticae;
-                     i32  i;
-                     i32  x;
-                     i32  y;
-                     s32  radius;
-                   Color  color;
-                    character buffer_textus[LXIV];
+                      Piscina* piscina;
+         FenestraConfiguratio  configuratio;
+                     Fenestra* fenestra;
+              TabulaPixelorum* tabula;
+          ContextusDelineandi* ctx;
+                      Eventus  eventus;
+                          b32  currens;
+                       chorda  textus;
+                          f32  tempus_currens;
+            StatisticaeQuadri* statisticae;
+                          i32  i;
+                          i32  x;
+                          i32  y;
+                          s32  radius;
+                        Color  color;
+                    character  buffer_textus[LXIV];
 
     /* Creare piscinam */
     piscina = piscina_generare_dynamicum("tempus", M * M);
@@ -46,12 +46,12 @@ main (
     tempus_ponere_quadra_destinata(60.0);
 
     /* Configurare fenestram */
-    configuratio.titulus  = "Probatio Tempus";
-    configuratio.x        = C;
-    configuratio.y        = C;
-    configuratio.latitudo = DCCC;
-    configuratio.altitudo = DC;
-    configuratio.vexilla  = FENESTRA_ORDINARIA;
+    configuratio.titulus   = "Probatio Tempus";
+    configuratio.x         = C;
+    configuratio.y         = C;
+    configuratio.latitudo  = DCCC;
+    configuratio.altitudo  = DC;
+    configuratio.vexilla   = FENESTRA_ORDINARIA;
 
     /* Creare fenestram */
     fenestra = fenestra_creare(piscina, &configuratio);
@@ -63,7 +63,8 @@ main (
     }
 
     /* Creare tabulam pixelorum */
-    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra, CDLXXX);
+    tabula = fenestra_creare_tabulam_pixelorum(piscina, fenestra,
+        CDLXXX);
     si (tabula == NIHIL)
     {
         imprimere("Errore: non possum creare tabulam pixelorum\n");
@@ -118,8 +119,8 @@ main (
 
         /* Actualizare tempus */
         tempus_quadrum();
-        tempus_currens = (f32)tempus_nunc();
-        statisticae = tempus_obtinere_statisticas();
+        tempus_currens  = (f32)tempus_nunc();
+        statisticae     = tempus_obtinere_statisticas();
 
         /* Purgare tabulam pixelorum */
         delineare_vacare(ctx, color_ex_rgb((i8)XX, (i8)XX, (i8)XXX));
@@ -127,7 +128,8 @@ main (
         /* Delineare titulum */
         textus = chorda_ex_literis("PROBATIO TEMPUS", piscina);
         tabula_pixelorum_pingere_chordam_scalatam(tabula, X, X, textus,
-            color_ad_pixelum(color_ex_rgb((i8)CCXXXVIII, (i8)CCXXXVIII, (i8)CCLV)), II);
+            color_ad_pixelum(color_ex_rgb((i8)CCXXXVIII, (i8)CCXXXVIII,
+            (i8)CCLV)), II);
 
         /* Delineare FPS */
         sprintf(buffer_textus, "FPS: %.1f (avg: %.1f)",
@@ -145,20 +147,22 @@ main (
             f32 t;
             i32 base_y;
 
-            phase = tempus_currens + (f32)i * 0.3f;
-            t = oscillare(phase * 0.8f, 1.0f);
+            phase  = tempus_currens + (f32)i * 0.3f;
+            t      = oscillare(phase * 0.8f, 1.0f);
 
             /* Usare lenitionem resilientem pro effectu pilae resilientis */
             base_y = CCC - (i32)(lenire_resiliens_egressus(t) * C);
 
-            x = L + i * C;
-            y = base_y;
-            radius = XV;
+            x       = L + i * C;
+            y       = base_y;
+            radius  = XV;
 
             /* Color diversus pro quaque pila */
-            color = color_ex_rgb((i8)(C + i * XXX), (i8)(CC - i * XX), (i8)(CL + i * XX));
+            color = color_ex_rgb((i8)(C + i * XXX), (i8)(CC - i * XX),
+                (i8)(CL + i * XX));
             delineare_circulum_plenum(ctx, x, y, radius, color);
-            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
+            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV,
+                (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio II: Undae Sinusoidales - Circuli Oscillantes */
@@ -167,14 +171,17 @@ main (
             f32 offset_x;
             f32 offset_y;
 
-            offset_x = unda_sinus(tempus_currens + (f32)i * 0.5f, 0.5f, 30.0f);
-            offset_y = unda_sinus(tempus_currens + (f32)i * 0.7f, 0.3f, 20.0f);
+            offset_x = unda_sinus(tempus_currens + (f32)i * 0.5f, 0.5f,
+                30.0f);
+            offset_y = unda_sinus(tempus_currens + (f32)i * 0.7f, 0.3f,
+                20.0f);
 
-            x = CD + i * LX + (i32)offset_x;
-            y = CL + (i32)offset_y;
-            radius = (s32)(X + i * III);
+            x       = CD + i * LX + (i32)offset_x;
+            y       = CL + (i32)offset_y;
+            radius  = (s32)(X + i * III);
 
-            color = color_ex_rgb((i8)(CCLV - i * XL), (i8)(C + i * L), (i8)(CCLV - i * XXX));
+            color = color_ex_rgb((i8)(CCLV - i * XL), (i8)(C + i * L),
+                (i8)(CCLV - i * XXX));
             delineare_circulum_plenum(ctx, x, y, radius, color);
         }
 
@@ -198,32 +205,41 @@ main (
             i32 elasticus_y;
 
             elasticus_t = oscillare(tempus_currens * 0.5f, 1.0f);
-            elasticus_y = CC + (i32)(lenire_elasticus_egressus(elasticus_t) * L);
+            elasticus_y = CC
+                + (i32)(lenire_elasticus_egressus(elasticus_t) * L);
 
-            x = C;
-            y = elasticus_y;
-            radius = XX;
+            x       = C;
+            y       = elasticus_y;
+            radius  = XX;
 
-            delineare_circulum_plenum(ctx, x, y, radius, color_ex_rgb((i8)C, (i8)CCLV, (i8)CCLV));
-            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
+            delineare_circulum_plenum(ctx, x, y, radius,
+                color_ex_rgb((i8)C, (i8)CCLV, (i8)CCLV));
+            delineare_circulum(ctx, x, y, radius, color_ex_rgb((i8)CCLV,
+                (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio V: Interpolatio Coloris - Transitus Coloris */
         {
-            f32 color_t;
+              f32 color_t;
             Color color_interpolatus;
             Color color_initialis;
             Color color_finalis;
-            i32 t_scaled;
+              i32 t_scaled;
 
-            color_t = (unda_sinus(tempus_currens, 0.5f, 1.0f) + 1.0f) / 2.0f;
-            color_initialis = color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM, (i8)ZEPHYRUM);
-            color_finalis = color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM, (i8)CCLV);
+            color_t = (unda_sinus(tempus_currens, 0.5f, 1.0f) + 1.0f)
+                / 2.0f;
+            color_initialis = color_ex_rgb((i8)CCLV, (i8)ZEPHYRUM,
+                (i8)ZEPHYRUM);
+            color_finalis = color_ex_rgb((i8)ZEPHYRUM, (i8)ZEPHYRUM,
+                (i8)CCLV);
             t_scaled = (i32)(color_t * 256.0f);
-            color_interpolatus = color_interpolate(color_initialis, color_finalis, t_scaled);
+            color_interpolatus = color_interpolate(color_initialis,
+                color_finalis, t_scaled);
 
-            delineare_rectangulum_plenum(ctx, DC, CCC, LX, XL, color_interpolatus);
-            delineare_rectangulum(ctx, DC, CCC, LX, XL, color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
+            delineare_rectangulum_plenum(ctx, DC, CCC, LX, XL,
+                color_interpolatus);
+            delineare_rectangulum(ctx, DC, CCC, LX, XL,
+                color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)CCLV));
         }
 
         /* Sectio VI: Linea Rotans - Interpolatio Anguli */
@@ -236,16 +252,17 @@ main (
             i32 x2;
             i32 y2;
 
-            angulus = tempus_currens * 2.0f;
-            centrum_x = DCCL;
-            centrum_y = C;
+            angulus    = tempus_currens * 2.0f;
+            centrum_x  = DCCL;
+            centrum_y  = C;
 
             x1 = centrum_x + (i32)(cos(angulus) * XL);
             y1 = centrum_y + (i32)(sin(angulus) * XL);
             x2 = centrum_x - (i32)(cos(angulus) * XL);
             y2 = centrum_y - (i32)(sin(angulus) * XL);
 
-            delineare_lineam(ctx, x1, y1, x2, y2, color_ex_rgb((i8)CCLV, (i8)CC, (i8)ZEPHYRUM));
+            delineare_lineam(ctx, x1, y1, x2, y2, color_ex_rgb((i8)CCLV,
+                (i8)CC, (i8)ZEPHYRUM));
             delineare_circulum_plenum(ctx, centrum_x, centrum_y, V,
                 color_ex_rgb((i8)CCLV, (i8)CCLV, (i8)ZEPHYRUM));
         }
@@ -254,18 +271,21 @@ main (
         {
             f32 dens_x;
 
-            dens_x = unda_dens_serrae(tempus_currens, 0.4f, 60.0f);
-            x = DCCL + (i32)dens_x;
-            y = CC;
+            dens_x  = unda_dens_serrae(tempus_currens, 0.4f, 60.0f);
+            x       = DCCL + (i32)dens_x;
+            y       = CC;
 
-            delineare_triangulum_plenum(ctx, x, y - XX, x - XV, y + XV, x + XV, y + XV,
+            delineare_triangulum_plenum(ctx, x, y - XX, x - XV, y + XV,
+                x + XV, y + XV,
                 color_ex_rgb((i8)ZEPHYRUM, (i8)CCLV, (i8)ZEPHYRUM));
         }
 
         /* Delineare instructiones */
-        textus = chorda_ex_literis("Premere EFFUGIUM ut claudas", piscina);
+        textus = chorda_ex_literis("Premere EFFUGIUM ut claudas",
+            piscina);
         tabula_pixelorum_pingere_chordam(tabula, X, CDLX, textus,
-            color_ad_pixelum(color_ex_rgb((i8)CLXXX, (i8)CLXXX, (i8)CLXXX)));
+            color_ad_pixelum(color_ex_rgb((i8)CLXXX, (i8)CLXXX,
+            (i8)CLXXX)));
 
         /* Descriptiones effectuum */
         textus = chorda_ex_literis("Resiliens", piscina);

@@ -17,23 +17,27 @@
 #define DIARIUM "/tmp/probatio_mensura_diarium.tsv"
 
 interior Mensura
-_mensura_ficta (Piscina* piscina, constans character* titulus, duplex valor)
+_mensura_ficta (
+               Piscina* piscina,
+    constans character* titulus,
+                duplex  valor)
 {
     Mensura m;
 
-    m.sessio   = chorda_ex_literis("019a3f2b1c00", piscina);
-    m.id       = chorda_ex_literis("019a3f2b1c00-1f4-3", piscina);
-    m.parens   = chorda_ex_literis("019a3f2b1c00-1f4-1", piscina);
-    m.titulus  = chorda_ex_literis(titulus, piscina);
-    m.valor    = valor;
-    m.unitas   = chorda_ex_literis("secunda", piscina);
-    m.momentum = (s64)1755100000000;
+    m.sessio    = chorda_ex_literis("019a3f2b1c00", piscina);
+    m.id        = chorda_ex_literis("019a3f2b1c00-1f4-3", piscina);
+    m.parens    = chorda_ex_literis("019a3f2b1c00-1f4-1", piscina);
+    m.titulus   = chorda_ex_literis(titulus, piscina);
+    m.valor     = valor;
+    m.unitas    = chorda_ex_literis("secunda", piscina);
+    m.momentum  = (s64)1755100000000;
 
     redde m;
 }
 
 interior i32
-_lineas_numerare (constans character* via)
+_lineas_numerare (
+    constans character* via)
 {
     FILE* f;
     i32   numerus;
@@ -60,7 +64,7 @@ _lineas_numerare (constans character* via)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_mensura", M * M);
@@ -73,6 +77,7 @@ s32 principale (vacuum)
 
     remove(DIARIUM);
 
+
     /* ========================================================
      * I. Circuitus formae: nihil perit
      * ======================================================== */
@@ -80,9 +85,10 @@ s32 principale (vacuum)
     imprimere("\n--- I. Circuitus lineae ---\n");
     {
         Mensura fons, reducta;
-        chorda  linea;
+        chorda linea;
 
-        fons  = _mensura_ficta(piscina, "compilatio.lib/chorda.c", 1.234567);
+        fons = _mensura_ficta(piscina, "compilatio.lib/chorda.c",
+            1.234567);
         linea = mensura_ad_lineam(&fons, piscina);
 
         CREDO_MAIOR_I32(linea.mensura, ZEPHYRUM);
@@ -97,6 +103,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S64(reducta.momentum, fons.momentum);
     }
 
+
     /* ========================================================
      * II. Parens vacuus (radix) circuitum superest
      * ======================================================== */
@@ -104,16 +111,17 @@ s32 principale (vacuum)
     imprimere("\n--- II. Radix (parens vacuus) ---\n");
     {
         Mensura fons, reducta;
-        chorda  linea;
+        chorda linea;
 
-        fons        = _mensura_ficta(piscina, "aedificatio", 42.0);
-        fons.parens = chorda_ex_literis("", piscina);
+        fons         = _mensura_ficta(piscina, "aedificatio", 42.0);
+        fons.parens  = chorda_ex_literis("", piscina);
 
         linea = mensura_ad_lineam(&fons, piscina);
         CREDO_VERUM(mensura_ex_linea(linea, &reducta, piscina));
         CREDO_AEQUALIS_I32(reducta.parens.mensura, ZEPHYRUM);
         CREDO_VERUM(chorda_aequalis(reducta.titulus, fons.titulus));
     }
+
 
     /* ========================================================
      * III. Campus separatorem continens RECUSATUR
@@ -125,11 +133,11 @@ s32 principale (vacuum)
     imprimere("\n--- III. Separator in campo ---\n");
     {
         Mensura fons;
-        chorda  linea;
+         chorda linea;
 
-        fons         = _mensura_ficta(piscina, "bonus", 1.0);
-        fons.titulus = chorda_ex_literis("malus\ttitulus", piscina);
-        linea        = mensura_ad_lineam(&fons, piscina);
+        fons          = _mensura_ficta(piscina, "bonus", 1.0);
+        fons.titulus  = chorda_ex_literis("malus\ttitulus", piscina);
+        linea         = mensura_ad_lineam(&fons, piscina);
         CREDO_AEQUALIS_I32(linea.mensura, ZEPHYRUM);
 
         fons         = _mensura_ficta(piscina, "bonus", 1.0);
@@ -137,6 +145,7 @@ s32 principale (vacuum)
         linea        = mensura_ad_lineam(&fons, piscina);
         CREDO_AEQUALIS_I32(linea.mensura, ZEPHYRUM);
     }
+
 
     /* ========================================================
      * IV. Lineae malformatae RECUSANTUR
@@ -150,13 +159,15 @@ s32 principale (vacuum)
             chorda_ex_literis("a\tb\tc", piscina), &reducta, piscina));
 
         CREDO_FALSUM(mensura_ex_linea(
-            chorda_ex_literis("a\tb\tc\td\tNONNUMERUS\tf\t123", piscina),
+            chorda_ex_literis("a\tb\tc\td\tNONNUMERUS\tf\t123",
+            piscina),
             &reducta, piscina));
 
         CREDO_FALSUM(mensura_ex_linea(
             chorda_ex_literis("a\tb\tc\td\t1.5\tf\tg\th", piscina),
             &reducta, piscina));
     }
+
 
     /* ========================================================
      * V. Claves unicae
@@ -169,15 +180,16 @@ s32 principale (vacuum)
     {
         chorda id_a, id_b, sessio;
 
-        id_a   = mensura_id_novum(piscina);
-        id_b   = mensura_id_novum(piscina);
-        sessio = mensura_sessionem_novam(piscina);
+        id_a    = mensura_id_novum(piscina);
+        id_b    = mensura_id_novum(piscina);
+        sessio  = mensura_sessionem_novam(piscina);
 
         CREDO_MAIOR_I32(id_a.mensura, ZEPHYRUM);
         CREDO_MAIOR_I32(sessio.mensura, ZEPHYRUM);
         CREDO_FALSUM(chorda_aequalis(id_a, id_b));
         CREDO_VERUM(mensura_momentum_nunc() > (s64)1700000000000);
     }
+
 
     /* ========================================================
      * VI. Diarium APPENDIT (non superscribit)
@@ -187,8 +199,8 @@ s32 principale (vacuum)
     {
         Mensura prima, altera;
 
-        prima  = _mensura_ficta(piscina, "unum", 1.0);
-        altera = _mensura_ficta(piscina, "duo", 2.0);
+        prima   = _mensura_ficta(piscina, "unum", 1.0);
+        altera  = _mensura_ficta(piscina, "duo", 2.0);
 
         CREDO_VERUM(mensura_annotare(DIARIUM, &prima, piscina));
         CREDO_AEQUALIS_I32(_lineas_numerare(DIARIUM), (i32)I);
@@ -201,14 +213,15 @@ s32 principale (vacuum)
                                       &prima, piscina));
     }
 
+
     /* ========================================================
      * VII. Conditio in volumen + truncatio
      * ======================================================== */
 
     imprimere("\n--- VII. Conditio ---\n");
     {
-        Volumen*       vol;
-        MensuraFructus fructus;
+               Volumen* vol;
+        MensuraFructus  fructus;
 
         vol = volumen_temporarium(piscina, "probatio_mensura");
         CREDO_NON_NIHIL(vol);
@@ -229,15 +242,16 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * VIII. Lineae malformatae NUMERANTUR, non silentur
      * ======================================================== */
 
     imprimere("\n--- VIII. Malformatae numerantur ---\n");
     {
-        Volumen*       vol;
-        MensuraFructus fructus;
-        Mensura        bona;
+               Volumen* vol;
+        MensuraFructus  fructus;
+               Mensura  bona;
         FILE*          f;
 
         remove(DIARIUM);
@@ -267,6 +281,7 @@ s32 principale (vacuum)
 
         remove(DIARIUM);
     }
+
 
     /* ========================================================
      * Compendium

@@ -15,7 +15,8 @@
 #include <string.h>
 
 interior b32
-_omnes_hex (chorda c)
+_omnes_hex (
+    chorda c)
 {
     i32 i;
 
@@ -39,7 +40,7 @@ _omnes_hex (chorda c)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_machina", M * LXIV);
@@ -49,6 +50,7 @@ s32 principale (vacuum)
         redde I;
     }
     credo_aperire(piscina);
+
 
     /* ========================================================
      * I. Nucleus purus: fontes DIVERSI, identitates DIVERSAE
@@ -62,9 +64,9 @@ s32 principale (vacuum)
         fons_a = chorda_ex_literis("machina-alpha", piscina);
         fons_b = chorda_ex_literis("machina-beta", piscina);
 
-        id_a        = machina_identitas_ex_fonte(fons_a, piscina);
-        id_b        = machina_identitas_ex_fonte(fons_b, piscina);
-        id_a_iterum = machina_identitas_ex_fonte(fons_a, piscina);
+        id_a         = machina_identitas_ex_fonte(fons_a, piscina);
+        id_b         = machina_identitas_ex_fonte(fons_b, piscina);
+        id_a_iterum  = machina_identitas_ex_fonte(fons_a, piscina);
 
         /* HAEC probatio constantem deprehendit - nulla alia potest */
         CREDO_FALSUM(chorda_aequalis(id_a, id_b));
@@ -76,18 +78,21 @@ s32 principale (vacuum)
         CREDO_FALSUM(chorda_aequalis(id_a, fons_a));
 
         /* Forma */
-        CREDO_AEQUALIS_I32(id_a.mensura, (i32)MACHINA_IDENTITAS_LONGITUDO);
-        CREDO_AEQUALIS_I32(id_b.mensura, (i32)MACHINA_IDENTITAS_LONGITUDO);
+        CREDO_AEQUALIS_I32(id_a.mensura,
+            (i32)MACHINA_IDENTITAS_LONGITUDO);
+        CREDO_AEQUALIS_I32(id_b.mensura,
+            (i32)MACHINA_IDENTITAS_LONGITUDO);
         CREDO_VERUM(_omnes_hex(id_a));
         CREDO_VERUM(_omnes_hex(id_b));
 
         /* Fons unius characteris differens sufficit */
         {
             chorda fons_c = chorda_ex_literis("machina-alphb", piscina);
-            chorda id_c   = machina_identitas_ex_fonte(fons_c, piscina);
+            chorda id_c = machina_identitas_ex_fonte(fons_c, piscina);
             CREDO_FALSUM(chorda_aequalis(id_a, id_c));
         }
     }
+
 
     /* ========================================================
      * II. Fons vacuus RECUSATUR
@@ -97,8 +102,8 @@ s32 principale (vacuum)
     {
         chorda vacua, exitus;
 
-        vacua.datum   = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
 
         exitus = machina_identitas_ex_fonte(vacua, piscina);
         CREDO_AEQUALIS_I32(exitus.mensura, ZEPHYRUM);
@@ -108,6 +113,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32(exitus.mensura, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * III. Identitas huius machinae
      * ======================================================== */
@@ -116,8 +122,8 @@ s32 principale (vacuum)
     {
         chorda prima, altera;
 
-        prima  = machina_identitas(piscina);
-        altera = machina_identitas(piscina);
+        prima   = machina_identitas(piscina);
+        altera  = machina_identitas(piscina);
 
         /* Vacua hic significat fontem deesse - vitium verum in
          * machina quae aut gethostuuid aut /etc/machine-id habet */
@@ -131,6 +137,7 @@ s32 principale (vacuum)
         imprimere("    identitas: %.*s\n", (integer)prima.mensura,
                   (constans character*)prima.datum);
     }
+
 
     /* ========================================================
      * IV. Nota plena
@@ -163,6 +170,7 @@ s32 principale (vacuum)
                   nota.nuclei);
     }
 
+
     /* ========================================================
      * V. Piscina absens
      * ======================================================== */
@@ -170,7 +178,7 @@ s32 principale (vacuum)
     imprimere("\n--- V. Piscina absens ---\n");
     {
         MachinaNota nota;
-        chorda      id;
+             chorda id;
 
         id = machina_identitas(NIHIL);
         CREDO_AEQUALIS_I32(id.mensura, ZEPHYRUM);
@@ -178,6 +186,7 @@ s32 principale (vacuum)
         nota = machina_nota(NIHIL);
         CREDO_FALSUM(nota.valida);
     }
+
 
     /* ========================================================
      * Compendium

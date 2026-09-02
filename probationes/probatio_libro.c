@@ -139,7 +139,7 @@ hic_manens vacuum
 probans_libro_nominare_pagina(vacuum)
 {
     LibroPaginarum* libro;
-    chorda* titulus;
+            chorda* titulus;
 
     libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
@@ -181,7 +181,7 @@ hic_manens vacuum
 probans_libro_pagina_nova(vacuum)
 {
     LibroPaginarum* libro;
-    s32 index;
+               s32  index;
 
     libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
@@ -203,7 +203,7 @@ hic_manens vacuum
 probans_libro_pagina_currens(vacuum)
 {
     LibroPaginarum* libro;
-    Pagina* pagina;
+            Pagina* pagina;
 
     libro = libro_creare(g_ctx);
     CREDO_NON_NIHIL(libro);
@@ -234,7 +234,8 @@ probans_libro_limites_index(vacuum)
 
     /* Index maior quam maximum */
     libro_navigare_ad(libro, LIBRO_MAXIMUS_PAGINARUM + X);
-    CREDO_AEQUALIS_I32(libro_index_currens(libro), LIBRO_MAXIMUS_PAGINARUM - I);
+    CREDO_AEQUALIS_I32(libro_index_currens(libro),
+        LIBRO_MAXIMUS_PAGINARUM - I);
 }
 
 
@@ -243,10 +244,10 @@ probans_libro_limites_index(vacuum)
  * ================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("test_libro", M * II);  /* 2MB */
     si (!piscina)
@@ -254,9 +255,10 @@ principale(vacuum)
         imprimere("FRACTA: piscina_generatio\n");
         redde I;
     }
-    g_piscina = piscina;
-    g_intern = internamentum_creare(piscina);
-    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL);
+    g_piscina  = piscina;
+    g_intern   = internamentum_creare(piscina);
+    g_ctx = contextus_widget_creare(piscina, g_intern, NIHIL, NIHIL,
+        NIHIL, NIHIL, NIHIL);
 
     credo_aperire(piscina);
 

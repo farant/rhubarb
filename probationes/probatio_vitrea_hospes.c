@@ -44,7 +44,8 @@ externus constans CapsulaEmbed capsula_speculi_hospes;
  * ======================================================================== */
 
 interior vacuum
-_salve_tractator(HospitiumColloquium* colloquium)
+_salve_tractator (
+    HospitiumColloquium* colloquium)
 {
     chorda corpus = chorda_ex_literis("salve ex hospitio",
                                       colloquium_piscina(colloquium));
@@ -57,15 +58,18 @@ _salve_tractator(HospitiumColloquium* colloquium)
  * ======================================================================== */
 
 interior JsonValor*
-_confirmare(JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_confirmare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     chorda textus;
 
     (vacuum)datum;
     (vacuum)culpa;
-    textus.mensura = ZEPHYRUM;
-    textus.datum = NIHIL;
+    textus.mensura  = ZEPHYRUM;
+    textus.datum    = NIHIL;
     si (argumenta != NIHIL)
     {
         textus = json_ad_chorda(json_objectum_capere(argumenta,
@@ -78,11 +82,14 @@ _confirmare(JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 }
 
 interior JsonValor*
-_portum_petere(JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_portum_petere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    Hospitium* h = (Hospitium*)datum;
-    JsonValor* fructus = json_objectum_creare(piscina);
+    Hospitium* h        = (Hospitium*)datum;
+    JsonValor* fructus  = json_objectum_creare(piscina);
 
     (vacuum)argumenta;
     (vacuum)culpa;
@@ -96,26 +103,29 @@ _portum_petere(JsonValor* argumenta, Piscina* piscina, vacuum* datum,
  * PRINCIPALE
  * ======================================================================== */
 
-s32 principale (s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
     Piscina* piscina = piscina_generare_dynamicum("vitrea_hospes",
         16777216);
     Piscina* piscina_vocationis = piscina_generare_dynamicum(
         "vitrea_hospes_vocationes", 16777216);
-    FenestraConfiguratio figura_fenestrae;
-    VitreaConfiguratio figura_vitreae;
-    HospitiumConfiguratio figura_hospitii;
-    Fenestra* fenestra;
-    Capsula* capsula = NIHIL;
-    Vitrea* vitrea;
-    Internuntius* inx;
-    Hospitium* hospitium;
-    Speculum* speculum;
-    character url[CXXVIII];
-    b32 postura_url = FALSUM;
-    b32 fumus_speculi = FALSUM;
-    i32 gyri = 0;
-    s32 arg_i;
+     FenestraConfiguratio  figura_fenestrae;
+       VitreaConfiguratio  figura_vitreae;
+    HospitiumConfiguratio  figura_hospitii;
+                 Fenestra* fenestra;
+                  Capsula* capsula = NIHIL;
+                   Vitrea* vitrea;
+             Internuntius* inx;
+                Hospitium* hospitium;
+                 Speculum* speculum;
+                character  url[CXXVIII];
+                      b32  postura_url    = FALSUM;
+                      b32  fumus_speculi  = FALSUM;
+                      i32  gyri           = 0;
+                      s32  arg_i;
 
     si (piscina == NIHIL || piscina_vocationis == NIHIL)
     {
@@ -150,10 +160,10 @@ s32 principale (s32 argc, character** argv)
 
     figura_fenestrae.titulus = postura_url
         ? "vitrea modus-dev (A)" : "vitrea se-hospitans (B)";
-    figura_fenestrae.x = CC;
-    figura_fenestrae.y = CC;
-    figura_fenestrae.latitudo = 640;
-    figura_fenestrae.altitudo = 400;
+    figura_fenestrae.x         = CC;
+    figura_fenestrae.y         = CC;
+    figura_fenestrae.latitudo  = 640;
+    figura_fenestrae.altitudo  = 400;
     figura_fenestrae.vexilla = FENESTRA_CLAUDIBILIS
         | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
     fenestra = fenestra_creare(piscina, &figura_fenestrae);
@@ -168,10 +178,10 @@ s32 principale (s32 argc, character** argv)
         /* postura A: pagina ex hospitio - eadem-origo, sine CORS */
         sprintf(url, "http://127.0.0.1:%u/static/",
             hospitium_portus(hospitium));
-        figura_vitreae.origo = VITREA_ORIGO_URL;
-        figura_vitreae.capsula = NIHIL;
-        figura_vitreae.via_initialis = NIHIL;
-        figura_vitreae.url = url;
+        figura_vitreae.origo          = VITREA_ORIGO_URL;
+        figura_vitreae.capsula        = NIHIL;
+        figura_vitreae.via_initialis  = NIHIL;
+        figura_vitreae.url            = url;
     }
     alioquin
     {
@@ -182,10 +192,10 @@ s32 principale (s32 argc, character** argv)
             imprimere("FRACTA: capsula\n");
             redde I;
         }
-        figura_vitreae.origo = VITREA_ORIGO_CAPSULA;
-        figura_vitreae.capsula = capsula;
-        figura_vitreae.via_initialis = "index.html";
-        figura_vitreae.url = NIHIL;
+        figura_vitreae.origo          = VITREA_ORIGO_CAPSULA;
+        figura_vitreae.capsula        = capsula;
+        figura_vitreae.via_initialis  = "index.html";
+        figura_vitreae.url            = NIHIL;
     }
     figura_vitreae.inspectabilis = VERUM;
 
@@ -223,10 +233,10 @@ s32 principale (s32 argc, character** argv)
 
     dum (!fenestra_debet_claudere(fenestra))
     {
-        Eventus eventus;
-        chorda nuntium;
+                   Eventus eventus;
+                    chorda nuntium;
         VitreaNuntiusGenus genus;
-        PiscinaNotatio nota;
+            PiscinaNotatio nota;
 
         /* limes L ms = tectum latentiae servi dum UI dormit
          * (nuntius pontis expergefacit statim, ut in demo) */
@@ -250,8 +260,8 @@ s32 principale (s32 argc, character** argv)
                 Eventus fictus;
 
                 memset(&fictus, 0, magnitudo(fictus));
-                fictus.genus = EVENTUS_CLAVIS_DEPRESSUS;
-                fictus.datum.clavis.clavis = (clavis_t)'D';
+                fictus.genus                = EVENTUS_CLAVIS_DEPRESSUS;
+                fictus.datum.clavis.clavis  = (clavis_t)'D';
                 fictus.datum.clavis.modificantes =
                     (i32)MOD_SUPER | (i32)MOD_SHIFT;
                 (vacuum)speculum_tangere(speculum, &fictus);

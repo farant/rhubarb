@@ -20,11 +20,12 @@
 
 /* forma IPv4: quattuor numeri puncto separati, singuli 0-255 */
 interior b32
-_forma_ipv4_valida (constans character* s)
+_forma_ipv4_valida (
+    constans character* s)
 {
-    i32 puncta = ZEPHYRUM;
-    i32 digiti = ZEPHYRUM;
-    i32 valor  = ZEPHYRUM;
+    i32 puncta  = ZEPHYRUM;
+    i32 digiti  = ZEPHYRUM;
+    i32 valor   = ZEPHYRUM;
     i32 i;
 
     per (i = ZEPHYRUM; s[i] != '\0'; i++)
@@ -36,8 +37,8 @@ _forma_ipv4_valida (constans character* s)
                 redde FALSUM;
             }
             puncta++;
-            digiti = ZEPHYRUM;
-            valor = ZEPHYRUM;
+            digiti  = ZEPHYRUM;
+            valor   = ZEPHYRUM;
         }
         alioquin si (s[i] >= '0' && s[i] <= '9')
         {
@@ -61,7 +62,7 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_rete", 65536);
     si (piscina == NIHIL)
@@ -85,8 +86,8 @@ principale (vacuum)
     /* ---- invariantia fructus ---- */
     {
         ReteInterfacies tabulatum[16];
-        i32 numerus;
-        i32 i;
+                    i32 numerus;
+                    i32 i;
 
         imprimere("\n--- Probans invariantia ---\n");
         memset(tabulatum, ZEPHYRUM, magnitudo(tabulatum));
@@ -119,7 +120,7 @@ principale (vacuum)
         si (numerus > ZEPHYRUM)
         {
             ReteInterfacies unum;
-            i32 pauci;
+                        i32 pauci;
 
             memset(&unum, ZEPHYRUM, magnitudo(unum));
             pauci = rete_addressus_locales(&unum, I);

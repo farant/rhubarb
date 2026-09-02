@@ -15,7 +15,9 @@
  * ================================================== */
 
 interior SputnikAstNodus*
-_obtinere_infantem(SputnikAstNodus* nodus, i32 index)
+_obtinere_infantem (
+    SputnikAstNodus* nodus,
+                i32  index)
 {
     si (nodus == NIHIL || nodus->liberi == NIHIL)
     {
@@ -29,7 +31,8 @@ _obtinere_infantem(SputnikAstNodus* nodus, i32 index)
 }
 
 interior i32
-_numerus_infantium(SputnikAstNodus* nodus)
+_numerus_infantium (
+    SputnikAstNodus* nodus)
 {
     si (nodus == NIHIL || nodus->liberi == NIHIL)
     {
@@ -39,13 +42,15 @@ _numerus_infantium(SputnikAstNodus* nodus)
 }
 
 interior SputnikAstNodus*
-_prima_sententia(SputnikAstNodus* programma)
+_prima_sententia (
+    SputnikAstNodus* programma)
 {
     redde _obtinere_infantem(programma, ZEPHYRUM);
 }
 
 interior SputnikAstNodus*
-_expressio_ex_sententia(SputnikAstNodus* sententia)
+_expressio_ex_sententia (
+    SputnikAstNodus* sententia)
 {
     /* Pro SENTENTIA_EXPRESSIO, expressio est in liberi[0] */
     redde _obtinere_infantem(sententia, ZEPHYRUM);
@@ -59,9 +64,9 @@ _expressio_ex_sententia(SputnikAstNodus* sententia)
 interior vacuum
 _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
 
     imprimere("\n--- Probatio Literalia ---\n");
 
@@ -71,7 +76,8 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO(sent != NIHIL);
-        CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_SENTENTIA_EXPRESSIO);
+        CREDO_AEQUALIS_I32(sent->genus,
+            SPUTNIK_AST_SENTENTIA_EXPRESSIO);
         expr = _expressio_ex_sententia(sent);
         CREDO(expr != NIHIL);
         CREDO_AEQUALIS_I32(expr->genus, SPUTNIK_AST_NUMERUS_LITERALIS);
@@ -146,9 +152,9 @@ _probare_literalia(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_identificatores(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
 
     imprimere("\n--- Probatio Identificatores ---\n");
 
@@ -200,13 +206,14 @@ _probare_identificatores(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_operationes_binariae(Piscina* piscina, InternamentumChorda* intern)
+_probare_operationes_binariae(Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
-    SputnikAstNodus* sin;
-    SputnikAstNodus* dex;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
+          SputnikAstNodus* sin;
+          SputnikAstNodus* dex;
 
     imprimere("\n--- Probatio Operationes Binariae ---\n");
 
@@ -275,10 +282,10 @@ _probare_operationes_binariae(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_praecedentia(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
-    SputnikAstNodus* dex;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
+          SputnikAstNodus* dex;
 
     imprimere("\n--- Probatio Praecedentia ---\n");
 
@@ -313,7 +320,8 @@ _probare_praecedentia(Piscina* piscina, InternamentumChorda* intern)
 
         /* Sinister debet esse * */
         sin_tmp = _obtinere_infantem(expr, ZEPHYRUM);
-        CREDO_AEQUALIS_I32(sin_tmp->operator, SPUTNIK_LEXEMA_ASTERISCUS);
+        CREDO_AEQUALIS_I32(sin_tmp->operator,
+            SPUTNIK_LEXEMA_ASTERISCUS);
     }
 
     /* a == b && c => (a == b) && c */
@@ -336,12 +344,13 @@ _probare_praecedentia(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_operationes_unariae(Piscina* piscina, InternamentumChorda* intern)
+_probare_operationes_unariae(Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
-    SputnikAstNodus* operandus;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
+          SputnikAstNodus* operandus;
 
     imprimere("\n--- Probatio Operationes Unariae ---\n");
 
@@ -378,12 +387,12 @@ _probare_operationes_unariae(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
-    SputnikAstNodus* conditio;
-    SputnikAstNodus* verum_ramus;
-    SputnikAstNodus* falsum_ramus;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
+          SputnikAstNodus* conditio;
+          SputnikAstNodus* verum_ramus;
+          SputnikAstNodus* falsum_ramus;
 
     imprimere("\n--- Probatio Ternaria ---\n");
 
@@ -395,22 +404,25 @@ _probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
         expr = _expressio_ex_sententia(sent);
         CREDO_AEQUALIS_I32(expr->genus, SPUTNIK_AST_TERNARIA);
 
-        conditio = _obtinere_infantem(expr, ZEPHYRUM);
-        verum_ramus = _obtinere_infantem(expr, I);
-        falsum_ramus = _obtinere_infantem(expr, II);
+        conditio      = _obtinere_infantem(expr, ZEPHYRUM);
+        verum_ramus   = _obtinere_infantem(expr, I);
+        falsum_ramus  = _obtinere_infantem(expr, II);
 
         CREDO(conditio != NIHIL);
         CREDO(verum_ramus != NIHIL);
         CREDO(falsum_ramus != NIHIL);
 
         CREDO_AEQUALIS_I32(conditio->genus, SPUTNIK_AST_IDENTIFICATOR);
-        CREDO_AEQUALIS_I32(verum_ramus->genus, SPUTNIK_AST_IDENTIFICATOR);
-        CREDO_AEQUALIS_I32(falsum_ramus->genus, SPUTNIK_AST_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32(verum_ramus->genus,
+            SPUTNIK_AST_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32(falsum_ramus->genus,
+            SPUTNIK_AST_IDENTIFICATOR);
     }
 
     /* Ternaria in conditione: x > 0 ? 1 : -1 */
     {
-        r = sputnik_parsere_ex_literis("x > 0 ? 1 : 0 - 1;", piscina, intern);
+        r = sputnik_parsere_ex_literis("x > 0 ? 1 : 0 - 1;", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         expr = _expressio_ex_sententia(sent);
@@ -428,9 +440,9 @@ _probare_ternaria(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_accessus(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
 
     imprimere("\n--- Probatio Accessus ---\n");
 
@@ -477,9 +489,9 @@ _probare_accessus(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
 
     imprimere("\n--- Probatio Vocatio ---\n");
 
@@ -495,7 +507,8 @@ _probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
 
     /* Vocatio cum argumentis */
     {
-        r = sputnik_parsere_ex_literis("foo(1, 2, 3);", piscina, intern);
+        r = sputnik_parsere_ex_literis("foo(1, 2, 3);", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         expr = _expressio_ex_sententia(sent);
@@ -506,7 +519,8 @@ _probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
     /* Vocatio methodi */
     {
         SputnikAstNodus* callee;
-        r = sputnik_parsere_ex_literis("obj.method();", piscina, intern);
+        r = sputnik_parsere_ex_literis("obj.method();", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         expr = _expressio_ex_sententia(sent);
@@ -524,11 +538,12 @@ _probare_vocatio(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_literalia_composita(Piscina* piscina, InternamentumChorda* intern)
+_probare_literalia_composita(Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* expr;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* expr;
 
     imprimere("\n--- Probatio Literalia Composita ---\n");
 
@@ -564,7 +579,8 @@ _probare_literalia_composita(Piscina* piscina, InternamentumChorda* intern)
 
     /* Objectum cum proprietatibus */
     {
-        r = sputnik_parsere_ex_literis("sit x = {a: 1, b: 2};", piscina, intern);
+        r = sputnik_parsere_ex_literis("sit x = {a: 1, b: 2};", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         expr = _obtinere_infantem(sent, ZEPHYRUM);  /* valor */
@@ -584,9 +600,9 @@ _probare_literalia_composita(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_declarationes(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
-    SputnikAstNodus* valor;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
+          SputnikAstNodus* valor;
 
     imprimere("\n--- Probatio Declarationes ---\n");
 
@@ -613,7 +629,8 @@ _probare_declarationes(Piscina* piscina, InternamentumChorda* intern)
 
     /* Constans (requirit valorem) */
     {
-        r = sputnik_parsere_ex_literis("constans PI = 3.14;", piscina, intern);
+        r = sputnik_parsere_ex_literis("constans PI = 3.14;", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_DECLARATIO_CONST);
@@ -631,14 +648,15 @@ _probare_declarationes(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
 
     imprimere("\n--- Probatio Control Flow ---\n");
 
     /* Si simplex */
     {
-        r = sputnik_parsere_ex_literis("si (x) { y; }", piscina, intern);
+        r = sputnik_parsere_ex_literis("si (x) { y; }", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_SENTENTIA_SI);
@@ -647,7 +665,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 
     /* Si/alioquin */
     {
-        r = sputnik_parsere_ex_literis("si (x) { y; } alioquin { z; }", piscina, intern);
+        r = sputnik_parsere_ex_literis("si (x) { y; } alioquin { z; }",
+            piscina, intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_SENTENTIA_SI);
@@ -656,7 +675,8 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 
     /* Dum */
     {
-        r = sputnik_parsere_ex_literis("dum (x) { y; }", piscina, intern);
+        r = sputnik_parsere_ex_literis("dum (x) { y; }", piscina,
+            intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_SENTENTIA_DUM);
@@ -665,7 +685,9 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 
     /* Per */
     {
-        r = sputnik_parsere_ex_literis("per (sit i = 0; i < 10; i = i + 1) { x; }", piscina, intern);
+        r =
+            sputnik_parsere_ex_literis("per (sit i = 0; i < 10; i = i + 1) { x; }",
+            piscina, intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_SENTENTIA_PER);
@@ -701,14 +723,15 @@ _probare_control_flow(Piscina* piscina, InternamentumChorda* intern)
 interior vacuum
 _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    SputnikAstNodus* sent;
+    SputnikParserResultus  r;
+          SputnikAstNodus* sent;
 
     imprimere("\n--- Probatio Functiones ---\n");
 
     /* Functio sine parametris */
     {
-        r = sputnik_parsere_ex_literis("functio foo() { redde 42; }", piscina, intern);
+        r = sputnik_parsere_ex_literis("functio foo() { redde 42; }",
+            piscina, intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_DECLARATIO_FUNCTIO);
@@ -719,7 +742,9 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
 
     /* Functio cum parametris */
     {
-        r = sputnik_parsere_ex_literis("functio add(a, b) { redde a + b; }", piscina, intern);
+        r =
+            sputnik_parsere_ex_literis("functio add(a, b) { redde a + b; }",
+            piscina, intern);
         CREDO(r.successus);
         sent = _prima_sententia(r.radix);
         CREDO_AEQUALIS_I32(sent->genus, SPUTNIK_AST_DECLARATIO_FUNCTIO);
@@ -736,18 +761,19 @@ _probare_functiones(Piscina* piscina, InternamentumChorda* intern)
  * ================================================== */
 
 interior vacuum
-_probare_programma_complexum(Piscina* piscina, InternamentumChorda* intern)
+_probare_programma_complexum(Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    SputnikParserResultus r;
-    constans character* programma =
-        "functio factorial(n) {\n"
-        "    si (n <= 1) {\n"
-        "        redde 1;\n"
-        "    }\n"
-        "    redde n * factorial(n - 1);\n"
-        "}\n"
-        "\n"
-        "sit result = factorial(5);\n";
+    SputnikParserResultus  r;
+       constans character* programma =
+           "functio factorial(n) {\n"
+           "    si (n <= 1) {\n"
+           "        redde 1;\n"
+           "    }\n"
+           "    redde n * factorial(n - 1);\n"
+           "}\n"
+           "\n"
+           "sit result = factorial(5);\n";
 
     imprimere("\n--- Probatio Programma Complexum ---\n");
 
@@ -786,7 +812,8 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
 
     /* Bracchium deest */
     {
-        r = sputnik_parsere_ex_literis("functio foo() redde 1; }", piscina, intern);
+        r = sputnik_parsere_ex_literis("functio foo() redde 1; }",
+            piscina, intern);
         CREDO(!r.successus);
     }
 
@@ -798,13 +825,15 @@ _probare_errores(Piscina* piscina, InternamentumChorda* intern)
  * Principale
  * ================================================== */
 
-s32 principale(vacuum)
+s32
+principale (vacuum)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32 praeteritus;
+                    b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_parser", MMMMXCVI * IV);
+    piscina = piscina_generare_dynamicum("probatio_parser",
+        MMMMXCVI * IV);
     intern = internamentum_creare(piscina);
 
     credo_aperire(piscina);

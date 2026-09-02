@@ -19,7 +19,8 @@ hic_manens i32 g_tractati_update = ZEPHYRUM;
 hic_manens i32 g_tractati_render = ZEPHYRUM;
 
 interior b32
-tractator_tick(ContextusTractandi* ctx)
+tractator_tick (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tractati_tick++;
@@ -27,7 +28,8 @@ tractator_tick(ContextusTractandi* ctx)
 }
 
 interior b32
-tractator_update(ContextusTractandi* ctx)
+tractator_update (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tractati_update++;
@@ -35,7 +37,8 @@ tractator_update(ContextusTractandi* ctx)
 }
 
 interior b32
-tractator_render(ContextusTractandi* ctx)
+tractator_render (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tractati_render++;
@@ -43,11 +46,11 @@ tractator_render(ContextusTractandi* ctx)
 }
 
 interior vacuum
-resettere_contadores(vacuum)
+resettere_contadores (vacuum)
 {
-    g_tractati_tick   = ZEPHYRUM;
-    g_tractati_update = ZEPHYRUM;
-    g_tractati_render = ZEPHYRUM;
+    g_tractati_tick    = ZEPHYRUM;
+    g_tractati_update  = ZEPHYRUM;
+    g_tractati_render  = ZEPHYRUM;
 }
 
 
@@ -56,7 +59,8 @@ resettere_contadores(vacuum)
  * ================================================== */
 
 interior EntitasRepositorium*
-_creare_repo(Piscina* piscina)
+_creare_repo (
+    Piscina* piscina)
 {
     Persistentia* pers;
 
@@ -72,9 +76,9 @@ _creare_repo(Piscina* piscina)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
 
     /* Aperire credo et piscina */
@@ -101,14 +105,14 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
+         EntitasRepositorium* repo;
 
         imprimere("\n--- Probans cursus_creare ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
         CREDO_NON_NIHIL(tractator);
         CREDO_NON_NIHIL(repo);
 
@@ -140,21 +144,22 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              entitas;
-        chorda*               entitas_id;
+         EntitasRepositorium* repo;
+                     Entitas* entitas;
+                      chorda* entitas_id;
 
         imprimere("\n--- Probans cursus_mittere ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
         /* Creare entitatem */
-        entitas = repo->entitas_scaffoldare(repo->datum, "Widget", "widget-1");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "widget-1");
         CREDO_NON_NIHIL(entitas);
         entitas_id = entitas->id;
 
@@ -163,16 +168,20 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), ZEPHYRUM);
 
         /* Mittere nuntium - creat capsam pigre */
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "tick"));
 
         CREDO_VERUM(cursus_habet_capsam(cursus, entitas_id));
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), I);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, entitas_id), I);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            entitas_id), I);
 
         /* Mittere secundum nuntium */
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "update"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "update"));
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), II);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, entitas_id), II);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            entitas_id), II);
     }
 
 
@@ -181,35 +190,41 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              entitas;
-        chorda*               entitas_id;
-        i32                   tractati;
+         EntitasRepositorium* repo;
+                     Entitas* entitas;
+                      chorda* entitas_id;
+                         i32  tractati;
 
         imprimere("\n--- Probans cursus_processare ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
         /* Registrare tractatores */
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "tick", tractator_tick));
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "update", tractator_update));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "update", tractator_update));
 
         /* Creare entitatem */
-        entitas = repo->entitas_scaffoldare(repo->datum, "Widget", "proc-widget");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "proc-widget");
         CREDO_NON_NIHIL(entitas);
         entitas_id = entitas->id;
 
         /* Mittere nuntios */
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "update"));
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "update"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "tick"));
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), III);
 
         /* Processare omnes */
@@ -228,33 +243,36 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              entitas;
-        chorda*               entitas_id;
-        i32                   tractati;
-        i32                   i;
+         EntitasRepositorium* repo;
+                     Entitas* entitas;
+                      chorda* entitas_id;
+                         i32  tractati;
+                         i32  i;
 
         imprimere("\n--- Probans limite processandi ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Counter", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Counter", "tick", tractator_tick));
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Counter", "limit-counter");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Counter",
+            "limit-counter");
         CREDO_NON_NIHIL(entitas);
         entitas_id = entitas->id;
 
         /* Mittere X nuntios */
         per (i = ZEPHYRUM; i < X; i++)
         {
-            CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
+            CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL,
+                entitas_id, "tick"));
         }
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), X);
 
@@ -277,29 +295,33 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              ent1;
-        Entitas*              ent2;
-        chorda*               id1;
-        chorda*               id2;
-        i32                   tractati;
+         EntitasRepositorium* repo;
+                     Entitas* ent1;
+                     Entitas* ent2;
+                      chorda* id1;
+                      chorda* id2;
+                         i32  tractati;
 
         imprimere("\n--- Probans multas entitates ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "tick", tractator_tick));
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "render", tractator_render));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "render", tractator_render));
 
-        ent1 = repo->entitas_scaffoldare(repo->datum, "Widget", "multi-1");
-        ent2 = repo->entitas_scaffoldare(repo->datum, "Widget", "multi-2");
+        ent1 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "multi-1");
+        ent2 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "multi-2");
         CREDO_NON_NIHIL(ent1);
         CREDO_NON_NIHIL(ent2);
         id1 = ent1->id;
@@ -308,12 +330,16 @@ s32 principale(vacuum)
         /* Mittere ad ambas entitates */
         CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id1, "tick"));
         CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id2, "tick"));
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id1, "render"));
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id2, "render"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id1,
+            "render"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, id2,
+            "render"));
 
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), IV);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, id1), II);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, id2), II);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            id1), II);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            id2), II);
 
         /* Processare omnes */
         tractati = cursus_processare(cursus, M);
@@ -328,25 +354,26 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              ent1;
-        Entitas*              ent2;
-        chorda*               id1;
-        chorda*               id2;
-        i32                   tractati;
+         EntitasRepositorium* repo;
+                     Entitas* ent1;
+                     Entitas* ent2;
+                      chorda* id1;
+                      chorda* id2;
+                         i32  tractati;
 
         imprimere("\n--- Probans cursus_processare_entitatem ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Item", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Item",
+            "tick", tractator_tick));
 
         ent1 = repo->entitas_scaffoldare(repo->datum, "Item", "item-1");
         ent2 = repo->entitas_scaffoldare(repo->datum, "Item", "item-2");
@@ -368,8 +395,10 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(g_tractati_tick, II);
 
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), I);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, id1), ZEPHYRUM);
-        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus, id2), I);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            id1), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(cursus_numerus_pendentium_entitatis(cursus,
+            id2), I);
 
         /* Processare entitatem 2 */
         tractati = cursus_processare_entitatem(cursus, id2, M);
@@ -383,26 +412,29 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        Entitas*              entitas;
-        chorda*               entitas_id;
+         EntitasRepositorium* repo;
+                     Entitas* entitas;
+                      chorda* entitas_id;
 
         imprimere("\n--- Probans cursus_vacare ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
-        entitas = repo->entitas_scaffoldare(repo->datum, "Widget", "clear-widget");
+        entitas = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "clear-widget");
         CREDO_NON_NIHIL(entitas);
         entitas_id = entitas->id;
 
         /* Mittere nuntios */
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
-        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id, "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "tick"));
+        CREDO_VERUM(cursus_mittere_simplex(cursus, NIHIL, entitas_id,
+            "tick"));
         CREDO_AEQUALIS_I32(cursus_numerus_pendentium(cursus), II);
 
         /* Vacare */
@@ -416,16 +448,16 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        CursusNuntiorum*      cursus;
+             CursusNuntiorum* cursus;
         RegistrumTractatoris* tractator;
-        EntitasRepositorium*  repo;
-        i32                   datum_custom;
+         EntitasRepositorium* repo;
+                         i32  datum_custom;
 
         imprimere("\n--- Probans cursus_ponere_datum ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(cursus);
 
         datum_custom = XLII;

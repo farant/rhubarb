@@ -9,9 +9,9 @@
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
 
     /* Aperire credo et piscina */
@@ -39,14 +39,14 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        chorda   mittens_chorda;
-        chorda*  mittens_id;
+         chorda  mittens_chorda;
+         chorda* mittens_id;
 
         imprimere("\n--- Probans nuntius_creare ---\n");
 
         /* Creare mittens_id */
-        mittens_chorda = chorda_ex_literis("actor-123", piscina);
-        mittens_id     = chorda_internare(intern, mittens_chorda);
+        mittens_chorda  = chorda_ex_literis("actor-123", piscina);
+        mittens_id      = chorda_internare(intern, mittens_chorda);
         CREDO_NON_NIHIL(mittens_id);
 
         /* Creare nuntium cum mittente */
@@ -81,9 +81,9 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        chorda   valor_chorda;
-        chorda*  valor_internatum;
-        chorda*  resultus;
+         chorda  valor_chorda;
+         chorda* valor_internatum;
+         chorda* resultus;
 
         imprimere("\n--- Probans nuntius_datum ---\n");
 
@@ -92,9 +92,10 @@ s32 principale(vacuum)
         CREDO_NIHIL(nuntius->datum);  /* Nondum allocatum */
 
         /* Ponere valorem - hoc allocat datum */
-        valor_chorda     = chorda_ex_literis("mundus", piscina);
-        valor_internatum = chorda_internare(intern, valor_chorda);
-        CREDO_VERUM(nuntius_datum_ponere(nuntius, "salutatio", valor_internatum));
+        valor_chorda      = chorda_ex_literis("mundus", piscina);
+        valor_internatum  = chorda_internare(intern, valor_chorda);
+        CREDO_VERUM(nuntius_datum_ponere(nuntius, "salutatio",
+            valor_internatum));
         CREDO_NON_NIHIL(nuntius->datum);  /* Nunc allocatum */
 
         /* Capere valorem */
@@ -114,16 +115,18 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        chorda*  resultus;
-        chorda   speratus;
+         chorda* resultus;
+         chorda  speratus;
 
         imprimere("\n--- Probans nuntius_datum_ponere_literis ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "config");
         CREDO_NON_NIHIL(nuntius);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "titulus", "Salve Munde"));
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "descriptio", "Probatio"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "titulus",
+            "Salve Munde"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "descriptio",
+            "Probatio"));
 
         resultus = nuntius_datum_capere(nuntius, "titulus");
         CREDO_NON_NIHIL(resultus);
@@ -143,8 +146,8 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        s32      valor;
-        b32      successus;
+            s32  valor;
+            b32  successus;
 
         imprimere("\n--- Probans nuntius_datum_s32 ---\n");
 
@@ -154,26 +157,31 @@ s32 principale(vacuum)
         /* Ponere valorem positivum */
         CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, "numerus", XLII));
 
-        successus = nuntius_datum_capere_s32(nuntius, "numerus", &valor);
+        successus = nuntius_datum_capere_s32(nuntius, "numerus",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S32(valor, XLII);
 
         /* Ponere valorem negativum */
         CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, "negativus", -C));
 
-        successus = nuntius_datum_capere_s32(nuntius, "negativus", &valor);
+        successus = nuntius_datum_capere_s32(nuntius, "negativus",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S32(valor, -C);
 
         /* Ponere zephyrum */
-        CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, "zephyrus", ZEPHYRUM));
+        CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, "zephyrus",
+            ZEPHYRUM));
 
-        successus = nuntius_datum_capere_s32(nuntius, "zephyrus", &valor);
+        successus = nuntius_datum_capere_s32(nuntius, "zephyrus",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S32(valor, ZEPHYRUM);
 
         /* Capere clavem non existentem */
-        successus = nuntius_datum_capere_s32(nuntius, "non_existens", &valor);
+        successus = nuntius_datum_capere_s32(nuntius, "non_existens",
+            &valor);
         CREDO_FALSUM(successus);
     }
 
@@ -184,8 +192,8 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        s64      valor;
-        b32      successus;
+            s64  valor;
+            b32  successus;
 
         imprimere("\n--- Probans nuntius_datum_s64 ---\n");
 
@@ -193,16 +201,19 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nuntius);
 
         /* Ponere valorem magnum */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "tempus", "1234567890123"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "tempus",
+            "1234567890123"));
 
         successus = nuntius_datum_capere_s64(nuntius, "tempus", &valor);
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S64(valor, 1234567890123LL);
 
         /* Valorem negativum */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "negativum", "-9876543210"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "negativum",
+            "-9876543210"));
 
-        successus = nuntius_datum_capere_s64(nuntius, "negativum", &valor);
+        successus = nuntius_datum_capere_s64(nuntius, "negativum",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_AEQUALIS_S64(valor, -9876543210LL);
     }
@@ -214,24 +225,27 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        f64      valor;
-        b32      successus;
+            f64  valor;
+            b32  successus;
 
         imprimere("\n--- Probans nuntius_datum_f64 ---\n");
 
         nuntius = nuntius_creare(piscina, intern, NIHIL, "metrics");
         CREDO_NON_NIHIL(nuntius);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "ratio", "3.14159"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "ratio",
+            "3.14159"));
 
         successus = nuntius_datum_capere_f64(nuntius, "ratio", &valor);
         CREDO_VERUM(successus);
         CREDO_VERUM(valor > 3.14 && valor < 3.15);
 
         /* Valorem negativum */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "temperatura", "-273.15"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "temperatura",
+            "-273.15"));
 
-        successus = nuntius_datum_capere_f64(nuntius, "temperatura", &valor);
+        successus = nuntius_datum_capere_f64(nuntius, "temperatura",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_VERUM(valor < -273.0 && valor > -274.0);
     }
@@ -243,8 +257,8 @@ s32 principale(vacuum)
 
     {
         Nuntius* nuntius;
-        b32      valor;
-        b32      successus;
+            b32  valor;
+            b32  successus;
 
         imprimere("\n--- Probans nuntius_datum_b32 ---\n");
 
@@ -252,40 +266,54 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nuntius);
 
         /* Verum */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum", "verum"));
-        successus = nuntius_datum_capere_b32(nuntius, "activum", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum",
+            "verum"));
+        successus = nuntius_datum_capere_b32(nuntius, "activum",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_VERUM(valor);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum2", "true"));
-        successus = nuntius_datum_capere_b32(nuntius, "activum2", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum2",
+            "true"));
+        successus = nuntius_datum_capere_b32(nuntius, "activum2",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_VERUM(valor);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum3", "1"));
-        successus = nuntius_datum_capere_b32(nuntius, "activum3", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "activum3",
+            "1"));
+        successus = nuntius_datum_capere_b32(nuntius, "activum3",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_VERUM(valor);
 
         /* Falsum */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum", "falsum"));
-        successus = nuntius_datum_capere_b32(nuntius, "inactivum", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum",
+            "falsum"));
+        successus = nuntius_datum_capere_b32(nuntius, "inactivum",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_FALSUM(valor);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum2", "false"));
-        successus = nuntius_datum_capere_b32(nuntius, "inactivum2", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum2",
+            "false"));
+        successus = nuntius_datum_capere_b32(nuntius, "inactivum2",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_FALSUM(valor);
 
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum3", "0"));
-        successus = nuntius_datum_capere_b32(nuntius, "inactivum3", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "inactivum3",
+            "0"));
+        successus = nuntius_datum_capere_b32(nuntius, "inactivum3",
+            &valor);
         CREDO_VERUM(successus);
         CREDO_FALSUM(valor);
 
         /* Valor invalidus */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "invalidum", "maybe"));
-        successus = nuntius_datum_capere_b32(nuntius, "invalidum", &valor);
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "invalidum",
+            "maybe"));
+        successus = nuntius_datum_capere_b32(nuntius, "invalidum",
+            &valor);
         CREDO_FALSUM(successus);
     }
 
@@ -306,7 +334,8 @@ s32 principale(vacuum)
         CREDO_FALSUM(nuntius_datum_habet(nuntius, "clavis"));
 
         /* Addere clavem */
-        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "clavis", "valor"));
+        CREDO_VERUM(nuntius_datum_ponere_literis(nuntius, "clavis",
+            "valor"));
 
         CREDO_VERUM(nuntius_datum_habet(nuntius, "clavis"));
         CREDO_FALSUM(nuntius_datum_habet(nuntius, "alia_clavis"));
@@ -318,14 +347,14 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        Capsa*  capsa;
+         Capsa* capsa;
         chorda  possessor_chorda;
         chorda* possessor_id;
 
         imprimere("\n--- Probans capsa_creare ---\n");
 
-        possessor_chorda = chorda_ex_literis("widget-456", piscina);
-        possessor_id     = chorda_internare(intern, possessor_chorda);
+        possessor_chorda  = chorda_ex_literis("widget-456", piscina);
+        possessor_id      = chorda_internare(intern, possessor_chorda);
         CREDO_NON_NIHIL(possessor_id);
 
         capsa = capsa_creare(piscina, possessor_id);
@@ -349,9 +378,9 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        Capsa*   capsa;
-        chorda   possessor_chorda;
-        chorda*  possessor_id;
+          Capsa* capsa;
+         chorda  possessor_chorda;
+         chorda* possessor_id;
         Nuntius* n1;
         Nuntius* n2;
         Nuntius* n3;
@@ -359,9 +388,9 @@ s32 principale(vacuum)
 
         imprimere("\n--- Probans capsa FIFO ---\n");
 
-        possessor_chorda = chorda_ex_literis("fifo-test", piscina);
-        possessor_id     = chorda_internare(intern, possessor_chorda);
-        capsa            = capsa_creare(piscina, possessor_id);
+        possessor_chorda  = chorda_ex_literis("fifo-test", piscina);
+        possessor_id      = chorda_internare(intern, possessor_chorda);
+        capsa             = capsa_creare(piscina, possessor_id);
         CREDO_NON_NIHIL(capsa);
 
         /* Creare tres nuntios */
@@ -408,18 +437,18 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        Capsa*   capsa;
-        chorda   possessor_chorda;
-        chorda*  possessor_id;
+          Capsa* capsa;
+         chorda  possessor_chorda;
+         chorda* possessor_id;
         Nuntius* n1;
         Nuntius* n2;
         Nuntius* resultus;
 
         imprimere("\n--- Probans capsa_inspicere ---\n");
 
-        possessor_chorda = chorda_ex_literis("peek-test", piscina);
-        possessor_id     = chorda_internare(intern, possessor_chorda);
-        capsa            = capsa_creare(piscina, possessor_id);
+        possessor_chorda  = chorda_ex_literis("peek-test", piscina);
+        possessor_id      = chorda_internare(intern, possessor_chorda);
+        capsa             = capsa_creare(piscina, possessor_id);
         CREDO_NON_NIHIL(capsa);
 
         /* Inspicere capsam vacuam */
@@ -455,17 +484,17 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        Capsa*   capsa;
-        chorda   possessor_chorda;
-        chorda*  possessor_id;
+          Capsa* capsa;
+         chorda  possessor_chorda;
+         chorda* possessor_id;
         Nuntius* n1;
         Nuntius* n2;
 
         imprimere("\n--- Probans capsa_vacare ---\n");
 
-        possessor_chorda = chorda_ex_literis("clear-test", piscina);
-        possessor_id     = chorda_internare(intern, possessor_chorda);
-        capsa            = capsa_creare(piscina, possessor_id);
+        possessor_chorda  = chorda_ex_literis("clear-test", piscina);
+        possessor_id      = chorda_internare(intern, possessor_chorda);
+        capsa             = capsa_creare(piscina, possessor_id);
         CREDO_NON_NIHIL(capsa);
 
         n1 = nuntius_creare(piscina, intern, NIHIL, "primus");
@@ -488,11 +517,11 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        Nuntius* nuntius;
-        s32      i;
-        s32      valor;
-        b32      successus;
-        character clavis_buffer[XXXII];
+          Nuntius* nuntius;
+              s32  i;
+              s32  valor;
+              b32  successus;
+        character  clavis_buffer[XXXII];
 
         imprimere("\n--- Probans nuntius_multae_claves ---\n");
 
@@ -503,14 +532,16 @@ s32 principale(vacuum)
         per (i = ZEPHYRUM; i < C; i++)
         {
             sprintf(clavis_buffer, "clavis_%d", (integer)i);
-            CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, clavis_buffer, i * X));
+            CREDO_VERUM(nuntius_datum_ponere_s32(nuntius, clavis_buffer,
+                i * X));
         }
 
         /* Verificare omnes */
         per (i = ZEPHYRUM; i < C; i++)
         {
             sprintf(clavis_buffer, "clavis_%d", (integer)i);
-            successus = nuntius_datum_capere_s32(nuntius, clavis_buffer, &valor);
+            successus = nuntius_datum_capere_s32(nuntius, clavis_buffer,
+                &valor);
             CREDO_VERUM(successus);
             CREDO_AEQUALIS_S32(valor, i * X);
         }

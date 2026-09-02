@@ -14,7 +14,9 @@
 
 /* Auxiliaris: verificare si chorda continet subchorda */
 hic_manens b32
-_continet(chorda s, constans character* acus)
+_continet (
+                chorda  s,
+    constans character* acus)
 {
     i32 acus_longitudo;
     i32 i;
@@ -24,8 +26,8 @@ _continet(chorda s, constans character* acus)
 
     per (i = ZEPHYRUM; i <= s.mensura - acus_longitudo; i++)
     {
-        si (memcmp(s.datum + i, acus, (memoriae_index)acus_longitudo) == ZEPHYRUM)
-            redde VERUM;
+        si (memcmp(s.datum + i, acus, (memoriae_index)acus_longitudo)
+            == ZEPHYRUM) redde VERUM;
     }
     redde FALSUM;
 }
@@ -34,7 +36,8 @@ s32 principale(vacuum)
 {
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_nuntium_generare", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_nuntium_generare",
+        MMMMXCVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -42,9 +45,11 @@ s32 principale(vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE I: Generare caput pro nuntio simplice
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -53,7 +58,7 @@ s32 principale(vacuum)
             "  textus appellatio = 3;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda caput;
+                    chorda  caput;
 
         imprimere("\n--- Probans I: generare caput simplex ---\n");
 
@@ -92,9 +97,11 @@ s32 principale(vacuum)
         imprimere("  caput generatum -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE II: Generare corpus pro nuntio simplice
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -103,7 +110,7 @@ s32 principale(vacuum)
             "  textus appellatio = 3;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda corpus;
+                    chorda  corpus;
 
         imprimere("\n--- Probans II: generare corpus simplex ---\n");
 
@@ -139,9 +146,11 @@ s32 principale(vacuum)
         imprimere("  corpus generatum -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE III: Omnia VIII genera camporum
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Omnia {"
@@ -155,8 +164,8 @@ s32 principale(vacuum)
             "  f64     h = 8;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda caput;
-        chorda corpus;
+                    chorda  caput;
+                    chorda  corpus;
 
         imprimere("\n--- Probans III: omnia VIII genera camporum ---\n");
 
@@ -202,9 +211,11 @@ s32 principale(vacuum)
         imprimere("  VIII genera -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE IV: Nuntia multiplicia in uno schemate
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -216,8 +227,8 @@ s32 principale(vacuum)
             "  fixum64 pretium = 2;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda caput;
-        chorda corpus;
+                    chorda  caput;
+                    chorda  corpus;
 
         imprimere("\n--- Probans IV: nuntia multiplicia ---\n");
 
@@ -257,9 +268,11 @@ s32 principale(vacuum)
         imprimere("  nuntia multiplicia -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE V: Input invalidum -> chorda vacua
      * ======================================================== */
+
     {
         chorda caput;
         chorda corpus;
@@ -269,15 +282,18 @@ s32 principale(vacuum)
         caput = nuntium_schema_generare_caput(piscina, NIHIL, "test.h");
         CREDO_VERUM(caput.mensura == ZEPHYRUM);
 
-        corpus = nuntium_schema_generare_corpus(piscina, NIHIL, "test.h");
+        corpus = nuntium_schema_generare_corpus(piscina, NIHIL,
+            "test.h");
         CREDO_VERUM(corpus.mensura == ZEPHYRUM);
 
         imprimere("  input invalidum -> chorda vacua -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VI: Tag numeri in tag constantia
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Magnum {"
@@ -285,7 +301,7 @@ s32 principale(vacuum)
             "  textus campus_secundus = 255;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda caput;
+                    chorda  caput;
 
         imprimere("\n--- Probans VI: tag numeri ---\n");
 
@@ -305,9 +321,11 @@ s32 principale(vacuum)
         imprimere("  tag numeri -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VII: Struct campi in corpore habent nomina originalia
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -315,7 +333,7 @@ s32 principale(vacuum)
             "  varint aetas = 2;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda corpus;
+                    chorda  corpus;
 
         imprimere("\n--- Probans VII: nomina camporum originalia in corpore ---\n");
 
@@ -338,9 +356,11 @@ s32 principale(vacuum)
         imprimere("  nomina originalia -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VIII: Caput habet struct cum campis et padding
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -348,7 +368,7 @@ s32 principale(vacuum)
             "  varint aetas = 2;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda caput;
+                    chorda  caput;
 
         imprimere("\n--- Probans VIII: struct campi in capite ---\n");
 
@@ -365,16 +385,18 @@ s32 principale(vacuum)
         imprimere("  struct campi -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE IX: Scribere corpus continet null-guard pro chorda
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
             "  textus appellatio = 1;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda corpus;
+                    chorda  corpus;
 
         imprimere("\n--- Probans IX: null-guard pro chorda in scribere ---\n");
 
@@ -390,16 +412,18 @@ s32 principale(vacuum)
         imprimere("  null-guard -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE X: Legere corpus continet memset ad zephyrum
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
             "  textus id = 1;"
             "}";
         NuntiumSchemaNodus* radix;
-        chorda corpus;
+                    chorda  corpus;
 
         imprimere("\n--- Probans X: memset in legere ---\n");
 
@@ -416,9 +440,11 @@ s32 principale(vacuum)
         imprimere("  memset -> OK\n");
     }
 
+
     /* ========================================================
      * Compendium
      * ======================================================== */
+
     imprimere("\n");
     credo_imprimere_compendium();
 

@@ -30,27 +30,31 @@ externus constans CapsulaEmbed capsula_speculi_hospes;
 
 nomen structura {
     Piscina* piscina;
-    chorda   ultima;
-    i32      numerus;
+     chorda  ultima;
+        i32  numerus;
 } Captor;
 
 interior vacuum
-_captor_capere(vacuum* datum, chorda textus)
+_captor_capere (
+    vacuum* datum,
+    chorda  textus)
 {
     Captor* captor;
-    i8*     copia;
+        i8* copia;
 
     captor = (Captor*)datum;
     copia = (i8*)piscina_allocare(captor->piscina,
         (memoriae_index)textus.mensura + I);
     memcpy(copia, textus.datum, (size_t)textus.mensura);
-    captor->ultima.datum = copia;
-    captor->ultima.mensura = textus.mensura;
+    captor->ultima.datum    = copia;
+    captor->ultima.mensura  = textus.mensura;
     captor->numerus++;
 }
 
 interior b32
-_continet(chorda textus, constans character* acus)
+_continet (
+                chorda  textus,
+    constans character* acus)
 {
     i32 acus_mensura;
     i32 i;
@@ -71,14 +75,16 @@ _continet(chorda textus, constans character* acus)
 }
 
 interior Eventus
-_eventus_clavis(i32 clavis, i32 modificantes)
+_eventus_clavis (
+    i32 clavis,
+    i32 modificantes)
 {
     Eventus eventus;
 
     memset(&eventus, 0, magnitudo(eventus));
-    eventus.genus = EVENTUS_CLAVIS_DEPRESSUS;
-    eventus.datum.clavis.clavis = (clavis_t)clavis;
-    eventus.datum.clavis.modificantes = modificantes;
+    eventus.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    eventus.datum.clavis.clavis        = (clavis_t)clavis;
+    eventus.datum.clavis.modificantes  = modificantes;
     redde eventus;
 }
 
@@ -108,7 +114,7 @@ probatio_praebere_duplicatum(Piscina* piscina, Internuntius* inx)
 interior vacuum
 probatio_obtinere(Internuntius* inx, Captor* missor, Piscina* piscina)
 {
-    chorda   petitio;
+     chorda  petitio;
     Piscina* pv;
 
     imprimere("  effusio una (speculum_obtinere)...\n");
@@ -126,7 +132,8 @@ probatio_obtinere(Internuntius* inx, Captor* missor, Piscina* piscina)
     CREDO_VERUM(_continet(missor->ultima, "\"commissum\""));
     CREDO_VERUM(_continet(missor->ultima, "\"fontes\""));
     CREDO_VERUM(_continet(missor->ultima, "lib/piscina.c"));
-    CREDO_VERUM(_continet(missor->ultima, "piscina_generare_dynamicum"));
+    CREDO_VERUM(_continet(missor->ultima,
+        "piscina_generare_dynamicum"));
     CREDO_VERUM(_continet(missor->ultima, "\"documenta\""));
     CREDO_VERUM(_continet(missor->ultima, "hospitium.worklog.md"));
     CREDO_VERUM(_continet(missor->ultima, "\"exclusa\""));
@@ -140,19 +147,19 @@ interior vacuum
 probatio_tangere(Speculum* spec, Captor* aestimator)
 {
     Eventus eventus;
-    b32     consumptus;
+        b32 consumptus;
 
     imprimere("  tangere (Cmd+Shift+D)...\n");
 
     /* clavis sine modificantibus - non consumptus */
-    eventus = _eventus_clavis((i32)'D', 0);
-    consumptus = speculum_tangere(spec, &eventus);
+    eventus     = _eventus_clavis((i32)'D', 0);
+    consumptus  = speculum_tangere(spec, &eventus);
     CREDO_FALSUM(consumptus);
     CREDO_AEQUALIS_I32(aestimator->numerus, 0);
 
     /* Cmd+D sine Shift - non consumptus */
-    eventus = _eventus_clavis((i32)'D', (i32)MOD_SUPER);
-    consumptus = speculum_tangere(spec, &eventus);
+    eventus     = _eventus_clavis((i32)'D', (i32)MOD_SUPER);
+    consumptus  = speculum_tangere(spec, &eventus);
     CREDO_FALSUM(consumptus);
 
     /* Cmd+Shift+D - consumptus, stipes evaluatus */
@@ -186,13 +193,14 @@ probatio_tangere(Speculum* spec, Captor* aestimator)
  * PRINCIPALE
  * ======================================================================== */
 
-s32 principale(vacuum)
+s32
+principale (vacuum)
 {
-    Piscina*      piscina;
+         Piscina* piscina;
     Internuntius* inx;
-    Speculum*     spec;
-    Captor        missor;
-    Captor        aestimator;
+        Speculum* spec;
+          Captor  missor;
+          Captor  aestimator;
 
     piscina = piscina_generare_dynamicum("probatio_speculum", 33554432);
     si (piscina == NIHIL)
@@ -207,8 +215,8 @@ s32 principale(vacuum)
 
     memset(&missor, 0, magnitudo(missor));
     memset(&aestimator, 0, magnitudo(aestimator));
-    missor.piscina = piscina;
-    aestimator.piscina = piscina;
+    missor.piscina      = piscina;
+    aestimator.piscina  = piscina;
 
     inx = internuntius_creare(piscina, _captor_capere, &missor);
     spec = speculum_creare(piscina, &capsula_speculi_hospes, inx,

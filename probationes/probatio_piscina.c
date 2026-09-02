@@ -10,10 +10,10 @@ s32 principale (vacuum)
     memoriae_index  usus;
            Piscina* piscina;
 
-    
+
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("probatio_piscina", 4096);
-    si (!piscina) 
+    si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
         redde I;
@@ -27,7 +27,7 @@ s32 principale (vacuum)
 
     {
         Piscina* p;
-        
+
         imprimere("\n--- Probans piscina_generare_dynamicum ---\n");
 
         p = piscina_generare_dynamicum("test_dynamica",  CCLVI);
@@ -147,13 +147,15 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans piscina_conari_allocare (successus) ---\n");
 
-        p = piscina_generare_dynamicum("probare_conari_allocare", CCLVI);
+        p = piscina_generare_dynamicum("probare_conari_allocare",
+            CCLVI);
 
         allocatus = piscina_conari_allocare(p, CXXVIII);
         CREDO_NON_NIHIL (allocatus);
-        
+
         piscina_destruere(p);
     }
+
 
     /* ========================================================
      * PROBARE: piscina_conari_allocare - casus fracti (certae)
@@ -165,7 +167,9 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans piscina_conari_allocare (fracta) ---\n");
 
-        p = piscina_generare_certae_magnitudinis("probare_conari_allocare", CXXVIII);
+        p =
+            piscina_generare_certae_magnitudinis("probare_conari_allocare",
+            CXXVIII);
         CREDO_NON_NIHIL (p);
 
         /* Allocare plus quam capacitate */
@@ -194,11 +198,11 @@ s32 principale (vacuum)
 
         /* Allocare non-ordinatum primum */
         ptr_non_ordinatum  = piscina_allocare(p, VII);
-        offset_ordinatum = (memoriae_index)(void*)ptr_non_ordinatum;
+        offset_ordinatum   = (memoriae_index)(void*)ptr_non_ordinatum;
 
         /* Allocare XVI-byte ordinatum */
-        ptr_ordinatum    = piscina_allocare_ordinatum(p, LXIV, XVI);
-        offset_ordinatum = (memoriae_index)(void*)ptr_ordinatum;
+        ptr_ordinatum     = piscina_allocare_ordinatum(p, LXIV, XVI);
+        offset_ordinatum  = (memoriae_index)(void*)ptr_ordinatum;
 
         /* Confer si ordinatum aptatum est */
         CREDO_NON_NIHIL    (ptr_ordinatum);
@@ -224,8 +228,8 @@ s32 principale (vacuum)
         p = piscina_generare_dynamicum("probatio_reliqua", CCLVI);
         CREDO_NON_NIHIL (p);
 
-        a1   = piscina_allocare(p, C);
-        ante = piscina_summa_usus(p);
+        a1    = piscina_allocare(p, C);
+        ante  = piscina_summa_usus(p);
         CREDO_NON_NIHIL    (a1);
         CREDO_AEQUALIS_I32 ((i32)ante, C);
 
@@ -240,7 +244,6 @@ s32 principale (vacuum)
 
         piscina_destruere(p);
     }
-
 
 
     /* ========================================================
@@ -260,8 +263,8 @@ s32 principale (vacuum)
 
         piscina_allocare(p, C);
 
-        usus     = piscina_summa_usus(p);
-        inutilis = piscina_summa_inutilis_allocatus(p);
+        usus      = piscina_summa_usus(p);
+        inutilis  = piscina_summa_inutilis_allocatus(p);
 
         /* usus + inutilis = CCLVI */
         totalis = usus + inutilis;
@@ -295,6 +298,7 @@ s32 principale (vacuum)
         piscina_destruere(p);
     }
 
+
     /* ========================================================
      * PROBARE: piscina_summa_apex_usus
      * ======================================================== */
@@ -323,6 +327,7 @@ s32 principale (vacuum)
 
         piscina_destruere(p);
     }
+
 
     /* ========================================================
      * PROBARE: NIHIL input handling
@@ -367,8 +372,8 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (a1);
 
         /* Notare positionem */
-        nota = piscina_notare(p);
-        usus_ante = piscina_summa_usus(p);
+        nota       = piscina_notare(p);
+        usus_ante  = piscina_summa_usus(p);
         CREDO_AEQUALIS_I32 ((i32)usus_ante, L);
 
         /* Allocare plus post notationem */
@@ -451,7 +456,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans piscina_potesne_allocare ---\n");
 
         /* Dynamica - semper potest */
-        p_dyn = piscina_generare_dynamicum("probatio_potesne_dyn", CCLVI);
+        p_dyn = piscina_generare_dynamicum("probatio_potesne_dyn",
+            CCLVI);
         CREDO_NON_NIHIL (p_dyn);
 
         potest = piscina_potesne_allocare(p_dyn, M);
@@ -460,7 +466,9 @@ s32 principale (vacuum)
         piscina_destruere(p_dyn);
 
         /* Certae magnitudinis - limitata */
-        p_fix = piscina_generare_certae_magnitudinis("probatio_potesne_fix", CCLVI);
+        p_fix =
+            piscina_generare_certae_magnitudinis("probatio_potesne_fix",
+            CCLVI);
         CREDO_NON_NIHIL (p_fix);
 
         /* Intra capacitatem */
@@ -482,6 +490,7 @@ s32 principale (vacuum)
         piscina_destruere(p_fix);
     }
 
+
     /* ========================================================
      * Compendium
      * ======================================================== */
@@ -500,6 +509,3 @@ s32 principale (vacuum)
         redde I;
     }
 }
-
-
-

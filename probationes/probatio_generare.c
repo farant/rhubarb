@@ -27,14 +27,14 @@ hic_manens i8 _suffixum_buf[] = { '*', '/' };
 
 nomen structura {
     chorda  instrumentum;
-    Xar*    argumenta;
-    s32     versus;
+       Xar* argumenta;
+       s32  versus;
 } ProbatioDirectiva;
 
 interior s32
-_computare_lineas(
+_computare_lineas (
     chorda contentum,
-    i32    usque_ad)
+       i32 usque_ad)
 {
     s32 numerus;
     i32 i;
@@ -52,34 +52,36 @@ _computare_lineas(
 }
 
 interior Xar*
-_extrahere_directivas(
-    chorda   contentum,
+_extrahere_directivas (
+     chorda  contentum,
     Piscina* piscina)
 {
-    Xar*   directivae;
-    chorda praefixum;
-    chorda suffixum;
-    s32    positio;
-    chorda reliquum;
-    s32    versus_currens;
+       Xar* directivae;
+    chorda  praefixum;
+    chorda  suffixum;
+       s32  positio;
+    chorda  reliquum;
+       s32  versus_currens;
 
     directivae = xar_creare(piscina, (i32)magnitudo(ProbatioDirectiva));
-    praefixum  = chorda_ex_buffer(_praefixum_buf, GENERARE_PRAEFIXUM_MENSURA);
-    suffixum   = chorda_ex_buffer(_suffixum_buf, GENERARE_SUFFIXUM_MENSURA);
+    praefixum = chorda_ex_buffer(_praefixum_buf,
+        GENERARE_PRAEFIXUM_MENSURA);
+    suffixum = chorda_ex_buffer(_suffixum_buf,
+        GENERARE_SUFFIXUM_MENSURA);
 
     reliquum        = contentum;
     versus_currens  = I;
 
     dum (reliquum.mensura > ZEPHYRUM)
     {
-        chorda             inventum;
-        s32                finis_idx;
-        chorda             corpus;
-        chorda             praecisa;
+                   chorda  inventum;
+                      s32  finis_idx;
+                   chorda  corpus;
+                   chorda  praecisa;
         ProbatioDirectiva* dir;
-        i32                idx;
-        i32                signi_initium;
-        s32                lineas_ante;
+                      i32  idx;
+                      i32  signi_initium;
+                      s32  lineas_ante;
 
         positio = chorda_invenire_index(reliquum, praefixum);
         si (positio < ZEPHYRUM)
@@ -87,11 +89,12 @@ _extrahere_directivas(
             frange;
         }
 
-        lineas_ante = _computare_lineas(reliquum, (i32)positio);
-        versus_currens += lineas_ante;
+        lineas_ante     = _computare_lineas(reliquum, (i32)positio);
+        versus_currens  += lineas_ante;
 
         inventum = chorda_sectio(reliquum,
-                                 (i32)positio + GENERARE_PRAEFIXUM_MENSURA,
+                                 (i32)positio
+                                     + GENERARE_PRAEFIXUM_MENSURA,
                                  reliquum.mensura);
 
         finis_idx = chorda_invenire_index(inventum, suffixum);
@@ -100,27 +103,28 @@ _extrahere_directivas(
             frange;
         }
 
-        corpus = chorda_sectio(inventum, ZEPHYRUM, (i32)finis_idx);
-        praecisa = chorda_praecidere(corpus);
+        corpus    = chorda_sectio(inventum, ZEPHYRUM, (i32)finis_idx);
+        praecisa  = chorda_praecidere(corpus);
 
         si (praecisa.mensura > ZEPHYRUM)
         {
             dir = (ProbatioDirectiva*)xar_addere(directivae);
             si (dir != NIHIL)
             {
-                dir->argumenta = xar_creare(piscina, (i32)magnitudo(chorda));
-                dir->instrumentum.datum = NIHIL;
-                dir->instrumentum.mensura = ZEPHYRUM;
-                dir->versus = versus_currens;
+                dir->argumenta = xar_creare(piscina,
+                    (i32)magnitudo(chorda));
+                dir->instrumentum.datum    = NIHIL;
+                dir->instrumentum.mensura  = ZEPHYRUM;
+                dir->versus                = versus_currens;
 
                 idx = ZEPHYRUM;
                 dum (idx < praecisa.mensura)
                 {
-                    dum (idx < praecisa.mensura &&
-                         (praecisa.datum[idx] == ' ' ||
-                          praecisa.datum[idx] == '\t' ||
-                          praecisa.datum[idx] == '\n' ||
-                          praecisa.datum[idx] == '\r'))
+                    dum (   idx < praecisa.mensura
+                         && (praecisa.datum[idx] == ' '
+                        || praecisa.datum[idx] == '\t'
+                        || praecisa.datum[idx] == '\n'
+                        || praecisa.datum[idx] == '\r'))
                     {
                         idx++;
                     }
@@ -131,22 +135,24 @@ _extrahere_directivas(
                     }
 
                     signi_initium = idx;
-                    dum (idx < praecisa.mensura &&
-                         praecisa.datum[idx] != ' ' &&
-                         praecisa.datum[idx] != '\t' &&
-                         praecisa.datum[idx] != '\n' &&
-                         praecisa.datum[idx] != '\r')
+                    dum (   idx < praecisa.mensura
+                         && praecisa.datum[idx] != ' '
+                         && praecisa.datum[idx] != '\t'
+                         && praecisa.datum[idx] != '\n'
+                         && praecisa.datum[idx] != '\r')
                     {
                         idx++;
                     }
 
                     {
                         chorda signum;
-                        signum = chorda_sectio(praecisa, signi_initium, idx);
+                        signum = chorda_sectio(praecisa, signi_initium,
+                            idx);
 
                         si (dir->instrumentum.datum == NIHIL)
                         {
-                            dir->instrumentum = chorda_transcribere(signum, piscina);
+                            dir->instrumentum =
+                                chorda_transcribere(signum, piscina);
                         }
                         alioquin
                         {
@@ -154,7 +160,8 @@ _extrahere_directivas(
                             arg = (chorda*)xar_addere(dir->argumenta);
                             si (arg != NIHIL)
                             {
-                                *arg = chorda_transcribere(signum, piscina);
+                                *arg = chorda_transcribere(signum,
+                                    piscina);
                             }
                         }
                     }
@@ -164,12 +171,14 @@ _extrahere_directivas(
 
         {
             i32 finis_directivae;
-            finis_directivae = (i32)positio + GENERARE_PRAEFIXUM_MENSURA +
-                               (i32)finis_idx + GENERARE_SUFFIXUM_MENSURA;
+            finis_directivae = (i32)positio + GENERARE_PRAEFIXUM_MENSURA
+                + (i32)finis_idx
+                                   + GENERARE_SUFFIXUM_MENSURA;
             versus_currens += _computare_lineas(
                 chorda_sectio(reliquum, (i32)positio, finis_directivae),
                 finis_directivae - (i32)positio);
-            reliquum = chorda_sectio(reliquum, finis_directivae, reliquum.mensura);
+            reliquum = chorda_sectio(reliquum, finis_directivae,
+                reliquum.mensura);
         }
     }
 
@@ -184,7 +193,7 @@ _extrahere_directivas(
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_generare", MMMMXCVI);
     si (!piscina)
@@ -200,10 +209,10 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
-        chorda*            arg;
+                   chorda* arg;
 
         imprimere("\n--- Probans una directiva simplex ---\n");
 
@@ -218,7 +227,8 @@ s32 principale(vacuum)
 
         dir = (ProbatioDirectiva*)xar_obtinere(directivae, ZEPHYRUM);
         CREDO_NON_NIHIL(dir);
-        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum, "meum_instrumentum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum,
+            "meum_instrumentum");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), II);
 
         arg = (chorda*)xar_obtinere(dir->argumenta, ZEPHYRUM);
@@ -236,8 +246,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir0;
         ProbatioDirectiva* dir1;
 
@@ -270,8 +280,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda contentum;
-        Xar*   directivae;
+        chorda  contentum;
+           Xar* directivae;
 
         imprimere("\n--- Probans nullas directivas ---\n");
 
@@ -291,10 +301,10 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
-        chorda*            arg;
+                   chorda* arg;
 
         imprimere("\n--- Probans directivam cum multis argumentis ---\n");
 
@@ -308,7 +318,8 @@ s32 principale(vacuum)
 
         dir = (ProbatioDirectiva*)xar_obtinere(directivae, ZEPHYRUM);
         CREDO_NON_NIHIL(dir);
-        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum, "nuntium_schema_generare");
+        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum,
+            "nuntium_schema_generare");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), III);
 
         arg = (chorda*)xar_obtinere(dir->argumenta, ZEPHYRUM);
@@ -327,8 +338,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
 
         imprimere("\n--- Probans spatium album extra ---\n");
@@ -343,7 +354,8 @@ s32 principale(vacuum)
 
         dir = (ProbatioDirectiva*)xar_obtinere(directivae, ZEPHYRUM);
         CREDO_NON_NIHIL(dir);
-        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum, "instrumentum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum,
+            "instrumentum");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), II);
     }
 
@@ -353,8 +365,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
 
         imprimere("\n--- Probans directivam sine argumentis ---\n");
@@ -369,7 +381,8 @@ s32 principale(vacuum)
 
         dir = (ProbatioDirectiva*)xar_obtinere(directivae, ZEPHYRUM);
         CREDO_NON_NIHIL(dir);
-        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum, "solum_instrumentum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(dir->instrumentum,
+            "solum_instrumentum");
         CREDO_AEQUALIS_I32(xar_numerus(dir->argumenta), ZEPHYRUM);
     }
 
@@ -379,8 +392,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda contentum;
-        Xar*   directivae;
+        chorda  contentum;
+           Xar* directivae;
 
         imprimere("\n--- Probans commentarium non-directivam ---\n");
 
@@ -401,8 +414,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
 
         imprimere("\n--- Probans directivam in medio fili ---\n");
@@ -431,8 +444,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        chorda             contentum;
-        Xar*               directivae;
+                   chorda  contentum;
+                      Xar* directivae;
         ProbatioDirectiva* dir;
 
         imprimere("\n--- Probans numeros versuum ---\n");
@@ -482,8 +495,8 @@ s32 principale(vacuum)
      * ======================================================== */
 
     {
-        b32 scriptum;
-        s32 codex;
+           b32 scriptum;
+           s32 codex;
         chorda indicator_contentum;
 
         imprimere("\n--- Probans variabiles ambitus ---\n");
@@ -524,14 +537,16 @@ s32 principale(vacuum)
             chorda filum_acus;
             filum_acus = chorda_ex_literis(
                 "FILUM=/tmp/probatio_generare_env.c", piscina);
-            CREDO_VERUM(chorda_continet(indicator_contentum, filum_acus));
+            CREDO_VERUM(chorda_continet(indicator_contentum,
+                filum_acus));
         }
 
         /* Verificare GENERARE_VERSUS=3 */
         {
             chorda versus_acus;
             versus_acus = chorda_ex_literis("VERSUS=3", piscina);
-            CREDO_VERUM(chorda_continet(indicator_contentum, versus_acus));
+            CREDO_VERUM(chorda_continet(indicator_contentum,
+                versus_acus));
         }
 
         /* Purgare */
@@ -593,7 +608,8 @@ s32 principale(vacuum)
             "/* generare: instrumentum_non_existens arg1 */\n");
         CREDO_VERUM(scriptum);
 
-        codex = system("./bin/generare /tmp/probatio_generare_error.c 2>/dev/null");
+        codex =
+            system("./bin/generare /tmp/probatio_generare_error.c 2>/dev/null");
         CREDO_INAEQUALITAS_S32(codex, ZEPHYRUM);
 
         filum_delere("/tmp/probatio_generare_error.c");

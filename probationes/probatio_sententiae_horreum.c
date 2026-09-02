@@ -52,13 +52,17 @@
 #define FX_LIBER "probationes/fixa/sententiae/de_imagine.md"
 
 interior chorda
-_ch (Piscina* piscina, constans character* litterae)
+_ch (
+               Piscina* piscina,
+    constans character* litterae)
 {
     redde chorda_ex_literis(litterae, piscina);
 }
 
 interior JsonValor*
-_campus (Piscina* piscina, constans character* clavis,
+_campus (
+                    Piscina* piscina,
+         constans character* clavis,
          constans character* typus)
 {
     JsonValor* c = json_objectum_creare(piscina);
@@ -73,12 +77,15 @@ _campus (Piscina* piscina, constans character* clavis,
 /* Definitionem generis 'liber' mittere. cum_campis=FALSUM definitionem
  * VENENATAM parit - eandem clavem sine campis, qua collisio probatur. */
 interior chorda
-_liber_definire (ClientTabularii* cliens, Piscina* piscina,
-                 constans character* titulus, b32 cum_campis)
+_liber_definire (
+                    ClientTabularii* cliens,
+                            Piscina* piscina,
+                 constans character* titulus,
+                                b32  cum_campis)
 {
-    JsonValor* def   = json_objectum_creare(piscina);
-    JsonValor* args  = json_objectum_creare(piscina);
-    chorda     culpa = chorda_ex_literis("", piscina);
+    JsonValor* def    = json_objectum_creare(piscina);
+    JsonValor* args   = json_objectum_creare(piscina);
+       chorda  culpa  = chorda_ex_literis("", piscina);
 
     json_objectum_ponere(def, "clavis", json_chorda_creare(piscina,
         _ch(piscina, "liber")));
@@ -89,8 +96,10 @@ _liber_definire (ClientTabularii* cliens, Piscina* piscina,
     {
         JsonValor* campi = json_tabulatum_creare(piscina);
 
-        json_tabulatum_addere(campi, _campus(piscina, "siglum", "textus"));
-        json_tabulatum_addere(campi, _campus(piscina, "slug", "textus"));
+        json_tabulatum_addere(campi, _campus(piscina, "siglum",
+            "textus"));
+        json_tabulatum_addere(campi, _campus(piscina, "slug",
+            "textus"));
         /* 'status_libri', NON 'status': 'status' clavis RESERVATA est -
          * iudicium camporum eam praeterit ET columnam vitae proicit,
          * ergo campus ita nominatus taciturnus et fallax simul esset */
@@ -108,7 +117,8 @@ _liber_definire (ClientTabularii* cliens, Piscina* piscina,
     json_objectum_ponere(args, "datum", json_chorda_creare(piscina,
         json_scribere(def, piscina)));
 
-    redde cliens_tabularii_vocare(cliens, piscina, "addere", args, &culpa);
+    redde cliens_tabularii_vocare(cliens, piscina, "addere", args,
+        &culpa);
 }
 
 /* CUSTOS COLLISIONIS - tabulam generum LEGIT.
@@ -118,16 +128,20 @@ _liber_definire (ClientTabularii* cliens, Piscina* piscina,
  * non in responso - ergo custos qui responsum inspicit collisionem
  * numquam videt. Sectio V id probat. */
 interior b32
-_genus_adest (ClientTabularii* cliens, Piscina* piscina,
+_genus_adest (
+                 ClientTabularii* cliens,
+                         Piscina* piscina,
               constans character* clavis)
 {
-    chorda     culpa = chorda_ex_literis("", piscina);
+       chorda  culpa = chorda_ex_literis("", piscina);
     JsonValor* entia;
-    i32        k;
+          i32  k;
 
     entia = cliens_tabularii_legere(cliens, piscina,
         _ch(piscina, "definitio"), (i32)C, &culpa);
-    si (entia == NIHIL || !json_est_tabulatum(entia)) { redde FALSUM; }
+    si (entia == NIHIL || !json_est_tabulatum(entia))
+    { redde FALSUM;
+    }
 
     per (k = ZEPHYRUM; k < json_tabulatum_numerus(entia); k++)
     {
@@ -135,34 +149,47 @@ _genus_adest (ClientTabularii* cliens, Piscina* piscina,
         JsonValor* d;
         JsonValor* c;
 
-        si (e == NIHIL) { perge; }
+        si (e == NIHIL)
+        { perge;
+        }
         d = json_objectum_capere(e, "datum");
-        si (d == NIHIL) { perge; }
+        si (d == NIHIL)
+        { perge;
+        }
         c = json_objectum_capere(d, "clavis");
-        si (c == NIHIL || !json_est_chorda(c)) { perge; }
+        si (c == NIHIL || !json_est_chorda(c))
+        { perge;
+        }
         si (chorda_aequalis_literis(json_ad_chorda(c), clavis))
-        { redde VERUM; }
+        { redde VERUM;
+        }
     }
     redde FALSUM;
 }
 
 /* Campum mutare, deinde rem BREVITER relegere. */
 interior chorda
-_mutare_et_legere (ClientTabularii* cliens, Piscina* piscina, chorda res_id,
-                   constans character* clavis, constans character* valor)
+_mutare_et_legere (
+                      ClientTabularii* cliens,
+                              Piscina* piscina,
+                               chorda  res_id,
+                   constans character* clavis,
+                   constans character* valor)
 {
-    JsonValor* args  = json_objectum_creare(piscina);
-    JsonValor* q     = json_objectum_creare(piscina);
-    chorda     culpa = chorda_ex_literis("", piscina);
+    JsonValor* args   = json_objectum_creare(piscina);
+    JsonValor* q      = json_objectum_creare(piscina);
+       chorda  culpa  = chorda_ex_literis("", piscina);
 
-    json_objectum_ponere(args, "res", json_chorda_creare(piscina, res_id));
+    json_objectum_ponere(args, "res", json_chorda_creare(piscina,
+        res_id));
     json_objectum_ponere(args, "actus", json_chorda_creare(piscina,
         _ch(piscina, "mutatio")));
     json_objectum_ponere(args, "clavis", json_chorda_creare(piscina,
         _ch(piscina, clavis)));
     json_objectum_ponere(args, "valor", json_chorda_creare(piscina,
         _ch(piscina, valor)));
-    (vacuum)cliens_tabularii_vocare(cliens, piscina, "gerere", args, &culpa);
+    (vacuum)cliens_tabularii_vocare(cliens, piscina, "gerere", args,
+        &culpa);
 
     json_objectum_ponere(q, "res", json_chorda_creare(piscina, res_id));
     json_objectum_ponere(q, "breviter", json_chorda_creare(piscina,
@@ -174,12 +201,15 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
     integer  portus_int = ZEPHYRUM;
-    i32      k;
+        i32  k;
 
-    piscina = piscina_generare_dynamicum("probatio_sent_horreum", 33554432);
-    si (!piscina) { imprimere("FRACTA: piscina\n"); redde I; }
+    piscina = piscina_generare_dynamicum("probatio_sent_horreum",
+        33554432);
+    si (!piscina)
+    { imprimere("FRACTA: piscina\n"); redde I;
+    }
     credo_aperire(piscina);
 
     imprimere("\n--- I. daemon ephemerus ---\n");
@@ -190,7 +220,8 @@ principale (vacuum)
         CREDO_VERUM (system("gesta/build/tabulariumd -portus 0"
             " -scrinium build/probatio_sent.db"
             " -annales build/probatio_sent.jsonl"
-            " > build/probatio_sent.portus 2> /dev/null &") == ZEPHYRUM);
+            " > build/probatio_sent.portus 2> /dev/null &")
+                == ZEPHYRUM);
 
         per (k = ZEPHYRUM; k < XXV; k++)
         {
@@ -198,9 +229,10 @@ principale (vacuum)
 
             si (pf != NIHIL)
             {
-                si (fscanf(pf, "portus %d", &portus_int) == I &&
-                    portus_int > 0)
-                { fclose(pf); frange; }
+                si (   fscanf(pf, "portus %d", &portus_int) == I
+                    && portus_int > 0)
+                { fclose(pf); frange;
+                }
                 fclose(pf);
             }
             (vacuum)system("sleep 0.2");
@@ -211,20 +243,22 @@ principale (vacuum)
     si (portus_int > 0)
     {
         ClientTabularii cliens;
-        chorda          culpa = chorda_ex_literis("", piscina);
-        chorda          fons_originalis;
-        chorda          res_id = chorda_ex_literis("", piscina);
-        Liber           ante;
+                 chorda culpa = chorda_ex_literis("", piscina);
+                 chorda fons_originalis;
+                 chorda res_id = chorda_ex_literis("",
+                     piscina);
+                  Liber ante;
 
         cliens_tabularii_incipere(&cliens, (i32)portus_int);
-        cliens.praefixum = "[probatio]";
-        cliens.actor     = "sententiae";
-        cliens.launcher  = NIHIL;   /* daemon iam currit */
-        cliens.genitus   = VERUM;
+        cliens.praefixum  = "[probatio]";
+        cliens.actor      = "sententiae";
+        cliens.launcher   = NIHIL;   /* daemon iam currit */
+        cliens.genitus    = VERUM;
 
         fons_originalis = filum_legere_totum(FX_LIBER, piscina);
         si (fons_originalis.mensura == ZEPHYRUM)
-        { imprimere("  FIXUM ABEST: %s\n", FX_LIBER); }
+        { imprimere("  FIXUM ABEST: %s\n", FX_LIBER);
+        }
         CREDO_VERUM (fons_originalis.mensura > ZEPHYRUM);
 
         ante = sententiae_legere(fons_originalis, piscina);
@@ -243,24 +277,30 @@ principale (vacuum)
 
         imprimere("\n--- III. iter per conditorium: OCTETUS PRO OCTETO ---\n");
         {
-            JsonValor* datum = json_objectum_creare(piscina);
-            JsonValor* args  = json_objectum_creare(piscina);
-            chorda     resp;
+            JsonValor* datum  = json_objectum_creare(piscina);
+            JsonValor* args   = json_objectum_creare(piscina);
+               chorda  resp;
 
-            json_objectum_ponere(datum, "siglum", json_chorda_creare(piscina,
+            json_objectum_ponere(datum, "siglum",
+                json_chorda_creare(piscina,
                 _ch(piscina, "DI")));
-            json_objectum_ponere(datum, "slug", json_chorda_creare(piscina,
+            json_objectum_ponere(datum, "slug",
+                json_chorda_creare(piscina,
                 _ch(piscina, "de-imagine")));
             json_objectum_ponere(datum, "status_libri",
                 json_chorda_creare(piscina, _ch(piscina, "DRAFT")));
-            json_objectum_ponere(datum, "fons", json_chorda_creare(piscina,
+            json_objectum_ponere(datum, "fons",
+                json_chorda_creare(piscina,
                 fons_originalis));
 
-            json_objectum_ponere(args, "genus", json_chorda_creare(piscina,
+            json_objectum_ponere(args, "genus",
+                json_chorda_creare(piscina,
                 _ch(piscina, "liber")));
-            json_objectum_ponere(args, "titulus", json_chorda_creare(piscina,
+            json_objectum_ponere(args, "titulus",
+                json_chorda_creare(piscina,
                 _ch(piscina, "De Imagine")));
-            json_objectum_ponere(args, "datum", json_chorda_creare(piscina,
+            json_objectum_ponere(args, "datum",
+                json_chorda_creare(piscina,
                 json_scribere(datum, piscina)));
 
             resp = cliens_tabularii_vocare(&cliens, piscina, "addere",
@@ -271,8 +311,8 @@ principale (vacuum)
 
         {
             JsonValor* entia;
-            chorda     fons_reditus = chorda_ex_literis("", piscina);
-            Liber      post;
+               chorda  fons_reditus = chorda_ex_literis("", piscina);
+                Liber  post;
 
             entia = cliens_tabularii_legere(&cliens, piscina,
                 _ch(piscina, "liber"), (i32)X, &culpa);
@@ -281,7 +321,8 @@ principale (vacuum)
             {
                 JsonValor* e;
 
-                CREDO_AEQUALIS_I32 (json_tabulatum_numerus(entia), (i32)1);
+                CREDO_AEQUALIS_I32 (json_tabulatum_numerus(entia),
+                    (i32)1);
                 e = json_tabulatum_obtinere(entia, (i32)ZEPHYRUM);
                 CREDO_NON_NIHIL (e);
                 si (e != NIHIL)
@@ -295,7 +336,8 @@ principale (vacuum)
 
                         CREDO_NON_NIHIL (f);
                         si (f != NIHIL && json_est_chorda(f))
-                        { fons_reditus = json_ad_chorda(f); }
+                        { fons_reditus = json_ad_chorda(f);
+                        }
                     }
                 }
             }
@@ -316,17 +358,23 @@ principale (vacuum)
             {
                 i32 congruentia = ZEPHYRUM;
 
-                per (k = ZEPHYRUM; k < xar_numerus(ante.sententiae); k++)
+                per (k = ZEPHYRUM; k
+                    < xar_numerus(ante.sententiae); k++)
                 {
-                    Sententia* a = (Sententia*)xar_obtinere(ante.sententiae,
+                    Sententia* a =
+                        (Sententia*)xar_obtinere(ante.sententiae,
                         (i32)k);
-                    Sententia* b = (Sententia*)xar_obtinere(post.sententiae,
+                    Sententia* b =
+                        (Sententia*)xar_obtinere(post.sententiae,
                         (i32)k);
 
-                    si (a == NIHIL || b == NIHIL) { perge; }
-                    si (chorda_aequalis(a->locus, b->locus) &&
-                        sigillum_aequale(&a->sigillum, &b->sigillum))
-                    { congruentia++; }
+                    si (a == NIHIL || b == NIHIL)
+                    { perge;
+                    }
+                    si (   chorda_aequalis(a->locus, b->locus)
+                        && sigillum_aequale(&a->sigillum, &b->sigillum))
+                    { congruentia++;
+                    }
                 }
                 CREDO_AEQUALIS_I32 (congruentia, (i32)273);
             }
@@ -369,7 +417,8 @@ principale (vacuum)
             /* Doctrina dicebat: 'responsum addere pro iam occupata
              * inspice'. Non operatur - et pretium non est nuntius
              * amissus sed SCHEMA RAPTUM. */
-            resp = _liber_definire(&cliens, piscina, "Liber Alter", FALSUM);
+            resp = _liber_definire(&cliens, piscina, "Liber Alter",
+                FALSUM);
 
             /* (a) responsum successus MUNDUS est */
             CREDO_CHORDA_CONTINET (resp, _ch(piscina, "creata"));
@@ -406,13 +455,15 @@ principale (vacuum)
         imprimere("\n--- VII. 'breviter' corpus NON effundit ---\n");
         {
             JsonValor* q = json_objectum_creare(piscina);
-            chorda     brevis_lectio;
+               chorda  brevis_lectio;
 
             json_objectum_ponere(q, "res", json_chorda_creare(piscina,
                 res_id));
-            json_objectum_ponere(q, "breviter", json_chorda_creare(piscina,
+            json_objectum_ponere(q, "breviter",
+                json_chorda_creare(piscina,
                 _ch(piscina, "verum")));
-            brevis_lectio = cliens_tabularii_vocare(&cliens, piscina, "res",
+            brevis_lectio = cliens_tabularii_vocare(&cliens, piscina,
+                "res",
                 q, &culpa);
 
             /* 'res' plenum datum crudum verbatim imprimit - in libro
@@ -447,6 +498,8 @@ principale (vacuum)
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
-    si (praeteritus) { redde ZEPHYRUM; }
+    si (praeteritus)
+    { redde ZEPHYRUM;
+    }
     redde I;
 }

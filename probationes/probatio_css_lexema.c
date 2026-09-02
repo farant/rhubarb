@@ -20,18 +20,25 @@
 #include <string.h>
 
 interior Xar*
-_lexare_literis (Piscina* piscina, constans character* fons);
+_lexare_literis (
+               Piscina* piscina,
+    constans character* fons);
 
 interior Xar*
-_lexare_literis (Piscina* piscina, constans character* fons)
+_lexare_literis (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde css_lexare(piscina, fons, (i32)strlen(fons));
 }
 
 /* seriem generum probare (FINIS exclusa) */
 interior vacuum
-_seriem_probare (Piscina* piscina, constans character* fons,
-    constans CssLexemaGenus* exspectata, i32 numerus);
+_seriem_probare (
+                    Piscina* piscina,
+         constans character* fons,
+    constans CssLexemaGenus* exspectata,
+                        i32  numerus);
 
 interior vacuum
 _seriem_probare (Piscina* piscina, constans character* fons,
@@ -65,14 +72,20 @@ _seriem_probare (Piscina* piscina, constans character* fons,
 /* fidelitas + progressus: emissio == fons, nullum lexema vacuum
  * nisi FINIS */
 interior b32
-_fidelis (Piscina* piscina, constans character* fons, i32 mensura);
+_fidelis (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura);
 
 interior b32
-_fidelis (Piscina* piscina, constans character* fons, i32 mensura)
+_fidelis (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
-    Xar*   l = css_lexare(piscina, fons, mensura);
-    chorda e;
-    i32    k;
+       Xar* l = css_lexare(piscina, fons, mensura);
+    chorda  e;
+       i32  k;
 
     si (l == NIHIL)
     {
@@ -98,12 +111,16 @@ _fidelis (Piscina* piscina, constans character* fons, i32 mensura)
 
 /* numerus generum imperfectorum in fonte */
 interior i32
-_imperfecta_numerare (Piscina* piscina, constans character* fons,
-    i32 mensura);
+_imperfecta_numerare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura);
 
 interior i32
-_imperfecta_numerare (Piscina* piscina, constans character* fons,
-    i32 mensura)
+_imperfecta_numerare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
     Xar* l = css_lexare(piscina, fons, mensura);
     i32  k;
@@ -117,7 +134,7 @@ _imperfecta_numerare (Piscina* piscina, constans character* fons,
     {
         CssLexema* lx = (CssLexema*)xar_obtinere(l, k);
 
-        si (lx->genus == CSS_LEX_CHORDA_IMPERFECTA
+        si (   lx->genus == CSS_LEX_CHORDA_IMPERFECTA
             || lx->genus == CSS_LEX_URL_IMPERFECTA
             || lx->genus == CSS_LEX_COMMENTARIUM_IMPERFECTUM)
         {
@@ -290,7 +307,7 @@ principale (vacuum)
 
     imprimere("\n--- Positiones (octeti, 1-basatae) ---\n");
     {
-        Xar*       l = _lexare_literis(piscina, "a\n  bc");
+              Xar* l = _lexare_literis(piscina, "a\n  bc");
         CssLexema* lx;
 
         CREDO_NON_NIHIL (l);
@@ -304,9 +321,9 @@ principale (vacuum)
 
     imprimere("\n--- Fidelitas super corpus (fixa/css) ---\n");
     {
-        DirectoriumIterator*  iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        i32                   probatae = 0;
+                         i32  probatae = 0;
 
         iter = directorium_iterator_aperire("probationes/fixa/css",
             piscina);
@@ -316,9 +333,9 @@ principale (vacuum)
             dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
             {
                 ChordaAedificator* aed;
-                chorda             via;
-                chorda             contentum;
-                b32                adversaria;
+                           chorda  via;
+                           chorda  contentum;
+                              b32  adversaria;
 
                 si (e->genus != INTROITUS_FILUM)
                 {

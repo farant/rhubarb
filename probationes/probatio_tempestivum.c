@@ -21,7 +21,8 @@ hic_manens i32 g_tick_contador   = ZEPHYRUM;
 hic_manens i32 g_update_contador = ZEPHYRUM;
 
 interior b32
-tractator_tick(ContextusTractandi* ctx)
+tractator_tick (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tick_contador++;
@@ -29,7 +30,8 @@ tractator_tick(ContextusTractandi* ctx)
 }
 
 interior b32
-tractator_update(ContextusTractandi* ctx)
+tractator_update (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_update_contador++;
@@ -37,10 +39,10 @@ tractator_update(ContextusTractandi* ctx)
 }
 
 interior vacuum
-resettere_contadores(vacuum)
+resettere_contadores (vacuum)
 {
-    g_tick_contador   = ZEPHYRUM;
-    g_update_contador = ZEPHYRUM;
+    g_tick_contador    = ZEPHYRUM;
+    g_update_contador  = ZEPHYRUM;
 }
 
 
@@ -49,7 +51,8 @@ resettere_contadores(vacuum)
  * ================================================== */
 
 interior EntitasRepositorium*
-_creare_repo(Piscina* piscina)
+_creare_repo (
+    Piscina* piscina)
 {
     Persistentia* pers;
 
@@ -65,13 +68,14 @@ _creare_repo(Piscina* piscina)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
 
     /* Aperire credo et piscina */
-    piscina = piscina_generare_dynamicum("test_tempestivum", MMM * LXIV);
+    piscina = piscina_generare_dynamicum("test_tempestivum",
+        MMM * LXIV);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -97,20 +101,21 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
 
         imprimere("\n--- Probans administrator_tempestivi_creare ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
         CREDO_NON_NIHIL(tractator);
         CREDO_NON_NIHIL(repo);
         CREDO_NON_NIHIL(cursus);
 
-        admin = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        admin = administrator_tempestivi_creare(piscina, repo, cursus,
+            intern);
         CREDO_NON_NIHIL(admin);
         CREDO_VERUM(admin->repositorium == repo);
         CREDO_VERUM(admin->cursus == cursus);
@@ -118,16 +123,20 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(admin->genus_tempestivi);
 
         /* Argumenta invalida */
-        admin = administrator_tempestivi_creare(NIHIL, repo, cursus, intern);
+        admin = administrator_tempestivi_creare(NIHIL, repo, cursus,
+            intern);
         CREDO_NIHIL(admin);
 
-        admin = administrator_tempestivi_creare(piscina, NIHIL, cursus, intern);
+        admin = administrator_tempestivi_creare(piscina, NIHIL, cursus,
+            intern);
         CREDO_NIHIL(admin);
 
-        admin = administrator_tempestivi_creare(piscina, repo, NIHIL, intern);
+        admin = administrator_tempestivi_creare(piscina, repo, NIHIL,
+            intern);
         CREDO_NIHIL(admin);
 
-        admin = administrator_tempestivi_creare(piscina, repo, cursus, NIHIL);
+        admin = administrator_tempestivi_creare(piscina, repo, cursus,
+            NIHIL);
         CREDO_NIHIL(admin);
     }
 
@@ -138,26 +147,29 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
 
         imprimere("\n--- Probans tempestivum_creare ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
         /* Creare entitatem destinationis */
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "timer-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "timer-widget");
         CREDO_NON_NIHIL(widget);
 
         /* Creare tempestivum */
-        tempestivum = tempestivum_creare(admin, widget->id, "tick", C, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, "tick", C,
+            VERUM);
         CREDO_NON_NIHIL(tempestivum);
         CREDO_NON_NIHIL(tempestivum->id);
 
@@ -168,19 +180,24 @@ s32 principale(vacuum)
         CREDO_VERUM(tempestivum_est_activum(admin, tempestivum->id));
 
         /* Argumenta invalida */
-        tempestivum = tempestivum_creare(NIHIL, widget->id, "tick", C, VERUM);
+        tempestivum = tempestivum_creare(NIHIL, widget->id, "tick", C,
+            VERUM);
         CREDO_NIHIL(tempestivum);
 
-        tempestivum = tempestivum_creare(admin, NIHIL, "tick", C, VERUM);
+        tempestivum = tempestivum_creare(admin, NIHIL, "tick", C,
+            VERUM);
         CREDO_NIHIL(tempestivum);
 
-        tempestivum = tempestivum_creare(admin, widget->id, NIHIL, C, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, NIHIL, C,
+            VERUM);
         CREDO_NIHIL(tempestivum);
 
-        tempestivum = tempestivum_creare(admin, widget->id, "tick", ZEPHYRUM, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, "tick",
+            ZEPHYRUM, VERUM);
         CREDO_NIHIL(tempestivum);
 
-        tempestivum = tempestivum_creare(admin, widget->id, "tick", -C, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, "tick", -C,
+            VERUM);
         CREDO_NIHIL(tempestivum);
     }
 
@@ -191,21 +208,23 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
 
         imprimere("\n--- Probans tempestivum_creare_cum_delay ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "delay-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "delay-widget");
         CREDO_NON_NIHIL(widget);
 
         /* Creare tempestivum cum delay */
@@ -222,25 +241,28 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
-        chorda*                  temp_id;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
+                         chorda* temp_id;
 
         imprimere("\n--- Probans tempestivum_pausare et resumere ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "pause-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "pause-widget");
         CREDO_NON_NIHIL(widget);
 
-        tempestivum = tempestivum_creare(admin, widget->id, "tick", C, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, "tick", C,
+            VERUM);
         CREDO_NON_NIHIL(tempestivum);
         temp_id = tempestivum->id;
 
@@ -251,7 +273,8 @@ s32 principale(vacuum)
         /* Pausare */
         CREDO_VERUM(tempestivum_pausare(admin, temp_id));
         CREDO_FALSUM(tempestivum_est_activum(admin, temp_id));
-        CREDO_AEQUALIS_I32(tempestivum_numerus_activorum(admin), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tempestivum_numerus_activorum(admin),
+            ZEPHYRUM);
 
         /* Resumere */
         CREDO_VERUM(tempestivum_resumere(admin, temp_id));
@@ -272,25 +295,28 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
-        chorda*                  temp_id;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
+                         chorda* temp_id;
 
         imprimere("\n--- Probans tempestivum_annullare ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "cancel-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "cancel-widget");
         CREDO_NON_NIHIL(widget);
 
-        tempestivum = tempestivum_creare(admin, widget->id, "tick", C, VERUM);
+        tempestivum = tempestivum_creare(admin, widget->id, "tick", C,
+            VERUM);
         CREDO_NON_NIHIL(tempestivum);
         temp_id = tempestivum->id;
 
@@ -314,30 +340,36 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget1;
-        Entitas*                 widget2;
-        Xar*                     tempestiva;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget1;
+                        Entitas* widget2;
+                            Xar* tempestiva;
 
         imprimere("\n--- Probans tempestivum_pro_destinatione ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        widget1 = repo->entitas_scaffoldare(repo->datum, "Widget", "dest-widget-1");
-        widget2 = repo->entitas_scaffoldare(repo->datum, "Widget", "dest-widget-2");
+        widget1 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "dest-widget-1");
+        widget2 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "dest-widget-2");
         CREDO_NON_NIHIL(widget1);
         CREDO_NON_NIHIL(widget2);
 
         /* Creare II tempestiva pro widget1, I pro widget2 */
-        CREDO_NON_NIHIL(tempestivum_creare(admin, widget1->id, "tick", C, VERUM));
-        CREDO_NON_NIHIL(tempestivum_creare(admin, widget1->id, "update", CC, VERUM));
-        CREDO_NON_NIHIL(tempestivum_creare(admin, widget2->id, "tick", CL, VERUM));
+        CREDO_NON_NIHIL(tempestivum_creare(admin, widget1->id, "tick",
+            C, VERUM));
+        CREDO_NON_NIHIL(tempestivum_creare(admin, widget1->id, "update",
+            CC, VERUM));
+        CREDO_NON_NIHIL(tempestivum_creare(admin, widget2->id, "tick",
+            CL, VERUM));
 
         /* Quaerere pro widget1 */
         tempestiva = tempestivum_pro_destinatione(admin, widget1->id);
@@ -364,26 +396,29 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        i32                      missi;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                            i32  missi;
 
         imprimere("\n--- Probans tempestivum_processare ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
         /* Registrare tractator */
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "tick", tractator_tick));
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "proc-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "proc-widget");
         CREDO_NON_NIHIL(widget);
 
         /* Creare tempestivum cum delay initiali brevis (10ms) */
@@ -415,26 +450,29 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
-        i32                      missi;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
+                            i32  missi;
 
         imprimere("\n--- Probans tempestivum repetens ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "tick", tractator_tick));
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "repeat-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "repeat-widget");
         CREDO_NON_NIHIL(widget);
 
         /* Creare tempestivum repetens cum delay 10ms et intervallo 10ms */
@@ -471,26 +509,29 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 tempestivum;
-        i32                      missi;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* tempestivum;
+                            i32  missi;
 
         imprimere("\n--- Probans tempestivum non repetens ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "update", tractator_update));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "update", tractator_update));
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "oneshot-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "oneshot-widget");
         CREDO_NON_NIHIL(widget);
 
         /* Creare tempestivum non repetens cum delay 10ms */
@@ -507,7 +548,8 @@ s32 principale(vacuum)
 
         /* Timer debet esse non activum post activationem */
         CREDO_FALSUM(tempestivum_est_activum(admin, tempestivum->id));
-        CREDO_AEQUALIS_I32(tempestivum_numerus_activorum(admin), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(tempestivum_numerus_activorum(admin),
+            ZEPHYRUM);
 
         /* Processare denuo - nihil */
         usleep(15000);
@@ -526,28 +568,33 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget1;
-        Entitas*                 widget2;
-        i32                      missi;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget1;
+                        Entitas* widget2;
+                            i32  missi;
 
         imprimere("\n--- Probans multa tempestiva ---\n");
 
         resettere_contadores();
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "tick", tractator_tick));
-        CREDO_VERUM(registrum_tractatoris_registrare(tractator, "Widget", "update", tractator_update));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "tick", tractator_tick));
+        CREDO_VERUM(registrum_tractatoris_registrare(tractator,
+            "Widget", "update", tractator_update));
 
-        widget1 = repo->entitas_scaffoldare(repo->datum, "Widget", "multi-widget-1");
-        widget2 = repo->entitas_scaffoldare(repo->datum, "Widget", "multi-widget-2");
+        widget1 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "multi-widget-1");
+        widget2 = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "multi-widget-2");
         CREDO_NON_NIHIL(widget1);
         CREDO_NON_NIHIL(widget2);
 
@@ -583,37 +630,41 @@ s32 principale(vacuum)
 
     {
         AdministratorTempestivi* admin;
-        RegistrumTractatoris*    tractator;
-        EntitasRepositorium*     repo;
-        CursusNuntiorum*         cursus;
-        Entitas*                 widget;
-        Entitas*                 lentum;
-        Entitas*                 celere;
-        s64                      meta;
+           RegistrumTractatoris* tractator;
+            EntitasRepositorium* repo;
+                CursusNuntiorum* cursus;
+                        Entitas* widget;
+                        Entitas* lentum;
+                        Entitas* celere;
+                            s64  meta;
 
         imprimere("\n--- Probans tempestivum_proxima_meta_ms ---\n");
 
-        tractator = registrum_tractatoris_creare(piscina, intern);
-        repo      = _creare_repo(piscina);
-        cursus    = cursus_creare(piscina, tractator, repo, intern);
-        admin     = administrator_tempestivi_creare(piscina, repo, cursus, intern);
+        tractator  = registrum_tractatoris_creare(piscina, intern);
+        repo       = _creare_repo(piscina);
+        cursus     = cursus_creare(piscina, tractator, repo, intern);
+        admin = administrator_tempestivi_creare(piscina, repo,
+            cursus, intern);
         CREDO_NON_NIHIL(admin);
 
         /* nullum tempestivum -> -1 (nihil paratum) */
         CREDO_VERUM(tempestivum_proxima_meta_ms(admin) == (s64)(-I));
         CREDO_VERUM(tempestivum_proxima_meta_ms(NIHIL) == (s64)(-I));
 
-        widget = repo->entitas_scaffoldare(repo->datum, "Widget", "meta-widget");
+        widget = repo->entitas_scaffoldare(repo->datum, "Widget",
+            "meta-widget");
         CREDO_NON_NIHIL(widget);
 
         /* tempestivum lentum (5000 ms) -> meta in (0, 5000] */
-        lentum = tempestivum_creare(admin, widget->id, "tick", 5000, VERUM);
+        lentum = tempestivum_creare(admin, widget->id, "tick", 5000,
+            VERUM);
         CREDO_NON_NIHIL(lentum);
         meta = tempestivum_proxima_meta_ms(admin);
         CREDO_VERUM(meta > (s64)ZEPHYRUM && meta <= (s64)5000);
 
         /* alterum celerius (50 ms) -> minima vincit */
-        celere = tempestivum_creare(admin, widget->id, "update", L, VERUM);
+        celere = tempestivum_creare(admin, widget->id, "update", L,
+            VERUM);
         CREDO_NON_NIHIL(celere);
         meta = tempestivum_proxima_meta_ms(admin);
         CREDO_VERUM(meta >= (s64)ZEPHYRUM && meta <= (s64)L);

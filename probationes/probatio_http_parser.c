@@ -28,8 +28,10 @@ probatio_methodus_ex_literis(vacuum)
     CREDO_VERUM(http_methodus_ex_literis("PATCH") == HTTP_PATCH);
     CREDO_VERUM(http_methodus_ex_literis("HEAD") == HTTP_HEAD);
     CREDO_VERUM(http_methodus_ex_literis("OPTIONS") == HTTP_OPTIONS);
-    CREDO_VERUM(http_methodus_ex_literis("UNKNOWN") == HTTP_METHODUS_IGNOTUS);
-    CREDO_VERUM(http_methodus_ex_literis(NIHIL) == HTTP_METHODUS_IGNOTUS);
+    CREDO_VERUM(http_methodus_ex_literis("UNKNOWN")
+        == HTTP_METHODUS_IGNOTUS);
+    CREDO_VERUM(http_methodus_ex_literis(NIHIL)
+        == HTTP_METHODUS_IGNOTUS);
 
     printf("\n");
 }
@@ -62,8 +64,10 @@ probatio_parse_get_simplex(Piscina* piscina)
     CREDO_VERUM(res.petitio->versio == XI);
     CREDO_VERUM(res.petitio->keep_alive == VERUM);
 
-    printf("  Methodus: %s\n", http_methodus_nomen(res.petitio->methodus));
-    printf("  Via: %.*s\n", res.petitio->via.mensura, res.petitio->via.datum);
+    printf("  Methodus: %s\n",
+        http_methodus_nomen(res.petitio->methodus));
+    printf("  Via: %.*s\n", res.petitio->via.mensura,
+        res.petitio->via.datum);
     printf("\n");
 }
 
@@ -89,14 +93,17 @@ probatio_parse_post_cum_corpus(Piscina* piscina)
     CREDO_NON_NIHIL(res.petitio);
 
     CREDO_VERUM(res.petitio->methodus == HTTP_POST);
-    CREDO_VERUM(chorda_aequalis_literis(res.petitio->via, "/api/users"));
+    CREDO_VERUM(chorda_aequalis_literis(res.petitio->via,
+        "/api/users"));
     CREDO_VERUM(res.petitio->content_length == XXVIII);
     CREDO_VERUM(res.petitio->corpus.mensura == XXVIII);
     CREDO_VERUM(chorda_aequalis_literis(res.petitio->corpus,
                                          "{\"name\":\"Claudius\",\"age\":42}"));
 
-    printf("  Methodus: %s\n", http_methodus_nomen(res.petitio->methodus));
-    printf("  Corpus: %.*s\n", res.petitio->corpus.mensura, res.petitio->corpus.datum);
+    printf("  Methodus: %s\n",
+        http_methodus_nomen(res.petitio->methodus));
+    printf("  Corpus: %.*s\n", res.petitio->corpus.mensura,
+        res.petitio->corpus.datum);
     printf("\n");
 }
 
@@ -122,13 +129,18 @@ probatio_parse_cum_quaestio(Piscina* piscina)
     CREDO_VERUM(res.completa);
     CREDO_NON_NIHIL(res.petitio);
 
-    CREDO_VERUM(chorda_aequalis_literis(res.petitio->uri, "/search?q=test&lang=la"));
+    CREDO_VERUM(chorda_aequalis_literis(res.petitio->uri,
+        "/search?q=test&lang=la"));
     CREDO_VERUM(chorda_aequalis_literis(res.petitio->via, "/search"));
-    CREDO_VERUM(chorda_aequalis_literis(res.petitio->quaestio, "q=test&lang=la"));
+    CREDO_VERUM(chorda_aequalis_literis(res.petitio->quaestio,
+        "q=test&lang=la"));
 
-    printf("  URI: %.*s\n", res.petitio->uri.mensura, res.petitio->uri.datum);
-    printf("  Via: %.*s\n", res.petitio->via.mensura, res.petitio->via.datum);
-    printf("  Quaestio: %.*s\n", res.petitio->quaestio.mensura, res.petitio->quaestio.datum);
+    printf("  URI: %.*s\n", res.petitio->uri.mensura,
+        res.petitio->uri.datum);
+    printf("  Via: %.*s\n", res.petitio->via.mensura,
+        res.petitio->via.datum);
+    printf("  Quaestio: %.*s\n", res.petitio->quaestio.mensura,
+        res.petitio->quaestio.datum);
     printf("\n");
 }
 
@@ -148,7 +160,7 @@ probatio_parse_headers(Piscina* piscina)
         "User-Agent: Rhubarb/1.0\r\n"
         "\r\n";
     HttpParseResultus res;
-    i32 i;
+                  i32 i;
 
     printf("--- Probans parse headers ---\n");
 
@@ -193,7 +205,8 @@ probatio_http_versio(Piscina* piscina)
     printf("--- Probans HTTP versio ---\n");
 
     /* HTTP/1.0 */
-    res = http_petitio_parse(petitio_10, (i32)strlen(petitio_10), piscina);
+    res = http_petitio_parse(petitio_10, (i32)strlen(petitio_10),
+        piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(res.petitio->versio == X);
     CREDO_VERUM(res.petitio->keep_alive == FALSUM);  /* Default pro 1.0 */
@@ -201,7 +214,8 @@ probatio_http_versio(Piscina* piscina)
            res.petitio->versio, res.petitio->keep_alive);
 
     /* HTTP/1.1 */
-    res = http_petitio_parse(petitio_11, (i32)strlen(petitio_11), piscina);
+    res = http_petitio_parse(petitio_11, (i32)strlen(petitio_11),
+        piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(res.petitio->versio == XI);
     CREDO_VERUM(res.petitio->keep_alive == VERUM);  /* Default pro 1.1 */
@@ -234,16 +248,19 @@ probatio_connection_header(Piscina* piscina)
     printf("--- Probans Connection header ---\n");
 
     /* HTTP/1.1 cum Connection: close */
-    res = http_petitio_parse(petitio_close, (i32)strlen(petitio_close), piscina);
+    res = http_petitio_parse(petitio_close, (i32)strlen(petitio_close),
+        piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(res.petitio->keep_alive == FALSUM);
     printf("  1.1 + close: keep_alive=%d\n", res.petitio->keep_alive);
 
     /* HTTP/1.0 cum Connection: keep-alive */
-    res = http_petitio_parse(petitio_keepalive, (i32)strlen(petitio_keepalive), piscina);
+    res = http_petitio_parse(petitio_keepalive,
+        (i32)strlen(petitio_keepalive), piscina);
     CREDO_VERUM(res.successus);
     CREDO_VERUM(res.petitio->keep_alive == VERUM);
-    printf("  1.0 + keep-alive: keep_alive=%d\n", res.petitio->keep_alive);
+    printf("  1.0 + keep-alive: keep_alive=%d\n",
+        res.petitio->keep_alive);
 
     printf("\n");
 }
@@ -256,8 +273,8 @@ probatio_connection_header(Piscina* piscina)
 interior vacuum
 probatio_parser_incrementalis(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* pars1 = "GET /path HTTP/1.1\r\n";
     constans character* pars2 = "Host: example.com\r\n";
     constans character* pars3 = "\r\n";
@@ -289,7 +306,8 @@ probatio_parser_incrementalis(Piscina* piscina)
 
     /* Verificare petitio */
     CREDO_NON_NIHIL(http_parser_obtinere_petitio(parser));
-    CREDO_VERUM(http_parser_obtinere_petitio(parser)->methodus == HTTP_GET);
+    CREDO_VERUM(http_parser_obtinere_petitio(parser)->methodus
+        == HTTP_GET);
 
     printf("\n");
 }
@@ -302,12 +320,13 @@ probatio_parser_incrementalis(Piscina* piscina)
 interior vacuum
 probatio_omnes_methodi(Piscina* piscina)
 {
-    HttpMethodus methodi[] = {HTTP_GET, HTTP_POST, HTTP_PUT, HTTP_DELETE,
+    HttpMethodus methodi[] = {HTTP_GET, HTTP_POST, HTTP_PUT,
+        HTTP_DELETE,
                               HTTP_PATCH, HTTP_HEAD, HTTP_OPTIONS};
     constans character* nomina[] = {"GET", "POST", "PUT", "DELETE",
                                      "PATCH", "HEAD", "OPTIONS"};
-    i32 i;
-    character petitio[CXXVIII];
+                  i32 i;
+            character petitio[CXXVIII];
     HttpParseResultus res;
 
     printf("--- Probans omnes methodi ---\n");
@@ -315,9 +334,11 @@ probatio_omnes_methodi(Piscina* piscina)
     per (i = 0; i < VII; i++)
     {
         /* Construere petitio */
-        sprintf(petitio, "%s / HTTP/1.1\r\nHost: test.com\r\n\r\n", nomina[i]);
+        sprintf(petitio, "%s / HTTP/1.1\r\nHost: test.com\r\n\r\n",
+            nomina[i]);
 
-        res = http_petitio_parse(petitio, (i32)strlen(petitio), piscina);
+        res = http_petitio_parse(petitio, (i32)strlen(petitio),
+            piscina);
         CREDO_VERUM(res.successus);
         CREDO_VERUM(res.petitio->methodus == methodi[i]);
         printf("  %s: OK\n", nomina[i]);
@@ -334,8 +355,8 @@ probatio_omnes_methodi(Piscina* piscina)
 interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
-    HttpParseResultus res;
-    HttpParser* parser;
+    HttpParseResultus  res;
+           HttpParser* parser;
 
     printf("--- Probans nullum argumenta ---\n");
 
@@ -372,24 +393,33 @@ probatio_status_descriptio(vacuum)
     /* 2xx */
     CREDO_VERUM(strcmp(http_status_descriptio(CC), "OK") == 0);
     CREDO_VERUM(strcmp(http_status_descriptio(CCI), "Created") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(CCIV), "No Content") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCIV), "No Content")
+        == 0);
 
     /* 3xx */
-    CREDO_VERUM(strcmp(http_status_descriptio(CCCI), "Moved Permanently") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCCI),
+        "Moved Permanently") == 0);
     CREDO_VERUM(strcmp(http_status_descriptio(CCCII), "Found") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(CCCIV), "Not Modified") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CCCIV), "Not Modified")
+        == 0);
 
     /* 4xx */
     CREDO_VERUM(strcmp(http_status_descriptio(CD), "Bad Request") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(CDI), "Unauthorized") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(CDIII), "Forbidden") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDI), "Unauthorized")
+        == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDIII), "Forbidden")
+        == 0);
     CREDO_VERUM(strcmp(http_status_descriptio(CDIV), "Not Found") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(CDV), "Method Not Allowed") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(CDV),
+        "Method Not Allowed") == 0);
 
     /* 5xx */
-    CREDO_VERUM(strcmp(http_status_descriptio(D), "Internal Server Error") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(DI), "Not Implemented") == 0);
-    CREDO_VERUM(strcmp(http_status_descriptio(DIII), "Service Unavailable") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(D),
+        "Internal Server Error") == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(DI), "Not Implemented")
+        == 0);
+    CREDO_VERUM(strcmp(http_status_descriptio(DIII),
+        "Service Unavailable") == 0);
 
     /* Unknown */
     CREDO_VERUM(strcmp(http_status_descriptio(999), "Unknown") == 0);
@@ -407,7 +437,7 @@ interior vacuum
 probatio_responsum_serialize_simplex(Piscina* piscina)
 {
     HttpResponsum resp;
-    chorda serialized;
+           chorda serialized;
 
     printf("--- Probans responsum_serialize simplex ---\n");
 
@@ -421,7 +451,8 @@ probatio_responsum_serialize_simplex(Piscina* piscina)
     CREDO_NON_NIHIL(serialized.datum);
 
     /* Verificare status line */
-    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 200 OK\r\n", XVII) == 0);
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 200 OK\r\n", XVII)
+        == 0);
 
     /* Verificare Content-Length praesens */
     CREDO_VERUM(chorda_continet(serialized,
@@ -440,7 +471,7 @@ interior vacuum
 probatio_responsum_serialize_404(Piscina* piscina)
 {
     HttpResponsum resp;
-    chorda serialized;
+           chorda serialized;
 
     printf("--- Probans responsum_serialize 404 ---\n");
 
@@ -451,7 +482,8 @@ probatio_responsum_serialize_404(Piscina* piscina)
     serialized = http_responsum_serialize(&resp, piscina);
 
     CREDO_VERUM(serialized.mensura > 0);
-    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 404 Not Found\r\n", XXIV) == 0);
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 404 Not Found\r\n",
+        XXIV) == 0);
 
     printf("  Status line correcta\n");
     printf("\n");
@@ -461,8 +493,8 @@ interior vacuum
 probatio_responsum_serialize_cum_headers(Piscina* piscina)
 {
     HttpResponsum resp;
-    HttpCaput capita[II];
-    chorda serialized;
+        HttpCaput capita[II];
+           chorda serialized;
 
     printf("--- Probans responsum_serialize cum headers ---\n");
 
@@ -470,20 +502,21 @@ probatio_responsum_serialize_cum_headers(Piscina* piscina)
     resp.status = CC;
 
     /* Addere custom headers */
-    capita[0].titulus = chorda_ex_literis("Content-Type", piscina);
-    capita[0].valor = chorda_ex_literis("application/json", piscina);
-    capita[I].titulus = chorda_ex_literis("X-Custom", piscina);
-    capita[I].valor = chorda_ex_literis("test-value", piscina);
+    capita[0].titulus  = chorda_ex_literis("Content-Type", piscina);
+    capita[0].valor    = chorda_ex_literis("application/json", piscina);
+    capita[I].titulus  = chorda_ex_literis("X-Custom", piscina);
+    capita[I].valor    = chorda_ex_literis("test-value", piscina);
 
-    resp.capita = capita;
-    resp.capita_numerus = II;
-    resp.corpus = chorda_ex_literis("{}", piscina);
+    resp.capita          = capita;
+    resp.capita_numerus  = II;
+    resp.corpus          = chorda_ex_literis("{}", piscina);
 
     serialized = http_responsum_serialize(&resp, piscina);
 
     CREDO_VERUM(serialized.mensura > 0);
     CREDO_VERUM(chorda_continet(serialized,
-        chorda_ex_literis("Content-Type: application/json\r\n", piscina)));
+        chorda_ex_literis("Content-Type: application/json\r\n",
+        piscina)));
     CREDO_VERUM(chorda_continet(serialized,
         chorda_ex_literis("X-Custom: test-value\r\n", piscina)));
 
@@ -495,7 +528,7 @@ interior vacuum
 probatio_responsum_serialize_sine_corpus(Piscina* piscina)
 {
     HttpResponsum resp;
-    chorda serialized;
+           chorda serialized;
 
     printf("--- Probans responsum_serialize sine corpus ---\n");
 
@@ -505,14 +538,16 @@ probatio_responsum_serialize_sine_corpus(Piscina* piscina)
     serialized = http_responsum_serialize(&resp, piscina);
 
     CREDO_VERUM(serialized.mensura > 0);
-    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 204 No Content\r\n", XXV) == 0);
+    CREDO_VERUM(memcmp(serialized.datum, "HTTP/1.1 204 No Content\r\n",
+        XXV) == 0);
 
     /* Non debet habere Content-Length */
     CREDO_FALSUM(chorda_continet(serialized,
         chorda_ex_literis("Content-Length", piscina)));
 
     /* Debet finire cum \r\n\r\n */
-    CREDO_VERUM(memcmp(serialized.datum + serialized.mensura - IV, "\r\n\r\n", IV) == 0);
+    CREDO_VERUM(memcmp(serialized.datum + serialized.mensura - IV,
+        "\r\n\r\n", IV) == 0);
 
     printf("  204 No Content correcte serialized\n");
     printf("\n");
@@ -539,10 +574,11 @@ probatio_responsum_serialize_nihil(Piscina* piscina)
  * ======================================================================== */
 
 interior vacuum
-probatio_parse_sine_uri(Piscina* piscina)
+probatio_parse_sine_uri (
+    Piscina* piscina)
 {
     constans character* petitio = "GET HTTP/1.1\r\n\r\n";
-    HttpParseResultus res;
+     HttpParseResultus  res;
 
     printf("--- Probans parse sine URI ---\n");
 
@@ -563,10 +599,11 @@ probatio_parse_sine_uri(Piscina* piscina)
 }
 
 interior vacuum
-probatio_parse_sine_versio(Piscina* piscina)
+probatio_parse_sine_versio (
+    Piscina* piscina)
 {
     constans character* petitio = "GET /path\r\n\r\n";
-    HttpParseResultus res;
+     HttpParseResultus  res;
 
     printf("--- Probans parse sine versio ---\n");
 
@@ -585,7 +622,8 @@ probatio_parse_sine_versio(Piscina* piscina)
 }
 
 interior vacuum
-probatio_parse_header_sine_colon(Piscina* piscina)
+probatio_parse_header_sine_colon (
+    Piscina* piscina)
 {
     constans character* petitio =
         "GET /path HTTP/1.1\r\n"
@@ -599,7 +637,8 @@ probatio_parse_header_sine_colon(Piscina* piscina)
 
     /* Expectamus ut header ignoretur vel error */
     printf("  successus=%d, capita=%d\n",
-           res.successus, res.petitio ? res.petitio->capita_numerus : 0);
+           res.successus,
+           res.petitio ? res.petitio->capita_numerus : 0);
     printf("\n");
 }
 
@@ -622,7 +661,8 @@ probatio_parse_vacua(Piscina* piscina)
 }
 
 interior vacuum
-probatio_parse_content_length_mismatch(Piscina* piscina)
+probatio_parse_content_length_mismatch (
+    Piscina* piscina)
 {
     constans character* petitio =
         "POST /api HTTP/1.1\r\n"
@@ -642,16 +682,18 @@ probatio_parse_content_length_mismatch(Piscina* piscina)
     }
     alioquin
     {
-        printf("  successus=%d, completa=%d\n", res.successus, res.completa);
+        printf("  successus=%d, completa=%d\n", res.successus,
+            res.completa);
     }
     printf("\n");
 }
 
 interior vacuum
-probatio_parse_uri_longa(Piscina* piscina)
+probatio_parse_uri_longa (
+    Piscina* piscina)
 {
-    character petitio[MMMMXCVI];
-    i32 uri_len;
+            character petitio[MMMMXCVI];
+                  i32 uri_len;
     HttpParseResultus res;
 
     printf("--- Probans URI longa ---\n");
@@ -666,7 +708,8 @@ probatio_parse_uri_longa(Piscina* piscina)
 
     si (res.successus)
     {
-        printf("  URI longa accepted (len=%d)\n", res.petitio->uri.mensura);
+        printf("  URI longa accepted (len=%d)\n",
+            res.petitio->uri.mensura);
     }
     alioquin
     {
@@ -761,9 +804,9 @@ probatio_custos_methodus_ignota(Piscina* piscina)
 interior vacuum
 probatio_custos_versio(Piscina* piscina)
 {
-    constans character* mala = "GET / HTTP/9.9\r\n\r\n";
-    constans character* absens = "GET /path\r\n\r\n";
-    HttpParseResultus res;
+    constans character* mala    = "GET / HTTP/9.9\r\n\r\n";
+    constans character* absens  = "GET /path\r\n\r\n";
+     HttpParseResultus  res;
 
     printf("--- Probans custos versio -> 400 ---\n");
 
@@ -817,8 +860,8 @@ probatio_lf_leniens(Piscina* piscina)
 interior vacuum
 probatio_lf_crlf_divisum(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* pars1 = "GET /path HTTP/1.1\r";
     constans character* pars2 = "\nHost: example.com\r\n\r\n";
 
@@ -847,8 +890,8 @@ interior vacuum
 probatio_limes_uri(Piscina* piscina)
 {
     hic_manens character petitio[X * M];
-    i32 len;
-    HttpParseResultus res;
+                     i32 len;
+       HttpParseResultus res;
 
     printf("--- Probans limes URI -> 414 ---\n");
 
@@ -867,8 +910,8 @@ probatio_limes_uri(Piscina* piscina)
 interior vacuum
 probatio_limes_petitio_parva(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* petitio =
         "GET /via/satis/longa/ut/limitem/parvum/excedat HTTP/1.1\r\n"
         "Host: example.com\r\n"
@@ -888,8 +931,8 @@ probatio_limes_petitio_parva(Piscina* piscina)
 interior vacuum
 probatio_limes_cl_nuntiatum(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* petitio =
         "POST /api HTTP/1.1\r\n"
         "Content-Length: 999999999\r\n"
@@ -912,8 +955,8 @@ probatio_limes_cl_nuntiatum(Piscina* piscina)
 interior vacuum
 probatio_reliquiae(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* sine_corpore =
         "GET / HTTP/1.1\r\n\r\nGET /next HTTP/1.1\r\n";
     constans character* cum_corpore =
@@ -928,20 +971,22 @@ probatio_reliquiae(Piscina* piscina)
 
     /* Bytes pipelinati post petitionem sine corpore */
     parser = http_parser_creare(piscina);
-    res = http_parser_adicere(parser, sine_corpore, (i32)strlen(sine_corpore));
+    res = http_parser_adicere(parser, sine_corpore,
+        (i32)strlen(sine_corpore));
     CREDO_VERUM(res.successus);
     CREDO_VERUM(res.completa);
     CREDO_VERUM(http_parser_reliquiae(parser) == XX);
 
     /* Post corpus */
     parser = http_parser_creare(piscina);
-    res = http_parser_adicere(parser, cum_corpore, (i32)strlen(cum_corpore));
+    res = http_parser_adicere(parser, cum_corpore,
+        (i32)strlen(cum_corpore));
     CREDO_VERUM(res.completa);
     CREDO_VERUM(http_parser_reliquiae(parser) == V);
 
     /* Exacte in fine -> 0 */
-    parser = http_parser_creare(piscina);
-    res = http_parser_adicere(parser, exacta, (i32)strlen(exacta));
+    parser  = http_parser_creare(piscina);
+    res     = http_parser_adicere(parser, exacta, (i32)strlen(exacta));
     CREDO_VERUM(res.completa);
     CREDO_VERUM(http_parser_reliquiae(parser) == 0);
     printf("\n");
@@ -956,7 +1001,7 @@ interior vacuum
 probatio_serialize_vacua_cc(Piscina* piscina)
 {
     HttpResponsum resp;
-    chorda serialized;
+           chorda serialized;
 
     printf("--- Probans serialize 200 vacua -> CL: 0 ---\n");
 
@@ -974,20 +1019,20 @@ interior vacuum
 probatio_serialize_capita_saltata(Piscina* piscina)
 {
     HttpResponsum resp;
-    HttpCaput capita[II];
-    chorda serialized;
+        HttpCaput capita[II];
+           chorda serialized;
 
     printf("--- Probans serialize capita CL/Connection saltata ---\n");
 
     memset(&resp, 0, magnitudo(resp));
-    resp.status = CC;
-    capita[0].titulus = chorda_ex_literis("Content-Length", piscina);
-    capita[0].valor = chorda_ex_literis("999", piscina);
-    capita[I].titulus = chorda_ex_literis("Connection", piscina);
-    capita[I].valor = chorda_ex_literis("upgrade", piscina);
-    resp.capita = capita;
-    resp.capita_numerus = II;
-    resp.corpus = chorda_ex_literis("ok", piscina);
+    resp.status          = CC;
+    capita[0].titulus    = chorda_ex_literis("Content-Length", piscina);
+    capita[0].valor      = chorda_ex_literis("999", piscina);
+    capita[I].titulus    = chorda_ex_literis("Connection", piscina);
+    capita[I].valor      = chorda_ex_literis("upgrade", piscina);
+    resp.capita          = capita;
+    resp.capita_numerus  = II;
+    resp.corpus          = chorda_ex_literis("ok", piscina);
 
     serialized = http_responsum_serialize(&resp, piscina);
     CREDO_FALSUM(chorda_continet(serialized,
@@ -1003,7 +1048,7 @@ interior vacuum
 probatio_serialize_cum_conexione(Piscina* piscina)
 {
     HttpResponsum resp;
-    chorda serialized;
+           chorda serialized;
 
     printf("--- Probans serialize_cum_conexione ---\n");
 
@@ -1011,11 +1056,13 @@ probatio_serialize_cum_conexione(Piscina* piscina)
     resp.status = CC;
     resp.corpus = chorda_ex_literis("ok", piscina);
 
-    serialized = http_responsum_serialize_cum_conexione(&resp, VERUM, piscina);
+    serialized = http_responsum_serialize_cum_conexione(&resp, VERUM,
+        piscina);
     CREDO_VERUM(chorda_continet(serialized,
         chorda_ex_literis("Connection: keep-alive\r\n", piscina)));
 
-    serialized = http_responsum_serialize_cum_conexione(&resp, FALSUM, piscina);
+    serialized = http_responsum_serialize_cum_conexione(&resp, FALSUM,
+        piscina);
     CREDO_VERUM(chorda_continet(serialized,
         chorda_ex_literis("Connection: close\r\n", piscina)));
 
@@ -1034,8 +1081,8 @@ probatio_serialize_cum_conexione(Piscina* piscina)
 interior vacuum
 probatio_reset_hygiene(Piscina* piscina)
 {
-    HttpParser* parser;
-    HttpParseResultus res;
+            HttpParser* parser;
+     HttpParseResultus  res;
     constans character* prima =
         "POST /a HTTP/1.1\r\n"
         "Content-Length: 3\r\n"
@@ -1073,10 +1120,10 @@ probatio_reset_hygiene(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");
@@ -1084,7 +1131,8 @@ principale(vacuum)
     printf("========================================\n");
     printf("\n");
 
-    piscina = piscina_generare_dynamicum("probatio_http_parser", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_http_parser",
+        CXXVIII * M);
     credo_aperire(piscina);
 
     probatio_methodus_ex_literis();

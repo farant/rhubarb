@@ -10,7 +10,7 @@
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
+        b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_friatio", MMMMXCVI);
@@ -20,6 +20,7 @@ s32 principale(vacuum)
         redde I;
     }
     credo_aperire(piscina);
+
 
     /* ==================================================
      * Probare FNV-1a basicum
@@ -54,6 +55,7 @@ s32 principale(vacuum)
         imprimere("  Hash 'world': 0x%08X\n", h2);
     }
 
+
     /* ==================================================
      * Probare FNV-1a literis
      * ================================================== */
@@ -75,6 +77,7 @@ s32 principale(vacuum)
         imprimere("  Hash 'test' (literis): 0x%08X\n", h1);
     }
 
+
     /* ==================================================
      * Probare FNV-1a valores cognitos
      * ================================================== */
@@ -83,26 +86,27 @@ s32 principale(vacuum)
 
     {
         chorda ch;
-        i32    h;
+           i32 h;
 
         /* FNV-1a of "" = 0x811c9dc5 (2166136261) */
-        ch = chorda_ex_literis("", piscina);
-        h = friatio_fnv1a(ch);
+        ch  = chorda_ex_literis("", piscina);
+        h   = friatio_fnv1a(ch);
         CREDO_AEQUALIS_I32(h, (i32)0x811c9dc5);
         imprimere("  '' -> 0x%08X (expected 0x811c9dc5)\n", h);
 
         /* "a" */
-        ch = chorda_ex_literis("a", piscina);
-        h = friatio_fnv1a(ch);
+        ch  = chorda_ex_literis("a", piscina);
+        h   = friatio_fnv1a(ch);
         CREDO_AEQUALIS_I32(h, (i32)0xe40c292c);
         imprimere("  'a' -> 0x%08X (expected 0xe40c292c)\n", h);
 
         /* "foobar" */
-        ch = chorda_ex_literis("foobar", piscina);
-        h = friatio_fnv1a(ch);
+        ch  = chorda_ex_literis("foobar", piscina);
+        h   = friatio_fnv1a(ch);
         CREDO_AEQUALIS_I32(h, (i32)0xbf9cf968);
         imprimere("  'foobar' -> 0x%08X (expected 0xbf9cf968)\n", h);
     }
+
 
     /* ==================================================
      * Probare DJB2 basicum
@@ -131,6 +135,7 @@ s32 principale(vacuum)
         imprimere("  Hash 'world': 0x%08X\n", h2);
     }
 
+
     /* ==================================================
      * Probare DJB2 literis
      * ================================================== */
@@ -152,6 +157,7 @@ s32 principale(vacuum)
         imprimere("  Hash 'test' (literis): 0x%08X\n", h1);
     }
 
+
     /* ==================================================
      * Probare DJB2 valores cognitos
      * ================================================== */
@@ -160,20 +166,21 @@ s32 principale(vacuum)
 
     {
         chorda ch;
-        i32    h;
+           i32 h;
 
         /* DJB2 of empty string = 5381 (init value) */
-        ch = chorda_ex_literis("", piscina);
-        h = friatio_djb2(ch);
+        ch  = chorda_ex_literis("", piscina);
+        h   = friatio_djb2(ch);
         CREDO_AEQUALIS_I32(h, (i32)5381);
         imprimere("  '' -> %u (expected 5381)\n", h);
 
         /* Known value for "hello" */
-        ch = chorda_ex_literis("hello", piscina);
-        h = friatio_djb2(ch);
+        ch  = chorda_ex_literis("hello", piscina);
+        h   = friatio_djb2(ch);
         CREDO_AEQUALIS_I32(h, (i32)0x0F923099);
         imprimere("  'hello' -> 0x%08X\n", h);
     }
+
 
     /* ==================================================
      * Probare SHA-1 basicum
@@ -182,7 +189,7 @@ s32 principale(vacuum)
     imprimere("\n--- Probans sha1_friare ---\n");
 
     {
-        i8  digest[SHA1_DIGEST_MENSURA];
+         i8 digest[SHA1_DIGEST_MENSURA];
         i32 i;
 
         /* Hash empty string */
@@ -202,6 +209,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0xee);
     }
 
+
     /* ==================================================
      * Probare SHA-1 test vectors
      * ================================================== */
@@ -209,7 +217,7 @@ s32 principale(vacuum)
     imprimere("\n--- Probans SHA-1 test vectors ---\n");
 
     {
-        i8  digest[SHA1_DIGEST_MENSURA];
+         i8 digest[SHA1_DIGEST_MENSURA];
         i32 i;
 
         /* Test vector 1: "abc" */
@@ -231,10 +239,11 @@ s32 principale(vacuum)
     }
 
     {
-        constans character* test2 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
-        i32 len2 = (i32)strlen(test2);
-        i8  digest[SHA1_DIGEST_MENSURA];
-        i32 i;
+        constans character* test2 =
+            "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
+                       i32 len2 = (i32)strlen(test2);
+                        i8 digest[SHA1_DIGEST_MENSURA];
+                       i32 i;
 
         /* Expected: 84983e441c3bd26ebaae4aa1f95129e5e54670f1 */
         sha1_friare((constans i8*)test2, len2, digest);
@@ -252,6 +261,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x44);
     }
 
+
     /* ==================================================
      * Probare SHA-1 incrementale
      * ================================================== */
@@ -260,9 +270,9 @@ s32 principale(vacuum)
 
     {
         SHA1Contextus ctx;
-        i8  digest1[SHA1_DIGEST_MENSURA];
-        i8  digest2[SHA1_DIGEST_MENSURA];
-        i32 i;
+                   i8 digest1[SHA1_DIGEST_MENSURA];
+                   i8 digest2[SHA1_DIGEST_MENSURA];
+                  i32 i;
 
         /* Hash "hello world" in uno passu */
         sha1_friare((constans i8*)"hello world", XI, digest1);
@@ -276,7 +286,8 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         per (i = ZEPHYRUM; i < SHA1_DIGEST_MENSURA; i++)
         {
-            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF, (i8)digest2[i] & 0xFF);
+            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF,
+                (i8)digest2[i] & 0xFF);
         }
 
         imprimere("  Incrementale = uno passu: ");
@@ -287,6 +298,7 @@ s32 principale(vacuum)
         imprimere("\n");
     }
 
+
     /* ==================================================
      * Probare sha1_friare_chorda
      * ================================================== */
@@ -295,9 +307,9 @@ s32 principale(vacuum)
 
     {
         chorda ch;
-        i8     digest1[SHA1_DIGEST_MENSURA];
-        i8     digest2[SHA1_DIGEST_MENSURA];
-        i32    i;
+            i8 digest1[SHA1_DIGEST_MENSURA];
+            i8 digest2[SHA1_DIGEST_MENSURA];
+           i32 i;
 
         ch = chorda_ex_literis("test string", piscina);
 
@@ -307,11 +319,13 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         per (i = ZEPHYRUM; i < SHA1_DIGEST_MENSURA; i++)
         {
-            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF, (i8)digest2[i] & 0xFF);
+            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF,
+                (i8)digest2[i] & 0xFF);
         }
 
         imprimere("  SHA1 chorda = SHA1 literis: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare comparatio FNV-1a vs DJB2
@@ -323,9 +337,9 @@ s32 principale(vacuum)
         chorda ch;
         i32    fnv, djb;
 
-        ch = chorda_ex_literis("same input", piscina);
-        fnv = friatio_fnv1a(ch);
-        djb = friatio_djb2(ch);
+        ch   = chorda_ex_literis("same input", piscina);
+        fnv  = friatio_fnv1a(ch);
+        djb  = friatio_djb2(ch);
 
         /* Debent esse differentes (different algorithms) */
         CREDO_INAEQUALITAS_I32(fnv, djb);
@@ -335,6 +349,7 @@ s32 principale(vacuum)
         imprimere("    DJB2:   0x%08X\n", djb);
     }
 
+
     /* ==================================================
      * Probare SHA-256 basicum
      * ================================================== */
@@ -342,7 +357,7 @@ s32 principale(vacuum)
     imprimere("\n--- Probans sha256_friare ---\n");
 
     {
-        i8  digest[SHA256_DIGEST_MENSURA];
+         i8 digest[SHA256_DIGEST_MENSURA];
         i32 i;
 
         /* Hash empty string */
@@ -362,6 +377,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x42);
     }
 
+
     /* ==================================================
      * Probare SHA-256 test vectors
      * ================================================== */
@@ -369,7 +385,7 @@ s32 principale(vacuum)
     imprimere("\n--- Probans SHA-256 test vectors ---\n");
 
     {
-        i8  digest[SHA256_DIGEST_MENSURA];
+         i8 digest[SHA256_DIGEST_MENSURA];
         i32 i;
 
         /* Test vector 1: "abc" */
@@ -391,10 +407,11 @@ s32 principale(vacuum)
     }
 
     {
-        constans character* test2 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
-        i32 len2 = (i32)strlen(test2);
-        i8  digest[SHA256_DIGEST_MENSURA];
-        i32 i;
+        constans character* test2 =
+            "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
+                       i32 len2 = (i32)strlen(test2);
+                        i8 digest[SHA256_DIGEST_MENSURA];
+                       i32 i;
 
         /* Expected: 248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1 */
         sha256_friare((constans i8*)test2, len2, digest);
@@ -412,6 +429,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_S32((i8)digest[III] & 0xFF, 0x61);
     }
 
+
     /* ==================================================
      * Probare SHA-256 incrementale
      * ================================================== */
@@ -420,9 +438,9 @@ s32 principale(vacuum)
 
     {
         SHA256Contextus ctx;
-        i8  digest1[SHA256_DIGEST_MENSURA];
-        i8  digest2[SHA256_DIGEST_MENSURA];
-        i32 i;
+                     i8 digest1[SHA256_DIGEST_MENSURA];
+                     i8 digest2[SHA256_DIGEST_MENSURA];
+                    i32 i;
 
         /* Hash "hello world" in uno passu */
         sha256_friare((constans i8*)"hello world", XI, digest1);
@@ -436,7 +454,8 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         per (i = ZEPHYRUM; i < SHA256_DIGEST_MENSURA; i++)
         {
-            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF, (i8)digest2[i] & 0xFF);
+            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF,
+                (i8)digest2[i] & 0xFF);
         }
 
         imprimere("  Incrementale = uno passu: ");
@@ -447,6 +466,7 @@ s32 principale(vacuum)
         imprimere("\n");
     }
 
+
     /* ==================================================
      * Probare sha256_friare_chorda
      * ================================================== */
@@ -455,9 +475,9 @@ s32 principale(vacuum)
 
     {
         chorda ch;
-        i8     digest1[SHA256_DIGEST_MENSURA];
-        i8     digest2[SHA256_DIGEST_MENSURA];
-        i32    i;
+            i8 digest1[SHA256_DIGEST_MENSURA];
+            i8 digest2[SHA256_DIGEST_MENSURA];
+           i32 i;
 
         ch = chorda_ex_literis("test string", piscina);
 
@@ -467,11 +487,13 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         per (i = ZEPHYRUM; i < SHA256_DIGEST_MENSURA; i++)
         {
-            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF, (i8)digest2[i] & 0xFF);
+            CREDO_AEQUALIS_S32((i8)digest1[i] & 0xFF,
+                (i8)digest2[i] & 0xFF);
         }
 
         imprimere("  SHA256 chorda = SHA256 literis: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare CRC32 basicum
@@ -489,9 +511,11 @@ s32 principale(vacuum)
 
         /* Known test vector: "123456789" -> 0xCBF43926 */
         crc = crc32_calculare((constans i8*)"123456789", IX);
-        imprimere("  CRC32('123456789') = 0x%08X (expected 0xCBF43926)\n", crc);
+        imprimere("  CRC32('123456789') = 0x%08X (expected 0xCBF43926)\n",
+            crc);
         CREDO_AEQUALIS_I32(crc, (i32)0xCBF43926);
     }
+
 
     /* ==================================================
      * Probare CRC32 test vectors
@@ -511,9 +535,11 @@ s32 principale(vacuum)
         crc = crc32_calculare(
             (constans i8*)"The quick brown fox jumps over the lazy dog",
             XLIII);
-        imprimere("  CRC32('The quick brown...') = 0x%08X (expected 0x414FA339)\n", crc);
+        imprimere("  CRC32('The quick brown...') = 0x%08X (expected 0x414FA339)\n",
+            crc);
         CREDO_AEQUALIS_I32(crc, (i32)0x414FA339);
     }
+
 
     /* ==================================================
      * Probare CRC32 incrementale
@@ -539,6 +565,7 @@ s32 principale(vacuum)
         imprimere("  Incrementale = uno passu: 0x%08X\n", crc1);
     }
 
+
     /* ==================================================
      * Probare crc32_calculare_chorda
      * ================================================== */
@@ -557,8 +584,10 @@ s32 principale(vacuum)
         /* Debent esse aequales */
         CREDO_AEQUALIS_I32(crc1, crc2);
 
-        imprimere("  CRC32 chorda = CRC32 literis: VERUM (0x%08X)\n", crc1);
+        imprimere("  CRC32 chorda = CRC32 literis: VERUM (0x%08X)\n",
+            crc1);
     }
+
 
     /* ==================================================
      * Compendium

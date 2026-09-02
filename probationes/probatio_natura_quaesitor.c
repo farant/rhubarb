@@ -20,66 +20,78 @@
 #include "processus.h"
 #include <stdio.h>
 
-interior ProcessusResultus _currere(constans character* arg1,
+interior ProcessusResultus
+_currere (
+                                    constans character* arg1,
                                     constans character* arg2,
                                     constans character* arg3,
-                                    Piscina* piscina);
-interior ProcessusResultus _currere4(constans character* arg1,
+                                               Piscina* piscina);
+interior ProcessusResultus
+_currere4 (
+                                     constans character* arg1,
                                      constans character* arg2,
                                      constans character* arg3,
                                      constans character* arg4,
-                                     Piscina* piscina);
-interior b32 _continet_literis(chorda effusio,
+                                                Piscina* piscina);
+interior b32
+_continet_literis (
+                                           chorda  effusio,
                                constans character* literae,
-                               Piscina* piscina);
+                                          Piscina* piscina);
 
 interior ProcessusResultus
-_currere(
-    constans character*  arg1,
-    constans character*  arg2,
-    constans character*  arg3,
-    Piscina*             piscina)
+_currere (
+    constans character* arg1,
+    constans character* arg2,
+    constans character* arg3,
+               Piscina* piscina)
 {
     constans character* argumenta[VI];
-    i32                 n;
+                   i32  n;
 
-    n = ZEPHYRUM;
-    argumenta[n++] = "bin/natura";
-    si (arg1) { argumenta[n++] = arg1; }
-    si (arg2) { argumenta[n++] = arg2; }
-    si (arg3) { argumenta[n++] = arg3; }
+    n               = ZEPHYRUM;
+    argumenta[n++]  = "bin/natura";
+    si (arg1)
+    { argumenta[n++] = arg1;
+    }
+    si (arg2)
+    { argumenta[n++] = arg2;
+    }
+    si (arg3)
+    { argumenta[n++] = arg3;
+    }
     argumenta[n] = NIHIL;
 
     redde processus_exsequi(argumenta, 60000, piscina);
 }
 
 interior ProcessusResultus
-_currere4(
-    constans character*  arg1,
-    constans character*  arg2,
-    constans character*  arg3,
-    constans character*  arg4,
-    Piscina*             piscina)
+_currere4 (
+    constans character* arg1,
+    constans character* arg2,
+    constans character* arg3,
+    constans character* arg4,
+               Piscina* piscina)
 {
     constans character* argumenta[VI];
-    i32                 n;
+                   i32  n;
 
-    n = ZEPHYRUM;
-    argumenta[n++] = "bin/natura";
-    argumenta[n++] = arg1;
-    argumenta[n++] = arg2;
-    argumenta[n++] = arg3;
-    argumenta[n++] = arg4;
-    argumenta[n]   = NIHIL;
+    n               = ZEPHYRUM;
+    argumenta[n++]  = "bin/natura";
+    argumenta[n++]  = arg1;
+    argumenta[n++]  = arg2;
+    argumenta[n++]  = arg3;
+    argumenta[n++]  = arg4;
+    argumenta[n]    = NIHIL;
 
     redde processus_exsequi(argumenta, 60000, piscina);
 }
 
 interior b32
-_continet_literis(
-    chorda               effusio,
-    constans character*  literae,
-    Piscina*             piscina)
+_continet_literis (
+                chorda  effusio,
+    constans character* literae,
+               Piscina* piscina)
 {
     redde chorda_continet(effusio,
                           chorda_ex_literis(literae, piscina));
@@ -88,7 +100,7 @@ _continet_literis(
 s32 principale (vacuum)
 {
          b32  praeteritus;
-    Piscina*  piscina;
+     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_natura_quaesitor",
                                          8388608);
@@ -99,20 +111,22 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * 0. instrumentum paratur
      * ======================================================== */
+
     {
         imprimere("\n--- 0. instrumentum ---\n");
 
         si (!filum_existit("bin/natura"))
         {
             constans character* struere[II];
-            ProcessusResultus   rs;
+             ProcessusResultus  rs;
 
             imprimere("  (bin/natura abest - struo semel)\n");
             struere[ZEPHYRUM] = "./tools/natura_struere.sh";
-            struere[I]        = NIHIL;
+            struere[I] = NIHIL;
             rs = processus_exsequi(struere, 300000, piscina);
             si (!rs.successus || rs.codex_exitus != ZEPHYRUM)
             {
@@ -123,6 +137,7 @@ s32 principale (vacuum)
         CREDO_VERUM (filum_existit("bin/natura"));
     }
 
+
     /* ========================================================
      * I. CULPA PLANTATA: nomen quod SOLUM ut species exsistit
      *
@@ -130,6 +145,7 @@ s32 principale (vacuum)
      * custos collisionum mortuus est et nomina occupata libera
      * videbuntur - exacte quod 2026-08-08 accidit.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -146,9 +162,11 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * II. nomen vere liberum: SENTENTIA contraria
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -165,9 +183,11 @@ s32 principale (vacuum)
                                         piscina));
     }
 
+
     /* ========================================================
      * III. genus nomine ipso quoque OCCUPATUM nuntiatur
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -181,12 +201,14 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * IV. apparatus hereditatem fert (trans exemplaria)
      *
      * deceptio sub defectus_documenti sedet: contentum et
      * in_opere a parente veniunt, ideo [hereditarium].
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -206,9 +228,11 @@ s32 principale (vacuum)
             piscina));
     }
 
+
     /* ========================================================
      * V. maiores trans exemplaria (documentatio -> fabricatio)
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -223,9 +247,11 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * VI. DISCIPLINA EXITUUM: 2 = NIHIL CURSUM, non salus
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -246,12 +272,14 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)r.codex_exitus, (i32)II);
     }
 
+
     /* ========================================================
      * VII. modus machinae: SENTENTIA linea propria
      *
      * Custos truncationis: sententia ULTIMA linea est, ideo
      * etiam 'tail -1' responsum servat.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -267,6 +295,7 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * VIII. UMBRAE: tertius status sententiae
      *
@@ -274,6 +303,7 @@ s32 principale (vacuum)
      * (nullum ens id fert) nec LIBERUM (adhibetur): condere eo
      * nomine umbram IMPLET. Sententia binaria hic mentiretur.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -294,11 +324,13 @@ s32 principale (vacuum)
             (i32)I);
     }
 
+
     /* ========================================================
      * IX. APPARATUS DIVES (munus a natura_quaere.sh migratum):
      * optiones electionis, status machinae, necessitas partium,
      * petitum relationis, catena in arbore, species.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -331,10 +363,12 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * IXb. species enumerantur (genus quod eas RECTA habet -
      * plantae species sub sub-generibus sedent, non sub ipsa)
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -350,9 +384,11 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * X. petitum relationis NOMINATUR (non solum nomen relationis)
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -375,12 +411,14 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * XI. TAXINOMIA NIDIFICATA (2026-08-08): species speciem
      * continere potest. Ante hoc graphus id planabat, ergo
      * 'intra isbn' dici non poterat - res ad genus ambiens
      * solum referebatur.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -404,6 +442,7 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * XII. CENSUS + RELATIONES: mensurae ex arbore PARSATA
      *
@@ -413,6 +452,7 @@ s32 principale (vacuum)
      * STRUCTURALES falsi - quod peius est, quia nemo eos contra
      * quicquam conferre potest.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 
@@ -439,11 +479,13 @@ s32 principale (vacuum)
                                        piscina));
     }
 
+
     /* ========================================================
      * XIII. NECESSITUDINES (corpus fictum -radix): ambulatio
      * quarta quaerentis, columna ligata/soluta, cohors
      * conversorum (a= solo), TERMINI in apparatu, census.
      * ======================================================== */
+
     {
         ProcessusResultus r;
 

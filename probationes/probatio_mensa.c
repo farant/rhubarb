@@ -14,12 +14,18 @@
 #define VIA_PROBATIONIS "build/probatio_mensa.db"
 
 interior s64
-_actum (Volumen* vol, constans character* genus,
-    constans character* datum, Piscina* piscina);
+_actum (
+               Volumen* vol,
+    constans character* genus,
+    constans character* datum,
+               Piscina* piscina);
 
 interior s64
-_actum (Volumen* vol, constans character* genus,
-    constans character* datum, Piscina* piscina)
+_actum (
+               Volumen* vol,
+    constans character* genus,
+    constans character* datum,
+               Piscina* piscina)
 {
     redde volumen_actum_appendere(vol, genus,
         chorda_ex_literis(datum, piscina));
@@ -27,7 +33,7 @@ _actum (Volumen* vol, constans character* genus,
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
     Volumen* vol;
 
@@ -45,12 +51,13 @@ s32 principale (vacuum)
     }
     vol = volumen_creare(piscina, VIA_PROBATIONIS);
 
+
     /* ========================================================
      * PROBARE: volumen_acta_legere - post_seq exclusivum
      * ======================================================== */
 
     {
-        Xar*          acta;
+                 Xar* acta;
         VolumenActum* a;
 
         imprimere("\n--- Probans volumen_acta_legere ---\n");
@@ -72,15 +79,16 @@ s32 principale (vacuum)
         CREDO_VERUM(a->momentum.mensura > ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: plica - creatum + fusio + deletum + aliena
      * ======================================================== */
 
     {
-        chorda       status;
-        JsonResultus lectum;
-        JsonValor*   elementa;
-        JsonValor*   elem;
+              chorda  status;
+        JsonResultus  lectum;
+           JsonValor* elementa;
+           JsonValor* elem;
 
         imprimere("\n--- Probans plicam mensae ---\n");
 
@@ -134,14 +142,15 @@ s32 principale (vacuum)
         CREDO_NIHIL(elem);
     }
 
+
     /* ========================================================
      * PROBARE: resurrectio post deletum
      * ======================================================== */
 
     {
-        chorda       status;
-        JsonResultus lectum;
-        JsonValor*   elem;
+              chorda  status;
+        JsonResultus  lectum;
+           JsonValor* elem;
 
         imprimere("\n--- Probans resurrectionem ---\n");
 
@@ -159,6 +168,7 @@ s32 principale (vacuum)
     }
 
     volumen_claudere(vol);
+
 
     /* ========================================================
      * Compendium

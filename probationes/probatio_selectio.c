@@ -13,13 +13,14 @@
 /* Auxilium ad STML parsandum et elementum radix obtinendum */
 interior StmlNodus*
 _legere_stml (
-    constans character*  input,
-    Piscina*             piscina,
+     constans character* input,
+                Piscina* piscina,
     InternamentumChorda* intern)
 {
     StmlResultus resultus;
     resultus = stml_legere_ex_literis(input, piscina, intern);
-    si (!resultus.successus) {
+    si (!resultus.successus)
+    {
         redde NIHIL;
     }
     redde resultus.elementum_radix;
@@ -28,13 +29,14 @@ _legere_stml (
 s32
 principale (vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_selectio", 65536);
-    intern = internamentum_creare(piscina);
+    piscina  = piscina_generare_dynamicum("probatio_selectio", 65536);
+    intern   = internamentum_creare(piscina);
     credo_aperire(piscina);
+
 
     /* ==================================================
      * PROBATIONES PARSATIONIS
@@ -44,60 +46,75 @@ principale (vacuum)
 
     /* Probatio: Parsare selectorem tituli simplicem */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
         resultus = selectio_legere_ex_literis("div", piscina, intern);
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->genus, SELECTIO_TITULUS);
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->valor, "div");
     }
 
     /* Probatio: Parsare selectorem ID */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
         resultus = selectio_legere_ex_literis("#myid", piscina, intern);
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->genus, SELECTIO_ID);
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->valor, "myid");
     }
 
     /* Probatio: Parsare selectorem classis */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis(".myclass", piscina, intern);
+        resultus = selectio_legere_ex_literis(".myclass", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->genus, SELECTIO_CLASSIS);
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->valor, "myclass");
     }
 
     /* Probatio: Parsare selectorem compositum div.class#id */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* s0;
-        SelectioSimplex* s1;
-        SelectioSimplex* s2;
+        SelectioResultus  resultus;
+         SelectioSimplex* s0;
+         SelectioSimplex* s1;
+         SelectioSimplex* s2;
 
-        resultus = selectio_legere_ex_literis("div.class#id", piscina, intern);
+        resultus = selectio_legere_ex_literis("div.class#id", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        CREDO_AEQUALIS_I32(xar_numerus(resultus.selectio->composita->partes), 3);
+        CREDO_AEQUALIS_I32(xar_numerus(resultus.selectio->composita->partes),
+            3);
 
-        s0 = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
-        s1 = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 1);
-        s2 = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 2);
+        s0 =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
+        s1 =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            1);
+        s2 =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            2);
 
         CREDO_AEQUALIS_I32(s0->genus, SELECTIO_TITULUS);
         CREDO_AEQUALIS_I32(s1->genus, SELECTIO_CLASSIS);
@@ -106,13 +123,16 @@ principale (vacuum)
 
     /* Probatio: Parsare selectorem attributi [attr] */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis("[disabled]", piscina, intern);
+        resultus = selectio_legere_ex_literis("[disabled]", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->genus, SELECTIO_ATTRIBUTUM);
         CREDO_AEQUALIS_I32(simplex->attr_op, ATTR_OP_EXISTIT);
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->valor, "disabled");
@@ -120,13 +140,16 @@ principale (vacuum)
 
     /* Probatio: Parsare selectorem attributi [attr=val] */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis("[type=text]", piscina, intern);
+        resultus = selectio_legere_ex_literis("[type=text]", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->attr_op, ATTR_OP_AEQUALIS);
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->valor, "type");
         CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->attr_valor, "text");
@@ -134,50 +157,64 @@ principale (vacuum)
 
     /* Probatio: Parsare selectorem attributi cum quotationibus [attr="val"] */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis("[data-value=\"hello world\"]", piscina, intern);
+        resultus =
+            selectio_legere_ex_literis("[data-value=\"hello world\"]",
+            piscina, intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->attr_valor, "hello world");
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*simplex->attr_valor,
+            "hello world");
     }
 
     /* Probatio: Parsare selectorem attributi incipit-cum [attr^=val] */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis("[href^=https]", piscina, intern);
+        resultus = selectio_legere_ex_literis("[href^=https]", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->attr_op, ATTR_OP_INCIPIT);
     }
 
     /* Probatio: Parsare pseudo-classem :first-child */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis(":first-child", piscina, intern);
+        resultus = selectio_legere_ex_literis(":first-child", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->genus, SELECTIO_PSEUDO_CLASSIS);
         CREDO_AEQUALIS_I32(simplex->pseudo, PSEUDO_PRIMUS_LIBERUM);
     }
 
     /* Probatio: Parsare pseudo-classem :empty */
     {
-        SelectioResultus resultus;
-        SelectioSimplex* simplex;
+        SelectioResultus  resultus;
+         SelectioSimplex* simplex;
 
-        resultus = selectio_legere_ex_literis(":empty", piscina, intern);
+        resultus = selectio_legere_ex_literis(":empty", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
-        simplex = *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes, 0);
+        simplex =
+            *(SelectioSimplex**)xar_obtinere(resultus.selectio->composita->partes,
+            0);
         CREDO_AEQUALIS_I32(simplex->pseudo, PSEUDO_VACUUS);
     }
 
@@ -189,41 +226,49 @@ principale (vacuum)
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio->sequens);
-        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator, COMBINATOR_DESCENDENS);
+        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator,
+            COMBINATOR_DESCENDENS);
     }
 
     /* Probatio: Parsare combinatorem liberi div > p */
     {
         SelectioResultus resultus;
 
-        resultus = selectio_legere_ex_literis("div > p", piscina, intern);
+        resultus = selectio_legere_ex_literis("div > p", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio->sequens);
-        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator, COMBINATOR_LIBERUM);
+        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator,
+            COMBINATOR_LIBERUM);
     }
 
     /* Probatio: Parsare combinatorem fratris adjacentis div + p */
     {
         SelectioResultus resultus;
 
-        resultus = selectio_legere_ex_literis("div + p", piscina, intern);
+        resultus = selectio_legere_ex_literis("div + p", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio->sequens);
-        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator, COMBINATOR_FRATER_ADJ);
+        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator,
+            COMBINATOR_FRATER_ADJ);
     }
 
     /* Probatio: Parsare combinatorem fratris generalis div ~ p */
     {
         SelectioResultus resultus;
 
-        resultus = selectio_legere_ex_literis("div ~ p", piscina, intern);
+        resultus = selectio_legere_ex_literis("div ~ p", piscina,
+            intern);
 
         CREDO_VERUM(resultus.successus);
         CREDO_NON_NIHIL(resultus.selectio->sequens);
-        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator, COMBINATOR_FRATER_GEN);
+        CREDO_AEQUALIS_I32(resultus.selectio->sequens->combinator,
+            COMBINATOR_FRATER_GEN);
     }
+
 
     /* ==================================================
      * PROBATIONES CONGRUENTIAE
@@ -236,7 +281,8 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><span>text</span></div>", piscina, intern);
+        root = _legere_stml("<div><span>text</span></div>", piscina,
+            intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "span", piscina, intern);
@@ -249,7 +295,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><span id=\"target\">text</span></div>", piscina, intern);
+        root =
+            _legere_stml("<div><span id=\"target\">text</span></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "#target", piscina, intern);
@@ -262,7 +310,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><span labels=\"foo bar\">text</span></div>", piscina, intern);
+        root =
+            _legere_stml("<div><span labels=\"foo bar\">text</span></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, ".foo", piscina, intern);
@@ -281,7 +331,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><span class=\"highlight\">text</span></div>", piscina, intern);
+        root =
+            _legere_stml("<div><span class=\"highlight\">text</span></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, ".highlight", piscina, intern);
@@ -293,7 +345,8 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<form><input disabled/><input/></form>", piscina, intern);
+        root = _legere_stml("<form><input disabled/><input/></form>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "[disabled]", piscina, intern);
@@ -305,7 +358,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<form><input type=\"text\"/><input type=\"password\"/></form>", piscina, intern);
+        root =
+            _legere_stml("<form><input type=\"text\"/><input type=\"password\"/></form>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "[type=password]", piscina, intern);
@@ -320,7 +375,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><span id=\"x\" labels=\"a b\">1</span><span id=\"y\">2</span></div>", piscina, intern);
+        root =
+            _legere_stml("<div><span id=\"x\" labels=\"a b\">1</span><span id=\"y\">2</span></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "span#x.a", piscina, intern);
@@ -333,9 +390,11 @@ principale (vacuum)
     /* Probatio: Congruere combinatorem descendentem */
     {
         StmlNodus* root;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<div><section><p>1</p></section><p>2</p></div>", piscina, intern);
+        root =
+            _legere_stml("<div><section><p>1</p></section><p>2</p></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         all = stml_quaerere_omnes(root, "div p", piscina, intern);
@@ -346,9 +405,11 @@ principale (vacuum)
     /* Probatio: Congruere combinatorem liberi */
     {
         StmlNodus* root;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<div><section><p>nested</p></section><p>direct</p></div>", piscina, intern);
+        root =
+            _legere_stml("<div><section><p>nested</p></section><p>direct</p></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         all = stml_quaerere_omnes(root, "div > p", piscina, intern);
@@ -361,7 +422,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><h1>Title</h1><p>First para</p><p>Second para</p></div>", piscina, intern);
+        root =
+            _legere_stml("<div><h1>Title</h1><p>First para</p><p>Second para</p></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "h1 + p", piscina, intern);
@@ -371,9 +434,10 @@ principale (vacuum)
     /* Probatio: Congruere combinatorem fratris generalis */
     {
         StmlNodus* root;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<div><h1>Title</h1><p>1</p><p>2</p></div>", piscina, intern);
+        root = _legere_stml("<div><h1>Title</h1><p>1</p><p>2</p></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         all = stml_quaerere_omnes(root, "h1 ~ p", piscina, intern);
@@ -385,15 +449,17 @@ principale (vacuum)
     {
         StmlNodus* root;
         StmlNodus* found;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<ul><li>1</li><li>2</li><li>3</li></ul>", piscina, intern);
+        root = _legere_stml("<ul><li>1</li><li>2</li><li>3</li></ul>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "li:first-child", piscina, intern);
         CREDO_NON_NIHIL(found);
 
-        all = stml_quaerere_omnes(root, "li:first-child", piscina, intern);
+        all = stml_quaerere_omnes(root, "li:first-child", piscina,
+            intern);
         CREDO_AEQUALIS_I32(xar_numerus(all), 1);
     }
 
@@ -402,7 +468,8 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<ul><li>1</li><li>2</li><li>3</li></ul>", piscina, intern);
+        root = _legere_stml("<ul><li>1</li><li>2</li><li>3</li></ul>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "li:last-child", piscina, intern);
@@ -412,9 +479,11 @@ principale (vacuum)
     /* Probatio: Congruere pseudo-classem :empty */
     {
         StmlNodus* root;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<div><span></span><span>text</span><span/></div>", piscina, intern);
+        root =
+            _legere_stml("<div><span></span><span>text</span><span/></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         all = stml_quaerere_omnes(root, ":empty", piscina, intern);
@@ -425,9 +494,10 @@ principale (vacuum)
     /* Probatio: Nulla congruentia reddit xar vacuum */
     {
         StmlNodus* root;
-        Xar*       all;
+              Xar* all;
 
-        root = _legere_stml("<div><span>text</span></div>", piscina, intern);
+        root = _legere_stml("<div><span>text</span></div>", piscina,
+            intern);
         CREDO_NON_NIHIL(root);
 
         all = stml_quaerere_omnes(root, "p", piscina, intern);
@@ -450,7 +520,8 @@ principale (vacuum)
             piscina, intern);
         CREDO_NON_NIHIL(root);
 
-        found = stml_quaerere(root, "#container .list .active", piscina, intern);
+        found = stml_quaerere(root, "#container .list .active", piscina,
+            intern);
         CREDO_NON_NIHIL(found);
         CREDO_CHORDA_AEQUALIS_LITERIS(*found->titulus, "li");
     }
@@ -460,7 +531,9 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><a href=\"https://example.com\">link</a></div>", piscina, intern);
+        root =
+            _legere_stml("<div><a href=\"https://example.com\">link</a></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "[href^=https]", piscina, intern);
@@ -472,7 +545,8 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div><img src=\"photo.png\"/></div>", piscina, intern);
+        root = _legere_stml("<div><img src=\"photo.png\"/></div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
         found = stml_quaerere(root, "[src$=png]", piscina, intern);
@@ -484,12 +558,16 @@ principale (vacuum)
         StmlNodus* root;
         StmlNodus* found;
 
-        root = _legere_stml("<div data-info=\"the quick brown fox\">text</div>", piscina, intern);
+        root =
+            _legere_stml("<div data-info=\"the quick brown fox\">text</div>",
+            piscina, intern);
         CREDO_NON_NIHIL(root);
 
-        found = stml_quaerere(root, "[data-info*=quick]", piscina, intern);
+        found = stml_quaerere(root, "[data-info*=quick]", piscina,
+            intern);
         CREDO_NON_NIHIL(found);
     }
+
 
     /* ==================================================
      * COMPENDIUM

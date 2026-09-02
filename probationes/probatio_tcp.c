@@ -85,7 +85,8 @@ probatio_connexio_invalida(Piscina* piscina)
     printf("  DNS error: ");
     si (res.error_descriptio.mensura > 0)
     {
-        printf("%.*s", res.error_descriptio.mensura, res.error_descriptio.datum);
+        printf("%.*s", res.error_descriptio.mensura,
+            res.error_descriptio.datum);
     }
     printf("\n");
 
@@ -100,11 +101,11 @@ probatio_connexio_invalida(Piscina* piscina)
 interior vacuum
 probatio_connexio_http(Piscina* piscina)
 {
-    TcpResultus res;
+           TcpResultus  res;
     constans character* petitio;
-    i8 buffer[MMMMXCVI];
-    s32 n;
-    b32 misit;
+                    i8  buffer[MMMMXCVI];
+                   s32  n;
+                   b32  misit;
 
     printf("--- Probans connexio HTTP (httpbin.org:80) ---\n");
 
@@ -153,7 +154,8 @@ probatio_connexio_http(Piscina* piscina)
         printf("  Receptum %d bytes\n", n);
 
         /* Verificare HTTP responsum */
-        CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII) == 0);
+        CREDO_VERUM(strncmp((character*)buffer, "HTTP/1.1 200", XII)
+            == 0);
         printf("  Status: HTTP/1.1 200 OK\n");
     }
 
@@ -172,11 +174,11 @@ probatio_connexio_http(Piscina* piscina)
 interior vacuum
 probatio_mittere_recipere(Piscina* piscina)
 {
-    TcpResultus res;
+           TcpResultus  res;
     constans character* petitio;
-    i8 buffer[MMMMXCVI];
-    s32 totalis;
-    s32 n;
+                    i8  buffer[MMMMXCVI];
+                   s32  totalis;
+                   s32  n;
 
     printf("--- Probans mittere/recipere ---\n");
 
@@ -194,7 +196,8 @@ probatio_mittere_recipere(Piscina* piscina)
               "Connection: close\r\n"
               "\r\n";
 
-    n = tcp_mittere(res.connexio, (constans i8*)petitio, (i32)strlen(petitio));
+    n = tcp_mittere(res.connexio, (constans i8*)petitio,
+        (i32)strlen(petitio));
     CREDO_MAIOR_S32(n, 0);
 
     /* Recipere in loop usque connexio clausa */
@@ -259,10 +262,10 @@ probatio_nullum_argumenta(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

@@ -8,7 +8,7 @@
 s32 principale (vacuum)
 {
          b32  praeteritus;
-    Piscina* piscina;
+     Piscina* piscina;
 
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("probatio_qr", 65536);
@@ -71,13 +71,13 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda test_data;
 
         imprimere("\n--- Probans qr_generare (basica) ---\n");
 
-        test_data = chorda_ex_literis("HELLO", piscina);
-        qr = qr_generare(test_data, QR_ECC_M, piscina);
+        test_data  = chorda_ex_literis("HELLO", piscina);
+        qr         = qr_generare(test_data, QR_ECC_M, piscina);
 
         /* Debet succedere */
         CREDO_VERUM    (qr.successus);
@@ -94,15 +94,15 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda vacua;
 
         imprimere("\n--- Probans qr_generare (vacuus) ---\n");
 
         /* Chorda vacua: datum = NIHIL, mensura = 0 */
-        vacua.datum = NIHIL;
-        vacua.mensura = ZEPHYRUM;
-        qr = qr_generare(vacua, QR_ECC_M, piscina);
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        qr             = qr_generare(vacua, QR_ECC_M, piscina);
 
         /* Debet fallere */
         CREDO_FALSUM (qr.successus);
@@ -115,13 +115,13 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda test_data;
 
         imprimere("\n--- Probans finder patterns ---\n");
 
-        test_data = chorda_ex_literis("TEST", piscina);
-        qr = qr_generare(test_data, QR_ECC_M, piscina);
+        test_data  = chorda_ex_literis("TEST", piscina);
+        qr         = qr_generare(test_data, QR_ECC_M, piscina);
 
         CREDO_VERUM (qr.successus);
 
@@ -154,23 +154,23 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda test_data;
         s32    m8, m9, m10, m11, m12;
 
         imprimere("\n--- Probans timing patterns ---\n");
 
-        test_data = chorda_ex_literis("TEST", piscina);
-        qr = qr_generare(test_data, QR_ECC_M, piscina);
+        test_data  = chorda_ex_literis("TEST", piscina);
+        qr         = qr_generare(test_data, QR_ECC_M, piscina);
 
         CREDO_VERUM (qr.successus);
 
         /* Timing horizontalis (versus 6) - alternans ab columna 8 */
-        m8  = qr_modulus(&qr, VIII, VI);
-        m9  = qr_modulus(&qr, IX, VI);
-        m10 = qr_modulus(&qr, X, VI);
-        m11 = qr_modulus(&qr, XI, VI);
-        m12 = qr_modulus(&qr, XII, VI);
+        m8   = qr_modulus(&qr, VIII, VI);
+        m9   = qr_modulus(&qr, IX, VI);
+        m10  = qr_modulus(&qr, X, VI);
+        m11  = qr_modulus(&qr, XI, VI);
+        m12  = qr_modulus(&qr, XII, VI);
 
         /* Debet alternare */
         CREDO_INAEQUALITAS_S32 (m8, m9);
@@ -180,9 +180,9 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (m10, m12);
 
         /* Timing verticalis (columna 6) - alternans ab versu 8 */
-        m8  = qr_modulus(&qr, VI, VIII);
-        m9  = qr_modulus(&qr, VI, IX);
-        m10 = qr_modulus(&qr, VI, X);
+        m8   = qr_modulus(&qr, VI, VIII);
+        m9   = qr_modulus(&qr, VI, IX);
+        m10  = qr_modulus(&qr, VI, X);
 
         CREDO_INAEQUALITAS_S32 (m8, m9);
         CREDO_AEQUALIS_S32 (m8, m10);
@@ -194,14 +194,14 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda test_data;
 
         imprimere("\n--- Probans alignment patterns ---\n");
 
         /* Generare V2 QR (necessitas >= 15 bytes ad M) */
-        test_data = chorda_ex_literis("12345678901234567890", piscina);
-        qr = qr_generare(test_data, QR_ECC_M, piscina);
+        test_data  = chorda_ex_literis("12345678901234567890", piscina);
+        qr         = qr_generare(test_data, QR_ECC_M, piscina);
 
         CREDO_VERUM (qr.successus);
         CREDO_AEQUALIS_I32 (qr.versio, II);
@@ -232,13 +232,13 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda test_data;
 
         imprimere("\n--- Probans qr_modulus fines ---\n");
 
-        test_data = chorda_ex_literis("TEST", piscina);
-        qr = qr_generare(test_data, QR_ECC_M, piscina);
+        test_data  = chorda_ex_literis("TEST", piscina);
+        qr         = qr_generare(test_data, QR_ECC_M, piscina);
 
         CREDO_VERUM (qr.successus);
 
@@ -258,12 +258,13 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        QR     qr;
+            QR qr;
         chorda url;
 
         imprimere("\n--- Probans URL typica ---\n");
 
-        url = chorda_ex_literis("https://example.com/?token=abc123", piscina);
+        url = chorda_ex_literis("https://example.com/?token=abc123",
+            piscina);
         qr = qr_generare(url, QR_ECC_M, piscina);
 
         /* Debet succedere */
@@ -331,9 +332,9 @@ s32 principale (vacuum)
         {
             per (e = ZEPHYRUM; e <= III; e++)
             {
-                i32 bloci = ZEPHYRUM;
-                i32 data_cw = ZEPHYRUM;
-                i32 ecc_cw = ZEPHYRUM;
+                i32 bloci    = ZEPHYRUM;
+                i32 data_cw  = ZEPHYRUM;
+                i32 ecc_cw   = ZEPHYRUM;
 
                 CREDO_VERUM(qr_structura(v, (QREcc)e, &bloci,
                     &data_cw, &ecc_cw));
@@ -357,6 +358,7 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32(sentinella, 12345);
         }
     }
+
 
     /* ========================================================
      * Compendium

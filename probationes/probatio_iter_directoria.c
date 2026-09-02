@@ -10,7 +10,8 @@
 #include <unistd.h>
 
 /* Via ad directorium temporarium pro probationibus */
-hic_manens constans character* VIA_PROBATIONIS = "/tmp/rhubarb_iter_probatio";
+hic_manens constans character* VIA_PROBATIONIS =
+    "/tmp/rhubarb_iter_probatio";
 
 /* Contextus pro ambulatore */
 nomen structura {
@@ -26,7 +27,7 @@ nomen structura {
 
 /* Creare structuram directorii pro probationibus */
 hic_manens b32
-_creare_structuram_probationis(vacuum)
+_creare_structuram_probationis (vacuum)
 {
     /* Creare directorium principale */
     system("rm -rf /tmp/rhubarb_iter_probatio");
@@ -48,21 +49,19 @@ _creare_structuram_probationis(vacuum)
     redde VERUM;
 }
 
-
 /* Purgare structuram probationis */
 hic_manens vacuum
-_purgare_structuram_probationis(vacuum)
+_purgare_structuram_probationis (vacuum)
 {
     system("rm -rf /tmp/rhubarb_iter_probatio");
 }
 
-
 /* Callback pro ambulatore - numerare introitus */
 hic_manens s32
-_callback_numerare(
-    chorda                         via_plena,
+_callback_numerare (
+                           chorda  via_plena,
     constans DirectoriumIntroitus* introitus,
-    vacuum*                        contextus)
+                           vacuum* contextus)
 {
     AmbulatorContextus* ctx = (AmbulatorContextus*)contextus;
 
@@ -70,22 +69,23 @@ _callback_numerare(
 
     ctx->numerus_totalis++;
 
-    si (introitus->genus == INTROITUS_FILUM) {
+    si (introitus->genus == INTROITUS_FILUM)
+    {
         ctx->numerus_filorum++;
-    } alioquin si (introitus->genus == INTROITUS_DIRECTORIUM) {
+    } alioquin si (introitus->genus == INTROITUS_DIRECTORIUM)
+    {
         ctx->numerus_directoriorum++;
     }
 
     redde 0; /* Perge */
 }
 
-
 /* Callback pro terminatione praematura */
 hic_manens s32
-_callback_terminare_post_tres(
-    chorda                         via_plena,
+_callback_terminare_post_tres (
+                           chorda  via_plena,
     constans DirectoriumIntroitus* introitus,
-    vacuum*                        contextus)
+                           vacuum* contextus)
 {
     i32* numerus = (i32*)contextus;
 
@@ -94,7 +94,8 @@ _callback_terminare_post_tres(
 
     (*numerus)++;
 
-    si (*numerus >= III) {
+    si (*numerus >= III)
+    {
         redde I; /* Termina */
     }
 
@@ -112,7 +113,8 @@ s32 principale(vacuum)
 
     /* Aperire piscina et credo */
     piscina = piscina_generare_dynamicum("test_iter_directoria", 8192);
-    si (!piscina) {
+    si (!piscina)
+    {
         imprimere("FRACTA: piscina_generatio\n");
         redde I;
     }
@@ -125,10 +127,11 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Iteratio Simplex
      * ================================================== */
+
     {
-        DirectoriumIterator* iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        i32 numerus;
+                         i32  numerus;
 
         imprimere("\n--- Probans iterationem simplicem ---\n");
 
@@ -136,7 +139,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(iter);
 
         numerus = 0;
-        dum ((e = directorium_iterator_proximum(iter)) != NIHIL) {
+        dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+        {
             numerus++;
             CREDO_CHORDA_NON_VACUA(e->titulus);
         }
@@ -152,12 +156,14 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Directorium Non Existens
      * ================================================== */
+
     {
         DirectoriumIterator* iter;
 
         imprimere("\n--- Probans directorium non existens ---\n");
 
-        iter = directorium_iterator_aperire("/non/existens/via", piscina);
+        iter = directorium_iterator_aperire("/non/existens/via",
+            piscina);
         CREDO_NIHIL(iter);
     }
 
@@ -165,24 +171,28 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Genera Introituum
      * ================================================== */
+
     {
-        DirectoriumIterator* iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        i32 fila;
-        i32 directoria;
+                         i32  fila;
+                         i32  directoria;
 
         imprimere("\n--- Probans genera introituum ---\n");
 
         iter = directorium_iterator_aperire(VIA_PROBATIONIS, piscina);
         CREDO_NON_NIHIL(iter);
 
-        fila = 0;
-        directoria = 0;
+        fila        = 0;
+        directoria  = 0;
 
-        dum ((e = directorium_iterator_proximum(iter)) != NIHIL) {
-            si (e->genus == INTROITUS_FILUM) {
+        dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+        {
+            si (e->genus == INTROITUS_FILUM)
+            {
                 fila++;
-            } alioquin si (e->genus == INTROITUS_DIRECTORIUM) {
+            } alioquin si (e->genus == INTROITUS_DIRECTORIUM)
+            {
                 directoria++;
             }
         }
@@ -200,10 +210,11 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Mensura Fili
      * ================================================== */
+
     {
-        DirectoriumIterator* iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        b32 inventum;
+                         b32  inventum;
 
         imprimere("\n--- Probans mensuram fili ---\n");
 
@@ -211,8 +222,10 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(iter);
 
         inventum = FALSUM;
-        dum ((e = directorium_iterator_proximum(iter)) != NIHIL) {
-            si (chorda_aequalis_literis(e->titulus, "file1.txt")) {
+        dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+        {
+            si (chorda_aequalis_literis(e->titulus, "file1.txt"))
+            {
                 /* "content1\n" = 9 bytes */
                 CREDO_AEQUALIS_I32((i32)e->mensura, IX);
                 inventum = VERUM;
@@ -227,6 +240,7 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Pattern Matching - *
      * ================================================== */
+
     {
         chorda titulus;
         chorda exemplar;
@@ -252,6 +266,7 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Pattern Matching - ?
      * ================================================== */
+
     {
         chorda titulus;
         chorda exemplar;
@@ -274,6 +289,7 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Pattern Matching - Vacua
      * ================================================== */
+
     {
         chorda titulus;
         chorda exemplar_vacua;
@@ -285,13 +301,15 @@ s32 principale(vacuum)
         exemplar_vacua.mensura = 0;
 
         /* Exemplar vacua congruit cum omnibus */
-        CREDO_VERUM(directorium_titulus_congruit(titulus, exemplar_vacua));
+        CREDO_VERUM(directorium_titulus_congruit(titulus,
+            exemplar_vacua));
     }
 
 
     /* ==================================================
      * Probare: directorium_existit
      * ================================================== */
+
     {
         imprimere("\n--- Probans directorium_existit ---\n");
 
@@ -305,15 +323,16 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Ambulator Simplex
      * ================================================== */
+
     {
         AmbulatorContextus ctx;
-        s32 fructus;
+                       s32 fructus;
 
         imprimere("\n--- Probans ambulatorem simplicem ---\n");
 
-        ctx.numerus_filorum = 0;
-        ctx.numerus_directoriorum = 0;
-        ctx.numerus_totalis = 0;
+        ctx.numerus_filorum        = 0;
+        ctx.numerus_directoriorum  = 0;
+        ctx.numerus_totalis        = 0;
 
         fructus = directorium_ambulare(
             VIA_PROBATIONIS,
@@ -321,7 +340,7 @@ s32 principale(vacuum)
             _callback_numerare,
             &ctx,
             piscina
-        );
+            );
 
         CREDO_AEQUALIS_S32(fructus, 0);
 
@@ -334,19 +353,20 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Ambulator cum Filtro - Sine Occultis
      * ================================================== */
+
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
-        s32 fructus;
+                       s32 fructus;
 
         imprimere("\n--- Probans ambulatorem sine occultis ---\n");
 
-        ctx.numerus_filorum = 0;
-        ctx.numerus_directoriorum = 0;
-        ctx.numerus_totalis = 0;
+        ctx.numerus_filorum        = 0;
+        ctx.numerus_directoriorum  = 0;
+        ctx.numerus_totalis        = 0;
 
-        filtrum = directorium_filtrum_omnia();
-        filtrum.includere_occultos = FALSUM;
+        filtrum                     = directorium_filtrum_omnia();
+        filtrum.includere_occultos  = FALSUM;
 
         fructus = directorium_ambulare(
             VIA_PROBATIONIS,
@@ -354,7 +374,7 @@ s32 principale(vacuum)
             _callback_numerare,
             &ctx,
             piscina
-        );
+            );
 
         CREDO_AEQUALIS_S32(fructus, 0);
 
@@ -367,16 +387,17 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Ambulator cum Filtro - Pattern
      * ================================================== */
+
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
-        s32 fructus;
+                       s32 fructus;
 
         imprimere("\n--- Probans ambulatorem cum pattern *.txt ---\n");
 
-        ctx.numerus_filorum = 0;
-        ctx.numerus_directoriorum = 0;
-        ctx.numerus_totalis = 0;
+        ctx.numerus_filorum        = 0;
+        ctx.numerus_directoriorum  = 0;
+        ctx.numerus_totalis        = 0;
 
         filtrum = directorium_filtrum_omnia();
         filtrum.exemplar = chorda_ex_literis("*.txt", piscina);
@@ -388,7 +409,7 @@ s32 principale(vacuum)
             _callback_numerare,
             &ctx,
             piscina
-        );
+            );
 
         CREDO_AEQUALIS_S32(fructus, 0);
 
@@ -401,6 +422,7 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Ambulator - Terminatio Praematura
      * ================================================== */
+
     {
         i32 numerus;
         s32 fructus;
@@ -415,7 +437,7 @@ s32 principale(vacuum)
             _callback_terminare_post_tres,
             &numerus,
             piscina
-        );
+            );
 
         /* Callback reddit non-0 post 3 */
         CREDO_AEQUALIS_S32(fructus, I);
@@ -426,20 +448,21 @@ s32 principale(vacuum)
     /* ==================================================
      * Probare: Ambulator - Profunditas Maxima
      * ================================================== */
+
     {
         AmbulatorContextus ctx;
         DirectoriumFiltrum filtrum;
-        s32 fructus;
+                       s32 fructus;
 
         imprimere("\n--- Probans profunditatem maximam ---\n");
 
-        ctx.numerus_filorum = 0;
-        ctx.numerus_directoriorum = 0;
-        ctx.numerus_totalis = 0;
+        ctx.numerus_filorum        = 0;
+        ctx.numerus_directoriorum  = 0;
+        ctx.numerus_totalis        = 0;
 
-        filtrum = directorium_filtrum_omnia();
-        filtrum.profunditas_max = I; /* Solum primus gradus */
-        filtrum.includere_occultos = FALSUM;
+        filtrum                     = directorium_filtrum_omnia();
+        filtrum.profunditas_max     = I; /* Solum primus gradus */
+        filtrum.includere_occultos  = FALSUM;
 
         fructus = directorium_ambulare(
             VIA_PROBATIONIS,
@@ -447,7 +470,7 @@ s32 principale(vacuum)
             _callback_numerare,
             &ctx,
             piscina
-        );
+            );
 
         CREDO_AEQUALIS_S32(fructus, 0);
 

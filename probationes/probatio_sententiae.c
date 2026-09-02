@@ -31,50 +31,61 @@ interior chorda
 _fixum (Piscina* piscina, constans character* titulus)
 {
     character via[CCLVI];
-    chorda    contentum;
+       chorda contentum;
 
     sprintf(via, "%s%s", FX_RADIX, titulus);
     contentum = filum_legere_totum(via, piscina);
 
     si (contentum.mensura == ZEPHYRUM)
-    { imprimere("  FIXUM ABEST AUT VACUUM: %s\n", via); }
+    { imprimere("  FIXUM ABEST AUT VACUUM: %s\n", via);
+    }
     CREDO_VERUM (contentum.mensura > ZEPHYRUM);
     redde contentum;
 }
 
 interior chorda
-_ch (constans character* litterae)
+_ch (
+    constans character* litterae)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = litterae;
-    c.datum   = u.m;
-    c.mensura = (i32)strlen(litterae);
+    u.l        = litterae;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(litterae);
     redde c;
 }
 
 interior i32
-_gradus_numerare (constans Liber* liber, constans character* vocabulum)
+_gradus_numerare (
+        constans Liber* liber,
+    constans character* vocabulum)
 {
     i32 k;
     i32 numerus = ZEPHYRUM;
 
     per (k = ZEPHYRUM; k < xar_numerus(liber->sententiae); k++)
     {
-        Sententia* s = (Sententia*)xar_obtinere(liber->sententiae, (i32)k);
-        Gradus*    g;
+        Sententia* s = (Sententia*)xar_obtinere(liber->sententiae,
+            (i32)k);
+           Gradus* g;
 
-        si (s == NIHIL || s->gradus < (s32)ZEPHYRUM) { perge; }
+        si (s == NIHIL || s->gradus < (s32)ZEPHYRUM)
+        { perge;
+        }
         g = (Gradus*)xar_obtinere(liber->vocabularium, (i32)s->gradus);
-        si (g != NIHIL && chorda_aequalis_literis(g->vocabulum, vocabulum))
-        { numerus++; }
+        si (   g != NIHIL
+            && chorda_aequalis_literis(g->vocabulum, vocabulum))
+        { numerus++;
+        }
     }
     redde numerus;
 }
 
 interior i32
-_anomalias_numerare (constans Liber* liber, GenusAnomaliae genus)
+_anomalias_numerare (
+    constans Liber* liber,
+    GenusAnomaliae  genus)
 {
     i32 k;
     i32 numerus = ZEPHYRUM;
@@ -82,7 +93,9 @@ _anomalias_numerare (constans Liber* liber, GenusAnomaliae genus)
     per (k = ZEPHYRUM; k < xar_numerus(liber->anomaliae); k++)
     {
         Anomalia* a = (Anomalia*)xar_obtinere(liber->anomaliae, (i32)k);
-        si (a != NIHIL && a->genus == genus) { numerus++; }
+        si (a != NIHIL && a->genus == genus)
+        { numerus++;
+        }
     }
     redde numerus;
 }
@@ -91,11 +104,14 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32      praeteritus;
-    Liber    liber;
+        b32  praeteritus;
+      Liber  liber;
 
-    piscina = piscina_generare_dynamicum("probatio_sententiae", 16777216);
-    si (!piscina) { imprimere("FRACTA: piscina\n"); redde I; }
+    piscina = piscina_generare_dynamicum("probatio_sententiae",
+        16777216);
+    si (!piscina)
+    { imprimere("FRACTA: piscina\n"); redde I;
+    }
     credo_aperire(piscina);
 
     imprimere("\n--- I. lectio documenti veri ---\n");
@@ -122,11 +138,13 @@ principale (vacuum)
          * remissionum externarum ea eget */
         CREDO_AEQUALIS_I32 (xar_numerus(liber.auctoritates), (i32)4);
         {
-            Auctoritas* a = (Auctoritas*)xar_obtinere(liber.auctoritates,
+            Auctoritas* a =
+                (Auctoritas*)xar_obtinere(liber.auctoritates,
                                                       (i32)ZEPHYRUM);
             CREDO_NON_NIHIL (a);
             si (a != NIHIL)
-            { CREDO_CHORDA_AEQUALIS_LITERIS (a->siglum, "DI"); }
+            { CREDO_CHORDA_AEQUALIS_LITERIS (a->siglum, "DI");
+            }
         }
     }
 
@@ -139,9 +157,11 @@ principale (vacuum)
 
         /* nullus gradus in corpore indeclaratus */
         CREDO_AEQUALIS_I32 (_anomalias_numerare(&liber,
-                                ANOMALIA_GRADUS_IGNOTUS), (i32)ZEPHYRUM);
+                                ANOMALIA_GRADUS_IGNOTUS),
+                                (i32)ZEPHYRUM);
         CREDO_AEQUALIS_I32 (_anomalias_numerare(&liber,
-                                ANOMALIA_VOCABULARIUM_ABEST), (i32)ZEPHYRUM);
+                                ANOMALIA_VOCABULARIUM_ABEST),
+                                (i32)ZEPHYRUM);
     }
 
     imprimere("\n--- IV. tags per lineas extensa (decipula a) ---\n");
@@ -154,7 +174,8 @@ principale (vacuum)
          * linea XVII prooemii DECLARATIO vocabularii est, non gradus
          * applicatus. Distinctio ipsa est cur prooemium et corpus
          * separantur. */
-        CREDO_AEQUALIS_I32 (_gradus_numerare(&liber, "retracted"), (i32)7);
+        CREDO_AEQUALIS_I32 (_gradus_numerare(&liber, "retracted"),
+            (i32)7);
 
         /* onus gradus captum: [retracted: <causa>] */
         {
@@ -188,10 +209,12 @@ principale (vacuum)
 
             per (k = ZEPHYRUM; k < xar_numerus(liber.sententiae); k++)
             {
-                Sententia* t = (Sententia*)xar_obtinere(liber.sententiae,
+                Sententia* t =
+                    (Sententia*)xar_obtinere(liber.sententiae,
                                                         (i32)k);
                 si (t != NIHIL && chorda_continet(t->locus, _ch("obj")))
-                { numerus++; }
+                { numerus++;
+                }
             }
             CREDO_AEQUALIS_I32 (numerus, (i32)21);
         }
@@ -217,10 +240,13 @@ principale (vacuum)
             Gradus* g;
 
             CREDO_MAIOR_AUT_AEQUALIS_S32 (s->gradus, (s32)ZEPHYRUM);
-            g = (Gradus*)xar_obtinere(liber.vocabularium, (i32)s->gradus);
+            g = (Gradus*)xar_obtinere(liber.vocabularium,
+                (i32)s->gradus);
             CREDO_NON_NIHIL (g);
             si (g != NIHIL)
-            { CREDO_CHORDA_AEQUALIS_LITERIS (g->vocabulum, "conjecture"); }
+            { CREDO_CHORDA_AEQUALIS_LITERIS (g->vocabulum,
+                  "conjecture");
+            }
 
             /* [Fran's thesis; ...] gradus NON est - annotatio libera */
             CREDO_AEQUALIS_I32 (xar_numerus(s->annotationes), (i32)1);
@@ -235,17 +261,26 @@ principale (vacuum)
 
         per (k = ZEPHYRUM; k < xar_numerus(liber.sententiae); k++)
         {
-            Sententia* s = (Sententia*)xar_obtinere(liber.sententiae, (i32)k);
-            i32        j;
+            Sententia* s = (Sententia*)xar_obtinere(liber.sententiae,
+                (i32)k);
+                  i32 j;
 
-            si (s == NIHIL) { perge; }
+            si (s == NIHIL)
+            { perge;
+            }
             per (j = ZEPHYRUM; j < xar_numerus(s->remissiones); j++)
             {
-                Remissio* r = (Remissio*)xar_obtinere(s->remissiones, (i32)j);
-                si (r == NIHIL) { perge; }
+                Remissio* r = (Remissio*)xar_obtinere(s->remissiones,
+                    (i32)j);
+                si (r == NIHIL)
+                { perge;
+                }
                 si (r->genus == REMISSIO_INTERNA)
-                { internae++; CREDO_VERUM (r->resoluta); }
-                alioquin { externae++; }
+                { internae++; CREDO_VERUM (r->resoluta);
+                }
+                alioquin
+                { externae++;
+                }
             }
         }
 
@@ -258,19 +293,20 @@ principale (vacuum)
 
     imprimere("\n--- IX. involutio sigillum NON mutat ---\n");
     {
-        chorda   latum    = _fixum(piscina, "punctum_latum.txt");
-        chorda   angustum = _fixum(piscina, "punctum_angustum.txt");
-        chorda   crlf     = _fixum(piscina, "punctum_crlf.txt");
-        chorda   n_latum;
-        chorda   n_angustum;
-        chorda   n_crlf;
+          chorda latum     = _fixum(piscina, "punctum_latum.txt");
+          chorda angustum  = _fixum(piscina, "punctum_angustum.txt");
+          chorda crlf      = _fixum(piscina, "punctum_crlf.txt");
+          chorda n_latum;
+          chorda n_angustum;
+          chorda n_crlf;
         Sigillum s_latum;
         Sigillum s_angustum;
         Sigillum s_crlf;
 
         n_latum    = sententiae_normalizare(latum, liber.vocabularium,
                                             piscina);
-        n_angustum = sententiae_normalizare(angustum, liber.vocabularium,
+        n_angustum = sententiae_normalizare(angustum,
+            liber.vocabularium,
                                             piscina);
         n_crlf     = sententiae_normalizare(crlf, liber.vocabularium,
                                             piscina);
@@ -283,9 +319,9 @@ principale (vacuum)
         CREDO_FALSUM (chorda_continet(n_latum, _ch("[theorem]")));
         CREDO_FALSUM (chorda_continet(n_latum, _ch("4.1.")));
 
-        s_latum    = sententiae_sigillare(n_latum);
-        s_angustum = sententiae_sigillare(n_angustum);
-        s_crlf     = sententiae_sigillare(n_crlf);
+        s_latum     = sententiae_sigillare(n_latum);
+        s_angustum  = sententiae_sigillare(n_angustum);
+        s_crlf      = sententiae_sigillare(n_crlf);
 
         CREDO_VERUM (sigillum_aequale(&s_latum, &s_angustum));
         CREDO_VERUM (sigillum_aequale(&s_latum, &s_crlf));
@@ -293,9 +329,10 @@ principale (vacuum)
 
     imprimere("\n--- X. iudicium ancorae ---\n");
     {
-        Sententia*      s = sententiae_per_locum(&liber, _ch("13.5"));
+              Sententia* s = sententiae_per_locum(&liber,
+                  _ch("13.5"));
         IudiciumAncorae iudicium;
-        Sigillum        falsum;
+               Sigillum falsum;
 
         CREDO_NON_NIHIL (s);
         si (s != NIHIL)
@@ -314,7 +351,8 @@ principale (vacuum)
             iudicium = sententiae_ancoram_iudicare(&liber, _ch("99.9"),
                                                    s->sigillum);
             CREDO_AEQUALIS_I32 (iudicium.status, (i32)ANCORA_MOTA);
-            CREDO_CHORDA_AEQUALIS_LITERIS (iudicium.locus_novus, "13.5");
+            CREDO_CHORDA_AEQUALIS_LITERIS (iudicium.locus_novus,
+                "13.5");
 
             /* neutrum = ORBA */
             iudicium = sententiae_ancoram_iudicare(&liber, _ch("99.9"),
@@ -327,7 +365,8 @@ principale (vacuum)
     {
         chorda parens;
 
-        CREDO_VERUM (sententiae_parentem_capere(_ch("4.obj.1.1"), &parens));
+        CREDO_VERUM (sententiae_parentem_capere(_ch("4.obj.1.1"),
+            &parens));
         CREDO_CHORDA_AEQUALIS_LITERIS (parens, "4.obj.1");
         CREDO_VERUM (sententiae_parentem_capere(_ch("1.1"), &parens));
         CREDO_CHORDA_AEQUALIS_LITERIS (parens, "1");
@@ -336,22 +375,24 @@ principale (vacuum)
 
     imprimere("\n--- XII. inputa degenerata (nihil ruat) ---\n");
     {
-        Liber  vacuus;
-        Liber  prosa;
+         Liber vacuus;
+         Liber prosa;
         chorda nihil_chorda;
 
-        nihil_chorda.datum   = NIHIL;
-        nihil_chorda.mensura = ZEPHYRUM;
+        nihil_chorda.datum    = NIHIL;
+        nihil_chorda.mensura  = ZEPHYRUM;
 
         vacuus = sententiae_legere(nihil_chorda, piscina);
         CREDO_VERUM (vacuus.successus);
-        CREDO_AEQUALIS_I32 (xar_numerus(vacuus.sententiae), (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(vacuus.sententiae),
+            (i32)ZEPHYRUM);
 
         prosa = sententiae_legere(
             _ch("Prosa mera. Nulla structura. Nullum saeptum.\n"
                 "Altera linea quae puncto terminatur.\n"), piscina);
         CREDO_VERUM (prosa.successus);
-        CREDO_AEQUALIS_I32 (xar_numerus(prosa.sententiae), (i32)ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (xar_numerus(prosa.sententiae),
+            (i32)ZEPHYRUM);
     }
 
     imprimere("\n--- XIII. culpae structurae OBSTANT ---\n");
@@ -362,15 +403,18 @@ principale (vacuum)
         Liber apertum;
 
         duplicatus = sententiae_legere(
-            _ch("# T\n\n```\n1. Prima.\n1. Iterum prima.\n```\n"), piscina);
+            _ch("# T\n\n```\n1. Prima.\n1. Iterum prima.\n```\n"),
+            piscina);
         CREDO_FALSUM (duplicatus.successus);
-        CREDO_AEQUALIS_I32 (duplicatus.culpa, (i32)SENTENTIAE_LOCUS_DUPLEX);
+        CREDO_AEQUALIS_I32 (duplicatus.culpa,
+            (i32)SENTENTIAE_LOCUS_DUPLEX);
         CREDO_CHORDA_NON_VACUA (duplicatus.causa);
 
         apertum = sententiae_legere(
             _ch("# T\n\n```\n1. Prima.\n"), piscina);
         CREDO_FALSUM (apertum.successus);
-        CREDO_AEQUALIS_I32 (apertum.culpa, (i32)SENTENTIAE_SAEPTUM_IMPAR);
+        CREDO_AEQUALIS_I32 (apertum.culpa,
+            (i32)SENTENTIAE_SAEPTUM_IMPAR);
         CREDO_CHORDA_NON_VACUA (apertum.causa);
     }
 
@@ -378,6 +422,8 @@ principale (vacuum)
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);
-    si (praeteritus) { redde ZEPHYRUM; }
+    si (praeteritus)
+    { redde ZEPHYRUM;
+    }
     redde I;
 }

@@ -8,7 +8,7 @@
 s32 principale(vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("test_fons", MMMMXCVI);
     si (!piscina)
@@ -59,16 +59,24 @@ s32 principale(vacuum)
         imprimere("\n--- Probans Latin-1 supplement ---\n");
 
         /* Litterae accentuatae */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00E9), 0xE9);  /* e-acutum */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00F1), 0xF1);  /* n-tilde */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FC), 0xFC);  /* u-umlaut */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00E0), 0xE0);  /* a-grave */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00C9), 0xC9);  /* E-acutum */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00E9),
+            0xE9);  /* e-acutum */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00F1),
+            0xF1);  /* n-tilde */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FC),
+            0xFC);  /* u-umlaut */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00E0),
+            0xE0);  /* a-grave */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00C9),
+            0xC9);  /* E-acutum */
 
         /* Limites Latin-1 supplement */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A0), 0x20);  /* NBSP -> space */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A1), 0xA1);  /* inverted ! */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FF), 0xFF);  /* y-umlaut */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A0),
+            0x20);  /* NBSP -> space */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A1),
+            0xA1);  /* inverted ! */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FF),
+            0xFF);  /* y-umlaut */
     }
 
 
@@ -80,16 +88,24 @@ s32 principale(vacuum)
         imprimere("\n--- Probans smart quotes ---\n");
 
         /* Single quotes -> apostrophe */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2018), 0x27);  /* ' left */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2019), 0x27);  /* ' right */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201A), 0x27);  /* ‚ low-9 */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201B), 0x27);  /* ‛ reversed */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2018),
+            0x27);  /* ' left */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2019),
+            0x27);  /* ' right */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201A),
+            0x27);  /* ‚ low-9 */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201B),
+            0x27);  /* ‛ reversed */
 
         /* Double quotes -> quotation mark */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201C), 0x22);  /* " left */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201D), 0x22);  /* " right */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201E), 0x22);  /* „ low-9 */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201F), 0x22);  /* ‟ reversed */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201C),
+            0x22);  /* " left */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201D),
+            0x22);  /* " right */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201E),
+            0x22);  /* „ low-9 */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x201F),
+            0x22);  /* ‟ reversed */
     }
 
 
@@ -100,10 +116,14 @@ s32 principale(vacuum)
     {
         imprimere("\n--- Probans dashes ---\n");
 
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2013), 0x2D);  /* en dash */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2014), 0x2D);  /* em dash */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2015), 0x2D);  /* horizontal bar */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2212), 0x2D);  /* minus sign */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2013),
+            0x2D);  /* en dash */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2014),
+            0x2D);  /* em dash */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2015),
+            0x2D);  /* horizontal bar */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2212),
+            0x2D);  /* minus sign */
     }
 
 
@@ -114,8 +134,10 @@ s32 principale(vacuum)
     {
         imprimere("\n--- Probans ellipsis et alia ---\n");
 
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2026), 0x2E);  /* ellipsis */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2022), 0x07);  /* bullet */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2026),
+            0x2E);  /* ellipsis */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2022),
+            0x07);  /* bullet */
     }
 
 
@@ -127,16 +149,22 @@ s32 principale(vacuum)
         imprimere("\n--- Probans TOFU ---\n");
 
         /* Codepoints invalidi */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(-I), FONS_TOFU);
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(-I),
+            FONS_TOFU);
 
         /* Codepoints non mappati (e.g. emoji, CJK) */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x1F600), FONS_TOFU);  /* emoji */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x4E00), FONS_TOFU);   /* CJK */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x0100), FONS_TOFU);   /* Latin Extended-A */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x1F600),
+            FONS_TOFU);  /* emoji */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x4E00),
+            FONS_TOFU);   /* CJK */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x0100),
+            FONS_TOFU);   /* Latin Extended-A */
 
         /* Graeca (non mappata) */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x03B1), FONS_TOFU);  /* alpha */
-        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x03C0), FONS_TOFU);  /* pi */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x03B1),
+            FONS_TOFU);  /* alpha */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x03C0),
+            FONS_TOFU);  /* pi */
     }
 
 

@@ -23,10 +23,14 @@
 #define AREA "build/probatio_silex_area"
 
 interior b32
-_manifestum_continet (Xar* res_omnes, constans character* via);
+_manifestum_continet (
+                   Xar* res_omnes,
+    constans character* via);
 
 interior b32
-_manifestum_continet (Xar* res_omnes, constans character* via)
+_manifestum_continet (
+                   Xar* res_omnes,
+    constans character* via)
 {
     i32 index;
 
@@ -43,6 +47,7 @@ _manifestum_continet (Xar* res_omnes, constans character* via)
     redde FALSUM;
 }
 
+
 /* ==================================================
  * Corpus fictum: capsula in memoria (forma: caput XII + TOC
  * XX/introitum + chordae + data; comp==raw = introitus crudus)
@@ -54,10 +59,14 @@ nomen structura {
 } ParFictum;
 
 interior vacuum
-_i32_le_scribere (i8* p, i32 v);
+_i32_le_scribere (
+     i8* p,
+    i32  v);
 
 interior vacuum
-_i32_le_scribere (i8* p, i32 v)
+_i32_le_scribere (
+     i8* p,
+    i32  v)
 {
     p[0] = (i8)(v & 0xFF);
     p[1] = (i8)((v >> VIII) & 0xFF);
@@ -66,21 +75,25 @@ _i32_le_scribere (i8* p, i32 v)
 }
 
 interior CapsulaEmbed
-_corpus_fictum (Piscina* piscina, constans ParFictum* paria,
-    i32 numerus);
+_corpus_fictum (
+               Piscina* piscina,
+    constans ParFictum* paria,
+                   i32  numerus);
 
 interior CapsulaEmbed
-_corpus_fictum (Piscina* piscina, constans ParFictum* paria,
-    i32 numerus)
+_corpus_fictum (
+               Piscina* piscina,
+    constans ParFictum* paria,
+                   i32  numerus)
 {
-    CapsulaEmbed embed;
-    i32 chordae_mensura = 0;
-    i32 datorum_mensura = 0;
-    i32 i;
-    i32 summa;
-    i8* buf;
-    i32 chorda_off;
-    i32 datum_off;
+    CapsulaEmbed  embed;
+             i32  chordae_mensura = 0;
+             i32  datorum_mensura = 0;
+             i32  i;
+             i32  summa;
+              i8* buf;
+             i32  chorda_off;
+             i32  datum_off;
 
     per (i = 0; i < numerus; i = i + 1)
     {
@@ -89,24 +102,24 @@ _corpus_fictum (Piscina* piscina, constans ParFictum* paria,
         datorum_mensura = datorum_mensura
             + (i32)strlen(paria[i].contentum);
     }
-    summa = XII + numerus * XX + chordae_mensura + datorum_mensura;
-    buf = (i8*)piscina_allocare(piscina, (memoriae_index)summa);
+    summa  = XII + numerus * XX + chordae_mensura + datorum_mensura;
+    buf    = (i8*)piscina_allocare(piscina, (memoriae_index)summa);
     si (buf == NIHIL)
     {
-        embed.datum = NIHIL;
-        embed.mensura = 0;
+        embed.datum    = NIHIL;
+        embed.mensura  = 0;
         redde embed;
     }
     _i32_le_scribere(buf, (i32)0x53504143);
     _i32_le_scribere(buf + IV, I);
     _i32_le_scribere(buf + VIII, numerus);
-    chorda_off = XII + numerus * XX;
-    datum_off  = chorda_off + chordae_mensura;
+    chorda_off  = XII + numerus * XX;
+    datum_off   = chorda_off + chordae_mensura;
     per (i = 0; i < numerus; i = i + 1)
     {
-        i8* introitus = buf + XII + i * XX;
-        i32 via_mensura = (i32)strlen(paria[i].via);
-        i32 datum_mensura = (i32)strlen(paria[i].contentum);
+         i8* introitus      = buf + XII + i * XX;
+        i32  via_mensura    = (i32)strlen(paria[i].via);
+        i32  datum_mensura  = (i32)strlen(paria[i].contentum);
 
         _i32_le_scribere(introitus, chorda_off);
         _i32_le_scribere(introitus + IV, via_mensura);
@@ -117,20 +130,24 @@ _corpus_fictum (Piscina* piscina, constans ParFictum* paria,
             (size_t)via_mensura);
         memcpy(buf + datum_off, paria[i].contentum,
             (size_t)datum_mensura);
-        chorda_off = chorda_off + via_mensura;
-        datum_off  = datum_off + datum_mensura;
+        chorda_off  = chorda_off + via_mensura;
+        datum_off   = datum_off + datum_mensura;
     }
-    embed.datum = buf;
-    embed.mensura = summa;
+    embed.datum    = buf;
+    embed.mensura  = summa;
     redde embed;
 }
 
 interior constans character*
-_texere_probationis (Piscina* piscina, constans character* a,
+_texere_probationis (
+               Piscina* piscina,
+    constans character* a,
     constans character* b);
 
 interior constans character*
-_texere_probationis (Piscina* piscina, constans character* a,
+_texere_probationis (
+               Piscina* piscina,
+    constans character* a,
     constans character* b)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
@@ -142,10 +159,14 @@ _texere_probationis (Piscina* piscina, constans character* a,
 }
 
 interior SilexDifferentiaRes*
-_differentiam_invenire (Xar* res, constans character* via);
+_differentiam_invenire (
+                   Xar* res,
+    constans character* via);
 
 interior SilexDifferentiaRes*
-_differentiam_invenire (Xar* res, constans character* via)
+_differentiam_invenire (
+                   Xar* res,
+    constans character* via)
 {
     i32 index;
 
@@ -164,7 +185,7 @@ _differentiam_invenire (Xar* res, constans character* via)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silex", 65536);
@@ -186,6 +207,7 @@ s32 principale (vacuum)
         processus_exsequi(argumenta_rm, 5000, piscina);
     }
 
+
     /* ========================================================
      * PROBARE: clausura - semen sine gemino lib
      * ======================================================== */
@@ -206,12 +228,13 @@ s32 principale (vacuum)
             "include/latina.h"));
     }
 
+
     /* ========================================================
      * PROBARE: clausura - geminus lib + transitiva
      * ======================================================== */
 
     {
-        Xar*      res_omnes;
+             Xar* res_omnes;
         SilexRes* primus;
         interior constans character* constans SEMINA_CHORDA[] = {
             "chorda.h"
@@ -236,6 +259,7 @@ s32 principale (vacuum)
         CREDO_VERUM(primus->origo[0] == 'v');   /* "vendicata:..." */
     }
 
+
     /* ========================================================
      * PROBARE: fabrica invalida = recusatio (in constructore)
      * ======================================================== */
@@ -256,14 +280,15 @@ s32 principale (vacuum)
         CREDO_NIHIL(res_omnes);
     }
 
+
     /* ========================================================
      * PROBARE: fons disci - existit/legere
      * ======================================================== */
 
     {
-        SilexFons* fons = silex_fons_disci(piscina, ".");
-        b32        inventum = FALSUM;
-        chorda     contentum;
+        SilexFons* fons      = silex_fons_disci(piscina, ".");
+              b32  inventum  = FALSUM;
+           chorda  contentum;
 
         imprimere("\n--- Probans fontem disci ---\n");
         CREDO_NON_NIHIL(fons);
@@ -276,6 +301,7 @@ s32 principale (vacuum)
         CREDO_VERUM(inventum);
         CREDO_VERUM(contentum.mensura > 0);
     }
+
 
     /* ========================================================
      * PROBARE: fons corporis == fons disci (porta differentialis)
@@ -299,12 +325,12 @@ s32 principale (vacuum)
         interior constans character* constans SEMINA2[] = {
             "altera.h", "obiectiva.h"
         };
-        SilexFons*   discus;
-        SilexFons*   corpus;
-        Xar*         ex_disco;
-        Xar*         ex_corpore;
-        i32          index;
-        CapsulaEmbed embed = _corpus_fictum(piscina, PARIA, 9);
+           SilexFons* discus;
+           SilexFons* corpus;
+                 Xar* ex_disco;
+                 Xar* ex_corpore;
+                 i32  index;
+        CapsulaEmbed  embed = _corpus_fictum(piscina, PARIA, 9);
 
         imprimere("\n--- Probans corpus == discus ---\n");
         filum_directorium_creare_si_necesse("build");
@@ -360,13 +386,14 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)xar_numerus(ex_disco), (i32)8);
     }
 
+
     /* ========================================================
      * PROBARE: fabricam invenire (ascensus e cwd)
      * ======================================================== */
 
     {
         constans character* radix;
-        chorda              expectata;
+                    chorda  expectata;
 
         imprimere("\n--- Probans fabricam invenire ---\n");
 
@@ -388,24 +415,25 @@ s32 principale (vacuum)
             == NIHIL);
     }
 
+
     /* ========================================================
      * PROBARE: novum - proiectum integrum
      * ======================================================== */
 
     {
         SilexNovumOptiones optiones;
-        SilexNovumFructus  fructus;
+         SilexNovumFructus fructus;
 
         imprimere("\n--- Probans silex_novum ---\n");
 
         filum_directorium_creare_si_necesse("build");
         filum_directorium_creare_si_necesse(AREA);
 
-        optiones.fons = silex_fons_disci(piscina, ".");
-        optiones.destinatio = AREA;
-        optiones.vitrea = FALSUM;
-        optiones.titulus = "specimen";
-        fructus = silex_novum(piscina, &optiones);
+        optiones.fons        = silex_fons_disci(piscina, ".");
+        optiones.destinatio  = AREA;
+        optiones.vitrea      = FALSUM;
+        optiones.titulus     = "specimen";
+        fructus              = silex_novum(piscina, &optiones);
         si (!fructus.successus)
         {
             imprimere("silex_novum erratum: %s\n",
@@ -446,7 +474,7 @@ s32 principale (vacuum)
                 AREA "/specimen/specimen.volumen");
             chorda e_disco = filum_legere_totum(
                 AREA "/specimen/lib/chorda.c", piscina);
-            b32    inventum;
+               b32 inventum;
             chorda e_volumine = volumen_plagulam_promere(vol,
                 chorda_ex_literis("lib/chorda.c", piscina), piscina,
                 &inventum);
@@ -461,6 +489,7 @@ s32 principale (vacuum)
         CREDO_FALSUM(fructus.successus);
     }
 
+
     /* ========================================================
      * PROBARE: ascensus proiectum silicis PRAETERIT (volumen
      * radicis = proiectum, numquam fabrica sui ipsius - AMBULATIO
@@ -471,7 +500,7 @@ s32 principale (vacuum)
 
     {
         constans character* radix;
-        chorda              expectata;
+                    chorda  expectata;
 
         imprimere("\n--- Probans ascensum praeter proiectum ---\n");
 
@@ -486,21 +515,22 @@ s32 principale (vacuum)
             chorda_ut_cstr(expectata, piscina));
     }
 
+
     /* ========================================================
      * PROBARE: novum -vitrea - inventarium seminis cordis
      * ======================================================== */
 
     {
         SilexNovumOptiones optiones;
-        SilexNovumFructus  fructus;
+         SilexNovumFructus fructus;
 
         imprimere("\n--- Probans novum -vitrea ---\n");
 
-        optiones.fons = silex_fons_disci(piscina, ".");
-        optiones.destinatio = AREA;
-        optiones.titulus = "vitreum";
-        optiones.vitrea = VERUM;
-        fructus = silex_novum(piscina, &optiones);
+        optiones.fons        = silex_fons_disci(piscina, ".");
+        optiones.destinatio  = AREA;
+        optiones.titulus     = "vitreum";
+        optiones.vitrea      = VERUM;
+        fructus              = silex_novum(piscina, &optiones);
         si (!fructus.successus)
         {
             imprimere("novum -vitrea erratum: %s\n",
@@ -546,8 +576,8 @@ s32 principale (vacuum)
          * (ambulatio acceptionis hoc cepit) */
         CREDO_VERUM(filum_existit(AREA "/vitreum/lib/credo.c"));
         /* titulus cum '-' recusatur (symbolum C fieret) */
-        optiones.titulus = "malum-nomen";
-        fructus = silex_novum(piscina, &optiones);
+        optiones.titulus  = "malum-nomen";
+        fructus           = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
 
         /* ordines generati: stampa, sine globo, listae
@@ -632,15 +662,16 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: VCS - status/condere/historia in specimine
      * ======================================================== */
 
     {
-        SilexStatusFructus   status;
-        SilexConditioFructus conditio;
-        Xar*                 historia;
-        i32                  plagulae_primae;
+          SilexStatusFructus  status;
+        SilexConditioFructus  conditio;
+                         Xar* historia;
+                         i32  plagulae_primae;
 
         imprimere("\n--- Probans status (arbor munda) ---\n");
 
@@ -667,9 +698,9 @@ s32 principale (vacuum)
             (i32)(plagulae_primae - 2));   /* mutata + deleta */
         {
             i32 index;
-            i32 mutatae = 0;
-            i32 novae = 0;
-            i32 absentes = 0;
+            i32 mutatae   = 0;
+            i32 novae     = 0;
+            i32 absentes  = 0;
 
             per (index = 0; index < xar_numerus(status.res);
                 index = index + 1)
@@ -738,16 +769,17 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: proicere - volumen arborem scribit
      * ======================================================== */
 
     {
-        SilexProiectioFructus p;
-        SilexConditioFructus  conditio;
-        SilexStatusFructus    status;
-        Xar*                  historia;
-        chorda                relatum;
+        SilexProiectioFructus  p;
+         SilexConditioFructus  conditio;
+           SilexStatusFructus  status;
+                          Xar* historia;
+                       chorda  relatum;
 
         imprimere("\n--- Probans proicere (consilium/scriptio) ---\n");
 
@@ -874,6 +906,7 @@ s32 principale (vacuum)
         CREDO_VERUM(filum_delere(AREA "/specimen/vagus.txt"));
     }
 
+
     /* ========================================================
      * PROBARE: renovare - sigilla tria contra fabricam FICTAM
      * (fabrica mutabilis in area - fabricam veram mutare non
@@ -881,11 +914,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilexRenovatioFructus r;
-        Volumen*              vol;
-        chorda                contentum;
-        b32                   bene;
-        SilexFons*            fons_fictae;
+        SilexRenovatioFructus  r;
+                      Volumen* vol;
+                       chorda  contentum;
+                          b32  bene;
+                    SilexFons* fons_fictae;
 
         imprimere("\n--- Probans renovare (fabrica ficta) ---\n");
 
@@ -1094,8 +1127,8 @@ s32 principale (vacuum)
             fons_fictae, FALSUM);
         CREDO_VERUM(r.successus);
         {
-            b32 addenda_caput = FALSUM;
-            b32 addenda_lib = FALSUM;
+            b32 addenda_caput  = FALSUM;
+            b32 addenda_lib    = FALSUM;
             i32 index;
 
             per (index = 0; index < xar_numerus(r.res);
@@ -1129,9 +1162,9 @@ s32 principale (vacuum)
         {
             Xar* partes = silex_partes(piscina, AREA "/renovandum",
                 fons_fictae, NIHIL);
-            b32  addenda_abest = FALSUM;
-            b32  nova_adest = FALSUM;
-            i32  index;
+            b32 addenda_abest  = FALSUM;
+            b32 nova_adest     = FALSUM;
+            i32 index;
 
             imprimere("\n--- Probans partes ---\n");
             CREDO_NON_NIHIL(partes);
@@ -1141,12 +1174,12 @@ s32 principale (vacuum)
                 SilexPartesRes* pr = (SilexPartesRes*)xar_obtinere(
                     partes, index);
 
-                si (chorda_aequalis_literis(pr->via,
+                si (   chorda_aequalis_literis(pr->via,
                     "include/addenda.h") && !pr->adest)
                 {
                     addenda_abest = VERUM;
                 }
-                si (chorda_aequalis_literis(pr->via,
+                si (   chorda_aequalis_literis(pr->via,
                     "include/nova.h") && pr->adest)
                 {
                     nova_adest = VERUM;
@@ -1156,6 +1189,7 @@ s32 principale (vacuum)
             CREDO_VERUM(nova_adest);
         }
     }
+
 
     /* ========================================================
      * PROBARE: historia plagulae unius + vexillum renovationis
@@ -1291,6 +1325,7 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: differentia - QUID mutatum, textu
      * (laborans contra discum, deinde inter plicas; fixturae
@@ -1300,9 +1335,9 @@ s32 principale (vacuum)
 
     {
         SilexDifferentiaFructus f;
-        SilexConditioFructus    conditio;
-        s64                     seq_ante;
-        s64                     seq_post;
+           SilexConditioFructus conditio;
+                            s64 seq_ante;
+                            s64 seq_post;
 
         imprimere("\n--- Probans differentiam (arbor munda) ---\n");
 
@@ -1422,8 +1457,8 @@ s32 principale (vacuum)
             s64  seq_primae;
 
             CREDO_NON_NIHIL(h);
-            seq_novi = ((SilexConditio*)xar_obtinere(h, 1))->seq;
-            seq_primae = ((SilexConditio*)xar_obtinere(h, 2))->seq;
+            seq_novi    = ((SilexConditio*)xar_obtinere(h, 1))->seq;
+            seq_primae  = ((SilexConditio*)xar_obtinere(h, 2))->seq;
 
             f = silex_differentia_plicarum(piscina,
                 AREA "/specimen", seq_novi, seq_primae, VERUM);
@@ -1454,6 +1489,7 @@ s32 principale (vacuum)
             }
         }
     }
+
 
     /* ========================================================
      * PROBARE: identitas voluminis (decisum red-team IX):
@@ -1490,27 +1526,29 @@ s32 principale (vacuum)
         CREDO_FALSUM(status.successus);
     }
 
+
     /* ========================================================
      * PROBARE: tituli mali recusantur
      * ======================================================== */
 
     {
         SilexNovumOptiones optiones;
-        SilexNovumFructus  fructus;
+         SilexNovumFructus fructus;
 
         imprimere("\n--- Probans recusationem tituli ---\n");
 
-        optiones.fons = silex_fons_disci(piscina, ".");
-        optiones.destinatio = AREA;
-        optiones.vitrea = FALSUM;
-        optiones.titulus = "malus/titulus";
-        fructus = silex_novum(piscina, &optiones);
+        optiones.fons        = silex_fons_disci(piscina, ".");
+        optiones.destinatio  = AREA;
+        optiones.vitrea      = FALSUM;
+        optiones.titulus     = "malus/titulus";
+        fructus              = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
 
-        optiones.titulus = "";
-        fructus = silex_novum(piscina, &optiones);
+        optiones.titulus  = "";
+        fructus           = silex_novum(piscina, &optiones);
         CREDO_FALSUM(fructus.successus);
     }
+
 
     /* ========================================================
      * Compendium

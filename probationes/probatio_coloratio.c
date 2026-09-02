@@ -12,7 +12,8 @@
  * ================================================== */
 
 hic_manens b32
-_dummy_command(ContextusCommandi* ctx)
+_dummy_command (
+    ContextusCommandi* ctx)
 {
     (vacuum)ctx;
     redde VERUM;
@@ -60,15 +61,17 @@ probare_creare(Piscina* piscina)
     CREDO_NON_NIHIL(col->status_lineae);
 
     /* Verificare initiale valores sunt COLORATIO_DEFALTA */
-    CREDO_AEQUALIS_I32((i32)coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32((i32)coloratio_obtinere(col, V, V), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32((i32)coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32((i32)coloratio_obtinere(col, V, V),
+        COLORATIO_DEFALTA);
 }
 
 hic_manens vacuum
 probare_creare_ex_tabula(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  coloratio_creare_ex_tabula...\n");
 
@@ -123,7 +126,8 @@ probare_regulas(Piscina* piscina)
 
     /* Addere regulam */
     coloratio_addere_regulam(col, COLORATIO_REGULA_STML);
-    CREDO_AEQUALIS_I32(col->regulae, COLORATIO_REGULA_COMMANDA | COLORATIO_REGULA_STML);
+    CREDO_AEQUALIS_I32(col->regulae, COLORATIO_REGULA_COMMANDA
+        | COLORATIO_REGULA_STML);
 
     /* Removere regulam */
     coloratio_removere_regulam(col, COLORATIO_REGULA_COMMANDA);
@@ -142,8 +146,8 @@ probare_regulas(Piscina* piscina)
 hic_manens vacuum
 probare_commanda_simplex(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $command simplex...\n");
 
@@ -155,28 +159,39 @@ probare_commanda_simplex(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* "Try " (positions 0-3) = default */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_DEFALTA);  /* T */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_DEFALTA);         /* r */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_DEFALTA);        /* y */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_DEFALTA);       /* ' ' */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_DEFALTA);  /* T */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_DEFALTA);         /* r */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_DEFALTA);        /* y */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_DEFALTA);       /* ' ' */
 
     /* "$date" (positions 4-8) = command */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_COMMANDUM);      /* $ */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_COMMANDUM);       /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_COMMANDUM);      /* a */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_COMMANDUM);     /* t */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII), COLORATIO_COMMANDUM);    /* e */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_COMMANDUM);      /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_COMMANDUM);       /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_COMMANDUM);      /* a */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_COMMANDUM);     /* t */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII),
+        COLORATIO_COMMANDUM);    /* e */
 
     /* " here" (positions 9+) = default */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX), COLORATIO_DEFALTA);        /* ' ' */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_DEFALTA);         /* h */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX),
+        COLORATIO_DEFALTA);        /* ' ' */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_DEFALTA);         /* h */
 }
 
 hic_manens vacuum
 probare_commanda_multiplex(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $command multiplex...\n");
 
@@ -188,23 +203,29 @@ probare_commanda_multiplex(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* "$first" (positions 0-5) = command */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_COMMANDUM);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_COMMANDUM);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_COMMANDUM);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_COMMANDUM);
 
     /* " and " = default */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_DEFALTA);
 
     /* "$second" (positions 11-17) = command */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XI), COLORATIO_COMMANDUM);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XVII), COLORATIO_COMMANDUM);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XI),
+        COLORATIO_COMMANDUM);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XVII),
+        COLORATIO_COMMANDUM);
 }
 
 hic_manens vacuum
 probare_commanda_sine_regula(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $command sine regula...\n");
 
@@ -216,15 +237,17 @@ probare_commanda_sine_regula(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* Omnia debent esse default */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_DEFALTA);
 }
 
 hic_manens vacuum
 probare_commanda_solum_signum(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $ solum (no word)...\n");
 
@@ -236,14 +259,15 @@ probare_commanda_solum_signum(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* "$ " alone should NOT be highlighted (no word after $) */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_DEFALTA);  /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_DEFALTA);  /* $ */
 }
 
 hic_manens vacuum
 probare_commanda_ad_finem_lineae(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $command ad finem lineae...\n");
 
@@ -255,8 +279,10 @@ probare_commanda_ad_finem_lineae(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* "$cmd" at end = command */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_COMMANDUM);   /* $ */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_COMMANDUM);  /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_COMMANDUM);   /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_COMMANDUM);  /* d */
 }
 
 
@@ -267,8 +293,8 @@ probare_commanda_ad_finem_lineae(Piscina* piscina)
 hic_manens vacuum
 probare_status_lineae_normalis(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  status lineae normalis...\n");
 
@@ -279,15 +305,17 @@ probare_status_lineae_normalis(Piscina* piscina)
     col = coloratio_creare_ex_tabula(piscina, &tabula);
     coloratio_computare(col, &tabula);
 
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM), STATUS_LINEA_NORMALIS);
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, I), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM),
+        STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, I),
+        STATUS_LINEA_NORMALIS);
 }
 
 hic_manens vacuum
 probare_status_lineae_sputnik_block(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  status lineae sputnik block...\n");
 
@@ -303,38 +331,46 @@ probare_status_lineae_sputnik_block(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* Line 0: Normal → remains NORMALIS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM),
+        STATUS_LINEA_NORMALIS);
 
     /* Line 1: <sputnik> → becomes IN_SPUTNIK */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, I), STATUS_LINEA_IN_SPUTNIK);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, I),
+        STATUS_LINEA_IN_SPUTNIK);
 
     /* Lines 2,3: inside block → stays IN_SPUTNIK */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, II), STATUS_LINEA_IN_SPUTNIK);
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, III), STATUS_LINEA_IN_SPUTNIK);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, II),
+        STATUS_LINEA_IN_SPUTNIK);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, III),
+        STATUS_LINEA_IN_SPUTNIK);
 
     /* Line 4: </sputnik> → returns to NORMALIS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, IV), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, IV),
+        STATUS_LINEA_NORMALIS);
 
     /* Line 5: Normal → NORMALIS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, V), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, V),
+        STATUS_LINEA_NORMALIS);
 }
 
 hic_manens vacuum
 probare_status_lineae_sputnik_inline(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  status lineae sputnik inline...\n");
 
     tabula_initiare(&tabula, piscina, L, V);
-    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM, "Before <sputnik>code</sputnik> after");
+    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM,
+        "Before <sputnik>code</sputnik> after");
 
     col = coloratio_creare_ex_tabula(piscina, &tabula);
     coloratio_computare(col, &tabula);
 
     /* Open and close on same line → ends as NORMALIS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM),
+        STATUS_LINEA_NORMALIS);
 }
 
 
@@ -345,8 +381,8 @@ probare_status_lineae_sputnik_inline(Piscina* piscina)
 hic_manens vacuum
 probare_vacare(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  coloratio_vacare...\n");
 
@@ -358,14 +394,17 @@ probare_vacare(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* Verificare highlighted */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_COMMANDUM);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_COMMANDUM);
 
     /* Vacare */
     coloratio_vacare(col);
 
     /* Verificare cleared */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM), STATUS_LINEA_NORMALIS);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere_status_lineae(col, ZEPHYRUM),
+        STATUS_LINEA_NORMALIS);
 }
 
 
@@ -383,13 +422,18 @@ probare_obtinere_limites(Piscina* piscina)
     col = coloratio_creare(piscina, XX, X);
 
     /* Out of bounds → DEFALTA (cast to avoid sign conversion warning) */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, (i32)-1, ZEPHYRUM), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, (i32)-1), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, X, ZEPHYRUM), COLORATIO_DEFALTA);
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XX), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, (i32)-1, ZEPHYRUM),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, (i32)-1),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, X, ZEPHYRUM),
+        COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XX),
+        COLORATIO_DEFALTA);
 
     /* NIHIL coloratio → DEFALTA */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(NIHIL, ZEPHYRUM, ZEPHYRUM), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(NIHIL, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_DEFALTA);
 }
 
 
@@ -400,8 +444,8 @@ probare_obtinere_limites(Piscina* piscina)
 hic_manens vacuum
 probare_commanda_cum_registro(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
     RegistrumCommandi* reg;
 
     imprimere("  $command cum registro...\n");
@@ -411,7 +455,8 @@ probare_commanda_cum_registro(Piscina* piscina)
     registrum_commandi_registrare(reg, "date", _dummy_command, NIHIL);
 
     tabula_initiare(&tabula, piscina, L, V);
-    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM, "$date $time $unknown");
+    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM,
+        "$date $time $unknown");
 
     col = coloratio_creare_ex_tabula(piscina, &tabula);
     coloratio_ponere_regulas(col, COLORATIO_REGULA_COMMANDA);
@@ -419,37 +464,50 @@ probare_commanda_cum_registro(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* $date (0-4) should be highlighted - registered */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_COMMANDUM);  /* $ */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_COMMANDUM);         /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_COMMANDUM);        /* a */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_COMMANDUM);       /* t */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_COMMANDUM);        /* e */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_COMMANDUM);  /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_COMMANDUM);         /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_COMMANDUM);        /* a */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_COMMANDUM);       /* t */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_COMMANDUM);        /* e */
 
     /* Space at 5 - default */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_DEFALTA);
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_DEFALTA);
 
     /* $time (6-10) should NOT be highlighted - not registered */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_DEFALTA);   /* $ */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_DEFALTA);  /* t */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII), COLORATIO_DEFALTA); /* i */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX), COLORATIO_DEFALTA);   /* m */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_DEFALTA);    /* e */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_DEFALTA);   /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_DEFALTA);  /* t */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII),
+        COLORATIO_DEFALTA); /* i */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX),
+        COLORATIO_DEFALTA);   /* m */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_DEFALTA);    /* e */
 
     /* $unknown (12-19) should NOT be highlighted - not registered */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII), COLORATIO_DEFALTA);  /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII),
+        COLORATIO_DEFALTA);  /* $ */
 }
 
 hic_manens vacuum
 probare_commanda_sine_registro(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  $command sine registro (all highlighted)...\n");
 
     /* Sine registrum, all $word patterns highlighted */
     tabula_initiare(&tabula, piscina, L, V);
-    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM, "$date $time $anything");
+    _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM,
+        "$date $time $anything");
 
     col = coloratio_creare_ex_tabula(piscina, &tabula);
     coloratio_ponere_regulas(col, COLORATIO_REGULA_COMMANDA);
@@ -457,9 +515,12 @@ probare_commanda_sine_registro(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* All commands should be highlighted when no registry */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_COMMANDUM);  /* $date */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_COMMANDUM);        /* $time */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII), COLORATIO_COMMANDUM);       /* $anything */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_COMMANDUM);  /* $date */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_COMMANDUM);        /* $time */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII),
+        COLORATIO_COMMANDUM);       /* $anything */
 }
 
 
@@ -470,8 +531,8 @@ probare_commanda_sine_registro(Piscina* piscina)
 hic_manens vacuum
 probare_tag_simplex(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag simplex <div>...\n");
 
@@ -483,18 +544,23 @@ probare_tag_simplex(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* <div> - all TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_TAGUM);        /* i */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_TAGUM);       /* v */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_TAGUM);        /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_TAGUM);        /* i */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_TAGUM);       /* v */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_TAGUM);        /* > */
 }
 
 hic_manens vacuum
 probare_tag_closing(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag closing </div>...\n");
 
@@ -506,17 +572,21 @@ probare_tag_closing(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* </div> - all TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* / */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_TAGUM);        /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_TAGUM);         /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* / */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_TAGUM);        /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_TAGUM);         /* > */
 }
 
 hic_manens vacuum
 probare_tag_self_closing(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag self-closing <br/>...\n");
 
@@ -528,18 +598,23 @@ probare_tag_self_closing(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* <br/> - all TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* b */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_TAGUM);        /* r */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_TAGUM);       /* / */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_TAGUM);        /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* b */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_TAGUM);        /* r */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_TAGUM);       /* / */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_TAGUM);        /* > */
 }
 
 hic_manens vacuum
 probare_tag_cum_attributo(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag cum attributo...\n");
 
@@ -552,37 +627,51 @@ probare_tag_cum_attributo(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* < a = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* a */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* a */
 
     /* space = DEFALTA */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II), COLORATIO_DEFALTA);      /* space */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, II),
+        COLORATIO_DEFALTA);      /* space */
 
     /* href = ATTRIBUTUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_ATTRIBUTUM);  /* h */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_ATTRIBUTUM);   /* r */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_ATTRIBUTUM);    /* e */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_ATTRIBUTUM);   /* f */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_ATTRIBUTUM);  /* h */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_ATTRIBUTUM);   /* r */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_ATTRIBUTUM);    /* e */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_ATTRIBUTUM);   /* f */
 
     /* = OPERANS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_OPERANS);     /* = */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_OPERANS);     /* = */
 
     /* "url" = VALOR_ATTR */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII), COLORATIO_VALOR_ATTR); /* " */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX), COLORATIO_VALOR_ATTR);   /* u */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_VALOR_ATTR);    /* r */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XI), COLORATIO_VALOR_ATTR);   /* l */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII), COLORATIO_VALOR_ATTR);  /* " */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII),
+        COLORATIO_VALOR_ATTR); /* " */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX),
+        COLORATIO_VALOR_ATTR);   /* u */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_VALOR_ATTR);    /* r */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XI),
+        COLORATIO_VALOR_ATTR);   /* l */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XII),
+        COLORATIO_VALOR_ATTR);  /* " */
 
     /* > = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XIII), COLORATIO_TAGUM);      /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XIII),
+        COLORATIO_TAGUM);      /* > */
 }
 
 hic_manens vacuum
 probare_tag_boolean_attr(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag boolean attribute...\n");
 
@@ -595,23 +684,29 @@ probare_tag_boolean_attr(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* <button = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* b */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_TAGUM);        /* n */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* b */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_TAGUM);        /* n */
 
     /* disabled = ATTRIBUTUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII), COLORATIO_ATTRIBUTUM); /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XV), COLORATIO_ATTRIBUTUM);   /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII),
+        COLORATIO_ATTRIBUTUM); /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XV),
+        COLORATIO_ATTRIBUTUM);   /* d */
 
     /* > = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XVI), COLORATIO_TAGUM);       /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XVI),
+        COLORATIO_TAGUM);       /* > */
 }
 
 hic_manens vacuum
 probare_tag_bare_value(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag bare value...\n");
 
@@ -624,30 +719,39 @@ probare_tag_bare_value(Piscina* piscina)
     coloratio_computare(col, &tabula);
 
     /* <x = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I), COLORATIO_TAGUM);         /* x */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, I),
+        COLORATIO_TAGUM);         /* x */
 
     /* val = ATTRIBUTUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III), COLORATIO_ATTRIBUTUM);  /* v */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_ATTRIBUTUM);    /* l */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, III),
+        COLORATIO_ATTRIBUTUM);  /* v */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_ATTRIBUTUM);    /* l */
 
     /* = OPERANS */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_OPERANS);      /* = */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_OPERANS);      /* = */
 
     /* 123 = VALOR_ATTR */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII), COLORATIO_VALOR_ATTR);  /* 1 */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII), COLORATIO_VALOR_ATTR); /* 2 */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX), COLORATIO_VALOR_ATTR);   /* 3 */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VII),
+        COLORATIO_VALOR_ATTR);  /* 1 */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VIII),
+        COLORATIO_VALOR_ATTR); /* 2 */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX),
+        COLORATIO_VALOR_ATTR);   /* 3 */
 
     /* > = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_TAGUM);         /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_TAGUM);         /* > */
 }
 
 hic_manens vacuum
 probare_tag_cum_commando(Piscina* piscina)
 {
-    TabulaCharacterum tabula;
-    Coloratio* col;
+    TabulaCharacterum  tabula;
+            Coloratio* col;
 
     imprimere("  tag cum $command...\n");
 
@@ -656,21 +760,29 @@ probare_tag_cum_commando(Piscina* piscina)
     _scribere_textum(&tabula, ZEPHYRUM, ZEPHYRUM, "<div>$date</div>");
 
     col = coloratio_creare_ex_tabula(piscina, &tabula);
-    coloratio_ponere_regulas(col, COLORATIO_REGULA_STML | COLORATIO_REGULA_COMMANDA);
+    coloratio_ponere_regulas(col, COLORATIO_REGULA_STML
+        | COLORATIO_REGULA_COMMANDA);
     coloratio_computare(col, &tabula);
 
     /* <div> = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM), COLORATIO_TAGUM);  /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV), COLORATIO_TAGUM);        /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, ZEPHYRUM),
+        COLORATIO_TAGUM);  /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IV),
+        COLORATIO_TAGUM);        /* > */
 
     /* $date = COMMANDUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V), COLORATIO_COMMANDUM);     /* $ */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI), COLORATIO_COMMANDUM);    /* d */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX), COLORATIO_COMMANDUM);    /* e */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, V),
+        COLORATIO_COMMANDUM);     /* $ */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, VI),
+        COLORATIO_COMMANDUM);    /* d */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, IX),
+        COLORATIO_COMMANDUM);    /* e */
 
     /* </div> = TAGUM */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X), COLORATIO_TAGUM);         /* < */
-    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XV), COLORATIO_TAGUM);        /* > */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, X),
+        COLORATIO_TAGUM);         /* < */
+    CREDO_AEQUALIS_I32(coloratio_obtinere(col, ZEPHYRUM, XV),
+        COLORATIO_TAGUM);        /* > */
 }
 
 
@@ -678,12 +790,14 @@ probare_tag_cum_commando(Piscina* piscina)
  * Main
  * ================================================== */
 
-integer principale(vacuum)
+integer
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
-    piscina = piscina_generare_dynamicum("probatio_coloratio", M * LXIV);
+    piscina = piscina_generare_dynamicum("probatio_coloratio",
+        M * LXIV);
 
     credo_aperire(piscina);
 

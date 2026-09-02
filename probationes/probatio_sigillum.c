@@ -11,7 +11,7 @@ interior vacuum
 _proba_vector (constans character* titulus, constans character* nuntius,
     constans character* speratum)
 {
-    Sigillum s = sigillum_computare(nuntius, strlen(nuntius));
+     Sigillum s = sigillum_computare(nuntius, strlen(nuntius));
     character hex[SIGILLUM_HEX_MENSURA];
 
     sigillum_hex(&s, hex);
@@ -21,7 +21,7 @@ _proba_vector (constans character* titulus, constans character* nuntius,
 
 s32 principale (vacuum)
 {
-    b32 praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_sigillum", 4096);
@@ -32,9 +32,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: vectores NIST
      * ======================================================== */
+
     {
         imprimere("\n--- Probans vectores NIST ---\n");
 
@@ -51,17 +53,19 @@ s32 principale (vacuum)
             "a33ce45964ff2167f6ecedd419db06c1");
     }
 
+
     /* ========================================================
      * PROBARE: farcimen circa limites bloccorum (55/56/64 octeti -
      * anguli farciminis: 55 = longitudo intra bloccum, 56 = bloccus
      * farciminis additur, 64 = bloccus exactus)
      * ======================================================== */
+
     {
-        character nuntius[65];
-        Sigillum uno;
-        Sigillum partim;
+                character nuntius[65];
+                 Sigillum uno;
+                 Sigillum partim;
         SigillumContextus ctx;
-        integer k;
+                  integer k;
 
         imprimere("\n--- Probans limites bloccorum ---\n");
 
@@ -83,15 +87,17 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: nuntius longus ("a" x 1,000,000 - NIST)
      * ======================================================== */
+
     {
-        character mille_a[1000];
+                character mille_a[1000];
         SigillumContextus ctx;
-        Sigillum s;
-        character hex[SIGILLUM_HEX_MENSURA];
-        integer k;
+                 Sigillum s;
+                character hex[SIGILLUM_HEX_MENSURA];
+                  integer k;
 
         imprimere("\n--- Probans nuntium longum ---\n");
 
@@ -111,9 +117,11 @@ s32 principale (vacuum)
             "f1809a48a497200e046d39ccc7112cd0") == ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: aequalitas + identitas contenti
      * ======================================================== */
+
     {
         Sigillum a = sigillum_computare("idem", 4);
         Sigillum b = sigillum_computare("idem", 4);

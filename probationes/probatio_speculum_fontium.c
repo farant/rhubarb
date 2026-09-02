@@ -29,7 +29,9 @@ externus constans CapsulaEmbed capsula_speculi_hospes;
  * ======================================================================== */
 
 interior b32
-_continet(chorda textus, constans character* acus)
+_continet (
+                chorda  textus,
+    constans character* acus)
 {
     i32 acus_mensura;
     i32 i;
@@ -81,7 +83,7 @@ probatio_fontes_praesentes(Capsula* cap)
 interior vacuum
 probatio_corpus_verum(Capsula* cap, Piscina* piscina)
 {
-    CapsulaFructus fructus;
+    CapsulaFructus  fructus;
     CapsulaIndexum* tabella;
 
     imprimere("  corpus verum (gzip circumitus)...\n");
@@ -165,7 +167,8 @@ probatio_scripta(Capsula* cap)
  * PRINCIPALE
  * ======================================================================== */
 
-s32 principale(vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
     Capsula* cap;

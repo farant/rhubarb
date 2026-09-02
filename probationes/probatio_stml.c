@@ -10,7 +10,9 @@
 
 /* Adiutor: comparare chorda* cum literis C */
 interior b32
-_chorda_ptr_eq_literis(chorda* ch, constans character* cstr)
+_chorda_ptr_eq_literis (
+                chorda* ch,
+    constans character* cstr)
 {
     si (!ch)
     {
@@ -36,8 +38,8 @@ _pulchrum_probare(Piscina*             piscina,
 {
     StmlResultus primum;
     StmlResultus secundum;
-    chorda       scriptum;
-    chorda       rescriptum;
+          chorda scriptum;
+          chorda rescriptum;
 
     primum = stml_legere_ex_literis(input, piscina, intern);
     CREDO_VERUM(primum.successus);
@@ -60,9 +62,9 @@ _pulchrum_probare(Piscina*             piscina,
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
     /* Aperire piscinam et credonem */
     piscina = piscina_generare_dynamicum("probatio_stml", MMMMXCVI);
@@ -82,6 +84,7 @@ s32 principale(vacuum)
 
     credo_aperire(piscina);
 
+
     /* ==================================================
      * Probare stml_elementum_creare
      * ================================================== */
@@ -100,6 +103,7 @@ s32 principale(vacuum)
         imprimere("  Elementum 'root' creatum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_textum_creare
      * ================================================== */
@@ -113,10 +117,12 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
         CREDO_AEQUALIS_I32(nodus->genus, STML_NODUS_TEXTUS);
         CREDO_NON_NIHIL(nodus->valor);
-        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->valor, "Hello World"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(nodus->valor,
+            "Hello World"));
 
         imprimere("  Textus 'Hello World' creatum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_attributum_addere
@@ -126,13 +132,15 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda*    valor;
+           chorda* valor;
 
         nodus = stml_elementum_creare(piscina, intern, "element");
         CREDO_NON_NIHIL(nodus);
 
-        CREDO_VERUM(stml_attributum_addere(nodus, piscina, intern, "id", "123"));
-        CREDO_VERUM(stml_attributum_addere(nodus, piscina, intern, "class", "main"));
+        CREDO_VERUM(stml_attributum_addere(nodus, piscina, intern, "id",
+            "123"));
+        CREDO_VERUM(stml_attributum_addere(nodus, piscina, intern,
+            "class", "main"));
 
         valor = stml_attributum_capere(nodus, "id");
         CREDO_NON_NIHIL(valor);
@@ -145,6 +153,7 @@ s32 principale(vacuum)
         imprimere("  Attributa addita et obtenta: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_attributum_boolean_addere
      * ================================================== */
@@ -153,12 +162,13 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda*    valor;
+           chorda* valor;
 
         nodus = stml_elementum_creare(piscina, intern, "button");
         CREDO_NON_NIHIL(nodus);
 
-        CREDO_VERUM(stml_attributum_boolean_addere(nodus, piscina, intern, "disabled"));
+        CREDO_VERUM(stml_attributum_boolean_addere(nodus, piscina,
+            intern, "disabled"));
 
         valor = stml_attributum_capere(nodus, "disabled");
         CREDO_NON_NIHIL(valor);
@@ -167,6 +177,7 @@ s32 principale(vacuum)
 
         imprimere("  Boolean attributum 'disabled': VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_liberum_addere
@@ -178,16 +189,18 @@ s32 principale(vacuum)
         StmlNodus* parens;
         StmlNodus* liberum;
 
-        parens = stml_elementum_creare(piscina, intern, "parent");
-        liberum = stml_elementum_creare(piscina, intern, "child");
+        parens   = stml_elementum_creare(piscina, intern, "parent");
+        liberum  = stml_elementum_creare(piscina, intern, "child");
 
         CREDO_VERUM(stml_liberum_addere(parens, liberum));
         CREDO_AEQUALIS_I32(stml_numerus_liberorum(parens), I);
-        CREDO_AEQUALIS_PTR(stml_liberum_ad_indicem(parens, ZEPHYRUM), liberum);
+        CREDO_AEQUALIS_PTR(stml_liberum_ad_indicem(parens, ZEPHYRUM),
+            liberum);
         CREDO_AEQUALIS_PTR(liberum->parens, parens);
 
         imprimere("  Liberum additum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere simplex
@@ -202,11 +215,14 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
         CREDO_NON_NIHIL(res.elementum_radix);
-        CREDO_AEQUALIS_I32(res.elementum_radix->genus, STML_NODUS_ELEMENTUM);
-        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "root"));
+        CREDO_AEQUALIS_I32(res.elementum_radix->genus,
+            STML_NODUS_ELEMENTUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus,
+            "root"));
 
         imprimere("  Parsatio '<root/>': VERUM\n");
     }
+
 
     /* ==================================================
      * Probare lineas nodorum (metadatum parsationis)
@@ -215,11 +231,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans lineas nodorum ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   radix_e;
-        StmlNodus*   liberum;
-        i32          i;
-        i32          n;
+        StmlResultus  res;
+           StmlNodus* radix_e;
+           StmlNodus* liberum;
+                 i32  i;
+                 i32  n;
 
         res = stml_legere_ex_literis(
             "<radix>\n"
@@ -263,6 +279,7 @@ s32 principale(vacuum)
         imprimere("  Lineae nodorum: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_legere cum attributis
      * ================================================== */
@@ -270,10 +287,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans stml_legere cum attributis ---\n");
 
     {
-        StmlResultus res;
-        chorda*      val;
+        StmlResultus  res;
+              chorda* val;
 
-        res = stml_legere_ex_literis("<item id=\"42\" name=\"test\"/>", piscina, intern);
+        res = stml_legere_ex_literis("<item id=\"42\" name=\"test\"/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -288,6 +306,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio attributa: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_legere boolean attributes
      * ================================================== */
@@ -297,18 +316,24 @@ s32 principale(vacuum)
     {
         StmlResultus res;
 
-        res = stml_legere_ex_literis("<button disabled type=\"submit\"/>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<button disabled type=\"submit\"/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
-        CREDO_VERUM(stml_attributum_habet(res.elementum_radix, "disabled"));
+        CREDO_VERUM(stml_attributum_habet(res.elementum_radix,
+            "disabled"));
         CREDO_VERUM(_chorda_ptr_eq_literis(
-            stml_attributum_capere(res.elementum_radix, "disabled"), "true"));
+            stml_attributum_capere(res.elementum_radix, "disabled"),
+            "true"));
         CREDO_VERUM(_chorda_ptr_eq_literis(
-            stml_attributum_capere(res.elementum_radix, "type"), "submit"));
+            stml_attributum_capere(res.elementum_radix, "type"),
+            "submit"));
 
         imprimere("  Boolean attribute 'disabled': VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere cum apostrophis (single quotes)
@@ -322,13 +347,15 @@ s32 principale(vacuum)
         /* OLIM sustentati, NUNC RECUSATI (decretum 2026-08-29,
          * instrumentum par. 7.3): involucra simplicia classem
          * emissionis non re-parsabilis aperiebant. */
-        res = stml_legere_ex_literis("<item id='42' name='test'/>", piscina, intern);
+        res = stml_legere_ex_literis("<item id='42' name='test'/>",
+            piscina, intern);
         CREDO_FALSUM(res.successus);
         CREDO_AEQUALIS_I32((i32)res.status,
                           (i32)STML_ERROR_ATTRIBUTUM);
 
         imprimere("  Recusatio apostrophorum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere cum valoribus nudis (bare values)
@@ -337,10 +364,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans stml_legere cum valoribus nudis ---\n");
 
     {
-        StmlResultus res;
-        chorda*      val;
+        StmlResultus  res;
+              chorda* val;
 
-        res = stml_legere_ex_literis("<pagina x=0 y=10 latitudo=71/>", piscina, intern);
+        res = stml_legere_ex_literis("<pagina x=0 y=10 latitudo=71/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -359,6 +387,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio valoribus nudis: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_legere cum valoribus mixtis
      * ================================================== */
@@ -366,10 +395,12 @@ s32 principale(vacuum)
     imprimere("\n--- Probans stml_legere cum valoribus mixtis ---\n");
 
     {
-        StmlResultus res;
-        chorda*      val;
+        StmlResultus  res;
+              chorda* val;
 
-        res = stml_legere_ex_literis("<widget id=\"main\" x=0 name=\"test\" active/>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<widget id=\"main\" x=0 name=\"test\" active/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -392,6 +423,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio valoribus mixtis: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_legere cum liberis
      * ================================================== */
@@ -399,19 +431,22 @@ s32 principale(vacuum)
     imprimere("\n--- Probans stml_legere cum liberis ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   lib;
+        StmlResultus  res;
+           StmlNodus* lib;
 
-        res = stml_legere_ex_literis("<parent><child/></parent>", piscina, intern);
+        res = stml_legere_ex_literis("<parent><child/></parent>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
-        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), I);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix),
+            I);
 
         lib = stml_invenire_liberum(res.elementum_radix, "child");
         CREDO_NON_NIHIL(lib);
 
         imprimere("  Parsatio liberis: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere cum textu
@@ -421,9 +456,10 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       textus;
+              chorda textus;
 
-        res = stml_legere_ex_literis("<greeting>Hello World</greeting>", piscina, intern);
+        res = stml_legere_ex_literis("<greeting>Hello World</greeting>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -434,6 +470,7 @@ s32 principale(vacuum)
         imprimere("  Parsatio textus: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_legere raw content tags (!)
      * ================================================== */
@@ -442,19 +479,23 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       textus;
+              chorda textus;
 
-        res = stml_legere_ex_literis("<code!><div>literal &amp;</div></code>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<code!><div>literal &amp;</div></code>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
         CREDO_VERUM(res.elementum_radix->crudus);
 
         textus = stml_textus_internus(res.elementum_radix, piscina);
         CREDO_CHORDA_NON_VACUA(textus);
-        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<div>literal &amp;</div>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus,
+            "<div>literal &amp;</div>");
 
         imprimere("  Raw content '<code!>': VERUM\n");
     }
+
 
     /* ==================================================
      * Probare forward capture operators
@@ -463,11 +504,12 @@ s32 principale(vacuum)
     imprimere("\n--- Probans forward capture operator ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        StmlNodus*   captured;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+           StmlNodus* captured;
 
-        res = stml_legere_ex_literis("<root><wrapper (><item/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><wrapper (><item/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -482,6 +524,7 @@ s32 principale(vacuum)
         imprimere("  Forward capture <wrapper (>: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare backward capture operators
      * ================================================== */
@@ -489,11 +532,12 @@ s32 principale(vacuum)
     imprimere("\n--- Probans backward capture operator ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        StmlNodus*   captured;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+           StmlNodus* captured;
 
-        res = stml_legere_ex_literis("<root><item/><) wrapper></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><item/><) wrapper></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -508,6 +552,7 @@ s32 principale(vacuum)
         imprimere("  Backward capture <) wrapper>: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare sandwich capture operators
      * ================================================== */
@@ -515,18 +560,21 @@ s32 principale(vacuum)
     imprimere("\n--- Probans sandwich capture operator ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        i32          num_children;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+                 i32  num_children;
 
-        res = stml_legere_ex_literis("<root><prev/><= wrapper =><next/></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><prev/><= wrapper =><next/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
         /* After capture processing, prev and next should be children of wrapper */
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
         CREDO_NON_NIHIL(wrapper);
-        CREDO_AEQUALIS_I32(wrapper->captio_directio, STML_CAPTIO_FARCIMEN);
+        CREDO_AEQUALIS_I32(wrapper->captio_directio,
+            STML_CAPTIO_FARCIMEN);
 
         num_children = stml_numerus_liberorum(wrapper);
         CREDO_AEQUALIS_I32(num_children, II);
@@ -537,6 +585,7 @@ s32 principale(vacuum)
         imprimere("  Sandwich capture <= wrapper =>: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_scribere simplex
      * ================================================== */
@@ -545,7 +594,7 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda     output;
+           chorda  output;
 
         nodus = stml_elementum_creare(piscina, intern, "empty");
 
@@ -556,6 +605,7 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<empty/>");
     }
 
+
     /* ==================================================
      * Probare stml_scribere cum attributis
      * ================================================== */
@@ -564,7 +614,7 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda     output;
+           chorda  output;
 
         nodus = stml_elementum_creare(piscina, intern, "item");
         stml_attributum_addere(nodus, piscina, intern, "id", "42");
@@ -576,6 +626,7 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<item id=\"42\"/>");
     }
 
+
     /* ==================================================
      * Probare stml_scribere boolean attributes
      * ================================================== */
@@ -584,10 +635,11 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda     output;
+           chorda  output;
 
         nodus = stml_elementum_creare(piscina, intern, "button");
-        stml_attributum_boolean_addere(nodus, piscina, intern, "disabled");
+        stml_attributum_boolean_addere(nodus, piscina, intern,
+            "disabled");
 
         output = stml_scribere(nodus, piscina, FALSUM);
         CREDO_CHORDA_NON_VACUA(output);
@@ -596,6 +648,7 @@ s32 principale(vacuum)
         /* Boolean attributes should be serialized without ="true" */
         CREDO_CHORDA_AEQUALIS_LITERIS(output, "<button disabled/>");
     }
+
 
     /* ==================================================
      * Probare stml_scribere cum liberis
@@ -606,18 +659,20 @@ s32 principale(vacuum)
     {
         StmlNodus* parens;
         StmlNodus* liberum;
-        chorda     output;
+           chorda  output;
 
-        parens = stml_elementum_creare(piscina, intern, "parent");
-        liberum = stml_elementum_creare(piscina, intern, "child");
+        parens   = stml_elementum_creare(piscina, intern, "parent");
+        liberum  = stml_elementum_creare(piscina, intern, "child");
         stml_liberum_addere(parens, liberum);
 
         output = stml_scribere(parens, piscina, FALSUM);
         CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<parent><child/></parent>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<parent><child/></parent>");
     }
+
 
     /* ==================================================
      * Probare stml_scribere cum textu
@@ -627,7 +682,7 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda     output;
+           chorda  output;
 
         nodus = stml_elementum_creare(piscina, intern, "greeting");
         stml_textum_addere(nodus, piscina, intern, "Hello");
@@ -636,8 +691,10 @@ s32 principale(vacuum)
         CREDO_CHORDA_NON_VACUA(output);
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<greeting>Hello</greeting>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<greeting>Hello</greeting>");
     }
+
 
     /* ==================================================
      * Probare stml_scribere raw content
@@ -648,10 +705,11 @@ s32 principale(vacuum)
     {
         StmlNodus* nodus;
         StmlNodus* textus;
-        chorda     output;
+           chorda  output;
 
         nodus = stml_elementum_crudum_creare(piscina, intern, "code");
-        textus = stml_textum_creare(piscina, intern, "<div>&amp;</div>");
+        textus = stml_textum_creare(piscina, intern,
+            "<div>&amp;</div>");
         stml_liberum_addere(nodus, textus);
 
         output = stml_scribere(nodus, piscina, FALSUM);
@@ -659,8 +717,10 @@ s32 principale(vacuum)
 
         imprimere("  Output: %.*s\n", output.mensura, output.datum);
         /* Raw content should NOT be escaped */
-        CREDO_CHORDA_AEQUALIS_LITERIS(output, "<code!><div>&amp;</div></code>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(output,
+            "<code!><div>&amp;</div></code>");
     }
+
 
     /* ==================================================
      * Probare roundtrip (parse -> serialize)
@@ -672,23 +732,25 @@ s32 principale(vacuum)
         constans character* stml_original =
             "<root attr=\"value\"><child>text</child></root>";
 
-        StmlResultus res1;
-        chorda       serialized;
-        StmlResultus res2;
-        chorda*      val1;
-        chorda*      val2;
-        chorda       text1;
-        chorda       text2;
+        StmlResultus  res1;
+              chorda  serialized;
+        StmlResultus  res2;
+              chorda* val1;
+              chorda* val2;
+              chorda  text1;
+              chorda  text2;
 
         /* Parse original */
         res1 = stml_legere_ex_literis(stml_original, piscina, intern);
         CREDO_VERUM(res1.successus);
 
         /* Serialize */
-        serialized = stml_scribere(res1.elementum_radix, piscina, FALSUM);
+        serialized = stml_scribere(res1.elementum_radix, piscina,
+            FALSUM);
         CREDO_CHORDA_NON_VACUA(serialized);
 
-        imprimere("  Serialized: %.*s\n", serialized.mensura, serialized.datum);
+        imprimere("  Serialized: %.*s\n", serialized.mensura,
+            serialized.datum);
 
         /* Parse again */
         res2 = stml_legere(serialized, piscina, intern);
@@ -701,12 +763,17 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(val2);
         CREDO_VERUM(chorda_aequalis(*val1, *val2));
 
-        text1 = stml_textus_internus(stml_invenire_liberum(res1.elementum_radix, "child"), piscina);
-        text2 = stml_textus_internus(stml_invenire_liberum(res2.elementum_radix, "child"), piscina);
+        text1 =
+            stml_textus_internus(stml_invenire_liberum(res1.elementum_radix,
+            "child"), piscina);
+        text2 =
+            stml_textus_internus(stml_invenire_liberum(res2.elementum_radix,
+            "child"), piscina);
         CREDO_VERUM(chorda_aequalis(text1, text2));
 
         imprimere("  Roundtrip: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere errores
@@ -723,6 +790,7 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(res.status, STML_ERROR_VACUUM_INPUT);
         imprimere("  Empty input detectum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare stml_legere cum commento
@@ -746,6 +814,7 @@ s32 principale(vacuum)
         imprimere("  Commenta parsata: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare stml_invenire_omnes_liberos
      * ================================================== */
@@ -753,8 +822,8 @@ s32 principale(vacuum)
     imprimere("\n--- Probans stml_invenire_omnes_liberos ---\n");
 
     {
-        StmlResultus res;
-        Xar*         items;
+        StmlResultus  res;
+                 Xar* items;
 
         res = stml_legere_ex_literis(
             "<list>"
@@ -766,12 +835,15 @@ s32 principale(vacuum)
             piscina, intern);
         CREDO_VERUM(res.successus);
 
-        items = stml_invenire_omnes_liberos(res.elementum_radix, "item", piscina);
+        items = stml_invenire_omnes_liberos(res.elementum_radix, "item",
+            piscina);
         CREDO_NON_NIHIL(items);
         CREDO_AEQUALIS_I32(xar_numerus(items), III);
 
-        imprimere("  Invenire omnes 'item': %d (expected 3)\n", xar_numerus(items));
+        imprimere("  Invenire omnes 'item': %d (expected 3)\n",
+            xar_numerus(items));
     }
+
 
     /* ==================================================
      * Probare multiple forward captures
@@ -780,12 +852,14 @@ s32 principale(vacuum)
     imprimere("\n--- Probans multiple forward captures ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        i32          num_children;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+                 i32  num_children;
 
         /* (( captures 2 siblings */
-        res = stml_legere_ex_literis("<root><wrapper (( ><a/><b/><c/></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><wrapper (( ><a/><b/><c/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -801,10 +875,12 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(stml_invenire_liberum(wrapper, "b"));
 
         /* c should be sibling of wrapper, not child */
-        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix, "c"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix,
+            "c"));
 
         imprimere("  Multiple forward capture ((: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare errores: malformed tags
@@ -816,7 +892,8 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Mismatched tags */
-        res = stml_legere_ex_literis("<div>content</span>", piscina, intern);
+        res = stml_legere_ex_literis("<div>content</span>", piscina,
+            intern);
         CREDO_FALSUM(res.successus);
         CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_IMPROPRIE);
         imprimere("  Mismatched tags detectum: VERUM\n");
@@ -826,7 +903,8 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Overlapping tags (invalid nesting) */
-        res = stml_legere_ex_literis("<b><i>text</b></i>", piscina, intern);
+        res = stml_legere_ex_literis("<b><i>text</b></i>", piscina,
+            intern);
         CREDO_FALSUM(res.successus);
         CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_IMPROPRIE);
         imprimere("  Overlapping tags detectum: VERUM\n");
@@ -836,7 +914,8 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Unclosed tag at EOF */
-        res = stml_legere_ex_literis("<div>unclosed content", piscina, intern);
+        res = stml_legere_ex_literis("<div>unclosed content", piscina,
+            intern);
         CREDO_FALSUM(res.successus);
         CREDO_AEQUALIS_I32(res.status, STML_ERROR_TAG_NON_CLAUSUM);
         imprimere("  Unclosed tag detectum: VERUM\n");
@@ -855,10 +934,12 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Multiple closing tags */
-        res = stml_legere_ex_literis("<div>content</div></div>", piscina, intern);
+        res = stml_legere_ex_literis("<div>content</div></div>",
+            piscina, intern);
         CREDO_FALSUM(res.successus);
         imprimere("  Multiple closing tags detectum: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare errores: edge cases
@@ -881,7 +962,8 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Only comment - should succeed */
-        res = stml_legere_ex_literis("<!-- only comment -->", piscina, intern);
+        res = stml_legere_ex_literis("<!-- only comment -->", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
         /* No root element */
@@ -893,19 +975,21 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Multiple root elements - should succeed */
-        res = stml_legere_ex_literis("<root1>a</root1><root2>b</root2>", piscina, intern);
+        res = stml_legere_ex_literis("<root1>a</root1><root2>b</root2>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.radix);
         /* First element is rootElement */
         CREDO_NON_NIHIL(res.elementum_radix);
-        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "root1"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus,
+            "root1"));
         imprimere("  Multiple roots: VERUM\n");
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   nodus;
-        i32          depth;
+        StmlResultus  res;
+           StmlNodus* nodus;
+                 i32  depth;
 
         /* Deeply nested structure */
         res = stml_legere_ex_literis(
@@ -942,9 +1026,11 @@ s32 principale(vacuum)
             "</root>",
             piscina, intern);
         CREDO_VERUM(res.successus);
-        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), XX);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix),
+            XX);
         imprimere("  Many siblings (20): VERUM\n");
     }
+
 
     /* ==================================================
      * Probare capture edge cases
@@ -953,12 +1039,13 @@ s32 principale(vacuum)
     imprimere("\n--- Probans capture edge cases ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   outer;
-        StmlNodus*   inner;
+        StmlResultus  res;
+           StmlNodus* outer;
+           StmlNodus* inner;
 
         /* Nested captures: <outer (> captures <inner /> */
-        res = stml_legere_ex_literis("<root><outer (><inner/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><outer (><inner/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         outer = stml_invenire_liberum(res.elementum_radix, "outer");
@@ -972,8 +1059,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
+        StmlResultus  res;
+           StmlNodus* wrapper;
 
         /* Comments should be transparent to capture */
         res = stml_legere_ex_literis(
@@ -990,12 +1077,14 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        chorda       textus;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+              chorda  textus;
 
         /* Text nodes with captures */
-        res = stml_legere_ex_literis("<root><wrapper (>captured text</root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><wrapper (>captured text</root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
@@ -1005,6 +1094,7 @@ s32 principale(vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "captured text");
         imprimere("  Text capture: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare PI and DOCTYPE
@@ -1016,10 +1106,12 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* Processing instruction */
-        res = stml_legere_ex_literis("<?xml version=\"1.0\"?><root/>", piscina, intern);
+        res = stml_legere_ex_literis("<?xml version=\"1.0\"?><root/>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
-        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "root"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus,
+            "root"));
         imprimere("  Processing instruction: VERUM\n");
     }
 
@@ -1027,12 +1119,15 @@ s32 principale(vacuum)
         StmlResultus res;
 
         /* DOCTYPE */
-        res = stml_legere_ex_literis("<!DOCTYPE html><html/>", piscina, intern);
+        res = stml_legere_ex_literis("<!DOCTYPE html><html/>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
-        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus, "html"));
+        CREDO_VERUM(_chorda_ptr_eq_literis(res.elementum_radix->titulus,
+            "html"));
         imprimere("  DOCTYPE: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare raw content edge cases
@@ -1042,10 +1137,11 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       textus;
+              chorda textus;
 
         /* Raw content preserves special chars */
-        res = stml_legere_ex_literis("<code!>< > & \" '</code>", piscina, intern);
+        res = stml_legere_ex_literis("<code!>< > & \" '</code>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_VERUM(res.elementum_radix->crudus);
 
@@ -1056,14 +1152,17 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       textus;
+              chorda textus;
 
         /* Raw content preserves nested tag-like content */
-        res = stml_legere_ex_literis("<template!><div class=\"test\"><span>inner</span></div></template>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<template!><div class=\"test\"><span>inner</span></div></template>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         textus = stml_textus_internus(res.elementum_radix, piscina);
-        CREDO_CHORDA_AEQUALIS_LITERIS(textus, "<div class=\"test\"><span>inner</span></div>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(textus,
+            "<div class=\"test\"><span>inner</span></div>");
         imprimere("  Raw nested tags: VERUM\n");
     }
 
@@ -1074,24 +1173,28 @@ s32 principale(vacuum)
         res = stml_legere_ex_literis("<code!></code>", piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_VERUM(res.elementum_radix->crudus);
-        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix),
+            ZEPHYRUM);
         imprimere("  Empty raw content: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda       textus;
+              chorda textus;
 
         /* Raw content starting with TAB (uppercase word) */
-        res = stml_legere_ex_literis("<pagina!>TAB = test</pagina>", piscina, intern);
+        res = stml_legere_ex_literis("<pagina!>TAB = test</pagina>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_VERUM(res.elementum_radix->crudus);
 
         textus = stml_textus_internus(res.elementum_radix, piscina);
-        imprimere("  TAB raw content: [%.*s]\n", textus.mensura, textus.datum);
+        imprimere("  TAB raw content: [%.*s]\n", textus.mensura,
+            textus.datum);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "TAB = test");
         imprimere("  Raw content with TAB word: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare serialization edge cases
@@ -1101,11 +1204,13 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       output;
+              chorda output;
 
         /* Pretty print: spina unigena COLLABITUR (§4 T3c) - forma
          * capturae in linea una intra tectum columnarum */
-        res = stml_legere_ex_literis("<root><child><inner/></child></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><child><inner/></child></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         output = stml_scribere(res.elementum_radix, piscina, VERUM);
@@ -1118,7 +1223,7 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        chorda     output;
+           chorda  output;
 
         /* Multiple attributes */
         nodus = stml_elementum_creare(piscina, intern, "el");
@@ -1130,11 +1235,15 @@ s32 principale(vacuum)
         CREDO_CHORDA_NON_VACUA(output);
 
         /* Should contain all attributes */
-        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("a=\"1\"", piscina)));
-        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("b=\"2\"", piscina)));
-        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("c=\"3\"", piscina)));
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("a=\"1\"",
+            piscina)));
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("b=\"2\"",
+            piscina)));
+        CREDO_VERUM(chorda_continet(output, chorda_ex_literis("c=\"3\"",
+            piscina)));
         imprimere("  Multiple attributes: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare parser.test.ts equivalents
@@ -1143,12 +1252,14 @@ s32 principale(vacuum)
     imprimere("\n--- Probans parser features ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   p;
-        i32          num_children;
+        StmlResultus  res;
+           StmlNodus* p;
+                 i32  num_children;
 
         /* Mixed content: text + elements interleaved */
-        res = stml_legere_ex_literis("<p>Text before <b>bold</b> text after</p>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<p>Text before <b>bold</b> text after</p>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         p = res.elementum_radix;
@@ -1159,22 +1270,26 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(num_children, III);
 
         /* First child is text */
-        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, ZEPHYRUM)->genus, STML_NODUS_TEXTUS);
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, ZEPHYRUM)->genus,
+            STML_NODUS_TEXTUS);
 
         /* Second child is <b> element */
-        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, I)->genus, STML_NODUS_ELEMENTUM);
-        CREDO_VERUM(_chorda_ptr_eq_literis(stml_liberum_ad_indicem(p, I)->titulus, "b"));
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, I)->genus,
+            STML_NODUS_ELEMENTUM);
+        CREDO_VERUM(_chorda_ptr_eq_literis(stml_liberum_ad_indicem(p,
+            I)->titulus, "b"));
 
         /* Third child is text */
-        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, II)->genus, STML_NODUS_TEXTUS);
+        CREDO_AEQUALIS_I32(stml_liberum_ad_indicem(p, II)->genus,
+            STML_NODUS_TEXTUS);
 
         imprimere("  Mixed content: VERUM\n");
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   root;
-        chorda*      xmlns_attr;
+        StmlResultus  res;
+           StmlNodus* root;
+              chorda* xmlns_attr;
 
         /* Namespace attributes */
         res = stml_legere_ex_literis(
@@ -1188,7 +1303,8 @@ s32 principale(vacuum)
         /* Check namespace attribute */
         xmlns_attr = stml_attributum_capere(root, "xmlns:custom");
         CREDO_NON_NIHIL(xmlns_attr);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*xmlns_attr, "http://example.com");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*xmlns_attr,
+            "http://example.com");
 
         /* Check namespaced child element */
         CREDO_NON_NIHIL(stml_invenire_liberum(root, "custom:element"));
@@ -1197,8 +1313,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        Xar*         items;
+        StmlResultus  res;
+                 Xar* items;
 
         /* Recursive getElementsByTagName equivalent */
         res = stml_legere_ex_literis(
@@ -1209,12 +1325,14 @@ s32 principale(vacuum)
         si (res.successus)
         {
             /* stml_invenire_omnes_liberos only finds direct children */
-            items = stml_invenire_omnes_liberos(res.elementum_radix, "item", piscina);
+            items = stml_invenire_omnes_liberos(res.elementum_radix,
+                "item", piscina);
             CREDO_AEQUALIS_I32(xar_numerus(items), I);  /* Only 1 direct child */
         }
 
         imprimere("  Direct children search: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare capture-operators.test.ts equivalents
@@ -1223,12 +1341,13 @@ s32 principale(vacuum)
     imprimere("\n--- Probans capture operators (extended) ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   div;
-        chorda       textus;
+        StmlResultus  res;
+           StmlNodus* div;
+              chorda  textus;
 
         /* Text node capture: <div (>hello world */
-        res = stml_legere_ex_literis("<root><div (>hello world</root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><div (>hello world</root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         div = stml_invenire_liberum(res.elementum_radix, "div");
@@ -1242,8 +1361,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   div;
+        StmlResultus  res;
+           StmlNodus* div;
 
         /* Multiple parens capture multiple nodes: <div (((> captures 3 siblings */
         res = stml_legere_ex_literis(
@@ -1261,18 +1380,21 @@ s32 principale(vacuum)
         CREDO_NIHIL(stml_invenire_liberum(div, "d"));
 
         /* d should still be in root */
-        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix, "d"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix,
+            "d"));
 
         imprimere("  Multiple parens capture: VERUM\n");
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
-        chorda       textus;
+        StmlResultus  res;
+           StmlNodus* wrapper;
+              chorda  textus;
 
         /* Backward capture of text: text content <) wrapper> */
-        res = stml_legere_ex_literis("<root>some text<) wrapper></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root>some text<) wrapper></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
@@ -1286,11 +1408,13 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
+        StmlResultus  res;
+           StmlNodus* wrapper;
 
         /* Multiple backward capture: <)) wrapper> captures 2 previous siblings */
-        res = stml_legere_ex_literis("<root><a/><b/><c/><)) wrapper></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><a/><b/><c/><)) wrapper></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
@@ -1302,18 +1426,21 @@ s32 principale(vacuum)
         CREDO_NIHIL(stml_invenire_liberum(wrapper, "a"));
 
         /* a should still be in root */
-        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix, "a"));
+        CREDO_NON_NIHIL(stml_invenire_liberum(res.elementum_radix,
+            "a"));
 
         imprimere("  Multiple backward capture: VERUM\n");
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   forward;
-        StmlNodus*   backward;
+        StmlResultus  res;
+           StmlNodus* forward;
+           StmlNodus* backward;
 
         /* Mixed operators: <forward (> <) backward> */
-        res = stml_legere_ex_literis("<root><forward (><) backward></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><forward (><) backward></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         forward = stml_invenire_liberum(res.elementum_radix, "forward");
@@ -1330,11 +1457,13 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
+        StmlResultus  res;
+           StmlNodus* wrapper;
 
         /* Simple sandwich with both siblings */
-        res = stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
@@ -1351,11 +1480,12 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   wrapper;
+        StmlResultus  res;
+           StmlNodus* wrapper;
 
         /* Self-closing tag capture */
-        res = stml_legere_ex_literis("<root><wrapper (><img/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><wrapper (><img/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         wrapper = stml_invenire_liberum(res.elementum_radix, "wrapper");
@@ -1367,11 +1497,12 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   div;
+        StmlResultus  res;
+           StmlNodus* div;
 
         /* Not enough nodes for multiple capture - should capture what's available */
-        res = stml_legere_ex_literis("<root><div (((><only/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><div (((><only/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
 
         div = stml_invenire_liberum(res.elementum_radix, "div");
@@ -1383,6 +1514,7 @@ s32 principale(vacuum)
         imprimere("  Partial capture: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare smart whitespace trimming
      * ================================================== */
@@ -1390,16 +1522,18 @@ s32 principale(vacuum)
     imprimere("\n--- Probans smart whitespace trimming ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         /* Simple inline text - should just trim ends */
-        res = stml_legere_ex_literis("<p>  hello world  </p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>  hello world  </p>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
         CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
 
-        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
         CREDO_AEQUALIS_I32(textus->genus, STML_NODUS_TEXTUS);
         /* PARSER SERVAT (2026-08-06): arbor documentum fideliter
@@ -1418,8 +1552,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         /* Multiline with indentation - should normalize */
         res = stml_legere_ex_literis(
@@ -1433,7 +1567,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.elementum_radix);
         CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
 
-        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
 
         /* normalizatio ad LECTIONEM: linea vacua initialis remota,
@@ -1460,8 +1595,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         /* Raw content should NOT be normalized */
         res = stml_legere_ex_literis(
@@ -1474,7 +1609,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(res.elementum_radix);
         CREDO_AEQUALIS_I32(xar_numerus(res.elementum_radix->liberi), I);
 
-        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
 
         /* Raw content preserves original whitespace */
@@ -1485,8 +1621,8 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         /* Relative indentation should be preserved */
         res = stml_legere_ex_literis(
@@ -1500,7 +1636,8 @@ s32 principale(vacuum)
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
-        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi, ZEPHYRUM);
+        textus = *(StmlNodus**)xar_obtinere(res.elementum_radix->liberi,
+            ZEPHYRUM);
         CREDO_NON_NIHIL(textus);
 
         /* basis VIII spatiorum remota, 'inner' IV relativa servat */
@@ -1513,14 +1650,15 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         /* EXEMPLAR TRIVIAE (spec §1.3, supersedet 2026-08-06):
          * cursus totus albus lineam-ferens NULLUM nodum parit -
          * octeti in spatia_clausurae parentis vivunt et circuitus
          * eos verbatim reddit. Fratres non conglutinantur quia
          * spatium in dispositione servatur, non in nodo. */
-        res = stml_legere_ex_literis("<root>   \n   \n   </root>", piscina, intern);
+        res = stml_legere_ex_literis("<root>   \n   \n   </root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_NON_NIHIL(res.elementum_radix);
 
@@ -1536,11 +1674,13 @@ s32 principale(vacuum)
          * exacte reddit - "   \n   \n   " - quos normalizatio ad
          * nihil praecidit) */
         CREDO_AEQUALIS_I32(
-            stml_textus_normalizatus(res.elementum_radix, piscina).mensura,
+            stml_textus_normalizatus(res.elementum_radix,
+            piscina).mensura,
             ZEPHYRUM);
 
         imprimere("  Spatium album -> clausurae, circuitus exactus: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare tituli (labels)
@@ -1555,7 +1695,8 @@ s32 principale(vacuum)
         nodus = stml_elementum_creare(piscina, intern, "div");
         CREDO_NON_NIHIL(nodus);
 
-        stml_attributum_addere(nodus, piscina, intern, "labels", "foo bar baz");
+        stml_attributum_addere(nodus, piscina, intern, "labels",
+            "foo bar baz");
 
         /* Test stml_titulum_habet */
         CREDO_VERUM(stml_titulum_habet(nodus, "foo"));
@@ -1575,7 +1716,8 @@ s32 principale(vacuum)
         nodus = stml_elementum_creare(piscina, intern, "div");
         CREDO_NON_NIHIL(nodus);
 
-        stml_attributum_addere(nodus, piscina, intern, "labels", "one two three");
+        stml_attributum_addere(nodus, piscina, intern, "labels",
+            "one two three");
 
         CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), III);
 
@@ -1589,14 +1731,15 @@ s32 principale(vacuum)
 
     {
         StmlNodus* nodus;
-        Xar* tituli;
-        chorda* label;
+              Xar* tituli;
+           chorda* label;
 
         /* Test stml_titulos_capere */
         nodus = stml_elementum_creare(piscina, intern, "div");
         CREDO_NON_NIHIL(nodus);
 
-        stml_attributum_addere(nodus, piscina, intern, "labels", "alpha beta gamma");
+        stml_attributum_addere(nodus, piscina, intern, "labels",
+            "alpha beta gamma");
 
         tituli = stml_titulos_capere(nodus, piscina);
         CREDO_NON_NIHIL(tituli);
@@ -1625,16 +1768,19 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
 
         /* Add first label */
-        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern, "first"));
+        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern,
+            "first"));
         CREDO_VERUM(stml_titulum_habet(nodus, "first"));
 
         /* Add second label */
-        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern, "second"));
+        CREDO_VERUM(stml_titulum_addere(nodus, piscina, intern,
+            "second"));
         CREDO_VERUM(stml_titulum_habet(nodus, "first"));
         CREDO_VERUM(stml_titulum_habet(nodus, "second"));
 
         /* Adding duplicate returns FALSUM */
-        CREDO_FALSUM(stml_titulum_addere(nodus, piscina, intern, "first"));
+        CREDO_FALSUM(stml_titulum_addere(nodus, piscina, intern,
+            "first"));
 
         CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), II);
 
@@ -1648,16 +1794,19 @@ s32 principale(vacuum)
         nodus = stml_elementum_creare(piscina, intern, "div");
         CREDO_NON_NIHIL(nodus);
 
-        stml_attributum_addere(nodus, piscina, intern, "labels", "keep remove also");
+        stml_attributum_addere(nodus, piscina, intern, "labels",
+            "keep remove also");
 
         /* Remove middle label */
-        CREDO_VERUM(stml_titulum_removere(nodus, piscina, intern, "remove"));
+        CREDO_VERUM(stml_titulum_removere(nodus, piscina, intern,
+            "remove"));
         CREDO_FALSUM(stml_titulum_habet(nodus, "remove"));
         CREDO_VERUM(stml_titulum_habet(nodus, "keep"));
         CREDO_VERUM(stml_titulum_habet(nodus, "also"));
 
         /* Removing non-existent returns FALSUM */
-        CREDO_FALSUM(stml_titulum_removere(nodus, piscina, intern, "nothere"));
+        CREDO_FALSUM(stml_titulum_removere(nodus, piscina, intern,
+            "nothere"));
 
         CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(nodus), II);
 
@@ -1672,15 +1821,18 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(nodus);
 
         /* Toggle on (returns VERUM = now has it) */
-        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern,
+            "toggle"));
         CREDO_VERUM(stml_titulum_habet(nodus, "toggle"));
 
         /* Toggle off (returns FALSUM = now doesn't have it) */
-        CREDO_FALSUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_FALSUM(stml_titulum_commutare(nodus, piscina, intern,
+            "toggle"));
         CREDO_FALSUM(stml_titulum_habet(nodus, "toggle"));
 
         /* Toggle back on */
-        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern, "toggle"));
+        CREDO_VERUM(stml_titulum_commutare(nodus, piscina, intern,
+            "toggle"));
         CREDO_VERUM(stml_titulum_habet(nodus, "toggle"));
 
         imprimere("  stml_titulum_commutare: VERUM\n");
@@ -1700,7 +1852,8 @@ s32 principale(vacuum)
         CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "parsed"));
         CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "one"));
         CREDO_VERUM(stml_titulum_habet(res.elementum_radix, "two"));
-        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(res.elementum_radix), III);
+        CREDO_AEQUALIS_I32((i32)stml_titulos_numerus(res.elementum_radix),
+            III);
 
         imprimere("  Parsed labels: VERUM\n");
     }
@@ -1723,6 +1876,7 @@ s32 principale(vacuum)
         imprimere("  HTML class compat: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare Navigatio (Traversal)
      * ================================================== */
@@ -1730,11 +1884,11 @@ s32 principale(vacuum)
     imprimere("\n--- Probans navigatio ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child1;
-        StmlNodus* child2;
-        StmlNodus* child3;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child1;
+           StmlNodus* child2;
+           StmlNodus* child3;
 
         /* Tree: <div><a/><b/><c/></div> */
         res = stml_legere_ex_literis(
@@ -1788,10 +1942,10 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child2;
-        Xar* fratres;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child2;
+                 Xar* fratres;
 
         /* Test stml_fratres */
         res = stml_legere_ex_literis(
@@ -1799,8 +1953,8 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        child2 = stml_liberum_ad_indicem(div, I);  /* <b/> */
+        div     = res.elementum_radix;
+        child2  = stml_liberum_ad_indicem(div, I);  /* <b/> */
 
         fratres = stml_fratres(child2, piscina);
         CREDO_NON_NIHIL(fratres);
@@ -1810,11 +1964,11 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* inner;
-        StmlNodus* deep;
-        Xar* maiores;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* inner;
+           StmlNodus* deep;
+                 Xar* maiores;
 
         /* Test stml_maiores: <div><inner><deep/></inner></div> */
         res = stml_legere_ex_literis(
@@ -1822,8 +1976,8 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        inner = stml_primus_liberum(div);
+        div    = res.elementum_radix;
+        inner  = stml_primus_liberum(div);
         CREDO_NON_NIHIL(inner);
         deep = stml_primus_liberum(inner);
         CREDO_NON_NIHIL(deep);
@@ -1833,18 +1987,19 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(xar_numerus(maiores), III);  /* inner, div, documentum */
 
         /* Verificare ordo: primus est parens directus */
-        CREDO_VERUM(*((StmlNodus**)xar_obtinere(maiores, ZEPHYRUM)) == inner);
+        CREDO_VERUM(*((StmlNodus**)xar_obtinere(maiores, ZEPHYRUM))
+            == inner);
         CREDO_VERUM(*((StmlNodus**)xar_obtinere(maiores, I)) == div);
 
         imprimere("  stml_maiores: VERUM\n");
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* inner;
-        StmlNodus* deep;
-        StmlNodus* found;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* inner;
+           StmlNodus* deep;
+           StmlNodus* found;
 
         /* Test stml_proximus_maior */
         res = stml_legere_ex_literis(
@@ -1852,9 +2007,9 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        inner = stml_primus_liberum(div);
-        deep = stml_primus_liberum(inner);
+        div    = res.elementum_radix;
+        inner  = stml_primus_liberum(div);
+        deep   = stml_primus_liberum(inner);
 
         /* Invenire "div" ex deep */
         found = stml_proximus_maior(deep, "div", piscina, intern);
@@ -1869,11 +2024,13 @@ s32 principale(vacuum)
         CREDO_VERUM(found == deep);
 
         /* Non invenire "nonexistent" */
-        found = stml_proximus_maior(deep, "nonexistent", piscina, intern);
+        found = stml_proximus_maior(deep, "nonexistent", piscina,
+            intern);
         CREDO_NIHIL(found);
 
         imprimere("  stml_proximus_maior: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare Mutatio (Mutation)
@@ -1882,9 +2039,9 @@ s32 principale(vacuum)
     imprimere("\n--- Probans mutatio ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* novum;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* novum;
 
         /* Test stml_praeponere */
         res = stml_legere_ex_literis(
@@ -1907,9 +2064,9 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child2;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child2;
 
         /* Test stml_removere */
         res = stml_legere_ex_literis(
@@ -1935,10 +2092,10 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child1;
-        StmlNodus* child2;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child1;
+           StmlNodus* child2;
 
         /* Test stml_vacare_liberos */
         res = stml_legere_ex_literis(
@@ -1946,9 +2103,9 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);
-        child2 = stml_liberum_ad_indicem(div, I);
+        div     = res.elementum_radix;
+        child1  = stml_liberum_ad_indicem(div, ZEPHYRUM);
+        child2  = stml_liberum_ad_indicem(div, I);
 
         stml_vacare_liberos(div);
         CREDO_AEQUALIS_I32(stml_numerus_liberorum(div), ZEPHYRUM);
@@ -1959,10 +2116,10 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child1;
-        StmlNodus* novum;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child1;
+           StmlNodus* novum;
 
         /* Test stml_inserere_ante */
         res = stml_legere_ex_literis(
@@ -1970,8 +2127,8 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+        div     = res.elementum_radix;
+        child1  = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
 
         novum = stml_elementum_creare(piscina, intern, "before-a");
         CREDO_VERUM(stml_inserere_ante(child1, novum, piscina));
@@ -1984,10 +2141,10 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child1;
-        StmlNodus* novum;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child1;
+           StmlNodus* novum;
 
         /* Test stml_inserere_post */
         res = stml_legere_ex_literis(
@@ -1995,8 +2152,8 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+        div     = res.elementum_radix;
+        child1  = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
 
         novum = stml_elementum_creare(piscina, intern, "after-a");
         CREDO_VERUM(stml_inserere_post(child1, novum, piscina));
@@ -2010,10 +2167,10 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* child1;
-        StmlNodus* novum;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* child1;
+           StmlNodus* novum;
 
         /* Test stml_substituere */
         res = stml_legere_ex_literis(
@@ -2021,8 +2178,8 @@ s32 principale(vacuum)
             piscina, intern);
 
         CREDO_VERUM(res.successus);
-        div = res.elementum_radix;
-        child1 = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
+        div     = res.elementum_radix;
+        child1  = stml_liberum_ad_indicem(div, ZEPHYRUM);  /* <a/> */
 
         novum = stml_elementum_creare(piscina, intern, "replaced");
         CREDO_VERUM(stml_substituere(child1, novum, piscina));
@@ -2036,6 +2193,7 @@ s32 principale(vacuum)
         imprimere("  stml_substituere: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare Duplicatio (Cloning)
      * ================================================== */
@@ -2043,9 +2201,9 @@ s32 principale(vacuum)
     imprimere("\n--- Probans duplicatio ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* clone;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* clone;
 
         /* Test stml_duplicare (deep) */
         res = stml_legere_ex_literis(
@@ -2068,7 +2226,8 @@ s32 principale(vacuum)
 
         /* Clone is independent */
         CREDO_VERUM(clone != div);
-        CREDO_VERUM(stml_primus_liberum(clone) != stml_primus_liberum(div));
+        CREDO_VERUM(stml_primus_liberum(clone)
+            != stml_primus_liberum(div));
 
         /* Clone should have same attributes */
         CREDO_VERUM(_chorda_ptr_eq_literis(
@@ -2078,9 +2237,9 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* div;
-        StmlNodus* shallow;
+        StmlResultus  res;
+           StmlNodus* div;
+           StmlNodus* shallow;
 
         /* Test stml_duplicare_superficialiter */
         res = stml_legere_ex_literis(
@@ -2102,6 +2261,7 @@ s32 principale(vacuum)
         imprimere("  stml_duplicare_superficialiter: VERUM\n");
     }
 
+
     /* ==================================================
      * Probare Entity Unescaping
      * ================================================== */
@@ -2109,12 +2269,13 @@ s32 principale(vacuum)
     imprimere("\n--- Probans Entity Unescaping ---\n");
 
     {
-        StmlResultus res;
-        StmlNodus* p;
-        chorda textus;
+        StmlResultus  res;
+           StmlNodus* p;
+              chorda  textus;
 
         /* Basic entity unescaping: &lt; and &gt; */
-        res = stml_legere_ex_literis("<p>&lt;test&gt;</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>&lt;test&gt;</p>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         p = res.elementum_radix;
         CREDO_NON_NIHIL(p);
@@ -2126,10 +2287,11 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda textus;
+              chorda textus;
 
         /* Ampersand unescaping: &amp; */
-        res = stml_legere_ex_literis("<p>A &amp; B</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>A &amp; B</p>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         textus = stml_textus_internus(res.elementum_radix, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "A & B");
@@ -2139,10 +2301,11 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda textus;
+              chorda textus;
 
         /* Quote unescaping: &quot; */
-        res = stml_legere_ex_literis("<p>&quot;quoted&quot;</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>&quot;quoted&quot;</p>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         textus = stml_textus_internus(res.elementum_radix, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "\"quoted\"");
@@ -2152,10 +2315,11 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda textus;
+              chorda textus;
 
         /* Apostrophe unescaping: &apos; */
-        res = stml_legere_ex_literis("<p>&apos;single&apos;</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>&apos;single&apos;</p>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         textus = stml_textus_internus(res.elementum_radix, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "'single'");
@@ -2164,12 +2328,13 @@ s32 principale(vacuum)
     }
 
     {
-        StmlResultus res;
-        StmlNodus* code;
-        chorda textus;
+        StmlResultus  res;
+           StmlNodus* code;
+              chorda  textus;
 
         /* Raw tags preserve entities literally (no unescaping) */
-        res = stml_legere_ex_literis("<code!>&lt;not unescaped&gt;</code>",
+        res =
+            stml_legere_ex_literis("<code!>&lt;not unescaped&gt;</code>",
                                      piscina, intern);
         CREDO_VERUM(res.successus);
         code = res.elementum_radix;
@@ -2182,23 +2347,27 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Roundtrip equality: parse -> serialize -> same as input */
-        res = stml_legere_ex_literis("<p>&lt;hello&gt;</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>&lt;hello&gt;</p>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<p>&lt;hello&gt;</p>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<p>&lt;hello&gt;</p>");
 
         imprimere("  Roundtrip equality: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda textus;
+              chorda textus;
 
         /* Multiple entities in one text node */
-        res = stml_legere_ex_literis("<p>&lt;a&gt; &amp;&amp; &lt;b&gt;</p>",
+        res =
+            stml_legere_ex_literis("<p>&lt;a&gt; &amp;&amp; &lt;b&gt;</p>",
                                      piscina, intern);
         CREDO_VERUM(res.successus);
         textus = stml_textus_internus(res.elementum_radix, piscina);
@@ -2209,16 +2378,18 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda textus;
+              chorda textus;
 
         /* Unknown entities preserved as-is */
-        res = stml_legere_ex_literis("<p>&foo; stays</p>", piscina, intern);
+        res = stml_legere_ex_literis("<p>&foo; stays</p>", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         textus = stml_textus_internus(res.elementum_radix, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS(textus, "&foo; stays");
 
         imprimere("  Unknown entities preserved: VERUM\n");
     }
+
 
     /* ==================================================
      * Probare Capture Operator Serialization (Roundtrip)
@@ -2228,72 +2399,84 @@ s32 principale(vacuum)
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Forward capture roundtrip */
-        res = stml_legere_ex_literis("<root><wrapper (><item/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><wrapper (><item/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><wrapper (><item/></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<root><wrapper (><item/></root>");
 
         imprimere("  Forward capture roundtrip: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Multiple forward capture roundtrip */
-        res = stml_legere_ex_literis("<root><wrapper ((><a/><b/></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><wrapper ((><a/><b/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><wrapper ((><a/><b/></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<root><wrapper ((><a/><b/></root>");
 
         imprimere("  Multiple forward capture roundtrip: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Backward capture roundtrip - ORDO FLUMINIS (spec triviae
          * §6): liberi capti retro in fonte ANTE tagum stant; emissio
          * non-pulchra ordinem authoris nunc reddit OCTETIM (olim ad
          * captor-primum reordinabat - circuitus non erat) */
-        res = stml_legere_ex_literis("<root><item/><) wrapper></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><item/><) wrapper></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><item/><) wrapper></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<root><item/><) wrapper></root>");
 
         imprimere("  Backward capture roundtrip: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Sandwich capture roundtrip - ordo fluminis (§6): liberum
          * primum ante tagum, reliqua post - octetim exactus nunc */
-        res = stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><a/><= wrapper =><b/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><a/><= wrapper =><b/></root>");
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<root><a/><= wrapper =><b/></root>");
 
         imprimere("  Sandwich capture roundtrip: VERUM\n");
     }
 
     {
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         /* Forward capture with text */
-        res = stml_legere_ex_literis("<wrapper (>hello", piscina, intern);
+        res = stml_legere_ex_literis("<wrapper (>hello", piscina,
+            intern);
         CREDO_VERUM(res.successus);
         serialized = stml_scribere(res.radix, piscina, FALSUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<wrapper (>hello");
 
         imprimere("  Forward capture with text: VERUM\n");
     }
+
 
     /* ==================================================
      * Regula capturae (§1.2 emendatum) + parens glutinata (§1.6)
@@ -2306,9 +2489,9 @@ s32 principale(vacuum)
     {
         /* spatium post captorem = spatia_post captoris, elementum
          * capitur (non spatium) */
-        StmlResultus res;
-        StmlNodus* captor;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* captor;
+              chorda  serialized;
 
         res = stml_legere_ex_literis("<radix><t(> <a/></radix>",
                                      piscina, intern);
@@ -2330,10 +2513,10 @@ s32 principale(vacuum)
 
     {
         /* margo ducens post captorem: valor sine spatio */
-        StmlResultus res;
-        StmlNodus* captor;
-        StmlNodus* textus;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* captor;
+           StmlNodus* textus;
+              chorda  serialized;
 
         res = stml_legere_ex_literis("<radix><t(> foo</radix>",
                                      piscina, intern);
@@ -2357,12 +2540,12 @@ s32 principale(vacuum)
 
     {
         /* spina glutinata: t1 -> t2 -> t3 -> textus */
-        StmlResultus res;
-        StmlNodus* t1;
-        StmlNodus* t2;
-        StmlNodus* t3;
-        StmlNodus* textus;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* t1;
+           StmlNodus* t2;
+           StmlNodus* t3;
+           StmlNodus* textus;
+              chorda  serialized;
 
         res = stml_legere_ex_literis(
             "<radix><t1(> <t2(> <t3(> foo</radix>",
@@ -2393,7 +2576,7 @@ s32 principale(vacuum)
         /* formae prae parenthesibus: spatiata et cum attributis -
          * octeti conditi redduntur (§1.6 emendatum) */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         res = stml_legere_ex_literis("<radix><t (><a/></radix>",
                                      piscina, intern);
@@ -2420,7 +2603,7 @@ s32 principale(vacuum)
          * quod frangi potest; verbum ipsum in linea impletionis
          * LXX columnarum cadit) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<t>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -2445,6 +2628,7 @@ s32 principale(vacuum)
         imprimere("  limen tecti LXXII/LXXIII: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Collapsus verticalis (§0.2 decretum alterum, M2b):
      * forma capturae UNIVERSALIS liberis elementaribus -
@@ -2458,7 +2642,7 @@ s32 principale(vacuum)
          * linea recenti, gradu uno altius, clausura suo gradu
          * (optio 2: captor tagum aperiens bloci numquam sorbet) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<a><b><c><d/><e/></c></b></a>", piscina, intern);
@@ -2474,7 +2658,7 @@ s32 principale(vacuum)
         /* catena unius vinculi cum terminali bloci: etiam vinculum
          * solitarium formam capturae capit (linea '</>' deletur) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<a><b><c/><d/></b></a>", piscina, intern);
@@ -2492,7 +2676,7 @@ s32 principale(vacuum)
          * addit (per LINEAM); terminalis inline in fine lineae
          * ultimae vehitur */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<vinculumprimum><vinculumsecundum><vinculumtertium>"
@@ -2513,7 +2697,7 @@ s32 principale(vacuum)
          * (unificatio §4): captee lineae novae in lineam redit si
          * cadit; forma stackata canonica sese reproducit */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis("<a (>\n<x/>", piscina, intern);
         CREDO_VERUM(res.successus);
@@ -2531,6 +2715,7 @@ s32 principale(vacuum)
         imprimere("  re-derivatio auctoris: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Lineae vacuae (§4): separatio paragraphorum superstes
      * - una aut duae servantur, plures ad duas cadunt
@@ -2542,7 +2727,7 @@ s32 principale(vacuum)
         /* linea vacua inter fratres blocorum (et ante commentum)
          * servatur */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<radix>\n  <a/>\n\n  <!-- nota -->\n  <b/>\n</radix>",
@@ -2558,7 +2743,7 @@ s32 principale(vacuum)
     {
         /* tres vacuae ad duas cadunt (tectum) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<radix>\n  <a/>\n\n\n\n  <b/>\n</radix>",
@@ -2575,7 +2760,7 @@ s32 principale(vacuum)
         /* post tagum apertum et ante tagum claudentem: eadem
          * clausula (basis = linea prima ordinaria) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<radix>\n\n  <a/>\n  <b/>\n\n</radix>",
@@ -2591,7 +2776,7 @@ s32 principale(vacuum)
     {
         /* gradus documenti: vacua inter processionem et radicem */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<?xml version=\"1.0\"?>\n\n<radix><a/><b/></radix>",
@@ -2603,6 +2788,7 @@ s32 principale(vacuum)
 
         imprimere("  vacua gradus documenti: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Tectum profundum (§0.2 decretum tertium): sub
@@ -2619,12 +2805,12 @@ s32 principale(vacuum)
          * capit. Fons programmatice: XX gradus '<n><z/>'
          * (liberi bini = blocus quisque gradus), tum spina */
         ChordaAedificator* aed;
-        StmlResultus res;
-        StmlResultus res2;
-        chorda fons;
-        chorda scriptum;
-        chorda rescriptum;
-        i32 k;
+             StmlResultus  res;
+             StmlResultus  res2;
+                   chorda  fons;
+                   chorda  scriptum;
+                   chorda  rescriptum;
+                      i32  k;
 
         aed = chorda_aedificator_creare(piscina, 4096);
         CREDO_NON_NIHIL(aed);
@@ -2654,6 +2840,7 @@ s32 principale(vacuum)
 
         imprimere("  fundus XL sub gradu XX: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Accessores sensus M3 (§2): stml_textus_valor +
@@ -2768,6 +2955,7 @@ s32 principale(vacuum)
         imprimere("  fluxus: lectio prosae: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Re-involutio fluxus (§4 M3): pulcher prosam fluminis
      * POSSIDET - semper canonica, fracturae authoratae non
@@ -2780,7 +2968,7 @@ s32 principale(vacuum)
         /* iunctio + cascas capturae: valor multilineus iunctus
          * intra tectum cadit -> forma capturae */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis("<t>prima\nsecunda</t>",
             piscina, intern);
@@ -2797,7 +2985,7 @@ s32 principale(vacuum)
          * separatio paragraphorum (decretum §4 vacuas INTER nodos
          * regit) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<t>pars una\n\npars altera</t>", piscina, intern);
@@ -2813,7 +3001,7 @@ s32 principale(vacuum)
         /* cursus multiplicium spatiorum INFRANGIBILIS et
          * litteralis (fluxus eum servat) */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis("<t>foo  bar baz</t>",
             piscina, intern);
@@ -2873,7 +3061,7 @@ s32 principale(vacuum)
          * re-involutionem ET capturam vetat (praecisio marginum in
          * relectione id ederet) - forma inline verbatim manet */
         StmlResultus res;
-        chorda scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<radix>\n  <t>foo </t>\n  <u/>\n</radix>", piscina,
@@ -2885,6 +3073,7 @@ s32 principale(vacuum)
 
         imprimere("  margines sordidi verbatim: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Attributa multilinea (§0.2 decretum quintum)
@@ -3020,6 +3209,7 @@ s32 principale(vacuum)
             "'>' glutinata + liberi bloci: PRAETERITUM");
     }
 
+
     /* ==================================================
      * Captura multiplex (§0.2 decretum sextum): II aut III
      * liberi elementares intra tectum altitudinis -> '((>' /
@@ -3105,8 +3295,8 @@ s32 principale(vacuum)
     {
         /* fidelitas: tagum multilineum authoratum octetim
          * redditur (trivia M1 - custos, non novum) */
-        StmlResultus res;
-        chorda scriptum;
+              StmlResultus  res;
+                    chorda  scriptum;
         constans character* fons = "<t\n  a=\"1\"\n  b=\"2\"/>";
 
         res = stml_legere_ex_literis(fons, piscina, intern);
@@ -3117,6 +3307,7 @@ s32 principale(vacuum)
         imprimere("  fidelitas multilinea (custos): PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Fragment Tests
      * ================================================== */
@@ -3125,10 +3316,11 @@ s32 principale(vacuum)
 
     {
         /* Anonymous fragment parsing */
-        StmlResultus res;
-        StmlNodus* frag;
+        StmlResultus  res;
+           StmlNodus* frag;
 
-        res = stml_legere_ex_literis("<root><#>content</#></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><#>content</#></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         frag = stml_invenire_liberum(res.elementum_radix, "#");
         CREDO_NON_NIHIL(frag);
@@ -3140,10 +3332,11 @@ s32 principale(vacuum)
 
     {
         /* Named fragment parsing */
-        StmlResultus res;
-        StmlNodus* frag;
+        StmlResultus  res;
+           StmlNodus* frag;
 
-        res = stml_legere_ex_literis("<root><#header>Title</#></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><#header>Title</#></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         frag = stml_invenire_liberum(res.elementum_radix, "#");
         CREDO_NON_NIHIL(frag);
@@ -3157,12 +3350,15 @@ s32 principale(vacuum)
     {
         /* Self-closing fragment */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<root><#placeholder/></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><#placeholder/></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<root><#placeholder/></root>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<root><#placeholder/></root>");
 
         imprimere("  Self-closing fragment: PRAETERITUM\n");
     }
@@ -3170,12 +3366,15 @@ s32 principale(vacuum)
     {
         /* Fragment roundtrip */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<doc><#sidebar><item/></#></doc>", piscina, intern);
+        res = stml_legere_ex_literis("<doc><#sidebar><item/></#></doc>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#sidebar><item/></#></doc>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#sidebar><item/></#></doc>");
 
         imprimere("  Fragment roundtrip: PRAETERITUM\n");
     }
@@ -3185,9 +3384,9 @@ s32 principale(vacuum)
          * ferre potest - '<#@f>' = definitio templi (instantiatio),
          * '<#f>' = fragmentum contenti (alias/identitas). Sigillum
          * partem id est - '@f' internatur, non 'f'. */
-        StmlResultus res;
-        StmlNodus* frag;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* frag;
+              chorda  serialized;
 
         res = stml_legere_ex_literis(
             "<doc><#@post-spatia n=\"@n\"><x/></#></doc>",
@@ -3205,7 +3404,8 @@ s32 principale(vacuum)
                     "@post-spatia");
             }
         }
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
         CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
             "<doc><#@post-spatia n=\"@n\"><x/></#></doc>");
 
@@ -3218,7 +3418,7 @@ s32 principale(vacuum)
          * parsatione - antea nodi transclusionis a parsatore solo
          * nascebantur */
         StmlNodus* trans;
-        chorda serialized;
+           chorda  serialized;
 
         trans = stml_transclusionem_creare(piscina, intern,
             chorda_ex_literis("#@post-spatia n=\"1\"", piscina));
@@ -3237,11 +3437,13 @@ s32 principale(vacuum)
 
     {
         /* Fragment with attributes */
-        StmlResultus res;
-        StmlNodus* frag;
-        chorda* valor;
+        StmlResultus  res;
+           StmlNodus* frag;
+              chorda* valor;
 
-        res = stml_legere_ex_literis("<root><#comp visible=\"true\">content</#></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><#comp visible=\"true\">content</#></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         frag = stml_invenire_liberum(res.elementum_radix, "#");
         CREDO_NON_NIHIL(frag);
@@ -3255,12 +3457,15 @@ s32 principale(vacuum)
     {
         /* Anonymous fragment roundtrip */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<doc><#>content</#></doc>", piscina, intern);
+        res = stml_legere_ex_literis("<doc><#>content</#></doc>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#>content</#></doc>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#>content</#></doc>");
 
         imprimere("  Anonymous fragment roundtrip: PRAETERITUM\n");
     }
@@ -3268,15 +3473,20 @@ s32 principale(vacuum)
     {
         /* Nested fragments */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<doc><#outer><#inner>text</#></#></doc>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<doc><#outer><#inner>text</#></#></doc>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><#outer><#inner>text</#></#></doc>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><#outer><#inner>text</#></#></doc>");
 
         imprimere("  Nested fragments: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Elementa Attributorum: <@titulus=> (par. 6.3 spec macronum)
@@ -3293,8 +3503,8 @@ s32 principale(vacuum)
     {
         /* Forma parsatur: liberum titulo '@', titulus attributi
          * in campo proprio */
-        StmlResultus res;
-        StmlNodus* ae;
+        StmlResultus  res;
+           StmlNodus* ae;
 
         res = stml_legere_ex_literis("<a><@m=>x</></a>", piscina,
                                      intern);
@@ -3318,8 +3528,8 @@ s32 principale(vacuum)
         /* Aequivalentia capere: forma inscripta et forma elementi
          * eundem valorem reddunt - cum fructu decreti: '"' in
          * valore, inscripte irrepresentabilis */
-        StmlResultus res;
-        chorda* valor;
+        StmlResultus  res;
+              chorda* valor;
 
         res = stml_legere_ex_literis("<a><@m=>x</></a>", piscina,
                                      intern);
@@ -3347,8 +3557,8 @@ s32 principale(vacuum)
     {
         /* Sepulcrum: elementum attributi vacuum = absentia
          * explicita (decretum 2026-08-26) - capere NIHIL reddit */
-        StmlResultus res;
-        StmlNodus* ae;
+        StmlResultus  res;
+           StmlNodus* ae;
 
         res = stml_legere_ex_literis("<a><@m=/></a>", piscina,
                                      intern);
@@ -3366,7 +3576,7 @@ s32 principale(vacuum)
          * paria vacua se-claudentia scribit - mensuratum in
          * '<a></a>' -> '<a/>') */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         res = stml_legere_ex_literis("<a><@m=></></a>", piscina,
                                      intern);
@@ -3383,7 +3593,7 @@ s32 principale(vacuum)
     {
         /* Circuitus octetim: forma compacta cum fratre ordinario */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
         res = stml_legere_ex_literis("<a><@m=>x</><b/></a>",
                                      piscina, intern);
@@ -3399,9 +3609,9 @@ s32 principale(vacuum)
     {
         /* Forma capturae '<@m=(>': machina capturae ordinaria
          * post '=' currit - circuitus octetim */
-        StmlResultus res;
-        chorda serialized;
-        chorda* valor;
+        StmlResultus  res;
+              chorda  serialized;
+              chorda* valor;
 
         res = stml_legere_ex_literis("<a><@m=(> hello</a>",
                                      piscina, intern);
@@ -3538,6 +3748,7 @@ s32 principale(vacuum)
         imprimere("  Lex positionis (licitae): PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Fragmenta Capturantia: <#id (> / <# (> / saccharum <(>
      * (natalis 2026-07-30: bloci capturarum in articulis fori -
@@ -3549,10 +3760,10 @@ s32 principale(vacuum)
     {
         /* Fragmentum nominatum capturans: textus frater captus,
          * circuitus octetim identicus (forma stampata) */
-        StmlResultus res;
-        StmlNodus* frag;
-        StmlNodus* textus;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* frag;
+           StmlNodus* textus;
+              chorda  serialized;
 
         res = stml_legere_ex_literis(
             "<doc><#01KYRF (>eat a cake</doc>", piscina, intern);
@@ -3580,9 +3791,9 @@ s32 principale(vacuum)
 
     {
         /* Parentheses binae: duos fratres capit */
-        StmlResultus res;
-        StmlNodus* frag;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* frag;
+              chorda  serialized;
 
         res = stml_legere_ex_literis(
             "<doc><#a ((><x/><y/></doc>", piscina, intern);
@@ -3606,11 +3817,11 @@ s32 principale(vacuum)
         /* Saccharum <(>: fragmentum anonymum capturans; scriptor
          * ad <#(> normalizat (forma authoris ephemera; NIHIL =
          * glutinata canonica, §1.6 emendatum) */
-        StmlResultus res;
-        StmlResultus relectum;
-        StmlNodus* frag;
-        chorda serialized;
-        chorda rescriptum;
+        StmlResultus  res;
+        StmlResultus  relectum;
+           StmlNodus* frag;
+              chorda  serialized;
+              chorda  rescriptum;
 
         res = stml_legere_ex_literis(
             "<doc><(>textus</doc>", piscina, intern);
@@ -3640,16 +3851,16 @@ s32 principale(vacuum)
     {
         /* Blocus articuli (figura destinata): lineae mixtae -
          * anonyma et stampata - fragmenta bina fiunt */
-        StmlResultus res;
-        StmlResultus relectum;
-        StmlNodus* radix;
-        StmlNodus* primus;
-        StmlNodus* secundus;
-        chorda serialized;
-        chorda rescriptum;
-        i32 i;
-        i32 num;
-        i32 fragmenta;
+        StmlResultus  res;
+        StmlResultus  relectum;
+           StmlNodus* radix;
+           StmlNodus* primus;
+           StmlNodus* secundus;
+              chorda  serialized;
+              chorda  rescriptum;
+                 i32  i;
+                 i32  num;
+                 i32  fragmenta;
 
         res = stml_legere_ex_literis(
             "<ideas>\n"
@@ -3660,10 +3871,10 @@ s32 principale(vacuum)
         radix = res.elementum_radix;
         CREDO_NON_NIHIL(radix);
 
-        primus = NIHIL;
-        secundus = NIHIL;
-        fragmenta = ZEPHYRUM;
-        num = stml_numerus_liberorum(radix);
+        primus     = NIHIL;
+        secundus   = NIHIL;
+        fragmenta  = ZEPHYRUM;
+        num        = stml_numerus_liberorum(radix);
         per (i = ZEPHYRUM; i < num; i++)
         {
             StmlNodus* l = stml_liberum_ad_indicem(radix, i);
@@ -3685,8 +3896,8 @@ s32 principale(vacuum)
         CREDO_AEQUALIS_I32(stml_numerus_liberorum(secundus), I);
 
         /* circuitus: scriptio -> relectio -> rescriptio stabilis */
-        serialized = stml_scribere(radix, piscina, FALSUM);
-        relectum = stml_legere(serialized, piscina, intern);
+        serialized  = stml_scribere(radix, piscina, FALSUM);
+        relectum    = stml_legere(serialized, piscina, intern);
         CREDO_VERUM(relectum.successus);
         rescriptum = stml_scribere(relectum.elementum_radix,
             piscina, FALSUM);
@@ -3694,6 +3905,7 @@ s32 principale(vacuum)
 
         imprimere("  Blocus articuli fragmentis binis: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Clausura anonyma </> (01KYSPRF9R): elementum apertum
@@ -3704,9 +3916,9 @@ s32 principale(vacuum)
 
     {
         /* proximum claudit - recursio ipsa 'proximum' dat */
-        StmlResultus res;
-        StmlNodus* b;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* b;
+              chorda  serialized;
 
         res = stml_legere_ex_literis("<r><b>x</></r>", piscina,
             intern);
@@ -3726,10 +3938,10 @@ s32 principale(vacuum)
 
     {
         /* nidificatio bina: quaeque clausura elementum suum */
-        StmlResultus res;
-        StmlNodus* a;
-        StmlNodus* b;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* a;
+           StmlNodus* b;
+              chorda  serialized;
 
         res = stml_legere_ex_literis("<r><a><b>x</></></r>",
             piscina, intern);
@@ -3760,6 +3972,7 @@ s32 principale(vacuum)
         imprimere("  Clausura anonyma orba errat: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Transclusion Tests
      * ================================================== */
@@ -3768,10 +3981,11 @@ s32 principale(vacuum)
 
     {
         /* Basic transclusion parsing */
-        StmlResultus res;
-        StmlNodus* trans;
+        StmlResultus  res;
+           StmlNodus* trans;
 
-        res = stml_legere_ex_literis("<root><<#header>></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><<#header>></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
         CREDO_NON_NIHIL(trans);
@@ -3783,14 +3997,17 @@ s32 principale(vacuum)
 
     {
         /* Transclusion with complex selector */
-        StmlResultus res;
-        StmlNodus* trans;
+        StmlResultus  res;
+           StmlNodus* trans;
 
-        res = stml_legere_ex_literis("<root><<article .featured>></root>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<root><<article .featured>></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
         CREDO_NON_NIHIL(trans);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, "article .featured");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor,
+            "article .featured");
 
         imprimere("  Complex selector transclusion: PRAETERITUM\n");
     }
@@ -3798,12 +4015,15 @@ s32 principale(vacuum)
     {
         /* Transclusion roundtrip */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<doc>Before<<#nav>>After</doc>", piscina, intern);
+        res = stml_legere_ex_literis("<doc>Before<<#nav>>After</doc>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc>Before<<#nav>>After</doc>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc>Before<<#nav>>After</doc>");
 
         imprimere("  Transclusion roundtrip: PRAETERITUM\n");
     }
@@ -3812,23 +4032,28 @@ s32 principale(vacuum)
         /* Scan '>>' citationum-conscius (macros v1): valores
          * argumentorum '>>' continere possunt - antea lexema in
          * '>>' interiore praemature secabatur */
-        StmlResultus res;
-        StmlNodus* trans;
-        chorda serialized;
+        StmlResultus  res;
+           StmlNodus* trans;
+              chorda  serialized;
 
-        res = stml_legere_ex_literis("<radix><<#f a=\"x>>y\">></radix>", piscina, intern);
+        res = stml_legere_ex_literis("<radix><<#f a=\"x>>y\">></radix>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         si (res.successus)
         {
-            trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
+            trans = stml_liberum_ad_indicem(res.elementum_radix,
+                ZEPHYRUM);
             CREDO_NON_NIHIL(trans);
             si (trans != NIHIL)
             {
-                CREDO_AEQUALIS_I32(trans->genus, STML_NODUS_TRANSCLUSIO);
-                CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor, "#f a=\"x>>y\"");
+                CREDO_AEQUALIS_I32(trans->genus,
+                    STML_NODUS_TRANSCLUSIO);
+                CREDO_CHORDA_AEQUALIS_LITERIS(*trans->valor,
+                    "#f a=\"x>>y\"");
             }
             serialized = stml_scribere(res.radix, piscina, FALSUM);
-            CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<radix><<#f a=\"x>>y\">></radix>");
+            CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+                "<radix><<#f a=\"x>>y\">></radix>");
         }
 
         imprimere("  Transclusio citationum-conscia: PRAETERITUM\n");
@@ -3838,20 +4063,23 @@ s32 principale(vacuum)
         /* Multiple transclusions */
         StmlResultus res;
 
-        res = stml_legere_ex_literis("<page><<#header>><<#content>><<#footer>></page>",
+        res =
+            stml_legere_ex_literis("<page><<#header>><<#content>><<#footer>></page>",
                                       piscina, intern);
         CREDO_VERUM(res.successus);
-        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix), III);
+        CREDO_AEQUALIS_I32(stml_numerus_liberorum(res.elementum_radix),
+            III);
 
         imprimere("  Multiple transclusions: PRAETERITUM\n");
     }
 
     {
         /* Transclusion with whitespace in selector */
-        StmlResultus res;
-        StmlNodus* trans;
+        StmlResultus  res;
+           StmlNodus* trans;
 
-        res = stml_legere_ex_literis("<root><<  .item  >></root>", piscina, intern);
+        res = stml_legere_ex_literis("<root><<  .item  >></root>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
         trans = stml_liberum_ad_indicem(res.elementum_radix, ZEPHYRUM);
         CREDO_NON_NIHIL(trans);
@@ -3863,15 +4091,20 @@ s32 principale(vacuum)
     {
         /* Mixed content with transclusion */
         StmlResultus res;
-        chorda serialized;
+              chorda serialized;
 
-        res = stml_legere_ex_literis("<doc><header/><<#nav>><footer/></doc>", piscina, intern);
+        res =
+            stml_legere_ex_literis("<doc><header/><<#nav>><footer/></doc>",
+            piscina, intern);
         CREDO_VERUM(res.successus);
-        serialized = stml_scribere(res.elementum_radix, piscina, FALSUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(serialized, "<doc><header/><<#nav>><footer/></doc>");
+        serialized = stml_scribere(res.elementum_radix, piscina,
+            FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(serialized,
+            "<doc><header/><<#nav>><footer/></doc>");
 
         imprimere("  Mixed content transclusion: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Probare capturam lineae crudae <tag! (>
@@ -3883,9 +4116,9 @@ s32 principale(vacuum)
     {
         /* Asperitates crudae: anguli, ampersand, quotae -
          * verbatim ad finem lineae */
-        StmlResultus res;
-        StmlNodus*   vexillum;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* vexillum;
+           StmlNodus* textus;
 
         res = stml_legere_ex_literis(
             "<res>\n"
@@ -3916,10 +4149,10 @@ s32 principale(vacuum)
         /* Regressio vitii devorantis: crudae binae in ordine +
          * parens recte clauditur (pristinum: prima </parentis>
          * devorabat -> TAG_NON_CLAUSUM) */
-        StmlResultus res;
-        Xar*         vexilla;
-        StmlNodus*   secundum;
-        StmlNodus*   textus;
+        StmlResultus  res;
+                 Xar* vexilla;
+           StmlNodus* secundum;
+           StmlNodus* textus;
 
         res = stml_legere_ex_literis(
             "<nexus>\n"
@@ -3934,8 +4167,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(vexilla);
         CREDO_AEQUALIS_I32(xar_numerus(vexilla), II);
 
-        secundum = *(StmlNodus**)xar_obtinere(vexilla, I);
-        textus = stml_liberum_ad_indicem(secundum, ZEPHYRUM);
+        secundum  = *(StmlNodus**)xar_obtinere(vexilla, I);
+        textus    = stml_liberum_ad_indicem(secundum, ZEPHYRUM);
         CREDO_VERUM(_chorda_ptr_eq_literis(textus->valor,
             "-framework WebKit"));
 
@@ -3944,9 +4177,9 @@ s32 principale(vacuum)
 
     {
         /* Entia in linea cruda NON solvuntur (crudum = crudum) */
-        StmlResultus res;
-        StmlNodus*   vexillum;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* vexillum;
+           StmlNodus* textus;
 
         res = stml_legere_ex_literis(
             "<res><vexillum! (>a&amp;b\n</res>", piscina, intern);
@@ -3963,8 +4196,8 @@ s32 principale(vacuum)
 
     {
         /* Captura vacua: elementum sine liberis */
-        StmlResultus res;
-        StmlNodus*   vexillum;
+        StmlResultus  res;
+           StmlNodus* vexillum;
 
         res = stml_legere_ex_literis(
             "<res><vexillum! (>\n</res>", piscina, intern);
@@ -3980,8 +4213,8 @@ s32 principale(vacuum)
 
     {
         /* ((> numerum notat sed adhuc UNAM lineam capit (v1) */
-        StmlResultus res;
-        StmlNodus*   vexillum;
+        StmlResultus  res;
+           StmlNodus* vexillum;
 
         res = stml_legere_ex_literis(
             "<res>\n"
@@ -4005,8 +4238,8 @@ s32 principale(vacuum)
          * ambabus posturis stabilis */
         StmlResultus res;
         StmlResultus relectum;
-        chorda       scriptum;
-        chorda       rescriptum;
+              chorda scriptum;
+              chorda rescriptum;
 
         res = stml_legere_ex_literis(
             "<nexus>\n"
@@ -4042,20 +4275,20 @@ s32 principale(vacuum)
     {
         /* Via constructoris (semita manifesti aedilis): nodus manu
          * structus -> scriptio -> lectio -> valor idem */
-        StmlNodus*   nexus;
-        StmlNodus*   vexillum;
-        StmlNodus*   textus;
-        StmlResultus relectum;
-        chorda       scriptum;
+           StmlNodus* nexus;
+           StmlNodus* vexillum;
+           StmlNodus* textus;
+        StmlResultus  relectum;
+              chorda  scriptum;
 
         nexus = stml_elementum_creare(piscina, intern, "nexus");
         vexillum = stml_elementum_creare(piscina, intern,
             "vexillum");
         CREDO_NON_NIHIL(nexus);
         CREDO_NON_NIHIL(vexillum);
-        vexillum->crudus = VERUM;
-        vexillum->captio_directio = STML_CAPTIO_ANTE;
-        vexillum->captio_numerus = I;
+        vexillum->crudus           = VERUM;
+        vexillum->captio_directio  = STML_CAPTIO_ANTE;
+        vexillum->captio_numerus   = I;
         CREDO_VERUM(stml_textum_addere(vexillum, piscina, intern,
             "-DFOO=\"bar\" -framework Cocoa"));
         CREDO_VERUM(stml_liberum_addere(nexus, vexillum));
@@ -4074,6 +4307,7 @@ s32 principale(vacuum)
         imprimere("  Via constructoris cruda: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * PROBARE: stml_strictum - forma bene formata
      *
@@ -4084,8 +4318,8 @@ s32 principale(vacuum)
      * ================================================== */
 
     {
-        StmlResultus        r;
-        Xar*                vitia;
+              StmlResultus  r;
+                       Xar* vitia;
         StmlStrictumVitium* v;
 
         imprimere("\n--- Probans stml_strictum ---\n");
@@ -4183,6 +4417,7 @@ s32 principale(vacuum)
         imprimere("  stml_strictum: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Probans titulum illegaliter incipientem (vitium 2026-08-10)
      *
@@ -4192,6 +4427,7 @@ s32 principale(vacuum)
      * '<>' saccharum fragmenti anonymi est (2026-08-27); '< >'
      * lenis manet (strictum TITULUS_VACUUS iudicat, supra).
      * ================================================== */
+
     imprimere("\n--- Probans titulum illegaliter incipientem ---\n");
     {
         StmlResultus r;
@@ -4228,6 +4464,7 @@ s32 principale(vacuum)
         imprimere("  titulus illegalis: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Probans titulos punctatos (spatium generum, 2026-08-10)
      *
@@ -4235,10 +4472,11 @@ s32 principale(vacuum)
      * positione tituli, pars NOMINIS ipsius. Punctum unum ducens,
      * dein character initialis normalis. Attributa numquam.
      * ================================================== */
+
     imprimere("\n--- Probans titulos punctatos ---\n");
     {
         StmlResultus r;
-        chorda scripta;
+              chorda scripta;
 
         /* parse + structura + punctum in nomine servatum */
         r = stml_legere_ex_literis(
@@ -4279,6 +4517,7 @@ s32 principale(vacuum)
         imprimere("  tituli punctati: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * Probans augmentationem <% &clavis;> (librarium W3, 2026-08-10)
      *
@@ -4289,11 +4528,12 @@ s32 principale(vacuum)
      * comparantur). Ante hoc '<%' vitium clarum erat (titulus
      * illegaliter incipiens) - grammatica aperta, non mutata.
      * ================================================== */
+
     imprimere("\n--- Probans augmentationem ---\n");
     {
-        StmlResultus r;
-        StmlNodus*   aug;
-        chorda       scripta;
+        StmlResultus  r;
+           StmlNodus* aug;
+              chorda  scripta;
 
         /* parse + structura: elementum titulo "%" cum clave */
         r = stml_legere_ex_literis(
@@ -4362,6 +4602,7 @@ s32 principale(vacuum)
 
         imprimere("  augmentatio: PRAETERITUM\n");
     }
+
 
     /* ==================================================
      * Scriptio pulchra: contentum MIXTUM (textus + elementa)
@@ -4483,10 +4724,10 @@ s32 principale(vacuum)
          * omnium posterorum IMPLICAT - catenae '</>' semper
          * contiguae, numquam intermixtae. */
         ChordaAedificator* aed;
-        chorda             ingressus;
-        chorda             exitus;
-        StmlResultus       res;
-        i32                j;
+                   chorda  ingressus;
+                   chorda  exitus;
+             StmlResultus  res;
+                      i32  j;
 
         aed = chorda_aedificator_creare(piscina, MMMMXCVI);
         chorda_aedificator_appendere_literis(aed, "<longus>");
@@ -4508,6 +4749,7 @@ s32 principale(vacuum)
         imprimere("  XIII limen: nomen ultra limen retentum: PRAETERITUM\n");
     }
 
+
     /* ==================================================
      * XIV. LEXEMATA - fluxus publicus sine arbore
      * ================================================== */
@@ -4521,10 +4763,10 @@ s32 principale(vacuum)
          * finem unius et initium proximi = octeti quos pictor
          * numquam coloraret et nemo desideraret - vitium quod
          * numerando invisibile est. */
-        chorda      ingressus;
-        Xar*        fluxus;
-        i32         k;
-        i32         tectum;
+            chorda  ingressus;
+               Xar* fluxus;
+               i32  k;
+               i32  tectum;
         StmlLexema* lx;
 
         ingressus = chorda_ex_literis(
@@ -4551,13 +4793,13 @@ s32 principale(vacuum)
         /* B. SIGILLA DISCERNUNTUR - id ipsum propter quod lexator
          * HTML STML colorare non potest: ille '<#f/>' et '<<#f>>'
          * in 'tag' unum planaret. */
-        chorda      ingressus;
-        Xar*        fluxus;
-        i32         k;
-        b32         fragmentum;
-        b32         transclusio;
-        b32         crudus;
-        b32         percentum;
+            chorda  ingressus;
+               Xar* fluxus;
+               i32  k;
+               b32  fragmentum;
+               b32  transclusio;
+               b32  crudus;
+               b32  percentum;
         StmlLexema* lx;
 
         ingressus = chorda_ex_literis(
@@ -4565,10 +4807,10 @@ s32 principale(vacuum)
         fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
         CREDO_VERUM(fluxus != NIHIL);
 
-        fragmentum  = FALSUM;
-        transclusio = FALSUM;
-        crudus      = FALSUM;
-        percentum   = FALSUM;
+        fragmentum   = FALSUM;
+        transclusio  = FALSUM;
+        crudus       = FALSUM;
+        percentum    = FALSUM;
         per (k = ZEPHYRUM; k < xar_numerus(fluxus); k++)
         {
             lx = (StmlLexema*)xar_obtinere(fluxus, k);
@@ -4604,10 +4846,10 @@ s32 principale(vacuum)
          * nudum tokenum omnino possibilem facit - modum crudum
          * '_tok_proximus' ipse regit. Si parsator eum regeret,
          * haec assertio caderet. */
-        chorda      ingressus;
-        Xar*        fluxus;
-        i32         k;
-        i32         aperturae;
+            chorda  ingressus;
+               Xar* fluxus;
+               i32  k;
+               i32  aperturae;
         StmlLexema* lx;
 
         ingressus = chorda_ex_literis("<x!>a<b>c</x>", piscina);
@@ -4633,9 +4875,9 @@ s32 principale(vacuum)
          * RECUSAT fluxum tamen reddit - unde instrumenta textum
          * semiplenum (qualis est dum scribitur) tractare possunt.
          * Par oraculorum: alterum recusat, alterum non. */
-        chorda       ingressus;
-        Xar*         fluxus;
-        StmlResultus res;
+              chorda  ingressus;
+                 Xar* fluxus;
+        StmlResultus  res;
 
         ingressus = chorda_ex_literis("<a><b>", piscina);
 
@@ -4655,8 +4897,8 @@ s32 principale(vacuum)
          * Xar vacuum - 'nihil dedi' et 'nihil inveni' duo sunt). */
         chorda vacua;
 
-        vacua.datum   = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
 
         CREDO_VERUM(stml_lexemata_colligere(vacua, piscina, intern)
             == NIHIL);
@@ -4667,6 +4909,7 @@ s32 principale(vacuum)
         imprimere("  E recusatio: input vacuum / piscina absens "
             "-> NIHIL\n");
     }
+
 
     /* ==================================================
      * XV. EXTENSIONES NODORUM (positus_initium/finis)
@@ -4681,11 +4924,11 @@ s32 principale(vacuum)
          * SECAMUS et cum textu exspectato comparamus. Numerus
          * falsus qui 'probabilis' videtur (off-by-one, clausura
          * omissa) hic CADIT; numerus contra numerum non caderet. */
-        chorda       ingressus;
-        StmlResultus res;
-        StmlNodus*   radix;
-        StmlNodus*   a;
-        chorda       fetta;
+              chorda  ingressus;
+        StmlResultus  res;
+           StmlNodus* radix;
+           StmlNodus* a;
+              chorda  fetta;
 
         ingressus = chorda_ex_literis(
             "<radix><a>x</a><b/></radix>", piscina);
@@ -4723,11 +4966,11 @@ s32 principale(vacuum)
          * fratres non se intersecant. Invarians quem lector
          * 'nodum ex positione quaerens' PRAESUMIT - ergo
          * asserendus, non speratus. */
-        chorda       ingressus;
-        StmlResultus res;
-        StmlNodus*   radix;
-        StmlNodus*   p;
-        StmlNodus*   q;
+              chorda  ingressus;
+        StmlResultus  res;
+           StmlNodus* radix;
+           StmlNodus* p;
+           StmlNodus* q;
 
         ingressus = chorda_ex_literis(
             "<r>\n  <p a=\"1\">textus</p>\n  <q/>\n</r>", piscina);
@@ -4758,20 +5001,20 @@ s32 principale(vacuum)
          * solae eam solvere NON possunt: hic 'p' et 'q' in LINEA
          * EADEM iacent, ergo quaesitio per lineam ambiguum
          * redderet. Extensio discernit. */
-        chorda       ingressus;
-        StmlResultus res;
-        StmlNodus*   radix;
-        StmlNodus*   p;
-        StmlNodus*   q;
-        i32          sedes_q;
+              chorda  ingressus;
+        StmlResultus  res;
+           StmlNodus* radix;
+           StmlNodus* p;
+           StmlNodus* q;
+                 i32  sedes_q;
 
         ingressus = chorda_ex_literis(
             "<r><p>aa</p><q>bb</q></r>", piscina);
         res = stml_legere(ingressus, piscina, intern);
         CREDO_VERUM(res.successus);
-        radix = res.elementum_radix;
-        p = stml_invenire_liberum(radix, "p");
-        q = stml_invenire_liberum(radix, "q");
+        radix  = res.elementum_radix;
+        p      = stml_invenire_liberum(radix, "p");
+        q      = stml_invenire_liberum(radix, "q");
         CREDO_VERUM(p != NIHIL && q != NIHIL);
 
         /* eadem linea uterque - probatio quod linea non sufficit */
@@ -4808,9 +5051,9 @@ s32 principale(vacuum)
          * sunt, ergo scriptor eas numquam legit - documentum
          * rescriptum octetim idem manet. Assertio quae campum
          * novum ab emissore separat. */
-        chorda       ingressus;
+              chorda ingressus;
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         ingressus = chorda_ex_literis(
             "<r><p a=\"1\">x</p><q/></r>", piscina);
@@ -4823,6 +5066,7 @@ s32 principale(vacuum)
         imprimere("  E fidelitas: scriptio octetim eadem\n");
     }
 
+
     /* ==================================================
      * Canonicalizatio CRLF (spec triviae §3)
      * ================================================== */
@@ -4833,10 +5077,10 @@ s32 principale(vacuum)
         /* A. DOCUMENTUM CRLF: vexillum positum, arbor formam LF
          * videt, scriptio non-pulchra formam LF octetim reddit -
          * contractus fidelitatis super octetos CANONICALIZATOS. */
-        chorda       ingressus;
-        chorda       expectatum;
+              chorda ingressus;
+              chorda expectatum;
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         ingressus = chorda_ex_literis(
             "<r>\r\n  <p>salve\r\nmunde</p>\r\n</r>", piscina);
@@ -4856,9 +5100,9 @@ s32 principale(vacuum)
     {
         /* B. DOCUMENTUM LF PURUM: vexillum FALSUM, nulla copia
          * facta (fidelitas octetim intacta). */
-        chorda       ingressus;
+              chorda ingressus;
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         ingressus = chorda_ex_literis("<r>\n  <p>x</p>\n</r>",
             piscina);
@@ -4875,12 +5119,12 @@ s32 principale(vacuum)
     {
         /* C. '\r' SOLIVAGUM (sine '\n'): CONTENTUM manet - regula
          * angusta CRLF sola est, nulla purgatio generalis. */
-        chorda       ingressus;
+              chorda ingressus;
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
-        ingressus = chorda_ex_literis("<r>a\rb</r>", piscina);
-        res = stml_legere(ingressus, piscina, intern);
+        ingressus  = chorda_ex_literis("<r>a\rb</r>", piscina);
+        res        = stml_legere(ingressus, piscina, intern);
         CREDO_VERUM(res.successus);
         CREDO_FALSUM(res.crlf_canonicalizatum);
 
@@ -4894,10 +5138,10 @@ s32 principale(vacuum)
         /* D. CAPTURA LINEAE CRUDAE sub CRLF: praecisio '\r'
          * per-genus DELETA est - canonicalizatio introitus eandem
          * rem uno loco facit. Valor captus sine '\r'. */
-        chorda       ingressus;
-        StmlResultus res;
-        StmlNodus*   imp;
-        chorda       textus;
+              chorda  ingressus;
+        StmlResultus  res;
+           StmlNodus* imp;
+              chorda  textus;
 
         ingressus = chorda_ex_literis(
             "<r><imp! (>via/crudi\r\n<post/></r>", piscina);
@@ -4916,6 +5160,7 @@ s32 principale(vacuum)
         imprimere("  D captura cruda sub CRLF: valor sine '\\r'\n");
     }
 
+
     /* ==================================================
      * Scala generum textus: '<tag\>' (spec triviae §1.4)
      * ================================================== */
@@ -4925,9 +5170,9 @@ s32 principale(vacuum)
     {
         /* A. BLOCUS VERSUUM: dedentatio in parsatione, structura
          * relativa servata, circuitus octetim, internus exactus */
-        StmlResultus res;
-        StmlNodus*   textus;
-        chorda       scriptum;
+        StmlResultus  res;
+           StmlNodus* textus;
+              chorda  scriptum;
 
         res = stml_legere_ex_literis(
             "<versus\\>\n  prima\n    altior\n  ultima\n</>",
@@ -4965,17 +5210,17 @@ s32 principale(vacuum)
          * '123\n</>', '123\n  </>' - valor IDEM, octeti sui cuique
          * circuitu redditi */
         constans character* fontes[III];
-        i32                 f;
+                       i32  f;
 
-        fontes[ZEPHYRUM] = "<m\\>\n  abc\n  123</>";
-        fontes[I]        = "<m\\>\n  abc\n  123\n</>";
-        fontes[II]       = "<m\\>\n  abc\n  123\n  </>";
+        fontes[ZEPHYRUM]  = "<m\\>\n  abc\n  123</>";
+        fontes[I]         = "<m\\>\n  abc\n  123\n</>";
+        fontes[II]        = "<m\\>\n  abc\n  123\n  </>";
 
         per (f = ZEPHYRUM; f < III; f++)
         {
-            StmlResultus res;
-            StmlNodus*   textus;
-            chorda       scriptum;
+            StmlResultus  res;
+               StmlNodus* textus;
+                  chorda  scriptum;
 
             res = stml_legere_ex_literis(fontes[f], piscina,
                 intern);
@@ -4998,8 +5243,8 @@ s32 principale(vacuum)
         /* C. LINEA PRIMA PROFUNDIOR: praecisio ducens = '\n' SOLA,
          * ergo indentatio lineae primae in dedentationem intrat et
          * structura relativa superest */
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         res = stml_legere_ex_literis(
             "<m\\>\n      alta\n  ima\n</>", piscina, intern);
@@ -5018,9 +5263,9 @@ s32 principale(vacuum)
     {
         /* D. CONTENTUM IN LINEA TAGI: legale, a dedentatione
          * exclusum (regula PEP-257), circuitus octetim */
-        StmlResultus res;
-        StmlNodus*   textus;
-        chorda       scriptum;
+        StmlResultus  res;
+           StmlNodus* textus;
+              chorda  scriptum;
 
         res = stml_legere_ex_literis(
             "<m\\>abc\n  def\n</>", piscina, intern);
@@ -5044,9 +5289,9 @@ s32 principale(vacuum)
     {
         /* E. CRUDUM MULTILINEA '<code!\>': entia mortua, tags
          * mortui, dedentatio viva, circuitus octetim */
-        StmlResultus res;
-        StmlNodus*   textus;
-        chorda       scriptum;
+        StmlResultus  res;
+           StmlNodus* textus;
+              chorda  scriptum;
 
         res = stml_legere_ex_literis(
             "<code!\\>\n  a < b && c > d\n</code>", piscina,
@@ -5110,8 +5355,8 @@ s32 principale(vacuum)
     {
         /* G. TAB/SPATIUM MIXTA: praefixum commune octetim nullum -
          * nihil demptum, deterministice */
-        StmlResultus res;
-        StmlNodus*   textus;
+        StmlResultus  res;
+           StmlNodus* textus;
 
         res = stml_legere_ex_literis(
             "<m\\>\n\tuna\n  duo\n</>", piscina, intern);
@@ -5130,9 +5375,9 @@ s32 principale(vacuum)
         /* H. FORMAE: signum cum attributis; auto-clausum; contentum
          * totum album -> elementum vacuum genuinum (clausurae
          * octetos fert); lineae interiores VACUAE manent */
-        StmlResultus res;
-        StmlNodus*   textus;
-        chorda       scriptum;
+        StmlResultus  res;
+           StmlNodus* textus;
+              chorda  scriptum;
 
         res = stml_legere_ex_literis(
             "<m\\ clavis=\"v\">\n  x\n</>", piscina, intern);
@@ -5174,6 +5419,7 @@ s32 principale(vacuum)
                   "vacuae): VERUM\n");
     }
 
+
     /* ==================================================
      * Trivia intra tagum (spec triviae §1.6)
      * ================================================== */
@@ -5184,7 +5430,7 @@ s32 principale(vacuum)
         /* A. TAG MULTILINEARIS: dispositio attributorum circuitum
          * octetim superest (foramen fidelitatis vetus clausum) */
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<a\n  b=\"1\"\n  c=\"2\">x</a>", piscina, intern);
@@ -5200,7 +5446,7 @@ s32 principale(vacuum)
         /* B. SPATIUM ANTE FINEM: '<a b="1" >' et '<a />' formam
          * suam tenent; spatium unicum canonicum NIHIL manet */
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis("<a b=\"1\" >x</a>", piscina,
             intern);
@@ -5234,7 +5480,7 @@ s32 principale(vacuum)
          * nominata §1.6): 'attr = "v"' fit 'attr="v"' ambobus
          * modis */
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis("<a b = \"1\">x</a>", piscina,
             intern);
@@ -5250,7 +5496,7 @@ s32 principale(vacuum)
          * spatium unicum redit (§1.6 - regula dispositionis
          * multilinearis formatoris RESERVATA) */
         StmlResultus res;
-        chorda       scriptum;
+              chorda scriptum;
 
         res = stml_legere_ex_literis(
             "<r><a\n  b=\"1\">x</a></r>", piscina, intern);
@@ -5276,6 +5522,7 @@ s32 principale(vacuum)
      * apertae; olim parsura FRANGEBAT, status 4). Formae anonymae
      * OMNES fragmenta sunt - exemplar unum.
      * ================================================== */
+
     imprimere("\n--- Probans saccharum fragmenti nudi <> ---\n");
 
     {

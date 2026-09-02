@@ -25,18 +25,20 @@
 #include <string.h>
 
 interior b32
-_est_sha_hex (constans character* sha);
+_est_sha_hex (
+    constans character* sha);
 
 interior b32
-_est_sha_hex (constans character* sha)
+_est_sha_hex (
+    constans character* sha)
 {
     i32 i;
 
     per (i = 0; i < 40; i = i + 1)
     {
         character c = sha[i];
-        b32 hexus = (c >= '0' && c <= '9')
-            || (c >= 'a' && c <= 'f');
+              b32 hexus = (c >= '0' && c <= '9')
+                  || (c >= 'a' && c <= 'f');
 
         si (!hexus)
         {
@@ -48,10 +50,10 @@ _est_sha_hex (constans character* sha)
 
 s32 principale (vacuum)
 {
-    b32              praeteritus;
-    Piscina*         piscina;
+                b32  praeteritus;
+            Piscina* piscina;
     GitRepositorium* repositorium;
-    character        caput[GIT_SHA_HEX_MENSURA];
+          character  caput[GIT_SHA_HEX_MENSURA];
 
     piscina = piscina_generare_dynamicum("probatio_git", 1048576);
     si (!piscina)
@@ -150,10 +152,10 @@ s32 principale (vacuum)
         {
             Xar* introitus = git_arborem_legere(repositorium,
                 chorda_ut_cstr(commissum.arbor, piscina), piscina);
-            b32  lib_arbor = FALSUM;
-            b32  include_arbor = FALSUM;
-            b32  claude_massa = FALSUM;
-            i32  i;
+            b32 lib_arbor      = FALSUM;
+            b32 include_arbor  = FALSUM;
+            b32 claude_massa   = FALSUM;
+            i32 i;
 
             CREDO_NON_NIHIL(introitus);
             CREDO_VERUM(xar_numerus(introitus) > (i32)10);
@@ -162,17 +164,17 @@ s32 principale (vacuum)
                 GitArborIntroitus* e = (GitArborIntroitus*)
                     xar_obtinere(introitus, i);
 
-                si (chorda_aequalis_literis(e->titulus, "lib")
+                si (   chorda_aequalis_literis(e->titulus, "lib")
                     && e->est_arbor)
                 {
                     lib_arbor = VERUM;
                 }
-                si (chorda_aequalis_literis(e->titulus, "include")
+                si (   chorda_aequalis_literis(e->titulus, "include")
                     && e->est_arbor)
                 {
                     include_arbor = VERUM;
                 }
-                si (chorda_aequalis_literis(e->titulus,
+                si (   chorda_aequalis_literis(e->titulus,
                         "CLAUDE.md") && !e->est_arbor)
                 {
                     claude_massa = VERUM;
@@ -187,7 +189,7 @@ s32 principale (vacuum)
     imprimere("\n--- Probans massam per viam (oraculum disci) ---\n");
 
     {
-        b32    inventum = FALSUM;
+           b32 inventum = FALSUM;
         chorda massa = git_massam_per_viam(repositorium, caput,
             "include/latina.h", piscina, &inventum);
         chorda discus = filum_legere_totum("include/latina.h",
@@ -216,8 +218,8 @@ s32 principale (vacuum)
      * omnis lectio sha-verificata - transitus = probatio SHA-1 */
     {
         character vetus[GIT_SHA_HEX_MENSURA];
-        b32       inventum = FALSUM;
-        chorda    massa;
+              b32 inventum = FALSUM;
+           chorda massa;
 
         CREDO_VERUM(git_ref_resolvere(repositorium, "HEAD~20",
             vetus));
@@ -242,10 +244,10 @@ s32 principale (vacuum)
      * sha verificat!) -> octeti == discus. Sha falsum catenam
      * alicubi frangeret. */
     {
-        character sha_massae[GIT_SHA_HEX_MENSURA];
-        b32       est_arbor = VERUM;
+          character sha_massae[GIT_SHA_HEX_MENSURA];
+                b32 est_arbor = VERUM;
         GitObiectum obiectum;
-        chorda    discus;
+             chorda discus;
 
         CREDO_VERUM(git_sha_per_viam(repositorium, caput,
             "include/latina.h", piscina, sha_massae, &est_arbor));
@@ -283,11 +285,11 @@ s32 principale (vacuum)
      *   A  probationes/probatio_git.c
      * (ordo idem: viae ordinatae chorda_comparare) */
     {
-        character    sha_parentis[GIT_SHA_HEX_MENSURA];
-        character    sha_nati[GIT_SHA_HEX_MENSURA];
-        GitCommissum parens;
-        GitCommissum natus;
-        Xar*         mutatae;
+           character  sha_parentis[GIT_SHA_HEX_MENSURA];
+           character  sha_nati[GIT_SHA_HEX_MENSURA];
+        GitCommissum  parens;
+        GitCommissum  natus;
+                 Xar* mutatae;
 
         CREDO_VERUM(git_ref_resolvere(repositorium, "d4a89dd",
             sha_parentis));

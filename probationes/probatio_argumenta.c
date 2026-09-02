@@ -8,533 +8,591 @@
 
 s32 principale (vacuum)
 {
-	Piscina* piscina;
-	     b32  praeteritus;
+     Piscina* piscina;
+         b32  praeteritus;
 
-	/* Aperire credo et piscina */
-	piscina = piscina_generare_dynamicum("test_argumenta", 8192);
-	si (!piscina)
-	{
-		imprimere("FRACTA: piscina_generatio\n");
-		redde I;
-	}
-	credo_aperire(piscina);
+    /* Aperire credo et piscina */
+    piscina = piscina_generare_dynamicum("test_argumenta", 8192);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare argumenta_creare
 	 * ================================================== */
 
-	{
-		ArgumentaParser* parser;
+    {
+        ArgumentaParser* parser;
 
-		imprimere("\n--- Probans argumenta_creare ---\n");
+        imprimere("\n--- Probans argumenta_creare ---\n");
 
-		parser = argumenta_creare(piscina);
-		CREDO_NON_NIHIL(parser);
-	}
+        parser = argumenta_creare(piscina);
+        CREDO_NON_NIHIL(parser);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare vexilla simplicia
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-v", "--help"};
-		               i32  argc   = III;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "-v", "--help"};
+                       i32  argc    = III;
 
-		imprimere("\n--- Probans vexilla simplicia ---\n");
+        imprimere("\n--- Probans vexilla simplicia ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose output");
-		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-v", "--verbose",
+            "Verbose output");
+        argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-v"));
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--verbose"));
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--help"));
-		CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-q"));
-	}
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "-v"));
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "--verbose"));
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "--help"));
+        CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-q"));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare optiones cum valoribus
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", 
-                                      "-o", 
-                                      "output.txt", 
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa",
+                                      "-o",
+                                      "output.txt",
                                       "--config=settings.ini"};
-		               i32  argc = IV;
-		            chorda  output;
-		            chorda  config;
+                       i32 argc = IV;
+                    chorda output;
+                    chorda config;
 
-		imprimere("\n--- Probans optiones cum valoribus ---\n");
+        imprimere("\n--- Probans optiones cum valoribus ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_optionem(parser, "-o", "--output", "Output file");
-		argumenta_addere_optionem(parser, "-c", "--config", "Config file");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_optionem(parser, "-o", "--output",
+            "Output file");
+        argumenta_addere_optionem(parser, "-c", "--config",
+            "Config file");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		output = argumenta_obtinere_optionem(fructus, "-o", piscina);
-		CREDO_INAEQUALITAS_I32(output.mensura, ZEPHYRUM);
-		CREDO_VERUM(chorda_aequalis(output, chorda_ex_literis("output.txt", piscina)));
+        output = argumenta_obtinere_optionem(fructus, "-o", piscina);
+        CREDO_INAEQUALITAS_I32(output.mensura, ZEPHYRUM);
+        CREDO_VERUM(chorda_aequalis(output,
+            chorda_ex_literis("output.txt",
+            piscina)));
 
-		config = argumenta_obtinere_optionem(fructus, "--config", piscina);
-		CREDO_INAEQUALITAS_I32(config.mensura, ZEPHYRUM);
-		CREDO_VERUM(chorda_aequalis(config, chorda_ex_literis("settings.ini", piscina)));
-	}
+        config = argumenta_obtinere_optionem(fructus, "--config",
+            piscina);
+        CREDO_INAEQUALITAS_I32(config.mensura, ZEPHYRUM);
+        CREDO_VERUM(chorda_aequalis(config,
+            chorda_ex_literis("settings.ini",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare optiones cum syntax equals
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", 
-                                      "--output=file.txt", 
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa",
+                                      "--output=file.txt",
                                       "--name=test"};
-		               i32  argc = III;
-		            chorda  output;
-		            chorda  titulus;
+                       i32 argc = III;
+                    chorda output;
+                    chorda titulus;
 
-		imprimere("\n--- Probans optiones cum syntax equals ---\n");
+        imprimere("\n--- Probans optiones cum syntax equals ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_optionem(parser, "-o", "--output", "Output file");
-		argumenta_addere_optionem(parser, "-n", "--name", "Name");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_optionem(parser, "-o", "--output",
+            "Output file");
+        argumenta_addere_optionem(parser, "-n", "--name", "Name");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		output = argumenta_obtinere_optionem(fructus, "--output", piscina);
-		CREDO_VERUM(chorda_aequalis(output, chorda_ex_literis("file.txt", piscina)));
+        output = argumenta_obtinere_optionem(fructus, "--output",
+            piscina);
+        CREDO_VERUM(chorda_aequalis(output,
+            chorda_ex_literis("file.txt",
+            piscina)));
 
-		titulus = argumenta_obtinere_optionem(fructus, "--name", piscina);
-		CREDO_VERUM(chorda_aequalis(titulus, chorda_ex_literis("test", piscina)));
-	}
+        titulus = argumenta_obtinere_optionem(fructus, "--name",
+            piscina);
+        CREDO_VERUM(chorda_aequalis(titulus, chorda_ex_literis("test",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare argumenta positionalia
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "input.txt", "output.txt"};
-		               i32  argc = III;
-		            chorda  input;
-		            chorda  output;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa", "input.txt",
+            "output.txt"};
+                       i32 argc = III;
+                    chorda input;
+                    chorda output;
 
-		imprimere("\n--- Probans argumenta positionalia ---\n");
+        imprimere("\n--- Probans argumenta positionalia ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
-		argumenta_addere_positionalem(parser, "output", "Output file", FALSUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_positionalem(parser, "input", "Input file",
+            VERUM);
+        argumenta_addere_positionalem(parser, "output", "Output file",
+            FALSUM);
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus), II);
+        CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus),
+            II);
 
-		input = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
-		CREDO_VERUM(chorda_aequalis(input, chorda_ex_literis("input.txt", piscina)));
+        input = argumenta_obtinere_positionalem(fructus, ZEPHYRUM,
+            piscina);
+        CREDO_VERUM(chorda_aequalis(input,
+            chorda_ex_literis("input.txt",
+            piscina)));
 
-		output = argumenta_obtinere_positionalem(fructus, I, piscina);
-		CREDO_VERUM(chorda_aequalis(output, chorda_ex_literis("output.txt", piscina)));
-	}
+        output = argumenta_obtinere_positionalem(fructus, I, piscina);
+        CREDO_VERUM(chorda_aequalis(output,
+            chorda_ex_literis("output.txt",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare mixtura vexilla, optiones, et positionalia
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", 
-                                      "-v", 
-                                      "--output", 
-                                      "out.txt", 
-                                      "input.txt", 
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa",
+                                      "-v",
+                                      "--output",
+                                      "out.txt",
+                                      "input.txt",
                                       "--debug"};
-		               i32  argc = VI;
-		            chorda  output;
-		            chorda  input;
+                       i32 argc = VI;
+                    chorda output;
+                    chorda input;
 
-		imprimere("\n--- Probans mixtura vexilla, optiones, et positionalia ---\n");
+        imprimere("\n--- Probans mixtura vexilla, optiones, et positionalia ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
-		argumenta_addere_vexillum(parser, "-d", "--debug", "Debug mode");
-		argumenta_addere_optionem(parser, "-o", "--output", "Output file");
-		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        argumenta_addere_vexillum(parser, "-d", "--debug",
+            "Debug mode");
+        argumenta_addere_optionem(parser, "-o", "--output",
+            "Output file");
+        argumenta_addere_positionalem(parser, "input", "Input file",
+            VERUM);
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-v"));
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--debug"));
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "-v"));
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "--debug"));
 
-		output = argumenta_obtinere_optionem(fructus, "--output", piscina);
-		CREDO_VERUM(chorda_aequalis(output, chorda_ex_literis("out.txt", piscina)));
+        output = argumenta_obtinere_optionem(fructus, "--output",
+            piscina);
+        CREDO_VERUM(chorda_aequalis(output, chorda_ex_literis("out.txt",
+            piscina)));
 
-		CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus), I);
-		input = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
-		CREDO_VERUM(chorda_aequalis(input, chorda_ex_literis("input.txt", piscina)));
-	}
+        CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus), I);
+        input = argumenta_obtinere_positionalem(fructus, ZEPHYRUM,
+            piscina);
+        CREDO_VERUM(chorda_aequalis(input,
+            chorda_ex_literis("input.txt",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare vexillum solum (sine nomen longum)
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-q"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "-q"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans vexillum solum breve ---\n");
+        imprimere("\n--- Probans vexillum solum breve ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-q", NIHIL, "Quiet mode");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-q", NIHIL, "Quiet mode");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-q"));
-	}
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "-q"));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare vexillum breve MULTI-CHARACTERE (stilus domus
 	 * "-scribere") - truncatio prior "-s" quaerebat (mensuratum
 	 * 2026-08-04, silex proicere); congruentia nunc exacta
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-scribere",
-			"-ad", "XII"};
-		               i32  argc = IV;
-		            chorda  ad;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa", "-scribere",
+            "-ad", "XII"};
+                       i32 argc = IV;
+                    chorda ad;
 
-		imprimere("\n--- Probans vexillum breve longius ---\n");
+        imprimere("\n--- Probans vexillum breve longius ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-scribere", "--scribere",
-			"Applicare");
-		argumenta_addere_optionem(parser, "-ad", "--ad",
-			"Usque ad seq");
-		argumenta_addere_vexillum(parser, "-s", NIHIL,
-			"Vexillum unius characteris - vicinus non captus");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-scribere", "--scribere",
+            "Applicare");
+        argumenta_addere_optionem(parser, "-ad", "--ad",
+            "Usque ad seq");
+        argumenta_addere_vexillum(parser, "-s", NIHIL,
+            "Vexillum unius characteris - vicinus non captus");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-scribere"));
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--scribere"));
-		/* "-scribere" non est "-s" - nulla truncatio */
-		CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-s"));
-		ad = argumenta_obtinere_optionem(fructus, "-ad", piscina);
-		CREDO_VERUM(chorda_aequalis(ad,
-			chorda_ex_literis("XII", piscina)));
-	}
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "-scribere"));
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "--scribere"));
+        /* "-scribere" non est "-s" - nulla truncatio */
+        CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-s"));
+        ad = argumenta_obtinere_optionem(fructus, "-ad", piscina);
+        CREDO_VERUM(chorda_aequalis(ad,
+            chorda_ex_literis("XII", piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare optio solum (sine nomen breve)
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--config", "test.ini"};
-		               i32  argc = III;
-		            chorda  config;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa", "--config",
+            "test.ini"};
+                       i32 argc = III;
+                    chorda config;
 
-		imprimere("\n--- Probans optio solum longum ---\n");
+        imprimere("\n--- Probans optio solum longum ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_optionem(parser, NIHIL, "--config", "Config file");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_optionem(parser, NIHIL, "--config",
+            "Config file");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		config = argumenta_obtinere_optionem(fructus, "--config", piscina);
-		CREDO_VERUM(chorda_aequalis(config, chorda_ex_literis("test.ini", piscina)));
-	}
+        config = argumenta_obtinere_optionem(fructus, "--config",
+            piscina);
+        CREDO_VERUM(chorda_aequalis(config,
+            chorda_ex_literis("test.ini",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare optio non data
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa"};
-		               i32  argc = I;
-		            chorda  output;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa"};
+                       i32  argc    = I;
+                    chorda  output;
 
-		imprimere("\n--- Probans optio non data ---\n");
+        imprimere("\n--- Probans optio non data ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_optionem(parser, "-o", "--output", "Output file");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_optionem(parser, "-o", "--output",
+            "Output file");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		output = argumenta_obtinere_optionem(fructus, "--output", piscina);
-		CREDO_AEQUALIS_I32(output.mensura, ZEPHYRUM);
-	}
+        output = argumenta_obtinere_optionem(fructus, "--output",
+            piscina);
+        CREDO_AEQUALIS_I32(output.mensura, ZEPHYRUM);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare errore: optio ignota
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--unknown"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "--unknown"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans errore: optio ignota ---\n");
+        imprimere("\n--- Probans errore: optio ignota ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
 
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NIHIL(fructus);
-	}
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NIHIL(fructus);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare errore: optio sine valore
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--output"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "--output"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans errore: optio sine valore ---\n");
+        imprimere("\n--- Probans errore: optio sine valore ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_optionem(parser, "-o", "--output", "Output file");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_optionem(parser, "-o", "--output",
+            "Output file");
 
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NIHIL(fructus);
-	}
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NIHIL(fructus);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare positionalia multa
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", 
-                                      "file1.txt", 
-                                      "file2.txt", 
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[] = {"programa",
+                                      "file1.txt",
+                                      "file2.txt",
                                       "file3.txt"};
-		               i32  argc = IV;
-		            chorda  file1;
-		            chorda  file2;
-		            chorda  file3;
+                       i32 argc = IV;
+                    chorda file1;
+                    chorda file2;
+                    chorda file3;
 
-		imprimere("\n--- Probans positionalia multa ---\n");
+        imprimere("\n--- Probans positionalia multa ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_positionalem(parser, "file1", "First file", VERUM);
-		argumenta_addere_positionalem(parser, "file2", "Second file", VERUM);
-		argumenta_addere_positionalem(parser, "file3", "Third file", FALSUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_positionalem(parser, "file1", "First file",
+            VERUM);
+        argumenta_addere_positionalem(parser, "file2", "Second file",
+            VERUM);
+        argumenta_addere_positionalem(parser, "file3", "Third file",
+            FALSUM);
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus), III);
+        CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus),
+            III);
 
-		file1 = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
-		file2 = argumenta_obtinere_positionalem(fructus, I, piscina);
-		file3 = argumenta_obtinere_positionalem(fructus, II, piscina);
+        file1 = argumenta_obtinere_positionalem(fructus, ZEPHYRUM,
+            piscina);
+        file2 = argumenta_obtinere_positionalem(fructus, I, piscina);
+        file3 = argumenta_obtinere_positionalem(fructus, II, piscina);
 
-		CREDO_VERUM(chorda_aequalis(file1, chorda_ex_literis("file1.txt", piscina)));
-		CREDO_VERUM(chorda_aequalis(file2, chorda_ex_literis("file2.txt", piscina)));
-		CREDO_VERUM(chorda_aequalis(file3, chorda_ex_literis("file3.txt", piscina)));
-	}
+        CREDO_VERUM(chorda_aequalis(file1,
+            chorda_ex_literis("file1.txt",
+            piscina)));
+        CREDO_VERUM(chorda_aequalis(file2,
+            chorda_ex_literis("file2.txt",
+            piscina)));
+        CREDO_VERUM(chorda_aequalis(file3,
+            chorda_ex_literis("file3.txt",
+            piscina)));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare vexillum cum valor (errore)
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--verbose=true"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "--verbose=true"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans vexillum cum valor (errore) ---\n");
+        imprimere("\n--- Probans vexillum cum valor (errore) ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
 
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NIHIL(fructus);
-	}
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NIHIL(fructus);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare sine argumenta
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa"};
-		               i32  argc = I;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa"};
+                       i32  argc    = I;
 
-		imprimere("\n--- Probans sine argumenta ---\n");
+        imprimere("\n--- Probans sine argumenta ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
-		argumenta_addere_optionem(parser, "-o", "--output", "Output");
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        argumenta_addere_optionem(parser, "-o", "--output", "Output");
 
-		fructus = argumenta_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
+        fructus = argumenta_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
 
-		CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-v"));
-		CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus), ZEPHYRUM);
-	}
+        CREDO_FALSUM(argumenta_habet_vexillum(fructus, "-v"));
+        CREDO_AEQUALIS_I32(argumenta_numerus_positionalium(fructus),
+            ZEPHYRUM);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare --help cum positionalibus necessariis
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "--help"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "--help"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans --help cum positionalibus necessariis ---\n");
+        imprimere("\n--- Probans --help cum positionalibus necessariis ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
-		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        argumenta_addere_positionalem(parser, "input", "Input file",
+            VERUM);
 
-		/* --help debet succedere etiam sine positionali necessario */
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "--help"));
-	}
+        /* --help debet succedere etiam sine positionali necessario */
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "--help"));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare -h cum positionalibus necessariis
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-h"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "-h"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans -h cum positionalibus necessariis ---\n");
+        imprimere("\n--- Probans -h cum positionalibus necessariis ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
-		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
-		argumenta_addere_positionalem(parser, "output", "Output file", VERUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+        argumenta_addere_positionalem(parser, "input", "Input file",
+            VERUM);
+        argumenta_addere_positionalem(parser, "output", "Output file",
+            VERUM);
 
-		/* -h debet succedere etiam sine duobus positionalibus necessariis */
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NON_NIHIL(fructus);
-		CREDO_VERUM(argumenta_habet_vexillum(fructus, "-h"));
-	}
+        /* -h debet succedere etiam sine duobus positionalibus necessariis */
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NON_NIHIL(fructus);
+        CREDO_VERUM(argumenta_habet_vexillum(fructus, "-h"));
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare sine --help debet adhuc verificare positionalia
 	 * ================================================== */
 
-	{
-		   ArgumentaParser* parser;
-		  ArgumentaFructus* fructus;
-		constans character* argv[] = {"programa", "-v"};
-		               i32  argc = II;
+    {
+           ArgumentaParser* parser;
+          ArgumentaFructus* fructus;
+        constans character* argv[]  = {"programa", "-v"};
+                       i32  argc    = II;
 
-		imprimere("\n--- Probans sine --help debet verificare positionalia ---\n");
+        imprimere("\n--- Probans sine --help debet verificare positionalia ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
-		argumenta_addere_positionalem(parser, "input", "Input file", VERUM);
+        parser = argumenta_creare(piscina);
+        argumenta_addere_vexillum(parser, "-h", "--help", "Show help");
+        argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose");
+        argumenta_addere_positionalem(parser, "input", "Input file",
+            VERUM);
 
-		/* Sine --help, positionale necessarium debet verificari */
-		fructus = argumenta_conari_parsere(parser, argc, argv);
-		CREDO_NIHIL(fructus);
-	}
+        /* Sine --help, positionale necessarium debet verificari */
+        fructus = argumenta_conari_parsere(parser, argc, argv);
+        CREDO_NIHIL(fructus);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Probare descriptio et exempla
 	 * ================================================== */
 
-	{
-		ArgumentaParser* parser;
+    {
+        ArgumentaParser* parser;
 
-		imprimere("\n--- Probans descriptio et exempla ---\n");
+        imprimere("\n--- Probans descriptio et exempla ---\n");
 
-		parser = argumenta_creare(piscina);
-		argumenta_ponere_descriptionem(parser, "Test program - does testing");
-		argumenta_addere_exemplum(parser, "programa -v input.txt");
-		argumenta_addere_exemplum(parser, "programa --output=out.txt file.txt");
-		argumenta_addere_vexillum(parser, "-v", "--verbose", "Verbose output");
+        parser = argumenta_creare(piscina);
+        argumenta_ponere_descriptionem(parser,
+            "Test program - does testing");
+        argumenta_addere_exemplum(parser, "programa -v input.txt");
+        argumenta_addere_exemplum(parser,
+            "programa --output=out.txt file.txt");
+        argumenta_addere_vexillum(parser, "-v", "--verbose",
+            "Verbose output");
 
-		/* Non fracta */
-		CREDO_NON_NIHIL(parser);
-	}
+        /* Non fracta */
+        CREDO_NON_NIHIL(parser);
+    }
 
 
-	/* ==================================================
+    /* ==================================================
 	 * Compendium
 	 * ================================================== */
 
-	imprimere("\n");
-	credo_imprimere_compendium();
+    imprimere("\n");
+    credo_imprimere_compendium();
 
-	praeteritus = credo_omnia_praeterierunt();
+    praeteritus = credo_omnia_praeterierunt();
 
-	/* Destructio */
-	credo_claudere();
-	piscina_destruere(piscina);
+    /* Destructio */
+    credo_claudere();
+    piscina_destruere(piscina);
 
-	si (praeteritus)
-	{
-		redde ZEPHYRUM;
-	}
-	alioquin
-	{
-		redde I;
-	}
+    si (praeteritus)
+    {
+        redde ZEPHYRUM;
+    }
+    alioquin
+    {
+        redde I;
+    }
 }

@@ -42,7 +42,7 @@ interior vacuum
 probatio_content_type(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                ct;
+                  chorda  ct;
 
     printf("--- Probans content type ---\n");
 
@@ -70,14 +70,15 @@ interior vacuum
 probatio_textum_simplex(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                corpus;
+                  chorda  corpus;
 
     printf("--- Probans textum simplex ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
 
-    multipart_addere_textum(aed, "name", chorda_ex_literis("John", piscina));
+    multipart_addere_textum(aed, "name", chorda_ex_literis("John",
+        piscina));
 
     corpus = multipart_corpus_finire(aed);
     CREDO_NON_NIHIL(corpus.datum);
@@ -100,7 +101,7 @@ interior vacuum
 probatio_multiples_campi(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                corpus;
+                  chorda  corpus;
 
     printf("--- Probans multiples campi ---\n");
 
@@ -132,8 +133,9 @@ interior vacuum
 probatio_fasciculum(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                corpus;
-    constans i8           data[] = {0x01, 0x02, 0x03, 0x04, 0x05};
+                  chorda  corpus;
+             constans i8  data[] = {0x01, 0x02, 0x03, 0x04,
+                 0x05};
 
     printf("--- Probans fasciculum ---\n");
 
@@ -161,9 +163,10 @@ interior vacuum
 probatio_mixtum(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                corpus;
-    chorda                ct;
-    constans i8           audio_data[] = "fake audio data for testing";
+                  chorda  corpus;
+                  chorda  ct;
+             constans i8  audio_data[] =
+                 "fake audio data for testing";
 
     printf("--- Probans mixtum (textum + fasciculum) ---\n");
 
@@ -203,8 +206,8 @@ interior vacuum
 probatio_nullum_argumenta(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                ct;
-    chorda                corpus;
+                  chorda  ct;
+                  chorda  corpus;
 
     printf("--- Probans nullum argumenta ---\n");
 
@@ -218,8 +221,10 @@ probatio_nullum_argumenta(Piscina* piscina)
 
     /* Addere textum cum NIHIL */
     aed = multipart_creare(piscina);
-    multipart_addere_textum(NIHIL, "test", chorda_ex_literis("val", piscina));
-    multipart_addere_textum(aed, NIHIL, chorda_ex_literis("val", piscina));
+    multipart_addere_textum(NIHIL, "test", chorda_ex_literis("val",
+        piscina));
+    multipart_addere_textum(aed, NIHIL, chorda_ex_literis("val",
+        piscina));
 
     /* Addere fasciculum cum NIHIL */
     multipart_addere_fasciculum(NIHIL, "file", "test.bin", "text/plain",
@@ -241,17 +246,18 @@ interior vacuum
 probatio_boundary_format(Piscina* piscina)
 {
     MultipartAedificator* aed;
-    chorda                corpus;
-    i32                   i;
-    b32                   invenit_boundary;
-    b32                   invenit_closing;
+                  chorda  corpus;
+                     i32  i;
+                     b32  invenit_boundary;
+                     b32  invenit_closing;
 
     printf("--- Probans boundary format ---\n");
 
     aed = multipart_creare(piscina);
     CREDO_NON_NIHIL(aed);
 
-    multipart_addere_textum(aed, "test", chorda_ex_literis("value", piscina));
+    multipart_addere_textum(aed, "test", chorda_ex_literis("value",
+        piscina));
 
     corpus = multipart_corpus_finire(aed);
     CREDO_NON_NIHIL(corpus.datum);
@@ -262,8 +268,8 @@ probatio_boundary_format(Piscina* piscina)
     CREDO_VERUM(corpus.datum[I] == '-');
 
     /* Verificare corpus continet closing boundary "--" */
-    invenit_boundary = FALSUM;
-    invenit_closing = FALSUM;
+    invenit_boundary  = FALSUM;
+    invenit_closing   = FALSUM;
 
     per (i = 0; i < corpus.mensura - III; i++)
     {
@@ -292,10 +298,10 @@ probatio_boundary_format(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");
@@ -303,7 +309,8 @@ principale(vacuum)
     printf("========================================\n");
     printf("\n");
 
-    piscina = piscina_generare_dynamicum("probatio_multipart", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("probatio_multipart",
+        CXXVIII * M);
     credo_aperire(piscina);
 
     probatio_creare(piscina);

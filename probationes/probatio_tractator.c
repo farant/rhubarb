@@ -16,7 +16,8 @@ hic_manens i32 g_tractator_b_vocatus = ZEPHYRUM;
 hic_manens i32 g_fallback_vocatus    = ZEPHYRUM;
 
 interior b32
-tractator_a(ContextusTractandi* ctx)
+tractator_a (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tractator_a_vocatus++;
@@ -24,7 +25,8 @@ tractator_a(ContextusTractandi* ctx)
 }
 
 interior b32
-tractator_b(ContextusTractandi* ctx)
+tractator_b (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_tractator_b_vocatus++;
@@ -32,7 +34,8 @@ tractator_b(ContextusTractandi* ctx)
 }
 
 interior b32
-tractator_fallback(ContextusTractandi* ctx)
+tractator_fallback (
+    ContextusTractandi* ctx)
 {
     (vacuum)ctx;
     g_fallback_vocatus++;
@@ -41,9 +44,9 @@ tractator_fallback(ContextusTractandi* ctx)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    b32                  praeteritus;
+                    b32  praeteritus;
 
 
     /* Aperire credo et piscina */
@@ -80,7 +83,8 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(reg->fallbacks);
         CREDO_VERUM(reg->piscina == piscina);
         CREDO_VERUM(reg->intern == intern);
-        CREDO_AEQUALIS_I32(registrum_tractatoris_numerus(reg), ZEPHYRUM);
+        CREDO_AEQUALIS_I32(registrum_tractatoris_numerus(reg),
+            ZEPHYRUM);
 
         /* Argumenta invalida */
         reg = registrum_tractatoris_creare(NIHIL, intern);
@@ -104,22 +108,29 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(reg);
 
         /* Registrare tractator */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "open", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "open", tractator_a));
         CREDO_AEQUALIS_I32(registrum_tractatoris_numerus(reg), I);
 
         /* Registrare secundum tractator pro eodem genere entitatis */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "close", tractator_b));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "close", tractator_b));
         CREDO_AEQUALIS_I32(registrum_tractatoris_numerus(reg), II);
 
         /* Registrare tractator pro alio genere entitatis */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Widget", "tick", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Widget",
+            "tick", tractator_a));
         CREDO_AEQUALIS_I32(registrum_tractatoris_numerus(reg), III);
 
         /* Argumenta invalida */
-        CREDO_FALSUM(registrum_tractatoris_registrare(NIHIL, "Page", "test", tractator_a));
-        CREDO_FALSUM(registrum_tractatoris_registrare(reg, NIHIL, "test", tractator_a));
-        CREDO_FALSUM(registrum_tractatoris_registrare(reg, "Page", NIHIL, tractator_a));
-        CREDO_FALSUM(registrum_tractatoris_registrare(reg, "Page", "test", NIHIL));
+        CREDO_FALSUM(registrum_tractatoris_registrare(NIHIL, "Page",
+            "test", tractator_a));
+        CREDO_FALSUM(registrum_tractatoris_registrare(reg, NIHIL,
+            "test", tractator_a));
+        CREDO_FALSUM(registrum_tractatoris_registrare(reg, "Page",
+            NIHIL, tractator_a));
+        CREDO_FALSUM(registrum_tractatoris_registrare(reg, "Page",
+            "test", NIHIL));
     }
 
 
@@ -139,11 +150,13 @@ s32 principale(vacuum)
         CREDO_FALSUM(registrum_tractatoris_habet(reg, "Page", "open"));
 
         /* Post registrationem */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "open", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "open", tractator_a));
         CREDO_VERUM(registrum_tractatoris_habet(reg, "Page", "open"));
 
         /* Genus entitatis non existens */
-        CREDO_FALSUM(registrum_tractatoris_habet(reg, "Widget", "open"));
+        CREDO_FALSUM(registrum_tractatoris_habet(reg, "Widget",
+            "open"));
 
         /* Genus nuntii non existens */
         CREDO_FALSUM(registrum_tractatoris_habet(reg, "Page", "close"));
@@ -156,29 +169,35 @@ s32 principale(vacuum)
 
     {
         RegistrumTractatoris* reg;
-        FunctioTractandi      functio;
+            FunctioTractandi  functio;
 
         imprimere("\n--- Probans registrum_tractatoris_invenire_literis ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "open", tractator_a));
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "close", tractator_b));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "open", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "close", tractator_b));
 
         /* Invenire tractator_a */
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "open");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "open");
         CREDO_VERUM(functio == tractator_a);
 
         /* Invenire tractator_b */
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "close");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "close");
         CREDO_VERUM(functio == tractator_b);
 
         /* Non inventum */
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "unknown");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "unknown");
         CREDO_NIHIL((vacuum*)functio);
 
-        functio = registrum_tractatoris_invenire_literis(reg, "Widget", "open");
+        functio = registrum_tractatoris_invenire_literis(reg, "Widget",
+            "open");
         CREDO_NIHIL((vacuum*)functio);
     }
 
@@ -189,29 +208,31 @@ s32 principale(vacuum)
 
     {
         RegistrumTractatoris* reg;
-        FunctioTractandi      functio;
-        chorda                genus_ent_chorda;
-        chorda                genus_nun_chorda;
-        chorda*               genus_ent;
-        chorda*               genus_nun;
+            FunctioTractandi  functio;
+                      chorda  genus_ent_chorda;
+                      chorda  genus_nun_chorda;
+                      chorda* genus_ent;
+                      chorda* genus_nun;
 
         imprimere("\n--- Probans registrum_tractatoris_invenire ---\n");
 
         reg = registrum_tractatoris_creare(piscina, intern);
         CREDO_NON_NIHIL(reg);
 
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "render", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "render", tractator_a));
 
         /* Internare chordas */
-        genus_ent_chorda = chorda_ex_literis("Page", piscina);
-        genus_ent = chorda_internare(intern, genus_ent_chorda);
+        genus_ent_chorda  = chorda_ex_literis("Page", piscina);
+        genus_ent         = chorda_internare(intern, genus_ent_chorda);
         CREDO_NON_NIHIL(genus_ent);
 
-        genus_nun_chorda = chorda_ex_literis("render", piscina);
-        genus_nun = chorda_internare(intern, genus_nun_chorda);
+        genus_nun_chorda  = chorda_ex_literis("render", piscina);
+        genus_nun         = chorda_internare(intern, genus_nun_chorda);
         CREDO_NON_NIHIL(genus_nun);
 
-        functio = registrum_tractatoris_invenire(reg, genus_ent, genus_nun);
+        functio = registrum_tractatoris_invenire(reg, genus_ent,
+            genus_nun);
         CREDO_VERUM(functio == tractator_a);
     }
 
@@ -222,7 +243,7 @@ s32 principale(vacuum)
 
     {
         RegistrumTractatoris* reg;
-        FunctioTractandi      functio;
+            FunctioTractandi  functio;
 
         imprimere("\n--- Probans fallback tractator ---\n");
 
@@ -230,21 +251,26 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(reg);
 
         /* Registrare tractator specificum */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "open", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "open", tractator_a));
 
         /* Ponere fallback */
-        CREDO_VERUM(registrum_tractatoris_ponere_fallback(reg, "Page", tractator_fallback));
+        CREDO_VERUM(registrum_tractatoris_ponere_fallback(reg, "Page",
+            tractator_fallback));
 
         /* Quaerere tractator specificum - debet invenire tractator_a */
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "open");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "open");
         CREDO_VERUM(functio == tractator_a);
 
         /* Quaerere nuntium ignotum - debet invenire fallback */
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "unknown_message");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "unknown_message");
         CREDO_VERUM(functio == tractator_fallback);
 
         /* Quaerere genus entitatis sine fallback - debet reddere NIHIL */
-        functio = registrum_tractatoris_invenire_literis(reg, "Widget", "test");
+        functio = registrum_tractatoris_invenire_literis(reg, "Widget",
+            "test");
         CREDO_NIHIL((vacuum*)functio);
     }
 
@@ -255,9 +281,9 @@ s32 principale(vacuum)
 
     {
         RegistrumTractatoris* reg;
-        i32                   i;
-        character             genus_buffer[XXXII];
-        character             nuntius_buffer[XXXII];
+                         i32  i;
+                   character  genus_buffer[XXXII];
+                   character  nuntius_buffer[XXXII];
 
         imprimere("\n--- Probans multos tractatores ---\n");
 
@@ -282,7 +308,8 @@ s32 principale(vacuum)
             sprintf(genus_buffer, "Genus_%d", (integer)i);
             sprintf(nuntius_buffer, "nuntius_%d", (integer)i);
 
-            CREDO_VERUM(registrum_tractatoris_habet(reg, genus_buffer, nuntius_buffer));
+            CREDO_VERUM(registrum_tractatoris_habet(reg, genus_buffer,
+                nuntius_buffer));
         }
     }
 
@@ -293,7 +320,7 @@ s32 principale(vacuum)
 
     {
         RegistrumTractatoris* reg;
-        FunctioTractandi      functio;
+            FunctioTractandi  functio;
 
         imprimere("\n--- Probans overwrite tractator ---\n");
 
@@ -301,15 +328,19 @@ s32 principale(vacuum)
         CREDO_NON_NIHIL(reg);
 
         /* Registrare tractator_a */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "update", tractator_a));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "update", tractator_a));
 
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "update");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "update");
         CREDO_VERUM(functio == tractator_a);
 
         /* Overwrite cum tractator_b */
-        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page", "update", tractator_b));
+        CREDO_VERUM(registrum_tractatoris_registrare(reg, "Page",
+            "update", tractator_b));
 
-        functio = registrum_tractatoris_invenire_literis(reg, "Page", "update");
+        functio = registrum_tractatoris_invenire_literis(reg, "Page",
+            "update");
         CREDO_VERUM(functio == tractator_b);
     }
 

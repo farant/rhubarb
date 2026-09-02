@@ -21,18 +21,25 @@
 #include <string.h>
 
 interior Xar*
-_lexare_literis (Piscina* piscina, constans character* fons);
+_lexare_literis (
+               Piscina* piscina,
+    constans character* fons);
 
 interior Xar*
-_lexare_literis (Piscina* piscina, constans character* fons)
+_lexare_literis (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde html_lexare(piscina, fons, (i32)strlen(fons));
 }
 
 /* seriem generum probare (FINIS exclusa) */
 interior vacuum
-_seriem_probare (Piscina* piscina, constans character* fons,
-    constans HtmlLexemaGenus* exspectata, i32 numerus);
+_seriem_probare (
+                     Piscina* piscina,
+          constans character* fons,
+    constans HtmlLexemaGenus* exspectata,
+                         i32  numerus);
 
 interior vacuum
 _seriem_probare (Piscina* piscina, constans character* fons,
@@ -65,16 +72,19 @@ _seriem_probare (Piscina* piscina, constans character* fons,
 
 /* valorem lexematis k probare (extensio verbatim) */
 interior vacuum
-_valorem_probare (Piscina* piscina, constans character* fons,
-    i32 index, constans character* exspectatus);
+_valorem_probare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  index,
+    constans character* exspectatus);
 
 interior vacuum
 _valorem_probare (Piscina* piscina, constans character* fons,
     i32 index, constans character* exspectatus)
 {
-    Xar*        l = _lexare_literis(piscina, fons);
+           Xar* l = _lexare_literis(piscina, fons);
     HtmlLexema* lx;
-    i32         m = (i32)strlen(exspectatus);
+           i32  m = (i32)strlen(exspectatus);
 
     CREDO_NON_NIHIL (l);
     si (l == NIHIL || index >= xar_numerus(l))
@@ -94,14 +104,20 @@ _valorem_probare (Piscina* piscina, constans character* fons,
 /* fidelitas + progressus: emissio == fons, nullum lexema vacuum
  * nisi FINIS */
 interior b32
-_fidelis (Piscina* piscina, constans character* fons, i32 mensura);
+_fidelis (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura);
 
 interior b32
-_fidelis (Piscina* piscina, constans character* fons, i32 mensura)
+_fidelis (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
-    Xar*   l = html_lexare(piscina, fons, mensura);
-    chorda e;
-    i32    k;
+       Xar* l = html_lexare(piscina, fons, mensura);
+    chorda  e;
+       i32  k;
 
     si (l == NIHIL)
     {
@@ -128,12 +144,16 @@ _fidelis (Piscina* piscina, constans character* fons, i32 mensura)
 /* numerus generum imperfectorum ET pravorum in fonte (plagulae
  * mundae utraque nulla ferant) */
 interior i32
-_imperfecta_numerare (Piscina* piscina, constans character* fons,
-    i32 mensura);
+_imperfecta_numerare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura);
 
 interior i32
-_imperfecta_numerare (Piscina* piscina, constans character* fons,
-    i32 mensura)
+_imperfecta_numerare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
 {
     Xar* l = html_lexare(piscina, fons, mensura);
     i32  k;
@@ -147,7 +167,7 @@ _imperfecta_numerare (Piscina* piscina, constans character* fons,
     {
         HtmlLexema* lx = (HtmlLexema*)xar_obtinere(l, k);
 
-        si (lx->genus == HTML_LEX_TEXTUS_CRUDUS_IMPERFECTUS
+        si (   lx->genus == HTML_LEX_TEXTUS_CRUDUS_IMPERFECTUS
             || lx->genus == HTML_LEX_ATTRIBUTUM_VALOR_IMPERFECTUS
             || lx->genus == HTML_LEX_COMMENTARIUM_IMPERFECTUM
             || lx->genus == HTML_LEX_COMMENTARIUM_PRAVUM
@@ -444,7 +464,8 @@ principale (vacuum)
 
     imprimere("\n--- Positiones (octeti, 1-basatae) ---\n");
     {
-        Xar*        l = _lexare_literis(piscina, "<p>\n<em x=1>");
+               Xar* l = _lexare_literis(piscina,
+                   "<p>\n<em x=1>");
         HtmlLexema* lx;
 
         CREDO_NON_NIHIL (l);
@@ -465,9 +486,9 @@ principale (vacuum)
 
     imprimere("\n--- Fidelitas super corpus (fixa/html) ---\n");
     {
-        DirectoriumIterator*  iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* e;
-        i32                   probatae = 0;
+                         i32  probatae = 0;
 
         iter = directorium_iterator_aperire("probationes/fixa/html",
             piscina);
@@ -477,9 +498,9 @@ principale (vacuum)
             dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
             {
                 ChordaAedificator* aed;
-                chorda             via;
-                chorda             contentum;
-                b32                adversaria;
+                           chorda  via;
+                           chorda  contentum;
+                              b32  adversaria;
 
                 si (e->genus != INTROITUS_FILUM)
                 {

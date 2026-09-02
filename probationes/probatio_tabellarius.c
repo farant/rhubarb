@@ -11,7 +11,9 @@
 
 /* chorda == litterae (octetim) */
 interior b32
-_aequalis (chorda c, constans character* litterae)
+_aequalis (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -22,7 +24,9 @@ _aequalis (chorda c, constans character* litterae)
 /* forma canonica: scribere(legere(litterae)) - asserta objectorum
  * independentia formae exactae json_scribere */
 interior chorda
-_canonica (constans character* litterae, Piscina* piscina)
+_canonica (
+    constans character* litterae,
+               Piscina* piscina)
 {
     JsonResultus res = json_legere_literis(litterae, piscina);
 
@@ -30,16 +34,18 @@ _canonica (constans character* litterae, Piscina* piscina)
     {
         chorda vacua;
 
-        vacua.mensura = ZEPHYRUM;
-        vacua.datum = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        vacua.datum    = NIHIL;
         redde vacua;
     }
     redde json_scribere(res.radix, piscina);
 }
 
 interior b32
-_aequalis_canonicae (chorda c, constans character* litterae,
-    Piscina* piscina)
+_aequalis_canonicae (
+                chorda  c,
+    constans character* litterae,
+               Piscina* piscina)
 {
     chorda canonica = _canonica(litterae, piscina);
 
@@ -52,7 +58,8 @@ _aequalis_canonicae (chorda c, constans character* litterae,
 
 /* FILE* effimerum cum contentis datis, retro volutum */
 interior FILE*
-_fluxus_ex_literis (constans character* litterae)
+_fluxus_ex_literis (
+    constans character* litterae)
 {
     FILE* pl = tmpfile();
 
@@ -65,6 +72,7 @@ _fluxus_ex_literis (constans character* litterae)
     redde pl;
 }
 
+
 /* ==================================================
  * EPISTULA (framing)
  * ================================================== */
@@ -72,10 +80,10 @@ _fluxus_ex_literis (constans character* litterae)
 interior vacuum
 probatio_epistula_scribere (Piscina* piscina)
 {
-    FILE* pl = tmpfile();
-    chorda corpus = chorda_ex_literis("{}", piscina);
-    character receptum[LXIV];
-    memoriae_index m;
+              FILE* pl      = tmpfile();
+            chorda  corpus  = chorda_ex_literis("{}", piscina);
+         character  receptum[LXIV];
+    memoriae_index  m;
 
     imprimere("--- Probans epistulam scribere ---\n");
     CREDO_VERUM(pl != NIHIL);
@@ -93,7 +101,7 @@ probatio_epistula_legere (Piscina* piscina)
 {
     FILE* pl = _fluxus_ex_literis(
         "Content-Length: 5\r\n\r\nsalveContent-Length: 2\r\n\r\n{}");
-    b32 finitus = FALSUM;
+       b32 finitus = FALSUM;
     chorda corpus;
 
     imprimere("--- Probans epistulam legere ---\n");
@@ -124,7 +132,7 @@ probatio_epistula_tolerantia (Piscina* piscina)
         "Content-Type: application/vscode-jsonrpc\r\n"
         "\r\n"
         "abcd");
-    b32 finitus = FALSUM;
+       b32 finitus = FALSUM;
     chorda corpus;
 
     imprimere("--- Probans tolerantiam capitum ---\n");
@@ -138,7 +146,7 @@ probatio_epistula_tolerantia (Piscina* piscina)
 interior vacuum
 probatio_epistula_prava (Piscina* piscina)
 {
-    b32 finitus;
+       b32 finitus;
     chorda corpus;
     FILE* pl;
 
@@ -147,8 +155,8 @@ probatio_epistula_prava (Piscina* piscina)
     /* caput sine content-length */
     pl = _fluxus_ex_literis("Nusquam: 3\r\n\r\nabc");
     CREDO_VERUM(pl != NIHIL);
-    finitus = FALSUM;
-    corpus = tabellarius_epistulam_legere(pl, piscina, &finitus);
+    finitus  = FALSUM;
+    corpus   = tabellarius_epistulam_legere(pl, piscina, &finitus);
     CREDO_VERUM(finitus);
     CREDO_VERUM(corpus.mensura == ZEPHYRUM);
     fclose(pl);
@@ -156,16 +164,16 @@ probatio_epistula_prava (Piscina* piscina)
     /* fluxus vacuus */
     pl = _fluxus_ex_literis("");
     CREDO_VERUM(pl != NIHIL);
-    finitus = FALSUM;
-    corpus = tabellarius_epistulam_legere(pl, piscina, &finitus);
+    finitus  = FALSUM;
+    corpus   = tabellarius_epistulam_legere(pl, piscina, &finitus);
     CREDO_VERUM(finitus);
     fclose(pl);
 
     /* corpus brevius quam promissum */
     pl = _fluxus_ex_literis("Content-Length: 99\r\n\r\nbrevis");
     CREDO_VERUM(pl != NIHIL);
-    finitus = FALSUM;
-    corpus = tabellarius_epistulam_legere(pl, piscina, &finitus);
+    finitus  = FALSUM;
+    corpus   = tabellarius_epistulam_legere(pl, piscina, &finitus);
     CREDO_VERUM(finitus);
     fclose(pl);
 }
@@ -183,7 +191,7 @@ probatio_linea (Piscina* piscina)
             "{\"a\":1}\r\n"
             "\n"
             "{\"b\":2}\n");
-        b32 finitus = FALSUM;
+           b32 finitus = FALSUM;
         chorda corpus;
 
         CREDO_VERUM(pl != NIHIL);
@@ -197,9 +205,9 @@ probatio_linea (Piscina* piscina)
     }
     /* EOF ante '\n' = finitus (nuntius truncatus) */
     {
-        FILE* pl = _fluxus_ex_literis("{\"c\":3}");
-        b32 finitus = FALSUM;
-        chorda corpus;
+          FILE* pl       = _fluxus_ex_literis("{\"c\":3}");
+           b32  finitus  = FALSUM;
+        chorda  corpus;
 
         CREDO_VERUM(pl != NIHIL);
         corpus = tabellarius_lineam_legere(pl, piscina, &finitus);
@@ -208,9 +216,9 @@ probatio_linea (Piscina* piscina)
     }
     /* scribere: corpus + '\n'; '\n' crudum RECUSATUM */
     {
-        FILE* pl = tmpfile();
-        character receptum[LXIV];
-        memoriae_index m;
+                  FILE* pl = tmpfile();
+             character  receptum[LXIV];
+        memoriae_index  m;
 
         CREDO_VERUM(pl != NIHIL);
         CREDO_VERUM(tabellarius_lineam_scribere(pl,
@@ -227,11 +235,11 @@ probatio_linea (Piscina* piscina)
      * compacte -> linea una tuta -> circulus integer */
     {
         JsonValor* obj = json_objectum_creare(piscina);
-        chorda serialis;
-        FILE* pl = tmpfile();
-        b32 finitus = FALSUM;
-        chorda relecta;
-        i32 i;
+           chorda  serialis;
+             FILE* pl       = tmpfile();
+              b32  finitus  = FALSUM;
+           chorda  relecta;
+              i32  i;
 
         CREDO_VERUM(pl != NIHIL);
         json_objectum_ponere(obj, "nuntius",
@@ -248,7 +256,7 @@ probatio_linea (Piscina* piscina)
         CREDO_VERUM(!finitus);
         {
             JsonResultus iterum = json_legere(relecta, piscina);
-            chorda valor;
+                  chorda valor;
 
             CREDO_VERUM(iterum.successus);
             valor = json_ad_chorda(json_objectum_capere(
@@ -259,6 +267,7 @@ probatio_linea (Piscina* piscina)
         fclose(pl);
     }
 }
+
 
 /* ==================================================
  * NUNTIUS (envelope)
@@ -347,6 +356,7 @@ probatio_nuntius_pravum (Piscina* piscina)
     CREDO_VERUM(n.id != NIHIL);
 }
 
+
 /* ==================================================
  * FABRI
  * ================================================== */
@@ -354,7 +364,7 @@ probatio_nuntius_pravum (Piscina* piscina)
 interior vacuum
 probatio_fabri (Piscina* piscina)
 {
-    chorda corpus;
+       chorda  corpus;
     JsonValor* id_septem = json_integer_creare(piscina, VII);
 
     imprimere("--- Probans fabros ---\n");
@@ -392,6 +402,7 @@ probatio_fabri (Piscina* piscina)
         "{\"jsonrpc\":\"2.0\",\"method\":\"exit\"}", piscina));
 }
 
+
 /* ==================================================
  * CIRCULUS PLENUS (legere -> tractare -> scribere -> legere)
  * ================================================== */
@@ -402,10 +413,10 @@ probatio_circulus (Piscina* piscina)
     FILE* intra = _fluxus_ex_literis(
         "Content-Length: 44\r\n\r\n"
         "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"shutdown\"}");
-    FILE* extra = tmpfile();
-    b32 finitus = FALSUM;
-    chorda corpus;
-    TabellariusNuntius n;
+                  FILE* extra    = tmpfile();
+                   b32  finitus  = FALSUM;
+                chorda  corpus;
+    TabellariusNuntius  n;
 
     imprimere("--- Probans circulum plenum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -431,6 +442,7 @@ probatio_circulus (Piscina* piscina)
     fclose(intra);
     fclose(extra);
 }
+
 
 /* ================================================== */
 

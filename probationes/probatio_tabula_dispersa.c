@@ -13,14 +13,16 @@ s32 principale (vacuum)
         b32  praeteritus;
 
     /* Aperire piscinam et credonem */
-    piscina = piscina_generare_dynamicum("probatio_tabula_dispersa", CDLVI);
+    piscina = piscina_generare_dynamicum("probatio_tabula_dispersa",
+        CDLVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
         redde I;
     }
     credo_aperire(piscina);
-    
+
+
     /* =================================================
      * Probare tabula_dispersa_creare
      * ================================================= */
@@ -36,11 +38,12 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)tabula->capacitas, CXXVIII);
     }
 
+
     /* =================================================
      * Probare tabula_dispersa_inserere et invenire
      * ================================================= */
 
-    { 
+    {
         TabulaDispersa* tabula;
                 chorda  clavis1, clavis2, clavis_nonexistens;
                    i32  valor1 = XLII;
@@ -67,17 +70,19 @@ s32 principale (vacuum)
                         (vacuum*)(longus)valor2));
 
         /* Quaestiones amborum */
-        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis1, &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis1,
+            &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor1);
 
-        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis2, &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis2,
+            &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor2);
 
         /* Quaestio nonexistentis */
         clavis_nonexistens = chorda_ex_literis("charlie", piscina);
         CREDO_FALSUM(tabula_dispersa_invenire(
-                        tabula, 
-                        clavis_nonexistens, 
+                        tabula,
+                        clavis_nonexistens,
                         &valor_recuperatus));
     }
 
@@ -97,9 +102,11 @@ s32 principale (vacuum)
 
         CREDO_FALSUM(tabula_dispersa_continet(tabula, clavis));
 
-        tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)CXXIII);
+        tabula_dispersa_inserere(tabula, clavis,
+            (vacuum*)(longus)CXXIII);
         CREDO_VERUM(tabula_dispersa_continet(tabula, clavis));
     }
+
 
     /* =================================================
      * Probare tabula_dispersa_inserere_update
@@ -118,17 +125,21 @@ s32 principale (vacuum)
         clavis = chorda_ex_literis("key", piscina);
 
         /* Insertio */
-        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)valor1));
+        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis,
+            (vacuum*)(longus)valor1));
         CREDO_AEQUALIS_I32((i32)tabula->numerus, I);
 
         /* Renovatio eiusdem clavis */
-        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)valor2));
+        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis,
+            (vacuum*)(longus)valor2));
         CREDO_AEQUALIS_I32((i32)tabula->numerus, I);
 
         /* Verificatio valoris renovati */
-        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis, &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis,
+            &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor2);
     }
+
 
     /* =================================================
      * Probare tabula_dispersa_delere
@@ -141,9 +152,9 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans tabula_dispersa_delere ---\n");
 
-        tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
-        clavis1 = chorda_ex_literis("alice", piscina);
-        clavis2 = chorda_ex_literis("bob", piscina);
+        tabula   = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+        clavis1  = chorda_ex_literis("alice", piscina);
+        clavis2  = chorda_ex_literis("bob", piscina);
 
         /* Insertiones amborum */
         tabula_dispersa_inserere(tabula, clavis1, (vacuum*)(longus)I);
@@ -155,14 +166,17 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32((i32)tabula->numerus, I);
 
         /* Verificatio deletionis */
-        CREDO_FALSUM(tabula_dispersa_invenire(tabula, clavis1, &valor_recuperatus));
+        CREDO_FALSUM(tabula_dispersa_invenire(tabula, clavis1,
+            &valor_recuperatus));
 
         /* Secundus adhuc adest */
-        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis2, &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis2,
+            &valor_recuperatus));
 
         /* Deletio nonexistentis */
         clavis_nonexistens = chorda_ex_literis("charlie", piscina);
-        CREDO_FALSUM(tabula_dispersa_delere(tabula, clavis_nonexistens));
+        CREDO_FALSUM(tabula_dispersa_delere(tabula,
+            clavis_nonexistens));
         CREDO_AEQUALIS_I32((i32)tabula->numerus, I);
     }
 
@@ -189,9 +203,11 @@ s32 principale (vacuum)
 
         /* Reusum tabulae */
         clavis2 = chorda_ex_literis("newkey", piscina);
-        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis2, (vacuum*)(longus)XCIX));
+        CREDO_VERUM(tabula_dispersa_inserere(tabula, clavis2,
+            (vacuum*)(longus)XCIX));
         CREDO_AEQUALIS_I32((i32)tabula->numerus, I);
     }
+
 
     /* =================================================
      * Probare tabula_dispersa_crescere
@@ -216,7 +232,8 @@ s32 principale (vacuum)
 
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         /* Oportet crevisse */
@@ -226,11 +243,12 @@ s32 principale (vacuum)
         per (i = ZEPHYRUM; i < XIV; i++)
         {
             chorda  clavis;
-            vacuum *valor;
+            vacuum* valor;
 
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis, &valor));
+            CREDO_VERUM(tabula_dispersa_invenire(tabula, clavis,
+                &valor));
             CREDO_AEQUALIS_I32((i32)(longus)valor, i);
         }
     }
@@ -261,10 +279,11 @@ s32 principale (vacuum)
         tabula_dispersa_inserere(tabula, clavis3, (vacuum*)(longus)III);
 
         /* Ambulare et computare */
-        iter  = tabula_dispersa_iterator_initium(tabula);
-        count = ZEPHYRUM;
+        iter   = tabula_dispersa_iterator_initium(tabula);
+        count  = ZEPHYRUM;
 
-        dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter, &valor_iter))
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter,
+            &valor_iter))
         {
             count++;
         }
@@ -297,7 +316,8 @@ s32 principale (vacuum)
         {
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         factor = tabula_dispersa_factor_oneris(tabula);
@@ -317,15 +337,18 @@ s32 principale (vacuum)
 
         tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
 
-        CREDO_AEQUALIS_I32((i32)tabula_dispersa_numerus(tabula), ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)tabula_dispersa_numerus(tabula),
+            ZEPHYRUM);
 
         clavis = chorda_ex_literis("one", piscina);
         tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)I);
         CREDO_AEQUALIS_I32((i32)tabula_dispersa_numerus(tabula), I);
 
         tabula_dispersa_delere(tabula, clavis);
-        CREDO_AEQUALIS_I32((i32)tabula_dispersa_numerus(tabula), ZEPHYRUM);
+        CREDO_AEQUALIS_I32((i32)tabula_dispersa_numerus(tabula),
+            ZEPHYRUM);
     }
+
 
     /* =================================================
      * Probare collisiones tracking
@@ -352,7 +375,8 @@ s32 principale (vacuum)
 
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         /* Aliquae collisiones debent accidisse */
@@ -413,8 +437,10 @@ s32 principale (vacuum)
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
 
-            CREDO_VERUM(tabula_dispersa_inserere(tabula1, clavis, (vacuum*)(longus)i));
-            CREDO_VERUM(tabula_dispersa_inserere(tabula2, clavis, (vacuum*)(longus)i));
+            CREDO_VERUM(tabula_dispersa_inserere(tabula1, clavis,
+                (vacuum*)(longus)i));
+            CREDO_VERUM(tabula_dispersa_inserere(tabula2, clavis,
+                (vacuum*)(longus)i));
         }
 
         /* Verificare quaestiones operantur */
@@ -426,8 +452,10 @@ s32 principale (vacuum)
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
 
-            CREDO_VERUM(tabula_dispersa_invenire(tabula1, clavis, &valor1));
-            CREDO_VERUM(tabula_dispersa_invenire(tabula2, clavis, &valor2));
+            CREDO_VERUM(tabula_dispersa_invenire(tabula1, clavis,
+                &valor1));
+            CREDO_VERUM(tabula_dispersa_invenire(tabula2, clavis,
+                &valor2));
 
             CREDO_AEQUALIS_I32((i32)(longus)valor1, i);
             CREDO_AEQUALIS_I32((i32)(longus)valor2, i);
@@ -441,10 +469,10 @@ s32 principale (vacuum)
 
     {
         TabulaDispersa* tabula;
-               chorda   clavis;
-                  i32   i;
-            character   buffer[VI];
-                  i32   capacitas_initialis;
+                chorda  clavis;
+                   i32  i;
+             character  buffer[VI];
+                   i32  capacitas_initialis;
 
         imprimere("\n--- Probans factor_deletorum et crescentia ---\n");
 
@@ -456,7 +484,8 @@ s32 principale (vacuum)
         {
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         /* Delere omnes */
@@ -487,21 +516,22 @@ s32 principale (vacuum)
      * ================================================= */
 
     {
-        TabulaDispersa* tabula;
-         TabulaIterator iter;
-                 chorda clavis_iter;
-                vacuum* valor_iter;
-                    i32 count;
+         TabulaDispersa* tabula;
+         TabulaIterator  iter;
+                 chorda  clavis_iter;
+                 vacuum* valor_iter;
+                    i32  count;
 
         imprimere("\n--- Probans iterator cum tabula vacua ---\n");
 
         tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
 
         /* Ambulare tabulam vacuam */
-        iter = tabula_dispersa_iterator_initium(tabula);
-        count = ZEPHYRUM;
+        iter   = tabula_dispersa_iterator_initium(tabula);
+        count  = ZEPHYRUM;
 
-        dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter, &valor_iter))
+        dum (tabula_dispersa_iterator_proximum(&iter, &clavis_iter,
+            &valor_iter))
         {
             count++;
         }
@@ -515,8 +545,8 @@ s32 principale (vacuum)
      * ================================================= */
 
     {
-        TabulaDispersa* tabula;
-         TabulaIterator iter;
+         TabulaDispersa* tabula;
+         TabulaIterator  iter;
                  chorda clavis1, clavis2, clavis3;
                     i32 count;
 
@@ -533,8 +563,8 @@ s32 principale (vacuum)
         tabula_dispersa_inserere(tabula, clavis3, (vacuum*)(longus)III);
 
         /* Ambulare cum NIHIL outputis */
-        iter = tabula_dispersa_iterator_initium(tabula);
-        count = ZEPHYRUM;
+        iter   = tabula_dispersa_iterator_initium(tabula);
+        count  = ZEPHYRUM;
 
         dum (tabula_dispersa_iterator_proximum(&iter, NIHIL, NIHIL))
         {
@@ -550,11 +580,11 @@ s32 principale (vacuum)
      * ================================================= */
 
     {
-        TabulaDispersa* tabula;
-                    i32 i;
-              character buffer[VI];
-                 chorda clavis;
-                vacuum* valor;
+         TabulaDispersa* tabula;
+                    i32  i;
+              character  buffer[VI];
+                 chorda  clavis;
+                 vacuum* valor;
 
         imprimere("\n--- Probans deletio post crescentiam ---\n");
 
@@ -565,7 +595,8 @@ s32 principale (vacuum)
         {
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         /* Deletio post crescentiam */
@@ -592,9 +623,9 @@ s32 principale (vacuum)
      * ================================================= */
 
     {
-        TabulaDispersa* tabula;
-                    i32 i;
-              character buffer[VI];
+         TabulaDispersa* tabula;
+                    i32  i;
+              character  buffer[VI];
 
         imprimere("\n--- Probans distantia_maxima tracking ---\n");
 
@@ -607,7 +638,8 @@ s32 principale (vacuum)
 
             snprintf(buffer, VI, "k%d", i);
             clavis = chorda_ex_literis(buffer, piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)i);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)i);
         }
 
         /* Invarians verus (">= 0" in i32 vana erat): distantia
@@ -659,9 +691,9 @@ s32 principale (vacuum)
 
     {
         TabulaDispersa* tabula;
-        vacuum* valor_recuperatus;
-        i32 valor1 = XLII;
-        i32 valor2 = XCIX;
+                vacuum* valor_recuperatus;
+                   i32  valor1 = XLII;
+                   i32  valor2 = XCIX;
 
         imprimere("\n--- Probans tabula_dispersa_invenire_literis ---\n");
 
@@ -671,28 +703,34 @@ s32 principale (vacuum)
         {
             chorda clavis;
             clavis = chorda_ex_literis("test_key", piscina);
-            tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)valor1);
+            tabula_dispersa_inserere(tabula, clavis,
+                (vacuum*)(longus)valor1);
         }
 
         /* Quaestio cum literis */
-        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key", &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key",
+            &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor1);
 
         /* Quaestio clavis non existentis */
-        CREDO_FALSUM(tabula_dispersa_invenire_literis(tabula, "nonexistent", &valor_recuperatus));
+        CREDO_FALSUM(tabula_dispersa_invenire_literis(tabula,
+            "nonexistent", &valor_recuperatus));
 
         /* Insertio alterius */
         {
             chorda clavis2;
             clavis2 = chorda_ex_literis("another_key", piscina);
-            tabula_dispersa_inserere(tabula, clavis2, (vacuum*)(longus)valor2);
+            tabula_dispersa_inserere(tabula, clavis2,
+                (vacuum*)(longus)valor2);
         }
 
         /* Verificare ambas claves */
-        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key", &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "test_key",
+            &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor1);
 
-        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula, "another_key", &valor_recuperatus));
+        CREDO_VERUM(tabula_dispersa_invenire_literis(tabula,
+            "another_key", &valor_recuperatus));
         CREDO_AEQUALIS_I32((i32)(longus)valor_recuperatus, valor2);
     }
 
@@ -703,22 +741,26 @@ s32 principale (vacuum)
 
     {
         TabulaDispersa* tabula;
-        chorda clavis;
+                chorda  clavis;
 
         imprimere("\n--- Probans tabula_dispersa_continet_literis ---\n");
 
         tabula = tabula_dispersa_creare_chorda(piscina, CXXVIII);
 
         /* Verificare clavis non existens */
-        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula, "missing"));
+        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula,
+            "missing"));
 
         /* Inserere */
         clavis = chorda_ex_literis("present", piscina);
-        tabula_dispersa_inserere(tabula, clavis, (vacuum*)(longus)CXXIII);
+        tabula_dispersa_inserere(tabula, clavis,
+            (vacuum*)(longus)CXXIII);
 
         /* Verificare existit */
-        CREDO_VERUM(tabula_dispersa_continet_literis(tabula, "present"));
-        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula, "absent"));
+        CREDO_VERUM(tabula_dispersa_continet_literis(tabula,
+            "present"));
+        CREDO_FALSUM(tabula_dispersa_continet_literis(tabula,
+            "absent"));
     }
 
 
@@ -736,11 +778,13 @@ s32 principale (vacuum)
         CREDO_NIHIL(tabula_nulla);
 
         /* Creatio cum friatio NIHIL */
-        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII, NIHIL, (TabulaComparatio)chorda_comparare);
+        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII, NIHIL,
+            (TabulaComparatio)chorda_comparare);
         CREDO_NIHIL(tabula_nulla);
 
         /* Creatio cum comparatio NIHIL */
-        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII, tabula_friare_fnv1a, NIHIL);
+        tabula_nulla = tabula_dispersa_creare(piscina, CXXVIII,
+            tabula_friare_fnv1a, NIHIL);
         CREDO_NIHIL(tabula_nulla);
     }
 

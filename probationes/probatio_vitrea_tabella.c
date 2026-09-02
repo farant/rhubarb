@@ -25,24 +25,28 @@
 /* status appicationis - datum usoris tractatorum */
 nomen structura {
     Piscina* piscina;
-    Xar*     tituli;   /* Xar chordarum (copiae in piscina) */
+        Xar* tituli;   /* Xar chordarum (copiae in piscina) */
 } TabellaStatus;
+
 
 /* ==================================================
  * tractatores
  * ================================================== */
 
 interior JsonValor*
-_inscribere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_inscribere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     TabellaStatus* tabella = (TabellaStatus*)datum;
-    JsonValor* fructus = json_objectum_creare(piscina);
-    chorda titulus;
+        JsonValor* fructus = json_objectum_creare(piscina);
+           chorda  titulus;
 
     (vacuum)culpa;
-    titulus.mensura = ZEPHYRUM;
-    titulus.datum = NIHIL;
+    titulus.mensura  = ZEPHYRUM;
+    titulus.datum    = NIHIL;
     si (argumenta != NIHIL)
     {
         titulus = json_ad_chorda(json_objectum_capere(argumenta,
@@ -76,13 +80,16 @@ _inscribere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
 }
 
 interior JsonValor*
-_legere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
-    chorda* culpa)
+_legere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    TabellaStatus* tabella = (TabellaStatus*)datum;
-    JsonValor* fructus = json_objectum_creare(piscina);
-    JsonValor* tituli = json_tabulatum_creare(piscina);
-    i32 i;
+    TabellaStatus* tabella  = (TabellaStatus*)datum;
+        JsonValor* fructus  = json_objectum_creare(piscina);
+        JsonValor* tituli   = json_tabulatum_creare(piscina);
+              i32  i;
 
     (vacuum)argumenta;
     (vacuum)culpa;
@@ -106,35 +113,36 @@ _legere (JsonValor* argumenta, Piscina* piscina, vacuum* datum,
     redde fructus;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina = piscina_generare_dynamicum("tabella_vitrea",
         16777216);
     Piscina* piscina_vocationis = piscina_generare_dynamicum(
         "tabella_vocationes", 4194304);
-    FenestraConfiguratio figura_fenestrae;
-    VitreaConfiguratio figura_vitreae;
-    Fenestra* fenestra;
-    Capsula* capsula;
-    Vitrea* vitrea;
-    Internuntius* inx;
-    TabellaStatus tabella;
+    FenestraConfiguratio  figura_fenestrae;
+      VitreaConfiguratio  figura_vitreae;
+                Fenestra* fenestra;
+                 Capsula* capsula;
+                  Vitrea* vitrea;
+            Internuntius* inx;
+           TabellaStatus  tabella;
 
     si (piscina == NIHIL || piscina_vocationis == NIHIL)
     {
         redde I;
     }
-    tabella.piscina = piscina;
-    tabella.tituli = xar_creare(piscina, (i32)magnitudo(chorda));
+    tabella.piscina  = piscina;
+    tabella.tituli   = xar_creare(piscina, (i32)magnitudo(chorda));
     si (tabella.tituli == NIHIL)
     {
         redde I;
     }
-    figura_fenestrae.titulus = "tabella salutationum";
-    figura_fenestrae.x = CC;
-    figura_fenestrae.y = CC;
-    figura_fenestrae.latitudo = 560;
-    figura_fenestrae.altitudo = 440;
+    figura_fenestrae.titulus   = "tabella salutationum";
+    figura_fenestrae.x         = CC;
+    figura_fenestrae.y         = CC;
+    figura_fenestrae.latitudo  = 560;
+    figura_fenestrae.altitudo  = 440;
     figura_fenestrae.vexilla = FENESTRA_CLAUDIBILIS
         | FENESTRA_MUTABILIS | FENESTRA_CENTRATA;
     fenestra = fenestra_creare(piscina, &figura_fenestrae);
@@ -176,10 +184,10 @@ s32 principale (vacuum)
 
     dum (!fenestra_debet_claudere(fenestra))
     {
-        Eventus eventus;
-        chorda nuntium;
+                   Eventus eventus;
+                    chorda nuntium;
         VitreaNuntiusGenus genus;
-        PiscinaNotatio nota;
+            PiscinaNotatio nota;
 
         fenestra_expectare_eventus(fenestra, CC);
         dum (fenestra_obtinere_eventus(fenestra, &eventus))

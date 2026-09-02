@@ -9,20 +9,21 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* l; i8* m; } u;
 
-    u.l = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.l        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 s32 principale (vacuum)
 {
-    b32 praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_scrinium", 65536);
@@ -33,11 +34,13 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: aperire in memoria + circuitus fundamentalis
      * ======================================================== */
+
     {
-        Scrinium* s;
+                  Scrinium* s;
         ScriniumEnuntiatum* e;
 
         imprimere("\n--- Probans circuitum fundamentalem ---\n");
@@ -84,8 +87,8 @@ s32 principale (vacuum)
             chorda totum = _ch("XXmediumYY");
             chorda sectio;
 
-            sectio.datum = totum.datum + II;
-            sectio.mensura = VI;   /* "medium" */
+            sectio.datum    = totum.datum + II;
+            sectio.mensura  = VI;   /* "medium" */
             e = scrinium_praeparare(s,
                 "INSERT INTO res (id, titulus) VALUES ('res-3', ?)");
             CREDO_NON_NIHIL (e);
@@ -110,9 +113,11 @@ s32 principale (vacuum)
         scrinium_claudere(s);
     }
 
+
     /* ========================================================
      * PROBARE: migrationes solum-appende (idempotentes)
      * ======================================================== */
+
     {
         hic_manens constans character* constans MIGRATIONES_II[] = {
             "CREATE TABLE a (x INTEGER)",
@@ -123,7 +128,7 @@ s32 principale (vacuum)
             "CREATE TABLE b (y INTEGER)",
             "ALTER TABLE a ADD COLUMN z INTEGER"
         };
-        Scrinium* s;
+                  Scrinium* s;
         ScriniumEnuntiatum* e;
 
         imprimere("\n--- Probans migrationes ---\n");
@@ -148,11 +153,13 @@ s32 principale (vacuum)
         scrinium_claudere(s);
     }
 
+
     /* ========================================================
      * PROBARE: FTS5 (vexillum vendicationis probatur)
      * ======================================================== */
+
     {
-        Scrinium* s;
+                  Scrinium* s;
         ScriniumEnuntiatum* e;
 
         imprimere("\n--- Probans FTS5 ---\n");
@@ -190,12 +197,14 @@ s32 principale (vacuum)
         scrinium_claudere(s);
     }
 
+
     /* ========================================================
      * PROBARE: plagula vera + WAL + persistentia
      * ======================================================== */
+
     {
         constans character* via = "build/probatio_scrinium.db";
-        Scrinium* s;
+                  Scrinium* s;
         ScriniumEnuntiatum* e;
 
         imprimere("\n--- Probans persistentiam WAL ---\n");
@@ -241,13 +250,15 @@ s32 principale (vacuum)
         remove("build/probatio_scrinium.db-shm");
     }
 
+
     /* ========================================================
      * PROBARE: ULID (mensura, litterae, monotonia)
      * ======================================================== */
+
     {
         character a[SCRINIUM_ULID_MENSURA];
         character b[SCRINIUM_ULID_MENSURA];
-        integer k;
+          integer k;
 
         imprimere("\n--- Probans ULID ---\n");
 
@@ -267,7 +278,7 @@ s32 principale (vacuum)
         {
             character prior[SCRINIUM_ULID_MENSURA];
             character praesens[SCRINIUM_ULID_MENSURA];
-            b32 omnes_crescentes = VERUM;
+                  b32 omnes_crescentes = VERUM;
 
             scrinium_ulid(prior);
             per (k = ZEPHYRUM; k < 100; k++)

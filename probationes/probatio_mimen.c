@@ -21,7 +21,8 @@ probatio_pro_via(vacuum)
     CREDO_VERUM(strcmp(mimen_pro_via("stilus.css"), "text/css") == 0);
     CREDO_VERUM(strcmp(mimen_pro_via("index.html"), "text/html") == 0);
     CREDO_VERUM(strcmp(mimen_pro_via("imago.jpeg"), "image/jpeg") == 0);
-    CREDO_VERUM(strcmp(mimen_pro_via("via/alta/norma.js"), "text/javascript") == 0);
+    CREDO_VERUM(strcmp(mimen_pro_via("via/alta/norma.js"),
+        "text/javascript") == 0);
 
     /* ignotum / sine extensione / punctum caudale / punctum ante '/' */
     CREDO_VERUM(strcmp(mimen_pro_via("res.xyz"),
@@ -57,16 +58,16 @@ probatio_paritas_chorda(Piscina* piscina)
     per (i = 0; i < VIII; i++)
     {
         chorda via;
-        i32 len = (i32)strlen(probanda[i]);
-        i8* buffer = (i8*)piscina_allocare(piscina, (i64)(len + IV));
+        i32 len     = (i32)strlen(probanda[i]);
+        i8* buffer  = (i8*)piscina_allocare(piscina, (i64)(len + IV));
 
         /* copia SINE NUL - byteae venenatae post finem probant
          * lectionem longitudine limitatam */
         memcpy(buffer, probanda[i], (size_t)len);
         memset(buffer + len, 'X', IV);
 
-        via.datum = buffer;
-        via.mensura = len;
+        via.datum    = buffer;
+        via.mensura  = len;
 
         CREDO_VERUM(strcmp(mimen_pro_via_chorda(via),
                            mimen_pro_via(probanda[i])) == 0);
@@ -84,8 +85,8 @@ probatio_chorda_vacua(vacuum)
 
     printf("--- Probans chorda vacua ---\n");
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
     CREDO_VERUM(strcmp(mimen_pro_via_chorda(vacua),
                        "application/octet-stream") == 0);
 
@@ -98,10 +99,10 @@ probatio_chorda_vacua(vacuum)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

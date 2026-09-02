@@ -57,14 +57,16 @@ probatio_parse_portus(Piscina* piscina)
     printf("--- Probans parse cum portus ---\n");
 
     /* Portus explicitus */
-    successus = uri_parse("https://example.com:8080/path", &uri, piscina);
+    successus = uri_parse("https://example.com:8080/path", &uri,
+        piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.hospes, "example.com"));
     CREDO_VERUM(uri.portus == 8080);
     CREDO_VERUM(chorda_aequalis_literis(uri.via, "/path"));
 
     /* Portus 443 */
-    successus = uri_parse("https://secure.example.com:443", &uri, piscina);
+    successus = uri_parse("https://secure.example.com:443", &uri,
+        piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(uri.portus == 443);
 
@@ -85,13 +87,15 @@ probatio_parse_userinfo(Piscina* piscina)
     printf("--- Probans parse cum userinfo ---\n");
 
     /* User simplex */
-    successus = uri_parse("https://user@example.com/path", &uri, piscina);
+    successus = uri_parse("https://user@example.com/path", &uri,
+        piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.userinfo, "user"));
     CREDO_VERUM(chorda_aequalis_literis(uri.hospes, "example.com"));
 
     /* User et password */
-    successus = uri_parse("https://user:pass@example.com:8080/path", &uri, piscina);
+    successus = uri_parse("https://user:pass@example.com:8080/path",
+        &uri, piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.userinfo, "user:pass"));
     CREDO_VERUM(chorda_aequalis_literis(uri.hospes, "example.com"));
@@ -114,19 +118,23 @@ probatio_parse_quaestio_fragmentum(Piscina* piscina)
     printf("--- Probans parse cum quaestio et fragmentum ---\n");
 
     /* Quaestio */
-    successus = uri_parse("https://example.com/search?q=test&lang=en", &uri, piscina);
+    successus = uri_parse("https://example.com/search?q=test&lang=en",
+        &uri, piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.via, "/search"));
-    CREDO_VERUM(chorda_aequalis_literis(uri.quaestio, "q=test&lang=en"));
+    CREDO_VERUM(chorda_aequalis_literis(uri.quaestio,
+        "q=test&lang=en"));
 
     /* Fragmentum */
-    successus = uri_parse("https://example.com/page#section", &uri, piscina);
+    successus = uri_parse("https://example.com/page#section", &uri,
+        piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.via, "/page"));
     CREDO_VERUM(chorda_aequalis_literis(uri.fragmentum, "section"));
 
     /* Quaestio et fragmentum */
-    successus = uri_parse("https://example.com/page?key=val#anchor", &uri, piscina);
+    successus = uri_parse("https://example.com/page?key=val#anchor",
+        &uri, piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.quaestio, "key=val"));
     CREDO_VERUM(chorda_aequalis_literis(uri.fragmentum, "anchor"));
@@ -232,8 +240,8 @@ probatio_uri_creare(Piscina* piscina)
 interior vacuum
 probatio_construere(Piscina* piscina)
 {
-    Uri*   uri;
-    chorda constructa;
+       Uri* uri;
+    chorda  constructa;
 
     printf("--- Probans uri_construere ---\n");
 
@@ -241,19 +249,22 @@ probatio_construere(Piscina* piscina)
     uri = uri_creare("https://example.com/path", piscina);
     CREDO_NON_NIHIL(uri);
     constructa = uri_construere(uri, piscina);
-    CREDO_VERUM(chorda_aequalis_literis(constructa, "https://example.com/path"));
+    CREDO_VERUM(chorda_aequalis_literis(constructa,
+        "https://example.com/path"));
 
     /* Cum portus */
     uri = uri_creare("https://example.com:8080/api", piscina);
     CREDO_NON_NIHIL(uri);
     constructa = uri_construere(uri, piscina);
-    CREDO_VERUM(chorda_aequalis_literis(constructa, "https://example.com:8080/api"));
+    CREDO_VERUM(chorda_aequalis_literis(constructa,
+        "https://example.com:8080/api"));
 
     /* Cum quaestio */
     uri = uri_creare("https://example.com/search?q=test", piscina);
     CREDO_NON_NIHIL(uri);
     constructa = uri_construere(uri, piscina);
-    CREDO_VERUM(chorda_aequalis_literis(constructa, "https://example.com/search?q=test"));
+    CREDO_VERUM(chorda_aequalis_literis(constructa,
+        "https://example.com/search?q=test"));
 
     printf("\n");
 }
@@ -266,9 +277,9 @@ probatio_construere(Piscina* piscina)
 interior vacuum
 probatio_resolvere(Piscina* piscina)
 {
-    Uri*   base;
-    Uri*   resultatus;
-    chorda relativum;
+       Uri* base;
+       Uri* resultatus;
+    chorda  relativum;
 
     printf("--- Probans uri_resolvere ---\n");
 
@@ -276,21 +287,24 @@ probatio_resolvere(Piscina* piscina)
     CREDO_NON_NIHIL(base);
 
     /* Via absolutum */
-    relativum = chorda_ex_literis("/absolute/path", piscina);
-    resultatus = uri_resolvere(base, relativum, piscina);
+    relativum   = chorda_ex_literis("/absolute/path", piscina);
+    resultatus  = uri_resolvere(base, relativum, piscina);
     CREDO_NON_NIHIL(resultatus);
-    CREDO_VERUM(chorda_aequalis_literis(resultatus->via, "/absolute/path"));
-    CREDO_VERUM(chorda_aequalis_literis(resultatus->hospes, "example.com"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->via,
+        "/absolute/path"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->hospes,
+        "example.com"));
 
     /* Via relativum */
-    relativum = chorda_ex_literis("sibling", piscina);
-    resultatus = uri_resolvere(base, relativum, piscina);
+    relativum   = chorda_ex_literis("sibling", piscina);
+    resultatus  = uri_resolvere(base, relativum, piscina);
     CREDO_NON_NIHIL(resultatus);
-    CREDO_VERUM(chorda_aequalis_literis(resultatus->via, "/foo/sibling"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->via,
+        "/foo/sibling"));
 
     /* Via cum .. */
-    relativum = chorda_ex_literis("../other", piscina);
-    resultatus = uri_resolvere(base, relativum, piscina);
+    relativum   = chorda_ex_literis("../other", piscina);
+    resultatus  = uri_resolvere(base, relativum, piscina);
     CREDO_NON_NIHIL(resultatus);
     CREDO_VERUM(chorda_aequalis_literis(resultatus->via, "/other"));
 
@@ -307,11 +321,16 @@ probatio_portus_default(Piscina* piscina)
 {
     printf("--- Probans uri_portus_default ---\n");
 
-    CREDO_VERUM(uri_portus_default(chorda_ex_literis("https", piscina)) == 443);
-    CREDO_VERUM(uri_portus_default(chorda_ex_literis("http", piscina)) == 80);
-    CREDO_VERUM(uri_portus_default(chorda_ex_literis("ftp", piscina)) == 21);
-    CREDO_VERUM(uri_portus_default(chorda_ex_literis("ssh", piscina)) == 22);
-    CREDO_VERUM(uri_portus_default(chorda_ex_literis("unknown", piscina)) == 0);
+    CREDO_VERUM(uri_portus_default(chorda_ex_literis("https", piscina))
+        == 443);
+    CREDO_VERUM(uri_portus_default(chorda_ex_literis("http", piscina))
+        == 80);
+    CREDO_VERUM(uri_portus_default(chorda_ex_literis("ftp", piscina))
+        == 21);
+    CREDO_VERUM(uri_portus_default(chorda_ex_literis("ssh", piscina))
+        == 22);
+    CREDO_VERUM(uri_portus_default(chorda_ex_literis("unknown",
+        piscina)) == 0);
 
     printf("\n");
 }
@@ -381,7 +400,8 @@ probatio_ipv6(Piscina* piscina)
     CREDO_VERUM(uri.portus == 8080);
 
     /* IPv6 completa */
-    successus = uri_parse("http://[2001:db8::1]:8080/path", &uri, piscina);
+    successus = uri_parse("http://[2001:db8::1]:8080/path", &uri,
+        piscina);
     CREDO_VERUM(successus);
     CREDO_VERUM(chorda_aequalis_literis(uri.hospes, "[2001:db8::1]"));
     CREDO_VERUM(uri.portus == 8080);
@@ -395,10 +415,10 @@ probatio_ipv6(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(vacuum)
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     printf("\n");
     printf("========================================\n");

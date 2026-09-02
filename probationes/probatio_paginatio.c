@@ -16,14 +16,16 @@
 interior Piscina* arena = NIHIL;
 
 interior b32
-_romanus_valet (constans character* s)
+_romanus_valet (
+    constans character* s)
 {
     i32 valor = ZEPHYRUM;
     redde numerus_romanus_legere(chorda_ex_literis(s, arena), &valor);
 }
 
 interior i32
-_romanus_valor (constans character* s)
+_romanus_valor (
+    constans character* s)
 {
     i32 valor = ZEPHYRUM;
     (vacuum)numerus_romanus_legere(chorda_ex_literis(s, arena), &valor);
@@ -31,13 +33,15 @@ _romanus_valor (constans character* s)
 }
 
 interior Paginatio
-_pag (constans character* s)
+_pag (
+    constans character* s)
 {
     redde paginatio_legere(chorda_ex_literis(s, arena));
 }
 
 interior i64
-_clavis (constans character* s)
+_clavis (
+    constans character* s)
 {
     redde paginatio_clavis_chordae(chorda_ex_literis(s, arena));
 }
@@ -54,9 +58,11 @@ s32 principale (vacuum)
     }
     credo_aperire(arena);
 
+
     /* ========================================================
      * PROBARE: numeri Romani - forma subtractiva stricta
      * ======================================================== */
+
     {
         imprimere("\n--- Probans numerus_romanus_legere ---\n");
 
@@ -107,9 +113,11 @@ s32 principale (vacuum)
         CREDO_FALSUM (_romanus_valet("did"));
     }
 
+
     /* ========================================================
      * PROBARE: designatio paginae
      * ======================================================== */
+
     {
         imprimere("\n--- Probans paginatio_legere ---\n");
 
@@ -140,6 +148,7 @@ s32 principale (vacuum)
             (i32)PAGINATIO_NULLA);
     }
 
+
     /* ========================================================
      * PROBARE: ORDO - prooemium ANTE corpus
      *
@@ -147,6 +156,7 @@ s32 principale (vacuum)
      * distinguere non potest, et ordo falsus notam ad locum falsum
      * ligat.
      * ======================================================== */
+
     {
         imprimere("\n--- Probans paginatio_clavis ---\n");
 
@@ -172,6 +182,7 @@ s32 principale (vacuum)
         /* casus non mutat ordinem */
         CREDO_VERUM (_clavis("XII") == _clavis("xii"));
     }
+
 
     /* ========================================================
      * Compendium

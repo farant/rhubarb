@@ -38,9 +38,9 @@ _purgare (vacuum)
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
-    integer portus_int = 0;
-    integer k;
+        b32  praeteritus;
+    integer  portus_int = 0;
+    integer  k;
 
     piscina = piscina_generare_dynamicum("probatio_ct", 16777216);
     si (!piscina)
@@ -64,7 +64,7 @@ s32 principale (vacuum)
 
         si (pf != NIHIL)
         {
-            si (fscanf(pf, "portus %d", &portus_int) == I
+            si (   fscanf(pf, "portus %d", &portus_int) == I
                 && portus_int > 0)
             {
                 fclose(pf);
@@ -79,11 +79,11 @@ s32 principale (vacuum)
     si (portus_int > 0)
     {
         ClientTabularii cliens;
-        chorda culpa;
-        chorda res_id;
+                 chorda culpa;
+                 chorda res_id;
 
-        culpa.mensura = ZEPHYRUM;
-        culpa.datum = NIHIL;
+        culpa.mensura  = ZEPHYRUM;
+        culpa.datum    = NIHIL;
 
         /* I. initium: valores ordinarii */
         imprimere("\n--- I. initium clientis ---\n");
@@ -95,13 +95,14 @@ s32 principale (vacuum)
         /* II. vocare: instrumentum reale trans TCP */
         {
             JsonValor* args = json_objectum_creare(piscina);
-            chorda textus;
+               chorda  textus;
 
             imprimere("\n--- II. vocare (addere) ---\n");
             json_objectum_ponere(args, "genus",
                 json_chorda_creare_literis(piscina, "pipatum"));
             json_objectum_ponere(args, "titulus",
-                json_chorda_creare_literis(piscina, "pipatum clientis"));
+                json_chorda_creare_literis(piscina,
+                "pipatum clientis"));
             json_objectum_ponere(args, "corpus",
                 json_chorda_creare_literis(piscina,
                     "per clientem extractum."));
@@ -140,8 +141,8 @@ s32 principale (vacuum)
 
         /* VI. tractator transmittere: allowlist + actor iniectus */
         {
-            JsonValor* arg = json_objectum_creare(piscina);
-            JsonValor* interiora = json_objectum_creare(piscina);
+            JsonValor* arg        = json_objectum_creare(piscina);
+            JsonValor* interiora  = json_objectum_creare(piscina);
             JsonValor* fructus;
 
             imprimere("\n--- VI. transmittere ---\n");
@@ -157,14 +158,15 @@ s32 principale (vacuum)
 
             /* instrumentum extra allowlist RECUSATUR */
             {
-                JsonValor* pravum = json_objectum_creare(piscina);
-                JsonValor* nihil_arg = json_objectum_creare(piscina);
+                JsonValor* pravum     = json_objectum_creare(piscina);
+                JsonValor* nihil_arg  = json_objectum_creare(piscina);
 
                 json_objectum_ponere(pravum, "instrumentum",
-                    json_chorda_creare_literis(piscina, "delere-omnia"));
+                    json_chorda_creare_literis(piscina,
+                    "delere-omnia"));
                 json_objectum_ponere(pravum, "argumenta", nihil_arg);
-                culpa.mensura = ZEPHYRUM;
-                culpa.datum = NIHIL;
+                culpa.mensura  = ZEPHYRUM;
+                culpa.datum    = NIHIL;
                 fructus = cliens_tabularii_transmittere(pravum,
                     piscina, &cliens, &culpa);
                 CREDO_NIHIL (fructus);
@@ -177,9 +179,9 @@ s32 principale (vacuum)
          * launcher SEMEL excitatur, deinde defectus statim, ne
          * anquisitio IS (II s) tractatorem V s obstruentem ferat. */
         {
-            ClientTabularii mortuus;
-            JsonValor* args;
-            chorda textus;
+            ClientTabularii  mortuus;
+                  JsonValor* args;
+                     chorda  textus;
 
             imprimere("\n--- VII. defectus citus ---\n");
             (vacuum)system("kill $(cat " VIA_PID ") 2>/dev/null");
@@ -188,12 +190,12 @@ s32 principale (vacuum)
             cliens_tabularii_incipere(&mortuus, (i32)portus_int);
             /* launcher falsus: excitatio nihil facit, ergo
              * conatus primus solus moram fert */
-            mortuus.launcher = "true";
-            mortuus.praefixum = "[probatio]";
+            mortuus.launcher   = "true";
+            mortuus.praefixum  = "[probatio]";
 
-            args = json_objectum_creare(piscina);
-            culpa.mensura = ZEPHYRUM;
-            culpa.datum = NIHIL;
+            args           = json_objectum_creare(piscina);
+            culpa.mensura  = ZEPHYRUM;
+            culpa.datum    = NIHIL;
             textus = cliens_tabularii_vocare(&mortuus, piscina,
                 "legere", args, &culpa);
             CREDO_AEQUALIS_I32 (textus.mensura, ZEPHYRUM);
@@ -201,8 +203,8 @@ s32 principale (vacuum)
             CREDO_VERUM (mortuus.genitus);
 
             /* conatus SECUNDUS: statim, sine mora launcheri */
-            culpa.mensura = ZEPHYRUM;
-            culpa.datum = NIHIL;
+            culpa.mensura  = ZEPHYRUM;
+            culpa.datum    = NIHIL;
             textus = cliens_tabularii_vocare(&mortuus, piscina,
                 "legere", args, &culpa);
             CREDO_AEQUALIS_I32 (textus.mensura, ZEPHYRUM);

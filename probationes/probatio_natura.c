@@ -10,6 +10,7 @@
 #include "credo.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Fixturae
  * ================================================== */
@@ -200,17 +201,24 @@ interior constans character* FIXTURA_FINES =
     "</.genus>\n"
     "</natura>\n";
 
+
 /* ==================================================
  * Auxilia
  * ================================================== */
 
-interior i32 vulnera_regulae(NaturaBibliotheca* bib, i32 regula);
-interior i32 monita_regulae(NaturaBibliotheca* bib, i32 regula);
+interior i32
+vulnera_regulae (
+    NaturaBibliotheca* bib,
+                  i32  regula);
+interior i32
+monita_regulae (
+    NaturaBibliotheca* bib,
+                  i32  regula);
 
 interior i32
-vulnera_regulae(
+vulnera_regulae (
     NaturaBibliotheca* bib,
-    i32                regula)
+                  i32  regula)
 {
     i32 i;
     i32 numerus;
@@ -231,9 +239,9 @@ vulnera_regulae(
 }
 
 interior i32
-monita_regulae(
+monita_regulae (
     NaturaBibliotheca* bib,
-    i32                regula)
+                  i32  regula)
 {
     i32 i;
     i32 numerus;
@@ -244,8 +252,8 @@ monita_regulae(
         NaturaDiagnosticum* d;
 
         d = (NaturaDiagnosticum*)xar_obtinere(bib->diagnostica, i);
-        si (d->gradus == NATURA_GRADUS_MONITUM &&
-            d->regula == regula)
+        si (   d->gradus == NATURA_GRADUS_MONITUM
+            && d->regula == regula)
         {
             numerus++;
         }
@@ -257,7 +265,7 @@ monita_regulae(
 s32 principale (vacuum)
 {
              b32  praeteritus;
-        Piscina*  piscina;
+         Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_natura", 65536);
     si (!piscina)
@@ -274,7 +282,7 @@ s32 principale (vacuum)
 
     {
         NaturaBibliotheca* bib;
-        i32                vulnera;
+                      i32  vulnera;
 
         imprimere("\n--- Probans lectionem sanam ---\n");
 
@@ -314,7 +322,7 @@ s32 principale (vacuum)
         {
             NaturaGenus* planta;
             NaturaGenus* vivens;
-            NaturaEns*   rosa_ens;
+              NaturaEns* rosa_ens;
 
             imprimere("\n--- Probans quaestiones ---\n");
 
@@ -351,11 +359,11 @@ s32 principale (vacuum)
                                 ZEPHYRUM);
             {
                 NaturaGenus* rosa_g;
-                i32          j;
-                b32          rosa_inventa;
+                        i32  j;
+                        b32  rosa_inventa;
 
-                rosa_g = natura_genus(bib, "rosa");
-                rosa_inventa = FALSUM;
+                rosa_g        = natura_genus(bib, "rosa");
+                rosa_inventa  = FALSUM;
                 per (j = ZEPHYRUM;
                      j < xar_numerus(planta->liberi); j++)
                 {
@@ -380,7 +388,7 @@ s32 principale (vacuum)
          * ==================================================== */
 
         {
-            NaturaEns*   corona_ens;
+              NaturaEns* corona_ens;
             NaturaGenus* corona;
 
             imprimere("\n--- Probans etiam ---\n");
@@ -410,9 +418,10 @@ s32 principale (vacuum)
          * planabantur. Nunc AMBAE dicuntur - et haec probatio
          * custodit ne altera alteram corrumpat.
          * ==================================================== */
+
         {
-            NaturaEns*   granny_ens;
-            NaturaEns*   malus_d_ens;
+              NaturaEns* granny_ens;
+              NaturaEns* malus_d_ens;
             NaturaGenus* granny;
             NaturaGenus* malus_d;
 
@@ -435,8 +444,8 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)malus_d_ens->discrimen,
                                 (i32)NATURA_ENS_GENUS);
 
-            granny  = (NaturaGenus*)granny_ens->corpus;
-            malus_d = (NaturaGenus*)malus_d_ens->corpus;
+            granny   = (NaturaGenus*)granny_ens->corpus;
+            malus_d  = (NaturaGenus*)malus_d_ens->corpus;
 
             /* parentela: rosa_alba sub rosa, rosa sub planta */
             CREDO_AEQUALIS_PTR (granny->parens, malus_d);
@@ -481,13 +490,13 @@ s32 principale (vacuum)
             NaturaGenus* planta;
             NaturaGenus* vivens;
             NaturaGenus* alienum;
-            Xar*         maiores;
+                    Xar* maiores;
 
             imprimere("\n--- Probans maiores ---\n");
 
-            planta  = natura_genus(bib, "planta");
-            vivens  = natura_genus(bib, "vivens");
-            alienum = natura_genus(bib, "alienum");
+            planta   = natura_genus(bib, "planta");
+            vivens   = natura_genus(bib, "vivens");
+            alienum  = natura_genus(bib, "alienum");
             CREDO_NON_NIHIL (alienum);
 
             maiores = natura_maiores(planta, piscina);
@@ -518,9 +527,9 @@ s32 principale (vacuum)
          * ==================================================== */
 
         {
-            NaturaGenus*            planta;
-            NaturaGenus*            vivens;
-            Xar*                    apparatus;
+                       NaturaGenus* planta;
+                       NaturaGenus* vivens;
+                               Xar* apparatus;
             NaturaApparatusMembrum* membrum;
 
             imprimere("\n--- Probans apparatum ---\n");
@@ -561,12 +570,12 @@ s32 principale (vacuum)
          * ==================================================== */
 
         {
-            NaturaGenus*            rosa;
-            Xar*                    apparatus;
-            i32                     j;
-            i32                     valores;
-            i32                     relata;
-            NaturaGenus*            auctor_valoris;
+            NaturaGenus* rosa;
+                    Xar* apparatus;
+                    i32  j;
+                    i32  valores;
+                    i32  relata;
+            NaturaGenus* auctor_valoris;
 
             imprimere("\n--- Probans determinationes ---\n");
 
@@ -580,9 +589,9 @@ s32 principale (vacuum)
              * planta: altitudo (I); vivens: VI - summa X */
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(apparatus), X);
 
-            valores        = ZEPHYRUM;
-            relata         = ZEPHYRUM;
-            auctor_valoris = NIHIL;
+            valores         = ZEPHYRUM;
+            relata          = ZEPHYRUM;
+            auctor_valoris  = NIHIL;
             per (j = ZEPHYRUM; j < xar_numerus(apparatus); j++)
             {
                 NaturaApparatusMembrum* m;
@@ -615,7 +624,7 @@ s32 principale (vacuum)
 
     {
         NaturaBibliotheca* bib;
-        i32                vulnera;
+                      i32  vulnera;
 
         imprimere("\n--- Probans necessitudines (registratio) ---\n");
 
@@ -664,12 +673,12 @@ s32 principale (vacuum)
         {
             NaturaGenus* actus_g;
             NaturaGenus* subactus_g;
-            Xar*         apparatus;
-            i32          k;
-            i32          termini_numerus;
+                    Xar* apparatus;
+                    i32  k;
+                    i32  termini_numerus;
 
-            actus_g    = natura_genus(bib, "actus_probandus");
-            subactus_g = natura_genus(bib, "subactus_probandus");
+            actus_g     = natura_genus(bib, "actus_probandus");
+            subactus_g  = natura_genus(bib, "subactus_probandus");
             CREDO_NON_NIHIL (actus_g);
             CREDO_NON_NIHIL (subactus_g);
 
@@ -730,16 +739,16 @@ s32 principale (vacuum)
          * recta directione - canis_p INTRA, lapis_p EXCEDIT */
         {
             NaturaNecessitudo* mordet_n;
-            i32                k;
-            i32                numerus_s;
-            i32                intra_n;
-            i32                excedit_n;
+                          i32  k;
+                          i32  numerus_s;
+                          i32  intra_n;
+                          i32  excedit_n;
 
             mordet_n = natura_necessitudo(bib, "mordet");
             CREDO_NON_NIHIL (mordet_n);
-            numerus_s = ZEPHYRUM;
-            intra_n   = ZEPHYRUM;
-            excedit_n = ZEPHYRUM;
+            numerus_s  = ZEPHYRUM;
+            intra_n    = ZEPHYRUM;
+            excedit_n  = ZEPHYRUM;
             per (k = ZEPHYRUM;
                  k < xar_numerus(bib->sedes_ligatae); k++)
             {
@@ -820,16 +829,16 @@ s32 principale (vacuum)
          * verbum ipsum conversum); stat_male sola EXCEDIT */
         {
             NaturaNecessitudo* fundat_n;
-            i32                k;
-            i32                numerus_s;
-            i32                intra_n;
-            i32                excedit_n;
+                          i32  k;
+                          i32  numerus_s;
+                          i32  intra_n;
+                          i32  excedit_n;
 
             fundat_n = natura_necessitudo(bib, "fundat_p");
             CREDO_NON_NIHIL (fundat_n);
-            numerus_s = ZEPHYRUM;
-            intra_n   = ZEPHYRUM;
-            excedit_n = ZEPHYRUM;
+            numerus_s  = ZEPHYRUM;
+            intra_n    = ZEPHYRUM;
+            excedit_n  = ZEPHYRUM;
             per (k = ZEPHYRUM;
                  k < xar_numerus(bib->sedes_ligatae); k++)
             {
@@ -975,7 +984,7 @@ s32 principale (vacuum)
 
     {
         NaturaBibliotheca* bib;
-        i32                vulnera;
+                      i32  vulnera;
 
         imprimere("\n--- Probans regulas contractus ---\n");
 
@@ -1032,8 +1041,8 @@ s32 principale (vacuum)
 
                 d = (NaturaDiagnosticum*)xar_obtinere(
                     bib->diagnostica, j);
-                si (d->gradus == NATURA_GRADUS_MONITUM &&
-                    d->regula == III)
+                si (   d->gradus == NATURA_GRADUS_MONITUM
+                    && d->regula == III)
                 {
                     monita++;
                 }

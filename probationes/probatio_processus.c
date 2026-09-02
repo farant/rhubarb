@@ -21,7 +21,9 @@
 
 /* chordam ut litterae NUL-terminatas in piscina (pro strstr/strcmp) */
 interior constans character*
-_litterae_ex (Piscina* piscina, chorda c)
+_litterae_ex (
+    Piscina* piscina,
+     chorda  c)
 {
     character* l = (character*)piscina_allocare(piscina,
         (memoriae_index)(c.mensura + I));
@@ -41,7 +43,7 @@ _litterae_ex (Piscina* piscina, chorda c)
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_processus",
         8388608);
@@ -55,13 +57,13 @@ s32 principale (vacuum)
     /* I. exsecutio simplex: effusio capta, codex zerus */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- I. exsecutio simplex ---\n");
-        argumenta[0] = "/bin/echo";
-        argumenta[I] = "salve";
-        argumenta[II] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[0]   = "/bin/echo";
+        argumenta[I]   = "salve";
+        argumenta[II]  = NIHIL;
+        r              = processus_exsequi(argumenta, 5000, piscina);
 
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
@@ -76,14 +78,14 @@ s32 principale (vacuum)
      * felicitatem imperii) */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- II. codex exitus non-zerus ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "exit 5";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "exit 5";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 5000, piscina);
 
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 (r.codex_exitus, V);
@@ -93,16 +95,16 @@ s32 principale (vacuum)
     /* III. stdout et stderr SEPARATIM (quod system() nequit) */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
         constans character* ef;
         constans character* er;
 
         imprimere("\n--- III. effusio et erratum separata ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "echo ad-effusionem; echo ad-erratum 1>&2";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "echo ad-effusionem; echo ad-erratum 1>&2";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 5000, piscina);
 
         CREDO_VERUM (r.successus);
         ef = _litterae_ex(piscina, r.effusio);
@@ -119,15 +121,15 @@ s32 principale (vacuum)
      * imperium alienum pararent. */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
         constans character* ef;
 
         imprimere("\n--- IV. argumenta sine concha ---\n");
         argumenta[0] = "/bin/echo";
         argumenta[I] = "spatium 'virgula' \"duplex\" ; rm -rf /\n"
             "linea nova";
-        argumenta[II] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[II]  = NIHIL;
+        r              = processus_exsequi(argumenta, 5000, piscina);
 
         CREDO_VERUM (r.successus);
         ef = _litterae_ex(piscina, r.effusio);
@@ -140,14 +142,14 @@ s32 principale (vacuum)
     /* V. terminus temporis: processus occisus, error nominatus */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- V. mora excessa ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "sleep 10";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 300, piscina);
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "sleep 10";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 300, piscina);
 
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_TEMPUS);
@@ -161,12 +163,12 @@ s32 principale (vacuum)
      * "systemctl in capsa remota abest" idem viderentur. */
     {
         constans character* argumenta[III];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- VI. exec fallitum vs codex CXXVII ---\n");
-        argumenta[0] = "/bin/nullum-tale-binarium-est";
-        argumenta[I] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[0]  = "/bin/nullum-tale-binarium-est";
+        argumenta[I]  = NIHIL;
+        r             = processus_exsequi(argumenta, 5000, piscina);
 
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_EXEC);
@@ -174,13 +176,13 @@ s32 principale (vacuum)
         /* contra: processus VERUS qui 127 reddit */
         {
             constans character* arg2[IV];
-            ProcessusResultus r2;
+             ProcessusResultus  r2;
 
-            arg2[0] = "/bin/sh";
-            arg2[I] = "-c";
-            arg2[II] = "exit 127";
-            arg2[III] = NIHIL;
-            r2 = processus_exsequi(arg2, 5000, piscina);
+            arg2[0]    = "/bin/sh";
+            arg2[I]    = "-c";
+            arg2[II]   = "exit 127";
+            arg2[III]  = NIHIL;
+            r2         = processus_exsequi(arg2, 5000, piscina);
 
             CREDO_VERUM (r2.successus);
             CREDO_AEQUALIS_I32 (r2.codex_exitus, CXXVII);
@@ -191,15 +193,15 @@ s32 principale (vacuum)
     /* VII. effusio maior quam frustum unum (sacculus crescens) */
     {
         constans character* argumenta[IV];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- VII. effusio magna ---\n");
         argumenta[0] = "/bin/sh";
         argumenta[I] = "-c";
         argumenta[II] = "i=0; while [ $i -lt 3000 ]; do "
             "echo linea-longa-ad-sacculum-implendum; i=$((i+1)); done";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 10000, piscina);
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 10000, piscina);
 
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
@@ -210,11 +212,11 @@ s32 principale (vacuum)
     /* VIII. argumenta invalida recusantur clare */
     {
         constans character* argumenta[II];
-        ProcessusResultus r;
+         ProcessusResultus  r;
 
         imprimere("\n--- VIII. argumenta invalida ---\n");
-        argumenta[0] = NIHIL;
-        r = processus_exsequi(argumenta, 5000, piscina);
+        argumenta[0]  = NIHIL;
+        r             = processus_exsequi(argumenta, 5000, piscina);
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_ARGUMENTA);
 
@@ -222,6 +224,7 @@ s32 principale (vacuum)
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_ARGUMENTA);
     }
+
 
     /* ==============================================================
      * IX-XVI. SEMITA INCREMENTALIS
@@ -237,9 +240,9 @@ s32 principale (vacuum)
      * - si ansae dissidere inciperent, hic primum clamaret. */
     {
         constans character* argumenta[IV];
-        ProcessusResultus   obstans;
-        ProcessusResultus   incrementalis;
-        Processus*          p;
+         ProcessusResultus  obstans;
+         ProcessusResultus  incrementalis;
+                 Processus* p;
 
         imprimere("\n--- IX. aequivalentia semitarum ---\n");
         argumenta[0] = "/bin/sh";
@@ -263,9 +266,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (incrementalis.codex_exitus,
             obstans.codex_exitus);
         CREDO_AEQUALIS_I32 (incrementalis.codex_exitus, III);
-        CREDO_VERUM (strcmp(_litterae_ex(piscina, incrementalis.effusio),
+        CREDO_VERUM (strcmp(_litterae_ex(piscina,
+            incrementalis.effusio),
             _litterae_ex(piscina, obstans.effusio)) == ZEPHYRUM);
-        CREDO_VERUM (strcmp(_litterae_ex(piscina, incrementalis.erratum),
+        CREDO_VERUM (strcmp(_litterae_ex(piscina,
+            incrementalis.erratum),
             _litterae_ex(piscina, obstans.erratum)) == ZEPHYRUM);
     }
 
@@ -280,15 +285,15 @@ s32 principale (vacuum)
      * fluctuant. */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 pulsus = ZEPHYRUM;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  pulsus = ZEPHYRUM;
 
         imprimere("\n--- X. pulsus non obstat ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "sleep 0.3";
-        argumenta[III] = NIHIL;
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "sleep 0.3";
+        argumenta[III]  = NIHIL;
 
         p = processus_incipere(argumenta, 10000, piscina);
         CREDO_NON_NIHIL (p);
@@ -314,15 +319,15 @@ s32 principale (vacuum)
      * tardus processum aeternum parere non debet */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 pulsus = ZEPHYRUM;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  pulsus = ZEPHYRUM;
 
         imprimere("\n--- XI. terminus in modo pulsante ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "sleep 10";
-        argumenta[III] = NIHIL;
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "sleep 10";
+        argumenta[III]  = NIHIL;
 
         p = processus_incipere(argumenta, 300, piscina);
         CREDO_NON_NIHIL (p);
@@ -344,15 +349,15 @@ s32 principale (vacuum)
     /* XII. abrumpere: pyxis 'siste' faciei */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 i;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  i;
 
         imprimere("\n--- XII. abrumpere ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "sleep 10";
-        argumenta[III] = NIHIL;
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "sleep 10";
+        argumenta[III]  = NIHIL;
 
         p = processus_incipere(argumenta, 30000, piscina);
         CREDO_NON_NIHIL (p);
@@ -376,8 +381,8 @@ s32 principale (vacuum)
      * UNAM tractat, non duas */
     {
         constans character* argumenta[II];
-        Processus*          p;
-        ProcessusResultus   r;
+                 Processus* p;
+         ProcessusResultus  r;
 
         imprimere("\n--- XIII. manubrium fractum ---\n");
         argumenta[0] = NIHIL;
@@ -396,14 +401,14 @@ s32 principale (vacuum)
     /* XIV. metere sine pulsando (commoditas) + idempotentia */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   prima;
-        ProcessusResultus   secunda;
+                 Processus* p;
+         ProcessusResultus  prima;
+         ProcessusResultus  secunda;
 
         imprimere("\n--- XIV. metere sine pulsu, bis ---\n");
-        argumenta[0] = "/bin/echo";
-        argumenta[I] = "salve";
-        argumenta[II] = NIHIL;
+        argumenta[0]   = "/bin/echo";
+        argumenta[I]   = "salve";
+        argumenta[II]  = NIHIL;
 
         p = processus_incipere(argumenta, 5000, piscina);
         CREDO_NON_NIHIL (p);
@@ -425,9 +430,9 @@ s32 principale (vacuum)
      * crescit, nihil amittitur */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 pulsus = ZEPHYRUM;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  pulsus = ZEPHYRUM;
 
         imprimere("\n--- XV. effusio magna per pulsus ---\n");
         argumenta[0] = "/bin/sh";
@@ -458,8 +463,8 @@ s32 principale (vacuum)
      * servatur */
     {
         constans character* argumenta[III];
-        Processus*          p;
-        ProcessusResultus   r;
+                 Processus* p;
+         ProcessusResultus  r;
 
         imprimere("\n--- XVI. exec fallitum incrementaliter ---\n");
         argumenta[0] = "/bin/nullum-tale-binarium-est";
@@ -476,6 +481,7 @@ s32 principale (vacuum)
         CREDO_VERUM (r.error == PROCESSUS_ERROR_EXEC);
     }
 
+
     /* XVII. NEPOS FISTULAM TENENS - infans abit, nepos vivit.
      *
      * CASUS VERUS QUI HOC REVELAVIT: ssh cum 'ControlPersist'
@@ -489,16 +495,17 @@ s32 principale (vacuum)
      * scribit, nepotem generat qui fistulam hereditat, et statim
      * abit. Ante emendationem haec probatio XXX secunda penderet.
      * ============================================================ */
+
     {
         constans character* argumenta[IV];
-        ProcessusResultus   r;
+         ProcessusResultus  r;
 
         imprimere("\n--- XVII. nepos fistulam tenens ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "echo salve; sleep 30 &";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 10000, piscina);
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "echo salve; sleep 30 &";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 10000, piscina);
 
         CREDO_VERUM (r.successus);
         CREDO_AEQUALIS_I32 (r.codex_exitus, ZEPHYRUM);
@@ -514,15 +521,15 @@ s32 principale (vacuum)
     /* XVIII. idem per semitam INCREMENTALEM */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 pulsus = ZEPHYRUM;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  pulsus = ZEPHYRUM;
 
         imprimere("\n--- XVIII. nepos, semita incrementalis ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "echo salve; sleep 30 &";
-        argumenta[III] = NIHIL;
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "echo salve; sleep 30 &";
+        argumenta[III]  = NIHIL;
 
         p = processus_incipere(argumenta, 10000, piscina);
         CREDO_NON_NIHIL (p);
@@ -557,6 +564,7 @@ s32 principale (vacuum)
         CREDO_FALSUM (processus_transformare(NIHIL));
     }
 
+
     /* XX. TERMINUS SINE FISTULIS - infans fistulas claudit sed
      * vivere pergit. Imago speculi XVII: illic fistulae apertae
      * infante mortuo, hic fistulae CLAUSAE infante VIVO.
@@ -567,16 +575,17 @@ s32 principale (vacuum)
      * quae fistulis clausis ante eam redit, et waitpid obstans
      * finalis terminum nullum habebat.
      * ============================================================ */
+
     {
         constans character* argumenta[IV];
-        ProcessusResultus   r;
+         ProcessusResultus  r;
 
         imprimere("\n--- XX. terminus sine fistulis ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "exec >&- 2>&-; sleep 3";
-        argumenta[III] = NIHIL;
-        r = processus_exsequi(argumenta, 500, piscina);
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "exec >&- 2>&-; sleep 3";
+        argumenta[III]  = NIHIL;
+        r               = processus_exsequi(argumenta, 500, piscina);
 
         CREDO_FALSUM (r.successus);
         CREDO_VERUM (r.error == PROCESSUS_ERROR_TEMPUS);
@@ -591,16 +600,16 @@ s32 principale (vacuum)
      * fistulis clausis numquam attingebatur) */
     {
         constans character* argumenta[IV];
-        Processus*          p;
-        ProcessusResultus   r;
-        i32                 pulsus = ZEPHYRUM;
+                 Processus* p;
+         ProcessusResultus  r;
+                       i32  pulsus = ZEPHYRUM;
 
         imprimere("\n--- XXI. terminus sine fistulis,"
             " incrementalis ---\n");
-        argumenta[0] = "/bin/sh";
-        argumenta[I] = "-c";
-        argumenta[II] = "exec >&- 2>&-; sleep 3";
-        argumenta[III] = NIHIL;
+        argumenta[0]    = "/bin/sh";
+        argumenta[I]    = "-c";
+        argumenta[II]   = "exec >&- 2>&-; sleep 3";
+        argumenta[III]  = NIHIL;
 
         p = processus_incipere(argumenta, 500, piscina);
         CREDO_NON_NIHIL (p);

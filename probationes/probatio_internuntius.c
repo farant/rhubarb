@@ -14,24 +14,27 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * missor memoriae
  * ================================================== */
 
 nomen structura {
     Piscina* piscina;
-    Xar*     capta;   /* chorda (valore) - copiae */
+        Xar* capta;   /* chorda (valore) - copiae */
 } MissorMemoriae;
 
 interior vacuum
-_missor_memoriae (vacuum* datum, chorda textus)
+_missor_memoriae (
+    vacuum* datum,
+    chorda  textus)
 {
     MissorMemoriae* m = (MissorMemoriae*)datum;
-    chorda copia;
-    chorda* locus;
+            chorda  copia;
+            chorda* locus;
 
-    copia.mensura = textus.mensura;
-    copia.datum = NIHIL;
+    copia.mensura  = textus.mensura;
+    copia.datum    = NIHIL;
     si (textus.mensura > ZEPHYRUM)
     {
         copia.datum = (i8*)piscina_allocare(m->piscina,
@@ -55,10 +58,11 @@ _missor_memoriae (vacuum* datum, chorda textus)
 
 /* captum ultimum ut litterae NUL-terminatae ("" si nullum) */
 interior constans character*
-_ultimum (MissorMemoriae* m)
+_ultimum (
+    MissorMemoriae* m)
 {
-    i32 n = xar_numerus(m->capta);
-    chorda* c;
+          i32  n = xar_numerus(m->capta);
+       chorda* c;
     character* l;
 
     si (n == ZEPHYRUM)
@@ -80,17 +84,21 @@ _ultimum (MissorMemoriae* m)
     redde l;
 }
 
+
 /* ==================================================
  * tractatores probationis
  * ================================================== */
 
 /* resonans: fructus = {"vox": argumenta.vox} */
 interior JsonValor*
-_tractator_resonare (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_tractator_resonare (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    JsonValor* fructus = json_objectum_creare(piscina);
-    JsonValor* vox = NIHIL;
+    JsonValor* fructus  = json_objectum_creare(piscina);
+    JsonValor* vox      = NIHIL;
 
     (vacuum)datum;
     (vacuum)culpa;
@@ -105,13 +113,16 @@ _tractator_resonare (JsonValor* argumenta, Piscina* piscina,
 
 /* additor cum dato usoris (basis addenda - probat datum) */
 interior JsonValor*
-_tractator_addere (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_tractator_addere (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
-    s64* basis = (s64*)datum;
-    s64 a = ZEPHYRUM;
-    s64 b = ZEPHYRUM;
-    JsonValor* fructus = json_objectum_creare(piscina);
+          s64* basis    = (s64*)datum;
+          s64  a        = ZEPHYRUM;
+          s64  b        = ZEPHYRUM;
+    JsonValor* fructus  = json_objectum_creare(piscina);
 
     (vacuum)culpa;
     si (argumenta != NIHIL)
@@ -126,8 +137,11 @@ _tractator_addere (JsonValor* argumenta, Piscina* piscina,
 
 /* culpans: semper recusat */
 interior JsonValor*
-_tractator_culpans (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_tractator_culpans (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     (vacuum)argumenta;
     (vacuum)datum;
@@ -137,8 +151,11 @@ _tractator_culpans (JsonValor* argumenta, Piscina* piscina,
 
 /* tacens: NIHIL sine culpa -> fructus null */
 interior JsonValor*
-_tractator_tacens (JsonValor* argumenta, Piscina* piscina,
-    vacuum* datum, chorda* culpa)
+_tractator_tacens (
+    JsonValor* argumenta,
+      Piscina* piscina,
+       vacuum* datum,
+       chorda* culpa)
 {
     (vacuum)argumenta;
     (vacuum)piscina;
@@ -147,24 +164,29 @@ _tractator_tacens (JsonValor* argumenta, Piscina* piscina,
     redde NIHIL;
 }
 
+
 /* ==================================================
  * auxilia
  * ================================================== */
 
 interior vacuum
-_tractare_literis (Internuntius* inx, constans character* nuntium,
-    Piscina* pv)
+_tractare_literis (
+          Internuntius* inx,
+    constans character* nuntium,
+               Piscina* pv)
 {
     internuntius_tractare(inx, chorda_ex_literis(nuntium, pv), pv);
 }
 
 /* effugator: fons -> exspectatum, byte-exactum */
 interior b32
-_effugium_aequale (Piscina* piscina, constans character* fons,
+_effugium_aequale (
+               Piscina* piscina,
+    constans character* fons,
     constans character* exspectatum)
 {
-    chorda f = chorda_ex_literis(fons, piscina);
-    chorda e = internuntius_effugere_js(f, piscina);
+            chorda f = chorda_ex_literis(fons, piscina);
+            chorda e = internuntius_effugere_js(f, piscina);
     memoriae_index m = strlen(exspectatum);
 
     redde (memoriae_index)e.mensura == m
@@ -174,12 +196,12 @@ _effugium_aequale (Piscina* piscina, constans character* fons,
 
 s32 principale (vacuum)
 {
-    Piscina* piscina;
-    Piscina* pv;
-    MissorMemoriae missor;
-    Internuntius* inx;
-    s64 basis = C;   /* 100 - datum usoris */
-    b32 praeteritus;
+               Piscina* piscina;
+               Piscina* pv;
+        MissorMemoriae  missor;
+          Internuntius* inx;
+                   s64  basis = C;   /* 100 - datum usoris */
+                   b32  praeteritus;
     constans character* r;
 
     piscina = piscina_generare_dynamicum("probatio_inx",
@@ -191,8 +213,8 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
-    missor.piscina = piscina;
-    missor.capta = xar_creare(piscina, (i32)magnitudo(chorda));
+    missor.piscina  = piscina;
+    missor.capta    = xar_creare(piscina, (i32)magnitudo(chorda));
 
     /* I. creare + registrum */
     inx = internuntius_creare(piscina, _missor_memoriae, &missor);

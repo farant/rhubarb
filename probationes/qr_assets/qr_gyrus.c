@@ -20,7 +20,10 @@
 #define QUIES IV
 
 interior vacuum
-_octetos_scribere (FILE* f, i32 v, i32 n)
+_octetos_scribere (
+    FILE* f,
+     i32  v,
+     i32  n)
 {
     i32 i;
 
@@ -31,11 +34,13 @@ _octetos_scribere (FILE* f, i32 v, i32 n)
 }
 
 s32
-principale (integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* p = piscina_generare_dynamicum("qr_gyrus", 4194304);
-    chorda   datum;
-    QR       qr;
+     chorda  datum;
+         QR  qr;
     FILE*    f;
     i32      lat, pad;
     s32      x, y;
@@ -48,8 +53,8 @@ principale (integer argc, character** argv)
         imprimere("FRACTUM: piscina\n");
         redde I;
     }
-    datum = chorda_ex_literis(textus, p);
-    qr = qr_generare(datum, (QREcc)gradus, p);
+    datum  = chorda_ex_literis(textus, p);
+    qr     = qr_generare(datum, (QREcc)gradus, p);
     si (!qr.successus)
     {
         imprimere("FRACTUM: generatio\n");

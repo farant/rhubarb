@@ -11,10 +11,14 @@
 
 /* Auxiliaris: obtinere definitio ex radice per indicem */
 hic_manens NuntiumSchemaNodus*
-_definitio_obtinere(NuntiumSchemaNodus* radix, i32 index)
+_definitio_obtinere (
+    NuntiumSchemaNodus* radix,
+                   i32  index)
 {
     NuntiumSchemaNodus** locus;
-    si (!radix || radix->genus != NUNTIUM_SCHEMA_NODUS_SCHEMA) redde NIHIL;
+    si (   !radix
+        || radix->genus
+                                                                                                                       != NUNTIUM_SCHEMA_NODUS_SCHEMA) redde NIHIL;
     locus = (NuntiumSchemaNodus**)xar_obtinere(
         radix->datum.schema.definitiones, index);
     si (!locus) redde NIHIL;
@@ -23,10 +27,14 @@ _definitio_obtinere(NuntiumSchemaNodus* radix, i32 index)
 
 /* Auxiliaris: obtinere campus ex definitio per indicem */
 hic_manens NuntiumSchemaNodus*
-_campus_obtinere(NuntiumSchemaNodus* def, i32 index)
+_campus_obtinere (
+    NuntiumSchemaNodus* def,
+                   i32  index)
 {
     NuntiumSchemaNodus** locus;
-    si (!def || def->genus != NUNTIUM_SCHEMA_NODUS_DEFINITIO) redde NIHIL;
+    si (   !def
+        || def->genus
+                                                                                                                       != NUNTIUM_SCHEMA_NODUS_DEFINITIO) redde NIHIL;
     locus = (NuntiumSchemaNodus**)xar_obtinere(
         def->datum.definitio.campi, index);
     si (!locus) redde NIHIL;
@@ -35,10 +43,11 @@ _campus_obtinere(NuntiumSchemaNodus* def, i32 index)
 
 s32 principale(vacuum)
 {
-    Piscina*             piscina;
-    NuntiumSchemaNodus*  radix;
+               Piscina* piscina;
+    NuntiumSchemaNodus* radix;
 
-    piscina = piscina_generare_dynamicum("probatio_nuntium_schema", MMMMXCVI);
+    piscina = piscina_generare_dynamicum("probatio_nuntium_schema",
+        MMMMXCVI);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -46,9 +55,11 @@ s32 principale(vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE I: Nuntium simplex cum uno campo
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona { textus identificator = 1; }";
@@ -59,28 +70,37 @@ s32 principale(vacuum)
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
-        CREDO_AEQUALIS_S32((s32)radix->genus, (s32)NUNTIUM_SCHEMA_NODUS_SCHEMA);
-        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones), I);
+        CREDO_AEQUALIS_S32((s32)radix->genus,
+            (s32)NUNTIUM_SCHEMA_NODUS_SCHEMA);
+        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones),
+            I);
 
         def = _definitio_obtinere(radix, ZEPHYRUM);
         CREDO_NON_NIHIL(def);
-        CREDO_AEQUALIS_S32((s32)def->genus, (s32)NUNTIUM_SCHEMA_NODUS_DEFINITIO);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus, "Persona");
+        CREDO_AEQUALIS_S32((s32)def->genus,
+            (s32)NUNTIUM_SCHEMA_NODUS_DEFINITIO);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus,
+            "Persona");
         CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi), I);
 
         campus = _campus_obtinere(def, ZEPHYRUM);
         CREDO_NON_NIHIL(campus);
-        CREDO_AEQUALIS_S32((s32)campus->genus, (s32)NUNTIUM_SCHEMA_NODUS_CAMPUS);
-        CREDO_AEQUALIS_S32((s32)campus->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_TEXTUS);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*campus->datum.campus.titulus, "identificator");
+        CREDO_AEQUALIS_S32((s32)campus->genus,
+            (s32)NUNTIUM_SCHEMA_NODUS_CAMPUS);
+        CREDO_AEQUALIS_S32((s32)campus->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_TEXTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*campus->datum.campus.titulus,
+            "identificator");
         CREDO_AEQUALIS_S32(campus->datum.campus.tag, I);
 
         imprimere("  nuntium Persona { textus identificator = 1; } -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE II: Nuntium cum campis multiplicibus
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -100,30 +120,40 @@ s32 principale(vacuum)
 
         def = _definitio_obtinere(radix, ZEPHYRUM);
         CREDO_NON_NIHIL(def);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus, "Persona");
-        CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus,
+            "Persona");
+        CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi),
+            III);
 
         c0 = _campus_obtinere(def, ZEPHYRUM);
-        CREDO_AEQUALIS_S32((s32)c0->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_TEXTUS);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c0->datum.campus.titulus, "identificator");
+        CREDO_AEQUALIS_S32((s32)c0->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_TEXTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c0->datum.campus.titulus,
+            "identificator");
         CREDO_AEQUALIS_S32(c0->datum.campus.tag, I);
 
         c1 = _campus_obtinere(def, I);
-        CREDO_AEQUALIS_S32((s32)c1->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_VARINT);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c1->datum.campus.titulus, "aetas");
+        CREDO_AEQUALIS_S32((s32)c1->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_VARINT);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c1->datum.campus.titulus,
+            "aetas");
         CREDO_AEQUALIS_S32(c1->datum.campus.tag, II);
 
         c2 = _campus_obtinere(def, II);
-        CREDO_AEQUALIS_S32((s32)c2->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_TEXTUS);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c2->datum.campus.titulus, "titulus_campi");
+        CREDO_AEQUALIS_S32((s32)c2->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_TEXTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c2->datum.campus.titulus,
+            "titulus_campi");
         CREDO_AEQUALIS_S32(c2->datum.campus.tag, III);
 
         imprimere("  3 campi: textus, varint, textus -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE III: Nuntia multiplicia
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona {"
@@ -141,24 +171,31 @@ s32 principale(vacuum)
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
-        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones), II);
+        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones),
+            II);
 
         def0 = _definitio_obtinere(radix, ZEPHYRUM);
         CREDO_NON_NIHIL(def0);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def0->datum.definitio.titulus, "Persona");
-        CREDO_AEQUALIS_I32(xar_numerus(def0->datum.definitio.campi), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def0->datum.definitio.titulus,
+            "Persona");
+        CREDO_AEQUALIS_I32(xar_numerus(def0->datum.definitio.campi),
+            II);
 
         def1 = _definitio_obtinere(radix, I);
         CREDO_NON_NIHIL(def1);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def1->datum.definitio.titulus, "Ordo");
-        CREDO_AEQUALIS_I32(xar_numerus(def1->datum.definitio.campi), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def1->datum.definitio.titulus,
+            "Ordo");
+        CREDO_AEQUALIS_I32(xar_numerus(def1->datum.definitio.campi),
+            II);
 
         imprimere("  Persona + Ordo -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE IV: Omnia VIII genera camporum
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Omnia {"
@@ -181,46 +218,57 @@ s32 principale(vacuum)
 
         def = _definitio_obtinere(radix, ZEPHYRUM);
         CREDO_NON_NIHIL(def);
-        CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi), VIII);
+        CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi),
+            VIII);
 
         c = _campus_obtinere(def, ZEPHYRUM);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_TEXTUS);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_TEXTUS);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, I);
 
         c = _campus_obtinere(def, I);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_VARINT);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_VARINT);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, II);
 
         c = _campus_obtinere(def, II);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_SVARINT);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_SVARINT);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, III);
 
         c = _campus_obtinere(def, III);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_FIXUM32);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_FIXUM32);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, IV);
 
         c = _campus_obtinere(def, IV);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_FIXUM64);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_FIXUM64);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, V);
 
         c = _campus_obtinere(def, V);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_BYTES);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_BYTES);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, VI);
 
         c = _campus_obtinere(def, VI);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_F32);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_F32);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, VII);
 
         c = _campus_obtinere(def, VII);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_F64);
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_F64);
         CREDO_AEQUALIS_S32(c->datum.campus.tag, VIII);
 
         imprimere("  textus, varint, svarint, fixum32, fixum64, bytes, f32, f64 -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE V: Tag numeri maiores
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Magnum {"
@@ -248,9 +296,11 @@ s32 principale(vacuum)
         imprimere("  tag 100, 255 -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VI: Input vacuum -> NIHIL
      * ======================================================== */
+
     {
         imprimere("\n--- Probans VI: input vacuum -> NIHIL ---\n");
 
@@ -263,9 +313,11 @@ s32 principale(vacuum)
         imprimere("  vacuum -> NIHIL -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VII: Error — semicolon deficiens
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona { textus id = 1 }";
@@ -278,9 +330,11 @@ s32 principale(vacuum)
         imprimere("  semicolon deficiens -> NIHIL -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE VIII: Error — character ignotus
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Persona { textus id @ 1; }";
@@ -293,9 +347,11 @@ s32 principale(vacuum)
         imprimere("  character ignotus -> NIHIL -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE IX: Spatium copiosum et lineae novae
      * ======================================================== */
+
     {
         constans character* fons =
             "\n\n  nuntium  Persona  {\n"
@@ -311,15 +367,18 @@ s32 principale(vacuum)
 
         def = _definitio_obtinere(radix, ZEPHYRUM);
         CREDO_NON_NIHIL(def);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus, "Persona");
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def->datum.definitio.titulus,
+            "Persona");
         CREDO_AEQUALIS_I32(xar_numerus(def->datum.definitio.campi), II);
 
         imprimere("  spatium copiosum -> OK\n");
     }
 
+
     /* ========================================================
      * PROBARE X: Tria nuntia (end-to-end complexus)
      * ======================================================== */
+
     {
         constans character* fons =
             "nuntium Eventum {"
@@ -346,43 +405,58 @@ s32 principale(vacuum)
 
         radix = nuntium_schema_legere(piscina, fons, (s32)strlen(fons));
         CREDO_NON_NIHIL(radix);
-        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones), III);
+        CREDO_AEQUALIS_I32(xar_numerus(radix->datum.schema.definitiones),
+            III);
 
         /* Eventum: 4 campi */
         def0 = _definitio_obtinere(radix, ZEPHYRUM);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def0->datum.definitio.titulus, "Eventum");
-        CREDO_AEQUALIS_I32(xar_numerus(def0->datum.definitio.campi), IV);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def0->datum.definitio.titulus,
+            "Eventum");
+        CREDO_AEQUALIS_I32(xar_numerus(def0->datum.definitio.campi),
+            IV);
 
         c = _campus_obtinere(def0, ZEPHYRUM);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_VARINT);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus, "genus_eventum");
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_VARINT);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus,
+            "genus_eventum");
 
         c = _campus_obtinere(def0, III);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_BYTES);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus, "datum_binarium");
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_BYTES);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus,
+            "datum_binarium");
         CREDO_AEQUALIS_S32(c->datum.campus.tag, IV);
 
         /* Persona: 3 campi */
         def1 = _definitio_obtinere(radix, I);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def1->datum.definitio.titulus, "Persona");
-        CREDO_AEQUALIS_I32(xar_numerus(def1->datum.definitio.campi), III);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def1->datum.definitio.titulus,
+            "Persona");
+        CREDO_AEQUALIS_I32(xar_numerus(def1->datum.definitio.campi),
+            III);
 
         /* Ordo: 2 campi */
         def2 = _definitio_obtinere(radix, II);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*def2->datum.definitio.titulus, "Ordo");
-        CREDO_AEQUALIS_I32(xar_numerus(def2->datum.definitio.campi), II);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*def2->datum.definitio.titulus,
+            "Ordo");
+        CREDO_AEQUALIS_I32(xar_numerus(def2->datum.definitio.campi),
+            II);
 
         c = _campus_obtinere(def2, I);
-        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus, (s32)NUNTIUM_CAMPUS_FIXUM64);
-        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus, "pretium");
+        CREDO_AEQUALIS_S32((s32)c->datum.campus.campus_genus,
+            (s32)NUNTIUM_CAMPUS_FIXUM64);
+        CREDO_CHORDA_AEQUALIS_LITERIS(*c->datum.campus.titulus,
+            "pretium");
         CREDO_AEQUALIS_S32(c->datum.campus.tag, II);
 
         imprimere("  Eventum(4) + Persona(3) + Ordo(2) -> OK\n");
     }
 
+
     /* ========================================================
      * Compendium
      * ======================================================== */
+
     imprimere("\n");
     credo_imprimere_compendium();
 

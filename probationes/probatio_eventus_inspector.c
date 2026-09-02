@@ -24,7 +24,8 @@ constans character* EVENTUS_NOMINA[] = {
 };
 
 interior constans character*
-_eventus_nomen(EventusGenus genus)
+_eventus_nomen (
+    EventusGenus genus)
 {
     /* Nota: EventusGenus incipit ab I, non ZEPHYRUM */
     si (genus >= I && genus <= VIII)
@@ -35,7 +36,8 @@ _eventus_nomen(EventusGenus genus)
 }
 
 interior vacuum
-_imprimere_chorda(chorda* c)
+_imprimere_chorda (
+    chorda* c)
 {
     i32 i;
     si (c == NIHIL || c->datum == NIHIL)
@@ -54,15 +56,17 @@ _imprimere_chorda(chorda* c)
 }
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*             piscina;
-    Persistentia*        persistentia;
+                Piscina* piscina;
+           Persistentia* persistentia;
     EntitasRepositorium* repo;
-    Xar*                 eventus;
-    i32                  i;
-    i32                  numerus;
-    constans character*  via_log;
+                    Xar* eventus;
+                    i32  i;
+                    i32  numerus;
+     constans character* via_log;
 
     /* Statisticae */
     i32 counts[VIII];
