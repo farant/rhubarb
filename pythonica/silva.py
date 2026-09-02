@@ -460,6 +460,8 @@ PORTAE = {
     'differre': (['./silva/differre_fumus.sh'],
                  r'fumus differre: (sanum|FRACTUM)'),
     'unci': (['./tools/unci-git/fumus.sh'], r'fumus unci: (sanum|FRACTUM)'),
+    'mensor-suitae': (['./tools/mensor_suitae_fumus.sh'],
+                      r'fumus mensor_suitae: (sanum|FRACTUM)'),
     'amalgamata': (['./tools/amalgamata_probare.sh'],
                    r'amalgamata: \d+ compilata, \d+ fracta'),
 }

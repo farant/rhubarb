@@ -114,7 +114,9 @@ function el(genus, attr, intra) {
 /* Sessiones ordine temporis; clavis sessionis tempore praefixa est */
 function sessionesOrdinatae(d) {
   var claves = {};
-  d.mensurae.forEach(function (m) { claves[m.sessio] = true; });
+  d.mensurae.forEach(function (m) {
+    if (m.titulus === T("suita.tempus.totum")) { claves[m.sessio] = true; }
+  });
   return Object.keys(claves).sort();
 }
 
@@ -147,8 +149,28 @@ var sessioComparanda = null;
    nunc in quaque pyxide apparet, et hoc vexillum reliqua abscondit. */
 var soliPleni = false;
 
+/* SUITA electa per PRAEFIXUM titulorum: "" = radix, "silva." = silva.
+   Cursores omnes titulos eadem forma scribunt, praefixo solo
+   distincti (tools/mensor_suitae.sh, 2026-09-02). Sessio unius
+   suitae est; sessiones alienae absconduntur - aliter cursus silvae
+   (LIII probationes, ~XIII min) in linea radicis ut 'partialis'
+   appareret et tendentiam falsaret. */
+var praefixum = "";
+function T(t) { return praefixum + t; }
+function suitae(d) {
+  var s = {};
+  var cauda = "suita.tempus.totum";
+  d.mensurae.forEach(function (m) {
+    var i = m.titulus.length - cauda.length;
+    if (i >= 0 && m.titulus.substring(i) === cauda) {
+      s[m.titulus.substring(0, i)] = true;
+    }
+  });
+  return Object.keys(s).sort();
+}
+
 function probationesQuot(d, sessio) {
-  var v = valorem(d, sessio, "suita.probationes.totae");
+  var v = valorem(d, sessio, T("suita.probationes.totae"));
   return (v === null) ? 0 : v;
 }
 
@@ -167,7 +189,7 @@ function temporaCursus(d, sessio) {
   var t = {};
   d.mensurae.forEach(function (m) {
     if (m.sessio === sessio
-        && m.titulus.indexOf("probatio.cursus.") === 0) {
+        && m.titulus.indexOf(T("probatio.cursus.")) === 0) {
       t[m.titulus] = m.valor;
     }
   });
@@ -273,8 +295,8 @@ function arborem(d, sessio) {
 }
 
 function brevius(t) {
-  return t.replace("suita.tempus.", "").replace("probatio.cursus.", "")
-          .replace("probatio.compilatio.", "").replace("probatio_", "");
+  return t.replace(T("suita.tempus."), "").replace(T("probatio.cursus."), "")
+          .replace(T("probatio.compilatio."), "").replace("probatio_", "");
 }
 
 var TINCTURAE = ["#7aa2f7", "#e0af68", "#9ece6a", "#bb9af7", "#7dcfff"];
@@ -354,6 +376,12 @@ function reddere() {
     return;
   }
 
+  /* praefixum validatur contra suitas praesentes (volumen sine
+     radice, silva sola: silva eligitur) */
+  var omnesSuitae = suitae(d);
+  if (omnesSuitae.indexOf(praefixum) < 0 && omnesSuitae.length > 0) {
+    praefixum = omnesSuitae[0];
+  }
   var omnesSessiones = sessionesOrdinatae(d);
   var maxProb = 0;
   omnesSessiones.forEach(function (k) {
@@ -386,12 +414,29 @@ function reddere() {
     (s0 ? " · " + s0.systema + " " + s0.architectura +
           " · machina " + s0.machina.substring(0, 8) : "");
 
+  /* ---- suitae eligendae (cum plures) ---- */
+  if (omnesSuitae.length > 1) {
+    var su = el("div", { "class": "tabula", id: "tabula-suitae" });
+    su.appendChild(el("h2", {}, "suitae"));
+    var pyxSu = el("div", { "class": "sessiones", id: "suitae" });
+    omnesSuitae.forEach(function (p) {
+      var b = el("button", { "class": "sessio" + (p === praefixum ? " electa" : "") },
+                 p === "" ? "radix" : p.replace(/\.$/, ""));
+      b.onclick = function () {
+        praefixum = p; sessioElecta = null; sessioComparanda = null; reddere();
+      };
+      pyxSu.appendChild(b);
+    });
+    su.appendChild(pyxSu);
+    corpus.appendChild(su);
+  }
+
   /* ---- sessiones eligendae ---- */
   var sel = el("div", { "class": "tabula", id: "tabula-sessiones" });
   sel.appendChild(el("h2", {}, "sessiones"));
   var pyxides = el("div", { "class": "sessiones", id: "sessiones" });
   sessiones.forEach(function (k, i) {
-    var totum = valorem(d, k, "suita.tempus.totum");
+    var totum = valorem(d, k, T("suita.tempus.totum"));
     var comm  = commissumBreve(d, k);
     var quot  = probationesQuot(d, k);
     var plenus = estPlenus(d, k, maxProb);
@@ -468,11 +513,11 @@ function reddere() {
     + commissumBreve(d, electa)
     + (electa === ultima ? " (ultima)" : "")));
   var box = el("div", { "class": "summa" });
-  [["totum", "suita.tempus.totum", "s", 1],
-   ["compilatio", "suita.tempus.compilatio", "s", 1],
-   ["cursus", "suita.tempus.cursus", "s", 1],
-   ["probationes", "suita.probationes.totae", "", 0],
-   ["fractae", "suita.probationes.fractae", "", 0]
+  [["totum", T("suita.tempus.totum"), "s", 1],
+   ["compilatio", T("suita.tempus.compilatio"), "s", 1],
+   ["cursus", T("suita.tempus.cursus"), "s", 1],
+   ["probationes", T("suita.probationes.totae"), "", 0],
+   ["fractae", T("suita.probationes.fractae"), "", 0]
   ].forEach(function (par) {
     var v = valorem(d, electa, par[1]);
     var c = el("div");
@@ -509,9 +554,9 @@ function reddere() {
     col.appendChild(caput);
 
     var tsum = el("table", { id: "collatio-summa" });
-    [["totum", "suita.tempus.totum"],
-     ["compilatio", "suita.tempus.compilatio"],
-     ["cursus", "suita.tempus.cursus"]
+    [["totum", T("suita.tempus.totum")],
+     ["compilatio", T("suita.tempus.compilatio")],
+     ["cursus", T("suita.tempus.cursus")]
     ].forEach(function (par) {
       var a = valorem(d, basis, par[1]);
       var b = valorem(d, electa, par[1]);
@@ -610,9 +655,9 @@ function reddere() {
   tend.appendChild(el("h2", {}, "tendentia"));
   var claves = el("div", { "class": "claves" });
   var series = [
-    { titulus: "totum", clavis: "suita.tempus.totum", color: "#7aa2f7" },
-    { titulus: "compilatio", clavis: "suita.tempus.compilatio", color: "#e0af68" },
-    { titulus: "cursus", clavis: "suita.tempus.cursus", color: "#9ece6a" }
+    { titulus: "totum", clavis: T("suita.tempus.totum"), color: "#7aa2f7" },
+    { titulus: "compilatio", clavis: T("suita.tempus.compilatio"), color: "#e0af68" },
+    { titulus: "cursus", clavis: T("suita.tempus.cursus"), color: "#9ece6a" }
   ];
   series.forEach(function (s) {
     s.valores = sessiones.map(function (k) { return valorem(d, k, s.clavis); });
@@ -631,7 +676,7 @@ function reddere() {
 
   /* ---- probationes tardissimae (sessio ELECTA) ---- */
   var tard = d.mensurae.filter(function (m) {
-    return m.sessio === electa && m.titulus.indexOf("probatio.cursus.") === 0;
+    return m.sessio === electa && m.titulus.indexOf(T("probatio.cursus.")) === 0;
   }).sort(function (a, b) { return b.valor - a.valor; }).slice(0, 15);
 
   if (tard.length > 0) {
@@ -641,7 +686,7 @@ function reddere() {
     var summus = tard[0].valor || 1;
     tard.forEach(function (m) {
       var tr = el("tr");
-      var nomen = m.titulus.replace("probatio.cursus.", "");
+      var nomen = m.titulus.replace(T("probatio.cursus."), "");
       tr.appendChild(el("td", {}, nomen));
       var tdv = el("td", { "style": "width:52%" });
       var virga = el("div", { "class": "virga" });

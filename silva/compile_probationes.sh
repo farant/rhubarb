@@ -27,6 +27,14 @@ RADIX_DIR="$(cd "$SILVA_DIR/.." && pwd)"
 BUILD_DIR="$SILVA_DIR/build"
 mkdir -p "$BUILD_DIR"
 
+# METRA SUITAE (tools/mensor_suitae.sh, 2026-09-02): forma eadem ac
+# radix, tituli "silva." praefixati - ante hoc suita silvae nihil in
+# mensorem scribebat, et quinque probationes corporis (XCVIII% temporis,
+# ~XIII min) historiam nullam habebant. Numquam suitam frangit.
+source "$RADIX_DIR/tools/mensor_suitae.sh"
+mensor_suitae_incipere "silva."
+RECOMPILATAE=0
+
 declare -a GCC_FLAGS=(
     "-std=c89"
     "-pedantic"
@@ -124,7 +132,7 @@ for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
+        echo "  [dep] $f.c"; RECOMPILATAE=1
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
         fi
@@ -141,7 +149,7 @@ for src in "$SILVA_DIR"/fontes/*.c "$SILVA_DIR"/instrumenta/*.c; do
     if [ "$base" = "nexus_ordines" ]; then continue; fi
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [silva] $base.c"
+        echo "  [silva] $base.c"; RECOMPILATAE=1
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
         fi
@@ -159,7 +167,7 @@ for src in "$SILVA_DIR"/probationes/*.c; do
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [adiumentum] $base.c"
+        echo "  [adiumentum] $base.c"; RECOMPILATAE=1
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
         fi
@@ -178,22 +186,34 @@ for test_file in "$SILVA_DIR"/probationes/probatio_*.c; do
     bin="$BUILD_DIR/$name"
     echo ""
     echo "=== $name ==="
+    t0=$(mensor_suitae_nunc)
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue
     fi
+    mensor_suitae_compilatio "$name" "$t0"
+    t0=$(mensor_suitae_nunc)
     if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
+        mensor_suitae_cursus "$name" "$t0"
+        echo "--- $name praeteriit (${MSU_ULTIMA}s)"
         passed=$((passed + 1))
     else
+        mensor_suitae_cursus "$name" "$t0"
+        echo "--- $name FRACTA (${MSU_ULTIMA}s)"
         failed_names="$failed_names $name"
     fi
 done
 shopt -u nullglob
 
 echo ""
+mensor_suitae_tardissimae 5
 echo "========================================"
 echo "SILVA PROBATIONES: $passed/$total praeteritae"
+if [ "$total" -gt 0 ]; then
+    fractae=$(echo $failed_names | wc -w | tr -d ' ')
+    mensor_suitae_finire "" "$total" "$fractae" "$RECOMPILATAE"
+fi
 if [ -n "$failed_names" ]; then
     echo "FRACTAE:$failed_names"
     exit 1

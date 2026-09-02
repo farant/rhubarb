@@ -123,3 +123,16 @@ so the copy lands on a fresh inode with nothing cached to disagree with.
 Worth remembering as a shape: **the empty log was the clue.** A process
 that dies before its first `printf` was killed from outside, not broken
 inside.
+
+## 2026-09-02 — suites by title prefix
+
+The silva runner now records into mensor (tools/mensor_suitae.sh,
+shared helper; root still carries its inline copy). Its sessions
+would have appeared on the root timeline as dashed "partial" runs
+(53 tests against 141), so the page gained a suite selector keyed on
+the title prefix: "" = radix, "silva." = silva. Every title lookup
+goes through T(t) = praefixum + t, and a session belongs to a suite
+iff it carries that suite's `suita.tempus.totum`. Suites are derived
+from the data (titles ending in suita.tempus.totum), so a new runner
+adopting the helper shows up with no page change. Verified with
+-json (both suites listed) and -imago.
