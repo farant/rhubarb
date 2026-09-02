@@ -40,7 +40,7 @@ if [ -n "${UNCUS_VIAE:-}" ]; then
     VIAE="$UNCUS_VIAE"
 else
     VIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.m' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/')"
 fi
 if [ -z "$VIAE" ]; then
     echo "examen (pre-commit): nulla plagula .c/.m in commissione - nihil iudicatum" >&2
@@ -60,7 +60,7 @@ fi
 # viarum explicitarum) non format.
 if [ -z "${UNCUS_VIAE:-}" ]; then
     for via in $(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/'); do
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/'); do
         [ -f "$via" ] || continue
         if [ -n "$(git diff --name-only -- "$via" 2>/dev/null)" ]; then
             echo "formator (pre-commit): $via NON formata - arbor operis ab indice differt (commissio partialis)" >&2
@@ -144,7 +144,7 @@ echo "examen (pre-commit): $iudicatae plagulae ACCIPE" >&2
 # hominis manet (plagula nova = omnia nova, -scribere eam).
 if [ -z "${UNCUS_VIAE:-}" ]; then
     FVIAE="$(git diff --cached --name-only --diff-filter=ACMR -- '*.c' '*.h' 2>/dev/null \
-        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama)/')"
+        | grep -vE '(^|/)(scratchpad|build|fixa|amalgama|archivum)/')"
 else
     FVIAE="$(printf '%s\n' $UNCUS_VIAE | grep -E '\.(c|h)$')"
 fi

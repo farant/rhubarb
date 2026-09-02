@@ -26,7 +26,7 @@ DIR="${1:-}"; MODUS="${2:-}"
 T=build/forma_evolutio; mkdir -p "$T"
 
 FILES=$(git ls-files "$DIR" | grep -E '\.(c|h)$' \
-    | grep -vE '(^|/)(fixa|vendor|build|amalgama|scratchpad)/' \
+    | grep -vE '(^|/)(fixa|vendor|build|amalgama|scratchpad|archivum)/' \
     | grep -vE '(^|/)capsula_[a-z_]+\.(c|h)$')
 [ -z "$FILES" ] && { echo "nulla plagula in $DIR" >&2; exit 2; }
 N=$(printf '%s\n' "$FILES" | wc -l | tr -d ' ')

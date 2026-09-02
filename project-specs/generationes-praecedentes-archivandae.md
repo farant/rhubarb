@@ -158,3 +158,29 @@ forbids. Fran's move-don't-delete instinct is exactly right here.
    and get materially faster; expect nuntium's 4 suites to stay
    green (that is the lapifex check).
 6. Measure the suite time before and after; record it.
+
+## 9. Executio partialis — 2026-09-02
+
+Prompted by suite timing, not by the archive question: the five
+`probatio_lapifex_c89_*` mains were the five slowest root tests
+(6.5 s each), and the whole 6.5 s is `_tabulam_parare` building the
+C89 LALR table from the grammar at process start, before the first
+assertion prints — five processes rebuilding one table.
+
+Executed (§8 step 3, the separable slice only):
+- `git mv` of the 5 `probatio_lapifex_c89_*.c` into
+  `archivum/probationes/` (first files in `archivum/`).
+- Engine (`lib/lapifex_*.c`, nuntium's substrate) and the C89 grammar
+  (`lib/lapifex_c89_grammatica.c`) NOT moved: the grammar carries one
+  of the 8 codex-58 sites pinned by decretum 01KXSAK5K7HW, and moving
+  it would silently drop the pin to 7. It is now an unbuilt file in
+  `lib/` (§7.3 class): no suite main pulls it, so the regenerated
+  manifest no longer compiles it.
+- `archivum/` is skipped by the pre-commit formatter/examen sweep and
+  by `tools/forma_evolutio.sh` (frozen reference is never reformatted);
+  the formatter exclusion list points at the new paths.
+- Manifest regenerated (`compile_tests_fontes_generare.sh`).
+
+Still parked (01M0FT8AE7VP): arbor v1/v2 engines + 13 suites, the 4
+orphaned consumers, `fixa/arbor_index/`, and the decretum decision for
+the remaining 7 pinned sites.
