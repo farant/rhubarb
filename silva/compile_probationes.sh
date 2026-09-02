@@ -162,39 +162,99 @@ for src in "$SILVA_DIR"/probationes/*.c; do
     obj_files="$obj_files $obj"
 done
 
-# ---- 3. discover, compile, run probationes ----
-total=0 ; passed=0 ; failed_names=""
+# ---- 3. probationes: PARALLELAE (FILA operarii), collectio ordinata ----
+#
+# 2026-09-02: suita seriatim ~240 s, quinque probationes corporis
+# XCVII% temporis - parallelae, tempus muri = probatio tardissima.
+# Operarius (probatio_una, exportatus) compilat + nectit + currit
+# probationem UNAM, effusum in singulae/<nomen>.log, verdictum et
+# tempora in <nomen>.res; parens post omnes acta ORDINE nominum
+# imprimit (acta legibilia, deterministica) et tabulas mensoris implet.
+# Nihil inter operarios commune: obiecta bibliothecae iam recentia
+# (gradus 1-2b supra, seriatim), binarium et .o per nomen propria.
+# PROBATIONES_FILA=N (ordinarius: nuclei PERFORMANTES - mensura
+# 2026-09-02: VIII fila (IV perf + IV eff) murus 142 s, IV fila 96 s;
+# probationes corporis in nucleis efficientibus bis tardiores et
+# latitudo memoriae contenditur); =1 seriatim.
+FILA="${PROBATIONES_FILA:-$(sysctl -n hw.perflevel0.physicalcpu 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)}"
+SINGULAE="$BUILD_DIR/singulae"
+rm -rf "$SINGULAE"; mkdir -p "$SINGULAE"
+OBIECTA="$BUILD_DIR/obiecta_probationum.txt"
+echo "$obj_files" > "$OBIECTA"
+export SILVA_DIR RADIX_DIR BUILD_DIR SINGULAE OBIECTA
+
+probatio_una () {   # <nomen> - in operario (bash filio); ambitus exportatus
+    local name="$1"
+    local test_file="$SILVA_DIR/probationes/$1.c"
+    local bin="$BUILD_DIR/$1"
+    local t0 t1 tc tr rc obj_files
+    local -a INC
+    source "$RADIX_DIR/tools/vexilla.sh"
+    INC=("-I$RADIX_DIR/include" "-I$SILVA_DIR/fontes" "-I$SILVA_DIR/instrumenta" "-I$SILVA_DIR/probationes")
+    obj_files="$(cat "$OBIECTA")"
+    t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    # compilatio et nexus seorsum (dsymutil vitatur - vide radicem)
+    if ! clang "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$bin.o" > "$SINGULAE/$name.log" 2>&1 \
+       || ! clang "${VEXILLA_C89[@]}" "$bin.o" $obj_files -o "$bin" >> "$SINGULAE/$name.log" 2>&1; then
+        echo "FRACTA (compilatio): $name" >> "$SINGULAE/$name.log"
+        echo "2 0 0" > "$SINGULAE/$name.res"
+        return 0
+    fi
+    t1=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    tc=$(echo "$t1 - $t0" | bc); case "$tc" in .*) tc="0$tc" ;; esac
+    t0=$t1
+    RHUBARB_RADIX="$RADIX_DIR" "$bin" >> "$SINGULAE/$name.log" 2>&1
+    rc=$?
+    t1=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    tr=$(echo "$t1 - $t0" | bc); case "$tr" in .*) tr="0$tr" ;; esac
+    echo "$rc $tc $tr" > "$SINGULAE/$name.res"
+    return 0
+}
+export -f probatio_una
+
+lista=""
 for test_file in "$SILVA_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
     if [ -n "$FILTER" ] && [[ "$name" != *"$FILTER"* ]]; then
         continue
     fi
+    lista="$lista $name"
+done
+shopt -u nullglob
+total=0 ; passed=0 ; failed_names="" ; MURUS=""
+if [ -n "${lista// /}" ]; then
+    echo ""
+    echo "probationes parallelae: $(echo $lista | wc -w | tr -d ' ') per $FILA fila"
+    MURUS_T0=$(mensor_suitae_nunc)
+    printf '%s\n' $lista | xargs -P "$FILA" -n 1 -I{} bash -c 'probatio_una "$1"' _ {}
+    _mensor_suitae_duratio "$MURUS_T0"; MURUS="$MSU_ULTIMA"
+    echo "murus fascis: ${MURUS}s"
+fi
+for name in $lista; do
     total=$((total + 1))
-    bin="$BUILD_DIR/$name"
     echo ""
     echo "=== $name ==="
-    t0=$(mensor_suitae_nunc)
-    # compilatio et nexus seorsum: uno vocamine cum -g clang dsymutil
-    # post nexum currit (~0.2 s per probationem) - vide radicem
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$test_file" -o "$bin.o" \
-       || ! clang "${GCC_FLAGS[@]}" "$bin.o" $obj_files -o "$bin"; then
-        echo "FRACTA (compilatio): $name"
+    cat "$SINGULAE/$name.log" 2>/dev/null
+    if [ ! -f "$SINGULAE/$name.res" ]; then
+        echo "--- $name SINE VERDICTO (operarius periit?)"
         failed_names="$failed_names $name"
         continue
     fi
-    mensor_suitae_compilatio "$name" "$t0"
-    t0=$(mensor_suitae_nunc)
-    if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
-        mensor_suitae_cursus "$name" "$t0"
-        echo "--- $name praeteriit (${MSU_ULTIMA}s)"
+    read -r rc tc tr < "$SINGULAE/$name.res"
+    if [ "$rc" = "2" ] && [ "$tc" = "0" ]; then
+        failed_names="$failed_names $name"
+        continue
+    fi
+    mensor_suitae_compilatio_secunda "$name" "$tc"
+    mensor_suitae_cursus_secunda "$name" "$tr"
+    if [ "$rc" = "0" ]; then
+        echo "--- $name praeteriit (${tr}s)"
         passed=$((passed + 1))
     else
-        mensor_suitae_cursus "$name" "$t0"
-        echo "--- $name FRACTA (${MSU_ULTIMA}s)"
+        echo "--- $name FRACTA (${tr}s, exitus $rc)"
         failed_names="$failed_names $name"
     fi
 done
-shopt -u nullglob
 
 echo ""
 mensor_suitae_tardissimae 5
@@ -202,7 +262,7 @@ echo "========================================"
 echo "SILVA PROBATIONES: $passed/$total praeteritae"
 if [ "$total" -gt 0 ]; then
     fractae=$(echo $failed_names | wc -w | tr -d ' ')
-    mensor_suitae_finire "" "$total" "$fractae" "$RECOMPILATAE"
+    mensor_suitae_finire "" "$total" "$fractae" "$RECOMPILATAE" "$FILA" "$MURUS"
 fi
 if [ -n "$failed_names" ]; then
     echo "FRACTAE:$failed_names"

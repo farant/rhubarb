@@ -129,6 +129,12 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
+Suita (compile_probationes.sh) probationes PARALLELAS currit
+(2026-09-02): PROBATIONES_FILA=N operarii (ordinarius nuclei
+performantes = IV; =1 seriatim), acta per probationem in
+build/singulae/<nomen>.log, collectio ordine nominum; murus ~96 s pro
+239 s seriatim. Res inter probationes communis = classis vitii (aedilis
+plagulas temporarias fixas habebat - nunc per PID).
 NB tabulae coctae (generare.sh) indices densos ferunt (actiones_index,
 goto_index; 2026-09-02) et a probationibus validantur, non per
 parsuram - mutatio contractus silva_tabulae.h SEMPER regenerationem

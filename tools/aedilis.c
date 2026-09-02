@@ -12,6 +12,7 @@
  * Spec: project-specs/aedilis-spec-v2.md; parcum 01KXJ2HV.
  */
 
+#include "postulata_posix.h"   /* getpid: plagulae temporariae per processum */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -26,6 +27,7 @@
 #include "silva.h"
 
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -219,6 +221,24 @@ _annotationem_extrahere (
     redde vacua;
 }
 
+/* Via temporaria PER PROCESSUM (2026-09-02): "build/aedilis/<basis>.tmp"
+ * fixa inter aediles concurrentes communis erat - quattuor probationes
+ * corporis silvae aedilem simul vocant (clausurae), et una lectio
+ * effusum alienum accepit: plagula sine clausura parsata, porta
+ * apparatus (latinizatae 155/156) recusavit. Nomen cum PID, plagula
+ * post lectionem deleta. */
+interior constans character*
+_via_temporaria (
+    constans character* basis,
+               Piscina* piscina)
+{
+    character buffer[128];
+
+    sprintf(buffer, "build/aedilis/%s.%ld.tmp", basis,
+        (longus)getpid());
+    redde chorda_ut_cstr(chorda_ex_literis(buffer, piscina), piscina);
+}
+
 /* Cursus minoritatis: clang -MM per system(), plagula temporalis.
  * Directivae redditae = viae IAM RESOLUTAE (ex_oraculo). */
 interior b32
@@ -228,11 +248,12 @@ _extractor_oraculi (
                Piscina*  piscina,
                    Xar** directivae_out)
 {
-    ChordaAedificator* mandatum;
-               chorda  textus;
-            character* mandatum_cstr;
-                  i32  i;
-                  i32  numerus;
+     ChordaAedificator* mandatum;
+                chorda  textus;
+             character* mandatum_cstr;
+                   i32  i;
+                   i32  numerus;
+    constans character* via_temporaria;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
     chorda_aedificator_appendere_literis(mandatum, "clang -MM");
@@ -248,17 +269,20 @@ _extractor_oraculi (
     }
     chorda_aedificator_appendere_literis(mandatum, " ");
     chorda_aedificator_appendere_literis(mandatum, via);
-    chorda_aedificator_appendere_literis(mandatum,
-        " > build/aedilis/oraculum.tmp 2>/dev/null");
+        via_temporaria = _via_temporaria("oraculum", piscina);
+    chorda_aedificator_appendere_literis(mandatum, " > ");
+    chorda_aedificator_appendere_literis(mandatum, via_temporaria);
+    chorda_aedificator_appendere_literis(mandatum, " 2>/dev/null");
     mandatum_cstr = chorda_ut_cstr(
         chorda_aedificator_finire(mandatum), piscina);
 
     si (system(mandatum_cstr) != 0)
     {
+        (vacuum)remove(via_temporaria);
         redde FALSUM;
     }
-    textus = filum_legere_totum("build/aedilis/oraculum.tmp",
-        piscina);
+    textus = filum_legere_totum(via_temporaria, piscina);
+    (vacuum)remove(via_temporaria);
     si (textus.mensura == 0)
     {
         redde FALSUM;
@@ -595,16 +619,21 @@ interior constans character*
 _commissum_obtinere (
     Piscina* piscina)
 {
-    chorda textus;
-       i32 finis;
+                chorda  textus;
+                   i32  finis;
+    constans character* via_temporaria;
+             character  mandatum[256];
 
-    si (system("git rev-parse --short HEAD"
-            " > build/aedilis/commissum.tmp 2>/dev/null") != 0)
+        via_temporaria = _via_temporaria("commissum", piscina);
+    sprintf(mandatum, "git rev-parse --short HEAD > %s 2>/dev/null",
+        via_temporaria);
+    si (system(mandatum) != 0)
     {
+        (vacuum)remove(via_temporaria);
         redde NIHIL;
     }
-    textus = filum_legere_totum("build/aedilis/commissum.tmp",
-        piscina);
+    textus = filum_legere_totum(via_temporaria, piscina);
+    (vacuum)remove(via_temporaria);
     finis = textus.mensura;
     dum (   finis > 0 && (textus.datum[finis - 1] == (i8)'\n'
         || textus.datum[finis - 1] == (i8)'\r'))
