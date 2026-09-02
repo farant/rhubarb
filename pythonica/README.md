@@ -62,6 +62,14 @@ plica pendet — veritas in C manet.
   umbrae SERIATIM (tempora fida), commissio contra recepta omnia,
   recepta deleta; `siccum=True` = portae solae; reddit (hash, [(porta,
   compendium, totum_s)])
+- **porta rubra nominat quid ruberit**: `Porta.fracturae` =
+  [Fractura(nomen, relatio)] (relatio = lineae diagnosticae effusus
+  probationis IPSIUS: FRACTA/Speratus/Receptus/Totalis/Conditio);
+  `silva.fracturae(acta, porta)` lectio pura (formae radix / suita /
+  generica); `relatio_fracturarum(fr)`; receptum umbrae eas fert,
+  `receptum_relatio(via)` post cursum legit; errores commissionis et
+  commissio_umbra eas ferunt pro cauda actorum; planta compendium
+  rubrum 'fractae: X (Conditio: ...)' reddit et imprimit
 - `silva.mensurae(praefixum, quantum)` — sessiones voluminis mensoris
   ('' radix, 'silva.' silva; tituli praefixo exuti; plenae solae);
   `compendium_mensurae(sessio)` = totum/cursus/compilatio/praevolatus

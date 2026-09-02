@@ -554,7 +554,11 @@ class Textus(object):
 
 # ---------------------------------------------------------------- portae
 
-Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta')
+Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta fracturae',
+                   defaults=(None,))
+# fractura = probatio una fracta intra portam: nomen + lineae diagnosticae
+# effusus SUI (FRACTA/Speratus/Receptus/compendium/error), non cauda actorum
+Fractura = namedtuple('Fractura', 'nomen relatio')
 
 # porta: (imperium, signum 'cucurrit' (regex)). 'cucurrit' = porta
 # suam mensuram edidit - rc 0 sine signo = nihil cucurrit (exitus 2
@@ -593,6 +597,114 @@ PORTAE = {
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 
+# forma effusus portae: 'radix' (Testing: X ... ✗ TEST FAILED: X (t)),
+# 'suita' (=== X === ... FRACTAE: X Y - silva et sub-suitae omnes),
+# aliter 'generica' (porta tota = fractura una)
+FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
+          'materia': 'suita', 'officina': 'suita', 'gesta': 'suita',
+          'tessera': 'suita', 'saltuarius': 'suita'}
+_RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
+                         r'Praeteriti|Fracti|Conditio|error:|Segmentation|'
+                         r'Abort|exitus|FAILED|SINE VERDICTO')
+
+
+def _relatio(lineae, tectum=14):
+    """lineae diagnosticae ex effusu probationis unius; si nullae, cauda"""
+    d = [l.rstrip() for l in lineae if _RELATIO_RE.search(l)]
+    if not d:
+        d = [l.rstrip() for l in lineae if l.strip()][-5:]
+    if len(d) > tectum:
+        d = d[:tectum - 1] + ['... (%d lineae plures)' % (len(d) - tectum + 1)]
+    return '\n'.join(d)
+
+
+def fracturae(acta, nomen='', forma=None):
+    """probationes fractae ex actis portae: [Fractura(nomen, relatio)] -
+    lectio actorum, non cursus. relatio = lineae diagnosticae effusus
+    probationis IPSIUS (inter vexillum eius et verdictum), ut 'CXXIV
+    assertiones, 0 fractae, exitus I' uno aspectu legatur."""
+    forma = forma or FORMAE.get(nomen, 'generica')
+    lineae = _ANSI.sub('', acta).splitlines()
+    exitus = []
+    if forma == 'radix':
+        nomina = []
+        for l in lineae:
+            m = re.search(r'✗ (?:TEST |COMPILATION |BUILD )?FAILED: (\S+)', l)
+            if m and m.group(1) not in nomina:
+                nomina.append(m.group(1))
+        for n in nomina:
+            a = b = None
+            for i, l in enumerate(lineae):
+                if a is None and l.strip() == 'Testing: ' + n:
+                    a = i
+                if re.search(r'FAILED: ' + re.escape(n) + r'\b', l):
+                    b = i
+                    break
+            if a is None:
+                a = max(-1, (b or 0) - 20)
+            fin = len(lineae) if b is None else b + 1
+            exitus.append(Fractura(n, _relatio(lineae[a + 1:fin])))
+    elif forma == 'suita':
+        m = re.search(r'^FRACTAE:(.*)$', '\n'.join(lineae), re.M)
+        for n in (m.group(1).split() if m else []):
+            a = None
+            b = len(lineae)
+            for i, l in enumerate(lineae):
+                if a is None:
+                    if l.strip() == '=== %s ===' % n:
+                        a = i
+                elif l.startswith('=== ') or l.startswith('====='):
+                    b = i
+                    break
+            exitus.append(Fractura(n, _relatio(lineae[a + 1:b])
+                                   if a is not None else '(effusus absens)'))
+    else:
+        if any(_RELATIO_RE.search(l) for l in lineae):
+            exitus.append(Fractura(nomen or '?', _relatio(lineae)))
+    return exitus
+
+
+def relatio_fracturarum(fr, tectum=10):
+    """textus relationis: nomina, deinde lineae diagnosticae per fracturam;
+    '' si nullae. Hoc in errore commissionis et in recepto legitur."""
+    if not fr:
+        return ''
+    partes = ['\nfractae (%d): %s' % (len(fr), ', '.join(f.nomen for f in fr))]
+    for f in fr:
+        ls = f.relatio.splitlines()
+        partes.append('  --- ' + f.nomen)
+        partes.extend('      ' + l for l in ls[:tectum])
+        if len(ls) > tectum:
+            partes.append('      ... (%d lineae plures)' % (len(ls) - tectum))
+    return '\n'.join(partes)
+
+
+def _summa_fracturae(f):
+    """linea una quae fracturam nominat (FRACTA (...) / Conditio / error)"""
+    for l in f.relatio.splitlines():
+        if re.search(r'FRACTA \(|Conditio:|FATALE|error:|Segmentation', l):
+            return l.strip()
+    ls = f.relatio.splitlines()
+    return ls[0].strip() if ls else '?'
+
+
+def _portae_fictae():
+    # portae fictae probationum: JSON {nomen: [imperium, signum, forma?]}
+    # in ambitu - operarius umbrae (processus separatus, PORTAE suae)
+    # easdem videt, aliter porta ficta ibi ignota est
+    import json as _json
+    try:
+        d = _json.loads(os.environ.get('PYTHONICA_PORTAE_FICTAE', '{}'))
+    except ValueError:
+        return
+    for k, v in d.items():
+        PORTAE[k] = (list(v[0]), v[1])
+        if len(v) > 2:
+            FORMAE[k] = v[2]
+
+
+_portae_fictae()
+
 
 def porta_viae(via):
     """porta directorii plagulae: radix pro lib/include/probationes/tools"""
@@ -623,7 +735,8 @@ def porta(nomen, filtrum=None):
     sana = cucurrit and r.returncode == 0 \
         and not re.search(r'FRACT|Fracti:\s*[1-9]|Failed:\s*[1-9]',
                           compendium)
-    return Porta(nomen, cucurrit, sana, compendium, r.returncode, acta)
+    fr = [] if sana else fracturae(acta, nomen)
+    return Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr)
 
 
 VETITAE = ('FAQ.md', 'gesta/annales/tabula.md',
@@ -659,7 +772,8 @@ def commissio(nuntius, viae, portae=(), verificare=True):
             f = porta(nomen, filtrum)
         if not f.sana:
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
-                             ' commissum' % (nomen, f.compendium, f.rc))
+                             ' commissum%s' % (nomen, f.compendium, f.rc,
+                                               relatio_fracturarum(f.fracturae)))
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
@@ -692,7 +806,8 @@ import time
 
 PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
-                      'compendium rc sigillum rancida finis')
+                      'compendium rc sigillum rancida finis fracturae',
+                      defaults=([],))
 
 
 def sigillum_arboris():
@@ -776,14 +891,15 @@ def _umbra_currere(nomen, filtrum, via):
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
              'cucurrit': p.cucurrit, 'compendium': p.compendium,
              'rc': p.rc, 'sigillum': sig,
-             'rancida': sig != sigillum_arboris(), 'finis': time.time()}
+             'rancida': sig != sigillum_arboris(), 'finis': time.time(),
+             'fracturae': [list(f) for f in (p.fracturae or [])]}
     except Exception:
         acta = traceback.format_exc()
         ultima = acta.strip().splitlines()[-1][:200]
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': False,
              'cucurrit': False, 'compendium': 'UMBRA FRACTA: ' + ultima,
              'rc': -1, 'sigillum': sig, 'rancida': False,
-             'finis': time.time()}
+             'finis': time.time(), 'fracturae': []}
     with open(via + '.acta', 'w') as f:
         f.write(acta)
     with open(via + '.tmp', 'w') as f:
@@ -805,7 +921,8 @@ def receptum_legere(via):
         d = json.load(f)
     return Receptum(via, d['nomen'], d['filtrum'], d['sana'], d['cucurrit'],
                     d['compendium'], d['rc'], d['sigillum'], d['rancida'],
-                    d['finis'])
+                    d['finis'],
+                    [Fractura(*f) for f in d.get('fracturae', [])])
 
 
 def receptum_validum(via):
@@ -819,7 +936,16 @@ def receptum_validum(via):
         causa += ' [arbor mutata DUM currebat]'
     elif not recens:
         causa += ' [arbor mutata POST cursum - receptum rancidum]'
-    return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '')
+    return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '', r.fracturae)
+
+
+def receptum_relatio(via):
+    """relatio recepti, etiam diu post cursum: nomen, compendium,
+    probationes fractae cum lineis diagnosticis suis - lectio sola"""
+    r = receptum_legere(via)
+    caput = '%s: %s [%s]' % (r.nomen, r.compendium,
+                             'sana' if r.sana else 'FRACTA')
+    return caput + relatio_fracturarum(r.fracturae)
 
 
 def receptum_delere(via):
@@ -894,8 +1020,9 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                     tot = ss[0].mensurae.get('suita.tempus.totum')
         recepta.append((via, nomen, r, tot))
         if not r.sana:
-            raise SilvaError('porta umbrae %s non sana: %s\n%s'
-                             % (nomen, r.compendium, acta[-1500:]))
+            rel = relatio_fracturarum(r.fracturae) or '\n' + acta[-800:]
+            raise SilvaError('porta umbrae %s non sana: %s%s\n(acta: %s.acta)'
+                             % (nomen, r.compendium, rel, via))
     h = None
     if not siccum:
         h = commissio(nuntius, viae, portae=[v for v, _, _, _ in recepta],
@@ -943,7 +1070,14 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
     if not viridis.sana:
         raise SilvaError('porta post reversionem non viridis: %s'
                          % viridis.compendium)
-    return rubra.compendium, viridis.compendium
+    # testimonium rubrum servatur (acta rubra a cursu viridi obteruntur):
+    # compendium + quae probationes ruberint et qua linea
+    rubrum = rubra.compendium
+    if rubra.fracturae:
+        rubrum += ' | fractae: ' + ', '.join(
+            '%s (%s)' % (f.nomen, _summa_fracturae(f)) for f in rubra.fracturae)
+    print('planta rubra: ' + rubrum)
+    return rubrum, viridis.compendium
 
 
 # ---------------------------------------------------------------- mensurae

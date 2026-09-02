@@ -95,3 +95,32 @@ session when the runner prints no total; a name refusal now says
 whether the name is present as another genus or only as a call.
 Still open: the snapshot-bound shadow (edit while gates run) and a
 Refactio hook for "write, regenerate, judge".
+
+## 2026-09-02 (late) — a red gate names what went red
+
+The credo NIHIL PROBATUM landing (0c784412) turned the root gate red
+for three tests, and the exception said only "porta umbrae radix non
+sana: Tests Passed:" — the marker text and the last 1500 characters of
+a 4.8 MB output. Three rounds of grep over the receipt's `.acta` to
+learn the three names and that each had passed every assertion. The
+information was in a file the module had already written. Now:
+`fracturae(acta, porta)` reads the failed tests out of a gate's output
+by the runner's own shape (root: `Testing: X` … `✗ TEST FAILED: X`;
+every sub-suite: `=== X ===` … `FRACTAE: X Y`; anything else: the
+whole gate as one fracture) and keeps for each the diagnostic lines of
+ITS OWN output — FRACTA/Speratus/Receptus/Totalis/Conditio — not the
+tail of the run. `Porta.fracturae` carries them (default None, so the
+fake gates in the tests still construct positionally); the umbra
+worker writes them into the receipt; `receptum_relatio(via)` reads
+them back days later; `commissio` and `commissio_umbra` put them in
+the exception instead of the tail; `planta` prints and returns
+"fractae: X (Conditio: NIHIL PROBATUM)" so the red testimony survives
+the green rerun that overwrites its log. Tests: synthetic root and
+sub-suite outputs, then a REAL red gate — a shell script that emits a
+canned root run and exits 1, registered through
+`PYTHONICA_PORTAE_FICTAE` (JSON in the environment) so the umbra
+worker, a separate process with its own PORTAE, sees the same fake.
+Proof on the live runner: plant the early return in probatio_credo,
+`planta` printed "fractae: probatio_credo (Conditio: NIHIL PROBATUM)"
+from the real colored output. Small API note found the same night:
+`Refactio.applicare()` returns a list of Fructus, not one.

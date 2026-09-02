@@ -517,6 +517,85 @@ credo(h_u is None and len(rr) == 1 and rr[0][0] == 'formator-intra' and 'sanum' 
 post_u = set(v for v, _ in silva.portae_pendentes())
 credo(post_u <= ante_u, 'commissio_umbra: recepta sua deleta (aliena intacta)')
 
+print('--- fracturae: lectio actorum portae ---')
+import json
+ACTA_RADIX = ('Testing: probatio_x\n----\n.F\n FRACTA (credo_verum): a == b at probationes/probatio_x.c:12\n'
+              '  Speratus: 1\n  Receptus: 2\n\n=== CREDO COMPENDIUM ===\nTotalis:    3\nPraeteriti: 2\n'
+              'Fracti:     1\n\nConditio: FRACTA\n✗ TEST FAILED: probatio_x (.2s)\n'
+              'Testing: probatio_y\n...\nTotalis:    2\nConditio: OMNIA PRAETERIERUNT\n'
+              '✓ TEST PASSED: probatio_y (.1s)\nTests Passed: 1\nTests Failed: 1\n')
+fr = silva.fracturae(ACTA_RADIX, 'radix')
+credo([f.nomen for f in fr] == ['probatio_x'] and 'Totalis:    3' in fr[0].relatio
+      and 'Speratus: 1' in fr[0].relatio and 'probatio_y' not in fr[0].relatio
+      and 'Totalis:    2' not in fr[0].relatio,
+      'fracturae radix: nomen ex TEST FAILED, relatio inter Testing: et verdictum')
+credo(silva.fracturae(ACTA_RADIX.replace('✗ TEST FAILED: probatio_x (.2s)\n', ''), 'radix') == [],
+      'fracturae radix: sine linea FAILED nulla')
+ACTA_SUITA = ('=== probatio_a ===\n..\n--- probatio_a praeteriit (0.1s)\n=== probatio_b ===\n.F\n'
+              ' FRACTA (credo_nihil): p at x.c:3\n  Speratus: NIHIL\n  Receptus: 0x1\nConditio: FRACTA\n'
+              '--- probatio_b FRACTA (0.2s, exitus 1)\n=== probatio_c ===\n\n========================\n'
+              'SILVA PROBATIONES: 1/3 praeteritae\nFRACTAE: probatio_b probatio_c\n')
+fr = silva.fracturae(ACTA_SUITA, 'silva')
+credo([f.nomen for f in fr] == ['probatio_b', 'probatio_c'] and 'exitus 1' in fr[0].relatio
+      and 'Speratus: NIHIL' in fr[0].relatio and 'probatio_a' not in fr[0].relatio
+      and 'SILVA PROBATIONES' not in fr[1].relatio,
+      'fracturae suita: nomina ex FRACTAE:, relatio inter vexilla ===')
+credo(silva.fracturae(ACTA_SUITA, 'css') == silva.fracturae(ACTA_SUITA, 'silva'), 'fracturae: sub-suitae eadem forma')
+fg = silva.fracturae('fumus vexilla: FRACTUM\n  offensor: x.sh\n', 'vexilla')
+credo(len(fg) == 1 and fg[0].nomen == 'vexilla' and 'FRACTUM' in fg[0].relatio, 'fracturae generica: porta tota')
+rel = silva.relatio_fracturarum(silva.fracturae(ACTA_RADIX, 'radix'))
+credo(rel.startswith('\nfractae (1): probatio_x') and '      Totalis:    3' in rel, 'relatio_fracturarum: caput + lineae')
+credo(silva.relatio_fracturarum([]) == '', 'relatio_fracturarum: vacua = chorda vacua')
+# porta rubra VERA (processus): fracturae in Porta, in errore commissionis,
+# in recepto umbrae (operarius portam fictam per ambitum videt), in
+# receptum_relatio, in errore commissio_umbra
+scriptum = os.path.join(silva.RADIX, 'pythonica', '.porta_rubra.tmp.sh')
+open(scriptum, 'w').write("#!/bin/sh\ncat <<'ACTA'\n" + ACTA_RADIX + "ACTA\nexit 1\n")
+os.chmod(scriptum, 0o755)
+os.environ['PYTHONICA_PORTAE_FICTAE'] = json.dumps({'ficta-rubra': [[scriptum], 'Tests Passed:', 'radix']})
+silva._portae_fictae()
+try:
+    po = silva.porta('ficta-rubra')
+    credo(po.cucurrit and not po.sana and [f.nomen for f in po.fracturae] == ['probatio_x'],
+          'porta rubra: fracturae in Porta')
+    try:
+        silva.commissio('nihil', ['pythonica/README.md'], portae=['ficta-rubra'])
+        credo(False, 'commissio cum porta rubra levat')
+    except silva.SilvaError as ex:
+        credo('probatio_x' in str(ex) and 'Speratus: 1' in str(ex),
+              'commissio: error probationem fractam nominat cum relatione')
+    via_f = silva.porta_umbra('ficta-rubra')
+    rf = silva.exspectare(via_f, tectum=60)
+    credo(rf.cucurrit and not rf.sana and [f.nomen for f in rf.fracturae] == ['probatio_x'],
+          'receptum umbrae fracturas fert')
+    credo(not silva.receptum_validum(via_f).sana and silva.receptum_validum(via_f).fracturae,
+          'receptum_validum: fracturae in Porta')
+    rr = silva.receptum_relatio(via_f)
+    credo('ficta-rubra' in rr and 'FRACTA' in rr and 'probatio_x' in rr and 'Totalis:    3' in rr,
+          'receptum_relatio: lectio post cursum')
+    silva.receptum_delere(via_f)
+    ante_f = set(v for v, _ in silva.portae_pendentes())
+    try:
+        silva.commissio_umbra('nihil', ['pythonica/README.md'], ['ficta-rubra'], siccum=True)
+        credo(False, 'commissio_umbra cum porta rubra levat')
+    except silva.SilvaError as ex:
+        credo('fractae (1): probatio_x' in str(ex) and 'Speratus: 1' in str(ex) and '.acta' in str(ex),
+              'commissio_umbra: error fracturas nominat, non caudam actorum')
+    for v, _ in silva.portae_pendentes():
+        if v not in ante_f and 'ficta-rubra' in v:
+            silva.receptum_delere(v)
+    # planta: testimonium rubrum nomina et lineam fert
+    def porta_rubra_ficta(v):
+        return silva.Porta('f', True, 'PLANTATUM' not in open(v).read(), 'ficta', 1, '',
+                           [silva.Fractura('probatio_x', 'Totalis:    0\nConditio: NIHIL PROBATUM')])
+    open(via, 'w').write(FONS)
+    r_p, g_p = silva.planta(via, ANC, PLA, porta_rubra_ficta)
+    credo('probatio_x' in r_p and 'NIHIL PROBATUM' in r_p and open(via).read() == FONS,
+          'planta: compendium rubrum fracturas nominat (linea Conditio)')
+finally:
+    del os.environ['PYTHONICA_PORTAE_FICTAE']
+    os.unlink(scriptum)
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')
