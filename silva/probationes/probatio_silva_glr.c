@@ -15,6 +15,7 @@
 #include "silva_nodus.h"
 #include "silva_tabulae.h"
 #include "silva_tabulae_sceleti.h"
+#include "silva_tabulae_c89.h"
 #include "silva_glr.h"
 #include "credo.h"
 #include <stdio.h>
@@ -73,8 +74,13 @@ s32 principale (vacuum)
     {
         imprimere("\n--- Probans validationem et adaptatorem ---\n");
 
+                CREDO_VERUM (silva_glr_tabulam_validare(piscina,
+                    &SILVA_SCELETUM_TABULA));
+        /* Tabula C89 quoque HIC iudicatur (2026-09-02): motor eam per
+         * parsuram non iam validat (silva_glr_creare) - artificium
+         * coctum commissum semel in suita iudicatur, non per usum. */
         CREDO_VERUM (silva_glr_tabulam_validare(piscina,
-            &SILVA_SCELETUM_TABULA));
+            &SILVA_C89_TABULA));
         CREDO_NON_NIHIL (glr);
 
         CREDO_AEQUALIS_S32 (silva_glr_terminale_ex_genere(

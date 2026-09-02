@@ -1086,11 +1086,21 @@ silva_glr_creare (
 {
     SilvaGLR* glr;
 
-    si (piscina == NIHIL || constructor == NIHIL || fabrica == NIHIL)
-    {
+        si (   piscina == NIHIL || constructor == NIHIL
+            || fabrica == NIHIL)
+        {
         redde NIHIL;
-    }
-    si (!silva_glr_tabulam_validare(piscina, tabula))
+        }
+    /* Tabula NON hic validatur (2026-09-02): validatio O(actiones x
+     * goto) = XIV M iterationes per parsuram (I-IV% temporis; plagulis
+     * parvis plus) super artificium generatum COMMISSUM quod
+     * probationes (probatio_silva_glr, probatio_silva_ambiguitas)
+     * per silva_glr_tabulam_validare in omni cursu suitae iudicant.
+     * Res cocta semel iudicatur, non per parsuram. Tabula manca
+     * (NIHIL) tamen refutatur. */
+    si (   tabula == NIHIL || tabula->numerus_statuum == ZEPHYRUM
+        || tabula->status == NIHIL || tabula->actiones == NIHIL
+        || tabula->goto_introitus == NIHIL)
     {
         redde NIHIL;
     }
