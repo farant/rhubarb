@@ -30,7 +30,8 @@ interior constans character* CLAVIUM_NOMINA[] = {
 };
 
 interior vacuum
-_scaenam_pingere (TesseraOpus* opus)
+_scaenam_pingere (
+    TesseraOpus* opus)
 {
     TesseraStilus nativus = tessera_stilus_nativus();
     TesseraStilus titulus = tessera_stilus(0xFFD700,
@@ -100,16 +101,17 @@ _scaenam_pingere (TesseraOpus* opus)
             TESSERA_COLOR_NATIVUS, TESSERA_ORNAMENTUM_OBSCURUM));
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    Piscina* piscina;
-    TesseraPons* pons;
-    TesseraOpus* opus;
+          Piscina* piscina;
+      TesseraPons* pons;
+      TesseraOpus* opus;
     TesseraLector* lector;
-    character status[128];
-    s32 cur_x = II;
-    s32 cur_y = II;
-    b32 currens = VERUM;
+        character  status[128];
+              s32  cur_x    = II;
+              s32  cur_y    = II;
+              b32  currens  = VERUM;
 
     piscina = piscina_generare_dynamicum("spectaculum", 33554432);
     si (piscina == NIHIL)
@@ -124,8 +126,8 @@ s32 principale (vacuum)
             "spectaculum: terminal verum requiritur (isatty)\n");
         redde I;
     }
-    opus = tessera_aperire(piscina, pons);
-    lector = tessera_lector_creare(piscina, pons);
+    opus    = tessera_aperire(piscina, pons);
+    lector  = tessera_lector_creare(piscina, pons);
     si (opus == NIHIL || lector == NIHIL)
     {
         fprintf(stderr, "spectaculum: apertura fracta\n");

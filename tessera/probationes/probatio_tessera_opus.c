@@ -27,12 +27,13 @@ _nativus (vacuum)
     redde tessera_stilus_nativus();
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                    b32  praeteritus;
+                Piscina* piscina;
     TesseraPonsMemoriae* pm;
-    TesseraOpus* opus;
+            TesseraOpus* opus;
 
     piscina = piscina_generare_dynamicum("probatio_tessera_opus",
         33554432);
@@ -48,9 +49,11 @@ s32 principale (vacuum)
     opus = tessera_aperire(piscina, &pm->pons);
     CREDO_NON_NIHIL (opus);
 
+
     /* ========================================================
      * PROBARE: aperire - amplitudo ex ponte, modus intratus
      * ======================================================== */
+
     {
         imprimere("\n--- Probans aperire ---\n");
 
@@ -62,10 +65,12 @@ s32 principale (vacuum)
             ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: quadrum primum aureum - celare + ED + CUP + SGR
      * + signa (cellulae vacuae praeteritae - 2J eas pinxit)
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -79,9 +84,11 @@ s32 principale (vacuum)
             "\033[?25l\033[2J\033[1;1H\033[0mab");
     }
 
+
     /* ========================================================
      * PROBARE: quadrum minimum aureum - cellula una mutata
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -97,10 +104,12 @@ s32 principale (vacuum)
             "\033[2;4H\033[0;38;2;255;0;0mz");
     }
 
+
     /* ========================================================
      * PROBARE: coalitio SGR - cellulae vicinae eiusdem stili =
      * CUP unum + SGR unum + signa
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -115,9 +124,11 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[3;1H\033[0mxy");
     }
 
+
     /* ========================================================
      * PROBARE: quadrum sine mutationibus = NIHIL emissum
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -129,10 +140,12 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (captum.mensura, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: protocollum cursoris - ponere/monstrare/celare;
      * optatum immutatum = nihil
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -156,9 +169,11 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (captum, "\033[?25l");
     }
 
+
     /* ========================================================
      * PROBARE: praecisio taciturna extra fines
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -176,10 +191,12 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (captum.mensura, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: scriptio UTF-8 - runa trium octetorum cellula una;
      * octetus invalidus + regiminis -> '?'
      * ======================================================== */
+
     {
         imprimere("\n--- Probans scriptionem UTF-8 ---\n");
 
@@ -204,9 +221,11 @@ s32 principale (vacuum)
             tessera_cellulam_legere(opus, I, I).signum, (i32)'?');
     }
 
+
     /* ========================================================
      * PROBARE: ars linearis - quadrum + linea
      * ======================================================== */
+
     {
         imprimere("\n--- Probans artem linearem ---\n");
 
@@ -242,10 +261,12 @@ s32 principale (vacuum)
             (i32)TESSERA_SIGNUM_DUPLEX_V);
     }
 
+
     /* ========================================================
      * PROBARE: replere (1.1) - rectangulum uniforme; praecisio
      * taciturna trans fines
      * ======================================================== */
+
     {
         TesseraStilus inversus;
 
@@ -278,10 +299,12 @@ s32 principale (vacuum)
             (i32)'@');
     }
 
+
     /* ========================================================
      * PROBARE: renovatio magnitudinis - amplitudo nova, pictura
      * plena sequitur
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -302,17 +325,19 @@ s32 principale (vacuum)
             "\033[?25l\033[2J\033[1;1H\033[0mr");
     }
 
+
     /* ========================================================
      * PROBARE: fructus + ASSERTIO APICIS - post calefactionem
      * quadra ulteriora NIHIL allocant (spectare + reset)
      * ======================================================== */
+
     {
         Piscina* piscina_apicis = piscina_generare_dynamicum(
             "apex_tessera", 33554432);
         TesseraPonsMemoriae* pa;
-        TesseraOpus* oa;
-        memoriae_index apex_calidus;
-        i32 k;
+                TesseraOpus* oa;
+             memoriae_index  apex_calidus;
+                        i32  k;
 
         imprimere("\n--- Probans fructum + apicem ---\n");
 
@@ -349,9 +374,11 @@ s32 principale (vacuum)
         piscina_destruere(piscina_apicis);
     }
 
+
     /* ========================================================
      * PROBARE: claudere - reditio SGR + cursor visibilis + exire
      * ======================================================== */
+
     {
         chorda captum;
 

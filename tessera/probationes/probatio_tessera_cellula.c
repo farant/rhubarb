@@ -13,9 +13,10 @@
 #include "credo.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_tessera_cellula",
@@ -27,12 +28,14 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: compingere + mensura (ASCII pellucidum)
      * ======================================================== */
+
     {
-        hic_manens constans i8 UNUS[I] = { 'a' };
-        hic_manens constans i8 TRES[III] = { 0xE2, 0x94, 0x80 };
+        hic_manens constans i8 UNUS[I]    = { 'a' };
+        hic_manens constans i8 TRES[III]  = { 0xE2, 0x94, 0x80 };
         hic_manens constans i8 QUATTUOR[IV] = { 0xF0, 0x9F, 0x8E,
             0xB2 };
 
@@ -62,12 +65,14 @@ s32 principale (vacuum)
             ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: effusio (vacuum -> spatium; octeti fideles)
      * ======================================================== */
+
     {
         ChordaAedificator* aed;
-        chorda visus;
+                   chorda  visus;
 
         imprimere("\n--- Probans effusionem signi ---\n");
 
@@ -79,9 +84,11 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (visus, "x \xE2\x94\x82");
     }
 
+
     /* ========================================================
      * PROBARE: stilus
      * ======================================================== */
+
     {
         TesseraStilus a;
         TesseraStilus b;

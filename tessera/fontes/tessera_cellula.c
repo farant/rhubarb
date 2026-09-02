@@ -3,13 +3,16 @@
 #include "tessera_cellula.h"
 
 TesseraStilus
-tessera_stilus (i32 color_litterae, i32 color_fundi, i32 ornamenta)
+tessera_stilus (
+    i32 color_litterae,
+    i32 color_fundi,
+    i32 ornamenta)
 {
     TesseraStilus stilus;
 
-    stilus.color_litterae = color_litterae;
-    stilus.color_fundi = color_fundi;
-    stilus.ornamenta = ornamenta;
+    stilus.color_litterae  = color_litterae;
+    stilus.color_fundi     = color_fundi;
+    stilus.ornamenta       = ornamenta;
     redde stilus;
 }
 
@@ -21,7 +24,9 @@ tessera_stilus_nativus (vacuum)
 }
 
 b32
-tessera_stilus_aequalis (TesseraStilus a, TesseraStilus b)
+tessera_stilus_aequalis (
+    TesseraStilus a,
+    TesseraStilus b)
 {
     redde (a.color_litterae == b.color_litterae
         && a.color_fundi == b.color_fundi
@@ -29,7 +34,9 @@ tessera_stilus_aequalis (TesseraStilus a, TesseraStilus b)
 }
 
 i32
-tessera_signum_ex_octetis (constans i8* octeti, i32 numerus)
+tessera_signum_ex_octetis (
+    constans i8* octeti,
+            i32  numerus)
 {
     i32 signum = ZEPHYRUM;
     i32 k;
@@ -46,7 +53,8 @@ tessera_signum_ex_octetis (constans i8* octeti, i32 numerus)
 }
 
 i32
-tessera_signum_mensura (i32 signum)
+tessera_signum_mensura (
+    i32 signum)
 {
     si (signum == ZEPHYRUM)
     {
@@ -68,7 +76,9 @@ tessera_signum_mensura (i32 signum)
 }
 
 vacuum
-tessera_signum_scribere (ChordaAedificator* aed, i32 signum)
+tessera_signum_scribere (
+    ChordaAedificator* aed,
+                  i32  signum)
 {
     i32 mensura;
     i32 k;

@@ -79,36 +79,41 @@ nomen structura {
     TesseraEventumGenus genus;
 
     /* CLAVIS */
-    s32           runa;          /* codepoint; 0 si clavis specialis */
+              s32 runa;          /* codepoint; 0 si clavis specialis */
     TesseraClavis clavis;        /* NULLA si runa */
-    i32           modificatores;
-    i32           numerus;       /* FUNCTIO: 1-12 */
+              i32 modificatores;
+              i32 numerus;       /* FUNCTIO: 1-12 */
 
     /* MUS */
     TesseraMusGenus mus_genus;
-    s32           mus_x;         /* 0-basata */
-    s32           mus_y;
-    i32           mus_pulsus;    /* 0/1/2 */
+                s32 mus_x;         /* 0-basata */
+                s32 mus_y;
+                i32 mus_pulsus;    /* 0/1/2 */
 
     /* AMPLITUDO */
-    i32           latitudo;
-    i32           altitudo;
+    i32 latitudo;
+    i32 altitudo;
 } TesseraEventum;
 
 nomen structura {
     TesseraPons* pons;
-    i8           buffer[TESSERA_LECTOR_BUFFER];
-    i32          mensura;        /* octeti validi */
-    i32          latitudo_nota;  /* amplitudo novissime visa */
-    i32          altitudo_nota;
+             i8  buffer[TESSERA_LECTOR_BUFFER];
+            i32  mensura;        /* octeti validi */
+            i32  latitudo_nota;  /* amplitudo novissime visa */
+            i32  altitudo_nota;
 } TesseraLector;
 
-TesseraLector* tessera_lector_creare (Piscina* piscina,
+TesseraLector*
+tessera_lector_creare (
+        Piscina* piscina,
     TesseraPons* pons);
 
 /* Eventum proximum intra moram (ms); mora < 0 = sine fine.
  * NIHIL genus = mora exacta. */
-TesseraEventumGenus tessera_eventum_expectare (TesseraLector* lector,
-    TesseraEventum* eventum, s32 mora_ms);
+TesseraEventumGenus
+tessera_eventum_expectare (
+     TesseraLector* lector,
+    TesseraEventum* eventum,
+               s32  mora_ms);
 
 #endif /* TESSERA_EVENTUM_H */

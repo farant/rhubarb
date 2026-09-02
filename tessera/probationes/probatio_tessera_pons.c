@@ -14,10 +14,11 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                    b32  praeteritus;
+                Piscina* piscina;
     TesseraPonsMemoriae* pm;
 
     piscina = piscina_generare_dynamicum("probatio_tessera_pons",
@@ -32,9 +33,11 @@ s32 principale (vacuum)
     pm = tessera_pons_memoriae_creare(piscina, LXXX, XXIV);
     CREDO_NON_NIHIL (pm);
 
+
     /* ========================================================
      * PROBARE: amplitudo + mutatio
      * ======================================================== */
+
     {
         i32 lat = ZEPHYRUM;
         i32 alt = ZEPHYRUM;
@@ -51,11 +54,13 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (alt, XII);
     }
 
+
     /* ========================================================
      * PROBARE: legere - scriptum portionibus, exhaustio = 0
      * ======================================================== */
+
     {
-        i8 buffer[IV];
+         i8 buffer[IV];
         s32 n;
 
         imprimere("\n--- Probans lectionem scriptam ---\n");
@@ -79,9 +84,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)buffer[ZEPHYRUM], (i32)'z');
     }
 
+
     /* ========================================================
      * PROBARE: scribere captum + purgare (buffer manet)
      * ======================================================== */
+
     {
         chorda captum;
 
@@ -103,9 +110,11 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (captum, "q");
     }
 
+
     /* ========================================================
      * PROBARE: intrare/egredi numerata
      * ======================================================== */
+
     {
         imprimere("\n--- Probans intrare/egredi ---\n");
 

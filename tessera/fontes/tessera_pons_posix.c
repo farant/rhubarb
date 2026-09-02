@@ -22,6 +22,7 @@
 #define INTRANDI "\033[?1049h\033[?1000h\033[?1006h"
 #define EXEUNDI  "\033[?1006l\033[?1000l\033[?1049l\033[0m\033[?25h"
 
+
 /* ==================================================
  * STATICUM SANCTUM: status restitutionis pro tractatoribus
  * signorum (async-signal-tuta: write + tcsetattr solum)
@@ -46,7 +47,8 @@ _restituere_cruda (vacuum)
 }
 
 interior vacuum
-_tractator_fatalis (signatus numerus)
+_tractator_fatalis (
+    signatus numerus)
 {
     _restituere_cruda();
     (vacuum)signal(numerus, SIG_DFL);
@@ -54,7 +56,8 @@ _tractator_fatalis (signatus numerus)
 }
 
 interior vacuum
-_tractator_winch (signatus numerus)
+_tractator_winch (
+    signatus numerus)
 {
     (vacuum)numerus;
     /* corpus vacuum: select EINTR accipit; lector amplitudinem
@@ -62,7 +65,8 @@ _tractator_winch (signatus numerus)
 }
 
 interior vacuum
-_tractator_tstp (signatus numerus)
+_tractator_tstp (
+    signatus numerus)
 {
     (vacuum)numerus;
     _restituere_cruda();
@@ -71,7 +75,8 @@ _tractator_tstp (signatus numerus)
 }
 
 interior vacuum
-_tractator_cont (signatus numerus)
+_tractator_cont (
+    signatus numerus)
 {
     (vacuum)numerus;
     /* in crudum redire + tractatorem TSTP reinstituere */
@@ -115,12 +120,17 @@ _tractatores_instituere (vacuum)
     tractatores_instituti = VERUM;
 }
 
+
 /* ==================================================
  * Tabula functionum
  * ================================================== */
 
 interior s32
-_legere_posix (vacuum* datum, i8* buffer, i32 capacitas, s32 mora_ms)
+_legere_posix (
+    vacuum* datum,
+        i8* buffer,
+       i32  capacitas,
+       s32  mora_ms)
 {
     fd_set legenda;
     structura timeval mora;
@@ -135,8 +145,8 @@ _legere_posix (vacuum* datum, i8* buffer, i32 capacitas, s32 mora_ms)
     FD_SET(ZEPHYRUM, &legenda);
     si (mora_ms >= ZEPHYRUM)
     {
-        mora.tv_sec = mora_ms / 1000;
-        mora.tv_usec = (mora_ms % 1000) * 1000;
+        mora.tv_sec   = mora_ms / 1000;
+        mora.tv_usec  = (mora_ms % 1000) * 1000;
         fructus = select(I, &legenda, (fd_set*)NIHIL, (fd_set*)NIHIL,
             &mora);
     }
@@ -169,7 +179,10 @@ _legere_posix (vacuum* datum, i8* buffer, i32 capacitas, s32 mora_ms)
 }
 
 interior b32
-_scribere_posix (vacuum* datum, constans i8* octeti, i32 numerus)
+_scribere_posix (
+         vacuum* datum,
+    constans i8* octeti,
+            i32  numerus)
 {
     i32 scripti = ZEPHYRUM;
 
@@ -197,7 +210,10 @@ _scribere_posix (vacuum* datum, constans i8* octeti, i32 numerus)
 }
 
 interior b32
-_amplitudo_posix (vacuum* datum, i32* latitudo_out, i32* altitudo_out)
+_amplitudo_posix (
+    vacuum* datum,
+       i32* latitudo_out,
+       i32* altitudo_out)
 {
     structura winsize fenestra;  /* NB "magnitudo" = macro latina! */
 
@@ -206,9 +222,9 @@ _amplitudo_posix (vacuum* datum, i32* latitudo_out, i32* altitudo_out)
     {
         redde FALSUM;
     }
-    si (ioctl(I, TIOCGWINSZ, &fenestra) != ZEPHYRUM
-        || fenestra.ws_col == ZEPHYRUM
-        || fenestra.ws_row == ZEPHYRUM)
+    si (   ioctl(I, TIOCGWINSZ, &fenestra) != ZEPHYRUM
+        || fenestra.ws_col                 == ZEPHYRUM
+        || fenestra.ws_row                 == ZEPHYRUM)
     {
         *latitudo_out = LXXX;   /* 80x24 refugium */
         *altitudo_out = XXIV;
@@ -220,7 +236,8 @@ _amplitudo_posix (vacuum* datum, i32* latitudo_out, i32* altitudo_out)
 }
 
 interior b32
-_intrare_posix (vacuum* datum)
+_intrare_posix (
+    vacuum* datum)
 {
     structura termios modus;
 
@@ -231,16 +248,16 @@ _intrare_posix (vacuum* datum)
     }
     modus_pristinus = modus;
     cfmakeraw(&modus);
-    modus.c_cc[VMIN] = I;   /* select moram dat; read saltem unum */
-    modus.c_cc[VTIME] = ZEPHYRUM;
+    modus.c_cc[VMIN]   = I;   /* select moram dat; read saltem unum */
+    modus.c_cc[VTIME]  = ZEPHYRUM;
     /* ISIG redux sed SUSP SOLUM: Ctrl-Z SIGTSTP verum generat
      * (interview: "Ctrl-Z numquam frangit"), Ctrl-C et Ctrl-\
      * claves ordinariae manent (VINTR/VQUIT singulatim vetita -
      * cfmakeraw ISIG totum stinxerat, quo Ctrl-Z octetus 0x1A
      * merus fiebat: oculi Fran in spectaculo id invenerunt) */
-    modus.c_lflag |= (insignatus longus)ISIG;
-    modus.c_cc[VINTR] = _POSIX_VDISABLE;
-    modus.c_cc[VQUIT] = _POSIX_VDISABLE;
+    modus.c_lflag      |= (insignatus longus)ISIG;
+    modus.c_cc[VINTR]  = _POSIX_VDISABLE;
+    modus.c_cc[VQUIT]  = _POSIX_VDISABLE;
     si (tcsetattr(ZEPHYRUM, TCSAFLUSH, &modus) != ZEPHYRUM)
     {
         redde FALSUM;
@@ -253,7 +270,8 @@ _intrare_posix (vacuum* datum)
 }
 
 interior b32
-_egredi_posix (vacuum* datum)
+_egredi_posix (
+    vacuum* datum)
 {
     (vacuum)datum;
     si (!vexillum_intratum)
@@ -271,7 +289,8 @@ _egredi_posix (vacuum* datum)
 }
 
 interior b32
-_resumptum_posix (vacuum* datum)
+_resumptum_posix (
+    vacuum* datum)
 {
     (vacuum)datum;
     si (vexillum_resumptum)
@@ -283,7 +302,8 @@ _resumptum_posix (vacuum* datum)
 }
 
 TesseraPons*
-tessera_pons_posix_creare (Piscina* piscina)
+tessera_pons_posix_creare (
+    Piscina* piscina)
 {
     TesseraPons* pons;
 
@@ -297,12 +317,12 @@ tessera_pons_posix_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    pons->datum = NIHIL;
-    pons->legere = _legere_posix;
-    pons->scribere = _scribere_posix;
-    pons->amplitudo = _amplitudo_posix;
-    pons->intrare = _intrare_posix;
-    pons->egredi = _egredi_posix;
-    pons->resumptum = _resumptum_posix;
+    pons->datum      = NIHIL;
+    pons->legere     = _legere_posix;
+    pons->scribere   = _scribere_posix;
+    pons->amplitudo  = _amplitudo_posix;
+    pons->intrare    = _intrare_posix;
+    pons->egredi     = _egredi_posix;
+    pons->resumptum  = _resumptum_posix;
     redde pons;
 }

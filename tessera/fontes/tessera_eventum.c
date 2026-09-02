@@ -19,23 +19,26 @@ nomen enumeratio {
 } ParsFructus;
 
 interior vacuum
-_eventum_vacare (TesseraEventum* ev)
+_eventum_vacare (
+    TesseraEventum* ev)
 {
-    ev->genus = TESSERA_EVENTUM_NIHIL;
-    ev->runa = ZEPHYRUM;
-    ev->clavis = TESSERA_CLAVIS_NULLA;
-    ev->modificatores = ZEPHYRUM;
-    ev->numerus = ZEPHYRUM;
-    ev->mus_genus = TESSERA_MUS_PRESSUS;
-    ev->mus_x = ZEPHYRUM;
-    ev->mus_y = ZEPHYRUM;
-    ev->mus_pulsus = ZEPHYRUM;
-    ev->latitudo = ZEPHYRUM;
-    ev->altitudo = ZEPHYRUM;
+    ev->genus          = TESSERA_EVENTUM_NIHIL;
+    ev->runa           = ZEPHYRUM;
+    ev->clavis         = TESSERA_CLAVIS_NULLA;
+    ev->modificatores  = ZEPHYRUM;
+    ev->numerus        = ZEPHYRUM;
+    ev->mus_genus      = TESSERA_MUS_PRESSUS;
+    ev->mus_x          = ZEPHYRUM;
+    ev->mus_y          = ZEPHYRUM;
+    ev->mus_pulsus     = ZEPHYRUM;
+    ev->latitudo       = ZEPHYRUM;
+    ev->altitudo       = ZEPHYRUM;
 }
 
 interior vacuum
-_consumere (TesseraLector* lector, i32 numerus)
+_consumere (
+    TesseraLector* lector,
+              i32  numerus)
 {
     si (numerus >= lector->mensura)
     {
@@ -48,26 +51,32 @@ _consumere (TesseraLector* lector, i32 numerus)
 }
 
 interior vacuum
-_clavem_ponere (TesseraEventum* ev, TesseraClavis clavis,
-    i32 modificatores)
+_clavem_ponere (
+    TesseraEventum* ev,
+     TesseraClavis  clavis,
+               i32  modificatores)
 {
-    ev->genus = TESSERA_EVENTUM_CLAVIS;
-    ev->clavis = clavis;
-    ev->modificatores = modificatores;
+    ev->genus          = TESSERA_EVENTUM_CLAVIS;
+    ev->clavis         = clavis;
+    ev->modificatores  = modificatores;
 }
 
 interior vacuum
-_runam_ponere (TesseraEventum* ev, s32 runa, i32 modificatores)
+_runam_ponere (
+    TesseraEventum* ev,
+               s32  runa,
+               i32  modificatores)
 {
-    ev->genus = TESSERA_EVENTUM_CLAVIS;
-    ev->runa = runa;
-    ev->modificatores = modificatores;
+    ev->genus          = TESSERA_EVENTUM_CLAVIS;
+    ev->runa           = runa;
+    ev->modificatores  = modificatores;
 }
 
 /* Modificatores CSI (parametrum m): m-1 = bits maiuscula/alterum/
  * imperium */
 interior i32
-_modificatores_csi (s32 m)
+_modificatores_csi (
+    s32 m)
 {
     i32 fructus = ZEPHYRUM;
     s32 bits;
@@ -94,7 +103,10 @@ _modificatores_csi (s32 m)
 
 /* ~-codices CSI */
 interior b32
-_clavem_tildae (s32 codex, TesseraEventum* ev, i32 modificatores)
+_clavem_tildae (
+               s32  codex,
+    TesseraEventum* ev,
+               i32  modificatores)
 {
     commutatio (codex)
     {
@@ -134,8 +146,10 @@ _clavem_tildae (s32 codex, TesseraEventum* ev, i32 modificatores)
 }
 
 interior b32
-_clavem_finalem (character finalis, TesseraEventum* ev,
-    i32 modificatores)
+_clavem_finalem (
+         character  finalis,
+    TesseraEventum* ev,
+               i32  modificatores)
 {
     commutatio (finalis)
     {
@@ -161,17 +175,19 @@ _clavem_finalem (character finalis, TesseraEventum* ev,
 /* CSI: buffer[0]=ESC buffer[1]='['. Parametra numerica leguntur,
  * octetus finalis 0x40-0x7E. Mus SGR: '<' post CSI. */
 interior ParsFructus
-_csi_parsare (TesseraLector* lector, TesseraEventum* ev,
-    i32* consumendum)
+_csi_parsare (
+     TesseraLector* lector,
+    TesseraEventum* ev,
+               i32* consumendum)
 {
-    i32 i = II;
-    b32 est_mus = FALSUM;
-    b32 privata = FALSUM;
-    s32 parametra[IV];
-    i32 numerus_parametrorum = ZEPHYRUM;
-    s32 valor_currens = ZEPHYRUM;
-    b32 valor_visus = FALSUM;
-    character finalis = '\0';
+          i32 i        = II;
+          b32 est_mus  = FALSUM;
+          b32 privata  = FALSUM;
+          s32 parametra[IV];
+          i32 numerus_parametrorum  = ZEPHYRUM;
+          s32 valor_currens         = ZEPHYRUM;
+          b32 valor_visus           = FALSUM;
+    character finalis               = '\0';
 
     si (i < lector->mensura && lector->buffer[i] == '<')
     {
@@ -188,8 +204,8 @@ _csi_parsare (TesseraLector* lector, TesseraEventum* ev,
 
         si (b >= '0' && b <= '9')
         {
-            valor_currens = valor_currens * X + (s32)(b - '0');
-            valor_visus = VERUM;
+            valor_currens  = valor_currens * X + (s32)(b - '0');
+            valor_visus    = VERUM;
             i++;
         }
         alioquin si (b == ';')
@@ -198,8 +214,8 @@ _csi_parsare (TesseraLector* lector, TesseraEventum* ev,
             {
                 parametra[numerus_parametrorum++] = valor_currens;
             }
-            valor_currens = ZEPHYRUM;
-            valor_visus = FALSUM;
+            valor_currens  = ZEPHYRUM;
+            valor_visus    = FALSUM;
             i++;
         }
         alioquin si (b >= 0x30 && b <= 0x3F)
@@ -241,7 +257,7 @@ _csi_parsare (TesseraLector* lector, TesseraEventum* ev,
     }
     *consumendum = i;
 
-    si (est_mus && (finalis == 'M' || finalis == 'm')
+    si (   est_mus && (finalis == 'M' || finalis == 'm')
         && numerus_parametrorum >= III)
     {
         s32 pulsus = parametra[ZEPHYRUM];
@@ -287,8 +303,10 @@ _csi_parsare (TesseraLector* lector, TesseraEventum* ev,
 
 /* SS3: ESC O <finalis> - frecce + F1-F4 (modus applicationis) */
 interior ParsFructus
-_ss3_parsare (TesseraLector* lector, TesseraEventum* ev,
-    i32* consumendum)
+_ss3_parsare (
+     TesseraLector* lector,
+    TesseraEventum* ev,
+               i32* consumendum)
 {
     character finalis;
 
@@ -296,8 +314,8 @@ _ss3_parsare (TesseraLector* lector, TesseraEventum* ev,
     {
         redde PARS_INCOMPLETUM;
     }
-    finalis = (character)lector->buffer[II];
-    *consumendum = III;
+    finalis       = (character)lector->buffer[II];
+    *consumendum  = III;
     si (_clavem_finalem(finalis, ev, ZEPHYRUM))
     {
         redde PARS_COMPLETUM;
@@ -313,7 +331,10 @@ _ss3_parsare (TesseraLector* lector, TesseraEventum* ev,
 
 /* Octetus regiminis solus (non ESC) */
 interior vacuum
-_regimen_parsare (i8 b, TesseraEventum* ev, i32 modificatores)
+_regimen_parsare (
+                i8  b,
+    TesseraEventum* ev,
+               i32  modificatores)
 {
     si (b == 0x0D || b == 0x0A)
     {
@@ -347,10 +368,12 @@ _regimen_parsare (i8 b, TesseraEventum* ev, i32 modificatores)
 
 /* Unum eventum a fronte bufferis parsare temptare */
 interior ParsFructus
-_parsare (TesseraLector* lector, TesseraEventum* ev)
+_parsare (
+     TesseraLector* lector,
+    TesseraEventum* ev)
 {
-    i8 primus;
-    i32 consumendum = ZEPHYRUM;
+             i8 primus;
+            i32 consumendum = ZEPHYRUM;
     ParsFructus fructus;
 
     si (lector->mensura == ZEPHYRUM)
@@ -368,7 +391,7 @@ _parsare (TesseraLector* lector, TesseraEventum* ev)
         si (lector->buffer[I] == '[')
         {
             fructus = _csi_parsare(lector, ev, &consumendum);
-            si (fructus == PARS_COMPLETUM
+            si (   fructus == PARS_COMPLETUM
                 || fructus == PARS_PRAETERITUM)
             {
                 _consumere(lector, consumendum);
@@ -378,7 +401,7 @@ _parsare (TesseraLector* lector, TesseraEventum* ev)
         si (lector->buffer[I] == 'O')
         {
             fructus = _ss3_parsare(lector, ev, &consumendum);
-            si (fructus == PARS_COMPLETUM
+            si (   fructus == PARS_COMPLETUM
                 || fructus == PARS_PRAETERITUM)
             {
                 _consumere(lector, consumendum);
@@ -404,13 +427,13 @@ _parsare (TesseraLector* lector, TesseraEventum* ev)
                 redde PARS_COMPLETUM;
             }
             {
-                constans i8* cursor = lector->buffer + I;
-                constans i8* finis = lector->buffer + lector->mensura;
-                s32 longitudo_runae =
-                    utf8_longitudo_byte(lector->buffer[I]);
+                constans i8* cursor  = lector->buffer + I;
+                constans i8* finis   = lector->buffer + lector->mensura;
+                        s32  longitudo_runae =
+                            utf8_longitudo_byte(lector->buffer[I]);
                 s32 runa;
 
-                si (longitudo_runae > ZEPHYRUM
+                si (   longitudo_runae > ZEPHYRUM
                     && (i32)longitudo_runae > lector->mensura - I)
                 {
                     redde PARS_INCOMPLETUM;
@@ -442,10 +465,10 @@ _parsare (TesseraLector* lector, TesseraEventum* ev)
     {
         constans i8* cursor = lector->buffer;
         constans i8* finis = lector->buffer + lector->mensura;
-        s32 longitudo_runae = utf8_longitudo_byte(primus);
-        s32 runa;
+                s32  longitudo_runae = utf8_longitudo_byte(primus);
+                s32  runa;
 
-        si (longitudo_runae > ZEPHYRUM
+        si (   longitudo_runae > ZEPHYRUM
             && (i32)longitudo_runae > lector->mensura)
         {
             redde PARS_INCOMPLETUM;  /* runa dimidia in fine */
@@ -463,7 +486,9 @@ _parsare (TesseraLector* lector, TesseraEventum* ev)
 }
 
 TesseraLector*
-tessera_lector_creare (Piscina* piscina, TesseraPons* pons)
+tessera_lector_creare (
+        Piscina* piscina,
+    TesseraPons* pons)
 {
     TesseraLector* lector;
 
@@ -477,8 +502,8 @@ tessera_lector_creare (Piscina* piscina, TesseraPons* pons)
     {
         redde NIHIL;
     }
-    lector->pons = pons;
-    lector->mensura = ZEPHYRUM;
+    lector->pons     = pons;
+    lector->mensura  = ZEPHYRUM;
     si (!pons->amplitudo(pons->datum, &lector->latitudo_nota,
             &lector->altitudo_nota))
     {
@@ -489,8 +514,10 @@ tessera_lector_creare (Piscina* piscina, TesseraPons* pons)
 }
 
 TesseraEventumGenus
-tessera_eventum_expectare (TesseraLector* lector,
-    TesseraEventum* eventum, s32 mora_ms)
+tessera_eventum_expectare (
+     TesseraLector* lector,
+    TesseraEventum* eventum,
+               s32  mora_ms)
 {
     ParsFructus fructus;
 
@@ -501,7 +528,7 @@ tessera_eventum_expectare (TesseraLector* lector,
     _eventum_vacare(eventum);
 
     /* Resumptio? (roga-et-purga; NIHIL licet) */
-    si (lector->pons->resumptum != NIHIL
+    si (   lector->pons->resumptum != NIHIL
         && lector->pons->resumptum(lector->pons->datum))
     {
         eventum->genus = TESSERA_EVENTUM_RESUMPTUM;
@@ -514,15 +541,15 @@ tessera_eventum_expectare (TesseraLector* lector,
         i32 lat;
         i32 alt;
 
-        si (lector->pons->amplitudo(lector->pons->datum, &lat, &alt)
+        si (   lector->pons->amplitudo(lector->pons->datum, &lat, &alt)
             && (lat != lector->latitudo_nota
                 || alt != lector->altitudo_nota))
         {
-            lector->latitudo_nota = lat;
-            lector->altitudo_nota = alt;
-            eventum->genus = TESSERA_EVENTUM_AMPLITUDO;
-            eventum->latitudo = lat;
-            eventum->altitudo = alt;
+            lector->latitudo_nota  = lat;
+            lector->altitudo_nota  = alt;
+            eventum->genus         = TESSERA_EVENTUM_AMPLITUDO;
+            eventum->latitudo      = lat;
+            eventum->altitudo      = alt;
             redde eventum->genus;
         }
     }

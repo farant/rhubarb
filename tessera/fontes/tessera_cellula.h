@@ -19,11 +19,13 @@
 #include "latina.h"
 #include "chorda_aedificator.h"
 
+
 /* ==================================================
  * Colores
  * ================================================== */
 
 #define TESSERA_COLOR_NATIVUS 0xFF000000
+
 
 /* ==================================================
  * Ornamenta (fasciculus bitorum - sex tuta)
@@ -35,6 +37,7 @@
 #define TESSERA_ORNAMENTUM_SUBLINEATUM 0x08
 #define TESSERA_ORNAMENTUM_INVERSUM    0x10
 #define TESSERA_ORNAMENTUM_TRANSFIXUM  0x20
+
 
 /* ==================================================
  * Cellula + stilus
@@ -53,23 +56,40 @@ nomen structura {
     i32 ornamenta;
 } TesseraStilus;
 
-TesseraStilus tessera_stilus (i32 color_litterae, i32 color_fundi,
+TesseraStilus
+tessera_stilus (
+    i32 color_litterae,
+    i32 color_fundi,
     i32 ornamenta);
-TesseraStilus tessera_stilus_nativus (vacuum);
-b32 tessera_stilus_aequalis (TesseraStilus a, TesseraStilus b);
+TesseraStilus
+tessera_stilus_nativus (vacuum);
+b32
+tessera_stilus_aequalis (
+    TesseraStilus a,
+    TesseraStilus b);
+
 
 /* ==================================================
  * Signum compactum
  * ================================================== */
 
 /* Octetos 1-4 compingere (LSB primus); 0 octeti aut nimis -> 0 */
-i32 tessera_signum_ex_octetis (constans i8* octeti, i32 numerus);
+i32
+tessera_signum_ex_octetis (
+    constans i8* octeti,
+            i32  numerus);
 
 /* Numerus octetorum signi; 0 pro vacuo */
-i32 tessera_signum_mensura (i32 signum);
+i32
+tessera_signum_mensura (
+    i32 signum);
 
 /* Octetos signi in aedificatorem effundere; vacuum -> ' ' */
-vacuum tessera_signum_scribere (ChordaAedificator* aed, i32 signum);
+vacuum
+tessera_signum_scribere (
+    ChordaAedificator* aed,
+                  i32  signum);
+
 
 /* ==================================================
  * Signa linearum (constanta compacta)

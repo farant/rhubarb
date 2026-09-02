@@ -25,7 +25,8 @@ interior TesseraLector* lector_globalis;
 
 /* Scriptum ponere et eventum unum expectare */
 interior TesseraEventum
-_unum (constans character* octeti)
+_unum (
+    constans character* octeti)
 {
     TesseraEventum ev;
 
@@ -38,9 +39,10 @@ _unum (constans character* octeti)
     redde ev;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_tessera_eventum",
@@ -58,9 +60,11 @@ s32 principale (vacuum)
         &pm_globalis->pons);
     CREDO_NON_NIHIL (lector_globalis);
 
+
     /* ========================================================
      * PROBARE: runae - ASCII, UTF-8, invalidum
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -85,9 +89,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (ev.runa, (s32)'b');
     }
 
+
     /* ========================================================
      * PROBARE: regimen
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -113,9 +119,11 @@ s32 principale (vacuum)
             TESSERA_MODIFICATOR_IMPERIUM);
     }
 
+
     /* ========================================================
      * PROBARE: CSI - frecce, ~-codices, modificatores, Z
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -172,9 +180,11 @@ s32 principale (vacuum)
             TESSERA_MODIFICATOR_MAIUSCULA);
     }
 
+
     /* ========================================================
      * PROBARE: SS3 + ALTERUM
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -202,9 +212,11 @@ s32 principale (vacuum)
             TESSERA_MODIFICATOR_ALTERUM);
     }
 
+
     /* ========================================================
      * PROBARE: mus SGR
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -231,10 +243,12 @@ s32 principale (vacuum)
             (i32)TESSERA_MUS_ROTA_DEORSUM);
     }
 
+
     /* ========================================================
      * PROBARE: CSI ignota tacite; eventa plura gestata; FUGA
      * sola per moram; NIHIL in vacuo
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -265,9 +279,11 @@ s32 principale (vacuum)
             (i32)TESSERA_EVENTUM_NIHIL);
     }
 
+
     /* ========================================================
      * PROBARE: AMPLITUDO (interrogatio) + RESUMPTUM (vexillum)
      * ======================================================== */
+
     {
         TesseraEventum ev;
 
@@ -285,8 +301,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)ev.genus,
             (i32)TESSERA_EVENTUM_NIHIL);
 
-        pm_globalis->resumendum = VERUM;
-        ev = _unum(NIHIL);
+        pm_globalis->resumendum  = VERUM;
+        ev                       = _unum(NIHIL);
         CREDO_AEQUALIS_I32 ((i32)ev.genus,
             (i32)TESSERA_EVENTUM_RESUMPTUM);
         ev = _unum(NIHIL);
@@ -294,15 +310,17 @@ s32 principale (vacuum)
             (i32)TESSERA_EVENTUM_NIHIL);
     }
 
+
     /* ========================================================
      * PROBARE: intermittere/resumere - numeri pontis + pictura
      * plena post resumptionem
      * ======================================================== */
+
     {
         TesseraPonsMemoriae* pi = tessera_pons_memoriae_creare(
             piscina, VIII, III);
         TesseraOpus* opus;
-        chorda captum;
+             chorda  captum;
 
         imprimere("\n--- Probans intermittere/resumere ---\n");
 

@@ -21,6 +21,7 @@
 
 #define NUMERUS(series) ((i32)(magnitudo(series) / magnitudo((series)[0])))
 
+
 /* ==================================================
  * Manifestum
  * ================================================== */
@@ -110,10 +111,13 @@ _enumerare (vacuum)
     }
 }
 
-s32 principale (s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    AmalgamaManifestum manifestum;
+               Piscina* piscina;
+    AmalgamaManifestum  manifestum;
 
     si (argc == II && strcmp(argv[I], "--enumerare") == ZEPHYRUM)
     {
@@ -154,12 +158,12 @@ s32 principale (s32 argc, character** argv)
     manifestum.prooemium = PROOEMIUM;
     manifestum.assertiones = NIHIL;  /* macra duplicata identica =
                                       * custodia derivae gratuita */
-    manifestum.latina_datum_via_capitis = NIHIL;   /* silvae solum */
-    manifestum.latina_datum_via_corporis = NIHIL;
-    manifestum.latina_datum_prooemium = NIHIL;
-    manifestum.latina_datum_custos = NIHIL;
-    manifestum.latina_datum_titulus_textus = NIHIL;
-    manifestum.latina_datum_titulus_mensurae = NIHIL;
+    manifestum.latina_datum_via_capitis       = NIHIL;   /* silvae solum */
+    manifestum.latina_datum_via_corporis      = NIHIL;
+    manifestum.latina_datum_prooemium         = NIHIL;
+    manifestum.latina_datum_custos            = NIHIL;
+    manifestum.latina_datum_titulus_textus    = NIHIL;
+    manifestum.latina_datum_titulus_mensurae  = NIHIL;
 
     si (!silva_amalgama_currere(piscina, argv[I], argv[II],
             &manifestum))

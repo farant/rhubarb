@@ -21,6 +21,8 @@
 #include "piscina.h"
 #include "tessera_pons.h"
 
-TesseraPons* tessera_pons_posix_creare (Piscina* piscina);
+TesseraPons*
+tessera_pons_posix_creare (
+    Piscina* piscina);
 
 #endif /* TESSERA_PONS_POSIX_H */

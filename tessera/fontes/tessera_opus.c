@@ -13,7 +13,8 @@ hic_manens constans TesseraCellula CELLULA_VACUA = {
 };
 
 interior b32
-_cellulae_aequales (constans TesseraCellula* a,
+_cellulae_aequales (
+    constans TesseraCellula* a,
     constans TesseraCellula* b)
 {
     redde (a->signum == b->signum
@@ -23,7 +24,10 @@ _cellulae_aequales (constans TesseraCellula* a,
 }
 
 interior b32
-_in_finibus (constans TesseraOpus* opus, s32 x, s32 y)
+_in_finibus (
+    constans TesseraOpus* opus,
+                     s32  x,
+                     s32  y)
 {
     redde (x >= ZEPHYRUM && y >= ZEPHYRUM
         && x < (s32)opus->latitudo && y < (s32)opus->altitudo)
@@ -31,14 +35,19 @@ _in_finibus (constans TesseraOpus* opus, s32 x, s32 y)
 }
 
 interior i32
-_index (s32 x, s32 y)
+_index (
+    s32 x,
+    s32 y)
 {
     redde (i32)y * TESSERA_LATITUDO_MAXIMA + (i32)x;
 }
 
 /* CUP: "\033[<y+1>;<x+1>H" (1-basatum) */
 interior vacuum
-_positum_emittere (ChordaAedificator* aed, i32 x, i32 y)
+_positum_emittere (
+    ChordaAedificator* aed,
+                  i32  x,
+                  i32  y)
 {
     chorda_aedificator_appendere_literis(aed, "\033[");
     chorda_aedificator_appendere_i32(aed, y + I);
@@ -50,7 +59,9 @@ _positum_emittere (ChordaAedificator* aed, i32 x, i32 y)
 /* SGR: reditio plena + ornamenta + colores (nativus = nihil -
  * reditio nuda defaltas terminalis dat) */
 interior vacuum
-_stilum_emittere (ChordaAedificator* aed, constans TesseraStilus* st)
+_stilum_emittere (
+         ChordaAedificator* aed,
+    constans TesseraStilus* st)
 {
     chorda_aedificator_appendere_literis(aed, "\033[0");
     si (st->ornamenta & TESSERA_ORNAMENTUM_CRASSUM)
@@ -104,10 +115,12 @@ _stilum_emittere (ChordaAedificator* aed, constans TesseraStilus* st)
 }
 
 TesseraOpus*
-tessera_aperire (Piscina* piscina, TesseraPons* pons)
+tessera_aperire (
+        Piscina* piscina,
+    TesseraPons* pons)
 {
-    TesseraOpus* opus;
-    memoriae_index cellulae = (memoriae_index)TESSERA_LATITUDO_MAXIMA
+       TesseraOpus* opus;
+    memoriae_index  cellulae = (memoriae_index)TESSERA_LATITUDO_MAXIMA
         * (memoriae_index)TESSERA_ALTITUDO_MAXIMA;
     i32 latitudo;
     i32 altitudo;
@@ -127,8 +140,8 @@ tessera_aperire (Piscina* piscina, TesseraPons* pons)
     {
         redde NIHIL;
     }
-    opus->piscina = piscina;
-    opus->pons = pons;
+    opus->piscina  = piscina;
+    opus->pons     = pons;
     opus->frons = (TesseraCellula*)piscina_allocare_ordinatum(piscina,
         cellulae * magnitudo(TesseraCellula), IV);
     opus->tergum = (TesseraCellula*)piscina_allocare_ordinatum(
@@ -162,17 +175,17 @@ tessera_aperire (Piscina* piscina, TesseraPons* pons)
         redde NIHIL;
     }
 
-    opus->cursor_x = -I;
-    opus->cursor_y = -I;
-    opus->cursor_x_actus = -I;
-    opus->cursor_y_actus = -I;
-    opus->cursor_visibilis_actus = FALSUM;
-    opus->primum = VERUM;
-    opus->fructus.cellulae_collatae = ZEPHYRUM;
-    opus->fructus.cellulae_mutatae = ZEPHYRUM;
-    opus->fructus.octeti_emissi = ZEPHYRUM;
-    opus->fructus.praesentationes = ZEPHYRUM;
-    opus->fructus.tempus_praesentandi_ms = 0.0;
+    opus->cursor_x                        = -I;
+    opus->cursor_y                        = -I;
+    opus->cursor_x_actus                  = -I;
+    opus->cursor_y_actus                  = -I;
+    opus->cursor_visibilis_actus          = FALSUM;
+    opus->primum                          = VERUM;
+    opus->fructus.cellulae_collatae       = ZEPHYRUM;
+    opus->fructus.cellulae_mutatae        = ZEPHYRUM;
+    opus->fructus.octeti_emissi           = ZEPHYRUM;
+    opus->fructus.praesentationes         = ZEPHYRUM;
+    opus->fructus.tempus_praesentandi_ms  = 0.0;
 
     si (!pons->intrare(pons->datum))
     {
@@ -182,7 +195,8 @@ tessera_aperire (Piscina* piscina, TesseraPons* pons)
 }
 
 vacuum
-tessera_claudere (TesseraOpus* opus)
+tessera_claudere (
+    TesseraOpus* opus)
 {
     si (opus == NIHIL)
     {
@@ -201,7 +215,8 @@ tessera_claudere (TesseraOpus* opus)
 }
 
 vacuum
-tessera_intermittere (TesseraOpus* opus)
+tessera_intermittere (
+    TesseraOpus* opus)
 {
     si (opus == NIHIL)
     {
@@ -220,33 +235,38 @@ tessera_intermittere (TesseraOpus* opus)
 }
 
 vacuum
-tessera_resumere (TesseraOpus* opus)
+tessera_resumere (
+    TesseraOpus* opus)
 {
     si (opus == NIHIL)
     {
         redde;
     }
     opus->pons->intrare(opus->pons->datum);
-    opus->primum = VERUM;   /* pictura plena sequitur */
-    opus->cursor_x_actus = -I;
-    opus->cursor_y_actus = -I;
-    opus->cursor_visibilis_actus = FALSUM;
+    opus->primum                  = VERUM;   /* pictura plena sequitur */
+    opus->cursor_x_actus          = -I;
+    opus->cursor_y_actus          = -I;
+    opus->cursor_visibilis_actus  = FALSUM;
 }
 
 i32
-tessera_latitudo (constans TesseraOpus* opus)
+tessera_latitudo (
+    constans TesseraOpus* opus)
 {
     redde (opus != NIHIL) ? opus->latitudo : ZEPHYRUM;
 }
 
 i32
-tessera_altitudo (constans TesseraOpus* opus)
+tessera_altitudo (
+    constans TesseraOpus* opus)
 {
     redde (opus != NIHIL) ? opus->altitudo : ZEPHYRUM;
 }
 
 vacuum
-tessera_purgare (TesseraOpus* opus, TesseraStilus stilus)
+tessera_purgare (
+      TesseraOpus* opus,
+    TesseraStilus  stilus)
 {
     s32 x;
     s32 y;
@@ -261,17 +281,21 @@ tessera_purgare (TesseraOpus* opus, TesseraStilus stilus)
         {
             TesseraCellula* cella = &opus->tergum[_index(x, y)];
 
-            cella->signum = ZEPHYRUM;
-            cella->color_litterae = stilus.color_litterae;
-            cella->color_fundi = stilus.color_fundi;
-            cella->ornamenta = stilus.ornamenta;
+            cella->signum          = ZEPHYRUM;
+            cella->color_litterae  = stilus.color_litterae;
+            cella->color_fundi     = stilus.color_fundi;
+            cella->ornamenta       = stilus.ornamenta;
         }
     }
 }
 
 vacuum
-tessera_cellulam_ponere (TesseraOpus* opus, s32 x, s32 y, i32 signum,
-    TesseraStilus stilus)
+tessera_cellulam_ponere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              i32  signum,
+    TesseraStilus  stilus)
 {
     TesseraCellula* cella;
 
@@ -279,15 +303,18 @@ tessera_cellulam_ponere (TesseraOpus* opus, s32 x, s32 y, i32 signum,
     {
         redde;  /* praecisio taciturna */
     }
-    cella = &opus->tergum[_index(x, y)];
-    cella->signum = signum;
-    cella->color_litterae = stilus.color_litterae;
-    cella->color_fundi = stilus.color_fundi;
-    cella->ornamenta = stilus.ornamenta;
+    cella                  = &opus->tergum[_index(x, y)];
+    cella->signum          = signum;
+    cella->color_litterae  = stilus.color_litterae;
+    cella->color_fundi     = stilus.color_fundi;
+    cella->ornamenta       = stilus.ornamenta;
 }
 
 TesseraCellula
-tessera_cellulam_legere (constans TesseraOpus* opus, s32 x, s32 y)
+tessera_cellulam_legere (
+    constans TesseraOpus* opus,
+                     s32  x,
+                     s32  y)
 {
     si (opus == NIHIL || !_in_finibus(opus, x, y))
     {
@@ -299,19 +326,24 @@ tessera_cellulam_legere (constans TesseraOpus* opus, s32 x, s32 y)
 /* Nucleus scriptionis (parametra constantia - scribere_literis
  * qualificatorem numquam abicit) */
 interior vacuum
-_octetos_scribere (TesseraOpus* opus, s32 x, s32 y,
-    constans i8* datum, i32 mensura, TesseraStilus stilus)
+_octetos_scribere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* datum,
+              i32  mensura,
+    TesseraStilus  stilus)
 {
     constans i8* cursor;
     constans i8* finis;
-    s32 cx = x;
+            s32  cx = x;
 
     si (opus == NIHIL || datum == NIHIL)
     {
         redde;
     }
-    cursor = datum;
-    finis = datum + mensura;
+    cursor  = datum;
+    finis   = datum + mensura;
     dum (cursor < finis)
     {
         i8 primus = *cursor;
@@ -325,7 +357,7 @@ _octetos_scribere (TesseraOpus* opus, s32 x, s32 y,
         alioquin
         {
             constans i8* post = cursor;
-            s32 runa = utf8_decodere(&post, finis);
+                    s32  runa = utf8_decodere(&post, finis);
 
             si (runa < ZEPHYRUM)
             {
@@ -347,16 +379,24 @@ _octetos_scribere (TesseraOpus* opus, s32 x, s32 y,
 }
 
 vacuum
-tessera_scribere (TesseraOpus* opus, s32 x, s32 y, chorda textus,
-    TesseraStilus stilus)
+tessera_scribere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+           chorda  textus,
+    TesseraStilus  stilus)
 {
     _octetos_scribere(opus, x, y, textus.datum, textus.mensura,
         stilus);
 }
 
 vacuum
-tessera_scribere_literis (TesseraOpus* opus, s32 x, s32 y,
-    constans character* textus, TesseraStilus stilus)
+tessera_scribere_literis (
+           TesseraOpus* opus,
+                   s32  x,
+                   s32  y,
+    constans character* textus,
+         TesseraStilus  stilus)
 {
     si (textus == NIHIL)
     {
@@ -368,7 +408,9 @@ tessera_scribere_literis (TesseraOpus* opus, s32 x, s32 y,
 
 /* Signa marginum per genus: h, v, ss, sd, is, id */
 interior vacuum
-_signa_lineae (TesseraLineaGenus genus, i32* signa)
+_signa_lineae (
+    TesseraLineaGenus  genus,
+                  i32* signa)
 {
     commutatio (genus)
     {
@@ -400,9 +442,14 @@ _signa_lineae (TesseraLineaGenus genus, i32* signa)
 }
 
 vacuum
-tessera_quadrum_pingere (TesseraOpus* opus, s32 x, s32 y,
-    s32 latitudo, s32 altitudo, TesseraLineaGenus genus,
-    TesseraStilus stilus)
+tessera_quadrum_pingere (
+          TesseraOpus* opus,
+                  s32  x,
+                  s32  y,
+                  s32  latitudo,
+                  s32  altitudo,
+    TesseraLineaGenus  genus,
+        TesseraStilus  stilus)
 {
     i32 signa[VI];
     s32 k;
@@ -436,9 +483,14 @@ tessera_quadrum_pingere (TesseraOpus* opus, s32 x, s32 y,
 }
 
 vacuum
-tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
-    s32 longitudo, b32 verticalis, TesseraLineaGenus genus,
-    TesseraStilus stilus)
+tessera_lineam_pingere (
+          TesseraOpus* opus,
+                  s32  x,
+                  s32  y,
+                  s32  longitudo,
+                  b32  verticalis,
+    TesseraLineaGenus  genus,
+        TesseraStilus  stilus)
 {
     i32 signa[VI];
     i32 signum;
@@ -458,8 +510,14 @@ tessera_lineam_pingere (TesseraOpus* opus, s32 x, s32 y,
 }
 
 vacuum
-tessera_replere (TesseraOpus* opus, s32 x, s32 y, s32 latitudo,
-    s32 altitudo, i32 signum, TesseraStilus stilus)
+tessera_replere (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              s32  latitudo,
+              s32  altitudo,
+              i32  signum,
+    TesseraStilus  stilus)
 {
     s32 dx;
     s32 dy;
@@ -479,7 +537,10 @@ tessera_replere (TesseraOpus* opus, s32 x, s32 y, s32 latitudo,
 }
 
 vacuum
-tessera_cursorem_ponere (TesseraOpus* opus, s32 x, s32 y)
+tessera_cursorem_ponere (
+    TesseraOpus* opus,
+            s32  x,
+            s32  y)
 {
     si (opus == NIHIL)
     {
@@ -490,17 +551,18 @@ tessera_cursorem_ponere (TesseraOpus* opus, s32 x, s32 y)
 }
 
 b32
-tessera_praesentare (TesseraOpus* opus)
+tessera_praesentare (
+    TesseraOpus* opus)
 {
-    clock_t t0;
-    s32 pos_x = -I;
-    s32 pos_y = -I;
+          clock_t t0;
+              s32 pos_x = -I;
+              s32 pos_y = -I;
     TesseraStilus stilus_currens;
-    b32 stilus_validus = FALSUM;
-    i32 mutatae_quadri = ZEPHYRUM;
-    b32 successus = VERUM;
-    s32 x;
-    s32 y;
+              b32 stilus_validus  = FALSUM;
+              i32 mutatae_quadri  = ZEPHYRUM;
+              b32 successus       = VERUM;
+              s32 x;
+              s32 y;
 
     si (opus == NIHIL)
     {
@@ -514,18 +576,19 @@ tessera_praesentare (TesseraOpus* opus)
     {
         chorda_aedificator_appendere_literis(opus->aed,
             "\033[?25l\033[2J");
-        opus->cursor_visibilis_actus = FALSUM;
-        opus->cursor_x_actus = -I;
-        opus->cursor_y_actus = -I;
+        opus->cursor_visibilis_actus  = FALSUM;
+        opus->cursor_x_actus          = -I;
+        opus->cursor_y_actus          = -I;
     }
 
     per (y = ZEPHYRUM; y < (s32)opus->altitudo; y++)
     {
         per (x = ZEPHYRUM; x < (s32)opus->latitudo; x++)
         {
-            i32 idx = _index(x, y);
-            constans TesseraCellula* cella = &opus->tergum[idx];
-            b32 pingenda;
+                                i32 idx     =
+                                    _index(x, y);
+            constans TesseraCellula* cella  = &opus->tergum[idx];
+                                b32  pingenda;
 
             opus->fructus.cellulae_collatae++;
             si (opus->primum)
@@ -550,10 +613,10 @@ tessera_praesentare (TesseraOpus* opus)
             {
                 TesseraStilus stilus_cellae;
 
-                stilus_cellae.color_litterae = cella->color_litterae;
-                stilus_cellae.color_fundi = cella->color_fundi;
-                stilus_cellae.ornamenta = cella->ornamenta;
-                si (!stilus_validus
+                stilus_cellae.color_litterae  = cella->color_litterae;
+                stilus_cellae.color_fundi     = cella->color_fundi;
+                stilus_cellae.ornamenta       = cella->ornamenta;
+                si (   !stilus_validus
                     || !tessera_stilus_aequalis(stilus_currens,
                            stilus_cellae))
                 {
@@ -579,7 +642,7 @@ tessera_praesentare (TesseraOpus* opus)
     /* Cursor in fine quadri applicatur */
     si (opus->cursor_x >= ZEPHYRUM && opus->cursor_y >= ZEPHYRUM)
     {
-        si (mutatae_quadri > ZEPHYRUM
+        si (   mutatae_quadri > ZEPHYRUM
             || opus->cursor_x != opus->cursor_x_actus
             || opus->cursor_y != opus->cursor_y_actus
             || !opus->cursor_visibilis_actus)
@@ -591,9 +654,9 @@ tessera_praesentare (TesseraOpus* opus)
                 chorda_aedificator_appendere_literis(opus->aed,
                     "\033[?25h");
             }
-            opus->cursor_x_actus = opus->cursor_x;
-            opus->cursor_y_actus = opus->cursor_y;
-            opus->cursor_visibilis_actus = VERUM;
+            opus->cursor_x_actus          = opus->cursor_x;
+            opus->cursor_y_actus          = opus->cursor_y;
+            opus->cursor_visibilis_actus  = VERUM;
         }
     }
     alioquin si (opus->cursor_visibilis_actus)
@@ -620,12 +683,13 @@ tessera_praesentare (TesseraOpus* opus)
 }
 
 b32
-tessera_magnitudinem_renovare (TesseraOpus* opus)
+tessera_magnitudinem_renovare (
+    TesseraOpus* opus)
 {
     i32 latitudo;
     i32 altitudo;
 
-    si (opus == NIHIL
+    si (   opus == NIHIL
         || !opus->pons->amplitudo(opus->pons->datum, &latitudo,
                &altitudo))
     {
