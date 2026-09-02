@@ -1362,7 +1362,8 @@ structura TesseraPiscina {
     memoriae_index  mensura_alvei_initia;
          character* titulus;
                b32  est_dynamicum;
-    memoriae_index  maximus_usus;
+        memoriae_index  maximus_usus;
+    memoriae_index  usus_currens;           /* summa offsetuum, incrementalis */
     memoriae_index  numerus_allocationum;   /* historia, numquam minuitur */
 };
 
@@ -1453,11 +1454,9 @@ _allocare_interna (
         memoriae_index  ordinatio,
                    b32  fatalis)
 {
-    memoriae_index  ordinatus_offset;
-    memoriae_index  necessaria;
-    memoriae_index  summa_nunc;
-            Alveus* b;
-            vacuum* ptr;
+        memoriae_index  ordinatus_offset;
+        memoriae_index  necessaria;
+                vacuum* ptr;
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
@@ -1534,19 +1533,17 @@ _allocare_interna (
     }
 
 
-    /* Allocare ex alveo nunc */
+        /* Allocare ex alveo nunc. Apex INCREMENTALITER (2026-09-02): olim
+     * omnes alvei per allocationem percurrebantur (I.II M allocationes
+     * x XVII alvei in lib/stml.c = XIII% foliorum profili); summa
+     * offsetuum mutatur solum hic (delta), in vacare (nihil) et in
+     * reficere (recomputata semel). */
     ptr = (character*)(piscina->nunc->buffer) + ordinatus_offset;
+    piscina->usus_currens += necessaria - piscina->nunc->offset;
     piscina->nunc->offset = necessaria;
-
-    /* Sequi apex usus per omnes alvei */
-    summa_nunc = ZEPHYRUM;
-    per (b = piscina->primus; b; b = b->sequens)
+    si (piscina->usus_currens > piscina->maximus_usus)
     {
-        summa_nunc += b->offset;
-    }
-    si (summa_nunc > piscina->maximus_usus)
-    {
-        piscina->maximus_usus = summa_nunc;
+        piscina->maximus_usus = piscina->usus_currens;
     }
     piscina->numerus_allocationum += I;
 
@@ -1581,8 +1578,9 @@ tessera_piscina_generare_dynamicum (
     piscina->primus                = alveus_primus;
     piscina->nunc                  = alveus_primus;
     piscina->mensura_alvei_initia  = mensura_alvei_initia;
-    piscina->est_dynamicum         = VERUM;
+        piscina->est_dynamicum     = VERUM;
     piscina->maximus_usus          = ZEPHYRUM;
+    piscina->usus_currens          = ZEPHYRUM;
     piscina->numerus_allocationum  = ZEPHYRUM;
 
     si (piscinae_titulum)

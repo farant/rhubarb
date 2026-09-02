@@ -525,6 +525,41 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)piscina_numerus_allocationum(p_num),
             XL);
 
+                /* apex incrementalis (2026-09-02) == summa offsetuum ambulata:
+         * crescens, post notare/reficere, post allocationes novas */
+        {
+            PiscinaNotatio nota;
+            memoriae_index apex_ante;
+
+            CREDO_VERUM (piscina_summa_apex_usus(p_num)
+                >= piscina_summa_usus(p_num));
+            piscina_vacare(p_num);
+            CREDO_AEQUALIS_I32 ((i32)piscina_summa_usus(p_num),
+                ZEPHYRUM);
+            per (i = ZEPHYRUM; i
+                                                < XX; i++) (vacuum)piscina_allocare(p_num,
+                                                               C);
+            nota = piscina_notare(p_num);
+            per (i = ZEPHYRUM; i
+                                                < XX; i++) (vacuum)piscina_allocare(p_num,
+                                                               C);
+            apex_ante = piscina_summa_apex_usus(p_num);
+            CREDO_VERUM (apex_ante >= piscina_summa_usus(p_num));
+            piscina_reficere(p_num, nota);
+            CREDO_VERUM (piscina_summa_usus(p_num) < apex_ante);
+            CREDO_VERUM (piscina_summa_apex_usus(p_num) == apex_ante);
+            per (i = ZEPHYRUM; i
+                                               < V; i++) (vacuum)piscina_allocare(p_num,
+                                                             C);
+            CREDO_VERUM (piscina_summa_apex_usus(p_num) == apex_ante);
+            per (i = ZEPHYRUM; i
+                                                 < XXX; i++) (vacuum)piscina_allocare(p_num,
+                                                                 C);
+            CREDO_VERUM (piscina_summa_apex_usus(p_num) > apex_ante);
+            CREDO_VERUM (piscina_summa_apex_usus(p_num)
+                == piscina_summa_usus(p_num));
+        }
+
         /* allocatio fracta (piscina fixa) NON numeratur */
         piscina_destruere(p_num);
         p_num =
