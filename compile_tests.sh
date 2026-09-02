@@ -643,11 +643,52 @@ run_speculum() {
     return 0
 }
 
+# Operarius probationis unius (in bash filio per xargs; ambitus:
+# SINGULAE, OBIECTA exportata). Vexilla ex tools/vexilla.sh iterum
+# fontata (tabulae bash non exportantur).
+probatio_una() {
+    local test_file="$1"
+    local name; name=$(basename "$test_file" .c)
+    local output_binary="/tmp/$name"
+    local obj_files t0 t1 tc tr rc
+    local -a INC
+    source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
+    INC=("-Iinclude" "-Iprobationes" "-Ibook_assets" "-Iprobationes/vitrea_assets" "-Iprobationes/tabella_assets")
+    obj_files="$(cat "$OBIECTA")"
+    case "$name" in
+        probatio_speculum_fontium|probatio_speculum)
+            obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o" ;;
+    esac
+    t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    if ! clang "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
+       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
+        echo "2 0 0" > "$SINGULAE/$name.res"
+        return 0
+    fi
+    t1=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    tc=$(echo "$t1 - $t0" | bc); case "$tc" in .*) tc="0$tc" ;; esac
+    t0=$t1
+    "$output_binary" >> "$SINGULAE/$name.log" 2>&1
+    rc=$?
+    t1=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+    tr=$(echo "$t1 - $t0" | bc); case "$tr" in .*) tr="0$tr" ;; esac
+    echo "$rc $tc $tr" > "$SINGULAE/$name.res"
+    return 0
+}
+export -f probatio_una
+
 run_all_tests() {
     # Compile libraries first
     if ! compile_libraries; then
         echo -e "${RED}Library compilation failed${RESET}"
         return 1
+    fi
+
+    # Daemon tabularii SEMEL praestructus: tres probationes (cliens_
+    # tabularii, villa_agens, sententiae_horreum) './gesta/tabulariumd.sh
+    # -struere' vocant - parallelae simul aedificarent (2026-09-02)
+    if [ -x ./gesta/tabulariumd.sh ]; then
+        ./gesta/tabulariumd.sh -struere > /dev/null 2>&1 || true
     fi
 
     # Run generare directives before compiling tests
@@ -707,12 +748,64 @@ run_all_tests() {
         fi
     done <<< "$all_files"
 
-    # Compile and run regular tests
+    # Compile and run regular tests: PARALLELAE cum FILA > 1 (2026-09-02),
+    # seriatim (via vetus, lldb --debug) cum FILA = 1. Operarius
+    # probatio_una (exportatus, xargs -P) compilat + nectit + currit
+    # probationem unam, acta in build/test_logs/singulae/<nomen>.log,
+    # verdictum + tempora in <nomen>.res; parens post fascem acta ORDINE
+    # nominum imprimit et tabulas temporum implet. Res communis inter
+    # probationes = vitium (aedilis plagulas temporarias fixas habuit).
+    # PROBATIONES_FILA=N; ordinarius nuclei performantes.
     if [ -n "$test_files" ]; then
-        while IFS= read -r test_file; do
-            [ -z "$test_file" ] && continue
-            compile_and_run_test "$test_file"
-        done <<< "$test_files"
+        if [ "$FILA" -le 1 ] || [ $DEBUG_MODE -eq 1 ]; then
+            while IFS= read -r test_file; do
+                [ -z "$test_file" ] && continue
+                compile_and_run_test "$test_file"
+            done <<< "$test_files"
+        else
+            local murus_t0 murus_t1 name rc tc tr
+            SINGULAE="build/test_logs/singulae"
+            rm -rf "$SINGULAE"; mkdir -p "$SINGULAE"
+            OBIECTA="build/test_logs/obiecta_probationum.txt"
+            get_object_files > "$OBIECTA"
+            export SINGULAE OBIECTA
+            echo -e "${BLUE}probationes parallelae: $(echo "$test_files" | grep -c .) per $FILA fila${RESET}"
+            murus_t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+            echo "$test_files" | grep . | xargs -P "$FILA" -n 1 -I{} bash -c 'probatio_una "$1"' _ {}
+            murus_t1=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+            MURUS_FASCIS=$(echo "$murus_t1 - $murus_t0" | bc)
+            echo -e "${BLUE}murus fascis: ${MURUS_FASCIS}s${RESET}"
+            while IFS= read -r test_file; do
+                [ -z "$test_file" ] && continue
+                name=$(basename "$test_file" .c)
+                TESTS_TOTAL=$((TESTS_TOTAL + 1))
+                echo -e "${BLUE}────────────────────────────────────────${RESET}"
+                echo -e "${BLUE}Testing: $name${RESET}"
+                echo -e "${BLUE}────────────────────────────────────────${RESET}"
+                cat "$SINGULAE/$name.log" 2>/dev/null
+                if [ ! -f "$SINGULAE/$name.res" ]; then
+                    echo -e "${RED}✗ SINE VERDICTO: $name (operarius periit?)${RESET}"
+                    TESTS_FAILED=$((TESTS_FAILED + 1)); FAILED_TESTS="$FAILED_TESTS $name"
+                    continue
+                fi
+                read -r rc tc tr < "$SINGULAE/$name.res"
+                if [ "$rc" = "2" ] && [ "$tc" = "0" ]; then
+                    echo -e "${RED}✗ COMPILATION FAILED: $name${RESET}"
+                    TESTS_FAILED=$((TESTS_FAILED + 1)); FAILED_TESTS="$FAILED_TESTS $name"
+                    continue
+                fi
+                echo "$tc $name" >> "$COMPILE_TIMES_FILE"
+                echo "$tr $name" >> "$TEST_TIMES_FILE"
+                if [ "$rc" = "0" ]; then
+                    echo -e "${GREEN}✓ TEST PASSED: $name ${YELLOW}(${tr}s)${RESET}"
+                    TESTS_PASSED=$((TESTS_PASSED + 1))
+                else
+                    echo -e "${RED}✗ TEST FAILED: $name ${YELLOW}(${tr}s, exitus $rc)${RESET}"
+                    TESTS_FAILED=$((TESTS_FAILED + 1)); FAILED_TESTS="$FAILED_TESTS $name"
+                fi
+                echo ""
+            done <<< "$test_files"
+        fi
     fi
 
     # Build GUI apps (but don't run them)
@@ -844,11 +937,19 @@ print_summary() {
         # secunda ex CLXXX - probationes JS/oraculi et generare, quae
         # OMNI cursu currunt, filtro neglecto. Residuum nominare id
         # ex 'ignoto' in 'mensuratum' vertit.
-        praevolatus=$(echo \
-            "$total_duration - $summa_compilationis - $summa_cursus" \
-            | bc 2>/dev/null || echo 0)
+        # cum fila > I summae SIMUL currentium sunt: praevolatus = totum
+        # - murus fascis (a fasce datus), non totum - summae
+        if [ -n "$MURUS_FASCIS" ]; then
+            praevolatus=$(echo "$total_duration - $MURUS_FASCIS" \
+                | bc 2>/dev/null || echo 0)
+        else
+            praevolatus=$(echo \
+                "$total_duration - $summa_compilationis - $summa_cursus" \
+                | bc 2>/dev/null || echo 0)
+        fi
         mensura_addere "suita.tempus.praevolatus" "$praevolatus" \
             secunda "$radix"
+        mensura_addere "suita.fila" "$FILA" numerus "$radix"
 
         mensura_addere "suita.probationes.totae"  "$TESTS_TOTAL" \
             numerus "$radix"
@@ -876,6 +977,8 @@ print_summary() {
 }
 
 # Parse arguments
+FILA="${PROBATIONES_FILA:-$(sysctl -n hw.perflevel0.physicalcpu 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)}"
+MURUS_FASCIS=""
 WATCH_MODE=0
 DEBUG_MODE=0
 CLEAN_MODE=0

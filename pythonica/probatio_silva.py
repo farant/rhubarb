@@ -531,6 +531,9 @@ credo([f.nomen for f in fr] == ['probatio_x'] and 'Totalis:    3' in fr[0].relat
       'fracturae radix: nomen ex TEST FAILED, relatio inter Testing: et verdictum')
 credo(silva.fracturae(ACTA_RADIX.replace('✗ TEST FAILED: probatio_x (.2s)\n', ''), 'radix') == [],
       'fracturae radix: sine linea FAILED nulla')
+fsv = silva.fracturae('Testing: probatio_z\n✗ SINE VERDICTO: probatio_z (operarius periit?)\nTests Failed: 1\n', 'radix')
+credo([f.nomen for f in fsv] == ['probatio_z'] and 'SINE VERDICTO' in fsv[0].relatio,
+      'fracturae radix: SINE VERDICTO (cursor parallelus) nominatur')
 ACTA_SUITA = ('=== probatio_a ===\n..\n--- probatio_a praeteriit (0.1s)\n=== probatio_b ===\n.F\n'
               ' FRACTA (credo_nihil): p at x.c:3\n  Speratus: NIHIL\n  Receptus: 0x1\nConditio: FRACTA\n'
               '--- probatio_b FRACTA (0.2s, exitus 1)\n=== probatio_c ===\n\n========================\n'

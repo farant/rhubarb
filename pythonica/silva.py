@@ -642,7 +642,8 @@ def fracturae(acta, nomen='', forma=None):
     if forma == 'radix':
         nomina = []
         for l in lineae:
-            m = re.search(r'✗ (?:TEST |COMPILATION |BUILD )?FAILED: (\S+)', l)
+            m = re.search(r'✗ (?:(?:TEST |COMPILATION |BUILD )?FAILED|'
+                          r'SINE VERDICTO): (\S+)', l)
             if m and m.group(1) not in nomina:
                 nomina.append(m.group(1))
         for n in nomina:
