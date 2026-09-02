@@ -34,19 +34,26 @@ nomen structura {
     constans MateriaNodus*           sedes;
 } MateriaScriptor;
 
-interior vacuum _valorem_scribere (MateriaScriptor* st, MateriaValor valor);
-interior vacuum _nodum_scribere (MateriaScriptor* st,
+interior vacuum
+_valorem_scribere (
+    MateriaScriptor* st,
+       MateriaValor  valor);
+interior vacuum
+_nodum_scribere (
+          MateriaScriptor* st,
     constans MateriaNodus* nodus);
 
 interior vacuum
-_fractura (MateriaScriptor* st, constans character* causa,
+_fractura (
+          MateriaScriptor* st,
+       constans character* causa,
     constans MateriaNodus* sedes)
 {
     si (st->successus)
     {
-        st->successus = FALSUM;
-        st->causa     = causa;
-        st->sedes     = sedes;
+        st->successus  = FALSUM;
+        st->causa      = causa;
+        st->sedes      = sedes;
     }
 }
 
@@ -59,30 +66,31 @@ _fractura (MateriaScriptor* st, constans character* causa,
  * omnino absente). FALSUM = ambiguus adest sed locis caret -
  * distinctio inter 'non habeo' et 'fractum habeo'. */
 interior b32
-_formam_ambigui_invenire (MateriaScriptor* st)
+_formam_ambigui_invenire (
+    MateriaScriptor* st)
 {
     constans MateriaRegistrumCoctum* tab = st->consilium->tabularium;
-    i32 g;
+                                i32  g;
 
-    st->genus_ambigui          = (s32)-I;
-    st->locus_interpretationum = ZEPHYRUM;
-    st->locus_canonicae        = ZEPHYRUM;
+    st->genus_ambigui           = (s32)-I;
+    st->locus_interpretationum  = ZEPHYRUM;
+    st->locus_canonicae         = ZEPHYRUM;
 
     per (g = ZEPHYRUM; g < tab->numerus_generum; g++)
     {
         constans MateriaTabGenus* def = &tab->genera[g];
-        i32 k;
-        s32 interp;
-        s32 canon;
+                             i32  k;
+                             s32  interp;
+                             s32  canon;
 
-        si (   def->titulus == NIHIL
+        si (   def->titulus                     == NIHIL
             || strcmp(def->titulus, "ambiguus") != ZEPHYRUM)
         {
             perge;
         }
 
-        interp = (s32)-I;
-        canon  = (s32)-I;
+        interp  = (s32)-I;
+        canon   = (s32)-I;
         per (k = ZEPHYRUM; k < def->loci_numerus; k++)
         {
             constans MateriaTabLocus* locus =
@@ -102,9 +110,9 @@ _formam_ambigui_invenire (MateriaScriptor* st)
         {
             redde FALSUM;   /* adest sed fractum - RECUSA */
         }
-        st->genus_ambigui          = (s32)g;
-        st->locus_interpretationum = (i32)interp;
-        st->locus_canonicae        = (i32)canon;
+        st->genus_ambigui           = (s32)g;
+        st->locus_interpretationum  = (i32)interp;
+        st->locus_canonicae         = (i32)canon;
         redde VERUM;
     }
     redde VERUM;   /* absens - lingua ambiguitatem non habet */
@@ -116,7 +124,9 @@ _formam_ambigui_invenire (MateriaScriptor* st)
  * ================================================== */
 
 interior vacuum
-_lexema_emittere (MateriaScriptor* st, constans MateriaToken* token)
+_lexema_emittere (
+          MateriaScriptor* st,
+    constans MateriaToken* token)
 {
     i32 i;
 
@@ -159,7 +169,9 @@ _lexema_emittere (MateriaScriptor* st, constans MateriaToken* token)
 }
 
 interior vacuum
-_laminam_emittere (MateriaScriptor* st, Xar* lamina)
+_laminam_emittere (
+    MateriaScriptor* st,
+                Xar* lamina)
 {
     i32 k;
 
@@ -171,7 +183,9 @@ _laminam_emittere (MateriaScriptor* st, Xar* lamina)
 
 /* Fundere reinserenda quorum offset < ante */
 interior vacuum
-_reinserenda_fundere (MateriaScriptor* st, s32 ante)
+_reinserenda_fundere (
+    MateriaScriptor* st,
+                s32  ante)
 {
     Xar* r_xar = st->consilium->reinserenda;
 
@@ -201,8 +215,12 @@ materia_reinserenda_comparare (
     constans MateriaReinserendum* ra = (constans MateriaReinserendum*)a;
     constans MateriaReinserendum* rb = (constans MateriaReinserendum*)b;
 
-    si (ra->offset < rb->offset) { redde (s32)-I; }
-    si (ra->offset > rb->offset) { redde (s32)I; }
+    si (ra->offset < rb->offset)
+    { redde (s32)-I;
+    }
+    si (ra->offset > rb->offset)
+    { redde (s32)I;
+    }
     redde ZEPHYRUM;
 }
 
@@ -212,7 +230,9 @@ materia_reinserenda_comparare (
  * ================================================== */
 
 interior vacuum
-_lexema_scribere (MateriaScriptor* st, MateriaToken* token)
+_lexema_scribere (
+    MateriaScriptor* st,
+       MateriaToken* token)
 {
     constans MateriaOrigoUncus* uncus;
                   MateriaToken* radix;
@@ -241,7 +261,7 @@ _lexema_scribere (MateriaScriptor* st, MateriaToken* token)
     /* Plagula aliena (limes includendi): octeti eius reconstructioni
      * SUAE pertinent. */
     si (   st->consilium->fons_index >= ZEPHYRUM
-        && radix->fons_index != st->consilium->fons_index)
+        && radix->fons_index         != st->consilium->fons_index)
     {
         redde;
     }
@@ -257,19 +277,22 @@ _lexema_scribere (MateriaScriptor* st, MateriaToken* token)
         }
         si (uncus->extentum_quaerere != NIHIL)
         {
-            Xar* extentum = uncus->extentum_quaerere(uncus->datum, radix);
+            Xar* extentum = uncus->extentum_quaerere(uncus->datum,
+                radix);
 
             si (extentum != NIHIL && xar_numerus(extentum) > ZEPHYRUM)
             {
                 MateriaToken* t = NIHIL;
-                i32           k;
+                         i32  k;
 
                 /* Fusio reinserendorum INTRA extentum manet
                  * possibilis (C89: directiva intra argumenta). */
                 per (k = ZEPHYRUM; k < xar_numerus(extentum); k++)
                 {
                     t = *(MateriaToken**)xar_obtinere(extentum, k);
-                    si (t == NIHIL) { perge; }
+                    si (t == NIHIL)
+                    { perge;
+                    }
                     _reinserenda_fundere(st, t->byte_offset);
                     _lexema_emittere(st, t);
                 }
@@ -286,8 +309,8 @@ _lexema_scribere (MateriaScriptor* st, MateriaToken* token)
 
     _reinserenda_fundere(st, radix->byte_offset);
     _lexema_emittere(st, radix);
-    st->fons_ultimus  = radix->fons_index;
-    st->emissum_usque = radix->byte_offset + (s32)radix->valor.mensura;
+    st->fons_ultimus   = radix->fons_index;
+    st->emissum_usque  = radix->byte_offset + (s32)radix->valor.mensura;
 }
 
 
@@ -296,7 +319,9 @@ _lexema_scribere (MateriaScriptor* st, MateriaToken* token)
  * ================================================== */
 
 interior vacuum
-_ambiguum_scribere (MateriaScriptor* st, constans MateriaNodus* nodus)
+_ambiguum_scribere (
+          MateriaScriptor* st,
+    constans MateriaNodus* nodus)
 {
     MateriaValor  interp;
     MateriaValor  canonica;
@@ -308,8 +333,8 @@ _ambiguum_scribere (MateriaScriptor* st, constans MateriaNodus* nodus)
         _fractura(st, "forma ambigui extra loci nodi", nodus);
         redde;
     }
-    interp   = nodus->loci[st->locus_interpretationum];
-    canonica = nodus->loci[st->locus_canonicae];
+    interp    = nodus->loci[st->locus_interpretationum];
+    canonica  = nodus->loci[st->locus_canonicae];
 
     si (   interp.genus   != MATERIA_VALOR_LISTA
         || canonica.genus != MATERIA_VALOR_INDEX)
@@ -335,7 +360,9 @@ _ambiguum_scribere (MateriaScriptor* st, constans MateriaNodus* nodus)
 }
 
 interior vacuum
-_nodum_scribere (MateriaScriptor* st, constans MateriaNodus* nodus)
+_nodum_scribere (
+          MateriaScriptor* st,
+    constans MateriaNodus* nodus)
 {
     i32 k;
 
@@ -368,7 +395,9 @@ _nodum_scribere (MateriaScriptor* st, constans MateriaNodus* nodus)
 }
 
 interior vacuum
-_valorem_scribere (MateriaScriptor* st, MateriaValor valor)
+_valorem_scribere (
+    MateriaScriptor* st,
+       MateriaValor  valor)
 {
     si (!st->successus)
     {
@@ -392,7 +421,8 @@ _valorem_scribere (MateriaScriptor* st, MateriaValor valor)
 
             per (i = ZEPHYRUM; i < n; i++)
             {
-                MateriaValor* elem = materia_valor_lista_obtinere(valor, i);
+                MateriaValor* elem = materia_valor_lista_obtinere(valor,
+                    i);
 
                 si (elem != NIHIL)
                 {
@@ -414,7 +444,7 @@ _valorem_scribere (MateriaScriptor* st, MateriaValor valor)
 
 vacuum
 materia_scriptura_consilium_nudum (
-    MateriaScripturaConsilium* consilium,
+          MateriaScripturaConsilium* consilium,
     constans MateriaRegistrumCoctum* tabularium)
 {
     si (consilium == NIHIL)
@@ -424,38 +454,42 @@ materia_scriptura_consilium_nudum (
     /* MEMSET PRIMUM: campus consilio additus sed hic oblitus
      * garbage fert. Deinde campi quorum ordinarium NON zephyrum est. */
     memset(consilium, ZEPHYRUM, magnitudo(*consilium));
-    consilium->tabularium       = tabularium;
-    consilium->fons_index       = (s32)-I;
+    consilium->tabularium = tabularium;
+    consilium->fons_index = (s32)-I;
 }
 
 interior MateriaScriptura
-_scriptura_fracta (constans character* causa)
+_scriptura_fracta (
+    constans character* causa)
 {
     MateriaScriptura s;
 
-    s.successus      = FALSUM;
-    s.textus.datum   = NIHIL;
-    s.textus.mensura = ZEPHYRUM;
-    s.causa          = causa;
-    s.sedes          = NIHIL;
+    s.successus       = FALSUM;
+    s.textus.datum    = NIHIL;
+    s.textus.mensura  = ZEPHYRUM;
+    s.causa           = causa;
+    s.sedes           = NIHIL;
     redde s;
 }
 
 interior b32
-_scriptor_parare (MateriaScriptor* st, Piscina* piscina,
+_scriptor_parare (
+                       MateriaScriptor* st,
+                               Piscina* piscina,
     constans MateriaScripturaConsilium* consilium)
 {
-    st->aed                    = chorda_aedificator_creare(piscina, 1024);
-    st->consilium              = consilium;
-    st->reinserenda_index      = ZEPHYRUM;
-    st->fons_ultimus           = (s32)-II;
-    st->emissum_usque          = ZEPHYRUM;
-    st->successus              = VERUM;
-    st->causa                  = NIHIL;
-    st->sedes                  = NIHIL;
-    st->genus_ambigui          = (s32)-I;
-    st->locus_interpretationum = ZEPHYRUM;
-    st->locus_canonicae        = ZEPHYRUM;
+    st->aed = chorda_aedificator_creare(piscina,
+        1024);
+    st->consilium               = consilium;
+    st->reinserenda_index       = ZEPHYRUM;
+    st->fons_ultimus            = (s32)-II;
+    st->emissum_usque           = ZEPHYRUM;
+    st->successus               = VERUM;
+    st->causa                   = NIHIL;
+    st->sedes                   = NIHIL;
+    st->genus_ambigui           = (s32)-I;
+    st->locus_interpretationum  = ZEPHYRUM;
+    st->locus_canonicae         = ZEPHYRUM;
 
     si (st->aed == NIHIL)
     {
@@ -465,34 +499,35 @@ _scriptor_parare (MateriaScriptor* st, Piscina* piscina,
 }
 
 interior MateriaScriptura
-_scriptura_finire (MateriaScriptor* st)
+_scriptura_finire (
+    MateriaScriptor* st)
 {
     MateriaScriptura s;
 
-    s.successus = st->successus;
-    s.causa     = st->causa;
-    s.sedes     = st->sedes;
+    s.successus  = st->successus;
+    s.causa      = st->causa;
+    s.sedes      = st->sedes;
     si (st->successus)
     {
         s.textus = chorda_aedificator_finire(st->aed);
     }
     alioquin
     {
-        s.textus.datum   = NIHIL;
-        s.textus.mensura = ZEPHYRUM;
+        s.textus.datum    = NIHIL;
+        s.textus.mensura  = ZEPHYRUM;
     }
     redde s;
 }
 
 MateriaScriptura
 materia_scribere_valorem (
-                          Piscina* piscina,
-                      MateriaValor valor,
+                               Piscina* piscina,
+                          MateriaValor  valor,
     constans MateriaScripturaConsilium* consilium)
 {
     MateriaScriptor st;
 
-    si (   piscina == NIHIL || consilium == NIHIL
+    si (   piscina               == NIHIL || consilium == NIHIL
         || consilium->tabularium == NIHIL)
     {
         redde _scriptura_fracta("argumenta nulla");
@@ -508,8 +543,8 @@ materia_scribere_valorem (
 
 MateriaScriptura
 materia_scribere_nodum (
-                          Piscina* piscina,
-             constans MateriaNodus* nodus,
+                               Piscina* piscina,
+                 constans MateriaNodus* nodus,
     constans MateriaScripturaConsilium* consilium)
 {
     MateriaScriptor st;

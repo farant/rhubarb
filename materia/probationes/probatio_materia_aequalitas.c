@@ -49,11 +49,11 @@ interior MateriaNodus*
 _arborem_struere (
     Piscina* piscina)
 {
-     MateriaNodus* radix;
-     MateriaNodus* filius;
-     MateriaToken* caput;
-     MateriaToken* trivium;
-      MateriaValor lista;
+      MateriaNodus* radix;
+      MateriaNodus* filius;
+      MateriaToken* caput;
+      MateriaToken* trivium;
+      MateriaValor  lista;
 
     radix = materia_nodus_creare(piscina, (s32)VII, (i32)III);
     si (radix == NIHIL)
@@ -216,9 +216,9 @@ principale (vacuum)
      * ================================================== */
 
     {
-        MateriaNodus* a;
-        MateriaNodus* b;
-          MateriaValor ampliata;
+          MateriaNodus* a;
+          MateriaNodus* b;
+          MateriaValor  ampliata;
 
         imprimere("\n--- Probans prospectum contra repositorium ---\n");
         a = _arborem_struere(piscina);

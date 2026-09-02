@@ -88,10 +88,10 @@ nomen structura {
 nomen structura {
     MateriaValorGenus genus;
     unio {
-        MateriaNodus*          nodus;
-        MateriaToken*          token;
-        MateriaListaProspectus lista;
-        s32                    index;
+                  MateriaNodus* nodus;
+                  MateriaToken* token;
+        MateriaListaProspectus  lista;
+                           s32  index;
     } datum;
 } MateriaValor;
 
@@ -101,8 +101,8 @@ nomen structura {
  * ================================================== */
 
 structura MateriaNodus {
-    s32           genus;            /* index in registrum generum */
-    i32           numerus_locorum;
+             s32  genus;            /* index in registrum generum */
+             i32  numerus_locorum;
     MateriaValor* loci;
     MateriaNodus* pater;            /* post-acceptum SOLUM */
 };
@@ -157,12 +157,23 @@ materia_sedes_tokeni (
  * Constructores valorum
  * ================================================== */
 
-MateriaValor materia_valor_nihil (vacuum);
-MateriaValor materia_valor_nodus (MateriaNodus* nodus);
-MateriaValor materia_valor_token (MateriaToken* token);
-MateriaValor materia_valor_index (s32 index);
-MateriaValor materia_valor_lista (Xar* lista);
-MateriaValor materia_valor_lista_nova (Piscina* piscina);
+MateriaValor
+materia_valor_nihil (vacuum);
+MateriaValor
+materia_valor_nodus (
+    MateriaNodus* nodus);
+MateriaValor
+materia_valor_token (
+    MateriaToken* token);
+MateriaValor
+materia_valor_index (
+    s32 index);
+MateriaValor
+materia_valor_lista (
+    Xar* lista);
+MateriaValor
+materia_valor_lista_nova (
+    Piscina* piscina);
 
 /* Appendere PURUM: prospectus alieni numquam laeduntur. Si
  * prospectus ad finem vivum repositorii stat, in loco appendit
@@ -170,12 +181,17 @@ MateriaValor materia_valor_lista_nova (Piscina* piscina);
  * copiat. Prospectum NOVUM reddit. */
 MateriaValor
 materia_valor_lista_appendere (
-      Piscina* piscina,
-    MateriaValor lista,
-    MateriaValor elementum);
+         Piscina* piscina,
+    MateriaValor  lista,
+    MateriaValor  elementum);
 
-i32           materia_valor_lista_numerus  (MateriaValor lista);
-MateriaValor* materia_valor_lista_obtinere (MateriaValor lista, i32 index);
+i32
+materia_valor_lista_numerus (
+    MateriaValor lista);
+MateriaValor*
+materia_valor_lista_obtinere (
+    MateriaValor lista,
+             i32 index);
 
 
 /* ==================================================
@@ -184,9 +200,9 @@ MateriaValor* materia_valor_lista_obtinere (MateriaValor lista, i32 index);
 
 MateriaNodus*
 materia_nodus_creare (
-    Piscina* piscina,
-         s32 genus,
-         i32 numerus_locorum);
+     Piscina* piscina,
+         s32  genus,
+         i32  numerus_locorum);
 
 /* Signum valoris contra speciem loci probatur, semel-tantum
  * scribere imponitur. FALSUM in violatione (et nihil scribitur) -
@@ -194,18 +210,18 @@ materia_nodus_creare (
  * corruptae tribus operibus post. */
 b32
 materia_nodus_ponere (
-        MateriaNodus* nodus,
-                  i32 locus,
-         MateriaValor valor,
-  MateriaLocusSpecies species);
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species);
 
 b32
 materia_nodus_appendere (
-             Piscina* piscina,
-        MateriaNodus* nodus,
-                  i32 locus,
-         MateriaValor valor,
-  MateriaLocusSpecies species);
+              Piscina* piscina,
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species);
 
 b32
 materia_valor_congruit (
@@ -216,7 +232,7 @@ materia_valor_congruit (
  * locorum. Tabulis non eget - valores signati sunt. */
 Xar*
 materia_nodus_liberi (
-                Piscina* piscina,
+                  Piscina* piscina,
     constans MateriaNodus* nodus);
 
 #endif /* MATERIA_NODUS_H */

@@ -94,8 +94,8 @@ nomen enumeratio {
 nomen structura {
     constans character* titulus;       /* nomen; tag inde mangulatur */
     constans character* orthographia;  /* PER SPECIEM legendum */
-    s32                 species;       /* MateriaLexSpecies */
-    s32                 munus;         /* MateriaLexMunus */
+                   s32  species;       /* MateriaLexSpecies */
+                   s32  munus;         /* MateriaLexMunus */
 } MateriaLexGenus;
 
 
@@ -109,9 +109,9 @@ nomen structura {
 
 nomen structura {
     constans MateriaLexGenus* genera;
-    i32                       numerus_generum;  /* ET sentinella non-inventi */
-    constans character*       praefixum_tagi;   /* e.g. "lex-" */
-    s32                       genus_spatii;     /* SPATIUM canonicum;
+                         i32  numerus_generum;  /* ET sentinella non-inventi */
+          constans character* praefixum_tagi;   /* e.g. "lex-" */
+                         s32  genus_spatii;     /* SPATIUM canonicum;
                                                  * -I si lingua nullum habet */
 } MateriaLexiconCoctum;
 
@@ -162,8 +162,8 @@ nomen structura {
 
 nomen structura {
     constans MateriaLexiconCoctum* lexicon;
-    i32                            munera_praesentia;  /* larva vexillorum */
-    b32                            ratum;
+                              i32  munera_praesentia;  /* larva vexillorum */
+                              b32  ratum;
 } MateriaLexiconRatum;
 
 
@@ -175,9 +175,9 @@ nomen structura {
  * iudicium causam et genus reum nominat. */
 b32
 materia_lexicon_ratum_facere (
-        MateriaLexiconRatum* ratum,
+              MateriaLexiconRatum* ratum,
     constans MateriaLexiconCoctum* lexicon,
-         MateriaLexIudicium* iudicium);
+               MateriaLexIudicium* iudicium);
 
 /* Nomen vitii ad nuntios. NUMQUAM NIHIL. */
 constans character*
@@ -192,13 +192,13 @@ materia_lexicon_vitium_nomen (
 b32
 materia_lexicon_munus_habet (
     constans MateriaLexiconRatum* ratum,
-              MateriaLexMunus  munus);
+                 MateriaLexMunus  munus);
 
 /* Larva postulatorum: OMNIA adesse debent. */
 b32
 materia_lexicon_munera_habet (
     constans MateriaLexiconRatum* ratum,
-                            i32  munera_postulata);
+                             i32  munera_postulata);
 
 
 /* ==================================================

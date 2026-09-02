@@ -15,20 +15,20 @@
 
 nomen structura {
     constans character* titulus;     /* nomen loci */
-    s32                 species;     /* MateriaLocusSpecies */
+                   s32  species;     /* MateriaLocusSpecies */
 } MateriaTabLocus;
 
 nomen structura {
     constans character* titulus;     /* nomen generis */
-    i32                 loci_offset; /* in seriem planam locorum */
-    i32                 loci_numerus;
+                   i32  loci_offset; /* in seriem planam locorum */
+                   i32  loci_numerus;
 } MateriaTabGenus;
 
 nomen structura {
     constans MateriaTabGenus* genera;
-    i32                       numerus_generum;
+                         i32  numerus_generum;
     constans MateriaTabLocus* loci;
-    i32                       numerus_locorum;
+                         i32  numerus_locorum;
 } MateriaRegistrumCoctum;
 
 #endif /* MATERIA_REGISTRUM_H */

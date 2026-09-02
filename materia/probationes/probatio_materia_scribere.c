@@ -67,7 +67,9 @@ hic_manens Xar*          EXTENTUM_FICTUM;
 hic_manens b32           RADIX_RECUSAT;
 
 hic_manens MateriaToken*
-_radix_ficta (vacuum* datum, MateriaToken* token,
+_radix_ficta (
+                          vacuum*  datum,
+                    MateriaToken*  token,
               constans character** causa)
 {
     (vacuum)datum;
@@ -85,19 +87,23 @@ _radix_ficta (vacuum* datum, MateriaToken* token,
 }
 
 hic_manens Xar*
-_extentum_fictum (vacuum* datum, constans MateriaToken* radix)
+_extentum_fictum (
+                   vacuum* datum,
+    constans MateriaToken* radix)
 {
     (vacuum)datum;
     (vacuum)radix;
     redde EXTENTUM_FICTUM;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
         b32  praeteritus;
-   Piscina*  piscina;
+    Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_scribere", 65536);
+    piscina = piscina_generare_dynamicum("probatio_materia_scribere",
+        65536);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -109,10 +115,11 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: ambiguus OPTIONALIS (correctio I)
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaNodus*             n;
-        MateriaScriptura          s;
+        MateriaScripturaConsilium  c;
+                     MateriaNodus* n;
+                 MateriaScriptura  s;
 
         imprimere("\n--- Probans ambiguum optionalem ---\n");
 
@@ -149,12 +156,13 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: emissio structuralis simplex
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaNodus*             n;
-        MateriaToken*             a;
-        MateriaToken*             b;
-        MateriaScriptura          s;
+        MateriaScripturaConsilium  c;
+                     MateriaNodus* n;
+                     MateriaToken* a;
+                     MateriaToken* b;
+                 MateriaScriptura  s;
 
         imprimere("\n--- Probans emissionem structuralem ---\n");
 
@@ -178,8 +186,8 @@ s32 principale (vacuum)
             == ZEPHYRUM);
 
         /* genus ignotum: fractura clara, non praetermissio tacita */
-        n->genus = (s32)99;
-        s = materia_scribere_nodum(piscina, n, &c);
+        n->genus  = (s32)99;
+        s         = materia_scribere_nodum(piscina, n, &c);
         CREDO_FALSUM (s.successus);
         CREDO_AEQUALIS_PTR ((constans vacuum*)s.sedes,
                             (constans vacuum*)n);
@@ -191,17 +199,19 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: REINSERENDA EX VIA SUBARBORIS (MG1)
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaNodus*             n;
-        MateriaToken*             t_int;
-        MateriaToken*             t_f;
-        MateriaToken*             d1;
-        Xar*                      lamina;
-        Xar*                      reins;
-        MateriaReinserendum*      r;
-        MateriaScriptura          s;
-        constans character*       FONS_VERUS = "#define X 1\nint f;\n";
+        MateriaScripturaConsilium  c;
+                     MateriaNodus* n;
+                     MateriaToken* t_int;
+                     MateriaToken* t_f;
+                     MateriaToken* d1;
+                              Xar* lamina;
+                              Xar* reins;
+              MateriaReinserendum* r;
+                 MateriaScriptura  s;
+               constans character* FONS_VERUS =
+                   "#define X 1\nint f;\n";
 
         imprimere("\n--- Probans reinserenda ex via subarboris (MG1) ---\n");
 
@@ -214,7 +224,8 @@ s32 principale (vacuum)
             chorda_ex_literis("int", piscina), (s32)12, (i32)2, (i32)1,
             ZEPHYRUM);
         t_f   = materia_token_creare(piscina, &FORMA, ZEPHYRUM,
-            chorda_ex_literis(" f;\n", piscina), (s32)15, (i32)2, (i32)4,
+            chorda_ex_literis(" f;\n", piscina), (s32)15, (i32)2,
+            (i32)4,
             ZEPHYRUM);
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(t_int), MATERIA_LOCUS_LISTA_MIXTA));
@@ -240,8 +251,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)7);
 
         /* CUM reinserendis: fons VERUS octetim */
-        c.reinserenda = reins;
-        s = materia_scribere_nodum(piscina, n, &c);
+        c.reinserenda  = reins;
+        s              = materia_scribere_nodum(piscina, n, &c);
         CREDO_VERUM (s.successus);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)strlen(FONS_VERUS));
         CREDO_VERUM (memcmp(s.textus.datum, FONS_VERUS,
@@ -252,18 +263,19 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: uncus originis
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaOrigoUncus         uncus;
-        MateriaNodus*             n;
-        MateriaToken*             derivatum;
-        MateriaToken*             derivatum2;
-        MateriaScriptura          s;
+        MateriaScripturaConsilium  c;
+                MateriaOrigoUncus  uncus;
+                     MateriaNodus* n;
+                     MateriaToken* derivatum;
+                     MateriaToken* derivatum2;
+                 MateriaScriptura  s;
 
         imprimere("\n--- Probans uncum originis ---\n");
 
-        RADIX_RECUSAT   = FALSUM;
-        EXTENTUM_FICTUM = NIHIL;
+        RADIX_RECUSAT    = FALSUM;
+        EXTENTUM_FICTUM  = NIHIL;
         RADIX_FICTA = materia_token_creare(piscina, &FORMA, ZEPHYRUM,
             chorda_ex_literis("SI", piscina), ZEPHYRUM, (i32)I, (i32)I,
             ZEPHYRUM);
@@ -276,30 +288,33 @@ s32 principale (vacuum)
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
             materia_valor_token(derivatum), MATERIA_LOCUS_LISTA_MIXTA));
 
-        uncus.datum             = NIHIL;
-        uncus.sedes_quaerere    = NIHIL;
-        uncus.radix_quaerere    = _radix_ficta;
-        uncus.extentum_quaerere = NIHIL;
+        uncus.datum              = NIHIL;
+        uncus.sedes_quaerere     = NIHIL;
+        uncus.radix_quaerere     = _radix_ficta;
+        uncus.extentum_quaerere  = NIHIL;
 
         materia_scriptura_consilium_nudum(&c, &REG_SINE_AMBIGUO);
         s = materia_scribere_nodum(piscina, n, &c);
         /* SINE unco: lexema se ipsum emittit */
         CREDO_VERUM (s.successus);
-        CREDO_VERUM (memcmp(s.textus.datum, "if", (size_t)2) == ZEPHYRUM);
+        CREDO_VERUM (memcmp(s.textus.datum, "if", (size_t)2)
+            == ZEPHYRUM);
 
         /* CUM unco: RADIX emittitur, non lexema */
-        c.origo = &uncus;
-        s = materia_scribere_nodum(piscina, n, &c);
+        c.origo  = &uncus;
+        s        = materia_scribere_nodum(piscina, n, &c);
         CREDO_VERUM (s.successus);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)2);
-        CREDO_VERUM (memcmp(s.textus.datum, "SI", (size_t)2) == ZEPHYRUM);
+        CREDO_VERUM (memcmp(s.textus.datum, "SI", (size_t)2)
+            == ZEPHYRUM);
 
         /* DEDUPLICATIO: duo lexemata derivata, radix una - semel */
         derivatum2 = materia_token_creare(piscina, &FORMA, ZEPHYRUM,
             chorda_ex_literis("(", piscina), (s32)-I, (i32)I, (i32)I,
             ZEPHYRUM);
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
-            materia_valor_token(derivatum2), MATERIA_LOCUS_LISTA_MIXTA));
+            materia_valor_token(derivatum2),
+            MATERIA_LOCUS_LISTA_MIXTA));
         s = materia_scribere_nodum(piscina, n, &c);
         CREDO_VERUM (s.successus);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)2);   /* non IV */
@@ -315,7 +330,8 @@ s32 principale (vacuum)
             e2 = materia_token_creare(piscina, &FORMA, ZEPHYRUM,
                 chorda_ex_literis("(x)", piscina), (s32)2, (i32)I,
                 (i32)3, ZEPHYRUM);
-            EXTENTUM_FICTUM = xar_creare(piscina, magnitudo(MateriaToken*));
+            EXTENTUM_FICTUM = xar_creare(piscina,
+                magnitudo(MateriaToken*));
             *(MateriaToken**)xar_addere(EXTENTUM_FICTUM) = e1;
             *(MateriaToken**)xar_addere(EXTENTUM_FICTUM) = e2;
             uncus.extentum_quaerere = _extentum_fictum;
@@ -329,11 +345,12 @@ s32 principale (vacuum)
         }
 
         /* RECUSATIO unci = fractura cum CAUSA UNCI, non generica */
-        RADIX_RECUSAT = VERUM;
-        s = materia_scribere_nodum(piscina, n, &c);
+        RADIX_RECUSAT  = VERUM;
+        s              = materia_scribere_nodum(piscina, n, &c);
         CREDO_FALSUM (s.successus);
         CREDO_NON_NIHIL (s.causa);
-        CREDO_VERUM (strcmp(s.causa, "origo ficta recusat") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(s.causa, "origo ficta recusat")
+            == ZEPHYRUM);
         RADIX_RECUSAT = FALSUM;
     }
 
@@ -341,10 +358,11 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: filtrum fontis
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaNodus*             n;
-        MateriaScriptura          s;
+        MateriaScripturaConsilium  c;
+                     MateriaNodus* n;
+                 MateriaScriptura  s;
 
         imprimere("\n--- Probans filtrum fontis ---\n");
 
@@ -366,28 +384,31 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)4);
 
         /* fons 0 solum */
-        c.fons_index = ZEPHYRUM;
-        s = materia_scribere_nodum(piscina, n, &c);
+        c.fons_index  = ZEPHYRUM;
+        s             = materia_scribere_nodum(piscina, n, &c);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)2);
-        CREDO_VERUM (memcmp(s.textus.datum, "aa", (size_t)2) == ZEPHYRUM);
+        CREDO_VERUM (memcmp(s.textus.datum, "aa", (size_t)2)
+            == ZEPHYRUM);
 
         /* fons 1 solum */
-        c.fons_index = (s32)I;
-        s = materia_scribere_nodum(piscina, n, &c);
+        c.fons_index  = (s32)I;
+        s             = materia_scribere_nodum(piscina, n, &c);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)2);
-        CREDO_VERUM (memcmp(s.textus.datum, "bb", (size_t)2) == ZEPHYRUM);
+        CREDO_VERUM (memcmp(s.textus.datum, "bb", (size_t)2)
+            == ZEPHYRUM);
     }
 
 
     /* ========================================================
      * PROBARE: trivia et uncus valoris
      * ======================================================== */
+
     {
-        MateriaScripturaConsilium c;
-        MateriaNodus*             n;
-        MateriaToken*             t;
-        MateriaToken*             tr[1];
-        MateriaScriptura          s;
+        MateriaScripturaConsilium  c;
+                     MateriaNodus* n;
+                     MateriaToken* t;
+                     MateriaToken* tr[1];
+                 MateriaScriptura  s;
 
         imprimere("\n--- Probans trivia ---\n");
 
@@ -408,7 +429,8 @@ s32 principale (vacuum)
         s = materia_scribere_nodum(piscina, n, &c);
         CREDO_VERUM (s.successus);
         CREDO_AEQUALIS_I32 (s.textus.mensura, (i32)3);
-        CREDO_VERUM (memcmp(s.textus.datum, "  x", (size_t)3) == ZEPHYRUM);
+        CREDO_VERUM (memcmp(s.textus.datum, "  x", (size_t)3)
+            == ZEPHYRUM);
     }
 
 

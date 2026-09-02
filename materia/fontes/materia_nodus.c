@@ -28,11 +28,11 @@ materia_sedes_tokeni (
     }
     si (token == NIHIL)
     {
-        sedes->byte_offset = (s32)-I;
-        sedes->linea       = ZEPHYRUM;
-        sedes->columna     = ZEPHYRUM;
-        sedes->fons_index  = (s32)-I;
-        sedes->est_fons    = FALSUM;
+        sedes->byte_offset  = (s32)-I;
+        sedes->linea        = ZEPHYRUM;
+        sedes->columna      = ZEPHYRUM;
+        sedes->fons_index   = (s32)-I;
+        sedes->est_fons     = FALSUM;
         redde;
     }
 
@@ -44,11 +44,11 @@ materia_sedes_tokeni (
 
     /* Nulla derivatio: lexema origo sua est. Hoc pro CSS et HTML
      * RECTUM est, non degradatio. */
-    sedes->byte_offset = token->byte_offset;
-    sedes->linea       = token->linea;
-    sedes->columna     = token->columna;
-    sedes->fons_index  = token->fons_index;
-    sedes->est_fons    = VERUM;
+    sedes->byte_offset  = token->byte_offset;
+    sedes->linea        = token->linea;
+    sedes->columna      = token->columna;
+    sedes->fons_index   = token->fons_index;
+    sedes->est_fons     = VERUM;
 }
 
 
@@ -61,43 +61,47 @@ materia_valor_nihil (vacuum)
 {
     MateriaValor v;
 
-    v.genus       = MATERIA_VALOR_NIHIL;
-    v.datum.nodus = NIHIL;
+    v.genus        = MATERIA_VALOR_NIHIL;
+    v.datum.nodus  = NIHIL;
     redde v;
 }
 
 MateriaValor
-materia_valor_nodus (MateriaNodus* nodus)
+materia_valor_nodus (
+    MateriaNodus* nodus)
 {
     MateriaValor v;
 
-    v.genus       = MATERIA_VALOR_NODUS;
-    v.datum.nodus = nodus;
+    v.genus        = MATERIA_VALOR_NODUS;
+    v.datum.nodus  = nodus;
     redde v;
 }
 
 MateriaValor
-materia_valor_token (MateriaToken* token)
+materia_valor_token (
+    MateriaToken* token)
 {
     MateriaValor v;
 
-    v.genus       = MATERIA_VALOR_TOKEN;
-    v.datum.token = token;
+    v.genus        = MATERIA_VALOR_TOKEN;
+    v.datum.token  = token;
     redde v;
 }
 
 MateriaValor
-materia_valor_index (s32 index)
+materia_valor_index (
+    s32 index)
 {
     MateriaValor v;
 
-    v.genus       = MATERIA_VALOR_INDEX;
-    v.datum.index = index;
+    v.genus        = MATERIA_VALOR_INDEX;
+    v.datum.index  = index;
     redde v;
 }
 
 MateriaValor
-materia_valor_lista (Xar* lista)
+materia_valor_lista (
+    Xar* lista)
 {
     MateriaValor v;
 
@@ -112,7 +116,8 @@ materia_valor_lista (Xar* lista)
 }
 
 MateriaValor
-materia_valor_lista_nova (Piscina* piscina)
+materia_valor_lista_nova (
+    Piscina* piscina)
 {
     redde materia_valor_lista(
         xar_creare(piscina, magnitudo(MateriaValor)));
@@ -120,14 +125,14 @@ materia_valor_lista_nova (Piscina* piscina)
 
 MateriaValor
 materia_valor_lista_appendere (
-      Piscina* piscina,
-    MateriaValor lista,
-    MateriaValor elementum)
+         Piscina* piscina,
+    MateriaValor  lista,
+    MateriaValor  elementum)
 {
              Xar* xar;
     MateriaValor* slot;
 
-    si (lista.genus != MATERIA_VALOR_LISTA
+    si (   lista.genus           != MATERIA_VALOR_LISTA
         || lista.datum.lista.xar == NIHIL)
     {
         redde materia_valor_nihil();
@@ -170,15 +175,16 @@ materia_valor_lista_appendere (
     {
         MateriaValor novus;
 
-        novus.genus               = MATERIA_VALOR_LISTA;
-        novus.datum.lista.xar     = xar;
-        novus.datum.lista.mensura = lista.datum.lista.mensura + I;
+        novus.genus                = MATERIA_VALOR_LISTA;
+        novus.datum.lista.xar      = xar;
+        novus.datum.lista.mensura  = lista.datum.lista.mensura + I;
         redde novus;
     }
 }
 
 i32
-materia_valor_lista_numerus (MateriaValor lista)
+materia_valor_lista_numerus (
+    MateriaValor lista)
 {
     si (lista.genus != MATERIA_VALOR_LISTA)
     {
@@ -188,11 +194,13 @@ materia_valor_lista_numerus (MateriaValor lista)
 }
 
 MateriaValor*
-materia_valor_lista_obtinere (MateriaValor lista, i32 index)
+materia_valor_lista_obtinere (
+    MateriaValor lista,
+             i32 index)
 {
-    si (lista.genus != MATERIA_VALOR_LISTA
+    si (   lista.genus           != MATERIA_VALOR_LISTA
         || lista.datum.lista.xar == NIHIL
-        || index >= lista.datum.lista.mensura)
+        || index                 >= lista.datum.lista.mensura)
     {
         redde NIHIL;
     }
@@ -206,9 +214,9 @@ materia_valor_lista_obtinere (MateriaValor lista, i32 index)
 
 MateriaNodus*
 materia_nodus_creare (
-    Piscina* piscina,
-         s32 genus,
-         i32 numerus_locorum)
+     Piscina* piscina,
+         s32  genus,
+         i32  numerus_locorum)
 {
     MateriaNodus* nodus;
              i32  i;
@@ -226,10 +234,10 @@ materia_nodus_creare (
         redde NIHIL;
     }
 
-    nodus->genus           = genus;
-    nodus->numerus_locorum = numerus_locorum;
-    nodus->pater           = NIHIL;
-    nodus->loci            = NIHIL;
+    nodus->genus            = genus;
+    nodus->numerus_locorum  = numerus_locorum;
+    nodus->pater            = NIHIL;
+    nodus->loci             = NIHIL;
 
     si (numerus_locorum > ZEPHYRUM)
     {
@@ -273,10 +281,10 @@ materia_valor_congruit (
 
 b32
 materia_nodus_ponere (
-        MateriaNodus* nodus,
-                  i32 locus,
-         MateriaValor valor,
-  MateriaLocusSpecies species)
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species)
 {
     si (nodus == NIHIL || locus >= nodus->numerus_locorum)
     {
@@ -306,11 +314,11 @@ materia_nodus_ponere (
 
 b32
 materia_nodus_appendere (
-             Piscina* piscina,
-        MateriaNodus* nodus,
-                  i32 locus,
-         MateriaValor valor,
-  MateriaLocusSpecies species)
+              Piscina* piscina,
+         MateriaNodus* nodus,
+                  i32  locus,
+         MateriaValor  valor,
+  MateriaLocusSpecies  species)
 {
     MateriaValor novus;
 
@@ -347,7 +355,7 @@ materia_nodus_appendere (
 
 Xar*
 materia_nodus_liberi (
-                Piscina* piscina,
+                  Piscina* piscina,
     constans MateriaNodus* nodus)
 {
     Xar* liberi;
@@ -372,7 +380,7 @@ materia_nodus_liberi (
                 *locus = v->datum.nodus;
             }
         }
-        alioquin si (   v->genus == MATERIA_VALOR_LISTA
+        alioquin si (   v->genus           == MATERIA_VALOR_LISTA
                      && v->datum.lista.xar != NIHIL)
         {
             i32 j;

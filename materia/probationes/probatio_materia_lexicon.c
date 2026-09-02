@@ -22,11 +22,16 @@
  * ================================================== */
 
 hic_manens constans MateriaLexGenus GENERA_CSSFORMIA[] = {
-    { "FINIS",         "",    MATERIA_LEX_FIXUM,    MATERIA_MUNUS_FINIS },
-    { "IDENTIFICATOR", NIHIL, MATERIA_LEX_VERBATIM, MATERIA_MUNUS_SUBSTANTIVUM },
-    { "SPATIA",        NIHIL, MATERIA_LEX_VERBATIM, MATERIA_MUNUS_SPATIUM },
-    { "COMMENTARIUM",  NIHIL, MATERIA_LEX_VERBATIM, MATERIA_MUNUS_COMMENTUM },
-    { "COLON",         ":",   MATERIA_LEX_FIXUM,    MATERIA_MUNUS_SUBSTANTIVUM }
+    { "FINIS",         "",    MATERIA_LEX_FIXUM,
+        MATERIA_MUNUS_FINIS },
+    { "IDENTIFICATOR", NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_SUBSTANTIVUM },
+    { "SPATIA",        NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_SPATIUM },
+    { "COMMENTARIUM",  NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_COMMENTUM },
+    { "COLON",         ":",   MATERIA_LEX_FIXUM,
+        MATERIA_MUNUS_SUBSTANTIVUM }
 };
 
 hic_manens constans MateriaLexiconCoctum LEXICON_CSSFORME = {
@@ -50,28 +55,29 @@ _pravum_fabricare (
                    s32  munus,
                    s32  genus_spatii)
 {
-    GENUS_PRAVUM[0].titulus      = titulus;
-    GENUS_PRAVUM[0].orthographia = orthographia;
-    GENUS_PRAVUM[0].species      = species;
-    GENUS_PRAVUM[0].munus        = munus;
+    GENUS_PRAVUM[0].titulus       = titulus;
+    GENUS_PRAVUM[0].orthographia  = orthographia;
+    GENUS_PRAVUM[0].species       = species;
+    GENUS_PRAVUM[0].munus         = munus;
 
-    LEXICON_PRAVUM.genera          = GENUS_PRAVUM;
-    LEXICON_PRAVUM.numerus_generum = I;
-    LEXICON_PRAVUM.praefixum_tagi  = "lex-";
-    LEXICON_PRAVUM.genus_spatii    = genus_spatii;
+    LEXICON_PRAVUM.genera           = GENUS_PRAVUM;
+    LEXICON_PRAVUM.numerus_generum  = I;
+    LEXICON_PRAVUM.praefixum_tagi   = "lex-";
+    LEXICON_PRAVUM.genus_spatii     = genus_spatii;
 
     redde &LEXICON_PRAVUM;
 }
 
-
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
                  b32  praeteritus;
-            Piscina*  piscina;
+             Piscina* piscina;
  MateriaLexiconRatum  ratum;
   MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_lexicon", 4096);
+    piscina = piscina_generare_dynamicum("probatio_materia_lexicon",
+        4096);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -83,6 +89,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: porta lexicon C89 ACCIPIT
      * ======================================================== */
+
     {
         imprimere("\n--- Probans portam: lexicon C89 sanum ---\n");
 
@@ -99,9 +106,10 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: VITIA PLANTATA - porta singula RECUSAT
      * ======================================================== */
+
     {
         MateriaLexiconRatum r;
-        MateriaLexIudicium  iud;
+         MateriaLexIudicium iud;
 
         imprimere("\n--- Probans vitia plantata (porta CLAMARE debet) ---\n");
 
@@ -114,44 +122,51 @@ s32 principale (vacuum)
         {
             MateriaLexiconCoctum vacuum_lex;
 
-            vacuum_lex.genera          = GENERA_CSSFORMIA;
-            vacuum_lex.numerus_generum = ZEPHYRUM;
-            vacuum_lex.praefixum_tagi  = "lex-";
-            vacuum_lex.genus_spatii    = (s32)-I;
-            CREDO_FALSUM (materia_lexicon_ratum_facere(&r, &vacuum_lex, &iud));
-            CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_NUMERUS);
+            vacuum_lex.genera           = GENERA_CSSFORMIA;
+            vacuum_lex.numerus_generum  = ZEPHYRUM;
+            vacuum_lex.praefixum_tagi   = "lex-";
+            vacuum_lex.genus_spatii     = (s32)-I;
+            CREDO_FALSUM (materia_lexicon_ratum_facere(&r, &vacuum_lex,
+                &iud));
+            CREDO_AEQUALIS_S32 (iud.vitium,
+                (s32)MATERIA_LEX_VITIUM_NUMERUS);
         }
 
         /* praefixum NIHIL */
         {
             MateriaLexiconCoctum sine_prae;
 
-            sine_prae.genera          = GENERA_CSSFORMIA;
-            sine_prae.numerus_generum = I;
-            sine_prae.praefixum_tagi  = NIHIL;
-            sine_prae.genus_spatii    = (s32)-I;
-            CREDO_FALSUM (materia_lexicon_ratum_facere(&r, &sine_prae, &iud));
-            CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_PRAEFIXUM);
+            sine_prae.genera           = GENERA_CSSFORMIA;
+            sine_prae.numerus_generum  = I;
+            sine_prae.praefixum_tagi   = NIHIL;
+            sine_prae.genus_spatii     = (s32)-I;
+            CREDO_FALSUM (materia_lexicon_ratum_facere(&r, &sine_prae,
+                &iud));
+            CREDO_AEQUALIS_S32 (iud.vitium,
+                (s32)MATERIA_LEX_VITIUM_PRAEFIXUM);
         }
 
         /* titulus NIHIL */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare(NIHIL, NIHIL, (s32)MATERIA_LEX_VERBATIM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_TITULUS);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_TITULUS);
 
         /* titulus vacuus */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("", NIHIL, (s32)MATERIA_LEX_VERBATIM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_TITULUS);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_TITULUS);
 
         /* species extra fines */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", NIHIL,
                 (s32)MATERIA_LEX_NUMERUS_SPECIERUM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_SPECIES);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_SPECIES);
 
         /* munus extra fines */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
@@ -163,37 +178,43 @@ s32 principale (vacuum)
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", "x", (s32)MATERIA_LEX_VERBATIM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_INVARIANS);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_INVARIANS);
 
         /* INVARIANS, latus II: FIXUM sine orthographia */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", NIHIL, (s32)MATERIA_LEX_FIXUM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_INVARIANS);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_INVARIANS);
 
         /* REPETITUM cuius unitas non character unus */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", "  ", (s32)MATERIA_LEX_REPETITUM,
                 (s32)MATERIA_MUNUS_SPATIUM, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_REPETITUM);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_REPETITUM);
 
         /* TERMINATOR non in nova linea desinens */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", "\r", (s32)MATERIA_LEX_TERMINATOR,
                 (s32)MATERIA_MUNUS_LINEA, (s32)-I), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_TERMINATOR);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_TERMINATOR);
 
         /* genus_spatii extra fines */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", NIHIL, (s32)MATERIA_LEX_VERBATIM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, (s32)V), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_SPATIUM);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_SPATIUM);
 
         /* genus_spatii ad genus cuius munus non SPATIUM est */
         CREDO_FALSUM (materia_lexicon_ratum_facere(&r,
             _pravum_fabricare("X", NIHIL, (s32)MATERIA_LEX_VERBATIM,
                 (s32)MATERIA_MUNUS_SUBSTANTIVUM, ZEPHYRUM), &iud));
-        CREDO_AEQUALIS_S32 (iud.vitium, (s32)MATERIA_LEX_VITIUM_SPATIUM);
+        CREDO_AEQUALIS_S32 (iud.vitium,
+            (s32)MATERIA_LEX_VITIUM_SPATIUM);
 
         /* Nomen vitii numquam NIHIL, etiam extra fines */
         CREDO_NON_NIHIL (materia_lexicon_vitium_nomen(
@@ -204,9 +225,10 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: larva capacitatis (politica degradationis B)
      * ======================================================== */
+
     {
         MateriaLexiconRatum r_css;
-        MateriaLexIudicium  iud;
+         MateriaLexIudicium iud;
 
         imprimere("\n--- Probans larvam capacitatis ---\n");
 
@@ -240,20 +262,23 @@ s32 principale (vacuum)
          * C89 praestat; CSS-forme NON - ergo recusatio ad tempus
          * ONERIS, non responsum falsum per vocationem. */
         {
-            i32 postulata = MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_COMMENTUM)
+            i32 postulata =
+                MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_COMMENTUM)
                           | MATERIA_MUNUS_VEXILLUM(MATERIA_MUNUS_LINEA);
 
-            CREDO_VERUM  (materia_lexicon_munera_habet(&ratum, postulata));
-            CREDO_FALSUM (materia_lexicon_munera_habet(&r_css, postulata));
+            CREDO_VERUM  (materia_lexicon_munera_habet(&ratum,
+                postulata));
+            CREDO_FALSUM (materia_lexicon_munera_habet(&r_css,
+                postulata));
         }
 
         /* Ratum non factum nihil praestat */
         {
             MateriaLexiconRatum r_nullum;
 
-            r_nullum.lexicon           = NIHIL;
-            r_nullum.munera_praesentia = ZEPHYRUM;
-            r_nullum.ratum             = FALSUM;
+            r_nullum.lexicon            = NIHIL;
+            r_nullum.munera_praesentia  = ZEPHYRUM;
+            r_nullum.ratum              = FALSUM;
             CREDO_FALSUM (materia_lexicon_munus_habet(&r_nullum,
                 MATERIA_MUNUS_SPATIUM));
         }
@@ -263,18 +288,20 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: accessus + distributio C89
      * ======================================================== */
+
     {
         i32 i;
-        i32 numerus_verbatim = ZEPHYRUM;
-        i32 numerus_fixum    = ZEPHYRUM;
-        i32 numerus_repetitum= ZEPHYRUM;
-        i32 numerus_terminator = ZEPHYRUM;
+        i32 numerus_verbatim    = ZEPHYRUM;
+        i32 numerus_fixum       = ZEPHYRUM;
+        i32 numerus_repetitum   = ZEPHYRUM;
+        i32 numerus_terminator  = ZEPHYRUM;
 
         imprimere("\n--- Probans accessus et distributionem C89 ---\n");
 
         /* Valores noti - erratum generationis grossum caperent */
         CREDO_VERUM (strcmp(materia_lexicon_titulus(&ratum,
-            (s32)LEXICON_C89_GENUS_IDENTIFICATOR), "IDENTIFICATOR") == ZEPHYRUM);
+            (s32)LEXICON_C89_GENUS_IDENTIFICATOR), "IDENTIFICATOR")
+                == ZEPHYRUM);
         CREDO_VERUM (strcmp(materia_lexicon_orthographia(&ratum,
             (s32)LEXICON_C89_GENUS_AUTO), "auto") == ZEPHYRUM);
         CREDO_NIHIL (materia_lexicon_orthographia(&ratum,
@@ -290,9 +317,11 @@ s32 principale (vacuum)
 
         /* Munera propria */
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
-            (s32)LEXICON_C89_GENUS_NOVA_LINEA), (s32)MATERIA_MUNUS_LINEA);
+            (s32)LEXICON_C89_GENUS_NOVA_LINEA),
+            (s32)MATERIA_MUNUS_LINEA);
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
-            (s32)LEXICON_C89_GENUS_CONTINUATIO), (s32)MATERIA_MUNUS_LAMINA);
+            (s32)LEXICON_C89_GENUS_CONTINUATIO),
+            (s32)MATERIA_MUNUS_LAMINA);
         CREDO_AEQUALIS_S32 ((s32)materia_lexicon_munus(&ratum,
             (s32)LEXICON_C89_GENUS_COMMENTUM_LINEA),
             (s32)MATERIA_MUNUS_COMMENTUM);

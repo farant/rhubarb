@@ -18,13 +18,15 @@
 hic_manens constans MateriaTokenForma FORMA_CUM_CAUDA  = { (i32)VIII };
 hic_manens constans MateriaTokenForma FORMA_SINE_CAUDA = { ZEPHYRUM };
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
          b32  praeteritus;
-    Piscina*  piscina;
+     Piscina* piscina;
       chorda  valor;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_token", 16384);
+    piscina = piscina_generare_dynamicum("probatio_materia_token",
+        16384);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -38,6 +40,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: dispositio PINNATA
      * ======================================================== */
+
     {
         imprimere("\n--- Probans dispositionem pinnatam ---\n");
 
@@ -51,6 +54,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: creatio et campi
      * ======================================================== */
+
     {
         MateriaToken* t;
 
@@ -81,18 +85,20 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: CAUDA - allocatio UNA, non duae
      * ======================================================== */
+
     {
         MateriaToken* sine;
         MateriaToken* cum;
         MateriaToken* alter;
-        vacuum*       cauda;
-        vacuum*       cauda_altera;
-        character*    octeti;
-        i32           i;
+              vacuum* cauda;
+              vacuum* cauda_altera;
+           character* octeti;
+                 i32  i;
 
         imprimere("\n--- Probans caudam ---\n");
 
-        sine = materia_token_creare(piscina, &FORMA_SINE_CAUDA, ZEPHYRUM,
+        sine = materia_token_creare(piscina, &FORMA_SINE_CAUDA,
+            ZEPHYRUM,
             valor, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
         cum  = materia_token_creare(piscina, &FORMA_CUM_CAUDA, ZEPHYRUM,
             valor, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
@@ -133,7 +139,8 @@ s32 principale (vacuum)
 
         /* Duo lexemata caudas suas NON communicant - error mensurae
          * hic apparet, non tribus operibus post */
-        alter = materia_token_creare(piscina, &FORMA_CUM_CAUDA, ZEPHYRUM,
+        alter = materia_token_creare(piscina, &FORMA_CUM_CAUDA,
+            ZEPHYRUM,
             valor, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
         CREDO_NON_NIHIL (alter);
         cauda_altera = materia_token_cauda(alter);
@@ -154,7 +161,8 @@ s32 principale (vacuum)
 
         /* forma NIHIL = nulla cauda */
         CREDO_NIHIL (materia_token_cauda(materia_token_creare(piscina,
-            NIHIL, ZEPHYRUM, valor, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM)));
+            NIHIL, ZEPHYRUM, valor, ZEPHYRUM, (i32)I, (i32)I,
+            ZEPHYRUM)));
         CREDO_NIHIL (materia_token_cauda(NIHIL));
     }
 
@@ -162,10 +170,11 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: trivia EXACTA
      * ======================================================== */
+
     {
         MateriaToken* t;
         MateriaToken* trivia[3];
-        i32           i;
+                 i32  i;
 
         imprimere("\n--- Probans trivia exacta ---\n");
 
@@ -175,7 +184,8 @@ s32 principale (vacuum)
         per (i = ZEPHYRUM; i < (i32)III; i++)
         {
             trivia[i] = materia_token_creare(piscina, &FORMA_SINE_CAUDA,
-                (s32)(i + I), valor, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);
+                (s32)(i + I), valor, ZEPHYRUM, (i32)I, (i32)I,
+                ZEPHYRUM);
             CREDO_NON_NIHIL (trivia[i]);
         }
 
@@ -216,6 +226,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: vexilla non se invicem conculcant
      * ======================================================== */
+
     {
         MateriaToken* t;
 

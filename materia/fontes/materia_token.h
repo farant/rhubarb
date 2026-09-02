@@ -81,17 +81,17 @@ nomen structura {
 nomen structura MateriaToken MateriaToken;
 
 structura MateriaToken {
-    chorda         valor;           /* visus in textum; NON nul-terminatus */
+          chorda   valor;           /* visus in textum; NON nul-terminatus */
     MateriaToken** spatia_ante;     /* series EXACTA; NIHIL si nulla */
     MateriaToken** spatia_post;
-    i32            numerus_ante;
-    i32            numerus_post;
-    s32            genus;           /* index in lexicon; vide materia_lexicon.h */
-    s32            byte_offset;     /* intra fontem; -I si syntheticum */
-    i32            linea;           /* I-basata */
-    i32            columna;         /* I-basata */
-    s32            fons_index;      /* in tabulam fontium */
-    i32            vexilla;         /* MATERIA_TOKEN_* */
+             i32   numerus_ante;
+             i32   numerus_post;
+             s32   genus;           /* index in lexicon; vide materia_lexicon.h */
+             s32   byte_offset;     /* intra fontem; -I si syntheticum */
+             i32   linea;           /* I-basata */
+             i32   columna;         /* I-basata */
+             s32   fons_index;      /* in tabulam fontium */
+             i32   vexilla;         /* MATERIA_TOKEN_* */
 };
 
 
@@ -103,14 +103,14 @@ structura MateriaToken {
  * sequitur, ordinata et ad zephyrum posita. */
 MateriaToken*
 materia_token_creare (
-                       Piscina* piscina,
-    constans MateriaTokenForma* forma,
-                            s32 genus,
-                         chorda valor,
-                            s32 byte_offset,
-                            i32 linea,
-                            i32 columna,
-                            s32 fons_index);
+                        Piscina* piscina,
+     constans MateriaTokenForma* forma,
+                            s32  genus,
+                         chorda  valor,
+                            s32  byte_offset,
+                            i32  linea,
+                            i32  columna,
+                            s32  fons_index);
 
 /* Datum privatum frontis. NIHIL si forma nullam caudam poposcit -
  * ergo punctator ultra allocationem reddi NON potest. */
@@ -127,17 +127,17 @@ materia_token_cauda (
  * (punctator NIHIL, numerus ZEPHYRUM). */
 b32
 materia_token_trivia_ante_ponere (
-        MateriaToken* token,
-             Piscina* piscina,
-        MateriaToken** fonte,
-                  i32  numerus);
+         MateriaToken*  token,
+              Piscina*  piscina,
+         MateriaToken** fonte,
+                  i32   numerus);
 
 b32
 materia_token_trivia_post_ponere (
-        MateriaToken* token,
-             Piscina* piscina,
-        MateriaToken** fonte,
-                  i32  numerus);
+         MateriaToken*  token,
+              Piscina*  piscina,
+         MateriaToken** fonte,
+                  i32   numerus);
 
 
 /* ==================================================
@@ -150,7 +150,7 @@ materia_token_initium_lineae (
 
 vacuum
 materia_token_initium_lineae_ponere (
-    MateriaToken* token,
-              b32 valor);
+     MateriaToken* token,
+              b32  valor);
 
 #endif /* MATERIA_TOKEN_H */

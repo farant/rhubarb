@@ -21,24 +21,28 @@ hic_manens constans MateriaTokenForma FORMA = { ZEPHYRUM };
 /* Uncus fictus: sedem fixam reddit, ut via unci a via lexematis
  * DISCERNI possit */
 hic_manens vacuum
-_uncus_fictus (vacuum* datum, constans MateriaToken* token,
+_uncus_fictus (
+                     vacuum* datum,
+      constans MateriaToken* token,
                MateriaSedes* sedes)
 {
     (vacuum)token;
-    sedes->byte_offset = *(s32*)datum;
-    sedes->linea       = (i32)999;
-    sedes->columna     = (i32)7;
-    sedes->fons_index  = (s32)3;
-    sedes->est_fons    = FALSUM;
+    sedes->byte_offset  = *(s32*)datum;
+    sedes->linea        = (i32)999;
+    sedes->columna      = (i32)7;
+    sedes->fons_index   = (s32)3;
+    sedes->est_fons     = FALSUM;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
         b32  praeteritus;
-   Piscina*  piscina;
+    Piscina* piscina;
      chorda  valor;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_nodus", 32768);
+    piscina = piscina_generare_dynamicum("probatio_materia_nodus",
+        32768);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -51,6 +55,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: valores et congruentia
      * ======================================================== */
+
     {
         MateriaValor v;
 
@@ -74,9 +79,11 @@ s32 principale (vacuum)
         CREDO_VERUM  (materia_valor_congruit(materia_valor_index(ZEPHYRUM),
             MATERIA_LOCUS_INDEX));
         CREDO_VERUM  (materia_valor_congruit(
-            materia_valor_lista_nova(piscina), MATERIA_LOCUS_LISTA_NODUS));
+            materia_valor_lista_nova(piscina),
+            MATERIA_LOCUS_LISTA_NODUS));
         CREDO_VERUM  (materia_valor_congruit(
-            materia_valor_lista_nova(piscina), MATERIA_LOCUS_LISTA_MIXTA));
+            materia_valor_lista_nova(piscina),
+            MATERIA_LOCUS_LISTA_MIXTA));
         CREDO_FALSUM (materia_valor_congruit(materia_valor_nihil(),
             MATERIA_LOCUS_NODUS));
         /* Species extra fines: FALSUM, non ruina */
@@ -92,6 +99,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: prospectus FURCA-TUTUS
      * ======================================================== */
+
     {
         MateriaValor basis;
         MateriaValor furca_a;
@@ -104,18 +112,21 @@ s32 principale (vacuum)
             materia_valor_index((s32)10));
         basis = materia_valor_lista_appendere(piscina, basis,
             materia_valor_index((s32)20));
-        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(basis), (i32)II);
+        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(basis),
+            (i32)II);
 
         /* Furca A: in loco appendit (ad finem vivum stat) */
         furca_a = materia_valor_lista_appendere(piscina, basis,
             materia_valor_index((s32)31));
-        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(furca_a), (i32)III);
+        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(furca_a),
+            (i32)III);
 
         /* Furca B ex EADEM basi: repositorium iam ultra prospectum
          * basis scriptum est, ergo COPIA fieri debet */
         furca_b = materia_valor_lista_appendere(piscina, basis,
             materia_valor_index((s32)32));
-        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(furca_b), (i32)III);
+        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(furca_b),
+            (i32)III);
 
         /* Repositoria DIVERSA - hoc est copia-in-divergentia */
         CREDO_INAEQUALITAS_PTR (furca_a.datum.lista.xar,
@@ -130,15 +141,18 @@ s32 principale (vacuum)
             (s32)32);
 
         /* Basis intacta - mensura SUA, non repositorii */
-        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(basis), (i32)II);
+        CREDO_AEQUALIS_I32 (materia_valor_lista_numerus(basis),
+            (i32)II);
         CREDO_NIHIL (materia_valor_lista_obtinere(basis, (i32)II));
 
         /* Praefixum commune utrique furcae superest */
         CREDO_AEQUALIS_S32 (
-            materia_valor_lista_obtinere(furca_a, ZEPHYRUM)->datum.index,
+            materia_valor_lista_obtinere(furca_a,
+            ZEPHYRUM)->datum.index,
             (s32)10);
         CREDO_AEQUALIS_S32 (
-            materia_valor_lista_obtinere(furca_b, ZEPHYRUM)->datum.index,
+            materia_valor_lista_obtinere(furca_b,
+            ZEPHYRUM)->datum.index,
             (s32)10);
 
         /* Appendere in non-listam: nihil-valor */
@@ -154,6 +168,7 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: nodus - custodiae PLANTATAE
      * ======================================================== */
+
     {
         MateriaNodus* n;
         MateriaNodus* filius;
@@ -199,12 +214,13 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: appendere et liberi
      * ======================================================== */
+
     {
         MateriaNodus* n;
         MateriaNodus* a;
         MateriaNodus* b;
         MateriaToken* t;
-        Xar*          liberi;
+                 Xar* liberi;
 
         imprimere("\n--- Probans appendere et liberos ---\n");
 
@@ -235,8 +251,10 @@ s32 principale (vacuum)
         liberi = materia_nodus_liberi(piscina, n);
         CREDO_NON_NIHIL (liberi);
         CREDO_AEQUALIS_I32 (xar_numerus(liberi), (i32)II);
-        CREDO_AEQUALIS_PTR (*(MateriaNodus**)xar_obtinere(liberi, ZEPHYRUM), a);
-        CREDO_AEQUALIS_PTR (*(MateriaNodus**)xar_obtinere(liberi, (i32)I), b);
+        CREDO_AEQUALIS_PTR (*(MateriaNodus**)xar_obtinere(liberi,
+            ZEPHYRUM), a);
+        CREDO_AEQUALIS_PTR (*(MateriaNodus**)xar_obtinere(liberi,
+            (i32)I), b);
 
         /* nodus NIHIL: Xar vacuus, non NIHIL */
         liberi = materia_nodus_liberi(piscina, NIHIL);
@@ -248,11 +266,12 @@ s32 principale (vacuum)
     /* ========================================================
      * PROBARE: uncus sedis
      * ======================================================== */
+
     {
-        MateriaToken*     t;
-        MateriaSedes      sedes;
-        MateriaOrigoUncus uncus;
-        s32               fictum = (s32)1234;
+             MateriaToken* t;
+             MateriaSedes  sedes;
+        MateriaOrigoUncus  uncus;
+                      s32  fictum = (s32)1234;
 
         imprimere("\n--- Probans uncum sedis ---\n");
 
@@ -270,16 +289,16 @@ s32 principale (vacuum)
         CREDO_VERUM (sedes.est_fons);
 
         /* Uncus cum campo NIHIL = idem ac uncus absens */
-        uncus.datum = NIHIL;
-        uncus.sedes_quaerere = NIHIL;
+        uncus.datum           = NIHIL;
+        uncus.sedes_quaerere  = NIHIL;
         materia_sedes_tokeni(&uncus, t, &sedes);
         CREDO_AEQUALIS_S32 (sedes.byte_offset, (s32)77);
         CREDO_VERUM (sedes.est_fons);
 
         /* Cum unco: quod FRONS dicit, non quod lexema fert.
          * C89 hac via catenam originis ad radicem ambulat. */
-        uncus.datum = &fictum;
-        uncus.sedes_quaerere = _uncus_fictus;
+        uncus.datum           = &fictum;
+        uncus.sedes_quaerere  = _uncus_fictus;
         materia_sedes_tokeni(&uncus, t, &sedes);
         CREDO_AEQUALIS_S32 (sedes.byte_offset, (s32)1234);
         CREDO_AEQUALIS_I32 (sedes.linea, (i32)999);

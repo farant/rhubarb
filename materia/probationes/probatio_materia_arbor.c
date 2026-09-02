@@ -35,13 +35,20 @@ enumeratio {
 };
 
 hic_manens constans MateriaLexGenus GENERA[] = {
-    { "FINIS",      "",    MATERIA_LEX_FIXUM,      MATERIA_MUNUS_FINIS },
-    { "IDENT",      NIHIL, MATERIA_LEX_VERBATIM,   MATERIA_MUNUS_SUBSTANTIVUM },
-    { "SPATIA",     " ",   MATERIA_LEX_REPETITUM,  MATERIA_MUNUS_SPATIUM },
-    { "NOVA_LINEA", "\n",  MATERIA_LEX_TERMINATOR, MATERIA_MUNUS_LINEA },
-    { "COMMENTUM",  NIHIL, MATERIA_LEX_VERBATIM,   MATERIA_MUNUS_COMMENTUM },
-    { "PLUS",       "+",   MATERIA_LEX_FIXUM,      MATERIA_MUNUS_SUBSTANTIVUM },
-    { "ALBUM",      NIHIL, MATERIA_LEX_VERBATIM,   MATERIA_MUNUS_SPATIUM }
+    { "FINIS",      "",    MATERIA_LEX_FIXUM,
+        MATERIA_MUNUS_FINIS },
+    { "IDENT",      NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_SUBSTANTIVUM },
+    { "SPATIA",     " ",   MATERIA_LEX_REPETITUM,
+        MATERIA_MUNUS_SPATIUM },
+    { "NOVA_LINEA", "\n",  MATERIA_LEX_TERMINATOR,
+        MATERIA_MUNUS_LINEA },
+    { "COMMENTUM",  NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_COMMENTUM },
+    { "PLUS",       "+",   MATERIA_LEX_FIXUM,
+        MATERIA_MUNUS_SUBSTANTIVUM },
+    { "ALBUM",      NIHIL, MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_SPATIUM }
 };
 hic_manens constans MateriaLexiconCoctum LEXICON = {
     GENERA, (i32)G_NUMERUS_GENERUM, "lex-", (s32)G_SPATIA
@@ -58,21 +65,28 @@ hic_manens constans MateriaRegistrumCoctum REG = {
 };
 
 hic_manens MateriaToken*
-_lex (Piscina* p, s32 genus, constans character* v, s32 offset,
-      i32 linea, i32 columna)
+_lex (
+               Piscina* p,
+                   s32  genus,
+    constans character* v,
+                   s32  offset,
+                   i32  linea,
+                   i32  columna)
 {
     redde materia_token_creare(p, &FORMA, genus,
         chorda_ex_literis(v, p), offset, linea, columna, ZEPHYRUM);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
                 b32  praeteritus;
-           Piscina*  piscina;
+            Piscina* piscina;
 MateriaLexiconRatum  ratum;
  MateriaLexIudicium  iudicium;
 
-    piscina = piscina_generare_dynamicum("probatio_materia_arbor", 65536);
+    piscina = piscina_generare_dynamicum("probatio_materia_arbor",
+        65536);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -80,12 +94,14 @@ MateriaLexiconRatum  ratum;
     }
     credo_aperire(piscina);
 
-    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON, &iudicium));
+    CREDO_VERUM (materia_lexicon_ratum_facere(&ratum, &LEXICON,
+        &iudicium));
 
 
     /* ========================================================
      * PROBARE: mangulatio tagorum, utroque modo
      * ======================================================== */
+
     {
         character tag[MATERIA_ARBOR_TAG_CAPACITAS];
 
@@ -109,21 +125,28 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: formae triviorum EX SPECIE
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaNodus* n;
-        MateriaToken* t;
-        MateriaToken* tr[3];
-        MateriaArborScriptura s;
+        MateriaArborConsilium  c;
+                 MateriaNodus* n;
+                 MateriaToken* t;
+                 MateriaToken* tr[3];
+        MateriaArborScriptura  s;
 
         imprimere("\n--- Probans formas triviorum ---\n");
 
-        t     = _lex(piscina, (s32)G_IDENT, "x", (s32)6, (i32)I, (i32)7);
-        tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I, (i32)I);
-        tr[1] = _lex(piscina, (s32)G_COMMENTUM, "/*c*/", (s32)4, (i32)I, (i32)5);
-        tr[2] = _lex(piscina, (s32)G_NOVA_LINEA, "\r\n", (s32)7, (i32)I, (i32)8);
-        CREDO_VERUM (materia_token_trivia_ante_ponere(t, piscina, tr, (i32)II));
-        CREDO_VERUM (materia_token_trivia_post_ponere(t, piscina, tr + II,
+        t = _lex(piscina, (s32)G_IDENT, "x", (s32)6, (i32)I,
+            (i32)7);
+        tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I,
+            (i32)I);
+        tr[1] = _lex(piscina, (s32)G_COMMENTUM, "/*c*/", (s32)4, (i32)I,
+            (i32)5);
+        tr[2] = _lex(piscina, (s32)G_NOVA_LINEA, "\r\n", (s32)7, (i32)I,
+            (i32)8);
+        CREDO_VERUM (materia_token_trivia_ante_ponere(t, piscina, tr,
+            (i32)II));
+        CREDO_VERUM (materia_token_trivia_post_ponere(t, piscina, tr
+            + II,
             (i32)I));
 
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
@@ -159,6 +182,7 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: LEX ANCORAE - ambo casus
      * ======================================================== */
+
     {
         MateriaArborConsilium c;
         MateriaArborScriptura s;
@@ -170,7 +194,8 @@ MateriaLexiconRatum  ratum;
          * Hic vitium EVANESCIT - probatio quae hoc solum probat de
          * lege ancorae NIHIL dicit. */
         {
-            MateriaNodus* n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+            MateriaNodus* n = materia_nodus_creare(piscina, ZEPHYRUM,
+                (i32)I);
 
             CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
                 materia_valor_token(_lex(piscina, (s32)G_IDENT, "a",
@@ -178,7 +203,8 @@ MateriaLexiconRatum  ratum;
                 MATERIA_LOCUS_LISTA_MIXTA));
             s = materia_arbor_scribere_nodum(piscina, n, &c);
             CREDO_VERUM (s.successus);
-            CREDO_NON_NIHIL (strstr((character*)s.textus.datum, "b=\"0\""));
+            CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                "b=\"0\""));
         }
 
         /* CASUS II: lexema primum CUM trivio ducente ad offset IV,
@@ -186,21 +212,25 @@ MateriaLexiconRatum  ratum;
          * ubi emissio incipit. Si VIII, sedes omnes longitudine
          * indentationis labuntur. */
         {
-            MateriaNodus* n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
+            MateriaNodus* n = materia_nodus_creare(piscina, ZEPHYRUM,
+                (i32)I);
             MateriaToken* t = _lex(piscina, (s32)G_IDENT, "b", (s32)8,
                 (i32)II, (i32)5);
             MateriaToken* tr[1];
 
-            tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", (s32)4, (i32)II,
+            tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", (s32)4,
+                (i32)II,
                 (i32)I);
-            CREDO_VERUM (materia_token_trivia_ante_ponere(t, piscina, tr,
+            CREDO_VERUM (materia_token_trivia_ante_ponere(t, piscina,
+                tr,
                 (i32)I));
             CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
                 materia_valor_token(t), MATERIA_LOCUS_LISTA_MIXTA));
 
             s = materia_arbor_scribere_nodum(piscina, n, &c);
             CREDO_VERUM (s.successus);
-            CREDO_NON_NIHIL (strstr((character*)s.textus.datum, "b=\"4\""));
+            CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
+                "b=\"4\""));
             /* et NON ad lexema ipsum */
             CREDO_NIHIL (strstr((character*)s.textus.datum, "b=\"8\""));
             CREDO_NON_NIHIL (strstr((character*)s.textus.datum,
@@ -212,11 +242,12 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: fragmentum et transclusio (identitas, non copia)
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaNodus*         n;
-        MateriaToken*         t;
-        MateriaArborScriptura s;
+        MateriaArborConsilium  c;
+                 MateriaNodus* n;
+                 MateriaToken* t;
+        MateriaArborScriptura  s;
 
         imprimere("\n--- Probans fragmentum/transclusionem ---\n");
 
@@ -243,11 +274,12 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: custodiae
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaArborScriptura s;
-        MateriaNodus*         n;
-        MateriaLexiconRatum   irritum;
+        MateriaArborConsilium  c;
+        MateriaArborScriptura  s;
+                 MateriaNodus* n;
+          MateriaLexiconRatum  irritum;
 
         imprimere("\n--- Probans custodias ---\n");
 
@@ -255,8 +287,8 @@ MateriaLexiconRatum  ratum;
         materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
 
         /* grammatica innominata */
-        c.grammatica = NIHIL;
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        c.grammatica  = NIHIL;
+        s             = materia_arbor_scribere_nodum(piscina, n, &c);
         CREDO_FALSUM (s.successus);
         c.grammatica = "probatio";
 
@@ -271,10 +303,11 @@ MateriaLexiconRatum  ratum;
         c.lexicon = &ratum;
 
         /* genus ignotum: fractura cum SEDE */
-        n->genus = (s32)99;
-        s = materia_arbor_scribere_nodum(piscina, n, &c);
+        n->genus  = (s32)99;
+        s         = materia_arbor_scribere_nodum(piscina, n, &c);
         CREDO_FALSUM (s.successus);
-        CREDO_AEQUALIS_PTR ((constans vacuum*)s.sedes, (constans vacuum*)n);
+        CREDO_AEQUALIS_PTR ((constans vacuum*)s.sedes,
+            (constans vacuum*)n);
         n->genus = ZEPHYRUM;
 
         /* argumenta nulla */
@@ -295,26 +328,31 @@ MateriaLexiconRatum  ratum;
      * (Lex ex stml-text-semantics: 'circuitus unus testimonium
      * NON est cum vitium compoundat'.)
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaNodus*         n;
-        MateriaToken*         t1;
-        MateriaToken*         t2;
-        MateriaToken*         tr[2];
-        MateriaArborScriptura s1;
-        MateriaArborScriptura s2;
-        MateriaArborScriptura s3;
-        MateriaNodus*         lecta;
-        MateriaNodus*         lecta2;
-        MateriaArborVitium    vitium;
+        MateriaArborConsilium  c;
+                 MateriaNodus* n;
+                 MateriaToken* t1;
+                 MateriaToken* t2;
+                 MateriaToken* tr[2];
+        MateriaArborScriptura  s1;
+        MateriaArborScriptura  s2;
+        MateriaArborScriptura  s3;
+                 MateriaNodus* lecta;
+                 MateriaNodus* lecta2;
+           MateriaArborVitium  vitium;
 
         imprimere("\n--- Probans circuitum (BIS) ---\n");
 
         /* '    a+b' : trivium ducens, duo lexemata, unum fixum */
-        tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I, (i32)I);
-        t1    = _lex(piscina, (s32)G_IDENT, "a", (s32)4, (i32)I, (i32)5);
-        t2    = _lex(piscina, (s32)G_PLUS,  "+", (s32)5, (i32)I, (i32)6);
-        CREDO_VERUM (materia_token_trivia_ante_ponere(t1, piscina, tr, (i32)I));
+        tr[0] = _lex(piscina, (s32)G_SPATIA, "    ", ZEPHYRUM, (i32)I,
+            (i32)I);
+        t1 = _lex(piscina, (s32)G_IDENT, "a", (s32)4, (i32)I,
+            (i32)5);
+        t2 = _lex(piscina, (s32)G_PLUS,  "+", (s32)5, (i32)I,
+            (i32)6);
+        CREDO_VERUM (materia_token_trivia_ante_ponere(t1, piscina, tr,
+            (i32)I));
 
         n = materia_nodus_creare(piscina, ZEPHYRUM, (i32)I);
         CREDO_VERUM (materia_nodus_appendere(piscina, n, ZEPHYRUM,
@@ -326,7 +364,8 @@ MateriaLexiconRatum  ratum;
         s1 = materia_arbor_scribere_nodum(piscina, n, &c);
         CREDO_VERUM (s1.successus);
 
-        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c, &vitium);
+        lecta = materia_arbor_legere(piscina, NIHIL, s1.textus, &c,
+            &vitium);
         CREDO_NON_NIHIL (lecta);
         CREDO_NIHIL (vitium.causa);
 
@@ -337,7 +376,8 @@ MateriaLexiconRatum  ratum;
             (size_t)s1.textus.mensura) == ZEPHYRUM);
 
         /* CIRCUITUS SECUNDUS */
-        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c, &vitium);
+        lecta2 = materia_arbor_legere(piscina, NIHIL, s2.textus, &c,
+            &vitium);
         CREDO_NON_NIHIL (lecta2);
         s3 = materia_arbor_scribere_nodum(piscina, lecta2, &c);
         CREDO_VERUM (s3.successus);
@@ -348,9 +388,11 @@ MateriaLexiconRatum  ratum;
         /* SEDES DERIVATAE: documentum eas non fert, lector eas
          * reficit. Lexema primum ad IV (post trivium), '+' ad V. */
         {
-            MateriaValor* e0 = materia_valor_lista_obtinere(lecta->loci[0],
+            MateriaValor* e0 =
+                materia_valor_lista_obtinere(lecta->loci[0],
                 ZEPHYRUM);
-            MateriaValor* e1 = materia_valor_lista_obtinere(lecta->loci[0],
+            MateriaValor* e1 =
+                materia_valor_lista_obtinere(lecta->loci[0],
                 (i32)I);
 
             CREDO_NON_NIHIL (e0);
@@ -370,11 +412,12 @@ MateriaLexiconRatum  ratum;
     /* ========================================================
      * PROBARE: custodiae lectoris
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaArborVitium    vitium;
-        MateriaNodus*         n;
-        MateriaArborScriptura s;
+        MateriaArborConsilium  c;
+           MateriaArborVitium  vitium;
+                 MateriaNodus* n;
+        MateriaArborScriptura  s;
 
         imprimere("\n--- Probans custodias lectoris ---\n");
         materia_arbor_consilium_nudum(&c, &REG, &ratum, "probatio");
@@ -442,15 +485,16 @@ MateriaLexiconRatum  ratum;
      * (CSS) plagulam quamlibet spatium ferentem proicere NON
      * POTERAT - centesimam partem CSS veri.
      * ======================================================== */
+
     {
-        MateriaArborConsilium c;
-        MateriaArborVitium vitium;
-        MateriaArborScriptura s1;
-        MateriaArborScriptura s2;
-        MateriaNodus* radix;
-        MateriaNodus* lecta;
-        MateriaToken* ident;
-        MateriaToken* album;
+        MateriaArborConsilium  c;
+           MateriaArborVitium  vitium;
+        MateriaArborScriptura  s1;
+        MateriaArborScriptura  s2;
+                 MateriaNodus* radix;
+                 MateriaNodus* lecta;
+                 MateriaToken* ident;
+                 MateriaToken* album;
 
         imprimere("\n--- Probans spatium album VERBATIM (crudum) ---\n");
 
@@ -511,16 +555,16 @@ MateriaLexiconRatum  ratum;
          * quia chorda longitudinem fert et textus terminatore
          * legitur. Relaxatio albi hoc NON tetigit. */
         {
-            MateriaToken* malum;
-            MateriaNodus* r2;
-            chorda cum_nul;
-            MateriaArborScriptura s3;
+                     MateriaToken* malum;
+                     MateriaNodus* r2;
+                           chorda  cum_nul;
+            MateriaArborScriptura  s3;
 
             cum_nul.mensura = (i32)II;
             cum_nul.datum   = (i8*)piscina_allocare(piscina,
                 (memoriae_index)II);
-            cum_nul.datum[ZEPHYRUM] = (i8)' ';
-            cum_nul.datum[I]        = (i8)'\0';
+            cum_nul.datum[ZEPHYRUM]  = (i8)' ';
+            cum_nul.datum[I]         = (i8)'\0';
 
             malum = materia_token_creare(piscina, &FORMA, (s32)G_ALBUM,
                 cum_nul, ZEPHYRUM, (i32)I, (i32)I, ZEPHYRUM);

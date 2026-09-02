@@ -59,16 +59,16 @@ _iudicium_ponere (
 {
     si (iudicium != NIHIL)
     {
-        iudicium->vitium = (s32)vitium;
-        iudicium->genus  = genus;
+        iudicium->vitium  = (s32)vitium;
+        iudicium->genus   = genus;
     }
 }
 
 b32
 materia_lexicon_ratum_facere (
-        MateriaLexiconRatum* ratum,
+              MateriaLexiconRatum* ratum,
     constans MateriaLexiconCoctum* lexicon,
-         MateriaLexIudicium* iudicium)
+               MateriaLexIudicium* iudicium)
 {
     i32 i;
     i32 larva;
@@ -78,9 +78,9 @@ materia_lexicon_ratum_facere (
         redde FALSUM;
     }
 
-    ratum->lexicon           = NIHIL;
-    ratum->munera_praesentia = ZEPHYRUM;
-    ratum->ratum             = FALSUM;
+    ratum->lexicon            = NIHIL;
+    ratum->munera_praesentia  = ZEPHYRUM;
+    ratum->ratum              = FALSUM;
 
     si (lexicon == NIHIL || lexicon->genera == NIHIL)
     {
@@ -89,7 +89,8 @@ materia_lexicon_ratum_facere (
     }
     si (lexicon->numerus_generum == ZEPHYRUM)
     {
-        _iudicium_ponere(iudicium, MATERIA_LEX_VITIUM_NUMERUS, ZEPHYRUM);
+        _iudicium_ponere(iudicium, MATERIA_LEX_VITIUM_NUMERUS,
+            ZEPHYRUM);
         redde FALSUM;
     }
     si (lexicon->praefixum_tagi == NIHIL)
@@ -104,7 +105,7 @@ materia_lexicon_ratum_facere (
     per (i = ZEPHYRUM; i < lexicon->numerus_generum; i++)
     {
         constans MateriaLexGenus* g = &lexicon->genera[i];
-        b32                       verbatim;
+                             b32  verbatim;
 
         si (g->titulus == NIHIL || g->titulus[0] == '\0')
         {
@@ -166,7 +167,7 @@ materia_lexicon_ratum_facere (
     {
         si (   lexicon->genus_spatii < ZEPHYRUM
             || (i32)lexicon->genus_spatii >= lexicon->numerus_generum
-            ||    lexicon->genera[(i32)lexicon->genus_spatii].munus
+            || lexicon->genera[(i32)lexicon->genus_spatii].munus
                != (s32)MATERIA_MUNUS_SPATIUM)
         {
             _iudicium_ponere(iudicium, MATERIA_LEX_VITIUM_SPATIUM,
@@ -175,10 +176,11 @@ materia_lexicon_ratum_facere (
         }
     }
 
-    ratum->lexicon           = lexicon;
-    ratum->munera_praesentia = larva;
-    ratum->ratum             = VERUM;
-    _iudicium_ponere(iudicium, MATERIA_LEX_SANUM, lexicon->numerus_generum);
+    ratum->lexicon            = lexicon;
+    ratum->munera_praesentia  = larva;
+    ratum->ratum              = VERUM;
+    _iudicium_ponere(iudicium, MATERIA_LEX_SANUM,
+        lexicon->numerus_generum);
     redde VERUM;
 }
 
@@ -190,13 +192,13 @@ materia_lexicon_ratum_facere (
 b32
 materia_lexicon_munus_habet (
     constans MateriaLexiconRatum* ratum,
-              MateriaLexMunus  munus)
+                 MateriaLexMunus  munus)
 {
     si (ratum == NIHIL || !ratum->ratum)
     {
         redde FALSUM;
     }
-    si ((s32)munus < ZEPHYRUM
+    si (   (s32)munus < ZEPHYRUM
         || (s32)munus >= (s32)MATERIA_MUNUS_NUMERUS_MUNERUM)
     {
         redde FALSUM;
@@ -208,7 +210,7 @@ materia_lexicon_munus_habet (
 b32
 materia_lexicon_munera_habet (
     constans MateriaLexiconRatum* ratum,
-                            i32  munera_postulata)
+                             i32  munera_postulata)
 {
     si (ratum == NIHIL || !ratum->ratum)
     {
@@ -235,7 +237,8 @@ _genus_capere (
     /* Genus SIGNATUM est quia lexemata id ita ferunt (MateriaToken.
      * genus). Custodia negativi ergo REALIS est: sine ea -I in
      * i32 versum ad 4294967295 fit et casu solo fines excedit. */
-    si (genus < ZEPHYRUM || (i32)genus >= ratum->lexicon->numerus_generum)
+    si (   genus < ZEPHYRUM
+        || (i32)genus >= ratum->lexicon->numerus_generum)
     {
         redde NIHIL;
     }

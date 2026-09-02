@@ -52,9 +52,9 @@
  * ================================================== */
 
 nomen structura {
-    b32                    successus;
-    chorda                 textus;   /* octeti emissi; vacua in fractura */
-    constans character*    causa;    /* diagnostica statica; NIHIL si bene */
+                      b32  successus;
+                   chorda  textus;   /* octeti emissi; vacua in fractura */
+       constans character* causa;    /* diagnostica statica; NIHIL si bene */
     constans MateriaNodus* sedes;    /* nodus fracturae; NIHIL licet */
 } MateriaScriptura;
 
@@ -103,7 +103,7 @@ nomen structura {
 /* Consilium minimum: tabularium solum, cetera NIHIL/-I. */
 vacuum
 materia_scriptura_consilium_nudum (
-    MateriaScripturaConsilium* consilium,
+          MateriaScripturaConsilium* consilium,
     constans MateriaRegistrumCoctum* tabularium);
 
 
@@ -113,14 +113,14 @@ materia_scriptura_consilium_nudum (
 
 MateriaScriptura
 materia_scribere_valorem (
-                          Piscina* piscina,
-                      MateriaValor valor,
+                               Piscina* piscina,
+                          MateriaValor  valor,
     constans MateriaScripturaConsilium* consilium);
 
 MateriaScriptura
 materia_scribere_nodum (
-                          Piscina* piscina,
-             constans MateriaNodus* nodus,
+                               Piscina* piscina,
+                 constans MateriaNodus* nodus,
     constans MateriaScripturaConsilium* consilium);
 
 /* Comparator ad reinserenda ordinanda (xar_ordinare) - vocans ea

@@ -85,7 +85,7 @@ nomen structura {
                        b32  successus;
                     chorda  textus;   /* octeti STML; vacua in fractura */
         constans character* causa;
-    constans MateriaNodus*  sedes;
+     constans MateriaNodus* sedes;
                        Xar* sedes_valorum;   /* MateriaArborSedes */
         MateriaArborCensus  census;
 } MateriaArborScriptura;
@@ -99,10 +99,12 @@ nomen structura MateriaArborScriptor MateriaArborScriptor;
 nomen structura MateriaArborLector   MateriaArborLector;
 
 Piscina*
-materia_arbor_scriptor_piscina (MateriaArborScriptor* scriptor);
+materia_arbor_scriptor_piscina (
+    MateriaArborScriptor* scriptor);
 
 InternamentumChorda*
-materia_arbor_scriptor_intern (MateriaArborScriptor* scriptor);
+materia_arbor_scriptor_intern (
+    MateriaArborScriptor* scriptor);
 
 /* Causam fracturae ponere (prima vincit, ut in silva). */
 vacuum
@@ -145,7 +147,7 @@ i32
 materia_arbor_lexema_tag (
     constans MateriaLexiconRatum* ratum,
                              s32  genus,
-                      character*  buffer,
+                       character* buffer,
                              i32  capacitas);
 
 /* Inversum, per mangulationem ANTRORSAM omnium generum - ergo
@@ -154,7 +156,7 @@ materia_arbor_lexema_tag (
 s32
 materia_arbor_lexema_ex_tag (
     constans MateriaLexiconRatum* ratum,
-             constans character*  tag,
+              constans character* tag,
                              i32  mensura);
 
 
@@ -253,7 +255,7 @@ nomen structura {
 
 chorda
 materia_arbor_sigillum (
-                          Piscina* piscina,
+                            Piscina* piscina,
     constans MateriaRegistrumCoctum* tabularium);
 
 s32
@@ -279,29 +281,28 @@ nomen structura {
 
     /* LECTIO: Xar de MateriaLacuna, per offset ORDINATUS. NIHIL
      * licet (casus subarboris). */
-                                Xar*  lacunae;
+                                Xar* lacunae;
 
     /* LECTIO: forma lexematum creandorum. Sine hac lector lexemata
      * SINE cauda creat et frons quod legit reponere NON habet -
      * uncus 'liberum_legere' scribere posset sed non conservare.
      * Hiatus API inventus dum shim C89 scriberetur: probatio quae
      * unum latus solum exercet eum non ostendisset. */
-                  MateriaTokenForma  forma;
+                  MateriaTokenForma forma;
 } MateriaArborConsilium;
 
 vacuum
 materia_arbor_consilium_nudum (
-        MateriaArborConsilium* consilium,
+              MateriaArborConsilium* consilium,
     constans MateriaRegistrumCoctum* tabularium,
        constans MateriaLexiconRatum* lexicon,
                  constans character* grammatica);
 
 MateriaArborScriptura
 materia_arbor_scribere_nodum (
-                        Piscina* piscina,
-          constans MateriaNodus* nodus,
+                           Piscina* piscina,
+             constans MateriaNodus* nodus,
     constans MateriaArborConsilium* consilium);
-
 
 
 /* ==================================================
@@ -343,7 +344,8 @@ nomen structura {
  * valorem tegunt). */
 
 Piscina*
-materia_arbor_lector_piscina (MateriaArborLector* lector);
+materia_arbor_lector_piscina (
+    MateriaArborLector* lector);
 
 /* Semper FALSUM reddit, ut vocantes 'redde ...recusare(...)'
  * scribere possint. PRIMA causa vincit - profundissima est et
@@ -371,11 +373,11 @@ nomen enumeratio {
 
 MateriaNodus*
 materia_arbor_legere (
-                        Piscina* piscina,
-            InternamentumChorda* intern,
-                          chorda textus,
+                           Piscina* piscina,
+               InternamentumChorda* intern,
+                            chorda  textus,
     constans MateriaArborConsilium* consilium,
-             MateriaArborVitium* vitium);
+                MateriaArborVitium* vitium);
 
 
 /* ==================================================

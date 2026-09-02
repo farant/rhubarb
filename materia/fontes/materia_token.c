@@ -18,18 +18,18 @@
 
 MateriaToken*
 materia_token_creare (
-                       Piscina* piscina,
-    constans MateriaTokenForma* forma,
-                            s32 genus,
-                         chorda valor,
-                            s32 byte_offset,
-                            i32 linea,
-                            i32 columna,
-                            s32 fons_index)
+                        Piscina* piscina,
+     constans MateriaTokenForma* forma,
+                            s32  genus,
+                         chorda  valor,
+                            s32  byte_offset,
+                            i32  linea,
+                            i32  columna,
+                            s32  fons_index)
 {
-    MateriaToken*  token;
-    memoriae_index mensura;
-               i32 cauda;
+      MateriaToken* token;
+    memoriae_index  mensura;
+               i32  cauda;
 
     si (piscina == NIHIL)
     {
@@ -48,12 +48,12 @@ materia_token_creare (
     }
     memset(token, ZEPHYRUM, (size_t)mensura);
 
-    token->valor       = valor;
-    token->genus       = genus;
-    token->byte_offset = byte_offset;
-    token->linea       = linea;
-    token->columna     = columna;
-    token->fons_index  = fons_index;
+    token->valor        = valor;
+    token->genus        = genus;
+    token->byte_offset  = byte_offset;
+    token->linea        = linea;
+    token->columna      = columna;
+    token->fons_index   = fons_index;
     si (cauda > ZEPHYRUM)
     {
         token->vexilla |= MATERIA_TOKEN_CAUDA;
@@ -66,7 +66,8 @@ vacuum*
 materia_token_cauda (
     constans MateriaToken* token)
 {
-    si (token == NIHIL || (token->vexilla & MATERIA_TOKEN_CAUDA) == ZEPHYRUM)
+    si (   token                                  == NIHIL
+        || (token->vexilla & MATERIA_TOKEN_CAUDA) == ZEPHYRUM)
     {
         redde NIHIL;
     }
@@ -89,13 +90,13 @@ _trivia_ponere (
      MateriaToken**  fonte,
               i32    numerus)
 {
-    MateriaToken** series;
-               i32 i;
+      MateriaToken** series;
+               i32   i;
 
     si (numerus == ZEPHYRUM)
     {
-        *destinatio         = NIHIL;
-        *numerus_destinatio = ZEPHYRUM;
+        *destinatio          = NIHIL;
+        *numerus_destinatio  = ZEPHYRUM;
         redde VERUM;
     }
     si (piscina == NIHIL || fonte == NIHIL)
@@ -117,17 +118,17 @@ _trivia_ponere (
         series[i] = fonte[i];
     }
 
-    *destinatio         = series;
-    *numerus_destinatio = numerus;
+    *destinatio          = series;
+    *numerus_destinatio  = numerus;
     redde VERUM;
 }
 
 b32
 materia_token_trivia_ante_ponere (
-        MateriaToken* token,
-             Piscina* piscina,
-        MateriaToken** fonte,
-                  i32  numerus)
+         MateriaToken*  token,
+              Piscina*  piscina,
+         MateriaToken** fonte,
+                  i32   numerus)
 {
     si (token == NIHIL)
     {
@@ -139,10 +140,10 @@ materia_token_trivia_ante_ponere (
 
 b32
 materia_token_trivia_post_ponere (
-        MateriaToken* token,
-             Piscina* piscina,
-        MateriaToken** fonte,
-                  i32  numerus)
+         MateriaToken*  token,
+              Piscina*  piscina,
+         MateriaToken** fonte,
+                  i32   numerus)
 {
     si (token == NIHIL)
     {
@@ -171,8 +172,8 @@ materia_token_initium_lineae (
 
 vacuum
 materia_token_initium_lineae_ponere (
-    MateriaToken* token,
-              b32 valor)
+     MateriaToken* token,
+              b32  valor)
 {
     si (token == NIHIL)
     {
