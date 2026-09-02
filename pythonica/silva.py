@@ -36,6 +36,7 @@ import difflib
 import os
 import re
 import subprocess
+import sys
 import tempfile
 from collections import namedtuple
 
@@ -513,8 +514,12 @@ def commissio(nuntius, viae, portae=(), verificare=True):
         if v in VETITAE:
             raise SilvaError('via vetita commissioni: %s' % v)
     for p in portae:
-        nomen, filtrum = (p, None) if isinstance(p, str) else p
-        f = porta(nomen, filtrum)
+        if isinstance(p, str) and p.endswith('.json'):
+            f = receptum_validum(p)            # porta ex umbra
+            nomen = f.nomen + ' (receptum)'
+        else:
+            nomen, filtrum = (p, None) if isinstance(p, str) else p
+            f = porta(nomen, filtrum)
         if not f.sana:
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
                              ' commissum' % (nomen, f.compendium, f.rc))
@@ -530,6 +535,137 @@ def commissio(nuntius, viae, portae=(), verificare=True):
         raise SilvaError('git commit rc=%d: %s'
                          % (r.returncode, (r.stdout + r.stderr).strip()[-600:]))
     return _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
+
+
+# ---------------------------------------------------------------- umbra
+
+import hashlib
+import time
+
+PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
+Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
+                      'compendium rc sigillum rancida finis')
+
+
+def sigillum_arboris():
+    """sigillum status arboris: HEAD + differentia plagularum tractarum
+    (index et arbor) + plagulae novae non ignoratae cum contentu.
+    Receptum portae huic sigillo ligatur - mutatio ulla = rancidum."""
+    h = hashlib.sha256()
+    h.update(_curre(['git', 'rev-parse', 'HEAD']).stdout.encode())
+    h.update(_curre(['git', 'diff', 'HEAD', '--']).stdout.encode('utf-8',
+                                                                   'replace'))
+    novae = _curre(['git', 'ls-files', '--others', '--exclude-standard']
+                   ).stdout.split()
+    for v in sorted(novae):
+        h.update(v.encode())
+        try:
+            with open(os.path.join(RADIX, v), 'rb') as f:
+                h.update(hashlib.sha256(f.read()).digest())
+        except (IOError, OSError):
+            h.update(b'?')
+    return h.hexdigest()[:16]
+
+
+def _receptum_via(nomen, filtrum):
+    return os.path.join(PORTAE_DIR, '%s%s.%d.json' % (
+        nomen, '.' + filtrum if filtrum else '', int(time.time())))
+
+
+def porta_umbra(nomen, filtrum=None):
+    """portam in umbra currere (processus separatus, sessio propria):
+    receptum JSON in build/portae/ scriptum in fine - sigillo arboris
+    initii ligatum (rancidum si arbor mutata dum currit). Reddit viam
+    recepti (pendens: '.pendens' iuxta eam dum currit). exspectare(via)
+    manet; commissio(portae=[via]) receptum ut portam accipit."""
+    if nomen not in PORTAE:
+        raise SilvaError('porta ignota: %s' % nomen)
+    os.makedirs(PORTAE_DIR, exist_ok=True)
+    via = _receptum_via(nomen, filtrum)
+    open(via + '.pendens', 'w').write(str(time.time()))
+    subprocess.Popen(
+        [sys.executable, os.path.abspath(__file__), '-umbra', nomen,
+         filtrum or '', via], cwd=RADIX, start_new_session=True,
+        stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL)
+    return via
+
+
+def _umbra_currere(nomen, filtrum, via):
+    """corpus operarii umbrae (processus separatus)"""
+    sig = sigillum_arboris()
+    p = porta(nomen, filtrum or None)
+    with open(via + '.acta', 'w') as f:
+        f.write(p.acta)
+    sig_finis = sigillum_arboris()
+    d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
+         'cucurrit': p.cucurrit, 'compendium': p.compendium, 'rc': p.rc,
+         'sigillum': sig, 'rancida': sig != sig_finis,
+         'finis': time.time()}
+    with open(via + '.tmp', 'w') as f:
+        json.dump(d, f)
+    os.rename(via + '.tmp', via)
+    try:
+        os.unlink(via + '.pendens')
+    except OSError:
+        pass
+
+
+def receptum_legere(via):
+    if not os.path.exists(via):
+        if os.path.exists(via + '.pendens'):
+            raise SilvaError('receptum pendens (porta adhuc currit): %s'
+                             % via)
+        raise SilvaError('receptum absens: %s' % via)
+    with open(via) as f:
+        d = json.load(f)
+    return Receptum(via, d['nomen'], d['filtrum'], d['sana'], d['cucurrit'],
+                    d['compendium'], d['rc'], d['sigillum'], d['rancida'],
+                    d['finis'])
+
+
+def receptum_validum(via):
+    """Porta ex recepto: sana SOLUM si receptum sanum, non rancidum, et
+    sigillum arboris PRAESENS idem (nihil mutatum post cursum)"""
+    r = receptum_legere(via)
+    recens = r.sigillum == sigillum_arboris()
+    sana = r.sana and r.cucurrit and not r.rancida and recens
+    causa = r.compendium
+    if r.rancida:
+        causa += ' [arbor mutata DUM currebat]'
+    elif not recens:
+        causa += ' [arbor mutata POST cursum - receptum rancidum]'
+    return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '')
+
+
+def exspectare(via, tectum=1800, intervallum=2.0):
+    """receptum manere (secunda); SilvaError post tectum"""
+    finis = time.time() + tectum
+    while time.time() < finis:
+        if os.path.exists(via):
+            return receptum_legere(via)
+        time.sleep(intervallum)
+    raise SilvaError('receptum non venit intra %ds: %s' % (tectum, via))
+
+
+def portae_pendentes():
+    """[(via, status)] status: pendens | sana | fracta | rancida -
+    orientatio post compactionem: quid in cursu erat"""
+    if not os.path.isdir(PORTAE_DIR):
+        return []
+    exitus = []
+    sig = sigillum_arboris()
+    for f in sorted(os.listdir(PORTAE_DIR)):
+        via = os.path.join(PORTAE_DIR, f)
+        if f.endswith('.pendens'):
+            exitus.append((via[:-8], 'pendens'))
+        elif f.endswith('.json'):
+            r = receptum_legere(via)
+            if r.rancida or r.sigillum != sig:
+                exitus.append((via, 'rancida'))
+            else:
+                exitus.append((via, 'sana' if r.sana else 'fracta'))
+    return exitus
 
 
 # ---------------------------------------------------------------- planta
@@ -983,3 +1119,12 @@ def differre(vetus, novus, gradus='cosmetica'):
         raise SilvaError('differre sine verdicto (rc=%d): %s'
                          % (r.returncode, r.stderr.strip()[-200:]))
     return Differentia(paria, verd, r.returncode == 0, r.returncode)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) >= 5 and sys.argv[1] == '-umbra':
+        _umbra_currere(sys.argv[2], sys.argv[3], sys.argv[4])
+    else:
+        sys.stderr.write('usus: silva.py -umbra <porta> <filtrum|""> '
+                         '<receptum.json>\n')
+        sys.exit(2)

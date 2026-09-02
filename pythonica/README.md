@@ -43,6 +43,10 @@ plica pendet — veritas in C manet.
   sanae aut nihil commissum; viae vetitae refutatae; `verificare=False`
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
   rubra (non aedificatio fracta) -> reversio (finally) -> viridis
+- `silva.porta_umbra(nomen)` — porta in umbra (processus separatus),
+  receptum JSON in build/portae/ sigillo arboris ligatum;
+  `exspectare(via)`, `portae_pendentes()`, `commissio(portae=[via.json])`
+  receptum accipit nisi arbor mutata (rancidum)
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

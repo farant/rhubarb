@@ -613,3 +613,15 @@ TOTA praeter knotapel/vendor. `pythonica/silva.py`: facies Pythonica
 (extenta, Editio omnia-aut-nihil cum ancoris tolerantibus, substituere/
 inserere nomine, verdictum, differre) - porta `pythonica/probare.sh`.
 R13: acervus directivarum inter functiones = separator (nullus ordo).
+
+## pythonica II (2026-09-02): ancorae lexematum, portae, commissio, planta, umbra
+
+Ancorae `Editio.replace` = series lexematum (spatia ubique
+indifferentia). Tabula `PORTAE` (imperium + signum 'cucurrit');
+`porta(nomen, filtrum)`; `commissio(nuntius, viae, portae)` - portae
+omnes cucurrisse et sanae aut nihil commissum, viae vetitae refutatae;
+`planta(via, vetus, novus, porta)` ritus culpae plantatae (rubra non
+aedificatio fracta -> reversio finally -> viridis). `porta_umbra`:
+porta in umbra cum recepto sigillo arboris ligato (HEAD + diff tractae
++ novae); `commissio(portae=[receptum.json])` receptum accipit nisi
+rancidum. `-intra`/`-lineae` typos quoque tangunt. Porta pythonica XC.

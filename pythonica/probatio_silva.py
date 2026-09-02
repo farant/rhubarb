@@ -370,6 +370,27 @@ try:
 except silva.SilvaError as ex:
     credo('AEDIFICATIONEM' in str(ex) and open(via).read() == FONS, 'planta: aedificatio fracta nominata ET reversa')
 
+print('--- umbra: receptum sigillo ligatum ---')
+via_r = silva.porta_umbra('formator-intra')
+credo(os.path.exists(via_r + '.pendens'), 'pendens scriptum')
+credo(any(st == 'pendens' for _, st in silva.portae_pendentes()), 'portae_pendentes: pendens')
+r = silva.exspectare(via_r, tectum=300)
+credo(r.sana and r.cucurrit and not r.rancida, 'receptum sanum (%s)' % r.compendium)
+credo(silva.receptum_validum(via_r).sana, 'receptum validum (arbor eadem)')
+novum = os.path.join(silva.RADIX, 'pythonica', '.umbra_probatio.tmp')
+open(novum, 'w').write('x')
+try:
+    pv = silva.receptum_validum(via_r)
+    credo(not pv.sana and 'POST cursum' in pv.compendium, 'receptum rancidum post mutationem arboris')
+    try:
+        silva.commissio('nihil', ['pythonica/README.md'], portae=[via_r])
+        credo(False, 'commissio cum recepto rancido refutatur')
+    except silva.SilvaError as ex:
+        credo('rancidum' in str(ex), 'commissio: receptum rancidum refutatum')
+finally:
+    os.unlink(novum)
+credo(silva.receptum_validum(via_r).sana, 'receptum iterum validum post reversionem')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')
