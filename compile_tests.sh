@@ -241,8 +241,8 @@ compile_libraries() {
 
     # Compile C source files
     for src_file in "${SOURCE_FILES[@]}"; do
-        obj_name=$(basename "$src_file" .c).o
-        obj_file="$BUILD_DIR/$obj_name"
+        obj_name="${src_file##*/}"
+        obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
         # Recompile if source OR any header is newer than object
         if [ ! -f "$obj_file" ] || [ "$src_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
@@ -256,8 +256,8 @@ compile_libraries() {
 
     # Compile Objective-C files
     for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
-        obj_file="$BUILD_DIR/$obj_name"
+        obj_name="${objc_file##*/}"
+        obj_file="$BUILD_DIR/${obj_name%.m}.o"
 
         if [ ! -f "$obj_file" ] || [ "$objc_file" -nt "$obj_file" ] || [ -n "$(newest_header "$obj_file")" ]; then
             echo -e "  Compiling: $objc_file"
@@ -271,8 +271,8 @@ compile_libraries() {
     # Compile vendored files (relaxed flags, own objects; headers
     # in include/ do not affect them - source-newer check only)
     for vend_file in "${VENDOR_SOURCES[@]}"; do
-        obj_name=$(basename "$vend_file" .c).o
-        obj_file="$BUILD_DIR/$obj_name"
+        obj_name="${vend_file##*/}"
+        obj_file="$BUILD_DIR/${obj_name%.c}.o"
 
         if [ ! -f "$obj_file" ] || [ "$vend_file" -nt "$obj_file" ]; then
             echo -e "  Compiling (vendor): $vend_file"
@@ -290,26 +290,31 @@ compile_libraries() {
 }
 
 # Get all object files for linking
+# SINE FURCIS (mensura 2026-09-02): vocatur SEMEL PER PROBATIONEM
+# (et per instrumentum, per applicationem) et $(basename) per fontem
+# CLXV furcas iaciebat = 0.19s per vocationem, ~XXX secunda per
+# cursum plenum - morbus idem ac praevolatus retiratus 2026-08-25
+# (expansio parametrorum 0.003s, effusum octetim idem).
 get_object_files() {
     local obj_files=""
     local src_file
     local obj_name
 
     for src_file in "${SOURCE_FILES[@]}"; do
-        obj_name=$(basename "$src_file" .c).o
-        obj_files="$obj_files $BUILD_DIR/$obj_name"
+        obj_name="${src_file##*/}"
+        obj_files="$obj_files $BUILD_DIR/${obj_name%.c}.o"
     done
 
     # Add Objective-C objects
     for objc_file in "${OBJC_SOURCES[@]}"; do
-        obj_name=$(basename "$objc_file" .m).o
-        obj_files="$obj_files $BUILD_DIR/$obj_name"
+        obj_name="${objc_file##*/}"
+        obj_files="$obj_files $BUILD_DIR/${obj_name%.m}.o"
     done
 
     # Add vendored objects
     for vend_file in "${VENDOR_SOURCES[@]}"; do
-        obj_name=$(basename "$vend_file" .c).o
-        obj_files="$obj_files $BUILD_DIR/$obj_name"
+        obj_name="${vend_file##*/}"
+        obj_files="$obj_files $BUILD_DIR/${obj_name%.c}.o"
     done
 
     echo "$obj_files"
