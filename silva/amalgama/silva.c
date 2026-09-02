@@ -10342,6 +10342,35 @@ silva_xar_creare_cum_vexillis (
                   XAR_SEGMENTA_ORDINARIA);
 }
 
+/* Bitum summum positum (0-basatum) numeri positivi: scansio binaria
+ * quinque graduum (C89 sine intrinsecis). Pro xar_locare: segmentum k
+ * >= II indices [primum x 2^(k-1), primum x 2^k) tenet, ergo cum
+ * q = index / primum, k = bitum_summum(q) + I - tempore constanti,
+ * non gyro duplicandi (XVI% foliorum profili in lib/stml.c, 2026-09-02). */
+interior i32
+_bitum_summum (
+    i32 q)
+{
+    i32 k = ZEPHYRUM;
+
+    si (q >> XVI)
+    { k += XVI; q >>= XVI;
+    }
+    si (q >> VIII)
+    { k += VIII; q >>= VIII;
+    }
+    si (q >> IV)
+    { k += IV;   q >>= IV;
+    }
+    si (q >> II)
+    { k += II;   q >>= II;
+    }
+    si (q >> I)
+    { k += I;
+    }
+    redde k;
+}
+
 
 /* ========================================================================
  * LOCATIO ET ACCESSUS
@@ -10396,30 +10425,18 @@ silva_xar_locare (
 	 *
 	 * Usans manipulationem bitorum pro quaestio exponentia
 	 */
-    index_adiustus      = index - (xar->magnitudo_primi * II);
-    index_segmenti      = II;
-    magnitudo_segmenti  = xar->magnitudo_primi * II;  /* Magnitudo segmenti 2 */
-
-    /* Invenire segmentum usans formam crescentiae exponentialem
-	 */
-    dum (   index_adiustus >= magnitudo_segmenti
-         && index_segmenti < xar->segmenta_maxima)
+    /* Forma clausa (2026-09-02, olim gyrus duplicandi): q = index /
+     * primum; segmentum = bitum_summum(q) + I; magnitudo = primum <<
+     * bitum; offset = index - magnitudo. Eaedem fines ac gyrus (probatio
+     * xar: numerus segmentorum et capacitas per fines contra
+     * referentiam). */
     {
-        index_adiustus -= magnitudo_segmenti;
+        i32 q = index / xar->magnitudo_primi;
+        i32 b = _bitum_summum(q);
 
-        /* Verificare overflow ante duplicatio
-		 * Si magnitudo_segmenti > 2^30, duplicatio overflow facit
-		 */
-        si (magnitudo_segmenti > (0x7FFFFFFF >> I))
-        {
-            imprimere("FRACTA: xar magnitudo segmenti overflow: %d\n",
-                      magnitudo_segmenti);
-            imprimere("        (impossibilis cum indices i32)\n");
-            exire(I);
-        }
-
-        magnitudo_segmenti <<= I;  /* Duplicare pro segmento proximo */
-        index_segmenti++;
+        index_segmenti      = b + I;
+        magnitudo_segmenti  = xar->magnitudo_primi << b;
+        index_adiustus      = index - magnitudo_segmenti;
     }
 
     si (index_segmenti >= xar->segmenta_maxima)
@@ -10429,9 +10446,8 @@ silva_xar_locare (
 
     locatio->index_segmenti      = index_segmenti;
     locatio->offset_in_segmento  = index_adiustus;
-    locatio->magnitudo_segmenti = computare_magnitudinem_segmenti(xar,
-        index_segmenti);
-    locatio->basis_segmenti = xar->segmenta[index_segmenti];
+    locatio->magnitudo_segmenti  = magnitudo_segmenti;
+    locatio->basis_segmenti      = xar->segmenta[index_segmenti];
 
     redde VERUM;
 }

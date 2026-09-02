@@ -30,3 +30,16 @@ first after-capture ran with the edited headers in every file's
 closure and would have flagged most of the corpus for the wrong
 reason; the fix was to drive the built binaries directly with the
 HEAD header text restored under a trap.
+
+## 2026-09-02 — locate in constant time
+
+`xar_locare` found the segment for an index by walking the doubling
+sequence from segment 2, and `xar_obtinere` paid that walk on every
+read: 16% of leaf samples on lib/stml.c after the arena fix. Closed
+form: with q = index / first, the segment is highest_bit(q) + 1 and
+its size is first << highest_bit(q); the bit is found by a five-step
+binary shift (no intrinsics in C89). Same boundaries as the loop by
+construction, pinned in the test against a reference walk for first
+sizes 1, 3, 4, 7, 8 and 16 through segment count and capacity after
+4352 appends, plus a value round trip. Measured (min of 7): stml.c
+50.3 -> 43.1 ms, json.c 13.4 -> 11.8 ms, allocation counts identical.

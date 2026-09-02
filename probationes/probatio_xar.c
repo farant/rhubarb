@@ -1193,6 +1193,75 @@ s32 principale(vacuum)
         piscina_destruere(p_seg);
     }
 
+
+        /* ========================================================
+     * PROBARE: fines segmentorum contra referentiam (gyrus duplicandi
+     * vetus, 2026-09-02 forma clausa): pro primis variis (etiam non
+     * potentiis binariis) numerus segmentorum et capacitas post N
+     * additiones eaedem ac referentia, valores circumeunt.
+     * ======================================================== */
+
+    {
+         Piscina* p_fin;
+             i32  prima[VI];
+             i32  pi;
+
+        prima[0] = I; prima[I] = III; prima[II]  = IV;
+        prima[III]                               = VII; prima[IV] =
+                                                                              VIII; prima[V] =
+                                                                                        XVI;
+        imprimere("\n--- Probans fines segmentorum (forma clausa) ---\n");
+        p_fin = piscina_generare_dynamicum("probatio_fines",
+            MMMMXCVI * XVI);
+        CREDO_NON_NIHIL (p_fin);
+        per (pi = ZEPHYRUM; pi < VI; pi++)
+        {
+            Xar* x;
+            i32  primum = prima[pi];
+            i32  n;
+            i32  seg_ref;
+            i32  cap_ref;
+            i32  mag;
+            b32  circuitus_sanus;
+            i32* e;
+
+            x = xar_creare_cum_magnitudine(p_fin, (i32)sizeof(i32),
+                primum);
+            CREDO_NON_NIHIL (x);
+            circuitus_sanus = VERUM;
+            per (n = ZEPHYRUM; n < MMMMXCVI + CCLVI; n++)
+            {
+                e = (i32*)xar_addere(x);
+                si (e == NIHIL)
+                { circuitus_sanus = FALSUM; frange;
+                }
+                *e = n * VII + primum;
+            }
+            per (n = ZEPHYRUM; n < xar_numerus(x); n++)
+            {
+                e = (i32*)xar_obtinere(x, n);
+                si (e == NIHIL || *e != n * VII + primum)
+                { circuitus_sanus = FALSUM; frange;
+                }
+            }
+            CREDO_VERUM (circuitus_sanus);
+            /* referentia: segmenta 0 et I primum tenent, k >= II primum x
+             * 2^(k-1); segmentum k allocatum cum index primus eius
+             * (primum x 2^(k-1)) additus */
+            seg_ref = ZEPHYRUM; cap_ref = ZEPHYRUM; mag = primum;
+            n = xar_numerus(x);
+            dum (cap_ref < n)
+            {
+                cap_ref += mag;
+                seg_ref++;
+                si (seg_ref >= II) mag <<= I;
+            }
+            CREDO_AEQUALIS_I32 (x->numerus_segmentorum, seg_ref);
+            CREDO_AEQUALIS_I32 (xar_capacitas(x), cap_ref);
+        }
+        piscina_destruere(p_fin);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 
