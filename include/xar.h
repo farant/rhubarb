@@ -21,9 +21,17 @@
 #include "latina.h"
 #include "piscina.h"
 
-/* Constantae */
-#define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* 64 segmenta maxima */
-#define XAR_PRIMUS_SEGMENTUM        XVI     /* 16 elementa in primo segmento */
+/* Constantae (RP pars II, 2026-09-02: tabula segmentorum per xar
+ * ALLOCATA, non in capite inscripta - caput DLXXVI -> XLVIII octeti;
+ * primum IV, non XVI: ex XI M Xar triviorum in lib/stml.c X M unum
+ * elementum tenebant, CXXVIII octeti pro VIII). Segmentum k primum x
+ * 2^(k-1) tenet: tabula ordinaria XXIV segmenta = cum primo IV XXXIII M
+ * elementa (primum x 2^XXIII); ultra fines REFUSIO
+ * nominata (stderr, xar_addere NIHIL), numquam truncatio tacita -
+ * xar_creare_magnum tabulam LXIV dat. */
+#define XAR_SEGMENTA_ORDINARIA      XXIV    /* tabula ordinaria */
+#define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* tabula magna (xar_creare_magnum) */
+#define XAR_PRIMUS_SEGMENTUM        IV      /* elementa in primo segmento */
 
 /* Vexilla */
 #define XAR_VEXILLUM_ORDINARIUS     ZEPHYRUM    /* Ordinarius: memoria ad zephyrum */
@@ -55,9 +63,10 @@ nomen structura Xar {
                    i32  numerus_segmentorum; /* Quot segmenta allocata? */
                    i32  capacitas_totalis;   /* Capacitas totalis */
                    i32  vexilla;             /* Signa comportamenti */
+                   i32  segmenta_maxima;     /* mensura tabulae: ORDINARIA | MAXIMUS */
                Piscina* piscina;             /* Piscina memoriae */
-                vacuum* segmenta[XAR_MAXIMUS_SEGMENTORUM];  /* Indices segmentorum */
-             character  titulus[XXXII];        /* Nomen pro depuratione */
+               vacuum** segmenta;            /* tabula segmentorum, post caput
+                                              * una allocatione (segmenta_maxima) */
 } Xar;
 
 
@@ -91,6 +100,15 @@ xar_creare_cum_vexillis (
             i32  magnitudo_elementi,
             i32  magnitudo_primi,
             i32  vexilla);
+
+/* Xar Creare Magnum - tabula segmentorum LXIV (XAR_MAXIMUS_SEGMENTORUM)
+ * pro tabulis vere ingentibus (> XXXIII M elementa cum primo IV); forma
+ * ordinaria XXIV segmenta habet et ultra REFUSAT nominatim. */
+Xar*
+xar_creare_magnum (
+        Piscina* piscina,
+            i32  magnitudo_elementi,
+            i32  magnitudo_primi);
 
 /* Xar Destruere
  * "Cum piscina, nihil agendum!"

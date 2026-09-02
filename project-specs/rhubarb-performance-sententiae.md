@@ -213,6 +213,29 @@ AW    tools/aedilis.worklog.md
 10.5. Total edit surface: four constants and two deletions, all in
       lib/piscina.c, include/xar.h, lib/xar.c, and the silva.h
       mirror. No silva logic touched.
+10.6. Landed 2026-09-02 with one design change: instead of lowering
+      XAR_MAXIMUS_SEGMENTORUM (7), the segment table is allocated
+      after the header and sized at creation — 24 entries by default,
+      64 via xar_creare_magnum — with a loud refusal past the default
+      (7.obj.1.1 satisfied: named limit, no silent truncation). First
+      segment 4, debug name removed, ratchet deleted. Header 576 → 48
+      bytes. [observed]
+10.7. Re-measured on the house toolchain (clang, suite flags, no -O)
+      with the include closure in the arena and the INPUT held fixed:
+      lib/stml.c 457 → 150 MB handed out (−67%), 635 → 160 MB
+      committed (−75%), idle 178 → 10 MB, parse 177 → 152 ms (−14%);
+      lib/json.c 127 → 41 MB, 49 → 39 ms; lib/piscina.c 29 → 9.7 MB,
+      18.5 → 9.6 ms. Allocation count rose 3% (first segment 4 splits
+      more often). The memory figures match 10.1-10.2; the speedup is
+      smaller than 10.3 because this build is unoptimized and the
+      closure dominates the token count. [observed]
+10.8. Equivalence demonstrated as 5.1 demands: arbor.sh canonical
+      STML byte-identical for 154 of 156 lib/*.c, the two exceptions
+      being lib/xar.c and lib/piscina.c themselves, whose text
+      changed. The differential had to hold the header text fixed:
+      the first attempt ran with the edited headers in every closure
+      and would have flagged the corpus for the wrong reason.
+      [observed]
 ```
 
 ---

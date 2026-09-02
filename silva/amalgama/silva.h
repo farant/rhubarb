@@ -39,7 +39,7 @@ typedef struct SilvaChorda {
 /* Xar: tabula crescens sine reallocatione (monstratores elementorum
  * stabiles trans additiones). Transparens: hospes per
  * silva_xar_numerus/obtinere legit. */
-#define SILVA_XAR_MAXIMUS_SEGMENTORUM 64
+#define SILVA_XAR_MAXIMUS_SEGMENTORUM 64   /* tabula magna; ordinaria 24 */
 typedef struct SilvaXar {
     unsigned int  numerus_elementorum;
     unsigned int  magnitudo_elementi;
@@ -47,9 +47,9 @@ typedef struct SilvaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
+    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
     SilvaPiscina* piscina;
-    void*         segmenta[SILVA_XAR_MAXIMUS_SEGMENTORUM];
-    char          titulus[32];
+    void**        segmenta;          /* tabula post caput, una allocatione */
 } SilvaXar;
 
 /* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus

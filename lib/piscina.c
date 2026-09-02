@@ -166,13 +166,15 @@ _allocare_interna (
             memoriae_index capacitas_nova =
                 piscina->mensura_alvei_initia * II;
 
-            /* Si petitio magnitudinem duplicatam superat, allocare 
-             * petitionem + sequentem, et mensuram */
+            /* Petitio maior quam duplum: alveus ad mensuram petitionis
+             * (+ basis), BASIS INTACTA. Olim basis ad hanc mensuram
+             * ratchetabatur et numquam decrescebat: lib/stml.c alvei
+             * 1, 2, 3, 6, 9, 18, 27, 54 MB, ultimo 54 MB VII tenente -
+             * XXXIX% otiosum (RP §6, 2026-09-02). */
             si (necessaria > capacitas_nova)
             {
                 capacitas_nova = necessaria
                     + piscina->mensura_alvei_initia;
-                piscina->mensura_alvei_initia = capacitas_nova;
             }
 
             alveus_novum = _alveus_nova(capacitas_nova);

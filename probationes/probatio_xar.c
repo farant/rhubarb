@@ -832,8 +832,7 @@ s32 principale(vacuum)
             *elem  = i;
         }
 
-        strcpy(xar->titulus, "Tabula Probationis");
-        xar_status_imprimere(xar);
+        xar_status_imprimere(xar);   /* sine titulo (RP §8, 2026-09-02) */
     }
 
 
@@ -1134,6 +1133,65 @@ s32 principale(vacuum)
     /* ==================================================
 	 * Compendium
 	 * ================================================== */
+
+
+        /* ========================================================
+     * PROBARE: tabula segmentorum ordinaria (XXIV) et magna (LXIV) -
+     * RP pars II 7.obj.1: finis nominatus cum refusione, non
+     * truncatio tacita. Elementum I octeti, primum I: segmentum k
+     * primum x 2^(k-1) tenet (segmenta 0 et I ambo primum), ergo
+     * capacitas ordinaria = 2^(XXIV - I) = VIII M octeti.
+     * ======================================================== */
+
+    {
+        Piscina* p_seg;
+            Xar* parvus;
+            Xar* magnus;
+            i32  i;
+            i32  capacitas_ordinaria;
+             i8* ultimum;
+
+        imprimere("\n--- Probans segmenta ordinaria / magna ---\n");
+        p_seg = piscina_generare_dynamicum("probatio_segmenta",
+            MMMMXCVI * CCLVI);
+        CREDO_NON_NIHIL (p_seg);
+
+        capacitas_ordinaria = (i32)(1u << (XAR_SEGMENTA_ORDINARIA - I));
+        parvus = xar_creare_cum_magnitudine(p_seg, I, I);
+        CREDO_NON_NIHIL (parvus);
+        ultimum = NIHIL;
+        per (i = ZEPHYRUM; i < capacitas_ordinaria; i++)
+        {
+            ultimum = (i8*)xar_addere(parvus);
+            si (ultimum == NIHIL) frange;
+        }
+        CREDO_NON_NIHIL (ultimum);
+        CREDO_AEQUALIS_I32 (xar_numerus(parvus), capacitas_ordinaria);
+        /* unum ultra: REFUSIO (NIHIL, nuntius in stderr), numerus manet */
+        CREDO_NIHIL (xar_addere(parvus));
+        CREDO_AEQUALIS_I32 (xar_numerus(parvus), capacitas_ordinaria);
+
+        /* magnus: idem elementum, idem primum, tabula LXIV - ultra
+         * fines ordinarios pergit, et elementum ultimum legibile */
+        magnus = xar_creare_magnum(p_seg, I, I);
+        CREDO_NON_NIHIL (magnus);
+        per (i = ZEPHYRUM; i < capacitas_ordinaria + X; i++)
+        {
+            ultimum = (i8*)xar_addere(magnus);
+            si (ultimum == NIHIL) frange;
+        }
+        CREDO_NON_NIHIL (ultimum);
+        CREDO_AEQUALIS_I32 (xar_numerus(magnus), capacitas_ordinaria
+            + X);
+        si (ultimum != NIHIL)
+        {
+            *ultimum = (i8)XLII;
+            CREDO_AEQUALIS_I32 ((i32)*(i8*)xar_obtinere(magnus,
+                (i32)(capacitas_ordinaria + X - I)), XLII);
+        }
+
+        piscina_destruere(p_seg);
+    }
 
     imprimere("\n");
     credo_imprimere_compendium();

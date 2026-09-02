@@ -52,7 +52,7 @@ typedef struct SilvaChorda {
 /* Xar: tabula crescens sine reallocatione (monstratores elementorum
  * stabiles trans additiones). Transparens: hospes per
  * silva_xar_numerus/obtinere legit. */
-#define SILVA_XAR_MAXIMUS_SEGMENTORUM 64
+#define SILVA_XAR_MAXIMUS_SEGMENTORUM 64   /* tabula magna; ordinaria 24 */
 typedef struct SilvaXar {
     unsigned int  numerus_elementorum;
     unsigned int  magnitudo_elementi;
@@ -60,9 +60,9 @@ typedef struct SilvaXar {
     unsigned int  numerus_segmentorum;
     unsigned int  capacitas_totalis;
     unsigned int  vexilla;
+    unsigned int  segmenta_maxima;   /* mensura tabulae (XXIV | LXIV) */
     SilvaPiscina* piscina;
-    void*         segmenta[SILVA_XAR_MAXIMUS_SEGMENTORUM];
-    char          titulus[32];
+    void**        segmenta;          /* tabula post caput, una allocatione */
 } SilvaXar;
 
 /* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
@@ -3037,9 +3037,17 @@ tabula_friare_fnv1a (
 #ifndef XAR_H
 #define XAR_H
 
-/* Constantae */
-#define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* 64 segmenta maxima */
-#define XAR_PRIMUS_SEGMENTUM        XVI     /* 16 elementa in primo segmento */
+/* Constantae (RP pars II, 2026-09-02: tabula segmentorum per xar
+ * ALLOCATA, non in capite inscripta - caput DLXXVI -> XLVIII octeti;
+ * primum IV, non XVI: ex XI M Xar triviorum in lib/stml.c X M unum
+ * elementum tenebant, CXXVIII octeti pro VIII). Segmentum k primum x
+ * 2^(k-1) tenet: tabula ordinaria XXIV segmenta = cum primo IV XXXIII M
+ * elementa (primum x 2^XXIII); ultra fines REFUSIO
+ * nominata (stderr, xar_addere NIHIL), numquam truncatio tacita -
+ * xar_creare_magnum tabulam LXIV dat. */
+#define XAR_SEGMENTA_ORDINARIA      XXIV    /* tabula ordinaria */
+#define XAR_MAXIMUS_SEGMENTORUM     LXIV    /* tabula magna (xar_creare_magnum) */
+#define XAR_PRIMUS_SEGMENTUM        IV      /* elementa in primo segmento */
 
 /* Vexilla */
 #define XAR_VEXILLUM_ORDINARIUS     ZEPHYRUM    /* Ordinarius: memoria ad zephyrum */
@@ -7956,13 +7964,15 @@ _allocare_interna (
             memoriae_index capacitas_nova =
                 piscina->mensura_alvei_initia * II;
 
-            /* Si petitio magnitudinem duplicatam superat, allocare 
-             * petitionem + sequentem, et mensuram */
+            /* Petitio maior quam duplum: alveus ad mensuram petitionis
+             * (+ basis), BASIS INTACTA. Olim basis ad hanc mensuram
+             * ratchetabatur et numquam decrescebat: lib/stml.c alvei
+             * 1, 2, 3, 6, 9, 18, 27, 54 MB, ultimo 54 MB VII tenente -
+             * XXXIX% otiosum (RP §6, 2026-09-02). */
             si (necessaria > capacitas_nova)
             {
                 capacitas_nova = necessaria
                     + piscina->mensura_alvei_initia;
-                piscina->mensura_alvei_initia = capacitas_nova;
             }
 
             alveus_novum = _alveus_nova(capacitas_nova);
@@ -9450,13 +9460,25 @@ computare_magnitudinem_segmenti (
 	 */
     si (shift_amount >= XXX)
     {
-        imprimere("FRACTA: xar segmentum nimis altum: %d\n", index_segmenti);
+        imprimere("FRACTA: xar segmentum nimis altum: %d\n",
+            index_segmenti);
         imprimere("        (impossibilis cum indices i32 - corruptio?)\n");
         exire(I);
     }
 
     /* Segmenta sequentia: duplicant */
     redde xar->magnitudo_primi << shift_amount;
+}
+
+/* Refusio nominata: tabula segmentorum exhausta (RP 7.obj.1 - finis
+ * nominatus, non truncatio tacita). xar_addere NIHIL reddit. */
+interior vacuum
+_refusio_segmentorum (
+    constans SilvaXar* xar)
+{
+    fprintf(stderr, "xar: tabula segmentorum exhausta (%u segmenta,"
+        " %u elementa) - xar_creare_magnum pro tabula LXIV\n",
+        xar->segmenta_maxima, xar->numerus_elementorum);
 }
 
 /* Allocare Segmentum
@@ -9473,8 +9495,9 @@ allocare_segmentum (
     memoriae_index  magnitudo_memoriae;
             vacuum* memoria;
 
-    si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
+    si (index_segmenti >= xar->segmenta_maxima)
     {
+        _refusio_segmentorum(xar);
         redde FALSUM;  /* Nimis multa segmenta! */
     }
 
@@ -9484,8 +9507,10 @@ allocare_segmentum (
     }
 
     /* Computare magnitudinem segmenti */
-    magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
-    magnitudo_memoriae = (memoriae_index)magnitudo_segmenti * xar->magnitudo_elementi;
+    magnitudo_segmenti = computare_magnitudinem_segmenti(xar,
+        index_segmenti);
+    magnitudo_memoriae =
+        (memoriae_index)magnitudo_segmenti * xar->magnitudo_elementi;
 
     /* Allocare ex piscina */
     memoria = silva_piscina_allocare(xar->piscina, magnitudo_memoriae);
@@ -9510,6 +9535,48 @@ allocare_segmentum (
     xar->capacitas_totalis += magnitudo_segmenti;
 
     redde VERUM;
+}
+
+/* Genesis: caput + tabula segmentorum UNA allocatione (tabula post
+ * caput), mensura tabulae data. */
+interior SilvaXar*
+_creare (
+    SilvaPiscina* piscina,
+        i32  magnitudo_elementi,
+        i32  magnitudo_primi,
+        i32  vexilla,
+        i32  segmenta_maxima)
+{
+               SilvaXar* xar;
+    memoriae_index  mensura;
+               i32  i;
+
+    si (!piscina || magnitudo_elementi == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    mensura = magnitudo(SilvaXar)
+            + (memoriae_index)segmenta_maxima * magnitudo(vacuum*);
+    xar = (SilvaXar*)silva_piscina_allocare_ordinatum(piscina, mensura, VIII);
+    si (!xar)
+    {
+        redde NIHIL;
+    }
+    xar->numerus_elementorum  = ZEPHYRUM;
+    xar->magnitudo_elementi   = magnitudo_elementi;
+    xar->magnitudo_primi     = magnitudo_primi ? magnitudo_primi
+                                               : XAR_PRIMUS_SEGMENTUM;
+    xar->numerus_segmentorum  = ZEPHYRUM;
+    xar->capacitas_totalis    = ZEPHYRUM;
+    xar->vexilla              = vexilla;
+    xar->segmenta_maxima      = segmenta_maxima;
+    xar->piscina              = piscina;
+    xar->segmenta             = (vacuum**)(xar + I);
+    per (i = ZEPHYRUM; i < segmenta_maxima; i++)
+    {
+        xar->segmenta[i] = NIHIL;
+    }
+    redde xar;
 }
 
 
@@ -9552,44 +9619,8 @@ silva_xar_creare_cum_vexillis (
         i32  magnitudo_primi,
         i32  vexilla)
 {
-    SilvaXar* xar;
-    i32  i;
-
-    si (!piscina || magnitudo_elementi == ZEPHYRUM)
-    {
-        redde NIHIL;
-    }
-
-    /* Allocare structuram xar ex piscina */
-    xar = (SilvaXar*)silva_piscina_allocare_ordinatum(piscina, magnitudo(SilvaXar), magnitudo(SilvaXar));
-    si (!xar)
-    {
-        redde NIHIL;
-    }
-
-    /* Initializare metadatum
-	 * "Initium notitiae"
-	 */
-    xar->numerus_elementorum = ZEPHYRUM;
-    xar->magnitudo_elementi = magnitudo_elementi;
-    xar->magnitudo_primi = magnitudo_primi ? magnitudo_primi : XAR_PRIMUS_SEGMENTUM;
-    xar->numerus_segmentorum = ZEPHYRUM;
-    xar->capacitas_totalis = ZEPHYRUM;
-    xar->vexilla = vexilla;
-    xar->piscina = piscina;
-
-    /* Vacuare segmenta
-	 * "Vacuare omnes indices segmentorum"
-	 */
-    per (i = ZEPHYRUM; i < XAR_MAXIMUS_SEGMENTORUM; i++)
-    {
-        xar->segmenta[i] = NIHIL;
-    }
-
-    /* Ponere titulus */
-    strcpy(xar->titulus, "Xar Anonymus");
-
-    redde xar;
+    redde _creare(piscina, magnitudo_elementi, magnitudo_primi, vexilla,
+                  XAR_SEGMENTA_ORDINARIA);
 }
 
 
@@ -9637,7 +9668,8 @@ silva_xar_locare (
             locatio->offset_in_segmento  = index - xar->magnitudo_primi;
             locatio->magnitudo_segmenti  = xar->magnitudo_primi;
         }
-        locatio->basis_segmenti = xar->segmenta[locatio->index_segmenti];
+        locatio->basis_segmenti =
+            xar->segmenta[locatio->index_segmenti];
         redde VERUM;
     }
 
@@ -9652,7 +9684,7 @@ silva_xar_locare (
     /* Invenire segmentum usans formam crescentiae exponentialem
 	 */
     dum (   index_adiustus >= magnitudo_segmenti
-         && index_segmenti < XAR_MAXIMUS_SEGMENTORUM)
+         && index_segmenti < xar->segmenta_maxima)
     {
         index_adiustus -= magnitudo_segmenti;
 
@@ -9671,14 +9703,15 @@ silva_xar_locare (
         index_segmenti++;
     }
 
-    si (index_segmenti >= XAR_MAXIMUS_SEGMENTORUM)
+    si (index_segmenti >= xar->segmenta_maxima)
     {
-        redde FALSUM;  /* Index nimis magnus */
+        redde FALSUM;  /* Index nimis magnus (vocator additionis clamat) */
     }
 
-    locatio->index_segmenti = index_segmenti;
-    locatio->offset_in_segmento = index_adiustus;
-    locatio->magnitudo_segmenti = computare_magnitudinem_segmenti(xar, index_segmenti);
+    locatio->index_segmenti      = index_segmenti;
+    locatio->offset_in_segmento  = index_adiustus;
+    locatio->magnitudo_segmenti = computare_magnitudinem_segmenti(xar,
+        index_segmenti);
     locatio->basis_segmenti = xar->segmenta[index_segmenti];
 
     redde VERUM;
@@ -9713,7 +9746,8 @@ silva_xar_obtinere (
     /* Computare locum elementi
 	 */
     basis = (i8*)locatio.basis_segmenti;
-    redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
+    redde basis
+        + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
 
 
@@ -9742,6 +9776,7 @@ silva_xar_addere (
     /* Invenire ubi elementum novum ibit */
     si (!silva_xar_locare(xar, index_novus, &locatio))
     {
+        _refusio_segmentorum(xar);
         redde NIHIL;
     }
 
@@ -9761,7 +9796,8 @@ silva_xar_addere (
 
     /* Reddere indicem ad elementum novum */
     basis = (i8*)locatio.basis_segmenti;
-    redde basis + (locatio.offset_in_segmento * xar->magnitudo_elementi);
+    redde basis
+        + (locatio.offset_in_segmento * xar->magnitudo_elementi);
 }
 
 
@@ -9878,7 +9914,8 @@ silva_xar_mutare (
     alioquin
     {
         /* Allocare in heap pro elementis magnis */
-        temp_heap = (i8*)silva_piscina_allocare(xar->piscina, xar->magnitudo_elementi);
+        temp_heap = (i8*)silva_piscina_allocare(xar->piscina,
+            xar->magnitudo_elementi);
         si (!temp_heap)
         {
             redde FALSUM;
@@ -9921,7 +9958,8 @@ silva_xar_ordinare (
         per (j = i + I; j < xar->numerus_elementorum; j++)
         {
             elem_j = silva_xar_obtinere(xar, j);
-            si (elem_j && elem_min && comparator(elem_j, elem_min) < ZEPHYRUM)
+            si (   elem_j && elem_min
+                && comparator(elem_j, elem_min) < ZEPHYRUM)
             {
                 min_index  = j;
                 elem_min   = elem_j;
