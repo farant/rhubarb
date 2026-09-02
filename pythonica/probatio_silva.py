@@ -70,7 +70,7 @@ try:
 except silva.SilvaError:
     credo(True, 'ancora fallens levat SilvaError')
 credo(open(via).read() == FONS, 'discus intactus post ancoram fallentem')
-diff = e.applicare()
+diff = e.applicare(forma=False, iudica=False).diff
 credo('-    x  = I;' in diff and diff.startswith('--- a/'), 'diff unificatus')
 credo(open(via).read() == e.textus, 'scriptum semel')
 
@@ -92,13 +92,13 @@ print('--- inserere ---')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
 e.inserere_post('a', 'vacuum\nc (vacuum)\n{\n    redde;\n}\n')
-e.applicare()
+e.applicare(iudica=False)
 x2 = silva.extenta(via)
 credo([t.titulus for t in x2 if t.definitio] == ['a', 'c', 'b'],
       'c post a, ante b')
 e = silva.Editio(via)
 e.inserere_ante('a', '/* d */\nvacuum\nd (vacuum)\n{\n    redde;\n}\n')
-e.applicare()
+e.applicare(iudica=False)
 x3 = silva.extenta(via)
 credo([t.titulus for t in x3 if t.definitio] == ['d', 'a', 'c', 'b'],
       'd ante a (ante commentarium a)')
@@ -115,6 +115,64 @@ credo(silva.formare(via), 'formare scripsit')
 # NB: 'x  = I;' sola (glomus unius) a nulla regula regitur - R7 'i32  x;'
 # (glomus unius) regitur: hoc metimur
 credo('i32  x;' not in open(via).read(), 'formata (R7 glomus unius)')
+
+print('--- applicare: portae ---')
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.substituere('b', 'vacuum\nb (vacuum)\n{\n    i32  y;\n\n    redde;\n}\n')
+f = e.applicare()
+credo(f.examen == 'ACCIPE' and f.sana, 'examen in fructu')
+credo(f.formata and 'i32  y;' not in open(via).read()
+      and 'i32 y;' in open(via).read(), 'forma applicata (i32  y -> i32 y)')
+credo('+    i32 y;' in f.diff, 'diff post formam')
+credo(f.differentia is not None and f.differentia.verdictum == 'substantiva'
+      and ('MUTATA', 'b', 'substantiva') in f.unitates(), 'differentia: b substantiva')
+credo(str(f).startswith('applicare ') and 'examen: ACCIPE' in str(f), 'compendium')
+# lectio rancida: alius scribit interea
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.replace('redde;', 'frange;', numerus=2)
+open(via, 'a').write('/* alius interea */\n')
+try:
+    e.applicare()
+    credo(False, 'lectio rancida refutatur')
+except silva.SilvaError:
+    credo(True, 'lectio rancida refutatur (SilvaError)')
+credo(open(via).read().endswith('/* alius interea */\n'), 'discus alterius intactus')
+# REICE refertur, non revertitur; strictum revertit
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.replace('    redde;\n}\n\n/* b */', '    // C99\n    redde;\n}\n\n/* b */', tolerans=False)
+f = e.applicare()
+credo(f.examen == 'REICE' and not f.sana, 'REICE refertur')
+credo('// C99' in open(via).read(), 'non revertitur (ordinarius)')
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.replace('    redde;\n}\n\n/* b */', '    // C99\n    redde;\n}\n\n/* b */', tolerans=False)
+try:
+    e.applicare(strictum=True)
+    credo(False, 'strictum levat')
+except silva.SilvaError:
+    credo(True, 'strictum levat SilvaError')
+credo(open(via).read() == FONS, 'strictum restituit textum ante')
+# iudica=False: velox, sine verdicto
+open(via, 'w').write(FONS)
+e = silva.Editio(via); e.replace('redde;', 'frange;', numerus=2)
+f = e.applicare(iudica=False, forma=False)
+credo(f.examen is None and f.differentia is None and not f.formata, 'iudica/forma seiuncta')
+
+print('--- usus + renominare ---')
+u = silva.usus('formator_extenta')
+credo(any(x.via.endswith('silva_formator.c') for x in u.sedes), 'usus: sedes definitionis')
+credo(any(v.endswith('formator.c') for v in u.usus), 'usus: usus per plagulam')
+credo(silva.usus('nemo_hic_est_omnino').sedes == [], 'usus: ignotum vacuum')
+open(via, 'w').write(FONS)
+planum = silva.renominare('b', 'beta', [via])
+credo('beta' in planum and open(via).read() == FONS, 'renominare: planum, discus intactus')
+silva.renominare('b', 'beta', [via], scribere=True)
+t = open(via).read()
+credo('beta (vacuum)' in t and 'vacuum beta(vacuum);' in t and 'b (vacuum)' not in t,
+      'renominare -scribere: definitio et prototypum')
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

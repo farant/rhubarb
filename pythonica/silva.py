@@ -11,13 +11,16 @@ Usus typicus in scripto editionis:
     e = silva.Editio('lib/chorda.c')
     e.substituere('chorda_mensura', NOVUM)      # corpus functionis nomine
     e.replace('x  = I;', 'x = II;')             # ancora spatiis tolerans
-    print(e.applicare())                        # omnia aut nihil; diff
-    print(silva.verdictum('lib/chorda.c'))      # examen + forma
-    assert silva.differre(vetus, novus).cosmetica_solum
+    f = e.applicare()                           # omnia aut nihil; portae
+    print(f)                                    # examen, forma, unitates, diff
+    assert f.sana and f.unitates() == [('MUTATA', 'chorda_mensura', 'substantiva')]
 
 Contractus:
   - Editio mutat textum IN MEMORIA; nihil in discum it ante applicare().
     Ancora fallens levat SilvaError - plagula intacta (omnia aut nihil).
+  - applicare() = punctum scripturae unicum, ergo sedes portarum: custos
+    lectionis rancidae, scriptura, forma (plagula tota), examen, differre
+    contra textum ante editionem. Fructus refert; strictum revertit.
   - Ancorae tolerantes: spatia inter verba ancorae quaelibet spatia
     congruunt (reordinatio formatoris ancoram non frangit); ubi ancora
     spatium non habet, nullum admittitur.
@@ -214,15 +217,83 @@ class Editio(object):
     def mutata(self):
         return self.textus != self.originalis
 
-    def applicare(self):
-        """scribit semel (omnia aut nihil); diff reddit ('' si intacta)"""
+    def applicare(self, forma=True, iudica=True, strictum=False):
+        """Scribit SEMEL (omnia aut nihil) et Fructum reddit.
+
+        Portae in ordine: (1) custos lectionis rancidae - discus a textu
+        lecto differens = alius scripsit interea (uncus, processus
+        alius): SilvaError, nihil scriptum; (2) scriptura; (3) forma:
+        formator plagulae totius (diff redditus = quod in disco est);
+        (4) iudica: examen + differre contra textum ante editionem
+        (unitates mutatae nominatae - mea substantiva, formatoris
+        cosmetica). strictum: examen non ACCIPE -> textus ante
+        editionem restituitur et SilvaError. Ordinarius: refertur,
+        numquam tacite revertitur (status medius refactionis licitus
+        est; uncus commissionis porta manet)."""
+        via = _absoluta(self.via)
+        in_disco = open(via).read()
+        if in_disco != self.originalis:
+            raise SilvaError('plagula in disco mutata post lectionem'
+                             ' (%s) - relege ante editionem' % self.via)
         if not self.mutata():
-            return ''
-        d = self.diff()
-        with open(_absoluta(self.via), 'w') as f:
+            return Fructus(self.via, '', None, False, None)
+        ante = self.originalis
+        with open(via, 'w') as f:
             f.write(self.textus)
+        formata = False
+        if forma:
+            formata = formare(self.via)
+            self.textus = open(via).read()
+        d = ''.join(difflib.unified_diff(
+            ante.splitlines(True), self.textus.splitlines(True),
+            'a/' + self.via, 'b/' + self.via))
+        verd = None
+        dif = None
+        if iudica:
+            verd = examen(self.via)
+            dif = differre(ante, self.via)
+            if strictum and verd != 'ACCIPE':
+                with open(via, 'w') as f:
+                    f.write(ante)
+                self.textus = ante
+                raise SilvaError('examen %s - scriptura restituta (strictum)'
+                                 % verd)
         self.originalis = self.textus
-        return d
+        return Fructus(self.via, d, verd, formata, dif)
+
+
+class Fructus(object):
+    """exitus applicare: diff (post formam), examen, formata, differentia.
+    str(fructus) = compendium quattuor linearum + diff."""
+
+    def __init__(self, via, diff, examen_verdictum, formata, differentia):
+        self.via = via
+        self.diff = diff
+        self.examen = examen_verdictum
+        self.formata = formata
+        self.differentia = differentia
+
+    @property
+    def sana(self):
+        return self.examen in (None, 'ACCIPE')
+
+    def unitates(self):
+        if self.differentia is None:
+            return []
+        return [(p.status, p.titulus, p.classificatio)
+                for p in self.differentia.paria]
+
+    def __str__(self):
+        lineae = ['applicare %s: %s' % (self.via, 'mutata' if self.diff
+                                         else 'intacta')]
+        if self.examen is not None:
+            lineae.append('  examen: %s' % self.examen)
+        lineae.append('  forma: %s' % ('scripta' if self.formata
+                                        else 'nihil'))
+        if self.differentia is not None:
+            lineae.append('  differre: %s %s' % (
+                self.differentia.verdictum, self.unitates()))
+        return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
 
 
 # ---------------------------------------------------------------- iudicia
@@ -278,6 +349,50 @@ def verdictum(via, ref='HEAD'):
     novae, evanidae = forma_delta(via, ref)
     return {'examen': examen(via), 'forma_novae': novae,
             'forma_evanidae': evanidae}
+
+
+# ---------------------------------------------------------------- symbola
+
+Sedes = namedtuple('Sedes', 'via linea columna genus')
+Usus = namedtuple('Usus', 'sedes usus')   # sedes: [Sedes]; usus: {via: [lineae]}
+
+
+def usus(symbolum):
+    """sedes definitionum + usus per plagulam (nexus.sh, tabula se-sanans);
+    symbolum ignotum = Usus([], {})"""
+    r = _curre(['./silva/nexus.sh', symbolum])
+    if r.returncode == 2:
+        raise SilvaError('nexus fractus: %s' % r.stderr.strip()[-200:])
+    sedes = []
+    per_viam = {}
+    for linea in r.stdout.splitlines():
+        if linea.startswith('SEDES '):
+            partes = linea.split()
+            via, l, c = partes[1].rsplit(':', 2)
+            sedes.append(Sedes(via, int(l), int(c),
+                               partes[2] if len(partes) > 2 else ''))
+        elif linea.startswith('  ') and '(' in linea and '):' in linea:
+            via = linea.split()[0]
+            lineae = [int(x) for x in linea.split('):', 1)[1].split()]
+            per_viam[via] = lineae
+    return Usus(sedes, per_viam)
+
+
+def renominare(vetus, novum, viae=None, scribere=False, intra_via=None):
+    """renominatio semantica (renominare.sh): planum ordinarium, scribere
+    applicat. Reddit textum plani/relationis; refusio (1) et recusatio
+    (3) levant SilvaError cum causa; apparatus (2) et fractum (4)
+    quoque."""
+    args = ['./silva/renominare.sh', vetus, novum] + list(viae or [])
+    if intra_via:
+        args += ['-via', intra_via]
+    if scribere:
+        args.append('-scribere')
+    r = _curre(args)
+    if r.returncode != 0:
+        raise SilvaError('renominare rc=%d: %s' % (
+            r.returncode, (r.stdout + r.stderr).strip()[-400:]))
+    return r.stdout
 
 
 def _ut_plagula(x, praefixum):
