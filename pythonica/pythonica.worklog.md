@@ -80,3 +80,18 @@ matching once; comments now compare whitespace-collapsed. Fran's
 longer answer is a trivia-tolerant plain-text/markdown parser next to
 the sententiae outline parser, so prose gets structural anchors the
 way C has them; not started.
+
+## 2026-09-02 (night) — what the optimization day asked for
+
+Ten shadow-gated commits through commissio_umbra, no half-writes.
+Every refusal was an anchor of mine, three of them the same shape:
+a block containing comments anchored without them. `replace_inter`
+(two short anchors, everything between replaced) is that fallback
+made a primitive, for Editio and Textus. The receipt no longer hashes
+Fran's staging files (VETITAE) — the tabularium journal is tracked and
+every note voided a running gate. `metiri` is the min-of-7 computus
+measurement; commissio_umbra reads a suite's wall time from the mensor
+session when the runner prints no total; a name refusal now says
+whether the name is present as another genus or only as a call.
+Still open: the snapshot-bound shadow (edit while gates run) and a
+Refactio hook for "write, regenerate, judge".

@@ -121,7 +121,13 @@ def _extentum_nominis(lista, nomen, definitio=True, genus=None):
         candidati = [x for x in lista if x.titulus == nomen
                      and x.genus == genus]
     if not candidati:
-        raise SilvaError("'%s' (%s) non inventum" % (nomen, genus))
+        alia = sorted(set(x.genus for x in lista if x.titulus == nomen))
+        if alia:
+            raise SilvaError("'%s' (%s) non inventum - hic ut %s adest"
+                             % (nomen, genus, '/'.join(alia)))
+        raise SilvaError("'%s' (%s) non inventum in hac plagula (vocatio, non"
+                         " definitio? definitiones: %s ...)" % (nomen, genus,
+                         ', '.join(x.titulus for x in lista if x.definitio)[:120]))
     if len(candidati) > 1:
         raise SilvaError("functio '%s' ambigua (%d extenta)"
                          % (nomen, len(candidati)))
@@ -232,6 +238,33 @@ class Editio(object):
         for a, b in reversed(sedes):
             self.textus = self.textus[:a] + novus + self.textus[b:]
         self.acta.append('replace %r' % vetus[:40])
+        return self
+
+    def replace_inter(self, initium, finis, novus, tolerans=True):
+        """spatium ab INITIO ancorae 'initium' ad FINEM ancorae 'finis'
+        (post initium quaesitae) substituere - ambae breves, unicae;
+        quidquid inter eas (commenta inclusa) abit. Pro blocis quae
+        commenta tenent: ancora totius bloci commenta omnia ferre
+        deberet (lexema unum quodque) - hic duo anchorae solae."""
+        if tolerans is True:
+            a = _sedes_lexematum(self.textus, initium)
+        else:
+            a = [(i, i + len(initium)) for i in
+                 [j for j in range(len(self.textus)) if self.textus.startswith(initium, j)]]
+        if len(a) != 1:
+            raise SilvaError("ancora initii %d vicibus inventa: %r" % (len(a), initium[:60]))
+        a0 = a[0][0]
+        cauda = self.textus[a0:]
+        if tolerans is True:
+            b = _sedes_lexematum(cauda, finis)
+        else:
+            b = [(i, i + len(finis)) for i in
+                 [j for j in range(len(cauda)) if cauda.startswith(finis, j)]]
+        if len(b) < 1:
+            raise SilvaError("ancora finis post initium non inventa: %r" % finis[:60])
+        b1 = a0 + b[0][1]
+        self.textus = self.textus[:a0] + novus + self.textus[b1:]
+        self.acta.append('replace_inter %r..%r' % (initium[:20], finis[:20]))
         return self
 
     # -- nomina --
@@ -478,6 +511,19 @@ class Textus(object):
     def inserere_ante(self, vetus, novus, numerus=1):
         return self.replace(vetus, novus + vetus, numerus)
 
+    def replace_inter(self, initium, finis, novus):
+        """ab initio 'initium' (semel) ad finem 'finis' (prima post
+        initium) substituere - exacte"""
+        if self.textus.count(initium) != 1:
+            raise SilvaError("ancora initii %d vicibus: %r" % (self.textus.count(initium), initium[:60]))
+        a0 = self.textus.index(initium)
+        b = self.textus.find(finis, a0 + len(initium))
+        if b < 0:
+            raise SilvaError("ancora finis post initium non inventa: %r" % finis[:60])
+        self.textus = self.textus[:a0] + novus + self.textus[b + len(finis):]
+        self.acta.append('replace_inter %r..%r' % (initium[:20], finis[:20]))
+        return self
+
     def appendere(self, novus):
         self.textus += novus
         self.acta.append('appendere')
@@ -655,10 +701,16 @@ def sigillum_arboris():
     Receptum portae huic sigillo ligatur - mutatio ulla = rancidum."""
     h = hashlib.sha256()
     h.update(_curre(['git', 'rev-parse', 'HEAD']).stdout.encode())
-    h.update(_curre(['git', 'diff', 'HEAD', '--']).stdout.encode('utf-8',
-                                                                   'replace'))
-    novae = _curre(['git', 'ls-files', '--others', '--exclude-standard']
-                   ).stdout.split()
+    # VETITAE (plagulae Frani in cursu, numquam commissae per hoc) non
+    # sigillantur: acta tabularii tracta sunt et per notas mutantur -
+    # sine hoc nota inter portam et commissionem receptum rancidum
+    # faciebat (2026-09-02)
+    h.update(_curre(['git', 'diff', 'HEAD', '--', '.']
+                    + [':(exclude)' + v for v in VETITAE]
+                    ).stdout.encode('utf-8', 'replace'))
+    novae = [v for v in _curre(['git', 'ls-files', '--others',
+                                '--exclude-standard']).stdout.split()
+             if v not in VETITAE]
     for v in sorted(novae):
         h.update(v.encode())
         try:
@@ -833,7 +885,14 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         via = porta_umbra(nomen, filtrum)
         r = exspectare(via, tectum)
         acta = open(via + '.acta').read()
-        recepta.append((via, nomen, r, _totum_actorum(acta)))
+        tot = _totum_actorum(acta)
+        if tot is None:
+            praef = {'radix': '', 'silva': 'silva.'}.get(nomen)
+            if praef is not None:
+                ss = mensurae(praef, 1, plenae=False)
+                if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
+                    tot = ss[0].mensurae.get('suita.tempus.totum')
+        recepta.append((via, nomen, r, tot))
         if not r.sana:
             raise SilvaError('porta umbrae %s non sana: %s\n%s'
                              % (nomen, r.compendium, acta[-1500:]))
@@ -960,6 +1019,32 @@ def compendium_mensurae(sessio, quantum=5):
     for v, k in tarda[:quantum]:
         lineae.append('  %8.2fs  %s' % (v, k[len('probatio.cursus.'):]))
     return '\n'.join(lineae)
+
+
+Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes usus ordo')
+
+
+def metiri(via, n=7, nudum=False):
+    """computus min-of-n (singuli +-X%): parsare/lexare ms, phases
+    (lex/expansio/glr/commissio), allocationes, usus - pro A/B
+    optimizationum. ordo = ordo TSV integer cursus optimi."""
+    best = None
+    for _ in range(n):
+        args = ['./silva/computus.sh', _absoluta(via), '-machina'] + (['-nudum'] if nudum else [])
+        out = _curre(args).stdout.splitlines()
+        rows = [l.split('\t') for l in out if l and not l.startswith('#')]
+        if not rows:
+            raise SilvaError('computus sine ordine: %s' % via)
+        r = rows[0]
+        v = float(r[7])
+        if best is None or v < best[0]:
+            best = (v, r)
+    r = best[1]
+    phases = {}
+    if len(r) >= 20:
+        phases = {'lex': float(r[16]), 'expansio': float(r[17]),
+                  'glr': float(r[18]), 'commissio': float(r[19])}
+    return Mensura(via, best[0], float(r[6]), phases, int(r[13]), int(r[8]), r)
 
 
 # ---------------------------------------------------------------- selecta

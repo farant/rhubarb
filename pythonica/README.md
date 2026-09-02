@@ -18,6 +18,10 @@ plica pendet — veritas in C manet.
   `.unitates()`); `strictum=True` REICE revertit
 - `silva.verdictum(via)` — examen + `-delta` uno vocamine
 - `silva.differre(a, b)` — paria unitatum + `cosmetica_solum`
+- `.replace_inter(initium, finis, novus)` — spatium inter duas ancoras
+  breves substituere (bloci cum commentis); Textus quoque
+- `silva.metiri(via, n=7)` — computus min-of-n: parsare/lexare ms,
+  phases, allocationes, usus (A/B optimizationum)
 - `.membrum_addere(typus, textus, post=None)` — membrum structurae/
   unionis/enumerationis nomine typi (extenta genus structura/unio/
   enumeratio; `corpus(via, 'S', genus='typus')`)

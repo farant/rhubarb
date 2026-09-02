@@ -385,6 +385,39 @@ credo(len(ms2) >= 1 and all('suita.tempus.totum' in s.mensurae for s in ms2)
 credo('totum' in silva.compendium_mensurae(ms[0]) and 'probatio_' in silva.compendium_mensurae(ms[0]), 'compendium_mensurae')
 credo(silva.mensurae('nemo.', 1) == [], 'mensurae: praefixum ignotum vacuum')
 
+print('--- replace_inter (Editio + Textus) ---')
+open(via, 'w').write(FONS)
+e = silva.Editio(via)
+e.replace_inter('b (vacuum)\n{', 'redde;\n}', 'b (vacuum)\n{\n    frange;\n}')   # 'vacuum b (vacuum)' prototypum quoque congrueret
+credo('x  = I;' not in e.textus and 'frange;' in e.textus and '/* b */' in e.textus, 'Editio.replace_inter: spatium inter ancoras substitutum, commentum ducens manet')
+try:
+    silva.Editio(via).replace_inter('redde;', '}', 'x')       # initium bis
+    credo(False, 'replace_inter initium ambiguum levat')
+except silva.SilvaError:
+    credo(True, 'replace_inter: initium ambiguum levat')
+tx = silva.Textus(via_t2)
+tx.replace_inter('# titulus', 'gamma', '# T')
+credo(tx.textus.startswith('# T\ncauda') or tx.textus.startswith('# T\n'), 'Textus.replace_inter')
+try:
+    silva.Editio(via).inserere_ante('nemo_hic', 'x')
+except silva.SilvaError as ex:
+    credo('definitio' in str(ex) or 'definitiones' in str(ex), 'nuntius refusionis nominis definitiones nominat')
+
+print('--- sigillum: vetitae non sigillantur ---')
+vet = os.path.join('pythonica', '.vetita_probatio.tmp')
+silva.VETITAE = tuple(silva.VETITAE) + (vet,)
+s_ante = silva.sigillum_arboris()
+open(os.path.join(silva.RADIX, vet), 'w').write('x')
+try:
+    credo(silva.sigillum_arboris() == s_ante, 'sigillum: plagula vetita nova ignorata')
+finally:
+    os.unlink(os.path.join(silva.RADIX, vet))
+    silva.VETITAE = tuple(v for v in silva.VETITAE if v != vet)
+
+print('--- metiri ---')
+mm = silva.metiri('lib/piscina.c', n=1)
+credo(mm.parsare_ms > 0 and mm.allocationes > 0 and 'glr' in mm.phases, 'metiri: mensura cum phasibus (%.1f ms)' % mm.parsare_ms)
+
 print('--- portae + commissio + planta ---')
 pp = silva.porta('formator-intra')
 credo(pp.cucurrit and pp.sana and 'sanum' in pp.compendium, 'porta formator-intra sana (%s)' % pp.compendium)
