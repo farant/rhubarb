@@ -4,6 +4,7 @@
 #include "silva_lexema.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* Genus ERROR + locus lexematum + numerus locorum ex registro per
  * nomen */
@@ -150,6 +151,14 @@ _texere (
                     SilvaExpansio* expansio,
     constans SilvaRegistrumCoctum* tabularium,
                      SilvaParsura* parsura);
+/* ms inter duo momenta clock() (horologia phasium) */
+interior duplex
+_ms_inter (
+    clock_t a,
+    clock_t b)
+{
+    redde (duplex)(b - a) * 1000.0 / (duplex)CLOCKS_PER_SEC;
+}
 
 /* Nucleus circuitus secantis; contextus NIHIL licet (fines motoris
  * defaltae tunc solae valent); expansio (si praesens) texturam
@@ -207,7 +216,11 @@ _lexemata_parsare_interna (
     {
         redde NIHIL;
     }
-    parsura->successus                = FALSUM;
+        parsura->successus            = FALSUM;
+    parsura->ms_lexandi               = 0.0;
+    parsura->ms_expandendi            = 0.0;
+    parsura->ms_glr                   = 0.0;
+    parsura->ms_committendi           = 0.0;
     parsura->commissio                = NIHIL;
     parsura->lexema_finis             = NIHIL;
     parsura->lexemata                 = NIHIL;
@@ -503,7 +516,12 @@ _lexemata_parsare_interna (
                 }
             }
 
-            fructus = silva_glr_parsare(glr, segmentum, piscina);
+                        {
+                clock_t h0 = clock();
+
+                fructus = silva_glr_parsare(glr, segmentum, piscina);
+                parsura->ms_glr += _ms_inter(h0, clock());
+            }
             parsura->numerus_segmentorum++;
             parsura->fusiones         += fructus.fusiones;
             parsura->transmutationes  += fructus.transmutationes;
@@ -594,8 +612,14 @@ _lexemata_parsare_interna (
     }
 
     /* Commissio: pater + normalizatio + resolutio (collapse+diarium) */
-    parsura->commissio = silva_committere(piscina, radix,
-        grammatica->tabularium, oraculum, resolutor, datum_resolutoris);
+        {
+        clock_t h0 = clock();
+
+        parsura->commissio = silva_committere(piscina, radix,
+            grammatica->tabularium, oraculum, resolutor,
+            datum_resolutoris);
+        parsura->ms_committendi = _ms_inter(h0, clock());
+    }
     parsura->successus = (parsura->commissio != NIHIL) ? VERUM : FALSUM;
     redde parsura;
 }
@@ -1185,6 +1209,9 @@ _fistula_interna (
              Xar* strata;
              Xar* directivae;
     SilvaParsura* parsura;
+         clock_t  h0;
+         clock_t  h1;
+         clock_t  h2;
 
     si (   piscina    == NIHIL || expansio == NIHIL || fons == NIHIL
         || grammatica == NIHIL)
@@ -1197,18 +1224,23 @@ _fistula_interna (
      * (point-in-time - Phase 2.5) */
     fons_index = silva_fons_addere(expansio,
         (titulus_fontis != NIHIL) ? titulus_fontis : "<fons>", FALSUM);
+        h0      = clock();
     lexemata    = silva_lexare(piscina, fons, mensura, fons_index);
+    h1          = clock();
     directivae  = NIHIL;
     reliqua = silva_expansio_directivas_processare(expansio, lexemata,
         &directivae);
     strata = NIHIL;
     expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
         &strata);
+    h2 = clock();
 
     parsura = _lexemata_parsare_interna(piscina, expansa, grammatica,
         oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
+        parsura->ms_lexandi     = _ms_inter(h0, h1);
+        parsura->ms_expandendi  = _ms_inter(h1, h2);
         parsura->lexemata       = expansa;
         parsura->strata         = strata;
         parsura->expansio       = expansio;

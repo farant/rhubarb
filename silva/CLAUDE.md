@@ -129,10 +129,16 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
-./silva/computus.sh <fons.c> [-nudum] [-machina] (imago memoriae et
-temporis parseris: lexemata, dati/commissa/otiosa, alvei,
-allocationes, ms lexandi/parsandi - piscina propria I MiB; porta =
-probatio_silva_computus, aurum fixa/computus/basis.tsv; RP §11),
+./silva/computus.sh <fons.c> [-nudum] [-machina] [-iter N] (imago
+memoriae et temporis parseris: lexemata, dati/commissa/otiosa, alvei,
+allocationes, ms lexandi/parsandi + HOROLOGIA PHASIUM lex/expansio/
+glr/commissio - piscina propria I MiB; porta = probatio_silva_computus,
+aurum fixa/computus/basis.tsv; RP §11),
+./silva/sample.sh <fons.c> [-iter N] [-secunda S] (profilum 'sample':
+tabula foliorum + build/sample/<n>.folded pro flamma - UBI tempus it),
+./silva/aequivalentia.sh -basis | -conferre (documenta arboris
+octetim contra basim, CAPITA ad basim in disco restituta dum
+curritur - porta cuiusque optimizationis; RP 5.1),
 ./silva/arbor.sh <fons.c> [-nudum] [-tacitus] (documentum STML
 canonicum in stdout; compendium in stderr numerat lexemata /
 expansa / ambigua / ERRORES. Cave: -nudum super codicem

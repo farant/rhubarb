@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <time.h>
 
 /* ================= silva.h (verbatim) ================= */
 /* silva.h - Silva: C89 parsing substrate (public interface)
@@ -37,6 +38,7 @@
 
 #include <stddef.h>  /* size_t */
 
+
 /* ==================================================
  * Substratum vendicatum (renominatum): piscina, chorda, xar
  * ================================================== */
@@ -45,7 +47,7 @@ typedef struct SilvaPiscina SilvaPiscina;  /* arena memoriae (opaca) */
 
 /* Chorda: mensura + datum, NON NUL-terminata */
 typedef struct SilvaChorda {
-    unsigned int   mensura;
+     unsigned int  mensura;
     unsigned char* datum;
 } SilvaChorda;
 
@@ -67,18 +69,34 @@ typedef struct SilvaXar {
 
 /* Vacare: cursor ad initium, ALVEI RETENTI (nullum unmap) - reusus
  * trans opera (percursus: piscinae per plagulam sine tumultu mmap) */
-void silva_piscina_vacare(SilvaPiscina* piscina);
-SilvaPiscina* silva_piscina_generare_dynamicum(const char* titulus,
-    size_t mensura_alvei_initia);
-void silva_piscina_destruere(SilvaPiscina* piscina);
+void
+silva_piscina_vacare (
+    SilvaPiscina* piscina);
+SilvaPiscina*
+silva_piscina_generare_dynamicum (
+    const char* titulus,
+        size_t  mensura_alvei_initia);
+void
+silva_piscina_destruere (
+    SilvaPiscina* piscina);
 
 /* Telemetria arenae (additiones I): octeti in usu + apex usus -
  * hospites longaevi (saltuarius LRU) mensurare possunt */
-size_t silva_piscina_summa_usus(const SilvaPiscina* piscina);
-size_t silva_piscina_summa_apex_usus(const SilvaPiscina* piscina);
+size_t
+silva_piscina_summa_usus (
+    const SilvaPiscina* piscina);
+size_t
+silva_piscina_summa_apex_usus (
+    const SilvaPiscina* piscina);
 
-unsigned int silva_xar_numerus(const SilvaXar* xar);
-void* silva_xar_obtinere(const SilvaXar* xar, unsigned int index);
+unsigned int
+silva_xar_numerus (
+    const SilvaXar* xar);
+void*
+silva_xar_obtinere (
+    const SilvaXar* xar,
+      unsigned int  index);
+
 
 /* ==================================================
  * Lexema (token) - genus, origo, contractus unificatus
@@ -190,7 +208,7 @@ typedef enum {
 /* Caecatio (hideset, Prosser) - lista immutabilis cauda-communis */
 typedef struct SilvaCaecatio SilvaCaecatio;
 struct SilvaCaecatio {
-    SilvaChorda*   titulus;
+      SilvaChorda* titulus;
     SilvaCaecatio* cauda;
 };
 
@@ -209,43 +227,44 @@ typedef struct SilvaOrigo {
     SilvaOrigoGenus genus;
     union {
         struct {
-            SilvaToken*    corpus;
-            SilvaToken*    invocatio;
-            SilvaChorda*   nomen_macro;
+               SilvaToken* corpus;
+               SilvaToken* invocatio;
+              SilvaChorda* nomen_macro;
             SilvaCaecatio* caecatio;
         } expansio;
         struct {
-            SilvaToken*    sinister;
-            SilvaToken*    dexter;
-            SilvaToken*    invocatio;
-            SilvaChorda*   nomen_macro;
+               SilvaToken* sinister;
+               SilvaToken* dexter;
+               SilvaToken* invocatio;
+              SilvaChorda* nomen_macro;
             SilvaCaecatio* caecatio;
         } pasta;
         struct {
-            SilvaToken*    primus;
-            SilvaChorda*   nomen_macro;
+             SilvaToken* primus;
+            SilvaChorda* nomen_macro;
         } stringificatio;
         struct {
-            SilvaChorda*   nomen_macro;
+            SilvaChorda* nomen_macro;
         } api;
     } datum;
 } SilvaOrigo;
 
 struct SilvaToken {
-    SilvaLexemaGenus genus;
-    SilvaChorda      valor;          /* visus in textum fontis */
-    int              byte_offset;    /* -1 si syntheticum */
-    unsigned int     longitudo;
-    unsigned int     linea;          /* 1-basata */
-    unsigned int     columna;        /* 1-basata */
-    int              fons_index;
-    unsigned char    standard;       /* SILVA_STANDARD_* */
-    int              initium_lineae;
-    SilvaXar*        spatia_ante;    /* SilvaToken* (trivia); NULL */
-    SilvaXar*        spatia_post;    /* SilvaToken* (trivia); NULL */
-    SilvaXar*        scissurae;      /* laminae intra lexema; NULL */
-    SilvaOrigo       origo;          /* inserta - numquam absens */
+    SilvaLexemaGenus  genus;
+         SilvaChorda  valor;          /* visus in textum fontis */
+                 int  byte_offset;    /* -1 si syntheticum */
+        unsigned int  longitudo;
+        unsigned int  linea;          /* 1-basata */
+        unsigned int  columna;        /* 1-basata */
+                 int  fons_index;
+       unsigned char  standard;       /* SILVA_STANDARD_* */
+                 int  initium_lineae;
+            SilvaXar* spatia_ante;    /* SilvaToken* (trivia); NULL */
+            SilvaXar* spatia_post;    /* SilvaToken* (trivia); NULL */
+            SilvaXar* scissurae;      /* laminae intra lexema; NULL */
+          SilvaOrigo  origo;          /* inserta - numquam absens */
 };
+
 
 /* ==================================================
  * Lexatio + auxilia lexematum (additiones I)
@@ -257,24 +276,43 @@ struct SilvaToken {
  * textum fontis spectant, ergo textus vivere debet quamdiu
  * lexemata vivunt (arena eadem consulto). fons_index tokenis
  * inscribitur; 0 licet pro usu solitario. */
-SilvaXar* silva_lexare(SilvaPiscina* piscina, const char* fons,
-    unsigned int mensura, int fons_index);
+SilvaXar*
+silva_lexare (
+    SilvaPiscina* piscina,
+      const char* fons,
+    unsigned int  mensura,
+             int  fons_index);
 
 /* Fluxus crudus: lexemata vera ET trivia INTERPOSITA, ordine
  * fontis - pro pictoribus (omnis octetus classificatus in
  * ordine). Idem contractus vitae. */
-SilvaXar* silva_lexare_cruda(SilvaPiscina* piscina,
-    const char* fons, unsigned int mensura, int fons_index);
+SilvaXar*
+silva_lexare_cruda (
+    SilvaPiscina* piscina,
+      const char* fons,
+    unsigned int  mensura,
+             int  fons_index);
 
 /* Catena originis: radix (maiorum FONS/API), profunditas
  * (generatio expansionis; 0 = fons), estne stratum 0 */
-SilvaToken* silva_token_radix(SilvaToken* token);
-unsigned int silva_token_profunditas(SilvaToken* token);
-int silva_token_est_fons(SilvaToken* token);
+SilvaToken*
+silva_token_radix (
+    SilvaToken* token);
+unsigned int
+silva_token_profunditas (
+    SilvaToken* token);
+int
+silva_token_est_fons (
+    SilvaToken* token);
 
 /* Tituli generum (tabellae originis, debugging) */
-const char* silva_lexema_genus_nomen(SilvaLexemaGenus genus);
-const char* silva_origo_genus_nomen(SilvaOrigoGenus genus);
+const char*
+silva_lexema_genus_nomen (
+    SilvaLexemaGenus genus);
+const char*
+silva_origo_genus_nomen (
+    SilvaOrigoGenus genus);
+
 
 /* ==================================================
  * Nodus + valor signatus (codex ut basis datorum)
@@ -303,58 +341,82 @@ typedef struct SilvaValor SilvaValor;
 /* Prospectus listae: {repositorium, mensura} - repositorium commune,
  * mensura PROSPECTUS est veritas (numquam xar numerus directus) */
 typedef struct SilvaListaProspectus {
-    SilvaXar*    xar;
-    unsigned int mensura;
+        SilvaXar* xar;
+    unsigned int  mensura;
 } SilvaListaProspectus;
 
 struct SilvaValor {
     SilvaValorGenus genus;
     union {
-        SilvaNodus*          nodus;
-        SilvaToken*          token;
-        SilvaListaProspectus lista;
-        int                  index;
+                  SilvaNodus* nodus;
+                  SilvaToken* token;
+        SilvaListaProspectus  lista;
+                         int  index;
     } datum;
 };
 
 struct SilvaNodus {
-    int          genus;            /* index in registro generum */
-    unsigned int numerus_locorum;
-    SilvaValor*  loci;             /* ordine layout */
-    SilvaNodus*  pater;            /* post commissionem */
+             int  genus;            /* index in registro generum */
+    unsigned int  numerus_locorum;
+      SilvaValor* loci;             /* ordine layout */
+      SilvaNodus* pater;            /* post commissionem */
 };
 
-unsigned int silva_valor_lista_numerus(SilvaValor lista);
-SilvaValor* silva_valor_lista_obtinere(SilvaValor lista,
+unsigned int
+silva_valor_lista_numerus (
+    SilvaValor lista);
+SilvaValor*
+silva_valor_lista_obtinere (
+      SilvaValor lista,
     unsigned int index);
 
 /* Liberi nodales (NODUS loci + elementa NODUS listarum, ordine
  * locorum): SilvaXar de SilvaNodus* (additiones I) */
-SilvaXar* silva_nodus_liberi(SilvaPiscina* piscina,
+SilvaXar*
+silva_nodus_liberi (
+        SilvaPiscina* piscina,
     const SilvaNodus* nodus);
 
 /* Extensio fontis (LEGATUS chunk 0): min/max octetorum super
  * lexemata subarboris in fonte dato, per radicem originis
  * (synthetica omissa). *minimum initia < 0, *maximum initia 0;
  * *minimum manet < 0 si nihil inventum. */
-void silva_valor_extensionem(SilvaValor valor, int fons_index,
-    int* minimum, int* maximum);
-void silva_nodus_extensionem(const SilvaNodus* nodus,
-    int fons_index, int* minimum, int* maximum);
+void
+silva_valor_extensionem (
+    SilvaValor  valor,
+           int  fons_index,
+           int* minimum,
+           int* maximum);
+void
+silva_nodus_extensionem (
+    const SilvaNodus* nodus,
+                 int  fons_index,
+                 int* minimum,
+                 int* maximum);
 
 /* Variantia linearum (1-basata; exitus intus zerantur; linea_a==0
  * post reditum = nihil inventum; finis = columna+longitudo,
  * approximatio uni-linearis). */
-void silva_nodus_extensionem_lineis(const SilvaNodus* nodus,
-    int fons_index, unsigned int* linea_a, unsigned int* columna_a,
-    unsigned int* linea_b, unsigned int* columna_b);
+void
+silva_nodus_extensionem_lineis (
+    const SilvaNodus* nodus,
+                 int  fons_index,
+        unsigned int* linea_a,
+        unsigned int* columna_a,
+        unsigned int* linea_b,
+        unsigned int* columna_b);
 
 /* Puritas fontis: 1 si lexemata subarboris OMNIA origine FONS
  * (stratum 0 - nihil expansum). fons_index >= 0 = plagulae datae;
  * < 0 = quaelibet. Subarbor sine lexematis = 1 (vacue). */
-int silva_valor_est_fons_purus(SilvaValor valor, int fons_index);
-int silva_nodus_est_fons_purus(const SilvaNodus* nodus,
-    int fons_index);
+int
+silva_valor_est_fons_purus (
+    SilvaValor valor,
+           int fons_index);
+int
+silva_nodus_est_fons_purus (
+    const SilvaNodus* nodus,
+                 int  fons_index);
 
 /* Geometria fida: 1 si sedes fontis (per radicem originis)
  * lexematum subarboris DISTINCTAE - expansio 1:1 fida manet,
@@ -363,10 +425,16 @@ int silva_nodus_est_fons_purus(const SilvaNodus* nodus,
  * (byte_offset < 0) = 0 statim; lexemata plagularum aliarum
  * omissa; lexema IDEM bis visum (bracchia ambigua) collapsus non
  * est - identitas comparatur. */
-int silva_valor_geometria_fida(SilvaPiscina* piscina,
-    SilvaValor valor, int fons_index);
-int silva_nodus_geometria_fida(SilvaPiscina* piscina,
-    const SilvaNodus* nodus, int fons_index);
+int
+silva_valor_geometria_fida (
+    SilvaPiscina* piscina,
+      SilvaValor  valor,
+             int  fons_index);
+int
+silva_nodus_geometria_fida (
+        SilvaPiscina* piscina,
+    const SilvaNodus* nodus,
+                 int  fons_index);
 
 /* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
  * (contiguus, sine linea vacua inter finem eius et nodum; linea
@@ -375,13 +443,17 @@ int silva_nodus_geometria_fida(SilvaPiscina* piscina,
  * initiatae: invocatio trivia fert). Redde 1 si praesens. */
 typedef struct
 {
-    int          initium;   /* BYTES in fons; -1 = absens */
-    int          finis;     /* exclusive; -1 = absens */
+             int initium;   /* BYTES in fons; -1 = absens */
+             int finis;     /* exclusive; -1 = absens */
     unsigned int linea;     /* 1-basata (commenti primi) */
 } SilvaCommentariumVista;
 
-int silva_commentarium_ducens(const SilvaNodus* nodus,
-    int fons_index, SilvaCommentariumVista* vista);
+int
+silva_commentarium_ducens (
+          const SilvaNodus* nodus,
+                       int  fons_index,
+    SilvaCommentariumVista* vista);
+
 
 /* ==================================================
  * Tabulae coctae (generatae - contractus stabilis)
@@ -396,9 +468,9 @@ typedef enum {
 } SilvaTabActioGenus;
 
 typedef struct SilvaTabActio {
-    int          terminalis;   /* -1 = $ */
-    int          actio;        /* SilvaTabActioGenus */
-    int          valor;
+             int terminalis;   /* -1 = $ */
+             int actio;        /* SilvaTabActioGenus */
+             int valor;
     unsigned int pretium;
 } SilvaTabActio;
 
@@ -415,15 +487,15 @@ typedef struct SilvaTabStatus {
 } SilvaTabStatus;
 
 typedef struct SilvaTabSymbolum {
-    const char*      titulus;
-    SilvaLexemaGenus genus_lexematis;
-    int              est_terminale;
+          const char* titulus;
+    SilvaLexemaGenus  genus_lexematis;
+                 int  est_terminale;
 } SilvaTabSymbolum;
 
 typedef struct SilvaTabProductio {
-    int          sinistrum;
-    unsigned int longitudo;
-    const char*  id;
+             int  sinistrum;
+    unsigned int  longitudo;
+      const char* id;
 } SilvaTabProductio;
 
 /* Cella praelata (<praelatio>): conflictus in tabulis DECLARATE
@@ -437,37 +509,37 @@ typedef struct SilvaTabPraelata {
 
 typedef struct SilvaTabLocus {
     const char* titulus;
-    int         species;       /* SilvaLocusSpecies */
+           int  species;       /* SilvaLocusSpecies */
 } SilvaTabLocus;
 
 typedef struct SilvaTabGenus {
-    const char*  titulus;
-    unsigned int loci_offset;
-    unsigned int loci_numerus;
+      const char* titulus;
+    unsigned int  loci_offset;
+    unsigned int  loci_numerus;
 } SilvaTabGenus;
 
 typedef struct SilvaRegistrumCoctum {
     const SilvaTabGenus* genera;
-    unsigned int         numerus_generum;
+           unsigned int  numerus_generum;
     const SilvaTabLocus* loci;
-    unsigned int         numerus_locorum;
+           unsigned int  numerus_locorum;
 } SilvaRegistrumCoctum;
 
 typedef struct SilvaTabulaCocta {
-    const SilvaTabSymbolum*  symbola;
-    unsigned int             numerus_symbolorum;
-    unsigned int             numerus_terminalium;
+     const SilvaTabSymbolum* symbola;
+               unsigned int  numerus_symbolorum;
+               unsigned int  numerus_terminalium;
     const SilvaTabProductio* productiones;
-    unsigned int             numerus_productionum;
-    const SilvaTabStatus*    status;
-    unsigned int             numerus_statuum;
-    const SilvaTabActio*     actiones;
-    unsigned int             numerus_actionum;
-    const SilvaTabGoto*      goto_introitus;
-    unsigned int             numerus_goto;
-    int                      initium_index;
-    int                      productio_augmentata;
-    int                      numerus_conflictuum;
+               unsigned int  numerus_productionum;
+       const SilvaTabStatus* status;
+               unsigned int  numerus_statuum;
+        const SilvaTabActio* actiones;
+               unsigned int  numerus_actionum;
+         const SilvaTabGoto* goto_introitus;
+               unsigned int  numerus_goto;
+                        int  initium_index;
+                        int  productio_augmentata;
+                        int  numerus_conflictuum;
 } SilvaTabulaCocta;
 
 /* Subscriptiones generatae (constructor + fabrica ambigui) */
@@ -476,37 +548,54 @@ typedef SilvaValor (*SilvaGLRConstructor)(SilvaPiscina* piscina,
 typedef SilvaValor (*SilvaGLRFabricaAmbigui)(SilvaPiscina* piscina,
     SilvaValor interpretationes, int canonica);
 
+
 /* ==================================================
  * Oraculum + resolutio
  * ================================================== */
 
 typedef struct SilvaOraculum SilvaOraculum;
 
-SilvaOraculum* silva_oraculum_creare(SilvaPiscina* piscina);
-int silva_oraculum_typum_addere(SilvaOraculum* oraculum,
-    SilvaChorda titulus);
-int silva_oraculum_typum_addere_literis(SilvaOraculum* oraculum,
-    const char* titulus);
-int silva_oraculum_typum_novit(const SilvaOraculum* oraculum,
-    SilvaChorda titulus);
+SilvaOraculum*
+silva_oraculum_creare (
+    SilvaPiscina* piscina);
+int
+silva_oraculum_typum_addere (
+    SilvaOraculum* oraculum,
+      SilvaChorda  titulus);
+int
+silva_oraculum_typum_addere_literis (
+    SilvaOraculum* oraculum,
+       const char* titulus);
+int
+silva_oraculum_typum_novit (
+    const SilvaOraculum* oraculum,
+            SilvaChorda  titulus);
 
 /* Oraculum POSITIONALE (M2b): typus a SITU declarationis visibilis
  * (byte_offset lexematis nominis; 0 = praeoneratus, ubique
  * visibilis - addere sine situ = situs 0). typedef POST usum
  * ambiguitatem priorem non solvit. Situs primus servatur. */
-int silva_oraculum_typum_addere_situ(SilvaOraculum* oraculum,
-    SilvaChorda titulus, int situs);
-int silva_oraculum_situs_typi(const SilvaOraculum* oraculum,
-    SilvaChorda titulus, int* situs_out);
+int
+silva_oraculum_typum_addere_situ (
+    SilvaOraculum* oraculum,
+      SilvaChorda  titulus,
+              int  situs);
+int
+silva_oraculum_situs_typi (
+    const SilvaOraculum* oraculum,
+            SilvaChorda  titulus,
+                    int* situs_out);
 
 /* Responsa stipata oraculi vacare - voca ante
  * silva_recanonicare/indecisa_numerare pro statu recenti
  * (fistula bis-analysans: augere -> vacare -> recanonicare;
  * M1a A: declaratio deerat, functio iam exsistebat) */
-void silva_oraculum_responsa_vacare(SilvaOraculum* oraculum);
+void
+silva_oraculum_responsa_vacare (
+    SilvaOraculum* oraculum);
 
 typedef struct SilvaResolutioResponsum {
-    int         victor;        /* index interpretationis; -1 ignotum */
+           int  victor;        /* index interpretationis; -1 ignotum */
     SilvaToken* discriminans;  /* NULL licet */
 } SilvaResolutioResponsum;
 
@@ -520,25 +609,29 @@ typedef enum {
 } SilvaResolutioGenus;
 
 typedef struct SilvaResolutioEventum {
-    SilvaResolutioGenus genus;
-    SilvaNodus*         sedes;
-    int                 victor;
-    int                 genus_victoris;
-    SilvaToken*         discriminans;
+    SilvaResolutioGenus  genus;
+             SilvaNodus* sedes;
+                    int  victor;
+                    int  genus_victoris;
+             SilvaToken* discriminans;
 } SilvaResolutioEventum;
 
 typedef struct SilvaCommissio {
-    SilvaValor   radix;
-    SilvaXar*    ambigui;        /* SilvaNodus* superstites */
-    SilvaXar*    resolutiones;   /* SilvaResolutioEventum */
-    int          genus_ambigui;
-    unsigned int locus_interpretationum;
-    unsigned int locus_canonicae;
+      SilvaValor  radix;
+        SilvaXar* ambigui;        /* SilvaNodus* superstites */
+        SilvaXar* resolutiones;   /* SilvaResolutioEventum */
+             int  genus_ambigui;
+    unsigned int  locus_interpretationum;
+    unsigned int  locus_canonicae;
 } SilvaCommissio;
 
-unsigned int silva_recanonicare(SilvaCommissio* commissio,
-    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* datum_resolutoris);
+unsigned int
+silva_recanonicare (
+         SilvaCommissio* commissio,
+    const SilvaOraculum* oraculum,
+         SilvaResolutor  resolutor,
+                   void* datum_resolutoris);
+
 
 /* ==================================================
  * Praeprocessor (expansio) - contextus praeparabilis
@@ -546,15 +639,32 @@ unsigned int silva_recanonicare(SilvaCommissio* commissio,
 
 typedef struct SilvaExpansio SilvaExpansio;
 
-SilvaExpansio* silva_expansio_creare(SilvaPiscina* piscina);
-int silva_fons_addere(SilvaExpansio* exp, const char* via,
-    int est_syntheticus);
-int silva_includendum_praebere(SilvaExpansio* exp, const char* via,
-    const char* textus, unsigned int mensura);
-int silva_macro_addere(SilvaExpansio* exp, const char* titulus,
-    const char* corpus);
-int silva_macro_functio_addere(SilvaExpansio* exp,
-    const char* titulus, const char** parametra, const char* corpus);
+SilvaExpansio*
+silva_expansio_creare (
+    SilvaPiscina* piscina);
+int
+silva_fons_addere (
+    SilvaExpansio* exp,
+       const char* via,
+              int  est_syntheticus);
+int
+silva_includendum_praebere (
+    SilvaExpansio* exp,
+       const char* via,
+       const char* textus,
+     unsigned int  mensura);
+int
+silva_macro_addere (
+    SilvaExpansio* exp,
+       const char* titulus,
+       const char* corpus);
+int
+silva_macro_functio_addere (
+    SilvaExpansio*  exp,
+       const char*  titulus,
+       const char** parametra,
+       const char*  corpus);
+
 
 /* ==================================================
  * Contextus hospitis (Phase 7) - receptum diu vivens:
@@ -577,35 +687,52 @@ typedef struct SilvaFines {
 typedef int (*SilvaPergereFunctio)(void* datum);
 
 typedef struct SilvaContextusPlagula {
-    const char*  via;
-    const char*  textus;
-    unsigned int mensura;
+      const char* via;
+      const char* textus;
+    unsigned int  mensura;
 } SilvaContextusPlagula;
 
 typedef struct SilvaContextus SilvaContextus;
 
 struct SilvaContextus {
-    SilvaPiscina*       piscina;
-    SilvaFines          fines;
-    SilvaPergereFunctio pergere;          /* NULL = numquam rogare */
-    void*               pergere_datum;
-    unsigned int        passus_pergendi;  /* intervallum lexematum */
-    SilvaXar*           lexica;           /* SilvaContextusPlagula */
-    SilvaXar*           praebenda;        /* SilvaContextusPlagula */
+           SilvaPiscina* piscina;
+             SilvaFines  fines;
+    SilvaPergereFunctio  pergere;          /* NULL = numquam rogare */
+                   void* pergere_datum;
+           unsigned int  passus_pergendi;  /* intervallum lexematum */
+               SilvaXar* lexica;           /* SilvaContextusPlagula */
+               SilvaXar* praebenda;        /* SilvaContextusPlagula */
 };
 
-SilvaContextus* silva_contextus_creare(SilvaPiscina* piscina);
-int silva_contextus_lexicon_addere(SilvaContextus* contextus,
-    const char* via, const char* textus, unsigned int mensura);
-int silva_contextus_latinam_addere(SilvaContextus* contextus);
-int silva_contextus_praebere(SilvaContextus* contextus,
-    const char* via, const char* textus, unsigned int mensura);
-void silva_contextus_pergere_ponere(SilvaContextus* contextus,
-    SilvaPergereFunctio pergere, void* datum, unsigned int passus);
+SilvaContextus*
+silva_contextus_creare (
+    SilvaPiscina* piscina);
+int
+silva_contextus_lexicon_addere (
+    SilvaContextus* contextus,
+        const char* via,
+        const char* textus,
+      unsigned int  mensura);
+int
+silva_contextus_latinam_addere (
+    SilvaContextus* contextus);
+int
+silva_contextus_praebere (
+    SilvaContextus* contextus,
+        const char* via,
+        const char* textus,
+      unsigned int  mensura);
+void
+silva_contextus_pergere_ponere (
+         SilvaContextus* contextus,
+    SilvaPergereFunctio  pergere,
+                   void* datum,
+           unsigned int  passus);
 
 /* Textus latina.h compilatus (GENERATUM ex include/latina.h) */
 extern const char         silva_latina_textus[];
 extern const unsigned int silva_latina_mensura;
+
 
 /* ==================================================
  * Gubernator (fistula tota) + fructus
@@ -618,68 +745,93 @@ extern const unsigned int silva_latina_mensura;
 typedef void (*SilvaPraecommissio)(SilvaValor radix, void* datum);
 
 typedef struct SilvaGrammatica {
-    const SilvaTabulaCocta*     tabula;
+        const SilvaTabulaCocta* tabula;
     const SilvaRegistrumCoctum* tabularium;
-    SilvaGLRConstructor         constructor;
-    SilvaGLRFabricaAmbigui      fabrica;
-    SilvaPraecommissio          praecommissio;  /* NULL licet */
+           SilvaGLRConstructor  constructor;
+        SilvaGLRFabricaAmbigui  fabrica;
+            SilvaPraecommissio  praecommissio;  /* NULL licet */
 } SilvaGrammatica;
 
 typedef struct SilvaParsura {
-    int             successus;
+               int  successus;
     SilvaCommissio* commissio;
-    SilvaToken*     lexema_finis;   /* EOF - trivia caudae */
-    SilvaXar*       lexemata;       /* fluxus expansus */
-    SilvaExpansio*  expansio;       /* NULL in ingressu lexematum */
-    SilvaXar*       directivae;     /* lineae consumptae; NULL */
-    int             fons_princeps;  /* NB non 0 post praebere! */
-    unsigned int    numerus_errorum;
-    unsigned int    numerus_segmentorum;
-    unsigned int    fusiones;
-    unsigned int    transmutationes;
-    unsigned int    transmutationes_negatae;
-    unsigned int    eventa_marginis_novi;
-    unsigned int    frons_maxima;
-    int             est_intermissa;   /* pergere falsum; arbor tamen
+        SilvaToken* lexema_finis;   /* EOF - trivia caudae */
+          SilvaXar* lexemata;       /* fluxus expansus */
+     SilvaExpansio* expansio;       /* NULL in ingressu lexematum */
+          SilvaXar* directivae;     /* lineae consumptae; NULL */
+               int  fons_princeps;  /* NB non 0 post praebere! */
+      unsigned int  numerus_errorum;
+      unsigned int  numerus_segmentorum;
+      unsigned int  fusiones;
+      unsigned int  transmutationes;
+      unsigned int  transmutationes_negatae;
+      unsigned int  eventa_marginis_novi;
+      unsigned int  frons_maxima;
+               int  est_intermissa;   /* pergere falsum; arbor tamen
                                        * completa (cauda = ERROR) */
-    int             expansio_decisa;  /* expansio trunca (limen) */
-    int             fines_tactae;     /* quilibet limen tactus */
-    unsigned int    segmenta_ultra_limen;
-    unsigned int    regiones_textae;  /* regiones in arborem textae */
-    unsigned int    regiones_omissae; /* degradatae (limes transgressus) */
-    SilvaXar*       strata;           /* per-generation streams (Xar of
+             int  expansio_decisa;  /* expansio trunca (limen) */
+             int  fines_tactae;     /* quilibet limen tactus */
+    unsigned int  segmenta_ultra_limen;
+    unsigned int  regiones_textae;  /* regiones in arborem textae */
+    unsigned int  regiones_omissae; /* degradatae (limes transgressus) */
+        SilvaXar* strata;           /* per-generation streams (Xar of
                                        * SilvaXar* of SilvaToken*), one per
                                        * MUTATING expansion generation;
                                        * NULL if nothing ever expanded.
                                        * strata[last] ALIASES lexemata.
                                        * Layer view = [as-written] +
                                        * strata[] (additiones II) */
+    double ms_lexandi;       /* phase clocks (ms), 2026-09-02 */
+    double ms_expandendi;
+    double ms_glr;
+    double ms_committendi;
+
 } SilvaParsura;
 
-SilvaParsura* silva_parsare(SilvaPiscina* piscina,
-    const char* titulus_fontis, const char* fons,
-    unsigned int mensura, const SilvaGrammatica* grammatica,
-    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* datum_resolutoris);
-
-SilvaParsura* silva_parsare_cum_expansione(SilvaPiscina* piscina,
-    SilvaExpansio* expansio, const char* titulus_fontis,
-    const char* fons, unsigned int mensura,
+SilvaParsura*
+silva_parsare (
+             SilvaPiscina* piscina,
+               const char* titulus_fontis,
+               const char* fons,
+             unsigned int  mensura,
     const SilvaGrammatica* grammatica,
-    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* datum_resolutoris);
+      const SilvaOraculum* oraculum,
+           SilvaResolutor  resolutor,
+                     void* datum_resolutoris);
 
-SilvaParsura* silva_parsare_cum_contextu(SilvaPiscina* piscina,
-    const SilvaContextus* contextus, const char* titulus_fontis,
-    const char* fons, unsigned int mensura,
+SilvaParsura*
+silva_parsare_cum_expansione (
+             SilvaPiscina* piscina,
+            SilvaExpansio* expansio,
+               const char* titulus_fontis,
+               const char* fons,
+             unsigned int  mensura,
     const SilvaGrammatica* grammatica,
-    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* datum_resolutoris);
+      const SilvaOraculum* oraculum,
+           SilvaResolutor  resolutor,
+                     void* datum_resolutoris);
 
-SilvaParsura* silva_lexemata_parsare(SilvaPiscina* piscina,
-    const SilvaXar* lexemata, const SilvaGrammatica* grammatica,
-    const SilvaOraculum* oraculum, SilvaResolutor resolutor,
-    void* datum_resolutoris);
+SilvaParsura*
+silva_parsare_cum_contextu (
+             SilvaPiscina* piscina,
+     const SilvaContextus* contextus,
+               const char* titulus_fontis,
+               const char* fons,
+             unsigned int  mensura,
+    const SilvaGrammatica* grammatica,
+      const SilvaOraculum* oraculum,
+           SilvaResolutor  resolutor,
+                     void* datum_resolutoris);
+
+SilvaParsura*
+silva_lexemata_parsare (
+             SilvaPiscina* piscina,
+           const SilvaXar* lexemata,
+    const SilvaGrammatica* grammatica,
+      const SilvaOraculum* oraculum,
+           SilvaResolutor  resolutor,
+                     void* datum_resolutoris);
+
 
 /* ==================================================
  * Expansio: reading windows (additiones II) - SilvaExpansio stays
@@ -698,66 +850,98 @@ typedef enum {
 
 typedef struct {
     const SilvaChorda* via;
-    int                fons_ex;
-    int                fons_ad;           /* -1 = unresolved */
-    int                est_praetermissa;
-    int                est_angulata;      /* angle form vs quoted */
+                  int  fons_ex;
+                  int  fons_ad;           /* -1 = unresolved */
+                  int  est_praetermissa;
+                  int  est_angulata;      /* angle form vs quoted */
 } SilvaInclusioVista;
 
 typedef struct {
-    SilvaRamusGenus    genus;
-    int                est_sumptum;
-    int                est_numquam;       /* #if 0 idiom */
-    int                corpus_initium;    /* BYTES in fons; -1 empty */
-    int                corpus_finis;      /* exclusive; -1 empty */
-    int                fons_index;
-    unsigned int       linea;
+    SilvaRamusGenus genus;
+                int est_sumptum;
+                int est_numquam;       /* #if 0 idiom */
+                int corpus_initium;    /* BYTES in fons; -1 empty */
+                int corpus_finis;      /* exclusive; -1 empty */
+                int fons_index;
+       unsigned int linea;
 } SilvaRamusVista;
 
 typedef struct {
     const SilvaChorda* titulus;
-    int                est_functio;
-    int                fons_index;
-    unsigned int       linea;
-    int                corpus_initium;  /* BYTES in fons (first body
+                  int  est_functio;
+                  int  fons_index;
+         unsigned int  linea;
+                  int  corpus_initium;  /* BYTES in fons (first body
                                          * token); -1 = empty/api */
-    int                corpus_finis;    /* exclusive; -1 = empty */
+    int corpus_finis;    /* exclusive; -1 = empty */
 } SilvaMacroVista;
 
-unsigned int silva_fontes_numerus(const SilvaExpansio* exp);
+unsigned int
+silva_fontes_numerus (
+    const SilvaExpansio* exp);
 /* NULL if out of range; synthetic fontes return their title */
-const SilvaChorda* silva_fons_via(const SilvaExpansio* exp,
-    int fons_index);
-unsigned int silva_inclusiones_numerus(const SilvaExpansio* exp);
+const SilvaChorda*
+silva_fons_via (
+    const SilvaExpansio* exp,
+                    int  fons_index);
+unsigned int
+silva_inclusiones_numerus (
+    const SilvaExpansio* exp);
 /* Catena inclusionum AD fontem datum: viae ab radice ad
  * includentem proximum (" > " separatae; fons ipse exclusus).
  * 0 = radix ipse / ignotus / spatium deficiens (buffer vacuus). */
-unsigned int silva_inclusionis_catena_scribere(
-    const SilvaExpansio* exp, int fons_index, char* buffer,
-    unsigned int capacitas);
+unsigned int
+silva_inclusionis_catena_scribere (
+    const SilvaExpansio* exp,
+                    int  fons_index,
+                   char* buffer,
+           unsigned int  capacitas);
 
-int silva_inclusio_vista(const SilvaExpansio* exp,
-    unsigned int index, SilvaInclusioVista* vista_out);
-unsigned int silva_rami_numerus(const SilvaExpansio* exp);
-int silva_ramus_vista(const SilvaExpansio* exp,
-    unsigned int index, SilvaRamusVista* vista_out);
+int
+silva_inclusio_vista (
+    const SilvaExpansio* exp,
+           unsigned int  index,
+     SilvaInclusioVista* vista_out);
+unsigned int
+silva_rami_numerus (
+    const SilvaExpansio* exp);
+int
+silva_ramus_vista (
+    const SilvaExpansio* exp,
+           unsigned int  index,
+        SilvaRamusVista* vista_out);
 /* Definitions AS RECORDED (the journal is the product: #undef does
  * not erase history); O(acta) per call */
-unsigned int silva_macros_numerus(const SilvaExpansio* exp);
-int silva_macro_vista(const SilvaExpansio* exp,
-    unsigned int index, SilvaMacroVista* vista_out);
+unsigned int
+silva_macros_numerus (
+    const SilvaExpansio* exp);
+int
+silva_macro_vista (
+    const SilvaExpansio* exp,
+           unsigned int  index,
+        SilvaMacroVista* vista_out);
 /* Retained-token windows (01KYX2DSKK follow-up): macro BODIES and
  * omitted-branch laminae hold REAL lexed tokens (exact positions) -
  * these open them to tools. Indices match silva_macro_vista /
  * silva_ramus_vista. 0/NULL out of bounds or api/taken. */
-unsigned int silva_macro_corpus_numerus(const SilvaExpansio* exp,
-    unsigned int index);
-SilvaToken* silva_macro_corpus_lexema(const SilvaExpansio* exp,
-    unsigned int index, unsigned int lexema_index);
-unsigned int silva_ramus_lexemata_numerus(const SilvaExpansio* exp,
-    unsigned int index);
-SilvaToken* silva_ramus_lexema_crudum(const SilvaExpansio* exp,
-    unsigned int index, unsigned int lexema_index);
+unsigned int
+silva_macro_corpus_numerus (
+    const SilvaExpansio* exp,
+           unsigned int  index);
+SilvaToken*
+silva_macro_corpus_lexema (
+    const SilvaExpansio* exp,
+           unsigned int  index,
+           unsigned int  lexema_index);
+unsigned int
+silva_ramus_lexemata_numerus (
+    const SilvaExpansio* exp,
+           unsigned int  index);
+SilvaToken*
+silva_ramus_lexema_crudum (
+    const SilvaExpansio* exp,
+           unsigned int  index,
+           unsigned int  lexema_index);
 
 
 /* ==================================================
@@ -765,25 +949,35 @@ SilvaToken* silva_ramus_lexema_crudum(const SilvaExpansio* exp,
  * ================================================== */
 
 typedef struct SilvaScriptura {
-    int               successus;
-    SilvaChorda       textus;
-    const char*       causa;    /* diagnostica statica; NULL si bene */
+                 int  successus;
+         SilvaChorda  textus;
+          const char* causa;    /* diagnostica statica; NULL si bene */
     const SilvaNodus* sedes;    /* nodus fracturae; NULL licet */
 } SilvaScriptura;
 
-SilvaScriptura silva_scribere_valorem(SilvaPiscina* piscina,
-    SilvaValor valor, const SilvaRegistrumCoctum* tabularium,
-    const SilvaExpansio* expansio);
-SilvaScriptura silva_scribere_nodum(SilvaPiscina* piscina,
-    const SilvaNodus* nodus, const SilvaRegistrumCoctum* tabularium,
-    const SilvaExpansio* expansio);
-SilvaScriptura silva_scribere_fontem(SilvaPiscina* piscina,
-    const SilvaParsura* parsura,
-    const SilvaRegistrumCoctum* tabularium, int fons_index);
+SilvaScriptura
+silva_scribere_valorem (
+                  SilvaPiscina* piscina,
+                    SilvaValor  valor,
+    const SilvaRegistrumCoctum* tabularium,
+           const SilvaExpansio* expansio);
+SilvaScriptura
+silva_scribere_nodum (
+                  SilvaPiscina* piscina,
+              const SilvaNodus* nodus,
+    const SilvaRegistrumCoctum* tabularium,
+           const SilvaExpansio* expansio);
+SilvaScriptura
+silva_scribere_fontem (
+                  SilvaPiscina* piscina,
+            const SilvaParsura* parsura,
+    const SilvaRegistrumCoctum* tabularium,
+                           int  fons_index);
 
 /* (superficies sceleti retracta M2d Chunk B: grammatica c89 est
  * grammatica UNA amalgamae; sceletum in fontes/ manet ut fixum
  * generatoris) */
+
 
 /* ==================================================
  * Grammatica C89 (M2, crescens per M2a..M2d) - expressiones
@@ -873,188 +1067,547 @@ enum {
 
 /* Accessores locorum (GENERATI - unus per locum; nodus NULL aut
  * generis alieni -> valor generis SILVA_VALOR_NIHIL) */
-SilvaValor silva_c89_definitio_functionis_specificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_definitio_functionis_declarator(const SilvaNodus* nodus);
-SilvaValor silva_c89_definitio_functionis_declarationes_kr(const SilvaNodus* nodus);
-SilvaValor silva_c89_definitio_functionis_corpus(const SilvaNodus* nodus);
-SilvaValor silva_c89_sententia_vacua_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_corpus_tok_aperta(const SilvaNodus* nodus);
-SilvaValor silva_c89_corpus_elementa(const SilvaNodus* nodus);
-SilvaValor silva_c89_corpus_tok_clausa(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_conditio(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_consequens(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_tok_alioquin(const SilvaNodus* nodus);
-SilvaValor silva_c89_si_alioquin(const SilvaNodus* nodus);
-SilvaValor silva_c89_dum_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_dum_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_dum_conditio(const SilvaNodus* nodus);
-SilvaValor silva_c89_dum_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_dum_corpus(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_tok_fac(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_corpus(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_tok_dum(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_conditio(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_fac_dum_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_corpus(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula_initium(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula_tok_terminator_i(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula_conditio(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula_tok_terminator_ii(const SilvaNodus* nodus);
-SilvaValor silva_c89_per_clausula_passus(const SilvaNodus* nodus);
-SilvaValor silva_c89_commutatio_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_commutatio_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_commutatio_discrimen(const SilvaNodus* nodus);
-SilvaValor silva_c89_commutatio_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_commutatio_corpus(const SilvaNodus* nodus);
-SilvaValor silva_c89_casus_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_casus_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_casus_tok_colon(const SilvaNodus* nodus);
-SilvaValor silva_c89_casus_sententiae(const SilvaNodus* nodus);
-SilvaValor silva_c89_ordinarius_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_ordinarius_tok_colon(const SilvaNodus* nodus);
-SilvaValor silva_c89_ordinarius_sententiae(const SilvaNodus* nodus);
-SilvaValor silva_c89_titulatum_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_titulatum_tok_colon(const SilvaNodus* nodus);
-SilvaValor silva_c89_titulatum_sententia(const SilvaNodus* nodus);
-SilvaValor silva_c89_salta_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_salta_tok_destinatio(const SilvaNodus* nodus);
-SilvaValor silva_c89_salta_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_frange_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_frange_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_perge_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_perge_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_redde_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_redde_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_redde_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_declaratio_specificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_declaratio_declaratores(const SilvaNodus* nodus);
-SilvaValor silva_c89_declaratio_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_typus_nominatus_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_typus_primitivus_tok_verba(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_initiatus_declarator(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_initiatus_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_initiatus_initiator(const SilvaNodus* nodus);
-SilvaValor silva_c89_congeries_tok_aperta(const SilvaNodus* nodus);
-SilvaValor silva_c89_congeries_elementa(const SilvaNodus* nodus);
-SilvaValor silva_c89_congeries_tok_clausa(const SilvaNodus* nodus);
-SilvaValor silva_c89_structura_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_structura_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_structura_tok_aperta(const SilvaNodus* nodus);
-SilvaValor silva_c89_structura_membra(const SilvaNodus* nodus);
-SilvaValor silva_c89_structura_tok_clausa(const SilvaNodus* nodus);
-SilvaValor silva_c89_unio_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_unio_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_unio_tok_aperta(const SilvaNodus* nodus);
-SilvaValor silva_c89_unio_membra(const SilvaNodus* nodus);
-SilvaValor silva_c89_unio_tok_clausa(const SilvaNodus* nodus);
-SilvaValor silva_c89_membrum_specificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_membrum_declaratores(const SilvaNodus* nodus);
-SilvaValor silva_c89_membrum_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_campus_declarator(const SilvaNodus* nodus);
-SilvaValor silva_c89_campus_tok_colon(const SilvaNodus* nodus);
-SilvaValor silva_c89_campus_latitudo(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumeratio_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumeratio_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumeratio_tok_aperta(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumeratio_enumeratores(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumeratio_tok_clausa(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumerator_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumerator_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_enumerator_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_monstrator_tok_stella(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_monstrator_qualificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_monstrator_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_titulus_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_parenthesis_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_parenthesis_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_parenthesis_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_aciei_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_aciei_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_aciei_mensura(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_aciei_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_functionis_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_functionis_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_functionis_parametra(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_functionis_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_parametrum_specificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_parametrum_declarator(const SilvaNodus* nodus);
-SilvaValor silva_c89_sententia_expressionis_expressio(const SilvaNodus* nodus);
-SilvaValor silva_c89_sententia_expressionis_tok_terminator(const SilvaNodus* nodus);
-SilvaValor silva_c89_virgula_sinister(const SilvaNodus* nodus);
-SilvaValor silva_c89_virgula_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_virgula_dexter(const SilvaNodus* nodus);
-SilvaValor silva_c89_assignatio_sinister(const SilvaNodus* nodus);
-SilvaValor silva_c89_assignatio_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_assignatio_dexter(const SilvaNodus* nodus);
-SilvaValor silva_c89_ternarius_conditio(const SilvaNodus* nodus);
-SilvaValor silva_c89_ternarius_tok_quaestio(const SilvaNodus* nodus);
-SilvaValor silva_c89_ternarius_verum(const SilvaNodus* nodus);
-SilvaValor silva_c89_ternarius_tok_colon(const SilvaNodus* nodus);
-SilvaValor silva_c89_ternarius_falsum(const SilvaNodus* nodus);
-SilvaValor silva_c89_binarium_sinister(const SilvaNodus* nodus);
-SilvaValor silva_c89_binarium_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_binarium_dexter(const SilvaNodus* nodus);
-SilvaValor silva_c89_conversio_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_conversio_typus(const SilvaNodus* nodus);
-SilvaValor silva_c89_conversio_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_conversio_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_unarium_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_unarium_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_expressionis_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_expressionis_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_typi_tok_verbum(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_typi_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_typi_typus(const SilvaNodus* nodus);
-SilvaValor silva_c89_magnitudo_typi_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_species_typi_specificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_species_typi_declarator(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_abstractus_tok_stella(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_abstractus_qualificatores(const SilvaNodus* nodus);
-SilvaValor silva_c89_declarator_abstractus_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_subscriptio_basis(const SilvaNodus* nodus);
-SilvaValor silva_c89_subscriptio_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_subscriptio_index(const SilvaNodus* nodus);
-SilvaValor silva_c89_subscriptio_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_vocatio_functio(const SilvaNodus* nodus);
-SilvaValor silva_c89_vocatio_tok_apertum(const SilvaNodus* nodus);
-SilvaValor silva_c89_vocatio_argumenta(const SilvaNodus* nodus);
-SilvaValor silva_c89_vocatio_tok_clausum(const SilvaNodus* nodus);
-SilvaValor silva_c89_accessus_basis(const SilvaNodus* nodus);
-SilvaValor silva_c89_accessus_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_accessus_tok_titulus(const SilvaNodus* nodus);
-SilvaValor silva_c89_postcrementum_internum(const SilvaNodus* nodus);
-SilvaValor silva_c89_postcrementum_tok_operator(const SilvaNodus* nodus);
-SilvaValor silva_c89_folium_identificator_tok_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_folium_integer_tok_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_folium_fluitans_tok_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_folium_character_tok_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_folium_chorda_tok_valor(const SilvaNodus* nodus);
-SilvaValor silva_c89_error_tokens(const SilvaNodus* nodus);
-SilvaValor silva_c89_ambiguus_interpretationes(const SilvaNodus* nodus);
-SilvaValor silva_c89_ambiguus_canonica(const SilvaNodus* nodus);
-SilvaValor silva_c89_conditionalis_rami(const SilvaNodus* nodus);
-SilvaValor silva_c89_conditionalis_finis(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_sumptus_directiva(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_sumptus_contentum(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_sumptus_conditio_id(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_omissus_directiva(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_omissus_cruda(const SilvaNodus* nodus);
-SilvaValor silva_c89_ramus_omissus_conditio_id(const SilvaNodus* nodus);
+SilvaValor
+silva_c89_definitio_functionis_specificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_definitio_functionis_declarator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_definitio_functionis_declarationes_kr (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_definitio_functionis_corpus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_sententia_vacua_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_corpus_tok_aperta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_corpus_elementa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_corpus_tok_clausa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_conditio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_consequens (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_tok_alioquin (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_si_alioquin (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_dum_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_dum_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_dum_conditio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_dum_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_dum_corpus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_tok_fac (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_corpus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_tok_dum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_conditio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_fac_dum_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_corpus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula_initium (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula_tok_terminator_i (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula_conditio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula_tok_terminator_ii (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_per_clausula_passus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_commutatio_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_commutatio_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_commutatio_discrimen (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_commutatio_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_commutatio_corpus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_casus_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_casus_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_casus_tok_colon (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_casus_sententiae (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ordinarius_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ordinarius_tok_colon (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ordinarius_sententiae (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_titulatum_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_titulatum_tok_colon (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_titulatum_sententia (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_salta_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_salta_tok_destinatio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_salta_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_frange_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_frange_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_perge_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_perge_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_redde_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_redde_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_redde_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declaratio_specificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declaratio_declaratores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declaratio_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_typus_nominatus_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_typus_primitivus_tok_verba (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_initiatus_declarator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_initiatus_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_initiatus_initiator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_congeries_tok_aperta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_congeries_elementa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_congeries_tok_clausa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_structura_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_structura_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_structura_tok_aperta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_structura_membra (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_structura_tok_clausa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unio_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unio_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unio_tok_aperta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unio_membra (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unio_tok_clausa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_membrum_specificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_membrum_declaratores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_membrum_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_campus_declarator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_campus_tok_colon (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_campus_latitudo (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumeratio_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumeratio_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumeratio_tok_aperta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumeratio_enumeratores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumeratio_tok_clausa (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumerator_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumerator_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_enumerator_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_monstrator_tok_stella (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_monstrator_qualificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_monstrator_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_titulus_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_parenthesis_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_parenthesis_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_parenthesis_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_aciei_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_aciei_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_aciei_mensura (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_aciei_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_functionis_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_functionis_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_functionis_parametra (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_functionis_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_parametrum_specificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_parametrum_declarator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_sententia_expressionis_expressio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_sententia_expressionis_tok_terminator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_virgula_sinister (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_virgula_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_virgula_dexter (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_assignatio_sinister (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_assignatio_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_assignatio_dexter (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ternarius_conditio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ternarius_tok_quaestio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ternarius_verum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ternarius_tok_colon (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ternarius_falsum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_binarium_sinister (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_binarium_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_binarium_dexter (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conversio_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conversio_typus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conversio_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conversio_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unarium_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_unarium_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_expressionis_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_expressionis_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_typi_tok_verbum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_typi_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_typi_typus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_magnitudo_typi_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_species_typi_specificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_species_typi_declarator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_abstractus_tok_stella (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_abstractus_qualificatores (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_declarator_abstractus_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_subscriptio_basis (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_subscriptio_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_subscriptio_index (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_subscriptio_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_vocatio_functio (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_vocatio_tok_apertum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_vocatio_argumenta (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_vocatio_tok_clausum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_accessus_basis (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_accessus_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_accessus_tok_titulus (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_postcrementum_internum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_postcrementum_tok_operator (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_folium_identificator_tok_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_folium_integer_tok_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_folium_fluitans_tok_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_folium_character_tok_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_folium_chorda_tok_valor (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_error_tokens (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ambiguus_interpretationes (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ambiguus_canonica (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conditionalis_rami (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_conditionalis_finis (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_sumptus_directiva (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_sumptus_contentum (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_sumptus_conditio_id (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_omissus_directiva (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_omissus_cruda (
+    const SilvaNodus* nodus);
+SilvaValor
+silva_c89_ramus_omissus_conditio_id (
+    const SilvaNodus* nodus);
 /* <<< GENERATUM (silva_coquere): finis superficiei publicae SILVA_C89 <<< */
 
-SilvaValor silva_c89_construere(SilvaPiscina* piscina,
-    int productio, const SilvaValor* valores);
-SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
-    SilvaValor interpretationes, int canonica);
+SilvaValor
+silva_c89_construere (
+        SilvaPiscina* piscina,
+                 int  productio,
+    const SilvaValor* valores);
+SilvaValor
+silva_c89_ambiguum_fabricare (
+    SilvaPiscina* piscina,
+      SilvaValor  interpretationes,
+             int  canonica);
+
 
 /* ==================================================
  * Anima semantica c89 (M2b, simulatio X): saltatio oraculi.
@@ -1066,8 +1619,12 @@ SilvaValor silva_c89_ambiguum_fabricare(SilvaPiscina* piscina,
 
 extern const SilvaGrammatica SILVA_C89_GRAMMATICA;
 
-SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
-    const char* via, const char* fons, unsigned int mensura,
+SilvaParsura*
+silva_c89_parsare (
+     SilvaPiscina* piscina,
+       const char* via,
+       const char* fons,
+     unsigned int  mensura,
     SilvaOraculum* oraculum);
 
 /* Eadem cum contextu hospitis (lexica latina, includenda
@@ -1075,31 +1632,43 @@ SilvaParsura* silva_c89_parsare(SilvaPiscina* piscina,
  * lexici praeonerantur: plagulae lexicae standalone parsantur
  * oraculo dato ante fontem principalem - typedefs earum
  * registrantur ('i8 * t;' declaratio fit, non ambiguum) */
-SilvaParsura* silva_c89_parsare_cum_contextu(
-    SilvaPiscina* piscina, const SilvaContextus* contextus,
-    const char* via, const char* fons, unsigned int mensura,
-    SilvaOraculum* oraculum);
+SilvaParsura*
+silva_c89_parsare_cum_contextu (
+            SilvaPiscina* piscina,
+    const SilvaContextus* contextus,
+              const char* via,
+              const char* fons,
+            unsigned int  mensura,
+           SilvaOraculum* oraculum);
 
 /* Resolutor verus (filtrum combinationis X10 + oraculum
  * positionale X3 + retentio ignotorum) - pro machinatione
  * propria (silva_parsare/silva_recanonicare directis) */
-void silva_c89_resolutor(const SilvaNodus* ambiguum,
-    const SilvaOraculum* oraculum, void* datum,
+void
+silva_c89_resolutor (
+           const SilvaNodus* ambiguum,
+        const SilvaOraculum* oraculum,
+                       void* datum,
     SilvaResolutioResponsum* responsum);
 
 /* Registratio typorum radice (etiam intra ramos sumptos;
  * elementa ambigua praetermissa) */
-void silva_c89_typos_registrare(SilvaValor radix,
+void
+silva_c89_typos_registrare (
+       SilvaValor  radix,
     SilvaOraculum* oraculum);
 
 /* Lexema tituli declaratoris (catena persecuta; NULL si
  * abstractus) - ambulator vistae declarationum */
-SilvaToken* silva_c89_declaratoris_titulus(
+SilvaToken*
+silva_c89_declaratoris_titulus (
     const SilvaNodus* declarator);
 
 /* Politica canonicae super superstites; numerum versorum reddit */
-unsigned int silva_c89_politicam_imponere(SilvaCommissio* commissio,
-    SilvaOraculum* oraculum);
+unsigned int
+silva_c89_politicam_imponere (
+    SilvaCommissio* commissio,
+     SilvaOraculum* oraculum);
 
 /* Vista declarationum: ordines TOC (unus per declaratorem; nudae
  * per tag; rami sumpti visitantur; ambigua per spinam canonicam) */
@@ -1113,17 +1682,24 @@ typedef struct SilvaDeclaratioVista {
                                * abest (filtrum fons_princeps) */
 } SilvaDeclaratioVista;
 
-unsigned int silva_c89_declarationes_numerus(
+unsigned int
+silva_c89_declarationes_numerus (
     const SilvaParsura* parsura);
-int silva_c89_declaratio_vista(const SilvaParsura* parsura,
-    unsigned int index, SilvaDeclaratioVista* vista);
+int
+silva_c89_declaratio_vista (
+      const SilvaParsura* parsura,
+            unsigned int  index,
+    SilvaDeclaratioVista* vista);
 
 /* Subscriptio functionis (M2c): specificatores + declarator
  * octetim ex arbore (sine corpore) - textus ordinis TOC.
  * Ordo vistae ad indicem definitio-functionis sit. */
-SilvaScriptura silva_c89_functionis_subscriptio(
-    SilvaPiscina* piscina, const SilvaParsura* parsura,
-    unsigned int index);
+SilvaScriptura
+silva_c89_functionis_subscriptio (
+          SilvaPiscina* piscina,
+    const SilvaParsura* parsura,
+          unsigned int  index);
+
 
 /* ==================================================
  * Quaestio (QA+QB+QC): selectores CSS-similes super arbores
@@ -1153,13 +1729,13 @@ typedef int (*SilvaQuaestioPseudoFunctio)(const SilvaNodus* nodus,
 /* Captura ligata (QB): gradus catenae congruentis cum $nomine -
  * gradus OMNES ligantur, non subiectum solum */
 typedef struct SilvaQuaestioCaptura {
-    SilvaChorda       titulus;
+         SilvaChorda  titulus;
     const SilvaNodus* nodus;
 } SilvaQuaestioCaptura;
 
 typedef struct SilvaQuaestioResultatum {
     const SilvaNodus* nodus;    /* subiectum congruens */
-    SilvaXar*         capturae; /* SilvaQuaestioCaptura (valore);
+            SilvaXar* capturae; /* SilvaQuaestioCaptura (valore);
                                  * NULL = catena sine capturis */
 } SilvaQuaestioResultatum;
 
@@ -1175,37 +1751,53 @@ typedef struct SilvaQuaestioResultatum {
  * :ambiguum, :lectiones, :sumptus/:omissus. NULL + *causa_out
  * (litterae staticae; NULL licet) si malformatus aut nomen
  * ignotum. */
-SilvaQuaestio* silva_quaestio_compilare(SilvaPiscina* piscina,
-    const SilvaRegistrumCoctum* tabularium, const char* selector,
-    const char** causa_out);
+SilvaQuaestio*
+silva_quaestio_compilare (
+                  SilvaPiscina*  piscina,
+    const SilvaRegistrumCoctum*  tabularium,
+                    const char*  selector,
+                    const char** causa_out);
 
 /* Ut compilare, sed pseudo-classes usoris ex tabula data agnoscit
  * (registro NULL = nativae solae; functiones in quaestionem
  * copiantur). */
-SilvaQuaestio* silva_quaestio_compilare_cum_registro(
-    SilvaPiscina* piscina, const SilvaRegistrumCoctum* tabularium,
-    const SilvaQuaestioPseudoRegistrum* registro,
-    const char* selector, const char** causa_out);
+SilvaQuaestio*
+silva_quaestio_compilare_cum_registro (
+                          SilvaPiscina*  piscina,
+            const SilvaRegistrumCoctum*  tabularium,
+    const SilvaQuaestioPseudoRegistrum*  registro,
+                            const char*  selector,
+                            const char** causa_out);
 
 /* Tabulam pseudo-classium vacuam creare. */
-SilvaQuaestioPseudoRegistrum* silva_quaestio_registrum_creare(
+SilvaQuaestioPseudoRegistrum*
+silva_quaestio_registrum_creare (
     SilvaPiscina* piscina);
 
 /* Pseudo-classem usoris registrare. Zephyrum: argumentum NULL,
  * titulus vacuus/litteris non-tag, aut nomen nativum obumbraret.
  * Titulus idem iterum = renovatio (non-zephyrum). */
-int silva_quaestio_registrare(
-    SilvaQuaestioPseudoRegistrum* registro, const char* titulus,
-    SilvaQuaestioPseudoFunctio functio, void* datum);
+int
+silva_quaestio_registrare (
+    SilvaQuaestioPseudoRegistrum* registro,
+                      const char* titulus,
+      SilvaQuaestioPseudoFunctio  functio,
+                            void* datum);
 
 /* Omnes nodi congruentes sub radice (commissio->radix directa).
  * SilvaXar de SilvaQuaestioResultatum (valore) in piscinam. */
-SilvaXar* silva_quaestio_exsequi(const SilvaQuaestio* quaestio,
-    SilvaValor radix, SilvaPiscina* piscina);
+SilvaXar*
+silva_quaestio_exsequi (
+    const SilvaQuaestio* quaestio,
+             SilvaValor  radix,
+           SilvaPiscina* piscina);
 
 /* Nodusne unus catenae alicui congruit (maiores per patrem)? */
-int silva_quaestio_congruit(const SilvaQuaestio* quaestio,
-    const SilvaNodus* nodus);
+int
+silva_quaestio_congruit (
+    const SilvaQuaestio* quaestio,
+       const SilvaNodus* nodus);
+
 
 /* ==================================================
  * Quaestiones nominatae: bibliotheca selectorum commissa
@@ -1228,11 +1820,11 @@ typedef enum {
 
 /* Quaestio nominata: unum entrium bibliothecae (lectum, validatum) */
 typedef struct SilvaQuaestioNominata {
-    SilvaChorda titulus;
-    int         gradus;      /* SilvaQuaestionesGradus */
-    SilvaChorda selector;    /* textus crudus cum $parametris */
-    SilvaXar*   parametra;   /* SilvaChorda (valore) - declarata */
-    SilvaChorda causa;
+    SilvaChorda  titulus;
+            int  gradus;      /* SilvaQuaestionesGradus */
+    SilvaChorda  selector;    /* textus crudus cum $parametris */
+       SilvaXar* parametra;   /* SilvaChorda (valore) - declarata */
+    SilvaChorda  causa;
 } SilvaQuaestioNominata;
 
 /* Argumentum pro parare: par titulus->valor */
@@ -1245,29 +1837,37 @@ typedef struct SilvaQuaestionesArgumentum {
  * per compilationes posteriores (parare) legitur, ergo bibliothecam
  * supervivere debet. */
 typedef struct SilvaQuaestiones {
-    SilvaXar*                              nominatae;
-    const SilvaRegistrumCoctum*            tabularium;
-    const SilvaQuaestioPseudoRegistrum*    registro;
+                              SilvaXar* nominatae;
+            const SilvaRegistrumCoctum* tabularium;
+    const SilvaQuaestioPseudoRegistrum* registro;
 } SilvaQuaestiones;
 
 /* Bibliothecam ex chorda legere et TOTAM validare. NULL +
  * *culpa_out (in piscinam formata, entrium nominans) in fractura
  * QUALIBET. registro NULL = pseudo nativae solae. */
-SilvaQuaestiones* silva_quaestiones_legere(SilvaPiscina* piscina,
-    const SilvaRegistrumCoctum* tabularium,
+SilvaQuaestiones*
+silva_quaestiones_legere (
+                          SilvaPiscina* piscina,
+            const SilvaRegistrumCoctum* tabularium,
     const SilvaQuaestioPseudoRegistrum* registro,
-    SilvaChorda fons, SilvaChorda* culpa_out);
+                           SilvaChorda  fons,
+                           SilvaChorda* culpa_out);
 
-unsigned int silva_quaestiones_numerus(
+unsigned int
+silva_quaestiones_numerus (
     const SilvaQuaestiones* bibliotheca);
 
 /* Ad indicem; NULL = extra fines */
-const SilvaQuaestioNominata* silva_quaestiones_ad_indicem(
-    const SilvaQuaestiones* bibliotheca, unsigned int index);
+const SilvaQuaestioNominata*
+silva_quaestiones_ad_indicem (
+    const SilvaQuaestiones* bibliotheca,
+              unsigned int  index);
 
 /* Per titulum; NULL = absens */
-const SilvaQuaestioNominata* silva_quaestiones_invenire(
-    const SilvaQuaestiones* bibliotheca, const char* titulus);
+const SilvaQuaestioNominata*
+silva_quaestiones_invenire (
+    const SilvaQuaestiones* bibliotheca,
+                const char* titulus);
 
 /* Argumenta in selectorem texere et compilare. argumenta = series
  * PLANA (monstrator + numerus; NULL/0 = nulla) - non Xar, ut
@@ -1275,11 +1875,15 @@ const SilvaQuaestioNominata* silva_quaestiones_invenire(
  * Fracturae nominatae: argumentum absens/ignotum/iteratum, valor
  * illicitus ('"' '(' ')' vetiti), compilatio. Fructus reusabilis
  * trans arbores. */
-SilvaQuaestio* silva_quaestiones_parare(SilvaPiscina* piscina,
-    const SilvaQuaestiones* bibliotheca,
-    const SilvaQuaestioNominata* nominata,
+SilvaQuaestio*
+silva_quaestiones_parare (
+                        SilvaPiscina* piscina,
+              const SilvaQuaestiones* bibliotheca,
+         const SilvaQuaestioNominata* nominata,
     const SilvaQuaestionesArgumentum* argumenta,
-    unsigned int numerus_argumentorum, SilvaChorda* culpa_out);
+                        unsigned int  numerus_argumentorum,
+                         SilvaChorda* culpa_out);
+
 
 /* ==================================================
  * Semantica C89 (M0a): typi + scopi + forma + index — tabulae
@@ -1329,18 +1933,18 @@ typedef enum {
 typedef struct TypusC89 TypusC89;
 
 typedef struct {
-    SilvaChorda  titulus;      /* copia; mensura 0 = anonymum */
-    TypusC89*    typus;
-    unsigned int offset;       /* octeti; a forma computatus */
-    int          est_campus;   /* bitfield (forma tag parcata) */
+     SilvaChorda  titulus;      /* copia; mensura 0 = anonymum */
+        TypusC89* typus;
+    unsigned int  offset;       /* octeti; a forma computatus */
+             int  est_campus;   /* bitfield (forma tag parcata) */
 } TypusC89Membrum;
 
 struct TypusC89 {
     int genus;                 /* TypusC89Genus */
     int ex_systemate;          /* provenientia (haruspex) */
 
-    int forma_computata;
-    int in_computatione;
+             int forma_computata;
+             int in_computatione;
     unsigned int magnitudo_octetorum;
     unsigned int ordinatio;
 
@@ -1351,31 +1955,31 @@ struct TypusC89 {
         } monstrator;
         struct {
             TypusC89* elementum;
-            int       numerus;      /* -1 = incompleta */
+                 int  numerus;      /* -1 = incompleta */
         } acies;
         struct {
-            TypusC89*    reditus;
-            TypusC89**   parametra;
-            unsigned int numerus_parametrorum;
-            int          est_variadica;
-            int          est_prototypata;
+                TypusC89*  reditus;
+                TypusC89** parametra;
+            unsigned int   numerus_parametrorum;
+                     int   est_variadica;
+                     int   est_prototypata;
         } functio;
         struct {
-            SilvaChorda       titulus;
-            int               completa;
-            TypusC89Membrum*  membra;
-            unsigned int      numerus_membrorum;
+                 SilvaChorda  titulus;
+                         int  completa;
+             TypusC89Membrum* membra;
+                unsigned int  numerus_membrorum;
             const SilvaNodus* declarans;
-            int               habet_campos;
+                         int  habet_campos;
         } tag;
         struct {
-            SilvaChorda       titulus;
-            int               completa;
+                 SilvaChorda  titulus;
+                         int  completa;
             const SilvaNodus* declarans;
         } enumeratus;
         struct {
-            TypusC89*    internum;
-            unsigned int quales;
+                TypusC89* internum;
+            unsigned int  quales;
         } qualificatus;
     } datum;
 };
@@ -1401,18 +2005,18 @@ typedef enum {
  * probatio: silva_c89_definitio_functionis_corpus(declarans)
  * generis alieni SILVA_VALOR_NIHIL reddit. */
 typedef struct {
-    int               genus;        /* SemanticaSymbolumGenus */
-    SilvaChorda       titulus;
-    TypusC89*         typus;
-    long long         valor;        /* CONSTANS solum */
-    unsigned int      repositio;
-    unsigned int      profunditas;  /* 0 = scopus fili */
-    int               ex_systemate;
-    int               est_implicitum; /* extern int implicitum
+             int  genus;        /* SemanticaSymbolumGenus */
+     SilvaChorda  titulus;
+        TypusC89* typus;
+       long long  valor;        /* CONSTANS solum */
+    unsigned int  repositio;
+    unsigned int  profunditas;  /* 0 = scopus fili */
+             int  ex_systemate;
+             int  est_implicitum; /* extern int implicitum
                                        * synthetizatum (M0b C) */
     const SilvaNodus* declarans;    /* implicitis: sedes vocationis */
-    SilvaToken*       lexema;
-    int               usus;         /* resolutio symbolum invenit
+          SilvaToken* lexema;
+                 int  usus;         /* resolutio symbolum invenit
                                      * (codices 69/70) */
 } SemanticaSymbolum;
 
@@ -1567,18 +2171,18 @@ typedef enum {
  * additionis; vita viae = vita parsurae ambulationis. */
 typedef struct {
     const SilvaNodus* nodus;        /* NULL licet */
-    const char*       causa;        /* litterae staticae (ex tabula);
+          const char* causa;        /* litterae staticae (ex tabula);
                                      * MACRO_DOMESTICUM_IN_ALIENO in
                                      * piscina struit (nominat) */
-    int               codex;        /* ExamenCodex */
-    int               severitas;    /* ExamenSeveritas */
-    int               provisionale; /* sub AMBIGUO retento */
-    SilvaChorda       via;          /* radicis; vacua si ignota */
-    unsigned int      linea;        /* 1-basata; 0 si ignota */
-    unsigned int      columna;      /* 1-basata; 0 si ignota */
-    unsigned int      longitudo;    /* octeti lexematis primi
+             int codex;        /* ExamenCodex */
+             int severitas;    /* ExamenSeveritas */
+             int provisionale; /* sub AMBIGUO retento */
+     SilvaChorda via;          /* radicis; vacua si ignota */
+    unsigned int linea;        /* 1-basata; 0 si ignota */
+    unsigned int columna;      /* 1-basata; 0 si ignota */
+    unsigned int longitudo;    /* octeti lexematis primi
                                      * (radicis); 0 si ignota */
-    int               fons_index;   /* fons radicis (catena:
+    int fons_index;   /* fons radicis (catena:
                                      * silva_inclusionis_catena_
                                      * scribere); -1 ignotus */
     const SilvaNodus* socius;       /* sedes cognata; NULL licet */
@@ -1589,62 +2193,95 @@ typedef struct SilvaSemantica SilvaSemantica;   /* opaca */
 /* Analysis totius fili super arborem commissam (ordine fontis,
  * registra-ante-usum; rami sumpti; canonica ambiguorum; K&R
  * parca). Numquam ruit. */
-SilvaSemantica* silva_c89_semantica_analysare(SilvaPiscina* piscina,
+SilvaSemantica*
+silva_c89_semantica_analysare (
+          SilvaPiscina* piscina,
     const SilvaParsura* parsura);
 
 /* Ut supra, symbola systematis prius harvestata (systema =
  * parsura systema_c89.h; NULL licet = simplex) */
-SilvaSemantica* silva_c89_semantica_analysare_cum_systemate(
-    SilvaPiscina* piscina, const SilvaParsura* parsura,
+SilvaSemantica*
+silva_c89_semantica_analysare_cum_systemate (
+          SilvaPiscina* piscina,
+    const SilvaParsura* parsura,
     const SilvaParsura* systema);
 
 /* Symbola in oraculum fundere (typedef -> typi; cetera ->
  * NON-typi, oraculum trivalens) - praeoneratio et clausura */
-unsigned int silva_c89_semantica_oraculum_augere(
-    const SilvaSemantica* sem, SilvaOraculum* oraculum);
+unsigned int
+silva_c89_semantica_oraculum_augere (
+    const SilvaSemantica* sem,
+           SilvaOraculum* oraculum);
 
 /* Quot ambigua retenta adhuc INDECISA (voca
  * silva_oraculum_responsa_vacare ante pro statu recenti) */
-unsigned int silva_c89_ambigua_indecisa_numerare(
-    const SilvaCommissio* commissio, const SilvaOraculum* oraculum);
+unsigned int
+silva_c89_ambigua_indecisa_numerare (
+    const SilvaCommissio* commissio,
+     const SilvaOraculum* oraculum);
 
 /* Quaestio symboli (a scopo fili post analysem) */
-SemanticaSymbolum* silva_c89_symbolum_invenire(SilvaSemantica* sem,
-    SilvaChorda titulus);
+SemanticaSymbolum*
+silva_c89_symbolum_invenire (
+    SilvaSemantica* sem,
+       SilvaChorda  titulus);
 
 /* Index: omnia symbola creata (cum profunditate) - saltuarius
  * saltus typorum = consumptor primus nominatus */
-unsigned int silva_c89_symbola_numerus(const SilvaSemantica* sem);
-const SemanticaSymbolum* silva_c89_symbolum_per_indicem(
-    const SilvaSemantica* sem, unsigned int index);
+unsigned int
+silva_c89_symbola_numerus (
+    const SilvaSemantica* sem);
+const SemanticaSymbolum*
+silva_c89_symbolum_per_indicem (
+    const SilvaSemantica* sem,
+            unsigned int  index);
 
 /* Relatio compatibilitatis C89 6.1.2.6 (examen chunk B) - pura,
  * symmetrica; ERROR absorbet; tags nominales; enum <-> int. */
-int silva_c89_typi_compatibiles(TypusC89* a, TypusC89* b);
+int
+silva_c89_typi_compatibiles (
+    TypusC89* a,
+    TypusC89* b);
 
 /* Iudicium directionale assignationis (6.3.16.1; etiam initiator
  * scalaris/argumentum prototypatum/redde). Reddit ExamenLicentia;
  * sub VETITO codex_out (NULL licet) codicem violationis fert. */
-int silva_c89_assignationem_iudicare(SilvaSemantica* sem,
-    const SilvaNodus* nodus_valoris, TypusC89* finis,
-    TypusC89* valoris, int* codex_out);
+int
+silva_c89_assignationem_iudicare (
+      SilvaSemantica* sem,
+    const SilvaNodus* nodus_valoris,
+            TypusC89* finis,
+            TypusC89* valoris,
+                 int* codex_out);
 
 /* Tabula codicum quaerenda (causa + severitas per codicem) */
-const char* silva_c89_codicis_causa(int codex);
-int silva_c89_codicis_severitas(int codex);
+const char*
+silva_c89_codicis_causa (
+    int codex);
+int
+silva_c89_codicis_severitas (
+    int codex);
 
-unsigned int silva_c89_diagnostica_numerus(
+unsigned int
+silva_c89_diagnostica_numerus (
     const SilvaSemantica* sem);
-const SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem(
-    const SilvaSemantica* sem, unsigned int index);
+const SemanticaDiagnosticum*
+silva_c89_diagnosticum_per_indicem (
+    const SilvaSemantica* sem,
+            unsigned int  index);
 
 /* Forma pigra: VERUM si magnitudo/ordinatio (et offsets) validae */
-int silva_c89_formam_computare(SilvaSemantica* sem,
-    TypusC89* typus);
+int
+silva_c89_formam_computare (
+    SilvaSemantica* sem,
+          TypusC89* typus);
 
 /* Singuli primitivi (aequalitas monstratorum = identitas) */
-TypusC89* silva_c89_typus_primitivum(SilvaSemantica* sem,
-    int primitivum);
+TypusC89*
+silva_c89_typus_primitivum (
+    SilvaSemantica* sem,
+               int  primitivum);
+
 
 /* ==================================================
  * Typatio expressionum (M0b) - tabula parallela nodus ->
@@ -1657,12 +2294,17 @@ TypusC89* silva_c89_typus_primitivum(SilvaSemantica* sem,
  * bis analysat). Contractus demissionis officinae.
  * ================================================== */
 
-const TypusC89* silva_c89_typus_expressionis(
-    const SilvaSemantica* sem, const SilvaNodus* nodus);
+const TypusC89*
+silva_c89_typus_expressionis (
+    const SilvaSemantica* sem,
+        const SilvaNodus* nodus);
 /* NIHIL = nulla conversio scopo applicata */
-const TypusC89* silva_c89_conversio_expressionis(
-    const SilvaSemantica* sem, const SilvaNodus* nodus);
-unsigned int silva_c89_typationes_numerus(
+const TypusC89*
+silva_c89_conversio_expressionis (
+    const SilvaSemantica* sem,
+        const SilvaNodus* nodus);
+unsigned int
+silva_c89_typationes_numerus (
     const SilvaSemantica* sem);
 
 /* Redditor typorum (LEGATUS chunk 0): typus -> textus latinus
@@ -1671,8 +2313,12 @@ unsigned int silva_c89_typationes_numerus(
  * = "<anonyma>" (typedef tag anonymum baptizat titulo suo). Redde
  * octetos scriptos; 0 = irreddibilis (error / spatium deficiens)
  * - buffer tunc vacuus. */
-unsigned int silva_c89_typum_scribere(const TypusC89* t,
-    char* buffer, unsigned int capacitas);
+unsigned int
+silva_c89_typum_scribere (
+    const TypusC89* t,
+              char* buffer,
+      unsigned int  capacitas);
+
 
 /* ==================================================
  * Exporta demissionis (M1a Chunk A; officina-m1-spec §II)
@@ -1681,22 +2327,33 @@ unsigned int silva_c89_typum_scribere(const TypusC89* t,
 /* Symbolum sedis usus (folium-identificator aut vocatus
  * vocationis, etiam implicitus). Canonicae-conscia et RELATIVA
  * CANONICAE ut typatio. NIHIL si non resoluta. */
-const SemanticaSymbolum* silva_c89_symbolum_nodi(
-    const SilvaSemantica* sem, const SilvaNodus* nodus);
-unsigned int silva_c89_nexus_numerus(const SilvaSemantica* sem);
+const SemanticaSymbolum*
+silva_c89_symbolum_nodi (
+    const SilvaSemantica* sem,
+        const SilvaNodus* nodus);
+unsigned int
+silva_c89_nexus_numerus (
+    const SilvaSemantica* sem);
 
 /* Expressio constans integralis C89 -> valor (VERUM si constans).
  * folium-integer/-character, constantes enumerorum, unarium,
  * binarium, ternarius, conversio, magnitudo-typi/-expressionis. */
-int silva_c89_constans_aestimare(SilvaSemantica* sem,
-    const SilvaNodus* expressio, long long* valor_out);
+int
+silva_c89_constans_aestimare (
+      SilvaSemantica* sem,
+    const SilvaNodus* expressio,
+           long long* valor_out);
 
 /* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
  * adiacentia coniuncta) in piscinam datam. SINE nullo terminali -
  * materia data (acies.numerus = octeti + 1; nullum ex typo).
  * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
-int silva_c89_chorda_decodere(SilvaPiscina* piscina,
-    const SilvaNodus* nodus, SilvaChorda* octeti_out);
+int
+silva_c89_chorda_decodere (
+        SilvaPiscina* piscina,
+    const SilvaNodus* nodus,
+         SilvaChorda* octeti_out);
+
 
 /* ==================================================
  * Annotationes STML (stratum identitatis et intentionis)
@@ -1712,7 +2369,8 @@ int silva_c89_chorda_decodere(SilvaPiscina* piscina,
 /* internamentum praenuntiatum (opacum; creare + tradere) */
 typedef struct SilvaInternamentumChorda SilvaInternamentumChorda;
 
-SilvaInternamentumChorda* silva_internamentum_creare(
+SilvaInternamentumChorda*
+silva_internamentum_creare (
     SilvaPiscina* piscina);
 
 typedef enum {
@@ -1755,34 +2413,34 @@ typedef struct {
 } SilvaStmlAttributum;
 
 typedef struct SilvaStmlNodus {
-    SilvaStmlNodusGenus     genus;
-    SilvaChorda*            titulus;     /* elementorum */
-    SilvaChorda*            valor;       /* textus/commenti/PI */
-    SilvaXar*               attributa;   /* SilvaStmlAttributum */
-    SilvaXar*               liberi;      /* SilvaStmlNodus* */
+    SilvaStmlNodusGenus  genus;
+            SilvaChorda* titulus;     /* elementorum */
+            SilvaChorda* valor;       /* textus/commenti/PI */
+               SilvaXar* attributa;   /* SilvaStmlAttributum */
+               SilvaXar* liberi;      /* SilvaStmlNodus* */
     struct SilvaStmlNodus*  parens;
-    unsigned int            linea;       /* linea fontis, 1-basata;
+    unsigned int linea;       /* linea fontis, 1-basata;
                                           * 0 = non e parsatione */
-    unsigned int            positus_initium; /* extensio octetorum
+    unsigned int positus_initium; /* extensio octetorum
                                           * [initium, finis) in fonte
                                           * PARSATO: tag aperiens
                                           * usque post claudens; 0/0
                                           * si non e parsatione */
-    unsigned int            positus_finis;
-    int                     crudus;
+               unsigned int positus_finis;
+                        int crudus;
     SilvaStmlCaptioDirectio captio_directio;
-    unsigned int            captio_numerus;
-    int                     clausura_anonyma; /* clausum per </> -
+               unsigned int captio_numerus;
+                        int clausura_anonyma; /* clausum per </> -
                                                * scriptor formam
                                                * authoris servat */
-    int                     fragmentum;
-    SilvaChorda*            fragmentum_id;
-    SilvaChorda*            augmentum_clavis; /* '<% &clavis;>' -
+            int  fragmentum;
+    SilvaChorda* fragmentum_id;
+    SilvaChorda* augmentum_clavis; /* '<% &clavis;>' -
                                                * clavis VERBATIM
                                                * sigillata; NIHIL =
                                                * elementum
                                                * ordinarium */
-    SilvaChorda*            attributum_titulus; /* '<@titulus=>' -
+    SilvaChorda* attributum_titulus; /* '<@titulus=>' -
                                                * elementum attributi
                                                * (par. 6.3): titulus
                                                * '@' geritur, nomen
@@ -1796,44 +2454,59 @@ typedef struct SilvaStmlNodus {
      * §1.2: cursus inter nodos per primam '\n' INCLUSIVE prioris
      * est (post), residuum sequentis (ante). Scriptor fidelis
      * verbatim reassuit. */
-    SilvaChorda*            spatia_ante;
-    SilvaChorda*            spatia_post;
-    SilvaChorda*            spatia_clausurae; /* interius ante tag
+    SilvaChorda* spatia_ante;
+    SilvaChorda* spatia_post;
+    SilvaChorda* spatia_clausurae; /* interius ante tag
                                                * claudens; documento
                                                * cauda plagulae */
-    SilvaChorda*            spatia_intra_tagum; /* ante '>' (§1.6) */
+    SilvaChorda* spatia_intra_tagum; /* ante '>' (§1.6) */
 
     /* '<tag\>' (§1.4): lineae novae contentum, dedentatio in
      * parsatione, praefixum in 'indentatio' conditum */
-    int                     multilinea;
-    SilvaChorda*            indentatio;
+            int  multilinea;
+    SilvaChorda* indentatio;
 } SilvaStmlNodus;
 
 typedef struct {
-    int              successus;
-    SilvaStmlNodus*  radix;
-    SilvaStmlNodus*  elementum_radix;
+                int  successus;
+     SilvaStmlNodus* radix;
+     SilvaStmlNodus* elementum_radix;
     SilvaStmlStatus  status;
-    unsigned int     linea_erroris;
-    unsigned int     columna_erroris;
-    SilvaChorda      error;
-    int              crlf_canonicalizatum; /* '\r\n' -> '\n' in
+       unsigned int  linea_erroris;
+       unsigned int  columna_erroris;
+        SilvaChorda  error;
+                int  crlf_canonicalizatum; /* '\r\n' -> '\n' in
                                             * introitu factum (§3) */
 } SilvaStmlResultus;
 
-SilvaStmlResultus silva_stml_legere(SilvaChorda input,
-    SilvaPiscina* piscina, SilvaInternamentumChorda* intern);
-SilvaStmlNodus* silva_stml_invenire_liberum(SilvaStmlNodus* nodus,
-    const char* titulus);
-SilvaChorda* silva_stml_attributum_capere(SilvaStmlNodus* nodus,
-    const char* titulus);
-int silva_stml_attributum_habet(SilvaStmlNodus* nodus,
-    const char* titulus);
-SilvaChorda silva_stml_textus_internus(SilvaStmlNodus* nodus,
-    SilvaPiscina* piscina);
-unsigned int silva_stml_numerus_liberorum(SilvaStmlNodus* nodus);
-SilvaStmlNodus* silva_stml_liberum_ad_indicem(SilvaStmlNodus* nodus,
-    unsigned int index);
+SilvaStmlResultus
+silva_stml_legere (
+                 SilvaChorda  input,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern);
+SilvaStmlNodus*
+silva_stml_invenire_liberum (
+    SilvaStmlNodus* nodus,
+        const char* titulus);
+SilvaChorda*
+silva_stml_attributum_capere (
+    SilvaStmlNodus* nodus,
+        const char* titulus);
+int
+silva_stml_attributum_habet (
+    SilvaStmlNodus* nodus,
+        const char* titulus);
+SilvaChorda
+silva_stml_textus_internus (
+    SilvaStmlNodus* nodus,
+      SilvaPiscina* piscina);
+unsigned int
+silva_stml_numerus_liberorum (
+    SilvaStmlNodus* nodus);
+SilvaStmlNodus*
+silva_stml_liberum_ad_indicem (
+    SilvaStmlNodus* nodus,
+      unsigned int  index);
 
 /* DISTRIBUTIO (proiectio contenti secunda, 2026-08-27): involucra
  * (elementa nominata quorum liberi fragmenta anonyma sunt) in
@@ -1847,15 +2520,17 @@ typedef enum {
 } SilvaStmlDistributioVitium;
 
 typedef struct {
-    int                         successus;
-    SilvaStmlNodus*             radix_distributa; /* arbor NOVA */
+                           int  successus;
+                SilvaStmlNodus* radix_distributa; /* arbor NOVA */
     SilvaStmlDistributioVitium  vitium;
-    unsigned int                linea;    /* liberi peccantis */
-    SilvaChorda                 titulus;  /* involucri peccantis */
+                  unsigned int  linea;    /* liberi peccantis */
+                   SilvaChorda  titulus;  /* involucri peccantis */
 } SilvaStmlDistributioResultus;
 
-SilvaStmlDistributioResultus silva_stml_distribuere(
-    SilvaStmlNodus* radix, SilvaPiscina* piscina,
+SilvaStmlDistributioResultus
+silva_stml_distribuere (
+              SilvaStmlNodus* radix,
+                SilvaPiscina* piscina,
     SilvaInternamentumChorda* intern);
 
 typedef enum {
@@ -1865,30 +2540,35 @@ typedef enum {
 } SilvaAnnotatioModus;
 
 typedef struct {
-    SilvaChorda textus;          /* corpus purgatum */
-    SilvaChorda crudum;          /* octeti pleni delimitatoribus */
-    int          fons_index;
+     SilvaChorda textus;          /* corpus purgatum */
+     SilvaChorda crudum;          /* octeti pleni delimitatoribus */
+             int fons_index;
     unsigned int linea;          /* 1-basata */
     unsigned int columna;
-    int          byte_offset;
+             int byte_offset;
 
-    SilvaAnnotatioModus modus;
-    const SilvaNodus*   unitas;  /* NIHIL = PLAGULA */
+    SilvaAnnotatioModus  modus;
+       const SilvaNodus* unitas;  /* NIHIL = PLAGULA */
 
-    int              parsata;
-    SilvaStmlNodus*  documentum; /* radix documenti */
-    SilvaStmlNodus*  arbor;      /* elementum primum; NIHIL fractum */
+                int  parsata;
+     SilvaStmlNodus* documentum; /* radix documenti */
+     SilvaStmlNodus* arbor;      /* elementum primum; NIHIL fractum */
     SilvaStmlStatus  status;
-    unsigned int     linea_erroris;   /* intra textum purgatum */
-    unsigned int     columna_erroris;
-    SilvaChorda      error;
+       unsigned int  linea_erroris;   /* intra textum purgatum */
+       unsigned int  columna_erroris;
+        SilvaChorda  error;
 } SilvaAnnotatio;
 
 /* Xar de SilvaAnnotatio (per valorem), ordo fluminis; intern NIHIL
  * licet. Unitates: Xar de SilvaNodus*, ordo fontis. */
-SilvaXar* silva_annotationes_colligere(SilvaPiscina* piscina,
-    const SilvaParsura* parsura, SilvaInternamentumChorda* intern);
-SilvaXar* silva_annotationes_unitates(SilvaPiscina* piscina,
+SilvaXar*
+silva_annotationes_colligere (
+                SilvaPiscina* piscina,
+          const SilvaParsura* parsura,
+    SilvaInternamentumChorda* intern);
+SilvaXar*
+silva_annotationes_unitates (
+          SilvaPiscina* piscina,
     const SilvaParsura* parsura);
 
 
@@ -1920,32 +2600,50 @@ SilvaXar* silva_annotationes_unitates(SilvaPiscina* piscina,
  * arrays plus their counts, so walking both covers all of it. A
  * document carries its seal; the loader REFUSES on mismatch, because
  * a tree judged by the wrong vocabulary is a lie. */
-SilvaChorda silva_arbor_sigillum(SilvaPiscina* piscina,
+SilvaChorda
+silva_arbor_sigillum (
+                  SilvaPiscina* piscina,
     const SilvaRegistrumCoctum* tabularium);
 
 /* Name lookups. The locus lookup is genus-SCOPED and must be: locus
  * names are not globally unique ("corpus" is a locus of
  * definitio-functionis but not of the genus "corpus"). Returns -1 if
  * unknown. Titles are NOT NUL-terminated - a length is required. */
-int silva_arbor_genus_index(const SilvaRegistrumCoctum* tabularium,
-    const char* titulus, unsigned int mensura);
-int silva_arbor_locus_index(const SilvaRegistrumCoctum* tabularium,
-    int genus_index, const char* titulus, unsigned int mensura);
+int
+silva_arbor_genus_index (
+    const SilvaRegistrumCoctum* tabularium,
+                    const char* titulus,
+                  unsigned int  mensura);
+int
+silva_arbor_locus_index (
+    const SilvaRegistrumCoctum* tabularium,
+                           int  genus_index,
+                    const char* titulus,
+                  unsigned int  mensura);
 
 /* Fixed spelling of a lexeme genus ("auto", "[", "->"); NULL when the
  * genus carries a VARIABLE spelling (identifiers, literals, trivia)
  * and the value must therefore be carried in the document. */
-const char* silva_arbor_orthographia(SilvaLexemaGenus genus);
-int silva_arbor_valor_portandus(SilvaLexemaGenus genus);
+const char*
+silva_arbor_orthographia (
+    SilvaLexemaGenus genus);
+int
+silva_arbor_valor_portandus (
+    SilvaLexemaGenus genus);
 
 /* Lexeme tag mangling: "lex-" + lowercase name, '_' -> '-'. Writes
  * NUL-terminated; returns the length written, or 0 on bad genus or
  * insufficient capacity. The reverse runs the forward mangling and
  * compares, so the two directions cannot drift. */
-unsigned int silva_arbor_lexema_tag(SilvaLexemaGenus genus,
-    char* buffer, unsigned int capacitas);
-SilvaLexemaGenus silva_arbor_lexema_ex_tag(const char* tag,
-    unsigned int mensura);
+unsigned int
+silva_arbor_lexema_tag (
+    SilvaLexemaGenus  genus,
+                char* buffer,
+        unsigned int  capacitas);
+SilvaLexemaGenus
+silva_arbor_lexema_ex_tag (
+      const char* tag,
+    unsigned int  mensura);
 
 /* Where a silva value landed in the EMITTED document: byte extent
  * [initium, finis) of ITS element (opening tag through closing).
@@ -1959,10 +2657,10 @@ SilvaLexemaGenus silva_arbor_lexema_ex_tag(const char* tag,
  * values, not document furniture. First consumer: the laboratorium
  * inspector (0032). */
 typedef struct SilvaArborSedes {
-    const void*  clavis;      /* SilvaNodus* or SilvaToken* */
-    int          est_lexema;
-    unsigned int initium;     /* byte offset, INCLUSIVE */
-    unsigned int finis;       /* byte offset, EXCLUSIVE */
+      const void* clavis;      /* SilvaNodus* or SilvaToken* */
+             int  est_lexema;
+    unsigned int  initium;     /* byte offset, INCLUSIVE */
+    unsigned int  finis;       /* byte offset, EXCLUSIVE */
 } SilvaArborSedes;
 
 /* Compression census - the writer measures its own coverage (a
@@ -1980,16 +2678,16 @@ typedef struct SilvaArborCensusCompressionis {
 /* Writer result - same shape as SilvaScriptura (loud failure: a
  * static causa plus the offending node, never a silent omission). */
 typedef struct SilvaArborScriptura {
-    int               successus;
-    SilvaChorda       textus;   /* STML bytes; empty on failure */
-    const char*       causa;    /* static diagnostic; NULL if well */
+                 int  successus;
+         SilvaChorda  textus;   /* STML bytes; empty on failure */
+          const char* causa;    /* static diagnostic; NULL if well */
     const SilvaNodus* sedes;    /* failing node; NULL permitted */
 
     /* Sedes table (SilvaXar of SilvaArborSedes), in write order
      * (post-order of closing). Filled by scribere_parsuram; NULL
      * on failure AND from the subtree writer - a NAMED privation,
      * door open when a consumer pulls. */
-    SilvaXar*         sedes_valorum;
+    SilvaXar* sedes_valorum;
 
     /* Filled by scribere_parsuram; zeroed by the subtree writer
      * (subtree documents carry no definition head). */
@@ -2002,10 +2700,14 @@ typedef struct SilvaArborScriptura {
  * name is for humans.
  * expansio is REQUIRED - the fons table lives on it and a bare node
  * cannot resolve fons_index. intern may be NULL (lazily created). */
-SilvaArborScriptura silva_arbor_scribere_nodum(SilvaPiscina* piscina,
-    const SilvaNodus* nodus, const SilvaRegistrumCoctum* tabularium,
-    const char* grammatica, const SilvaExpansio* expansio,
-    SilvaInternamentumChorda* intern);
+SilvaArborScriptura
+silva_arbor_scribere_nodum (
+                  SilvaPiscina* piscina,
+              const SilvaNodus* nodus,
+    const SilvaRegistrumCoctum* tabularium,
+                    const char* grammatica,
+           const SilvaExpansio* expansio,
+      SilvaInternamentumChorda* intern);
 
 /* Comparison mode. What a position MEANS depends on where the tree
  * came from, so the caller says which question is being asked:
@@ -2024,14 +2726,14 @@ typedef enum SilvaArborComparatioModus {
 /* The FIRST divergence, named. A bare boolean is useless in a gate
  * over a corpus - it turns every failure into a manual bisect. */
 typedef struct SilvaArborDifferentia {
-    const char*       campus;    /* diverging field; NULL if equal */
+          const char* campus;    /* diverging field; NULL if equal */
     const SilvaNodus* nodus_a;
     const SilvaNodus* nodus_b;
     const SilvaToken* lexema_a;  /* NULL unless lexical */
     const SilvaToken* lexema_b;
-    int               locus;     /* -1 if not applicable */
-    int               index;     /* -1 if not applicable */
-    char              via[SILVA_ARBOR_VIA_CAPACITAS];  /* genus.locus trail */
+                 int  locus;     /* -1 if not applicable */
+                 int  index;     /* -1 if not applicable */
+                char  via[SILVA_ARBOR_VIA_CAPACITAS];  /* genus.locus trail */
 } SilvaArborDifferentia;
 
 /* Non-zero if equal. differentia may be NULL.
@@ -2039,15 +2741,18 @@ typedef struct SilvaArborDifferentia {
  * parentage of the comparison roots lies outside the comparison.
  * DELIBERATELY BLIND to nothing in particular - see the M1 gate's
  * header for what the two round-trip oracles do and do not cover. */
-int silva_arbor_aequalis(const SilvaNodus* a, const SilvaNodus* b,
-    SilvaArborComparatioModus modus,
-    SilvaArborDifferentia* differentia);
+int
+silva_arbor_aequalis (
+             const SilvaNodus* a,
+             const SilvaNodus* b,
+    SilvaArborComparatioModus  modus,
+        SilvaArborDifferentia* differentia);
 
 /* Reader failure: a static causa plus the DOCUMENT LINE. A fault
  * without a line is a hunt, not a diagnostic. */
 typedef struct SilvaArborVitium {
-    const char*  causa;   /* NULL if well */
-    unsigned int linea;   /* 1-based; 0 if unknown */
+      const char* causa;   /* NULL if well */
+    unsigned int  linea;   /* 1-based; 0 if unknown */
 } SilvaArborVitium;
 
 /* Validates BEFORE building: envelope, grammatica, SEAL, every genus
@@ -2057,10 +2762,14 @@ typedef struct SilvaArborVitium {
  * Returns NULL plus a named vitium on refusal. A document with no
  * anchor is legitimate - that is an AUTHORED tree, and it keeps line
  * structure while leaving coordinates unset. */
-SilvaNodus* silva_arbor_legere(SilvaPiscina* piscina,
-    SilvaInternamentumChorda* intern, SilvaChorda textus,
-    const SilvaRegistrumCoctum* tabularium, const char* grammatica,
-    SilvaArborVitium* vitium);
+SilvaNodus*
+silva_arbor_legere (
+                  SilvaPiscina* piscina,
+      SilvaInternamentumChorda* intern,
+                   SilvaChorda  textus,
+    const SilvaRegistrumCoctum* tabularium,
+                    const char* grammatica,
+              SilvaArborVitium* vitium);
 
 /* WHOLE-FILE serialization (M2). The node surface above projects a
  * SUBTREE; this projects an entire SilvaParsura, which additionally
@@ -2083,22 +2792,33 @@ SilvaNodus* silva_arbor_legere(SilvaPiscina* piscina,
  * parse totals against a loaded document is comparing unlike things.
  *
  * intern may be NULL (lazily created). */
-SilvaArborScriptura silva_arbor_scribere_parsuram(SilvaPiscina* piscina,
-    const SilvaParsura* parsura, const SilvaRegistrumCoctum* tabularium,
-    const char* grammatica, int fons_index,
-    SilvaInternamentumChorda* intern);
+SilvaArborScriptura
+silva_arbor_scribere_parsuram (
+                  SilvaPiscina* piscina,
+            const SilvaParsura* parsura,
+    const SilvaRegistrumCoctum* tabularium,
+                    const char* grammatica,
+                           int  fons_index,
+      SilvaInternamentumChorda* intern);
 
-SilvaParsura* silva_arbor_legere_parsuram(SilvaPiscina* piscina,
-    SilvaInternamentumChorda* intern, SilvaChorda textus,
-    const SilvaRegistrumCoctum* tabularium, const char* grammatica,
-    SilvaArborVitium* vitium);
+SilvaParsura*
+silva_arbor_legere_parsuram (
+                  SilvaPiscina* piscina,
+      SilvaInternamentumChorda* intern,
+                   SilvaChorda  textus,
+    const SilvaRegistrumCoctum* tabularium,
+                    const char* grammatica,
+              SilvaArborVitium* vitium);
 
 /* Parsura comparison, same two modes as silva_arbor_aequalis. Names
  * the FIRST divergence rather than returning a bare boolean: over a
  * corpus, an unnamed failure is a manual bisect. */
-int silva_arbor_parsurae_aequales(const SilvaParsura* a,
-    const SilvaParsura* b, SilvaArborComparatioModus modus,
-    SilvaArborDifferentia* differentia);
+int
+silva_arbor_parsurae_aequales (
+           const SilvaParsura* a,
+           const SilvaParsura* b,
+    SilvaArborComparatioModus  modus,
+        SilvaArborDifferentia* differentia);
 
 #endif /* SILVA_H */
 
@@ -50349,6 +51069,14 @@ _texere (
                     SilvaExpansio* expansio,
     constans SilvaRegistrumCoctum* tabularium,
                      SilvaParsura* parsura);
+/* ms inter duo momenta clock() (horologia phasium) */
+interior duplex
+_ms_inter (
+    clock_t a,
+    clock_t b)
+{
+    redde (duplex)(b - a) * 1000.0 / (duplex)CLOCKS_PER_SEC;
+}
 
 /* Nucleus circuitus secantis; contextus NIHIL licet (fines motoris
  * defaltae tunc solae valent); expansio (si praesens) texturam
@@ -50406,7 +51134,11 @@ _lexemata_parsare_interna (
     {
         redde NIHIL;
     }
-    parsura->successus                = FALSUM;
+        parsura->successus            = FALSUM;
+    parsura->ms_lexandi               = 0.0;
+    parsura->ms_expandendi            = 0.0;
+    parsura->ms_glr                   = 0.0;
+    parsura->ms_committendi           = 0.0;
     parsura->commissio                = NIHIL;
     parsura->lexema_finis             = NIHIL;
     parsura->lexemata                 = NIHIL;
@@ -50702,7 +51434,12 @@ _lexemata_parsare_interna (
                 }
             }
 
-            fructus = silva_glr_parsare(glr, segmentum, piscina);
+                        {
+                clock_t h0 = clock();
+
+                fructus = silva_glr_parsare(glr, segmentum, piscina);
+                parsura->ms_glr += _ms_inter(h0, clock());
+            }
             parsura->numerus_segmentorum++;
             parsura->fusiones         += fructus.fusiones;
             parsura->transmutationes  += fructus.transmutationes;
@@ -50793,8 +51530,14 @@ _lexemata_parsare_interna (
     }
 
     /* Commissio: pater + normalizatio + resolutio (collapse+diarium) */
-    parsura->commissio = silva_committere(piscina, radix,
-        grammatica->tabularium, oraculum, resolutor, datum_resolutoris);
+        {
+        clock_t h0 = clock();
+
+        parsura->commissio = silva_committere(piscina, radix,
+            grammatica->tabularium, oraculum, resolutor,
+            datum_resolutoris);
+        parsura->ms_committendi = _ms_inter(h0, clock());
+    }
     parsura->successus = (parsura->commissio != NIHIL) ? VERUM : FALSUM;
     redde parsura;
 }
@@ -51384,6 +52127,9 @@ _fistula_interna (
              SilvaXar* strata;
              SilvaXar* directivae;
     SilvaParsura* parsura;
+         clock_t  h0;
+         clock_t  h1;
+         clock_t  h2;
 
     si (   piscina    == NIHIL || expansio == NIHIL || fons == NIHIL
         || grammatica == NIHIL)
@@ -51396,18 +52142,23 @@ _fistula_interna (
      * (point-in-time - Phase 2.5) */
     fons_index = silva_fons_addere(expansio,
         (titulus_fontis != NIHIL) ? titulus_fontis : "<fons>", FALSUM);
+        h0      = clock();
     lexemata    = silva_lexare(piscina, fons, mensura, fons_index);
+    h1          = clock();
     directivae  = NIHIL;
     reliqua = silva_expansio_directivas_processare(expansio, lexemata,
         &directivae);
     strata = NIHIL;
     expansa = silva_expansio_expandere_reliqua(expansio, reliqua,
         &strata);
+    h2 = clock();
 
     parsura = _lexemata_parsare_interna(piscina, expansa, grammatica,
         oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
+        parsura->ms_lexandi     = _ms_inter(h0, h1);
+        parsura->ms_expandendi  = _ms_inter(h1, h2);
         parsura->lexemata       = expansa;
         parsura->strata         = strata;
         parsura->expansio       = expansio;

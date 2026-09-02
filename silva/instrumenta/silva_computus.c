@@ -86,7 +86,11 @@ silva_computus_metiri (
         exitus->successus = parsura->successus;
         exitus->lexemata  = parsura->lexemata
                           ? xar_numerus(parsura->lexemata) : ZEPHYRUM;
-        exitus->errores   = parsura->numerus_errorum;
+                exitus->errores  = parsura->numerus_errorum;
+        exitus->ph_lexandi       = parsura->ms_lexandi;
+        exitus->ph_expandendi    = parsura->ms_expandendi;
+        exitus->ph_glr           = parsura->ms_glr;
+        exitus->ph_committendi   = parsura->ms_committendi;
     }
     exitus->usus          = piscina_summa_usus(piscina);
     exitus->otiosa        = piscina_summa_inutilis_allocatus(piscina);

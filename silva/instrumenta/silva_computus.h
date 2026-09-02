@@ -48,6 +48,10 @@ nomen structura {
     memoriae_index allocationes_lexandi;
             duplex ms_lexandi;
             duplex ms_parsandi;           /* parsura plena, lexatione inclusa */
+            duplex ph_lexandi;            /* horologia phasium parsurae */
+            duplex ph_expandendi;
+            duplex ph_glr;
+            duplex ph_committendi;
 } SilvaComputus;
 
 /* clausura: capita praebenda (NIHIL / 0 = nudum, sine expansione).

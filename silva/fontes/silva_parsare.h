@@ -100,6 +100,16 @@ nomen structura {
                           * iam solvuntur, gubernator modo tenet).
                           * NIHIL si fluxus numquam mutatus.
                           * strata[ultimum] == lexemata (alias!) */
+
+    /* Horologia phasium (clock(), ms) - computus ea imprimit: lexatio,
+     * expansio (directivae + expansio positionalis), GLR (segmenta
+     * omnia), commissio. Summa < tempus totum: residuum = adiumenta
+     * (segmentatio, textura conditionalium). Additae 2026-09-02 ut
+     * sample.sh 'UBI' et haec 'QUANTUM PER PHASIM' consentiant. */
+    duplex ms_lexandi;
+    duplex ms_expandendi;
+    duplex ms_glr;
+    duplex ms_committendi;
 } SilvaParsura;
 
 

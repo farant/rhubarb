@@ -27,3 +27,16 @@ length (the CLI with a path reported 21437 for base64.c, the probatio
 with the bare name 21433), so the probatio pins bare names; and examen
 accepted two signedness conversions clang rejects (`idx = -I` into an
 i32, unsigned into s32), the class already filed as 01M1GB2MMJ.
+
+## 2026-09-02 (later) — the optimization bench
+
+Three tools so that each lever is an afternoon with a number: `-iter N`
+on computus plus `silva/sample.sh` (macOS `sample` over a parse loop;
+leaf table and folded stacks), `silva/aequivalentia.sh -basis|-conferre`
+(the byte-identity differential over lib/*.c, headers pinned to the
+baseline commit's text on disk under a trap while the newly built
+binary runs), and phase clocks on SilvaParsura (lex / expansion / GLR /
+commit, read by computus). First reading on stml.c at -O2: GLR 36.5 of
+54 ms, lexing 6, expansion 4.4, commit 4.7. Combined with the sampler
+(Xar and arena operations ~48% of leaf samples) the picture is: the
+GLR loop's container traffic, not the automaton, is the cost.

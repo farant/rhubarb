@@ -1,8 +1,10 @@
 /* computus.c - imago memoriae et temporis parseris super plagulam
  *
  * usus:
- *   ./silva/computus.sh <plagula.c> [-nudum] [-machina]
+ *   ./silva/computus.sh <plagula.c> [-nudum] [-machina] [-iter N]
  *
+ * '-iter N': mensura N vicibus repetita (ultima impressa) - gyrus pro
+ * sample.sh (profilator quinque secundorum unam parsuram L ms non videt).
  * Clausura inclusionum per aedilem (ut arbor.sh); '-nudum' eam non
  * praebet (sine latina.h codex latinizatus NON parsatur - numeri
  * tunc fracturam metiuntur, non parsuram). '-machina' = ordo TSV cum
@@ -16,6 +18,7 @@
 #include "filum.h"
 #include "silva_computus.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define CLAUSURA_MAXIMA 96
@@ -87,8 +90,13 @@ _imprimere_hominem (
     imprimere("  lexemata      %u (cruda %u) · errores %u · parsura %s\n",
         (insignatus)c->lexemata, (insignatus)c->lexemata_cruda,
         (insignatus)c->errores, c->successus ? "sana" : "FRACTA");
-    imprimere("  tempus        lexare %.2f ms · parsare %.2f ms\n",
-        c->ms_lexandi, c->ms_parsandi);
+        imprimere("  tempus        lexare %.2f ms · parsare %.2f ms\n",
+            c->ms_lexandi, c->ms_parsandi);
+    imprimere("  phases        lex %.2f · expansio %.2f · glr %.2f · commissio %.2f"
+              " · adiumenta %.2f ms\n",
+        c->ph_lexandi, c->ph_expandendi, c->ph_glr, c->ph_committendi,
+        c->ms_parsandi - c->ph_lexandi - c->ph_expandendi - c->ph_glr
+            - c->ph_committendi);
     imprimere("  memoria       dati %.2f MB · commissa %.2f MB · otiosa %.2f MB"
               " · apex %.2f MB\n",
         _mb(c->usus), _mb(c->commissa), _mb(c->otiosa), _mb(c->apex));
@@ -106,9 +114,10 @@ _imprimere_machinam (
 {
     imprimere("# via\toctetos\tlexemata\tlexemata_cruda\terrores\tsana"
               "\tms_lexandi\tms_parsandi\tusus\tcommissa\totiosa\tapex"
-              "\talvei\tallocationes\tusus_lexandi\tallocationes_lexandi\n");
+              "\talvei\tallocationes\tusus_lexandi\tallocationes_lexandi"
+              "\tph_lexandi\tph_expandendi\tph_glr\tph_committendi\n");
     imprimere("%s\t%u\t%u\t%u\t%u\t%u\t%.3f\t%.3f\t%lu\t%lu\t%lu\t%lu"
-              "\t%lu\t%lu\t%lu\t%lu\n",
+              "\t%lu\t%lu\t%lu\t%lu\t%.3f\t%.3f\t%.3f\t%.3f\n",
         via, (insignatus)c->octeti_fontis, (insignatus)c->lexemata,
         (insignatus)c->lexemata_cruda, (insignatus)c->errores,
         (insignatus)(c->successus ? I : ZEPHYRUM),
@@ -116,8 +125,9 @@ _imprimere_machinam (
         (insignatus longus)c->usus, (insignatus longus)c->commissa,
         (insignatus longus)c->otiosa, (insignatus longus)c->apex,
         (insignatus longus)c->alvei, (insignatus longus)c->allocationes,
-        (insignatus longus)c->usus_lexandi,
-        (insignatus longus)c->allocationes_lexandi);
+                (insignatus longus)c->usus_lexandi,
+        (insignatus longus)c->allocationes_lexandi,
+        c->ph_lexandi, c->ph_expandendi, c->ph_glr, c->ph_committendi);
 }
 
 s32
@@ -129,6 +139,8 @@ principale (
        constans character* via;
                       b32  nudum;
                       b32  machina;
+                  integer  iter;
+                  integer  q;
                   integer  i;
                    chorda  fons;
                       i32  numerus_clausurae;
@@ -137,14 +149,22 @@ principale (
             SilvaComputus  c;
                       b32  sana;
 
-    via      = NIHIL;
+        via  = NIHIL;
     nudum    = FALSUM;
     machina  = FALSUM;
+    iter     = I;
     per (i = I; i < numerus_argumentorum; i++)
     {
         si (strcmp(argumenta[i], "-nudum") == ZEPHYRUM)
         {
             nudum = VERUM;
+        }
+        alioquin si (   strcmp(argumenta[i], "-iter") == ZEPHYRUM
+                     && i + I < numerus_argumentorum)
+        {
+            i++;
+            iter = atoi(argumenta[i]);
+            si (iter < I) iter = I;
         }
         alioquin si (strcmp(argumenta[i], "-machina") == ZEPHYRUM)
         {
@@ -158,9 +178,10 @@ principale (
     si (via == NIHIL)
     {
         fprintf(stderr,
-            "usus: computus <plagula.c> [-nudum] [-machina]\n"
+                        "usus: computus <plagula.c> [-nudum] [-machina] [-iter N]\n"
             "  -nudum    clausuram inclusionum NON praebere\n"
-            "  -machina  ordo TSV (caput '#')\n");
+            "  -machina  ordo TSV (caput '#')\n"
+            "  -iter N   mensuram N vicibus repetere (profilatori)\n");
         redde II;
     }
 
@@ -196,9 +217,15 @@ principale (
         }
     }
 
-    sana = silva_computus_metiri(via, (constans character*)fons.datum,
-        fons.mensura, numerus_clausurae > ZEPHYRUM ? clausura : NIHIL,
-        numerus_clausurae, &c);
+        sana = FALSUM;
+    per (q = ZEPHYRUM; q < iter; q++)
+    {
+        sana = silva_computus_metiri(via,
+            (constans character*)fons.datum,
+            fons.mensura, numerus_clausurae
+                > ZEPHYRUM ? clausura : NIHIL,
+            numerus_clausurae, &c);
+    }
 
     si (machina)
     {
