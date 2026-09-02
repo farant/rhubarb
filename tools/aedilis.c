@@ -31,15 +31,17 @@
 #include <time.h>
 
 nomen structura {
-    SilvaContextus*               contextus;
+                  SilvaContextus* contextus;
     constans AedilisConfiguratio* configuratio;
 } ExtractorDatum;
 
 /* Chordam ex octetis alienis in piscinam copiare (vistae silvae
  * in piscinam plagulae spectant quae mox destruitur) */
 interior chorda
-_chordam_copiare (constans i8* datum, i32 mensura,
-    Piscina* piscina)
+_chordam_copiare (
+    constans i8* datum,
+            i32  mensura,
+        Piscina* piscina)
 {
     chorda copia;
 
@@ -54,7 +56,9 @@ _chordam_copiare (constans i8* datum, i32 mensura,
 }
 
 interior vacuum
-_chordam_in_xar (Xar* xar, chorda valor)
+_chordam_in_xar (
+       Xar* xar,
+    chorda  valor)
 {
     chorda* locus;
 
@@ -74,40 +78,44 @@ _chordam_in_xar (Xar* xar, chorda valor)
  * clamosum - nulla prosa tacita; lectio spicae vetus: substring
  * prosam capiebat). mensura 0 = non annotatio. */
 interior chorda
-_annotationem_extrahere (i8* datum, i32 mensura,
-    Piscina* piscina, SilvaPiscina* arboris,
-    SilvaInternamentumChorda* intern, constans character* via,
-    b32* recusatio_out)
+_annotationem_extrahere (
+                          i8* datum,
+                         i32  mensura,
+                     Piscina* piscina,
+                SilvaPiscina* arboris,
+    SilvaInternamentumChorda* intern,
+          constans character* via,
+                         b32* recusatio_out)
 {
     constans character* signum = "aedilis:";
-    chorda vacua;
-    i32 i;
-    i32 j;
-    i32 finis;
+                chorda  vacua;
+                   i32  i;
+                   i32  j;
+                   i32  finis;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
-    *recusatio_out = FALSUM;
+    vacua.datum     = NIHIL;
+    vacua.mensura   = 0;
+    *recusatio_out  = FALSUM;
 
     i = 0;
-    si (mensura >= 2 && datum[0] == (i8)'/'
+    si (   mensura >= 2 && datum[0] == (i8)'/'
         && (datum[1] == (i8)'*' || datum[1] == (i8)'/'))
     {
         i = 2;
     }
-    dum (i < mensura
-        && (datum[i] == (i8)' ' || datum[i] == (i8)'\t'))
+    dum (   i < mensura
+         && (datum[i] == (i8)' ' || datum[i] == (i8)'\t'))
     {
         i++;
     }
     finis = mensura;
-    si (finis >= 2 && datum[finis - 2] == (i8)'*'
+    si (   finis            >= 2 && datum[finis - 2] == (i8)'*'
         && datum[finis - 1] == (i8)'/')
     {
         finis -= 2;
     }
-    dum (finis > i
-        && (datum[finis - 1] == (i8)' '
+    dum (   finis > i
+         && (datum[finis - 1] == (i8)' '
             || datum[finis - 1] == (i8)'\t'
             || datum[finis - 1] == (i8)'\n'
             || datum[finis - 1] == (i8)'\r'))
@@ -119,12 +127,12 @@ _annotationem_extrahere (i8* datum, i32 mensura,
         redde vacua;
     }
 
-    si (datum[i] == (i8)'<' && i + 1 < finis
+    si (   datum[i] == (i8)'<' && i + 1 < finis
         && ((datum[i + 1] >= (i8)'a' && datum[i + 1] <= (i8)'z')
             || (datum[i + 1] >= (i8)'A'
                 && datum[i + 1] <= (i8)'Z')))
     {
-        SilvaChorda corpus_annotationis;
+              SilvaChorda corpus_annotationis;
         SilvaStmlResultus resultus;
         SilvaStmlNodus* nodus;
         SilvaStmlAttributum* attr;
@@ -134,13 +142,13 @@ _annotationem_extrahere (i8* datum, i32 mensura,
         corpus_annotationis.datum = datum + i;
         resultus = silva_stml_legere(corpus_annotationis, arboris,
             intern);
-        si (!resultus.successus
+        si (   !resultus.successus
             || resultus.elementum_radix == NIHIL)
         {
             /* malformatum: si "<aedilis" textualiter, nostrum et
              * fractum -> clamare; alioquin annotatio aliena
              * (codex 74 examinis eam iam custodit) */
-            si (finis - i >= 8
+            si (   finis - i                        >= 8
                 && memcmp(datum + i, "<aedilis", 8) == 0)
             {
                 fprintf(stderr, "aedilis: annotatio malformata in"
@@ -151,12 +159,12 @@ _annotationem_extrahere (i8* datum, i32 mensura,
             redde vacua;
         }
         nodus = resultus.elementum_radix;
-        si (nodus->titulus == NIHIL || nodus->titulus->mensura != 7
+        si (   nodus->titulus == NIHIL || nodus->titulus->mensura != 7
             || memcmp(nodus->titulus->datum, "aedilis", 7) != 0)
         {
             redde vacua;   /* elementum alienum */
         }
-        si (nodus->attributa == NIHIL
+        si (   nodus->attributa                    == NIHIL
             || silva_xar_numerus(nodus->attributa) != 1)
         {
             fprintf(stderr, "aedilis: annotatio in %s attributum"
@@ -167,7 +175,7 @@ _annotationem_extrahere (i8* datum, i32 mensura,
         }
         attr = (SilvaStmlAttributum*)silva_xar_obtinere(
             nodus->attributa, 0);
-        si (attr == NIHIL || attr->titulus == NIHIL
+        si (   attr        == NIHIL || attr->titulus == NIHIL
             || attr->valor == NIHIL || attr->valor->mensura == 0)
         {
             fprintf(stderr, "aedilis: annotatio in %s sine valore"
@@ -177,8 +185,8 @@ _annotationem_extrahere (i8* datum, i32 mensura,
         }
         {
             chorda fructus;
-            i32 mensura_fructus = (i32)(attr->titulus->mensura + 1
-                + attr->valor->mensura);
+               i32 mensura_fructus = (i32)(attr->titulus->mensura + 1
+                   + attr->valor->mensura);
 
             fructus.mensura = mensura_fructus;
             fructus.datum = (i8*)piscina_allocare(piscina,
@@ -214,14 +222,17 @@ _annotationem_extrahere (i8* datum, i32 mensura,
 /* Cursus minoritatis: clang -MM per system(), plagula temporalis.
  * Directivae redditae = viae IAM RESOLUTAE (ex_oraculo). */
 interior b32
-_extractor_oraculi (ExtractorDatum* extractoris,
-    constans character* via, Piscina* piscina, Xar** directivae_out)
+_extractor_oraculi (
+        ExtractorDatum*  extractoris,
+    constans character*  via,
+               Piscina*  piscina,
+                   Xar** directivae_out)
 {
     ChordaAedificator* mandatum;
-    chorda             textus;
-    character*         mandatum_cstr;
-    i32                i;
-    i32                numerus;
+               chorda  textus;
+            character* mandatum_cstr;
+                  i32  i;
+                  i32  numerus;
 
     mandatum = chorda_aedificator_creare(piscina, 512);
     chorda_aedificator_appendere_literis(mandatum, "clang -MM");
@@ -267,11 +278,11 @@ _extractor_oraculi (ExtractorDatum* extractoris,
     }
     dum (i < textus.mensura)
     {
-        i32 initium;
+           i32 initium;
         chorda signum;
 
-        dum (i < textus.mensura
-            && (textus.datum[i] == (i8)' '
+        dum (   i < textus.mensura
+             && (textus.datum[i] == (i8)' '
                 || textus.datum[i] == (i8)'\t'
                 || textus.datum[i] == (i8)'\n'
                 || textus.datum[i] == (i8)'\r'
@@ -280,11 +291,11 @@ _extractor_oraculi (ExtractorDatum* extractoris,
             i++;
         }
         initium = i;
-        dum (i < textus.mensura && textus.datum[i] != (i8)' '
-            && textus.datum[i] != (i8)'\t'
-            && textus.datum[i] != (i8)'\n'
-            && textus.datum[i] != (i8)'\r'
-            && textus.datum[i] != (i8)'\\')
+        dum (   i < textus.mensura && textus.datum[i] != (i8)' '
+             && textus.datum[i] != (i8)'\t'
+             && textus.datum[i] != (i8)'\n'
+             && textus.datum[i] != (i8)'\r'
+             && textus.datum[i] != (i8)'\\')
         {
             i++;
         }
@@ -292,13 +303,13 @@ _extractor_oraculi (ExtractorDatum* extractoris,
         {
             memoriae_index longitudo_viae;
 
-            signum.datum = textus.datum + initium;
-            signum.mensura = i - initium;
+            signum.datum    = textus.datum + initium;
+            signum.mensura  = i - initium;
             /* fontem ipsum praeterire: -MM eum nudum imprimit,
              * via nostra "./" praefixari potest - suffixo
              * congruere */
             longitudo_viae = strlen(via);
-            si (longitudo_viae >= (memoriae_index)signum.mensura
+            si (   longitudo_viae >= (memoriae_index)signum.mensura
                 && memcmp(via + longitudo_viae
                         - (memoriae_index)signum.mensura,
                     signum.datum,
@@ -317,9 +328,13 @@ _extractor_oraculi (ExtractorDatum* extractoris,
 }
 
 interior b32
-_extractor_silvae (vacuum* datum, constans character* via,
-    Piscina* piscina, Xar** directivae_out, Xar** annotationes_out,
-    b32* ex_oraculo_out)
+_extractor_silvae (
+                vacuum*  datum,
+    constans character*  via,
+               Piscina*  piscina,
+                   Xar** directivae_out,
+                   Xar** annotationes_out,
+                   b32*  ex_oraculo_out)
 {
     ExtractorDatum* extractoris;
     SilvaPiscina*   arboris;
@@ -331,14 +346,14 @@ _extractor_silvae (vacuum* datum, constans character* via,
     insignatus integer n;
     insignatus integer k;
 
-    extractoris = (ExtractorDatum*)datum;
-    *directivae_out = xar_creare(piscina, (i32)magnitudo(chorda));
+    extractoris      = (ExtractorDatum*)datum;
+    *directivae_out  = xar_creare(piscina, (i32)magnitudo(chorda));
     *annotationes_out = xar_creare(piscina,
         (i32)magnitudo(chorda));
     *ex_oraculo_out = FALSUM;
 
     longitudo_viae = strlen(via);
-    si (longitudo_viae > 2 && via[longitudo_viae - 2] == '.'
+    si (   longitudo_viae > 2 && via[longitudo_viae - 2] == '.'
         && via[longitudo_viae - 1] == 'm')
     {
         *ex_oraculo_out = VERUM;
@@ -376,8 +391,8 @@ _extractor_silvae (vacuum* datum, constans character* via,
         {
             perge;
         }
-        si (vista.fons_ex != parsura->fons_princeps
-            || vista.via == NIHIL)
+        si (   vista.fons_ex != parsura->fons_princeps
+            || vista.via     == NIHIL)
         {
             perge;
         }
@@ -404,7 +419,7 @@ _extractor_silvae (vacuum* datum, constans character* via,
             b32         recusatio;
 
             lexema = *(SilvaToken**)silva_xar_obtinere(cruda, k);
-            si (lexema == NIHIL
+            si (   lexema == NIHIL
                 || (lexema->genus != SILVA_LEX_COMMENTUM_CLAUSUM
                     && lexema->genus != SILVA_LEX_COMMENTUM_LINEA))
             {
@@ -433,18 +448,20 @@ _extractor_silvae (vacuum* datum, constans character* via,
  * contra clang -MM oraculum. CONSENSUS / NOS-SOLI / ORACULUM-SOLUM;
  * exitus 0 = consensus purus (porta per codicem exitus). */
 interior s32
-_differentiam_currere (Piscina* piscina,
-    ExtractorDatum* extractoris, AedilisFructus* fructus,
+_differentiam_currere (
+               Piscina* piscina,
+        ExtractorDatum* extractoris,
+        AedilisFructus* fructus,
     constans character* scopus_cstr)
 {
     TabulaDispersa* nostra;
     TabulaDispersa* eorum;
-    Xar*            oraculi;
-    Xar*            nos_soli;
-    Xar*            oraculum_solum;
-    i32             consensus;
-    i32             i;
-    i32             numerus;
+               Xar* oraculi;
+               Xar* nos_soli;
+               Xar* oraculum_solum;
+               i32  consensus;
+               i32  i;
+               i32  numerus;
 
     /* UNIO -MM super OMNES fontes clausurae: -MM unitatem
      * translationis solam videt, aedilis clausuram NEXUS -
@@ -467,7 +484,7 @@ _differentiam_currere (Piscina* piscina,
 
         obiectum = (AedilisObiectum*)xar_obtinere(fructus->obiecta,
             i);
-        si (obiectum->absens
+        si (   obiectum->absens
             || obiectum->origo == AEDILIS_ORIGO_ANNOTATIO)
         {
             perge;
@@ -484,9 +501,9 @@ _differentiam_currere (Piscina* piscina,
         }
     }
 
-    nostra = tabula_dispersa_creare_chorda(piscina, 256);
-    eorum = tabula_dispersa_creare_chorda(piscina, 256);
-    numerus = xar_numerus(fructus->capita);
+    nostra   = tabula_dispersa_creare_chorda(piscina, 256);
+    eorum    = tabula_dispersa_creare_chorda(piscina, 256);
+    numerus  = xar_numerus(fructus->capita);
     per (i = 0; i < numerus; i++)
     {
         AedilisCaput* caput;
@@ -499,8 +516,8 @@ _differentiam_currere (Piscina* piscina,
     {
         Xar* unica;
 
-        unica = xar_creare(piscina, (i32)magnitudo(chorda));
-        numerus = xar_numerus(oraculi);
+        unica    = xar_creare(piscina, (i32)magnitudo(chorda));
+        numerus  = xar_numerus(oraculi);
         per (i = 0; i < numerus; i++)
         {
             chorda via;
@@ -516,10 +533,10 @@ _differentiam_currere (Piscina* piscina,
         oraculi = unica;
     }
 
-    consensus = 0;
-    nos_soli = xar_creare(piscina, (i32)magnitudo(chorda));
-    oraculum_solum = xar_creare(piscina, (i32)magnitudo(chorda));
-    numerus = xar_numerus(fructus->capita);
+    consensus       = 0;
+    nos_soli        = xar_creare(piscina, (i32)magnitudo(chorda));
+    oraculum_solum  = xar_creare(piscina, (i32)magnitudo(chorda));
+    numerus         = xar_numerus(fructus->capita);
     per (i = 0; i < numerus; i++)
     {
         AedilisCaput* caput;
@@ -575,10 +592,11 @@ _differentiam_currere (Piscina* piscina,
 
 /* Provenientia git (optima conatio; NIHIL si abest) */
 interior constans character*
-_commissum_obtinere (Piscina* piscina)
+_commissum_obtinere (
+    Piscina* piscina)
 {
     chorda textus;
-    i32    finis;
+       i32 finis;
 
     si (system("git rev-parse --short HEAD"
             " > build/aedilis/commissum.tmp 2>/dev/null") != 0)
@@ -588,7 +606,7 @@ _commissum_obtinere (Piscina* piscina)
     textus = filum_legere_totum("build/aedilis/commissum.tmp",
         piscina);
     finis = textus.mensura;
-    dum (finis > 0 && (textus.datum[finis - 1] == (i8)'\n'
+    dum (   finis > 0 && (textus.datum[finis - 1] == (i8)'\n'
         || textus.datum[finis - 1] == (i8)'\r'))
     {
         finis--;
@@ -602,14 +620,16 @@ _commissum_obtinere (Piscina* piscina)
 }
 
 s32
-principale (s32 numerus_argumentorum, character** argumenta_cruda)
+principale (
+          s32   numerus_argumentorum,
+    character** argumenta_cruda)
 {
-    Piscina*             piscina;
-    ArgumentaParser*     parser;
-    ArgumentaFructus*    lecta;
+                Piscina* piscina;
+        ArgumentaParser* parser;
+       ArgumentaFructus* lecta;
     AedilisConfiguratio* configuratio;
-    AedilisFructus*      fructus;
-    ExtractorDatum       extractoris;
+         AedilisFructus* fructus;
+         ExtractorDatum  extractoris;
     SilvaPiscina*        contextus_piscina;
     SilvaContextus*      contextus;
     chorda               causa;
@@ -627,8 +647,8 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         fprintf(stderr, "AEDILIS RECUSAT: piscina deest\n");
         redde 1;
     }
-    causa.datum = NIHIL;
-    causa.mensura = 0;
+    causa.datum    = NIHIL;
+    causa.mensura  = 0;
 
     parser = argumenta_creare(piscina);
     argumenta_ponere_descriptionem(parser,
@@ -665,14 +685,14 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
             "usus: aedilis <fons.c> [--varians <verbum>]\n");
         redde 1;
     }
-    scopus = argumenta_obtinere_positionalem(lecta, 0, piscina);
-    scopus_cstr = chorda_ut_cstr(scopus, piscina);
+    scopus       = argumenta_obtinere_positionalem(lecta, 0, piscina);
+    scopus_cstr  = chorda_ut_cstr(scopus, piscina);
     varians = argumenta_obtinere_optionem(lecta, "--varians",
         piscina);
     varians_cstr = (varians.mensura > 0)
         ? chorda_ut_cstr(varians, piscina) : NIHIL;
 
-    si (!filum_directorium_creare_si_necesse("build")
+    si (   !filum_directorium_creare_si_necesse("build")
         || !filum_directorium_creare_si_necesse("build/aedilis"))
     {
         fprintf(stderr,
@@ -693,14 +713,14 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         "aedilis_contextus", 4194304);
     contextus = (contextus_piscina == NIHIL)
         ? NIHIL : silva_contextus_creare(contextus_piscina);
-    si (contextus == NIHIL
+    si (   contextus == NIHIL
         || !silva_contextus_latinam_addere(contextus))
     {
         fprintf(stderr, "AEDILIS RECUSAT: contextus deest\n");
         redde 1;
     }
-    extractoris.contextus = contextus;
-    extractoris.configuratio = configuratio;
+    extractoris.contextus     = contextus;
+    extractoris.configuratio  = configuratio;
 
     initium = clock();
     fructus = aedilis_derivare(piscina, configuratio, scopus_cstr,
@@ -793,8 +813,8 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         per (i = 0; i < numerus; i++)
         {
             AedilisCaput* caput;
-            i32 k;
-            i32 numerus_aristarum;
+                     i32  k;
+                     i32  numerus_aristarum;
 
             caput = (AedilisCaput*)xar_obtinere(fructus->capita,
                 i);
@@ -850,9 +870,9 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
         _commissum_obtinere(piscina));
 
     {
-        chorda     basis;
-        chorda     directorium;
-        chorda     via_manifesti;
+                   chorda  basis;
+                   chorda  directorium;
+                   chorda  via_manifesti;
         ChordaAedificator* aedificator;
 
         basis = via_nomen_radix(via_nomen(scopus, piscina),
@@ -901,8 +921,8 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
 
         /* scripta emissa ex manifesti veritate */
         {
-            chorda scriptum;
-            chorda via_scripti;
+                        chorda  scriptum;
+                        chorda  via_scripti;
             constans character* commissum;
 
             commissum = _commissum_obtinere(piscina);
@@ -957,7 +977,7 @@ principale (s32 numerus_argumentorum, character** argumenta_cruda)
 
                 via_servandi = argumenta_obtinere_optionem(lecta,
                     "--scribere", piscina);
-                si (via_servandi.mensura > 0
+                si (   via_servandi.mensura > 0
                     && !filum_scribere(chorda_ut_cstr(
                             via_servandi, piscina), scriptum))
                 {

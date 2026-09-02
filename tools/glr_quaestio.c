@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /* ==================================================
  * Global State for Dynamic Lookup Tables
  * ================================================== */
@@ -28,7 +29,7 @@ hic_manens InternamentumChorda* g_intern = NIHIL;
 /* Dynamic token lookup table (built from parsing arbor2_lexema.h) */
 nomen structura {
     constans character* titulus;
-    s32 valor;
+                   s32  valor;
 } TitulusValor;
 
 hic_manens TitulusValor* g_lexema_tabula = NIHIL;
@@ -41,6 +42,7 @@ hic_manens i32 g_nt_numerus = ZEPHYRUM;
 /* Dynamic INT_NT lookup table (from #define INT_NT_* - for goto command) */
 hic_manens TitulusValor* g_int_nt_tabula = NIHIL;
 hic_manens i32 g_int_nt_numerus = ZEPHYRUM;
+
 
 /* ==================================================
  * Parsed Table Structures (from source introspection)
@@ -70,15 +72,15 @@ hic_manens i32 g_actio_numerus = ZEPHYRUM;
 
 /* Parsed REGULA entry */
 nomen structura {
-    s32 sinister;     /* ARBOR2_NT_* value */
-    i32 longitudo;
-    i32 nodus_genus;  /* ARBOR2_NODUS_* value */
+                   s32  sinister;     /* ARBOR2_NT_* value */
+                   i32  longitudo;
+                   i32  nodus_genus;  /* ARBOR2_NODUS_* value */
     constans character* descriptio;  /* Rule description (Phase 2) */
 } ParsedRegula;
 
 /* Parsed STATE description entry (Phase 6) */
 nomen structura {
-    i32 status;
+                   i32  status;
     constans character* descriptio;
 } ParsedStatusDesc;
 
@@ -88,6 +90,7 @@ hic_manens i32 g_regula_numerus = ZEPHYRUM;
 /* State descriptions (from STATUS_TABULA_PARTIAL) */
 hic_manens ParsedStatusDesc* g_status_desc_tabula = NIHIL;
 hic_manens i32 g_status_desc_numerus = ZEPHYRUM;
+
 
 /* ==================================================
  * Dynamic Enum Extraction
@@ -105,22 +108,22 @@ hic_manens i32 g_status_desc_numerus = ZEPHYRUM;
  * Returns: VERUM if successful
  */
 interior b32
-extrahere_enum_ex_filo(
-    constans character* via,
-    constans character* typedef_titulus,
-    constans character* praefixum,
-    TitulusValor** tabula_out,
-    i32* numerus_out)
+extrahere_enum_ex_filo (
+    constans character*  via,
+    constans character*  typedef_titulus,
+    constans character*  praefixum,
+          TitulusValor** tabula_out,
+                   i32*  numerus_out)
 {
-    ArborResultus res;
-    ArborNodus* radix;
-    Xar* declarationes;
-    i32 num_decl;
-    i32 i;
-    i32 praefixum_len;
+    ArborResultus  res;
+       ArborNodus* radix;
+              Xar* declarationes;
+              i32  num_decl;
+              i32  i;
+              i32  praefixum_len;
 
-    *tabula_out = NIHIL;
-    *numerus_out = ZEPHYRUM;
+    *tabula_out   = NIHIL;
+    *numerus_out  = ZEPHYRUM;
 
     praefixum_len = (i32)strlen(praefixum);
 
@@ -140,7 +143,8 @@ extrahere_enum_ex_filo(
                     ArborError* err = *err_ptr;
                     fprintf(stderr, "  Error [%d:%d]: %.*s\n",
                         err->linea, err->columna,
-                        err->nuntius.mensura, (constans character*)err->nuntius.datum);
+                        err->nuntius.mensura,
+                        (constans character*)err->nuntius.datum);
                 }
             }
         }
@@ -150,7 +154,8 @@ extrahere_enum_ex_filo(
     radix = res.radix;
     si (radix == NIHIL || radix->genus != ARBOR_NODUS_TRANSLATION_UNIT)
     {
-        fprintf(stderr, "Warning: AST radix invalida pro %s (genus=%d)\n", via,
+        fprintf(stderr,
+            "Warning: AST radix invalida pro %s (genus=%d)\n", via,
             radix != NIHIL ? (integer)radix->genus : -1);
         redde FALSUM;
     }
@@ -167,13 +172,13 @@ extrahere_enum_ex_filo(
     per (i = ZEPHYRUM; i < num_decl; i++)
     {
         ArborNodus** decl_ptr;
-        ArborNodus* decl;
-        Xar* specifiers;
-        Xar* declaratores;
-        ArborNodus* enum_spec;
-        i32 j;
-        b32 est_typedef;
-        b32 nomen_invenit;
+        ArborNodus*  decl;
+               Xar*  specifiers;
+               Xar*  declaratores;
+        ArborNodus*  enum_spec;
+               i32   j;
+               b32   est_typedef;
+               b32   nomen_invenit;
 
         decl_ptr = xar_obtinere(declarationes, i);
         si (decl_ptr == NIHIL)
@@ -187,8 +192,8 @@ extrahere_enum_ex_filo(
             perge;
         }
 
-        specifiers = decl->datum.declaratio.specifiers;
-        declaratores = decl->datum.declaratio.declaratores;
+        specifiers    = decl->datum.declaratio.specifiers;
+        declaratores  = decl->datum.declaratio.declaratores;
 
         si (specifiers == NIHIL)
         {
@@ -196,13 +201,13 @@ extrahere_enum_ex_filo(
         }
 
         /* Check if this is a typedef and find enum specifier */
-        est_typedef = FALSUM;
-        enum_spec = NIHIL;
+        est_typedef  = FALSUM;
+        enum_spec    = NIHIL;
 
         per (j = ZEPHYRUM; j < xar_numerus(specifiers); j++)
         {
             ArborNodus** spec_ptr;
-            ArborNodus* spec;
+            ArborNodus*  spec;
 
             spec_ptr = xar_obtinere(specifiers, j);
             si (spec_ptr == NIHIL)
@@ -237,9 +242,9 @@ extrahere_enum_ex_filo(
             per (j = ZEPHYRUM; j < xar_numerus(declaratores); j++)
             {
                 ArborNodus** init_decl_ptr;
-                ArborNodus* init_decl;
-                ArborNodus* declarator;
-                chorda* decl_nomen;
+                ArborNodus*  init_decl;
+                ArborNodus*  declarator;
+                    chorda*  decl_nomen;
 
                 init_decl_ptr = xar_obtinere(declaratores, j);
                 si (init_decl_ptr == NIHIL)
@@ -264,16 +269,19 @@ extrahere_enum_ex_filo(
                 }
 
                 /* Get the name from the declarator */
-                si (declarator->genus == ARBOR_NODUS_IDENTIFIER ||
-                    declarator->genus == ARBOR_NODUS_TYPEDEF_NAME)
+                si (   declarator->genus == ARBOR_NODUS_IDENTIFIER
+                    || declarator->genus == ARBOR_NODUS_TYPEDEF_NAME)
                 {
                     decl_nomen = declarator->datum.folium.valor;
                     si (decl_nomen != NIHIL)
                     {
                         /* Compare with target typedef name */
-                        si (decl_nomen->mensura == (i32)strlen(typedef_titulus) &&
-                            strncmp((constans character*)decl_nomen->datum, typedef_titulus,
-                                    (size_t)decl_nomen->mensura) == ZEPHYRUM)
+                        si (   decl_nomen->mensura
+                            == (i32)strlen(typedef_titulus)
+                            && strncmp((constans character*)decl_nomen->datum,
+                            typedef_titulus,
+                                    (size_t)decl_nomen->mensura)
+                                        == ZEPHYRUM)
                         {
                             nomen_invenit = VERUM;
                             frange;
@@ -293,10 +301,10 @@ extrahere_enum_ex_filo(
 
         /* Found a typedef enum! Verify by prefix and extract enumerators */
         {
-            Xar* enumeratores;
-            i32 num_enum;
-            i32 k;
-            s32 valor_currens;
+                     Xar* enumeratores;
+                     i32  num_enum;
+                     i32  k;
+                     s32  valor_currens;
             TitulusValor* tabula;
 
             enumeratores = enum_spec->datum.enum_spec.enumeratores;
@@ -314,19 +322,20 @@ extrahere_enum_ex_filo(
             /* Verify first enumerator matches prefix */
             {
                 ArborNodus** first_ptr;
-                ArborNodus* first_enum;
-                chorda* first_nomen;
+                ArborNodus*  first_enum;
+                    chorda*  first_nomen;
 
                 first_ptr = xar_obtinere(enumeratores, ZEPHYRUM);
                 si (first_ptr == NIHIL)
                 {
                     perge;
                 }
-                first_enum = *first_ptr;
-                first_nomen = first_enum->datum.folium.valor;
-                si (first_nomen == NIHIL ||
-                    first_nomen->mensura <= praefixum_len ||
-                    strncmp((constans character*)first_nomen->datum, praefixum,
+                first_enum   = *first_ptr;
+                first_nomen  = first_enum->datum.folium.valor;
+                si (   first_nomen          == NIHIL
+                    || first_nomen->mensura <= praefixum_len
+                    || strncmp((constans character*)first_nomen->datum,
+                    praefixum,
                             (size_t)praefixum_len) != ZEPHYRUM)
                 {
                     perge;
@@ -344,10 +353,10 @@ extrahere_enum_ex_filo(
             valor_currens = ZEPHYRUM;
             per (k = ZEPHYRUM; k < num_enum; k++)
             {
-                ArborNodus** enum_ptr;
-                ArborNodus* enumerator;
-                chorda* enum_nomen;
-                constans character* stripped_nomen;
+                        ArborNodus** enum_ptr;
+                        ArborNodus*  enumerator;
+                            chorda*  enum_nomen;
+                constans character*  stripped_nomen;
 
                 enum_ptr = xar_obtinere(enumeratores, k);
                 si (enum_ptr == NIHIL)
@@ -356,8 +365,8 @@ extrahere_enum_ex_filo(
                 }
                 enumerator = *enum_ptr;
 
-                si (enumerator->genus != ARBOR_NODUS_ENUMERATOR &&
-                    enumerator->genus != ARBOR_NODUS_IDENTIFIER)
+                si (   enumerator->genus != ARBOR_NODUS_ENUMERATOR
+                    && enumerator->genus != ARBOR_NODUS_IDENTIFIER)
                 {
                     perge;
                 }
@@ -369,11 +378,12 @@ extrahere_enum_ex_filo(
                 }
 
                 /* Strip prefix from name */
-                si (enum_nomen->mensura > praefixum_len &&
-                    strncmp((constans character*)enum_nomen->datum, praefixum, (size_t)praefixum_len) == ZEPHYRUM)
+                si (   enum_nomen->mensura > praefixum_len
+                    && strncmp((constans character*)enum_nomen->datum,
+                    praefixum, (size_t)praefixum_len) == ZEPHYRUM)
                 {
                     /* Allocate stripped name */
-                    i32 stripped_len;
+                          i32  stripped_len;
                     character* stripped;
 
                     stripped_len = enum_nomen->mensura - praefixum_len;
@@ -381,10 +391,11 @@ extrahere_enum_ex_filo(
                         (memoriae_index)(stripped_len + I));
                     si (stripped != NIHIL)
                     {
-                        memcpy(stripped, enum_nomen->datum + praefixum_len,
+                        memcpy(stripped, enum_nomen->datum
+                            + praefixum_len,
                                (size_t)stripped_len);
-                        stripped[stripped_len] = '\0';
-                        stripped_nomen = stripped;
+                        stripped[stripped_len]  = '\0';
+                        stripped_nomen          = stripped;
                     }
                     alioquin
                     {
@@ -400,9 +411,10 @@ extrahere_enum_ex_filo(
                         (memoriae_index)(enum_nomen->mensura + I));
                     si (copia != NIHIL)
                     {
-                        memcpy(copia, enum_nomen->datum, (size_t)enum_nomen->mensura);
-                        copia[enum_nomen->mensura] = '\0';
-                        stripped_nomen = copia;
+                        memcpy(copia, enum_nomen->datum,
+                            (size_t)enum_nomen->mensura);
+                        copia[enum_nomen->mensura]  = '\0';
+                        stripped_nomen              = copia;
                     }
                     alioquin
                     {
@@ -417,13 +429,13 @@ extrahere_enum_ex_filo(
                  * For arbor2_lexema.h, all values are sequential anyway.
                  */
 
-                tabula[k].titulus = stripped_nomen;
-                tabula[k].valor = valor_currens;
+                tabula[k].titulus  = stripped_nomen;
+                tabula[k].valor    = valor_currens;
                 valor_currens++;
             }
 
-            *tabula_out = tabula;
-            *numerus_out = num_enum;
+            *tabula_out   = tabula;
+            *numerus_out  = num_enum;
             redde VERUM;
         }
     }
@@ -436,10 +448,10 @@ extrahere_enum_ex_filo(
  * These are the actual values used in the GOTO table.
  */
 interior b32
-extrahere_int_nt_ex_filo(
-    constans character* via,
-    TitulusValor** tabula_out,
-    i32* numerus_out)
+extrahere_int_nt_ex_filo (
+    constans character*  via,
+          TitulusValor** tabula_out,
+                   i32*  numerus_out)
 {
     FILE* f;
     character linea[512];
@@ -447,8 +459,8 @@ extrahere_int_nt_ex_filo(
     i32 capacitas;
     TitulusValor* tabula;
 
-    *tabula_out = NIHIL;
-    *numerus_out = ZEPHYRUM;
+    *tabula_out   = NIHIL;
+    *numerus_out  = ZEPHYRUM;
 
     f = fopen(via, "r");
     si (f == NIHIL)
@@ -494,14 +506,14 @@ extrahere_int_nt_ex_filo(
             character* nomen_finis;
             character* valor_initium;
             character* nomen_copia;
-            i32 nomen_len;
-            s32 valor;
+                  i32  nomen_len;
+                  s32  valor;
 
             /* Extract name: starts after "#define INT_NT_" */
-            nomen_initium = linea + 15;
-            nomen_finis = nomen_initium;
-            dum (*nomen_finis != '\0' && *nomen_finis != ' ' &&
-                 *nomen_finis != '\t' && *nomen_finis != '\n')
+            nomen_initium  = linea + 15;
+            nomen_finis    = nomen_initium;
+            dum (   *nomen_finis != '\0' && *nomen_finis != ' '
+                 && *nomen_finis != '\t' && *nomen_finis != '\n')
             {
                 nomen_finis++;
             }
@@ -523,8 +535,8 @@ extrahere_int_nt_ex_filo(
                 memcpy(nomen_copia, nomen_initium, (size_t)nomen_len);
                 nomen_copia[nomen_len] = '\0';
 
-                tabula[numerus].titulus = nomen_copia;
-                tabula[numerus].valor = valor;
+                tabula[numerus].titulus  = nomen_copia;
+                tabula[numerus].valor    = valor;
                 numerus++;
             }
         }
@@ -532,10 +544,11 @@ extrahere_int_nt_ex_filo(
 
     fclose(f);
 
-    *tabula_out = tabula;
-    *numerus_out = numerus;
+    *tabula_out   = tabula;
+    *numerus_out  = numerus;
     redde VERUM;
 }
+
 
 /* ==================================================
  * Source Table Parsing
@@ -545,7 +558,9 @@ extrahere_int_nt_ex_filo(
  * Resolve INT_NT_<name> to its value using pre-extracted table.
  */
 interior s32
-resolvere_int_nt(constans character* titulus_nt, i32 titulus_len)
+resolvere_int_nt (
+    constans character* titulus_nt,
+                   i32  titulus_len)
 {
     i32 i;
 
@@ -556,9 +571,10 @@ resolvere_int_nt(constans character* titulus_nt, i32 titulus_len)
 
     per (i = ZEPHYRUM; i < g_int_nt_numerus; i++)
     {
-        si (g_int_nt_tabula[i].titulus != NIHIL &&
-            (i32)strlen(g_int_nt_tabula[i].titulus) == titulus_len &&
-            strncmp(g_int_nt_tabula[i].titulus, titulus_nt, (size_t)titulus_len) == ZEPHYRUM)
+        si (   g_int_nt_tabula[i].titulus              != NIHIL
+            && (i32)strlen(g_int_nt_tabula[i].titulus) == titulus_len
+            && strncmp(g_int_nt_tabula[i].titulus, titulus_nt,
+            (size_t)titulus_len) == ZEPHYRUM)
         {
             redde g_int_nt_tabula[i].valor;
         }
@@ -571,7 +587,9 @@ resolvere_int_nt(constans character* titulus_nt, i32 titulus_len)
  * Resolve ARBOR2_LEXEMA_<name> to its value.
  */
 interior s32
-resolvere_lexema(constans character* titulus_nt, i32 titulus_len)
+resolvere_lexema (
+    constans character* titulus_nt,
+                   i32  titulus_len)
 {
     i32 i;
 
@@ -582,9 +600,10 @@ resolvere_lexema(constans character* titulus_nt, i32 titulus_len)
 
     per (i = ZEPHYRUM; i < g_lexema_numerus; i++)
     {
-        si (g_lexema_tabula[i].titulus != NIHIL &&
-            (i32)strlen(g_lexema_tabula[i].titulus) == titulus_len &&
-            strncmp(g_lexema_tabula[i].titulus, titulus_nt, (size_t)titulus_len) == ZEPHYRUM)
+        si (   g_lexema_tabula[i].titulus              != NIHIL
+            && (i32)strlen(g_lexema_tabula[i].titulus) == titulus_len
+            && strncmp(g_lexema_tabula[i].titulus, titulus_nt,
+            (size_t)titulus_len) == ZEPHYRUM)
         {
             redde g_lexema_tabula[i].valor;
         }
@@ -597,7 +616,9 @@ resolvere_lexema(constans character* titulus_nt, i32 titulus_len)
  * Resolve ARBOR2_NT_<name> to its value.
  */
 interior s32
-resolvere_nt(constans character* titulus_nt, i32 titulus_len)
+resolvere_nt (
+    constans character* titulus_nt,
+                   i32  titulus_len)
 {
     i32 i;
 
@@ -608,9 +629,10 @@ resolvere_nt(constans character* titulus_nt, i32 titulus_len)
 
     per (i = ZEPHYRUM; i < g_nt_numerus; i++)
     {
-        si (g_nt_tabula[i].titulus != NIHIL &&
-            (i32)strlen(g_nt_tabula[i].titulus) == titulus_len &&
-            strncmp(g_nt_tabula[i].titulus, titulus_nt, (size_t)titulus_len) == ZEPHYRUM)
+        si (   g_nt_tabula[i].titulus              != NIHIL
+            && (i32)strlen(g_nt_tabula[i].titulus) == titulus_len
+            && strncmp(g_nt_tabula[i].titulus, titulus_nt,
+            (size_t)titulus_len) == ZEPHYRUM)
         {
             redde g_nt_tabula[i].valor;
         }
@@ -624,7 +646,8 @@ resolvere_nt(constans character* titulus_nt, i32 titulus_len)
  * Format: STATUS_N_GOTO[] = { { INT_NT_<name>, <new_state> }, ... }
  */
 interior b32
-parsere_goto_tabula(constans character* via)
+parsere_goto_tabula (
+    constans character* via)
 {
     FILE* f;
     character linea[512];
@@ -642,12 +665,13 @@ parsere_goto_tabula(constans character* via)
     }
 
     /* First pass: count entries across all STATUS_N_GOTO arrays */
-    numerus = ZEPHYRUM;
-    in_array = FALSUM;
+    numerus   = ZEPHYRUM;
+    in_array  = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         /* Track when entering/exiting STATUS_N_GOTO arrays */
-        si (strstr(linea, "STATUS_") != NIHIL && strstr(linea, "_GOTO[]") != NIHIL)
+        si (   strstr(linea, "STATUS_") != NIHIL
+            && strstr(linea, "_GOTO[]") != NIHIL)
         {
             in_array = VERUM;
             perge;
@@ -659,8 +683,8 @@ parsere_goto_tabula(constans character* via)
         }
 
         /* Only count entries within per-state arrays */
-        si (in_array &&
-            strstr(linea, "{ INT_NT_") != NIHIL)
+        si (   in_array
+            && strstr(linea, "{ INT_NT_") != NIHIL)
         {
             numerus++;
         }
@@ -684,25 +708,25 @@ parsere_goto_tabula(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    in_array = FALSUM;
-    status_currens = -I;
-    numerus = ZEPHYRUM;
+    in_array        = FALSUM;
+    status_currens  = -I;
+    numerus         = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         character* p;
         character* nt_start;
         character* nt_end;
-        s32 nt_val;
-        i32 status_novus;
-        i32 nt_len;
+              s32  nt_val;
+              i32  status_novus;
+              i32  nt_len;
 
         /* Check for STATUS_N_GOTO[] array start */
         p = strstr(linea, "STATUS_");
         si (p != NIHIL && strstr(linea, "_GOTO[]") != NIHIL)
         {
             /* Extract state number from STATUS_N_GOTO */
-            status_currens = (s32)strtol(p + VII, NIHIL, 10);
-            in_array = VERUM;
+            status_currens  = (s32)strtol(p + VII, NIHIL, 10);
+            in_array        = VERUM;
             perge;
         }
 
@@ -727,9 +751,10 @@ parsere_goto_tabula(constans character* via)
         }
 
         /* Parse NT name */
-        nt_start = p + IX; /* skip "{ INT_NT_" */
-        nt_end = nt_start;
-        dum (*nt_end != '\0' && *nt_end != ',' && *nt_end != ' ' && *nt_end != '\t')
+        nt_start  = p + IX; /* skip "{ INT_NT_" */
+        nt_end    = nt_start;
+        dum (   *nt_end != '\0' && *nt_end != ',' && *nt_end != ' '
+             && *nt_end != '\t')
         {
             nt_end++;
         }
@@ -752,16 +777,16 @@ parsere_goto_tabula(constans character* via)
         status_novus = (i32)strtol(p, NIHIL, 10);
 
         /* Store entry */
-        tabula[numerus].status = (i32)status_currens;
-        tabula[numerus].nt = nt_val;
-        tabula[numerus].status_novus = status_novus;
+        tabula[numerus].status        = (i32)status_currens;
+        tabula[numerus].nt            = nt_val;
+        tabula[numerus].status_novus  = status_novus;
         numerus++;
     }
 
     fclose(f);
 
-    g_goto_tabula = tabula;
-    g_goto_numerus = numerus;
+    g_goto_tabula   = tabula;
+    g_goto_numerus  = numerus;
     redde VERUM;
 }
 
@@ -770,7 +795,8 @@ parsere_goto_tabula(constans character* via)
  * Format: STATUS_N_ACTIONES[] = { { LEXEMA, ACTIO, value, conflict_flag }, ... }
  */
 interior b32
-parsere_actiones_tabula(constans character* via)
+parsere_actiones_tabula (
+    constans character* via)
 {
     FILE* f;
     character linea[512];
@@ -787,12 +813,13 @@ parsere_actiones_tabula(constans character* via)
     }
 
     /* First pass: count action entries across all STATUS_N_ACTIONES arrays */
-    numerus = ZEPHYRUM;
-    in_array = FALSUM;
+    numerus   = ZEPHYRUM;
+    in_array  = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         /* Track when entering/exiting STATUS_N_ACTIONES arrays */
-        si (strstr(linea, "STATUS_") != NIHIL && strstr(linea, "_ACTIONES[]") != NIHIL)
+        si (   strstr(linea, "STATUS_")     != NIHIL
+            && strstr(linea, "_ACTIONES[]") != NIHIL)
         {
             in_array = VERUM;
             perge;
@@ -804,9 +831,9 @@ parsere_actiones_tabula(constans character* via)
         }
 
         /* Only count entries within per-state arrays */
-        si (in_array &&
-            strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL &&
-            strstr(linea, "ARBOR2_ACTIO_") != NIHIL)
+        si (   in_array
+            && strstr(linea, "{ ARBOR2_LEXEMA_") != NIHIL
+            && strstr(linea, "ARBOR2_ACTIO_")    != NIHIL)
         {
             numerus++;
         }
@@ -830,9 +857,9 @@ parsere_actiones_tabula(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    numerus = ZEPHYRUM;
-    status_currens = -I;
-    in_array = FALSUM;
+    numerus         = ZEPHYRUM;
+    status_currens  = -I;
+    in_array        = FALSUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         character* p;
@@ -840,18 +867,18 @@ parsere_actiones_tabula(constans character* via)
         character* lex_end;
         character* actio_start;
         character* actio_end;
-        s32 lex_val;
-        i32 actio_val;
-        i32 valor;
-        b32 conflict_flag;
+              s32  lex_val;
+              i32  actio_val;
+              i32  valor;
+              b32  conflict_flag;
 
         /* Check for STATUS_N_ACTIONES[] array start */
         p = strstr(linea, "STATUS_");
         si (p != NIHIL && strstr(linea, "_ACTIONES[]") != NIHIL)
         {
             /* Extract state number from STATUS_N_ACTIONES */
-            status_currens = (s32)strtol(p + VII, NIHIL, 10);
-            in_array = VERUM;
+            status_currens  = (s32)strtol(p + VII, NIHIL, 10);
+            in_array        = VERUM;
             perge;
         }
 
@@ -875,13 +902,14 @@ parsere_actiones_tabula(constans character* via)
         }
 
         /* Parse lexema */
-        lex_start = p + XVI; /* skip "{ ARBOR2_LEXEMA_" */
-        lex_end = lex_start;
+        lex_start  = p + XVI; /* skip "{ ARBOR2_LEXEMA_" */
+        lex_end    = lex_start;
         dum (*lex_end != '\0' && *lex_end != ',' && *lex_end != ' ')
         {
             lex_end++;
         }
-        lex_val = resolvere_lexema(lex_start, (i32)(lex_end - lex_start));
+        lex_val = resolvere_lexema(lex_start, (i32)(lex_end
+            - lex_start));
         si (lex_val < ZEPHYRUM)
         {
             perge;
@@ -893,9 +921,10 @@ parsere_actiones_tabula(constans character* via)
         {
             perge;
         }
-        actio_start += XIII; /* skip "ARBOR2_ACTIO_" */
-        actio_end = actio_start;
-        dum (*actio_end != '\0' && *actio_end != ',' && *actio_end != ' ')
+        actio_start  += XIII; /* skip "ARBOR2_ACTIO_" */
+        actio_end    = actio_start;
+        dum (   *actio_end != '\0' && *actio_end != ','
+             && *actio_end != ' ')
         {
             actio_end++;
         }
@@ -942,18 +971,18 @@ parsere_actiones_tabula(constans character* via)
         }
 
         /* Store entry */
-        tabula[numerus].status = status_currens;
-        tabula[numerus].lexema = lex_val;
-        tabula[numerus].actio = actio_val;
-        tabula[numerus].valor = valor;
-        tabula[numerus].conflictus_intentus = conflict_flag;
+        tabula[numerus].status               = status_currens;
+        tabula[numerus].lexema               = lex_val;
+        tabula[numerus].actio                = actio_val;
+        tabula[numerus].valor                = valor;
+        tabula[numerus].conflictus_intentus  = conflict_flag;
         numerus++;
     }
 
     fclose(f);
 
-    g_actio_tabula = tabula;
-    g_actio_numerus = numerus;
+    g_actio_tabula   = tabula;
+    g_actio_numerus  = numerus;
     redde VERUM;
 }
 
@@ -962,7 +991,8 @@ parsere_actiones_tabula(constans character* via)
  * Format: { ARBOR2_NT_<name>, <length>, ARBOR2_NODUS_<type>, "description" },
  */
 interior b32
-parsere_regulae_tabula(constans character* via)
+parsere_regulae_tabula (
+    constans character* via)
 {
     FILE* f;
     character linea[512];
@@ -978,11 +1008,12 @@ parsere_regulae_tabula(constans character* via)
     }
 
     /* First pass: count entries */
-    in_tabula = FALSUM;
-    numerus = ZEPHYRUM;
+    in_tabula  = FALSUM;
+    numerus    = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "REGULAE[]") != NIHIL && strstr(linea, "Arbor2Regula") != NIHIL)
+        si (   strstr(linea, "REGULAE[]")    != NIHIL
+            && strstr(linea, "Arbor2Regula") != NIHIL)
         {
             in_tabula = VERUM;
             perge;
@@ -1020,11 +1051,12 @@ parsere_regulae_tabula(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    in_tabula = FALSUM;
-    numerus = ZEPHYRUM;
+    in_tabula  = FALSUM;
+    numerus    = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
-        si (strstr(linea, "REGULAE[]") != NIHIL && strstr(linea, "Arbor2Regula") != NIHIL)
+        si (   strstr(linea, "REGULAE[]")    != NIHIL
+            && strstr(linea, "Arbor2Regula") != NIHIL)
         {
             in_tabula = VERUM;
             perge;
@@ -1032,13 +1064,13 @@ parsere_regulae_tabula(constans character* via)
 
         si (in_tabula)
         {
-            character* p;
-            character* nt_start;
-            character* nt_end;
-            character* desc_start;
-            character* desc_end;
-            s32 nt_val;
-            i32 rhs_len;
+                     character* p;
+                     character* nt_start;
+                     character* nt_end;
+                     character* desc_start;
+                     character* desc_end;
+                           s32  nt_val;
+                           i32  rhs_len;
             constans character* descriptio;
 
             si (strstr(linea, "};") != NIHIL && linea[ZEPHYRUM] != ' ')
@@ -1053,8 +1085,8 @@ parsere_regulae_tabula(constans character* via)
             }
 
             /* Parse NT */
-            nt_start = p + XII; /* skip "{ ARBOR2_NT_" */
-            nt_end = nt_start;
+            nt_start  = p + XII; /* skip "{ ARBOR2_NT_" */
+            nt_end    = nt_start;
             dum (*nt_end != '\0' && *nt_end != ',' && *nt_end != ' ')
             {
                 nt_end++;
@@ -1082,7 +1114,7 @@ parsere_regulae_tabula(constans character* via)
                 desc_end = strchr(desc_start, '"');
                 si (desc_end != NIHIL)
                 {
-                    i32 desc_len;
+                          i32  desc_len;
                     character* desc_copia;
 
                     desc_len = (i32)(desc_end - desc_start);
@@ -1090,26 +1122,27 @@ parsere_regulae_tabula(constans character* via)
                         (memoriae_index)(desc_len + I));
                     si (desc_copia != NIHIL)
                     {
-                        memcpy(desc_copia, desc_start, (size_t)desc_len);
-                        desc_copia[desc_len] = '\0';
-                        descriptio = desc_copia;
+                        memcpy(desc_copia, desc_start,
+                            (size_t)desc_len);
+                        desc_copia[desc_len]  = '\0';
+                        descriptio            = desc_copia;
                     }
                 }
             }
 
             /* Store entry */
-            tabula[numerus].sinister = nt_val;
-            tabula[numerus].longitudo = rhs_len;
-            tabula[numerus].nodus_genus = ZEPHYRUM;
-            tabula[numerus].descriptio = descriptio;
+            tabula[numerus].sinister     = nt_val;
+            tabula[numerus].longitudo    = rhs_len;
+            tabula[numerus].nodus_genus  = ZEPHYRUM;
+            tabula[numerus].descriptio   = descriptio;
             numerus++;
         }
     }
 
     fclose(f);
 
-    g_regula_tabula = tabula;
-    g_regula_numerus = numerus;
+    g_regula_tabula   = tabula;
+    g_regula_numerus  = numerus;
     redde VERUM;
 }
 
@@ -1118,7 +1151,8 @@ parsere_regulae_tabula(constans character* via)
  * Format: STATUS_INFO(N, "description"),
  */
 interior b32
-parsere_status_descriptiones(constans character* via)
+parsere_status_descriptiones (
+    constans character* via)
 {
     FILE* f;
     character linea[512];
@@ -1134,8 +1168,8 @@ parsere_status_descriptiones(constans character* via)
     }
 
     /* First pass: count STATUS_INFO entries */
-    in_tabula = FALSUM;
-    numerus = ZEPHYRUM;
+    in_tabula  = FALSUM;
+    numerus    = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         si (strstr(linea, "STATUS_TABULA_PARTIAL[]") != NIHIL)
@@ -1176,8 +1210,8 @@ parsere_status_descriptiones(constans character* via)
 
     /* Second pass: parse entries */
     rewind(f);
-    in_tabula = FALSUM;
-    numerus = ZEPHYRUM;
+    in_tabula  = FALSUM;
+    numerus    = ZEPHYRUM;
     dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
     {
         si (strstr(linea, "STATUS_TABULA_PARTIAL[]") != NIHIL)
@@ -1188,10 +1222,10 @@ parsere_status_descriptiones(constans character* via)
 
         si (in_tabula)
         {
-            character* p;
-            character* desc_start;
-            character* desc_end;
-            i32 status_num;
+                     character* p;
+                     character* desc_start;
+                     character* desc_end;
+                           i32  status_num;
             constans character* descriptio;
 
             si (strstr(linea, "};") != NIHIL)
@@ -1206,8 +1240,8 @@ parsere_status_descriptiones(constans character* via)
             }
 
             /* Parse state number: STATUS_INFO(N, ... */
-            p += XII; /* skip "STATUS_INFO(" */
-            status_num = (i32)strtol(p, &p, 10);
+            p           += XII; /* skip "STATUS_INFO(" */
+            status_num  = (i32)strtol(p, &p, 10);
 
             /* Parse description: "..." */
             descriptio = NIHIL;
@@ -1218,7 +1252,7 @@ parsere_status_descriptiones(constans character* via)
                 desc_end = strchr(desc_start, '"');
                 si (desc_end != NIHIL)
                 {
-                    i32 desc_len;
+                          i32  desc_len;
                     character* desc_copia;
 
                     desc_len = (i32)(desc_end - desc_start);
@@ -1226,26 +1260,28 @@ parsere_status_descriptiones(constans character* via)
                         (memoriae_index)(desc_len + I));
                     si (desc_copia != NIHIL)
                     {
-                        memcpy(desc_copia, desc_start, (size_t)desc_len);
-                        desc_copia[desc_len] = '\0';
-                        descriptio = desc_copia;
+                        memcpy(desc_copia, desc_start,
+                            (size_t)desc_len);
+                        desc_copia[desc_len]  = '\0';
+                        descriptio            = desc_copia;
                     }
                 }
             }
 
             /* Store entry */
-            tabula[numerus].status = status_num;
-            tabula[numerus].descriptio = descriptio;
+            tabula[numerus].status      = status_num;
+            tabula[numerus].descriptio  = descriptio;
             numerus++;
         }
     }
 
     fclose(f);
 
-    g_status_desc_tabula = tabula;
-    g_status_desc_numerus = numerus;
+    g_status_desc_tabula   = tabula;
+    g_status_desc_numerus  = numerus;
     redde VERUM;
 }
+
 
 /* ==================================================
  * Internal NT Values (must match arbor2_glr_tabula.c)
@@ -1277,6 +1313,7 @@ parsere_status_descriptiones(constans character* via)
 #define INT_NT_COMPARATIO     23
 #define INT_NT_CONIUNCTIO     24
 #define INT_NT_DISIUNCTIO     25
+
 
 /* ==================================================
  * NT Name Table (hardcoded for now - Phase 2 will parse #defines)
@@ -1320,7 +1357,8 @@ hic_manens TitulusValor NT_NOMINA[] = {
  * ================================================== */
 
 interior s32
-parsere_lexema_titulus(constans character* titulus)
+parsere_lexema_titulus (
+    constans character* titulus)
 {
     i32 i;
 
@@ -1329,8 +1367,9 @@ parsere_lexema_titulus(constans character* titulus)
     {
         per (i = ZEPHYRUM; i < g_lexema_numerus; i++)
         {
-            si (g_lexema_tabula[i].titulus != NIHIL &&
-                strcmp(g_lexema_tabula[i].titulus, titulus) == ZEPHYRUM)
+            si (   g_lexema_tabula[i].titulus != NIHIL
+                && strcmp(g_lexema_tabula[i].titulus, titulus)
+                    == ZEPHYRUM)
             {
                 redde g_lexema_tabula[i].valor;
             }
@@ -1341,7 +1380,8 @@ parsere_lexema_titulus(constans character* titulus)
 }
 
 interior s32
-parsere_nt_titulus(constans character* titulus)
+parsere_nt_titulus (
+    constans character* titulus)
 {
     i32 i;
 
@@ -1350,8 +1390,8 @@ parsere_nt_titulus(constans character* titulus)
     {
         per (i = ZEPHYRUM; i < g_nt_numerus; i++)
         {
-            si (g_nt_tabula[i].titulus != NIHIL &&
-                strcmp(g_nt_tabula[i].titulus, titulus) == ZEPHYRUM)
+            si (   g_nt_tabula[i].titulus                  != NIHIL
+                && strcmp(g_nt_tabula[i].titulus, titulus) == ZEPHYRUM)
             {
                 redde g_nt_tabula[i].valor;
             }
@@ -1375,7 +1415,8 @@ parsere_nt_titulus(constans character* titulus)
  * Uses dynamically extracted values, falls back to hardcoded NT_NOMINA.
  */
 interior s32
-parsere_int_nt_titulus(constans character* titulus)
+parsere_int_nt_titulus (
+    constans character* titulus)
 {
     i32 i;
 
@@ -1384,8 +1425,9 @@ parsere_int_nt_titulus(constans character* titulus)
     {
         per (i = ZEPHYRUM; i < g_int_nt_numerus; i++)
         {
-            si (g_int_nt_tabula[i].titulus != NIHIL &&
-                strcmp(g_int_nt_tabula[i].titulus, titulus) == ZEPHYRUM)
+            si (   g_int_nt_tabula[i].titulus != NIHIL
+                && strcmp(g_int_nt_tabula[i].titulus, titulus)
+                    == ZEPHYRUM)
             {
                 redde g_int_nt_tabula[i].valor;
             }
@@ -1410,7 +1452,8 @@ parsere_int_nt_titulus(constans character* titulus)
  * ================================================== */
 
 interior constans character*
-obtinere_actio_nomen(i32 actio)
+obtinere_actio_nomen (
+    i32 actio)
 {
     commutatio (actio)
     {
@@ -1423,7 +1466,8 @@ obtinere_actio_nomen(i32 actio)
 }
 
 interior constans character*
-obtinere_lexema_nomen(s32 lexema_val)
+obtinere_lexema_nomen (
+    s32 lexema_val)
 {
     i32 i;
 
@@ -1442,7 +1486,8 @@ obtinere_lexema_nomen(s32 lexema_val)
 }
 
 interior constans character*
-obtinere_nt_nomen(s32 nt_val)
+obtinere_nt_nomen (
+    s32 nt_val)
 {
     i32 i;
 
@@ -1461,7 +1506,8 @@ obtinere_nt_nomen(s32 nt_val)
 }
 
 interior constans character*
-obtinere_status_descriptio(i32 status)
+obtinere_status_descriptio (
+    i32 status)
 {
     i32 i;
 
@@ -1478,6 +1524,7 @@ obtinere_status_descriptio(i32 status)
 
     redde NIHIL;
 }
+
 
 /* ==================================================
  * Helper: Expression-chain NT names (ordered by precedence, low to high)
@@ -1514,7 +1561,9 @@ hic_manens constans character* EXPR_CHAIN_NT_NOMINA[] = {
  * Returns: Number of unique states found
  */
 interior i32
-collectare_expr_chain_states(i32* status_out, i32 max_status)
+collectare_expr_chain_states (
+    i32* status_out,
+    i32  max_status)
 {
     i32 count;
     i32 i;
@@ -1573,12 +1622,13 @@ collectare_expr_chain_states(i32* status_out, i32 max_status)
 }
 
 interior integer
-cmd_state(constans character* arg)
+cmd_state (
+    constans character* arg)
 {
-    i32 status;
-    i32 i;
-    i32 inventa;
-    character* endptr;
+                   i32  status;
+                   i32  i;
+                   i32  inventa;
+             character* endptr;
     constans character* desc;
 
     status = (i32)strtol(arg, &endptr, 10);
@@ -1627,7 +1677,8 @@ cmd_state(constans character* arg)
 }
 
 interior integer
-cmd_token(constans character* arg)
+cmd_token (
+    constans character* arg)
 {
     s32 lexema;
     i32 i;
@@ -1637,7 +1688,8 @@ cmd_token(constans character* arg)
     si (lexema < (s32)ZEPHYRUM)
     {
         fprintf(stderr, "Error: Lexema '%s' ignotum\n", arg);
-        fprintf(stderr, "Exempla: DUAMPERSAND, DUPIPA, SEMICOLON, EOF\n");
+        fprintf(stderr,
+            "Exempla: DUAMPERSAND, DUPIPA, SEMICOLON, EOF\n");
         redde I;
     }
 
@@ -1669,7 +1721,8 @@ cmd_token(constans character* arg)
 }
 
 interior integer
-cmd_goto(constans character* arg)
+cmd_goto (
+    constans character* arg)
 {
     s32 nt;
     i32 i;
@@ -1680,7 +1733,8 @@ cmd_goto(constans character* arg)
     si (nt < (s32)ZEPHYRUM)
     {
         fprintf(stderr, "Error: Non-terminalis '%s' ignotum\n", arg);
-        fprintf(stderr, "Exempla: FACTOR, EXPR, TERM, CONIUNCTIO, DISIUNCTIO\n");
+        fprintf(stderr,
+            "Exempla: FACTOR, EXPR, TERM, CONIUNCTIO, DISIUNCTIO\n");
         redde I;
     }
 
@@ -1710,9 +1764,10 @@ cmd_goto(constans character* arg)
 }
 
 interior integer
-cmd_rule(constans character* arg)
+cmd_rule (
+    constans character* arg)
 {
-    i32 index;
+          i32  index;
     character* endptr;
 
     index = (i32)strtol(arg, &endptr, 10);
@@ -1736,8 +1791,10 @@ cmd_rule(constans character* arg)
     }
 
     printf("Rule P%d:\n", index);
-    printf("  LHS: %s\n", obtinere_nt_nomen(g_regula_tabula[index].sinister));
-    printf("  RHS length: %d symbol(s)\n", g_regula_tabula[index].longitudo);
+    printf("  LHS: %s\n",
+        obtinere_nt_nomen(g_regula_tabula[index].sinister));
+    printf("  RHS length: %d symbol(s)\n",
+        g_regula_tabula[index].longitudo);
     si (g_regula_tabula[index].descriptio != NIHIL)
     {
         printf("  Production: %s\n", g_regula_tabula[index].descriptio);
@@ -1747,7 +1804,7 @@ cmd_rule(constans character* arg)
 }
 
 interior i32
-computare_max_status(vacuum)
+computare_max_status (vacuum)
 {
     i32 i;
     i32 max_status;
@@ -1768,7 +1825,7 @@ computare_max_status(vacuum)
 }
 
 interior integer
-cmd_stats(vacuum)
+cmd_stats (vacuum)
 {
     printf("GLR Table Statistics (from source):\n");
     printf("  States:   %d\n", computare_max_status());
@@ -1780,7 +1837,7 @@ cmd_stats(vacuum)
 }
 
 interior vacuum
-imprimere_auxilium(vacuum)
+imprimere_auxilium (vacuum)
 {
     printf("glr_quaestio - GLR Table Query Tool\n\n");
     printf("Usus:\n");
@@ -1805,7 +1862,7 @@ imprimere_auxilium(vacuum)
 }
 
 interior integer
-cmd_tokens(vacuum)
+cmd_tokens (vacuum)
 {
     i32 i;
 
@@ -1818,13 +1875,14 @@ cmd_tokens(vacuum)
     printf("Known tokens (%d):\n", g_lexema_numerus);
     per (i = ZEPHYRUM; i < g_lexema_numerus; i++)
     {
-        printf("  %3d: %s\n", g_lexema_tabula[i].valor, g_lexema_tabula[i].titulus);
+        printf("  %3d: %s\n", g_lexema_tabula[i].valor,
+            g_lexema_tabula[i].titulus);
     }
     redde ZEPHYRUM;
 }
 
 interior integer
-cmd_nts(vacuum)
+cmd_nts (vacuum)
 {
     i32 i;
 
@@ -1833,7 +1891,8 @@ cmd_nts(vacuum)
         printf("No NTs loaded (extraction failed), using hardcoded:\n");
         per (i = ZEPHYRUM; NT_NOMINA[i].titulus != NIHIL; i++)
         {
-            printf("  %3d: %s\n", NT_NOMINA[i].valor, NT_NOMINA[i].titulus);
+            printf("  %3d: %s\n", NT_NOMINA[i].valor,
+                NT_NOMINA[i].titulus);
         }
         redde ZEPHYRUM;
     }
@@ -1841,13 +1900,15 @@ cmd_nts(vacuum)
     printf("Known non-terminals (%d):\n", g_nt_numerus);
     per (i = ZEPHYRUM; i < g_nt_numerus; i++)
     {
-        printf("  %3d: %s\n", g_nt_tabula[i].valor, g_nt_tabula[i].titulus);
+        printf("  %3d: %s\n", g_nt_tabula[i].valor,
+            g_nt_tabula[i].titulus);
     }
     redde ZEPHYRUM;
 }
 
 interior integer
-cmd_rules(constans character* nt_titulus)
+cmd_rules (
+    constans character* nt_titulus)
 {
     s32 nt;
     i32 inventa;
@@ -1856,8 +1917,10 @@ cmd_rules(constans character* nt_titulus)
     nt = parsere_nt_titulus(nt_titulus);
     si (nt < (s32)ZEPHYRUM)
     {
-        fprintf(stderr, "Error: Non-terminalis '%s' ignotum\n", nt_titulus);
-        fprintf(stderr, "Exempla: CONIUNCTIO, DISIUNCTIO, AEQUALITAS, EXPR\n");
+        fprintf(stderr, "Error: Non-terminalis '%s' ignotum\n",
+            nt_titulus);
+        fprintf(stderr,
+            "Exempla: CONIUNCTIO, DISIUNCTIO, AEQUALITAS, EXPR\n");
         redde I;
     }
 
@@ -1893,6 +1956,7 @@ cmd_rules(constans character* nt_titulus)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Command: clone - Generate entries for new token based on existing
  *
@@ -1903,14 +1967,17 @@ cmd_rules(constans character* nt_titulus)
  * ================================================== */
 
 interior integer
-cmd_clone(constans character* fons_nomen, constans character* target_nomen)
+cmd_clone (
+    constans character* fons_nomen,
+    constans character* target_nomen)
 {
-    s32 fons_val;
-    i32 i;
-    i32 num_status;
-    i32 status;
-    i32 inventa;
-    constans character* actio_nomina[] = { "ERROR", "SHIFT", "REDUCE", "ACCEPT" };
+                   s32  fons_val;
+                   i32  i;
+                   i32  num_status;
+                   i32  status;
+                   i32  inventa;
+    constans character* actio_nomina[] = { "ERROR", "SHIFT", "REDUCE",
+        "ACCEPT" };
 
     si (g_actio_tabula == NIHIL)
     {
@@ -1923,15 +1990,17 @@ cmd_clone(constans character* fons_nomen, constans character* target_nomen)
     si (fons_val < ZEPHYRUM)
     {
         fprintf(stderr, "Error: Lexema '%s' ignotum\n", fons_nomen);
-        fprintf(stderr, "Usa 'glr_quaestio tokens' pro lista lexematum\n");
+        fprintf(stderr,
+            "Usa 'glr_quaestio tokens' pro lista lexematum\n");
         redde I;
     }
 
-    num_status = computare_max_status();
-    inventa = ZEPHYRUM;
+    num_status  = computare_max_status();
+    inventa     = ZEPHYRUM;
 
     printf("/* ==================================================\n");
-    printf(" * Clone: ARBOR2_LEXEMA_%s -> ARBOR2_LEXEMA_%s\n", fons_nomen, target_nomen);
+    printf(" * Clone: ARBOR2_LEXEMA_%s -> ARBOR2_LEXEMA_%s\n",
+        fons_nomen, target_nomen);
     printf(" * ================================================== */\n\n");
 
     /* Iterate through states in order */
@@ -1974,15 +2043,18 @@ cmd_clone(constans character* fons_nomen, constans character* target_nomen)
         }
     }
 
-    printf("/* Totalis: %d entries to add across %d states */\n", inventa, num_status);
+    printf("/* Totalis: %d entries to add across %d states */\n",
+        inventa, num_status);
 
     si (inventa == ZEPHYRUM)
     {
-        printf("/* Nulla entries inventa pro ARBOR2_LEXEMA_%s */\n", fons_nomen);
+        printf("/* Nulla entries inventa pro ARBOR2_LEXEMA_%s */\n",
+            fons_nomen);
     }
 
     redde ZEPHYRUM;
 }
+
 
 /* ==================================================
  * Command: analyze-level - Document what a precedence level consists of
@@ -1994,7 +2066,9 @@ cmd_clone(constans character* fons_nomen, constans character* target_nomen)
  * ================================================== */
 
 interior integer
-cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
+cmd_analyze_level (
+    constans character* nt_nomen,
+    constans character* op_nomen)
 {
     s32 op_val;
     i32 i;
@@ -2027,23 +2101,26 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     }
 
     printf("=============================================================\n");
-    printf("PRECEDENCE LEVEL ANALYSIS: %s (operator: %s)\n", nt_nomen, op_nomen);
+    printf("PRECEDENCE LEVEL ANALYSIS: %s (operator: %s)\n", nt_nomen,
+        op_nomen);
     printf("=============================================================\n\n");
 
     /* 1. Find all SHIFT entries for the operator */
     printf("## 1. SHIFT Entries (where the operator is consumed)\n\n");
-    printf("These states SHIFT when they see %s, moving to a new state\n", op_nomen);
+    printf("These states SHIFT when they see %s, moving to a new state\n",
+        op_nomen);
     printf("to parse the right-hand side of the expression.\n\n");
 
     shift_count = ZEPHYRUM;
     per (i = ZEPHYRUM; i < g_actio_numerus; i++)
     {
-        si (g_actio_tabula[i].lexema == op_val &&
-            g_actio_tabula[i].actio == I) /* SHIFT */
+        si (   g_actio_tabula[i].lexema == op_val
+            && g_actio_tabula[i].actio  == I) /* SHIFT */
         {
             si (shift_count < 64)
             {
-                shift_states[shift_count] = (i32)g_actio_tabula[i].status;
+                shift_states[shift_count] =
+                    (i32)g_actio_tabula[i].status;
                 shift_targets[shift_count] = g_actio_tabula[i].valor;
                 shift_count++;
             }
@@ -2057,7 +2134,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
         per (i = ZEPHYRUM; i < shift_count; i++)
         {
             printf("| %10d | %8d | After %s, shift %s |\n",
-                   shift_states[i], shift_targets[i], nt_nomen, op_nomen);
+                   shift_states[i], shift_targets[i], nt_nomen,
+                   op_nomen);
         }
         printf("\n");
 
@@ -2079,18 +2157,20 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
 
     /* 2. Find all REDUCE entries for the operator */
     printf("## 2. REDUCE Entries (where the operator triggers reduction)\n\n");
-    printf("These states REDUCE when they see %s, building up the\n", op_nomen);
+    printf("These states REDUCE when they see %s, building up the\n",
+        op_nomen);
     printf("parse tree before the operator can be processed.\n\n");
 
     reduce_count = ZEPHYRUM;
     per (i = ZEPHYRUM; i < g_actio_numerus; i++)
     {
-        si (g_actio_tabula[i].lexema == op_val &&
-            g_actio_tabula[i].actio == II) /* REDUCE */
+        si (   g_actio_tabula[i].lexema == op_val
+            && g_actio_tabula[i].actio  == II) /* REDUCE */
         {
             si (reduce_count < 64)
             {
-                reduce_states[reduce_count] = (i32)g_actio_tabula[i].status;
+                reduce_states[reduce_count] =
+                    (i32)g_actio_tabula[i].status;
                 reduce_rules[reduce_count] = g_actio_tabula[i].valor;
                 reduce_count++;
             }
@@ -2108,7 +2188,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
         }
         si (reduce_count > 20)
         {
-            printf("| ...   | ...         | (%d more) |\n", reduce_count - 20);
+            printf("| ...   | ...         | (%d more) |\n", reduce_count
+                - 20);
         }
         printf("\n");
         printf("Total REDUCE entries: %d\n\n", reduce_count);
@@ -2119,8 +2200,10 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     }
 
     /* 3. Find GOTO entries for this NT */
-    printf("## 3. GOTO Entries (where reductions to %s lead)\n\n", nt_nomen);
-    printf("After reducing to %s, these GOTO entries determine\n", nt_nomen);
+    printf("## 3. GOTO Entries (where reductions to %s lead)\n\n",
+        nt_nomen);
+    printf("After reducing to %s, these GOTO entries determine\n",
+        nt_nomen);
     printf("which state to transition to.\n\n");
 
     goto_count = ZEPHYRUM;
@@ -2132,8 +2215,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
         {
             si (goto_count < 64)
             {
-                goto_from[goto_count] = g_goto_tabula[i].status;
-                goto_to[goto_count] = g_goto_tabula[i].status_novus;
+                goto_from[goto_count]  = g_goto_tabula[i].status;
+                goto_to[goto_count]    = g_goto_tabula[i].status_novus;
                 goto_count++;
             }
         }
@@ -2150,10 +2233,12 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
         }
         si (goto_count > 20)
         {
-            printf("| ...        | ...      | (%d more) |\n", goto_count - 20);
+            printf("| ...        | ...      | (%d more) |\n", goto_count
+                - 20);
         }
         printf("\n");
-        printf("Total GOTO entries pointing to state %d: %d\n\n", after_nt_state, goto_count);
+        printf("Total GOTO entries pointing to state %d: %d\n\n",
+            after_nt_state, goto_count);
     }
     alioquin
     {
@@ -2162,7 +2247,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
 
     /* 4. Summary and template for adding a new level */
     printf("## 4. TEMPLATE: Adding a New Precedence Level\n\n");
-    printf("To add a new level (e.g., PIPA_BITWISE with '|') similar to %s:\n\n", nt_nomen);
+    printf("To add a new level (e.g., PIPA_BITWISE with '|') similar to %s:\n\n",
+        nt_nomen);
 
     printf("### Step 1: Add the non-terminal\n");
     printf("```c\n");
@@ -2182,7 +2268,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     printf("{ ARBOR2_NT_NEW_LEVEL, 1, ARBOR2_NODUS_ERROR, \"new -> lower\" },\n");
     printf("```\n\n");
 
-    printf("### Step 3: Create 'after NT' state (like state %d)\n", after_nt_state);
+    printf("### Step 3: Create 'after NT' state (like state %d)\n",
+        after_nt_state);
     printf("```c\n");
     printf("/* State N: after NEW_LEVEL - shift on new_op or reduce */\n");
     printf("hic_manens constans Arbor2TabulaActio STATUS_N_ACTIONES[] = {\n");
@@ -2192,7 +2279,8 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     printf("};\n");
     printf("```\n\n");
 
-    printf("### Step 4: Create 'after operator' state (like state %d)\n", after_op_state);
+    printf("### Step 4: Create 'after operator' state (like state %d)\n",
+        after_op_state);
     printf("```c\n");
     printf("/* State N+1: after 'new_op' - expect RHS expression */\n");
     printf("hic_manens constans Arbor2TabulaActio STATUS_N1_ACTIONES[] = {\n");
@@ -2235,6 +2323,7 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Command: checklist - Complete checklist for adding a new precedence level
  *
@@ -2246,16 +2335,16 @@ cmd_analyze_level(constans character* nt_nomen, constans character* op_nomen)
  * ================================================== */
 
 interior integer
-cmd_checklist(vacuum)
+cmd_checklist (vacuum)
 {
-    i32 i;
-    i32 n;
-    i32 expression_context_states[32];
-    i32 expr_ctx_count;
-    i32 basic_states[] = { 1, 2, 3, 4, 5 };
-    i32 basic_count;
-    i32 expr_chain_states[64];
-    i32 expr_chain_count;
+                   i32  i;
+                   i32  n;
+                   i32  expression_context_states[32];
+                   i32  expr_ctx_count;
+                   i32  basic_states[] = { 1, 2, 3, 4, 5 };
+                   i32  basic_count;
+                   i32  expr_chain_states[64];
+                   i32  expr_chain_count;
     constans character* desc;
 
     si (g_goto_tabula == NIHIL || g_actio_tabula == NIHIL)
@@ -2287,7 +2376,8 @@ cmd_checklist(vacuum)
             i32 j;
             per (j = ZEPHYRUM; j < expr_ctx_count; j++)
             {
-                si (expression_context_states[j] == g_goto_tabula[i].status)
+                si (expression_context_states[j]
+                    == g_goto_tabula[i].status)
                 {
                     found = VERUM;
                     frange;
@@ -2295,7 +2385,8 @@ cmd_checklist(vacuum)
             }
             si (!found && expr_ctx_count < 32)
             {
-                expression_context_states[expr_ctx_count] = g_goto_tabula[i].status;
+                expression_context_states[expr_ctx_count] =
+                    g_goto_tabula[i].status;
                 expr_ctx_count++;
             }
         }
@@ -2324,7 +2415,8 @@ cmd_checklist(vacuum)
     printf("integer, after-paren, deref, addr-of). They need REDUCE\n");
     printf("entries for ANY new binary operator.\n\n");
 
-    basic_count = (i32)(magnitudo(basic_states) / magnitudo(basic_states[ZEPHYRUM]));
+    basic_count = (i32)(magnitudo(basic_states)
+        / magnitudo(basic_states[ZEPHYRUM]));
     printf("States: ");
     per (i = ZEPHYRUM; i < basic_count; i++)
     {
@@ -2353,7 +2445,8 @@ cmd_checklist(vacuum)
     {
         si (n == ZEPHYRUM)
         {
-            printf("%s <- lowest precedence\n", EXPR_CHAIN_NT_NOMINA[n]);
+            printf("%s <- lowest precedence\n",
+                EXPR_CHAIN_NT_NOMINA[n]);
         }
         alioquin
         {
@@ -2368,7 +2461,8 @@ cmd_checklist(vacuum)
     printf("```\n\n");
 
     /* Dynamically find and display expression chain states */
-    expr_chain_count = collectare_expr_chain_states(expr_chain_states, 64);
+    expr_chain_count = collectare_expr_chain_states(expr_chain_states,
+        64);
 
     printf("Expression chain states found: %d\n\n", expr_chain_count);
     printf("| State | Description |\n");
@@ -2473,6 +2567,7 @@ cmd_checklist(vacuum)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Command: expr-states - List all expression-context states
  *
@@ -2481,12 +2576,12 @@ cmd_checklist(vacuum)
  * ================================================== */
 
 interior integer
-cmd_expr_states(vacuum)
+cmd_expr_states (vacuum)
 {
-    i32 i;
-    i32 j;
-    i32 expression_context_states[64];
-    i32 expr_ctx_count;
+                   i32  i;
+                   i32  j;
+                   i32  expression_context_states[64];
+                   i32  expr_ctx_count;
     constans character* desc;
 
     si (g_goto_tabula == NIHIL)
@@ -2505,7 +2600,8 @@ cmd_expr_states(vacuum)
             b32 found = FALSUM;
             per (j = ZEPHYRUM; j < expr_ctx_count; j++)
             {
-                si (expression_context_states[j] == g_goto_tabula[i].status)
+                si (expression_context_states[j]
+                    == g_goto_tabula[i].status)
                 {
                     found = VERUM;
                     frange;
@@ -2513,7 +2609,8 @@ cmd_expr_states(vacuum)
             }
             si (!found && expr_ctx_count < 64)
             {
-                expression_context_states[expr_ctx_count] = g_goto_tabula[i].status;
+                expression_context_states[expr_ctx_count] =
+                    g_goto_tabula[i].status;
                 expr_ctx_count++;
             }
         }
@@ -2545,6 +2642,7 @@ cmd_expr_states(vacuum)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Command: chain-states - List reduction chain states
  *
@@ -2554,17 +2652,19 @@ cmd_expr_states(vacuum)
  * ================================================== */
 
 interior integer
-cmd_chain_states(constans character* flag)
+cmd_chain_states (
+    constans character* flag)
 {
-    i32 i;
+                   i32  i;
     constans character* desc;
-    i32 chain_states[64];
-    i32 chain_count;
-    b32 expr_only;
+                   i32  chain_states[64];
+                   i32  chain_count;
+                   b32  expr_only;
 
     si (g_status_desc_tabula == NIHIL)
     {
-        fprintf(stderr, "Error: STATUS_TABULA descriptiones non parsitae\n");
+        fprintf(stderr,
+            "Error: STATUS_TABULA descriptiones non parsitae\n");
         redde I;
     }
 
@@ -2605,15 +2705,16 @@ cmd_chain_states(constans character* flag)
             si (desc != NIHIL && strstr(desc, "after ") != NIHIL)
             {
                 /* Check if it's an "after <NT>" pattern (not "after op") */
-                si (strstr(desc, "after '") == NIHIL &&
-                    strstr(desc, "after FACTOR") == NIHIL)
+                si (   strstr(desc, "after '")      == NIHIL
+                    && strstr(desc, "after FACTOR") == NIHIL)
                 {
                     printf("| %5d | %s |\n",
                            g_status_desc_tabula[i].status,
                            desc);
                     si (chain_count < 64)
                     {
-                        chain_states[chain_count] = g_status_desc_tabula[i].status;
+                        chain_states[chain_count] =
+                            g_status_desc_tabula[i].status;
                         chain_count++;
                     }
                 }
@@ -2639,7 +2740,7 @@ cmd_chain_states(constans character* flag)
 }
 
 interior integer
-cmd_conflicts(vacuum)
+cmd_conflicts (vacuum)
 {
     i32 num_status;
     i32 status;
@@ -2662,9 +2763,9 @@ cmd_conflicts(vacuum)
         redde I;
     }
 
-    num_status = computare_max_status();
-    total_conflicts = ZEPHYRUM;
-    intentional_conflicts = ZEPHYRUM;
+    num_status             = computare_max_status();
+    total_conflicts        = ZEPHYRUM;
+    intentional_conflicts  = ZEPHYRUM;
 
     printf("Quaerendo conflictus in %d statibus...\n\n", num_status);
 
@@ -2688,8 +2789,8 @@ cmd_conflicts(vacuum)
                 si (lexemata_visa[j] == g_actio_tabula[i].lexema)
                 {
                     /* Same lexema - check if actually different action */
-                    si (actiones_visae[j] == g_actio_tabula[i].actio &&
-                        valores_visi[j] == g_actio_tabula[i].valor)
+                    si (   actiones_visae[j] == g_actio_tabula[i].actio
+                        && valores_visi[j]   == g_actio_tabula[i].valor)
                     {
                         /* Identical entry (duplicate) - not a conflict */
                         invenit_conflictum = VERUM; /* Skip adding again */
@@ -2700,8 +2801,8 @@ cmd_conflicts(vacuum)
                     {
                         b32 est_intentus;
 
-                        est_intentus = intentus_visi[j] ||
-                                       g_actio_tabula[i].conflictus_intentus;
+                        est_intentus = intentus_visi[j]
+                            || g_actio_tabula[i].conflictus_intentus;
 
                         printf("  State %d: CONFLICTUS pro %s%s\n",
                                status,
@@ -2727,10 +2828,13 @@ cmd_conflicts(vacuum)
             /* Only add to seen list if not a duplicate */
             si (!invenit_conflictum && numerus_visorum < 256)
             {
-                lexemata_visa[numerus_visorum] = g_actio_tabula[i].lexema;
-                actiones_visae[numerus_visorum] = g_actio_tabula[i].actio;
+                lexemata_visa[numerus_visorum] =
+                    g_actio_tabula[i].lexema;
+                actiones_visae[numerus_visorum] =
+                    g_actio_tabula[i].actio;
                 valores_visi[numerus_visorum] = g_actio_tabula[i].valor;
-                intentus_visi[numerus_visorum] = g_actio_tabula[i].conflictus_intentus;
+                intentus_visi[numerus_visorum] =
+                    g_actio_tabula[i].conflictus_intentus;
                 numerus_visorum++;
             }
         }
@@ -2743,12 +2847,13 @@ cmd_conflicts(vacuum)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Main
  * ================================================== */
 
 interior b32
-initializare_tabulas(vacuum)
+initializare_tabulas (vacuum)
 {
     /* Initialize global state */
     g_piscina = piscina_generare_dynamicum("glr_quaestio", 1024 * 128);
@@ -2768,7 +2873,8 @@ initializare_tabulas(vacuum)
             &g_lexema_tabula,
             &g_lexema_numerus))
     {
-        fprintf(stderr, "Warning: Non potest extrahere lexema enum - using fallback\n");
+        fprintf(stderr,
+            "Warning: Non potest extrahere lexema enum - using fallback\n");
         /* Continue anyway - token lookup will fail but other commands work */
     }
 
@@ -2780,7 +2886,8 @@ initializare_tabulas(vacuum)
             &g_nt_tabula,
             &g_nt_numerus))
     {
-        fprintf(stderr, "Warning: Non potest extrahere NT enum - using fallback\n");
+        fprintf(stderr,
+            "Warning: Non potest extrahere NT enum - using fallback\n");
         /* Continue anyway - NT lookup will use hardcoded table */
     }
 
@@ -2790,7 +2897,8 @@ initializare_tabulas(vacuum)
             &g_int_nt_tabula,
             &g_int_nt_numerus))
     {
-        fprintf(stderr, "Warning: Non potest extrahere INT_NT defines - using fallback\n");
+        fprintf(stderr,
+            "Warning: Non potest extrahere INT_NT defines - using fallback\n");
         /* Continue anyway - will use hardcoded NT_NOMINA table */
     }
 
@@ -2812,13 +2920,17 @@ initializare_tabulas(vacuum)
 
     si (!parsere_status_descriptiones("lib/arbor2_glr_tabula.c"))
     {
-        fprintf(stderr, "Warning: Non potest parsere STATUS_TABULA descriptiones\n");
+        fprintf(stderr,
+            "Warning: Non potest parsere STATUS_TABULA descriptiones\n");
     }
 
     redde VERUM;
 }
 
-integer principale(integer argc, constans character* constans* argv)
+integer
+principale (
+    integer argc,
+    constans character* constans* argv)
 {
     /* Initialize lookup tables */
     si (!initializare_tabulas())
@@ -2832,8 +2944,8 @@ integer principale(integer argc, constans character* constans* argv)
         redde I;
     }
 
-    si (strcmp(argv[I], "--help") == ZEPHYRUM ||
-        strcmp(argv[I], "-h") == ZEPHYRUM)
+    si (   strcmp(argv[I], "--help") == ZEPHYRUM
+        || strcmp(argv[I], "-h")     == ZEPHYRUM)
     {
         imprimere_auxilium();
         redde ZEPHYRUM;
@@ -2872,7 +2984,8 @@ integer principale(integer argc, constans character* constans* argv)
     si (strcmp(argv[I], "chain-states") == ZEPHYRUM)
     {
         /* Optional --expr flag for expression-only mode */
-        constans character* chain_flag = (argc >= III) ? argv[II] : NIHIL;
+        constans character* chain_flag = (argc
+            >= III) ? argv[II] : NIHIL;
         redde cmd_chain_states(chain_flag);
     }
 
@@ -2915,7 +3028,8 @@ integer principale(integer argc, constans character* constans* argv)
         {
             fprintf(stderr, "Error: clone requirit duo argumenta\n");
             fprintf(stderr, "Usa: glr_quaestio clone SOURCE TARGET\n");
-            fprintf(stderr, "Exemplum: glr_quaestio clone PLUS SPACESHIP\n");
+            fprintf(stderr,
+                "Exemplum: glr_quaestio clone PLUS SPACESHIP\n");
             redde I;
         }
         redde cmd_clone(argv[II], argv[III]);
@@ -2926,9 +3040,12 @@ integer principale(integer argc, constans character* constans* argv)
     {
         si (argc < IV)
         {
-            fprintf(stderr, "Error: analyze-level requirit duo argumenta\n");
-            fprintf(stderr, "Usa: glr_quaestio analyze-level NT OPERATOR\n");
-            fprintf(stderr, "Exemplum: glr_quaestio analyze-level CONIUNCTIO DUAMPERSAND\n");
+            fprintf(stderr,
+                "Error: analyze-level requirit duo argumenta\n");
+            fprintf(stderr,
+                "Usa: glr_quaestio analyze-level NT OPERATOR\n");
+            fprintf(stderr,
+                "Exemplum: glr_quaestio analyze-level CONIUNCTIO DUAMPERSAND\n");
             redde I;
         }
         redde cmd_analyze_level(argv[II], argv[III]);

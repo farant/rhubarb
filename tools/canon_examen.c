@@ -30,29 +30,41 @@
 
 #define REGISTRUM "canones.registrum"
 
-interior constans character* vitium_campus(CanonVitium* v,
+interior constans character*
+vitium_campus (
+                                         CanonVitium* v,
                                            character* buffer,
-                                           i32 tectum);
-interior Canon* canonem_onerare(chorda via_canonis,
-                                Piscina* piscina,
+                                                 i32  tectum);
+interior Canon*
+canonem_onerare (
+                                             chorda  via_canonis,
+                                            Piscina* piscina,
                                 InternamentumChorda* intern);
-interior i32 vitia_imprimere(constans character* via,
+interior i32
+vitia_imprimere (
+                             constans character* via,
                              constans character* fons_iudicii,
-                             Xar* vitia, b32 machina);
-interior vacuum _campum(chorda* c, constans character* cadens);
-interior b32 index_scribere(constans character* via,
-                            Piscina* piscina,
+                                            Xar* vitia,
+                                            b32  machina);
+interior vacuum
+_campum (
+                chorda* c,
+    constans character* cadens);
+interior b32
+index_scribere (
+                             constans character* via,
+                                        Piscina* piscina,
                             InternamentumChorda* intern);
 
 /* campus 'detail' cum limitibus cardinalitatis */
 interior constans character*
-vitium_campus(
+vitium_campus (
     CanonVitium* v,
-    character*   buffer,
-    i32          tectum)
+      character* buffer,
+            i32  tectum)
 {
-    si (v->genus == CANON_LIBERI_PAUCI ||
-        v->genus == CANON_LIBERI_MULTI)
+    si (   v->genus == CANON_LIBERI_PAUCI
+        || v->genus == CANON_LIBERI_MULTI)
     {
         sprintf(buffer, "%.*s (%u, limes %u)",
                 v->detail ? (integer)v->detail->mensura : 1,
@@ -79,14 +91,14 @@ vitium_campus(
 }
 
 interior Canon*
-canonem_onerare(
-    chorda                via_canonis,
-    Piscina*              piscina,
-    InternamentumChorda*  intern)
+canonem_onerare (
+                 chorda  via_canonis,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     chorda  fons_canonis;
     chorda  causa;
-    Canon*  canon;
+     Canon* canon;
 
     fons_canonis = filum_legere_totum(
         chorda_ut_cstr(via_canonis, piscina), piscina);
@@ -112,11 +124,11 @@ canonem_onerare(
 }
 
 interior i32
-vitia_imprimere(
-    constans character*  via,
-    constans character*  fons_iudicii,
-    Xar*                 vitia,
-    b32                  machina)
+vitia_imprimere (
+    constans character* via,
+    constans character* fons_iudicii,
+                   Xar* vitia,
+                   b32  machina)
 {
     i32 j;
     i32 numerus;
@@ -126,11 +138,11 @@ vitia_imprimere(
     per (j = ZEPHYRUM; j < numerus; j++)
     {
         CanonVitium* v;
-        character    buffer[DXII];
-        i32          linea;
+          character  buffer[DXII];
+                i32  linea;
 
-        v = (CanonVitium*)xar_obtinere(vitia, j);
-        linea = v->nodus ? v->nodus->linea : ZEPHYRUM;
+        v      = (CanonVitium*)xar_obtinere(vitia, j);
+        linea  = v->nodus ? v->nodus->linea : ZEPHYRUM;
 
         si (machina)
         {
@@ -165,9 +177,9 @@ vitia_imprimere(
 /* campum TSV imprimere: chorda aut valor cadens; lineae novae et
  * tabulata in spatia vertuntur ne TSV rumpatur */
 interior vacuum
-_campum(
-    chorda*              c,
-    constans character*  cadens)
+_campum (
+                chorda* c,
+    constans character* cadens)
 {
     i32 i;
 
@@ -200,15 +212,15 @@ _campum(
  * Consumptor primus: tools/natura_metamodulus_generare.sh
  * (catalogus METAMODULI e canone generatus, ne spec rancescat). */
 interior b32
-index_scribere(
-    constans character*   via,
-    Piscina*              piscina,
-    InternamentumChorda*  intern)
+index_scribere (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
-    chorda        fons;
-    StmlResultus  r;
-    i32           n;
-    i32           i;
+          chorda fons;
+    StmlResultus r;
+             i32 n;
+             i32 i;
 
     fons = filum_legere_totum(via, piscina);
     si (fons.mensura == ZEPHYRUM)
@@ -217,8 +229,8 @@ index_scribere(
         redde FALSUM;
     }
     r = stml_legere(fons, piscina, intern);
-    si (!r.successus || !r.elementum_radix ||
-        !chorda_aequalis_literis(*r.elementum_radix->titulus,
+    si (   !r.successus || !r.elementum_radix
+        || !chorda_aequalis_literis(*r.elementum_radix->titulus,
                                  "canon"))
     {
         fprintf(stderr,
@@ -230,7 +242,7 @@ index_scribere(
     per (i = ZEPHYRUM; i < n; i++)
     {
         StmlNodus* e;
-        chorda*    e_nomen;
+           chorda* e_nomen;
 
         e = stml_liberum_ad_indicem(r.elementum_radix, i);
         si (!e || e->genus != STML_NODUS_ELEMENTUM)
@@ -297,7 +309,7 @@ index_scribere(
             per (j = ZEPHYRUM; j < nl; j++)
             {
                 StmlNodus* l;
-                chorda*    l_nomen;
+                   chorda* l_nomen;
 
                 l = stml_liberum_ad_indicem(e, j);
                 si (!l || l->genus != STML_NODUS_ELEMENTUM)
@@ -335,12 +347,12 @@ index_scribere(
                     per (k = ZEPHYRUM; k < no; k++)
                     {
                         StmlNodus* o;
-                        chorda     t;
+                           chorda  t;
 
                         o = stml_liberum_ad_indicem(l, k);
-                        si (!o ||
-                            o->genus != STML_NODUS_ELEMENTUM ||
-                            !chorda_aequalis_literis(*o->titulus,
+                        si (   !o
+                            || o->genus != STML_NODUS_ELEMENTUM
+                            || !chorda_aequalis_literis(*o->titulus,
                                                      "optio"))
                         {
                             perge;
@@ -377,55 +389,55 @@ index_scribere(
 }
 
 s32
-principale(
-    s32          numerus,
-    character**  argumenta)
+principale (
+          s32   numerus,
+    character** argumenta)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    chorda               catalogus;
-    constans character*  canon_expressus;
-    b32                  machina;
-    s32                  i;
-    i32                  iudicatae;
-    i32                  vitia_summa;
+                 chorda  catalogus;
+     constans character* canon_expressus;
+                    b32  machina;
+                    s32  i;
+                    i32  iudicatae;
+                    i32  vitia_summa;
 
     i32 indexatae;
 
-    canon_expressus = NIHIL;
-    machina         = FALSUM;
-    iudicatae       = ZEPHYRUM;
-    vitia_summa     = ZEPHYRUM;
-    indexatae       = ZEPHYRUM;
+    canon_expressus  = NIHIL;
+    machina          = FALSUM;
+    iudicatae        = ZEPHYRUM;
+    vitia_summa      = ZEPHYRUM;
+    indexatae        = ZEPHYRUM;
 
-    piscina = piscina_generare_dynamicum("canon_examen", 4194304);
-    intern  = internamentum_creare(piscina);
+    piscina  = piscina_generare_dynamicum("canon_examen", 4194304);
+    intern   = internamentum_creare(piscina);
 
     catalogus = filum_legere_totum(REGISTRUM, piscina);
 
     per (i = I; i < numerus; i++)
     {
         constans character* via;
-        chorda              via_canonis;
-        chorda              fons;
-        chorda              causa;
-        StmlResultus        r;
-        StmlNodus*          infixus;
-        b32                 iudicata;
+                    chorda  via_canonis;
+                    chorda  fons;
+                    chorda  causa;
+              StmlResultus  r;
+                 StmlNodus* infixus;
+                       b32  iudicata;
 
         si (strcmp(argumenta[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
             perge;
         }
-        si (strcmp(argumenta[i], "-canon") == ZEPHYRUM &&
-            i + I < numerus)
+        si (   strcmp(argumenta[i], "-canon") == ZEPHYRUM
+            && i + I < numerus)
         {
             canon_expressus = argumenta[++i];
             perge;
         }
-        si (strcmp(argumenta[i], "-index") == ZEPHYRUM &&
-            i + I < numerus)
+        si (   strcmp(argumenta[i], "-index") == ZEPHYRUM
+            && i + I < numerus)
         {
             si (index_scribere(argumenta[++i], piscina, intern))
             {
@@ -451,8 +463,8 @@ principale(
             perge;
         }
 
-        infixus = canon_infixum_invenire(r.elementum_radix);
-        iudicata = FALSUM;
+        infixus   = canon_infixum_invenire(r.elementum_radix);
+        iudicata  = FALSUM;
 
         /* canonem registri invenire: RADIX VINCIT, extensio cadit.
          * '.stml' quattuor dialectos fert, ergo extensio illis
@@ -464,8 +476,8 @@ principale(
         }
         alioquin
         {
-            via_canonis.datum   = NIHIL;
-            via_canonis.mensura = ZEPHYRUM;
+            via_canonis.datum    = NIHIL;
+            via_canonis.mensura  = ZEPHYRUM;
             si (r.elementum_radix && r.elementum_radix->titulus)
             {
                 via_canonis = canon_registrum_quaerere_radice(
@@ -497,9 +509,9 @@ principale(
 
         si (infixus)
         {
-            chorda titulus_canonici;
-            chorda via_cc;
-            Canon* c_inf;
+            chorda  titulus_canonici;
+            chorda  via_cc;
+             Canon* c_inf;
 
             /* a. infixus IPSE contra canonem canonum - infixus
              * fractus clamat, non tacite iners fit */
@@ -556,8 +568,8 @@ principale(
 
     /* NIHIL IUDICATUM et NIHIL INVENTUM: non successus. Plagula
      * parsari nescia vitium est (exitus I), non absentia. */
-    si (iudicatae == ZEPHYRUM && vitia_summa == ZEPHYRUM &&
-        indexatae == ZEPHYRUM)
+    si (   iudicatae == ZEPHYRUM && vitia_summa == ZEPHYRUM
+        && indexatae == ZEPHYRUM)
     {
         fprintf(stderr,
             "canon_examen: NULLA plagula iudicata est\n");

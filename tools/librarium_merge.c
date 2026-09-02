@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 /* ==================================================
  * Configuratio
  * ================================================== */
@@ -22,18 +23,20 @@
 #define VIA_OUTPUT   "librarium.stml"
 #define VIA_INDEX    "gutenberg_index.stml"
 
+
 /* ==================================================
  * Contextus
  * ================================================== */
 
 nomen structura {
-    Piscina*              piscina;
-    InternamentumChorda*  intern;
-    StmlNodus*            radix;           /* Radix librarium */
-    TabulaDispersa*       viae_canonicae;  /* numerus -> via canonica */
-    i32                   libri_processati;
-    i32                   libri_errores;
+                Piscina* piscina;
+    InternamentumChorda* intern;
+              StmlNodus* radix;           /* Radix librarium */
+         TabulaDispersa* viae_canonicae;  /* numerus -> via canonica */
+                    i32  libri_processati;
+                    i32  libri_errores;
 } MergeContextus;
+
 
 /* ==================================================
  * Auxiliares
@@ -41,13 +44,16 @@ nomen structura {
 
 /* Convertere chorda ad C string (null-terminated) */
 hic_manens character*
-_chorda_ad_cstr(chorda ch, Piscina* piscina)
+_chorda_ad_cstr (
+     chorda  ch,
+    Piscina* piscina)
 {
     character* fructus;
-    i32 i;
+          i32  i;
 
     fructus = (character*)piscina_allocare(piscina, ch.mensura + 1);
-    per (i = 0; i < ch.mensura; i++) {
+    per (i = 0; i < ch.mensura; i++)
+    {
         fructus[i] = (character)ch.datum[i];
     }
     fructus[ch.mensura] = '\0';
@@ -57,16 +63,20 @@ _chorda_ad_cstr(chorda ch, Piscina* piscina)
 
 /* Extrahere numerum libri ex titulo fili (e.g., "10553.txt" -> 10553) */
 hic_manens s32
-_extrahere_numerum(chorda titulus)
+_extrahere_numerum (
+    chorda titulus)
 {
     s32 numerus = 0;
     i32 i;
 
-    per (i = 0; i < titulus.mensura; i++) {
+    per (i = 0; i < titulus.mensura; i++)
+    {
         character c = (character)titulus.datum[i];
-        si (c >= '0' && c <= '9') {
+        si (c >= '0' && c <= '9')
+        {
             numerus = numerus * 10 + (c - '0');
-        } alioquin {
+        } alioquin
+        {
             frange;
         }
     }
@@ -79,43 +89,55 @@ _extrahere_numerum(chorda titulus)
  * Detrahere 1000 si in /old/ directorio
  */
 hic_manens s32
-_scorare_via(chorda via, b32 in_old)
+_scorare_via (
+    chorda via,
+       b32 in_old)
 {
     s32 score = 0;
     s32 i;
-    s32 ultima_sep = -1;
-    s32 punctum = -1;
-    s32 mensura = (s32)via.mensura;
+    s32 ultima_sep  = -1;
+    s32 punctum     = -1;
+    s32 mensura     = (s32)via.mensura;
 
     /* Invenire ultimum / et ultimum . */
-    per (i = 0; i < mensura; i++) {
-        si ((character)via.datum[i] == '/') {
+    per (i = 0; i < mensura; i++)
+    {
+        si ((character)via.datum[i] == '/')
+        {
             ultima_sep = i;
         }
-        si ((character)via.datum[i] == '.') {
+        si ((character)via.datum[i] == '.')
+        {
             punctum = i;
         }
     }
 
     /* Extrahere nomen fili (post ultimum /) */
     {
-        s32 nomen_init = ultima_sep + 1;
-        s32 nomen_finis = punctum > nomen_init ? punctum : mensura;
+        s32 nomen_init   = ultima_sep + 1;
+        s32 nomen_finis  = punctum > nomen_init ? punctum : mensura;
 
         /* Quaerere -0, -8, vel -N pattern ante .txt */
-        si (nomen_finis - nomen_init >= 2) {
+        si (nomen_finis - nomen_init >= 2)
+        {
             s32 dash_pos = nomen_finis - 2;
             /* Verificare si est -N pattern */
-            dum (dash_pos > nomen_init) {
-                si ((character)via.datum[dash_pos] == '-') {
-                    character suffix = (character)via.datum[dash_pos + 1];
-                    si (suffix == '0') {
+            dum (dash_pos > nomen_init)
+            {
+                si ((character)via.datum[dash_pos] == '-')
+                {
+                    character suffix = (character)via.datum[dash_pos
+                        + 1];
+                    si (suffix == '0')
+                    {
                         /* -0 = UTF-8, optimus */
                         score = 100;
-                    } alioquin si (suffix == '8') {
+                    } alioquin si (suffix == '8')
+                    {
                         /* -8 = Latin-1, minus bonus */
                         score = 80;
-                    } alioquin si (suffix >= '1' && suffix <= '9') {
+                    } alioquin si (suffix >= '1' && suffix <= '9')
+                    {
                         /* -1, -2, etc = duplicata */
                         score = 50;
                     }
@@ -125,17 +147,20 @@ _scorare_via(chorda via, b32 in_old)
             }
 
             /* Si nullum -N inventum, est plain .txt */
-            si (score == 0) {
+            si (score == 0)
+            {
                 score = 90;
             }
-        } alioquin {
+        } alioquin
+        {
             /* Nomen brevissimum, probabiliter plain */
             score = 90;
         }
     }
 
     /* Penalizare si in old/ */
-    si (in_old) {
+    si (in_old)
+    {
         score -= 1000;
     }
 
@@ -144,23 +169,28 @@ _scorare_via(chorda via, b32 in_old)
 
 /* Selectare via canonica ex liber nodo in gutenberg_index.stml */
 hic_manens chorda
-_selectare_via_canonica(StmlNodus* liber, Piscina* piscina)
+_selectare_via_canonica (
+    StmlNodus* liber,
+      Piscina* piscina)
 {
     StmlNodus* filum;
-    chorda optima_via;
-    s32 optimus_score = -9999;
+       chorda  optima_via;
+          s32  optimus_score = -9999;
 
-    optima_via.datum = NIHIL;
-    optima_via.mensura = 0;
+    optima_via.datum    = NIHIL;
+    optima_via.mensura  = 0;
 
     filum = stml_invenire_liberum(liber, "filum");
-    dum (filum != NIHIL) {
+    dum (filum != NIHIL)
+    {
         chorda* via_attr = stml_attributum_capere(filum, "via");
-        si (via_attr != NIHIL && via_attr->mensura > 0) {
-            b32 in_old = stml_attributum_habet(filum, "in_old");
-            s32 score = _scorare_via(*via_attr, in_old);
+        si (via_attr != NIHIL && via_attr->mensura > 0)
+        {
+            b32 in_old  = stml_attributum_habet(filum, "in_old");
+            s32 score   = _scorare_via(*via_attr, in_old);
 
-            si (score > optimus_score) {
+            si (score > optimus_score)
+            {
                 optimus_score = score;
                 optima_via = chorda_transcribere(*via_attr, piscina);
             }
@@ -173,56 +203,68 @@ _selectare_via_canonica(StmlNodus* liber, Piscina* piscina)
 
 /* Invenire ultimum <result> blocum in textu */
 hic_manens chorda
-_invenire_ultimum_result(chorda textus, Piscina* piscina)
+_invenire_ultimum_result (
+     chorda  textus,
+    Piscina* piscina)
 {
-    chorda fructus;
-    constans character* tag_init = "<result>";
-    constans character* tag_finis = "</result>";
-    s32 init_len = 8;  /* length of "<result>" */
-    s32 finis_len = 9; /* length of "</result>" */
-    s32 ultima_initium = -1;
-    s32 ultima_finis = -1;
-    s32 i;
+                chorda  fructus;
+    constans character* tag_init        = "<result>";
+    constans character* tag_finis       = "</result>";
+                   s32  init_len        = 8;  /* length of "<result>" */
+                   s32  finis_len       = 9; /* length of "</result>" */
+                   s32  ultima_initium  = -1;
+                   s32  ultima_finis    = -1;
+                   s32  i;
 
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
 
     /* Quaerere omnes <result> blocos, recordare ultimum */
-    per (i = 0; i <= (s32)textus.mensura - init_len; i++) {
+    per (i = 0; i <= (s32)textus.mensura - init_len; i++)
+    {
         b32 congruit = VERUM;
         s32 j;
-        per (j = 0; j < init_len; j++) {
-            si ((character)textus.datum[(i32)(i + j)] != tag_init[j]) {
+        per (j = 0; j < init_len; j++)
+        {
+            si ((character)textus.datum[(i32)(i + j)] != tag_init[j])
+            {
                 congruit = FALSUM;
                 frange;
             }
         }
-        si (congruit) {
+        si (congruit)
+        {
             ultima_initium = (s32)i + init_len;
         }
     }
 
-    si (ultima_initium < 0) {
+    si (ultima_initium < 0)
+    {
         redde fructus;
     }
 
     /* Quaerere </result> post ultimum initium */
-    per (i = ultima_initium; i <= (s32)textus.mensura - finis_len; i++) {
+    per (i = ultima_initium; i <= (s32)textus.mensura - finis_len; i++)
+    {
         b32 congruit = VERUM;
         s32 j;
-        per (j = 0; j < finis_len; j++) {
-            si ((character)textus.datum[(i32)(i + j)] != tag_finis[j]) {
+        per (j = 0; j < finis_len; j++)
+        {
+            si ((character)textus.datum[(i32)(i + j)] != tag_finis[j])
+            {
                 congruit = FALSUM;
                 frange;
             }
         }
-        si (congruit) {
+        si (congruit)
+        {
             ultima_finis = (s32)i;
             frange;
         }
     }
 
-    si (ultima_finis < 0) {
+    si (ultima_finis < 0)
+    {
         redde fructus;
     }
 
@@ -230,9 +272,10 @@ _invenire_ultimum_result(chorda textus, Piscina* piscina)
     {
         s32 len = ultima_finis - ultima_initium;
         s32 k;
-        fructus.datum = (i8*)piscina_allocare(piscina, (i32)len);
-        fructus.mensura = (i32)len;
-        per (k = 0; k < len; k++) {
+        fructus.datum    = (i8*)piscina_allocare(piscina, (i32)len);
+        fructus.mensura  = (i32)len;
+        per (k = 0; k < len; k++)
+        {
             fructus.datum[k] = textus.datum[(i32)(ultima_initium + k)];
         }
     }
@@ -242,34 +285,43 @@ _invenire_ultimum_result(chorda textus, Piscina* piscina)
 
 /* Extrahere TOML inter ``` fences, vel totum contentum si non sunt fences */
 hic_manens chorda
-_extrahere_toml(chorda result_content, Piscina* piscina)
+_extrahere_toml (
+     chorda  result_content,
+    Piscina* piscina)
 {
     chorda fructus;
-    s32 initium = -1;
-    s32 finis = -1;
-    s32 i;
-    s32 fence_count = 0;
+       s32 initium  = -1;
+       s32 finis    = -1;
+       s32 i;
+       s32 fence_count = 0;
 
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
 
     /* Quaerere primum ``` (post "toml" si praesens) */
-    per (i = 0; i < (s32)result_content.mensura - 2; i++) {
-        si ((character)result_content.datum[(i32)i] == '`' &&
-            (character)result_content.datum[(i32)i + 1] == '`' &&
-            (character)result_content.datum[(i32)i + 2] == '`') {
-            si (fence_count == 0) {
+    per (i = 0; i < (s32)result_content.mensura - 2; i++)
+    {
+        si (   (character)result_content.datum[(i32)i]     == '`'
+            && (character)result_content.datum[(i32)i + 1] == '`'
+            && (character)result_content.datum[(i32)i + 2] == '`')
+        {
+            si (fence_count == 0)
+            {
                 /* Saltare ad finem lineae */
                 initium = i + 3;
-                dum (initium < (s32)result_content.mensura &&
-                     (character)result_content.datum[(i32)initium] != '\n') {
+                dum (   initium < (s32)result_content.mensura
+                     && (character)result_content.datum[(i32)initium]
+                        != '\n')
+                {
                     initium++;
                 }
-                si (initium < (s32)result_content.mensura) {
+                si (initium < (s32)result_content.mensura)
+                {
                     initium++; /* Saltare \n */
                 }
                 fence_count++;
-            } alioquin {
+            } alioquin
+            {
                 finis = i;
                 frange;
             }
@@ -277,38 +329,49 @@ _extrahere_toml(chorda result_content, Piscina* piscina)
     }
 
     /* Si non inventae fences, uti toto contentu */
-    si (initium < 0 || finis < 0 || finis <= initium) {
-        s32 start = 0;
-        s32 end = (s32)result_content.mensura;
+    si (initium < 0 || finis < 0 || finis <= initium)
+    {
+        s32 start  = 0;
+        s32 end    = (s32)result_content.mensura;
         s32 k;
 
         /* Saltare spatium initiale */
-        dum (start < end) {
+        dum (start < end)
+        {
             character c = (character)result_content.datum[(i32)start];
-            si (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+            si (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+            {
                 start++;
-            } alioquin {
+            } alioquin
+            {
                 frange;
             }
         }
 
         /* Saltare spatium finale */
-        dum (end > start) {
-            character c = (character)result_content.datum[(i32)(end - 1)];
-            si (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+        dum (end > start)
+        {
+            character c = (character)result_content.datum[(i32)(end
+                - 1)];
+            si (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+            {
                 end--;
-            } alioquin {
+            } alioquin
+            {
                 frange;
             }
         }
 
-        si (end <= start) {
+        si (end <= start)
+        {
             redde fructus;
         }
 
-        fructus.datum = (i8*)piscina_allocare(piscina, (i32)(end - start));
+        fructus.datum = (i8*)piscina_allocare(piscina, (i32)(end
+            - start));
         fructus.mensura = (i32)(end - start);
-        per (k = 0; k < end - start; k++) {
+        per (k = 0; k < end - start; k++)
+        {
             fructus.datum[k] = result_content.datum[(i32)(start + k)];
         }
 
@@ -319,9 +382,10 @@ _extrahere_toml(chorda result_content, Piscina* piscina)
     {
         s32 len = finis - initium;
         s32 k;
-        fructus.datum = (i8*)piscina_allocare(piscina, (i32)len);
-        fructus.mensura = (i32)len;
-        per (k = 0; k < len; k++) {
+        fructus.datum    = (i8*)piscina_allocare(piscina, (i32)len);
+        fructus.mensura  = (i32)len;
+        per (k = 0; k < len; k++)
+        {
             fructus.datum[k] = result_content.datum[(i32)(initium + k)];
         }
     }
@@ -331,42 +395,50 @@ _extrahere_toml(chorda result_content, Piscina* piscina)
 
 /* Convertere s32 ad chorda */
 hic_manens chorda
-_s32_ad_chorda(s32 numerus, Piscina* piscina)
+_s32_ad_chorda (
+        s32  numerus,
+    Piscina* piscina)
 {
     character buffer[32];
-    i32 i = 0;
-    s32 n = numerus;
-    i32 start = 0;
-    i32 len;
-    i32 j;
-    chorda fructus;
+          i32 i      = 0;
+          s32 n      = numerus;
+          i32 start  = 0;
+          i32 len;
+          i32 j;
+       chorda fructus;
 
-    si (n < 0) {
-        buffer[i++] = '-';
-        n = -n;
-        start = 1;
+    si (n < 0)
+    {
+        buffer[i++]  = '-';
+        n            = -n;
+        start        = 1;
     }
 
-    si (n == 0) {
+    si (n == 0)
+    {
         buffer[i++] = '0';
-    } alioquin {
-        dum (n > 0) {
-            buffer[i++] = (character)('0' + n % 10);
-            n /= 10;
+    } alioquin
+    {
+        dum (n > 0)
+        {
+            buffer[i++]  = (character)('0' + n % 10);
+            n            /= 10;
         }
     }
 
     len = i;
     /* Reverse numerus part */
-    per (j = start; j < start + (len - start) / 2; j++) {
-        character temp = buffer[j];
-        buffer[j] = buffer[len - 1 - (j - start)];
-        buffer[len - 1 - (j - start)] = temp;
+    per (j = start; j < start + (len - start) / 2; j++)
+    {
+        character temp                 = buffer[j];
+        buffer[j]                      = buffer[len - 1 - (j - start)];
+        buffer[len - 1 - (j - start)]  = temp;
     }
 
-    fructus.datum = (i8*)piscina_allocare(piscina, (i32)len);
-    fructus.mensura = (i32)len;
-    per (j = 0; j < len; j++) {
+    fructus.datum    = (i8*)piscina_allocare(piscina, (i32)len);
+    fructus.mensura  = (i32)len;
+    per (j = 0; j < len; j++)
+    {
         fructus.datum[j] = (i8)buffer[j];
     }
 
@@ -375,38 +447,46 @@ _s32_ad_chorda(s32 numerus, Piscina* piscina)
 
 /* Extrahere annus ex liber nodo */
 hic_manens s32
-_extrahere_annus(StmlNodus* liber)
+_extrahere_annus (
+    StmlNodus* liber)
 {
     StmlNodus* annus_nodus;
     StmlNodus* textus;
-    chorda* valor;
-    s32 annus = 0;
-    s32 signum = 1;
-    i32 i;
+       chorda* valor;
+          s32  annus   = 0;
+          s32  signum  = 1;
+          i32  i;
 
     annus_nodus = stml_invenire_liberum(liber, "annus");
-    si (annus_nodus == NIHIL) {
+    si (annus_nodus == NIHIL)
+    {
         redde 9999; /* Libri sine anno ad finem */
     }
 
     textus = stml_primus_liberum(annus_nodus);
-    si (textus == NIHIL) {
+    si (textus == NIHIL)
+    {
         redde 9999;
     }
 
     valor = textus->valor; /* Textus nodi valor est chorda* */
-    si (valor == NIHIL || valor->datum == NIHIL || valor->mensura == 0) {
+    si (valor == NIHIL || valor->datum == NIHIL || valor->mensura == 0)
+    {
         redde 9999;
     }
 
     /* Parsare numerum */
-    per (i = 0; i < valor->mensura; i++) {
+    per (i = 0; i < valor->mensura; i++)
+    {
         character c = (character)valor->datum[i];
-        si (c >= '0' && c <= '9') {
+        si (c >= '0' && c <= '9')
+        {
             annus = annus * 10 + (c - '0');
-        } alioquin si (c == '-' && annus == 0) {
+        } alioquin si (c == '-' && annus == 0)
+        {
             signum = -1;
-        } alioquin {
+        } alioquin
+        {
             frange;
         }
     }
@@ -416,43 +496,53 @@ _extrahere_annus(StmlNodus* liber)
 
 /* Ordinare liberos per annum (insertion sort) */
 hic_manens vacuum
-_ordinare_per_annum(StmlNodus* radix, Piscina* piscina)
+_ordinare_per_annum (
+    StmlNodus* radix,
+      Piscina* piscina)
 {
-    Xar* libri;
-    i32 numerus;
+          Xar* libri;
+          i32  numerus;
     StmlNodus* liber;
-    s32 i;
-    s32 j;
+          s32  i;
+          s32  j;
 
     /* Colligere omnes liberos */
     libri = xar_creare(piscina, magnitudo(StmlNodus*));
 
     liber = stml_primus_liberum(radix);
-    dum (liber != NIHIL) {
-        StmlNodus** slot = (StmlNodus**)xar_addere(libri);
-        *slot = liber;
-        liber = stml_frater_proximus(liber);
+    dum (liber != NIHIL)
+    {
+        StmlNodus** slot  = (StmlNodus**)xar_addere(libri);
+        *slot             = liber;
+        liber             = stml_frater_proximus(liber);
     }
 
     numerus = xar_numerus(libri);
-    si (numerus <= 1) {
+    si (numerus <= 1)
+    {
         redde;
     }
 
     /* Insertion sort per annum */
-    per (i = 1; i < (s32)numerus; i++) {
+    per (i = 1; i < (s32)numerus; i++)
+    {
         StmlNodus* insertandus = *(StmlNodus**)xar_obtinere_s(libri, i);
-        s32 annus_insertandi = _extrahere_annus(insertandus);
+              s32  annus_insertandi = _extrahere_annus(insertandus);
         j = i - 1;
 
-        dum (j >= 0 && _extrahere_annus(*(StmlNodus**)xar_obtinere_s(libri, j)) > annus_insertandi) {
-            StmlNodus** slot_j1 = (StmlNodus**)xar_obtinere_s(libri, j + 1);
-            StmlNodus** slot_j = (StmlNodus**)xar_obtinere_s(libri, j);
-            *slot_j1 = *slot_j;
+        dum (   j >= 0
+             && _extrahere_annus(*(StmlNodus**)xar_obtinere_s(libri, j))
+                > annus_insertandi)
+        {
+            StmlNodus** slot_j1 = (StmlNodus**)xar_obtinere_s(libri, j
+                + 1);
+            StmlNodus** slot_j  = (StmlNodus**)xar_obtinere_s(libri, j);
+            *slot_j1            = *slot_j;
             j--;
         }
         {
-            StmlNodus** slot = (StmlNodus**)xar_obtinere_s(libri, j + 1);
+            StmlNodus** slot = (StmlNodus**)xar_obtinere_s(libri, j
+                + 1);
             *slot = insertandus;
         }
     }
@@ -460,57 +550,71 @@ _ordinare_per_annum(StmlNodus* radix, Piscina* piscina)
     /* Vacare liberos et readdere in ordine */
     stml_vacare_liberos(radix);
 
-    per (i = 0; i < (s32)numerus; i++) {
-        stml_liberum_addere(radix, *(StmlNodus**)xar_obtinere_s(libri, i));
+    per (i = 0; i < (s32)numerus; i++)
+    {
+        stml_liberum_addere(radix, *(StmlNodus**)xar_obtinere_s(libri,
+            i));
     }
 }
 
 /* Invenire liber nodum pro numero */
 hic_manens StmlNodus*
-_invenire_liber(StmlNodus* radix, s32 numerus)
+_invenire_liber (
+    StmlNodus* radix,
+          s32  numerus)
 {
     StmlNodus* liber;
-    chorda numerus_str;
-    character buffer[16];
-    i32 i = 0;
-    s32 n = numerus;
-    i32 len;
-    i32 j;
+       chorda  numerus_str;
+    character  buffer[16];
+          i32  i = 0;
+          s32  n = numerus;
+          i32  len;
+          i32  j;
 
     /* Convertere numerum ad buffer */
-    si (n == 0) {
+    si (n == 0)
+    {
         buffer[i++] = '0';
-    } alioquin {
-        dum (n > 0) {
-            buffer[i++] = (character)('0' + n % 10);
-            n /= 10;
+    } alioquin
+    {
+        dum (n > 0)
+        {
+            buffer[i++]  = (character)('0' + n % 10);
+            n            /= 10;
         }
     }
     len = i;
     /* Reverse */
-    per (j = 0; j < len / 2; j++) {
-        character temp = buffer[j];
-        buffer[j] = buffer[len - 1 - j];
-        buffer[len - 1 - j] = temp;
+    per (j = 0; j < len / 2; j++)
+    {
+        character temp       = buffer[j];
+        buffer[j]            = buffer[len - 1 - j];
+        buffer[len - 1 - j]  = temp;
     }
 
-    numerus_str.datum = (i8*)buffer;
-    numerus_str.mensura = (i32)len;
+    numerus_str.datum    = (i8*)buffer;
+    numerus_str.mensura  = (i32)len;
 
     /* Quaerere existentem liber */
     liber = stml_invenire_liberum(radix, "liber");
-    dum (liber != NIHIL) {
+    dum (liber != NIHIL)
+    {
         chorda* attr_numerus = stml_attributum_capere(liber, "numerus");
-        si (attr_numerus != NIHIL && attr_numerus->mensura == numerus_str.mensura) {
+        si (   attr_numerus          != NIHIL
+            && attr_numerus->mensura == numerus_str.mensura)
+        {
             b32 aequalis = VERUM;
             s32 k;
-            per (k = 0; k < (s32)numerus_str.mensura; k++) {
-                si (attr_numerus->datum[k] != numerus_str.datum[k]) {
+            per (k = 0; k < (s32)numerus_str.mensura; k++)
+            {
+                si (attr_numerus->datum[k] != numerus_str.datum[k])
+                {
                     aequalis = FALSUM;
                     frange;
                 }
             }
-            si (aequalis) {
+            si (aequalis)
+            {
                 redde liber;
             }
         }
@@ -522,54 +626,68 @@ _invenire_liber(StmlNodus* radix, s32 numerus)
 
 /* Addere vel actualizare elementum textus */
 hic_manens vacuum
-_addere_elementum_textus(MergeContextus* ctx, StmlNodus* liber,
-                         constans character* titulus, chorda valor)
+_addere_elementum_textus (
+                             MergeContextus* ctx,
+                                  StmlNodus* liber,
+                         constans character* titulus,
+                                     chorda  valor)
 {
     StmlNodus* existens;
     StmlNodus* novum;
     StmlNodus* textus;
 
-    si (valor.datum == NIHIL || valor.mensura == 0) {
+    si (valor.datum == NIHIL || valor.mensura == 0)
+    {
         redde;
     }
 
     /* Verificare si iam existit */
     existens = stml_invenire_liberum(liber, titulus);
-    si (existens != NIHIL) {
+    si (existens != NIHIL)
+    {
         redde;
     }
 
     /* Creare novum elementum */
     novum = stml_elementum_creare(ctx->piscina, ctx->intern, titulus);
-    textus = stml_textum_creare_ex_chorda(ctx->piscina, ctx->intern, valor);
+    textus = stml_textum_creare_ex_chorda(ctx->piscina, ctx->intern,
+        valor);
     stml_liberum_addere(novum, textus);
     stml_liberum_addere(liber, novum);
 }
 
 /* Verificare si chorda iam in xar */
 hic_manens b32
-_chorda_in_xar(Xar* xar, chorda ch)
+_chorda_in_xar (
+       Xar* xar,
+    chorda  ch)
 {
     i32 i;
     i32 num;
 
-    si (xar == NIHIL) {
+    si (xar == NIHIL)
+    {
         redde FALSUM;
     }
 
     num = xar_numerus(xar);
-    per (i = 0; i < num; i++) {
+    per (i = 0; i < num; i++)
+    {
         chorda* elem = (chorda*)xar_obtinere(xar, i);
-        si (elem->mensura == ch.mensura) {
+        si (elem->mensura == ch.mensura)
+        {
             b32 aequalis = VERUM;
             i32 j;
-            per (j = 0; j < (i32)ch.mensura; j++) {
-                si (elem->datum[j] != ch.datum[j]) {
+            per (j = 0; j < (i32)ch.mensura; j++)
+            {
+                si (elem->datum[j] != ch.datum[j])
+                {
                     aequalis = FALSUM;
                     frange;
                 }
             }
-            si (aequalis) {
+            si (aequalis)
+            {
                 redde VERUM;
             }
         }
@@ -580,49 +698,60 @@ _chorda_in_xar(Xar* xar, chorda ch)
 
 /* Addere chordam ad xar si non iam praesens */
 hic_manens vacuum
-_addere_chorda_si_non_praesens(Xar* xar, chorda ch)
+_addere_chorda_si_non_praesens (
+       Xar* xar,
+    chorda  ch)
 {
     chorda* nova;
 
-    si (ch.datum == NIHIL || ch.mensura == 0) {
+    si (ch.datum == NIHIL || ch.mensura == 0)
+    {
         redde;
     }
 
-    si (_chorda_in_xar(xar, ch)) {
+    si (_chorda_in_xar(xar, ch))
+    {
         redde;
     }
 
-    nova = (chorda*)xar_addere(xar);
-    *nova = ch;
+    nova   = (chorda*)xar_addere(xar);
+    *nova  = ch;
 }
 
 /* Colligere tags ex omnibus fontibus TOML */
 hic_manens Xar*
-_colligere_tags(TomlDocumentum* doc, Piscina* piscina)
+_colligere_tags (
+    TomlDocumentum* doc,
+           Piscina* piscina)
 {
     Xar* tags;
     Xar* temp;
-    i32 i;
-    i32 num;
+    i32  i;
+    i32  num;
 
     tags = xar_creare(piscina, magnitudo(chorda));
 
     /* 1. Primum tentare "Tags" directe */
     temp = toml_capere_tabulatum(doc, "Tags");
-    si (temp != NIHIL) {
+    si (temp != NIHIL)
+    {
         num = xar_numerus(temp);
-        per (i = 0; i < num; i++) {
+        per (i = 0; i < num; i++)
+        {
             chorda* elem = (chorda*)xar_obtinere(temp, i);
             _addere_chorda_si_non_praesens(tags, *elem);
         }
     }
 
     /* 2. Si vacua, tentare "categories" */
-    si (xar_numerus(tags) == 0) {
+    si (xar_numerus(tags) == 0)
+    {
         temp = toml_capere_tabulatum(doc, "categories");
-        si (temp != NIHIL) {
+        si (temp != NIHIL)
+        {
             num = xar_numerus(temp);
-            per (i = 0; i < num; i++) {
+            per (i = 0; i < num; i++)
+            {
                 chorda* elem = (chorda*)xar_obtinere(temp, i);
                 _addere_chorda_si_non_praesens(tags, *elem);
             }
@@ -630,76 +759,92 @@ _colligere_tags(TomlDocumentum* doc, Piscina* piscina)
     }
 
     /* 2b. Tentare singulares claves: "category", "Type", "Category" */
-    si (xar_numerus(tags) == 0) {
+    si (xar_numerus(tags) == 0)
+    {
         chorda val = toml_capere_chorda(doc, "category");
-        si (val.datum != NIHIL && val.mensura > 0) {
+        si (val.datum != NIHIL && val.mensura > 0)
+        {
             _addere_chorda_si_non_praesens(tags, val);
         }
     }
-    si (xar_numerus(tags) == 0) {
+    si (xar_numerus(tags) == 0)
+    {
         chorda val = toml_capere_chorda(doc, "Type");
-        si (val.datum != NIHIL && val.mensura > 0) {
+        si (val.datum != NIHIL && val.mensura > 0)
+        {
             _addere_chorda_si_non_praesens(tags, val);
         }
     }
-    si (xar_numerus(tags) == 0) {
+    si (xar_numerus(tags) == 0)
+    {
         chorda val = toml_capere_chorda(doc, "Category");
-        si (val.datum != NIHIL && val.mensura > 0) {
+        si (val.datum != NIHIL && val.mensura > 0)
+        {
             _addere_chorda_si_non_praesens(tags, val);
         }
     }
 
     /* 3. Mergere "audience" tabulatum vel chorda */
     temp = toml_capere_tabulatum(doc, "audience");
-    si (temp != NIHIL) {
+    si (temp != NIHIL)
+    {
         num = xar_numerus(temp);
-        per (i = 0; i < num; i++) {
+        per (i = 0; i < num; i++)
+        {
             chorda* elem = (chorda*)xar_obtinere(temp, i);
             _addere_chorda_si_non_praesens(tags, *elem);
         }
-    } alioquin {
+    } alioquin
+    {
         /* Tentare ut chorda singularis */
         chorda val = toml_capere_chorda(doc, "audience");
-        si (val.datum != NIHIL && val.mensura > 0) {
+        si (val.datum != NIHIL && val.mensura > 0)
+        {
             _addere_chorda_si_non_praesens(tags, val);
         }
     }
 
     /* 4. Mergere "religious" tabulatum */
     temp = toml_capere_tabulatum(doc, "religious");
-    si (temp != NIHIL) {
+    si (temp != NIHIL)
+    {
         num = xar_numerus(temp);
-        per (i = 0; i < num; i++) {
+        per (i = 0; i < num; i++)
+        {
             chorda* elem = (chorda*)xar_obtinere(temp, i);
             _addere_chorda_si_non_praesens(tags, *elem);
         }
     }
 
     /* 5. Verificare "appropriate_for_children" boolean (et variationes) */
-    si (toml_capere_boolean(doc, "appropriate_for_children") ||
-        toml_capere_boolean(doc, "Appropriate_for_children")) {
-        chorda tag;
+    si (   toml_capere_boolean(doc, "appropriate_for_children")
+        || toml_capere_boolean(doc, "Appropriate_for_children"))
+    {
+                    chorda  tag;
         constans character* lit = "appropriate-for-children";
-        i32 len = 24;
-        i32 k;
-        tag.datum = (i8*)piscina_allocare(piscina, len);
-        tag.mensura = len;
-        per (k = 0; k < len; k++) {
+                       i32  len = 24;
+                       i32  k;
+        tag.datum    = (i8*)piscina_allocare(piscina, len);
+        tag.mensura  = len;
+        per (k = 0; k < len; k++)
+        {
             tag.datum[k] = (i8)lit[k];
         }
         _addere_chorda_si_non_praesens(tags, tag);
     }
 
     /* 6. Verificare "catholic" boolean (et variationes) */
-    si (toml_capere_boolean(doc, "catholic") ||
-        toml_capere_boolean(doc, "Catholic")) {
-        chorda tag;
+    si (   toml_capere_boolean(doc, "catholic")
+        || toml_capere_boolean(doc, "Catholic"))
+    {
+                    chorda  tag;
         constans character* lit = "catholic";
-        i32 len = 8;
-        i32 k;
-        tag.datum = (i8*)piscina_allocare(piscina, len);
-        tag.mensura = len;
-        per (k = 0; k < len; k++) {
+                       i32  len = 8;
+                       i32  k;
+        tag.datum    = (i8*)piscina_allocare(piscina, len);
+        tag.mensura  = len;
+        per (k = 0; k < len; k++)
+        {
             tag.datum[k] = (i8)lit[k];
         }
         _addere_chorda_si_non_praesens(tags, tag);
@@ -710,32 +855,42 @@ _colligere_tags(TomlDocumentum* doc, Piscina* piscina)
 
 /* Addere tags */
 hic_manens vacuum
-_addere_tags(MergeContextus* ctx, StmlNodus* liber, Xar* tags)
+_addere_tags (
+    MergeContextus* ctx,
+         StmlNodus* liber,
+               Xar* tags)
 {
     StmlNodus* tags_nodus;
-    i32 num;
-    i32 i;
+          i32  num;
+          i32  i;
 
-    si (tags == NIHIL) {
+    si (tags == NIHIL)
+    {
         redde;
     }
 
     num = xar_numerus(tags);
-    si (num == 0) {
+    si (num == 0)
+    {
         redde;
     }
 
     /* Verificare si tags iam existit */
-    si (stml_invenire_liberum(liber, "tags") != NIHIL) {
+    si (stml_invenire_liberum(liber, "tags") != NIHIL)
+    {
         redde;
     }
 
-    tags_nodus = stml_elementum_creare(ctx->piscina, ctx->intern, "tags");
+    tags_nodus = stml_elementum_creare(ctx->piscina, ctx->intern,
+        "tags");
 
-    per (i = 0; i < num; i++) {
-        chorda* tag = (chorda*)xar_obtinere(tags, i);
-        StmlNodus* tag_elem = stml_elementum_creare(ctx->piscina, ctx->intern, "tag");
-        StmlNodus* tag_text = stml_textum_creare_ex_chorda(ctx->piscina, ctx->intern, *tag);
+    per (i = 0; i < num; i++)
+    {
+           chorda* tag = (chorda*)xar_obtinere(tags, i);
+        StmlNodus* tag_elem = stml_elementum_creare(ctx->piscina,
+            ctx->intern, "tag");
+        StmlNodus* tag_text = stml_textum_creare_ex_chorda(ctx->piscina,
+            ctx->intern, *tag);
         stml_liberum_addere(tag_elem, tag_text);
         stml_liberum_addere(tags_nodus, tag_elem);
     }
@@ -745,47 +900,53 @@ _addere_tags(MergeContextus* ctx, StmlNodus* liber, Xar* tags)
 
 /* Processare unum filum LLM */
 hic_manens s32
-_processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
-                  vacuum* contextus)
+_processare_filum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
-    MergeContextus* ctx = (MergeContextus*)contextus;
-    chorda titulus = introitus->titulus;
-    s32 numerus;
-    character* via_cstr;
-    chorda contentum;
-    chorda result_block;
-    chorda toml_text;
+    MergeContextus* ctx      = (MergeContextus*)contextus;
+            chorda  titulus  = introitus->titulus;
+               s32  numerus;
+         character* via_cstr;
+            chorda  contentum;
+            chorda  result_block;
+            chorda  toml_text;
     TomlDocumentum* doc;
-    StmlNodus* liber;
-    chorda valor_titulus;
-    chorda valor_auctor;
-    s32 valor_annus;
-    Xar* valor_tags;
-    chorda valor_summarium;
-    chorda valor_notae;
+         StmlNodus* liber;
+            chorda  valor_titulus;
+            chorda  valor_auctor;
+               s32  valor_annus;
+               Xar* valor_tags;
+            chorda  valor_summarium;
+            chorda  valor_notae;
 
     /* Ignorare si non est .txt */
-    si (titulus.mensura < 4) {
+    si (titulus.mensura < 4)
+    {
         redde 0;
     }
-    si ((character)titulus.datum[titulus.mensura - 4] != '.' ||
-        (character)titulus.datum[titulus.mensura - 3] != 't' ||
-        (character)titulus.datum[titulus.mensura - 2] != 'x' ||
-        (character)titulus.datum[titulus.mensura - 1] != 't') {
+    si (   (character)titulus.datum[titulus.mensura - 4] != '.'
+        || (character)titulus.datum[titulus.mensura - 3] != 't'
+        || (character)titulus.datum[titulus.mensura - 2] != 'x'
+        || (character)titulus.datum[titulus.mensura - 1] != 't')
+    {
         redde 0;
     }
 
     numerus = _extrahere_numerum(titulus);
-    si (numerus == 0) {
+    si (numerus == 0)
+    {
         redde 0;
     }
 
     imprimere("Processando %d...\n", numerus);
 
     /* Legere filum */
-    via_cstr = _chorda_ad_cstr(via_plena, ctx->piscina);
-    contentum = filum_legere_totum(via_cstr, ctx->piscina);
-    si (contentum.datum == NIHIL || contentum.mensura == 0) {
+    via_cstr   = _chorda_ad_cstr(via_plena, ctx->piscina);
+    contentum  = filum_legere_totum(via_cstr, ctx->piscina);
+    si (contentum.datum == NIHIL || contentum.mensura == 0)
+    {
         imprimere("  Error: non potest legere filum\n");
         ctx->libri_errores++;
         redde 0;
@@ -793,7 +954,8 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
 
     /* Extrahere ultimum <result> */
     result_block = _invenire_ultimum_result(contentum, ctx->piscina);
-    si (result_block.datum == NIHIL) {
+    si (result_block.datum == NIHIL)
+    {
         imprimere("  Error: non inventum <result>\n");
         ctx->libri_errores++;
         redde 0;
@@ -801,7 +963,8 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
 
     /* Extrahere TOML */
     toml_text = _extrahere_toml(result_block, ctx->piscina);
-    si (toml_text.datum == NIHIL) {
+    si (toml_text.datum == NIHIL)
+    {
         imprimere("  Error: non inventum TOML\n");
         ctx->libri_errores++;
         redde 0;
@@ -809,7 +972,8 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
 
     /* Parsare TOML */
     doc = toml_legere(toml_text, ctx->piscina);
-    si (!toml_successus(doc)) {
+    si (!toml_successus(doc))
+    {
         imprimere("  Error: TOML parsatio fallavit\n");
         ctx->libri_errores++;
         redde 0;
@@ -817,27 +981,32 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
 
     /* Invenire vel creare liber */
     liber = _invenire_liber(ctx->radix, numerus);
-    si (liber == NIHIL) {
-        chorda numerus_ch = _s32_ad_chorda(numerus, ctx->piscina);
-        character* numerus_cstr = _chorda_ad_cstr(numerus_ch, ctx->piscina);
-        liber = stml_elementum_creare(ctx->piscina, ctx->intern, "liber");
-        stml_attributum_addere(liber, ctx->piscina, ctx->intern, "numerus", numerus_cstr);
+    si (liber == NIHIL)
+    {
+           chorda  numerus_ch = _s32_ad_chorda(numerus, ctx->piscina);
+        character* numerus_cstr = _chorda_ad_cstr(numerus_ch,
+            ctx->piscina);
+        liber = stml_elementum_creare(ctx->piscina, ctx->intern,
+            "liber");
+        stml_attributum_addere(liber, ctx->piscina, ctx->intern,
+            "numerus", numerus_cstr);
         stml_liberum_addere(ctx->radix, liber);
     }
 
     /* Extrahere valores */
-    valor_titulus = toml_capere_chorda(doc, "Title");
-    valor_auctor = toml_capere_chorda(doc, "Author");
-    valor_annus = toml_capere_numerum(doc, "Year");
-    valor_tags = _colligere_tags(doc, ctx->piscina);
-    valor_summarium = toml_capere_chorda(doc, "Summary");
-    valor_notae = toml_capere_chorda(doc, "Notes");
+    valor_titulus    = toml_capere_chorda(doc, "Title");
+    valor_auctor     = toml_capere_chorda(doc, "Author");
+    valor_annus      = toml_capere_numerum(doc, "Year");
+    valor_tags       = _colligere_tags(doc, ctx->piscina);
+    valor_summarium  = toml_capere_chorda(doc, "Summary");
+    valor_notae      = toml_capere_chorda(doc, "Notes");
 
     /* Addere metadata */
     _addere_elementum_textus(ctx, liber, "titulus", valor_titulus);
     _addere_elementum_textus(ctx, liber, "auctor", valor_auctor);
 
-    si (valor_annus != 0) {
+    si (valor_annus != 0)
+    {
         chorda annus_ch = _s32_ad_chorda(valor_annus, ctx->piscina);
         _addere_elementum_textus(ctx, liber, "annus", annus_ch);
     }
@@ -848,16 +1017,19 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
 
     /* Addere via canonica si disponibilis */
     {
-        chorda numerus_ch = _s32_ad_chorda(numerus, ctx->piscina);
-        vacuum* via_valor = NIHIL;
-        si (tabula_dispersa_invenire(ctx->viae_canonicae, numerus_ch, &via_valor)) {
+        chorda  numerus_ch  = _s32_ad_chorda(numerus, ctx->piscina);
+        vacuum* via_valor   = NIHIL;
+        si (tabula_dispersa_invenire(ctx->viae_canonicae, numerus_ch,
+            &via_valor))
+        {
             chorda* via_canonica = (chorda*)via_valor;
             _addere_elementum_textus(ctx, liber, "via", *via_canonica);
         }
     }
 
     /* Actualizare status */
-    stml_attributum_addere(liber, ctx->piscina, ctx->intern, "status", "enriched");
+    stml_attributum_addere(liber, ctx->piscina, ctx->intern, "status",
+        "enriched");
 
     ctx->libri_processati++;
     imprimere("  OK\n");
@@ -865,18 +1037,22 @@ _processare_filum(chorda via_plena, constans DirectoriumIntroitus* introitus,
     redde 0;
 }
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale(s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    MergeContextus ctx;
-    DirectoriumFiltrum filtrum;
-    ChordaAedificator* aedificator;
-    chorda output;
+         MergeContextus  ctx;
+     DirectoriumFiltrum  filtrum;
+      ChordaAedificator* aedificator;
+                 chorda  output;
 
     (vacuum)argc;
     (vacuum)argv;
@@ -884,58 +1060,81 @@ s32 principale(s32 argc, character** argv)
     imprimere("=== LIBRARIUM MERGE ===\n\n");
 
     /* Creare piscina et internamentum */
-    piscina = piscina_generare_dynamicum("merge", MMMMXCVI * LXIV);
-    intern = internamentum_creare(piscina);
+    piscina  = piscina_generare_dynamicum("merge", MMMMXCVI * LXIV);
+    intern   = internamentum_creare(piscina);
 
     /* Initialisare contextum */
-    ctx.piscina = piscina;
-    ctx.intern = intern;
-    ctx.radix = stml_elementum_creare(piscina, intern, "librarium");
-    ctx.viae_canonicae = tabula_dispersa_creare_chorda(piscina, MMMMXCVI);
-    ctx.libri_processati = 0;
-    ctx.libri_errores = 0;
+    ctx.piscina  = piscina;
+    ctx.intern   = intern;
+    ctx.radix    = stml_elementum_creare(piscina, intern, "librarium");
+    ctx.viae_canonicae = tabula_dispersa_creare_chorda(piscina,
+        MMMMXCVI);
+    ctx.libri_processati  = 0;
+    ctx.libri_errores     = 0;
 
     /* Legere gutenberg_index.stml et construere tabulam viarum canonicarum */
     imprimere("Legendo vias canonicas ex %s...\n", VIA_INDEX);
     {
         chorda index_contentum = filum_legere_totum(VIA_INDEX, piscina);
-        si (index_contentum.datum != NIHIL && index_contentum.mensura > 0) {
-            StmlResultus index_res = stml_legere(index_contentum, piscina, intern);
-            si (index_res.successus && index_res.elementum_radix != NIHIL) {
+        si (   index_contentum.datum != NIHIL
+            && index_contentum.mensura > 0)
+        {
+            StmlResultus index_res = stml_legere(index_contentum,
+                piscina, intern);
+            si (   index_res.successus
+                && index_res.elementum_radix != NIHIL)
+            {
                 StmlNodus* librarium = index_res.elementum_radix;
-                StmlNodus* liber = stml_invenire_liberum(librarium, "liber");
-                i32 viae_inventae = 0;
+                StmlNodus* liber = stml_invenire_liberum(librarium,
+                    "liber");
+                      i32 viae_inventae = 0;
 
-                dum (liber != NIHIL) {
-                    chorda* numerus_attr = stml_attributum_capere(liber, "numerus");
-                    si (numerus_attr != NIHIL && numerus_attr->mensura > 0) {
-                        chorda via_canonica = _selectare_via_canonica(liber, piscina);
-                        si (via_canonica.datum != NIHIL && via_canonica.mensura > 0) {
-                            chorda* via_copia = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+                dum (liber != NIHIL)
+                {
+                    chorda* numerus_attr = stml_attributum_capere(liber,
+                        "numerus");
+                    si (   numerus_attr != NIHIL
+                        && numerus_attr->mensura > 0)
+                    {
+                        chorda via_canonica =
+                            _selectare_via_canonica(liber, piscina);
+                        si (   via_canonica.datum != NIHIL
+                            && via_canonica.mensura > 0)
+                        {
+                            chorda* via_copia =
+                                (chorda*)piscina_allocare(piscina,
+                                magnitudo(chorda));
                             *via_copia = via_canonica;
-                            tabula_dispersa_inserere(ctx.viae_canonicae, *numerus_attr, via_copia);
+                            tabula_dispersa_inserere(ctx.viae_canonicae,
+                                *numerus_attr, via_copia);
                             viae_inventae++;
                         }
                     }
                     liber = stml_frater_proximus(liber);
                 }
 
-                imprimere("  Inventae %d viae canonicae\n\n", viae_inventae);
-            } alioquin {
-                imprimere("  Admonitio: non potest parsare %s\n\n", VIA_INDEX);
+                imprimere("  Inventae %d viae canonicae\n\n",
+                    viae_inventae);
+            } alioquin
+            {
+                imprimere("  Admonitio: non potest parsare %s\n\n",
+                    VIA_INDEX);
             }
-        } alioquin {
-            imprimere("  Admonitio: non potest legere %s\n\n", VIA_INDEX);
+        } alioquin
+        {
+            imprimere("  Admonitio: non potest legere %s\n\n",
+                VIA_INDEX);
         }
     }
 
     /* Ambulare per raw directoria */
     imprimere("Legendo fila ex %s...\n\n", VIA_RAW);
 
-    filtrum = directorium_filtrum_omnia();
-    filtrum.profunditas_max = 1; /* Unum nivellum */
+    filtrum                  = directorium_filtrum_omnia();
+    filtrum.profunditas_max  = 1; /* Unum nivellum */
 
-    directorium_ambulare(VIA_RAW, &filtrum, _processare_filum, &ctx, piscina);
+    directorium_ambulare(VIA_RAW, &filtrum, _processare_filum, &ctx,
+        piscina);
 
     /* Ordinare per annum */
     imprimere("\nOrdinando libros per annum...\n");
@@ -948,9 +1147,11 @@ s32 principale(s32 argc, character** argv)
     stml_scribere_ad_aedificator(ctx.radix, aedificator, VERUM, 0);
     output = chorda_aedificator_finire(aedificator);
 
-    si (filum_scribere(VIA_OUTPUT, output)) {
+    si (filum_scribere(VIA_OUTPUT, output))
+    {
         imprimere("Scriptum cum successu.\n");
-    } alioquin {
+    } alioquin
+    {
         imprimere("Error: non potest scribere %s\n", VIA_OUTPUT);
     }
 

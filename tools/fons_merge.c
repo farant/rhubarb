@@ -185,7 +185,8 @@ static const unsigned char fons_alcuin[NUM_GLYPHAE][ALTITUDO] = {
 
 /* Verificare si glypha vacua */
 static int
-est_vacua(const unsigned char* g)
+est_vacua (
+    const unsigned char* g)
 {
     int i;
     for (i = 0; i < ALTITUDO; i++)
@@ -196,7 +197,7 @@ est_vacua(const unsigned char* g)
 }
 
 int
-main(void)
+main (void)
 {
     int i, j;
     int merged = 0;
@@ -221,7 +222,7 @@ main(void)
     for (i = 0; i < NUM_GLYPHAE; i++)
     {
         const unsigned char* src;
-        int from_alcuin = 0;
+                        int  from_alcuin = 0;
 
         /* Decidere fontem */
         if (i == 0x20)
@@ -232,8 +233,8 @@ main(void)
         else if (est_vacua(fons_6x8[i]) && !est_vacua(fons_alcuin[i]))
         {
             /* HP vacua, Alcuin habet - utere Alcuin */
-            src = fons_alcuin[i];
-            from_alcuin = 1;
+            src          = fons_alcuin[i];
+            from_alcuin  = 1;
             merged++;
         }
         else

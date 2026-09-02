@@ -35,59 +35,90 @@
 #define NG_COLUMNA         XXIV
 
 nomen structura {
-    character  codices[NG_LINGUAE_MAXIMAE][NG_CODEX_LONGUS];
-    i32        numerus;
+    character codices[NG_LINGUAE_MAXIMAE][NG_CODEX_LONGUS];
+          i32 numerus;
 } NgLinguae;
 
-interior b32    _extensionem_habet(constans chorda* titulus);
-interior vacuum _stirpem_scribere(constans chorda* titulus,
-                                  character* exitus, i32 capacitas);
-interior b32    _linguas_legere(constans character* lista,
+interior b32
+_extensionem_habet (
+    constans chorda* titulus);
+interior vacuum
+_stirpem_scribere (
+                            constans chorda* titulus,
+                                  character* exitus,
+                                        i32  capacitas);
+interior b32
+_linguas_legere (
+                       constans character* lista,
                                 NgLinguae* linguae);
-interior i32    _genus_linguae_quot(NaturaGenus* g,
+interior i32
+_genus_linguae_quot (
+                                           NaturaGenus* g,
                                     constans character* codex);
-interior vacuum _columnam_scribere(FILE* f, constans chorda* t,
-                                   i32 latitudo);
-interior i32*   _ordo_exemplarium(NaturaBibliotheca* bib,
+interior vacuum
+_columnam_scribere (
+                                  FILE* f,
+                       constans chorda* t,
+                                   i32  latitudo);
+interior i32*
+_ordo_exemplarium (
+                        NaturaBibliotheca* bib,
                                   Piscina* piscina);
-interior vacuum _html_textum_scribere(FILE* f, chorda t);
-interior vacuum _lineam_scribere(FILE* f, NaturaGenus* g);
-interior StmlNodus* _glossam_invenire(NaturaGenus* g,
+interior vacuum
+_html_textum_scribere (
+      FILE* f,
+    chorda  t);
+interior vacuum
+_lineam_scribere (
+           FILE* f,
+    NaturaGenus* g);
+interior StmlNodus*
+_glossam_invenire (
+                                             NaturaGenus* g,
                                       constans character* codex);
-interior StmlNodus* _definitio_elementi(StmlNodus* radix_canonis,
+interior StmlNodus*
+_definitio_elementi (
+                                              StmlNodus* radix_canonis,
                                         constans chorda* petitum,
                                         constans chorda* intra);
-interior vacuum _valorem_fictum_scribere(FILE* f,
+interior vacuum
+_valorem_fictum_scribere (
+                                              FILE* f,
                                          StmlNodus* def_attributi,
-                                         Piscina* piscina);
-interior vacuum _syntaxin_scribere(FILE* f,
+                                           Piscina* piscina);
+interior vacuum
+_syntaxin_scribere (
+                                        FILE* f,
                                    StmlNodus* radix_canonis,
-                                   StmlNodus* def, i32 gradus,
-                                   Piscina* piscina);
-interior b32    _paginam_scribere(NaturaBibliotheca* bib,
+                                   StmlNodus* def,
+                                         i32  gradus,
+                                     Piscina* piscina);
+interior b32
+_paginam_scribere (
+                                   NaturaBibliotheca* bib,
                                   constans NgLinguae* linguae,
-                                  StmlNodus* radix_canonis,
+                                           StmlNodus* radix_canonis,
                                   constans character* via,
-                                  Piscina* piscina);
+                                             Piscina* piscina);
 
 interior b32
-_extensionem_habet(
-    constans chorda*  titulus)
+_extensionem_habet (
+    constans chorda* titulus)
 {
     si (titulus->mensura <= (i32)EXTENSIO_LONGA)
     {
         redde FALSUM;
     }
-    redde (b32)(memcmp(titulus->datum +
-                    (titulus->mensura - (i32)EXTENSIO_LONGA),
+    redde (b32)(memcmp(titulus->datum
+        + (titulus->mensura - (i32)EXTENSIO_LONGA),
                     EXTENSIO, (size_t)EXTENSIO_LONGA) == ZEPHYRUM);
 }
 
 interior vacuum
-_stirpem_scribere(
-    constans chorda*  titulus,
-    character*        exitus,
-    i32               capacitas)
+_stirpem_scribere (
+    constans chorda* titulus,
+          character* exitus,
+                i32  capacitas)
 {
     i32 longitudo;
     i32 i;
@@ -106,16 +137,16 @@ _stirpem_scribere(
 
 /* 'la,en,fr' -> codices; FALSUM si vacuus/longus/nimii */
 interior b32
-_linguas_legere(
-    constans character*  lista,
-    NgLinguae*           linguae)
+_linguas_legere (
+    constans character* lista,
+             NgLinguae* linguae)
 {
     i32 n;
     i32 j;
 
-    linguae->numerus = ZEPHYRUM;
-    n = ZEPHYRUM;
-    j = ZEPHYRUM;
+    linguae->numerus  = ZEPHYRUM;
+    n                 = ZEPHYRUM;
+    j                 = ZEPHYRUM;
     dum (VERUM)
     {
         character c;
@@ -123,8 +154,8 @@ _linguas_legere(
         c = lista[n];
         si (c == ',' || c == '\0')
         {
-            si (j == ZEPHYRUM ||
-                linguae->numerus >= (i32)NG_LINGUAE_MAXIMAE)
+            si (   j                == ZEPHYRUM
+                || linguae->numerus >= (i32)NG_LINGUAE_MAXIMAE)
             {
                 redde FALSUM;
             }
@@ -156,9 +187,9 @@ _linguas_legere(
  * qui glossam derivatam eodem cadente petit), ceterae = glossae
  * congruentes numeratae (>1 = GEMINA) */
 interior i32
-_genus_linguae_quot(
-    NaturaGenus*         g,
-    constans character*  codex)
+_genus_linguae_quot (
+           NaturaGenus* g,
+    constans character* codex)
 {
     i32 numerus;
     i32 i;
@@ -166,21 +197,21 @@ _genus_linguae_quot(
 
     si (strcmp(codex, "la") == ZEPHYRUM)
     {
-        redde (stml_invenire_liberum(g->nodus, "definitio") ||
-               stml_invenire_liberum(g->nodus, "differentia"))
+        redde (stml_invenire_liberum(g->nodus, "definitio")
+            || stml_invenire_liberum(g->nodus, "differentia"))
                   ? I : ZEPHYRUM;
     }
 
-    quot    = ZEPHYRUM;
-    numerus = stml_numerus_liberorum(g->nodus);
+    quot     = ZEPHYRUM;
+    numerus  = stml_numerus_liberorum(g->nodus);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    lingua;
+           chorda* lingua;
 
         l = stml_liberum_ad_indicem(g->nodus, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "glossa"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "glossa"))
         {
             perge;
         }
@@ -194,10 +225,10 @@ _genus_linguae_quot(
 }
 
 interior vacuum
-_columnam_scribere(
-    FILE*             f,
-    constans chorda*  t,
-    i32               latitudo)
+_columnam_scribere (
+               FILE* f,
+    constans chorda* t,
+                i32  latitudo)
 {
     i32 i;
 
@@ -214,9 +245,9 @@ _columnam_scribere(
  * machinas instabilis); relatio et pagina ambae hoc ordine
  * scribuntur, unde output vere deterministicum fit */
 interior i32*
-_ordo_exemplarium(
-    NaturaBibliotheca*  bib,
-    Piscina*            piscina)
+_ordo_exemplarium (
+    NaturaBibliotheca* bib,
+              Piscina* piscina)
 {
     i32* ordo;
     i32  n;
@@ -235,14 +266,14 @@ _ordo_exemplarium(
     {
         i32 clavis;
 
-        clavis = ordo[i];
-        j = i;
+        clavis  = ordo[i];
+        j       = i;
         dum (j > ZEPHYRUM)
         {
             NaturaExemplar* a;
             NaturaExemplar* b;
-            i32             minima;
-            integer         ordo_bytium;
+                       i32  minima;
+                   integer  ordo_bytium;
 
             a = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
                                                 ordo[j - I]);
@@ -252,9 +283,9 @@ _ordo_exemplarium(
                          ? a->stirps->mensura : b->stirps->mensura;
             ordo_bytium = memcmp(a->stirps->datum, b->stirps->datum,
                                  (size_t)minima);
-            si (ordo_bytium < ZEPHYRUM ||
-                (ordo_bytium == ZEPHYRUM &&
-                 a->stirps->mensura <= b->stirps->mensura))
+            si (   ordo_bytium < ZEPHYRUM
+                || (ordo_bytium == ZEPHYRUM
+                && a->stirps->mensura <= b->stirps->mensura))
             {
                 frange;
             }
@@ -268,8 +299,8 @@ _ordo_exemplarium(
 
 /* textus in html: <, >, & evasa; cetera verbatim (UTF-8 transit) */
 interior vacuum
-_html_textum_scribere(
-    FILE*   f,
+_html_textum_scribere (
+      FILE* f,
     chorda  t)
 {
     i32 i;
@@ -279,22 +310,30 @@ _html_textum_scribere(
         character c;
 
         c = (character)t.datum[i];
-        si (c == '<')          { fputs("&lt;", f); }
-        alioquin si (c == '>') { fputs("&gt;", f); }
-        alioquin si (c == '&') { fputs("&amp;", f); }
-        alioquin               { putc(c, f); }
+        si (c == '<')
+        { fputs("&lt;", f);
+        }
+        alioquin si (c == '>')
+        { fputs("&gt;", f);
+        }
+        alioquin si (c == '&')
+        { fputs("&amp;", f);
+        }
+        alioquin
+        { putc(c, f);
+        }
     }
 }
 
 /* catena parentum a radice ad genus: 'vivens &rarr; planta' */
 interior vacuum
-_lineam_scribere(
-    FILE*         f,
-    NaturaGenus*  g)
+_lineam_scribere (
+           FILE* f,
+    NaturaGenus* g)
 {
     NaturaGenus* catena[XXXII];
-    i32          n;
-    i32          i;
+            i32  n;
+            i32  i;
     NaturaGenus* cursor;
 
     n = ZEPHYRUM;
@@ -316,9 +355,9 @@ _lineam_scribere(
 
 /* glossam primam linguae datae reddere, vel NIHIL */
 interior StmlNodus*
-_glossam_invenire(
-    NaturaGenus*         g,
-    constans character*  codex)
+_glossam_invenire (
+           NaturaGenus* g,
+    constans character* codex)
 {
     i32 numerus;
     i32 i;
@@ -327,11 +366,11 @@ _glossam_invenire(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    lingua;
+           chorda* lingua;
 
         l = stml_liberum_ad_indicem(g->nodus, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "glossa"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "glossa"))
         {
             perge;
         }
@@ -349,26 +388,26 @@ _glossam_invenire(
  * intra praefertur, definitio sine intra cadens est. Canon plagula
  * STML est - lectio recta, sine lib/canon.c. */
 interior StmlNodus*
-_definitio_elementi(
-    StmlNodus*        radix_canonis,
-    constans chorda*  petitum,
-    constans chorda*  intra)
+_definitio_elementi (
+          StmlNodus* radix_canonis,
+    constans chorda* petitum,
+    constans chorda* intra)
 {
     StmlNodus* planum;
-    i32        numerus;
-    i32        i;
+          i32  numerus;
+          i32  i;
 
-    planum  = NIHIL;
-    numerus = stml_numerus_liberorum(radix_canonis);
+    planum   = NIHIL;
+    numerus  = stml_numerus_liberorum(radix_canonis);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    titulus_n;
-        chorda*    intra_n;
+           chorda* titulus_n;
+           chorda* intra_n;
 
         l = stml_liberum_ad_indicem(radix_canonis, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "elementum"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "elementum"))
         {
             perge;
         }
@@ -396,10 +435,10 @@ _definitio_elementi(
 /* valor fictus pro genere attributi: electio optiones veras
  * monstrat (usque ad IV), cetera formam generis */
 interior vacuum
-_valorem_fictum_scribere(
-    FILE*       f,
-    StmlNodus*  def_attributi,
-    Piscina*    piscina)
+_valorem_fictum_scribere (
+         FILE* f,
+    StmlNodus* def_attributi,
+      Piscina* piscina)
 {
     chorda* genus_v;
 
@@ -415,15 +454,15 @@ _valorem_fictum_scribere(
         i32 i;
         i32 scriptae;
 
-        scriptae = ZEPHYRUM;
-        numerus  = stml_numerus_liberorum(def_attributi);
+        scriptae  = ZEPHYRUM;
+        numerus   = stml_numerus_liberorum(def_attributi);
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             StmlNodus* l;
 
             l = stml_liberum_ad_indicem(def_attributi, i);
-            si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-                !chorda_aequalis_literis(*l->titulus, "optio"))
+            si (   !l || l->genus != STML_NODUS_ELEMENTUM
+                || !chorda_aequalis_literis(*l->titulus, "optio"))
             {
                 perge;
             }
@@ -475,20 +514,20 @@ _valorem_fictum_scribere(
  * valoribus fictis, liberi nidificati (profunditas II), textus
  * '...'. Effusio iam evasa ('lt;' litteralis) - intra <pre> it. */
 interior vacuum
-_syntaxin_scribere(
-    FILE*       f,
-    StmlNodus*  radix_canonis,
-    StmlNodus*  def,
-    i32         gradus,
-    Piscina*    piscina)
+_syntaxin_scribere (
+         FILE* f,
+    StmlNodus* radix_canonis,
+    StmlNodus* def,
+          i32  gradus,
+      Piscina* piscina)
 {
     chorda* titulus_t;
-    b32     textus_habet;
-    i32     n_attributa;
-    i32     n_liberorum;
-    i32     numerus;
-    i32     i;
-    i32     scripta;
+       b32  textus_habet;
+       i32  n_attributa;
+       i32  n_liberorum;
+       i32  numerus;
+       i32  i;
+       i32  scripta;
 
     titulus_t = stml_attributum_capere(def, "nomen");
     si (!titulus_t)
@@ -497,9 +536,9 @@ _syntaxin_scribere(
     }
     textus_habet = stml_attributum_capere(def, "textus") != NIHIL;
 
-    n_attributa = ZEPHYRUM;
-    n_liberorum = ZEPHYRUM;
-    numerus     = stml_numerus_liberorum(def);
+    n_attributa  = ZEPHYRUM;
+    n_liberorum  = ZEPHYRUM;
+    numerus      = stml_numerus_liberorum(def);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
@@ -531,11 +570,11 @@ _syntaxin_scribere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    titulus_a;
+           chorda* titulus_a;
 
         l = stml_liberum_ad_indicem(def, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "attributum"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "attributum"))
         {
             perge;
         }
@@ -582,12 +621,12 @@ _syntaxin_scribere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    petitum;
+           chorda* petitum;
         StmlNodus* def_l;
 
         l = stml_liberum_ad_indicem(def, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "liberum"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "liberum"))
         {
             perge;
         }
@@ -630,12 +669,12 @@ _syntaxin_scribere(
  * -probare crustae byte conferre potest. Lacuna VISIBILIS
  * ('deest') pagina index operum est; soluta e pagina evanescit. */
 interior b32
-_paginam_scribere(
-    NaturaBibliotheca*   bib,
-    constans NgLinguae*  linguae,
-    StmlNodus*           radix_canonis,
-    constans character*  via,
-    Piscina*             piscina)
+_paginam_scribere (
+     NaturaBibliotheca* bib,
+    constans NgLinguae* linguae,
+             StmlNodus* radix_canonis,
+    constans character* via,
+               Piscina* piscina)
 {
     FILE* f;
     i32*  ordo;
@@ -697,8 +736,8 @@ _paginam_scribere(
         i32 habentia;
         i32 omnia;
 
-        habentia = ZEPHYRUM;
-        omnia    = ZEPHYRUM;
+        habentia  = ZEPHYRUM;
+        omnia     = ZEPHYRUM;
         per (g_i = ZEPHYRUM; g_i < xar_numerus(bib->genera_omnia);
              g_i++)
         {
@@ -727,7 +766,7 @@ _paginam_scribere(
     per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
     {
         NaturaExemplar* ex;
-        b32             genera_habet;
+                   b32  genera_habet;
 
         ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
                                              ordo[m]);
@@ -762,8 +801,8 @@ _paginam_scribere(
     per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
     {
         NaturaExemplar* ex;
-        i32             omnia_moduli;
-        i32             habentia[NG_LINGUAE_MAXIMAE];
+                   i32  omnia_moduli;
+                   i32  habentia[NG_LINGUAE_MAXIMAE];
 
         ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
                                              ordo[m]);
@@ -819,7 +858,7 @@ _paginam_scribere(
              g_i++)
         {
             NaturaGenus* g;
-            StmlNodus*   def;
+              StmlNodus* def;
 
             g = *(NaturaGenus**)xar_obtinere(bib->genera_omnia,
                                              g_i);
@@ -891,10 +930,10 @@ _paginam_scribere(
             si (radix_canonis)
             {
                 character  kebab[CCLVI];
-                chorda     petitum;
+                   chorda  petitum;
                 StmlNodus* def_g;
-                i32        k;
-                i32        longitudo;
+                      i32  k;
+                      i32  longitudo;
 
                 longitudo = g->titulus->mensura;
                 si (longitudo >= (i32)magnitudo(kebab))
@@ -905,11 +944,11 @@ _paginam_scribere(
                 {
                     character c;
 
-                    c = (character)g->titulus->datum[k];
-                    kebab[k] = c == '_' ? '-' : c;
+                    c         = (character)g->titulus->datum[k];
+                    kebab[k]  = c == '_' ? '-' : c;
                 }
-                kebab[longitudo] = '\0';
-                petitum = chorda_ex_literis(kebab, piscina);
+                kebab[longitudo]  = '\0';
+                petitum           = chorda_ex_literis(kebab, piscina);
 
                 def_g = _definitio_elementi(radix_canonis,
                                             &petitum, NIHIL);
@@ -938,35 +977,35 @@ _paginam_scribere(
 }
 
 s32
-principale(
-    s32          numerus,
-    character**  argumenta)
+principale (
+          s32   numerus,
+    character** argumenta)
 {
-    Piscina*              piscina;
-    NaturaBibliotheca*    bib;
-    DirectoriumIterator*  iter;
+                 Piscina* piscina;
+       NaturaBibliotheca* bib;
+     DirectoriumIterator* iter;
     DirectoriumIntroitus* introitus;
-    constans character*   radix;
-    constans character*   lista_linguarum;
-    constans character*   via_html;
-    NgLinguae             linguae;
-    b32                   modus_porta;
-    b32                   modus_machina;
-    s32                   i;
-    i32*                  ordo;
-    i32                   onerata;
-    i32                   lacunae;
-    i32                   m;
-    i32                   g_i;
-    i32                   l_i;
-    i32                   summa_habentia[NG_LINGUAE_MAXIMAE];
-    i32                   summa_omnia;
+      constans character* radix;
+      constans character* lista_linguarum;
+      constans character* via_html;
+               NgLinguae  linguae;
+                     b32  modus_porta;
+                     b32  modus_machina;
+                     s32  i;
+                     i32* ordo;
+                     i32  onerata;
+                     i32  lacunae;
+                     i32  m;
+                     i32  g_i;
+                     i32  l_i;
+                     i32  summa_habentia[NG_LINGUAE_MAXIMAE];
+                     i32  summa_omnia;
 
-    radix           = "natura";
-    lista_linguarum = "la,en,fr";
-    via_html        = NIHIL;
-    modus_porta     = FALSUM;
-    modus_machina   = FALSUM;
+    radix            = "natura";
+    lista_linguarum  = "la,en,fr";
+    via_html         = NIHIL;
+    modus_porta      = FALSUM;
+    modus_machina    = FALSUM;
 
     per (i = I; i < numerus; i++)
     {
@@ -978,18 +1017,18 @@ principale(
         {
             modus_machina = VERUM;
         }
-        alioquin si (strcmp(argumenta[i], "-radix") == ZEPHYRUM &&
-                     i + I < numerus)
+        alioquin si (   strcmp(argumenta[i], "-radix") == ZEPHYRUM
+                     && i + I < numerus)
         {
             radix = argumenta[++i];
         }
-        alioquin si (strcmp(argumenta[i], "-linguae") == ZEPHYRUM &&
-                     i + I < numerus)
+        alioquin si (   strcmp(argumenta[i], "-linguae") == ZEPHYRUM
+                     && i + I < numerus)
         {
             lista_linguarum = argumenta[++i];
         }
-        alioquin si (strcmp(argumenta[i], "-html") == ZEPHYRUM &&
-                     i + I < numerus)
+        alioquin si (   strcmp(argumenta[i], "-html") == ZEPHYRUM
+                     && i + I < numerus)
         {
             via_html = argumenta[++i];
         }
@@ -1011,8 +1050,8 @@ principale(
         redde II;
     }
 
-    piscina = piscina_generare_dynamicum("natura_glossae", 4194304);
-    bib     = natura_bibliotheca_creare(piscina);
+    piscina  = piscina_generare_dynamicum("natura_glossae", 4194304);
+    bib      = natura_bibliotheca_creare(piscina);
     si (!bib)
     {
         fprintf(stderr,
@@ -1033,15 +1072,15 @@ principale(
     {
         character via[DXII];
         character stirps[CCLVI];
-        chorda    fons;
+           chorda fons;
 
-        si (introitus->genus != INTROITUS_FILUM ||
-            !_extensionem_habet(&introitus->titulus))
+        si (   introitus->genus != INTROITUS_FILUM
+            || !_extensionem_habet(&introitus->titulus))
         {
             perge;
         }
-        si ((size_t)introitus->titulus.mensura + strlen(radix) + II >
-            magnitudo(via))
+        si ((size_t)introitus->titulus.mensura + strlen(radix) + II
+            > magnitudo(via))
         {
             perge;
         }
@@ -1097,8 +1136,8 @@ principale(
     per (m = ZEPHYRUM; m < xar_numerus(bib->exemplaria); m++)
     {
         NaturaExemplar* ex;
-        i32             omnia_moduli;
-        i32             habentia[NG_LINGUAE_MAXIMAE];
+                   i32  omnia_moduli;
+                   i32  habentia[NG_LINGUAE_MAXIMAE];
 
         ex = *(NaturaExemplar**)xar_obtinere(bib->exemplaria,
                                              ordo[m]);
@@ -1200,7 +1239,7 @@ principale(
                  g_i < xar_numerus(bib->genera_omnia); g_i++)
             {
                 NaturaGenus* g;
-                i32          quot;
+                        i32  quot;
 
                 g = *(NaturaGenus**)xar_obtinere(
                         bib->genera_omnia, g_i);
@@ -1275,7 +1314,7 @@ principale(
         si (strlen(radix) + XXXII < (size_t)DXII)
         {
             character via_canonis[DXII];
-            chorda    fons_canonis;
+               chorda fons_canonis;
 
             sprintf(via_canonis, "%s/cocta/individua.canon",
                     radix);

@@ -31,10 +31,12 @@ static int glyphae_praesens[NUM_GLYPHAE];  /* Tractat quae glyphae definitae sun
  * Bit 7 = leftmost pixel, bit 2 = rightmost of 6 pixels
  */
 static unsigned char
-linea_ad_byte(const char* linea, int longitudo)
+linea_ad_byte (
+    const char* linea,
+           int  longitudo)
 {
     unsigned char fructus = 0;
-    int i;
+              int i;
 
     for (i = 0; i < longitudo && i < LATITUDO_MAXIMA; i++)
     {
@@ -50,19 +52,21 @@ linea_ad_byte(const char* linea, int longitudo)
 
 /* Parsare filum bitsyfont */
 static int
-parsare_bitsyfont(FILE* filum)
+parsare_bitsyfont (
+    FILE* filum)
 {
     char linea[256];
-    int character_currens = -1;
-    int ordo_currens = 0;
-    int latitudo = 6;
-    int altitudo = 8;
+     int character_currens  = -1;
+     int ordo_currens       = 0;
+     int latitudo           = 6;
+     int altitudo           = 8;
 
     while (fgets(linea, sizeof(linea), filum))
     {
         /* Removere newline */
         size_t len = strlen(linea);
-        while (len > 0 && (linea[len-1] == '\n' || linea[len-1] == '\r'))
+        while (   len > 0
+               && (linea[len - 1] == '\n' || linea[len - 1] == '\r'))
         {
             linea[--len] = '\0';
         }
@@ -96,12 +100,14 @@ parsare_bitsyfont(FILE* filum)
         /* Parsare CHAR */
         if (strncmp(linea, "CHAR ", 5) == 0)
         {
-            character_currens = atoi(linea + 5);
-            ordo_currens = 0;
+            character_currens  = atoi(linea + 5);
+            ordo_currens       = 0;
 
-            if (character_currens < 0 || character_currens >= NUM_GLYPHAE)
+            if (   character_currens < 0
+                || character_currens >= NUM_GLYPHAE)
             {
-                fprintf(stderr, "Character %d extra limites\n", character_currens);
+                fprintf(stderr, "Character %d extra limites\n",
+                    character_currens);
                 character_currens = -1;
             }
             continue;
@@ -111,7 +117,7 @@ parsare_bitsyfont(FILE* filum)
         if (character_currens >= 0 && ordo_currens < altitudo)
         {
             /* Verificare quod linea continet solum 0 et 1 */
-            int valida = 1;
+               int valida = 1;
             size_t i;
 
             for (i = 0; i < len && i < (size_t)latitudo; i++)
@@ -142,7 +148,8 @@ parsare_bitsyfont(FILE* filum)
 
 /* Scribere header C */
 static void
-scribere_header(const char* nomen_fontis)
+scribere_header (
+    const char* nomen_fontis)
 {
     int i, j;
     int primus;
@@ -197,7 +204,7 @@ scribere_header(const char* nomen_fontis)
 
 /* Scribere modo glyphas quae differunt (pro merge) */
 static void
-scribere_differentias(void)
+scribere_differentias (void)
 {
     int i, j;
     int numerus = 0;
@@ -249,7 +256,9 @@ scribere_differentias(void)
 }
 
 int
-main(int argc, char** argv)
+main (
+     int   argc,
+    char** argv)
 {
     FILE* filum;
     int modus_diff = 0;
@@ -257,7 +266,8 @@ main(int argc, char** argv)
     if (argc < 2)
     {
         fprintf(stderr, "Usus: %s [-d] <bitsyfont>\n", argv[0]);
-        fprintf(stderr, "  -d  Scribere solum differentias (pro merge)\n");
+        fprintf(stderr,
+            "  -d  Scribere solum differentias (pro merge)\n");
         return 1;
     }
 

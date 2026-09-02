@@ -46,13 +46,13 @@ hic_manens i8 _c_glob_buf[] = { '*', '.', 'c' };
 /* Directiva extracta ex filo */
 nomen structura {
     chorda  instrumentum;
-    Xar*    argumenta;
-    s32     versus;         /* Numerus versus (1-based) */
+       Xar* argumenta;
+       s32  versus;         /* Numerus versus (1-based) */
 } GenerareDirectiva;
 
 /* Contextus pro ambulatore directoriorum */
 nomen structura {
-    Xar*     fila;
+        Xar* fila;
     Piscina* piscina;
 } ColligereContextus;
 
@@ -62,14 +62,14 @@ nomen structura {
  * ======================================================================== */
 
 interior s32
-_colligere_filum(
-    chorda                         via_plena,
+_colligere_filum (
+                           chorda  via_plena,
     constans DirectoriumIntroitus* introitus,
-    vacuum*                        contextus)
+                           vacuum* contextus)
 {
     ColligereContextus* ctx;
-    chorda*             via_ptr;
-    chorda              suffixum;
+                chorda* via_ptr;
+                chorda  suffixum;
 
     ctx = (ColligereContextus*)contextus;
 
@@ -100,9 +100,9 @@ _colligere_filum(
 
 /* Numerare lineas novas in chorda usque ad positionem datam */
 interior s32
-_computare_lineas(
+_computare_lineas (
     chorda contentum,
-    i32    usque_ad)
+       i32 usque_ad)
 {
     s32 numerus;
     i32 i;
@@ -125,34 +125,36 @@ _computare_lineas(
  * ======================================================================== */
 
 interior Xar*
-_extrahere_directivas(
-    chorda   contentum,
+_extrahere_directivas (
+     chorda  contentum,
     Piscina* piscina)
 {
-    Xar*   directivae;
-    chorda praefixum;
-    chorda suffixum;
-    s32    positio;
-    chorda reliquum;
-    s32    versus_currens;
+       Xar* directivae;
+    chorda  praefixum;
+    chorda  suffixum;
+       s32  positio;
+    chorda  reliquum;
+       s32  versus_currens;
 
     directivae = xar_creare(piscina, (i32)magnitudo(GenerareDirectiva));
-    praefixum  = chorda_ex_buffer(_praefixum_buf, GENERARE_PRAEFIXUM_MENSURA);
-    suffixum   = chorda_ex_buffer(_suffixum_buf, GENERARE_SUFFIXUM_MENSURA);
+    praefixum = chorda_ex_buffer(_praefixum_buf,
+        GENERARE_PRAEFIXUM_MENSURA);
+    suffixum = chorda_ex_buffer(_suffixum_buf,
+        GENERARE_SUFFIXUM_MENSURA);
 
     reliquum        = contentum;
     versus_currens  = I;
 
     dum (reliquum.mensura > ZEPHYRUM)
     {
-        chorda             inventum;
-        s32                finis_idx;
-        chorda             corpus;
-        chorda             praecisa;
+                   chorda  inventum;
+                      s32  finis_idx;
+                   chorda  corpus;
+                   chorda  praecisa;
         GenerareDirectiva* dir;
-        i32                idx;
-        i32                signi_initium;
-        s32                lineas_ante;
+                      i32  idx;
+                      i32  signi_initium;
+                      s32  lineas_ante;
 
         positio = chorda_invenire_index(reliquum, praefixum);
         si (positio < ZEPHYRUM)
@@ -161,11 +163,12 @@ _extrahere_directivas(
         }
 
         /* Computare lineas novas inter positionem currentem et directivam */
-        lineas_ante = _computare_lineas(reliquum, (i32)positio);
-        versus_currens += lineas_ante;
+        lineas_ante     = _computare_lineas(reliquum, (i32)positio);
+        versus_currens  += lineas_ante;
 
         inventum = chorda_sectio(reliquum,
-                                 (i32)positio + GENERARE_PRAEFIXUM_MENSURA,
+                                 (i32)positio
+                                     + GENERARE_PRAEFIXUM_MENSURA,
                                  reliquum.mensura);
 
         finis_idx = chorda_invenire_index(inventum, suffixum);
@@ -174,27 +177,28 @@ _extrahere_directivas(
             frange;
         }
 
-        corpus = chorda_sectio(inventum, ZEPHYRUM, (i32)finis_idx);
-        praecisa = chorda_praecidere(corpus);
+        corpus    = chorda_sectio(inventum, ZEPHYRUM, (i32)finis_idx);
+        praecisa  = chorda_praecidere(corpus);
 
         si (praecisa.mensura > ZEPHYRUM)
         {
             dir = (GenerareDirectiva*)xar_addere(directivae);
             si (dir != NIHIL)
             {
-                dir->argumenta = xar_creare(piscina, (i32)magnitudo(chorda));
-                dir->instrumentum.datum = NIHIL;
-                dir->instrumentum.mensura = ZEPHYRUM;
-                dir->versus = versus_currens;
+                dir->argumenta = xar_creare(piscina,
+                    (i32)magnitudo(chorda));
+                dir->instrumentum.datum    = NIHIL;
+                dir->instrumentum.mensura  = ZEPHYRUM;
+                dir->versus                = versus_currens;
 
                 idx = ZEPHYRUM;
                 dum (idx < praecisa.mensura)
                 {
-                    dum (idx < praecisa.mensura &&
-                         (praecisa.datum[idx] == ' ' ||
-                          praecisa.datum[idx] == '\t' ||
-                          praecisa.datum[idx] == '\n' ||
-                          praecisa.datum[idx] == '\r'))
+                    dum (   idx < praecisa.mensura
+                         && (praecisa.datum[idx] == ' '
+                        || praecisa.datum[idx] == '\t'
+                        || praecisa.datum[idx] == '\n'
+                        || praecisa.datum[idx] == '\r'))
                     {
                         idx++;
                     }
@@ -205,22 +209,24 @@ _extrahere_directivas(
                     }
 
                     signi_initium = idx;
-                    dum (idx < praecisa.mensura &&
-                         praecisa.datum[idx] != ' ' &&
-                         praecisa.datum[idx] != '\t' &&
-                         praecisa.datum[idx] != '\n' &&
-                         praecisa.datum[idx] != '\r')
+                    dum (   idx < praecisa.mensura
+                         && praecisa.datum[idx] != ' '
+                         && praecisa.datum[idx] != '\t'
+                         && praecisa.datum[idx] != '\n'
+                         && praecisa.datum[idx] != '\r')
                     {
                         idx++;
                     }
 
                     {
                         chorda signum;
-                        signum = chorda_sectio(praecisa, signi_initium, idx);
+                        signum = chorda_sectio(praecisa, signi_initium,
+                            idx);
 
                         si (dir->instrumentum.datum == NIHIL)
                         {
-                            dir->instrumentum = chorda_transcribere(signum, piscina);
+                            dir->instrumentum =
+                                chorda_transcribere(signum, piscina);
                         }
                         alioquin
                         {
@@ -228,7 +234,8 @@ _extrahere_directivas(
                             arg = (chorda*)xar_addere(dir->argumenta);
                             si (arg != NIHIL)
                             {
-                                *arg = chorda_transcribere(signum, piscina);
+                                *arg = chorda_transcribere(signum,
+                                    piscina);
                             }
                         }
                     }
@@ -239,12 +246,14 @@ _extrahere_directivas(
         /* Computare lineas in directiva ipsa (praefixum + corpus + suffixum) */
         {
             i32 finis_directivae;
-            finis_directivae = (i32)positio + GENERARE_PRAEFIXUM_MENSURA +
-                               (i32)finis_idx + GENERARE_SUFFIXUM_MENSURA;
+            finis_directivae = (i32)positio + GENERARE_PRAEFIXUM_MENSURA
+                + (i32)finis_idx
+                                   + GENERARE_SUFFIXUM_MENSURA;
             versus_currens += _computare_lineas(
                 chorda_sectio(reliquum, (i32)positio, finis_directivae),
                 finis_directivae - (i32)positio);
-            reliquum = chorda_sectio(reliquum, finis_directivae, reliquum.mensura);
+            reliquum = chorda_sectio(reliquum, finis_directivae,
+                reliquum.mensura);
         }
     }
 
@@ -257,17 +266,17 @@ _extrahere_directivas(
  * ======================================================================== */
 
 interior s32
-_executare_directivam(
+_executare_directivam (
     constans GenerareDirectiva* directiva,
-    chorda                      filum_via,
-    b32                         loquax,
-    Piscina*                    piscina)
+                        chorda  filum_via,
+                           b32  loquax,
+                       Piscina* piscina)
 {
     ChordaAedificator* aed;
-    chorda              mandatum_chorda;
-    character*          mandatum_cstr;
-    s32                 codex;
-    i32                 idx;
+               chorda  mandatum_chorda;
+            character* mandatum_cstr;
+                  s32  codex;
+                  i32  idx;
 
     aed = chorda_aedificator_creare(piscina, DXII);
 
@@ -281,7 +290,8 @@ _executare_directivam(
     chorda_aedificator_appendere_literis(aed, "bin/");
     chorda_aedificator_appendere_chorda(aed, directiva->instrumentum);
 
-    per (idx = ZEPHYRUM; idx < (i32)xar_numerus(directiva->argumenta); idx++)
+    per (idx = ZEPHYRUM; idx
+        < (i32)xar_numerus(directiva->argumenta); idx++)
     {
         chorda* arg;
         arg = (chorda*)xar_obtinere(directiva->argumenta, (i32)idx);
@@ -292,8 +302,8 @@ _executare_directivam(
         }
     }
 
-    mandatum_chorda = chorda_aedificator_finire(aed);
-    mandatum_cstr = chorda_ut_cstr(mandatum_chorda, piscina);
+    mandatum_chorda  = chorda_aedificator_finire(aed);
+    mandatum_cstr    = chorda_ut_cstr(mandatum_chorda, piscina);
 
     printf("  $ %s\n", mandatum_cstr);
 
@@ -318,27 +328,27 @@ _executare_directivam(
  * ======================================================================== */
 
 interior s32
-_processare_filum(
-    chorda   via,
-    b32      loquax,
+_processare_filum (
+     chorda  via,
+        b32  loquax,
     Piscina* piscina)
 {
-    character*  via_cstr;
-    chorda      contentum;
-    Xar*        directivae;
-    i32         idx;
-    i32         numerus;
+    character* via_cstr;
+       chorda  contentum;
+          Xar* directivae;
+          i32  idx;
+          i32  numerus;
 
-    via_cstr = chorda_ut_cstr(via, piscina);
-    contentum = filum_legere_totum(via_cstr, piscina);
+    via_cstr   = chorda_ut_cstr(via, piscina);
+    contentum  = filum_legere_totum(via_cstr, piscina);
 
     si (contentum.mensura == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
 
-    directivae = _extrahere_directivas(contentum, piscina);
-    numerus = (i32)xar_numerus(directivae);
+    directivae  = _extrahere_directivas(contentum, piscina);
+    numerus     = (i32)xar_numerus(directivae);
 
     si (numerus == ZEPHYRUM)
     {
@@ -353,7 +363,7 @@ _processare_filum(
     per (idx = ZEPHYRUM; idx < numerus; idx++)
     {
         GenerareDirectiva* dir;
-        s32                codex;
+                      s32  codex;
 
         dir = (GenerareDirectiva*)xar_obtinere(directivae, (i32)idx);
         si (dir == NIHIL || dir->instrumentum.datum == NIHIL)
@@ -364,7 +374,8 @@ _processare_filum(
         codex = _executare_directivam(dir, via, loquax, piscina);
         si (codex != ZEPHYRUM)
         {
-            fprintf(stderr, "ERRATUM: terminatur propter fracta in %.*s\n",
+            fprintf(stderr,
+                "ERRATUM: terminatur propter fracta in %.*s\n",
                     (i32)via.mensura, (character*)via.datum);
             redde -I;
         }
@@ -379,20 +390,22 @@ _processare_filum(
  * ======================================================================== */
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*          piscina;
-    ArgumentaParser*  parser;
+             Piscina* piscina;
+     ArgumentaParser* parser;
     ArgumentaFructus* fructus;
-    b32               loquax;
-    i32               numerus_viarum;
-    i32               idx;
-    Xar*              fila;
-    s32               totalis_directivae;
-    s32               totalis_fila;
+                 b32  loquax;
+                 i32  numerus_viarum;
+                 i32  idx;
+                 Xar* fila;
+                 s32  totalis_directivae;
+                 s32  totalis_fila;
 
-    totalis_directivae = ZEPHYRUM;
-    totalis_fila       = ZEPHYRUM;
+    totalis_directivae  = ZEPHYRUM;
+    totalis_fila        = ZEPHYRUM;
 
     piscina = piscina_generare_dynamicum("generare", LXIV * M);
     si (!piscina)
@@ -419,7 +432,8 @@ principale(integer argc, character** argv)
     numerus_viarum = argumenta_numerus_positionalium(fructus);
     si (numerus_viarum == ZEPHYRUM)
     {
-        fprintf(stderr, "Usus: generare [--verbose] <via> [<via> ...]\n");
+        fprintf(stderr,
+            "Usus: generare [--verbose] <via> [<via> ...]\n");
         piscina_destruere(piscina);
         redde I;
     }
@@ -428,27 +442,29 @@ principale(integer argc, character** argv)
 
     per (idx = ZEPHYRUM; idx < numerus_viarum; idx++)
     {
-        chorda     via;
+           chorda  via;
         character* via_cstr;
 
-        via = argumenta_obtinere_positionalem(fructus, (i32)idx, piscina);
+        via = argumenta_obtinere_positionalem(fructus, (i32)idx,
+            piscina);
         via_cstr = chorda_ut_cstr(via, piscina);
 
         si (filum_directorium_existit(via_cstr))
         {
             ColligereContextus ctx;
             DirectoriumFiltrum filtrum;
-            IntroitusGenus     genus_filum;
+                IntroitusGenus genus_filum;
 
-            ctx.fila    = fila;
-            ctx.piscina = piscina;
+            ctx.fila     = fila;
+            ctx.piscina  = piscina;
 
             genus_filum = INTROITUS_FILUM;
 
-            filtrum = directorium_filtrum_omnia();
-            filtrum.genera_accepta = &genus_filum;
-            filtrum.genera_numerus = I;
-            filtrum.exemplar = chorda_ex_buffer(_c_glob_buf, C_GLOB_MENSURA);
+            filtrum                 = directorium_filtrum_omnia();
+            filtrum.genera_accepta  = &genus_filum;
+            filtrum.genera_numerus  = I;
+            filtrum.exemplar = chorda_ex_buffer(_c_glob_buf,
+                C_GLOB_MENSURA);
 
             directorium_ambulare(via_cstr, &filtrum, _colligere_filum,
                                  &ctx, piscina);
@@ -464,14 +480,15 @@ principale(integer argc, character** argv)
         }
         alioquin
         {
-            fprintf(stderr, "Admonitio: via non inventa: %s\n", via_cstr);
+            fprintf(stderr, "Admonitio: via non inventa: %s\n",
+                via_cstr);
         }
     }
 
     per (idx = ZEPHYRUM; idx < (i32)xar_numerus(fila); idx++)
     {
         chorda* via;
-        s32     fructus_fili;
+           s32  fructus_fili;
 
         via = (chorda*)xar_obtinere(fila, (i32)idx);
         si (via == NIHIL)

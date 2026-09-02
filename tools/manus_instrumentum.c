@@ -73,17 +73,20 @@
 #define SESSIONES_MAX  XXXII
 
 nomen structura {
-    i32       portus;
-    s32       pid;        /* ZEPHYRUM = adhaesa, non a nobis genita */
+          i32 portus;
+          s32 pid;        /* ZEPHYRUM = adhaesa, non a nobis genita */
     character binarium[CCLVI];
 } Sessio;
+
 
 /* ==================================================
  * Sedes sessionum
  * ================================================== */
 
 interior vacuum
-_sedes (character* destinatio, memoriae_index maximum)
+_sedes (
+         character* destinatio,
+    memoriae_index  maximum)
 {
     constans character* domus = getenv("HOME");
 
@@ -93,7 +96,9 @@ _sedes (character* destinatio, memoriae_index maximum)
 }
 
 interior vacuum
-_via_sessionis (character* destinatio, i32 portus)
+_via_sessionis (
+    character* destinatio,
+          i32  portus)
 {
     character sedes[VIAE_MENSURA];
 
@@ -102,7 +107,9 @@ _via_sessionis (character* destinatio, i32 portus)
 }
 
 interior vacuum
-_via_diarii (character* destinatio, i32 portus)
+_via_diarii (
+    character* destinatio,
+          i32  portus)
 {
     character sedes[VIAE_MENSURA];
 
@@ -120,8 +127,8 @@ _via_diarii (character* destinatio, i32 portus)
 interior vacuum
 _sedem_parare (vacuum)
 {
-    character domus[VIAE_MENSURA];
-    character sedes[VIAE_MENSURA];
+             character  domus[VIAE_MENSURA];
+             character  sedes[VIAE_MENSURA];
     constans character* h = getenv("HOME");
 
     sprintf(domus, "%s/.rhubarb", (h != NIHIL) ? h : "/tmp");
@@ -131,7 +138,8 @@ _sedem_parare (vacuum)
 }
 
 interior b32
-_vivit (s32 pid)
+_vivit (
+    s32 pid)
 {
     si (pid <= ZEPHYRUM)
     {
@@ -141,7 +149,8 @@ _vivit (s32 pid)
 }
 
 interior b32
-_sessionem_scribere (constans Sessio* s)
+_sessionem_scribere (
+    constans Sessio* s)
 {
     character via[VIAE_MENSURA];
     FILE*     f;
@@ -160,7 +169,9 @@ _sessionem_scribere (constans Sessio* s)
 }
 
 interior b32
-_sessionem_legere (i32 portus, Sessio* exitus)
+_sessionem_legere (
+       i32  portus,
+    Sessio* exitus)
 {
     character via[VIAE_MENSURA];
     FILE*     f;
@@ -180,17 +191,19 @@ _sessionem_legere (i32 portus, Sessio* exitus)
         redde FALSUM;
     }
     fclose(f);
-    exitus->portus = (i32)p;
-    exitus->pid    = (s32)q;
+    exitus->portus  = (i32)p;
+    exitus->pid     = (s32)q;
     redde VERUM;
 }
 
 /* Sessiones VIVAS colligere; mortuas eodem transitu purgare, ne
  * index crescat donec ambiguitas falsa fiat. */
 interior i32
-_sessiones_legere (Sessio* vas, i32 maximum)
+_sessiones_legere (
+    Sessio* vas,
+       i32  maximum)
 {
-    character      sedes[VIAE_MENSURA];
+    character sedes[VIAE_MENSURA];
     DIR*           d;
     structura dirent* v;
     i32            n = ZEPHYRUM;
@@ -205,7 +218,7 @@ _sessiones_legere (Sessio* vas, i32 maximum)
     dum ((v = readdir(d)) != NIHIL && n < maximum)
     {
         Sessio s;
-        i32    portus;
+           i32 portus;
 
         si (strstr(v->d_name, ".sessio") == NIHIL)
         {
@@ -231,6 +244,7 @@ _sessiones_legere (Sessio* vas, i32 maximum)
     redde n;
 }
 
+
 /* ==================================================
  * Portus liber
  * ==================================================
@@ -241,13 +255,14 @@ _sessiones_legere (Sessio* vas, i32 maximum)
  * quae portum occupatum invenit CLAMAT (imperium_vivarium causam
  * reddit), ergo defectus apertus est, non tacitus.
  */
+
 interior i32
 _portus_liber (vacuum)
 {
     structura sockaddr_in ad;
-    socklen_t             longitudo = (socklen_t)magnitudo(ad);
-    s32                   fd;
-    i32                   portus = ZEPHYRUM;
+    socklen_t longitudo = (socklen_t)magnitudo(ad);
+          s32 fd;
+          i32 portus = ZEPHYRUM;
 
     fd = socket(AF_INET, SOCK_STREAM, 0);
     si (fd < ZEPHYRUM)
@@ -255,11 +270,11 @@ _portus_liber (vacuum)
         redde ZEPHYRUM;
     }
     memset(&ad, 0, magnitudo(ad));
-    ad.sin_family      = AF_INET;
-    ad.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    ad.sin_port        = 0;
+    ad.sin_family       = AF_INET;
+    ad.sin_addr.s_addr  = htonl(INADDR_LOOPBACK);
+    ad.sin_port         = 0;
 
-    si (bind(fd, (structura sockaddr*)&ad, (socklen_t)magnitudo(ad))
+    si (   bind(fd, (structura sockaddr*)&ad, (socklen_t)magnitudo(ad))
         == ZEPHYRUM
         && getsockname(fd, (structura sockaddr*)&ad, &longitudo)
         == ZEPHYRUM)
@@ -269,6 +284,7 @@ _portus_liber (vacuum)
     (vacuum)close(fd);
     redde portus;
 }
+
 
 /* ==================================================
  * Applicationem detrahere
@@ -280,18 +296,22 @@ _portus_liber (vacuum)
  * Ergo hic: setsid + effusio in plagulam. Diarium praeterea manet,
  * unde 'bin/manus effusio' postea legere potest.
  */
+
 interior s32
-_detrahere (constans character* binarium, i32 portus,
-            integer argc_extra, character** argv_extra)
+_detrahere (
+    constans character*  binarium,
+                   i32   portus,
+               integer   argc_extra,
+             character** argv_extra)
 {
-    pid_t      proles;
+        pid_t  proles;
     character  vex_vivum[XVI];
     character  vex_portus[XVI];
     character  num[XXXII];
     character  diarium[VIAE_MENSURA];
     character* argumenta[XXXII];
-    integer    i;
-    integer    n = 0;
+      integer  i;
+      integer  n = 0;
 
     strcpy(vex_vivum,  "-vivum");
     strcpy(vex_portus, "-portus");
@@ -356,14 +376,16 @@ _detrahere (constans character* binarium, i32 portus,
  * res extra paginam, quam pagina nuntiare non potest. manus_incipere
  * ipsa idem facit. */
 interior Manus*
-_portum_exspectare (Piscina* piscina, i32 portus)
+_portum_exspectare (
+    Piscina* piscina,
+        i32  portus)
 {
     structura timespec mora;
-    Manus*             m;
-    integer            conatus;
+      Manus* m;
+    integer  conatus;
 
-    mora.tv_sec  = 0;
-    mora.tv_nsec = 50L * 1000L * 1000L;   /* L ms */
+    mora.tv_sec   = 0;
+    mora.tv_nsec  = 50L * 1000L * 1000L;   /* L ms */
 
     per (conatus = 0; conatus < C; conatus++)   /* <= V s */
     {
@@ -377,6 +399,7 @@ _portum_exspectare (Piscina* piscina, i32 portus)
     redde NIHIL;
 }
 
+
 /* ==================================================
  * Paratitudo paginae
  * ==================================================
@@ -389,8 +412,10 @@ _portum_exspectare (Piscina* piscina, i32 portus)
  * Exspectatio IN PAGINA fit, more manus: promissum quod se solvit
  * cum 'load' venit aut terminus transit. Nullus somnus hinc.
  */
+
 interior b32
-_paginam_exspectare (Manus* m)
+_paginam_exspectare (
+    Manus* m)
 {
     chorda r = manus_aestimare(m,
         "new Promise(function(R){"
@@ -402,23 +427,27 @@ _paginam_exspectare (Manus* m)
     redde (r.mensura > ZEPHYRUM && r.datum[0] == '1') ? VERUM : FALSUM;
 }
 
+
 /* ==================================================
  * Sessionem eligere
  * ================================================== */
 
 interior b32
-_eligere (i32 rogatus, Sessio* exitus)
+_eligere (
+       i32  rogatus,
+    Sessio* exitus)
 {
     Sessio vas[SESSIONES_MAX];
-    i32    n;
-    i32    i;
+       i32 n;
+       i32 i;
 
     si (rogatus != ZEPHYRUM)
     {
         si (!_sessionem_legere(rogatus, exitus))
         {
             fprintf(stderr, "manus: sessio %d ignota"
-                    " (vide 'bin/manus sessiones')\n", (integer)rogatus);
+                    " (vide 'bin/manus sessiones')\n",
+                    (integer)rogatus);
             redde FALSUM;
         }
         redde VERUM;
@@ -448,12 +477,14 @@ _eligere (i32 rogatus, Sessio* exitus)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Impressio affordantiarum
  * ================================================== */
 
 interior constans character*
-_genus_nomen (AffordantiaGenus g)
+_genus_nomen (
+    AffordantiaGenus g)
 {
     commutatio (g)
     {
@@ -466,7 +497,9 @@ _genus_nomen (AffordantiaGenus g)
 }
 
 interior vacuum
-_affordantias_imprimere (Affordantiae aff, b32 machina)
+_affordantias_imprimere (
+    Affordantiae aff,
+             b32 machina)
 {
     i32 i;
 
@@ -519,6 +552,7 @@ _affordantias_imprimere (Affordantiae aff, b32 machina)
     }
 }
 
+
 /* ==================================================
  * Auxilium
  * ================================================== */
@@ -527,37 +561,37 @@ interior s32
 _auxilium (vacuum)
 {
     imprimere(
-      "manus - applicationem vitreae vivam agitare (modus dev)\n\n"
-      "  bin/manus incipere <binarium> [args...]  sessionem gignere\n"
-      "  bin/manus adhaerere <portus>             sessioni currenti\n"
-      "  bin/manus sessiones                      quae vivunt\n"
-      "  bin/manus finire                         applicationem occidere\n\n"
-      "  bin/manus affordantiae                   quid tangi possit\n"
-      "  bin/manus lege <selector>                quid DICITUR\n"
-      "  bin/manus abest <selector>               MORATUR donec abeat\n"
-      "  bin/manus imago <via>                    photographia\n"
-      "  bin/manus premere <selector>\n"
-    "  bin/manus clavis <nomen>                 clavis NATIVA"
+        "manus - applicationem vitreae vivam agitare (modus dev)\n\n"
+        "  bin/manus incipere <binarium> [args...]  sessionem gignere\n"
+        "  bin/manus adhaerere <portus>             sessioni currenti\n"
+        "  bin/manus sessiones                      quae vivunt\n"
+        "  bin/manus finire                         applicationem occidere\n\n"
+        "  bin/manus affordantiae                   quid tangi possit\n"
+        "  bin/manus lege <selector>                quid DICITUR\n"
+        "  bin/manus abest <selector>               MORATUR donec abeat\n"
+        "  bin/manus imago <via>                    photographia\n"
+        "  bin/manus premere <selector>\n"
+        "  bin/manus clavis <nomen>                 clavis NATIVA"
                                               " (+ 'Cmd+c')\n"
-    "  bin/manus movere <selector>              librare (NON CSS :hover)\n"
-      "  bin/manus premere-textum <textus>\n"
-      "  bin/manus scribere <selector> <textus>\n"
-      "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
-    "  bin/manus volvere <sel> <+-pixela>       elementum INTRA se\n"
-    "  bin/manus focus [<selector>]             quid focum tenet"
+        "  bin/manus movere <selector>              librare (NON CSS :hover)\n"
+        "  bin/manus premere-textum <textus>\n"
+        "  bin/manus scribere <selector> <textus>\n"
+        "  bin/manus volvere <selector|+-pixela>   imago PROSPECTUM capit\n"
+        "  bin/manus volvere <sel> <+-pixela>       elementum INTRA se\n"
+        "  bin/manus focus [<selector>]             quid focum tenet"
                                               " / focum ponere\n"
-    "  bin/manus magnitudo [<lat> <alt>]        prospectum legere/ponere\n"
-      "  bin/manus textus <selector>\n"
-      "  bin/manus aestimare <js>\n"
-      "  bin/manus errores                        culpae paginae\n"
-      "  bin/manus effusio                        stdout applicationis\n\n"
-      "  -s <portus>   sessionem nominare (omitte cum una sola vivit)\n"
-      "  -exspecta     lege/textus: MORARI donec selector appareat\n"
-      "                (actiones IAM morantur; solae interrogationes\n"
+        "  bin/manus magnitudo [<lat> <alt>]        prospectum legere/ponere\n"
+        "  bin/manus textus <selector>\n"
+        "  bin/manus aestimare <js>\n"
+        "  bin/manus errores                        culpae paginae\n"
+        "  bin/manus effusio                        stdout applicationis\n\n"
+        "  -s <portus>   sessionem nominare (omitte cum una sola vivit)\n"
+        "  -exspecta     lege/textus: MORARI donec selector appareat\n"
+        "                (actiones IAM morantur; solae interrogationes\n"
                        " non morabantur)\n"
-      "  -mora <ms>    terminus exspectandi (ordinarius MM)\n"
-      "  -machina      TSV purum, sine capite (affordantiae,\n"
-      "                sessiones, lege)\n\n"
+        "  -mora <ms>    terminus exspectandi (ordinarius MM)\n"
+        "  -machina      TSV purum, sine capite (affordantiae,\n"
+        "                sessiones, lege)\n\n"
       /* COLUMNAE HIC NOMINANDAE.
        *
        * -machina caput ferre NON debet (mos domus: TSV purum, ne
@@ -568,41 +602,45 @@ _auxilium (vacuum)
        * Praeterea campi VACUI in TSV tabulationes CONTINUAS pariunt,
        * quas oculus numerare non potest. Ergo index hic, ubi ille
        * iam quaesiverat. */
-      "Columnae -machina:\n"
-      "  affordantiae  genus selector titulus valor impedimentum\n"
-      "                x y latitudo altitudo   (IX columnae; valor et\n"
-      "                impedimentum vacua esse possunt - tabulationes\n"
-      "                continuas exspecta)\n"
-      "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n"
-      "  lege          cellulae ordinis (filii visibiles; sine\n"
-      "                filiis, textus ipsius) - numerus columnarum\n"
-      "                per ordinem VARIAT\n"
-      "  focus         selector tag titulus   (linea VACUA = nihil\n"
-      "                focum tenet)\n"
-      "  magnitudo     latitudo altitudo   (FACTA, non petita)\n\n"
-      "Exitus: 0 factum; I defectum; II nihil actum.\n");
+        "Columnae -machina:\n"
+        "  affordantiae  genus selector titulus valor impedimentum\n"
+        "                x y latitudo altitudo   (IX columnae; valor et\n"
+        "                impedimentum vacua esse possunt - tabulationes\n"
+        "                continuas exspecta)\n"
+        "  sessiones     portus pid applicatio   (pid 0 = adhaesa)\n"
+        "  lege          cellulae ordinis (filii visibiles; sine\n"
+        "                filiis, textus ipsius) - numerus columnarum\n"
+        "                per ordinem VARIAT\n"
+        "  focus         selector tag titulus   (linea VACUA = nihil\n"
+        "                focum tenet)\n"
+        "  magnitudo     latitudo altitudo   (FACTA, non petita)\n\n"
+        "Exitus: 0 factum; I defectum; II nihil actum.\n");
     redde II;
 }
+
 
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*            piscina;
-    Manus*              m;
-    Sessio              sessio;
-    constans character* verbum;
-    character**         reliqua;
-    integer             n_reliqua;
-    character*          positiva[XXXII];
-    integer             i;
-    i32                 rogatus = ZEPHYRUM;
-    b32                 machina = FALSUM;
-    b32                 exspecta = FALSUM;
-    Mora                mora = MANUS_MORA_ORDINARIA;
-    s32                 codex   = ZEPHYRUM;
+               Piscina*  piscina;
+                 Manus*  m;
+                Sessio   sessio;
+    constans character*  verbum;
+             character** reliqua;
+               integer   n_reliqua;
+             character*  positiva[XXXII];
+               integer   i;
+                   i32   rogatus   = ZEPHYRUM;
+                   b32   machina   = FALSUM;
+                   b32   exspecta  = FALSUM;
+                  Mora   mora      = MANUS_MORA_ORDINARIA;
+                   s32   codex     = ZEPHYRUM;
 
     si (argc < II)
     {
@@ -612,9 +650,9 @@ s32 principale (integer argc, character** argv)
     /* Vexilla ubicumque, non in loco primo solo: '-s' post verbum
      * scribere naturale est, et vexillum quod solum primo loco
      * legitur tacite elabitur (decipula mensurata in mensor_ui). */
-    verbum    = NIHIL;
-    reliqua   = NIHIL;
-    n_reliqua = 0;
+    verbum     = NIHIL;
+    reliqua    = NIHIL;
+    n_reliqua  = 0;
     per (i = I; i < argc; i++)
     {
         si (strcmp(argv[i], "-machina") == ZEPHYRUM)
@@ -625,12 +663,14 @@ s32 principale (integer argc, character** argv)
         {
             exspecta = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-mora") == ZEPHYRUM && (i + I) < argc)
+        alioquin si (   strcmp(argv[i], "-mora") == ZEPHYRUM
+                     && (i + I) < argc)
         {
             mora = (Mora)atoi(argv[i + I]);
             i++;
         }
-        alioquin si (strcmp(argv[i], "-s") == ZEPHYRUM && (i + I) < argc)
+        alioquin si (   strcmp(argv[i], "-s") == ZEPHYRUM
+                     && (i + I) < argc)
         {
             rogatus = (i32)atoi(argv[i + I]);
             i++;
@@ -654,8 +694,8 @@ s32 principale (integer argc, character** argv)
          * vexilla NOTA (supra) hauriuntur; cetera transeunt. */
         alioquin si (n_reliqua < (integer)XXXII)
         {
-            positiva[n_reliqua] = argv[i];
-            n_reliqua = n_reliqua + I;
+            positiva[n_reliqua]  = argv[i];
+            n_reliqua            = n_reliqua + I;
         }
     }
     reliqua = positiva;
@@ -671,8 +711,8 @@ s32 principale (integer argc, character** argv)
     si (strcmp(verbum, "incipere") == ZEPHYRUM)
     {
         Sessio nova;
-        i32    portus;
-        s32    pid;
+           i32 portus;
+           s32 pid;
 
         si (n_reliqua < I)
         {
@@ -709,14 +749,16 @@ s32 principale (integer argc, character** argv)
         portus = _portus_liber();
         si (portus == ZEPHYRUM)
         {
-            fprintf(stderr, "manus: portus liber inveniri non potuit\n");
+            fprintf(stderr,
+                "manus: portus liber inveniri non potuit\n");
             redde I;
         }
         pid = _detrahere(reliqua[0], portus, n_reliqua - I,
                          &reliqua[I]);
         si (pid < ZEPHYRUM)
         {
-            fprintf(stderr, "manus: applicatio detrahi non potuit: %s\n",
+            fprintf(stderr,
+                "manus: applicatio detrahi non potuit: %s\n",
                     reliqua[0]);
             redde I;
         }
@@ -737,9 +779,10 @@ s32 principale (integer argc, character** argv)
 
         (vacuum)_paginam_exspectare(m);
 
-        nova.portus = portus;
-        nova.pid    = pid;
-        strncpy(nova.binarium, reliqua[0], magnitudo(nova.binarium) - I);
+        nova.portus  = portus;
+        nova.pid     = pid;
+        strncpy(nova.binarium, reliqua[0], magnitudo(nova.binarium)
+            - I);
         nova.binarium[magnitudo(nova.binarium) - I] = '\0';
         si (!_sessionem_scribere(&nova))
         {
@@ -754,23 +797,23 @@ s32 principale (integer argc, character** argv)
     si (strcmp(verbum, "adhaerere") == ZEPHYRUM)
     {
         Sessio nova;
-        i32    portus;
+           i32 portus;
 
         si (n_reliqua < I)
         {
             fprintf(stderr, "manus: 'adhaerere' portum poscit\n");
             redde II;
         }
-        portus = (i32)atoi(reliqua[0]);
-        m = manus_aperire(piscina, "127.0.0.1", portus);
+        portus  = (i32)atoi(reliqua[0]);
+        m       = manus_aperire(piscina, "127.0.0.1", portus);
         si (m == NIHIL)
         {
             fprintf(stderr, "manus: nihil respondet in %d\n",
                     (integer)portus);
             redde I;
         }
-        nova.portus = portus;
-        nova.pid    = ZEPHYRUM;   /* non nostra: portus solus testis */
+        nova.portus  = portus;
+        nova.pid     = ZEPHYRUM;   /* non nostra: portus solus testis */
         strcpy(nova.binarium, "(adhaesa)");
         (vacuum)_sessionem_scribere(&nova);
         imprimere("%d\n", (integer)portus);
@@ -781,8 +824,8 @@ s32 principale (integer argc, character** argv)
     si (strcmp(verbum, "sessiones") == ZEPHYRUM)
     {
         Sessio vas[SESSIONES_MAX];
-        i32    n = _sessiones_legere(vas, (i32)SESSIONES_MAX);
-        i32    k;
+           i32 n = _sessiones_legere(vas, (i32)SESSIONES_MAX);
+           i32 k;
 
         /* CAPUT in forma humana, ABSENS in -machina.
          *
@@ -850,7 +893,8 @@ s32 principale (integer argc, character** argv)
         f = fopen(diarium, "r");
         si (f == NIHIL)
         {
-            fprintf(stderr, "manus: nullum diarium (sessio adhaesa?)\n");
+            fprintf(stderr,
+                "manus: nullum diarium (sessio adhaesa?)\n");
             redde II;
         }
         dum (fgets(linea, (integer)magnitudo(linea), f) != NIHIL)
@@ -872,7 +916,8 @@ s32 principale (integer argc, character** argv)
 
     si (strcmp(verbum, "affordantiae") == ZEPHYRUM)
     {
-        _affordantias_imprimere(manus_affordantiae(m, piscina), machina);
+        _affordantias_imprimere(manus_affordantiae(m, piscina),
+            machina);
     }
     alioquin si (strcmp(verbum, "imago") == ZEPHYRUM && n_reliqua >= I)
     {
@@ -881,12 +926,13 @@ s32 principale (integer argc, character** argv)
             imprimere("%s\n", reliqua[0]);
         }
     }
-    alioquin si (strcmp(verbum, "premere") == ZEPHYRUM && n_reliqua >= I)
+    alioquin si (   strcmp(verbum, "premere") == ZEPHYRUM
+                 && n_reliqua                 >= I)
     {
         (vacuum)manus_premere(m, reliqua[0]);
     }
-    alioquin si (strcmp(verbum, "premere-textum") == ZEPHYRUM
-                 && n_reliqua >= I)
+    alioquin si (   strcmp(verbum, "premere-textum") == ZEPHYRUM
+                 && n_reliqua                        >= I)
     {
         (vacuum)manus_premere_textum(m, reliqua[0]);
     }
@@ -965,7 +1011,8 @@ s32 principale (integer argc, character** argv)
                 (integer)lat, (integer)alt);
         }
     }
-    alioquin si (strcmp(verbum, "scribere") == ZEPHYRUM && n_reliqua >= II)
+    alioquin si (   strcmp(verbum, "scribere") == ZEPHYRUM
+                 && n_reliqua                  >= II)
     {
         (vacuum)manus_scribere(m, reliqua[0], reliqua[I]);
     }
@@ -979,7 +1026,7 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "lege") == ZEPHYRUM && n_reliqua >= I)
     {
         Lectio l;
-        i32    k;
+           i32 k;
 
         si (exspecta)
         {
@@ -1006,7 +1053,8 @@ s32 principale (integer argc, character** argv)
             imprimere("\n");
         }
     }
-    alioquin si (strcmp(verbum, "volvere") == ZEPHYRUM && n_reliqua >= I)
+    alioquin si (   strcmp(verbum, "volvere") == ZEPHYRUM
+                 && n_reliqua                 >= I)
     {
         /* Numerus an selector? Prima littera decidit, et discrimen
          * TUTUM est: identificator CSS cifra aut signo incipere NON
@@ -1026,8 +1074,8 @@ s32 principale (integer argc, character** argv)
                 imprimere("%d\n", (integer)manus_volutio(m, arg));
             }
         }
-        alioquin si (arg[0] == '-' || arg[0] == '+'
-            || (arg[0] >= '0' && arg[0] <= '9'))
+        alioquin si (   arg[0] == '-' || arg[0] == '+'
+                     || (arg[0] >= '0' && arg[0] <= '9'))
         {
             (vacuum)manus_volvere(m, (s32)atoi(arg));
         }
@@ -1049,7 +1097,8 @@ s32 principale (integer argc, character** argv)
         imprimere("%.*s\n", (integer)t.mensura,
                   (constans character*)t.datum);
     }
-    alioquin si (strcmp(verbum, "aestimare") == ZEPHYRUM && n_reliqua >= I)
+    alioquin si (   strcmp(verbum, "aestimare") == ZEPHYRUM
+                 && n_reliqua                   >= I)
     {
         chorda r = manus_aestimare(m, reliqua[0], MANUS_MORA_ORDINARIA);
 
@@ -1059,11 +1108,11 @@ s32 principale (integer argc, character** argv)
     alioquin si (strcmp(verbum, "errores") == ZEPHYRUM)
     {
         chorda primus;
-        i32    quot;
+           i32 quot;
 
-        primus.mensura = ZEPHYRUM;
-        primus.datum   = NIHIL;
-        quot = manus_errores(m, &primus);
+        primus.mensura  = ZEPHYRUM;
+        primus.datum    = NIHIL;
+        quot            = manus_errores(m, &primus);
 
         imprimere("errores: %d\n", (integer)quot);
         si (primus.mensura > ZEPHYRUM)

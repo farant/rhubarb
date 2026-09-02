@@ -26,38 +26,46 @@ nomen structura {
  * Redde: chorda numeri, vel vacua si non inventum
  */
 hic_manens chorda
-extrahere_numerum_libri(chorda titulus, Piscina* piscina)
+extrahere_numerum_libri (
+     chorda  titulus,
+    Piscina* piscina)
 {
-    chorda fructus;
-    i32 finis;
-    i32 i;
+       chorda fructus;
+          i32 finis;
+          i32 i;
     character c;
 
-    fructus.datum = NIHIL;
-    fructus.mensura = 0;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = 0;
 
-    si (titulus.mensura < 5) {  /* Minimum: "1.txt" */
+    si (titulus.mensura < 5)
+    {  /* Minimum: "1.txt" */
         redde fructus;
     }
 
     /* Verificare si incipit cum digito */
     c = (character)titulus.datum[0];
-    si (c < '0' || c > '9') {
+    si (c < '0' || c > '9')
+    {
         redde fructus;
     }
 
     /* Invenire finem digitorum */
     finis = 0;
-    per (i = 0; i < titulus.mensura; i++) {
+    per (i = 0; i < titulus.mensura; i++)
+    {
         c = (character)titulus.datum[i];
-        si (c >= '0' && c <= '9') {
+        si (c >= '0' && c <= '9')
+        {
             finis = i + 1;
-        } alioquin {
+        } alioquin
+        {
             frange;
         }
     }
 
-    si (finis == 0) {
+    si (finis == 0)
+    {
         redde fructus;
     }
 
@@ -70,18 +78,23 @@ extrahere_numerum_libri(chorda titulus, Piscina* piscina)
 
 /* Verificare si filum habet -N suffixum (duplicatum) */
 hic_manens b32
-est_duplicatum(chorda titulus)
+est_duplicatum (
+    chorda titulus)
 {
     i32 i;
 
     /* Quaerere pattern: digiti, hyphen, digitus, ".txt" */
-    per (i = 2; i < titulus.mensura - 5; i++) {
+    per (i = 2; i < titulus.mensura - 5; i++)
+    {
         character c = (character)titulus.datum[i];
-        si (c == '-') {
+        si (c == '-')
+        {
             /* Verificare si sequitur digitus */
-            si (i + 1 < titulus.mensura) {
+            si (i + 1 < titulus.mensura)
+            {
                 character next = (character)titulus.datum[i + 1];
-                si (next >= '0' && next <= '9') {
+                si (next >= '0' && next <= '9')
+                {
                     redde VERUM;
                 }
             }
@@ -93,15 +106,18 @@ est_duplicatum(chorda titulus)
 
 /* Verificare si via continet "/old/" */
 hic_manens b32
-est_in_old(chorda via)
+est_in_old (
+    chorda via)
 {
     i32 i;
-    per (i = 0; i < via.mensura - 4; i++) {
-        si (via.datum[i] == '/' &&
-            via.datum[i+1] == 'o' &&
-            via.datum[i+2] == 'l' &&
-            via.datum[i+3] == 'd' &&
-            via.datum[i+4] == '/') {
+    per (i = 0; i < via.mensura - 4; i++)
+    {
+        si (   via.datum[i]     == '/'
+            && via.datum[i + 1] == 'o'
+            && via.datum[i + 2] == 'l'
+            && via.datum[i + 3] == 'd'
+            && via.datum[i + 4] == '/')
+        {
             redde VERUM;
         }
     }
@@ -110,68 +126,82 @@ est_in_old(chorda via)
 
 /* Callback pro ambulatore */
 hic_manens s32
-processare_filum(
-    chorda                         via_plena,
+processare_filum (
+                           chorda  via_plena,
     constans DirectoriumIntroitus* introitus,
-    vacuum*                        contextus)
+                           vacuum* contextus)
 {
     CensusContextus* ctx = (CensusContextus*)contextus;
-    chorda numerus;
+             chorda  numerus;
 
     /* Solum fila */
-    si (introitus->genus != INTROITUS_FILUM) {
+    si (introitus->genus != INTROITUS_FILUM)
+    {
         redde 0;
     }
 
     /* Solum .txt */
-    si (!chorda_terminatur(introitus->titulus, chorda_ex_literis(".txt", ctx->piscina))) {
+    si (!chorda_terminatur(introitus->titulus, chorda_ex_literis(".txt",
+        ctx->piscina)))
+    {
         redde 0;
     }
 
     ctx->fila_totalia++;
 
     /* Verificare si in old/ directorio */
-    si (est_in_old(via_plena)) {
+    si (est_in_old(via_plena))
+    {
         ctx->fila_in_old++;
     }
 
     /* Verificare duplicatum (-N suffix) */
-    si (est_duplicatum(introitus->titulus)) {
+    si (est_duplicatum(introitus->titulus))
+    {
         ctx->fila_duplicata++;
     }
 
     /* Extrahere et registrare numerum libri */
     numerus = extrahere_numerum_libri(introitus->titulus, ctx->piscina);
-    si (numerus.datum != NIHIL) {
-        si (!tabula_dispersa_continet(ctx->libri_visi, numerus)) {
+    si (numerus.datum != NIHIL)
+    {
+        si (!tabula_dispersa_continet(ctx->libri_visi, numerus))
+        {
             /* Novus liber */
             tabula_dispersa_inserere(ctx->libri_visi, numerus, NIHIL);
         }
-    } alioquin {
+    } alioquin
+    {
         ctx->fila_non_numerica++;
     }
 
     redde 0;
 }
 
-s32 principale(s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    CensusContextus ctx;
-    DirectoriumFiltrum filtrum;
+               Piscina* piscina;
+       CensusContextus  ctx;
+    DirectoriumFiltrum  filtrum;
     constans character* via;
-    i32 libri_unici;
+                   i32  libri_unici;
 
     /* Via default vel ex argumento */
-    si (argc > 1) {
+    si (argc > 1)
+    {
         via = argv[1];
-    } alioquin {
+    } alioquin
+    {
         via = "gutenberg-mirror";
     }
 
     /* Initiare */
     piscina = piscina_generare_dynamicum("census", 1024 * 1024);
-    si (!piscina) {
+    si (!piscina)
+    {
         imprimere("Error: non possum allocare memoriam\n");
         redde 1;
     }
@@ -187,10 +217,12 @@ s32 principale(s32 argc, character** argv)
     imprimere("...\n");
 
     /* Ambulare per directorium */
-    filtrum = directorium_filtrum_omnia();
-    filtrum.includere_occultos = FALSUM;
+    filtrum                     = directorium_filtrum_omnia();
+    filtrum.includere_occultos  = FALSUM;
 
-    si (directorium_ambulare(via, &filtrum, processare_filum, &ctx, piscina) < 0) {
+    si (directorium_ambulare(via, &filtrum, processare_filum, &ctx,
+        piscina) < 0)
+    {
         imprimere("Error: non possum aperire directorium '%s'\n", via);
         piscina_destruere(piscina);
         redde 1;

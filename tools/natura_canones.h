@@ -19,15 +19,16 @@
 #include <stdio.h>
 
 nomen structura {
-         chorda*  titulus;     /* nomen naturae, snake_case */
-         chorda*  modulus;
-    NaturaGenus*  genus;       /* genus ipsum, aut genus rei continentis */
-    NaturaGenus*  genus_etiam; /* etiam= resolutum (res sola), vel NIHIL:
+         chorda* titulus;     /* nomen naturae, snake_case */
+         chorda* modulus;
+    NaturaGenus* genus;       /* genus ipsum, aut genus rei continentis */
+    NaturaGenus* genus_etiam; /* etiam= resolutum (res sola), vel NIHIL:
                                 * apparatus AMBARUM catenarum debetur
                                 * (natura.h par. NaturaRes) */
-      StmlNodus*  nodus;       /* nodus entis (genus aut res) */
+       StmlNodus* nodus;       /* nodus entis (genus aut res) */
              b32  est_res;     /* VERUM = species/individuum/cultivar */
 } NcEns;
+
 
 /* ==================================================
  * Exemplar elementi - apparatus PLICATUS
@@ -57,16 +58,16 @@ nomen enumeratio {
 nomen structura {
      NcMembrumDiscrimen  discrimen;
          NcMembrumOrigo  origo;
-                chorda*  titulus;       /* nomen naturae, snake */
-    constans character*  praefixum;     /* "status_" vel NIHIL */
-    constans character*  genus_valoris; /* "textus"/"nomen"/... */
-                   Xar*  optiones;      /* Xar de chorda* - electio */
-                chorda*  praestitutum;  /* ordinarius=, vel NIHIL */
+                 chorda* titulus;       /* nomen naturae, snake */
+     constans character* praefixum;     /* "status_" vel NIHIL */
+     constans character* genus_valoris; /* "textus"/"nomen"/... */
+                    Xar* optiones;      /* Xar de chorda* - electio */
+                 chorda* praestitutum;  /* ordinarius=, vel NIHIL */
     /* FINES (spec fines) - verbatim e proprietate in canonem
      * coctum, numerus solus; NIHIL = absens */
-                chorda*  fractio;
-                chorda*  finis_minimus;
-                chorda*  finis_maximus;
+                chorda* fractio;
+                chorda* finis_minimus;
+                chorda* finis_maximus;
     /* MONOLITHUS solum: index nominum entium (snake) quorum
      * identitates hoc membrum citare licet - petitum primum, tum
      * posteri eius omnes (catena sub= ET etiam=), quia claves per
@@ -79,14 +80,15 @@ nomen structura {
      * COLLIGAT: quae relatio citari possit et quae clausura eius
      * sit natura_canones.c solus iudicat (petitum resolvi debet -
      * vide ibi). */
-                   Xar*  citatio_ad;   /* Xar de chorda* */
+                   Xar* citatio_ad;   /* Xar de chorda* */
 } NcMembrum;
 
 nomen structura {
-      NcEns*  ens;
-        Xar*  membra;     /* Xar de NcMembrum */
-        Xar*  actiones;   /* Xar de chorda* - pro <eventum actio=> */
+      NcEns* ens;
+        Xar* membra;     /* Xar de NcMembrum */
+        Xar* actiones;   /* Xar de chorda* - pro <eventum actio=> */
 } NcElementum;
+
 
 /* ==================================================
  * Emissio (natura_canones_emissio.c)
@@ -94,15 +96,15 @@ nomen structura {
 
 /* nomen naturae (snake) -> nomen canonis (kebab) */
 vacuum
-_kebab_scribere(
-    FILE*             f,
-    constans chorda*  t);
+_kebab_scribere (
+               FILE* f,
+    constans chorda* t);
 
 /* exemplar unius elementi in TSV - modus -inspicere */
 vacuum
-_elementum_inspicere(
-    FILE*         f,
-    NcElementum*  el);
+_elementum_inspicere (
+           FILE* f,
+    NcElementum* el);
 
 /* canonem unius plagulae emittere.
  *   elementa  - Xar de NcElementum* (ordo = ordo emissionis)
@@ -122,16 +124,16 @@ _elementum_inspicere(
  * scriptum valet et vocans plagulam abicere debet - canon dimidius
  * mendacium est. */
 b32
-_canonem_emittere(
-    FILE*                f,
-    Xar*                 elementa,
-    constans character*  dialectus,
-    constans character*  fons,
-    constans character*  praefatio,
-    Xar*                 entia,      /* NIHIL = sine clavibus
+_canonem_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* dialectus,
+    constans character* fons,
+    constans character* praefatio,
+                   Xar* entia,      /* NIHIL = sine clavibus
                                       * externis; monolithus entia
                                       * tradit (librarium W1) */
-    Piscina*             piscina);
+               Piscina* piscina);
 
 /* census relationum - NUMERI IN CANONEM IPSUM SCRIBUNTUR.
  *
@@ -140,30 +142,30 @@ _canonem_emittere(
  * generatus de SE dicat quantum vere examinet. SEDES numerantur
  * (membra huius canonis), non declarationes generum. */
 nomen structura {
-    i32  omnes;
-    i32  citatae;
-    i32  apertae;
-    i32  multiplices;
-    i32  ignotae;
+    i32 omnes;
+    i32 citatae;
+    i32 apertae;
+    i32 multiplices;
+    i32 ignotae;
 } NcCensusRelationum;
 
 /* exemplar elementi ex ente aedificare (plicatio hereditate iam
  * soluta) - definitio in natura_canones.c; emissio (semina) per
  * individuum vocat ut membra pro appellationibus habeat */
 NcElementum*
-_elementum_aedificare(
-    NaturaBibliotheca*   bib,
-    NcEns*               ens,
-    b32                  monolithus,
-    NcCensusRelationum*  census,
-    Piscina*             piscina);
+_elementum_aedificare (
+     NaturaBibliotheca* bib,
+                 NcEns* ens,
+                   b32  monolithus,
+    NcCensusRelationum* census,
+               Piscina* piscina);
 
 /* an nodus fontis individuum sit (spec census par. 1: praedicabile
  * non est, tag non gignit) - communis inter iudicium
  * (natura_canones.c) et semina (emissio) */
 b32
-_nodus_individuum_est(
-    constans StmlNodus*  n);
+_nodus_individuum_est (
+    constans StmlNodus* n);
 
 /* censum seminum scribere (spec census par. 2): individua
  * dictionarii ut DATA - instantiae tagorum generum suorum in
@@ -173,10 +175,10 @@ _nodus_individuum_est(
  * transcribitur (textus normalizatus); nota curatorialis OMITTITUR.
  * Redde FALSUM ut _canonem_emittere: nihil scriptum valet. */
 b32
-_censum_seminum_scribere(
-    NaturaBibliotheca*   bib,
-    Xar*                 entia,
-    constans character*  via,
-    Piscina*             piscina);
+_censum_seminum_scribere (
+     NaturaBibliotheca* bib,
+                   Xar* entia,
+    constans character* via,
+               Piscina* piscina);
 
 #endif /* NATURA_CANONES_H */

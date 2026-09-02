@@ -24,54 +24,107 @@ nomen enumeratio {
     NC_VALOR_NULLUS = IV    /* octetus nullus - vide infra */
 } NcValorStatus;
 
-interior vacuum  _kebab_literas_scribere(FILE* f,
+interior vacuum
+_kebab_literas_scribere (
+                                                       FILE* f,
                                          constans character* s);
-interior vacuum  _planum_scribere(FILE* f, constans chorda* t);
-interior b32     _appellatio_emissa(character* ex, i32 tectum,
+interior vacuum
+_planum_scribere (
+               FILE* f,
+    constans chorda* t);
+interior b32
+_appellatio_emissa (
+                                             character* ex,
+                                                   i32  tectum,
                                     constans character* praefixum,
-                                    constans chorda* titulus);
-interior NcValorStatus _valorem_planare(constans chorda* v,
-                                        character* ex, i32 tectum,
-                                        b32 quota_licet,
-                                        b32* planatum);
-interior b32     _generi_congruit(constans character* genus_valoris,
+                                       constans chorda* titulus);
+interior NcValorStatus
+_valorem_planare (
+                                  constans chorda* v,
+                                        character* ex,
+                                              i32  tectum,
+                                              b32  quota_licet,
+                                              b32* planatum);
+interior b32
+_generi_congruit (
+                                  constans character* genus_valoris,
                                   constans character* v,
-                                  Xar* optiones);
-interior b32     _litteras_alienas_habet(constans character* v);
-interior vacuum  _textum_evasum_scribere(FILE* f,
+                                                 Xar* optiones);
+interior b32
+_litteras_alienas_habet (
+    constans character* v);
+interior vacuum
+_textum_evasum_scribere (
+                                                       FILE* f,
                                          constans character* s);
-interior b32     _appellatio_iam_emissa(Xar* membra, i32 usque,
-                                        NcMembrumDiscrimen d,
+interior b32
+_appellatio_iam_emissa (
+                                                       Xar* membra,
+                                                       i32  usque,
+                                        NcMembrumDiscrimen  d,
                                         constans character* appellatio);
-interior b32     _actio_iam_scripta(Xar* elementa, i32 usque_el,
-                                    i32 usque_ac, constans chorda* a);
-interior constans character* _textus_generis(
+interior b32
+_actio_iam_scripta (
+                                    Xar* elementa,
+                                    i32  usque_el,
+                                    i32  usque_ac,
+                        constans chorda* a);
+interior constans character*
+_textus_generis (
                                  constans character* genus_valoris);
-interior vacuum  _glossas_scribere(FILE* f, StmlNodus* nodus,
+interior vacuum
+_glossas_scribere (
+                                      FILE* f,
+                                 StmlNodus* nodus,
                                    Piscina* piscina);
-interior vacuum  _chordam_scribere(FILE* f, constans chorda* c);
-interior b32     _elementum_scribere(FILE* f, NcElementum* el,
-                                     i32* planata, i32* aliena,
-                                     i32* omissa, Piscina* piscina);
-interior b32     _membrum_attributum_scribere(FILE* f,
+interior vacuum
+_chordam_scribere (
+               FILE* f,
+    constans chorda* c);
+interior b32
+_elementum_scribere (
+                                    FILE* f,
+                             NcElementum* el,
+                                     i32* planata,
+                                     i32* aliena,
+                                     i32* omissa,
+                                 Piscina* piscina);
+interior b32
+_membrum_attributum_scribere (
+    FILE* f,
                                               NcElementum* el,
                                               NcMembrum* m,
                                               constans character* ap,
                                               i32* planata,
                                               i32* aliena);
-interior vacuum  _eventum_scribere(FILE* f, Xar* elementa);
-interior vacuum  _citationes_scribere(FILE* f, Xar* elementa);
-interior vacuum  _unicitas_scribere(FILE* f, Xar* elementa);
-interior s32     _nullus_index(constans chorda* c);
-interior integer _mensura_tuta(constans chorda* c);
-interior b32     _nomina_tuta(Xar* elementa);
+interior vacuum
+_eventum_scribere (
+    FILE* f,
+     Xar* elementa);
+interior vacuum
+_citationes_scribere (
+    FILE* f,
+     Xar* elementa);
+interior vacuum
+_unicitas_scribere (
+    FILE* f,
+     Xar* elementa);
+interior s32
+_nullus_index (
+    constans chorda* c);
+interior integer
+_mensura_tuta (
+    constans chorda* c);
+interior b32
+_nomina_tuta (
+    Xar* elementa);
 
 /* nomen naturae (snake) -> nomen canonis (kebab).
  * Bijectivum: genus 'nomen' naturae lineolam non fert. */
 vacuum
-_kebab_scribere(
-    FILE*             f,
-    constans chorda*  t)
+_kebab_scribere (
+               FILE* f,
+    constans chorda* t)
 {
     i32 i;
 
@@ -91,9 +144,9 @@ _kebab_scribere(
 /* idem pro literis C - praefixa ('status_') formam SNAKE in
  * exemplari servant, ergo kebab uno loco solo fit */
 interior vacuum
-_kebab_literas_scribere(
-    FILE*                f,
-    constans character*  s)
+_kebab_literas_scribere (
+                  FILE* f,
+    constans character* s)
 {
     i32 i;
 
@@ -108,9 +161,9 @@ _kebab_literas_scribere(
  * TSV crudo emissa unum membrum in plures lineas frangeret.
  * Exemplar valorem VERUM tenet; sola haec species eum planat. */
 interior vacuum
-_planum_scribere(
-    FILE*             f,
-    constans chorda*  t)
+_planum_scribere (
+               FILE* f,
+    constans chorda* t)
 {
     i32 i;
 
@@ -131,16 +184,16 @@ _planum_scribere(
  *   ENS  discrimen  nomen  genus  optiones  [=ordinarius]
  * Actio breviter: ENS  actio  nomen */
 vacuum
-_elementum_inspicere(
-    FILE*         f,
-    NcElementum*  el)
+_elementum_inspicere (
+           FILE* f,
+    NcElementum* el)
 {
     i32 i;
 
     per (i = ZEPHYRUM; i < xar_numerus(el->membra); i++)
     {
         NcMembrum* m;
-        i32        j;
+              i32  j;
 
         m = (NcMembrum*)xar_obtinere(el->membra, i);
 
@@ -187,6 +240,7 @@ _elementum_inspicere(
     }
 }
 
+
 /* ==================================================
  * Canon generatus
  * ================================================== */
@@ -195,11 +249,11 @@ _elementum_inspicere(
  * Materiatur quia et scribendum et COMPARANDUM est - exemplar per
  * par (titulus, praefixum) deduplicat, canon per nomen emissum. */
 interior b32
-_appellatio_emissa(
-    character*           ex,
-    i32                  tectum,
-    constans character*  praefixum,
-    constans chorda*     titulus)
+_appellatio_emissa (
+             character* ex,
+                   i32  tectum,
+    constans character* praefixum,
+       constans chorda* titulus)
 {
     i32 n;
     i32 i;
@@ -224,8 +278,8 @@ _appellatio_emissa(
         {
             redde FALSUM;
         }
-        c      = (character)titulus->datum[i];
-        ex[n++] = (c == '_') ? '-' : c;
+        c        = (character)titulus->datum[i];
+        ex[n++]  = (c == '_') ? '-' : c;
     }
     ex[n] = '\0';
     redde VERUM;
@@ -261,20 +315,20 @@ _appellatio_emissa(
  *   non est - sed numeratur, ne tacitum sit.
  */
 interior NcValorStatus
-_valorem_planare(
-    constans chorda*  v,
-    character*        ex,
-    i32               tectum,
-    b32               quota_licet,
-    b32*              planatum)
+_valorem_planare (
+    constans chorda* v,
+          character* ex,
+                i32  tectum,
+                b32  quota_licet,
+                b32* planatum)
 {
     i32 n;
     i32 i;
     i32 initium;
     i32 finis;
 
-    *planatum = FALSUM;
-    n         = ZEPHYRUM;
+    *planatum  = FALSUM;
+    n          = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < v->mensura; i++)
     {
@@ -299,8 +353,8 @@ _valorem_planare(
         }
         si (c == '\n' || c == '\r' || c == '\t')
         {
-            c         = ' ';
-            *planatum = VERUM;
+            c          = ' ';
+            *planatum  = VERUM;
         }
         si (n + I >= tectum)
         {
@@ -312,8 +366,8 @@ _valorem_planare(
 
     /* margines tondere: spatium ad initium aut finem valoris nihil
      * significat, et tonsum ambo lectores idem legunt */
-    initium = ZEPHYRUM;
-    finis   = n;
+    initium  = ZEPHYRUM;
+    finis    = n;
     dum (initium < finis && ex[initium] == ' ')
     {
         initium++;
@@ -338,10 +392,10 @@ _valorem_planare(
  * congruit'), id est canon TOTUS onerari nequit. Ergo hic
  * deprehendendum est, dum locum nominare possumus. */
 interior b32
-_generi_congruit(
-    constans character*  genus_valoris,
-    constans character*  v,
-    Xar*                 optiones)
+_generi_congruit (
+    constans character* genus_valoris,
+    constans character* v,
+                   Xar* optiones)
 {
     i32 i;
 
@@ -354,9 +408,9 @@ _generi_congruit(
     {
         per (i = ZEPHYRUM; optiones && i < xar_numerus(optiones); i++)
         {
-            chorda*       o;
-            character     planum[NC_VALOR_MAXIMUS];
-            b32           mutatum;
+               chorda* o;
+            character  planum[NC_VALOR_MAXIMUS];
+                  b32  mutatum;
 
             /* QUOTA LICITA hic quoque: optio textus elementi est,
              * et forma qua COMPARATUR eadem esse debet qua
@@ -386,8 +440,8 @@ _generi_congruit(
 
     si (strcmp(genus_valoris, "veritas") == ZEPHYRUM)
     {
-        redde (b32)(strcmp(v, "verum")  == ZEPHYRUM ||
-                    strcmp(v, "falsum") == ZEPHYRUM);
+        redde (b32)(strcmp(v, "verum") == ZEPHYRUM
+            || strcmp(v, "falsum") == ZEPHYRUM);
     }
 
     si (strcmp(genus_valoris, "numerus") == ZEPHYRUM)
@@ -462,12 +516,12 @@ _generi_congruit(
      * DEBET - aliter ordinarius licitus falso reiceretur. */
     per (i = ZEPHYRUM; v[i] != '\0'; i++)
     {
-        si (!((v[i] >= 'a' && v[i] <= 'z') ||
-              (v[i] >= 'A' && v[i] <= 'Z') ||
-              (v[i] >= '0' && v[i] <= '9') ||
-              v[i] == '_' || v[i] == '*' ||
-              (v[i] == '-' &&
-               strcmp(genus_valoris, "compositum") == ZEPHYRUM)))
+        si (!((v[i] >= 'a' && v[i] <= 'z')
+            || (v[i] >= 'A' && v[i] <= 'Z')
+            || (v[i] >= '0' && v[i] <= '9')
+            || v[i] == '_' || v[i] == '*'
+            || (v[i] == '-'
+            && strcmp(genus_valoris, "compositum") == ZEPHYRUM)))
         {
             redde FALSUM;
         }
@@ -481,8 +535,8 @@ _generi_congruit(
  * numeramus, ne tacita sit forma quam instrumentum alienum
  * aliter legeret. */
 interior b32
-_litteras_alienas_habet(
-    constans character*  v)
+_litteras_alienas_habet (
+    constans character* v)
 {
     i32 i;
 
@@ -500,9 +554,9 @@ _litteras_alienas_habet(
  * entitates in contentu textuali SOLVIT (aliter quam in
  * attributis) */
 interior vacuum
-_textum_evasum_scribere(
-    FILE*                f,
-    constans character*  s)
+_textum_evasum_scribere (
+                  FILE* f,
+    constans character* s)
 {
     i32 i;
 
@@ -536,14 +590,14 @@ _textum_evasum_scribere(
  * frangunt. Hodie in corpore nusquam fit; porta tamen adest et
  * CLAMAT, quia collapsus tacitus vitium domus est. */
 interior b32
-_appellatio_iam_emissa(
-    Xar*                 membra,
-    i32                  usque,
-    NcMembrumDiscrimen   d,
-    constans character*  appellatio)
+_appellatio_iam_emissa (
+                   Xar* membra,
+                   i32  usque,
+    NcMembrumDiscrimen  d,
+    constans character* appellatio)
 {
     character alia[NC_APPELLATIO_MAXIMA];
-    i32       i;
+          i32 i;
 
     per (i = ZEPHYRUM; i < usque; i++)
     {
@@ -571,21 +625,21 @@ _appellatio_iam_emissa(
  * eas UNIT. Deduplicatio hic sine piscina fit (copia parva) -
  * scriptor per omnia priora currit. */
 interior b32
-_actio_iam_scripta(
-    Xar*              elementa,
-    i32               usque_el,
-    i32               usque_ac,
-    constans chorda*  a)
+_actio_iam_scripta (
+                Xar* elementa,
+                i32  usque_el,
+                i32  usque_ac,
+    constans chorda* a)
 {
     i32 i;
 
     per (i = ZEPHYRUM; i <= usque_el; i++)
     {
         NcElementum* el;
-        i32          j;
-        i32          tectum;
+                i32  j;
+                i32  tectum;
 
-        el     = *(NcElementum**)xar_obtinere(elementa, i);
+        el = *(NcElementum**)xar_obtinere(elementa, i);
         tectum = (i == usque_el) ? usque_ac : xar_numerus(el->actiones);
         per (j = ZEPHYRUM; j < tectum; j++)
         {
@@ -606,40 +660,40 @@ _actio_iam_scripta(
  * 'electio' ad 'verum' cadit: canon.canon id consulto omittit
  * ('mechanismus optionum pro textu nondum existit'). */
 interior constans character*
-_textus_generis(
-    constans character*  genus_valoris)
+_textus_generis (
+    constans character* genus_valoris)
 {
     si (strcmp(genus_valoris, "numerus") == ZEPHYRUM) redde "numerus";
     si (strcmp(genus_valoris, "veritas") == ZEPHYRUM) redde "veritas";
-    si (strcmp(genus_valoris, "dies")    == ZEPHYRUM) redde "dies";
-    si (strcmp(genus_valoris, "nomen")   == ZEPHYRUM) redde "nomen";
+    si (strcmp(genus_valoris, "dies") == ZEPHYRUM) redde "dies";
+    si (strcmp(genus_valoris, "nomen") == ZEPHYRUM) redde "nomen";
     redde "verum";
 }
 
 /* unum <attributum> cum optionibus et ordinario. Redde FALSUM si
  * praestitutum emitti NEQUIT - tunc canon totus recusandus est. */
 interior b32
-_membrum_attributum_scribere(
-    FILE*                f,
-    NcElementum*         el,
-    NcMembrum*           m,
-    constans character*  ap,
-    i32*                 planata,
-    i32*                 aliena)
+_membrum_attributum_scribere (
+                  FILE* f,
+           NcElementum* el,
+             NcMembrum* m,
+    constans character* ap,
+                   i32* planata,
+                   i32* aliena)
 {
     constans character* genus_valoris;
-    character           valor[NC_VALOR_MAXIMUS];
-    b32                 habet_valorem;
-    b32                 planatum;
-    i32                 i;
+             character  valor[NC_VALOR_MAXIMUS];
+                   b32  habet_valorem;
+                   b32  planatum;
+                   i32  i;
 
     genus_valoris = m->genus_valoris;
 
     /* electio SINE optionibus omnem valorem reiceret - attributum
      * quod scribi non potest porta non est sed laqueus. Ad textum
      * cadit (par. 3.4: canon limitat, non poscit), numquam tacite. */
-    si (strcmp(genus_valoris, "electio") == ZEPHYRUM &&
-        (!m->optiones || xar_numerus(m->optiones) == ZEPHYRUM))
+    si (   strcmp(genus_valoris, "electio") == ZEPHYRUM
+        && (!m->optiones || xar_numerus(m->optiones) == ZEPHYRUM))
     {
         fprintf(stderr,
             "natura_canones: <%.*s> '%s' electio SINE optionibus - "
@@ -765,9 +819,9 @@ _membrum_attributum_scribere(
     fputs(">\n", f);
     per (i = ZEPHYRUM; i < xar_numerus(m->optiones); i++)
     {
-        chorda*   o;
-        character planum[NC_VALOR_MAXIMUS];
-        b32       mutatum;
+           chorda* o;
+        character  planum[NC_VALOR_MAXIMUS];
+              b32  mutatum;
 
         /* optio TEXTUS ELEMENTI est, non valor attributi: quota hic
          * licet (vide _valorem_planare). Cetera - octetus nullus,
@@ -810,10 +864,10 @@ _membrum_attributum_scribere(
  * glossas hodie non ferunt (natura.canon sub genere solo admittit)
  * - lectio generica tamen: si umquam ferent, sponte transibunt. */
 interior vacuum
-_glossas_scribere(
-    FILE*       f,
-    StmlNodus*  nodus,
-    Piscina*    piscina)
+_glossas_scribere (
+         FILE* f,
+    StmlNodus* nodus,
+      Piscina* piscina)
 {
     i32 numerus;
     i32 i;
@@ -827,12 +881,12 @@ _glossas_scribere(
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         StmlNodus* l;
-        chorda*    lingua;
-        chorda     textus;
+           chorda* lingua;
+           chorda  textus;
 
         l = stml_liberum_ad_indicem(nodus, i);
-        si (!l || l->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*l->titulus, "glossa"))
+        si (   !l || l->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*l->titulus, "glossa"))
         {
             perge;
         }
@@ -852,17 +906,17 @@ _glossas_scribere(
 }
 
 interior b32
-_elementum_scribere(
-    FILE*         f,
-    NcElementum*  el,
-    i32*          planata,
-    i32*          aliena,
-    i32*          omissa,
-    Piscina*      piscina)
+_elementum_scribere (
+           FILE* f,
+    NcElementum* el,
+            i32* planata,
+            i32* aliena,
+            i32* omissa,
+        Piscina* piscina)
 {
     character ap[NC_APPELLATIO_MAXIMA];
-    b32       sanum;
-    i32       i;
+          b32 sanum;
+          i32 i;
 
     sanum = VERUM;
 
@@ -904,8 +958,8 @@ _elementum_scribere(
             sanum = FALSUM;
             perge;
         }
-        si (strcmp(ap, "nomen") == ZEPHYRUM ||
-            _appellatio_iam_emissa(el->membra, i,
+        si (   strcmp(ap, "nomen") == ZEPHYRUM
+            || _appellatio_iam_emissa(el->membra, i,
                                    NC_MEMBRUM_ATTRIBUTUM, ap))
         {
             fprintf(stderr,
@@ -944,8 +998,8 @@ _elementum_scribere(
             sanum = FALSUM;
             perge;
         }
-        si (strcmp(ap, "historia") == ZEPHYRUM ||
-            _appellatio_iam_emissa(el->membra, i, NC_MEMBRUM_LIBERUM,
+        si (   strcmp(ap, "historia") == ZEPHYRUM
+            || _appellatio_iam_emissa(el->membra, i, NC_MEMBRUM_LIBERUM,
                                    ap))
         {
             fprintf(stderr,
@@ -997,10 +1051,10 @@ _elementum_scribere(
         {
             perge;
         }
-        si (!_appellatio_emissa(ap, (i32)magnitudo(ap), m->praefixum,
-                                m->titulus) ||
-            strcmp(ap, "historia") == ZEPHYRUM ||
-            _appellatio_iam_emissa(el->membra, i, NC_MEMBRUM_LIBERUM,
+        si (   !_appellatio_emissa(ap, (i32)magnitudo(ap), m->praefixum,
+                                m->titulus)
+            || strcmp(ap, "historia") == ZEPHYRUM
+            || _appellatio_iam_emissa(el->membra, i, NC_MEMBRUM_LIBERUM,
                                    ap))
         {
             perge;
@@ -1060,9 +1114,9 @@ _elementum_scribere(
  * Actio nulla in modulo => genus 'nomen', ne electio vacua omnem
  * valorem reiciat. */
 interior vacuum
-_eventum_scribere(
-    FILE*  f,
-    Xar*   elementa)
+_eventum_scribere (
+    FILE* f,
+     Xar* elementa)
 {
     i32 numerus;
     i32 i;
@@ -1073,7 +1127,7 @@ _eventum_scribere(
         NcElementum* el;
 
         el       = *(NcElementum**)xar_obtinere(elementa, i);
-        numerus += xar_numerus(el->actiones);
+        numerus  += xar_numerus(el->actiones);
     }
 
     fputs("\n  <elementum nomen=\"eventum\" intra=\"historia\" "
@@ -1086,11 +1140,12 @@ _eventum_scribere(
     }
     alioquin
     {
-        fputs("    <attributum nomen=\"actio\" genus=\"electio\">\n", f);
+        fputs("    <attributum nomen=\"actio\" genus=\"electio\">\n",
+            f);
         per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
         {
             NcElementum* el;
-            i32          j;
+                    i32  j;
 
             el = *(NcElementum**)xar_obtinere(elementa, i);
             per (j = ZEPHYRUM; j < xar_numerus(el->actiones); j++)
@@ -1145,9 +1200,9 @@ _eventum_scribere(
  * separator valet; lector XML conformis eam in spatium
  * normalizat (par. 3.3.3), unde AMBO idem legunt. */
 interior vacuum
-_unicitas_scribere(
-    FILE*  f,
-    Xar*   elementa)
+_unicitas_scribere (
+    FILE* f,
+     Xar* elementa)
 {
     i32 columna;
     i32 i;
@@ -1204,19 +1259,19 @@ _unicitas_scribere(
  * separati) subsumptionem compilatam ferunt: petitum primus
  * stat, posteri sequuntur (vide _clausuram_colligere). */
 interior vacuum
-_citationes_scribere(
-    FILE*  f,
-    Xar*   elementa)
+_citationes_scribere (
+    FILE* f,
+     Xar* elementa)
 {
     character ap[NC_APPELLATIO_MAXIMA];
-    i32       numerus;
-    i32       i;
+          i32 numerus;
+          i32 i;
 
     numerus = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
     {
         NcElementum* el;
-        i32          j;
+                i32  j;
 
         el = *(NcElementum**)xar_obtinere(elementa, i);
         per (j = ZEPHYRUM; j < xar_numerus(el->membra); j++)
@@ -1224,8 +1279,8 @@ _citationes_scribere(
             NcMembrum* m;
 
             m = (NcMembrum*)xar_obtinere(el->membra, j);
-            si (!m->citatio_ad ||
-                !_appellatio_emissa(ap, (i32)magnitudo(ap),
+            si (   !m->citatio_ad
+                || !_appellatio_emissa(ap, (i32)magnitudo(ap),
                                     m->praefixum, m->titulus))
             {
                 perge;
@@ -1296,6 +1351,7 @@ _citationes_scribere(
     }
 }
 
+
 /* ==================================================
  * Semina - dictionarium in censum proiectum (spec census par. 2)
  * ================================================== */
@@ -1304,13 +1360,13 @@ _citationes_scribere(
  * genus aut species/cultivar '.', irresolutum nudum cum querela
  * (corpus 0 pendentia fert - via haec calcari non debet) */
 interior constans character*
-_signum_petiti(
-    NaturaBibliotheca*  bib,
-    constans chorda*    v,
-    Piscina*            piscina)
+_signum_petiti (
+    NaturaBibliotheca* bib,
+      constans chorda* v,
+              Piscina* piscina)
 {
     constans character* vc;
-    i32                 i;
+                   i32  i;
 
     vc = chorda_ut_cstr(*v, piscina);
     si (natura_genus(bib, vc))
@@ -1334,18 +1390,21 @@ _signum_petiti(
     redde "";
 }
 
-interior vacuum _chordam_scribere(FILE* f, constans chorda* c);
+interior vacuum
+_chordam_scribere (
+               FILE* f,
+    constans chorda* c);
 
 /* petitum signatum scribere: '.' corpus KEBAB (vocabularium =
  * tituli elementorum canonis), '&corpus;' verbatim (identitas -
  * compositum snake sinit, claves seminum ita congruunt;
  * terminator ';' obligatorius, decretum 2026-08-10) */
 interior vacuum
-_petitum_scribere(
-    FILE*               f,
-    NaturaBibliotheca*  bib,
-    constans chorda*    v,
-    Piscina*            piscina)
+_petitum_scribere (
+                 FILE* f,
+    NaturaBibliotheca* bib,
+      constans chorda* v,
+              Piscina* piscina)
 {
     constans character* sig;
 
@@ -1367,9 +1426,9 @@ _petitum_scribere(
 
 /* membrum exemplaris titulo naturae (snake) invenire */
 interior NcMembrum*
-_membrum_invenire(
-    Xar*              membra,
-    constans chorda*  titulus)
+_membrum_invenire (
+                Xar* membra,
+    constans chorda* titulus)
 {
     i32 i;
 
@@ -1388,9 +1447,9 @@ _membrum_invenire(
 
 /* chordam crudam scribere */
 interior vacuum
-_chordam_scribere(
-    FILE*             f,
-    constans chorda*  c)
+_chordam_scribere (
+               FILE* f,
+    constans chorda* c)
 {
     fprintf(f, "%.*s", (integer)c->mensura,
             (constans character*)c->datum);
@@ -1398,16 +1457,16 @@ _chordam_scribere(
 
 /* individuum unum ut instantiam tagi generis sui emittere */
 interior vacuum
-_semen_emittere(
-    FILE*               f,
-    NaturaBibliotheca*  bib,
-    NcEns*              e,
-    Xar*                membra,
-    Piscina*            piscina)
+_semen_emittere (
+                 FILE* f,
+    NaturaBibliotheca* bib,
+                NcEns* e,
+                  Xar* membra,
+              Piscina* piscina)
 {
     character ap[NC_APPELLATIO_MAXIMA];
-    b32       liberos_habet;
-    i32       j;
+          b32 liberos_habet;
+          i32 j;
 
     fputs("\n  <", f);
     _kebab_scribere(f, e->genus->titulus);
@@ -1420,13 +1479,13 @@ _semen_emittere(
     per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
     {
         StmlNodus* vn;
-        chorda*    tv;
-        chorda     textus;
+           chorda* tv;
+           chorda  textus;
         NcMembrum* m;
 
         vn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
-        si (vn->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*vn->titulus, "valor"))
+        si (   vn->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*vn->titulus, "valor"))
         {
             perge;
         }
@@ -1436,8 +1495,8 @@ _semen_emittere(
             perge;
         }
         m = _membrum_invenire(membra, tv);
-        si (!m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM ||
-            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+        si (   !m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM
+            || !_appellatio_emissa(ap, (i32)magnitudo(ap),
                                 m->praefixum, m->titulus))
         {
             perge;
@@ -1460,25 +1519,25 @@ _semen_emittere(
     per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
     {
         StmlNodus* rn;
-        chorda*    tv;
-        chorda*    ad_v;
+           chorda* tv;
+           chorda* ad_v;
         NcMembrum* m;
 
         rn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
-        si (rn->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*rn->titulus, "relatum"))
+        si (   rn->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*rn->titulus, "relatum"))
         {
             perge;
         }
-        tv   = stml_attributum_capere(rn, "nomen");
-        ad_v = stml_attributum_capere(rn, "ad");
+        tv    = stml_attributum_capere(rn, "nomen");
+        ad_v  = stml_attributum_capere(rn, "ad");
         si (!tv || !ad_v)
         {
             perge;
         }
         m = _membrum_invenire(membra, tv);
-        si (!m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM ||
-            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+        si (   !m || m->discrimen != NC_MEMBRUM_ATTRIBUTUM
+            || !_appellatio_emissa(ap, (i32)magnitudo(ap),
                                 m->praefixum, m->titulus))
         {
             perge;
@@ -1493,8 +1552,8 @@ _semen_emittere(
     per (j = ZEPHYRUM; j < xar_numerus(e->nodus->liberi); j++)
     {
         StmlNodus* vn;
-        chorda*    tv;
-        chorda     textus;
+           chorda* tv;
+           chorda  textus;
         NcMembrum* m;
 
         vn = *(StmlNodus**)xar_obtinere(e->nodus->liberi, j);
@@ -1515,7 +1574,7 @@ _semen_emittere(
             per (k = ZEPHYRUM; k < xar_numerus(vn->liberi); k++)
             {
                 StmlNodus* ev;
-                i32        a;
+                      i32  a;
 
                 ev = *(StmlNodus**)xar_obtinere(vn->liberi, k);
                 si (ev->genus != STML_NODUS_ELEMENTUM)
@@ -1556,15 +1615,15 @@ _semen_emittere(
             chorda* ad_v;
 
             /* relata MULTIPLICIA: liberum cum ad= signato */
-            tv   = stml_attributum_capere(vn, "nomen");
-            ad_v = stml_attributum_capere(vn, "ad");
+            tv    = stml_attributum_capere(vn, "nomen");
+            ad_v  = stml_attributum_capere(vn, "ad");
             si (!tv || !ad_v)
             {
                 perge;
             }
             m = _membrum_invenire(membra, tv);
-            si (!m || m->discrimen != NC_MEMBRUM_LIBERUM ||
-                !_appellatio_emissa(ap, (i32)magnitudo(ap),
+            si (   !m || m->discrimen != NC_MEMBRUM_LIBERUM
+                || !_appellatio_emissa(ap, (i32)magnitudo(ap),
                                     m->praefixum, m->titulus))
             {
                 perge;
@@ -1589,8 +1648,8 @@ _semen_emittere(
             perge;
         }
         m = _membrum_invenire(membra, tv);
-        si (!m || m->discrimen != NC_MEMBRUM_LIBERUM ||
-            !_appellatio_emissa(ap, (i32)magnitudo(ap),
+        si (   !m || m->discrimen != NC_MEMBRUM_LIBERUM
+            || !_appellatio_emissa(ap, (i32)magnitudo(ap),
                                 m->praefixum, m->titulus))
         {
             perge;
@@ -1619,11 +1678,11 @@ _semen_emittere(
 }
 
 b32
-_censum_seminum_scribere(
-    NaturaBibliotheca*   bib,
-    Xar*                 entia,
-    constans character*  via,
-    Piscina*             piscina)
+_censum_seminum_scribere (
+     NaturaBibliotheca* bib,
+                   Xar* entia,
+    constans character* via,
+               Piscina* piscina)
 {
     FILE* f;
     i32   i;
@@ -1649,7 +1708,7 @@ _censum_seminum_scribere(
     numerus = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(entia); i++)
     {
-        NcEns*       e;
+              NcEns* e;
         NcElementum* el;
 
         e = (NcEns*)xar_obtinere(entia, i);
@@ -1675,8 +1734,8 @@ _censum_seminum_scribere(
 
 /* index primi octeti nulli, vel -I si nullus adest */
 interior s32
-_nullus_index(
-    constans chorda*  c)
+_nullus_index (
+    constans chorda* c)
 {
     i32 i;
 
@@ -1695,8 +1754,8 @@ _nullus_index(
  * (terminale et annales ibi desinunt), id est diagnosticum quod
  * eadem via corrumpitur qua res de qua queritur. */
 interior integer
-_mensura_tuta(
-    constans chorda*  c)
+_mensura_tuta (
+    constans chorda* c)
 {
     s32 sedes;
 
@@ -1743,8 +1802,8 @@ _mensura_tuta(
  * OMNIA recensentur ante reditum: auctor qui corpus corruptum
  * ferat sedes OMNES semel videat, non unam per cursum. */
 interior b32
-_nomina_tuta(
-    Xar*  elementa)
+_nomina_tuta (
+    Xar* elementa)
 {
     b32 tuta;
     i32 i;
@@ -1753,7 +1812,7 @@ _nomina_tuta(
     per (i = ZEPHYRUM; i < xar_numerus(elementa); i++)
     {
         NcElementum* el;
-        i32          j;
+                i32  j;
 
         el = *(NcElementum**)xar_obtinere(elementa, i);
 
@@ -1817,9 +1876,9 @@ _nomina_tuta(
  * citationum adhibet); genus= = elementum generis kebab in hoc
  * ipso canone (fundamentum augmentationis W3). */
 interior vacuum
-_claves_externas_scribere(
-    FILE*  f,
-    Xar*   entia)
+_claves_externas_scribere (
+    FILE* f,
+     Xar* entia)
 {
     i32 i;
     i32 quot;
@@ -1868,14 +1927,14 @@ _claves_externas_scribere(
 }
 
 b32
-_canonem_emittere(
-    FILE*                f,
-    Xar*                 elementa,
-    constans character*  dialectus,
-    constans character*  fons,
-    constans character*  praefatio,
-    Xar*                 entia,
-    Piscina*             piscina)
+_canonem_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* dialectus,
+    constans character* fons,
+    constans character* praefatio,
+                   Xar* entia,
+               Piscina* piscina)
 {
     b32 sanum;
     i32 planata;
@@ -1883,10 +1942,10 @@ _canonem_emittere(
     i32 omissa;
     i32 i;
 
-    sanum   = VERUM;
-    planata = ZEPHYRUM;
-    aliena  = ZEPHYRUM;
-    omissa  = ZEPHYRUM;
+    sanum    = VERUM;
+    planata  = ZEPHYRUM;
+    aliena   = ZEPHYRUM;
+    omissa   = ZEPHYRUM;
 
     /* ANTE SCRIPTIONEM ULLAM: octetus nullus in nomine tres semitas
      * emissionis diverse corrumpit, ergo semel hic iudicatur.

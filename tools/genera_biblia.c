@@ -14,7 +14,7 @@ typedef struct {
     const char* abbr;
     const char* name_latin;
     const char* name_english;
-    int enum_index;
+           int  enum_index;
 } BookInfo;
 
 /* Douay-Rheims canonical order with enum indices */
@@ -115,10 +115,15 @@ typedef struct {
     int capitula_numerus;
 } BookChapterInfo;
 
-static int find_book_index(const char* abbr) {
+static int
+find_book_index (
+    const char* abbr)
+{
     int i;
-    for (i = 0; books[i].abbr != NULL; i++) {
-        if (strcmp(books[i].abbr, abbr) == 0) {
+    for (i = 0; books[i].abbr != NULL; i++)
+    {
+        if (strcmp(books[i].abbr, abbr) == 0)
+        {
             return books[i].enum_index;
         }
     }
@@ -126,33 +131,45 @@ static int find_book_index(const char* abbr) {
 }
 
 /* Calculate output length after transformation (smart quotes -> ASCII) */
-static int calc_output_length(const char* s) {
+static int
+calc_output_length (
+    const char* s)
+{
     const unsigned char* p;
-    int len = 0;
-    for (p = (const unsigned char*)s; *p; p++) {
+                    int  len = 0;
+    for (p = (const unsigned char*)s; *p; p++)
+    {
         /* UTF-8 smart apostrophe: 3 bytes -> 1 byte */
-        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99) {
+        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99)
+        {
             len++;
             p += 2;
             continue;
         }
-        if (*p != '\r') {  /* skip CR */
+        if (*p != '\r')
+        {  /* skip CR */
             len++;
         }
     }
     return len;
 }
 
-static void print_escaped_string(const char* s) {
+static void
+print_escaped_string (
+    const char* s)
+{
     const unsigned char* p;
-    for (p = (const unsigned char*)s; *p; p++) {
+    for (p = (const unsigned char*)s; *p; p++)
+    {
         /* Check for UTF-8 smart apostrophe: E2 80 99 -> ASCII ' */
-        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99) {
+        if (p[0] == 0xE2 && p[1] == 0x80 && p[2] == 0x99)
+        {
             putchar('\'');
             p += 2;  /* skip next 2 bytes (loop will skip 3rd) */
             continue;
         }
-        switch (*p) {
+        switch (*p)
+        {
             case '\\': printf("\\\\"); break;
             case '"':  printf("\\\""); break;
             case '\n': printf("\\n"); break;
@@ -163,7 +180,11 @@ static void print_escaped_string(const char* s) {
     }
 }
 
-int main(int argc, char** argv) {
+int
+main (
+     int   argc,
+    char** argv)
+{
     sqlite3* db;
     sqlite3_stmt* stmt;
     int rc;
@@ -186,7 +207,8 @@ int main(int argc, char** argv) {
     int current_chapter_start = 0;
     int current_chapter_verses = 0;
 
-    if (argc < 2) {
+    if (argc < 2)
+    {
         fprintf(stderr, "Usage: %s <database.db>\n", argv[0]);
         return 1;
     }
@@ -194,13 +216,16 @@ int main(int argc, char** argv) {
     db_path = argv[1];
 
     rc = sqlite3_open(db_path, &db);
-    if (rc != SQLITE_OK) {
-        fprintf(stderr, "Cannot open database: %s\n", sqlite3_errmsg(db));
+    if (rc != SQLITE_OK)
+    {
+        fprintf(stderr, "Cannot open database: %s\n",
+            sqlite3_errmsg(db));
         return 1;
     }
 
     /* Initialize book_chapters */
-    for (i = 0; i < NUM_BOOKS; i++) {
+    for (i = 0; i < NUM_BOOKS; i++)
+    {
         book_chapters[i].capitula_initium = 0;
         book_chapters[i].capitula_numerus = 0;
     }
@@ -212,6 +237,7 @@ int main(int argc, char** argv) {
     printf("#include \"biblia.h\"\n");
     printf("#include <string.h>\n");
     printf("\n");
+
 
     /* ============================================================
      * Pass 1: Generate text blob and collect verse offsets
@@ -248,63 +274,79 @@ int main(int argc, char** argv) {
         "WHEN 'REV' THEN 72 ELSE 99 END, chapter, verse",
         -1, &stmt, NULL);
 
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK)
+    {
         fprintf(stderr, "SQL error: %s\n", sqlite3_errmsg(db));
         sqlite3_close(db);
         return 1;
     }
 
-    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW) {
+    while ((rc = sqlite3_step(stmt)) == SQLITE_ROW)
+    {
         const char* book = (const char*)sqlite3_column_text(stmt, 0);
-        int chapter = sqlite3_column_int(stmt, 1);
-        int verse = sqlite3_column_int(stmt, 2);
+               int  chapter = sqlite3_column_int(stmt, 1);
+               int  verse = sqlite3_column_int(stmt, 2);
         const char* text = (const char*)sqlite3_column_text(stmt, 3);
-        int text_len = calc_output_length(text);
+               int  text_len = calc_output_length(text);
 
         int book_idx = find_book_index(book);
 
         /* Grow verse array if needed */
-        if (verse_count >= verse_capacity) {
+        if (verse_count >= verse_capacity)
+        {
             verse_capacity = verse_capacity ? verse_capacity * 2 : 1024;
-            verses = realloc(verses, (size_t)verse_capacity * sizeof(VerseInfo));
+            verses = realloc(verses,
+                (size_t)verse_capacity * sizeof(VerseInfo));
         }
 
         /* Track chapter boundaries */
-        if (book_idx != prev_book || chapter != prev_chapter) {
+        if (book_idx != prev_book || chapter != prev_chapter)
+        {
             /* Save previous chapter if exists */
-            if (prev_book >= 0 && current_chapter_verses > 0) {
-                if (chapter_count >= chapter_capacity) {
-                    chapter_capacity = chapter_capacity ? chapter_capacity * 2 : 256;
-                    chapters = realloc(chapters, (size_t)chapter_capacity * sizeof(ChapterInfo));
+            if (prev_book >= 0 && current_chapter_verses > 0)
+            {
+                if (chapter_count >= chapter_capacity)
+                {
+                    chapter_capacity =
+                        chapter_capacity ? chapter_capacity * 2 : 256;
+                    chapters = realloc(chapters,
+                        (size_t)chapter_capacity * sizeof(ChapterInfo));
                 }
-                chapters[chapter_count].versus_initium = current_chapter_start;
-                chapters[chapter_count].versus_numerus = current_chapter_verses;
+                chapters[chapter_count].versus_initium =
+                    current_chapter_start;
+                chapters[chapter_count].versus_numerus =
+                    current_chapter_verses;
                 chapter_count++;
             }
 
             /* Track first chapter index for new book */
-            if (book_idx != prev_book && book_idx >= 0 && book_idx < NUM_BOOKS) {
-                book_chapters[book_idx].capitula_initium = chapter_count;
+            if (   book_idx != prev_book && book_idx >= 0
+                && book_idx < NUM_BOOKS)
+            {
+                book_chapters[book_idx].capitula_initium =
+                    chapter_count;
             }
 
             /* Start new chapter */
-            current_chapter_start = verse_count;
-            current_chapter_verses = 0;
-            prev_book = book_idx;
-            prev_chapter = chapter;
+            current_chapter_start   = verse_count;
+            current_chapter_verses  = 0;
+            prev_book               = book_idx;
+            prev_chapter            = chapter;
         }
 
-        verses[verse_count].book_idx = book_idx;
-        verses[verse_count].chapter = chapter;
-        verses[verse_count].verse = verse;
-        verses[verse_count].offset = text_offset;
-        verses[verse_count].length = text_len;
+        verses[verse_count].book_idx  = book_idx;
+        verses[verse_count].chapter   = chapter;
+        verses[verse_count].verse     = verse;
+        verses[verse_count].offset    = text_offset;
+        verses[verse_count].length    = text_len;
         verse_count++;
         current_chapter_verses++;
 
         /* Update book chapter count */
-        if (book_idx >= 0 && book_idx < NUM_BOOKS) {
-            if (chapter > book_chapters[book_idx].capitula_numerus) {
+        if (book_idx >= 0 && book_idx < NUM_BOOKS)
+        {
+            if (chapter > book_chapters[book_idx].capitula_numerus)
+            {
                 book_chapters[book_idx].capitula_numerus = chapter;
             }
         }
@@ -318,10 +360,14 @@ int main(int argc, char** argv) {
     }
 
     /* Save final chapter */
-    if (prev_book >= 0 && current_chapter_verses > 0) {
-        if (chapter_count >= chapter_capacity) {
-            chapter_capacity = chapter_capacity ? chapter_capacity * 2 : 256;
-            chapters = realloc(chapters, (size_t)chapter_capacity * sizeof(ChapterInfo));
+    if (prev_book >= 0 && current_chapter_verses > 0)
+    {
+        if (chapter_count >= chapter_capacity)
+        {
+            chapter_capacity =
+                chapter_capacity ? chapter_capacity * 2 : 256;
+            chapters = realloc(chapters,
+                (size_t)chapter_capacity * sizeof(ChapterInfo));
         }
         chapters[chapter_count].versus_initium = current_chapter_start;
         chapters[chapter_count].versus_numerus = current_chapter_verses;
@@ -335,6 +381,7 @@ int main(int argc, char** argv) {
     printf("#define TEXTUS_LONGITUDO %d\n", text_offset);
     printf("\n");
 
+
     /* ============================================================
      * Versus Array
      * ============================================================ */
@@ -345,7 +392,8 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("hic_manens constans Versus versus_dr[] = {\n");
 
-    for (i = 0; i < verse_count; i++) {
+    for (i = 0; i < verse_count; i++)
+    {
         printf("    { %d, %d, %d, %d, %d },\n",
             verses[i].book_idx,
             verses[i].chapter,
@@ -359,6 +407,7 @@ int main(int argc, char** argv) {
     printf("#define VERSUS_NUMERUS %d\n", verse_count);
     printf("\n");
 
+
     /* ============================================================
      * Capitula Array
      * ============================================================ */
@@ -369,7 +418,8 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("hic_manens constans Capitulum capitula_dr[] = {\n");
 
-    for (i = 0; i < chapter_count; i++) {
+    for (i = 0; i < chapter_count; i++)
+    {
         printf("    { %d, %d },\n",
             chapters[i].versus_numerus,
             chapters[i].versus_initium);
@@ -379,6 +429,7 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("#define CAPITULA_NUMERUS %d\n", chapter_count);
     printf("\n");
+
 
     /* ============================================================
      * Libri Array
@@ -390,7 +441,8 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("hic_manens constans Liber libri_dr[] = {\n");
 
-    for (i = 0; books[i].abbr != NULL; i++) {
+    for (i = 0; books[i].abbr != NULL; i++)
+    {
         printf("    { \"%s\", \"%s\", \"%s\", %d, %d },\n",
             books[i].name_latin,
             books[i].name_english,
@@ -403,6 +455,7 @@ int main(int argc, char** argv) {
     printf("\n");
     printf("#define LIBRI_NUMERUS_DR 73\n");
     printf("\n");
+
 
     /* ============================================================
      * Biblia Structure
@@ -425,6 +478,7 @@ int main(int argc, char** argv) {
     printf("    versus_dr\n");
     printf("};\n");
     printf("\n");
+
 
     /* ============================================================
      * API Functions

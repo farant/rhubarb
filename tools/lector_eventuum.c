@@ -27,7 +27,8 @@
  * ================================================== */
 
 interior constans character*
-_nomen_eventus(EventusGenus genus)
+_nomen_eventus (
+    EventusGenus genus)
 {
     commutatio (genus)
     {
@@ -49,7 +50,9 @@ _nomen_eventus(EventusGenus genus)
  * ================================================== */
 
 interior vacuum
-_imprimere_eventum(Eventum* e, i32 index)
+_imprimere_eventum (
+    Eventum* e,
+        i32  index)
 {
     printf("[%d] %s\n", index, _nomen_eventus(e->genus));
 
@@ -78,8 +81,8 @@ _imprimere_eventum(Eventum* e, i32 index)
             si (e->datum.proprietas.valor)
             {
                 /* Truncare valorem longum */
-                i32 max_len = LX;
-                i32 len = e->datum.proprietas.valor->mensura;
+                i32 max_len  = LX;
+                i32 len      = e->datum.proprietas.valor->mensura;
                 si (len > max_len)
                 {
                     printf("    valor: %.*s...\n", max_len,
@@ -155,15 +158,17 @@ _imprimere_eventum(Eventum* e, i32 index)
  * ================================================== */
 
 interior vacuum
-_imprimere_stats(Xar* eventus, Piscina* piscina)
+_imprimere_stats (
+        Xar* eventus,
+    Piscina* piscina)
 {
     TabulaDispersa* per_genus_entitas;
-    TabulaIterator iter;
-    chorda clavis;
-    vacuum* valor;
-    i32 i;
-    i32 numerus;
-    i32 counts[VIII];  /* Pro 8 event types */
+    TabulaIterator  iter;
+            chorda  clavis;
+            vacuum* valor;
+               i32  i;
+               i32  numerus;
+               i32  counts[VIII];  /* Pro 8 event types */
 
     /* Initiare counts */
     per (i = ZEPHYRUM; i < VIII; i++)
@@ -178,7 +183,7 @@ _imprimere_stats(Xar* eventus, Piscina* piscina)
     per (i = ZEPHYRUM; i < numerus; i++)
     {
         Eventum* e;
-        i32* count_ptr;
+            i32* count_ptr;
 
         e = *(Eventum**)xar_obtinere(eventus, i);
         si (!e)
@@ -244,11 +249,11 @@ _imprimere_stats(Xar* eventus, Piscina* piscina)
  * ================================================== */
 
 interior b32
-_eventum_correspondet(
-    Eventum*            e,
-    chorda              filtrum_genus,
-    chorda              filtrum_entitas,
-    EventusGenus        filtrum_type)
+_eventum_correspondet (
+         Eventum* e,
+          chorda  filtrum_genus,
+          chorda  filtrum_entitas,
+    EventusGenus  filtrum_type)
 {
     /* Filtrare per entitas genus */
     si (filtrum_genus.mensura > ZEPHYRUM)
@@ -271,7 +276,8 @@ _eventum_correspondet(
             redde FALSUM;
         }
         /* Partial match (contains) */
-        si (chorda_invenire_index(*e->entitas_id, filtrum_entitas) < ZEPHYRUM)
+        si (chorda_invenire_index(*e->entitas_id, filtrum_entitas)
+            < ZEPHYRUM)
         {
             redde FALSUM;
         }
@@ -290,7 +296,8 @@ _eventum_correspondet(
 }
 
 interior EventusGenus
-_parsere_eventus_type(chorda type_str)
+_parsere_eventus_type (
+    chorda type_str)
 {
     si (chorda_aequalis_literis(type_str, "creare"))
     {
@@ -320,25 +327,28 @@ _parsere_eventus_type(chorda type_str)
  * Principale
  * ================================================== */
 
-integer principale(integer argc, constans character* constans* argv)
+integer
+principale (
+    integer argc,
+    constans character* constans* argv)
 {
-    Piscina* piscina;
-    ArgumentaParser* parser;
+             Piscina* piscina;
+     ArgumentaParser* parser;
     ArgumentaFructus* fructus;
-    Persistentia* persistentia;
-    Xar* eventus;
-    chorda filum_via;
-    chorda filtrum_genus;
-    chorda filtrum_entitas;
-    chorda filtrum_type_str;
-    EventusGenus filtrum_type;
-    i32 limit;
-    i32 tail;
-    b32 stats_mode;
-    i32 i;
-    i32 numerus;
-    i32 printed;
-    character* via_cstr;
+        Persistentia* persistentia;
+                 Xar* eventus;
+              chorda  filum_via;
+              chorda  filtrum_genus;
+              chorda  filtrum_entitas;
+              chorda  filtrum_type_str;
+        EventusGenus  filtrum_type;
+                 i32  limit;
+                 i32  tail;
+                 b32  stats_mode;
+                 i32  i;
+                 i32  numerus;
+                 i32  printed;
+           character* via_cstr;
 
     /* Creare piscina */
     piscina = piscina_generare_dynamicum("lector_eventuum", 1024 * 512);
@@ -370,10 +380,14 @@ integer principale(integer argc, constans character* constans* argv)
     argumenta_addere_positionalem(parser, "filum",
         "Via ad .log file", VERUM);
 
-    argumenta_addere_exemplum(parser, "lector_eventuum data/combinado.log");
-    argumenta_addere_exemplum(parser, "lector_eventuum data/combinado.log --stats");
-    argumenta_addere_exemplum(parser, "lector_eventuum data/combinado.log --genus Page --limit 10");
-    argumenta_addere_exemplum(parser, "lector_eventuum data/combinado.log --tail 20");
+    argumenta_addere_exemplum(parser,
+        "lector_eventuum data/combinado.log");
+    argumenta_addere_exemplum(parser,
+        "lector_eventuum data/combinado.log --stats");
+    argumenta_addere_exemplum(parser,
+        "lector_eventuum data/combinado.log --genus Page --limit 10");
+    argumenta_addere_exemplum(parser,
+        "lector_eventuum data/combinado.log --tail 20");
 
     /* Parsere argumenta */
     fructus = argumenta_conari_parsere(parser, (i32)argc, argv);
@@ -393,7 +407,8 @@ integer principale(integer argc, constans character* constans* argv)
     }
 
     /* Obtinere filum via */
-    filum_via = argumenta_obtinere_positionalem(fructus, ZEPHYRUM, piscina);
+    filum_via = argumenta_obtinere_positionalem(fructus, ZEPHYRUM,
+        piscina);
     si (filum_via.mensura == ZEPHYRUM)
     {
         fprintf(stderr, "Error: Requiritur via ad .log file\n");
@@ -421,9 +436,12 @@ integer principale(integer argc, constans character* constans* argv)
 
     /* Obtinere optiones */
     stats_mode = argumenta_habet_vexillum(fructus, "--stats");
-    filtrum_genus = argumenta_obtinere_optionem(fructus, "--genus", piscina);
-    filtrum_entitas = argumenta_obtinere_optionem(fructus, "--entitas", piscina);
-    filtrum_type_str = argumenta_obtinere_optionem(fructus, "--type", piscina);
+    filtrum_genus = argumenta_obtinere_optionem(fructus, "--genus",
+        piscina);
+    filtrum_entitas = argumenta_obtinere_optionem(fructus, "--entitas",
+        piscina);
+    filtrum_type_str = argumenta_obtinere_optionem(fructus, "--type",
+        piscina);
     filtrum_type = ZEPHYRUM;
     si (filtrum_type_str.mensura > ZEPHYRUM)
     {
@@ -435,11 +453,13 @@ integer principale(integer argc, constans character* constans* argv)
         chorda limit_str;
         chorda tail_str;
 
-        limit_str = argumenta_obtinere_optionem(fructus, "--limit", piscina);
-        tail_str = argumenta_obtinere_optionem(fructus, "--tail", piscina);
+        limit_str = argumenta_obtinere_optionem(fructus, "--limit",
+            piscina);
+        tail_str = argumenta_obtinere_optionem(fructus, "--tail",
+            piscina);
 
-        limit = ZEPHYRUM;  /* 0 = no limit */
-        tail = ZEPHYRUM;   /* 0 = no tail */
+        limit  = ZEPHYRUM;  /* 0 = no limit */
+        tail   = ZEPHYRUM;   /* 0 = no tail */
 
         si (limit_str.mensura > ZEPHYRUM)
         {
@@ -460,7 +480,8 @@ integer principale(integer argc, constans character* constans* argv)
         redde I;
     }
 
-    eventus = persistentia->legere_eventus(persistentia->datum, piscina);
+    eventus = persistentia->legere_eventus(persistentia->datum,
+        piscina);
     si (!eventus)
     {
         fprintf(stderr, "Error: Non potest legere eventus\n");
@@ -501,7 +522,9 @@ integer principale(integer argc, constans character* constans* argv)
                 Eventum* e;
 
                 e = *(Eventum**)xar_obtinere(eventus, i);
-                si (e && _eventum_correspondet(e, filtrum_genus, filtrum_entitas, filtrum_type))
+                si (   e
+                    && _eventum_correspondet(e, filtrum_genus,
+                    filtrum_entitas, filtrum_type))
                 {
                     matching++;
                 }
@@ -523,7 +546,8 @@ integer principale(integer argc, constans character* constans* argv)
             }
 
             /* Applicare filtrum */
-            si (!_eventum_correspondet(e, filtrum_genus, filtrum_entitas, filtrum_type))
+            si (!_eventum_correspondet(e, filtrum_genus,
+                filtrum_entitas, filtrum_type))
             {
                 perge;
             }

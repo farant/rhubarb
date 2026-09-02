@@ -38,16 +38,16 @@
 
 /* Informationes de libro collectae */
 nomen structura {
-    chorda numerus;
-    chorda titulus;
-    chorda auctor;
-    chorda annus;
-    chorda summarium;
-    chorda notae;
-    chorda via_originalis;
-    chorda status;
-    Xar*   tags;          /* Xar de chorda */
-    b32    successus;     /* Copia successit? */
+    chorda  numerus;
+    chorda  titulus;
+    chorda  auctor;
+    chorda  annus;
+    chorda  summarium;
+    chorda  notae;
+    chorda  via_originalis;
+    chorda  status;
+       Xar* tags;          /* Xar de chorda */
+       b32  successus;     /* Copia successit? */
 } LibrumCollectum;
 
 
@@ -56,7 +56,8 @@ nomen structura {
  * ======================================================================== */
 
 interior b32
-_creare_directorium(constans character* via)
+_creare_directorium (
+    constans character* via)
 {
     si (mkdir(via, 0755) == 0)
     {
@@ -78,7 +79,10 @@ _creare_directorium(constans character* via)
  * ======================================================================== */
 
 interior b32
-_copiare_filum(constans character* fons, constans character* destinatio, Piscina* piscina)
+_copiare_filum (
+    constans character* fons,
+    constans character* destinatio,
+               Piscina* piscina)
 {
     chorda contentum;
     FILE*  out;
@@ -108,7 +112,9 @@ _copiare_filum(constans character* fons, constans character* destinatio, Piscina
  * ======================================================================== */
 
 interior constans character*
-_chorda_ad_cstr(chorda ch, Piscina* piscina)
+_chorda_ad_cstr (
+     chorda  ch,
+    Piscina* piscina)
 {
     character* buf;
 
@@ -125,12 +131,14 @@ _chorda_ad_cstr(chorda ch, Piscina* piscina)
  * ======================================================================== */
 
 interior Xar*
-_extrahere_tags(StmlNodus* nodus_liber, Piscina* piscina)
+_extrahere_tags (
+    StmlNodus* nodus_liber,
+      Piscina* piscina)
 {
     StmlNodus* nodus_tags;
-    Xar*       tags;
-    Xar*       tag_nodes;
-    i32        i;
+          Xar* tags;
+          Xar* tag_nodes;
+          i32  i;
 
     tags = xar_creare(piscina, (i32)magnitudo(chorda));
 
@@ -145,10 +153,10 @@ _extrahere_tags(StmlNodus* nodus_liber, Piscina* piscina)
     per (i = 0; i < xar_numerus(tag_nodes); i++)
     {
         StmlNodus* tag_nodus;
-        chorda*    tag_chorda;
+           chorda* tag_chorda;
 
-        tag_nodus = *(StmlNodus**)xar_obtinere(tag_nodes, i);
-        tag_chorda = (chorda*)xar_addere(tags);
+        tag_nodus   = *(StmlNodus**)xar_obtinere(tag_nodes, i);
+        tag_chorda  = (chorda*)xar_addere(tags);
 
         si (tag_chorda != NIHIL)
         {
@@ -165,10 +173,12 @@ _extrahere_tags(StmlNodus* nodus_liber, Piscina* piscina)
  * ======================================================================== */
 
 interior chorda
-_generare_stml(Xar* libri, Piscina* piscina)
+_generare_stml (
+        Xar* libri,
+    Piscina* piscina)
 {
     ChordaAedificator* aed;
-    i32                i;
+                  i32  i;
 
     aed = chorda_aedificator_creare(piscina, XXXII * M);
 
@@ -177,7 +187,7 @@ _generare_stml(Xar* libri, Piscina* piscina)
     per (i = 0; i < xar_numerus(libri); i++)
     {
         LibrumCollectum* liber;
-        i32              j;
+                    i32  j;
 
         liber = (LibrumCollectum*)xar_obtinere(libri, i);
 
@@ -187,7 +197,8 @@ _generare_stml(Xar* libri, Piscina* piscina)
         }
 
         /* Aperire liber elementum */
-        chorda_aedificator_appendere_literis(aed, "  <liber numerus=\"");
+        chorda_aedificator_appendere_literis(aed,
+            "  <liber numerus=\"");
         chorda_aedificator_appendere_chorda(aed, liber->numerus);
         chorda_aedificator_appendere_literis(aed, "\" status=\"");
         chorda_aedificator_appendere_chorda(aed, liber->status);
@@ -236,7 +247,8 @@ _generare_stml(Xar* libri, Piscina* piscina)
                 chorda* tag;
 
                 tag = (chorda*)xar_obtinere(liber->tags, j);
-                chorda_aedificator_appendere_literis(aed, "      <tag>");
+                chorda_aedificator_appendere_literis(aed,
+                    "      <tag>");
                 chorda_aedificator_appendere_chorda(aed, *tag);
                 chorda_aedificator_appendere_literis(aed, "</tag>\n");
             }
@@ -259,7 +271,8 @@ _generare_stml(Xar* libri, Piscina* piscina)
  * ======================================================================== */
 
 interior chorda
-_generare_toml(Piscina* piscina)
+_generare_toml (
+    Piscina* piscina)
 {
     ChordaAedificator* aed;
 
@@ -280,23 +293,25 @@ _generare_toml(Piscina* piscina)
  * ======================================================================== */
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*            piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    chorda              config_content;
-    StmlResultus        resultus;
-    Xar*                libri_stml;
-    Xar*                libri_collecta;
-    constans character* input_via;
-    constans character* output_dir;
-    i32                 limit;
-    i32                 i;
-    i32                 successus_count;
-    i32                 fallita_count;
-    chorda              input_dir;
-    character           output_stml_via[1024];
-    character           output_toml_via[1024];
+                 chorda  config_content;
+           StmlResultus  resultus;
+                    Xar* libri_stml;
+                    Xar* libri_collecta;
+     constans character* input_via;
+     constans character* output_dir;
+                    i32  limit;
+                    i32  i;
+                    i32  successus_count;
+                    i32  fallita_count;
+                 chorda  input_dir;
+              character  output_stml_via[1024];
+              character  output_toml_via[1024];
     FILE*               out_file;
     chorda              stml_output;
     chorda              toml_output;
@@ -304,16 +319,19 @@ principale(integer argc, character** argv)
     /* Parse argumenta */
     si (argc < III)
     {
-        fprintf(stderr, "Usus: %s <librarium.stml> <output_dir> [--limit N]\n", argv[0]);
+        fprintf(stderr,
+            "Usus: %s <librarium.stml> <output_dir> [--limit N]\n",
+            argv[0]);
         fprintf(stderr, "\nExempla:\n");
         fprintf(stderr, "  %s librarium.stml book_assets/\n", argv[0]);
-        fprintf(stderr, "  %s librarium.stml book_assets/ --limit 100\n", argv[0]);
+        fprintf(stderr,
+            "  %s librarium.stml book_assets/ --limit 100\n", argv[0]);
         redde I;
     }
 
-    input_via = argv[I];
-    output_dir = argv[II];
-    limit = LIMIT_DEFECTUS;
+    input_via   = argv[I];
+    output_dir  = argv[II];
+    limit       = LIMIT_DEFECTUS;
 
     /* Check pro --limit */
     per (i = III; i < (i32)argc; i++)
@@ -331,19 +349,22 @@ principale(integer argc, character** argv)
     printf("Output: %s\n", output_dir);
     printf("Limit:  %d\n\n", limit);
 
-    piscina = piscina_generare_dynamicum("librarium_collector", CXXVIII * M);
+    piscina = piscina_generare_dynamicum("librarium_collector",
+        CXXVIII * M);
     intern = internamentum_creare(piscina);
 
     /* Creare output directorium */
     si (!_creare_directorium(output_dir))
     {
-        fprintf(stderr, "Error: non possum creare directorium '%s'\n", output_dir);
+        fprintf(stderr, "Error: non possum creare directorium '%s'\n",
+            output_dir);
         piscina_destruere(piscina);
         redde I;
     }
 
     /* Capere directorium input fili */
-    input_dir = via_directorium(chorda_ex_literis(input_via, piscina), piscina);
+    input_dir = via_directorium(chorda_ex_literis(input_via, piscina),
+        piscina);
 
     /* Legere STML */
     config_content = filum_legere_totum(input_via, piscina);
@@ -364,26 +385,29 @@ principale(integer argc, character** argv)
     }
 
     /* Invenire omnes libros */
-    libri_stml = stml_invenire_omnes_liberos(resultus.elementum_radix, "liber", piscina);
+    libri_stml = stml_invenire_omnes_liberos(resultus.elementum_radix,
+        "liber", piscina);
 
     printf("Inventa %d libri in STML\n", xar_numerus(libri_stml));
     printf("Processurus %d libri (limit)\n\n",
-           limit < xar_numerus(libri_stml) ? limit : xar_numerus(libri_stml));
+           limit
+               < xar_numerus(libri_stml) ? limit : xar_numerus(libri_stml));
 
     /* Colligere libros */
-    libri_collecta = xar_creare(piscina, (i32)magnitudo(LibrumCollectum));
-    successus_count = 0;
-    fallita_count = 0;
+    libri_collecta = xar_creare(piscina,
+        (i32)magnitudo(LibrumCollectum));
+    successus_count  = 0;
+    fallita_count    = 0;
 
     per (i = 0; i < xar_numerus(libri_stml) && i < limit; i++)
     {
-        StmlNodus*       nodus_liber;
-        StmlNodus*       nodus_temp;
-        LibrumCollectum* liber;
-        chorda           via_relativa;
-        chorda           partes[II];
-        chorda           via_absoluta;
-        character        output_file_via[1024];
+                 StmlNodus* nodus_liber;
+                 StmlNodus* nodus_temp;
+           LibrumCollectum* liber;
+                    chorda  via_relativa;
+                    chorda  partes[II];
+                    chorda  via_absoluta;
+                 character  output_file_via[1024];
         constans character* via_abs_cstr;
         constans character* numerus_cstr;
 
@@ -400,39 +424,49 @@ principale(integer argc, character** argv)
             chorda* attr_numerus;
             chorda* attr_status;
 
-            attr_numerus = stml_attributum_capere(nodus_liber, "numerus");
+            attr_numerus = stml_attributum_capere(nodus_liber,
+                "numerus");
             attr_status = stml_attributum_capere(nodus_liber, "status");
 
             liber->numerus = attr_numerus ? *attr_numerus :
-                                            chorda_ex_literis("", piscina);
+                                            chorda_ex_literis("",
+                                            piscina);
             liber->status = attr_status ? *attr_status :
-                                          chorda_ex_literis("enriched", piscina);
+                                          chorda_ex_literis("enriched",
+                                          piscina);
         }
 
         /* Capere elementa */
         nodus_temp = stml_invenire_liberum(nodus_liber, "titulus");
-        liber->titulus = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+        liber->titulus =
+            nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                        chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "auctor");
-        liber->auctor = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+        liber->auctor =
+            nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                       chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "annus");
-        liber->annus = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+        liber->annus = nodus_temp ? stml_textus_normalizatus(nodus_temp,
+            piscina) :
                                      chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "summarium");
-        liber->summarium = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+        liber->summarium =
+            nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
                                          chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "notae");
-        liber->notae = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+        liber->notae = nodus_temp ? stml_textus_normalizatus(nodus_temp,
+            piscina) :
                                      chorda_ex_literis("", piscina);
 
         nodus_temp = stml_invenire_liberum(nodus_liber, "via");
-        liber->via_originalis = nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
-                                              chorda_ex_literis("", piscina);
+        liber->via_originalis =
+            nodus_temp ? stml_textus_normalizatus(nodus_temp, piscina) :
+                                              chorda_ex_literis("",
+                                              piscina);
 
         liber->tags = _extrahere_tags(nodus_liber, piscina);
 
@@ -440,17 +474,18 @@ principale(integer argc, character** argv)
         si (liber->via_originalis.mensura == 0)
         {
             printf("  [%d] %.*s - via vacua, saliens\n",
-                   i, (i32)liber->numerus.mensura, liber->numerus.datum);
+                   i, (i32)liber->numerus.mensura,
+                   liber->numerus.datum);
             liber->successus = FALSUM;
             fallita_count++;
             perge;
         }
 
         /* Iungere input_dir + via_originalis */
-        partes[0] = input_dir;
-        partes[I] = liber->via_originalis;
-        via_relativa = via_iungere(partes, II, piscina);
-        via_absoluta = via_normalizare(via_relativa, piscina);
+        partes[0]     = input_dir;
+        partes[I]     = liber->via_originalis;
+        via_relativa  = via_iungere(partes, II, piscina);
+        via_absoluta  = via_normalizare(via_relativa, piscina);
 
         via_abs_cstr = _chorda_ad_cstr(via_absoluta, piscina);
         numerus_cstr = _chorda_ad_cstr(liber->numerus, piscina);
@@ -462,7 +497,8 @@ principale(integer argc, character** argv)
         /* Copiare filum */
         si (_copiare_filum(via_abs_cstr, output_file_via, piscina))
         {
-            printf("  [%d] %s -> %s.txt\n", i, numerus_cstr, numerus_cstr);
+            printf("  [%d] %s -> %s.txt\n", i, numerus_cstr,
+                numerus_cstr);
             liber->successus = VERUM;
             successus_count++;
         }
@@ -481,7 +517,8 @@ principale(integer argc, character** argv)
     printf("\n");
 
     /* Generare STML */
-    snprintf(output_stml_via, sizeof(output_stml_via), "%s/librarium.stml", output_dir);
+    snprintf(output_stml_via, sizeof(output_stml_via),
+        "%s/librarium.stml", output_dir);
     stml_output = _generare_stml(libri_collecta, piscina);
 
     out_file = fopen(output_stml_via, "w");
@@ -493,11 +530,13 @@ principale(integer argc, character** argv)
     }
     alioquin
     {
-        fprintf(stderr, "Error: non possum scribere '%s'\n", output_stml_via);
+        fprintf(stderr, "Error: non possum scribere '%s'\n",
+            output_stml_via);
     }
 
     /* Generare TOML */
-    snprintf(output_toml_via, sizeof(output_toml_via), "%s/libri.toml", output_dir);
+    snprintf(output_toml_via, sizeof(output_toml_via), "%s/libri.toml",
+        output_dir);
     toml_output = _generare_toml(piscina);
 
     out_file = fopen(output_toml_via, "w");
@@ -509,7 +548,8 @@ principale(integer argc, character** argv)
     }
     alioquin
     {
-        fprintf(stderr, "Error: non possum scribere '%s'\n", output_toml_via);
+        fprintf(stderr, "Error: non possum scribere '%s'\n",
+            output_toml_via);
     }
 
     printf("\nFactum!\n");

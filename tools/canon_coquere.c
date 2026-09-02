@@ -40,64 +40,109 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Exemplar canonis in memoria (ordine documenti)
  * ================================================== */
 
 nomen structura {
-    chorda*            titulus;
+               chorda* titulus;
     CanonGenusValoris  genus;
-    b32                necessarium;
-    chorda*            praestitutum;
-    Xar*               optiones;     /* chorda* */
+                  b32  necessarium;
+               chorda* praestitutum;
+                  Xar* optiones;     /* chorda* */
 } CqAttributum;
 
 nomen structura {
-    chorda*  titulus;
-    b32      unicum;   /* maximum == 1 */
+    chorda* titulus;
+       b32  unicum;   /* maximum == 1 */
 } CqLiberum;
 
 nomen structura {
-    chorda*            titulus;
-    chorda*            intra;        /* NIHIL = globale */
-    b32                radix;
-    b32                textus_licet;
+               chorda* titulus;
+               chorda* intra;        /* NIHIL = globale */
+                  b32  radix;
+                  b32  textus_licet;
     CanonGenusValoris  textus_genus;
-    Xar*               attributa;    /* CqAttributum */
-    Xar*               liberi;       /* CqLiberum */
+                  Xar* attributa;    /* CqAttributum */
+                  Xar* liberi;       /* CqLiberum */
 } CqElementum;
+
 
 /* ==================================================
  * Prototypa
  * ================================================== */
 
-interior CanonGenusValoris _genus_ex(chorda* s);
-interior b32 _reservatum(constans character* s);
-interior vacuum _campus_scribere(FILE* f, constans chorda* titulus);
-interior vacuum _camelus_scribere(FILE* f, constans chorda* t);
-interior vacuum _typus_scribere(FILE* f,
-    constans character* praefixum, CqElementum* e);
-interior vacuum _functio_scribere(FILE* f,
-    constans character* praefixum_min, CqElementum* e,
+interior CanonGenusValoris
+_genus_ex (
+    chorda* s);
+interior b32
+_reservatum (
+    constans character* s);
+interior vacuum
+_campus_scribere (
+               FILE* f,
+    constans chorda* titulus);
+interior vacuum
+_camelus_scribere (
+               FILE* f,
+    constans chorda* t);
+interior vacuum
+_typus_scribere (
+                  FILE* f,
+    constans character* praefixum,
+           CqElementum* e);
+interior vacuum
+_functio_scribere (
+                  FILE* f,
+    constans character* praefixum_min,
+           CqElementum* e,
     constans character* suffixum);
-interior vacuum _maiusculum_scribere(FILE* f, constans chorda* t);
-interior vacuum _membrum_electionis_scribere(FILE* f,
-    constans character* praefixum, CqElementum* e,
-    CqAttributum* a, constans chorda* optio);
-interior CqElementum* _def_invenire(Xar* elementa,
-    constans chorda* parens, constans chorda* titulus);
-interior Xar* _canonem_colligere(StmlNodus* radix_canonis,
-    Piscina* piscina);
-interior vacuum _caput_emittere(FILE* f, Xar* elementa,
-    constans character* praefixum, constans character* praefixum_min,
-    constans character* custos, constans character* via_canonis,
+interior vacuum
+_maiusculum_scribere (
+               FILE* f,
+    constans chorda* t);
+interior vacuum
+_membrum_electionis_scribere (
+                  FILE* f,
+    constans character* praefixum,
+           CqElementum* e,
+          CqAttributum* a,
+       constans chorda* optio);
+interior CqElementum*
+_def_invenire (
+                Xar* elementa,
+    constans chorda* parens,
+    constans chorda* titulus);
+interior Xar*
+_canonem_colligere (
+    StmlNodus* radix_canonis,
+      Piscina* piscina);
+interior vacuum
+_caput_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* praefixum,
+    constans character* praefixum_min,
+    constans character* custos,
+    constans character* via_canonis,
     constans character* iussum);
-interior vacuum _corpus_emittere(FILE* f, Xar* elementa,
-    constans character* praefixum, constans character* praefixum_min,
-    constans character* caput_basis, constans character* via_canonis);
-interior vacuum _lectorem_emittere(FILE* f, Xar* elementa,
-    CqElementum* e, constans character* praefixum,
+interior vacuum
+_corpus_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* praefixum,
+    constans character* praefixum_min,
+    constans character* caput_basis,
+    constans character* via_canonis);
+interior vacuum
+_lectorem_emittere (
+                  FILE* f,
+                   Xar* elementa,
+           CqElementum* e,
+    constans character* praefixum,
     constans character* praefixum_min);
+
 
 /* ==================================================
  * Auxilia nominum
@@ -124,7 +169,7 @@ interior constans character* constans RESERVATA[] = {
 };
 
 interior b32
-_reservatum(
+_reservatum (
     constans character* s)
 {
     i32 i;
@@ -143,13 +188,13 @@ _reservatum(
 /* nomen campi: minusculae, lineola -> subvirga; reservatum
  * suffixo '_v' sanatur */
 interior vacuum
-_campus_scribere(
-    FILE*             f,
-    constans chorda*  titulus)
+_campus_scribere (
+               FILE* f,
+    constans chorda* titulus)
 {
     character buffer[CXXVIII];
-    i32       i;
-    i32       j;
+          i32 i;
+          i32 j;
 
     j = ZEPHYRUM;
     per (i = ZEPHYRUM;
@@ -169,9 +214,9 @@ _campus_scribere(
 
     si (_reservatum(buffer))
     {
-        buffer[j]     = '_';
-        buffer[j + I] = 'v';
-        buffer[j + II] = '\0';
+        buffer[j]       = '_';
+        buffer[j + I]   = 'v';
+        buffer[j + II]  = '\0';
     }
 
     fprintf(f, "%s", buffer);
@@ -179,9 +224,9 @@ _campus_scribere(
 
 /* CamelCase: littera prima cuiusque segmenti (-/_) maiuscula */
 interior vacuum
-_camelus_scribere(
-    FILE*             f,
-    constans chorda*  t)
+_camelus_scribere (
+               FILE* f,
+    constans chorda* t)
 {
     i32 i;
     b32 initium;
@@ -207,10 +252,10 @@ _camelus_scribere(
 }
 
 interior vacuum
-_typus_scribere(
-    FILE*                f,
-    constans character*  praefixum,
-    CqElementum*         e)
+_typus_scribere (
+                  FILE* f,
+    constans character* praefixum,
+           CqElementum* e)
 {
     fprintf(f, "%s", praefixum);
     si (e->intra)
@@ -221,11 +266,11 @@ _typus_scribere(
 }
 
 interior vacuum
-_functio_scribere(
-    FILE*                f,
-    constans character*  praefixum_min,
-    CqElementum*         e,
-    constans character*  suffixum)
+_functio_scribere (
+                  FILE* f,
+    constans character* praefixum_min,
+           CqElementum* e,
+    constans character* suffixum)
 {
     fprintf(f, "%s_", praefixum_min);
     si (e->intra)
@@ -238,9 +283,9 @@ _functio_scribere(
 }
 
 interior vacuum
-_maiusculum_scribere(
-    FILE*             f,
-    constans chorda*  t)
+_maiusculum_scribere (
+               FILE* f,
+    constans chorda* t)
 {
     i32 i;
 
@@ -264,12 +309,12 @@ _maiusculum_scribere(
 /* membrum enumerationis: PRAEF_ELEM_ATTR_OPTIO (optio NIHIL =
  * caput sine optione) */
 interior vacuum
-_membrum_electionis_scribere(
-    FILE*                f,
-    constans character*  praefixum,
-    CqElementum*         e,
-    CqAttributum*        a,
-    constans chorda*     optio)
+_membrum_electionis_scribere (
+                  FILE* f,
+    constans character* praefixum,
+           CqElementum* e,
+          CqAttributum* a,
+       constans chorda* optio)
 {
     i32 i;
 
@@ -300,78 +345,77 @@ _membrum_electionis_scribere(
     }
 }
 
+
 /* ==================================================
  * Lectio canonis in exemplar
  * ================================================== */
 
 interior CanonGenusValoris
-_genus_ex(
+_genus_ex (
     chorda* s)
 {
     si (!s)
     {
         redde CANON_GENUS_TEXTUS;
     }
-    si (chorda_aequalis_literis(*s, "nomen"))
-        redde CANON_GENUS_NOMEN;
-    si (chorda_aequalis_literis(*s, "numerus"))
-        redde CANON_GENUS_NUMERUS;
-    si (chorda_aequalis_literis(*s, "veritas"))
-        redde CANON_GENUS_VERITAS;
-    si (chorda_aequalis_literis(*s, "dies"))
-        redde CANON_GENUS_DIES;
-    si (chorda_aequalis_literis(*s, "electio"))
-        redde CANON_GENUS_ELECTIO;
-    si (chorda_aequalis_literis(*s, "compositum"))
-        redde CANON_GENUS_COMPOSITUM;
+    si (chorda_aequalis_literis(*s, "nomen")) redde CANON_GENUS_NOMEN;
+    si (chorda_aequalis_literis(*s,
+                                                    "numerus")) redde CANON_GENUS_NUMERUS;
+    si (chorda_aequalis_literis(*s,
+                                                    "veritas")) redde CANON_GENUS_VERITAS;
+    si (chorda_aequalis_literis(*s, "dies")) redde CANON_GENUS_DIES;
+    si (chorda_aequalis_literis(*s,
+                                                    "electio")) redde CANON_GENUS_ELECTIO;
+    si (chorda_aequalis_literis(*s,
+                                                       "compositum")) redde CANON_GENUS_COMPOSITUM;
     /* signa (spec canon-referentia par. 7): valor VERBATIM manet,
      * signo incluso - chorda* ut textus, CONSULTO (degradatio
      * tacita vetita: nominatim hic, non per casum ordinarium) */
-    si (chorda_aequalis_literis(*s, "identitas"))
-        redde CANON_GENUS_TEXTUS;
-    si (chorda_aequalis_literis(*s, "referentia"))
-        redde CANON_GENUS_TEXTUS;
+    si (chorda_aequalis_literis(*s,
+                                                      "identitas")) redde CANON_GENUS_TEXTUS;
+    si (chorda_aequalis_literis(*s,
+                                                       "referentia")) redde CANON_GENUS_TEXTUS;
 
     redde CANON_GENUS_TEXTUS;
 }
 
 interior Xar*
-_canonem_colligere(
-    StmlNodus*  radix_canonis,
-    Piscina*    piscina)
+_canonem_colligere (
+    StmlNodus* radix_canonis,
+      Piscina* piscina)
 {
     Xar* elementa;
     i32  n;
     i32  i;
 
-    elementa = xar_creare(piscina, (i32)magnitudo(CqElementum));
-    n = stml_numerus_liberorum(radix_canonis);
+    elementa  = xar_creare(piscina, (i32)magnitudo(CqElementum));
+    n         = stml_numerus_liberorum(radix_canonis);
 
     per (i = ZEPHYRUM; i < n; i++)
     {
-        StmlNodus*   en;
+          StmlNodus* en;
         CqElementum* e;
-        chorda*      attr;
-        i32          nl;
-        i32          j;
+             chorda* attr;
+                i32  nl;
+                i32  j;
 
         en = stml_liberum_ad_indicem(radix_canonis, i);
-        si (!en || en->genus != STML_NODUS_ELEMENTUM ||
-            !chorda_aequalis_literis(*en->titulus, "elementum"))
+        si (   !en || en->genus != STML_NODUS_ELEMENTUM
+            || !chorda_aequalis_literis(*en->titulus, "elementum"))
         {
             perge;
         }
 
-        e = (CqElementum*)xar_addere(elementa);
-        e->titulus = stml_attributum_capere(en, "nomen");
-        e->intra   = stml_attributum_capere(en, "intra");
-        attr = stml_attributum_capere(en, "radix");
-        e->radix = (b32)(attr &&
-            chorda_aequalis_literis(*attr, "verum"));
+        e           = (CqElementum*)xar_addere(elementa);
+        e->titulus  = stml_attributum_capere(en, "nomen");
+        e->intra    = stml_attributum_capere(en, "intra");
+        attr        = stml_attributum_capere(en, "radix");
+        e->radix = (b32)(attr
+            && chorda_aequalis_literis(*attr, "verum"));
 
-        e->textus_licet = FALSUM;
-        e->textus_genus = CANON_GENUS_TEXTUS;
-        attr = stml_attributum_capere(en, "textus");
+        e->textus_licet  = FALSUM;
+        e->textus_genus  = CANON_GENUS_TEXTUS;
+        attr             = stml_attributum_capere(en, "textus");
         si (attr)
         {
             si (chorda_aequalis_literis(*attr, "verum"))
@@ -383,8 +427,8 @@ _canonem_colligere(
                 CanonGenusValoris g;
 
                 g = _genus_ex(attr);
-                si (g != CANON_GENUS_TEXTUS &&
-                    g != CANON_GENUS_ELECTIO)
+                si (   g != CANON_GENUS_TEXTUS
+                    && g != CANON_GENUS_ELECTIO)
                 {
                     e->textus_licet = VERUM;
                     e->textus_genus = g;
@@ -401,7 +445,7 @@ _canonem_colligere(
         per (j = ZEPHYRUM; j < nl; j++)
         {
             StmlNodus* l;
-            chorda*    lt;
+               chorda* lt;
 
             l = stml_liberum_ad_indicem(en, j);
             si (!l || l->genus != STML_NODUS_ELEMENTUM)
@@ -417,16 +461,16 @@ _canonem_colligere(
             si (chorda_aequalis_literis(*l->titulus, "attributum"))
             {
                 CqAttributum* a;
-                i32           no;
-                i32           k;
+                         i32  no;
+                         i32  k;
 
-                a = (CqAttributum*)xar_addere(e->attributa);
-                a->titulus = lt;
+                a           = (CqAttributum*)xar_addere(e->attributa);
+                a->titulus  = lt;
                 a->genus = _genus_ex(
                     stml_attributum_capere(l, "genus"));
                 attr = stml_attributum_capere(l, "necessarium");
-                a->necessarium = (b32)(attr &&
-                    chorda_aequalis_literis(*attr, "verum"));
+                a->necessarium = (b32)(attr
+                    && chorda_aequalis_literis(*attr, "verum"));
                 a->praestitutum =
                     stml_attributum_capere(l, "ordinarius");
                 a->optiones = xar_creare(piscina,
@@ -435,14 +479,14 @@ _canonem_colligere(
                 no = stml_numerus_liberorum(l);
                 per (k = ZEPHYRUM; k < no; k++)
                 {
-                    StmlNodus* o;
-                    chorda*    valor;
-                    chorda**   locus;
-                    chorda     t;
+                    StmlNodus*  o;
+                       chorda*  valor;
+                       chorda** locus;
+                       chorda   t;
 
                     o = stml_liberum_ad_indicem(l, k);
-                    si (!o || o->genus != STML_NODUS_ELEMENTUM ||
-                        !chorda_aequalis_literis(*o->titulus,
+                    si (   !o || o->genus != STML_NODUS_ELEMENTUM
+                        || !chorda_aequalis_literis(*o->titulus,
                                                  "optio"))
                     {
                         perge;
@@ -451,21 +495,21 @@ _canonem_colligere(
                         stml_textus_normalizatus(o, piscina));
                     valor = (chorda*)piscina_allocare(piscina,
                         magnitudo(chorda));
-                    *valor = t;
-                    locus = (chorda**)xar_addere(a->optiones);
-                    *locus = valor;
+                    *valor  = t;
+                    locus   = (chorda**)xar_addere(a->optiones);
+                    *locus  = valor;
                 }
             }
             alioquin si (chorda_aequalis_literis(*l->titulus,
                                                  "liberum"))
             {
                 CqLiberum* lb;
-                chorda*    m;
+                   chorda* m;
 
-                lb = (CqLiberum*)xar_addere(e->liberi);
-                lb->titulus = lt;
-                lb->unicum  = FALSUM;
-                m = stml_attributum_capere(l, "maximum");
+                lb           = (CqLiberum*)xar_addere(e->liberi);
+                lb->titulus  = lt;
+                lb->unicum   = FALSUM;
+                m            = stml_attributum_capere(l, "maximum");
                 si (m && chorda_aequalis_literis(*m, "1"))
                 {
                     lb->unicum = VERUM;
@@ -480,12 +524,12 @@ _canonem_colligere(
 /* definitionem liberi solvere: adstricta (intra==parens) vincit,
  * globalis cadit - speculum elementum_quaerere canonis */
 interior CqElementum*
-_def_invenire(
-    Xar*              elementa,
-    constans chorda*  parens,
-    constans chorda*  titulus)
+_def_invenire (
+                Xar* elementa,
+    constans chorda* parens,
+    constans chorda* titulus)
 {
-    i32          i;
+            i32  i;
     CqElementum* globale;
 
     globale = NIHIL;
@@ -498,8 +542,8 @@ _def_invenire(
         {
             perge;
         }
-        si (e->intra && parens &&
-            chorda_aequalis(*e->intra, *parens))
+        si (   e->intra && parens
+            && chorda_aequalis(*e->intra, *parens))
         {
             redde e;
         }
@@ -512,19 +556,20 @@ _def_invenire(
     redde globale;
 }
 
+
 /* ==================================================
  * Emissio capitis
  * ================================================== */
 
 interior vacuum
-_caput_emittere(
-    FILE*                f,
-    Xar*                 elementa,
-    constans character*  praefixum,
-    constans character*  praefixum_min,
-    constans character*  custos,
-    constans character*  via_canonis,
-    constans character*  iussum)
+_caput_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* praefixum,
+    constans character* praefixum_min,
+    constans character* custos,
+    constans character* via_canonis,
+    constans character* iussum)
 {
     i32 i;
     i32 j;
@@ -569,7 +614,7 @@ _caput_emittere(
         per (j = ZEPHYRUM; j < xar_numerus(e->attributa); j++)
         {
             CqAttributum* a;
-            i32           k;
+                     i32  k;
 
             a = (CqAttributum*)xar_obtinere(e->attributa, j);
             si (a->genus != CANON_GENUS_ELECTIO)
@@ -647,11 +692,11 @@ _caput_emittere(
 
         per (j = ZEPHYRUM; j < xar_numerus(e->liberi); j++)
         {
-            CqLiberum*   lb;
+              CqLiberum* lb;
             CqElementum* def;
 
-            lb = (CqLiberum*)xar_obtinere(e->liberi, j);
-            def = _def_invenire(elementa, e->titulus, lb->titulus);
+            lb   = (CqLiberum*)xar_obtinere(e->liberi, j);
+            def  = _def_invenire(elementa, e->titulus, lb->titulus);
             si (!def)
             {
                 perge;   /* liberum sine definitione: DOM solum */
@@ -717,17 +762,18 @@ _caput_emittere(
     fprintf(f, "\n#endif /* %s */\n", custos);
 }
 
+
 /* ==================================================
  * Emissio corporis
  * ================================================== */
 
 interior vacuum
-_lectorem_emittere(
-    FILE*                f,
-    Xar*                 elementa,
-    CqElementum*         e,
-    constans character*  praefixum,
-    constans character*  praefixum_min)
+_lectorem_emittere (
+                  FILE* f,
+                   Xar* elementa,
+           CqElementum* e,
+    constans character* praefixum,
+    constans character* praefixum_min)
 {
     i32 j;
     b32 liberi_definiti;
@@ -804,8 +850,8 @@ _lectorem_emittere(
             fprintf(f, "    res->");
             _campus_scribere(f, a->titulus);
             fprintf(f, " = %s;\n    res->",
-                (a->praestitutum &&
-                 chorda_aequalis_literis(*a->praestitutum,
+                (a->praestitutum
+                && chorda_aequalis_literis(*a->praestitutum,
                                          "verum"))
                     ? "VERUM" : "FALSUM");
             _campus_scribere(f, a->titulus);
@@ -892,11 +938,11 @@ _lectorem_emittere(
     /* liberi: initia */
     per (j = ZEPHYRUM; j < xar_numerus(e->liberi); j++)
     {
-        CqLiberum*   lb;
+          CqLiberum* lb;
         CqElementum* def;
 
-        lb = (CqLiberum*)xar_obtinere(e->liberi, j);
-        def = _def_invenire(elementa, e->titulus, lb->titulus);
+        lb   = (CqLiberum*)xar_obtinere(e->liberi, j);
+        def  = _def_invenire(elementa, e->titulus, lb->titulus);
         si (!def)
         {
             perge;
@@ -937,7 +983,7 @@ _lectorem_emittere(
             primus = VERUM;
             per (j = ZEPHYRUM; j < xar_numerus(e->liberi); j++)
             {
-                CqLiberum*   lb;
+                  CqLiberum* lb;
                 CqElementum* def;
 
                 lb = (CqLiberum*)xar_obtinere(e->liberi, j);
@@ -1070,13 +1116,13 @@ _lectorem_emittere(
 }
 
 interior vacuum
-_corpus_emittere(
-    FILE*                f,
-    Xar*                 elementa,
-    constans character*  praefixum,
-    constans character*  praefixum_min,
-    constans character*  caput_basis,
-    constans character*  via_canonis)
+_corpus_emittere (
+                  FILE* f,
+                   Xar* elementa,
+    constans character* praefixum,
+    constans character* praefixum_min,
+    constans character* caput_basis,
+    constans character* via_canonis)
 {
     i32 i;
 
@@ -1096,49 +1142,50 @@ _corpus_emittere(
     }
 }
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
 s32
-principale(
-    s32          numerus,
-    character**  argumenta)
+principale (
+          s32   numerus,
+    character** argumenta)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    constans character*  via_canonis;
-    constans character*  praefixum;
-    constans character*  via_capitis;
-    constans character*  via_corporis;
-    character            praefixum_min[XXXII];
-    character            custos[CXXVIII];
-    character            iussum[DXII];
-    chorda               fons;
-    StmlResultus         r;
-    Xar*                 elementa;
+     constans character* via_canonis;
+     constans character* praefixum;
+     constans character* via_capitis;
+     constans character* via_corporis;
+              character  praefixum_min[XXXII];
+              character  custos[CXXVIII];
+              character  iussum[DXII];
+                 chorda  fons;
+           StmlResultus  r;
+                    Xar* elementa;
     FILE*                f;
     s32                  i;
 
-    via_canonis  = NIHIL;
-    praefixum    = NIHIL;
-    via_capitis  = NIHIL;
-    via_corporis = NIHIL;
+    via_canonis   = NIHIL;
+    praefixum     = NIHIL;
+    via_capitis   = NIHIL;
+    via_corporis  = NIHIL;
 
     per (i = I; i < numerus; i++)
     {
-        si (strcmp(argumenta[i], "-praefixum") == ZEPHYRUM &&
-            i + I < numerus)
+        si (   strcmp(argumenta[i], "-praefixum") == ZEPHYRUM
+            && i + I < numerus)
         {
             praefixum = argumenta[++i];
         }
-        alioquin si (strcmp(argumenta[i], "-caput") == ZEPHYRUM &&
-                     i + I < numerus)
+        alioquin si (   strcmp(argumenta[i], "-caput") == ZEPHYRUM
+                     && i + I < numerus)
         {
             via_capitis = argumenta[++i];
         }
-        alioquin si (strcmp(argumenta[i], "-corpus") == ZEPHYRUM &&
-                     i + I < numerus)
+        alioquin si (   strcmp(argumenta[i], "-corpus") == ZEPHYRUM
+                     && i + I < numerus)
         {
             via_corporis = argumenta[++i];
         }
@@ -1156,8 +1203,8 @@ principale(
         redde II;
     }
 
-    piscina = piscina_generare_dynamicum("canon_coquere", 1048576);
-    intern  = internamentum_creare(piscina);
+    piscina  = piscina_generare_dynamicum("canon_coquere", 1048576);
+    intern   = internamentum_creare(piscina);
 
     fons = filum_legere_totum(via_canonis, piscina);
     si (fons.mensura == ZEPHYRUM)
@@ -1167,8 +1214,8 @@ principale(
         redde II;
     }
     r = stml_legere(fons, piscina, intern);
-    si (!r.successus || !r.elementum_radix ||
-        !chorda_aequalis_literis(*r.elementum_radix->titulus,
+    si (   !r.successus || !r.elementum_radix
+        || !chorda_aequalis_literis(*r.elementum_radix->titulus,
                                  "canon"))
     {
         fprintf(stderr,
@@ -1189,8 +1236,8 @@ principale(
     {
         i32 j;
 
-        per (j = ZEPHYRUM; praefixum[j] &&
-             j < (i32)magnitudo(praefixum_min) - I; j++)
+        per (j = ZEPHYRUM; praefixum[j]
+            && j < (i32)magnitudo(praefixum_min) - I; j++)
         {
             character c;
 
@@ -1205,14 +1252,14 @@ principale(
     }
     {
         constans character* basis;
-        i32                 j;
-        i32                 k;
+                       i32  j;
+                       i32  k;
 
-        basis = strrchr(via_capitis, '/');
-        basis = basis ? basis + I : via_capitis;
-        k = ZEPHYRUM;
-        per (j = ZEPHYRUM; basis[j] &&
-             k < (i32)magnitudo(custos) - I; j++)
+        basis  = strrchr(via_capitis, '/');
+        basis  = basis ? basis + I : via_capitis;
+        k      = ZEPHYRUM;
+        per (j = ZEPHYRUM; basis[j]
+            && k < (i32)magnitudo(custos) - I; j++)
         {
             character c;
 

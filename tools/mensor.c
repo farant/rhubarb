@@ -41,7 +41,10 @@
 #define MORA_AMPLA MMMMXCVI * M
 
 interior constans character*
-_arg (integer argc, character** argv, constans character* clavis)
+_arg (
+               integer   argc,
+             character** argv,
+    constans character*  clavis)
 {
     integer i;
 
@@ -58,7 +61,10 @@ _arg (integer argc, character** argv, constans character* clavis)
 
 /* Vexillum nudum (sine valore sequente) adesse? */
 interior b32
-_vexillum (integer argc, character** argv, constans character* clavis)
+_vexillum (
+               integer   argc,
+             character** argv,
+    constans character*  clavis)
 {
     integer i;
 
@@ -74,7 +80,9 @@ _vexillum (integer argc, character** argv, constans character* clavis)
 }
 
 interior constans character*
-_ambitus_aut (constans character* clavis, constans character* alterum)
+_ambitus_aut (
+    constans character* clavis,
+    constans character* alterum)
 {
     constans character* valor;
 
@@ -88,7 +96,9 @@ _ambitus_aut (constans character* clavis, constans character* alterum)
 }
 
 interior constans character*
-_diarium (integer argc, character** argv)
+_diarium (
+      integer   argc,
+    character** argv)
 {
     constans character* via;
 
@@ -102,10 +112,13 @@ _diarium (integer argc, character** argv)
 }
 
 interior chorda
-_volumen_via (integer argc, character** argv, Piscina* piscina)
+_volumen_via (
+      integer   argc,
+    character** argv,
+      Piscina*  piscina)
 {
     constans character* via;
-    ChordaAedificator*  aedificator;
+     ChordaAedificator* aedificator;
 
     via = _arg(argc, argv, "-volumen");
     si (via != NIHIL)
@@ -130,7 +143,9 @@ _volumen_via (integer argc, character** argv, Piscina* piscina)
 
 /* Chordam in litteras NUL-terminatas vertere (fopen eas poscit) */
 interior character*
-_litterae (chorda c, Piscina* piscina)
+_litterae (
+     chorda  c,
+    Piscina* piscina)
 {
     character* l;
 
@@ -150,17 +165,21 @@ _litterae (chorda c, Piscina* piscina)
     redde l;
 }
 
+
 /* ============================================================
  * sessio
  * ============================================================ */
 
 interior integer
-_sessionem_incipere (Piscina* piscina, integer argc, character** argv)
+_sessionem_incipere (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
 {
-    chorda    sessio;
+       chorda sessio;
     character diarium[CCLVI];
-    b32       nudus;
-    integer   i;
+          b32 nudus;
+      integer i;
 
     nudus = FALSUM;
     per (i = I; i < argc; i++)
@@ -187,22 +206,28 @@ _sessionem_incipere (Piscina* piscina, integer argc, character** argv)
 
     /* Forma quam concha 'eval' consumit */
     imprimere("MENSOR_SESSIO=%.*s; export MENSOR_SESSIO;\n",
-              (integer)sessio.mensura, (constans character*)sessio.datum);
+              (integer)sessio.mensura,
+              (constans character*)sessio.datum);
     imprimere("MENSOR_DIARIUM=%s; export MENSOR_DIARIUM;\n", diarium);
 
     redde 0;
 }
+
 
 /* ============================================================
  * mensurare / addere
  * ============================================================ */
 
 interior Mensura
-_mensuram_struere (Piscina* piscina, integer argc, character** argv,
-                   constans character* titulus, duplex valor,
-                   constans character* unitas)
+_mensuram_struere (
+                              Piscina*  piscina,
+                              integer   argc,
+                            character** argv,
+                   constans character*  titulus,
+                               duplex   valor,
+                   constans character*  unitas)
 {
-    Mensura             m;
+               Mensura  m;
     constans character* parens;
 
     parens = _arg(argc, argv, "-parens");
@@ -212,26 +237,30 @@ _mensuram_struere (Piscina* piscina, integer argc, character** argv,
     }
 
     m.sessio   = chorda_ex_literis(
-                     _ambitus_aut("MENSOR_SESSIO", "sine-sessione"), piscina);
-    m.id       = mensura_id_novum(piscina);
-    m.parens   = chorda_ex_literis(parens, piscina);
-    m.titulus  = chorda_ex_literis(titulus, piscina);
-    m.valor    = valor;
-    m.unitas   = chorda_ex_literis(unitas, piscina);
-    m.momentum = mensura_momentum_nunc();
+                     _ambitus_aut("MENSOR_SESSIO", "sine-sessione"),
+                     piscina);
+    m.id        = mensura_id_novum(piscina);
+    m.parens    = chorda_ex_literis(parens, piscina);
+    m.titulus   = chorda_ex_literis(titulus, piscina);
+    m.valor     = valor;
+    m.unitas    = chorda_ex_literis(unitas, piscina);
+    m.momentum  = mensura_momentum_nunc();
 
     redde m;
 }
 
 interior integer
-_mensurare (Piscina* piscina, integer argc, character** argv)
+_mensurare (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
 {
-    constans character*  titulus;
+    constans character* titulus;
     integer              i, initium;
     s64                  ante, post;
-    ProcessusResultus    resultus;
-    Mensura              m;
-    character            id_tabula[LXIV];
+    ProcessusResultus resultus;
+              Mensura m;
+            character id_tabula[LXIV];
 
     titulus = _arg(argc, argv, "-titulus");
     si (titulus == NIHIL)
@@ -269,8 +298,8 @@ _mensurare (Piscina* piscina, integer argc, character** argv)
                    (i32)MORA_AMPLA, piscina);
     post = mensura_momentum_nunc();
 
-    m.valor    = (duplex)(post - ante) / 1000.0;
-    m.momentum = ante;
+    m.valor     = (duplex)(post - ante) / 1000.0;
+    m.momentum  = ante;
 
     /* Effusionem prolis TRANSMITTERE. processus_exsequi eam colligit,
      * ergo sine hoc instrumentum omnem exitum aedificationis quam
@@ -316,10 +345,13 @@ _mensurare (Piscina* piscina, integer argc, character** argv)
  * exemplaria formae per tempus dissiderent.
  */
 interior integer
-_addere_tabulam (Piscina* piscina, integer argc, character** argv,
-                 constans character* via_tabulae,
-                 constans character* praefixum,
-                 constans character* unitas)
+_addere_tabulam (
+                            Piscina*  piscina,
+                            integer   argc,
+                          character** argv,
+                 constans character*  via_tabulae,
+                 constans character*  praefixum,
+                 constans character*  unitas)
 {
     FILE*              plagula;
     character          linea[MMMMXCVI];
@@ -338,10 +370,10 @@ _addere_tabulam (Piscina* piscina, integer argc, character** argv,
 
     dum (fgets(linea, MMMMXCVI, plagula) != NIHIL)
     {
-        duplex     valor;
+           duplex  valor;
         character* finis;
         character* titulus;
-        Mensura    m;
+          Mensura  m;
 
         valor = strtod(linea, &finis);
         si (finis == linea)
@@ -388,20 +420,23 @@ _addere_tabulam (Piscina* piscina, integer argc, character** argv,
 }
 
 interior integer
-_addere (Piscina* piscina, integer argc, character** argv)
+_addere (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
 {
     constans character* titulus;
     constans character* valor_litterae;
     constans character* unitas;
     constans character* tabula;
     constans character* praefixum;
-    Mensura             m;
+               Mensura  m;
 
-    titulus        = _arg(argc, argv, "-titulus");
-    valor_litterae = _arg(argc, argv, "-valor");
-    unitas         = _arg(argc, argv, "-unitas");
-    tabula         = _arg(argc, argv, "-tabula");
-    praefixum      = _arg(argc, argv, "-praefixum");
+    titulus         = _arg(argc, argv, "-titulus");
+    valor_litterae  = _arg(argc, argv, "-valor");
+    unitas          = _arg(argc, argv, "-unitas");
+    tabula          = _arg(argc, argv, "-tabula");
+    praefixum       = _arg(argc, argv, "-praefixum");
 
     si (tabula != NIHIL)
     {
@@ -442,20 +477,22 @@ _addere (Piscina* piscina, integer argc, character** argv)
     redde 0;
 }
 
+
 /* ============================================================
  * condere
  * ============================================================ */
 
 interior chorda
-_commissum (Piscina* piscina)
+_commissum (
+    Piscina* piscina)
 {
     constans character* argumenta[IV];
-    ProcessusResultus   resultus;
+     ProcessusResultus  resultus;
 
-    argumenta[0]   = "git";
-    argumenta[I]   = "rev-parse";
-    argumenta[II]  = "HEAD";
-    argumenta[III] = NIHIL;
+    argumenta[0]    = "git";
+    argumenta[I]    = "rev-parse";
+    argumenta[II]   = "HEAD";
+    argumenta[III]  = NIHIL;
 
     resultus = processus_exsequi(argumenta, (i32)(X * M), piscina);
     si (!resultus.successus || resultus.codex_exitus != 0)
@@ -464,9 +501,11 @@ _commissum (Piscina* piscina)
     }
 
     /* Lineam novam terminalem tollere */
-    dum (resultus.effusio.mensura > ZEPHYRUM &&
-         (resultus.effusio.datum[resultus.effusio.mensura - I] == '\n' ||
-          resultus.effusio.datum[resultus.effusio.mensura - I] == '\r'))
+    dum (   resultus.effusio.mensura > ZEPHYRUM
+         && (resultus.effusio.datum[resultus.effusio.mensura - I]
+             == '\n'
+        || resultus.effusio.datum[resultus.effusio.mensura - I]
+            == '\r'))
     {
         resultus.effusio.mensura--;
     }
@@ -475,17 +514,21 @@ _commissum (Piscina* piscina)
 }
 
 interior integer
-_condere (Piscina* piscina, integer argc, character** argv)
+_condere (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
 {
-    chorda             via;
-    Volumen*           volumen;
-    MensuraFructus     fructus;
-    MachinaNota        nota;
+               chorda  via;
+              Volumen* volumen;
+       MensuraFructus  fructus;
+          MachinaNota  nota;
     ChordaAedificator* aedificator;
-    chorda             commissum;
+               chorda  commissum;
 
-    via     = _volumen_via(argc, argv, piscina);
-    volumen = volumen_aperire_aut_creare(piscina, _litterae(via, piscina));
+    via = _volumen_via(argc, argv, piscina);
+    volumen = volumen_aperire_aut_creare(piscina, _litterae(via,
+        piscina));
     si (volumen == NIHIL)
     {
         fprintf(stderr, "mensor: volumen aperiri non potest: %.*s\n",
@@ -494,10 +537,11 @@ _condere (Piscina* piscina, integer argc, character** argv)
     }
 
     /* Metadata sessionis SEMEL - hic, non in linea quaque */
-    nota      = machina_nota(piscina);
-    commissum = _commissum(piscina);
+    nota       = machina_nota(piscina);
+    commissum  = _commissum(piscina);
 
-    aedificator = chorda_aedificator_creare(piscina, (memoriae_index)CC);
+    aedificator = chorda_aedificator_creare(piscina,
+        (memoriae_index)CC);
     chorda_aedificator_appendere_literis(
         aedificator, _ambitus_aut("MENSOR_SESSIO", "sine-sessione"));
     chorda_aedificator_appendere_character(aedificator, '\t');
@@ -535,6 +579,7 @@ _condere (Piscina* piscina, integer argc, character** argv)
     redde 0;
 }
 
+
 /* ============================================================ */
 
 interior vacuum
@@ -552,7 +597,9 @@ _usus (vacuum)
 }
 
 integer
-main (integer argc, character** argv)
+main (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina;
     integer  codex;

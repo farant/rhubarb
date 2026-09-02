@@ -21,10 +21,12 @@
 
 interior i32 signa_emissa = ZEPHYRUM;
 
-interior vacuum signa_emittere(StmlNodus* nodus);
+interior vacuum
+signa_emittere (
+    StmlNodus* nodus);
 
 interior vacuum
-campum_scribere(
+campum_scribere (
     constans chorda* valor)
 {
     si (valor)
@@ -39,7 +41,7 @@ campum_scribere(
 }
 
 interior vacuum
-signa_emittere(
+signa_emittere (
     StmlNodus* nodus)
 {
     i32 i;
@@ -50,16 +52,16 @@ signa_emittere(
         redde;
     }
 
-    si (nodus->genus == STML_NODUS_ELEMENTUM && nodus->titulus &&
-        chorda_aequalis_literis(*nodus->titulus, "signum"))
+    si (   nodus->genus == STML_NODUS_ELEMENTUM && nodus->titulus
+        && chorda_aequalis_literis(*nodus->titulus, "signum"))
     {
         chorda* titulus_s;
         chorda* contentum;
         chorda* via;
 
-        titulus_s = stml_attributum_capere(nodus, "nomen");
-        contentum = stml_attributum_capere(nodus, "contentum");
-        via       = stml_attributum_capere(nodus, "via");
+        titulus_s  = stml_attributum_capere(nodus, "nomen");
+        contentum  = stml_attributum_capere(nodus, "contentum");
+        via        = stml_attributum_capere(nodus, "via");
 
         campum_scribere(titulus_s);
         imprimere("\t");
@@ -78,12 +80,12 @@ signa_emittere(
 }
 
 s32
-principale(
-    s32          numerus,
-    character**  argumenta)
+principale (
+          s32   numerus,
+    character** argumenta)
 {
-    Piscina*      piscina;
-    chorda        fons;
+         Piscina* piscina;
+          chorda  fons;
     StmlResultus  resultus;
 
     si (numerus < II)

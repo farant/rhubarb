@@ -14,26 +14,29 @@
 #include <string.h>
 
 hic_manens Xar*
-lexare(Piscina* p, InternamentumChorda* intern, constans character* input)
+lexare (
+                Piscina* p,
+    InternamentumChorda* intern,
+     constans character* input)
 {
-    Xar* tokens;
+              Xar* tokens;
     Arbor2Lexator* lex;
-    chorda* via;
+           chorda* via;
     unio { constans character* c; i8* m; } u;
 
     tokens = xar_creare(p, magnitudo(Arbor2Token*));
     lex = arbor2_lexator_creare(p, intern, input, (i32)strlen(input));
 
-    u.c = "<input>";
-    via = piscina_allocare(p, magnitudo(chorda));
-    via->datum = u.m;
-    via->mensura = VII;
+    u.c           = "<input>";
+    via           = piscina_allocare(p, magnitudo(chorda));
+    via->datum    = u.m;
+    via->mensura  = VII;
 
     dum (VERUM)
     {
-        Arbor2Lexema* l = arbor2_lexema_proximum(lex);
-        Arbor2Token* t;
-        Arbor2Token** slot;
+        Arbor2Lexema*  l = arbor2_lexema_proximum(lex);
+         Arbor2Token*  t;
+         Arbor2Token** slot;
 
         si (l == NIHIL)
         {
@@ -59,7 +62,8 @@ lexare(Piscina* p, InternamentumChorda* intern, constans character* input)
 }
 
 hic_manens vacuum
-imprimere_tokens(Xar* tokens)
+imprimere_tokens (
+    Xar* tokens)
 {
     i32 i;
     i32 num;
@@ -69,10 +73,11 @@ imprimere_tokens(Xar* tokens)
 
     per (i = ZEPHYRUM; i < num; i++)
     {
-        Arbor2Token** t_ptr = xar_obtinere(tokens, i);
-        Arbor2Token* t = *t_ptr;
+        Arbor2Token** t_ptr  = xar_obtinere(tokens, i);
+        Arbor2Token*  t      = *t_ptr;
 
-        printf("  [%2d] %-16s", i, arbor2_lexema_genus_nomen(t->lexema->genus));
+        printf("  [%2d] %-16s", i,
+            arbor2_lexema_genus_nomen(t->lexema->genus));
 
         si (t->lexema->valor.mensura > ZEPHYRUM)
         {
@@ -86,7 +91,9 @@ imprimere_tokens(Xar* tokens)
 }
 
 hic_manens vacuum
-imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
+imprimere_nodus (
+    Arbor2Nodus* nodus,
+            i32  depth)
 {
     i32 j;
 
@@ -112,21 +119,25 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
         casus ARBOR2_NODUS_FLOAT:
         casus ARBOR2_NODUS_CHAR:
         casus ARBOR2_NODUS_STRING:
-            si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
+            si (   nodus->lexema         != NIHIL
+                && nodus->lexema->lexema != NIHIL)
             {
                 chorda* val = &nodus->lexema->lexema->valor;
                 si (val->mensura > ZEPHYRUM)
                 {
-                    printf(" \"%.*s\"", val->mensura, (constans character*)val->datum);
+                    printf(" \"%.*s\"", val->mensura,
+                        (constans character*)val->datum);
                 }
             }
             printf("\n");
             frange;
 
         casus ARBOR2_NODUS_BINARIUM:
-            si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
+            si (   nodus->lexema         != NIHIL
+                && nodus->lexema->lexema != NIHIL)
             {
-                printf(" [%s]", arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
+                printf(" [%s]",
+                    arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
             }
             printf("\n");
             imprimere_nodus(nodus->datum.binarium.sinister, depth + I);
@@ -134,29 +145,36 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             frange;
 
         casus ARBOR2_NODUS_UNARIUM:
-            si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
+            si (   nodus->lexema         != NIHIL
+                && nodus->lexema->lexema != NIHIL)
             {
-                printf(" [%s]", arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
+                printf(" [%s]",
+                    arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
             }
             printf("\n");
             imprimere_nodus(nodus->datum.unarium.operandum, depth + I);
             frange;
 
         casus ARBOR2_NODUS_SIZEOF:
-            printf(" [%s]\n", nodus->datum.sizeof_expr.est_typus ? "type" : "expr");
-            imprimere_nodus(nodus->datum.sizeof_expr.operandum, depth + I);
+            printf(" [%s]\n",
+                nodus->datum.sizeof_expr.est_typus ? "type" : "expr");
+            imprimere_nodus(nodus->datum.sizeof_expr.operandum, depth
+                + I);
             frange;
 
         casus ARBOR2_NODUS_CONVERSIO:
-            si (nodus->lexema != NIHIL && nodus->lexema->lexema != NIHIL)
+            si (   nodus->lexema         != NIHIL
+                && nodus->lexema->lexema != NIHIL)
             {
-                printf(" [%s]\n", arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
+                printf(" [%s]\n",
+                    arbor2_lexema_genus_nomen(nodus->lexema->lexema->genus));
             }
             alioquin
             {
                 printf("\n");
             }
-            imprimere_nodus(nodus->datum.conversio.expressio, depth + I);
+            imprimere_nodus(nodus->datum.conversio.expressio, depth
+                + I);
             frange;
 
         casus ARBOR2_NODUS_TERNARIUS:
@@ -181,11 +199,14 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
                 Arbor2Nodus* lista = nodus->datum.vocatio.argumenta;
                 si (lista->genus == ARBOR2_NODUS_LISTA_SEPARATA)
                 {
-                    i32 num_args = xar_numerus(lista->datum.lista_separata.elementa);
+                    i32 num_args =
+                        xar_numerus(lista->datum.lista_separata.elementa);
                     i32 k;
                     per (k = ZEPHYRUM; k < num_args; k++)
                     {
-                        Arbor2Nodus** arg = xar_obtinere(lista->datum.lista_separata.elementa, k);
+                        Arbor2Nodus** arg =
+                            xar_obtinere(lista->datum.lista_separata.elementa,
+                            k);
                         imprimere_nodus(*arg, depth + I);
                     }
                 }
@@ -201,17 +222,22 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
             frange;
 
         casus ARBOR2_NODUS_POST_UNARIUM:
-            printf(" [%s]\n", arbor2_lexema_genus_nomen(nodus->datum.post_unarium.operator));
-            imprimere_nodus(nodus->datum.post_unarium.operandum, depth + I);
+            printf(" [%s]\n",
+                arbor2_lexema_genus_nomen(nodus->datum.post_unarium.operator));
+            imprimere_nodus(nodus->datum.post_unarium.operandum, depth
+                + I);
             frange;
 
         casus ARBOR2_NODUS_DECLARATIO:
             printf("\n");
-            imprimere_nodus(nodus->datum.declaratio.specifier, depth + I);
-            imprimere_nodus(nodus->datum.declaratio.declarator, depth + I);
+            imprimere_nodus(nodus->datum.declaratio.specifier, depth
+                + I);
+            imprimere_nodus(nodus->datum.declaratio.declarator, depth
+                + I);
             si (nodus->datum.declaratio.initializor != NIHIL)
             {
-                imprimere_nodus(nodus->datum.declaratio.initializor, depth + I);
+                imprimere_nodus(nodus->datum.declaratio.initializor,
+                    depth + I);
             }
             /* Print chained declarations */
             si (nodus->datum.declaratio.proxima != NIHIL)
@@ -226,9 +252,12 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
                    xar_numerus(nodus->datum.lista_separata.separatores));
             {
                 i32 k;
-                per (k = ZEPHYRUM; k < xar_numerus(nodus->datum.lista_separata.elementa); k++)
+                per (k = ZEPHYRUM; k
+                    < xar_numerus(nodus->datum.lista_separata.elementa); k++)
                 {
-                    Arbor2Nodus** elem = xar_obtinere(nodus->datum.lista_separata.elementa, k);
+                    Arbor2Nodus** elem =
+                        xar_obtinere(nodus->datum.lista_separata.elementa,
+                        k);
                     imprimere_nodus(*elem, depth + I);
                 }
             }
@@ -241,18 +270,20 @@ imprimere_nodus(Arbor2Nodus* nodus, i32 depth)
 }
 
 integer
-principale(integer argc, constans character* constans* argv)
+principale (
+    integer argc,
+    constans character* constans* argv)
 {
-    Piscina* p;
+                Piscina* p;
     InternamentumChorda* intern;
-    Arbor2Expansion* expansion;
-    Arbor2GLR* glr;
-    Xar* tokens;
-    Arbor2GLRResultus result;
-    constans character* input;
-    i32 i;
-    i32 arg_index;
-    b32 expr_mode;
+        Arbor2Expansion* expansion;
+              Arbor2GLR* glr;
+                    Xar* tokens;
+      Arbor2GLRResultus  result;
+     constans character* input;
+                    i32  i;
+                    i32  arg_index;
+                    b32  expr_mode;
 
     si (argc < II)
     {
@@ -260,10 +291,13 @@ principale(integer argc, constans character* constans* argv)
         fprintf(stderr, "       glr_debug --validate\n");
         fprintf(stderr, "       glr_debug --validate-tags\n");
         fprintf(stderr, "\nOptions:\n");
-        fprintf(stderr, "  -e, --expr    Parse as expression only (default: full parser)\n");
+        fprintf(stderr,
+            "  -e, --expr    Parse as expression only (default: full parser)\n");
         fprintf(stderr, "\nExamples:\n");
-        fprintf(stderr, "  glr_debug \"int x;\"           # declaration\n");
-        fprintf(stderr, "  glr_debug -e \"a + b * c\"     # expression\n");
+        fprintf(stderr,
+            "  glr_debug \"int x;\"           # declaration\n");
+        fprintf(stderr,
+            "  glr_debug -e \"a + b * c\"     # expression\n");
         redde I;
     }
 
@@ -285,13 +319,15 @@ principale(integer argc, constans character* constans* argv)
     arg_index = I;
     expr_mode = FALSUM;
 
-    si (strcmp(argv[arg_index], "-e") == ZEPHYRUM || strcmp(argv[arg_index], "--expr") == ZEPHYRUM)
+    si (   strcmp(argv[arg_index], "-e")     == ZEPHYRUM
+        || strcmp(argv[arg_index], "--expr") == ZEPHYRUM)
     {
         expr_mode = VERUM;
         arg_index++;
         si (arg_index >= (i32)argc)
         {
-            fprintf(stderr, "Error: missing input after %s\n", argv[arg_index - I]);
+            fprintf(stderr, "Error: missing input after %s\n",
+                argv[arg_index - I]);
             redde I;
         }
     }
@@ -299,10 +335,10 @@ principale(integer argc, constans character* constans* argv)
     input = argv[arg_index];
 
     /* Initialize */
-    p = piscina_generare_dynamicum("glr_debug", 262144);
-    intern = internamentum_creare(p);
-    expansion = arbor2_expansion_creare(p, intern);
-    glr = arbor2_glr_creare(p, intern, expansion);
+    p          = piscina_generare_dynamicum("glr_debug", 262144);
+    intern     = internamentum_creare(p);
+    expansion  = arbor2_expansion_creare(p, intern);
+    glr        = arbor2_glr_creare(p, intern, expansion);
 
     printf("=== Input: \"%s\" ===\n\n", input);
 
@@ -325,7 +361,8 @@ principale(integer argc, constans character* constans* argv)
     printf("Result: %s\n\n", result.successus ? "SUCCESS" : "FAILED");
 
     /* Show errors */
-    si (result.errores != NIHIL && xar_numerus(result.errores) > ZEPHYRUM)
+    si (   result.errores != NIHIL
+        && xar_numerus(result.errores) > ZEPHYRUM)
     {
         printf("Errors (%d):\n", xar_numerus(result.errores));
         per (i = ZEPHYRUM; i < xar_numerus(result.errores); i++)
@@ -333,7 +370,8 @@ principale(integer argc, constans character* constans* argv)
             chorda** err = xar_obtinere(result.errores, i);
             si (err != NIHIL && *err != NIHIL)
             {
-                printf("  %.*s\n", (*err)->mensura, (constans character*)(*err)->datum);
+                printf("  %.*s\n", (*err)->mensura,
+                    (constans character*)(*err)->datum);
             }
         }
         printf("\n");

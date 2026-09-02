@@ -23,7 +23,8 @@
 #include <string.h>
 
 interior vacuum
-_salve(HospitiumColloquium* colloquium)
+_salve (
+    HospitiumColloquium* colloquium)
 {
     chorda corpus = chorda_ex_literis("salve ex hospitio!\n",
                                       colloquium_piscina(colloquium));
@@ -31,27 +32,32 @@ _salve(HospitiumColloquium* colloquium)
 }
 
 interior vacuum
-_resonans(HospitiumColloquium* colloquium)
+_resonans (
+    HospitiumColloquium* colloquium)
 {
     chorda id = colloquium_param(colloquium, "id");
     colloquium_respondere(colloquium, CC, "text/plain", id);
 }
 
 interior vacuum
-_echo(HospitiumColloquium* colloquium)
+_echo (
+    HospitiumColloquium* colloquium)
 {
-    constans HttpPetitioServeri* petitio = colloquium_petitio(colloquium);
+    constans HttpPetitioServeri* petitio =
+        colloquium_petitio(colloquium);
     colloquium_respondere(colloquium, CC, "application/octet-stream",
                           petitio->corpus);
 }
 
 interior vacuum
-_fructus_tractator(HospitiumColloquium* colloquium)
+_fructus_tractator (
+    HospitiumColloquium* colloquium)
 {
-    Hospitium* h = (Hospitium*)colloquium_datum(colloquium);
-    HospitiumFructus fr = hospitium_fructus(h);
-    character textus[DXII];
-    chorda corpus;
+           Hospitium* h   =
+               (Hospitium*)colloquium_datum(colloquium);
+    HospitiumFructus fr  = hospitium_fructus(h);
+           character textus[DXII];
+              chorda corpus;
 
     sprintf(textus,
         "{\n"
@@ -76,23 +82,27 @@ _fructus_tractator(HospitiumColloquium* colloquium)
 }
 
 integer
-principale(integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    HospitiumConfiguratio cfg;
-    Hospitium* h;
+                  Piscina* piscina;
+    HospitiumConfiguratio  cfg;
+                Hospitium* h;
 
     piscina = piscina_generare_dynamicum("hospitium_demo", IV * M * M);
 
     memset(&cfg, 0, magnitudo(cfg));
-    cfg.portus = (argc > I) ? (i32)atoi(argv[I]) : (i32)(VIII * M + LXXX);
-    cfg.acta_accessus = VERUM;
-    cfg.acao = VERUM;   /* postura dev - paginae capsula:// petere possunt */
+    cfg.portus = (argc > I) ? (i32)atoi(argv[I]) : (i32)(VIII * M
+        + LXXX);
+    cfg.acta_accessus  = VERUM;
+    cfg.acao           = VERUM;   /* postura dev - paginae capsula:// petere possunt */
 
     h = hospitium_creare(piscina, &cfg);
     si (h == NIHIL)
     {
-        fprintf(stderr, "hospitium_demo: creatio fallita (portus %d occupatus?)\n",
+        fprintf(stderr,
+            "hospitium_demo: creatio fallita (portus %d occupatus?)\n",
                 (argc > I) ? atoi(argv[I]) : (VIII * M + LXXX));
         redde I;
     }
