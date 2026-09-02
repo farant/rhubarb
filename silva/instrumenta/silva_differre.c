@@ -17,19 +17,27 @@
 #include <string.h>
 
 interior SilvaToken*
-_lexema_ad (Xar* lexemata, i32 i);
+_lexema_ad (
+    Xar* lexemata,
+    i32  i);
 
 interior SilvaToken*
-_lexema_ad (Xar* lexemata, i32 i)
+_lexema_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 interior SilvaUnitas*
-_unitas_ad (Xar* unitates, i32 i);
+_unitas_ad (
+    Xar* unitates,
+    i32  i);
 
 interior SilvaUnitas*
-_unitas_ad (Xar* unitates, i32 i)
+_unitas_ad (
+    Xar* unitates,
+    i32  i)
 {
     redde (SilvaUnitas*)xar_obtinere(unitates, i);
 }
@@ -37,14 +45,18 @@ _unitas_ad (Xar* unitates, i32 i)
 /* initium byte unitatis: trivia praecedentia lexematis primi (si
  * adsunt), alioquin lexema ipsum */
 interior i32
-_unitatis_initium (Xar* lexemata, constans SilvaUnitas* u);
+_unitatis_initium (
+                     Xar* lexemata,
+    constans SilvaUnitas* u);
 
 interior i32
-_unitatis_initium (Xar* lexemata, constans SilvaUnitas* u)
+_unitatis_initium (
+                     Xar* lexemata,
+    constans SilvaUnitas* u)
 {
     SilvaToken* primum = _lexema_ad(lexemata, u->lexema_primum);
 
-    si (primum->spatia_ante != NIHIL
+    si (   primum->spatia_ante != NIHIL
         && xar_numerus(primum->spatia_ante) > 0)
     {
         SilvaToken* trivia = *(SilvaToken**)xar_obtinere(
@@ -63,9 +75,12 @@ _unitatis_initium (Xar* lexemata, constans SilvaUnitas* u)
 }
 
 b32
-silva_differre_latus_ex_textu (Piscina* piscina,
-    InternamentumChorda* intern, chorda textus,
-    constans character* titulus, SilvaDifferreLatus* latus)
+silva_differre_latus_ex_textu (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                 chorda  textus,
+     constans character* titulus,
+     SilvaDifferreLatus* latus)
 {
     i32 k;
 
@@ -103,8 +118,8 @@ silva_differre_latus_ex_textu (Piscina* piscina,
         piscina,
         (memoriae_index)(latus->numerus == 0 ? I : latus->numerus)
             * magnitudo(vacuum*));
-    si (latus->initia == NIHIL || latus->fines == NIHIL
-        || latus->identitates == NIHIL
+    si (   latus->initia               == NIHIL || latus->fines == NIHIL
+        || latus->identitates          == NIHIL
         || latus->identitates_normatae == NIHIL)
     {
         redde FALSUM;
@@ -125,18 +140,18 @@ silva_differre_latus_ex_textu (Piscina* piscina,
     }
     per (k = 0; k < latus->numerus; k = k + 1)
     {
-        Sigillum  sig;
-        character hex[SIGILLUM_HEX_MENSURA];
-        chorda    hex_ch;
-        chorda*   internata;
+         Sigillum  sig;
+        character  hex[SIGILLUM_HEX_MENSURA];
+           chorda  hex_ch;
+           chorda* internata;
 
         sig = sigillum_computare(
             (constans vacuum*)(latus->textus.datum
                 + latus->initia[k]),
             (memoriae_index)(latus->fines[k] - latus->initia[k]));
         sigillum_hex(&sig, hex);
-        hex_ch = chorda_ex_buffer((i8*)hex, 64);
-        internata = chorda_internare(intern, hex_ch);
+        hex_ch     = chorda_ex_buffer((i8*)hex, 64);
+        internata  = chorda_internare(intern, hex_ch);
         si (internata == NIHIL)
         {
             redde FALSUM;
@@ -149,13 +164,13 @@ silva_differre_latus_ex_textu (Piscina* piscina,
     per (k = 0; k < latus->numerus; k = k + 1)
     {
         constans SilvaUnitas* u = _unitas_ad(latus->unitates, k);
-        ChordaAedificator*    aed = chorda_aedificator_creare(
-            piscina, (memoriae_index)128);
-        Sigillum  sig;
-        character hex[SIGILLUM_HEX_MENSURA];
-        chorda    normata;
-        chorda*   internata;
-        i32       j;
+           ChordaAedificator* aed = chorda_aedificator_creare(
+               piscina, (memoriae_index)128);
+         Sigillum  sig;
+        character  hex[SIGILLUM_HEX_MENSURA];
+           chorda  normata;
+           chorda* internata;
+              i32  j;
 
         si (aed == NIHIL)
         {
@@ -164,7 +179,7 @@ silva_differre_latus_ex_textu (Piscina* piscina,
         per (j = u->lexema_primum; j < u->lexema_finis; j = j + 1)
         {
             SilvaToken* t = _lexema_ad(latus->lexemata, j);
-            i8          limites[2];
+                    i8  limites[2];
 
             limites[0] = (i8)((integer)t->genus + I);
             limites[1] = (i8)0x1F;
@@ -191,7 +206,9 @@ silva_differre_latus_ex_textu (Piscina* piscina,
 }
 
 chorda
-silva_differre_spatium (constans SilvaDifferreLatus* latus, i32 k)
+silva_differre_spatium (
+    constans SilvaDifferreLatus* latus,
+                            i32  k)
 {
     redde chorda_ex_buffer(latus->textus.datum + latus->initia[k],
         latus->fines[k] - latus->initia[k]);
@@ -202,18 +219,26 @@ silva_differre_spatium (constans SilvaDifferreLatus* latus, i32 k)
  * -------------------------------------------------- */
 
 interior b32
-_lexemata_codicis_aequalia (constans SilvaDifferreLatus* a, i32 ai,
-    constans SilvaDifferreLatus* b, i32 bi);
+_lexemata_codicis_aequalia (
+    constans SilvaDifferreLatus* a,
+                            i32  ai,
+    constans SilvaDifferreLatus* b,
+                            i32  bi);
 
 interior b32
-_lexemata_codicis_aequalia (constans SilvaDifferreLatus* a, i32 ai,
-    constans SilvaDifferreLatus* b, i32 bi)
+_lexemata_codicis_aequalia (
+    constans SilvaDifferreLatus* a,
+                            i32  ai,
+    constans SilvaDifferreLatus* b,
+                            i32  bi)
 {
     constans SilvaUnitas* ua = _unitas_ad(a->unitates, ai);
     constans SilvaUnitas* ub = _unitas_ad(b->unitates, bi);
-    i32 na = ua->lexema_finis - ua->lexema_primum;
-    i32 nb = ub->lexema_finis - ub->lexema_primum;
-    i32 k;
+                     i32  na   = ua->lexema_finis
+                         - ua->lexema_primum;
+                     i32 nb   = ub->lexema_finis
+                         - ub->lexema_primum;
+                     i32 k;
 
     si (na != nb)
     {
@@ -226,7 +251,7 @@ _lexemata_codicis_aequalia (constans SilvaDifferreLatus* a, i32 ai,
         SilvaToken* tb = _lexema_ad(b->lexemata,
             ub->lexema_primum + k);
 
-        si (ta->genus != tb->genus
+        si (   ta->genus != tb->genus
             || !chorda_aequalis(ta->valor, tb->valor))
         {
             redde FALSUM;
@@ -236,10 +261,14 @@ _lexemata_codicis_aequalia (constans SilvaDifferreLatus* a, i32 ai,
 }
 
 interior vacuum
-_commenta_conserere (ChordaAedificator* aed, Xar* spatia);
+_commenta_conserere (
+    ChordaAedificator* aed,
+                  Xar* spatia);
 
 interior vacuum
-_commenta_conserere (ChordaAedificator* aed, Xar* spatia)
+_commenta_conserere (
+    ChordaAedificator* aed,
+                  Xar* spatia)
 {
     i32 k;
 
@@ -252,7 +281,7 @@ _commenta_conserere (ChordaAedificator* aed, Xar* spatia)
         SilvaToken* trivia = *(SilvaToken**)xar_obtinere(spatia,
             k);
 
-        si (trivia->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+        si (   trivia->genus == SILVA_LEX_COMMENTUM_CLAUSUM
             || trivia->genus == SILVA_LEX_COMMENTUM_LINEA)
         {
             chorda_aedificator_appendere_chorda(aed,
@@ -262,16 +291,20 @@ _commenta_conserere (ChordaAedificator* aed, Xar* spatia)
 }
 
 interior chorda
-_commenta_unitatis (Piscina* piscina,
-    constans SilvaDifferreLatus* l, i32 k);
+_commenta_unitatis (
+                        Piscina* piscina,
+    constans SilvaDifferreLatus* l,
+                            i32  k);
 
 interior chorda
-_commenta_unitatis (Piscina* piscina,
-    constans SilvaDifferreLatus* l, i32 k)
+_commenta_unitatis (
+                        Piscina* piscina,
+    constans SilvaDifferreLatus* l,
+                            i32  k)
 {
     constans SilvaUnitas* u = _unitas_ad(l->unitates, k);
-    ChordaAedificator*    aed = chorda_aedificator_creare(piscina,
-        (memoriae_index)64);
+       ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+           (memoriae_index)64);
     i32 j;
 
     per (j = u->lexema_primum; j < u->lexema_finis; j = j + 1)
@@ -285,12 +318,20 @@ _commenta_unitatis (Piscina* piscina,
 }
 
 interior constans character*
-_classificare (Piscina* piscina, constans SilvaDifferreLatus* a,
-    i32 ai, constans SilvaDifferreLatus* b, i32 bi);
+_classificare (
+                        Piscina* piscina,
+    constans SilvaDifferreLatus* a,
+                            i32  ai,
+    constans SilvaDifferreLatus* b,
+                            i32  bi);
 
 interior constans character*
-_classificare (Piscina* piscina, constans SilvaDifferreLatus* a,
-    i32 ai, constans SilvaDifferreLatus* b, i32 bi)
+_classificare (
+                        Piscina* piscina,
+    constans SilvaDifferreLatus* a,
+                            i32  ai,
+    constans SilvaDifferreLatus* b,
+                            i32  bi)
 {
     si (!_lexemata_codicis_aequalia(a, ai, b, bi))
     {
@@ -305,19 +346,22 @@ _classificare (Piscina* piscina, constans SilvaDifferreLatus* a,
 }
 
 b32
-silva_differre_symbolum_ex_textu (Piscina* piscina, chorda textus,
-    constans character* titulus, SilvaDifferreSymbolum* exitus)
+silva_differre_symbolum_ex_textu (
+                  Piscina* piscina,
+                   chorda  textus,
+       constans character* titulus,
+    SilvaDifferreSymbolum* exitus)
 {
-    Piscina*             temporaria;
+                Piscina* temporaria;
     InternamentumChorda* intern_brevis;
-    SilvaDifferreLatus   latus;
-    ChordaAedificator*   aed;
-    i32                  k;
+     SilvaDifferreLatus  latus;
+      ChordaAedificator* aed;
+                    i32  k;
 
-    exitus->inventa = FALSUM;
-    exitus->textus.datum = NIHIL;
-    exitus->textus.mensura = 0;
-    exitus->sigillum_hex = exitus->textus;
+    exitus->inventa         = FALSUM;
+    exitus->textus.datum    = NIHIL;
+    exitus->textus.mensura  = 0;
+    exitus->sigillum_hex    = exitus->textus;
     si (textus.datum == NIHIL || textus.mensura == 0)
     {
         redde VERUM;
@@ -329,7 +373,7 @@ silva_differre_symbolum_ex_textu (Piscina* piscina, chorda textus,
         redde FALSUM;
     }
     intern_brevis = internamentum_creare(temporaria);
-    si (intern_brevis == NIHIL
+    si (   intern_brevis == NIHIL
         || !silva_differre_latus_ex_textu(temporaria,
                intern_brevis, textus, "symbolum", &latus))
     {
@@ -362,10 +406,10 @@ silva_differre_symbolum_ex_textu (Piscina* piscina, chorda textus,
     }
     exitus->textus = chorda_aedificator_finire(aed);
     {
-        Sigillum  sig;
-        character hex[SIGILLUM_HEX_MENSURA];
-        i8*       datum = (i8*)piscina_allocare(piscina,
-            (memoriae_index)64);
+         Sigillum  sig;
+        character  hex[SIGILLUM_HEX_MENSURA];
+               i8* datum = (i8*)piscina_allocare(piscina,
+                   (memoriae_index)64);
 
         si (datum == NIHIL)
         {
@@ -382,16 +426,18 @@ silva_differre_symbolum_ex_textu (Piscina* piscina, chorda textus,
 }
 
 constans character*
-silva_differre_classificare_textus (Piscina* piscina, chorda a,
-    chorda b)
+silva_differre_classificare_textus (
+    Piscina* piscina,
+     chorda  a,
+     chorda  b)
 {
     Xar* la = silva_lexare(piscina,
         (constans character*)a.datum, a.mensura, ZEPHYRUM);
     Xar* lb = silva_lexare(piscina,
         (constans character*)b.datum, b.mensura, ZEPHYRUM);
-    i32  k;
+    i32 k;
 
-    si (la == NIHIL || lb == NIHIL
+    si (   la              == NIHIL || lb == NIHIL
         || xar_numerus(la) != xar_numerus(lb))
     {
         redde "substantiva";
@@ -401,7 +447,7 @@ silva_differre_classificare_textus (Piscina* piscina, chorda a,
         SilvaToken* ta = _lexema_ad(la, k);
         SilvaToken* tb = _lexema_ad(lb, k);
 
-        si (ta->genus != tb->genus
+        si (   ta->genus != tb->genus
             || !chorda_aequalis(ta->valor, tb->valor))
         {
             redde "substantiva";
@@ -441,10 +487,12 @@ silva_differre_classificare_textus (Piscina* piscina, chorda a,
  * -------------------------------------------------- */
 
 interior constans character*
-_generis_titulus (constans SilvaUnitas* u);
+_generis_titulus (
+    constans SilvaUnitas* u);
 
 interior constans character*
-_generis_titulus (constans SilvaUnitas* u)
+_generis_titulus (
+    constans SilvaUnitas* u)
 {
     si (u->est_directiva)
     {
@@ -466,7 +514,8 @@ _generis_titulus (constans SilvaUnitas* u)
 }
 
 vacuum
-silva_differre_titulum_imprimere (chorda titulus)
+silva_differre_titulum_imprimere (
+    chorda titulus)
 {
     si (titulus.mensura == 0)
     {
@@ -478,12 +527,14 @@ silva_differre_titulum_imprimere (chorda titulus)
 }
 
 DifferentiaSumma
-silva_differre_summa_textuum (Piscina* piscina, chorda vetus,
-    chorda novum)
+silva_differre_summa_textuum (
+    Piscina* piscina,
+     chorda  vetus,
+     chorda  novum)
 {
     DifferentiaLinearum* d = differentia_linearum(piscina, vetus,
         novum);
-    DifferentiaSumma     vacua;
+    DifferentiaSumma vacua;
 
     si (d == NIHIL)
     {
@@ -495,8 +546,10 @@ silva_differre_summa_textuum (Piscina* piscina, chorda vetus,
 }
 
 constans character*
-silva_differre_titulum_cstr (Piscina* piscina,
-    constans character* praefixum, chorda titulus)
+silva_differre_titulum_cstr (
+               Piscina* piscina,
+    constans character* praefixum,
+                chorda  titulus)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(piscina,
         (memoriae_index)64);
@@ -522,16 +575,22 @@ silva_differre_titulum_cstr (Piscina* piscina,
  * #ifdef) singulae reperibiles manent (olim ordinalis PRIMUS
  * solus servabatur - copia secunda irreperibilis, 01M0D4RN3B). */
 interior b32
-_ordinalem_registrare (Piscina* piscina, TabulaDispersa* tabula,
-    chorda clavis, i32 ordinis);
+_ordinalem_registrare (
+           Piscina* piscina,
+    TabulaDispersa* tabula,
+            chorda  clavis,
+               i32  ordinis);
 
 interior b32
-_ordinalem_registrare (Piscina* piscina, TabulaDispersa* tabula,
-    chorda clavis, i32 ordinis)
+_ordinalem_registrare (
+           Piscina* piscina,
+    TabulaDispersa* tabula,
+            chorda  clavis,
+               i32  ordinis)
 {
     vacuum* inventum = NIHIL;
-    Xar*    ordines;
-    i32*    cella;
+       Xar* ordines;
+       i32* cella;
 
     si (tabula_dispersa_invenire(tabula, clavis, &inventum))
     {
@@ -558,16 +617,20 @@ _ordinalem_registrare (Piscina* piscina, TabulaDispersa* tabula,
 
 /* ordinalis primus NON sumptus in lista clavis; -1 = nullus */
 interior s32
-_ordinalis_liber (TabulaDispersa* tabula, chorda clavis,
-    constans i32* sumptae);
+_ordinalis_liber (
+    TabulaDispersa* tabula,
+            chorda  clavis,
+      constans i32* sumptae);
 
 interior s32
-_ordinalis_liber (TabulaDispersa* tabula, chorda clavis,
-    constans i32* sumptae)
+_ordinalis_liber (
+    TabulaDispersa* tabula,
+            chorda  clavis,
+      constans i32* sumptae)
 {
     vacuum* inventum = NIHIL;
-    Xar*    ordines;
-    i32     k;
+       Xar* ordines;
+       i32  k;
 
     si (!tabula_dispersa_invenire(tabula, clavis, &inventum))
     {
@@ -587,19 +650,21 @@ _ordinalis_liber (TabulaDispersa* tabula, chorda clavis,
 }
 
 Xar*
-silva_differre_paria (Piscina* piscina,
+silva_differre_paria (
+                        Piscina* piscina,
     constans SilvaDifferreLatus* a,
-    constans SilvaDifferreLatus* b, i32* immotae_exitus)
+    constans SilvaDifferreLatus* b,
+                            i32* immotae_exitus)
 {
-    Xar* tractus;
-    Xar* paria;
-    Xar* remotae_ordo;
-    Xar* additae_ordo;
+               Xar* tractus;
+               Xar* paria;
+               Xar* remotae_ordo;
+               Xar* additae_ordo;
     TabulaDispersa* sigilla_remotarum;
     TabulaDispersa* normata_remotarum;
     TabulaDispersa* tituli_remotarum;
-    i32* sumptae;
-    i32  k;
+               i32* sumptae;
+               i32  k;
 
     tractus = differentia_seriei(piscina,
         (constans vacuum* constans*)a->identitates, a->numerus,
@@ -614,10 +679,10 @@ silva_differre_paria (Piscina* piscina,
     sigilla_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
     normata_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
     tituli_remotarum = tabula_dispersa_creare_chorda(piscina, 32);
-    si (paria == NIHIL || remotae_ordo == NIHIL
-        || additae_ordo == NIHIL || sigilla_remotarum == NIHIL
+    si (   paria             == NIHIL || remotae_ordo == NIHIL
+        || additae_ordo      == NIHIL || sigilla_remotarum == NIHIL
         || normata_remotarum == NIHIL
-        || tituli_remotarum == NIHIL)
+        || tituli_remotarum  == NIHIL)
     {
         redde NIHIL;
     }
@@ -671,21 +736,21 @@ silva_differre_paria (Piscina* piscina,
     }
     per (k = 0; k < xar_numerus(remotae_ordo); k = k + 1)
     {
-        i32    ai = *(i32*)xar_obtinere(remotae_ordo, k);
-        chorda sigillum_ai = *(chorda*)a->identitates[ai];
+           i32 ai           = *(i32*)xar_obtinere(remotae_ordo, k);
+        chorda sigillum_ai  = *(chorda*)a->identitates[ai];
         chorda normatum_ai =
             *(chorda*)a->identitates_normatae[ai];
         constans SilvaUnitas* ua = _unitas_ad(a->unitates, ai);
 
         sumptae[k] = 0;
-        si (!_ordinalem_registrare(piscina, sigilla_remotarum,
+        si (   !_ordinalem_registrare(piscina, sigilla_remotarum,
                 sigillum_ai, k)
             || !_ordinalem_registrare(piscina, normata_remotarum,
                    normatum_ai, k))
         {
             redde NIHIL;
         }
-        si (ua->titulus.mensura > 0
+        si (   ua->titulus.mensura > 0
             && !_ordinalem_registrare(piscina, tituli_remotarum,
                    ua->titulus, k))
         {
@@ -698,13 +763,13 @@ silva_differre_paria (Piscina* piscina,
      * MUTATA (titulus idem) > ADDITA */
     per (k = 0; k < xar_numerus(additae_ordo); k = k + 1)
     {
-        i32     bi = *(i32*)xar_obtinere(additae_ordo, k);
-        chorda  sigillum_bi = *(chorda*)b->identitates[bi];
-        chorda  normatum_bi =
+           i32 bi           = *(i32*)xar_obtinere(additae_ordo, k);
+        chorda sigillum_bi  = *(chorda*)b->identitates[bi];
+        chorda normatum_bi =
             *(chorda*)b->identitates_normatae[bi];
         constans SilvaUnitas* ub = _unitas_ad(b->unitates, bi);
-        s32     ordinis;
-        SilvaDifferrePar* par;
+                         s32  ordinis;
+            SilvaDifferrePar* par;
 
         par = (SilvaDifferrePar*)xar_addere(paria);
         si (par == NIHIL)
@@ -771,11 +836,16 @@ silva_differre_paria (Piscina* piscina,
 }
 
 vacuum
-silva_differre_paria_emittere (Piscina* piscina,
+silva_differre_paria_emittere (
+                        Piscina* piscina,
     constans SilvaDifferreLatus* a,
-    constans SilvaDifferreLatus* b, Xar* paria, b32 machina,
-    constans character* via_machina, b32 corpora,
-    i32* additae_totae, i32* deletae_totae)
+    constans SilvaDifferreLatus* b,
+                            Xar* paria,
+                            b32  machina,
+             constans character* via_machina,
+                            b32  corpora,
+                            i32* additae_totae,
+                            i32* deletae_totae)
 {
     i32 k;
 
@@ -787,13 +857,13 @@ silva_differre_paria_emittere (Piscina* piscina,
             ? _unitas_ad(b->unitates, (i32)par->b_index)
             : _unitas_ad(a->unitates, (i32)par->a_index);
         constans character* classificatio = "-";
-        DifferentiaSumma    summa;
-        chorda              spatium_a;
-        chorda              spatium_b;
+          DifferentiaSumma  summa;
+                    chorda  spatium_a;
+                    chorda  spatium_b;
 
-        spatium_a.datum = NIHIL;
-        spatium_a.mensura = 0;
-        spatium_b = spatium_a;
+        spatium_a.datum    = NIHIL;
+        spatium_a.mensura  = 0;
+        spatium_b          = spatium_a;
         si (par->a_index >= 0)
         {
             spatium_a = silva_differre_spatium(a,

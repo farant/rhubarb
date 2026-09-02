@@ -81,12 +81,18 @@
  * contentorum, et CLI. */
 
 interior b32
-_latus_parare (Piscina* piscina, InternamentumChorda* intern,
-    constans character* via, SilvaDifferreLatus* latus);
+_latus_parare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* via,
+     SilvaDifferreLatus* latus);
 
 interior b32
-_latus_parare (Piscina* piscina, InternamentumChorda* intern,
-    constans character* via, SilvaDifferreLatus* latus)
+_latus_parare (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* via,
+     SilvaDifferreLatus* latus)
 {
     si (!filum_existit(via))
     {
@@ -99,10 +105,12 @@ _latus_parare (Piscina* piscina, InternamentumChorda* intern,
 }
 
 interior b32
-_via_est_c (chorda via);
+_via_est_c (
+    chorda via);
 
 interior b32
-_via_est_c (chorda via)
+_via_est_c (
+    chorda via)
 {
     character ultima;
 
@@ -117,25 +125,29 @@ _via_est_c (chorda via)
 /* massa e git per sha (chorda hex 40); vacua si sha vacua aut
  * obiectum non massa */
 interior chorda
-_massam_ex_git (GitRepositorium* repositorium, chorda sha,
-    Piscina* piscina);
+_massam_ex_git (
+    GitRepositorium* repositorium,
+             chorda  sha,
+            Piscina* piscina);
 
 interior chorda
-_massam_ex_git (GitRepositorium* repositorium, chorda sha,
-    Piscina* piscina)
+_massam_ex_git (
+    GitRepositorium* repositorium,
+             chorda  sha,
+            Piscina* piscina)
 {
-    chorda      vacua;
+         chorda vacua;
     GitObiectum obiectum;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = 0;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0;
     si (sha.mensura != 40)
     {
         redde vacua;
     }
     obiectum = git_obiectum_legere(repositorium,
         chorda_ut_cstr(sha, piscina), piscina);
-    si (!obiectum.successus
+    si (   !obiectum.successus
         || obiectum.genus != GIT_OBIECTUM_MASSA)
     {
         redde vacua;
@@ -144,10 +156,12 @@ _massam_ex_git (GitRepositorium* repositorium, chorda sha,
 }
 
 interior b32
-_est_binaria (chorda textus);
+_est_binaria (
+    chorda textus);
 
 interior b32
-_est_binaria (chorda textus)
+_est_binaria (
+    chorda textus)
 {
     redde textus.mensura > 0
         && memchr(textus.datum, 0,
@@ -163,23 +177,29 @@ _est_binaria (chorda textus)
  * silva_differre_symbolum_ex_textu extrahere. sha_massae NIHIL =
  * plagula ad commissum absens (latus vacuum honestum). */
 interior b32
-_historia_latus_legere (GitRepositorium* repositorium,
-    constans character* sha_massae, constans character* titulus,
-    Piscina* ambulationis, SilvaDifferreSymbolum* exitus);
+_historia_latus_legere (
+          GitRepositorium* repositorium,
+       constans character* sha_massae,
+       constans character* titulus,
+                  Piscina* ambulationis,
+    SilvaDifferreSymbolum* exitus);
 
 interior b32
-_historia_latus_legere (GitRepositorium* repositorium,
-    constans character* sha_massae, constans character* titulus,
-    Piscina* ambulationis, SilvaDifferreSymbolum* exitus)
+_historia_latus_legere (
+          GitRepositorium* repositorium,
+       constans character* sha_massae,
+       constans character* titulus,
+                  Piscina* ambulationis,
+    SilvaDifferreSymbolum* exitus)
 {
-    Piscina*    massae;
-    GitObiectum obiectum;
-    b32         fructus;
+        Piscina* massae;
+    GitObiectum  obiectum;
+            b32  fructus;
 
-    exitus->inventa = FALSUM;
-    exitus->textus.datum = NIHIL;
-    exitus->textus.mensura = 0;
-    exitus->sigillum_hex = exitus->textus;
+    exitus->inventa         = FALSUM;
+    exitus->textus.datum    = NIHIL;
+    exitus->textus.mensura  = 0;
+    exitus->sigillum_hex    = exitus->textus;
     si (sha_massae == NIHIL)
     {
         redde VERUM;
@@ -192,7 +212,7 @@ _historia_latus_legere (GitRepositorium* repositorium,
     }
     obiectum = git_obiectum_legere(repositorium, sha_massae,
         massae);
-    si (!obiectum.successus
+    si (   !obiectum.successus
         || obiectum.genus != GIT_OBIECTUM_MASSA)
     {
         piscina_destruere(massae);
@@ -206,15 +226,19 @@ _historia_latus_legere (GitRepositorium* repositorium,
 
 /* dies ex epocha commissoris; exitus >= 16 octeti */
 interior vacuum
-_diem_scribere (s64 tempus, character* exitus);
+_diem_scribere (
+          s64  tempus,
+    character* exitus);
 
 interior vacuum
-_diem_scribere (s64 tempus, character* exitus)
+_diem_scribere (
+          s64  tempus,
+    character* exitus)
 {
-    time_t         t = (time_t)tempus;
-    structura tm*  fractum = gmtime(&t);
+    time_t t                = (time_t)tempus;
+    structura tm*  fractum  = gmtime(&t);
 
-    si (fractum == NIHIL
+    si (   fractum == NIHIL
         || strftime(exitus, (memoriae_index)16, "%Y-%m-%d",
                fractum) == 0)
     {
@@ -224,10 +248,12 @@ _diem_scribere (s64 tempus, character* exitus)
 
 /* linea prima nuntii commissi */
 interior chorda
-_subiectum (chorda nuntius);
+_subiectum (
+    chorda nuntius);
 
 interior chorda
-_subiectum (chorda nuntius)
+_subiectum (
+    chorda nuntius)
 {
     i32 k;
 
@@ -244,23 +270,34 @@ _subiectum (chorda nuntius)
 /* eventum unum historiae emittere: vetus = latus parentis, novus
  * = latus commissi mutantis */
 interior vacuum
-_historia_eventum_emittere (Piscina* piscina,
-    constans character* sha_commissi,
-    constans GitCommissum* commissum, constans character* status,
-    constans SilvaDifferreSymbolum* vetus, constans SilvaDifferreSymbolum* novus,
-    b32 machina, b32 summa_modus, constans character* titulus);
+_historia_eventum_emittere (
+                           Piscina* piscina,
+                constans character* sha_commissi,
+             constans GitCommissum* commissum,
+                constans character* status,
+    constans SilvaDifferreSymbolum* vetus,
+    constans SilvaDifferreSymbolum* novus,
+                               b32  machina,
+                               b32  summa_modus,
+                constans character* titulus);
 
 interior vacuum
-_historia_eventum_emittere (Piscina* piscina,
-    constans character* sha_commissi,
-    constans GitCommissum* commissum, constans character* status,
-    constans SilvaDifferreSymbolum* vetus, constans SilvaDifferreSymbolum* novus,
-    b32 machina, b32 summa_modus, constans character* titulus)
+_historia_eventum_emittere (
+                           Piscina* piscina,
+                constans character* sha_commissi,
+             constans GitCommissum* commissum,
+                constans character* status,
+    constans SilvaDifferreSymbolum* vetus,
+    constans SilvaDifferreSymbolum* novus,
+                               b32  machina,
+                               b32  summa_modus,
+                constans character* titulus)
 {
-    DifferentiaSumma    summa;
+      DifferentiaSumma  summa;
     constans character* classificatio = "-";
-    character           dies[16];
-    chorda              subiectum = _subiectum(commissum->nuntius);
+             character  dies[16];
+                chorda  subiectum =
+                    _subiectum(commissum->nuntius);
 
     summa = silva_differre_summa_textuum(piscina, vetus->textus,
         novus->textus);
@@ -309,26 +346,29 @@ _historia_eventum_emittere (Piscina* piscina,
     imprimere("\n");
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina*             piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    SilvaDifferreLatus   a;
-    SilvaDifferreLatus   b;
-    constans character*  via_a = NIHIL;
-    constans character*  via_b = NIHIL;
-    constans character*  positio_tertia = NIHIL;
-    b32                  machina = FALSUM;
-    b32                  git_modus = FALSUM;
-    b32                  commissum_modus = FALSUM;
-    b32                  historia_modus = FALSUM;
-    b32                  summa_modus = FALSUM;
-    Xar*                 paria;
-    i32                  immotae = 0;
-    i32                  additae_totae = 0;
-    i32                  deletae_totae = 0;
-    i32                  k;
-    integer              arg;
+     SilvaDifferreLatus  a;
+     SilvaDifferreLatus  b;
+     constans character* via_a            = NIHIL;
+     constans character* via_b            = NIHIL;
+     constans character* positio_tertia   = NIHIL;
+                    b32  machina          = FALSUM;
+                    b32  git_modus        = FALSUM;
+                    b32  commissum_modus  = FALSUM;
+                    b32  historia_modus   = FALSUM;
+                    b32  summa_modus      = FALSUM;
+                    Xar* paria;
+                    i32  immotae        = 0;
+                    i32  additae_totae  = 0;
+                    i32  deletae_totae  = 0;
+                    i32  k;
+                integer  arg;
 
     per (arg = 1; arg < argc; arg = arg + 1)
     {
@@ -412,17 +452,17 @@ s32 principale (integer argc, character** argv)
         /* ambulatio parentum primorum, cribrum duplici gradu:
          * sha massae plagulae (gratis), sigillum spatiorum
          * (parsatio solum ubi plagula mutata) */
-        GitRepositorium*    repositorium = git_aperire(piscina,
+        GitRepositorium* repositorium = git_aperire(piscina,
             ".");
         constans character* ref = positio_tertia != NIHIL
             ? positio_tertia : "HEAD";
-        character           sha_currentis[GIT_SHA_HEX_MENSURA];
-        GitCommissum        commissum_currens;
-        character           sha_massae_currentis[
-            GIT_SHA_HEX_MENSURA];
-        b32                 habet_currens = FALSUM;
-        SilvaDifferreSymbolum       latus_currens;
-        i32                 eventa = 0;
+           character sha_currentis[GIT_SHA_HEX_MENSURA];
+        GitCommissum commissum_currens;
+           character sha_massae_currentis[
+               GIT_SHA_HEX_MENSURA];
+                          b32 habet_currens = FALSUM;
+        SilvaDifferreSymbolum latus_currens;
+                          i32 eventa = 0;
 
         si (repositorium == NIHIL)
         {
@@ -473,13 +513,13 @@ s32 principale (integer argc, character** argv)
 
         dum (VERUM)
         {
-            character     sha_parentis[GIT_SHA_HEX_MENSURA];
-            GitCommissum  commissum_parentis;
-            character     sha_massae_parentis[
-                GIT_SHA_HEX_MENSURA];
-            b32           habet_parens = FALSUM;
+               character sha_parentis[GIT_SHA_HEX_MENSURA];
+            GitCommissum commissum_parentis;
+               character sha_massae_parentis[
+                   GIT_SHA_HEX_MENSURA];
+                              b32 habet_parens = FALSUM;
             SilvaDifferreSymbolum latus_parentis;
-            b32           plagula_mutata;
+                              b32 plagula_mutata;
 
             si (xar_numerus(commissum_currens.parentes) == 0)
             {
@@ -488,10 +528,10 @@ s32 principale (integer argc, character** argv)
                 {
                     SilvaDifferreSymbolum vacuum_latus;
 
-                    vacuum_latus.inventa = FALSUM;
-                    vacuum_latus.textus.datum = NIHIL;
-                    vacuum_latus.textus.mensura = 0;
-                    vacuum_latus.sigillum_hex = vacuum_latus.textus;
+                    vacuum_latus.inventa         = FALSUM;
+                    vacuum_latus.textus.datum    = NIHIL;
+                    vacuum_latus.textus.mensura  = 0;
+                    vacuum_latus.sigillum_hex    = vacuum_latus.textus;
                     _historia_eventum_emittere(piscina,
                         sha_currentis, &commissum_currens,
                         "ADDITA", &vacuum_latus, &latus_currens,
@@ -540,7 +580,7 @@ s32 principale (integer argc, character** argv)
                     redde II;
                 }
                 /* cribrum gradus secundi: sigilla spatiorum */
-                si (latus_currens.inventa != latus_parentis.inventa
+                si (   latus_currens.inventa != latus_parentis.inventa
                     || (latus_currens.inventa
                            && !chorda_aequalis(
                                   latus_currens.sigillum_hex,
@@ -579,12 +619,12 @@ s32 principale (integer argc, character** argv)
          * contentum tangitur solum ubi mutatum), plagulae C
          * unitatim, ceterae summa linearum */
         GitRepositorium* repositorium = git_aperire(piscina, ".");
-        character        sha_veteris[GIT_SHA_HEX_MENSURA];
-        character        sha_novi[GIT_SHA_HEX_MENSURA];
-        GitCommissum     vetus_commissum;
-        GitCommissum     novum_commissum;
-        Xar*             mutatae;
-        i32              paria_totae = 0;
+              character  sha_veteris[GIT_SHA_HEX_MENSURA];
+              character  sha_novi[GIT_SHA_HEX_MENSURA];
+           GitCommissum  vetus_commissum;
+           GitCommissum  novum_commissum;
+                    Xar* mutatae;
+                    i32  paria_totae = 0;
 
         si (repositorium == NIHIL)
         {
@@ -622,7 +662,7 @@ s32 principale (integer argc, character** argv)
             }
             novum_commissum = git_commissum_legere(repositorium,
                 sha_novi, piscina);
-            si (!novum_commissum.successus
+            si (   !novum_commissum.successus
                 || xar_numerus(novum_commissum.parentes) == 0)
             {
                 fprintf(stderr, "differre: commissum sine"
@@ -637,7 +677,7 @@ s32 principale (integer argc, character** argv)
             sha_veteris, piscina);
         novum_commissum = git_commissum_legere(repositorium,
             sha_novi, piscina);
-        si (!vetus_commissum.successus
+        si (   !vetus_commissum.successus
             || !novum_commissum.successus)
         {
             fprintf(stderr, "differre: commissum legi non"
@@ -679,11 +719,11 @@ s32 principale (integer argc, character** argv)
 
             si (_via_est_c(m->via) && !binaria)
             {
-                SilvaDifferreLatus la;
-                SilvaDifferreLatus lb;
-                Xar*               paria_plagulae;
+                SilvaDifferreLatus  la;
+                SilvaDifferreLatus  lb;
+                               Xar* paria_plagulae;
 
-                si (!silva_differre_latus_ex_textu(piscina,
+                si (   !silva_differre_latus_ex_textu(piscina,
                         intern, textus_vetus, via_cstr, &la)
                     || !silva_differre_latus_ex_textu(piscina,
                            intern, textus_novus, via_cstr, &lb))
@@ -761,14 +801,14 @@ s32 principale (integer argc, character** argv)
     si (git_modus)
     {
         /* latera e bibliotheca git NATIVA - nullus subprocessus */
-        GitRepositorium*    repositorium = git_aperire(piscina,
+        GitRepositorium* repositorium = git_aperire(piscina,
             ".");
-        character           sha[GIT_SHA_HEX_MENSURA];
+                 character  sha[GIT_SHA_HEX_MENSURA];
         constans character* ref_vetus = via_b != NIHIL ? via_b
             : "HEAD";
-        chorda              textus_vetus;
-        chorda              textus_novum;
-        b32                 inventum = FALSUM;
+        chorda textus_vetus;
+        chorda textus_novum;
+           b32 inventum = FALSUM;
 
         si (repositorium == NIHIL)
         {
@@ -785,8 +825,8 @@ s32 principale (integer argc, character** argv)
             via_a, piscina, &inventum);
         si (!inventum)
         {
-            textus_vetus.datum = NIHIL;
-            textus_vetus.mensura = 0;
+            textus_vetus.datum    = NIHIL;
+            textus_vetus.mensura  = 0;
         }
         si (positio_tertia != NIHIL)
         {
@@ -802,8 +842,8 @@ s32 principale (integer argc, character** argv)
                 via_a, piscina, &inventum);
             si (!inventum)
             {
-                textus_novum.datum = NIHIL;
-                textus_novum.mensura = 0;
+                textus_novum.datum    = NIHIL;
+                textus_novum.mensura  = 0;
             }
         }
         alioquin si (filum_existit(via_a))
@@ -812,10 +852,10 @@ s32 principale (integer argc, character** argv)
         }
         alioquin
         {
-            textus_novum.datum = NIHIL;
-            textus_novum.mensura = 0;
+            textus_novum.datum    = NIHIL;
+            textus_novum.mensura  = 0;
         }
-        si (!silva_differre_latus_ex_textu(piscina, intern,
+        si (   !silva_differre_latus_ex_textu(piscina, intern,
                 textus_vetus, via_a, &a)
             || !silva_differre_latus_ex_textu(piscina, intern,
                    textus_novum, via_a, &b))
@@ -823,8 +863,8 @@ s32 principale (integer argc, character** argv)
             redde II;
         }
     }
-    alioquin si (!_latus_parare(piscina, intern, via_a, &a)
-        || !_latus_parare(piscina, intern, via_b, &b))
+    alioquin si (   !_latus_parare(piscina, intern, via_a, &a)
+                 || !_latus_parare(piscina, intern, via_b, &b))
     {
         redde II;
     }

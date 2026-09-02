@@ -61,26 +61,29 @@ externus constans SilvaGrammatica SILVA_C89_GRAMMATICA;
  * abstractus vel forma ignota). Idem ambulator quo vista
  * declarationum utetur (X5). */
 SilvaToken*
-silva_c89_declaratoris_titulus (constans SilvaNodus* declarator);
+silva_c89_declaratoris_titulus (
+    constans SilvaNodus* declarator);
 
 /* Registratio typorum: declarationes typedef in radice (etiam
  * intra ramos sumptos) -> oraculum, cum situ. Elementa ambigua
  * praetermissa (X4). */
 vacuum
 silva_c89_typos_registrare (
-    SilvaValor     radix,
+       SilvaValor  radix,
     SilvaOraculum* oraculum);
 
 /* Uncus praecommissionis (datum = SilvaOraculum* mutabile) */
 vacuum
-silva_c89_praecommissio (SilvaValor radix, vacuum* datum);
+silva_c89_praecommissio (
+    SilvaValor  radix,
+        vacuum* datum);
 
 /* Resolutor verus (X6+X10) - forma SilvaResolutor */
 vacuum
 silva_c89_resolutor (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  datum,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* datum,
     SilvaResolutioResponsum* responsum);
 
 /* Politica spinae canonicae super superstites; numerum versorum
@@ -88,7 +91,8 @@ silva_c89_resolutor (
 i32
 silva_c89_politicam_imponere (
     SilvaCommissio* commissio,
-    SilvaOraculum*  oraculum);
+     SilvaOraculum* oraculum);
+
 
 /* ==================================================
  * Vista declarationum (M2b Chunk D) - ordines TOC pro
@@ -103,13 +107,13 @@ nomen structura {
     constans character* genus;    /* titulus generis ordinis
                                    * (kebab, e registro): declarator-
                                    * functionis, structura, ... */
-    chorda              titulus;  /* nomen declaratum; mensura 0 =
+    chorda titulus;  /* nomen declaratum; mensura 0 =
                                    * anonymum/abstractum */
-    s32                 linea;    /* lexematis nominis (aut primi) */
-    s32                 situs;    /* byte_offset eiusdem */
-    b32                 est_typedef; /* TYPEDEF in specificatoribus
+    s32 linea;    /* lexematis nominis (aut primi) */
+    s32 situs;    /* byte_offset eiusdem */
+    b32 est_typedef; /* TYPEDEF in specificatoribus
                                    * (M2c D - sectio TYPI TOC) */
-    s32                 fons_index;  /* plagula lexematis tituli
+    s32 fons_index;  /* plagula lexematis tituli
                                    * (M2d A+: filtrum
                                    * fons_princeps - ordines
                                    * plagularum inclusarum
@@ -119,14 +123,15 @@ nomen structura {
 
 /* Numerus ordinum vistae per radicem parsurae */
 i32
-silva_c89_declarationes_numerus (constans SilvaParsura* parsura);
+silva_c89_declarationes_numerus (
+    constans SilvaParsura* parsura);
 
 /* Ordo vistae ad indicem; FALSUM extra fines */
 b32
 silva_c89_declaratio_vista (
     constans SilvaParsura* parsura,
-    i32                    index,
-    SilvaDeclaratioVista*  vista);
+                      i32  index,
+     SilvaDeclaratioVista* vista);
 
 /* Subscriptio functionis (M2c Chunk C): specificatores +
  * declarator octetim ex arbore (sine corpore, sine
@@ -134,20 +139,20 @@ silva_c89_declaratio_vista (
  * indicem definitio-functionis sit; aliter fractura clara. */
 SilvaScriptura
 silva_c89_functionis_subscriptio (
-    Piscina*               piscina,
+                  Piscina* piscina,
     constans SilvaParsura* parsura,
-    i32                    index);
+                      i32  index);
 
 /* Vocatio una: parsare + registrare + resolvere + politica.
  * oraculum NIHIL licet (vacuum intus creatur); oraculum datum
  * typos plagulae ACCIPIT (praeonera typos externos ante). */
 SilvaParsura*
 silva_c89_parsare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via,
     constans character* fons,
-    i32                 mensura,
-    SilvaOraculum*      oraculum);
+                   i32  mensura,
+         SilvaOraculum* oraculum);
 
 /* Eadem sed cum CONTEXTU hospitis (M2d Chunk A): lexica
  * (latina!), includenda praebita, fines - grammatica c89 tandem
@@ -159,11 +164,11 @@ silva_c89_parsare (
  * typos prioris videt. */
 SilvaParsura*
 silva_c89_parsare_cum_contextu (
-    Piscina*                 piscina,
+                    Piscina* piscina,
     constans SilvaContextus* contextus,
-    constans character*      via,
-    constans character*      fons,
-    i32                      mensura,
-    SilvaOraculum*           oraculum);
+         constans character* via,
+         constans character* fons,
+                        i32  mensura,
+              SilvaOraculum* oraculum);
 
 #endif /* SILVA_C89_ORACULUM_H */

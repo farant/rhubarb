@@ -3,6 +3,7 @@
 #include "silva_nodus.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Constructores valorum
  * ================================================== */
@@ -12,54 +13,59 @@ silva_valor_nihil (vacuum)
 {
     SilvaValor v;
 
-    v.genus = SILVA_VALOR_NIHIL;
-    v.datum.nodus = NIHIL;
+    v.genus        = SILVA_VALOR_NIHIL;
+    v.datum.nodus  = NIHIL;
     redde v;
 }
 
 SilvaValor
-silva_valor_nodus (SilvaNodus* nodus)
+silva_valor_nodus (
+    SilvaNodus* nodus)
 {
     SilvaValor v;
 
-    v.genus = SILVA_VALOR_NODUS;
-    v.datum.nodus = nodus;
+    v.genus        = SILVA_VALOR_NODUS;
+    v.datum.nodus  = nodus;
     redde v;
 }
 
 SilvaValor
-silva_valor_token (SilvaToken* token)
+silva_valor_token (
+    SilvaToken* token)
 {
     SilvaValor v;
 
-    v.genus = SILVA_VALOR_TOKEN;
-    v.datum.token = token;
+    v.genus        = SILVA_VALOR_TOKEN;
+    v.datum.token  = token;
     redde v;
 }
 
 SilvaValor
-silva_valor_lista (Xar* lista)
+silva_valor_lista (
+    Xar* lista)
 {
     SilvaValor v;
 
-    v.genus = SILVA_VALOR_LISTA;
-    v.datum.lista.xar = lista;
-    v.datum.lista.mensura = xar_numerus(lista);
+    v.genus                = SILVA_VALOR_LISTA;
+    v.datum.lista.xar      = lista;
+    v.datum.lista.mensura  = xar_numerus(lista);
     redde v;
 }
 
 SilvaValor
-silva_valor_index (s32 index)
+silva_valor_index (
+    s32 index)
 {
     SilvaValor v;
 
-    v.genus = SILVA_VALOR_INDEX;
-    v.datum.index = index;
+    v.genus        = SILVA_VALOR_INDEX;
+    v.datum.index  = index;
     redde v;
 }
 
 SilvaValor
-silva_valor_lista_nova (Piscina* piscina)
+silva_valor_lista_nova (
+    Piscina* piscina)
 {
     redde silva_valor_lista(
         xar_creare(piscina, magnitudo(SilvaValor)));
@@ -67,14 +73,15 @@ silva_valor_lista_nova (Piscina* piscina)
 
 SilvaValor
 silva_valor_lista_appendere (
-    Piscina*   piscina,
-    SilvaValor lista,
-    SilvaValor elementum)
+       Piscina* piscina,
+    SilvaValor  lista,
+    SilvaValor  elementum)
 {
-    Xar*        xar;
+           Xar* xar;
     SilvaValor* slot;
 
-    si (lista.genus != SILVA_VALOR_LISTA || lista.datum.lista.xar == NIHIL)
+    si (   lista.genus           != SILVA_VALOR_LISTA
+        || lista.datum.lista.xar == NIHIL)
     {
         redde silva_valor_nihil();
     }
@@ -117,15 +124,16 @@ silva_valor_lista_appendere (
     {
         SilvaValor novus;
 
-        novus.genus = SILVA_VALOR_LISTA;
-        novus.datum.lista.xar = xar;
-        novus.datum.lista.mensura = lista.datum.lista.mensura + I;
+        novus.genus                = SILVA_VALOR_LISTA;
+        novus.datum.lista.xar      = xar;
+        novus.datum.lista.mensura  = lista.datum.lista.mensura + I;
         redde novus;
     }
 }
 
 i32
-silva_valor_lista_numerus (SilvaValor lista)
+silva_valor_lista_numerus (
+    SilvaValor lista)
 {
     si (lista.genus != SILVA_VALOR_LISTA)
     {
@@ -135,10 +143,13 @@ silva_valor_lista_numerus (SilvaValor lista)
 }
 
 SilvaValor*
-silva_valor_lista_obtinere (SilvaValor lista, i32 index)
+silva_valor_lista_obtinere (
+    SilvaValor lista,
+           i32 index)
 {
-    si (lista.genus != SILVA_VALOR_LISTA || lista.datum.lista.xar == NIHIL
-        || index >= lista.datum.lista.mensura)
+    si (   lista.genus           != SILVA_VALOR_LISTA
+        || lista.datum.lista.xar == NIHIL
+        || index                 >= lista.datum.lista.mensura)
     {
         redde NIHIL;
     }
@@ -153,11 +164,11 @@ silva_valor_lista_obtinere (SilvaValor lista, i32 index)
 SilvaNodus*
 silva_nodus_creare (
     Piscina* piscina,
-    s32      genus,
-    i32      numerus_locorum)
+        s32  genus,
+        i32  numerus_locorum)
 {
     SilvaNodus* nodus;
-    i32 i;
+           i32  i;
 
     nodus = (SilvaNodus*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(SilvaNodus));
@@ -165,10 +176,10 @@ silva_nodus_creare (
     {
         redde NIHIL;
     }
-    nodus->genus = genus;
-    nodus->numerus_locorum = numerus_locorum;
-    nodus->pater = NIHIL;
-    nodus->loci = NIHIL;
+    nodus->genus            = genus;
+    nodus->numerus_locorum  = numerus_locorum;
+    nodus->pater            = NIHIL;
+    nodus->loci             = NIHIL;
 
     si (numerus_locorum > ZEPHYRUM)
     {
@@ -189,7 +200,7 @@ silva_nodus_creare (
 
 b32
 silva_valor_congruit (
-    SilvaValor        valor,
+           SilvaValor valor,
     SilvaLocusSpecies species)
 {
     commutatio (species)
@@ -211,14 +222,15 @@ silva_valor_congruit (
 
 b32
 silva_nodus_ponere (
-    SilvaNodus*       nodus,
-    i32               locus,
-    SilvaValor        valor,
-    SilvaLocusSpecies species)
+           SilvaNodus* nodus,
+                  i32  locus,
+           SilvaValor  valor,
+    SilvaLocusSpecies  species)
 {
     si (nodus == NIHIL || locus >= nodus->numerus_locorum)
     {
-        fprintf(stderr, "silva_nodus: locus %d extra fines\n", (int)locus);
+        fprintf(stderr, "silva_nodus: locus %d extra fines\n",
+            (int)locus);
         redde FALSUM;
     }
     /* S32: signum contra speciem */
@@ -243,11 +255,11 @@ silva_nodus_ponere (
 
 b32
 silva_nodus_appendere (
-    Piscina*          piscina,
-    SilvaNodus*       nodus,
-    i32               locus,
-    SilvaValor        valor,
-    SilvaLocusSpecies species)
+              Piscina* piscina,
+           SilvaNodus* nodus,
+                  i32  locus,
+           SilvaValor  valor,
+    SilvaLocusSpecies  species)
 {
     SilvaValor novus;
 
@@ -255,7 +267,7 @@ silva_nodus_appendere (
     {
         redde FALSUM;
     }
-    si (species != SILVA_LOCUS_LISTA_NODUS
+    si (   species != SILVA_LOCUS_LISTA_NODUS
         && species != SILVA_LOCUS_LISTA_TOKEN
         && species != SILVA_LOCUS_LISTA_MIXTA)
     {
@@ -286,11 +298,11 @@ silva_nodus_appendere (
 
 Xar*
 silva_nodus_liberi (
-    Piscina*             piscina,
+                Piscina* piscina,
     constans SilvaNodus* nodus)
 {
     Xar* liberi;
-    i32 i;
+    i32  i;
 
     liberi = xar_creare(piscina, magnitudo(SilvaNodus*));
     si (nodus == NIHIL)
@@ -311,8 +323,8 @@ silva_nodus_liberi (
                 *locus = v->datum.nodus;
             }
         }
-        alioquin si (v->genus == SILVA_VALOR_LISTA
-            && v->datum.lista.xar != NIHIL)
+        alioquin si (   v->genus           == SILVA_VALOR_LISTA
+                     && v->datum.lista.xar != NIHIL)
         {
             i32 j;
 
@@ -322,10 +334,11 @@ silva_nodus_liberi (
                 SilvaValor* e = (SilvaValor*)xar_obtinere(
                     v->datum.lista.xar, j);
 
-                si (e != NIHIL && e->genus == SILVA_VALOR_NODUS
+                si (   e != NIHIL && e->genus == SILVA_VALOR_NODUS
                     && e->datum.nodus != NIHIL)
                 {
-                    SilvaNodus** locus = (SilvaNodus**)xar_addere(liberi);
+                    SilvaNodus** locus =
+                        (SilvaNodus**)xar_addere(liberi);
 
                     si (locus != NIHIL)
                     {
@@ -338,14 +351,18 @@ silva_nodus_liberi (
     redde liberi;
 }
 
+
 /* ==================================================
  * Extensio fontis (LEGATUS chunk 0, ex sessione promota - motus
  * purus; ambulator contra API publicam scriptus erat)
  * ================================================== */
 
 vacuum
-silva_nodus_extensionem (constans SilvaNodus* n, s32 fons_index,
-    s32* minimum, s32* maximum)
+silva_nodus_extensionem (
+    constans SilvaNodus* n,
+                    s32  fons_index,
+                    s32* minimum,
+                    s32* maximum)
 {
     insignatus integer k;
 
@@ -361,8 +378,11 @@ silva_nodus_extensionem (constans SilvaNodus* n, s32 fons_index,
 }
 
 vacuum
-silva_valor_extensionem (SilvaValor v, s32 fons_index, s32* minimum,
-    s32* maximum)
+silva_valor_extensionem (
+    SilvaValor  v,
+           s32  fons_index,
+           s32* minimum,
+           s32* maximum)
 {
     commutatio (v.genus)
     {
@@ -379,7 +399,7 @@ silva_valor_extensionem (SilvaValor v, s32 fons_index, s32* minimum,
                 {
                     radix_t = v.datum.token;
                 }
-                si (radix_t->fons_index == fons_index
+                si (   radix_t->fons_index  == fons_index
                     && radix_t->byte_offset >= ZEPHYRUM)
                 {
                     s32 a = (s32)radix_t->byte_offset;
@@ -423,8 +443,13 @@ silva_valor_extensionem (SilvaValor v, s32 fons_index, s32* minimum,
 }
 
 interior vacuum
-_extensionem_lineis_valoris (SilvaValor v, s32 fons_index,
-    i32* linea_a, i32* columna_a, i32* linea_b, i32* columna_b)
+_extensionem_lineis_valoris (
+    SilvaValor  v,
+           s32  fons_index,
+           i32* linea_a,
+           i32* columna_a,
+           i32* linea_b,
+           i32* columna_b)
 {
     commutatio (v.genus)
     {
@@ -438,24 +463,24 @@ _extensionem_lineis_valoris (SilvaValor v, s32 fons_index,
                 {
                     radix_t = v.datum.token;
                 }
-                si (radix_t->fons_index == fons_index
+                si (   radix_t->fons_index  == fons_index
                     && radix_t->byte_offset >= ZEPHYRUM)
                 {
-                    i32 l = radix_t->linea;
-                    i32 c = radix_t->columna;
-                    i32 cf = c + radix_t->longitudo;
+                    i32 l   = radix_t->linea;
+                    i32 c   = radix_t->columna;
+                    i32 cf  = c + radix_t->longitudo;
 
-                    si (*linea_a == ZEPHYRUM || l < *linea_a
+                    si (   *linea_a == ZEPHYRUM || l < *linea_a
                         || (l == *linea_a && c < *columna_a))
                     {
-                        *linea_a = l;
-                        *columna_a = c;
+                        *linea_a    = l;
+                        *columna_a  = c;
                     }
-                    si (*linea_b == ZEPHYRUM || l > *linea_b
+                    si (   *linea_b == ZEPHYRUM || l > *linea_b
                         || (l == *linea_b && cf > *columna_b))
                     {
-                        *linea_b = l;
-                        *columna_b = cf;
+                        *linea_b    = l;
+                        *columna_b  = cf;
                     }
                 }
             }
@@ -463,7 +488,7 @@ _extensionem_lineis_valoris (SilvaValor v, s32 fons_index,
         casus SILVA_VALOR_NODUS:
         {
             constans SilvaNodus* n = v.datum.nodus;
-            insignatus integer k;
+             insignatus integer  k;
 
             si (n != NIHIL)
             {
@@ -499,16 +524,20 @@ _extensionem_lineis_valoris (SilvaValor v, s32 fons_index,
 }
 
 vacuum
-silva_nodus_extensionem_lineis (constans SilvaNodus* n,
-    s32 fons_index, i32* linea_a, i32* columna_a, i32* linea_b,
-    i32* columna_b)
+silva_nodus_extensionem_lineis (
+    constans SilvaNodus* n,
+                    s32  fons_index,
+                    i32* linea_a,
+                    i32* columna_a,
+                    i32* linea_b,
+                    i32* columna_b)
 {
     insignatus integer k;
 
-    *linea_a = ZEPHYRUM;
-    *columna_a = ZEPHYRUM;
-    *linea_b = ZEPHYRUM;
-    *columna_b = ZEPHYRUM;
+    *linea_a    = ZEPHYRUM;
+    *columna_a  = ZEPHYRUM;
+    *linea_b    = ZEPHYRUM;
+    *columna_b  = ZEPHYRUM;
     si (n == NIHIL)
     {
         redde;
@@ -520,6 +549,7 @@ silva_nodus_extensionem_lineis (constans SilvaNodus* n,
     }
 }
 
+
 /* ==================================================
  * Puritas fontis + geometria fida - quaestiones
  * provenientiae (comites honestatis extensionis:
@@ -527,7 +557,9 @@ silva_nodus_extensionem_lineis (constans SilvaNodus* n,
  * ================================================== */
 
 b32
-silva_valor_est_fons_purus (SilvaValor v, s32 fons_index)
+silva_valor_est_fons_purus (
+    SilvaValor v,
+           s32 fons_index)
 {
     commutatio (v.genus)
     {
@@ -538,7 +570,7 @@ silva_valor_est_fons_purus (SilvaValor v, s32 fons_index)
                 {
                     redde FALSUM;
                 }
-                si (fons_index >= (s32)ZEPHYRUM
+                si (   fons_index                >= (s32)ZEPHYRUM
                     && v.datum.token->fons_index != fons_index)
                 {
                     redde FALSUM;
@@ -557,7 +589,7 @@ silva_valor_est_fons_purus (SilvaValor v, s32 fons_index)
             {
                 SilvaValor* elem = silva_valor_lista_obtinere(v, k);
 
-                si (elem != NIHIL
+                si (   elem != NIHIL
                     && !silva_valor_est_fons_purus(*elem,
                            fons_index))
                 {
@@ -573,7 +605,9 @@ silva_valor_est_fons_purus (SilvaValor v, s32 fons_index)
 }
 
 b32
-silva_nodus_est_fons_purus (constans SilvaNodus* n, s32 fons_index)
+silva_nodus_est_fons_purus (
+    constans SilvaNodus* n,
+                    s32  fons_index)
 {
     insignatus integer k;
 
@@ -595,13 +629,15 @@ silva_nodus_est_fons_purus (constans SilvaNodus* n, s32 fons_index)
  * identitas lexematis arboris (idem bis visum = communicatio
  * ambigua, non collapsus) */
 nomen structura {
-    s32         fons;
-    s32         byte;
+           s32  fons;
+           s32  byte;
     SilvaToken* token;
 } SedesRadicis;
 
 interior s32
-_sedes_comparare (constans vacuum* a, constans vacuum* b)
+_sedes_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     constans SedesRadicis* sa = (constans SedesRadicis*)a;
     constans SedesRadicis* sb = (constans SedesRadicis*)b;
@@ -620,7 +656,10 @@ _sedes_comparare (constans vacuum* a, constans vacuum* b)
 /* FALSUM = sedes inscibilis inventa (radix synthetica) aut
  * defectus memoriae - fides statim negatur */
 interior b32
-_sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
+_sedes_colligere (
+    SilvaValor  v,
+           s32  fons_index,
+           Xar* sedes)
 {
     commutatio (v.genus)
     {
@@ -638,7 +677,7 @@ _sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
                 {
                     redde FALSUM;
                 }
-                si (fons_index < (s32)ZEPHYRUM
+                si (   fons_index < (s32)ZEPHYRUM
                     || radix_t->fons_index == fons_index)
                 {
                     SedesRadicis* addita =
@@ -648,16 +687,16 @@ _sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
                     {
                         redde FALSUM;
                     }
-                    addita->fons = radix_t->fons_index;
-                    addita->byte = radix_t->byte_offset;
-                    addita->token = v.datum.token;
+                    addita->fons   = radix_t->fons_index;
+                    addita->byte   = radix_t->byte_offset;
+                    addita->token  = v.datum.token;
                 }
             }
             frange;
         casus SILVA_VALOR_NODUS:
         {
             constans SilvaNodus* n = v.datum.nodus;
-            insignatus integer k;
+             insignatus integer  k;
 
             si (n != NIHIL)
             {
@@ -681,7 +720,7 @@ _sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
             {
                 SilvaValor* elem = silva_valor_lista_obtinere(v, k);
 
-                si (elem != NIHIL
+                si (   elem != NIHIL
                     && !_sedes_colligere(*elem, fons_index, sedes))
                 {
                     redde FALSUM;
@@ -698,7 +737,8 @@ _sedes_colligere (SilvaValor v, s32 fons_index, Xar* sedes)
 /* sedes ordinatae percurrere: sedes eadem a lexematis DISTINCTIS
  * vindicata = collapsus (lexema idem bis = communicatio ambigua) */
 interior b32
-_sedes_examinare (Xar* sedes)
+_sedes_examinare (
+    Xar* sedes)
 {
     i32 numerus;
     i32 k;
@@ -712,8 +752,8 @@ _sedes_examinare (Xar* sedes)
         constans SedesRadicis* currens =
             (constans SedesRadicis*)xar_obtinere(sedes, k);
 
-        si (prior->fons == currens->fons
-            && prior->byte == currens->byte
+        si (   prior->fons  == currens->fons
+            && prior->byte  == currens->byte
             && prior->token != currens->token)
         {
             redde FALSUM;
@@ -723,8 +763,10 @@ _sedes_examinare (Xar* sedes)
 }
 
 b32
-silva_valor_geometria_fida (Piscina* piscina, SilvaValor v,
-    s32 fons_index)
+silva_valor_geometria_fida (
+       Piscina* piscina,
+    SilvaValor  v,
+           s32  fons_index)
 {
     Xar* sedes;
 
@@ -745,11 +787,13 @@ silva_valor_geometria_fida (Piscina* piscina, SilvaValor v,
 }
 
 b32
-silva_nodus_geometria_fida (Piscina* piscina,
-    constans SilvaNodus* n, s32 fons_index)
+silva_nodus_geometria_fida (
+                Piscina* piscina,
+    constans SilvaNodus* n,
+                    s32  fons_index)
 {
-    Xar* sedes;
-    insignatus integer k;
+                   Xar* sedes;
+    insignatus integer  k;
 
     si (n == NIHIL)
     {
@@ -774,6 +818,7 @@ silva_nodus_geometria_fida (Piscina* piscina,
     redde _sedes_examinare(sedes);
 }
 
+
 /* ==================================================
  * commentarium ducens - consumptor PRIMUS pinnae
  * "commenta sunt contenta" (VISIO; INTENTIO in
@@ -784,8 +829,11 @@ silva_nodus_geometria_fida (Piscina* piscina,
  * originis soluto - declarationes latinae macris incipiunt:
  * lexema expansum syntheticum est, invocatio trivia fert) */
 interior vacuum
-_lexema_primum_valoris (SilvaValor v, s32 fons_index,
-    SilvaToken** primum, s32* minimum)
+_lexema_primum_valoris (
+    SilvaValor   v,
+           s32   fons_index,
+    SilvaToken** primum,
+           s32*  minimum)
 {
     commutatio (v.genus)
     {
@@ -799,13 +847,13 @@ _lexema_primum_valoris (SilvaValor v, s32 fons_index,
                 {
                     radix_t = v.datum.token;
                 }
-                si (radix_t->fons_index == fons_index
+                si (   radix_t->fons_index  == fons_index
                     && radix_t->byte_offset >= ZEPHYRUM
                     && (*minimum < (s32)ZEPHYRUM
                         || (s32)radix_t->byte_offset < *minimum))
                 {
-                    *minimum = (s32)radix_t->byte_offset;
-                    *primum = radix_t;
+                    *minimum  = (s32)radix_t->byte_offset;
+                    *primum   = radix_t;
                 }
             }
             frange;
@@ -845,24 +893,26 @@ _lexema_primum_valoris (SilvaValor v, s32 fons_index,
 }
 
 integer
-silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
+silva_commentarium_ducens (
+       constans SilvaNodus* n,
+                       s32  fons_index,
     SilvaCommentariumVista* vista)
 {
-    SilvaToken* primum = NIHIL;
-    s32 minimum = (s32)-I;
-    insignatus integer k;
-    s32 nl;
-    s32 initium;
-    s32 finis;
-    insignatus integer linea;
+            SilvaToken* primum   = NIHIL;
+                   s32  minimum  = (s32)-I;
+    insignatus integer  k;
+                   s32  nl;
+                   s32  initium;
+                   s32  finis;
+    insignatus integer  linea;
 
     si (vista == NIHIL)
     {
         redde ZEPHYRUM;
     }
-    vista->initium = (s32)-I;
-    vista->finis = (s32)-I;
-    vista->linea = ZEPHYRUM;
+    vista->initium  = (s32)-I;
+    vista->finis    = (s32)-I;
+    vista->linea    = ZEPHYRUM;
     si (n == NIHIL)
     {
         redde ZEPHYRUM;
@@ -883,11 +933,11 @@ silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
      * (SPATIA/TABULAE neglectis) -> bloccus finitur; commentum
      * numerum linearum novarum retexit (commenta multi-lineae
      * bloccus unus manent) */
-    nl = ZEPHYRUM;
-    initium = (s32)-I;
-    finis = (s32)-I;
-    linea = ZEPHYRUM;
-    k = xar_numerus(primum->spatia_ante);
+    nl       = ZEPHYRUM;
+    initium  = (s32)-I;
+    finis    = (s32)-I;
+    linea    = ZEPHYRUM;
+    k        = xar_numerus(primum->spatia_ante);
     dum (k > ZEPHYRUM)
     {
         SilvaToken* t;
@@ -908,13 +958,13 @@ silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
             }
             perge;
         }
-        si (t->genus == SILVA_LEX_SPATIA
+        si (   t->genus == SILVA_LEX_SPATIA
             || t->genus == SILVA_LEX_TABULAE
             || t->genus == SILVA_LEX_CONTINUATIO)
         {
             perge;
         }
-        si ((t->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+        si (   (t->genus == SILVA_LEX_COMMENTUM_CLAUSUM
                 || t->genus == SILVA_LEX_COMMENTUM_LINEA)
             && t->byte_offset >= ZEPHYRUM)
         {
@@ -922,9 +972,9 @@ silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
             {
                 finis = (s32)t->byte_offset + (s32)t->longitudo;
             }
-            initium = (s32)t->byte_offset;
-            linea = t->linea;
-            nl = ZEPHYRUM;
+            initium  = (s32)t->byte_offset;
+            linea    = t->linea;
+            nl       = ZEPHYRUM;
             perge;
         }
         frange;   /* genus inopinatum - tutela */
@@ -933,8 +983,8 @@ silva_commentarium_ducens (constans SilvaNodus* n, s32 fons_index,
     {
         redde ZEPHYRUM;
     }
-    vista->initium = initium;
-    vista->finis = finis;
-    vista->linea = linea;
+    vista->initium  = initium;
+    vista->finis    = finis;
+    vista->linea    = linea;
     redde I;
 }

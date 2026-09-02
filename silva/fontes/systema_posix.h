@@ -19,6 +19,7 @@
  * concatenatio redefinitionem vetat.
  */
 
+
 /* ==================================================
  * <sectio semper="verum"/>
  * Typi fundamentales POSIX (Darwin) - BASIS omnium sectionum
@@ -36,6 +37,7 @@ typedef long long          blkcnt_t;
 typedef int                blksize_t;
 typedef int                suseconds_t;   /* tv_usec 32-bit! */
 
+
 /* ==================================================
  * <sectio caput="sys/time.h"/>
  * ================================================== */
@@ -52,6 +54,7 @@ struct timeval {
 
 int gettimeofday(struct timeval* tp, void* tzp);
 
+
 /* ==================================================
  * <sectio caput="time.h" poscit="sys/time.h"/>
  * time.h POSIX (time/clock/time_t in systema_c89.h ut C89 - hae
@@ -65,7 +68,9 @@ int gettimeofday(struct timeval* tp, void* tzp);
  * deinde lexicon nanosleep ipsum ut vocationem implicitam flagabat.
  * Instrumentum in foveam suam ducebat. Mensuratum in lib/manus.c,
  * quae monitum secuta est et alterum monitum accepit. */
-int nanosleep(const struct timespec* petitum, struct timespec* reliquum);
+int nanosleep(const struct timespec* petitum,
+    struct timespec* reliquum);
+
 
 /* ==================================================
  * <sectio caput="sys/stat.h" poscit="sys/time.h"/>
@@ -114,6 +119,7 @@ int stat(const char* via, struct stat* sedes);
 int mkdir(const char* via, mode_t modus);
 int chmod(const char* via, mode_t modus);
 
+
 /* ==================================================
  * <sectio caput="unistd.h"/>
  * unistd.h (pars parva - Unda 1; opendir/readdir Unda 1b nomine -
@@ -122,6 +128,7 @@ int chmod(const char* via, mode_t modus);
 
 char* getcwd(char* sedes, size_t mensura);
 int   unlink(const char* via);
+
 
 /* ==================================================
  * UNDA 2 (tractus hospitii 2026-07-20): fossae + signa + processus.
@@ -353,6 +360,7 @@ struct pollfd {
 };
 
 int poll(struct pollfd* fossae, nfds_t numerus, int mora);
+
 
 /* ==================================================
  * UNDA 3 (re-pinnatio exclusionum 2026-07-27): dirent + mman +

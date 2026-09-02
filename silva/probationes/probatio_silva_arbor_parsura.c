@@ -117,9 +117,9 @@ _circuitus_directus (
                Piscina* piscina,
     constans character* fons)
 {
-    SilvaParsura*  origo;
-    SilvaScriptura emissio;
-    i32            mensura;
+      SilvaParsura* origo;
+    SilvaScriptura  emissio;
+               i32  mensura;
 
     mensura = (i32)strlen(fons);
     origo = silva_parsare(piscina, "probatio.c", fons, mensura,
@@ -697,6 +697,7 @@ principale (vacuum)
         }
     }
 
+
     /* ==============================================================
      * T7b - CASUS ADVERSARII: extenta invocationum et lacunae
      *
@@ -710,11 +711,12 @@ principale (vacuum)
      * (id est quod portam apparatus prope fefellit - vide
      * probatio_silva_arbor_plagula). Ergo clausura hic non opus est.
      * ============================================================== */
+
     {
         nomen structura {
             constans character* titulus;
             constans character* fons;
-                         b32    debet_transire;
+                           b32  debet_transire;
             constans character* causa_nota;
         } CasusAdversarius;
 
@@ -723,32 +725,39 @@ principale (vacuum)
             { "functio-similis simplex",
               "#define F(a) (a)\nint n = F(1);\n", VERUM, NIHIL },
             { "argumenta duo",
-              "#define F(a,b) ((a)+(b))\nint n = F(1, 2);\n", VERUM, NIHIL },
+              "#define F(a,b) ((a)+(b))\nint n = F(1, 2);\n", VERUM,
+                  NIHIL },
             { "sine argumentis",
               "#define F() 0\nint n = F();\n", VERUM, NIHIL },
             { "comma intra parentheses",
               "#define F(a) (a)\nint n = F((1,2));\n", VERUM, NIHIL },
             { "invocatio multi-linearis",
-              "#define F(a,b) ((a)+(b))\nint n = F(1,\n    2);\n", VERUM, NIHIL },
+              "#define F(a,b) ((a)+(b))\nint n = F(1,\n    2);\n",
+                  VERUM, NIHIL },
             { "commentum intra argumenta",
-              "#define F(a) (a)\nint n = F(/* x */ 1);\n", VERUM, NIHIL },
+              "#define F(a) (a)\nint n = F(/* x */ 1);\n", VERUM,
+                  NIHIL },
             { "spatia intra argumenta",
               "#define F(a) (a)\nint n = F( 1 );\n", VERUM, NIHIL },
             { "duae invocationes una linea",
-              "#define F(a) (a)\nint n = F(1) + F(2);\n", VERUM, NIHIL },
+              "#define F(a) (a)\nint n = F(1) + F(2);\n", VERUM,
+                  NIHIL },
             { "invocatio intra argumentum sui",
               "#define F(a) (a)\nint n = F(F(1));\n", VERUM, NIHIL },
 
             /* --- nidificatio --- */
             { "nidus duorum graduum",
-              "#define G(a) ((a)*2)\n#define F(a) G(a)\nint n = F(3);\n", VERUM, NIHIL },
+              "#define G(a) ((a)*2)\n#define F(a) G(a)\nint n = F(3);\n",
+                  VERUM, NIHIL },
             { "nidus trium graduum",
               "#define H(a) ((a)+1)\n#define G(a) H(a)\n"
               "#define F(a) G(a)\nint n = F(3);\n", VERUM, NIHIL },
             { "obiectum-simile intra functio-similem",
-              "#define X 5\n#define F(a) ((a)+X)\nint n = F(1);\n", VERUM, NIHIL },
+              "#define X 5\n#define F(a) ((a)+X)\nint n = F(1);\n",
+                  VERUM, NIHIL },
             { "obiectum-simile ad invocationem expansum",
-              "#define G(a) (a)\n#define F G(1)\nint n = F;\n", VERUM, NIHIL },
+              "#define G(a) (a)\n#define F G(1)\nint n = F;\n", VERUM,
+                  NIHIL },
 
             /* --- expansio vacua --- */
             { "expansio vacua",
@@ -764,14 +773,16 @@ principale (vacuum)
               "NOSTRUM: extentum pro origine CHORDA non scribitur "
               "(silva sola TRANSIT - vide _extentum_continens)" },
             { "pasta",
-              "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n", VERUM, NIHIL },
+              "#define P(a,b) a##b\nint ab = 0;\nint n = P(a,b);\n",
+                  VERUM, NIHIL },
             { "pasta parente ex CORPORE",
               "#define C(a) pre##a\nint prex = 0;\nint n = C(x);\n",
               VERUM, NIHIL },
 
             /* --- lacunae et regiones --- */
             { "directiva intra regionem",
-              "#ifndef X\n#define X 1\n#endif\nint n = 0;\n", VERUM, NIHIL },
+              "#ifndef X\n#define X 1\n#endif\nint n = 0;\n", VERUM,
+                  NIHIL },
             { "directiva cum commento multi-lineari intra regionem",
               "#ifndef X\n#define X 1 /* prima\n              * altera */\n"
               "#endif\nint n = 0;\n", VERUM, NIHIL },
@@ -780,7 +791,8 @@ principale (vacuum)
               "    return 2;\n#endif\n}\n", VERUM, NIHIL },
             { "regiones duae",
               "#ifndef A\n#define A 1\n#endif\nint n = 0;\n"
-              "#ifndef B\n#define B 2\n#endif\nint m = 1;\n", VERUM, NIHIL },
+              "#ifndef B\n#define B 2\n#endif\nint m = 1;\n", VERUM,
+                  NIHIL },
             { "macrum et regio miscentur",
               "#define F(a) (a)\n#ifndef X\n#define X 1\n#endif\n"
               "int n = F(X);\n", VERUM, NIHIL }
@@ -847,10 +859,10 @@ principale (vacuum)
      * attributa fert, ergo nomen SOLUM asseritur; vocatio
      * transclusio est (valor verbatim), tota asseritur. --- */
     {
-        SilvaParsura*        origo;
+               SilvaParsura* origo;
         SilvaArborScriptura  scriptura;
-        constans character*  causa;
-        constans character*  fons = "int x = 1;\n";
+         constans character* causa;
+         constans character* fons = "int x = 1;\n";
 
         imprimere("\n--- T7c: templa macronea (post-spatia) ---\n");
         origo = silva_parsare(piscina, "probatio.c", fons,
@@ -884,11 +896,11 @@ principale (vacuum)
      * indentatio: post lineam novam possidet, residuum spatii
      * ante lexema sequens cadit ('<ante><lex-spatia n="4"/>'). --- */
     {
-        SilvaParsura*        origo;
+               SilvaParsura* origo;
         SilvaArborScriptura  scriptura;
-        constans character*  causa;
-        constans character*  fons =
-            "int f(void)\n{\n    int x;\n    return x;\n}\n";
+         constans character* causa;
+         constans character* fons =
+             "int f(void)\n{\n    int x;\n    return x;\n}\n";
 
         imprimere("\n--- T7c-b: templum ante-spatia ---\n");
         origo = silva_parsare(piscina, "probatio.c", fons,
@@ -924,11 +936,11 @@ principale (vacuum)
      * '<#@m-<macro>>' capitis levatur, sedes vocationes fiunt.
      * Compressio ex contento derivata (independens invocationis). --- */
     {
-        SilvaParsura*        origo;
+               SilvaParsura* origo;
         SilvaArborScriptura  scriptura;
-        constans character*  causa;
-        constans character*  fons =
-            "#define N 0\nint a = N;\nint b = N;\n";
+         constans character* causa;
+         constans character* fons =
+             "#define N 0\nint a = N;\nint b = N;\n";
 
         imprimere("\n--- T7d: folia macronum (m-fragmenta) ---\n");
         origo = silva_parsare(piscina, "probatio.c", fons,
@@ -965,11 +977,11 @@ principale (vacuum)
      * lexN in argumentum solvitur). Sceletum ambulans v2:
      * congruentia = definitio retro currens. --- */
     {
-        SilvaParsura*        origo;
+               SilvaParsura* origo;
         SilvaArborScriptura  scriptura;
-        constans character*  causa;
-        constans character*  fons =
-            "typedef int T;\nint f(T* x)\n{\n    return *x;\n}\n";
+         constans character* causa;
+         constans character* fons =
+             "typedef int T;\nint f(T* x)\n{\n    return *x;\n}\n";
 
         imprimere("\n--- T7e: familia parametrorum ---\n");
         origo = silva_parsare(piscina, "probatio.c", fons,

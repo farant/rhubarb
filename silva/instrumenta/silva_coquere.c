@@ -5,23 +5,28 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Auxiliares
  * ================================================== */
 
 /* Imprimere chordam in plagulam */
 interior vacuum
-_ch (FILE* pl, chorda* c)
+_ch (
+      FILE* pl,
+    chorda* c)
 {
     si (c != NIHIL)
     {
-        fprintf(pl, "%.*s", (int)c->mensura, (constans character*)c->datum);
+        fprintf(pl, "%.*s", (int)c->mensura,
+            (constans character*)c->datum);
     }
 }
 
 /* Basename viae (post ultimum '/') */
 interior constans character*
-_basis_tituli (constans character* via)
+_basis_tituli (
+    constans character* via)
 {
     constans character* ultimum;
 
@@ -31,7 +36,8 @@ _basis_tituli (constans character* via)
 
 /* Titulus generis actionis */
 interior constans character*
-_actio_titulus (SilvaGenActioGenus genus)
+_actio_titulus (
+    SilvaGenActioGenus genus)
 {
     commutatio (genus)
     {
@@ -49,39 +55,45 @@ _actio_titulus (SilvaGenActioGenus genus)
 
 /* Comparator actionum: (terminalis, actio, valor) - ordo stabilis */
 interior s32
-_actio_comparator (constans vacuum* a, constans vacuum* b)
+_actio_comparator (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     constans SilvaGenActioIntroitus* aa =
         (constans SilvaGenActioIntroitus*)a;
     constans SilvaGenActioIntroitus* ab =
         (constans SilvaGenActioIntroitus*)b;
 
-    si (aa->terminalis != ab->terminalis)
-        redde (aa->terminalis < ab->terminalis) ? -I : I;
-    si (aa->actio != ab->actio)
-        redde ((i32)aa->actio < (i32)ab->actio) ? -I : I;
-    si (aa->valor != ab->valor)
-        redde (aa->valor < ab->valor) ? -I : I;
+    si (aa->terminalis != ab->terminalis) redde (aa->terminalis
+                                              < ab->terminalis) ? -I : I;
+    si (aa->actio != ab->actio) redde ((i32)aa->actio
+                                    < (i32)ab->actio) ? -I : I;
+    si (aa->valor != ab->valor) redde (aa->valor < ab->valor) ? -I : I;
     redde ZEPHYRUM;
 }
 
 /* Comparator goto: non_terminalis */
 interior s32
-_goto_comparator (constans vacuum* a, constans vacuum* b)
+_goto_comparator (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     constans SilvaGenGotoIntroitus* ga =
         (constans SilvaGenGotoIntroitus*)a;
     constans SilvaGenGotoIntroitus* gb =
         (constans SilvaGenGotoIntroitus*)b;
 
-    si (ga->non_terminalis != gb->non_terminalis)
-        redde (ga->non_terminalis < gb->non_terminalis) ? -I : I;
+    si (ga->non_terminalis
+                                                      != gb->non_terminalis) redde (ga->non_terminalis
+                                                                                 < gb->non_terminalis) ? -I : I;
     redde ZEPHYRUM;
 }
 
 /* Emittere kebab-minusculas ut MAIUSCULAS_SERPENTES */
 interior vacuum
-_maiusculas (FILE* pl, chorda* c)
+_maiusculas (
+      FILE* pl,
+    chorda* c)
 {
     i32 i;
 
@@ -104,7 +116,9 @@ _maiusculas (FILE* pl, chorda* c)
 
 /* Emittere kebab ut serpentes ('-' -> '_') */
 interior vacuum
-_serpentes (FILE* pl, chorda* c)
+_serpentes (
+      FILE* pl,
+    chorda* c)
 {
     i32 i;
 
@@ -119,7 +133,9 @@ _serpentes (FILE* pl, chorda* c)
 
 /* Emittere literas minusculas (praefixum functionum) */
 interior vacuum
-_minusculas_literis (FILE* pl, constans character* s)
+_minusculas_literis (
+                  FILE* pl,
+    constans character* s)
 {
     dum (*s != '\0')
     {
@@ -136,7 +152,8 @@ _minusculas_literis (FILE* pl, constans character* s)
 
 /* Titulus speciei loci (SilvaLocusSpecies ut s32) */
 interior constans character*
-_species_titulus (s32 species)
+_species_titulus (
+    s32 species)
 {
     commutatio (species)
     {
@@ -150,7 +167,9 @@ _species_titulus (s32 species)
 }
 
 interior b32
-_pares (chorda* a, chorda* b)
+_pares (
+    chorda* a,
+    chorda* b)
 {
     si (a == NIHIL || b == NIHIL) redde FALSUM;
     si (a->mensura != b->mensura) redde FALSUM;
@@ -160,13 +179,16 @@ _pares (chorda* a, chorda* b)
 }
 
 interior SilvaGenGenusDef*
-_genus_def (Xar* genera, chorda* titulus)
+_genus_def (
+       Xar* genera,
+    chorda* titulus)
 {
     i32 i;
 
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
-        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera, i);
+        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera,
+            i);
 
         si (def != NIHIL && _pares(def->titulus, titulus))
         {
@@ -177,7 +199,9 @@ _genus_def (Xar* genera, chorda* titulus)
 }
 
 interior s32
-_locus_index (SilvaGenGenusDef* def, chorda* titulus)
+_locus_index (
+    SilvaGenGenusDef* def,
+              chorda* titulus)
 {
     i32 i;
 
@@ -196,7 +220,10 @@ _locus_index (SilvaGenGenusDef* def, chorda* titulus)
 
 /* Imprimere nomen terminalis pro commento ("$" pro -1) */
 interior vacuum
-_terminalem_commentare (FILE* pl, SilvaGenGrammatica* g, s32 terminalis)
+_terminalem_commentare (
+                  FILE* pl,
+    SilvaGenGrammatica* g,
+                   s32  terminalis)
 {
     si (terminalis < ZEPHYRUM)
     {
@@ -213,6 +240,7 @@ _terminalem_commentare (FILE* pl, SilvaGenGrammatica* g, s32 terminalis)
     }
 }
 
+
 /* ==================================================
  * Coquere
  * ================================================== */
@@ -220,7 +248,7 @@ _terminalem_commentare (FILE* pl, SilvaGenGrammatica* g, s32 terminalis)
 b32
 silva_gen_coquere (
     SilvaGenGrammatica* grammatica,
-    SilvaGenTabula*     tabula,
+        SilvaGenTabula* tabula,
     constans character* praefixum,
     constans character* basis_via,
     constans character* via_grammaticae)
@@ -252,10 +280,10 @@ silva_gen_coquere (
         redde FALSUM;
     }
 
-    basis = _basis_tituli(basis_via);
-    num_status = xar_numerus(tabula->status_tabulae);
-    num_symbolorum = xar_numerus(grammatica->symbola);
-    num_productionum = xar_numerus(grammatica->productiones);
+    basis             = _basis_tituli(basis_via);
+    num_status        = xar_numerus(tabula->status_tabulae);
+    num_symbolorum    = xar_numerus(grammatica->symbola);
+    num_productionum  = xar_numerus(grammatica->productiones);
 
     /* Custos includendi: BASIS_H maiusculis */
     {
@@ -275,15 +303,15 @@ silva_gen_coquere (
                 c = (character)(c - 'a' + 'A');
             }
             alioquin si (!((c >= 'A' && c <= 'Z')
-                || (c >= '0' && c <= '9')))
+                         || (c >= '0' && c <= '9')))
             {
                 c = '_';
             }
             custos[k] = c;
         }
-        custos[m] = '_';
-        custos[m + I] = 'H';
-        custos[m + II] = '\0';
+        custos[m]       = '_';
+        custos[m + I]   = 'H';
+        custos[m + II]  = '\0';
     }
 
     /* Productio augmentata */
@@ -292,7 +320,8 @@ silva_gen_coquere (
     {
         SilvaGenProductio* prod = (SilvaGenProductio*)xar_obtinere(
             grammatica->productiones, i);
-        si (prod != NIHIL && prod->sinistrum == grammatica->initium_index)
+        si (   prod            != NIHIL
+            && prod->sinistrum == grammatica->initium_index)
         {
             productio_augmentata = prod->index;
             frange;
@@ -336,13 +365,15 @@ silva_gen_coquere (
     /* Enumeratio generum (custos communis: superficies publica
      * generata - silva.h - eadem genera prius definire potest;
      * tunc copia haec in amalgamato cadit) */
-    fprintf(pl, "/* Genera nodorum (registrum unum: grammatica + extra) */\n"
+    fprintf(pl,
+        "/* Genera nodorum (registrum unum: grammatica + extra) */\n"
         "#ifndef %s_GENERA_CUSTOS\n"
         "#define %s_GENERA_CUSTOS\n"
         "enumeratio {\n", praefixum, praefixum);
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
-        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera, i);
+        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera,
+            i);
 
         fprintf(pl, "    %s_GENUS_", praefixum);
         _maiusculas(pl, def->titulus);
@@ -370,8 +401,9 @@ silva_gen_coquere (
     /* Accessores generati (probati: genus + fines) */
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
-        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera, i);
-        i32 k;
+        SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(genera,
+            i);
+                     i32 k;
 
         per (k = ZEPHYRUM; k < xar_numerus(def->loci); k++)
         {
@@ -389,7 +421,8 @@ silva_gen_coquere (
     }
 
     /* Constructio generata */
-    fprintf(pl, "\n/* Constructio ex reductione GLR: PURA (S26) - allocat\n"
+    fprintf(pl,
+        "\n/* Constructio ex reductione GLR: PURA (S26) - allocat\n"
         " * et implet solum; pater post-acceptum (S27) */\n"
         "SilvaValor ");
     _minusculas_literis(pl, praefixum);
@@ -437,7 +470,8 @@ silva_gen_coquere (
         basis);
 
     /* --- Symbola --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Symbola\n"
         " * ================================================== */\n\n"
         "hic_manens constans SilvaTabSymbolum %s_SYMBOLA[%d] = {\n",
@@ -465,7 +499,8 @@ silva_gen_coquere (
     fprintf(pl, "};\n\n");
 
     /* --- Productiones --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Productiones\n"
         " * ================================================== */\n\n"
         "hic_manens constans SilvaTabProductio %s_PRODUCTIONES[%d] = {\n",
@@ -498,7 +533,8 @@ silva_gen_coquere (
     fprintf(pl, "};\n\n");
 
     /* --- Actiones (planae, ordinatae per statum) --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Actiones (laminae per statum in %s_STATUS)\n"
         " * ================================================== */\n\n"
         "hic_manens constans SilvaTabActio %s_ACTIONES[] = {\n",
@@ -528,13 +564,15 @@ silva_gen_coquere (
             commutatio (actio->actio)
             {
                 casus SILVA_GEN_ACTIO_TRANSPONERE:
-                    fprintf(pl, ": transponere -> %d", (int)actio->valor);
+                    fprintf(pl, ": transponere -> %d",
+                        (int)actio->valor);
                     frange;
                 casus SILVA_GEN_ACTIO_REDUCERE:
                 {
                     SilvaGenProductio* prod =
                         (SilvaGenProductio*)xar_obtinere(
-                            grammatica->productiones, (i32)actio->valor);
+                            grammatica->productiones,
+                            (i32)actio->valor);
 
                     fprintf(pl, ": reducere P%d", (int)actio->valor);
                     si (prod != NIHIL && prod->id != NIHIL)
@@ -557,7 +595,8 @@ silva_gen_coquere (
     fprintf(pl, "};\n\n");
 
     /* --- Goto (plana, ordinata per statum) --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Goto\n"
         " * ================================================== */\n\n"
         "hic_manens constans SilvaTabGoto %s_GOTO[] = {\n", praefixum);
@@ -576,7 +615,8 @@ silva_gen_coquere (
         per (i = ZEPHYRUM; i < num_g; i++)
         {
             SilvaGenGotoIntroitus* g =
-                (SilvaGenGotoIntroitus*)xar_obtinere(st->goto_introitus, i);
+                (SilvaGenGotoIntroitus*)xar_obtinere(st->goto_introitus,
+                i);
             SilvaGenSymbolum* sym = (SilvaGenSymbolum*)xar_obtinere(
                 grammatica->symbola, (i32)g->non_terminalis);
 
@@ -590,32 +630,34 @@ silva_gen_coquere (
     fprintf(pl, "    { -1, -1 }   /* terminator */\n};\n\n");
 
     /* --- Status (laminae) --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Status (offset + numerus in series planas)\n"
         " * ================================================== */\n\n"
         "hic_manens constans SilvaTabStatus %s_STATUS[%d] = {\n",
         praefixum, (int)num_status);
-    offset_actionum = ZEPHYRUM;
-    offset_goto = ZEPHYRUM;
+    offset_actionum  = ZEPHYRUM;
+    offset_goto      = ZEPHYRUM;
     per (s = ZEPHYRUM; s < num_status; s++)
     {
         SilvaGenStatusTabula* st = (SilvaGenStatusTabula*)xar_obtinere(
             tabula->status_tabulae, s);
-        i32 num_act = xar_numerus(st->actiones);
-        i32 num_g = xar_numerus(st->goto_introitus);
+        i32 num_act  = xar_numerus(st->actiones);
+        i32 num_g    = xar_numerus(st->goto_introitus);
 
         fprintf(pl, "    /* status %2d */ { %4d, %2d, %4d, %2d }%s\n",
             (int)s,
             (int)offset_actionum, (int)num_act,
             (int)offset_goto, (int)num_g,
             (s < num_status - I) ? "," : "");
-        offset_actionum += num_act;
-        offset_goto += num_g;
+        offset_actionum  += num_act;
+        offset_goto      += num_g;
     }
     fprintf(pl, "};\n\n");
 
     /* --- Tabula integra --- */
-    fprintf(pl, "/* ==================================================\n"
+    fprintf(pl,
+        "/* ==================================================\n"
         " * Tabula cocta integra\n"
         " * ================================================== */\n\n"
         "constans SilvaTabulaCocta %s_TABULA = {\n"
@@ -645,7 +687,8 @@ silva_gen_coquere (
     {
         i32 c_i;
 
-        fprintf(pl, "\n/* ==================================================\n"
+        fprintf(pl,
+            "\n/* ==================================================\n"
             " * Cellae praelatae (<praelatio>) - categoria census\n"
             " * ================================================== */\n\n"
             "constans SilvaTabPraelata %s_PRAELATAE[%d] = {\n",
@@ -654,7 +697,7 @@ silva_gen_coquere (
         {
             SilvaGenCellaPraelata* cella = (SilvaGenCellaPraelata*)
                 xar_obtinere(tabula->cellae_praelatae, c_i);
-            SilvaGenSymbolum* sym;
+             SilvaGenSymbolum* sym;
             SilvaGenProductio* prod;
 
             si (!cella) perge;
@@ -685,10 +728,12 @@ silva_gen_coquere (
         i32 offset_locorum = ZEPHYRUM;
         i32 g_i;
 
-        fprintf(pl, "\n/* ==================================================\n"
+        fprintf(pl,
+            "\n/* ==================================================\n"
             " * Registrum generum (layouts locorum)\n"
             " * ================================================== */\n\n"
-            "hic_manens constans SilvaTabLocus %s_LOCI[] = {\n", praefixum);
+            "hic_manens constans SilvaTabLocus %s_LOCI[] = {\n",
+            praefixum);
         per (g_i = ZEPHYRUM; g_i < xar_numerus(genera); g_i++)
         {
             SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(
@@ -700,18 +745,21 @@ silva_gen_coquere (
             fprintf(pl, " */\n");
             per (k = ZEPHYRUM; k < xar_numerus(def->loci); k++)
             {
-                SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
+                SilvaGenLocusDef* locus =
+                    (SilvaGenLocusDef*)xar_obtinere(
                     def->loci, k);
 
                 fprintf(pl, "    { \"");
                 _ch(pl, locus->titulus);
-                fprintf(pl, "\", %s },\n", _species_titulus(locus->species));
+                fprintf(pl, "\", %s },\n",
+                    _species_titulus(locus->species));
             }
         }
         fprintf(pl, "    { NIHIL, -1 }   /* terminator */\n};\n\n");
 
         fprintf(pl,
-            "hic_manens constans SilvaTabGenus %s_GENERA[] = {\n", praefixum);
+            "hic_manens constans SilvaTabGenus %s_GENERA[] = {\n",
+            praefixum);
         per (g_i = ZEPHYRUM; g_i < xar_numerus(genera); g_i++)
         {
             SilvaGenGenusDef* def = (SilvaGenGenusDef*)xar_obtinere(
@@ -738,7 +786,8 @@ silva_gen_coquere (
     {
         i32 g_i;
 
-        fprintf(pl, "\n/* ==================================================\n"
+        fprintf(pl,
+            "\n/* ==================================================\n"
             " * Accessores (probati: genus + fines)\n"
             " * ================================================== */\n");
         per (g_i = ZEPHYRUM; g_i < xar_numerus(genera); g_i++)
@@ -749,7 +798,8 @@ silva_gen_coquere (
 
             per (k = ZEPHYRUM; k < xar_numerus(def->loci); k++)
             {
-                SilvaGenLocusDef* locus = (SilvaGenLocusDef*)xar_obtinere(
+                SilvaGenLocusDef* locus =
+                    (SilvaGenLocusDef*)xar_obtinere(
                     def->loci, k);
 
                 fprintf(pl, "\nSilvaValor\n");
@@ -762,7 +812,8 @@ silva_gen_coquere (
                     "    si (nodus == NIHIL || nodus->genus != (s32)%s_GENUS_",
                     praefixum);
                 _maiusculas(pl, def->titulus);
-                fprintf(pl, "\n        || %d >= nodus->numerus_locorum)\n"
+                fprintf(pl,
+                    "\n        || %d >= nodus->numerus_locorum)\n"
                     "    {\n"
                     "        redde silva_valor_nihil();\n"
                     "    }\n"
@@ -774,7 +825,8 @@ silva_gen_coquere (
 
     /* --- Constructio generata --- */
     {
-        fprintf(pl, "\n/* ==================================================\n"
+        fprintf(pl,
+            "\n/* ==================================================\n"
             " * Constructio ex reductione (PURA - S26; pater numquam - S27)\n"
             " * ================================================== */\n\n"
             "SilvaValor\n");
@@ -816,10 +868,10 @@ silva_gen_coquere (
                 _ch(pl, prod->manu);
                 fprintf(pl, "(piscina, valores);\n");
             }
-            alioquin si (prod->modus != NIHIL
-                && prod->modus->mensura == XIII
-                && memcmp(prod->modus->datum, "lista-initium",
-                       XIII) == ZEPHYRUM)
+            alioquin si (   prod->modus          != NIHIL
+                         && prod->modus->mensura == XIII
+                         && memcmp(prod->modus->datum, "lista-initium",
+                         XIII) == ZEPHYRUM)
             {
                 i32 k;
 
@@ -829,9 +881,11 @@ silva_gen_coquere (
                 per (k = ZEPHYRUM; k < num_dex; k++)
                 {
                     SilvaGenLocusMappa* mappa =
-                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
+                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci,
+                        k);
 
-                    si (mappa == NIHIL || mappa->titulus == NIHIL) perge;
+                    si (   mappa          == NIHIL
+                        || mappa->titulus == NIHIL) perge;
                     fprintf(pl, "        lista = "
                         "silva_valor_lista_appendere(piscina, lista, "
                         "valores[%d]);\n", (int)k);
@@ -847,7 +901,8 @@ silva_gen_coquere (
                 per (k = ZEPHYRUM; k < num_dex; k++)
                 {
                     SilvaGenLocusMappa* mappa =
-                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
+                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci,
+                        k);
 
                     si (mappa != NIHIL && mappa->appendere)
                     {
@@ -857,7 +912,8 @@ silva_gen_coquere (
                 }
                 si (k_plus < ZEPHYRUM)
                 {
-                    fprintf(stderr, "silva_coquere: P%d lista-appendere "
+                    fprintf(stderr,
+                        "silva_coquere: P%d lista-appendere "
                         "sine @loco+\n", (int)prod->index);
                     fclose(pl);
                     redde FALSUM;
@@ -875,10 +931,11 @@ silva_gen_coquere (
                 per (k = ZEPHYRUM; k < num_dex; k++)
                 {
                     SilvaGenLocusMappa* mappa =
-                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
+                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci,
+                        k);
 
-                    si (mappa == NIHIL || mappa->titulus == NIHIL
-                        || k == (i32)k_plus)
+                    si (   mappa == NIHIL || mappa->titulus == NIHIL
+                        || k     == (i32)k_plus)
                     {
                         perge;
                     }
@@ -891,7 +948,7 @@ silva_gen_coquere (
             alioquin si (prod->genus != NIHIL)
             {
                 SilvaGenGenusDef* def = _genus_def(genera, prod->genus);
-                i32 k;
+                             i32  k;
 
                 si (def == NIHIL)
                 {
@@ -911,18 +968,21 @@ silva_gen_coquere (
                 per (k = ZEPHYRUM; k < num_dex; k++)
                 {
                     SilvaGenLocusMappa* mappa =
-                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci, k);
+                        (SilvaGenLocusMappa*)xar_obtinere(prod->loci,
+                        k);
                     SilvaGenLocusDef* locus;
-                    s32 idx;
+                                 s32  idx;
 
-                    si (mappa == NIHIL || mappa->titulus == NIHIL) perge;
+                    si (   mappa          == NIHIL
+                        || mappa->titulus == NIHIL) perge;
                     idx = _locus_index(def, mappa->titulus);
                     locus = (SilvaGenLocusDef*)xar_obtinere(
                         def->loci, (i32)idx);
 
                     si (mappa->appendere)
                     {
-                        fprintf(pl, "        si (!silva_nodus_appendere("
+                        fprintf(pl,
+                            "        si (!silva_nodus_appendere("
                             "piscina, nodus, %d, valores[%d], %s))\n"
                             "        {\n"
                             "            redde silva_valor_nihil();\n"
@@ -965,18 +1025,18 @@ silva_gen_coquere (
     /* Fabrica ambigui: forma ex registro lecta (loci per nomen, non
      * positione fixa) - generator formam iam validavit */
     {
-        SilvaGenGenusDef* ambiguum_def = NIHIL;
-        s32 locus_interp = -I;
-        s32 locus_canonica = -I;
-        s32 species_interp = II;
-        i32 k;
+        SilvaGenGenusDef* ambiguum_def    = NIHIL;
+                     s32  locus_interp    = -I;
+                     s32  locus_canonica  = -I;
+                     s32  species_interp  = II;
+                     i32  k;
 
         per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
         {
             SilvaGenGenusDef* def =
                 (SilvaGenGenusDef*)xar_obtinere(genera, i);
 
-            si (def != NIHIL && def->titulus != NIHIL
+            si (   def != NIHIL && def->titulus != NIHIL
                 && chorda_aequalis_literis(*def->titulus, "ambiguus"))
             {
                 ambiguum_def = def;
@@ -1000,8 +1060,8 @@ silva_gen_coquere (
             si (chorda_aequalis_literis(*locus->titulus,
                     "interpretationes"))
             {
-                locus_interp = (s32)k;
-                species_interp = locus->species;
+                locus_interp    = (s32)k;
+                species_interp  = locus->species;
             }
             si (chorda_aequalis_literis(*locus->titulus, "canonica"))
             {
@@ -1015,7 +1075,8 @@ silva_gen_coquere (
             redde FALSUM;
         }
 
-        fprintf(pl, "\n/* ==================================================\n"
+        fprintf(pl,
+            "\n/* ==================================================\n"
             " * Fabrica ambigui (spec-v2 par 12)\n"
             " * ================================================== */\n\n"
             "SilvaValor\n");
@@ -1055,6 +1116,7 @@ silva_gen_coquere (
     redde VERUM;
 }
 
+
 /* ==================================================
  * Superficies publica generata (officina pre-M1, 2026-07-08):
  * enum generum + prototypa accessorum VANILLA (enum/const) inter
@@ -1067,9 +1129,9 @@ silva_gen_coquere (
 
 interior character*
 _plagulam_totam_legere (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* via,
-    memoriae_index*     mensura_out)
+        memoriae_index* mensura_out)
 {
     FILE* pl;
     character* buffer;
@@ -1099,7 +1161,7 @@ _plagulam_totam_legere (
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -1107,16 +1169,16 @@ _plagulam_totam_legere (
         redde NIHIL;
     }
     fclose(pl);
-    buffer[mensura] = '\0';
-    *mensura_out = (memoriae_index)mensura;
+    buffer[mensura]  = '\0';
+    *mensura_out     = (memoriae_index)mensura;
     redde buffer;
 }
 
 /* Enum generum + prototypa accessorum, VANILLA (pro silva.h) */
 interior vacuum
 _publica_emittere (
-    FILE*               pl,
-    Xar*                genera,
+                  FILE* pl,
+                   Xar* genera,
     constans character* praefixum)
 {
     i32 i;
@@ -1167,13 +1229,13 @@ _publica_emittere (
 /* Tabula hospitis: omnes accessores VOCANTUR (regula hospitis) */
 interior vacuum
 _hospitem_emittere (
-    FILE*               pl,
-    Xar*                genera,
+                  FILE* pl,
+                   Xar* genera,
     constans character* praefixum)
 {
     i32 i;
-    i32 summa_locorum = ZEPHYRUM;
-    i32 n = ZEPHYRUM;
+    i32 summa_locorum  = ZEPHYRUM;
+    i32 n              = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
@@ -1211,20 +1273,20 @@ _hospitem_emittere (
 
 interior b32
 _splicare (
-    Piscina*            piscina,
-    Xar*                genera,
+               Piscina* piscina,
+                   Xar* genera,
     constans character* praefixum,
     constans character* via,
-    b32                 est_hospes)
+                   b32  est_hospes)
 {
-    character signum_initii[160];
-    character signum_finis[160];
-    character* buffer;
-    memoriae_index mensura = ZEPHYRUM;
-    character* p_initium;
-    character* p_finis;
-    memoriae_index praefixi_finis;
-    memoriae_index suffixi_initium;
+         character  signum_initii[160];
+         character  signum_finis[160];
+         character* buffer;
+    memoriae_index  mensura = ZEPHYRUM;
+         character* p_initium;
+         character* p_finis;
+    memoriae_index  praefixi_finis;
+    memoriae_index  suffixi_initium;
     FILE* pl;
 
     sprintf(signum_initii, "/* >>> GENERATUM (silva_coquere):"
@@ -1290,7 +1352,7 @@ _splicare (
 
 b32
 silva_gen_splicere_publica (
-    Piscina*            piscina,
+               Piscina* piscina,
     SilvaGenGrammatica* grammatica,
     constans character* praefixum,
     constans character* via_capitis,

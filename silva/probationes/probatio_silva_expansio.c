@@ -11,11 +11,14 @@
 #include <string.h>
 
 interior SilvaExpansio*
-_praeparare (Piscina* piscina, constans character* fons, Xar** reliqua_out,
-             Xar** directivae_out)
+_praeparare (
+               Piscina*  piscina,
+    constans character*  fons,
+                   Xar** reliqua_out,
+                   Xar** directivae_out)
 {
     SilvaExpansio* exp;
-    Xar* lexemata;
+              Xar* lexemata;
 
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
@@ -26,23 +29,25 @@ _praeparare (Piscina* piscina, constans character* fons, Xar** reliqua_out,
 }
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_expansio", 262144);
+    piscina = piscina_generare_dynamicum("probatio_silva_expansio",
+        262144);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -58,12 +63,13 @@ s32 principale (vacuum)
     {
         SilvaExpansio* exp;
         SilvaMacroDef* def;
-        Xar* reliqua;
-        Xar* directivae;
+                  Xar* reliqua;
+                  Xar* directivae;
 
         imprimere("\n--- Probans definitionem simplicem ---\n");
 
-        exp = _praeparare(piscina, "#define X 42\nint y;", &reliqua, &directivae);
+        exp = _praeparare(piscina, "#define X 42\nint y;", &reliqua,
+            &directivae);
 
         def = silva_expansio_quaerere(exp, _ch("X"));
         CREDO_NON_NIHIL (def);
@@ -86,11 +92,12 @@ s32 principale (vacuum)
     {
         SilvaExpansio* exp;
         SilvaMacroDef* def;
-        Xar* reliqua;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans functionem-similem ---\n");
 
-        exp = _praeparare(piscina, "#define F(a, b) a + b", &reliqua, NIHIL);
+        exp = _praeparare(piscina, "#define F(a, b) a + b", &reliqua,
+            NIHIL);
         def = silva_expansio_quaerere(exp, _ch("F"));
         CREDO_NON_NIHIL (def);
         CREDO_VERUM (def->est_functio);
@@ -105,7 +112,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(def->corpus), III);  /* ( x ) */
 
         /* variadica (C99) signata; "..." parametrum __VA_ARGS__ appendit */
-        exp = _praeparare(piscina, "#define V(a, ...) a", &reliqua, NIHIL);
+        exp = _praeparare(piscina, "#define V(a, ...) a", &reliqua,
+            NIHIL);
         def = silva_expansio_quaerere(exp, _ch("V"));
         CREDO_NON_NIHIL (def);
         CREDO_VERUM (def->est_functio);
@@ -119,10 +127,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* reliqua;
+         SilvaExpansio* exp;
+                   Xar* reliqua;
         TabulaDispersa* tunc;
-        vacuum* valor;
+                vacuum* valor;
 
         imprimere("\n--- Probans undef et acta ---\n");
 
@@ -136,17 +144,20 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(exp->acta), III);
 
         /* replay: ad lineam II solum A definita erat */
-        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM, II);
+        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM,
+            II);
         CREDO_VERUM (tabula_dispersa_invenire(tunc, _ch("A"), &valor));
         CREDO_FALSUM (tabula_dispersa_invenire(tunc, _ch("B"), &valor));
 
         /* ad lineam III: A et B */
-        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM, III);
+        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM,
+            III);
         CREDO_VERUM (tabula_dispersa_invenire(tunc, _ch("A"), &valor));
         CREDO_VERUM (tabula_dispersa_invenire(tunc, _ch("B"), &valor));
 
         /* ad lineam IV: A deleta */
-        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM, IV);
+        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM,
+            IV);
         CREDO_FALSUM (tabula_dispersa_invenire(tunc, _ch("A"), &valor));
         CREDO_VERUM (tabula_dispersa_invenire(tunc, _ch("B"), &valor));
     }
@@ -159,11 +170,12 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* reliqua;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans regressionem defectus directivarum ---\n");
 
-        exp = _praeparare(piscina, "#define A 1\n#define B 2", &reliqua, NIHIL);
+        exp = _praeparare(piscina, "#define A 1\n#define B 2", &reliqua,
+            NIHIL);
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("A")));
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("B")));
 
@@ -179,11 +191,12 @@ s32 principale (vacuum)
     {
         SilvaExpansio* exp;
         SilvaMacroDef* def;
-        Xar* reliqua;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans directivam laminatam ---\n");
 
-        exp = _praeparare(piscina, "#define X \\\n 42\nint y;", &reliqua, NIHIL);
+        exp = _praeparare(piscina, "#define X \\\n 42\nint y;",
+            &reliqua, NIHIL);
         def = silva_expansio_quaerere(exp, _ch("X"));
         CREDO_NON_NIHIL (def);
         CREDO_AEQUALIS_I32 (xar_numerus(def->corpus), I);
@@ -198,7 +211,7 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* reliqua;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans cancellum medium ---\n");
 
@@ -216,9 +229,9 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* reliqua;
-        SilvaMacroVista vista;
+          SilvaExpansio* exp;
+                    Xar* reliqua;
+        SilvaMacroVista  vista;
 
         imprimere("\n--- Probans extenta corporis vistae ---\n");
 

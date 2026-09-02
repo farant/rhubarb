@@ -32,26 +32,27 @@
 
 #include "latina.h"
 
+
 /* ==================================================
  * Registrum generum coctum (layouts nodorum, S21/S20)
  * ================================================== */
 
 nomen structura {
     constans character* titulus;     /* nomen loci */
-    s32                 species;     /* SilvaLocusSpecies */
+                   s32  species;     /* SilvaLocusSpecies */
 } SilvaTabLocus;
 
 nomen structura {
     constans character* titulus;     /* nomen generis */
-    i32                 loci_offset; /* in seriem planam locorum */
-    i32                 loci_numerus;
+                   i32  loci_offset; /* in seriem planam locorum */
+                   i32  loci_numerus;
 } SilvaTabGenus;
 
 nomen structura {
     constans SilvaTabGenus* genera;
-    i32                     numerus_generum;
+                       i32  numerus_generum;
     constans SilvaTabLocus* loci;
-    i32                     numerus_locorum;
+                       i32  numerus_locorum;
 } SilvaRegistrumCoctum;
 
 #endif /* SILVA_REGISTRUM_H */

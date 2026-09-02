@@ -4,6 +4,7 @@
 #include "silva_annotationes.h"
 #include <string.h>
 
+
 /* ==================================================
  * Ancoratio + purgatio
  * ================================================== */
@@ -12,14 +13,16 @@
  * non terminata ad EOF delimitatorem carere possunt - tunc mensura
  * tota manet) */
 interior i32
-_finis_contenti (constans chorda* valor, s32 genus)
+_finis_contenti (
+    constans chorda* valor,
+                s32  genus)
 {
     i32 fine = valor->mensura;
 
-    si (genus == SILVA_LEX_COMMENTUM_CLAUSUM
-        && fine >= IV
+    si (   genus                   == SILVA_LEX_COMMENTUM_CLAUSUM
+        && fine                    >= IV
         && valor->datum[fine - II] == '*'
-        && valor->datum[fine - I] == '/')
+        && valor->datum[fine - I]  == '/')
     {
         fine -= II;
     }
@@ -29,7 +32,9 @@ _finis_contenti (constans chorda* valor, s32 genus)
 /* index contenti primi post delimitatorem apertum, spatia, et
  * decorationem linearum continuationis; -1 = commentarium vacuum */
 interior s32
-_contentum_primum (constans chorda* valor, i32 fine)
+_contentum_primum (
+    constans chorda* valor,
+                i32  fine)
 {
     i32 i = II;   /* post delimitatorem apertum (ambo bini) */
 
@@ -43,7 +48,7 @@ _contentum_primum (constans chorda* valor, i32 fine)
         si (valor->datum[i] == '\n')
         {
             i++;
-            dum (i < fine && (valor->datum[i] == ' '
+            dum (   i < fine && (valor->datum[i] == ' '
                 || valor->datum[i] == '\t'))
             {
                 i++;
@@ -66,11 +71,13 @@ _contentum_primum (constans chorda* valor, i32 fine)
 /* ancoratum = contentum primum '<' littera sequente (prosa numquam
  * fere tag incipit; "< 5" spatio non ancoratur) */
 interior b32
-_est_ancoratum (constans chorda* valor, s32 genus)
+_est_ancoratum (
+    constans chorda* valor,
+                s32  genus)
 {
-    i32 fine = _finis_contenti(valor, genus);
-    s32 primus = _contentum_primum(valor, fine);
-    i8 sequens;
+    i32 fine    = _finis_contenti(valor, genus);
+    s32 primus  = _contentum_primum(valor, fine);
+     i8 sequens;
 
     si (primus < ZEPHYRUM || (i32)primus + I >= fine)
     {
@@ -90,15 +97,18 @@ _est_ancoratum (constans chorda* valor, s32 genus)
  * spatium unum optionale exuuntur. Lineae novae servantur - linea
  * erroris stml in lineam fontis remappari potest. */
 interior chorda
-_purgare (Piscina* piscina, constans chorda* valor, i32 fine)
+_purgare (
+            Piscina* piscina,
+    constans chorda* valor,
+                i32  fine)
 {
-    chorda purgatum;
-    i8*    d;
-    i32    i;
-    i32    n = ZEPHYRUM;
+    chorda  purgatum;
+        i8* d;
+       i32  i;
+       i32  n = ZEPHYRUM;
 
-    purgatum.mensura = ZEPHYRUM;
-    purgatum.datum = NIHIL;
+    purgatum.mensura  = ZEPHYRUM;
+    purgatum.datum    = NIHIL;
     si (fine <= II)
     {
         redde purgatum;
@@ -116,7 +126,7 @@ _purgare (Piscina* piscina, constans chorda* valor, i32 fine)
             d[n] = '\n';
             n++;
             i++;
-            dum (i < fine && (valor->datum[i] == ' '
+            dum (   i < fine && (valor->datum[i] == ' '
                 || valor->datum[i] == '\t'))
             {
                 i++;
@@ -137,10 +147,11 @@ _purgare (Piscina* piscina, constans chorda* valor, i32 fine)
             i++;
         }
     }
-    purgatum.datum = d;
-    purgatum.mensura = n;
+    purgatum.datum    = d;
+    purgatum.mensura  = n;
     redde purgatum;
 }
+
 
 /* ==================================================
  * Collectio
@@ -150,54 +161,60 @@ _purgare (Piscina* piscina, constans chorda* valor, i32 fine)
  * omissa (radix invocationis pluribus lexematibus expansis
  * COMMUNIS est - exemplar TOLERA) */
 interior vacuum
-_annotationem_addere (Xar* fructus, Piscina* piscina,
-    InternamentumChorda* intern, constans SilvaToken* tr)
+_annotationem_addere (
+                    Xar* fructus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    constans SilvaToken* tr)
 {
-    i32             k;
-    i32             fine;
+               i32  k;
+               i32  fine;
     SilvaAnnotatio* a;
-    StmlResultus    resultus;
+      StmlResultus  resultus;
 
     per (k = ZEPHYRUM; k < xar_numerus(fructus); k++)
     {
         constans SilvaAnnotatio* d = (constans SilvaAnnotatio*)
             xar_obtinere(fructus, k);
 
-        si (d->fons_index == tr->fons_index
+        si (   d->fons_index  == tr->fons_index
             && d->byte_offset == tr->byte_offset)
         {
             redde;
         }
     }
-    fine = _finis_contenti(&tr->valor, (s32)tr->genus);
-    a = (SilvaAnnotatio*)xar_addere(fructus);
+    fine  = _finis_contenti(&tr->valor, (s32)tr->genus);
+    a     = (SilvaAnnotatio*)xar_addere(fructus);
     si (a == NIHIL)
     {
         redde;
     }
-    a->crudum = tr->valor;
-    a->fons_index = tr->fons_index;
-    a->linea = tr->linea;
-    a->columna = tr->columna;
-    a->byte_offset = tr->byte_offset;
-    a->modus = SILVA_ANNOTATIO_PLAGULA;
-    a->unitas = NIHIL;
-    a->textus = _purgare(piscina, &tr->valor, fine);
+    a->crudum       = tr->valor;
+    a->fons_index   = tr->fons_index;
+    a->linea        = tr->linea;
+    a->columna      = tr->columna;
+    a->byte_offset  = tr->byte_offset;
+    a->modus        = SILVA_ANNOTATIO_PLAGULA;
+    a->unitas       = NIHIL;
+    a->textus       = _purgare(piscina, &tr->valor, fine);
 
-    resultus = stml_legere(a->textus, piscina, intern);
-    a->parsata = resultus.successus;
-    a->documentum = resultus.radix;
-    a->arbor = resultus.elementum_radix;
-    a->status = resultus.status;
-    a->linea_erroris = resultus.linea_erroris;
-    a->columna_erroris = resultus.columna_erroris;
-    a->error = resultus.error;
+    resultus            = stml_legere(a->textus, piscina, intern);
+    a->parsata          = resultus.successus;
+    a->documentum       = resultus.radix;
+    a->arbor            = resultus.elementum_radix;
+    a->status           = resultus.status;
+    a->linea_erroris    = resultus.linea_erroris;
+    a->columna_erroris  = resultus.columna_erroris;
+    a->error            = resultus.error;
 }
 
 /* trivia lexematis unius (ambo latera): commenta ancorata sola */
 interior vacuum
-_ex_lexemate (Xar* fructus, Piscina* piscina,
-    InternamentumChorda* intern, constans SilvaToken* tok)
+_ex_lexemate (
+                    Xar* fructus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    constans SilvaToken* tok)
 {
     i32 latus;
 
@@ -216,7 +233,7 @@ _ex_lexemate (Xar* fructus, Piscina* piscina,
             constans SilvaToken* tr = *(SilvaToken**)xar_obtinere(
                 trivia, j);
 
-            si (tr == NIHIL
+            si (   tr == NIHIL
                 || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
                     && (s32)tr->genus != SILVA_LEX_COMMENTUM_LINEA))
             {
@@ -235,17 +252,19 @@ _ex_lexemate (Xar* fructus, Piscina* piscina,
     }
 }
 
+
 /* ==================================================
  * Affixio (spec par 2.3, octetis per fontem)
  * ================================================== */
 
 Xar*
-silva_annotationes_unitates (Piscina* piscina,
+silva_annotationes_unitates (
+                  Piscina* piscina,
     constans SilvaParsura* parsura)
 {
     SilvaValor radix;
 
-    si (piscina == NIHIL || parsura == NIHIL
+    si (   piscina            == NIHIL || parsura == NIHIL
         || parsura->commissio == NIHIL)
     {
         redde NIHIL;
@@ -255,8 +274,8 @@ silva_annotationes_unitates (Piscina* piscina,
     {
         Xar* unitates = xar_creare(piscina,
             (i32)magnitudo(SilvaNodus*));
-        i32  n = silva_valor_lista_numerus(radix);
-        i32  i;
+        i32 n = silva_valor_lista_numerus(radix);
+        i32 i;
 
         si (unitates == NIHIL)
         {
@@ -266,7 +285,7 @@ silva_annotationes_unitates (Piscina* piscina,
         {
             SilvaValor* v = silva_valor_lista_obtinere(radix, i);
 
-            si (v != NIHIL && v->genus == SILVA_VALOR_NODUS
+            si (   v != NIHIL && v->genus == SILVA_VALOR_NODUS
                 && v->datum.nodus != NIHIL)
             {
                 SilvaNodus** locus = (SilvaNodus**)xar_addere(
@@ -280,7 +299,7 @@ silva_annotationes_unitates (Piscina* piscina,
         }
         redde unitates;
     }
-    si (radix.genus == SILVA_VALOR_NODUS
+    si (   radix.genus       == SILVA_VALOR_NODUS
         && radix.datum.nodus != NIHIL)
     {
         redde silva_nodus_liberi(piscina, radix.datum.nodus);
@@ -289,8 +308,10 @@ silva_annotationes_unitates (Piscina* piscina,
 }
 
 interior vacuum
-_affigere (Piscina* piscina, constans SilvaParsura* parsura,
-    Xar* fructus)
+_affigere (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+                      Xar* fructus)
 {
     Xar* unitates;
     i32  i;
@@ -302,14 +323,14 @@ _affigere (Piscina* piscina, constans SilvaParsura* parsura,
     unitates = silva_annotationes_unitates(piscina, parsura);
     per (i = ZEPHYRUM; i < xar_numerus(fructus); i++)
     {
-        SilvaAnnotatio*      a = (SilvaAnnotatio*)xar_obtinere(
+        SilvaAnnotatio* a = (SilvaAnnotatio*)xar_obtinere(
             fructus, i);
-        s32                  optimum = -I;
-        constans SilvaNodus* optima = NIHIL;
-        i32                  u;
+                        s32  optimum  = -I;
+        constans SilvaNodus* optima   = NIHIL;
+                        i32  u;
 
-        a->modus = SILVA_ANNOTATIO_PLAGULA;
-        a->unitas = NIHIL;
+        a->modus   = SILVA_ANNOTATIO_PLAGULA;
+        a->unitas  = NIHIL;
         si (unitates == NIHIL)
         {
             perge;
@@ -335,27 +356,28 @@ _affigere (Piscina* piscina, constans SilvaParsura* parsura,
             {
                 perge;   /* unitas in hoc fonte absens */
             }
-            si (minimum <= a->byte_offset
+            si (   minimum        <= a->byte_offset
                 && a->byte_offset <= maximum)
             {
-                a->modus = SILVA_ANNOTATIO_INTERIOR;
-                a->unitas = unitas;
+                a->modus   = SILVA_ANNOTATIO_INTERIOR;
+                a->unitas  = unitas;
                 frange;
             }
-            si (minimum > a->byte_offset
+            si (   minimum > a->byte_offset
                 && (optimum < ZEPHYRUM || minimum < optimum))
             {
-                optimum = minimum;
-                optima = unitas;
+                optimum  = minimum;
+                optima   = unitas;
             }
         }
         si (a->modus == SILVA_ANNOTATIO_PLAGULA && optima != NIHIL)
         {
-            a->modus = SILVA_ANNOTATIO_SUPRA;
-            a->unitas = optima;
+            a->modus   = SILVA_ANNOTATIO_SUPRA;
+            a->unitas  = optima;
         }
     }
 }
+
 
 /* ==================================================
  * API
@@ -366,8 +388,10 @@ _affigere (Piscina* piscina, constans SilvaParsura* parsura,
  * pinnae; radix strati identitatis et intentionis</causa>
  * </intentio> */
 Xar*
-silva_annotationes_colligere (Piscina* piscina,
-    constans SilvaParsura* parsura, InternamentumChorda* intern)
+silva_annotationes_colligere (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+      InternamentumChorda* intern)
 {
     Xar* fructus;
     i32  i;
@@ -457,12 +481,15 @@ silva_annotationes_colligere (Piscina* piscina,
     redde fructus;
 }
 
+
 /* ==================================================
  * Identitates (frustum B): lectio arboris + locatio textus
  * ================================================== */
 
 interior b32
-_verbum_est (constans chorda* c, constans character* litterae)
+_verbum_est (
+       constans chorda* c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -472,7 +499,8 @@ _verbum_est (constans chorda* c, constans character* litterae)
 }
 
 interior constans StmlAttributum*
-_attributum_invenire (constans StmlNodus* nodus,
+_attributum_invenire (
+    constans StmlNodus* nodus,
     constans character* titulus)
 {
     i32 k;
@@ -495,8 +523,12 @@ _attributum_invenire (constans StmlNodus* nodus,
 }
 
 interior vacuum
-_identitatem_addere (Xar* fructus, StmlNodus* elementum,
-    constans chorda* valor, b32 petitio, SilvaInsertioGenus genus)
+_identitatem_addere (
+                   Xar* fructus,
+             StmlNodus* elementum,
+       constans chorda* valor,
+                   b32  petitio,
+    SilvaInsertioGenus  genus)
 {
     SilvaIdentitas* id = (SilvaIdentitas*)xar_addere(fructus);
 
@@ -511,19 +543,21 @@ _identitatem_addere (Xar* fructus, StmlNodus* elementum,
     }
     alioquin
     {
-        id->valor.mensura = ZEPHYRUM;
-        id->valor.datum = NIHIL;
+        id->valor.mensura  = ZEPHYRUM;
+        id->valor.datum    = NIHIL;
     }
-    id->petitio = petitio;
-    id->insertio_genus = genus;
-    id->insertio_offset = -I;
+    id->petitio          = petitio;
+    id->insertio_genus   = genus;
+    id->insertio_offset  = -I;
 }
 
 /* ordo documenti: elementum ipsum, deinde liberi. Attributum
  * booleanum valorem internatum "true" fert - valor "nid" literalis
  * "true" impossibilis (ULID), ergo "true" = petitio. */
 interior vacuum
-_identitates_ex_arbore (Xar* fructus, StmlNodus* nodus)
+_identitates_ex_arbore (
+          Xar* fructus,
+    StmlNodus* nodus)
 {
     i32 k;
 
@@ -584,6 +618,7 @@ _identitates_ex_arbore (Xar* fructus, StmlNodus* nodus)
     }
 }
 
+
 /* ==================================================
  * Locatio textualis sedium mintationis (octeti crudi - offsets
  * in fonte veri; textus purgatus offsets fontis non servat).
@@ -596,50 +631,57 @@ _identitates_ex_arbore (Xar* fructus, StmlNodus* nodus)
  * ================================================== */
 
 nomen structura {
-    s32                offset;
+                   s32 offset;
     SilvaInsertioGenus genus;
 } SedesMintationis;
 
 interior b32
-_verbi_initium (i8 c)
+_verbi_initium (
+    i8 c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
         || c == '_';
 }
 
 interior b32
-_verbi_pars (i8 c)
+_verbi_pars (
+    i8 c)
 {
     redde _verbi_initium(c) || (c >= '0' && c <= '9') || c == '-';
 }
 
 interior vacuum
-_sedem_addere (Xar* sedes, s32 offset, SilvaInsertioGenus genus)
+_sedem_addere (
+                   Xar* sedes,
+                   s32  offset,
+    SilvaInsertioGenus  genus)
 {
     SedesMintationis* s = (SedesMintationis*)xar_addere(sedes);
 
     si (s != NIHIL)
     {
-        s->offset = offset;
-        s->genus = genus;
+        s->offset  = offset;
+        s->genus   = genus;
     }
 }
 
 interior Xar*
-_sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
+_sedes_mintationis (
+                    Piscina* piscina,
+    constans SilvaAnnotatio* a)
 {
     constans chorda* v = &a->crudum;
-    s32  genus_commentarii;
-    i32  fine;
-    i32  i = II;
-    b32  in_tag = FALSUM;
-    b32  in_claudens = FALSUM;
-    b32  est_nid = FALSUM;
-    b32  vidit_v = FALSUM;
-    b32  titulus_lectus = FALSUM;
-    s32  titulus_finis = -I;
-    Xar* sedes = xar_creare(piscina,
-        (i32)magnitudo(SedesMintationis));
+                s32  genus_commentarii;
+                i32  fine;
+                i32  i               = II;
+                b32  in_tag          = FALSUM;
+                b32  in_claudens     = FALSUM;
+                b32  est_nid         = FALSUM;
+                b32  vidit_v         = FALSUM;
+                b32  titulus_lectus  = FALSUM;
+                s32  titulus_finis   = -I;
+                Xar* sedes = xar_creare(piscina,
+                    (i32)magnitudo(SedesMintationis));
 
     si (sedes == NIHIL || v->datum == NIHIL || v->mensura < II)
     {
@@ -657,12 +699,12 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
         {
             si (c == '<')
             {
-                in_tag = VERUM;
-                in_claudens = FALSUM;
-                est_nid = FALSUM;
-                vidit_v = FALSUM;
-                titulus_lectus = FALSUM;
-                titulus_finis = -I;
+                in_tag          = VERUM;
+                in_claudens     = FALSUM;
+                est_nid         = FALSUM;
+                vidit_v         = FALSUM;
+                titulus_lectus  = FALSUM;
+                titulus_finis   = -I;
                 i++;
                 si (i < fine && v->datum[i] == '/')
                 {
@@ -691,7 +733,7 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
         }
         si (c == '>')
         {
-            si (est_nid && !in_claudens && !vidit_v
+            si (   est_nid && !in_claudens && !vidit_v
                 && titulus_finis >= ZEPHYRUM)
             {
                 _sedem_addere(sedes,
@@ -705,7 +747,7 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
         si (c == '\n')
         {
             i++;
-            dum (i < fine && (v->datum[i] == ' '
+            dum (   i < fine && (v->datum[i] == ' '
                 || v->datum[i] == '\t'))
             {
                 i++;
@@ -730,8 +772,8 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
             }
             si (!titulus_lectus)
             {
-                titulus_lectus = VERUM;
-                titulus_finis = (s32)i;
+                titulus_lectus  = VERUM;
+                titulus_finis   = (s32)i;
                 est_nid = (i - initium == III)
                     && v->datum[initium] == 'n'
                     && v->datum[initium + I] == 'i'
@@ -761,7 +803,7 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
                     si (d == '\n')
                     {
                         j++;
-                        dum (j < fine && (v->datum[j] == ' '
+                        dum (   j < fine && (v->datum[j] == ' '
                             || v->datum[j] == '\t'))
                         {
                             j++;
@@ -788,8 +830,8 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
                             a->byte_offset + (s32)i,
                             SILVA_INSERTIO_POST_ATTRIBUTUM);
                     }
-                    alioquin si (est_attr_nid && !est_nid
-                        && !in_claudens)
+                    alioquin si (   est_attr_nid && !est_nid
+                                 && !in_claudens)
                     {
                         _sedem_addere(sedes,
                             a->byte_offset + (s32)i,
@@ -809,7 +851,8 @@ _sedes_mintationis (Piscina* piscina, constans SilvaAnnotatio* a)
 }
 
 Xar*
-silva_annotationes_identitates (Piscina* piscina,
+silva_annotationes_identitates (
+                    Piscina* piscina,
     constans SilvaAnnotatio* annotatio)
 {
     Xar* fructus;
@@ -818,7 +861,7 @@ silva_annotationes_identitates (Piscina* piscina,
     i32  k;
     i32  j;
 
-    si (piscina == NIHIL || annotatio == NIHIL
+    si (   piscina == NIHIL || annotatio == NIHIL
         || !annotatio->parsata || annotatio->documentum == NIHIL)
     {
         redde NIHIL;
@@ -844,7 +887,7 @@ silva_annotationes_identitates (Piscina* piscina,
         redde fructus;
     }
     sedes = _sedes_mintationis(piscina, annotatio);
-    si (sedes == NIHIL
+    si (   sedes              == NIHIL
         || xar_numerus(sedes) != petitiones_arboris)
     {
         redde fructus;   /* dissensus - offsets -1 manent */

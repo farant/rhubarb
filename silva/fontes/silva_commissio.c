@@ -4,12 +4,14 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Oraculum
  * ================================================== */
 
 SilvaOraculum*
-silva_oraculum_creare (Piscina* piscina)
+silva_oraculum_creare (
+    Piscina* piscina)
 {
     SilvaOraculum* oraculum;
 
@@ -23,8 +25,8 @@ silva_oraculum_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    oraculum->piscina = piscina;
-    oraculum->typi = tabula_dispersa_creare_chorda(piscina, XVI);
+    oraculum->piscina  = piscina;
+    oraculum->typi     = tabula_dispersa_creare_chorda(piscina, XVI);
     si (oraculum->typi == NIHIL)
     {
         redde NIHIL;
@@ -39,6 +41,7 @@ silva_oraculum_creare (Piscina* piscina)
     redde oraculum;
 }
 
+
 /* ==================================================
  * Non-typi (oraculum trivalens - M0a Chunk C)
  * ================================================== */
@@ -46,7 +49,7 @@ silva_oraculum_creare (Piscina* piscina)
 b32
 silva_oraculum_non_typum_addere (
     SilvaOraculum* oraculum,
-    chorda         titulus)
+           chorda  titulus)
 {
     chorda copia;
 
@@ -65,7 +68,7 @@ silva_oraculum_non_typum_addere (
 
 b32
 silva_oraculum_non_typum_addere_literis (
-    SilvaOraculum*      oraculum,
+         SilvaOraculum* oraculum,
     constans character* titulus)
 {
     chorda c;
@@ -75,16 +78,16 @@ silva_oraculum_non_typum_addere_literis (
     {
         redde FALSUM;
     }
-    u.c = titulus;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(titulus);
+    u.c        = titulus;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(titulus);
     redde silva_oraculum_non_typum_addere(oraculum, c);
 }
 
 b32
 silva_oraculum_non_typum_novit (
     constans SilvaOraculum* oraculum,
-    chorda                  titulus)
+                    chorda  titulus)
 {
     si (oraculum == NIHIL)
     {
@@ -93,17 +96,19 @@ silva_oraculum_non_typum_novit (
     redde tabula_dispersa_continet(oraculum->non_typi, titulus);
 }
 
+
 /* ==================================================
  * Verdicta praecomputata (sanatio oraculi 2026-07-06)
  * ================================================== */
 
 nomen structura {
     constans SilvaNodus* sedes;
-    s32                  victor;
+                    s32  victor;
 } OraculumResponsum;
 
 vacuum
-silva_oraculum_responsa_vacare (SilvaOraculum* oraculum)
+silva_oraculum_responsa_vacare (
+    SilvaOraculum* oraculum)
 {
     si (oraculum == NIHIL) redde;
     si (oraculum->responsa == NIHIL)
@@ -117,9 +122,9 @@ silva_oraculum_responsa_vacare (SilvaOraculum* oraculum)
 
 b32
 silva_oraculum_responsum_ponere (
-    SilvaOraculum*       oraculum,
+          SilvaOraculum* oraculum,
     constans SilvaNodus* sedes,
-    s32                  victor)
+                    s32  victor)
 {
     OraculumResponsum* slot;
 
@@ -131,21 +136,21 @@ silva_oraculum_responsum_ponere (
     }
     slot = (OraculumResponsum*)xar_addere(oraculum->responsa);
     si (slot == NIHIL) redde FALSUM;
-    slot->sedes = sedes;
-    slot->victor = victor;
+    slot->sedes   = sedes;
+    slot->victor  = victor;
     redde VERUM;
 }
 
 b32
 silva_oraculum_responsum_quaerere (
     constans SilvaOraculum* oraculum,
-    constans SilvaNodus*    sedes,
-    s32*                    victor_out)
+       constans SilvaNodus* sedes,
+                       s32* victor_out)
 {
     i32 i;
 
-    si (oraculum == NIHIL || oraculum->responsa == NIHIL
-        || sedes == NIHIL)
+    si (   oraculum == NIHIL || oraculum->responsa == NIHIL
+        || sedes    == NIHIL)
     {
         redde FALSUM;
     }
@@ -165,7 +170,9 @@ silva_oraculum_responsum_quaerere (
 }
 
 b32
-silva_oraculum_typum_addere (SilvaOraculum* oraculum, chorda titulus)
+silva_oraculum_typum_addere (
+    SilvaOraculum* oraculum,
+           chorda  titulus)
 {
     /* Sine situ = "visibile ab initio" (situs 0) - typi praeonerati
      * (API, latina) ubique valent */
@@ -176,12 +183,12 @@ silva_oraculum_typum_addere (SilvaOraculum* oraculum, chorda titulus)
 b32
 silva_oraculum_typum_addere_situ (
     SilvaOraculum* oraculum,
-    chorda         titulus,
-    s32            situs)
+           chorda  titulus,
+              s32  situs)
 {
-    chorda copia;
-    s32*   sedes;
-    s32    prior;
+    chorda  copia;
+       s32* sedes;
+       s32  prior;
 
     si (oraculum == NIHIL)
     {
@@ -189,7 +196,7 @@ silva_oraculum_typum_addere_situ (
     }
     /* Situs PRIMUS servatur (visibilitas a declaratione prima;
      * legalitas redeclarationis = res laminae lint, M2b sim X) */
-    si (silva_oraculum_situs_typi(oraculum, titulus, &prior)
+    si (   silva_oraculum_situs_typi(oraculum, titulus, &prior)
         && prior <= situs)
     {
         redde VERUM;
@@ -211,8 +218,8 @@ silva_oraculum_typum_addere_situ (
 b32
 silva_oraculum_situs_typi (
     constans SilvaOraculum* oraculum,
-    chorda                  titulus,
-    s32*                    situs_out)
+                    chorda  titulus,
+                       s32* situs_out)
 {
     vacuum* valor = NIHIL;
 
@@ -220,7 +227,7 @@ silva_oraculum_situs_typi (
     {
         redde FALSUM;
     }
-    si (!tabula_dispersa_invenire(oraculum->typi, titulus, &valor)
+    si (   !tabula_dispersa_invenire(oraculum->typi, titulus, &valor)
         || valor == NIHIL)
     {
         redde FALSUM;
@@ -231,7 +238,7 @@ silva_oraculum_situs_typi (
 
 b32
 silva_oraculum_typum_addere_literis (
-    SilvaOraculum*      oraculum,
+         SilvaOraculum* oraculum,
     constans character* titulus)
 {
     si (oraculum == NIHIL || titulus == NIHIL)
@@ -245,7 +252,7 @@ silva_oraculum_typum_addere_literis (
 b32
 silva_oraculum_typum_novit (
     constans SilvaOraculum* oraculum,
-    chorda                  titulus)
+                    chorda  titulus)
 {
     si (oraculum == NIHIL)
     {
@@ -260,26 +267,33 @@ silva_oraculum_typum_novit (
  * ================================================== */
 
 nomen structura {
-    Piscina*                piscina;
-    SilvaCommissio*         commissio;
+                   Piscina* piscina;
+            SilvaCommissio* commissio;
     constans SilvaOraculum* oraculum;
-    SilvaResolutor          resolutor;
-    vacuum*                 datum_resolutoris;
+            SilvaResolutor  resolutor;
+                    vacuum* datum_resolutoris;
 } SilvaAmbulatio;
 
-interior SilvaValor _valorem_committere (SilvaAmbulatio* ambulatio,
-    SilvaValor valor, SilvaNodus* pater);
+interior SilvaValor
+_valorem_committere (
+    SilvaAmbulatio* ambulatio,
+        SilvaValor  valor,
+        SilvaNodus* pater);
 
 /* Normalizatio prospectus (A½): mensura exacta post commissionem -
  * consumptores xar_numerus tuto legere possunt */
 interior SilvaValor
-_listam_normalizare (SilvaAmbulatio* ambulatio, SilvaValor lista)
+_listam_normalizare (
+    SilvaAmbulatio* ambulatio,
+        SilvaValor  lista)
 {
     Xar* exactum;
     i32  i;
 
-    si (lista.genus != SILVA_VALOR_LISTA || lista.datum.lista.xar == NIHIL
-        || xar_numerus(lista.datum.lista.xar) == lista.datum.lista.mensura)
+    si (   lista.genus           != SILVA_VALOR_LISTA
+        || lista.datum.lista.xar == NIHIL
+        || xar_numerus(lista.datum.lista.xar)
+            == lista.datum.lista.mensura)
     {
         redde lista;
     }
@@ -304,7 +318,9 @@ _listam_normalizare (SilvaAmbulatio* ambulatio, SilvaValor lista)
 
 /* Nodus ordinarius: loci per ambulationem, filii pater accipiunt */
 interior vacuum
-_nodum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
+_nodum_committere (
+    SilvaAmbulatio* ambulatio,
+        SilvaNodus* nodus)
 {
     i32 i;
 
@@ -318,11 +334,13 @@ _nodum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
 /* Nodus AMBIGUUS: collapsus si oraculum novit, alioquin superstes
  * cum spina canonica */
 interior vacuum
-_ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
+_ambiguum_committere (
+    SilvaAmbulatio* ambulatio,
+        SilvaNodus* nodus)
 {
     SilvaCommissio* commissio = ambulatio->commissio;
-    SilvaValor      interps;
-    s32             canonica;
+        SilvaValor  interps;
+               s32  canonica;
 
     /* Resolutio: oraculum iam novit? -> COLLAPSUS (victor super
      * allocationem copiatur - identitas manet, involucrum abiit) */
@@ -330,8 +348,8 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
     {
         SilvaResolutioResponsum responsum;
 
-        responsum.victor = -I;
-        responsum.discriminans = NIHIL;
+        responsum.victor        = -I;
+        responsum.discriminans  = NIHIL;
         ambulatio->resolutor(nodus, ambulatio->oraculum,
             ambulatio->datum_resolutoris, &responsum);
         si (responsum.victor >= ZEPHYRUM)
@@ -340,15 +358,15 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
                 nodus->loci[commissio->locus_interpretationum],
                 (i32)responsum.victor);
 
-            si (victor_valor != NIHIL
-                && victor_valor->genus == SILVA_VALOR_NODUS
+            si (   victor_valor              != NIHIL
+                && victor_valor->genus       == SILVA_VALOR_NODUS
                 && victor_valor->datum.nodus != NIHIL)
             {
-                SilvaNodus* pater_servatus = nodus->pater;
+                           SilvaNodus* pater_servatus = nodus->pater;
                 SilvaResolutioEventum* eventum;
 
-                *nodus = *victor_valor->datum.nodus;  /* collapsus */
-                nodus->pater = pater_servatus;
+                *nodus        = *victor_valor->datum.nodus;  /* collapsus */
+                nodus->pater  = pater_servatus;
 
                 eventum = (SilvaResolutioEventum*)xar_addere(
                     commissio->resolutiones);
@@ -373,7 +391,8 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
      * spina sola: canonica pater=ambiguum, aliae NIHIL. Canonica
      * ULTIMA ambulatur - in subarbore communi parens spinae vincit. */
     {
-        SilvaNodus** slot = (SilvaNodus**)xar_addere(commissio->ambigui);
+        SilvaNodus** slot =
+            (SilvaNodus**)xar_addere(commissio->ambigui);
 
         si (slot != NIHIL)
         {
@@ -381,10 +400,11 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
         }
     }
 
-    nodus->loci[commissio->locus_interpretationum] = _listam_normalizare(
+    nodus->loci[commissio->locus_interpretationum] =
+        _listam_normalizare(
         ambulatio, nodus->loci[commissio->locus_interpretationum]);
-    interps = nodus->loci[commissio->locus_interpretationum];
-    canonica = nodus->loci[commissio->locus_canonicae].datum.index;
+    interps   = nodus->loci[commissio->locus_interpretationum];
+    canonica  = nodus->loci[commissio->locus_canonicae].datum.index;
 
     {
         i32 numerus = silva_valor_lista_numerus(interps);
@@ -417,8 +437,8 @@ _ambiguum_committere (SilvaAmbulatio* ambulatio, SilvaNodus* nodus)
 interior SilvaValor
 _valorem_committere (
     SilvaAmbulatio* ambulatio,
-    SilvaValor      valor,
-    SilvaNodus*     pater)
+        SilvaValor  valor,
+        SilvaNodus* pater)
 {
     commutatio (valor.genus)
     {
@@ -444,8 +464,8 @@ _valorem_committere (
         i32 numerus;
         i32 i;
 
-        valor = _listam_normalizare(ambulatio, valor);
-        numerus = silva_valor_lista_numerus(valor);
+        valor    = _listam_normalizare(ambulatio, valor);
+        numerus  = silva_valor_lista_numerus(valor);
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
@@ -470,19 +490,19 @@ _valorem_committere (
 
 SilvaCommissio*
 silva_committere (
-    Piscina*                       piscina,
-    SilvaValor                     radix,
+                          Piscina* piscina,
+                       SilvaValor  radix,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaOraculum*        oraculum,
-    SilvaResolutor                 resolutor,
-    vacuum*                        datum_resolutoris)
+           constans SilvaOraculum* oraculum,
+                   SilvaResolutor  resolutor,
+                           vacuum* datum_resolutoris)
 {
     SilvaCommissio* commissio;
     SilvaAmbulatio  ambulatio;
-    s32 genus_ambigui = -I;
-    s32 locus_interp = -I;
-    s32 locus_canonicae = -I;
-    i32 i;
+               s32  genus_ambigui    = -I;
+               s32  locus_interp     = -I;
+               s32  locus_canonicae  = -I;
+               i32  i;
 
     si (piscina == NIHIL || tabularium == NIHIL)
     {
@@ -494,7 +514,7 @@ silva_committere (
     {
         constans SilvaTabGenus* genus = &tabularium->genera[i];
 
-        si (genus->titulus != NIHIL
+        si (   genus->titulus                     != NIHIL
             && strcmp(genus->titulus, "ambiguus") == ZEPHYRUM)
         {
             i32 k;
@@ -519,7 +539,7 @@ silva_committere (
             frange;
         }
     }
-    si (genus_ambigui < ZEPHYRUM || locus_interp < ZEPHYRUM
+    si (   genus_ambigui < ZEPHYRUM || locus_interp < ZEPHYRUM
         || locus_canonicae < ZEPHYRUM)
     {
         fprintf(stderr,
@@ -537,15 +557,15 @@ silva_committere (
         (i32)magnitudo(SilvaNodus*));
     commissio->resolutiones = xar_creare(piscina,
         (i32)magnitudo(SilvaResolutioEventum));
-    commissio->genus_ambigui = genus_ambigui;
-    commissio->locus_interpretationum = (i32)locus_interp;
-    commissio->locus_canonicae = (i32)locus_canonicae;
+    commissio->genus_ambigui           = genus_ambigui;
+    commissio->locus_interpretationum  = (i32)locus_interp;
+    commissio->locus_canonicae         = (i32)locus_canonicae;
 
-    ambulatio.piscina = piscina;
-    ambulatio.commissio = commissio;
-    ambulatio.oraculum = oraculum;
-    ambulatio.resolutor = resolutor;
-    ambulatio.datum_resolutoris = datum_resolutoris;
+    ambulatio.piscina            = piscina;
+    ambulatio.commissio          = commissio;
+    ambulatio.oraculum           = oraculum;
+    ambulatio.resolutor          = resolutor;
+    ambulatio.datum_resolutoris  = datum_resolutoris;
 
     commissio->radix = _valorem_committere(&ambulatio, radix, NIHIL);
     redde commissio;
@@ -553,10 +573,10 @@ silva_committere (
 
 i32
 silva_recanonicare (
-    SilvaCommissio*         commissio,
+            SilvaCommissio* commissio,
     constans SilvaOraculum* oraculum,
-    SilvaResolutor          resolutor,
-    vacuum*                 datum_resolutoris)
+            SilvaResolutor  resolutor,
+                    vacuum* datum_resolutoris)
 {
     i32 versi = ZEPHYRUM;
     i32 i;
@@ -570,10 +590,10 @@ silva_recanonicare (
     {
         SilvaNodus** slot =
             (SilvaNodus**)xar_obtinere(commissio->ambigui, i);
-        SilvaNodus* nodus;
-        SilvaResolutioResponsum responsum;
-        SilvaValor interps;
-        s32 canonica;
+                     SilvaNodus* nodus;
+        SilvaResolutioResponsum  responsum;
+                     SilvaValor  interps;
+                            s32  canonica;
 
         si (slot == NIHIL || *slot == NIHIL) perge;
         nodus = *slot;
@@ -582,17 +602,17 @@ silva_recanonicare (
             perge;  /* iam collapsus alio modo? - praetermittitur */
         }
 
-        responsum.victor = -I;
-        responsum.discriminans = NIHIL;
+        responsum.victor        = -I;
+        responsum.discriminans  = NIHIL;
         resolutor(nodus, oraculum, datum_resolutoris, &responsum);
         si (responsum.victor < ZEPHYRUM)
         {
             perge;  /* adhuc ignotum */
         }
 
-        interps = nodus->loci[commissio->locus_interpretationum];
-        canonica = nodus->loci[commissio->locus_canonicae].datum.index;
-        si (responsum.victor == canonica
+        interps   = nodus->loci[commissio->locus_interpretationum];
+        canonica  = nodus->loci[commissio->locus_canonicae].datum.index;
+        si (   responsum.victor == canonica
             || (i32)responsum.victor
                 >= silva_valor_lista_numerus(interps))
         {
@@ -608,12 +628,12 @@ silva_recanonicare (
                 (i32)responsum.victor);
             SilvaResolutioEventum* eventum;
 
-            si (vetus != NIHIL && vetus->genus == SILVA_VALOR_NODUS
+            si (   vetus != NIHIL && vetus->genus == SILVA_VALOR_NODUS
                 && vetus->datum.nodus != NIHIL)
             {
                 vetus->datum.nodus->pater = NIHIL;
             }
-            si (novus != NIHIL && novus->genus == SILVA_VALOR_NODUS
+            si (   novus != NIHIL && novus->genus == SILVA_VALOR_NODUS
                 && novus->datum.nodus != NIHIL)
             {
                 novus->datum.nodus->pater = nodus;
@@ -625,9 +645,9 @@ silva_recanonicare (
                 commissio->resolutiones);
             si (eventum != NIHIL)
             {
-                eventum->genus = SILVA_RESOLUTIO_RECANONICATA;
-                eventum->sedes = nodus;
-                eventum->victor = responsum.victor;
+                eventum->genus   = SILVA_RESOLUTIO_RECANONICATA;
+                eventum->sedes   = nodus;
+                eventum->victor  = responsum.victor;
                 eventum->genus_victoris =
                     (novus != NIHIL && novus->genus == SILVA_VALOR_NODUS
                      && novus->datum.nodus != NIHIL)

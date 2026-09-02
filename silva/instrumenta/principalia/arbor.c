@@ -95,8 +95,8 @@ _plagulam_legere (
 /* Clausuram capitum domesticorum ex aedile petere; numerum reddit. */
 interior i32
 _clausuram_petere (
-    constans character* via_relativa,
-              character series[CLAUSURA_MAXIMA][VIA_MAXIMA])
+     constans character* via_relativa,
+              character  series[CLAUSURA_MAXIMA][VIA_MAXIMA])
 {
     character mandatum[1024];
     character linea[VIA_MAXIMA + 64];
@@ -120,13 +120,13 @@ _clausuram_petere (
             perge;
         }
         m = strlen(linea);
-        dum (m > ZEPHYRUM
+        dum (   m > ZEPHYRUM
              && (linea[m - I] == '\n' || linea[m - I] == '\r'))
         {
             linea[m - I] = '\0';
             m--;
         }
-        si (m <= II || numerus >= CLAUSURA_MAXIMA
+        si (   m      <= II || numerus >= CLAUSURA_MAXIMA
             || m - II >= VIA_MAXIMA)
         {
             perge;
@@ -140,21 +140,21 @@ _clausuram_petere (
 
 s32
 principale (
-             integer  numerus_argumentorum,
+               integer  numerus_argumentorum,
     constans character* argumenta[])
 {
-                Piscina* piscina;
-     constans character* via;
-                     b32 nudum;
-                     b32 tacitus;
-                     i32 i;
-                     i8* fons;
-                     i32 mensura;
-           SilvaParsura* parsura;
-    SilvaArborScriptura  scriptura;
-               character clausura[CLAUSURA_MAXIMA][VIA_MAXIMA];
-                     i32 numerus_clausurae;
-                     i32 expansa;
+                 Piscina* piscina;
+      constans character* via;
+                     b32  nudum;
+                     b32  tacitus;
+                     i32  i;
+                      i8* fons;
+                     i32  mensura;
+            SilvaParsura* parsura;
+     SilvaArborScriptura  scriptura;
+               character  clausura[CLAUSURA_MAXIMA][VIA_MAXIMA];
+                     i32  numerus_clausurae;
+                     i32  expansa;
 
     via      = NIHIL;
     nudum    = FALSUM;
@@ -210,12 +210,12 @@ principale (
     {
         SilvaExpansio* expansio;
 
-        expansio = silva_expansio_creare(piscina);
-        numerus_clausurae = _clausuram_petere(via, clausura);
+        expansio           = silva_expansio_creare(piscina);
+        numerus_clausurae  = _clausuram_petere(via, clausura);
         per (i = ZEPHYRUM; i < numerus_clausurae; i++)
         {
-            i8* textus;
-            i32 m_caput;
+             i8* textus;
+            i32  m_caput;
 
             textus = _plagulam_legere(piscina, clausura[i], &m_caput);
             si (textus == NIHIL)
@@ -262,7 +262,7 @@ principale (
                 SilvaToken** sedes = (SilvaToken**)
                     xar_obtinere(parsura->lexemata, i);
 
-                si (   sedes != NIHIL && *sedes != NIHIL
+                si (   sedes                 != NIHIL && *sedes != NIHIL
                     && (*sedes)->origo.genus != SILVA_ORIGO_FONS)
                 {
                     expansa++;

@@ -26,12 +26,14 @@
 #include <string.h>
 
 interior s32
-_numerus (Piscina* piscina, constans SilvaParsura* parsura,
-    constans character* selector)
+_numerus (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* selector)
 {
     constans character* causa = NIHIL;
-    SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-        &SILVA_C89_REGISTRUM, selector, &causa);
+         SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+             &SILVA_C89_REGISTRUM, selector, &causa);
     Xar* resultata;
 
     si (q == NIHIL) redde -I;
@@ -42,8 +44,9 @@ _numerus (Piscina* piscina, constans SilvaParsura* parsura,
 }
 
 interior constans SilvaNodus*
-_captura (constans SilvaQuaestioResultatum* r,
-    constans character* titulus)
+_captura (
+    constans SilvaQuaestioResultatum* r,
+                  constans character* titulus)
 {
     i32 i;
 
@@ -53,7 +56,7 @@ _captura (constans SilvaQuaestioResultatum* r,
         SilvaQuaestioCaptura* cap = (SilvaQuaestioCaptura*)
             xar_obtinere(r->capturae, i);
 
-        si (cap != NIHIL
+        si (   cap                  != NIHIL
             && cap->titulus.mensura == (i32)strlen(titulus)
             && memcmp(cap->titulus.datum, titulus,
                    strlen(titulus)) == ZEPHYRUM)
@@ -67,7 +70,7 @@ _captura (constans SilvaQuaestioResultatum* r,
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_messis",
         8388608);
@@ -78,12 +81,14 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * Selectores typorum (v1: Type Selectors)
      * ======================================================== */
+
     {
         constans character* fons = "int main(void) { return 0; }";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         imprimere("\n--- Messis: selectores typorum ---\n");
 
@@ -104,9 +109,11 @@ s32 principale (vacuum)
             "redde"), I);
     }
 
+
     /* ========================================================
      * Selectores typorum ampliati (v1: Extended)
      * ======================================================== */
+
     {
         constans character* fons =
             "struct Point { int x; int y; };\n"
@@ -160,9 +167,11 @@ s32 principale (vacuum)
             "typus-primitivus") >= (s32)VIII);
     }
 
+
     /* ========================================================
      * Combinatores (v1: Descendant + Child)
      * ======================================================== */
+
     {
         constans character* fons =
             "int foo(void) { int x; return x; }";
@@ -188,12 +197,14 @@ s32 principale (vacuum)
             "corpus > redde"), I);
     }
 
+
     /* ========================================================
      * Attributa (v1: Attribute Selectors + Operators)
      * ======================================================== */
+
     {
         constans character* fons = "int main(void) { return 0; }";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         imprimere("\n--- Messis: attributa ---\n");
 
@@ -231,16 +242,18 @@ s32 principale (vacuum)
             ZEPHYRUM);
     }
 
+
     /* ========================================================
      * Capturae (v1: Captures + Multiple Captures; delta: tabula
      * dispersa v1 -> Xar gradus omnes)
      * ======================================================== */
+
     {
         constans character* fons = "int foo(void) { return 0; }";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
         constans character* causa = NIHIL;
-        SilvaQuaestio* q;
-        Xar* resultata;
+             SilvaQuaestio* q;
+                       Xar* resultata;
 
         imprimere("\n--- Messis: capturae ---\n");
 
@@ -268,13 +281,13 @@ s32 principale (vacuum)
         constans character* fons =
             "int foo(int x) { return x + 1; }\n"
             "int bar(int y) { return y * 2; }\n";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
         constans character* causa = NIHIL;
-        SilvaQuaestio* q;
-        SilvaQuaestio* q_def;
-        SilvaQuaestio* q_redde;
-        Xar* resultata;
-        i32 i;
+             SilvaQuaestio* q;
+             SilvaQuaestio* q_def;
+             SilvaQuaestio* q_redde;
+                       Xar* resultata;
+                       i32  i;
 
         parsura = silva_c89_parsare(piscina, "probatio.c", fons,
             (i32)strlen(fons), NIHIL);
@@ -305,8 +318,8 @@ s32 principale (vacuum)
             constans SilvaNodus* ret;
 
             CREDO_NON_NIHIL (r);
-            func = _captura(r, "func");
-            ret = _captura(r, "ret");
+            func  = _captura(r, "func");
+            ret   = _captura(r, "ret");
             CREDO_NON_NIHIL (func);
             CREDO_VERUM (ret == r->nodus);
             CREDO_VERUM (silva_quaestio_congruit(q_def, func));
@@ -314,10 +327,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * Pseudo (v1: Pseudo-Selectors + Extended; delta: asserta
      * mollia v1 EXACTA - :vocat(compute) v1 sine assertione)
      * ======================================================== */
+
     {
         constans character* fons =
             "void foo(void) { printf(\"hello\"); }\n"
@@ -366,10 +381,12 @@ s32 principale (vacuum)
             "definitio-functionis:definit(caller)"), I);
     }
 
+
     /* ========================================================
      * Quaestiones complexae + nidificatio (v1: Complex + Deep
      * Nesting + Child vs Descendant)
      * ======================================================== */
+
     {
         constans character* fons =
             "int add(int a, int b) { return a + b; }\n"
@@ -423,25 +440,27 @@ s32 principale (vacuum)
             "    return 0;\n"
             "}\n";
         SilvaParsura* parsura;
-        s32 filii;
-        s32 descendentes;
+                 s32  filii;
+                 s32  descendentes;
 
         parsura = silva_c89_parsare(piscina, "probatio.c", fons,
             (i32)strlen(fons), NIHIL);
         CREDO_NON_NIHIL (parsura);
         CREDO_VERUM (parsura->successus);
 
-        filii = _numerus(piscina, parsura, "corpus > redde");
-        descendentes = _numerus(piscina, parsura, "corpus redde");
+        filii         = _numerus(piscina, parsura, "corpus > redde");
+        descendentes  = _numerus(piscina, parsura, "corpus redde");
         CREDO_AEQUALIS_S32 (filii, II);
         CREDO_AEQUALIS_S32 (descendentes, II);
         CREDO_VERUM (descendentes >= filii);
     }
 
+
     /* ========================================================
      * Casus marginis (v1: Edge Cases; delta: tag ignotum v1
      * tacite vacuum -> fractura clara)
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
 
@@ -456,7 +475,7 @@ s32 principale (vacuum)
     }
     {
         constans character* fons = "int x;";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
         constans character* causa = NIHIL;
 
         parsura = silva_c89_parsare(piscina, "probatio.c", fons,
@@ -494,17 +513,19 @@ s32 principale (vacuum)
             " declarator-titulus[tok_titulus=\"beta\"]"), I);
     }
 
+
     /* ========================================================
      * Congruit (v1: Simple Match; delta: translation-unit nodum
      * non habet - radix LISTA nuda, nodi veri probantur)
      * ======================================================== */
+
     {
         constans character* fons = "int x;";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
         constans character* causa = NIHIL;
-        SilvaQuaestio* q_decl;
-        SilvaQuaestio* q_def;
-        Xar* resultata;
+             SilvaQuaestio* q_decl;
+             SilvaQuaestio* q_def;
+                       Xar* resultata;
 
         imprimere("\n--- Messis: congruit ---\n");
 

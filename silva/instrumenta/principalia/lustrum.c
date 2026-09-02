@@ -46,8 +46,10 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 };
 
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -77,7 +79,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -85,13 +87,14 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         redde NIHIL;
     }
     fclose(pl);
-    buffer[mensura] = '\0';
-    *mensura_out = (i32)mensura;
+    buffer[mensura]  = '\0';
+    *mensura_out     = (i32)mensura;
     redde buffer;
 }
 
 interior b32
-_suffixum_habet (constans character* titulus,
+_suffixum_habet (
+    constans character* titulus,
     constans character* suffixum)
 {
     memoriae_index lt = strlen(titulus);
@@ -109,7 +112,8 @@ _suffixum_habet (constans character* titulus,
  * functio-similium (praeconditio classis HS_call∩HS_rparen).
  * Reddit numerum imparium novorum; nomina imprimit. */
 interior i32
-_prosser_scandere (SilvaExpansio* exp)
+_prosser_scandere (
+    SilvaExpansio* exp)
 {
     i32 imparia = ZEPHYRUM;
     i32 k;
@@ -117,11 +121,11 @@ _prosser_scandere (SilvaExpansio* exp)
     per (k = ZEPHYRUM; k < xar_numerus(exp->acta); k++)
     {
         SilvaEventum* ev = (SilvaEventum*)xar_obtinere(exp->acta, k);
-        s32 par = ZEPHYRUM;
-        b32 impar = FALSUM;
-        i32 t;
+                 s32  par = ZEPHYRUM;
+                 b32  impar = FALSUM;
+                 i32  t;
 
-        si (ev == NIHIL || ev->genus != SILVA_EVENTUM_DEFINITIO
+        si (   ev == NIHIL || ev->genus != SILVA_EVENTUM_DEFINITIO
             || ev->def == NIHIL || !ev->def->est_functio
             || ev->def->corpus == NIHIL)
         {
@@ -160,29 +164,32 @@ _prosser_scandere (SilvaExpansio* exp)
     redde imparia;
 }
 
-s32 principale (s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina_census;
-    SilvaContextus* contextus;
-    character* nomina[PLAGULAE_MAXIMAE];
-    i32 numerus_plagularum = ZEPHYRUM;
+               Piscina* piscina_census;
+        SilvaContextus* contextus;
+             character* nomina[PLAGULAE_MAXIMAE];
+                   i32  numerus_plagularum = ZEPHYRUM;
     constans character* via_solarii;
-    character via[VIA_MAXIMA];
-    i32 k;
+             character  via[VIA_MAXIMA];
+                   i32  k;
 
     /* Summae */
-    i32 fideles = ZEPHYRUM;
-    i32 infideles = ZEPHYRUM;
-    i32 fracturae_parsurae = ZEPHYRUM;
-    i32 summa_octetorum = ZEPHYRUM;
-    i32 summa_errorum = ZEPHYRUM;
-    i32 summa_segmentorum = ZEPHYRUM;
-    i32 summa_textarum = ZEPHYRUM;
-    i32 summa_omissarum = ZEPHYRUM;
-    i32 summa_inclusionum_ignotarum = ZEPHYRUM;
-    i32 prosser_imparia = ZEPHYRUM;
-    i32 fines_tactae_plagulae = ZEPHYRUM;
-    duplex tempus_totale = 0.0;
+       i32 fideles                      = ZEPHYRUM;
+       i32 infideles                    = ZEPHYRUM;
+       i32 fracturae_parsurae           = ZEPHYRUM;
+       i32 summa_octetorum              = ZEPHYRUM;
+       i32 summa_errorum                = ZEPHYRUM;
+       i32 summa_segmentorum            = ZEPHYRUM;
+       i32 summa_textarum               = ZEPHYRUM;
+       i32 summa_omissarum              = ZEPHYRUM;
+       i32 summa_inclusionum_ignotarum  = ZEPHYRUM;
+       i32 prosser_imparia              = ZEPHYRUM;
+       i32 fines_tactae_plagulae        = ZEPHYRUM;
+    duplex tempus_totale                = 0.0;
 
     si (argc < II)
     {
@@ -208,10 +215,10 @@ s32 principale (s32 argc, character** argv)
             fprintf(stderr, "lustrum: %s non apertum\n", via_solarii);
             redde I;
         }
-        dum ((introitus = readdir(dir)) != NIHIL
-            && numerus_plagularum < PLAGULAE_MAXIMAE)
+        dum (   (introitus = readdir(dir)) != NIHIL
+             && numerus_plagularum < PLAGULAE_MAXIMAE)
         {
-            si (_suffixum_habet(introitus->d_name, ".c")
+            si (   _suffixum_habet(introitus->d_name, ".c")
                 || _suffixum_habet(introitus->d_name, ".h"))
             {
                 memoriae_index m = strlen(introitus->d_name) + I;
@@ -230,8 +237,8 @@ s32 principale (s32 argc, character** argv)
     /* Ordinare (insertio - numeri parvi; exitus stabilis) */
     per (k = I; k < numerus_plagularum; k++)
     {
-        character* clavis = nomina[k];
-        i32 j = k;
+        character* clavis  = nomina[k];
+              i32  j       = k;
 
         dum (j > ZEPHYRUM && strcmp(nomina[j - I], clavis) > ZEPHYRUM)
         {
@@ -255,8 +262,8 @@ s32 principale (s32 argc, character** argv)
 
         per (k = ZEPHYRUM; k < numerus_plagularum; k++)
         {
-            i8* textus;
-            i32 mensura;
+             i8* textus;
+            i32  mensura;
 
             si (!_suffixum_habet(nomina[k], ".h"))
             {
@@ -264,7 +271,7 @@ s32 principale (s32 argc, character** argv)
             }
             sprintf(via, "%s/%s", via_solarii, nomina[k]);
             textus = _plagulam_legere(piscina_census, via, &mensura);
-            si (textus != NIHIL
+            si (   textus != NIHIL
                 && silva_contextus_praebere(contextus, nomina[k],
                        (constans character*)textus, mensura))
             {
@@ -277,13 +284,13 @@ s32 principale (s32 argc, character** argv)
     /* Census: quaeque plagula fistula integra */
     per (k = ZEPHYRUM; k < numerus_plagularum; k++)
     {
-        Piscina* piscina_plagulae;
-        i8* textus;
-        i32 mensura;
-        SilvaParsura* parsura;
-        SilvaScriptura scriptura;
-        clock_t t0;
-        clock_t t1;
+               Piscina* piscina_plagulae;
+                    i8* textus;
+                   i32  mensura;
+          SilvaParsura* parsura;
+        SilvaScriptura  scriptura;
+               clock_t  t0;
+               clock_t  t1;
 
         sprintf(via, "%s/%s", via_solarii, nomina[k]);
         piscina_plagulae = piscina_generare_dynamicum("plagula",
@@ -315,10 +322,10 @@ s32 principale (s32 argc, character** argv)
         }
         scriptura = silva_scribere_fontem(piscina_plagulae, parsura,
             &SILVA_SCELETUM_REGISTRUM, parsura->fons_princeps);
-        t1 = clock();
-        tempus_totale += (duplex)(t1 - t0) / (duplex)CLOCKS_PER_SEC;
+        t1             = clock();
+        tempus_totale  += (duplex)(t1 - t0) / (duplex)CLOCKS_PER_SEC;
 
-        si (scriptura.successus
+        si (   scriptura.successus
             && scriptura.textus.mensura == (i32)mensura
             && (mensura == ZEPHYRUM
                 || memcmp(scriptura.textus.datum, textus,
@@ -342,8 +349,8 @@ s32 principale (s32 argc, character** argv)
                 i32 minor = (scriptura.textus.mensura < (i32)mensura)
                     ? (i32)scriptura.textus.mensura : mensura;
 
-                dum (d < minor
-                    && scriptura.textus.datum[d] == (i8)textus[d])
+                dum (   d < minor
+                     && scriptura.textus.datum[d] == (i8)textus[d])
                 {
                     d++;
                 }
@@ -353,10 +360,10 @@ s32 principale (s32 argc, character** argv)
             }
         }
 
-        summa_errorum += parsura->numerus_errorum;
-        summa_segmentorum += parsura->numerus_segmentorum;
-        summa_textarum += parsura->regiones_textae;
-        summa_omissarum += parsura->regiones_omissae;
+        summa_errorum      += parsura->numerus_errorum;
+        summa_segmentorum  += parsura->numerus_segmentorum;
+        summa_textarum     += parsura->regiones_textae;
+        summa_omissarum    += parsura->regiones_omissae;
         si (parsura->fines_tactae)
         {
             fines_tactae_plagulae++;

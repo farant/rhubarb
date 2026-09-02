@@ -50,22 +50,24 @@ typedef void (*NexusOrdinesReceptor)(
  * macrorum in latina.h definitorum exclusi (sedes manent). */
 void
 nexus_ordines_fundere (
-    const SilvaParsura*   parsura,
+      const SilvaParsura* parsura,
     const SilvaSemantica* sem,
-    Piscina*              effimera,
+                 Piscina* effimera,
     NexusOrdinesReceptor  receptor,
-    void*                 datum);
+                    void* datum);
 
 /* genus symboli -> titulus tabulae (variabile/functio/typedef/
  * constans/parametrum/?) */
 const char*
-nexus_ordines_genus_titulus (int genus);
+nexus_ordines_genus_titulus (
+    int genus);
 
 /* titulus macronis EXTIMI (in fonte scripti) lexematis expansi:
  * catenam originis ascendit; NULL si lexema FONS purum aut catena
  * corrupta. Communis emissioni (usus macrorum) et legato
  * (resolutio positionis - hover/definitio in invocatione). */
 const SilvaChorda*
-nexus_ordines_titulus_macronis (SilvaToken* tok);
+nexus_ordines_titulus_macronis (
+    SilvaToken* tok);
 
 #endif /* NEXUS_ORDINES_H */

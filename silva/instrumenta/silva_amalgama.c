@@ -18,6 +18,7 @@
 
 #define VIA_MAXIMA 1024
 
+
 /* ==================================================
  * Status amalgamatoris
  * ================================================== */
@@ -32,13 +33,16 @@ nomen structura {
     constans AmalgamaManifestum* manifestum;
 } Amalgamator;
 
+
 /* ==================================================
  * Auxiliares
  * ================================================== */
 
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -69,7 +73,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -82,10 +86,12 @@ _plagulam_legere (Piscina* piscina, constans character* via,
 }
 
 interior character*
-_literis_figere (Piscina* piscina, constans character* literis)
+_literis_figere (
+               Piscina* piscina,
+    constans character* literis)
 {
-    memoriae_index m = strlen(literis) + I;
-    character* fixum = (character*)piscina_allocare(piscina, m);
+    memoriae_index  m      = strlen(literis) + I;
+         character* fixum  = (character*)piscina_allocare(piscina, m);
 
     si (fixum != NIHIL)
     {
@@ -95,7 +101,9 @@ _literis_figere (Piscina* piscina, constans character* literis)
 }
 
 interior b32
-_chorda_est (chorda c, constans character* literis)
+_chorda_est (
+                chorda  c,
+    constans character* literis)
 {
     si (c.mensura != (i32)strlen(literis))
     {
@@ -110,13 +118,17 @@ _chorda_est (chorda c, constans character* literis)
 }
 
 interior SilvaToken*
-_ad (Xar* lexemata, i32 i)
+_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 interior vacuum
-_trivia_emittere (Amalgamator* am, Xar* spatia)
+_trivia_emittere (
+    Amalgamator* am,
+            Xar* spatia)
 {
     i32 i;
 
@@ -136,7 +148,10 @@ _trivia_emittere (Amalgamator* am, Xar* spatia)
  * intra lexemata in bibliothecis vendicatis non exsistunt, et textus
  * mundus semper compilat. */
 interior vacuum
-_lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
+_lexema_emittere (
+    Amalgamator* am,
+     SilvaToken* t,
+            b32  sine_ante)
 {
     i32 k;
 
@@ -164,7 +179,7 @@ _lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
             i32 m = (i32)strlen(
                 am->manifestum->praefixa_functionum[k].vetus);
 
-            si (t->valor.mensura > m
+            si (   t->valor.mensura > m
                 && memcmp(t->valor.datum,
                        am->manifestum->praefixa_functionum[k].vetus,
                        (memoriae_index)m) == ZEPHYRUM)
@@ -173,8 +188,8 @@ _lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
 
                 chorda_aedificator_appendere_literis(am->aed,
                     am->manifestum->praefixa_functionum[k].novum);
-                cauda.datum = t->valor.datum + m;
-                cauda.mensura = t->valor.mensura - m;
+                cauda.datum    = t->valor.datum + m;
+                cauda.mensura  = t->valor.mensura - m;
                 chorda_aedificator_appendere_chorda(am->aed, cauda);
                 _trivia_emittere(am, t->spatia_post);
                 redde;
@@ -186,6 +201,7 @@ _lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
     _trivia_emittere(am, t->spatia_post);
 }
 
+
 /* ==================================================
  * Scansio unitatum: MOTA in silva_unitates.{h,c} 2026-08-17
  * (mechanismus communis - differre consumptor alter; porta
@@ -193,7 +209,9 @@ _lexema_emittere (Amalgamator* am, SilvaToken* t, b32 sine_ante)
  * ================================================== */
 
 interior b32
-_in_indice (chorda titulus, constans character* constans* index)
+_in_indice (
+    chorda titulus,
+    constans character* constans* index)
 {
     i32 k;
 
@@ -212,7 +230,8 @@ _in_indice (chorda titulus, constans character* constans* index)
 }
 
 interior b32
-_in_servandis (chorda titulus,
+_in_servandis (
+    chorda titulus,
     constans character* constans* servanda)
 {
     i32 k;
@@ -235,20 +254,24 @@ _in_servandis (chorda titulus,
     redde FALSUM;
 }
 
+
 /* ==================================================
  * Processio plagulae
  * ================================================== */
 
 interior vacuum
-_includendum_systematis_subferre (Amalgamator* am, Xar* lexemata,
-    i32 i, i32 lf)
+_includendum_systematis_subferre (
+    Amalgamator* am,
+            Xar* lexemata,
+            i32  i,
+            i32  lf)
 {
     ChordaAedificator* titulus_aed;
-    chorda titulus;
-    i32 j;
-    b32 novum = VERUM;
+               chorda  titulus;
+                  i32  j;
+                  b32  novum = VERUM;
 
-    si (i + II >= lf
+    si (   i + II                       >= lf
         || _ad(lexemata, i + II)->genus != SILVA_LEX_MINOR)
     {
         redde;  /* "proiectum.h" - cadit sine sublatione */
@@ -269,7 +292,7 @@ _includendum_systematis_subferre (Amalgamator* am, Xar* lexemata,
     {
         chorda* c = (chorda*)xar_obtinere(am->systematis, j);
 
-        si (c->mensura == titulus.mensura
+        si (   c->mensura == titulus.mensura
             && (titulus.mensura == ZEPHYRUM
                 || memcmp(c->datum, titulus.datum,
                        (memoriae_index)c->mensura) == ZEPHYRUM))
@@ -290,15 +313,17 @@ _includendum_systematis_subferre (Amalgamator* am, Xar* lexemata,
 }
 
 interior vacuum
-_plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
+_plagulam_processare (
+                 Amalgamator* am,
+    constans AmalgamaPlagula* pl)
 {
-    character via[VIA_MAXIMA];
+    character  via[VIA_MAXIMA];
     character* via_fixa;
-    i8* fons;
-    i32 mensura;
-    Xar* lexemata;
-    i32 n;
-    i32 i;
+           i8* fons;
+          i32  mensura;
+          Xar* lexemata;
+          i32  n;
+          i32  i;
 
     sprintf(via, "%s/%s", am->radix, pl->via);
     fons = _plagulam_legere(am->piscina, via, &mensura);
@@ -335,14 +360,14 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
          * ceterae (custodiae, defines) verbatim renominatae */
         si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
         {
-            i32 lf = silva_lineam_finire(lexemata, i, n);
-            b32 est_includendum = FALSUM;
+            i32 lf               = silva_lineam_finire(lexemata, i, n);
+            b32 est_includendum  = FALSUM;
 
             si (i + I < lf)
             {
                 SilvaToken* nomen_dir = _ad(lexemata, i + I);
 
-                si (nomen_dir->genus == SILVA_LEX_IDENTIFICATOR
+                si (   nomen_dir->genus == SILVA_LEX_IDENTIFICATOR
                     && _chorda_est(nomen_dir->valor, "include"))
                 {
                     est_includendum = VERUM;
@@ -369,15 +394,15 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
         /* Unitas suprema */
         {
             chorda titulus;
-            b32 est_functio;
-            b32 est_statica;
-            b32 est_definitio;
-            b32 est_typedef;
-            b32 est_tag_def;
-            b32 inicere;
-            i32 finis = silva_unitatem_finire(lexemata, i, n,
-                &titulus, &est_functio, &est_statica,
-                &est_definitio, &est_typedef, &est_tag_def);
+               b32 est_functio;
+               b32 est_statica;
+               b32 est_definitio;
+               b32 est_typedef;
+               b32 est_tag_def;
+               b32 inicere;
+               i32 finis = silva_unitatem_finire(lexemata, i, n,
+                   &titulus, &est_functio, &est_statica,
+                   &est_definitio, &est_typedef, &est_tag_def);
             i32 j;
 
             si (!_in_servandis(titulus, pl->servanda))
@@ -385,7 +410,7 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
                 i = finis;  /* unitas exclusa cadit (S44) */
                 perge;
             }
-            si (pl->excludenda != NIHIL
+            si (   pl->excludenda != NIHIL
                 && _in_indice(titulus, pl->excludenda))
             {
                 i = finis;  /* inusitata demissa (S44 finis) */
@@ -396,7 +421,7 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
              * (definitio una per TU). Typedef unitates per titulum;
              * definitiones tag solum si silva.h structuram PLENE
              * possidet. */
-            si (!pl->est_corpus
+            si (   !pl->est_corpus
                 && ((est_typedef
                         && _in_indice(titulus,
                                am->manifestum->cadenda_typedef))
@@ -411,7 +436,7 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
             /* S41: definitiones staticae duplicatae trans corpora =
              * error in UNO TU (vendicatae iniectae + interiores
              * silvae aeque examinantur) */
-            si (pl->est_corpus && est_functio && est_definitio
+            si (   pl->est_corpus && est_functio && est_definitio
                 && titulus.datum != NIHIL
                 && (est_statica || pl->est_vendicata))
             {
@@ -429,20 +454,20 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
                 }
                 alioquin
                 {
-                    chorda clavis;
-                    i8* datum_fixum = (i8*)piscina_allocare(
-                        am->piscina,
-                        (memoriae_index)(titulus.mensura > ZEPHYRUM
+                    chorda  clavis;
+                        i8* datum_fixum = (i8*)piscina_allocare(
+                            am->piscina,
+                            (memoriae_index)(titulus.mensura > ZEPHYRUM
                             ? titulus.mensura : I));
 
-                    si (datum_fixum != NIHIL
+                    si (   datum_fixum != NIHIL
                         && titulus.mensura > ZEPHYRUM)
                     {
                         memcpy(datum_fixum, titulus.datum,
                             (memoriae_index)titulus.mensura);
                     }
-                    clavis.datum = datum_fixum;
-                    clavis.mensura = titulus.mensura;
+                    clavis.datum    = datum_fixum;
+                    clavis.mensura  = titulus.mensura;
                     tabula_dispersa_inserere(am->statica, clavis,
                         (vacuum*)via_fixa);
                 }
@@ -478,6 +503,8 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
         }
     }
 }
+
+
 /* ==================================================
  * Datum latinum (optionale - silva): plagulae datum ex
  * include/latina.h emittuntur (series octetorum - limes 509
@@ -486,7 +513,8 @@ _plagulam_processare (Amalgamator* am, constans AmalgamaPlagula* pl)
  * ================================================== */
 
 interior constans character*
-_basis_viae (constans character* via)
+_basis_viae (
+    constans character* via)
 {
     constans character* solidus = strrchr(via, '/');
 
@@ -495,9 +523,9 @@ _basis_viae (constans character* via)
 
 interior b32
 _latina_datum_emittere (
-    constans character*          radix,
-    constans i8*                 textus,
-    i32                          mensura,
+             constans character* radix,
+                    constans i8* textus,
+                            i32  mensura,
     constans AmalgamaManifestum* m)
 {
     character via[VIA_MAXIMA];
@@ -573,30 +601,30 @@ _latina_datum_emittere (
 
 b32
 silva_amalgama_currere (
-    Piscina*                     piscina,
-    constans character*          radix,
-    constans character*          via_exitus,
+                        Piscina* piscina,
+             constans character* radix,
+             constans character* via_exitus,
     constans AmalgamaManifestum* manifestum)
 {
-    Amalgamator am;
-    character via_latinae[VIA_MAXIMA];
-    i8* latina;
-    i32 mensura_latinae;
-    chorda corpus;
-    i32 k;
+    Amalgamator  am;
+      character  via_latinae[VIA_MAXIMA];
+             i8* latina;
+            i32  mensura_latinae;
+         chorda  corpus;
+            i32  k;
 
-    si (piscina == NIHIL || radix == NIHIL || via_exitus == NIHIL
+    si (   piscina    == NIHIL || radix == NIHIL || via_exitus == NIHIL
         || manifestum == NIHIL)
     {
         redde FALSUM;
     }
-    am.piscina = piscina;
-    am.aed = chorda_aedificator_creare(piscina, 262144);
-    am.radix = radix;
-    am.systematis = xar_creare(piscina, magnitudo(chorda));
-    am.statica = tabula_dispersa_creare_chorda(piscina, CXXVIII);
-    am.successus = VERUM;
-    am.manifestum = manifestum;
+    am.piscina     = piscina;
+    am.aed         = chorda_aedificator_creare(piscina, 262144);
+    am.radix       = radix;
+    am.systematis  = xar_creare(piscina, magnitudo(chorda));
+    am.statica     = tabula_dispersa_creare_chorda(piscina, CXXVIII);
+    am.successus   = VERUM;
+    am.manifestum  = manifestum;
 
     /* latina.h verbatim (numquam renominata - S43) */
     sprintf(via_latinae, "%s/include/latina.h", radix);
@@ -675,10 +703,10 @@ silva_amalgama_currere (
          * separatim ferunt) */
         si (manifestum->via_capitis != NIHIL)
         {
-            character via_capitis[VIA_MAXIMA];
-            i8* caput;
-            i32 mensura_capitis;
-            chorda caput_chorda;
+            character  via_capitis[VIA_MAXIMA];
+                   i8* caput;
+                  i32  mensura_capitis;
+               chorda  caput_chorda;
 
             sprintf(via_capitis, "%s/%s", radix,
                 manifestum->via_capitis);
@@ -697,21 +725,21 @@ silva_amalgama_currere (
                 _basis_viae(manifestum->via_capitis));
             chorda_aedificator_appendere_literis(totum,
                 " (verbatim) ================= */\n");
-            caput_chorda.datum = caput;
-            caput_chorda.mensura = mensura_capitis;
+            caput_chorda.datum    = caput;
+            caput_chorda.mensura  = mensura_capitis;
             chorda_aedificator_appendere_chorda(totum, caput_chorda);
         }
         chorda_aedificator_appendere_literis(totum,
             "\n/* ================= ex include/latina.h "
             "================= */\n");
-        latina_chorda.datum = latina;
-        latina_chorda.mensura = mensura_latinae;
+        latina_chorda.datum    = latina;
+        latina_chorda.mensura  = mensura_latinae;
         chorda_aedificator_appendere_chorda(totum, latina_chorda);
         chorda_aedificator_appendere_chorda(totum, corpus);
 
         {
-            chorda exitus = chorda_aedificator_finire(totum);
-            FILE* pl = fopen(via_exitus, "wb");
+            chorda  exitus  = chorda_aedificator_finire(totum);
+              FILE* pl      = fopen(via_exitus, "wb");
 
             si (pl == NIHIL)
             {
@@ -720,7 +748,7 @@ silva_amalgama_currere (
                     via_exitus);
                 redde FALSUM;
             }
-            si (exitus.mensura > ZEPHYRUM
+            si (   exitus.mensura > ZEPHYRUM
                 && fwrite(exitus.datum, I,
                        (memoriae_index)exitus.mensura, pl)
                     != (memoriae_index)exitus.mensura)

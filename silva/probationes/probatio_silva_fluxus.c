@@ -19,7 +19,8 @@
 #include <string.h>
 
 interior constans SilvaNodus*
-_nodalis_probationis (SilvaValor v)
+_nodalis_probationis (
+    SilvaValor v)
 {
     si (v.genus != SILVA_VALOR_NODUS)
     {
@@ -29,7 +30,9 @@ _nodalis_probationis (SilvaValor v)
 }
 
 interior constans SilvaNodus*
-_nodus (constans SilvaParsura* parsura, i32 index)
+_nodus (
+    constans SilvaParsura* parsura,
+                      i32  index)
 {
     SilvaValor* e = silva_valor_lista_obtinere(
         parsura->commissio->radix, index);
@@ -45,22 +48,24 @@ _nodus (constans SilvaParsura* parsura, i32 index)
  * parentheses - sufficit probationibus (semantica plicationem
  * plenam tradet in gradu 2) */
 interior b32
-_aestimator_litteralis (vacuum* contextus,
-    constans SilvaNodus* expressio, s64* valor)
+_aestimator_litteralis (
+                 vacuum* contextus,
+    constans SilvaNodus* expressio,
+                    s64* valor)
 {
     SilvaValor tok_v;
-    chorda textus;
-    s64 v = ZEPHYRUM;
-    i32 i;
+        chorda textus;
+           s64 v = ZEPHYRUM;
+           i32 i;
 
     (vacuum)contextus;
-    dum (expressio != NIHIL
-        && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    dum (   expressio        != NIHIL
+         && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
     {
         expressio = _nodalis_probationis(
             silva_c89_parenthesis_internum(expressio));
     }
-    si (expressio == NIHIL
+    si (   expressio        == NIHIL
         || expressio->genus != (s32)SILVA_C89_GENUS_FOLIUM_INTEGER)
     {
         redde FALSUM;
@@ -91,13 +96,15 @@ _aestimator_litteralis (vacuum* contextus,
 
 /* Fistula probationis: fons -> parsura -> CFG definitionis primae */
 interior FluxusFunctionis*
-_fluere (Piscina* piscina, constans character* fons,
-    b32 cum_aestimatore)
+_fluere (
+               Piscina* piscina,
+    constans character* fons,
+                   b32  cum_aestimatore)
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina, "probatio.c",
         fons, (i32)strlen(fons), NIHIL);
     constans SilvaNodus* definitio;
-    FluxusAuxilia aux;
+          FluxusAuxilia  aux;
 
     si (parsura == NIHIL || parsura->numerus_errorum != ZEPHYRUM)
     {
@@ -110,9 +117,9 @@ _fluere (Piscina* piscina, constans character* fons,
     }
     si (cum_aestimatore)
     {
-        aux.canonicum = NIHIL;
-        aux.aestimator = _aestimator_litteralis;
-        aux.contextus = NIHIL;
+        aux.canonicum   = NIHIL;
+        aux.aestimator  = _aestimator_litteralis;
+        aux.contextus   = NIHIL;
         redde silva_c89_fluxus_aedificare(piscina, definitio, &aux);
     }
     redde silva_c89_fluxus_aedificare(piscina, definitio, NIHIL);
@@ -120,7 +127,9 @@ _fluere (Piscina* piscina, constans character* fons,
 
 /* Numerus marginum generis dati trans omnes blocos */
 interior i32
-_margines_generis (constans FluxusFunctionis* fluxus, s32 genus)
+_margines_generis (
+    constans FluxusFunctionis* fluxus,
+                          s32  genus)
 {
     i32 summa = ZEPHYRUM;
     i32 b;
@@ -150,7 +159,8 @@ _margines_generis (constans FluxusFunctionis* fluxus, s32 genus)
 /* Numerus blocorum attingibilium (fissio: omnes segmenta vivere
  * debent - probatio marginis retro ansarum) */
 interior i32
-_bloci_attingibiles (constans FluxusFunctionis* fluxus)
+_bloci_attingibiles (
+    constans FluxusFunctionis* fluxus)
 {
     i32 summa = ZEPHYRUM;
     i32 b;
@@ -171,7 +181,8 @@ _bloci_attingibiles (constans FluxusFunctionis* fluxus)
 
 /* Summa granulorum trans omnes blocos */
 interior i32
-_sententiae_totae (constans FluxusFunctionis* fluxus)
+_sententiae_totae (
+    constans FluxusFunctionis* fluxus)
 {
     i32 summa = ZEPHYRUM;
     i32 b;
@@ -189,7 +200,8 @@ _sententiae_totae (constans FluxusFunctionis* fluxus)
 
 /* Bloci inattingibiles NON vacui (cibus codicis 65) */
 interior i32
-_bloci_mortui_pleni (constans FluxusFunctionis* fluxus)
+_bloci_mortui_pleni (
+    constans FluxusFunctionis* fluxus)
 {
     i32 summa = ZEPHYRUM;
     i32 b;
@@ -200,7 +212,7 @@ _bloci_mortui_pleni (constans FluxusFunctionis* fluxus)
         constans FluxusBlocus* blocus = (constans FluxusBlocus*)
             xar_obtinere(fluxus->bloci, b);
 
-        si (!blocus->attingibilis
+        si (   !blocus->attingibilis
             && xar_numerus(blocus->sententiae) > ZEPHYRUM)
         {
             summa++;
@@ -212,7 +224,7 @@ _bloci_mortui_pleni (constans FluxusFunctionis* fluxus)
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_fluxus", 33554432);
     si (!piscina)
@@ -222,9 +234,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: formae lineares et si
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 
@@ -261,9 +275,11 @@ s32 principale (vacuum)
             (s32)FLUXUS_MARGO_REDDITUS), II);
     }
 
+
     /* ========================================================
      * PROBARE: ansae - conditio constans = sutura auxiliorum
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 
@@ -318,9 +334,11 @@ s32 principale (vacuum)
             (s32)FLUXUS_MARGO_PERSECUTIO), I);
     }
 
+
     /* ========================================================
      * PROBARE: commutatio - dispersio, lapsus, ordinarius
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 
@@ -392,9 +410,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_bloci_mortui_pleni(f), I);
     }
 
+
     /* ========================================================
      * PROBARE: tituli, salta, violationes ut data
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 
@@ -446,9 +466,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (_bloci_mortui_pleni(f), I);
     }
 
+
     /* ========================================================
      * PROBARE: conditionalis - semita sumpta transit
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 
@@ -461,9 +483,11 @@ s32 principale (vacuum)
             (s32)FLUXUS_MARGO_REDDITUS), I);
     }
 
+
     /* ========================================================
      * PROBARE: fissio sectionum brevium (FLUXUS-1 chunk 0)
      * ======================================================== */
+
     {
         FluxusFunctionis* f;
 

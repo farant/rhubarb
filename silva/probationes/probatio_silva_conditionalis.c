@@ -38,7 +38,8 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 
 /* Genus ex registro per nomen; -1 si absens */
 interior s32
-_genus_invenire (constans character* titulus)
+_genus_invenire (
+    constans character* titulus)
 {
     i32 i;
 
@@ -48,7 +49,7 @@ _genus_invenire (constans character* titulus)
         constans SilvaTabGenus* genus =
             &SILVA_SCELETUM_REGISTRUM.genera[i];
 
-        si (genus->titulus != NIHIL
+        si (   genus->titulus                  != NIHIL
             && strcmp(genus->titulus, titulus) == ZEPHYRUM)
         {
             redde (s32)i;
@@ -59,10 +60,12 @@ _genus_invenire (constans character* titulus)
 
 /* Locus generis per nomen; -1 si absens */
 interior s32
-_locum_invenire (s32 genus_index, constans character* titulus)
+_locum_invenire (
+                   s32  genus_index,
+    constans character* titulus)
 {
     constans SilvaTabGenus* genus;
-    i32 k;
+                       i32  k;
 
     si (genus_index < ZEPHYRUM)
     {
@@ -74,7 +77,7 @@ _locum_invenire (s32 genus_index, constans character* titulus)
         constans SilvaTabLocus* locus =
             &SILVA_SCELETUM_REGISTRUM.loci[genus->loci_offset + k];
 
-        si (locus->titulus != NIHIL
+        si (   locus->titulus                  != NIHIL
             && strcmp(locus->titulus, titulus) == ZEPHYRUM)
         {
             redde (s32)k;
@@ -85,12 +88,14 @@ _locum_invenire (s32 genus_index, constans character* titulus)
 
 /* Parsare + reconstructio octetim exacta; parsura_out semper */
 interior b32
-_fidelis (Piscina* piscina, constans character* fons,
-    SilvaParsura** parsura_out)
+_fidelis (
+               Piscina*  piscina,
+    constans character*  fons,
+          SilvaParsura** parsura_out)
 {
-    SilvaParsura*  parsura;
-    SilvaScriptura scriptura;
-    i32 m = (i32)strlen(fons);
+      SilvaParsura* parsura;
+    SilvaScriptura  scriptura;
+               i32  m = (i32)strlen(fons);
 
     parsura = silva_parsare(piscina, "probatio.c", fons, m,
         &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
@@ -108,7 +113,7 @@ _fidelis (Piscina* piscina, constans character* fons,
     {
         redde FALSUM;
     }
-    si (m > ZEPHYRUM
+    si (   m > ZEPHYRUM
         && memcmp(scriptura.textus.datum, fons,
                (memoriae_index)m) != ZEPHYRUM)
     {
@@ -119,7 +124,9 @@ _fidelis (Piscina* piscina, constans character* fons,
 
 /* Elementum radicis generis dati primum; NIHIL si absens */
 interior SilvaNodus*
-_elementum_generis (SilvaParsura* parsura, s32 genus)
+_elementum_generis (
+    SilvaParsura* parsura,
+             s32  genus)
 {
     i32 n;
     i32 i;
@@ -134,7 +141,7 @@ _elementum_generis (SilvaParsura* parsura, s32 genus)
         SilvaValor* elem = silva_valor_lista_obtinere(
             parsura->commissio->radix, i);
 
-        si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
+        si (   elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
             && elem->datum.nodus->genus == genus)
         {
             redde elem->datum.nodus;
@@ -145,19 +152,19 @@ _elementum_generis (SilvaParsura* parsura, s32 genus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
-    s32 g_conditionalis;
-    s32 g_sumptus;
-    s32 g_omissus;
-    s32 l_rami;
-    s32 l_finis;
-    s32 l_s_directiva;
-    s32 l_s_contentum;
-    s32 l_s_conditio;
-    s32 l_o_directiva;
-    s32 l_o_cruda;
-    s32 l_o_conditio;
+        s32  g_conditionalis;
+        s32  g_sumptus;
+        s32  g_omissus;
+        s32  l_rami;
+        s32  l_finis;
+        s32  l_s_directiva;
+        s32  l_s_contentum;
+        s32  l_s_conditio;
+        s32  l_o_directiva;
+        s32  l_o_cruda;
+        s32  l_o_conditio;
 
     piscina = piscina_generare_dynamicum("probatio_conditionalis",
         33554432);
@@ -168,38 +175,42 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: formae in registro cocto (generator eas imponit)
      * ======================================================== */
+
     imprimere("\n--- Probans formas generum ---\n");
-    g_conditionalis = _genus_invenire("conditionalis");
-    g_sumptus = _genus_invenire("ramus-sumptus");
-    g_omissus = _genus_invenire("ramus-omissus");
+    g_conditionalis  = _genus_invenire("conditionalis");
+    g_sumptus        = _genus_invenire("ramus-sumptus");
+    g_omissus        = _genus_invenire("ramus-omissus");
     CREDO_VERUM (g_conditionalis >= ZEPHYRUM);
     CREDO_VERUM (g_sumptus >= ZEPHYRUM);
     CREDO_VERUM (g_omissus >= ZEPHYRUM);
-    l_rami = _locum_invenire(g_conditionalis, "rami");
-    l_finis = _locum_invenire(g_conditionalis, "finis");
-    l_s_directiva = _locum_invenire(g_sumptus, "directiva");
-    l_s_contentum = _locum_invenire(g_sumptus, "contentum");
-    l_s_conditio = _locum_invenire(g_sumptus, "conditio_id");
-    l_o_directiva = _locum_invenire(g_omissus, "directiva");
-    l_o_cruda = _locum_invenire(g_omissus, "cruda");
-    l_o_conditio = _locum_invenire(g_omissus, "conditio_id");
+    l_rami         = _locum_invenire(g_conditionalis, "rami");
+    l_finis        = _locum_invenire(g_conditionalis, "finis");
+    l_s_directiva  = _locum_invenire(g_sumptus, "directiva");
+    l_s_contentum  = _locum_invenire(g_sumptus, "contentum");
+    l_s_conditio   = _locum_invenire(g_sumptus, "conditio_id");
+    l_o_directiva  = _locum_invenire(g_omissus, "directiva");
+    l_o_cruda      = _locum_invenire(g_omissus, "cruda");
+    l_o_conditio   = _locum_invenire(g_omissus, "conditio_id");
     CREDO_VERUM (l_rami >= ZEPHYRUM && l_finis >= ZEPHYRUM);
     CREDO_VERUM (l_s_directiva >= ZEPHYRUM && l_s_contentum >= ZEPHYRUM
         && l_s_conditio >= ZEPHYRUM);
     CREDO_VERUM (l_o_directiva >= ZEPHYRUM && l_o_cruda >= ZEPHYRUM
         && l_o_conditio >= ZEPHYRUM);
 
+
     /* ========================================================
      * PROBARE: duo rami - sumptus parsatum fert, omissus crudum;
      * finis lineam #endif; conditio_id iuncturam; dominus unus
      * (directivae fluxus lineas regionum NON fert)
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* conditionalis;
+          SilvaNodus* conditionalis;
 
         imprimere("\n--- Probans texturam basicam ---\n");
 
@@ -224,15 +235,16 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (conditionalis);
             si (conditionalis != NIHIL)
             {
-                SilvaValor rami = conditionalis->loci[l_rami];
-                SilvaValor finis = conditionalis->loci[l_finis];
+                SilvaValor  rami   = conditionalis->loci[l_rami];
+                SilvaValor  finis  = conditionalis->loci[l_finis];
                 SilvaValor* r0;
                 SilvaValor* r1;
 
                 CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(rami),
                     II);
                 /* finis: lexemata lineae #endif */
-                CREDO_VERUM (silva_valor_lista_numerus(finis) > ZEPHYRUM);
+                CREDO_VERUM (silva_valor_lista_numerus(finis)
+                    > ZEPHYRUM);
 
                 r0 = silva_valor_lista_obtinere(rami, ZEPHYRUM);
                 r1 = silva_valor_lista_obtinere(rami, I);
@@ -269,12 +281,14 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: #else sumptus (#if 0 numquam) + ramus vacuus
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* conditionalis;
+          SilvaNodus* conditionalis;
 
         imprimere("\n--- Probans else sumptum ---\n");
 
@@ -327,13 +341,15 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: nidificatio - conditionalis interior elementum
      * contenti exterioris
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* exterior;
+          SilvaNodus* exterior;
 
         imprimere("\n--- Probans nidificationem ---\n");
 
@@ -371,11 +387,13 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: degradationes - regio intra sententiam; limes
      * transgressus. Reconstructio tenet UTRIMQUE (mos pristinus
      * est via regressus).
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
 
@@ -404,14 +422,16 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: regio definitionum solarum (nihil congregatum -
      * insertio ordinali; linea #define in directivis MANET,
      * intra conditionalem reinserta)
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* conditionalis;
+          SilvaNodus* conditionalis;
 
         imprimere("\n--- Probans regionem definitionum ---\n");
 
@@ -433,13 +453,15 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: imperfecta (EOF ante #endif) - finis vacuum,
      * textura tenet
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* conditionalis;
+          SilvaNodus* conditionalis;
 
         imprimere("\n--- Probans imperfectam ---\n");
 
@@ -460,15 +482,17 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: includendum intra ramum - elementa plagulae alienae
      * EXTRA conditionalem manent; reconstructio AMBARUM plagularum
      * octetim exacta (uniformitas fontium, sim ⑦ C7)
      * ======================================================== */
+
     {
-        SilvaExpansio* exp;
-        SilvaParsura* parsura;
-        SilvaScriptura scriptura;
+             SilvaExpansio* exp;
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
         constans character* MODULUS = "int ex_modulo;\n";
         constans character* FONS =
             "#if 1\n#include \"modulus.h\"\nint x;\n#endif\n";
@@ -512,12 +536,14 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: elif - rami tres, medius sumptus
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
-        SilvaNodus* conditionalis;
+          SilvaNodus* conditionalis;
 
         imprimere("\n--- Probans elif ---\n");
 
@@ -533,7 +559,7 @@ s32 principale (vacuum)
             CREDO_NON_NIHIL (conditionalis);
             si (conditionalis != NIHIL)
             {
-                SilvaValor rami = conditionalis->loci[l_rami];
+                SilvaValor  rami = conditionalis->loci[l_rami];
                 SilvaValor* r0 = silva_valor_lista_obtinere(rami,
                     ZEPHYRUM);
                 SilvaValor* r1 = silva_valor_lista_obtinere(rami, I);
@@ -551,11 +577,13 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: messis sepulcreti v1 (praeparator spot-check,
      * Phase 7 Chunk C): directivae INDENTATAE (initium_lineae,
      * non columna 1) + #endif sine linea nova ad EOF
      * ======================================================== */
+
     {
         SilvaParsura* parsura;
 

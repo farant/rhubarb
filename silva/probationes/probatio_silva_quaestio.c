@@ -19,8 +19,9 @@
 
 /* capturam nomine invenire (QB); NIHIL = absens */
 interior constans SilvaNodus*
-_captura (constans SilvaQuaestioResultatum* r,
-    constans character* titulus)
+_captura (
+    constans SilvaQuaestioResultatum* r,
+                  constans character* titulus)
 {
     i32 i;
 
@@ -30,7 +31,7 @@ _captura (constans SilvaQuaestioResultatum* r,
         SilvaQuaestioCaptura* cap = (SilvaQuaestioCaptura*)
             xar_obtinere(r->capturae, i);
 
-        si (cap != NIHIL
+        si (   cap                  != NIHIL
             && cap->titulus.mensura == (i32)strlen(titulus)
             && memcmp(cap->titulus.datum, titulus,
                    strlen(titulus)) == ZEPHYRUM)
@@ -42,12 +43,14 @@ _captura (constans SilvaQuaestioResultatum* r,
 }
 
 interior s32
-_numerus (Piscina* piscina, constans SilvaParsura* parsura,
-    constans character* selector)
+_numerus (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* selector)
 {
     constans character* causa = NIHIL;
-    SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-        &SILVA_C89_REGISTRUM, selector, &causa);
+         SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+             &SILVA_C89_REGISTRUM, selector, &causa);
     Xar* resultata;
 
     si (q == NIHIL) redde -I;
@@ -59,13 +62,15 @@ _numerus (Piscina* piscina, constans SilvaParsura* parsura,
 
 /* ut _numerus, sed cum tabula pseudo usoris (QC) */
 interior s32
-_numerus_cum (Piscina* piscina, constans SilvaParsura* parsura,
+_numerus_cum (
+                                  Piscina* piscina,
+                    constans SilvaParsura* parsura,
     constans SilvaQuaestioPseudoRegistrum* registro,
-    constans character* selector)
+                       constans character* selector)
 {
     constans character* causa = NIHIL;
-    SilvaQuaestio* q = silva_quaestio_compilare_cum_registro(
-        piscina, &SILVA_C89_REGISTRUM, registro, selector, &causa);
+         SilvaQuaestio* q = silva_quaestio_compilare_cum_registro(
+             piscina, &SILVA_C89_REGISTRUM, registro, selector, &causa);
     Xar* resultata;
 
     si (q == NIHIL) redde -I;
@@ -78,8 +83,10 @@ _numerus_cum (Piscina* piscina, constans SilvaParsura* parsura,
 /* pseudo usoris probandum (QC): congruit si argumentum == "ita";
  * datum = numerator vocationum (filum argumenti + dati probat) */
 interior b32
-_pseudo_argosum (constans SilvaNodus* nodus, chorda argumentum,
-    vacuum* datum)
+_pseudo_argosum (
+    constans SilvaNodus* nodus,
+                 chorda  argumentum,
+                 vacuum* datum)
 {
     i32* numerator = (i32*)datum;
 
@@ -93,7 +100,7 @@ _pseudo_argosum (constans SilvaNodus* nodus, chorda argumentum,
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_quaestio",
         4194304);
@@ -104,9 +111,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: selectores fundamentales super programma parvum
      * ======================================================== */
+
     {
         constans character* fons =
             "int a;\n"
@@ -184,10 +193,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: fractura clara (tag ignotum = mutatio deliberata
      * a v1, DECISUS; selectores malformati)
      * ======================================================== */
+
     {
         constans character* causa = NIHIL;
 
@@ -214,13 +225,15 @@ s32 principale (vacuum)
             &SILVA_C89_REGISTRUM, "declaratio [x", &causa));
     }
 
+
     /* ========================================================
      * PROBARE: ambigua - descensus canonicus solus (DECISUS);
      * involucrum ipsum congruibile (tag "ambiguus")
      * ======================================================== */
+
     {
         constans character* fons = "Ignotus * x;\n";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         imprimere("\n--- Probans descensum canonicum ---\n");
 
@@ -244,12 +257,14 @@ s32 principale (vacuum)
             "binarium"), I);
     }
 
+
     /* ========================================================
      * PROBARE: nodi ERROR congruibiles (tag "error")
      * ======================================================== */
+
     {
         constans character* fons = "int bonus;\n@@@;\n";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         imprimere("\n--- Probans errorem congruibilem ---\n");
 
@@ -263,12 +278,14 @@ s32 principale (vacuum)
             "declaratio"), I);
     }
 
+
     /* ========================================================
      * PROBARE QB: attributa [locus op "valor"] (quinque
      * operationes; resolutio per genus; validatio compilationis),
      * capturae $nomen (gradus OMNES - insectum v1 #1), fratres
      * +/~, fracturae novae
      * ======================================================== */
+
     {
         constans character* fons =
             "int a;\n"
@@ -348,9 +365,9 @@ s32 principale (vacuum)
         /* capturae: gradus OMNES catenae ligati (insectum v1 #1) */
         {
             constans character* causa = NIHIL;
-            SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-                &SILVA_C89_REGISTRUM,
-                "definitio-functionis$f binarium$b", &causa);
+                 SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+                     &SILVA_C89_REGISTRUM,
+                     "definitio-functionis$f binarium$b", &causa);
             SilvaQuaestio* q_def = silva_quaestio_compilare(
                 piscina, &SILVA_C89_REGISTRUM,
                 "definitio-functionis", &causa);
@@ -383,9 +400,9 @@ s32 principale (vacuum)
         /* sine capturis: capturae NIHIL (nulla allocatio) */
         {
             constans character* causa = NIHIL;
-            SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-                &SILVA_C89_REGISTRUM, "definitio-functionis",
-                &causa);
+                 SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+                     &SILVA_C89_REGISTRUM, "definitio-functionis",
+                     &causa);
             Xar* resultata = silva_quaestio_exsequi(q,
                 parsura->commissio->radix, piscina);
             SilvaQuaestioResultatum* r;
@@ -400,9 +417,9 @@ s32 principale (vacuum)
          * capturam "r" ferunt, binarium "b" */
         {
             constans character* causa = NIHIL;
-            SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-                &SILVA_C89_REGISTRUM, "redde$r, binarium$b",
-                &causa);
+                 SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+                     &SILVA_C89_REGISTRUM, "redde$r, binarium$b",
+                     &causa);
             Xar* resultata = silva_quaestio_exsequi(q,
                 parsura->commissio->radix, piscina);
             i32 cum_b = ZEPHYRUM;
@@ -425,11 +442,13 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE QB: lexemata interposita in fratribus (virgulae
      * congeriei transilitae) + locus LISTA lexematum
      * (folium-chorda: elementum ULLUM congruit)
      * ======================================================== */
+
     {
         constans character* fons =
             "int arr[3] = {1, 2, 3};\n"
@@ -473,11 +492,13 @@ s32 principale (vacuum)
             "declarator-initiatus[tok_operator=\"=\"]"), II);
     }
 
+
     /* ========================================================
      * PROBARE QC: pseudo-classes structurales/logicales/
      * semanticae (:primus/:ultimus, :habet limite confinatum,
      * :non, :vocat/:definit/:utitur/:reddit, capturae compositae)
      * ======================================================== */
+
     {
         constans character* fons =
             "int a;\n"
@@ -551,10 +572,10 @@ s32 principale (vacuum)
         /* captura composita cum pseudo + congruit */
         {
             constans character* causa = NIHIL;
-            SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-                &SILVA_C89_REGISTRUM,
-                "definitio-functionis:vocat(quadratum)$f",
-                &causa);
+                 SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+                     &SILVA_C89_REGISTRUM,
+                     "definitio-functionis:vocat(quadratum)$f",
+                     &causa);
             SilvaQuaestio* q_reddit = silva_quaestio_compilare(
                 piscina, &SILVA_C89_REGISTRUM,
                 "definitio-functionis:reddit", &causa);
@@ -587,13 +608,15 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE QC: filius solus in loco NODO directo (DECISUS:
      * AMBO :primus/:ultimus congruunt)
      * ======================================================== */
+
     {
         constans character* fons = "int arr[7];\n";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         parsura = silva_c89_parsare(piscina, "probatio.c", fons,
             (i32)strlen(fons), NIHIL);
@@ -604,13 +627,15 @@ s32 principale (vacuum)
             "folium-integer:ultimus"), I);
     }
 
+
     /* ========================================================
      * PROBARE QC: :ambiguum + :lectiones (lectiones omnes
      * apertae) + :sumptus/:omissus (textura conditionalium)
      * ======================================================== */
+
     {
         constans character* fons = "Ignotus * x;\n";
-        SilvaParsura* parsura;
+              SilvaParsura* parsura;
 
         imprimere("\n--- Probans QC: lectiones/rami ---\n");
 
@@ -665,18 +690,20 @@ s32 principale (vacuum)
             "ramus-omissus:omissus"), I);
     }
 
+
     /* ========================================================
      * PROBARE QC: registratio usoris (tabula ANTE compilationem;
      * insectum v1 #4 functionale factum) + fracturae pseudo
      * ======================================================== */
+
     {
         constans character* fons =
             "int a;\n"
             "int quadratum(int x) { int y; y = x * x; return y; }\n"
             "void vacua(void) { int z; z = 1; }\n";
-        SilvaParsura* parsura;
+                        SilvaParsura* parsura;
         SilvaQuaestioPseudoRegistrum* registro;
-        i32 numerator = ZEPHYRUM;
+                                 i32  numerator = ZEPHYRUM;
 
         imprimere("\n--- Probans QC: registratio/fracturae ---\n");
 

@@ -23,6 +23,7 @@
 #include "xar.h"
 #include "silva_token.h"
 
+
 /* ==================================================
  * Species loci (vocabularium formae v0)
  * ================================================== */
@@ -68,10 +69,10 @@ nomen structura {
 structura SilvaValor {
     SilvaValorGenus genus;
     unio {
-        SilvaNodus*          nodus;
-        SilvaToken*          token;
-        SilvaListaProspectus lista;
-        s32                  index;
+                  SilvaNodus* nodus;
+                  SilvaToken* token;
+        SilvaListaProspectus  lista;
+                         s32  index;
     } datum;
 };
 
@@ -81,8 +82,8 @@ structura SilvaValor {
  * ================================================== */
 
 structura SilvaNodus {
-    s32         genus;            /* index in registro generum */
-    i32         numerus_locorum;
+           s32  genus;            /* index in registro generum */
+           i32  numerus_locorum;
     SilvaValor* loci;             /* series signata (layout per genus) */
     SilvaNodus* pater;            /* post-acceptum SOLUM (S27) */
 };
@@ -92,16 +93,27 @@ structura SilvaNodus {
  * Constructores valorum
  * ================================================== */
 
-SilvaValor silva_valor_nihil (vacuum);
-SilvaValor silva_valor_nodus (SilvaNodus* nodus);
-SilvaValor silva_valor_token (SilvaToken* token);
-SilvaValor silva_valor_index (s32 index);
+SilvaValor
+silva_valor_nihil (vacuum);
+SilvaValor
+silva_valor_nodus (
+    SilvaNodus* nodus);
+SilvaValor
+silva_valor_token (
+    SilvaToken* token);
+SilvaValor
+silva_valor_index (
+    s32 index);
 
 /* Prospectus super Xar existentem (mensura = numerus currens) */
-SilvaValor silva_valor_lista (Xar* lista);
+SilvaValor
+silva_valor_lista (
+    Xar* lista);
 
 /* Lista nova vacua (Xar de SilvaValor, prospectus 0) */
-SilvaValor silva_valor_lista_nova (Piscina* piscina);
+SilvaValor
+silva_valor_lista_nova (
+    Piscina* piscina);
 
 /* Appendere PURUM (A½): prospectus alieni numquam laeduntur. Si
  * prospectus ad finem vivum repositorii stat, in loco appendit (O(1),
@@ -110,15 +122,20 @@ SilvaValor silva_valor_lista_nova (Piscina* piscina);
  * nihil-valorem in errore aut inputo non-lista. */
 SilvaValor
 silva_valor_lista_appendere (
-    Piscina*   piscina,
-    SilvaValor lista,
-    SilvaValor elementum);
+       Piscina* piscina,
+    SilvaValor  lista,
+    SilvaValor  elementum);
 
 /* Numerus elementorum PROSPECTUS (0 si non lista) */
-i32 silva_valor_lista_numerus (SilvaValor lista);
+i32
+silva_valor_lista_numerus (
+    SilvaValor lista);
 
 /* Elementum intra prospectum (NIHIL extra mensuram prospectus) */
-SilvaValor* silva_valor_lista_obtinere (SilvaValor lista, i32 index);
+SilvaValor*
+silva_valor_lista_obtinere (
+    SilvaValor lista,
+           i32 index);
 
 
 /* ==================================================
@@ -129,39 +146,39 @@ SilvaValor* silva_valor_lista_obtinere (SilvaValor lista, i32 index);
 SilvaNodus*
 silva_nodus_creare (
     Piscina* piscina,
-    s32      genus,
-    i32      numerus_locorum);
+        s32  genus,
+        i32  numerus_locorum);
 
 /* Ponere valorem in locum - S32: signum contra speciem probatur,
  * semel-tantum scribere imponitur. Reddit FALSUM in violatione
  * (et nihil scribit). */
 b32
 silva_nodus_ponere (
-    SilvaNodus*       nodus,
-    i32               locus,
-    SilvaValor        valor,
-    SilvaLocusSpecies species);
+           SilvaNodus* nodus,
+                  i32  locus,
+           SilvaValor  valor,
+    SilvaLocusSpecies  species);
 
 /* Appendere in locum listae (creat listam si NIHIL) */
 b32
 silva_nodus_appendere (
-    Piscina*          piscina,
-    SilvaNodus*       nodus,
-    i32               locus,
-    SilvaValor        valor,
-    SilvaLocusSpecies species);
+              Piscina* piscina,
+           SilvaNodus* nodus,
+                  i32  locus,
+           SilvaValor  valor,
+    SilvaLocusSpecies  species);
 
 /* Congruitne signum valoris cum specie loci? */
 b32
 silva_valor_congruit (
-    SilvaValor        valor,
+           SilvaValor valor,
     SilvaLocusSpecies species);
 
 /* Liberi nodales: NODUS loci + elementa NODUS listarum, ordine locorum.
  * Tabulis non eget - valores signati sunt. Xar de SilvaNodus*. */
 Xar*
 silva_nodus_liberi (
-    Piscina*           piscina,
+                Piscina* piscina,
     constans SilvaNodus* nodus);
 
 /* Extensio fontis (LEGATUS chunk 0, ex sessione promota): min/max
@@ -173,19 +190,19 @@ silva_nodus_liberi (
  * <contractus param="maximum" modus="accumulat"/> */
 vacuum
 silva_valor_extensionem (
-    SilvaValor        valor,
-    s32               fons_index,
-    s32*              minimum,
-    s32*              maximum);
+    SilvaValor  valor,
+           s32  fons_index,
+           s32* minimum,
+           s32* maximum);
 
 /* <contractus param="minimum" modus="accumulat"/>
  * <contractus param="maximum" modus="accumulat"/> */
 vacuum
 silva_nodus_extensionem (
     constans SilvaNodus* nodus,
-    s32                  fons_index,
-    s32*                 minimum,
-    s32*                 maximum);
+                    s32  fons_index,
+                    s32* minimum,
+                    s32* maximum);
 
 /* Variantia linearum (pro LSP): initium = minimum (linea,columna)
  * lexicographicum, finis = maximum (linea, columna+longitudo -
@@ -195,11 +212,11 @@ silva_nodus_extensionem (
 vacuum
 silva_nodus_extensionem_lineis (
     constans SilvaNodus* nodus,
-    s32                  fons_index,
-    i32*                 linea_a,
-    i32*                 columna_a,
-    i32*                 linea_b,
-    i32*                 columna_b);
+                    s32  fons_index,
+                    i32* linea_a,
+                    i32* columna_a,
+                    i32* linea_b,
+                    i32* columna_b);
 
 /* Puritas fontis: VERUM si lexemata subarboris OMNIA origine FONS
  * sunt (stratum 0 - nihil ex expansione/pasta/stringificatione/
@@ -212,12 +229,12 @@ silva_nodus_extensionem_lineis (
 b32
 silva_valor_est_fons_purus (
     SilvaValor valor,
-    s32        fons_index);
+           s32 fons_index);
 
 b32
 silva_nodus_est_fons_purus (
     constans SilvaNodus* nodus,
-    s32                  fons_index);
+                    s32  fons_index);
 
 /* Geometria fida: VERUM si sedes fontis (per radicem originis)
  * lexematum subarboris DISTINCTAE sunt. Expansio 1:1 (macros
@@ -234,15 +251,15 @@ silva_nodus_est_fons_purus (
  * intacta). */
 b32
 silva_valor_geometria_fida (
-    Piscina*   piscina,
-    SilvaValor valor,
-    s32        fons_index);
+       Piscina* piscina,
+    SilvaValor  valor,
+           s32  fons_index);
 
 b32
 silva_nodus_geometria_fida (
-    Piscina*             piscina,
+                Piscina* piscina,
     constans SilvaNodus* nodus,
-    s32                  fons_index);
+                    s32  fons_index);
 
 /* Commentarium ducens: bloccus commentorum "arcte-supra" nodum
  * (regula arbor2-comment-spec: bloccus contiguus sine linea vacua
@@ -252,15 +269,15 @@ silva_nodus_geometria_fida (
  * Redde I si praesens (vista impleta), ZEPHYRUM si absens. */
 nomen structura
 {
-    s32                initium;   /* BYTES in fonte; -1 = absens */
-    s32                finis;     /* exclusivum; -1 = absens */
+                   s32 initium;   /* BYTES in fonte; -1 = absens */
+                   s32 finis;     /* exclusivum; -1 = absens */
     insignatus integer linea;     /* 1-basata (commenti primi) */
 } SilvaCommentariumVista;
 
 integer
 silva_commentarium_ducens (
-    constans SilvaNodus*    nodus,
-    s32                     fons_index,
+       constans SilvaNodus* nodus,
+                       s32  fons_index,
     SilvaCommentariumVista* vista);
 
 #endif /* SILVA_NODUS_H */

@@ -18,10 +18,14 @@
 #include <string.h>
 
 interior Xar*
-_scandere_literis (Piscina* piscina, constans character* fons);
+_scandere_literis (
+               Piscina* piscina,
+    constans character* fons);
 
 interior Xar*
-_scandere_literis (Piscina* piscina, constans character* fons)
+_scandere_literis (
+               Piscina* piscina,
+    constans character* fons)
 {
     Xar* lexemata = silva_lexare(piscina, fons,
         (i32)strlen(fons), ZEPHYRUM);
@@ -34,17 +38,21 @@ _scandere_literis (Piscina* piscina, constans character* fons)
 }
 
 interior SilvaUnitas*
-_unitas (Xar* unitates, i32 index);
+_unitas (
+    Xar* unitates,
+    i32  index);
 
 interior SilvaUnitas*
-_unitas (Xar* unitates, i32 index)
+_unitas (
+    Xar* unitates,
+    i32  index)
 {
     redde (SilvaUnitas*)xar_obtinere(unitates, index);
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_unitatum",

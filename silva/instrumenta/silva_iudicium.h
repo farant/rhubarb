@@ -28,31 +28,32 @@
 #include "silva_c89_semantica.h"
 
 nomen structura {
-    Piscina*   piscina;
-    Xar*       capita;       /* IudiciumCaput per valorem */
+      Piscina* piscina;
+          Xar* capita;       /* IudiciumCaput per valorem */
     character* fons_iso;
-    i32        mensura_iso;
+          i32  mensura_iso;
     character* fons_px;
-    i32        mensura_px;
+          i32  mensura_px;
 } IudiciumApparatus;
 
 nomen structura {
     character* via;          /* NUL-terminata (piscina) */
     character* textus;
-    i32        mensura;
+          i32  mensura;
 } IudiciumCaput;
 
 nomen structura {
-    SilvaParsura*   parsura;
+      SilvaParsura* parsura;
     SilvaSemantica* sem;
-    b32             apparatus_fractus;  /* INFRA - iudicium nullum */
-    b32             recusatum;          /* fines tactae (RECUSO) */
+               b32  apparatus_fractus;  /* INFRA - iudicium nullum */
+               b32  recusatum;          /* fines tactae (RECUSO) */
 } IudiciumFructus;
 
 /* Ambulatio radicis ("."), systema lecta. NIHIL = apparatus deest.
  * Ex radice repositorii vocandum (viae systematis relativae). */
 IudiciumApparatus*
-silva_iudicium_praeparare (Piscina* piscina);
+silva_iudicium_praeparare (
+    Piscina* piscina);
 
 /* Plagulam UNAM iudicare (fons in memoria - emendator textum
  * mutatum sine disco iudicat). VERUM = iudicium exstat (fructus->sem
@@ -63,13 +64,19 @@ silva_iudicium_praeparare (Piscina* piscina);
  * vocator per plagulam creat et destruit, ne arena trans plagulas
  * multas cumuletur; apparatus in piscina SUA vivit et supervivit. */
 b32
-silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
-    constans character* via, constans character* fons, i32 mensura,
-    IudiciumFructus* fructus);
+silva_iudicium_iudicare (
+     IudiciumApparatus* app,
+               Piscina* opus,
+    constans character* via,
+    constans character* fons,
+                   i32  mensura,
+       IudiciumFructus* fructus);
 
 /* Plagulam e disco legere (auxiliaris communis) */
 character*
-silva_iudicium_plagulam_legere (Piscina* piscina,
-    constans character* via, i32* mensura_out);
+silva_iudicium_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out);
 
 #endif /* SILVA_IUDICIUM_H */

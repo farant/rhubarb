@@ -46,8 +46,10 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 };
 
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -77,7 +79,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -85,13 +87,14 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         redde NIHIL;
     }
     fclose(pl);
-    buffer[mensura] = '\0';
-    *mensura_out = (i32)mensura;
+    buffer[mensura]  = '\0';
+    *mensura_out     = (i32)mensura;
     redde buffer;
 }
 
 interior b32
-_suffixum_habet (constans character* titulus,
+_suffixum_habet (
+    constans character* titulus,
     constans character* suffixum)
 {
     memoriae_index lt = strlen(titulus);
@@ -107,18 +110,18 @@ _suffixum_habet (constans character* titulus,
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SilvaContextus* contextus;
+                   b32  praeteritus;
+               Piscina* piscina;
+        SilvaContextus* contextus;
     constans character* radix_env;
-    character via_solarii[VIA_MAXIMA];
-    character via[VIA_MAXIMA];
-    character* nomina[PLAGULAE_MAXIMAE];
-    i32 numerus_plagularum = ZEPHYRUM;
-    i32 fideles = ZEPHYRUM;
-    i32 summa_textarum = ZEPHYRUM;
-    i32 summa_omissarum = ZEPHYRUM;
-    i32 k;
+             character  via_solarii[VIA_MAXIMA];
+             character  via[VIA_MAXIMA];
+             character* nomina[PLAGULAE_MAXIMAE];
+                   i32  numerus_plagularum  = ZEPHYRUM;
+                   i32  fideles             = ZEPHYRUM;
+                   i32  summa_textarum      = ZEPHYRUM;
+                   i32  summa_omissarum     = ZEPHYRUM;
+                   i32  k;
 
     piscina = piscina_generare_dynamicum("probatio_solarium",
         33554432);
@@ -150,10 +153,10 @@ s32 principale (vacuum)
             piscina_destruere(piscina);
             redde ZEPHYRUM;
         }
-        dum ((introitus = readdir(dir)) != NIHIL
-            && numerus_plagularum < PLAGULAE_MAXIMAE)
+        dum (   (introitus = readdir(dir)) != NIHIL
+             && numerus_plagularum < PLAGULAE_MAXIMAE)
         {
-            si (_suffixum_habet(introitus->d_name, ".c")
+            si (   _suffixum_habet(introitus->d_name, ".c")
                 || _suffixum_habet(introitus->d_name, ".h"))
             {
                 memoriae_index m = strlen(introitus->d_name) + I;
@@ -179,8 +182,8 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL (contextus);
     per (k = ZEPHYRUM; k < numerus_plagularum; k++)
     {
-        i8* textus;
-        i32 mensura;
+         i8* textus;
+        i32  mensura;
 
         si (!_suffixum_habet(nomina[k], ".h"))
         {
@@ -198,12 +201,12 @@ s32 principale (vacuum)
     /* Vectis: quaeque plagula octetim exacta */
     per (k = ZEPHYRUM; k < numerus_plagularum; k++)
     {
-        Piscina* piscina_plagulae;
-        i8* textus;
-        i32 mensura;
-        SilvaParsura* parsura;
-        SilvaScriptura scriptura;
-        b32 fidelis = FALSUM;
+               Piscina* piscina_plagulae;
+                    i8* textus;
+                   i32  mensura;
+          SilvaParsura* parsura;
+        SilvaScriptura  scriptura;
+                   b32  fidelis = FALSUM;
 
         sprintf(via, "%s/%s", via_solarii, nomina[k]);
         piscina_plagulae = piscina_generare_dynamicum("plagula",
@@ -223,7 +226,7 @@ s32 principale (vacuum)
                 scriptura = silva_scribere_fontem(piscina_plagulae,
                     parsura, &SILVA_SCELETUM_REGISTRUM,
                     parsura->fons_princeps);
-                si (scriptura.successus
+                si (   scriptura.successus
                     && scriptura.textus.mensura == (i32)mensura
                     && (mensura == ZEPHYRUM
                         || memcmp(scriptura.textus.datum, textus,
@@ -231,8 +234,8 @@ s32 principale (vacuum)
                 {
                     fidelis = VERUM;
                 }
-                summa_textarum += parsura->regiones_textae;
-                summa_omissarum += parsura->regiones_omissae;
+                summa_textarum   += parsura->regiones_textae;
+                summa_omissarum  += parsura->regiones_omissae;
             }
         }
         si (fidelis)

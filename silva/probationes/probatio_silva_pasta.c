@@ -10,31 +10,37 @@
 #include <string.h>
 
 interior Xar*
-_expandere_fontem (Piscina* piscina, constans character* fons)
+_expandere_fontem (
+               Piscina* piscina,
+    constans character* fons)
 {
     SilvaExpansio* exp;
-    Xar* lexemata;
-    Xar* reliqua;
+              Xar* lexemata;
+              Xar* reliqua;
 
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
     lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
-    reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+    reliqua = silva_expansio_directivas_processare(exp, lexemata,
+        NIHIL);
     redde silva_expansio_expandere(exp, reliqua, NIHIL);
 }
 
 interior SilvaToken*
-_ad (Xar* lexemata, i32 i)
+_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_pasta", 524288);
+    piscina = piscina_generare_dynamicum("probatio_silva_pasta",
+        524288);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -48,20 +54,24 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* exitus;
+               Xar* exitus;
         SilvaToken* token;
 
         imprimere("\n--- Probans stringificationem ---\n");
 
         /* S(abc) -> "abc" */
-        exitus = _expandere_fontem(piscina, "#define S(x) #x\ns = S(abc);");
+        exitus = _expandere_fontem(piscina,
+            "#define S(x) #x\ns = S(abc);");
         token = _ad(exitus, II);
-        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_STRING_LIT);
+        CREDO_AEQUALIS_I32 ((i32)token->genus,
+            (i32)SILVA_LEX_STRING_LIT);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "\"abc\"");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_CHORDA);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_CHORDA);
 
         /* cursus albi -> unum spatium */
-        exitus = _expandere_fontem(piscina, "#define S(x) #x\ns = S(1   +  2);");
+        exitus = _expandere_fontem(piscina,
+            "#define S(x) #x\ns = S(1   +  2);");
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "\"1 + 2\"");
 
@@ -72,7 +82,8 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "\"X\"");
 
         /* effugium: " et \\ in litteris */
-        exitus = _expandere_fontem(piscina, "#define S(x) #x\ns = S(\"q\");");
+        exitus = _expandere_fontem(piscina,
+            "#define S(x) #x\ns = S(\"q\");");
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "\"\\\"q\\\"\"");
     }
@@ -83,7 +94,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* exitus;
+               Xar* exitus;
         SilvaToken* token;
 
         imprimere("\n--- Probans pastam ---\n");
@@ -92,9 +103,11 @@ s32 principale (vacuum)
         exitus = _expandere_fontem(piscina,
             "#define GLUE(a, b) a ## b\nn = GLUE(sil, va);");
         token = _ad(exitus, II);
-        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)token->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "silva");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_PASTA);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_PASTA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             token->origo.datum.pasta.sinister->valor, "sil");
         CREDO_CHORDA_AEQUALIS_LITERIS (
@@ -110,7 +123,8 @@ s32 principale (vacuum)
         exitus = _expandere_fontem(piscina,
             "#define OP(a, b) a ## b\nn = OP(<, <);");
         token = _ad(exitus, II);
-        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_SINISTRORSUM);
+        CREDO_AEQUALIS_I32 ((i32)token->genus,
+            (i32)SILVA_LEX_SINISTRORSUM);
 
         /* catena: TRI(x, y, z) -> xyz */
         exitus = _expandere_fontem(piscina,
@@ -129,7 +143,8 @@ s32 principale (vacuum)
             "#define E(a) x ## a\nn = E();");
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "x");
-        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, III)->genus, (i32)SILVA_LEX_SEMICOLON);
+        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, III)->genus,
+            (i32)SILVA_LEX_SEMICOLON);
 
         /* ORDO-SENSITIVITAS (debitum Chunk C): operanda multi-lexematum.
          * MT(a b, c d) -> a b##c d -> a bc d: lexemata circumdantia
@@ -140,17 +155,20 @@ s32 principale (vacuum)
         /* n = a bc d ; EOF */
         token = _ad(exitus, II);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "a");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_EXPANSIO);
         token = _ad(exitus, III);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "bc");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_PASTA);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_PASTA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             token->origo.datum.pasta.sinister->valor, "b");
         CREDO_CHORDA_AEQUALIS_LITERIS (
             token->origo.datum.pasta.dexter->valor, "c");
         token = _ad(exitus, IV);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "d");
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_EXPANSIO);
         CREDO_AEQUALIS_I32 ((i32)_ad(exitus, V)->genus,
             (i32)SILVA_LEX_SEMICOLON);
     }
@@ -168,8 +186,10 @@ s32 principale (vacuum)
         /* "1" ## "+" -> "1+" relexatur: INTEGER PLUS (duo lexemata) */
         exitus = _expandere_fontem(piscina,
             "#define BAD(a) a ## +\nn = BAD(1);");
-        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, II)->genus, (i32)SILVA_LEX_INTEGER);
-        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, III)->genus, (i32)SILVA_LEX_PLUS);
+        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, II)->genus,
+            (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 ((i32)_ad(exitus, III)->genus,
+            (i32)SILVA_LEX_PLUS);
     }
 
 
@@ -178,7 +198,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* exitus;
+               Xar* exitus;
         SilvaToken* token;
 
         imprimere("\n--- Probans pastam cum rescan ---\n");
@@ -190,7 +210,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "9");
         /* provenientia: 9 <- expansio AB <- pasta */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_EXPANSIO);
         CREDO_AEQUALIS_I32 (
             (i32)token->origo.datum.expansio.invocatio->origo.genus,
             (i32)SILVA_ORIGO_PASTA);

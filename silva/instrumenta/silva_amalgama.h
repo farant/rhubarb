@@ -22,11 +22,11 @@
 
 /* Plagula manifesti */
 nomen structura {
-    constans character*  via;      /* relativa ad radicem */
+    constans character* via;      /* relativa ad radicem */
     constans character* constans* servanda;   /* NIHIL = omnia */
     constans character* constans* excludenda; /* cadenda; NIHIL = nulla */
-    b32                  est_corpus;    /* definitiones (S41) */
-    b32                  est_vendicata; /* static iniectio + rename */
+    b32 est_corpus;    /* definitiones (S41) */
+    b32 est_vendicata; /* static iniectio + rename */
 } AmalgamaPlagula;
 
 /* Renominatio (typi exacti / praefixa functionum) */
@@ -38,13 +38,13 @@ nomen structura {
 /* Manifestum totum - quod proiectum amalgamandum definit */
 nomen structura {
     constans AmalgamaPlagula* capita_vendicata;
-    i32                       numerus_capitum_vendicatorum;
+                         i32  numerus_capitum_vendicatorum;
     constans AmalgamaPlagula* corpora_vendicata;
-    i32                       numerus_corporum_vendicatorum;
+                         i32  numerus_corporum_vendicatorum;
     constans AmalgamaPlagula* capita_propria;
-    i32                       numerus_capitum_propriorum;
+                         i32  numerus_capitum_propriorum;
     constans AmalgamaPlagula* corpora_propria;
-    i32                       numerus_corporum_propriorum;
+                         i32  numerus_corporum_propriorum;
 
     /* Typi quos caput manu scriptum possidet (NIHIL-terminata) */
     constans character* constans* cadenda_typedef;
@@ -53,9 +53,9 @@ nomen structura {
     constans character* constans* non_statica;
 
     constans Renominatio* typi_exacti;
-    i32                   numerus_typorum;
+                     i32  numerus_typorum;
     constans Renominatio* praefixa_functionum;  /* longissimum primum */
-    i32                   numerus_praefixorum;
+                     i32  numerus_praefixorum;
 
     constans character* via_capitis;  /* caput manu scriptum, verbatim */
     constans character* prooemium;    /* commentarius initialis exitus */
@@ -75,9 +75,9 @@ nomen structura {
 /* Currere: legere, transformare, componere, scribere. VERUM = bene. */
 b32
 silva_amalgama_currere (
-    Piscina*                   piscina,
-    constans character*        radix,
-    constans character*        via_exitus,
+                        Piscina* piscina,
+             constans character* radix,
+             constans character* via_exitus,
     constans AmalgamaManifestum* manifestum);
 
 #endif /* SILVA_AMALGAMA_H */

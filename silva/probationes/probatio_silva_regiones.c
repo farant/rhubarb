@@ -11,42 +11,50 @@
 #include <string.h>
 
 interior SilvaExpansio*
-_praeparare (Piscina* piscina, constans character* fons, Xar** reliqua_out)
+_praeparare (
+               Piscina*  piscina,
+    constans character*  fons,
+                   Xar** reliqua_out)
 {
     SilvaExpansio* exp;
-    Xar* lexemata;
+              Xar* lexemata;
 
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
     lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
-    *reliqua_out = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+    *reliqua_out = silva_expansio_directivas_processare(exp, lexemata,
+        NIHIL);
     redde exp;
 }
 
 interior SilvaToken*
-_ad (Xar* lexemata, i32 i)
+_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_regiones", 2097152);
+    piscina = piscina_generare_dynamicum("probatio_silva_regiones",
+        2097152);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -61,9 +69,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        SilvaRamus* ramus;
-        Xar* reliqua;
+           SilvaRegio* regio;
+           SilvaRamus* ramus;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans #ifdef sumptum ---\n");
 
@@ -105,9 +113,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        SilvaRamus* ramus;
-        Xar* reliqua;
+           SilvaRegio* regio;
+           SilvaRamus* ramus;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans #ifdef non sumptum ---\n");
 
@@ -133,9 +141,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        SilvaRamus* ramus;
-        Xar* reliqua;
+           SilvaRegio* regio;
+           SilvaRamus* ramus;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans catenam elif ---\n");
 
@@ -172,8 +180,8 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaEventum* eventum;
-        Xar* reliqua;
+         SilvaEventum* eventum;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans definitiones in ramis ---\n");
 
@@ -200,8 +208,8 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        Xar* reliqua;
+           SilvaRegio* regio;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans nidificationem ---\n");
 
@@ -235,9 +243,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        SilvaRamus* ramus;
-        Xar* reliqua;
+           SilvaRegio* regio;
+           SilvaRamus* ramus;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans #if 0 ---\n");
 
@@ -260,17 +268,18 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaRegio* regio;
-        Xar* reliqua;
+           SilvaRegio* regio;
+                  Xar* reliqua;
 
         imprimere("\n--- Probans regionem imperfectam ---\n");
 
-        exp = _praeparare(piscina, "#ifdef A\nint a;\n", &reliqua);
-        regio = *(SilvaRegio**)xar_obtinere(exp->regiones, ZEPHYRUM);
+        exp    = _praeparare(piscina, "#ifdef A\nint a;\n", &reliqua);
+        regio  = *(SilvaRegio**)xar_obtinere(exp->regiones, ZEPHYRUM);
         CREDO_VERUM (regio->est_imperfecta);
 
         /* #endif sine regione: transit ad reliqua */
-        exp = _praeparare(piscina, "int a;\n#endif\nint b;\n", &reliqua);
+        exp = _praeparare(piscina, "int a;\n#endif\nint b;\n",
+            &reliqua);
         CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (xar_numerus(reliqua), IX);  /* omnia manent */
     }
@@ -282,22 +291,24 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        SilvaFons* fons;
-        Xar* reliqua;
-        Xar* lexemata;
+            SilvaFons* fons;
+                  Xar* reliqua;
+                  Xar* lexemata;
 
         imprimere("\n--- Probans custodem ---\n");
 
         /* plagula custodita directe processata: NULLA regio */
         exp = _praeparare(piscina,
-            "#ifndef CUSTOS_H\n#define CUSTOS_H\nint g;\n#endif\n", &reliqua);
+            "#ifndef CUSTOS_H\n#define CUSTOS_H\nint g;\n#endif\n",
+            &reliqua);
         CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), ZEPHYRUM);
         CREDO_AEQUALIS_I32 (xar_numerus(reliqua), IV);  /* int g ; EOF */
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("CUSTOS_H")));
         fons = (SilvaFons*)xar_obtinere(exp->fontes, ZEPHYRUM);
         CREDO_VERUM (fons->est_custos);
         CREDO_NON_NIHIL (fons->custos_titulus);
-        CREDO_CHORDA_AEQUALIS_LITERIS (*fons->custos_titulus, "CUSTOS_H");
+        CREDO_CHORDA_AEQUALIS_LITERIS (*fons->custos_titulus,
+            "CUSTOS_H");
 
         /* quasi-custos: contentum post #endif - regio normalis */
         exp = _praeparare(piscina,
@@ -313,8 +324,8 @@ s32 principale (vacuum)
          * falsum, interior ramus non sumptus (extra rationem sed
          * numquam perditus), lineae captae */
         {
-            Xar* lexemata_c7;
-            Xar* directivae_c7;
+                   Xar* lexemata_c7;
+                   Xar* directivae_c7;
             SilvaRegio* regio;
             SilvaRamus* ramus;
 
@@ -334,7 +345,8 @@ s32 principale (vacuum)
              * una cum ramo non sumpto, lamina cruda interiorem fert */
             CREDO_AEQUALIS_I32 (xar_numerus(reliqua), I);
             CREDO_AEQUALIS_I32 (xar_numerus(exp->regiones), I);
-            regio = *(SilvaRegio**)xar_obtinere(exp->regiones, ZEPHYRUM);
+            regio = *(SilvaRegio**)xar_obtinere(exp->regiones,
+                ZEPHYRUM);
             CREDO_AEQUALIS_I32 (xar_numerus(regio->rami), I);
             ramus = *(SilvaRamus**)xar_obtinere(regio->rami, ZEPHYRUM);
             CREDO_FALSUM (ramus->est_sumptum);
@@ -365,8 +377,8 @@ s32 principale (vacuum)
         /* includere bis: interior semel, secunda praetermissa */
         {
             SilvaInclusio* inclusio;
-            i32 i;
-            i32 numerus_g;
+                      i32  i;
+                      i32  numerus_g;
 
             exp = silva_expansio_creare(piscina);
             silva_fons_addere(exp, "principalis.c", FALSUM);
@@ -379,7 +391,8 @@ s32 principale (vacuum)
                 (i32)strlen(
                 "#include \"custos.h\"\n#include \"custos.h\"\nint m;\n"),
                 ZEPHYRUM);
-            reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            reliqua = silva_expansio_directivas_processare(exp,
+                lexemata,
                 NIHIL);
 
             /* g semel tantum */
@@ -389,7 +402,8 @@ s32 principale (vacuum)
                 SilvaToken* t;
 
                 t = _ad(reliqua, i);
-                si (t->valor.mensura == I && t->valor.datum[ZEPHYRUM] == 'g')
+                si (   t->valor.mensura         == I
+                    && t->valor.datum[ZEPHYRUM] == 'g')
                 {
                     numerus_g++;
                 }
@@ -398,10 +412,12 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 (xar_numerus(reliqua), VII);
 
             CREDO_AEQUALIS_I32 (xar_numerus(exp->inclusiones), II);
-            inclusio = (SilvaInclusio*)xar_obtinere(exp->inclusiones, ZEPHYRUM);
+            inclusio = (SilvaInclusio*)xar_obtinere(exp->inclusiones,
+                ZEPHYRUM);
             CREDO_FALSUM (inclusio->est_praetermissa);
             CREDO_VERUM (inclusio->fons_ad >= ZEPHYRUM);
-            inclusio = (SilvaInclusio*)xar_obtinere(exp->inclusiones, I);
+            inclusio = (SilvaInclusio*)xar_obtinere(exp->inclusiones,
+                I);
             CREDO_VERUM (inclusio->est_praetermissa);
         }
     }
@@ -414,8 +430,8 @@ s32 principale (vacuum)
     {
         SilvaExpansio* exp;
         SilvaInclusio* inclusio;
-        Xar* reliqua;
-        Xar* lexemata;
+                  Xar* reliqua;
+                  Xar* lexemata;
 
         imprimere("\n--- Probans includenda ---\n");
 
@@ -428,27 +444,33 @@ s32 principale (vacuum)
             "int ante;\n#include \"medius.h\"\nint post;\n",
             (i32)strlen("int ante;\n#include \"medius.h\"\nint post;\n"),
             ZEPHYRUM);
-        reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         CREDO_AEQUALIS_I32 (xar_numerus(reliqua), X);  /* 3+3+3+EOF */
         CREDO_CHORDA_AEQUALIS_LITERIS (_ad(reliqua, I)->valor, "ante");
-        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(reliqua, IV)->valor, "medius");
-        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(reliqua, VII)->valor, "post");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(reliqua, IV)->valor,
+            "medius");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(reliqua, VII)->valor,
+            "post");
 
         /* definitiones ex includendo visibiles post insertionem */
         exp = silva_expansio_creare(piscina);
         silva_fons_addere(exp, "principalis.c", FALSUM);
         silva_includendum_praebere(exp, "defs.h", "#define QUAD 4\n",
             (i32)strlen("#define QUAD 4\n"));
-        lexemata = silva_lexare(piscina, "#include \"defs.h\"\nint x;\n",
+        lexemata = silva_lexare(piscina,
+            "#include \"defs.h\"\nint x;\n",
             (i32)strlen("#include \"defs.h\"\nint x;\n"), ZEPHYRUM);
-        reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("QUAD")));
 
         /* ignotum ("discens"): via memorata, processio pergit */
         {
             Xar* r2;
 
-            exp = _praeparare(piscina, "#include <stdio.h>\nint x;\n", &r2);
+            exp = _praeparare(piscina, "#include <stdio.h>\nint x;\n",
+                &r2);
             CREDO_AEQUALIS_I32 (xar_numerus(r2), IV);
             CREDO_AEQUALIS_I32 (xar_numerus(exp->inclusiones), I);
             inclusio = (SilvaInclusio*)xar_obtinere(exp->inclusiones,
@@ -466,7 +488,8 @@ s32 principale (vacuum)
             (i32)strlen("#include \"gyrus.h\"\nint l;"));
         lexemata = silva_lexare(piscina, "#include \"gyrus.h\"\n",
             (i32)strlen("#include \"gyrus.h\"\n"), ZEPHYRUM);
-        reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         /* XXXII gradus x (int l ;) + EOF */
         CREDO_AEQUALIS_I32 (xar_numerus(reliqua), XCVII);
     }
@@ -479,9 +502,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* reliqua;
-        Xar* lexemata;
-        Xar* expansa;
+                  Xar* reliqua;
+                  Xar* lexemata;
+                  Xar* expansa;
 
         imprimere("\n--- Probans sceletum integrum ---\n");
 
@@ -501,7 +524,8 @@ s32 principale (vacuum)
             "#if MODUS == 2\n#define GRADUS 42\n#else\n#define GRADUS 7\n"
             "#endif\n"
             "int x = GRADUS;\n"), ZEPHYRUM);
-        reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         expansa = silva_expansio_expandere(exp, reliqua, NIHIL);
 
         /* int x = 42 ; EOF */

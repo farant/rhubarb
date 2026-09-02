@@ -19,7 +19,7 @@
 
 interior Xar*
 _lint (
-              Piscina* piscina,
+               Piscina* piscina,
     constans character* fons)
 {
     redde formator_lint(piscina, NIHIL, fons,
@@ -28,7 +28,7 @@ _lint (
 
 interior FormatorScriptum
 _scribere (
-              Piscina* piscina,
+               Piscina* piscina,
     constans character* fons)
 {
     redde formator_scribere(piscina, NIHIL, fons,

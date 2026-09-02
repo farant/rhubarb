@@ -45,8 +45,8 @@ _plagulam_legere (
     signatus longus mensura;
     character* buffer;
 
-    fructus.datum   = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
 
     pl = fopen(via, "rb");
     si (pl == NIHIL) redde fructus;
@@ -70,9 +70,9 @@ _plagulam_legere (
         redde fructus;
     }
     fclose(pl);
-    buffer[mensura] = '\0';
-    fructus.datum   = (i8*)buffer;
-    fructus.mensura = (i32)mensura;
+    buffer[mensura]  = '\0';
+    fructus.datum    = (i8*)buffer;
+    fructus.mensura  = (i32)mensura;
     redde fructus;
 }
 
@@ -88,10 +88,10 @@ _elementum (
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(canon_radix); i++)
     {
         StmlNodus* l = stml_liberum_ad_indicem(canon_radix, i);
-        chorda*    n;
-        chorda*    in;
+           chorda* n;
+           chorda* in;
 
-        si (   l == NIHIL || l->genus != STML_NODUS_ELEMENTUM
+        si (   l          == NIHIL || l->genus != STML_NODUS_ELEMENTUM
             || l->titulus == NIHIL
             || !chorda_aequalis_literis(*l->titulus, "elementum"))
         {
@@ -119,17 +119,17 @@ _elementum (
 s32
 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     constans character* radix_via;
-              character  via_canonis[512];
-              character  via_metacanonis[512];
-                 chorda  fons_canonis;
-                 chorda  fons_metacanonis;
-            StmlResultus res_canonis;
-                  Canon* metacanon;
-                 chorda  causa;
-              StmlNodus* canon_radix;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+      constans character* radix_via;
+               character  via_canonis[512];
+               character  via_metacanonis[512];
+                  chorda  fons_canonis;
+                  chorda  fons_metacanonis;
+            StmlResultus  res_canonis;
+                   Canon* metacanon;
+                  chorda  causa;
+               StmlNodus* canon_radix;
 
     piscina = piscina_generare_dynamicum("canon_c89", LXIV * M * M);
     si (piscina == NIHIL)
@@ -156,6 +156,7 @@ principale (vacuum)
         redde I;
     }
 
+
     /* ============================================================
      * I. CANON IPSE LEGITUR
      *
@@ -164,10 +165,11 @@ principale (vacuum)
      * citationes quattuor et unicitatem fert - si quaelibet
      * attributum non declaratum nominaret, hic frangeretur.
      * ============================================================ */
+
     {
         Canon* canon_c89;
 
-        causa.datum   = NIHIL;
+        causa.datum = NIHIL;
         causa.mensura = ZEPHYRUM;
         canon_c89 = canon_legere(fons_canonis, piscina, intern, &causa);
         CREDO_NON_NIHIL (canon_c89);
@@ -178,9 +180,11 @@ principale (vacuum)
         }
     }
 
+
     /* ============================================================
      * II. CANON.CANON CANONEM PROIECTUM IUDICAT
      * ============================================================ */
+
     res_canonis = stml_legere(fons_canonis, piscina, intern);
     CREDO_VERUM (res_canonis.successus);
     si (!res_canonis.successus)
@@ -193,7 +197,7 @@ principale (vacuum)
     canon_radix = res_canonis.elementum_radix;
     CREDO_NON_NIHIL (canon_radix);
 
-    causa.datum   = NIHIL;
+    causa.datum = NIHIL;
     causa.mensura = ZEPHYRUM;
     metacanon = canon_legere(fons_metacanonis, piscina, intern, &causa);
     CREDO_NON_NIHIL (metacanon);
@@ -231,6 +235,7 @@ principale (vacuum)
         }
     }
 
+
     /* ============================================================
      * III. AEQUALITAS I - MANGULATIO TAG
      *
@@ -239,6 +244,7 @@ principale (vacuum)
      * documenta scriptoris canonem numquam transirent - et causa
      * lateret. Hic clamat.
      * ============================================================ */
+
     {
         i32 inventa;
         i32 i;
@@ -246,7 +252,7 @@ principale (vacuum)
         inventa = ZEPHYRUM;
         per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
         {
-            character tag[SILVA_ARBOR_TAG_CAPACITAS];
+            character  tag[SILVA_ARBOR_TAG_CAPACITAS];
             StmlNodus* elem;
 
             si (silva_arbor_lexema_tag((SilvaLexemaGenus)i, tag,
@@ -266,6 +272,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (inventa, (i32)95);
     }
 
+
     /* ============================================================
      * IV. AEQUALITAS II - QUAE GENERA TEXTUM FERANT
      *
@@ -278,6 +285,7 @@ principale (vacuum)
      * repetit. Ergo si emissor et arbor divergant, ambo contra
      * hanc tertiam sententiam franguntur.
      * ============================================================ */
+
     {
         i32 textualia;
         i32 i;
@@ -286,10 +294,10 @@ principale (vacuum)
         per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
         {
             SilvaLexemaGenus  genus = (SilvaLexemaGenus)i;
-            character         tag[SILVA_ARBOR_TAG_CAPACITAS];
-            StmlNodus*        elem;
-            b32               debet;
-            b32               habet;
+                   character  tag[SILVA_ARBOR_TAG_CAPACITAS];
+                   StmlNodus* elem;
+                         b32  debet;
+                         b32  habet;
 
             si (silva_arbor_lexema_tag(genus, tag, (i32)magnitudo(tag))
                 == ZEPHYRUM)
@@ -302,8 +310,8 @@ principale (vacuum)
                 && genus != SILVA_LEX_NOVA_LINEA
                 && genus != SILVA_LEX_CONTINUATIO);
 
-            elem  = _elementum(canon_radix, tag, NIHIL);
-            habet = FALSUM;
+            elem   = _elementum(canon_radix, tag, NIHIL);
+            habet  = FALSUM;
             si (elem != NIHIL)
             {
                 chorda* t = stml_attributum_capere(elem, "textus");
@@ -322,6 +330,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (textualia, (i32)10);
     }
 
+
     /* ============================================================
      * V. FORMA CANONIS FIXA
      *
@@ -329,20 +338,21 @@ principale (vacuum)
      * XVII involucri = CCCXLVI. Numeri e mensura corporis veniunt
      * (spec par. 0.3), non e cursu primo.
      * ============================================================ */
+
     {
         i32 lexematum;
         i32 locorum;
         i32 liberorum;
         i32 i;
 
-        lexematum = ZEPHYRUM;
-        locorum   = ZEPHYRUM;
-        liberorum = ZEPHYRUM;
+        lexematum  = ZEPHYRUM;
+        locorum    = ZEPHYRUM;
+        liberorum  = ZEPHYRUM;
 
         per (i = ZEPHYRUM; i < stml_numerus_liberorum(canon_radix); i++)
         {
             StmlNodus* l = stml_liberum_ad_indicem(canon_radix, i);
-            chorda*    n;
+               chorda* n;
 
             si (   l == NIHIL || l->genus != STML_NODUS_ELEMENTUM
                 || l->titulus == NIHIL
@@ -357,8 +367,8 @@ principale (vacuum)
             {
                 locorum++;
             }
-            alioquin si (n->mensura > IV
-                && memcmp(n->datum, "lex-", IV) == ZEPHYRUM)
+            alioquin si (   n->mensura > IV
+                         && memcmp(n->datum, "lex-", IV) == ZEPHYRUM)
             {
                 lexematum++;
             }
@@ -375,6 +385,7 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 (liberorum, (i32)75);
     }
 
+
     /* ============================================================
      * VI. COLLISIONES NOMINUM TRANS LAMINAS
      *
@@ -383,6 +394,7 @@ principale (vacuum)
      * est prorsus cur loci 'intra=' ferunt. Utrumque asseritur:
      * definitio non-adstricta ADEST, et adstricta quoque.
      * ============================================================ */
+
     {
         CREDO_NON_NIHIL (_elementum(canon_radix, "corpus", NIHIL));
         CREDO_NON_NIHIL (_elementum(canon_radix, "corpus",
@@ -392,6 +404,7 @@ principale (vacuum)
                                     "ramus-omissus"));
     }
 
+
     /* ============================================================
      * VII. CASUS QUI CONSILIUM DECREVIT
      *
@@ -400,25 +413,26 @@ principale (vacuum)
      * ambo 'NODUS' sunt. ABSENTIA probatio vera est: praesentia
      * sola ex vocabulario nimis lato aeque sequeretur.
      * ============================================================ */
+
     {
         StmlNodus* locus;
-        i32        i;
-        b32        habet_titulum;
-        b32        habet_abstractum;
+              i32  i;
+              b32  habet_titulum;
+              b32  habet_abstractum;
 
         locus = _elementum(canon_radix, "declarator",
                            "definitio-functionis");
         CREDO_NON_NIHIL (locus);
-        habet_titulum    = FALSUM;
-        habet_abstractum = FALSUM;
+        habet_titulum     = FALSUM;
+        habet_abstractum  = FALSUM;
         si (locus != NIHIL)
         {
             per (i = ZEPHYRUM; i < stml_numerus_liberorum(locus); i++)
             {
                 StmlNodus* l = stml_liberum_ad_indicem(locus, i);
-                chorda*    n;
+                   chorda* n;
 
-                si (l == NIHIL || l->titulus == NIHIL
+                si (   l == NIHIL || l->titulus == NIHIL
                     || !chorda_aequalis_literis(*l->titulus, "liberum"))
                 {
                     perge;
@@ -429,7 +443,8 @@ principale (vacuum)
                 {
                     habet_titulum = VERUM;
                 }
-                si (chorda_aequalis_literis(*n, "declarator-abstractus"))
+                si (chorda_aequalis_literis(*n,
+                    "declarator-abstractus"))
                 {
                     habet_abstractum = VERUM;
                 }
@@ -438,6 +453,7 @@ principale (vacuum)
         CREDO_VERUM  (habet_titulum);
         CREDO_FALSUM (habet_abstractum);
     }
+
 
     /* ============================================================
      * VIII. SIGILLUM PROPRIUM (T6) - SENSIBILITAS ASSERTA
@@ -453,6 +469,7 @@ principale (vacuum)
      * quem nemo frangi vidit sigillum est quem nemo scit operari -
      * eadem lex quae hunc gradum peperit.
      * ============================================================ */
+
     {
               character  via_grammaticae[512];
                  chorda  fons_grammaticae;
@@ -498,8 +515,8 @@ principale (vacuum)
 
                 /* CULPA PLANTATA: productio mutata, tabulae immotae */
                 {
-                    character* copia;
-                    character* sedes;
+                             character* copia;
+                             character* sedes;
                     constans character* VETUS =
                         "sententia@consequens";
                     constans character* NOVUM =
@@ -521,7 +538,7 @@ principale (vacuum)
                         si (sedes != NIHIL)
                         {
                             SilvaGenGrammatica* g_mutata;
-                            chorda              sig_mutata;
+                                        chorda  sig_mutata;
 
                             memcpy(sedes, NOVUM, strlen(NOVUM));
                             g_mutata = silva_gen_grammaticam_legere(

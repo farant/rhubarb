@@ -24,7 +24,7 @@
 b32
 silva_gen_coquere (
     SilvaGenGrammatica* grammatica,
-    SilvaGenTabula*     tabula,
+        SilvaGenTabula* tabula,
     constans character* praefixum,
     constans character* basis_via,
     constans character* via_grammaticae);
@@ -37,7 +37,7 @@ silva_gen_coquere (
  * copias scribit - deriva structuraliter impossibilis. */
 b32
 silva_gen_splicere_publica (
-    Piscina*            piscina,
+               Piscina* piscina,
     SilvaGenGrammatica* grammatica,
     constans character* praefixum,
     constans character* via_capitis,

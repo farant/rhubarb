@@ -10,9 +10,9 @@
 interior b32
 _formam_erroris_invenire (
     constans SilvaRegistrumCoctum* tabularium,
-    s32*                           genus_out,
-    i32*                           locus_out,
-    i32*                           numerus_locorum_out)
+                              s32* genus_out,
+                              i32* locus_out,
+                              i32* numerus_locorum_out)
 {
     i32 i;
 
@@ -20,7 +20,7 @@ _formam_erroris_invenire (
     {
         constans SilvaTabGenus* genus = &tabularium->genera[i];
 
-        si (genus->titulus != NIHIL
+        si (   genus->titulus                  != NIHIL
             && strcmp(genus->titulus, "error") == ZEPHYRUM)
         {
             i32 k;
@@ -30,12 +30,12 @@ _formam_erroris_invenire (
                 constans SilvaTabLocus* locus =
                     &tabularium->loci[genus->loci_offset + k];
 
-                si (locus->titulus != NIHIL
+                si (   locus->titulus                   != NIHIL
                     && strcmp(locus->titulus, "tokens") == ZEPHYRUM)
                 {
-                    *genus_out = (s32)i;
-                    *locus_out = k;
-                    *numerus_locorum_out = genus->loci_numerus;
+                    *genus_out            = (s32)i;
+                    *locus_out            = k;
+                    *numerus_locorum_out  = genus->loci_numerus;
                     redde VERUM;
                 }
             }
@@ -51,7 +51,8 @@ _formam_erroris_invenire (
  * LAXUM - suspicio falsa segmentum crassius facit (elementa
  * plura, arbores rectae), numquam arborem falsam. */
 hic_manens b32
-_kr_plausibile (SilvaLexemaGenus genus)
+_kr_plausibile (
+    SilvaLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -90,7 +91,10 @@ _kr_plausibile (SilvaLexemaGenus genus)
 
 /* Lexema proximum non-NIHIL post indicem i (NIHIL si nullum) */
 hic_manens SilvaToken*
-_lexema_sequens (constans Xar* lexemata, i32 i, i32 numerus)
+_lexema_sequens (
+    constans Xar* lexemata,
+             i32  i,
+             i32  numerus)
 {
     i32 k;
 
@@ -109,16 +113,16 @@ _lexema_sequens (constans Xar* lexemata, i32 i, i32 numerus)
 /* Nodus ERROR ex lexematibus segmenti [initium, finis) */
 interior SilvaValor
 _nodum_erroris_facere (
-    Piscina*      piscina,
+         Piscina* piscina,
     constans Xar* lexemata,
-    i32           initium,
-    i32           finis,
-    s32           genus_erroris,
-    i32           locus_lexematum,
-    i32           numerus_locorum)
+             i32  initium,
+             i32  finis,
+             s32  genus_erroris,
+             i32  locus_lexematum,
+             i32  numerus_locorum)
 {
     SilvaNodus* nodus;
-    i32 i;
+           i32  i;
 
     nodus = silva_nodus_creare(piscina, genus_erroris, numerus_locorum);
     si (nodus == NIHIL)
@@ -141,37 +145,37 @@ _nodum_erroris_facere (
 /* Textura conditionalium (infra definita - ante commissionem) */
 interior SilvaValor
 _texere (
-    Piscina*                       piscina,
-    SilvaValor                     radix,
-    SilvaExpansio*                 expansio,
+                          Piscina* piscina,
+                       SilvaValor  radix,
+                    SilvaExpansio* expansio,
     constans SilvaRegistrumCoctum* tabularium,
-    SilvaParsura*                  parsura);
+                     SilvaParsura* parsura);
 
 /* Nucleus circuitus secantis; contextus NIHIL licet (fines motoris
  * defaltae tunc solae valent); expansio (si praesens) texturam
  * conditionalium ante commissionem permittit */
 interior SilvaParsura*
 _lexemata_parsare_interna (
-    Piscina*                  piscina,
-    constans Xar*             lexemata,
+                     Piscina* piscina,
+                constans Xar* lexemata,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris,
-    SilvaExpansio*            expansio,
-    constans SilvaContextus*  contextus)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris,
+               SilvaExpansio* expansio,
+     constans SilvaContextus* contextus)
 {
     SilvaParsura* parsura;
-    SilvaGLR*     glr;
-    SilvaToken*   lexema_eof = NIHIL;
-    SilvaValor    radix;
-    s32           genus_erroris = -I;
-    i32           locus_lexematum = ZEPHYRUM;
-    i32           numerus_locorum_erroris = ZEPHYRUM;
-    i32           numerus;
-    i32           initium;
-    i32           i;
-    i32           profunditas;
+        SilvaGLR* glr;
+      SilvaToken* lexema_eof = NIHIL;
+      SilvaValor  radix;
+             s32  genus_erroris            = -I;
+             i32  locus_lexematum          = ZEPHYRUM;
+             i32  numerus_locorum_erroris  = ZEPHYRUM;
+             i32  numerus;
+             i32  initium;
+             i32  i;
+             i32  profunditas;
 
     si (piscina == NIHIL || lexemata == NIHIL || grammatica == NIHIL)
     {
@@ -191,10 +195,10 @@ _lexemata_parsare_interna (
     }
     si (contextus != NIHIL)
     {
-        glr->limen_frontis = contextus->fines.frons;
-        glr->pergere = contextus->pergere;
-        glr->pergere_datum = contextus->pergere_datum;
-        glr->passus_pergendi = contextus->passus_pergendi;
+        glr->limen_frontis    = contextus->fines.frons;
+        glr->pergere          = contextus->pergere;
+        glr->pergere_datum    = contextus->pergere_datum;
+        glr->passus_pergendi  = contextus->passus_pergendi;
     }
 
     parsura = (SilvaParsura*)piscina_allocare(piscina,
@@ -203,27 +207,27 @@ _lexemata_parsare_interna (
     {
         redde NIHIL;
     }
-    parsura->successus = FALSUM;
-    parsura->commissio = NIHIL;
-    parsura->lexema_finis = NIHIL;
-    parsura->lexemata = NIHIL;
-    parsura->expansio = NIHIL;
-    parsura->directivae = NIHIL;
-    parsura->fons_princeps = -I;
-    parsura->numerus_errorum = ZEPHYRUM;
-    parsura->numerus_segmentorum = ZEPHYRUM;
-    parsura->fusiones = ZEPHYRUM;
-    parsura->transmutationes = ZEPHYRUM;
-    parsura->transmutationes_negatae = ZEPHYRUM;
-    parsura->eventa_marginis_novi = ZEPHYRUM;
-    parsura->frons_maxima = ZEPHYRUM;
-    parsura->est_intermissa = FALSUM;
-    parsura->expansio_decisa = FALSUM;
-    parsura->fines_tactae = FALSUM;
-    parsura->segmenta_ultra_limen = ZEPHYRUM;
-    parsura->regiones_textae = ZEPHYRUM;
-    parsura->regiones_omissae = ZEPHYRUM;
-    parsura->strata = NIHIL;
+    parsura->successus                = FALSUM;
+    parsura->commissio                = NIHIL;
+    parsura->lexema_finis             = NIHIL;
+    parsura->lexemata                 = NIHIL;
+    parsura->expansio                 = NIHIL;
+    parsura->directivae               = NIHIL;
+    parsura->fons_princeps            = -I;
+    parsura->numerus_errorum          = ZEPHYRUM;
+    parsura->numerus_segmentorum      = ZEPHYRUM;
+    parsura->fusiones                 = ZEPHYRUM;
+    parsura->transmutationes          = ZEPHYRUM;
+    parsura->transmutationes_negatae  = ZEPHYRUM;
+    parsura->eventa_marginis_novi     = ZEPHYRUM;
+    parsura->frons_maxima             = ZEPHYRUM;
+    parsura->est_intermissa           = FALSUM;
+    parsura->expansio_decisa          = FALSUM;
+    parsura->fines_tactae             = FALSUM;
+    parsura->segmenta_ultra_limen     = ZEPHYRUM;
+    parsura->regiones_textae          = ZEPHYRUM;
+    parsura->regiones_omissae         = ZEPHYRUM;
+    parsura->strata                   = NIHIL;
 
     numerus = xar_numerus(lexemata);
 
@@ -233,7 +237,7 @@ _lexemata_parsare_interna (
         SilvaToken** ref = (SilvaToken**)xar_obtinere(lexemata,
             numerus - I);
 
-        si (ref != NIHIL && *ref != NIHIL
+        si (   ref           != NIHIL && *ref != NIHIL
             && (*ref)->genus == SILVA_LEX_EOF)
         {
             lexema_eof = *ref;
@@ -256,22 +260,22 @@ _lexemata_parsare_interna (
      *     "do do x; while (a); while (b);" recte)
      * Suppressio falsa (else vagum) segmentum longius ERROR facit
      * - ambitus recuperationis crassior, numquam falsa arbor. */
-    initium = ZEPHYRUM;
-    profunditas = ZEPHYRUM;
-    i = ZEPHYRUM;
+    initium      = ZEPHYRUM;
+    profunditas  = ZEPHYRUM;
+    i            = ZEPHYRUM;
     {
-        i32 fac_pendentia = ZEPHYRUM;
-        b32 post_clausa = FALSUM;       /* ")" in prof. 0 visum */
-        i32 intervallum_post = ZEPHYRUM; /* lexemata post ")" */
-        b32 modus_corporis = FALSUM;    /* "{" post ")" - segmentum
+        i32 fac_pendentia     = ZEPHYRUM;
+        b32 post_clausa       = FALSUM;       /* ")" in prof. 0 visum */
+        i32 intervallum_post  = ZEPHYRUM; /* lexemata post ")" */
+        b32 modus_corporis    = FALSUM;    /* "{" post ")" - segmentum
                                          * unco clauditur, non ";" */
 
     dum (i < numerus)
     {
         SilvaToken** ref = (SilvaToken**)xar_obtinere(lexemata, i);
         SilvaToken*  lexema = (ref != NIHIL) ? *ref : NIHIL;
-        b32 est_finis_segmenti = FALSUM;
-        b32 est_eof = FALSUM;
+               b32   est_finis_segmenti = FALSUM;
+               b32   est_eof = FALSUM;
 
         si (lexema == NIHIL)
         {
@@ -280,8 +284,8 @@ _lexemata_parsare_interna (
         }
         si (lexema->genus == SILVA_LEX_EOF)
         {
-            est_eof = VERUM;
-            est_finis_segmenti = (i > initium) ? VERUM : FALSUM;
+            est_eof             = VERUM;
+            est_finis_segmenti  = (i > initium) ? VERUM : FALSUM;
         }
         alioquin si (lexema->genus == SILVA_LEX_PAREN_APERTA)
         {
@@ -308,8 +312,8 @@ _lexemata_parsare_interna (
             }
             si (profunditas == ZEPHYRUM)
             {
-                post_clausa = VERUM;
-                intervallum_post = ZEPHYRUM;
+                post_clausa       = VERUM;
+                intervallum_post  = ZEPHYRUM;
             }
         }
         alioquin si (lexema->genus == SILVA_LEX_BRACE_CLAUSA)
@@ -328,14 +332,14 @@ _lexemata_parsare_interna (
                 {
                     /* corpus clausum = limes, nisi sententia
                      * continuatur (alioquin / cauda fac-dum) */
-                    si (proximum != NIHIL
+                    si (   proximum        != NIHIL
                         && proximum->genus == SILVA_LEX_ELSE)
                     {
                         /* continuatio */
                     }
-                    alioquin si (proximum != NIHIL
-                        && proximum->genus == SILVA_LEX_WHILE
-                        && fac_pendentia > ZEPHYRUM)
+                    alioquin si (   proximum        != NIHIL
+                                 && proximum->genus == SILVA_LEX_WHILE
+                                 && fac_pendentia > ZEPHYRUM)
                     {
                         fac_pendentia--;
                     }
@@ -344,9 +348,9 @@ _lexemata_parsare_interna (
                         est_finis_segmenti = VERUM;
                     }
                 }
-                alioquin si (proximum != NIHIL
-                    && proximum->genus == SILVA_LEX_WHILE
-                    && fac_pendentia > ZEPHYRUM)
+                alioquin si (   proximum        != NIHIL
+                             && proximum->genus == SILVA_LEX_WHILE
+                             && fac_pendentia > ZEPHYRUM)
                 {
                     /* "do { } while" - cauda post corpus uncatum
                      * sine modo corporis; pendentia consumitur ne
@@ -355,25 +359,25 @@ _lexemata_parsare_interna (
                 }
             }
         }
-        alioquin si (lexema->genus == SILVA_LEX_DO
-            && profunditas == ZEPHYRUM)
+        alioquin si (   lexema->genus == SILVA_LEX_DO
+                     && profunditas   == ZEPHYRUM)
         {
             fac_pendentia++;
         }
-        alioquin si (lexema->genus == SILVA_LEX_SEMICOLON
-            && profunditas == ZEPHYRUM)
+        alioquin si (   lexema->genus == SILVA_LEX_SEMICOLON
+                     && profunditas   == ZEPHYRUM)
         {
             SilvaToken* proximum =
                 _lexema_sequens(lexemata, i, numerus);
 
-            si (proximum != NIHIL
+            si (   proximum        != NIHIL
                 && proximum->genus == SILVA_LEX_ELSE)
             {
                 /* continuatio - non limes */
             }
-            alioquin si (proximum != NIHIL
-                && proximum->genus == SILVA_LEX_WHILE
-                && fac_pendentia > ZEPHYRUM)
+            alioquin si (   proximum        != NIHIL
+                         && proximum->genus == SILVA_LEX_WHILE
+                         && fac_pendentia > ZEPHYRUM)
             {
                 /* cauda fac-dum - non limes */
                 fac_pendentia--;
@@ -437,15 +441,15 @@ _lexemata_parsare_interna (
 
         si (est_finis_segmenti)
         {
-            i32 finis = est_eof ? i : (i + I);
-            Xar* segmentum;
-            i32 k;
-            SilvaGLRFructus fructus;
+                        i32  finis = est_eof ? i : (i + I);
+                        Xar* segmentum;
+                        i32  k;
+            SilvaGLRFructus  fructus;
 
             /* Intermissio (Phase 7): ante segmentum interrogamus;
              * cauda TOTA [initium..EOF) nodus ERROR unus fit - arbor
              * completa manet, reconstructio byte-exacta tenet */
-            si (!parsura->est_intermissa
+            si (   !parsura->est_intermissa
                 && contextus != NIHIL && contextus->pergere != NIHIL
                 && !contextus->pergere(contextus->pergere_datum))
             {
@@ -501,8 +505,8 @@ _lexemata_parsare_interna (
 
             fructus = silva_glr_parsare(glr, segmentum, piscina);
             parsura->numerus_segmentorum++;
-            parsura->fusiones += fructus.fusiones;
-            parsura->transmutationes += fructus.transmutationes;
+            parsura->fusiones         += fructus.fusiones;
+            parsura->transmutationes  += fructus.transmutationes;
             parsura->transmutationes_negatae +=
                 fructus.transmutationes_negatae;
             parsura->eventa_marginis_novi +=
@@ -523,7 +527,7 @@ _lexemata_parsare_interna (
                 parsura->est_intermissa = VERUM;
             }
 
-            si (fructus.successus
+            si (   fructus.successus
                 && fructus.valor.genus == SILVA_VALOR_LISTA)
             {
                 i32 n = silva_valor_lista_numerus(fructus.valor);
@@ -559,10 +563,10 @@ _lexemata_parsare_interna (
             initium = est_eof ? i : (i + I);
 
             /* status secantis per segmentum - purgare */
-            fac_pendentia = ZEPHYRUM;
-            post_clausa = FALSUM;
-            intervallum_post = ZEPHYRUM;
-            modus_corporis = FALSUM;
+            fac_pendentia     = ZEPHYRUM;
+            post_clausa       = FALSUM;
+            intervallum_post  = ZEPHYRUM;
+            modus_corporis    = FALSUM;
         }
 
         si (est_eof)
@@ -598,16 +602,17 @@ _lexemata_parsare_interna (
 
 SilvaParsura*
 silva_lexemata_parsare (
-    Piscina*                  piscina,
-    constans Xar*             lexemata,
+                     Piscina* piscina,
+                constans Xar* lexemata,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris)
 {
     redde _lexemata_parsare_interna(piscina, lexemata, grammatica,
         oraculum, resolutor, datum_resolutoris, NIHIL, NIHIL);
 }
+
 
 /* ==================================================
  * Textura conditionalium (Phase 7 Chunk B, simulatio ⑦)
@@ -637,7 +642,9 @@ nomen structura {
 } TexExtentum;
 
 interior vacuum
-_extentum_valoris (SilvaValor valor, TexExtentum* extentum)
+_extentum_valoris (
+     SilvaValor  valor,
+    TexExtentum* extentum)
 {
     commutatio (valor.genus)
     {
@@ -645,8 +652,8 @@ _extentum_valoris (SilvaValor valor, TexExtentum* extentum)
         {
             SilvaToken* t = valor.datum.token;
 
-            dum (t != NIHIL
-                && (t->origo.genus == SILVA_ORIGO_EXPANSIO
+            dum (   t != NIHIL
+                 && (t->origo.genus == SILVA_ORIGO_EXPANSIO
                     || t->origo.genus == SILVA_ORIGO_CHORDA))
             {
                 t = (t->origo.genus == SILVA_ORIGO_EXPANSIO)
@@ -664,9 +671,9 @@ _extentum_valoris (SilvaValor valor, TexExtentum* extentum)
             }
             si (extentum->fons == -I)
             {
-                extentum->fons = t->fons_index;
-                extentum->initium = t->byte_offset;
-                extentum->finis = t->byte_offset + (s32)t->longitudo;
+                extentum->fons     = t->fons_index;
+                extentum->initium  = t->byte_offset;
+                extentum->finis    = t->byte_offset + (s32)t->longitudo;
             }
             alioquin si (extentum->fons != t->fons_index)
             {
@@ -678,9 +685,11 @@ _extentum_valoris (SilvaValor valor, TexExtentum* extentum)
                 {
                     extentum->initium = t->byte_offset;
                 }
-                si (t->byte_offset + (s32)t->longitudo > extentum->finis)
+                si (t->byte_offset + (s32)t->longitudo
+                    > extentum->finis)
                 {
-                    extentum->finis = t->byte_offset + (s32)t->longitudo;
+                    extentum->finis = t->byte_offset
+                        + (s32)t->longitudo;
                 }
             }
             frange;
@@ -688,7 +697,7 @@ _extentum_valoris (SilvaValor valor, TexExtentum* extentum)
         casus SILVA_VALOR_NODUS:
         {
             constans SilvaNodus* nodus = valor.datum.nodus;
-            i32 k;
+                            i32  k;
 
             per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
             {
@@ -737,30 +746,30 @@ nomen structura {
 interior b32
 _formam_texturae_invenire (
     constans SilvaRegistrumCoctum* tabularium,
-    constans character*            titulus_generis,
-    constans character*            titulus_a,
-    constans character*            titulus_b,
-    constans character*            titulus_c,
-    TexForma*                      forma)
+               constans character* titulus_generis,
+               constans character* titulus_a,
+               constans character* titulus_b,
+               constans character* titulus_c,
+                         TexForma* forma)
 {
     i32 i;
 
-    forma->genus = -I;
-    forma->locus_a = -I;
-    forma->locus_b = -I;
-    forma->locus_c = -I;
+    forma->genus    = -I;
+    forma->locus_a  = -I;
+    forma->locus_b  = -I;
+    forma->locus_c  = -I;
     per (i = ZEPHYRUM; i < tabularium->numerus_generum; i++)
     {
         constans SilvaTabGenus* genus = &tabularium->genera[i];
-        i32 k;
+                           i32  k;
 
-        si (genus->titulus == NIHIL
+        si (   genus->titulus                          == NIHIL
             || strcmp(genus->titulus, titulus_generis) != ZEPHYRUM)
         {
             perge;
         }
-        forma->genus = (s32)i;
-        forma->numerus_locorum = genus->loci_numerus;
+        forma->genus            = (s32)i;
+        forma->numerus_locorum  = genus->loci_numerus;
         per (k = ZEPHYRUM; k < genus->loci_numerus; k++)
         {
             constans SilvaTabLocus* locus =
@@ -771,13 +780,15 @@ _formam_texturae_invenire (
             {
                 forma->locus_a = (s32)k;
             }
-            alioquin si (titulus_b != NIHIL
-                && strcmp(locus->titulus, titulus_b) == ZEPHYRUM)
+            alioquin si (   titulus_b != NIHIL
+                         && strcmp(locus->titulus, titulus_b)
+                             == ZEPHYRUM)
             {
                 forma->locus_b = (s32)k;
             }
-            alioquin si (titulus_c != NIHIL
-                && strcmp(locus->titulus, titulus_c) == ZEPHYRUM)
+            alioquin si (   titulus_c != NIHIL
+                         && strcmp(locus->titulus, titulus_c)
+                             == ZEPHYRUM)
             {
                 forma->locus_c = (s32)k;
             }
@@ -792,19 +803,22 @@ _formam_texturae_invenire (
 
 /* Status passus texturae */
 nomen structura {
-    Piscina*                       piscina;
+                          Piscina* piscina;
     constans SilvaRegistrumCoctum* tabularium;
-    SilvaParsura*                  parsura;
-    SilvaValor                     radix;    /* lista currens */
-    TexForma                       conditionalis; /* a=rami b=finis */
-    TexForma                       sumptus;  /* a=directiva b=contentum c=conditio_id */
-    TexForma                       omissus;  /* a=directiva b=cruda c=conditio_id */
+                     SilvaParsura* parsura;
+                       SilvaValor  radix;    /* lista currens */
+                         TexForma  conditionalis; /* a=rami b=finis */
+                         TexForma  sumptus;  /* a=directiva b=contentum c=conditio_id */
+                         TexForma  omissus;  /* a=directiva b=cruda c=conditio_id */
 } TexturaStatus;
 
 /* Lexemata laminae in locum listae-token appendere */
 interior vacuum
-_laminam_in_locum (Piscina* piscina, SilvaNodus* nodus, i32 locus,
-    Xar* lamina)
+_laminam_in_locum (
+       Piscina* piscina,
+    SilvaNodus* nodus,
+           i32  locus,
+           Xar* lamina)
 {
     i32 k;
 
@@ -830,17 +844,19 @@ _laminam_in_locum (Piscina* piscina, SilvaNodus* nodus, i32 locus,
  * PLENE intra corpus rami sumpti iacere debet; elementum opacum
  * intersectionis incertae = degradatio conservativa. */
 interior vacuum
-_regionem_texere (TexturaStatus* st, SilvaRegio* regio)
+_regionem_texere (
+    TexturaStatus* st,
+       SilvaRegio* regio)
 {
     SilvaRamus* ramus_sumptus = NIHIL;
-    s32 regio_initium;
-    s32 regio_finis;
-    i32 numerus_elementorum;
-    s32 primum_congregatum = -I;
-    s32 primum_post = -I;
-    b32 degradata = FALSUM;
-    b32* congreganda;
-    i32 e;
+           s32  regio_initium;
+           s32  regio_finis;
+           i32  numerus_elementorum;
+           s32  primum_congregatum  = -I;
+           s32  primum_post         = -I;
+           b32  degradata           = FALSUM;
+           b32* congreganda;
+           i32  e;
 
     si (regio->rami == NIHIL || xar_numerus(regio->rami) == ZEPHYRUM)
     {
@@ -854,7 +870,7 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
             ZEPHYRUM);
         SilvaToken* t;
 
-        si (primus->directiva == NIHIL
+        si (   primus->directiva              == NIHIL
             || xar_numerus(primus->directiva) == ZEPHYRUM)
         {
             st->parsura->regiones_omissae++;
@@ -863,7 +879,7 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
         t = *(SilvaToken**)xar_obtinere(primus->directiva, ZEPHYRUM);
         regio_initium = t->byte_offset;
     }
-    si (regio->directiva_finis != NIHIL
+    si (   regio->directiva_finis != NIHIL
         && xar_numerus(regio->directiva_finis) > ZEPHYRUM)
     {
         SilvaToken* ultimum = *(SilvaToken**)xar_obtinere(
@@ -907,17 +923,17 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
     }
     per (e = ZEPHYRUM; e < numerus_elementorum; e++)
     {
-        SilvaValor* elem = silva_valor_lista_obtinere(st->radix, e);
-        TexExtentum extentum;
+         SilvaValor* elem = silva_valor_lista_obtinere(st->radix, e);
+        TexExtentum  extentum;
 
         congreganda[e] = FALSUM;
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
         {
             perge;
         }
-        extentum.fons = -I;
-        extentum.initium = ZEPHYRUM;
-        extentum.finis = ZEPHYRUM;
+        extentum.fons     = -I;
+        extentum.initium  = ZEPHYRUM;
+        extentum.finis    = ZEPHYRUM;
         _extentum_valoris(*elem, &extentum);
         si (extentum.fons == -II)
         {
@@ -942,7 +958,7 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
             perge;  /* post regionem */
         }
         /* intersecat: plene intra corpus rami sumpti aut degradatio */
-        si (ramus_sumptus != NIHIL
+        si (   ramus_sumptus != NIHIL
             && ramus_sumptus->corpus_initium >= ZEPHYRUM
             && extentum.initium >= ramus_sumptus->corpus_initium
             && extentum.finis <= ramus_sumptus->corpus_finis)
@@ -968,7 +984,7 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
     /* Nodum conditionalis aedificare */
     {
         SilvaNodus* nodus_conditionalis;
-        i32 r;
+               i32  r;
 
         nodus_conditionalis = silva_nodus_creare(st->piscina,
             st->conditionalis.genus,
@@ -983,7 +999,7 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
             SilvaRamus* ramus = *(SilvaRamus**)xar_obtinere(
                 regio->rami, r);
             constans TexForma* forma;
-            SilvaNodus* nodus_rami;
+                   SilvaNodus* nodus_rami;
 
             si (ramus == NIHIL) perge;
             forma = ramus->est_sumptum ? &st->sumptus : &st->omissus;
@@ -994,7 +1010,8 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
                 st->parsura->regiones_omissae++;
                 redde;
             }
-            _laminam_in_locum(st->piscina, nodus_rami, (i32)forma->locus_a,
+            _laminam_in_locum(st->piscina, nodus_rami,
+                (i32)forma->locus_a,
                 ramus->directiva);
             si (ramus->est_sumptum)
             {
@@ -1035,8 +1052,8 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
          * elementum eiusdem fontis post regionem; aut in fine) */
         {
             SilvaValor lista_nova = silva_valor_lista_nova(st->piscina);
-            i32 positio_insertionis;
-            b32 insertum = FALSUM;
+                   i32 positio_insertionis;
+                   b32 insertum = FALSUM;
 
             si (primum_congregatum >= ZEPHYRUM)
             {
@@ -1090,7 +1107,9 @@ _regionem_texere (TexturaStatus* st, SilvaRegio* regio)
  * interior elementum extenti gerens fit quod textura exterior
  * congregat) */
 interior vacuum
-_regiones_texere (TexturaStatus* st, Xar* regiones)
+_regiones_texere (
+    TexturaStatus* st,
+              Xar* regiones)
 {
     i32 i;
 
@@ -1111,20 +1130,20 @@ _regiones_texere (TexturaStatus* st, Xar* regiones)
 /* Ingressus passus: radix nova (aut eadem) redditur */
 interior SilvaValor
 _texere (
-    Piscina*                       piscina,
-    SilvaValor                     radix,
-    SilvaExpansio*                 expansio,
+                          Piscina* piscina,
+                       SilvaValor  radix,
+                    SilvaExpansio* expansio,
     constans SilvaRegistrumCoctum* tabularium,
-    SilvaParsura*                  parsura)
+                     SilvaParsura* parsura)
 {
     TexturaStatus st;
 
-    si (expansio == NIHIL || expansio->regiones == NIHIL
+    si (   expansio == NIHIL || expansio->regiones == NIHIL
         || xar_numerus(expansio->regiones) == ZEPHYRUM)
     {
         redde radix;
     }
-    si (!_formam_texturae_invenire(tabularium, "conditionalis",
+    si (   !_formam_texturae_invenire(tabularium, "conditionalis",
             "rami", "finis", NIHIL, &st.conditionalis)
         || !_formam_texturae_invenire(tabularium, "ramus-sumptus",
             "directiva", "contentum", "conditio_id", &st.sumptus)
@@ -1136,10 +1155,10 @@ _texere (
             "silva_parsare: formae texturae in registro absunt\n");
         redde radix;
     }
-    st.piscina = piscina;
-    st.tabularium = tabularium;
-    st.parsura = parsura;
-    st.radix = radix;
+    st.piscina     = piscina;
+    st.tabularium  = tabularium;
+    st.parsura     = parsura;
+    st.radix       = radix;
     _regiones_texere(&st, expansio->regiones);
     redde st.radix;
 }
@@ -1148,26 +1167,26 @@ _texere (
  * licet (via cum_expansione) */
 interior SilvaParsura*
 _fistula_interna (
-    Piscina*                  piscina,
-    SilvaExpansio*            expansio,
-    constans SilvaContextus*  contextus,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+               SilvaExpansio* expansio,
+     constans SilvaContextus* contextus,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris)
 {
-    s32            fons_index;
-    Xar*           lexemata;
-    Xar*           reliqua;
-    Xar*           expansa;
-    Xar*           strata;
-    Xar*           directivae;
-    SilvaParsura*  parsura;
+             s32  fons_index;
+             Xar* lexemata;
+             Xar* reliqua;
+             Xar* expansa;
+             Xar* strata;
+             Xar* directivae;
+    SilvaParsura* parsura;
 
-    si (piscina == NIHIL || expansio == NIHIL || fons == NIHIL
+    si (   piscina    == NIHIL || expansio == NIHIL || fons == NIHIL
         || grammatica == NIHIL)
     {
         redde NIHIL;
@@ -1178,8 +1197,8 @@ _fistula_interna (
      * (point-in-time - Phase 2.5) */
     fons_index = silva_fons_addere(expansio,
         (titulus_fontis != NIHIL) ? titulus_fontis : "<fons>", FALSUM);
-    lexemata = silva_lexare(piscina, fons, mensura, fons_index);
-    directivae = NIHIL;
+    lexemata    = silva_lexare(piscina, fons, mensura, fons_index);
+    directivae  = NIHIL;
     reliqua = silva_expansio_directivas_processare(expansio, lexemata,
         &directivae);
     strata = NIHIL;
@@ -1190,18 +1209,18 @@ _fistula_interna (
         oraculum, resolutor, datum_resolutoris, expansio, contextus);
     si (parsura != NIHIL)
     {
-        parsura->lexemata = expansa;
-        parsura->strata = strata;
-        parsura->expansio = expansio;
-        parsura->directivae = directivae;
-        parsura->fons_princeps = fons_index;
+        parsura->lexemata       = expansa;
+        parsura->strata         = strata;
+        parsura->expansio       = expansio;
+        parsura->directivae     = directivae;
+        parsura->fons_princeps  = fons_index;
 
         /* Vexilla expansionis in fructum (fines/intermissio in
          * praeprocessore tactae) */
         si (expansio->expansio_decisa)
         {
-            parsura->expansio_decisa = VERUM;
-            parsura->fines_tactae = VERUM;
+            parsura->expansio_decisa  = VERUM;
+            parsura->fines_tactae     = VERUM;
         }
         si (expansio->fines_tactae)
         {
@@ -1217,15 +1236,15 @@ _fistula_interna (
 
 SilvaParsura*
 silva_parsare_cum_expansione (
-    Piscina*                  piscina,
-    SilvaExpansio*            expansio,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+               SilvaExpansio* expansio,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris)
 {
     redde _fistula_interna(piscina, expansio, NIHIL, titulus_fontis,
         fons, mensura, grammatica, oraculum, resolutor,
@@ -1239,19 +1258,19 @@ silva_parsare_cum_expansione (
  * fingitur). */
 interior b32
 _contextum_applicare (
-    Piscina*                 piscina,
-    SilvaExpansio*           expansio,
+                    Piscina* piscina,
+              SilvaExpansio* expansio,
     constans SilvaContextus* contextus)
 {
     i32 k;
 
-    expansio->limen_lexematum = contextus->fines.lexemata;
-    expansio->limen_generationum = contextus->fines.generationes;
+    expansio->limen_lexematum     = contextus->fines.lexemata;
+    expansio->limen_generationum  = contextus->fines.generationes;
     expansio->limen_includendi =
         contextus->fines.profunditas_includendi;
-    expansio->limen_regionum = contextus->fines.profunditas_regionum;
-    expansio->pergere = contextus->pergere;
-    expansio->pergere_datum = contextus->pergere_datum;
+    expansio->limen_regionum  = contextus->fines.profunditas_regionum;
+    expansio->pergere         = contextus->pergere;
+    expansio->pergere_datum   = contextus->pergere_datum;
 
     per (k = ZEPHYRUM; k < xar_numerus(contextus->praebenda); k++)
     {
@@ -1259,7 +1278,7 @@ _contextum_applicare (
             (constans SilvaContextusPlagula*)xar_obtinere(
                 contextus->praebenda, k);
 
-        si (plagula == NIHIL
+        si (   plagula == NIHIL
             || silva_includendum_praebere(expansio, plagula->via,
                    plagula->textus, plagula->mensura) < ZEPHYRUM)
         {
@@ -1281,8 +1300,8 @@ _contextum_applicare (
         {
             redde FALSUM;
         }
-        acta_ante = xar_numerus(expansio->acta);
-        fons_index = silva_fons_addere(expansio, plagula->via, FALSUM);
+        acta_ante   = xar_numerus(expansio->acta);
+        fons_index  = silva_fons_addere(expansio, plagula->via, FALSUM);
         si (fons_index < ZEPHYRUM)
         {
             redde FALSUM;
@@ -1329,15 +1348,15 @@ _contextum_applicare (
 
 SilvaParsura*
 silva_parsare_cum_contextu (
-    Piscina*                  piscina,
-    constans SilvaContextus*  contextus,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+     constans SilvaContextus* contextus,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris)
 {
     SilvaExpansio* expansio;
 
@@ -1361,14 +1380,14 @@ silva_parsare_cum_contextu (
 
 SilvaParsura*
 silva_parsare (
-    Piscina*                  piscina,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris)
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris)
 {
     SilvaExpansio* expansio;
 

@@ -32,6 +32,7 @@
 #include "silva_nodus.h"
 #include "silva_registrum.h"
 
+
 /* ==================================================
  * Oraculum typorum (binarium in M1: novit/ignotum;
  * oraculum trivalens - "non-typus notus" - grammaticae
@@ -41,14 +42,14 @@
 nomen structura SilvaOraculum SilvaOraculum;
 
 structura SilvaOraculum {
-    Piscina*        piscina;
+           Piscina* piscina;
     TabulaDispersa* typi;      /* clavis chorda (copiata) -> VERUM */
     TabulaDispersa* non_typi;  /* TRIVALENS (M0a C): nomina quae
                                 * NON-typi noti sunt (functiones,
                                 * variabiles, acies) - lectio quae
                                 * nomen tale ut typum postulat
                                 * IMPOSSIBILIS est (occiditur) */
-    Xar*            responsa;  /* verdicta praecomputata ambulationis
+    Xar* responsa;  /* verdicta praecomputata ambulationis
                                 * praecommissionis (sanatio oraculi
                                 * 2026-07-06): {sedes, victor} per
                                 * AMBIGUUS, victor -1 = retentio
@@ -58,13 +59,19 @@ structura SilvaOraculum {
                                 * inter parsuras collidere possunt) */
 };
 
-SilvaOraculum* silva_oraculum_creare (Piscina* piscina);
+SilvaOraculum*
+silva_oraculum_creare (
+    Piscina* piscina);
 
 /* Titulus in piscinam oraculi COPIATUR (valores lexematum prospectus
  * in fontem sunt - lectio vitae fons->via) */
-b32 silva_oraculum_typum_addere (SilvaOraculum* oraculum,
-    chorda titulus);
-b32 silva_oraculum_typum_addere_literis (SilvaOraculum* oraculum,
+b32
+silva_oraculum_typum_addere (
+    SilvaOraculum* oraculum,
+           chorda  titulus);
+b32
+silva_oraculum_typum_addere_literis (
+         SilvaOraculum* oraculum,
     constans character* titulus);
 
 /* Situs declarationis (M2b, sim X): byte_offset lexematis nominis
@@ -75,27 +82,41 @@ b32 silva_oraculum_typum_addere_literis (SilvaOraculum* oraculum,
  * priorem non solvit - nunc quia nondum registratus, non per
  * situm. Situs PRIMUS servatur in redeclaratione (legalitas =
  * lamina lint). */
-b32 silva_oraculum_typum_addere_situ (SilvaOraculum* oraculum,
-    chorda titulus, s32 situs);
+b32
+silva_oraculum_typum_addere_situ (
+    SilvaOraculum* oraculum,
+           chorda  titulus,
+              s32  situs);
 
 /* VERUM + *situs_out si notus; FALSUM si ignotus */
-b32 silva_oraculum_situs_typi (constans SilvaOraculum* oraculum,
-    chorda titulus, s32* situs_out);
+b32
+silva_oraculum_situs_typi (
+    constans SilvaOraculum* oraculum,
+                    chorda  titulus,
+                       s32* situs_out);
 
-b32 silva_oraculum_typum_novit (constans SilvaOraculum* oraculum,
-    chorda titulus);
+b32
+silva_oraculum_typum_novit (
+    constans SilvaOraculum* oraculum,
+                    chorda  titulus);
 
 /* Oraculum TRIVALENS (M0a Chunk C, censu ductum: ~84% ambiguorum
  * retentorum in nominibus NON-typorum repositorii discriminant -
  * silva-semantica-design.md par VII). Nomen ut typus ET ut non-typus
  * notum (umbratio trans scopos, tabula plana): typus vincit
  * (conservativum - retentio ut ante). */
-b32 silva_oraculum_non_typum_addere (SilvaOraculum* oraculum,
-    chorda titulus);
-b32 silva_oraculum_non_typum_addere_literis (SilvaOraculum* oraculum,
+b32
+silva_oraculum_non_typum_addere (
+    SilvaOraculum* oraculum,
+           chorda  titulus);
+b32
+silva_oraculum_non_typum_addere_literis (
+         SilvaOraculum* oraculum,
     constans character* titulus);
-b32 silva_oraculum_non_typum_novit (
-    constans SilvaOraculum* oraculum, chorda titulus);
+b32
+silva_oraculum_non_typum_novit (
+    constans SilvaOraculum* oraculum,
+                    chorda  titulus);
 
 /* Verdicta praecomputata (sanatio oraculi 2026-07-06): ambulatio
  * praecommissionis grammaticae verdictum per AMBIGUUS stipat
@@ -103,12 +124,19 @@ b32 silva_oraculum_non_typum_novit (
  * registratus cum ambiguum attingitur; comparatio situm trans
  * fontes FALSA erat, vide silva-incrementalitas.md par V);
  * resolutor verdictum legit. victor -1 = retentio decisa. */
-vacuum silva_oraculum_responsa_vacare (SilvaOraculum* oraculum);
-b32 silva_oraculum_responsum_ponere (SilvaOraculum* oraculum,
-    constans SilvaNodus* sedes, s32 victor);
-b32 silva_oraculum_responsum_quaerere (
+vacuum
+silva_oraculum_responsa_vacare (
+    SilvaOraculum* oraculum);
+b32
+silva_oraculum_responsum_ponere (
+          SilvaOraculum* oraculum,
+    constans SilvaNodus* sedes,
+                    s32  victor);
+b32
+silva_oraculum_responsum_quaerere (
     constans SilvaOraculum* oraculum,
-    constans SilvaNodus* sedes, s32* victor_out);
+       constans SilvaNodus* sedes,
+                       s32* victor_out);
 
 
 /* ==================================================
@@ -116,7 +144,7 @@ b32 silva_oraculum_responsum_quaerere (
  * ================================================== */
 
 nomen structura {
-    s32         victor;        /* index interpretationis; -1 = ignotum */
+           s32  victor;        /* index interpretationis; -1 = ignotum */
     SilvaToken* discriminans;  /* lexema discriminante (NIHIL licet) */
 } SilvaResolutioResponsum;
 
@@ -166,12 +194,12 @@ nomen structura {
  * NB "registrum" ut titulus vetitum - macro latina (register)! */
 SilvaCommissio*
 silva_committere (
-    Piscina*                       piscina,
-    SilvaValor                     radix,
+                          Piscina* piscina,
+                       SilvaValor  radix,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaOraculum*        oraculum,
-    SilvaResolutor                 resolutor,
-    vacuum*                        datum_resolutoris);
+           constans SilvaOraculum* oraculum,
+                   SilvaResolutor  resolutor,
+                           vacuum* datum_resolutoris);
 
 /* Scientia sera: ambigua superstitia iterum resolvere. Canonica in
  * loco vertitur + spina localiter retexta; involucrum MANET (arbor
@@ -179,9 +207,9 @@ silva_committere (
  * reddit. */
 i32
 silva_recanonicare (
-    SilvaCommissio*         commissio,
+            SilvaCommissio* commissio,
     constans SilvaOraculum* oraculum,
-    SilvaResolutor          resolutor,
-    vacuum*                 datum_resolutoris);
+            SilvaResolutor  resolutor,
+                    vacuum* datum_resolutoris);
 
 #endif /* SILVA_COMMISSIO_H */

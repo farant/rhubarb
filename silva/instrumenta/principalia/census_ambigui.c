@@ -28,7 +28,8 @@
 hic_manens i32 capita_praebita = ZEPHYRUM;
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -38,8 +39,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -55,11 +59,13 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
     fseek(pl, 0L, SEEK_SET);
-    si (mensura_l < 0L) { fclose(pl); redde; }
+    si (mensura_l < 0L)
+    { fclose(pl); redde;
+    }
     mensura = (i32)mensura_l;
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -74,8 +80,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -83,7 +92,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -98,7 +107,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -112,8 +121,10 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
 /* Primum lexema TYPUS_NOMINATUS in subarbore (titulus discriminans
  * lectionis declarationis); si nullum, primum IDENTIFICATOR. */
 hic_manens SilvaToken*
-_discriminans_invenire (constans SilvaNodus* nodus, i32 prof,
-    b32 solum_nominatus)
+_discriminans_invenire (
+    constans SilvaNodus* nodus,
+                    i32  prof,
+                    b32  solum_nominatus)
 {
     i32 i;
 
@@ -156,20 +167,21 @@ _discriminans_invenire (constans SilvaNodus* nodus, i32 prof,
 
                     si (r != NIHIL) redde r;
                 }
-                alioquin si (!solum_nominatus && e != NIHIL
-                    && e->genus == SILVA_VALOR_TOKEN
-                    && e->datum.token != NIHIL
-                    && e->datum.token->genus
-                        == SILVA_LEX_IDENTIFICATOR)
+                alioquin si (   !solum_nominatus && e != NIHIL
+                             && e->genus       == SILVA_VALOR_TOKEN
+                             && e->datum.token != NIHIL
+                             && e->datum.token->genus
+                             == SILVA_LEX_IDENTIFICATOR)
                 {
                     redde e->datum.token;
                 }
             }
         }
-        alioquin si (!solum_nominatus
-            && v->genus == SILVA_VALOR_TOKEN
-            && v->datum.token != NIHIL
-            && v->datum.token->genus == SILVA_LEX_IDENTIFICATOR)
+        alioquin si (   !solum_nominatus
+                     && v->genus       == SILVA_VALOR_TOKEN
+                     && v->datum.token != NIHIL
+                     && v->datum.token->genus
+                         == SILVA_LEX_IDENTIFICATOR)
         {
             redde v->datum.token;
         }
@@ -177,12 +189,15 @@ _discriminans_invenire (constans SilvaNodus* nodus, i32 prof,
     redde NIHIL;
 }
 
-int principale (int argc, char** argv)
+int
+principale (
+     int   argc,
+    char** argv)
 {
-    Piscina* piscina;
-    Piscina* piscina_ctx;
+           Piscina* piscina;
+           Piscina* piscina_ctx;
     SilvaContextus* ctx;
-    SilvaParsura* parsura;
+      SilvaParsura* parsura;
     FILE* pl;
     constans character* via;
     i8* fons;
@@ -202,19 +217,25 @@ int principale (int argc, char** argv)
     via = argv[I];
 
     pl = fopen(via, "rb");
-    si (pl == NIHIL) { fprintf(stderr, "aperire non potest\n"); redde I; }
+    si (pl == NIHIL)
+    { fprintf(stderr, "aperire non potest\n"); redde I;
+    }
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
     fseek(pl, 0L, SEEK_SET);
-    si (mensura_l < 0L) { fclose(pl); redde I; }
+    si (mensura_l < 0L)
+    { fclose(pl); redde I;
+    }
     mensura = (i32)mensura_l;
 
-    piscina = piscina_generare_dynamicum("census", 8388608);
-    piscina_ctx = piscina_generare_dynamicum("census_ctx", 8388608);
-    si (piscina == NIHIL || piscina_ctx == NIHIL) { fclose(pl); redde I; }
+    piscina      = piscina_generare_dynamicum("census", 8388608);
+    piscina_ctx  = piscina_generare_dynamicum("census_ctx", 8388608);
+    si (piscina == NIHIL || piscina_ctx == NIHIL)
+    { fclose(pl); redde I;
+    }
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -229,7 +250,8 @@ int principale (int argc, char** argv)
         TabulaDispersa* visa = tabula_dispersa_creare_chorda(
             piscina_ctx, DXII);
 
-        si (visa != NIHIL) _capita_praeparare(ctx, piscina_ctx, visa, ".");
+        si (visa != NIHIL) _capita_praeparare(ctx, piscina_ctx, visa,
+                               ".");
     }
 
     /* fistula plena (Chunk C): systema + praeoneratio + clausura -
@@ -301,8 +323,8 @@ int principale (int argc, char** argv)
         {
             SilvaResolutioResponsum responsum;
 
-            responsum.victor = -I;
-            responsum.discriminans = NIHIL;
+            responsum.victor        = -I;
+            responsum.discriminans  = NIHIL;
             silva_c89_resolutor(nodus, oraculum, NIHIL, &responsum);
             si (responsum.victor >= ZEPHYRUM)
             {
@@ -334,7 +356,7 @@ int principale (int argc, char** argv)
             {
                 SilvaValor* e = silva_valor_lista_obtinere(interp, j);
 
-                si (e != NIHIL && e->genus == SILVA_VALOR_NODUS
+                si (   e != NIHIL && e->genus == SILVA_VALOR_NODUS
                     && e->datum.nodus != NIHIL)
                 {
                     imprimere("g%d ", (int)e->datum.nodus->genus);

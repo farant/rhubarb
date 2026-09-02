@@ -3,6 +3,7 @@
 #include "silva_conditio.h"
 #include <string.h>
 
+
 /* ==================================================
  * Contextus evaluationis
  * ================================================== */
@@ -14,31 +15,62 @@ nomen structura {
     b32  error;
 } SilvaConditioEval;
 
+
 /* ==================================================
  * Praedeclarationes (descensus recursivus)
  * ================================================== */
 
-interior s64 _evaluare_expressio (SilvaConditioEval* eval);
-interior s64 _evaluare_ternarius (SilvaConditioEval* eval);
-interior s64 _evaluare_disiunctio (SilvaConditioEval* eval);
-interior s64 _evaluare_coniunctio (SilvaConditioEval* eval);
-interior s64 _evaluare_vel_bitalis (SilvaConditioEval* eval);
-interior s64 _evaluare_xor_bitalis (SilvaConditioEval* eval);
-interior s64 _evaluare_et_bitalis (SilvaConditioEval* eval);
-interior s64 _evaluare_aequalitas (SilvaConditioEval* eval);
-interior s64 _evaluare_comparatio (SilvaConditioEval* eval);
-interior s64 _evaluare_translatio (SilvaConditioEval* eval);
-interior s64 _evaluare_additio (SilvaConditioEval* eval);
-interior s64 _evaluare_multiplicatio (SilvaConditioEval* eval);
-interior s64 _evaluare_unarium (SilvaConditioEval* eval);
-interior s64 _evaluare_primarium (SilvaConditioEval* eval);
+interior s64
+_evaluare_expressio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_ternarius (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_disiunctio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_coniunctio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_vel_bitalis (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_xor_bitalis (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_et_bitalis (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_aequalitas (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_comparatio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_translatio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_additio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_multiplicatio (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_unarium (
+    SilvaConditioEval* eval);
+interior s64
+_evaluare_primarium (
+    SilvaConditioEval* eval);
+
 
 /* ==================================================
  * Auxiliares
  * ================================================== */
 
 interior SilvaToken*
-_lexema_currens (SilvaConditioEval* eval)
+_lexema_currens (
+    SilvaConditioEval* eval)
 {
     si (eval->positus >= eval->numerus)
     {
@@ -48,7 +80,8 @@ _lexema_currens (SilvaConditioEval* eval)
 }
 
 interior SilvaLexemaGenus
-_genus_currens (SilvaConditioEval* eval)
+_genus_currens (
+    SilvaConditioEval* eval)
 {
     SilvaToken* tok;
 
@@ -61,7 +94,8 @@ _genus_currens (SilvaConditioEval* eval)
 }
 
 interior vacuum
-_progredi (SilvaConditioEval* eval)
+_progredi (
+    SilvaConditioEval* eval)
 {
     si (eval->positus < eval->numerus)
     {
@@ -71,13 +105,15 @@ _progredi (SilvaConditioEval* eval)
 
 /* Potestne lexema nomen macro esse? (praeprocessor verba clausa non novit) */
 interior b32
-_est_nomen_conditionis (SilvaToken* token)
+_est_nomen_conditionis (
+    SilvaToken* token)
 {
     si (token->genus == SILVA_LEX_IDENTIFICATOR)
     {
         redde VERUM;
     }
-    si (token->genus >= SILVA_LEX_AUTO && token->genus <= SILVA_LEX_WHILE)
+    si (   token->genus >= SILVA_LEX_AUTO
+        && token->genus <= SILVA_LEX_WHILE)
     {
         redde VERUM;
     }
@@ -85,7 +121,8 @@ _est_nomen_conditionis (SilvaToken* token)
 }
 
 interior b32
-_est_defined (SilvaToken* tok)
+_est_defined (
+    SilvaToken* tok)
 {
     si (tok == NIHIL || tok->genus != SILVA_LEX_IDENTIFICATOR)
     {
@@ -101,17 +138,18 @@ _est_defined (SilvaToken* tok)
 
 /* Parsere litteram integram (dec/hex/oct, suffixa L/U praetermissa) */
 interior s64
-_parsere_integer (chorda valor)
+_parsere_integer (
+    chorda valor)
 {
-    s64 fructus;
-    s64 basis;
-    i32 i;
+            s64  fructus;
+            s64  basis;
+            i32  i;
     constans i8* p;
 
-    fructus = ZEPHYRUM;
-    basis = X;
-    i = ZEPHYRUM;
-    p = valor.datum;
+    fructus  = ZEPHYRUM;
+    basis    = X;
+    i        = ZEPHYRUM;
+    p        = valor.datum;
 
     si (valor.mensura == ZEPHYRUM)
     {
@@ -122,8 +160,8 @@ _parsere_integer (chorda valor)
     {
         si (p[i + I] == 'x' || p[i + I] == 'X')
         {
-            basis = XVI;
-            i += II;
+            basis  = XVI;
+            i      += II;
         }
         alioquin si (p[i + I] >= '0' && p[i + I] <= '7')
         {
@@ -135,7 +173,7 @@ _parsere_integer (chorda valor)
     dum (i < valor.mensura)
     {
         character c;
-        s64 cifra;
+              s64 cifra;
 
         c = (character)p[i];
 
@@ -175,7 +213,8 @@ _parsere_integer (chorda valor)
 
 /* Littera characteris: 'a' vel '\n' etc. */
 interior s64
-_parsere_characterem (chorda valor)
+_parsere_characterem (
+    chorda valor)
 {
     si (valor.mensura >= II && valor.datum[ZEPHYRUM] == '\'')
     {
@@ -197,6 +236,7 @@ _parsere_characterem (chorda valor)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Descensus recursivus
  *
@@ -206,13 +246,15 @@ _parsere_characterem (chorda valor)
  * ================================================== */
 
 interior s64
-_evaluare_expressio (SilvaConditioEval* eval)
+_evaluare_expressio (
+    SilvaConditioEval* eval)
 {
     redde _evaluare_ternarius(eval);
 }
 
 interior s64
-_evaluare_ternarius (SilvaConditioEval* eval)
+_evaluare_ternarius (
+    SilvaConditioEval* eval)
 {
     s64 conditio;
     s64 valor_verus;
@@ -238,7 +280,8 @@ _evaluare_ternarius (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_disiunctio (SilvaConditioEval* eval)
+_evaluare_disiunctio (
+    SilvaConditioEval* eval)
 {
     s64 sinister;
 
@@ -248,14 +291,15 @@ _evaluare_disiunctio (SilvaConditioEval* eval)
         s64 dexter;
 
         _progredi(eval);
-        dexter = _evaluare_coniunctio(eval);
-        sinister = (sinister || dexter) ? I : ZEPHYRUM;
+        dexter    = _evaluare_coniunctio(eval);
+        sinister  = (sinister || dexter) ? I : ZEPHYRUM;
     }
     redde sinister;
 }
 
 interior s64
-_evaluare_coniunctio (SilvaConditioEval* eval)
+_evaluare_coniunctio (
+    SilvaConditioEval* eval)
 {
     s64 sinister;
 
@@ -265,14 +309,15 @@ _evaluare_coniunctio (SilvaConditioEval* eval)
         s64 dexter;
 
         _progredi(eval);
-        dexter = _evaluare_vel_bitalis(eval);
-        sinister = (sinister && dexter) ? I : ZEPHYRUM;
+        dexter    = _evaluare_vel_bitalis(eval);
+        sinister  = (sinister && dexter) ? I : ZEPHYRUM;
     }
     redde sinister;
 }
 
 interior s64
-_evaluare_vel_bitalis (SilvaConditioEval* eval)
+_evaluare_vel_bitalis (
+    SilvaConditioEval* eval)
 {
     s64 sinister;
 
@@ -282,14 +327,15 @@ _evaluare_vel_bitalis (SilvaConditioEval* eval)
         s64 dexter;
 
         _progredi(eval);
-        dexter = _evaluare_xor_bitalis(eval);
-        sinister = sinister | dexter;
+        dexter    = _evaluare_xor_bitalis(eval);
+        sinister  = sinister | dexter;
     }
     redde sinister;
 }
 
 interior s64
-_evaluare_xor_bitalis (SilvaConditioEval* eval)
+_evaluare_xor_bitalis (
+    SilvaConditioEval* eval)
 {
     s64 sinister;
 
@@ -299,14 +345,15 @@ _evaluare_xor_bitalis (SilvaConditioEval* eval)
         s64 dexter;
 
         _progredi(eval);
-        dexter = _evaluare_et_bitalis(eval);
-        sinister = sinister ^ dexter;
+        dexter    = _evaluare_et_bitalis(eval);
+        sinister  = sinister ^ dexter;
     }
     redde sinister;
 }
 
 interior s64
-_evaluare_et_bitalis (SilvaConditioEval* eval)
+_evaluare_et_bitalis (
+    SilvaConditioEval* eval)
 {
     s64 sinister;
 
@@ -316,21 +363,22 @@ _evaluare_et_bitalis (SilvaConditioEval* eval)
         s64 dexter;
 
         _progredi(eval);
-        dexter = _evaluare_aequalitas(eval);
-        sinister = sinister & dexter;
+        dexter    = _evaluare_aequalitas(eval);
+        sinister  = sinister & dexter;
     }
     redde sinister;
 }
 
 interior s64
-_evaluare_aequalitas (SilvaConditioEval* eval)
+_evaluare_aequalitas (
+    SilvaConditioEval* eval)
 {
-    s64 sinister;
+                 s64 sinister;
     SilvaLexemaGenus op;
 
     sinister = _evaluare_comparatio(eval);
-    dum ((op = _genus_currens(eval)) == SILVA_LEX_AEQUALIS_AEQUALIS
-        || op == SILVA_LEX_NON_AEQUALIS)
+    dum (   (op = _genus_currens(eval)) == SILVA_LEX_AEQUALIS_AEQUALIS
+         || op                          == SILVA_LEX_NON_AEQUALIS)
     {
         s64 dexter;
 
@@ -349,16 +397,17 @@ _evaluare_aequalitas (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_comparatio (SilvaConditioEval* eval)
+_evaluare_comparatio (
+    SilvaConditioEval* eval)
 {
-    s64 sinister;
+                 s64 sinister;
     SilvaLexemaGenus op;
 
     sinister = _evaluare_translatio(eval);
-    dum ((op = _genus_currens(eval)) == SILVA_LEX_MINOR
-        || op == SILVA_LEX_MAIOR
-        || op == SILVA_LEX_MINOR_AEQUALIS
-        || op == SILVA_LEX_MAIOR_AEQUALIS)
+    dum (   (op = _genus_currens(eval)) == SILVA_LEX_MINOR
+         || op                          == SILVA_LEX_MAIOR
+         || op                          == SILVA_LEX_MINOR_AEQUALIS
+         || op                          == SILVA_LEX_MAIOR_AEQUALIS)
     {
         s64 dexter;
 
@@ -386,14 +435,15 @@ _evaluare_comparatio (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_translatio (SilvaConditioEval* eval)
+_evaluare_translatio (
+    SilvaConditioEval* eval)
 {
-    s64 sinister;
+                 s64 sinister;
     SilvaLexemaGenus op;
 
     sinister = _evaluare_additio(eval);
-    dum ((op = _genus_currens(eval)) == SILVA_LEX_SINISTRORSUM
-        || op == SILVA_LEX_DEXTRORSUM)
+    dum (   (op = _genus_currens(eval)) == SILVA_LEX_SINISTRORSUM
+         || op                          == SILVA_LEX_DEXTRORSUM)
     {
         s64 dexter;
 
@@ -417,14 +467,15 @@ _evaluare_translatio (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_additio (SilvaConditioEval* eval)
+_evaluare_additio (
+    SilvaConditioEval* eval)
 {
-    s64 sinister;
+                 s64 sinister;
     SilvaLexemaGenus op;
 
     sinister = _evaluare_multiplicatio(eval);
-    dum ((op = _genus_currens(eval)) == SILVA_LEX_PLUS
-        || op == SILVA_LEX_MINUS)
+    dum (   (op = _genus_currens(eval)) == SILVA_LEX_PLUS
+         || op                          == SILVA_LEX_MINUS)
     {
         s64 dexter;
 
@@ -443,15 +494,16 @@ _evaluare_additio (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_multiplicatio (SilvaConditioEval* eval)
+_evaluare_multiplicatio (
+    SilvaConditioEval* eval)
 {
-    s64 sinister;
+                 s64 sinister;
     SilvaLexemaGenus op;
 
     sinister = _evaluare_unarium(eval);
-    dum ((op = _genus_currens(eval)) == SILVA_LEX_STAR
-        || op == SILVA_LEX_SOLIDUS
-        || op == SILVA_LEX_PERCENTUM)
+    dum (   (op = _genus_currens(eval)) == SILVA_LEX_STAR
+         || op                          == SILVA_LEX_SOLIDUS
+         || op                          == SILVA_LEX_PERCENTUM)
     {
         s64 dexter;
 
@@ -482,7 +534,8 @@ _evaluare_multiplicatio (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_unarium (SilvaConditioEval* eval)
+_evaluare_unarium (
+    SilvaConditioEval* eval)
 {
     SilvaLexemaGenus op;
 
@@ -522,7 +575,8 @@ _evaluare_unarium (SilvaConditioEval* eval)
 }
 
 interior s64
-_evaluare_primarium (SilvaConditioEval* eval)
+_evaluare_primarium (
+    SilvaConditioEval* eval)
 {
     SilvaToken* tok;
 
@@ -577,6 +631,7 @@ _evaluare_primarium (SilvaConditioEval* eval)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Substitutio 'defined' (protecta - ANTE expansionem)
  *
@@ -586,24 +641,30 @@ _evaluare_primarium (SilvaConditioEval* eval)
  * ================================================== */
 
 interior SilvaToken*
-_integer_syntheticum (SilvaExpansio* exp, b32 valor, chorda* nomen_macro)
+_integer_syntheticum (
+    SilvaExpansio* exp,
+              b32  valor,
+           chorda* nomen_macro)
 {
     chorda textus;
     unio { constans character* c; i8* m; } u;
 
-    u.c = valor ? "1" : "0";
-    textus.datum = u.m;
-    textus.mensura = I;
+    u.c             = valor ? "1" : "0";
+    textus.datum    = u.m;
+    textus.mensura  = I;
     redde silva_token_ex_api(exp->piscina, SILVA_LEX_INTEGER, textus,
         nomen_macro, -I);
 }
 
 interior chorda*
-_chordam_figere_conditionis (Piscina* piscina, chorda c)
+_chordam_figere_conditionis (
+    Piscina* piscina,
+     chorda  c)
 {
     chorda* fixa;
 
-    fixa = (chorda*)piscina_allocare(piscina, (memoriae_index)magnitudo(chorda));
+    fixa = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(chorda));
     si (fixa != NIHIL)
     {
         *fixa = c;
@@ -612,16 +673,18 @@ _chordam_figere_conditionis (Piscina* piscina, chorda c)
 }
 
 interior Xar*
-_defined_substituere (SilvaExpansio* exp, Xar* lexemata)
+_defined_substituere (
+    SilvaExpansio* exp,
+              Xar* lexemata)
 {
-    Xar* exitus;
+           Xar* exitus;
     SilvaToken* tok;
-    i32 i;
-    i32 n;
+           i32  i;
+           i32  n;
 
-    exitus = xar_creare(exp->piscina, magnitudo(SilvaToken*));
-    n = xar_numerus(lexemata);
-    i = ZEPHYRUM;
+    exitus  = xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    n       = xar_numerus(lexemata);
+    i       = ZEPHYRUM;
 
     dum (i < n)
     {
@@ -629,14 +692,15 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
 
         si (_est_defined(tok))
         {
-            SilvaToken* operandum;
+            SilvaToken*  operandum;
             SilvaToken** locus;
-            b32 habet_paren;
-            b32 est_def;
+                   b32   habet_paren;
+                   b32   est_def;
 
             i++;
             habet_paren = FALSUM;
-            si (i < n && (*(SilvaToken**)xar_obtinere(lexemata, i))->genus
+            si (   i < n
+                && (*(SilvaToken**)xar_obtinere(lexemata, i))->genus
                 == SILVA_LEX_PAREN_APERTA)
             {
                 habet_paren = VERUM;
@@ -654,7 +718,8 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
             i++;
             si (habet_paren)
             {
-                si (i >= n || (*(SilvaToken**)xar_obtinere(lexemata, i))->genus
+                si (   i >= n
+                    || (*(SilvaToken**)xar_obtinere(lexemata, i))->genus
                     != SILVA_LEX_PAREN_CLAUSA)
                 {
                     redde NIHIL;
@@ -662,12 +727,14 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
                 i++;
             }
 
-            est_def = silva_conditio_est_definitum(exp, operandum->valor);
+            est_def = silva_conditio_est_definitum(exp,
+                operandum->valor);
             locus = (SilvaToken**)xar_addere(exitus);
             si (locus != NIHIL)
             {
                 *locus = _integer_syntheticum(exp, est_def,
-                    _chordam_figere_conditionis(exp->piscina, operandum->valor));
+                    _chordam_figere_conditionis(exp->piscina,
+                    operandum->valor));
             }
             perge;
         }
@@ -687,6 +754,7 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
     redde exitus;
 }
 
+
 /* ==================================================
  * API publica
  * ================================================== */
@@ -694,31 +762,33 @@ _defined_substituere (SilvaExpansio* exp, Xar* lexemata)
 b32
 silva_conditio_est_definitum (
     SilvaExpansio* exp,
-    chorda         titulus)
+           chorda  titulus)
 {
     si (exp == NIHIL)
     {
         redde FALSUM;
     }
-    redde (silva_expansio_quaerere(exp, titulus) != NIHIL) ? VERUM : FALSUM;
+    redde (silva_expansio_quaerere(exp, titulus)
+        != NIHIL) ? VERUM : FALSUM;
 }
 
 s64
 silva_conditio_evaluare (
     SilvaExpansio* exp,
-    Xar*           lexemata,
-    b32*           successus)
+              Xar* lexemata,
+              b32* successus)
 {
-    SilvaConditioEval eval;
-    Xar* substituta;
-    Xar* expansa;
-    s64 fructus;
+    SilvaConditioEval  eval;
+                  Xar* substituta;
+                  Xar* expansa;
+                  s64  fructus;
 
     si (successus != NIHIL)
     {
         *successus = FALSUM;
     }
-    si (exp == NIHIL || lexemata == NIHIL || xar_numerus(lexemata) == ZEPHYRUM)
+    si (   exp                   == NIHIL || lexemata == NIHIL
+        || xar_numerus(lexemata) == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
@@ -734,10 +804,10 @@ silva_conditio_evaluare (
     expansa = silva_expansio_expandere(exp, substituta, NIHIL);
 
     /* 3. evaluatio arithmetica */
-    eval.lexemata = expansa;
-    eval.positus = ZEPHYRUM;
-    eval.numerus = xar_numerus(expansa);
-    eval.error = FALSUM;
+    eval.lexemata  = expansa;
+    eval.positus   = ZEPHYRUM;
+    eval.numerus   = xar_numerus(expansa);
+    eval.error     = FALSUM;
 
     si (eval.numerus == ZEPHYRUM)
     {

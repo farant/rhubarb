@@ -21,7 +21,10 @@
 #include <string.h>
 
 interior SilvaGLRFructus
-_parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
+_parsare (
+               Piscina* piscina,
+              SilvaGLR* glr,
+    constans character* fons)
 {
     Xar* lexemata;
 
@@ -31,7 +34,9 @@ _parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
 
 /* Nodus ex elemento listae (NIHIL si non nodus) */
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -45,8 +50,8 @@ _elementum (SilvaValor lista, i32 index)
 
 s32 principale (vacuum)
 {
-    b32       praeteritus;
-    Piscina*  piscina;
+         b32  praeteritus;
+     Piscina* piscina;
     SilvaGLR* glr;
 
     piscina = piscina_generare_dynamicum("probatio_silva_glr", 4194304);
@@ -111,17 +116,18 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* declaratio;
-        SilvaValor  typus;
-        SilvaValor  declarator;
-        SilvaValor  terminator;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* declaratio;
+             SilvaValor  typus;
+             SilvaValor  declarator;
+             SilvaValor  terminator;
 
         imprimere("\n--- Probans declarationem ---\n");
 
         fructus = _parsare(piscina, glr, "int x;");
         CREDO_VERUM (fructus.successus);
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), I);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            I);
 
         declaratio = _elementum(fructus.valor, ZEPHYRUM);
         CREDO_NON_NIHIL (declaratio);
@@ -133,7 +139,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (typus.datum.nodus->genus,
             (s32)SILVA_SCELETUM_GENUS_TYPUS_PRIMITIVUS);
         {
-            SilvaValor verbum = silva_sceletum_typus_primitivus_tok_verbum(
+            SilvaValor verbum =
+                silva_sceletum_typus_primitivus_tok_verbum(
                 typus.datum.nodus);
 
             CREDO_AEQUALIS_S32 ((s32)verbum.genus,
@@ -156,7 +163,8 @@ s32 principale (vacuum)
                 "x");
         }
 
-        terminator = silva_sceletum_declaratio_tok_terminator(declaratio);
+        terminator =
+            silva_sceletum_declaratio_tok_terminator(declaratio);
         CREDO_AEQUALIS_S32 ((s32)terminator.genus,
             (s32)SILVA_VALOR_TOKEN);
         CREDO_CHORDA_AEQUALIS_LITERIS (terminator.datum.token->valor,
@@ -175,10 +183,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* declaratio;
-        SilvaValor  declarator;
-        SilvaValor  internum;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* declaratio;
+             SilvaValor  declarator;
+             SilvaValor  internum;
 
         imprimere("\n--- Probans monstratorem ---\n");
 
@@ -211,11 +219,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* sententia;
-        SilvaValor  expressio;
-        SilvaValor  sinister;
-        SilvaValor  dexter;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* sententia;
+             SilvaValor  expressio;
+             SilvaValor  sinister;
+             SilvaValor  dexter;
 
         imprimere("\n--- Probans praecedentiam ---\n");
 
@@ -238,7 +246,8 @@ s32 principale (vacuum)
             CREDO_CHORDA_AEQUALIS_LITERIS (op.datum.token->valor, "+");
         }
 
-        sinister = silva_sceletum_binarium_sinister(expressio.datum.nodus);
+        sinister =
+            silva_sceletum_binarium_sinister(expressio.datum.nodus);
         CREDO_AEQUALIS_S32 (sinister.datum.nodus->genus,
             (s32)SILVA_SCELETUM_GENUS_FOLIUM_IDENTIFICATOR);
 
@@ -274,11 +283,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* sententia;
-        SilvaValor  expressio;
-        SilvaValor  sinister;
-        SilvaValor  internum;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* sententia;
+             SilvaValor  expressio;
+             SilvaValor  sinister;
+             SilvaValor  internum;
 
         imprimere("\n--- Probans parentheses ---\n");
 
@@ -297,7 +306,8 @@ s32 principale (vacuum)
             CREDO_CHORDA_AEQUALIS_LITERIS (op.datum.token->valor, "*");
         }
 
-        sinister = silva_sceletum_binarium_sinister(expressio.datum.nodus);
+        sinister =
+            silva_sceletum_binarium_sinister(expressio.datum.nodus);
         CREDO_AEQUALIS_S32 (sinister.datum.nodus->genus,
             (s32)SILVA_SCELETUM_GENUS_PARENTHESIS);
 
@@ -319,15 +329,16 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* primus;
-        SilvaNodus* secundus;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* primus;
+             SilvaNodus* secundus;
 
         imprimere("\n--- Probans sententias plures ---\n");
 
         fructus = _parsare(piscina, glr, "int x; y + 2;");
         CREDO_VERUM (fructus.successus);
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), II);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            II);
 
         primus = _elementum(fructus.valor, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (primus->genus,

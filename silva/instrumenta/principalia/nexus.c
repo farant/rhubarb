@@ -28,18 +28,19 @@ nomen structura {
     chorda species;      /* "sedes" | "usus" */
     chorda genus;
     chorda via;
-    i32    linea;
-    i32    columna;
-    i32    profunditas;
+       i32 linea;
+       i32 columna;
+       i32 profunditas;
 } NexusOrdo;
 
 nomen structura {
-    chorda via;
-    Xar*   ordines;      /* NexusOrdo* (indices in omnes) */
+    chorda  via;
+       Xar* ordines;      /* NexusOrdo* (indices in omnes) */
 } NexusGrex;
 
 hic_manens i32
-_numerus_ex_chorda (chorda c)
+_numerus_ex_chorda (
+    chorda c)
 {
     i32 valor = ZEPHYRUM;
     i32 k;
@@ -56,29 +57,34 @@ _numerus_ex_chorda (chorda c)
 
 /* campum proximum usque ad tab/novissimam secare; cursorem movet */
 hic_manens chorda
-_campum_secare (character* textus, i32 mensura,
-    i32* cursor)
+_campum_secare (
+    character* textus,
+          i32  mensura,
+          i32* cursor)
 {
     chorda campus;
-    i32 initium = *cursor;
-    i32 k = initium;
+       i32 initium  = *cursor;
+       i32 k        = initium;
 
     dum (k < mensura && textus[k] != '\t' && textus[k] != '\n')
     {
         k++;
     }
-    campus.datum = (i8*)(textus + initium);
-    campus.mensura = (i32)(k - initium);
-    *cursor = (k < mensura && textus[k] == '\t') ? k + I : k;
+    campus.datum    = (i8*)(textus + initium);
+    campus.mensura  = (i32)(k - initium);
+    *cursor         = (k < mensura && textus[k] == '\t') ? k + I : k;
     redde campus;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    constans character* quaestio = NIHIL;
-    b32 omnia = FALSUM;
-    b32 modus_similis = FALSUM;
+               Piscina* piscina;
+    constans character* quaestio       = NIHIL;
+                   b32  omnia          = FALSUM;
+                   b32  modus_similis  = FALSUM;
     FILE* pl;
     long mensura_l;
     i32 mensura;
@@ -136,7 +142,7 @@ s32 principale (integer argc, character** argv)
     mensura = (i32)mensura_l;
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)mensura);
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -146,10 +152,10 @@ s32 principale (integer argc, character** argv)
     }
     fclose(pl);
 
-    congruentes = xar_creare(piscina, magnitudo(NexusOrdo));
-    tituli_distincti = xar_creare(piscina, magnitudo(chorda));
-    tituli_visi = tabula_dispersa_creare_chorda(piscina, DXII);
-    si (congruentes == NIHIL || tituli_distincti == NIHIL
+    congruentes       = xar_creare(piscina, magnitudo(NexusOrdo));
+    tituli_distincti  = xar_creare(piscina, magnitudo(chorda));
+    tituli_visi       = tabula_dispersa_creare_chorda(piscina, DXII);
+    si (   congruentes == NIHIL || tituli_distincti == NIHIL
         || tituli_visi == NIHIL)
     {
         redde II;
@@ -157,13 +163,13 @@ s32 principale (integer argc, character** argv)
 
     /* tabulam percurrere */
     {
-        i32 cursor = ZEPHYRUM;
-        chorda quaestio_ch = chorda_ex_literis(quaestio, piscina);
+           i32 cursor       = ZEPHYRUM;
+        chorda quaestio_ch  = chorda_ex_literis(quaestio, piscina);
 
         dum (cursor < mensura)
         {
             NexusOrdo ordo;
-            chorda campus;
+               chorda campus;
 
             si (textus[cursor] == '#')
             {
@@ -220,11 +226,12 @@ s32 principale (integer argc, character** argv)
     /* modus -similis: nomina simillima cum numeris */
     si (modus_similis)
     {
-        SimilitudoFructus fructus[SIMILES_MAXIMI];
-        i32 numerus = xar_numerus(tituli_distincti);
-        chorda* acies = (chorda*)piscina_allocare(piscina,
-            (memoriae_index)(numerus > ZEPHYRUM ? numerus : I)
-                * magnitudo(chorda));
+        SimilitudoFructus  fructus[SIMILES_MAXIMI];
+                      i32  numerus = xar_numerus(tituli_distincti);
+                   chorda* acies = (chorda*)piscina_allocare(piscina,
+                       (memoriae_index)(numerus
+                           > ZEPHYRUM ? numerus : I)
+                       * magnitudo(chorda));
         i32 n = ZEPHYRUM;
         i32 f;
 
@@ -272,7 +279,7 @@ s32 principale (integer argc, character** argv)
             si (acies != NIHIL && numerus > ZEPHYRUM)
             {
                 chorda q = chorda_ex_literis(quaestio, piscina);
-                i32 c;
+                   i32 c;
 
                 per (c = ZEPHYRUM; c < numerus; c++)
                 {
@@ -301,9 +308,9 @@ s32 principale (integer argc, character** argv)
 
     /* effusio: sedes primum, tum usus per plagulam gregati */
     {
-        i32 m;
-        i32 usus_summa = ZEPHYRUM;
-        Xar* greges = xar_creare(piscina, magnitudo(NexusGrex));
+        i32  m;
+        i32  usus_summa  = ZEPHYRUM;
+        Xar* greges      = xar_creare(piscina, magnitudo(NexusGrex));
 
         si (greges == NIHIL) redde II;
 
@@ -329,7 +336,7 @@ s32 principale (integer argc, character** argv)
             }
             alioquin
             {
-                i32 g;
+                      i32  g;
                 NexusGrex* grex = NIHIL;
 
                 usus_summa++;

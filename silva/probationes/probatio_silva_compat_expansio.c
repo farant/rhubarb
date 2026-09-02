@@ -22,7 +22,8 @@
 #include <string.h>
 
 interior SilvaExpansio*
-_exp_novum (Piscina* piscina)
+_exp_novum (
+    Piscina* piscina)
 {
     SilvaExpansio* exp;
 
@@ -34,40 +35,48 @@ _exp_novum (Piscina* piscina)
 /* Processare fontem plene: lexare + directivae + expansio positionalis
  * (semantica cpp: quodque lexema statum macro sui puncti videt) */
 interior Xar*
-_processare (SilvaExpansio* exp, Piscina* piscina, constans character* fons)
+_processare (
+         SilvaExpansio* exp,
+               Piscina* piscina,
+    constans character* fons)
 {
     Xar* lexemata;
     Xar* reliqua;
 
     lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
-    reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+    reliqua = silva_expansio_directivas_processare(exp, lexemata,
+        NIHIL);
     redde silva_expansio_expandere_reliqua(exp, reliqua, NIHIL);
 }
 
 interior SilvaToken*
-_ad (Xar* lexemata, i32 i)
+_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_compat_expansio",
+    piscina =
+        piscina_generare_dynamicum("probatio_silva_compat_expansio",
         4194304);
     si (!piscina)
     {
@@ -83,7 +92,7 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans expansionem obiecti-similis per API ---\n");
 
@@ -92,7 +101,8 @@ s32 principale (vacuum)
 
         fructus = _processare(exp, piscina, "int x = FOO;");
 
-        CREDO_AEQUALIS_I32 ((i32)_ad(fructus, 0)->genus, (i32)SILVA_LEX_INT);
+        CREDO_AEQUALIS_I32 ((i32)_ad(fructus, 0)->genus,
+            (i32)SILVA_LEX_INT);
         CREDO_AEQUALIS_I32 ((i32)_ad(fructus, I)->genus,
             (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_AEQUALIS_I32 ((i32)_ad(fructus, II)->genus,
@@ -111,12 +121,13 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans #define acta creat ---\n");
 
         exp = _exp_novum(piscina);
-        fructus = _processare(exp, piscina, "#define BAR 1\nint x = BAR;");
+        fructus = _processare(exp, piscina,
+            "#define BAR 1\nint x = BAR;");
         (vacuum)fructus;
 
         CREDO_VERUM (xar_numerus(exp->acta) >= I);
@@ -129,9 +140,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
-        SilvaToken* radix;
+                  Xar* fructus;
+           SilvaToken* tok;
+           SilvaToken* radix;
 
         imprimere("\n--- Probans catenam provenientiae ---\n");
 
@@ -158,7 +169,7 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans expansionem nidificatam ---\n");
 
@@ -178,10 +189,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
+         SilvaExpansio* exp;
+                   Xar* fructus;
         TabulaDispersa* tunc;
-        vacuum* valor;
+                vacuum* valor;
 
         imprimere("\n--- Probans macros ad lineam ---\n");
 
@@ -191,7 +202,8 @@ s32 principale (vacuum)
         (vacuum)fructus;
 
         /* ad lineam II: X definita */
-        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM, II);
+        tunc = silva_expansio_macros_ad_lineam(exp, piscina, ZEPHYRUM,
+            II);
         CREDO_NON_NIHIL (tunc);
         CREDO_VERUM (tabula_dispersa_invenire(tunc, _ch("X"), &valor));
     }
@@ -205,18 +217,19 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
+             SilvaExpansio* exp;
+                       Xar* fructus;
         constans character* parametra_add[3];
 
         imprimere("\n--- Probans functionem-similem ADD ---\n");
 
-        parametra_add[0] = "a";
-        parametra_add[I] = "b";
-        parametra_add[II] = NIHIL;
+        parametra_add[0]   = "a";
+        parametra_add[I]   = "b";
+        parametra_add[II]  = NIHIL;
 
         exp = _exp_novum(piscina);
-        CREDO_VERUM (silva_macro_functio_addere(exp, "ADD", parametra_add,
+        CREDO_VERUM (silva_macro_functio_addere(exp, "ADD",
+            parametra_add,
             "((a)+(b))"));
 
         fructus = _processare(exp, piscina, "ADD(1,2)");
@@ -248,20 +261,21 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+             SilvaExpansio* exp;
+                       Xar* fructus;
+                SilvaToken* tok;
         constans character* parametra_add[3];
-        i32 i;
+                       i32  i;
 
         imprimere("\n--- Probans parentheses nidificatas ---\n");
 
-        parametra_add[0] = "a";
-        parametra_add[I] = "b";
-        parametra_add[II] = NIHIL;
+        parametra_add[0]   = "a";
+        parametra_add[I]   = "b";
+        parametra_add[II]  = NIHIL;
 
         exp = _exp_novum(piscina);
-        silva_macro_functio_addere(exp, "ADD", parametra_add, "((a)+(b))");
+        silva_macro_functio_addere(exp, "ADD", parametra_add,
+            "((a)+(b))");
 
         /* ADD((1+2),3): (1+2) est argumentum primum */
         fructus = _processare(exp, piscina, "ADD((1+2),3)");
@@ -286,8 +300,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
+             SilvaExpansio* exp;
+                       Xar* fructus;
         constans character* parametra_vacua[1];
 
         imprimere("\n--- Probans functionem sine parametris ---\n");
@@ -309,17 +323,17 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
+             SilvaExpansio* exp;
+                       Xar* fructus;
         constans character* parametra_max[3];
-        b32 quaestio_inventa;
-        i32 i;
+                       b32  quaestio_inventa;
+                       i32  i;
 
         imprimere("\n--- Probans MAX ternarium ---\n");
 
-        parametra_max[0] = "a";
-        parametra_max[I] = "b";
-        parametra_max[II] = NIHIL;
+        parametra_max[0]   = "a";
+        parametra_max[I]   = "b";
+        parametra_max[II]  = NIHIL;
 
         exp = _exp_novum(piscina);
         silva_macro_functio_addere(exp, "MAX", parametra_max,
@@ -346,7 +360,7 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans SQUARE per #define ---\n");
 
@@ -381,12 +395,12 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+             SilvaExpansio* exp;
+                       Xar* fructus;
+                SilvaToken* tok;
         constans character* parametra_str[2];
-        b32 habet_obliquam;
-        i32 j;
+                       b32  habet_obliquam;
+                       i32  j;
 
         imprimere("\n--- Probans stringificationem ---\n");
 
@@ -396,24 +410,24 @@ s32 principale (vacuum)
         /* basica */
         exp = _exp_novum(piscina);
         silva_macro_functio_addere(exp, "STR", parametra_str, "#x");
-        fructus = _processare(exp, piscina, "STR(hello)");
-        tok = _ad(fructus, 0);
+        fructus  = _processare(exp, piscina, "STR(hello)");
+        tok      = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_STRING_LIT);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "\"hello\"");
 
         /* numerica */
         exp = _exp_novum(piscina);
         silva_macro_functio_addere(exp, "STR", parametra_str, "#x");
-        fructus = _processare(exp, piscina, "STR(123)");
-        tok = _ad(fructus, 0);
+        fructus  = _processare(exp, piscina, "STR(123)");
+        tok      = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_STRING_LIT);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "\"123\"");
 
         /* effugium: STR("hi") - quotes effugiuntur */
         exp = _exp_novum(piscina);
         silva_macro_functio_addere(exp, "STR", parametra_str, "#x");
-        fructus = _processare(exp, piscina, "STR(\"hi\")");
-        tok = _ad(fructus, 0);
+        fructus  = _processare(exp, piscina, "STR(\"hi\")");
+        tok      = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_STRING_LIT);
         habet_obliquam = FALSUM;
         per (j = ZEPHYRUM; j < tok->valor.mensura; j++)
@@ -441,41 +455,46 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+             SilvaExpansio* exp;
+                       Xar* fructus;
+                SilvaToken* tok;
         constans character* parametra_paste[3];
         constans character* parametra_var[2];
 
         imprimere("\n--- Probans pastam ---\n");
 
-        parametra_paste[0] = "a";
-        parametra_paste[I] = "b";
-        parametra_paste[II] = NIHIL;
-        parametra_var[0] = "n";
-        parametra_var[I] = NIHIL;
+        parametra_paste[0]   = "a";
+        parametra_paste[I]   = "b";
+        parametra_paste[II]  = NIHIL;
+        parametra_var[0]     = "n";
+        parametra_var[I]     = NIHIL;
 
         /* basica: foobar */
         exp = _exp_novum(piscina);
-        silva_macro_functio_addere(exp, "PASTE", parametra_paste, "a##b");
-        fructus = _processare(exp, piscina, "PASTE(foo,bar)");
-        tok = _ad(fructus, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        silva_macro_functio_addere(exp, "PASTE", parametra_paste,
+            "a##b");
+        fructus  = _processare(exp, piscina, "PASTE(foo,bar)");
+        tok      = _ad(fructus, 0);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "foobar");
 
         /* praefixum: var_1 */
         exp = _exp_novum(piscina);
-        silva_macro_functio_addere(exp, "VAR", parametra_var, "var_##n");
-        fructus = _processare(exp, piscina, "VAR(1)");
-        tok = _ad(fructus, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        silva_macro_functio_addere(exp, "VAR", parametra_var,
+            "var_##n");
+        fructus  = _processare(exp, piscina, "VAR(1)");
+        tok      = _ad(fructus, 0);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "var_1");
 
         /* numerica: 1234 */
         exp = _exp_novum(piscina);
-        silva_macro_functio_addere(exp, "PASTE", parametra_paste, "a##b");
-        fructus = _processare(exp, piscina, "PASTE(12,34)");
-        tok = _ad(fructus, 0);
+        silva_macro_functio_addere(exp, "PASTE", parametra_paste,
+            "a##b");
+        fructus  = _processare(exp, piscina, "PASTE(12,34)");
+        tok      = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_INTEGER);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "1234");
 
@@ -484,7 +503,8 @@ s32 principale (vacuum)
         fructus = _processare(exp, piscina,
             "#define GLUE(a,b) a##b\nGLUE(hello,world)");
         tok = _ad(fructus, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "helloworld");
     }
 
@@ -494,18 +514,18 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        Xar* fructus;
+             SilvaExpansio* exp;
+                       Xar* fructus;
         constans character* parametra_va[2];
         constans character* parametra_fmt[3];
 
         imprimere("\n--- Probans variadicam ---\n");
 
-        parametra_va[0] = "...";
-        parametra_va[I] = NIHIL;
-        parametra_fmt[0] = "f";
-        parametra_fmt[I] = "...";
-        parametra_fmt[II] = NIHIL;
+        parametra_va[0]    = "...";
+        parametra_va[I]    = NIHIL;
+        parametra_fmt[0]   = "f";
+        parametra_fmt[I]   = "...";
+        parametra_fmt[II]  = NIHIL;
 
         /* basica: VARIADIC(a,b,c) -> a , b , c */
         exp = _exp_novum(piscina);
@@ -551,17 +571,18 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+                  Xar* fructus;
+           SilvaToken* tok;
 
         imprimere("\n--- Probans praeventionem recursionis ---\n");
 
         /* directa: SELF -> SELF */
         exp = _exp_novum(piscina);
         silva_macro_addere(exp, "SELF", "SELF");
-        fructus = _processare(exp, piscina, "SELF");
-        tok = _ad(fructus, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        fructus  = _processare(exp, piscina, "SELF");
+        tok      = _ad(fructus, 0);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "SELF");
 
         /* mutua: MACRO_A <-> MACRO_B */
@@ -586,10 +607,10 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        b32 integer_inventum;
-        b32 identificator_inventum;
-        i32 i;
+                  Xar* fructus;
+                  b32  integer_inventum;
+                  b32  identificator_inventum;
+                  i32  i;
 
         imprimere("\n--- Probans #undef ---\n");
 
@@ -597,8 +618,8 @@ s32 principale (vacuum)
         fructus = _processare(exp, piscina,
             "#define TEMP 42\nTEMP\n#undef TEMP\nTEMP");
 
-        integer_inventum = FALSUM;
-        identificator_inventum = FALSUM;
+        integer_inventum        = FALSUM;
+        identificator_inventum  = FALSUM;
         per (i = ZEPHYRUM; i < xar_numerus(fructus); i++)
         {
             si (_ad(fructus, i)->genus == SILVA_LEX_INTEGER)
@@ -622,7 +643,8 @@ s32 principale (vacuum)
 
         /* #undef inexistentis: nullus fragor */
         exp = _exp_novum(piscina);
-        fructus = _processare(exp, piscina, "#undef NONEXISTENT\nint x;");
+        fructus = _processare(exp, piscina,
+            "#undef NONEXISTENT\nint x;");
         CREDO_VERUM (xar_numerus(fructus) > ZEPHYRUM);
     }
 
@@ -633,9 +655,9 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        i32 numerus_commatum;
-        i32 i;
+                  Xar* fructus;
+                  i32  numerus_commatum;
+                  i32  i;
 
         imprimere("\n--- Probans variadicam extremam ---\n");
 
@@ -677,10 +699,10 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        i32 numerus_plus;
-        b32 foo_inventum;
-        i32 i;
+                  Xar* fructus;
+                  i32  numerus_plus;
+                  b32  foo_inventum;
+                  i32  i;
 
         imprimere("\n--- Probans invocationes nidificatas ---\n");
 
@@ -709,7 +731,7 @@ s32 principale (vacuum)
             SilvaToken* t;
 
             t = _ad(fructus, i);
-            si (t->genus == SILVA_LEX_IDENTIFICATOR
+            si (   t->genus         == SILVA_LEX_IDENTIFICATOR
                 && t->valor.mensura == III)
             {
                 foo_inventum = VERUM;
@@ -726,20 +748,20 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans obiecti-similem per #define ---\n");
 
         /* simplex */
-        exp = _exp_novum(piscina);
-        fructus = _processare(exp, piscina, "#define FOO 42\nFOO");
+        exp      = _exp_novum(piscina);
+        fructus  = _processare(exp, piscina, "#define FOO 42\nFOO");
         CREDO_AEQUALIS_I32 ((i32)_ad(fructus, 0)->genus,
             (i32)SILVA_LEX_INTEGER);
         CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, 0)->valor, "42");
 
         /* multi-lexematum */
-        exp = _exp_novum(piscina);
-        fructus = _processare(exp, piscina, "#define EXPR 1+2\nEXPR");
+        exp      = _exp_novum(piscina);
+        fructus  = _processare(exp, piscina, "#define EXPR 1+2\nEXPR");
         CREDO_AEQUALIS_I32 ((i32)_ad(fructus, 0)->genus,
             (i32)SILVA_LEX_INTEGER);
         CREDO_AEQUALIS_I32 ((i32)_ad(fructus, I)->genus,
@@ -755,8 +777,8 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+                  Xar* fructus;
+           SilvaToken* tok;
 
         imprimere("\n--- Probans stringificationem extremam ---\n");
 
@@ -769,7 +791,8 @@ s32 principale (vacuum)
 
         /* lexemata multa: STR(a b c) -> "a b c" */
         exp = _exp_novum(piscina);
-        fructus = _processare(exp, piscina, "#define STR(x) #x\nSTR(a b c)");
+        fructus = _processare(exp, piscina,
+            "#define STR(x) #x\nSTR(a b c)");
         tok = _ad(fructus, 0);
         CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_STRING_LIT);
         CREDO_CHORDA_AEQUALIS_LITERIS (tok->valor, "\"a b c\"");
@@ -782,8 +805,8 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        SilvaToken* tok;
+                  Xar* fructus;
+           SilvaToken* tok;
 
         imprimere("\n--- Probans pastam extremam ---\n");
 
@@ -810,7 +833,7 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
+                  Xar* fructus;
 
         imprimere("\n--- Probans expansionem ter nidificatam ---\n");
 
@@ -828,8 +851,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaExpansio* exp;
-        SilvaProspectus prospectus;
+          SilvaExpansio* exp;
+        SilvaProspectus  prospectus;
 
         imprimere("\n--- Probans prospectum ---\n");
 
@@ -848,7 +871,8 @@ s32 principale (vacuum)
         CREDO_FALSUM (prospectus.est_recursivum);
 
         /* macro ignotum: FALSUM redditur */
-        CREDO_FALSUM (silva_expansio_prospectare(exp, _ch("NONEXISTENT"),
+        CREDO_FALSUM (silva_expansio_prospectare(exp,
+            _ch("NONEXISTENT"),
             &prospectus));
 
         /* macro vacuum */
@@ -876,7 +900,8 @@ s32 principale (vacuum)
         /* macro ad litteram integram */
         CREDO_VERUM (silva_expansio_prospectare(exp, _ch("NUMERUS"),
             &prospectus));
-        CREDO_AEQUALIS_I32 ((i32)prospectus.genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_I32 ((i32)prospectus.genus,
+            (i32)SILVA_LEX_INTEGER);
     }
 
 
@@ -886,8 +911,8 @@ s32 principale (vacuum)
 
     {
         SilvaExpansio* exp;
-        Xar* fructus;
-        Xar* lexemata;
+                  Xar* fructus;
+                  Xar* lexemata;
 
         imprimere("\n--- Probans includenda ---\n");
 
@@ -903,7 +928,8 @@ s32 principale (vacuum)
         fructus = silva_expansio_expandere(exp,
             silva_expansio_directivas_processare(exp, lexemata, NIHIL),
             NIHIL);
-        CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("HEADER_MACRO")));
+        CREDO_NON_NIHIL (silva_expansio_quaerere(exp,
+            _ch("HEADER_MACRO")));
         CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, III)->valor, "42");
 
         /* includendum nidificatum: a.h -> b.h */
@@ -915,7 +941,8 @@ s32 principale (vacuum)
             (i32)strlen("#include \"b.h\"\n#define A_MACRO 1\n"));
         lexemata = silva_lexare(piscina, "#include \"a.h\"\n",
             (i32)strlen("#include \"a.h\"\n"), ZEPHYRUM);
-        fructus = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        fructus = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         (vacuum)fructus;
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("A_MACRO")));
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("B_MACRO")));
@@ -930,7 +957,8 @@ s32 principale (vacuum)
             "#include \"cust.h\"\n#include \"cust.h\"\n",
             (i32)strlen("#include \"cust.h\"\n#include \"cust.h\"\n"),
             ZEPHYRUM);
-        fructus = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        fructus = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         CREDO_NON_NIHIL (fructus);
         CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("C_MACRO")));
 
@@ -938,14 +966,16 @@ s32 principale (vacuum)
         exp = _exp_novum(piscina);
         lexemata = silva_lexare(piscina, "#include \"nonexistent.h\"",
             (i32)strlen("#include \"nonexistent.h\""), ZEPHYRUM);
-        fructus = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        fructus = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         CREDO_NON_NIHIL (fructus);
 
         /* syntaxis systematis: <stdio.h> */
         exp = _exp_novum(piscina);
         lexemata = silva_lexare(piscina, "#include <stdio.h>",
             (i32)strlen("#include <stdio.h>"), ZEPHYRUM);
-        fructus = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        fructus = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         CREDO_NON_NIHIL (fructus);
     }
 

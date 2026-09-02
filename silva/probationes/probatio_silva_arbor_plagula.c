@@ -154,6 +154,7 @@ _plagulam_probare (
         census->lexemata_expansa += expansa;
     }
 
+
     /* ==========================================================
      * ORACULUM SEPARANS: emissio DIRECTA ex parsura originali,
      * sine circuitu STML.
@@ -165,6 +166,7 @@ _plagulam_probare (
      * exacta est dum circuitus STML divergit, vitium NOSTRUM est.
      * Sine hoc numero utrumque stratum uno numero involvitur.
      * ========================================================== */
+
     {
         SilvaScriptura directa;
 
@@ -215,9 +217,9 @@ _plagulam_probare (
          * cum ARBOR_DEFIGERE=<via exitus>. */
         constans character* petitum = getenv("ARBOR_DEFIGERE_NOMEN");
 
-        si (   petitum != NIHIL
+        si (   petitum                  != NIHIL
             && getenv("ARBOR_DEFIGERE") != NIHIL
-            && strstr(via, petitum) != NIHIL)
+            && strstr(via, petitum)     != NIHIL)
         {
             FILE* ef = fopen(getenv("ARBOR_DEFIGERE"), "wb");
 
@@ -321,8 +323,8 @@ _plagulam_probare (
         constans character* nomen_petitum;
 
         nomen_petitum = getenv("ARBOR_DEFIGERE_NOMEN");
-        si (   nomen_petitum != NIHIL
-            && getenv("ARBOR_DEFIGERE") != NIHIL
+        si (   nomen_petitum              != NIHIL
+            && getenv("ARBOR_DEFIGERE")   != NIHIL
             && strstr(via, nomen_petitum) != NIHIL)
         {
             FILE* effusio = fopen(getenv("ARBOR_DEFIGERE"), "wb");
@@ -488,6 +490,7 @@ principale (vacuum)
     _causas_imprimere("DIVERGENTIAE", census.divergentiae,
         census.numerus_divergentiarum);
 
+
     /* ==============================================================
      * GRADUS LATINIZATUS (T7) - corpus quod M2 vere petit
      *
@@ -499,6 +502,7 @@ principale (vacuum)
      * originis ad invocationem strati 0 sequenda) non casus
      * marginalis est sed SEMITA CALIDA.
      * ============================================================== */
+
     memset(&census_latinus, 0, magnitudo(PlagulaCensus));
     sprintf(via_corporis, "%s/lib", radix);
 
@@ -596,12 +600,14 @@ principale (vacuum)
      * valeret. Zero est mensura, non praesumptio. */
     CREDO_AEQUALIS_I32 (census.comparator_tacuit, ZEPHYRUM);
 
+
     /* ==========================================================
      * PORTA GRADUS LATINIZATI (T7) - numeri PINNATI
      *
      * Hic numerus est quem M2 vere petit: codex NOSTER, ubi
      * 'si'/'per'/'redde'/'NIHIL' omnia expansiones macro sunt.
      * ========================================================== */
+
     CREDO_AEQUALIS_I32 (census_latinus.plagulae, 156);
 
     /* Clausura vere praebita. Si porta apparatus incendit, numerus
@@ -641,6 +647,7 @@ principale (vacuum)
     /* Comparator nusquam caecus */
     CREDO_AEQUALIS_I32 (census_latinus.comparator_tacuit, ZEPHYRUM);
 
+
     /* ==========================================================
      * PORTA COMPRESSIONIS - PRAESENTIA, non numeri pincti
      *
@@ -654,6 +661,7 @@ principale (vacuum)
      * nullum lexema expansum) - praesentia eorum gradu latinizato
      * solo asseritur.
      * ========================================================== */
+
     imprimere("\n  compressio (planum):  spatia %d | parametra %d/%d\n",
         (integer)census.compressio.spatia_vocationes,
         (integer)census.compressio.parametra_compressa,

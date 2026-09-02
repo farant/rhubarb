@@ -19,12 +19,13 @@
 #include "silva_glr.h"
 #include <stdio.h>
 
+
 /* ==================================================
  * Via per GSS
  * ================================================== */
 
 nomen structura {
-    SilvaValor     valores[SILVA_GLR_DEXTRUM_MAXIMUM];
+       SilvaValor  valores[SILVA_GLR_DEXTRUM_MAXIMUM];
     SilvaGSSNodus* basis;     /* nodus sub via - fons goto */
 } SilvaGSSVia;
 
@@ -33,24 +34,24 @@ nomen structura {
  * transmutationis = UNA exhaustio (index per lexema recens - regula
  * ordinis quae periculum retroactivitatis claudit). */
 nomen structura {
-    s32            status;
+              s32  status;
     SilvaGSSNodus* basis;
     SilvaGSSNodus* nodus;
-    b32            exhaustus;         /* reductiones eius iam cucurrerunt */
-    b32            est_ambiguum;      /* valor iam involucrum AMBIGUUS */
-    SilvaValor     interpretationes;  /* prospectus - ab motore tentus, ne
+              b32  exhaustus;         /* reductiones eius iam cucurrerunt */
+              b32  est_ambiguum;      /* valor iam involucrum AMBIGUUS */
+       SilvaValor  interpretationes;  /* prospectus - ab motore tentus, ne
                                        * nodum umquam legere debeat */
 } SilvaIndexIntroitus;
 
 /* Contextus passus unius lexematis */
 nomen structura {
-    s32         terminale;
+           s32  terminale;
     SilvaToken* lexema;           /* NIHIL in prospectu $ */
-    Xar*        index;            /* SilvaIndexIntroitus (per valorem) */
-    Xar*        reducenda;        /* SilvaIndexIntroitus* (FIFO) */
-    Xar*        frons_nova;       /* SilvaGSSNodus* */
-    Xar*        acceptati;        /* SilvaGSSNodus* */
-    Piscina*    piscina_arborum;
+           Xar* index;            /* SilvaIndexIntroitus (per valorem) */
+           Xar* reducenda;        /* SilvaIndexIntroitus* (FIFO) */
+           Xar* frons_nova;       /* SilvaGSSNodus* */
+           Xar* acceptati;        /* SilvaGSSNodus* */
+       Piscina* piscina_arborum;
 } SilvaGLRPassus;
 
 
@@ -59,10 +60,15 @@ nomen structura {
  * nodorum uniforme nullos casus per-genus poscit)
  * ================================================== */
 
-interior b32 _valores_aequales (SilvaValor a, SilvaValor b);
+interior b32
+_valores_aequales (
+    SilvaValor a,
+    SilvaValor b);
 
 interior b32
-_nodi_aequales (constans SilvaNodus* a, constans SilvaNodus* b)
+_nodi_aequales (
+    constans SilvaNodus* a,
+    constans SilvaNodus* b)
 {
     i32 i;
 
@@ -70,7 +76,7 @@ _nodi_aequales (constans SilvaNodus* a, constans SilvaNodus* b)
     {
         redde VERUM;
     }
-    si (a == NIHIL || b == NIHIL || a->genus != b->genus
+    si (   a == NIHIL || b == NIHIL || a->genus != b->genus
         || a->numerus_locorum != b->numerus_locorum)
     {
         redde FALSUM;
@@ -86,7 +92,9 @@ _nodi_aequales (constans SilvaNodus* a, constans SilvaNodus* b)
 }
 
 interior b32
-_valores_aequales (SilvaValor a, SilvaValor b)
+_valores_aequales (
+    SilvaValor a,
+    SilvaValor b)
 {
     si (a.genus != b.genus)
     {
@@ -121,7 +129,7 @@ _valores_aequales (SilvaValor a, SilvaValor b)
             SilvaValor* ea = silva_valor_lista_obtinere(a, i);
             SilvaValor* eb = silva_valor_lista_obtinere(b, i);
 
-            si (ea == NIHIL || eb == NIHIL
+            si (   ea == NIHIL || eb == NIHIL
                 || !_valores_aequales(*ea, *eb))
             {
                 redde FALSUM;
@@ -146,10 +154,10 @@ _valores_aequales (SilvaValor a, SilvaValor b)
  * potest) */
 interior SilvaIndexIntroitus*
 _index_quaerere (
-    Xar*            index,
-    s32             status,
-    SilvaGSSNodus*  basis,
-    b32*            status_visus_out)
+              Xar* index,
+              s32  status,
+    SilvaGSSNodus* basis,
+              b32* status_visus_out)
 {
     i32 i;
     i32 numerus = xar_numerus(index);
@@ -177,10 +185,10 @@ _index_quaerere (
  * valor GSS simpliciter religatur - identitas non requiritur */
 interior vacuum
 _compingere (
-    SilvaGLR*            glr,
-    SilvaGLRPassus*      passus,
+               SilvaGLR* glr,
+         SilvaGLRPassus* passus,
     SilvaIndexIntroitus* introitus,
-    SilvaValor           valor_novus)
+             SilvaValor  valor_novus)
 {
     SilvaValor interps;
     SilvaValor involucrum;
@@ -209,9 +217,9 @@ _compingere (
         fprintf(stderr, "silva_glr: fabrica ambigui fracta\n");
         redde;
     }
-    introitus->nodus->valor = involucrum;
-    introitus->est_ambiguum = VERUM;
-    introitus->interpretationes = interps;
+    introitus->nodus->valor      = involucrum;
+    introitus->est_ambiguum      = VERUM;
+    introitus->interpretationes  = interps;
     glr->fusiones++;
 }
 
@@ -223,10 +231,10 @@ _compingere (
  * nullum praesidium S32 praeteritur. */
 interior vacuum
 _transmutare (
-    SilvaGLR*            glr,
-    SilvaGLRPassus*      passus,
+               SilvaGLR* glr,
+         SilvaGLRPassus* passus,
     SilvaIndexIntroitus* introitus,
-    SilvaValor           valor_novus)
+             SilvaValor  valor_novus)
 {
     SilvaNodus* sedes = introitus->nodus->valor.datum.nodus;
     SilvaValor  interps;
@@ -249,8 +257,8 @@ _transmutare (
         {
             redde;
         }
-        *clon = *sedes;
-        interps = silva_valor_lista_nova(passus->piscina_arborum);
+        *clon    = *sedes;
+        interps  = silva_valor_lista_nova(passus->piscina_arborum);
         interps = silva_valor_lista_appendere(passus->piscina_arborum,
             interps, silva_valor_nodus(clon));
     }
@@ -267,15 +275,15 @@ _transmutare (
     }
     involucrum = glr->fabrica(passus->piscina_arborum, interps,
         ZEPHYRUM);
-    si (involucrum.genus != SILVA_VALOR_NODUS
+    si (   involucrum.genus       != SILVA_VALOR_NODUS
         || involucrum.datum.nodus == NIHIL)
     {
         fprintf(stderr, "silva_glr: fabrica ambigui fracta\n");
         redde;
     }
-    *sedes = *involucrum.datum.nodus;  /* identitas religata */
-    introitus->est_ambiguum = VERUM;
-    introitus->interpretationes = interps;
+    *sedes                       = *involucrum.datum.nodus;  /* identitas religata */
+    introitus->est_ambiguum      = VERUM;
+    introitus->interpretationes  = interps;
     glr->transmutationes++;
 }
 
@@ -286,8 +294,8 @@ _transmutare (
 
 interior SilvaGSSNodus*
 _nodus_creare (
-    SilvaGLR*   glr,
-    s32         status,
+      SilvaGLR* glr,
+           s32  status,
     SilvaValor  valor,
     SilvaToken* lexema)
 {
@@ -299,8 +307,8 @@ _nodus_creare (
     {
         redde NIHIL;
     }
-    nodus->status = status;
-    nodus->valor = valor;
+    nodus->status  = status;
+    nodus->valor   = valor;
     nodus->praedecessores = xar_creare(glr->piscina,
         (i32)magnitudo(SilvaGSSNodus*));
     nodus->lexema = lexema;
@@ -314,8 +322,8 @@ _praedecessorem_addere (
     SilvaGSSNodus* praedecessor)
 {
     SilvaGSSNodus** slot;
-    i32 i;
-    i32 numerus;
+              i32   i;
+              i32   numerus;
 
     si (nodus == NIHIL || praedecessor == NIHIL)
     {
@@ -347,10 +355,10 @@ _praedecessorem_addere (
 interior vacuum
 _vias_recursio (
     SilvaGSSNodus* nodus,
-    i32            profunditas,
-    i32            gradus,
-    SilvaValor*    partiales,
-    Xar*           viae)
+              i32  profunditas,
+              i32  gradus,
+       SilvaValor* partiales,
+              Xar* viae)
 {
     si (profunditas == gradus)
     {
@@ -389,7 +397,8 @@ _vias_recursio (
         per (pi = ZEPHYRUM; pi < numerus_praed; pi++)
         {
             SilvaGSSNodus** praed =
-                (SilvaGSSNodus**)xar_obtinere(nodus->praedecessores, pi);
+                (SilvaGSSNodus**)xar_obtinere(nodus->praedecessores,
+                pi);
 
             si (praed != NIHIL && *praed != NIHIL)
             {
@@ -402,12 +411,12 @@ _vias_recursio (
 
 interior Xar*
 _vias_enumerare (
-    SilvaGLR*      glr,
+         SilvaGLR* glr,
     SilvaGSSNodus* culmen,
-    i32            gradus)
+              i32  gradus)
 {
-    Xar*       viae;
-    SilvaValor partiales[SILVA_GLR_DEXTRUM_MAXIMUM];
+           Xar* viae;
+    SilvaValor  partiales[SILVA_GLR_DEXTRUM_MAXIMUM];
 
     /* Effimera reusa - non recens: vide notam in SilvaGLR (una viva
      * simul; contenta ante reditum plene scripta, ergo vacatio tuta) */
@@ -438,14 +447,14 @@ _vias_enumerare (
  * numerum reddit (ordinatae adiacentes - in validatione impositum). */
 interior i32
 _actiones_invenire (
-    constans SilvaTabulaCocta* tabula,
-    s32                        status,
-    s32                        terminale,
-    constans SilvaTabActio**   prima_out)
+    constans SilvaTabulaCocta*  tabula,
+                          s32   status,
+                          s32   terminale,
+       constans SilvaTabActio** prima_out)
 {
     constans SilvaTabStatus* lamina;
-    i32 i;
-    i32 numerus = ZEPHYRUM;
+                        i32  i;
+                        i32  numerus = ZEPHYRUM;
 
     *prima_out = NIHIL;
     si (status < ZEPHYRUM || status >= (s32)tabula->numerus_statuum)
@@ -478,11 +487,11 @@ _actiones_invenire (
 interior s32
 _goto_quaerere (
     constans SilvaTabulaCocta* tabula,
-    s32                        status,
-    s32                        non_terminalis)
+                          s32  status,
+                          s32  non_terminalis)
 {
     constans SilvaTabStatus* lamina;
-    i32 i;
+                        i32  i;
 
     si (status < ZEPHYRUM || status >= (s32)tabula->numerus_statuum)
     {
@@ -527,13 +536,13 @@ silva_glr_terminale_ex_genere (
 
 b32
 silva_glr_tabulam_validare (
-    Piscina*                   piscina,
+                      Piscina* piscina,
     constans SilvaTabulaCocta* tabula)
 {
     i32 st;
     i32 i;
 
-    si (piscina == NIHIL || tabula == NIHIL
+    si (   piscina == NIHIL || tabula == NIHIL
         || tabula->numerus_statuum == ZEPHYRUM
         || tabula->symbola == NIHIL || tabula->productiones == NIHIL
         || tabula->status == NIHIL || tabula->actiones == NIHIL
@@ -554,7 +563,7 @@ silva_glr_tabulam_validare (
                 (int)i, (int)SILVA_GLR_DEXTRUM_MAXIMUM);
             redde FALSUM;
         }
-        si (p->sinistrum < (s32)tabula->numerus_terminalium
+        si (   p->sinistrum < (s32)tabula->numerus_terminalium
             || p->sinistrum >= (s32)tabula->numerus_symbolorum)
         {
             fprintf(stderr,
@@ -567,10 +576,10 @@ silva_glr_tabulam_validare (
     /* Laminae statuum: fines, introitus, ordinatio, goto pro LHS */
     per (st = ZEPHYRUM; st < tabula->numerus_statuum; st++)
     {
-        constans SilvaTabStatus* lamina = &tabula->status[st];
-        s32 terminale_prius = -II;
+        constans SilvaTabStatus* lamina           = &tabula->status[st];
+                            s32  terminale_prius  = -II;
 
-        si (lamina->actiones_offset + lamina->actiones_numerus
+        si (   lamina->actiones_offset + lamina->actiones_numerus
                 > tabula->numerus_actionum
             || lamina->goto_offset + lamina->goto_numerus
                 > tabula->numerus_goto)
@@ -585,8 +594,9 @@ silva_glr_tabulam_validare (
             constans SilvaTabActio* actio =
                 &tabula->actiones[lamina->actiones_offset + i];
 
-            si (actio->terminalis < -I
-                || actio->terminalis >= (s32)tabula->numerus_terminalium)
+            si (   actio->terminalis < -I
+                || actio->terminalis
+                    >= (s32)tabula->numerus_terminalium)
             {
                 fprintf(stderr,
                     "silva_glr: status %d terminale %d extra fines\n",
@@ -605,7 +615,7 @@ silva_glr_tabulam_validare (
             commutatio (actio->actio)
             {
             casus SILVA_TAB_ACTIO_TRANSPONERE:
-                si (actio->valor < ZEPHYRUM
+                si (   actio->valor < ZEPHYRUM
                     || actio->valor >= (s32)tabula->numerus_statuum)
                 {
                     fprintf(stderr,
@@ -615,8 +625,9 @@ silva_glr_tabulam_validare (
                 }
                 frange;
             casus SILVA_TAB_ACTIO_REDUCERE:
-                si (actio->valor < ZEPHYRUM
-                    || actio->valor >= (s32)tabula->numerus_productionum)
+                si (   actio->valor < ZEPHYRUM
+                    || actio->valor
+                        >= (s32)tabula->numerus_productionum)
                 {
                     fprintf(stderr,
                         "silva_glr: status %d reductio extra fines\n",
@@ -627,7 +638,8 @@ silva_glr_tabulam_validare (
                  * mundus (arbor2 worklog) - LHS goto alicubi habere
                  * debet. */
                 {
-                    s32 lhs = tabula->productiones[actio->valor].sinistrum;
+                    s32 lhs =
+                        tabula->productiones[actio->valor].sinistrum;
                     b32 inventum = FALSUM;
                     i32 gi;
 
@@ -666,10 +678,10 @@ silva_glr_tabulam_validare (
             constans SilvaTabGoto* g =
                 &tabula->goto_introitus[lamina->goto_offset + i];
 
-            si (g->non_terminalis < (s32)tabula->numerus_terminalium
+            si (   g->non_terminalis < (s32)tabula->numerus_terminalium
                 || g->non_terminalis >= (s32)tabula->numerus_symbolorum
                 || g->status_novus < ZEPHYRUM
-                || g->status_novus >= (s32)tabula->numerus_statuum)
+                || g->status_novus   >= (s32)tabula->numerus_statuum)
             {
                 fprintf(stderr,
                     "silva_glr: status %d goto extra fines\n", (int)st);
@@ -709,7 +721,7 @@ silva_glr_tabulam_validare (
 
                 si (actio->actio == (s32)SILVA_TAB_ACTIO_TRANSPONERE)
                 {
-                    si (accessus[actio->valor] != -I
+                    si (   accessus[actio->valor] != -I
                         && accessus[actio->valor] != actio->terminalis)
                     {
                         fprintf(stderr, "silva_glr: status %d symbolis "
@@ -727,7 +739,7 @@ silva_glr_tabulam_validare (
                 constans SilvaTabGoto* g =
                     &tabula->goto_introitus[lamina->goto_offset + i];
 
-                si (accessus[g->status_novus] != -I
+                si (   accessus[g->status_novus] != -I
                     && accessus[g->status_novus] != g->non_terminalis)
                 {
                     fprintf(stderr, "silva_glr: status %d symbolis "
@@ -752,13 +764,13 @@ silva_glr_tabulam_validare (
 
 interior vacuum
 _nodum_processare (
-    SilvaGLR*       glr,
-    SilvaGSSNodus*  nodus,
+          SilvaGLR* glr,
+     SilvaGSSNodus* nodus,
     SilvaGLRPassus* passus)
 {
     constans SilvaTabActio* actio;
-    i32 numerus_actionum;
-    i32 ai;
+                       i32  numerus_actionum;
+                       i32  ai;
 
     numerus_actionum = _actiones_invenire(glr->tabula, nodus->status,
         passus->terminale, &actio);
@@ -794,9 +806,9 @@ _nodum_processare (
         casus SILVA_TAB_ACTIO_REDUCERE:
         {
             constans SilvaTabProductio* prod;
-            Xar* viae;
-            i32  numerus_viarum;
-            i32  vi;
+                                   Xar* viae;
+                                   i32  numerus_viarum;
+                                   i32  vi;
 
             prod = &glr->tabula->productiones[actio->valor];
             viae = _vias_enumerare(glr, nodus, prod->longitudo);
@@ -804,11 +816,11 @@ _nodum_processare (
 
             per (vi = ZEPHYRUM; vi < numerus_viarum; vi++)
             {
-                SilvaGSSVia*         via;
-                SilvaValor           valor_novus;
-                s32                  goto_status;
+                        SilvaGSSVia* via;
+                         SilvaValor  valor_novus;
+                                s32  goto_status;
                 SilvaIndexIntroitus* introitus;
-                b32                  status_visus;
+                                b32  status_visus;
 
                 via = (SilvaGSSVia*)xar_obtinere(viae, vi);
                 si (via == NIHIL || via->basis == NIHIL)
@@ -840,7 +852,7 @@ _nodum_processare (
                 si (introitus == NIHIL)
                 {
                     /* Clavis nova - nodus recens registratur */
-                    SilvaGSSNodus*        novus;
+                          SilvaGSSNodus*  novus;
                     SilvaIndexIntroitus*  recens;
                     SilvaIndexIntroitus** slot;
 
@@ -864,12 +876,12 @@ _nodum_processare (
                     {
                         perge;
                     }
-                    recens->status = goto_status;
-                    recens->basis = via->basis;
-                    recens->nodus = novus;
-                    recens->exhaustus = FALSUM;
-                    recens->est_ambiguum = FALSUM;
-                    recens->interpretationes = silva_valor_nihil();
+                    recens->status            = goto_status;
+                    recens->basis             = via->basis;
+                    recens->nodus             = novus;
+                    recens->exhaustus         = FALSUM;
+                    recens->est_ambiguum      = FALSUM;
+                    recens->interpretationes  = silva_valor_nihil();
 
                     slot = (SilvaIndexIntroitus**)xar_addere(
                         passus->reducenda);
@@ -879,7 +891,7 @@ _nodum_processare (
                     }
                 }
                 alioquin si (_valores_aequales(introitus->nodus->valor,
-                    valor_novus))
+                             valor_novus))
                 {
                     /* Derivatio duplex - abicitur (superstes solus
                      * consistens manet) */
@@ -890,7 +902,7 @@ _nodum_processare (
                     _compingere(glr, passus, introitus, valor_novus);
                 }
                 alioquin si (introitus->nodus->valor.genus
-                    == SILVA_VALOR_NODUS)
+                             == SILVA_VALOR_NODUS)
                 {
                     _transmutare(glr, passus, introitus, valor_novus);
                 }
@@ -900,7 +912,7 @@ _nodum_processare (
                      * identitas religanda non existit - brachium
                      * separatum, scala gratiosa. Introitus additus
                      * (exhauriendus) sed a clavi priore obumbratus. */
-                    SilvaGSSNodus*        novus;
+                          SilvaGSSNodus*  novus;
                     SilvaIndexIntroitus*  recens;
                     SilvaIndexIntroitus** slot;
 
@@ -918,12 +930,12 @@ _nodum_processare (
                     {
                         perge;
                     }
-                    recens->status = goto_status;
-                    recens->basis = via->basis;
-                    recens->nodus = novus;
-                    recens->exhaustus = FALSUM;
-                    recens->est_ambiguum = FALSUM;
-                    recens->interpretationes = silva_valor_nihil();
+                    recens->status            = goto_status;
+                    recens->basis             = via->basis;
+                    recens->nodus             = novus;
+                    recens->exhaustus         = FALSUM;
+                    recens->est_ambiguum      = FALSUM;
+                    recens->interpretationes  = silva_valor_nihil();
                     slot = (SilvaIndexIntroitus**)xar_addere(
                         passus->reducenda);
                     si (slot != NIHIL)
@@ -971,7 +983,9 @@ _nodum_processare (
  * accessus in validatione probata). Ordo servatur (compactio in
  * loco). */
 interior vacuum
-_frontem_compingere (SilvaGLR* glr, Xar* frons)
+_frontem_compingere (
+    SilvaGLR* glr,
+         Xar* frons)
 {
     i32 i;
     i32 j;
@@ -996,7 +1010,8 @@ _frontem_compingere (SilvaGLR* glr, Xar* frons)
                 per (pi = ZEPHYRUM;
                      pi < xar_numerus((*slot_b)->praedecessores); pi++)
                 {
-                    SilvaGSSNodus** praed = (SilvaGSSNodus**)xar_obtinere(
+                    SilvaGSSNodus** praed =
+                        (SilvaGSSNodus**)xar_obtinere(
                         (*slot_b)->praedecessores, pi);
 
                     si (praed != NIHIL && *praed != NIHIL)
@@ -1037,34 +1052,37 @@ _frontem_compingere (SilvaGLR* glr, Xar* frons)
 
 /* Numeratores in zephyrum */
 interior vacuum
-_statisticas_purgare (SilvaGLR* glr)
+_statisticas_purgare (
+    SilvaGLR* glr)
 {
-    glr->frons_maxima = ZEPHYRUM;
-    glr->nodi_creati = ZEPHYRUM;
-    glr->reductiones_factae = ZEPHYRUM;
-    glr->fusiones = ZEPHYRUM;
-    glr->transmutationes = ZEPHYRUM;
-    glr->transmutationes_negatae = ZEPHYRUM;
-    glr->eventa_marginis_novi = ZEPHYRUM;
+    glr->frons_maxima             = ZEPHYRUM;
+    glr->nodi_creati              = ZEPHYRUM;
+    glr->reductiones_factae       = ZEPHYRUM;
+    glr->fusiones                 = ZEPHYRUM;
+    glr->transmutationes          = ZEPHYRUM;
+    glr->transmutationes_negatae  = ZEPHYRUM;
+    glr->eventa_marginis_novi     = ZEPHYRUM;
 }
 
 /* Numeratores in fructum (productum queribile, par 12.2) */
 interior vacuum
-_statisticas_copiare (constans SilvaGLR* glr, SilvaGLRFructus* fructus)
+_statisticas_copiare (
+    constans SilvaGLR* glr,
+      SilvaGLRFructus* fructus)
 {
-    fructus->frons_maxima = glr->frons_maxima;
-    fructus->fusiones = glr->fusiones;
-    fructus->transmutationes = glr->transmutationes;
-    fructus->transmutationes_negatae = glr->transmutationes_negatae;
-    fructus->eventa_marginis_novi = glr->eventa_marginis_novi;
+    fructus->frons_maxima             = glr->frons_maxima;
+    fructus->fusiones                 = glr->fusiones;
+    fructus->transmutationes          = glr->transmutationes;
+    fructus->transmutationes_negatae  = glr->transmutationes_negatae;
+    fructus->eventa_marginis_novi     = glr->eventa_marginis_novi;
 }
 
 SilvaGLR*
 silva_glr_creare (
-    Piscina*                   piscina,
+                      Piscina* piscina,
     constans SilvaTabulaCocta* tabula,
-    SilvaGLRConstructor        constructor,
-    SilvaGLRFabricaAmbigui     fabrica)
+          SilvaGLRConstructor  constructor,
+       SilvaGLRFabricaAmbigui  fabrica)
 {
     SilvaGLR* glr;
 
@@ -1083,10 +1101,10 @@ silva_glr_creare (
     {
         redde NIHIL;
     }
-    glr->tabula = tabula;
-    glr->constructor = constructor;
-    glr->fabrica = fabrica;
-    glr->piscina = piscina;
+    glr->tabula       = tabula;
+    glr->constructor  = constructor;
+    glr->fabrica      = fabrica;
+    glr->piscina      = piscina;
     /* Segmentum primum = I: reductio fere omnis viam UNAM habet */
     glr->viae_effimerae = xar_creare_cum_magnitudine(piscina,
         (i32)magnitudo(SilvaGSSVia), I);
@@ -1094,10 +1112,10 @@ silva_glr_creare (
     {
         redde NIHIL;
     }
-    glr->limen_frontis = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
-    glr->pergere = NIHIL;
-    glr->pergere_datum = NIHIL;
-    glr->passus_pergendi = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
+    glr->limen_frontis    = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
+    glr->pergere          = NIHIL;
+    glr->pergere_datum    = NIHIL;
+    glr->passus_pergendi  = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
     _statisticas_purgare(glr);
     redde glr;
 }
@@ -1108,27 +1126,27 @@ silva_glr_parsare (
     constans Xar* lexemata,
     Piscina*      piscina_arborum)
 {
-    SilvaGLRFructus fructus;
-    Xar* frons;
-    Xar* acceptati;
-    i32  numerus_lexematum;
-    i32  positio;
+    SilvaGLRFructus  fructus;
+                Xar* frons;
+                Xar* acceptati;
+                i32  numerus_lexematum;
+                i32  positio;
 
-    fructus.successus = FALSUM;
-    fructus.valor = silva_valor_nihil();
-    fructus.lexema_finis = NIHIL;
-    fructus.numerus_acceptorum = ZEPHYRUM;
-    fructus.frons_maxima = ZEPHYRUM;
-    fructus.fusiones = ZEPHYRUM;
-    fructus.transmutationes = ZEPHYRUM;
-    fructus.transmutationes_negatae = ZEPHYRUM;
-    fructus.eventa_marginis_novi = ZEPHYRUM;
-    fructus.est_error = FALSUM;
-    fructus.positio = ZEPHYRUM;
-    fructus.terminalis = ZEPHYRUM;
-    fructus.status = ZEPHYRUM;
-    fructus.est_ultra_limen = FALSUM;
-    fructus.est_intermissus = FALSUM;
+    fructus.successus                = FALSUM;
+    fructus.valor                    = silva_valor_nihil();
+    fructus.lexema_finis             = NIHIL;
+    fructus.numerus_acceptorum       = ZEPHYRUM;
+    fructus.frons_maxima             = ZEPHYRUM;
+    fructus.fusiones                 = ZEPHYRUM;
+    fructus.transmutationes          = ZEPHYRUM;
+    fructus.transmutationes_negatae  = ZEPHYRUM;
+    fructus.eventa_marginis_novi     = ZEPHYRUM;
+    fructus.est_error                = FALSUM;
+    fructus.positio                  = ZEPHYRUM;
+    fructus.terminalis               = ZEPHYRUM;
+    fructus.status                   = ZEPHYRUM;
+    fructus.est_ultra_limen          = FALSUM;
+    fructus.est_intermissus          = FALSUM;
 
     si (glr == NIHIL || lexemata == NIHIL || piscina_arborum == NIHIL)
     {
@@ -1138,8 +1156,8 @@ silva_glr_parsare (
 
     _statisticas_purgare(glr);
 
-    numerus_lexematum = xar_numerus(lexemata);
-    positio = ZEPHYRUM;
+    numerus_lexematum  = xar_numerus(lexemata);
+    positio            = ZEPHYRUM;
 
     /* Frons initialis: nodus unus in statu 0 */
     frons = xar_creare(glr->piscina, (i32)magnitudo(SilvaGSSNodus*));
@@ -1155,31 +1173,32 @@ silva_glr_parsare (
             *slot = initialis;
         }
     }
-    acceptati = xar_creare(glr->piscina, (i32)magnitudo(SilvaGSSNodus*));
+    acceptati = xar_creare(glr->piscina,
+        (i32)magnitudo(SilvaGSSNodus*));
 
     dum (VERUM)
     {
         SilvaGLRPassus passus;
-        i32 fi;
-        i32 cursor;
+                   i32 fi;
+                   i32 cursor;
 
         /* Intermissio (Phase 7): interrogatio determinata per passum
          * lexematum; FALSUM = fractura munda (gubernator recuperat) */
-        si (glr->pergere != NIHIL
+        si (   glr->pergere != NIHIL
             && (glr->passus_pergendi <= I
                 || (positio % glr->passus_pergendi) == ZEPHYRUM)
             && !glr->pergere(glr->pergere_datum))
         {
-            fructus.est_error = VERUM;
-            fructus.est_intermissus = VERUM;
-            fructus.positio = (s32)positio;
+            fructus.est_error        = VERUM;
+            fructus.est_intermissus  = VERUM;
+            fructus.positio          = (s32)positio;
             _statisticas_copiare(glr, &fructus);
             redde fructus;
         }
 
         /* Prospectus: lexema currens aut $ ultra fluxum */
-        passus.terminale = SILVA_GLR_PROSPECTUS_FINIS;
-        passus.lexema = NIHIL;
+        passus.terminale  = SILVA_GLR_PROSPECTUS_FINIS;
+        passus.lexema     = NIHIL;
         si (positio < numerus_lexematum)
         {
             SilvaToken** ref =
@@ -1192,9 +1211,9 @@ silva_glr_parsare (
                     glr->tabula, passus.lexema->genus);
                 si (passus.terminale == SILVA_GLR_TERMINALE_IGNOTUM)
                 {
-                    fructus.est_error = VERUM;
-                    fructus.positio = (s32)positio;
-                    fructus.terminalis = SILVA_GLR_TERMINALE_IGNOTUM;
+                    fructus.est_error   = VERUM;
+                    fructus.positio     = (s32)positio;
+                    fructus.terminalis  = SILVA_GLR_TERMINALE_IGNOTUM;
                     _statisticas_copiare(glr, &fructus);
                     redde fructus;
                 }
@@ -1207,8 +1226,8 @@ silva_glr_parsare (
             (i32)magnitudo(SilvaGSSNodus*));
         passus.index = xar_creare(glr->piscina,
             (i32)magnitudo(SilvaIndexIntroitus));
-        passus.acceptati = acceptati;
-        passus.piscina_arborum = piscina_arborum;
+        passus.acceptati        = acceptati;
+        passus.piscina_arborum  = piscina_arborum;
         xar_vacare(acceptati);
 
         /* Passus 1: frons; passus 2: exhaustio reducendorum (FIFO -
@@ -1248,8 +1267,8 @@ silva_glr_parsare (
         {
             Xar* radices = xar_creare(glr->piscina,
                 (i32)magnitudo(SilvaValor));
-            i32  vias_acceptae = ZEPHYRUM;
-            i32  ai;
+            i32 vias_acceptae = ZEPHYRUM;
+            i32 ai;
 
             per (ai = ZEPHYRUM; ai < xar_numerus(acceptati); ai++)
             {
@@ -1258,7 +1277,7 @@ silva_glr_parsare (
                 i32 pi;
 
                 si (acceptus == NIHIL) perge;
-                si (ai == ZEPHYRUM
+                si (   ai                    == ZEPHYRUM
                     && acceptus->valor.genus == SILVA_VALOR_TOKEN)
                 {
                     /* Lexema EOF translatum - trivia Phase 5 emittet */
@@ -1267,7 +1286,8 @@ silva_glr_parsare (
                 per (pi = ZEPHYRUM;
                      pi < xar_numerus(acceptus->praedecessores); pi++)
                 {
-                    SilvaGSSNodus** praed = (SilvaGSSNodus**)xar_obtinere(
+                    SilvaGSSNodus** praed =
+                        (SilvaGSSNodus**)xar_obtinere(
                         acceptus->praedecessores, pi);
                     b32 novum = VERUM;
                     i32 ri;
@@ -1279,7 +1299,7 @@ silva_glr_parsare (
                         SilvaValor* r =
                             (SilvaValor*)xar_obtinere(radices, ri);
 
-                        si (r != NIHIL
+                        si (   r != NIHIL
                             && _valores_aequales(*r, (*praed)->valor))
                         {
                             novum = FALSUM;
@@ -1299,8 +1319,8 @@ silva_glr_parsare (
                 }
             }
 
-            fructus.successus = VERUM;
-            fructus.numerus_acceptorum = vias_acceptae;
+            fructus.successus           = VERUM;
+            fructus.numerus_acceptorum  = vias_acceptae;
             si (xar_numerus(radices) == I)
             {
                 fructus.valor = *(SilvaValor*)xar_obtinere(radices,
@@ -1339,9 +1359,9 @@ silva_glr_parsare (
         /* Frons vacua sine acceptatione = error parsurae */
         si (xar_numerus(passus.frons_nova) == ZEPHYRUM)
         {
-            fructus.est_error = VERUM;
-            fructus.positio = (s32)positio;
-            fructus.terminalis = passus.terminale;
+            fructus.est_error   = VERUM;
+            fructus.positio     = (s32)positio;
+            fructus.terminalis  = passus.terminale;
             si (xar_numerus(frons) > ZEPHYRUM)
             {
                 SilvaGSSNodus** ref =
@@ -1363,13 +1383,13 @@ silva_glr_parsare (
 
         /* Limen frontis (Phase 7): fractura munda pro fluxu infesto -
          * gubernator segmentum in nodum ERROR vertit (totalitas) */
-        si (glr->limen_frontis > ZEPHYRUM
+        si (   glr->limen_frontis > ZEPHYRUM
             && xar_numerus(passus.frons_nova) > glr->limen_frontis)
         {
-            fructus.est_error = VERUM;
-            fructus.est_ultra_limen = VERUM;
-            fructus.positio = (s32)positio;
-            fructus.terminalis = passus.terminale;
+            fructus.est_error        = VERUM;
+            fructus.est_ultra_limen  = VERUM;
+            fructus.positio          = (s32)positio;
+            fructus.terminalis       = passus.terminale;
             _statisticas_copiare(glr, &fructus);
             redde fructus;
         }

@@ -29,33 +29,33 @@
  * ergo textus vivere debet quamdiu lexemata vivunt. */
 Xar*
 silva_lexare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fons,
-    i32                 mensura,
-    s32                 fons_index);
+                   i32  mensura,
+                   s32  fons_index);
 
 /* Fluxus crudus: lexemata vera ET trivia interposita, ordine fontis.
  * Pro probationibus et instrumentis; silva_lexare hoc + attachmentum est. */
 Xar*
 silva_lexare_cruda (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* fons,
-    i32                 mensura,
-    s32                 fons_index);
+                   i32  mensura,
+                   s32  fons_index);
 
 /* Transitus attachmenti: fluxus crudus -> lexemata vera cum triviis.
  * Functio pura super regulas possessionis - separatim probabilis. */
 Xar*
 silva_spatia_attachere (
     Piscina* piscina,
-    Xar*     cruda);
+        Xar* cruda);
 
 /* Emittere fluxum attachatum ad octetos - oraculum fidelitatis.
  * Scissurae reinseruntur; trivia verbatim. */
 chorda
 silva_lexemata_emittere (
     Piscina* piscina,
-    Xar*     lexemata);
+        Xar* lexemata);
 
 /* Primitivum emissionis lexematis UNIUS in aedificatorem datum:
  * trivia ante + valor (scissurae reinsertae) + trivia post.
@@ -64,6 +64,6 @@ silva_lexemata_emittere (
 vacuum
 silva_lexema_emittere_in (
     ChordaAedificator* aed,
-    SilvaToken*        token);
+           SilvaToken* token);
 
 #endif /* SILVA_LEXEMA_H */

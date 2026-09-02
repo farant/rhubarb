@@ -79,10 +79,12 @@ hic_manens i32 praetermissae = ZEPHYRUM;
 
 /* cauda viae post ultimum '/' == titulus? */
 hic_manens b32
-_basename_aequalis (constans chorda* via, constans character* titulus)
+_basename_aequalis (
+       constans chorda* via,
+    constans character* titulus)
 {
-    s32 initium = ZEPHYRUM;
-    s32 k;
+       s32 initium = ZEPHYRUM;
+       s32 k;
     chorda cauda;
 
     si (via == NIHIL || via->datum == NIHIL) redde FALSUM;
@@ -90,8 +92,8 @@ _basename_aequalis (constans chorda* via, constans character* titulus)
     {
         si (via->datum[k] == '/') initium = k + I;
     }
-    cauda.datum = via->datum + initium;
-    cauda.mensura = (i32)((s32)via->mensura - initium);
+    cauda.datum    = via->datum + initium;
+    cauda.mensura  = (i32)((s32)via->mensura - initium);
     redde chorda_aequalis_literis(cauda, titulus);
 }
 
@@ -100,13 +102,14 @@ _basename_aequalis (constans chorda* via, constans character* titulus)
  * -------------------------------------------------- */
 
 hic_manens TabulaDispersa*
-_latina_macra_colligere (constans SilvaExpansio* exp,
-    Piscina* piscina)
+_latina_macra_colligere (
+    constans SilvaExpansio* exp,
+                   Piscina* piscina)
 {
     TabulaDispersa* copia;
-    i32 numerus;
-    i32 k;
-    b32 ulla = FALSUM;
+               i32  numerus;
+               i32  k;
+               b32  ulla = FALSUM;
 
     si (exp == NIHIL) redde NIHIL;
     numerus = silva_macros_numerus(exp);
@@ -138,12 +141,14 @@ _latina_macra_colligere (constans SilvaExpansio* exp,
  * -------------------------------------------------- */
 
 hic_manens constans chorda*
-_macrum_latinum (constans SilvaToken* t, TabulaDispersa* copia)
+_macrum_latinum (
+    constans SilvaToken* t,
+         TabulaDispersa* copia)
 {
     dum (t != NIHIL)
     {
-        constans chorda* nm = NIHIL;
-        constans SilvaToken* sequens = NIHIL;
+            constans chorda* nm       = NIHIL;
+        constans SilvaToken* sequens  = NIHIL;
 
         commutatio (t->origo.genus)
         {
@@ -180,16 +185,18 @@ _macrum_latinum (constans SilvaToken* t, TabulaDispersa* copia)
  * -------------------------------------------------- */
 
 hic_manens b32
-_exceptum (s32 genus_nodi, constans chorda* nm)
+_exceptum (
+                s32  genus_nodi,
+    constans chorda* nm)
 {
     /* principale -> main: omne programma id in declaratore ligat */
-    si (genus_nodi == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS
+    si (   genus_nodi == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS
         && chorda_aequalis_literis(*nm, "principale"))
     {
         redde VERUM;
     }
     /* FILUM -> FILE: usus typi deliberatus (FILUM* pl = ...) */
-    si (genus_nodi == (s32)SILVA_C89_GENUS_TYPUS_NOMINATUS
+    si (   genus_nodi == (s32)SILVA_C89_GENUS_TYPUS_NOMINATUS
         && chorda_aequalis_literis(*nm, "FILUM"))
     {
         redde VERUM;
@@ -226,7 +233,8 @@ _exceptum (s32 genus_nodi, constans chorda* nm)
  * (AUTO..WHILE) - ergo intervallum, non lista manu scripta. C89
  * clausum est: intervallum crescere non potest. */
 hic_manens b32
-_clavis_c89 (constans SilvaToken* t)
+_clavis_c89 (
+    constans SilvaToken* t)
 {
     si (t == NIHIL) redde FALSUM;
     redde ((s32)t->genus >= (s32)SILVA_LEX_AUTO
@@ -239,7 +247,8 @@ _clavis_c89 (constans SilvaToken* t)
  * (return, if, for, sizeof...) NON: post eas nomen declaratoris
  * stare non potest, ergo vicinitas earum innocentiam signat. */
 hic_manens b32
-_signum_typi (constans SilvaToken* t)
+_signum_typi (
+    constans SilvaToken* t)
 {
     si (t == NIHIL) redde FALSUM;
     commutatio (t->genus)
@@ -271,12 +280,16 @@ _signum_typi (constans SilvaToken* t)
 }
 
 hic_manens b32
-_convictum (constans SilvaToken* t, SilvaValor lexemata, i32 m)
+_convictum (
+    constans SilvaToken* t,
+             SilvaValor  lexemata,
+                    i32  m)
 {
     constans SilvaToken* ante = NIHIL;
     constans SilvaToken* post = NIHIL;
-    i32 numerus = silva_valor_lista_numerus(lexemata);
-    s32 j;
+                    i32  numerus  =
+                        silva_valor_lista_numerus(lexemata);
+                    s32 j;
 
     /* (i) in clavem expansum? */
     si (!_clavis_c89(t)) redde FALSUM;
@@ -286,7 +299,7 @@ _convictum (constans SilvaToken* t, SilvaValor lexemata, i32 m)
     {
         SilvaValor* e = silva_valor_lista_obtinere(lexemata, (i32)j);
 
-        si (e == NIHIL || e->genus != SILVA_VALOR_TOKEN
+        si (   e              == NIHIL || e->genus != SILVA_VALOR_TOKEN
             || e->datum.token == NIHIL)
         {
             perge;
@@ -315,7 +328,7 @@ _convictum (constans SilvaToken* t, SilvaValor lexemata, i32 m)
     {
         SilvaValor* e = silva_valor_lista_obtinere(lexemata, (i32)j);
 
-        si (e == NIHIL || e->genus != SILVA_VALOR_TOKEN
+        si (   e              == NIHIL || e->genus != SILVA_VALOR_TOKEN
             || e->datum.token == NIHIL)
         {
             perge;
@@ -332,12 +345,15 @@ _convictum (constans SilvaToken* t, SilvaValor lexemata, i32 m)
  * -------------------------------------------------- */
 
 hic_manens vacuum
-_flagrationem_referre (constans SilvaExpansio* exp,
-    constans character* via_tu, SilvaToken* t,
-    constans chorda* nm, constans character* titulus_generis)
+_flagrationem_referre (
+    constans SilvaExpansio* exp,
+        constans character* via_tu,
+                SilvaToken* t,
+           constans chorda* nm,
+        constans character* titulus_generis)
 {
-    SilvaToken* radix = silva_token_radix(t);
-    constans chorda* via_fontis = NIHIL;
+         SilvaToken* radix       = silva_token_radix(t);
+    constans chorda* via_fontis  = NIHIL;
 
     si (radix != NIHIL && exp != NIHIL)
     {
@@ -373,10 +389,13 @@ _flagrationem_referre (constans SilvaExpansio* exp,
  * amalgamandi ordines [CENSURA] numerat (XIII benedicti), et
  * numerus ille mutari non debet quia classis B exitum non mutat. */
 hic_manens vacuum
-_convictum_referre (constans SilvaExpansio* exp,
-    constans character* via_tu, SilvaToken* t, constans chorda* nm)
+_convictum_referre (
+    constans SilvaExpansio* exp,
+        constans character* via_tu,
+                SilvaToken* t,
+           constans chorda* nm)
 {
-    SilvaToken* radix = silva_token_radix(t);
+         SilvaToken* radix = silva_token_radix(t);
     constans chorda* via_fontis = NIHIL;
     constans chorda* scriptum = (radix != NIHIL) ? &radix->valor : nm;
 
@@ -408,13 +427,17 @@ _convictum_referre (constans SilvaExpansio* exp,
 #define SUSPECTA_MAXIMA VIII
 
 hic_manens vacuum
-_suspecta_referre (constans SilvaExpansio* exp,
-    constans character* via_tu, SilvaToken* primus,
-    constans chorda** macra, i32 numerus_macrorum, b32 plura)
+_suspecta_referre (
+    constans SilvaExpansio*  exp,
+        constans character*  via_tu,
+                SilvaToken*  primus,
+           constans chorda** macra,
+                       i32   numerus_macrorum,
+                       b32   plura)
 {
-    SilvaToken* radix = silva_token_radix(primus);
-    constans chorda* via_fontis = NIHIL;
-    i32 k;
+         SilvaToken* radix       = silva_token_radix(primus);
+    constans chorda* via_fontis  = NIHIL;
+                i32  k;
 
     si (radix != NIHIL && exp != NIHIL)
     {
@@ -451,9 +474,11 @@ _suspecta_referre (constans SilvaExpansio* exp,
  * -------------------------------------------------- */
 
 hic_manens vacuum
-_arborem_censere (constans SilvaParsura* parsura,
-    constans character* via_tu, TabulaDispersa* copia,
-    Piscina* piscina)
+_arborem_censere (
+    constans SilvaParsura* parsura,
+       constans character* via_tu,
+           TabulaDispersa* copia,
+                  Piscina* piscina)
 {
     constans SilvaExpansio* exp = parsura->expansio;
     Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
@@ -499,7 +524,7 @@ _arborem_censere (constans SilvaParsura* parsura,
 
         {
             constans SilvaNodus* nodus = v.datum.nodus;
-            i32 k;
+                            i32  k;
 
             /* AMBIGUUS: lectio canonica SOLA (exemplar percursus) */
             si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
@@ -533,14 +558,14 @@ _arborem_censere (constans SilvaParsura* parsura,
             si (nodus->genus == (s32)SILVA_C89_GENUS_ERROR)
             {
                 constans chorda* macra[SUSPECTA_MAXIMA];
-                i32 numerus_macrorum = ZEPHYRUM;
-                b32 plura = FALSUM;
-                SilvaToken* primus = NIHIL;
+                            i32  numerus_macrorum  = ZEPHYRUM;
+                            b32  plura             = FALSUM;
+                     SilvaToken* primus            = NIHIL;
 
                 per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
                 {
                     SilvaValor lexemata = nodus->loci[k];
-                    i32 m;
+                           i32 m;
 
                     si (lexemata.genus != SILVA_VALOR_LISTA) perge;
                     per (m = ZEPHYRUM;
@@ -550,11 +575,11 @@ _arborem_censere (constans SilvaParsura* parsura,
                         SilvaValor* elem =
                             silva_valor_lista_obtinere(lexemata, m);
                         constans chorda* nm;
-                        i32 d;
-                        b32 iam = FALSUM;
+                                    i32  d;
+                                    b32  iam = FALSUM;
 
-                        si (elem == NIHIL
-                            || elem->genus != SILVA_VALOR_TOKEN
+                        si (   elem              == NIHIL
+                            || elem->genus       != SILVA_VALOR_TOKEN
                             || elem->datum.token == NIHIL)
                         {
                             perge;
@@ -608,7 +633,7 @@ _arborem_censere (constans SilvaParsura* parsura,
 
             /* inventarium mechanicum: loci "tok_titulus" ex
              * registro cocto (numquam lista manu) */
-            si (nodus->genus >= ZEPHYRUM
+            si (   nodus->genus >= ZEPHYRUM
                 && nodus->genus
                     < (s32)SILVA_C89_REGISTRUM.numerus_generum)
             {
@@ -623,7 +648,7 @@ _arborem_censere (constans SilvaParsura* parsura,
                         &SILVA_C89_REGISTRUM.loci[tg->loci_offset
                             + k];
 
-                    si (tl->species == (s32)SILVA_LOCUS_TOKEN
+                    si (   tl->species == (s32)SILVA_LOCUS_TOKEN
                         && strcmp(tl->titulus, "tok_titulus")
                             == ZEPHYRUM
                         && nodus->loci[k].genus == SILVA_VALOR_TOKEN
@@ -632,7 +657,7 @@ _arborem_censere (constans SilvaParsura* parsura,
                         constans chorda* nm = _macrum_latinum(
                             nodus->loci[k].datum.token, copia);
 
-                        si (nm != NIHIL
+                        si (   nm != NIHIL
                             && !_exceptum(nodus->genus, nm))
                         {
                             _flagrationem_referre(exp, via_tu,
@@ -659,8 +684,9 @@ _arborem_censere (constans SilvaParsura* parsura,
  * -------------------------------------------------- */
 
 hic_manens vacuum
-_plagulam_censere (constans SilvaContextus* ctx,
-    constans character* via)
+_plagulam_censere (
+    constans SilvaContextus* ctx,
+         constans character* via)
 {
     Piscina* piscina;
     FILE* pl;
@@ -707,7 +733,7 @@ _plagulam_censere (constans SilvaContextus* ctx,
     }
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -752,7 +778,8 @@ _plagulam_censere (constans SilvaContextus* ctx,
  * -------------------------------------------------- */
 
 hic_manens b32
-_est_fons_c (constans character* titulus)
+_est_fons_c (
+    constans character* titulus)
 {
     memoriae_index m = strlen(titulus);
 
@@ -763,7 +790,8 @@ _est_fons_c (constans character* titulus)
 }
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -777,8 +805,9 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_directorium_censere (constans SilvaContextus* ctx,
-    constans character* via)
+_directorium_censere (
+    constans SilvaContextus* ctx,
+         constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -815,8 +844,11 @@ _directorium_censere (constans SilvaContextus* ctx,
  * -------------------------------------------------- */
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -842,7 +874,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -858,8 +890,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -867,7 +902,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -886,7 +921,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -899,14 +934,17 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
 
 /* -------------------------------------------------- */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina_ctx;
-    SilvaContextus* ctx;
-    b32 modus_corporis = FALSUM;
-    constans character* radix = ".";
-    integer k;
-    integer plagulae_datae = ZEPHYRUM;
+               Piscina* piscina_ctx;
+        SilvaContextus* ctx;
+                   b32  modus_corporis  = FALSUM;
+    constans character* radix           = ".";
+               integer  k;
+               integer  plagulae_datae = ZEPHYRUM;
 
     per (k = I; k < argc; k++)
     {

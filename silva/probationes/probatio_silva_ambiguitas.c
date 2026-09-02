@@ -27,7 +27,10 @@
 #include <string.h>
 
 interior SilvaGLRFructus
-_parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
+_parsare (
+               Piscina* piscina,
+              SilvaGLR* glr,
+    constans character* fons)
 {
     Xar* lexemata;
 
@@ -36,7 +39,9 @@ _parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
 }
 
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -51,7 +56,9 @@ _elementum (SilvaValor lista, i32 index)
 /* Quot interpretationes generis dati? (ordo brachiorum res interna
  * exhaustionis est - assertiones per copiam, non per positionem) */
 interior i32
-_interpretationes_generis (SilvaValor interpretationes, s32 genus)
+_interpretationes_generis (
+    SilvaValor interpretationes,
+           s32 genus)
 {
     i32 numerus = ZEPHYRUM;
     i32 i;
@@ -61,8 +68,9 @@ _interpretationes_generis (SilvaValor interpretationes, s32 genus)
     {
         SilvaValor* v = silva_valor_lista_obtinere(interpretationes, i);
 
-        si (v != NIHIL && v->genus == SILVA_VALOR_NODUS
-            && v->datum.nodus != NIHIL && v->datum.nodus->genus == genus)
+        si (   v != NIHIL && v->genus == SILVA_VALOR_NODUS
+            && v->datum.nodus != NIHIL
+            && v->datum.nodus->genus == genus)
         {
             numerus++;
         }
@@ -72,7 +80,9 @@ _interpretationes_generis (SilvaValor interpretationes, s32 genus)
 
 /* Interpretatio prima generis dati */
 interior SilvaNodus*
-_interpretatio_generis (SilvaValor interpretationes, s32 genus)
+_interpretatio_generis (
+    SilvaValor interpretationes,
+           s32 genus)
 {
     i32 i;
 
@@ -81,8 +91,9 @@ _interpretatio_generis (SilvaValor interpretationes, s32 genus)
     {
         SilvaValor* v = silva_valor_lista_obtinere(interpretationes, i);
 
-        si (v != NIHIL && v->genus == SILVA_VALOR_NODUS
-            && v->datum.nodus != NIHIL && v->datum.nodus->genus == genus)
+        si (   v != NIHIL && v->genus == SILVA_VALOR_NODUS
+            && v->datum.nodus != NIHIL
+            && v->datum.nodus->genus == genus)
         {
             redde v->datum.nodus;
         }
@@ -92,8 +103,8 @@ _interpretatio_generis (SilvaValor interpretationes, s32 genus)
 
 s32 principale (vacuum)
 {
-    b32       praeteritus;
-    Piscina*  piscina;
+         b32  praeteritus;
+     Piscina* piscina;
     SilvaGLR* sceletum;
     SilvaGLR* imparilis;
 
@@ -120,10 +131,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* ambiguum;
-        SilvaValor  interps;
-        SilvaValor  canonica;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* ambiguum;
+             SilvaValor  interps;
+             SilvaValor  canonica;
 
         imprimere("\n--- Probans furcam compactam (sceletum) ---\n");
 
@@ -133,7 +144,8 @@ s32 principale (vacuum)
         /* LOCALIZATA: radix est lista ordinaria unius elementi */
         CREDO_AEQUALIS_S32 ((s32)fructus.valor.genus,
             (s32)SILVA_VALOR_LISTA);
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), I);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            I);
 
         ambiguum = _elementum(fructus.valor, ZEPHYRUM);
         CREDO_NON_NIHIL (ambiguum);
@@ -151,14 +163,16 @@ s32 principale (vacuum)
             (s32)SILVA_SCELETUM_GENUS_SENTENTIA_EXPRESSIONIS), I);
 
         canonica = silva_sceletum_ambiguus_canonica(ambiguum);
-        CREDO_AEQUALIS_S32 ((s32)canonica.genus, (s32)SILVA_VALOR_INDEX);
+        CREDO_AEQUALIS_S32 ((s32)canonica.genus,
+            (s32)SILVA_VALOR_INDEX);
         CREDO_AEQUALIS_S32 (canonica.datum.index, ZEPHYRUM);
 
         /* Lectio declarationis integra */
         {
             SilvaNodus* declaratio = _interpretatio_generis(interps,
                 (s32)SILVA_SCELETUM_GENUS_DECLARATIO);
-            SilvaValor typus = silva_sceletum_declaratio_typus(declaratio);
+            SilvaValor typus =
+                silva_sceletum_declaratio_typus(declaratio);
             SilvaValor declarator =
                 silva_sceletum_declaratio_declarator(declaratio);
 
@@ -199,21 +213,22 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* primus;
-        SilvaNodus* medius;
-        SilvaNodus* ultimus;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* primus;
+             SilvaNodus* medius;
+             SilvaNodus* ultimus;
 
         imprimere("\n--- Probans localizationem ---\n");
 
-        fructus = _parsare(piscina, sceletum, "int a; foo * bar; b + 1;");
+        fructus = _parsare(piscina, sceletum,
+            "int a; foo * bar; b + 1;");
         CREDO_VERUM (fructus.successus);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
             III);
 
-        primus = _elementum(fructus.valor, ZEPHYRUM);
-        medius = _elementum(fructus.valor, I);
-        ultimus = _elementum(fructus.valor, II);
+        primus   = _elementum(fructus.valor, ZEPHYRUM);
+        medius   = _elementum(fructus.valor, I);
+        ultimus  = _elementum(fructus.valor, II);
         CREDO_AEQUALIS_S32 (primus->genus,
             (s32)SILVA_SCELETUM_GENUS_DECLARATIO);
         CREDO_AEQUALIS_S32 (medius->genus,
@@ -228,20 +243,23 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* a;
-        SilvaNodus* b;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* a;
+             SilvaNodus* b;
 
         imprimere("\n--- Probans furcas plures ---\n");
 
         fructus = _parsare(piscina, sceletum, "foo * bar; baz * qux;");
         CREDO_VERUM (fructus.successus);
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), II);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            II);
 
         a = _elementum(fructus.valor, ZEPHYRUM);
         b = _elementum(fructus.valor, I);
-        CREDO_AEQUALIS_S32 (a->genus, (s32)SILVA_SCELETUM_GENUS_AMBIGUUS);
-        CREDO_AEQUALIS_S32 (b->genus, (s32)SILVA_SCELETUM_GENUS_AMBIGUUS);
+        CREDO_AEQUALIS_S32 (a->genus,
+            (s32)SILVA_SCELETUM_GENUS_AMBIGUUS);
+        CREDO_AEQUALIS_S32 (b->genus,
+            (s32)SILVA_SCELETUM_GENUS_AMBIGUUS);
         CREDO_INAEQUALITAS_PTR (a, b);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
             silva_sceletum_ambiguus_interpretationes(a)), II);
@@ -275,9 +293,9 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaNodus* ambiguum;
-        SilvaValor  interps;
+        SilvaGLRFructus  fructus;
+             SilvaNodus* ambiguum;
+             SilvaValor  interps;
 
         imprimere("\n--- Probans transmutationem (imparilis) ---\n");
 
@@ -291,7 +309,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (fructus.transmutationes, I);
         CREDO_AEQUALIS_I32 (fructus.transmutationes_negatae, ZEPHYRUM);
 
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), I);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            I);
         ambiguum = _elementum(fructus.valor, ZEPHYRUM);
         CREDO_NON_NIHIL (ambiguum);
         CREDO_AEQUALIS_S32 (ambiguum->genus,
@@ -328,7 +347,8 @@ s32 principale (vacuum)
         fructus = _parsare(piscina, imparilis, "int a; foo * bar;");
         CREDO_VERUM (fructus.successus);
         CREDO_AEQUALIS_I32 (fructus.transmutationes, I);
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor), II);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(fructus.valor),
+            II);
         CREDO_AEQUALIS_S32 (_elementum(fructus.valor, ZEPHYRUM)->genus,
             (s32)SILVA_IMPARILIS_GENUS_DECLARATIO);
         CREDO_AEQUALIS_S32 (_elementum(fructus.valor, I)->genus,

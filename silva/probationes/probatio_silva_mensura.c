@@ -47,7 +47,10 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
  * SILVA_C89_GRAMMATICA cum unco fert) */
 
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -71,13 +74,14 @@ _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
     }
     rewind(pl);
 
-    buffer = (i8*)piscina_allocare(piscina, (memoriae_index)(mensura + 1L));
+    buffer = (i8*)piscina_allocare(piscina, (memoriae_index)(mensura
+        + 1L));
     si (buffer == NIHIL)
     {
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -91,7 +95,8 @@ _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
 }
 
 interior b32
-_est_c_vel_h (constans character* titulus)
+_est_c_vel_h (
+    constans character* titulus)
 {
     memoriae_index m;
 
@@ -100,7 +105,7 @@ _est_c_vel_h (constans character* titulus)
     {
         redde FALSUM;
     }
-    si (titulus[m - II] == '.'
+    si (   titulus[m - II] == '.'
         && (titulus[m - I] == 'c' || titulus[m - I] == 'h'))
     {
         redde VERUM;
@@ -110,12 +115,12 @@ _est_c_vel_h (constans character* titulus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                   b32  praeteritus;
+               Piscina* piscina;
     constans character* radix;
-    b32 verbosa;
-    character via_corporis[VIA_MAXIMA];
-    character via_plagulae[VIA_MAXIMA];
+                   b32  verbosa;
+             character  via_corporis[VIA_MAXIMA];
+             character  via_plagulae[VIA_MAXIMA];
     DIR* corpus;
     structura dirent* introitus;
     i32 numerus;
@@ -135,7 +140,8 @@ s32 principale (vacuum)
     i32 frons_maxima_c89;
     i32 fideles_arboris_c89;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_mensura", 262144);
+    piscina = piscina_generare_dynamicum("probatio_silva_mensura",
+        262144);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -153,21 +159,21 @@ s32 principale (vacuum)
 
     imprimere("\n--- Mensura corporis laminarum ---\n");
 
-    numerus = ZEPHYRUM;
-    summa_octetorum = 0.0;
-    summa_lexare_ms = 0.0;
-    summa_expandere_ms = 0.0;
-    summa_parsare_ms = 0.0;
-    summa_scribere_ms = 0.0;
-    summa_apex_octetorum = 0.0;
-    apex_maximus = 0.0;
-    summa_errorum = ZEPHYRUM;
-    frons_maxima = ZEPHYRUM;
-    fideles_arboris = ZEPHYRUM;
-    summa_parsare_c89_ms = 0.0;
-    summa_errorum_c89 = ZEPHYRUM;
-    frons_maxima_c89 = ZEPHYRUM;
-    fideles_arboris_c89 = ZEPHYRUM;
+    numerus               = ZEPHYRUM;
+    summa_octetorum       = 0.0;
+    summa_lexare_ms       = 0.0;
+    summa_expandere_ms    = 0.0;
+    summa_parsare_ms      = 0.0;
+    summa_scribere_ms     = 0.0;
+    summa_apex_octetorum  = 0.0;
+    apex_maximus          = 0.0;
+    summa_errorum         = ZEPHYRUM;
+    frons_maxima          = ZEPHYRUM;
+    fideles_arboris       = ZEPHYRUM;
+    summa_parsare_c89_ms  = 0.0;
+    summa_errorum_c89     = ZEPHYRUM;
+    frons_maxima_c89      = ZEPHYRUM;
+    fideles_arboris_c89   = ZEPHYRUM;
 
     /* Contextus latinus communis (M2d Chunk A): lexicon latina
      * ante quamque plagulam - grammatica c89 tandem expansione
@@ -192,21 +198,21 @@ s32 principale (vacuum)
     dum ((introitus = readdir(corpus)) != NIHIL)
     {
         Piscina* piscina_plagulae;
-        i8* fons;
-        Xar* lexemata;
-        Xar* reliqua;
-        Xar* expansa;
-        i32 mensura;
-        clock_t t0;
-        clock_t t1;
-        clock_t t2;
-        clock_t t3;
-        clock_t t4;
-        duplex lexare_ms;
-        duplex expandere_ms;
-        duplex parsare_ms;
-        duplex scribere_ms;
-        duplex apex;
+             i8* fons;
+            Xar* lexemata;
+            Xar* reliqua;
+            Xar* expansa;
+            i32  mensura;
+        clock_t  t0;
+        clock_t  t1;
+        clock_t  t2;
+        clock_t  t3;
+        clock_t  t4;
+         duplex  lexare_ms;
+         duplex  expandere_ms;
+         duplex  parsare_ms;
+         duplex  scribere_ms;
+         duplex  apex;
 
         si (!_est_c_vel_h(introitus->d_name))
         {
@@ -214,14 +220,16 @@ s32 principale (vacuum)
         }
         sprintf(via_plagulae, "%s/%s", via_corporis, introitus->d_name);
 
-        piscina_plagulae = piscina_generare_dynamicum("mensura_plagulae",
+        piscina_plagulae =
+            piscina_generare_dynamicum("mensura_plagulae",
             8388608);
         si (piscina_plagulae == NIHIL)
         {
             perge;
         }
 
-        fons = _plagulam_legere(piscina_plagulae, via_plagulae, &mensura);
+        fons = _plagulam_legere(piscina_plagulae, via_plagulae,
+            &mensura);
         si (fons == NIHIL)
         {
             piscina_destruere(piscina_plagulae);
@@ -237,9 +245,11 @@ s32 principale (vacuum)
 
             exp = silva_expansio_creare(piscina_plagulae);
             silva_fons_addere(exp, introitus->d_name, FALSUM);
-            reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            reliqua = silva_expansio_directivas_processare(exp,
+                lexemata,
                 NIHIL);
-            expansa = silva_expansio_expandere_reliqua(exp, reliqua, NIHIL);
+            expansa = silva_expansio_expandere_reliqua(exp, reliqua,
+                NIHIL);
             (vacuum)expansa;
         }
         t2 = clock();
@@ -271,7 +281,7 @@ s32 principale (vacuum)
                     parsura, &SILVA_SCELETUM_REGISTRUM,
                     parsura->fons_princeps);
                 t4 = clock();
-                si (scriptura.successus
+                si (   scriptura.successus
                     && scriptura.textus.mensura == mensura
                     && (mensura == ZEPHYRUM
                         || memcmp(scriptura.textus.datum, fons,
@@ -287,10 +297,10 @@ s32 principale (vacuum)
          * trans corpus verum (comparanda cum sceleto supra;
          * fines mensi M2b figentur) */
         {
-            Piscina* piscina_c89;
+                 Piscina* piscina_c89;
             SilvaParsura* parsura;
-            clock_t c0;
-            clock_t c1;
+                 clock_t  c0;
+                 clock_t  c1;
 
             piscina_c89 = piscina_generare_dynamicum(
                 "mensura_c89", 8388608);
@@ -309,7 +319,7 @@ s32 principale (vacuum)
 
                     summa_errorum_c89 +=
                         (i32)parsura->numerus_errorum;
-                    si (verbosa && parsura->numerus_errorum
+                    si (   verbosa && parsura->numerus_errorum
                         > ZEPHYRUM)
                     {
                         imprimere("  [c89 errores %d] %s\n",
@@ -323,7 +333,7 @@ s32 principale (vacuum)
                     scriptura = silva_scribere_fontem(piscina_c89,
                         parsura, &SILVA_C89_REGISTRUM,
                         parsura->fons_princeps);
-                    si (scriptura.successus
+                    si (   scriptura.successus
                         && scriptura.textus.mensura == mensura
                         && (mensura == ZEPHYRUM
                             || memcmp(scriptura.textus.datum, fons,
@@ -338,18 +348,21 @@ s32 principale (vacuum)
         }
 
         lexare_ms = (duplex)(t1 - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC;
-        expandere_ms = (duplex)(t2 - t1) * 1000.0 / (duplex)CLOCKS_PER_SEC;
-        parsare_ms = (duplex)(t3 - t2) * 1000.0 / (duplex)CLOCKS_PER_SEC;
-        scribere_ms = (duplex)(t4 - t3) * 1000.0 / (duplex)CLOCKS_PER_SEC;
+        expandere_ms = (duplex)(t2 - t1) * 1000.0
+            / (duplex)CLOCKS_PER_SEC;
+        parsare_ms = (duplex)(t3 - t2) * 1000.0
+            / (duplex)CLOCKS_PER_SEC;
+        scribere_ms = (duplex)(t4 - t3) * 1000.0
+            / (duplex)CLOCKS_PER_SEC;
         apex = (duplex)piscina_summa_apex_usus(piscina_plagulae);
 
         numerus++;
-        summa_octetorum += (duplex)mensura;
-        summa_lexare_ms += lexare_ms;
-        summa_expandere_ms += expandere_ms;
-        summa_parsare_ms += parsare_ms;
-        summa_scribere_ms += scribere_ms;
-        summa_apex_octetorum += apex;
+        summa_octetorum       += (duplex)mensura;
+        summa_lexare_ms       += lexare_ms;
+        summa_expandere_ms    += expandere_ms;
+        summa_parsare_ms      += parsare_ms;
+        summa_scribere_ms     += scribere_ms;
+        summa_apex_octetorum  += apex;
         si (apex > apex_maximus)
         {
             apex_maximus = apex;
@@ -366,7 +379,8 @@ s32 principale (vacuum)
     }
     closedir(corpus);
 
-    imprimere("  plagulae: %d, octeti: %.0f\n", numerus, summa_octetorum);
+    imprimere("  plagulae: %d, octeti: %.0f\n", numerus,
+        summa_octetorum);
     imprimere("  lexare:   %8.2f ms totalis (%.4f ms/KB)\n",
         summa_lexare_ms,
         summa_octetorum > 0.0
@@ -410,7 +424,8 @@ s32 principale (vacuum)
      * comprehensionis - numerus verus, numquam laxandus. */
     CREDO_AEQUALIS_I32 (summa_errorum_c89, ZEPHYRUM);
     imprimere("  apex:     %8.0f B medius, %.0f B maximus\n",
-        numerus > ZEPHYRUM ? summa_apex_octetorum / (duplex)numerus : 0.0,
+        numerus > ZEPHYRUM ? summa_apex_octetorum
+            / (duplex)numerus : 0.0,
         apex_maximus);
 
     CREDO_VERUM (numerus >= LXXVIII);

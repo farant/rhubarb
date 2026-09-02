@@ -54,7 +54,7 @@ hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
 /* Ambae grammaticae per omnia specimina (M2a Chunk C: c89 eundem
  * vectem incolumitatis fert quem sceletum) */
 nomen structura {
-    constans SilvaGrammatica*      grammatica;
+         constans SilvaGrammatica* grammatica;
     constans SilvaRegistrumCoctum* tabularium;
 } GrammaticaProbanda;
 
@@ -74,16 +74,18 @@ _fortuitum (vacuum)
 {
     i32 x = semen_globale;
 
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    semen_globale = x;
+    x              ^= x << 13;
+    x              ^= x >> 17;
+    x              ^= x << 5;
+    semen_globale  = x;
     redde x;
 }
 
 /* Buffonem implere octetis fortuitis */
 interior i32
-_buffo_crudus (i8* buffo, i32 mensura_maxima)
+_buffo_crudus (
+     i8* buffo,
+    i32  mensura_maxima)
 {
     i32 mensura = _fortuitum() % (mensura_maxima + I);
     i32 i;
@@ -97,12 +99,14 @@ _buffo_crudus (i8* buffo, i32 mensura_maxima)
 
 /* Buffonem implere characteribus C-formibus */
 interior i32
-_buffo_c_formis (i8* buffo, i32 mensura_maxima)
+_buffo_c_formis (
+     i8* buffo,
+    i32  mensura_maxima)
 {
     hic_manens constans character MATERIA[] =
         "abcdefgXYZ_0123456789 \t\n\r\\\"'#(){}[];,.*+-/<>=!&|?:";
-    i32 numerus_materiae = (i32)(magnitudo(MATERIA) - I);
-    i32 mensura = _fortuitum() % (mensura_maxima + I);
+    i32 numerus_materiae  = (i32)(magnitudo(MATERIA) - I);
+    i32 mensura           = _fortuitum() % (mensura_maxima + I);
     i32 i;
 
     per (i = ZEPHYRUM; i < mensura; i++)
@@ -115,20 +119,24 @@ _buffo_c_formis (i8* buffo, i32 mensura_maxima)
 /* Unum specimen: fidelitas lexatoris + expansio sine fragore.
  * Reddit VERUM si fidelis. */
 interior b32
-_specimen (constans i8* buffo, i32 mensura)
+_specimen (
+    constans i8* buffo,
+            i32  mensura)
 {
     Piscina* piscina;
-    Xar* lexemata;
-    chorda emissa;
-    b32 fidelis;
+        Xar* lexemata;
+     chorda  emissa;
+        b32  fidelis;
 
-    piscina = piscina_generare_dynamicum("incolumitas_specimen", 4194304);
+    piscina = piscina_generare_dynamicum("incolumitas_specimen",
+        4194304);
     si (piscina == NIHIL)
     {
         redde FALSUM;
     }
 
-    lexemata = silva_lexare(piscina, (constans character*)buffo, mensura,
+    lexemata = silva_lexare(piscina, (constans character*)buffo,
+        mensura,
         ZEPHYRUM);
     emissa = silva_lexemata_emittere(piscina, lexemata);
     fidelis = (emissa.mensura == mensura
@@ -139,12 +147,13 @@ _specimen (constans i8* buffo, i32 mensura)
     /* praeprocessor integer: numquam fragor, semper terminat */
     {
         SilvaExpansio* exp;
-        Xar* reliqua;
-        Xar* expansa;
+                  Xar* reliqua;
+                  Xar* expansa;
 
         exp = silva_expansio_creare(piscina);
         silva_fons_addere(exp, "fuzz.c", FALSUM);
-        reliqua = silva_expansio_directivas_processare(exp, lexemata, NIHIL);
+        reliqua = silva_expansio_directivas_processare(exp, lexemata,
+            NIHIL);
         expansa = silva_expansio_expandere_reliqua(exp, reliqua, NIHIL);
         (vacuum)expansa;
     }
@@ -176,7 +185,7 @@ _specimen (constans i8* buffo, i32 mensura)
 
                 scriptura = silva_scribere_fontem(piscina, parsura,
                     GRAMMATICAE[g].tabularium, parsura->fons_princeps);
-                si (!scriptura.successus
+                si (   !scriptura.successus
                     || scriptura.textus.mensura != mensura
                     || (mensura > ZEPHYRUM
                         && memcmp(scriptura.textus.datum, buffo,
@@ -194,12 +203,12 @@ _specimen (constans i8* buffo, i32 mensura)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
-    i8       buffo[MENSURA_MAXIMA];
-    i32      i;
-    i32      fideles_crudi;
-    i32      fideles_c;
+         i8  buffo[MENSURA_MAXIMA];
+        i32  i;
+        i32  fideles_crudi;
+        i32  fideles_c;
 
     piscina = piscina_generare_dynamicum("probatio_silva_incolumitas",
         262144);

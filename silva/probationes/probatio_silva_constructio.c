@@ -24,7 +24,9 @@
 #define VIA_MAXIMA 1024
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via)
 {
     FILE* pl;
     character* buffer;
@@ -64,13 +66,16 @@ _plagulam_legere (Piscina* piscina, constans character* via)
 
 /* Productio cocta per id */
 interior s32
-_prod_per_id (constans character* id)
+_prod_per_id (
+    constans character* id)
 {
     i32 i;
 
-    per (i = ZEPHYRUM; i < SILVA_SCELETUM_TABULA.numerus_productionum; i++)
+    per (i = ZEPHYRUM; i
+        < SILVA_SCELETUM_TABULA.numerus_productionum; i++)
     {
-        constans character* pid = SILVA_SCELETUM_TABULA.productiones[i].id;
+        constans character* pid =
+            SILVA_SCELETUM_TABULA.productiones[i].id;
 
         si (pid != NIHIL && strcmp(pid, id) == ZEPHYRUM)
         {
@@ -82,11 +87,13 @@ _prod_per_id (constans character* id)
 
 /* Symbolum coctum per titulum */
 interior s32
-_sym_per_titulum (constans character* titulus)
+_sym_per_titulum (
+    constans character* titulus)
 {
     i32 i;
 
-    per (i = ZEPHYRUM; i < SILVA_SCELETUM_TABULA.numerus_symbolorum; i++)
+    per (i = ZEPHYRUM; i
+        < SILVA_SCELETUM_TABULA.numerus_symbolorum; i++)
     {
         si (strcmp(SILVA_SCELETUM_TABULA.symbola[i].titulus, titulus)
             == ZEPHYRUM)
@@ -99,17 +106,20 @@ _sym_per_titulum (constans character* titulus)
 
 /* Productio transitus (id NIHIL) per LHS + longitudinem */
 interior s32
-_prod_transitus (constans character* lhs, i32 longitudo)
+_prod_transitus (
+    constans character* lhs,
+                   i32  longitudo)
 {
     s32 lhs_idx = _sym_per_titulum(lhs);
     i32 i;
 
-    per (i = ZEPHYRUM; i < SILVA_SCELETUM_TABULA.numerus_productionum; i++)
+    per (i = ZEPHYRUM; i
+        < SILVA_SCELETUM_TABULA.numerus_productionum; i++)
     {
         constans SilvaTabProductio* p =
             &SILVA_SCELETUM_TABULA.productiones[i];
 
-        si (p->id == NIHIL && p->sinistrum == lhs_idx
+        si (   p->id        == NIHIL && p->sinistrum == lhs_idx
             && p->longitudo == longitudo)
         {
             redde (s32)i;
@@ -120,13 +130,13 @@ _prod_transitus (constans character* lhs, i32 longitudo)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                    b32  praeteritus;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    SilvaToken* tok_foo;
-    SilvaToken* tok_star;
-    SilvaToken* tok_bar;
-    SilvaToken* tok_semi;
+             SilvaToken* tok_foo;
+             SilvaToken* tok_star;
+             SilvaToken* tok_bar;
+             SilvaToken* tok_semi;
 
     piscina = piscina_generare_dynamicum("probatio_silva_constructio",
         16777216);
@@ -143,10 +153,10 @@ s32 principale (vacuum)
         Xar* lexemata = silva_lexare(piscina, "foo * bar ;",
             (i32)strlen("foo * bar ;"), ZEPHYRUM);
 
-        tok_foo = *(SilvaToken**)xar_obtinere(lexemata, 0);
-        tok_star = *(SilvaToken**)xar_obtinere(lexemata, I);
-        tok_bar = *(SilvaToken**)xar_obtinere(lexemata, II);
-        tok_semi = *(SilvaToken**)xar_obtinere(lexemata, III);
+        tok_foo   = *(SilvaToken**)xar_obtinere(lexemata, 0);
+        tok_star  = *(SilvaToken**)xar_obtinere(lexemata, I);
+        tok_bar   = *(SilvaToken**)xar_obtinere(lexemata, II);
+        tok_semi  = *(SilvaToken**)xar_obtinere(lexemata, III);
     }
 
 
@@ -156,10 +166,10 @@ s32 principale (vacuum)
 
     {
         constans character* radix;
-        character via[VIA_MAXIMA];
-        character* fons;
+                 character  via[VIA_MAXIMA];
+                 character* fons;
         SilvaGenGrammatica* g;
-        Xar* genera;
+                       Xar* genera;
 
         imprimere("\n--- Probans registrum (S20) ---\n");
 
@@ -171,7 +181,8 @@ s32 principale (vacuum)
         sprintf(via, "%s/silva/grammatica/sceletum.stml", radix);
         fons = _plagulam_legere(piscina, via);
         g = (fons != NIHIL)
-            ? silva_gen_grammaticam_legere(piscina, intern, fons) : NIHIL;
+            ? silva_gen_grammaticam_legere(piscina, intern,
+            fons) : NIHIL;
         CREDO_NON_NIHIL (g);
 
         genera = silva_gen_registrum_computare(g);
@@ -181,7 +192,7 @@ s32 principale (vacuum)
 
         /* binarium: loci unificati trans expressio-plus/terminus-star = 3 */
         {
-            i32 i;
+                         i32  i;
             SilvaGenGenusDef* binarium = NIHIL;
 
             per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
@@ -189,7 +200,7 @@ s32 principale (vacuum)
                 SilvaGenGenusDef* def =
                     (SilvaGenGenusDef*)xar_obtinere(genera, i);
 
-                si (def->titulus->mensura == VIII
+                si (   def->titulus->mensura == VIII
                     && memcmp(def->titulus->datum, "binarium", VIII)
                         == ZEPHYRUM)
                 {
@@ -237,10 +248,12 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans registrum coctum ---\n");
 
-        CREDO_AEQUALIS_I32 (SILVA_SCELETUM_REGISTRUM.numerus_generum, XV);
+        CREDO_AEQUALIS_I32 (SILVA_SCELETUM_REGISTRUM.numerus_generum,
+            XV);
 
         binarium_idx = -I;
-        per (i = ZEPHYRUM; i < SILVA_SCELETUM_REGISTRUM.numerus_generum; i++)
+        per (i = ZEPHYRUM; i
+            < SILVA_SCELETUM_REGISTRUM.numerus_generum; i++)
         {
             si (strcmp(SILVA_SCELETUM_REGISTRUM.genera[i].titulus,
                     "binarium") == ZEPHYRUM)
@@ -250,7 +263,8 @@ s32 principale (vacuum)
         }
         CREDO_VERUM (binarium_idx >= ZEPHYRUM);
         CREDO_AEQUALIS_I32 (
-            SILVA_SCELETUM_REGISTRUM.genera[binarium_idx].loci_numerus, III);
+            SILVA_SCELETUM_REGISTRUM.genera[binarium_idx].loci_numerus,
+            III);
         CREDO_AEQUALIS_S32 ((s32)binarium_idx,
             (s32)SILVA_SCELETUM_GENUS_BINARIUM);
 
@@ -273,10 +287,11 @@ s32 principale (vacuum)
         {
             b32 index_inventus = FALSUM;
 
-            per (i = ZEPHYRUM; i < SILVA_SCELETUM_REGISTRUM.numerus_locorum;
+            per (i = ZEPHYRUM; i
+                < SILVA_SCELETUM_REGISTRUM.numerus_locorum;
                  i++)
             {
-                si (strcmp(SILVA_SCELETUM_REGISTRUM.loci[i].titulus,
+                si (   strcmp(SILVA_SCELETUM_REGISTRUM.loci[i].titulus,
                         "canonica") == ZEPHYRUM
                     && SILVA_SCELETUM_REGISTRUM.loci[i].species
                         == (s32)SILVA_LOCUS_INDEX)
@@ -322,12 +337,13 @@ s32 principale (vacuum)
             _prod_per_id("factor-identificator"), valores);
 
         /* binarium: terminus STAR factor */
-        valores[0] = v_foo;
-        valores[I] = silva_valor_token(tok_star);
-        valores[II] = v_bar;
+        valores[0]   = v_foo;
+        valores[I]   = silva_valor_token(tok_star);
+        valores[II]  = v_bar;
         v_binarium = silva_sceletum_construere(piscina,
             _prod_per_id("terminus-star"), valores);
-        CREDO_AEQUALIS_I32 ((i32)v_binarium.genus, (i32)SILVA_VALOR_NODUS);
+        CREDO_AEQUALIS_I32 ((i32)v_binarium.genus,
+            (i32)SILVA_VALOR_NODUS);
         CREDO_AEQUALIS_S32 (v_binarium.datum.nodus->genus,
             (s32)SILVA_SCELETUM_GENUS_BINARIUM);
 
@@ -363,21 +379,26 @@ s32 principale (vacuum)
         valores[I] = silva_valor_token(tok_semi);
         v_sententia = silva_sceletum_construere(piscina,
             _prod_per_id("sententia-expr"), valores);
-        CREDO_AEQUALIS_I32 ((i32)v_sententia.genus, (i32)SILVA_VALOR_NODUS);
+        CREDO_AEQUALIS_I32 ((i32)v_sententia.genus,
+            (i32)SILVA_VALOR_NODUS);
 
         {
             SilvaValor lista;
             s32 prod_initium = _prod_transitus("sententiae", ZEPHYRUM);
 
-            lista = silva_sceletum_construere(piscina, prod_initium, NIHIL);
-            CREDO_AEQUALIS_I32 ((i32)lista.genus, (i32)SILVA_VALOR_LISTA);
-            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(lista), ZEPHYRUM);
+            lista = silva_sceletum_construere(piscina, prod_initium,
+                NIHIL);
+            CREDO_AEQUALIS_I32 ((i32)lista.genus,
+                (i32)SILVA_VALOR_LISTA);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(lista),
+                ZEPHYRUM);
 
             valores[0] = lista;
             valores[I] = v_sententia;
             lista = silva_sceletum_construere(piscina,
                 _prod_per_id("sententiae-appendere"), valores);
-            CREDO_AEQUALIS_I32 ((i32)lista.genus, (i32)SILVA_VALOR_LISTA);
+            CREDO_AEQUALIS_I32 ((i32)lista.genus,
+                (i32)SILVA_VALOR_LISTA);
             CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(lista), I);
         }
     }
@@ -398,9 +419,9 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans prospectus listarum (A-dimidium) ---\n");
 
-        elem_i = silva_valor_token(tok_foo);
-        elem_ii = silva_valor_token(tok_bar);
-        elem_iii = silva_valor_token(tok_semi);
+        elem_i    = silva_valor_token(tok_foo);
+        elem_ii   = silva_valor_token(tok_bar);
+        elem_iii  = silva_valor_token(tok_semi);
 
         /* Via velox: prospectus ad finem vivum -> idem repositorium */
         basis = silva_valor_lista_nova(piscina);
@@ -430,8 +451,10 @@ s32 principale (vacuum)
 
             /* Ambae furcae praefixum commune, caudas proprias vident */
             CREDO_AEQUALIS_PTR (
-                silva_valor_lista_obtinere(furca_a, ZEPHYRUM)->datum.token,
-                silva_valor_lista_obtinere(furca_b, ZEPHYRUM)->datum.token);
+                silva_valor_lista_obtinere(furca_a,
+                ZEPHYRUM)->datum.token,
+                silva_valor_lista_obtinere(furca_b,
+                ZEPHYRUM)->datum.token);
             CREDO_AEQUALIS_PTR (
                 silva_valor_lista_obtinere(furca_a, I)->datum.token,
                 tok_bar);
@@ -453,7 +476,8 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)malum.genus,
                 (i32)SILVA_VALOR_NIHIL);
         }
-        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elem_i), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elem_i),
+            ZEPHYRUM);
         CREDO_NIHIL (silva_valor_lista_obtinere(elem_i, ZEPHYRUM));
     }
 
@@ -490,12 +514,13 @@ s32 principale (vacuum)
             (s32)SILVA_SCELETUM_GENUS_DECLARATOR_MONSTRATOR);
 
         /* declaratio: typus declarator ; */
-        valores[0] = v_typus;
-        valores[I] = v_declarator;
-        valores[II] = silva_valor_token(tok_semi);
+        valores[0]   = v_typus;
+        valores[I]   = v_declarator;
+        valores[II]  = silva_valor_token(tok_semi);
         v_declaratio = silva_sceletum_construere(piscina,
             _prod_per_id("declaratio-simplex"), valores);
-        CREDO_AEQUALIS_I32 ((i32)v_declaratio.genus, (i32)SILVA_VALOR_NODUS);
+        CREDO_AEQUALIS_I32 ((i32)v_declaratio.genus,
+            (i32)SILVA_VALOR_NODUS);
         CREDO_AEQUALIS_S32 (v_declaratio.datum.nodus->genus,
             (s32)SILVA_SCELETUM_GENUS_DECLARATIO);
 
@@ -507,10 +532,13 @@ s32 principale (vacuum)
                 v_declaratio.datum.nodus);
             Xar* liberi;
 
-            CREDO_AEQUALIS_I32 ((i32)typus.genus, (i32)SILVA_VALOR_NODUS);
-            CREDO_CHORDA_AEQUALIS_LITERIS (term.datum.token->valor, ";");
+            CREDO_AEQUALIS_I32 ((i32)typus.genus,
+                (i32)SILVA_VALOR_NODUS);
+            CREDO_CHORDA_AEQUALIS_LITERIS (term.datum.token->valor,
+                ";");
 
-            liberi = silva_nodus_liberi(piscina, v_declaratio.datum.nodus);
+            liberi = silva_nodus_liberi(piscina,
+                v_declaratio.datum.nodus);
             CREDO_AEQUALIS_I32 (xar_numerus(liberi), II);
         }
 

@@ -36,15 +36,15 @@ silva_lineam_finire (
  * corpus functionis {...} habet. */
 i32
 silva_unitatem_finire (
-    Xar*    lexemata,
-    i32     i,
-    i32     n,
+       Xar* lexemata,
+       i32  i,
+       i32  n,
     chorda* titulus_out,
-    b32*    est_functio_out,
-    b32*    est_statica_out,
-    b32*    est_definitio_out,
-    b32*    est_typedef_out,
-    b32*    est_tag_def_out);
+       b32* est_functio_out,
+       b32* est_statica_out,
+       b32* est_definitio_out,
+       b32* est_typedef_out,
+       b32* est_tag_def_out);
 
 /* enumeratio tota plagulae: directivae lineatim (titulus pro
  * define/undef/ifdef/ifndef = identificator sequens; pro include =
@@ -52,20 +52,20 @@ silva_unitatem_finire (
  * EOF non fit unitas. */
 nomen structura {
     chorda titulus;         /* vacua si sine titulo */
-    i32    lexema_primum;   /* index in lexemata */
-    i32    lexema_finis;    /* exclusivum */
-    b32    est_directiva;
-    b32    est_functio;
-    b32    est_statica;
-    b32    est_definitio;
-    b32    est_typedef;
-    b32    est_tag_def;
+       i32 lexema_primum;   /* index in lexemata */
+       i32 lexema_finis;    /* exclusivum */
+       b32 est_directiva;
+       b32 est_functio;
+       b32 est_statica;
+       b32 est_definitio;
+       b32 est_typedef;
+       b32 est_tag_def;
 } SilvaUnitas;
 
 /* Xar de SilvaUnitas ordine fontis; NIHIL = memoria defecit */
 Xar*
 silva_unitates_scandere (
     Piscina* piscina,
-    Xar*     lexemata);
+        Xar* lexemata);
 
 #endif /* SILVA_UNITATES_H */

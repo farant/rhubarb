@@ -44,8 +44,10 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 
 /* Plagulam integram legere */
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -76,7 +78,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -91,8 +93,10 @@ _plagulam_legere (Piscina* piscina, constans character* via,
 
 /* Parsare per contextum; parsuram reddit (NIHIL in fractura) */
 interior SilvaParsura*
-_parsare_ctx (Piscina* piscina, constans SilvaContextus* contextus,
-    constans character* fons)
+_parsare_ctx (
+                    Piscina* piscina,
+    constans SilvaContextus* contextus,
+         constans character* fons)
 {
     redde silva_parsare_cum_contextu(piscina, contextus, "probatio.c",
         fons, (i32)strlen(fons), &GRAMMATICA_SCELETI, NIHIL, NIHIL,
@@ -102,12 +106,15 @@ _parsare_ctx (Piscina* piscina, constans SilvaContextus* contextus,
 /* Fidelitas per contextum: parsare -> scribere == fons.
  * parsura_out (si non NIHIL) parsuram recipit pro assertionibus. */
 interior b32
-_fidelis_ctx (Piscina* piscina, constans SilvaContextus* contextus,
-    constans character* fons, SilvaParsura** parsura_out)
+_fidelis_ctx (
+                    Piscina*  piscina,
+    constans SilvaContextus*  contextus,
+         constans character*  fons,
+               SilvaParsura** parsura_out)
 {
-    SilvaParsura*  parsura;
-    SilvaScriptura scriptura;
-    i32 m = (i32)strlen(fons);
+      SilvaParsura* parsura;
+    SilvaScriptura  scriptura;
+               i32  m = (i32)strlen(fons);
 
     parsura = _parsare_ctx(piscina, contextus, fons);
     si (parsura_out != NIHIL)
@@ -124,7 +131,7 @@ _fidelis_ctx (Piscina* piscina, constans SilvaContextus* contextus,
     {
         redde FALSUM;
     }
-    si (m > ZEPHYRUM
+    si (   m > ZEPHYRUM
         && memcmp(scriptura.textus.datum, fons,
                (memoriae_index)m) != ZEPHYRUM)
     {
@@ -135,7 +142,8 @@ _fidelis_ctx (Piscina* piscina, constans SilvaContextus* contextus,
 
 /* Interrogatio numerans: post N vocationes FALSUM (monotona) */
 interior b32
-_pergere_numerans (vacuum* datum)
+_pergere_numerans (
+    vacuum* datum)
 {
     i32* reliquae = (i32*)datum;
 
@@ -149,7 +157,7 @@ _pergere_numerans (vacuum* datum)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_contextus",
@@ -161,9 +169,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: creare + defaltae (fines generosae SEMPER activae)
      * ======================================================== */
+
     {
         SilvaContextus* ctx;
 
@@ -185,13 +195,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(ctx->praebenda), ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: lexicon - definitiones ante fontem valent
      * (a positione 0; provenientia ad plagulam lexici)
      * ======================================================== */
+
     {
         SilvaContextus* ctx;
-        SilvaParsura* parsura;
+          SilvaParsura* parsura;
 
         imprimere("\n--- Probans lexicon ---\n");
 
@@ -213,17 +225,19 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: lexicon latinum COMPILATUM (silva_latina_datum) -
      * "integer x;" declaratio fit; datum == plagula in disco
      * ======================================================== */
+
     {
-        SilvaContextus* ctx;
-        SilvaParsura* parsura;
+            SilvaContextus* ctx;
+              SilvaParsura* parsura;
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        i8* latina_disco;
-        i32 m_disco;
+                 character  via[VIA_MAXIMA];
+                        i8* latina_disco;
+                       i32  m_disco;
 
         imprimere("\n--- Probans latinam compilatam ---\n");
 
@@ -258,13 +272,15 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: limen lexematum - expansio exponentialis decisa,
      * arbor completa, reconstructio octetim exacta
      * ======================================================== */
+
     {
-        SilvaContextus* ctx;
-        SilvaParsura* parsura;
+            SilvaContextus* ctx;
+              SilvaParsura* parsura;
         constans character* fons =
             "#define A0 A1 A1\n"
             "#define A1 A2 A2\n"
@@ -280,8 +296,8 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans limen lexematum ---\n");
 
-        ctx = silva_contextus_creare(piscina);
-        ctx->fines.lexemata = L;  /* 50 - decisio certa */
+        ctx                  = silva_contextus_creare(piscina);
+        ctx->fines.lexemata  = L;  /* 50 - decisio certa */
 
         parsura = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, fons, &parsura));
@@ -293,12 +309,14 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: limen generationum - catena longa decisa
      * ======================================================== */
+
     {
-        SilvaContextus* ctx;
-        SilvaParsura* parsura;
+            SilvaContextus* ctx;
+              SilvaParsura* parsura;
         constans character* fons =
             "#define B0 B1\n"
             "#define B1 B2\n"
@@ -308,8 +326,8 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans limen generationum ---\n");
 
-        ctx = silva_contextus_creare(piscina);
-        ctx->fines.generationes = II;
+        ctx                      = silva_contextus_creare(piscina);
+        ctx->fines.generationes  = II;
 
         parsura = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, fons, &parsura));
@@ -319,8 +337,8 @@ s32 principale (vacuum)
         }
 
         /* Eadem catena sine limine arto: nulla decisio */
-        ctx = silva_contextus_creare(piscina);
-        parsura = NIHIL;
+        ctx      = silva_contextus_creare(piscina);
+        parsura  = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, fons, &parsura));
         si (parsura != NIHIL)
         {
@@ -329,14 +347,16 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: limen regionum - regio ultra modum cruda manet,
      * reconstructio tenet; nidificatio profunda acervum non
      * perfodit (defalta LXIV)
      * ======================================================== */
+
     {
-        SilvaContextus* ctx;
-        SilvaParsura* parsura;
+            SilvaContextus* ctx;
+              SilvaParsura* parsura;
         constans character* fons =
             "#if 1\n"
             "#if 1\n"
@@ -388,10 +408,10 @@ s32 principale (vacuum)
             Piscina* piscina_nidi = piscina_generare_dynamicum(
                 "nidificatio", 67108864);
             ChordaAedificator* aed;
-            chorda textus;
-            SilvaParsura* p;
-            SilvaScriptura scriptura;
-            i32 k;
+                       chorda  textus;
+                 SilvaParsura* p;
+               SilvaScriptura  scriptura;
+                          i32  k;
 
             CREDO_NON_NIHIL (piscina_nidi);
             aed = chorda_aedificator_creare(piscina_nidi, 65536);
@@ -429,12 +449,14 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: limen includendi per contextum
      * ======================================================== */
+
     {
         SilvaContextus* ctx;
-        SilvaParsura* parsura;
+          SilvaParsura* parsura;
 
         imprimere("\n--- Probans limen includendi ---\n");
 
@@ -460,18 +482,20 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: limen frontis - furca ultra limen = nodus ERROR
      * (totalitas), numeratus
      * ======================================================== */
+
     {
         SilvaContextus* ctx;
-        SilvaParsura* parsura;
+          SilvaParsura* parsura;
 
         imprimere("\n--- Probans limen frontis ---\n");
 
-        ctx = silva_contextus_creare(piscina);
-        ctx->fines.frons = I;  /* furca foo*bar frontem 2 petit */
+        ctx               = silva_contextus_creare(piscina);
+        ctx->fines.frons  = I;  /* furca foo*bar frontem 2 petit */
 
         parsura = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, "foo * bar;",
@@ -484,8 +508,8 @@ s32 principale (vacuum)
         }
 
         /* Defalta generosa: eadem furca sine fractura */
-        ctx = silva_contextus_creare(piscina);
-        parsura = NIHIL;
+        ctx      = silva_contextus_creare(piscina);
+        parsura  = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, "foo * bar;",
             &parsura));
         si (parsura != NIHIL)
@@ -496,19 +520,21 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: intermissio - cauda nodus ERROR unus, arbor
      * completa, reconstructio octetim exacta
      * ======================================================== */
+
     {
         SilvaContextus* ctx;
-        SilvaParsura* parsura;
-        i32 reliquae;
+          SilvaParsura* parsura;
+                   i32  reliquae;
 
         imprimere("\n--- Probans intermissionem ---\n");
 
-        ctx = silva_contextus_creare(piscina);
-        reliquae = V;
+        ctx       = silva_contextus_creare(piscina);
+        reliquae  = V;
         silva_contextus_pergere_ponere(ctx, _pergere_numerans,
             &reliquae, I);
 
@@ -522,8 +548,8 @@ s32 principale (vacuum)
         }
 
         /* Intermissio statim (in expansione iam): cauda tota */
-        ctx = silva_contextus_creare(piscina);
-        reliquae = ZEPHYRUM;
+        ctx       = silva_contextus_creare(piscina);
+        reliquae  = ZEPHYRUM;
         silva_contextus_pergere_ponere(ctx, _pergere_numerans,
             &reliquae, I);
 
@@ -536,8 +562,8 @@ s32 principale (vacuum)
         }
 
         /* Sine interrogatione: nulla intermissio */
-        ctx = silva_contextus_creare(piscina);
-        parsura = NIHIL;
+        ctx      = silva_contextus_creare(piscina);
+        parsura  = NIHIL;
         CREDO_VERUM (_fidelis_ctx(piscina, ctx, "int a;", &parsura));
         si (parsura != NIHIL)
         {
@@ -545,22 +571,24 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: clausura cursor.c PER CONTEXTUM (vectis M1 via
      * nova) - lexicon latinum COMPILATUM + praebenda; #include
      * "latina.h" ignotum manet (linea reinserta) sed macros iam
      * valent; octetim exacta
      * ======================================================== */
+
     {
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        Piscina* piscina_cursoris;
-        i8* cursor_c;
-        i8* cursor_h;
-        i8* color_h;
-        i32 m_cursor_c;
-        i32 m_cursor_h;
-        i32 m_color_h;
+                 character  via[VIA_MAXIMA];
+                   Piscina* piscina_cursoris;
+                        i8* cursor_c;
+                        i8* cursor_h;
+                        i8* color_h;
+                       i32  m_cursor_c;
+                       i32  m_cursor_h;
+                       i32  m_color_h;
 
         imprimere("\n--- Probans clausuram cursor.c per contextum ---\n");
 
@@ -592,7 +620,7 @@ s32 principale (vacuum)
         si (cursor_c != NIHIL && cursor_h != NIHIL && color_h != NIHIL)
         {
             SilvaContextus* ctx;
-            SilvaParsura*   parsura;
+              SilvaParsura* parsura;
             SilvaScriptura  scriptura;
 
             ctx = silva_contextus_creare(piscina_cursoris);

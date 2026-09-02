@@ -29,7 +29,9 @@
 #include <string.h>
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_c89_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), NIHIL);
@@ -40,11 +42,11 @@ interior vacuum
 _codicem_probare (Piscina* piscina, constans character* fons,
     s32 codex, i32 numerus, constans character* descriptio)
 {
-    SilvaParsura* parsura;
+      SilvaParsura* parsura;
     SilvaSemantica* sem;
-    i32 inventi = ZEPHYRUM;
-    i32 i;
-    i32 m;
+               i32  inventi = ZEPHYRUM;
+               i32  i;
+               i32  m;
 
     imprimere("  %s\n", descriptio);
     parsura = _parsare(piscina, fons);

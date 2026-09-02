@@ -19,8 +19,10 @@
 
 /* parsare + colligere uno gressu */
 interior Xar*
-_colligere (Piscina* piscina, constans character* fons,
-    SilvaParsura** parsura_out)
+_colligere (
+               Piscina*  piscina,
+    constans character*  fons,
+          SilvaParsura** parsura_out)
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina,
         "probatio.c", fons, (i32)strlen(fons), NIHIL);
@@ -38,7 +40,10 @@ _colligere (Piscina* piscina, constans character* fons,
 
 /* unitas suprema per indicem */
 interior constans SilvaNodus*
-_unitas (Piscina* piscina, constans SilvaParsura* parsura, i32 index)
+_unitas (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+                      i32  index)
 {
     Xar* unitates = silva_annotationes_unitates(piscina, parsura);
 
@@ -50,7 +55,9 @@ _unitas (Piscina* piscina, constans SilvaParsura* parsura, i32 index)
 }
 
 interior SilvaAnnotatio*
-_annotatio (Xar* annotationes, i32 index)
+_annotatio (
+    Xar* annotationes,
+    i32  index)
 {
     redde (SilvaAnnotatio*)xar_obtinere(annotationes, index);
 }
@@ -58,7 +65,7 @@ _annotatio (Xar* annotationes, i32 index)
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_annotationes",
         8388608);
@@ -69,9 +76,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * I. ancoratio + salta-vacua + prosa numquam lecta
      * ======================================================== */
+
     {
         constans character* fons =
             "/* prosa normalis hic est */\n"
@@ -108,9 +117,11 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * II. registrum leve: captura lineae in commentario lineae
      * ======================================================== */
+
     {
         constans character* fons =
             "// <intentio (>cur probamus\n"
@@ -137,9 +148,11 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * III. multilineare decoratum + nid boolean
      * ======================================================== */
+
     {
         constans character* fons =
             "/*\n"
@@ -175,9 +188,11 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * IV. malformatum ancoratum = INVENTUM, numquam tacite prosa
      * ======================================================== */
+
     {
         constans character* fons =
             "/* <intentio sine fine */\n"
@@ -203,9 +218,11 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * V. cumulata: ambae supra unitatem eandem
      * ======================================================== */
+
     {
         constans character* fons =
             "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE2A\"/> */\n"
@@ -220,8 +237,8 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (annotationes);
         CREDO_AEQUALIS_I32 (xar_numerus(annotationes), II);
 
-        prima = _annotatio(annotationes, ZEPHYRUM);
-        secunda = _annotatio(annotationes, I);
+        prima    = _annotatio(annotationes, ZEPHYRUM);
+        secunda  = _annotatio(annotationes, I);
         CREDO_AEQUALIS_I32 (prima->linea, I);
         CREDO_AEQUALIS_I32 (secunda->linea, II);
         CREDO_AEQUALIS_S32 ((s32)prima->modus,
@@ -232,9 +249,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_PTR (prima->unitas, secunda->unitas);
     }
 
+
     /* ========================================================
      * VI. scopus plagulae: sine unitate sequente
      * ======================================================== */
+
     {
         constans character* fons =
             "int f;\n"
@@ -254,9 +273,11 @@ s32 principale (vacuum)
         CREDO_NIHIL (a->unitas);
     }
 
+
     /* ========================================================
      * VII. INTERIOR: intra unitatem continentem
      * ======================================================== */
+
     {
         constans character* fons =
             "int g(void)\n"
@@ -280,10 +301,12 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * VIII. radix originis: commentarium ante lineam macro ductam
      * (lectio TOLERA - trivia in lexemate invocationis equitant)
      * ======================================================== */
+
     {
         constans character* fons =
             "#define numerus int\n"
@@ -307,12 +330,14 @@ s32 principale (vacuum)
             _unitas(piscina, parsura, ZEPHYRUM));
     }
 
+
     /* ========================================================
      * X. identitates: lectio arboris (frustum B)
      * ======================================================== */
+
     {
-        Xar* annotationes;
-        Xar* identitates;
+                   Xar* annotationes;
+                   Xar* identitates;
         SilvaIdentitas* id;
 
         imprimere("\n--- Probans lectionem identitatum ---\n");
@@ -359,20 +384,22 @@ s32 principale (vacuum)
             _annotatio(annotationes, ZEPHYRUM)));
     }
 
+
     /* ========================================================
      * XI. sedes mintationis: offsets textuales (frustum B)
      * ======================================================== */
+
     {
-        Xar* annotationes;
-        Xar* identitates;
-        SilvaIdentitas* id;
+                       Xar* annotationes;
+                       Xar* identitates;
+            SilvaIdentitas* id;
         constans character* fons;
 
         imprimere("\n--- Probans sedes mintationis ---\n");
 
         /* attributum booleanum in elemento */
-        fons = "/* <intentio nid>x</intentio> */\nint a;\n";
-        annotationes = _colligere(piscina, fons, NIHIL);
+        fons          = "/* <intentio nid>x</intentio> */\nint a;\n";
+        annotationes  = _colligere(piscina, fons, NIHIL);
         identitates = silva_annotationes_identitates(piscina,
             _annotatio(annotationes, ZEPHYRUM));
         CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
@@ -385,8 +412,8 @@ s32 principale (vacuum)
             "nid", III) == ZEPHYRUM);
 
         /* elementum nid nudum: post titulum */
-        fons = "/* <nid/> */\nint a;\n";
-        annotationes = _colligere(piscina, fons, NIHIL);
+        fons          = "/* <nid/> */\nint a;\n";
+        annotationes  = _colligere(piscina, fons, NIHIL);
         identitates = silva_annotationes_identitates(piscina,
             _annotatio(annotationes, ZEPHYRUM));
         CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
@@ -399,8 +426,8 @@ s32 principale (vacuum)
         CREDO_VERUM (fons[id->insertio_offset] == '/');
 
         /* v booleanum in elemento nid */
-        fons = "/* <nid v/> */\nint a;\n";
-        annotationes = _colligere(piscina, fons, NIHIL);
+        fons          = "/* <nid v/> */\nint a;\n";
+        annotationes  = _colligere(piscina, fons, NIHIL);
         identitates = silva_annotationes_identitates(piscina,
             _annotatio(annotationes, ZEPHYRUM));
         CREDO_AEQUALIS_I32 (xar_numerus(identitates), I);
@@ -459,9 +486,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (id->insertio_offset, -I);
     }
 
+
     /* ========================================================
      * IX. commentaria vacua nihil frangunt
      * ======================================================== */
+
     {
         constans character* fons =
             "/**/\n"
@@ -475,6 +504,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(annotationes), ZEPHYRUM);
     }
 
+
     /* ========================================================
      * X. annotatio supra lineam directivae (resurrectio E1):
      * trivia in lexemate directivae consumptae equitant quod
@@ -482,6 +512,7 @@ s32 principale (vacuum)
      * directivarum haec annotatio TACITE vorabatur (collocatio
      * capitis plagulae supra #include/#define naturalissima)
      * ======================================================== */
+
     {
         constans character* fons =
             "/* prosa capitis plagulae */\n"

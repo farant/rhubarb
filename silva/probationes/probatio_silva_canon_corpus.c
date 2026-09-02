@@ -77,15 +77,15 @@ nomen structura {
 /* Quotiens litterae in chorda occurrant (non nullo terminata) */
 interior i32
 _quot_occurrit (
-                 chorda c,
-    constans character* litterae)
+                 chorda  c,
+     constans character* litterae)
 {
     i32 numerus;
     i32 i;
     i32 m;
 
-    numerus = ZEPHYRUM;
-    m = (i32)strlen(litterae);
+    numerus  = ZEPHYRUM;
+    m        = (i32)strlen(litterae);
     si (c.datum == NIHIL || m == ZEPHYRUM || c.mensura < m)
     {
         redde ZEPHYRUM;
@@ -103,11 +103,11 @@ _quot_occurrit (
 
 interior vacuum
 _involucrum_numerare (
-    chorda doc,
+         chorda  doc,
     CanonCensus* census)
 {
-    census->vidit_expansio        += _quot_occurrit(doc, "<expansio");
-    census->vidit_pasta           += _quot_occurrit(doc, "<pasta");
+    census->vidit_expansio  += _quot_occurrit(doc, "<expansio");
+    census->vidit_pasta     += _quot_occurrit(doc, "<pasta");
     census->vidit_stringificatio  += _quot_occurrit(doc,
                                          "<stringificatio");
     census->vidit_extentum        += _quot_occurrit(doc, "<extentum");
@@ -127,18 +127,18 @@ _documentum_gignere (
     constans character* via,
     constans character* radix,
      constans Clausura* clausura,
-          CanonCensus* census)
+           CanonCensus* census)
 {
-                 chorda vacua;
-                    i8* fons;
-                    i32 mensura;
+                 chorda  vacua;
+                     i8* fons;
+                    i32  mensura;
            SilvaParsura* origo;
     SilvaArborScriptura  scriptura;
                     s32  fons_latina;
                     i32  expansa;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     fons = apparatus_plagulam_legere(opus, via, &mensura);
     si (fons == NIHIL || mensura <= ZEPHYRUM)
@@ -191,17 +191,17 @@ _documentum_gignere (
  * Reddit numerum vitiorum, aut -1 in fractura (ergo SIGNATUM). */
 interior s32
 _documentum_iudicare (
-               Piscina* opus,
-                 Canon* canon,
-                 chorda documentum,
-    constans character* via,
+                Piscina* opus,
+                  Canon* canon,
+                 chorda  documentum,
+     constans character* via,
     InternamentumChorda* intern,
-           CanonCensus* census)
+            CanonCensus* census)
 {
-    StmlResultus res;
-            Xar* vitia;
-             s32 numerus;
-             i32 i;
+    StmlResultus  res;
+             Xar* vitia;
+             s32  numerus;
+             i32  i;
 
     res = stml_legere(documentum, opus, intern);
     si (!res.successus || res.elementum_radix == NIHIL)
@@ -231,7 +231,7 @@ _documentum_iudicare (
 
         vitia_expansa = canon_iudicare_expansum(canon,
             res.elementum_radix, opus, intern);
-        si (   vitia_expansa != NIHIL
+        si (   vitia_expansa              != NIHIL
             && xar_numerus(vitia_expansa) == ZEPHYRUM)
         {
             census->purae_expansae++;
@@ -298,13 +298,14 @@ _documentum_iudicare (
 interior vacuum
 _censum_imprimere (
     constans character* titulus,
-        CanonCensus* census)
+           CanonCensus* census)
 {
     i32 i;
 
     imprimere("\n  --- %s ---\n", titulus);
     imprimere("  plagulae:           %d\n", (integer)census->plagulae);
-    imprimere("  latinizatae:        %d\n", (integer)census->latinizatae);
+    imprimere("  latinizatae:        %d\n",
+        (integer)census->latinizatae);
     imprimere("  APPARATUS FRACTI:   %d\n",
         (integer)census->apparatus_fracti);
     imprimere("  parsura recusata:   %d\n",
@@ -338,16 +339,16 @@ _censum_imprimere (
 s32
 principale (vacuum)
 {
-                Piscina* piscina;
-    InternamentumChorda* intern;
-     constans character* radix;
-              character  via_canonis[VIA_MAXIMA];
-              character  via_corporis[VIA_MAXIMA];
-              character  via_plagulae[VIA_MAXIMA];
-              character  via_relativa[VIA_MAXIMA];
-                  Canon* canon;
-                  chorda fons_canonis;
-                  chorda causa;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+      constans character* radix;
+               character  via_canonis[VIA_MAXIMA];
+               character  via_corporis[VIA_MAXIMA];
+               character  via_plagulae[VIA_MAXIMA];
+               character  via_relativa[VIA_MAXIMA];
+                   Canon* canon;
+                  chorda  fons_canonis;
+                  chorda  causa;
                     DIR* corpus;
           structura dirent* introitus;
              CanonCensus  census_planus;
@@ -364,9 +365,11 @@ principale (vacuum)
     radix = getenv("RHUBARB_RADIX");
     si (radix == NIHIL) radix = "..";
 
+
     /* ============================================================
      * CANONEM ONERARE
      * ============================================================ */
+
     sprintf(via_canonis, "%s/silva/c89.canon", radix);
     {
         i32 m;
@@ -379,10 +382,10 @@ principale (vacuum)
             credo_imprimere_compendium();
             redde I;
         }
-        fons_canonis.datum   = datum;
-        fons_canonis.mensura = m;
+        fons_canonis.datum    = datum;
+        fons_canonis.mensura  = m;
     }
-    causa.datum   = NIHIL;
+    causa.datum = NIHIL;
     causa.mensura = ZEPHYRUM;
     canon = canon_legere(fons_canonis, piscina, intern, &causa);
     CREDO_NON_NIHIL (canon);
@@ -397,6 +400,7 @@ principale (vacuum)
         redde I;
     }
 
+
     /* ============================================================
      * FALSIFICATIO PRIMUM (spec par. 5, proprietas I)
      *
@@ -408,11 +412,12 @@ principale (vacuum)
      * 'declarator-abstractus' in definitio-functionis/declarator
      * sedere NON potest, quamquam species utriusque NODUS est.
      * ============================================================ */
+
     {
-        Piscina* opus;
-        chorda   doc;
-        s32      vitia_sana;
-        s32      vitia_corrupta;
+          Piscina* opus;
+           chorda  doc;
+              s32  vitia_sana;
+              s32  vitia_corrupta;
         character* copia;
         character* sedes;
 
@@ -451,9 +456,9 @@ principale (vacuum)
 
                 /* 'declaratores' -> 'xeclaratores' : elementum quod
                  * canon omnino non novit */
-                sedes[1] = 'x';
-                corrupta.datum   = (i8*)copia;
-                corrupta.mensura = doc.mensura;
+                sedes[1]          = 'x';
+                corrupta.datum    = (i8*)copia;
+                corrupta.mensura  = doc.mensura;
                 vitia_corrupta = _documentum_iudicare(opus, canon,
                     corrupta, "corruptum", intern, &census_planus);
                 imprimere("  documentum corruptum: vitia %d\n",
@@ -464,9 +469,11 @@ principale (vacuum)
         piscina_destruere(opus);
     }
 
+
     /* ============================================================
      * GRADUS I - corpus planum (nulla macro)
      * ============================================================ */
+
     memset(&census_planus, 0, magnitudo(CanonCensus));
     sprintf(via_corporis, "%s/probationes/fixa/roundtrip", radix);
     imprimere("\n--- GRADUS PLANUS: %s ---\n", via_corporis);
@@ -478,7 +485,7 @@ principale (vacuum)
         dum ((introitus = readdir(corpus)) != NIHIL)
         {
             Piscina* opus;
-            chorda   doc;
+             chorda  doc;
 
             si (!apparatus_est_c(introitus->d_name))
             {
@@ -503,9 +510,11 @@ principale (vacuum)
     }
     _censum_imprimere("GRADUS PLANUS", &census_planus);
 
+
     /* ============================================================
      * GRADUS II - latinizatus (lib (plagulae .c) cum clausuris)
      * ============================================================ */
+
     memset(&census_latinus, 0, magnitudo(CanonCensus));
     sprintf(via_corporis, "%s/lib", radix);
     imprimere("\n--- GRADUS LATINIZATUS: %s ---\n", via_corporis);
@@ -516,9 +525,9 @@ principale (vacuum)
     {
         dum ((introitus = readdir(corpus)) != NIHIL)
         {
-            Piscina* opus;
-            chorda   doc;
-            Clausura clausura;
+             Piscina* opus;
+              chorda  doc;
+            Clausura  clausura;
 
             si (!apparatus_est_c(introitus->d_name))
             {
@@ -545,9 +554,11 @@ principale (vacuum)
     }
     _censum_imprimere("GRADUS LATINIZATUS", &census_latinus);
 
+
     /* ============================================================
      * NUMERI FIXI
      * ============================================================ */
+
     CREDO_AEQUALIS_I32 (census_planus.plagulae, (i32)73);
     CREDO_AEQUALIS_I32 (census_planus.apparatus_fracti, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planus.parsura_recusata, ZEPHYRUM);
@@ -570,6 +581,7 @@ principale (vacuum)
     CREDO_AEQUALIS_I32 (census_latinus.purae, (i32)156);
     CREDO_AEQUALIS_I32 (census_latinus.purae_expansae, (i32)156);
 
+
     /* ============================================================
      * QUID PORTA REVERA VIDERIT
      *
@@ -582,6 +594,7 @@ principale (vacuum)
      * clamaret) - sola PRAESENTIA, quae proprietas est quam porta
      * postulat.
      * ============================================================ */
+
     CREDO_VERUM (census_latinus.vidit_expansio       > ZEPHYRUM);
     CREDO_VERUM (census_latinus.vidit_pasta          > ZEPHYRUM);
     CREDO_VERUM (census_latinus.vidit_stringificatio > ZEPHYRUM);
@@ -590,6 +603,7 @@ principale (vacuum)
     /* ERROR gradu PLANO solo apparet (XLI), non latinizato - ergo
      * politia 'error in radice sola' ibi exercetur */
     CREDO_VERUM (census_planus.vidit_error           > ZEPHYRUM);
+
 
     /* ============================================================
      * LACUNA NOMINATA, non tacita (spec par. 5: nulla tecta tacita)
@@ -607,6 +621,7 @@ principale (vacuum)
      * SEDES: fixa propria in probationes/fixa/ postulantur; corpus
      * verum ea non fert.
      * ============================================================ */
+
     CREDO_AEQUALIS_I32 (census_latinus.vidit_invocatio_vacua, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_latinus.vidit_scissura,        ZEPHYRUM);
     CREDO_AEQUALIS_I32 (census_planus.vidit_invocatio_vacua,  ZEPHYRUM);

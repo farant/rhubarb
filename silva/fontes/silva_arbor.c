@@ -265,7 +265,7 @@ silva_arbor_genus_index (
     {
         constans character* candidatus = tabularium->genera[i].titulus;
 
-        si (   candidatus                                   != NIHIL
+        si (   candidatus != NIHIL
             && strlen(candidatus) == (size_t)mensura
             && memcmp(candidatus, titulus, (size_t)mensura) == ZEPHYRUM)
         {
@@ -308,7 +308,7 @@ silva_arbor_locus_index (
         }
         candidatus = tabularium->loci[absolutus].titulus;
 
-        si (   candidatus                                   != NIHIL
+        si (   candidatus != NIHIL
             && strlen(candidatus) == (size_t)mensura
             && memcmp(candidatus, titulus, (size_t)mensura) == ZEPHYRUM)
         {
@@ -823,7 +823,8 @@ _numerare_valorem (
             numerus = silva_valor_lista_numerus(valor);
             per (i = ZEPHYRUM; i < numerus; i++)
             {
-                SilvaValor* elementum = silva_valor_lista_obtinere(valor, i);
+                SilvaValor* elementum =
+                    silva_valor_lista_obtinere(valor, i);
 
                 si (elementum != NIHIL)
                 {
@@ -1546,7 +1547,8 @@ _scribere_lexema (
             scriptor->intern, nomen_fragmenti);
         si (transclusio->valor == NIHIL)
         {
-            scriptor->causa = "valor transclusionis internari non potuit";
+            scriptor->causa =
+                "valor transclusionis internari non potuit";
             redde NIHIL;
         }
         redde transclusio;
@@ -1924,7 +1926,8 @@ _scribere_valorem_in (
                 }
                 si (!stml_liberum_addere(parens, liberum))
                 {
-                    scriptor->causa = "elementum listae addi non potuit";
+                    scriptor->causa =
+                        "elementum listae addi non potuit";
                     scriptor->sedes = sedes;
                     redde FALSUM;
                 }
@@ -3055,7 +3058,8 @@ _lexema_legere (
         }
         liberum = stml_liberum_ad_indicem(elementum, cursor);
         cursor++;
-        si (   liberum          == NIHIL || liberum->genus != STML_NODUS_ELEMENTUM
+        si (   liberum          == NIHIL
+            || liberum->genus   != STML_NODUS_ELEMENTUM
             || liberum->titulus == NIHIL)
         {
             perge;
@@ -5503,7 +5507,7 @@ _parametra_comprimere (
     {
         StmlCongruentiaPar* par =
             (StmlCongruentiaPar*)xar_obtinere(paria, i);
-           chorda  clavis;
+           chorda clavis;
 
         clavis.datum    = (i8*)&par->vetus;
         clavis.mensura  = (i32)magnitudo(par->vetus);
@@ -6704,26 +6708,31 @@ silva_arbor_legere_parsuram (
                     || !_numerus_ex_chorda(attributum,
                             &numerus_attributi))
                 {
-                    _recusare(&lector, "regio sine indice", elem->linea);
+                    _recusare(&lector, "regio sine indice",
+                        elem->linea);
                     redde NIHIL;
                 }
                 index_regionis = (s32)numerus_attributi;
 
                 attributum = stml_attributum_capere(elem, "pater");
                 si (   attributum != NIHIL
-                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                    && _numerus_ex_chorda(attributum,
+                    &numerus_attributi))
                 {
                     index_patris = (s32)numerus_attributi;
                 }
                 attributum = stml_attributum_capere(elem, "regio-fons");
                 si (   attributum != NIHIL
-                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                    && _numerus_ex_chorda(attributum,
+                    &numerus_attributi))
                 {
                     regio_fons = (s32)numerus_attributi;
                 }
-                attributum = stml_attributum_capere(elem, "regio-linea");
+                attributum = stml_attributum_capere(elem,
+                    "regio-linea");
                 si (   attributum != NIHIL
-                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                    && _numerus_ex_chorda(attributum,
+                    &numerus_attributi))
                 {
                     regio_linea = numerus_attributi;
                 }
@@ -6766,7 +6775,8 @@ silva_arbor_legere_parsuram (
                     || !_numerus_ex_chorda(attributum,
                             &numerus_attributi))
                 {
-                    _recusare(&lector, "ramus sine indice", elem->linea);
+                    _recusare(&lector, "ramus sine indice",
+                        elem->linea);
                     redde NIHIL;
                 }
                 ramus = _parsura_ramum_obtinere(&lector, regio,
@@ -6781,7 +6791,8 @@ silva_arbor_legere_parsuram (
                     stml_attributum_capere(elem, "genus"));
                 attributum = stml_attributum_capere(elem, "conditio");
                 si (   attributum != NIHIL
-                    && _numerus_ex_chorda(attributum, &numerus_attributi))
+                    && _numerus_ex_chorda(attributum,
+                    &numerus_attributi))
                 {
                     ramus->conditio_id = numerus_attributi;
                 }
@@ -6842,7 +6853,8 @@ silva_arbor_legere_parsuram (
                     xar_addere(expansio->extenta);
                 si (ext == NIHIL)
                 {
-                    _recusare(&lector, "invocatio vacua addi non potuit",
+                    _recusare(&lector,
+                        "invocatio vacua addi non potuit",
                         elem->linea);
                     redde NIHIL;
                 }
@@ -6942,7 +6954,8 @@ silva_arbor_legere_parsuram (
                     redde NIHIL;
                 }
                 _parsura_ancoram_legere(elem, &sedes);
-                parsura->lexema_finis = _lexema_legere(&lector, interius,
+                parsura->lexema_finis = _lexema_legere(&lector,
+                    interius,
                     NIHIL);
                 si (parsura->lexema_finis == NIHIL)
                 {

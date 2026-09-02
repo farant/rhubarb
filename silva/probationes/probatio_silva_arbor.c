@@ -55,7 +55,8 @@ _primus_congruens (
     {
         redde NIHIL;
     }
-    primum = (SilvaQuaestioResultatum*)xar_obtinere(resultata, ZEPHYRUM);
+    primum = (SilvaQuaestioResultatum*)xar_obtinere(resultata,
+        ZEPHYRUM);
     redde primum ? primum->nodus : NIHIL;
 }
 
@@ -96,7 +97,8 @@ _nodus_generis (
         numerus = silva_valor_lista_numerus(valor);
         per (i = ZEPHYRUM; i < numerus; i++)
         {
-            SilvaValor* elementum = silva_valor_lista_obtinere(valor, i);
+            SilvaValor* elementum = silva_valor_lista_obtinere(valor,
+                i);
 
             si (elementum != NIHIL)
             {
@@ -185,9 +187,10 @@ _substituere (
                   i32  i;
                   b32  factum;
 
-    aedificator = chorda_aedificator_creare(piscina, fenum.mensura + 64);
-    longitudo = (i32)strlen(acus);
-    factum = FALSUM;
+    aedificator = chorda_aedificator_creare(piscina, fenum.mensura
+        + 64);
+    longitudo  = (i32)strlen(acus);
+    factum     = FALSUM;
 
     per (i = ZEPHYRUM; i < fenum.mensura; i++)
     {
@@ -225,7 +228,8 @@ _quotiens (
     }
     per (i = ZEPHYRUM; i <= fenum.mensura - longitudo; i++)
     {
-        si (memcmp(fenum.datum + i, acus, (size_t)longitudo) == ZEPHYRUM)
+        si (memcmp(fenum.datum + i, acus, (size_t)longitudo)
+            == ZEPHYRUM)
         {
             numerus++;
         }
@@ -326,8 +330,10 @@ principale (vacuum)
 
         imprimere("\n--- Probans sigillum registri ---\n");
 
-        c89_primum = silva_arbor_sigillum(piscina, &SILVA_C89_REGISTRUM);
-        c89_iterum = silva_arbor_sigillum(piscina, &SILVA_C89_REGISTRUM);
+        c89_primum = silva_arbor_sigillum(piscina,
+            &SILVA_C89_REGISTRUM);
+        c89_iterum = silva_arbor_sigillum(piscina,
+            &SILVA_C89_REGISTRUM);
 
         /* forma: VIII characteres, hexadecimales minusculi */
         CREDO_AEQUALIS_I32 (c89_primum.mensura,

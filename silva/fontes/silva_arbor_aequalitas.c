@@ -216,8 +216,10 @@ _arbor_scissurae_aequales (
     i32 numerus_b;
     i32 i;
 
-    numerus_a = a->scissurae ? xar_numerus(a->scissurae) : (i32)ZEPHYRUM;
-    numerus_b = b->scissurae ? xar_numerus(b->scissurae) : (i32)ZEPHYRUM;
+    numerus_a =
+        a->scissurae ? xar_numerus(a->scissurae) : (i32)ZEPHYRUM;
+    numerus_b =
+        b->scissurae ? xar_numerus(b->scissurae) : (i32)ZEPHYRUM;
 
     si (numerus_a != numerus_b)
     {
@@ -234,12 +236,14 @@ _arbor_scissurae_aequales (
 
         si (scissura_a == NIHIL || scissura_b == NIHIL)
         {
-            redde _arbor_divergere(comparator, "scissura/nihil", nodus_a,
+            redde _arbor_divergere(comparator, "scissura/nihil",
+                nodus_a,
                 nodus_b, a, b, locus, (s32)i);
         }
         si (scissura_a->offset != scissura_b->offset)
         {
-            redde _arbor_divergere(comparator, "scissura/offset", nodus_a,
+            redde _arbor_divergere(comparator, "scissura/offset",
+                nodus_a,
                 nodus_b, a, b, locus, (s32)i);
         }
         si (scissura_a->crlf != scissura_b->crlf)
@@ -267,13 +271,15 @@ _arbor_lexemata_aequalia (
         {
             redde VERUM;
         }
-        redde _arbor_divergere(comparator, "lexema/nihil", nodus_a, nodus_b,
+        redde _arbor_divergere(comparator, "lexema/nihil", nodus_a,
+            nodus_b,
             a, b, locus, index);
     }
 
     si (a->genus != b->genus)
     {
-        redde _arbor_divergere(comparator, "lexema/genus", nodus_a, nodus_b,
+        redde _arbor_divergere(comparator, "lexema/genus", nodus_a,
+            nodus_b,
             a, b, locus, index);
     }
     si (   a->valor.mensura != b->valor.mensura
@@ -281,7 +287,8 @@ _arbor_lexemata_aequalia (
             && memcmp(a->valor.datum, b->valor.datum,
                    (size_t)a->valor.mensura) != ZEPHYRUM))
     {
-        redde _arbor_divergere(comparator, "lexema/valor", nodus_a, nodus_b,
+        redde _arbor_divergere(comparator, "lexema/valor", nodus_a,
+            nodus_b,
             a, b, locus, index);
     }
     si (a->standard != b->standard)
@@ -291,12 +298,14 @@ _arbor_lexemata_aequalia (
     }
     si (a->fons_index != b->fons_index)
     {
-        redde _arbor_divergere(comparator, "lexema/fons", nodus_a, nodus_b,
+        redde _arbor_divergere(comparator, "lexema/fons", nodus_a,
+            nodus_b,
             a, b, locus, index);
     }
     si (a->initium_lineae != b->initium_lineae)
     {
-        redde _arbor_divergere(comparator, "lexema/initium-lineae", nodus_a,
+        redde _arbor_divergere(comparator, "lexema/initium-lineae",
+            nodus_a,
             nodus_b, a, b, locus, index);
     }
 
@@ -304,7 +313,8 @@ _arbor_lexemata_aequalia (
      * custodia quae aliter transiret quia subiectum eius abesset */
     si ((a->byte_offset < ZEPHYRUM) != (b->byte_offset < ZEPHYRUM))
     {
-        redde _arbor_divergere(comparator, "lexema/provenientia", nodus_a,
+        redde _arbor_divergere(comparator, "lexema/provenientia",
+            nodus_a,
             nodus_b, a, b, locus, index);
     }
 
@@ -322,22 +332,26 @@ _arbor_lexemata_aequalia (
         }
         si (a->columna != b->columna)
         {
-            redde _arbor_divergere(comparator, "lexema/columna", nodus_a,
+            redde _arbor_divergere(comparator, "lexema/columna",
+                nodus_a,
                 nodus_b, a, b, locus, index);
         }
         si (a->longitudo != b->longitudo)
         {
-            redde _arbor_divergere(comparator, "lexema/longitudo", nodus_a,
+            redde _arbor_divergere(comparator, "lexema/longitudo",
+                nodus_a,
                 nodus_b, a, b, locus, index);
         }
     }
 
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_ante, b->spatia_ante,
+    si (!_arbor_trivia_aequalia(comparator, a->spatia_ante,
+        b->spatia_ante,
              "trivia/ante", nodus_a, nodus_b, locus))
     {
         redde FALSUM;
     }
-    si (!_arbor_trivia_aequalia(comparator, a->spatia_post, b->spatia_post,
+    si (!_arbor_trivia_aequalia(comparator, a->spatia_post,
+        b->spatia_post,
              "trivia/post", nodus_a, nodus_b, locus))
     {
         redde FALSUM;
@@ -372,7 +386,8 @@ _arbor_valores_aequales (
 
     si (a.genus != b.genus)
     {
-        redde _arbor_divergere(comparator, "locus/genus-valoris", nodus_a,
+        redde _arbor_divergere(comparator, "locus/genus-valoris",
+            nodus_a,
             nodus_b, NIHIL, NIHIL, locus, -I);
     }
 
@@ -392,7 +407,8 @@ _arbor_valores_aequales (
         casus SILVA_VALOR_INDEX:
             si (a.datum.index != b.datum.index)
             {
-                redde _arbor_divergere(comparator, "locus/index", nodus_a,
+                redde _arbor_divergere(comparator, "locus/index",
+                    nodus_a,
                     nodus_b, NIHIL, NIHIL, locus, -I);
             }
             redde VERUM;
@@ -404,7 +420,8 @@ _arbor_valores_aequales (
             numerus_b = silva_valor_lista_numerus(b);
             si (numerus_a != numerus_b)
             {
-                redde _arbor_divergere(comparator, "lista/numerus", nodus_a,
+                redde _arbor_divergere(comparator, "lista/numerus",
+                    nodus_a,
                     nodus_b, NIHIL, NIHIL, locus, -I);
             }
             per (i = ZEPHYRUM; i < numerus_a; i++)
@@ -416,12 +433,14 @@ _arbor_valores_aequales (
 
                 si (elementum_a == NIHIL || elementum_b == NIHIL)
                 {
-                    redde _arbor_divergere(comparator, "lista/elementum-nihil",
+                    redde _arbor_divergere(comparator,
+                        "lista/elementum-nihil",
                         nodus_a, nodus_b, NIHIL, NIHIL, locus, (s32)i);
                 }
                 si (elementum_a->genus != elementum_b->genus)
                 {
-                    redde _arbor_divergere(comparator, "lista/genus-elementi",
+                    redde _arbor_divergere(comparator,
+                        "lista/genus-elementi",
                         nodus_a, nodus_b, NIHIL, NIHIL, locus, (s32)i);
                 }
                 si (elementum_a->genus == SILVA_VALOR_NODUS)
@@ -445,7 +464,8 @@ _arbor_valores_aequales (
                 }
                 alioquin
                 {
-                    si (!_arbor_valores_aequales(comparator, *elementum_a,
+                    si (!_arbor_valores_aequales(comparator,
+                        *elementum_a,
                              *elementum_b, nodus_a, nodus_b, locus))
                     {
                         redde FALSUM;
@@ -487,7 +507,8 @@ _arbor_nodi_aequales (
     }
     si (a->numerus_locorum != b->numerus_locorum)
     {
-        redde _arbor_divergere(comparator, "nodus/numerus-locorum", a, b,
+        redde _arbor_divergere(comparator, "nodus/numerus-locorum", a,
+            b,
             NIHIL, NIHIL, -I, -I);
     }
 
@@ -510,7 +531,8 @@ _arbor_nodi_aequales (
         via_prior = comparator->via_longitudo;
         _arbor_via_premere(comparator, a->genus, i);
         comparator->profunditas++;
-        fructus = _arbor_valores_aequales(comparator, a->loci[i], b->loci[i],
+        fructus = _arbor_valores_aequales(comparator, a->loci[i],
+            b->loci[i],
             a, b, (s32)i);
         comparator->profunditas--;
         _arbor_via_restituere(comparator, via_prior);
@@ -935,7 +957,8 @@ silva_arbor_parsurae_aequales (
             si (!_arbor_nodi_aequales(&comparator, ea->datum.nodus,
                      eb->datum.nodus))
             {
-                si (differentia != NIHIL && differentia->index < ZEPHYRUM)
+                si (   differentia != NIHIL
+                    && differentia->index < ZEPHYRUM)
                 {
                     differentia->index = (s32)i;
                 }

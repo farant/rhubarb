@@ -25,7 +25,10 @@
 #include <string.h>
 
 interior SilvaGLRFructus
-_parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
+_parsare (
+               Piscina* piscina,
+              SilvaGLR* glr,
+    constans character* fons)
 {
     Xar* lexemata;
 
@@ -34,7 +37,9 @@ _parsare (Piscina* piscina, SilvaGLR* glr, constans character* fons)
 }
 
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -50,9 +55,9 @@ _elementum (SilvaValor lista, i32 index)
  * oraculo notus est; alioquin ignotum */
 interior vacuum
 _resolutor_sceleti (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -68,13 +73,13 @@ _resolutor_sceleti (
 
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS) perge;
         nodus = elem->datum.nodus;
-        si (nodus == NIHIL
+        si (   nodus        == NIHIL
             || nodus->genus != (s32)SILVA_SCELETUM_GENUS_DECLARATIO)
         {
             perge;
         }
         typus = silva_sceletum_declaratio_typus(nodus);
-        si (typus.genus != SILVA_VALOR_NODUS
+        si (   typus.genus != SILVA_VALOR_NODUS
             || typus.datum.nodus->genus
                 != (s32)SILVA_SCELETUM_GENUS_TYPUS_NOMINATUS)
         {
@@ -85,12 +90,12 @@ _resolutor_sceleti (
                 silva_sceletum_typus_nominatus_tok_titulus(
                     typus.datum.nodus);
 
-            si (titulus.genus == SILVA_VALOR_TOKEN
+            si (   titulus.genus == SILVA_VALOR_TOKEN
                 && silva_oraculum_typum_novit(oraculum,
                        titulus.datum.token->valor))
             {
-                responsum->victor = (s32)i;
-                responsum->discriminans = titulus.datum.token;
+                responsum->victor        = (s32)i;
+                responsum->discriminans  = titulus.datum.token;
                 redde;
             }
         }
@@ -100,9 +105,9 @@ _resolutor_sceleti (
 /* Resolutor imparilis: idem, accessoribus imparilis */
 interior vacuum
 _resolutor_imparilis (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -118,13 +123,13 @@ _resolutor_imparilis (
 
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS) perge;
         nodus = elem->datum.nodus;
-        si (nodus == NIHIL
+        si (   nodus        == NIHIL
             || nodus->genus != (s32)SILVA_IMPARILIS_GENUS_DECLARATIO)
         {
             perge;
         }
         typus = silva_imparilis_declaratio_typus(nodus);
-        si (typus.genus != SILVA_VALOR_NODUS
+        si (   typus.genus != SILVA_VALOR_NODUS
             || typus.datum.nodus->genus
                 != (s32)SILVA_IMPARILIS_GENUS_TYPUS_NOMINATUS)
         {
@@ -135,12 +140,12 @@ _resolutor_imparilis (
                 silva_imparilis_typus_nominatus_tok_titulus(
                     typus.datum.nodus);
 
-            si (titulus.genus == SILVA_VALOR_TOKEN
+            si (   titulus.genus == SILVA_VALOR_TOKEN
                 && silva_oraculum_typum_novit(oraculum,
                        titulus.datum.token->valor))
             {
-                responsum->victor = (s32)i;
-                responsum->discriminans = titulus.datum.token;
+                responsum->victor        = (s32)i;
+                responsum->discriminans  = titulus.datum.token;
                 redde;
             }
         }
@@ -151,9 +156,9 @@ _resolutor_imparilis (
  * versionis canonicae - semantica ficta) */
 interior vacuum
 _resolutor_praeferens_expressionem (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -166,7 +171,7 @@ _resolutor_praeferens_expressionem (
     {
         SilvaValor* elem = silva_valor_lista_obtinere(interps, i);
 
-        si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
+        si (   elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
             && elem->datum.nodus != NIHIL
             && elem->datum.nodus->genus
                 == (s32)SILVA_SCELETUM_GENUS_SENTENTIA_EXPRESSIONIS)
@@ -179,8 +184,8 @@ _resolutor_praeferens_expressionem (
 
 s32 principale (vacuum)
 {
-    b32       praeteritus;
-    Piscina*  piscina;
+         b32  praeteritus;
+     Piscina* piscina;
     SilvaGLR* sceletum;
     SilvaGLR* imparilis;
 
@@ -204,10 +209,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaCommissio* commissio;
-        SilvaNodus* declaratio;
-        SilvaNodus* sententia;
+        SilvaGLRFructus  fructus;
+         SilvaCommissio* commissio;
+             SilvaNodus* declaratio;
+             SilvaNodus* sententia;
 
         imprimere("\n--- Probans patrem fixum ---\n");
 
@@ -219,8 +224,8 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (commissio);
         CREDO_AEQUALIS_I32 (xar_numerus(commissio->ambigui), ZEPHYRUM);
 
-        declaratio = _elementum(commissio->radix, ZEPHYRUM);
-        sententia = _elementum(commissio->radix, I);
+        declaratio  = _elementum(commissio->radix, ZEPHYRUM);
+        sententia   = _elementum(commissio->radix, I);
 
         /* Radices listae radicalis: pater NIHIL (lista nodum non
          * habet) */
@@ -229,7 +234,8 @@ s32 principale (vacuum)
 
         /* Interna: filii patrem accipiunt */
         {
-            SilvaValor typus = silva_sceletum_declaratio_typus(declaratio);
+            SilvaValor typus =
+                silva_sceletum_declaratio_typus(declaratio);
             SilvaValor declarator =
                 silva_sceletum_declaratio_declarator(declaratio);
 
@@ -243,7 +249,8 @@ s32 principale (vacuum)
             SilvaValor sinister =
                 silva_sceletum_binarium_sinister(expressio.datum.nodus);
 
-            CREDO_AEQUALIS_PTR (expressio.datum.nodus->pater, sententia);
+            CREDO_AEQUALIS_PTR (expressio.datum.nodus->pater,
+                sententia);
             CREDO_AEQUALIS_PTR (sinister.datum.nodus->pater,
                 expressio.datum.nodus);
         }
@@ -255,12 +262,12 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaCommissio* commissio;
-        SilvaNodus* ambiguum;
-        SilvaValor  interps;
-        SilvaNodus* declaratio;
-        SilvaNodus* sententia;
+        SilvaGLRFructus  fructus;
+         SilvaCommissio* commissio;
+             SilvaNodus* ambiguum;
+             SilvaValor  interps;
+             SilvaNodus* declaratio;
+             SilvaNodus* sententia;
 
         imprimere("\n--- Probans spinam canonicam ---\n");
 
@@ -300,7 +307,8 @@ s32 principale (vacuum)
             SilvaValor expressio =
                 silva_sceletum_sententia_expressionis_expressio(sententia);
 
-            CREDO_AEQUALIS_PTR (expressio.datum.nodus->pater, sententia);
+            CREDO_AEQUALIS_PTR (expressio.datum.nodus->pater,
+                sententia);
         }
     }
 
@@ -310,11 +318,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaOraculum*  oraculum;
-        SilvaCommissio* commissio;
-        SilvaNodus*     sedes_ante;
-        SilvaNodus*     sedes_post;
+        SilvaGLRFructus  fructus;
+          SilvaOraculum* oraculum;
+         SilvaCommissio* commissio;
+             SilvaNodus* sedes_ante;
+             SilvaNodus* sedes_post;
 
         imprimere("\n--- Probans collapsum cum diario ---\n");
 
@@ -322,8 +330,8 @@ s32 principale (vacuum)
         CREDO_VERUM (silva_oraculum_typum_addere_literis(oraculum,
             "foo"));
 
-        fructus = _parsare(piscina, sceletum, "foo * bar;");
-        sedes_ante = _elementum(fructus.valor, ZEPHYRUM);
+        fructus     = _parsare(piscina, sceletum, "foo * bar;");
+        sedes_ante  = _elementum(fructus.valor, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (sedes_ante->genus,
             (s32)SILVA_SCELETUM_GENUS_AMBIGUUS);
 
@@ -372,13 +380,13 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaOraculum*  oraculum;
-        SilvaCommissio* commissio;
-        SilvaNodus*     ambiguum;
-        SilvaValor      interps;
-        SilvaNodus*     declaratio;
-        SilvaNodus*     sententia;
+        SilvaGLRFructus  fructus;
+          SilvaOraculum* oraculum;
+         SilvaCommissio* commissio;
+             SilvaNodus* ambiguum;
+             SilvaValor  interps;
+             SilvaNodus* declaratio;
+             SilvaNodus* sententia;
 
         imprimere("\n--- Probans recanonicationem ---\n");
 
@@ -440,20 +448,20 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
-        SilvaToken* tok_a;
-        SilvaToken* tok_b;
-        SilvaValor  basis;
-        SilvaValor  ramus_a;
-        SilvaValor  ramus_b;
-        SilvaNodus* nodus;
+                   Xar* lexemata;
+            SilvaToken* tok_a;
+            SilvaToken* tok_b;
+            SilvaValor  basis;
+            SilvaValor  ramus_a;
+            SilvaValor  ramus_b;
+            SilvaNodus* nodus;
         SilvaCommissio* commissio;
 
         imprimere("\n--- Probans normalizationem ---\n");
 
-        lexemata = silva_lexare(piscina, "a b", III, ZEPHYRUM);
-        tok_a = *(SilvaToken**)xar_obtinere(lexemata, ZEPHYRUM);
-        tok_b = *(SilvaToken**)xar_obtinere(lexemata, I);
+        lexemata  = silva_lexare(piscina, "a b", III, ZEPHYRUM);
+        tok_a     = *(SilvaToken**)xar_obtinere(lexemata, ZEPHYRUM);
+        tok_b     = *(SilvaToken**)xar_obtinere(lexemata, I);
 
         /* Divergentia manu: basis {xar,1}; ramus_a scribit ultra;
          * ramus_b ex basi copiam facit */
@@ -497,10 +505,10 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus fructus;
-        SilvaOraculum*  oraculum;
-        SilvaCommissio* commissio;
-        SilvaNodus*     sedes;
+        SilvaGLRFructus  fructus;
+          SilvaOraculum* oraculum;
+         SilvaCommissio* commissio;
+             SilvaNodus* sedes;
 
         imprimere("\n--- Probans transmutatum collapsum (imparilis) ---\n");
 

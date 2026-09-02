@@ -144,9 +144,9 @@ apparatus_clausuram_petere (
     character linea[VIA_MAXIMA + 64];
         FILE* tubus;
 
-    clausura->numerus      = ZEPHYRUM;
-    clausura->latina_inest = FALSUM;
-    clausura->truncata     = FALSUM;
+    clausura->numerus       = ZEPHYRUM;
+    clausura->latina_inest  = FALSUM;
+    clausura->truncata      = FALSUM;
 
     sprintf(mandatum,
         "cd '%s' && ./bin/aedilis '%s' --partes 2>/dev/null",
@@ -165,7 +165,7 @@ apparatus_clausuram_petere (
             perge;
         }
         m = strlen(linea);
-        dum (m > ZEPHYRUM
+        dum (   m > ZEPHYRUM
              && (linea[m - I] == '\n' || linea[m - I] == '\r'))
         {
             linea[m - I] = '\0';
@@ -199,14 +199,14 @@ apparatus_clausuram_petere (
 
 SilvaParsura*
 apparatus_parsare (
-               Piscina* opus,
-    constans character* via,
-           constans i8* fons,
-                    i32 mensura,
-    constans character* radix,
-     constans Clausura* clausura,
-                    b32 praebere,
-                   s32* fons_latina_exitus)
+                Piscina* opus,
+     constans character* via,
+            constans i8* fons,
+                    i32  mensura,
+     constans character* radix,
+      constans Clausura* clausura,
+                    b32  praebere,
+                    s32* fons_latina_exitus)
 {
     si (fons_latina_exitus != NIHIL)
     {
@@ -215,16 +215,16 @@ apparatus_parsare (
 
     si (clausura != NIHIL && praebere)
     {
-        SilvaExpansio* expansio;
-                   i32 i;
+         SilvaExpansio* expansio;
+                   i32  i;
 
         expansio = silva_expansio_creare(opus);
         per (i = ZEPHYRUM; i < clausura->numerus; i++)
         {
-            character via_capitis[1024];
-                  i8* textus;
-                  i32 m_caput;
-                  s32 index_fontis;
+            character  via_capitis[1024];
+                   i8* textus;
+                  i32  m_caput;
+                  s32  index_fontis;
 
             sprintf(via_capitis, "%s/%s", radix, clausura->series[i]);
             textus = apparatus_plagulam_legere(opus, via_capitis,
@@ -267,7 +267,7 @@ _lexemata_ex_fonte_numerare (
     i32 i;
     i32 quantum;
 
-    si (parsura == NIHIL || parsura->lexemata == NIHIL
+    si (   parsura == NIHIL || parsura->lexemata == NIHIL
         || fons < ZEPHYRUM)
     {
         redde ZEPHYRUM;
@@ -276,12 +276,12 @@ _lexemata_ex_fonte_numerare (
     quantum = xar_numerus(parsura->lexemata);
     per (i = ZEPHYRUM; i < quantum; i++)
     {
-        SilvaToken** sedes;
-         SilvaToken* corpus_macro;
+         SilvaToken** sedes;
+         SilvaToken*  corpus_macro;
 
         sedes = (SilvaToken**)xar_obtinere(parsura->lexemata, i);
-        si (   sedes == NIHIL
-            || *sedes == NIHIL
+        si (   sedes                 == NIHIL
+            || *sedes                == NIHIL
             || (*sedes)->origo.genus != SILVA_ORIGO_EXPANSIO)
         {
             perge;
@@ -298,9 +298,9 @@ _lexemata_ex_fonte_numerare (
 b32
 apparatus_sanus (
     constans SilvaParsura* parsura,
-       constans Clausura* clausura,
-                      s32 fons_latina,
-                     i32* expansa_exitus)
+        constans Clausura* clausura,
+                      s32  fons_latina,
+                      i32* expansa_exitus)
 {
     i32 expansa;
 

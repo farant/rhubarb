@@ -20,7 +20,8 @@ hic_manens constans character* HEX_CIFRAE = "0123456789abcdef";
  * caput scribere duas regenerationes RECTAS dissentire faceret -
  * et porta quae exitum confert de re innoxia clamaret. */
 interior constans character*
-_basis (constans character* via)
+_basis (
+    constans character* via)
 {
     constans character* ultimum;
 
@@ -32,17 +33,21 @@ _basis (constans character* via)
     redde (ultimum != NIHIL) ? ultimum + I : via;
 }
 
+
 /* ==================================================
  * Auxiliares
  * ================================================== */
 
 /* Imprimere chordam (non terminata nullo) */
 interior vacuum
-_ch (FILE* pl, constans chorda* c)
+_ch (
+               FILE* pl,
+    constans chorda* c)
 {
     si (c != NIHIL)
     {
-        fprintf(pl, "%.*s", (int)c->mensura, (constans character*)c->datum);
+        fprintf(pl, "%.*s", (int)c->mensura,
+            (constans character*)c->datum);
     }
 }
 
@@ -59,7 +64,9 @@ _ch (FILE* pl, constans chorda* c)
  * silva_arbor_lexema_tag comparat. Divergentia probationem NOMINE
  * frangit - quod tacita communicatio non praestaret. */
 interior vacuum
-_lexema_tag (FILE* pl, SilvaLexemaGenus genus)
+_lexema_tag (
+                FILE* pl,
+    SilvaLexemaGenus  genus)
 {
     constans character* titulus;
                    i32  i;
@@ -100,7 +107,8 @@ _lexema_tag (FILE* pl, SilvaLexemaGenus genus)
  * cum silva_arbor_valor_portandus comparat, carve-out triviorum
  * SEPARATIM asserto. */
 interior b32
-_textum_fert (SilvaLexemaGenus genus)
+_textum_fert (
+    SilvaLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -122,7 +130,8 @@ _textum_fert (SilvaLexemaGenus genus)
 
 /* An genus trivium sit (in <ante>/<post> solum sedens) */
 interior b32
-_trivium_est (SilvaLexemaGenus genus)
+_trivium_est (
+    SilvaLexemaGenus genus)
 {
     commutatio (genus)
     {
@@ -141,7 +150,9 @@ _trivium_est (SilvaLexemaGenus genus)
 /* Idem quod _lexema_tag, in aedificatorem - ut exemplar contenti
  * comparari possit ante emissionem */
 interior vacuum
-_lexema_tag_ae (ChordaAedificator* ae, SilvaLexemaGenus genus)
+_lexema_tag_ae (
+    ChordaAedificator* ae,
+     SilvaLexemaGenus  genus)
 {
     constans character* titulus;
                    i32  i;
@@ -167,6 +178,7 @@ _lexema_tag_ae (ChordaAedificator* ae, SilvaLexemaGenus genus)
         chorda_aedificator_appendere_character(ae, c);
     }
 }
+
 
 /* ==================================================
  * FRAGMENTA (T6.5): vocabularia saepe repetita semel scripta
@@ -197,17 +209,19 @@ nomen structura {
 } CanonFragmenta;
 
 interior chorda
-_lexemata_textus (Piscina* p, constans character* margo)
+_lexemata_textus (
+               Piscina* p,
+    constans character* margo)
 {
-    ChordaAedificator* ae;
-                   i32 i;
+     ChordaAedificator* ae;
+                   i32  i;
 
     ae = chorda_aedificator_creare(p, 4096);
     si (ae == NIHIL)
     {
         chorda vacua;
-        vacua.datum   = NIHIL;
-        vacua.mensura = ZEPHYRUM;
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
         redde vacua;
     }
     per (i = ZEPHYRUM; i < (i32)SILVA_LEX_NUMERUS_GENERUM; i++)
@@ -226,11 +240,14 @@ _lexemata_textus (Piscina* p, constans character* margo)
 
 /* Chordam in plagulam effundere (non nullo terminata) */
 interior vacuum
-_effundere (FILE* pl, chorda c)
+_effundere (
+      FILE* pl,
+    chorda  c)
 {
     si (c.datum != NIHIL && c.mensura > ZEPHYRUM)
     {
-        fprintf(pl, "%.*s", (int)c.mensura, (constans character*)c.datum);
+        fprintf(pl, "%.*s", (int)c.mensura,
+            (constans character*)c.datum);
     }
 }
 
@@ -238,9 +255,9 @@ _effundere (FILE* pl, chorda c)
  * definitum est */
 interior vacuum
 _lexemata_liberos (
-                 FILE* pl,
+                  FILE* pl,
     constans character* margo,
-     CanonFragmenta*  fr)
+        CanonFragmenta* fr)
 {
     si (fr != NIHIL && fr->lexemata.mensura > ZEPHYRUM)
     {
@@ -252,7 +269,9 @@ _lexemata_liberos (
 
 /* Attributa sedis, communia nodis et lexematibus portatis */
 interior vacuum
-_attributa_sedis (FILE* pl, constans character* margo)
+_attributa_sedis (
+                  FILE* pl,
+    constans character* margo)
 {
     fprintf(pl,
         "%s<attributum nomen=\"b\"       genus=\"numerus\"/>\n"
@@ -267,6 +286,7 @@ _attributa_sedis (FILE* pl, constans character* margo)
         margo, margo, margo, margo, margo, margo, margo, margo, margo);
 }
 
+
 /* ==================================================
  * Involucrum: forma SCRIPTORIS, non grammaticae
  *
@@ -277,7 +297,7 @@ _attributa_sedis (FILE* pl, constans character* margo)
 interior vacuum
 _involucrum_scribere (
               FILE* pl,
-              Xar*  genera_radicis,
+               Xar* genera_radicis,
     CanonFragmenta* fr)
 {
     i32 i;
@@ -525,6 +545,7 @@ _involucrum_scribere (
     fprintf(pl, "  </elementum>\n\n");
 }
 
+
 /* ==================================================
  * Elementa lexematum (XCV, ex enumeratione)
  *
@@ -535,7 +556,8 @@ _involucrum_scribere (
  * ================================================== */
 
 interior vacuum
-_lexemata_scribere (FILE* pl)
+_lexemata_scribere (
+    FILE* pl)
 {
     i32 i;
 
@@ -597,6 +619,7 @@ _lexemata_scribere (FILE* pl)
     }
 }
 
+
 /* ==================================================
  * Genera et loci: pars DERIVATA
  * ================================================== */
@@ -604,8 +627,8 @@ _lexemata_scribere (FILE* pl)
 interior SilvaGenImpletio*
 _impletio_quaerere (
                   Xar* impletiones,
-     constans chorda*  genus,
-     constans chorda*  locus)
+      constans chorda* genus,
+      constans chorda* locus)
 {
     i32 i;
 
@@ -629,7 +652,8 @@ _impletio_quaerere (
 }
 
 interior b32
-_species_lista (s32 species)
+_species_lista (
+    s32 species)
 {
     redde (b32)(   species == (s32)SILVA_LOCUS_LISTA_NODUS
                 || species == (s32)SILVA_LOCUS_LISTA_TOKEN
@@ -637,7 +661,8 @@ _species_lista (s32 species)
 }
 
 interior b32
-_species_nodum_fert (s32 species)
+_species_nodum_fert (
+    s32 species)
 {
     redde (b32)(   species == (s32)SILVA_LOCUS_NODUS
                 || species == (s32)SILVA_LOCUS_LISTA_NODUS
@@ -652,14 +677,14 @@ interior chorda
 _impletionis_textus (
     SilvaGenImpletio* imp,
                  s32  species,
-            Piscina*  piscina)
+             Piscina* piscina)
 {
-    ChordaAedificator* ae;
-                   i32 n;
-                chorda vacua;
+     ChordaAedificator* ae;
+                   i32  n;
+                chorda  vacua;
 
-    vacua.datum   = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
 
     ae = chorda_aedificator_creare(piscina, 1024);
     si (ae == NIHIL)
@@ -675,7 +700,8 @@ _impletionis_textus (
         {
             perge;
         }
-        chorda_aedificator_appendere_literis(ae, "    <liberum nomen=\"");
+        chorda_aedificator_appendere_literis(ae,
+            "    <liberum nomen=\"");
         chorda_aedificator_appendere_chorda(ae, **t);
         chorda_aedificator_appendere_literis(ae,
             _species_lista(species) ? "\"/>\n" : "\" maximum=\"1\"/>\n");
@@ -683,7 +709,7 @@ _impletionis_textus (
     per (n = ZEPHYRUM; n < xar_numerus(imp->lexemata); n++)
     {
         chorda** t = (chorda**)xar_obtinere(imp->lexemata, n);
-        i32      c_i;
+           i32   c_i;
 
         si (t == NIHIL || *t == NIHIL)
         {
@@ -726,16 +752,16 @@ _impletionis_textus (
  * porta corporis falsificat. */
 interior vacuum
 _extra_vocabularium (
-                   FILE* pl,
+                     FILE* pl,
        constans character* genus,
        constans character* locus,
-                     Xar*  genera,
-                     Xar*  genera_radicis,
-          CanonFragmenta*  fr)
+                      Xar* genera,
+                      Xar* genera_radicis,
+           CanonFragmenta* fr)
 {
     i32 i;
 
-    si (strcmp(genus, "ambiguus") == ZEPHYRUM
+    si (   strcmp(genus, "ambiguus")         == ZEPHYRUM
         && strcmp(locus, "interpretationes") == ZEPHYRUM)
     {
         /* Fabrica ambigui QUAMLIBET reductionem involvere potest */
@@ -755,16 +781,16 @@ _extra_vocabularium (
         fprintf(pl, "    <liberum nomen=\"ambiguus\"/>\n");
         redde;
     }
-    si (strcmp(genus, "conditionalis") == ZEPHYRUM
-        && strcmp(locus, "rami") == ZEPHYRUM)
+    si (   strcmp(genus, "conditionalis") == ZEPHYRUM
+        && strcmp(locus, "rami")          == ZEPHYRUM)
     {
         fprintf(pl,
             "    <liberum nomen=\"ramus-sumptus\"/>\n"
             "    <liberum nomen=\"ramus-omissus\"/>\n");
         redde;
     }
-    si (strcmp(genus, "ramus-sumptus") == ZEPHYRUM
-        && strcmp(locus, "contentum") == ZEPHYRUM)
+    si (   strcmp(genus, "ramus-sumptus") == ZEPHYRUM
+        && strcmp(locus, "contentum")     == ZEPHYRUM)
     {
         per (i = ZEPHYRUM; i < xar_numerus(genera_radicis); i++)
         {
@@ -791,9 +817,9 @@ _extra_vocabularium (
 interior vacuum
 _genera_scribere (
               FILE* pl,
-              Xar*  genera,
-              Xar*  impletiones,
-              Xar*  genera_radicis,
+               Xar* genera,
+               Xar* impletiones,
+               Xar* genera_radicis,
     CanonFragmenta* fr,
            Piscina* piscina)
 {
@@ -876,15 +902,21 @@ _genera_scribere (
             {
                 character titulus_g[128];
                 character titulus_l[128];
-                i32       mg;
-                i32       ml;
+                      i32 mg;
+                      i32 ml;
 
-                mg = def->titulus->mensura   < (i32)magnitudo(titulus_g) - I
-                   ? def->titulus->mensura   : (i32)magnitudo(titulus_g) - I;
-                ml = locus->titulus->mensura < (i32)magnitudo(titulus_l) - I
-                   ? locus->titulus->mensura : (i32)magnitudo(titulus_l) - I;
-                memcpy(titulus_g, def->titulus->datum, (memoriae_index)mg);
-                memcpy(titulus_l, locus->titulus->datum, (memoriae_index)ml);
+                mg = def->titulus->mensura < (i32)magnitudo(titulus_g)
+                    - I
+                    ? def->titulus->mensura   : (i32)magnitudo(titulus_g)
+                       - I;
+                ml = locus->titulus->mensura < (i32)magnitudo(titulus_l)
+                    - I
+                    ? locus->titulus->mensura : (i32)magnitudo(titulus_l)
+                       - I;
+                memcpy(titulus_g, def->titulus->datum,
+                    (memoriae_index)mg);
+                memcpy(titulus_l, locus->titulus->datum,
+                    (memoriae_index)ml);
                 titulus_g[mg] = '\0';
                 titulus_l[ml] = '\0';
                 _extra_vocabularium(pl, titulus_g, titulus_l,
@@ -922,6 +954,7 @@ _genera_scribere (
     }
 }
 
+
 /* ==================================================
  * SIGILLUM PROPRIUM (T6)
  *
@@ -947,7 +980,9 @@ _genera_scribere (
  * ================================================== */
 
 interior vacuum
-_campum (ChordaAedificator* m, constans chorda* c)
+_campum (
+    ChordaAedificator* m,
+      constans chorda* c)
 {
     /* Separator post CAMPUM QUEMQUE (mos silva_arbor_sigillum):
      * sine eo 'ab'+'c' et 'a'+'bc' idem sigillum darent */
@@ -959,7 +994,9 @@ _campum (ChordaAedificator* m, constans chorda* c)
 }
 
 interior vacuum
-_campum_literis (ChordaAedificator* m, constans character* s)
+_campum_literis (
+     ChordaAedificator* m,
+    constans character* s)
 {
     si (s != NIHIL)
     {
@@ -971,18 +1008,18 @@ _campum_literis (ChordaAedificator* m, constans character* s)
 interior chorda
 _sigillum_computare (
     SilvaGenGrammatica* g,
-                  Xar*  genera)
+                   Xar* genera)
 {
-    ChordaAedificator* m;
-    ChordaAedificator* exitus;
-                chorda friandum;
-                chorda vacua;
-                   i32 friatum;
-                   i32 i;
-                   i32 k;
+     ChordaAedificator* m;
+     ChordaAedificator* exitus;
+                chorda  friandum;
+                chorda  vacua;
+                   i32  friatum;
+                   i32  i;
+                   i32  k;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum   = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
 
     m = chorda_aedificator_creare(g->piscina, 8192);
     si (m == NIHIL)
@@ -1010,7 +1047,7 @@ _sigillum_computare (
     {
         SilvaGenProductio* p = (SilvaGenProductio*)xar_obtinere(
             g->productiones, i);
-        SilvaGenSymbolum*  s;
+        SilvaGenSymbolum* s;
 
         si (p == NIHIL)
         {
@@ -1025,11 +1062,11 @@ _sigillum_computare (
 
         per (k = ZEPHYRUM; k < xar_numerus(p->dextrum); k++)
         {
-            s32*                atomus;
+                           s32* atomus;
             SilvaGenLocusMappa* mappa;
 
-            atomus = (s32*)xar_obtinere(p->dextrum, k);
-            mappa  = (SilvaGenLocusMappa*)xar_obtinere(p->loci, k);
+            atomus  = (s32*)xar_obtinere(p->dextrum, k);
+            mappa   = (SilvaGenLocusMappa*)xar_obtinere(p->loci, k);
             si (atomus != NIHIL)
             {
                 s = (SilvaGenSymbolum*)xar_obtinere(g->symbola,
@@ -1070,7 +1107,8 @@ _sigillum_computare (
      * hoc illius SUPERSET sit, non alternativum */
     per (i = ZEPHYRUM; i < xar_numerus(genera); i++)
     {
-        SilvaGenGenusDef* d = (SilvaGenGenusDef*)xar_obtinere(genera, i);
+        SilvaGenGenusDef* d = (SilvaGenGenusDef*)xar_obtinere(genera,
+            i);
 
         si (d == NIHIL)
         {
@@ -1115,8 +1153,8 @@ _sigillum_computare (
     }
     per (i = ZEPHYRUM; i < VIII; i++)
     {
-        i32 gradus  = (VIII - I - i) * IV;
-        i32 nibble  = (friatum >> gradus) & (i32)0xF;
+        i32 gradus = (VIII - I - i) * IV;
+        i32 nibble = (friatum >> gradus) & (i32)0xF;
 
         chorda_aedificator_appendere_character(exitus,
             HEX_CIFRAE[nibble]);
@@ -1124,16 +1162,15 @@ _sigillum_computare (
     redde chorda_aedificator_finire(exitus);
 }
 
-
 chorda
 silva_gen_canonem_sigillum (
     SilvaGenGrammatica* grammatica)
 {
-    chorda vacua;
-    Xar*   genera;
+    chorda  vacua;
+       Xar* genera;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum   = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
 
     si (grammatica == NIHIL)
     {
@@ -1171,12 +1208,12 @@ silva_gen_canonem_scribere (
         redde FALSUM;
     }
 
-    fragmenta.lexemata.datum    = NIHIL;
-    fragmenta.lexemata.mensura  = ZEPHYRUM;
-    fragmenta.expressio.datum   = NIHIL;
-    fragmenta.expressio.mensura = ZEPHYRUM;
-    fragmenta.sententia.datum   = NIHIL;
-    fragmenta.sententia.mensura = ZEPHYRUM;
+    fragmenta.lexemata.datum     = NIHIL;
+    fragmenta.lexemata.mensura   = ZEPHYRUM;
+    fragmenta.expressio.datum    = NIHIL;
+    fragmenta.expressio.mensura  = ZEPHYRUM;
+    fragmenta.sententia.datum    = NIHIL;
+    fragmenta.sententia.mensura  = ZEPHYRUM;
 
     genera = silva_gen_registrum_computare(grammatica);
     si (genera == NIHIL || xar_numerus(genera) == ZEPHYRUM)
@@ -1191,7 +1228,8 @@ silva_gen_canonem_scribere (
         redde FALSUM;
     }
     genera_radicis = silva_gen_genera_radicis_computare(grammatica);
-    si (genera_radicis == NIHIL || xar_numerus(genera_radicis) == ZEPHYRUM)
+    si (   genera_radicis              == NIHIL
+        || xar_numerus(genera_radicis) == ZEPHYRUM)
     {
         /* CLAMAT, non tacet: radix vacua canonem gigneret qui
          * documentum omne reiceret - et causa lateret */
@@ -1258,8 +1296,8 @@ silva_gen_canonem_scribere (
 
     /* --- FRAGMENTA (T6.5) --- */
     {
-        SilvaGenImpletio ficta;
-        Xar*             vacuum_lex;
+        SilvaGenImpletio  ficta;
+                     Xar* vacuum_lex;
 
         vacuum_lex = xar_creare(grammatica->piscina,
                                 (i32)magnitudo(chorda*));

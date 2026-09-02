@@ -40,7 +40,8 @@ hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
 /* genera ligaminis: loci tok_titulus horum generum symbolum LIGANT
  * (typus-nominatus et accessus = USUS, exclusi ut in censore) */
 hic_manens b32
-_genus_ligat (s32 genus)
+_genus_ligat (
+    s32 genus)
 {
     redde (genus == (s32)SILVA_C89_GENUS_DECLARATOR_TITULUS
         || genus == (s32)SILVA_C89_GENUS_ENUMERATOR
@@ -55,13 +56,14 @@ _genus_ligat (s32 genus)
  * habent (lista aliqua non vacua) - "structura Xar* x;" = USUS
  * (inventum vectis: quaerens Xar etiam XarIterator emittebat) */
 hic_manens b32
-_tag_definit (constans SilvaNodus* nodus)
+_tag_definit (
+    constans SilvaNodus* nodus)
 {
     i32 k;
 
     per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
     {
-        si (nodus->loci[k].genus == SILVA_VALOR_LISTA
+        si (   nodus->loci[k].genus == SILVA_VALOR_LISTA
             && silva_valor_lista_numerus(nodus->loci[k])
                 > ZEPHYRUM)
         {
@@ -75,7 +77,9 @@ _tag_definit (constans SilvaNodus* nodus)
  * radicis originis (scriptus) - "principale" expansum "main" est,
  * quaerens alterutrum invenit (inventum vectis: probationes) */
 hic_manens b32
-_nomen_congruit (SilvaToken* t, constans character* symbolum)
+_nomen_congruit (
+            SilvaToken* t,
+    constans character* symbolum)
 {
     SilvaToken* radix;
 
@@ -89,7 +93,8 @@ _nomen_congruit (SilvaToken* t, constans character* symbolum)
 /* genera perspicua: continentia, non elementa (per ea descenditur
  * sine elemento figendo) */
 hic_manens b32
-_genus_perspicuum (s32 genus)
+_genus_perspicuum (
+    s32 genus)
 {
     redde (genus == (s32)SILVA_C89_GENUS_CONDITIONALIS
         || genus == (s32)SILVA_C89_GENUS_RAMUS_SUMPTUS)
@@ -106,14 +111,17 @@ nomen structura {
 } GradusSeriei;
 
 hic_manens vacuum
-_seriem_addere (Xar* series, SilvaValor v, SilvaNodus* elementum)
+_seriem_addere (
+           Xar* series,
+    SilvaValor  v,
+    SilvaNodus* elementum)
 {
     GradusSeriei* gradus = (GradusSeriei*)xar_addere(series);
 
     si (gradus != NIHIL)
     {
-        gradus->valor = v;
-        gradus->elementum = elementum;
+        gradus->valor      = v;
+        gradus->elementum  = elementum;
     }
 }
 
@@ -121,12 +129,15 @@ _seriem_addere (Xar* series, SilvaValor v, SilvaNodus* elementum)
  * nomina = OMNIA nomina ligata (chordae, forma scripta) pro
  * suggestionibus "fortasse" similitudinis si nihil inventum */
 hic_manens vacuum
-_congruentia_quaerere (constans SilvaParsura* parsura,
-    constans character* symbolum, Xar* congruentia, Xar* nomina,
-    Piscina* piscina)
+_congruentia_quaerere (
+    constans SilvaParsura* parsura,
+       constans character* symbolum,
+                      Xar* congruentia,
+                      Xar* nomina,
+                  Piscina* piscina)
 {
     Xar* series = xar_creare(piscina, magnitudo(GradusSeriei));
-    i32 cursor = ZEPHYRUM;
+    i32  cursor = ZEPHYRUM;
 
     si (series == NIHIL) redde;
     _seriem_addere(series, parsura->commissio->radix, NIHIL);
@@ -162,9 +173,9 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
         }
 
         {
-            SilvaNodus* nodus = v.datum.nodus;
-            SilvaNodus* elementum = gradus.elementum;
-            i32 k;
+            SilvaNodus* nodus      = v.datum.nodus;
+            SilvaNodus* elementum  = gradus.elementum;
+                   i32  k;
 
             si (nodus->genus == (s32)SILVA_C89_GENUS_AMBIGUUS)
             {
@@ -185,7 +196,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
                 }
                 perge;
             }
-            si (nodus->genus == (s32)SILVA_C89_GENUS_ERROR
+            si (   nodus->genus == (s32)SILVA_C89_GENUS_ERROR
                 || nodus->genus
                     == (s32)SILVA_C89_GENUS_RAMUS_OMISSUS)
             {
@@ -194,7 +205,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
 
             /* elementum figere: primus nodus non-perspicuus sub
              * radice = elementum gradus summi */
-            si (elementum == NIHIL
+            si (   elementum == NIHIL
                 && !_genus_perspicuum(nodus->genus))
             {
                 elementum = nodus;
@@ -202,7 +213,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
 
             /* congruentia: loci tok_titulus generum ligantium
              * (tag sine membris = usus, non ligamen) */
-            si (_genus_ligat(nodus->genus)
+            si (   _genus_ligat(nodus->genus)
                 && nodus->genus >= ZEPHYRUM
                 && nodus->genus
                     < (s32)SILVA_C89_REGISTRUM.numerus_generum
@@ -224,7 +235,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
                         &SILVA_C89_REGISTRUM.loci[tg->loci_offset
                             + k];
 
-                    si (tl->species == (s32)SILVA_LOCUS_TOKEN
+                    si (   tl->species == (s32)SILVA_LOCUS_TOKEN
                         && strcmp(tl->titulus, "tok_titulus")
                             == ZEPHYRUM
                         && nodus->loci[k].genus == SILVA_VALOR_TOKEN
@@ -248,7 +259,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
                             }
                         }
 
-                        si (_nomen_congruit(lexema, symbolum)
+                        si (   _nomen_congruit(lexema, symbolum)
                             && elementum != NIHIL)
                         {
                             i32 d;
@@ -282,7 +293,7 @@ _congruentia_quaerere (constans SilvaParsura* parsura,
 
             /* descende - corpora functionum PRAETERMISSA (usus
              * intra corpora = opus nexus) */
-            si (nodus->genus
+            si (   nodus->genus
                 == (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS
                 && nodus->genus
                     < (s32)SILVA_C89_REGISTRUM.numerus_generum)
@@ -333,28 +344,30 @@ nomen structura {
 } Extentus;
 
 hic_manens Extentus
-_extentum_metiri (constans SilvaParsura* parsura,
-    SilvaNodus* elementum, Piscina* piscina)
+_extentum_metiri (
+    constans SilvaParsura* parsura,
+               SilvaNodus* elementum,
+                  Piscina* piscina)
 {
-    Extentus ext;
-    Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
-    i32 cursor = ZEPHYRUM;
+    Extentus  ext;
+         Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
+         i32  cursor = ZEPHYRUM;
 
-    ext.validus = FALSUM;
-    ext.initium = ZEPHYRUM;
-    ext.finis = ZEPHYRUM;
-    ext.linea_prima = ZEPHYRUM;
-    ext.linea_ultima = ZEPHYRUM;
+    ext.validus       = FALSUM;
+    ext.initium       = ZEPHYRUM;
+    ext.finis         = ZEPHYRUM;
+    ext.linea_prima   = ZEPHYRUM;
+    ext.linea_ultima  = ZEPHYRUM;
 
     si (series == NIHIL) redde ext;
     {
-        SilvaValor v;
+        SilvaValor  v;
         SilvaValor* radix = (SilvaValor*)xar_addere(series);
 
         si (radix == NIHIL) redde ext;
-        v.genus = SILVA_VALOR_NODUS;
-        v.datum.nodus = elementum;
-        *radix = v;
+        v.genus        = SILVA_VALOR_NODUS;
+        v.datum.nodus  = elementum;
+        *radix         = v;
     }
 
     dum (cursor < xar_numerus(series))
@@ -383,23 +396,23 @@ _extentum_metiri (constans SilvaParsura* parsura,
         {
             SilvaToken* radix_lex = silva_token_radix(v.datum.token);
 
-            si (radix_lex != NIHIL
-                && radix_lex->fons_index == parsura->fons_princeps
+            si (   radix_lex              != NIHIL
+                && radix_lex->fons_index  == parsura->fons_princeps
                 && radix_lex->byte_offset >= ZEPHYRUM)
             {
                 s32 finis_lex = radix_lex->byte_offset
                     + (s32)radix_lex->longitudo;
 
-                si (!ext.validus
+                si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)
                 {
-                    ext.initium = radix_lex->byte_offset;
-                    ext.linea_prima = radix_lex->linea;
+                    ext.initium      = radix_lex->byte_offset;
+                    ext.linea_prima  = radix_lex->linea;
                 }
                 si (!ext.validus || finis_lex > ext.finis)
                 {
-                    ext.finis = finis_lex;
-                    ext.linea_ultima = radix_lex->linea;
+                    ext.finis         = finis_lex;
+                    ext.linea_ultima  = radix_lex->linea;
                 }
                 ext.validus = VERUM;
             }
@@ -411,7 +424,7 @@ _extentum_metiri (constans SilvaParsura* parsura,
         }
         {
             constans SilvaNodus* nodus = v.datum.nodus;
-            i32 k;
+                            i32  k;
 
             per (k = ZEPHYRUM; k < nodus->numerus_locorum; k++)
             {
@@ -428,7 +441,8 @@ _extentum_metiri (constans SilvaParsura* parsura,
 
 /* praeparatio capitum: exemplar percursus/censor (inclusio vera) */
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -438,8 +452,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -465,7 +482,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -481,8 +498,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -490,7 +510,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -509,7 +529,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -520,13 +540,16 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina_ctx;
-    Piscina* piscina;
-    SilvaContextus* ctx;
-    constans character* via = NIHIL;
-    constans character* symbolum = NIHIL;
+               Piscina* piscina_ctx;
+               Piscina* piscina;
+        SilvaContextus* ctx;
+    constans character* via       = NIHIL;
+    constans character* symbolum  = NIHIL;
     FILE* pl;
     i8* fons;
     long mensura_l;
@@ -615,7 +638,7 @@ s32 principale (integer argc, character** argv)
     }
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -648,15 +671,15 @@ s32 principale (integer argc, character** argv)
             /* fortasse: suggestiones similitudinis (desideratum
              * primum - vectis huius ipsius instrumenti eam
              * poposcit: symbolum male coniectum = circuitus grep) */
-            si (nomina != NIHIL
+            si (   nomina != NIHIL
                 && xar_numerus(nomina) > ZEPHYRUM)
             {
                 SimilitudoFructus fructus[V];
-                i32 n = ZEPHYRUM;
+                              i32 n = ZEPHYRUM;
 
                 /* xar segmentatum - candidatos in aciem continuam
                  * copiare (similitudo aciem expectat) */
-                i32 numerus = xar_numerus(nomina);
+                   i32  numerus = xar_numerus(nomina);
                 chorda* acies = (chorda*)piscina_allocare(piscina,
                     (memoriae_index)numerus
                         * magnitudo(chorda));
@@ -688,8 +711,8 @@ s32 principale (integer argc, character** argv)
                     per (f = ZEPHYRUM; f < n; f++)
                     {
                         chorda nom = acies[fructus[f].index];
-                        b32 iam = FALSUM;
-                        i32 g;
+                           b32 iam = FALSUM;
+                           i32 g;
 
                         per (g = ZEPHYRUM; g < f; g++)
                         {
@@ -725,15 +748,15 @@ s32 principale (integer argc, character** argv)
             si (!ext.validus) perge;
 
             /* initium ad initium lineae retrahere */
-            dum (ext.initium > ZEPHYRUM
-                && fons[ext.initium - I] != '\n')
+            dum (   ext.initium > ZEPHYRUM
+                 && fons[ext.initium - I] != '\n')
             {
                 ext.initium--;
             }
             /* finem ad finem lineae extendere (novissima inclusa) */
             finis_lineae = ext.finis;
-            dum (finis_lineae < (s32)mensura
-                && fons[finis_lineae] != '\n')
+            dum (   finis_lineae < (s32)mensura
+                 && fons[finis_lineae] != '\n')
             {
                 finis_lineae++;
             }

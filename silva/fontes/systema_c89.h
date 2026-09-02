@@ -15,6 +15,7 @@
  * quid ante definitionem usurpetur - parsura sine ambiguis.
  */
 
+
 /* ==================================================
  * Typi fundamentales (stddef.h)
  * ================================================== */
@@ -25,12 +26,14 @@ typedef int           wchar_t;
 
 #define NULL ((void*)0)
 
+
 /* ==================================================
  * stdarg.h (va_* magicae - machinula eas specialiter tractabit;
  * corpus variadica non definit - audit 2026-07-08)
  * ================================================== */
 
 typedef char* va_list;
+
 
 /* ==================================================
  * errno.h
@@ -40,6 +43,7 @@ extern int errno;
 
 #define EDOM   33
 #define ERANGE 34
+
 
 /* ==================================================
  * limits.h (praecipua)
@@ -63,50 +67,152 @@ extern int errno;
 #define LONG_MAX   9223372036854775807L
 #define ULONG_MAX  18446744073709551615UL
 
+
 /* ==================================================
  * ctype.h
  * ================================================== */
 
-int isalnum(int c);
-int isalpha(int c);
-int iscntrl(int c);
-int isdigit(int c);
-int isgraph(int c);
-int islower(int c);
-int isprint(int c);
-int ispunct(int c);
-int isspace(int c);
-int isupper(int c);
-int isxdigit(int c);
-int tolower(int c);
-int toupper(int c);
+int
+isalnum (
+    int c);
+int
+isalpha (
+    int c);
+int
+iscntrl (
+    int c);
+int
+isdigit (
+    int c);
+int
+isgraph (
+    int c);
+int
+islower (
+    int c);
+int
+isprint (
+    int c);
+int
+ispunct (
+    int c);
+int
+isspace (
+    int c);
+int
+isupper (
+    int c);
+int
+isxdigit (
+    int c);
+int
+tolower (
+    int c);
+int
+toupper (
+    int c);
+
 
 /* ==================================================
  * string.h
  * ================================================== */
 
-void*  memcpy(void* destinatio, const void* fons, size_t n);
-void*  memmove(void* destinatio, const void* fons, size_t n);
-char*  strcpy(char* destinatio, const char* fons);
-char*  strncpy(char* destinatio, const char* fons, size_t n);
-char*  strcat(char* destinatio, const char* fons);
-char*  strncat(char* destinatio, const char* fons, size_t n);
-int    memcmp(const void* a, const void* b, size_t n);
-int    strcmp(const char* a, const char* b);
-int    strcoll(const char* a, const char* b);
-int    strncmp(const char* a, const char* b, size_t n);
-size_t strxfrm(char* destinatio, const char* fons, size_t n);
-void*  memchr(const void* s, int c, size_t n);
-char*  strchr(const char* s, int c);
-size_t strcspn(const char* s, const char* reicienda);
-char*  strpbrk(const char* s, const char* accipienda);
-char*  strrchr(const char* s, int c);
-size_t strspn(const char* s, const char* accipienda);
-char*  strstr(const char* s, const char* quaesitum);
-char*  strtok(char* s, const char* separatores);
-void*  memset(void* s, int c, size_t n);
-char*  strerror(int errnum);
-size_t strlen(const char* s);
+void*
+memcpy (
+          void* destinatio,
+    const void* fons,
+        size_t  n);
+void*
+memmove (
+          void* destinatio,
+    const void* fons,
+        size_t  n);
+char*
+strcpy (
+          char* destinatio,
+    const char* fons);
+char*
+strncpy (
+          char* destinatio,
+    const char* fons,
+        size_t  n);
+char*
+strcat (
+          char* destinatio,
+    const char* fons);
+char*
+strncat (
+          char* destinatio,
+    const char* fons,
+        size_t  n);
+int
+memcmp (
+    const void* a,
+    const void* b,
+        size_t  n);
+int
+strcmp (
+    const char* a,
+    const char* b);
+int
+strcoll (
+    const char* a,
+    const char* b);
+int
+strncmp (
+    const char* a,
+    const char* b,
+        size_t  n);
+size_t
+strxfrm (
+          char* destinatio,
+    const char* fons,
+        size_t  n);
+void*
+memchr (
+    const void* s,
+           int  c,
+        size_t  n);
+char*
+strchr (
+    const char* s,
+           int  c);
+size_t
+strcspn (
+    const char* s,
+    const char* reicienda);
+char*
+strpbrk (
+    const char* s,
+    const char* accipienda);
+char*
+strrchr (
+    const char* s,
+           int  c);
+size_t
+strspn (
+    const char* s,
+    const char* accipienda);
+char*
+strstr (
+    const char* s,
+    const char* quaesitum);
+char*
+strtok (
+          char* s,
+    const char* separatores);
+void*
+memset (
+      void* s,
+       int  c,
+    size_t  n);
+char*
+strerror (
+    int errnum);
+size_t
+strlen (
+    const char* s);
+
 
 /* ==================================================
  * stdio.h
@@ -132,49 +238,161 @@ extern FILE* stderr;
 #define _IOLBF       1
 #define _IONBF       2
 
-int    remove(const char* via);
-int    rename(const char* vetus, const char* novum);
-FILE*  tmpfile(void);
-char*  tmpnam(char* s);
-int    fclose(FILE* fluxus);
-int    fflush(FILE* fluxus);
-FILE*  fopen(const char* via, const char* modus);
-FILE*  freopen(const char* via, const char* modus, FILE* fluxus);
-void   setbuf(FILE* fluxus, char* buffer);
-int    setvbuf(FILE* fluxus, char* buffer, int modus, size_t n);
-int    fprintf(FILE* fluxus, const char* forma, ...);
-int    fscanf(FILE* fluxus, const char* forma, ...);
-int    printf(const char* forma, ...);
-int    scanf(const char* forma, ...);
-int    sprintf(char* s, const char* forma, ...);
-int    sscanf(const char* s, const char* forma, ...);
-int    vfprintf(FILE* fluxus, const char* forma, va_list arg);
-int    vprintf(const char* forma, va_list arg);
-int    vsprintf(char* s, const char* forma, va_list arg);
-int    fgetc(FILE* fluxus);
-char*  fgets(char* s, int n, FILE* fluxus);
-int    fputc(int c, FILE* fluxus);
-int    fputs(const char* s, FILE* fluxus);
-int    getc(FILE* fluxus);
-int    getchar(void);
-char*  gets(char* s);
-int    putc(int c, FILE* fluxus);
-int    putchar(int c);
-int    puts(const char* s);
-int    ungetc(int c, FILE* fluxus);
-size_t fread(void* datum, size_t magnitudo_elementi, size_t n,
+int
+remove (
+    const char* via);
+int
+rename (
+    const char* vetus,
+    const char* novum);
+FILE*
+tmpfile (void);
+char*
+tmpnam (
+    char* s);
+int
+fclose (
     FILE* fluxus);
-size_t fwrite(const void* datum, size_t magnitudo_elementi,
-    size_t n, FILE* fluxus);
-int    fgetpos(FILE* fluxus, fpos_t* positio);
-int    fseek(FILE* fluxus, long offset, int unde);
-int    fsetpos(FILE* fluxus, const fpos_t* positio);
-long   ftell(FILE* fluxus);
-void   rewind(FILE* fluxus);
-void   clearerr(FILE* fluxus);
-int    feof(FILE* fluxus);
-int    ferror(FILE* fluxus);
-void   perror(const char* s);
+int
+fflush (
+    FILE* fluxus);
+FILE*
+fopen (
+    const char* via,
+    const char* modus);
+FILE*
+freopen (
+    const char* via,
+    const char* modus,
+          FILE* fluxus);
+void
+setbuf (
+    FILE* fluxus,
+    char* buffer);
+int
+setvbuf (
+      FILE* fluxus,
+      char* buffer,
+       int  modus,
+    size_t  n);
+int
+fprintf (
+          FILE* fluxus,
+    const char* forma, ...);
+int
+fscanf (
+          FILE* fluxus,
+    const char* forma, ...);
+int
+printf (
+    const char* forma, ...);
+int
+scanf (
+    const char* forma, ...);
+int
+sprintf (
+          char* s,
+    const char* forma, ...);
+int
+sscanf (
+    const char* s,
+    const char* forma, ...);
+int
+vfprintf (
+          FILE* fluxus,
+    const char* forma,
+       va_list  arg);
+int
+vprintf (
+    const char* forma,
+       va_list  arg);
+int
+vsprintf (
+          char* s,
+    const char* forma,
+       va_list  arg);
+int
+fgetc (
+    FILE* fluxus);
+char*
+fgets (
+    char* s,
+     int  n,
+    FILE* fluxus);
+int
+fputc (
+     int  c,
+    FILE* fluxus);
+int
+fputs (
+    const char* s,
+          FILE* fluxus);
+int
+getc (
+    FILE* fluxus);
+int
+getchar (void);
+char*
+gets (
+    char* s);
+int
+putc (
+     int  c,
+    FILE* fluxus);
+int
+putchar (
+    int c);
+int
+puts (
+    const char* s);
+int
+ungetc (
+     int  c,
+    FILE* fluxus);
+size_t
+fread (
+      void* datum,
+    size_t  magnitudo_elementi,
+    size_t  n,
+      FILE* fluxus);
+size_t
+fwrite (
+    const void* datum,
+        size_t  magnitudo_elementi,
+        size_t  n,
+          FILE* fluxus);
+int
+fgetpos (
+      FILE* fluxus,
+    fpos_t* positio);
+int
+fseek (
+    FILE* fluxus,
+    long  offset,
+     int  unde);
+int
+fsetpos (
+            FILE* fluxus,
+    const fpos_t* positio);
+long
+ftell (
+    FILE* fluxus);
+void
+rewind (
+    FILE* fluxus);
+void
+clearerr (
+    FILE* fluxus);
+int
+feof (
+    FILE* fluxus);
+int
+ferror (
+    FILE* fluxus);
+void
+perror (
+    const char* s);
+
 
 /* ==================================================
  * stdlib.h
@@ -188,38 +406,113 @@ typedef struct { long quot; long rem; } ldiv_t;
 #define RAND_MAX     2147483647
 #define MB_CUR_MAX   1
 
-double        atof(const char* s);
-int           atoi(const char* s);
-long          atol(const char* s);
-double        strtod(const char* s, char** finis);
-long          strtol(const char* s, char** finis, int basis);
-unsigned long strtoul(const char* s, char** finis, int basis);
-int           rand(void);
-void          srand(unsigned int semen);
-void*         calloc(size_t n, size_t magnitudo_elementi);
-void          free(void* monstrator);
-void*         malloc(size_t magnitudo_petita);
-void*         realloc(void* monstrator, size_t magnitudo_petita);
-void          abort(void);
-int           atexit(void (*functio)(void));
-void          exit(int conditio);
-char*         getenv(const char* titulus);
-int           system(const char* imperium);
-void*         bsearch(const void* clavis, const void* basis,
-    size_t n, size_t magnitudo_elementi,
-    int (*comparator)(const void*, const void*));
-void          qsort(void* basis, size_t n,
+double
+atof (
+    const char* s);
+int
+atoi (
+    const char* s);
+long
+atol (
+    const char* s);
+double
+strtod (
+    const char*  s,
+          char** finis);
+long
+strtol (
+    const char*  s,
+          char** finis,
+           int   basis);
+unsigned long
+strtoul (
+    const char*  s,
+          char** finis,
+           int   basis);
+int
+rand (void);
+void
+srand (
+    unsigned int semen);
+void*
+calloc (
+    size_t n,
+    size_t magnitudo_elementi);
+void
+free (
+    void* monstrator);
+void*
+malloc (
+    size_t magnitudo_petita);
+void*
+realloc (
+      void* monstrator,
+    size_t  magnitudo_petita);
+void
+abort (void);
+int
+atexit (
+    void (*functio)(void));
+void
+exit (
+    int conditio);
+char*
+getenv (
+    const char* titulus);
+int
+system (
+    const char* imperium);
+void*
+bsearch (
+    const void* clavis,
+    const void* basis,
+    size_t n,
     size_t magnitudo_elementi,
     int (*comparator)(const void*, const void*));
-int           abs(int valor);
-div_t         div(int numerator, int denominator);
-long          labs(long valor);
-ldiv_t        ldiv(long numerator, long denominator);
-int           mblen(const char* s, size_t n);
-int           mbtowc(wchar_t* pwc, const char* s, size_t n);
-int           wctomb(char* s, wchar_t wc);
-size_t        mbstowcs(wchar_t* pwcs, const char* s, size_t n);
-size_t        wcstombs(char* s, const wchar_t* pwcs, size_t n);
+void
+qsort (
+    void* basis,
+    size_t n,
+    size_t magnitudo_elementi,
+    int (*comparator)(const void*, const void*));
+int
+abs (
+    int valor);
+div_t
+div (
+    int numerator,
+    int denominator);
+long
+labs (
+    long valor);
+ldiv_t
+ldiv (
+    long numerator,
+    long denominator);
+int
+mblen (
+    const char* s,
+        size_t  n);
+int
+mbtowc (
+       wchar_t* pwc,
+    const char* s,
+        size_t  n);
+int
+wctomb (
+       char* s,
+    wchar_t  wc);
+size_t
+mbstowcs (
+       wchar_t* pwcs,
+    const char* s,
+        size_t  n);
+size_t
+wcstombs (
+             char* s,
+    const wchar_t* pwcs,
+           size_t  n);
+
 
 /* ==================================================
  * math.h
@@ -227,28 +520,79 @@ size_t        wcstombs(char* s, const wchar_t* pwcs, size_t n);
 
 #define HUGE_VAL 1e308
 
-double acos(double x);
-double asin(double x);
-double atan(double x);
-double atan2(double y, double x);
-double cos(double x);
-double sin(double x);
-double tan(double x);
-double cosh(double x);
-double sinh(double x);
-double tanh(double x);
-double exp(double x);
-double frexp(double valor, int* exponens);
-double ldexp(double x, int exponens);
-double log(double x);
-double log10(double x);
-double modf(double valor, double* pars_integra);
-double pow(double x, double y);
-double sqrt(double x);
-double ceil(double x);
-double fabs(double x);
-double floor(double x);
-double fmod(double x, double y);
+double
+acos (
+    double x);
+double
+asin (
+    double x);
+double
+atan (
+    double x);
+double
+atan2 (
+    double y,
+    double x);
+double
+cos (
+    double x);
+double
+sin (
+    double x);
+double
+tan (
+    double x);
+double
+cosh (
+    double x);
+double
+sinh (
+    double x);
+double
+tanh (
+    double x);
+double
+exp (
+    double x);
+double
+frexp (
+    double  valor,
+       int* exponens);
+double
+ldexp (
+    double x,
+       int exponens);
+double
+log (
+    double x);
+double
+log10 (
+    double x);
+double
+modf (
+    double  valor,
+    double* pars_integra);
+double
+pow (
+    double x,
+    double y);
+double
+sqrt (
+    double x);
+double
+ceil (
+    double x);
+double
+fabs (
+    double x);
+double
+floor (
+    double x);
+double
+fmod (
+    double x,
+    double y);
+
 
 /* ==================================================
  * time.h
@@ -271,16 +615,37 @@ struct tm {
     int tm_isdst;
 };
 
-clock_t    clock(void);
-double     difftime(time_t finis, time_t initium);
-time_t     mktime(struct tm* tempus);
-time_t     time(time_t* sedes);
-char*      asctime(const struct tm* tempus);
-char*      ctime(const time_t* tempus);
-struct tm* gmtime(const time_t* tempus);
-struct tm* localtime(const time_t* tempus);
-size_t     strftime(char* s, size_t maximum, const char* forma,
+clock_t
+clock (void);
+double
+difftime (
+    time_t finis,
+    time_t initium);
+time_t
+mktime (
+    struct tm* tempus);
+time_t
+time (
+    time_t* sedes);
+char*
+asctime (
     const struct tm* tempus);
+char*
+ctime (
+    const time_t* tempus);
+struct tm*
+gmtime (
+    const time_t* tempus);
+struct tm*
+localtime (
+    const time_t* tempus);
+size_t
+strftime (
+    char* s,
+    size_t maximum,
+    const char* forma,
+    const struct tm* tempus);
+
 
 /* ==================================================
  * setjmp.h
@@ -288,8 +653,14 @@ size_t     strftime(char* s, size_t maximum, const char* forma,
 
 typedef int jmp_buf[48];
 
-int  setjmp(jmp_buf ambitus);
-void longjmp(jmp_buf ambitus, int valor);
+int
+setjmp (
+    jmp_buf ambitus);
+void
+longjmp (
+    jmp_buf ambitus,
+        int valor);
+
 
 /* ==================================================
  * signal.h
@@ -308,9 +679,14 @@ typedef void (*_systema_tractator_signi)(int);
 #define SIGSEGV 11
 #define SIGTERM 15
 
-_systema_tractator_signi signal(int signum,
+_systema_tractator_signi
+signal (
+                         int signum,
     _systema_tractator_signi tractator);
-int raise(int signum);
+int
+raise (
+    int signum);
+
 
 /* ==================================================
  * locale.h
@@ -344,12 +720,20 @@ struct lconv {
     char  n_sign_posn;
 };
 
-char*         setlocale(int categoria, const char* locale);
-struct lconv* localeconv(void);
+char*
+setlocale (
+           int  categoria,
+    const char* locale);
+struct lconv*
+localeconv (void);
+
 
 /* ==================================================
  * assert.h (macro - machinula specialiter; hic pro completudine)
  * ================================================== */
 
-void _systema_assertio_fracta(const char* expressio,
-    const char* via, int linea);
+void
+_systema_assertio_fracta (
+    const char* expressio,
+    const char* via,
+           int  linea);

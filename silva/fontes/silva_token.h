@@ -25,6 +25,7 @@
 #include "chorda.h"
 #include "xar.h"
 
+
 /* ==================================================
  * Genus lexematis - vocabularium lexicale C89 totum
  * + genera robustitatis (input quodlibet lexatur)
@@ -155,12 +156,12 @@ nomen enumeratio {
 
 nomen structura {
     chorda* via;              /* via plagulae interned; titulus syntheticus pro API */
-    b32     est_syntheticus;  /* VERUM: textus ex API, non plagula vera */
-    b32     est_lexicon;      /* plagula lexici (definitiones ante fontem
+       b32  est_syntheticus;  /* VERUM: textus ex API, non plagula vera */
+       b32  est_lexicon;      /* plagula lexici (definitiones ante fontem
                                * principalem processatae - systema/latina);
                                * macros eius NON domestica pro examine
                                * alienorum (ISO iure ubique adhibentur) */
-    b32     est_custos;       /* plagula custodita (#ifndef X / #define X / #endif) */
+       b32  est_custos;       /* plagula custodita (#ifndef X / #define X / #endif) */
     chorda* custos_titulus;   /* titulus macro custodis; NIHIL si non custodita */
 } SilvaFons;
 
@@ -173,7 +174,7 @@ nomen structura {
 nomen structura SilvaCaecatio SilvaCaecatio;
 
 structura SilvaCaecatio {
-    chorda*        titulus;   /* titulus macro (interned praeferatur) */
+           chorda* titulus;   /* titulus macro (interned praeferatur) */
     SilvaCaecatio* cauda;     /* lista parentis - NUMQUAM mutanda */
 };
 
@@ -210,24 +211,24 @@ nomen structura {
     SilvaOrigoGenus genus;
     unio {
         structura {
-            SilvaToken*    corpus;      /* lexema corporis macro (def-site) */
-            SilvaToken*    invocatio;   /* lexema invocationis (use-site) */
-            chorda*        nomen_macro;
+               SilvaToken* corpus;      /* lexema corporis macro (def-site) */
+               SilvaToken* invocatio;   /* lexema invocationis (use-site) */
+                   chorda* nomen_macro;
             SilvaCaecatio* caecatio;    /* hideset lexematis expansi */
         } expansio;
         structura {
-            SilvaToken*    sinister;    /* parens sinister ## */
-            SilvaToken*    dexter;      /* parens dexter ## */
-            SilvaToken*    invocatio;   /* lexema invocationis (use-site) */
-            chorda*        nomen_macro;
+               SilvaToken* sinister;    /* parens sinister ## */
+               SilvaToken* dexter;      /* parens dexter ## */
+               SilvaToken* invocatio;   /* lexema invocationis (use-site) */
+                   chorda* nomen_macro;
             SilvaCaecatio* caecatio;
         } pasta;
         structura {
-            SilvaToken*    primus;      /* primum lexema argumenti stringificati */
-            chorda*        nomen_macro;
+            SilvaToken* primus;      /* primum lexema argumenti stringificati */
+                chorda* nomen_macro;
         } stringificatio;
         structura {
-            chorda*        nomen_macro; /* definitio per API */
+            chorda* nomen_macro; /* definitio per API */
         } api;
     } datum;                            /* pro FONS: unio non usurpatur */
 } SilvaOrigo;
@@ -261,22 +262,22 @@ structura SilvaToken {
 /* Lexema fontis (stratum 0) */
 SilvaToken*
 silva_token_ex_fonte (
-    Piscina*         piscina,
-    SilvaLexemaGenus genus,
-    chorda           valor,
-    s32              byte_offset,
-    i32              linea,
-    i32              columna,
-    s32              fons_index);
+             Piscina* piscina,
+    SilvaLexemaGenus  genus,
+              chorda  valor,
+                 s32  byte_offset,
+                 i32  linea,
+                 i32  columna,
+                 s32  fons_index);
 
 /* Lexema ex expansione macro: campos lexicales a corpore capit (def-site),
  * invocationem et caecationem in origine servat */
 SilvaToken*
 silva_token_ex_expansione (
-    Piscina*       piscina,
-    SilvaToken*    corpus,
-    SilvaToken*    invocatio,
-    chorda*        nomen_macro,
+          Piscina* piscina,
+       SilvaToken* corpus,
+       SilvaToken* invocatio,
+           chorda* nomen_macro,
     SilvaCaecatio* caecatio);
 
 /* Lexema ex ## - textus novus, parentes ambo servati.
@@ -289,22 +290,22 @@ silva_token_ex_expansione (
  * ad usum semita non semper ducit. */
 SilvaToken*
 silva_token_ex_pasta (
-    Piscina*         piscina,
-    SilvaLexemaGenus genus,
-    chorda           valor,
-    SilvaToken*      sinister,
-    SilvaToken*      dexter,
-    SilvaToken*      invocatio,
-    chorda*          nomen_macro,
-    SilvaCaecatio*   caecatio);
+             Piscina* piscina,
+    SilvaLexemaGenus  genus,
+              chorda  valor,
+          SilvaToken* sinister,
+          SilvaToken* dexter,
+          SilvaToken* invocatio,
+              chorda* nomen_macro,
+       SilvaCaecatio* caecatio);
 
 /* Lexema ex # - littera chordae synthetica */
 SilvaToken*
 silva_token_ex_stringificatione (
-    Piscina*    piscina,
-    chorda      valor,
+       Piscina* piscina,
+        chorda  valor,
     SilvaToken* primus,
-    chorda*     nomen_macro);
+        chorda* nomen_macro);
 
 /* Lexema praedefinitum (__FILE__/__LINE__/__STDC__) - littera
  * synthetica generis dati; origo CHORDA (primus = lexema
@@ -312,20 +313,20 @@ silva_token_ex_stringificatione (
  * radicis = linea invocationis - semantica C89) */
 SilvaToken*
 silva_token_ex_praedefinito (
-    Piscina*         piscina,
-    SilvaLexemaGenus genus,
-    chorda           valor,
-    SilvaToken*      invocatio,
-    chorda*          nomen_macro);
+             Piscina* piscina,
+    SilvaLexemaGenus  genus,
+              chorda  valor,
+          SilvaToken* invocatio,
+              chorda* nomen_macro);
 
 /* Lexema ex definitione API iniecta (fons syntheticus) */
 SilvaToken*
 silva_token_ex_api (
-    Piscina*         piscina,
-    SilvaLexemaGenus genus,
-    chorda           valor,
-    chorda*          nomen_macro,
-    s32              fons_index);
+             Piscina* piscina,
+    SilvaLexemaGenus  genus,
+              chorda  valor,
+              chorda* nomen_macro,
+                 s32  fons_index);
 
 
 /* ==================================================
@@ -355,15 +356,15 @@ silva_token_est_fons (
 /* Extendere: cella nova quae caudam parentis communicat - O(1) */
 SilvaCaecatio*
 silva_caecatio_extendere (
-    Piscina*       piscina,
+          Piscina* piscina,
     SilvaCaecatio* parens,
-    chorda*        titulus);
+           chorda* titulus);
 
 /* Continetne caecatio titulum? (comparatio contentus) */
 b32
 silva_caecatio_continet (
     SilvaCaecatio* caecatio,
-    chorda         titulus);
+           chorda  titulus);
 
 
 /* ==================================================

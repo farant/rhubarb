@@ -53,6 +53,7 @@
 #include "xar.h"
 #include "silva_nodus.h"
 
+
 /* ==================================================
  * Genera marginum
  * ================================================== */
@@ -78,8 +79,8 @@ nomen enumeratio {
 nomen structura FluxusBlocus FluxusBlocus;
 
 nomen structura {
-    s32                  genus;       /* FluxusMargoGenus */
-    FluxusBlocus*        destinatio;
+                    s32  genus;       /* FluxusMargoGenus */
+           FluxusBlocus* destinatio;
     constans SilvaNodus* origo;       /* nodus qui marginem genuit */
 } FluxusMargo;
 
@@ -91,7 +92,7 @@ structura FluxusBlocus {
     constans SilvaNodus* titulus_dux;  /* casus/ordinarius/titulatum
                                  * qui blocum aperit; NIHIL alias
                                  * (sedes flagrationis gradus) */
-    b32  plicatione_exemptus;   /* margo introitus plicatione
+    b32 plicatione_exemptus;   /* margo introitus plicatione
                                  * constantium omissus est MODO
                                  * exempto: conditio macro-tincta
                                  * (si (DEBUG) - clang idem tacet)
@@ -105,8 +106,8 @@ structura FluxusBlocus {
 
 /* Titulus functionis (salta-destinatio) - tabula quaesibilis */
 nomen structura {
-    chorda               titulus;
-    FluxusBlocus*        blocus;
+                 chorda  titulus;
+           FluxusBlocus* blocus;
     constans SilvaNodus* nodus;   /* titulatum */
 } FluxusTitulus;
 
@@ -128,6 +129,7 @@ nomen structura {
                                       * fluxus_datorum_aedificare */
 } FluxusFunctionis;
 
+
 /* ==================================================
  * Sutura auxiliorum (politica vocatoris)
  * ================================================== */
@@ -143,6 +145,7 @@ nomen structura {
     vacuum* contextus;
 } FluxusAuxilia;
 
+
 /* ==================================================
  * API
  * ================================================== */
@@ -153,8 +156,8 @@ nomen structura {
  * definitio ipsa NIHIL aut sine corpore (declaratio). */
 FluxusFunctionis*
 silva_c89_fluxus_aedificare (
-    Piscina*                piscina,
-    constans SilvaNodus*    definitio,
+                   Piscina* piscina,
+       constans SilvaNodus* definitio,
     constans FluxusAuxilia* auxilia);
 
 #endif /* SILVA_C89_FLUXUS_H */

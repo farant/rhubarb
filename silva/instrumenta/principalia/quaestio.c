@@ -64,19 +64,21 @@ nomen structura {
 } Extentus;
 
 hic_manens Extentus
-_extentum_metiri (constans SilvaParsura* parsura,
-    constans SilvaNodus* subiectum, Piscina* piscina)
+_extentum_metiri (
+    constans SilvaParsura* parsura,
+      constans SilvaNodus* subiectum,
+                  Piscina* piscina)
 {
-    Extentus ext;
-    Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
-    i32 cursor = ZEPHYRUM;
-    i32 k;
+    Extentus  ext;
+         Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
+         i32  cursor = ZEPHYRUM;
+         i32  k;
 
-    ext.validus = FALSUM;
-    ext.initium = ZEPHYRUM;
-    ext.finis = ZEPHYRUM;
-    ext.linea_prima = ZEPHYRUM;
-    ext.linea_ultima = ZEPHYRUM;
+    ext.validus       = FALSUM;
+    ext.initium       = ZEPHYRUM;
+    ext.finis         = ZEPHYRUM;
+    ext.linea_prima   = ZEPHYRUM;
+    ext.linea_ultima  = ZEPHYRUM;
 
     si (series == NIHIL) redde ext;
     per (k = ZEPHYRUM; k < subiectum->numerus_locorum; k++)
@@ -112,23 +114,23 @@ _extentum_metiri (constans SilvaParsura* parsura,
         {
             SilvaToken* radix_lex = silva_token_radix(v.datum.token);
 
-            si (radix_lex != NIHIL
-                && radix_lex->fons_index == parsura->fons_princeps
+            si (   radix_lex              != NIHIL
+                && radix_lex->fons_index  == parsura->fons_princeps
                 && radix_lex->byte_offset >= ZEPHYRUM)
             {
                 s32 finis_lex = radix_lex->byte_offset
                     + (s32)radix_lex->longitudo;
 
-                si (!ext.validus
+                si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)
                 {
-                    ext.initium = radix_lex->byte_offset;
-                    ext.linea_prima = radix_lex->linea;
+                    ext.initium      = radix_lex->byte_offset;
+                    ext.linea_prima  = radix_lex->linea;
                 }
                 si (!ext.validus || finis_lex > ext.finis)
                 {
-                    ext.finis = finis_lex;
-                    ext.linea_ultima = radix_lex->linea;
+                    ext.finis         = finis_lex;
+                    ext.linea_ultima  = radix_lex->linea;
                 }
                 ext.validus = VERUM;
             }
@@ -140,7 +142,7 @@ _extentum_metiri (constans SilvaParsura* parsura,
         }
         {
             constans SilvaNodus* nodus = v.datum.nodus;
-            i32 m;
+                            i32  m;
 
             per (m = ZEPHYRUM; m < nodus->numerus_locorum; m++)
             {
@@ -158,7 +160,8 @@ _extentum_metiri (constans SilvaParsura* parsura,
  * -------------------------------------------------- */
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -168,8 +171,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -195,7 +201,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -211,8 +217,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -220,7 +229,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -239,7 +248,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -255,13 +264,15 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
  * -------------------------------------------------- */
 
 hic_manens i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl = fopen(via, "rb");
-    long mensura_l;
-    i32 mensura;
-    i8* fons;
+    long  mensura_l;
+     i32  mensura;
+      i8* fons;
 
     *mensura_out = ZEPHYRUM;
     si (pl == NIHIL) redde NIHIL;
@@ -276,7 +287,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     mensura = (i32)mensura_l;
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -293,13 +304,14 @@ _plagulam_legere (Piscina* piscina, constans character* via,
  * -------------------------------------------------- */
 
 hic_manens SilvaQuaestiones*
-_bibliothecam_legere (Piscina* piscina)
+_bibliothecam_legere (
+    Piscina* piscina)
 {
-    i32 mensura;
-    i8* textus = _plagulam_legere(piscina, VIA_BIBLIOTHECAE,
-        &mensura);
-    chorda fons;
-    chorda culpa;
+    i32  mensura;
+     i8* textus = _plagulam_legere(piscina, VIA_BIBLIOTHECAE,
+         &mensura);
+              chorda  fons;
+              chorda  culpa;
     SilvaQuaestiones* bibliotheca;
 
     si (textus == NIHIL)
@@ -308,8 +320,8 @@ _bibliothecam_legere (Piscina* piscina)
             " repositorii currendum)\n", VIA_BIBLIOTHECAE);
         redde NIHIL;
     }
-    fons.datum = textus;
-    fons.mensura = mensura;
+    fons.datum    = textus;
+    fons.mensura  = mensura;
     bibliotheca = silva_quaestiones_legere(piscina,
         &SILVA_C89_REGISTRUM, NIHIL, fons, &culpa);
     si (bibliotheca == NIHIL)
@@ -323,7 +335,8 @@ _bibliothecam_legere (Piscina* piscina)
 }
 
 hic_manens vacuum
-_indicem_imprimere (constans SilvaQuaestiones* bibliotheca)
+_indicem_imprimere (
+    constans SilvaQuaestiones* bibliotheca)
 {
     i32 k;
     i32 p;
@@ -360,10 +373,14 @@ _indicem_imprimere (constans SilvaQuaestiones* bibliotheca)
  * -------------------------------------------------- */
 
 hic_manens i32
-_congruentias_imprimere (constans SilvaParsura* parsura,
-    constans i8* fons, i32 mensura, Xar* resultata,
-    Piscina* piscina, constans character* via,
-    constans character* praefixum)
+_congruentias_imprimere (
+    constans SilvaParsura* parsura,
+              constans i8* fons,
+                      i32  mensura,
+                      Xar* resultata,
+                  Piscina* piscina,
+       constans character* via,
+       constans character* praefixum)
 {
     i32 congruentia = ZEPHYRUM;
     i32 m;
@@ -374,8 +391,8 @@ _congruentias_imprimere (constans SilvaParsura* parsura,
             (constans SilvaQuaestioResultatum*)xar_obtinere(
                 resultata, m);
         Extentus ext;
-        s32 finis_lineae;
-        s32 initium;
+             s32 finis_lineae;
+             s32 initium;
 
         si (r == NIHIL || r->nodus == NIHIL) perge;
         ext = _extentum_metiri(parsura, r->nodus, piscina);
@@ -387,8 +404,8 @@ _congruentias_imprimere (constans SilvaParsura* parsura,
             initium--;
         }
         finis_lineae = ext.finis;
-        dum (finis_lineae < (s32)mensura
-            && fons[finis_lineae] != (i8)'\n')
+        dum (   finis_lineae < (s32)mensura
+             && fons[finis_lineae] != (i8)'\n')
         {
             finis_lineae++;
         }
@@ -419,28 +436,31 @@ _congruentias_imprimere (constans SilvaParsura* parsura,
 
 nomen structura {
     constans SilvaQuaestioNominata* nominata;
-    SilvaQuaestio*                  quaestio;
-    i32                             violationes;
+                     SilvaQuaestio* quaestio;
+                               i32  violationes;
 } InvariansParatus;
 
 nomen structura {
     SilvaContextus* ctx;
-    Xar*            invariantia;   /* InvariansParatus (valore);
+               Xar* invariantia;   /* InvariansParatus (valore);
                                     * NIHIL = modus singulae */
-    SilvaQuaestio*  singula;       /* -omnibus/-lista: quaestio una */
-    i32             congruentiae;  /* summa singulae */
-    i32             plagulae;
-    i32             saltatae;
-    i32             cautiones;
-    b32             fractura;
+    SilvaQuaestio* singula;       /* -omnibus/-lista: quaestio una */
+              i32  congruentiae;  /* summa singulae */
+              i32  plagulae;
+              i32  saltatae;
+              i32  cautiones;
+              b32  fractura;
 } Percursus;
 
 /* lineam datam (1-basatam) fontis imprimere (sine novalinea) */
 hic_manens vacuum
-_lineam_imprimere (constans i8* fons, i32 mensura, i32 linea)
+_lineam_imprimere (
+    constans i8* fons,
+            i32  mensura,
+            i32  linea)
 {
-    i32 i = ZEPHYRUM;
-    i32 currens = I;
+    i32 i        = ZEPHYRUM;
+    i32 currens  = I;
     i32 initium;
 
     dum (i < mensura && currens < linea)
@@ -463,14 +483,16 @@ _lineam_imprimere (constans i8* fons, i32 mensura, i32 linea)
  * verae omnes <=80, falsa prima @135 (lex scanner-triggeris,
  * firma sexta). */
 hic_manens b32
-_est_generata (constans i8* fons, i32 mensura)
+_est_generata (
+    constans i8* fons,
+            i32  mensura)
 {
     i32 tectum = mensura < C ? mensura : C;
     i32 i;
 
     per (i = ZEPHYRUM; i + 12 <= tectum; i++)
     {
-        si (memcmp(fons + i, "GENERATUM", 9) == ZEPHYRUM
+        si (   memcmp(fons + i, "GENERATUM", 9)     == ZEPHYRUM
             || memcmp(fons + i, "Generated by", 12) == ZEPHYRUM)
         {
             redde VERUM;
@@ -483,10 +505,14 @@ _est_generata (constans i8* fons, i32 mensura)
  * (lineae binae - stylus domus typum reditus in linea propria
  * ponit, nomen in secunda). Fructus = numerus ordinum. */
 hic_manens i32
-_ordines_imprimere (constans SilvaParsura* parsura,
-    constans i8* fons, i32 mensura, Xar* resultata,
-    Piscina* piscina, constans character* via,
-    constans character* praefixum)
+_ordines_imprimere (
+    constans SilvaParsura* parsura,
+              constans i8* fons,
+                      i32  mensura,
+                      Xar* resultata,
+                  Piscina* piscina,
+       constans character* via,
+       constans character* praefixum)
 {
     i32 numerus = ZEPHYRUM;
     i32 m;
@@ -521,14 +547,16 @@ _ordines_imprimere (constans SilvaParsura* parsura,
 }
 
 hic_manens vacuum
-_plagulam_percurrere (Percursus* percursus, constans character* via)
+_plagulam_percurrere (
+             Percursus* percursus,
+    constans character* via)
 {
     Piscina* piscina = piscina_generare_dynamicum(
         "quaestio_plagula", 33554432);
-    i32 mensura;
-    i8* fons;
+             i32  mensura;
+              i8* fons;
     SilvaParsura* parsura;
-    i32 k;
+             i32  k;
 
     si (piscina == NIHIL)
     {
@@ -588,7 +616,7 @@ _plagulam_percurrere (Percursus* percursus, constans character* via)
             xar_obtinere(percursus->invariantia, k);
         Xar* resultata = silva_quaestio_exsequi(invarians->quaestio,
             parsura->commissio->radix, piscina);
-        i32 inventae;
+              i32 inventae;
         character praefixum[128];
 
         si (resultata == NIHIL) perge;
@@ -604,7 +632,9 @@ _plagulam_percurrere (Percursus* percursus, constans character* via)
 }
 
 hic_manens vacuum
-_arborem_percurrere (Percursus* percursus, constans character* via)
+_arborem_percurrere (
+             Percursus* percursus,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -612,7 +642,7 @@ _arborem_percurrere (Percursus* percursus, constans character* via)
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -633,7 +663,7 @@ _arborem_percurrere (Percursus* percursus, constans character* via)
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'c')
             {
                 _plagulam_percurrere(percursus, via_plena);
@@ -644,16 +674,17 @@ _arborem_percurrere (Percursus* percursus, constans character* via)
 }
 
 hic_manens s32
-_invariantia_percurrere (constans character* radix)
+_invariantia_percurrere (
+    constans character* radix)
 {
     Piscina* piscina_ctx = piscina_generare_dynamicum(
         "quaestio_ctx", 16777216);
     Piscina* piscina_bib = piscina_generare_dynamicum(
         "quaestio_bib", 8388608);
     SilvaQuaestiones* bibliotheca;
-    Percursus percursus;
-    i32 k;
-    i32 violatae = ZEPHYRUM;
+           Percursus  percursus;
+                 i32  k;
+                 i32  violatae = ZEPHYRUM;
 
     si (piscina_ctx == NIHIL || piscina_bib == NIHIL) redde II;
     bibliotheca = _bibliothecam_legere(piscina_bib);
@@ -661,12 +692,12 @@ _invariantia_percurrere (constans character* radix)
 
     percursus.invariantia = xar_creare(piscina_bib,
         magnitudo(InvariansParatus));
-    percursus.singula = NIHIL;
-    percursus.congruentiae = ZEPHYRUM;
-    percursus.plagulae = ZEPHYRUM;
-    percursus.saltatae = ZEPHYRUM;
-    percursus.cautiones = ZEPHYRUM;
-    percursus.fractura = FALSUM;
+    percursus.singula       = NIHIL;
+    percursus.congruentiae  = ZEPHYRUM;
+    percursus.plagulae      = ZEPHYRUM;
+    percursus.saltatae      = ZEPHYRUM;
+    percursus.cautiones     = ZEPHYRUM;
+    percursus.fractura      = FALSUM;
     si (percursus.invariantia == NIHIL) redde II;
 
     per (k = ZEPHYRUM;
@@ -677,7 +708,7 @@ _invariantia_percurrere (constans character* radix)
 
         si (nominata->gradus == (s32)SILVA_QUAESTIONES_INVARIANS)
         {
-            chorda culpa;
+                      chorda  culpa;
             InvariansParatus* invarians = (InvariansParatus*)
                 xar_addere(percursus.invariantia);
 
@@ -751,19 +782,21 @@ _invariantia_percurrere (constans character* radix)
  * listam viarum ex stdin (clausurae per scriptum aedile computatae).
  * Ordines compacti; exitus 0 congruentia / 1 nulla / 2 fractura. */
 hic_manens s32
-_singulam_percurrere (constans character* titulus,
+_singulam_percurrere (
+            constans character* titulus,
     SilvaQuaestionesArgumentum* argumenta,
-    i32 numerus_argumentorum, constans character* radix,
-    b32 ex_stdin)
+                           i32  numerus_argumentorum,
+            constans character* radix,
+                           b32  ex_stdin)
 {
     Piscina* piscina_ctx = piscina_generare_dynamicum(
         "quaestio_ctx", 16777216);
     Piscina* piscina_bib = piscina_generare_dynamicum(
         "quaestio_bib", 8388608);
-    SilvaQuaestiones* bibliotheca;
+                  SilvaQuaestiones* bibliotheca;
     constans SilvaQuaestioNominata* nominata;
-    Percursus percursus;
-    chorda culpa;
+                         Percursus  percursus;
+                            chorda  culpa;
 
     si (piscina_ctx == NIHIL || piscina_bib == NIHIL) redde II;
     bibliotheca = _bibliothecam_legere(piscina_bib);
@@ -775,12 +808,12 @@ _singulam_percurrere (constans character* titulus,
             " (sine argumentis = index)\n", titulus);
         redde II;
     }
-    percursus.invariantia = NIHIL;
-    percursus.congruentiae = ZEPHYRUM;
-    percursus.plagulae = ZEPHYRUM;
-    percursus.saltatae = ZEPHYRUM;
-    percursus.cautiones = ZEPHYRUM;
-    percursus.fractura = FALSUM;
+    percursus.invariantia   = NIHIL;
+    percursus.congruentiae  = ZEPHYRUM;
+    percursus.plagulae      = ZEPHYRUM;
+    percursus.saltatae      = ZEPHYRUM;
+    percursus.cautiones     = ZEPHYRUM;
+    percursus.fractura      = FALSUM;
     percursus.singula = silva_quaestiones_parare(piscina_bib,
         bibliotheca, nominata, argumenta, numerus_argumentorum,
         &culpa);
@@ -809,8 +842,8 @@ _singulam_percurrere (constans character* titulus,
         {
             memoriae_index m = strlen(linea);
 
-            dum (m > (memoriae_index)ZEPHYRUM
-                && (linea[m - I] == '\n' || linea[m - I] == '\r'
+            dum (   m > (memoriae_index)ZEPHYRUM
+                 && (linea[m - I] == '\n' || linea[m - I] == '\r'
                     || linea[m - I] == ' '))
             {
                 linea[m - I] = '\0';
@@ -856,21 +889,21 @@ _proba (vacuum)
     constans character* fons_c =
         "int quadratum(int x) { return x * x; }\n"
         "int bis(int x) { return quadratum(x) + quadratum(x); }\n";
-    chorda fons;
-    chorda culpa;
-    SilvaQuaestiones* bibliotheca;
+                            chorda  fons;
+                            chorda  culpa;
+                  SilvaQuaestiones* bibliotheca;
     constans SilvaQuaestioNominata* nominata;
-    SilvaParsura* parsura;
-    SilvaQuaestio* quaestio;
-    SilvaQuaestionesArgumentum argumenta[I];
-    Xar* resultata;
-    b32 fracta = FALSUM;
+                      SilvaParsura* parsura;
+                     SilvaQuaestio* quaestio;
+        SilvaQuaestionesArgumentum  argumenta[I];
+                               Xar* resultata;
+                               b32  fracta = FALSUM;
 
     si (piscina == NIHIL) redde II;
     fons = chorda_ex_literis(fons_stml, piscina);
     bibliotheca = silva_quaestiones_legere(piscina,
         &SILVA_C89_REGISTRUM, NIHIL, fons, &culpa);
-    si (bibliotheca == NIHIL
+    si (   bibliotheca                            == NIHIL
         || silva_quaestiones_numerus(bibliotheca) != II)
     {
         fprintf(stderr, "quaestio -proba: lectio fracta\n");
@@ -919,7 +952,7 @@ _proba (vacuum)
     {
         resultata = silva_quaestio_exsequi(quaestio,
             parsura->commissio->radix, piscina);
-        si (resultata == NIHIL
+        si (   resultata              == NIHIL
             || xar_numerus(resultata) != ZEPHYRUM)
         {
             fprintf(stderr, "quaestio -proba: invarians falsus\n");
@@ -936,25 +969,28 @@ _proba (vacuum)
  * principale
  * -------------------------------------------------- */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    constans character* via = NIHIL;
-    constans character* titulus = NIHIL;
-    SilvaQuaestionesArgumentum argumenta[XXXII];
-    i32 numerus_argumentorum = ZEPHYRUM;
-    Piscina* piscina_ctx;
-    Piscina* piscina;
-    SilvaContextus* ctx;
-    SilvaQuaestiones* bibliotheca;
+                constans character* via      = NIHIL;
+                constans character* titulus  = NIHIL;
+        SilvaQuaestionesArgumentum  argumenta[XXXII];
+                               i32  numerus_argumentorum = ZEPHYRUM;
+                           Piscina* piscina_ctx;
+                           Piscina* piscina;
+                    SilvaContextus* ctx;
+                  SilvaQuaestiones* bibliotheca;
     constans SilvaQuaestioNominata* nominata;
-    SilvaQuaestio* quaestio;
-    chorda culpa;
-    i8* fons;
-    i32 mensura;
-    SilvaParsura* parsura;
-    Xar* resultata;
-    i32 congruentia;
-    integer k;
+                     SilvaQuaestio* quaestio;
+                            chorda  culpa;
+                                i8* fons;
+                               i32  mensura;
+                      SilvaParsura* parsura;
+                               Xar* resultata;
+                               i32  congruentia;
+                           integer  k;
 
     /* modi speciales primum */
     si (argc >= II && strcmp(argv[I], "-proba") == ZEPHYRUM)
@@ -965,14 +1001,14 @@ s32 principale (integer argc, character** argv)
     {
         redde _invariantia_percurrere(argc >= III ? argv[II] : ".");
     }
-    si (argc >= III && (strcmp(argv[I], "-omnibus") == ZEPHYRUM
+    si (   argc >= III && (strcmp(argv[I], "-omnibus") == ZEPHYRUM
         || strcmp(argv[I], "-lista") == ZEPHYRUM))
     {
         b32 est_lista = strcmp(argv[I], "-lista") == ZEPHYRUM
             ? VERUM : FALSUM;
         SilvaQuaestionesArgumentum series[XXXII];
-        i32 numerus_seriei = ZEPHYRUM;
-        constans character* radix = ".";
+        i32 numerus_seriei         = ZEPHYRUM;
+        constans character* radix  = ".";
         Piscina* piscina_arg = piscina_generare_dynamicum(
             "quaestio_arg", 1048576);
 
@@ -1050,7 +1086,7 @@ s32 principale (integer argc, character** argv)
         alioquin si (aequale != NIHIL && aequale != argv[k])
         {
             SilvaQuaestionesArgumentum* argumentum;
-            chorda titulus_argumenti;
+                                chorda  titulus_argumenti;
 
             si (numerus_argumentorum >= (i32)XXXII)
             {
@@ -1068,8 +1104,8 @@ s32 principale (integer argc, character** argv)
             si (titulus_argumenti.datum == NIHIL) redde II;
             memcpy(titulus_argumenti.datum, argv[k],
                 (size_t)(aequale - argv[k]));
-            titulus_argumenti.mensura = (i32)(aequale - argv[k]);
-            argumentum->titulus = titulus_argumenti;
+            titulus_argumenti.mensura  = (i32)(aequale - argv[k]);
+            argumentum->titulus        = titulus_argumenti;
             argumentum->valor = chorda_ex_literis(aequale + I,
                 piscina);
         }

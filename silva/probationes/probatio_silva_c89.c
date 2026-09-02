@@ -49,14 +49,18 @@ hic_manens constans SilvaGrammatica GRAMMATICA_C89 = {
 };
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), &GRAMMATICA_C89, NIHIL, NIHIL, NIHIL);
 }
 
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -70,20 +74,23 @@ _elementum (SilvaValor lista, i32 index)
 
 /* Primum elementum radicis - sententia unica */
 interior SilvaNodus*
-_sententia_prima (SilvaParsura* parsura)
+_sententia_prima (
+    SilvaParsura* parsura)
 {
     redde _elementum(parsura->commissio->radix, ZEPHYRUM);
 }
 
 /* Expressio sub sententia-expressionis prima */
 interior SilvaNodus*
-_expressio_prima (SilvaParsura* parsura)
+_expressio_prima (
+    SilvaParsura* parsura)
 {
     SilvaNodus* sententia = _sententia_prima(parsura);
     SilvaValor  expressio;
 
-    si (sententia == NIHIL
-        || sententia->genus != (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS)
+    si (   sententia == NIHIL
+        || sententia->genus
+            != (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS)
     {
         redde NIHIL;
     }
@@ -93,7 +100,8 @@ _expressio_prima (SilvaParsura* parsura)
 }
 
 interior SilvaNodus*
-_nodus_valoris (SilvaValor valor)
+_nodus_valoris (
+    SilvaValor valor)
 {
     si (valor.genus != SILVA_VALOR_NODUS) redde NIHIL;
     redde valor.datum.nodus;
@@ -103,12 +111,13 @@ _nodus_valoris (SilvaValor valor)
  * vel magnitudinis-typi; NIHIL si lectio typi non est vel typus
  * primitivus est */
 interior SilvaToken*
-_titulus_typi (constans SilvaNodus* interp)
+_titulus_typi (
+    constans SilvaNodus* interp)
 {
-    SilvaValor typus;
-    SilvaValor specificatores;
+    SilvaValor  typus;
+    SilvaValor  specificatores;
     SilvaValor* primum;
-    SilvaValor titulus;
+    SilvaValor  titulus;
 
     si (interp == NIHIL) redde NIHIL;
     si (interp->genus == (s32)SILVA_C89_GENUS_CONVERSIO)
@@ -147,9 +156,9 @@ _titulus_typi (constans SilvaNodus* interp)
  * pin quaestionum joculatoriarum id vult) */
 interior vacuum
 _resolutor_c89 (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interpretationes =
@@ -166,11 +175,11 @@ _resolutor_c89 (
 
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS) perge;
         titulus = _titulus_typi(elem->datum.nodus);
-        si (titulus != NIHIL
+        si (   titulus != NIHIL
             && silva_oraculum_typum_novit(oraculum, titulus->valor))
         {
-            responsum->victor = (s32)i;
-            responsum->discriminans = titulus;
+            responsum->victor        = (s32)i;
+            responsum->discriminans  = titulus;
             redde;
         }
     }
@@ -180,9 +189,9 @@ _resolutor_c89 (
  * victoria lectioni EXPRESSIONIS (non-typus) */
 interior vacuum
 _resolutor_expressionis (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interpretationes =
@@ -209,7 +218,9 @@ _resolutor_expressionis (
 /* Index interpretationis generis dati intra nodum ambiguum;
  * -1 si absens */
 interior s32
-_index_generis (constans SilvaNodus* ambiguum, s32 genus)
+_index_generis (
+    constans SilvaNodus* ambiguum,
+                    s32  genus)
 {
     SilvaValor interpretationes =
         silva_c89_ambiguus_interpretationes(ambiguum);
@@ -221,7 +232,7 @@ _index_generis (constans SilvaNodus* ambiguum, s32 genus)
         SilvaValor* elem = silva_valor_lista_obtinere(
             interpretationes, i);
 
-        si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
+        si (   elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
             && elem->datum.nodus->genus == genus)
         {
             redde (s32)i;
@@ -232,7 +243,7 @@ _index_generis (constans SilvaNodus* ambiguum, s32 genus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_c89",
@@ -263,23 +274,30 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        constans SilvaTabulaCocta* tabula = &SILVA_C89_TABULA;
-        s32 prod_tn = -I;
-        s32 prod_pi = -I;
-        s32 prod_dt = -I;
-        s32 sym_sd = -I;
-        s32 sym_sq = -I;
-        s32 sym_qual = -I;
-        i32 f1 = ZEPHYRUM;
-        i32 f2 = ZEPHYRUM;
-        i32 f3 = ZEPHYRUM;
-        i32 f4 = ZEPHYRUM;
-        i32 f5 = ZEPHYRUM;
-        i32 f6 = ZEPHYRUM;
-        i32 ignotae = ZEPHYRUM;
-        i32 s;
-        i32 i;
-        i32 j;
+        constans SilvaTabulaCocta* tabula    = &SILVA_C89_TABULA;
+                              s32  prod_tn   = -I;
+                              s32  prod_pi   = -I;
+                              s32  prod_dt   = -I;
+                              s32  sym_sd    = -I;
+                              s32  sym_sq    = -I;
+                              s32  sym_qual  = -I;
+                              i32  f1        =
+                                  ZEPHYRUM;
+                              i32 f2        =
+                                  ZEPHYRUM;
+                              i32 f3        =
+                                  ZEPHYRUM;
+                              i32 f4        =
+                                  ZEPHYRUM;
+                              i32 f5        =
+                                  ZEPHYRUM;
+                              i32 f6        =
+                                  ZEPHYRUM;
+                              i32 ignotae   =
+                                  ZEPHYRUM;
+                              i32 s;
+                              i32 i;
+                              i32 j;
 
         imprimere("\n--- Probans censum conflictuum (familiae) ---\n");
 
@@ -348,19 +366,19 @@ s32 principale (vacuum)
 
         per (s = ZEPHYRUM; s < tabula->numerus_statuum; s++)
         {
-            i32 initium = tabula->status[s].actiones_offset;
-            i32 finis = initium + tabula->status[s].actiones_numerus;
+            i32 initium  = tabula->status[s].actiones_offset;
+            i32 finis    = initium + tabula->status[s].actiones_numerus;
 
             per (i = initium; i < finis; i++)
             {
-                b32 prior_par = FALSUM;
-                i32 pares = I;
-                b32 tn_adest = FALSUM;
-                b32 pi_adest = FALSUM;
-                b32 dt_adest = FALSUM;
-                b32 transpositio_adest = FALSUM;
-                b32 sd_reducitur = FALSUM;
-                b32 qual_reducitur = FALSUM;
+                b32 prior_par           = FALSUM;
+                i32 pares               = I;
+                b32 tn_adest            = FALSUM;
+                b32 pi_adest            = FALSUM;
+                b32 dt_adest            = FALSUM;
+                b32 transpositio_adest  = FALSUM;
+                b32 sd_reducitur        = FALSUM;
+                b32 qual_reducitur      = FALSUM;
 
                 per (j = initium; j < i; j++)
                 {
@@ -383,12 +401,13 @@ s32 principale (vacuum)
                         perge;
                     }
                     si (j > i) pares++;
-                    si (actio->actio == (s32)SILVA_TAB_ACTIO_TRANSPONERE)
+                    si (actio->actio
+                        == (s32)SILVA_TAB_ACTIO_TRANSPONERE)
                     {
                         transpositio_adest = VERUM;
                     }
                     alioquin si (actio->actio
-                        == (s32)SILVA_TAB_ACTIO_REDUCERE)
+                                 == (s32)SILVA_TAB_ACTIO_REDUCERE)
                     {
                         si (actio->valor == prod_tn) tn_adest = VERUM;
                         si (actio->valor == prod_pi) pi_adest = VERUM;
@@ -417,13 +436,13 @@ s32 principale (vacuum)
                 {
                     f2++;
                 }
-                alioquin si (pares == II && transpositio_adest
-                    && sd_reducitur)
+                alioquin si (   pares == II && transpositio_adest
+                             && sd_reducitur)
                 {
                     f3++;
                 }
-                alioquin si (pares == III && tn_adest && dt_adest
-                    && pi_adest)
+                alioquin si (   pares == III && tn_adest && dt_adest
+                             && pi_adest)
                 {
                     f4++;
                 }
@@ -431,8 +450,8 @@ s32 principale (vacuum)
                 {
                     f5++;
                 }
-                alioquin si (pares == II && transpositio_adest
-                    && qual_reducitur)
+                alioquin si (   pares == II && transpositio_adest
+                             && qual_reducitur)
                 {
                     f6++;
                 }
@@ -479,7 +498,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* folium;
+          SilvaNodus* folium;
 
         imprimere("\n--- Probans folia ---\n");
 
@@ -533,7 +552,8 @@ s32 principale (vacuum)
         valores = silva_c89_folium_chorda_tok_valor(folium);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(valores), II);
         {
-            SilvaValor* secundum = silva_valor_lista_obtinere(valores, I);
+            SilvaValor* secundum = silva_valor_lista_obtinere(valores,
+                I);
             CREDO_AEQUALIS_S32 ((s32)secundum->genus,
                 (s32)SILVA_VALOR_TOKEN);
             CREDO_CHORDA_AEQUALIS_LITERIS (secundum->datum.token->valor,
@@ -554,7 +574,8 @@ s32 principale (vacuum)
 
         /* 2+3*4 -> +(2, *(3,4)) */
         radix = _expressio_prima(_parsare(piscina, "2+3*4;"));
-        CREDO_AEQUALIS_S32 (radix->genus, (s32)SILVA_C89_GENUS_BINARIUM);
+        CREDO_AEQUALIS_S32 (radix->genus,
+            (s32)SILVA_C89_GENUS_BINARIUM);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_c89_binarium_tok_operator(radix).datum.token->valor,
             "+");
@@ -566,8 +587,8 @@ s32 principale (vacuum)
             "*");
 
         /* 1-2-3 -> -(-(1,2), 3): sinistro-associativa */
-        radix = _expressio_prima(_parsare(piscina, "1-2-3;"));
-        internus = _nodus_valoris(silva_c89_binarium_sinister(radix));
+        radix     = _expressio_prima(_parsare(piscina, "1-2-3;"));
+        internus  = _nodus_valoris(silva_c89_binarium_sinister(radix));
         CREDO_AEQUALIS_S32 (internus->genus,
             (s32)SILVA_C89_GENUS_BINARIUM);
         CREDO_AEQUALIS_S32 (
@@ -600,7 +621,8 @@ s32 principale (vacuum)
         /* catena profunda: scala tota in una expressione */
         radix = _expressio_prima(_parsare(piscina,
             "a||b&&c|d^e&f==g<h<<i+j*k;"));
-        CREDO_AEQUALIS_S32 (radix->genus, (s32)SILVA_C89_GENUS_BINARIUM);
+        CREDO_AEQUALIS_S32 (radix->genus,
+            (s32)SILVA_C89_GENUS_BINARIUM);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_c89_binarium_tok_operator(radix).datum.token->valor,
             "||");
@@ -680,7 +702,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans postfixa ---\n");
 
         radix = _expressio_prima(_parsare(piscina, "s.x;"));
-        CREDO_AEQUALIS_S32 (radix->genus, (s32)SILVA_C89_GENUS_ACCESSUS);
+        CREDO_AEQUALIS_S32 (radix->genus,
+            (s32)SILVA_C89_GENUS_ACCESSUS);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_c89_accessus_tok_operator(radix).datum.token->valor,
             ".");
@@ -689,7 +712,8 @@ s32 principale (vacuum)
             "x");
 
         radix = _expressio_prima(_parsare(piscina, "p->y;"));
-        CREDO_AEQUALIS_S32 (radix->genus, (s32)SILVA_C89_GENUS_ACCESSUS);
+        CREDO_AEQUALIS_S32 (radix->genus,
+            (s32)SILVA_C89_GENUS_ACCESSUS);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_c89_accessus_tok_operator(radix).datum.token->valor,
             "->");
@@ -712,11 +736,12 @@ s32 principale (vacuum)
 
         /* f(a,b): lista separata - signum COMMA IN lista intersertum
          * (ordo locorum == ordo octetorum) */
-        radix = _expressio_prima(_parsare(piscina, "f(a,b);"));
-        argumenta = silva_c89_vocatio_argumenta(radix);
+        radix      = _expressio_prima(_parsare(piscina, "f(a,b);"));
+        argumenta  = silva_c89_vocatio_argumenta(radix);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(argumenta), III);
         {
-            SilvaValor* medius = silva_valor_lista_obtinere(argumenta, I);
+            SilvaValor* medius = silva_valor_lista_obtinere(argumenta,
+                I);
             CREDO_AEQUALIS_S32 ((s32)medius->genus,
                 (s32)SILVA_VALOR_TOKEN);
             CREDO_AEQUALIS_S32 ((s32)medius->datum.token->genus,
@@ -744,7 +769,8 @@ s32 principale (vacuum)
 
         /* (a+b)*c: parenthesis praecedentiam vertit */
         radix = _expressio_prima(_parsare(piscina, "(a+b)*c;"));
-        CREDO_AEQUALIS_S32 (radix->genus, (s32)SILVA_C89_GENUS_BINARIUM);
+        CREDO_AEQUALIS_S32 (radix->genus,
+            (s32)SILVA_C89_GENUS_BINARIUM);
         CREDO_CHORDA_AEQUALIS_LITERIS (
             silva_c89_binarium_tok_operator(radix).datum.token->valor,
             "*");
@@ -913,10 +939,10 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* ambiguum;
-        s32 index_vocationis;
-        s32 index_conversionis;
-        SilvaValor canonica;
+          SilvaNodus* ambiguum;
+                 s32  index_vocationis;
+                 s32  index_conversionis;
+          SilvaValor  canonica;
 
         imprimere("\n--- Probans familiam furcarum ---\n");
 
@@ -1011,11 +1037,11 @@ s32 principale (vacuum)
 
     {
         SilvaOraculum* oraculum;
-        SilvaParsura* parsura;
-        SilvaNodus* radix;
-        SilvaNodus* ambiguum;
-        s32 index_conversionis;
-        s32 index_vocationis;
+         SilvaParsura* parsura;
+           SilvaNodus* radix;
+           SilvaNodus* ambiguum;
+                  s32  index_conversionis;
+                  s32  index_vocationis;
 
         imprimere("\n--- Probans oraculum et recanonicare ---\n");
 
@@ -1044,8 +1070,8 @@ s32 principale (vacuum)
         /* Sine oraculo, deinde RECANONICARE: scientia sera indicem
          * canonicum vertit IN LOCO - involucrum manet, nulla
          * reparsura */
-        parsura = _parsare(piscina, "(foo)(x);");
-        ambiguum = _expressio_prima(parsura);
+        parsura   = _parsare(piscina, "(foo)(x);");
+        ambiguum  = _expressio_prima(parsura);
         index_conversionis = _index_generis(ambiguum,
             (s32)SILVA_C89_GENUS_CONVERSIO);
         index_vocationis = _index_generis(ambiguum,
@@ -1077,11 +1103,11 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* declaratio;
-        SilvaNodus* nodus;
-        SilvaValor  specificatores;
-        SilvaValor  declaratores;
-        SilvaValor* elem;
+          SilvaNodus* declaratio;
+          SilvaNodus* nodus;
+          SilvaValor  specificatores;
+          SilvaValor  declaratores;
+          SilvaValor* elem;
 
         imprimere("\n--- Probans declarationes ---\n");
 
@@ -1135,8 +1161,8 @@ s32 principale (vacuum)
         declaratores = silva_c89_declaratio_declaratores(declaratio);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(declaratores),
             III);  /* p, COMMA, q */
-        elem = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
-        nodus = elem->datum.nodus;
+        elem   = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
+        nodus  = elem->datum.nodus;
         CREDO_AEQUALIS_S32 (nodus->genus,
             (s32)SILVA_C89_GENUS_DECLARATOR_MONSTRATOR);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
@@ -1192,11 +1218,11 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* declaratio;
-        SilvaNodus* nodus;
-        SilvaValor  specificatores;
-        SilvaValor  lista;
-        SilvaValor* elem;
+          SilvaNodus* declaratio;
+          SilvaNodus* nodus;
+          SilvaValor  specificatores;
+          SilvaValor  lista;
+          SilvaValor* elem;
 
         imprimere("\n--- Probans aggregata ---\n");
 
@@ -1212,8 +1238,8 @@ s32 principale (vacuum)
             (s32)SILVA_C89_GENUS_DECLARATIO);
         specificatores =
             silva_c89_declaratio_specificatores(declaratio);
-        elem = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
-        nodus = elem->datum.nodus;
+        elem   = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
+        nodus  = elem->datum.nodus;
         CREDO_AEQUALIS_S32 (nodus->genus,
             (s32)SILVA_C89_GENUS_STRUCTURA);
         CREDO_CHORDA_AEQUALIS_LITERIS (
@@ -1256,8 +1282,8 @@ s32 principale (vacuum)
         declaratio = _sententia_prima(parsura);
         specificatores =
             silva_c89_declaratio_specificatores(declaratio);
-        elem = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
-        lista = silva_c89_structura_membra(elem->datum.nodus);
+        elem   = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
+        lista  = silva_c89_structura_membra(elem->datum.nodus);
 
         /* membra[0] = involucrum ambiguum; lectio campus-cum-
          * declaratore inter interpretationes adest */
@@ -1275,10 +1301,10 @@ s32 principale (vacuum)
             {
                 SilvaNodus* membrum = _nodus_valoris(
                     *silva_valor_lista_obtinere(interps, k));
-                SilvaValor decll;
+                SilvaValor  decll;
                 SilvaNodus* campus_nodus;
 
-                si (membrum == NIHIL
+                si (   membrum        == NIHIL
                     || membrum->genus != (s32)SILVA_C89_GENUS_MEMBRUM)
                 {
                     perge;
@@ -1286,7 +1312,7 @@ s32 principale (vacuum)
                 decll = silva_c89_membrum_declaratores(membrum);
                 campus_nodus = _nodus_valoris(
                     *silva_valor_lista_obtinere(decll, ZEPHYRUM));
-                si (campus_nodus != NIHIL
+                si (   campus_nodus != NIHIL
                     && campus_nodus->genus
                         == (s32)SILVA_C89_GENUS_CAMPUS
                     && silva_c89_campus_declarator(campus_nodus)
@@ -1321,8 +1347,8 @@ s32 principale (vacuum)
         declaratio = _sententia_prima(parsura);
         specificatores =
             silva_c89_declaratio_specificatores(declaratio);
-        elem = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
-        nodus = elem->datum.nodus;
+        elem   = silva_valor_lista_obtinere(specificatores, ZEPHYRUM);
+        nodus  = elem->datum.nodus;
         CREDO_AEQUALIS_S32 (nodus->genus,
             (s32)SILVA_C89_GENUS_ENUMERATIO);
         lista = silva_c89_enumeratio_enumeratores(nodus);
@@ -1339,9 +1365,9 @@ s32 principale (vacuum)
         parsura = _parsare(piscina,
             "int m[2][2] = { { 1, 2 }, { 3, 4 }, };");
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
-        declaratio = _sententia_prima(parsura);
-        lista = silva_c89_declaratio_declaratores(declaratio);
-        elem = silva_valor_lista_obtinere(lista, ZEPHYRUM);
+        declaratio  = _sententia_prima(parsura);
+        lista       = silva_c89_declaratio_declaratores(declaratio);
+        elem        = silva_valor_lista_obtinere(lista, ZEPHYRUM);
         nodus = _nodus_valoris(silva_c89_declarator_initiatus_initiator(
             elem->datum.nodus));
         CREDO_AEQUALIS_S32 (nodus->genus,
@@ -1373,7 +1399,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* ambiguum;
+          SilvaNodus* ambiguum;
 
         imprimere("\n--- Probans furcam sceleti (declaratio) ---\n");
 
@@ -1419,7 +1445,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* elementum;
+          SilvaNodus* elementum;
 
         imprimere("\n--- Probans saltationem oraculi ---\n");
 
@@ -1454,7 +1480,7 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(
             parsura->commissio->resolutiones), I);
         {
-            SilvaValor decll;
+            SilvaValor  decll;
             SilvaValor* delem;
 
             elementum = _sententia_prima(parsura);
@@ -1542,7 +1568,7 @@ s32 principale (vacuum)
     {
         nomen structura {
             constans character* fons;
-            s32                 genus;
+                           s32  genus;
         } VectisPortata;
         hic_manens constans VectisPortata VECTIS[] = {
             { "x;",      (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR },
@@ -1590,7 +1616,7 @@ s32 principale (vacuum)
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             SilvaParsura* parsura = _parsare(piscina, VECTIS[i].fons);
-            SilvaNodus* radix;
+              SilvaNodus* radix;
 
             CREDO_VERUM (parsura->successus);
             CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
@@ -1614,8 +1640,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaParsura* parsura;
-        SilvaDeclaratioVista vista;
+                SilvaParsura* parsura;
+        SilvaDeclaratioVista  vista;
 
         imprimere("\n--- Probans vistam declarationum ---\n");
 
@@ -1685,7 +1711,7 @@ s32 principale (vacuum)
     {
         nomen structura {
             constans character* fons;
-            s32                 genus;
+                           s32  genus;
         } VectisDecl;
         hic_manens constans VectisDecl VECTIS[] = {
             { "int x;", (s32)SILVA_C89_GENUS_DECLARATIO },
@@ -1767,7 +1793,7 @@ s32 principale (vacuum)
     {
         nomen structura {
             constans character* fons;
-            s32                 genus;
+                           s32  genus;
         } VectisSent;
         hic_manens constans VectisSent VECTIS[] = {
             { "x = 5;",
@@ -1854,7 +1880,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   definitio;
+          SilvaNodus* definitio;
 
         imprimere("\n--- Probans definitiones functionum ---\n");
 
@@ -1879,7 +1905,8 @@ s32 principale (vacuum)
          * regulam confirmat: identificatores listae nomina sunt) */
         {
             SilvaParsura* parsura_kr = silva_c89_parsare(piscina,
-                "probatio.c", "int f(a, b) int a; char b; { return a; }",
+                "probatio.c",
+                "int f(a, b) int a; char b; { return a; }",
                 (i32)strlen("int f(a, b) int a; char b; { return a; }"),
                 NIHIL);
             SilvaNodus* definitio_kr;
@@ -1962,9 +1989,9 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   definitio;
-        SilvaNodus*   corpus;
-        SilvaValor    elementa;
+          SilvaNodus* definitio;
+          SilvaNodus* corpus;
+          SilvaValor  elementa;
 
         imprimere("\n--- Probans saltationem in corpus ---\n");
 
@@ -2009,8 +2036,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaParsura* parsura;
-        SilvaDeclaratioVista vista;
+                SilvaParsura* parsura;
+        SilvaDeclaratioVista  vista;
 
         imprimere("\n--- Probans vistam FUNCTIONES ---\n");
 
@@ -2098,7 +2125,7 @@ s32 principale (vacuum)
          * fons_princeps - filtrum TOC hoc distinguit */
         {
             SilvaContextus* ctx = silva_contextus_creare(piscina);
-            SilvaParsura* parsura_ctx;
+              SilvaParsura* parsura_ctx;
 
             CREDO_NON_NIHIL (ctx);
             CREDO_VERUM (silva_contextus_praebere(ctx, "amicus.h",
@@ -2156,8 +2183,8 @@ s32 principale (vacuum)
     {
         nomen structura {
             constans character* fons;
-            i32                 elementa;
-            s32                 genus_primi;
+                           i32  elementa;
+                           s32  genus_primi;
         } VectisFunc;
         hic_manens constans VectisFunc VECTIS[] = {
             { "int f(void) { return 0; }", I,
@@ -2240,7 +2267,7 @@ s32 principale (vacuum)
          * in fonte */
         {
             SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-            SilvaParsura* parsura;
+             SilvaParsura* parsura;
 
             silva_oraculum_typum_addere_literis(oraculum, "size_t");
             silva_oraculum_typum_addere_literis(oraculum, "ptrdiff_t");
@@ -2273,9 +2300,9 @@ s32 principale (vacuum)
         nomen structura {
             constans character* fons;
             constans character* lexicon;  /* NIHIL = sine iniecto */
-            b32                 cum_latina;
-            i32                 elementa;
-            s32                 genus_primi;
+                           b32  cum_latina;
+                           i32  elementa;
+                           s32  genus_primi;
         } VectisExp;
         hic_manens constans VectisExp VECTIS[] = {
             /* fons purus per contextum (sine macris) */
@@ -2356,8 +2383,8 @@ s32 principale (vacuum)
         per (i = ZEPHYRUM; i < numerus; i++)
         {
             SilvaContextus* ctx = silva_contextus_creare(piscina);
-            SilvaParsura*   parsura;
-            SilvaNodus*     primus;
+              SilvaParsura* parsura;
+                SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             si (VECTIS[i].cum_latina)
@@ -2415,11 +2442,11 @@ s32 principale (vacuum)
 
         /* typedef sero in capite -> solvitur (ambigui 0) */
         {
-            SilvaContextus* ctx = silva_contextus_creare(piscina);
+                SilvaContextus* ctx = silva_contextus_creare(piscina);
             constans character* fons =
                 "#include \"tarde.h\"\nTardus * t;\n";
             SilvaParsura* parsura;
-            SilvaNodus* primus;
+              SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             CREDO_VERUM (silva_contextus_praebere(ctx, "tarde.h",
@@ -2443,11 +2470,11 @@ s32 principale (vacuum)
 
         /* inclusio POST usum -> retentio honesta (ambigui I) */
         {
-            SilvaContextus* ctx = silva_contextus_creare(piscina);
+                SilvaContextus* ctx = silva_contextus_creare(piscina);
             constans character* fons =
                 "Tardus * t;\n#include \"tarde.h\"\n";
             SilvaParsura* parsura;
-            SilvaNodus* primus;
+              SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             CREDO_VERUM (silva_contextus_praebere(ctx, "tarde.h",
@@ -2488,13 +2515,13 @@ s32 principale (vacuum)
 
         /* latina: i8 * t; ad radicem -> declaratio soluta */
         {
-            SilvaContextus*     ctx = silva_contextus_creare(
+            SilvaContextus* ctx = silva_contextus_creare(
                 piscina);
-            SilvaOraculum*      oraculum = silva_oraculum_creare(
+            SilvaOraculum* oraculum = silva_oraculum_creare(
                 piscina);
             constans character* fons = "i8 * t;\n";
-            SilvaParsura*       parsura;
-            SilvaNodus*         primus;
+                  SilvaParsura* parsura;
+                    SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             CREDO_NON_NIHIL (oraculum);
@@ -2530,13 +2557,13 @@ s32 principale (vacuum)
         /* cascata: lexicon posterius typum lexici prioris videt
          * (oraculum commune trans plagulas lexicas, ordine) */
         {
-            SilvaContextus*     ctx = silva_contextus_creare(
+            SilvaContextus* ctx = silva_contextus_creare(
                 piscina);
-            SilvaOraculum*      oraculum = silva_oraculum_creare(
+            SilvaOraculum* oraculum = silva_oraculum_creare(
                 piscina);
             constans character* fons = "Derivatus * d;\n";
-            SilvaParsura*       parsura;
-            SilvaNodus*         primus;
+                  SilvaParsura* parsura;
+                    SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             CREDO_NON_NIHIL (oraculum);
@@ -2569,11 +2596,11 @@ s32 principale (vacuum)
         /* custodia contra registrationem phantasma: sine lexico
          * retentio honesta manet */
         {
-            SilvaContextus*     ctx = silva_contextus_creare(
+            SilvaContextus* ctx = silva_contextus_creare(
                 piscina);
             constans character* fons = "i8 * t;\n";
-            SilvaParsura*       parsura;
-            SilvaNodus*         primus;
+                  SilvaParsura* parsura;
+                    SilvaNodus* primus;
 
             CREDO_NON_NIHIL (ctx);
             parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
@@ -2607,8 +2634,8 @@ s32 principale (vacuum)
 
     {
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        character linea[LINEA_MAXIMA];
+                 character  via[VIA_MAXIMA];
+                 character  linea[LINEA_MAXIMA];
         FILE* corpus;
         i32 lineae = ZEPHYRUM;
         i32 arbores = ZEPHYRUM;
@@ -2630,15 +2657,16 @@ s32 principale (vacuum)
         {
             dum (fgets(linea, LINEA_MAXIMA, corpus) != NIHIL)
             {
-                Piscina* piscina_lineae;
-                SilvaParsura* parsura;
-                character decodata[LINEA_MAXIMA];
-                memoriae_index m = strlen(linea);
-                i32 d = ZEPHYRUM;
-                i32 k;
+                       Piscina* piscina_lineae;
+                  SilvaParsura* parsura;
+                     character  decodata[LINEA_MAXIMA];
+                memoriae_index  m = strlen(linea);
+                           i32  d = ZEPHYRUM;
+                           i32  k;
 
-                si (m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
-                    || linea[ZEPHYRUM] == '\n' || linea[ZEPHYRUM] != '"')
+                si (   m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
+                    || linea[ZEPHYRUM] == '\n'
+                    || linea[ZEPHYRUM] != '"')
                 {
                     perge;
                 }
@@ -2654,7 +2682,7 @@ s32 principale (vacuum)
                 {
                     si (linea[k] == '\\' && k + I < (i32)m)
                     {
-                        si (linea[k + I] == '"'
+                        si (   linea[k + I] == '"'
                             || linea[k + I] == '\\')
                         {
                             decodata[d++] = linea[k + I];
@@ -2681,7 +2709,7 @@ s32 principale (vacuum)
                         /* clausura - litera adiacens sequitur? */
                         i32 p = k + I;
 
-                        dum (p < (i32)m && (linea[p] == ' '
+                        dum (   p < (i32)m && (linea[p] == ' '
                             || linea[p] == '\t'))
                         {
                             p++;
@@ -2745,7 +2773,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   sententia;
+          SilvaNodus* sententia;
 
         imprimere("\n--- Probans sententias (genera regiminis) ---\n");
 
@@ -2807,14 +2835,16 @@ s32 principale (vacuum)
         }
 
         /* redde cum valore et sine */
-        parsura = _parsare(piscina, "return x + 1;");
-        sententia = _sententia_prima(parsura);
-        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_REDDE);
+        parsura    = _parsare(piscina, "return x + 1;");
+        sententia  = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus,
+            (s32)SILVA_C89_GENUS_REDDE);
         CREDO_NON_NIHIL (_nodus_valoris(silva_c89_redde_valor(sententia)));
 
-        parsura = _parsare(piscina, "return;");
-        sententia = _sententia_prima(parsura);
-        CREDO_AEQUALIS_S32 (sententia->genus, (s32)SILVA_C89_GENUS_REDDE);
+        parsura    = _parsare(piscina, "return;");
+        sententia  = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (sententia->genus,
+            (s32)SILVA_C89_GENUS_REDDE);
         CREDO_NIHIL (_nodus_valoris(silva_c89_redde_valor(sententia)));
 
         /* salta / frange / perge / vacua */
@@ -2856,8 +2886,8 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   corpus;
-        SilvaValor    elementa;
+          SilvaNodus* corpus;
+          SilvaValor  elementa;
 
         imprimere("\n--- Probans corpus (lista una, furca per elementum) ---\n");
 
@@ -2875,8 +2905,8 @@ s32 principale (vacuum)
             (s32)SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS);
 
         /* corpus vacuum */
-        parsura = _parsare(piscina, "{ }");
-        corpus = _sententia_prima(parsura);
+        parsura  = _parsare(piscina, "{ }");
+        corpus   = _sententia_prima(parsura);
         CREDO_AEQUALIS_S32 (corpus->genus, (s32)SILVA_C89_GENUS_CORPUS);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
             silva_c89_corpus_elementa(corpus)), ZEPHYRUM);
@@ -2907,8 +2937,8 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   si_externum;
-        SilvaNodus*   si_internum;
+          SilvaNodus* si_externum;
+          SilvaNodus* si_internum;
 
         imprimere("\n--- Probans alioquin pendens (praelatio) ---\n");
 
@@ -2919,7 +2949,8 @@ s32 principale (vacuum)
             parsura->commissio->ambigui), ZEPHYRUM);
 
         si_externum = _sententia_prima(parsura);
-        CREDO_AEQUALIS_S32 (si_externum->genus, (s32)SILVA_C89_GENUS_SI);
+        CREDO_AEQUALIS_S32 (si_externum->genus,
+            (s32)SILVA_C89_GENUS_SI);
         /* externum: alioquin ABSENS */
         CREDO_NIHIL (_nodus_valoris(
             silva_c89_si_alioquin(si_externum)));
@@ -2927,14 +2958,16 @@ s32 principale (vacuum)
         si_internum = _nodus_valoris(
             silva_c89_si_consequens(si_externum));
         CREDO_NON_NIHIL (si_internum);
-        CREDO_AEQUALIS_S32 (si_internum->genus, (s32)SILVA_C89_GENUS_SI);
+        CREDO_AEQUALIS_S32 (si_internum->genus,
+            (s32)SILVA_C89_GENUS_SI);
         CREDO_NON_NIHIL (_nodus_valoris(
             silva_c89_si_alioquin(si_internum)));
 
         /* forma simplex adhuc integra */
-        parsura = _parsare(piscina, "if (a) x; else y;");
-        si_externum = _sententia_prima(parsura);
-        CREDO_AEQUALIS_S32 (si_externum->genus, (s32)SILVA_C89_GENUS_SI);
+        parsura      = _parsare(piscina, "if (a) x; else y;");
+        si_externum  = _sententia_prima(parsura);
+        CREDO_AEQUALIS_S32 (si_externum->genus,
+            (s32)SILVA_C89_GENUS_SI);
         CREDO_NON_NIHIL (_nodus_valoris(
             silva_c89_si_alioquin(si_externum)));
         parsura = _parsare(piscina, "if (a) x;");
@@ -2951,9 +2984,9 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus*   selectio;
-        SilvaNodus*   corpus;
-        SilvaValor    elementa;
+          SilvaNodus* selectio;
+          SilvaNodus* corpus;
+          SilvaValor  elementa;
 
         imprimere("\n--- Probans commutationem gregatam ---\n");
 
@@ -2970,9 +3003,9 @@ s32 principale (vacuum)
         elementa = silva_c89_corpus_elementa(corpus);
         CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(elementa), III);
         {
-            SilvaNodus* grex_i = _elementum(elementa, ZEPHYRUM);
-            SilvaNodus* grex_ii = _elementum(elementa, I);
-            SilvaNodus* grex_iii = _elementum(elementa, II);
+            SilvaNodus* grex_i    = _elementum(elementa, ZEPHYRUM);
+            SilvaNodus* grex_ii   = _elementum(elementa, I);
+            SilvaNodus* grex_iii  = _elementum(elementa, II);
 
             CREDO_AEQUALIS_S32 (grex_i->genus,
                 (s32)SILVA_C89_GENUS_CASUS);
@@ -3119,8 +3152,8 @@ s32 principale (vacuum)
 
         per (i = ZEPHYRUM; i < numerus; i++)
         {
-            SilvaParsura* parsura;
-            SilvaScriptura scriptura;
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
 
             parsura = _parsare(piscina, FIXTURAE[i]);
             CREDO_NON_NIHIL (parsura);
@@ -3140,10 +3173,11 @@ s32 principale (vacuum)
      * consumptor primus pinnae "commenta sunt contenta";
      * INTENTIO silva/phase-log 2026-07-14)
      * ======================================================== */
+
     {
-        SilvaParsura* parsura;
-        SilvaNodus* nodus;
-        SilvaCommentariumVista vista;
+                  SilvaParsura* parsura;
+                    SilvaNodus* nodus;
+        SilvaCommentariumVista  vista;
 
         imprimere("\n--- Probans commentarium ducens ---\n");
 
@@ -3215,7 +3249,7 @@ s32 principale (vacuum)
                 SilvaNodus* cand = _elementum(
                     parsura->commissio->radix, e);
 
-                si (cand != NIHIL && cand->genus
+                si (   cand != NIHIL && cand->genus
                     == (s32)SILVA_C89_GENUS_DECLARATIO)
                 {
                     nodus = cand;

@@ -51,6 +51,7 @@
 #include "silva_parsare.h"
 #include "silva_commissio.h"
 
+
 /* ==================================================
  * Genera typorum
  * ================================================== */
@@ -91,6 +92,7 @@ nomen enumeratio {
 #define QUALIS_CONSTANS   1
 #define QUALIS_VOLATILIS  2
 
+
 /* ==================================================
  * Typus
  * ================================================== */
@@ -98,10 +100,10 @@ nomen enumeratio {
 nomen structura TypusC89 TypusC89;
 
 nomen structura {
-    chorda    titulus;      /* copia; mensura 0 = anonymum */
+      chorda  titulus;      /* copia; mensura 0 = anonymum */
     TypusC89* typus;
-    i32       offset;       /* octeti; a forma computatus */
-    b32       est_campus;   /* bitfield (forma tag parcata) */
+         i32  offset;       /* octeti; a forma computatus */
+         b32  est_campus;   /* bitfield (forma tag parcata) */
 } TypusC89Membrum;
 
 structura TypusC89 {
@@ -122,34 +124,35 @@ structura TypusC89 {
         } monstrator;
         structura {
             TypusC89* elementum;
-            s32       numerus;    /* -1 = incompleta [] */
+                 s32  numerus;    /* -1 = incompleta [] */
         } acies;
         structura {
             TypusC89*  reditus;
             TypusC89** parametra;             /* series in piscina */
-            i32        numerus_parametrorum;
-            b32        est_variadica;         /* ... */
-            b32        est_prototypata;       /* FALSUM = () */
+                 i32   numerus_parametrorum;
+                 b32   est_variadica;         /* ... */
+                 b32   est_prototypata;       /* FALSUM = () */
         } functio;
         structura {
-            chorda               titulus;     /* mensura 0 = anonyma */
-            b32                  completa;
-            TypusC89Membrum*     membra;      /* series in piscina */
-            i32                  numerus_membrorum;
+                         chorda  titulus;     /* mensura 0 = anonyma */
+                            b32  completa;
+                TypusC89Membrum* membra;      /* series in piscina */
+                            i32  numerus_membrorum;
             constans SilvaNodus* declarans;   /* sedes identitatis */
-            b32                  habet_campos; /* bitfields (parca) */
+                            b32  habet_campos; /* bitfields (parca) */
         } tag;              /* STRUCTURA + UNIO */
         structura {
-            chorda               titulus;
-            b32                  completa;
+                         chorda  titulus;
+                            b32  completa;
             constans SilvaNodus* declarans;
         } enumeratus;
         structura {
             TypusC89* internum;
-            i32       quales;    /* QUALIS_* vexilla */
+                 i32  quales;    /* QUALIS_* vexilla */
         } qualificatus;
     } datum;
 };
+
 
 /* ==================================================
  * Symbola + scopi (Chunk B): spatia nominum C89 - ordinaria
@@ -182,14 +185,14 @@ nomen enumeratio {
  * prototypi in legato inde orta est (2026-07-14): primus-congruens
  * prototypum capiebat. */
 nomen structura {
-    s32                  genus;        /* SemanticaSymbolumGenus */
-    chorda               titulus;      /* copia in piscinam */
-    TypusC89*            typus;
-    s64                  valor;        /* CONSTANS solum */
-    i32                  repositio;    /* REPOSITIO_* vexilla */
-    i32                  profunditas;  /* 0 = scopus fili */
-    b32                  ex_systemate; /* provenientia */
-    b32                  est_implicitum; /* extern int implicitum
+         s32  genus;        /* SemanticaSymbolumGenus */
+      chorda  titulus;      /* copia in piscinam */
+    TypusC89* typus;
+         s64  valor;        /* CONSTANS solum */
+         i32  repositio;    /* REPOSITIO_* vexilla */
+         i32  profunditas;  /* 0 = scopus fili */
+         b32  ex_systemate; /* provenientia */
+         b32  est_implicitum; /* extern int implicitum
                                          * synthetizatum (vocatus
                                          * ignotus C89 6.3.2.2) -
                                          * signum quod lamina
@@ -198,8 +201,8 @@ nomen structura {
                                          * (M0b C, emendatio) */
     constans SilvaNodus* declarans;   /* pro implicitis: SEDES
                                        * VOCATIONIS, non declaratio */
-    SilvaToken*          lexema;       /* nomen; NIHIL licet */
-    b32                  usus;         /* resolutio nominis hoc
+    SilvaToken* lexema;       /* nomen; NIHIL licet */
+           b32  usus;         /* resolutio nominis hoc
                                         * symbolum invenit (nexus) -
                                         * codices 69/70 (MENU-FINALE
                                         * 2026-07-17); (vacuum)x
@@ -209,10 +212,11 @@ nomen structura {
 nomen structura SemanticaScopus SemanticaScopus;
 structura SemanticaScopus {
     SemanticaScopus* pater;       /* NIHIL in summo */
-    TabulaDispersa*  ordinaria;   /* titulus -> SemanticaSymbolum* */
-    TabulaDispersa*  tags;        /* titulus -> TypusC89* */
-    i32              profunditas;
+     TabulaDispersa* ordinaria;   /* titulus -> SemanticaSymbolum* */
+     TabulaDispersa* tags;        /* titulus -> TypusC89* */
+                i32  profunditas;
 };
+
 
 /* ==================================================
  * Examen (M4a chunk A): severitas + codices diagnosticorum
@@ -538,6 +542,7 @@ nomen enumeratio {
     EXAMEN_VETITUM             /* violatio - codex_out dicit quae */
 } ExamenLicentia;
 
+
 /* ==================================================
  * Semantica (contextus communis typus/forma/aestimator/scopus)
  * ================================================== */
@@ -547,19 +552,19 @@ nomen enumeratio {
  * ambulationis currentis). Vita viae = vita parsurae. */
 nomen structura {
     constans SilvaNodus* nodus;        /* NIHIL licet */
-    constans character*  causa;        /* litterae staticae (ex tabula);
+     constans character* causa;        /* litterae staticae (ex tabula);
                                         * MACRO_DOMESTICUM_IN_ALIENO in
                                         * piscina sem struit (nominat) */
-    s32                  codex;        /* ExamenCodex */
-    s32                  severitas;    /* ExamenSeveritas (ex tabula) */
-    b32                  provisionale; /* sub AMBIGUO retento -
+    s32 codex;        /* ExamenCodex */
+    s32 severitas;    /* ExamenSeveritas (ex tabula) */
+    b32 provisionale; /* sub AMBIGUO retento -
                                         * canonicum = coniectura */
-    chorda               via;          /* radicis; vacua si ignota */
-    i32                  linea;        /* 1-basata; 0 si ignota */
-    i32                  columna;      /* 1-basata; 0 si ignota */
-    i32                  longitudo;    /* octeti lexematis primi
+    chorda via;          /* radicis; vacua si ignota */
+       i32 linea;        /* 1-basata; 0 si ignota */
+       i32 columna;      /* 1-basata; 0 si ignota */
+       i32 longitudo;    /* octeti lexematis primi
                                         * (radicis); 0 si ignota */
-    s32                  fons_index;   /* fons radicis (catena
+    s32 fons_index;   /* fons radicis (catena
                                         * inclusionum:
                                         * silva_inclusionis_catena_
                                         * scribere); -1 ignotus */
@@ -574,8 +579,11 @@ nomen structura {
  * (typedef tamen tag anonymum BAPTIZAT titulo suo - agitatio
  * 2026-07-13). Redde octetos scriptos; 0 = irreddibilis (error /
  * spatium deficiens) - buffer tunc vacuus. */
-insignatus integer silva_c89_typum_scribere (constans TypusC89* t,
-    character* buffer, insignatus integer capacitas);
+insignatus integer
+silva_c89_typum_scribere (
+     constans TypusC89* t,
+             character* buffer,
+    insignatus integer  capacitas);
 
 /* Titulo signata: silva.h eam OPACAM praenuntiat (exemplar
  * SilvaOraculum) - interna (scopi, derivati) post amalgamam
@@ -628,16 +636,16 @@ structura SilvaSemantica {
      * = systema sine parte POSIX - codices silent. datum = alias in
      * textum compositum (comparatio monstratorum pro registrationibus
      * sine lexemate - typedefi). */
-    s32                 limes_posix;        /* byte_offset tituli limitis */
-    i32                 limes_posix_linea;
+                   s32  limes_posix;        /* byte_offset tituli limitis */
+                   i32  limes_posix_linea;
     constans character* limes_posix_datum;
-    TabulaDispersa*     gradus_tabula;      /* titulus -> GradusPortabilitatis* */
-    TabulaDispersa*     posix_nomina;       /* titulus -> NIHIL */
+        TabulaDispersa* gradus_tabula;      /* titulus -> GradusPortabilitatis* */
+        TabulaDispersa* posix_nomina;       /* titulus -> NIHIL */
 
     /* Professiones portabilitatis (codex 88): fons_index ->
      * professio, ex triviis OMNIUM fontium parsurae collectae
      * (systema non requiritur - professio se ipsam fert). */
-    Xar*                professiones;       /* ProfessioFontis per valorem */
+    Xar* professiones;       /* ProfessioFontis per valorem */
 
     /* parsura ambulationis currentis (M4a chunk A): analysare eam
      * ponit per ambulationem (systema, deinde usoris) - fons viae
@@ -649,28 +657,28 @@ structura SilvaSemantica {
      * NIHIL = TU sine vendore. Iudicia DOMESTICA codicem alienum
      * numquam iudicant. */
     constans SilvaParsura* alieni_parsura;
-    b32*                   fontes_alieni;
-    i32                    fontes_alieni_numerus;
+                      b32* fontes_alieni;
+                      i32  fontes_alieni_numerus;
 
     /* tabula TOLERA (gradus severi, 2026-07-17): commentaria
      * suppressionis ex triviis lexematum pigre collecta per
      * parsuram; elementa ExamenTolera (in .c). Post ambulationem
      * inutilia IRRITUM flagrant. */
     constans SilvaParsura* tolerae_parsura;
-    Xar*                   tolerae;
+                      Xar* tolerae;
 
     /* tabula contractuum (01KY3JWF, 2026-07-22): annotationes
      * <contractus/> ex OMNIBUS fontibus (capita praebita!) pigre
      * collectae per parsuram; elementa ExamenContractus (in .c). */
     constans SilvaParsura* contractus_parsura;
-    Xar*                   contractus;
-    Xar*                   refinationes_typorum;  /* RefinatioTypi
+                      Xar* contractus;
+                      Xar* refinationes_typorum;  /* RefinatioTypi
                                                    * (in .c): contractus
                                                    * intra supra typedef
                                                    * (01KYN533VY) - una
                                                    * collectione cum
                                                    * contractibus */
-    Xar*                   signata_typorum;       /* SignatumTypi
+    Xar* signata_typorum;       /* SignatumTypi
                                                    * (in .c): genera
                                                    * nominalia supra
                                                    * typedef
@@ -682,14 +690,14 @@ structura SilvaSemantica {
      * NIHIL alias (typatio caeca manet, mores immutati). Sigla
      * cruda (caput fluxus hic consulto non inclusum). */
     constans structura FluxusDatorum* stirpes_datorum;
-    constans s32*                     stirpes_ambitus;
+    constans s32* stirpes_ambitus;
 
     /* annotationes collectae (frustum E2, 2026-07-22): ambulatio
      * UNA communis per parsuram (collector silva_annotationes) -
      * consumptores: passus 74-76, tabula TOLERA, contractus.
      * Elementa SilvaAnnotatio. */
     constans SilvaParsura* annotationes_parsura;
-    Xar*                   annotationes;
+                      Xar* annotationes;
 
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa
@@ -717,16 +725,25 @@ structura SilvaSemantica {
     Xar* candidata_intervallorum;
 };
 
-SilvaSemantica* silva_c89_semantica_creare (Piscina* piscina);
+SilvaSemantica*
+silva_c89_semantica_creare (
+    Piscina* piscina);
 
 /* Diagnosticum addere (M4a chunk A): codex -> {causa, severitas} ex
  * tabula unica; positio/provisionale materializantur hic. Socius =
  * sedes cognata (declaratio prior, etc.). */
-vacuum silva_c89_diagnosticum_addere (SilvaSemantica* sem,
-    constans SilvaNodus* nodus, s32 codex);
-vacuum silva_c89_diagnosticum_addere_cum_socio (SilvaSemantica* sem,
-    constans SilvaNodus* nodus, s32 codex,
+vacuum
+silva_c89_diagnosticum_addere (
+         SilvaSemantica* sem,
+    constans SilvaNodus* nodus,
+                    s32  codex);
+vacuum
+silva_c89_diagnosticum_addere_cum_socio (
+         SilvaSemantica* sem,
+    constans SilvaNodus* nodus,
+                    s32  codex,
     constans SilvaNodus* socius);
+
 
 /* ==================================================
  * Relatio compatibilitatis (examen chunk B)
@@ -739,22 +756,34 @@ vacuum silva_c89_diagnosticum_addere_cum_socio (SilvaSemantica* sem,
  * mensurae (-1 ignota); functio = reditus + parametra (mixta
  * prototypata/K&R: promotione ordinaria immota, non variadica);
  * tags nominales (identitas per declarans); enumeratus <-> int. */
-b32 silva_c89_typi_compatibiles (TypusC89* a, TypusC89* b);
+b32
+silva_c89_typi_compatibiles (
+    TypusC89* a,
+    TypusC89* b);
 
 /* Iudicium directionale assignationis simplicis (6.3.16.1; idem
  * pro initiatore scalari / argumento prototypato / redde). Quales
  * summi finis exuuntur (conversio valoris); nodus_valoris pro
  * constante nulla (NIHIL licet). Redditur ExamenLicentia; sub
  * VETITO codex_out (NIHIL licet) codicem violationis fert. */
-s32 silva_c89_assignationem_iudicare (SilvaSemantica* sem,
-    constans SilvaNodus* nodus_valoris, TypusC89* finis,
-    TypusC89* valoris, s32* codex_out);
+s32
+silva_c89_assignationem_iudicare (
+         SilvaSemantica* sem,
+    constans SilvaNodus* nodus_valoris,
+               TypusC89* finis,
+               TypusC89* valoris,
+                    s32* codex_out);
 
 /* Tabula codicum quaerenda (percursus census = consumptor primus;
  * effusor/vectis chunk D sequuntur). Codex extra fines: causa
  * "codex ignotus", severitas INFRA. */
-constans character* silva_c89_codicis_causa (s32 codex);
-s32 silva_c89_codicis_severitas (s32 codex);
+constans character*
+silva_c89_codicis_causa (
+    s32 codex);
+s32
+silva_c89_codicis_severitas (
+    s32 codex);
+
 
 /* ==================================================
  * Fluxus intervalla (gradus 2, 01KYMBTDGP)
@@ -783,24 +812,44 @@ nomen structura {
  * functionis, globale, extra corpus). Consumptor primus = probatio;
  * futuri legatus (hover) / solarium - ordo silva.h ad primum
  * consumptorem externum differtur (nominatum). */
-b32 silva_c89_fluxus_intervallum_ad_punctum (SilvaSemantica* sem,
-    constans SilvaNodus* usus, SemanticaIntervallum* effectus);
+b32
+silva_c89_fluxus_intervallum_ad_punctum (
+          SilvaSemantica* sem,
+     constans SilvaNodus* usus,
+    SemanticaIntervallum* effectus);
+
 
 /* ==================================================
  * Constructio typorum (fabricae internantes)
  * ================================================== */
 
-TypusC89* silva_c89_typus_primitivum (SilvaSemantica* sem,
-    s32 primitivum);
-TypusC89* silva_c89_typus_monstrator (SilvaSemantica* sem,
-    TypusC89* internum);
-TypusC89* silva_c89_typus_acies (SilvaSemantica* sem,
-    TypusC89* elementum, s32 numerus);
-TypusC89* silva_c89_typus_qualificatus (SilvaSemantica* sem,
-    TypusC89* internum, i32 quales);
-TypusC89* silva_c89_typus_functio (SilvaSemantica* sem,
-    TypusC89* reditus, TypusC89** parametra, i32 numerus,
-    b32 est_variadica, b32 est_prototypata);
+TypusC89*
+silva_c89_typus_primitivum (
+    SilvaSemantica* sem,
+               s32  primitivum);
+TypusC89*
+silva_c89_typus_monstrator (
+    SilvaSemantica* sem,
+          TypusC89* internum);
+TypusC89*
+silva_c89_typus_acies (
+    SilvaSemantica* sem,
+          TypusC89* elementum,
+               s32  numerus);
+TypusC89*
+silva_c89_typus_qualificatus (
+    SilvaSemantica* sem,
+          TypusC89* internum,
+               i32  quales);
+TypusC89*
+silva_c89_typus_functio (
+    SilvaSemantica*  sem,
+          TypusC89*  reditus,
+          TypusC89** parametra,
+               i32   numerus,
+               b32   est_variadica,
+               b32   est_prototypata);
+
 
 /* ==================================================
  * Constructio ex arbore
@@ -811,35 +860,51 @@ TypusC89* silva_c89_typus_functio (SilvaSemantica* sem,
  * const-int - recte). TYPEDEF vexillum per est_typedef_out (NIHIL
  * licet). Nullus specificator typi = int implicitum (C89 legale).
  * Ignotum typus-nominatus = venenum + diagnosticum. */
-TypusC89* silva_c89_typus_ex_specificatoribus (SilvaSemantica* sem,
-    SilvaValor specificatores, b32* est_typedef_out);
+TypusC89*
+silva_c89_typus_ex_specificatoribus (
+    SilvaSemantica* sem,
+        SilvaValor  specificatores,
+               b32* est_typedef_out);
 
 /* Catena declaratoris (internum deorsum) super basim - regula C
  * intus-foras. declarator NIHIL aut abstractus = basis ipsa.
  * declarator-initiatus perspicue involvitur (initiator NON
  * probatur - M0b parca). titulus_out (NIHIL licet) = lexema
  * nominis aut NIHIL si abstractus. */
-TypusC89* silva_c89_typus_ex_declaratore (SilvaSemantica* sem,
-    TypusC89* basis, constans SilvaNodus* declarator,
-    SilvaToken** titulus_out);
+TypusC89*
+silva_c89_typus_ex_declaratore (
+         SilvaSemantica*  sem,
+               TypusC89*  basis,
+    constans SilvaNodus*  declarator,
+             SilvaToken** titulus_out);
 
 /* species-typi (conversio/magnitudo-typi) -> typus */
-TypusC89* silva_c89_typus_ex_specie (SilvaSemantica* sem,
+TypusC89*
+silva_c89_typus_ex_specie (
+         SilvaSemantica* sem,
     constans SilvaNodus* species);
 
 /* Declarationem integram tractare: typedefs registrat, tags
  * definit, constantes enumerorum aestimat - nomina TYPICA sola
  * (symbola variabilium = scopus, Chunk B). Numerum declaratorum
  * typatorum reddit. */
-i32 silva_c89_declarationem_tractare (SilvaSemantica* sem,
+i32
+silva_c89_declarationem_tractare (
+         SilvaSemantica* sem,
     constans SilvaNodus* declaratio);
 
 /* Registratio typedef in scopum CURRENTEM (B: scopus-conscia).
  * Tag anonymum titulo typedef baptizat (vide _typedef_baptizare) */
-b32 silva_c89_typedef_registrare (SilvaSemantica* sem,
-    chorda titulus, TypusC89* typus);
-TypusC89* silva_c89_typedef_invenire (SilvaSemantica* sem,
-    chorda titulus);
+b32
+silva_c89_typedef_registrare (
+    SilvaSemantica* sem,
+            chorda  titulus,
+          TypusC89* typus);
+TypusC89*
+silva_c89_typedef_invenire (
+    SilvaSemantica* sem,
+            chorda  titulus);
+
 
 /* ==================================================
  * Ambulatio integra (Chunk B): analysis totius fili
@@ -853,13 +918,18 @@ TypusC89* silva_c89_typedef_invenire (SilvaSemantica* sem,
  * declarationes-kr = parca nominata (diagnosticum). Symbola omnia
  * in sem->symbola accumulantur (index). Numquam ruit - venenum +
  * diagnostica (regula tree-sitter). */
-SilvaSemantica* silva_c89_semantica_analysare (Piscina* piscina,
+SilvaSemantica*
+silva_c89_semantica_analysare (
+                  Piscina* piscina,
     constans SilvaParsura* parsura);
 
 /* Quaestio symboli a scopo currenti foras (post analysem = scopus
  * fili). NIHIL si absens. */
-SemanticaSymbolum* silva_c89_symbolum_invenire (SilvaSemantica* sem,
-    chorda titulus);
+SemanticaSymbolum*
+silva_c89_symbolum_invenire (
+    SilvaSemantica* sem,
+            chorda  titulus);
+
 
 /* ==================================================
  * Systema (Chunk C): canalis B - arbor systematis SEMEL parsata
@@ -871,8 +941,10 @@ SemanticaSymbolum* silva_c89_symbolum_invenire (SilvaSemantica* sem,
 /* Ut analysare, sed symbola systematis prius harvestat (systema
  * NIHIL licet = analysare simplex). Arbor systematis piscinam
  * SUAM habere potest - vivat quamdiu sem vivit. */
-SilvaSemantica* silva_c89_semantica_analysare_cum_systemate (
-    Piscina* piscina, constans SilvaParsura* parsura,
+SilvaSemantica*
+silva_c89_semantica_analysare_cum_systemate (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
     constans SilvaParsura* systema);
 
 /* Symbola semanticae in oraculum fundere: TYPEDEF -> typi noti,
@@ -880,8 +952,10 @@ SilvaSemantica* silva_c89_semantica_analysare_cum_systemate (
  * (sem systematis -> oraculum per plagulam) et clausura (sem
  * plagulae -> oraculum ante silva_recanonicare - vide percursum).
  * Numerum nominum fusorum reddit. */
-i32 silva_c89_semantica_oraculum_augere (
-    constans SilvaSemantica* sem, SilvaOraculum* oraculum);
+i32
+silva_c89_semantica_oraculum_augere (
+    constans SilvaSemantica* sem,
+              SilvaOraculum* oraculum);
 
 /* Residuum clausurae: quot ambigua retenta ADHUC INDECISA sint
  * (resolutor victorem non dat) sub oraculo dato. NB: responsa
@@ -889,9 +963,11 @@ i32 silva_c89_semantica_oraculum_augere (
  * status RECENS oraculi quaeritur. "Decisum" != "versum":
  * resolutio quae canonicae iam congruit nihil vertit sed decisa
  * est (recanonicare solum versiones numerat). */
-i32 silva_c89_ambigua_indecisa_numerare (
+i32
+silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
-    constans SilvaOraculum*  oraculum);
+     constans SilvaOraculum* oraculum);
+
 
 /* ==================================================
  * Index (Chunk D): superficies quaestionis symbolorum - primus
@@ -900,13 +976,22 @@ i32 silva_c89_ambigua_indecisa_numerare (
  * donec consumptor frigidus existat (DECISUS 8).
  * ================================================== */
 
-i32 silva_c89_symbola_numerus (constans SilvaSemantica* sem);
-constans SemanticaSymbolum* silva_c89_symbolum_per_indicem (
-    constans SilvaSemantica* sem, i32 index);
+i32
+silva_c89_symbola_numerus (
+    constans SilvaSemantica* sem);
+constans SemanticaSymbolum*
+silva_c89_symbolum_per_indicem (
+    constans SilvaSemantica* sem,
+                        i32  index);
 
-i32 silva_c89_diagnostica_numerus (constans SilvaSemantica* sem);
-constans SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem (
-    constans SilvaSemantica* sem, i32 index);
+i32
+silva_c89_diagnostica_numerus (
+    constans SilvaSemantica* sem);
+constans SemanticaDiagnosticum*
+silva_c89_diagnosticum_per_indicem (
+    constans SilvaSemantica* sem,
+                        i32  index);
+
 
 /* ==================================================
  * Typatio expressionum (M0b Chunk A): tabula parallela
@@ -921,14 +1006,21 @@ constans SemanticaDiagnosticum* silva_c89_diagnosticum_per_indicem (
  * novam fac (INTENTIO DECISUS 2; percursus bis analysat).
  * ================================================== */
 
-constans TypusC89* silva_c89_typus_expressionis (
-    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+constans TypusC89*
+silva_c89_typus_expressionis (
+    constans SilvaSemantica* sem,
+        constans SilvaNodus* nodus);
 
 /* NIHIL = nulla conversio scopo applicata */
-constans TypusC89* silva_c89_conversio_expressionis (
-    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+constans TypusC89*
+silva_c89_conversio_expressionis (
+    constans SilvaSemantica* sem,
+        constans SilvaNodus* nodus);
 
-i32 silva_c89_typationes_numerus (constans SilvaSemantica* sem);
+i32
+silva_c89_typationes_numerus (
+    constans SilvaSemantica* sem);
+
 
 /* ==================================================
  * Forma (pigra; arm64 LP64 Apple)
@@ -937,8 +1029,11 @@ i32 silva_c89_typationes_numerus (constans SilvaSemantica* sem);
 /* VERUM si magnitudo_octetorum/ordinatio (et offsets membrorum)
  * validae post vocationem. FALSUM (+ diagnosticum) pro vacuo,
  * functione, acie incompleta, tag incompleto, cyclo, campis. */
-b32 silva_c89_formam_computare (SilvaSemantica* sem,
-    TypusC89* typus);
+b32
+silva_c89_formam_computare (
+    SilvaSemantica* sem,
+          TypusC89* typus);
+
 
 /* ==================================================
  * Aestimator (expressiones constantes integrae C89)
@@ -948,8 +1043,12 @@ b32 silva_c89_formam_computare (SilvaSemantica* sem,
  * unarium, binarium, ternarius, parenthesis, conversio (ad typos
  * integros), magnitudo-typi (per formam - recursio mutua consulto).
  * magnitudo-expressionis = parca M0b (FALSUM + diagnosticum). */
-b32 silva_c89_constans_aestimare (SilvaSemantica* sem,
-    constans SilvaNodus* expressio, s64* valor_out);
+b32
+silva_c89_constans_aestimare (
+         SilvaSemantica* sem,
+    constans SilvaNodus* expressio,
+                    s64* valor_out);
+
 
 /* ==================================================
  * Exporta demissionis (M1a Chunk A; officina-m1-spec §II):
@@ -960,16 +1059,23 @@ b32 silva_c89_constans_aestimare (SilvaSemantica* sem,
  * vocationis). _canonicum-conscia ut typatio. NIHIL si sedes
  * non resoluta. NB RELATIVA CANONICAE ut typatio - post
  * recanonicare analysim novam fac. */
-constans SemanticaSymbolum* silva_c89_symbolum_nodi (
-    constans SilvaSemantica* sem, constans SilvaNodus* nodus);
+constans SemanticaSymbolum*
+silva_c89_symbolum_nodi (
+    constans SilvaSemantica* sem,
+        constans SilvaNodus* nodus);
 
-i32 silva_c89_nexus_numerus (constans SilvaSemantica* sem);
+i32
+silva_c89_nexus_numerus (
+    constans SilvaSemantica* sem);
 
 /* Octeti chordae litteralis DECODATI (fugae solutae, fragmenta
  * adiacentia coniuncta). SINE nullo terminali - materia data
  * (acies.numerus = octeti + I; demissio nullum ex typo scribit).
  * FALSUM: L-chorda (parca), fuga invalida, nodus non chorda. */
-b32 silva_c89_chorda_decodere (Piscina* piscina,
-    constans SilvaNodus* nodus, chorda* octeti_out);
+b32
+silva_c89_chorda_decodere (
+                Piscina* piscina,
+    constans SilvaNodus* nodus,
+                 chorda* octeti_out);
 
 #endif /* SILVA_C89_SEMANTICA_H */

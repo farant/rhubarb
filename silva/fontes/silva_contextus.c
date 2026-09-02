@@ -9,17 +9,19 @@
 /* Copia cstring in piscinam (contextus vocatorem supervivit -
  * lectio vitae fons->via) */
 interior constans character*
-_literis_figere (Piscina* piscina, constans character* fons)
+_literis_figere (
+               Piscina* piscina,
+    constans character* fons)
 {
-    memoriae_index mensura;
-    character* novum;
+    memoriae_index  mensura;
+         character* novum;
 
     si (fons == NIHIL)
     {
         redde NIHIL;
     }
-    mensura = strlen(fons) + I;
-    novum = (character*)piscina_allocare(piscina, mensura);
+    mensura  = strlen(fons) + I;
+    novum    = (character*)piscina_allocare(piscina, mensura);
     si (novum == NIHIL)
     {
         redde NIHIL;
@@ -30,18 +32,18 @@ _literis_figere (Piscina* piscina, constans character* fons)
 
 interior b32
 _plagulam_addere (
-    SilvaContextus*     contextus,
-    Xar*                quo,
+        SilvaContextus* contextus,
+                   Xar* quo,
     constans character* via,
     constans character* textus,
-    i32                 mensura)
+                   i32  mensura)
 {
     SilvaContextusPlagula* locus;
-    constans character* via_fixa;
-    character* textus_fixus;
+       constans character* via_fixa;
+                character* textus_fixus;
 
-    si (contextus == NIHIL || quo == NIHIL || via == NIHIL
-        || textus == NIHIL)
+    si (   contextus == NIHIL || quo == NIHIL || via == NIHIL
+        || textus    == NIHIL)
     {
         redde FALSUM;
     }
@@ -66,14 +68,15 @@ _plagulam_addere (
     {
         redde FALSUM;
     }
-    locus->via = via_fixa;
-    locus->textus = textus_fixus;
-    locus->mensura = mensura;
+    locus->via      = via_fixa;
+    locus->textus   = textus_fixus;
+    locus->mensura  = mensura;
     redde VERUM;
 }
 
 SilvaContextus*
-silva_contextus_creare (Piscina* piscina)
+silva_contextus_creare (
+    Piscina* piscina)
 {
     SilvaContextus* contextus;
 
@@ -87,17 +90,17 @@ silva_contextus_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    contextus->piscina = piscina;
-    contextus->fines.lexemata = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
-    contextus->fines.generationes = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
+    contextus->piscina             = piscina;
+    contextus->fines.lexemata      = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
+    contextus->fines.generationes  = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
     contextus->fines.profunditas_includendi =
         SILVA_LIMEN_INCLUDENDI_DEFALTUM;
     contextus->fines.profunditas_regionum =
         SILVA_LIMEN_REGIONUM_DEFALTUM;
-    contextus->fines.frons = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
-    contextus->pergere = NIHIL;
-    contextus->pergere_datum = NIHIL;
-    contextus->passus_pergendi = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
+    contextus->fines.frons      = SILVA_GLR_LIMEN_FRONTIS_DEFALTUM;
+    contextus->pergere          = NIHIL;
+    contextus->pergere_datum    = NIHIL;
+    contextus->passus_pergendi  = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
     contextus->lexica = xar_creare(piscina,
         magnitudo(SilvaContextusPlagula));
     contextus->praebenda = xar_creare(piscina,
@@ -111,10 +114,10 @@ silva_contextus_creare (Piscina* piscina)
 
 b32
 silva_contextus_lexicon_addere (
-    SilvaContextus*     contextus,
+        SilvaContextus* contextus,
     constans character* via,
     constans character* textus,
-    i32                 mensura)
+                   i32  mensura)
 {
     si (contextus == NIHIL)
     {
@@ -125,7 +128,8 @@ silva_contextus_lexicon_addere (
 }
 
 b32
-silva_contextus_latinam_addere (SilvaContextus* contextus)
+silva_contextus_latinam_addere (
+    SilvaContextus* contextus)
 {
     redde silva_contextus_lexicon_addere(contextus, "latina.h",
         silva_latina_textus, silva_latina_mensura);
@@ -133,10 +137,10 @@ silva_contextus_latinam_addere (SilvaContextus* contextus)
 
 b32
 silva_contextus_praebere (
-    SilvaContextus*     contextus,
+        SilvaContextus* contextus,
     constans character* via,
     constans character* textus,
-    i32                 mensura)
+                   i32  mensura)
 {
     si (contextus == NIHIL)
     {
@@ -148,16 +152,16 @@ silva_contextus_praebere (
 
 vacuum
 silva_contextus_pergere_ponere (
-    SilvaContextus*     contextus,
-    SilvaPergereFunctio pergere,
-    vacuum*             datum,
-    i32                 passus)
+         SilvaContextus* contextus,
+    SilvaPergereFunctio  pergere,
+                 vacuum* datum,
+                    i32  passus)
 {
     si (contextus == NIHIL)
     {
         redde;
     }
-    contextus->pergere = pergere;
-    contextus->pergere_datum = datum;
-    contextus->passus_pergendi = passus;
+    contextus->pergere          = pergere;
+    contextus->pergere_datum    = datum;
+    contextus->passus_pergendi  = passus;
 }

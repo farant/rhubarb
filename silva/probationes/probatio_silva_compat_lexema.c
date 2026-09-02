@@ -15,20 +15,25 @@
 #include <string.h>
 
 interior Xar*
-_lexare (Piscina* piscina, constans character* fons)
+_lexare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
 }
 
 interior SilvaToken*
-_ad (Xar* lexemata, i32 i)
+_ad (
+    Xar* lexemata,
+    i32  i)
 {
     redde *(SilvaToken**)xar_obtinere(lexemata, i);
 }
 
 /* Habetne series triviarum NOVA_LINEA? */
 interior b32
-_habet_nova_linea (Xar* spatia)
+_habet_nova_linea (
+    Xar* spatia)
 {
     i32 i;
 
@@ -48,7 +53,8 @@ _habet_nova_linea (Xar* spatia)
 }
 
 interior i32
-_numerare_nova_linea (Xar* spatia)
+_numerare_nova_linea (
+    Xar* spatia)
 {
     i32 i;
     i32 numerus;
@@ -70,7 +76,8 @@ _numerare_nova_linea (Xar* spatia)
 }
 
 interior SilvaToken*
-_obtinere_nova_linea (Xar* spatia)
+_obtinere_nova_linea (
+    Xar* spatia)
 {
     i32 i;
 
@@ -92,7 +99,8 @@ _obtinere_nova_linea (Xar* spatia)
 }
 
 interior b32
-_habet_continuationem (Xar* spatia)
+_habet_continuationem (
+    Xar* spatia)
 {
     i32 i;
 
@@ -113,7 +121,7 @@ _habet_continuationem (Xar* spatia)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_compat_lexema",
@@ -131,7 +139,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
 
         imprimere("\n--- Probans NOVA_LINEA in spatia ---\n");
@@ -164,7 +172,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
 
         imprimere("\n--- Probans newlines multiplices ---\n");
@@ -173,12 +181,14 @@ s32 principale (vacuum)
 
         /* a: UNA NOVA_LINEA in spatia_post (prima) */
         tok = _ad(lexemata, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok->spatia_post), I);
 
         /* b: UNA in spatia_ante (secunda) */
         tok = _ad(lexemata, I);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_AEQUALIS_I32 (_numerare_nova_linea(tok->spatia_ante), I);
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, II)->genus,
@@ -215,7 +225,7 @@ s32 principale (vacuum)
 
     {
         Xar* lexemata;
-        b32 inventa;
+        b32  inventa;
 
         imprimere("\n--- Probans spatia CONTINUATIO ---\n");
 
@@ -235,7 +245,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
         SilvaToken* nl;
 
@@ -244,7 +254,8 @@ s32 principale (vacuum)
         lexemata = _lexare(piscina, "a\r\nb");
 
         tok = _ad(lexemata, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
 
         /* NOVA_LINEA longitudo II (\r\n) */
@@ -265,7 +276,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
 
         imprimere("\n--- Probans formam directivae ---\n");
@@ -294,7 +305,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
 
         imprimere("\n--- Probans fluxum integrum ---\n");
@@ -305,7 +316,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(lexemata), III);
 
         tok = _ad(lexemata, 0);
-        CREDO_AEQUALIS_I32 ((i32)tok->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)tok->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_VERUM (_habet_nova_linea(tok->spatia_post));
 
         CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
@@ -323,7 +335,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans genus_nomen ---\n");
 
         CREDO_AEQUALIS_I32 ((i32)strcmp(
-            silva_lexema_genus_nomen(SILVA_LEX_NOVA_LINEA), "NOVA_LINEA"),
+            silva_lexema_genus_nomen(SILVA_LEX_NOVA_LINEA),
+            "NOVA_LINEA"),
             ZEPHYRUM);
         CREDO_AEQUALIS_I32 ((i32)strcmp(
             silva_lexema_genus_nomen(SILVA_LEX_INT), "INT"), ZEPHYRUM);
@@ -337,7 +350,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+               Xar* lexemata;
         SilvaToken* tok;
 
         imprimere("\n--- Probans newlines ducentes ---\n");

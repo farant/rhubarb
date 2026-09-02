@@ -36,7 +36,7 @@
 
 nomen structura {
     constans character* titulus;
-    b32                 integrale;
+                   b32  integrale;
 } AuspexTypus;
 
 interior constans AuspexTypus TYPI[] = {
@@ -59,7 +59,7 @@ interior constans AuspexTypus TYPI[] = {
 
 nomen structura {
     constans character* textus;
-    b32                 integrale_solum;
+                   b32  integrale_solum;
 } AuspexOperator;
 
 interior constans AuspexOperator OPERATORES[] = {
@@ -88,12 +88,13 @@ interior constans character* constans GLOBALIA =
 
 nomen structura {
     constans character* textus;   /* expressio verbatim */
-    b32                 signi;    /* assertio signi (constans
+                   b32  signi;    /* assertio signi (constans
                                    * integralis) licet */
 } AuspexCombo;
 
 interior b32
-_primitivum_insignatum (s32 p)
+_primitivum_insignatum (
+    s32 p)
 {
     commutatio (p)
     {
@@ -109,8 +110,11 @@ _primitivum_insignatum (s32 p)
 }
 
 interior vacuum
-_combo_addere (Piscina* piscina, Xar* combi, constans character* textus,
-    b32 signi)
+_combo_addere (
+               Piscina* piscina,
+                   Xar* combi,
+    constans character* textus,
+                   b32  signi)
 {
     AuspexCombo* c = (AuspexCombo*)xar_addere(combi);
 
@@ -118,15 +122,18 @@ _combo_addere (Piscina* piscina, Xar* combi, constans character* textus,
     {
         redde;
     }
-    c->textus = textus;
-    c->signi = signi;
+    c->textus  = textus;
+    c->signi   = signi;
     (vacuum)piscina;
 }
 
 /* Textum expressionis binariae in piscinam formare */
 interior constans character*
-_binarium_formare (Piscina* piscina, constans character* t1,
-    constans character* op, constans character* t2)
+_binarium_formare (
+               Piscina* piscina,
+    constans character* t1,
+    constans character* op,
+    constans character* t2)
 {
     character* textus = (character*)piscina_allocare(piscina, CXXVIII);
 
@@ -139,7 +146,9 @@ _binarium_formare (Piscina* piscina, constans character* t1,
 }
 
 interior constans character*
-_unarium_formare (Piscina* piscina, constans character* op,
+_unarium_formare (
+               Piscina* piscina,
+    constans character* op,
     constans character* t)
 {
     character* textus = (character*)piscina_allocare(piscina, CXXVIII);
@@ -178,10 +187,10 @@ _probam_struere (Piscina* piscina, Xar* combi, i32* mensura_out)
             per (j = ZEPHYRUM; j < TYPI_NUMERUS; j++)
             {
                 constans character* textus;
-                b32 ambo_integralia = TYPI[i].integrale
-                    && TYPI[j].integrale;
+                               b32  ambo_integralia = TYPI[i].integrale
+                                   && TYPI[j].integrale;
 
-                si (OPERATORES[k].integrale_solum
+                si (   OPERATORES[k].integrale_solum
                     && !ambo_integralia)
                 {
                     perge;
@@ -231,23 +240,25 @@ _probam_struere (Piscina* piscina, Xar* combi, i32* mensura_out)
         _combo_addere(piscina, combi, MIXTA[i], FALSUM);
         cursor += (i32)sprintf(fons + cursor, "    %s;\n", MIXTA[i]);
     }
-    cursor += (i32)sprintf(fons + cursor, "}\n");
-    *mensura_out = cursor;
+    cursor        += (i32)sprintf(fons + cursor, "}\n");
+    *mensura_out  = cursor;
     redde fons;
 }
 
 /* Elementa corporis definitionis (nodi soli) in xar colligere */
 interior b32
-_sententias_colligere (constans SilvaParsura* parsura,
-    i32 index_definitionis, Xar* sententiae)
+_sententias_colligere (
+    constans SilvaParsura* parsura,
+                      i32  index_definitionis,
+                      Xar* sententiae)
 {
     SilvaValor* e = silva_valor_lista_obtinere(
         parsura->commissio->radix, index_definitionis);
     constans SilvaNodus* def;
-    SilvaValor corpus_v;
-    SilvaValor elementa;
-    i32 i;
-    i32 m;
+             SilvaValor  corpus_v;
+             SilvaValor  elementa;
+                    i32  i;
+                    i32  m;
 
     si (e == NIHIL || e->genus != SILVA_VALOR_NODUS)
     {
@@ -263,8 +274,8 @@ _sententias_colligere (constans SilvaParsura* parsura,
     {
         redde FALSUM;
     }
-    elementa = silva_c89_corpus_elementa(corpus_v.datum.nodus);
-    m = (i32)silva_valor_lista_numerus(elementa);
+    elementa  = silva_c89_corpus_elementa(corpus_v.datum.nodus);
+    m         = (i32)silva_valor_lista_numerus(elementa);
     per (i = ZEPHYRUM; i < m; i++)
     {
         SilvaValor* v = silva_valor_lista_obtinere(elementa, i);
@@ -286,13 +297,13 @@ _sententias_colligere (constans SilvaParsura* parsura,
 s32
 principale (vacuum)
 {
-    Piscina* piscina;
-    Xar* combi;
-    Xar* sententiae;
+               Piscina* piscina;
+                   Xar* combi;
+                   Xar* sententiae;
     constans character* fons;
-    i32 mensura = ZEPHYRUM;
-    SilvaParsura* parsura;
-    SilvaSemantica* sem;
+                   i32  mensura = ZEPHYRUM;
+          SilvaParsura* parsura;
+        SilvaSemantica* sem;
     FILE* pl;
     i32 k;
     i32 assertiones = ZEPHYRUM;
@@ -369,8 +380,8 @@ principale (vacuum)
         constans SilvaNodus** sen =
             (constans SilvaNodus**)xar_obtinere(sententiae, k);
         constans SilvaNodus* sententia;
-        SilvaValor expr_v;
-        constans TypusC89* typus;
+                 SilvaValor  expr_v;
+          constans TypusC89* typus;
 
         sententia = *sen;
         si (sententia->genus
@@ -403,7 +414,7 @@ principale (vacuum)
             TypusC89* idem = silva_c89_typus_monstrator(sem,
                 typus->datum.monstrator.internum);
 
-            si (idem != typus
+            si (   idem != typus
                 || !silva_c89_formam_computare(sem, idem))
             {
                 fprintf(stderr, "auspex: forma expressionis %d"

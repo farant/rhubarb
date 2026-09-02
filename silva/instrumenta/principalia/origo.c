@@ -40,17 +40,18 @@ hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
  * -------------------------------------------------- */
 
 hic_manens vacuum
-_catenam_imprimere (SilvaToken* t)
+_catenam_imprimere (
+    SilvaToken* t)
 {
-    SilvaToken* gradus = t;
-    b32 expansum = FALSUM;
+    SilvaToken* gradus    = t;
+           b32  expansum  = FALSUM;
 
     imprimere("  '%.*s'", (int)t->valor.mensura,
         (constans character*)t->valor.datum);
     dum (gradus != NIHIL)
     {
-        constans chorda* nm = NIHIL;
-        SilvaToken* sequens = NIHIL;
+        constans chorda* nm       = NIHIL;
+             SilvaToken* sequens  = NIHIL;
 
         commutatio (gradus->origo.genus)
         {
@@ -107,7 +108,8 @@ _catenam_imprimere (SilvaToken* t)
 
 /* praeparatio capitum: exemplar percursus/censor/emitte */
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -117,8 +119,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -144,7 +149,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -160,8 +165,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -169,7 +177,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -188,7 +196,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -199,15 +207,18 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina_ctx;
     Piscina* piscina;
     SilvaContextus* ctx;
-    constans character* via = NIHIL;
-    constans character* positio = NIHIL;
-    i32 linea = ZEPHYRUM;
-    i32 columna = ZEPHYRUM;          /* 0 = tota linea */
+    constans character* via      = NIHIL;
+    constans character* positio  = NIHIL;
+    i32 linea                    = ZEPHYRUM;
+    i32 columna                  = ZEPHYRUM;          /* 0 = tota linea */
     FILE* pl;
     i8* fons;
     long mensura_l;
@@ -310,7 +321,7 @@ s32 principale (integer argc, character** argv)
     }
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -322,7 +333,7 @@ s32 principale (integer argc, character** argv)
 
     parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
         (constans character*)fons, mensura, NIHIL);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura           == NIHIL || !parsura->successus
         || parsura->lexemata == NIHIL)
     {
         fprintf(stderr, "origo: sine arbore: %s\n", via);
@@ -333,9 +344,10 @@ s32 principale (integer argc, character** argv)
      * ad positionem quaesitam reducta - grex = invocatio radicis
      * eadem (caput gregis semel impressum) */
     {
-        SilvaToken* radix_prior = NIHIL;
-        i32 n = xar_numerus(parsura->lexemata);
-        i32 t;
+        SilvaToken* radix_prior  = NIHIL;
+               i32  n             =
+                   xar_numerus(parsura->lexemata);
+               i32 t;
 
         per (t = ZEPHYRUM; t < n; t++)
         {
@@ -345,12 +357,12 @@ s32 principale (integer argc, character** argv)
             SilvaToken* radix;
 
             si (cella == NIHIL || *cella == NIHIL) perge;
-            lexema = *cella;
-            radix = silva_token_radix(lexema);
+            lexema  = *cella;
+            radix   = silva_token_radix(lexema);
             si (radix == NIHIL) perge;
             si (radix->fons_index != parsura->fons_princeps) perge;
             si (radix->linea != linea) perge;
-            si (columna != ZEPHYRUM
+            si (   columna != ZEPHYRUM
                 && !(columna >= radix->columna
                      && columna < radix->columna
                          + radix->longitudo))

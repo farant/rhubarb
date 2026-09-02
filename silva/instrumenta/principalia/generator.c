@@ -19,7 +19,9 @@
 #include <string.h>
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via)
 {
     FILE* pl;
     character* buffer;
@@ -50,7 +52,7 @@ _plagulam_legere (Piscina* piscina, constans character* via)
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -62,16 +64,19 @@ _plagulam_legere (Piscina* piscina, constans character* via)
     redde buffer;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    character* fons;
-    SilvaGenGrammatica* grammatica;
-    SilvaGenCollectio* collectio;
-    SilvaGenTabula* tabula;
-    constans character* via_grammaticae;
-    b32 canon_solus;
+              character* fons;
+     SilvaGenGrammatica* grammatica;
+      SilvaGenCollectio* collectio;
+         SilvaGenTabula* tabula;
+     constans character* via_grammaticae;
+                    b32  canon_solus;
 
     /* MODUS CANONIS SOLIUS: porta recentiae canonem in locum
      * TEMPORARIUM scribere debet ut exitum conferat, et tabulas
@@ -128,7 +133,7 @@ s32 principale (integer argc, character** argv)
         redde ZEPHYRUM;
     }
 
-    si (!silva_gen_first_computare(grammatica)
+    si (   !silva_gen_first_computare(grammatica)
         || !silva_gen_follow_computare(grammatica))
     {
         fprintf(stderr, "generator: FIRST/FOLLOW defecerunt\n");
@@ -149,7 +154,8 @@ s32 principale (integer argc, character** argv)
         redde I;
     }
 
-    si (!silva_gen_coquere(grammatica, tabula, argv[II], argv[III], argv[I]))
+    si (!silva_gen_coquere(grammatica, tabula, argv[II], argv[III],
+        argv[I]))
     {
         fprintf(stderr, "generator: coctio defecit\n");
         redde I;
@@ -157,7 +163,7 @@ s32 principale (integer argc, character** argv)
 
     /* Superficies publica (officina pre-M1): splicis in silva.h +
      * hospes.c - solum si viae datae (grammatica c89 sola) */
-    si (argc >= VI
+    si (   argc >= VI
         && !silva_gen_splicere_publica(piscina, grammatica, argv[II],
                argv[IV], argv[V]))
     {
@@ -167,7 +173,7 @@ s32 principale (integer argc, character** argv)
 
     /* Canon documentorum arboris (arbor M2 par. 3) - grammatica c89
      * sola, quae sola documenta parsurae gignit */
-    si (argc == VIII
+    si (   argc == VIII
         && !silva_gen_canonem_scribere(grammatica, argv[VII], argv[VI],
                argv[I]))
     {

@@ -4,18 +4,20 @@
 #include "silva_quaestio.h"
 #include <string.h>
 
+
 /* ==================================================
  * Lexatio selectoris (manu - superficies parva)
  * ================================================== */
 
 nomen structura {
     constans character* fons;
-    i32                 positus;
-    i32                 mensura;
+                   i32  positus;
+                   i32  mensura;
 } LectorSelectoris;
 
 hic_manens vacuum
-_spatia_transilire (LectorSelectoris* lector)
+_spatia_transilire (
+    LectorSelectoris* lector)
 {
     dum (lector->positus < lector->mensura)
     {
@@ -27,7 +29,8 @@ _spatia_transilire (LectorSelectoris* lector)
 }
 
 hic_manens b32
-_est_littera_tag (character c)
+_est_littera_tag (
+    character c)
 {
     redde ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
         || c == '-' || c == '_') ? VERUM : FALSUM;
@@ -35,12 +38,14 @@ _est_littera_tag (character c)
 
 /* Tag legere: [a-z0-9_-]+ ; initium/mensura in selectorem */
 hic_manens i32
-_tag_legere (LectorSelectoris* lector, i32* initium_out)
+_tag_legere (
+    LectorSelectoris* lector,
+                 i32* initium_out)
 {
     i32 initium = lector->positus;
 
-    dum (lector->positus < lector->mensura
-        && _est_littera_tag(lector->fons[lector->positus]))
+    dum (   lector->positus < lector->mensura
+         && _est_littera_tag(lector->fons[lector->positus]))
     {
         lector->positus++;
     }
@@ -51,14 +56,17 @@ _tag_legere (LectorSelectoris* lector, i32* initium_out)
 /* Segmentum selectoris in piscinam copiare (quaestio compilata
  * selectorem vocantis supervivit - QB) */
 hic_manens chorda
-_chordam_copiare (Piscina* piscina, constans character* fons,
-    i32 initium, i32 mensura)
+_chordam_copiare (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  initium,
+                   i32  mensura)
 {
-    chorda c;
+       chorda  c;
     character* datum;
 
-    c.datum = NIHIL;
-    c.mensura = ZEPHYRUM;
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
     datum = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
     si (datum == NIHIL) redde c;
@@ -66,10 +74,11 @@ _chordam_copiare (Piscina* piscina, constans character* fons,
     {
         memcpy(datum, fons + initium, (size_t)mensura);
     }
-    c.datum = (i8*)datum;
-    c.mensura = mensura;
+    c.datum    = (i8*)datum;
+    c.mensura  = mensura;
     redde c;
 }
+
 
 /* ==================================================
  * Pseudo-classes nativae (QC) - tabula nominum UNA:
@@ -78,8 +87,8 @@ _chordam_copiare (Piscina* piscina, constans character* fons,
 
 nomen structura {
     constans character* titulus;
-    s32                 genus;      /* SilvaQuaestioPseudoGenus */
-    b32                 argumentum_necessarium; /* alioquin vetitum */
+                   s32  genus;      /* SilvaQuaestioPseudoGenus */
+                   b32  argumentum_necessarium; /* alioquin vetitum */
 } PseudoNativum;
 
 hic_manens constans PseudoNativum _pseudo_nativa[] = {
@@ -99,7 +108,9 @@ hic_manens constans PseudoNativum _pseudo_nativa[] = {
 
 /* Index in tabula nativa aut -I */
 hic_manens s32
-_pseudo_nativum_invenire (constans character* fons, i32 mensura)
+_pseudo_nativum_invenire (
+    constans character* fons,
+                   i32  mensura)
 {
     s32 i;
 
@@ -108,7 +119,7 @@ _pseudo_nativum_invenire (constans character* fons, i32 mensura)
     {
         constans character* titulus = _pseudo_nativa[i].titulus;
 
-        si (strlen(titulus) == (size_t)mensura
+        si (   strlen(titulus)                        == (size_t)mensura
             && memcmp(titulus, fons, (size_t)mensura) == ZEPHYRUM)
         {
             redde i;
@@ -117,6 +128,7 @@ _pseudo_nativum_invenire (constans character* fons, i32 mensura)
     redde -I;
 }
 
+
 /* ==================================================
  * Tabula pseudo-classium usoris (QC) - impletur ANTE
  * compilationem (pseudo ignotum = fractura clara; forma
@@ -124,18 +136,19 @@ _pseudo_nativum_invenire (constans character* fons, i32 mensura)
  * ================================================== */
 
 nomen structura {
-    chorda                     titulus;
-    SilvaQuaestioPseudoFunctio functio;
-    vacuum*                    datum;
+                        chorda  titulus;
+    SilvaQuaestioPseudoFunctio  functio;
+                        vacuum* datum;
 } PseudoUsoris;
 
 structura SilvaQuaestioPseudoRegistrum {
     Piscina* piscina;
-    Xar*     entia;    /* PseudoUsoris (valore) */
+        Xar* entia;    /* PseudoUsoris (valore) */
 };
 
 SilvaQuaestioPseudoRegistrum*
-silva_quaestio_registrum_creare (Piscina* piscina)
+silva_quaestio_registrum_creare (
+    Piscina* piscina)
 {
     SilvaQuaestioPseudoRegistrum* registro;
 
@@ -154,12 +167,12 @@ silva_quaestio_registrum_creare (Piscina* piscina)
 b32
 silva_quaestio_registrare (
     SilvaQuaestioPseudoRegistrum* registro,
-    constans character*           titulus,
-    SilvaQuaestioPseudoFunctio    functio,
-    vacuum*                       datum)
+              constans character* titulus,
+      SilvaQuaestioPseudoFunctio  functio,
+                          vacuum* datum)
 {
-    i32 mensura;
-    i32 i;
+             i32  mensura;
+             i32  i;
     PseudoUsoris* ens;
 
     si (registro == NIHIL || titulus == NIHIL || functio == NIHIL)
@@ -181,12 +194,12 @@ silva_quaestio_registrare (
     per (i = ZEPHYRUM; i < xar_numerus(registro->entia); i++)
     {
         ens = (PseudoUsoris*)xar_obtinere(registro->entia, i);
-        si (ens != NIHIL && ens->titulus.mensura == mensura
+        si (   ens != NIHIL && ens->titulus.mensura == mensura
             && memcmp(ens->titulus.datum, titulus,
                    (size_t)mensura) == ZEPHYRUM)
         {
-            ens->functio = functio;
-            ens->datum = datum;
+            ens->functio  = functio;
+            ens->datum    = datum;
             redde VERUM;
         }
     }
@@ -195,16 +208,16 @@ silva_quaestio_registrare (
     ens->titulus = _chordam_copiare(registro->piscina, titulus,
         ZEPHYRUM, mensura);
     si (ens->titulus.datum == NIHIL) redde FALSUM;
-    ens->functio = functio;
-    ens->datum = datum;
+    ens->functio  = functio;
+    ens->datum    = datum;
     redde VERUM;
 }
 
 hic_manens constans PseudoUsoris*
 _pseudo_usoris_invenire (
     constans SilvaQuaestioPseudoRegistrum* registro,
-    constans character*                    fons,
-    i32                                    mensura)
+                       constans character* fons,
+                                      i32  mensura)
 {
     i32 i;
 
@@ -215,7 +228,7 @@ _pseudo_usoris_invenire (
             (constans PseudoUsoris*)xar_obtinere(registro->entia,
                 i);
 
-        si (ens != NIHIL && ens->titulus.mensura == mensura
+        si (   ens != NIHIL && ens->titulus.mensura == mensura
             && memcmp(ens->titulus.datum, fons,
                    (size_t)mensura) == ZEPHYRUM)
         {
@@ -224,6 +237,7 @@ _pseudo_usoris_invenire (
     }
     redde NIHIL;
 }
+
 
 /* ==================================================
  * Compilatio
@@ -234,13 +248,13 @@ _pseudo_usoris_invenire (
 hic_manens s32
 _locum_invenire (
     constans SilvaRegistrumCoctum* tabularium,
-    s32                            genus,
-    chorda                         locus)
+                              s32  genus,
+                           chorda  locus)
 {
     constans SilvaTabGenus* g;
-    i32 k;
+                       i32  k;
 
-    si (genus < ZEPHYRUM
+    si (   genus < ZEPHYRUM
         || (i32)genus >= tabularium->numerus_generum)
     {
         redde -I;
@@ -251,7 +265,7 @@ _locum_invenire (
         constans character* titulus =
             tabularium->loci[g->loci_offset + k].titulus;
 
-        si (titulus != NIHIL
+        si (   titulus         != NIHIL
             && strlen(titulus) == (size_t)locus.mensura
             && memcmp(titulus, locus.datum,
                    (size_t)locus.mensura) == ZEPHYRUM)
@@ -267,11 +281,11 @@ _locum_invenire (
 hic_manens s32
 _locum_titulo (
     constans SilvaRegistrumCoctum* tabularium,
-    i32                            genus_index,
-    constans character*            titulus)
+                              i32  genus_index,
+               constans character* titulus)
 {
     constans SilvaTabGenus* g = &tabularium->genera[genus_index];
-    i32 k;
+                       i32  k;
 
     per (k = ZEPHYRUM; k < g->loci_numerus; k++)
     {
@@ -289,8 +303,8 @@ _locum_titulo (
 hic_manens s32
 _genus_invenire (
     constans SilvaRegistrumCoctum* tabularium,
-    constans character*            tag,
-    i32                            mensura)
+               constans character* tag,
+                              i32  mensura)
 {
     i32 i;
 
@@ -298,8 +312,8 @@ _genus_invenire (
     {
         constans character* titulus = tabularium->genera[i].titulus;
 
-        si (titulus != NIHIL
-            && strlen(titulus) == (size_t)mensura
+        si (   titulus                               != NIHIL
+            && strlen(titulus)                       == (size_t)mensura
             && memcmp(titulus, tag, (size_t)mensura) == ZEPHYRUM)
         {
             redde (s32)i;
@@ -309,8 +323,10 @@ _genus_invenire (
 }
 
 hic_manens Xar*
-_gradum_novum (Piscina* piscina, Xar* catena,
-    SilvaQuaestioCombinator combinator)
+_gradum_novum (
+                    Piscina* piscina,
+                        Xar* catena,
+    SilvaQuaestioCombinator  combinator)
 {
     SilvaQuaestioGradus* gradus =
         (SilvaQuaestioGradus*)xar_addere(catena);
@@ -327,15 +343,19 @@ _gradum_novum (Piscina* piscina, Xar* catena,
  * QB: extractum ex ansa compilationis quia '[' et '$' composita
  * quoque incipere possunt (universalis implicitus). */
 hic_manens Xar*
-_compositum_parare (Piscina* piscina, SilvaQuaestio* quaestio,
-    Xar** catena, Xar* partes,
-    SilvaQuaestioCombinator* pendens, b32* spatium_visum)
+_compositum_parare (
+                    Piscina*  piscina,
+              SilvaQuaestio*  quaestio,
+                        Xar** catena,
+                        Xar*  partes,
+    SilvaQuaestioCombinator*  pendens,
+                        b32*  spatium_visum)
 {
     si (partes != NIHIL && !*spatium_visum)
     {
         redde partes;   /* compositum currens pergit */
     }
-    si (partes != NIHIL && *spatium_visum
+    si (   partes   != NIHIL && *spatium_visum
         && *pendens == SILVA_QUAESTIO_COMB_NULLUS)
     {
         *pendens = SILVA_QUAESTIO_COMB_DESCENDENS;
@@ -349,28 +369,29 @@ _compositum_parare (Piscina* piscina, SilvaQuaestio* quaestio,
         si (*catena == NIHIL) redde NIHIL;
         sedes = (Xar**)xar_addere(quaestio->catenae);
         si (sedes == NIHIL) redde NIHIL;
-        *sedes = *catena;
-        *pendens = SILVA_QUAESTIO_COMB_NULLUS;
+        *sedes    = *catena;
+        *pendens  = SILVA_QUAESTIO_COMB_NULLUS;
     }
     partes = _gradum_novum(piscina, *catena, *pendens);
     si (partes == NIHIL) redde NIHIL;
-    *pendens = SILVA_QUAESTIO_COMB_NULLUS;
-    *spatium_visum = FALSUM;
+    *pendens        = SILVA_QUAESTIO_COMB_NULLUS;
+    *spatium_visum  = FALSUM;
     redde partes;
 }
 
 /* Partem puram addere (campi QB zephyrati - partes generum QA eas
  * numquam tangunt) */
 hic_manens SilvaQuaestioPars*
-_partem_addere (Xar* partes)
+_partem_addere (
+    Xar* partes)
 {
     SilvaQuaestioPars* pars =
         (SilvaQuaestioPars*)xar_addere(partes);
 
     si (pars == NIHIL) redde NIHIL;
     memset(pars, ZEPHYRUM, magnitudo(SilvaQuaestioPars));
-    pars->nodi_genus = -I;
-    pars->pseudo_genus = -I;
+    pars->nodi_genus    = -I;
+    pars->pseudo_genus  = -I;
     redde pars;
 }
 
@@ -379,8 +400,10 @@ _partem_addere (Xar* partes)
  * non numerantur). VERUM: [initium,finis) sine parenthesibus,
  * positus post ')'. FALSUM: non clausum. */
 hic_manens b32
-_pseudo_arg_legere (LectorSelectoris* lector, i32* initium_out,
-    i32* finis_out)
+_pseudo_arg_legere (
+    LectorSelectoris* lector,
+                 i32* initium_out,
+                 i32* finis_out)
 {
     i32 altitudo = I;
 
@@ -393,8 +416,8 @@ _pseudo_arg_legere (LectorSelectoris* lector, i32* initium_out,
         si (c == '"')
         {
             lector->positus++;
-            dum (lector->positus < lector->mensura
-                && lector->fons[lector->positus] != '"')
+            dum (   lector->positus < lector->mensura
+                 && lector->fons[lector->positus] != '"')
             {
                 lector->positus++;
             }
@@ -422,19 +445,19 @@ _pseudo_arg_legere (LectorSelectoris* lector, i32* initium_out,
  * pro recursione :habet/:non (custodita) */
 hic_manens SilvaQuaestio*
 _compilare_cum (
-    Piscina*                               piscina,
-    constans SilvaRegistrumCoctum*         tabularium,
-    constans SilvaQuaestioPseudoRegistrum* registro,
-    constans character*                    selector,
-    constans character**                   causa_out,
-    i32                                    profunditas)
+                                  Piscina*  piscina,
+            constans SilvaRegistrumCoctum*  tabularium,
+    constans SilvaQuaestioPseudoRegistrum*  registro,
+                       constans character*  selector,
+                       constans character** causa_out,
+                                      i32   profunditas)
 {
-    SilvaQuaestio* quaestio;
-    LectorSelectoris lector;
-    Xar* catena = NIHIL;
-    Xar* partes = NIHIL;
-    SilvaQuaestioCombinator pendens = SILVA_QUAESTIO_COMB_NULLUS;
-    b32 spatium_visum = FALSUM;
+              SilvaQuaestio* quaestio;
+           LectorSelectoris  lector;
+                        Xar* catena = NIHIL;
+                        Xar* partes = NIHIL;
+    SilvaQuaestioCombinator  pendens = SILVA_QUAESTIO_COMB_NULLUS;
+                        b32  spatium_visum = FALSUM;
 
     si (causa_out != NIHIL) *causa_out = NIHIL;
     si (piscina == NIHIL || tabularium == NIHIL || selector == NIHIL)
@@ -454,27 +477,27 @@ _compilare_cum (
     quaestio = (SilvaQuaestio*)piscina_allocare(piscina,
         (memoriae_index)magnitudo(SilvaQuaestio));
     si (quaestio == NIHIL) redde NIHIL;
-    quaestio->tabularium = tabularium;
-    quaestio->catenae = xar_creare(piscina, (i32)magnitudo(Xar*));
+    quaestio->tabularium  = tabularium;
+    quaestio->catenae     = xar_creare(piscina, (i32)magnitudo(Xar*));
     si (quaestio->catenae == NIHIL) redde NIHIL;
     quaestio->gradus_maximi = ZEPHYRUM;
 
     /* formae generum ex registro PER NOMEN (exemplar commissionis;
      * absens = -I, licet - praedicatum numquam congruit; ambiguus
      * absens = descensus canonicus otiosis) */
-    quaestio->genus_ambigui = -I;
-    quaestio->locus_interpretationum = ZEPHYRUM;
-    quaestio->locus_canonicae = ZEPHYRUM;
-    quaestio->lectiones_omnes = FALSUM;
-    quaestio->genus_vocationis = -I;
-    quaestio->locus_functionis = -I;
-    quaestio->genus_folii = -I;
-    quaestio->locus_folii_valoris = -I;
-    quaestio->genus_declaratoris = -I;
-    quaestio->locus_declaratoris_tituli = -I;
-    quaestio->genus_redde = -I;
-    quaestio->genus_rami_sumpti = -I;
-    quaestio->genus_rami_omissi = -I;
+    quaestio->genus_ambigui              = -I;
+    quaestio->locus_interpretationum     = ZEPHYRUM;
+    quaestio->locus_canonicae            = ZEPHYRUM;
+    quaestio->lectiones_omnes            = FALSUM;
+    quaestio->genus_vocationis           = -I;
+    quaestio->locus_functionis           = -I;
+    quaestio->genus_folii                = -I;
+    quaestio->locus_folii_valoris        = -I;
+    quaestio->genus_declaratoris         = -I;
+    quaestio->locus_declaratoris_tituli  = -I;
+    quaestio->genus_redde                = -I;
+    quaestio->genus_rami_sumpti          = -I;
+    quaestio->genus_rami_omissi          = -I;
     {
         i32 i;
 
@@ -508,14 +531,14 @@ _compilare_cum (
                     _locum_titulo(tabularium, i, "functio");
             }
             alioquin si (strcmp(titulus, "folium-identificator")
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 quaestio->genus_folii = (s32)i;
                 quaestio->locus_folii_valoris =
                     _locum_titulo(tabularium, i, "tok_valor");
             }
             alioquin si (strcmp(titulus, "declarator-titulus")
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 quaestio->genus_declaratoris = (s32)i;
                 quaestio->locus_declaratoris_tituli =
@@ -526,21 +549,21 @@ _compilare_cum (
                 quaestio->genus_redde = (s32)i;
             }
             alioquin si (strcmp(titulus, "ramus-sumptus")
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 quaestio->genus_rami_sumpti = (s32)i;
             }
             alioquin si (strcmp(titulus, "ramus-omissus")
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 quaestio->genus_rami_omissi = (s32)i;
             }
         }
     }
 
-    lector.fons = selector;
-    lector.positus = ZEPHYRUM;
-    lector.mensura = (i32)strlen(selector);
+    lector.fons     = selector;
+    lector.positus  = ZEPHYRUM;
+    lector.mensura  = (i32)strlen(selector);
 
     _spatia_transilire(&lector);
     si (lector.positus >= lector.mensura)
@@ -556,7 +579,7 @@ _compilare_cum (
         si (c == ',')
         {
             /* unio: catena clausa, nova incipit */
-            si (catena == NIHIL || partes == NIHIL
+            si (   catena              == NIHIL || partes == NIHIL
                 || xar_numerus(partes) == ZEPHYRUM)
             {
                 si (causa_out != NIHIL)
@@ -567,10 +590,10 @@ _compilare_cum (
             }
             lector.positus++;
             _spatia_transilire(&lector);
-            catena = NIHIL;
-            partes = NIHIL;
-            pendens = SILVA_QUAESTIO_COMB_NULLUS;
-            spatium_visum = FALSUM;
+            catena         = NIHIL;
+            partes         = NIHIL;
+            pendens        = SILVA_QUAESTIO_COMB_NULLUS;
+            spatium_visum  = FALSUM;
             perge;
         }
         si (c == ' ' || c == '\t' || c == '\n')
@@ -594,16 +617,16 @@ _compilare_cum (
             pendens = (c == '>') ? SILVA_QUAESTIO_COMB_FILIUS
                 : (c == '+') ? SILVA_QUAESTIO_COMB_FRATER_PROXIMUS
                 : SILVA_QUAESTIO_COMB_FRATER_SEQUENS;
-            spatium_visum = FALSUM;
-            partes = NIHIL;  /* compositum novum sequatur */
+            spatium_visum  = FALSUM;
+            partes         = NIHIL;  /* compositum novum sequatur */
             perge;
         }
         si (c == '[')
         {
             /* attributum [locus op "valor"] (QB) */
             SilvaQuaestioPars* pars;
-            i32 initium;
-            i32 mensura;
+                          i32  initium;
+                          i32  mensura;
 
             partes = _compositum_parare(piscina, quaestio, &catena,
                 partes, &pendens, &spatium_visum);
@@ -633,7 +656,7 @@ _compilare_cum (
 
                 si (oc == '^' || oc == '$' || oc == '*')
                 {
-                    si (lector.positus + I >= lector.mensura
+                    si (   lector.positus + I >= lector.mensura
                         || lector.fons[lector.positus + I] != '=')
                     {
                         si (causa_out != NIHIL)
@@ -661,7 +684,7 @@ _compilare_cum (
                 /* valor citatus: octeti ad '"' clausum, sine fugis
                  * (limes nominatus v1) */
                 _spatia_transilire(&lector);
-                si (lector.positus >= lector.mensura
+                si (   lector.positus              >= lector.mensura
                     || lector.fons[lector.positus] != '"')
                 {
                     si (causa_out != NIHIL)
@@ -673,8 +696,8 @@ _compilare_cum (
                 }
                 lector.positus++;
                 initium = lector.positus;
-                dum (lector.positus < lector.mensura
-                    && lector.fons[lector.positus] != '"')
+                dum (   lector.positus < lector.mensura
+                     && lector.fons[lector.positus] != '"')
                 {
                     lector.positus++;
                 }
@@ -693,7 +716,7 @@ _compilare_cum (
                 lector.positus++;   /* '"' */
             }
             _spatia_transilire(&lector);
-            si (lector.positus >= lector.mensura
+            si (   lector.positus              >= lector.mensura
                 || lector.fons[lector.positus] != ']')
             {
                 si (causa_out != NIHIL)
@@ -715,7 +738,7 @@ _compilare_cum (
                         (constans SilvaQuaestioPars*)xar_obtinere(
                             partes, p);
 
-                    si (alia == NIHIL
+                    si (   alia        == NIHIL
                         || alia->genus != SILVA_QUAESTIO_PARS_GENUS)
                     {
                         perge;
@@ -739,8 +762,8 @@ _compilare_cum (
         {
             /* captura $nomen (QB) */
             SilvaQuaestioPars* pars;
-            i32 initium;
-            i32 mensura;
+                          i32  initium;
+                          i32  mensura;
 
             partes = _compositum_parare(piscina, quaestio, &catena,
                 partes, &pendens, &spatium_visum);
@@ -767,12 +790,12 @@ _compilare_cum (
         {
             /* pseudo-classis :titulus aut :titulus(arg) (QC) */
             SilvaQuaestioPars* pars;
-            i32 initium;
-            i32 mensura;
-            s32 index_nativi;
-            b32 habet_arg = FALSUM;
-            i32 arg_initium = ZEPHYRUM;
-            i32 arg_finis = ZEPHYRUM;
+                          i32  initium;
+                          i32  mensura;
+                          s32  index_nativi;
+                          b32  habet_arg    = FALSUM;
+                          i32  arg_initium  = ZEPHYRUM;
+                          i32  arg_finis    = ZEPHYRUM;
 
             partes = _compositum_parare(piscina, quaestio, &catena,
                 partes, &pendens, &spatium_visum);
@@ -787,7 +810,7 @@ _compilare_cum (
                 }
                 redde NIHIL;
             }
-            si (lector.positus < lector.mensura
+            si (   lector.positus < lector.mensura
                 && lector.fons[lector.positus] == '(')
             {
                 si (!_pseudo_arg_legere(&lector, &arg_initium,
@@ -812,7 +835,7 @@ _compilare_cum (
                 constans PseudoNativum* nativum =
                     &_pseudo_nativa[index_nativi];
 
-                si (nativum->argumentum_necessarium
+                si (   nativum->argumentum_necessarium
                     && (!habet_arg || arg_finis == arg_initium))
                 {
                     si (causa_out != NIHIL)
@@ -831,13 +854,13 @@ _compilare_cum (
                     redde NIHIL;
                 }
                 pars->pseudo_genus = nativum->genus;
-                si (nativum->genus == SILVA_QUAESTIO_PSEUDO_HABET
+                si (   nativum->genus == SILVA_QUAESTIO_PSEUDO_HABET
                     || nativum->genus == SILVA_QUAESTIO_PSEUDO_NON)
                 {
                     /* selector nidificatus: fragmentum
                      * NUL-terminatum -> recursio */
                     character* fragmentum;
-                    i32 arg_mensura = arg_finis - arg_initium;
+                          i32  arg_mensura = arg_finis - arg_initium;
 
                     fragmentum = (character*)piscina_allocare(
                         piscina,
@@ -885,9 +908,9 @@ _compilare_cum (
                     }
                     redde NIHIL;
                 }
-                pars->pseudo_genus = SILVA_QUAESTIO_PSEUDO_USOR;
-                pars->pseudo_functio = usoris->functio;
-                pars->pseudo_datum = usoris->datum;
+                pars->pseudo_genus    = SILVA_QUAESTIO_PSEUDO_USOR;
+                pars->pseudo_functio  = usoris->functio;
+                pars->pseudo_datum    = usoris->datum;
                 si (habet_arg && arg_finis > arg_initium)
                 {
                     pars->pseudo_arg = _chordam_copiare(piscina,
@@ -914,8 +937,8 @@ _compilare_cum (
             si (c == '*')
             {
                 lector.positus++;
-                pars->genus = SILVA_QUAESTIO_PARS_UNIVERSALIS;
-                pars->nodi_genus = -I;
+                pars->genus       = SILVA_QUAESTIO_PARS_UNIVERSALIS;
+                pars->nodi_genus  = -I;
             }
             alioquin
             {
@@ -932,8 +955,8 @@ _compilare_cum (
                     }
                     redde NIHIL;
                 }
-                pars->genus = SILVA_QUAESTIO_PARS_GENUS;
-                pars->nodi_genus = inventum;
+                pars->genus       = SILVA_QUAESTIO_PARS_GENUS;
+                pars->nodi_genus  = inventum;
             }
             perge;
         }
@@ -944,7 +967,7 @@ _compilare_cum (
         redde NIHIL;
     }
 
-    si (partes == NIHIL || xar_numerus(partes) == ZEPHYRUM
+    si (   partes  == NIHIL || xar_numerus(partes) == ZEPHYRUM
         || pendens != SILVA_QUAESTIO_COMB_NULLUS)
     {
         si (causa_out != NIHIL)
@@ -963,7 +986,7 @@ _compilare_cum (
         {
             Xar** una = (Xar**)xar_obtinere(quaestio->catenae, c2);
 
-            si (una != NIHIL && *una != NIHIL
+            si (   una != NIHIL && *una != NIHIL
                 && xar_numerus(*una) > quaestio->gradus_maximi)
             {
                 quaestio->gradus_maximi = xar_numerus(*una);
@@ -975,10 +998,10 @@ _compilare_cum (
 
 SilvaQuaestio*
 silva_quaestio_compilare (
-    Piscina*                       piscina,
-    constans SilvaRegistrumCoctum* tabularium,
-    constans character*            selector,
-    constans character**           causa_out)
+                          Piscina*  piscina,
+    constans SilvaRegistrumCoctum*  tabularium,
+               constans character*  selector,
+               constans character** causa_out)
 {
     redde _compilare_cum(piscina, tabularium, NIHIL, selector,
         causa_out, ZEPHYRUM);
@@ -986,15 +1009,16 @@ silva_quaestio_compilare (
 
 SilvaQuaestio*
 silva_quaestio_compilare_cum_registro (
-    Piscina*                               piscina,
-    constans SilvaRegistrumCoctum*         tabularium,
-    constans SilvaQuaestioPseudoRegistrum* registro,
-    constans character*                    selector,
-    constans character**                   causa_out)
+                                  Piscina*  piscina,
+            constans SilvaRegistrumCoctum*  tabularium,
+    constans SilvaQuaestioPseudoRegistrum*  registro,
+                       constans character*  selector,
+                       constans character** causa_out)
 {
     redde _compilare_cum(piscina, tabularium, registro, selector,
         causa_out, ZEPHYRUM);
 }
+
 
 /* ==================================================
  * Congruentia
@@ -1003,7 +1027,10 @@ silva_quaestio_compilare_cum_registro (
 /* Comparatio chordae contra operatorem attributi (mensura-conscia;
  * petitum vacuum: AEQUALIS = vacuo soli, ceteri = VERUM) */
 hic_manens b32
-_valor_congruit_op (chorda habitum, s32 op, chorda petitum)
+_valor_congruit_op (
+    chorda habitum,
+       s32 op,
+    chorda petitum)
 {
     si (op == SILVA_QUAESTIO_ATTR_AEQUALIS)
     {
@@ -1050,8 +1077,8 @@ _valor_congruit_op (chorda habitum, s32 op, chorda petitum)
 hic_manens b32
 _attributum_congruit (
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaQuaestioPars*    pars,
-    constans SilvaNodus*           nodus)
+       constans SilvaQuaestioPars* pars,
+              constans SilvaNodus* nodus)
 {
     s32 k = _locum_invenire(tabularium, nodus->genus,
         pars->locus_titulus);
@@ -1082,7 +1109,7 @@ _attributum_congruit (
             SilvaValor* elem = silva_valor_lista_obtinere(*valor,
                 i);
 
-            si (elem != NIHIL && elem->genus == SILVA_VALOR_TOKEN
+            si (   elem != NIHIL && elem->genus == SILVA_VALOR_TOKEN
                 && elem->datum.token != NIHIL
                 && _valor_congruit_op(elem->datum.token->valor,
                        pars->attr_op, pars->attr_valor))
@@ -1097,14 +1124,17 @@ _attributum_congruit (
 
 /* Praenuntiatio (recursio mutua: compositum -> pseudo -> catena
  * nidificata -> compositum) */
-hic_manens b32 _pseudo_congruit (constans SilvaQuaestio* quaestio,
-    constans SilvaQuaestioPars* pars, constans SilvaNodus* nodus);
+hic_manens b32
+_pseudo_congruit (
+        constans SilvaQuaestio* quaestio,
+    constans SilvaQuaestioPars* pars,
+           constans SilvaNodus* nodus);
 
 hic_manens b32
 _composito_congruit (
-    constans SilvaQuaestio*       quaestio,
+          constans SilvaQuaestio* quaestio,
     constans SilvaQuaestioGradus* gradus,
-    constans SilvaNodus*          nodus)
+             constans SilvaNodus* nodus)
 {
     i32 i;
 
@@ -1149,17 +1179,19 @@ _composito_congruit (
  * percursi, listae perscrutatae pro nodo; index elementi redditur.
  * NIHIL = nodus in loco NODO directo sedet - fratres nulli. */
 hic_manens constans SilvaValor*
-_listam_continentem (constans SilvaNodus* nodus, s32* index_out)
+_listam_continentem (
+    constans SilvaNodus* nodus,
+                    s32* index_out)
 {
     constans SilvaNodus* pater = nodus->pater;
-    i32 i;
+                    i32  i;
 
     si (pater == NIHIL) redde NIHIL;
     per (i = ZEPHYRUM; i < (i32)pater->numerus_locorum; i++)
     {
         constans SilvaValor* valor = &pater->loci[i];
-        i32 n;
-        i32 k;
+                        i32  n;
+                        i32  k;
 
         si (valor->genus != SILVA_VALOR_LISTA) perge;
         n = silva_valor_lista_numerus(*valor);
@@ -1168,7 +1200,7 @@ _listam_continentem (constans SilvaNodus* nodus, s32* index_out)
             SilvaValor* elem = silva_valor_lista_obtinere(*valor,
                 k);
 
-            si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
+            si (   elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
                 && elem->datum.nodus == nodus)
             {
                 *index_out = (s32)k;
@@ -1179,21 +1211,31 @@ _listam_continentem (constans SilvaNodus* nodus, s32* index_out)
     redde NIHIL;
 }
 
+
 /* ==================================================
  * Pseudo-classes (QC) - praedicata et ambulatio subarboris
  * ================================================== */
 
-hic_manens b32 _congruit_interna (constans SilvaQuaestio* quaestio,
-    constans SilvaNodus* nodus, constans SilvaNodus* limes);
-hic_manens b32 _liberos_quaerere (constans SilvaQuaestio* quaestio,
-    constans SilvaQuaestioPars* pars, constans SilvaNodus* subiectum,
-    constans SilvaNodus* nodus, b32 lectiones_omnes,
-    i32 profunditas);
+hic_manens b32
+_congruit_interna (
+    constans SilvaQuaestio* quaestio,
+       constans SilvaNodus* nodus,
+       constans SilvaNodus* limes);
+hic_manens b32
+_liberos_quaerere (
+        constans SilvaQuaestio* quaestio,
+    constans SilvaQuaestioPars* pars,
+           constans SilvaNodus* subiectum,
+           constans SilvaNodus* nodus,
+                           b32  lectiones_omnes,
+                           i32  profunditas);
 
 /* Valorem lexematis loci contra argumentum comparare (aequalitas) */
 hic_manens b32
-_loci_token_aequat (constans SilvaNodus* nodus, s32 locus,
-    chorda petitum)
+_loci_token_aequat (
+    constans SilvaNodus* nodus,
+                    s32  locus,
+                 chorda  petitum)
 {
     constans SilvaValor* valor;
 
@@ -1202,7 +1244,7 @@ _loci_token_aequat (constans SilvaNodus* nodus, s32 locus,
         redde FALSUM;
     }
     valor = &nodus->loci[locus];
-    si (valor->genus != SILVA_VALOR_TOKEN
+    si (   valor->genus       != SILVA_VALOR_TOKEN
         || valor->datum.token == NIHIL)
     {
         redde FALSUM;
@@ -1216,10 +1258,10 @@ _loci_token_aequat (constans SilvaNodus* nodus, s32 locus,
  * genus + lexema) */
 hic_manens b32
 _nodo_probare (
-    constans SilvaQuaestio*     quaestio,
+        constans SilvaQuaestio* quaestio,
     constans SilvaQuaestioPars* pars,
-    constans SilvaNodus*        subiectum,
-    constans SilvaNodus*        nodus)
+           constans SilvaNodus* subiectum,
+           constans SilvaNodus* nodus)
 {
     commutatio (pars->pseudo_genus)
     {
@@ -1235,14 +1277,14 @@ _nodo_probare (
         {
             redde FALSUM;
         }
-        si (quaestio->locus_functionis < ZEPHYRUM
+        si (   quaestio->locus_functionis < ZEPHYRUM
             || quaestio->locus_functionis
                 >= (s32)nodus->numerus_locorum)
         {
             redde FALSUM;
         }
         valor = &nodus->loci[quaestio->locus_functionis];
-        si (valor->genus != SILVA_VALOR_NODUS
+        si (   valor->genus       != SILVA_VALOR_NODUS
             || valor->datum.nodus == NIHIL)
         {
             redde FALSUM;
@@ -1276,12 +1318,12 @@ _nodo_probare (
  * regulam ambigui _nodum_visitare speculatur) */
 hic_manens b32
 _valorem_quaerere (
-    constans SilvaQuaestio*     quaestio,
+        constans SilvaQuaestio* quaestio,
     constans SilvaQuaestioPars* pars,
-    constans SilvaNodus*        subiectum,
-    SilvaValor                  valor,
-    b32                         lectiones_omnes,
-    i32                         profunditas)
+           constans SilvaNodus* subiectum,
+                    SilvaValor  valor,
+                           b32  lectiones_omnes,
+                           i32  profunditas)
 {
     si (profunditas > LXIV) redde FALSUM;
     si (valor.genus == SILVA_VALOR_LISTA)
@@ -1294,7 +1336,7 @@ _valorem_quaerere (
             SilvaValor* elem = silva_valor_lista_obtinere(valor,
                 i);
 
-            si (elem != NIHIL
+            si (   elem != NIHIL
                 && _valorem_quaerere(quaestio, pars, subiectum,
                        *elem, lectiones_omnes, profunditas + I))
             {
@@ -1303,7 +1345,7 @@ _valorem_quaerere (
         }
         redde FALSUM;
     }
-    si (valor.genus == SILVA_VALOR_NODUS
+    si (   valor.genus       == SILVA_VALOR_NODUS
         && valor.datum.nodus != NIHIL)
     {
         si (_nodo_probare(quaestio, pars, subiectum,
@@ -1321,31 +1363,31 @@ _valorem_quaerere (
  * descendentes soli; regula lectionum ambigui servata) */
 hic_manens b32
 _liberos_quaerere (
-    constans SilvaQuaestio*     quaestio,
+        constans SilvaQuaestio* quaestio,
     constans SilvaQuaestioPars* pars,
-    constans SilvaNodus*        subiectum,
-    constans SilvaNodus*        nodus,
-    b32                         lectiones_omnes,
-    i32                         profunditas)
+           constans SilvaNodus* subiectum,
+           constans SilvaNodus* nodus,
+                           b32  lectiones_omnes,
+                           i32  profunditas)
 {
     i32 i;
 
     si (profunditas > LXIV) redde FALSUM;
-    si (quaestio->genus_ambigui >= ZEPHYRUM
-        && nodus->genus == quaestio->genus_ambigui)
+    si (   quaestio->genus_ambigui >= ZEPHYRUM
+        && nodus->genus            == quaestio->genus_ambigui)
     {
         constans SilvaValor* interps;
         constans SilvaValor* canonica;
 
-        si (quaestio->locus_interpretationum
+        si (   quaestio->locus_interpretationum
                 >= (i32)nodus->numerus_locorum
             || quaestio->locus_canonicae
                 >= (i32)nodus->numerus_locorum)
         {
             redde FALSUM;
         }
-        interps = &nodus->loci[quaestio->locus_interpretationum];
-        canonica = &nodus->loci[quaestio->locus_canonicae];
+        interps   = &nodus->loci[quaestio->locus_interpretationum];
+        canonica  = &nodus->loci[quaestio->locus_canonicae];
         si (interps->genus != SILVA_VALOR_LISTA) redde FALSUM;
         si (lectiones_omnes)
         {
@@ -1379,16 +1421,16 @@ _liberos_quaerere (
 /* Pars pseudo contra nodum (QC) */
 hic_manens b32
 _pseudo_congruit (
-    constans SilvaQuaestio*     quaestio,
+        constans SilvaQuaestio* quaestio,
     constans SilvaQuaestioPars* pars,
-    constans SilvaNodus*        nodus)
+           constans SilvaNodus* nodus)
 {
     commutatio (pars->pseudo_genus)
     {
     casus SILVA_QUAESTIO_PSEUDO_PRIMUS:
     casus SILVA_QUAESTIO_PSEUDO_ULTIMUS:
     {
-        s32 sedes = -I;
+                        s32  sedes = -I;
         constans SilvaValor* lista = _listam_continentem(nodus,
             &sedes);
         s32 i;   /* signatus: decrementum sub zephyrum terminat */
@@ -1403,8 +1445,8 @@ _pseudo_congruit (
                 SilvaValor* elem = silva_valor_lista_obtinere(
                     *lista, (i32)i);
 
-                si (elem != NIHIL
-                    && elem->genus == SILVA_VALOR_NODUS
+                si (   elem              != NIHIL
+                    && elem->genus       == SILVA_VALOR_NODUS
                     && elem->datum.nodus != NIHIL)
                 {
                     redde FALSUM;   /* frater nodalis praecedens */
@@ -1417,7 +1459,7 @@ _pseudo_congruit (
             SilvaValor* elem = silva_valor_lista_obtinere(*lista,
                 (i32)i);
 
-            si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
+            si (   elem != NIHIL && elem->genus == SILVA_VALOR_NODUS
                 && elem->datum.nodus != NIHIL)
             {
                 redde FALSUM;   /* frater nodalis sequens */
@@ -1439,7 +1481,7 @@ _pseudo_congruit (
         redde _congruit_interna(pars->pseudo_quaestio, nodus,
             NIHIL) ? FALSUM : VERUM;
     casus SILVA_QUAESTIO_PSEUDO_VOCAT:
-        si (quaestio->genus_vocationis < ZEPHYRUM
+        si (   quaestio->genus_vocationis < ZEPHYRUM
             || quaestio->genus_folii < ZEPHYRUM)
         {
             redde FALSUM;
@@ -1502,12 +1544,12 @@ _pseudo_congruit (
  * superiorem - retentationes mortuae vestigia sua secum ferunt). */
 hic_manens b32
 _catenae_congruit (
-    constans SilvaQuaestio* quaestio,
-    Xar*                    catena,
-    i32                     index,
-    constans SilvaNodus*    nodus,
-    constans SilvaNodus*    limes,
-    constans SilvaNodus**   vestigia)
+    constans SilvaQuaestio*  quaestio,
+                       Xar*  catena,
+                       i32   index,
+       constans SilvaNodus*  nodus,
+       constans SilvaNodus*  limes,
+       constans SilvaNodus** vestigia)
 {
     constans SilvaQuaestioGradus* gradus;
 
@@ -1557,7 +1599,7 @@ _catenae_congruit (
     casus SILVA_QUAESTIO_COMB_FRATER_PROXIMUS:
     casus SILVA_QUAESTIO_COMB_FRATER_SEQUENS:
     {
-        s32 sedes = -I;
+                        s32  sedes = -I;
         constans SilvaValor* lista = _listam_continentem(nodus,
             &sedes);
         b32 inventum = FALSUM;
@@ -1569,8 +1611,8 @@ _catenae_congruit (
             SilvaValor* elem = silva_valor_lista_obtinere(*lista,
                 (i32)i);
 
-            si (elem == NIHIL
-                || elem->genus != SILVA_VALOR_NODUS
+            si (   elem              == NIHIL
+                || elem->genus       != SILVA_VALOR_NODUS
                 || elem->datum.nodus == NIHIL)
             {
                 perge;   /* lexema interpositum */
@@ -1602,8 +1644,8 @@ _catenae_congruit (
 hic_manens b32
 _congruit_interna (
     constans SilvaQuaestio* quaestio,
-    constans SilvaNodus*    nodus,
-    constans SilvaNodus*    limes)
+       constans SilvaNodus* nodus,
+       constans SilvaNodus* limes)
 {
     i32 c;
 
@@ -1625,31 +1667,34 @@ _congruit_interna (
 b32
 silva_quaestio_congruit (
     constans SilvaQuaestio* quaestio,
-    constans SilvaNodus*    nodus)
+       constans SilvaNodus* nodus)
 {
     redde _congruit_interna(quaestio, nodus, NIHIL);
 }
+
 
 /* ==================================================
  * Exsecutio - ambulatio arboris (canonica per ambigua)
  * ================================================== */
 
 nomen structura {
-    constans SilvaQuaestio* quaestio;
-    Xar*                    resultata;
-    Piscina*                piscina;
-    constans SilvaNodus**   vestigia;  /* quaternio gradus_maximi */
+    constans SilvaQuaestio*  quaestio;
+                       Xar*  resultata;
+                   Piscina*  piscina;
+       constans SilvaNodus** vestigia;  /* quaternio gradus_maximi */
 } AmbulatioQuaestionis;
 
 /* Capturas catenae congruentis ligare (QB): gradus OMNES cum
  * $nomine ex vestigiis - insectum v1 #1 (subiectum solum ligatum)
  * exstirpatum. NIHIL = catena sine capturis (nulla allocatio). */
 hic_manens Xar*
-_capturas_ligare (Xar* catena, constans SilvaNodus** vestigia,
-    Piscina* piscina)
+_capturas_ligare (
+                    Xar*  catena,
+    constans SilvaNodus** vestigia,
+                Piscina*  piscina)
 {
     Xar* capturae = NIHIL;
-    i32 g;
+    i32  g;
 
     per (g = ZEPHYRUM; g < xar_numerus(catena); g++)
     {
@@ -1665,7 +1710,7 @@ _capturas_ligare (Xar* catena, constans SilvaNodus** vestigia,
                     gradus->partes, p);
             SilvaQuaestioCaptura* cap;
 
-            si (pars == NIHIL
+            si (   pars        == NIHIL
                 || pars->genus != SILVA_QUAESTIO_PARS_CAPTURA)
             {
                 perge;
@@ -1678,21 +1723,24 @@ _capturas_ligare (Xar* catena, constans SilvaNodus** vestigia,
             }
             cap = (SilvaQuaestioCaptura*)xar_addere(capturae);
             si (cap == NIHIL) redde capturae;
-            cap->titulus = pars->captura_titulus;
-            cap->nodus = vestigia != NIHIL ? vestigia[g] : NIHIL;
+            cap->titulus  = pars->captura_titulus;
+            cap->nodus    = vestigia != NIHIL ? vestigia[g] : NIHIL;
         }
     }
     redde capturae;
 }
 
-hic_manens vacuum _valorem_percurrere (SilvaValor valor,
-    AmbulatioQuaestionis* ambulatio, i32 profunditas);
+hic_manens vacuum
+_valorem_percurrere (
+              SilvaValor  valor,
+    AmbulatioQuaestionis* ambulatio,
+                     i32  profunditas);
 
 hic_manens vacuum
 _nodum_visitare (
-    constans SilvaNodus*  nodus,
+     constans SilvaNodus* nodus,
     AmbulatioQuaestionis* ambulatio,
-    i32                   profunditas)
+                     i32  profunditas)
 {
     i32 i;
 
@@ -1726,13 +1774,13 @@ _nodum_visitare (
 
     /* AMBIGUUS: lectio canonica sola descenditur (DECISUS);
      * :lectiones (QC) lectiones OMNES aperit */
-    si (ambulatio->quaestio->genus_ambigui >= ZEPHYRUM
+    si (   ambulatio->quaestio->genus_ambigui >= ZEPHYRUM
         && nodus->genus == ambulatio->quaestio->genus_ambigui)
     {
         constans SilvaValor* interps;
         constans SilvaValor* canonica;
 
-        si (ambulatio->quaestio->locus_interpretationum
+        si (   ambulatio->quaestio->locus_interpretationum
                 >= (i32)nodus->numerus_locorum
             || ambulatio->quaestio->locus_canonicae
                 >= (i32)nodus->numerus_locorum)
@@ -1773,9 +1821,9 @@ _nodum_visitare (
 
 hic_manens vacuum
 _valorem_percurrere (
-    SilvaValor            valor,
+              SilvaValor  valor,
     AmbulatioQuaestionis* ambulatio,
-    i32                   profunditas)
+                     i32  profunditas)
 {
     si (profunditas > LXIV) redde;
 
@@ -1796,7 +1844,7 @@ _valorem_percurrere (
         }
         redde;
     }
-    si (valor.genus == SILVA_VALOR_NODUS
+    si (   valor.genus       == SILVA_VALOR_NODUS
         && valor.datum.nodus != NIHIL)
     {
         _nodum_visitare(valor.datum.nodus, ambulatio,
@@ -1807,8 +1855,8 @@ _valorem_percurrere (
 Xar*
 silva_quaestio_exsequi (
     constans SilvaQuaestio* quaestio,
-    SilvaValor              radix,
-    Piscina*                piscina)
+                SilvaValor  radix,
+                   Piscina* piscina)
 {
     AmbulatioQuaestionis ambulatio;
 
@@ -1817,8 +1865,8 @@ silva_quaestio_exsequi (
     ambulatio.resultata = xar_creare(piscina,
         (i32)magnitudo(SilvaQuaestioResultatum));
     si (ambulatio.resultata == NIHIL) redde NIHIL;
-    ambulatio.piscina = piscina;
-    ambulatio.vestigia = NIHIL;
+    ambulatio.piscina   = piscina;
+    ambulatio.vestigia  = NIHIL;
     si (quaestio->gradus_maximi > ZEPHYRUM)
     {
         ambulatio.vestigia = (constans SilvaNodus**)

@@ -30,23 +30,23 @@
  * spatialis id tacite dilatat pro recusatione clamosa (quae vitiis
  * detectorum reservatur). */
 nomen structura {
-    i32    linea_a;
-    i32    columna_a;
-    i32    linea_b;
-    i32    columna_b;
-    b32    tolerans;
+       i32 linea_a;
+       i32 columna_a;
+       i32 linea_b;
+       i32 columna_b;
+       b32 tolerans;
     chorda insertum;
 } FormatorEmendatio;
 
 /* nuntius ordinationum ancoram nominat: "(ancora 'x' l.N + II)" */
 nomen structura {
-    constans character* regula;      /* nomen stabile regulae */
-    constans character* nuntius;     /* descriptio brevis */
-                   i32  linea;       /* 1-basata */
-                   i32  columna;     /* 1-basata */
-                   s32  inventum;    /* valor inventus */
-                   s32  exspectatum; /* valor exspectatus */
-                   i32  numerus_emendationum; /* 0 = non fixabilis */
+     constans character* regula;      /* nomen stabile regulae */
+     constans character* nuntius;     /* descriptio brevis */
+                    i32  linea;       /* 1-basata */
+                    i32  columna;     /* 1-basata */
+                    s32  inventum;    /* valor inventus */
+                    s32  exspectatum; /* valor exspectatus */
+                    i32  numerus_emendationum; /* 0 = non fixabilis */
       FormatorEmendatio  emendationes[II];
 } FormatorDivergentia;
 
@@ -61,8 +61,8 @@ nomen structura {
  * solum pertinent (contentum capitum numquam flagratur). */
 Xar*
 formator_lint (
-              Piscina* piscina,
-       SilvaContextus* contextus,
+               Piscina* piscina,
+        SilvaContextus* contextus,
     constans character* fons,
                    i32  mensura);
 
@@ -79,13 +79,13 @@ nomen structura {
                     b32  mutatum;
                     i32  iterationes;
                     i32  applicatae;   /* emendationes summa */
-    constans character*  querela;      /* NIHIL nisi recusatum */
+     constans character* querela;      /* NIHIL nisi recusatum */
 } FormatorScriptum;
 
 FormatorScriptum
 formator_scribere (
-              Piscina* piscina,
-       SilvaContextus* contextus,
+               Piscina* piscina,
+        SilvaContextus* contextus,
     constans character* fons,
                    i32  mensura);
 

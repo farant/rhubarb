@@ -15,16 +15,16 @@
  * directivae accipit, quae EOF numquam continet. */
 interior s64
 _evaluare (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* praefixum,
     constans character* expressio,
-    b32*                successus)
+                   b32* successus)
 {
     SilvaExpansio* exp;
-    Xar* lexemata;
-    Xar* sine_eof;
-    i32 i;
-    i32 n;
+              Xar* lexemata;
+              Xar* sine_eof;
+              i32  i;
+              i32  n;
 
     exp = silva_expansio_creare(piscina);
     silva_fons_addere(exp, "probatio.c", FALSUM);
@@ -39,11 +39,11 @@ _evaluare (
 
     lexemata = silva_lexare(piscina, expressio, (i32)strlen(expressio),
         ZEPHYRUM);
-    sine_eof = xar_creare(piscina, magnitudo(SilvaToken*));
-    n = xar_numerus(lexemata);
+    sine_eof  = xar_creare(piscina, magnitudo(SilvaToken*));
+    n         = xar_numerus(lexemata);
     per (i = ZEPHYRUM; i < n; i++)
     {
-        SilvaToken* t;
+        SilvaToken*  t;
         SilvaToken** locus;
 
         t = *(SilvaToken**)xar_obtinere(lexemata, i);
@@ -62,11 +62,12 @@ _evaluare (
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
-    b32      ok;
+        b32  ok;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_conditio", 1048576);
+    piscina = piscina_generare_dynamicum("probatio_silva_conditio",
+        1048576);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -84,18 +85,25 @@ s32 principale (vacuum)
 
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1", &ok), I);
         CREDO_VERUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0", &ok),
+            ZEPHYRUM);
         CREDO_VERUM (ok);
 
         /* praecedentia */
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 + 2 * 3", &ok), VII);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "(1 + 2) * 3", &ok), IX);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "10 / 3", &ok), III);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "10 % 3", &ok), I);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 + 2 * 3", &ok),
+            VII);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "(1 + 2) * 3",
+            &ok), IX);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "10 / 3", &ok),
+            III);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "10 % 3", &ok),
+            I);
 
         /* basis: hex, oct, suffixa */
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0x10", &ok), XVI);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "010", &ok), VIII);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0x10", &ok),
+            XVI);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "010", &ok),
+            VIII);
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "16L", &ok), XVI);
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1U", &ok), I);
     }
@@ -109,10 +117,13 @@ s32 principale (vacuum)
     {
         imprimere("\n--- Probans comparationem signatam ---\n");
 
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "-1 < 0", &ok), I);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "-1 < 0", &ok),
+            I);
         CREDO_VERUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "-5 / 2", &ok), -II);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0 - 3", &ok), -III);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "-5 / 2", &ok),
+            -II);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0 - 3", &ok),
+            -III);
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "~0", &ok), -I);
     }
 
@@ -124,24 +135,37 @@ s32 principale (vacuum)
     {
         imprimere("\n--- Probans operatores ceteros ---\n");
 
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0xFF & 0x0F", &ok), XV);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 | 2", &ok), III);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "5 ^ 3", &ok), VI);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 << 4", &ok), XVI);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "256 >> 4", &ok), XVI);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0xFF & 0x0F",
+            &ok), XV);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 | 2", &ok),
+            III);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "5 ^ 3", &ok),
+            VI);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 << 4", &ok),
+            XVI);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "256 >> 4", &ok),
+            XVI);
 
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "3 > 2", &ok), I);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "2 >= 3", &ok), ZEPHYRUM);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 == 1", &ok), I);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 != 1", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "2 >= 3", &ok),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 == 1", &ok),
+            I);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 != 1", &ok),
+            ZEPHYRUM);
 
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 && 0", &ok), ZEPHYRUM);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 || 0", &ok), I);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 && 0", &ok),
+            ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 || 0", &ok),
+            I);
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "!0", &ok), I);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "!5", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "!5", &ok),
+            ZEPHYRUM);
 
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 ? 5 : 10", &ok), V);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0 ? 5 : 10", &ok), X);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 ? 5 : 10",
+            &ok), V);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "0 ? 5 : 10",
+            &ok), X);
 
         /* littera characteris */
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "'A'", &ok), LXV);
@@ -157,9 +181,11 @@ s32 principale (vacuum)
         imprimere("\n--- Probans defined ---\n");
 
         CREDO_AEQUALIS_S64 (
-            _evaluare(piscina, "#define FOO 1\n", "defined FOO", &ok), I);
+            _evaluare(piscina, "#define FOO 1\n", "defined FOO", &ok),
+            I);
         CREDO_AEQUALIS_S64 (
-            _evaluare(piscina, "#define FOO 1\n", "defined(FOO)", &ok), I);
+            _evaluare(piscina, "#define FOO 1\n", "defined(FOO)", &ok),
+            I);
         CREDO_AEQUALIS_S64 (
             _evaluare(piscina, NIHIL, "defined BAR", &ok), ZEPHYRUM);
         CREDO_VERUM (ok);
@@ -169,7 +195,8 @@ s32 principale (vacuum)
         /* operandum protectum: FOO ad 0 expanderetur, sed defined
          * ANTE expansionem substituitur */
         CREDO_AEQUALIS_S64 (
-            _evaluare(piscina, "#define FOO 0\n", "defined(FOO)", &ok), I);
+            _evaluare(piscina, "#define FOO 0\n", "defined(FOO)", &ok),
+            I);
 
         /* compositum */
         CREDO_AEQUALIS_S64 (
@@ -214,15 +241,20 @@ s32 principale (vacuum)
     {
         imprimere("\n--- Probans errores ---\n");
 
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 / 0", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 / 0", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 % 0", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 % 0", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 +", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 +", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, ")", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, ")", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 << 65", &ok),
             ZEPHYRUM);
@@ -230,7 +262,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "defined", &ok),
             ZEPHYRUM);
         CREDO_FALSUM (ok);
-        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 ? 2", &ok), ZEPHYRUM);
+        CREDO_AEQUALIS_S64 (_evaluare(piscina, NIHIL, "1 ? 2", &ok),
+            ZEPHYRUM);
         CREDO_FALSUM (ok);
     }
 

@@ -55,7 +55,9 @@ interior constans character* GRAMMATICA_V0 =
     "</grammatica>";
 
 interior b32
-_chorda_est (chorda* c, constans character* literis)
+_chorda_est (
+                chorda* c,
+    constans character* literis)
 {
     si (c == NIHIL)
     {
@@ -65,13 +67,16 @@ _chorda_est (chorda* c, constans character* literis)
     {
         redde FALSUM;
     }
-    redde (memcmp(c->datum, literis, (memoriae_index)c->mensura) == ZEPHYRUM)
+    redde (memcmp(c->datum, literis, (memoriae_index)c->mensura)
+        == ZEPHYRUM)
         ? VERUM : FALSUM;
 }
 
 /* Invenire symbolum per titulum (scansio linearis - probatio) */
 interior s32
-_symbolum (SilvaGenGrammatica* g, constans character* titulus)
+_symbolum (
+    SilvaGenGrammatica* g,
+    constans character* titulus)
 {
     i32 i;
 
@@ -90,11 +95,12 @@ _symbolum (SilvaGenGrammatica* g, constans character* titulus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                    b32  praeteritus;
+                Piscina* piscina;
     InternamentumChorda* intern;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_generare", 8388608);
+    piscina = piscina_generare_dynamicum("probatio_silva_generare",
+        8388608);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -110,12 +116,13 @@ s32 principale (vacuum)
 
     {
         SilvaGenGrammatica* g;
-        SilvaGenProductio* prod;
+         SilvaGenProductio* prod;
         SilvaGenLocusMappa* mappa;
 
         imprimere("\n--- Probans lectionem formae v0 ---\n");
 
-        g = silva_gen_grammaticam_legere(piscina, intern, GRAMMATICA_V0);
+        g = silva_gen_grammaticam_legere(piscina, intern,
+            GRAMMATICA_V0);
         CREDO_NON_NIHIL (g);
 
         /* 6 terminalia, 3 non-terminalia + __initium__ */
@@ -125,7 +132,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (xar_numerus(g->productiones), VII);
 
         /* P0: expr -> expr@sinister PLUS@tok_operator term@dexter */
-        prod = (SilvaGenProductio*)xar_obtinere(g->productiones, ZEPHYRUM);
+        prod = (SilvaGenProductio*)xar_obtinere(g->productiones,
+            ZEPHYRUM);
         CREDO_VERUM (_chorda_est(prod->genus, "binarium"));
         CREDO_VERUM (_chorda_est(prod->id, "expr-plus"));
         CREDO_NIHIL (prod->modus);
@@ -168,12 +176,13 @@ s32 principale (vacuum)
 
     {
         SilvaGenGrammatica* g;
-        SilvaGenCollectio* collectio;
-        SilvaGenTabula* tabula;
+         SilvaGenCollectio* collectio;
+            SilvaGenTabula* tabula;
 
         imprimere("\n--- Probans FIRST/FOLLOW/LALR ---\n");
 
-        g = silva_gen_grammaticam_legere(piscina, intern, GRAMMATICA_V0);
+        g = silva_gen_grammaticam_legere(piscina, intern,
+            GRAMMATICA_V0);
         CREDO_NON_NIHIL (g);
         CREDO_VERUM (silva_gen_first_computare(g));
         CREDO_VERUM (silva_gen_follow_computare(g));
@@ -206,8 +215,8 @@ s32 principale (vacuum)
 
     {
         SilvaGenGrammatica* g;
-        SilvaGenCollectio* collectio;
-        SilvaGenTabula* tabula;
+         SilvaGenCollectio* collectio;
+            SilvaGenTabula* tabula;
         constans character* fons =
             "<grammatica>"
             "  <terminalia>"
@@ -248,11 +257,12 @@ s32 principale (vacuum)
             i32 s;
             s32 plus_idx;
 
-            cella_duplex_inventa = FALSUM;
-            plus_idx = _symbolum(g, "PLUS");
+            cella_duplex_inventa  = FALSUM;
+            plus_idx              = _symbolum(g, "PLUS");
 
             per (s = ZEPHYRUM;
-                 s < xar_numerus(tabula->status_tabulae) && !cella_duplex_inventa;
+                 s < xar_numerus(tabula->status_tabulae)
+                     && !cella_duplex_inventa;
                  s++)
             {
                 Xar* actiones;
@@ -275,7 +285,7 @@ s32 principale (vacuum)
 
     {
         SilvaGenGrammatica* g;
-        SilvaGenSymbolum* sym;
+          SilvaGenSymbolum* sym;
         constans character* fons =
             "<grammatica>"
             "  <terminalia>"
@@ -309,12 +319,13 @@ s32 principale (vacuum)
 
         /* @locus+ forma appendendi lecta */
         {
-            SilvaGenProductio* prod;
+             SilvaGenProductio* prod;
             SilvaGenLocusMappa* mappa;
 
             prod = (SilvaGenProductio*)xar_obtinere(g->productiones, I);
             CREDO_VERUM (_chorda_est(prod->modus, "lista-appendere"));
-            mappa = (SilvaGenLocusMappa*)xar_obtinere(prod->loci, ZEPHYRUM);
+            mappa = (SilvaGenLocusMappa*)xar_obtinere(prod->loci,
+                ZEPHYRUM);
             CREDO_VERUM (_chorda_est(mappa->titulus, "elementa"));
             CREDO_VERUM (mappa->appendere);
         }
@@ -349,7 +360,7 @@ s32 principale (vacuum)
 
     {
         SilvaGenGrammatica* g;
-        SilvaGenProductio* prod;
+         SilvaGenProductio* prod;
         SilvaGenLocusMappa* mappa;
 
         imprimere("\n--- Probans productionem multilinearem ---\n");

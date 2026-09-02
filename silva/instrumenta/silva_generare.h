@@ -20,20 +20,22 @@
 #include "internamentum.h"
 #include "xar.h"
 
+
 /* ================================================
  * Symbolum - Terminale vel Non-Terminale
  * ================================================ */
 
 nomen structura {
-    chorda*  titulus;          /* Symbolum appellatio (internatum) */
-    chorda*  genus;            /* Pro terminalibus: genus lexematis */
-    chorda*  exemplum;         /* Pro lexere: exemplum congruendi (vel NIHIL) */
-    s32      index;            /* Index in tabula symbolorum */
-    b32      est_terminale;    /* VERUM si terminale */
-    Xar*     first;            /* FIRST coniunctum: Xar de s32 (indices terminalium) */
-    Xar*     follow;           /* FOLLOW coniunctum: Xar de s32 (indices terminalium) */
-    b32      habet_epsilon;    /* VERUM si epsilon in FIRST */
+    chorda* titulus;          /* Symbolum appellatio (internatum) */
+    chorda* genus;            /* Pro terminalibus: genus lexematis */
+    chorda* exemplum;         /* Pro lexere: exemplum congruendi (vel NIHIL) */
+       s32  index;            /* Index in tabula symbolorum */
+       b32  est_terminale;    /* VERUM si terminale */
+       Xar* first;            /* FIRST coniunctum: Xar de s32 (indices terminalium) */
+       Xar* follow;           /* FOLLOW coniunctum: Xar de s32 (indices terminalium) */
+       b32  habet_epsilon;    /* VERUM si epsilon in FIRST */
 } SilvaGenSymbolum;
+
 
 /* ================================================
  * Mappa loci - annotatio symbolum@locus (forma v0, spec-v2 §9.3)
@@ -41,25 +43,27 @@ nomen structura {
  * ================================================ */
 
 nomen structura {
-    chorda*  titulus;          /* nomen loci (slot); NIHIL = sine loco */
-    b32      appendere;        /* @locus+ (lista accumulans) */
+    chorda* titulus;          /* nomen loci (slot); NIHIL = sine loco */
+       b32  appendere;        /* @locus+ (lista accumulans) */
 } SilvaGenLocusMappa;
+
 
 /* ================================================
  * Productio - Regula A -> alpha (cum annotationibus)
  * ================================================ */
 
 nomen structura {
-    s32      sinistrum;        /* Index symboli non-terminalis (LHS) */
-    Xar*     dextrum;          /* Xar de s32: indices symbolorum (RHS) */
-    s32      index;            /* Index productionis */
+    s32  sinistrum;        /* Index symboli non-terminalis (LHS) */
+    Xar* dextrum;          /* Xar de s32: indices symbolorum (RHS) */
+    s32  index;            /* Index productionis */
     /* Annotationes (forma v0): */
-    chorda*  genus;            /* genus nodi; NIHIL = pass-through */
-    chorda*  id;               /* id stabile (mandatum si genus) */
-    chorda*  modus;            /* lista-initium|lista-appendere|NIHIL */
-    chorda*  manu;             /* functio constructionis manualis|NIHIL */
-    Xar*     loci;             /* Xar de SilvaGenLocusMappa - parallela dextro */
+    chorda* genus;            /* genus nodi; NIHIL = pass-through */
+    chorda* id;               /* id stabile (mandatum si genus) */
+    chorda* modus;            /* lista-initium|lista-appendere|NIHIL */
+    chorda* manu;             /* functio constructionis manualis|NIHIL */
+       Xar* loci;             /* Xar de SilvaGenLocusMappa - parallela dextro */
 } SilvaGenProductio;
+
 
 /* ================================================
  * Genus extra - genera structuralia (<genera-extra>):
@@ -67,9 +71,10 @@ nomen structura {
  * ================================================ */
 
 nomen structura {
-    chorda*  titulus;          /* nomen generis */
-    chorda*  loci_descriptio;  /* "tokens:lista-token ..." (cruda; layouts Chunk D) */
+    chorda* titulus;          /* nomen generis */
+    chorda* loci_descriptio;  /* "tokens:lista-token ..." (cruda; layouts Chunk D) */
 } SilvaGenGenusExtra;
+
 
 /* ================================================
  * Registrum generum (S20) - genera nodorum cum locis
@@ -78,15 +83,16 @@ nomen structura {
  * ================================================ */
 
 nomen structura {
-    chorda*  titulus;          /* nomen loci */
-    s32      species;          /* SilvaLocusSpecies */
+    chorda* titulus;          /* nomen loci */
+       s32  species;          /* SilvaLocusSpecies */
 } SilvaGenLocusDef;
 
 nomen structura {
-    chorda*  titulus;          /* nomen generis */
-    Xar*     loci;             /* Xar de SilvaGenLocusDef (per valorem) */
-    b32      ex_extra;         /* ex <genera-extra> */
+    chorda* titulus;          /* nomen generis */
+       Xar* loci;             /* Xar de SilvaGenLocusDef (per valorem) */
+       b32  ex_extra;         /* ex <genera-extra> */
 } SilvaGenGenusDef;
+
 
 /* ================================================
  * Praelatio (<praelatio terminalis="ELSE"
@@ -95,25 +101,27 @@ nomen structura {
  * ================================================ */
 
 nomen structura {
-    s32  terminalis;   /* index symboli terminalis */
-    s32  actio;        /* SilvaGenActioGenus retinendum (s32) */
+    s32 terminalis;   /* index symboli terminalis */
+    s32 actio;        /* SilvaGenActioGenus retinendum (s32) */
 } SilvaGenPraelatio;
+
 
 /* ================================================
  * Grammatica - Collectio plena
  * ================================================ */
 
 nomen structura {
-    Xar*                     symbola;           /* Xar de SilvaGenSymbolum */
-    Xar*                     productiones;      /* Xar de SilvaGenProductio */
-    Xar*                     genera_extra;      /* Xar de SilvaGenGenusExtra */
-    Xar*                     praelationes;      /* Xar de SilvaGenPraelatio */
-    s32                      initium_index;     /* Index symboli initialis */
-    i32                      numerus_terminalium;
-    i32                      numerus_non_terminalium;
-    Piscina*                 piscina;
-    InternamentumChorda*     intern;
+                    Xar* symbola;           /* Xar de SilvaGenSymbolum */
+                    Xar* productiones;      /* Xar de SilvaGenProductio */
+                    Xar* genera_extra;      /* Xar de SilvaGenGenusExtra */
+                    Xar* praelationes;      /* Xar de SilvaGenPraelatio */
+                    s32  initium_index;     /* Index symboli initialis */
+                    i32  numerus_terminalium;
+                    i32  numerus_non_terminalium;
+                Piscina* piscina;
+    InternamentumChorda* intern;
 } SilvaGenGrammatica;
+
 
 /* ================================================
  * Impletiones (T4): QUAE genera locum implere possint.
@@ -131,16 +139,16 @@ nomen structura {
  * ================================================ */
 
 nomen structura {
-    chorda*  genus;    /* genus continens */
-    chorda*  locus;    /* nomen loci */
-    Xar*     nodi;     /* Xar de chorda* - genera nodorum admissa */
-    Xar*     lexemata; /* Xar de chorda* - symbola terminalia admissa */
+    chorda* genus;    /* genus continens */
+    chorda* locus;    /* nomen loci */
+       Xar* nodi;     /* Xar de chorda* - genera nodorum admissa */
+       Xar* lexemata; /* Xar de chorda* - symbola terminalia admissa */
 } SilvaGenImpletio;
 
 /* Xar de SilvaGenImpletio; NIHIL si grammatica NIHIL */
 Xar*
-silva_gen_impletiones_computare(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_impletiones_computare (
+    SilvaGenGrammatica* grammatica);
 
 /* Genera in RADICE documenti licita: clausura symboli initialis.
  * Xar de chorda* (tituli generum); NIHIL si grammatica NIHIL.
@@ -149,8 +157,8 @@ silva_gen_impletiones_computare(
  * genus gignit, ergo nullum par (genus, locus) meret; vocabularium
  * tamen reale est (scriptor liberos radicis DIRECTE emittit). */
 Xar*
-silva_gen_genera_radicis_computare(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_genera_radicis_computare (
+    SilvaGenGrammatica* grammatica);
 
 /* Genera quae symbolum NOMINATUM producere potest; NIHIL si
  * symbolum ignotum aut terminale. Xar de chorda*.
@@ -160,9 +168,9 @@ silva_gen_genera_radicis_computare(
  * clausura id nomen delet, haec functio reddit, ergo fragmentum
  * emissum nomen VERUM ferre potest. */
 Xar*
-silva_gen_genera_symboli_computare(
-    SilvaGenGrammatica*  grammatica,
-    constans character*  titulus);
+silva_gen_genera_symboli_computare (
+    SilvaGenGrammatica* grammatica,
+    constans character* titulus);
 
 
 /* ================================================
@@ -173,10 +181,10 @@ silva_gen_genera_symboli_computare(
  * Redde: SilvaGenGrammatica* vel NIHIL si error
  */
 SilvaGenGrammatica*
-silva_gen_grammaticam_legere(
-    Piscina*                 piscina,
-    InternamentumChorda*     intern,
-    constans character*      stml_fons);
+silva_gen_grammaticam_legere (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* stml_fons);
 
 /* Computare registrum generum (S20): unificatio locorum trans
  * productiones eiusdem generis (conflictus specierum = error) +
@@ -185,8 +193,9 @@ silva_gen_grammaticam_legere(
  * LISTA_MIXTA si non-terminale lista-valens est); @locus+ -> LISTA_*.
  * Reddit Xar de SilvaGenGenusDef vel NIHIL in errore. */
 Xar*
-silva_gen_registrum_computare(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_registrum_computare (
+    SilvaGenGrammatica* grammatica);
+
 
 /* ================================================
  * FIRST Coniuncta
@@ -196,16 +205,17 @@ silva_gen_registrum_computare(
  * Redde: VERUM si successus
  */
 b32
-silva_gen_first_computare(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_first_computare (
+    SilvaGenGrammatica* grammatica);
 
 /* Obtinere FIRST coniunctum pro symbolo
  * Redde: Xar* de i32 (indices terminalium)
  */
 Xar*
-silva_gen_first_obtinere(
-    SilvaGenGrammatica*  grammatica,
-    i32                 symbolum_index);
+silva_gen_first_obtinere (
+    SilvaGenGrammatica* grammatica,
+                   i32  symbolum_index);
+
 
 /* ================================================
  * Depuratio - Imprimere
@@ -213,13 +223,14 @@ silva_gen_first_obtinere(
 
 /* Imprimere grammaticam ad stdout */
 vacuum
-silva_gen_grammaticam_imprimere(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_grammaticam_imprimere (
+    SilvaGenGrammatica* grammatica);
 
 /* Imprimere FIRST coniuncta ad stdout */
 vacuum
-silva_gen_first_imprimere(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_first_imprimere (
+    SilvaGenGrammatica* grammatica);
+
 
 /* ================================================
  * FOLLOW Coniuncta
@@ -230,60 +241,65 @@ silva_gen_first_imprimere(
  * Redde: VERUM si successus
  */
 b32
-silva_gen_follow_computare(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_follow_computare (
+    SilvaGenGrammatica* grammatica);
 
 /* Obtinere FOLLOW coniunctum pro symbolo
  * Redde: Xar* de s32 (indices terminalium), vel NIHIL
  */
 Xar*
-silva_gen_follow_obtinere(
-    SilvaGenGrammatica*  grammatica,
-    i32                 symbolum_index);
+silva_gen_follow_obtinere (
+    SilvaGenGrammatica* grammatica,
+                   i32  symbolum_index);
 
 /* Imprimere FOLLOW coniuncta ad stdout */
 vacuum
-silva_gen_follow_imprimere(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_follow_imprimere (
+    SilvaGenGrammatica* grammatica);
+
 
 /* ================================================
  * LR(1) Res (Item): [A -> alpha . beta, a]
  * ================================================ */
 
 nomen structura {
-    s32  productio;     /* Index productionis */
-    s32  punctum;       /* Positio puncti (0..longitudo RHS) */
-    s32  prospectus;    /* Lookahead: index terminalis (-1 = EOF/finis) */
+    s32 productio;     /* Index productionis */
+    s32 punctum;       /* Positio puncti (0..longitudo RHS) */
+    s32 prospectus;    /* Lookahead: index terminalis (-1 = EOF/finis) */
 } SilvaGenRes;
+
 
 /* ================================================
  * LR(1) Status (State): coniunctum rerum
  * ================================================ */
 
 nomen structura {
-    Xar*  res;          /* Xar de SilvaGenRes */
-    s32   index;        /* Status numerus */
+    Xar* res;          /* Xar de SilvaGenRes */
+    s32  index;        /* Status numerus */
 } SilvaGenStatus;
+
 
 /* ================================================
  * Transitio: status --symbolum--> status_novus
  * ================================================ */
 
 nomen structura {
-    s32  status;        /* Fons status */
-    s32  symbolum;      /* Symbolum transitionis */
-    s32  status_novus;  /* Destinatio status */
+    s32 status;        /* Fons status */
+    s32 symbolum;      /* Symbolum transitionis */
+    s32 status_novus;  /* Destinatio status */
 } SilvaGenTransitio;
+
 
 /* ================================================
  * Collectio Canonica: omnes status + transitiones
  * ================================================ */
 
 nomen structura {
-    Xar*                status_omnes;     /* Xar de SilvaGenStatus */
-    Xar*                transitiones;     /* Xar de SilvaGenTransitio */
-    SilvaGenGrammatica*  grammatica;
+                   Xar* status_omnes;     /* Xar de SilvaGenStatus */
+                   Xar* transitiones;     /* Xar de SilvaGenTransitio */
+    SilvaGenGrammatica* grammatica;
 } SilvaGenCollectio;
+
 
 /* ================================================
  * Constructio Collectionis LR(1)
@@ -294,8 +310,8 @@ nomen structura {
  * Redde: SilvaGenCollectio* vel NIHIL si error
  */
 SilvaGenCollectio*
-silva_gen_collectio_construere(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_collectio_construere (
+    SilvaGenGrammatica* grammatica);
 
 /* Construere collectionem LALR(1) (multo velocior quam canonica LR(1))
  * Construit LR(0) nucleos, deinde propagat prospectus.
@@ -303,13 +319,14 @@ silva_gen_collectio_construere(
  * Redde: SilvaGenCollectio* vel NIHIL si error
  */
 SilvaGenCollectio*
-silva_gen_collectio_lalr_construere(
-    SilvaGenGrammatica*  grammatica);
+silva_gen_collectio_lalr_construere (
+    SilvaGenGrammatica* grammatica);
 
 /* Imprimere collectionem ad stdout */
 vacuum
-silva_gen_collectio_imprimere(
-    SilvaGenCollectio*   collectio);
+silva_gen_collectio_imprimere (
+    SilvaGenCollectio* collectio);
+
 
 /* ================================================
  * ACTION/GOTO Tabula LR(1)
@@ -325,78 +342,78 @@ nomen enumeratio {
 
 /* Introitus in tabula ACTION */
 nomen structura {
-    s32                terminalis;          /* Index symboli (-1 = $) */
-    SilvaGenActioGenus  actio;              /* SHIFT/REDUCE/ACCEPT */
-    s32                valor;              /* SHIFT: status destinationis; REDUCE: index productionis */
-    b32                conflictus_intentus; /* VERUM si conflictus GLR */
+                   s32 terminalis;          /* Index symboli (-1 = $) */
+    SilvaGenActioGenus actio;              /* SHIFT/REDUCE/ACCEPT */
+                   s32 valor;              /* SHIFT: status destinationis; REDUCE: index productionis */
+                   b32 conflictus_intentus; /* VERUM si conflictus GLR */
 } SilvaGenActioIntroitus;
 
 /* Introitus in tabula GOTO */
 nomen structura {
-    s32  non_terminalis;  /* Index symboli */
-    s32  status_novus;    /* Status destinationis */
+    s32 non_terminalis;  /* Index symboli */
+    s32 status_novus;    /* Status destinationis */
 } SilvaGenGotoIntroitus;
 
 /* Tabula pro uno statu */
 nomen structura {
-    Xar*  actiones;         /* Xar de SilvaGenActioIntroitus */
-    Xar*  goto_introitus;   /* Xar de SilvaGenGotoIntroitus */
-    s32   index;
-    b32   habet_conflictum;
+    Xar* actiones;         /* Xar de SilvaGenActioIntroitus */
+    Xar* goto_introitus;   /* Xar de SilvaGenGotoIntroitus */
+    s32  index;
+    b32  habet_conflictum;
 } SilvaGenStatusTabula;
 
 /* Cella praelata: conflictus declarate resolutus (memoria pro
  * emissione + censu) */
 nomen structura {
-    s32  status;
-    s32  terminalis;
-    s32  actio_retenta;      /* SilvaGenActioGenus (s32) */
-    s32  productio_remota;   /* index productionis remotae */
+    s32 status;
+    s32 terminalis;
+    s32 actio_retenta;      /* SilvaGenActioGenus (s32) */
+    s32 productio_remota;   /* index productionis remotae */
 } SilvaGenCellaPraelata;
 
 /* Tabula completa ACTION/GOTO */
 nomen structura {
-    Xar*                status_tabulae;   /* Xar de SilvaGenStatusTabula */
-    SilvaGenGrammatica*  grammatica;
-    SilvaGenCollectio*   collectio;
-    s32                 numerus_conflictuum;
-    Xar*                cellae_praelatae; /* Xar de SilvaGenCellaPraelata */
-    i32                 numerus_praelatarum;
+                   Xar* status_tabulae;   /* Xar de SilvaGenStatusTabula */
+    SilvaGenGrammatica* grammatica;
+     SilvaGenCollectio* collectio;
+                   s32  numerus_conflictuum;
+                   Xar* cellae_praelatae; /* Xar de SilvaGenCellaPraelata */
+                   i32  numerus_praelatarum;
 } SilvaGenTabula;
 
 /* Construere tabulam ACTION/GOTO ex collectione canonica
  * Redde: SilvaGenTabula* vel NIHIL si error
  */
 SilvaGenTabula*
-silva_gen_tabulam_construere(
-    SilvaGenCollectio*  collectio);
+silva_gen_tabulam_construere (
+    SilvaGenCollectio* collectio);
 
 /* Quaerere actiones pro (status, terminalis)
  * Redde: Xar* de SilvaGenActioIntroitus (possibilis plures si conflictus)
  */
 Xar*
-silva_gen_actiones_quaerere(
-    SilvaGenTabula*  tabula,
-    s32             status,
-    s32             terminalis);
+silva_gen_actiones_quaerere (
+    SilvaGenTabula* tabula,
+               s32  status,
+               s32  terminalis);
 
 /* Quaerere goto pro (status, non_terminalis)
  * Redde: index status novi, vel -1 si non inventum
  */
 s32
-silva_gen_goto_quaerere(
-    SilvaGenTabula*  tabula,
-    s32             status,
-    s32             non_terminalis);
+silva_gen_goto_quaerere (
+    SilvaGenTabula* tabula,
+               s32  status,
+               s32  non_terminalis);
 
 /* Imprimere tabulam ad stdout */
 vacuum
-silva_gen_tabulam_imprimere(
-    SilvaGenTabula*  tabula);
+silva_gen_tabulam_imprimere (
+    SilvaGenTabula* tabula);
 
 /* Imprimere conflictus ad stdout */
 vacuum
-silva_gen_conflictus_imprimere(
-    SilvaGenTabula*  tabula);
+silva_gen_conflictus_imprimere (
+    SilvaGenTabula* tabula);
 
 #endif /* SILVA_GENERARE_H */

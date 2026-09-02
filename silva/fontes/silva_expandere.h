@@ -35,19 +35,20 @@
 #include "tabula_dispersa.h"
 #include "silva_token.h"
 
+
 /* ==================================================
  * Definitio macro
  * ================================================== */
 
 nomen structura {
-    chorda*  titulus;       /* nomen macro */
-    b32      est_functio;   /* '(' adiacens post titulum */
-    b32      est_variadica; /* ... in parametris (C99 - signatum) */
-    Xar*     parametra;     /* Xar de chorda* (tituli parametrorum); NIHIL si nulla */
-    Xar*     corpus;        /* Xar de SilvaToken* - lamina fluxus fontis */
-    s32      fons_index;    /* -1 si ex API */
-    i32      linea_def;     /* 0 si ignota */
-    b32      ex_api;
+    chorda* titulus;       /* nomen macro */
+       b32  est_functio;   /* '(' adiacens post titulum */
+       b32  est_variadica; /* ... in parametris (C99 - signatum) */
+       Xar* parametra;     /* Xar de chorda* (tituli parametrorum); NIHIL si nulla */
+       Xar* corpus;        /* Xar de SilvaToken* - lamina fluxus fontis */
+       s32  fons_index;    /* -1 si ex API */
+       i32  linea_def;     /* 0 si ignota */
+       b32  ex_api;
 } SilvaMacroDef;
 
 
@@ -61,13 +62,13 @@ nomen enumeratio {
 } SilvaEventumGenus;
 
 nomen structura {
-    SilvaEventumGenus genus;
-    s32               fons_index;
-    i32               linea;
-    chorda*           titulus;
-    SilvaMacroDef*    def;          /* NIHIL pro DELETIO */
-    i32               conditio_id;  /* 0 = incondicionale */
-    s32               positus;      /* index in fluxu reliquorum a quo
+    SilvaEventumGenus  genus;
+                  s32  fons_index;
+                  i32  linea;
+               chorda* titulus;
+        SilvaMacroDef* def;          /* NIHIL pro DELETIO */
+                  i32  conditio_id;  /* 0 = incondicionale */
+                  s32  positus;      /* index in fluxu reliquorum a quo
                                      * eventum valet (status ad punctum -
                                      * semantica cpp pro #undef medio) */
 } SilvaEventum;
@@ -107,27 +108,27 @@ nomen structura {
     s32         corpus_initium; /* offset primi lexematis corporis
                                  * (post lineam directivae); -1 si
                                  * corpus vacuum (sim ⑦ C1) */
-    s32         corpus_finis;   /* offset post ultimum lexema corporis;
+    s32 corpus_finis;   /* offset post ultimum lexema corporis;
                                  * -1 si vacuum */
 } SilvaRamus;
 
 structura SilvaRegio {
-    s32         fons_index;
-    i32         linea;
-    Xar*        rami;           /* Xar de SilvaRamus* */
+           s32  fons_index;
+           i32  linea;
+           Xar* rami;           /* Xar de SilvaRamus* */
     SilvaRegio* pater;          /* regio amplectens; NIHIL si suprema */
-    Xar*        filiae;         /* Xar de SilvaRegio* (in ramis sumptis) */
-    b32         est_imperfecta; /* EOF ante #endif */
-    b32         est_ultra_modum; /* profunditas ultra limen (Phase 7):
+           Xar* filiae;         /* Xar de SilvaRegio* (in ramis sumptis) */
+           b32  est_imperfecta; /* EOF ante #endif */
+           b32  est_ultra_modum; /* profunditas ultra limen (Phase 7):
                                   * NULLUS ramus evaluatur - omnes crudi
                                   * (degradatio determinata; recursio
                                   * cessat, octeti supersunt) */
-    Xar*        directiva_finis; /* lexemata lineae #endif; NIHIL si
+    Xar* directiva_finis; /* lexemata lineae #endif; NIHIL si
                                   * imperfecta (sim ⑦ C1). REGIO lineas
                                   * structurales suas POSSIDET (β, sim ⑦
                                   * C2): #if/#elif/#else/#endif numquam
                                   * in directivae_out intrant */
-    b32         est_texta;       /* in arborem texta (Phase 7 Chunk B):
+    b32 est_texta;       /* in arborem texta (Phase 7 Chunk B):
                                   * lineae + cruda ex ARBORE emittuntur,
                                   * non ex reinserendis (dominus unus) */
 };
@@ -144,11 +145,11 @@ nomen structura {
 
 /* Inclusio observata (graphum dependentiarum - "discens") */
 nomen structura {
-    s32     fons_ex;            /* fons in quo #include stat */
+       s32  fons_ex;            /* fons in quo #include stat */
     chorda* via;                /* via petita */
-    s32     fons_ad;            /* fons resolutus; -1 = ignotus */
-    b32     est_praetermissa;   /* praetermissa (custos vel profunditas) */
-    b32     est_angulata;       /* forma angulata contra citatam
+       s32  fons_ad;            /* fons resolutus; -1 = ignotus */
+       b32  est_praetermissa;   /* praetermissa (custos vel profunditas) */
+       b32  est_angulata;       /* forma angulata contra citatam
                                  * "via" (01KY118F1J) */
 } SilvaInclusio;
 
@@ -161,14 +162,14 @@ nomen structura {
  * expansa fert. */
 nomen structura {
     SilvaToken* invocatio;   /* lexema nominis (origo FONS) */
-    Xar*        lamina;      /* Xar de SilvaToken* - [nomen, post ')') */
+           Xar* lamina;      /* Xar de SilvaToken* - [nomen, post ')') */
     /* VACUA: expansio ZERO lexemata peperit. Tunc NULLUM lexema
      * arboris hanc invocationem monstrat, ergo emissio eam per
      * ambulationem numquam invenit et octeti SILENTER perirent
      * (successu nuntiato - vulnus in ipso oraculo fidelitatis).
      * Lamina his in reinserenda it, sicut linea directivae
      * consumpta: utraque octetos tegit quos arbor non fert. */
-    b32         vacua;
+    b32 vacua;
 } SilvaExtentumInvocationis;
 
 
@@ -179,19 +180,19 @@ nomen structura {
 nomen structura SilvaExpansio SilvaExpansio;
 
 structura SilvaExpansio {
-    Piscina*        piscina;
-    Xar*            fontes;     /* Xar de SilvaFons (per valorem) */
+           Piscina* piscina;
+               Xar* fontes;     /* Xar de SilvaFons (per valorem) */
     TabulaDispersa* macros;     /* status vivus - via defalta */
-    Xar*            acta;       /* Xar de SilvaEventum (per valorem) */
-    Xar*            rami;       /* Xar de SilvaRamus* - tabula conditio_id */
-    Xar*            regiones;   /* Xar de SilvaRegio* - regiones supremae */
+               Xar* acta;       /* Xar de SilvaEventum (per valorem) */
+               Xar* rami;       /* Xar de SilvaRamus* - tabula conditio_id */
+               Xar* regiones;   /* Xar de SilvaRegio* - regiones supremae */
     TabulaDispersa* includenda; /* via (chorda) -> SilvaIncludendum* */
-    Xar*            inclusiones; /* Xar de SilvaInclusio (per valorem) */
-    Xar*            extenta;    /* Xar de SilvaExtentumInvocationis
+               Xar* inclusiones; /* Xar de SilvaInclusio (per valorem) */
+               Xar* extenta;    /* Xar de SilvaExtentumInvocationis
                                  * (per valorem) - invocationes
                                  * functio-similes strati 0 */
-    i32             profunditas_includendi;
-    s32             fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
+               i32  profunditas_includendi;
+               s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
     TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
                                     * positionalis; NIHIL = tabula viva */
 
@@ -208,7 +209,7 @@ structura SilvaExpansio {
     /* Intermissio (SilvaContextus eam ponit; forma cruda ne stratum
      * inferius contextum noscat): FALSUM redditum = intermitte. */
     b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
-    vacuum*   pergere_datum;
+    vacuum* pergere_datum;
 
     /* Status finium (productum, non depuratio) */
     b32 expansio_decisa;      /* expansio trunca (limen lexematum aut
@@ -232,9 +233,9 @@ silva_expansio_creare (
 /* Addere fontem; reddit indicem eius */
 s32
 silva_fons_addere (
-    SilvaExpansio*      exp,
+         SilvaExpansio* exp,
     constans character* via,
-    b32                 est_syntheticus);
+                   b32  est_syntheticus);
 
 
 /* Praebere contentum includendum: via -> textus (lexatur statim).
@@ -242,10 +243,10 @@ silva_fons_addere (
  * Reddit indicem fontis novi. */
 s32
 silva_includendum_praebere (
-    SilvaExpansio*      exp,
+         SilvaExpansio* exp,
     constans character* via,
     constans character* textus,
-    i32                 mensura);
+                   i32  mensura);
 
 
 /* ==================================================
@@ -263,15 +264,16 @@ silva_includendum_praebere (
 
 Xar*
 silva_expansio_directivas_processare (
-    SilvaExpansio* exp,
-    Xar*           lexemata,
-    Xar**          directivae_out);
+    SilvaExpansio*  exp,
+              Xar*  lexemata,
+              Xar** directivae_out);
 
 /* Quaerere definitionem in tabula viva; NIHIL si absens */
 SilvaMacroDef*
 silva_expansio_quaerere (
     SilvaExpansio* exp,
-    chorda         titulus);
+           chorda  titulus);
+
 
 /* ==================================================
  * Iniectio macro per API (fons syntheticus "<api>")
@@ -284,14 +286,14 @@ silva_expansio_quaerere (
 
 b32
 silva_macro_addere (
-    SilvaExpansio*      exp,
+         SilvaExpansio* exp,
     constans character* titulus,
     constans character* corpus);
 
 /* parametra: series NIHIL-terminata; "..." = variadica */
 b32
 silva_macro_functio_addere (
-    SilvaExpansio*       exp,
+         SilvaExpansio*  exp,
     constans character*  titulus,
     constans character** parametra,
     constans character*  corpus);
@@ -304,15 +306,15 @@ silva_macro_functio_addere (
 
 nomen structura {
     SilvaLexemaGenus genus;          /* primi lexematis corporis; EOF si vacuum */
-    b32              est_vacuum;     /* corpus vacuum */
-    b32              est_recursivum; /* primum lexema ipsum nomen macro est */
+                 b32 est_vacuum;     /* corpus vacuum */
+                 b32 est_recursivum; /* primum lexema ipsum nomen macro est */
 } SilvaProspectus;
 
 /* Reddit FALSUM si titulus non est macro */
 b32
 silva_expansio_prospectare (
-    SilvaExpansio*   exp,
-    chorda           titulus,
+      SilvaExpansio* exp,
+             chorda  titulus,
     SilvaProspectus* prospectus_out);
 
 /* Status macro ad (fons, linea): replay actorum in piscinam datam.
@@ -321,9 +323,9 @@ silva_expansio_prospectare (
 TabulaDispersa*
 silva_expansio_macros_ad_lineam (
     SilvaExpansio* exp,
-    Piscina*       piscina,
-    s32            fons_index,
-    i32            linea);
+          Piscina* piscina,
+              s32  fons_index,
+              i32  linea);
 
 
 /* ==================================================
@@ -346,8 +348,8 @@ silva_expansio_macros_ad_lineam (
 Xar*
 silva_expansio_generatio (
     SilvaExpansio* exp,
-    Xar*           lexemata,
-    b32*           mutatum_out);
+              Xar* lexemata,
+              b32* mutatum_out);
 
 /* Expansio ad fixum CONTRA STATUM VIVUM: generationes iteratae dum
  * mutationes. Pro seriebus sine positione (argumenta, expressiones
@@ -356,9 +358,9 @@ silva_expansio_generatio (
  * generationis mutantis, ordine (strata modeli stratorum). */
 Xar*
 silva_expansio_expandere (
-    SilvaExpansio* exp,
-    Xar*           lexemata,
-    Xar**          strata_out);
+    SilvaExpansio*  exp,
+              Xar*  lexemata,
+              Xar** strata_out);
 
 /* Expansio POSITIONALIS fluxus reliquorum (semantica cpp fidelis):
  * eventa actorum per positus applicantur dum fluxus ambulatur, ergo
@@ -368,9 +370,9 @@ silva_expansio_expandere (
  * plagularum integrarum; expandere supra pro seriebus solutis. */
 Xar*
 silva_expansio_expandere_reliqua (
-    SilvaExpansio* exp,
-    Xar*           reliqua,
-    Xar**          strata_out);
+    SilvaExpansio*  exp,
+              Xar*  reliqua,
+              Xar** strata_out);
 
 
 /* ==================================================
@@ -383,73 +385,89 @@ silva_expansio_expandere_reliqua (
 
 nomen structura {
     constans chorda* via;
-    s32              fons_ex;
-    s32              fons_ad;           /* -1 = ignotus */
-    b32              est_praetermissa;
-    b32              est_angulata;      /* angulata contra citatam */
+                s32  fons_ex;
+                s32  fons_ad;           /* -1 = ignotus */
+                b32  est_praetermissa;
+                b32  est_angulata;      /* angulata contra citatam */
 } SilvaInclusioVista;
 
 nomen structura {
-    SilvaRamusGenus  genus;
-    b32              est_sumptum;
-    b32              est_numquam;
-    s32              corpus_initium;    /* OCTETI in fonte; -1 vacuum */
-    s32              corpus_finis;      /* exclusivus; -1 vacuum */
-    s32              fons_index;
-    i32              linea;
+    SilvaRamusGenus genus;
+                b32 est_sumptum;
+                b32 est_numquam;
+                s32 corpus_initium;    /* OCTETI in fonte; -1 vacuum */
+                s32 corpus_finis;      /* exclusivus; -1 vacuum */
+                s32 fons_index;
+                i32 linea;
 } SilvaRamusVista;
 
 nomen structura {
     constans chorda* titulus;
-    b32              est_functio;
-    s32              fons_index;
-    i32              linea;
-    s32              corpus_initium;    /* OCTETI in fonte (lexema
+                b32  est_functio;
+                s32  fons_index;
+                i32  linea;
+                s32  corpus_initium;    /* OCTETI in fonte (lexema
                                          * primum corporis); -1 =
                                          * vacuum aut ex api.
                                          * Exemplar SilvaRamusVista;
                                          * LEGATUS v0.2 - hover
                                          * multilinearis sine
                                          * scansione '\'. */
-    s32              corpus_finis;      /* exclusivus; -1 vacuum */
+    s32 corpus_finis;      /* exclusivus; -1 vacuum */
 } SilvaMacroVista;
 
 i32
-silva_fontes_numerus (constans SilvaExpansio* exp);
+silva_fontes_numerus (
+    constans SilvaExpansio* exp);
 
 /* Via fontis; NIHIL si extra fines (synthetici titulos reddunt) */
 constans chorda*
-silva_fons_via (constans SilvaExpansio* exp, s32 fons_index);
+silva_fons_via (
+    constans SilvaExpansio* exp,
+                       s32  fons_index);
 
 i32
-silva_inclusiones_numerus (constans SilvaExpansio* exp);
+silva_inclusiones_numerus (
+    constans SilvaExpansio* exp);
 
 /* Catena inclusionum AD fontem datum: viae ab radice ad
  * includentem proximum (" > " separatae; fons ipse exclusus).
  * 0 = radix ipse / ignotus / spatium deficiens (buffer vacuus). */
 insignatus integer
-silva_inclusionis_catena_scribere (constans SilvaExpansio* exp,
-    s32 fons_index, character* buffer, insignatus integer capacitas);
+silva_inclusionis_catena_scribere (
+    constans SilvaExpansio* exp,
+                       s32  fons_index,
+                 character* buffer,
+        insignatus integer  capacitas);
 
 b32
-silva_inclusio_vista (constans SilvaExpansio* exp, i32 index,
-    SilvaInclusioVista* vista_out);
+silva_inclusio_vista (
+    constans SilvaExpansio* exp,
+                       i32  index,
+        SilvaInclusioVista* vista_out);
 
 i32
-silva_rami_numerus (constans SilvaExpansio* exp);
+silva_rami_numerus (
+    constans SilvaExpansio* exp);
 
 b32
-silva_ramus_vista (constans SilvaExpansio* exp, i32 index,
-    SilvaRamusVista* vista_out);
+silva_ramus_vista (
+    constans SilvaExpansio* exp,
+                       i32  index,
+           SilvaRamusVista* vista_out);
 
 /* Definitiones UT ACTAE (acta = fructus: #undef historiam non
  * delet); O(acta) per vocatum - satis ad mensuram v1 */
 i32
-silva_macros_numerus (constans SilvaExpansio* exp);
+silva_macros_numerus (
+    constans SilvaExpansio* exp);
 
 b32
-silva_macro_vista (constans SilvaExpansio* exp, i32 index,
-    SilvaMacroVista* vista_out);
+silva_macro_vista (
+    constans SilvaExpansio* exp,
+                       i32  index,
+           SilvaMacroVista* vista_out);
+
 
 /* ==================================================
  * Lexemata retenta quaesibilia (01KYX2DSKK sequela): corpora
@@ -462,23 +480,29 @@ silva_macro_vista (constans SilvaExpansio* exp, i32 index,
 /* Lexemata corporis macronis ad indicem actorum; 0 si ex_api,
  * corpus vacuum, aut index malus */
 i32
-silva_macro_corpus_numerus (constans SilvaExpansio* exp,
-    i32 index);
+silva_macro_corpus_numerus (
+    constans SilvaExpansio* exp,
+                       i32  index);
 
 /* Lexema corporis; NIHIL extra fines */
 SilvaToken*
-silva_macro_corpus_lexema (constans SilvaExpansio* exp,
-    i32 index, i32 lexema_index);
+silva_macro_corpus_lexema (
+    constans SilvaExpansio* exp,
+                       i32  index,
+                       i32  lexema_index);
 
 /* Lexemata laminae rami OMISSI (cruda, lexata); 0 si ramus
  * sumptus aut index malus */
 i32
-silva_ramus_lexemata_numerus (constans SilvaExpansio* exp,
-    i32 index);
+silva_ramus_lexemata_numerus (
+    constans SilvaExpansio* exp,
+                       i32  index);
 
 /* Lexema laminae; NIHIL extra fines */
 SilvaToken*
-silva_ramus_lexema_crudum (constans SilvaExpansio* exp,
-    i32 index, i32 lexema_index);
+silva_ramus_lexema_crudum (
+    constans SilvaExpansio* exp,
+                       i32  index,
+                       i32  lexema_index);
 
 #endif /* SILVA_EXPANDERE_H */

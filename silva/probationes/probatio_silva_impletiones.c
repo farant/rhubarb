@@ -86,7 +86,8 @@ _impletio (
     {
         SilvaGenImpletio* imp =
             (SilvaGenImpletio*)xar_obtinere(impletiones, i);
-        si (   imp != NIHIL && imp->genus != NIHIL && imp->locus != NIHIL
+        si (   imp        != NIHIL && imp->genus != NIHIL
+            && imp->locus != NIHIL
             && chorda_aequalis_literis(*imp->genus, genus)
             && chorda_aequalis_literis(*imp->locus, locus))
         {

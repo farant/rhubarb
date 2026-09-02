@@ -52,16 +52,19 @@ hic_manens i32 capita_praebita = ZEPHYRUM;
 hic_manens SilvaParsura*   systema_parsura = NIHIL;
 hic_manens SilvaSemantica* systema_semantica = NIHIL;
 
+
 /* ==================================================
  * Lectio plagularum + praebenda (exemplar percursus)
  * ================================================== */
 
 hic_manens character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* datum;
 
     si (pl == NIHIL)
@@ -78,7 +81,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     }
     datum = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l + 1L));
-    si (datum == NIHIL
+    si (   datum == NIHIL
         || (mensura_l > 0L
             && fread(datum, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -87,13 +90,14 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         redde NIHIL;
     }
     fclose(pl);
-    datum[mensura_l] = '\0';
-    *mensura_out = (i32)mensura_l;
+    datum[mensura_l]  = '\0';
+    *mensura_out      = (i32)mensura_l;
     redde datum;
 }
 
 hic_manens b32
-_est_caput (constans character* titulus)
+_est_caput (
+    constans character* titulus)
 {
     memoriae_index m = strlen(titulus);
 
@@ -101,7 +105,8 @@ _est_caput (constans character* titulus)
 }
 
 hic_manens b32
-_est_fons_c (constans character* titulus)
+_est_fons_c (
+    constans character* titulus)
 {
     memoriae_index m = strlen(titulus);
 
@@ -109,8 +114,11 @@ _est_fons_c (constans character* titulus)
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* radix)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* radix)
 {
     DIR* dir = opendir(radix);
     structura dirent* introitus;
@@ -136,9 +144,9 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
             chorda clavis;
             unio { constans character* c; i8* m; } u;
 
-            u.c = introitus->d_name;
-            clavis.datum = u.m;
-            clavis.mensura = (i32)strlen(introitus->d_name);
+            u.c             = introitus->d_name;
+            clavis.datum    = u.m;
+            clavis.mensura  = (i32)strlen(introitus->d_name);
             si (tabula_dispersa_continet(visa, clavis))
             {
                 perge;   /* primus vicit */
@@ -150,7 +158,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
                     (vacuum*)VERUM);
             }
             {
-                i32 mensura = ZEPHYRUM;
+                      i32  mensura = ZEPHYRUM;
                 character* textus = _plagulam_legere(piscina, via,
                     &mensura);
 
@@ -166,6 +174,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+
 /* ==================================================
  * Assertabilitas
  * ================================================== */
@@ -173,7 +182,9 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
 /* Penditne typus PER VALOREM ex typo systematis? (monstratores
  * opaci licent - partitio provenientiae) */
 hic_manens b32
-_pendet_ex_systemate (constans TypusC89* typus, i32 profunditas)
+_pendet_ex_systemate (
+    constans TypusC89* typus,
+                  i32  profunditas)
 {
     si (typus == NIHIL || profunditas > XXXII)
     {
@@ -219,9 +230,11 @@ _pendet_ex_systemate (constans TypusC89* typus, i32 profunditas)
 }
 
 hic_manens b32
-_assertabilis (SilvaSemantica* sem, TypusC89* typus)
+_assertabilis (
+    SilvaSemantica* sem,
+          TypusC89* typus)
 {
-    si (typus == NIHIL || typus->genus == TYPUS_C89_ERROR
+    si (   typus        == NIHIL || typus->genus == TYPUS_C89_ERROR
         || typus->genus == TYPUS_C89_FUNCTIO)
     {
         redde FALSUM;
@@ -238,7 +251,7 @@ _assertabilis (SilvaSemantica* sem, TypusC89* typus)
         {
             t = t->datum.qualificatus.internum;
         }
-        si ((t->genus == TYPUS_C89_STRUCTURA
+        si (   (t->genus == TYPUS_C89_STRUCTURA
              || t->genus == TYPUS_C89_UNIO)
             && t->datum.tag.habet_campos)
         {
@@ -254,14 +267,17 @@ _assertabilis (SilvaSemantica* sem, TypusC89* typus)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Emissio assertionum
  * ================================================== */
 
 /* Nomen typi in textum C ("Titulus" aut "struct Titulus") */
 hic_manens vacuum
-_nomen_typi_imprimere (FILE* pl, constans character* praefixum,
-    chorda titulus)
+_nomen_typi_imprimere (
+                  FILE* pl,
+    constans character* praefixum,
+                chorda  titulus)
 {
     fprintf(pl, "%s%.*s", praefixum, (int)titulus.mensura,
         (constans character*)titulus.datum);
@@ -270,11 +286,16 @@ _nomen_typi_imprimere (FILE* pl, constans character* praefixum,
 /* Assertiones pro typo uno (sizeof + ordinatio + offsetof
  * membrorum si tag) - numerus assertionum redditur */
 hic_manens i32
-_typum_asserere (FILE* pl, SilvaSemantica* sem, TypusC89* typus,
-    constans character* praefixum, chorda titulus, i32* n)
+_typum_asserere (
+                  FILE* pl,
+        SilvaSemantica* sem,
+              TypusC89* typus,
+    constans character* praefixum,
+                chorda  titulus,
+                   i32* n)
 {
-    i32 emissae = ZEPHYRUM;
-    constans TypusC89* nudus = typus;
+                  i32  emissae  = ZEPHYRUM;
+    constans TypusC89* nudus    = typus;
 
     (vacuum)sem;
     dum (nudus->genus == TYPUS_C89_QUALIFICATUS)
@@ -300,7 +321,7 @@ _typum_asserere (FILE* pl, SilvaSemantica* sem, TypusC89* typus,
     emissae++;
 
     /* offsetof membrorum directorum (tags completi) */
-    si (nudus->genus == TYPUS_C89_STRUCTURA
+    si (   nudus->genus == TYPUS_C89_STRUCTURA
         || nudus->genus == TYPUS_C89_UNIO)
     {
         i32 k;
@@ -328,6 +349,7 @@ _typum_asserere (FILE* pl, SilvaSemantica* sem, TypusC89* typus,
     redde emissae;
 }
 
+
 /* ==================================================
  * Plagula una
  * ================================================== */
@@ -336,37 +358,40 @@ _typum_asserere (FILE* pl, SilvaSemantica* sem, TypusC89* typus,
  * inspicitur, non via tota - lexicon ubicumque situm idem manet.
  * CLASSIS, non nomen: lexicon quodlibet futurum se sponte excludet. */
 hic_manens b32
-_lexicon_est (constans character* via)
+_lexicon_est (
+    constans character* via)
 {
     constans character* basis;
     constans character* solidus;
 
-    basis   = via;
-    solidus = strrchr(via, '/');
+    basis    = via;
+    solidus  = strrchr(via, '/');
     si (solidus != NIHIL)
     {
         basis = solidus + I;
     }
-    redde (strncmp(basis, "systema_", magnitudo("systema_") - I) == ZEPHYRUM)
+    redde (strncmp(basis, "systema_", magnitudo("systema_") - I)
+        == ZEPHYRUM)
         ? VERUM : FALSUM;
 }
 
 hic_manens vacuum
-_plagulam_inspicere (constans SilvaContextus* ctx,
-    constans character* via)
+_plagulam_inspicere (
+    constans SilvaContextus* ctx,
+         constans character* via)
 {
     Piscina* piscina = piscina_generare_dynamicum("haruspex",
         8388608);
-    i32 mensura = ZEPHYRUM;
-    character* fons;
-    SilvaOraculum* oraculum;
-    SilvaParsura* parsura;
+               i32  mensura = ZEPHYRUM;
+         character* fons;
+     SilvaOraculum* oraculum;
+      SilvaParsura* parsura;
     SilvaSemantica* sem;
-    character via_tu[2048];
-    FILE* pl = NIHIL;
-    i32 n = ZEPHYRUM;
-    i32 assertiones = ZEPHYRUM;
-    i32 i;
+         character  via_tu[2048];
+              FILE* pl           = NIHIL;
+               i32  n            = ZEPHYRUM;
+               i32  assertiones  = ZEPHYRUM;
+               i32  i;
 
     si (piscina == NIHIL)
     {
@@ -421,11 +446,11 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
     /* TU aperire pigre (solum si assertiones adsunt) */
     {
         constans character* basis = strrchr(via, '/');
-        character nudum[512];
-        memoriae_index m;
+                 character  nudum[512];
+            memoriae_index  m;
 
-        basis = (basis != NIHIL) ? basis + I : via;
-        m = strlen(basis);
+        basis  = (basis != NIHIL) ? basis + I : via;
+        m      = strlen(basis);
         si (m > II && basis[m - II] == '.')
         {
             m = m - II;   /* extensionem .c/.h demere */
@@ -446,9 +471,9 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
         constans SemanticaSymbolum* symbolum =
             silva_c89_symbolum_per_indicem(sem, i);
 
-        si (symbolum->ex_systemate
+        si (   symbolum->ex_systemate
             || symbolum->profunditas != ZEPHYRUM
-            || symbolum->lexema == NIHIL
+            || symbolum->lexema      == NIHIL
             || symbolum->lexema->fons_index
                 != parsura->fons_princeps)
         {
@@ -501,16 +526,16 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
     {
         TabulaIterator iter = tabula_dispersa_iterator_initium(
             sem->scopus_summus->tags);
-        chorda clavis;
+        chorda  clavis;
         vacuum* valor;
 
         dum (tabula_dispersa_iterator_proximum(&iter, &clavis,
                 &valor))
         {
-            TypusC89* typus = (TypusC89*)valor;
+                      TypusC89* typus = (TypusC89*)valor;
             constans character* praefixum;
-            chorda titulus;
-            s32 fons_tag = -I;
+                        chorda  titulus;
+                           s32  fons_tag = -I;
 
             si (typus->ex_systemate)
             {
@@ -518,18 +543,18 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
             }
             si (typus->genus == TYPUS_C89_STRUCTURA)
             {
-                praefixum = "struct ";
-                titulus = typus->datum.tag.titulus;
+                praefixum  = "struct ";
+                titulus    = typus->datum.tag.titulus;
             }
             alioquin si (typus->genus == TYPUS_C89_UNIO)
             {
-                praefixum = "union ";
-                titulus = typus->datum.tag.titulus;
+                praefixum  = "union ";
+                titulus    = typus->datum.tag.titulus;
             }
             alioquin si (typus->genus == TYPUS_C89_ENUMERATUS)
             {
-                praefixum = "enum ";
-                titulus = typus->datum.enumeratus.titulus;
+                praefixum  = "enum ";
+                titulus    = typus->datum.enumeratus.titulus;
             }
             alioquin
             {
@@ -601,8 +626,9 @@ _plagulam_inspicere (constans SilvaContextus* ctx,
 }
 
 hic_manens vacuum
-_directorium_inspicere (constans SilvaContextus* ctx,
-    constans character* radix)
+_directorium_inspicere (
+    constans SilvaContextus* ctx,
+         constans character* radix)
 {
     DIR* dir = opendir(radix);
     structura dirent* introitus;
@@ -623,8 +649,8 @@ _directorium_inspicere (constans SilvaContextus* ctx,
         {
             _directorium_inspicere(ctx, via);
         }
-        alioquin si (_est_fons_c(introitus->d_name)
-            || _est_caput(introitus->d_name))
+        alioquin si (   _est_fons_c(introitus->d_name)
+                     || _est_caput(introitus->d_name))
         {
             _plagulam_inspicere(ctx, via);
         }
@@ -632,11 +658,14 @@ _directorium_inspicere (constans SilvaContextus* ctx,
     closedir(dir);
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina_ctx;
+           Piscina* piscina_ctx;
     SilvaContextus* ctx;
-    integer k;
+           integer  k;
 
     piscina_ctx = piscina_generare_dynamicum("haruspex_ctx",
         16777216);
@@ -655,7 +684,7 @@ s32 principale (integer argc, character** argv)
 
     /* systema (fistula plena) */
     {
-        i32 mensura = ZEPHYRUM;
+              i32  mensura = ZEPHYRUM;
         character* fons = _plagulam_legere(piscina_ctx,
             "silva/fontes/systema_c89.h", &mensura);
 
@@ -667,7 +696,7 @@ s32 principale (integer argc, character** argv)
         }
         systema_parsura = silva_c89_parsare(piscina_ctx,
             "systema_c89.h", fons, mensura, NIHIL);
-        si (systema_parsura == NIHIL
+        si (   systema_parsura == NIHIL
             || systema_parsura->numerus_errorum > ZEPHYRUM)
         {
             fprintf(stderr, "haruspex: systema non parsatum\n");

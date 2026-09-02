@@ -47,14 +47,15 @@
 #include "silva_expandere.h"
 #include "silva_parsare.h"
 
+
 /* ==================================================
  * Fructus scripturae
  * ================================================== */
 
 nomen structura {
-    b32                  successus;
-    chorda               textus;   /* octeti emissi; vacua in fractura */
-    constans character*  causa;    /* diagnostica statica; NIHIL si bene */
+                    b32  successus;
+                 chorda  textus;   /* octeti emissi; vacua in fractura */
+     constans character* causa;    /* diagnostica statica; NIHIL si bene */
     constans SilvaNodus* sedes;    /* nodus fracturae; NIHIL licet */
 } SilvaScriptura;
 
@@ -68,18 +69,18 @@ nomen structura {
  * tunc lexema expansum quodlibet = fractura clara. */
 SilvaScriptura
 silva_scribere_valorem (
-    Piscina*                       piscina,
-    SilvaValor                     valor,
+                          Piscina* piscina,
+                       SilvaValor  valor,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaExpansio*        expansio);
+           constans SilvaExpansio* expansio);
 
 /* Subarbor una - ingressus transformationum */
 SilvaScriptura
 silva_scribere_nodum (
-    Piscina*                       piscina,
-    constans SilvaNodus*           nodus,
+                          Piscina* piscina,
+              constans SilvaNodus* nodus,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaExpansio*        expansio);
+           constans SilvaExpansio* expansio);
 
 /* Fons integer ex parsura: arbor + lineae directivae + rami non
  * sumpti + trivia caudae (EOF - pro plagula inclusa ex includenda
@@ -87,9 +88,9 @@ silva_scribere_nodum (
  * -1 = quaelibet (fluxus praelexati sine includendo). */
 SilvaScriptura
 silva_scribere_fontem (
-    Piscina*                       piscina,
-    constans SilvaParsura*         parsura,
+                          Piscina* piscina,
+            constans SilvaParsura* parsura,
     constans SilvaRegistrumCoctum* tabularium,
-    s32                            fons_index);
+                              s32  fons_index);
 
 #endif /* SILVA_SCRIBERE_H */

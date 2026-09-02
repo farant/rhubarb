@@ -58,10 +58,13 @@
  * ordine fontis concatenantur. NIHIL = nulla sectio petita (plagula
  * sine capitibus POSIX - ISO purum). */
 character*
-silva_lexicon_posix_derivare(
-    constans character* fons_px, i32 mensura_px,
-    constans character* fons_pl, i32 mensura_pl,
-    Piscina* piscina, i32* mensura_out);
+silva_lexicon_posix_derivare (
+    constans character* fons_px,
+                   i32  mensura_px,
+    constans character* fons_pl,
+                   i32  mensura_pl,
+               Piscina* piscina,
+                   i32* mensura_out);
 
 /* Blocos externa (tago aperto cum caput="...", tago clauso finito
  * - forma exacta CONSULTO non scripta, vide CAVE in .c: sequentia
@@ -75,10 +78,13 @@ silva_lexicon_posix_derivare(
  * vocator verdictum mundum ex annotatione fracta reddere NON debet
  * (INFRA, non ACCIPE). Nuntius erroris iam in stderr scriptus est. */
 character*
-silva_lexicon_externa_excerpere(
-    constans character* fons, i32 mensura,
-    Piscina* piscina, i32* mensura_out,
-    constans character* via, b32* fractum);
+silva_lexicon_externa_excerpere (
+    constans character* fons,
+                   i32  mensura,
+               Piscina* piscina,
+                   i32* mensura_out,
+    constans character* via,
+                   b32* fractum);
 
 /* Compositio PLENA textus systematis pro plagula una - functiones
  * I et II vocatae UNO loco (geminus tertius oneratorum hic moritur:
@@ -101,11 +107,17 @@ silva_lexicon_externa_excerpere(
  * iam in stderr). NIHIL sine fracto = apparatus (allocatio), non
  * absentia. */
 character*
-silva_lexicon_componere(
-    constans character* fons_iso, i32 mensura_iso,
-    constans character* fons_px, i32 mensura_px,
-    constans character* fons_pl, i32 mensura_pl,
-    b32 totum_posix, Piscina* piscina, i32* mensura_out,
-    constans character* via, b32* fractum);
+silva_lexicon_componere (
+    constans character* fons_iso,
+                   i32  mensura_iso,
+    constans character* fons_px,
+                   i32  mensura_px,
+    constans character* fons_pl,
+                   i32  mensura_pl,
+                   b32  totum_posix,
+               Piscina* piscina,
+                   i32* mensura_out,
+    constans character* via,
+                   b32* fractum);
 
 #endif /* SILVA_LEXICON_H */

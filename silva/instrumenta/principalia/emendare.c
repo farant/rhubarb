@@ -34,7 +34,9 @@ hic_manens b32 scribere_volo = FALSUM;
 
 /* numeri diagnosticorum per codicem (tabula parva in acervum) */
 interior vacuum
-_numeros_colligere (constans SilvaSemantica* sem, i32* numeri)
+_numeros_colligere (
+    constans SilvaSemantica* sem,
+                        i32* numeri)
 {
     i32 i;
     i32 m = (i32)silva_c89_diagnostica_numerus(sem);
@@ -46,7 +48,7 @@ _numeros_colligere (constans SilvaSemantica* sem, i32* numeri)
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(sem, i);
 
-        si (d != NIHIL && d->codex >= ZEPHYRUM
+        si (   d != NIHIL && d->codex >= ZEPHYRUM
             && d->codex < (s32)EXAMEN_CODEX_NUMERUS)
         {
             numeri[d->codex]++;
@@ -55,12 +57,13 @@ _numeros_colligere (constans SilvaSemantica* sem, i32* numeri)
 }
 
 interior b32
-_reice_est (constans IudiciumFructus* fr)
+_reice_est (
+    constans IudiciumFructus* fr)
 {
     i32 i;
     i32 m;
 
-    si (fr->parsura != NIHIL && fr->parsura->numerus_errorum
+    si (   fr->parsura != NIHIL && fr->parsura->numerus_errorum
         > ZEPHYRUM)
     {
         redde VERUM;
@@ -75,7 +78,7 @@ _reice_est (constans IudiciumFructus* fr)
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(fr->sem, i);
 
-        si (d != NIHIL && d->severitas == EXAMEN_VIOLATIO
+        si (   d != NIHIL && d->severitas == EXAMEN_VIOLATIO
             && !d->provisionale)
         {
             redde VERUM;
@@ -85,7 +88,9 @@ _reice_est (constans IudiciumFructus* fr)
 }
 
 interior constans character*
-_causa_codicis (constans SilvaSemantica* sem, s32 codex)
+_causa_codicis (
+    constans SilvaSemantica* sem,
+                        s32  codex)
 {
     i32 i;
     i32 m = (i32)silva_c89_diagnostica_numerus(sem);
@@ -107,7 +112,8 @@ _causa_codicis (constans SilvaSemantica* sem, s32 codex)
  * lineis directivarum parsurae - arbor, non textus). Nulla inclusio
  * = 0 (caput plagulae). */
 interior s32
-_ancoram_invenire (constans SilvaParsura* parsura)
+_ancoram_invenire (
+    constans SilvaParsura* parsura)
 {
     i32 i;
     i32 m;
@@ -122,8 +128,8 @@ _ancoram_invenire (constans SilvaParsura* parsura)
         Xar* linea = *(Xar**)xar_obtinere(parsura->directivae, i);
         i32 tm;
         i32 t;
-        constans SilvaToken* primum = NIHIL;
-        b32 est_inclusio = FALSUM;
+        constans SilvaToken* primum  = NIHIL;
+        b32 est_inclusio             = FALSUM;
 
         si (linea == NIHIL)
         {
@@ -143,7 +149,7 @@ _ancoram_invenire (constans SilvaParsura* parsura)
             {
                 primum = tok;
             }
-            si (tok->genus == SILVA_LEX_IDENTIFICATOR
+            si (   tok->genus         == SILVA_LEX_IDENTIFICATOR
                 && tok->valor.mensura == VII
                 && strncmp((constans character*)tok->valor.datum,
                        "include", VII) == ZEPHYRUM)
@@ -152,7 +158,7 @@ _ancoram_invenire (constans SilvaParsura* parsura)
                 frange;
             }
         }
-        si (!est_inclusio || primum == NIHIL
+        si (   !est_inclusio || primum == NIHIL
             || primum->fons_index != parsura->fons_princeps
             || primum->byte_offset < ZEPHYRUM)
         {
@@ -165,21 +171,23 @@ _ancoram_invenire (constans SilvaParsura* parsura)
 
 /* VERUM = sana(re)tur aut iam sana; FALSUM = fracta */
 interior b32
-_plagulam_emendare (IudiciumApparatus* app, constans character* via)
+_plagulam_emendare (
+     IudiciumApparatus* app,
+    constans character* via)
 {
-    Piscina* opus;
-    IudiciumFructus ante;
-    IudiciumFructus post;
-    character* fons;
-    i32 mensura = ZEPHYRUM;
-    character* novum;
-    i32 mensura_novi;
-    i32 linea_m = (i32)strlen(LINEA_POSTULATORUM);
-    s32 ancora;
-    i32 numeri_ante[EXAMEN_CODEX_NUMERUS];
-    i32 numeri_post[EXAMEN_CODEX_NUMERUS];
-    b32 bene = VERUM;
-    s32 c;
+            Piscina* opus;
+    IudiciumFructus  ante;
+    IudiciumFructus  post;
+          character* fons;
+                i32  mensura = ZEPHYRUM;
+          character* novum;
+                i32  mensura_novi;
+                i32  linea_m = (i32)strlen(LINEA_POSTULATORUM);
+                s32  ancora;
+                i32  numeri_ante[EXAMEN_CODEX_NUMERUS];
+                i32  numeri_post[EXAMEN_CODEX_NUMERUS];
+                b32  bene = VERUM;
+                s32  c;
 
     opus = piscina_generare_dynamicum("emendare_opus", 268435456);
     si (opus == NIHIL)
@@ -274,7 +282,7 @@ _plagulam_emendare (IudiciumApparatus* app, constans character* via)
     {
         FILE* pl = fopen(via, "wb");
 
-        si (pl == NIHIL
+        si (   pl == NIHIL
             || fwrite(novum, I, (memoriae_index)mensura_novi, pl)
                 != (memoriae_index)mensura_novi)
         {
@@ -304,14 +312,17 @@ _plagulam_emendare (IudiciumApparatus* app, constans character* via)
     redde VERUM;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    IudiciumApparatus* app;
-    constans character* codex_arg = NIHIL;
-    i32 sanae = ZEPHYRUM;
-    i32 fractae = ZEPHYRUM;
-    integer k;
+               Piscina* piscina;
+     IudiciumApparatus* app;
+    constans character* codex_arg  = NIHIL;
+                   i32  sanae      = ZEPHYRUM;
+                   i32  fractae    = ZEPHYRUM;
+               integer  k;
 
     per (k = I; k < argc; k++)
     {

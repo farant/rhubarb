@@ -88,14 +88,14 @@ apparatus_clausuram_petere (
  * fons_latina_exitus: index fontis latina.h, aut -1 si non praebita. */
 SilvaParsura*
 apparatus_parsare (
-               Piscina* opus,
-    constans character* via,
-           constans i8* fons,
-                    i32 mensura,
-    constans character* radix,
-     constans Clausura* clausura,
-                    b32 praebere,
-                   s32* fons_latina_exitus);
+                Piscina* opus,
+     constans character* via,
+            constans i8* fons,
+                    i32  mensura,
+     constans character* radix,
+      constans Clausura* clausura,
+                    b32  praebere,
+                    s32* fons_latina_exitus);
 
 /* PORTA IPSA: an apparatus SANUS sit (aut non applicabilis).
  *
@@ -110,8 +110,8 @@ apparatus_parsare (
 b32
 apparatus_sanus (
     constans SilvaParsura* parsura,
-       constans Clausura* clausura,
-                      s32 fons_latina,
-                     i32* expansa_exitus);
+        constans Clausura* clausura,
+                      s32  fons_latina,
+                      i32* expansa_exitus);
 
 #endif /* SILVA_PROBATIONES_APPARATUS_H */

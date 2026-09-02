@@ -28,8 +28,10 @@
 #define VIA_MAXIMA 1024
 
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -60,7 +62,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -68,23 +70,23 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         redde NIHIL;
     }
     fclose(pl);
-    buffer[mensura] = '\0';
-    *mensura_out = (i32)mensura;
+    buffer[mensura]  = '\0';
+    *mensura_out     = (i32)mensura;
     redde buffer;
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                   b32  praeteritus;
+               Piscina* piscina;
     constans character* radix;
-    character via[VIA_MAXIMA];
-    i8* latina_textus;
-    i8* caput_textus;
-    i8* corpus_textus;
-    i32 m_latinae;
-    i32 m_capitis;
-    i32 m_corporis;
+             character  via[VIA_MAXIMA];
+                    i8* latina_textus;
+                    i8* caput_textus;
+                    i8* corpus_textus;
+                   i32  m_latinae;
+                   i32  m_capitis;
+                   i32  m_corporis;
 
     piscina = piscina_generare_dynamicum("probatio_silva_amalgama",
         16777216);
@@ -113,9 +115,11 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL (caput_textus);
     CREDO_NON_NIHIL (corpus_textus);
 
-    si (latina_textus != NIHIL && caput_textus != NIHIL
+    si (   latina_textus != NIHIL && caput_textus != NIHIL
         && corpus_textus != NIHIL)
     {
+
+
         /* ========================================================
          * PROBARE: pollutio silva.h - identificatores vs
          * definitiones latina.h (probatio VERA, non index manualis)
@@ -123,8 +127,8 @@ s32 principale (vacuum)
 
         TabulaDispersa* definitiones =
             tabula_dispersa_creare_chorda(piscina, DXII);
-        i32 numerus_definitionum = ZEPHYRUM;
-        i32 violationes = ZEPHYRUM;
+        i32 numerus_definitionum  = ZEPHYRUM;
+        i32 violationes           = ZEPHYRUM;
 
         /* definitiones latina.h colligere: lineae "# define NOMEN" */
         {
@@ -143,13 +147,13 @@ s32 principale (vacuum)
                 SilvaToken* titulus = *(SilvaToken**)xar_obtinere(
                     lexemata, i + II);
 
-                si (t->genus == SILVA_LEX_CANCELLUM
+                si (   t->genus         == SILVA_LEX_CANCELLUM
                     && t->initium_lineae
-                    && d->genus == SILVA_LEX_IDENTIFICATOR
+                    && d->genus         == SILVA_LEX_IDENTIFICATOR
                     && d->valor.mensura == VI
                     && memcmp(d->valor.datum, "define", VI)
                         == ZEPHYRUM
-                    && titulus->genus == SILVA_LEX_IDENTIFICATOR)
+                    && titulus->genus   == SILVA_LEX_IDENTIFICATOR)
                 {
                     tabula_dispersa_inserere(definitiones,
                         titulus->valor, (vacuum*)(s64)I);
@@ -174,7 +178,7 @@ s32 principale (vacuum)
                 SilvaToken* t = *(SilvaToken**)xar_obtinere(
                     lexemata, i);
 
-                si (t->genus == SILVA_LEX_IDENTIFICATOR
+                si (   t->genus == SILVA_LEX_IDENTIFICATOR
                     && tabula_dispersa_continet(definitiones,
                            t->valor))
                 {
@@ -190,6 +194,7 @@ s32 principale (vacuum)
             }
         }
         CREDO_AEQUALIS_I32 ((i32)violationes, ZEPHYRUM);
+
 
         /* ========================================================
          * PROBARE: proprietates silva.c

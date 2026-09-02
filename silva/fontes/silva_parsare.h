@@ -27,6 +27,7 @@
 #include "silva_commissio.h"
 #include "silva_contextus.h"
 
+
 /* ==================================================
  * Ligamen grammaticae (superficies generata una)
  * ================================================== */
@@ -40,11 +41,11 @@
 nomen vacuum (*SilvaPraecommissio)(SilvaValor radix, vacuum* datum);
 
 nomen structura {
-    constans SilvaTabulaCocta*     tabula;
+        constans SilvaTabulaCocta* tabula;
     constans SilvaRegistrumCoctum* tabularium;
-    SilvaGLRConstructor            constructor;
-    SilvaGLRFabricaAmbigui         fabrica;
-    SilvaPraecommissio             praecommissio;  /* NIHIL licet */
+              SilvaGLRConstructor  constructor;
+           SilvaGLRFabricaAmbigui  fabrica;
+               SilvaPraecommissio  praecommissio;  /* NIHIL licet */
 } SilvaGrammatica;
 
 
@@ -53,25 +54,25 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    b32             successus;       /* arbor completa exsistit (semper
+    b32 successus;       /* arbor completa exsistit (semper
                                       * post recuperationem, nisi
                                       * apparatus ipse fractus) */
     SilvaCommissio* commissio;       /* radix + ambigui + resolutiones */
-    SilvaToken*     lexema_finis;    /* EOF (trivia caudae - Phase 5) */
-    Xar*            lexemata;        /* fluxus expansus (queribilis) */
-    SilvaExpansio*  expansio;        /* strata/diarium; NIHIL in
+        SilvaToken* lexema_finis;    /* EOF (trivia caudae - Phase 5) */
+               Xar* lexemata;        /* fluxus expansus (queribilis) */
+     SilvaExpansio* expansio;        /* strata/diarium; NIHIL in
                                       * ingressu lexematum */
-    Xar*            directivae;      /* Xar de Xar de SilvaToken* -
+    Xar* directivae;      /* Xar de Xar de SilvaToken* -
                                       * lineae directivae consumptae
                                       * (reconstructio fontis, Phase
                                       * 5); NIHIL in ingressu
                                       * lexematum */
-    s32             fons_princeps;   /* index fontis principalis (cum
+    s32 fons_princeps;   /* index fontis principalis (cum
                                       * praebere fontes priores indices
                                       * capiunt!); -1 in ingressu
                                       * lexematum */
-    i32             numerus_errorum;     /* nodi ERROR in arbore */
-    i32             numerus_segmentorum;
+    i32 numerus_errorum;     /* nodi ERROR in arbore */
+    i32 numerus_segmentorum;
 
     /* Numeratores aggregati trans segmenta (summae; frons max) */
     i32 fusiones;
@@ -92,8 +93,8 @@ nomen structura {
     /* Textura conditionalium (Phase 7 Chunk B): regiones in arborem
      * textae vs degradatae (limes sententiae transgressus, fontes
      * mixti, elementum opacum - lamina reinserenda possessa manet) */
-    i32 regiones_textae;
-    i32 regiones_omissae;
+    i32  regiones_textae;
+    i32  regiones_omissae;
     Xar* strata;         /* Xar de Xar* - fluxus per generationem
                           * MUTANTEM (additiones II; GRATIS - arenae
                           * iam solvuntur, gubernator modo tenet).
@@ -110,14 +111,14 @@ nomen structura {
  * resolutor NIHIL licent (nulla resolutio - ambigua supersunt). */
 SilvaParsura*
 silva_parsare (
-    Piscina*                  piscina,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris);
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris);
 
 /* Fistula tota cum expansione PRAEPARATA a vocatore: includenda iam
  * praebita (silva_includendum_praebere), macros iam iniecta
@@ -125,15 +126,15 @@ silva_parsare (
  * Phase 7 eam equitabit); silva_parsare = involucrum tenue huius. */
 SilvaParsura*
 silva_parsare_cum_expansione (
-    Piscina*                  piscina,
-    SilvaExpansio*            expansio,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+               SilvaExpansio* expansio,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris);
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris);
 
 /* Fistula tota cum CONTEXTU hospitis (Phase 7): receptum contextus
  * expansioni recenti applicatur (fines, pergere, lexica ante fontem
@@ -141,25 +142,25 @@ silva_parsare_cum_expansione (
  * Contextus diu vivit et inter parsuras reusabilis est. */
 SilvaParsura*
 silva_parsare_cum_contextu (
-    Piscina*                  piscina,
-    constans SilvaContextus*  contextus,
-    constans character*       titulus_fontis,
-    constans character*       fons,
-    i32                       mensura,
+                     Piscina* piscina,
+     constans SilvaContextus* contextus,
+          constans character* titulus_fontis,
+          constans character* fons,
+                         i32  mensura,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris);
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris);
 
 /* Ingressus lexematum (forma silva_lexare: Xar de SilvaToken*, EOF
  * ultimo) - pro fluxibus iam expansis aut probationibus. */
 SilvaParsura*
 silva_lexemata_parsare (
-    Piscina*                  piscina,
-    constans Xar*             lexemata,
+                     Piscina* piscina,
+                constans Xar* lexemata,
     constans SilvaGrammatica* grammatica,
-    constans SilvaOraculum*   oraculum,
-    SilvaResolutor            resolutor,
-    vacuum*                   datum_resolutoris);
+      constans SilvaOraculum* oraculum,
+              SilvaResolutor  resolutor,
+                      vacuum* datum_resolutoris);
 
 #endif /* SILVA_PARSARE_H */

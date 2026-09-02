@@ -24,6 +24,7 @@
 
 #include <string.h>
 
+
 /* ==================================================
  * Status aedificatoris
  * ================================================== */
@@ -36,29 +37,39 @@ nomen structura {
 } FluxusContextusFractionis;
 
 nomen structura {
-    Piscina*          piscina;
-    FluxusAuxilia     aux;        /* normalizata (campi NIHIL licent) */
+             Piscina* piscina;
+       FluxusAuxilia  aux;        /* normalizata (campi NIHIL licent) */
     FluxusFunctionis* fluxus;
-    FluxusBlocus*     currens;    /* NIHIL = fluxus mortuus (post saltum) */
-    Xar*              fractiones; /* FluxusContextusFractionis (valore) */
-    i32               altitudo;   /* numerus vivus acervi fractionum */
+        FluxusBlocus* currens;    /* NIHIL = fluxus mortuus (post saltum) */
+                 Xar* fractiones; /* FluxusContextusFractionis (valore) */
+                 i32  altitudo;   /* numerus vivus acervi fractionum */
 } FluxusAedificator;
 
-interior vacuum _sententiam_ambulare (FluxusAedificator* aed,
+interior vacuum
+_sententiam_ambulare (
+      FluxusAedificator* aed,
     constans SilvaNodus* nodus);
-interior vacuum _titulos_colligere (FluxusAedificator* aed,
+interior vacuum
+_titulos_colligere (
+      FluxusAedificator* aed,
     constans SilvaNodus* nodus);
-interior vacuum _sectionem_findere (FluxusAedificator* aed,
+interior vacuum
+_sectionem_findere (
+      FluxusAedificator* aed,
     constans SilvaNodus* op);
-interior vacuum _internum_filium_findere (FluxusAedificator* aed,
+interior vacuum
+_internum_filium_findere (
+      FluxusAedificator* aed,
     constans SilvaNodus* filius);
+
 
 /* ==================================================
  * Auxilia parva
  * ================================================== */
 
 interior constans SilvaNodus*
-_nodalis (SilvaValor v)
+_nodalis (
+    SilvaValor v)
 {
     si (v.genus != SILVA_VALOR_NODUS)
     {
@@ -68,7 +79,9 @@ _nodalis (SilvaValor v)
 }
 
 interior constans SilvaNodus*
-_canonicum_per (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_canonicum_per (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
     si (nodus == NIHIL || aed->aux.canonicum == NIHIL)
     {
@@ -79,7 +92,10 @@ _canonicum_per (FluxusAedificator* aed, constans SilvaNodus* nodus)
 
 /* Aestimatio conditionis: VERUM si constans (valor in *valor). */
 interior b32
-_aestimare (FluxusAedificator* aed, SilvaValor conditio_v, s64* valor)
+_aestimare (
+    FluxusAedificator* aed,
+           SilvaValor  conditio_v,
+                  s64* valor)
 {
     constans SilvaNodus* n = _nodalis(conditio_v);
 
@@ -90,12 +106,14 @@ _aestimare (FluxusAedificator* aed, SilvaValor conditio_v, s64* valor)
     redde aed->aux.aestimator(aed->aux.contextus, n, valor);
 }
 
+
 /* ==================================================
  * Bloci et margines
  * ================================================== */
 
 interior FluxusBlocus*
-_blocus_novus (FluxusAedificator* aed)
+_blocus_novus (
+    FluxusAedificator* aed)
 {
     FluxusBlocus* b = (FluxusBlocus*)xar_addere(aed->fluxus->bloci);
 
@@ -114,10 +132,12 @@ _blocus_novus (FluxusAedificator* aed)
  * 65: si (DEBUG) disabilitatum clang quoque tacet; si (0)
  * litterale flagrat. */
 interior b32
-_conditio_macro_tincta (FluxusAedificator* aed, SilvaValor conditio_v)
+_conditio_macro_tincta (
+    FluxusAedificator* aed,
+           SilvaValor  conditio_v)
 {
     constans SilvaNodus* n = _nodalis(conditio_v);
-    SilvaValor tok_v;
+             SilvaValor  tok_v;
 
     dum (n != NIHIL)
     {
@@ -152,8 +172,11 @@ _conditio_macro_tincta (FluxusAedificator* aed, SilvaValor conditio_v)
 }
 
 interior vacuum
-_margo_addere (FluxusBlocus* fons, s32 genus,
-    FluxusBlocus* destinatio, constans SilvaNodus* origo)
+_margo_addere (
+           FluxusBlocus* fons,
+                    s32  genus,
+           FluxusBlocus* destinatio,
+    constans SilvaNodus* origo)
 {
     FluxusMargo* m;
 
@@ -161,16 +184,17 @@ _margo_addere (FluxusBlocus* fons, s32 genus,
     {
         redde;
     }
-    m = (FluxusMargo*)xar_addere(fons->margines);
-    m->genus = genus;
-    m->destinatio = destinatio;
-    m->origo = origo;
+    m              = (FluxusMargo*)xar_addere(fons->margines);
+    m->genus       = genus;
+    m->destinatio  = destinatio;
+    m->origo       = origo;
 }
 
 /* Blocus currens - si fluxus mortuus, blocum orbum aperit (sine
  * margine introitus = inattingibilis naturaliter; cibus codicis 65) */
 interior FluxusBlocus*
-_in_currentem (FluxusAedificator* aed)
+_in_currentem (
+    FluxusAedificator* aed)
 {
     si (aed->currens == NIHIL)
     {
@@ -181,7 +205,9 @@ _in_currentem (FluxusAedificator* aed)
 
 /* Transitio recta ad blocum datum (margo SEQUENS si fluxus vivus) */
 interior vacuum
-_transire_ad (FluxusAedificator* aed, FluxusBlocus* destinatio,
+_transire_ad (
+      FluxusAedificator* aed,
+           FluxusBlocus* destinatio,
     constans SilvaNodus* origo)
 {
     si (aed->currens != NIHIL)
@@ -193,9 +219,11 @@ _transire_ad (FluxusAedificator* aed, FluxusBlocus* destinatio,
 }
 
 interior vacuum
-_folium_addere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_folium_addere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
-    FluxusBlocus* b = _in_currentem(aed);
+           FluxusBlocus*  b = _in_currentem(aed);
     constans SilvaNodus** locus =
         (constans SilvaNodus**)xar_addere(b->sententiae);
 
@@ -203,7 +231,9 @@ _folium_addere (FluxusAedificator* aed, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_nodum_notare (Xar* tabulatum, constans SilvaNodus* nodus)
+_nodum_notare (
+                    Xar* tabulatum,
+    constans SilvaNodus* nodus)
 {
     constans SilvaNodus** locus =
         (constans SilvaNodus**)xar_addere(tabulatum);
@@ -211,13 +241,16 @@ _nodum_notare (Xar* tabulatum, constans SilvaNodus* nodus)
     *locus = nodus;
 }
 
+
 /* ==================================================
  * Acervus contextus fractionum
  * ================================================== */
 
 interior vacuum
-_contextum_imponere (FluxusAedificator* aed, FluxusBlocus* ruptura,
-    FluxusBlocus* persecutio)
+_contextum_imponere (
+    FluxusAedificator* aed,
+         FluxusBlocus* ruptura,
+         FluxusBlocus* persecutio)
 {
     FluxusContextusFractionis* c;
 
@@ -230,13 +263,14 @@ _contextum_imponere (FluxusAedificator* aed, FluxusBlocus* ruptura,
     {
         c = (FluxusContextusFractionis*)xar_addere(aed->fractiones);
     }
-    c->ruptura = ruptura;
-    c->persecutio = persecutio;
+    c->ruptura     = ruptura;
+    c->persecutio  = persecutio;
     aed->altitudo++;
 }
 
 interior vacuum
-_contextum_deponere (FluxusAedificator* aed)
+_contextum_deponere (
+    FluxusAedificator* aed)
 {
     si (aed->altitudo > ZEPHYRUM)
     {
@@ -246,7 +280,8 @@ _contextum_deponere (FluxusAedificator* aed)
 
 /* Apex acervi (frange) - NIHIL si vacuus */
 interior FluxusContextusFractionis*
-_fractionis_apex (FluxusAedificator* aed)
+_fractionis_apex (
+    FluxusAedificator* aed)
 {
     si (aed->altitudo == ZEPHYRUM)
     {
@@ -259,7 +294,8 @@ _fractionis_apex (FluxusAedificator* aed)
 /* Contextus persecutionis proximus (perge commutationem transit) -
  * numeratio deorsum signata (lectio vindex!) */
 interior FluxusContextusFractionis*
-_persecutionis_proxima (FluxusAedificator* aed)
+_persecutionis_proxima (
+    FluxusAedificator* aed)
 {
     s32 k;
 
@@ -275,6 +311,7 @@ _persecutionis_proxima (FluxusAedificator* aed)
     }
     redde NIHIL;
 }
+
 
 /* ==================================================
  * Fissio sectionum brevium (FLUXUS-1 chunk 0)
@@ -299,7 +336,9 @@ nomen enumeratio {
 
 /* Per parentheses descendere (canonicum in quoque gradu) */
 interior constans SilvaNodus*
-_per_parentheses (FluxusAedificator* aed, constans SilvaNodus* n)
+_per_parentheses (
+      FluxusAedificator* aed,
+    constans SilvaNodus* n)
 {
     si (n == NIHIL)
     {
@@ -319,7 +358,8 @@ _per_parentheses (FluxusAedificator* aed, constans SilvaNodus* n)
 
 /* Genus sectionis nodi IPSIUS (sine descensu parenthesium) */
 interior s32
-_sectionis_genus_crudus (constans SilvaNodus* n)
+_sectionis_genus_crudus (
+    constans SilvaNodus* n)
 {
     si (n == NIHIL)
     {
@@ -350,7 +390,9 @@ _sectionis_genus_crudus (constans SilvaNodus* n)
 
 /* Continetne arbor sectionem brevem? (ambulatio generica locorum) */
 interior b32
-_habet_sectionem (FluxusAedificator* aed, constans SilvaNodus* n)
+_habet_sectionem (
+      FluxusAedificator* aed,
+    constans SilvaNodus* n)
 {
     i32 i;
 
@@ -387,7 +429,7 @@ _habet_sectionem (FluxusAedificator* aed, constans SilvaNodus* n)
             {
                 SilvaValor* e = silva_valor_lista_obtinere(*v, k);
 
-                si (e != NIHIL && e->genus == SILVA_VALOR_NODUS
+                si (   e != NIHIL && e->genus == SILVA_VALOR_NODUS
                     && _habet_sectionem(aed, e->datum.nodus))
                 {
                     redde VERUM;
@@ -402,7 +444,9 @@ _habet_sectionem (FluxusAedificator* aed, constans SilvaNodus* n)
  * vocator id tractat) ordine locorum finduntur; reliquum in granulo
  * vocatoris manet. */
 interior vacuum
-_interna_findere (FluxusAedificator* aed, constans SilvaNodus* n)
+_interna_findere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* n)
 {
     i32 i;
 
@@ -442,7 +486,8 @@ _interna_findere (FluxusAedificator* aed, constans SilvaNodus* n)
 }
 
 interior vacuum
-_internum_filium_findere (FluxusAedificator* aed,
+_internum_filium_findere (
+      FluxusAedificator* aed,
     constans SilvaNodus* filius)
 {
     filius = _canonicum_per(aed, filius);
@@ -463,11 +508,13 @@ _internum_filium_findere (FluxusAedificator* aed,
 /* Operandum sectionis: si ipsum sectio est, recursio sine granulo;
  * alioquin interna finduntur et operandum granulum fit. */
 interior vacuum
-_operandum_findere (FluxusAedificator* aed, constans SilvaNodus* n)
+_operandum_findere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* n)
 {
     constans SilvaNodus* nucleus = _per_parentheses(aed, n);
 
-    si (nucleus != NIHIL
+    si (   nucleus                          != NIHIL
         && _sectionis_genus_crudus(nucleus) != (s32)FLUXUS_SECTIO_NULLA)
     {
         _sectionem_findere(aed, nucleus);
@@ -488,7 +535,9 @@ _operandum_findere (FluxusAedificator* aed, constans SilvaNodus* n)
  * segmentorum cum iunctione propria. op = BINARIUM(&&,||) aut
  * TERNARIUS (post parentheses). */
 interior vacuum
-_sectionem_findere (FluxusAedificator* aed, constans SilvaNodus* op)
+_sectionem_findere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* op)
 {
     si (op->genus == (s32)SILVA_C89_GENUS_TERNARIUS)
     {
@@ -499,15 +548,16 @@ _sectionem_findere (FluxusAedificator* aed, constans SilvaNodus* op)
 
         _operandum_findere(aed,
             _nodalis(silva_c89_ternarius_conditio(op)));
-        apertura = _in_currentem(aed);
-        verum_b = _blocus_novus(aed);
-        falsum_b = _blocus_novus(aed);
-        iunctio = _blocus_novus(aed);
+        apertura  = _in_currentem(aed);
+        verum_b   = _blocus_novus(aed);
+        falsum_b  = _blocus_novus(aed);
+        iunctio   = _blocus_novus(aed);
         _margo_addere(apertura, (s32)FLUXUS_MARGO_VERUS, verum_b, op);
         _margo_addere(apertura, (s32)FLUXUS_MARGO_FALSUS, falsum_b,
             op);
         aed->currens = verum_b;
-        _operandum_findere(aed, _nodalis(silva_c89_ternarius_verum(op)));
+        _operandum_findere(aed,
+            _nodalis(silva_c89_ternarius_verum(op)));
         _margo_addere(_in_currentem(aed), (s32)FLUXUS_MARGO_SEQUENS,
             iunctio, op);
         aed->currens = falsum_b;
@@ -527,9 +577,9 @@ _sectionem_findere (FluxusAedificator* aed, constans SilvaNodus* op)
 
         _operandum_findere(aed,
             _nodalis(silva_c89_binarium_sinister(op)));
-        apertura = _in_currentem(aed);
-        dexter_b = _blocus_novus(aed);
-        iunctio = _blocus_novus(aed);
+        apertura  = _in_currentem(aed);
+        dexter_b  = _blocus_novus(aed);
+        iunctio   = _blocus_novus(aed);
         si (est_et)
         {
             _margo_addere(apertura, (s32)FLUXUS_MARGO_VERUS, dexter_b,
@@ -556,7 +606,8 @@ _sectionem_findere (FluxusAedificator* aed, constans SilvaNodus* op)
 /* Folium cum sectionibus: interna finduntur, folium ipsum granulum
  * ultimum in bloco iunctionis fit; sine sectionibus via hodierna. */
 interior vacuum
-_folium_findere_aut_addere (FluxusAedificator* aed,
+_folium_findere_aut_addere (
+      FluxusAedificator* aed,
     constans SilvaNodus* nodus)
 {
     si (_habet_sectionem(aed, nodus))
@@ -573,12 +624,15 @@ _folium_findere_aut_addere (FluxusAedificator* aed,
  * attributionis operandi ultimi per s21 in-arcu confirmandum).
  * Vocator: aed->currens = blocus aperturae. */
 interior vacuum
-_conditionem_findere (FluxusAedificator* aed, constans SilvaNodus* n,
-    FluxusBlocus* verus_ad, FluxusBlocus* falsus_ad,
+_conditionem_findere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* n,
+           FluxusBlocus* verus_ad,
+           FluxusBlocus* falsus_ad,
     constans SilvaNodus* origo_ultimus)
 {
-    constans SilvaNodus* nucleus = _per_parentheses(aed, n);
-    s32 genus_sectionis = _sectionis_genus_crudus(nucleus);
+    constans SilvaNodus* nucleus  = _per_parentheses(aed, n);
+    s32 genus_sectionis           = _sectionis_genus_crudus(nucleus);
 
     si (genus_sectionis == (s32)FLUXUS_SECTIO_ET)
     {
@@ -608,8 +662,8 @@ _conditionem_findere (FluxusAedificator* aed, constans SilvaNodus* n,
     }
     si (genus_sectionis == (s32)FLUXUS_SECTIO_TERNARIA)
     {
-        FluxusBlocus* verum_b = _blocus_novus(aed);
-        FluxusBlocus* falsum_b = _blocus_novus(aed);
+        FluxusBlocus* verum_b   = _blocus_novus(aed);
+        FluxusBlocus* falsum_b  = _blocus_novus(aed);
 
         _conditionem_findere(aed,
             _nodalis(silva_c89_ternarius_conditio(nucleus)),
@@ -625,12 +679,12 @@ _conditionem_findere (FluxusAedificator* aed, constans SilvaNodus* n,
         redde;
     }
     /* negatio: permutatio destinationum */
-    si (nucleus != NIHIL
+    si (   nucleus        != NIHIL
         && nucleus->genus == (s32)SILVA_C89_GENUS_UNARIUM)
     {
         SilvaValor tok_v = silva_c89_unarium_tok_operator(nucleus);
 
-        si (tok_v.genus == SILVA_VALOR_TOKEN
+        si (   tok_v.genus              == SILVA_VALOR_TOKEN
             && tok_v.datum.token->genus == SILVA_LEX_EXCLAMATIO)
         {
             _conditionem_findere(aed,
@@ -659,12 +713,14 @@ _conditionem_findere (FluxusAedificator* aed, constans SilvaNodus* n,
     }
 }
 
+
 /* ==================================================
  * Tabula titulorum (transitus primus)
  * ================================================== */
 
 interior FluxusTitulus*
-_titulum_invenire_per_nodum (FluxusAedificator* aed,
+_titulum_invenire_per_nodum (
+      FluxusAedificator* aed,
     constans SilvaNodus* nodus)
 {
     i32 i;
@@ -684,7 +740,9 @@ _titulum_invenire_per_nodum (FluxusAedificator* aed,
 }
 
 interior FluxusTitulus*
-_titulum_invenire_per_chordam (FluxusAedificator* aed, chorda titulus)
+_titulum_invenire_per_chordam (
+    FluxusAedificator* aed,
+               chorda  titulus)
 {
     i32 i;
     i32 m = xar_numerus(aed->fluxus->tituli);
@@ -703,7 +761,9 @@ _titulum_invenire_per_chordam (FluxusAedificator* aed, chorda titulus)
 }
 
 interior vacuum
-_listam_colligere (FluxusAedificator* aed, SilvaValor lista)
+_listam_colligere (
+    FluxusAedificator* aed,
+           SilvaValor  lista)
 {
     i32 i;
     i32 m = silva_valor_lista_numerus(lista);
@@ -720,7 +780,9 @@ _listam_colligere (FluxusAedificator* aed, SilvaValor lista)
 }
 
 interior vacuum
-_titulos_colligere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_titulos_colligere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
     si (nodus == NIHIL)
     {
@@ -735,17 +797,17 @@ _titulos_colligere (FluxusAedificator* aed, constans SilvaNodus* nodus)
             FluxusTitulus* t = (FluxusTitulus*)xar_addere(
                 aed->fluxus->tituli);
 
-            t->blocus = _blocus_novus(aed);
-            t->blocus->titulus_dux = nodus;
-            t->nodus = nodus;
+            t->blocus               = _blocus_novus(aed);
+            t->blocus->titulus_dux  = nodus;
+            t->nodus                = nodus;
             si (tok_v.genus == SILVA_VALOR_TOKEN)
             {
                 t->titulus = tok_v.datum.token->valor;
             }
             alioquin
             {
-                t->titulus.datum = NIHIL;
-                t->titulus.mensura = ZEPHYRUM;
+                t->titulus.datum    = NIHIL;
+                t->titulus.mensura  = ZEPHYRUM;
             }
             _titulos_colligere(aed,
                 _nodalis(silva_c89_titulatum_sententia(nodus)));
@@ -796,12 +858,15 @@ _titulos_colligere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     }
 }
 
+
 /* ==================================================
  * Ambulatio (transitus alter) - sententiae compositae
  * ================================================== */
 
 interior vacuum
-_listam_fluere (FluxusAedificator* aed, SilvaValor lista)
+_listam_fluere (
+    FluxusAedificator* aed,
+           SilvaValor  lista)
 {
     i32 i;
     i32 m = silva_valor_lista_numerus(lista);
@@ -818,10 +883,13 @@ _listam_fluere (FluxusAedificator* aed, SilvaValor lista)
 }
 
 interior vacuum
-_si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_si_fluere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
-    SilvaValor conditio_v = silva_c89_si_conditio(nodus);
-    constans SilvaNodus* conditio_n = _nodalis(conditio_v);
+             SilvaValor conditio_v   =
+                 silva_c89_si_conditio(nodus);
+    constans SilvaNodus* conditio_n  = _nodalis(conditio_v);
     constans SilvaNodus* alterum_n =
         _nodalis(silva_c89_si_alioquin(nodus));
     FluxusBlocus* apertura = _in_currentem(aed);
@@ -829,9 +897,10 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     FluxusBlocus* alterum = NIHIL;
     FluxusBlocus* iunctio;
     FluxusBlocus* dein_finis;
-    FluxusBlocus* alterum_finis = NIHIL;
-    s64 valor = ZEPHYRUM;
-    b32 constansne = _aestimare(aed, conditio_v, &valor);
+    FluxusBlocus* alterum_finis  = NIHIL;
+             s64  valor          = ZEPHYRUM;
+             b32  constansne      = _aestimare(aed, conditio_v,
+                 &valor);
 
     /* iunctio ante corpora: cascada destinationem falsam postulat */
     dein = _blocus_novus(aed);
@@ -910,18 +979,20 @@ _si_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_dum_fluere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
-    SilvaValor conditio_v = silva_c89_dum_conditio(nodus);
-    FluxusBlocus* caput = _blocus_novus(aed);
+      SilvaValor  conditio_v  = silva_c89_dum_conditio(nodus);
+    FluxusBlocus* caput       = _blocus_novus(aed);
     FluxusBlocus* corpus_b;
     FluxusBlocus* postis;
-    s64 valor = ZEPHYRUM;
-    b32 constansne = _aestimare(aed, conditio_v, &valor);
+             s64  valor       = ZEPHYRUM;
+             b32  constansne  = _aestimare(aed, conditio_v, &valor);
 
     _transire_ad(aed, caput, nodus);
-    corpus_b = _blocus_novus(aed);
-    postis = _blocus_novus(aed);
+    corpus_b  = _blocus_novus(aed);
+    postis    = _blocus_novus(aed);
     si (constansne)
     {
         constans SilvaNodus* conditio_n = _nodalis(conditio_v);
@@ -972,18 +1043,20 @@ _dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_fac_dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_fac_dum_fluere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
-    SilvaValor conditio_v = silva_c89_fac_dum_conditio(nodus);
-    FluxusBlocus* corpus_b = _blocus_novus(aed);
+      SilvaValor  conditio_v  = silva_c89_fac_dum_conditio(nodus);
+    FluxusBlocus* corpus_b    = _blocus_novus(aed);
     FluxusBlocus* conditio_b;
     FluxusBlocus* postis;
-    s64 valor = ZEPHYRUM;
-    b32 constansne = _aestimare(aed, conditio_v, &valor);
+             s64  valor       = ZEPHYRUM;
+             b32  constansne  = _aestimare(aed, conditio_v, &valor);
 
     _transire_ad(aed, corpus_b, nodus);
-    conditio_b = _blocus_novus(aed);
-    postis = _blocus_novus(aed);
+    conditio_b  = _blocus_novus(aed);
+    postis      = _blocus_novus(aed);
     _contextum_imponere(aed, postis, conditio_b);
     aed->currens = corpus_b;
     _sententiam_ambulare(aed,
@@ -1027,21 +1100,23 @@ _fac_dum_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_per_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_per_fluere (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
     constans SilvaNodus* clausula =
         _canonicum_per(aed, _nodalis(silva_c89_per_clausula(nodus)));
-    constans SilvaNodus* initium_n = NIHIL;
-    constans SilvaNodus* conditio_n = NIHIL;
-    constans SilvaNodus* passus_n = NIHIL;
-    FluxusBlocus* caput;
-    FluxusBlocus* corpus_b;
-    FluxusBlocus* passus_b;
-    FluxusBlocus* postis;
-    s64 valor = ZEPHYRUM;
-    b32 constansne = FALSUM;
+    constans SilvaNodus* initium_n   = NIHIL;
+    constans SilvaNodus* conditio_n  = NIHIL;
+    constans SilvaNodus* passus_n    = NIHIL;
+           FluxusBlocus* caput;
+           FluxusBlocus* corpus_b;
+           FluxusBlocus* passus_b;
+           FluxusBlocus* postis;
+                    s64  valor       = ZEPHYRUM;
+                    b32  constansne  = FALSUM;
 
-    si (clausula != NIHIL
+    si (   clausula        != NIHIL
         && clausula->genus == (s32)SILVA_C89_GENUS_PER_CLAUSULA)
     {
         initium_n = _nodalis(silva_c89_per_clausula_initium(clausula));
@@ -1060,9 +1135,9 @@ _per_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
     }
     caput = _blocus_novus(aed);
     _transire_ad(aed, caput, nodus);
-    corpus_b = _blocus_novus(aed);
-    passus_b = _blocus_novus(aed);
-    postis = _blocus_novus(aed);
+    corpus_b  = _blocus_novus(aed);
+    passus_b  = _blocus_novus(aed);
+    postis    = _blocus_novus(aed);
     si (conditio_n == NIHIL)
     {
         /* conditio absens = semper vera (per (;;)) */
@@ -1110,7 +1185,8 @@ _per_fluere (FluxusAedificator* aed, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_commutationem_fluere (FluxusAedificator* aed,
+_commutationem_fluere (
+      FluxusAedificator* aed,
     constans SilvaNodus* nodus)
 {
     constans SilvaNodus* corpus_n =
@@ -1120,7 +1196,7 @@ _commutationem_fluere (FluxusAedificator* aed,
         _nodalis(silva_c89_commutatio_discrimen(nodus));
     FluxusBlocus* apertura;
     FluxusBlocus* postis;
-    b32 ordinarius_visus = FALSUM;
+             b32  ordinarius_visus = FALSUM;
 
     /* granulum discriminis (fissio si sectiones continet) - margines
      * dispersionis ex bloco iunctionis eius */
@@ -1128,18 +1204,18 @@ _commutationem_fluere (FluxusAedificator* aed,
     {
         _folium_findere_aut_addere(aed, discrimen_n);
     }
-    apertura = _in_currentem(aed);
-    postis = _blocus_novus(aed);
+    apertura  = _in_currentem(aed);
+    postis    = _blocus_novus(aed);
 
     _contextum_imponere(aed, postis, NIHIL);
     aed->currens = NIHIL;   /* ante titulum primum: fluxus mortuus */
 
-    si (corpus_n != NIHIL
+    si (   corpus_n        != NIHIL
         && corpus_n->genus == (s32)SILVA_C89_GENUS_CORPUS)
     {
         SilvaValor lista = silva_c89_corpus_elementa(corpus_n);
-        i32 i;
-        i32 m = silva_valor_lista_numerus(lista);
+               i32 i;
+               i32 m = silva_valor_lista_numerus(lista);
 
         per (i = ZEPHYRUM; i < m; i++)
         {
@@ -1151,17 +1227,17 @@ _commutationem_fluere (FluxusAedificator* aed,
                 perge;
             }
             e = _canonicum_per(aed, v->datum.nodus);
-            si (e->genus == (s32)SILVA_C89_GENUS_CASUS
+            si (   e->genus == (s32)SILVA_C89_GENUS_CASUS
                 || e->genus == (s32)SILVA_C89_GENUS_ORDINARIUS)
             {
                 FluxusBlocus* grex = _blocus_novus(aed);
-                s32 genus_marginis;
+                         s32  genus_marginis;
 
                 grex->titulus_dux = e;
                 si (e->genus == (s32)SILVA_C89_GENUS_ORDINARIUS)
                 {
-                    genus_marginis = (s32)FLUXUS_MARGO_ORDINARIUS;
-                    ordinarius_visus = VERUM;
+                    genus_marginis    = (s32)FLUXUS_MARGO_ORDINARIUS;
+                    ordinarius_visus  = VERUM;
                 }
                 alioquin
                 {
@@ -1216,12 +1292,15 @@ _commutationem_fluere (FluxusAedificator* aed,
     aed->currens = postis;
 }
 
+
 /* ==================================================
  * Ambulatio - dispersio
  * ================================================== */
 
 interior vacuum
-_sententiam_ambulare (FluxusAedificator* aed, constans SilvaNodus* nodus)
+_sententiam_ambulare (
+      FluxusAedificator* aed,
+    constans SilvaNodus* nodus)
 {
     si (nodus == NIHIL)
     {
@@ -1262,9 +1341,9 @@ _sententiam_ambulare (FluxusAedificator* aed, constans SilvaNodus* nodus)
         }
         casus (s32)SILVA_C89_GENUS_SALTA:
         {
-            SilvaValor tok_v = silva_c89_salta_tok_destinatio(nodus);
-            FluxusTitulus* t = NIHIL;
-            FluxusBlocus* b = _in_currentem(aed);
+            SilvaValor tok_v  = silva_c89_salta_tok_destinatio(nodus);
+            FluxusTitulus* t  = NIHIL;
+            FluxusBlocus* b   = _in_currentem(aed);
 
             _folium_addere(aed, nodus);
             si (tok_v.genus == SILVA_VALOR_TOKEN)
@@ -1288,7 +1367,8 @@ _sententiam_ambulare (FluxusAedificator* aed, constans SilvaNodus* nodus)
         casus (s32)SILVA_C89_GENUS_FRANGE:
         {
             FluxusContextusFractionis* c = _fractionis_apex(aed);
-            FluxusBlocus* b = _in_currentem(aed);
+                         FluxusBlocus* b =
+                             _in_currentem(aed);
 
             _folium_addere(aed, nodus);
             si (c != NIHIL)
@@ -1307,7 +1387,8 @@ _sententiam_ambulare (FluxusAedificator* aed, constans SilvaNodus* nodus)
         casus (s32)SILVA_C89_GENUS_PERGE:
         {
             FluxusContextusFractionis* c = _persecutionis_proxima(aed);
-            FluxusBlocus* b = _in_currentem(aed);
+                         FluxusBlocus* b =
+                             _in_currentem(aed);
 
             _folium_addere(aed, nodus);
             si (c != NIHIL)
@@ -1364,12 +1445,15 @@ _sententiam_ambulare (FluxusAedificator* aed, constans SilvaNodus* nodus)
     }
 }
 
+
 /* ==================================================
  * Attingibilitas
  * ================================================== */
 
 interior vacuum
-_attingibilitatem_signare (FluxusFunctionis* fluxus, Piscina* piscina)
+_attingibilitatem_signare (
+    FluxusFunctionis* fluxus,
+             Piscina* piscina)
 {
     Xar* index_operis = xar_creare(piscina,
         (i32)magnitudo(FluxusBlocus*));
@@ -1394,7 +1478,7 @@ _attingibilitatem_signare (FluxusFunctionis* fluxus, Piscina* piscina)
             FluxusMargo* margo = (FluxusMargo*)xar_obtinere(
                 b->margines, i);
 
-            si (margo->destinatio != NIHIL
+            si (   margo->destinatio != NIHIL
                 && !margo->destinatio->attingibilis)
             {
                 FluxusBlocus** locus;
@@ -1407,18 +1491,21 @@ _attingibilitatem_signare (FluxusFunctionis* fluxus, Piscina* piscina)
     }
 }
 
+
 /* ==================================================
  * API
  * ================================================== */
 
 FluxusFunctionis*
-silva_c89_fluxus_aedificare (Piscina* piscina,
-    constans SilvaNodus* definitio, constans FluxusAuxilia* auxilia)
+silva_c89_fluxus_aedificare (
+                   Piscina* piscina,
+       constans SilvaNodus* definitio,
+    constans FluxusAuxilia* auxilia)
 {
-    FluxusAedificator aed;
-    FluxusFunctionis* fluxus;
+      FluxusAedificator  aed;
+       FluxusFunctionis* fluxus;
     constans SilvaNodus* corpus_n;
-    FluxusBlocus* cadens;
+           FluxusBlocus* cadens;
 
     si (definitio == NIHIL)
     {
@@ -1440,8 +1527,8 @@ silva_c89_fluxus_aedificare (Piscina* piscina,
         (i32)magnitudo(constans SilvaNodus*));
     fluxus->fractiones_extra = xar_creare(piscina,
         (i32)magnitudo(constans SilvaNodus*));
-    fluxus->cadit_attingibilis = FALSUM;
-    fluxus->datorum = NIHIL;
+    fluxus->cadit_attingibilis  = FALSUM;
+    fluxus->datorum             = NIHIL;
 
     aed.piscina = piscina;
     si (auxilia != NIHIL)
@@ -1450,18 +1537,18 @@ silva_c89_fluxus_aedificare (Piscina* piscina,
     }
     alioquin
     {
-        aed.aux.canonicum = NIHIL;
-        aed.aux.aestimator = NIHIL;
-        aed.aux.contextus = NIHIL;
+        aed.aux.canonicum   = NIHIL;
+        aed.aux.aestimator  = NIHIL;
+        aed.aux.contextus   = NIHIL;
     }
-    aed.fluxus = fluxus;
-    aed.currens = NIHIL;
+    aed.fluxus   = fluxus;
+    aed.currens  = NIHIL;
     aed.fractiones = xar_creare(piscina,
         (i32)magnitudo(FluxusContextusFractionis));
     aed.altitudo = ZEPHYRUM;
 
-    fluxus->introitus = _blocus_novus(&aed);
-    fluxus->exitus = _blocus_novus(&aed);
+    fluxus->introitus  = _blocus_novus(&aed);
+    fluxus->exitus     = _blocus_novus(&aed);
 
     _titulos_colligere(&aed, corpus_n);
 

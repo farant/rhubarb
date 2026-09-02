@@ -53,19 +53,21 @@ nomen structura {
 } Extentus;
 
 hic_manens Extentus
-_extentum_metiri (constans SilvaParsura* parsura,
-    constans SilvaNodus* subiectum, Piscina* piscina)
+_extentum_metiri (
+    constans SilvaParsura* parsura,
+      constans SilvaNodus* subiectum,
+                  Piscina* piscina)
 {
-    Extentus ext;
-    Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
-    i32 cursor = ZEPHYRUM;
-    i32 k;
+    Extentus  ext;
+         Xar* series = xar_creare(piscina, magnitudo(SilvaValor));
+         i32  cursor = ZEPHYRUM;
+         i32  k;
 
-    ext.validus = FALSUM;
-    ext.initium = ZEPHYRUM;
-    ext.finis = ZEPHYRUM;
-    ext.linea_prima = ZEPHYRUM;
-    ext.linea_ultima = ZEPHYRUM;
+    ext.validus       = FALSUM;
+    ext.initium       = ZEPHYRUM;
+    ext.finis         = ZEPHYRUM;
+    ext.linea_prima   = ZEPHYRUM;
+    ext.linea_ultima  = ZEPHYRUM;
 
     si (series == NIHIL) redde ext;
     per (k = ZEPHYRUM; k < subiectum->numerus_locorum; k++)
@@ -101,23 +103,23 @@ _extentum_metiri (constans SilvaParsura* parsura,
         {
             SilvaToken* radix_lex = silva_token_radix(v.datum.token);
 
-            si (radix_lex != NIHIL
-                && radix_lex->fons_index == parsura->fons_princeps
+            si (   radix_lex              != NIHIL
+                && radix_lex->fons_index  == parsura->fons_princeps
                 && radix_lex->byte_offset >= ZEPHYRUM)
             {
                 s32 finis_lex = radix_lex->byte_offset
                     + (s32)radix_lex->longitudo;
 
-                si (!ext.validus
+                si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)
                 {
-                    ext.initium = radix_lex->byte_offset;
-                    ext.linea_prima = radix_lex->linea;
+                    ext.initium      = radix_lex->byte_offset;
+                    ext.linea_prima  = radix_lex->linea;
                 }
                 si (!ext.validus || finis_lex > ext.finis)
                 {
-                    ext.finis = finis_lex;
-                    ext.linea_ultima = radix_lex->linea;
+                    ext.finis         = finis_lex;
+                    ext.linea_ultima  = radix_lex->linea;
                 }
                 ext.validus = VERUM;
             }
@@ -129,7 +131,7 @@ _extentum_metiri (constans SilvaParsura* parsura,
         }
         {
             constans SilvaNodus* nodus = v.datum.nodus;
-            i32 m;
+                            i32  m;
 
             per (m = ZEPHYRUM; m < nodus->numerus_locorum; m++)
             {
@@ -144,8 +146,9 @@ _extentum_metiri (constans SilvaParsura* parsura,
 
 /* -intra: maior-aut-ipse subiecti scopo congruit? */
 hic_manens b32
-_intra_scopum (constans SilvaQuaestio* q_scopus,
-    constans SilvaNodus* nodus)
+_intra_scopum (
+    constans SilvaQuaestio* q_scopus,
+       constans SilvaNodus* nodus)
 {
     constans SilvaNodus* n = nodus;
 
@@ -163,12 +166,14 @@ _intra_scopum (constans SilvaQuaestio* q_scopus,
  * -------------------------------------------------- */
 
 hic_manens s32
-_numerus_probae (Piscina* piscina, constans SilvaParsura* parsura,
-    constans character* selector)
+_numerus_probae (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* selector)
 {
     constans character* causa = NIHIL;
-    SilvaQuaestio* q = silva_quaestio_compilare(piscina,
-        &SILVA_C89_REGISTRUM, selector, &causa);
+         SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+             &SILVA_C89_REGISTRUM, selector, &causa);
     Xar* resultata;
 
     si (q == NIHIL) redde -I;
@@ -187,12 +192,12 @@ _proba (vacuum)
         "int a;\n"
         "int quadratum(int x) { return x * x; }\n"
         "void vacua(void) { int z; z = 1; }\n";
-    SilvaParsura* parsura;
-    constans character* causa = NIHIL;
-    b32 fracta = FALSUM;
+          SilvaParsura* parsura;
+    constans character* causa   = NIHIL;
+                   b32  fracta  = FALSUM;
     structura {
         constans character* selector;
-        s32                 numerus;
+                       s32  numerus;
     } probanda[] = {
         { "definitio-functionis",         II },
         { "definitio-functionis:reddit",  I },
@@ -230,7 +235,7 @@ _proba (vacuum)
         }
     }
     /* selector malus = fractura clara */
-    si (silva_quaestio_compilare(piscina, &SILVA_C89_REGISTRUM,
+    si (   silva_quaestio_compilare(piscina, &SILVA_C89_REGISTRUM,
             "tag-fictum", &causa) != NIHIL
         || causa == NIHIL)
     {
@@ -249,7 +254,8 @@ _proba (vacuum)
  * -------------------------------------------------- */
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -259,8 +265,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -286,7 +295,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -302,8 +311,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -311,7 +323,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -330,7 +342,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -341,14 +353,17 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina_ctx;
-    Piscina* piscina;
-    SilvaContextus* ctx;
-    constans character* via = NIHIL;
-    constans character* selector = NIHIL;
-    constans character* symbolum_intra = NIHIL;
+               Piscina* piscina_ctx;
+               Piscina* piscina;
+        SilvaContextus* ctx;
+    constans character* via             = NIHIL;
+    constans character* selector        = NIHIL;
+    constans character* symbolum_intra  = NIHIL;
     FILE* pl;
     i8* fons;
     long mensura_l;
@@ -371,8 +386,8 @@ s32 principale (integer argc, character** argv)
         {
             redde _proba();
         }
-        alioquin si (strcmp(argv[k], "-intra") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-intra") == ZEPHYRUM
+                     && k + I < argc)
         {
             k++;
             symbolum_intra = argv[k];
@@ -453,7 +468,7 @@ s32 principale (integer argc, character** argv)
     }
     fons = (i8*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -526,10 +541,10 @@ s32 principale (integer argc, character** argv)
                 (constans SilvaQuaestioResultatum*)xar_obtinere(
                     resultata, m);
             Extentus ext;
-            s32 finis_lineae;
+                 s32 finis_lineae;
 
             si (r == NIHIL || r->nodus == NIHIL) perge;
-            si (q_scopus != NIHIL
+            si (   q_scopus != NIHIL
                 && !_intra_scopum(q_scopus, r->nodus))
             {
                 perge;
@@ -538,15 +553,15 @@ s32 principale (integer argc, character** argv)
             si (!ext.validus) perge;
 
             /* initium ad initium lineae retrahere */
-            dum (ext.initium > ZEPHYRUM
-                && fons[ext.initium - I] != '\n')
+            dum (   ext.initium > ZEPHYRUM
+                 && fons[ext.initium - I] != '\n')
             {
                 ext.initium--;
             }
             /* finem ad finem lineae extendere */
             finis_lineae = ext.finis;
-            dum (finis_lineae < (s32)mensura
-                && fons[finis_lineae] != '\n')
+            dum (   finis_lineae < (s32)mensura
+                 && fons[finis_lineae] != '\n')
             {
                 finis_lineae++;
             }

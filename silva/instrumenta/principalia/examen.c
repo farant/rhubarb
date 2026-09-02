@@ -45,7 +45,8 @@ hic_manens b32 nudum = FALSUM;
 hic_manens i32 capita_praebita = ZEPHYRUM;
 
 interior constans character*
-_severitatis_titulus (s32 severitas)
+_severitatis_titulus (
+    s32 severitas)
 {
     commutatio (severitas)
     {
@@ -57,11 +58,13 @@ _severitatis_titulus (s32 severitas)
 }
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* textus;
 
     *mensura_out = ZEPHYRUM;
@@ -79,7 +82,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     }
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura_l > 0L
             && fread(textus, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -93,7 +96,8 @@ _plagulam_legere (Piscina* piscina, constans character* via,
 }
 
 interior b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -101,12 +105,15 @@ _praetermittendum (constans character* titulus)
 }
 
 interior vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
-    chorda clavis;
+       chorda  clavis;
     character* textus;
-    i32 mensura;
+          i32  mensura;
 
     /* clavis = via PLENA (01KYJ6740K): expansor sub via canonica
      * et basename seponit; resolutio includenti-relativa viam
@@ -129,8 +136,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 interior vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -141,7 +151,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     }
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.')
@@ -165,7 +175,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena);
@@ -175,17 +185,19 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
-
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
     constans character* via = NIHIL;
-    Piscina* piscina;
-    SilvaContextus* ctx;
-    SilvaParsura* systema_parsura = NIHIL;
-    SilvaSemantica* systema_semantica = NIHIL;
-    character* fons_plagulae = NIHIL;
-    i32 mensura_plagulae = ZEPHYRUM;
-    integer k;
+               Piscina* piscina;
+        SilvaContextus* ctx;
+          SilvaParsura* systema_parsura    = NIHIL;
+        SilvaSemantica* systema_semantica  = NIHIL;
+             character* fons_plagulae      = NIHIL;
+                   i32  mensura_plagulae   = ZEPHYRUM;
+               integer  k;
 
     per (k = I; k < argc; k++)
     {
@@ -227,14 +239,14 @@ s32 principale (integer argc, character** argv)
          * = custos in binario numquam erat). Manifestum involucrum
          * scribit (invarians aedificatoris); absentia = quieta.
          * Cautio in STDERR solum - effusum -machina intactum. */
-        VigiliaConfiguratio vc;
-        Vigilia* vigilia;
+        VigiliaConfiguratio  vc;
+                    Vigilia* vigilia;
 
-        vc.signum = NIHIL;
-        vc.via_binarii = argv[ZEPHYRUM];
-        vc.via_manifesti = "silva/build/examen.manifestum";
-        vigilia = vigilia_creare(piscina, &vc);
-        si (vigilia != NIHIL
+        vc.signum         = NIHIL;
+        vc.via_binarii    = argv[ZEPHYRUM];
+        vc.via_manifesti  = "silva/build/examen.manifestum";
+        vigilia           = vigilia_creare(piscina, &vc);
+        si (   vigilia != NIHIL
             && vigilia_inspicere(vigilia, piscina)
                 == VIGILIA_FONTES_SUPERANT)
         {
@@ -280,12 +292,12 @@ s32 principale (integer argc, character** argv)
     si (!nudum)
     {
         character* fons_iso;
-        i32 mensura_iso = ZEPHYRUM;
+              i32  mensura_iso = ZEPHYRUM;
         character* fons_px;
-        i32 mensura_px = ZEPHYRUM;
+              i32  mensura_px = ZEPHYRUM;
         character* fons_sys;
-        i32 mensura_sys = ZEPHYRUM;
-        b32 ext_fractum = FALSUM;
+              i32  mensura_sys = ZEPHYRUM;
+              b32  ext_fractum = FALSUM;
 
         fons_iso = _plagulam_legere(piscina,
             "silva/fontes/systema_c89.h", &mensura_iso);
@@ -328,7 +340,7 @@ s32 principale (integer argc, character** argv)
         }
         systema_parsura = silva_c89_parsare(piscina,
             "systema_c89.h", fons_sys, mensura_sys, NIHIL);
-        si (systema_parsura == NIHIL
+        si (   systema_parsura == NIHIL
             || systema_parsura->numerus_errorum > ZEPHYRUM)
         {
             fprintf(stderr, "examen: systema non parsatum\n");
@@ -361,17 +373,17 @@ s32 principale (integer argc, character** argv)
 
     /* plagula ipsa: parsare + bis-analysis (recipe percursus) */
     {
-        i32 mensura = mensura_plagulae;
-        character* fons = fons_plagulae;   /* supra lectum */
-        SilvaOraculum* oraculum;
-        SilvaParsura* parsura;
+                   i32  mensura  = mensura_plagulae;
+             character* fons     = fons_plagulae;   /* supra lectum */
+         SilvaOraculum* oraculum;
+          SilvaParsura* parsura;
         SilvaSemantica* sem;
-        i32 violationes = ZEPHYRUM;
-        i32 suspecta = ZEPHYRUM;
-        i32 domestica = ZEPHYRUM;
-        i32 infra = ZEPHYRUM;
-        i32 provisionalia = ZEPHYRUM;
-        b32 reice = FALSUM;
+                   i32  violationes    = ZEPHYRUM;
+                   i32  suspecta       = ZEPHYRUM;
+                   i32  domestica      = ZEPHYRUM;
+                   i32  infra          = ZEPHYRUM;
+                   i32  provisionalia  = ZEPHYRUM;
+                   b32  reice          = FALSUM;
 
         si (fons == NIHIL)
         {
@@ -387,7 +399,7 @@ s32 principale (integer argc, character** argv)
         }
         parsura = silva_c89_parsare_cum_contextu(piscina, ctx, via,
             fons, mensura, oraculum);
-        si (parsura == NIHIL || !parsura->successus
+        si (   parsura            == NIHIL || !parsura->successus
             || parsura->commissio == NIHIL)
         {
             fprintf(stderr, "examen: apparatus fractus: %s\n", via);
@@ -477,8 +489,8 @@ s32 principale (integer argc, character** argv)
                  * iudicata): catena inclusionum ei appenditur -
                  * radix > ... > includens (confusio attributionis
                  * plagulae-inclusae, debrief 2026-07-27) */
-                si (d->fons_index >= ZEPHYRUM
-                    && d->fons_index != parsura->fons_princeps
+                si (   d->fons_index     >= ZEPHYRUM
+                    && d->fons_index     != parsura->fons_princeps
                     && parsura->expansio != NIHIL)
                 {
                     (vacuum)silva_inclusionis_catena_scribere(

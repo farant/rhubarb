@@ -20,7 +20,9 @@
 
 /* culpa verbum continet? (quaestio simplex, sine casu) */
 interior b32
-_continet (chorda culpa, constans character* verbum)
+_continet (
+                chorda  culpa,
+    constans character* verbum)
 {
     i32 mensura = (i32)strlen(verbum);
     i32 i;
@@ -40,11 +42,13 @@ _continet (chorda culpa, constans character* verbum)
 
 /* legere quod deficere DEBET: NIHIL + culpa cum verbo */
 interior b32
-_fractura_exspectata (Piscina* piscina,
-    constans character* fons_stml, constans character* verbum)
+_fractura_exspectata (
+               Piscina* piscina,
+    constans character* fons_stml,
+    constans character* verbum)
 {
-    chorda culpa;
-    chorda fons = chorda_ex_literis(fons_stml, piscina);
+              chorda  culpa;
+              chorda  fons = chorda_ex_literis(fons_stml, piscina);
     SilvaQuaestiones* bibliotheca = silva_quaestiones_legere(
         piscina, &SILVA_C89_REGISTRUM, NIHIL, fons, &culpa);
 
@@ -61,19 +65,21 @@ _fractura_exspectata (Piscina* piscina,
 
 /* argumentum unum implere (series plana - forma API) */
 interior vacuum
-_argumentum (SilvaQuaestionesArgumentum* argumentum,
-    Piscina* piscina, constans character* titulus,
-    constans character* valor)
+_argumentum (
+    SilvaQuaestionesArgumentum* argumentum,
+                       Piscina* piscina,
+            constans character* titulus,
+            constans character* valor)
 {
-    argumentum->titulus = chorda_ex_literis(titulus, piscina);
-    argumentum->valor = chorda_ex_literis(valor, piscina);
+    argumentum->titulus  = chorda_ex_literis(titulus, piscina);
+    argumentum->valor    = chorda_ex_literis(valor, piscina);
 }
 
 s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_quaestiones",
         8388608);
@@ -84,9 +90,11 @@ principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: bibliotheca valida legitur
      * ======================================================== */
+
     {
         constans character* fons_stml =
             "<quaestiones>\n"
@@ -147,19 +155,21 @@ principale (vacuum)
         CREDO_NIHIL (silva_quaestiones_ad_indicem(bibliotheca,
             III));
 
+
         /* ====================================================
          * PROBARE: substitutio + executio contra fixturam
          * ==================================================== */
+
         {
             constans character* fons_c =
                 "int quadratum(int x) { return x * x; }\n"
                 "int bis(int x) { return quadratum(x)"
                 " + quadratum(x); }\n"
                 "void nihil_facere(void) { return; }\n";
-            SilvaParsura* parsura;
-            SilvaQuaestionesArgumentum argumenta[II];
-            SilvaQuaestio* quaestio;
-            Xar* resultata;
+                          SilvaParsura* parsura;
+            SilvaQuaestionesArgumentum  argumenta[II];
+                         SilvaQuaestio* quaestio;
+                                   Xar* resultata;
 
             imprimere("\n--- Probans substitutionem/executionem"
                 " ---\n");
@@ -217,9 +227,11 @@ principale (vacuum)
             CREDO_NON_NIHIL (resultata);
             CREDO_AEQUALIS_I32 (xar_numerus(resultata), ZEPHYRUM);
 
+
             /* ================================================
              * PROBARE: fracturae parandi
              * ================================================ */
+
             imprimere("\n--- Probans fracturas parandi ---\n");
 
             nominata = silva_quaestiones_invenire(bibliotheca,
@@ -255,10 +267,12 @@ principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: classes fracturae lectionis (plagula tota aut
      * nihil - quaeque culpa nominata)
      * ======================================================== */
+
     {
         imprimere("\n--- Probans classes fracturae ---\n");
 
@@ -385,13 +399,15 @@ principale (vacuum)
             "elementum ignotum"));
     }
 
+
     /* ========================================================
      * PROBARE: plagula commissa silva/quaestiones.stml valida
      * (pinna - entrium invalidum suite rubram facit)
      * ======================================================== */
+
     {
         constans character* radix = getenv("RHUBARB_RADIX");
-        character via[512];
+                 character  via[512];
         FILE* filum;
 
         imprimere("\n--- Probans plagulam commissam ---\n");
@@ -409,14 +425,14 @@ principale (vacuum)
                     piscina, (memoriae_index)65536);
                 size_t lecta = fread(textus, (size_t)I,
                     (size_t)65535, filum);
-                chorda fons;
-                chorda culpa;
+                          chorda  fons;
+                          chorda  culpa;
                 SilvaQuaestiones* bibliotheca;
 
                 (vacuum)fclose(filum);
                 CREDO_VERUM (lecta > (size_t)ZEPHYRUM);
-                fons.datum = (i8*)textus;
-                fons.mensura = (i32)lecta;
+                fons.datum    = (i8*)textus;
+                fons.mensura  = (i32)lecta;
                 bibliotheca = silva_quaestiones_legere(piscina,
                     &SILVA_C89_REGISTRUM, NIHIL, fons, &culpa);
                 si (bibliotheca == NIHIL)

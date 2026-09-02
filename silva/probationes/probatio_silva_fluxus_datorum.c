@@ -18,16 +18,17 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Resolutor probationis (nomine-clavatus)
  * ================================================== */
 
 nomen structura {
     constans character* titulus;
-    b32 localis;
-    b32 parametrum;
-    b32 aggregatum;
-    b32 acies;
+                   b32  localis;
+                   b32  parametrum;
+                   b32  aggregatum;
+                   b32  acies;
 } ProbatioSymbolum;
 
 /* Partes fixae: a/b/c/i parametra, x/y/p locales scalares,
@@ -46,7 +47,9 @@ hic_manens ProbatioSymbolum _symbola[] = {
 };
 
 interior b32
-_nomen_aequale (chorda c, constans character* litterae)
+_nomen_aequale (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -55,7 +58,8 @@ _nomen_aequale (chorda c, constans character* litterae)
 }
 
 interior constans SilvaNodus*
-_nodalis_probationis (SilvaValor v)
+_nodalis_probationis (
+    SilvaValor v)
 {
     si (v.genus != SILVA_VALOR_NODUS)
     {
@@ -67,7 +71,8 @@ _nodalis_probationis (SilvaValor v)
 /* Descensus declaratoris ad titulum (resolutor probationis -
  * semantica per nexum declaratorum resolvit) */
 interior constans SilvaNodus*
-_declaratoris_titulus (constans SilvaNodus* d)
+_declaratoris_titulus (
+    constans SilvaNodus* d)
 {
     dum (d != NIHIL)
     {
@@ -99,13 +104,15 @@ _declaratoris_titulus (constans SilvaNodus* d)
 }
 
 interior b32
-_probatio_symbolum (vacuum* contextus, constans SilvaNodus* nodus,
+_probatio_symbolum (
+                 vacuum* contextus,
+    constans SilvaNodus* nodus,
     FluxusSymbolumFacta* facta)
 {
     SilvaValor tok_v;
-    chorda textus;
-    i32 k;
-    i32 m = (i32)(magnitudo(_symbola) / magnitudo(_symbola[0]));
+        chorda textus;
+           i32 k;
+           i32 m = (i32)(magnitudo(_symbola) / magnitudo(_symbola[0]));
 
     (vacuum)contextus;
     si (nodus == NIHIL)
@@ -135,13 +142,13 @@ _probatio_symbolum (vacuum* contextus, constans SilvaNodus* nodus,
     {
         si (_nomen_aequale(textus, _symbola[k].titulus))
         {
-            facta->identitas = (vacuum*)&_symbola[k];
-            facta->titulus = textus;
-            facta->declarans = nodus;
-            facta->localis_automata = _symbola[k].localis;
-            facta->parametrum = _symbola[k].parametrum;
-            facta->aggregatum = _symbola[k].aggregatum;
-            facta->acies = _symbola[k].acies;
+            facta->identitas         = (vacuum*)&_symbola[k];
+            facta->titulus           = textus;
+            facta->declarans         = nodus;
+            facta->localis_automata  = _symbola[k].localis;
+            facta->parametrum        = _symbola[k].parametrum;
+            facta->aggregatum        = _symbola[k].aggregatum;
+            facta->acies             = _symbola[k].acies;
             redde VERUM;
         }
     }
@@ -150,14 +157,16 @@ _probatio_symbolum (vacuum* contextus, constans SilvaNodus* nodus,
 
 /* peek = functio cum parametris T* constantibus (pinna s04f) */
 interior b32
-_probatio_parametrum_constans (vacuum* contextus,
-    constans SilvaNodus* functio_folium, i32 index)
+_probatio_parametrum_constans (
+                 vacuum* contextus,
+    constans SilvaNodus* functio_folium,
+                    i32  index)
 {
     SilvaValor tok_v;
 
     (vacuum)contextus;
     (vacuum)index;
-    si (functio_folium == NIHIL
+    si (   functio_folium == NIHIL
         || functio_folium->genus
             != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
     {
@@ -171,12 +180,14 @@ _probatio_parametrum_constans (vacuum* contextus,
     redde _nomen_aequale(tok_v.datum.token->valor, "peek");
 }
 
+
 /* ==================================================
  * Fistula: fons -> CFG -> datorum
  * ================================================== */
 
 interior constans SilvaNodus*
-_definitio_prima (constans SilvaParsura* parsura)
+_definitio_prima (
+    constans SilvaParsura* parsura)
 {
     SilvaValor* e = silva_valor_lista_obtinere(
         parsura->commissio->radix, ZEPHYRUM);
@@ -191,22 +202,24 @@ _definitio_prima (constans SilvaParsura* parsura)
 /* Aestimator litteralis parvus (exemplar probatio_silva_fluxus):
  * folium-integer decimale per parentheses - plicatio si (0) */
 interior b32
-_aestimator_litteralis (vacuum* contextus,
-    constans SilvaNodus* expressio, s64* valor)
+_aestimator_litteralis (
+                 vacuum* contextus,
+    constans SilvaNodus* expressio,
+                    s64* valor)
 {
     SilvaValor tok_v;
-    chorda textus;
-    s64 v = ZEPHYRUM;
-    i32 i;
+        chorda textus;
+           s64 v = ZEPHYRUM;
+           i32 i;
 
     (vacuum)contextus;
-    dum (expressio != NIHIL
-        && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    dum (   expressio        != NIHIL
+         && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
     {
         expressio = _nodalis_probationis(
             silva_c89_parenthesis_internum(expressio));
     }
-    si (expressio == NIHIL
+    si (   expressio        == NIHIL
         || expressio->genus != (s32)SILVA_C89_GENUS_FOLIUM_INTEGER)
     {
         redde FALSUM;
@@ -238,18 +251,20 @@ _aestimator_litteralis (vacuum* contextus,
 /* Classificator stirpium probationis (ambitu caecus): folium 'a'
  * -> PRIMA, folium 'b' -> PRIMA+1, cetera NEUTRA */
 interior s32
-_probatio_stirps (vacuum* contextus, constans SilvaNodus* expressio)
+_probatio_stirps (
+                 vacuum* contextus,
+    constans SilvaNodus* expressio)
 {
     SilvaValor tok_v;
 
     (vacuum)contextus;
-    dum (expressio != NIHIL
-        && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+    dum (   expressio        != NIHIL
+         && expressio->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
     {
         expressio = _nodalis_probationis(
             silva_c89_parenthesis_internum(expressio));
     }
-    si (expressio == NIHIL || expressio->genus
+    si (   expressio == NIHIL || expressio->genus
         != (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
     {
         redde (s32)FLUXUS_STIRPS_NEUTRA;
@@ -274,27 +289,29 @@ _probatio_stirps (vacuum* contextus, constans SilvaNodus* expressio)
  * (semen); cetera = status currens variabilis 'x' (echo -
  * sui-referentia servat, exemplar t = t - m) */
 interior s32
-_probatio_stirps_ambitu (vacuum* contextus,
-    constans SilvaNodus* expressio,
-    constans FluxusDatorum* datorum, constans s32* stirpes)
+_probatio_stirps_ambitu (
+                    vacuum* contextus,
+       constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum,
+              constans s32* stirpes)
 {
     (vacuum)contextus;
     {
         constans SilvaNodus* e = expressio;
 
-        dum (e != NIHIL
-            && e->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
+        dum (   e        != NIHIL
+             && e->genus == (s32)SILVA_C89_GENUS_PARENTHESIS)
         {
             e = _nodalis_probationis(
                 silva_c89_parenthesis_internum(e));
         }
-        si (e != NIHIL && e->genus
+        si (   e != NIHIL && e->genus
             == (s32)SILVA_C89_GENUS_FOLIUM_IDENTIFICATOR)
         {
             SilvaValor tok_v =
                 silva_c89_folium_identificator_tok_valor(e);
 
-            si (tok_v.genus == SILVA_VALOR_TOKEN
+            si (   tok_v.genus == SILVA_VALOR_TOKEN
                 && _nomen_aequale(tok_v.datum.token->valor, "a"))
             {
                 redde (s32)FLUXUS_STIRPS_PRIMA;
@@ -311,7 +328,7 @@ _probatio_stirps_ambitu (vacuum* contextus,
                 (constans FluxusVariabilis*)xar_obtinere(
                     datorum->variabiles, i);
 
-            si (v != NIHIL && !v->membrum_est
+            si (   v != NIHIL && !v->membrum_est
                 && _nomen_aequale(v->titulus, "x"))
             {
                 redde stirpes[i];
@@ -322,17 +339,19 @@ _probatio_stirps_ambitu (vacuum* contextus,
 }
 
 interior FluxusDatorum*
-_extrahere_cum (Piscina* piscina, constans character* fons,
+_extrahere_cum (
+    Piscina* piscina,
+    constans character* fons,
     s32 (*stirps_cb)(vacuum*, constans SilvaNodus*),
     s32 (*ambitu_cb)(vacuum*, constans SilvaNodus*,
         constans FluxusDatorum*, constans s32*))
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina, "probatio.c",
         fons, (i32)strlen(fons), NIHIL);
-    constans SilvaNodus* definitio;
-    FluxusFunctionis* fluxus;
-    FluxusAuxilia aux_fluxus;
-    FluxusDatorumAuxilia aux;
+     constans SilvaNodus* definitio;
+        FluxusFunctionis* fluxus;
+           FluxusAuxilia  aux_fluxus;
+    FluxusDatorumAuxilia  aux;
 
     si (parsura == NIHIL || parsura->numerus_errorum != ZEPHYRUM)
     {
@@ -343,31 +362,34 @@ _extrahere_cum (Piscina* piscina, constans character* fons,
     {
         redde NIHIL;
     }
-    aux_fluxus.canonicum = NIHIL;
-    aux_fluxus.aestimator = _aestimator_litteralis;
-    aux_fluxus.contextus = NIHIL;
+    aux_fluxus.canonicum   = NIHIL;
+    aux_fluxus.aestimator  = _aestimator_litteralis;
+    aux_fluxus.contextus   = NIHIL;
     fluxus = silva_c89_fluxus_aedificare(piscina, definitio,
         &aux_fluxus);
     si (fluxus == NIHIL)
     {
         redde NIHIL;
     }
-    aux.symbolum = _probatio_symbolum;
-    aux.parametrum_constans = _probatio_parametrum_constans;
-    aux.parametrum_accumulat = NIHIL;
-    aux.expressio_acies = NIHIL;   /* e2e semanticae hoc probat */
-    aux.stirps_valoris = stirps_cb;
-    aux.stirps_valoris_ambitu = ambitu_cb;
-    aux.canonicum = NIHIL;
-    aux.contextus = NIHIL;
+    aux.symbolum               = _probatio_symbolum;
+    aux.parametrum_constans    = _probatio_parametrum_constans;
+    aux.parametrum_accumulat   = NIHIL;
+    aux.expressio_acies        = NIHIL;   /* e2e semanticae hoc probat */
+    aux.stirps_valoris         = stirps_cb;
+    aux.stirps_valoris_ambitu  = ambitu_cb;
+    aux.canonicum              = NIHIL;
+    aux.contextus              = NIHIL;
     redde silva_c89_fluxus_datorum_aedificare(piscina, fluxus, &aux);
 }
 
 interior FluxusDatorum*
-_extrahere (Piscina* piscina, constans character* fons)
+_extrahere (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde _extrahere_cum(piscina, fons, NIHIL, NIHIL);
 }
+
 
 /* ==================================================
  * Probatio seriei eventorum (plana, ordine blocorum)
@@ -403,7 +425,7 @@ _seriem_probare (FluxusDatorum* datorum,
              * disciplina consumptorum verorum speculata (genera
              * explicite cribrant); series membrorum probationem
              * propriam habet infra */
-            si (ev->genus == (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
+            si (   ev->genus == (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
                 || ev->genus
                     == (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
             {
@@ -441,6 +463,7 @@ _seriem_probare (FluxusDatorum* datorum,
 #define DEF_   (s32)FLUXUS_EVENTUM_DEFINITIO
 #define LOCI_  (s32)FLUXUS_EVENTUM_DEFINITIO_LOCI
 
+
 /* ==================================================
  * Probatio seriei eventorum MEMBRORUM (01KYMYW75S): solum genera
  * membrorum, ordine blocorum - complementum _seriem_probare (quae
@@ -450,7 +473,7 @@ _seriem_probare (FluxusDatorum* datorum,
 nomen structura {
     constans character* basis;      /* titulus basis */
     constans character* membrum;    /* titulus membri */
-    s32 genus;
+                   s32  genus;
 } MembrumExspectatum;
 
 interior vacuum
@@ -473,7 +496,7 @@ _seriem_membrorum_probare (FluxusDatorum* datorum,
             FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
                 blocus->eventa, e);
 
-            si (ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
+            si (   ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_USUS
                 && ev->genus
                     != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
             {
@@ -482,9 +505,9 @@ _seriem_membrorum_probare (FluxusDatorum* datorum,
             si (visa < numerus)
             {
                 constans MembrumExspectatum* ex = &exspectata[visa];
-                FluxusVariabilis* v = (FluxusVariabilis*)
-                    xar_obtinere(datorum->variabiles,
-                        (i32)ev->variabilis);
+                           FluxusVariabilis* v = (FluxusVariabilis*)
+                               xar_obtinere(datorum->variabiles,
+                               (i32)ev->variabilis);
 
                 CREDO_AEQUALIS_S32 (ev->genus, ex->genus);
                 CREDO_NON_NIHIL (v);
@@ -503,12 +526,15 @@ _seriem_membrorum_probare (FluxusDatorum* datorum,
     CREDO_AEQUALIS_I32 (visa, numerus);
 }
 
+
 /* ==================================================
  * Auxilia chunk B: lectio statuum may/must
  * ================================================== */
 
 interior s32
-_variabilis_titulo (FluxusDatorum* d, constans character* titulus)
+_variabilis_titulo (
+         FluxusDatorum* d,
+    constans character* titulus)
 {
     i32 i;
     i32 m = xar_numerus(d->variabiles);
@@ -527,7 +553,9 @@ _variabilis_titulo (FluxusDatorum* d, constans character* titulus)
 }
 
 interior b32
-_bitum_lectum (constans i64* verba, s32 index)
+_bitum_lectum (
+    constans i64* verba,
+             s32  index)
 {
     redde ((verba[index / LXIV] >> (i32)(index % LXIV)) & (i64)I)
         != (i64)ZEPHYRUM ? VERUM : FALSUM;
@@ -535,27 +563,32 @@ _bitum_lectum (constans i64* verba, s32 index)
 
 /* Status ad exitum functionis (introitus bloci exitus) */
 interior vacuum
-_status_exitus (FluxusDatorum* d, constans character* titulus,
-    b32* may, b32* must)
+_status_exitus (
+         FluxusDatorum* d,
+    constans character* titulus,
+                   b32* may,
+                   b32* must)
 {
     FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
         d->bloci, d->fluxus->exitus->index);
     s32 v = _variabilis_titulo(d, titulus);
 
-    *may = FALSUM;
-    *must = FALSUM;
+    *may   = FALSUM;
+    *must  = FALSUM;
     si (v < ZEPHYRUM)
     {
         redde;
     }
-    *may = _bitum_lectum(db->may_introitus, v);
-    *must = _bitum_lectum(db->must_introitus, v);
+    *may   = _bitum_lectum(db->may_introitus, v);
+    *must  = _bitum_lectum(db->must_introitus, v);
 }
 
 /* Stirps variabilis nominatae ad exitum functionis (introitus
  * bloci exitus) - punctum fixum tertium */
 interior s32
-_stirps_ad_exitum (FluxusDatorum* d, constans character* titulus)
+_stirps_ad_exitum (
+         FluxusDatorum* d,
+    constans character* titulus)
 {
     FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
         d->bloci, d->fluxus->exitus->index);
@@ -578,8 +611,8 @@ _status_ad_usum (FluxusDatorum* d, constans character* usus_titulus,
     i32 b;
     i32 numerus_blocorum = xar_numerus(d->bloci);
 
-    *may = FALSUM;
-    *must = FALSUM;
+    *may   = FALSUM;
+    *must  = FALSUM;
     si (vu < ZEPHYRUM || vq < ZEPHYRUM)
     {
         redde;
@@ -598,8 +631,8 @@ _status_ad_usum (FluxusDatorum* d, constans character* usus_titulus,
 
             si (ev->genus == USUS_ && ev->variabilis == vu)
             {
-                *may = _bitum_lectum(db->may_introitus, vq);
-                *must = _bitum_lectum(db->must_introitus, vq);
+                *may   = _bitum_lectum(db->may_introitus, vq);
+                *must  = _bitum_lectum(db->must_introitus, vq);
                 redde;
             }
         }
@@ -609,7 +642,7 @@ _status_ad_usum (FluxusDatorum* d, constans character* usus_titulus,
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_fluxus_datorum",
         33554432);
@@ -831,13 +864,15 @@ s32 principale (vacuum)
         _seriem_probare(d, s, IV);
     }
 
+
     /* ========================================================
      * CHUNK B: punctum fixum may/must
      * ======================================================== */
+
     {
         FluxusDatorum* d;
-        b32 may;
-        b32 must;
+                  b32  may;
+                  b32  must;
 
         /* si sine alioquin: may sine must (forma s06a) */
         d = _extrahere(piscina,
@@ -907,12 +942,14 @@ s32 principale (vacuum)
         CREDO_VERUM (must);
     }
 
+
     /* ========================================================
      * MEMBRA UT PSEUDO-VARIABILES (01KYMYW75S): series eventorum
      * membrorum exacta - quod probationes supra praetermittunt,
      * hic asseritur (rete utrimque: pinnae vetustae membra non
      * vident, series membrorum lacunas non celat)
      * ======================================================== */
+
     {
         FluxusDatorum* d;
 
@@ -936,16 +973,16 @@ s32 principale (vacuum)
             FluxusDatorumBlocus* blocus = (FluxusDatorumBlocus*)
                 xar_obtinere(d->bloci, ZEPHYRUM);
             i32 e;
-            i32 m = xar_numerus(blocus->eventa);
-            s32 index_def_totius = -I;
-            s32 index_def_membri = -I;
+            i32 m                 = xar_numerus(blocus->eventa);
+            s32 index_def_totius  = -I;
+            s32 index_def_membri  = -I;
 
             per (e = ZEPHYRUM; e < m; e++)
             {
                 FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
                     blocus->eventa, e);
 
-                si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
+                si (   ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO
                     && index_def_totius < ZEPHYRUM)
                 {
                     index_def_totius = (s32)e;
@@ -963,10 +1000,11 @@ s32 principale (vacuum)
         /* ordo membri tabulae: membrum_est, basis recta, parametrum
          * basis haeret; inquisitio basium ordinem praeterit */
         {
-            s32 vb = _variabilis_titulo(d, "s");
-            i32 i;
-            i32 m = xar_numerus(d->variabiles);
-            FluxusVariabilis* vm = NIHIL;
+                         s32 vb = _variabilis_titulo(d, "s");
+                         i32 i;
+                         i32 m    =
+                             xar_numerus(d->variabiles);
+            FluxusVariabilis* vm  = NIHIL;
 
             CREDO_VERUM (vb >= ZEPHYRUM);
             per (i = ZEPHYRUM; i < m; i++)
@@ -1054,10 +1092,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ==================================================
      * Punctum fixum stirpium (vestigatio generum - columna tertia,
      * arcus fluxus 01KYPZ3XPW)
      * ================================================== */
+
     {
         FluxusDatorum* d;
 

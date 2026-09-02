@@ -27,7 +27,9 @@
 #include <string.h>
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via)
 {
     FILE* pl;
     character* buffer;
@@ -35,14 +37,20 @@ _plagulam_legere (Piscina* piscina, constans character* via)
 
     pl = fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
-    si (fseek(pl, 0L, SEEK_END) != ZEPHYRUM) { fclose(pl); redde NIHIL; }
+    si (fseek(pl, 0L, SEEK_END) != ZEPHYRUM)
+    { fclose(pl); redde NIHIL;
+    }
     mensura = ftell(pl);
-    si (mensura < 0L) { fclose(pl); redde NIHIL; }
+    si (mensura < 0L)
+    { fclose(pl); redde NIHIL;
+    }
     rewind(pl);
     buffer = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura + 1L));
-    si (buffer == NIHIL) { fclose(pl); redde NIHIL; }
-    si (mensura > 0L
+    si (buffer == NIHIL)
+    { fclose(pl); redde NIHIL;
+    }
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -54,23 +62,29 @@ _plagulam_legere (Piscina* piscina, constans character* via)
     redde buffer;
 }
 
-interior vacuum _valorem_imprimere (SilvaValor valor, i32 gradus);
+interior vacuum
+_valorem_imprimere (
+    SilvaValor valor,
+           i32 gradus);
 
 interior vacuum
-_recessum_imprimere (i32 gradus)
+_recessum_imprimere (
+    i32 gradus)
 {
     i32 i;
     per (i = ZEPHYRUM; i < gradus; i++) imprimere("  ");
 }
 
 interior vacuum
-_nodum_imprimere (constans SilvaNodus* nodus, i32 gradus)
+_nodum_imprimere (
+    constans SilvaNodus* nodus,
+                    i32  gradus)
 {
     constans SilvaRegistrumCoctum* tabularium = &SILVA_C89_REGISTRUM;
-    constans SilvaTabGenus* genus;
-    i32 i;
+           constans SilvaTabGenus* genus;
+                              i32  i;
 
-    si (nodus->genus < ZEPHYRUM
+    si (   nodus->genus < ZEPHYRUM
         || nodus->genus >= (s32)tabularium->numerus_generum)
     {
         imprimere("<genus ignotum %d>\n", (int)nodus->genus);
@@ -92,7 +106,9 @@ _nodum_imprimere (constans SilvaNodus* nodus, i32 gradus)
 }
 
 interior vacuum
-_valorem_imprimere (SilvaValor valor, i32 gradus)
+_valorem_imprimere (
+    SilvaValor valor,
+           i32 gradus)
 {
     commutatio (valor.genus)
     {
@@ -137,13 +153,16 @@ _valorem_imprimere (SilvaValor valor, i32 gradus)
     }
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
+               Piscina* piscina;
     constans character* fons;
-    SilvaParsura* parsura;
-    i32 i;
-    i32 numerus;
+          SilvaParsura* parsura;
+                   i32  i;
+                   i32  numerus;
 
     si (argc < II)
     {
@@ -158,7 +177,7 @@ s32 principale (integer argc, character** argv)
         redde I;
     }
 
-    si (argc >= III && (strcmp(argv[I], "-f") == ZEPHYRUM
+    si (   argc >= III && (strcmp(argv[I], "-f") == ZEPHYRUM
         || strcmp(argv[I], "-d") == ZEPHYRUM))
     {
         fons = _plagulam_legere(piscina, argv[II]);

@@ -67,9 +67,9 @@ nomen SilvaValor (*SilvaGLRFabricaAmbigui) (
 nomen structura SilvaGSSNodus SilvaGSSNodus;
 
 structura SilvaGSSNodus {
-    s32         status;
+           s32  status;
     SilvaValor  valor;
-    Xar*        praedecessores;   /* SilvaGSSNodus* (dedup in additione) */
+           Xar* praedecessores;   /* SilvaGSSNodus* (dedup in additione) */
     SilvaToken* lexema;           /* lexema quo creatus (diagnostica/fusio) */
 };
 
@@ -80,24 +80,24 @@ structura SilvaGSSNodus {
 
 nomen structura {
     constans SilvaTabulaCocta* tabula;
-    SilvaGLRConstructor        constructor;
-    SilvaGLRFabricaAmbigui     fabrica;
-    Piscina*                   piscina;    /* GSS + apparatus */
+          SilvaGLRConstructor  constructor;
+       SilvaGLRFabricaAmbigui  fabrica;
+                      Piscina* piscina;    /* GSS + apparatus */
 
     /* Effimera per-reductionem REUSA (census 2026-07-04: xar recens
      * per reductionem = LXXXIV centesimae apicis arenae; una viva
      * simul - contenta per COPIAM VALORIS in constructiones fluunt,
      * numquam retenta). Vacatur in _vias_enumerare, segmenta manent. */
-    Xar*                       viae_effimerae;
+    Xar* viae_effimerae;
 
     /* Fines (Phase 7 Chunk A - par 8.2). 0 = infinitum. Frons ultra
      * limen = fractura munda segmenti (gubernator nodum ERROR facit -
      * totalitas tenet). Intermissio: pergere FALSUM = desiste;
      * passus_pergendi = intervallum lexematum inter interrogationes. */
-    i32       limen_frontis;
+    i32 limen_frontis;
     b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
-    vacuum*   pergere_datum;
-    i32       passus_pergendi;
+    vacuum* pergere_datum;
+       i32  passus_pergendi;
 
     /* Statisticae parsurae novissimae (etiam in fructum copiatae -
      * numeratores sunt PRODUCTUM, non depuratio: spec-v2 par 12.2) */
@@ -120,25 +120,25 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
-    b32          successus;
-    SilvaValor   valor;              /* radix arboris */
-    SilvaToken*  lexema_finis;       /* lexema EOF translatum (trivia!) */
-    i32          numerus_acceptorum;
+           b32  successus;
+    SilvaValor  valor;              /* radix arboris */
+    SilvaToken* lexema_finis;       /* lexema EOF translatum (trivia!) */
+           i32  numerus_acceptorum;
 
     /* Numeratores compactionis (productum queribile) */
-    i32          frons_maxima;
-    i32          fusiones;
-    i32          transmutationes;
-    i32          transmutationes_negatae;
-    i32          eventa_marginis_novi;
+    i32 frons_maxima;
+    i32 fusiones;
+    i32 transmutationes;
+    i32 transmutationes_negatae;
+    i32 eventa_marginis_novi;
 
     /* Error (successus == FALSUM) */
-    b32          est_error;
-    s32          positio;            /* index lexematis ubi fractum */
-    s32          terminalis;         /* prospectus (aut IGNOTUM) */
-    s32          status;             /* status primus frontis tunc */
-    b32          est_ultra_limen;    /* frons limen excessit (Phase 7) */
-    b32          est_intermissus;    /* pergere FALSUM reddidit */
+    b32 est_error;
+    s32 positio;            /* index lexematis ubi fractum */
+    s32 terminalis;         /* prospectus (aut IGNOTUM) */
+    s32 status;             /* status primus frontis tunc */
+    b32 est_ultra_limen;    /* frons limen excessit (Phase 7) */
+    b32 est_intermissus;    /* pergere FALSUM reddidit */
 } SilvaGLRFructus;
 
 
@@ -155,7 +155,7 @@ nomen structura {
  * Errores in stderr; reddit FALSUM in tabula invalida. */
 b32
 silva_glr_tabulam_validare (
-    Piscina*                   piscina,
+                      Piscina* piscina,
     constans SilvaTabulaCocta* tabula);
 
 /* Creare motorem. Tabula validatur - NIHIL in invalida.
@@ -163,25 +163,25 @@ silva_glr_tabulam_validare (
  * imponit, ergo quaevis tabula generata fabricam habet. */
 SilvaGLR*
 silva_glr_creare (
-    Piscina*                   piscina,
+                      Piscina* piscina,
     constans SilvaTabulaCocta* tabula,
-    SilvaGLRConstructor        constructor,
-    SilvaGLRFabricaAmbigui     fabrica);
+          SilvaGLRConstructor  constructor,
+       SilvaGLRFabricaAmbigui  fabrica);
 
 /* Parsare fluxum lexematum (Xar de SilvaToken*, EOF ultimo - forma
  * silva_lexare). Arbores in piscina_arborum allocantur. Reentrans:
  * status frontis per parsuram localis est. */
 SilvaGLRFructus
 silva_glr_parsare (
-    SilvaGLR*     glr,
+        SilvaGLR* glr,
     constans Xar* lexemata,
-    Piscina*      piscina_arborum);
+         Piscina* piscina_arborum);
 
 /* Terminale coctum pro genere lexematis (SILVA_GLR_TERMINALE_IGNOTUM
  * si genus in tabula non est). Publicum pro probationibus/adaptatoribus. */
 s32
 silva_glr_terminale_ex_genere (
     constans SilvaTabulaCocta* tabula,
-    SilvaLexemaGenus           genus);
+             SilvaLexemaGenus  genus);
 
 #endif /* SILVA_GLR_H */

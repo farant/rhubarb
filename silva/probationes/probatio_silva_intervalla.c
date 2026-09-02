@@ -31,7 +31,9 @@
 #include <string.h>
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_c89_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), NIHIL);
@@ -39,12 +41,15 @@ _parsare (Piscina* piscina, constans character* fons)
 
 /* folia identificatoris nomine - collectio recursiva ordine fontis */
 interior vacuum
-_folia_colligere (Piscina* piscina, constans SilvaNodus* nodus,
-    constans character* titulus, Xar* effecta)
+_folia_colligere (
+                Piscina* piscina,
+    constans SilvaNodus* nodus,
+     constans character* titulus,
+                    Xar* effecta)
 {
     Xar* liberi;
-    i32 i;
-    i32 m;
+    i32  i;
+    i32  m;
 
     si (nodus == NIHIL)
     {
@@ -57,10 +62,10 @@ _folia_colligere (Piscina* piscina, constans SilvaNodus* nodus,
 
         si (tok_v.genus == SILVA_VALOR_TOKEN)
         {
-            chorda valor = tok_v.datum.token->valor;
-            memoriae_index mt = strlen(titulus);
+                    chorda valor  = tok_v.datum.token->valor;
+            memoriae_index mt     = strlen(titulus);
 
-            si (valor.mensura == (i32)mt && valor.datum != NIHIL
+            si (   valor.mensura == (i32)mt && valor.datum != NIHIL
                 && memcmp(valor.datum, titulus, mt) == ZEPHYRUM)
             {
                 constans SilvaNodus** locus =
@@ -70,8 +75,8 @@ _folia_colligere (Piscina* piscina, constans SilvaNodus* nodus,
             }
         }
     }
-    liberi = silva_nodus_liberi(piscina, nodus);
-    m = xar_numerus(liberi);
+    liberi  = silva_nodus_liberi(piscina, nodus);
+    m       = xar_numerus(liberi);
     per (i = ZEPHYRUM; i < m; i++)
     {
         _folia_colligere(piscina,
@@ -82,8 +87,11 @@ _folia_colligere (Piscina* piscina, constans SilvaNodus* nodus,
 
 /* k-tum folium (0-basatum) tituli in arbore parsurae */
 interior constans SilvaNodus*
-_folium (Piscina* piscina, constans SilvaParsura* parsura,
-    constans character* titulus, i32 k)
+_folium (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* titulus,
+                      i32  k)
 {
     Xar* effecta = xar_creare(piscina,
         (i32)magnitudo(constans SilvaNodus*));
@@ -118,8 +126,8 @@ interior b32
 _quaerere (Piscina* piscina, constans character* fons,
     constans character* titulus, i32 k, SemanticaIntervallum* iv)
 {
-    SilvaParsura* parsura = _parsare(piscina, fons);
-    SilvaSemantica* sem;
+           SilvaParsura* parsura = _parsare(piscina, fons);
+         SilvaSemantica* sem;
     constans SilvaNodus* folium;
 
     CREDO_NON_NIHIL(parsura);
@@ -146,12 +154,15 @@ _quaerere (Piscina* piscina, constans character* fons,
  * (membra ut pseudo-variabiles, 01KYMYW75S: quaestio ad nodum
  * ACCESSUS ipsum - eventa membrorum eum ferunt) */
 interior vacuum
-_accessus_colligere (Piscina* piscina, constans SilvaNodus* nodus,
-    constans character* titulus, Xar* effecta)
+_accessus_colligere (
+                Piscina* piscina,
+    constans SilvaNodus* nodus,
+     constans character* titulus,
+                    Xar* effecta)
 {
     Xar* liberi;
-    i32 i;
-    i32 m;
+    i32  i;
+    i32  m;
 
     si (nodus == NIHIL)
     {
@@ -163,10 +174,10 @@ _accessus_colligere (Piscina* piscina, constans SilvaNodus* nodus,
 
         si (tok_v.genus == SILVA_VALOR_TOKEN)
         {
-            chorda valor = tok_v.datum.token->valor;
-            memoriae_index mt = strlen(titulus);
+                    chorda valor  = tok_v.datum.token->valor;
+            memoriae_index mt     = strlen(titulus);
 
-            si (valor.mensura == (i32)mt && valor.datum != NIHIL
+            si (   valor.mensura == (i32)mt && valor.datum != NIHIL
                 && memcmp(valor.datum, titulus, mt) == ZEPHYRUM)
             {
                 constans SilvaNodus** locus =
@@ -176,8 +187,8 @@ _accessus_colligere (Piscina* piscina, constans SilvaNodus* nodus,
             }
         }
     }
-    liberi = silva_nodus_liberi(piscina, nodus);
-    m = xar_numerus(liberi);
+    liberi  = silva_nodus_liberi(piscina, nodus);
+    m       = xar_numerus(liberi);
     per (i = ZEPHYRUM; i < m; i++)
     {
         _accessus_colligere(piscina,
@@ -188,8 +199,11 @@ _accessus_colligere (Piscina* piscina, constans SilvaNodus* nodus,
 
 /* k-tus nodus ACCESSUS (0-basatus) tituli membri in arbore */
 interior constans SilvaNodus*
-_accessus (Piscina* piscina, constans SilvaParsura* parsura,
-    constans character* titulus, i32 k)
+_accessus (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* titulus,
+                      i32  k)
 {
     Xar* effecta = xar_creare(piscina,
         (i32)magnitudo(constans SilvaNodus*));
@@ -220,8 +234,8 @@ interior b32
 _quaerere_membrum (Piscina* piscina, constans character* fons,
     constans character* titulus, i32 k, SemanticaIntervallum* iv)
 {
-    SilvaParsura* parsura = _parsare(piscina, fons);
-    SilvaSemantica* sem;
+           SilvaParsura* parsura = _parsare(piscina, fons);
+         SilvaSemantica* sem;
     constans SilvaNodus* nodus;
 
     CREDO_NON_NIHIL(parsura);
@@ -252,7 +266,7 @@ _adfirma_membrum (Piscina* piscina, constans character* fons,
     constans character* descriptio)
 {
     SemanticaIntervallum iv;
-    b32 inventum;
+                     b32 inventum;
 
     imprimere("  %s\n", descriptio);
     memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
@@ -281,7 +295,7 @@ _adfirma (Piscina* piscina, constans character* fons,
     constans character* descriptio)
 {
     SemanticaIntervallum iv;
-    b32 inventum;
+                     b32 inventum;
 
     imprimere("  %s\n", descriptio);
     memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
@@ -310,11 +324,11 @@ interior vacuum
 _violationem_probare (Piscina* piscina, constans character* fons,
     i32 numerus, constans character* descriptio)
 {
-    SilvaParsura* parsura;
+      SilvaParsura* parsura;
     SilvaSemantica* sem;
-    i32 inventi = ZEPHYRUM;
-    i32 i;
-    i32 m;
+               i32  inventi = ZEPHYRUM;
+               i32  i;
+               i32  m;
 
     imprimere("  %s\n", descriptio);
     parsura = _parsare(piscina, fons);
@@ -335,7 +349,7 @@ _violationem_probare (Piscina* piscina, constans character* fons,
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(sem, i);
 
-        si (d != NIHIL && d->codex
+        si (   d != NIHIL && d->codex
             == (s32)EXAMEN_CODEX_CONTRACTUS_INTERVALLI_VIOLATUS)
         {
             inventi++;
@@ -491,7 +505,7 @@ principale (vacuum)
     /* XVI. insignatum 64-bitorum: extra fines s64 -> OMNIA */
     {
         SemanticaIntervallum iv;
-        b32 inventum;
+                         b32 inventum;
 
         imprimere("  XVI. unsigned long -> OMNIA\n");
         memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
@@ -505,10 +519,10 @@ principale (vacuum)
 
     /* XVII. folium extra eventa (titulus functionis) -> FALSUM */
     {
-        SemanticaIntervallum iv;
-        SilvaParsura* parsura = _parsare(piscina,
-            "void g(void); void f(void) { g(); }");
-        SilvaSemantica* sem;
+        SemanticaIntervallum  iv;
+                SilvaParsura* parsura = _parsare(piscina,
+                    "void g(void); void f(void) { g(); }");
+             SilvaSemantica* sem;
         constans SilvaNodus* folium;
 
         imprimere("  XVII. titulus functionis -> non inventum\n");
@@ -600,12 +614,12 @@ principale (vacuum)
     /* XXVI. profunditas 2 invisibilis: t.in.m lectio nullum eventum
      * membri fert -> quaestio FALSUM (honeste extra scopum) */
     {
-        SemanticaIntervallum iv;
-        SilvaParsura* parsura = _parsare(piscina,
-            "struct S { unsigned m; }; struct T { struct S in; };"
-            " void f(void) { struct T t; t.in.m = 5u;"
-            " { unsigned u = t.in.m; } }");
-        SilvaSemantica* sem;
+        SemanticaIntervallum  iv;
+                SilvaParsura* parsura = _parsare(piscina,
+                    "struct S { unsigned m; }; struct T { struct S in; };"
+                    " void f(void) { struct T t; t.in.m = 5u;"
+                    " { unsigned u = t.in.m; } }");
+             SilvaSemantica* sem;
         constans SilvaNodus* nodus;
 
         imprimere("  XXVI. t.in.m -> non inventum (profunditas 2)\n");
@@ -625,7 +639,7 @@ principale (vacuum)
     /* XXVII. membrum non-integrale: ordo exsistit sed OMNIA */
     {
         SemanticaIntervallum iv;
-        b32 inventum;
+                         b32 inventum;
 
         imprimere("  XXVII. membrum duplex -> OMNIA\n");
         memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));
@@ -641,11 +655,11 @@ principale (vacuum)
     /* XXVIII. sagitta exclusa: p->m basis monstrator - nullum
      * eventum membri (pointee extra scopum v1) */
     {
-        SemanticaIntervallum iv;
-        SilvaParsura* parsura = _parsare(piscina,
-            "struct S { unsigned m; }; void f(struct S* p)"
-            " { unsigned u = p->m; }");
-        SilvaSemantica* sem;
+        SemanticaIntervallum  iv;
+                SilvaParsura* parsura = _parsare(piscina,
+                    "struct S { unsigned m; }; void f(struct S* p)"
+                    " { unsigned u = p->m; }");
+             SilvaSemantica* sem;
         constans SilvaNodus* nodus;
 
         imprimere("  XXVIII. p->m -> non inventum (sagitta)\n");
@@ -666,7 +680,7 @@ principale (vacuum)
      * ordo numquam praecisus (est_campus -> OMNIA semper) */
     {
         SemanticaIntervallum iv;
-        b32 inventum;
+                         b32 inventum;
 
         imprimere("  XXIX. campus bitorum -> OMNIA (non [200,200])\n");
         memset(&iv, ZEPHYRUM, magnitudo(SemanticaIntervallum));

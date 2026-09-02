@@ -90,7 +90,9 @@ hic_manens constans character* FONS_USOR_ANTE =
     "}\n";
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* titulus,
+_parsare (
+               Piscina* piscina,
+    constans character* titulus,
     constans character* fons)
 {
     redde silva_c89_parsare(piscina, titulus, fons,
@@ -98,7 +100,9 @@ _parsare (Piscina* piscina, constans character* titulus,
 }
 
 interior i32
-_numerus_codicis (constans SilvaSemantica* sem, s32 codex)
+_numerus_codicis (
+    constans SilvaSemantica* sem,
+                        s32  codex)
 {
     i32 n = ZEPHYRUM;
     i32 i;
@@ -118,8 +122,10 @@ _numerus_codicis (constans SilvaSemantica* sem, s32 codex)
 }
 
 interior b32
-_causa_continet (constans SilvaSemantica* sem, s32 codex,
-    constans character* fragmentum)
+_causa_continet (
+    constans SilvaSemantica* sem,
+                        s32  codex,
+         constans character* fragmentum)
 {
     i32 i;
     i32 m = (i32)silva_c89_diagnostica_numerus(sem);
@@ -129,7 +135,7 @@ _causa_continet (constans SilvaSemantica* sem, s32 codex,
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(sem, i);
 
-        si (d != NIHIL && d->codex == codex && d->causa != NIHIL
+        si (   d != NIHIL && d->codex == codex && d->causa != NIHIL
             && strstr(d->causa, fragmentum) != NIHIL)
         {
             redde VERUM;
@@ -145,8 +151,8 @@ _iudicare (Piscina* piscina, constans character* fons_sys,
     SilvaParsura* systema;
     SilvaParsura* usor;
 
-    systema = _parsare(piscina, "systema_c89.h", fons_sys);
-    usor = _parsare(piscina, "usor_probationis.c", fons_usoris);
+    systema  = _parsare(piscina, "systema_c89.h", fons_sys);
+    usor     = _parsare(piscina, "usor_probationis.c", fons_usoris);
     CREDO_NON_NIHIL (systema);
     CREDO_NON_NIHIL (usor);
     si (systema == NIHIL || usor == NIHIL)
@@ -160,7 +166,7 @@ _iudicare (Piscina* piscina, constans character* fons_sys,
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_portabilitas",
         67108864);
@@ -171,10 +177,12 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * I. Omnia flagrant: usor sine prologo omnia tria evocat;
      * causae radices et vicarios nominant
      * ======================================================== */
+
     imprimere("--- I: omnia flagrant ---\n");
     {
         SilvaSemantica* sem = _iudicare(piscina, FONS_SYS_CUM_LIMITE,
@@ -204,10 +212,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * II. Prologus sanat 85 SOLUM: vernaculum/obsoletum manent
      * (independentia codicum)
      * ======================================================== */
+
     imprimere("--- II: prologus sanat 85 ---\n");
     {
         SilvaSemantica* sem = _iudicare(piscina, FONS_SYS_CUM_LIMITE,
@@ -225,10 +235,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * III. Bracchium omissum quietat: usus in bracchio ifdef
      * non sumpto in crudis latet - conventio gratis
      * ======================================================== */
+
     imprimere("--- III: bracchium omissum quietat ---\n");
     {
         SilvaSemantica* sem = _iudicare(piscina, FONS_SYS_CUM_LIMITE,
@@ -242,11 +254,13 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * IV. Ante limitem non censetur: symbolum ISO (ante limitem)
      * postulata non evocat - praedicatum USU basatum, non
      * inclusione (stdlib.h sectio POSIX est - 182 plagulae)
      * ======================================================== */
+
     imprimere("--- IV: ante limitem non censetur ---\n");
     {
         SilvaSemantica* sem = _iudicare(piscina, FONS_SYS_CUM_LIMITE,
@@ -264,6 +278,7 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * V. Sine limite: 85 SOLUM silet - limes partem POSIX pro
      * POSTULATIS discernit; gradus autem notae EXPLICITAE per
@@ -272,6 +287,7 @@ s32 principale (vacuum)
      * hoc invenit: assertio prima 'limes portam OMNIUM tenet'
      * FALSA erat - independentia mechanismorum melior lex.
      * ======================================================== */
+
     imprimere("--- V: sine limite 85 silet, gradus manent ---\n");
     {
         SilvaSemantica* sem = _iudicare(piscina,
@@ -289,10 +305,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * VI. Sine systemate silent: analysare simplex (systema
      * NIHIL) portabilitatem numquam iudicat
      * ======================================================== */
+
     imprimere("--- VI: sine systemate silent ---\n");
     {
         SilvaParsura* usor = _parsare(piscina, "usor_probationis.c",
@@ -314,17 +332,19 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * VII-IX. Professiones (codex 88, regula lenis v1): plagula
      * portabilis vernaculum includens flagrat; sutura et sine
      * professione transeunt; principalis sine professione tacet.
      * Tagi in litteris divisis - lex scansoris.
      * ======================================================== */
+
     imprimere("--- VII: portabile vernaculum includit ---\n");
     {
-        SilvaContextus* ctx = silva_contextus_creare(piscina);
-        SilvaParsura* parsura;
-        SilvaSemantica* sem;
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+              SilvaParsura* parsura;
+            SilvaSemantica* sem;
         constans character* caput_vern =
             "/* fenestra ficta <vernacu" "lum/> */\n"
             "int fenestra_p(void);\n";
@@ -359,9 +379,9 @@ s32 principale (vacuum)
 
     imprimere("--- VIII: sutura et sine professione transeunt ---\n");
     {
-        SilvaContextus* ctx = silva_contextus_creare(piscina);
-        SilvaParsura* parsura;
-        SilvaSemantica* sem;
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+              SilvaParsura* parsura;
+            SilvaSemantica* sem;
         constans character* caput_sut =
             "/* <sutu" "ra/> */\n"
             "int sutura_p(void);\n";
@@ -398,9 +418,9 @@ s32 principale (vacuum)
 
     imprimere("--- IX: principalis sine professione tacet ---\n");
     {
-        SilvaContextus* ctx = silva_contextus_creare(piscina);
-        SilvaParsura* parsura;
-        SilvaSemantica* sem;
+            SilvaContextus* ctx = silva_contextus_creare(piscina);
+              SilvaParsura* parsura;
+            SilvaSemantica* sem;
         constans character* caput_vern =
             "/* <vernacu" "lum/> */\n"
             "int fenestra_p(void);\n";

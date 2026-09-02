@@ -88,6 +88,7 @@
 #include "silva_nodus.h"
 #include "silva_registrum.h"
 
+
 /* ==================================================
  * IR selectoris (QB/QC partes iam in formis - API primum)
  * ================================================== */
@@ -142,20 +143,20 @@ nomen b32 (*SilvaQuaestioPseudoFunctio) (
 
 nomen structura {
     SilvaQuaestioParsGenus genus;
-    s32                    nodi_genus;  /* PARS_GENUS: index generis */
+                       s32 nodi_genus;  /* PARS_GENUS: index generis */
     /* QB attributum: [locus op "valor"] - chordae in piscinam
      * copiatae (quaestio selectorem superviveat) */
-    chorda                 locus_titulus;
-    s32                    attr_op;     /* SilvaQuaestioAttrOp */
-    chorda                 attr_valor;
+    chorda locus_titulus;
+       s32 attr_op;     /* SilvaQuaestioAttrOp */
+    chorda attr_valor;
     /* QB captura: $nomen */
-    chorda                 captura_titulus;
+    chorda captura_titulus;
     /* QC pseudo: :titulus(arg); -I = non-pseudo */
-    s32                        pseudo_genus; /* SilvaQuaestioPseudoGenus */
-    chorda                     pseudo_arg;   /* vocat/definit/utitur/usor */
+       s32 pseudo_genus; /* SilvaQuaestioPseudoGenus */
+    chorda pseudo_arg;   /* vocat/definit/utitur/usor */
     structura SilvaQuaestio*   pseudo_quaestio; /* habet/non compilata */
-    SilvaQuaestioPseudoFunctio pseudo_functio;  /* USOR */
-    vacuum*                    pseudo_datum;    /* USOR */
+    SilvaQuaestioPseudoFunctio  pseudo_functio;  /* USOR */
+                        vacuum* pseudo_datum;    /* USOR */
 } SilvaQuaestioPars;
 
 /* Gradus catenae: combinator ad SINISTRAM + partes composito */
@@ -170,8 +171,8 @@ nomen structura {
 nomen structura SilvaQuaestio SilvaQuaestio;
 structura SilvaQuaestio {
     constans SilvaRegistrumCoctum* tabularium;
-    Xar*                           catenae; /* Xar* graduum (unio) */
-    i32                            gradus_maximi; /* vestigia (QB) */
+                              Xar* catenae; /* Xar* graduum (unio) */
+                              i32  gradus_maximi; /* vestigia (QB) */
     /* forma ambigui (exemplar commissionis - descensus canonicus) */
     s32 genus_ambigui;
     i32 locus_interpretationum;
@@ -197,21 +198,23 @@ structura SilvaQuaestio {
 nomen structura SilvaQuaestioPseudoRegistrum
     SilvaQuaestioPseudoRegistrum;
 
+
 /* ==================================================
  * Fructus
  * ================================================== */
 
 /* Captura ligata: gradus catenae congruentis cum $nomine (QB) */
 nomen structura {
-    chorda               titulus;
+                 chorda  titulus;
     constans SilvaNodus* nodus;
 } SilvaQuaestioCaptura;
 
 nomen structura {
     constans SilvaNodus* nodus;   /* subiectum (compositum ultimum) */
-    Xar*                 capturae; /* SilvaQuaestioCaptura (valore);
+                    Xar* capturae; /* SilvaQuaestioCaptura (valore);
                                     * NIHIL = catena sine capturis */
 } SilvaQuaestioResultatum;
+
 
 /* ==================================================
  * API
@@ -222,25 +225,26 @@ nomen structura {
  * selector malformatus aut tag registro ignotum. */
 SilvaQuaestio*
 silva_quaestio_compilare (
-    Piscina*                       piscina,
-    constans SilvaRegistrumCoctum* tabularium,
-    constans character*            selector,
-    constans character**           causa_out);
+                          Piscina*  piscina,
+    constans SilvaRegistrumCoctum*  tabularium,
+               constans character*  selector,
+               constans character** causa_out);
 
 /* Ut compilare, sed pseudo-classes usoris ex tabula data agnoscit
  * (registro NIHIL = nativae solae). Tabula per compilationem solam
  * legitur - functiones in quaestionem copiantur. */
 SilvaQuaestio*
 silva_quaestio_compilare_cum_registro (
-    Piscina*                               piscina,
-    constans SilvaRegistrumCoctum*         tabularium,
-    constans SilvaQuaestioPseudoRegistrum* registro,
-    constans character*                    selector,
-    constans character**                   causa_out);
+                                  Piscina*  piscina,
+            constans SilvaRegistrumCoctum*  tabularium,
+    constans SilvaQuaestioPseudoRegistrum*  registro,
+                       constans character*  selector,
+                       constans character** causa_out);
 
 /* Tabulam pseudo-classium vacuam creare. NIHIL = exhaustum. */
 SilvaQuaestioPseudoRegistrum*
-silva_quaestio_registrum_creare (Piscina* piscina);
+silva_quaestio_registrum_creare (
+    Piscina* piscina);
 
 /* Pseudo-classem usoris registrare. FALSUM: argumentum NIHIL,
  * titulus vacuus aut litteris non-tag ([a-z0-9_-]), aut nomen
@@ -249,9 +253,9 @@ silva_quaestio_registrum_creare (Piscina* piscina);
 b32
 silva_quaestio_registrare (
     SilvaQuaestioPseudoRegistrum* registro,
-    constans character*           titulus,
-    SilvaQuaestioPseudoFunctio    functio,
-    vacuum*                       datum);
+              constans character* titulus,
+      SilvaQuaestioPseudoFunctio  functio,
+                          vacuum* datum);
 
 /* Omnes nodi congruentes sub radice (SilvaValor - NODUS aut LISTA,
  * commissio->radix directa). Xar de SilvaQuaestioResultatum (valore)
@@ -260,14 +264,14 @@ silva_quaestio_registrare (
 Xar*
 silva_quaestio_exsequi (
     constans SilvaQuaestio* quaestio,
-    SilvaValor              radix,
-    Piscina*                piscina);
+                SilvaValor  radix,
+                   Piscina* piscina);
 
 /* Nodusne unus catenae alicui congruit (subiectum = nodus; maiores
  * per patrem probantur - arbor commissa)? */
 b32
 silva_quaestio_congruit (
     constans SilvaQuaestio* quaestio,
-    constans SilvaNodus*    nodus);
+       constans SilvaNodus* nodus);
 
 #endif /* SILVA_QUAESTIO_H */

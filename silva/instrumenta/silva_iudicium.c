@@ -23,11 +23,13 @@
 #include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 character*
-silva_iudicium_plagulam_legere (Piscina* piscina,
-    constans character* via, i32* mensura_out)
+silva_iudicium_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* textus;
 
     *mensura_out = ZEPHYRUM;
@@ -45,7 +47,7 @@ silva_iudicium_plagulam_legere (Piscina* piscina,
     }
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura_l > 0L
             && fread(textus, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -54,13 +56,14 @@ silva_iudicium_plagulam_legere (Piscina* piscina,
         redde NIHIL;
     }
     fclose(pl);
-    textus[mensura_l] = '\0';
-    *mensura_out = (i32)mensura_l;
+    textus[mensura_l]  = '\0';
+    *mensura_out       = (i32)mensura_l;
     redde textus;
 }
 
 interior b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -68,7 +71,9 @@ _praetermittendum (constans character* titulus)
 }
 
 interior vacuum
-_capita_colligere (IudiciumApparatus* app, constans character* via)
+_capita_colligere (
+     IudiciumApparatus* app,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -79,7 +84,7 @@ _capita_colligere (IudiciumApparatus* app, constans character* via)
     }
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.')
@@ -103,13 +108,13 @@ _capita_colligere (IudiciumApparatus* app, constans character* via)
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 IudiciumCaput* caput;
-                i32 mensura = ZEPHYRUM;
-                character* textus = silva_iudicium_plagulam_legere(
-                    app->piscina, via_plena, &mensura);
+                          i32  mensura = ZEPHYRUM;
+                    character* textus = silva_iudicium_plagulam_legere(
+                        app->piscina, via_plena, &mensura);
 
                 si (textus == NIHIL)
                 {
@@ -127,8 +132,8 @@ _capita_colligere (IudiciumApparatus* app, constans character* via)
                     perge;
                 }
                 strcpy(caput->via, via_plena);
-                caput->textus = textus;
-                caput->mensura = mensura;
+                caput->textus   = textus;
+                caput->mensura  = mensura;
             }
         }
     }
@@ -136,7 +141,8 @@ _capita_colligere (IudiciumApparatus* app, constans character* via)
 }
 
 IudiciumApparatus*
-silva_iudicium_praeparare (Piscina* piscina)
+silva_iudicium_praeparare (
+    Piscina* piscina)
 {
     IudiciumApparatus* app;
 
@@ -172,26 +178,30 @@ silva_iudicium_praeparare (Piscina* piscina)
 }
 
 b32
-silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
-    constans character* via, constans character* fons, i32 mensura,
-    IudiciumFructus* fructus)
+silva_iudicium_iudicare (
+     IudiciumApparatus* app,
+               Piscina* opus,
+    constans character* via,
+    constans character* fons,
+                   i32  mensura,
+       IudiciumFructus* fructus)
 {
     SilvaContextus* ctx;
-    SilvaParsura* systema_parsura;
+      SilvaParsura* systema_parsura;
     SilvaSemantica* systema_semantica;
-    SilvaOraculum* oraculum;
-    SilvaParsura* parsura;
+     SilvaOraculum* oraculum;
+      SilvaParsura* parsura;
     SilvaSemantica* sem;
-    character* fons_sys;
-    i32 mensura_sys = ZEPHYRUM;
-    b32 ext_fractum = FALSUM;
-    i32 i;
-    i32 m;
+         character* fons_sys;
+               i32  mensura_sys = ZEPHYRUM;
+               b32  ext_fractum = FALSUM;
+               i32  i;
+               i32  m;
 
-    fructus->parsura = NIHIL;
-    fructus->sem = NIHIL;
-    fructus->apparatus_fractus = FALSUM;
-    fructus->recusatum = FALSUM;
+    fructus->parsura            = NIHIL;
+    fructus->sem                = NIHIL;
+    fructus->apparatus_fractus  = FALSUM;
+    fructus->recusatum          = FALSUM;
 
     ctx = silva_contextus_creare(opus);
     si (ctx == NIHIL)
@@ -216,7 +226,7 @@ silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
     }
     systema_parsura = silva_c89_parsare(opus,
         "systema_c89.h", fons_sys, mensura_sys, NIHIL);
-    si (systema_parsura == NIHIL
+    si (   systema_parsura == NIHIL
         || systema_parsura->numerus_errorum > ZEPHYRUM)
     {
         fructus->apparatus_fractus = VERUM;
@@ -249,7 +259,7 @@ silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
     }
     parsura = silva_c89_parsare_cum_contextu(opus, ctx, via,
         fons, mensura, oraculum);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura            == NIHIL || !parsura->successus
         || parsura->commissio == NIHIL)
     {
         fructus->apparatus_fractus = VERUM;
@@ -257,8 +267,8 @@ silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
     }
     si (parsura->fines_tactae)
     {
-        fructus->parsura = parsura;
-        fructus->recusatum = VERUM;
+        fructus->parsura    = parsura;
+        fructus->recusatum  = VERUM;
         redde FALSUM;
     }
     sem = silva_c89_semantica_analysare_cum_systemate(opus,
@@ -277,7 +287,7 @@ silva_iudicium_iudicare (IudiciumApparatus* app, Piscina* opus,
         fructus->apparatus_fractus = VERUM;
         redde FALSUM;
     }
-    fructus->parsura = parsura;
-    fructus->sem = sem;
+    fructus->parsura  = parsura;
+    fructus->sem      = sem;
     redde VERUM;
 }

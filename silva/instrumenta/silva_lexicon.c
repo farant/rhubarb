@@ -34,8 +34,13 @@ nomen structura {
 
 /* attributum="valor" intra tagum invenire */
 hic_manens b32
-_attributum_capere (constans character* fons, i32 initium, i32 finis,
-    constans character* titulus, i32* valor_i, i32* valor_m)
+_attributum_capere (
+    constans character* fons,
+                   i32  initium,
+                   i32  finis,
+    constans character* titulus,
+                   i32* valor_i,
+                   i32* valor_m)
 {
     i32 n = (i32)strlen(titulus);
     i32 i;
@@ -68,8 +73,11 @@ _attributum_capere (constans character* fons, i32 initium, i32 finis,
 
 /* an nomen in lista commatibus separata stet (comparatio TOTA) */
 hic_manens b32
-_in_lista_nominum (constans character* lista, i32 lista_m,
-    constans character* titulus, i32 titulus_m)
+_in_lista_nominum (
+    constans character* lista,
+                   i32  lista_m,
+    constans character* titulus,
+                   i32  titulus_m)
 {
     i32 i = ZEPHYRUM;
 
@@ -81,7 +89,7 @@ _in_lista_nominum (constans character* lista, i32 lista_m,
 
         dum (i < lista_m && lista[i] != ',') i++;
         longitudo = i - initium;
-        si (longitudo == titulus_m
+        si (   longitudo == titulus_m
             && strncmp(lista + initium, titulus,
                 (memoriae_index)longitudo) == ZEPHYRUM)
         {
@@ -96,11 +104,14 @@ _in_lista_nominum (constans character* lista, i32 lista_m,
  * Inclusiones '"locales"' CONSULTO praetermittuntur: eae per
  * ambulationem capitum repositorii iam resolvuntur. */
 hic_manens i32
-_inclusa_colligere (constans character* fons, i32 mensura,
-    character* effusio, i32 capacitas)
+_inclusa_colligere (
+    constans character* fons,
+                   i32  mensura,
+             character* effusio,
+                   i32  capacitas)
 {
-    i32 longitudo = ZEPHYRUM;
-    i32 i = ZEPHYRUM;
+    i32 longitudo  = ZEPHYRUM;
+    i32 i          = ZEPHYRUM;
 
     dum (i + IX < mensura)
     {
@@ -144,19 +155,23 @@ _inclusa_colligere (constans character* fons, i32 mensura,
 }
 
 character*
-silva_lexicon_posix_derivare (constans character* fons_px,
-    i32 mensura_px, constans character* fons_pl, i32 mensura_pl,
-    Piscina* piscina, i32* mensura_out)
+silva_lexicon_posix_derivare (
+    constans character* fons_px,
+                   i32  mensura_px,
+    constans character* fons_pl,
+                   i32  mensura_pl,
+               Piscina* piscina,
+                   i32* mensura_out)
 {
-    SectioLexici sectiones[SECTIONES_MAXIMAE];
-    i32 numerus = ZEPHYRUM;
-    i32 capacitas = mensura_pl + mensura_px + CC;
-    character* petita;
-    i32 petita_m;
-    character* effusio;
-    i32 longitudo = ZEPHYRUM;
-    i32 i;
-    b32 mutatum;
+    SectioLexici  sectiones[SECTIONES_MAXIMAE];
+             i32  numerus    = ZEPHYRUM;
+             i32  capacitas  = mensura_pl + mensura_px + CC;
+       character* petita;
+             i32  petita_m;
+       character* effusio;
+             i32  longitudo = ZEPHYRUM;
+             i32  i;
+             b32  mutatum;
 
     *mensura_out = ZEPHYRUM;
     si (fons_px == NIHIL || fons_pl == NIHIL) redde NIHIL;
@@ -193,16 +208,16 @@ silva_lexicon_posix_derivare (constans character* fons_px,
             tag_finis++;
         }
         com_initium = i;
-        dum (com_initium > ZEPHYRUM
-            && !(fons_px[com_initium] == '/'
+        dum (   com_initium > ZEPHYRUM
+             && !(fons_px[com_initium] == '/'
                  && com_initium + I < mensura_px
                  && fons_px[com_initium + I] == '*'))
         {
             com_initium--;
         }
         com_finis = tag_finis;
-        dum (com_finis + I < mensura_px
-            && !(fons_px[com_finis] == '*'
+        dum (   com_finis + I < mensura_px
+             && !(fons_px[com_finis] == '*'
                  && fons_px[com_finis + I] == '/'))
         {
             com_finis++;
@@ -220,14 +235,14 @@ silva_lexicon_posix_derivare (constans character* fons_px,
                 (int)SECTIONES_MAXIMAE);
             redde NIHIL;
         }
-        sectiones[numerus].initium = com_finis;
-        sectiones[numerus].finis = mensura_px;
-        sectiones[numerus].caput_i = ZEPHYRUM;
-        sectiones[numerus].caput_m = ZEPHYRUM;
-        sectiones[numerus].poscit_i = ZEPHYRUM;
-        sectiones[numerus].poscit_m = ZEPHYRUM;
-        sectiones[numerus].semper = FALSUM;
-        sectiones[numerus].petita = FALSUM;
+        sectiones[numerus].initium   = com_finis;
+        sectiones[numerus].finis     = mensura_px;
+        sectiones[numerus].caput_i   = ZEPHYRUM;
+        sectiones[numerus].caput_m   = ZEPHYRUM;
+        sectiones[numerus].poscit_i  = ZEPHYRUM;
+        sectiones[numerus].poscit_m  = ZEPHYRUM;
+        sectiones[numerus].semper    = FALSUM;
+        sectiones[numerus].petita    = FALSUM;
         si (_attributum_capere(fons_px, i, tag_finis, "caput",
                 &vi, &vm))
         {
@@ -264,8 +279,8 @@ silva_lexicon_posix_derivare (constans character* fons_px,
             {
                 constans character* lista = fons_px
                     + sectiones[i].caput_i;
-                i32 lista_m = sectiones[i].caput_m;
-                i32 p = ZEPHYRUM;
+                i32 lista_m  = sectiones[i].caput_m;
+                i32 p        = ZEPHYRUM;
 
                 dum (p < lista_m && !volo)
                 {
@@ -283,9 +298,9 @@ silva_lexicon_posix_derivare (constans character* fons_px,
                 }
             }
             si (!volo) perge;
-            sectiones[i].petita = VERUM;
-            mutatum = VERUM;
-            si (sectiones[i].poscit_m > ZEPHYRUM
+            sectiones[i].petita  = VERUM;
+            mutatum              = VERUM;
+            si (   sectiones[i].poscit_m > ZEPHYRUM
                 && petita_m + sectiones[i].poscit_m + I < capacitas)
             {
                 si (petita_m > ZEPHYRUM)
@@ -311,28 +326,32 @@ silva_lexicon_posix_derivare (constans character* fons_px,
         si (n <= ZEPHYRUM) perge;
         memcpy(effusio + longitudo, fons_px + sectiones[i].initium,
             (memoriae_index)n);
-        longitudo = longitudo + n;
-        effusio[longitudo] = '\n';
+        longitudo           = longitudo + n;
+        effusio[longitudo]  = '\n';
         longitudo++;
     }
     si (longitudo == ZEPHYRUM) redde NIHIL;
-    effusio[longitudo] = '\0';
-    *mensura_out = longitudo;
+    effusio[longitudo]  = '\0';
+    *mensura_out        = longitudo;
     redde effusio;
 }
 
 character*
-silva_lexicon_externa_excerpere (constans character* fons,
-    i32 mensura, Piscina* piscina, i32* mensura_out,
-    constans character* via, b32* fractum)
+silva_lexicon_externa_excerpere (
+    constans character* fons,
+                   i32  mensura,
+               Piscina* piscina,
+                   i32* mensura_out,
+    constans character* via,
+                   b32* fractum)
 {
     character* effusio;
-    i32 longitudo = ZEPHYRUM;
-    i32 i = ZEPHYRUM;
+          i32  longitudo  = ZEPHYRUM;
+          i32  i          = ZEPHYRUM;
 
     /* 'fractum' ab 'absente' discernitur - contractus in capite */
-    *fractum = FALSUM;
-    *mensura_out = ZEPHYRUM;
+    *fractum      = FALSUM;
+    *mensura_out  = ZEPHYRUM;
     si (fons == NIHIL || mensura == ZEPHYRUM) redde NIHIL;
     effusio = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura + I));
@@ -382,10 +401,10 @@ silva_lexicon_externa_excerpere (constans character* fons,
             *fractum = VERUM;
             redde NIHIL;
         }
-        initium = apertura + I;
-        finis = initium;
-        dum (finis + X <= mensura
-            && strncmp(fons + finis, "</externa>", X) != ZEPHYRUM)
+        initium  = apertura + I;
+        finis    = initium;
+        dum (   finis + X                              <= mensura
+             && strncmp(fons + finis, "</externa>", X) != ZEPHYRUM)
         {
             finis++;
         }
@@ -397,19 +416,19 @@ silva_lexicon_externa_excerpere (constans character* fons,
             redde NIHIL;
         }
         {
-            i32 p = initium;
-            b32 initium_lineae = VERUM;
+            i32 p               = initium;
+            b32 initium_lineae  = VERUM;
 
             dum (p < finis)
             {
                 si (initium_lineae)
                 {
-                    dum (p < finis
-                        && (fons[p] == ' ' || fons[p] == '\t'))
+                    dum (   p < finis
+                         && (fons[p] == ' ' || fons[p] == '\t'))
                     {
                         p++;
                     }
-                    si (p < finis && fons[p] == '*'
+                    si (   p < finis && fons[p] == '*'
                         && !(p + I < finis && fons[p + I] == '/'))
                     {
                         p++;
@@ -429,24 +448,31 @@ silva_lexicon_externa_excerpere (constans character* fons,
         i = finis + X;
     }
     si (longitudo == ZEPHYRUM) redde NIHIL;
-    effusio[longitudo] = '\0';
-    *mensura_out = longitudo;
+    effusio[longitudo]  = '\0';
+    *mensura_out        = longitudo;
     redde effusio;
 }
 
 character*
-silva_lexicon_componere (constans character* fons_iso,
-    i32 mensura_iso, constans character* fons_px, i32 mensura_px,
-    constans character* fons_pl, i32 mensura_pl, b32 totum_posix,
-    Piscina* piscina, i32* mensura_out, constans character* via,
-    b32* fractum)
+silva_lexicon_componere (
+    constans character* fons_iso,
+                   i32  mensura_iso,
+    constans character* fons_px,
+                   i32  mensura_px,
+    constans character* fons_pl,
+                   i32  mensura_pl,
+                   b32  totum_posix,
+               Piscina* piscina,
+                   i32* mensura_out,
+    constans character* via,
+                   b32* fractum)
 {
-    constans character* pars = NIHIL;
-    i32 pars_m = ZEPHYRUM;
-    character* ext = NIHIL;
-    i32 ext_m = ZEPHYRUM;
-    character* effusio;
-    i32 longitudo;
+    constans character* pars    = NIHIL;
+                   i32  pars_m  = ZEPHYRUM;
+             character* ext     = NIHIL;
+                   i32  ext_m   = ZEPHYRUM;
+             character* effusio;
+                   i32  longitudo;
     /* limes portabilitatis (2026-08-03): ante partem POSIX emittitur;
      * semantica titulum quaerit ut symbola POSIX-praebita a puris ISO
      * discernat (codices 85-87). Externa POST limitem cadunt -
@@ -455,14 +481,14 @@ silva_lexicon_componere (constans character* fons_iso,
         " - hinc omnia derivata (compositio lexici) */\n";
     i32 limes_m = (i32)strlen(limes);
 
-    *fractum = FALSUM;
-    *mensura_out = ZEPHYRUM;
+    *fractum      = FALSUM;
+    *mensura_out  = ZEPHYRUM;
     si (fons_iso == NIHIL) redde NIHIL;
 
     si (totum_posix)
     {
-        pars = fons_px;
-        pars_m = mensura_px;
+        pars    = fons_px;
+        pars_m  = mensura_px;
     }
     alioquin si (fons_px != NIHIL && fons_pl != NIHIL)
     {
@@ -496,7 +522,7 @@ silva_lexicon_componere (constans character* fons_iso,
         memcpy(effusio + longitudo, ext, (memoriae_index)ext_m);
         longitudo = longitudo + ext_m;
     }
-    effusio[longitudo] = '\0';
-    *mensura_out = longitudo;
+    effusio[longitudo]  = '\0';
+    *mensura_out        = longitudo;
     redde effusio;
 }

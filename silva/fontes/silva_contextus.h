@@ -23,6 +23,7 @@
 #include "piscina.h"
 #include "xar.h"
 
+
 /* ==================================================
  * Fines - limina dura (par 8.2). 0 = infinitum.
  * Defaltae generosae in creare (habitus tree-sitter:
@@ -60,7 +61,7 @@ nomen b32 (*SilvaPergereFunctio)(vacuum* datum);
 nomen structura {
     constans character* via;
     constans character* textus;
-    i32                 mensura;
+                   i32  mensura;
 } SilvaContextusPlagula;
 
 nomen structura SilvaContextus SilvaContextus;
@@ -74,7 +75,7 @@ structura SilvaContextus {
     Xar*                lexica;          /* SilvaContextusPlagula (per
                                           * valorem) - definitiones ante
                                           * fontem processatae */
-    Xar*                praebenda;       /* SilvaContextusPlagula (per
+    Xar* praebenda;       /* SilvaContextusPlagula (per
                                           * valorem) - includenda */
 };
 
@@ -87,10 +88,10 @@ silva_contextus_creare (
  * valent; provenientia ad plagulam lexici ducit (fons verus). */
 b32
 silva_contextus_lexicon_addere (
-    SilvaContextus*     contextus,
+        SilvaContextus* contextus,
     constans character* via,
     constans character* textus,
-    i32                 mensura);
+                   i32  mensura);
 
 /* Lexicon latinum compilatum (silva_latina_datum - GENERATUM ex
  * include/latina.h per amalgatorem; fons veritatis unus) */
@@ -101,18 +102,18 @@ silva_contextus_latinam_addere (
 /* Contentum includendum (via #include resolvendum) */
 b32
 silva_contextus_praebere (
-    SilvaContextus*     contextus,
+        SilvaContextus* contextus,
     constans character* via,
     constans character* textus,
-    i32                 mensura);
+                   i32  mensura);
 
 /* passus <= 1 = quovis lexemate (GLR); expansio per generationem
  * interrogat, gubernator per segmentum - passus ibi non attinet */
 vacuum
 silva_contextus_pergere_ponere (
-    SilvaContextus*     contextus,
-    SilvaPergereFunctio pergere,
-    vacuum*             datum,
-    i32                 passus);
+         SilvaContextus* contextus,
+    SilvaPergereFunctio  pergere,
+                 vacuum* datum,
+                    i32  passus);
 
 #endif /* SILVA_CONTEXTUS_H */

@@ -37,18 +37,21 @@
 #include <time.h>
 #include <dirent.h>
 
+
 /* ==================================================
  * Lectio plagularum + praeparatio capitum (exemplar examinis)
  * ================================================== */
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* plagula = fopen(via, "rb");
-    longus magnitudo_plagulae;
-    character* textus;
-    memoriae_index lecta;
+              FILE* plagula = fopen(via, "rb");
+            longus  magnitudo_plagulae;
+         character* textus;
+    memoriae_index  lecta;
 
     *mensura_out = ZEPHYRUM;
     si (plagula == NIHIL)
@@ -81,13 +84,14 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     {
         redde NIHIL;
     }
-    textus[magnitudo_plagulae] = '\0';
-    *mensura_out = (i32)magnitudo_plagulae;
+    textus[magnitudo_plagulae]  = '\0';
+    *mensura_out                = (i32)magnitudo_plagulae;
     redde textus;
 }
 
 interior b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde strcmp(titulus, "vendor") == ZEPHYRUM
         || strcmp(titulus, "build") == ZEPHYRUM
@@ -96,13 +100,16 @@ _praetermittendum (constans character* titulus)
 }
 
 interior vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
-    chorda clavis;
+       chorda  clavis;
     character* textus;
-    i32 mensura;
+          i32  mensura;
 
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis))
@@ -121,8 +128,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 interior vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -133,7 +143,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     }
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.')
@@ -157,7 +167,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -168,14 +178,16 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+
 /* ==================================================
  * Adiutores communes
  * ================================================== */
 
 interior constans character*
-_genus_titulus (s32 genus)
+_genus_titulus (
+    s32 genus)
 {
-    si (genus >= ZEPHYRUM
+    si (   genus >= ZEPHYRUM
         && (i32)genus < SILVA_C89_REGISTRUM.numerus_generum)
     {
         redde SILVA_C89_REGISTRUM.genera[genus].titulus;
@@ -184,7 +196,8 @@ _genus_titulus (s32 genus)
 }
 
 interior constans character*
-_modus_titulus (SilvaAnnotatioModus modus)
+_modus_titulus (
+    SilvaAnnotatioModus modus)
 {
     commutatio (modus)
     {
@@ -196,8 +209,12 @@ _modus_titulus (SilvaAnnotatioModus modus)
 }
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, SilvaContextus* ctx,
-    constans character* via, character** fons_out, i32* mensura_out)
+_parsare (
+               Piscina*  piscina,
+        SilvaContextus*  ctx,
+    constans character*  via,
+             character** fons_out,
+                   i32*  mensura_out)
 {
     character* fons = _plagulam_legere(piscina, via, mensura_out);
 
@@ -213,14 +230,19 @@ _parsare (Piscina* piscina, SilvaContextus* ctx,
         *mensura_out, NIHIL);
 }
 
+
 /* ==================================================
  * --renovare: index scribere (+ citationes res= ex arboribus -
  * frustum D: materia cruda nexuum reversorum tabulae)
  * ================================================== */
 
 interior vacuum
-_citationes_colligere (FILE* cit, constans character* via,
-    constans SilvaAnnotatio* a, StmlNodus* nodus, i32* summa)
+_citationes_colligere (
+                       FILE* cit,
+         constans character* via,
+    constans SilvaAnnotatio* a,
+                  StmlNodus* nodus,
+                        i32* summa)
 {
     i32 k;
 
@@ -228,8 +250,8 @@ _citationes_colligere (FILE* cit, constans character* via,
     {
         redde;
     }
-    si ((s32)nodus->genus == STML_NODUS_ELEMENTUM
-        && nodus->attributa != NIHIL)
+    si (   (s32)nodus->genus == STML_NODUS_ELEMENTUM
+        && nodus->attributa  != NIHIL)
     {
         per (k = ZEPHYRUM; k < xar_numerus(nodus->attributa); k++)
         {
@@ -237,7 +259,7 @@ _citationes_colligere (FILE* cit, constans character* via,
                 (constans StmlAttributum*)xar_obtinere(
                     nodus->attributa, k);
 
-            si (attr != NIHIL && attr->titulus != NIHIL
+            si (   attr != NIHIL && attr->titulus != NIHIL
                 && attr->titulus->mensura == III
                 && memcmp(attr->titulus->datum, "res", III)
                     == ZEPHYRUM
@@ -264,20 +286,24 @@ _citationes_colligere (FILE* cit, constans character* via,
 }
 
 interior s32
-_renovare (Piscina* piscina, SilvaContextus* ctx,
-    constans character* exitus, constans character* exitus_cit,
-    integer numerus, character** viae)
+_renovare (
+               Piscina*  piscina,
+        SilvaContextus*  ctx,
+    constans character*  exitus,
+    constans character*  exitus_cit,
+               integer   numerus,
+             character** viae)
 {
     FILE* ex = fopen(exitus, "w");
     FILE* cit = exitus_cit != NIHIL ? fopen(exitus_cit, "w")
                                     : NIHIL;
-    i32 citationes = ZEPHYRUM;
-    InternamentumChorda* intern = internamentum_creare(piscina);
-    TabulaDispersa* nides_visae = tabula_dispersa_creare_chorda(
-        piscina, DXII);
-    i32 summa = ZEPHYRUM;
-    i32 petitiones = ZEPHYRUM;
-    i32 duplicata = ZEPHYRUM;
+                    i32  citationes  = ZEPHYRUM;
+    InternamentumChorda* intern      = internamentum_creare(piscina);
+         TabulaDispersa* nides_visae = tabula_dispersa_creare_chorda(
+             piscina, DXII);
+        i32 summa       = ZEPHYRUM;
+        i32 petitiones  = ZEPHYRUM;
+        i32 duplicata   = ZEPHYRUM;
     integer f;
 
     si (ex == NIHIL || intern == NIHIL)
@@ -299,11 +325,11 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
 
     per (f = ZEPHYRUM; f < numerus; f++)
     {
-        i32 mensura = ZEPHYRUM;
+                 i32  mensura = ZEPHYRUM;
         SilvaParsura* parsura = _parsare(piscina, ctx, viae[f],
             NIHIL, &mensura);
         Xar* annotationes;
-        i32 k;
+        i32  k;
 
         si (parsura == NIHIL)
         {
@@ -322,7 +348,7 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
             constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
                 xar_obtinere(annotationes, k);
             Xar* identitates;
-            i32 j;
+            i32  j;
 
             si (a->fons_index != parsura->fons_princeps)
             {
@@ -341,10 +367,11 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
                 constans SilvaIdentitas* id =
                     (constans SilvaIdentitas*)xar_obtinere(
                         identitates, j);
-                s32 u_min = -I;
-                s32 u_max = -I;
-                i32 linea_unitatis = ZEPHYRUM;
-                constans character* genus_unitatis = "-";
+                               s32 u_min = -I;
+                               s32 u_max = -I;
+                               i32 linea_unitatis   =
+                                   ZEPHYRUM;
+                constans character* genus_unitatis  = "-";
 
                 si (id->petitio)
                 {
@@ -438,12 +465,16 @@ _renovare (Piscina* piscina, SilvaContextus* ctx,
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * --solvere: praefixum -> ordo + fons
  * ================================================== */
 
 interior vacuum
-_partem_imprimere (constans character* via, longus a, longus b)
+_partem_imprimere (
+    constans character* via,
+                longus  a,
+                longus  b)
 {
     FILE* plagula;
     longus k;
@@ -475,7 +506,8 @@ _partem_imprimere (constans character* via, longus a, longus b)
 }
 
 interior s32
-_solvere (constans character* praefixum,
+_solvere (
+    constans character* praefixum,
     constans character* index_via)
 {
     FILE* index;
@@ -535,7 +567,7 @@ _solvere (constans character* praefixum,
      * linea_u a_min a_max u_min u_max */
     {
         character* partes[11];
-        integer n = ZEPHYRUM;
+          integer  n = ZEPHYRUM;
         character* p = inventa;
 
         dum (n < 11 && p != NIHIL)
@@ -578,22 +610,27 @@ _solvere (constans character* praefixum,
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * --mintare [--scribere]
  * ================================================== */
 
 nomen structura {
-    s32                offset;
+                   s32 offset;
     SilvaInsertioGenus genus;
 } Splissum;
 
 interior s32
-_mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
-    integer numerus, character** viae)
+_mintare (
+           Piscina*  piscina,
+    SilvaContextus*  ctx,
+               b32   scribere,
+           integer   numerus,
+         character** viae)
 {
     InternamentumChorda* intern = internamentum_creare(piscina);
-    i32 summa_mintatae = ZEPHYRUM;
-    integer f;
+                    i32  summa_mintatae = ZEPHYRUM;
+                integer  f;
 
     si (intern == NIHIL)
     {
@@ -601,8 +638,8 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
     }
     per (f = ZEPHYRUM; f < numerus; f++)
     {
-        i32 mensura = ZEPHYRUM;
-        character* fons = NIHIL;
+                 i32  mensura  = ZEPHYRUM;
+           character* fons     = NIHIL;
         SilvaParsura* parsura = _parsare(piscina, ctx, viae[f],
             &fons, &mensura);
         Xar* annotationes;
@@ -628,7 +665,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
             constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
                 xar_obtinere(annotationes, k);
             Xar* identitates;
-            i32 j;
+            i32  j;
 
             si (a->fons_index != parsura->fons_princeps)
             {
@@ -663,8 +700,8 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
 
                     si (s != NIHIL)
                     {
-                        s->offset = id->insertio_offset;
-                        s->genus = id->insertio_genus;
+                        s->offset  = id->insertio_offset;
+                        s->genus   = id->insertio_genus;
                     }
                 }
                 si (!scribere)
@@ -683,17 +720,17 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
         }
         /* applicare: ordine ascendente copiare + inserere */
         {
-            i32 n = xar_numerus(splissa);
+                       i32 n = xar_numerus(splissa);
             memoriae_index nova_capacitas = (memoriae_index)mensura
                 + (memoriae_index)n * 40;
             character* novus = (character*)piscina_allocare(piscina,
                 nova_capacitas + I);
-            s32 scripti = ZEPHYRUM;
-            s32 prior = ZEPHYRUM;
+                  s32 scripti  = ZEPHYRUM;
+                  s32 prior    = ZEPHYRUM;
             character via_temp[1100];
-            i32 s_index;
+                  i32 s_index;
 
-            si (novus == NIHIL
+            si (   novus               == NIHIL
                 || strlen(viae[f]) + X >= magnitudo(via_temp))
             {
                 redde I;
@@ -703,7 +740,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
                 constans Splissum* s = (constans Splissum*)
                     xar_obtinere(splissa, s_index);
                 character u[MONETA_ULID_MENSURA];
-                s32 pars = s->offset - prior;
+                      s32 pars = s->offset - prior;
 
                 si (pars < ZEPHYRUM)
                 {
@@ -713,8 +750,8 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
                 }
                 memcpy(novus + scripti, fons + prior,
                     (memoriae_index)pars);
-                scripti += pars;
-                prior = s->offset;
+                scripti  += pars;
+                prior    = s->offset;
                 moneta_ulid(u);
                 si (s->genus == SILVA_INSERTIO_POST_TITULUM)
                 {
@@ -729,14 +766,14 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
             }
             memcpy(novus + scripti, fons + prior,
                 (memoriae_index)((s32)mensura - prior));
-            scripti += (s32)mensura - prior;
-            novus[scripti] = '\0';
+            scripti         += (s32)mensura - prior;
+            novus[scripti]  = '\0';
 
             sprintf(via_temp, "%s.mintatur", viae[f]);
             {
                 FILE* ex = fopen(via_temp, "wb");
 
-                si (ex == NIHIL
+                si (   ex == NIHIL
                     || fwrite(novus, I, (memoriae_index)scripti,
                            ex) != (memoriae_index)scripti)
                 {
@@ -753,15 +790,15 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
             /* VERIFICATIO: re-colligere - petitiones 0, identitates
              * auctae numero splissorum */
             {
-                i32 mensura_novi = ZEPHYRUM;
+                         i32  mensura_novi = ZEPHYRUM;
                 SilvaParsura* parsura_novi = _parsare(piscina, ctx,
                     via_temp, NIHIL, &mensura_novi);
                 Xar* annotationes_novi;
-                i32 identitates_novae = ZEPHYRUM;
-                i32 petitiones_novae = ZEPHYRUM;
-                i32 kk;
+                i32  identitates_novae  = ZEPHYRUM;
+                i32  petitiones_novae   = ZEPHYRUM;
+                i32  kk;
 
-                si (parsura_novi == NIHIL
+                si (   parsura_novi      == NIHIL
                     || (s32)mensura_novi != scripti)
                 {
                     remove(via_temp);
@@ -778,7 +815,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
                         (constans SilvaAnnotatio*)xar_obtinere(
                             annotationes_novi, kk);
                     Xar* ids;
-                    i32 jj;
+                    i32  jj;
 
                     si (a->fons_index
                         != parsura_novi->fons_princeps)
@@ -807,7 +844,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
                         }
                     }
                 }
-                si (petitiones_novae != ZEPHYRUM
+                si (   petitiones_novae != ZEPHYRUM
                     || identitates_novae != identitates_priores
                         + xar_numerus(splissa))
                 {
@@ -844,6 +881,7 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * --exspecta: pinnae vectis ex annotationibus (frustum E1)
  *
@@ -858,14 +896,16 @@ _mintare (Piscina* piscina, SilvaContextus* ctx, b32 scribere,
  * ================================================== */
 
 nomen structura {
-    b32     absoluta;
-    i32     linea_data;   /* absoluta: ex attributo linea= */
-    i32     finis;        /* linea ultima commentarii (proxima) */
+       b32  absoluta;
+       i32  linea_data;   /* absoluta: ex attributo linea= */
+       i32  finis;        /* linea ultima commentarii (proxima) */
     chorda* codex;
 } PinnaExspecta;
 
 interior b32
-_numerus_ex_chorda (constans chorda* c, i32* numerus_out)
+_numerus_ex_chorda (
+    constans chorda* c,
+                i32* numerus_out)
 {
     i32 n = ZEPHYRUM;
     i32 i;
@@ -887,22 +927,24 @@ _numerus_ex_chorda (constans chorda* c, i32* numerus_out)
 }
 
 interior s32
-_exspecta (Piscina* piscina, SilvaContextus* ctx,
+_exspecta (
+               Piscina* piscina,
+        SilvaContextus* ctx,
     constans character* via)
 {
-    i32 mensura = ZEPHYRUM;
-    character* fons = NIHIL;
+             i32  mensura  = ZEPHYRUM;
+       character* fons     = NIHIL;
     SilvaParsura* parsura = _parsare(piscina, ctx, via, &fons,
         &mensura);
     Xar* annotationes;
     Xar* pinnae;
     b32* vacuae;     /* [1..numerus_linearum] sola spatia/tabs */
     b32* pinnatae;   /* [1..numerus_linearum] pinnam ferentes */
-    i32 numerus_linearum;
-    i32 i;
-    i32 l;
-    b32 vacua_currens;
-    i32 k;
+    i32  numerus_linearum;
+    i32  i;
+    i32  l;
+    b32  vacua_currens;
+    i32  k;
 
     si (parsura == NIHIL)
     {
@@ -930,8 +972,8 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
     }
     memset(pinnatae, ZEPHYRUM,
         (memoriae_index)(numerus_linearum + II) * magnitudo(b32));
-    l = I;
-    vacua_currens = VERUM;
+    l              = I;
+    vacua_currens  = VERUM;
     per (i = ZEPHYRUM; i <= mensura; i++)
     {
         si (i == mensura || fons[i] == '\n')
@@ -985,12 +1027,12 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
             StmlNodus* nodus = *(StmlNodus**)xar_obtinere(
                 a->documentum->liberi, j);
             PinnaExspecta* pinna;
-            chorda* codex;
-            chorda* linea_attr;
+                   chorda* codex;
+                   chorda* linea_attr;
 
-            si (nodus == NIHIL
-                || (s32)nodus->genus != STML_NODUS_ELEMENTUM
-                || nodus->titulus == NIHIL
+            si (   nodus                   == NIHIL
+                || (s32)nodus->genus       != STML_NODUS_ELEMENTUM
+                || nodus->titulus          == NIHIL
                 || nodus->titulus->mensura != VIII
                 || memcmp(nodus->titulus->datum, "exspecta", VIII)
                     != ZEPHYRUM)
@@ -1011,9 +1053,9 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
                     " deest\n");
                 redde I;
             }
-            pinna->codex = codex;
-            pinna->finis = finis;
-            linea_attr = stml_attributum_capere(nodus, "linea");
+            pinna->codex  = codex;
+            pinna->finis  = finis;
+            linea_attr    = stml_attributum_capere(nodus, "linea");
             si (linea_attr != NIHIL)
             {
                 si (!_numerus_ex_chorda(linea_attr,
@@ -1028,8 +1070,8 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
             }
             alioquin
             {
-                pinna->absoluta = FALSUM;
-                pinna->linea_data = ZEPHYRUM;
+                pinna->absoluta    = FALSUM;
+                pinna->linea_data  = ZEPHYRUM;
             }
             per (l = a->linea;
                  l <= finis && l <= numerus_linearum; l++)
@@ -1070,16 +1112,20 @@ _exspecta (Piscina* piscina, SilvaContextus* ctx,
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * principale
  * ================================================== */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
+           Piscina* piscina;
     SilvaContextus* ctx;
 
-    si (argc >= IV
+    si (   argc                         >= IV
         && strcmp(argv[I], "--solvere") == ZEPHYRUM)
     {
         redde _solvere(argv[II], argv[III]);

@@ -36,6 +36,7 @@
 #include "silva_nodus.h"
 #include "silva_c89_fluxus.h"
 
+
 /* ==================================================
  * Eventa
  * ================================================== */
@@ -105,19 +106,20 @@ nomen enumeratio {
  * -1 = OMNES variabiles (folium ERROR/AMBIGUUS opacum: def-omnia,
  * abstentio conservativa). */
 nomen structura {
-    s32                  variabilis;
-    s32                  genus;        /* FluxusEventumGenus */
+                    s32  variabilis;
+                    s32  genus;        /* FluxusEventumGenus */
     constans SilvaNodus* nodus;        /* sedes (diagnostica) */
-    b32                  in_initiatore_proprio;  /* int x = x */
+                    b32  in_initiatore_proprio;  /* int x = x */
     constans SilvaNodus* fons_valoris; /* expressio valoris definitionis
                                         * (NIHIL alias) - columna
                                         * quaestionis futurae */
-    s32                  forma;        /* FluxusForma valoris (DEFINITIO
+    s32 forma;        /* FluxusForma valoris (DEFINITIO
                                         * sola; IGNOTA alias) */
-    s32                  stirps;       /* FluxusStirps valoris per
+    s32 stirps;       /* FluxusStirps valoris per
                                         * stirps_valoris (DEFINITIO
                                         * genera; IGNOTA alias) */
 } FluxusEventum;
+
 
 /* ==================================================
  * Tabulae
@@ -125,11 +127,11 @@ nomen structura {
 
 /* Variabilis tracta (index in xar = index densus eventorum) */
 nomen structura {
-    constans vacuum*     identitas;    /* symbolum semanticae (opacum) */
-    chorda               titulus;      /* nomen (nuntia gradus C) */
+        constans vacuum* identitas;    /* symbolum semanticae (opacum) */
+                 chorda  titulus;      /* nomen (nuntia gradus C) */
     constans SilvaNodus* declarans;    /* sedes declarationis */
-    b32                  parametrum;   /* initiata in introitu */
-    b32                  effugit;      /* locus sumptus usquam (eventum
+                    b32  parametrum;   /* initiata in introitu */
+                    b32  effugit;      /* locus sumptus usquam (eventum
                                         * LOCI ullum): forma PERPETUO
                                         * MIXTA - scriptio per alias
                                         * post effugium invisibilis
@@ -141,9 +143,9 @@ nomen structura {
      * tabula (effugium/parametrum basis ibi consulenda). Analysis
      * initiationis ordines membrorum numquam videt (eventa membrorum
      * genera propria ferunt). */
-    b32                  membrum_est;
-    s32                  basis;        /* -1 nisi membrum */
-    chorda               titulus_membri;
+       b32 membrum_est;
+       s32 basis;        /* -1 nisi membrum */
+    chorda titulus_membri;
 } FluxusVariabilis;
 
 /* Blocus parallelus (index = FluxusBlocus.index). Status
@@ -177,8 +179,9 @@ structura FluxusDatorum {
     Xar* variabiles;                   /* FluxusVariabilis (valore) */
     Xar* bloci;                        /* FluxusDatorumBlocus (valore,
                                         * parallelus fluxus->bloci) */
-    i32  numerus_verborum;             /* verba i64 per statum */
+    i32 numerus_verborum;             /* verba i64 per statum */
 };
+
 
 /* ==================================================
  * Sutura factorum symbolorum (politica vocatoris)
@@ -251,6 +254,7 @@ nomen structura {
     vacuum* contextus;
 } FluxusDatorumAuxilia;
 
+
 /* ==================================================
  * API
  * ================================================== */
@@ -262,8 +266,8 @@ nomen structura {
  * Vocator monstratorem in FluxusFunctionis.datorum reponit. */
 FluxusDatorum*
 silva_c89_fluxus_datorum_aedificare (
-    Piscina*                       piscina,
-    constans FluxusFunctionis*     fluxus,
+                          Piscina* piscina,
+        constans FluxusFunctionis* fluxus,
     constans FluxusDatorumAuxilia* auxilia);
 
 #endif /* SILVA_C89_FLUXUS_DATORUM_H */

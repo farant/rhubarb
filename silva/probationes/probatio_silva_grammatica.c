@@ -22,7 +22,9 @@
 #define VIA_MAXIMA 1024
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via)
 {
     FILE* pl;
     character* buffer;
@@ -53,7 +55,7 @@ _plagulam_legere (Piscina* piscina, constans character* via)
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -66,7 +68,9 @@ _plagulam_legere (Piscina* piscina, constans character* via)
 }
 
 interior b32
-_chorda_est (chorda* c, constans character* literis)
+_chorda_est (
+                chorda* c,
+    constans character* literis)
 {
     si (c == NIHIL)
     {
@@ -76,12 +80,15 @@ _chorda_est (chorda* c, constans character* literis)
     {
         redde FALSUM;
     }
-    redde (memcmp(c->datum, literis, (memoriae_index)c->mensura) == ZEPHYRUM)
+    redde (memcmp(c->datum, literis, (memoriae_index)c->mensura)
+        == ZEPHYRUM)
         ? VERUM : FALSUM;
 }
 
 interior s32
-_symbolum (SilvaGenGrammatica* g, constans character* titulus)
+_symbolum (
+    SilvaGenGrammatica* g,
+    constans character* titulus)
 {
     i32 i;
 
@@ -100,7 +107,9 @@ _symbolum (SilvaGenGrammatica* g, constans character* titulus)
 
 /* Invenire productionem per id; reddit indicem vel -1 */
 interior s32
-_productio_per_id (SilvaGenGrammatica* g, constans character* id)
+_productio_per_id (
+    SilvaGenGrammatica* g,
+    constans character* id)
 {
     i32 i;
 
@@ -119,15 +128,15 @@ _productio_per_id (SilvaGenGrammatica* g, constans character* id)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                    b32  praeteritus;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    constans character* radix;
-    character via[VIA_MAXIMA];
-    character* fons;
-    SilvaGenGrammatica* g;
-    SilvaGenCollectio* collectio;
-    SilvaGenTabula* tabula;
+     constans character* radix;
+              character  via[VIA_MAXIMA];
+              character* fons;
+     SilvaGenGrammatica* g;
+      SilvaGenCollectio* collectio;
+         SilvaGenTabula* tabula;
 
     piscina = piscina_generare_dynamicum("probatio_silva_grammatica",
         16777216);
@@ -182,7 +191,8 @@ s32 principale (vacuum)
 
     /* ambae lectiones IDENTIFICATORIS adsunt */
     CREDO_VERUM (_productio_per_id(g, "typus-nomen") >= ZEPHYRUM);
-    CREDO_VERUM (_productio_per_id(g, "factor-identificator") >= ZEPHYRUM);
+    CREDO_VERUM (_productio_per_id(g, "factor-identificator")
+        >= ZEPHYRUM);
 
 
     /* ========================================================
@@ -213,7 +223,8 @@ s32 principale (vacuum)
 
     collectio = silva_gen_collectio_lalr_construere(g);
     CREDO_NON_NIHIL (collectio);
-    imprimere("  status: %d\n", (int)xar_numerus(collectio->status_omnes));
+    imprimere("  status: %d\n",
+        (int)xar_numerus(collectio->status_omnes));
 
     tabula = silva_gen_tabulam_construere(collectio);
     CREDO_NON_NIHIL (tabula);
@@ -237,34 +248,36 @@ s32 principale (vacuum)
 
         imprimere("\n--- Probans cellam furcae ---\n");
 
-        star_idx = _symbolum(g, "STAR");
-        prod_typus = _productio_per_id(g, "typus-nomen");
-        prod_factor = _productio_per_id(g, "factor-identificator");
-        furca_inventa = FALSUM;
+        star_idx       = _symbolum(g, "STAR");
+        prod_typus     = _productio_per_id(g, "typus-nomen");
+        prod_factor    = _productio_per_id(g, "factor-identificator");
+        furca_inventa  = FALSUM;
 
         per (s = ZEPHYRUM;
              s < xar_numerus(tabula->status_tabulae) && !furca_inventa;
              s++)
         {
             Xar* actiones;
-            b32 habet_typus;
-            b32 habet_factor;
-            i32 a;
+            b32  habet_typus;
+            b32  habet_factor;
+            i32  a;
 
-            actiones = silva_gen_actiones_quaerere(tabula, (s32)s, star_idx);
+            actiones = silva_gen_actiones_quaerere(tabula, (s32)s,
+                star_idx);
             si (actiones == NIHIL || xar_numerus(actiones) < II)
             {
                 perge;
             }
 
-            habet_typus = FALSUM;
-            habet_factor = FALSUM;
+            habet_typus   = FALSUM;
+            habet_factor  = FALSUM;
             per (a = ZEPHYRUM; a < xar_numerus(actiones); a++)
             {
                 SilvaGenActioIntroitus* actio;
 
-                actio = (SilvaGenActioIntroitus*)xar_obtinere(actiones, a);
-                si (actio == NIHIL
+                actio = (SilvaGenActioIntroitus*)xar_obtinere(actiones,
+                    a);
+                si (   actio        == NIHIL
                     || actio->actio != SILVA_GEN_ACTIO_REDUCERE)
                 {
                     perge;

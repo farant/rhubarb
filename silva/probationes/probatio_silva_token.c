@@ -8,18 +8,21 @@
 #include <string.h>
 
 interior chorda*
-_titulus_novus (Piscina* piscina, constans character* literis)
+_titulus_novus (
+               Piscina* piscina,
+    constans character* literis)
 {
     chorda* titulus;
 
-    titulus = (chorda*)piscina_allocare(piscina, (memoriae_index)magnitudo(chorda));
+    titulus = (chorda*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(chorda));
     *titulus = chorda_ex_literis(literis, piscina);
     redde titulus;
 }
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_token", 65536);
@@ -37,7 +40,7 @@ s32 principale (vacuum)
 
     {
         SilvaToken* token;
-        chorda      valor;
+            chorda  valor;
 
         imprimere("\n--- Probans silva_token_ex_fonte ---\n");
 
@@ -46,7 +49,8 @@ s32 principale (vacuum)
             valor, XLII, III, VII, ZEPHYRUM);
 
         CREDO_NON_NIHIL (token);
-        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_IDENTIFICATOR);
+        CREDO_AEQUALIS_I32 ((i32)token->genus,
+            (i32)SILVA_LEX_IDENTIFICATOR);
         CREDO_AEQUALIS_S32 (token->byte_offset, XLII);
         CREDO_AEQUALIS_I32 (token->longitudo, VII);
         CREDO_AEQUALIS_I32 (token->linea, III);
@@ -55,7 +59,8 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "piscina");
 
         /* Origo inserta: FONS, sine praedecessoribus */
-        CREDO_AEQUALIS_I32 ((i32)token->origo.genus, (i32)SILVA_ORIGO_FONS);
+        CREDO_AEQUALIS_I32 ((i32)token->origo.genus,
+            (i32)SILVA_ORIGO_FONS);
         CREDO_VERUM (silva_token_est_fons(token));
         CREDO_AEQUALIS_PTR (silva_token_radix(token), token);
         CREDO_AEQUALIS_I32 (silva_token_profunditas(token), ZEPHYRUM);
@@ -78,8 +83,8 @@ s32 principale (vacuum)
         SilvaToken* corpus_n;    /* lexema in corpore macro N */
         SilvaToken* gen1;
         SilvaToken* gen2;
-        chorda*     nomen_m;
-        chorda*     nomen_n;
+            chorda* nomen_m;
+            chorda* nomen_n;
 
         imprimere("\n--- Probans catenam expansionis ---\n");
 
@@ -88,7 +93,8 @@ s32 principale (vacuum)
 
         corpus_m = silva_token_ex_fonte(piscina, SILVA_LEX_INTEGER,
             chorda_ex_literis("42", piscina), X, I, IX, I);
-        invocatio_m = silva_token_ex_fonte(piscina, SILVA_LEX_IDENTIFICATOR,
+        invocatio_m = silva_token_ex_fonte(piscina,
+            SILVA_LEX_IDENTIFICATOR,
             chorda_ex_literis("M", piscina), C, V, I, ZEPHYRUM);
 
         gen1 = silva_token_ex_expansione(piscina, corpus_m, invocatio_m,
@@ -100,9 +106,12 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (gen1->fons_index, I);
 
         /* Catena use-site */
-        CREDO_AEQUALIS_I32 ((i32)gen1->origo.genus, (i32)SILVA_ORIGO_EXPANSIO);
-        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.corpus, corpus_m);
-        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.invocatio, invocatio_m);
+        CREDO_AEQUALIS_I32 ((i32)gen1->origo.genus,
+            (i32)SILVA_ORIGO_EXPANSIO);
+        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.corpus,
+            corpus_m);
+        CREDO_AEQUALIS_PTR (gen1->origo.datum.expansio.invocatio,
+            invocatio_m);
         CREDO_AEQUALIS_PTR (silva_token_radix(gen1), invocatio_m);
         CREDO_AEQUALIS_I32 (silva_token_profunditas(gen1), I);
         CREDO_FALSUM (silva_token_est_fons(gen1));
@@ -126,13 +135,15 @@ s32 principale (vacuum)
         SilvaToken* sinister;
         SilvaToken* dexter;
         SilvaToken* pasta;
-        chorda*     titulus;
+            chorda* titulus;
 
         imprimere("\n--- Probans pastam ---\n");
 
         titulus = _titulus_novus(piscina, "GLUE");
-        sinister = silva_token_ex_fonte(piscina, SILVA_LEX_IDENTIFICATOR,
-            chorda_ex_literis("silva_", piscina), ZEPHYRUM, I, I, ZEPHYRUM);
+        sinister = silva_token_ex_fonte(piscina,
+            SILVA_LEX_IDENTIFICATOR,
+            chorda_ex_literis("silva_", piscina), ZEPHYRUM, I, I,
+            ZEPHYRUM);
         dexter = silva_token_ex_fonte(piscina, SILVA_LEX_IDENTIFICATOR,
             chorda_ex_literis("crescat", piscina), X, I, XI, ZEPHYRUM);
 
@@ -141,11 +152,14 @@ s32 principale (vacuum)
             sinister, dexter, sinister, titulus, NIHIL);
 
         CREDO_CHORDA_AEQUALIS_LITERIS (pasta->valor, "silva_crescat");
-        CREDO_AEQUALIS_I32 ((i32)pasta->origo.genus, (i32)SILVA_ORIGO_PASTA);
-        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.sinister, sinister);
+        CREDO_AEQUALIS_I32 ((i32)pasta->origo.genus,
+            (i32)SILVA_ORIGO_PASTA);
+        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.sinister,
+            sinister);
         CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.dexter, dexter);
         /* ANCORA EMISSIONIS servata et a parentibus distincta */
-        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.invocatio, sinister);
+        CREDO_AEQUALIS_PTR (pasta->origo.datum.pasta.invocatio,
+            sinister);
 
         /* Radix sequitur sinistrum (catena primaria) */
         CREDO_AEQUALIS_PTR (silva_token_radix(pasta), sinister);
@@ -160,9 +174,9 @@ s32 principale (vacuum)
         SilvaCaecatio* c_m;
         SilvaCaecatio* c_mn;
         SilvaCaecatio* c_mx;
-        chorda*        nomen_m;
-        chorda*        nomen_n;
-        chorda*        nomen_x;
+               chorda* nomen_m;
+               chorda* nomen_n;
+               chorda* nomen_x;
 
         imprimere("\n--- Probans caecationem ---\n");
 
@@ -172,9 +186,12 @@ s32 principale (vacuum)
 
         c_m = silva_caecatio_extendere(piscina, NIHIL, nomen_m);
         CREDO_NON_NIHIL (c_m);
-        CREDO_VERUM  (silva_caecatio_continet(c_m, chorda_ex_literis("M", piscina)));
-        CREDO_FALSUM (silva_caecatio_continet(c_m, chorda_ex_literis("N", piscina)));
-        CREDO_FALSUM (silva_caecatio_continet(NIHIL, chorda_ex_literis("M", piscina)));
+        CREDO_VERUM  (silva_caecatio_continet(c_m,
+            chorda_ex_literis("M", piscina)));
+        CREDO_FALSUM (silva_caecatio_continet(c_m,
+            chorda_ex_literis("N", piscina)));
+        CREDO_FALSUM (silva_caecatio_continet(NIHIL,
+            chorda_ex_literis("M", piscina)));
 
         /* Fratres caudam communicant - structura, non exemplaria */
         c_mn = silva_caecatio_extendere(piscina, c_m, nomen_n);
@@ -183,11 +200,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_PTR (c_mx->cauda, c_m);
 
         /* Continentia per caudam */
-        CREDO_VERUM  (silva_caecatio_continet(c_mn, chorda_ex_literis("M", piscina)));
-        CREDO_VERUM  (silva_caecatio_continet(c_mn, chorda_ex_literis("N", piscina)));
-        CREDO_FALSUM (silva_caecatio_continet(c_mn, chorda_ex_literis("X", piscina)));
-        CREDO_VERUM  (silva_caecatio_continet(c_mx, chorda_ex_literis("X", piscina)));
-        CREDO_FALSUM (silva_caecatio_continet(c_mx, chorda_ex_literis("N", piscina)));
+        CREDO_VERUM  (silva_caecatio_continet(c_mn,
+            chorda_ex_literis("M", piscina)));
+        CREDO_VERUM  (silva_caecatio_continet(c_mn,
+            chorda_ex_literis("N", piscina)));
+        CREDO_FALSUM (silva_caecatio_continet(c_mn,
+            chorda_ex_literis("X", piscina)));
+        CREDO_VERUM  (silva_caecatio_continet(c_mx,
+            chorda_ex_literis("X", piscina)));
+        CREDO_FALSUM (silva_caecatio_continet(c_mx,
+            chorda_ex_literis("N", piscina)));
     }
 
 
@@ -199,13 +221,20 @@ s32 principale (vacuum)
     {
         imprimere("\n--- Probans nomina generum ---\n");
 
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_EOF), "EOF") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_IDENTIFICATOR), "IDENTIFICATOR") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_WHILE), "WHILE") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_ASSIGNATIO), "ASSIGNATIO") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_CANCELLUM_CANCELLUM), "CANCELLUM_CANCELLUM") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_COMMENTUM_LINEA), "COMMENTUM_LINEA") == ZEPHYRUM);
-        CREDO_VERUM (strcmp(silva_origo_genus_nomen(SILVA_ORIGO_PASTA), "PASTA") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_EOF),
+            "EOF") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_IDENTIFICATOR),
+            "IDENTIFICATOR") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_WHILE),
+            "WHILE") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_ASSIGNATIO),
+            "ASSIGNATIO") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_CANCELLUM_CANCELLUM),
+            "CANCELLUM_CANCELLUM") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_lexema_genus_nomen(SILVA_LEX_COMMENTUM_LINEA),
+            "COMMENTUM_LINEA") == ZEPHYRUM);
+        CREDO_VERUM (strcmp(silva_origo_genus_nomen(SILVA_ORIGO_PASTA),
+            "PASTA") == ZEPHYRUM);
     }
 
 

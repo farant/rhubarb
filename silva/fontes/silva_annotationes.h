@@ -37,6 +37,7 @@
 #include "silva_nodus.h"
 #include "silva_parsare.h"
 
+
 /* ==================================================
  * Modus affixionis
  * ================================================== */
@@ -47,6 +48,7 @@ nomen enumeratio {
     SILVA_ANNOTATIO_PLAGULA      /* scopus plagulae (nulla unitas) */
 } SilvaAnnotatioModus;
 
+
 /* ==================================================
  * Annotatio collecta
  * ================================================== */
@@ -55,10 +57,10 @@ nomen structura {
     /* fons commentarii */
     chorda textus;        /* corpus purgatum (praetransitus factus) */
     chorda crudum;        /* octeti pleni delimitatoribus inclusis */
-    s32    fons_index;
-    i32    linea;         /* 1-basata (commentarii initium) */
-    i32    columna;       /* 1-basata */
-    s32    byte_offset;   /* intra fontem */
+       s32 fons_index;
+       i32 linea;         /* 1-basata (commentarii initium) */
+       i32 columna;       /* 1-basata */
+       s32 byte_offset;   /* intra fontem */
 
     /* affixio */
     SilvaAnnotatioModus  modus;
@@ -67,16 +69,17 @@ nomen structura {
     /* fructus stml_legere super textu purgato. Linea fontis
      * erroris = linea + linea_erroris - 1 (praetransitus lineas
      * servat); columnae sub decoratione exuta moventur. */
-    b32        parsata;       /* successus parsationis */
+          b32  parsata;       /* successus parsationis */
     StmlNodus* documentum;    /* radix documenti (liberi = elementa
                                * omnia - commentarium unum elementa
                                * plura ferre potest) */
-    StmlNodus* arbor;         /* elementum primum; NIHIL si fractum */
-    StmlStatus status;
-    i32        linea_erroris;    /* intra textum purgatum, 1-basata */
-    i32        columna_erroris;
-    chorda     error;
+     StmlNodus* arbor;         /* elementum primum; NIHIL si fractum */
+    StmlStatus  status;
+           i32  linea_erroris;    /* intra textum purgatum, 1-basata */
+           i32  columna_erroris;
+        chorda  error;
 } SilvaAnnotatio;
+
 
 /* ==================================================
  * API
@@ -90,9 +93,9 @@ nomen structura {
  * allocationis. */
 Xar*
 silva_annotationes_colligere (
-    Piscina*                piscina,
-    constans SilvaParsura*  parsura,
-    InternamentumChorda*    intern);
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+      InternamentumChorda* intern);
 
 /* Unitates supremae parsurae: radix commissionis ("fortasse
  * religata") hodie LISTA sententiarum est, post normalizationem
@@ -100,8 +103,9 @@ silva_annotationes_colligere (
  * Xar de SilvaNodus* ordine fontis; NIHIL sine commissione. */
 Xar*
 silva_annotationes_unitates (
-    Piscina*                piscina,
-    constans SilvaParsura*  parsura);
+                  Piscina* piscina,
+    constans SilvaParsura* parsura);
+
 
 /* ==================================================
  * Identitates (frustum B): nid lectae + petitiones mintationis
@@ -114,11 +118,11 @@ nomen enumeratio {
 } SilvaInsertioGenus;
 
 nomen structura {
-    StmlNodus*         elementum;       /* elementum ferens */
-    chorda             valor;           /* ULID; vacua = petitio */
-    b32                petitio;         /* mintanda */
-    SilvaInsertioGenus insertio_genus;
-    s32                insertio_offset; /* fons-absolutum; -1 = nulla
+             StmlNodus* elementum;       /* elementum ferens */
+                chorda  valor;           /* ULID; vacua = petitio */
+                   b32  petitio;         /* mintanda */
+    SilvaInsertioGenus  insertio_genus;
+                   s32  insertio_offset; /* fons-absolutum; -1 = nulla
                                          * aut INCERTA (numeri arborum
                                          * et textus dissentiunt -
                                          * instrumentum recusat) */
@@ -134,7 +138,7 @@ nomen structura {
  * mintanda); NIHIL si annotatio non parsata. Xar de SilvaIdentitas. */
 Xar*
 silva_annotationes_identitates (
-    Piscina*                 piscina,
+                    Piscina* piscina,
     constans SilvaAnnotatio* annotatio);
 
 #endif /* SILVA_ANNOTATIONES_H */

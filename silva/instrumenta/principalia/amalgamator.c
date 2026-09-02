@@ -18,6 +18,7 @@
 
 #define NUMERUS(series) ((i32)(magnitudo(series) / magnitudo((series)[0])))
 
+
 /* ==================================================
  * Manifestum
  * ================================================== */
@@ -68,7 +69,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "SilvaResolutioGenus", "SilvaResolutioEventum", "SilvaCommissio",
     "SilvaExpansio", "SilvaGrammatica", "SilvaParsura",
     "SilvaScriptura", "SilvaFines", "SilvaPergereFunctio",
-    "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus", "SilvaInclusioVista",
+    "SilvaContextusPlagula", "SilvaContextus", "SilvaRamusGenus",
+        "SilvaInclusioVista",
     "SilvaRamusVista", "SilvaMacroVista", "SilvaCommentariumVista",
     "SilvaQuaestio", "SilvaQuaestioResultatum",
     "SilvaQuaestioCaptura",
@@ -222,8 +224,8 @@ _enumerare (vacuum)
 
 s32 principale (s32 argc, character** argv)
 {
-    Piscina* piscina;
-    AmalgamaManifestum manifestum;
+               Piscina* piscina;
+    AmalgamaManifestum  manifestum;
 
     si (argc == II && strcmp(argv[I], "--enumerare") == ZEPHYRUM)
     {
@@ -266,10 +268,10 @@ s32 principale (s32 argc, character** argv)
         "silva/fontes/silva_latina_datum.h";
     manifestum.latina_datum_via_corporis =
         "silva/fontes/silva_latina_datum.c";
-    manifestum.latina_datum_prooemium = LATINA_DATUM_PROOEMIUM;
-    manifestum.latina_datum_custos = "SILVA_LATINA_DATUM_H";
-    manifestum.latina_datum_titulus_textus = "silva_latina_textus";
-    manifestum.latina_datum_titulus_mensurae = "silva_latina_mensura";
+    manifestum.latina_datum_prooemium         = LATINA_DATUM_PROOEMIUM;
+    manifestum.latina_datum_custos            = "SILVA_LATINA_DATUM_H";
+    manifestum.latina_datum_titulus_textus    = "silva_latina_textus";
+    manifestum.latina_datum_titulus_mensurae  = "silva_latina_mensura";
 
     si (!silva_amalgama_currere(piscina, argv[I], argv[II],
             &manifestum))

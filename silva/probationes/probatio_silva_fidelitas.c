@@ -48,7 +48,10 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 
 /* Legere plagulam totam; reddit NIHIL in defectu */
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -72,13 +75,14 @@ _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
     }
     rewind(pl);
 
-    buffer = (i8*)piscina_allocare(piscina, (memoriae_index)(mensura + 1L));
+    buffer = (i8*)piscina_allocare(piscina, (memoriae_index)(mensura
+        + 1L));
     si (buffer == NIHIL)
     {
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -93,19 +97,22 @@ _plagulam_legere (Piscina* piscina, constans character* via, i32* mensura_out)
 
 /* Probare fidelitatem unius plagulae per DUO oracula */
 interior vacuum
-_fidelitatem_probare (constans character* via, b32* lex_out,
-    b32* arbor_out)
+_fidelitatem_probare (
+    constans character* via,
+                   b32* lex_out,
+                   b32* arbor_out)
 {
     Piscina* piscina;
-    i8* fons;
-    Xar* lexemata;
-    chorda emissa;
-    i32 mensura;
+         i8* fons;
+        Xar* lexemata;
+     chorda  emissa;
+        i32  mensura;
 
-    *lex_out = FALSUM;
-    *arbor_out = FALSUM;
+    *lex_out    = FALSUM;
+    *arbor_out  = FALSUM;
 
-    piscina = piscina_generare_dynamicum("fidelitas_plagulae", 16777216);
+    piscina = piscina_generare_dynamicum("fidelitas_plagulae",
+        16777216);
     si (piscina == NIHIL)
     {
         redde;
@@ -153,7 +160,8 @@ _fidelitatem_probare (constans character* via, b32* lex_out,
 }
 
 interior b32
-_est_c_vel_h (constans character* titulus)
+_est_c_vel_h (
+    constans character* titulus)
 {
     memoriae_index m;
 
@@ -162,7 +170,7 @@ _est_c_vel_h (constans character* titulus)
     {
         redde FALSUM;
     }
-    si (titulus[m - II] == '.'
+    si (   titulus[m - II] == '.'
         && (titulus[m - I] == 'c' || titulus[m - I] == 'h'))
     {
         redde VERUM;
@@ -172,18 +180,19 @@ _est_c_vel_h (constans character* titulus)
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                   b32  praeteritus;
+               Piscina* piscina;
     constans character* radix;
-    character via_corporis[VIA_MAXIMA];
-    character via_plagulae[VIA_MAXIMA];
+             character  via_corporis[VIA_MAXIMA];
+             character  via_plagulae[VIA_MAXIMA];
     DIR* corpus;
     structura dirent* introitus;
     i32 numerus;
     i32 fideles;
     i32 fideles_arboris;
 
-    piscina = piscina_generare_dynamicum("probatio_silva_fidelitas", 262144);
+    piscina = piscina_generare_dynamicum("probatio_silva_fidelitas",
+        262144);
     si (!piscina)
     {
         imprimere("FRACTA: piscina_generatio\n");
@@ -201,10 +210,10 @@ s32 principale (vacuum)
     imprimere("\n--- Probans fidelitatem corporis laminarum ---\n");
     imprimere("  corpus: %s\n", via_corporis);
 
-    numerus = ZEPHYRUM;
-    fideles = ZEPHYRUM;
-    fideles_arboris = ZEPHYRUM;
-    corpus = opendir(via_corporis);
+    numerus          = ZEPHYRUM;
+    fideles          = ZEPHYRUM;
+    fideles_arboris  = ZEPHYRUM;
+    corpus           = opendir(via_corporis);
     si (corpus == NIHIL)
     {
         imprimere("FRACTA: corpus non apertum: %s\n", via_corporis);

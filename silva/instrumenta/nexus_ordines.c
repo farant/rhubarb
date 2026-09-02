@@ -14,7 +14,8 @@
 #include <stdio.h>
 
 constans character*
-nexus_ordines_genus_titulus (int genus)
+nexus_ordines_genus_titulus (
+    int genus)
 {
     commutatio (genus)
     {
@@ -30,10 +31,12 @@ nexus_ordines_genus_titulus (int genus)
 /* positio lexematis per radicem originis; viae sine '/' (copiae
  * basename capitum praebitorum) reiectae */
 interior b32
-_positionem_capere (constans SilvaParsura* parsura, SilvaToken* t,
-    constans SilvaChorda** via_exitus,
-    insignatus integer* linea_exitus,
-    insignatus integer* columna_exitus)
+_positionem_capere (
+    constans SilvaParsura*  parsura,
+               SilvaToken*  t,
+     constans SilvaChorda** via_exitus,
+       insignatus integer*  linea_exitus,
+       insignatus integer*  columna_exitus)
 {
     SilvaToken* radix;
     constans SilvaChorda* via;
@@ -69,17 +72,19 @@ _positionem_capere (constans SilvaParsura* parsura, SilvaToken* t,
             redde FALSUM;
         }
     }
-    *via_exitus = via;
-    *linea_exitus = radix->linea;
-    *columna_exitus = radix->columna;
+    *via_exitus      = via;
+    *linea_exitus    = radix->linea;
+    *columna_exitus  = radix->columna;
     redde VERUM;
 }
 
 /* sedes declarationum: omnia symbola TU (systema exclusa) */
 interior vacuum
-_symbola_fundere (constans SilvaParsura* parsura,
-    constans SilvaSemantica* sem, NexusOrdinesReceptor receptor,
-    vacuum* datum)
+_symbola_fundere (
+      constans SilvaParsura* parsura,
+    constans SilvaSemantica* sem,
+       NexusOrdinesReceptor  receptor,
+                     vacuum* datum)
 {
     insignatus integer numerus = silva_c89_symbola_numerus(sem);
     insignatus integer k;
@@ -89,8 +94,8 @@ _symbola_fundere (constans SilvaParsura* parsura,
         constans SemanticaSymbolum* symbolum =
             silva_c89_symbolum_per_indicem(sem, k);
         constans SilvaChorda* via;
-        insignatus integer linea;
-        insignatus integer columna;
+          insignatus integer  linea;
+          insignatus integer  columna;
 
         si (symbolum == NIHIL)
         {
@@ -123,12 +128,15 @@ _symbola_fundere (constans SilvaParsura* parsura,
  * quoque - etiam impliciti; ambigui per canonicam sequuntur).
  * AMBULATIO LATA (series) - ordo emissionis pars contractus. */
 interior vacuum
-_usus_fundere (constans SilvaParsura* parsura,
-    constans SilvaSemantica* sem, Piscina* effimera,
-    NexusOrdinesReceptor receptor, vacuum* datum)
+_usus_fundere (
+      constans SilvaParsura* parsura,
+    constans SilvaSemantica* sem,
+                    Piscina* effimera,
+       NexusOrdinesReceptor  receptor,
+                     vacuum* datum)
 {
     Xar* series = xar_creare(effimera, (i32)magnitudo(SilvaValor));
-    i32 cursor = ZEPHYRUM;
+    i32  cursor = ZEPHYRUM;
 
     si (series == NIHIL)
     {
@@ -180,7 +188,7 @@ _usus_fundere (constans SilvaParsura* parsura,
 
         {
             constans SilvaNodus* nodus = v.datum.nodus;
-            insignatus integer k;
+             insignatus integer  k;
 
             si (nodus->genus == (int)SILVA_C89_GENUS_AMBIGUUS)
             {
@@ -209,7 +217,7 @@ _usus_fundere (constans SilvaParsura* parsura,
                 }
                 perge;
             }
-            si (nodus->genus == (int)SILVA_C89_GENUS_ERROR
+            si (   nodus->genus == (int)SILVA_C89_GENUS_ERROR
                 || nodus->genus
                     == (int)SILVA_C89_GENUS_RAMUS_OMISSUS)
             {
@@ -228,12 +236,12 @@ _usus_fundere (constans SilvaParsura* parsura,
                         silva_c89_folium_identificator_tok_valor(
                             nodus);
 
-                    si (tok.genus == SILVA_VALOR_TOKEN
+                    si (   tok.genus       == SILVA_VALOR_TOKEN
                         && tok.datum.token != NIHIL)
                     {
                         constans SilvaChorda* via;
-                        insignatus integer linea;
-                        insignatus integer columna;
+                          insignatus integer  linea;
+                          insignatus integer  columna;
 
                         si (_positionem_capere(parsura,
                                 tok.datum.token, &via, &linea,
@@ -263,6 +271,7 @@ _usus_fundere (constans SilvaParsura* parsura,
     }
 }
 
+
 /* ==================================================
  * Macra (LEGATUS v0.2): sedes definitionum ex vista actorum
  * (silva_macro_vista - nomen/genus/fons/linea; columna in
@@ -276,23 +285,25 @@ _usus_fundere (constans SilvaParsura* parsura,
 /* SilvaChorda -> chorda hospitis (clavis tabulae; datum in piscinam
  * parsurae spectat - vita fundendi sufficit) */
 interior chorda
-_chorda_hospitis (constans SilvaChorda* s)
+_chorda_hospitis (
+    constans SilvaChorda* s)
 {
     chorda c;
 
-    c.mensura = (i32)s->mensura;
-    c.datum = (i8*)s->datum;
+    c.mensura  = (i32)s->mensura;
+    c.datum    = (i8*)s->datum;
     redde c;
 }
 
 /* via in "latina.h" desinit? (forma basename praebita ET forma
  * plena ambulationis directae "include/latina.h") */
 interior b32
-_via_latinae_est (constans SilvaChorda* via)
+_via_latinae_est (
+    constans SilvaChorda* via)
 {
-    constans character* suffixum = "latina.h";
-    insignatus integer m = VIII;
-    insignatus integer k;
+    constans character* suffixum  = "latina.h";
+    insignatus integer  m         = VIII;
+    insignatus integer  k;
 
     si (via == NIHIL || via->mensura < m)
     {
@@ -306,7 +317,7 @@ _via_latinae_est (constans SilvaChorda* via)
             redde FALSUM;
         }
     }
-    si (via->mensura > m
+    si (   via->mensura > m
         && via->datum[via->mensura - m - I] != '/')
     {
         redde FALSUM;
@@ -319,11 +330,12 @@ _via_latinae_est (constans SilvaChorda* via)
  * API = finis catenae. custos contra catenas corruptas.
  * (NB "nomen" ut variabile VETITUM - macro latinae = typedef) */
 constans SilvaChorda*
-nexus_ordines_titulus_macronis (SilvaToken* tok)
+nexus_ordines_titulus_macronis (
+    SilvaToken* tok)
 {
-    SilvaToken* cur = tok;
-    constans SilvaChorda* titulus = NIHIL;
-    insignatus integer custos = ZEPHYRUM;
+              SilvaToken* cur      = tok;
+    constans SilvaChorda* titulus  = NIHIL;
+      insignatus integer  custos   = ZEPHYRUM;
 
     dum (cur != NIHIL && custos < LXIV)
     {
@@ -353,20 +365,23 @@ nexus_ordines_titulus_macronis (SilvaToken* tok)
 }
 
 interior vacuum
-_macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
-    NexusOrdinesReceptor receptor, vacuum* datum)
+_macros_fundere (
+    constans SilvaParsura* parsura,
+                  Piscina* effimera,
+     NexusOrdinesReceptor  receptor,
+                   vacuum* datum)
 {
-    TabulaDispersa* latina_tituli;
-    TabulaDispersa* usus_visi;
-    insignatus integer numerus;
-    insignatus integer k;
+        TabulaDispersa* latina_tituli;
+        TabulaDispersa* usus_visi;
+    insignatus integer  numerus;
+    insignatus integer  k;
 
     si (parsura->expansio == NIHIL)
     {
         redde;
     }
-    latina_tituli = tabula_dispersa_creare_chorda(effimera, CCLVI);
-    usus_visi = tabula_dispersa_creare_chorda(effimera, CCLVI);
+    latina_tituli  = tabula_dispersa_creare_chorda(effimera, CCLVI);
+    usus_visi      = tabula_dispersa_creare_chorda(effimera, CCLVI);
     si (latina_tituli == NIHIL || usus_visi == NIHIL)
     {
         redde;
@@ -377,10 +392,10 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
     numerus = silva_macros_numerus(parsura->expansio);
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        SilvaMacroVista vista;
+             SilvaMacroVista  vista;
         constans SilvaChorda* via;
 
-        si (!silva_macro_vista(parsura->expansio, k, &vista)
+        si (   !silva_macro_vista(parsura->expansio, k, &vista)
             || vista.titulus == NIHIL)
         {
             perge;
@@ -400,7 +415,7 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
         {
             /* lex viae: basename praebita (sine '/') omissa - ordo
              * canonicus ex ambulatione directa capitis venit */
-            b32 habet_separatorem = FALSUM;
+                           b32 habet_separatorem = FALSUM;
             insignatus integer j;
 
             per (j = ZEPHYRUM; j < via->mensura; j++)
@@ -429,8 +444,9 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
         redde;
     }
     {
-        insignatus integer n = silva_xar_numerus(parsura->lexemata);
-        SilvaToken* radix_prior = NIHIL;
+        insignatus integer n =
+            silva_xar_numerus(parsura->lexemata);
+                SilvaToken* radix_prior = NIHIL;
 
         per (k = ZEPHYRUM; k < n; k++)
         {
@@ -457,8 +473,8 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
             {
                 perge;   /* eadem invocatio - lexemata contigua */
             }
-            radix_prior = radix;
-            titulus = nexus_ordines_titulus_macronis(tok);
+            radix_prior  = radix;
+            titulus      = nexus_ordines_titulus_macronis(tok);
             si (titulus == NIHIL)
             {
                 perge;
@@ -475,8 +491,8 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
             }
             {
                 character clavis_litterae[CCLVI * II];
-                chorda clavis;
-                int scripti;
+                   chorda clavis;
+                      int scripti;
 
                 si (titulus->mensura + via->mensura + XXXII
                     > (insignatus integer)magnitudo(
@@ -494,8 +510,8 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
                 {
                     perge;
                 }
-                clavis.mensura = (i32)scripti;
-                clavis.datum = (i8*)clavis_litterae;
+                clavis.mensura  = (i32)scripti;
+                clavis.datum    = (i8*)clavis_litterae;
                 si (tabula_dispersa_continet(usus_visi, clavis))
                 {
                     perge;
@@ -509,6 +525,7 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
     }
 }
 
+
 /* ==================================================
  * Lexemata retenta (stadium quartum, 01KYX2DSKK sequela):
  * identificatores in CORPORIBUS macronum et in laminis ramorum
@@ -519,15 +536,18 @@ _macros_fundere (constans SilvaParsura* parsura, Piscina* effimera,
  * ================================================== */
 
 interior vacuum
-_lexema_retentum_fundere (constans SilvaParsura* parsura,
-    SilvaToken* tok, constans character* genus,
-    NexusOrdinesReceptor receptor, vacuum* datum)
+_lexema_retentum_fundere (
+    constans SilvaParsura* parsura,
+               SilvaToken* tok,
+       constans character* genus,
+     NexusOrdinesReceptor  receptor,
+                   vacuum* datum)
 {
     constans SilvaChorda* via;
-    insignatus integer linea;
-    insignatus integer columna;
+      insignatus integer  linea;
+      insignatus integer  columna;
 
-    si (tok == NIHIL || tok->genus != SILVA_LEX_IDENTIFICATOR
+    si (   tok == NIHIL || tok->genus != SILVA_LEX_IDENTIFICATOR
         || tok->byte_offset < ZEPHYRUM)
     {
         redde;
@@ -539,22 +559,24 @@ _lexema_retentum_fundere (constans SilvaParsura* parsura,
     {
         SilvaChorda titulus;
 
-        titulus.datum = tok->valor.datum;
-        titulus.mensura = tok->valor.mensura;
+        titulus.datum    = tok->valor.datum;
+        titulus.mensura  = tok->valor.mensura;
         receptor(datum, &titulus, "usus", genus, via, linea,
             columna, ZEPHYRUM);
     }
 }
 
 interior vacuum
-_retenta_fundere (constans SilvaParsura* parsura,
-    Piscina* effimera, NexusOrdinesReceptor receptor,
-    vacuum* datum)
+_retenta_fundere (
+    constans SilvaParsura* parsura,
+                  Piscina* effimera,
+     NexusOrdinesReceptor  receptor,
+                   vacuum* datum)
 {
-    TabulaDispersa* sumpta;
-    insignatus integer n;
-    insignatus integer k;
-    insignatus integer j;
+        TabulaDispersa* sumpta;
+    insignatus integer  n;
+    insignatus integer  k;
+    insignatus integer  j;
 
     si (parsura->expansio == NIHIL)
     {
@@ -579,27 +601,27 @@ _retenta_fundere (constans SilvaParsura* parsura,
      * IAM parsatus. Ramus omissus cuius (fons|initium) rami
      * SUMPTI congruit = umbra, supprimitur; rami platformarum
      * (#ifdef __linux__...) initium proprium habent et manent. */
-    sumpta = tabula_dispersa_creare_chorda(effimera, CCLVI);
-    n = silva_rami_numerus(parsura->expansio);
+    sumpta  = tabula_dispersa_creare_chorda(effimera, CCLVI);
+    n       = silva_rami_numerus(parsura->expansio);
     per (k = ZEPHYRUM; k < n; k++)
     {
         SilvaRamusVista vista;
 
-        si (silva_ramus_vista(parsura->expansio, k, &vista)
+        si (   silva_ramus_vista(parsura->expansio, k, &vista)
             && vista.est_sumptum && vista.corpus_initium >= ZEPHYRUM
             && sumpta != NIHIL)
         {
             character clavis_l[LXIV];
-            int scripti = sprintf(clavis_l, "%ld|%ld",
-                (long)vista.fons_index,
-                (long)vista.corpus_initium);
+                  int scripti = sprintf(clavis_l, "%ld|%ld",
+                      (long)vista.fons_index,
+                      (long)vista.corpus_initium);
 
             si (scripti > ZEPHYRUM)
             {
                 chorda clavis;
 
-                clavis.mensura = (i32)scripti;
-                clavis.datum = (i8*)clavis_l;
+                clavis.mensura  = (i32)scripti;
+                clavis.datum    = (i8*)clavis_l;
                 (vacuum)tabula_dispersa_inserere(sumpta,
                     chorda_transcribere(clavis, effimera), NIHIL);
             }
@@ -607,27 +629,27 @@ _retenta_fundere (constans SilvaParsura* parsura,
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        SilvaRamusVista vista;
+           SilvaRamusVista vista;
         insignatus integer m;
 
         si (!silva_ramus_vista(parsura->expansio, k, &vista))
         {
             perge;
         }
-        si (!vista.est_sumptum && vista.corpus_initium >= ZEPHYRUM
+        si (   !vista.est_sumptum && vista.corpus_initium >= ZEPHYRUM
             && sumpta != NIHIL)
         {
             character clavis_l[LXIV];
-            int scripti = sprintf(clavis_l, "%ld|%ld",
-                (long)vista.fons_index,
-                (long)vista.corpus_initium);
+                  int scripti = sprintf(clavis_l, "%ld|%ld",
+                      (long)vista.fons_index,
+                      (long)vista.corpus_initium);
 
             si (scripti > ZEPHYRUM)
             {
                 chorda clavis;
 
-                clavis.mensura = (i32)scripti;
-                clavis.datum = (i8*)clavis_l;
+                clavis.mensura  = (i32)scripti;
+                clavis.datum    = (i8*)clavis_l;
                 si (tabula_dispersa_continet(sumpta, clavis))
                 {
                     perge;   /* umbra inclusionis repetitae */
@@ -645,11 +667,14 @@ _retenta_fundere (constans SilvaParsura* parsura,
 }
 
 vacuum
-nexus_ordines_fundere (constans SilvaParsura* parsura,
-    constans SilvaSemantica* sem, Piscina* effimera,
-    NexusOrdinesReceptor receptor, vacuum* datum)
+nexus_ordines_fundere (
+      constans SilvaParsura* parsura,
+    constans SilvaSemantica* sem,
+                    Piscina* effimera,
+       NexusOrdinesReceptor  receptor,
+                     vacuum* datum)
 {
-    si (parsura == NIHIL || sem == NIHIL || effimera == NIHIL
+    si (   parsura  == NIHIL || sem == NIHIL || effimera == NIHIL
         || receptor == NIHIL || parsura->commissio == NIHIL)
     {
         redde;

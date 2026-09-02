@@ -38,14 +38,18 @@ hic_manens constans SilvaGrammatica GRAMMATICA_SCELETI = {
 };
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
 }
 
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -60,9 +64,9 @@ _elementum (SilvaValor lista, i32 index)
 /* Resolutor sceleti (ut in probatio_silva_commissio) */
 interior vacuum
 _resolutor_sceleti (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -78,13 +82,13 @@ _resolutor_sceleti (
 
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS) perge;
         nodus = elem->datum.nodus;
-        si (nodus == NIHIL
+        si (   nodus        == NIHIL
             || nodus->genus != (s32)SILVA_SCELETUM_GENUS_DECLARATIO)
         {
             perge;
         }
         typus = silva_sceletum_declaratio_typus(nodus);
-        si (typus.genus != SILVA_VALOR_NODUS
+        si (   typus.genus != SILVA_VALOR_NODUS
             || typus.datum.nodus->genus
                 != (s32)SILVA_SCELETUM_GENUS_TYPUS_NOMINATUS)
         {
@@ -95,12 +99,12 @@ _resolutor_sceleti (
                 silva_sceletum_typus_nominatus_tok_titulus(
                     typus.datum.nodus);
 
-            si (titulus.genus == SILVA_VALOR_TOKEN
+            si (   titulus.genus == SILVA_VALOR_TOKEN
                 && silva_oraculum_typum_novit(oraculum,
                        titulus.datum.token->valor))
             {
-                responsum->victor = (s32)i;
-                responsum->discriminans = titulus.datum.token;
+                responsum->victor        = (s32)i;
+                responsum->discriminans  = titulus.datum.token;
                 redde;
             }
         }
@@ -109,7 +113,7 @@ _resolutor_sceleti (
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_parsare",
@@ -128,8 +132,8 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* declaratio;
-        SilvaValor  typus;
+          SilvaNodus* declaratio;
+          SilvaValor  typus;
 
         imprimere("\n--- Probans fistulam totam ---\n");
 
@@ -168,7 +172,7 @@ s32 principale (vacuum)
 
     {
         SilvaParsura* parsura;
-        SilvaNodus* erroris;
+          SilvaNodus* erroris;
 
         imprimere("\n--- Probans recuperationem mediam ---\n");
 
@@ -241,7 +245,7 @@ s32 principale (vacuum)
 
     {
         SilvaOraculum* oraculum;
-        SilvaParsura*  parsura;
+         SilvaParsura* parsura;
 
         imprimere("\n--- Probans oraculum per gubernatorem ---\n");
 
@@ -274,7 +278,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        Xar* lexemata;
+                 Xar* lexemata;
         SilvaParsura* parsura;
 
         imprimere("\n--- Probans ingressum lexematum ---\n");
@@ -296,8 +300,8 @@ s32 principale (vacuum)
 
     {
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        character linea[LINEA_MAXIMA];
+                 character  via[VIA_MAXIMA];
+                 character  linea[LINEA_MAXIMA];
         FILE* corpus;
         i32 lineae = ZEPHYRUM;
         i32 arbores = ZEPHYRUM;
@@ -319,11 +323,11 @@ s32 principale (vacuum)
         {
             dum (fgets(linea, LINEA_MAXIMA, corpus) != NIHIL)
             {
-                Piscina* piscina_lineae;
-                SilvaParsura* parsura;
-                memoriae_index m = strlen(linea);
+                       Piscina* piscina_lineae;
+                  SilvaParsura* parsura;
+                memoriae_index  m = strlen(linea);
 
-                si (m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
+                si (   m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
                     || linea[ZEPHYRUM] == '\n')
                 {
                     perge;

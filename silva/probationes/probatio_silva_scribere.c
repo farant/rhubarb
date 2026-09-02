@@ -48,7 +48,9 @@ hic_manens constans SilvaGrammatica GRAMMATICA_IMPARILIS = {
 };
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), &GRAMMATICA_SCELETI, NIHIL, NIHIL, NIHIL);
@@ -56,8 +58,10 @@ _parsare (Piscina* piscina, constans character* fons)
 
 /* Plagulam integram legere (exemplar mensurae) */
 interior i8*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
     FILE* pl;
     i8* buffer;
@@ -88,7 +92,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
         fclose(pl);
         redde NIHIL;
     }
-    si (mensura > 0L
+    si (   mensura > 0L
         && fread(buffer, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -102,8 +106,10 @@ _plagulam_legere (Piscina* piscina, constans character* via,
 }
 
 interior b32
-_scriptura_aequat (SilvaScriptura scriptura, constans i8* octeti,
-    i32 mensura)
+_scriptura_aequat (
+    SilvaScriptura  scriptura,
+       constans i8* octeti,
+               i32  mensura)
 {
     si (!scriptura.successus || scriptura.textus.mensura != mensura)
     {
@@ -118,7 +124,9 @@ _scriptura_aequat (SilvaScriptura scriptura, constans i8* octeti,
 }
 
 interior SilvaNodus*
-_elementum (SilvaValor lista, i32 index)
+_elementum (
+    SilvaValor lista,
+           i32 index)
 {
     SilvaValor* elem;
 
@@ -132,12 +140,14 @@ _elementum (SilvaValor lista, i32 index)
 
 /* Fidelitas arboris per grammaticam datam: parsare -> scribere == fons */
 interior b32
-_fidelis_gram (Piscina* piscina, constans character* fons,
+_fidelis_gram (
+                     Piscina* piscina,
+          constans character* fons,
     constans SilvaGrammatica* grammatica)
 {
-    SilvaParsura*  parsura;
-    SilvaScriptura scriptura;
-    i32 m = (i32)strlen(fons);
+      SilvaParsura* parsura;
+    SilvaScriptura  scriptura;
+               i32  m = (i32)strlen(fons);
 
     parsura = silva_parsare(piscina, "probatio.c", fons, m,
         grammatica, NIHIL, NIHIL, NIHIL);
@@ -155,7 +165,7 @@ _fidelis_gram (Piscina* piscina, constans character* fons,
     {
         redde FALSUM;
     }
-    si (m > ZEPHYRUM
+    si (   m > ZEPHYRUM
         && memcmp(scriptura.textus.datum, fons,
                (memoriae_index)m) != ZEPHYRUM)
     {
@@ -165,7 +175,9 @@ _fidelis_gram (Piscina* piscina, constans character* fons,
 }
 
 interior b32
-_fidelis (Piscina* piscina, constans character* fons)
+_fidelis (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde _fidelis_gram(piscina, fons, &GRAMMATICA_SCELETI);
 }
@@ -173,9 +185,9 @@ _fidelis (Piscina* piscina, constans character* fons)
 /* Resolutor sceleti (ut in probatio_silva_parsare) */
 interior vacuum
 _resolutor_sceleti (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -191,13 +203,13 @@ _resolutor_sceleti (
 
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS) perge;
         nodus = elem->datum.nodus;
-        si (nodus == NIHIL
+        si (   nodus        == NIHIL
             || nodus->genus != (s32)SILVA_SCELETUM_GENUS_DECLARATIO)
         {
             perge;
         }
         typus = silva_sceletum_declaratio_typus(nodus);
-        si (typus.genus != SILVA_VALOR_NODUS
+        si (   typus.genus != SILVA_VALOR_NODUS
             || typus.datum.nodus->genus
                 != (s32)SILVA_SCELETUM_GENUS_TYPUS_NOMINATUS)
         {
@@ -208,12 +220,12 @@ _resolutor_sceleti (
                 silva_sceletum_typus_nominatus_tok_titulus(
                     typus.datum.nodus);
 
-            si (titulus.genus == SILVA_VALOR_TOKEN
+            si (   titulus.genus == SILVA_VALOR_TOKEN
                 && silva_oraculum_typum_novit(oraculum,
                        titulus.datum.token->valor))
             {
-                responsum->victor = (s32)i;
-                responsum->discriminans = titulus.datum.token;
+                responsum->victor        = (s32)i;
+                responsum->discriminans  = titulus.datum.token;
                 redde;
             }
         }
@@ -224,9 +236,9 @@ _resolutor_sceleti (
  * recanonicationis - octeti mutari non debent) */
 interior vacuum
 _resolutor_praeferens_expressionem (
-    constans SilvaNodus*     ambiguum,
-    constans SilvaOraculum*  oraculum,
-    vacuum*                  contextus,
+        constans SilvaNodus* ambiguum,
+     constans SilvaOraculum* oraculum,
+                     vacuum* contextus,
     SilvaResolutioResponsum* responsum)
 {
     SilvaValor interps =
@@ -239,7 +251,7 @@ _resolutor_praeferens_expressionem (
     {
         SilvaNodus* nodus = _elementum(interps, i);
 
-        si (nodus != NIHIL
+        si (   nodus != NIHIL
             && nodus->genus
                 == (s32)SILVA_SCELETUM_GENUS_SENTENTIA_EXPRESSIONIS)
         {
@@ -251,7 +263,7 @@ _resolutor_praeferens_expressionem (
 
 s32 principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_silva_scribere",
@@ -293,7 +305,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans fidelitatem basicam ---\n");
 
         per (i = ZEPHYRUM;
-             i < (i32)(magnitudo(FIXA) / magnitudo(FIXA[ZEPHYRUM])); i++)
+             i < (i32)(magnitudo(FIXA)
+                 / magnitudo(FIXA[ZEPHYRUM])); i++)
         {
             CREDO_VERUM (_fidelis(piscina, FIXA[i]));
         }
@@ -334,11 +347,11 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaParsura*  parsura;
-        SilvaScriptura ante;
-        SilvaScriptura post;
-        SilvaOraculum* oraculum;
-        i32 versae;
+          SilvaParsura* parsura;
+        SilvaScriptura  ante;
+        SilvaScriptura  post;
+         SilvaOraculum* oraculum;
+                   i32  versae;
 
         imprimere("\n--- Probans ambigua (canonica sola) ---\n");
 
@@ -369,7 +382,8 @@ s32 principale (vacuum)
          * communia - emissio a canonica independens esse debet) */
         parsura = _parsare(piscina, "foo * bar;");
         CREDO_VERUM (parsura->successus);
-        CREDO_AEQUALIS_I32 (xar_numerus(parsura->commissio->ambigui), I);
+        CREDO_AEQUALIS_I32 (xar_numerus(parsura->commissio->ambigui),
+            I);
 
         ante = silva_scribere_fontem(piscina, parsura,
             &SILVA_SCELETUM_REGISTRUM, ZEPHYRUM);
@@ -415,9 +429,9 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaParsura*  parsura;
-        SilvaNodus*    declaratio;
-        SilvaScriptura scriptura;
+          SilvaParsura* parsura;
+            SilvaNodus* declaratio;
+        SilvaScriptura  scriptura;
 
         imprimere("\n--- Probans subarbores ---\n");
 
@@ -459,8 +473,8 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaNodus*    nodus;
-        SilvaScriptura scriptura;
+            SilvaNodus* nodus;
+        SilvaScriptura  scriptura;
 
         imprimere("\n--- Probans fracturas claras ---\n");
 
@@ -477,8 +491,8 @@ s32 principale (vacuum)
             (s32)SILVA_SCELETUM_GENUS_AMBIGUUS, II);
         CREDO_NON_NIHIL (nodus);
         {
-            SilvaValor lista = silva_valor_lista_nova(piscina);
-            SilvaParsura* p = _parsare(piscina, "int x;");
+              SilvaValor  lista  = silva_valor_lista_nova(piscina);
+            SilvaParsura* p      = _parsare(piscina, "int x;");
 
             lista = silva_valor_lista_appendere(piscina, lista,
                 silva_valor_nodus(_elementum(p->commissio->radix,
@@ -617,10 +631,10 @@ s32 principale (vacuum)
     {
         hic_manens constans character* MODULUS =
             "#ifndef MODULUS_H\n#define MODULUS_H\nint m;\n#endif\n";
-        SilvaExpansio* exp;
-        SilvaParsura*  parsura;
-        SilvaScriptura scriptura;
-        s32 fons_moduli;
+             SilvaExpansio* exp;
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
+                       s32  fons_moduli;
         constans character* fons =
             "#include \"modulus.h\"\nint x;\n";
 
@@ -682,8 +696,8 @@ s32 principale (vacuum)
 
     {
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        character linea[LINEA_MAXIMA];
+                 character  via[VIA_MAXIMA];
+                 character  linea[LINEA_MAXIMA];
         FILE* corpus;
         i32 lineae = ZEPHYRUM;
         i32 fideles = ZEPHYRUM;
@@ -704,10 +718,10 @@ s32 principale (vacuum)
         {
             dum (fgets(linea, LINEA_MAXIMA, corpus) != NIHIL)
             {
-                Piscina* piscina_lineae;
-                memoriae_index m = strlen(linea);
+                       Piscina* piscina_lineae;
+                memoriae_index  m = strlen(linea);
 
-                si (m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
+                si (   m == ZEPHYRUM || linea[ZEPHYRUM] == '#'
                     || linea[ZEPHYRUM] == '\n')
                 {
                     perge;
@@ -745,16 +759,16 @@ s32 principale (vacuum)
 
     {
         constans character* radix_env;
-        character via[VIA_MAXIMA];
-        Piscina* piscina_cursoris;
-        i8* cursor_c;
-        i8* cursor_h;
-        i8* color_h;
-        i8* latina_h;
-        i32 m_cursor_c;
-        i32 m_cursor_h;
-        i32 m_color_h;
-        i32 m_latina_h;
+                 character  via[VIA_MAXIMA];
+                   Piscina* piscina_cursoris;
+                        i8* cursor_c;
+                        i8* cursor_h;
+                        i8* color_h;
+                        i8* latina_h;
+                       i32  m_cursor_c;
+                       i32  m_cursor_h;
+                       i32  m_color_h;
+                       i32  m_latina_h;
 
         imprimere("\n--- Probans clausuram cursor.c (vectis M1) ---\n");
 
@@ -788,11 +802,11 @@ s32 principale (vacuum)
         si (cursor_c != NIHIL && cursor_h != NIHIL && color_h != NIHIL
             && latina_h != NIHIL)
         {
-            SilvaExpansio* exp;
-            SilvaParsura*  parsura;
-            SilvaScriptura scriptura;
-            s32 fons_cursor_h;
-            s32 fons_latina_h;
+             SilvaExpansio* exp;
+              SilvaParsura* parsura;
+            SilvaScriptura  scriptura;
+                       s32  fons_cursor_h;
+                       s32  fons_latina_h;
 
             exp = silva_expansio_creare(piscina_cursoris);
             fons_cursor_h = silva_includendum_praebere(exp, "cursor.h",

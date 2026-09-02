@@ -24,6 +24,7 @@
 
 #define SILVA_SCRIBERE_OMNIA 0x7FFFFFFF
 
+
 /* ==================================================
  * Reinserendum - lamina per offset reinserenda
  * ================================================== */
@@ -33,40 +34,48 @@ nomen structura {
     Xar* lamina;    /* Xar de SilvaToken* */
 } SilvaReinserendum;
 
+
 /* ==================================================
  * Status scriptoris
  * ================================================== */
 
 nomen structura {
-    ChordaAedificator*             aed;
+                ChordaAedificator* aed;
     constans SilvaRegistrumCoctum* tabularium;
-    constans SilvaExpansio*        expansio;   /* NIHIL licet */
-    s32                            genus_ambigui;
-    i32                            locus_interpretationum;
-    i32                            locus_canonicae;
-    s32                            fons_index;   /* -1 = quaelibet */
-    Xar*                           reinserenda;  /* ordinata; NIHIL */
-    i32                            reinserenda_index;
-    s32                            fons_ultimus; /* -2 = nulla adhuc */
-    s32                            emissum_usque;
-    b32                            successus;
-    constans character*            causa;
-    constans SilvaNodus*           sedes;
+           constans SilvaExpansio* expansio;   /* NIHIL licet */
+                              s32  genus_ambigui;
+                              i32  locus_interpretationum;
+                              i32  locus_canonicae;
+                              s32  fons_index;   /* -1 = quaelibet */
+                              Xar* reinserenda;  /* ordinata; NIHIL */
+                              i32  reinserenda_index;
+                              s32  fons_ultimus; /* -2 = nulla adhuc */
+                              s32  emissum_usque;
+                              b32  successus;
+               constans character* causa;
+              constans SilvaNodus* sedes;
 } SilvaScriptor;
 
-interior vacuum _valorem_scribere (SilvaScriptor* st, SilvaValor valor);
-interior vacuum _nodum_scribere (SilvaScriptor* st,
+interior vacuum
+_valorem_scribere (
+    SilvaScriptor* st,
+       SilvaValor  valor);
+interior vacuum
+_nodum_scribere (
+          SilvaScriptor* st,
     constans SilvaNodus* nodus);
 
 interior vacuum
-_fractura (SilvaScriptor* st, constans character* causa,
+_fractura (
+          SilvaScriptor* st,
+     constans character* causa,
     constans SilvaNodus* sedes)
 {
     si (st->successus)
     {
-        st->successus = FALSUM;
-        st->causa = causa;
-        st->sedes = sedes;
+        st->successus  = FALSUM;
+        st->causa      = causa;
+        st->sedes      = sedes;
     }
 }
 
@@ -74,24 +83,25 @@ _fractura (SilvaScriptor* st, constans character* causa,
  * Reddit FALSUM si registrum formam non fert (generator eam imponit -
  * absentia = tabulae corruptae aut manu confectae). */
 interior b32
-_formam_ambigui_invenire (SilvaScriptor* st)
+_formam_ambigui_invenire (
+    SilvaScriptor* st)
 {
     i32 g;
 
-    st->genus_ambigui = -I;
-    st->locus_interpretationum = ZEPHYRUM;
-    st->locus_canonicae = ZEPHYRUM;
+    st->genus_ambigui           = -I;
+    st->locus_interpretationum  = ZEPHYRUM;
+    st->locus_canonicae         = ZEPHYRUM;
 
     per (g = ZEPHYRUM; g < st->tabularium->numerus_generum; g++)
     {
         constans SilvaTabGenus* def = &st->tabularium->genera[g];
 
-        si (def->titulus != NIHIL
+        si (   def->titulus                     != NIHIL
             && strcmp(def->titulus, "ambiguus") == ZEPHYRUM)
         {
             i32 k;
-            s32 interp = -I;
-            s32 canon = -I;
+            s32 interp  = -I;
+            s32 canon   = -I;
 
             per (k = ZEPHYRUM; k < def->loci_numerus; k++)
             {
@@ -99,7 +109,8 @@ _formam_ambigui_invenire (SilvaScriptor* st)
                     &st->tabularium->loci[def->loci_offset + k];
 
                 si (locus->titulus == NIHIL) perge;
-                si (strcmp(locus->titulus, "interpretationes") == ZEPHYRUM)
+                si (strcmp(locus->titulus, "interpretationes")
+                    == ZEPHYRUM)
                 {
                     interp = (s32)k;
                 }
@@ -112,14 +123,15 @@ _formam_ambigui_invenire (SilvaScriptor* st)
             {
                 redde FALSUM;
             }
-            st->genus_ambigui = (s32)g;
-            st->locus_interpretationum = (i32)interp;
-            st->locus_canonicae = (i32)canon;
+            st->genus_ambigui           = (s32)g;
+            st->locus_interpretationum  = (i32)interp;
+            st->locus_canonicae         = (i32)canon;
             redde VERUM;
         }
     }
     redde FALSUM;
 }
+
 
 /* ==================================================
  * Limes expansionis (Chunk B, sim ⑥ C4/C5)
@@ -130,7 +142,9 @@ _formam_ambigui_invenire (SilvaScriptor* st)
  * potest) et API (fons syntheticus) = stratum 0 non recuperabile -
  * deferral nominatum (INTENTIO Phase 5). */
 interior SilvaToken*
-_radix_probata (SilvaToken* token, b32* impurum_out)
+_radix_probata (
+    SilvaToken* token,
+           b32* impurum_out)
 {
     dum (token != NIHIL)
     {
@@ -182,8 +196,9 @@ _radix_probata (SilvaToken* token, b32* impurum_out)
  * nominis - quaestio per identitatem fallit, continentia invenit).
  * Scansio linearis - numeri parvi. */
 interior Xar*
-_extentum_continens (constans SilvaExpansio* expansio,
-    constans SilvaToken* radix)
+_extentum_continens (
+    constans SilvaExpansio* expansio,
+       constans SilvaToken* radix)
 {
     i32 k;
 
@@ -199,7 +214,7 @@ _extentum_continens (constans SilvaExpansio* expansio,
         SilvaToken* primum;
         SilvaToken* ultimum;
 
-        si (extentum == NIHIL || extentum->lamina == NIHIL
+        si (   extentum == NIHIL || extentum->lamina == NIHIL
             || xar_numerus(extentum->lamina) == ZEPHYRUM)
         {
             perge;
@@ -208,7 +223,7 @@ _extentum_continens (constans SilvaExpansio* expansio,
             ZEPHYRUM);
         ultimum = *(SilvaToken**)xar_obtinere(extentum->lamina,
             (i32)(xar_numerus(extentum->lamina) - I));
-        si (primum->fons_index == radix->fons_index
+        si (   primum->fons_index == radix->fons_index
             && radix->byte_offset >= primum->byte_offset
             && radix->byte_offset
                 < ultimum->byte_offset + (s32)ultimum->longitudo)
@@ -222,8 +237,9 @@ _extentum_continens (constans SilvaExpansio* expansio,
 /* Extentum invocationis functio-similis strati 0 (scansio linearis -
  * numeri parvi; radix comparatur per identitatem monstratoris) */
 interior Xar*
-_extentum_quaerere (constans SilvaExpansio* expansio,
-    constans SilvaToken* radix)
+_extentum_quaerere (
+    constans SilvaExpansio* expansio,
+       constans SilvaToken* radix)
 {
     i32 k;
 
@@ -246,7 +262,9 @@ _extentum_quaerere (constans SilvaExpansio* expansio,
 
 /* Lamina verbatim (sine fusione reinserendorum) */
 interior vacuum
-_laminam_emittere (SilvaScriptor* st, Xar* lamina)
+_laminam_emittere (
+    SilvaScriptor* st,
+              Xar* lamina)
 {
     i32 k;
 
@@ -259,7 +277,9 @@ _laminam_emittere (SilvaScriptor* st, Xar* lamina)
 
 /* Fundere reinserenda quorum offset < ante */
 interior vacuum
-_reinserenda_fundere (SilvaScriptor* st, s32 ante)
+_reinserenda_fundere (
+    SilvaScriptor* st,
+              s32  ante)
 {
     si (st->reinserenda == NIHIL)
     {
@@ -279,15 +299,18 @@ _reinserenda_fundere (SilvaScriptor* st, s32 ante)
     }
 }
 
+
 /* ==================================================
  * Emissio lexematis
  * ================================================== */
 
 interior vacuum
-_lexema_scribere (SilvaScriptor* st, SilvaToken* token)
+_lexema_scribere (
+    SilvaScriptor* st,
+       SilvaToken* token)
 {
     SilvaToken* radix;
-    b32 impurum;
+           b32  impurum;
 
     si (!st->successus || token == NIHIL)
     {
@@ -296,7 +319,7 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
 
     si (token->origo.genus == SILVA_ORIGO_FONS)
     {
-        si (st->fons_index >= ZEPHYRUM
+        si (   st->fons_index    >= ZEPHYRUM
             && token->fons_index != st->fons_index)
         {
             /* plagulae alienae (limes includendi): octeti eius
@@ -306,8 +329,8 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
         }
         _reinserenda_fundere(st, token->byte_offset);
         silva_lexema_emittere_in(st->aed, token);
-        st->fons_ultimus = token->fons_index;
-        st->emissum_usque = token->byte_offset + (s32)token->longitudo;
+        st->fons_ultimus   = token->fons_index;
+        st->emissum_usque  = token->byte_offset + (s32)token->longitudo;
         redde;
     }
 
@@ -318,15 +341,15 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
             NIHIL);
         redde;
     }
-    impurum = FALSUM;
-    radix = _radix_probata(token, &impurum);
+    impurum  = FALSUM;
+    radix    = _radix_probata(token, &impurum);
     si (impurum || radix == NIHIL)
     {
         _fractura(st, "origo pasta/chorda/api - stratum 0 non "
             "recuperabile (deferral nominatum)", NIHIL);
         redde;
     }
-    si (st->fons_index >= ZEPHYRUM
+    si (   st->fons_index    >= ZEPHYRUM
         && radix->fons_index != st->fons_index)
     {
         redde;  /* expansio in plagula aliena */
@@ -334,7 +357,7 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
 
     /* intra unitatem iam emissam? (corpus multi-lexematis eiusdem
      * invocationis; lexemata ex argumentis intra extentum) */
-    si (radix->fons_index == st->fons_ultimus
+    si (   radix->fons_index == st->fons_ultimus
         && radix->byte_offset < st->emissum_usque)
     {
         redde;
@@ -355,7 +378,7 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
              * fusio reinserendorum INTRA extentum manet possibilis
              * (directiva intra argumenta) */
             SilvaToken* t = NIHIL;
-            i32 k;
+                   i32  k;
 
             per (k = ZEPHYRUM; k < xar_numerus(extentum); k++)
             {
@@ -363,8 +386,8 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
                 _reinserenda_fundere(st, t->byte_offset);
                 silva_lexema_emittere_in(st->aed, t);
             }
-            st->fons_ultimus = radix->fons_index;
-            st->emissum_usque = t->byte_offset + (s32)t->longitudo;
+            st->fons_ultimus   = radix->fons_index;
+            st->emissum_usque  = t->byte_offset + (s32)t->longitudo;
         }
         alioquin
         {
@@ -378,33 +401,36 @@ _lexema_scribere (SilvaScriptor* st, SilvaToken* token)
     }
 }
 
+
 /* ==================================================
  * Ambulatio
  * ================================================== */
 
 interior vacuum
-_ambiguum_scribere (SilvaScriptor* st, constans SilvaNodus* nodus)
+_ambiguum_scribere (
+          SilvaScriptor* st,
+    constans SilvaNodus* nodus)
 {
-    SilvaValor interp;
-    SilvaValor canonica;
+    SilvaValor  interp;
+    SilvaValor  canonica;
     SilvaValor* electa;
 
-    si ((i32)st->locus_interpretationum >= nodus->numerus_locorum
-        || (i32)st->locus_canonicae >= nodus->numerus_locorum)
+    si (   (i32)st->locus_interpretationum >= nodus->numerus_locorum
+        || (i32)st->locus_canonicae        >= nodus->numerus_locorum)
     {
         _fractura(st, "forma ambigui extra loci nodi", nodus);
         redde;
     }
-    interp = nodus->loci[st->locus_interpretationum];
-    canonica = nodus->loci[st->locus_canonicae];
+    interp    = nodus->loci[st->locus_interpretationum];
+    canonica  = nodus->loci[st->locus_canonicae];
 
-    si (interp.genus != SILVA_VALOR_LISTA
+    si (   interp.genus   != SILVA_VALOR_LISTA
         || canonica.genus != SILVA_VALOR_INDEX)
     {
         _fractura(st, "forma ambigui corrupta", nodus);
         redde;
     }
-    si (canonica.datum.index < ZEPHYRUM
+    si (   canonica.datum.index < ZEPHYRUM
         || canonica.datum.index
             >= (s32)silva_valor_lista_numerus(interp))
     {
@@ -422,7 +448,9 @@ _ambiguum_scribere (SilvaScriptor* st, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_nodum_scribere (SilvaScriptor* st, constans SilvaNodus* nodus)
+_nodum_scribere (
+          SilvaScriptor* st,
+    constans SilvaNodus* nodus)
 {
     i32 k;
 
@@ -430,7 +458,7 @@ _nodum_scribere (SilvaScriptor* st, constans SilvaNodus* nodus)
     {
         redde;
     }
-    si (nodus->genus < ZEPHYRUM
+    si (   nodus->genus < ZEPHYRUM
         || nodus->genus >= (s32)st->tabularium->numerus_generum)
     {
         _fractura(st, "genus ignotum", nodus);
@@ -454,7 +482,9 @@ _nodum_scribere (SilvaScriptor* st, constans SilvaNodus* nodus)
 }
 
 interior vacuum
-_valorem_scribere (SilvaScriptor* st, SilvaValor valor)
+_valorem_scribere (
+    SilvaScriptor* st,
+       SilvaValor  valor)
 {
     si (!st->successus)
     {
@@ -493,14 +523,18 @@ _valorem_scribere (SilvaScriptor* st, SilvaValor valor)
     }
 }
 
+
 /* ==================================================
  * Reinserenda colligere (fontem)
  * ================================================== */
 
 interior vacuum
-_reinserendum_addere (SilvaScriptor* st, Piscina* piscina, Xar* lamina)
+_reinserendum_addere (
+    SilvaScriptor* st,
+          Piscina* piscina,
+              Xar* lamina)
 {
-    SilvaToken* primum;
+           SilvaToken* primum;
     SilvaReinserendum* r;
 
     si (lamina == NIHIL || xar_numerus(lamina) == ZEPHYRUM)
@@ -508,7 +542,7 @@ _reinserendum_addere (SilvaScriptor* st, Piscina* piscina, Xar* lamina)
         redde;
     }
     primum = *(SilvaToken**)xar_obtinere(lamina, ZEPHYRUM);
-    si (st->fons_index >= ZEPHYRUM
+    si (   st->fons_index     >= ZEPHYRUM
         && primum->fons_index != st->fons_index)
     {
         redde;
@@ -532,7 +566,10 @@ _reinserendum_addere (SilvaScriptor* st, Piscina* piscina, Xar* lamina)
  * (dominus unus) - sed filiae semper visitantur (regio degradata
  * intra textam sua adhuc possidet reinserendis). */
 interior vacuum
-_regiones_colligere (SilvaScriptor* st, Piscina* piscina, Xar* regiones)
+_regiones_colligere (
+    SilvaScriptor* st,
+          Piscina* piscina,
+              Xar* regiones)
 {
     i32 i;
 
@@ -543,7 +580,7 @@ _regiones_colligere (SilvaScriptor* st, Piscina* piscina, Xar* regiones)
     per (i = ZEPHYRUM; i < xar_numerus(regiones); i++)
     {
         SilvaRegio* regio = *(SilvaRegio**)xar_obtinere(regiones, i);
-        i32 j;
+               i32  j;
 
         si (regio == NIHIL) perge;
         si (!regio->est_texta && regio->rami != NIHIL)
@@ -574,7 +611,9 @@ _regiones_colligere (SilvaScriptor* st, Piscina* piscina, Xar* regiones)
 }
 
 interior s32
-_reinserenda_comparare (constans vacuum* a, constans vacuum* b)
+_reinserenda_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     constans SilvaReinserendum* ra = (constans SilvaReinserendum*)a;
     constans SilvaReinserendum* rb = (constans SilvaReinserendum*)b;
@@ -584,39 +623,44 @@ _reinserenda_comparare (constans vacuum* a, constans vacuum* b)
     redde ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Compositio fructus
  * ================================================== */
 
 interior SilvaScriptura
-_scriptura_fracta (constans character* causa)
+_scriptura_fracta (
+    constans character* causa)
 {
     SilvaScriptura s;
 
-    s.successus = FALSUM;
-    s.textus.datum = NIHIL;
-    s.textus.mensura = ZEPHYRUM;
-    s.causa = causa;
-    s.sedes = NIHIL;
+    s.successus       = FALSUM;
+    s.textus.datum    = NIHIL;
+    s.textus.mensura  = ZEPHYRUM;
+    s.causa           = causa;
+    s.sedes           = NIHIL;
     redde s;
 }
 
 interior b32
-_scriptor_parare (SilvaScriptor* st, Piscina* piscina,
+_scriptor_parare (
+                    SilvaScriptor* st,
+                          Piscina* piscina,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaExpansio* expansio, s32 fons_index)
+           constans SilvaExpansio* expansio,
+                              s32  fons_index)
 {
-    st->aed = chorda_aedificator_creare(piscina, 1024);
-    st->tabularium = tabularium;
-    st->expansio = expansio;
-    st->fons_index = fons_index;
-    st->reinserenda = NIHIL;
-    st->reinserenda_index = ZEPHYRUM;
-    st->fons_ultimus = -II;
-    st->emissum_usque = ZEPHYRUM;
-    st->successus = VERUM;
-    st->causa = NIHIL;
-    st->sedes = NIHIL;
+    st->aed                = chorda_aedificator_creare(piscina, 1024);
+    st->tabularium         = tabularium;
+    st->expansio           = expansio;
+    st->fons_index         = fons_index;
+    st->reinserenda        = NIHIL;
+    st->reinserenda_index  = ZEPHYRUM;
+    st->fons_ultimus       = -II;
+    st->emissum_usque      = ZEPHYRUM;
+    st->successus          = VERUM;
+    st->causa              = NIHIL;
+    st->sedes              = NIHIL;
     si (st->aed == NIHIL)
     {
         redde FALSUM;
@@ -625,24 +669,26 @@ _scriptor_parare (SilvaScriptor* st, Piscina* piscina,
 }
 
 interior SilvaScriptura
-_scriptura_finire (SilvaScriptor* st)
+_scriptura_finire (
+    SilvaScriptor* st)
 {
     SilvaScriptura s;
 
-    s.successus = st->successus;
-    s.causa = st->causa;
-    s.sedes = st->sedes;
+    s.successus  = st->successus;
+    s.causa      = st->causa;
+    s.sedes      = st->sedes;
     si (st->successus)
     {
         s.textus = chorda_aedificator_finire(st->aed);
     }
     alioquin
     {
-        s.textus.datum = NIHIL;
-        s.textus.mensura = ZEPHYRUM;
+        s.textus.datum    = NIHIL;
+        s.textus.mensura  = ZEPHYRUM;
     }
     redde s;
 }
+
 
 /* ==================================================
  * API
@@ -650,10 +696,10 @@ _scriptura_finire (SilvaScriptor* st)
 
 SilvaScriptura
 silva_scribere_valorem (
-    Piscina*                       piscina,
-    SilvaValor                     valor,
+                          Piscina* piscina,
+                       SilvaValor  valor,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaExpansio*        expansio)
+           constans SilvaExpansio* expansio)
 {
     SilvaScriptor st;
 
@@ -671,10 +717,10 @@ silva_scribere_valorem (
 
 SilvaScriptura
 silva_scribere_nodum (
-    Piscina*                       piscina,
-    constans SilvaNodus*           nodus,
+                          Piscina* piscina,
+              constans SilvaNodus* nodus,
     constans SilvaRegistrumCoctum* tabularium,
-    constans SilvaExpansio*        expansio)
+           constans SilvaExpansio* expansio)
 {
     SilvaScriptor st;
 
@@ -692,14 +738,14 @@ silva_scribere_nodum (
 
 SilvaScriptura
 silva_scribere_fontem (
-    Piscina*                       piscina,
-    constans SilvaParsura*         parsura,
+                          Piscina* piscina,
+            constans SilvaParsura* parsura,
     constans SilvaRegistrumCoctum* tabularium,
-    s32                            fons_index)
+                              s32  fons_index)
 {
     SilvaScriptor st;
 
-    si (piscina == NIHIL || parsura == NIHIL || tabularium == NIHIL
+    si (   piscina == NIHIL || parsura == NIHIL || tabularium == NIHIL
         || parsura->commissio == NIHIL)
     {
         redde _scriptura_fracta("argumenta nulla");
@@ -737,7 +783,7 @@ silva_scribere_fontem (
      * Vulnus in ipso oraculo fidelitatis, corpore non inventum
      * (nulla ex CLIV plagulis lib macrum vacuum habet) sed casu
      * adversario. */
-    si (parsura->expansio != NIHIL
+    si (   parsura->expansio          != NIHIL
         && parsura->expansio->extenta != NIHIL)
     {
         i32 i;
@@ -766,7 +812,7 @@ silva_scribere_fontem (
     /* Trivia caudae plagulae: lexema EOF. Plagulae inclusae EOF suum
      * in includenda retinent (fluxus reliquorum id abicit - sim ⑥
      * C6). */
-    si (parsura->lexema_finis != NIHIL
+    si (   parsura->lexema_finis != NIHIL
         && (fons_index < ZEPHYRUM
             || parsura->lexema_finis->fons_index == fons_index))
     {
@@ -778,20 +824,20 @@ silva_scribere_fontem (
             parsura->expansio->fontes, (i32)fons_index);
         vacuum* valor;
 
-        si (fons != NIHIL && fons->via != NIHIL
+        si (   fons != NIHIL && fons->via != NIHIL
             && tabula_dispersa_invenire(parsura->expansio->includenda,
                    *fons->via, &valor))
         {
             SilvaIncludendum* incl = (SilvaIncludendum*)valor;
 
-            si (incl != NIHIL && incl->lexemata != NIHIL
+            si (   incl != NIHIL && incl->lexemata != NIHIL
                 && xar_numerus(incl->lexemata) > ZEPHYRUM)
             {
                 SilvaToken* ultimum = *(SilvaToken**)xar_obtinere(
                     incl->lexemata,
                     (i32)(xar_numerus(incl->lexemata) - I));
 
-                si (ultimum != NIHIL
+                si (   ultimum        != NIHIL
                     && ultimum->genus == SILVA_LEX_EOF)
                 {
                     _lexema_scribere(&st, ultimum);

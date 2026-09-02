@@ -18,19 +18,22 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior constans SilvaNodus*
-_nodus (constans SilvaParsura* parsura, i32 index)
+_nodus (
+    constans SilvaParsura* parsura,
+                      i32  index)
 {
     SilvaValor* e = silva_valor_lista_obtinere(
         parsura->commissio->radix, index);
@@ -43,7 +46,9 @@ _nodus (constans SilvaParsura* parsura, i32 index)
 }
 
 interior SilvaParsura*
-_parsare (Piscina* piscina, constans character* fons)
+_parsare (
+               Piscina* piscina,
+    constans character* fons)
 {
     redde silva_c89_parsare(piscina, "probatio.c", fons,
         (i32)strlen(fons), NIHIL);
@@ -54,7 +59,8 @@ _parsare (Piscina* piscina, constans character* fons)
  * lectae - asserta numerorum sensum TYPATIONIS servant, non censum
  * inutilium */
 interior i32
-_ordines_praeter_inutilia (constans SilvaSemantica* sem)
+_ordines_praeter_inutilia (
+    constans SilvaSemantica* sem)
 {
     i32 i;
     i32 m = (i32)silva_c89_diagnostica_numerus(sem);
@@ -65,7 +71,7 @@ _ordines_praeter_inutilia (constans SilvaSemantica* sem)
         constans SemanticaDiagnosticum* d =
             silva_c89_diagnosticum_per_indicem(sem, i);
 
-        si (d != NIHIL
+        si (   d        != NIHIL
             && d->codex != (s32)EXAMEN_CODEX_VARIABILIS_INUTILIS
             && d->codex != (s32)EXAMEN_CODEX_PARAMETRUM_INUTILE)
         {
@@ -77,18 +83,20 @@ _ordines_praeter_inutilia (constans SilvaSemantica* sem)
 
 /* Basis declarationis (specificatores) + typus declaratoris primi */
 interior TypusC89*
-_typus_declarationis (SilvaSemantica* sem,
-    constans SilvaNodus* declaratio, SilvaToken** titulus_out)
+_typus_declarationis (
+         SilvaSemantica*  sem,
+    constans SilvaNodus*  declaratio,
+             SilvaToken** titulus_out)
 {
-    TypusC89* basis;
-    SilvaValor declaratores;
-    i32 i;
-    i32 m;
+      TypusC89* basis;
+    SilvaValor  declaratores;
+           i32  i;
+           i32  m;
 
     basis = silva_c89_typus_ex_specificatoribus(sem,
         silva_c89_declaratio_specificatores(declaratio), NIHIL);
-    declaratores = silva_c89_declaratio_declaratores(declaratio);
-    m = (i32)silva_valor_lista_numerus(declaratores);
+    declaratores  = silva_c89_declaratio_declaratores(declaratio);
+    m             = (i32)silva_valor_lista_numerus(declaratores);
     per (i = ZEPHYRUM; i < m; i++)
     {
         SilvaValor* dv = silva_valor_lista_obtinere(declaratores, i);
@@ -104,24 +112,25 @@ _typus_declarationis (SilvaSemantica* sem,
 
 /* M0b: initiator declarationis (primus declarator initiatus) */
 interior constans SilvaNodus*
-_initiator_declarationis (constans SilvaNodus* declaratio)
+_initiator_declarationis (
+    constans SilvaNodus* declaratio)
 {
     SilvaValor declaratores;
-    i32 i;
-    i32 m;
+           i32 i;
+           i32 m;
 
-    si (declaratio == NIHIL
+    si (   declaratio        == NIHIL
         || declaratio->genus != (s32)SILVA_C89_GENUS_DECLARATIO)
     {
         redde NIHIL;
     }
-    declaratores = silva_c89_declaratio_declaratores(declaratio);
-    m = (i32)silva_valor_lista_numerus(declaratores);
+    declaratores  = silva_c89_declaratio_declaratores(declaratio);
+    m             = (i32)silva_valor_lista_numerus(declaratores);
     per (i = ZEPHYRUM; i < m; i++)
     {
         SilvaValor* dv = silva_valor_lista_obtinere(declaratores, i);
 
-        si (dv != NIHIL && dv->genus == SILVA_VALOR_NODUS
+        si (   dv != NIHIL && dv->genus == SILVA_VALOR_NODUS
             && dv->datum.nodus->genus
                 == (s32)SILVA_C89_GENUS_DECLARATOR_INITIATUS)
         {
@@ -140,15 +149,17 @@ _initiator_declarationis (constans SilvaNodus* declaratio)
 
 /* M0b: elementum corporis functionis (definitio in indice fili) */
 interior constans SilvaNodus*
-_elementum_corporis (constans SilvaParsura* parsura,
-    i32 index_definitionis, i32 index_elementi)
+_elementum_corporis (
+    constans SilvaParsura* parsura,
+                      i32  index_definitionis,
+                      i32  index_elementi)
 {
     constans SilvaNodus* def = _nodus(parsura, index_definitionis);
-    SilvaValor corpus_v;
-    SilvaValor elementa;
-    SilvaValor* e;
+             SilvaValor  corpus_v;
+             SilvaValor  elementa;
+             SilvaValor* e;
 
-    si (def == NIHIL
+    si (   def        == NIHIL
         || def->genus != (s32)SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS)
     {
         redde NIHIL;
@@ -158,8 +169,8 @@ _elementum_corporis (constans SilvaParsura* parsura,
     {
         redde NIHIL;
     }
-    elementa = silva_c89_corpus_elementa(corpus_v.datum.nodus);
-    e = silva_valor_lista_obtinere(elementa, index_elementi);
+    elementa  = silva_c89_corpus_elementa(corpus_v.datum.nodus);
+    e         = silva_valor_lista_obtinere(elementa, index_elementi);
     si (e == NIHIL || e->genus != SILVA_VALOR_NODUS)
     {
         redde NIHIL;
@@ -169,20 +180,22 @@ _elementum_corporis (constans SilvaParsura* parsura,
 
 /* M0b C: argumentum k-um vocationis (nodi soli, virgulae saltatae) */
 interior constans SilvaNodus*
-_argumentum_vocationis (constans SilvaNodus* vocatio, i32 k)
+_argumentum_vocationis (
+    constans SilvaNodus* vocatio,
+                    i32  k)
 {
     SilvaValor argumenta;
-    i32 i;
-    i32 m;
-    i32 a = ZEPHYRUM;
+           i32 i;
+           i32 m;
+           i32 a = ZEPHYRUM;
 
-    si (vocatio == NIHIL
+    si (   vocatio        == NIHIL
         || vocatio->genus != (s32)SILVA_C89_GENUS_VOCATIO)
     {
         redde NIHIL;
     }
-    argumenta = silva_c89_vocatio_argumenta(vocatio);
-    m = (i32)silva_valor_lista_numerus(argumenta);
+    argumenta  = silva_c89_vocatio_argumenta(vocatio);
+    m          = (i32)silva_valor_lista_numerus(argumenta);
     per (i = ZEPHYRUM; i < m; i++)
     {
         SilvaValor* v = silva_valor_lista_obtinere(argumenta, i);
@@ -202,25 +215,26 @@ _argumentum_vocationis (constans SilvaNodus* vocatio, i32 k)
 /* M0b C: symbolum per nomen in INDICE (scopi post analysin clausi -
  * implicita in scopo corporis registrata sunt) */
 interior SemanticaSymbolum*
-_symbolum_indicis (constans SilvaSemantica* sem,
-    constans character* titulus)
+_symbolum_indicis (
+    constans SilvaSemantica* sem,
+         constans character* titulus)
 {
-    i32 i;
-    i32 m = silva_c89_symbola_numerus(sem);
-    chorda quaesitum = _ch(titulus);
+       i32 i;
+       i32 m          = silva_c89_symbola_numerus(sem);
+    chorda quaesitum  = _ch(titulus);
 
     per (i = ZEPHYRUM; i < m; i++)
     {
         constans SemanticaSymbolum* symbolum =
             silva_c89_symbolum_per_indicem(sem, i);
 
-        si (symbolum != NIHIL
+        si (   symbolum                  != NIHIL
             && symbolum->titulus.mensura == quaesitum.mensura
             && memcmp(symbolum->titulus.datum, quaesitum.datum,
                    (memoriae_index)quaesitum.mensura) == ZEPHYRUM)
         {
             unio { constans SemanticaSymbolum* c;
-                   SemanticaSymbolum* m; } u;
+                            SemanticaSymbolum* m; } u;
 
             u.c = symbolum;
             redde u.m;
@@ -232,7 +246,7 @@ _symbolum_indicis (constans SilvaSemantica* sem,
 s32 principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_semantica",
         16777216);
@@ -243,15 +257,17 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: primitivi - singuli, canonici, TRES characteres
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* a;
-        TypusC89* b;
-        TypusC89* c;
+          SilvaParsura* parsura;
+              TypusC89* a;
+              TypusC89* b;
+              TypusC89* c;
 
         imprimere("\n--- Probans primitivos ---\n");
         CREDO_NON_NIHIL (sem);
@@ -293,14 +309,16 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (c->ordinatio, IV);
     }
 
+
     /* ========================================================
      * PROBARE: qualificator scindit cursum; typedef + const
      * (fixum classicum: const IntPtr = int* const!)
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
+          SilvaParsura* parsura;
+              TypusC89* t;
 
         imprimere("\n--- Probans qualificatos ---\n");
 
@@ -334,14 +352,16 @@ s32 principale (vacuum)
             silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
     }
 
+
     /* ========================================================
      * PROBARE: declaratores - acies, monstratores, functiones
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
-        SilvaToken* tok = NIHIL;
+          SilvaParsura* parsura;
+              TypusC89* t;
+            SilvaToken* tok = NIHIL;
 
         imprimere("\n--- Probans declaratores ---\n");
 
@@ -390,14 +410,16 @@ s32 principale (vacuum)
         CREDO_FALSUM (t->datum.functio.est_prototypata);
     }
 
+
     /* ========================================================
      * PROBARE: structura sui-referens + forma; unio; incompleta
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
-        TypusC89* tag;
+          SilvaParsura* parsura;
+              TypusC89* t;
+              TypusC89* tag;
 
         imprimere("\n--- Probans structuras ---\n");
 
@@ -418,10 +440,10 @@ s32 principale (vacuum)
             chorda titulus;
             unio { constans character* c; i8* m; } u;
 
-            u.c = "Nodus";
-            titulus.datum = u.m;
-            titulus.mensura = V;
-            tag = silva_c89_typedef_invenire(sem, titulus);
+            u.c              = "Nodus";
+            titulus.datum    = u.m;
+            titulus.mensura  = V;
+            tag              = silva_c89_typedef_invenire(sem, titulus);
         }
         CREDO_NON_NIHIL (tag);
         CREDO_AEQUALIS_S32 (tag->genus, (s32)TYPUS_C89_STRUCTURA);
@@ -445,10 +467,10 @@ s32 principale (vacuum)
             chorda titulus;
             unio { constans character* c; i8* m; } u;
 
-            u.c = "U";
-            titulus.datum = u.m;
-            titulus.mensura = I;
-            t = silva_c89_typedef_invenire(sem, titulus);
+            u.c              = "U";
+            titulus.datum    = u.m;
+            titulus.mensura  = I;
+            t                = silva_c89_typedef_invenire(sem, titulus);
         }
         CREDO_NON_NIHIL (t);
         CREDO_AEQUALIS_S32 (t->genus, (s32)TYPUS_C89_UNIO);
@@ -465,16 +487,18 @@ s32 principale (vacuum)
             t->datum.monstrator.internum));
     }
 
+
     /* ========================================================
      * PROBARE: redditor typorum - baptisma tag anonymi, acies,
      * anonyma sine typedef (inventum agitationis legati 2026-07-13:
      * hover in legatus_currere signaturam totam perdebat)
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
-        character buffer[CXXVIII];
+          SilvaParsura* parsura;
+              TypusC89* t;
+             character  buffer[CXXVIII];
 
         imprimere("\n--- Probans redditorem typorum ---\n");
 
@@ -534,13 +558,15 @@ s32 principale (vacuum)
             "structura <anonyma>") == ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: enumerationes + aestimator + mensurae acierum
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
+          SilvaParsura* parsura;
+              TypusC89* t;
 
         imprimere("\n--- Probans aestimatorem ---\n");
 
@@ -584,13 +610,15 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (t->datum.acies.numerus, III);
     }
 
+
     /* ========================================================
      * PROBARE: internamentum - aequalitas monstratorum
      * ======================================================== */
+
     {
         SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        TypusC89* intus = silva_c89_typus_primitivum(sem,
-            PRIMITIVUM_INTEGER);
+              TypusC89* intus = silva_c89_typus_primitivum(sem,
+                  PRIMITIVUM_INTEGER);
 
         imprimere("\n--- Probans internamentum ---\n");
 
@@ -613,14 +641,16 @@ s32 principale (vacuum)
             intus);
     }
 
+
     /* ========================================================
      * PROBARE: venenum sine cascata (typus ignotus semanticae)
      * ======================================================== */
+
     {
-        SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
-        SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-        SilvaParsura* parsura;
-        TypusC89* t;
+        SilvaSemantica* sem       = silva_c89_semantica_creare(piscina);
+         SilvaOraculum* oraculum  = silva_oraculum_creare(piscina);
+          SilvaParsura* parsura;
+              TypusC89* t;
 
         imprimere("\n--- Probans venenum ---\n");
 
@@ -647,12 +677,14 @@ s32 principale (vacuum)
             silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
     }
 
+
     /* ========================================================
      * PROBARE (Chunk B): analysis integra - scopi, symbola,
      * conditionalis, definitio functionis, umbratio
      * ======================================================== */
+
     {
-        SilvaParsura* parsura;
+          SilvaParsura* parsura;
         SilvaSemantica* sem;
 
         imprimere("\n--- Probans analysin integram ---\n");
@@ -719,9 +751,9 @@ s32 principale (vacuum)
          * char prof III) - umbratio per scopos nidificatos */
         {
             i32 i;
-            i32 numerus_y = ZEPHYRUM;
-            b32 x_parametrum = FALSUM;
-            b32 y_char_profundius = FALSUM;
+            i32 numerus_y          = ZEPHYRUM;
+            b32 x_parametrum       = FALSUM;
+            b32 y_char_profundius  = FALSUM;
 
             per (i = ZEPHYRUM; i < xar_numerus(sem->symbola); i++)
             {
@@ -729,7 +761,7 @@ s32 principale (vacuum)
                     *(SemanticaSymbolum**)xar_obtinere(sem->symbola,
                         i);
 
-                si (symbolum->titulus.mensura == I
+                si (   symbolum->titulus.mensura         == I
                     && symbolum->titulus.datum[ZEPHYRUM] == 'y')
                 {
                     numerus_y++;
@@ -740,7 +772,7 @@ s32 principale (vacuum)
                         y_char_profundius = VERUM;
                     }
                 }
-                si (symbolum->titulus.mensura == I
+                si (   symbolum->titulus.mensura == I
                     && symbolum->titulus.datum[ZEPHYRUM] == 'x'
                     && symbolum->genus == (s32)SYMBOLUM_PARAMETRUM)
                 {
@@ -753,11 +785,13 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE (Chunk B): conflictus generis eodem scopo
      * ======================================================== */
+
     {
-        SilvaParsura* parsura;
+          SilvaParsura* parsura;
         SilvaSemantica* sem;
 
         imprimere("\n--- Probans conflictum generis ---\n");
@@ -771,13 +805,15 @@ s32 principale (vacuum)
         CREDO_VERUM (xar_numerus(sem->diagnostica) > ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE (Chunk C): oraculum trivalens - lectiones nominum
      * NON-typorum occiduntur (collapsus ad commissionem)
      * ======================================================== */
+
     {
-        SilvaOraculum* oraculum;
-        SilvaParsura* parsura;
+             SilvaOraculum* oraculum;
+              SilvaParsura* parsura;
         constans character* fons_v;
 
         imprimere("\n--- Probans oraculum trivalens ---\n");
@@ -815,13 +851,15 @@ s32 principale (vacuum)
             parsura->commissio->ambigui), I);
     }
 
+
     /* ========================================================
      * PROBARE (Chunk C): systema - parsura, harvest, praeoneratio,
      * analysis cum systemate (diagnostica -> 0), clausura
      * ======================================================== */
+
     {
         constans character* radix_env;
-        character via[1024];
+                 character  via[1024];
         FILE* pl;
         character* fons_sys = NIHIL;
         long mensura_sys = 0L;
@@ -954,8 +992,8 @@ s32 principale (vacuum)
                 "    int n = sizeof(localis);\n"
                 "}\n";
             SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-            SilvaParsura* parsura = silva_c89_parsare(piscina,
-                "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+             SilvaParsura* parsura = silva_c89_parsare(piscina,
+                 "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
             SilvaSemantica* sem;
 
             CREDO_NON_NIHIL (parsura);
@@ -981,6 +1019,7 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE (Chunk C): catenae conversionum nidificatae - furca
      * intra furcam (formae GLR); contagio "omnes" sanata (lectio
@@ -991,6 +1030,7 @@ s32 principale (vacuum)
      * invisibilis). Retentio honesta - victor eligi non potest.
      * Furcae VIVAE omnes deciduntur (exterior + interior)
      * ======================================================== */
+
     {
         constans character* fons_v =
             "#define SCR_ELEM(basis, idx, m)"
@@ -1006,8 +1046,8 @@ s32 principale (vacuum)
             "    }\n"
             "}\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-        SilvaParsura* parsura = silva_c89_parsare(piscina,
-            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+         SilvaParsura* parsura = silva_c89_parsare(piscina,
+             "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
         SilvaSemantica* sem;
 
         imprimere("\n--- Probans catenas nidificatas ---\n");
@@ -1026,6 +1066,7 @@ s32 principale (vacuum)
             parsura->commissio, oraculum), I);
     }
 
+
     /* ========================================================
      * PROBARE (sanatio catenarum 2026-07-10): conversio cum
      * operando parenthesato TYPUM ferente - "(u32)(sizeof(catena))"
@@ -1036,6 +1077,7 @@ s32 principale (vacuum)
      * expressionis); fluxus victoris solius catenam solvit.
      * Forma corporis M2c: friatio.c:133, url.c:209 (19 suites)
      * ======================================================== */
+
     {
         constans character* fons_v =
             "typedef unsigned int u32;\n"
@@ -1048,8 +1090,8 @@ s32 principale (vacuum)
             "    return a + b;\n"
             "}\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-        SilvaParsura* parsura = silva_c89_parsare(piscina,
-            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+         SilvaParsura* parsura = silva_c89_parsare(piscina,
+             "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
         SilvaSemantica* sem;
 
         imprimere("\n--- Probans conversionem parenthesatam"
@@ -1072,12 +1114,14 @@ s32 principale (vacuum)
             parsura->commissio, oraculum), ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE (M0a clausura): typedef scopi CORPORIS (decisiones
      * 13) - oraculum praecommissionis eum non registrat (retentio
      * ad commissionem), semantica scopis eum NOVIT -> clausura
      * DECIDIT (promissum consilii §II confirmatum numero)
      * ======================================================== */
+
     {
         constans character* fons_v =
             "void f(void)\n"
@@ -1087,8 +1131,8 @@ s32 principale (vacuum)
             "    (T)(x);\n"
             "}\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-        SilvaParsura* parsura = silva_c89_parsare(piscina,
-            "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
+         SilvaParsura* parsura = silva_c89_parsare(piscina,
+             "probatio.c", fons_v, (i32)strlen(fons_v), oraculum);
         SilvaSemantica* sem;
 
         imprimere("\n--- Probans typedef corporis (dec. 13) ---\n");
@@ -1107,9 +1151,11 @@ s32 principale (vacuum)
             parsura->commissio, oraculum), ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk A): typatio litteralium + initiatores
      * ======================================================== */
+
     {
         constans character* fons_t =
             "int a = 5;\n"
@@ -1122,9 +1168,9 @@ s32 principale (vacuum)
             "int ch = 'a';\n"
             "char s[] = \"ab\" \"cd\";\n"
             "char e2[] = \"a\\x41\\102z\";\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_t);
+          SilvaParsura* parsura = _parsare(piscina, fons_t);
         SilvaSemantica* sem;
-        TypusC89* char_t;
+              TypusC89* char_t;
 
         imprimere("\n--- Probans typationem litteralium (M0b A) ---\n");
         CREDO_NON_NIHIL (parsura);
@@ -1175,10 +1221,12 @@ s32 principale (vacuum)
         CREDO_VERUM (silva_c89_typationes_numerus(sem) >= X);
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk A): identificatores + unarium +
      * postcrementum + conditio scalaris (lapsus)
      * ======================================================== */
+
     {
         constans character* fons_u =
             "int g;\n"
@@ -1199,10 +1247,10 @@ s32 principale (vacuum)
             "    while (buf) { }\n"
             "    return g;\n"
             "}\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_u);
-        SilvaSemantica* sem;
-        TypusC89* int_t;
-        TypusC89* char_t;
+               SilvaParsura* parsura = _parsare(piscina, fons_u);
+             SilvaSemantica* sem;
+                   TypusC89* int_t;
+                   TypusC89* char_t;
         constans SilvaNodus* elem;
 
         imprimere("\n--- Probans typationem primariorum (M0b A) ---\n");
@@ -1212,8 +1260,8 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (sem);
         CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem),
             ZEPHYRUM);
-        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
-        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+        int_t   = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t  = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 
         /* g -> int */
         CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
@@ -1278,10 +1326,12 @@ s32 principale (vacuum)
         CREDO_VERUM (silva_c89_typationes_numerus(sem) >= XII);
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk A): venenum ignoti + fuga \x in
      * aestimatore (exparcatum)
      * ======================================================== */
+
     {
         constans character* fons_i =
             "enum E2 { LITTERA_A = '\\x41' };\n"
@@ -1289,9 +1339,9 @@ s32 principale (vacuum)
             "{\n"
             "    return incognitus;\n"
             "}\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_i);
-        SilvaSemantica* sem;
-        SemanticaSymbolum* symbolum;
+               SilvaParsura* parsura = _parsare(piscina, fons_i);
+             SilvaSemantica* sem;
+          SemanticaSymbolum* symbolum;
         constans SilvaNodus* elem;
 
         imprimere("\n--- Probans venenum + fugam \\x (M0b A) ---\n");
@@ -1318,9 +1368,11 @@ s32 principale (vacuum)
         CREDO_VERUM (silva_c89_diagnostica_numerus(sem) >= I);
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk B): UAC + operatores + conversiones
      * ======================================================== */
+
     {
         constans character* fons_b =
             "int i; long l; unsigned int ui; unsigned long ul;\n"
@@ -1344,11 +1396,11 @@ s32 principale (vacuum)
             "    ch += 1;\n"
             "    return i;\n"
             "}\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_b);
-        SilvaSemantica* sem;
-        TypusC89* int_t;
-        TypusC89* long_t;
-        TypusC89* char_t;
+               SilvaParsura* parsura = _parsare(piscina, fons_b);
+             SilvaSemantica* sem;
+                   TypusC89* int_t;
+                   TypusC89* long_t;
+                   TypusC89* char_t;
         constans SilvaNodus* init;
         constans SilvaNodus* elem;
 
@@ -1377,9 +1429,9 @@ s32 principale (vacuum)
                     (s32)EXAMEN_CODEX_CONVERSIO_SIGNI);
             }
         }
-        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
-        long_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS);
-        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+        int_t   = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        long_t  = silva_c89_typus_primitivum(sem, PRIMITIVUM_LONGUS);
+        char_t  = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 
         /* i + l -> long; i conversus long */
         init = _initiator_declarationis(_elementum_corporis(parsura,
@@ -1514,10 +1566,12 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk C): vocatio + accessus + subscriptio +
      * magnitudo-expressionis (exparcata) + est_implicitum
      * ======================================================== */
+
     {
         constans character* fons_c =
             "struct Punctum { int x; char c; };\n"
@@ -1541,11 +1595,11 @@ s32 principale (vacuum)
             "    int malum = ig->x;\n"
             "    return v1;\n"
             "}\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_c);
-        SilvaSemantica* sem;
-        TypusC89* int_t;
-        TypusC89* char_t;
-        SemanticaSymbolum* symbolum;
+               SilvaParsura* parsura = _parsare(piscina, fons_c);
+             SilvaSemantica* sem;
+                   TypusC89* int_t;
+                   TypusC89* char_t;
+          SemanticaSymbolum* symbolum;
         constans SilvaNodus* init;
 
         imprimere("\n--- Probans postfixa + implicitum (M0b C) ---\n");
@@ -1557,8 +1611,8 @@ s32 principale (vacuum)
          * ignotus_vocatus (materializatio chunk C, SUSPECTUM) -
          * praeter inutilia scaffolding */
         CREDO_AEQUALIS_I32 (_ordines_praeter_inutilia(sem), II);
-        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
-        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+        int_t   = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t  = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 
         /* sizeof(arr) in aestimatore: UNDECAYED = 16 (exparcatum) */
         symbolum = silva_c89_symbolum_invenire(sem, _ch("SZ"));
@@ -1642,9 +1696,11 @@ s32 principale (vacuum)
                 VI, X))), sem->typus_erroris);
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk C): congeries - typus deorsum + elisio
      * ======================================================== */
+
     {
         constans character* fons_g =
             "int m2[2][2] = {{1,2},{3,4}};\n"
@@ -1653,10 +1709,10 @@ s32 principale (vacuum)
             "int me[2] = {1, 2L};\n"
             "char cs[2][4] = {\"ab\", \"cd\"};\n"
             "int e2[2][2] = {1, 2, 3, 4};\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_g);
-        SilvaSemantica* sem;
-        TypusC89* int_t;
-        TypusC89* char_t;
+               SilvaParsura* parsura = _parsare(piscina, fons_g);
+             SilvaSemantica* sem;
+                   TypusC89* int_t;
+                   TypusC89* char_t;
         constans SilvaNodus* init;
 
         imprimere("\n--- Probans congeriem (M0b C) ---\n");
@@ -1664,8 +1720,8 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
         sem = silva_c89_semantica_analysare(piscina, parsura);
         CREDO_NON_NIHIL (sem);
-        int_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
-        char_t = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
+        int_t   = silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER);
+        char_t  = silva_c89_typus_primitivum(sem, PRIMITIVUM_CHARACTER);
 
         /* elisio: QUATTUOR elementa scalaria ubi int[2] exspectatur
          * (mensura corporis - parca nominata) */
@@ -1677,7 +1733,7 @@ s32 principale (vacuum)
             silva_c89_typus_acies(sem,
                 silva_c89_typus_acies(sem, int_t, II), II));
         {
-            SilvaValor elementa = silva_c89_congeries_elementa(init);
+            SilvaValor  elementa = silva_c89_congeries_elementa(init);
             SilvaValor* e0 = silva_valor_lista_obtinere(elementa, 0);
 
             CREDO_VERUM (e0 != NIHIL
@@ -1719,11 +1775,13 @@ s32 principale (vacuum)
             silva_c89_typus_acies(sem, int_t, II));
     }
 
+
     /* ========================================================
      * PROBARE (M0b Chunk D): FIXUM VERSIONIS - typatio relativa
      * canonicae (DECISUS 2): sem1 ante clausuram venenum videt,
      * sem2 post versionem typum verum (auditus M0b, inventum 2)
      * ======================================================== */
+
     {
         constans character* fons_v2 =
             "void f(void)\n"
@@ -1733,10 +1791,10 @@ s32 principale (vacuum)
             "    (T)(x);\n"
             "}\n";
         SilvaOraculum* oraculum = silva_oraculum_creare(piscina);
-        SilvaParsura* parsura = silva_c89_parsare(piscina,
-            "probatio.c", fons_v2, (i32)strlen(fons_v2), oraculum);
-        SilvaSemantica* sem1;
-        SilvaSemantica* sem2;
+         SilvaParsura* parsura = silva_c89_parsare(piscina,
+             "probatio.c", fons_v2, (i32)strlen(fons_v2), oraculum);
+             SilvaSemantica* sem1;
+             SilvaSemantica* sem2;
         constans SilvaNodus* expressio = NIHIL;
 
         imprimere("\n--- Probans fixum versionis (M0b D) ---\n");
@@ -1781,22 +1839,24 @@ s32 principale (vacuum)
             silva_c89_typus_primitivum(sem2, PRIMITIVUM_INTEGER));
     }
 
+
     /* ========================================================
      * PROBARE (M1a Chunk A): exporta demissionis - nexus
      * symbolorum (sedes usus -> symbolum, etiam implicitus) +
      * octeti chordae decodati (fugae, fragmenta, L-parca)
      * ======================================================== */
+
     {
         constans character* fons_n =
             "int quadrare(int x) { int y = x + 1; return y; }\n"
             "int f(void) { int r = g(); return r; }\n"
             "char* s = \"a\\x41\\0b\" \"cd\";\n"
             "char* w = \"a\\qb\";\n";
-        SilvaParsura* parsura = _parsare(piscina, fons_n);
-        SilvaSemantica* sem;
-        constans SilvaNodus* init;
+                      SilvaParsura* parsura = _parsare(piscina, fons_n);
+                    SilvaSemantica* sem;
+               constans SilvaNodus* init;
         constans SemanticaSymbolum* usus;
-        chorda octeti;
+                            chorda  octeti;
 
         imprimere("\n--- Probans exporta demissionis (M1a A) ---\n");
         CREDO_NON_NIHIL (parsura);

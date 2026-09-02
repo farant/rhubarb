@@ -27,71 +27,71 @@
 
 nomen structura {
     chorda   textus;
-    Xar*     lexemata;     /* SilvaToken* */
-    Xar*     unitates;     /* SilvaUnitas */
-    i32*     initia;       /* byte initium unitatis k */
-    i32*     fines;        /* byte finis (exclusivum) */
+       Xar*  lexemata;     /* SilvaToken* */
+       Xar*  unitates;     /* SilvaUnitas */
+       i32*  initia;       /* byte initium unitatis k */
+       i32*  fines;        /* byte finis (exclusivum) */
     vacuum** identitates;  /* sigilla internata (chorda*) - octeti
                             * crudi spatii (IDEM/MOTA) */
     vacuum** identitates_normatae; /* sigilla serierum lexematum
                             * (genus + valor, spatiis exemptis) -
                             * clavis parium sub reformatione
                             * spatiali (chorda*) */
-    i32      numerus;
+    i32 numerus;
 } SilvaDifferreLatus;
 
 /* par status - a_index/b_index: -1 = latus vacat */
 nomen structura {
     constans character* status;   /* MOTA|MUTATA|ADDITA|REMOTA */
-    s32                 a_index;
-    s32                 b_index;
+                   s32  a_index;
+                   s32  b_index;
 } SilvaDifferrePar;
 
 /* textus -> latus lexatum cum partitione unitatum; textus datum
  * NIHIL = latus vacuum honestum */
 b32
 silva_differre_latus_ex_textu (
-    Piscina*             piscina,
+                Piscina* piscina,
     InternamentumChorda* intern,
-    chorda               textus,
-    constans character*  titulus,
-    SilvaDifferreLatus*  latus);
+                 chorda  textus,
+     constans character* titulus,
+     SilvaDifferreLatus* latus);
 
 /* spatium byte unitatis k (alias in textum lateris) */
 chorda
 silva_differre_spatium (
     constans SilvaDifferreLatus* latus,
-    i32                          k);
+                            i32  k);
 
 /* differentia unitatum -> Xar de SilvaDifferrePar (MOTA sigillo,
  * MUTATA titulo, prima non sumpta vincit); *immotae_exitus
  * accumulat; NIHIL = defectus */
 Xar*
 silva_differre_paria (
-    Piscina*                     piscina,
+                        Piscina* piscina,
     constans SilvaDifferreLatus* a,
     constans SilvaDifferreLatus* b,
-    i32*                         immotae_exitus);
+                            i32* immotae_exitus);
 
 /* emissio parium: -machina TSV aut lectio humana; via_machina non
  * NIHIL = columna viae praefixa; corpora = textus unificatus sub
  * MUTATA; additae/deletae accumulant */
 vacuum
 silva_differre_paria_emittere (
-    Piscina*                     piscina,
+                        Piscina* piscina,
     constans SilvaDifferreLatus* a,
     constans SilvaDifferreLatus* b,
-    Xar*                         paria,
-    b32                          machina,
-    constans character*          via_machina,
-    b32                          corpora,
-    i32*                         additae_totae,
-    i32*                         deletae_totae);
+                            Xar* paria,
+                            b32  machina,
+             constans character* via_machina,
+                            b32  corpora,
+                            i32* additae_totae,
+                            i32* deletae_totae);
 
 /* symbolum unum e textu: spatia concatenata unitatum OMNIUM
  * titulo congruentium (prototypum + definitio una identitate) */
 nomen structura {
-    b32    inventa;
+       b32 inventa;
     chorda textus;        /* spatia concatenata (piscina data) */
     chorda sigillum_hex;  /* identitas contenti (64 hex) */
 } SilvaDifferreSymbolum;
@@ -102,9 +102,9 @@ nomen structura {
  * (inventa FALSUM, VERUM redditur). FALSUM = defectus verus. */
 b32
 silva_differre_symbolum_ex_textu (
-    Piscina*               piscina,
-    chorda                 textus,
-    constans character*    titulus,
+                  Piscina* piscina,
+                   chorda  textus,
+       constans character* titulus,
     SilvaDifferreSymbolum* exitus);
 
 /* classificatio duorum textuum planorum (sine unitatibus):
@@ -112,26 +112,27 @@ silva_differre_symbolum_ex_textu (
 constans character*
 silva_differre_classificare_textus (
     Piscina* piscina,
-    chorda   a,
-    chorda   b);
+     chorda  a,
+     chorda  b);
 
 /* summa linearum duorum textuum (differentia_linearum involuta;
  * defectus = summa nulla) */
 DifferentiaSumma
 silva_differre_summa_textuum (
     Piscina* piscina,
-    chorda   vetus,
-    chorda   novum);
+     chorda  vetus,
+     chorda  novum);
 
 /* titulum imprimere ("(sine titulo)" si vacuus) */
 vacuum
-silva_differre_titulum_imprimere (chorda titulus);
+silva_differre_titulum_imprimere (
+    chorda titulus);
 
 /* praefixum + titulus ut cstr (e.g. "a/functio_x") */
 constans character*
 silva_differre_titulum_cstr (
-    Piscina*            piscina,
+               Piscina* piscina,
     constans character* praefixum,
-    chorda              titulus);
+                chorda  titulus);
 
 #endif /* SILVA_DIFFERRE_H */

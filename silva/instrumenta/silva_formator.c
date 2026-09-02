@@ -26,6 +26,7 @@
 #define VEXILLUM_RECTUM   50
 #define LONGITUDO_RECTA   72
 
+
 /* ==================================================
  * adiutores
  * ================================================== */
@@ -53,12 +54,12 @@ _addere (
     d = (FormatorDivergentia*)xar_addere(divergentiae);
     si (!d) redde;
 
-    d->regula      = regula;
-    d->nuntius     = nuntius;
-    d->linea       = linea;
-    d->columna     = columna;
-    d->inventum    = inventum;
-    d->exspectatum = exspectatum;
+    d->regula       = regula;
+    d->nuntius      = nuntius;
+    d->linea        = linea;
+    d->columna      = columna;
+    d->inventum     = inventum;
+    d->exspectatum  = exspectatum;
 
     d->numerus_emendationum = ZEPHYRUM;
 }
@@ -155,22 +156,22 @@ _textus_emendationis (
         i32  novae,
         i32  spatia)
 {
-    chorda c;
-       i8* datum;
-       i32 n;
-       i32 i;
+    chorda  c;
+        i8* datum;
+       i32  n;
+       i32  i;
 
-    n         = novae + spatia;
-    c.mensura = ZEPHYRUM;
-    c.datum   = NIHIL;
+    n          = novae + spatia;
+    c.mensura  = ZEPHYRUM;
+    c.datum    = NIHIL;
     si (n <= (i32)ZEPHYRUM) redde c;
 
     datum = (i8*)piscina_allocare(piscina, (memoriae_index)n);
     si (!datum) redde c;
     per (i = ZEPHYRUM; i < novae; i += I) datum[i] = '\n';
     per (i = novae; i < n; i += I) datum[i] = ' ';
-    c.datum   = datum;
-    c.mensura = n;
+    c.datum    = datum;
+    c.mensura  = n;
     redde c;
 }
 
@@ -180,7 +181,7 @@ interior b32
 _clavis_ante_parenthesim (
     SilvaToken* lexema)
 {
-    si (lexema->genus == SILVA_LEX_IF
+    si (   lexema->genus == SILVA_LEX_IF
         || lexema->genus == SILVA_LEX_WHILE
         || lexema->genus == SILVA_LEX_FOR
         || lexema->genus == SILVA_LEX_SWITCH)
@@ -195,6 +196,7 @@ _clavis_ante_parenthesim (
         || chorda_aequalis_literis(lexema->valor, "commutatio");
 }
 
+
 /* ==================================================
  * R14: vexilla (cursus '=' intra commentum)
  * ================================================== */
@@ -204,25 +206,25 @@ _vexilla_censere (
            Xar* divergentiae,
     SilvaToken* commentum)
 {
-    constans i8* datum;
+     constans i8* datum;
              i32  n;
              i32  i;
              i32  lineae_intra;
              i32  initium_lineae;
 
-    datum          = commentum->valor.datum;
-    n              = commentum->valor.mensura;
-    i              = ZEPHYRUM;
-    lineae_intra   = ZEPHYRUM;
-    initium_lineae = ZEPHYRUM;
+    datum           = commentum->valor.datum;
+    n               = commentum->valor.mensura;
+    i               = ZEPHYRUM;
+    lineae_intra    = ZEPHYRUM;
+    initium_lineae  = ZEPHYRUM;
 
     dum (i < n)
     {
         si (datum[i] == '\n')
         {
-            lineae_intra += I;
-            i += I;
-            initium_lineae = i;
+            lineae_intra    += I;
+            i               += I;
+            initium_lineae  = i;
             perge;
         }
         si (datum[i] == '=')
@@ -234,7 +236,7 @@ _vexilla_censere (
             dum (i < n && datum[i] == '=') i += I;
             longitudo = i - initium_cursus;
 
-            si (longitudo >= VEXILLUM_MINIMUS
+            si (   longitudo >= VEXILLUM_MINIMUS
                 && longitudo != VEXILLUM_RECTUM)
             {
                 i32 columna;
@@ -344,6 +346,7 @@ _longitudinem_censere (
     }
 }
 
+
 /* ==================================================
  * R12 (pars plagulae): linea nova finalis unica
  * ================================================== */
@@ -362,14 +365,14 @@ _finem_censere (
 
     si (mensura == (i32)ZEPHYRUM) redde;
 
-    lineae          = I;
-    initium_ultimae = ZEPHYRUM;
+    lineae           = I;
+    initium_ultimae  = ZEPHYRUM;
     per (i = ZEPHYRUM; i < mensura; i += I)
     {
         si (fons[i] == '\n')
         {
-            lineae += I;
-            initium_ultimae = i + I;
+            lineae           += I;
+            initium_ultimae  = i + I;
         }
     }
 
@@ -386,10 +389,10 @@ _finem_censere (
         redde;
     }
 
-    novae_caudae = ZEPHYRUM;
-    i = mensura;
-    dum (i > (i32)ZEPHYRUM
-        && (fons[i - I] == '\n' || fons[i - I] == '\r'))
+    novae_caudae  = ZEPHYRUM;
+    i             = mensura;
+    dum (   i > (i32)ZEPHYRUM
+         && (fons[i - I] == '\n' || fons[i - I] == '\r'))
     {
         si (fons[i - I] == '\n') novae_caudae += I;
         i -= I;
@@ -405,27 +408,29 @@ _finem_censere (
     }
 }
 
+
 /* ==================================================
  * R13 intervalla (flumine): II vacuae ante vexillum,
  * I post, cumulus III+ vacuarum ubique nimius
  * ================================================== */
 
 interior b32
-_vexillum_continet (SilvaToken* lexema)
+_vexillum_continet (
+    SilvaToken* lexema)
 {
-    constans i8* datum;
+     constans i8* datum;
              i32  n;
              i32  i;
              i32  cursus;
 
-    si (lexema->genus != SILVA_LEX_COMMENTUM_CLAUSUM
+    si (   lexema->genus != SILVA_LEX_COMMENTUM_CLAUSUM
         && lexema->genus != SILVA_LEX_COMMENTUM_LINEA)
     {
         redde FALSUM;
     }
-    datum  = lexema->valor.datum;
-    n      = lexema->valor.mensura;
-    cursus = ZEPHYRUM;
+    datum   = lexema->valor.datum;
+    n       = lexema->valor.mensura;
+    cursus  = ZEPHYRUM;
     per (i = ZEPHYRUM; i < n; i += I)
     {
         si (datum[i] == '=')
@@ -455,14 +460,14 @@ _regio_vexillum_habet (
     i32 cursus;
 
     si (linea_b < linea_a) redde FALSUM;
-    linea  = I;
-    cursus = ZEPHYRUM;
+    linea   = I;
+    cursus  = ZEPHYRUM;
     per (i = ZEPHYRUM; i < mensura; i += I)
     {
         si (fons[i] == '\n')
         {
-            linea += I;
-            cursus = ZEPHYRUM;
+            linea   += I;
+            cursus  = ZEPHYRUM;
             si (linea > linea_b) redde FALSUM;
             perge;
         }
@@ -494,9 +499,9 @@ _novas_delere (
            i32  visae;
            i32  j;
 
-    nl_prima_delenda = NIHIL;
-    nl_ultima        = NIHIL;
-    visae            = ZEPHYRUM;
+    nl_prima_delenda  = NIHIL;
+    nl_ultima         = NIHIL;
+    visae             = ZEPHYRUM;
     per (j = nl_primus; j < finis; j += I)
     {
         SilvaToken* t;
@@ -528,10 +533,10 @@ _intervalla_censere (
            i32  nl_cursus;
            i32  nl_primus;
 
-    prior     = NIHIL;
-    numerus   = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
-    nl_cursus = ZEPHYRUM;
-    nl_primus = ZEPHYRUM;
+    prior      = NIHIL;
+    numerus    = cruda ? xar_numerus(cruda) : (i32)ZEPHYRUM;
+    nl_cursus  = ZEPHYRUM;
+    nl_primus  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
@@ -545,7 +550,7 @@ _intervalla_censere (
             nl_cursus += I;
             perge;
         }
-        si (lexema->genus == SILVA_LEX_SPATIA
+        si (   lexema->genus == SILVA_LEX_SPATIA
             || lexema->genus == SILVA_LEX_TABULAE
             || lexema->genus == SILVA_LEX_CONTINUATIO)
         {
@@ -562,7 +567,7 @@ _intervalla_censere (
             _novas_delere(piscina, divergentiae, cruda,
                 nl_primus, i, III);
         }
-        si (_vexillum_continet(lexema) && prior != NIHIL
+        si (   _vexillum_continet(lexema) && prior != NIHIL
             && vacuae < (i32)III && vacuae != (i32)II)
         {
             _addere(divergentiae, "intervalla",
@@ -579,7 +584,7 @@ _intervalla_censere (
                         ZEPHYRUM));
             }
         }
-        si (prior != NIHIL && _vexillum_continet(prior)
+        si (   prior         != NIHIL && _vexillum_continet(prior)
             && lexema->genus != SILVA_LEX_EOF
             && !_vexillum_continet(lexema)
             && vacuae < (i32)III && vacuae != (i32)I)
@@ -608,10 +613,11 @@ _intervalla_censere (
                     nl_primus, i, II);
             }
         }
-        prior = lexema;
-        nl_cursus = ZEPHYRUM;
+        prior      = lexema;
+        nl_cursus  = ZEPHYRUM;
     }
 }
+
 
 /* ==================================================
  * R15 ordo-inclusionum (flumine): postulata_posix.h prima;
@@ -621,13 +627,13 @@ _intervalla_censere (
 interior b32
 _continet_literas (
                  chorda  textus,
-    constans character* quaesitum)
+     constans character* quaesitum)
 {
     i32 mensura_quaesiti;
     i32 i;
 
     mensura_quaesiti = (i32)strlen(quaesitum);
-    si (mensura_quaesiti == (i32)ZEPHYRUM
+    si (   mensura_quaesiti == (i32)ZEPHYRUM
         || textus.mensura < mensura_quaesiti)
     {
         redde FALSUM;
@@ -655,7 +661,7 @@ _proximum_verum (
         SilvaLexemaGenus g;
 
         g = _lexema(cruda, index)->genus;
-        si (g != SILVA_LEX_SPATIA && g != SILVA_LEX_TABULAE
+        si (   g != SILVA_LEX_SPATIA && g != SILVA_LEX_TABULAE
             && g != SILVA_LEX_NOVA_LINEA
             && g != SILVA_LEX_CONTINUATIO
             && g != SILVA_LEX_COMMENTUM_CLAUSUM
@@ -680,8 +686,8 @@ _inclusiones_ordinem_censere (
 
     numerus            = cruda ? xar_numerus(cruda)
         : (i32)ZEPHYRUM;
-    vidi_systemicam    = FALSUM;
-    numerus_inclusionum = ZEPHYRUM;
+    vidi_systemicam      = FALSUM;
+    numerus_inclusionum  = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
@@ -690,14 +696,14 @@ _inclusiones_ordinem_censere (
                i32  k;
 
         lexema = _lexema(cruda, i);
-        si (lexema->genus != SILVA_LEX_CANCELLUM
+        si (   lexema->genus != SILVA_LEX_CANCELLUM
             || !lexema->initium_lineae)
         {
             perge;
         }
         j = _proximum_verum(cruda, numerus, i + I);
         si (j >= numerus) perge;
-        si (_lexema(cruda, j)->genus != SILVA_LEX_IDENTIFICATOR
+        si (   _lexema(cruda, j)->genus != SILVA_LEX_IDENTIFICATOR
             || !chorda_aequalis_literis(
                 _lexema(cruda, j)->valor, "include"))
         {
@@ -715,7 +721,7 @@ _inclusiones_ordinem_censere (
                     lexema->linea, lexema->columna, ZEPHYRUM,
                     ZEPHYRUM);
             }
-            si (_continet_literas(_lexema(cruda, k)->valor,
+            si (   _continet_literas(_lexema(cruda, k)->valor,
                 "postulata_posix")
                 && numerus_inclusionum != (i32)ZEPHYRUM)
             {
@@ -727,13 +733,14 @@ _inclusiones_ordinem_censere (
             numerus_inclusionum += I;
         }
         alioquin si (_lexema(cruda, k)->genus
-            == SILVA_LEX_MINOR)
+                     == SILVA_LEX_MINOR)
         {
-            vidi_systemicam = VERUM;
-            numerus_inclusionum += I;
+            vidi_systemicam      = VERUM;
+            numerus_inclusionum  += I;
         }
     }
 }
+
 
 /* ==================================================
  * pars arboris - regulae structurales (tranche II.a:
@@ -908,16 +915,18 @@ _spatium_continuationis_addere (
 }
 
 interior SilvaNodus*
-_valor_nodus (SilvaValor valor)
+_valor_nodus (
+    SilvaValor valor)
 {
     redde valor.genus == SILVA_VALOR_NODUS
         ? valor.datum.nodus : NIHIL;
 }
 
 interior SilvaToken*
-_valor_radix (SilvaValor valor)
+_valor_radix (
+    SilvaValor valor)
 {
-    si (valor.genus != SILVA_VALOR_TOKEN
+    si (   valor.genus       != SILVA_VALOR_TOKEN
         || valor.datum.token == NIHIL)
     {
         redde NIHIL;
@@ -930,9 +939,10 @@ _valor_radix (SilvaValor valor)
  * geometria eorum absona est (venatio flatura: -21 'pro' 0 in
  * FLATURA_SCRIBERE_BITS(...)) et iudicari nequit. */
 interior SilvaToken*
-_token_fons (SilvaValor valor)
+_token_fons (
+    SilvaValor valor)
 {
-    si (valor.genus != SILVA_VALOR_TOKEN
+    si (   valor.genus       != SILVA_VALOR_TOKEN
         || valor.datum.token == NIHIL
         || !silva_token_est_fons(valor.datum.token))
     {
@@ -962,7 +972,7 @@ _extensio (
 interior b32
 _principalis (
     FormatorAmbitus* ambitus,
-        SilvaToken*  lexema)
+         SilvaToken* lexema)
 {
     redde lexema != NIHIL
         && lexema->fons_index == ambitus->fons_princeps;
@@ -970,7 +980,8 @@ _principalis (
 
 /* catenam declaratoris descendere ad FUNCTIONIS extimam */
 interior SilvaNodus*
-_declarator_functionis (SilvaNodus* declarator)
+_declarator_functionis (
+    SilvaNodus* declarator)
 {
     dum (declarator)
     {
@@ -1001,7 +1012,8 @@ _declarator_functionis (SilvaNodus* declarator)
 
 /* titulum declaratoris invenire (radix originis reddita) */
 interior SilvaToken*
-_titulus_declaratoris (SilvaNodus* declarator)
+_titulus_declaratoris (
+    SilvaNodus* declarator)
 {
     dum (declarator)
     {
@@ -1039,7 +1051,8 @@ _titulus_declaratoris (SilvaNodus* declarator)
 
 /* parametrum '(vacuum)' - exceptio R8 (in linea manet) */
 interior b32
-_parametrum_vacuum (SilvaNodus* parametrum)
+_parametrum_vacuum (
+    SilvaNodus* parametrum)
 {
     SilvaValor  specificatores;
     SilvaValor* primus;
@@ -1062,7 +1075,7 @@ _parametrum_vacuum (SilvaNodus* parametrum)
     primus = silva_valor_lista_obtinere(specificatores,
         ZEPHYRUM);
     nodus_primus = primus ? _valor_nodus(*primus) : NIHIL;
-    si (!nodus_primus || nodus_primus->genus
+    si (   !nodus_primus || nodus_primus->genus
         != SILVA_C89_GENUS_TYPUS_PRIMITIVUS)
     {
         redde FALSUM;
@@ -1164,7 +1177,7 @@ interior vacuum
 _ramum_censere (
     FormatorAmbitus* ambitus,
          SilvaValor  ramus,
-        SilvaToken*  ancora)
+         SilvaToken* ancora)
 {
     SilvaNodus* nodus;
            i32  la;
@@ -1203,12 +1216,12 @@ _functionis_caput_censere (
     FormatorAmbitus* ambitus,
          SilvaNodus* functionis)
 {
-    SilvaToken* titulus;
-    SilvaToken* apertum;
-     SilvaValor parametra;
-            i32 numerus;
-            i32 prior_linea;
-            i32 i;
+     SilvaToken* titulus;
+     SilvaToken* apertum;
+     SilvaValor  parametra;
+            i32  numerus;
+            i32  prior_linea;
+            i32  i;
 
     si (!functionis) redde;
 
@@ -1219,7 +1232,7 @@ _functionis_caput_censere (
     si (!_principalis(ambitus, titulus)) redde;
 
     /* R1: titulus in columna prima lineae suae */
-    si (titulus && (!titulus->initium_lineae
+    si (   titulus && (!titulus->initium_lineae
         || titulus->columna != (i32)I))
     {
         _addere(ambitus->divergentiae, "typus-in-linea-sua",
@@ -1277,7 +1290,7 @@ _functionis_caput_censere (
 
         elementum = silva_valor_lista_obtinere(parametra,
             ZEPHYRUM);
-        si (elementum && _parametrum_vacuum(
+        si (   elementum && _parametrum_vacuum(
             _valor_nodus(*elementum)))
         {
             redde;
@@ -1318,7 +1331,8 @@ _functionis_caput_censere (
  * internum TITULUS est (monstratores functionum - internum
  * PARENTHESIS - excluduntur; R7 eos exemptos vult) */
 interior SilvaNodus*
-_prototypi_functionis (SilvaNodus* declaratio)
+_prototypi_functionis (
+    SilvaNodus* declaratio)
 {
     SilvaValor  declaratores;
     SilvaValor* d;
@@ -1326,7 +1340,7 @@ _prototypi_functionis (SilvaNodus* declaratio)
     SilvaNodus* functionis;
     SilvaNodus* internum;
 
-    si (!declaratio
+    si (   !declaratio
         || declaratio->genus != SILVA_C89_GENUS_DECLARATIO)
     {
         redde NIHIL;
@@ -1336,13 +1350,13 @@ _prototypi_functionis (SilvaNodus* declaratio)
     {
         redde NIHIL;
     }
-    d = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
-    declarator = d ? _valor_nodus(*d) : NIHIL;
-    functionis = _declarator_functionis(declarator);
+    d           = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
+    declarator  = d ? _valor_nodus(*d) : NIHIL;
+    functionis  = _declarator_functionis(declarator);
     si (!functionis) redde NIHIL;
     internum = _valor_nodus(
         silva_c89_declarator_functionis_internum(functionis));
-    si (!internum || internum->genus
+    si (   !internum || internum->genus
         != SILVA_C89_GENUS_DECLARATOR_TITULUS)
     {
         redde NIHIL;
@@ -1396,6 +1410,7 @@ _vocationem_censere (
     }
 }
 
+
 /* ==================================================
  * R7 columnae-binae: ordo declarationum duabus columnis
  * (typi dextre ordinati, tituli sinistre; hiatus =
@@ -1432,10 +1447,10 @@ _valoris_extensio (
 
         radix = _valor_radix(valor);
         si (!radix) redde FALSUM;
-        *linea_a   = radix->linea;
-        *columna_a = radix->columna;
-        *linea_b   = radix->linea;
-        *columna_b = radix->columna + radix->valor.mensura;
+        *linea_a    = radix->linea;
+        *columna_a  = radix->columna;
+        *linea_b    = radix->linea;
+        *columna_b  = radix->columna + radix->valor.mensura;
         redde VERUM;
     }
     si (valor.genus == SILVA_VALOR_NODUS)
@@ -1446,11 +1461,11 @@ _valoris_extensio (
     }
     si (valor.genus == SILVA_VALOR_LISTA)
     {
-        i32 numerus;
+               i32  numerus;
         SilvaValor* primus;
         SilvaValor* ultimus;
-        i32 lx;
-        i32 cx;
+               i32  lx;
+               i32  cx;
 
         numerus = silva_valor_lista_numerus(valor);
         si (numerus == (i32)ZEPHYRUM) redde FALSUM;
@@ -1479,9 +1494,9 @@ _declaratorem_metiri (
            i32*  stella_prima,
     SilvaToken** titulus)
 {
-    *stellae      = ZEPHYRUM;
-    *stella_prima = ZEPHYRUM;
-    *titulus      = NIHIL;
+    *stellae       = ZEPHYRUM;
+    *stella_prima  = ZEPHYRUM;
+    *titulus       = NIHIL;
 
     dum (declarator)
     {
@@ -1508,7 +1523,7 @@ _declaratorem_metiri (
                 si (stella)
                 {
                     *stellae += I;
-                    si (*stella_prima == (i32)ZEPHYRUM
+                    si (   *stella_prima == (i32)ZEPHYRUM
                         || stella->columna < *stella_prima)
                     {
                         *stella_prima = stella->columna;
@@ -1542,13 +1557,13 @@ interior b32
 _membrum_colligere (
     FormatorAmbitus* ambitus,
          SilvaValor  specificatores,
-        SilvaNodus*  declarator,
+         SilvaNodus* declarator,
           R7Membrum* exitus)
 {
-    i32 la;
-    i32 ca;
-    i32 lb;
-    i32 cb;
+           i32  la;
+           i32  ca;
+           i32  lb;
+           i32  cb;
     SilvaToken* titulus;
 
     si (!_valoris_extensio(ambitus, specificatores, &la, &ca,
@@ -1572,9 +1587,9 @@ _membrum_colligere (
             SilvaValor* e;
             SilvaNodus* n_s;
 
-            e = silva_valor_lista_obtinere(specificatores, s);
-            n_s = e ? _valor_nodus(*e) : NIHIL;
-            si (n_s && (n_s->genus == SILVA_C89_GENUS_STRUCTURA
+            e    = silva_valor_lista_obtinere(specificatores, s);
+            n_s  = e ? _valor_nodus(*e) : NIHIL;
+            si (   n_s && (n_s->genus == SILVA_C89_GENUS_STRUCTURA
                 || n_s->genus == SILVA_C89_GENUS_UNIO
                 || n_s->genus == SILVA_C89_GENUS_ENUMERATIO))
             {
@@ -1594,10 +1609,10 @@ _membrum_colligere (
      * columna titulorum se ipsam in aeternum fugat (venatio
      * flatura 1811: 245 -> 267 -> 289...) */
     si (titulus->columna < cb) redde FALSUM;
-    exitus->linea           = la;
-    exitus->ca              = ca;
-    exitus->cb              = cb;
-    exitus->titulus_columna = titulus->columna;
+    exitus->linea            = la;
+    exitus->ca               = ca;
+    exitus->cb               = cb;
+    exitus->titulus_columna  = titulus->columna;
     redde VERUM;
 }
 
@@ -1791,25 +1806,25 @@ _membra_censere (
           i32 numerus;
           i32 i;
 
-    plena       = ZEPHYRUM;
-    linea_prior = ZEPHYRUM;
-    numerus     = silva_valor_lista_numerus(membra_lista);
+    plena        = ZEPHYRUM;
+    linea_prior  = ZEPHYRUM;
+    numerus      = silva_valor_lista_numerus(membra_lista);
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        SilvaValor* elementum;
-        SilvaNodus* membrum;
-         SilvaValor declaratores;
-        SilvaNodus* declarator;
-          R7Membrum novum;
-                b32 sanum;
+         SilvaValor* elementum;
+         SilvaNodus* membrum;
+         SilvaValor  declaratores;
+         SilvaNodus* declarator;
+          R7Membrum  novum;
+                b32  sanum;
 
         elementum = silva_valor_lista_obtinere(membra_lista,
             i);
-        membrum = elementum ? _valor_nodus(*elementum) : NIHIL;
-        sanum = FALSUM;
+        membrum  = elementum ? _valor_nodus(*elementum) : NIHIL;
+        sanum    = FALSUM;
 
-        si (membrum
+        si (   membrum
             && membrum->genus == SILVA_C89_GENUS_MEMBRUM)
         {
             declaratores = silva_c89_membrum_declaratores(
@@ -1831,30 +1846,30 @@ _membra_censere (
         si (!sanum)
         {
             _ordinem_censere(ambitus, membra, plena);
-            plena = ZEPHYRUM;
-            linea_prior = ZEPHYRUM;
+            plena        = ZEPHYRUM;
+            linea_prior  = ZEPHYRUM;
             perge;
         }
         /* membrum alterum EADEM linea: R7 regula trans lineas
          * est - ordo finditur, membrum non participat */
-        si (linea_prior != (i32)ZEPHYRUM
+        si (   linea_prior != (i32)ZEPHYRUM
             && novum.linea == linea_prior)
         {
             _ordinem_censere(ambitus, membra, plena);
-            plena = ZEPHYRUM;
-            linea_prior = ZEPHYRUM;
+            plena        = ZEPHYRUM;
+            linea_prior  = ZEPHYRUM;
             perge;
         }
-        si ((linea_prior != (i32)ZEPHYRUM
+        si (   (linea_prior != (i32)ZEPHYRUM
                 && novum.linea > linea_prior + I)
             || plena >= (i32)R7_MEMBRA_MAXIMA)
         {
             _ordinem_censere(ambitus, membra, plena);
             plena = ZEPHYRUM;
         }
-        membra[plena] = novum;
-        plena += I;
-        linea_prior = novum.linea;
+        membra[plena]  = novum;
+        plena          += I;
+        linea_prior    = novum.linea;
     }
     _ordinem_censere(ambitus, membra, plena);
 }
@@ -1991,16 +2006,16 @@ _aeq_pascere (
     si (apta)
     {
         /* assignatio altera EADEM linea: non participat */
-        si (*aeq_linea_prior != (i32)ZEPHYRUM
-            && la == *aeq_linea_prior)
+        si (   *aeq_linea_prior != (i32)ZEPHYRUM
+            && la               == *aeq_linea_prior)
         {
             _aequationes_censere(ambitus, aeq_cb, aeq_op,
                 aeq_lineae, aeq_fines, *aeq_plena);
-            *aeq_plena       = ZEPHYRUM;
-            *aeq_linea_prior = ZEPHYRUM;
+            *aeq_plena        = ZEPHYRUM;
+            *aeq_linea_prior  = ZEPHYRUM;
             redde;
         }
-        si ((*aeq_linea_prior != (i32)ZEPHYRUM
+        si (   (*aeq_linea_prior != (i32)ZEPHYRUM
                 && la > *aeq_linea_prior + I)
             || *aeq_plena >= (i32)R7_MEMBRA_MAXIMA)
         {
@@ -2008,19 +2023,19 @@ _aeq_pascere (
                 aeq_lineae, aeq_fines, *aeq_plena);
             *aeq_plena = ZEPHYRUM;
         }
-        aeq_cb[*aeq_plena]     = cb;
-        aeq_op[*aeq_plena]     = op_columna;
-        aeq_lineae[*aeq_plena] = la;
-        aeq_fines[*aeq_plena]  = finis;
-        *aeq_plena += I;
-        *aeq_linea_prior = la;
+        aeq_cb[*aeq_plena]      = cb;
+        aeq_op[*aeq_plena]      = op_columna;
+        aeq_lineae[*aeq_plena]  = la;
+        aeq_fines[*aeq_plena]   = finis;
+        *aeq_plena              += I;
+        *aeq_linea_prior        = la;
     }
     alioquin
     {
         _aequationes_censere(ambitus, aeq_cb, aeq_op,
             aeq_lineae, aeq_fines, *aeq_plena);
-        *aeq_plena       = ZEPHYRUM;
-        *aeq_linea_prior = ZEPHYRUM;
+        *aeq_plena        = ZEPHYRUM;
+        *aeq_linea_prior  = ZEPHYRUM;
     }
 }
 
@@ -2031,8 +2046,8 @@ _aeq_pascere (
 interior b32
 _declarationem_aequatione_metiri (
     FormatorAmbitus* ambitus,
-        SilvaNodus*  nodus,
-        SilvaNodus*  declarator,
+         SilvaNodus* nodus,
+         SilvaNodus* declarator,
                 i32* cb,
                 i32* op_columna,
                 i32* la,
@@ -2048,7 +2063,7 @@ _declarationem_aequatione_metiri (
            i32  slb;
            i32  scb;
 
-    si (!declarator || declarator->genus
+    si (   !declarator || declarator->genus
         != SILVA_C89_GENUS_DECLARATOR_INITIATUS)
     {
         redde FALSUM;
@@ -2057,23 +2072,23 @@ _declarationem_aequatione_metiri (
         silva_c89_declarator_initiatus_tok_operator(
             declarator));
     si (!_principalis(ambitus, op_tok)) redde FALSUM;
-    si (!_valoris_extensio(ambitus,
+    si (   !_valoris_extensio(ambitus,
         silva_c89_declarator_initiatus_declarator(declarator),
         &xla, &xca, &xlb, &xcb)
         || xla != xlb || op_tok->linea != xla)
     {
         redde FALSUM;
     }
-    si (!_extensio(nodus, ambitus->fons_princeps, &sla, &sca,
+    si (   !_extensio(nodus, ambitus->fons_princeps, &sla, &sca,
         &slb, &scb)
         || sla != slb)
     {
         redde FALSUM;
     }
-    *cb         = xcb;
-    *op_columna = op_tok->columna;
-    *la         = xla;
-    *finis      = scb;
+    *cb          = xcb;
+    *op_columna  = op_tok->columna;
+    *la          = xla;
+    *finis       = scb;
     redde VERUM;
 }
 
@@ -2099,31 +2114,31 @@ _corpus_interius_censere (
             i32 aeq_plena;
             i32 aeq_linea_prior;
 
-    elementa = silva_c89_corpus_elementa(corpus);
-    numerus  = silva_valor_lista_numerus(elementa);
+    elementa  = silva_c89_corpus_elementa(corpus);
+    numerus   = silva_valor_lista_numerus(elementa);
 
-    plena              = ZEPHYRUM;
-    linea_prior        = ZEPHYRUM;
-    in_declarationibus = VERUM;
-    aeq_plena          = ZEPHYRUM;
-    aeq_linea_prior    = ZEPHYRUM;
+    plena               = ZEPHYRUM;
+    linea_prior         = ZEPHYRUM;
+    in_declarationibus  = VERUM;
+    aeq_plena           = ZEPHYRUM;
+    aeq_linea_prior     = ZEPHYRUM;
 
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
         SilvaValor* elementum;
         SilvaNodus* nodus;
 
-        elementum = silva_valor_lista_obtinere(elementa, i);
-        nodus = elementum ? _valor_nodus(*elementum) : NIHIL;
+        elementum  = silva_valor_lista_obtinere(elementa, i);
+        nodus      = elementum ? _valor_nodus(*elementum) : NIHIL;
 
         /* R7: cursus declarationum ducens */
         si (in_declarationibus)
         {
-            b32 sanum;
+                  b32 sanum;
             R7Membrum novum;
 
             sanum = FALSUM;
-            si (nodus
+            si (   nodus
                 && nodus->genus == SILVA_C89_GENUS_DECLARATIO)
             {
                 SilvaValor  declaratores;
@@ -2154,10 +2169,10 @@ _corpus_interius_censere (
                     i32 dla;
                     i32 finis;
 
-                    dcb    = ZEPHYRUM;
-                    op_col = ZEPHYRUM;
-                    dla    = ZEPHYRUM;
-                    finis  = ZEPHYRUM;
+                    dcb     = ZEPHYRUM;
+                    op_col  = ZEPHYRUM;
+                    dla     = ZEPHYRUM;
+                    finis   = ZEPHYRUM;
                     aeq_apta = _declarationem_aequatione_metiri(
                         ambitus, nodus, declarator, &dcb,
                         &op_col, &dla, &finis);
@@ -2171,34 +2186,34 @@ _corpus_interius_censere (
                 {
                     /* declaratio exempta - ordinem findit */
                     _ordinem_censere(ambitus, membra, plena);
-                    plena = ZEPHYRUM;
-                    linea_prior = ZEPHYRUM;
+                    plena        = ZEPHYRUM;
+                    linea_prior  = ZEPHYRUM;
                     perge;
                 }
-                si (linea_prior != (i32)ZEPHYRUM
+                si (   linea_prior != (i32)ZEPHYRUM
                     && novum.linea == linea_prior)
                 {
                     /* eadem linea - non participat */
                     _ordinem_censere(ambitus, membra, plena);
-                    plena = ZEPHYRUM;
-                    linea_prior = ZEPHYRUM;
+                    plena        = ZEPHYRUM;
+                    linea_prior  = ZEPHYRUM;
                     perge;
                 }
-                si ((linea_prior != (i32)ZEPHYRUM
+                si (   (linea_prior != (i32)ZEPHYRUM
                         && novum.linea > linea_prior + I)
                     || plena >= (i32)R7_MEMBRA_MAXIMA)
                 {
                     _ordinem_censere(ambitus, membra, plena);
                     plena = ZEPHYRUM;
                 }
-                membra[plena] = novum;
-                plena += I;
-                linea_prior = novum.linea;
+                membra[plena]  = novum;
+                plena          += I;
+                linea_prior    = novum.linea;
                 perge;
             }
             _ordinem_censere(ambitus, membra, plena);
-            plena = ZEPHYRUM;
-            in_declarationibus = FALSUM;
+            plena               = ZEPHYRUM;
+            in_declarationibus  = FALSUM;
         }
 
         /* R9: glomera assignationum simplicium */
@@ -2215,31 +2230,31 @@ _corpus_interius_censere (
                    i32  scb;
                    b32  apta;
 
-            apta = FALSUM;
-            assignatio = NIHIL;
-            operator_tok = NIHIL;
-            scb = ZEPHYRUM;
-            si (nodus && nodus->genus
+            apta          = FALSUM;
+            assignatio    = NIHIL;
+            operator_tok  = NIHIL;
+            scb           = ZEPHYRUM;
+            si (   nodus && nodus->genus
                 == SILVA_C89_GENUS_SENTENTIA_EXPRESSIONIS)
             {
                 assignatio = _valor_nodus(
                     silva_c89_sententia_expressionis_expressio(
                         nodus));
             }
-            si (assignatio && assignatio->genus
+            si (   assignatio && assignatio->genus
                 == SILVA_C89_GENUS_ASSIGNATIO)
             {
                 operator_tok = _token_fons(
                     silva_c89_assignatio_tok_operator(
                         assignatio));
-                si (operator_tok && _valoris_extensio(ambitus,
+                si (   operator_tok && _valoris_extensio(ambitus,
                     silva_c89_assignatio_sinister(assignatio),
                     &la, &ca, &lb, &cb)
-                    && la == lb
+                    && la                  == lb
                     && operator_tok->linea == la
                     && _extensio(nodus, ambitus->fons_princeps,
                         &sla, &sca, &slb, &scb)
-                    && sla == slb)
+                    && sla                 == slb)
                 {
                     apta = VERUM;
                 }
@@ -2266,12 +2281,12 @@ _parametra_ordinem_functionis (
     FormatorAmbitus* ambitus,
          SilvaNodus* functionis)
 {
-    SilvaToken* apertum;
-     SilvaValor parametra;
-      R7Membrum membra[R7_MEMBRA_MAXIMA];
-            i32 numerus;
-            i32 plena;
-            i32 i;
+     SilvaToken* apertum;
+     SilvaValor  parametra;
+      R7Membrum  membra[R7_MEMBRA_MAXIMA];
+            i32  numerus;
+            i32  plena;
+            i32  i;
 
     si (!functionis) redde;
     apertum = _valor_radix(
@@ -2280,7 +2295,7 @@ _parametra_ordinem_functionis (
     parametra = silva_c89_declarator_functionis_parametra(
         functionis);
     numerus = silva_valor_lista_numerus(parametra);
-    si (numerus == (i32)ZEPHYRUM
+    si (   numerus == (i32)ZEPHYRUM
         || numerus > (i32)R7_MEMBRA_MAXIMA)
     {
         redde;
@@ -2289,10 +2304,10 @@ _parametra_ordinem_functionis (
     plena = ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        SilvaValor* elementum;
-        SilvaNodus* parametrum;
-        SilvaNodus* declarator_parametri;
-         SilvaValor d;
+         SilvaValor* elementum;
+         SilvaNodus* parametrum;
+         SilvaNodus* declarator_parametri;
+         SilvaValor  d;
 
         elementum = silva_valor_lista_obtinere(parametra, i);
         parametrum = elementum ? _valor_nodus(*elementum)
@@ -2314,7 +2329,7 @@ _parametra_ordinem_functionis (
             redde;
         }
         /* parametra duo eadem linea: R8 primum findat */
-        si (plena != (i32)ZEPHYRUM
+        si (   plena               != (i32)ZEPHYRUM
             && membra[plena].linea == membra[plena - I].linea)
         {
             redde;
@@ -2323,13 +2338,14 @@ _parametra_ordinem_functionis (
     }
     /* forma uni-linearis (parametrum in linea parenthesis)
      * R8 pertinet - hic tacemus */
-    si (apertum && plena != (i32)ZEPHYRUM
+    si (   apertum && plena != (i32)ZEPHYRUM
         && membra[ZEPHYRUM].linea == apertum->linea)
     {
         redde;
     }
     _ordinem_censere(ambitus, membra, plena);
 }
+
 
 /* ==================================================
  * R17 catena-logica: catena &&/|| multi-linearis in
@@ -2343,14 +2359,16 @@ _parametra_ordinem_functionis (
 #define CATENA_MEMBRA_MAXIMA 64
 
 interior b32
-_operator_logicus (SilvaLexemaGenus genus)
+_operator_logicus (
+    SilvaLexemaGenus genus)
 {
     redde genus == SILVA_LEX_ET_ET
         || genus == SILVA_LEX_VEL_VEL;
 }
 
 interior b32
-_comparatio_bichar (SilvaLexemaGenus genus)
+_comparatio_bichar (
+    SilvaLexemaGenus genus)
 {
     redde genus == SILVA_LEX_AEQUALIS_AEQUALIS
         || genus == SILVA_LEX_NON_AEQUALIS
@@ -2370,7 +2388,7 @@ nomen structura {
  * aperiuntur (catenae nidificatae ancoram propriam habent) */
 interior vacuum
 _catenam_colligere (
-        SilvaNodus*  nodus,
+         SilvaNodus* nodus,
     CatenaCollectio* collectio)
 {
     si (!nodus) redde;
@@ -2399,8 +2417,8 @@ _catenam_colligere (
     si (collectio->numerus_ramorum
         < (i32)CATENA_MEMBRA_MAXIMA)
     {
-        collectio->rami[collectio->numerus_ramorum] = nodus;
-        collectio->numerus_ramorum += I;
+        collectio->rami[collectio->numerus_ramorum]  = nodus;
+        collectio->numerus_ramorum                   += I;
     }
 }
 
@@ -2686,6 +2704,7 @@ _definitionem_censere (
     _parametra_ordinem_functionis(ambitus, functionis);
 }
 
+
 /* ==================================================
  * R10 operatores: binarii spatiati, accessus/conversio/
  * unarii/postcrementum arti. ASSIGNATIO exclusa (R9).
@@ -2710,10 +2729,10 @@ _binarium_operatorem_censere (
         silva_c89_binarium_tok_operator(nodus));
     si (!_principalis(ambitus, operator_tok)) redde;
 
-    si (_valoris_extensio(ambitus,
+    si (   _valoris_extensio(ambitus,
         silva_c89_binarium_sinister(nodus), &sla, &sca, &slb,
         &scb)
-        && operator_tok->linea == slb
+        && operator_tok->linea   == slb
         && operator_tok->columna != scb + I
         && !(_comparatio_bichar(operator_tok->genus)
             && _catena_vindicata(ambitus, operator_tok->linea,
@@ -2729,7 +2748,7 @@ _binarium_operatorem_censere (
             _textus_emendationis(ambitus->piscina, ZEPHYRUM,
                 I));
     }
-    si (_valoris_extensio(ambitus,
+    si (   _valoris_extensio(ambitus,
         silva_c89_binarium_dexter(nodus), &dla, &dca, &dlb,
         &dcb)
         && dla == operator_tok->linea
@@ -2767,10 +2786,10 @@ _accessum_censere (
         silva_c89_accessus_tok_operator(nodus));
     si (!_principalis(ambitus, operator_tok)) redde;
 
-    si (_valoris_extensio(ambitus,
+    si (   _valoris_extensio(ambitus,
         silva_c89_accessus_basis(nodus), &bla, &bca, &blb,
         &bcb)
-        && operator_tok->linea == blb
+        && operator_tok->linea   == blb
         && operator_tok->columna != bcb)
     {
         _addere(ambitus->divergentiae, "operatores",
@@ -2785,7 +2804,7 @@ _accessum_censere (
     }
     titulus = _valor_radix(
         silva_c89_accessus_tok_titulus(nodus));
-    si (_principalis(ambitus, titulus)
+    si (   _principalis(ambitus, titulus)
         && titulus->linea == operator_tok->linea
         && titulus->columna != operator_tok->columna
             + operator_tok->valor.mensura)
@@ -2820,7 +2839,7 @@ _conversionem_censere (
     clausum = _token_fons(
         silva_c89_conversio_tok_clausum(nodus));
     si (!_principalis(ambitus, clausum)) redde;
-    si (_valoris_extensio(ambitus,
+    si (   _valoris_extensio(ambitus,
         silva_c89_conversio_internum(nodus), &ila, &ica, &ilb,
         &icb)
         && ila == clausum->linea
@@ -2852,7 +2871,7 @@ _unarium_censere (
     operator_tok = _token_fons(
         silva_c89_unarium_tok_operator(nodus));
     si (!_principalis(ambitus, operator_tok)) redde;
-    si (_valoris_extensio(ambitus,
+    si (   _valoris_extensio(ambitus,
         silva_c89_unarium_internum(nodus), &ila, &ica, &ilb,
         &icb)
         && ila == operator_tok->linea
@@ -2887,14 +2906,14 @@ _si_censere (
              SilvaNodus* nodus,
     constans SilvaNodus* caput)
 {
-    SilvaToken* clausum;
-    SilvaToken* verbum_alioquin;
-    SilvaNodus* consequens;
-    SilvaNodus* ramus_alioquin;
-     SilvaValor valor_alioquin;
+     SilvaToken* clausum;
+     SilvaToken* verbum_alioquin;
+     SilvaNodus* consequens;
+     SilvaNodus* ramus_alioquin;
+     SilvaValor  valor_alioquin;
 
-    clausum = _valor_radix(silva_c89_si_tok_clausum(nodus));
-    consequens = _valor_nodus(silva_c89_si_consequens(nodus));
+    clausum     = _valor_radix(silva_c89_si_tok_clausum(nodus));
+    consequens  = _valor_nodus(silva_c89_si_consequens(nodus));
 
     /* R17: catena logica in conditione (ANTE percursum -
      * vindicationes R10 praecedere debent) */
@@ -2918,7 +2937,7 @@ _si_censere (
         }
     }
 
-    si (consequens
+    si (   consequens
         && consequens->genus == SILVA_C89_GENUS_CORPUS)
     {
         _corpus_censere(ambitus, consequens, caput);
@@ -3226,6 +3245,7 @@ _nodum_percurrere (
     }
 }
 
+
 /* ==================================================
  * R11 continuatio (flumine + extensionibus arboris):
  * lineae internae sententiarum >= ca + IV; fractura iuxta
@@ -3236,7 +3256,8 @@ _nodum_percurrere (
  * ================================================== */
 
 interior b32
-_operator_ducibilis (SilvaLexemaGenus genus)
+_operator_ducibilis (
+    SilvaLexemaGenus genus)
 {
     redde genus == SILVA_LEX_PLUS
         || genus == SILVA_LEX_MINUS
@@ -3280,8 +3301,8 @@ _spatium_invenire (
                 redde spatium;
             }
         }
-        alioquin si (linea >= spatium->la
-            && linea < spatium->lb)
+        alioquin si (   linea >= spatium->la
+                     && linea < spatium->lb)
         {
             redde spatium;
         }
@@ -4427,6 +4448,7 @@ formator_extenta (
     redde extenta;
 }
 
+
 /* ==================================================
  * G2 -scribere: applicatio emendationum ad punctum
  * fixum. Applicator caecus et suspiciosus: octetos
@@ -4441,9 +4463,9 @@ formator_extenta (
 #define ITERATIONES_MAXIMAE 12
 
 nomen structura {
-       i32  offset_a;
-       i32  offset_b;
-    chorda  insertum;
+       i32 offset_a;
+       i32 offset_b;
+    chorda insertum;
 } EmendatioPlana;
 
 nomen structura {
@@ -4457,7 +4479,7 @@ _lineas_metiri (
                Piscina* piscina,
     constans character* fons,
                    i32  mensura,
-        IndexLinearum*  index)
+         IndexLinearum* index)
 {
     i32 lineae;
     i32 i;
@@ -4475,15 +4497,15 @@ _lineas_metiri (
         (memoriae_index)lineae * magnitudo(b32));
     si (!index->initia || !index->directivae) redde FALSUM;
 
-    l = ZEPHYRUM;
-    index->initia[l] = ZEPHYRUM;
-    l += I;
+    l                 = ZEPHYRUM;
+    index->initia[l]  = ZEPHYRUM;
+    l                 += I;
     per (i = ZEPHYRUM; i < mensura; i += I)
     {
         si (fons[i] == '\n')
         {
-            index->initia[l] = i + I;
-            l += I;
+            index->initia[l]  = i + I;
+            l                 += I;
         }
     }
     index->initia[lineae] = mensura;
@@ -4495,16 +4517,16 @@ _lineas_metiri (
         i32 j;
         b32 directiva;
 
-        a = index->initia[l];
-        b = index->initia[l + I];
-        directiva = FALSUM;
+        a          = index->initia[l];
+        b          = index->initia[l + I];
+        directiva  = FALSUM;
         per (j = a; j < b; j += I)
         {
             si (fons[j] == ' ' || fons[j] == '\t') perge;
             directiva = fons[j] == '#';
             frange;
         }
-        si (!directiva && l != (i32)ZEPHYRUM
+        si (   !directiva && l != (i32)ZEPHYRUM
             && index->directivae[l - I])
         {
             /* continuatio: linea prior directiva in '\\'
@@ -4519,7 +4541,7 @@ _lineas_metiri (
                 ante = f - II;
                 si (fons[ante] == '\r')
                 {
-                    si (ante != (i32)ZEPHYRUM
+                    si (   ante           != (i32)ZEPHYRUM
                         && fons[ante - I] == '\\')
                     {
                         directiva = VERUM;
@@ -4545,7 +4567,7 @@ _offset_e_coordinatis (
 {
     i32 offset;
 
-    si (linea < (i32)I || linea > index->numerus
+    si (   linea < (i32)I || linea > index->numerus
         || columna < (i32)I)
     {
         redde mensura + I;
@@ -4556,7 +4578,8 @@ _offset_e_coordinatis (
 }
 
 interior b32
-_octetus_spatialis (character c)
+_octetus_spatialis (
+    character c)
 {
     redde c == ' ' || c == '\t' || c == '\r' || c == '\n';
 }
@@ -4569,13 +4592,13 @@ _octetus_spatialis (character c)
  * honestae - lint eas adhuc nominat). */
 interior i32
 _emendationes_complanare (
-                  Piscina*  piscina,
-                      Xar*  divergentiae,
-    constans IndexLinearum* index,
-        constans character* fons,
-                       i32  mensura,
-           EmendatioPlana** exitus,
-                      b32*  violatio_spatialis)
+                   Piscina*  piscina,
+                       Xar*  divergentiae,
+    constans IndexLinearum*  index,
+        constans character*  fons,
+                       i32   mensura,
+            EmendatioPlana** exitus,
+                       b32*  violatio_spatialis)
 {
     EmendatioPlana* planae;
                i32  capacitas;
@@ -4583,9 +4606,9 @@ _emendationes_complanare (
                i32  numerus_div;
                i32  i;
 
-    *violatio_spatialis = FALSUM;
-    *exitus             = NIHIL;
-    numerus_div = xar_numerus(divergentiae);
+    *violatio_spatialis  = FALSUM;
+    *exitus              = NIHIL;
+    numerus_div          = xar_numerus(divergentiae);
 
     capacitas = ZEPHYRUM;
     per (i = ZEPHYRUM; i < numerus_div; i += I)
@@ -4611,11 +4634,11 @@ _emendationes_complanare (
         per (e = ZEPHYRUM; e < d->numerus_emendationum; e += I)
         {
             constans FormatorEmendatio* em;
-            i32 a;
-            i32 b;
-            i32 j;
-            b32 sana;
-            b32 habet_novam;
+                                   i32  a;
+                                   i32  b;
+                                   i32  j;
+                                   b32  sana;
+                                   b32  habet_novam;
 
             em = &d->emendationes[e];
             a  = _offset_e_coordinatis(index, mensura,
@@ -4625,8 +4648,8 @@ _emendationes_complanare (
             si (a > mensura || b > mensura || b < a) perge;
 
             /* custodia spatialis: deleta spatialia solum */
-            sana        = VERUM;
-            habet_novam = FALSUM;
+            sana         = VERUM;
+            habet_novam  = FALSUM;
             per (j = a; j < b; j += I)
             {
                 si (!_octetus_spatialis(fons[j]))
@@ -4679,10 +4702,10 @@ _emendationes_complanare (
                 si (tangit) perge;
             }
 
-            planae[n].offset_a = a;
-            planae[n].offset_b = b;
-            planae[n].insertum = em->insertum;
-            n += I;
+            planae[n].offset_a  = a;
+            planae[n].offset_b  = b;
+            planae[n].insertum  = em->insertum;
+            n                   += I;
         }
     }
     *exitus = planae;
@@ -4714,11 +4737,11 @@ _emendationes_comparare (
  * aedificare */
 interior chorda
 _emendationes_applicare (
-           Piscina*  piscina,
+            Piscina* piscina,
              chorda  fons,
-    EmendatioPlana*  planae,
+     EmendatioPlana* planae,
                 i32  numerus,
-               i32*  applicatae)
+                i32* applicatae)
 {
     ChordaAedificator* aed;
                   b32* acceptae;
@@ -4728,9 +4751,9 @@ _emendationes_applicare (
                   i32  cursor;
                chorda  vacua;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum   = NIHIL;
-    *applicatae   = ZEPHYRUM;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    *applicatae    = ZEPHYRUM;
 
     qsort(planae, (memoriae_index)numerus,
         magnitudo(EmendatioPlana), _emendationes_comparare);
@@ -4742,7 +4765,7 @@ _emendationes_applicare (
     min_initium = fons.mensura + I;
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
-        si (planae[i].offset_b <= min_initium
+        si (   planae[i].offset_b <= min_initium
             && planae[i].offset_a < min_initium)
         {
             acceptae[i] = VERUM;
@@ -4763,8 +4786,8 @@ _emendationes_applicare (
         chorda pars;
 
         si (!acceptae[j]) perge;
-        pars.datum   = fons.datum + cursor;
-        pars.mensura = planae[j].offset_a - cursor;
+        pars.datum    = fons.datum + cursor;
+        pars.mensura  = planae[j].offset_a - cursor;
         chorda_aedificator_appendere_chorda(aed, pars);
         si (planae[j].insertum.mensura != (i32)ZEPHYRUM)
         {
@@ -4776,8 +4799,8 @@ _emendationes_applicare (
     {
         chorda pars;
 
-        pars.datum   = fons.datum + cursor;
-        pars.mensura = fons.mensura - cursor;
+        pars.datum    = fons.datum + cursor;
+        pars.mensura  = fons.mensura - cursor;
         chorda_aedificator_appendere_chorda(aed, pars);
     }
     redde chorda_aedificator_finire(aed);
@@ -4786,7 +4809,8 @@ _emendationes_applicare (
 /* porta serierum: lexemata non-spatialia (commenta INCLUSA -
  * octeti eorum identici esse debent) genere et valore paria */
 interior b32
-_trivia_spatialis_est (SilvaLexemaGenus genus)
+_trivia_spatialis_est (
+    SilvaLexemaGenus genus)
 {
     redde genus == SILVA_LEX_SPATIA
         || genus == SILVA_LEX_TABULAE
@@ -4822,20 +4846,20 @@ _series_aequalis (
         SilvaToken* ta;
         SilvaToken* tb;
 
-        dum (ia < numerus_a
-            && _trivia_spatialis_est(_lexema(cruda_a, ia)->genus))
+        dum (   ia < numerus_a
+             && _trivia_spatialis_est(_lexema(cruda_a, ia)->genus))
         {
             ia += I;
         }
-        dum (ib < numerus_b
-            && _trivia_spatialis_est(_lexema(cruda_b, ib)->genus))
+        dum (   ib < numerus_b
+             && _trivia_spatialis_est(_lexema(cruda_b, ib)->genus))
         {
             ib += I;
         }
         si (ia >= numerus_a || ib >= numerus_b) frange;
         ta = _lexema(cruda_a, ia);
         tb = _lexema(cruda_b, ib);
-        si (ta->genus != tb->genus
+        si (   ta->genus != tb->genus
             || !chorda_aequalis(ta->valor, tb->valor))
         {
             redde FALSUM;

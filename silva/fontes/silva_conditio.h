@@ -26,7 +26,7 @@
 b32
 silva_conditio_est_definitum (
     SilvaExpansio* exp,
-    chorda         titulus);
+           chorda  titulus);
 
 /* Evaluare expressionem constantem praeprocessoris.
  * lexemata: Xar de SilvaToken* (linea directivae post verbum, sine EOF).
@@ -34,7 +34,7 @@ silva_conditio_est_definitum (
 s64
 silva_conditio_evaluare (
     SilvaExpansio* exp,
-    Xar*           lexemata,
-    b32*           successus);
+              Xar* lexemata,
+              b32* successus);
 
 #endif /* SILVA_CONDITIO_H */
