@@ -33,10 +33,10 @@
 #define SALT_INTROITUS_MAXIMI 4096
 
 nomen structura {
-    Piscina*              indicis;        /* arena indicium */
-    PiscinaNotatio        nota_indicis;
-    Piscina*              praevisus;      /* arena praevisus */
-    PiscinaNotatio        nota_praevisus;
+                 Piscina* indicis;        /* arena indicium */
+          PiscinaNotatio  nota_indicis;
+                 Piscina* praevisus;      /* arena praevisus */
+          PiscinaNotatio  nota_praevisus;
     SaltuariusTabularium* tab_parens;
     SaltuariusTabularium* tab_currens;
     SaltuariusTabularium* tab_praevisus;
@@ -45,14 +45,16 @@ nomen structura {
 /* Creare limitem: arenas refectionis generat; tabularia (ex arena
  * persistenti creata) accipit et possidet functionaliter */
 SaltuariusLimes*
-saltuarius_limes_creare (Piscina* persistens,
+saltuarius_limes_creare (
+                 Piscina* persistens,
     SaltuariusTabularium* tab_parens,
     SaltuariusTabularium* tab_currens,
     SaltuariusTabularium* tab_praevisus);
 
 /* Arenas destruere (exitus app) */
 vacuum
-saltuarius_limes_destruere (SaltuariusLimes* limes);
+saltuarius_limes_destruere (
+    SaltuariusLimes* limes);
 
 /* Indices ex disco implere pro res->via_currens: currens + parens
  * (NIHIL ad "/"). Selectio parentis = titulus directorii currentis;
@@ -60,16 +62,20 @@ saltuarius_limes_destruere (SaltuariusLimes* limes);
  * Columnae aptantur. Reddit FALSUM si directorium currens non
  * legibile (index vacuus fit - degradatio). */
 b32
-saltuarius_limes_indices (SaltuariusLimes* limes,
-    constans SaltuariusRes* res, SaltuariusColumnae* columnae,
-    constans chorda* selectandum);
+saltuarius_limes_indices (
+           SaltuariusLimes* limes,
+    constans SaltuariusRes* res,
+        SaltuariusColumnae* columnae,
+           constans chorda* selectandum);
 
 /* Praevisum ex disco implere pro introitu selecto currentis:
  * directorium -> index; filum -> textus (custodiae: magnum,
  * binarium, non legibile); alius -> nuntius. Columnae aptantur. */
 vacuum
-saltuarius_limes_praevisum (SaltuariusLimes* limes,
-    constans SaltuariusRes* res, SaltuariusColumnae* columnae);
+saltuarius_limes_praevisum (
+           SaltuariusLimes* limes,
+    constans SaltuariusRes* res,
+        SaltuariusColumnae* columnae);
 
 /* Librum aperire ex introitu selecto currentis (custodiae eaedem
  * ac praevisus: magnum sine lectione, binarium, non legibile).
@@ -77,23 +83,32 @@ saltuarius_limes_praevisum (SaltuariusLimes* limes,
  * nuntio). Textus per arenam praevisus transit (liber transcribit
  * in arenas proprias). */
 SaltuariusLiber*
-saltuarius_limes_librum_aperire (SaltuariusLimes* limes,
-    Piscina* persistens, SaltuariusNexus* nexus,
-    constans SaltuariusRes* res, constans character** causa_out);
+saltuarius_limes_librum_aperire (
+           SaltuariusLimes*  limes,
+                   Piscina*  persistens,
+           SaltuariusNexus*  nexus,
+    constans SaltuariusRes*  res,
+        constans character** causa_out);
 
 /* Capita (.h) ex viis -I legere pro praebendis nexus. Octeti in
  * arenam PERSISTENTEM leguntur (vita praebendorum = vita ctx!).
  * Non recursivum (viae -I planae sunt). Reddit numerum. */
 i32
-saltuarius_limes_capita_legere (SaltuariusLimes* limes,
-    Piscina* persistens, constans chorda* viae, i32 numerus_viarum,
+saltuarius_limes_capita_legere (
+    SaltuariusLimes*  limes,
+            Piscina*  persistens,
+    constans chorda*  viae,
+                i32   numerus_viarum,
     SaltuariusCaput** capita_out);
 
 /* Librum aperire per viam absolutam (saltus trans plagulas C3) -
  * custodiae eaedem; mensura per filum quaesita */
 SaltuariusLiber*
-saltuarius_limes_librum_via (SaltuariusLimes* limes,
-    Piscina* persistens, SaltuariusNexus* nexus, chorda via,
+saltuarius_limes_librum_via (
+       SaltuariusLimes*  limes,
+               Piscina*  persistens,
+       SaltuariusNexus*  nexus,
+                chorda   via,
     constans character** causa_out);
 
 #endif /* SALTUARIUS_LIMES_H */

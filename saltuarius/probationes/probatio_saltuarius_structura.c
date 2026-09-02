@@ -21,7 +21,9 @@
 #include <string.h>
 
 interior b32
-_continet (chorda textus, constans character* quaesitum)
+_continet (
+                chorda  textus,
+    constans character* quaesitum)
 {
     i32 m = ZEPHYRUM;
     i32 k;
@@ -47,8 +49,9 @@ _continet (chorda textus, constans character* quaesitum)
 
 /* Primus ordo cuius titulus quaesitum continet; -1 si nullus */
 interior s32
-_ordo_cum (constans SaltuariusStructura* index,
-    constans character* quaesitum)
+_ordo_cum (
+    constans SaltuariusStructura* index,
+              constans character* quaesitum)
 {
     s32 k;
 
@@ -63,8 +66,9 @@ _ordo_cum (constans SaltuariusStructura* index,
 }
 
 interior i32
-_ordines_cum (constans SaltuariusStructura* index,
-    constans character* quaesitum)
+_ordines_cum (
+    constans SaltuariusStructura* index,
+              constans character* quaesitum)
 {
     i32 summa = ZEPHYRUM;
     s32 k;
@@ -79,36 +83,37 @@ _ordines_cum (constans SaltuariusStructura* index,
     redde summa;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SaltuariusNexus* nexus;
-    SaltuariusLiber* liber;
+                    b32  praeteritus;
+                Piscina* piscina;
+        SaltuariusNexus* nexus;
+        SaltuariusLiber* liber;
     SaltuariusStructura* index;
-    constans character* FONS =
-        "#include \"amicus.h\"\n"      /* linea 1 */
-        "#include <ignotum.h>\n"       /* linea 2 */
-        "#define V 5\n"                /* linea 3 */
-        "#define G(x) ((x)+(x))\n"     /* linea 4 */
-        "#define V 6\n"                /* linea 5 */
-        "#if 0\n"                      /* linea 6 */
-        "int a;\n"
-        "#endif\n"
-        "#ifdef ABSENS\n"              /* linea 9 */
-        "int b;\n"                     /* linea 10 */
-        "#else\n"                      /* linea 11 */
-        "int c;\n"                     /* linea 12 */
-        "#endif\n"
-        "#ifdef VACUUS\n"              /* linea 14: bracchium
+     constans character* FONS =
+         "#include \"amicus.h\"\n"      /* linea 1 */
+         "#include <ignotum.h>\n"       /* linea 2 */
+         "#define V 5\n"                /* linea 3 */
+         "#define G(x) ((x)+(x))\n"     /* linea 4 */
+         "#define V 6\n"                /* linea 5 */
+         "#if 0\n"                      /* linea 6 */
+         "int a;\n"
+         "#endif\n"
+         "#ifdef ABSENS\n"              /* linea 9 */
+         "int b;\n"                     /* linea 10 */
+         "#else\n"                      /* linea 11 */
+         "int c;\n"                     /* linea 12 */
+         "#endif\n"
+         "#ifdef VACUUS\n"              /* linea 14: bracchium
                                         * VACUUM (corpus -1) */
-        "#endif\n"
-        "G(2);\n"                      /* linea 16 */
-        "typedef int T;\n"             /* linea 17: TYPI */
-        "int quadratum(int x) { return x * x; }\n"
+         "#endif\n"
+         "G(2);\n"                      /* linea 16 */
+         "typedef int T;\n"             /* linea 17: TYPI */
+         "int quadratum(int x) { return x * x; }\n"
                                        /* linea 18: FUNCTIONES */
-        "int duplum(int x);\n"         /* linea 19: PROTOTYPA */
-        "nomen structura { int n; } Probandum;\n";
+         "int duplum(int x);\n"         /* linea 19: PROTOTYPA */
+         "nomen structura { int n; } Probandum;\n";
                                        /* linea 20: LATINA! sine
                                         * contextu = falsa functio
                                         * "structura"; cum contextu
@@ -146,9 +151,11 @@ s32 principale (vacuum)
     index = saltuarius_structura_creare(piscina);
     CREDO_NON_NIHIL (index);
 
+
     /* ========================================================
      * PROBARE: aedificatio - sectiones, filtrum, insignia
      * ======================================================== */
+
     {
         s32 k;
 
@@ -172,8 +179,8 @@ s32 principale (vacuum)
 
         /* inclusiones: resoluta saltabilis, ignota insignita */
         {
-            s32 amicus = _ordo_cum(index, "amicus.h");
-            s32 ignotum = _ordo_cum(index, "ignotum.h");
+            s32 amicus   = _ordo_cum(index, "amicus.h");
+            s32 ignotum  = _ordo_cum(index, "ignotum.h");
 
             CREDO_VERUM (amicus >= ZEPHYRUM);
             CREDO_VERUM (index->ordines[amicus].saltabile);
@@ -299,9 +306,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (_ordo_cum(index, "a  :7"), -I);
     }
 
+
     /* ========================================================
      * PROBARE: selectio, motus, saltus
      * ======================================================== */
+
     {
         imprimere("\n--- Probans motum et saltum ---\n");
 
@@ -343,9 +352,11 @@ s32 principale (vacuum)
             (s32)index->numerus - I);
     }
 
+
     /* ========================================================
      * PROBARE: volumen (aptare) sequitur selectionem
      * ======================================================== */
+
     {
         imprimere("\n--- Probans volumen ---\n");
 
@@ -358,9 +369,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (index->volumen, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: merus recusat
      * ======================================================== */
+
     {
         SaltuariusLiber* merus;
 
@@ -375,9 +388,11 @@ s32 principale (vacuum)
         CREDO_FALSUM (index->apertum);
     }
 
+
     /* ========================================================
      * PROBARE: aurei cellularum - tabula super scaenam
      * ======================================================== */
+
     {
         TesseraPiscina* tp;
         TesseraPonsMemoriae* pm;
@@ -388,9 +403,9 @@ s32 principale (vacuum)
 
         tp = tessera_piscina_generare_dynamicum(
             "salt_index_tessera", 16777216);
-        pm = tessera_pons_memoriae_creare(tp, XL, XII);
-        opus = tessera_aperire(tp, &pm->pons);
-        res = saltuarius_res_creare(piscina, "/probe");
+        pm    = tessera_pons_memoriae_creare(tp, XL, XII);
+        opus  = tessera_aperire(tp, &pm->pons);
+        res   = saltuarius_res_creare(piscina, "/probe");
         CREDO_NON_NIHIL (opus);
         CREDO_NON_NIHIL (res);
 

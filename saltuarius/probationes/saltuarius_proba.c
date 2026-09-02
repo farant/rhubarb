@@ -5,12 +5,16 @@
 #include "utf8.h"
 
 chorda
-saltuarius_proba_linea (Piscina* piscina, TesseraOpus* opus,
-    s32 y, s32 x_initium, i32 mensura)
+saltuarius_proba_linea (
+        Piscina* piscina,
+    TesseraOpus* opus,
+            s32  y,
+            s32  x_initium,
+            i32  mensura)
 {
     ChordaAedificator* aed;
-    chorda fructus;
-    i32 k;
+               chorda  fructus;
+                  i32  k;
 
     aed = chorda_aedificator_creare(piscina,
         (memoriae_index)mensura * IV + XVI);
@@ -38,8 +42,8 @@ saltuarius_proba_linea (Piscina* piscina, TesseraOpus* opus,
     }
     fructus = chorda_aedificator_spectare(aed);
     /* spatia caudae praecidere */
-    dum (fructus.mensura > ZEPHYRUM
-        && fructus.datum[fructus.mensura - I] == ' ')
+    dum (   fructus.mensura > ZEPHYRUM
+         && fructus.datum[fructus.mensura - I] == ' ')
     {
         fructus.mensura--;
     }
@@ -47,13 +51,15 @@ saltuarius_proba_linea (Piscina* piscina, TesseraOpus* opus,
 }
 
 s32
-saltuarius_proba_quaerere (TesseraOpus* opus, s32 y,
+saltuarius_proba_quaerere (
+           TesseraOpus* opus,
+                   s32  y,
     constans character* textus)
 {
     constans i8* initium = (constans i8*)textus;
     constans i8* finis;
-    i32 latitudo = tessera_latitudo(opus);
-    s32 x;
+            i32  latitudo = tessera_latitudo(opus);
+            s32  x;
 
     finis = initium;
     dum (*finis != '\0')
@@ -63,9 +69,9 @@ saltuarius_proba_quaerere (TesseraOpus* opus, s32 y,
 
     per (x = ZEPHYRUM; x < (s32)latitudo; x++)
     {
-        constans i8* cursor = initium;
-        s32 columna = x;
-        b32 congruit = VERUM;
+        constans i8* cursor    = initium;
+                s32  columna   = x;
+                b32  congruit  = VERUM;
 
         dum (cursor < finis)
         {

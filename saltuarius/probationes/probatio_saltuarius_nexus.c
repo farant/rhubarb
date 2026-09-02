@@ -16,7 +16,9 @@
 
 /* Offset literarum in textu (primus casus); -1 si absens */
 interior s32
-_ubi (constans character* textus, constans character* quaesitum)
+_ubi (
+    constans character* textus,
+    constans character* quaesitum)
 {
     constans character* inventum = strstr(textus, quaesitum);
 
@@ -27,10 +29,11 @@ _ubi (constans character* textus, constans character* quaesitum)
     redde (s32)(inventum - textus);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                b32  praeteritus;
+            Piscina* piscina;
     SaltuariusNexus* nexus;
 
     piscina = piscina_generare_dynamicum("probatio_salt_nexus",
@@ -45,9 +48,11 @@ s32 principale (vacuum)
     nexus = saltuarius_nexus_creare(piscina);
     CREDO_NON_NIHIL (nexus);
 
+
     /* ========================================================
      * PROBARE: index latinorum
      * ======================================================== */
+
     {
         imprimere("\n--- Probans indicem latinorum ---\n");
         imprimere("  nomina latina: %d\n",
@@ -66,9 +71,11 @@ s32 principale (vacuum)
             chorda_ex_literis("saltuarius", piscina)));
     }
 
+
     /* ========================================================
      * PROBARE: classificatio viarum
      * ======================================================== */
+
     {
         imprimere("\n--- Probans vias ---\n");
 
@@ -84,16 +91,18 @@ s32 principale (vacuum)
             chorda_ex_literis("d.c/intra", piscina)));
     }
 
+
     /* ========================================================
      * PROBARE: tabula classium
      * ======================================================== */
+
     {
         constans character* FONS =
             "si (x) redde 5; /* c1\nc2 */\n#define QQ 7\n"
             "char* s = \"ab\";\n";
-        chorda textus = chorda_ex_literis(FONS, piscina);
-        i8* classis = (i8*)piscina_allocare(piscina,
-            (memoriae_index)textus.mensura);
+        chorda  textus = chorda_ex_literis(FONS, piscina);
+            i8* classis = (i8*)piscina_allocare(piscina,
+                (memoriae_index)textus.mensura);
         SilvaPiscina* arena = silva_piscina_generare_dynamicum(
             "probatio_nexus_silva", 1048576);
 
@@ -145,10 +154,12 @@ s32 principale (vacuum)
         silva_piscina_destruere(arena);
     }
 
+
     /* ========================================================
      * PROBARE: fistula parsandi (C1) - praebenda iniecta, parse,
      * strata, inclusio, resolutio
      * ======================================================== */
+
     {
         SaltuariusCaput capita[I];
         SilvaPiscina* arena;
@@ -205,17 +216,17 @@ s32 principale (vacuum)
 
                 per (j = ZEPHYRUM; j < n_inc; j++)
                 {
-                    si (silva_inclusio_vista(parsura->expansio,
+                    si (   silva_inclusio_vista(parsura->expansio,
                         j, &vista) && vista.via != NIHIL)
                     {
                         imprimere("  inclusio[%d]: %.*s fons_ad=%d\n",
                             (int)j, (int)vista.via->mensura,
                             (constans character*)vista.via->datum,
                             (int)vista.fons_ad);
-                        si (vista.via->mensura == X
+                        si (   vista.via->mensura == X
                             && memcmp(vista.via->datum,
                                 "geminare.h", X) == ZEPHYRUM
-                            && vista.fons_ad >= ZEPHYRUM)
+                            && vista.fons_ad      >= ZEPHYRUM)
                         {
                             inventa = VERUM;
                         }

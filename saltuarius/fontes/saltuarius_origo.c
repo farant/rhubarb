@@ -4,7 +4,8 @@
 #include "chorda_aedificator.h"
 
 SaltuariusOrigo*
-saltuarius_origo_creare (Piscina* persistens)
+saltuarius_origo_creare (
+    Piscina* persistens)
 {
     SaltuariusOrigo* origo;
 
@@ -19,28 +20,33 @@ saltuarius_origo_creare (Piscina* persistens)
     {
         redde NIHIL;
     }
-    origo->nota = piscina_notare(origo->arena);
-    origo->numerus = ZEPHYRUM;
-    origo->selectio = ZEPHYRUM;
-    origo->apertum = FALSUM;
+    origo->nota      = piscina_notare(origo->arena);
+    origo->numerus   = ZEPHYRUM;
+    origo->selectio  = ZEPHYRUM;
+    origo->apertum   = FALSUM;
     redde origo;
 }
 
 /* Chorda ex SilvaChorda (aliae - vita = vita exp) */
 interior chorda
-_ex_silva (constans SilvaChorda* s)
+_ex_silva (
+    constans SilvaChorda* s)
 {
     chorda c;
 
-    c.mensura = (s != NIHIL) ? s->mensura : ZEPHYRUM;
-    c.datum = (s != NIHIL) ? s->datum : NIHIL;
+    c.mensura  = (s != NIHIL) ? s->mensura : ZEPHYRUM;
+    c.datum    = (s != NIHIL) ? s->datum : NIHIL;
     redde c;
 }
 
 /* Titulum ordinis aedificare: praefixum + valor + " via:linea" */
 interior chorda
-_titulum (SaltuariusOrigo* origo, constans character* praefixum,
-    chorda medium, chorda via, i32 linea)
+_titulum (
+       SaltuariusOrigo* origo,
+    constans character* praefixum,
+                chorda  medium,
+                chorda  via,
+                   i32  linea)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(origo->arena,
         CCLVI);
@@ -48,8 +54,8 @@ _titulum (SaltuariusOrigo* origo, constans character* praefixum,
 
     si (aed == NIHIL)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
     chorda_aedificator_appendere_literis(aed, praefixum);
@@ -93,9 +99,14 @@ _titulum (SaltuariusOrigo* origo, constans character* praefixum,
 }
 
 interior vacuum
-_gradum_addere (SaltuariusOrigo* origo, SaltuariusGradusGenus genus,
-    chorda titulus, b32 saltabile, chorda via, s32 fons_index,
-    i32 linea)
+_gradum_addere (
+          SaltuariusOrigo* origo,
+    SaltuariusGradusGenus  genus,
+                   chorda  titulus,
+                      b32  saltabile,
+                   chorda  via,
+                      s32  fons_index,
+                      i32  linea)
 {
     SaltuariusGradus* gradus;
 
@@ -103,23 +114,25 @@ _gradum_addere (SaltuariusOrigo* origo, SaltuariusGradusGenus genus,
     {
         redde;
     }
-    gradus = &origo->gradus[origo->numerus];
-    gradus->genus = genus;
-    gradus->titulus = titulus;
-    gradus->saltabile = saltabile;
-    gradus->via = via;
-    gradus->fons_index = fons_index;
-    gradus->linea = linea;
+    gradus              = &origo->gradus[origo->numerus];
+    gradus->genus       = genus;
+    gradus->titulus     = titulus;
+    gradus->saltabile   = saltabile;
+    gradus->via         = via;
+    gradus->fons_index  = fons_index;
+    gradus->linea       = linea;
     origo->numerus++;
 }
 
 /* Catenam lexematis ambulare (deorsum ad FONS) et gradus addere */
 interior vacuum
-_catenam_ambulare (SaltuariusOrigo* origo,
-    constans SilvaExpansio* exp, SilvaToken* token)
+_catenam_ambulare (
+           SaltuariusOrigo* origo,
+    constans SilvaExpansio* exp,
+                SilvaToken* token)
 {
-    SilvaToken* t = token;
-    i32 profunditas = ZEPHYRUM;
+    SilvaToken* t            = token;
+           i32  profunditas  = ZEPHYRUM;
 
     dum (t != NIHIL && profunditas < SALT_GRADUS_MAXIMI)
     {
@@ -137,16 +150,16 @@ _catenam_ambulare (SaltuariusOrigo* origo,
         }
         si (t->origo.genus == SILVA_ORIGO_EXPANSIO)
         {
-            SilvaToken* corpus = t->origo.datum.expansio.corpus;
-            constans SilvaChorda* via = NIHIL;
-            i32 linea = ZEPHYRUM;
-            s32 fons = -I;
+            SilvaToken* corpus         = t->origo.datum.expansio.corpus;
+            constans SilvaChorda* via  = NIHIL;
+            i32 linea                  = ZEPHYRUM;
+            s32 fons                   = -I;
 
             si (corpus != NIHIL)
             {
-                via = silva_fons_via(exp, corpus->fons_index);
-                linea = corpus->linea;
-                fons = corpus->fons_index;
+                via    = silva_fons_via(exp, corpus->fons_index);
+                linea  = corpus->linea;
+                fons   = corpus->fons_index;
             }
             _gradum_addere(origo, SALT_GRADUS_EXPANSIO,
                 _titulum(origo, "<- expansio ",
@@ -189,10 +202,12 @@ _catenam_ambulare (SaltuariusOrigo* origo,
 
 /* Tegitne maiorum FONS lexematis offset (quaestio prorsum strati 0) */
 interior b32
-_maiorum_tegit (SilvaToken* token, s32 offset)
+_maiorum_tegit (
+    SilvaToken* token,
+           s32  offset)
 {
-    SilvaToken* t = token;
-    i32 gradus = ZEPHYRUM;
+    SilvaToken* t       = token;
+           i32  gradus  = ZEPHYRUM;
 
     dum (t != NIHIL && gradus < SALT_GRADUS_MAXIMI)
     {
@@ -207,7 +222,7 @@ _maiorum_tegit (SilvaToken* token, s32 offset)
         {
             SilvaToken* inv = t->origo.datum.expansio.invocatio;
 
-            si (inv != NIHIL && inv->origo.genus == SILVA_ORIGO_FONS
+            si (   inv != NIHIL && inv->origo.genus == SILVA_ORIGO_FONS
                 && inv->byte_offset >= ZEPHYRUM
                 && offset >= (s32)inv->byte_offset
                 && offset < (s32)inv->byte_offset
@@ -235,24 +250,26 @@ _maiorum_tegit (SilvaToken* token, s32 offset)
 }
 
 b32
-saltuarius_origo_aedificare (SaltuariusOrigo* origo,
-    SaltuariusLiber* liber, constans SaltuariusNexus* nexus)
+saltuarius_origo_aedificare (
+             SaltuariusOrigo* origo,
+             SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus)
 {
-    s32 offset;
+                       s32  offset;
     constans SilvaExpansio* exp;
 
     piscina_reficere(origo->arena, origo->nota);
-    origo->numerus = ZEPHYRUM;
-    origo->selectio = ZEPHYRUM;
-    origo->apertum = FALSUM;
+    origo->numerus   = ZEPHYRUM;
+    origo->selectio  = ZEPHYRUM;
+    origo->apertum   = FALSUM;
 
-    si (liber->parsura == NIHIL
+    si (   liber->parsura           == NIHIL
         || liber->parsura->expansio == NIHIL)
     {
         redde FALSUM;
     }
-    exp = liber->parsura->expansio;
-    offset = saltuarius_liber_cursor_offset(liber);
+    exp     = liber->parsura->expansio;
+    offset  = saltuarius_liber_cursor_offset(liber);
     si (offset < ZEPHYRUM)
     {
         redde FALSUM;
@@ -261,9 +278,9 @@ saltuarius_origo_aedificare (SaltuariusOrigo* origo,
     si (liber->stratum_currens == ZEPHYRUM)
     {
         /* PRORSUM: primum lexema finale cuius maiorum tegit */
-        SilvaXar* fluxus = liber->parsura->lexemata;
-        i32 n = silva_xar_numerus(fluxus);
-        i32 k;
+          SilvaXar* fluxus  = liber->parsura->lexemata;
+               i32  n       = silva_xar_numerus(fluxus);
+               i32  k;
         SilvaToken* inventum = NIHIL;
 
         per (k = ZEPHYRUM; k < n; k++)
@@ -272,7 +289,7 @@ saltuarius_origo_aedificare (SaltuariusOrigo* origo,
                 fluxus, k);
 
             /* solum expansa (FONS directa trivialia sunt) */
-            si (t->origo.genus != SILVA_ORIGO_FONS
+            si (   t->origo.genus != SILVA_ORIGO_FONS
                 && _maiorum_tegit(t, offset))
             {
                 inventum = t;
@@ -295,11 +312,11 @@ saltuarius_origo_aedificare (SaltuariusOrigo* origo,
         constans SaltuariusStratum* visus = saltuarius_liber_stratum(
             liber, nexus);
         SilvaToken* token = NIHIL;
-        i32 k;
+               i32  k;
 
         per (k = ZEPHYRUM; k < visus->numerus_positionum; k++)
         {
-            si (offset >= (s32)visus->positiones[k].initium
+            si (   offset >= (s32)visus->positiones[k].initium
                 && offset < (s32)visus->positiones[k].finis)
             {
                 token = visus->positiones[k].token;
@@ -326,13 +343,16 @@ saltuarius_origo_aedificare (SaltuariusOrigo* origo,
 }
 
 vacuum
-saltuarius_origo_claudere (SaltuariusOrigo* origo)
+saltuarius_origo_claudere (
+    SaltuariusOrigo* origo)
 {
     origo->apertum = FALSUM;
 }
 
 vacuum
-saltuarius_origo_movere (SaltuariusOrigo* origo, s32 delta)
+saltuarius_origo_movere (
+    SaltuariusOrigo* origo,
+                s32  delta)
 {
     s32 nova = origo->selectio + delta;
 
@@ -348,9 +368,10 @@ saltuarius_origo_movere (SaltuariusOrigo* origo, s32 delta)
 }
 
 constans SaltuariusGradus*
-saltuarius_origo_saltus (constans SaltuariusOrigo* origo)
+saltuarius_origo_saltus (
+    constans SaltuariusOrigo* origo)
 {
-    si (!origo->apertum || origo->selectio < ZEPHYRUM
+    si (   !origo->apertum || origo->selectio < ZEPHYRUM
         || origo->selectio >= (s32)origo->numerus)
     {
         redde NIHIL;

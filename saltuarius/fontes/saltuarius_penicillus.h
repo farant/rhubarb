@@ -17,23 +17,37 @@
 
 /* Textum ponere; reddit runas positas */
 i32
-saltuarius_pen_textum (TesseraOpus* opus, s32 x, s32 y,
-    constans i8* datum, i32 mensura, i32 runae_max,
-    TesseraStilus stilus);
+saltuarius_pen_textum (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* datum,
+              i32  mensura,
+              i32  runae_max,
+    TesseraStilus  stilus);
 
 /* Literis NUL-terminatis */
 vacuum
-saltuarius_pen_literis (TesseraOpus* opus, s32 x, s32 y,
-    constans character* literis, i32 runae_max,
-    TesseraStilus stilus);
+saltuarius_pen_literis (
+           TesseraOpus* opus,
+                   s32  x,
+                   s32  y,
+    constans character* literis,
+                   i32  runae_max,
+         TesseraStilus  stilus);
 
 /* Numerum decimalem ponere; reddit latitudinem scriptam */
 i32
-saltuarius_pen_numerum (TesseraOpus* opus, s32 x, s32 y,
-    s32 valor, TesseraStilus stilus);
+saltuarius_pen_numerum (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              s32  valor,
+    TesseraStilus  stilus);
 
 /* Digiti decimales valoris */
 i32
-saltuarius_pen_digiti (s32 valor);
+saltuarius_pen_digiti (
+    s32 valor);
 
 #endif /* SALTUARIUS_PENICILLUS_H */

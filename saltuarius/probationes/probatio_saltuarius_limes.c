@@ -27,13 +27,21 @@ _arborem_figere (vacuum)
     (vacuum)system("rm -rf " FIXUM
         " && mkdir -p " FIXUM "/alpha " FIXUM "/beta");
     f = fopen(FIXUM "/alpha/x.c", "wb");
-    si (f) { fputs("x\n", f); fclose(f); }
+    si (f)
+    { fputs("x\n", f); fclose(f);
+    }
     f = fopen(FIXUM "/alpha/y.c", "wb");
-    si (f) { fputs("y\n", f); fclose(f); }
+    si (f)
+    { fputs("y\n", f); fclose(f);
+    }
     f = fopen(FIXUM "/planus.txt", "wb");
-    si (f) { fputs("salve\nmunde\n", f); fclose(f); }
+    si (f)
+    { fputs("salve\nmunde\n", f); fclose(f);
+    }
     f = fopen(FIXUM "/.occultum", "wb");
-    si (f) { fputs("celatum\n", f); fclose(f); }
+    si (f)
+    { fputs("celatum\n", f); fclose(f);
+    }
     f = fopen(FIXUM "/binarius.dat", "wb");
     si (f)
     {
@@ -53,16 +61,17 @@ _arborem_figere (vacuum)
     (vacuum)k;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SaltuariusRes* res;
-    SaltuariusColumnae* columnae;
+                     b32  praeteritus;
+                 Piscina* piscina;
+           SaltuariusRes* res;
+      SaltuariusColumnae* columnae;
     SaltuariusTabularium* parens;
     SaltuariusTabularium* currens;
     SaltuariusTabularium* praevisus;
-    SaltuariusLimes* limes;
+         SaltuariusLimes* limes;
 
     piscina = piscina_generare_dynamicum("probatio_salt_limes",
         4194304);
@@ -74,19 +83,21 @@ s32 principale (vacuum)
     credo_aperire(piscina);
     _arborem_figere();
 
-    res = saltuarius_res_creare(piscina, FIXUM);
-    columnae = saltuarius_columnae_creare(piscina);
-    parens = saltuarius_tabularium_creare(piscina);
-    currens = saltuarius_tabularium_creare(piscina);
-    praevisus = saltuarius_tabularium_creare(piscina);
+    res        = saltuarius_res_creare(piscina, FIXUM);
+    columnae   = saltuarius_columnae_creare(piscina);
+    parens     = saltuarius_tabularium_creare(piscina);
+    currens    = saltuarius_tabularium_creare(piscina);
+    praevisus  = saltuarius_tabularium_creare(piscina);
     limes = saltuarius_limes_creare(piscina, parens, currens,
         praevisus);
     CREDO_NON_NIHIL (limes);
+
 
     /* ========================================================
      * PROBARE: indices ex disco - ordinati, punctata celata,
      * parens selectum per titulum
      * ======================================================== */
+
     {
         imprimere("\n--- Probans indices ex disco ---\n");
 
@@ -115,9 +126,11 @@ s32 principale (vacuum)
             "saltuarius_limes_fixum");
     }
 
+
     /* ========================================================
      * PROBARE: praevisus omnium generum
      * ======================================================== */
+
     {
         imprimere("\n--- Probans praevisum generum ---\n");
 
@@ -162,12 +175,14 @@ s32 principale (vacuum)
             "(filum binarium)");
     }
 
+
     /* ========================================================
      * PROBARE: memoria frenata - refectio arenae praevisus
      * ======================================================== */
+
     {
         memoriae_index usus_prior;
-        i32 k;
+                   i32 k;
 
         imprimere("\n--- Probans memoriam frenatam ---\n");
 
@@ -183,9 +198,11 @@ s32 principale (vacuum)
             (i32)usus_prior);
     }
 
+
     /* ========================================================
      * PROBARE: descensus + ascensus cum selectando
      * ======================================================== */
+
     {
         chorda selectandum;
 
@@ -209,9 +226,11 @@ s32 principale (vacuum)
             "alpha");
     }
 
+
     /* ========================================================
      * PROBARE: non legibile (directorium + praevisus)
      * ======================================================== */
+
     {
         imprimere("\n--- Probans non legibile ---\n");
 
@@ -235,12 +254,14 @@ s32 principale (vacuum)
         (vacuum)system("chmod 755 " FIXUM "/beta");
     }
 
+
     /* ========================================================
      * PROBARE: librum aperire (B3) - textus, custodiae
      * ======================================================== */
+
     {
-        SaltuariusNexus* nexus = saltuarius_nexus_creare(piscina);
-        SaltuariusLiber* liber;
+           SaltuariusNexus* nexus = saltuarius_nexus_creare(piscina);
+           SaltuariusLiber* liber;
         constans character* causa;
 
         imprimere("\n--- Probans librum aperire ---\n");

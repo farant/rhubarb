@@ -42,10 +42,10 @@ nomen enumeratio {
 
 nomen structura {
     SaltuariusOrdoGenus genus;
-    chorda              titulus;   /* textus ordinis (in arena) */
-    b32                 saltabile;
-    chorda              via;       /* INCLUSIO: via ut scripta */
-    i32                 linea;     /* DEFINITIO/REGIO: 1-basata.
+                 chorda titulus;   /* textus ordinis (in arena) */
+                    b32 saltabile;
+                 chorda via;       /* INCLUSIO: via ut scripta */
+                    i32 linea;     /* DEFINITIO/REGIO: 1-basata.
                                     * REGIO: linea CORPORIS
                                     * bracchii (ex corpus_initium
                                     * derivata - vista lineam
@@ -55,17 +55,18 @@ nomen structura {
 } SaltuariusOrdo;
 
 nomen structura {
-    Piscina*        arena;     /* refecta per aedificationem */
+           Piscina* arena;     /* refecta per aedificationem */
     PiscinaNotatio  nota;
     SaltuariusOrdo* ordines;   /* in arena */
-    i32             numerus;
-    s32             selectio;
-    s32             volumen;   /* primus ordo visibilis */
-    b32             apertum;
+               i32  numerus;
+               s32  selectio;
+               s32  volumen;   /* primus ordo visibilis */
+               b32  apertum;
 } SaltuariusStructura;
 
 SaltuariusStructura*
-saltuarius_structura_creare (Piscina* persistens);
+saltuarius_structura_creare (
+    Piscina* persistens);
 
 /* Indicem aedificare ex parsura libri (c89 cum contextu - M2d
  * Chunk B: sectiones c89 ex parsura PRINCIPALI leguntur, parsura
@@ -73,26 +74,31 @@ saltuarius_structura_creare (Piscina* persistens);
  * FALSUM si nihil narrabile (merus / sine parsura / vacuum).
  * Selectio in primum ordinem saltabilem. */
 b32
-saltuarius_structura_aedificare (SaltuariusStructura* index,
+saltuarius_structura_aedificare (
+         SaltuariusStructura* index,
     constans SaltuariusLiber* liber);
 
 vacuum
-saltuarius_structura_claudere (SaltuariusStructura* index);
+saltuarius_structura_claudere (
+    SaltuariusStructura* index);
 
 /* Selectionem movere (clausa; tituli sectionum selectabiles sed
  * non saltabiles - exemplar originis) */
 vacuum
-saltuarius_structura_movere (SaltuariusStructura* index,
-    s32 delta);
+saltuarius_structura_movere (
+    SaltuariusStructura* index,
+                    s32  delta);
 
 /* Volumen aptare ut selectio intra altitudinem visibilem sit
  * (pictor vocat cum altitudine interiore tabulae) */
 vacuum
-saltuarius_structura_aptare (SaltuariusStructura* index,
-    s32 altitudo);
+saltuarius_structura_aptare (
+    SaltuariusStructura* index,
+                    s32  altitudo);
 
 /* Ordo selectus si saltabilis; NIHIL alioquin */
 constans SaltuariusOrdo*
-saltuarius_structura_saltus (constans SaltuariusStructura* index);
+saltuarius_structura_saltus (
+    constans SaltuariusStructura* index);
 
 #endif /* SALTUARIUS_STRUCTURA_H */

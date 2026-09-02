@@ -45,11 +45,11 @@ nomen structura {
 } SaltuariusCaput;
 
 nomen structura {
-    Piscina*        piscina;   /* persistens */
+           Piscina* piscina;   /* persistens */
     TabulaDispersa* latina;    /* nomina ex silva_latina_textus */
-    i32             numerus_latinorum;
+               i32  numerus_latinorum;
     /* Phase C: fistula parsandi */
-    SilvaPiscina*   arena_ctx; /* arena contextus (longaeva) */
+      SilvaPiscina* arena_ctx; /* arena contextus (longaeva) */
     SilvaContextus* ctx;       /* NIHIL ante silvam_parare */
     TabulaDispersa* viae;      /* titulus praebendi -> chorda* absoluta */
 } SaltuariusNexus;
@@ -58,16 +58,19 @@ nomen structura {
  * silva_latina_textus (dogfood; claves in textum STATICUM amalgamae
  * spectant - aliae aeternae, transcriptio non necessaria) */
 SaltuariusNexus*
-saltuarius_nexus_creare (Piscina* persistens);
+saltuarius_nexus_creare (
+    Piscina* persistens);
 
 /* Estne nomen latinum? */
 b32
-saltuarius_nexus_est_latinum (constans SaltuariusNexus* nexus,
-    chorda titulus);
+saltuarius_nexus_est_latinum (
+    constans SaltuariusNexus* nexus,
+                      chorda  titulus);
 
 /* Meretne via colorationem? (.c / .h) */
 b32
-saltuarius_nexus_est_fons_c (chorda via);
+saltuarius_nexus_est_fons_c (
+    chorda via);
 
 /* Tabulam classium implere: classis_out[k] pro textus.datum[k]
  * (tabula a vocatore allocata, mensura = textus.mensura; PLANUM
@@ -75,31 +78,40 @@ saltuarius_nexus_est_fons_c (chorda via);
  * (vocator possidet - contractus vitae lexematum non nos tangit,
  * tabula octetos non lexemata retinet). */
 vacuum
-saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
-    SilvaPiscina* arena_silvae, chorda textus, i8* classis_out);
+saltuarius_nexus_classificare (
+    constans SaltuariusNexus* nexus,
+                SilvaPiscina* arena_silvae,
+                      chorda  textus,
+                          i8* classis_out);
 
 /* Fistulam parsandi parare: contextus + latina + praebenda ex
  * capitibus INIECTIS (limes discum ambulat). Reddit numerum
  * praebitorum, -1 si fractum. Basename collisio: primus vincit. */
 s32
-saltuarius_nexus_silvam_parare (SaltuariusNexus* nexus,
-    constans SaltuariusCaput* capita, i32 numerus);
+saltuarius_nexus_silvam_parare (
+             SaltuariusNexus* nexus,
+    constans SaltuariusCaput* capita,
+                         i32  numerus);
 
 /* Parsare textum cum contextu (arena_libri possidet parsuram);
  * NIHIL si fistula non parata aut parse fractum */
 SilvaParsura*
-saltuarius_nexus_parsare (SaltuariusNexus* nexus,
-    SilvaPiscina* arena_libri, constans character* titulus,
-    chorda textus);
+saltuarius_nexus_parsare (
+       SaltuariusNexus* nexus,
+          SilvaPiscina* arena_libri,
+    constans character* titulus,
+                chorda  textus);
 
 /* Titulus praebendi -> via absoluta (chorda vacua si ignotum) */
 chorda
-saltuarius_nexus_fons_resolvere (constans SaltuariusNexus* nexus,
-    chorda titulus);
+saltuarius_nexus_fons_resolvere (
+    constans SaltuariusNexus* nexus,
+                      chorda  titulus);
 
 /* Classis lexematis unius (pro materializatione stratorum) */
 i8
-saltuarius_nexus_classis (constans SaltuariusNexus* nexus,
-    constans SilvaToken* token);
+saltuarius_nexus_classis (
+    constans SaltuariusNexus* nexus,
+         constans SilvaToken* token);
 
 #endif /* SALTUARIUS_NEXUS_H */

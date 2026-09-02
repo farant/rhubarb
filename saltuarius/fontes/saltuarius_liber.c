@@ -14,11 +14,14 @@
 /* Index linearum: unus ambulatus (communis strato 0 et
  * materializatis) */
 interior vacuum
-_lineas_aedificare (Piscina* piscina, chorda textus,
-    SaltuariusLinea** lineae_out, i32* numerus_out)
+_lineas_aedificare (
+            Piscina*  piscina,
+             chorda   textus,
+    SaltuariusLinea** lineae_out,
+                i32*  numerus_out)
 {
-    i32 numerus = I;
-    i32 k;
+                i32  numerus = I;
+                i32  k;
     SaltuariusLinea* lineae;
 
     per (k = ZEPHYRUM; k < textus.mensura; k++)
@@ -33,13 +36,13 @@ _lineas_aedificare (Piscina* piscina, chorda textus,
             * (memoriae_index)magnitudo(SaltuariusLinea), IV);
     si (lineae == NIHIL)
     {
-        *lineae_out = NIHIL;
-        *numerus_out = ZEPHYRUM;
+        *lineae_out   = NIHIL;
+        *numerus_out  = ZEPHYRUM;
         redde;
     }
     {
-        i32 linea = ZEPHYRUM;
-        i32 initium = ZEPHYRUM;
+        i32 linea    = ZEPHYRUM;
+        i32 initium  = ZEPHYRUM;
 
         per (k = ZEPHYRUM; k <= textus.mensura; k++)
         {
@@ -48,13 +51,13 @@ _lineas_aedificare (Piscina* piscina, chorda textus,
                 i32 mensura = k - initium;
 
                 /* <tolera codex="SUBTRACTIO_COMPARATA" (>k prorsum ab initio scandit: numquam ante initium */
-                si (mensura > ZEPHYRUM
+                si (   mensura > ZEPHYRUM
                     && textus.datum[initium + mensura - I] == '\r')
                 {
                     mensura--;
                 }
-                lineae[linea].offset = (i32)initium;
-                lineae[linea].mensura = mensura;
+                lineae[linea].offset   = (i32)initium;
+                lineae[linea].mensura  = mensura;
                 linea++;
                 initium = k + I;
                 si (k == textus.mensura)
@@ -64,23 +67,27 @@ _lineas_aedificare (Piscina* piscina, chorda textus,
             }
         }
     }
-    *lineae_out = lineae;
-    *numerus_out = numerus;
+    *lineae_out   = lineae;
+    *numerus_out  = numerus;
 }
 
 /* Stratum activum (semper paratum - commutatio materializat) */
 interior constans SaltuariusStratum*
-_activum (constans SaltuariusLiber* liber)
+_activum (
+    constans SaltuariusLiber* liber)
 {
     redde &liber->strata_visus[liber->stratum_currens];
 }
 
 SaltuariusLiber*
-saltuarius_liber_aperire (Piscina* persistens,
-    SaltuariusNexus* nexus, chorda via, chorda textus)
+saltuarius_liber_aperire (
+            Piscina* persistens,
+    SaltuariusNexus* nexus,
+             chorda  via,
+             chorda  textus)
 {
     SaltuariusLiber* liber;
-    memoriae_index initium_arenae;
+     memoriae_index  initium_arenae;
 
     liber = (SaltuariusLiber*)piscina_allocare_ordinatum(persistens,
         (memoriae_index)magnitudo(SaltuariusLiber), IV);
@@ -118,7 +125,7 @@ saltuarius_liber_aperire (Piscina* persistens,
     }
 
     /* coloratio + parse: .c/.h */
-    si (saltuarius_nexus_est_fons_c(liber->via)
+    si (   saltuarius_nexus_est_fons_c(liber->via)
         && liber->textus.mensura > ZEPHYRUM)
     {
         liber->arena_silvae = silva_piscina_generare_dynamicum(
@@ -157,7 +164,7 @@ saltuarius_liber_aperire (Piscina* persistens,
 
             /* OMISSUM: rami non sumpti fusci (extenta OCTETI -
              * additiones II; stratum 0 solum) */
-            si (liber->parsura != NIHIL && liber->classis != NIHIL
+            si (   liber->parsura != NIHIL && liber->classis != NIHIL
                 && liber->parsura->expansio != NIHIL)
             {
                 constans SilvaExpansio* exp =
@@ -169,7 +176,7 @@ saltuarius_liber_aperire (Piscina* persistens,
                 {
                     SilvaRamusVista vista;
 
-                    si (silva_ramus_vista(exp, k, &vista)
+                    si (   silva_ramus_vista(exp, k, &vista)
                         && !vista.est_sumptum
                         && vista.fons_index
                             == liber->parsura->fons_princeps
@@ -177,8 +184,8 @@ saltuarius_liber_aperire (Piscina* persistens,
                         && vista.corpus_finis
                             > vista.corpus_initium)
                     {
-                        i32 initium = (i32)vista.corpus_initium;
-                        i32 finis = (i32)vista.corpus_finis;
+                        i32 initium  = (i32)vista.corpus_initium;
+                        i32 finis    = (i32)vista.corpus_finis;
                         i32 o;
 
                         si (finis > liber->textus.mensura)
@@ -200,7 +207,7 @@ saltuarius_liber_aperire (Piscina* persistens,
     {
         i32 n_strata = ZEPHYRUM;
 
-        si (liber->parsura != NIHIL
+        si (   liber->parsura         != NIHIL
             && liber->parsura->strata != NIHIL)
         {
             n_strata = silva_xar_numerus(liber->parsura->strata);
@@ -227,8 +234,8 @@ saltuarius_liber_aperire (Piscina* persistens,
 
             per (k = ZEPHYRUM; k < liber->numerus_stratorum; k++)
             {
-                liber->strata_visus[k].parata = FALSUM;
-                liber->strata_visus[k].positiones = NIHIL;
+                liber->strata_visus[k].parata      = FALSUM;
+                liber->strata_visus[k].positiones  = NIHIL;
                 liber->strata_visus[k].numerus_positionum =
                     ZEPHYRUM;
             }
@@ -249,7 +256,9 @@ saltuarius_liber_aperire (Piscina* persistens,
  * strati I). Regula: identificatoria adiacentia aut operatores
  * iterati spatium unum accipiunt. */
 interior b32
-_glutinosum (i8 a, i8 b)
+_glutinosum (
+    i8 a,
+    i8 b)
 {
     b32 a_ident = ((a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z')
         || (a >= '0' && a <= '9') || a == '_') ? VERUM : FALSUM;
@@ -260,7 +269,7 @@ _glutinosum (i8 a, i8 b)
     {
         redde VERUM;
     }
-    si (a == b && (a == '+' || a == '-' || a == '&' || a == '|'
+    si (   a == b && (a == '+' || a == '-' || a == '&' || a == '|'
         || a == '<' || a == '>' || a == '='))
     {
         redde VERUM;
@@ -273,22 +282,24 @@ _glutinosum (i8 a, i8 b)
  * classis ex genere, mappa positionum lexematum veterum;
  * IUNCTIO TUTA ubi trivia perierunt (expansio) */
 interior vacuum
-_stratum_materializare (SaltuariusLiber* liber,
-    constans SaltuariusNexus* nexus, s32 stratum)
+_stratum_materializare (
+             SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus,
+                         s32  stratum)
 {
     SaltuariusStratum* visus = &liber->strata_visus[stratum];
-    SilvaXar* fluxus = *(SilvaXar**)silva_xar_obtinere(
-        liber->parsura->strata, (i32)(stratum - I));
-    i32 n = silva_xar_numerus(fluxus);
-    i32 summa_octetorum = ZEPHYRUM;
-    i32 numerus_positionum = ZEPHYRUM;
+             SilvaXar* fluxus = *(SilvaXar**)silva_xar_obtinere(
+                 liber->parsura->strata, (i32)(stratum - I));
+    i32 n                   = silva_xar_numerus(fluxus);
+    i32 summa_octetorum     = ZEPHYRUM;
+    i32 numerus_positionum  = ZEPHYRUM;
     i32 k;
 
     /* transitus I: mensurae */
     per (k = ZEPHYRUM; k < n; k++)
     {
         SilvaToken* t = *(SilvaToken**)silva_xar_obtinere(fluxus, k);
-        i32 j;
+               i32  j;
 
         si (t->spatia_ante != NIHIL)
         {
@@ -329,18 +340,18 @@ _stratum_materializare (SaltuariusLiber* liber,
             (memoriae_index)(numerus_positionum > ZEPHYRUM
                 ? numerus_positionum : I)
                 * (memoriae_index)magnitudo(SaltuariusPositio), IV);
-    si (visus->textus.datum == NIHIL || visus->classis == NIHIL
-        || visus->positiones == NIHIL)
+    si (   visus->textus.datum == NIHIL || visus->classis == NIHIL
+        || visus->positiones   == NIHIL)
     {
-        visus->textus.mensura = ZEPHYRUM;
-        visus->parata = VERUM;   /* degradatum sed paratum */
+        visus->textus.mensura  = ZEPHYRUM;
+        visus->parata          = VERUM;   /* degradatum sed paratum */
         redde;
     }
 
     /* transitus II: octeti + classis + positiones */
     {
-        i32 cursor = ZEPHYRUM;
-        i32 positio = ZEPHYRUM;
+        i32 cursor   = ZEPHYRUM;
+        i32 positio  = ZEPHYRUM;
 
         per (k = ZEPHYRUM; k < n; k++)
         {
@@ -375,7 +386,7 @@ _stratum_materializare (SaltuariusLiber* liber,
                 i32 o;
 
                 /* iunctio tuta */
-                si (cursor > ZEPHYRUM
+                si (   cursor > ZEPHYRUM
                     && _glutinosum(
                         visus->textus.datum[cursor - I],
                         t->valor.datum[ZEPHYRUM]))
@@ -385,8 +396,8 @@ _stratum_materializare (SaltuariusLiber* liber,
                         (i8)SALT_CLASSIS_PLANUM;
                     cursor++;
                 }
-                visus->positiones[positio].token = t;
-                visus->positiones[positio].initium = cursor;
+                visus->positiones[positio].token    = t;
+                visus->positiones[positio].initium  = cursor;
                 per (o = ZEPHYRUM; o < t->valor.mensura; o++)
                 {
                     visus->textus.datum[cursor + o] =
@@ -394,8 +405,8 @@ _stratum_materializare (SaltuariusLiber* liber,
                     visus->classis[cursor + o] =
                         saltuarius_nexus_classis(nexus, t);
                 }
-                cursor += t->valor.mensura;
-                visus->positiones[positio].finis = cursor;
+                cursor                            += t->valor.mensura;
+                visus->positiones[positio].finis  = cursor;
                 positio++;
             }
             si (t->spatia_post != NIHIL)
@@ -421,8 +432,8 @@ _stratum_materializare (SaltuariusLiber* liber,
                 }
             }
         }
-        visus->textus.mensura = (i32)cursor;
-        visus->numerus_positionum = positio;
+        visus->textus.mensura      = (i32)cursor;
+        visus->numerus_positionum  = positio;
     }
 
     _lineas_aedificare(liber->piscina, visus->textus,
@@ -431,19 +442,21 @@ _stratum_materializare (SaltuariusLiber* liber,
 }
 
 constans SaltuariusStratum*
-saltuarius_liber_stratum_activum (constans SaltuariusLiber* liber)
+saltuarius_liber_stratum_activum (
+    constans SaltuariusLiber* liber)
 {
     redde _activum(liber);
 }
 
 constans SaltuariusStratum*
-saltuarius_liber_stratum (SaltuariusLiber* liber,
+saltuarius_liber_stratum (
+             SaltuariusLiber* liber,
     constans SaltuariusNexus* nexus)
 {
     SaltuariusStratum* visus =
         &liber->strata_visus[liber->stratum_currens];
 
-    si (!visus->parata && liber->parsura != NIHIL
+    si (   !visus->parata && liber->parsura != NIHIL
         && liber->stratum_currens > ZEPHYRUM)
     {
         _stratum_materializare(liber, nexus,
@@ -453,8 +466,9 @@ saltuarius_liber_stratum (SaltuariusLiber* liber,
 }
 
 vacuum
-saltuarius_liber_stratum_ponere (SaltuariusLiber* liber,
-    s32 stratum)
+saltuarius_liber_stratum_ponere (
+    SaltuariusLiber* liber,
+                s32  stratum)
 {
     si (stratum < ZEPHYRUM)
     {
@@ -468,19 +482,20 @@ saltuarius_liber_stratum_ponere (SaltuariusLiber* liber,
 }
 
 vacuum
-saltuarius_liber_destruere (SaltuariusLiber* liber)
+saltuarius_liber_destruere (
+    SaltuariusLiber* liber)
 {
-    SilvaPiscina* arena_silvae = liber->arena_silvae;
-    Piscina* piscina = liber->piscina;
+    SilvaPiscina* arena_silvae  = liber->arena_silvae;
+         Piscina* piscina       = liber->piscina;
 
-    liber->arena_silvae = NIHIL;
-    liber->piscina = NIHIL;
-    liber->classis = NIHIL;
-    liber->lineae = NIHIL;
-    liber->numerus_linearum = ZEPHYRUM;
-    liber->parsura = NIHIL;
-    liber->strata_visus = NIHIL;
-    liber->numerus_stratorum = ZEPHYRUM;
+    liber->arena_silvae       = NIHIL;
+    liber->piscina            = NIHIL;
+    liber->classis            = NIHIL;
+    liber->lineae             = NIHIL;
+    liber->numerus_linearum   = ZEPHYRUM;
+    liber->parsura            = NIHIL;
+    liber->strata_visus       = NIHIL;
+    liber->numerus_stratorum  = ZEPHYRUM;
     si (arena_silvae != NIHIL)
     {
         silva_piscina_destruere(arena_silvae);
@@ -492,16 +507,18 @@ saltuarius_liber_destruere (SaltuariusLiber* liber)
 }
 
 chorda
-saltuarius_liber_linea (constans SaltuariusLiber* liber, s32 index)
+saltuarius_liber_linea (
+    constans SaltuariusLiber* liber,
+                         s32  index)
 {
     constans SaltuariusStratum* visus = _activum(liber);
-    chorda vacua;
+                        chorda  vacua;
 
-    si (index < ZEPHYRUM || !visus->parata
+    si (   index < ZEPHYRUM || !visus->parata
         || index >= (s32)visus->numerus_linearum)
     {
-        vacua.mensura = ZEPHYRUM;
-        vacua.datum = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        vacua.datum    = NIHIL;
         redde vacua;
     }
     redde chorda_sectio(visus->textus,
@@ -511,8 +528,9 @@ saltuarius_liber_linea (constans SaltuariusLiber* liber, s32 index)
 }
 
 i32
-saltuarius_liber_linea_runae (constans SaltuariusLiber* liber,
-    s32 index)
+saltuarius_liber_linea_runae (
+    constans SaltuariusLiber* liber,
+                         s32  index)
 {
     chorda linea = saltuarius_liber_linea(liber, index);
 
@@ -526,7 +544,8 @@ saltuarius_liber_linea_runae (constans SaltuariusLiber* liber,
 
 /* Numerus linearum strati activi (pro claudendo cursoris) */
 interior i32
-_lineae_activae (constans SaltuariusLiber* liber)
+_lineae_activae (
+    constans SaltuariusLiber* liber)
 {
     constans SaltuariusStratum* visus = _activum(liber);
 
@@ -534,7 +553,9 @@ _lineae_activae (constans SaltuariusLiber* liber)
 }
 
 vacuum
-saltuarius_liber_movere (SaltuariusLiber* liber, s32 delta_linea)
+saltuarius_liber_movere (
+    SaltuariusLiber* liber,
+                s32  delta_linea)
 {
     s32 nova = liber->cursor_linea + delta_linea;
     i32 runae;
@@ -548,8 +569,8 @@ saltuarius_liber_movere (SaltuariusLiber* liber, s32 delta_linea)
     {
         nova = (s32)lineae - I;
     }
-    liber->cursor_linea = nova;
-    runae = saltuarius_liber_linea_runae(liber, nova);
+    liber->cursor_linea  = nova;
+    runae                = saltuarius_liber_linea_runae(liber, nova);
     si (liber->cursor_columna > (s32)runae)
     {
         liber->cursor_columna = (s32)runae;
@@ -557,7 +578,9 @@ saltuarius_liber_movere (SaltuariusLiber* liber, s32 delta_linea)
 }
 
 vacuum
-saltuarius_liber_movere_col (SaltuariusLiber* liber, s32 delta)
+saltuarius_liber_movere_col (
+    SaltuariusLiber* liber,
+                s32  delta)
 {
     s32 nova = liber->cursor_columna + delta;
     i32 runae = saltuarius_liber_linea_runae(liber,
@@ -575,27 +598,31 @@ saltuarius_liber_movere_col (SaltuariusLiber* liber, s32 delta)
 }
 
 vacuum
-saltuarius_liber_primum (SaltuariusLiber* liber)
+saltuarius_liber_primum (
+    SaltuariusLiber* liber)
 {
-    liber->cursor_linea = ZEPHYRUM;
-    liber->cursor_columna = ZEPHYRUM;
+    liber->cursor_linea    = ZEPHYRUM;
+    liber->cursor_columna  = ZEPHYRUM;
 }
 
 vacuum
-saltuarius_liber_ultimum (SaltuariusLiber* liber)
+saltuarius_liber_ultimum (
+    SaltuariusLiber* liber)
 {
     i32 lineae = _lineae_activae(liber);
 
     si (lineae > ZEPHYRUM)
     {
-        liber->cursor_linea = (s32)lineae - I;
-        liber->cursor_columna = ZEPHYRUM;
+        liber->cursor_linea    = (s32)lineae - I;
+        liber->cursor_columna  = ZEPHYRUM;
     }
 }
 
 vacuum
-saltuarius_liber_aptare (SaltuariusLiber* liber,
-    i32 altitudo_fenestrae, i32 latitudo_fenestrae)
+saltuarius_liber_aptare (
+    SaltuariusLiber* liber,
+                i32  altitudo_fenestrae,
+                i32  latitudo_fenestrae)
 {
     si (altitudo_fenestrae > ZEPHYRUM)
     {
@@ -633,28 +660,30 @@ saltuarius_liber_aptare (SaltuariusLiber* liber,
     }
 }
 
+
 /* ==================================================
  * Cursor <-> offset + vestigium identitatis (C2)
  * ================================================== */
 
 s32
-saltuarius_liber_cursor_offset (constans SaltuariusLiber* liber)
+saltuarius_liber_cursor_offset (
+    constans SaltuariusLiber* liber)
 {
     constans SaltuariusStratum* visus = _activum(liber);
-    constans SaltuariusLinea* linea;
-    constans i8* cursor;
-    constans i8* finis;
-    s32 runae;
+      constans SaltuariusLinea* linea;
+                   constans i8* cursor;
+                   constans i8* finis;
+                           s32  runae;
 
-    si (!visus->parata || liber->cursor_linea < ZEPHYRUM
+    si (   !visus->parata || liber->cursor_linea < ZEPHYRUM
         || liber->cursor_linea >= (s32)visus->numerus_linearum)
     {
         redde -I;
     }
-    linea = &visus->lineae[liber->cursor_linea];
-    cursor = visus->textus.datum + linea->offset;
-    finis = cursor + linea->mensura;
-    runae = liber->cursor_columna;
+    linea   = &visus->lineae[liber->cursor_linea];
+    cursor  = visus->textus.datum + linea->offset;
+    finis   = cursor + linea->mensura;
+    runae   = liber->cursor_columna;
     dum (cursor < finis && runae > ZEPHYRUM)
     {
         cursor = utf8_proxima_runa(cursor, finis);
@@ -664,12 +693,14 @@ saltuarius_liber_cursor_offset (constans SaltuariusLiber* liber)
 }
 
 vacuum
-saltuarius_liber_cursor_ad_offset (SaltuariusLiber* liber,
-    s32 offset)
+saltuarius_liber_cursor_ad_offset (
+    SaltuariusLiber* liber,
+                s32  offset)
 {
-    constans SaltuariusStratum* visus = _activum(liber);
-    s32 linea = ZEPHYRUM;
-    s32 k;
+    constans SaltuariusStratum* visus  = _activum(liber);
+                           s32  linea   =
+                               ZEPHYRUM;
+                           s32 k;
 
     si (!visus->parata || offset < ZEPHYRUM)
     {
@@ -689,12 +720,12 @@ saltuarius_liber_cursor_ad_offset (SaltuariusLiber* liber,
     }
     liber->cursor_linea = linea;
     {
-        constans SaltuariusLinea* l = &visus->lineae[linea];
-        constans i8* initium = visus->textus.datum + l->offset;
-        constans i8* meta = visus->textus.datum + offset;
-        constans i8* finis = initium + l->mensura;
-        s32 columna = ZEPHYRUM;
-        constans i8* cursor = initium;
+        constans SaltuariusLinea* l  = &visus->lineae[linea];
+        constans i8* initium         = visus->textus.datum + l->offset;
+        constans i8* meta            = visus->textus.datum + offset;
+        constans i8* finis           = initium + l->mensura;
+        s32 columna                  = ZEPHYRUM;
+        constans i8* cursor          = initium;
 
         si (meta > finis)
         {
@@ -714,10 +745,12 @@ saltuarius_liber_cursor_ad_offset (SaltuariusLiber* liber,
 /* Tegitne maiorum FONS lexematis offset datum (in plagula
  * radicali)? Catena per invocationes/corpora ambulatur. */
 interior b32
-_fons_tegit (constans SilvaToken* token, s32 offset)
+_fons_tegit (
+    constans SilvaToken* token,
+                    s32  offset)
 {
-    constans SilvaToken* t = token;
-    i32 gradus = ZEPHYRUM;
+    constans SilvaToken* t       = token;
+                    i32  gradus  = ZEPHYRUM;
 
     dum (t != NIHIL && gradus < XVI)
     {
@@ -734,10 +767,10 @@ _fons_tegit (constans SilvaToken* token, s32 offset)
             constans SilvaToken* inv = t->origo.datum.expansio
                 .invocatio;
 
-            si (inv != NIHIL
+            si (   inv              != NIHIL
                 && inv->origo.genus == SILVA_ORIGO_FONS
                 && inv->byte_offset >= ZEPHYRUM
-                && offset >= (s32)inv->byte_offset
+                && offset           >= (s32)inv->byte_offset
                 && offset < (s32)inv->byte_offset
                     + (s32)inv->longitudo)
             {
@@ -763,14 +796,16 @@ _fons_tegit (constans SilvaToken* token, s32 offset)
 }
 
 vacuum
-saltuarius_liber_stratum_transferre (SaltuariusLiber* liber,
-    constans SaltuariusNexus* nexus, s32 stratum_novum)
+saltuarius_liber_stratum_transferre (
+             SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus,
+                         s32  stratum_novum)
 {
-    s32 offset_vetus = saltuarius_liber_cursor_offset(liber);
-    s32 stratum_vetus = liber->stratum_currens;
-    f64 proportio = ZEPHYRUM;
+    s32 offset_vetus   = saltuarius_liber_cursor_offset(liber);
+    s32 stratum_vetus  = liber->stratum_currens;
+    f64 proportio      = ZEPHYRUM;
 
-    si (_activum(liber)->parata
+    si (   _activum(liber)->parata
         && _activum(liber)->numerus_linearum > ZEPHYRUM)
     {
         proportio = (f64)liber->cursor_linea
@@ -790,7 +825,7 @@ saltuarius_liber_stratum_transferre (SaltuariusLiber* liber,
     {
         constans SaltuariusStratum* novus = _activum(liber);
 
-        si (stratum_vetus == ZEPHYRUM
+        si (   stratum_vetus == ZEPHYRUM
             && liber->stratum_currens > ZEPHYRUM)
         {
             /* 0 -> k: primum lexema cuius maiorum offset tegit */
@@ -816,7 +851,7 @@ saltuarius_liber_stratum_transferre (SaltuariusLiber* liber,
 
             per (k = ZEPHYRUM; k < vetus->numerus_positionum; k++)
             {
-                si (offset_vetus
+                si (   offset_vetus
                         >= (s32)vetus->positiones[k].initium
                     && offset_vetus
                         < (s32)vetus->positiones[k].finis)
@@ -824,7 +859,7 @@ saltuarius_liber_stratum_transferre (SaltuariusLiber* liber,
                     SilvaToken* radix = silva_token_radix(
                         vetus->positiones[k].token);
 
-                    si (radix != NIHIL
+                    si (   radix              != NIHIL
                         && radix->byte_offset >= ZEPHYRUM)
                     {
                         saltuarius_liber_cursor_ad_offset(liber,
@@ -841,11 +876,11 @@ saltuarius_liber_stratum_transferre (SaltuariusLiber* liber,
             constans SaltuariusStratum* vetus =
                 &liber->strata_visus[stratum_vetus];
             SilvaToken* radix = NIHIL;
-            i32 k;
+                   i32  k;
 
             per (k = ZEPHYRUM; k < vetus->numerus_positionum; k++)
             {
-                si (offset_vetus
+                si (   offset_vetus
                         >= (s32)vetus->positiones[k].initium
                     && offset_vetus
                         < (s32)vetus->positiones[k].finis)

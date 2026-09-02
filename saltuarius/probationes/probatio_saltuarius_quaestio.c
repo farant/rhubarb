@@ -20,31 +20,35 @@
 #include <string.h>
 
 interior TesseraEventum
-_ev_runa (s32 runa)
+_ev_runa (
+    s32 runa)
 {
     TesseraEventum ev;
 
     memset(&ev, ZEPHYRUM, magnitudo(ev));
-    ev.genus = TESSERA_EVENTUM_CLAVIS;
-    ev.runa = runa;
+    ev.genus  = TESSERA_EVENTUM_CLAVIS;
+    ev.runa   = runa;
     redde ev;
 }
 
 interior TesseraEventum
-_ev_clavis (TesseraClavis clavis)
+_ev_clavis (
+    TesseraClavis clavis)
 {
     TesseraEventum ev;
 
     memset(&ev, ZEPHYRUM, magnitudo(ev));
-    ev.genus = TESSERA_EVENTUM_CLAVIS;
-    ev.clavis = clavis;
+    ev.genus   = TESSERA_EVENTUM_CLAVIS;
+    ev.clavis  = clavis;
     redde ev;
 }
 
 /* Literis dactylographare (ASCII; runae singulae traduntur) */
 interior vacuum
-_dactylographare (SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber, constans character* literis)
+_dactylographare (
+    SaltuariusQuaestio* quaestio,
+       SaltuariusLiber* liber,
+    constans character* literis)
 {
     i32 k;
 
@@ -56,13 +60,14 @@ _dactylographare (SaltuariusQuaestio* quaestio,
     }
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SaltuariusNexus* nexus;
-    SaltuariusLiber* liber;
-    SaltuariusQuaestio quaestio;
+                   b32  praeteritus;
+               Piscina* piscina;
+       SaltuariusNexus* nexus;
+       SaltuariusLiber* liber;
+    SaltuariusQuaestio  quaestio;
     /* offsets: 'i' prima in "#defIne" = 4; "int alpha" = 23;
      * "int beta" = 34; "int gamma" = 44 */
     constans character* FONS =
@@ -92,9 +97,11 @@ s32 principale (vacuum)
     CREDO_NON_NIHIL (liber->parsura);
     saltuarius_quaestio_parare(&quaestio);
 
+
     /* ========================================================
      * PROBARE: angustatio incrementalis + RETRORSUM relaxat
      * ======================================================== */
+
     {
         imprimere("\n--- Probans angustationem ---\n");
 
@@ -141,9 +148,11 @@ s32 principale (vacuum)
             XXIII);
     }
 
+
     /* ========================================================
      * PROBARE: n/N cum volutione
      * ======================================================== */
+
     {
         b32 volvit;
 
@@ -180,20 +189,22 @@ s32 principale (vacuum)
         CREDO_FALSUM (volvit);
     }
 
+
     /* ========================================================
      * PROBARE: nihil inventum + FUGA restituit
      * ======================================================== */
+
     {
         s32 linea_ante;
         s32 columna_ante;
 
         imprimere("\n--- Probans fugam ---\n");
 
-        liber->cursor_linea = II;
-        liber->cursor_columna = IV;
+        liber->cursor_linea    = II;
+        liber->cursor_columna  = IV;
         saltuarius_liber_movere(liber, ZEPHYRUM);
-        linea_ante = liber->cursor_linea;
-        columna_ante = liber->cursor_columna;
+        linea_ante    = liber->cursor_linea;
+        columna_ante  = liber->cursor_columna;
 
         saltuarius_quaestio_aperire(&quaestio, liber);
         _dactylographare(&quaestio, liber, "zzz");
@@ -214,9 +225,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (quaestio.commissum_mensura, III);
     }
 
+
     /* ========================================================
      * PROBARE: RETRORSUM runam INTEGRAM delet (UTF-8)
      * ======================================================== */
+
     {
         imprimere("\n--- Probans runam UTF-8 ---\n");
 
@@ -245,9 +258,11 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: quaere quod vides (stratum I)
      * ======================================================== */
+
     {
         imprimere("\n--- Probans stratum ostensum ---\n");
 
@@ -288,9 +303,11 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: aureum lineae echo
      * ======================================================== */
+
     {
         TesseraPiscina* tp;
         TesseraPonsMemoriae* pm;
@@ -301,9 +318,9 @@ s32 principale (vacuum)
 
         tp = tessera_piscina_generare_dynamicum(
             "salt_quaestio_tessera", 16777216);
-        pm = tessera_pons_memoriae_creare(tp, XL, VIII);
-        opus = tessera_aperire(tp, &pm->pons);
-        res = saltuarius_res_creare(piscina, "/probe");
+        pm    = tessera_pons_memoriae_creare(tp, XL, VIII);
+        opus  = tessera_aperire(tp, &pm->pons);
+        res   = saltuarius_res_creare(piscina, "/probe");
         CREDO_NON_NIHIL (opus);
         CREDO_NON_NIHIL (res);
 

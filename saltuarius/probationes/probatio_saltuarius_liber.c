@@ -13,10 +13,11 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
+                b32  praeteritus;
+            Piscina* piscina;
     SaltuariusNexus* nexus;
 
     piscina = piscina_generare_dynamicum("probatio_salt_liber",
@@ -30,9 +31,11 @@ s32 principale (vacuum)
     nexus = saltuarius_nexus_creare(piscina);
     CREDO_NON_NIHIL (nexus);
 
+
     /* ========================================================
      * PROBARE: index linearum + coloratio
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -61,9 +64,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: merus (.md) + plagula vacua + cauda cum \n
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -94,9 +99,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: cursor clausus + runae utf8 + volumina
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -150,11 +157,13 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: strata (C1) - parse, materializatio, OMISSUM
      * ======================================================== */
+
     {
-        SaltuariusLiber* liber;
+           SaltuariusLiber* liber;
         constans character* FONS =
             "#define G(x) ((x)+(x))\n"
             "#if 0\nint a;\n#else\nint b;\n#endif\n"
@@ -232,12 +241,14 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: iunctio tuta - trivia expansione perdita spatium
      * unum recipiunt (constPiscina numquam!)
      * ======================================================== */
+
     {
-        SaltuariusLiber* liber;
+                   SaltuariusLiber* liber;
         constans SaltuariusStratum* stratum;
 
         imprimere("\n--- Probans iunctionem tutam ---\n");
@@ -271,9 +282,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: degradatio - merus liber stratum unicum
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 

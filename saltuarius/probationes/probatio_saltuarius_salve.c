@@ -31,9 +31,10 @@
 
 #define FIXUM "/tmp/saltuarius_salve_fixum"
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_salt_salve",
@@ -45,9 +46,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: (a) amalgama tesserae - hospes secundus verus
      * ======================================================== */
+
     {
         TesseraPiscina* tp;
         TesseraPonsMemoriae* pm;
@@ -78,9 +81,9 @@ s32 principale (vacuum)
 
         /* octeti aurei quadri primi (speculum hospitis tesserae) */
         CREDO_VERUM (tessera_praesentare(opus));
-        captum = tessera_pons_memoriae_captum(pm);
-        visus.mensura = captum.mensura;
-        visus.datum = captum.datum;
+        captum         = tessera_pons_memoriae_captum(pm);
+        visus.mensura  = captum.mensura;
+        visus.datum    = captum.datum;
         CREDO_CHORDA_AEQUALIS_LITERIS (visus,
             "\033[?25l\033[2J\033[1;1H\033[0msaltuarius");
 
@@ -103,15 +106,17 @@ s32 principale (vacuum)
         tessera_piscina_destruere(tp);
     }
 
+
     /* ========================================================
      * PROBARE: (b) iter_directoria in arbore ficta
      * ======================================================== */
+
     {
-        DirectoriumIterator* iter;
+         DirectoriumIterator* iter;
         DirectoriumIntroitus* intr;
-        b32 subdir_inventum = FALSUM;
-        b32 plaga_inventa = FALSUM;
-        i32 numerus = ZEPHYRUM;
+                         b32  subdir_inventum  = FALSUM;
+                         b32  plaga_inventa    = FALSUM;
+                         i32  numerus          = ZEPHYRUM;
         FILE* f;
 
         imprimere("\n--- Probans iter_directoria (arbor ficta) ---\n");
@@ -147,9 +152,11 @@ s32 principale (vacuum)
         CREDO_VERUM (plaga_inventa);
     }
 
+
     /* ========================================================
      * PROBARE: (c) filum_legere_totum circuitus
      * ======================================================== */
+
     {
         chorda contentum;
 
@@ -163,9 +170,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (contentum.mensura, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: (d) via formae
      * ======================================================== */
+
     {
         chorda nomen_fili;
         chorda iuncta;
@@ -177,28 +186,30 @@ s32 principale (vacuum)
             chorda_ex_literis("/a/b/c.txt", piscina), piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS (nomen_fili, "c.txt");
 
-        partes[ZEPHYRUM] = chorda_ex_literis("silva", piscina);
-        partes[I] = chorda_ex_literis("fontes", piscina);
-        iuncta = via_iungere(partes, II, piscina);
+        partes[ZEPHYRUM]  = chorda_ex_literis("silva", piscina);
+        partes[I]         = chorda_ex_literis("fontes", piscina);
+        iuncta            = via_iungere(partes, II, piscina);
         CREDO_CHORDA_AEQUALIS_LITERIS (iuncta, "silva/fontes");
     }
+
 
     /* ========================================================
      * PROBARE: (e) utf8 sectio runarum (truncatio praevisus)
      * ======================================================== */
+
     {
         /* "a" + U+2500 + "b" = V octeti, III runae */
         hic_manens constans i8 LINEA[V] =
             { 'a', 0xE2, 0x94, 0x80, 'b' };
         constans i8* cursor;
         constans i8* finis;
-        i32 runae;
+                i32  runae;
 
         imprimere("\n--- Probans utf8 (sectio runarum) ---\n");
 
-        finis = LINEA + V;
-        cursor = LINEA;
-        runae = ZEPHYRUM;
+        finis   = LINEA + V;
+        cursor  = LINEA;
+        runae   = ZEPHYRUM;
         dum (cursor < finis && runae < II)
         {
             cursor = utf8_proxima_runa(cursor, finis);

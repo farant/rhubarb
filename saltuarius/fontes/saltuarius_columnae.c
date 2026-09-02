@@ -9,17 +9,22 @@
 #define COLOR_ALIENI      0x00808080
 #define COLOR_VACUI       0x00808080
 
+
 /* ==================================================
  * Panni
  * ================================================== */
 
 interior vacuum
-_pannum_pingere (TesseraOpus* opus, SaltuariusTabularium* tab,
-    s32 x, i32 latitudo, constans SaltuariusMetra* metra,
-    b32 est_focus)
+_pannum_pingere (
+                 TesseraOpus* opus,
+        SaltuariusTabularium* tab,
+                         s32  x,
+                         i32  latitudo,
+    constans SaltuariusMetra* metra,
+                         b32  est_focus)
 {
     TesseraStilus nativus = tessera_stilus_nativus();
-    s32 k;
+              s32 k;
 
     si (tab == NIHIL || latitudo == ZEPHYRUM)
     {
@@ -37,20 +42,20 @@ _pannum_pingere (TesseraOpus* opus, SaltuariusTabularium* tab,
 
     per (k = ZEPHYRUM; k < metra->contentum_alt; k++)
     {
-        s32 index = tab->volumen + k;
-        s32 ordo = metra->contentum_y + k;
+                                  s32  index  = tab->volumen + k;
+                                  s32  ordo   = metra->contentum_y + k;
         constans DirectoriumIntroitus* intr;
-        TesseraStilus stilus;
-        b32 est_selectum;
-        i32 positae;
-        character suffixum = '\0';
+                        TesseraStilus  stilus;
+                                  b32  est_selectum;
+                                  i32  positae;
+                            character  suffixum = '\0';
 
         si (index >= (s32)tab->numerus)
         {
             frange;
         }
-        intr = &tab->introitus[index];
-        est_selectum = (index == tab->selectio);
+        intr          = &tab->introitus[index];
+        est_selectum  = (index == tab->selectio);
 
         commutatio (intr->genus)
         {
@@ -94,19 +99,21 @@ _pannum_pingere (TesseraOpus* opus, SaltuariusTabularium* tab,
 }
 
 interior vacuum
-_praevisum_textus_pingere (TesseraOpus* opus, chorda textus,
+_praevisum_textus_pingere (
+                 TesseraOpus* opus,
+                      chorda  textus,
     constans SaltuariusMetra* metra)
 {
-    TesseraStilus nativus = tessera_stilus_nativus();
-    constans i8* cursor = textus.datum;
-    constans i8* finis = textus.datum + textus.mensura;
-    s32 ordo = metra->contentum_y;
+    TesseraStilus  nativus  = tessera_stilus_nativus();
+      constans i8* cursor   = textus.datum;
+      constans i8* finis    = textus.datum + textus.mensura;
+              s32  ordo     = metra->contentum_y;
 
-    dum (cursor < finis
-        && ordo < metra->contentum_y + metra->contentum_alt)
+    dum (   cursor < finis
+         && ordo < metra->contentum_y + metra->contentum_alt)
     {
         constans i8* linea_finis = cursor;
-        i32 linea_mensura;
+                i32  linea_mensura;
 
         dum (linea_finis < finis && *linea_finis != '\n')
         {
@@ -114,7 +121,7 @@ _praevisum_textus_pingere (TesseraOpus* opus, chorda textus,
         }
         linea_mensura = (i32)(memoriae_index)(linea_finis - cursor);
         /* \r caudae (plagulae CRLF) tondere */
-        si (linea_mensura > ZEPHYRUM
+        si (   linea_mensura > ZEPHYRUM
             && cursor[linea_mensura - I] == '\r')
         {
             linea_mensura--;
@@ -127,12 +134,14 @@ _praevisum_textus_pingere (TesseraOpus* opus, chorda textus,
     }
 }
 
+
 /* ==================================================
  * Interfacies publica
  * ================================================== */
 
 SaltuariusColumnae*
-saltuarius_columnae_creare (Piscina* piscina)
+saltuarius_columnae_creare (
+    Piscina* piscina)
 {
     SaltuariusColumnae* columnae;
 
@@ -142,36 +151,38 @@ saltuarius_columnae_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    columnae->parens = NIHIL;
-    columnae->currens = NIHIL;
-    columnae->praevisus_genus = SALT_PRAEVISUS_NIHIL;
-    columnae->praevisus_tab = NIHIL;
-    columnae->praevisus_textus.mensura = ZEPHYRUM;
-    columnae->praevisus_textus.datum = NIHIL;
-    columnae->praevisus_nuntius.mensura = ZEPHYRUM;
-    columnae->praevisus_nuntius.datum = NIHIL;
+    columnae->parens                     = NIHIL;
+    columnae->currens                    = NIHIL;
+    columnae->praevisus_genus            = SALT_PRAEVISUS_NIHIL;
+    columnae->praevisus_tab              = NIHIL;
+    columnae->praevisus_textus.mensura   = ZEPHYRUM;
+    columnae->praevisus_textus.datum     = NIHIL;
+    columnae->praevisus_nuntius.mensura  = ZEPHYRUM;
+    columnae->praevisus_nuntius.datum    = NIHIL;
     redde columnae;
 }
 
 vacuum
-saltuarius_columnae_metiri (i32 latitudo, i32 altitudo,
+saltuarius_columnae_metiri (
+                i32  latitudo,
+                i32  altitudo,
     SaltuariusMetra* metra)
 {
     /* ratio 1:3:4 in octavis; separatores singuli inter pannos */
-    metra->parens_x = ZEPHYRUM;
-    metra->parens_lat = (s32)(latitudo / VIII);
+    metra->parens_x    = ZEPHYRUM;
+    metra->parens_lat  = (s32)(latitudo / VIII);
     si (metra->parens_lat < I)
     {
         metra->parens_lat = I;
     }
-    metra->currens_x = metra->parens_lat + I;
-    metra->currens_lat = (s32)(latitudo * III / VIII);
+    metra->currens_x    = metra->parens_lat + I;
+    metra->currens_lat  = (s32)(latitudo * III / VIII);
     si (metra->currens_lat < I)
     {
         metra->currens_lat = I;
     }
-    metra->praevisus_x = metra->currens_x + metra->currens_lat + I;
-    metra->praevisus_lat = (s32)latitudo - metra->praevisus_x;
+    metra->praevisus_x    = metra->currens_x + metra->currens_lat + I;
+    metra->praevisus_lat  = (s32)latitudo - metra->praevisus_x;
     si (metra->praevisus_lat < ZEPHYRUM)
     {
         metra->praevisus_lat = ZEPHYRUM;
@@ -182,14 +193,16 @@ saltuarius_columnae_metiri (i32 latitudo, i32 altitudo,
 }
 
 vacuum
-saltuarius_columnae_pingere (SaltuariusColumnae* columnae,
-    constans SaltuariusRes* res, TesseraOpus* opus)
+saltuarius_columnae_pingere (
+        SaltuariusColumnae* columnae,
+    constans SaltuariusRes* res,
+               TesseraOpus* opus)
 {
-    TesseraStilus nativus = tessera_stilus_nativus();
+      TesseraStilus nativus = tessera_stilus_nativus();
     SaltuariusMetra metra;
-    i32 latitudo = tessera_latitudo(opus);
-    i32 altitudo = tessera_altitudo(opus);
-    s32 status_y = (s32)altitudo - I;
+                i32 latitudo = tessera_latitudo(opus);
+                i32 altitudo = tessera_altitudo(opus);
+                s32 status_y = (s32)altitudo - I;
 
     tessera_purgare(opus, nativus);
     saltuarius_columnae_metiri(latitudo, altitudo, &metra);
@@ -257,12 +270,13 @@ saltuarius_columnae_pingere (SaltuariusColumnae* columnae,
                 latitudo - X, nativus);
         }
     }
-    si (columnae->currens != NIHIL
+    si (   columnae->currens != NIHIL
         && columnae->currens->numerus > ZEPHYRUM)
     {
         s32 n = columnae->currens->selectio + I;
         s32 m = (s32)columnae->currens->numerus;
-        i32 lat_totalis = saltuarius_pen_digiti(n) + I + saltuarius_pen_digiti(m);
+        i32 lat_totalis = saltuarius_pen_digiti(n) + I
+            + saltuarius_pen_digiti(m);
         s32 x = (s32)latitudo - (s32)lat_totalis;
         i32 scripti;
 

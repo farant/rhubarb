@@ -12,7 +12,9 @@
 #include <stdio.h>
 
 interior SaltuariusLiber*
-_librum_facere (Piscina* piscina, SaltuariusNexus* nexus,
+_librum_facere (
+               Piscina* piscina,
+       SaltuariusNexus* nexus,
     constans character* via)
 {
     redde saltuarius_liber_aperire(piscina, nexus,
@@ -20,12 +22,13 @@ _librum_facere (Piscina* piscina, SaltuariusNexus* nexus,
         chorda_ex_literis("contentum\n", piscina));
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SaltuariusNexus* nexus;
-    SaltuariusBibliotheca bibliotheca;
+                      b32  praeteritus;
+                  Piscina* piscina;
+          SaltuariusNexus* nexus;
+    SaltuariusBibliotheca  bibliotheca;
 
     piscina = piscina_generare_dynamicum("probatio_salt_bibl",
         8388608);
@@ -38,9 +41,11 @@ s32 principale (vacuum)
     nexus = saltuarius_nexus_creare(piscina);
     saltuarius_bibliotheca_parare(&bibliotheca);
 
+
     /* ========================================================
      * PROBARE: condere + quaerere + motus ad frontem
      * ======================================================== */
+
     {
         SaltuariusLiber* a;
         SaltuariusLiber* b;
@@ -68,19 +73,21 @@ s32 principale (vacuum)
             (constans vacuum*)NIHIL);
 
         /* positio cursoris servata trans cache */
-        a->cursor_linea = ZEPHYRUM;
-        a->cursor_columna = III;
+        a->cursor_linea    = ZEPHYRUM;
+        a->cursor_columna  = III;
         CREDO_AEQUALIS_S32 (
             saltuarius_bibliotheca_quaerere(&bibliotheca,
                 chorda_ex_literis("a.md", piscina))->cursor_columna,
             III);
     }
 
+
     /* ========================================================
      * PROBARE: evictio ad N=8
      * ======================================================== */
+
     {
-        i32 k;
+              i32 k;
         character titulus[XVI];
 
         imprimere("\n--- Probans evictionem ---\n");
@@ -89,11 +96,11 @@ s32 principale (vacuum)
          * duo plures -> a et b evicti (vetustissimi) */
         per (k = ZEPHYRUM; k < VIII; k++)
         {
-            titulus[ZEPHYRUM] = (character)('c' + (s32)k);
-            titulus[I] = '.';
-            titulus[II] = 'm';
-            titulus[III] = 'd';
-            titulus[IV] = '\0';
+            titulus[ZEPHYRUM]  = (character)('c' + (s32)k);
+            titulus[I]         = '.';
+            titulus[II]        = 'm';
+            titulus[III]       = 'd';
+            titulus[IV]        = '\0';
             saltuarius_bibliotheca_condere(&bibliotheca,
                 _librum_facere(piscina, nexus, titulus));
         }

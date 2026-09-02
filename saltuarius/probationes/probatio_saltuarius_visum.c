@@ -16,9 +16,10 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
     TesseraPiscina* tp;
     TesseraPonsMemoriae* pm;
@@ -34,21 +35,23 @@ s32 principale (vacuum)
         redde I;
     }
     credo_aperire(piscina);
-    nexus = saltuarius_nexus_creare(piscina);
-    res = saltuarius_res_creare(piscina, "/probe");
+    nexus  = saltuarius_nexus_creare(piscina);
+    res    = saltuarius_res_creare(piscina, "/probe");
     tp = tessera_piscina_generare_dynamicum("salt_visum_tessera",
         16777216);
-    pm = tessera_pons_memoriae_creare(tp, XL, VIII);
-    opus = tessera_aperire(tp, &pm->pons);
+    pm    = tessera_pons_memoriae_creare(tp, XL, VIII);
+    opus  = tessera_aperire(tp, &pm->pons);
     si (opus == NIHIL || nexus == NIHIL)
     {
         imprimere("FRACTA: apertura\n");
         redde I;
     }
 
+
     /* ========================================================
      * PROBARE: scaena colorata - cunula, classes, cursor, status
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -122,9 +125,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: volumen horizontale
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -158,9 +163,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: merus - sine coloribus, pittacium verum
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
 
@@ -181,9 +188,11 @@ s32 principale (vacuum)
         saltuarius_liber_destruere(liber);
     }
 
+
     /* ========================================================
      * PROBARE: strata + tabella originis (C3)
      * ======================================================== */
+
     {
         SaltuariusLiber* liber;
         SaltuariusOrigo* origo;
@@ -211,9 +220,9 @@ s32 principale (vacuum)
         CREDO_VERUM (saltuarius_proba_quaerere(opus, VII,
             "stratum 1/1") > ZEPHYRUM);
         {
-            b32 inventum = FALSUM;
-            s32 y_inventa = ZEPHYRUM;
-            s32 x_inventa = ZEPHYRUM;
+            b32 inventum   = FALSUM;
+            s32 y_inventa  = ZEPHYRUM;
+            s32 x_inventa  = ZEPHYRUM;
             s32 y;
 
             per (y = ZEPHYRUM; y < VII; y++)
@@ -223,9 +232,9 @@ s32 principale (vacuum)
 
                 si (x >= ZEPHYRUM)
                 {
-                    inventum = VERUM;
-                    y_inventa = y;
-                    x_inventa = x;
+                    inventum   = VERUM;
+                    y_inventa  = y;
+                    x_inventa  = x;
                 }
             }
             CREDO_VERUM (inventum);

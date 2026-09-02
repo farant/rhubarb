@@ -19,25 +19,29 @@
 
 nomen structura {
     SaltuariusLiber* libri[SALT_LIBRI_MAXIMI];  /* [0] recentissimus */
-    i32              numerus;
+                i32  numerus;
 } SaltuariusBibliotheca;
 
 vacuum
-saltuarius_bibliotheca_parare (SaltuariusBibliotheca* bibliotheca);
+saltuarius_bibliotheca_parare (
+    SaltuariusBibliotheca* bibliotheca);
 
 /* Librum per viam quaerere; si inventus, ad frontem motus et
  * redditus, alioquin NIHIL */
 SaltuariusLiber*
-saltuarius_bibliotheca_quaerere (SaltuariusBibliotheca* bibliotheca,
-    chorda via);
+saltuarius_bibliotheca_quaerere (
+    SaltuariusBibliotheca* bibliotheca,
+                   chorda  via);
 
 /* Librum condere (frons); si plena, vetustissimus destruitur */
 vacuum
-saltuarius_bibliotheca_condere (SaltuariusBibliotheca* bibliotheca,
-    SaltuariusLiber* liber);
+saltuarius_bibliotheca_condere (
+    SaltuariusBibliotheca* bibliotheca,
+          SaltuariusLiber* liber);
 
 /* Omnes destruere (exitus) */
 vacuum
-saltuarius_bibliotheca_vacare (SaltuariusBibliotheca* bibliotheca);
+saltuarius_bibliotheca_vacare (
+    SaltuariusBibliotheca* bibliotheca);
 
 #endif /* SALTUARIUS_BIBLIOTHECA_H */

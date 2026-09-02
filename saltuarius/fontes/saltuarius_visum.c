@@ -16,7 +16,8 @@
 #define COLOR_IGNOTI      0x00FF6666
 
 interior TesseraStilus
-_stilus_classis (i8 classis)
+_stilus_classis (
+    i8 classis)
 {
     i32 color;
 
@@ -40,14 +41,20 @@ _stilus_classis (i8 classis)
  * Octeti imperii purgati (disciplina penicilli - hic locali quia
  * stilus per runam variat). */
 interior vacuum
-_lineam_ponere (TesseraOpus* opus, s32 x, s32 y, chorda linea,
-    i32 offset_lineae, constans i8* classis, s32 volumen_x,
-    i32 runae_max)
+_lineam_ponere (
+    TesseraOpus* opus,
+            s32  x,
+            s32  y,
+         chorda  linea,
+            i32  offset_lineae,
+    constans i8* classis,
+            s32  volumen_x,
+            i32  runae_max)
 {
-    constans i8* cursor = linea.datum;
-    constans i8* finis = linea.datum + linea.mensura;
-    s32 saltandae = volumen_x;
-    i32 positae = ZEPHYRUM;
+    constans i8* cursor     = linea.datum;
+    constans i8* finis      = linea.datum + linea.mensura;
+            s32  saltandae  = volumen_x;
+            i32  positae    = ZEPHYRUM;
 
     dum (cursor < finis && saltandae > ZEPHYRUM)
     {
@@ -56,12 +63,13 @@ _lineam_ponere (TesseraOpus* opus, s32 x, s32 y, chorda linea,
     }
     dum (cursor < finis && positae < runae_max)
     {
-        constans i8* proxima = utf8_proxima_runa(cursor, finis);
-        i32 octeti = (i32)(memoriae_index)(proxima - cursor);
-        i32 signum;
+          constans i8* proxima = utf8_proxima_runa(cursor, finis);
+                  i32  octeti = (i32)(memoriae_index)(proxima
+                      - cursor);
+                  i32 signum;
         TesseraStilus stilus;
 
-        si (octeti == I
+        si (   octeti == I
             && (cursor[ZEPHYRUM] < 0x20 || cursor[ZEPHYRUM] == 0x7F))
         {
             signum = (i32)' ';
@@ -89,14 +97,17 @@ _lineam_ponere (TesseraOpus* opus, s32 x, s32 y, chorda linea,
 }
 
 vacuum
-saltuarius_visum_metiri (constans SaltuariusLiber* liber,
-    i32 latitudo, i32 altitudo, SaltuariusVisumMetra* metra)
+saltuarius_visum_metiri (
+    constans SaltuariusLiber* liber,
+                         i32  latitudo,
+                         i32  altitudo,
+        SaltuariusVisumMetra* metra)
 {
     metra->cunula_lat = (s32)saltuarius_pen_digiti(
         (s32)saltuarius_liber_stratum_activum(liber)
             ->numerus_linearum);
-    metra->textus_x = metra->cunula_lat + I;
-    metra->textus_lat = (s32)latitudo - metra->textus_x;
+    metra->textus_x    = metra->cunula_lat + I;
+    metra->textus_lat  = (s32)latitudo - metra->textus_x;
     si (metra->textus_lat < I)
     {
         metra->textus_lat = I;
@@ -106,17 +117,19 @@ saltuarius_visum_metiri (constans SaltuariusLiber* liber,
 }
 
 vacuum
-saltuarius_visum_pingere (SaltuariusLiber* liber,
-    constans SaltuariusRes* res, TesseraOpus* opus)
+saltuarius_visum_pingere (
+           SaltuariusLiber* liber,
+    constans SaltuariusRes* res,
+               TesseraOpus* opus)
 {
     TesseraStilus nativus = tessera_stilus_nativus();
     TesseraStilus cunulae = tessera_stilus(COLOR_CUNULAE,
         TESSERA_COLOR_NATIVUS, ZEPHYRUM);
     SaltuariusVisumMetra metra;
-    i32 latitudo = tessera_latitudo(opus);
-    i32 altitudo = tessera_altitudo(opus);
-    s32 status_y = (s32)altitudo - I;
-    s32 k;
+                     i32 latitudo = tessera_latitudo(opus);
+                     i32 altitudo = tessera_altitudo(opus);
+                     s32 status_y = (s32)altitudo - I;
+                     s32 k;
 
     tessera_purgare(opus, nativus);
     saltuarius_visum_metiri(liber, latitudo, altitudo, &metra);
@@ -132,18 +145,18 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
 
         per (k = ZEPHYRUM; k < metra.contentum_alt; k++)
         {
-            s32 index = liber->volumen_y + k;
+               s32 index = liber->volumen_y + k;
             chorda linea;
 
-            si (!visus->parata
+            si (   !visus->parata
                 || index >= (s32)visus->numerus_linearum)
             {
                 frange;
             }
             /* cunula: numerus 1-basatus, dextro-ordinatus */
             {
-                s32 numerus = index + I;
-                i32 digiti = saltuarius_pen_digiti(numerus);
+                s32 numerus  = index + I;
+                i32 digiti   = saltuarius_pen_digiti(numerus);
 
                 (vacuum)saltuarius_pen_numerum(opus,
                     metra.cunula_lat - (s32)digiti, k, numerus,
@@ -170,14 +183,14 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
         i32 lat_numeri;
         i32 lat_dextrae;
         i32 lat_strati;
-        i32 lat_erroris = ZEPHYRUM;
-        s32 errores_libri = ZEPHYRUM;
+        i32 lat_erroris    = ZEPHYRUM;
+        s32 errores_libri  = ZEPHYRUM;
         s32 x;
 
         /* Insigne ambiens (M2d Chunk D): errores silvae SOLUM cum
          * adsunt - plagula pura nihil monstrat, incomprehensio
          * NOTATUR, non auditur */
-        si (liber->parsura != NIHIL
+        si (   liber->parsura != NIHIL
             && liber->parsura->numerus_errorum > ZEPHYRUM)
         {
             errores_libri = (s32)liber->parsura->numerus_errorum;
@@ -249,16 +262,17 @@ saltuarius_visum_pingere (SaltuariusLiber* liber,
 }
 
 vacuum
-saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
-    TesseraOpus* opus)
+saltuarius_visum_tabella (
+    constans SaltuariusOrigo* origo,
+                 TesseraOpus* opus)
 {
-    TesseraStilus nativus = tessera_stilus_nativus();
-    i32 latitudo = tessera_latitudo(opus);
-    s32 lat_tabellae;
-    s32 alt_tabellae;
-    s32 x;
-    s32 y = II;
-    s32 k;
+    TesseraStilus nativus   = tessera_stilus_nativus();
+              i32 latitudo  = tessera_latitudo(opus);
+              s32 lat_tabellae;
+              s32 alt_tabellae;
+              s32 x;
+              s32 y = II;
+              s32 k;
 
     si (!origo->apertum || origo->numerus == ZEPHYRUM)
     {
@@ -273,8 +287,8 @@ saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
     {
         redde;   /* terminal nimis angustum */
     }
-    alt_tabellae = (s32)origo->numerus + II;
-    x = ((s32)latitudo - lat_tabellae) / II;
+    alt_tabellae  = (s32)origo->numerus + II;
+    x             = ((s32)latitudo - lat_tabellae) / II;
 
     /* interior opacum PRIMO (tessera_replere - casus rectanguli),
      * deinde margo, deinde ordines */
@@ -289,7 +303,7 @@ saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
     per (k = ZEPHYRUM; k < (s32)origo->numerus; k++)
     {
         constans SaltuariusGradus* gradus = &origo->gradus[k];
-        TesseraStilus stilus = nativus;
+                    TesseraStilus  stilus = nativus;
 
         si (k == origo->selectio)
         {
@@ -309,17 +323,18 @@ saltuarius_visum_tabella (constans SaltuariusOrigo* origo,
 }
 
 vacuum
-saltuarius_visum_structura (SaltuariusStructura* index,
-    TesseraOpus* opus)
+saltuarius_visum_structura (
+    SaltuariusStructura* index,
+            TesseraOpus* opus)
 {
-    TesseraStilus nativus = tessera_stilus_nativus();
-    i32 latitudo = tessera_latitudo(opus);
-    i32 altitudo = tessera_altitudo(opus);
-    s32 lat_tabulae = XXXVIII;
-    s32 alt_tabulae;
-    s32 interius;
-    s32 x;
-    s32 k;
+    TesseraStilus nativus      = tessera_stilus_nativus();
+              i32 latitudo     = tessera_latitudo(opus);
+              i32 altitudo     = tessera_altitudo(opus);
+              s32 lat_tabulae  = XXXVIII;
+              s32 alt_tabulae;
+              s32 interius;
+              s32 x;
+              s32 k;
 
     si (!index->apertum || index->numerus == ZEPHYRUM)
     {
@@ -334,8 +349,8 @@ saltuarius_visum_structura (SaltuariusStructura* index,
     {
         redde;   /* terminal nimis angustum */
     }
-    interius = alt_tabulae - II;
-    x = (s32)latitudo - lat_tabulae;
+    interius  = alt_tabulae - II;
+    x         = (s32)latitudo - lat_tabulae;
     saltuarius_structura_aptare(index, interius);
 
     /* interior opacum, margo, titulus (ordo z = ordo picturae) */
@@ -349,9 +364,9 @@ saltuarius_visum_structura (SaltuariusStructura* index,
 
     per (k = ZEPHYRUM; k < interius; k++)
     {
-        s32 quo = index->volumen + k;
+                            s32  quo = index->volumen + k;
         constans SaltuariusOrdo* ordo;
-        TesseraStilus stilus = nativus;
+                  TesseraStilus  stilus = nativus;
 
         si (quo >= (s32)index->numerus)
         {
@@ -382,13 +397,14 @@ saltuarius_visum_structura (SaltuariusStructura* index,
 }
 
 vacuum
-saltuarius_visum_quaestio (constans SaltuariusQuaestio* quaestio,
-    TesseraOpus* opus)
+saltuarius_visum_quaestio (
+    constans SaltuariusQuaestio* quaestio,
+                    TesseraOpus* opus)
 {
-    TesseraStilus nativus = tessera_stilus_nativus();
-    i32 latitudo = tessera_latitudo(opus);
-    s32 status_y = (s32)tessera_altitudo(opus) - I;
-    i32 positae;
+    TesseraStilus nativus   = tessera_stilus_nativus();
+              i32 latitudo  = tessera_latitudo(opus);
+              s32 status_y  = (s32)tessera_altitudo(opus) - I;
+              i32 positae;
 
     si (!quaestio->activa)
     {
@@ -412,8 +428,12 @@ saltuarius_visum_quaestio (constans SaltuariusQuaestio* quaestio,
 /* Decem-partes ponere: valor_decies = valor * 10 -> "d.t";
  * reddit latitudinem scriptam */
 interior i32
-_pen_decem (TesseraOpus* opus, s32 x, s32 y, s32 valor_decies,
-    TesseraStilus stilus)
+_pen_decem (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              s32  valor_decies,
+    TesseraStilus  stilus)
 {
     i32 lat = saltuarius_pen_numerum(opus, x, y,
         valor_decies / X, stilus);
@@ -428,15 +448,19 @@ _pen_decem (TesseraOpus* opus, s32 x, s32 y, s32 valor_decies,
 }
 
 vacuum
-saltuarius_visum_fructus (constans SaltuariusLiber* liber,
-    i32 libri_numerus, TesseraOpus* opus)
+saltuarius_visum_fructus (
+    constans SaltuariusLiber* liber,
+                         i32  libri_numerus,
+                 TesseraOpus* opus)
 {
     TesseraStilus stilus = tessera_stilus(0x00FFCC66,
         TESSERA_COLOR_NATIVUS, ZEPHYRUM);
-    i32 latitudo = tessera_latitudo(opus);
-    s32 status_y = (s32)tessera_altitudo(opus) - I;
-    constans TesseraFructus* fructus = &opus->fructus;
-    s32 x = ZEPHYRUM;
+                        i32 latitudo  =
+                            tessera_latitudo(opus);
+                        s32 status_y  =
+                            (s32)tessera_altitudo(opus) - I;
+    constans TesseraFructus* fructus  = &opus->fructus;
+                        s32  x        = ZEPHYRUM;
 
     tessera_replere(opus, ZEPHYRUM, status_y, (s32)latitudo, I,
         (i32)' ', tessera_stilus_nativus());

@@ -29,12 +29,12 @@ nomen enumeratio {
 } SaltuariusPraevisusGenus;
 
 nomen structura {
-    SaltuariusTabularium*    parens;    /* NIHIL ad radicem "/" */
-    SaltuariusTabularium*    currens;
-    SaltuariusPraevisusGenus praevisus_genus;
-    SaltuariusTabularium*    praevisus_tab;
-    chorda                   praevisus_textus;
-    chorda                   praevisus_nuntius;
+        SaltuariusTabularium* parens;    /* NIHIL ad radicem "/" */
+        SaltuariusTabularium* currens;
+    SaltuariusPraevisusGenus  praevisus_genus;
+        SaltuariusTabularium* praevisus_tab;
+                      chorda  praevisus_textus;
+                      chorda  praevisus_nuntius;
 } SaltuariusColumnae;
 
 /* Mensurae dispositionis - publicae quia clicus (A3) pannum ex
@@ -52,18 +52,23 @@ nomen structura {
 
 /* Creare descriptionem scaenae vacuam */
 SaltuariusColumnae*
-saltuarius_columnae_creare (Piscina* piscina);
+saltuarius_columnae_creare (
+    Piscina* piscina);
 
 /* Dispositionem computare pro dimensionibus datis */
 vacuum
-saltuarius_columnae_metiri (i32 latitudo, i32 altitudo,
+saltuarius_columnae_metiri (
+                i32  latitudo,
+                i32  altitudo,
     SaltuariusMetra* metra_out);
 
 /* Scaenam integram pingere (purgat, pannos, separatores, viam,
  * statum; praesentare NON vocat - principale/probationes id
  * faciunt aut omittunt). Tabularia aptantur (volumen) hic. */
 vacuum
-saltuarius_columnae_pingere (SaltuariusColumnae* columnae,
-    constans SaltuariusRes* res, TesseraOpus* opus);
+saltuarius_columnae_pingere (
+        SaltuariusColumnae* columnae,
+    constans SaltuariusRes* res,
+               TesseraOpus* opus);
 
 #endif /* SALTUARIUS_COLUMNAE_H */

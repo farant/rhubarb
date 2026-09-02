@@ -33,40 +33,47 @@ nomen enumeratio {
 
 nomen structura {
     SaltuariusGradusGenus genus;
-    chorda                titulus;     /* textus ordinis */
-    b32                   saltabile;
-    chorda                via;         /* fons via (alias in exp) */
-    s32                   fons_index;
-    i32                   linea;       /* 1-basata */
+                   chorda titulus;     /* textus ordinis */
+                      b32 saltabile;
+                   chorda via;         /* fons via (alias in exp) */
+                      s32 fons_index;
+                      i32 linea;       /* 1-basata */
 } SaltuariusGradus;
 
 nomen structura {
-    Piscina*         arena;       /* refecta per aedificationem */
-    PiscinaNotatio   nota;
-    SaltuariusGradus gradus[SALT_GRADUS_MAXIMI];
-    i32              numerus;
-    s32              selectio;
-    b32              apertum;
+             Piscina* arena;       /* refecta per aedificationem */
+      PiscinaNotatio  nota;
+    SaltuariusGradus  gradus[SALT_GRADUS_MAXIMI];
+                 i32  numerus;
+                 s32  selectio;
+                 b32  apertum;
 } SaltuariusOrigo;
 
 SaltuariusOrigo*
-saltuarius_origo_creare (Piscina* persistens);
+saltuarius_origo_creare (
+    Piscina* persistens);
 
 /* Catenam aedificare pro cursore libri (stratum activum decernit
  * directionem). VERUM si catena aedificata (tabella aperienda);
  * FALSUM si nihil narrabile (sine parsura / nihil inventum). */
 b32
-saltuarius_origo_aedificare (SaltuariusOrigo* origo,
-    SaltuariusLiber* liber, constans SaltuariusNexus* nexus);
+saltuarius_origo_aedificare (
+             SaltuariusOrigo* origo,
+             SaltuariusLiber* liber,
+    constans SaltuariusNexus* nexus);
 
 vacuum
-saltuarius_origo_claudere (SaltuariusOrigo* origo);
+saltuarius_origo_claudere (
+    SaltuariusOrigo* origo);
 
 vacuum
-saltuarius_origo_movere (SaltuariusOrigo* origo, s32 delta);
+saltuarius_origo_movere (
+    SaltuariusOrigo* origo,
+                s32  delta);
 
 /* Gradus selectus si saltabilis; NIHIL alioquin */
 constans SaltuariusGradus*
-saltuarius_origo_saltus (constans SaltuariusOrigo* origo);
+saltuarius_origo_saltus (
+    constans SaltuariusOrigo* origo);
 
 #endif /* SALTUARIUS_ORIGO_H */

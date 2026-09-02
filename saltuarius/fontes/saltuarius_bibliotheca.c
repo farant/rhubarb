@@ -3,7 +3,8 @@
 #include "saltuarius_bibliotheca.h"
 
 vacuum
-saltuarius_bibliotheca_parare (SaltuariusBibliotheca* bibliotheca)
+saltuarius_bibliotheca_parare (
+    SaltuariusBibliotheca* bibliotheca)
 {
     i32 k;
 
@@ -15,10 +16,12 @@ saltuarius_bibliotheca_parare (SaltuariusBibliotheca* bibliotheca)
 }
 
 interior vacuum
-_ad_frontem (SaltuariusBibliotheca* bibliotheca, i32 index)
+_ad_frontem (
+    SaltuariusBibliotheca* bibliotheca,
+                      i32  index)
 {
     SaltuariusLiber* liber = bibliotheca->libri[index];
-    i32 k;
+                i32  k;
 
     per (k = index; k > ZEPHYRUM; k--)
     {
@@ -28,8 +31,9 @@ _ad_frontem (SaltuariusBibliotheca* bibliotheca, i32 index)
 }
 
 SaltuariusLiber*
-saltuarius_bibliotheca_quaerere (SaltuariusBibliotheca* bibliotheca,
-    chorda via)
+saltuarius_bibliotheca_quaerere (
+    SaltuariusBibliotheca* bibliotheca,
+                   chorda  via)
 {
     i32 k;
 
@@ -45,8 +49,9 @@ saltuarius_bibliotheca_quaerere (SaltuariusBibliotheca* bibliotheca,
 }
 
 vacuum
-saltuarius_bibliotheca_condere (SaltuariusBibliotheca* bibliotheca,
-    SaltuariusLiber* liber)
+saltuarius_bibliotheca_condere (
+    SaltuariusBibliotheca* bibliotheca,
+          SaltuariusLiber* liber)
 {
     si (bibliotheca->numerus >= SALT_LIBRI_MAXIMI)
     {
@@ -67,7 +72,8 @@ saltuarius_bibliotheca_condere (SaltuariusBibliotheca* bibliotheca,
 }
 
 vacuum
-saltuarius_bibliotheca_vacare (SaltuariusBibliotheca* bibliotheca)
+saltuarius_bibliotheca_vacare (
+    SaltuariusBibliotheca* bibliotheca)
 {
     i32 k;
 

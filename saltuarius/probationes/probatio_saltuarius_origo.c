@@ -15,13 +15,14 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
-    Piscina* piscina;
-    SaltuariusNexus* nexus;
-    SaltuariusLiber* liber;
-    SaltuariusOrigo* origo;
+                   b32  praeteritus;
+               Piscina* piscina;
+       SaltuariusNexus* nexus;
+       SaltuariusLiber* liber;
+       SaltuariusOrigo* origo;
     constans character* FONS = "#define G(x) ((x)+(x))\nG(2);\n";
 
     piscina = piscina_generare_dynamicum("probatio_salt_origo",
@@ -45,21 +46,23 @@ s32 principale (vacuum)
     origo = saltuarius_origo_creare(piscina);
     CREDO_NON_NIHIL (origo);
 
+
     /* ========================================================
      * PROBARE: catena DEORSUM (stratum I, cursor in expanso)
      * ======================================================== */
+
     {
         constans SaltuariusStratum* stratum;
-        constans character* textus_literis;
-        constans character* plus_situs;
+                constans character* textus_literis;
+                constans character* plus_situs;
 
         imprimere("\n--- Probans catenam deorsum ---\n");
 
         saltuarius_liber_stratum_transferre(liber, nexus, I);
         stratum = saltuarius_liber_stratum(liber, nexus);
         CREDO_VERUM (stratum->parata);
-        textus_literis = chorda_ut_cstr(stratum->textus, piscina);
-        plus_situs = strstr(textus_literis, "+");
+        textus_literis  = chorda_ut_cstr(stratum->textus, piscina);
+        plus_situs      = strstr(textus_literis, "+");
         CREDO_NON_NIHIL ((constans vacuum*)plus_situs);
 
         /* cursor in '+' (lexema expansum ex corpore G) */
@@ -109,9 +112,11 @@ s32 principale (vacuum)
             (s32)origo->numerus - I);
     }
 
+
     /* ========================================================
      * PROBARE: quaestio PRORSUM (stratum 0, cursor in G)
      * ======================================================== */
+
     {
         constans character* g_situs = strstr(FONS, "G(2)");
 
@@ -134,12 +139,14 @@ s32 principale (vacuum)
         CREDO_FALSUM (origo->apertum);
     }
 
+
     /* ========================================================
      * PROBARE: vestigium identitatis trans strata
      * ======================================================== */
+
     {
         constans character* g_situs = strstr(FONS, "G(2)");
-        s32 offset;
+                       s32  offset;
 
         imprimere("\n--- Probans vestigium identitatis ---\n");
 

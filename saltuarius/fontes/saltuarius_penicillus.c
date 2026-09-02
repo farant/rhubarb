@@ -4,21 +4,27 @@
 #include "utf8.h"
 
 i32
-saltuarius_pen_textum (TesseraOpus* opus, s32 x, s32 y,
-    constans i8* datum, i32 mensura, i32 runae_max,
-    TesseraStilus stilus)
+saltuarius_pen_textum (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+      constans i8* datum,
+              i32  mensura,
+              i32  runae_max,
+    TesseraStilus  stilus)
 {
-    constans i8* cursor = datum;
-    constans i8* finis = datum + mensura;
-    i32 positae = ZEPHYRUM;
+    constans i8* cursor   = datum;
+    constans i8* finis    = datum + mensura;
+            i32  positae  = ZEPHYRUM;
 
     dum (cursor < finis && positae < runae_max)
     {
-        constans i8* proxima = utf8_proxima_runa(cursor, finis);
-        i32 octeti = (i32)(memoriae_index)(proxima - cursor);
-        i32 signum;
+        constans i8* proxima  = utf8_proxima_runa(cursor, finis);
+                i32  octeti    = (i32)(memoriae_index)(proxima
+                    - cursor);
+                i32 signum;
 
-        si (octeti == I
+        si (   octeti == I
             && (cursor[ZEPHYRUM] < 0x20 || cursor[ZEPHYRUM] == 0x7F))
         {
             signum = (i32)' ';   /* imperium purgatum */
@@ -36,9 +42,13 @@ saltuarius_pen_textum (TesseraOpus* opus, s32 x, s32 y,
 }
 
 vacuum
-saltuarius_pen_literis (TesseraOpus* opus, s32 x, s32 y,
-    constans character* literis, i32 runae_max,
-    TesseraStilus stilus)
+saltuarius_pen_literis (
+           TesseraOpus* opus,
+                   s32  x,
+                   s32  y,
+    constans character* literis,
+                   i32  runae_max,
+         TesseraStilus  stilus)
 {
     i32 mensura = ZEPHYRUM;
 
@@ -51,13 +61,17 @@ saltuarius_pen_literis (TesseraOpus* opus, s32 x, s32 y,
 }
 
 i32
-saltuarius_pen_numerum (TesseraOpus* opus, s32 x, s32 y,
-    s32 valor, TesseraStilus stilus)
+saltuarius_pen_numerum (
+      TesseraOpus* opus,
+              s32  x,
+              s32  y,
+              s32  valor,
+    TesseraStilus  stilus)
 {
     character buffer[XVI];
-    i32 digiti = ZEPHYRUM;
-    s32 reliquum = valor;
-    i32 k;
+          i32 digiti    = ZEPHYRUM;
+          s32 reliquum  = valor;
+          i32 k;
 
     si (reliquum < ZEPHYRUM)
     {
@@ -79,7 +93,8 @@ saltuarius_pen_numerum (TesseraOpus* opus, s32 x, s32 y,
 }
 
 i32
-saltuarius_pen_digiti (s32 valor)
+saltuarius_pen_digiti (
+    s32 valor)
 {
     i32 numerus = I;
 

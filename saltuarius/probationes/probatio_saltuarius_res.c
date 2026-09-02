@@ -11,9 +11,10 @@
 #include "saltuarius_res.h"
 #include <stdio.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_salt_res",
@@ -25,9 +26,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: creatio + navigatio viae
      * ======================================================== */
+
     {
         SaltuariusRes* res;
 
@@ -60,9 +63,11 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS (res->via_currens, "/");
     }
 
+
     /* ========================================================
      * PROBARE: nuntius transitorius
      * ======================================================== */
+
     {
         SaltuariusRes* res;
 

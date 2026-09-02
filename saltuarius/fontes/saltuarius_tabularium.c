@@ -5,7 +5,8 @@
 /* Litteram ASCII ad minusculam plicare (sine ctype - locale non
  * negotium nostrum) */
 interior s32
-_minuscula (s32 c)
+_minuscula (
+    s32 c)
 {
     si (c >= 'A' && c <= 'Z')
     {
@@ -17,7 +18,8 @@ _minuscula (s32 c)
 /* Ordo: directoria primum, deinde tituli ordine octetorum
  * (brevior prior in aequalitate praefixi). Negativum si a < b. */
 interior s32
-_comparare (constans DirectoriumIntroitus* a,
+_comparare (
+    constans DirectoriumIntroitus* a,
     constans DirectoriumIntroitus* b)
 {
     b32 a_dir = (a->genus == INTROITUS_DIRECTORIUM);
@@ -47,7 +49,8 @@ _comparare (constans DirectoriumIntroitus* a,
 }
 
 SaltuariusTabularium*
-saltuarius_tabularium_creare (Piscina* piscina)
+saltuarius_tabularium_creare (
+    Piscina* piscina)
 {
     SaltuariusTabularium* tabularium;
 
@@ -58,25 +61,27 @@ saltuarius_tabularium_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    tabularium->introitus = NIHIL;
-    tabularium->numerus = ZEPHYRUM;
-    tabularium->selectio = -I;
-    tabularium->volumen = ZEPHYRUM;
+    tabularium->introitus  = NIHIL;
+    tabularium->numerus    = ZEPHYRUM;
+    tabularium->selectio   = -I;
+    tabularium->volumen    = ZEPHYRUM;
     redde tabularium;
 }
 
 vacuum
-saltuarius_tabularium_implere (SaltuariusTabularium* tabularium,
-    Piscina* piscina, constans DirectoriumIntroitus* fontes,
-    i32 numerus)
+saltuarius_tabularium_implere (
+             SaltuariusTabularium* tabularium,
+                          Piscina* piscina,
+    constans DirectoriumIntroitus* fontes,
+                              i32  numerus)
 {
     i32 k;
     i32 tenuti = ZEPHYRUM;
 
     /* NB: tabula vetus in piscina manet (arena est; index parvus,
      * pretium acceptum - impletio rara, non per-quadrum) */
-    tabularium->introitus = NIHIL;
-    tabularium->numerus = ZEPHYRUM;
+    tabularium->introitus  = NIHIL;
+    tabularium->numerus    = ZEPHYRUM;
     si (numerus > ZEPHYRUM)
     {
         tabularium->introitus = (DirectoriumIntroitus*)
@@ -91,7 +96,7 @@ saltuarius_tabularium_implere (SaltuariusTabularium* tabularium,
         {
             /* filtrum punctatorum (narratio Phase A: celata, sine
              * commutatore) */
-            si (fontes[k].titulus.mensura > ZEPHYRUM
+            si (   fontes[k].titulus.mensura > ZEPHYRUM
                 && fontes[k].titulus.datum[ZEPHYRUM] == '.')
             {
                 perge;
@@ -100,8 +105,8 @@ saltuarius_tabularium_implere (SaltuariusTabularium* tabularium,
             {
                 s32 j = (s32)tenuti - I;
 
-                dum (j >= ZEPHYRUM
-                    && _comparare(&tabularium->introitus[j],
+                dum (   j >= ZEPHYRUM
+                     && _comparare(&tabularium->introitus[j],
                         &fontes[k]) > ZEPHYRUM)
                 {
                     tabularium->introitus[j + I] =
@@ -113,16 +118,16 @@ saltuarius_tabularium_implere (SaltuariusTabularium* tabularium,
             }
         }
     }
-    tabularium->numerus = tenuti;
-    tabularium->selectio = (tenuti > ZEPHYRUM) ? ZEPHYRUM : -I;
-    tabularium->volumen = ZEPHYRUM;
+    tabularium->numerus   = tenuti;
+    tabularium->selectio  = (tenuti > ZEPHYRUM) ? ZEPHYRUM : -I;
+    tabularium->volumen   = ZEPHYRUM;
 }
 
 constans DirectoriumIntroitus*
 saltuarius_tabularium_selectum (
     constans SaltuariusTabularium* tabularium)
 {
-    si (tabularium->selectio < ZEPHYRUM
+    si (   tabularium->selectio < ZEPHYRUM
         || tabularium->selectio >= (s32)tabularium->numerus)
     {
         redde NIHIL;
@@ -131,8 +136,9 @@ saltuarius_tabularium_selectum (
 }
 
 vacuum
-saltuarius_tabularium_movere (SaltuariusTabularium* tabularium,
-    s32 delta)
+saltuarius_tabularium_movere (
+    SaltuariusTabularium* tabularium,
+                     s32  delta)
 {
     s32 nova;
 
@@ -153,7 +159,8 @@ saltuarius_tabularium_movere (SaltuariusTabularium* tabularium,
 }
 
 vacuum
-saltuarius_tabularium_primum (SaltuariusTabularium* tabularium)
+saltuarius_tabularium_primum (
+    SaltuariusTabularium* tabularium)
 {
     si (tabularium->numerus > ZEPHYRUM)
     {
@@ -162,7 +169,8 @@ saltuarius_tabularium_primum (SaltuariusTabularium* tabularium)
 }
 
 vacuum
-saltuarius_tabularium_ultimum (SaltuariusTabularium* tabularium)
+saltuarius_tabularium_ultimum (
+    SaltuariusTabularium* tabularium)
 {
     si (tabularium->numerus > ZEPHYRUM)
     {
@@ -171,8 +179,9 @@ saltuarius_tabularium_ultimum (SaltuariusTabularium* tabularium)
 }
 
 b32
-saltuarius_tabularium_saltare (SaltuariusTabularium* tabularium,
-    s32 runa)
+saltuarius_tabularium_saltare (
+    SaltuariusTabularium* tabularium,
+                     s32  runa)
 {
     s32 quaesita = _minuscula(runa);
     i32 k;
@@ -188,7 +197,7 @@ saltuarius_tabularium_saltare (SaltuariusTabularium* tabularium,
         constans DirectoriumIntroitus* intr =
             &tabularium->introitus[index];
 
-        si (intr->titulus.mensura > ZEPHYRUM
+        si (   intr->titulus.mensura > ZEPHYRUM
             && _minuscula((s32)intr->titulus.datum[ZEPHYRUM])
                 == quaesita)
         {
@@ -200,10 +209,11 @@ saltuarius_tabularium_saltare (SaltuariusTabularium* tabularium,
 }
 
 vacuum
-saltuarius_tabularium_aptare (SaltuariusTabularium* tabularium,
-    i32 altitudo_fenestrae)
+saltuarius_tabularium_aptare (
+    SaltuariusTabularium* tabularium,
+                     i32  altitudo_fenestrae)
 {
-    si (tabularium->selectio < ZEPHYRUM
+    si (   tabularium->selectio < ZEPHYRUM
         || altitudo_fenestrae == ZEPHYRUM)
     {
         tabularium->volumen = ZEPHYRUM;

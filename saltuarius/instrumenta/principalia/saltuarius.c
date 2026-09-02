@@ -29,7 +29,9 @@
 #define NUNTIUS_QUADRA XII   /* ~3s ad moram 250ms */
 
 interior constans character*
-_literis (Piscina* piscina, chorda textus)
+_literis (
+    Piscina* piscina,
+     chorda  textus)
 {
     character* buffer;
 
@@ -46,32 +48,34 @@ _literis (Piscina* piscina, chorda textus)
 
 /* Status totalis app (pro dispensatoribus) */
 nomen structura {
-    Piscina*                piscina;
-    SaltuariusRes*          res;
-    SaltuariusColumnae*     columnae;
-    SaltuariusLimes*        limes;
-    SaltuariusNexus*        nexus;
-    SaltuariusBibliotheca   bibliotheca;
-    SaltuariusLiber*        liber;      /* apertus in MODUS_FONS */
-    SaltuariusOrigo*        origo;
-    SaltuariusStructura*    index;      /* TOC; NB "structura" =
+                  Piscina* piscina;
+            SaltuariusRes* res;
+       SaltuariusColumnae* columnae;
+          SaltuariusLimes* limes;
+          SaltuariusNexus* nexus;
+    SaltuariusBibliotheca  bibliotheca;
+          SaltuariusLiber* liber;      /* apertus in MODUS_FONS */
+          SaltuariusOrigo* origo;
+      SaltuariusStructura* index;      /* TOC; NB "structura" =
                                          * macro (struct)! */
-    SaltuariusQuaestio      quaestio;   /* '/' (D2) */
-    TesseraOpus*            opus;
+    SaltuariusQuaestio  quaestio;   /* '/' (D2) */
+           TesseraOpus* opus;
 } SaltuariusApp;
 
 /* Praebenda ex compile_flags.txt seminare (conventio clangd:
  * lineae -I radix-relativae) - limes discum ambulat, nexus
  * iniecta accipit */
 interior vacuum
-_silvam_seminare (SaltuariusApp* app, SaltuariusLimes* limes,
-    chorda radix)
+_silvam_seminare (
+      SaltuariusApp* app,
+    SaltuariusLimes* limes,
+             chorda  radix)
 {
     chorda partes[II];
     chorda via_cf;
     chorda textus;
     chorda viae[XVI];
-    i32 numerus_viarum = ZEPHYRUM;
+       i32 numerus_viarum = ZEPHYRUM;
 
     partes[ZEPHYRUM] = radix;
     partes[I] = chorda_ex_literis("compile_flags.txt",
@@ -94,16 +98,16 @@ _silvam_seminare (SaltuariusApp* app, SaltuariusLimes* limes,
             {
                 i32 mensura = k - initium;
 
-                si (mensura > II
-                    && textus.datum[initium] == '-'
+                si (   mensura > II
+                    && textus.datum[initium]     == '-'
                     && textus.datum[initium + I] == 'I')
                 {
                     chorda relativa;
 
-                    relativa.datum = textus.datum + initium + II;
-                    relativa.mensura = mensura - II;
-                    partes[ZEPHYRUM] = radix;
-                    partes[I] = relativa;
+                    relativa.datum    = textus.datum + initium + II;
+                    relativa.mensura  = mensura - II;
+                    partes[ZEPHYRUM]  = radix;
+                    partes[I]         = relativa;
                     viae[numerus_viarum] = via_iungere(partes, II,
                         app->piscina);
                     numerus_viarum++;
@@ -114,8 +118,8 @@ _silvam_seminare (SaltuariusApp* app, SaltuariusLimes* limes,
     }
     {
         SaltuariusCaput* capita = NIHIL;
-        i32 numerus = saltuarius_limes_capita_legere(limes,
-            app->piscina, viae, numerus_viarum, &capita);
+                    i32  numerus = saltuarius_limes_capita_legere(limes,
+                        app->piscina, viae, numerus_viarum, &capita);
 
         si (numerus > ZEPHYRUM)
         {
@@ -129,7 +133,10 @@ _silvam_seminare (SaltuariusApp* app, SaltuariusLimes* limes,
  * COMMUNIS origini et indici structurae (D1: unus saltus, duo
  * vocatores). */
 interior vacuum
-_ad_locum_ire (SaltuariusApp* app, chorda via, i32 linea)
+_ad_locum_ire (
+    SaltuariusApp* app,
+           chorda  via,
+              i32  linea)
 {
     chorda via_meta;
 
@@ -137,14 +144,14 @@ _ad_locum_ire (SaltuariusApp* app, chorda via, i32 linea)
     si (chorda_aequalis(via, app->liber->via))
     {
         saltuarius_liber_stratum_ponere(app->liber, ZEPHYRUM);
-        app->liber->cursor_linea = (s32)linea - I;
-        app->liber->cursor_columna = ZEPHYRUM;
+        app->liber->cursor_linea    = (s32)linea - I;
+        app->liber->cursor_columna  = ZEPHYRUM;
         saltuarius_liber_movere(app->liber, ZEPHYRUM);
         redde;
     }
     /* resolutio: titulus praebendi -> absoluta; aut via absoluta */
     via_meta = saltuarius_nexus_fons_resolvere(app->nexus, via);
-    si (via_meta.mensura == ZEPHYRUM
+    si (   via_meta.mensura    == ZEPHYRUM
         && via.mensura > ZEPHYRUM
         && via.datum[ZEPHYRUM] == '/')
     {
@@ -177,15 +184,16 @@ _ad_locum_ire (SaltuariusApp* app, chorda via, i32 linea)
         }
         app->liber = liber;
         saltuarius_liber_stratum_ponere(liber, ZEPHYRUM);
-        liber->cursor_linea = (s32)linea - I;
-        liber->cursor_columna = ZEPHYRUM;
+        liber->cursor_linea    = (s32)linea - I;
+        liber->cursor_columna  = ZEPHYRUM;
         saltuarius_liber_movere(liber, ZEPHYRUM);
     }
 }
 
 /* Saltus originis: gradus selectus -> plagula + linea */
 interior vacuum
-_saltum_facere (SaltuariusApp* app)
+_saltum_facere (
+    SaltuariusApp* app)
 {
     constans SaltuariusGradus* gradus =
         saltuarius_origo_saltus(app->origo);
@@ -201,7 +209,8 @@ _saltum_facere (SaltuariusApp* app)
 /* Saltus indicis structurae: inclusio -> IN plagulam (linea I);
  * definitio/regio -> linea plagulae currentis */
 interior vacuum
-_saltum_indicis (SaltuariusApp* app)
+_saltum_indicis (
+    SaltuariusApp* app)
 {
     constans SaltuariusOrdo* ordo =
         saltuarius_structura_saltus(app->index);
@@ -231,7 +240,8 @@ _saltum_indicis (SaltuariusApp* app)
 
 /* Intrare (columnae): directorium aut librum aperire */
 interior vacuum
-_intrare (SaltuariusApp* app)
+_intrare (
+    SaltuariusApp* app)
 {
     constans DirectoriumIntroitus* selectum =
         saltuarius_tabularium_selectum(app->limes->tab_currens);
@@ -257,14 +267,14 @@ _intrare (SaltuariusApp* app)
         {
             /* cache primo (via plena in arena persistenti -
              * stillicidium parvum per aperturam, notatum) */
-            chorda partes[II];
-            chorda via_plena;
-            SaltuariusLiber* liber;
+                        chorda  partes[II];
+                        chorda  via_plena;
+               SaltuariusLiber* liber;
             constans character* causa;
 
-            partes[ZEPHYRUM] = app->res->via_currens;
-            partes[I] = selectum->titulus;
-            via_plena = via_iungere(partes, II, app->piscina);
+            partes[ZEPHYRUM]  = app->res->via_currens;
+            partes[I]         = selectum->titulus;
+            via_plena         = via_iungere(partes, II, app->piscina);
             liber = saltuarius_bibliotheca_quaerere(
                 &app->bibliotheca, via_plena);
             si (liber == NIHIL)
@@ -286,8 +296,8 @@ _intrare (SaltuariusApp* app)
                 saltuarius_bibliotheca_condere(&app->bibliotheca,
                     liber);
             }
-            app->liber = liber;
-            app->res->modus = SALT_MODUS_FONS;
+            app->liber       = liber;
+            app->res->modus  = SALT_MODUS_FONS;
             frange;
         }
         ordinarius:
@@ -298,7 +308,8 @@ _intrare (SaltuariusApp* app)
 }
 
 interior vacuum
-_ascendere (SaltuariusApp* app)
+_ascendere (
+    SaltuariusApp* app)
 {
     chorda selectandum;
 
@@ -314,18 +325,21 @@ _ascendere (SaltuariusApp* app)
 }
 
 interior vacuum
-_clicum_columnarum (SaltuariusApp* app, s32 x, s32 y)
+_clicum_columnarum (
+    SaltuariusApp* app,
+              s32  x,
+              s32  y)
 {
     SaltuariusMetra metra;
 
     saltuarius_columnae_metiri(tessera_latitudo(app->opus),
         tessera_altitudo(app->opus), &metra);
-    si (y < metra.contentum_y
+    si (   y < metra.contentum_y
         || y >= metra.contentum_y + metra.contentum_alt)
     {
         redde;
     }
-    si (x >= metra.currens_x
+    si (   x >= metra.currens_x
         && x < metra.currens_x + metra.currens_lat)
     {
         s32 index = app->limes->tab_currens->volumen
@@ -349,7 +363,10 @@ _clicum_columnarum (SaltuariusApp* app, s32 x, s32 y)
 }
 
 interior vacuum
-_clicum_fontis (SaltuariusApp* app, s32 x, s32 y)
+_clicum_fontis (
+    SaltuariusApp* app,
+              s32  x,
+              s32  y)
 {
     SaltuariusVisumMetra metra;
 
@@ -369,7 +386,8 @@ _clicum_fontis (SaltuariusApp* app, s32 x, s32 y)
 
 /* Iussa in modo columnarum */
 interior vacuum
-_iussum_columnarum (SaltuariusApp* app,
+_iussum_columnarum (
+                SaltuariusApp* app,
     constans SaltuariusIussum* iussum)
 {
     b32 praevisus_recens = FALSUM;
@@ -392,7 +410,7 @@ _iussum_columnarum (SaltuariusApp* app,
         casus SALT_ACTIO_PAGINA_DEORSUM:
         {
             SaltuariusMetra metra;
-            s32 dimidium;
+                        s32 dimidium;
 
             saltuarius_columnae_metiri(tessera_latitudo(app->opus),
                 tessera_altitudo(app->opus), &metra);
@@ -445,7 +463,8 @@ _iussum_columnarum (SaltuariusApp* app,
 }
 
 interior b32
-liber_multistratus (constans SaltuariusApp* app)
+liber_multistratus (
+    constans SaltuariusApp* app)
 {
     redde (app->liber != NIHIL
         && app->liber->numerus_stratorum > I) ? VERUM : FALSUM;
@@ -453,7 +472,8 @@ liber_multistratus (constans SaltuariusApp* app)
 
 /* Iussa dum tabella originis aperta (micro-modus) */
 interior vacuum
-_iussum_tabellae (SaltuariusApp* app,
+_iussum_tabellae (
+                SaltuariusApp* app,
     constans SaltuariusIussum* iussum)
 {
     commutatio (iussum->genus)
@@ -483,7 +503,8 @@ _iussum_tabellae (SaltuariusApp* app,
  * tabella originis MUTUO EXCLUSIVUS - dispensatio ordinem
  * praestat: origo -> index -> fons) */
 interior vacuum
-_iussum_indicis (SaltuariusApp* app,
+_iussum_indicis (
+                SaltuariusApp* app,
     constans SaltuariusIussum* iussum)
 {
     commutatio (iussum->genus)
@@ -526,7 +547,8 @@ _iussum_indicis (SaltuariusApp* app,
 
 /* Iussa in modo fontis */
 interior vacuum
-_iussum_fontis (SaltuariusApp* app,
+_iussum_fontis (
+                SaltuariusApp* app,
     constans SaltuariusIussum* iussum)
 {
     commutatio (iussum->genus)
@@ -549,7 +571,7 @@ _iussum_fontis (SaltuariusApp* app,
         casus SALT_ACTIO_PAGINA_DEORSUM:
         {
             SaltuariusVisumMetra metra;
-            s32 dimidium;
+                             s32 dimidium;
 
             saltuarius_visum_metiri(app->liber,
                 tessera_latitudo(app->opus),
@@ -616,9 +638,10 @@ _iussum_fontis (SaltuariusApp* app,
                     "(quaestio vacua)", NUNTIUS_QUADRA);
             }
             alioquin si (!saltuarius_quaestio_proximum(
-                &app->quaestio, app->liber,
-                (iussum->genus == SALT_ACTIO_PROXIMUM) ? I : -I,
-                &volvit))
+                         &app->quaestio, app->liber,
+                         (iussum->genus
+                             == SALT_ACTIO_PROXIMUM) ? I : -I,
+                         &volvit))
             {
                 saltuarius_res_nuntiare(app->res,
                     "(nihil inventum)", NUNTIUS_QUADRA);
@@ -650,7 +673,10 @@ _iussum_fontis (SaltuariusApp* app,
     }
 }
 
-s32 principale (s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
     SaltuariusApp app;
     TesseraPiscina* tp;
@@ -678,18 +704,18 @@ s32 principale (s32 argc, character** argv)
         app.res = saltuarius_res_creare(app.piscina,
             _literis(app.piscina, radix_abs));
     }
-    app.columnae = saltuarius_columnae_creare(app.piscina);
-    app.nexus = saltuarius_nexus_creare(app.piscina);
-    tab_parens = saltuarius_tabularium_creare(app.piscina);
-    tab_currens = saltuarius_tabularium_creare(app.piscina);
-    tab_praevisus = saltuarius_tabularium_creare(app.piscina);
+    app.columnae   = saltuarius_columnae_creare(app.piscina);
+    app.nexus      = saltuarius_nexus_creare(app.piscina);
+    tab_parens     = saltuarius_tabularium_creare(app.piscina);
+    tab_currens    = saltuarius_tabularium_creare(app.piscina);
+    tab_praevisus  = saltuarius_tabularium_creare(app.piscina);
     app.limes = saltuarius_limes_creare(app.piscina, tab_parens,
         tab_currens, tab_praevisus);
     saltuarius_bibliotheca_parare(&app.bibliotheca);
     app.origo = saltuarius_origo_creare(app.piscina);
     app.index = saltuarius_structura_creare(app.piscina);
     saltuarius_quaestio_parare(&app.quaestio);
-    si (app.res == NIHIL || app.columnae == NIHIL
+    si (   app.res   == NIHIL || app.columnae == NIHIL
         || app.nexus == NIHIL || app.limes == NIHIL
         || app.origo == NIHIL || app.index == NIHIL)
     {
@@ -707,8 +733,8 @@ s32 principale (s32 argc, character** argv)
             "saltuarius: terminal verum requiritur (isatty)\n");
         redde I;
     }
-    app.opus = tessera_aperire(tp, pons);
-    lector = tessera_lector_creare(tp, pons);
+    app.opus  = tessera_aperire(tp, pons);
+    lector    = tessera_lector_creare(tp, pons);
     si (app.opus == NIHIL || lector == NIHIL)
     {
         fprintf(stderr, "saltuarius: apertura fracta\n");
@@ -727,11 +753,11 @@ s32 principale (s32 argc, character** argv)
 
     dum (app.res->currens)
     {
-        TesseraEventum ev;
+          TesseraEventum ev;
         SaltuariusIussum iussum;
 
-        si (app.res->modus == SALT_MODUS_FONS
-            && app.liber != NIHIL)
+        si (   app.res->modus == SALT_MODUS_FONS
+            && app.liber      != NIHIL)
         {
             saltuarius_visum_pingere(app.liber, app.res, app.opus);
             si (app.origo->apertum)
@@ -773,27 +799,27 @@ s32 principale (s32 argc, character** argv)
         /* modus initus: eventa CRUDA ad quaestionem (claves
          * praeteritae - '/' solum ex _iussum_fontis attingitur,
          * ergo origo/index necessario clausi) */
-        si (app.res->modus == SALT_MODUS_FONS
-            && app.liber != NIHIL && app.quaestio.activa)
+        si (   app.res->modus == SALT_MODUS_FONS
+            && app.liber      != NIHIL && app.quaestio.activa)
         {
             (vacuum)saltuarius_quaestio_tradere(&app.quaestio,
                 app.liber, &ev);
         }
         alioquin si (saltuarius_claves_tradere(&claves,
-            app.res->modus, &ev, &iussum))
+                     app.res->modus, &ev, &iussum))
         {
-            si (app.res->modus == SALT_MODUS_FONS
-                && app.liber != NIHIL && app.origo->apertum)
+            si (   app.res->modus == SALT_MODUS_FONS
+                && app.liber      != NIHIL && app.origo->apertum)
             {
                 _iussum_tabellae(&app, &iussum);
             }
-            alioquin si (app.res->modus == SALT_MODUS_FONS
-                && app.liber != NIHIL && app.index->apertum)
+            alioquin si (   app.res->modus == SALT_MODUS_FONS
+                         && app.liber != NIHIL && app.index->apertum)
             {
                 _iussum_indicis(&app, &iussum);
             }
-            alioquin si (app.res->modus == SALT_MODUS_FONS
-                && app.liber != NIHIL)
+            alioquin si (   app.res->modus == SALT_MODUS_FONS
+                         && app.liber      != NIHIL)
             {
                 _iussum_fontis(&app, &iussum);
             }

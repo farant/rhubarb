@@ -20,20 +20,23 @@
 #include <stdio.h>
 
 interior DirectoriumIntroitus
-_introitus (constans character* titulus, IntroitusGenus genus,
-    Piscina* piscina)
+_introitus (
+    constans character* titulus,
+        IntroitusGenus  genus,
+               Piscina* piscina)
 {
     DirectoriumIntroitus intr;
 
-    intr.titulus = chorda_ex_literis(titulus, piscina);
-    intr.genus = genus;
-    intr.mensura = ZEPHYRUM;
+    intr.titulus  = chorda_ex_literis(titulus, piscina);
+    intr.genus    = genus;
+    intr.mensura  = ZEPHYRUM;
     redde intr;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
     TesseraPiscina* tp;
     TesseraPonsMemoriae* pm;
@@ -55,17 +58,19 @@ s32 principale (vacuum)
 
     tp = tessera_piscina_generare_dynamicum("salt_col_tessera",
         16777216);
-    pm = tessera_pons_memoriae_creare(tp, LX, XII);
-    opus = tessera_aperire(tp, &pm->pons);
+    pm    = tessera_pons_memoriae_creare(tp, LX, XII);
+    opus  = tessera_aperire(tp, &pm->pons);
     si (opus == NIHIL)
     {
         imprimere("FRACTA: apertura tesserae\n");
         redde I;
     }
 
+
     /* ========================================================
      * PROBARE: metra (mathesis dispositionis figitur)
      * ======================================================== */
+
     {
         SaltuariusMetra metra;
 
@@ -83,11 +88,11 @@ s32 principale (vacuum)
     }
 
     /* fixum commune */
-    res = saltuarius_res_creare(piscina, "/a/b");
-    columnae = saltuarius_columnae_creare(piscina);
-    parens = saltuarius_tabularium_creare(piscina);
-    currens = saltuarius_tabularium_creare(piscina);
-    praevisus = saltuarius_tabularium_creare(piscina);
+    res        = saltuarius_res_creare(piscina, "/a/b");
+    columnae   = saltuarius_columnae_creare(piscina);
+    parens     = saltuarius_tabularium_creare(piscina);
+    currens    = saltuarius_tabularium_creare(piscina);
+    praevisus  = saltuarius_tabularium_creare(piscina);
     {
         DirectoriumIntroitus fontes_parens[II];
         DirectoriumIntroitus fontes_currens[IV];
@@ -97,7 +102,8 @@ s32 principale (vacuum)
             INTROITUS_DIRECTORIUM, piscina);
         fontes_parens[I] = _introitus("b", INTROITUS_DIRECTORIUM,
             piscina);
-        saltuarius_tabularium_implere(parens, piscina, fontes_parens, II);
+        saltuarius_tabularium_implere(parens, piscina, fontes_parens,
+            II);
         parens->selectio = I;   /* "b" = directorium currens */
 
         fontes_currens[ZEPHYRUM] = _introitus("fontes",
@@ -108,23 +114,27 @@ s32 principale (vacuum)
             piscina);
         fontes_currens[III] = _introitus("nexus", INTROITUS_ALIUS,
             piscina);
-        saltuarius_tabularium_implere(currens, piscina, fontes_currens, IV);
+        saltuarius_tabularium_implere(currens, piscina, fontes_currens,
+            IV);
 
         fontes_praevisus[ZEPHYRUM] = _introitus("x.c",
             INTROITUS_FILUM, piscina);
         fontes_praevisus[I] = _introitus("y.c", INTROITUS_FILUM,
             piscina);
-        saltuarius_tabularium_implere(praevisus, piscina, fontes_praevisus,
+        saltuarius_tabularium_implere(praevisus, piscina,
+            fontes_praevisus,
             II);
     }
-    columnae->parens = parens;
-    columnae->currens = currens;
-    columnae->praevisus_genus = SALT_PRAEVISUS_DIRECTORIUM;
-    columnae->praevisus_tab = praevisus;
+    columnae->parens           = parens;
+    columnae->currens          = currens;
+    columnae->praevisus_genus  = SALT_PRAEVISUS_DIRECTORIUM;
+    columnae->praevisus_tab    = praevisus;
+
 
     /* ========================================================
      * PROBARE: scaena prima - panni, suffixa, selectio, status
      * ======================================================== */
+
     {
         chorda linea;
 
@@ -190,17 +200,19 @@ s32 principale (vacuum)
             saltuarius_proba_quaerere(opus, XI, "1/4"), LVII);
     }
 
+
     /* ========================================================
      * PROBARE: scaena secunda - selectio mota, praevisus textus
      * (purgatio \t, \r), nihil primae manet
      * ======================================================== */
+
     {
         chorda linea;
 
         imprimere("\n--- Probans scaenam secundam ---\n");
 
-        currens->selectio = II;   /* opus.c */
-        columnae->praevisus_genus = SALT_PRAEVISUS_TEXTUS;
+        currens->selectio          = II;   /* opus.c */
+        columnae->praevisus_genus  = SALT_PRAEVISUS_TEXTUS;
         columnae->praevisus_textus = chorda_ex_literis(
             "alpha\nbeta\rcum\ttabs\r\nfinis", piscina);
         saltuarius_columnae_pingere(columnae, res, opus);
@@ -238,13 +250,15 @@ s32 principale (vacuum)
             saltuarius_proba_quaerere(opus, XI, "3/4"), LVII);
     }
 
+
     /* ========================================================
      * PROBARE: truncatio - titulus longior quam pannus;
      * separator intactus
      * ======================================================== */
+
     {
         DirectoriumIntroitus longa[I];
-        chorda linea;
+                      chorda linea;
 
         imprimere("\n--- Probans truncationem ---\n");
 
@@ -268,15 +282,18 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_I32 (linea.mensura, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: vacuum + nuntius
      * ======================================================== */
+
     {
         chorda linea;
 
         imprimere("\n--- Probans vacuum et nuntium ---\n");
 
-        saltuarius_tabularium_implere(currens, piscina, NIHIL, ZEPHYRUM);
+        saltuarius_tabularium_implere(currens, piscina, NIHIL,
+            ZEPHYRUM);
         saltuarius_res_nuntiare(res, "silva legit...", II);
         saltuarius_columnae_pingere(columnae, res, opus);
 
@@ -288,14 +305,16 @@ s32 principale (vacuum)
             ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: amplitudo mutata (scripta) - dispositio nova,
      * pictura plena intra fines novos
      * ======================================================== */
+
     {
         DirectoriumIntroitus unus[I];
-        SaltuariusMetra metra;
-        chorda linea;
+             SaltuariusMetra metra;
+                      chorda linea;
 
         imprimere("\n--- Probans amplitudinem mutatam ---\n");
 

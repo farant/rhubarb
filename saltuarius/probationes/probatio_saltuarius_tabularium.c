@@ -14,20 +14,23 @@
 #include <stdio.h>
 
 interior DirectoriumIntroitus
-_introitus (constans character* titulus, IntroitusGenus genus,
-    Piscina* piscina)
+_introitus (
+    constans character* titulus,
+        IntroitusGenus  genus,
+               Piscina* piscina)
 {
     DirectoriumIntroitus intr;
 
-    intr.titulus = chorda_ex_literis(titulus, piscina);
-    intr.genus = genus;
-    intr.mensura = ZEPHYRUM;
+    intr.titulus  = chorda_ex_literis(titulus, piscina);
+    intr.genus    = genus;
+    intr.mensura  = ZEPHYRUM;
     redde intr;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
-    b32      praeteritus;
+        b32  praeteritus;
     Piscina* piscina;
 
     piscina = piscina_generare_dynamicum("probatio_salt_tab",
@@ -39,12 +42,14 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: impletio - ordinatio + filtrum punctatorum
      * ======================================================== */
+
     {
         SaltuariusTabularium* tab;
-        DirectoriumIntroitus fontes[VI];
+        DirectoriumIntroitus  fontes[VI];
 
         imprimere("\n--- Probans impletionem (ordinatio) ---\n");
 
@@ -54,8 +59,8 @@ s32 principale (vacuum)
             piscina);
         fontes[II] = _introitus(".git", INTROITUS_DIRECTORIUM,
             piscina);
-        fontes[III] = _introitus("beta.c", INTROITUS_FILUM, piscina);
-        fontes[IV] = _introitus("Marmor", INTROITUS_FILUM, piscina);
+        fontes[III]  = _introitus("beta.c", INTROITUS_FILUM, piscina);
+        fontes[IV]   = _introitus("Marmor", INTROITUS_FILUM, piscina);
         fontes[V] = _introitus("gamma", INTROITUS_DIRECTORIUM,
             piscina);
 
@@ -79,9 +84,11 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (tab->selectio, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (tab->volumen, ZEPHYRUM);
 
+
         /* ====================================================
          * PROBARE: motus clausus + selectum
          * ==================================================== */
+
         imprimere("\n--- Probans motum (clausum) ---\n");
 
         saltuarius_tabularium_movere(tab, II);
@@ -93,17 +100,21 @@ s32 principale (vacuum)
         saltuarius_tabularium_movere(tab, C);
         CREDO_AEQUALIS_S32 (tab->selectio, IV);
 
+
         /* ====================================================
          * PROBARE: primum / ultimum (gg / G)
          * ==================================================== */
+
         saltuarius_tabularium_primum(tab);
         CREDO_AEQUALIS_S32 (tab->selectio, ZEPHYRUM);
         saltuarius_tabularium_ultimum(tab);
         CREDO_AEQUALIS_S32 (tab->selectio, IV);
 
+
         /* ====================================================
          * PROBARE: saltus f<littera> - cyclicus, insensibilis
          * ==================================================== */
+
         imprimere("\n--- Probans saltum ad litteram ---\n");
 
         saltuarius_tabularium_primum(tab);
@@ -123,9 +134,11 @@ s32 principale (vacuum)
         CREDO_FALSUM (saltuarius_tabularium_saltare(tab, (s32)'x'));
         CREDO_AEQUALIS_S32 (tab->selectio, II);
 
+
         /* ====================================================
          * PROBARE: volumen aptatum (fenestra III alta)
          * ==================================================== */
+
         imprimere("\n--- Probans volumen ---\n");
 
         saltuarius_tabularium_ultimum(tab);   /* selectio IV */
@@ -140,12 +153,14 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_S32 (tab->volumen, ZEPHYRUM);
     }
 
+
     /* ========================================================
      * PROBARE: tabularium vacuum (omnia punctata)
      * ======================================================== */
+
     {
         SaltuariusTabularium* tab;
-        DirectoriumIntroitus fontes[II];
+        DirectoriumIntroitus  fontes[II];
 
         imprimere("\n--- Probans vacuum ---\n");
 

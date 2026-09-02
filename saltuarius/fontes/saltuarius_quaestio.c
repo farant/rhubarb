@@ -6,26 +6,31 @@
 #include <string.h>
 
 vacuum
-saltuarius_quaestio_parare (SaltuariusQuaestio* quaestio)
+saltuarius_quaestio_parare (
+    SaltuariusQuaestio* quaestio)
 {
     memset(quaestio, ZEPHYRUM, magnitudo(SaltuariusQuaestio));
 }
 
 /* Textus strati ostensi (dominium quaestionis) */
 interior chorda
-_textus_ostensus (constans SaltuariusLiber* liber)
+_textus_ostensus (
+    constans SaltuariusLiber* liber)
 {
     redde saltuarius_liber_stratum_activum(liber)->textus;
 }
 
 /* Prima inventio >= ab; -1 si nulla */
 interior s32
-_invenire_prorsum (chorda textus, constans i8* quaesitum,
-    i32 mensura, s32 ab)
+_invenire_prorsum (
+         chorda  textus,
+    constans i8* quaesitum,
+            i32  mensura,
+            s32  ab)
 {
     s32 k;
 
-    si (mensura == ZEPHYRUM || textus.mensura < mensura
+    si (   mensura == ZEPHYRUM || textus.mensura < mensura
         || ab < ZEPHYRUM)
     {
         redde -I;
@@ -43,8 +48,11 @@ _invenire_prorsum (chorda textus, constans i8* quaesitum,
 
 /* Ultima inventio <= ab; -1 si nulla */
 interior s32
-_invenire_retrorsum (chorda textus, constans i8* quaesitum,
-    i32 mensura, s32 ab)
+_invenire_retrorsum (
+         chorda  textus,
+    constans i8* quaesitum,
+            i32  mensura,
+            s32  ab)
 {
     s32 k;
 
@@ -69,22 +77,25 @@ _invenire_retrorsum (chorda textus, constans i8* quaesitum,
 
 /* Originem restituere (FUGA / nihil inventum) */
 interior vacuum
-_originem_restituere (constans SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber)
+_originem_restituere (
+    constans SaltuariusQuaestio* quaestio,
+                SaltuariusLiber* liber)
 {
-    liber->cursor_linea = quaestio->origo_linea;
-    liber->cursor_columna = quaestio->origo_columna;
-    liber->volumen_x = quaestio->origo_vol_x;
-    liber->volumen_y = quaestio->origo_vol_y;
+    liber->cursor_linea    = quaestio->origo_linea;
+    liber->cursor_columna  = quaestio->origo_columna;
+    liber->volumen_x       = quaestio->origo_vol_x;
+    liber->volumen_y       = quaestio->origo_vol_y;
     saltuarius_liber_movere(liber, ZEPHYRUM);
 }
 
 /* Re-quaerere AB ORIGINE (incrementalis; cum volutione tacita) */
 interior vacuum
-_renovare (SaltuariusQuaestio* quaestio, SaltuariusLiber* liber)
+_renovare (
+    SaltuariusQuaestio* quaestio,
+       SaltuariusLiber* liber)
 {
     chorda textus = _textus_ostensus(liber);
-    s32 inventum;
+       s32 inventum;
 
     quaestio->nihil_inventum = FALSUM;
     si (quaestio->mensura == ZEPHYRUM)
@@ -111,28 +122,31 @@ _renovare (SaltuariusQuaestio* quaestio, SaltuariusLiber* liber)
 }
 
 vacuum
-saltuarius_quaestio_aperire (SaltuariusQuaestio* quaestio,
+saltuarius_quaestio_aperire (
+          SaltuariusQuaestio* quaestio,
     constans SaltuariusLiber* liber)
 {
-    quaestio->activa = VERUM;
-    quaestio->mensura = ZEPHYRUM;
-    quaestio->nihil_inventum = FALSUM;
-    quaestio->origo_offset = saltuarius_liber_cursor_offset(liber);
+    quaestio->activa          = VERUM;
+    quaestio->mensura         = ZEPHYRUM;
+    quaestio->nihil_inventum  = FALSUM;
+    quaestio->origo_offset    = saltuarius_liber_cursor_offset(liber);
     si (quaestio->origo_offset < ZEPHYRUM)
     {
         quaestio->origo_offset = ZEPHYRUM;
     }
-    quaestio->origo_linea = liber->cursor_linea;
-    quaestio->origo_columna = liber->cursor_columna;
-    quaestio->origo_vol_x = liber->volumen_x;
-    quaestio->origo_vol_y = liber->volumen_y;
+    quaestio->origo_linea    = liber->cursor_linea;
+    quaestio->origo_columna  = liber->cursor_columna;
+    quaestio->origo_vol_x    = liber->volumen_x;
+    quaestio->origo_vol_y    = liber->volumen_y;
 }
 
 SaltuariusQuaestioExitus
-saltuarius_quaestio_tradere (SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber, constans TesseraEventum* eventum)
+saltuarius_quaestio_tradere (
+         SaltuariusQuaestio* quaestio,
+            SaltuariusLiber* liber,
+    constans TesseraEventum* eventum)
 {
-    si (!quaestio->activa
+    si (   !quaestio->activa
         || eventum->genus != TESSERA_EVENTUM_CLAVIS)
     {
         redde SALT_QUAESTIO_PERGIT;
@@ -174,7 +188,7 @@ saltuarius_quaestio_tradere (SaltuariusQuaestio* quaestio,
     }
 
     /* runa scribibilis (imperium nullum; pasta = imber runarum) */
-    si (eventum->runa > ZEPHYRUM
+    si (   eventum->runa > ZEPHYRUM
         && (eventum->modificatores & TESSERA_MODIFICATOR_IMPERIUM)
             == ZEPHYRUM
         && quaestio->mensura + IV <= SALT_QUAESTIO_MAXIMA)
@@ -192,12 +206,15 @@ saltuarius_quaestio_tradere (SaltuariusQuaestio* quaestio,
 }
 
 b32
-saltuarius_quaestio_proximum (constans SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber, s32 directio, b32* volvit_out)
+saltuarius_quaestio_proximum (
+    constans SaltuariusQuaestio* quaestio,
+                SaltuariusLiber* liber,
+                            s32  directio,
+                            b32* volvit_out)
 {
     chorda textus = _textus_ostensus(liber);
-    s32 cursor = saltuarius_liber_cursor_offset(liber);
-    s32 inventum;
+       s32 cursor = saltuarius_liber_cursor_offset(liber);
+       s32 inventum;
 
     *volvit_out = FALSUM;
     si (quaestio->commissum_mensura == ZEPHYRUM)

@@ -3,21 +3,25 @@
 #include "saltuarius_nexus.h"
 #include <string.h>
 
-interior SaltuariusClassis _classis_generis (
-    constans SaltuariusNexus* nexus, constans SilvaToken* t);
+interior SaltuariusClassis
+_classis_generis (
+    constans SaltuariusNexus* nexus,
+         constans SilvaToken* t);
 
 interior chorda
-_chorda_ex_silva (constans SilvaChorda* s)
+_chorda_ex_silva (
+    constans SilvaChorda* s)
 {
     chorda c;
 
-    c.mensura = s->mensura;
-    c.datum = s->datum;
+    c.mensura  = s->mensura;
+    c.datum    = s->datum;
     redde c;
 }
 
 SaltuariusNexus*
-saltuarius_nexus_creare (Piscina* persistens)
+saltuarius_nexus_creare (
+    Piscina* persistens)
 {
     SaltuariusNexus* nexus;
     SilvaPiscina* arena;
@@ -64,7 +68,7 @@ saltuarius_nexus_creare (Piscina* persistens)
                 SilvaToken* titulus = *(SilvaToken**)
                     silva_xar_obtinere(lexemata, k + II);
 
-                si (t->genus == SILVA_LEX_CANCELLUM
+                si (   t->genus == SILVA_LEX_CANCELLUM
                     && t->initium_lineae
                     && d->genus == SILVA_LEX_IDENTIFICATOR
                     && d->valor.mensura == VI
@@ -88,14 +92,16 @@ saltuarius_nexus_creare (Piscina* persistens)
 }
 
 b32
-saltuarius_nexus_est_latinum (constans SaltuariusNexus* nexus,
-    chorda titulus)
+saltuarius_nexus_est_latinum (
+    constans SaltuariusNexus* nexus,
+                      chorda  titulus)
 {
     redde tabula_dispersa_continet(nexus->latina, titulus);
 }
 
 b32
-saltuarius_nexus_est_fons_c (chorda via)
+saltuarius_nexus_est_fons_c (
+    chorda via)
 {
     /* extensio manualis: ultimum '.' quaerere */
     s32 k;
@@ -106,7 +112,7 @@ saltuarius_nexus_est_fons_c (chorda via)
         {
             i32 reliqui = via.mensura - (i32)k - I;
 
-            si (reliqui == I
+            si (   reliqui == I
                 && (via.datum[k + I] == 'c'
                     || via.datum[k + I] == 'h'))
             {
@@ -124,15 +130,17 @@ saltuarius_nexus_est_fons_c (chorda via)
 
 /* Classis pro genere lexematis (contextus directivae extra) */
 i8
-saltuarius_nexus_classis (constans SaltuariusNexus* nexus,
-    constans SilvaToken* t)
+saltuarius_nexus_classis (
+    constans SaltuariusNexus* nexus,
+         constans SilvaToken* t)
 {
     redde (i8)_classis_generis(nexus, t);
 }
 
 interior SaltuariusClassis
-_classis_generis (constans SaltuariusNexus* nexus,
-    constans SilvaToken* t)
+_classis_generis (
+    constans SaltuariusNexus* nexus,
+         constans SilvaToken* t)
 {
     si (t->genus >= SILVA_LEX_AUTO && t->genus <= SILVA_LEX_WHILE)
     {
@@ -166,8 +174,11 @@ _classis_generis (constans SaltuariusNexus* nexus,
 }
 
 vacuum
-saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
-    SilvaPiscina* arena_silvae, chorda textus, i8* classis_out)
+saltuarius_nexus_classificare (
+    constans SaltuariusNexus* nexus,
+                SilvaPiscina* arena_silvae,
+                      chorda  textus,
+                          i8* classis_out)
 {
     SilvaXar* cruda;
     i32 n;
@@ -201,18 +212,18 @@ saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
         /* directiva: CANCELLUM initio lineae + verbum sequens */
         si (t->genus == SILVA_LEX_CANCELLUM && t->initium_lineae)
         {
-            classis = SALT_CLASSIS_DIRECTIVA;
-            post_cancellum = VERUM;
+            classis         = SALT_CLASSIS_DIRECTIVA;
+            post_cancellum  = VERUM;
         }
-        alioquin si (post_cancellum
-            && t->genus == SILVA_LEX_IDENTIFICATOR)
+        alioquin si (   post_cancellum
+                     && t->genus == SILVA_LEX_IDENTIFICATOR)
         {
-            classis = SALT_CLASSIS_DIRECTIVA;
-            post_cancellum = FALSUM;
+            classis         = SALT_CLASSIS_DIRECTIVA;
+            post_cancellum  = FALSUM;
         }
         alioquin
         {
-            si (t->genus != SILVA_LEX_SPATIA
+            si (   t->genus != SILVA_LEX_SPATIA
                 && t->genus != SILVA_LEX_TABULAE)
             {
                 post_cancellum = FALSUM;
@@ -235,6 +246,7 @@ saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
     }
 }
 
+
 /* ==================================================
  * Fistula parsandi (Phase C)
  * ================================================== */
@@ -244,7 +256,9 @@ saltuarius_nexus_classificare (constans SaltuariusNexus* nexus,
  * consumptoris; decisiones 9 dies solutionis) */
 
 interior constans character*
-_literis (Piscina* piscina, chorda textus)
+_literis (
+    Piscina* piscina,
+     chorda  textus)
 {
     character* buffer;
 
@@ -260,8 +274,10 @@ _literis (Piscina* piscina, chorda textus)
 }
 
 s32
-saltuarius_nexus_silvam_parare (SaltuariusNexus* nexus,
-    constans SaltuariusCaput* capita, i32 numerus)
+saltuarius_nexus_silvam_parare (
+             SaltuariusNexus* nexus,
+    constans SaltuariusCaput* capita,
+                         i32  numerus)
 {
     s32 praebita = ZEPHYRUM;
     i32 k;
@@ -313,9 +329,11 @@ saltuarius_nexus_silvam_parare (SaltuariusNexus* nexus,
 }
 
 SilvaParsura*
-saltuarius_nexus_parsare (SaltuariusNexus* nexus,
-    SilvaPiscina* arena_libri, constans character* titulus,
-    chorda textus)
+saltuarius_nexus_parsare (
+       SaltuariusNexus* nexus,
+          SilvaPiscina* arena_libri,
+    constans character* titulus,
+                chorda  textus)
 {
     si (nexus->ctx == NIHIL || textus.mensura == ZEPHYRUM)
     {
@@ -327,18 +345,19 @@ saltuarius_nexus_parsare (SaltuariusNexus* nexus,
 }
 
 chorda
-saltuarius_nexus_fons_resolvere (constans SaltuariusNexus* nexus,
-    chorda titulus)
+saltuarius_nexus_fons_resolvere (
+    constans SaltuariusNexus* nexus,
+                      chorda  titulus)
 {
     vacuum* valor = NIHIL;
-    chorda vacua;
+    chorda  vacua;
 
-    si (tabula_dispersa_invenire(nexus->viae, titulus, &valor)
+    si (   tabula_dispersa_invenire(nexus->viae, titulus, &valor)
         && valor != NIHIL)
     {
         redde *(chorda*)valor;
     }
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
     redde vacua;
 }

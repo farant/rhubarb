@@ -35,9 +35,9 @@ nomen enumeratio {
 
 nomen structura {
     b32 activa;
-    i8  litterae[SALT_QUAESTIO_MAXIMA];   /* in flumine */
+     i8 litterae[SALT_QUAESTIO_MAXIMA];   /* in flumine */
     i32 mensura;
-    i8  commissum[SALT_QUAESTIO_MAXIMA];  /* memoria n/N */
+     i8 commissum[SALT_QUAESTIO_MAXIMA];  /* memoria n/N */
     i32 commissum_mensura;
     b32 nihil_inventum;    /* insigne lineae echo */
     /* imago originis (FUGA totam restituit) */
@@ -49,25 +49,32 @@ nomen structura {
 } SaltuariusQuaestio;
 
 vacuum
-saltuarius_quaestio_parare (SaltuariusQuaestio* quaestio);
+saltuarius_quaestio_parare (
+    SaltuariusQuaestio* quaestio);
 
 /* Modum initus aperire: originem notat, litteras purgat */
 vacuum
-saltuarius_quaestio_aperire (SaltuariusQuaestio* quaestio,
+saltuarius_quaestio_aperire (
+          SaltuariusQuaestio* quaestio,
     constans SaltuariusLiber* liber);
 
 /* Eventum crudum tradere (solum dum activa). Cursor libri per
  * inventionem movetur; FUGA restituit. */
 SaltuariusQuaestioExitus
-saltuarius_quaestio_tradere (SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber, constans TesseraEventum* eventum);
+saltuarius_quaestio_tradere (
+         SaltuariusQuaestio* quaestio,
+            SaltuariusLiber* liber,
+    constans TesseraEventum* eventum);
 
 /* n/N: commissum a cursore stricte ultra (directio > 0) / citra.
  * VERUM si inventum (cursor motus); volvit_out VERUM si quaestio
  * circum finem voluta. FALSUM: nihil inventum aut commissum
  * vacuum (vocator distinguat per commissum_mensura). */
 b32
-saltuarius_quaestio_proximum (constans SaltuariusQuaestio* quaestio,
-    SaltuariusLiber* liber, s32 directio, b32* volvit_out);
+saltuarius_quaestio_proximum (
+    constans SaltuariusQuaestio* quaestio,
+                SaltuariusLiber* liber,
+                            s32  directio,
+                            b32* volvit_out);
 
 #endif /* SALTUARIUS_QUAESTIO_H */

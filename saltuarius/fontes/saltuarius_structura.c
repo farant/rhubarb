@@ -7,7 +7,8 @@
 #include <string.h>
 
 SaltuariusStructura*
-saltuarius_structura_creare (Piscina* persistens)
+saltuarius_structura_creare (
+    Piscina* persistens)
 {
     SaltuariusStructura* index;
 
@@ -24,23 +25,24 @@ saltuarius_structura_creare (Piscina* persistens)
     {
         redde NIHIL;
     }
-    index->nota = piscina_notare(index->arena);
-    index->ordines = NIHIL;
-    index->numerus = ZEPHYRUM;
-    index->selectio = ZEPHYRUM;
-    index->volumen = ZEPHYRUM;
-    index->apertum = FALSUM;
+    index->nota      = piscina_notare(index->arena);
+    index->ordines   = NIHIL;
+    index->numerus   = ZEPHYRUM;
+    index->selectio  = ZEPHYRUM;
+    index->volumen   = ZEPHYRUM;
+    index->apertum   = FALSUM;
     redde index;
 }
 
 /* Chorda ex SilvaChorda (aliae - vita = vita exp) */
 interior chorda
-_ex_silva (constans SilvaChorda* s)
+_ex_silva (
+    constans SilvaChorda* s)
 {
     chorda c;
 
-    c.mensura = (s != NIHIL) ? s->mensura : ZEPHYRUM;
-    c.datum = (s != NIHIL) ? s->datum : NIHIL;
+    c.mensura  = (s != NIHIL) ? s->mensura : ZEPHYRUM;
+    c.datum    = (s != NIHIL) ? s->datum : NIHIL;
     redde c;
 }
 
@@ -48,9 +50,12 @@ _ex_silva (constans SilvaChorda* s)
  * runas) + insigne (vocator spatia regit: "()" glutinatur,
  * " (omissum)" spatium fert) + "  :linea" si linea > 0 */
 interior chorda
-_titulum (SaltuariusStructura* index,
-    constans character* praefixum, chorda medium,
-    constans character* insigne, i32 linea)
+_titulum (
+    SaltuariusStructura* index,
+     constans character* praefixum,
+                 chorda  medium,
+     constans character* insigne,
+                    i32  linea)
 {
     ChordaAedificator* aed = chorda_aedificator_creare(
         index->arena, CCLVI);
@@ -58,8 +63,8 @@ _titulum (SaltuariusStructura* index,
 
     si (aed == NIHIL)
     {
-        fructus.mensura = ZEPHYRUM;
-        fructus.datum = NIHIL;
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
         redde fructus;
     }
     chorda_aedificator_appendere_literis(aed, praefixum);
@@ -88,28 +93,33 @@ _titulum (SaltuariusStructura* index,
 }
 
 interior vacuum
-_ordinem_addere (SaltuariusStructura* index,
-    SaltuariusOrdoGenus genus, chorda titulus, b32 saltabile,
-    chorda via, i32 linea)
+_ordinem_addere (
+    SaltuariusStructura* index,
+    SaltuariusOrdoGenus  genus,
+                 chorda  titulus,
+                    b32  saltabile,
+                 chorda  via,
+                    i32  linea)
 {
     SaltuariusOrdo* ordo = &index->ordines[index->numerus];
 
-    ordo->genus = genus;
-    ordo->titulus = titulus;
-    ordo->saltabile = saltabile;
-    ordo->via = via;
-    ordo->linea = linea;
+    ordo->genus      = genus;
+    ordo->titulus    = titulus;
+    ordo->saltabile  = saltabile;
+    ordo->via        = via;
+    ordo->linea      = linea;
     index->numerus++;
 }
 
 interior vacuum
-_caput_sectionis (SaltuariusStructura* index,
-    constans character* titulus)
+_caput_sectionis (
+    SaltuariusStructura* index,
+     constans character* titulus)
 {
     chorda vacua;
 
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
     _ordinem_addere(index, SALT_ORDO_TITULUS,
         _titulum(index, titulus, vacua, NIHIL, ZEPHYRUM),
         FALSUM, vacua, ZEPHYRUM);
@@ -121,7 +131,9 @@ _caput_sectionis (SaltuariusStructura* index,
  * IPSIUS ex corpus_initium hic derivatur (octeti publici sufficiunt,
  * silva non tangenda). */
 interior i32
-_linea_ex_offset (constans SaltuariusLiber* liber, s32 offset)
+_linea_ex_offset (
+    constans SaltuariusLiber* liber,
+                         s32  offset)
 {
     i32 k;
 
@@ -136,7 +148,8 @@ _linea_ex_offset (constans SaltuariusLiber* liber, s32 offset)
 }
 
 interior constans character*
-_rami_verbum (SilvaRamusGenus genus)
+_rami_verbum (
+    SilvaRamusGenus genus)
 {
     commutatio (genus)
     {
@@ -150,46 +163,47 @@ _rami_verbum (SilvaRamusGenus genus)
 }
 
 b32
-saltuarius_structura_aedificare (SaltuariusStructura* index,
+saltuarius_structura_aedificare (
+         SaltuariusStructura* index,
     constans SaltuariusLiber* liber)
 {
     constans SilvaExpansio* exp;
-    s32 princeps;
-    i32 n_inc;
-    i32 n_mac;
-    i32 n_ram;
-    chorda vacua;
+                       s32  princeps;
+                       i32  n_inc;
+                       i32  n_mac;
+                       i32  n_ram;
+                    chorda  vacua;
     SilvaPiscina* arena_c89;
     SilvaParsura* parsura_c89;
     i32           n_decl;
 
     piscina_reficere(index->arena, index->nota);
-    index->ordines = NIHIL;
-    index->numerus = ZEPHYRUM;
-    index->selectio = ZEPHYRUM;
-    index->volumen = ZEPHYRUM;
-    index->apertum = FALSUM;
-    vacua.mensura = ZEPHYRUM;
-    vacua.datum = NIHIL;
+    index->ordines   = NIHIL;
+    index->numerus   = ZEPHYRUM;
+    index->selectio  = ZEPHYRUM;
+    index->volumen   = ZEPHYRUM;
+    index->apertum   = FALSUM;
+    vacua.mensura    = ZEPHYRUM;
+    vacua.datum      = NIHIL;
 
-    si (liber->parsura == NIHIL
+    si (   liber->parsura           == NIHIL
         || liber->parsura->expansio == NIHIL)
     {
         redde FALSUM;
     }
-    exp = liber->parsura->expansio;
-    princeps = liber->parsura->fons_princeps;
-    n_inc = silva_inclusiones_numerus(exp);
-    n_mac = silva_macros_numerus(exp);
-    n_ram = silva_rami_numerus(exp);
+    exp       = liber->parsura->expansio;
+    princeps  = liber->parsura->fons_princeps;
+    n_inc     = silva_inclusiones_numerus(exp);
+    n_mac     = silva_macros_numerus(exp);
+    n_ram     = silva_rami_numerus(exp);
 
     /* M2d Chunk B: parsura PRINCIPALIS libri iam c89 est (nexus
      * grammatica c89 cum saltatione parsat) - sectiones ex EA
      * leguntur, parsura secunda SUBLATA (dividendum permutationis:
      * Tab gratuitum). Arena parva SOLUM pro textu subscriptionum
      * (_titulum in arenam indicis copiat, deinde perit). */
-    parsura_c89 = liber->parsura;
-    n_decl = (i32)silva_c89_declarationes_numerus(parsura_c89);
+    parsura_c89  = liber->parsura;
+    n_decl       = (i32)silva_c89_declarationes_numerus(parsura_c89);
     arena_c89 = (n_decl > ZEPHYRUM)
         ? silva_piscina_generare_dynamicum("salt_subscriptio",
               262144)
@@ -220,9 +234,9 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaInclusioVista vista;
 
-            si (!silva_inclusio_vista(exp, k, &vista)
+            si (   !silva_inclusio_vista(exp, k, &vista)
                 || vista.fons_ex != princeps
-                || vista.via == NIHIL)
+                || vista.via     == NIHIL)
             {
                 perge;
             }
@@ -261,9 +275,9 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaMacroVista vista;
 
-            si (!silva_macro_vista(exp, k, &vista)
+            si (   !silva_macro_vista(exp, k, &vista)
                 || vista.fons_index != princeps
-                || vista.titulus == NIHIL)
+                || vista.titulus    == NIHIL)
             {
                 perge;
             }
@@ -288,7 +302,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaRamusVista vista;
 
-            si (!silva_ramus_vista(exp, k, &vista)
+            si (   !silva_ramus_vista(exp, k, &vista)
                 || vista.fons_index != princeps)
             {
                 perge;
@@ -299,8 +313,9 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
                 prima = FALSUM;
             }
             {
-                constans character* insigne = "";
-                i32 linea_bracchii = vista.linea;
+                constans character* insigne        = "";
+                               i32  linea_bracchii  =
+                                   vista.linea;
 
                 si (vista.est_numquam)
                 {
@@ -335,12 +350,12 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         per (k = ZEPHYRUM; k < n_decl; k++)
         {
             SilvaDeclaratioVista vista;
-            chorda medium;
+                          chorda medium;
 
-            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+            si (   !silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
                 || vista.fons_index != parsura_c89->fons_princeps
-                || vista.genus == NIHIL
+                || vista.genus      == NIHIL
                 || strcmp(vista.genus, "definitio-functionis")
                     != ZEPHYRUM)
             {
@@ -358,7 +373,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
                     silva_c89_functionis_subscriptio(arena_c89,
                         parsura_c89, (i32)k);
 
-                si (subscriptio.successus
+                si (   subscriptio.successus
                     && subscriptio.textus.mensura > ZEPHYRUM)
                 {
                     medium = _ex_silva(&subscriptio.textus);
@@ -395,11 +410,11 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaDeclaratioVista vista;
 
-            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+            si (   !silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
                 || vista.fons_index != parsura_c89->fons_princeps
                 || vista.est_typedef
-                || vista.genus == NIHIL
+                || vista.genus      == NIHIL
                 || strcmp(vista.genus, "declarator-functionis")
                     != ZEPHYRUM)
             {
@@ -436,7 +451,7 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaDeclaratioVista vista;
 
-            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+            si (   !silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
                 || vista.fons_index != parsura_c89->fons_princeps
                 || !vista.est_typedef)
@@ -475,11 +490,11 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
         {
             SilvaDeclaratioVista vista;
 
-            si (!silva_c89_declaratio_vista(parsura_c89, (i32)k,
+            si (   !silva_c89_declaratio_vista(parsura_c89, (i32)k,
                     &vista)
                 || vista.fons_index != parsura_c89->fons_princeps
                 || vista.est_typedef
-                || vista.genus == NIHIL
+                || vista.genus      == NIHIL
                 || strcmp(vista.genus, "definitio-functionis")
                     == ZEPHYRUM
                 || strcmp(vista.genus, "declarator-functionis")
@@ -538,14 +553,16 @@ saltuarius_structura_aedificare (SaltuariusStructura* index,
 }
 
 vacuum
-saltuarius_structura_claudere (SaltuariusStructura* index)
+saltuarius_structura_claudere (
+    SaltuariusStructura* index)
 {
     index->apertum = FALSUM;
 }
 
 vacuum
-saltuarius_structura_movere (SaltuariusStructura* index,
-    s32 delta)
+saltuarius_structura_movere (
+    SaltuariusStructura* index,
+                    s32  delta)
 {
     s32 nova = index->selectio + delta;
 
@@ -561,8 +578,9 @@ saltuarius_structura_movere (SaltuariusStructura* index,
 }
 
 vacuum
-saltuarius_structura_aptare (SaltuariusStructura* index,
-    s32 altitudo)
+saltuarius_structura_aptare (
+    SaltuariusStructura* index,
+                    s32  altitudo)
 {
     si (altitudo < I)
     {
@@ -583,9 +601,10 @@ saltuarius_structura_aptare (SaltuariusStructura* index,
 }
 
 constans SaltuariusOrdo*
-saltuarius_structura_saltus (constans SaltuariusStructura* index)
+saltuarius_structura_saltus (
+    constans SaltuariusStructura* index)
 {
-    si (!index->apertum || index->selectio < ZEPHYRUM
+    si (   !index->apertum || index->selectio < ZEPHYRUM
         || index->selectio >= (s32)index->numerus)
     {
         redde NIHIL;

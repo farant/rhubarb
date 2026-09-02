@@ -51,9 +51,9 @@ nomen enumeratio {
 
 nomen structura {
     SaltuariusActio genus;
-    s32             runa;  /* SALTARE */
-    s32             x;     /* CLICUS (cella, 0-basata) */
-    s32             y;
+                s32 runa;  /* SALTARE */
+                s32 x;     /* CLICUS (cella, 0-basata) */
+                s32 y;
 } SaltuariusIussum;
 
 nomen structura {
@@ -63,7 +63,8 @@ nomen structura {
 
 /* Status pendentium purus initio */
 vacuum
-saltuarius_claves_parare (SaltuariusClaves* claves);
+saltuarius_claves_parare (
+    SaltuariusClaves* claves);
 
 /* Eventum tradere; VERUM si iussum productum (iussum_out
  * impletur), FALSUM si nihil agendum. Modus mappam mutat: in
@@ -71,8 +72,10 @@ saltuarius_claves_parare (SaltuariusClaves* claves);
  * DEXTRA), Reditus INTRARE manet (Phase C: saltus originis),
  * L/o STRATUM/ORIGO fiunt. */
 b32
-saltuarius_claves_tradere (SaltuariusClaves* claves,
-    SaltuariusModus modus, constans TesseraEventum* eventum,
-    SaltuariusIussum* iussum_out);
+saltuarius_claves_tradere (
+           SaltuariusClaves* claves,
+            SaltuariusModus  modus,
+    constans TesseraEventum* eventum,
+           SaltuariusIussum* iussum_out);
 
 #endif /* SALTUARIUS_CLAVES_H */

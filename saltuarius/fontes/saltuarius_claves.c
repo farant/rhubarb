@@ -3,25 +3,31 @@
 #include "saltuarius_claves.h"
 
 vacuum
-saltuarius_claves_parare (SaltuariusClaves* claves)
+saltuarius_claves_parare (
+    SaltuariusClaves* claves)
 {
     claves->g_pendens = FALSUM;
     claves->f_pendens = FALSUM;
 }
 
 interior b32
-_iussum_simplex (SaltuariusIussum* iussum, SaltuariusActio genus)
+_iussum_simplex (
+    SaltuariusIussum* iussum,
+     SaltuariusActio  genus)
 {
-    iussum->genus = genus;
-    iussum->runa = ZEPHYRUM;
-    iussum->x = ZEPHYRUM;
-    iussum->y = ZEPHYRUM;
+    iussum->genus  = genus;
+    iussum->runa   = ZEPHYRUM;
+    iussum->x      = ZEPHYRUM;
+    iussum->y      = ZEPHYRUM;
     redde VERUM;
 }
 
 interior b32
-_clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
-    constans TesseraEventum* ev, SaltuariusIussum* iussum)
+_clavem_tradere (
+           SaltuariusClaves* claves,
+            SaltuariusModus  modus,
+    constans TesseraEventum* ev,
+           SaltuariusIussum* iussum)
 {
     b32 in_fonte = (modus == SALT_MODUS_FONS);
 
@@ -29,7 +35,7 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
     si (claves->f_pendens)
     {
         claves->f_pendens = FALSUM;
-        si (ev->runa != ZEPHYRUM
+        si (   ev->runa != ZEPHYRUM
             && (ev->modificatores & TESSERA_MODIFICATOR_IMPERIUM)
                 == ZEPHYRUM)
         {
@@ -44,7 +50,7 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
     si (claves->g_pendens)
     {
         claves->g_pendens = FALSUM;
-        si (ev->runa == (s32)'g'
+        si (   ev->runa          == (s32)'g'
             && ev->modificatores == ZEPHYRUM)
         {
             redde _iussum_simplex(iussum, SALT_ACTIO_PRIMUM);
@@ -85,15 +91,15 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
         casus TESSERA_CLAVIS_REDITUS:
             redde _iussum_simplex(iussum, SALT_ACTIO_INTRARE);
         casus TESSERA_CLAVIS_TABULA: si (in_fonte)
-        {
+                                     {
             redde _iussum_simplex(iussum, SALT_ACTIO_STRUCTURA);
-        }
+                                     }
         frange;
-        casus TESSERA_CLAVIS_FUNCTIO: si (in_fonte
-            && ev->numerus == II)
-        {
+        casus TESSERA_CLAVIS_FUNCTIO: si (   in_fonte
+                                          && ev->numerus == II)
+                                      {
             redde _iussum_simplex(iussum, SALT_ACTIO_FRUCTUS);
-        }
+                                      }
         frange;
         ordinarius:
             frange;
@@ -105,33 +111,33 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
         casus 'k': redde _iussum_simplex(iussum, SALT_ACTIO_SURSUM);
         casus 'j': redde _iussum_simplex(iussum, SALT_ACTIO_DEORSUM);
         casus 'h': redde _iussum_simplex(iussum, in_fonte
-            ? SALT_ACTIO_SINISTRA : SALT_ACTIO_PARENS);
+                       ? SALT_ACTIO_SINISTRA : SALT_ACTIO_PARENS);
         casus 'l': redde _iussum_simplex(iussum, in_fonte
-            ? SALT_ACTIO_DEXTRA : SALT_ACTIO_INTRARE);
+                       ? SALT_ACTIO_DEXTRA : SALT_ACTIO_INTRARE);
         casus 'L': si (in_fonte)
-        {
+                   {
             redde _iussum_simplex(iussum, SALT_ACTIO_STRATUM);
-        }
+                   }
         frange;
         casus 'o': si (in_fonte)
-        {
+                   {
             redde _iussum_simplex(iussum, SALT_ACTIO_ORIGO);
-        }
+                   }
         frange;
         casus '/': si (in_fonte)
-        {
+                   {
             redde _iussum_simplex(iussum, SALT_ACTIO_QUAESTIO);
-        }
+                   }
         frange;
         casus 'n': si (in_fonte)
-        {
+                   {
             redde _iussum_simplex(iussum, SALT_ACTIO_PROXIMUM);
-        }
+                   }
         frange;
         casus 'N': si (in_fonte)
-        {
+                   {
             redde _iussum_simplex(iussum, SALT_ACTIO_PRIUS);
-        }
+                   }
         frange;
         casus 'q': redde _iussum_simplex(iussum, SALT_ACTIO_FINIRE);
         casus 'G': redde _iussum_simplex(iussum, SALT_ACTIO_ULTIMUM);
@@ -148,9 +154,11 @@ _clavem_tradere (SaltuariusClaves* claves, SaltuariusModus modus,
 }
 
 b32
-saltuarius_claves_tradere (SaltuariusClaves* claves,
-    SaltuariusModus modus, constans TesseraEventum* eventum,
-    SaltuariusIussum* iussum_out)
+saltuarius_claves_tradere (
+           SaltuariusClaves* claves,
+            SaltuariusModus  modus,
+    constans TesseraEventum* eventum,
+           SaltuariusIussum* iussum_out)
 {
     commutatio (eventum->genus)
     {
