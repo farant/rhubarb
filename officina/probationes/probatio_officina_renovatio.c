@@ -52,26 +52,35 @@ _radix (vacuum)
 }
 
 interior vacuum
-_scribe_lineam (FILE* pl, Piscina* p, constans character* corpus)
+_scribe_lineam (
+                  FILE* pl,
+               Piscina* p,
+    constans character* corpus)
 {
     (vacuum)tabellarius_lineam_scribere(pl,
         chorda_ex_literis(corpus, p));
 }
 
 interior chorda
-_linea_cruda (FILE* pl, Piscina* p, b32* bene)
+_linea_cruda (
+       FILE* pl,
+    Piscina* p,
+        b32* bene)
 {
-    b32 finitus = FALSUM;
-    chorda corpus = tabellarius_lineam_legere(pl, p, &finitus);
+       b32 finitus  = FALSUM;
+    chorda corpus   = tabellarius_lineam_legere(pl, p, &finitus);
 
     *bene = finitus ? FALSUM : VERUM;
     redde corpus;
 }
 
 interior TabellariusNuntius
-_lege_lineam (FILE* pl, Piscina* p, b32* bene)
+_lege_lineam (
+       FILE* pl,
+    Piscina* p,
+        b32* bene)
 {
-    chorda corpus = _linea_cruda(pl, p, bene);
+                chorda corpus = _linea_cruda(pl, p, bene);
     TabellariusNuntius n;
 
     memset(&n, ZEPHYRUM, magnitudo(TabellariusNuntius));
@@ -83,7 +92,9 @@ _lege_lineam (FILE* pl, Piscina* p, b32* bene)
 }
 
 interior b32
-_chorda_est (chorda c, constans character* litterae)
+_chorda_est (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -92,7 +103,9 @@ _chorda_est (chorda c, constans character* litterae)
 }
 
 interior b32
-_chorda_continet (chorda c, constans character* particula)
+_chorda_continet (
+                chorda  c,
+    constans character* particula)
 {
     memoriae_index m = strlen(particula);
     memoriae_index i;
@@ -113,7 +126,8 @@ _chorda_continet (chorda c, constans character* particula)
 
 /* textus effectus instrumenti MCP: result.content[0].text */
 interior chorda
-_mcp_textus (TabellariusNuntius* n)
+_mcp_textus (
+    TabellariusNuntius* n)
 {
     redde json_ad_chorda(json_objectum_capere(
         json_tabulatum_obtinere(json_objectum_capere(
@@ -123,7 +137,8 @@ _mcp_textus (TabellariusNuntius* n)
 
 /* plagulam parvam scribere (contentum litterale) */
 interior vacuum
-_plagulam_scribere (constans character* via,
+_plagulam_scribere (
+    constans character* via,
     constans character* contentum)
 {
     FILE* pl = fopen(via, "wb");
@@ -139,7 +154,8 @@ _plagulam_scribere (constans character* via,
 /* binarium fictum antiquum + manifestum fontis veri: vigilia
  * FONTES_SUPERANT figitur (exemplar probatio_vigilia legati) */
 interior vacuum
-_stalitatem_fingere (constans character* via_binarii,
+_stalitatem_fingere (
+    constans character* via_binarii,
     constans character* via_manifesti)
 {
     structura utimbuf tempora;
@@ -148,24 +164,26 @@ _stalitatem_fingere (constans character* via_binarii,
         "# probatio renovationis\n"
         "officina/instrumenta/legatus.c\n");
     _plagulam_scribere(via_binarii, "x");
-    tempora.actime = 1000000L;
-    tempora.modtime = 1000000L;
+    tempora.actime   = 1000000L;
+    tempora.modtime  = 1000000L;
     CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
 }
+
 
 /* ==================================================
  * I. recens: renovare nihil agit
  * ================================================== */
 
 interior vacuum
-probatio_renovare_recens (Piscina* p)
+probatio_renovare_recens (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
-    chorda cruda;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
+                 chorda  cruda;
 
     imprimere("--- Probans renovare recentem (nihil agendum) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -183,8 +201,8 @@ probatio_renovare_recens (Piscina* p)
     rewind(intra);
 
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
-    cfg.radix = _radix();
-    cfg.modus_mcp = VERUM;
+    cfg.radix      = _radix();
+    cfg.modus_mcp  = VERUM;
     /* sine binarium_via: vigilia quieta = RECENS */
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
 
@@ -205,12 +223,14 @@ probatio_renovare_recens (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * II. explorator praevius fractus: recusatio, residens vivit
  * ================================================== */
 
 interior vacuum
-probatio_renovare_explorator_fractus (Piscina* p)
+probatio_renovare_explorator_fractus (
+    Piscina* p)
 {
     constans character* via_binarii =
         "officina/build/probatio_renovatio_binarium";
@@ -218,12 +238,12 @@ probatio_renovare_explorator_fractus (Piscina* p)
         "officina/build/probatio_renovatio_manifestum";
     constans character* via_stipulae =
         "officina/build/probatio_renovatio_fractum.sh";
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
-    chorda textus;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
+                 chorda  textus;
 
     imprimere("--- Probans exploratorem fractum (recusatio) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -248,12 +268,12 @@ probatio_renovare_explorator_fractus (Piscina* p)
     rewind(intra);
 
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
-    cfg.radix = _radix();
-    cfg.modus_mcp = VERUM;
-    cfg.binarium_via = via_binarii;
-    cfg.via_manifesti = via_manifesti;
-    cfg.signum = SIGNUM_VETUS;
-    cfg.via_renovatoris = via_stipulae;
+    cfg.radix            = _radix();
+    cfg.modus_mcp        = VERUM;
+    cfg.binarium_via     = via_binarii;
+    cfg.via_manifesti    = via_manifesti;
+    cfg.signum           = SIGNUM_VETUS;
+    cfg.via_renovatoris  = via_stipulae;
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
 
     rewind(extra);
@@ -277,12 +297,14 @@ probatio_renovare_explorator_fractus (Piscina* p)
     remove(via_stipulae);
 }
 
+
 /* ==================================================
  * III. integra: furca + fistulae + exec verus + renatus
  * ================================================== */
 
 interior vacuum
-probatio_renovatio_integra (Piscina* p)
+probatio_renovatio_integra (
+    Piscina* p)
 {
     constans character* via_binarii =
         "officina/build/probatio_renovatio_binarium2";
@@ -292,7 +314,7 @@ probatio_renovatio_integra (Piscina* p)
         "officina/build/probatio_renovatio_renovator.sh";
     integer p2i[II];   /* parens -> infans (stdin infantis) */
     integer i2p[II];   /* infans -> parens (stdout infantis) */
-    pid_t pid;
+      pid_t pid;
 
     imprimere("--- Probans renovationem integram (exec verus) ---\n");
 
@@ -347,12 +369,12 @@ probatio_renovatio_integra (Piscina* p)
         close(i2p[ZEPHYRUM]); close(i2p[I]);
 
         memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
-        cfg.radix = _radix();
-        cfg.modus_mcp = VERUM;
-        cfg.binarium_via = via_binarii;
-        cfg.via_manifesti = via_manifesti;
-        cfg.signum = SIGNUM_VETUS;
-        cfg.via_renovatoris = via_stipulae;
+        cfg.radix            = _radix();
+        cfg.modus_mcp        = VERUM;
+        cfg.binarium_via     = via_binarii;
+        cfg.via_manifesti    = via_manifesti;
+        cfg.signum           = SIGNUM_VETUS;
+        cfg.via_renovatoris  = via_stipulae;
         _exit((integer)legatus_currere(stdin, stdout, &cfg));
     }
 
@@ -361,12 +383,12 @@ probatio_renovatio_integra (Piscina* p)
     close(p2i[ZEPHYRUM]);
     close(i2p[I]);
     {
-        FILE* ad_infantem = fdopen(p2i[I], "w");
-        FILE* ab_infante = fdopen(i2p[ZEPHYRUM], "r");
-        b32 bene = FALSUM;
-        TabellariusNuntius n;
-        chorda cruda;
-        chorda textus;
+                      FILE* ad_infantem  = fdopen(p2i[I], "w");
+                      FILE* ab_infante   = fdopen(i2p[ZEPHYRUM], "r");
+                       b32  bene         = FALSUM;
+        TabellariusNuntius  n;
+                    chorda  cruda;
+                    chorda  textus;
 
         CREDO_VERUM(ad_infantem != NIHIL && ab_infante != NIHIL);
 
@@ -433,12 +455,15 @@ probatio_renovatio_integra (Piscina* p)
     remove(via_stipulae);
 }
 
+
 /* ==================================================
  * principale (+ modus -fingere-legatum pro III)
  * ================================================== */
 
 integer
-principale (integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina;
 
@@ -448,7 +473,7 @@ principale (integer argc, character** argv)
          * Sine binario/manifesto = vigilia recens; signum novum
          * identitatem post-exec probat. */
         LegatusConfiguratio cfg;
-        integer i;
+                    integer i;
 
         memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
         cfg.modus_mcp = VERUM;
@@ -458,14 +483,14 @@ principale (integer argc, character** argv)
             {
                 cfg.renatus = VERUM;
             }
-            alioquin si (strcmp(argv[i], "-radix") == ZEPHYRUM
-                && i + I < argc)
+            alioquin si (   strcmp(argv[i], "-radix") == ZEPHYRUM
+                         && i + I < argc)
             {
                 cfg.radix = argv[i + I];
                 i++;
             }
-            alioquin si (strcmp(argv[i], "-signum") == ZEPHYRUM
-                && i + I < argc)
+            alioquin si (   strcmp(argv[i], "-signum") == ZEPHYRUM
+                         && i + I < argc)
             {
                 cfg.signum = argv[i + I];
                 i++;

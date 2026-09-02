@@ -52,6 +52,7 @@
                                          * (MEDULLA_TYPUS_NIHIL = -1
                                          * vacuum significat) */
 
+
 /* ==================================================
  * Sectiones. ORDO SIGILLATUS: acies magnitudinum elementorum in
  * officina_indicium.c et enum vanilla in amalgama/officina.h eundem
@@ -74,13 +75,14 @@ nomen enumeratio {
     INDICIUM_SECTIO_NUMERUS
 } IndiciumSectioGenus;
 
+
 /* ==================================================
  * Res in disco (structurae fixae, i32/s32 solum)
  * ================================================== */
 
 /* Caput plagulae + directorium (genus sectionis EST index) */
 nomen structura {
-    i8  magica[8];
+     i8 magica[8];
     i32 versio;
     i32 numerus_sectionum;         /* INDICIUM_SECTIO_NUMERUS */
 } IndiciumCaput;
@@ -144,28 +146,38 @@ nomen structura {
                                     * 0 = ignotus */
 } IndiciumVariabile;
 
+
 /* ==================================================
  * Scriptor (coquere tempore compilationis)
  * ================================================== */
 
 nomen structura IndiciumScriptor IndiciumScriptor;
 
-IndiciumScriptor* indicium_scriptor_creare (Piscina* piscina);
+IndiciumScriptor*
+indicium_scriptor_creare (
+    Piscina* piscina);
 
 /* Colligere unum modulum DUM parsura vivit (fenestra
  * collige-ante-destrue - eadem ac demissio_lineas_colligere).
  * sem pro mensa variabilium (typi); NIHIL licet (variabilia sine
  * typis). */
-b32 indicium_modulum_colligere (IndiciumScriptor* scriptor,
+b32
+indicium_modulum_colligere (
+           IndiciumScriptor* scriptor,
     constans MedullaModulus* modulus,
-    constans SilvaParsura* parsura, SilvaSemantica* sem);
+      constans SilvaParsura* parsura,
+             SilvaSemantica* sem);
 
 /* Scribere plagulam pro mundo NEXO: ordo functionum = ordo
  * conexionis (iunctura per monstratores functionum). Functiones
  * non collectae (moduli textuales) introitus vacuos accipiunt.
  * Deterministicum: idem mundus -> eadem octeti. */
-b32 indicium_scribere (IndiciumScriptor* scriptor,
-    constans Conexio* conexio, constans character* via);
+b32
+indicium_scribere (
+      IndiciumScriptor* scriptor,
+      constans Conexio* conexio,
+    constans character* via);
+
 
 /* ==================================================
  * Lector (plagula -> quaestiones; nulla conversio)
@@ -176,35 +188,58 @@ nomen structura IndiciumLector IndiciumLector;
 /* Legit totam plagulam in blocum piscinae; magica/versio/fines
  * sectionum validat (versio aliena dure reiecta). NIHIL si
  * invalida. */
-IndiciumLector* indicium_aperire (Piscina* piscina,
+IndiciumLector*
+indicium_aperire (
+               Piscina* piscina,
     constans character* via);
 
-chorda indicium_chorda (constans IndiciumLector* lector, i32 index);
+chorda
+indicium_chorda (
+    constans IndiciumLector* lector,
+                        i32  index);
 /* via (IndiciumLinea.via = index in VIAE, non chorda) -> titulus */
-chorda indicium_via_chorda (constans IndiciumLector* lector,
-    i32 via_index);
-i32 indicium_functiones_numerus (constans IndiciumLector* lector);
-constans IndiciumFunctio* indicium_functio (
-    constans IndiciumLector* lector, i32 index);
+chorda
+indicium_via_chorda (
+    constans IndiciumLector* lector,
+                        i32  via_index);
+i32
+indicium_functiones_numerus (
+    constans IndiciumLector* lector);
+constans IndiciumFunctio*
+indicium_functio (
+    constans IndiciumLector* lector,
+                        i32  index);
 /* -I si non inventa (nomine) */
-s32 indicium_functionem_quaerere (constans IndiciumLector* lector,
-    chorda titulus);
+s32
+indicium_functionem_quaerere (
+    constans IndiciumLector* lector,
+                     chorda  titulus);
 
 /* Acies linearum pro instructione: intervallum continens indicem
  * quaesitum; *acies_out = introitus primus (radix prima), redditur
  * numerus introituum aciei (0 = ante primum intervallum / functio
  * sine lineis). */
-i32 indicium_lineas_de_instructione (constans IndiciumLector* lector,
-    i32 functio_index, i32 instructio,
-    constans IndiciumLinea** acies_out);
+i32
+indicium_lineas_de_instructione (
+    constans IndiciumLector*  lector,
+                        i32   functio_index,
+                        i32   instructio,
+     constans IndiciumLinea** acies_out);
 
 /* Situs pro (via, linea RADICIS) - congruentia lineae exacta;
  * *acies_out = situs primus, redditur numerus. Primitivum puncti:
  * situs[k].instructio = instructio prima intervalli. */
-i32 indicium_situs_de_linea (constans IndiciumLector* lector,
-    chorda via, i32 linea, constans IndiciumSitus** acies_out);
+i32
+indicium_situs_de_linea (
+    constans IndiciumLector*  lector,
+                     chorda   via,
+                        i32   linea,
+     constans IndiciumSitus** acies_out);
 
-i32 indicium_variabilia_functionis (constans IndiciumLector* lector,
-    i32 functio_index, constans IndiciumVariabile** acies_out);
+i32
+indicium_variabilia_functionis (
+       constans IndiciumLector*  lector,
+                           i32   functio_index,
+    constans IndiciumVariabile** acies_out);
 
 #endif /* OFFICINA_INDICIUM_H */

@@ -35,6 +35,7 @@
  * plena silva.h includet) */
 structura SilvaNodus;
 
+
 /* ==================================================
  * Typi operationum (suffixa: conventio domus i/s/f)
  * ================================================== */
@@ -57,6 +58,7 @@ nomen enumeratio {
                                     * litera nuda: officina.h idem
                                     * verbatim definit (redefinitio
                                     * identica = custodia gratuita) */
+
 
 /* ==================================================
  * Operationes (vocabularium-medullae.md §III - SIGNATUM)
@@ -115,6 +117,7 @@ nomen enumeratio {
     MEDULLA_OP_NUMERUS
 } MedullaOp;
 
+
 /* ==================================================
  * Operandum (C2: structura maxime copiata - signatum, 16 octeti)
  * ================================================== */
@@ -138,6 +141,7 @@ nomen structura {
     } datum;
 } MedullaOperandum;
 
+
 /* ==================================================
  * Instructio (origo SEMPER fertur - provenientia est merx)
  * ================================================== */
@@ -152,13 +156,14 @@ nomen structura {
     s32 destinatio;                /* index registri; -I = nulla */
     s32 extra_index;               /* vocare: initium argumentorum
                                     * in stiva operandorum; -I */
-    s32 extra_numerus;
+                 s32 extra_numerus;
     MedullaOperandum a;
     MedullaOperandum b;
     MedullaOperandum c;
     constans structura SilvaNodus* origo;   /* NIHIL licet (textus
                                              * manu scriptus) */
 } MedullaInstructio;
+
 
 /* ==================================================
  * PACTUM AMBULATIONIS CANONICAE (M3)
@@ -175,14 +180,15 @@ nomen structura {
  * figit.
  * ================================================== */
 
+
 /* ==================================================
  * Bloccus / functio / datum / modulus
  * ================================================== */
 
 nomen structura {
-    chorda titulus;                /* @titulus (sine sigillo) */
-    Xar*   instructiones;          /* MedullaInstructio valore */
-    b32    terminatus;
+    chorda  titulus;                /* @titulus (sine sigillo) */
+       Xar* instructiones;          /* MedullaInstructio valore */
+       b32  terminatus;
 } MedullaBloccus;
 
 nomen structura {
@@ -191,14 +197,14 @@ nomen structura {
 } MedullaParametrum;
 
 nomen structura {
-    chorda titulus;                /* $titulus (sine sigillo) */
-    s32    typus_reditus;          /* MEDULLA_TYPUS_NIHIL = vacuum */
-    b32    est_variadica;
-    Xar*   parametra;              /* MedullaParametrum valore */
-    Xar*   blocci;                 /* MedullaBloccus valore */
-    Xar*   registra;               /* chorda (tituli) valore -
+    chorda  titulus;                /* $titulus (sine sigillo) */
+       s32  typus_reditus;          /* MEDULLA_TYPUS_NIHIL = vacuum */
+       b32  est_variadica;
+       Xar* parametra;              /* MedullaParametrum valore */
+       Xar* blocci;                 /* MedullaBloccus valore */
+       Xar* registra;               /* chorda (tituli) valore -
                                     * mensura 0 numquam (tN auto) */
-    Xar*   operanda;               /* stiva: MedullaOperandum valore
+    Xar* operanda;               /* stiva: MedullaOperandum valore
                                     * (argumenta vocationum) */
     constans structura SilvaNodus* origo;
 } MedullaFunctio;
@@ -213,8 +219,8 @@ nomen enumeratio {
 
 nomen structura {
     chorda titulus;
-    s32    genus;                  /* MedullaSymbolumGenus */
-    s32    index;                  /* in functiones/data; -I externum */
+       s32 genus;                  /* MedullaSymbolumGenus */
+       s32 index;                  /* in functiones/data; -I externum */
 } MedullaSymbolum;
 
 nomen structura {
@@ -223,89 +229,153 @@ nomen structura {
 } MedullaRelocatio;
 
 nomen structura {
-    chorda titulus;
-    i32    magnitudo_octetorum;    /* NUMQUAM "magnitudo" - macro! */
-    i32    ordinatio;
-    i8*    imago;                  /* octeti (zephyrum-pleni initio) */
-    Xar*   relocationes;           /* MedullaRelocatio valore */
+    chorda  titulus;
+       i32  magnitudo_octetorum;    /* NUMQUAM "magnitudo" - macro! */
+       i32  ordinatio;
+        i8* imago;                  /* octeti (zephyrum-pleni initio) */
+       Xar* relocationes;           /* MedullaRelocatio valore */
     constans structura SilvaNodus* origo;
 } MedullaDatum;
 
 nomen structura {
     Piscina* piscina;
-    chorda   titulus;              /* "lib/chorda.c" */
-    Xar*     functiones;           /* MedullaFunctio* */
-    Xar*     data;                 /* MedullaDatum* */
-    Xar*     symbola;              /* MedullaSymbolum valore */
-    Xar*     causae;               /* chorda valore (sistere) */
+     chorda  titulus;              /* "lib/chorda.c" */
+        Xar* functiones;           /* MedullaFunctio* */
+        Xar* data;                 /* MedullaDatum* */
+        Xar* symbola;              /* MedullaSymbolum valore */
+        Xar* causae;               /* chorda valore (sistere) */
 } MedullaModulus;
+
 
 /* ==================================================
  * Fabrica (interfacies prima - Eskil)
  * ================================================== */
 
-MedullaModulus* medulla_modulum_creare (Piscina* piscina,
-    chorda titulus);
+MedullaModulus*
+medulla_modulum_creare (
+    Piscina* piscina,
+     chorda  titulus);
 
 /* Internare per titulum: idem titulus -> idem index. Novum =
  * EXTERNUM; functionem/datum_creare genus concretum ponit. */
-s32 medulla_symbolum_internare (MedullaModulus* modulus,
-    chorda titulus);
-constans MedullaSymbolum* medulla_symbolum_obtinere (
-    constans MedullaModulus* modulus, s32 index);
+s32
+medulla_symbolum_internare (
+    MedullaModulus* modulus,
+            chorda  titulus);
+constans MedullaSymbolum*
+medulla_symbolum_obtinere (
+    constans MedullaModulus* modulus,
+                        s32  index);
 
-s32 medulla_causam_internare (MedullaModulus* modulus, chorda causa);
-constans chorda* medulla_causam_obtinere (
-    constans MedullaModulus* modulus, s32 index);
+s32
+medulla_causam_internare (
+    MedullaModulus* modulus,
+            chorda  causa);
+constans chorda*
+medulla_causam_obtinere (
+    constans MedullaModulus* modulus,
+                        s32  index);
 
 /* NIHIL si titulus iam definitionem concretam habet */
-MedullaFunctio* medulla_functionem_creare (MedullaModulus* modulus,
-    chorda titulus, s32 typus_reditus, b32 est_variadica);
+MedullaFunctio*
+medulla_functionem_creare (
+    MedullaModulus* modulus,
+            chorda  titulus,
+               s32  typus_reditus,
+               b32  est_variadica);
 
 /* -> index registri novi (parametra = registra prima) */
-s32 medulla_parametrum_addere (MedullaFunctio* functio,
-    chorda titulus, s32 typus);
+s32
+medulla_parametrum_addere (
+    MedullaFunctio* functio,
+            chorda  titulus,
+               s32  typus);
 /* titulus mensura 0 -> "tN" automaticum */
-s32 medulla_registrum_novum (MedullaFunctio* functio, chorda titulus);
-constans chorda* medulla_registrum_titulus (
-    constans MedullaFunctio* functio, s32 index);
+s32
+medulla_registrum_novum (
+    MedullaFunctio* functio,
+            chorda  titulus);
+constans chorda*
+medulla_registrum_titulus (
+    constans MedullaFunctio* functio,
+                        s32  index);
 
-s32 medulla_bloccum_creare (MedullaFunctio* functio, chorda titulus);
-MedullaBloccus* medulla_bloccum_obtinere (
-    constans MedullaFunctio* functio, s32 index);
+s32
+medulla_bloccum_creare (
+    MedullaFunctio* functio,
+            chorda  titulus);
+MedullaBloccus*
+medulla_bloccum_obtinere (
+    constans MedullaFunctio* functio,
+                        s32  index);
 
 /* argumenta vocationis in stivam -> index initii (extra_index) */
-s32 medulla_operanda_addere (MedullaFunctio* functio,
-    constans MedullaOperandum* operanda, s32 numerus);
+s32
+medulla_operanda_addere (
+               MedullaFunctio* functio,
+    constans MedullaOperandum* operanda,
+                          s32  numerus);
 
 /* fabricae operandorum (valore) */
-MedullaOperandum medulla_op_nihil (vacuum);
-MedullaOperandum medulla_op_registrum (s32 index);
-MedullaOperandum medulla_op_immediatum (s64 valor);
-MedullaOperandum medulla_op_immediatum_f (f64 valor);
-MedullaOperandum medulla_op_symbolum (s32 index);
-MedullaOperandum medulla_op_bloccum (s32 index);
-MedullaOperandum medulla_op_causa (s32 index);
+MedullaOperandum
+medulla_op_nihil (vacuum);
+MedullaOperandum
+medulla_op_registrum (
+    s32 index);
+MedullaOperandum
+medulla_op_immediatum (
+    s64 valor);
+MedullaOperandum
+medulla_op_immediatum_f (
+    f64 valor);
+MedullaOperandum
+medulla_op_symbolum (
+    s32 index);
+MedullaOperandum
+medulla_op_bloccum (
+    s32 index);
+MedullaOperandum
+medulla_op_causa (
+    s32 index);
 
 /* Custos disciplinae: FALSUM si bloccus invalidus/terminatus, op
  * extra fines, aut destinatio registrum ignotum. Terminator
  * bloccum claudit. Instructio VALORE copiatur. */
-b32 medulla_emittere (MedullaFunctio* functio, s32 bloccus,
+b32
+medulla_emittere (
+                MedullaFunctio* functio,
+                           s32  bloccus,
     constans MedullaInstructio* instructio);
 
-b32 medulla_op_terminator (s32 op);
+b32
+medulla_op_terminator (
+    s32 op);
 /* omnes blocci terminati et saltem unus */
-b32 medulla_functio_terminata (constans MedullaFunctio* functio);
+b32
+medulla_functio_terminata (
+    constans MedullaFunctio* functio);
 
 /* NIHIL si titulus iam definitionem concretam habet aut
  * magnitudo_octetorum < I. Imago allocatur et zephyrum-pletur. */
-MedullaDatum* medulla_datum_creare (MedullaModulus* modulus,
-    chorda titulus, i32 magnitudo_octetorum, i32 ordinatio);
-b32 medulla_datum_scribere (MedullaDatum* datum, i32 offset,
-    constans i8* octeti, i32 numerus);
+MedullaDatum*
+medulla_datum_creare (
+    MedullaModulus* modulus,
+            chorda  titulus,
+               i32  magnitudo_octetorum,
+               i32  ordinatio);
+b32
+medulla_datum_scribere (
+    MedullaDatum* datum,
+             i32  offset,
+     constans i8* octeti,
+             i32  numerus);
 /* locellus relocationis = 8 octeti intra imaginem */
-b32 medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
-    s32 symbolum);
+b32
+medulla_relocationem_addere (
+    MedullaDatum* datum,
+             i32  offset,
+             s32  symbolum);
+
 
 /* ==================================================
  * Lineae distillatae (M2a; proto-indicium M3)
@@ -318,17 +388,26 @@ b32 medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
  * ================================================== */
 
 nomen structura {
-    Piscina*        piscina;
-    Xar*            viae;     /* chorda valore (viae fontium unicae) */
+           Piscina* piscina;
+               Xar* viae;     /* chorda valore (viae fontium unicae) */
     TabulaDispersa* lineae;   /* octeti monstratoris -> introitus */
 } MedullaLineae;
 
-MedullaLineae* medulla_lineas_creare (Piscina* piscina);
-b32 medulla_lineam_ponere (MedullaLineae* lineae,
-    constans structura SilvaNodus* origo, chorda via, i32 linea);
+MedullaLineae*
+medulla_lineas_creare (
+    Piscina* piscina);
+b32
+medulla_lineam_ponere (
+    MedullaLineae* lineae,
+    constans structura SilvaNodus* origo,
+    chorda via,
+    i32 linea);
 /* via_out/linea_out NIHIL licent (probatio existentiae) */
-b32 medulla_lineam_quaerere (constans MedullaLineae* lineae,
-    constans structura SilvaNodus* origo, chorda* via_out,
+b32
+medulla_lineam_quaerere (
+    constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo,
+    chorda* via_out,
     i32* linea_out);
 
 #endif /* OFFICINA_MEDULLA_H */

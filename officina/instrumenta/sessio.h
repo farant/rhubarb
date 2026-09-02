@@ -56,15 +56,15 @@ enum {
  * quas usor typavit), non in textu involuto iudicato. */
 typedef struct {
     chorda via;            /* "<sessio>" aut caput praebitum */
-    i32    linea;          /* 1-basata; 0 si ignota */
-    i32    columna;
-    s32    severitas;      /* ExamenSeveritas speculum (0=violatio,
+       i32 linea;          /* 1-basata; 0 si ignota */
+       i32 columna;
+       s32 severitas;      /* ExamenSeveritas speculum (0=violatio,
                             * 1=suspectum, 2=domesticum, 3=infra) */
-    s32    codex;          /* ExamenCodex; -1 = regula sessionis */
-    b32    provisionale;
-    b32    extra_turnum;   /* extra turnum novum flagravit (C2:
+    s32 codex;          /* ExamenCodex; -1 = regula sessionis */
+    b32 provisionale;
+    b32 extra_turnum;   /* extra turnum novum flagravit (C2:
                             * redefinitio turnum veterem aegrotat) */
-    s32    turnus_vetus;   /* index turni veteris; -1 nisi */
+       s32 turnus_vetus;   /* index turni veteris; -1 nisi */
     chorda nuntius;
 } SessioDiagnosticum;
 
@@ -82,40 +82,40 @@ typedef struct {
     const SessioDiagnosticum* diagnostica;
     s32    diagnostica_numerus;
     /* exsecutio (chunk B: replicatio documenti totius) */
-    b32    exsecutum;           /* replicatio facta */
-    s32    halitus_genus;       /* MachinulaExitusGenus; -1 nisi
+    b32 exsecutum;           /* replicatio facta */
+    s32 halitus_genus;       /* MachinulaExitusGenus; -1 nisi
                                  * halitus (BENE non relatum nisi
                                  * codex exit) */
-    s64    halitus_codex;
+       s64 halitus_codex;
     chorda halitus_nuntius;
-    s32    halitus_turnus;      /* quis turnus fregit; -1 nisi */
+       s32 halitus_turnus;      /* quis turnus fregit; -1 nisi */
     chorda effusio;             /* stdout turni novi (captum) */
     chorda effusio_erroris;     /* stderr turni novi */
     /* historia mutata: redefinitio effusionem turni veteris mutavit */
     const s32* turni_mutati;
-    s32    turni_mutati_numerus;
+          s32  turni_mutati_numerus;
     /* valor turni expressionis (chunk C: impressio) */
-    b32    divisum;             /* scissio automatica: declaratio +
+    b32 divisum;             /* scissio automatica: declaratio +
                                  * assignatio (initiator non
                                  * constans) - textus = assignatio */
     chorda typus_textus;        /* typus redditus latine; vacua si
                                  * irreddibilis */
-    s32    valor_genus;         /* SESSIO_VALOR_* */
-    b32    valor_validus;       /* exsecutio BENE, valor in codex */
-    s64    valor;               /* codex crudus (figurae f32/f64) */
+    s32 valor_genus;         /* SESSIO_VALOR_* */
+    b32 valor_validus;       /* exsecutio BENE, valor in codex */
+    s64 valor;               /* codex crudus (figurae f32/f64) */
 } SessioRelatum;
 
 typedef struct {
     const char* radix;          /* radix repositorii (systema +
                                  * capita); NIHIL = sine systemate */
-    b32         cum_posix;      /* systema POSIX concatenatum */
-    b32         sine_capitibus; /* ambulatio capitum omissa (probae
+    b32 cum_posix;      /* systema POSIX concatenatum */
+    b32 sine_capitibus; /* ambulatio capitum omissa (probae
                                  * velociores; #include tunc deest) */
     /* bibliothecae demissae SEMEL in mundum (viae radici relativae,
      * e.g. "lib/piscina.c") */
     const char* const* plagulae;
-    s32         plagulae_numerus;
-    b32         sine_recusationibus;  /* modus scripti: scripturae/
+    s32 plagulae_numerus;
+    b32 sine_recusationibus;  /* modus scripti: scripturae/
                                        * tempus/stdin LICENT */
 } SessioConfiguratio;
 
@@ -124,40 +124,71 @@ typedef struct {
  * processum (regio basi fixa - "una regio uno tempore"); sessio
  * altera creari potest, sed turni eius reicientur APPARATUS dum
  * mundus prioris vivit - destrue priorem primum. */
-Sessio* sessio_creare(Piscina* piscina,
+Sessio*
+sessio_creare (
+                     Piscina* piscina,
     const SessioConfiguratio* configuratio);
-void sessio_destruere(Sessio* sessio);
+void
+sessio_destruere (
+    Sessio* sessio);
 
 /* Offert turnum. Initus = textus turni (una elementum aut directiva
  * una; multi-elementa reiciuntur — corpus compositum { } fuga).
  * Acceptum ⇒ documentum crevit aut turnus religatus in loco. */
-SessioRelatum sessio_turnum_offerre(Sessio* sessio, chorda initus);
+SessioRelatum
+sessio_turnum_offerre (
+    Sessio* sessio,
+    chorda  initus);
 
 /* Probatio integritatis initus (librae/parentheses/commenta
  * aperta) — VERUM = initus clausus, offerre licet; FALSUM = pergere
  * legere (superficies lineam continuationis dat). */
-b32 sessio_initus_completus(Sessio* sessio, chorda initus);
+b32
+sessio_initus_completus (
+    Sessio* sessio,
+    chorda  initus);
 
 /* Inspectio documenti */
-i32    sessio_turni_numerus(const Sessio* sessio);
-chorda sessio_turnus_textus(const Sessio* sessio, i32 index);
-s32    sessio_turnus_genus(const Sessio* sessio, i32 index);
-chorda sessio_turnus_nomen(const Sessio* sessio, i32 index);
+i32
+sessio_turni_numerus (
+    const Sessio* sessio);
+chorda
+sessio_turnus_textus (
+    const Sessio* sessio,
+             i32  index);
+s32
+sessio_turnus_genus (
+    const Sessio* sessio,
+             i32  index);
+chorda
+sessio_turnus_nomen (
+    const Sessio* sessio,
+             i32  index);
 
 /* effusio capta novissima turni (acta; vacua si numquam involutus
  * aut nondum exsecutus) */
-chorda sessio_turnus_effusio(const Sessio* sessio, i32 index);
+chorda
+sessio_turnus_effusio (
+    const Sessio* sessio,
+             i32  index);
 
 /* Formator transcripti (chunk C): relatum -> textus ostensionis
  * (echo reparationis, effusio capta, echo declarationis,
  * valor : typus [+ praevisus char*], notitiae historiae, diagnostica,
  * halitus). Superficies (colloquium) eum imprimit; probationes eum
  * byte-comparant. */
-chorda sessio_relatum_formare(Sessio* sessio,
-    const SessioRelatum* relatum, Piscina* piscina);
+chorda
+sessio_relatum_formare (
+                 Sessio* sessio,
+    const SessioRelatum* relatum,
+                Piscina* piscina);
 
 /* Textus ostensus integer (materializatus in piscinam datam) */
-chorda sessio_documentum(const Sessio* sessio, Piscina* piscina);
+chorda
+sessio_documentum (
+    const Sessio* sessio,
+         Piscina* piscina);
+
 
 /* ==================================================
  * Chunk D: via #! + emissores
@@ -169,20 +200,28 @@ chorda sessio_documentum(const Sessio* sessio, Piscina* piscina);
  * numerus turnorum RECEPTORUM; -1 = apparatus. relatum_out (licet
  * NIHIL) = relatum ultimum (reiecti aut ultimi recepti).
  * NOTA v0: commenta INTER turnos in findendo pereunt. */
-s32 sessio_scriptum_offerre(Sessio* sessio, chorda textus,
+s32
+sessio_scriptum_offerre (
+           Sessio* sessio,
+           chorda  textus,
     SessioRelatum* relatum_out);
 
 /* Functionem nominatam in mundo currenti currit (C12: principale
  * post scriptum; tractio vindex-eval futura). Flumina directa -
  * SINE captura (scriptum = programma verum). VERUM = halitus BENE;
  * codex_out (licet NIHIL) = valor redditus / codex exitus. */
-b32 sessio_functionem_currere(Sessio* sessio,
-    const char* titulus, s64* codex_out);
+b32
+sessio_functionem_currere (
+        Sessio* sessio,
+    const char* titulus,
+           s64* codex_out);
 
 /* Exportatio C89 stricta: textus involutus + `#include "latina.h"`
  * praepositum + principale syntheticum turnos ordine vocans (NISI
  * usor principale definivit). clang vexillis domus compilat. */
-chorda sessio_documentum_strictum(const Sessio* sessio,
-    Piscina* piscina);
+chorda
+sessio_documentum_strictum (
+    const Sessio* sessio,
+         Piscina* piscina);
 
 #endif /* SESSIO_H */

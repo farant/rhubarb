@@ -10,19 +10,22 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -30,8 +33,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     long longitudo;
     constans character* radix = getenv("RHUBARB_RADIX");
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
     plagula = fopen(via, "rb");
@@ -46,7 +49,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -62,26 +65,31 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 }
 
 interior MedullaInstructio
-_instructio (s32 op, s32 typus, s32 destinatio,
-    MedullaOperandum a, MedullaOperandum b)
+_instructio (
+                 s32 op,
+                 s32 typus,
+                 s32 destinatio,
+    MedullaOperandum a,
+    MedullaOperandum b)
 {
     MedullaInstructio instructio;
 
     memset(&instructio, ZEPHYRUM, magnitudo(MedullaInstructio));
-    instructio.op = op;
-    instructio.typus = typus;
-    instructio.typus_secundus = MEDULLA_TYPUS_NIHIL;
-    instructio.destinatio = destinatio;
-    instructio.extra_index = -I;
-    instructio.a = a;
-    instructio.b = b;
-    instructio.c = medulla_op_nihil();
+    instructio.op              = op;
+    instructio.typus           = typus;
+    instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
+    instructio.destinatio      = destinatio;
+    instructio.extra_index     = -I;
+    instructio.a               = a;
+    instructio.b               = b;
+    instructio.c               = medulla_op_nihil();
     redde instructio;
 }
 
 /* $summa per fabricam - eadem figura ac vocabularium §VIII */
 interior MedullaModulus*
-_summam_aedificare (Piscina* piscina)
+_summam_aedificare (
+    Piscina* piscina)
 {
     MedullaModulus* modulus = medulla_modulum_creare(piscina,
         _ch("probatio.c"));
@@ -89,13 +97,13 @@ _summam_aedificare (Piscina* piscina)
         _ch("summa"), MEDULLA_TYPUS_S32, FALSUM);
     s32 r_n = medulla_parametrum_addere(functio, _ch("n"),
         MEDULLA_TYPUS_S32);
-    s32 r_s = medulla_registrum_novum(functio, _ch("s"));
-    s32 r_i = medulla_registrum_novum(functio, _ch("i"));
-    s32 r_c = medulla_registrum_novum(functio, _ch("c"));
-    s32 b_initium = medulla_bloccum_creare(functio, _ch("initium"));
-    s32 b_proba = medulla_bloccum_creare(functio, _ch("proba"));
-    s32 b_corpus = medulla_bloccum_creare(functio, _ch("corpus"));
-    s32 b_finis = medulla_bloccum_creare(functio, _ch("finis"));
+    s32 r_s        = medulla_registrum_novum(functio, _ch("s"));
+    s32 r_i        = medulla_registrum_novum(functio, _ch("i"));
+    s32 r_c        = medulla_registrum_novum(functio, _ch("c"));
+    s32 b_initium  = medulla_bloccum_creare(functio, _ch("initium"));
+    s32 b_proba    = medulla_bloccum_creare(functio, _ch("proba"));
+    s32 b_corpus   = medulla_bloccum_creare(functio, _ch("corpus"));
+    s32 b_finis    = medulla_bloccum_creare(functio, _ch("finis"));
     MedullaInstructio instructio;
 
     instructio = _instructio(MEDULLA_OP_MOVERE, MEDULLA_TYPUS_S32,
@@ -132,10 +140,11 @@ _summam_aedificare (Piscina* piscina)
     redde modulus;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_textus",
         16777216);
@@ -146,9 +155,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: nomina signata
      * ======================================================== */
+
     {
         imprimere("\n--- Probans nomina signata ---\n");
         CREDO_VERUM (strcmp(medulla_op_titulus(MEDULLA_OP_AUT),
@@ -162,14 +173,16 @@ s32 principale (vacuum)
         CREDO_NIHIL ((constans vacuum*)medulla_typum_titulus(-I));
     }
 
+
     /* ========================================================
      * PROBARE: fabrica -> scriptura == plagula canonica
      * (SCRIPTOR contra plagulam commissam fixus)
      * ======================================================== */
+
     {
         MedullaModulus* modulus = _summam_aedificare(piscina);
-        chorda scriptura = medulla_textum_scribere(piscina,
-            modulus);
+                chorda  scriptura = medulla_textum_scribere(piscina,
+                    modulus);
         chorda plagula = _plagulam_legere(piscina,
             "officina/probationes/fixa/summa.medulla");
 
@@ -180,12 +193,14 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS (scriptura, plagula);
     }
 
+
     /* ========================================================
      * PROBARE: VECTIS - dump(parse(t)) == t (canonicae)
      * ======================================================== */
+
     {
         constans character* plagulae[II];
-        i32 i;
+                       i32  i;
 
         plagulae[ZEPHYRUM] =
             "officina/probationes/fixa/summa.medulla";
@@ -193,8 +208,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans vectem (byte-idem) ---\n");
         per (i = ZEPHYRUM; i < II; i++)
         {
-            chorda plagula = _plagulam_legere(piscina, plagulae[i]);
-            i32 linea = ZEPHYRUM;
+            chorda plagula  = _plagulam_legere(piscina, plagulae[i]);
+            i32 linea       = ZEPHYRUM;
             MedullaModulus* modulus = medulla_textum_legere(piscina,
                 plagula, &linea);
             chorda scriptura;
@@ -207,16 +222,18 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: commenta praetermissa + idempotentia
      * ======================================================== */
+
     {
         chorda plagula = _plagulam_legere(piscina,
             "officina/probationes/fixa/commenta.medulla");
         MedullaModulus* modulus = medulla_textum_legere(piscina,
             plagula, NIHIL);
-        chorda prima;
-        chorda secunda;
+                chorda  prima;
+                chorda  secunda;
         MedullaModulus* iterum;
 
         imprimere("\n--- Probans commenta + idempotentiam ---\n");
@@ -231,23 +248,25 @@ s32 principale (vacuum)
             CREDO_AEQUALIS_I32 ((i32)(*datum)->imago[XV],
                 ZEPHYRUM);
         }
-        prima = medulla_textum_scribere(piscina, modulus);
-        iterum = medulla_textum_legere(piscina, prima, NIHIL);
+        prima   = medulla_textum_scribere(piscina, modulus);
+        iterum  = medulla_textum_legere(piscina, prima, NIHIL);
         CREDO_NON_NIHIL (iterum);
         secunda = medulla_textum_scribere(piscina, iterum);
         CREDO_CHORDA_AEQUALIS (prima, secunda);
     }
 
+
     /* ========================================================
      * PROBARE: fluitantia bit-exacta per vectem
      * ======================================================== */
+
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("fluitans.c"));
         MedullaFunctio* functio = medulla_functionem_creare(modulus,
             _ch("f"), MEDULLA_TYPUS_F64, FALSUM);
-        s32 r_x = medulla_registrum_novum(functio, _ch("x"));
-        s32 b = medulla_bloccum_creare(functio, _ch("initium"));
+        s32 r_x  = medulla_registrum_novum(functio, _ch("x"));
+        s32 b    = medulla_bloccum_creare(functio, _ch("initium"));
         MedullaInstructio instructio;
         chorda scriptura;
         MedullaModulus* iterum;
@@ -262,8 +281,8 @@ s32 principale (vacuum)
             medulla_op_nihil());
         CREDO_VERUM (medulla_emittere(functio, b, &instructio));
 
-        scriptura = medulla_textum_scribere(piscina, modulus);
-        iterum = medulla_textum_legere(piscina, scriptura, NIHIL);
+        scriptura  = medulla_textum_scribere(piscina, modulus);
+        iterum     = medulla_textum_legere(piscina, scriptura, NIHIL);
         CREDO_NON_NIHIL (iterum);
         {
             MedullaFunctio** f2 = (MedullaFunctio**)xar_obtinere(
@@ -281,9 +300,11 @@ s32 principale (vacuum)
             medulla_textum_scribere(piscina, iterum));
     }
 
+
     /* ========================================================
      * PROBARE: errores cum linea (strictus)
      * ======================================================== */
+
     {
         i32 linea;
 

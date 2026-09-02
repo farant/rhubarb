@@ -32,6 +32,7 @@
 #include "officina_medulla.h"
 #include "officina_regio.h"
 
+
 /* ==================================================
  * Genera symbolorum globalium
  * ================================================== */
@@ -63,9 +64,9 @@ nomen structura {
 
 nomen structura {
     chorda  titulus;        /* copia in piscina conexionis */
-    s32     genus;          /* ConexioSymbolumGenus */
-    s32     modulus_index;  /* definitor; -I si nullus */
-    s32     index_localis;  /* functio/datum in definitore; -I */
+       s32  genus;          /* ConexioSymbolumGenus */
+       s32  modulus_index;  /* definitor; -I si nullus */
+       s32  index_localis;  /* functio/datum in definitore; -I */
     vacuum* sedes;          /* inscriptio finalis (post nectere) */
 } ConexioSymbolum;
 
@@ -74,65 +75,107 @@ nomen structura {
  * translatio moduli eos resolvit) */
 nomen structura {
     MedullaFunctio* functio;
-    s32             modulus_index;
+               s32  modulus_index;
 } ConexioFunctioNexa;
 
 nomen structura Conexio Conexio;
+
 
 /* ==================================================
  * Vita + nexus
  * ================================================== */
 
-Conexio* conexio_creare (Piscina* piscina, Regio* regio);
+Conexio*
+conexio_creare (
+    Piscina* piscina,
+      Regio* regio);
 
 /* FALSUM: post nectere, aut definitio duplex (querela ponitur;
  * conexio post fracturam invalida) */
-b32 conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus);
+b32
+conexio_modulum_addere (
+           Conexio* conexio,
+    MedullaModulus* modulus);
 
 /* collocat data, descriptores, cellas, decipulas; relocationes
  * ADDITIVE sarcit. Decipulae NON sunt fracturae (numeratae +
  * nominatae). FALSUM = fractura vera (querela). */
-b32 conexio_nectere (Conexio* conexio);
+b32
+conexio_nectere (
+    Conexio* conexio);
 
-constans chorda* conexio_querela (constans Conexio* conexio);
+constans chorda*
+conexio_querela (
+    constans Conexio* conexio);
 /* symbolum querelae (mensura 0 si nullum) */
-constans chorda* conexio_querela_symbolum (constans Conexio* conexio);
+constans chorda*
+conexio_querela_symbolum (
+    constans Conexio* conexio);
+
 
 /* ==================================================
  * Quaestio (post nectere)
  * ================================================== */
 
 /* -I si absens */
-s32 conexio_symbolum_quaerere (constans Conexio* conexio,
-    chorda titulus);
-constans ConexioSymbolum* conexio_symbolum_obtinere (
-    constans Conexio* conexio, s32 index);
-i32 conexio_numerus_symbolorum (constans Conexio* conexio);
+s32
+conexio_symbolum_quaerere (
+    constans Conexio* conexio,
+              chorda  titulus);
+constans ConexioSymbolum*
+conexio_symbolum_obtinere (
+    constans Conexio* conexio,
+                 s32  index);
+i32
+conexio_numerus_symbolorum (
+    constans Conexio* conexio);
 
 /* sedes per titulum; NIHIL si absens ($main -> descriptor) */
-vacuum* conexio_sedes_quaerere (constans Conexio* conexio,
-    chorda titulus);
+vacuum*
+conexio_sedes_quaerere (
+    constans Conexio* conexio,
+              chorda  titulus);
 
 /* (modulus, index localis) -> index globalis; -I si invalidus */
-s32 conexio_symbolum_globale (constans Conexio* conexio,
-    s32 modulus_index, s32 index_localis);
+s32
+conexio_symbolum_globale (
+    constans Conexio* conexio,
+                 s32  modulus_index,
+                 s32  index_localis);
 
-constans ConexioFunctioNexa* conexio_functionem_obtinere (
-    constans Conexio* conexio, s64 index);
-i32 conexio_numerus_functionum (constans Conexio* conexio);
+constans ConexioFunctioNexa*
+conexio_functionem_obtinere (
+    constans Conexio* conexio,
+                 s64  index);
+i32
+conexio_numerus_functionum (
+    constans Conexio* conexio);
 
-i32 conexio_numerus_modulorum (constans Conexio* conexio);
-constans MedullaModulus* conexio_modulum_obtinere (
-    constans Conexio* conexio, s32 index);
+i32
+conexio_numerus_modulorum (
+    constans Conexio* conexio);
+constans MedullaModulus*
+conexio_modulum_obtinere (
+    constans Conexio* conexio,
+                 s32  index);
+
 
 /* ==================================================
  * Census (vectis M2a: decipulae numeratae + nominatae)
  * ================================================== */
 
-i32 conexio_numerus_datorum (constans Conexio* conexio);
-i32 conexio_numerus_cellarum (constans Conexio* conexio);
-i32 conexio_numerus_decipularum (constans Conexio* conexio);
-constans chorda* conexio_decipulam_obtinere (
-    constans Conexio* conexio, s32 index);
+i32
+conexio_numerus_datorum (
+    constans Conexio* conexio);
+i32
+conexio_numerus_cellarum (
+    constans Conexio* conexio);
+i32
+conexio_numerus_decipularum (
+    constans Conexio* conexio);
+constans chorda*
+conexio_decipulam_obtinere (
+    constans Conexio* conexio,
+                 s32  index);
 
 #endif /* OFFICINA_CONEXIO_H */

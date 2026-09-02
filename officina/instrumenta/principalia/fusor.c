@@ -25,6 +25,7 @@
 #include <time.h>
 #include <dirent.h>
 
+
 /* ==================================================
  * Status globalis
  * ================================================== */
@@ -36,7 +37,9 @@ hic_manens constans character* textus_quaesitus = NIHIL;
 
 /* linea primi lexematis subarboris (probatio -causa) */
 hic_manens unsigned int
-_linea_nodi (constans SilvaNodus* nodus, i32 profunditas)
+_linea_nodi (
+    constans SilvaNodus* nodus,
+                    i32  profunditas)
 {
     i32 i;
 
@@ -68,11 +71,13 @@ _linea_nodi (constans SilvaNodus* nodus, i32 profunditas)
 
 /* plagulam systematis in piscinam legere */
 hic_manens character*
-_systema_legere (Piscina* piscina, constans character* via,
-    long* mensura_fructus)
+_systema_legere (
+               Piscina* piscina,
+    constans character* via,
+                  long* mensura_fructus)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura;
+         FILE* pl = fopen(via, "rb");
+         long  mensura;
     character* fons;
 
     si (pl == NIHIL)
@@ -84,7 +89,7 @@ _systema_legere (Piscina* piscina, constans character* via,
     fseek(pl, 0L, SEEK_SET);
     fons = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura + 1L));
-    si (fons == NIHIL
+    si (   fons == NIHIL
         || fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -120,17 +125,19 @@ hic_manens SilvaSemantica* systema_semantica = NIHIL;
 /* causae aggregatae (textu) */
 nomen structura {
     character textus[LXIV];
-    i32       longitudo;
-    long      sistentia;   /* instructiones sistere */
-    long      notae;       /* moduli cum causa sine instructione */
+          i32 longitudo;
+         long sistentia;   /* instructiones sistere */
+         long notae;       /* moduli cum causa sine instructione */
 } FusorCausa;
 
 hic_manens FusorCausa causae_summae[LXIV];
 hic_manens i32 causae_numerus = ZEPHYRUM;
 
 hic_manens vacuum
-_causam_aggregare (constans chorda* causa, b32 est_sistere,
-    long numerus)
+_causam_aggregare (
+    constans chorda* causa,
+                b32  est_sistere,
+               long  numerus)
 {
     i32 i;
     i32 longitudo = (causa->mensura < (i32)LXIII)
@@ -138,7 +145,7 @@ _causam_aggregare (constans chorda* causa, b32 est_sistere,
 
     per (i = ZEPHYRUM; i < causae_numerus; i++)
     {
-        si (causae_summae[i].longitudo == (i32)longitudo
+        si (   causae_summae[i].longitudo == (i32)longitudo
             && memcmp(causae_summae[i].textus, causa->datum,
                    (memoriae_index)longitudo) == ZEPHYRUM)
         {
@@ -153,9 +160,9 @@ _causam_aggregare (constans chorda* causa, b32 est_sistere,
         }
         memcpy(causae_summae[i].textus, causa->datum,
             (memoriae_index)longitudo);
-        causae_summae[i].longitudo = (i32)longitudo;
-        causae_summae[i].sistentia = 0L;
-        causae_summae[i].notae = 0L;
+        causae_summae[i].longitudo  = (i32)longitudo;
+        causae_summae[i].sistentia  = 0L;
+        causae_summae[i].notae      = 0L;
         causae_numerus++;
     }
     si (est_sistere)
@@ -168,20 +175,22 @@ _causam_aggregare (constans chorda* causa, b32 est_sistere,
     }
 }
 
+
 /* ==================================================
  * Modulum numerare (instructiones + sistere per causam)
  * ================================================== */
 
 hic_manens vacuum
-_modulum_numerare (constans MedullaModulus* modulus,
-    constans character* via)
+_modulum_numerare (
+    constans MedullaModulus* modulus,
+         constans character* via)
 {
-    i32 f;
-    i32 numerus_functionum = xar_numerus(modulus->functiones);
+     i32 f;
+     i32 numerus_functionum = xar_numerus(modulus->functiones);
     long usus_causarum[CXXVIII];
-    i32 numerus_causarum = xar_numerus(modulus->causae);
-    long sistentia_plagulae = 0L;
-    i32 i;
+     i32 numerus_causarum    = xar_numerus(modulus->causae);
+    long sistentia_plagulae  = 0L;
+     i32 i;
 
     si (numerus_causarum > (i32)CXXVIII)
     {
@@ -192,8 +201,8 @@ _modulum_numerare (constans MedullaModulus* modulus,
         usus_causarum[i] = 0L;
     }
 
-    summa_functionum += (long)numerus_functionum;
-    summa_datorum += (long)xar_numerus(modulus->data);
+    summa_functionum  += (long)numerus_functionum;
+    summa_datorum     += (long)xar_numerus(modulus->data);
     per (f = ZEPHYRUM; f < numerus_functionum; f++)
     {
         MedullaFunctio** functio = (MedullaFunctio**)xar_obtinere(
@@ -216,7 +225,7 @@ _modulum_numerare (constans MedullaModulus* modulus,
                     (constans MedullaInstructio*)xar_obtinere(
                         bloccus->instructiones, (i32)k);
 
-                si (instructio->op == (s32)MEDULLA_OP_SISTERE
+                si (   instructio->op == (s32)MEDULLA_OP_SISTERE
                     && instructio->a.genus
                         == (s32)MEDULLA_OPERANDUM_CAUSA
                     && instructio->a.datum.index >= ZEPHYRUM
@@ -231,7 +240,7 @@ _modulum_numerare (constans MedullaModulus* modulus,
                             medulla_causam_obtinere(modulus,
                                 instructio->a.datum.index);
 
-                        si (causa != NIHIL
+                        si (   causa != NIHIL
                             && causa->mensura
                                 >= (i32)strlen(causa_quaesita)
                             && memcmp(causa->datum, causa_quaesita,
@@ -289,13 +298,15 @@ _modulum_numerare (constans MedullaModulus* modulus,
     }
 }
 
+
 /* ==================================================
  * Plagulam fundere (fistula bis-analysans percursus)
  * ================================================== */
 
 hic_manens vacuum
-_plagulam_fundere (constans SilvaContextus* ctx,
-    constans character* via)
+_plagulam_fundere (
+    constans SilvaContextus* ctx,
+         constans character* via)
 {
     FILE* pl;
     long mensura_l;
@@ -323,7 +334,7 @@ _plagulam_fundere (constans SilvaContextus* ctx,
         redde;
     }
     mensura = (i32)mensura_l;
-    si (mensura_maxima > ZEPHYRUM
+    si (   mensura_maxima > ZEPHYRUM
         && mensura > (i32)mensura_maxima)
     {
         imprimere("[PRAETERMISSA mensura %.1f MB] %s\n",
@@ -344,7 +355,7 @@ _plagulam_fundere (constans SilvaContextus* ctx,
     }
     fons = (i8*)piscina_allocare(piscina_officinae,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -364,11 +375,11 @@ _plagulam_fundere (constans SilvaContextus* ctx,
         (vacuum)silva_c89_semantica_oraculum_augere(
             systema_semantica, oraculum);
     }
-    c0 = clock();
-    u.m = fons;
+    c0   = clock();
+    u.m  = fons;
     parsura = silva_c89_parsare_cum_contextu(piscina_arboris, ctx,
         via, u.c, (unsigned int)mensura, oraculum);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura == NIHIL || !parsura->successus
         || parsura->numerus_errorum > ZEPHYRUM)
     {
         imprimere("[PARSURA FRACTA] %s\n", via);
@@ -403,10 +414,10 @@ _plagulam_fundere (constans SilvaContextus* ctx,
     }
 
     /* demissio */
-    u.c = via;
-    titulus_moduli.datum = u.m;
-    titulus_moduli.mensura = (i32)strlen(via);
-    c0 = clock();
+    u.c                     = via;
+    titulus_moduli.datum    = u.m;
+    titulus_moduli.mensura  = (i32)strlen(via);
+    c0                      = clock();
     modulus = demissio_currere(piscina_officinae, parsura, sem,
         titulus_moduli);
     c1 = clock();
@@ -424,15 +435,15 @@ _plagulam_fundere (constans SilvaContextus* ctx,
 
     /* circulus: scriptura -> lector -> scriptura byte-idem */
     {
-        chorda scriptura;
-        chorda secunda;
+                chorda  scriptura;
+                chorda  secunda;
         MedullaModulus* iterum;
-        unsigned int linea = 0;
+          unsigned int  linea = 0;
 
         c0 = clock();
         scriptura = medulla_textum_scribere(piscina_officinae,
             modulus);
-        si (textus_quaesitus != NIHIL
+        si (   textus_quaesitus              != NIHIL
             && strstr(via, textus_quaesitus) != NIHIL)
         {
             fwrite(scriptura.datum, I,
@@ -451,7 +462,7 @@ _plagulam_fundere (constans SilvaContextus* ctx,
         {
             secunda = medulla_textum_scribere(piscina_officinae,
                 iterum);
-            si (secunda.mensura != scriptura.mensura
+            si (   secunda.mensura != scriptura.mensura
                 || (scriptura.mensura > ZEPHYRUM
                     && memcmp(secunda.datum, scriptura.datum,
                            (memoriae_index)scriptura.mensura)
@@ -482,12 +493,14 @@ _plagulam_fundere (constans SilvaContextus* ctx,
     piscina_destruere(piscina_officinae);
 }
 
+
 /* ==================================================
  * Ambulatio repositorii (percursus exscriptus)
  * ================================================== */
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -497,7 +510,8 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens b32
-_est_fons_c (constans character* titulus)
+_est_fons_c (
+    constans character* titulus)
 {
     memoriae_index m = strlen(titulus);
 
@@ -506,8 +520,11 @@ _est_fons_c (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -534,7 +551,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
     mensura = (i32)mensura_l;
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -550,8 +567,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -559,7 +579,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -577,7 +597,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -589,8 +609,9 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_directorium_fundere (constans SilvaContextus* ctx,
-    constans character* via)
+_directorium_fundere (
+    constans SilvaContextus* ctx,
+         constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -620,11 +641,15 @@ _directorium_fundere (constans SilvaContextus* ctx,
     closedir(dir);
 }
 
+
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina_ctx;
     SilvaPiscina* piscina_silvae_ctx;
@@ -642,14 +667,14 @@ s32 principale (integer argc, character** argv)
         {
             mensura_maxima = ZEPHYRUM;
         }
-        alioquin si (strcmp(argv[k], "-causa") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-causa") == ZEPHYRUM
+                     && k + I < argc)
         {
             k++;
             causa_quaesita = argv[k];
         }
-        alioquin si (strcmp(argv[k], "-textus") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-textus") == ZEPHYRUM
+                     && k + I < argc)
         {
             k++;
             textus_quaesitus = argv[k];
@@ -681,14 +706,14 @@ s32 principale (integer argc, character** argv)
      * certificatae per auspex_posix.sh - oneratores officinae
      * soli concatenant, silva-latus plagulam ISO solam videt) */
     {
-        long m_iso = 0L;
-        long m_posix = 0L;
+             long  m_iso    = 0L;
+             long  m_posix  = 0L;
         character* fons_iso = _systema_legere(piscina_ctx,
             "silva/fontes/systema_c89.h", &m_iso);
         character* fons_posix = _systema_legere(piscina_ctx,
             "silva/fontes/systema_posix.h", &m_posix);
         character* fons_sys;
-        long mensura_sys;
+             long  mensura_sys;
 
         si (fons_iso == NIHIL || fons_posix == NIHIL)
         {
@@ -717,7 +742,7 @@ s32 principale (integer argc, character** argv)
         systema_parsura = silva_c89_parsare(piscina_silvae_ctx,
             "systema_c89.h", fons_sys, (unsigned int)mensura_sys,
             NIHIL);
-        si (systema_parsura == NIHIL
+        si (   systema_parsura == NIHIL
             || systema_parsura->numerus_errorum > ZEPHYRUM)
         {
             fprintf(stderr, "fusor: systema non parsatum\n");
@@ -784,7 +809,7 @@ s32 principale (integer argc, character** argv)
     imprimere("apex:          %.1f MB (%s)\n",
         (duplex)apex_memoriae / 1048576.0, plagula_apicis);
 
-    si (parsurae_fractae > 0L || ruinae_demissionis > 0L
+    si (   parsurae_fractae > 0L || ruinae_demissionis > 0L
         || circuli_fracti > 0L)
     {
         redde I;

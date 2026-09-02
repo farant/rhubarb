@@ -15,6 +15,7 @@
 
 #define NUMERUS(series) ((i32)(magnitudo(series) / magnitudo((series)[0])))
 
+
 /* ==================================================
  * Manifestum
  * ================================================== */
@@ -121,10 +122,13 @@ _enumerare (vacuum)
     }
 }
 
-s32 principale (s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    AmalgamaManifestum manifestum;
+               Piscina* piscina;
+    AmalgamaManifestum  manifestum;
 
     si (argc == II && strcmp(argv[I], "--enumerare") == ZEPHYRUM)
     {

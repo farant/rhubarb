@@ -34,43 +34,45 @@
  * XVI-ordinatus */
 nomen structura CaputAcervi CaputAcervi;
 structura CaputAcervi {
-    memoriae_index magnitudo_cum_vexillo;  /* payload; bit 0 = liber */
-    CaputAcervi*   sequens_liber;          /* index liber (si liber) */
+    memoriae_index  magnitudo_cum_vexillo;  /* payload; bit 0 = liber */
+       CaputAcervi* sequens_liber;          /* index liber (si liber) */
 };
 
 structura Regio {
     Piscina* piscina;
-    i8*      basis;
-    b32      custodia;
+         i8* basis;
+        b32  custodia;
 
     /* globalia */
-    i8*             globalia_initium;
+                i8* globalia_initium;
     memoriae_index  globalia_cursor;       /* offset intra aream */
 
     /* stiva */
-    i8*             stiva_initium;
+    i8* stiva_initium;
 
     /* acervus */
-    i8*             acervus_initium;
+                i8* acervus_initium;
     memoriae_index  acervus_magnitudo;
     memoriae_index  acervus_cursor;        /* offset (fines cumuli) */
-    CaputAcervi*    index_liber;
+       CaputAcervi* index_liber;
 
     /* census */
-    memoriae_index  acervus_octeti_usi;
-    memoriae_index  acervus_apex;
-    memoriae_index  numerus_allocationum;
-    memoriae_index  numerus_liberationum;
+    memoriae_index acervus_octeti_usi;
+    memoriae_index acervus_apex;
+    memoriae_index numerus_allocationum;
+    memoriae_index numerus_liberationum;
 };
+
 
 /* ==================================================
  * Vita
  * ================================================== */
 
 Regio*
-regio_generare (Piscina* piscina)
+regio_generare (
+    Piscina* piscina)
 {
-    Regio* regio;
+     Regio* regio;
     vacuum* datus;
 
     si (piscina == NIHIL)
@@ -99,26 +101,27 @@ regio_generare (Piscina* piscina)
     }
     memset(regio, ZEPHYRUM, magnitudo(Regio));
 
-    regio->piscina = piscina;
-    regio->basis = (i8*)datus;
-    regio->custodia = FALSUM;
+    regio->piscina   = piscina;
+    regio->basis     = (i8*)datus;
+    regio->custodia  = FALSUM;
 
-    regio->globalia_initium = regio->basis;
-    regio->globalia_cursor = ZEPHYRUM;
+    regio->globalia_initium  = regio->basis;
+    regio->globalia_cursor   = ZEPHYRUM;
 
     regio->stiva_initium = regio->basis + REGIO_GLOBALIA_MAG;
 
     regio->acervus_initium = regio->stiva_initium + REGIO_STIVA_MAG;
     regio->acervus_magnitudo = REGIO_TOTA - REGIO_GLOBALIA_MAG
         - REGIO_STIVA_MAG;
-    regio->acervus_cursor = ZEPHYRUM;
-    regio->index_liber = NIHIL;
+    regio->acervus_cursor  = ZEPHYRUM;
+    regio->index_liber     = NIHIL;
 
     redde regio;
 }
 
 vacuum
-regio_destruere (Regio* regio)
+regio_destruere (
+    Regio* regio)
 {
     si (regio == NIHIL)
     {
@@ -128,25 +131,30 @@ regio_destruere (Regio* regio)
     regio->basis = NIHIL;
 }
 
+
 /* ==================================================
  * Fines + custodia
  * ================================================== */
 
 vacuum*
-regio_basis (constans Regio* regio)
+regio_basis (
+    constans Regio* regio)
 {
     redde (vacuum*)regio->basis;
 }
 
 memoriae_index
-regio_magnitudo_tota (constans Regio* regio)
+regio_magnitudo_tota (
+    constans Regio* regio)
 {
     (vacuum)regio;
     redde REGIO_TOTA;
 }
 
 b32
-regio_continet (constans Regio* regio, constans vacuum* locus)
+regio_continet (
+     constans Regio* regio,
+    constans vacuum* locus)
 {
     constans i8* p = (constans i8*)locus;
 
@@ -158,27 +166,33 @@ regio_continet (constans Regio* regio, constans vacuum* locus)
 }
 
 vacuum
-regio_custodiam_ponere (Regio* regio, b32 custodia)
+regio_custodiam_ponere (
+    Regio* regio,
+      b32  custodia)
 {
     regio->custodia = custodia;
 }
 
 b32
-regio_custodia (constans Regio* regio)
+regio_custodia (
+    constans Regio* regio)
 {
     redde regio->custodia;
 }
+
 
 /* ==================================================
  * Globalia
  * ================================================== */
 
 vacuum*
-regio_globalia_allocare (Regio* regio,
-    memoriae_index magnitudo_octetorum, memoriae_index ordinatio)
+regio_globalia_allocare (
+             Regio* regio,
+    memoriae_index  magnitudo_octetorum,
+    memoriae_index  ordinatio)
 {
-    memoriae_index cursor;
-    i8* fructus;
+    memoriae_index  cursor;
+                i8* fructus;
 
     si (regio == NIHIL || magnitudo_octetorum == ZEPHYRUM)
     {
@@ -197,78 +211,90 @@ regio_globalia_allocare (Regio* regio,
         redde NIHIL;
     }
 
-    fructus = regio->globalia_initium + cursor;
-    regio->globalia_cursor = cursor + magnitudo_octetorum;
+    fructus                 = regio->globalia_initium + cursor;
+    regio->globalia_cursor  = cursor + magnitudo_octetorum;
     redde (vacuum*)fructus;
 }
 
 memoriae_index
-regio_globalia_usus (constans Regio* regio)
+regio_globalia_usus (
+    constans Regio* regio)
 {
     redde regio->globalia_cursor;
 }
+
 
 /* ==================================================
  * Stiva
  * ================================================== */
 
 vacuum*
-regio_stiva_initium (constans Regio* regio)
+regio_stiva_initium (
+    constans Regio* regio)
 {
     redde (vacuum*)regio->stiva_initium;
 }
 
 memoriae_index
-regio_stiva_magnitudo_octetorum (constans Regio* regio)
+regio_stiva_magnitudo_octetorum (
+    constans Regio* regio)
 {
     (vacuum)regio;
     redde REGIO_STIVA_MAG;
 }
+
 
 /* ==================================================
  * Acervus
  * ================================================== */
 
 interior memoriae_index
-_rotundare_xvi (memoriae_index n)
+_rotundare_xvi (
+    memoriae_index n)
 {
     redde (n + ACERVUS_ORDINATIO - I) & ~(ACERVUS_ORDINATIO - I);
 }
 
 interior CaputAcervi*
-_caput_de_loco (vacuum* locus)
+_caput_de_loco (
+    vacuum* locus)
 {
     redde (CaputAcervi*)(vacuum*)((i8*)locus
         - magnitudo(CaputAcervi));
 }
 
 interior vacuum*
-_locus_de_capite (CaputAcervi* caput)
+_locus_de_capite (
+    CaputAcervi* caput)
 {
     redde (vacuum*)((i8*)(vacuum*)caput
         + magnitudo(CaputAcervi));
 }
 
 interior memoriae_index
-_caput_magnitudo (constans CaputAcervi* caput)
+_caput_magnitudo (
+    constans CaputAcervi* caput)
 {
     redde caput->magnitudo_cum_vexillo & ~(memoriae_index)I;
 }
 
 interior b32
-_caput_liber (constans CaputAcervi* caput)
+_caput_liber (
+    constans CaputAcervi* caput)
 {
     redde (b32)(caput->magnitudo_cum_vexillo & (memoriae_index)I);
 }
 
 /* validitas capitis: intra acervum usum, magnitudo sana */
 interior b32
-_caput_validum (constans Regio* regio, constans CaputAcervi* caput)
+_caput_validum (
+          constans Regio* regio,
+    constans CaputAcervi* caput)
 {
-    constans i8* p = (constans i8*)(constans vacuum*)caput;
-    memoriae_index m;
+       constans i8* p = (constans i8*)(constans vacuum*)caput;
+    memoriae_index  m;
 
-    si (p < regio->acervus_initium
+    si (   p < regio->acervus_initium
         || p >= regio->acervus_initium + regio->acervus_cursor)
     {
         redde FALSUM;
@@ -279,7 +305,7 @@ _caput_validum (constans Regio* regio, constans CaputAcervi* caput)
         redde FALSUM;
     }
     m = _caput_magnitudo(caput);
-    si (m == ZEPHYRUM || m % ACERVUS_ORDINATIO != ZEPHYRUM
+    si (   m == ZEPHYRUM || m % ACERVUS_ORDINATIO != ZEPHYRUM
         || m > regio->acervus_cursor)
     {
         redde FALSUM;
@@ -288,12 +314,14 @@ _caput_validum (constans Regio* regio, constans CaputAcervi* caput)
 }
 
 vacuum*
-regio_allocare (Regio* regio, memoriae_index n)
+regio_allocare (
+             Regio* regio,
+    memoriae_index  n)
 {
-    CaputAcervi* caput;
-    CaputAcervi* prior;
-    vacuum* fructus;
-    memoriae_index rotundata;
+       CaputAcervi* caput;
+       CaputAcervi* prior;
+            vacuum* fructus;
+    memoriae_index  rotundata;
 
     si (regio == NIHIL || n == ZEPHYRUM)
     {
@@ -330,17 +358,18 @@ regio_allocare (Regio* regio, memoriae_index n)
         si (_caput_magnitudo(caput) >= rotundata
             + magnitudo(CaputAcervi) + ACERVUS_ORDINATIO)
         {
-            CaputAcervi* residuum;
-            memoriae_index magnitudo_residui;
+               CaputAcervi* residuum;
+            memoriae_index  magnitudo_residui;
 
             magnitudo_residui = _caput_magnitudo(caput) - rotundata
                 - magnitudo(CaputAcervi);
-            residuum = (CaputAcervi*)(vacuum*)((i8*)_locus_de_capite(caput)
+            residuum =
+                (CaputAcervi*)(vacuum*)((i8*)_locus_de_capite(caput)
                 + rotundata);
             residuum->magnitudo_cum_vexillo = magnitudo_residui
                 | (memoriae_index)I;
-            residuum->sequens_liber = regio->index_liber;
-            regio->index_liber = residuum;
+            residuum->sequens_liber  = regio->index_liber;
+            regio->index_liber       = residuum;
 
             caput->magnitudo_cum_vexillo = rotundata;
         }
@@ -361,13 +390,13 @@ regio_allocare (Regio* regio, memoriae_index n)
         }
         caput = (CaputAcervi*)(vacuum*)(regio->acervus_initium
             + regio->acervus_cursor);
-        regio->acervus_cursor += opus;
-        caput->magnitudo_cum_vexillo = rotundata;
-        caput->sequens_liber = NIHIL;
+        regio->acervus_cursor         += opus;
+        caput->magnitudo_cum_vexillo  = rotundata;
+        caput->sequens_liber          = NIHIL;
     }
 
-    fructus = _locus_de_capite(caput);
-    regio->acervus_octeti_usi += _caput_magnitudo(caput);
+    fructus                    = _locus_de_capite(caput);
+    regio->acervus_octeti_usi  += _caput_magnitudo(caput);
     si (regio->acervus_octeti_usi > regio->acervus_apex)
     {
         regio->acervus_apex = regio->acervus_octeti_usi;
@@ -383,7 +412,9 @@ regio_allocare (Regio* regio, memoriae_index n)
 }
 
 b32
-regio_liberare (Regio* regio, vacuum* locus)
+regio_liberare (
+     Regio* regio,
+    vacuum* locus)
 {
     CaputAcervi* caput;
 
@@ -403,21 +434,24 @@ regio_liberare (Regio* regio, vacuum* locus)
             _caput_magnitudo(caput));
     }
 
-    regio->acervus_octeti_usi -= _caput_magnitudo(caput);
-    regio->numerus_liberationum += I;
+    regio->acervus_octeti_usi    -= _caput_magnitudo(caput);
+    regio->numerus_liberationum  += I;
 
-    caput->magnitudo_cum_vexillo |= (memoriae_index)I;
-    caput->sequens_liber = regio->index_liber;
-    regio->index_liber = caput;
+    caput->magnitudo_cum_vexillo  |= (memoriae_index)I;
+    caput->sequens_liber          = regio->index_liber;
+    regio->index_liber            = caput;
     redde VERUM;
 }
 
 vacuum*
-regio_reallocare (Regio* regio, vacuum* locus, memoriae_index n)
+regio_reallocare (
+             Regio* regio,
+            vacuum* locus,
+    memoriae_index  n)
 {
-    CaputAcervi* caput;
-    memoriae_index vetus;
-    vacuum* novus;
+       CaputAcervi* caput;
+    memoriae_index  vetus;
+            vacuum* novus;
 
     si (regio == NIHIL)
     {
@@ -456,25 +490,29 @@ regio_reallocare (Regio* regio, vacuum* locus, memoriae_index n)
 }
 
 memoriae_index
-regio_acervus_usus (constans Regio* regio)
+regio_acervus_usus (
+    constans Regio* regio)
 {
     redde regio->acervus_octeti_usi;
 }
 
 memoriae_index
-regio_acervus_apex (constans Regio* regio)
+regio_acervus_apex (
+    constans Regio* regio)
 {
     redde regio->acervus_apex;
 }
 
 memoriae_index
-regio_numerus_allocationum (constans Regio* regio)
+regio_numerus_allocationum (
+    constans Regio* regio)
 {
     redde regio->numerus_allocationum;
 }
 
 memoriae_index
-regio_numerus_liberationum (constans Regio* regio)
+regio_numerus_liberationum (
+    constans Regio* regio)
 {
     redde regio->numerus_liberationum;
 }

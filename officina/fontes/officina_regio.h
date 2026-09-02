@@ -37,6 +37,7 @@
 
 nomen structura Regio Regio;
 
+
 /* ==================================================
  * Vita
  * ================================================== */
@@ -44,35 +45,64 @@ nomen structura Regio Regio;
 /* Reservat aream ad basim fixam; NIHIL si basis non data est
  * (numquam basim aliam tacite accipit - determinismus ante
  * commodum). Structura moderaminis ex piscina. */
-Regio* regio_generare (Piscina* piscina);
-vacuum regio_destruere (Regio* regio);
+Regio*
+regio_generare (
+    Piscina* piscina);
+vacuum
+regio_destruere (
+    Regio* regio);
+
 
 /* ==================================================
  * Fines + custodia
  * ================================================== */
 
-vacuum* regio_basis (constans Regio* regio);
-memoriae_index regio_magnitudo_tota (constans Regio* regio);
-b32 regio_continet (constans Regio* regio, constans vacuum* locus);
+vacuum*
+regio_basis (
+    constans Regio* regio);
+memoriae_index
+regio_magnitudo_tota (
+    constans Regio* regio);
+b32
+regio_continet (
+     constans Regio* regio,
+    constans vacuum* locus);
 
-vacuum regio_custodiam_ponere (Regio* regio, b32 custodia);
-b32 regio_custodia (constans Regio* regio);
+vacuum
+regio_custodiam_ponere (
+    Regio* regio,
+      b32  custodia);
+b32
+regio_custodia (
+    constans Regio* regio);
+
 
 /* ==================================================
  * Globalia (collocatio conexionis; cumulus, sine liberatione)
  * ================================================== */
 
 /* ordinatio = potestas duorum (0 -> I); NIHIL si spatium deest */
-vacuum* regio_globalia_allocare (Regio* regio,
-    memoriae_index magnitudo_octetorum, memoriae_index ordinatio);
-memoriae_index regio_globalia_usus (constans Regio* regio);
+vacuum*
+regio_globalia_allocare (
+             Regio* regio,
+    memoriae_index  magnitudo_octetorum,
+    memoriae_index  ordinatio);
+memoriae_index
+regio_globalia_usus (
+    constans Regio* regio);
+
 
 /* ==================================================
  * Stiva (fines pro machinula)
  * ================================================== */
 
-vacuum* regio_stiva_initium (constans Regio* regio);
-memoriae_index regio_stiva_magnitudo_octetorum (constans Regio* regio);
+vacuum*
+regio_stiva_initium (
+    constans Regio* regio);
+memoriae_index
+regio_stiva_magnitudo_octetorum (
+    constans Regio* regio);
+
 
 /* ==================================================
  * Acervus (pons malloc/free/realloc)
@@ -80,21 +110,38 @@ memoriae_index regio_stiva_magnitudo_octetorum (constans Regio* regio);
 
 /* n rotundatur ad XVI; fructus semper XVI-ordinatus; NIHIL si
  * spatium deest aut n == 0 */
-vacuum* regio_allocare (Regio* regio, memoriae_index n);
+vacuum*
+regio_allocare (
+             Regio* regio,
+    memoriae_index  n);
 
 /* FALSUM = monstrator alienus / iam liber / caput corruptum -
  * machinula halitum honestum ex hoc facit */
-b32 regio_liberare (Regio* regio, vacuum* locus);
+b32
+regio_liberare (
+     Regio* regio,
+    vacuum* locus);
 
 /* locus NIHIL -> allocare; contractio -> idem monstrator;
  * amplificatio -> novus + copia + liberatio veteris */
-vacuum* regio_reallocare (Regio* regio, vacuum* locus,
-    memoriae_index n);
+vacuum*
+regio_reallocare (
+             Regio* regio,
+            vacuum* locus,
+    memoriae_index  n);
 
 /* census (numeratores diagnosticorum) */
-memoriae_index regio_acervus_usus (constans Regio* regio);
-memoriae_index regio_acervus_apex (constans Regio* regio);
-memoriae_index regio_numerus_allocationum (constans Regio* regio);
-memoriae_index regio_numerus_liberationum (constans Regio* regio);
+memoriae_index
+regio_acervus_usus (
+    constans Regio* regio);
+memoriae_index
+regio_acervus_apex (
+    constans Regio* regio);
+memoriae_index
+regio_numerus_allocationum (
+    constans Regio* regio);
+memoriae_index
+regio_numerus_liberationum (
+    constans Regio* regio);
 
 #endif /* OFFICINA_REGIO_H */

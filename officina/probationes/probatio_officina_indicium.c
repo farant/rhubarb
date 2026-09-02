@@ -27,19 +27,22 @@
 #define LINEA_MACRONIS     15
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior vacuum
-_viam_plenam (constans character* via_partis, character* cella)
+_viam_plenam (
+    constans character* via_partis,
+             character* cella)
 {
     constans character* radix = getenv("RHUBARB_RADIX");
 
@@ -48,15 +51,17 @@ _viam_plenam (constans character* via_partis, character* cella)
 }
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
     chorda fructus;
     long longitudo;
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     _viam_plenam(via_partis, via);
     plagula = fopen(via, "rb");
     si (plagula == NIHIL)
@@ -70,7 +75,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -86,9 +91,12 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 }
 
 interior b32
-_variabilem_invenire (constans IndiciumLector* lector,
-    constans IndiciumVariabile* acies, i32 numerus,
-    constans character* titulus, constans IndiciumVariabile** v_out)
+_variabilem_invenire (
+       constans IndiciumLector*  lector,
+    constans IndiciumVariabile*  acies,
+                           i32   numerus,
+            constans character*  titulus,
+    constans IndiciumVariabile** v_out)
 {
     i32 i;
 
@@ -96,7 +104,7 @@ _variabilem_invenire (constans IndiciumLector* lector,
     {
         chorda t = indicium_chorda(lector, acies[i].titulus);
 
-        si (t.mensura == (i32)strlen(titulus)
+        si (   t.mensura == (i32)strlen(titulus)
             && memcmp(t.datum, titulus,
                    (memoriae_index)t.mensura) == 0)
         {
@@ -274,7 +282,7 @@ principale (vacuum)
                     (i32)functio_index, situs[k].instructio,
                     &acies);
 
-                si (n >= II
+                si (   n >= II
                     && acies[ZEPHYRUM].profunditas == ZEPHYRUM
                     && acies[ZEPHYRUM].linea == (i32)LINEA_MACRONIS
                     && acies[I].profunditas == I
@@ -283,7 +291,7 @@ principale (vacuum)
                     chorda titulus_macronis = indicium_chorda(
                         lector, acies[I].nomen_macro);
 
-                    si (titulus_macronis.mensura == VIII
+                    si (   titulus_macronis.mensura == VIII
                         && memcmp(titulus_macronis.datum,
                                "GEMINARE", VIII) == 0)
                     {

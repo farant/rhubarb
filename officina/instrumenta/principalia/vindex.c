@@ -40,30 +40,30 @@
 
 /* punctum app-lateris (pro tabula + delendo) */
 nomen structura {
-    s32 functio_index;
-    i32 instructio;
+       s32 functio_index;
+       i32 instructio;
     chorda descriptio;             /* "via:linea" aut "functio" */
 } VindexPunctum;
 
 nomen structura {
     VindexOnerator* onerator;
-    Machinula* machinula;
+         Machinula* machinula;
     IndiciumLector* lector;
-    Piscina* piscina_perpetua;     /* puncta, fons cachatus */
-    Piscina* piscina_effigiei;     /* vacatur quaque effigie */
-    Xar* puncta;                   /* VindexPunctum valore */
+           Piscina* piscina_perpetua;     /* puncta, fons cachatus */
+           Piscina* piscina_effigiei;     /* vacatur quaque effigie */
+               Xar* puncta;                   /* VindexPunctum valore */
     /* fons cachatus (via una) */
-    chorda via_fontis;
+    chorda  via_fontis;
     chorda* lineae_fontis;
-    i32 numerus_linearum;
+       i32  numerus_linearum;
     /* status visus */
-    i32 linea_prima;
-    s32 tabula_dextra;
-    i64 memoria_basis;             /* 0 = nulla */
-    character imperium[IMPERIUM_MAXIMUM];
-    i32 imperium_mensura;
-    b32 imperium_apertum;
-    character status[256];
+                   i32  linea_prima;
+                   s32  tabula_dextra;
+                   i64  memoria_basis;             /* 0 = nulla */
+             character  imperium[IMPERIUM_MAXIMUM];
+                   i32  imperium_mensura;
+                   b32  imperium_apertum;
+             character  status[256];
     constans character* radix;
     /* captura effusionis interpretatae (modus TUI): printf mundi
      * interpretati in TERMINALE IPSUM scriberet - volumen physicum
@@ -75,7 +75,8 @@ nomen structura {
 } Vindex;
 
 interior vacuum
-_vm_capere (Vindex* v)
+_vm_capere (
+    Vindex* v)
 {
     si (v->fd_capturae < 0) redde;
     fflush(stdout);
@@ -85,7 +86,8 @@ _vm_capere (Vindex* v)
 }
 
 interior vacuum
-_vm_solvere (Vindex* v)
+_vm_solvere (
+    Vindex* v)
 {
     si (v->fd_capturae < 0) redde;
     fflush(stdout);
@@ -95,43 +97,49 @@ _vm_solvere (Vindex* v)
 }
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior OfficinaChorda
-_och (chorda c)
+_och (
+    chorda c)
 {
     OfficinaChorda oc;
 
-    oc.datum = (insignatus character*)c.datum;
-    oc.mensura = c.mensura;
+    oc.datum    = (insignatus character*)c.datum;
+    oc.mensura  = c.mensura;
     redde oc;
 }
 
 interior chorda
-_ch_de_off (OfficinaChorda oc)
+_ch_de_off (
+    OfficinaChorda oc)
 {
     chorda c;
 
-    c.datum = (i8*)oc.datum;
-    c.mensura = oc.mensura;
+    c.datum    = (i8*)oc.datum;
+    c.mensura  = oc.mensura;
     redde c;
 }
+
 
 /* ==================================================
  * fons cachatus (via una; recargatur mutatione viae)
  * ================================================== */
 
 interior vacuum
-_fontem_curare (Vindex* v, chorda via)
+_fontem_curare (
+    Vindex* v,
+    chorda  via)
 {
     character via_plena[1024];
     FILE* pl;
@@ -142,7 +150,7 @@ _fontem_curare (Vindex* v, chorda via)
     i32 initium;
 
     si (via.mensura == ZEPHYRUM) redde;
-    si (v->via_fontis.mensura == via.mensura
+    si (   v->via_fontis.mensura == via.mensura
         && memcmp(v->via_fontis.datum, via.datum,
                (memoriae_index)via.mensura) == 0)
     {
@@ -157,7 +165,7 @@ _fontem_curare (Vindex* v, chorda via)
     fseek(pl, 0L, SEEK_SET);
     textus = (i8*)piscina_allocare(v->piscina_perpetua,
         (memoriae_index)(mensura_l + 1L));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || fread(textus, I, (memoriae_index)mensura_l, pl)
             != (memoriae_index)mensura_l)
     {
@@ -175,8 +183,8 @@ _fontem_curare (Vindex* v, chorda via)
         v->piscina_perpetua,
         (memoriae_index)numerus * magnitudo(chorda));
     si (v->lineae_fontis == NIHIL) redde;
-    v->numerus_linearum = ZEPHYRUM;
-    initium = ZEPHYRUM;
+    v->numerus_linearum  = ZEPHYRUM;
+    initium              = ZEPHYRUM;
     per (i = ZEPHYRUM; i <= (i32)mensura_l; i++)
     {
         si (i == (i32)mensura_l || textus[i] == '\n')
@@ -184,8 +192,8 @@ _fontem_curare (Vindex* v, chorda via)
             chorda* linea = &v->lineae_fontis[
                 v->numerus_linearum];
 
-            linea->datum = textus + initium;
-            linea->mensura = i - initium;
+            linea->datum    = textus + initium;
+            linea->mensura  = i - initium;
             v->numerus_linearum++;
             initium = i + I;
             si (v->numerus_linearum >= numerus) frange;
@@ -206,12 +214,16 @@ _fontem_curare (Vindex* v, chorda via)
     }
 }
 
+
 /* ==================================================
  * positio per lectorem (auctoritas = plagula)
  * ================================================== */
 
 interior b32
-_positionem_quaerere (Vindex* v, s32* functio_out, i32* instr_out)
+_positionem_quaerere (
+    Vindex* v,
+       s32* functio_out,
+       i32* instr_out)
 {
     i32 numerus = (i32)machinula_tabulata_numerus(v->machinula);
 
@@ -221,7 +233,10 @@ _positionem_quaerere (Vindex* v, s32* functio_out, i32* instr_out)
 }
 
 interior i32
-_lineam_radicis (Vindex* v, s32 functio_index, i32 instructio,
+_lineam_radicis (
+    Vindex* v,
+       s32  functio_index,
+       i32  instructio,
     chorda* via_out)
 {
     constans IndiciumLinea* acies = NIHIL;
@@ -238,12 +253,14 @@ _lineam_radicis (Vindex* v, s32 functio_index, i32 instructio,
     redde (i32)acies[ZEPHYRUM].linea;
 }
 
+
 /* ==================================================
  * gressus (ansae vectis 5: radix mutatur + custos profunditatis)
  * ================================================== */
 
 interior vacuum
-_gradus_unus (Vindex* v)
+_gradus_unus (
+    Vindex* v)
 {
     _vm_capere(v);
     (vacuum)machinula_gradus(v->machinula);
@@ -251,18 +268,20 @@ _gradus_unus (Vindex* v)
 }
 
 interior vacuum
-_super_lineam (Vindex* v, b32 intra)
+_super_lineam (
+    Vindex* v,
+       b32  intra)
 {
-    s32 functio = -I;
-    i32 instructio = ZEPHYRUM;
-    i32 linea_initii;
+       s32 functio     = -I;
+       i32 instructio  = ZEPHYRUM;
+       i32 linea_initii;
     chorda via_initii;
-    i32 profunditas_introitus =
-        (i32)machinula_tabulata_numerus(v->machinula);
+       i32 profunditas_introitus =
+           (i32)machinula_tabulata_numerus(v->machinula);
     long facti = 0L;
 
-    via_initii.datum = NIHIL;
-    via_initii.mensura = ZEPHYRUM;
+    via_initii.datum    = NIHIL;
+    via_initii.mensura  = ZEPHYRUM;
     si (!_positionem_quaerere(v, &functio, &instructio)) redde;
     linea_initii = _lineam_radicis(v, functio, instructio,
         &via_initii);
@@ -275,7 +294,7 @@ _super_lineam (Vindex* v, b32 intra)
             redde;   /* halitus */
         }
         facti++;
-        si (!intra && (i32)machinula_tabulata_numerus(v->machinula)
+        si (   !intra && (i32)machinula_tabulata_numerus(v->machinula)
             > profunditas_introitus)
         {
             perge;
@@ -287,11 +306,11 @@ _super_lineam (Vindex* v, b32 intra)
         }
         {
             chorda via_nova;
-            i32 linea = _lineam_radicis(v, functio, instructio,
-                &via_nova);
+               i32 linea = _lineam_radicis(v, functio, instructio,
+                   &via_nova);
 
             si (linea == ZEPHYRUM) perge;
-            si (linea != linea_initii
+            si (   linea            != linea_initii
                 || via_nova.mensura != via_initii.mensura
                 || (via_nova.mensura > 0U
                     && memcmp(via_nova.datum, via_initii.datum,
@@ -306,7 +325,8 @@ _super_lineam (Vindex* v, b32 intra)
 }
 
 interior vacuum
-_fini (Vindex* v)
+_fini (
+    Vindex* v)
 {
     i32 profunditas =
         (i32)machinula_tabulata_numerus(v->machinula);
@@ -314,7 +334,7 @@ _fini (Vindex* v)
 
     si (profunditas <= I) redde;
     _vm_capere(v);
-    dum ((i32)machinula_tabulata_numerus(v->machinula)
+    dum (   (i32)machinula_tabulata_numerus(v->machinula)
         >= profunditas && facti < CUSTOS_GRADUUM)
     {
         si (!machinula_gradus(v->machinula)) frange;
@@ -323,13 +343,18 @@ _fini (Vindex* v)
     _vm_solvere(v);
 }
 
+
 /* ==================================================
  * imperia (':' linea)
  * ================================================== */
 
 interior b32
-_punctum_de_argumento (Vindex* v, chorda argumentum,
-    s32* functio_out, i32* instructio_out, chorda* descriptio_out)
+_punctum_de_argumento (
+    Vindex* v,
+    chorda  argumentum,
+       s32* functio_out,
+       i32* instructio_out,
+    chorda* descriptio_out)
 {
     i32 i;
     s32 colon = -I;
@@ -341,15 +366,15 @@ _punctum_de_argumento (Vindex* v, chorda argumentum,
     si (colon >= ZEPHYRUM)
     {
         /* via:linea per tabulam RETRO */
-        chorda via;
-        i32 linea = ZEPHYRUM;
+                        chorda  via;
+                           i32  linea = ZEPHYRUM;
         constans IndiciumSitus* situs = NIHIL;
 
-        via.datum = argumentum.datum;
-        via.mensura = (i32)colon;
+        via.datum    = argumentum.datum;
+        via.mensura  = (i32)colon;
         per (i = (i32)colon + I; i < argumentum.mensura; i++)
         {
-            si (argumentum.datum[i] < '0'
+            si (   argumentum.datum[i] < '0'
                 || argumentum.datum[i] > '9')
             {
                 redde FALSUM;
@@ -361,8 +386,8 @@ _punctum_de_argumento (Vindex* v, chorda argumentum,
         {
             redde FALSUM;
         }
-        *functio_out = (s32)situs[ZEPHYRUM].functio;
-        *instructio_out = (i32)situs[ZEPHYRUM].instructio;
+        *functio_out     = (s32)situs[ZEPHYRUM].functio;
+        *instructio_out  = (i32)situs[ZEPHYRUM].instructio;
     }
     alioquin
     {
@@ -371,24 +396,25 @@ _punctum_de_argumento (Vindex* v, chorda argumentum,
             _och(argumentum));
 
         si (functio < ZEPHYRUM) redde FALSUM;
-        *functio_out = functio;
-        *instructio_out = ZEPHYRUM;
+        *functio_out     = functio;
+        *instructio_out  = ZEPHYRUM;
     }
     *descriptio_out = argumentum;
     redde VERUM;
 }
 
 interior vacuum
-_imperium_exsequi (Vindex* v)
+_imperium_exsequi (
+    Vindex* v)
 {
     chorda imperium;
     chorda verbum;
     chorda argumentum;
-    s32 spatium = -I;
-    i32 i;
+       s32 spatium = -I;
+       i32 i;
 
-    imperium.datum = (i8*)v->imperium;
-    imperium.mensura = v->imperium_mensura;
+    imperium.datum    = (i8*)v->imperium;
+    imperium.mensura  = v->imperium_mensura;
     per (i = ZEPHYRUM; i < imperium.mensura; i++)
     {
         si (imperium.datum[i] == ' ')
@@ -405,14 +431,14 @@ _imperium_exsequi (Vindex* v)
     argumentum.mensura = (spatium >= ZEPHYRUM)
         ? imperium.mensura - (i32)spatium - I : ZEPHYRUM;
 
-    si (chorda_aequalis_literis(verbum, "punctum")
+    si (   chorda_aequalis_literis(verbum, "punctum")
         && argumentum.mensura > ZEPHYRUM)
     {
-        s32 functio = -I;
-        i32 instructio = ZEPHYRUM;
+           s32 functio     = -I;
+           i32 instructio  = ZEPHYRUM;
         chorda descriptio;
 
-        si (_punctum_de_argumento(v, argumentum, &functio,
+        si (   _punctum_de_argumento(v, argumentum, &functio,
                 &instructio, &descriptio)
             && machinula_punctum_ponere(v->machinula,
                    (integer)functio,
@@ -434,9 +460,9 @@ _imperium_exsequi (Vindex* v)
                         (memoriae_index)descriptio.mensura);
                     copia.mensura = descriptio.mensura;
                 }
-                punctum->functio_index = functio;
-                punctum->instructio = instructio;
-                punctum->descriptio = copia;
+                punctum->functio_index  = functio;
+                punctum->instructio     = instructio;
+                punctum->descriptio     = copia;
             }
             sprintf(v->status, "punctum positum: %.*s",
                 (int)argumentum.mensura,
@@ -449,8 +475,8 @@ _imperium_exsequi (Vindex* v)
                 (constans character*)argumentum.datum);
         }
     }
-    alioquin si (chorda_aequalis_literis(verbum, "dele")
-        && argumentum.mensura > ZEPHYRUM)
+    alioquin si (   chorda_aequalis_literis(verbum, "dele")
+                 && argumentum.mensura > ZEPHYRUM)
     {
         i32 numerus = xar_numerus(v->puncta);
         b32 deletum = FALSUM;
@@ -472,21 +498,27 @@ _imperium_exsequi (Vindex* v)
         sprintf(v->status, deletum ? "punctum deletum"
             : "punctum non inventum");
     }
-    alioquin si (chorda_aequalis_literis(verbum, "memoria")
-        && argumentum.mensura > ZEPHYRUM)
+    alioquin si (   chorda_aequalis_literis(verbum, "memoria")
+                 && argumentum.mensura > ZEPHYRUM)
     {
         i64 basis = ZEPHYRUM;
 
         per (i = ZEPHYRUM; i < argumentum.mensura; i++)
         {
-            i8 c = argumentum.datum[i];
+             i8 c = argumentum.datum[i];
             i64 cifra;
 
             si (c >= '0' && c <= '9') cifra = (i64)(c - '0');
-            alioquin si (c >= 'a' && c <= 'f')
-                cifra = (i64)(c - 'a') + X;
-            alioquin si (c >= 'A' && c <= 'F')
-                cifra = (i64)(c - 'A') + X;
+            alioquin si (   c >= 'a'
+                         && c <= 'f') cifra =
+                                                                    (i64)(c
+                                                                        - 'a')
+                                                                        + X;
+            alioquin si (   c >= 'A'
+                         && c <= 'F') cifra =
+                                                                    (i64)(c
+                                                                        - 'A')
+                                                                        + X;
             alioquin si (c == 'x' || c == 'X') perge;
             alioquin frange;
             basis = basis * XVI + cifra;
@@ -509,6 +541,7 @@ _imperium_exsequi (Vindex* v)
     }
 }
 
+
 /* ==================================================
  * conspectum aedificare (machinula + lector -> snapshot purum)
  * ================================================== */
@@ -516,24 +549,29 @@ _imperium_exsequi (Vindex* v)
 #define ORDINES_MAXIMI 64
 
 nomen structura {
-    VindexOrdoTabulati tabulata[ORDINES_MAXIMI];
+      VindexOrdoTabulati tabulata[ORDINES_MAXIMI];
     VindexOrdoVariabilis variabilia[ORDINES_MAXIMI];
-    chorda anulus[ORDINES_MAXIMI];
-    chorda puncta[ORDINES_MAXIMI];
-    chorda memoria[ORDINES_MAXIMI];
-    i32 puncta_lineae[ORDINES_MAXIMI];
-    character positio[512];
-    character modus[32];
+                  chorda anulus[ORDINES_MAXIMI];
+                  chorda puncta[ORDINES_MAXIMI];
+                  chorda memoria[ORDINES_MAXIMI];
+                     i32 puncta_lineae[ORDINES_MAXIMI];
+               character positio[512];
+               character modus[32];
 } ConspectusPenus;
 
 interior chorda
-_ch_in_piscinam (Piscina* piscina, constans character* literis)
+_ch_in_piscinam (
+               Piscina* piscina,
+    constans character* literis)
 {
     redde chorda_ex_literis(literis, piscina);
 }
 
 interior vacuum
-_valorem_formare (character* cella, s32 typus_medulla, i64 verbum)
+_valorem_formare (
+    character* cella,
+          s32  typus_medulla,
+          i64  verbum)
 {
     commutatio (typus_medulla)
     {
@@ -568,21 +606,24 @@ _valorem_formare (character* cella, s32 typus_medulla, i64 verbum)
 }
 
 interior vacuum
-_conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
-    ConspectusPenus* penus, s32 halitus_novissimus)
+_conspectum_aedificare (
+              Vindex* v,
+    VindexConspectus* conspectus,
+     ConspectusPenus* penus,
+                 s32  halitus_novissimus)
 {
-    s32 functio = -I;
-    i32 instructio = ZEPHYRUM;
+       s32 functio     = -I;
+       i32 instructio  = ZEPHYRUM;
     chorda via_currens;
-    i32 linea_currens = ZEPHYRUM;
-    i32 numerus_tabulatorum =
-        (i32)machinula_tabulata_numerus(v->machinula);
+       i32 linea_currens = ZEPHYRUM;
+       i32 numerus_tabulatorum =
+           (i32)machinula_tabulata_numerus(v->machinula);
     i32 k;
 
     piscina_vacare(v->piscina_effigiei);
     memset(conspectus, ZEPHYRUM, magnitudo(VindexConspectus));
-    via_currens.datum = NIHIL;
-    via_currens.mensura = ZEPHYRUM;
+    via_currens.datum    = NIHIL;
+    via_currens.mensura  = ZEPHYRUM;
 
     si (_positionem_quaerere(v, &functio, &instructio))
     {
@@ -648,15 +689,15 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
     conspectus->positio = _ch(penus->positio);
 
     /* fons */
-    conspectus->lineae = v->lineae_fontis;
-    conspectus->numerus_linearum = v->numerus_linearum;
-    conspectus->titulus_fontis = v->via_fontis;
-    conspectus->linea_currens = linea_currens;
+    conspectus->lineae            = v->lineae_fontis;
+    conspectus->numerus_linearum  = v->numerus_linearum;
+    conspectus->titulus_fontis    = v->via_fontis;
+    conspectus->linea_currens     = linea_currens;
     si (linea_currens > ZEPHYRUM)
     {
         i32 fenestra = 20;
 
-        si (linea_currens < v->linea_prima + III
+        si (   linea_currens < v->linea_prima + III
             || linea_currens > v->linea_prima + fenestra)
         {
             v->linea_prima = (linea_currens > X)
@@ -668,19 +709,19 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
 
     /* puncta huius viae (lineae) + ordines punctorum */
     {
-        i32 numerus = xar_numerus(v->puncta);
-        i32 n_lineae = ZEPHYRUM;
-        i32 n_ordines = ZEPHYRUM;
+        i32 numerus    = xar_numerus(v->puncta);
+        i32 n_lineae   = ZEPHYRUM;
+        i32 n_ordines  = ZEPHYRUM;
 
         per (k = ZEPHYRUM; k < numerus && k < ORDINES_MAXIMI; k++)
         {
             VindexPunctum* punctum = xar_obtinere(v->puncta, k);
-            chorda via_p;
-            i32 linea_p = _lineam_radicis(v,
-                punctum->functio_index, punctum->instructio,
-                &via_p);
+                   chorda  via_p;
+                      i32  linea_p = _lineam_radicis(v,
+                          punctum->functio_index, punctum->instructio,
+                          &via_p);
 
-            si (linea_p > ZEPHYRUM
+            si (   linea_p > ZEPHYRUM
                 && via_p.mensura == v->via_fontis.mensura
                 && memcmp(via_p.datum, v->via_fontis.datum,
                        (memoriae_index)via_p.mensura) == 0)
@@ -691,10 +732,10 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
             penus->puncta[n_ordines] = punctum->descriptio;
             n_ordines++;
         }
-        conspectus->puncta_lineae = penus->puncta_lineae;
-        conspectus->puncta_numerus = n_lineae;
-        conspectus->puncta = penus->puncta;
-        conspectus->puncta_ordines_numerus = n_ordines;
+        conspectus->puncta_lineae           = penus->puncta_lineae;
+        conspectus->puncta_numerus          = n_lineae;
+        conspectus->puncta                  = penus->puncta;
+        conspectus->puncta_ordines_numerus  = n_ordines;
     }
 
     /* stiva */
@@ -704,8 +745,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
         per (k = numerus_tabulatorum; k > ZEPHYRUM
             && n < ORDINES_MAXIMI; k--)
         {
-            s32 functio_k = -I;
-            i32 instructio_k = ZEPHYRUM;
+            s32 functio_k     = -I;
+            i32 instructio_k  = ZEPHYRUM;
 
             si (!machinula_positionem_inspicere(v->machinula,
                     (insignatus integer)(k - I), &functio_k,
@@ -717,8 +758,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                 constans IndiciumFunctio* ifu = indicium_functio(
                     v->lector, (insignatus integer)functio_k);
                 chorda via_k;
-                i32 linea_k = _lineam_radicis(v, functio_k,
-                    instructio_k, &via_k);
+                   i32 linea_k = _lineam_radicis(v, functio_k,
+                       instructio_k, &via_k);
                 character cella[256];
 
                 penus->tabulata[n].functio = (ifu != NIHIL)
@@ -743,8 +784,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                 n++;
             }
         }
-        conspectus->tabulata = penus->tabulata;
-        conspectus->tabulata_numerus = n;
+        conspectus->tabulata          = penus->tabulata;
+        conspectus->tabulata_numerus  = n;
     }
 
     /* variabilia (functionis summae) */
@@ -777,8 +818,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                 n++;
             }
         }
-        conspectus->variabilia = penus->variabilia;
-        conspectus->variabilia_numerus = n;
+        conspectus->variabilia          = penus->variabilia;
+        conspectus->variabilia_numerus  = n;
     }
 
     /* anulus (cauda novissima prima) */
@@ -787,8 +828,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
 
         per (k = ZEPHYRUM; k < ORDINES_MAXIMI; k++)
         {
-            integer functio_k = -1;
-            insignatus integer instructio_k = 0U;
+                       integer functio_k     = -1;
+            insignatus integer instructio_k  = 0U;
 
             si (!machinula_anulum_inspicere(v->machinula,
                     (insignatus integer)k, &functio_k,
@@ -804,8 +845,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                           ifu->titulus))
                     : _ch("?");
                 chorda via_k;
-                i32 linea_k = _lineam_radicis(v, (s32)functio_k,
-                    (i32)instructio_k, &via_k);
+                   i32 linea_k = _lineam_radicis(v, (s32)functio_k,
+                       (i32)instructio_k, &via_k);
                 character cella[256];
 
                 si (linea_k > ZEPHYRUM)
@@ -833,8 +874,8 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                 n++;
             }
         }
-        conspectus->anulus = penus->anulus;
-        conspectus->anulus_numerus = n;
+        conspectus->anulus          = penus->anulus;
+        conspectus->anulus_numerus  = n;
     }
 
     /* memoria (si basis posita) */
@@ -844,10 +885,10 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
 
         per (k = ZEPHYRUM; k < XVI && n < ORDINES_MAXIMI; k++)
         {
-            i64 basis = v->memoria_basis + (i64)k * VIII;
+                  i64 basis = v->memoria_basis + (i64)k * VIII;
             character cella[128];
-            integer cursor;
-            i32 b;
+              integer cursor;
+                  i32 b;
 
             cursor = sprintf(cella, "%08llx  ",
                 (insignatus longus longus)basis);
@@ -876,51 +917,54 @@ _conspectum_aedificare (Vindex* v, VindexConspectus* conspectus,
                 v->piscina_effigiei, cella);
             n++;
         }
-        conspectus->memoria = penus->memoria;
-        conspectus->memoria_numerus = n;
+        conspectus->memoria          = penus->memoria;
+        conspectus->memoria_numerus  = n;
     }
 
     /* status + imperium */
-    conspectus->status = _ch(v->status);
-    conspectus->imperium_apertum = v->imperium_apertum;
+    conspectus->status            = _ch(v->status);
+    conspectus->imperium_apertum  = v->imperium_apertum;
     {
         chorda imperium;
 
-        imperium.datum = (i8*)v->imperium;
-        imperium.mensura = v->imperium_mensura;
-        conspectus->imperium = imperium;
+        imperium.datum        = (i8*)v->imperium;
+        imperium.mensura      = v->imperium_mensura;
+        conspectus->imperium  = imperium;
     }
     conspectus->tabula_dextra = v->tabula_dextra;
 }
+
 
 /* ==================================================
  * principale
  * ================================================== */
 
 s32
-principale (integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
     Vindex v;
     constans character* via_suitae = NIHIL;
     constans character* plagulae[PLAGULAE_MAXIMAE];
-    i32 numerus_plagularum = ZEPHYRUM;
-    constans character* imago_argumentum = NIHIL;
+    i32 numerus_plagularum                = ZEPHYRUM;
+    constans character* imago_argumentum  = NIHIL;
     integer a;
     s32 halitus_novissimus = (s32)4;   /* PAUSA initio */
 
     memset(&v, ZEPHYRUM, magnitudo(Vindex));
-    v.radix = ".";
-    v.fd_tty_stdout = -1;
-    v.fd_tty_stderr = -1;
-    v.fd_capturae = -1;
+    v.radix          = ".";
+    v.fd_tty_stdout  = -1;
+    v.fd_tty_stderr  = -1;
+    v.fd_capturae    = -1;
     per (a = 1; a < argc; a++)
     {
         si (strcmp(argv[a], "-plagulae") == 0 && a + 1 < argc)
         {
             character* cursor = argv[++a];
 
-            dum (cursor != NIHIL && *cursor != '\0'
-                && numerus_plagularum < (i32)PLAGULAE_MAXIMAE)
+            dum (   cursor != NIHIL && *cursor != '\0'
+                 && numerus_plagularum < (i32)PLAGULAE_MAXIMAE)
             {
                 character* virgula = strchr(cursor, ',');
 
@@ -930,13 +974,13 @@ principale (integer argc, character** argv)
                 cursor = (virgula != NIHIL) ? virgula + 1 : NIHIL;
             }
         }
-        alioquin si (strcmp(argv[a], "-imago") == 0
-            && a + 1 < argc)
+        alioquin si (   strcmp(argv[a], "-imago") == 0
+                     && a + 1 < argc)
         {
             imago_argumentum = argv[++a];
         }
-        alioquin si (strcmp(argv[a], "-radix") == 0
-            && a + 1 < argc)
+        alioquin si (   strcmp(argv[a], "-radix") == 0
+                     && a + 1 < argc)
         {
             v.radix = argv[++a];
         }
@@ -991,14 +1035,14 @@ principale (integer argc, character** argv)
             fprintf(stderr, "vindex: lib/ deest\n");
             redde II;
         }
-        dum ((introitus = readdir(dir)) != NIHIL
-            && numerus_viarum < 512)
+        dum (   (introitus = readdir(dir)) != NIHIL
+             && numerus_viarum < 512)
         {
-            memoriae_index m = strlen(introitus->d_name);
-            b32 congruit = (b32)(numerus_plagularum == ZEPHYRUM);
+            memoriae_index m  = strlen(introitus->d_name);
+            b32 congruit      = (b32)(numerus_plagularum == ZEPHYRUM);
             i32 p;
 
-            si (m < III || introitus->d_name[m - II] != '.'
+            si (   m < III || introitus->d_name[m - II] != '.'
                 || introitus->d_name[m - I] != 'c')
             {
                 perge;
@@ -1069,9 +1113,9 @@ principale (integer argc, character** argv)
             "vindex_imago", 4194304);
         TesseraPonsMemoriae* pm = tessera_pons_memoriae_creare(tp,
             120U, 40U);
-        TesseraOpus* opus = tessera_aperire(tp, &pm->pons);
-        VindexConspectus conspectus;
-        interior ConspectusPenus penus;
+                     TesseraOpus* opus = tessera_aperire(tp, &pm->pons);
+                VindexConspectus  conspectus;
+        interior ConspectusPenus  penus;
 
         si (opus == NIHIL)
         {
@@ -1079,11 +1123,11 @@ principale (integer argc, character** argv)
             redde II;
         }
         {
-            s32 functio = -I;
-            i32 instructio = ZEPHYRUM;
+               s32 functio     = -I;
+               i32 instructio  = ZEPHYRUM;
             chorda descriptio;
 
-            si (!_punctum_de_argumento(&v, _ch(imago_argumentum),
+            si (   !_punctum_de_argumento(&v, _ch(imago_argumentum),
                     &functio, &instructio, &descriptio)
                 || !machinula_punctum_ponere(v.machinula,
                        (integer)functio,
@@ -1096,9 +1140,9 @@ principale (integer argc, character** argv)
             {
                 VindexPunctum* punctum = xar_addere(v.puncta);
 
-                punctum->functio_index = functio;
-                punctum->instructio = instructio;
-                punctum->descriptio = _ch(imago_argumentum);
+                punctum->functio_index  = functio;
+                punctum->instructio     = instructio;
+                punctum->descriptio     = _ch(imago_argumentum);
             }
         }
         halitus_novissimus = (s32)machinula_pergere(v.machinula);
@@ -1169,8 +1213,8 @@ principale (integer argc, character** argv)
                 }
             }
         }
-        opus = tessera_aperire(tp, pons);
-        lector_clavium = tessera_lector_creare(tp, pons);
+        opus            = tessera_aperire(tp, pons);
+        lector_clavium  = tessera_lector_creare(tp, pons);
         si (opus == NIHIL || lector_clavium == NIHIL)
         {
             fprintf(stderr, "vindex: tessera fracta\n");
@@ -1178,8 +1222,8 @@ principale (integer argc, character** argv)
         }
         dum (currendum)
         {
-            VindexConspectus conspectus;
-            TesseraEventum eventum;
+               VindexConspectus conspectus;
+                 TesseraEventum eventum;
             TesseraEventumGenus genus;
 
             _conspectum_aedificare(&v, &conspectus, &penus,
@@ -1188,7 +1232,7 @@ principale (integer argc, character** argv)
             (vacuum)tessera_praesentare(opus);
             genus = tessera_eventum_expectare(lector_clavium,
                 &eventum, 250);
-            si (genus == TESSERA_EVENTUM_AMPLITUDO
+            si (   genus == TESSERA_EVENTUM_AMPLITUDO
                 || genus == TESSERA_EVENTUM_RESUMPTUM)
             {
                 (vacuum)tessera_magnitudinem_renovare(opus);
@@ -1200,8 +1244,8 @@ principale (integer argc, character** argv)
             {
                 si (eventum.clavis == TESSERA_CLAVIS_REDITUS)
                 {
-                    v.imperium[v.imperium_mensura] = '\0';
-                    v.imperium_apertum = FALSUM;
+                    v.imperium[v.imperium_mensura]  = '\0';
+                    v.imperium_apertum              = FALSUM;
                     _imperium_exsequi(&v);
                     v.imperium_mensura = ZEPHYRUM;
                 }
@@ -1211,17 +1255,17 @@ principale (integer argc, character** argv)
                     v.imperium_mensura = ZEPHYRUM;
                 }
                 alioquin si (eventum.clavis
-                    == TESSERA_CLAVIS_RETRORSUM)
+                             == TESSERA_CLAVIS_RETRORSUM)
                 {
                     si (v.imperium_mensura > ZEPHYRUM)
                     {
                         v.imperium_mensura--;
                     }
                 }
-                alioquin si (eventum.runa >= 32
-                    && eventum.runa < 127
-                    && v.imperium_mensura
-                        < (i32)(IMPERIUM_MAXIMUM - I))
+                alioquin si (   eventum.runa >= 32
+                             && eventum.runa < 127
+                             && v.imperium_mensura
+                             < (i32)(IMPERIUM_MAXIMUM - I))
                 {
                     v.imperium[v.imperium_mensura] =
                         (character)eventum.runa;

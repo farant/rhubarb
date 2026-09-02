@@ -61,8 +61,8 @@ nomen enumeratio {
 #endif
 
 nomen structura {
-    s32    genus;             /* MachinulaExitusGenus */
-    s64    codex;             /* valor redditus / codex exitus */
+       s32 genus;             /* MachinulaExitusGenus */
+       s64 codex;             /* valor redditus / codex exitus */
     chorda nuntius;           /* causa/titulus/vitium (vacua BENE) */
 } MachinulaExitus;
 
@@ -70,33 +70,48 @@ nomen structura Machinula Machinula;
 
 /* ligat aedificata (decipulae notae -> AEDIFICATUM in situ) et
  * cellas (ansae/errno) capit; NIHIL si quid deest */
-Machinula* machinula_creare (Piscina* piscina, Conexio* conexio,
-    Regio* regio);
+Machinula*
+machinula_creare (
+    Piscina* piscina,
+    Conexio* conexio,
+      Regio* regio);
 
 /* lineae distillatae pro relatione halitus (NIHIL licet - positio
  * tunc sine via:linea) */
-vacuum machinula_lineas_praebere (Machinula* machinula,
-    s32 modulus_index, constans MedullaLineae* lineae);
+vacuum
+machinula_lineas_praebere (
+                 Machinula* machinula,
+                       s32  modulus_index,
+    constans MedullaLineae* lineae);
 
 /* M4b sessio: flumina norma redirigere (ansa 0/1/2; NIHIL =
  * flumen hospitis ordinarium restitutum). Sutura capturae actorum. */
-vacuum machinula_ansam_ponere (Machinula* machinula, s32 ansa,
-    FILE* plagula);
+vacuum
+machinula_ansam_ponere (
+    Machinula* machinula,
+          s32  ansa,
+         FILE* plagula);
 
 /* M4b sessio: vexilla recusationum ponere (MACHINULA_RECUSARE_*;
  * 0 = omnia licita). Aedilis recusatus = halitus RECUSATIO. */
-vacuum machinula_recusationes_ponere (Machinula* machinula,
-    i32 vexilla);
+vacuum
+machinula_recusationes_ponere (
+    Machinula* machinula,
+          i32  vexilla);
 
 /* M4b: ansae 3+ (plagulae fopen programmatis) claudere - hygiene
  * demolitionis generationis (C6; fd non effluunt) */
-vacuum machinula_ansas_claudere (Machinula* machinula);
+vacuum
+machinula_ansas_claudere (
+    Machinula* machinula);
 
 /* functionem nominatam currit (functio sine parametris aut
  * parametra zephyro implentur); status stivae/halitus purgatur -
  * currere iterabile, globalia region PERSISTUNT */
-MachinulaExitus machinula_currere (Machinula* machinula,
-    chorda titulus_functionis);
+MachinulaExitus
+machinula_currere (
+    Machinula* machinula,
+       chorda  titulus_functionis);
 
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
@@ -104,45 +119,85 @@ MachinulaExitus machinula_currere (Machinula* machinula,
  * halitum aut pausam, genus halitus redditur; resumptio ex pausa
  * punctum sub cursore transit (restitue-grade-repone). currere =
  * involucrum compatibile (aperire + pergere + relatio + exitus). */
-b32 machinula_aperire (Machinula* machinula,
-    chorda titulus_functionis);
-b32 machinula_gradus (Machinula* machinula);
-s32 machinula_pergere (Machinula* machinula);
+b32
+machinula_aperire (
+    Machinula* machinula,
+       chorda  titulus_functionis);
+b32
+machinula_gradus (
+    Machinula* machinula);
+s32
+machinula_pergere (
+    Machinula* machinula);
 
 /* puncta: patching exemplaris CONGELATI (proprium machinulae - IR
  * intactum; nullum pretium in via calida). Sedes = (index functionis
  * conexionis, index instructionis planus) - indicium easdem
  * coordinatas dat. */
-b32 machinula_punctum_ponere (Machinula* machinula,
-    s32 functio_index, i32 instructio);
-b32 machinula_punctum_tollere (Machinula* machinula,
-    s32 functio_index, i32 instructio);
+b32
+machinula_punctum_ponere (
+    Machinula* machinula,
+          s32  functio_index,
+          i32  instructio);
+b32
+machinula_punctum_tollere (
+    Machinula* machinula,
+          s32  functio_index,
+          i32  instructio);
 
 /* inspectio (VM pausata): tabulatum_index 0 = imum,
  * numerus - I = cacumen */
-s64 machinula_halitus_codex (constans Machinula* machinula);
-i32 machinula_tabulata_numerus (constans Machinula* machinula);
-b32 machinula_positionem_inspicere (constans Machinula* machinula,
-    i32 tabulatum_index, s32* functio_index_out,
-    i32* instructio_out);
-b32 machinula_registrum_legere (constans Machinula* machinula,
-    i32 tabulatum_index, i32 index_registri, i64* valor_out);
+s64
+machinula_halitus_codex (
+    constans Machinula* machinula);
+i32
+machinula_tabulata_numerus (
+    constans Machinula* machinula);
+b32
+machinula_positionem_inspicere (
+    constans Machinula* machinula,
+                   i32  tabulatum_index,
+                   s32* functio_index_out,
+                   i32* instructio_out);
+b32
+machinula_registrum_legere (
+    constans Machinula* machinula,
+                   i32  tabulatum_index,
+                   i32  index_registri,
+                   i64* valor_out);
 /* anulus volatus: retro_index 0 = novissima figura, crescens =
  * vetustior; FALSUM ultra caudam (tabula anuli vindicis) */
-b32 machinula_anulum_inspicere (constans Machinula* machinula,
-    i32 retro_index, s32* functio_index_out, i32* instructio_out);
+b32
+machinula_anulum_inspicere (
+    constans Machinula* machinula,
+                   i32  retro_index,
+                   s32* functio_index_out,
+                   i32* instructio_out);
 
 /* census */
-i64 machinula_numerus_instructionum (constans Machinula* machinula);
-i64 machinula_numerus_op (constans Machinula* machinula, s32 op);
+i64
+machinula_numerus_instructionum (
+    constans Machinula* machinula);
+i64
+machinula_numerus_op (
+    constans Machinula* machinula,
+                   s32  op);
 /* numerus instructionum in exemplari CONGELATO functionis (index =
  * index functionis conexionis; 0 si extra fines). Probatio figens
  * pacti ambulationis canonicae (M3): numerus indicii ex ambulatione
  * collectionis == hic ex ambulatione congelationis. */
-i32 machinula_numerus_instructionum_planarum (
-    constans Machinula* machinula, s32 functio_index);
-i64 machinula_numerus_vocationum (constans Machinula* machinula);
-i64 machinula_numerus_aedificatorum (constans Machinula* machinula);
-memoriae_index machinula_stiva_apex (constans Machinula* machinula);
+i32
+machinula_numerus_instructionum_planarum (
+    constans Machinula* machinula,
+                   s32  functio_index);
+i64
+machinula_numerus_vocationum (
+    constans Machinula* machinula);
+i64
+machinula_numerus_aedificatorum (
+    constans Machinula* machinula);
+memoriae_index
+machinula_stiva_apex (
+    constans Machinula* machinula);
 
 #endif /* OFFICINA_MACHINULA_H */

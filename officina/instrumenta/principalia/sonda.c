@@ -28,11 +28,13 @@ hic_manens b32 crudum = FALSUM;
 hic_manens b32 cum_servare = FALSUM;
 
 interior character*
-_plagulam_legere (Piscina* piscina, constans character* via,
-    i32* mensura_out)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* textus;
 
     *mensura_out = ZEPHYRUM;
@@ -50,7 +52,7 @@ _plagulam_legere (Piscina* piscina, constans character* via,
     }
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura_l > 0L
             && fread(textus, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -64,7 +66,8 @@ _plagulam_legere (Piscina* piscina, constans character* via,
 }
 
 interior constans character*
-_gravitas_titulus (s64 gravitas)
+_gravitas_titulus (
+    s64 gravitas)
 {
     commutatio ((int)gravitas)
     {
@@ -77,7 +80,9 @@ _gravitas_titulus (s64 gravitas)
 }
 
 interior b32
-_chorda_est (chorda c, constans character* litterae)
+_chorda_est (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -87,11 +92,13 @@ _chorda_est (chorda c, constans character* litterae)
 
 /* publicatio imprimitur: ordines examen-formae */
 interior s32
-_publicationem_imprimere (JsonValor* params, constans character* via)
+_publicationem_imprimere (
+             JsonValor* params,
+    constans character* via)
 {
     JsonValor* lista = json_objectum_capere(params, "diagnostics");
-    i32 n;
-    i32 k;
+          i32  n;
+          i32  k;
 
     si (lista == NIHIL || !json_est_tabulatum(lista))
     {
@@ -102,11 +109,11 @@ _publicationem_imprimere (JsonValor* params, constans character* via)
     {
         JsonValor* d = json_tabulatum_obtinere(lista, k);
         JsonValor* initium;
-        chorda nuntius;
-        chorda fons;
-        s64 gravitas;
-        s64 linea;
-        s64 columna;
+           chorda  nuntius;
+           chorda  fons;
+              s64  gravitas;
+              s64  linea;
+              s64  columna;
 
         si (d == NIHIL)
         {
@@ -120,8 +127,8 @@ _publicationem_imprimere (JsonValor* params, constans character* via)
             "character")) + I;
         gravitas = json_ad_integer(json_objectum_capere(d,
             "severity"));
-        nuntius = json_ad_chorda(json_objectum_capere(d, "message"));
-        fons = json_ad_chorda(json_objectum_capere(d, "source"));
+        nuntius  = json_ad_chorda(json_objectum_capere(d, "message"));
+        fons     = json_ad_chorda(json_objectum_capere(d, "source"));
         imprimere("%s:%ld:%ld  [%s%s%.*s] %.*s\n", via,
             (long)linea, (long)columna,
             _gravitas_titulus(gravitas),
@@ -136,11 +143,14 @@ _publicationem_imprimere (JsonValor* params, constans character* via)
     redde (s32)n;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    constans character* via = NIHIL;
-    constans character* radix = ".";
-    Piscina* piscina;
+    constans character* via    = NIHIL;
+    constans character* radix  = ".";
+               Piscina* piscina;
     FILE* intra;
     FILE* extra;
     character* fons_plagulae;
@@ -158,8 +168,8 @@ s32 principale (integer argc, character** argv)
         {
             cum_servare = VERUM;
         }
-        alioquin si (strcmp(argv[k], "-radix") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-radix") == ZEPHYRUM
+                     && k + I < argc)
         {
             radix = argv[++k];
         }
@@ -234,8 +244,8 @@ s32 principale (integer argc, character** argv)
         {
             chorda textus;
 
-            textus.datum = (i8*)fons_plagulae;
-            textus.mensura = mensura_plagulae;
+            textus.datum    = (i8*)fons_plagulae;
+            textus.mensura  = mensura_plagulae;
             (vacuum)chorda_aedificator_appendere_evasus_json(aed,
                 textus);
         }
@@ -278,12 +288,12 @@ s32 principale (integer argc, character** argv)
     /* effusum totum: publicatio ULTIMA vincit (structuraliter -
      * omnes praesentes, ultima sumitur) */
     {
-        JsonValor* publicatio_ultima = NIHIL;
-        i32 publicationes = ZEPHYRUM;
+        JsonValor* publicatio_ultima  = NIHIL;
+              i32  publicationes      = ZEPHYRUM;
 
         per (;;)
         {
-            b32 finitus = FALSUM;
+               b32 finitus = FALSUM;
             chorda corpus = tabellarius_epistulam_legere(extra,
                 piscina, &finitus);
             TabellariusNuntius n;
@@ -293,7 +303,7 @@ s32 principale (integer argc, character** argv)
                 frange;
             }
             n = tabellarius_nuntium_legere(corpus, piscina);
-            si (n.genus == TABELLARIUS_NUNTIATIO
+            si (   n.genus  == TABELLARIUS_NUNTIATIO
                 && _chorda_est(n.methodus,
                        "textDocument/publishDiagnostics")
                 && n.params != NIHIL)

@@ -26,15 +26,20 @@
 
 #define INITUS_MAXIMUS 65536
 
-interior s32 _plagulas_findere (character* argumentum,
-    constans character** plagulae, s32 maximum);
+interior s32
+_plagulas_findere (
+             character*  argumentum,
+    constans character** plagulae,
+                   s32   maximum);
 
 interior s32
-_plagulas_findere (character* argumentum,
-    constans character** plagulae, s32 maximum)
+_plagulas_findere (
+             character*  argumentum,
+    constans character** plagulae,
+                   s32   maximum)
 {
-    s32 numerus = ZEPHYRUM;
-    character* p = argumentum;
+          s32  numerus  = ZEPHYRUM;
+    character* p        = argumentum;
 
     dum (numerus < maximum && p != NIHIL && *p != '\0')
     {
@@ -46,22 +51,24 @@ _plagulas_findere (character* argumentum,
         {
             frange;
         }
-        *virgula = '\0';
-        p = virgula + I;
+        *virgula  = '\0';
+        p         = virgula + I;
     }
     redde numerus;
 }
 
 interior chorda
-_plagulam_totam_legere (Piscina* piscina, constans character* via)
+_plagulam_totam_legere (
+               Piscina* piscina,
+    constans character* via)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
-    chorda fructus;
-    i8* datum;
+      FILE* pl = fopen(via, "rb");
+      long  mensura_l;
+    chorda  fructus;
+        i8* datum;
 
-    fructus.mensura = ZEPHYRUM;
-    fructus.datum = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
+    fructus.datum    = NIHIL;
     si (pl == NIHIL)
     {
         redde fructus;
@@ -75,7 +82,7 @@ _plagulam_totam_legere (Piscina* piscina, constans character* via)
         redde fructus;
     }
     datum = piscina_allocare(piscina, (memoriae_index)mensura_l);
-    si (datum == NIHIL
+    si (   datum == NIHIL
         || fread(datum, I, (memoriae_index)mensura_l, pl)
             != (memoriae_index)mensura_l)
     {
@@ -83,20 +90,23 @@ _plagulam_totam_legere (Piscina* piscina, constans character* via)
         redde fructus;
     }
     fclose(pl);
-    fructus.datum = datum;
-    fructus.mensura = (i32)mensura_l;
+    fructus.datum    = datum;
+    fructus.mensura  = (i32)mensura_l;
     redde fructus;
 }
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
-    Piscina* piscina;
-    Sessio* sessio;
-    SessioConfiguratio cfg;
+               Piscina* piscina;
+                Sessio* sessio;
+    SessioConfiguratio  cfg;
     constans character* plagulae[XXXII];
     constans character* via_scripti = NIHIL;
-    character initus[INITUS_MAXIMUS];
-    integer k;
+             character  initus[INITUS_MAXIMUS];
+               integer  k;
 
     piscina = piscina_generare_dynamicum("colloquium", 268435456);
     si (piscina == NIHIL)
@@ -113,22 +123,22 @@ s32 principale (integer argc, character** argv)
         {
             cfg.cum_posix = VERUM;
         }
-        alioquin si (strcmp(argv[k], "-plagulae") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-plagulae") == ZEPHYRUM
+                     && k + I < argc)
         {
             k++;
             cfg.plagulae = plagulae;
             cfg.plagulae_numerus = _plagulas_findere(argv[k],
                 plagulae, (s32)XXXII);
         }
-        alioquin si (strcmp(argv[k], "-radix") == ZEPHYRUM
-            && k + I < argc)
+        alioquin si (   strcmp(argv[k], "-radix") == ZEPHYRUM
+                     && k + I < argc)
         {
             k++;
             cfg.radix = argv[k];
         }
-        alioquin si (argv[k][ZEPHYRUM] != '-'
-            && via_scripti == NIHIL)
+        alioquin si (   argv[k][ZEPHYRUM] != '-'
+                     && via_scripti       == NIHIL)
         {
             via_scripti = argv[k];
         }
@@ -143,8 +153,8 @@ s32 principale (integer argc, character** argv)
     si (via_scripti != NIHIL)
     {
         /* modus batch (C12): recusationes desunt, iudicium adest */
-        cfg.sine_recusationibus = VERUM;
-        cfg.cum_posix = VERUM;   /* scripta bibliothecas POSIX agunt */
+        cfg.sine_recusationibus  = VERUM;
+        cfg.cum_posix            = VERUM;   /* scripta bibliothecas POSIX agunt */
     }
 
     sessio = sessio_creare(piscina, &cfg);
@@ -160,9 +170,9 @@ s32 principale (integer argc, character** argv)
         chorda scriptum = _plagulam_totam_legere(piscina,
             via_scripti);
         SessioRelatum r;
-        s32 recepti;
-        s64 codex = ZEPHYRUM;
-        b32 principale_definitum = FALSUM;
+                  s32 recepti;
+                  s64 codex                 = ZEPHYRUM;
+                  b32 principale_definitum  = FALSUM;
 
         si (scriptum.mensura == ZEPHYRUM)
         {
@@ -171,7 +181,7 @@ s32 principale (integer argc, character** argv)
             redde I;
         }
         recepti = sessio_scriptum_offerre(sessio, scriptum, &r);
-        si (recepti < ZEPHYRUM
+        si (   recepti < ZEPHYRUM
             || r.verdictum != SESSIO_ACCEPTUM)
         {
             chorda f = sessio_relatum_formare(sessio, &r, piscina);
@@ -198,7 +208,7 @@ s32 principale (integer argc, character** argv)
             }
             /* principale = macro latinae (-> main): valor lexematis
              * = textus EXPANSUS (lex emitte) - symbolum verum "main" */
-            si (sessio_turnus_genus(sessio, (i32)k)
+            si (   sessio_turnus_genus(sessio, (i32)k)
                     == SESSIO_TURNUS_DEFINITIO
                 && (chorda_aequalis_literis(
                         sessio_turnus_nomen(sessio, (i32)k), "main")
@@ -225,24 +235,24 @@ s32 principale (integer argc, character** argv)
     imprimere("colloquium (M4b) - :exi exit, :monstra documentum\n");
     per (;;)
     {
-        i32 mensura = ZEPHYRUM;
+           i32 mensura = ZEPHYRUM;
         chorda textus;
 
         imprimere("> ");
         fflush(stdout);
         per (;;)
         {
-            character* linea = initus + mensura;
-            i32 spatium = (i32)INITUS_MAXIMUS - mensura - I;
+            character* linea    = initus + mensura;
+                  i32  spatium  = (i32)INITUS_MAXIMUS - mensura - I;
 
-            si (spatium <= I
+            si (   spatium                           <= I
                 || fgets(linea, (int)spatium, stdin) == NIHIL)
             {
                 imprimere("\n");
                 redde ZEPHYRUM;   /* EOF = exitus */
             }
-            mensura += (i32)strlen(linea);
-            textus = chorda_ex_buffer((i8*)initus, mensura);
+            mensura  += (i32)strlen(linea);
+            textus   = chorda_ex_buffer((i8*)initus, mensura);
             si (sessio_initus_completus(sessio, textus))
             {
                 frange;
@@ -258,7 +268,7 @@ s32 principale (integer argc, character** argv)
 
             per (j = ZEPHYRUM; j < mensura; j++)
             {
-                si (initus[j] != ' ' && initus[j] != '\t'
+                si (   initus[j] != ' ' && initus[j] != '\t'
                     && initus[j] != '\n' && initus[j] != '\r')
                 {
                     vacua = FALSUM;
@@ -279,7 +289,7 @@ s32 principale (integer argc, character** argv)
                 frange;
             }
             alioquin si (strncmp(initus, ":monstra", VIII)
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 i32 n = sessio_turni_numerus(sessio);
                 i32 j;
@@ -294,9 +304,9 @@ s32 principale (integer argc, character** argv)
             }
             alioquin si (strncmp(initus, ":serva", VI) == ZEPHYRUM)
             {
-                character* via = initus + VI;
-                b32 strictum = FALSUM;
-                chorda textus_servandus;
+                character* via       = initus + VI;
+                      b32  strictum  = FALSUM;
+                   chorda  textus_servandus;
                 FILE* pl;
 
                 dum (*via == ' ')
@@ -305,8 +315,8 @@ s32 principale (integer argc, character** argv)
                 }
                 si (strncmp(via, "-strictum", IX) == ZEPHYRUM)
                 {
-                    strictum = VERUM;
-                    via += IX;
+                    strictum  = VERUM;
+                    via       += IX;
                     dum (*via == ' ')
                     {
                         via++;
@@ -339,10 +349,10 @@ s32 principale (integer argc, character** argv)
             }
             alioquin si (strncmp(initus, ":aperi", VI) == ZEPHYRUM)
             {
-                character* via = initus + VI;
-                chorda scriptum;
-                SessioRelatum r_scripti;
-                s32 recepti;
+                    character* via = initus + VI;
+                       chorda  scriptum;
+                SessioRelatum  r_scripti;
+                          s32  recepti;
 
                 dum (*via == ' ')
                 {
@@ -371,11 +381,11 @@ s32 principale (integer argc, character** argv)
                 }
             }
             alioquin si (strncmp(initus, ":effusio", VIII)
-                == ZEPHYRUM)
+                         == ZEPHYRUM)
             {
                 integer index = atoi(initus + VIII);
-                chorda e = sessio_turnus_effusio(sessio,
-                    (i32)index);
+                 chorda e = sessio_turnus_effusio(sessio,
+                     (i32)index);
 
                 si (e.mensura > ZEPHYRUM)
                 {
@@ -393,8 +403,8 @@ s32 principale (integer argc, character** argv)
         /* turnus */
         {
             SessioRelatum r = sessio_turnum_offerre(sessio, textus);
-            chorda formatum = sessio_relatum_formare(sessio, &r,
-                piscina);
+                   chorda formatum = sessio_relatum_formare(sessio, &r,
+                       piscina);
 
             si (formatum.mensura > ZEPHYRUM)
             {

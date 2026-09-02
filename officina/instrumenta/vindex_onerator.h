@@ -23,22 +23,32 @@ typedef struct VindexOnerator VindexOnerator;
 
 /* Praeparat systema + capita (ambulatio radicis). NULL si systema
  * deest (curre ex radice repositorii aut da radicem veram). */
-VindexOnerator* vindex_onerator_creare(const char* radix);
+VindexOnerator*
+vindex_onerator_creare (
+    const char* radix);
 
 /* Demittit unam plagulam .c (via RELATIVA radici - eadem chorda
  * fit via indicii/linearum). Colligit lineas + indicium. */
-int vindex_onerator_demittere(VindexOnerator* onerator,
-    const char* via);
+int
+vindex_onerator_demittere (
+    VindexOnerator* onerator,
+        const char* via);
 
 /* Nectit mundum, machinulam creat, lineas praebet, indicium
  * scribit ad viam datam et RECLUDIT. NULL si nexus fractus. */
-Machinula* vindex_onerator_nectere(VindexOnerator* onerator,
-    const char* via_indicii);
+Machinula*
+vindex_onerator_nectere (
+    VindexOnerator* onerator,
+        const char* via_indicii);
 
 /* Post nectere: lector plagulae indicii (proprietas oneratoris). */
-IndiciumLector* vindex_onerator_lector(VindexOnerator* onerator);
+IndiciumLector*
+vindex_onerator_lector (
+    VindexOnerator* onerator);
 
 /* Symbolum nexus insolutum novissimum (diagnosis nexus fracti). */
-OfficinaChorda vindex_onerator_querela(VindexOnerator* onerator);
+OfficinaChorda
+vindex_onerator_querela (
+    VindexOnerator* onerator);
 
 #endif /* VINDEX_ONERATOR_H */

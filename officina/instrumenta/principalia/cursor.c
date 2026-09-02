@@ -39,6 +39,7 @@
 #include <sys/stat.h>
 #include <signal.h>
 
+
 /* ==================================================
  * Status globalis
  * ================================================== */
@@ -126,7 +127,8 @@ hic_manens constans ExclusioStdout exclusiones_stdout[] = {
 };
 
 hic_manens constans character*
-_exclusio_stdout_causa (constans character* titulus)
+_exclusio_stdout_causa (
+    constans character* titulus)
 {
     i32 i;
 
@@ -143,11 +145,13 @@ _exclusio_stdout_causa (constans character* titulus)
 
 /* comparatio plagularum octetim (aureum vs captura) */
 hic_manens b32
-_plagulae_aequae (constans character* via_a, constans character* via_b)
+_plagulae_aequae (
+    constans character* via_a,
+    constans character* via_b)
 {
-    FILE* pa = fopen(via_a, "rb");
-    FILE* pb = fopen(via_b, "rb");
-    b32 aequae = VERUM;
+    FILE* pa      = fopen(via_a, "rb");
+    FILE* pb      = fopen(via_b, "rb");
+     b32  aequae  = VERUM;
 
     si (pa == NIHIL || pb == NIHIL)
     {
@@ -157,12 +161,12 @@ _plagulae_aequae (constans character* via_a, constans character* via_b)
     }
     dum (VERUM)
     {
-        character ba[4096];
-        character bb[4096];
+             character ba[4096];
+             character bb[4096];
         memoriae_index na = fread(ba, I, magnitudo(ba), pa);
         memoriae_index nb = fread(bb, I, magnitudo(bb), pb);
 
-        si (na != nb || (na > ZEPHYRUM
+        si (   na != nb || (na > ZEPHYRUM
             && memcmp(ba, bb, na) != ZEPHYRUM))
         {
             aequae = FALSUM;
@@ -180,11 +184,13 @@ _plagulae_aequae (constans character* via_a, constans character* via_b)
 
 /* viae capturae/aurei ex via suitae ("probationes/probatio_x.c") */
 hic_manens vacuum
-_vias_effusionis (constans character* via_suitae,
-    character* via_capturae, character* via_aurei)
+_vias_effusionis (
+    constans character* via_suitae,
+             character* via_capturae,
+             character* via_aurei)
 {
-    constans character* titulus = via_suitae + XII;
-    integer mensura = (integer)strlen(titulus) - II; /* sine ".c" */
+    constans character* titulus  = via_suitae + XII;
+    integer mensura              = (integer)strlen(titulus) - II; /* sine ".c" */
 
     sprintf(via_capturae, "officina/build/capturae/%.*s.stdout",
         mensura, titulus);
@@ -195,18 +201,22 @@ _vias_effusionis (constans character* via_suitae,
 
 /* comparator qsort pro ordinibus character[128] (-enumerare) */
 hic_manens integer
-_comparare_nomina (constans vacuum* a, constans vacuum* b)
+_comparare_nomina (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     redde strcmp((constans character*)a, (constans character*)b);
 }
 
 /* plagulam systematis in piscinam legere */
 hic_manens character*
-_systema_legere (Piscina* piscina, constans character* via,
-    long* mensura_fructus)
+_systema_legere (
+               Piscina* piscina,
+    constans character* via,
+                  long* mensura_fructus)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura;
+         FILE* pl = fopen(via, "rb");
+         long  mensura;
     character* fons;
 
     si (pl == NIHIL)
@@ -218,7 +228,7 @@ _systema_legere (Piscina* piscina, constans character* via,
     fseek(pl, 0L, SEEK_SET);
     fons = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura + 1L));
-    si (fons == NIHIL
+    si (   fons == NIHIL
         || fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -230,13 +240,16 @@ _systema_legere (Piscina* piscina, constans character* via,
     redde fons;
 }
 
+
 /* ==================================================
  * Plagulam demittere (fistula fusoris; modulus CACHATUR)
  * ================================================== */
 
 hic_manens MedullaModulus*
-_plagulam_demittere (constans SilvaContextus* ctx,
-    constans character* via, MedullaLineae** lineae_exitus)
+_plagulam_demittere (
+    constans SilvaContextus*  ctx,
+         constans character*  via,
+              MedullaLineae** lineae_exitus)
 {
     FILE* pl;
     long mensura_l;
@@ -283,7 +296,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     }
     fons = (i8*)piscina_allocare(piscina_officinae,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (fons == NIHIL || (mensura > ZEPHYRUM
+    si (   fons == NIHIL || (mensura > ZEPHYRUM
         && fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -300,11 +313,11 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         (vacuum)silva_c89_semantica_oraculum_augere(
             systema_semantica, oraculum);
     }
-    c0 = clock();
-    u.m = fons;
+    c0   = clock();
+    u.m  = fons;
     parsura = silva_c89_parsare_cum_contextu(piscina_arboris, ctx,
         via, u.c, (unsigned int)mensura, oraculum);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura == NIHIL || !parsura->successus
         || parsura->numerus_errorum > ZEPHYRUM)
     {
         fprintf(stderr, "[PARSURA FRACTA] %s\n", via);
@@ -334,10 +347,10 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         redde NIHIL;
     }
 
-    u.c = via;
-    titulus_moduli.datum = u.m;
-    titulus_moduli.mensura = (i32)strlen(via);
-    c0 = clock();
+    u.c                     = via;
+    titulus_moduli.datum    = u.m;
+    titulus_moduli.mensura  = (i32)strlen(via);
+    c0                      = clock();
     modulus = demissio_currere(piscina_officinae, parsura, sem,
         titulus_moduli);
     c1 = clock();
@@ -351,8 +364,8 @@ _plagulam_demittere (constans SilvaContextus* ctx,
         redde NIHIL;
     }
 
-    summa_functionum += (long)xar_numerus(modulus->functiones);
-    summa_datorum += (long)xar_numerus(modulus->data);
+    summa_functionum  += (long)xar_numerus(modulus->functiones);
+    summa_datorum     += (long)xar_numerus(modulus->data);
     {
         i32 f;
         i32 numerus_functionum = xar_numerus(modulus->functiones);
@@ -392,12 +405,14 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     redde modulus;
 }
 
+
 /* ==================================================
  * Capita praeparare (fusoris exscriptum)
  * ================================================== */
 
 hic_manens b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -407,8 +422,11 @@ _praetermittendum (constans character* titulus)
 }
 
 hic_manens vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
     FILE* pl;
@@ -435,7 +453,7 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
     mensura = (i32)mensura_l;
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura > ZEPHYRUM ? mensura : I));
-    si (textus == NIHIL || (mensura > ZEPHYRUM
+    si (   textus == NIHIL || (mensura > ZEPHYRUM
         && fread(textus, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura))
     {
@@ -451,8 +469,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 hic_manens vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -460,7 +481,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -478,7 +499,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -489,24 +510,28 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+
 /* ==================================================
  * Mundus: plagulae .c sub lib/ (ordine alphabetico - determinismus)
  * ================================================== */
 
 hic_manens integer
-_comparare_vias (constans vacuum* a, constans vacuum* b)
+_comparare_vias (
+    constans vacuum* a,
+    constans vacuum* b)
 {
     redde strcmp(*(character* constans*)a, *(character* constans*)b);
 }
 
 hic_manens vacuum
-_bibliothecam_demittere (constans SilvaContextus* ctx)
+_bibliothecam_demittere (
+    constans SilvaContextus* ctx)
 {
     DIR* dir = opendir("lib");
     structura dirent* introitus;
     character* viae[512];
-    integer numerus = 0;
-    integer i;
+      integer  numerus = 0;
+      integer  i;
 
     si (dir == NIHIL)
     {
@@ -518,7 +543,7 @@ _bibliothecam_demittere (constans SilvaContextus* ctx)
         memoriae_index m = strlen(introitus->d_name);
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (m >= III && introitus->d_name[m - II] == '.'
+        si (   m >= III && introitus->d_name[m - II] == '.'
             && introitus->d_name[m - I] == 'c')
         {
             character* via = piscina_allocare(piscina_officinae,
@@ -536,26 +561,30 @@ _bibliothecam_demittere (constans SilvaContextus* ctx)
         _comparare_vias);
     per (i = 0; i < numerus; i++)
     {
-        MedullaLineae* lineae = NIHIL;
+         MedullaLineae* lineae = NIHIL;
         MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i],
             &lineae);
 
         si (modulus != NIHIL)
         {
-            MedullaModulus** locellus = xar_addere(moduli_mundi);
-            MedullaLineae** locellus_l = xar_addere(lineae_mundi);
+            MedullaModulus** locellus    = xar_addere(moduli_mundi);
+             MedullaLineae** locellus_l  = xar_addere(lineae_mundi);
 
-            *locellus = modulus;
-            *locellus_l = lineae;
+            *locellus    = modulus;
+            *locellus_l  = lineae;
         }
     }
 }
+
 
 /* ==================================================
  * Principale
  * ================================================== */
 
-s32 principale (integer argc, character** argv)
+s32
+principale (
+      integer   argc,
+    character** argv)
 {
     Piscina* piscina_ctx;
     SilvaPiscina* piscina_silvae_ctx;
@@ -568,14 +597,14 @@ s32 principale (integer argc, character** argv)
         {
             custodia_petita = VERUM;
         }
-        alioquin si (strcmp(argv[a], "-mora") == ZEPHYRUM
-            && a + I < argc)
+        alioquin si (   strcmp(argv[a], "-mora") == ZEPHYRUM
+                     && a + I < argc)
         {
             a++;
             mora_secunda = (insignatus integer)atoi(argv[a]);
         }
-        alioquin si (strcmp(argv[a], "-sola") == ZEPHYRUM
-            && a + I < argc)
+        alioquin si (   strcmp(argv[a], "-sola") == ZEPHYRUM
+                     && a + I < argc)
         {
             a++;
             sola_quaesita = argv[a];
@@ -596,8 +625,8 @@ s32 principale (integer argc, character** argv)
         DIR* dir = opendir("probationes");
         structura dirent* introitus;
         hic_manens character vias[256][128];
-        integer numerus = 0;
-        integer i;
+                     integer numerus = 0;
+                     integer i;
 
         si (dir == NIHIL)
         {
@@ -606,17 +635,17 @@ s32 principale (integer argc, character** argv)
         }
         dum ((introitus = readdir(dir)) != NIHIL && numerus < 256)
         {
-            b32 exclusa = FALSUM;
-            memoriae_index md = strlen(introitus->d_name);
+                       b32 exclusa  = FALSUM;
+            memoriae_index md       = strlen(introitus->d_name);
 
             si (strncmp(introitus->d_name, "probatio_", IX)
                 != ZEPHYRUM)
             {
                 perge;
             }
-            si (md < III || md > CX
+            si (   md < III || md > CX
                 || introitus->d_name[md - II] != '.'
-                || introitus->d_name[md - I] != 'c')
+                || introitus->d_name[md - I]  != 'c')
             {
                 perge;
             }
@@ -652,7 +681,7 @@ s32 principale (integer argc, character** argv)
         "cursor_silva_ctx", 8388608);
     piscina_officinae = piscina_generare_dynamicum(
         "cursor_officina", 16777216);
-    si (piscina_ctx == NIHIL || piscina_silvae_ctx == NIHIL
+    si (   piscina_ctx       == NIHIL || piscina_silvae_ctx == NIHIL
         || piscina_officinae == NIHIL)
     {
         fprintf(stderr, "cursor: piscina deest\n");
@@ -675,14 +704,14 @@ s32 principale (integer argc, character** argv)
      * certificatae per auspex_posix.sh - oneratores officinae
      * soli concatenant, silva-latus plagulam ISO solam videt) */
     {
-        long m_iso = 0L;
-        long m_posix = 0L;
+             long  m_iso    = 0L;
+             long  m_posix  = 0L;
         character* fons_iso = _systema_legere(piscina_ctx,
             "silva/fontes/systema_c89.h", &m_iso);
         character* fons_posix = _systema_legere(piscina_ctx,
             "silva/fontes/systema_posix.h", &m_posix);
         character* fons_sys;
-        long mensura_sys;
+             long  mensura_sys;
 
         si (fons_iso == NIHIL || fons_posix == NIHIL)
         {
@@ -711,7 +740,7 @@ s32 principale (integer argc, character** argv)
         systema_parsura = silva_c89_parsare(piscina_silvae_ctx,
             "systema_c89.h", fons_sys, (unsigned int)mensura_sys,
             NIHIL);
-        si (systema_parsura == NIHIL
+        si (   systema_parsura == NIHIL
             || systema_parsura->numerus_errorum > ZEPHYRUM)
         {
             fprintf(stderr, "cursor: systema non parsatum\n");
@@ -764,15 +793,15 @@ s32 principale (integer argc, character** argv)
                 {
                     perge;
                 }
-                si (mc < III || intro_c->d_name[mc - II] != '.'
+                si (   mc < III || intro_c->d_name[mc - II] != '.'
                     || intro_c->d_name[mc - I] != 'c')
                 {
                     perge;
                 }
                 {
-                    character via_c[CCLVI];
+                         character  via_c[CCLVI];
                     MedullaModulus* modulus_c;
-                    MedullaLineae* lineae_c = NIHIL;
+                     MedullaLineae* lineae_c = NIHIL;
 
                     sprintf(via_c, "probationes/%s",
                         intro_c->d_name);
@@ -785,8 +814,8 @@ s32 principale (integer argc, character** argv)
                         MedullaLineae** locellus_cl =
                             xar_addere(lineae_mundi);
 
-                        *locellus_c = modulus_c;
-                        *locellus_cl = lineae_c;
+                        *locellus_c   = modulus_c;
+                        *locellus_cl  = lineae_c;
                     }
                 }
             }
@@ -804,20 +833,20 @@ s32 principale (integer argc, character** argv)
         DIR* dir = opendir("probationes");
         structura dirent* introitus;
         character* suites[256];
-        integer numerus_suitarum = 0;
-        integer i;
-        long praeteritae = 0L;
-        long exitus_mali = 0L;
-        long sisterae = 0L;
-        long decipulae_l = 0L;
-        long vitia = 0L;
-        long nexus_fracti = 0L;
-        long ruinae = 0L;
-        long tempora = 0L;
-        long effusiones_eaedem = 0L;
-        long effusiones_differentes = 0L;
-        long effusiones_sine_aureo = 0L;
-        long effusiones_exclusae = 0L;
+          integer  numerus_suitarum = 0;
+          integer  i;
+             long  praeteritae             = 0L;
+             long  exitus_mali             = 0L;
+             long  sisterae                = 0L;
+             long  decipulae_l             = 0L;
+             long  vitia                   = 0L;
+             long  nexus_fracti            = 0L;
+             long  ruinae                  = 0L;
+             long  tempora                 = 0L;
+             long  effusiones_eaedem       = 0L;
+             long  effusiones_differentes  = 0L;
+             long  effusiones_sine_aureo   = 0L;
+             long  effusiones_exclusae     = 0L;
 
         /* directorium capturarum (stdout interpretatum per suitem) */
         (vacuum)mkdir("officina/build/capturae", 0755);
@@ -831,8 +860,8 @@ s32 principale (integer argc, character** argv)
             fprintf(stderr, "cursor: probationes/ deest\n");
             redde I;
         }
-        dum ((introitus = readdir(dir)) != NIHIL
-            && numerus_suitarum < 256)
+        dum (   (introitus = readdir(dir)) != NIHIL
+             && numerus_suitarum < 256)
         {
             b32 exclusa = FALSUM;
 
@@ -844,7 +873,7 @@ s32 principale (integer argc, character** argv)
             {
                 memoriae_index md = strlen(introitus->d_name);
 
-                si (md < III || introitus->d_name[md - II] != '.'
+                si (   md < III || introitus->d_name[md - II] != '.'
                     || introitus->d_name[md - I] != 'c')
                 {
                     perge;
@@ -863,7 +892,7 @@ s32 principale (integer argc, character** argv)
             {
                 perge;
             }
-            si (sola_quaesita != NIHIL
+            si (   sola_quaesita != NIHIL
                 && strstr(introitus->d_name, sola_quaesita)
                     == NIHIL)
             {
@@ -887,11 +916,11 @@ s32 principale (integer argc, character** argv)
             (long)numerus_suitarum);
         per (i = 0; i < numerus_suitarum; i++)
         {
-            MedullaLineae* lineae_suitae = NIHIL;
+             MedullaLineae* lineae_suitae = NIHIL;
             MedullaModulus* modulus_suitae =
                 _plagulam_demittere(ctx, suites[i],
                     &lineae_suitae);
-            pid_t pullus;
+              pid_t pullus;
             integer status;
 
             si (modulus_suitae == NIHIL)
@@ -908,14 +937,14 @@ s32 principale (integer argc, character** argv)
             pullus = fork();
             si (pullus == ZEPHYRUM)
             {
-                Regio* regio;
-                Conexio* conexio;
-                Machinula* machinula;
-                MachinulaExitus fructus;
-                clock_t s0;
-                clock_t s1;
-                i32 k;
-                b32 nexus_bene = VERUM;
+                          Regio* regio;
+                        Conexio* conexio;
+                      Machinula* machinula;
+                MachinulaExitus  fructus;
+                        clock_t  s0;
+                        clock_t  s1;
+                            i32  k;
+                            b32  nexus_bene = VERUM;
 
                 /* stdout interpretatum in capturam (columna diff
                  * in parente post exitum) - PRAETER -sola
@@ -956,7 +985,7 @@ s32 principale (integer argc, character** argv)
                         nexus_bene = FALSUM;
                     }
                 }
-                si (!conexio_modulum_addere(conexio,
+                si (   !conexio_modulum_addere(conexio,
                         modulus_suitae)
                     || !nexus_bene || !conexio_nectere(conexio))
                 {
@@ -995,9 +1024,9 @@ s32 principale (integer argc, character** argv)
                     chorda titulus_main;
                     unio { constans character* c; i8* mm; } um;
 
-                    um.c = "main";
-                    titulus_main.datum = um.mm;
-                    titulus_main.mensura = IV;
+                    um.c                  = "main";
+                    titulus_main.datum    = um.mm;
+                    titulus_main.mensura  = IV;
                     fructus = machinula_currere(machinula,
                         titulus_main);
                 }
@@ -1043,7 +1072,7 @@ s32 principale (integer argc, character** argv)
 
                     /* versus SINE novissima linea - parens columnam
                      * stdout appendit post waitpid */
-                    si (fructus.genus == MACHINULA_BENE
+                    si (   fructus.genus == MACHINULA_BENE
                         && fructus.codex == ZEPHYRUM)
                     {
                         fprintf(stderr, "%-44s PRAETERIIT"
@@ -1114,11 +1143,11 @@ s32 principale (integer argc, character** argv)
                 /* columna stdout (versus pulli sine novissima
                  * linea): praeteriit -> diff capturae vs aurei;
                  * ceteri -> linea sola finitur */
-                si (codex_pulli == ZEPHYRUM
+                si (   codex_pulli   == ZEPHYRUM
                     && sola_quaesita == NIHIL)
                 {
-                    character via_capturae[CCLVI];
-                    character via_aurei[CCLVI];
+                             character  via_capturae[CCLVI];
+                             character  via_aurei[CCLVI];
                     constans character* causa;
 
                     _vias_effusionis(suites[i], via_capturae,
@@ -1156,8 +1185,8 @@ s32 principale (integer argc, character** argv)
                         }
                     }
                 }
-                alioquin si (codex_pulli >= 40
-                    && codex_pulli <= 44)
+                alioquin si (   codex_pulli >= 40
+                             && codex_pulli <= 44)
                 {
                     fprintf(stderr, "\n");
                 }

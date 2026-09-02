@@ -15,40 +15,43 @@
 #include <dirent.h>
 
 structura VindexOnerator {
-    Piscina*         piscina_ctx;      /* app: xar, buffers */
+            Piscina* piscina_ctx;      /* app: xar, buffers */
     OfficinaPiscina* piscina_off;      /* moduli, lineae, indicium */
-    Praeparatio      praeparatio;      /* ctx + systema (praeparator
+        Praeparatio  praeparatio;      /* ctx + systema (praeparator
                                         * - unitas communis) */
-    Xar*             moduli;           /* MedullaModulus* */
-    Xar*             lineae;           /* MedullaLineae* */
+                 Xar* moduli;           /* MedullaModulus* */
+                 Xar* lineae;           /* MedullaLineae* */
     IndiciumScriptor* scriptor;
-    IndiciumLector*  lector;
-    Conexio*         conexio;
-    character        radix[512];
+      IndiciumLector* lector;
+             Conexio* conexio;
+           character  radix[512];
 };
 
 interior OfficinaChorda
-_och (constans character* literis)
+_och (
+    constans character* literis)
 {
     OfficinaChorda c;
     unio { constans character* c; insignatus character* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (insignatus integer)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (insignatus integer)strlen(literis);
     redde c;
 }
+
 
 /* ==================================================
  * API
  * ================================================== */
 
 VindexOnerator*
-vindex_onerator_creare (constans character* radix)
+vindex_onerator_creare (
+    constans character* radix)
 {
     VindexOnerator* o;
-    Piscina* piscina_ctx = piscina_generare_dynamicum(
-        "vindex_onerator", 8388608);
+           Piscina* piscina_ctx = piscina_generare_dynamicum(
+               "vindex_onerator", 8388608);
 
     si (piscina_ctx == NIHIL) redde NIHIL;
     o = piscina_allocare(piscina_ctx,
@@ -69,7 +72,7 @@ vindex_onerator_creare (constans character* radix)
     o->lineae = xar_creare(piscina_ctx,
         (i32)magnitudo(vacuum*));
     o->scriptor = indicium_scriptor_creare(o->piscina_off);
-    si (o->moduli == NIHIL || o->lineae == NIHIL
+    si (   o->moduli   == NIHIL || o->lineae == NIHIL
         || o->scriptor == NIHIL)
     {
         redde NIHIL;
@@ -81,8 +84,8 @@ vindex_onerator_creare (constans character* radix)
         PraeparatorConfiguratio pcfg;
 
         memset(&pcfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-        pcfg.radix = o->radix;
-        pcfg.cum_posix = I;
+        pcfg.radix      = o->radix;
+        pcfg.cum_posix  = I;
         si (!praeparator_praeparare(&o->praeparatio, piscina_ctx,
                 &pcfg))
         {
@@ -93,10 +96,11 @@ vindex_onerator_creare (constans character* radix)
 }
 
 b32
-vindex_onerator_demittere (VindexOnerator* o,
+vindex_onerator_demittere (
+        VindexOnerator* o,
     constans character* via)
 {
-    character via_lecta[1024];
+             character via_lecta[1024];
     insignatus integer mensura = ZEPHYRUM;
     SilvaPiscina* piscina_arboris;
     character* fons;
@@ -119,7 +123,7 @@ vindex_onerator_demittere (VindexOnerator* o,
     }
     sem = praeparator_analysare(&o->praeparatio, piscina_arboris,
         via, fons, mensura, &parsura);
-    si (sem == NIHIL || parsura == NIHIL
+    si (   sem == NIHIL || parsura == NIHIL
         || parsura->numerus_errorum > 0U)
     {
         silva_piscina_destruere(piscina_arboris);
@@ -138,18 +142,19 @@ vindex_onerator_demittere (VindexOnerator* o,
     silva_piscina_destruere(piscina_arboris);
     si (modulus == NIHIL) redde FALSUM;
     {
-        vacuum** locellus = xar_addere(o->moduli);
-        vacuum** locellus_l = xar_addere(o->lineae);
+        vacuum** locellus    = xar_addere(o->moduli);
+        vacuum** locellus_l  = xar_addere(o->lineae);
 
         si (locellus == NIHIL || locellus_l == NIHIL) redde FALSUM;
-        *locellus = modulus;
-        *locellus_l = lineae;
+        *locellus    = modulus;
+        *locellus_l  = lineae;
     }
     redde VERUM;
 }
 
 Machinula*
-vindex_onerator_nectere (VindexOnerator* o,
+vindex_onerator_nectere (
+        VindexOnerator* o,
     constans character* via_indicii)
 {
     Regio* regio;
@@ -198,13 +203,15 @@ vindex_onerator_nectere (VindexOnerator* o,
 }
 
 IndiciumLector*
-vindex_onerator_lector (VindexOnerator* o)
+vindex_onerator_lector (
+    VindexOnerator* o)
 {
     redde (o != NIHIL) ? o->lector : NIHIL;
 }
 
 OfficinaChorda
-vindex_onerator_querela (VindexOnerator* o)
+vindex_onerator_querela (
+    VindexOnerator* o)
 {
     OfficinaChorda vacua;
 
@@ -218,7 +225,7 @@ vindex_onerator_querela (VindexOnerator* o)
             redde *symbolum;
         }
     }
-    vacua.datum = NIHIL;
-    vacua.mensura = 0U;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = 0U;
     redde vacua;
 }

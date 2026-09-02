@@ -7,12 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 
+
 /* ==================================================
  * Auxilia interna
  * ================================================== */
 
 interior b32
-_chordae_aequales (chorda a, chorda b)
+_chordae_aequales (
+    chorda a,
+    chorda b)
 {
     si (a.mensura != b.mensura)
     {
@@ -26,12 +29,15 @@ _chordae_aequales (chorda a, chorda b)
         (memoriae_index)a.mensura) == ZEPHYRUM;
 }
 
+
 /* ==================================================
  * Modulus + symbola + causae
  * ================================================== */
 
 MedullaModulus*
-medulla_modulum_creare (Piscina* piscina, chorda titulus)
+medulla_modulum_creare (
+    Piscina* piscina,
+     chorda  titulus)
 {
     MedullaModulus* modulus;
 
@@ -55,8 +61,8 @@ medulla_modulum_creare (Piscina* piscina, chorda titulus)
     modulus->symbola = xar_creare(piscina,
         (i32)magnitudo(MedullaSymbolum));
     modulus->causae = xar_creare(piscina, (i32)magnitudo(chorda));
-    si (modulus->functiones == NIHIL || modulus->data == NIHIL
-        || modulus->symbola == NIHIL || modulus->causae == NIHIL)
+    si (   modulus->functiones == NIHIL || modulus->data == NIHIL
+        || modulus->symbola    == NIHIL || modulus->causae == NIHIL)
     {
         redde NIHIL;
     }
@@ -64,10 +70,12 @@ medulla_modulum_creare (Piscina* piscina, chorda titulus)
 }
 
 s32
-medulla_symbolum_internare (MedullaModulus* modulus, chorda titulus)
+medulla_symbolum_internare (
+    MedullaModulus* modulus,
+            chorda  titulus)
 {
-    i32 i;
-    i32 m;
+                i32  i;
+                i32  m;
     MedullaSymbolum* symbolum;
 
     si (modulus == NIHIL || titulus.mensura == ZEPHYRUM)
@@ -80,7 +88,7 @@ medulla_symbolum_internare (MedullaModulus* modulus, chorda titulus)
         symbolum = (MedullaSymbolum*)xar_obtinere(modulus->symbola,
             i);
 
-        si (symbolum != NIHIL
+        si (   symbolum != NIHIL
             && _chordae_aequales(symbolum->titulus, titulus))
         {
             redde (s32)i;
@@ -99,8 +107,9 @@ medulla_symbolum_internare (MedullaModulus* modulus, chorda titulus)
 }
 
 constans MedullaSymbolum*
-medulla_symbolum_obtinere (constans MedullaModulus* modulus,
-    s32 index)
+medulla_symbolum_obtinere (
+    constans MedullaModulus* modulus,
+                        s32  index)
 {
     si (modulus == NIHIL)
     {
@@ -111,10 +120,12 @@ medulla_symbolum_obtinere (constans MedullaModulus* modulus,
 }
 
 s32
-medulla_causam_internare (MedullaModulus* modulus, chorda causa)
+medulla_causam_internare (
+    MedullaModulus* modulus,
+            chorda  causa)
 {
-    i32 i;
-    i32 m;
+       i32  i;
+       i32  m;
     chorda* sedes;
 
     si (modulus == NIHIL)
@@ -141,7 +152,9 @@ medulla_causam_internare (MedullaModulus* modulus, chorda causa)
 }
 
 constans chorda*
-medulla_causam_obtinere (constans MedullaModulus* modulus, s32 index)
+medulla_causam_obtinere (
+    constans MedullaModulus* modulus,
+                        s32  index)
 {
     si (modulus == NIHIL)
     {
@@ -150,18 +163,22 @@ medulla_causam_obtinere (constans MedullaModulus* modulus, s32 index)
     redde (constans chorda*)xar_obtinere_s(modulus->causae, index);
 }
 
+
 /* ==================================================
  * Functio + registra + blocci
  * ================================================== */
 
 MedullaFunctio*
-medulla_functionem_creare (MedullaModulus* modulus, chorda titulus,
-    s32 typus_reditus, b32 est_variadica)
+medulla_functionem_creare (
+    MedullaModulus* modulus,
+            chorda  titulus,
+               s32  typus_reditus,
+               b32  est_variadica)
 {
-    MedullaFunctio*  functio;
-    MedullaFunctio** locus_functionis;
-    MedullaSymbolum* symbolum;
-    s32 index_symboli;
+     MedullaFunctio*  functio;
+     MedullaFunctio** locus_functionis;
+    MedullaSymbolum*  symbolum;
+                s32   index_symboli;
 
     si (modulus == NIHIL || titulus.mensura == ZEPHYRUM)
     {
@@ -186,9 +203,9 @@ medulla_functionem_creare (MedullaModulus* modulus, chorda titulus,
         redde NIHIL;
     }
     memset(functio, ZEPHYRUM, magnitudo(MedullaFunctio));
-    functio->titulus = symbolum->titulus;   /* copia internata */
-    functio->typus_reditus = typus_reditus;
-    functio->est_variadica = est_variadica;
+    functio->titulus        = symbolum->titulus;   /* copia internata */
+    functio->typus_reditus  = typus_reditus;
+    functio->est_variadica  = est_variadica;
     functio->parametra = xar_creare(modulus->piscina,
         (i32)magnitudo(MedullaParametrum));
     functio->blocci = xar_creare(modulus->piscina,
@@ -197,8 +214,8 @@ medulla_functionem_creare (MedullaModulus* modulus, chorda titulus,
         (i32)magnitudo(chorda));
     functio->operanda = xar_creare(modulus->piscina,
         (i32)magnitudo(MedullaOperandum));
-    si (functio->parametra == NIHIL || functio->blocci == NIHIL
-        || functio->registra == NIHIL || functio->operanda == NIHIL)
+    si (   functio->parametra == NIHIL || functio->blocci == NIHIL
+        || functio->registra  == NIHIL || functio->operanda == NIHIL)
     {
         redde NIHIL;
     }
@@ -209,17 +226,19 @@ medulla_functionem_creare (MedullaModulus* modulus, chorda titulus,
     {
         redde NIHIL;
     }
-    *locus_functionis = functio;
-    symbolum->genus = MEDULLA_SYMBOLUM_FUNCTIO;
-    symbolum->index = (s32)(xar_numerus(modulus->functiones) - I);
+    *locus_functionis  = functio;
+    symbolum->genus    = MEDULLA_SYMBOLUM_FUNCTIO;
+    symbolum->index    = (s32)(xar_numerus(modulus->functiones) - I);
     redde functio;
 }
 
 s32
-medulla_registrum_novum (MedullaFunctio* functio, chorda titulus)
+medulla_registrum_novum (
+    MedullaFunctio* functio,
+            chorda  titulus)
 {
     chorda* sedes;
-    s32 index;
+       s32  index;
 
     si (functio == NIHIL)
     {
@@ -235,11 +254,11 @@ medulla_registrum_novum (MedullaFunctio* functio, chorda titulus)
     {
         /* nomen automaticum tN (N = index) */
         character littera[XXXII];
-        chorda temporarium;
-        s32 longitudo = (s32)sprintf(littera, "t%d", (int)index);
+           chorda temporarium;
+              s32 longitudo = (s32)sprintf(littera, "t%d", (int)index);
 
-        temporarium.datum = (i8*)littera;
-        temporarium.mensura = (i32)longitudo;
+        temporarium.datum    = (i8*)littera;
+        temporarium.mensura  = (i32)longitudo;
         *sedes = chorda_transcribere(temporarium,
             functio->registra->piscina);
     }
@@ -252,11 +271,13 @@ medulla_registrum_novum (MedullaFunctio* functio, chorda titulus)
 }
 
 s32
-medulla_parametrum_addere (MedullaFunctio* functio, chorda titulus,
-    s32 typus)
+medulla_parametrum_addere (
+    MedullaFunctio* functio,
+            chorda  titulus,
+               s32  typus)
 {
     MedullaParametrum* parametrum;
-    s32 index;
+                  s32  index;
 
     si (functio == NIHIL)
     {
@@ -278,8 +299,9 @@ medulla_parametrum_addere (MedullaFunctio* functio, chorda titulus,
 }
 
 constans chorda*
-medulla_registrum_titulus (constans MedullaFunctio* functio,
-    s32 index)
+medulla_registrum_titulus (
+    constans MedullaFunctio* functio,
+                        s32  index)
 {
     si (functio == NIHIL)
     {
@@ -289,7 +311,9 @@ medulla_registrum_titulus (constans MedullaFunctio* functio,
 }
 
 s32
-medulla_bloccum_creare (MedullaFunctio* functio, chorda titulus)
+medulla_bloccum_creare (
+    MedullaFunctio* functio,
+            chorda  titulus)
 {
     MedullaBloccus* bloccus;
 
@@ -315,8 +339,9 @@ medulla_bloccum_creare (MedullaFunctio* functio, chorda titulus)
 }
 
 MedullaBloccus*
-medulla_bloccum_obtinere (constans MedullaFunctio* functio,
-    s32 index)
+medulla_bloccum_obtinere (
+    constans MedullaFunctio* functio,
+                        s32  index)
 {
     si (functio == NIHIL)
     {
@@ -326,13 +351,15 @@ medulla_bloccum_obtinere (constans MedullaFunctio* functio,
 }
 
 s32
-medulla_operanda_addere (MedullaFunctio* functio,
-    constans MedullaOperandum* operanda, s32 numerus)
+medulla_operanda_addere (
+               MedullaFunctio* functio,
+    constans MedullaOperandum* operanda,
+                          s32  numerus)
 {
     s32 initium;
     s32 i;
 
-    si (functio == NIHIL || numerus < ZEPHYRUM
+    si (   functio == NIHIL || numerus < ZEPHYRUM
         || (numerus > ZEPHYRUM && operanda == NIHIL))
     {
         redde -I;
@@ -352,12 +379,14 @@ medulla_operanda_addere (MedullaFunctio* functio,
     redde initium;
 }
 
+
 /* ==================================================
  * Fabricae operandorum
  * ================================================== */
 
 interior MedullaOperandum
-_operandum (s32 genus)
+_operandum (
+    s32 genus)
 {
     MedullaOperandum operandum;
 
@@ -373,7 +402,8 @@ medulla_op_nihil (vacuum)
 }
 
 MedullaOperandum
-medulla_op_registrum (s32 index)
+medulla_op_registrum (
+    s32 index)
 {
     MedullaOperandum operandum =
         _operandum(MEDULLA_OPERANDUM_REGISTRUM);
@@ -383,7 +413,8 @@ medulla_op_registrum (s32 index)
 }
 
 MedullaOperandum
-medulla_op_immediatum (s64 valor)
+medulla_op_immediatum (
+    s64 valor)
 {
     MedullaOperandum operandum =
         _operandum(MEDULLA_OPERANDUM_IMMEDIATUM);
@@ -393,7 +424,8 @@ medulla_op_immediatum (s64 valor)
 }
 
 MedullaOperandum
-medulla_op_immediatum_f (f64 valor)
+medulla_op_immediatum_f (
+    f64 valor)
 {
     MedullaOperandum operandum =
         _operandum(MEDULLA_OPERANDUM_IMMEDIATUM_F);
@@ -403,7 +435,8 @@ medulla_op_immediatum_f (f64 valor)
 }
 
 MedullaOperandum
-medulla_op_symbolum (s32 index)
+medulla_op_symbolum (
+    s32 index)
 {
     MedullaOperandum operandum =
         _operandum(MEDULLA_OPERANDUM_SYMBOLUM);
@@ -413,7 +446,8 @@ medulla_op_symbolum (s32 index)
 }
 
 MedullaOperandum
-medulla_op_bloccum (s32 index)
+medulla_op_bloccum (
+    s32 index)
 {
     MedullaOperandum operandum =
         _operandum(MEDULLA_OPERANDUM_BLOCCUS);
@@ -423,7 +457,8 @@ medulla_op_bloccum (s32 index)
 }
 
 MedullaOperandum
-medulla_op_causa (s32 index)
+medulla_op_causa (
+    s32 index)
 {
     MedullaOperandum operandum = _operandum(MEDULLA_OPERANDUM_CAUSA);
 
@@ -431,12 +466,14 @@ medulla_op_causa (s32 index)
     redde operandum;
 }
 
+
 /* ==================================================
  * Emissio + disciplina terminatorum
  * ================================================== */
 
 b32
-medulla_op_terminator (s32 op)
+medulla_op_terminator (
+    s32 op)
 {
     redde op == (s32)MEDULLA_OP_SALIRE
         || op == (s32)MEDULLA_OP_RAMUS
@@ -445,22 +482,24 @@ medulla_op_terminator (s32 op)
 }
 
 b32
-medulla_emittere (MedullaFunctio* functio, s32 bloccus,
+medulla_emittere (
+                MedullaFunctio* functio,
+                           s32  bloccus,
     constans MedullaInstructio* instructio)
 {
-    MedullaBloccus*    sedes_blocci;
+       MedullaBloccus* sedes_blocci;
     MedullaInstructio* sedes;
 
     si (functio == NIHIL || instructio == NIHIL)
     {
         redde FALSUM;
     }
-    si (instructio->op < ZEPHYRUM
+    si (   instructio->op < ZEPHYRUM
         || instructio->op >= (s32)MEDULLA_OP_NUMERUS)
     {
         redde FALSUM;
     }
-    si (instructio->destinatio >= ZEPHYRUM
+    si (   instructio->destinatio >= ZEPHYRUM
         && instructio->destinatio
             >= (s32)xar_numerus(functio->registra))
     {
@@ -487,7 +526,8 @@ medulla_emittere (MedullaFunctio* functio, s32 bloccus,
 }
 
 b32
-medulla_functio_terminata (constans MedullaFunctio* functio)
+medulla_functio_terminata (
+    constans MedullaFunctio* functio)
 {
     i32 i;
     i32 m;
@@ -515,20 +555,24 @@ medulla_functio_terminata (constans MedullaFunctio* functio)
     redde VERUM;
 }
 
+
 /* ==================================================
  * Datum + relocationes (C8: imago + relocationes a die primo)
  * ================================================== */
 
 MedullaDatum*
-medulla_datum_creare (MedullaModulus* modulus, chorda titulus,
-    i32 magnitudo_octetorum, i32 ordinatio)
+medulla_datum_creare (
+    MedullaModulus* modulus,
+            chorda  titulus,
+               i32  magnitudo_octetorum,
+               i32  ordinatio)
 {
-    MedullaDatum*    datum;
-    MedullaDatum**   locus_dati;
-    MedullaSymbolum* symbolum;
-    s32 index_symboli;
+       MedullaDatum*  datum;
+       MedullaDatum** locus_dati;
+    MedullaSymbolum*  symbolum;
+                s32   index_symboli;
 
-    si (modulus == NIHIL || titulus.mensura == ZEPHYRUM
+    si (   modulus == NIHIL || titulus.mensura == ZEPHYRUM
         || magnitudo_octetorum < I || ordinatio < I)
     {
         redde NIHIL;
@@ -552,9 +596,9 @@ medulla_datum_creare (MedullaModulus* modulus, chorda titulus,
         redde NIHIL;
     }
     memset(datum, ZEPHYRUM, magnitudo(MedullaDatum));
-    datum->titulus = symbolum->titulus;
-    datum->magnitudo_octetorum = magnitudo_octetorum;
-    datum->ordinatio = ordinatio;
+    datum->titulus              = symbolum->titulus;
+    datum->magnitudo_octetorum  = magnitudo_octetorum;
+    datum->ordinatio            = ordinatio;
     datum->imago = (i8*)piscina_allocare(modulus->piscina,
         (memoriae_index)magnitudo_octetorum);
     datum->relocationes = xar_creare(modulus->piscina,
@@ -571,21 +615,24 @@ medulla_datum_creare (MedullaModulus* modulus, chorda titulus,
     {
         redde NIHIL;
     }
-    *locus_dati = datum;
-    symbolum->genus = MEDULLA_SYMBOLUM_DATUM;
-    symbolum->index = (s32)(xar_numerus(modulus->data) - I);
+    *locus_dati      = datum;
+    symbolum->genus  = MEDULLA_SYMBOLUM_DATUM;
+    symbolum->index  = (s32)(xar_numerus(modulus->data) - I);
     redde datum;
 }
 
 b32
-medulla_datum_scribere (MedullaDatum* datum, i32 offset,
-    constans i8* octeti, i32 numerus)
+medulla_datum_scribere (
+    MedullaDatum* datum,
+             i32  offset,
+     constans i8* octeti,
+             i32  numerus)
 {
     si (datum == NIHIL || octeti == NIHIL)
     {
         redde FALSUM;
     }
-    si (offset > datum->magnitudo_octetorum
+    si (   offset > datum->magnitudo_octetorum
         || numerus > datum->magnitudo_octetorum - offset)
     {
         redde FALSUM;
@@ -599,8 +646,10 @@ medulla_datum_scribere (MedullaDatum* datum, i32 offset,
 }
 
 b32
-medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
-    s32 symbolum)
+medulla_relocationem_addere (
+    MedullaDatum* datum,
+             i32  offset,
+             s32  symbolum)
 {
     MedullaRelocatio* relocatio;
 
@@ -608,7 +657,8 @@ medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     {
         redde FALSUM;
     }
-    si (datum->magnitudo_octetorum < VIII || offset > datum->magnitudo_octetorum - VIII)
+    si (   datum->magnitudo_octetorum < VIII
+        || offset > datum->magnitudo_octetorum - VIII)
     {
         redde FALSUM;   /* locellus 8 octetorum extra imaginem */
     }
@@ -617,10 +667,11 @@ medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
     {
         redde FALSUM;
     }
-    relocatio->offset = offset;
-    relocatio->symbolum = symbolum;
+    relocatio->offset    = offset;
+    relocatio->symbolum  = symbolum;
     redde VERUM;
 }
+
 
 /* ==================================================
  * Lineae distillatae (M2a) - clavis = octeti monstratoris origo
@@ -628,13 +679,14 @@ medulla_relocationem_addere (MedullaDatum* datum, i32 offset,
  * ================================================== */
 
 nomen structura {
-    i8  clavis_octeti[magnitudo(vacuum*)];
+     i8 clavis_octeti[magnitudo(vacuum*)];
     s32 via_index;
     i32 linea;
 } LineaIntroitus;
 
 MedullaLineae*
-medulla_lineas_creare (Piscina* piscina)
+medulla_lineas_creare (
+    Piscina* piscina)
 {
     MedullaLineae* lineae;
 
@@ -648,9 +700,9 @@ medulla_lineas_creare (Piscina* piscina)
     {
         redde NIHIL;
     }
-    lineae->piscina = piscina;
-    lineae->viae = xar_creare(piscina, (i32)magnitudo(chorda));
-    lineae->lineae = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    lineae->piscina  = piscina;
+    lineae->viae     = xar_creare(piscina, (i32)magnitudo(chorda));
+    lineae->lineae   = tabula_dispersa_creare_chorda(piscina, CCLVI);
     si (lineae->viae == NIHIL || lineae->lineae == NIHIL)
     {
         redde NIHIL;
@@ -659,10 +711,12 @@ medulla_lineas_creare (Piscina* piscina)
 }
 
 interior s32
-_viam_internare (MedullaLineae* lineae, chorda via)
+_viam_internare (
+    MedullaLineae* lineae,
+           chorda  via)
 {
-    i32 i;
-    i32 numerus = xar_numerus(lineae->viae);
+       i32  i;
+       i32  numerus = xar_numerus(lineae->viae);
     chorda* sedes;
 
     per (i = ZEPHYRUM; i < numerus; i++)
@@ -670,7 +724,7 @@ _viam_internare (MedullaLineae* lineae, chorda via)
         constans chorda* nota = (constans chorda*)xar_obtinere(
             lineae->viae, i);
 
-        si (nota->mensura == via.mensura
+        si (   nota->mensura == via.mensura
             && (via.mensura == ZEPHYRUM
                 || memcmp(nota->datum, via.datum,
                        (memoriae_index)via.mensura) == ZEPHYRUM))
@@ -688,12 +742,15 @@ _viam_internare (MedullaLineae* lineae, chorda via)
 }
 
 b32
-medulla_lineam_ponere (MedullaLineae* lineae,
-    constans structura SilvaNodus* origo, chorda via, i32 linea)
+medulla_lineam_ponere (
+    MedullaLineae* lineae,
+    constans structura SilvaNodus* origo,
+    chorda via,
+    i32 linea)
 {
     LineaIntroitus* introitus;
-    chorda clavis;
-    s32 via_index;
+            chorda  clavis;
+               s32  via_index;
 
     si (lineae == NIHIL || origo == NIHIL)
     {
@@ -716,22 +773,24 @@ medulla_lineam_ponere (MedullaLineae* lineae,
     }
     memcpy(introitus->clavis_octeti, &origo,
         magnitudo(introitus->clavis_octeti));
-    introitus->via_index = via_index;
-    introitus->linea = linea;
-    clavis.datum = introitus->clavis_octeti;
-    clavis.mensura = (i32)magnitudo(introitus->clavis_octeti);
+    introitus->via_index  = via_index;
+    introitus->linea      = linea;
+    clavis.datum          = introitus->clavis_octeti;
+    clavis.mensura        = (i32)magnitudo(introitus->clavis_octeti);
     redde tabula_dispersa_inserere(lineae->lineae, clavis,
         (vacuum*)introitus);
 }
 
 b32
-medulla_lineam_quaerere (constans MedullaLineae* lineae,
-    constans structura SilvaNodus* origo, chorda* via_out,
+medulla_lineam_quaerere (
+    constans MedullaLineae* lineae,
+    constans structura SilvaNodus* origo,
+    chorda* via_out,
     i32* linea_out)
 {
-    i8 octeti[magnitudo(vacuum*)];
-    chorda clavis;
-    vacuum* valor = NIHIL;
+                         i8  octeti[magnitudo(vacuum*)];
+                     chorda  clavis;
+                     vacuum* valor = NIHIL;
     constans LineaIntroitus* introitus;
 
     si (lineae == NIHIL || origo == NIHIL)
@@ -739,8 +798,8 @@ medulla_lineam_quaerere (constans MedullaLineae* lineae,
         redde FALSUM;
     }
     memcpy(octeti, &origo, magnitudo(octeti));
-    clavis.datum = octeti;
-    clavis.mensura = (i32)magnitudo(octeti);
+    clavis.datum    = octeti;
+    clavis.mensura  = (i32)magnitudo(octeti);
     si (!tabula_dispersa_invenire(lineae->lineae, clavis, &valor))
     {
         redde FALSUM;
@@ -757,8 +816,8 @@ medulla_lineam_quaerere (constans MedullaLineae* lineae,
         }
         alioquin
         {
-            via_out->datum = NIHIL;
-            via_out->mensura = ZEPHYRUM;
+            via_out->datum    = NIHIL;
+            via_out->mensura  = ZEPHYRUM;
         }
     }
     si (linea_out != NIHIL)

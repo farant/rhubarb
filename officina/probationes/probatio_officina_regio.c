@@ -11,10 +11,11 @@
 #include <stdio.h>
 #include <string.h>
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_regio", 1048576);
     si (!piscina)
@@ -24,12 +25,14 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: vita + basis fixa + fines
      * ======================================================== */
+
     {
         Regio* regio;
-        i8* basis;
+           i8* basis;
 
         imprimere("\n--- Probans vitam + basim fixam ---\n");
         regio = regio_generare(piscina);
@@ -58,14 +61,16 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: globalia - cumulus cum ordinatione
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
-        i8* b;
-        i8* c;
+           i8* a;
+           i8* b;
+           i8* c;
 
         imprimere("\n--- Probans globalia ---\n");
         CREDO_NON_NIHIL (regio);
@@ -95,12 +100,14 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: stiva - fines intra regionem
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* stiva;
+           i8* stiva;
 
         imprimere("\n--- Probans stivam ---\n");
         stiva = (i8*)regio_stiva_initium(regio);
@@ -114,15 +121,17 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: acervus - ordinatio + reusus LIFO + scissio
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
-        i8* b;
-        i8* c;
-        i8* iterum;
+           i8* a;
+           i8* b;
+           i8* c;
+           i8* iterum;
 
         imprimere("\n--- Probans acervum ---\n");
 
@@ -162,13 +171,15 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: liberare - validitas
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
-        i8 alienus[64];
+           i8* a;
+           i8  alienus[64];
 
         imprimere("\n--- Probans validitatem liberationis ---\n");
 
@@ -190,12 +201,14 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: custodia - venenum
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
+           i8* a;
 
         imprimere("\n--- Probans custodiam (venenum) ---\n");
         CREDO_FALSUM (regio_custodia(regio));
@@ -215,13 +228,15 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: reallocare
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
-        i8* b;
+           i8* a;
+           i8* b;
 
         imprimere("\n--- Probans reallocare ---\n");
 
@@ -246,13 +261,15 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: census
      * ======================================================== */
+
     {
         Regio* regio = regio_generare(piscina);
-        i8* a;
-        i8* b;
+           i8* a;
+           i8* b;
 
         imprimere("\n--- Probans censum ---\n");
 

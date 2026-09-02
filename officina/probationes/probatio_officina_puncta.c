@@ -20,19 +20,22 @@
     "officina/probationes/fixa/machinula/vocationes.medulla"
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -40,8 +43,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     long longitudo;
     constans character* radix = getenv("RHUBARB_RADIX");
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
     plagula = fopen(via, "rb");
@@ -56,7 +59,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -72,7 +75,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 }
 
 interior s32
-_functionem_quaerere (constans Conexio* conexio,
+_functionem_quaerere (
+      constans Conexio* conexio,
     constans character* titulus)
 {
     s32 index = conexio_symbolum_quaerere(conexio, _ch(titulus));
@@ -96,7 +100,7 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
-    b32 successus;
+        b32  successus;
 
     imprimere("\n========================================\n");
     imprimere("PROBATIONES OFFICINA PUNCTA (M3)\n");
@@ -112,8 +116,8 @@ principale (vacuum)
     credo_aperire(piscina);
 
     {
-        chorda textus = _plagulam_legere(piscina, VIA_FIXTURAE);
-        i32 linea_erroris = ZEPHYRUM;
+        chorda textus      = _plagulam_legere(piscina, VIA_FIXTURAE);
+        i32 linea_erroris  = ZEPHYRUM;
         MedullaModulus* modulus;
         Regio* regio;
         Conexio* conexio;
@@ -127,8 +131,8 @@ principale (vacuum)
         modulus = medulla_textum_legere(piscina, textus,
             &linea_erroris);
         CREDO_NON_NIHIL (modulus);
-        regio = regio_generare(piscina);
-        conexio = conexio_creare(piscina, regio);
+        regio    = regio_generare(piscina);
+        conexio  = conexio_creare(piscina, regio);
         CREDO_VERUM (conexio_modulum_addere(conexio, modulus));
         CREDO_VERUM (conexio_nectere(conexio));
         machinula = machinula_creare(piscina, conexio, regio);
@@ -137,9 +141,9 @@ principale (vacuum)
         {
             redde I;
         }
-        index_main = _functionem_quaerere(conexio, "main");
-        index_addens = _functionem_quaerere(conexio, "addens");
-        index_geminare = _functionem_quaerere(conexio, "geminare");
+        index_main      = _functionem_quaerere(conexio, "main");
+        index_addens    = _functionem_quaerere(conexio, "addens");
+        index_geminare  = _functionem_quaerere(conexio, "geminare");
         CREDO_VERUM (index_main >= ZEPHYRUM);
         CREDO_VERUM (index_addens >= ZEPHYRUM);
         CREDO_VERUM (index_geminare >= ZEPHYRUM);
@@ -188,9 +192,9 @@ principale (vacuum)
         /* --- punctum in main: pausa ante exsecutionem --- */
         imprimere("\n--- Probans punctum in main ---\n");
         {
-            s32 functio_visa = -I;
-            i32 instructio_visa = ZEPHYRUM;
-            i64 valor = ZEPHYRUM;
+            s32 functio_visa     = -I;
+            i32 instructio_visa  = ZEPHYRUM;
+            i64 valor            = ZEPHYRUM;
 
             CREDO_VERUM (machinula_punctum_ponere(machinula,
                 index_main, IV));
@@ -245,9 +249,9 @@ principale (vacuum)
         /* --- punctum in vocato (profunditas 2) --- */
         imprimere("\n--- Probans punctum in vocato ---\n");
         {
-            s32 functio_visa = -I;
-            i32 instructio_visa = (i32)-I;
-            i64 valor = ZEPHYRUM;
+            s32 functio_visa     = -I;
+            i32 instructio_visa  = (i32)-I;
+            i64 valor            = ZEPHYRUM;
 
             CREDO_VERUM (machinula_punctum_ponere(machinula,
                 index_addens, ZEPHYRUM));

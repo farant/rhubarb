@@ -12,19 +12,22 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -32,8 +35,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     long longitudo;
     constans character* radix = getenv("RHUBARB_RADIX");
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
     plagula = fopen(via, "rb");
@@ -48,7 +51,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -64,7 +67,9 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 }
 
 interior vacuum
-_plagulam_scribere (constans character* via_partis, chorda contenta)
+_plagulam_scribere (
+    constans character* via_partis,
+                chorda  contenta)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -83,8 +88,11 @@ _plagulam_scribere (constans character* via_partis, chorda contenta)
 }
 
 interior MedullaModulus*
-_demittere (Piscina* piscina, SilvaPiscina* piscina_silvae,
-    chorda fons, constans character* titulus)
+_demittere (
+               Piscina* piscina,
+          SilvaPiscina* piscina_silvae,
+                chorda  fons,
+    constans character* titulus)
 {
     SilvaParsura* parsura = silva_c89_parsare(piscina_silvae,
         "probatio.c", (constans character*)fons.datum, fons.mensura,
@@ -104,15 +112,18 @@ _demittere (Piscina* piscina, SilvaPiscina* piscina_silvae,
 }
 
 interior vacuum
-_plagulam_probare (Piscina* piscina, SilvaPiscina* piscina_silvae,
-    constans character* via_fontis, constans character* via_aurei,
+_plagulam_probare (
+               Piscina* piscina,
+          SilvaPiscina* piscina_silvae,
+    constans character* via_fontis,
+    constans character* via_aurei,
     constans character* titulus)
 {
-    chorda fons = _plagulam_legere(piscina, via_fontis);
+            chorda  fons = _plagulam_legere(piscina, via_fontis);
     MedullaModulus* modulus;
-    chorda scriptura;
-    i32 i;
-    i32 m;
+            chorda  scriptura;
+               i32  i;
+               i32  m;
 
     imprimere("\n--- Probans demissionem: %s ---\n", via_fontis);
     CREDO_VERUM (fons.mensura > ZEPHYRUM);
@@ -139,7 +150,7 @@ _plagulam_probare (Piscina* piscina, SilvaPiscina* piscina_silvae,
     CREDO_VERUM (scriptura.mensura > ZEPHYRUM);
     /* vectis lectoris: scriptura byte-idem per circulum */
     {
-        i32 linea = ZEPHYRUM;
+                   i32  linea = ZEPHYRUM;
         MedullaModulus* iterum = medulla_textum_legere(piscina,
             scriptura, &linea);
 
@@ -168,7 +179,8 @@ _plagulam_probare (Piscina* piscina, SilvaPiscina* piscina_silvae,
     }
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
     SilvaPiscina* piscina_silvae;
@@ -218,9 +230,9 @@ s32 principale (vacuum)
             MedullaFunctio** functio =
                 (MedullaFunctio**)xar_obtinere(modulus->functiones,
                     ZEPHYRUM);
-            constans MedullaBloccus* bloccus;
+               constans MedullaBloccus* bloccus;
             constans MedullaInstructio* ultima;
-            i32 n;
+                                   i32  n;
 
             CREDO_NON_NIHIL (functio);
             CREDO_AEQUALIS_I32 ((i32)xar_numerus(
@@ -267,7 +279,7 @@ s32 principale (vacuum)
                 (constans MedullaInstructio*)xar_obtinere(
                     bloccus->instructiones, ZEPHYRUM);
             chorda via;
-            i32 linea = ZEPHYRUM;
+               i32 linea = ZEPHYRUM;
 
             CREDO_NON_NIHIL ((constans vacuum*)instructio->origo);
             CREDO_VERUM (medulla_lineam_quaerere(lineae,

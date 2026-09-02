@@ -13,19 +13,22 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -33,8 +36,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     long longitudo;
     constans character* radix = getenv("RHUBARB_RADIX");
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
     plagula = fopen(via, "rb");
@@ -49,7 +52,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -66,12 +69,15 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 
 /* textus -> machinula parata (regio/conexio recentes) */
 interior Machinula*
-_machinulam_parare (Piscina* piscina, chorda textus, Regio** regio_out)
+_machinulam_parare (
+    Piscina*  piscina,
+     chorda   textus,
+      Regio** regio_out)
 {
-    i32 linea_erroris = ZEPHYRUM;
+               i32  linea_erroris = ZEPHYRUM;
     MedullaModulus* modulus = medulla_textum_legere(piscina, textus,
         &linea_erroris);
-    Regio* regio;
+      Regio* regio;
     Conexio* conexio;
 
     si (modulus == NIHIL)
@@ -79,9 +85,9 @@ _machinulam_parare (Piscina* piscina, chorda textus, Regio** regio_out)
         imprimere("FRACTA lectio (linea %d)\n", (int)linea_erroris);
         redde NIHIL;
     }
-    regio = regio_generare(piscina);
-    conexio = conexio_creare(piscina, regio);
-    si (!conexio_modulum_addere(conexio, modulus)
+    regio    = regio_generare(piscina);
+    conexio  = conexio_creare(piscina, regio);
+    si (   !conexio_modulum_addere(conexio, modulus)
         || !conexio_nectere(conexio))
     {
         redde NIHIL;
@@ -90,10 +96,11 @@ _machinulam_parare (Piscina* piscina, chorda textus, Regio** regio_out)
     redde machinula_creare(piscina, conexio, regio);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_machinula",
         33554432);
@@ -104,9 +111,11 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: fixturae per-familiam - omnes $main -> 42
      * ======================================================== */
+
     {
         constans character* fixturae[] = {
             "officina/probationes/fixa/machinula/arithmetica.medulla",
@@ -125,8 +134,8 @@ s32 principale (vacuum)
         imprimere("\n--- Probans fixturas (exsecutio -> 42) ---\n");
         per (i = ZEPHYRUM; i < numerus_fixturarum; i++)
         {
-            chorda textus = _plagulam_legere(piscina, fixturae[i]);
-            Regio* regio = NIHIL;
+            chorda textus  = _plagulam_legere(piscina, fixturae[i]);
+            Regio* regio   = NIHIL;
             Machinula* machinula;
             MachinulaExitus exitus;
 
@@ -138,7 +147,7 @@ s32 principale (vacuum)
                 perge;
             }
             exitus = machinula_currere(machinula, _ch("main"));
-            si (exitus.genus != MACHINULA_BENE
+            si (   exitus.genus != MACHINULA_BENE
                 || exitus.codex != (s64)XLII)
             {
                 imprimere("FRACTA fixtura %s (genus %d codex"
@@ -153,13 +162,15 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: sistere exsecutum - halitus cum causa
      * ======================================================== */
+
     {
         chorda textus = _plagulam_legere(piscina,
             "officina/probationes/fixa/machinula/sistere.medulla");
-        Regio* regio = NIHIL;
+            Regio* regio = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;
@@ -173,9 +184,11 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: decipula vocata + exit aedificatum + stiva
      * ======================================================== */
+
     {
         constans character* textus_literis =
             "modulus \"halitus.medulla\"\n"
@@ -194,8 +207,8 @@ s32 principale (vacuum)
             "@initium:\n"
             "    %t1 = vocare.s32 $abyssus\n"
             "    redde %t1\n";
-        chorda textus = _ch(textus_literis);
-        Regio* regio = NIHIL;
+           chorda  textus  = _ch(textus_literis);
+            Regio* regio   = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;
@@ -220,10 +233,12 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: aedificata memoriae + formator (snprintf in
      * regionem)
      * ======================================================== */
+
     {
         constans character* textus_literis =
             "modulus \"aedificata.medulla\"\n"
@@ -243,8 +258,8 @@ s32 principale (vacuum)
             "    octeti 25642b25 64000000\n";
         /* forma = \"%d+%d\" -> \"6+7\" (3 octeti); 3+... n=3, l=3;
          * (3+3)*3 = 18... immo XVIII non XLII - proba directa */
-        chorda textus = _ch(textus_literis);
-        Regio* regio = NIHIL;
+           chorda  textus  = _ch(textus_literis);
+            Regio* regio   = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;
@@ -259,11 +274,13 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: time aedificatum (ISO) - scriptura per
      * monstratorem eodem valore ac fructus (vocatio UNA, ergo
      * determinatum); valor post 2020; ordo monotonus
      * ======================================================== */
+
     {
         constans character* textus_literis =
             "modulus \"tempus.medulla\"\n"
@@ -281,8 +298,8 @@ s32 principale (vacuum)
             "    %t2 = et.i32 %t1, %ordo\n"
             "    %t3 = multiplicare.s32 %t2, 42\n"
             "    redde %t3\n";
-        chorda textus = _ch(textus_literis);
-        Regio* regio = NIHIL;
+           chorda  textus  = _ch(textus_literis);
+            Regio* regio   = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;
@@ -297,12 +314,14 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: ansae plagularum (M2d) - vita tota: fopen/fputc/
      * fwrite/ftell/fclose -> stat(st_size @96!) -> fopen/fread ->
      * remove -> gettimeofday/getcwd. 'A'+'B'+'C' = 198; omnia
      * recta -> 42. Via sub officina/build/ (CWD = radix).
      * ======================================================== */
+
     {
         constans character* textus_literis =
             "modulus \"ansae.medulla\"\n"
@@ -376,8 +395,8 @@ s32 principale (vacuum)
             "    octeti 72000000\n"
             "datum $bc_datum magnitudo 4 ordinatio 1\n"
             "    octeti 42430000\n";
-        chorda textus = _ch(textus_literis);
-        Regio* regio = NIHIL;
+           chorda  textus  = _ch(textus_literis);
+            Regio* regio   = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;
@@ -392,13 +411,15 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: numeratores + apex stivae
      * ======================================================== */
+
     {
         chorda textus = _plagulam_legere(piscina,
             "officina/probationes/fixa/machinula/fluxus.medulla");
-        Regio* regio = NIHIL;
+            Regio* regio = NIHIL;
         Machinula* machinula = _machinulam_parare(piscina, textus,
             &regio);
         MachinulaExitus exitus;

@@ -9,10 +9,12 @@
 #include <string.h>
 
 integer
-principale (integer argc, character** argv)
+principale (
+      integer   argc,
+    character** argv)
 {
     LegatusConfiguratio cfg;
-    integer i;
+                integer i;
 
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
     si (argc > ZEPHYRUM)
@@ -27,20 +29,20 @@ principale (integer argc, character** argv)
         {
             cfg.modus_mcp = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-radix") == ZEPHYRUM
-            && i + I < argc)
+        alioquin si (   strcmp(argv[i], "-radix") == ZEPHYRUM
+                     && i + I < argc)
         {
             cfg.radix = argv[i + I];
             i++;
         }
-        alioquin si (strcmp(argv[i], "-signum") == ZEPHYRUM
-            && i + I < argc)
+        alioquin si (   strcmp(argv[i], "-signum") == ZEPHYRUM
+                     && i + I < argc)
         {
             cfg.signum = argv[i + I];
             i++;
         }
-        alioquin si (strcmp(argv[i], "-manifestum") == ZEPHYRUM
-            && i + I < argc)
+        alioquin si (   strcmp(argv[i], "-manifestum") == ZEPHYRUM
+                     && i + I < argc)
         {
             cfg.via_manifesti = argv[i + I];
             i++;
@@ -49,8 +51,8 @@ principale (integer argc, character** argv)
         {
             cfg.renatus = VERUM;
         }
-        alioquin si (strcmp(argv[i], "-renovator") == ZEPHYRUM
-            && i + I < argc)
+        alioquin si (   strcmp(argv[i], "-renovator") == ZEPHYRUM
+                     && i + I < argc)
         {
             cfg.via_renovatoris = argv[i + I];
             i++;

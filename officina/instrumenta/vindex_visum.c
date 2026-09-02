@@ -10,9 +10,9 @@ _stilus_nativus (vacuum)
 {
     TesseraStilus s;
 
-    s.color_litterae = TESSERA_COLOR_NATIVUS;
-    s.color_fundi = TESSERA_COLOR_NATIVUS;
-    s.ornamenta = 0U;
+    s.color_litterae  = TESSERA_COLOR_NATIVUS;
+    s.color_fundi     = TESSERA_COLOR_NATIVUS;
+    s.ornamenta       = 0U;
     redde s;
 }
 
@@ -36,38 +36,49 @@ _stilus_crassus (vacuum)
 
 /* scribere praecisum ad latitudinem tabulae */
 interior vacuum
-_scribe (TesseraOpus* opus, integer x, integer y, chorda textus,
-    integer latitudo_maxima, TesseraStilus stilus)
+_scribe (
+      TesseraOpus* opus,
+          integer  x,
+          integer  y,
+           chorda  textus,
+          integer  latitudo_maxima,
+    TesseraStilus  stilus)
 {
     TesseraChorda tc;
-    i32 mensura = textus.mensura;
+              i32 mensura = textus.mensura;
 
     si (latitudo_maxima <= 0 || textus.datum == NIHIL) redde;
     si ((integer)mensura > latitudo_maxima)
     {
         mensura = (i32)latitudo_maxima;
     }
-    tc.datum = (insignatus character*)textus.datum;
-    tc.mensura = mensura;
+    tc.datum    = (insignatus character*)textus.datum;
+    tc.mensura  = mensura;
     tessera_scribere(opus, x, y, tc, stilus);
 }
 
 interior vacuum
-_scribe_literis (TesseraOpus* opus, integer x, integer y,
-    constans character* literis, integer latitudo_maxima,
-    TesseraStilus stilus)
+_scribe_literis (
+           TesseraOpus* opus,
+               integer  x,
+               integer  y,
+    constans character* literis,
+               integer  latitudo_maxima,
+         TesseraStilus  stilus)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     _scribe(opus, x, y, c, latitudo_maxima, stilus);
 }
 
 interior b32
-_linea_punctata (constans VindexConspectus* conspectus, i32 linea)
+_linea_punctata (
+    constans VindexConspectus* conspectus,
+                          i32  linea)
 {
     i32 i;
 
@@ -82,19 +93,23 @@ _linea_punctata (constans VindexConspectus* conspectus, i32 linea)
 }
 
 interior vacuum
-_tabulam_fontis_pingere (constans VindexConspectus* conspectus,
-    TesseraOpus* opus, integer x, integer y, integer latitudo,
-    integer altitudo)
+_tabulam_fontis_pingere (
+    constans VindexConspectus* conspectus,
+                  TesseraOpus* opus,
+                      integer  x,
+                      integer  y,
+                      integer  latitudo,
+                      integer  altitudo)
 {
     integer v;
 
     per (v = 0; v < altitudo; v++)
     {
-        i32 linea = conspectus->linea_prima + (i32)v;
+              i32 linea = conspectus->linea_prima + (i32)v;
         character numeri[16];
-        b32 currens;
+              b32 currens;
 
-        si ((integer)linea > (integer)conspectus->numerus_linearum
+        si (   (integer)linea > (integer)conspectus->numerus_linearum
             || linea < I)
         {
             frange;
@@ -122,9 +137,13 @@ _tabulam_fontis_pingere (constans VindexConspectus* conspectus,
 }
 
 interior vacuum
-_columnam_dextram_pingere (constans VindexConspectus* conspectus,
-    TesseraOpus* opus, integer x, integer y, integer latitudo,
-    integer altitudo)
+_columnam_dextram_pingere (
+    constans VindexConspectus* conspectus,
+                  TesseraOpus* opus,
+                      integer  x,
+                      integer  y,
+                      integer  latitudo,
+                      integer  altitudo)
 {
     integer altitudo_stivae = altitudo / 2;
     integer v;
@@ -147,8 +166,8 @@ _columnam_dextram_pingere (constans VindexConspectus* conspectus,
 
     /* tabula mutabilis (infra) */
     {
-        integer y_infra = y + altitudo_stivae;
-        integer altitudo_infra = altitudo - altitudo_stivae - 1;
+        integer y_infra         = y + altitudo_stivae;
+        integer altitudo_infra  = altitudo - altitudo_stivae - 1;
         constans character* tituli[] = {
             " VARIABILIA ", " ANULUS ", " PUNCTA ", " MEMORIA "
         };
@@ -209,8 +228,9 @@ _columnam_dextram_pingere (constans VindexConspectus* conspectus,
 }
 
 vacuum
-vindex_visum_pingere (constans VindexConspectus* conspectus,
-    TesseraOpus* opus)
+vindex_visum_pingere (
+    constans VindexConspectus* conspectus,
+                  TesseraOpus* opus)
 {
     integer latitudo = (integer)tessera_latitudo(opus);
     integer altitudo = (integer)tessera_altitudo(opus);
@@ -221,8 +241,8 @@ vindex_visum_pingere (constans VindexConspectus* conspectus,
     {
         redde;   /* fenestra nimis parva - nihil pingere */
     }
-    lat_sinistra = (latitudo * 62) / 100;
-    alt_media = altitudo - 3;
+    lat_sinistra  = (latitudo * 62) / 100;
+    alt_media     = altitudo - 3;
     tessera_purgare(opus, _stilus_nativus());
 
     /* vectis tituli */

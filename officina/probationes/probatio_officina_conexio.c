@@ -16,7 +16,9 @@
 #include <string.h>
 
 interior chorda
-_plagulam_legere (Piscina* piscina, constans character* via_partis)
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via_partis)
 {
     character via[CCLVI];
     FILE* plagula;
@@ -24,8 +26,8 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     long longitudo;
     constans character* radix = getenv("RHUBARB_RADIX");
 
-    fructus.datum = NIHIL;
-    fructus.mensura = ZEPHYRUM;
+    fructus.datum    = NIHIL;
+    fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
     plagula = fopen(via, "rb");
@@ -40,7 +42,7 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
     {
         fructus.datum = (i8*)piscina_allocare(piscina,
             (memoriae_index)longitudo);
-        si (fructus.datum != NIHIL
+        si (   fructus.datum != NIHIL
             && fread(fructus.datum, I, (memoriae_index)longitudo,
                    plagula) == (memoriae_index)longitudo)
         {
@@ -56,40 +58,46 @@ _plagulam_legere (Piscina* piscina, constans character* via_partis)
 }
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior MedullaInstructio
-_instructio (s32 op, s32 typus, s32 destinatio,
-    MedullaOperandum a, MedullaOperandum b)
+_instructio (
+                 s32 op,
+                 s32 typus,
+                 s32 destinatio,
+    MedullaOperandum a,
+    MedullaOperandum b)
 {
     MedullaInstructio instructio;
 
     memset(&instructio, ZEPHYRUM, magnitudo(MedullaInstructio));
-    instructio.op = op;
-    instructio.typus = typus;
-    instructio.typus_secundus = MEDULLA_TYPUS_NIHIL;
-    instructio.destinatio = destinatio;
-    instructio.extra_index = -I;
-    instructio.extra_numerus = ZEPHYRUM;
-    instructio.a = a;
-    instructio.b = b;
-    instructio.c = medulla_op_nihil();
-    instructio.origo = NIHIL;
+    instructio.op              = op;
+    instructio.typus           = typus;
+    instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
+    instructio.destinatio      = destinatio;
+    instructio.extra_index     = -I;
+    instructio.extra_numerus   = ZEPHYRUM;
+    instructio.a               = a;
+    instructio.b               = b;
+    instructio.c               = medulla_op_nihil();
+    instructio.origo           = NIHIL;
     redde instructio;
 }
 
 /* functio minima terminata: $titulus () -> s32 { redde 0 } */
 interior vacuum
-_functionem_minimam (MedullaModulus* modulus,
+_functionem_minimam (
+        MedullaModulus* modulus,
     constans character* titulus)
 {
     MedullaFunctio* functio = medulla_functionem_creare(modulus,
@@ -102,10 +110,11 @@ _functionem_minimam (MedullaModulus* modulus,
     medulla_emittere(functio, bloccus, &instructio);
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_conexio",
         16777216);
@@ -116,18 +125,20 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: nexus duorum modulorum - totum iter
      * ======================================================== */
+
     {
-        Regio* regio = regio_generare(piscina);
-        Conexio* conexio = conexio_creare(piscina, regio);
+                 Regio* regio    = regio_generare(piscina);
+               Conexio* conexio  = conexio_creare(piscina, regio);
         MedullaModulus* modulus_a;
         MedullaModulus* modulus_b;
-        s32 sym_adiutor_a;
-        s32 sym_verba_a;
-        s32 sym_adiutor_b;
-        i8 addendum_octeti[8];
+                   s32  sym_adiutor_a;
+                   s32  sym_verba_a;
+                   s32  sym_adiutor_b;
+                    i8  addendum_octeti[8];
 
         imprimere("\n--- Probans nexum duorum modulorum ---\n");
         CREDO_NON_NIHIL (regio);
@@ -204,7 +215,7 @@ s32 principale (vacuum)
         {
             vacuum* sedes = conexio_sedes_quaerere(conexio,
                 _ch("adiutor"));
-            constans ConexioDescriptor* descriptor = sedes;
+             constans ConexioDescriptor* descriptor = sedes;
             constans ConexioFunctioNexa* nexa;
 
             CREDO_NON_NIHIL (sedes);
@@ -297,12 +308,14 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: definitio duplex - fractura honesta
      * ======================================================== */
+
     {
-        Regio* regio = regio_generare(piscina);
-        Conexio* conexio = conexio_creare(piscina, regio);
+                 Regio* regio    = regio_generare(piscina);
+               Conexio* conexio  = conexio_creare(piscina, regio);
         MedullaModulus* modulus_a = medulla_modulum_creare(piscina,
             _ch("a.c"));
         MedullaModulus* modulus_b = medulla_modulum_creare(piscina,
@@ -319,14 +332,16 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: via lectoris - textus -> modulus -> nexus
      * ======================================================== */
+
     {
-        Regio* regio = regio_generare(piscina);
-        Conexio* conexio = conexio_creare(piscina, regio);
-        MedullaModulus* modulus;
-        i32 linea_erroris;
+                     Regio* regio    = regio_generare(piscina);
+                   Conexio* conexio  = conexio_creare(piscina, regio);
+            MedullaModulus* modulus;
+                       i32  linea_erroris;
         constans character* textus =
             "modulus \"summa.medulla\"\n"
             "\n"
@@ -366,10 +381,12 @@ s32 principale (vacuum)
         regio_destruere(regio);
     }
 
+
     /* ========================================================
      * PROBARE: fixturae machinulae - onerantur + nectuntur
      * (exsecutio ad M2b; hic vectis M2a: ONERATUR)
      * ======================================================== */
+
     {
         constans character* fixturae[] = {
             "officina/probationes/fixa/machinula/arithmetica.medulla",
@@ -408,8 +425,8 @@ s32 principale (vacuum)
                 perge;
             }
 
-            regio = regio_generare(piscina);
-            conexio = conexio_creare(piscina, regio);
+            regio    = regio_generare(piscina);
+            conexio  = conexio_creare(piscina, regio);
             CREDO_VERUM (conexio_modulum_addere(conexio, modulus));
             CREDO_VERUM (conexio_nectere(conexio));
             CREDO_NON_NIHIL (conexio_sedes_quaerere(conexio,

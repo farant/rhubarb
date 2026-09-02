@@ -13,41 +13,47 @@
 #include <string.h>
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior MedullaInstructio
-_instructio (s32 op, s32 typus, s32 destinatio,
-    MedullaOperandum a, MedullaOperandum b)
+_instructio (
+                 s32 op,
+                 s32 typus,
+                 s32 destinatio,
+    MedullaOperandum a,
+    MedullaOperandum b)
 {
     MedullaInstructio instructio;
 
     memset(&instructio, ZEPHYRUM, magnitudo(MedullaInstructio));
-    instructio.op = op;
-    instructio.typus = typus;
-    instructio.typus_secundus = MEDULLA_TYPUS_NIHIL;
-    instructio.destinatio = destinatio;
-    instructio.extra_index = -I;
-    instructio.extra_numerus = ZEPHYRUM;
-    instructio.a = a;
-    instructio.b = b;
-    instructio.c = medulla_op_nihil();
-    instructio.origo = NIHIL;
+    instructio.op              = op;
+    instructio.typus           = typus;
+    instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
+    instructio.destinatio      = destinatio;
+    instructio.extra_index     = -I;
+    instructio.extra_numerus   = ZEPHYRUM;
+    instructio.a               = a;
+    instructio.b               = b;
+    instructio.c               = medulla_op_nihil();
+    instructio.origo           = NIHIL;
     redde instructio;
 }
 
-s32 principale (vacuum)
+s32
+principale (vacuum)
 {
     Piscina* piscina;
-    b32 praeteritus;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_medulla",
         16777216);
@@ -58,22 +64,24 @@ s32 principale (vacuum)
     }
     credo_aperire(piscina);
 
+
     /* ========================================================
      * PROBARE: $summa - exemplum vocabularii §VIII per fabricam
      * ======================================================== */
+
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio.c"));
-        MedullaFunctio* functio;
-        s32 r_n;
-        s32 r_s;
-        s32 r_i;
-        s32 r_c;
-        s32 b_initium;
-        s32 b_proba;
-        s32 b_corpus;
-        s32 b_finis;
-        MedullaInstructio instructio;
+           MedullaFunctio* functio;
+                      s32  r_n;
+                      s32  r_s;
+                      s32  r_i;
+                      s32  r_c;
+                      s32  b_initium;
+                      s32  b_proba;
+                      s32  b_corpus;
+                      s32  b_finis;
+        MedullaInstructio  instructio;
 
         imprimere("\n--- Probans $summa (fabrica) ---\n");
         CREDO_NON_NIHIL (modulus);
@@ -91,10 +99,10 @@ s32 principale (vacuum)
         r_c = medulla_registrum_novum(functio, _ch("c"));
         CREDO_AEQUALIS_S32 (r_c, III);
 
-        b_initium = medulla_bloccum_creare(functio, _ch("initium"));
-        b_proba   = medulla_bloccum_creare(functio, _ch("proba"));
-        b_corpus  = medulla_bloccum_creare(functio, _ch("corpus"));
-        b_finis   = medulla_bloccum_creare(functio, _ch("finis"));
+        b_initium  = medulla_bloccum_creare(functio, _ch("initium"));
+        b_proba    = medulla_bloccum_creare(functio, _ch("proba"));
+        b_corpus   = medulla_bloccum_creare(functio, _ch("corpus"));
+        b_finis    = medulla_bloccum_creare(functio, _ch("finis"));
         CREDO_AEQUALIS_S32 (b_initium, ZEPHYRUM);
         CREDO_AEQUALIS_S32 (b_finis, III);
 
@@ -205,8 +213,8 @@ s32 principale (vacuum)
         instructio.op = (s32)MEDULLA_OP_NUMERUS;
         CREDO_VERUM (!medulla_emittere(functio, b_initium,
             &instructio));
-        instructio.op = MEDULLA_OP_MOVERE;
-        instructio.destinatio = XCIX;
+        instructio.op          = MEDULLA_OP_MOVERE;
+        instructio.destinatio  = XCIX;
         CREDO_VERUM (!medulla_emittere(functio, b_initium,
             &instructio));
 
@@ -217,18 +225,20 @@ s32 principale (vacuum)
         CREDO_VERUM (!medulla_op_terminator(MEDULLA_OP_ADDERE));
     }
 
+
     /* ========================================================
      * PROBARE: symbola internata + vocare cum stiva + sistere
      * ======================================================== */
+
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio2.c"));
-        MedullaFunctio* functio;
-        s32 s_impressio;
-        s32 s_iterum;
-        s32 b_solum;
-        s32 causa;
-        MedullaInstructio instructio;
+           MedullaFunctio* functio;
+                      s32  s_impressio;
+                      s32  s_iterum;
+                      s32  b_solum;
+                      s32  causa;
+        MedullaInstructio  instructio;
 
         imprimere("\n--- Probans symbola + vocare + sistere ---\n");
         CREDO_NON_NIHIL (modulus);
@@ -264,10 +274,10 @@ s32 principale (vacuum)
         /* vocare $imprimere, args in stiva */
         {
             MedullaOperandum argumenta[II];
-            s32 initium_stivae;
+                         s32 initium_stivae;
 
-            argumenta[ZEPHYRUM] = medulla_op_immediatum(42);
-            argumenta[I] = medulla_op_immediatum_f(1.5);
+            argumenta[ZEPHYRUM]  = medulla_op_immediatum(42);
+            argumenta[I]         = medulla_op_immediatum_f(1.5);
             initium_stivae = medulla_operanda_addere(functio,
                 argumenta, II);
             CREDO_AEQUALIS_S32 (initium_stivae, ZEPHYRUM);
@@ -276,8 +286,8 @@ s32 principale (vacuum)
                 MEDULLA_TYPUS_S32, -I,
                 medulla_op_symbolum(s_impressio),
                 medulla_op_nihil());
-            instructio.extra_index = initium_stivae;
-            instructio.extra_numerus = II;
+            instructio.extra_index    = initium_stivae;
+            instructio.extra_numerus  = II;
             CREDO_VERUM (medulla_emittere(functio, b_solum,
                 &instructio));
         }
@@ -320,14 +330,16 @@ s32 principale (vacuum)
         }
     }
 
+
     /* ========================================================
      * PROBARE: data + imago + relocationes (C8)
      * ======================================================== */
+
     {
         MedullaModulus* modulus = medulla_modulum_creare(piscina,
             _ch("probatio3.c"));
         MedullaDatum* datum;
-        s32 s_finis;
+                 s32  s_finis;
 
         imprimere("\n--- Probans data + relocationes ---\n");
         CREDO_NON_NIHIL (modulus);

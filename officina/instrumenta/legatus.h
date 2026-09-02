@@ -66,8 +66,8 @@ nomen structura {
  * (cliens mortuus) AUT fluxus corruptus. cfg NIHIL licet. */
 s32
 legatus_currere (
-    FILE*                        intra,
-    FILE*                        extra,
+                            FILE* intra,
+                            FILE* extra,
     constans LegatusConfiguratio* cfg);
 
 #endif /* LEGATUS_H */

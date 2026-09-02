@@ -44,23 +44,26 @@ hic_manens IndiciumScriptor* scriptor_indicii = NIHIL;
 hic_manens constans character* radix_repositorii = ".";
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 interior character*
-_plagulam_legere_cruda (Piscina* piscina, constans character* via,
-    long* mensura_fructus)
+_plagulam_legere_cruda (
+               Piscina* piscina,
+    constans character* via,
+                  long* mensura_fructus)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura;
+         FILE* pl = fopen(via, "rb");
+         long  mensura;
     character* fons;
 
     si (pl == NIHIL) redde NIHIL;
@@ -69,7 +72,7 @@ _plagulam_legere_cruda (Piscina* piscina, constans character* via,
     fseek(pl, 0L, SEEK_SET);
     fons = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura + 1L));
-    si (fons == NIHIL
+    si (   fons == NIHIL
         || fread(fons, I, (memoriae_index)mensura, pl)
             != (memoriae_index)mensura)
     {
@@ -81,12 +84,14 @@ _plagulam_legere_cruda (Piscina* piscina, constans character* via,
     redde fons;
 }
 
+
 /* ==================================================
  * capita praeparare (exemplar interpretare)
  * ================================================== */
 
 interior b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -96,13 +101,16 @@ _praetermittendum (constans character* titulus)
 }
 
 interior vacuum
-_caput_praebere (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via,
+_caput_praebere (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via,
     constans character* titulus)
 {
-    long mensura_l = 0L;
+         long  mensura_l = 0L;
     character* textus;
-    chorda clavis;
+       chorda  clavis;
 
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis)) redde;
@@ -116,8 +124,11 @@ _caput_praebere (SilvaContextus* ctx, Piscina* piscina,
 }
 
 interior vacuum
-_capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
-    TabulaDispersa* visa, constans character* via)
+_capita_praeparare (
+        SilvaContextus* ctx,
+               Piscina* piscina,
+        TabulaDispersa* visa,
+    constans character* via)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -125,7 +136,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     si (dir == NIHIL) redde;
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.') perge;
@@ -143,7 +154,7 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 _caput_praebere(ctx, piscina, visa, via_plena,
@@ -154,17 +165,19 @@ _capita_praeparare (SilvaContextus* ctx, Piscina* piscina,
     closedir(dir);
 }
 
+
 /* ==================================================
  * demissio unius plagulae + collectio indicii (onerator vindicis:
  * via oneris interpretare + coctio in fenestra collige-ante-destrue)
  * ================================================== */
 
 interior MedullaModulus*
-_plagulam_demittere (constans SilvaContextus* ctx,
-    constans character* via_parsurae)
+_plagulam_demittere (
+    constans SilvaContextus* ctx,
+         constans character* via_parsurae)
 {
     character via_lecta[CCLVI];
-    long mensura_l = 0L;
+         long mensura_l = 0L;
     SilvaPiscina* piscina_arboris;
     character* fons;
     SilvaParsura* parsura;
@@ -193,7 +206,7 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     parsura = silva_c89_parsare_cum_contextu(piscina_arboris, ctx,
         via_parsurae, fons, (insignatus integer)mensura_l,
         oraculum);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura == NIHIL || !parsura->successus
         || parsura->numerus_errorum > ZEPHYRUM)
     {
         silva_piscina_destruere(piscina_arboris);
@@ -228,11 +241,11 @@ _plagulam_demittere (constans SilvaContextus* ctx,
     silva_piscina_destruere(piscina_arboris);
     si (modulus != NIHIL)
     {
-        MedullaModulus** locellus = xar_addere(moduli_mundi);
-        MedullaLineae** locellus_l = xar_addere(lineae_mundi);
+        MedullaModulus** locellus    = xar_addere(moduli_mundi);
+         MedullaLineae** locellus_l  = xar_addere(lineae_mundi);
 
-        *locellus = modulus;
-        *locellus_l = lineae;
+        *locellus    = modulus;
+        *locellus_l  = lineae;
     }
     redde modulus;
 }
@@ -263,8 +276,8 @@ principale (vacuum)
         33554432);
     piscina_silvae_ctx = silva_piscina_generare_dynamicum(
         "vindex_silva", 8388608);
-    si (piscina == NIHIL || piscina_ctx == NIHIL
-        || piscina_officinae == NIHIL
+    si (   piscina            == NIHIL || piscina_ctx == NIHIL
+        || piscina_officinae  == NIHIL
         || piscina_silvae_ctx == NIHIL)
     {
         imprimere("FRACTA: piscinae\n");
@@ -284,14 +297,14 @@ principale (vacuum)
     /* --- systema ISO+POSIX (exemplar interpretare) --- */
     imprimere("\n--- Praeparans systema + capita ---\n");
     {
-        character via_iso[CCLVI];
-        character via_posix[CCLVI];
-        long m_iso = 0L;
-        long m_posix = 0L;
+        character  via_iso[CCLVI];
+        character  via_posix[CCLVI];
+             long  m_iso    = 0L;
+             long  m_posix  = 0L;
         character* fons_iso;
         character* fons_posix;
         character* fons_sys;
-        long mensura_sys;
+             long  mensura_sys;
 
         sprintf(via_iso, "%s/silva/fontes/systema_c89.h",
             radix_repositorii);
@@ -344,15 +357,15 @@ principale (vacuum)
 
     /* --- nexus + machinula + indicium scriptum-RECLUSUM --- */
     {
-        Regio* regio = regio_generare(piscina_ctx);
-        Conexio* conexio = conexio_creare(piscina_ctx, regio);
-        Machinula* machinula;
+                 Regio* regio    = regio_generare(piscina_ctx);
+               Conexio* conexio  = conexio_creare(piscina_ctx, regio);
+             Machinula* machinula;
         IndiciumLector* lector;
-        character via_indicii[CCLVI];
-        i32 k;
-        s32 functio_main = -I;
-        i32 instructio_puncti = ZEPHYRUM;
-        chorda via_suitae = _ch(VIA_SUITAE);
+             character  via_indicii[CCLVI];
+                   i32  k;
+                   s32  functio_main       = -I;
+                   i32  instructio_puncti  = ZEPHYRUM;
+                chorda  via_suitae         = _ch(VIA_SUITAE);
 
         CREDO_NON_NIHIL (regio);
         CREDO_NON_NIHIL (conexio);
@@ -407,8 +420,8 @@ principale (vacuum)
             {
                 redde I;
             }
-            functio_main = (s32)situs[ZEPHYRUM].functio;
-            instructio_puncti = situs[ZEPHYRUM].instructio;
+            functio_main       = (s32)situs[ZEPHYRUM].functio;
+            instructio_puncti  = situs[ZEPHYRUM].instructio;
             /* linea CREDO in main: cross-probatio nominis */
             CREDO_AEQUALIS_I32 ((i32)indicium_functionem_quaerere(
                 lector, _ch("main")), (i32)functio_main);
@@ -420,8 +433,8 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)machinula_pergere(machinula),
             (i32)MACHINULA_PAUSA);
         {
-            s32 functio_visa = -I;
-            i32 instructio_visa = (i32)-I;
+            s32 functio_visa     = -I;
+            i32 instructio_visa  = (i32)-I;
 
             CREDO_AEQUALIS_I32 (machinula_tabulata_numerus(
                 machinula), I);
@@ -477,7 +490,7 @@ principale (vacuum)
                 chorda titulus = indicium_chorda(lector,
                     varia[v].titulus);
 
-                si (titulus.mensura == IV
+                si (   titulus.mensura                   == IV
                     && memcmp(titulus.datum, "usus", IV) == 0)
                 {
                     i64 valor = (i64)-I;
@@ -509,10 +522,10 @@ principale (vacuum)
         {
             i32 profunditas_introitus = machinula_tabulata_numerus(
                 machinula);
-            long gradus_facti = 0L;
-            i32 linea_nova = ZEPHYRUM;
-            s32 functio_visa = -I;
-            i32 instructio_visa = ZEPHYRUM;
+            long gradus_facti     = 0L;
+             i32 linea_nova       = ZEPHYRUM;
+             s32 functio_visa     = -I;
+             i32 instructio_visa  = ZEPHYRUM;
 
             dum (gradus_facti < CUSTOS_GRADUUM)
             {
@@ -536,7 +549,7 @@ principale (vacuum)
                         (i32)functio_visa, instructio_visa,
                         &acies);
 
-                    si (n > ZEPHYRUM
+                    si (   n > ZEPHYRUM
                         && acies[ZEPHYRUM].linea
                             != (i32)LINEA_CREDO)
                     {
@@ -588,8 +601,8 @@ principale (vacuum)
             {
                 long gradus_facti = 0L;
 
-                dum (machinula_tabulata_numerus(machinula) >= II
-                    && gradus_facti < CUSTOS_GRADUUM)
+                dum (   machinula_tabulata_numerus(machinula) >= II
+                     && gradus_facti < CUSTOS_GRADUUM)
                 {
                     si (!machinula_gradus(machinula))
                     {

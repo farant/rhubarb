@@ -45,11 +45,11 @@ nomen structura {
     i32     puncta_numerus;
     chorda  titulus_fontis;
     /* status */
-    chorda  modus;                 /* "PAUSA"/"BENE"/"VITIUM"... */
-    chorda  positio;               /* linea positionis (acies) */
-    chorda  status;                /* nuntius lineae imae */
-    chorda  imperium;              /* buffer lineae ':' */
-    b32     imperium_apertum;
+    chorda modus;                 /* "PAUSA"/"BENE"/"VITIUM"... */
+    chorda positio;               /* linea positionis (acies) */
+    chorda status;                /* nuntius lineae imae */
+    chorda imperium;              /* buffer lineae ':' */
+       b32 imperium_apertum;
     /* columna dextra */
     constans VindexOrdoTabulati* tabulata;
     i32     tabulata_numerus;
@@ -66,7 +66,9 @@ nomen structura {
 
 /* pingit conspectum totum in opus (purgat + scribit; praesentare
  * vocantis est) */
-vacuum vindex_visum_pingere (constans VindexConspectus* conspectus,
-    TesseraOpus* opus);
+vacuum
+vindex_visum_pingere (
+    constans VindexConspectus* conspectus,
+                  TesseraOpus* opus);
 
 #endif /* VINDEX_VISUM_H */

@@ -35,16 +35,22 @@ _radix (vacuum)
 }
 
 interior vacuum
-_scribe (FILE* pl, Piscina* p, constans character* corpus)
+_scribe (
+                  FILE* pl,
+               Piscina* p,
+    constans character* corpus)
 {
     tabellarius_epistulam_scribere(pl, chorda_ex_literis(corpus, p));
 }
 
 interior TabellariusNuntius
-_lege (FILE* pl, Piscina* p, b32* bene)
+_lege (
+       FILE* pl,
+    Piscina* p,
+        b32* bene)
 {
-    b32 finitus = FALSUM;
-    chorda corpus = tabellarius_epistulam_legere(pl, p, &finitus);
+    b32 finitus    = FALSUM;
+    chorda corpus  = tabellarius_epistulam_legere(pl, p, &finitus);
     TabellariusNuntius n;
 
     memset(&n, ZEPHYRUM, magnitudo(TabellariusNuntius));
@@ -59,17 +65,23 @@ _lege (FILE* pl, Piscina* p, b32* bene)
 
 /* framing lineis (modus MCP, LEGATI) */
 interior vacuum
-_scribe_lineam (FILE* pl, Piscina* p, constans character* corpus)
+_scribe_lineam (
+                  FILE* pl,
+               Piscina* p,
+    constans character* corpus)
 {
     (vacuum)tabellarius_lineam_scribere(pl,
         chorda_ex_literis(corpus, p));
 }
 
 interior TabellariusNuntius
-_lege_lineam (FILE* pl, Piscina* p, b32* bene)
+_lege_lineam (
+       FILE* pl,
+    Piscina* p,
+        b32* bene)
 {
-    b32 finitus = FALSUM;
-    chorda corpus = tabellarius_lineam_legere(pl, p, &finitus);
+    b32 finitus    = FALSUM;
+    chorda corpus  = tabellarius_lineam_legere(pl, p, &finitus);
     TabellariusNuntius n;
 
     memset(&n, ZEPHYRUM, magnitudo(TabellariusNuntius));
@@ -83,7 +95,9 @@ _lege_lineam (FILE* pl, Piscina* p, b32* bene)
 }
 
 interior b32
-_chorda_est (chorda c, constans character* litterae)
+_chorda_est (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -92,7 +106,9 @@ _chorda_est (chorda c, constans character* litterae)
 }
 
 interior b32
-_chorda_desinit (chorda c, constans character* litterae)
+_chorda_desinit (
+                chorda  c,
+    constans character* litterae)
 {
     memoriae_index m = strlen(litterae);
 
@@ -103,7 +119,8 @@ _chorda_desinit (chorda c, constans character* litterae)
 
 /* textus effectus instrumenti MCP: result.content[0].text */
 interior chorda
-_mcp_textus (TabellariusNuntius* n)
+_mcp_textus (
+    TabellariusNuntius* n)
 {
     redde json_ad_chorda(json_objectum_capere(
         json_tabulatum_obtinere(json_objectum_capere(
@@ -112,7 +129,9 @@ _mcp_textus (TabellariusNuntius* n)
 }
 
 interior b32
-_chorda_continet (chorda c, constans character* particula)
+_chorda_continet (
+                chorda  c,
+    constans character* particula)
 {
     memoriae_index m = strlen(particula);
     memoriae_index i;
@@ -134,7 +153,9 @@ _chorda_continet (chorda c, constans character* particula)
 /* extensio lineae capitis "corpus X (via:A-B)" -> A,B (manu -
  * chorda non NUL-terminata, sscanf vetitum) */
 interior b32
-_extensio_capitis (chorda c, insignatus integer* la,
+_extensio_capitis (
+                chorda  c,
+    insignatus integer* la,
     insignatus integer* lb)
 {
     memoriae_index prima = (memoriae_index)c.mensura;
@@ -161,10 +182,10 @@ _extensio_capitis (chorda c, insignatus integer* la,
         redde FALSUM;
     }
     {
-        insignatus integer v = ZEPHYRUM;
-        insignatus integer a_v = ZEPHYRUM;
-        b32 visum = FALSUM;
-        b32 a_visum = FALSUM;
+        insignatus integer v        = ZEPHYRUM;
+        insignatus integer a_v      = ZEPHYRUM;
+                       b32 visum    = FALSUM;
+                       b32 a_visum  = FALSUM;
 
         per (i = colon + I; i < prima; i++)
         {
@@ -178,10 +199,10 @@ _extensio_capitis (chorda c, insignatus integer* la,
             }
             alioquin si (ch == '-' && visum && !a_visum)
             {
-                a_v = v;
-                a_visum = VERUM;
-                v = ZEPHYRUM;
-                visum = FALSUM;
+                a_v      = v;
+                a_visum  = VERUM;
+                v        = ZEPHYRUM;
+                visum    = FALSUM;
             }
             alioquin si (ch == ')')
             {
@@ -205,13 +226,14 @@ _extensio_capitis (chorda c, insignatus integer* la,
 /* "vocationes N" sequentia non crescens (ordinatio descendens)?
  * saltem una inveniatur oportet */
 interior b32
-_vocationes_descendentes (chorda c)
+_vocationes_descendentes (
+    chorda c)
 {
-    constans character* clavis = "vocationes ";
-    memoriae_index cl = strlen(clavis);
-    memoriae_index i = ZEPHYRUM;
-    insignatus integer prior = ZEPHYRUM;
-    b32 prima = VERUM;
+    constans character* clavis  = "vocationes ";
+        memoriae_index  cl      = strlen(clavis);
+        memoriae_index  i       = ZEPHYRUM;
+    insignatus integer  prior   = ZEPHYRUM;
+                   b32  prima   = VERUM;
 
     si (c.datum == NIHIL || (memoriae_index)c.mensura < cl)
     {
@@ -222,11 +244,11 @@ _vocationes_descendentes (chorda c)
         si (memcmp(c.datum + i, clavis, cl) == ZEPHYRUM)
         {
             insignatus integer v = ZEPHYRUM;
-            memoriae_index j = i + cl;
+                memoriae_index j = i + cl;
 
-            dum (j < (memoriae_index)c.mensura
-                && (character)c.datum[j] >= '0'
-                && (character)c.datum[j] <= '9')
+            dum (   j < (memoriae_index)c.mensura
+                 && (character)c.datum[j] >= '0'
+                 && (character)c.datum[j] <= '9')
             {
                 v = v * (insignatus integer)X
                     + (insignatus integer)((character)c.datum[j]
@@ -237,9 +259,9 @@ _vocationes_descendentes (chorda c)
             {
                 redde FALSUM;
             }
-            prior = v;
-            prima = FALSUM;
-            i = j;
+            prior  = v;
+            prima  = FALSUM;
+            i      = j;
         }
         alioquin
         {
@@ -251,11 +273,12 @@ _vocationes_descendentes (chorda c)
 
 /* numerus diagnosticorum publicationis (-1 = non publicatio) */
 interior s32
-_diagnostica_numerus (TabellariusNuntius* n)
+_diagnostica_numerus (
+    TabellariusNuntius* n)
 {
     JsonValor* lista;
 
-    si (n->genus != TABELLARIUS_NUNTIATIO
+    si (   n->genus  != TABELLARIUS_NUNTIATIO
         || !_chorda_est(n->methodus,
                "textDocument/publishDiagnostics")
         || n->params == NIHIL)
@@ -271,7 +294,8 @@ _diagnostica_numerus (TabellariusNuntius* n)
 }
 
 interior s64
-_error_codex (TabellariusNuntius* n)
+_error_codex (
+    TabellariusNuntius* n)
 {
     JsonValor* error_v;
     JsonValor* codex_v;
@@ -292,12 +316,13 @@ _error_codex (TabellariusNuntius* n)
 /* verum si aliquod diagnosticum publicationis particulam in
  * nuntio fert */
 interior b32
-_diagnosticum_continet (TabellariusNuntius* n,
+_diagnosticum_continet (
+    TabellariusNuntius* n,
     constans character* particula)
 {
-    JsonValor* lista;
-    i32 k;
-    memoriae_index pm = strlen(particula);
+         JsonValor* lista;
+               i32  k;
+    memoriae_index  pm = strlen(particula);
 
     si (n->genus != TABELLARIUS_NUNTIATIO || n->params == NIHIL)
     {
@@ -337,21 +362,23 @@ _diagnosticum_continet (TabellariusNuntius* n,
     redde FALSUM;
 }
 
+
 /* ==================================================
  * ORDO PLENUS: initialize -> didOpen violatio -> didChange purum
  * -> exclusum -> $/tacitum -> methodus ignota -> shutdown -> exit
  * ================================================== */
 
 interior vacuum
-probatio_ordo_plenus (Piscina* p)
+probatio_ordo_plenus (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[2048];
-    LegatusConfiguratio cfg;
-    s32 exitus;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[2048];
+    LegatusConfiguratio  cfg;
+                    s32  exitus;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans ordinem plenum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -458,10 +485,10 @@ probatio_ordo_plenus (Piscina* p)
     n = _lege(extra, p, &bene);
     CREDO_VERUM(bene);
     {
-        s32 numerus = _diagnostica_numerus(&n);
+              s32  numerus = _diagnostica_numerus(&n);
         JsonValor* lista;
-        b32 violatio_inventa = FALSUM;
-        s32 i;
+              b32  violatio_inventa = FALSUM;
+              s32  i;
 
         CREDO_VERUM(numerus >= (s32)I);
         CREDO_VERUM(json_ad_integer(json_objectum_capere(n.params,
@@ -476,7 +503,7 @@ probatio_ordo_plenus (Piscina* p)
                 "start");
             JsonValor* finis_r = json_objectum_capere(regio, "end");
 
-            si (json_ad_integer(json_objectum_capere(diag,
+            si (   json_ad_integer(json_objectum_capere(diag,
                     "severity")) == I
                 && json_ad_integer(json_objectum_capere(initium,
                        "line")) == ZEPHYRUM
@@ -535,7 +562,8 @@ probatio_ordo_plenus (Piscina* p)
 }
 
 interior b32
-_resultatum_nullum (TabellariusNuntius* n)
+_resultatum_nullum (
+    TabellariusNuntius* n)
 {
     JsonValor* resultatum;
 
@@ -549,7 +577,8 @@ _resultatum_nullum (TabellariusNuntius* n)
 }
 
 interior b32
-_hover_valor_est (TabellariusNuntius* n,
+_hover_valor_est (
+    TabellariusNuntius* n,
     constans character* litterae)
 {
     JsonValor* resultatum;
@@ -576,14 +605,15 @@ _hover_valor_est (TabellariusNuntius* n,
 /* valor hoveris particulam continet? (vicinitas: indicium, non
  * aequalitas exacta) */
 interior b32
-_hover_valor_continet (TabellariusNuntius* n,
+_hover_valor_continet (
+    TabellariusNuntius* n,
     constans character* particula)
 {
-    JsonValor* resultatum;
-    JsonValor* contenta;
-    chorda valor;
-    memoriae_index pm = strlen(particula);
-    i32 j;
+         JsonValor* resultatum;
+         JsonValor* contenta;
+            chorda  valor;
+    memoriae_index  pm = strlen(particula);
+               i32  j;
 
     si (n->radix == NIHIL)
     {
@@ -617,7 +647,8 @@ _hover_valor_continet (TabellariusNuntius* n,
 /* definitio: Location unum AUT tabulatum (gradus corporis v0.1b)
  * -> primum */
 interior JsonValor*
-_sedes_prima (TabellariusNuntius* n)
+_sedes_prima (
+    TabellariusNuntius* n)
 {
     JsonValor* resultatum;
 
@@ -637,20 +668,22 @@ _sedes_prima (TabellariusNuntius* n)
     redde resultatum;
 }
 
+
 /* ==================================================
  * HOVER + DOCUMENTSYMBOL (utf-8): sedes usus, litterale, nihil,
  * symbola plagulae
  * ================================================== */
 
 interior vacuum
-probatio_hover_symbola (Piscina* p)
+probatio_hover_symbola (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[2048];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[2048];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans hover + documentSymbol ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -982,8 +1015,8 @@ probatio_hover_symbola (Piscina* p)
         CREDO_VERUM(resultatum != NIHIL
             && json_est_tabulatum(resultatum)
             && json_tabulatum_numerus(resultatum) == I);
-        introitus = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
-        ab = json_objectum_capere(introitus, "from");
+        introitus  = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        ab         = json_objectum_capere(introitus, "from");
         CREDO_VERUM(_chorda_est(json_ad_chorda(
             json_objectum_capere(ab, "name")), "probatio_vocans"));
         CREDO_VERUM(json_ad_integer(json_objectum_capere(
@@ -1003,8 +1036,8 @@ probatio_hover_symbola (Piscina* p)
         CREDO_VERUM(resultatum != NIHIL
             && json_est_tabulatum(resultatum)
             && json_tabulatum_numerus(resultatum) == I);
-        introitus = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
-        ad = json_objectum_capere(introitus, "to");
+        introitus  = json_tabulatum_obtinere(resultatum, ZEPHYRUM);
+        ad         = json_objectum_capere(introitus, "to");
         CREDO_VERUM(_chorda_est(json_ad_chorda(
             json_objectum_capere(ad, "name")), "probatio_functio"));
         CREDO_VERUM(_chorda_desinit(json_ad_chorda(
@@ -1044,20 +1077,22 @@ probatio_hover_symbola (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * DEFINITIO IN CAPUT (saltus trans-plagularis primus): usus
  * functionis capitis -> Location in include/piscina.h
  * ================================================== */
 
 interior vacuum
-probatio_definitio_capitis (Piscina* p)
+probatio_definitio_capitis (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[1024];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[1024];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans definitionem in caput ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1108,10 +1143,10 @@ probatio_definitio_capitis (Piscina* p)
     CREDO_VERUM(bene);
     {
         JsonValor* sedes_v = _sedes_prima(&n);
-        chorda uri;
+           chorda  uri;
         /* cum tsv: corpus .c primum; sine tsv (arbor recens):
          * gradus declarationis solus -> caput */
-        FILE* tsv = fopen("build/nexus.tsv", "rb");
+                      FILE* tsv = fopen("build/nexus.tsv", "rb");
         constans character* suffixum = tsv != NIHIL
             ? "lib/piscina.c" : "include/piscina.h";
         memoriae_index m = strlen(suffixum);
@@ -1135,20 +1170,22 @@ probatio_definitio_capitis (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * UTF-16: remappa exiens (columnae diagnostici post BMP-signum)
  * + iniens (positio hover post signum)
  * ================================================== */
 
 interior vacuum
-probatio_utf16 (Piscina* p)
+probatio_utf16 (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[2048];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[2048];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans remappam utf-16 ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1209,9 +1246,9 @@ probatio_utf16 (Piscina* p)
         JsonValor* regio;
 
         CREDO_VERUM(_diagnostica_numerus(&n) == (s32)I);
-        lista = json_objectum_capere(n.params, "diagnostics");
-        diag = json_tabulatum_obtinere(lista, ZEPHYRUM);
-        regio = json_objectum_capere(diag, "range");
+        lista  = json_objectum_capere(n.params, "diagnostics");
+        diag   = json_tabulatum_obtinere(lista, ZEPHYRUM);
+        regio  = json_objectum_capere(diag, "range");
         CREDO_VERUM(json_ad_integer(json_objectum_capere(
             json_objectum_capere(regio, "start"), "line"))
             == ZEPHYRUM);
@@ -1237,20 +1274,22 @@ probatio_utf16 (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * SYNTAXIS POSITA (chunk D): nodus erroris post declarationem
  * validam -> linea 1 (degenerata daret 0)
  * ================================================== */
 
 interior vacuum
-probatio_syntaxis_posita (Piscina* p)
+probatio_syntaxis_posita (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[1024];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[1024];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans syntaxim positam ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1285,7 +1324,7 @@ probatio_syntaxis_posita (Piscina* p)
     n = _lege(extra, p, &bene);   /* publicatio */
     CREDO_VERUM(bene);
     {
-        s32 numerus = _diagnostica_numerus(&n);
+              s32  numerus = _diagnostica_numerus(&n);
         JsonValor* lista = json_objectum_capere(n.params,
             "diagnostics");
         b32 posita_inventa = FALSUM;
@@ -1299,7 +1338,7 @@ probatio_syntaxis_posita (Piscina* p)
             chorda nuntius = json_ad_chorda(
                 json_objectum_capere(diag, "message"));
 
-            si (nuntius.mensura >= (i32)VIII
+            si (   nuntius.mensura >= (i32)VIII
                 && memcmp(nuntius.datum, "syntaxis", VIII)
                     == ZEPHYRUM)
             {
@@ -1321,20 +1360,22 @@ probatio_syntaxis_posita (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * LAMINA .h (chunk D): didSave capitis -> reaedificatio ordine
  * C11 + re-publicatio documentorum apertorum; didSave .c tacitum
  * ================================================== */
 
 interior vacuum
-probatio_caput_servatum (Piscina* p)
+probatio_caput_servatum (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[1024];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[1024];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans caput servatum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1405,19 +1446,21 @@ probatio_caput_servatum (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * ANTE INITIALIZE: petitio -> -32002; EOF sine exit -> 1
  * ================================================== */
 
 interior vacuum
-probatio_ante_initium (Piscina* p)
+probatio_ante_initium (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
-    s32 exitus;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
+                    s32  exitus;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans ante initium ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1448,6 +1491,7 @@ probatio_ante_initium (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * FLUXUS VACUUS: exitus 1 statim
  * ================================================== */
@@ -1455,9 +1499,9 @@ probatio_ante_initium (Piscina* p)
 interior vacuum
 probatio_fluxus_vacuus (vacuum)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
 
     imprimere("--- Probans fluxum vacuum ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1467,18 +1511,20 @@ probatio_fluxus_vacuus (vacuum)
     fclose(extra);
 }
 
+
 /* ==================================================
  * QUISQUILIAE: analysis fracta -> -32700 cum id nullo
  * ================================================== */
 
 interior vacuum
-probatio_quisquiliae (Piscina* p)
+probatio_quisquiliae (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans quisquilias ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1499,7 +1545,9 @@ probatio_quisquiliae (Piscina* p)
     fclose(extra);
 }
 
+
 /* ================================================== */
+
 
 /* ==================================================
  * MACRA (v0.2): hover invocationis (gradus originis VINCIT typum
@@ -1508,14 +1556,15 @@ probatio_quisquiliae (Piscina* p)
  * ================================================== */
 
 interior vacuum
-probatio_macra (Piscina* p)
+probatio_macra (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[2048];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[2048];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans macra (index v0.2) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -1737,6 +1786,7 @@ probatio_macra (Piscina* p)
     fclose(extra);
 }
 
+
 /* ==================================================
  * VIGILIA SUI (lib/vigilia): binarium residens fontibus
  * posterius -> diagnosticum in publicatione. Manifestum fictum
@@ -1746,15 +1796,18 @@ probatio_macra (Piscina* p)
  * ================================================== */
 
 interior vacuum
-_vigilia_agere (Piscina* p, constans character* via_binarii,
-    constans character* via_manifesti, b32 stalus_expectatus)
+_vigilia_agere (
+               Piscina* p,
+    constans character* via_binarii,
+    constans character* via_manifesti,
+                   b32  stalus_expectatus)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[2048];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[2048];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
     sprintf(corpus,
@@ -1791,8 +1844,8 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
 
     rewind(intra);
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
-    cfg.binarium_via = via_binarii;
-    cfg.via_manifesti = via_manifesti;
+    cfg.binarium_via   = via_binarii;
+    cfg.via_manifesti  = via_manifesti;
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
     rewind(extra);
 
@@ -1844,7 +1897,8 @@ _vigilia_agere (Piscina* p, constans character* via_binarii,
 }
 
 interior vacuum
-probatio_vigilia (Piscina* p)
+probatio_vigilia (
+    Piscina* p)
 {
     constans character* via_binarii =
         "officina/build/probatio_vigilia_binarium";
@@ -1872,8 +1926,8 @@ probatio_vigilia (Piscina* p)
         CREDO_NON_NIHIL(pl);
         fputc('x', pl);
         fclose(pl);
-        tempora.actime = 1000000L;
-        tempora.modtime = 1000000L;
+        tempora.actime   = 1000000L;
+        tempora.modtime  = 1000000L;
         CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
     }
     _vigilia_agere(p, via_binarii, via_manifesti, VERUM);
@@ -1901,7 +1955,8 @@ probatio_vigilia (Piscina* p)
  * cruda excerptorem in HANC plagulam evocaret (lex scanner-
  * textualis, quinta sedes vitata). */
 interior vacuum
-probatio_praeparatio_derivata (Piscina* p)
+probatio_praeparatio_derivata (
+    Piscina* p)
 {
     constans character* fons_posix_utens =
         "#include <sys/time.h>\n"
@@ -1914,9 +1969,9 @@ probatio_praeparatio_derivata (Piscina* p)
         "    t.tv_usec = 0;\n"
         "    return (long)t.tv_sec;\n"
         "}\n";
-    Praeparatio praeparatio;
-    PraeparatorConfiguratio cfg;
-    Piscina* piscina_capitum;
+                Praeparatio  praeparatio;
+    PraeparatorConfiguratio  cfg;
+                    Piscina* piscina_capitum;
 
     (vacuum)p;
     imprimere("--- Probans derivationem lexici (design B) ---\n");
@@ -1927,8 +1982,8 @@ probatio_praeparatio_derivata (Piscina* p)
 
     /* sine derivatione: struct timeval ignotum -> diagnostica */
     memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-    cfg.radix = _radix();
-    cfg.sine_capitibus = I;   /* capita non attinent - velocius */
+    cfg.radix           = _radix();
+    cfg.sine_capitibus  = I;   /* capita non attinent - velocius */
     CREDO_VERUM(praeparator_praeparare(&praeparatio,
         piscina_capitum, &cfg) != ZEPHYRUM);
     CREDO_NON_NIHIL(praeparatio.fons_posix);   /* SEMPER lectus */
@@ -1954,9 +2009,9 @@ probatio_praeparatio_derivata (Piscina* p)
 
     /* cum derivatione: sectio sys/time.h intrat -> munda */
     memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-    cfg.radix = _radix();
-    cfg.sine_capitibus = I;
-    cfg.fons_plagulae = fons_posix_utens;
+    cfg.radix           = _radix();
+    cfg.sine_capitibus  = I;
+    cfg.fons_plagulae   = fons_posix_utens;
     cfg.mensura_plagulae =
         (insignatus integer)strlen(fons_posix_utens);
     cfg.via_plagulae = "specimen.c";
@@ -1991,9 +2046,9 @@ probatio_praeparatio_derivata (Piscina* p)
             "/* %cexterna%c\n * int x;\n */\n"
             "int proba_f(void) { return 0; }\n", '<', '>');
         memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-        cfg.radix = _radix();
-        cfg.sine_capitibus = I;
-        cfg.fons_plagulae = fons_fractus;
+        cfg.radix           = _radix();
+        cfg.sine_capitibus  = I;
+        cfg.fons_plagulae   = fons_fractus;
         cfg.mensura_plagulae =
             (insignatus integer)strlen(fons_fractus);
         cfg.via_plagulae = "specimen_fractum.c";
@@ -2009,13 +2064,14 @@ probatio_praeparatio_derivata (Piscina* p)
  * parentis pulsat (POSIX), quod tempora capitum notorum sola
  * videre non possunt */
 interior vacuum
-probatio_capita_nova (Piscina* p)
+probatio_capita_nova (
+    Piscina* p)
 {
     constans character* via_capitis =
         "officina/probationes/fixa/specimen_caput_novum.h";
-    Praeparatio praeparatio;
-    PraeparatorConfiguratio cfg;
-    Piscina* piscina_capitum;
+                Praeparatio  praeparatio;
+    PraeparatorConfiguratio  cfg;
+                    Piscina* piscina_capitum;
 
     (vacuum)p;
     imprimere("--- Probans inventionem capitum novorum ---\n");
@@ -2025,8 +2081,8 @@ probatio_capita_nova (Piscina* p)
         "probatio_capita_nova", 8388608);
     CREDO_NON_NIHIL(piscina_capitum);
     memset(&cfg, ZEPHYRUM, magnitudo(PraeparatorConfiguratio));
-    cfg.radix = _radix();
-    cfg.cum_latina = I;
+    cfg.radix       = _radix();
+    cfg.cum_latina  = I;
     CREDO_VERUM(praeparator_praeparare(&praeparatio,
         piscina_capitum, &cfg) != ZEPHYRUM);
     /* mundus recens: nihil stalum */
@@ -2046,8 +2102,8 @@ probatio_capita_nova (Piscina* p)
     {
         structura utimbuf tempora;
 
-        tempora.actime = 1000000L;
-        tempora.modtime = 1000000L;
+        tempora.actime   = 1000000L;
+        tempora.modtime  = 1000000L;
         CREDO_VERUM(utime("officina/probationes/fixa", &tempora)
             == ZEPHYRUM);
     }
@@ -2085,8 +2141,8 @@ probatio_capita_nova (Piscina* p)
             fclose(pl);
         }
         /* tempus alterum deterministicum (granularitas secundi) */
-        tempora.actime = 2000000L;
-        tempora.modtime = 2000000L;
+        tempora.actime   = 2000000L;
+        tempora.modtime  = 2000000L;
         CREDO_VERUM(utime(via_capitis, &tempora) == ZEPHYRUM);
     }
     {
@@ -2107,6 +2163,7 @@ probatio_capita_nova (Piscina* p)
     remove(via_capitis);
 }
 
+
 /* ==================================================
  * RECENSIO (pars 2): plagula clausa numquam-in-tsv -> outgoingCalls
  * per superpositionem _recensere; editio + mtime alia -> iudicium
@@ -2121,7 +2178,9 @@ probatio_capita_nova (Piscina* p)
  * _extentum_tituli definitionem praefert. Vide legatus.worklog.md
  * 2026-07-14. */
 interior vacuum
-_stala_scribere (constans character* via, b32 cum_altero)
+_stala_scribere (
+    constans character* via,
+                   b32  cum_altero)
 {
     FILE* pl = fopen(via, "wb");
 
@@ -2150,7 +2209,8 @@ _stala_scribere (constans character* via, b32 cum_altero)
 }
 
 interior s32
-_vocata_numerus (TabellariusNuntius* n)
+_vocata_numerus (
+    TabellariusNuntius* n)
 {
     JsonValor* resultatum = json_objectum_capere(n->radix,
         "result");
@@ -2163,15 +2223,16 @@ _vocata_numerus (TabellariusNuntius* n)
 }
 
 interior vacuum
-probatio_recensio (Piscina* p)
+probatio_recensio (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    character corpus[1024];
-    character via_stalae[DXII];
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+              character  corpus[1024];
+              character  via_stalae[DXII];
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans recensionem (gradus III) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -2253,8 +2314,8 @@ probatio_recensio (Piscina* p)
     {
         structura utimbuf tempora;
 
-        tempora.actime = 1500000000L;
-        tempora.modtime = 1500000000L;
+        tempora.actime   = 1500000000L;
+        tempora.modtime  = 1500000000L;
         (vacuum)utime(via_stalae, &tempora);
     }
 
@@ -2277,19 +2338,21 @@ probatio_recensio (Piscina* p)
     remove(via_stalae);
 }
 
+
 /* ==================================================
  * MODUS MCP (LEGATI pars 1): framing lineis + handshake +
  * tools/list + sceleta tools/call; EOF = exitus mundus 0
  * ================================================== */
 
 interior vacuum
-probatio_mcp (Piscina* p)
+probatio_mcp (
+    Piscina* p)
 {
-    FILE* intra = tmpfile();
-    FILE* extra = tmpfile();
-    LegatusConfiguratio cfg;
-    b32 bene = FALSUM;
-    TabellariusNuntius n;
+                   FILE* intra = tmpfile();
+                   FILE* extra = tmpfile();
+    LegatusConfiguratio  cfg;
+                    b32  bene = FALSUM;
+     TabellariusNuntius  n;
 
     imprimere("--- Probans modum MCP (LEGATI) ---\n");
     CREDO_VERUM(intra != NIHIL && extra != NIHIL);
@@ -2433,8 +2496,8 @@ probatio_mcp (Piscina* p)
 
     rewind(intra);
     memset(&cfg, ZEPHYRUM, magnitudo(LegatusConfiguratio));
-    cfg.modus_mcp = VERUM;
-    cfg.radix = _radix();
+    cfg.modus_mcp  = VERUM;
+    cfg.radix      = _radix();
     CREDO_VERUM(legatus_currere(intra, extra, &cfg) == ZEPHYRUM);
     rewind(extra);
 

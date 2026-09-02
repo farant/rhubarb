@@ -16,7 +16,7 @@
 
 nomen structura {
     constans character* titulus;
-    s64                 valor;
+                   s64  valor;
 } CellaNota;
 
 /* symbola data externa nota (M2a; M2c/M2d addent) - ansae opacae
@@ -30,53 +30,60 @@ interior constans CellaNota CELLAE_NOTAE[] = {
 #define CELLAE_NOTAE_NUMERUS 4
 
 structura Conexio {
-    Piscina*        piscina;
-    Regio*          regio;
-    Xar*            moduli;            /* MedullaModulus* */
-    Xar*            symbola;           /* ConexioSymbolum valore */
+           Piscina* piscina;
+             Regio* regio;
+               Xar* moduli;            /* MedullaModulus* */
+               Xar* symbola;           /* ConexioSymbolum valore */
     TabulaDispersa* index_titulorum;   /* titulus -> index+1 */
-    Xar*            translationes;     /* s32* (una per modulum) */
-    Xar*            functiones_nexae;  /* ConexioFunctioNexa valore */
-    Xar*            decipulae;         /* chorda valore (tituli) */
-    b32             nexum;
-    chorda          querela;
-    chorda          querela_symbolum;
-    i32             numerus_fracturarum;
-    i32             numerus_datorum;
-    i32             numerus_cellarum;
+               Xar* translationes;     /* s32* (una per modulum) */
+               Xar* functiones_nexae;  /* ConexioFunctioNexa valore */
+               Xar* decipulae;         /* chorda valore (tituli) */
+               b32  nexum;
+            chorda  querela;
+            chorda  querela_symbolum;
+               i32  numerus_fracturarum;
+               i32  numerus_datorum;
+               i32  numerus_cellarum;
 };
+
 
 /* ==================================================
  * Auxilia
  * ================================================== */
 
 interior chorda
-_titulum_copiare (Conexio* conexio, chorda titulus)
+_titulum_copiare (
+    Conexio* conexio,
+     chorda  titulus)
 {
-    chorda copia;
-    i8* datum;
+    chorda  copia;
+        i8* datum;
 
     datum = piscina_allocare(conexio->piscina,
         (memoriae_index)titulus.mensura);
     memcpy(datum, titulus.datum, (memoriae_index)titulus.mensura);
-    copia.datum = datum;
-    copia.mensura = titulus.mensura;
+    copia.datum    = datum;
+    copia.mensura  = titulus.mensura;
     redde copia;
 }
 
 interior vacuum
-_querelam_ponere (Conexio* conexio, constans character* nuntius)
+_querelam_ponere (
+               Conexio* conexio,
+    constans character* nuntius)
 {
     conexio->querela = chorda_ex_literis(nuntius, conexio->piscina);
 }
 
 /* invenire aut creare; -I in fractura allocationis */
 interior s32
-_globale_internare (Conexio* conexio, chorda titulus)
+_globale_internare (
+    Conexio* conexio,
+     chorda  titulus)
 {
-    vacuum* valor;
+             vacuum* valor;
     ConexioSymbolum* symbolum;
-    s32 index;
+                s32  index;
 
     si (tabula_dispersa_invenire(conexio->index_titulorum, titulus,
         &valor))
@@ -84,17 +91,17 @@ _globale_internare (Conexio* conexio, chorda titulus)
         redde (s32)(memoriae_index)valor - I;
     }
 
-    index = (s32)xar_numerus(conexio->symbola);
-    symbolum = xar_addere(conexio->symbola);
+    index     = (s32)xar_numerus(conexio->symbola);
+    symbolum  = xar_addere(conexio->symbola);
     si (symbolum == NIHIL)
     {
         redde -I;
     }
-    symbolum->titulus = _titulum_copiare(conexio, titulus);
-    symbolum->genus = CONEXIO_SYMBOLUM_IGNOTUM;
-    symbolum->modulus_index = -I;
-    symbolum->index_localis = -I;
-    symbolum->sedes = NIHIL;
+    symbolum->titulus        = _titulum_copiare(conexio, titulus);
+    symbolum->genus          = CONEXIO_SYMBOLUM_IGNOTUM;
+    symbolum->modulus_index  = -I;
+    symbolum->index_localis  = -I;
+    symbolum->sedes          = NIHIL;
 
     si (!tabula_dispersa_inserere(conexio->index_titulorum,
         symbolum->titulus,
@@ -105,12 +112,15 @@ _globale_internare (Conexio* conexio, chorda titulus)
     redde index;
 }
 
+
 /* ==================================================
  * Vita + nexus
  * ================================================== */
 
 Conexio*
-conexio_creare (Piscina* piscina, Regio* regio)
+conexio_creare (
+    Piscina* piscina,
+      Regio* regio)
 {
     Conexio* conexio;
 
@@ -121,8 +131,8 @@ conexio_creare (Piscina* piscina, Regio* regio)
     conexio = piscina_allocare(piscina, magnitudo(Conexio));
     memset(conexio, ZEPHYRUM, magnitudo(Conexio));
 
-    conexio->piscina = piscina;
-    conexio->regio = regio;
+    conexio->piscina  = piscina;
+    conexio->regio    = regio;
     conexio->moduli = xar_creare(piscina,
         (i32)magnitudo(MedullaModulus*));
     conexio->symbola = xar_creare(piscina,
@@ -135,7 +145,7 @@ conexio_creare (Piscina* piscina, Regio* regio)
         (i32)magnitudo(ConexioFunctioNexa));
     conexio->decipulae = xar_creare(piscina, (i32)magnitudo(chorda));
 
-    si (conexio->moduli == NIHIL || conexio->symbola == NIHIL
+    si (   conexio->moduli == NIHIL || conexio->symbola == NIHIL
         || conexio->index_titulorum == NIHIL
         || conexio->translationes == NIHIL
         || conexio->functiones_nexae == NIHIL
@@ -147,30 +157,32 @@ conexio_creare (Piscina* piscina, Regio* regio)
 }
 
 b32
-conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus)
+conexio_modulum_addere (
+           Conexio* conexio,
+    MedullaModulus* modulus)
 {
-    s32 modulus_index;
-    i32 numerus;
-    s32* translatio;
-    i32 i;
+               s32   modulus_index;
+               i32   numerus;
+               s32*  translatio;
+               i32   i;
     MedullaModulus** locellus;
-    s32** locellus_translationis;
+               s32** locellus_translationis;
 
     si (conexio == NIHIL || modulus == NIHIL || conexio->nexum)
     {
         redde FALSUM;
     }
 
-    modulus_index = (s32)xar_numerus(conexio->moduli);
-    locellus = xar_addere(conexio->moduli);
+    modulus_index  = (s32)xar_numerus(conexio->moduli);
+    locellus       = xar_addere(conexio->moduli);
     si (locellus == NIHIL)
     {
         redde FALSUM;
     }
     *locellus = modulus;
 
-    numerus = xar_numerus(modulus->symbola);
-    translatio = NIHIL;
+    numerus     = xar_numerus(modulus->symbola);
+    translatio  = NIHIL;
     si (numerus > ZEPHYRUM)
     {
         translatio = piscina_allocare(conexio->piscina,
@@ -210,9 +222,9 @@ conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus)
             {
                 _querelam_ponere(conexio,
                     "definitio duplex symboli");
-                conexio->querela_symbolum = symbolum->titulus;
-                conexio->numerus_fracturarum += I;
-                fractum = VERUM;
+                conexio->querela_symbolum     = symbolum->titulus;
+                conexio->numerus_fracturarum  += I;
+                fractum                       = VERUM;
                 perge;
             }
             symbolum->genus =
@@ -234,7 +246,9 @@ conexio_modulum_addere (Conexio* conexio, MedullaModulus* modulus)
 }
 
 interior b32
-_cellam_notam_quaerere (chorda titulus, s64* valor_out)
+_cellam_notam_quaerere (
+    chorda  titulus,
+       s64* valor_out)
 {
     i32 i;
 
@@ -250,12 +264,13 @@ _cellam_notam_quaerere (chorda titulus, s64* valor_out)
 }
 
 b32
-conexio_nectere (Conexio* conexio)
+conexio_nectere (
+    Conexio* conexio)
 {
     i32 numerus;
     i32 i;
 
-    si (conexio == NIHIL || conexio->nexum
+    si (   conexio == NIHIL || conexio->nexum
         || conexio->numerus_fracturarum > ZEPHYRUM)
     {
         redde FALSUM;
@@ -266,18 +281,18 @@ conexio_nectere (Conexio* conexio)
     per (i = ZEPHYRUM; i < numerus; i += I)
     {
         ConexioSymbolum* symbolum = xar_obtinere(conexio->symbola, i);
-        MedullaModulus* modulus;
+         MedullaModulus* modulus;
 
         si (symbolum->genus == CONEXIO_SYMBOLUM_FUNCTIO)
         {
-            ConexioDescriptor* descriptor;
+             ConexioDescriptor* descriptor;
             ConexioFunctioNexa* nexa;
-            s64 index_nexae;
+                           s64  index_nexae;
 
             modulus = *(MedullaModulus**)xar_obtinere(conexio->moduli,
                 (i32)symbolum->modulus_index);
-            index_nexae = (s64)xar_numerus(conexio->functiones_nexae);
-            nexa = xar_addere(conexio->functiones_nexae);
+            index_nexae  = (s64)xar_numerus(conexio->functiones_nexae);
+            nexa         = xar_addere(conexio->functiones_nexae);
             nexa->functio = *(MedullaFunctio**)xar_obtinere(
                 modulus->functiones, (i32)symbolum->index_localis);
             nexa->modulus_index = symbolum->modulus_index;
@@ -289,9 +304,9 @@ conexio_nectere (Conexio* conexio)
                 _querelam_ponere(conexio, "globalia exhausta");
                 redde FALSUM;
             }
-            descriptor->signum = CONEXIO_SIGNUM_INTERPRETATUM;
-            descriptor->index = index_nexae;
-            symbolum->sedes = descriptor;
+            descriptor->signum  = CONEXIO_SIGNUM_INTERPRETATUM;
+            descriptor->index   = index_nexae;
+            symbolum->sedes     = descriptor;
         }
         alioquin si (symbolum->genus == CONEXIO_SYMBOLUM_DATUM)
         {
@@ -327,16 +342,16 @@ conexio_nectere (Conexio* conexio)
                     _querelam_ponere(conexio, "globalia exhausta");
                     redde FALSUM;
                 }
-                *cella = valor_cellae;
-                symbolum->genus = CONEXIO_SYMBOLUM_CELLA;
-                symbolum->sedes = cella;
-                conexio->numerus_cellarum += I;
+                *cella                     = valor_cellae;
+                symbolum->genus            = CONEXIO_SYMBOLUM_CELLA;
+                symbolum->sedes            = cella;
+                conexio->numerus_cellarum  += I;
             }
             alioquin
             {
                 ConexioDescriptor* descriptor;
-                chorda* titulus_decipulae;
-                s64 index_decipulae;
+                           chorda* titulus_decipulae;
+                              s64  index_decipulae;
 
                 index_decipulae = (s64)xar_numerus(conexio->decipulae);
                 titulus_decipulae = xar_addere(conexio->decipulae);
@@ -349,10 +364,10 @@ conexio_nectere (Conexio* conexio)
                     _querelam_ponere(conexio, "globalia exhausta");
                     redde FALSUM;
                 }
-                descriptor->signum = CONEXIO_SIGNUM_DECIPULA;
-                descriptor->index = index_decipulae;
-                symbolum->genus = CONEXIO_SYMBOLUM_DECIPULA;
-                symbolum->sedes = descriptor;
+                descriptor->signum  = CONEXIO_SIGNUM_DECIPULA;
+                descriptor->index   = index_decipulae;
+                symbolum->genus     = CONEXIO_SYMBOLUM_DECIPULA;
+                symbolum->sedes     = descriptor;
             }
         }
     }
@@ -364,10 +379,10 @@ conexio_nectere (Conexio* conexio)
     {
         constans ConexioSymbolum* symbolum =
             xar_obtinere(conexio->symbola, i);
-        MedullaModulus* modulus;
+               MedullaModulus* modulus;
         constans MedullaDatum* datum;
-        s32* translatio;
-        i32 r;
+                          s32* translatio;
+                          i32  r;
 
         si (symbolum->genus != CONEXIO_SYMBOLUM_DATUM)
         {
@@ -388,9 +403,9 @@ conexio_nectere (Conexio* conexio)
             s32 globale = translatio[relocatio->symbolum];
             constans ConexioSymbolum* petitum =
                 xar_obtinere(conexio->symbola, (i32)globale);
-            i8* locellus = (i8*)symbolum->sedes + relocatio->offset;
-            s64 addendum;
-            s64 valor;
+             i8* locellus = (i8*)symbolum->sedes + relocatio->offset;
+            s64  addendum;
+            s64  valor;
 
             memcpy(&addendum, locellus, magnitudo(s64));
             valor = (s64)(memoriae_index)petitum->sedes + addendum;
@@ -403,23 +418,28 @@ conexio_nectere (Conexio* conexio)
 }
 
 constans chorda*
-conexio_querela (constans Conexio* conexio)
+conexio_querela (
+    constans Conexio* conexio)
 {
     redde &conexio->querela;
 }
 
 constans chorda*
-conexio_querela_symbolum (constans Conexio* conexio)
+conexio_querela_symbolum (
+    constans Conexio* conexio)
 {
     redde &conexio->querela_symbolum;
 }
+
 
 /* ==================================================
  * Quaestio
  * ================================================== */
 
 s32
-conexio_symbolum_quaerere (constans Conexio* conexio, chorda titulus)
+conexio_symbolum_quaerere (
+    constans Conexio* conexio,
+              chorda  titulus)
 {
     vacuum* valor;
 
@@ -432,19 +452,24 @@ conexio_symbolum_quaerere (constans Conexio* conexio, chorda titulus)
 }
 
 constans ConexioSymbolum*
-conexio_symbolum_obtinere (constans Conexio* conexio, s32 index)
+conexio_symbolum_obtinere (
+    constans Conexio* conexio,
+                 s32  index)
 {
     redde xar_obtinere_s(conexio->symbola, index);
 }
 
 i32
-conexio_numerus_symbolorum (constans Conexio* conexio)
+conexio_numerus_symbolorum (
+    constans Conexio* conexio)
 {
     redde xar_numerus(conexio->symbola);
 }
 
 vacuum*
-conexio_sedes_quaerere (constans Conexio* conexio, chorda titulus)
+conexio_sedes_quaerere (
+    constans Conexio* conexio,
+              chorda  titulus)
 {
     s32 index = conexio_symbolum_quaerere(conexio, titulus);
     constans ConexioSymbolum* symbolum;
@@ -458,20 +483,22 @@ conexio_sedes_quaerere (constans Conexio* conexio, chorda titulus)
 }
 
 s32
-conexio_symbolum_globale (constans Conexio* conexio,
-    s32 modulus_index, s32 index_localis)
+conexio_symbolum_globale (
+    constans Conexio* conexio,
+                 s32  modulus_index,
+                 s32  index_localis)
 {
     constans MedullaModulus* modulus;
-    s32* translatio;
+                        s32* translatio;
 
-    si (modulus_index < ZEPHYRUM
+    si (   modulus_index < ZEPHYRUM
         || modulus_index >= (s32)xar_numerus(conexio->moduli))
     {
         redde -I;
     }
     modulus = *(MedullaModulus**)xar_obtinere(conexio->moduli,
         (i32)modulus_index);
-    si (index_localis < ZEPHYRUM
+    si (   index_localis < ZEPHYRUM
         || index_localis >= (s32)xar_numerus(modulus->symbola))
     {
         redde -I;
@@ -482,25 +509,31 @@ conexio_symbolum_globale (constans Conexio* conexio,
 }
 
 constans ConexioFunctioNexa*
-conexio_functionem_obtinere (constans Conexio* conexio, s64 index)
+conexio_functionem_obtinere (
+    constans Conexio* conexio,
+                 s64  index)
 {
     redde xar_obtinere_s(conexio->functiones_nexae, (s32)index);
 }
 
 i32
-conexio_numerus_functionum (constans Conexio* conexio)
+conexio_numerus_functionum (
+    constans Conexio* conexio)
 {
     redde xar_numerus(conexio->functiones_nexae);
 }
 
 i32
-conexio_numerus_modulorum (constans Conexio* conexio)
+conexio_numerus_modulorum (
+    constans Conexio* conexio)
 {
     redde xar_numerus(conexio->moduli);
 }
 
 constans MedullaModulus*
-conexio_modulum_obtinere (constans Conexio* conexio, s32 index)
+conexio_modulum_obtinere (
+    constans Conexio* conexio,
+                 s32  index)
 {
     MedullaModulus** locellus = xar_obtinere_s(conexio->moduli,
         index);
@@ -508,30 +541,36 @@ conexio_modulum_obtinere (constans Conexio* conexio, s32 index)
     redde (locellus == NIHIL) ? NIHIL : *locellus;
 }
 
+
 /* ==================================================
  * Census
  * ================================================== */
 
 i32
-conexio_numerus_datorum (constans Conexio* conexio)
+conexio_numerus_datorum (
+    constans Conexio* conexio)
 {
     redde conexio->numerus_datorum;
 }
 
 i32
-conexio_numerus_cellarum (constans Conexio* conexio)
+conexio_numerus_cellarum (
+    constans Conexio* conexio)
 {
     redde conexio->numerus_cellarum;
 }
 
 i32
-conexio_numerus_decipularum (constans Conexio* conexio)
+conexio_numerus_decipularum (
+    constans Conexio* conexio)
 {
     redde xar_numerus(conexio->decipulae);
 }
 
 constans chorda*
-conexio_decipulam_obtinere (constans Conexio* conexio, s32 index)
+conexio_decipulam_obtinere (
+    constans Conexio* conexio,
+                 s32  index)
 {
     redde xar_obtinere_s(conexio->decipulae, index);
 }

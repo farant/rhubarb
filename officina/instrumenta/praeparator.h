@@ -34,7 +34,7 @@ typedef struct {
                             * memoriae_index; lexicon = canalis
                             * macrorum solum, typedefs per parsuram
                             * systematis fluunt) */
-    int sine_capitibus;    /* ambulatio capitum omissa */
+           int  sine_capitibus;    /* ambulatio capitum omissa */
     const char* fons_plagulae;      /* textus plagulae iudicandae:
                             * sectiones POSIX ex eius '#include <...>'
                             * derivantur et bloci externa eius in
@@ -43,20 +43,20 @@ typedef struct {
                             * (mos vetus exactus). Externa fracta =
                             * praeparatio fracta (0) - iudicium
                             * mundum ex annotatione prava numquam. */
-    unsigned int mensura_plagulae;
-    const char* via_plagulae;       /* pro nuntiis (externa fracta) */
+    unsigned int  mensura_plagulae;
+      const char* via_plagulae;       /* pro nuntiis (externa fracta) */
 } PraeparatorConfiguratio;
 
 /* tempus capitis ad onus commemoratum (percursus staleness) */
 typedef struct {
     const char* via;       /* via absoluta (copia in piscina) */
-    long        tempus;    /* mtime ad tempus onerationis */
+          long  tempus;    /* mtime ad tempus onerationis */
 } PraeparatorCaputTempus;
 
 typedef struct {
-    SilvaPiscina*   piscina;           /* ctx + systema (perennis) */
+      SilvaPiscina* piscina;           /* ctx + systema (perennis) */
     SilvaContextus* ctx;
-    SilvaParsura*   systema_parsura;   /* NULL si radix NULL */
+      SilvaParsura* systema_parsura;   /* NULL si radix NULL */
     SilvaSemantica* systema_semantica;
     TabulaDispersa* viae_capitum;      /* basename (chorda) -> via
                                         * absoluta (char*); ex
@@ -64,39 +64,49 @@ typedef struct {
                                         * si sine_capitibus. Pro
                                         * URIs saltuum in capita
                                         * (legatus definitio). */
-    Xar*            tempora_capitum;   /* PraeparatorCaputTempus -
+    Xar* tempora_capitum;   /* PraeparatorCaputTempus -
                                         * omnia capita onerata
                                         * (systema + repositorium)
                                         * + DIRECTORIA ambulata
                                         * (mtime parentis = inventio
                                         * capitum novorum, 2026-07-14);
                                         * pro caput_stalum */
-    const char*     fons_posix;        /* silva/fontes/systema_posix.h
+    const char* fons_posix;        /* silva/fontes/systema_posix.h
                                         * SEMPER lectus et vigilatus
                                         * (etiam si systema basis eum
                                         * non texit): consumptores
                                         * clavem derivationis inde
                                         * legunt (legatus, design B).
                                         * NULL si radix NULL. */
-    unsigned int    mensura_posix;
+    unsigned int mensura_posix;
 } Praeparatio;
 
 /* Praeparat contextum. piscina_capitum = arena textuum capitum et
  * systematis (vocantis; vita >= praeparationis). 0 = infrastructura
  * deest (praeparatio tunc semi-structa - destruere tutum). */
-int praeparator_praeparare(Praeparatio* praeparatio,
-    Piscina* piscina_capitum, const PraeparatorConfiguratio* cfg);
-void praeparator_destruere(Praeparatio* praeparatio);
+int
+praeparator_praeparare (
+                      Praeparatio* praeparatio,
+                          Piscina* piscina_capitum,
+    const PraeparatorConfiguratio* cfg);
+void
+praeparator_destruere (
+    Praeparatio* praeparatio);
 
 /* Plagulam totam in piscinam legere (NUL appenso - textus etiam
  * chorda cruda usabilis). NULL si illegibilis. */
-char* praeparator_plagulam_legere(Piscina* piscina, const char* via,
+char*
+praeparator_plagulam_legere (
+         Piscina* piscina,
+      const char* via,
     unsigned int* mensura_out);
 
 /* Tempus modificationis plagulae (secunda epochae); 0 = deest aut
  * illegibilis. Sedes POSIX (sys/stat.h) consulto HIC continetur -
  * eadem lex qua dirent (classis POSIX in una plagula). */
-long praeparator_tempus_plagulae(const char* via);
+long
+praeparator_tempus_plagulae (
+    const char* via);
 
 /* Percursus staleness (gradus I legis aetatum, spec-v2 mcp-legati):
  * omnia capita onerata re-stantur; via primi cuius mtime a
@@ -104,7 +114,9 @@ long praeparator_tempus_plagulae(const char* via);
  * e.g. git checkout) redditur, NULL = omnia recentia. Capita NOVA
  * (post onus creata) non videntur - inventio per iudicium-fallens
  * parcum nominatum. */
-const char* praeparator_caput_stalum(const Praeparatio* praeparatio);
+const char*
+praeparator_caput_stalum (
+    const Praeparatio* praeparatio);
 
 /* Receptum bis-analysis: parsura cum contextu + semantica cum
  * systemate + clausura oraculi (augere + vacare + recanonicare) +
@@ -112,8 +124,13 @@ const char* praeparator_caput_stalum(const Praeparatio* praeparatio);
  * (arbores/oraculum/semantica in eam; fons vivere debet quamdiu
  * arbores). NULL = apparatus fractus. Politica errorum syntaxis =
  * VOCANTIS (parsura_out->numerus_errorum inspice). */
-SilvaSemantica* praeparator_analysare(const Praeparatio* praeparatio,
-    SilvaPiscina* effimera, const char* via, const char* fons,
-    unsigned int mensura, SilvaParsura** parsura_out);
+SilvaSemantica*
+praeparator_analysare (
+    const Praeparatio*  praeparatio,
+         SilvaPiscina*  effimera,
+           const char*  via,
+           const char*  fons,
+         unsigned int   mensura,
+         SilvaParsura** parsura_out);
 
 #endif /* PRAEPARATOR_H */

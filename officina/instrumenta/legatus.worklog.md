@@ -888,3 +888,130 @@ urgency (didSave re-triggers), noted not fixed. (3) If false REICE
 ever recurs: stderr "praeparatio absens - iterum conatur" spam =
 the build itself is persistently failing; that is the new loud
 signal, by design.
+
+## 2026-08-22 — the 16-day LSP spin: overlay orders never reclaimed
+
+Fran noticed the machine was hot and asked how to kill legatus,
+half-expecting a shared background daemon. Worth writing down that
+there ISN'T one, because the source vocabulary actively misleads:
+"residens" throughout legatus.c means the in-process index living
+inside *this* process, not a separate resident daemon. Every legatus
+is a plain stdio child of exactly one client and dies on EOF
+(legatus.c:7896). `-mcp` = the legati MCP server, parent is a claude
+session. No `-mcp` = the LSP, parent is a claude running with
+--plugin-dir officina/legatus-plugin. No socket, no pidfile, no
+shared instance. (A `LEGATUSD daemon socketorum` was considered and
+PARKED — 01KXJ2HZCP — which is probably where the daemon intuition
+came from.)
+
+The real find: PID 75848, the LSP for a 16-day-old silva session,
+was spinning at 83.6% CPU / 17 GB RSS with 21.6 hours of CPU burned.
+
+`sample 75848 5` located it in five seconds — 3691 of 3975 samples
+in one path:
+
+    _didchange_tractare -> _contextum_reaedificare
+      -> _analysare_et_publicare
+        -> _ordines_plagulae_necare                    1964
+             -> xar_obtinere -> xar_locare
+                -> computare_magnitudinem_segmenti     1835 of those
+
+praeparator_analysare (the actual parse) was 246 samples, 6%. The
+parser was innocent; the bookkeeping was quadratic.
+
+Mechanism: `_ordines_plagulae_necare` (line 936) scans ALL of
+`l->omnes_ordines` and only sets `mortuus = VERUM` — it never
+removes. Its caller then runs `nexus_ordines_fundere`, which APPENDS
+a fresh overlay for the file. Per didChange: append N, then scan the
+whole accumulated array to tombstone the previous N. After k edits
+the array is ~k*N and each keystroke walks all of it. O(k^2 * N)
+time, O(k * N) memory.
+
+The constant is worse than the loop looks, and this is the part I'd
+have missed by reading alone: 1835 of the scan's 1964 samples are
+inside `xar_obtinere` -> `xar_locare` ->
+`computare_magnitudinem_segmenti`. Reading lib/xar.c:244, segments
+grow by DOUBLING and xar_locare searches them with a shift loop, so
+xar_obtinere is O(log n) per access — not O(1), and not linear in
+segments either. So the scan is O(n log n) and the total is
+O(k^2 log k). The loop spends its time *finding* each element rather
+than on the memcmp that is its actual purpose. (Corrected: my first
+pass said "walks segments" and implied linear. Directionally right
+that indexing dominates; the complexity was wrong, and it matters
+when judging whether compaction alone suffices.)
+
+SECOND COST, missed on the first pass: dead orders are marked but
+never unlinked from the index_titulorum chains. `_ordines_tituli`
+therefore returns a chain that grows every time ANY file containing
+that title is edited, and every hover/definition/references walks
+the corpses to skip them. Queries degraded too, not just the
+rebuild — and compacting omnes_ordines alone would NOT have fixed
+that. Any real fix has to touch the chains.
+
+ROOT CAUSE, stated properly: orders are allocated from
+`piscina_indicis`, an ARENA. Arenas cannot free individual objects,
+so tombstoning is the only option available — the `mortuus`
+discipline is honest and is checked at ~20 read sites, which is why
+the symptom was slowness and never wrong answers. The mistake is one
+level up: TWO LIFETIMES SHARE ONE ARENA. The base index (from
+nexus.tsv) lives until the next commit; the overlay is re-derived
+per keystroke. Both allocate from piscina_indicis, so the arena can
+only be released at the longer lifetime, and the short-lived half
+accumulates until then.
+
+Why it never heals: the sole reclamation path is `_indicem_renovare`,
+which destroys `piscina_indicis` wholesale — and it only fires when
+`build/nexus.tsv` mtime changes, i.e. after the post-commit hook. A
+long session that edits heavily without committing never reclaims.
+That is precisely the shape of a multi-day silva session, so the
+worst case is also the most likely one.
+
+Why it stayed invisible for 16 days: nothing watches resident size
+or per-request latency. The degradation is continuous — no cliff, no
+clamour, it just gets slower every day. The observer was Fran's fans.
+Another SILENT GATE = DEAD GATE instance; the fix is not only the
+compaction but a clamour so the next such drift announces itself.
+
+FIX SHAPE (recorded, not applied — see 01M0NYQGZSF55T8W9R7CHT53XN).
+Bucket orders by file and UNLINK rather than tombstone: add
+`TabulaDispersa* ordines_per_viam` (via -> Xar<LegatusOrdo*>); on
+re-analysis look up this file's bucket, splice each order out of its
+title chain, empty the bucket, fuse the new overlay. Kills both
+costs at once and is SUBTRACTIVE — `omnes_ordines` and the `mortuus`
+field both become unnecessary, along with all ~20 mortuus checks.
+Per-edit cost drops from O(k^2 log k) to O(orders in this file).
+Memory is still not reclaimed (arena garbage), but that is the slow
+leak which _indicem_renovare clears on commit.
+
+If memory must be fixed too: per-document overlay arena on
+LegatusDocumentum — editing a file destroys and recreates only that
+document's arena, bounding memory by (open docs x orders per doc)
+instead of by session length. Requires the unlink step regardless,
+or chain pointers dangle into a freed arena. Hold until the first
+fix is measured.
+
+WRINKLE: `nomina_indicis` (distinct titles, workspaceSymbol) appends
+on first-sight and never removes. Unlinking makes that bookkeeping
+subtly wrong; the "titulus vivus" helper (~line 5751) currently
+papers over it. Decide deliberately rather than inherit.
+
+The clamour matters more than either fix: nothing watches resident
+order count or per-request latency, which is the only reason this
+ran sixteen days.
+
+Two smaller things learned in passing:
+
+- `renovare` is the intended restart, not a signal. The resident
+  execs *itself* via the launcher (`processus_transformare`,
+  line ~7917) after the build is proven — same PID, same pipes, the
+  client never notices, and a failed build leaves the old one
+  alive-but-stale rather than dead. Reach for that before kill.
+- SIGTERM to the LSP did NOT trigger the plugin's restart, despite
+  `.lsp.json` carrying `"restartOnCrash": true, "maxRestarts": 5`.
+  Unverified which of {maxRestarts exhausted, clean exit is not a
+  crash, spawn is lazy} is responsible. Don't assume a killed LSP
+  comes back on its own.
+
+Recipe worth reusing on any hung house tool: `sample <pid> 5 -f out`
+then read the Call graph section. Five seconds, and it named the
+function and the ratio without a single hypothesis.

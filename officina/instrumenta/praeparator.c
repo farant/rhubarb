@@ -18,11 +18,13 @@
 #include <sys/stat.h>
 
 character*
-praeparator_plagulam_legere (Piscina* piscina,
-    constans character* via, insignatus integer* mensura_out)
+praeparator_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+    insignatus integer* mensura_out)
 {
-    FILE* pl = fopen(via, "rb");
-    long mensura_l;
+         FILE* pl = fopen(via, "rb");
+         long  mensura_l;
     character* textus;
 
     *mensura_out = ZEPHYRUM;
@@ -40,7 +42,7 @@ praeparator_plagulam_legere (Piscina* piscina,
     }
     textus = (character*)piscina_allocare(piscina,
         (memoriae_index)(mensura_l > 0L ? mensura_l + 1L : I));
-    si (textus == NIHIL
+    si (   textus == NIHIL
         || (mensura_l > 0L
             && fread(textus, I, (memoriae_index)mensura_l, pl)
                 != (memoriae_index)mensura_l))
@@ -49,13 +51,14 @@ praeparator_plagulam_legere (Piscina* piscina,
         redde NIHIL;
     }
     fclose(pl);
-    textus[mensura_l] = '\0';
-    *mensura_out = (insignatus integer)mensura_l;
+    textus[mensura_l]  = '\0';
+    *mensura_out       = (insignatus integer)mensura_l;
     redde textus;
 }
 
 longus
-praeparator_tempus_plagulae (constans character* via)
+praeparator_tempus_plagulae (
+    constans character* via)
 {
     structura stat indicium;
 
@@ -66,6 +69,7 @@ praeparator_tempus_plagulae (constans character* via)
     redde (longus)indicium.st_mtime;
 }
 
+
 /* ==================================================
  * capita praebere (ambulatio dirent; basename primus-vincit)
  * ================================================== */
@@ -73,19 +77,21 @@ praeparator_tempus_plagulae (constans character* via)
 /* tempus capitis commemorare (via copiatur in piscinam - fontes
  * saepe in quadris effimeris) */
 interior vacuum
-_tempus_commemorare (Praeparatio* p, Piscina* piscina_capitum,
+_tempus_commemorare (
+           Praeparatio* p,
+               Piscina* piscina_capitum,
     constans character* via)
 {
     PraeparatorCaputTempus* introitus;
-    memoriae_index m;
-    character* copia;
+            memoriae_index  m;
+                 character* copia;
 
     si (p->tempora_capitum == NIHIL)
     {
         redde;
     }
-    m = strlen(via);
-    copia = (character*)piscina_allocare(piscina_capitum, m + I);
+    m      = strlen(via);
+    copia  = (character*)piscina_allocare(piscina_capitum, m + I);
     si (copia == NIHIL)
     {
         redde;
@@ -95,13 +101,14 @@ _tempus_commemorare (Praeparatio* p, Piscina* piscina_capitum,
         p->tempora_capitum);
     si (introitus != NIHIL)
     {
-        introitus->via = copia;
-        introitus->tempus = praeparator_tempus_plagulae(copia);
+        introitus->via     = copia;
+        introitus->tempus  = praeparator_tempus_plagulae(copia);
     }
 }
 
 interior b32
-_praetermittendum (constans character* titulus)
+_praetermittendum (
+    constans character* titulus)
 {
     redde (strcmp(titulus, "build") == ZEPHYRUM
         || strcmp(titulus, ".git") == ZEPHYRUM
@@ -111,9 +118,12 @@ _praetermittendum (constans character* titulus)
 }
 
 interior vacuum
-_capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
-    TabulaDispersa* visa, constans character* via,
-    memoriae_index radix_m)
+_capita_praeparare (
+           Praeparatio* p,
+               Piscina* piscina_capitum,
+        TabulaDispersa* visa,
+    constans character* via,
+        memoriae_index  radix_m)
 {
     DIR* dir = opendir(via);
     structura dirent* introitus;
@@ -131,7 +141,7 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
     _tempus_commemorare(p, piscina_capitum, via);
     dum ((introitus = readdir(dir)) != NIHIL)
     {
-        character via_plena[1024];
+             character via_plena[1024];
         memoriae_index m;
 
         si (introitus->d_name[ZEPHYRUM] == '.')
@@ -156,7 +166,7 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         alioquin
         {
             m = strlen(introitus->d_name);
-            si (m >= III && introitus->d_name[m - II] == '.'
+            si (   m >= III && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I] == 'h')
             {
                 /* clavis = via RADICI-RELATIVA (01KYJ6740K):
@@ -166,11 +176,11 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                  * extenta) - clavis absoluta ei aliena esset;
                  * valores viae_capitum absoluti manent (URIs) */
                 constans character* via_clavis = via_plena;
-                chorda clavis;
-                character* textus;
-                insignatus integer mensura;
+                            chorda  clavis;
+                         character* textus;
+                insignatus integer  mensura;
 
-                si (radix_m > ZEPHYRUM
+                si (   radix_m > ZEPHYRUM
                     && strlen(via_plena) > radix_m + I
                     && via_plena[radix_m] == '/')
                 {
@@ -208,10 +218,10 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                         si (!tabula_dispersa_continet(
                                 p->viae_capitum, basis))
                         {
-                            memoriae_index mv = strlen(via_plena);
-                            character* copia = (character*)
-                                piscina_allocare(piscina_capitum,
-                                    mv + I);
+                            memoriae_index  mv = strlen(via_plena);
+                                 character* copia = (character*)
+                                     piscina_allocare(piscina_capitum,
+                                     mv + I);
 
                             si (copia != NIHIL)
                             {
@@ -228,12 +238,15 @@ _capita_praeparare (Praeparatio* p, Piscina* piscina_capitum,
     closedir(dir);
 }
 
+
 /* ==================================================
  * praeparare / destruere
  * ================================================== */
 
 integer
-praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
+praeparator_praeparare (
+                         Praeparatio* p,
+                             Piscina* piscina_capitum,
     constans PraeparatorConfiguratio* cfg)
 {
     si (p == NIHIL || piscina_capitum == NIHIL || cfg == NIHIL)
@@ -269,11 +282,11 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
      * fons_plagulae sectiones ex inclusionibus plagulae derivat
      * blocosque externa eius excerpit. */
     {
-        character via_sys[600];
-        insignatus integer m_iso = ZEPHYRUM;
-        insignatus integer m_px = ZEPHYRUM;
-        character* fons_sys;
-        insignatus integer mensura_sys;
+                 character  via_sys[600];
+        insignatus integer  m_iso  = ZEPHYRUM;
+        insignatus integer  m_px   = ZEPHYRUM;
+                 character* fons_sys;
+        insignatus integer  mensura_sys;
 
         sprintf(via_sys, "%s/silva/fontes/systema_c89.h",
             cfg->radix);
@@ -302,8 +315,8 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         si (cfg->cum_posix || cfg->fons_plagulae != NIHIL)
         {
             character* compositum;
-            i32 m_comp = ZEPHYRUM;
-            b32 fractum = FALSUM;
+                  i32  m_comp   = ZEPHYRUM;
+                  b32  fractum  = FALSUM;
 
             compositum = silva_lexicon_componere(fons_sys,
                 (i32)m_iso, p->fons_posix, (i32)m_px,
@@ -317,14 +330,14 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
                  * mundum ex annotatione prava numquam */
                 redde ZEPHYRUM;
             }
-            fons_sys = compositum;
-            mensura_sys = (insignatus integer)m_comp;
+            fons_sys     = compositum;
+            mensura_sys  = (insignatus integer)m_comp;
         }
         si (cfg->cum_latina)
         {
-            insignatus integer m_lat = ZEPHYRUM;
-            character* fons_lat;
-            character* iunctum;
+            insignatus integer  m_lat = ZEPHYRUM;
+                     character* fons_lat;
+                     character* iunctum;
 
             sprintf(via_sys, "%s/include/latina.h", cfg->radix);
             fons_lat = praeparator_plagulam_legere(piscina_capitum,
@@ -344,9 +357,9 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
             iunctum[mensura_sys] = '\n';
             memcpy(iunctum + mensura_sys + I, fons_lat,
                 (memoriae_index)m_lat);
-            mensura_sys = mensura_sys + I + m_lat;
-            iunctum[mensura_sys] = '\0';
-            fons_sys = iunctum;
+            mensura_sys           = mensura_sys + I + m_lat;
+            iunctum[mensura_sys]  = '\0';
+            fons_sys              = iunctum;
         }
         si (!silva_contextus_lexicon_addere(p->ctx, "systema_c89.h",
                 fons_sys, mensura_sys))
@@ -355,7 +368,7 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
         }
         p->systema_parsura = silva_c89_parsare(p->piscina,
             "systema_c89.h", fons_sys, mensura_sys, NIHIL);
-        si (p->systema_parsura == NIHIL
+        si (   p->systema_parsura == NIHIL
             || p->systema_parsura->numerus_errorum > ZEPHYRUM)
         {
             redde ZEPHYRUM;
@@ -385,7 +398,8 @@ praeparator_praeparare (Praeparatio* p, Piscina* piscina_capitum,
 }
 
 vacuum
-praeparator_destruere (Praeparatio* p)
+praeparator_destruere (
+    Praeparatio* p)
 {
     si (p == NIHIL)
     {
@@ -398,15 +412,19 @@ praeparator_destruere (Praeparatio* p)
     memset(p, ZEPHYRUM, magnitudo(Praeparatio));
 }
 
+
 /* ==================================================
  * receptum bis-analysis (percursus fidele)
  * ================================================== */
 
 SilvaSemantica*
-praeparator_analysare (constans Praeparatio* p,
-    SilvaPiscina* effimera, constans character* via,
-    constans character* fons, insignatus integer mensura,
-    SilvaParsura** parsura_out)
+praeparator_analysare (
+    constans Praeparatio*  p,
+            SilvaPiscina*  effimera,
+      constans character*  via,
+      constans character*  fons,
+      insignatus integer   mensura,
+            SilvaParsura** parsura_out)
 {
     SilvaOraculum* oraculum;
     SilvaParsura* parsura;
@@ -425,7 +443,7 @@ praeparator_analysare (constans Praeparatio* p,
     }
     parsura = silva_c89_parsare_cum_contextu(effimera, p->ctx, via,
         fons, mensura, oraculum);
-    si (parsura == NIHIL || !parsura->successus
+    si (   parsura            == NIHIL || !parsura->successus
         || parsura->commissio == NIHIL)
     {
         redde NIHIL;
@@ -446,7 +464,8 @@ praeparator_analysare (constans Praeparatio* p,
 }
 
 constans character*
-praeparator_caput_stalum (constans Praeparatio* p)
+praeparator_caput_stalum (
+    constans Praeparatio* p)
 {
     i32 n;
     i32 i;
@@ -464,7 +483,7 @@ praeparator_caput_stalum (constans Praeparatio* p)
 
         /* identitas cum se ipso: differentia quaevis (etiam retro -
          * git checkout) = stalum */
-        si (introitus != NIHIL
+        si (   introitus != NIHIL
             && praeparator_tempus_plagulae(introitus->via)
                    != introitus->tempus)
         {

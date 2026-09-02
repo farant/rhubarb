@@ -19,14 +19,23 @@
 
 /* nomina signata (vocabularium-medullae.md) - fons unicus et
  * scriptoris et lectoris; NIHIL si extra fines */
-constans character* medulla_op_titulus (s32 op);
-constans character* medulla_typum_titulus (s32 typus);
+constans character*
+medulla_op_titulus (
+    s32 op);
+constans character*
+medulla_typum_titulus (
+    s32 typus);
 
-chorda medulla_textum_scribere (Piscina* piscina,
+chorda
+medulla_textum_scribere (
+                    Piscina* piscina,
     constans MedullaModulus* modulus);
 
 /* NIHIL + linea_erroris (1-basis; NIHIL licet) in errore */
-MedullaModulus* medulla_textum_legere (Piscina* piscina,
-    chorda textus, i32* linea_erroris);
+MedullaModulus*
+medulla_textum_legere (
+    Piscina* piscina,
+     chorda  textus,
+        i32* linea_erroris);
 
 #endif /* OFFICINA_MEDULLA_TEXTUS_H */

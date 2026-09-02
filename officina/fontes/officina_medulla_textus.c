@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 /* ==================================================
  * Nomina signata (ORDO = ordo enumerationum!)
  * ================================================== */
@@ -33,7 +34,8 @@ interior constans character* TYPI_NOMINA[MEDULLA_TYPUS_NUMERUS] = {
 };
 
 constans character*
-medulla_op_titulus (s32 op)
+medulla_op_titulus (
+    s32 op)
 {
     si (op < ZEPHYRUM || op >= (s32)MEDULLA_OP_NUMERUS)
     {
@@ -43,7 +45,8 @@ medulla_op_titulus (s32 op)
 }
 
 constans character*
-medulla_typum_titulus (s32 typus)
+medulla_typum_titulus (
+    s32 typus)
 {
     si (typus < ZEPHYRUM || typus >= (s32)MEDULLA_TYPUS_NUMERUS)
     {
@@ -52,12 +55,15 @@ medulla_typum_titulus (s32 typus)
     redde TYPI_NOMINA[typus];
 }
 
+
 /* ==================================================
  * SCRIPTOR - quod evomit, canon est
  * ================================================== */
 
 interior vacuum
-_chordam_evadere (ChordaAedificator* aed, chorda textus)
+_chordam_evadere (
+    ChordaAedificator* aed,
+               chorda  textus)
 {
     i32 i;
 
@@ -89,7 +95,9 @@ _chordam_evadere (ChordaAedificator* aed, chorda textus)
 }
 
 interior vacuum
-_s64_scribere (ChordaAedificator* aed, s64 valor)
+_s64_scribere (
+    ChordaAedificator* aed,
+                  s64  valor)
 {
     character littera[XXXII];
 
@@ -98,9 +106,10 @@ _s64_scribere (ChordaAedificator* aed, s64 valor)
 }
 
 interior vacuum
-_operandum_scribere (ChordaAedificator* aed,
-    constans MedullaModulus* modulus,
-    constans MedullaFunctio* functio,
+_operandum_scribere (
+            ChordaAedificator* aed,
+      constans MedullaModulus* modulus,
+      constans MedullaFunctio* functio,
     constans MedullaOperandum* operandum)
 {
     commutatio (operandum->genus)
@@ -125,8 +134,8 @@ _operandum_scribere (ChordaAedificator* aed,
         casus (s32)MEDULLA_OPERANDUM_IMMEDIATUM_F:
         {
             character littera[XL];
-            i32 k;
-            b32 signatum_fluitantis = FALSUM;
+                  i32 k;
+                  b32 signatum_fluitantis = FALSUM;
 
             sprintf(littera, "%.17g",
                 operandum->datum.immediatum_f);
@@ -136,7 +145,7 @@ _operandum_scribere (ChordaAedificator* aed,
              * cautio subdola) */
             per (k = ZEPHYRUM; littera[k] != '\0'; k++)
             {
-                si (littera[k] == '.' || littera[k] == 'e'
+                si (   littera[k] == '.' || littera[k] == 'e'
                     || littera[k] == 'E')
                 {
                     signatum_fluitantis = VERUM;
@@ -198,9 +207,10 @@ _operandum_scribere (ChordaAedificator* aed,
 }
 
 interior vacuum
-_instructionem_scribere (ChordaAedificator* aed,
-    constans MedullaModulus* modulus,
-    constans MedullaFunctio* functio,
+_instructionem_scribere (
+             ChordaAedificator* aed,
+       constans MedullaModulus* modulus,
+       constans MedullaFunctio* functio,
     constans MedullaInstructio* instructio)
 {
     chorda_aedificator_appendere_repetita(aed, ' ', IV);
@@ -264,12 +274,12 @@ _instructionem_scribere (ChordaAedificator* aed,
     alioquin
     {
         constans MedullaOperandum* ordo[III];
-        b32 primum = VERUM;
-        s32 i;
+                              b32  primum = VERUM;
+                              s32  i;
 
-        ordo[ZEPHYRUM] = &instructio->a;
-        ordo[I] = &instructio->b;
-        ordo[II] = &instructio->c;
+        ordo[ZEPHYRUM]  = &instructio->a;
+        ordo[I]         = &instructio->b;
+        ordo[II]        = &instructio->c;
         per (i = ZEPHYRUM; i < III; i++)
         {
             si (ordo[i]->genus == (s32)MEDULLA_OPERANDUM_NIHIL)
@@ -286,7 +296,8 @@ _instructionem_scribere (ChordaAedificator* aed,
 }
 
 interior vacuum
-_functionem_scribere (ChordaAedificator* aed,
+_functionem_scribere (
+          ChordaAedificator* aed,
     constans MedullaModulus* modulus,
     constans MedullaFunctio* functio)
 {
@@ -360,8 +371,10 @@ _functionem_scribere (ChordaAedificator* aed,
 }
 
 interior vacuum
-_datum_scribere (ChordaAedificator* aed,
-    constans MedullaModulus* modulus, constans MedullaDatum* datum)
+_datum_scribere (
+          ChordaAedificator* aed,
+    constans MedullaModulus* modulus,
+      constans MedullaDatum* datum)
 {
     i32 i;
     i32 m;
@@ -417,16 +430,17 @@ _datum_scribere (ChordaAedificator* aed,
 }
 
 chorda
-medulla_textum_scribere (Piscina* piscina,
+medulla_textum_scribere (
+                    Piscina* piscina,
     constans MedullaModulus* modulus)
 {
     ChordaAedificator* aed;
-    chorda vacua;
-    i32 i;
-    i32 m;
+               chorda  vacua;
+                  i32  i;
+                  i32  m;
 
-    vacua.datum = NIHIL;
-    vacua.mensura = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
     si (piscina == NIHIL || modulus == NIHIL)
     {
         redde vacua;
@@ -460,44 +474,49 @@ medulla_textum_scribere (Piscina* piscina,
     redde chorda_aedificator_finire(aed);
 }
 
+
 /* ==================================================
  * LECTOR - strictus praeter commenta et lineas vacuas
  * ================================================== */
 
 nomen structura {
     chorda textus;
-    i32    numerus;              /* 1-basis */
+       i32 numerus;              /* 1-basis */
 } TextusLinea;
 
 nomen structura {
-    Piscina*        piscina;
-    Xar*            lineae;      /* TextusLinea valore */
-    i32             positio;
+           Piscina* piscina;
+               Xar* lineae;      /* TextusLinea valore */
+               i32  positio;
     MedullaModulus* modulus;
     MedullaFunctio* functio;     /* contextus currens */
-    s32             bloccus;     /* -I extra bloccum */
-    MedullaDatum*   datum;
-    i32             offset_dati;
-    i32             linea_erroris;
+               s32  bloccus;     /* -I extra bloccum */
+      MedullaDatum* datum;
+               i32  offset_dati;
+               i32  linea_erroris;
 } TextusLector;
 
 interior b32
-_est_littera (character c)
+_est_littera (
+    character c)
 {
     redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
         || (c >= '0' && c <= '9') || c == '_' || c == '.';
 }
 
 interior b32
-_est_cifra (character c)
+_est_cifra (
+    character c)
 {
     redde c >= '0' && c <= '9';
 }
 
 interior vacuum
-_spatia_praeterire (chorda linea, i32* cursor)
+_spatia_praeterire (
+    chorda  linea,
+       i32* cursor)
 {
-    dum (*cursor < linea.mensura
+    dum (   *cursor < linea.mensura
          && (character)linea.datum[*cursor] == ' ')
     {
         (*cursor)++;
@@ -505,7 +524,9 @@ _spatia_praeterire (chorda linea, i32* cursor)
 }
 
 interior character
-_aspicere (chorda linea, i32 cursor)
+_aspicere (
+    chorda linea,
+       i32 cursor)
 {
     si (cursor >= linea.mensura)
     {
@@ -515,23 +536,27 @@ _aspicere (chorda linea, i32 cursor)
 }
 
 interior chorda
-_verbum_legere (chorda linea, i32* cursor)
+_verbum_legere (
+    chorda  linea,
+       i32* cursor)
 {
     chorda verbum;
-    i32 initium = *cursor;
+       i32 initium = *cursor;
 
-    dum (*cursor < linea.mensura
+    dum (   *cursor < linea.mensura
          && _est_littera((character)linea.datum[*cursor]))
     {
         (*cursor)++;
     }
-    verbum.datum = linea.datum + initium;
-    verbum.mensura = *cursor - initium;
+    verbum.datum    = linea.datum + initium;
+    verbum.mensura  = *cursor - initium;
     redde verbum;
 }
 
 interior b32
-_verbum_aequale (chorda verbum, constans character* literis)
+_verbum_aequale (
+                chorda  verbum,
+    constans character* literis)
 {
     i32 longitudo = (i32)strlen(literis);
 
@@ -548,18 +573,21 @@ _verbum_aequale (chorda verbum, constans character* literis)
 }
 
 interior b32
-_s64_legere (chorda linea, i32* cursor, s64* valor_out)
+_s64_legere (
+    chorda  linea,
+       i32* cursor,
+       s64* valor_out)
 {
-    b32 negativum = FALSUM;
-    s64 valor = ZEPHYRUM;   /* accumulatio NEGATIVA (S64_MIN tuta) */
-    b32 ullus = FALSUM;
+    b32 negativum  = FALSUM;
+    s64 valor      = ZEPHYRUM;   /* accumulatio NEGATIVA (S64_MIN tuta) */
+    b32 ullus      = FALSUM;
 
     si (_aspicere(linea, *cursor) == '-')
     {
         negativum = VERUM;
         (*cursor)++;
     }
-    dum (*cursor < linea.mensura
+    dum (   *cursor < linea.mensura
          && _est_cifra((character)linea.datum[*cursor]))
     {
         valor = valor * X
@@ -577,11 +605,14 @@ _s64_legere (chorda linea, i32* cursor, s64* valor_out)
 
 /* fructus in piscinam (fugae solutae) */
 interior b32
-_chordam_citatam_legere (TextusLector* lector, chorda linea, i32* cursor,
-    chorda* fructus)
+_chordam_citatam_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32* cursor,
+          chorda* fructus)
 {
-    i8* datum;
-    i32 scriptum = ZEPHYRUM;
+     i8* datum;
+    i32  scriptum = ZEPHYRUM;
 
     si (_aspicere(linea, *cursor) != '"')
     {
@@ -602,8 +633,8 @@ _chordam_citatam_legere (TextusLector* lector, chorda linea, i32* cursor,
         si (c == '"')
         {
             (*cursor)++;
-            fructus->datum = datum;
-            fructus->mensura = scriptum;
+            fructus->datum    = datum;
+            fructus->mensura  = scriptum;
             redde VERUM;
         }
         si (c == '\\')
@@ -612,10 +643,18 @@ _chordam_citatam_legere (TextusLector* lector, chorda linea, i32* cursor,
 
             (*cursor)++;
             f = _aspicere(linea, *cursor);
-            si (f == 'n')       { datum[scriptum] = (i8)'\n'; }
-            alioquin si (f == 't')  { datum[scriptum] = (i8)'\t'; }
-            alioquin si (f == '"')  { datum[scriptum] = (i8)'"'; }
-            alioquin si (f == '\\') { datum[scriptum] = (i8)'\\'; }
+            si (f == 'n')
+            { datum[scriptum] = (i8)'\n';
+            }
+            alioquin si (f == 't')
+            { datum[scriptum] = (i8)'\t';
+            }
+            alioquin si (f == '"')
+            { datum[scriptum] = (i8)'"';
+            }
+            alioquin si (f == '\\')
+            { datum[scriptum] = (i8)'\\';
+            }
             alioquin
             {
                 redde FALSUM;   /* fuga ignota */
@@ -632,8 +671,9 @@ _chordam_citatam_legere (TextusLector* lector, chorda linea, i32* cursor,
 }
 
 interior s32
-_registrum_invenire_aut_creare (MedullaFunctio* functio,
-    chorda titulus)
+_registrum_invenire_aut_creare (
+    MedullaFunctio* functio,
+            chorda  titulus)
 {
     i32 i;
     i32 m = xar_numerus(functio->registra);
@@ -643,7 +683,7 @@ _registrum_invenire_aut_creare (MedullaFunctio* functio,
         constans chorda* sedes =
             (constans chorda*)xar_obtinere(functio->registra, i);
 
-        si (sedes->mensura == titulus.mensura
+        si (   sedes->mensura == titulus.mensura
             && (titulus.mensura == ZEPHYRUM
                 || memcmp(sedes->datum, titulus.datum,
                        (memoriae_index)titulus.mensura) == ZEPHYRUM))
@@ -655,7 +695,9 @@ _registrum_invenire_aut_creare (MedullaFunctio* functio,
 }
 
 interior s32
-_bloccum_invenire (constans MedullaFunctio* functio, chorda titulus)
+_bloccum_invenire (
+    constans MedullaFunctio* functio,
+                     chorda  titulus)
 {
     i32 i;
     i32 m = xar_numerus(functio->blocci);
@@ -666,7 +708,7 @@ _bloccum_invenire (constans MedullaFunctio* functio, chorda titulus)
             (constans MedullaBloccus*)xar_obtinere(functio->blocci,
                 i);
 
-        si (bloccus->titulus.mensura == titulus.mensura
+        si (   bloccus->titulus.mensura == titulus.mensura
             && memcmp(bloccus->titulus.datum, titulus.datum,
                    (memoriae_index)titulus.mensura) == ZEPHYRUM)
         {
@@ -677,7 +719,8 @@ _bloccum_invenire (constans MedullaFunctio* functio, chorda titulus)
 }
 
 interior s32
-_op_invenire (chorda verbum)
+_op_invenire (
+    chorda verbum)
 {
     s32 i;
 
@@ -692,7 +735,8 @@ _op_invenire (chorda verbum)
 }
 
 interior s32
-_typum_invenire (chorda verbum)
+_typum_invenire (
+    chorda verbum)
 {
     s32 i;
 
@@ -708,10 +752,13 @@ _typum_invenire (chorda verbum)
 
 /* numerus: fluitans si spatium characterum '.'/'e'/'E' continet */
 interior b32
-_numerum_legere (chorda linea, i32* cursor, MedullaOperandum* out)
+_numerum_legere (
+              chorda  linea,
+                 i32* cursor,
+    MedullaOperandum* out)
 {
-    i32 finis = *cursor;
-    b32 fluitat = FALSUM;
+    i32 finis    = *cursor;
+    b32 fluitat  = FALSUM;
 
     si (_aspicere(linea, finis) == '-')
     {
@@ -734,10 +781,10 @@ _numerum_legere (chorda linea, i32* cursor, MedullaOperandum* out)
     si (fluitat)
     {
         character littera[XLVIII];
-        i32 longitudo = finis - *cursor;
+              i32 longitudo = finis - *cursor;
 
         /* <tolera codex="SUBTRACTIO_COMPARATA" (>cursor numquam ultra finem (custos ansae vocantis) */
-        si (longitudo <= ZEPHYRUM
+        si (   longitudo <= ZEPHYRUM
             || longitudo >= (i32)magnitudo(littera))
         {
             redde FALSUM;
@@ -762,7 +809,10 @@ _numerum_legere (chorda linea, i32* cursor, MedullaOperandum* out)
 }
 
 interior b32
-_operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
+_operandum_legere (
+        TextusLector* lector,
+              chorda  linea,
+                 i32* cursor,
     MedullaOperandum* out)
 {
     character c;
@@ -772,7 +822,7 @@ _operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
     si (c == '%')
     {
         chorda verbum;
-        s32 index;
+           s32 index;
 
         (*cursor)++;
         verbum = _verbum_legere(linea, cursor);
@@ -792,11 +842,11 @@ _operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
     si (c == '$')
     {
         chorda verbum;
-        s32 index;
+           s32 index;
 
         (*cursor)++;
-        verbum = _verbum_legere(linea, cursor);
-        index = medulla_symbolum_internare(lector->modulus, verbum);
+        verbum  = _verbum_legere(linea, cursor);
+        index   = medulla_symbolum_internare(lector->modulus, verbum);
         si (index < ZEPHYRUM)
         {
             redde FALSUM;
@@ -807,7 +857,7 @@ _operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
     si (c == '@')
     {
         chorda verbum;
-        s32 index;
+           s32 index;
 
         (*cursor)++;
         verbum = _verbum_legere(linea, cursor);
@@ -826,7 +876,7 @@ _operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
     si (c == '"')
     {
         chorda causa;
-        s32 index;
+           s32 index;
 
         si (!_chordam_citatam_legere(lector, linea, cursor, &causa))
         {
@@ -844,27 +894,31 @@ _operandum_legere (TextusLector* lector, chorda linea, i32* cursor,
 }
 
 interior b32
-_finis_lineae (chorda linea, i32 cursor)
+_finis_lineae (
+    chorda linea,
+       i32 cursor)
 {
     _spatia_praeterire(linea, &cursor);
     redde cursor >= linea.mensura;
 }
 
 interior b32
-_instructionem_legere (TextusLector* lector, chorda linea)
+_instructionem_legere (
+    TextusLector* lector,
+          chorda  linea)
 {
-    i32 cursor = ZEPHYRUM;
+                  i32 cursor = ZEPHYRUM;
     MedullaInstructio instructio;
-    chorda verbum;
+               chorda verbum;
 
     memset(&instructio, ZEPHYRUM, magnitudo(MedullaInstructio));
-    instructio.typus = MEDULLA_TYPUS_NIHIL;
-    instructio.typus_secundus = MEDULLA_TYPUS_NIHIL;
-    instructio.destinatio = -I;
-    instructio.extra_index = -I;
-    instructio.a = medulla_op_nihil();
-    instructio.b = medulla_op_nihil();
-    instructio.c = medulla_op_nihil();
+    instructio.typus           = MEDULLA_TYPUS_NIHIL;
+    instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
+    instructio.destinatio      = -I;
+    instructio.extra_index     = -I;
+    instructio.a               = medulla_op_nihil();
+    instructio.b               = medulla_op_nihil();
+    instructio.c               = medulla_op_nihil();
 
     _spatia_praeterire(linea, &cursor);
     si (_aspicere(linea, cursor) == '%')
@@ -893,9 +947,9 @@ _instructionem_legere (TextusLector* lector, chorda linea)
     /* op[.typus[.typus]] */
     verbum = _verbum_legere(linea, &cursor);
     {
-        s32 punctum_a = -I;   /* index puncti; -I absens (s32!) */
-        s32 punctum_b = -I;
-        i32 k;
+           s32 punctum_a = -I;   /* index puncti; -I absens (s32!) */
+           s32 punctum_b = -I;
+           i32 k;
         chorda pars;
 
         per (k = ZEPHYRUM; k < verbum.mensura; k++)
@@ -929,9 +983,9 @@ _instructionem_legere (TextusLector* lector, chorda linea)
             i32 finis_partis = (punctum_b >= ZEPHYRUM)
                 ? (i32)punctum_b : verbum.mensura;
 
-            pars.datum = verbum.datum + punctum_a + I;
-            pars.mensura = finis_partis - (i32)punctum_a - I;
-            instructio.typus = _typum_invenire(pars);
+            pars.datum        = verbum.datum + punctum_a + I;
+            pars.mensura      = finis_partis - (i32)punctum_a - I;
+            instructio.typus  = _typum_invenire(pars);
             si (instructio.typus < ZEPHYRUM)
             {
                 redde FALSUM;
@@ -957,7 +1011,7 @@ _instructionem_legere (TextusLector* lector, chorda linea)
             redde FALSUM;
         }
         _spatia_praeterire(linea, &cursor);
-        si (_aspicere(linea, cursor) != '-'
+        si (   _aspicere(linea, cursor)     != '-'
             || _aspicere(linea, cursor + I) != '>')
         {
             redde FALSUM;
@@ -992,7 +1046,7 @@ _instructionem_legere (TextusLector* lector, chorda linea)
         dum (_aspicere(linea, cursor) == ',')
         {
             MedullaOperandum argumentum;
-            s32 index;
+                         s32 index;
 
             cursor++;
             si (!_operandum_legere(lector, linea, &cursor,
@@ -1054,7 +1108,8 @@ _instructionem_legere (TextusLector* lector, chorda linea)
 
 /* praescandere tituli bloccorum usque ad terminum functionis */
 interior b32
-_bloccos_praescandere (TextusLector* lector)
+_bloccos_praescandere (
+    TextusLector* lector)
 {
     i32 i;
     i32 m = xar_numerus(lector->lineae);
@@ -1063,7 +1118,7 @@ _bloccos_praescandere (TextusLector* lector)
     {
         constans TextusLinea* linea =
             (constans TextusLinea*)xar_obtinere(lector->lineae, i);
-        i32 cursor = ZEPHYRUM;
+              i32 cursor = ZEPHYRUM;
         character c;
 
         _spatia_praeterire(linea->textus, &cursor);
@@ -1074,7 +1129,7 @@ _bloccos_praescandere (TextusLector* lector)
 
             cursor++;
             verbum = _verbum_legere(linea->textus, &cursor);
-            si (verbum.mensura == ZEPHYRUM
+            si (   verbum.mensura                   == ZEPHYRUM
                 || _aspicere(linea->textus, cursor) != ':'
                 || medulla_bloccum_creare(lector->functio, verbum)
                     < ZEPHYRUM)
@@ -1087,7 +1142,7 @@ _bloccos_praescandere (TextusLector* lector)
         {
             chorda verbum = _verbum_legere(linea->textus, &cursor);
 
-            si (_verbum_aequale(verbum, "functio")
+            si (   _verbum_aequale(verbum, "functio")
                 || _verbum_aequale(verbum, "datum")
                 || _verbum_aequale(verbum, "modulus"))
             {
@@ -1099,15 +1154,18 @@ _bloccos_praescandere (TextusLector* lector)
 }
 
 interior b32
-_functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
+_functionem_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32  cursor)
 {
     chorda titulus;
-    s32 typi_parametrorum[XXXII];
+       s32 typi_parametrorum[XXXII];
     chorda tituli_parametrorum[XXXII];
-    s32 numerus_parametrorum = ZEPHYRUM;
-    b32 variadica = FALSUM;
-    s32 typus_reditus;
-    s32 i;
+       s32 numerus_parametrorum  = ZEPHYRUM;
+       b32 variadica             = FALSUM;
+       s32 typus_reditus;
+       s32 i;
 
     _spatia_praeterire(linea, &cursor);
     si (_aspicere(linea, cursor) != '$')
@@ -1137,13 +1195,13 @@ _functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
         si (_aspicere(linea, cursor) == '.')
         {
             /* "..." */
-            si (_aspicere(linea, cursor + I) != '.'
+            si (   _aspicere(linea, cursor + I)  != '.'
                 || _aspicere(linea, cursor + II) != '.')
             {
                 redde FALSUM;
             }
-            cursor += III;
-            variadica = VERUM;
+            cursor     += III;
+            variadica  = VERUM;
             _spatia_praeterire(linea, &cursor);
             perge;
         }
@@ -1154,8 +1212,8 @@ _functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
             redde FALSUM;
         }
         {
-            chorda verbum = _verbum_legere(linea, &cursor);
-            s32 typus = _typum_invenire(verbum);
+            chorda verbum  = _verbum_legere(linea, &cursor);
+               s32 typus   = _typum_invenire(verbum);
 
             si (typus < ZEPHYRUM)
             {
@@ -1176,7 +1234,7 @@ _functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
     }
     cursor++;   /* ')' */
     _spatia_praeterire(linea, &cursor);
-    si (_aspicere(linea, cursor) != '-'
+    si (   _aspicere(linea, cursor)     != '-'
         || _aspicere(linea, cursor + I) != '>')
     {
         redde FALSUM;
@@ -1206,8 +1264,8 @@ _functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
 
     lector->functio = medulla_functionem_creare(lector->modulus,
         titulus, typus_reditus, variadica);
-    lector->datum = NIHIL;
-    lector->bloccus = -I;
+    lector->datum    = NIHIL;
+    lector->bloccus  = -I;
     si (lector->functio == NIHIL)
     {
         redde FALSUM;
@@ -1225,11 +1283,14 @@ _functionem_legere (TextusLector* lector, chorda linea, i32 cursor)
 }
 
 interior b32
-_datum_legere (TextusLector* lector, chorda linea, i32 cursor)
+_datum_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32  cursor)
 {
     chorda titulus;
-    s64 magnitudo_octetorum;
-    s64 ordinatio;
+       s64 magnitudo_octetorum;
+       s64 ordinatio;
     chorda verbum;
 
     _spatia_praeterire(linea, &cursor);
@@ -1257,21 +1318,22 @@ _datum_legere (TextusLector* lector, chorda linea, i32 cursor)
         redde FALSUM;
     }
     _spatia_praeterire(linea, &cursor);
-    si (!_s64_legere(linea, &cursor, &ordinatio)
+    si (   !_s64_legere(linea, &cursor, &ordinatio)
         || !_finis_lineae(linea, cursor))
     {
         redde FALSUM;
     }
     lector->datum = medulla_datum_creare(lector->modulus, titulus,
         (i32)magnitudo_octetorum, (i32)ordinatio);
-    lector->functio = NIHIL;
-    lector->bloccus = -I;
-    lector->offset_dati = ZEPHYRUM;
+    lector->functio      = NIHIL;
+    lector->bloccus      = -I;
+    lector->offset_dati  = ZEPHYRUM;
     redde lector->datum != NIHIL;
 }
 
 interior s32
-_cifra_hex (character c)
+_cifra_hex (
+    character c)
 {
     si (c >= '0' && c <= '9')
     {
@@ -1285,9 +1347,12 @@ _cifra_hex (character c)
 }
 
 interior b32
-_octetos_legere (TextusLector* lector, chorda linea, i32 cursor)
+_octetos_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32  cursor)
 {
-    i8 octeti[LXIV];
+     i8 octeti[LXIV];
     i32 numerus = ZEPHYRUM;
 
     per (;;)
@@ -1300,9 +1365,9 @@ _octetos_legere (TextusLector* lector, chorda linea, i32 cursor)
         {
             frange;
         }
-        altum = _cifra_hex(_aspicere(linea, cursor));
-        imum = _cifra_hex(_aspicere(linea, cursor + I));
-        si (altum < ZEPHYRUM || imum < ZEPHYRUM
+        altum  = _cifra_hex(_aspicere(linea, cursor));
+        imum   = _cifra_hex(_aspicere(linea, cursor + I));
+        si (   altum < ZEPHYRUM || imum < ZEPHYRUM
             || numerus >= (i32)magnitudo(octeti))
         {
             redde FALSUM;
@@ -1325,11 +1390,14 @@ _octetos_legere (TextusLector* lector, chorda linea, i32 cursor)
 }
 
 interior b32
-_relocationem_legere (TextusLector* lector, chorda linea, i32 cursor)
+_relocationem_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32  cursor)
 {
-    s64 offset;
+       s64 offset;
     chorda titulus;
-    s32 symbolum;
+       s32 symbolum;
 
     _spatia_praeterire(linea, &cursor);
     si (!_s64_legere(linea, &cursor, &offset))
@@ -1357,11 +1425,13 @@ _relocationem_legere (TextusLector* lector, chorda linea, i32 cursor)
 }
 
 interior b32
-_lineam_tractare (TextusLector* lector, constans TextusLinea* linea)
+_lineam_tractare (
+            TextusLector* lector,
+    constans TextusLinea* linea)
 {
-    i32 cursor = ZEPHYRUM;
+          i32 cursor = ZEPHYRUM;
     character c;
-    chorda verbum;
+       chorda verbum;
 
     _spatia_praeterire(linea->textus, &cursor);
     c = _aspicere(linea->textus, cursor);
@@ -1376,7 +1446,7 @@ _lineam_tractare (TextusLector* lector, constans TextusLinea* linea)
         }
         cursor++;
         verbum = _verbum_legere(linea->textus, &cursor);
-        si (_aspicere(linea->textus, cursor) != ':'
+        si (   _aspicere(linea->textus, cursor) != ':'
             || !_finis_lineae(linea->textus, cursor + I))
         {
             redde FALSUM;
@@ -1411,7 +1481,7 @@ _lineam_tractare (TextusLector* lector, constans TextusLinea* linea)
                 redde FALSUM;
             }
             _spatia_praeterire(linea->textus, &cursor_verbi);
-            si (!_chordam_citatam_legere(lector, linea->textus,
+            si (   !_chordam_citatam_legere(lector, linea->textus,
                     &cursor_verbi, &titulus)
                 || !_finis_lineae(linea->textus, cursor_verbi))
             {
@@ -1463,14 +1533,16 @@ _lineam_tractare (TextusLector* lector, constans TextusLinea* linea)
 }
 
 MedullaModulus*
-medulla_textum_legere (Piscina* piscina, chorda textus,
-    i32* linea_erroris)
+medulla_textum_legere (
+    Piscina* piscina,
+     chorda  textus,
+        i32* linea_erroris)
 {
     TextusLector lector;
-    i32 i;
-    i32 m;
-    i32 initium = ZEPHYRUM;
-    i32 numerus_lineae = I;
+             i32 i;
+             i32 m;
+             i32 initium         = ZEPHYRUM;
+             i32 numerus_lineae  = I;
 
     si (linea_erroris != NIHIL)
     {
@@ -1481,9 +1553,9 @@ medulla_textum_legere (Piscina* piscina, chorda textus,
         redde NIHIL;
     }
     memset(&lector, ZEPHYRUM, magnitudo(TextusLector));
-    lector.piscina = piscina;
-    lector.bloccus = -I;
-    lector.lineae = xar_creare(piscina, (i32)magnitudo(TextusLinea));
+    lector.piscina  = piscina;
+    lector.bloccus  = -I;
+    lector.lineae   = xar_creare(piscina, (i32)magnitudo(TextusLinea));
     si (lector.lineae == NIHIL)
     {
         redde NIHIL;
@@ -1492,26 +1564,27 @@ medulla_textum_legere (Piscina* piscina, chorda textus,
     /* findere in lineas; vacuas et commenta (;) praetermittere */
     per (i = ZEPHYRUM; i <= textus.mensura; i++)
     {
-        si (i == textus.mensura
+        si (   i                          == textus.mensura
             || (character)textus.datum[i] == '\n')
         {
             chorda contenta;
-            i32 cursor = ZEPHYRUM;
+               i32 cursor = ZEPHYRUM;
 
-            contenta.datum = textus.datum + initium;
-            contenta.mensura = i - initium;
+            contenta.datum    = textus.datum + initium;
+            contenta.mensura  = i - initium;
             _spatia_praeterire(contenta, &cursor);
-            si (cursor < contenta.mensura
+            si (   cursor < contenta.mensura
                 && (character)contenta.datum[cursor] != ';')
             {
-                TextusLinea* sedes = (TextusLinea*)xar_addere(lector.lineae);
+                TextusLinea* sedes =
+                    (TextusLinea*)xar_addere(lector.lineae);
 
                 si (sedes == NIHIL)
                 {
                     redde NIHIL;
                 }
-                sedes->textus = contenta;
-                sedes->numerus = numerus_lineae;
+                sedes->textus   = contenta;
+                sedes->numerus  = numerus_lineae;
             }
             initium = i + I;
             numerus_lineae++;

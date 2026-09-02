@@ -15,29 +15,32 @@
 #define ALTITUDO 30U
 
 interior chorda
-_ch (constans character* literis)
+_ch (
+    constans character* literis)
 {
     chorda c;
     unio { constans character* c; i8* m; } u;
 
-    u.c = literis;
-    c.datum = u.m;
-    c.mensura = (i32)strlen(literis);
+    u.c        = literis;
+    c.datum    = u.m;
+    c.mensura  = (i32)strlen(literis);
     redde c;
 }
 
 /* columna prima ubi textus in linea y apparet; -I si absens */
 interior s32
-_quaerere (constans TesseraOpus* opus, integer y,
-    constans character* textus)
+_quaerere (
+    constans TesseraOpus* opus,
+                 integer  y,
+      constans character* textus)
 {
     memoriae_index mensura = strlen(textus);
-    integer x;
+           integer x;
 
     per (x = 0; x + (integer)mensura <= (integer)LATITUDO; x++)
     {
         memoriae_index k;
-        b32 congruit = VERUM;
+                   b32 congruit = VERUM;
 
         per (k = 0U; k < mensura; k++)
         {
@@ -89,47 +92,47 @@ principale (vacuum)
     }
 
     {
-        chorda lineae[5];
-        i32 puncta_lineae[1];
-        VindexOrdoTabulati tabulata[2];
+                      chorda lineae[5];
+                         i32 puncta_lineae[1];
+          VindexOrdoTabulati tabulata[2];
         VindexOrdoVariabilis variabilia[2];
-        VindexConspectus conspectus;
+            VindexConspectus conspectus;
 
-        lineae[0] = _ch("int computare(int fons)");
-        lineae[1] = _ch("{");
-        lineae[2] = _ch("    int a;");
-        lineae[3] = _ch("    a = fons + 1;");
-        lineae[4] = _ch("}");
-        puncta_lineae[0] = IV;
-        tabulata[0].functio = _ch("computare");
-        tabulata[0].positio = _ch("probe.c:4");
-        tabulata[1].functio = _ch("main");
-        tabulata[1].positio = _ch("probe.c:9");
-        variabilia[0].titulus = _ch("a");
-        variabilia[0].typus = _ch("int");
-        variabilia[0].valor = _ch("7");
-        variabilia[1].titulus = _ch("fons");
-        variabilia[1].typus = _ch("int");
-        variabilia[1].valor = _ch("6");
+        lineae[0]              = _ch("int computare(int fons)");
+        lineae[1]              = _ch("{");
+        lineae[2]              = _ch("    int a;");
+        lineae[3]              = _ch("    a = fons + 1;");
+        lineae[4]              = _ch("}");
+        puncta_lineae[0]       = IV;
+        tabulata[0].functio    = _ch("computare");
+        tabulata[0].positio    = _ch("probe.c:4");
+        tabulata[1].functio    = _ch("main");
+        tabulata[1].positio    = _ch("probe.c:9");
+        variabilia[0].titulus  = _ch("a");
+        variabilia[0].typus    = _ch("int");
+        variabilia[0].valor    = _ch("7");
+        variabilia[1].titulus  = _ch("fons");
+        variabilia[1].typus    = _ch("int");
+        variabilia[1].valor    = _ch("6");
 
         memset(&conspectus, ZEPHYRUM,
             magnitudo(VindexConspectus));
-        conspectus.lineae = lineae;
-        conspectus.numerus_linearum = V;
-        conspectus.linea_prima = I;
-        conspectus.linea_currens = IV;
-        conspectus.puncta_lineae = puncta_lineae;
-        conspectus.puncta_numerus = I;
-        conspectus.titulus_fontis = _ch("probe.c");
-        conspectus.modus = _ch("PAUSA");
+        conspectus.lineae            = lineae;
+        conspectus.numerus_linearum  = V;
+        conspectus.linea_prima       = I;
+        conspectus.linea_currens     = IV;
+        conspectus.puncta_lineae     = puncta_lineae;
+        conspectus.puncta_numerus    = I;
+        conspectus.titulus_fontis    = _ch("probe.c");
+        conspectus.modus             = _ch("PAUSA");
         conspectus.positio = _ch(
             "probe.c:4  per EXEMPLUM <- probe.h:2");
-        conspectus.status = _ch("status probationis");
-        conspectus.tabulata = tabulata;
-        conspectus.tabulata_numerus = II;
-        conspectus.tabula_dextra = (s32)VINDEX_TABULA_VARIABILIA;
-        conspectus.variabilia = variabilia;
-        conspectus.variabilia_numerus = II;
+        conspectus.status              = _ch("status probationis");
+        conspectus.tabulata            = tabulata;
+        conspectus.tabulata_numerus    = II;
+        conspectus.tabula_dextra       = (s32)VINDEX_TABULA_VARIABILIA;
+        conspectus.variabilia          = variabilia;
+        conspectus.variabilia_numerus  = II;
 
         vindex_visum_pingere(&conspectus, opus);
 
@@ -171,7 +174,7 @@ principale (vacuum)
         CREDO_VERUM (_quaerere(opus, 2, "computare") >= ZEPHYRUM);
         CREDO_VERUM (_quaerere(opus, 3, "main") >= ZEPHYRUM);
         {
-            s32 y_variabilium = -I;
+                s32 y_variabilium = -I;
             integer y;
 
             per (y = 0; y < (integer)ALTITUDO; y++)
@@ -203,8 +206,8 @@ principale (vacuum)
 
         /* linea imperii aperta */
         imprimere("\n--- Probans lineam imperii ---\n");
-        conspectus.imperium_apertum = VERUM;
-        conspectus.imperium = _ch("punctum probe.c:4");
+        conspectus.imperium_apertum  = VERUM;
+        conspectus.imperium          = _ch("punctum probe.c:4");
         vindex_visum_pingere(&conspectus, opus);
         {
             TesseraCellula prima = tessera_cellulam_legere(opus,
@@ -218,19 +221,19 @@ principale (vacuum)
         CREDO_AEQUALIS_I32 ((i32)opus->cursor_x,
             (i32)(1 + 17));
         /* tabula anuli */
-        conspectus.imperium_apertum = FALSUM;
-        conspectus.tabula_dextra = (s32)VINDEX_TABULA_ANULUS;
+        conspectus.imperium_apertum  = FALSUM;
+        conspectus.tabula_dextra     = (s32)VINDEX_TABULA_ANULUS;
         {
             chorda anulus[1];
 
-            anulus[0] = _ch("computare +3  probe.c:4");
-            conspectus.anulus = anulus;
-            conspectus.anulus_numerus = I;
+            anulus[0]                  = _ch("computare +3  probe.c:4");
+            conspectus.anulus          = anulus;
+            conspectus.anulus_numerus  = I;
             vindex_visum_pingere(&conspectus, opus);
             CREDO_VERUM (_quaerere(opus, 0, "VINDEX")
                 >= ZEPHYRUM);
             {
-                s32 inventum = -I;
+                    s32 inventum = -I;
                 integer y;
 
                 per (y = 0; y < (integer)ALTITUDO; y++)
