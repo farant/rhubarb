@@ -8,10 +8,13 @@
 
 /* Check if a call to a specific function exists */
 interior b32
-_habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Piscina* piscina)
+_habet_vocationem (
+            ArborNodus* radix,
+    constans character* nomen_quaerendum,
+               Piscina* piscina)
 {
     Xar* liberi;
-    i32 i;
+    i32  i;
 
     (vacuum)piscina;
 
@@ -23,9 +26,10 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
         si (callee != NIHIL && callee->genus == ARBOR_NODUS_IDENTIFIER)
         {
             chorda* valor = callee->datum.folium.valor;
-            si (valor != NIHIL &&
-                valor->mensura == (i32)strlen(nomen_quaerendum) &&
-                memcmp(valor->datum, nomen_quaerendum, (size_t)valor->mensura) == ZEPHYRUM)
+            si (   valor          != NIHIL
+                && valor->mensura == (i32)strlen(nomen_quaerendum)
+                && memcmp(valor->datum, nomen_quaerendum,
+                (size_t)valor->mensura) == ZEPHYRUM)
             {
                 redde VERUM;
             }
@@ -45,7 +49,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
                 per (i = ZEPHYRUM; i < xar_numerus(liberi); i++)
                 {
                     ArborNodus** slot = xar_obtinere(liberi, i);
-                    si (_habet_vocationem(*slot, nomen_quaerendum, piscina)) redde VERUM;
+                    si (_habet_vocationem(*slot, nomen_quaerendum,
+                                                                                 piscina)) redde VERUM;
                 }
             }
             frange;
@@ -53,8 +58,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
 
         casus ARBOR_NODUS_FUNCTION_DEFINITION:
         {
-            si (_habet_vocationem(radix->datum.functio.corpus, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.functio.corpus,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
@@ -66,7 +71,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
                 per (i = ZEPHYRUM; i < xar_numerus(sententiae); i++)
                 {
                     ArborNodus** slot = xar_obtinere(sententiae, i);
-                    si (_habet_vocationem(*slot, nomen_quaerendum, piscina)) redde VERUM;
+                    si (_habet_vocationem(*slot, nomen_quaerendum,
+                                                                                 piscina)) redde VERUM;
                 }
             }
             frange;
@@ -74,12 +80,12 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
 
         casus ARBOR_NODUS_IF_STATEMENT:
         {
-            si (_habet_vocationem(radix->datum.conditionale.conditio, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.conditionale.consequens, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.conditionale.alternans, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.conditionale.conditio,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.conditionale.consequens,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.conditionale.alternans,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
@@ -91,7 +97,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
                 per (i = ZEPHYRUM; i < xar_numerus(decls); i++)
                 {
                     ArborNodus** slot = xar_obtinere(decls, i);
-                    si (_habet_vocationem(*slot, nomen_quaerendum, piscina)) redde VERUM;
+                    si (_habet_vocationem(*slot, nomen_quaerendum,
+                                                                                 piscina)) redde VERUM;
                 }
             }
             frange;
@@ -99,8 +106,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
 
         casus ARBOR_NODUS_INIT_DECLARATOR:
         {
-            si (_habet_vocationem(radix->datum.init_decl.initializer, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.init_decl.initializer,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
@@ -112,7 +119,8 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
                 per (i = ZEPHYRUM; i < xar_numerus(args); i++)
                 {
                     ArborNodus** slot = xar_obtinere(args, i);
-                    si (_habet_vocationem(*slot, nomen_quaerendum, piscina)) redde VERUM;
+                    si (_habet_vocationem(*slot, nomen_quaerendum,
+                                                                                 piscina)) redde VERUM;
                 }
             }
             frange;
@@ -120,37 +128,37 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
 
         casus ARBOR_NODUS_BINARY_EXPRESSION:
         {
-            si (_habet_vocationem(radix->datum.binarium.sinister, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.binarium.dexter, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.binarium.sinister,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.binarium.dexter,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
         casus ARBOR_NODUS_ASSIGNMENT_EXPRESSION:
         {
-            si (_habet_vocationem(radix->datum.assignatio.target, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.assignatio.valor, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.assignatio.target,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.assignatio.valor,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
         casus ARBOR_NODUS_RETURN_STATEMENT:
         {
-            si (_habet_vocationem(radix->datum.reditio.valor, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.reditio.valor,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
         casus ARBOR_NODUS_CONDITIONAL_EXPRESSION:
         {
-            si (_habet_vocationem(radix->datum.ternarium.conditio, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.ternarium.verum, nomen_quaerendum, piscina))
-                redde VERUM;
-            si (_habet_vocationem(radix->datum.ternarium.falsum, nomen_quaerendum, piscina))
-                redde VERUM;
+            si (_habet_vocationem(radix->datum.ternarium.conditio,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.ternarium.verum,
+                nomen_quaerendum, piscina)) redde VERUM;
+            si (_habet_vocationem(radix->datum.ternarium.falsum,
+                nomen_quaerendum, piscina)) redde VERUM;
             frange;
         }
 
@@ -162,10 +170,13 @@ _habet_vocationem(ArborNodus* radix, constans character* nomen_quaerendum, Pisci
 }
 
 interior i32
-_lint_filum(constans character* via, Piscina* piscina, InternamentumChorda* intern)
+_lint_filum (
+     constans character* via,
+                Piscina* piscina,
+    InternamentumChorda* intern)
 {
     ArborResultus res;
-    i32 errores = ZEPHYRUM;
+              i32 errores = ZEPHYRUM;
 
     imprimere("Linting: %s\n", via);
 
@@ -187,14 +198,16 @@ _lint_filum(constans character* via, Piscina* piscina, InternamentumChorda* inte
     }
 
     /* Check for credo_imprimere_compendium */
-    si (!_habet_vocationem(res.radix, "credo_imprimere_compendium", piscina))
+    si (!_habet_vocationem(res.radix, "credo_imprimere_compendium",
+        piscina))
     {
         imprimere("  ADMONITIO: credo_imprimere_compendium() non inventa\n");
         errores++;
     }
 
     /* Check for credo_omnia_praeterierunt */
-    si (!_habet_vocationem(res.radix, "credo_omnia_praeterierunt", piscina))
+    si (!_habet_vocationem(res.radix, "credo_omnia_praeterierunt",
+        piscina))
     {
         imprimere("  ADMONITIO: credo_omnia_praeterierunt() non inventa\n");
         errores++;
@@ -208,12 +221,15 @@ _lint_filum(constans character* via, Piscina* piscina, InternamentumChorda* inte
     redde errores;
 }
 
-s32 principale(s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina* piscina;
+                Piscina* piscina;
     InternamentumChorda* intern;
-    s32 i;
-    s32 totalis_errores = ZEPHYRUM;
+                    s32  i;
+                    s32  totalis_errores = ZEPHYRUM;
 
     si (argc < II)
     {
@@ -221,8 +237,8 @@ s32 principale(s32 argc, character** argv)
         redde I;
     }
 
-    piscina = piscina_generare_dynamicum("lint", MMMMXCVI * XVI);
-    intern = internamentum_creare(piscina);
+    piscina  = piscina_generare_dynamicum("lint", MMMMXCVI * XVI);
+    intern   = internamentum_creare(piscina);
 
     per (i = I; i < argc; i++)
     {
@@ -236,7 +252,8 @@ s32 principale(s32 argc, character** argv)
     }
     alioquin
     {
-        imprimere("Linting completum: %d admonitiones\n", totalis_errores);
+        imprimere("Linting completum: %d admonitiones\n",
+            totalis_errores);
     }
 
     piscina_destruere(piscina);

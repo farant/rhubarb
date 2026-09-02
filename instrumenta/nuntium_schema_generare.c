@@ -12,13 +12,16 @@
 #include "chorda.h"
 #include <stdio.h>
 
-s32 principale(s32 argc, character** argv)
+s32
+principale (
+          s32   argc,
+    character** argv)
 {
-    Piscina*            piscina;
-    chorda              fons;
+               Piscina* piscina;
+                chorda  fons;
     NuntiumSchemaNodus* radix;
-    chorda              caput;
-    chorda              corpus;
+                chorda  caput;
+                chorda  corpus;
 
     si (argc != IV)
     {
@@ -39,17 +42,20 @@ s32 principale(s32 argc, character** argv)
     fons = filum_legere_totum(argv[I], piscina);
     si (fons.mensura == ZEPHYRUM)
     {
-        fprintf(stderr, "Error: non potuit legere filum '%s'\n", argv[I]);
+        fprintf(stderr, "Error: non potuit legere filum '%s'\n",
+            argv[I]);
         piscina_destruere(piscina);
         redde I;
     }
 
     /* Parsare schema */
-    radix = nuntium_schema_legere(piscina, (constans character*)fons.datum,
+    radix = nuntium_schema_legere(piscina,
+        (constans character*)fons.datum,
         (s32)fons.mensura);
     si (!radix)
     {
-        fprintf(stderr, "Error: schema parsatio fracta pro '%s'\n", argv[I]);
+        fprintf(stderr, "Error: schema parsatio fracta pro '%s'\n",
+            argv[I]);
         piscina_destruere(piscina);
         redde I;
     }
@@ -63,12 +69,12 @@ s32 principale(s32 argc, character** argv)
         caput_titulis = argv[II];
         per (p = argv[II]; *p; p++)
         {
-            si (*p == '/')
-                caput_titulis = p + I;
+            si (*p == '/') caput_titulis = p + I;
         }
 
         /* Generare caput */
-        caput = nuntium_schema_generare_caput(piscina, radix, caput_titulis);
+        caput = nuntium_schema_generare_caput(piscina, radix,
+            caput_titulis);
         si (caput.mensura == ZEPHYRUM)
         {
             fprintf(stderr, "Error: generatio capitis fracta\n");
@@ -77,7 +83,8 @@ s32 principale(s32 argc, character** argv)
         }
 
         /* Generare corpus */
-        corpus = nuntium_schema_generare_corpus(piscina, radix, caput_titulis);
+        corpus = nuntium_schema_generare_corpus(piscina, radix,
+            caput_titulis);
         si (corpus.mensura == ZEPHYRUM)
         {
             fprintf(stderr, "Error: generatio corporis fracta\n");
