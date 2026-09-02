@@ -85,6 +85,7 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "chorda_aedificator_push_indentationem",
     "chorda_aedificator_reset",
     "chorda_aedificator_spectare",
+    "chorda_aedificator_truncare",
     NIHIL
 };
 

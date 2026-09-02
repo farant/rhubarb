@@ -41,6 +41,7 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "chorda_aedificator_longitudo",
     "chorda_aedificator_pop_indentationem",
     "chorda_aedificator_push_indentationem",
+    "chorda_aedificator_truncare",
     NIHIL
 };
 
