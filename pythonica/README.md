@@ -18,6 +18,9 @@ plica pendet — veritas in C manet.
   `.unitates()`); `strictum=True` REICE revertit
 - `silva.verdictum(via)` — examen + `-delta` uno vocamine
 - `silva.differre(a, b)` — paria unitatum + `cosmetica_solum`
+- `.membrum_addere(typus, textus, post=None)` — membrum structurae/
+  unionis/enumerationis nomine typi (extenta genus structura/unio/
+  enumeratio; `corpus(via, 'S', genus='typus')`)
 - `silva.Refactio()` — transactio trans plagulas: `.editio(via)` una per
   viam, `.prototypum_synchronizare(via_c, via_h, nomen)` (caput
   definitionis -> prototypum; `si_absens='finis'` ante `#endif`),

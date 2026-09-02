@@ -237,6 +237,42 @@ try:
 except silva.SilvaError:
     credo(open(via).read() == FONS and open(via_h).read() == CAPUT, 'strictum: ambae restitutae')
 
+print('--- typi: extenta + membrum_addere ---')
+FONS_T = ('#include "latina.h"\n'
+          '\n'
+          'nomen structura {\n'
+          '    i32 a;\n'
+          '    vacuum* memoria;\n'
+          '} S;\n'
+          '\n'
+          'vacuum\n'
+          'f (vacuum)\n'
+          '{\n'
+          '    redde;\n'
+          '}\n')
+via_t = os.path.join(T, 'typi.c')
+open(via_t, 'w').write(FONS_T)
+xt = silva.extenta(via_t)
+credo([(x.titulus, x.genus) for x in xt] == [('S', 'structura'), ('f', 'definitio')],
+      'extenta: structura S + definitio f')
+credo(silva.corpus(via_t, 'S', genus='typus').startswith('nomen structura {'), 'corpus typi')
+e = silva.Editio(via_t)
+e.membrum_addere('S', '    b32 vexillum;')
+e.membrum_addere('S', '    i32 cursor;', post='i32 a;')
+f = e.applicare()
+c = silva.corpus(via_t, 'S', genus='typus')
+credo(f.sana and 'cursor;' in c and 'vexillum;' in c, 'membra addita, ACCIPE')
+credo(c.index('a;') < c.index('cursor;') < c.index('memoria;') < c.index('vexillum;'), 'ordo: post a, ante claudentem')
+credo(f.formata and ('vacuum* memoria;' in c or 'vacuum*' in c), 'forma columnas ordinavit')
+try:
+    silva.Editio(via_t).membrum_addere('S', '    i32 z;', post='nemo;')
+    credo(False, 'post ignotum levat')
+except silva.SilvaError:
+    credo(True, 'post ignotum levat SilvaError')
+# custos post inclusionem: extenta per ramum sumptum
+open(via_t, 'w').write('#include "latina.h"\n\n#ifndef CUSTOS_Y\n#define CUSTOS_Y\n\nvacuum\nb (vacuum);\n\n#endif\n')
+credo([x.titulus for x in silva.extenta(via_t)] == ['b'], 'custos post inclusionem: prototypum visum')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')

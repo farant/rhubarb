@@ -498,7 +498,7 @@ principale (
                         (insignatus integer)x->linea_a,
                         (insignatus integer)x->linea_nodi,
                         (insignatus integer)x->linea_b,
-                        x->definitio ? "definitio" : "prototypum");
+                        x->genus);
                 }
                 piscina_destruere(opus);
                 perge;

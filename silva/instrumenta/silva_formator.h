@@ -121,7 +121,10 @@ formator_lint_intra (
  * fontis - IDEM ambitus quem -intra iudicat: a linea post nodum
  * radicis priorem (commentarium ducens, intervalla supra) ad lineam
  * ultimam. Consumptor: -lineae (uncus commissionis: lineae mutatae ->
- * functiones nominatae -> scriptura intra eas). Xar de
+ * functiones nominatae -> scriptura intra eas), pythonica. Typi cum
+ * corpore (structura/unio/enumeratio) quoque. Nodi in ramis SUMPTIS
+ * conditionalium in ambitu plagulae ut radices ambulantur (custos post
+ * inclusionem, #ifdef platformae) - rami omissi non. Xar de
  * FormatorExtentum; vacuum si parsura fracta; NIHIL si piscina. */
 nomen structura {
     chorda titulus;
@@ -130,6 +133,9 @@ nomen structura {
                          * titulus) - corpus sine commentario ducente */
        i32 linea_b;
        b32 definitio;   /* VERUM = definitio, FALSUM = prototypum */
+    constans character* genus; /* "definitio" | "prototypum" | "structura"
+                                * | "unio" | "enumeratio" (typi cum corpore:
+                                * titulus = declarator typedef, aliter tag) */
 } FormatorExtentum;
 
 Xar*

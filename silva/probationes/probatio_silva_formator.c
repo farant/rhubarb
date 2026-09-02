@@ -2461,6 +2461,61 @@ principale (vacuum)
         }
     }
 
+        imprimere("\n--- Probans radices in ramis conditionalium et typos"
+            " ---\n");
+    {
+        /* custos post inclusionem = conditionalis vera in radice (silva
+         * custodem plagulae totius solum planat): ramus SUMPTUS ut
+         * radix ambulatur - extenta, prototypa R1, R13 (quaestio
+         * 01M1G2GAE4). Typi cum corpore in extentis (genus structura,
+         * titulus = declarator typedef). */
+        constans character* fons =
+            "#include \"latina.h\"\n"
+            "\n"
+            "#ifndef CUSTOS_X\n"
+            "#define CUSTOS_X\n"
+            "\n"
+            "nomen structura {\n"
+            "    i32 a;\n"
+            "} S;\n"
+            "\n"
+            "vacuum b(vacuum);\n"
+            "\n"
+            "#endif\n";
+                     Xar* x;
+                     Xar* d;
+        FormatorExtentum* e;
+                     b32  r1;
+                     i32  k;
+
+        x = formator_extenta(piscina, NIHIL, fons, (i32)strlen(fons));
+        CREDO_NON_NIHIL(x);
+        CREDO_AEQUALIS_I32(xar_numerus(x), (i32)2);
+        e = (FormatorExtentum*)xar_obtinere(x, ZEPHYRUM);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "S"));
+        CREDO_VERUM(strcmp(e->genus, "structura") == ZEPHYRUM);
+        CREDO_AEQUALIS_I32(e->linea_nodi, (i32)6);
+        CREDO_AEQUALIS_I32(e->linea_b, (i32)8);
+        e = (FormatorExtentum*)xar_obtinere(x, I);
+        CREDO_VERUM(chorda_aequalis_literis(e->titulus, "b"));
+        CREDO_VERUM(strcmp(e->genus, "prototypum") == ZEPHYRUM);
+
+        /* prototypum intra ramum sumptum: R1 iudicatur */
+        d = _lint(piscina, fons);
+        CREDO_NON_NIHIL(d);
+        r1 = FALSUM;
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            si (strcmp(_divergentia(d, k)->regula, "typus-in-linea-sua")
+                    == ZEPHYRUM
+                && _divergentia(d, k)->linea == (i32)10)
+            {
+                r1 = VERUM;
+            }
+        }
+        CREDO_VERUM(r1);
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 

@@ -3892,6 +3892,140 @@ _fracturas_censere (
     }
 }
 
+/* radices complanare: liberi directi radicis, et per conditionales
+ * in ambitu plagulae RAMI SUMPTI recursive (via evaluata = una
+ * configuratio, VISIO) - custos post inclusionem, #ifdef platformae.
+ * Ante hoc ambulatio radicis (R13, prototypa, extenta, -intra) intra
+ * conditionalem caeca erat (quaestio 01M1G2GAE4). */
+interior vacuum
+_radices_complanare (
+       Piscina* piscina,
+    SilvaValor  lista,
+           Xar* exitus)
+{
+    i32 n;
+    i32 j;
+
+    si (lista.genus != SILVA_VALOR_LISTA) redde;
+    n = silva_valor_lista_numerus(lista);
+    per (j = ZEPHYRUM; j < n; j += I)
+    {
+        SilvaValor* elementum;
+        SilvaNodus* nodus;
+
+        elementum  = silva_valor_lista_obtinere(lista, j);
+        nodus      = elementum ? _valor_nodus(*elementum) : NIHIL;
+        si (!nodus) perge;
+        si (nodus->genus == SILVA_C89_GENUS_CONDITIONALIS)
+        {
+            SilvaValor rami;
+                   i32 nr;
+                   i32 r;
+
+            rami = silva_c89_conditionalis_rami(nodus);
+            si (rami.genus != SILVA_VALOR_LISTA) perge;
+            nr = silva_valor_lista_numerus(rami);
+            per (r = ZEPHYRUM; r < nr; r += I)
+            {
+                SilvaValor* er;
+                SilvaNodus* ramus;
+
+                er     = silva_valor_lista_obtinere(rami, r);
+                ramus  = er ? _valor_nodus(*er) : NIHIL;
+                si (   !ramus
+                    || ramus->genus != SILVA_C89_GENUS_RAMUS_SUMPTUS)
+                {
+                    perge;
+                }
+                _radices_complanare(piscina,
+                    silva_c89_ramus_sumptus_contentum(ramus), exitus);
+            }
+            perge;
+        }
+        {
+            SilvaNodus** sedes;
+
+            sedes = (SilvaNodus**)xar_addere(exitus);
+            si (sedes) *sedes = nodus;
+        }
+    }
+}
+
+/* typus cum corpore in radice (declaratio cuius specificator
+ * structura/unio/enumeratio corpus fert): titulus = declarator typedef
+ * primus, aliter tag; genus = verbum; NIHIL aliter */
+interior SilvaToken*
+_titulus_typi_radicis (
+            SilvaNodus*  nodus_radicis,
+    constans character** genus_exitus)
+{
+    SilvaValor specificatores;
+           i32 n;
+           i32 s;
+
+    *genus_exitus = NIHIL;
+    si (   !nodus_radicis
+        || nodus_radicis->genus != SILVA_C89_GENUS_DECLARATIO)
+    {
+        redde NIHIL;
+    }
+    specificatores = silva_c89_declaratio_specificatores(nodus_radicis);
+    n = silva_valor_lista_numerus(specificatores);
+    per (s = ZEPHYRUM; s < n; s += I)
+    {
+        SilvaValor* e;
+        SilvaNodus* typus;
+        SilvaToken* tag;
+        SilvaValor  declaratores;
+
+        e      = silva_valor_lista_obtinere(specificatores, s);
+        typus  = e ? _valor_nodus(*e) : NIHIL;
+        si (!typus) perge;
+        si (typus->genus == SILVA_C89_GENUS_STRUCTURA)
+        {
+            *genus_exitus = "structura";
+        }
+        alioquin si (typus->genus == SILVA_C89_GENUS_UNIO)
+        {
+            *genus_exitus = "unio";
+        }
+        alioquin si (typus->genus == SILVA_C89_GENUS_ENUMERATIO)
+        {
+            *genus_exitus = "enumeratio";
+        }
+        alioquin
+        {
+            perge;
+        }
+        /* corpus? (declaratio 'structura X x;' sine corpore non est
+         * typus hic definitus) */
+        si (   typus->genus != SILVA_C89_GENUS_ENUMERATIO
+            && _valor_radix(silva_c89_structura_tok_aperta(typus))
+                == NIHIL)
+        {
+            *genus_exitus = NIHIL;
+            redde NIHIL;
+        }
+        declaratores = silva_c89_declaratio_declaratores(nodus_radicis);
+        si (silva_valor_lista_numerus(declaratores) > (i32)ZEPHYRUM)
+        {
+            SilvaValor* d;
+            SilvaToken* titulus;
+
+            d = silva_valor_lista_obtinere(declaratores, ZEPHYRUM);
+            titulus =
+                _titulus_declaratoris(d ? _valor_nodus(*d) : NIHIL);
+            si (titulus) redde titulus;
+        }
+        tag = typus->genus == SILVA_C89_GENUS_ENUMERATIO ? NIHIL
+            : _valor_radix(silva_c89_structura_tok_titulus(typus));
+        si (tag) redde tag;
+        *genus_exitus = NIHIL;
+        redde NIHIL;
+    }
+    redde NIHIL;
+}
+
 
 /* ==================================================
  * ambitus nominatus (-intra): extenta functionum
@@ -4251,19 +4385,20 @@ formator_lint_intra (
 
         si (radix.genus == SILVA_VALOR_LISTA)
         {
-            i32 n;
-            i32 j;
+            Xar* radices;
+            i32  n;
+            i32  j;
 
-            n = silva_valor_lista_numerus(radix);
+            radices = xar_creare(piscina, magnitudo(SilvaNodus*));
+            si (!radices) redde NIHIL;
+            _radices_complanare(piscina, radix, radices);
+            n = xar_numerus(radices);
             per (j = ZEPHYRUM; j < n; j += I)
             {
-                SilvaValor* elementum;
                 SilvaNodus* nodus_radicis;
 
-                elementum = silva_valor_lista_obtinere(radix,
+                nodus_radicis = *(SilvaNodus**)xar_obtinere(radices,
                     j);
-                nodus_radicis = elementum
-                    ? _valor_nodus(*elementum) : NIHIL;
                 si (!nodus_radicis) perge;
 
                 /* ambitus nominatus: extentum radicis a linea
@@ -4431,6 +4566,7 @@ formator_extenta (
                    i32  mensura)
 {
              Xar* extenta;
+             Xar* radices;
     SilvaParsura* parsura;
       SilvaValor  radix;
              i32  lb_prior;
@@ -4455,27 +4591,35 @@ formator_extenta (
     radix = parsura->commissio->radix;
     si (radix.genus != SILVA_VALOR_LISTA) redde extenta;
 
+    radices = xar_creare(piscina, magnitudo(SilvaNodus*));
+    si (!radices) redde NIHIL;
+    _radices_complanare(piscina, radix, radices);
+
     lb_prior  = ZEPHYRUM;
-    n         = silva_valor_lista_numerus(radix);
+    n         = xar_numerus(radices);
     per (j = ZEPHYRUM; j < n; j += I)
     {
-        SilvaValor* elementum;
-        SilvaNodus* nodus_radicis;
-        SilvaToken* titulus;
-               i32  la;
-               i32  ca;
-               i32  lb;
-               i32  cb;
+                SilvaNodus* nodus_radicis;
+                SilvaToken* titulus;
+        constans character* genus_typi;
+                       i32  la;
+                       i32  ca;
+                       i32  lb;
+                       i32  cb;
 
-        elementum      = silva_valor_lista_obtinere(radix, j);
-        nodus_radicis  = elementum ? _valor_nodus(*elementum) : NIHIL;
+        nodus_radicis = *(SilvaNodus**)xar_obtinere(radices, j);
         si (!nodus_radicis) perge;
         si (!_extensio(nodus_radicis, parsura->fons_princeps, &la,
             &ca, &lb, &cb))
         {
             perge;
         }
-        titulus = _titulus_radicis(nodus_radicis);
+        genus_typi  = NIHIL;
+        titulus     = _titulus_radicis(nodus_radicis);
+        si (!titulus)
+        {
+            titulus = _titulus_typi_radicis(nodus_radicis, &genus_typi);
+        }
         si (titulus)
         {
             FormatorExtentum* x;
@@ -4486,8 +4630,10 @@ formator_extenta (
             x->linea_a     = lb_prior + I;
             x->linea_nodi  = la;
             x->linea_b     = lb;
-            x->definitio = nodus_radicis->genus
+            x->definitio  = nodus_radicis->genus
                 == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS;
+            x->genus = genus_typi ? genus_typi
+                : (x->definitio ? "definitio" : "prototypum");
         }
         lb_prior = lb;
     }

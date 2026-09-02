@@ -47,7 +47,7 @@ class SilvaError(Exception):
 
 
 Extentum = namedtuple('Extentum',
-                      'titulus linea_a linea_nodi linea_b definitio')
+                      'titulus linea_a linea_nodi linea_b definitio genus')
 Divergentia = namedtuple('Divergentia',
                          'linea columna regula inventum exspectatum '
                          'nuntius emendationes')
@@ -97,25 +97,37 @@ def extenta(via):
         if len(o) < 6:
             continue
         exitus.append(Extentum(o[1], int(o[2]), int(o[3]), int(o[4]),
-                               o[5] == 'definitio'))
+                               o[5] == 'definitio', o[5]))
     return exitus
 
 
-def _extentum_nominis(lista, nomen, definitio=True):
-    candidati = [x for x in lista if x.titulus == nomen
-                 and x.definitio == definitio]
-    if not candidati:
+TYPI = ('structura', 'unio', 'enumeratio')
+
+
+def _extentum_nominis(lista, nomen, definitio=True, genus=None):
+    """genus: 'definitio' | 'prototypum' | 'structura' | 'unio' |
+    'enumeratio' | 'typus' (quilibet ex TYPI); definitio (bool) forma
+    vetus pro functionibus"""
+    if genus is None:
         genus = 'definitio' if definitio else 'prototypum'
-        raise SilvaError("functio '%s' (%s) non inventa" % (nomen, genus))
+    if genus == 'typus':
+        candidati = [x for x in lista if x.titulus == nomen
+                     and x.genus in TYPI]
+    else:
+        candidati = [x for x in lista if x.titulus == nomen
+                     and x.genus == genus]
+    if not candidati:
+        raise SilvaError("'%s' (%s) non inventum" % (nomen, genus))
     if len(candidati) > 1:
         raise SilvaError("functio '%s' ambigua (%d extenta)"
                          % (nomen, len(candidati)))
     return candidati[0]
 
 
-def corpus(via, nomen, definitio=True):
-    """Textus nodi (sine commentario ducente) functionis nomine."""
-    x = _extentum_nominis(extenta(via), nomen, definitio)
+def corpus(via, nomen, definitio=True, genus=None):
+    """Textus nodi (sine commentario ducente) functionis aut typi nomine
+    (genus='typus' pro structura/unio/enumeratio)."""
+    x = _extentum_nominis(extenta(via), nomen, definitio, genus)
     lineae = open(_absoluta(via)).read().splitlines(True)
     return ''.join(lineae[x.linea_nodi - 1:x.linea_b])
 
@@ -210,6 +222,30 @@ class Editio(object):
         self.textus = ''.join(lineae[:x.linea_a - 1]) + novus + '\n' \
             + ''.join(lineae[x.linea_a - 1:])
         self.acta.append('inserere_ante %s' % nomen)
+        return self
+
+    def membrum_addere(self, typus, textus, post=None):
+        """membrum structurae/unionis/enumerationis nomine typi addere:
+        ante lineam claudentem ('} Titulus;'), aut post membrum cuius
+        linea 'post' (ancora tolerans intra typum) continet. Forma
+        (applicare) columnas ordinat."""
+        x = _extentum_nominis(self._extenta_praesentia(), typus,
+                              genus='typus')
+        if not textus.endswith('\n'):
+            textus += '\n'
+        lineae = self._lineae()
+        a, b = x.linea_nodi - 1, x.linea_b      # [a, b) 0-basatae
+        sedes = b - 1                           # linea claudens
+        if post is not None:
+            ex = _exemplar_tolerans(post)
+            hits = [i for i in range(a, b) if ex.search(lineae[i])]
+            if len(hits) != 1:
+                raise SilvaError("membrum 'post' %d vicibus in %s: %r"
+                                 % (len(hits), typus, post[:40]))
+            sedes = hits[0] + 1
+        self.textus = ''.join(lineae[:sedes]) + textus \
+            + ''.join(lineae[sedes:])
+        self.acta.append('membrum_addere %s' % typus)
         return self
 
     # -- exitus --
