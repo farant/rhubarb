@@ -238,8 +238,12 @@ class Editio(object):
     def _lineae(self):
         return self.textus.splitlines(True)
 
-    def substituere(self, nomen, novus, definitio=True):
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio)
+    def substituere(self, nomen, novus, definitio=True, genus=None):
+        """corpus nodi nomine substituere (commentarium ducens manet);
+        genus='typus' pro structura/unione/enumeratione (aut genus
+        exactum: 'structura' ...) - sine genere functiones solae."""
+        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
+                              genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -248,8 +252,9 @@ class Editio(object):
         self.acta.append('substituere %s' % nomen)
         return self
 
-    def inserere_post(self, nomen, novus, definitio=True):
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio)
+    def inserere_post(self, nomen, novus, definitio=True, genus=None):
+        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
+                              genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -258,8 +263,9 @@ class Editio(object):
         self.acta.append('inserere_post %s' % nomen)
         return self
 
-    def inserere_ante(self, nomen, novus, definitio=True):
-        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio)
+    def inserere_ante(self, nomen, novus, definitio=True, genus=None):
+        x = _extentum_nominis(self._extenta_praesentia(), nomen, definitio,
+                              genus)
         if not novus.endswith('\n'):
             novus += '\n'
         lineae = self._lineae()
@@ -636,6 +642,16 @@ def receptum_validum(via):
     elif not recens:
         causa += ' [arbor mutata POST cursum - receptum rancidum]'
     return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '')
+
+
+def receptum_delere(via):
+    """receptum cum actis et signo pendenti delere - post consumptionem
+    (commissio) aut in fine probationis; absens = nihil"""
+    for suffixum in ('', '.acta', '.pendens', '.tmp'):
+        try:
+            os.unlink(via + suffixum)
+        except OSError:
+            pass
 
 
 def exspectare(via, tectum=1800, intervallum=2.0):

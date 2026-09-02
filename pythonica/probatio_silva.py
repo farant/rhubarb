@@ -269,6 +269,19 @@ try:
     credo(False, 'post ignotum levat')
 except silva.SilvaError:
     credo(True, 'post ignotum levat SilvaError')
+# substituere typum nomine (genus='typus'); sine genere non videtur
+open(via_t, 'w').write(FONS_T)
+e = silva.Editio(via_t)
+e.substituere('S', 'nomen structura {\n    i32 a;\n} S;\n', genus='typus')
+f = e.applicare(iudica=False)
+t = open(via_t).read()
+credo('memoria' not in t and 'i32 a;' in t and 'f (vacuum)' in t,
+      'substituere typum nomine: S sola mutata')
+try:
+    silva.Editio(via_t).substituere('S', 'x')
+    credo(False, 'substituere sine genere typum videt')
+except silva.SilvaError:
+    credo(True, 'substituere sine genere typum non videt (levat)')
 # custos post inclusionem: extenta per ramum sumptum
 open(via_t, 'w').write('#include "latina.h"\n\n#ifndef CUSTOS_Y\n#define CUSTOS_Y\n\nvacuum\nb (vacuum);\n\n#endif\n')
 credo([x.titulus for x in silva.extenta(via_t)] == ['b'], 'custos post inclusionem: prototypum visum')
@@ -390,6 +403,11 @@ try:
 finally:
     os.unlink(novum)
 credo(silva.receptum_validum(via_r).sana, 'receptum iterum validum post reversionem')
+silva.receptum_delere(via_r)
+credo(not os.path.exists(via_r) and not os.path.exists(via_r + '.acta'),
+      'receptum deletum cum actis')
+credo(all(v != via_r for v, _ in silva.portae_pendentes()),
+      'portae_pendentes: receptum abiit')
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

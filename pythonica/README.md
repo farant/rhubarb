@@ -10,8 +10,8 @@ plica pendet — veritas in C manet.
 
 - `silva.extenta(via)` — extenta functionum (nomen → lineae)
 - `silva.Editio(via)` — `.replace` (ancorae spatiis tolerantes),
-  `.substituere(nomen, textus)`, `.inserere_post/ante`, `.applicare()`
-  (omnia aut nihil, diff redditus)
+  `.substituere(nomen, textus[, genus='typus'])`, `.inserere_post/ante`,
+  `.applicare()` (omnia aut nihil, diff redditus)
 - `.applicare()` = punctum scripturae unicum = sedes portarum: custos
   lectionis rancidae, forma (plagula tota), examen, differre contra
   textum ante; `Fructus` (diff, examen, formata, differentia, `.sana`,
@@ -46,7 +46,8 @@ plica pendet — veritas in C manet.
 - `silva.porta_umbra(nomen)` — porta in umbra (processus separatus),
   receptum JSON in build/portae/ sigillo arboris ligatum;
   `exspectare(via)`, `portae_pendentes()`, `commissio(portae=[via.json])`
-  receptum accipit nisi arbor mutata (rancidum)
+  receptum accipit nisi arbor mutata (rancidum); `receptum_delere(via)`
+  post consumptionem
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 
