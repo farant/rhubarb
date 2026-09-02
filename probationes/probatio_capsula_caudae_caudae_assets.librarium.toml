@@ -1,0 +1,10 @@
+# Cursus PRESSIONIS capsulae caudae: librarium totum (book_assets/,
+# non tractum, ~I.I GB) in binarium appenditur - ~LIII s appendendi,
+# binarium ~DCXXXV MB, cursus ~XX s. NON a suite lectus (suite
+# solam <app>_caudae_assets.toml legit). Manu:
+#   ./bin/capsula_caudae_adiungere \
+#       probationes/probatio_capsula_caudae_caudae_assets.librarium.toml \
+#       bin/probatio_capsula_caudae && ./bin/probatio_capsula_caudae
+
+libri_files = ["../book_assets/*.txt", "../book_assets/librarium.stml"]
+libri_compress = true

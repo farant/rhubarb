@@ -1,5 +1,17 @@
 # Config pro probatio_capsula_caudae
-# Assets appenduntur ad caudam binarii
+# Assets appenduntur ad caudam binarii (viae relativae huic
+# directorio).
+#
+# FIXTURA PARVA consulto (2026-09-02): forma prior "../book_assets/*.txt"
+# MMMCCCIII libros (I.I GB, non tractos) omni cursu comprimebat -
+# LIII s appendendi + XX s cursus in residuo suitae non temporato
+# sepulti; gradus dormiebat donec bin/capsula_caudae_adiungere
+# aedificatum est (2026-09-01). Probatio de libris nihil asserit
+# (numerus, index 0, nomen absens, iteratio, index extra fines).
+# Cursus pressionis cum librario toto MANU:
+#   ./bin/capsula_caudae_adiungere \
+#       probationes/probatio_capsula_caudae_caudae_assets.librarium.toml \
+#       bin/probatio_capsula_caudae && ./bin/probatio_capsula_caudae
 
-libri_files = ["../book_assets/*.txt", "../book_assets/librarium.stml"]
+libri_files = ["fixa/caudae/*.txt", "fixa/caudae/index.stml"]
 libri_compress = true

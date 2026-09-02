@@ -360,15 +360,24 @@ compile_gui_app() {
     local caudae_config="probationes/${app_name}_caudae_assets.toml"
     if [[ -f "$caudae_config" ]] && [[ -f "bin/capsula_caudae_adiungere" ]]; then
         echo -e "${YELLOW}Appending assets from $caudae_config${RESET}"
-        local start_time=$(date +%s.%N)
+        # TEMPORATUR ambo (2026-09-02): appensio et cursus in residuo
+        # suitae latebant - LXXIII s invisibilia cum librarium totum
+        # appendebatur. Appensio = gradus aedificationis (compilatio),
+        # cursus = probatio (cursus): utrumque in compendio et mensura.
+        local start_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
         if ./bin/capsula_caudae_adiungere "$caudae_config" "$output_binary" 2>&1; then
-            local end_time=$(date +%s.%N)
+            local end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
             local duration=$(echo "$end_time - $start_time" | bc)
+            echo "$duration ${app_name}_caudae_adiungere" >> "$COMPILE_TIMES_FILE"
             echo -e "${GREEN}✓ Assets appended (${duration}s)${RESET}"
             # Run the test after appending
             echo -e "${BLUE}Running $app_name...${RESET}"
+            start_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
             if $output_binary 2>&1; then
-                echo -e "${GREEN}✓ TEST PASSED: $app_name${RESET}"
+                end_time=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
+                duration=$(echo "$end_time - $start_time" | bc)
+                echo "$duration $app_name" >> "$TEST_TIMES_FILE"
+                echo -e "${GREEN}✓ TEST PASSED: $app_name ${YELLOW}(${duration}s)${RESET}"
                 TESTS_PASSED=$((TESTS_PASSED + 1))
                 TESTS_TOTAL=$((TESTS_TOTAL + 1))
             else

@@ -422,9 +422,10 @@ proba_contentum_verificare (
 
     printf("  proba_contentum_verificare: ");
 
-    /* Test file: book 100 (Shakespeare) */
-    test_via_capsula  = "../book_assets/100.txt";
-    test_via_disco    = "book_assets/100.txt";
+    /* Fixtura: symbolum Nicaenum (fixa/caudae, viae relativae
+     * configurationi in capsula, radici in disco) */
+    test_via_capsula  = "fixa/caudae/credo.txt";
+    test_via_disco    = "probationes/fixa/caudae/credo.txt";
 
     /* Verify original file exists on disk */
     si (!filum_existit(test_via_disco))
@@ -508,10 +509,10 @@ proba_contentum_notum (
 
     printf("  proba_contentum_notum: ");
 
-    /* Test: look for "HAMLET" in Shakespeare (book 100) */
-    test_via        = "../book_assets/100.txt";
-    quaerendum      = "HAMLET";
-    quaerendum_len  = 6;
+    /* Chorda nota in symbolo Nicaeno (fixtura fixa/caudae) */
+    test_via        = "fixa/caudae/credo.txt";
+    quaerendum      = "Filioque";
+    quaerendum_len  = 8;
 
     capsula = capsula_caudae_aperire(g_via_binarii, piscina);
     si (capsula == NIHIL)

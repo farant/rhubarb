@@ -1,0 +1,5 @@
+<librarium titulus="fixtura caudae">
+  <liber via="ave.txt" titulus="Ave Maria, Pater noster, Gloria Patri"/>
+  <liber via="credo.txt" titulus="Symbolum Nicaenum"/>
+  <liber via="salve.txt" titulus="Salve Regina, Regina caeli"/>
+</librarium>
