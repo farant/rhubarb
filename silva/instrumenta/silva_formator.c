@@ -4437,9 +4437,10 @@ formator_extenta (
 
             x = (FormatorExtentum*)xar_addere(extenta);
             si (!x) redde NIHIL;
-            x->titulus = titulus->valor;
-            x->linea_a = lb_prior + I;
-            x->linea_b = lb;
+            x->titulus     = titulus->valor;
+            x->linea_a     = lb_prior + I;
+            x->linea_nodi  = la;
+            x->linea_b     = lb;
             x->definitio = nodus_radicis->genus
                 == SILVA_C89_GENUS_DEFINITIO_FUNCTIONIS;
         }

@@ -51,7 +51,8 @@ fi
 # CUR: forma non est res cui editor attendat. Lineae mutatae (git diff
 # --cached -U0) -> functiones radicis (formator -lineae) -> scriptura
 # intra eas solas (baseline plagulae communis intacta), index repositus.
-# Plagula nova (extra HEAD) = scriptura tota (baseline vacua).
+# Post evolutionem totam (2026-09-01) scriptura TOTA ubique praeter
+# knotapel/ vendor/ (terra non evoluta: intra functiones mutatas).
 # Arbor operis ab indice differens (commissio partialis) NON formatur
 # - monetur (scriptura arboris alia in indicem traheret). Lineae extra
 # functiones (structurae, tabulae) monentur, non formantur (porta:
@@ -65,18 +66,22 @@ if [ -z "${UNCUS_VIAE:-}" ]; then
             echo "formator (pre-commit): $via NON formata - arbor operis ab indice differt (commissio partialis)" >&2
             continue
         fi
-        if git cat-file -e "HEAD:$via" 2>/dev/null; then
-            rangae=$(git diff --cached -U0 -- "$via" 2>/dev/null | awk '/^@@/ {
-                split($3, p, /[+,]/); a = p[2]; n = (p[3] == "" ? 1 : p[3]);
-                if (n > 0) printf "-lineae %d-%d ", a, a + n - 1 }')
-            [ -z "$rangae" ] && continue
-            fout=$(./silva/formator.sh "$via" -scribere $rangae 2>&1 >/dev/null)
-        else
-            fout=$(./silva/formator.sh "$via" -scribere 2>&1 >/dev/null)
-        fi
+        case "$via" in
+            knotapel/*|vendor/*)
+                # terra non evoluta: scriptura intra functiones mutatas solas
+                rangae=$(git diff --cached -U0 -- "$via" 2>/dev/null | awk '/^@@/ {
+                    split($3, p, /[+,]/); a = p[2]; n = (p[3] == "" ? 1 : p[3]);
+                    if (n > 0) printf "-lineae %d-%d ", a, a + n - 1 }')
+                [ -z "$rangae" ] && continue
+                fout=$(./silva/formator.sh "$via" -scribere $rangae 2>&1 >/dev/null); modus="intra functiones mutatas" ;;
+            *)
+                # evolutio 2026-09-01 completa: baseline zephyrum ubique -
+                # scriptura TOTA (structurae, tabulae inclusae)
+                fout=$(./silva/formator.sh "$via" -scribere 2>&1 >/dev/null); modus="tota" ;;
+        esac
         if printf '%s\n' "$fout" | grep -q 'formator: scriptum'; then
             git add -- "$via"
-            echo "formator (pre-commit): $via FORMATA intra functiones mutatas, index repositus" >&2
+            echo "formator (pre-commit): $via FORMATA ($modus), index repositus" >&2
         fi
         printf '%s\n' "$fout" | grep -E 'extra functiones|recusat|ignota|maxime|malformata|fracta' | sed 's/^/  /' >&2 || true
     done

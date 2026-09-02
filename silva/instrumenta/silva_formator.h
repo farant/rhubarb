@@ -126,6 +126,8 @@ formator_lint_intra (
 nomen structura {
     chorda titulus;
        i32 linea_a;
+       i32 linea_nodi;  /* linea prima nodi ipsius (specificatores/
+                         * titulus) - corpus sine commentario ducente */
        i32 linea_b;
        b32 definitio;   /* VERUM = definitio, FALSUM = prototypum */
 } FormatorExtentum;

@@ -232,11 +232,12 @@ _divergentias_imprimere (
         d = (FormatorDivergentia*)xar_obtinere(divergentiae, j);
         si (machina)
         {
-            imprimere("%s\t%u\t%u\t%s\t%d\t%d\t%s\n", via,
+            imprimere("%s\t%u\t%u\t%s\t%d\t%d\t%s\t%u\n", via,
                 (insignatus integer)d->linea,
                 (insignatus integer)d->columna, d->regula,
                 (integer)d->inventum,
-                (integer)d->exspectatum, d->nuntius);
+                (integer)d->exspectatum, d->nuntius,
+                (insignatus integer)d->numerus_emendationum);
         }
         alioquin
         {
@@ -271,6 +272,7 @@ principale (
                  character  praebita[CAPITA_MAXIMA][256];
                        i32  numerus_praebitorum;
                        b32  machina;
+                       b32  extenta_modus;
                        b32  scriptura;
                        b32  recusatio;
                        b32  ulla_plagula;
@@ -278,6 +280,7 @@ principale (
                    integer  i;
 
     machina              = FALSUM;
+    extenta_modus        = FALSUM;
     scriptura            = FALSUM;
     recusatio            = FALSUM;
     ulla_plagula         = FALSUM;
@@ -291,6 +294,10 @@ principale (
         si (strcmp(argumenta[i], "-machina") == ZEPHYRUM)
         {
             machina = VERUM;
+        }
+        si (strcmp(argumenta[i], "-extenta") == ZEPHYRUM)
+        {
+            extenta_modus = VERUM;
         }
         si (strcmp(argumenta[i], "-scribere") == ZEPHYRUM)
         {
@@ -394,10 +401,15 @@ principale (
         }
     }
 
-    si (machina)
+    si (extenta_modus)
+    {
+        imprimere("# via\ttitulus\tlinea_a\tlinea_nodi\tlinea_b"
+            "\tgenus\n");
+    }
+    alioquin     si (machina)
     {
         imprimere("# via\tlinea\tcolumna\tregula\tinventum\t"
-            "exspectatum\tnuntius\n");
+            "exspectatum\tnuntius\temendationes\n");
     }
 
     per (i = I; i < numerus; i += I)
@@ -461,6 +473,36 @@ principale (
                 redde II;
             }
             textus = filum_legere_totum(via, opus);
+
+            /* -extenta: extenta functionum radicis (TSV) - facies
+             * Pythonica et unci; nihil iudicatur */
+            si (extenta_modus)
+            {
+                Xar* extenta;
+                i32  n_ext;
+                i32  e;
+
+                extenta = formator_extenta(opus, contextus,
+                    (constans character*)textus.datum,
+                    textus.mensura);
+                n_ext = extenta ? xar_numerus(extenta)
+                    : (i32)ZEPHYRUM;
+                per (e = ZEPHYRUM; e < n_ext; e += I)
+                {
+                    FormatorExtentum* x;
+
+                    x = (FormatorExtentum*)xar_obtinere(extenta, e);
+                    imprimere("%s\t%.*s\t%u\t%u\t%u\t%s\n", via,
+                        (integer)x->titulus.mensura,
+                        (constans character*)x->titulus.datum,
+                        (insignatus integer)x->linea_a,
+                        (insignatus integer)x->linea_nodi,
+                        (insignatus integer)x->linea_b,
+                        x->definitio ? "definitio" : "prototypum");
+                }
+                piscina_destruere(opus);
+                perge;
+            }
 
             /* -lineae -> nomina: extenta per parsuram unam, lineae
              * in functiones resolutae ANTE passum punctum-fixum
@@ -619,12 +661,13 @@ principale (
     {
         fprintf(stderr, "usus: formator <via.c> [viae ...]"
             " [-machina] [-scribere] [-intra functio ...]"
-            " [-lineae a-b ...] [-capita directorium ...]\n");
+            " [-lineae a-b ...] [-capita directorium ...]"
+            " [-extenta]\n");
         piscina_destruere(piscina);
         redde II;
     }
 
-    si (!machina)
+    si (!machina && !extenta_modus)
     {
         si (recusatio)
         {

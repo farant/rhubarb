@@ -25,6 +25,11 @@
  *      classificationi serviunt.
  *
  * Usus:   ./silva/differre.sh <vetus.c> <novum.c> [-machina]
+ *                             [-verdictum [cosmetica|documentaria]]
+ *         -verdictum: exitus 0 si paria omnia intra gradum (spatia
+ *         sola; documentaria = commentaria quoque), 1 aliter -
+ *         'solum trivia mutata?' uno codice exitus (evolutio formae,
+ *         scripta editionis pythonica)
  *         ./silva/differre.sh -git <via> [ref_vetus] [ref_novum]
  *           modus git NATIVUS (bibliotheca git, non subprocessus):
  *           ref_vetus ordinarius CAPUT; ref_novum absens = discus.
@@ -363,6 +368,8 @@ principale (
                     b32  commissum_modus  = FALSUM;
                     b32  historia_modus   = FALSUM;
                     b32  summa_modus      = FALSUM;
+                    b32  verdictum_modus  = FALSUM;
+     constans character* gradus           = "cosmetica";
                     Xar* paria;
                     i32  immotae        = 0;
                     i32  additae_totae  = 0;
@@ -391,6 +398,21 @@ principale (
         alioquin si (strcmp(argv[arg], "-summa") == 0)
         {
             summa_modus = VERUM;
+        }
+        alioquin si (strcmp(argv[arg], "-verdictum") == 0)
+        {
+            /* -verdictum [cosmetica|documentaria]: exitus 0 si paria
+             * omnia intra gradum (cosmetica = spatia sola; documentaria
+             * = commentaria quoque), 1 aliter; MOTA/ADDITA/REMOTA
+             * semper substantiva (structura mota) */
+            verdictum_modus = VERUM;
+            si (   arg + 1 < argc
+                && (   strcmp(argv[arg + 1], "documentaria") == 0
+                    || strcmp(argv[arg + 1], "cosmetica") == 0))
+            {
+                gradus  = argv[arg + 1];
+                arg     = arg + 1;
+            }
         }
         alioquin si (via_a == NIHIL)
         {
@@ -885,6 +907,11 @@ principale (
             imprimere("differre: nulla differentia (%d unitates"
                 " immotae)\n", (integer)immotae);
         }
+        si (verdictum_modus)
+        {
+            imprimere(machina ? "VERDICTUM\tcosmetica\t0\t0\t0\t0\t0"
+                "\t0\n" : "VERDICTUM: cosmetica (nulla differentia)\n");
+        }
         redde ZEPHYRUM;
     }
     silva_differre_paria_emittere(piscina, &a, &b, paria, machina,
@@ -895,6 +922,79 @@ principale (
             " immotae\n", (integer)xar_numerus(paria),
             (integer)additae_totae, (integer)deletae_totae,
             (integer)immotae);
+    }
+    si (verdictum_modus)
+    {
+                       i32  n_cosmetica     = 0;
+                       i32  n_documentaria  = 0;
+                       i32  n_substantiva   = 0;
+                       i32  n_mota          = 0;
+                       i32  n_additae       = 0;
+                       i32  n_remotae       = 0;
+        constans character* verd;
+                       b32  sanum;
+
+        per (k = 0; k < xar_numerus(paria); k = k + 1)
+        {
+            constans SilvaDifferrePar* par =
+                (constans SilvaDifferrePar*)xar_obtinere(paria, k);
+
+            si (strcmp(par->status, "MUTATA") == 0)
+            {
+                constans character* cls =
+                    silva_differre_classificare_textus(piscina,
+                        silva_differre_spatium(&a, (i32)par->a_index),
+                        silva_differre_spatium(&b, (i32)par->b_index));
+
+                si (strcmp(cls, "cosmetica") == 0)
+                {
+                    n_cosmetica = n_cosmetica + 1;
+                }
+                alioquin si (strcmp(cls, "documentaria") == 0)
+                {
+                    n_documentaria = n_documentaria + 1;
+                }
+                alioquin
+                {
+                    n_substantiva = n_substantiva + 1;
+                }
+            }
+            alioquin si (strcmp(par->status, "MOTA") == 0)
+            {
+                n_mota = n_mota + 1;
+            }
+            alioquin si (strcmp(par->status, "ADDITA") == 0)
+            {
+                n_additae = n_additae + 1;
+            }
+            alioquin
+            {
+                n_remotae = n_remotae + 1;
+            }
+        }
+        verd = (n_substantiva + n_mota + n_additae + n_remotae) > 0
+            ? "substantiva"
+            : (n_documentaria > 0 ? "documentaria" : "cosmetica");
+        sanum = strcmp(verd, "cosmetica") == 0
+            || (   strcmp(gradus, "documentaria") == 0
+                && strcmp(verd, "documentaria") == 0);
+        si (machina)
+        {
+            imprimere("VERDICTUM\t%s\t%d\t%d\t%d\t%d\t%d\t%d\n", verd,
+                (integer)n_cosmetica, (integer)n_documentaria,
+                (integer)n_substantiva, (integer)n_mota,
+                (integer)n_additae, (integer)n_remotae);
+        }
+        alioquin
+        {
+            imprimere("VERDICTUM: %s (cosmetica %d, documentaria %d,"
+                " substantiva %d, mota %d, additae %d, remotae %d;"
+                " gradus %s)\n", verd, (integer)n_cosmetica,
+                (integer)n_documentaria, (integer)n_substantiva,
+                (integer)n_mota, (integer)n_additae,
+                (integer)n_remotae, gradus);
+        }
+        redde sanum ? ZEPHYRUM : I;
     }
     redde ZEPHYRUM;
 }
