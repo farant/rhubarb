@@ -3393,6 +3393,43 @@ _fracturas_censere (
         }
         linea = d->linea;
 
+        /* cedere regulae alii lineam novam in hac linea inserenti
+         * (R8 parametra, R1 titulus): insertiones duae eodem loco
+         * lineam vacuam parerent - plagae adiacentes, non imbricatae,
+         * ambae applicantur (venatio semantica.c 4861: prototypum cum
+         * linea vacua inter parametra). Linea iteratione sequenti
+         * denuo iudicatur. */
+        {
+            b32 cedit;
+            i32 j;
+
+            cedit = FALSUM;
+            per (j = ZEPHYRUM; j < numerus_div && !cedit; j += I)
+            {
+                constans FormatorDivergentia* alia;
+                                         i32  e;
+
+                si (j == k) perge;
+                alia = (constans FormatorDivergentia*)xar_obtinere(
+                    divergentiae, j);
+                per (e = ZEPHYRUM; e < alia->numerus_emendationum;
+                    e += I)
+                {
+                    constans FormatorEmendatio* em;
+
+                    em = &alia->emendationes[e];
+                    si ((em->linea_a == linea || em->linea_b == linea)
+                        && em->insertum.mensura > (i32)ZEPHYRUM
+                        && em->insertum.datum[ZEPHYRUM] == '\n')
+                    {
+                        cedit = VERUM;
+                        frange;
+                    }
+                }
+            }
+            si (cedit) perge;
+        }
+
         n_cand           = ZEPHYRUM;
         prius            = NIHIL;
         primum           = VERUM;

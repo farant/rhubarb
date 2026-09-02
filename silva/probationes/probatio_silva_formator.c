@@ -2185,6 +2185,20 @@ s32 principale (vacuum)
             "    redde;\n"
             "}\n"));
 
+        /* prototypum longum: R8 findit, fractura cedit regulae lineam
+         * novam inserenti - nulla linea vacua inter parametra (venatio
+         * semantica 4861) */
+        s = _scribere(piscina,
+            "vacuum _fluxus_canonicum_ligamen_longum(vacuum* cont"
+            "extus, constans vacuum* nodus);\n");
+        CREDO_VERUM(s.successus);
+        CREDO_VERUM(s.mutatum);
+        CREDO_VERUM(_textus_aequalis(piscina, s.textus,
+            "vacuum\n"
+            "_fluxus_canonicum_ligamen_longum (\n"
+            "             vacuum* contextus,\n"
+            "    constans vacuum* nodus);\n"));
+
         /* ordo longitudinis: frangibilis armatus (I emendatio, nuntius
          * proprius) contra residuum (0, nuntius planus) */
         d = _lint(piscina,

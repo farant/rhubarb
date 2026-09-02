@@ -894,3 +894,26 @@ Doors: tectum = anchor + 40 under deep indentation (STML's rule,
 first, then the rule; `casus X:` label as a break candidate; `?:`
 as candidates; a scope smaller than a function for the probatio
 sections (scratch splice again).
+
+## 2026-09-01 — Fractura yields to any rule inserting a newline on the same line
+
+Fran asked to see a real before/after and the prototype at
+semantica.c:4861 came back with a BLANK LINE between its parameters.
+Cause: R8 (parametra-singula) and the wrapper both inserted a newline
+at the same point in the same iteration; the applier drops
+OVERLAPPING spans, but a zero-width insertion at the end of the
+deleted space is ADJACENT, so both applied. Fix: `_fracturas_censere`
+yields on a line where any other divergence's emendation inserts a
+newline (R8, R1) — that rule acts first, the line is judged again
+next iteration. Fixture `s` (root prototype > 72 with two params)
+pinned; plant (yield disabled) → 1 red.
+
+Process lesson, the expensive kind: the first attempt to land this
+fix FAILED its anchor assertion (the scoped write had realigned the
+function) inside a long shell script, the generator then ran the
+CLI against the UNFIXED binary and pinned the defective output, and
+the probatio went green. A pin generated from the implementation
+proves nothing until the implementation has been seen to change
+the pin — here the fix turned the pinned fixture red first, which is
+the only reason the mistake was caught. Long scripts get `set -e`;
+regenerated pins get eyeballed.
