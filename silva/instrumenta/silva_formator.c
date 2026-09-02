@@ -450,7 +450,8 @@ _vexillum_continet (
  * octetus primus non-spatialis '#' est, aut continuatio '\\' prioris)
  * - pro R13: acervus directivarum inter functiones separator est ut
  * vexillum, non lineae vacuae (quaestio 01M1FQ0JTN: '#define' inter
- * functiones 'N pro 1' in aeternum, emendatio tolerans tacite cadebat) */
+ * functiones 'N pro 1' in aeternum, emendatio tolerans tacite
+ * cadebat) */
 interior b32
 _regio_directivam_habet (
     constans character* fons,

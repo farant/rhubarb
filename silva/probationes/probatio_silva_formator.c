@@ -2430,11 +2430,12 @@ principale (vacuum)
         CREDO_FALSUM(s.mutatum);
     }
 
-        imprimere("\n--- Probans directivas inter functiones (R13) ---\n");
+        imprimere("\n--- Probans directivas inter functiones ---\n");
     {
         /* acervus '#define' inter duas functiones separator est ut
          * vexillum: nullus ordo 'intervalla' (olim 'N pro 1' in
-         * aeternum, emendatio tolerans cadebat - quaestio 01M1FQ0JTN) */
+         * aeternum, emendatio tolerans cadebat - quaestio
+         * 01M1FQ0JTN) */
         Xar* d = _lint(piscina,
             "vacuum\n"
             "a (vacuum)\n"
