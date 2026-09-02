@@ -446,6 +446,47 @@ _vexillum_continet (
     redde FALSUM;
 }
 
+/* regione linearum [linea_a, linea_b] directivam quaerere (linea cuius
+ * octetus primus non-spatialis '#' est, aut continuatio '\\' prioris)
+ * - pro R13: acervus directivarum inter functiones separator est ut
+ * vexillum, non lineae vacuae (quaestio 01M1FQ0JTN: '#define' inter
+ * functiones 'N pro 1' in aeternum, emendatio tolerans tacite cadebat) */
+interior b32
+_regio_directivam_habet (
+    constans character* fons,
+                   i32  mensura,
+                   i32  linea_a,
+                   i32  linea_b)
+{
+    i32 i;
+    i32 linea;
+    b32 initium;
+    b32 continuata;
+
+    si (linea_b < linea_a) redde FALSUM;
+    linea       = I;
+    initium     = VERUM;
+    continuata  = FALSUM;
+    per (i = ZEPHYRUM; i < mensura; i += I)
+    {
+        si (fons[i] == '\n')
+        {
+            continuata  = i > (i32)ZEPHYRUM && fons[i - I] == '\\';
+            linea       += I;
+            initium     = VERUM;
+            si (linea > linea_b) redde FALSUM;
+            perge;
+        }
+        si (linea < linea_a) perge;
+        si (initium && fons[i] != ' ' && fons[i] != '\t')
+        {
+            si (fons[i] == '#' || continuata) redde VERUM;
+            initium = FALSUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* regione linearum [linea_a, linea_b] vexillum quaerere
  * (cursus '=' >= X) - pro R13 inter functiones */
 interior b32
@@ -4277,6 +4318,9 @@ formator_lint_intra (
                         }
                         si (   lb_prior != (i32)ZEPHYRUM
                             && !_regio_vexillum_habet(fons,
+                                mensura, lb_prior + I,
+                                la_effectiva - I)
+                            && !_regio_directivam_habet(fons,
                                 mensura, lb_prior + I,
                                 la_effectiva - I)
                             && la_effectiva - lb_prior - I

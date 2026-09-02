@@ -2430,6 +2430,36 @@ principale (vacuum)
         CREDO_FALSUM(s.mutatum);
     }
 
+        imprimere("\n--- Probans directivas inter functiones (R13) ---\n");
+    {
+        /* acervus '#define' inter duas functiones separator est ut
+         * vexillum: nullus ordo 'intervalla' (olim 'N pro 1' in
+         * aeternum, emendatio tolerans cadebat - quaestio 01M1FQ0JTN) */
+        Xar* d = _lint(piscina,
+            "vacuum\n"
+            "a (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n"
+            "\n"
+            "#define ALPHA 1\n"
+            "#define BETA  2\n"
+            "\n"
+            "vacuum\n"
+            "b (vacuum)\n"
+            "{\n"
+            "    redde;\n"
+            "}\n");
+        i32 k;
+
+        CREDO_NON_NIHIL(d);
+        per (k = ZEPHYRUM; k < xar_numerus(d); k += I)
+        {
+            CREDO_VERUM(strcmp(_divergentia(d, k)->regula, "intervalla")
+                != ZEPHYRUM);
+        }
+    }
+
     imprimere("\n");
     credo_imprimere_compendium();
 
