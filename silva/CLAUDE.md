@@ -129,6 +129,10 @@ The read bench (instrumenta prima, 2026-07-10): ./silva/censor.sh
 (latina lint; also in amalgamare porta 6 + post-edit hook),
 ./silva/emitte.sh <file> <symbol> (byte-exact definition),
 ./silva/origo.sh <file> <linea>[:<col>] (expansion story),
+./silva/computus.sh <fons.c> [-nudum] [-machina] (imago memoriae et
+temporis parseris: lexemata, dati/commissa/otiosa, alvei,
+allocationes, ms lexandi/parsandi - piscina propria I MiB; porta =
+probatio_silva_computus, aurum fixa/computus/basis.tsv; RP §11),
 ./silva/arbor.sh <fons.c> [-nudum] [-tacitus] (documentum STML
 canonicum in stdout; compendium in stderr numerat lexemata /
 expansa / ambigua / ERRORES. Cave: -nudum super codicem

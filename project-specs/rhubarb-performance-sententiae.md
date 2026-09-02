@@ -234,6 +234,24 @@ AW    tools/aedilis.worklog.md
       exists and is tested.
 11.5. Do this before Part II lands, so Part II's numbers are the
       project's own and not this document's. [principle]
+11.6. Done 2026-09-02: ./silva/computus.sh <fons.c> [-nudum]
+      [-machina] (silva/instrumenta/silva_computus.c) reports source
+      bytes, tokens (expanded and raw), errors, handed-out, committed,
+      idle, peak, block count, allocation count, and the lex-only
+      figures, each measurement in its own arena with a 1 MiB initial
+      block. piscina gained piscina_numerus_alveorum and
+      piscina_numerus_allocationum for it. [observed]
+11.7. The pin of 11.3 is probatio_silva_computus over four
+      fixa/roundtrip files with -nudum, golden
+      silva/probationes/fixa/computus/basis.tsv; deterministic
+      figures compared exactly, times printed only. Regeneration is
+      COMPUTUS_SCRIBERE=1 and must name its cause. [observed]
+11.8. Re-measured on this toolchain, with the include closure:
+      lib/stml.c (285,866 B) parses in 176 ms into 436 MB handed out,
+      606 MB committed, 1,141,283 allocations, 11 blocks; lib/piscina.c
+      (14,215 B) into 27.8 MB handed out, 39.0 MB committed, 71,656
+      allocations. The 950-1070x of 2.1 is now roughly 1500-2000x with
+      the closure in the arena. [observed]
 
 12. Scope transient parse structures to their own arena region.
     [RETURN: high]
