@@ -125,7 +125,10 @@ formator_lint_intra (
  * corpore (structura/unio/enumeratio) quoque. Nodi in ramis SUMPTIS
  * conditionalium in ambitu plagulae ut radices ambulantur (custos post
  * inclusionem, #ifdef platformae) - rami omissi non. Xar de
- * FormatorExtentum; vacuum si parsura fracta; NIHIL si piscina. */
+ * FormatorExtentum; vacuum si parsura fracta; NIHIL si piscina.
+ * genus: "definitio" | "prototypum" | "structura" | "unio" |
+ * "enumeratio" (typi cum corpore: titulus = declarator typedef primus,
+ * aliter tag). */
 nomen structura {
     chorda titulus;
        i32 linea_a;
@@ -133,9 +136,7 @@ nomen structura {
                          * titulus) - corpus sine commentario ducente */
        i32 linea_b;
        b32 definitio;   /* VERUM = definitio, FALSUM = prototypum */
-    constans character* genus; /* "definitio" | "prototypum" | "structura"
-                                * | "unio" | "enumeratio" (typi cum corpore:
-                                * titulus = declarator typedef, aliter tag) */
+    constans character* genus; /* vide supra */
 } FormatorExtentum;
 
 Xar*

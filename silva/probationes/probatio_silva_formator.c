@@ -2461,8 +2461,7 @@ principale (vacuum)
         }
     }
 
-        imprimere("\n--- Probans radices in ramis conditionalium et typos"
-            " ---\n");
+        imprimere("\n--- Probans ramos conditionalium et typos ---\n");
     {
         /* custos post inclusionem = conditionalis vera in radice (silva
          * custodem plagulae totius solum planat): ramus SUMPTUS ut
