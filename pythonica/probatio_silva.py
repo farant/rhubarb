@@ -168,7 +168,8 @@ credo(any(v.endswith('formator.c') for v in u.usus), 'usus: usus per plagulam')
 credo(silva.usus('nemo_hic_est_omnino').sedes == [], 'usus: ignotum vacuum')
 open(via, 'w').write(FONS)
 planum = silva.renominare('b', 'beta', [via])
-credo('beta' in planum and open(via).read() == FONS, 'renominare: planum, discus intactus')
+credo('PLANUM' in planum and 'splicendae 2' in planum
+      and open(via).read() == FONS, 'renominare: planum (2 sedes), discus intactus')
 silva.renominare('b', 'beta', [via], scribere=True)
 t = open(via).read()
 credo('beta (vacuum)' in t and 'vacuum beta(vacuum);' in t and 'b (vacuum)' not in t,
