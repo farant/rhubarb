@@ -35,3 +35,12 @@ bytes must be on the wire before anything else happens. Verified
 with a deliberate crash demo through a pipe: exit 139 AND the full
 FRACTA report present. Sibling of the cursor "-sola fflush before
 _exit" lesson — same law, now in the framework itself.
+
+## 2026-09-02 — CREDO_RUIT_CUM_INTRA
+
+The bare RUIT_CUM waits CREDO_MORA_ORDINARIA_MS (5 s) before SIGKILL.
+For a child that never returns (the infinite-loop plant in
+probatio_credo_processus) the whole 5 s is always paid, and the poll
+loop counts 1 ms iterations rather than time, so it ran 6.3 s. The
+_INTRA form names the deadline; the test uses 300 ms. 6.3 → 0.76 s.
+The iteration-counting drift (about 25% long) is noted, not fixed.

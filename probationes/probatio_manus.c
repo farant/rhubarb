@@ -386,6 +386,28 @@ _puer (
         (vacuum)close(fd);
     }
 }
+/* Scaenaria HAERENTIA (servus numquam respondet, aut via una
+ * abest): termini breves, ne omnis exspectatio moram plenam cum
+ * gratia (M + D ms) solvat - VII s in refectione mortua, III s in
+ * captura pendente, II s in magnitudine absente, nihil probantia
+ * praeter horologium. Scaenaria respondentia terminos ordinarios
+ * tenent. */
+interior Manus*
+_aperire_scaenarii (
+    Piscina* p,
+        i32  portus,
+        s32  scenario)
+{
+    si (scenario == SCEN_PENDENS || scenario == SCEN_MAGN_ABSENS)
+    {
+        /* terminis ANTE sondam paratitudinis: sonda ipsa contra
+         * servum haerentem moram cum gratia solvebat (I.VII s) */
+        redde manus_aperire_terminis(p, "127.0.0.1", portus,
+                                     MANUS_MORA_BREVIS, (Mora)L);
+    }
+    redde manus_aperire(p, "127.0.0.1", portus);
+}
+
 
 interior s32
 _simulacrum_incipere (
@@ -508,7 +530,7 @@ _capere (
     p = piscina_generare_dynamicum("captura_manus", CXXVIII * M);
     credo_aperire(p);
 
-    m = manus_aperire(p, "127.0.0.1", portus);
+            m = _aperire_scaenarii(p, portus, scenario);
     si (m != NIHIL)
     {
         c.manus_aperta = VERUM;
@@ -610,7 +632,7 @@ _agere_capere (
      * suitam principalem non rubent. */
     credo_aperire(p);
 
-    m = manus_aperire(p, "127.0.0.1", portus);
+            m = _aperire_scaenarii(p, portus, scenario);
     si (m != NIHIL)
     {
         commutatio (operatio)

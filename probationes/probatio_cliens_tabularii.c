@@ -192,6 +192,9 @@ s32 principale (vacuum)
              * conatus primus solus moram fert */
             mortuus.launcher   = "true";
             mortuus.praefixum  = "[probatio]";
+            /* launcher falsus nihil excitat: mora V s ordinaria hic
+             * somnus purus esset - unus gradus (CC ms) sufficit */
+            mortuus.mora_excitationis_ms = CC;
 
             args           = json_objectum_creare(piscina);
             culpa.mensura  = ZEPHYRUM;

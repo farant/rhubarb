@@ -160,6 +160,32 @@ manus_aperire (
     constans character* hospes,
                    i32  portus);
 
+/* Terminos manus ponere. 'ordinaria' = mora actionum (premere,
+ * scribere, ...) et paginae intra eas (MANUS_MORA_ORDINARIA);
+ * 'gratia' = quod supra moram paginae SEMPER additur antequam
+ * 'non respondit' dicatur (M + D ms ordinarie - pagina occupata
+ * non est pagina mortua). Manus aperta valores ordinarios fert.
+ *
+ * Probationibus simulacri HAERENTIS: terminus ipse probatur, non
+ * longitudo eius - quae ibi somnus est (XII s cursus olim, quorum
+ * omnia gratia et morae contra servum qui numquam respondet). */
+vacuum
+manus_terminos_ponere (
+    Manus* manus,
+     Mora  ordinaria,
+     Mora  gratia);
+
+/* Ut manus_aperire, sed terminis datis ANTE sondam paratitudinis -
+ * quae ipsa moram brevem cum gratia solvit si applicatio haeret.
+ * Simulacrum haerens hac via aperitur; applicatio vera ordinaria. */
+Manus*
+manus_aperire_terminis (
+               Piscina* piscina,
+    constans character* hospes,
+                   i32  portus,
+                  Mora  ordinaria,
+                  Mora  gratia);
+
 /* Applicationem ipsam generare, portum exspectare, manum reddere.
  * Semita hermetica (integratio continua, machina aliena).
  *

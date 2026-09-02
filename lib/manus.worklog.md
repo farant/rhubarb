@@ -1178,3 +1178,19 @@ then manus_focus_ponere, then native keys.** Recorded in the lab
 memory + 0017 inventum; desideratum filed for scribere to retain
 focus (would match user-typing semantics and remove the
 trap-shaped step).
+
+## 2026-09-02 — deadlines per handle; the readiness probe pays grace too
+
+Suite timing: probatio_manus was 12.5 s with 0.03 s of CPU. Every
+wait against the hanging fake server cost its deadline PLUS
+MANUS_GRATIA (1.5 s): reload-after-death 7.0 s, the pending capture
+3.4 s, the size-absent capture 1.7 s. Deadlines moved from constants
+into the handle (mora_ordinaria, gratia; manus_terminos_ponere), and
+the first attempt still left 6 s — because manus_aperire's own
+readiness probe is an _iussum and runs before any setter can apply.
+Hence manus_aperire_terminis (deadlines before the probe);
+manus_aperire is now the default-deadline wrapper. The test opens
+only the hanging scenarios (PENDENS, MAGN_ABSENS) with short
+deadlines; responding scenarios keep production values. 12.5 → 2.1 s.
+Lesson: a per-handle setting is useless for whatever the constructor
+does before returning the handle.

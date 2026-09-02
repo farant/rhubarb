@@ -86,6 +86,11 @@ structura Manus {
      * manum ob eum absurdum esset. */
     b32 tacens;
 
+    /* Termini per manum, non per constantem: probationes simulacri
+     * haerentis eos breviant (manus_terminos_ponere). */
+    Mora mora_ordinaria;
+    Mora gratia;
+
     /* Imago automatica cum manus frangitur; vacua = tacita.
      * 'in_imagine' recursionem vetat: si captura ipsa fallit,
      * _frangere iterum vocaretur. */
@@ -124,7 +129,8 @@ _nunc (
 {
     structura timeval tv;
     gettimeofday(&tv, NIHIL);
-    redde (Momentum)((s64)tv.tv_sec * (s64)M + (s64)tv.tv_usec / (s64)M);
+    redde (Momentum)((s64)tv.tv_sec * (s64)M + (s64)tv.tv_usec
+        / (s64)M);
 }
 
 /* nanosleep, non usleep: XPG7 usleep sustulit, et sub postulatis
@@ -157,7 +163,8 @@ _servare (
      chorda  s,
     Piscina* piscina)
 {
-    ChordaAedificator* a = chorda_aedificator_creare(piscina, s.mensura + I);
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, s.mensura
+        + I);
     chorda_aedificator_appendere_chorda(a, s);
     redde chorda_aedificator_finire(a);
 }
@@ -243,7 +250,8 @@ _petere (
     r.corpus.mensura  = 0;
     r.corpus.datum    = NIHIL;
 
-    sprintf(url, "http://%s:%d%s", manus->hospes, (integer)manus->portus, via);
+    sprintf(url, "http://%s:%d%s", manus->hospes,
+        (integer)manus->portus, via);
 
     pet = http_petitio_creare(arena, methodus, url);
     si (pet == NIHIL)
@@ -348,7 +356,8 @@ _tesseram_pulsare (
             (vacuum)processus_pulsare(manus->processus);
         }
 
-        r = _petere(manus, HTTP_GET, via, vacuum_corpus, manus->scriptorium);
+        r = _petere(manus, HTTP_GET, via, vacuum_corpus,
+            manus->scriptorium);
         si (r.successus && r.status == CC)
         {
             j = json_legere(r.corpus, manus->scriptorium);
@@ -360,22 +369,26 @@ _tesseram_pulsare (
                     chorda s = json_ad_chorda(status);
                     si (chorda_aequalis_literis(s, "perfectum"))
                     {
-                        JsonValor* v = json_objectum_capere(j.radix, "valor");
+                        JsonValor* v = json_objectum_capere(j.radix,
+                            "valor");
                         si (v != NIHIL)
                         {
                             /* Scribitur in scriptorio, SERVATUR in
                              * piscina: hoc transitum facit. */
-                            chorda textus = json_scribere(v, manus->scriptorium);
+                            chorda textus = json_scribere(v,
+                                manus->scriptorium);
                             *valor = _servare(textus, manus->piscina);
                             perfectum = VERUM;
                         }
                     }
                     alioquin si (chorda_aequalis_literis(s, "culpa"))
                     {
-                        JsonValor* n = json_objectum_capere(j.radix, "nuntius");
+                        JsonValor* n = json_objectum_capere(j.radix,
+                            "nuntius");
                         si (n != NIHIL && json_est_chorda(n))
                         {
-                            *culpa = _servare(json_ad_chorda(n), manus->piscina);
+                            *culpa = _servare(json_ad_chorda(n),
+                                manus->piscina);
                         }
                         fallitum = VERUM;
                     }
@@ -435,7 +448,7 @@ _iussum (
         redde FALSUM;
     }
 
-    terminus = _nunc() + mora_paginae + MANUS_GRATIA;
+    terminus = _nunc() + mora_paginae + manus->gratia;
     si (!_tesseram_pulsare(manus, tessera, terminus, valor, &culpa))
     {
         si (culpa.mensura > 0)
@@ -810,12 +823,14 @@ _js_exspectare (
     constans character* corpus_functionis,
                   Mora  mora)
 {
-    ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, DXII);
-            character  numerus[XXXII];
+    ChordaAedificator* a = chorda_aedificator_creare(manus->piscina,
+        DXII);
+            character numerus[XXXII];
 
     sprintf(numerus, "%ld", (longus)mora);
 
-    chorda_aedificator_appendere_literis(a, "new Promise(function(R){var d=Date.now()+");
+    chorda_aedificator_appendere_literis(a,
+        "new Promise(function(R){var d=Date.now()+");
     chorda_aedificator_appendere_literis(a, numerus);
     chorda_aedificator_appendere_literis(a, ";");
     chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
@@ -987,7 +1002,8 @@ _manus_creare (
         redde NIHIL;
     }
 
-    manus = (Manus*)piscina_allocare(piscina, (memoriae_index)magnitudo(Manus));
+    manus = (Manus*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(Manus));
 
     /* Arena manus PROPRIA - unica res quam manus possidet, et ideo
      * unica quam claudere destruere debet. */
@@ -998,15 +1014,17 @@ _manus_creare (
         redde NIHIL;
     }
 
-    manus->piscina        = piscina;
-    manus->portus         = portus;
-    manus->processus      = NIHIL;
-    manus->fracta         = FALSUM;
-    manus->tacens         = FALSUM;
-    manus->in_imagine     = FALSUM;
-    manus->via_culpae[0]  = '\0';
-    manus->causa.mensura  = 0;
-    manus->causa.datum    = NIHIL;
+    manus->piscina         = piscina;
+    manus->portus          = portus;
+    manus->processus       = NIHIL;
+    manus->fracta          = FALSUM;
+    manus->tacens          = FALSUM;
+    manus->mora_ordinaria  = MANUS_MORA_ORDINARIA;
+    manus->gratia          = MANUS_GRATIA;
+    manus->in_imagine      = FALSUM;
+    manus->via_culpae[0]   = '\0';
+    manus->causa.mensura   = 0;
+    manus->causa.datum     = NIHIL;
     memcpy(manus->hospes, hospes, (memoriae_index)longitudo);
     manus->hospes[longitudo] = '\0';
 
@@ -1019,12 +1037,27 @@ manus_aperire (
     constans character* hospes,
                    i32  portus)
 {
+    redde manus_aperire_terminis(piscina, hospes, portus,
+                                 MANUS_MORA_ORDINARIA, MANUS_GRATIA);
+}
+
+Manus*
+manus_aperire_terminis (
+               Piscina* piscina,
+    constans character* hospes,
+                   i32  portus,
+                  Mora  ordinaria,
+                  Mora  gratia)
+{
     Manus* manus = _manus_creare(piscina, hospes, portus);
 
     si (manus == NIHIL)
     {
         redde NIHIL;
     }
+    /* ANTE sondam: sonda ipsa _iussum est, ergo gratiam solvit. */
+    manus_terminos_ponere(manus, ordinaria, gratia);
+
     /* NIHIL potius quam manus muta: manus quae nihil tangit omnia
      * asserta silentio praeterire faceret - suita viridis contra
      * applicationem quae numquam cucurrit.
@@ -1037,6 +1070,26 @@ manus_aperire (
     }
     _errores_instituere(manus);
     redde manus;
+}
+
+vacuum
+manus_terminos_ponere (
+    Manus* manus,
+     Mora  ordinaria,
+     Mora  gratia)
+{
+    si (manus == NIHIL)
+    {
+        redde;
+    }
+    si (ordinaria > (Mora)0)
+    {
+        manus->mora_ordinaria = ordinaria;
+    }
+    si (gratia >= (Mora)0)
+    {
+        manus->gratia = gratia;
+    }
 }
 
 Manus*
@@ -1183,7 +1236,8 @@ manus_aestimare (
     {
         redde vacua;
     }
-    si (!_iussum(manus, chorda_ex_literis(js, manus->piscina), mora, &valor))
+    si (!_iussum(manus, chorda_ex_literis(js, manus->piscina), mora,
+        &valor))
     {
         redde vacua;
     }
@@ -1238,7 +1292,8 @@ _agere (
      * intellexit 'hoc in pagina non est' - cum vera causa esset
      * 'nullus textus ita scriptus'. Duo genera defectus unum
      * nomen ferebant. */
-    chorda_aedificator_appendere_literis(a, ");if(!e)return{ok:false,visum:");
+    chorda_aedificator_appendere_literis(a,
+        ");if(!e)return{ok:false,visum:");
     _appendere_litteras_js(a,
         (resolutor[0] == 'q' && resolutor[1] == 't')
         ? "nullum elementum VISIBILE hunc textum fert (spatia coacta"
@@ -1256,9 +1311,10 @@ _agere (
 
     v = _exspectare(manus,
                     _js_exspectare(manus, (constans character*)
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
-                        MANUS_MORA_ORDINARIA),
-                    MANUS_MORA_ORDINARIA);
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
+                        manus->mora_ordinaria),
+                    manus->mora_ordinaria);
 
     si (!v.respondit)
     {
@@ -1266,13 +1322,15 @@ _agere (
     }
     si (!v.ok)
     {
-        ChordaAedificator* n = chorda_aedificator_creare(manus->piscina, CXXVIII);
+        ChordaAedificator* n = chorda_aedificator_creare(manus->piscina,
+            CXXVIII);
         chorda_aedificator_appendere_literis(n, nomen_actionis);
         chorda_aedificator_appendere_literis(n, " fefellit: ");
         chorda_aedificator_appendere_literis(n, argumentum);
         chorda_aedificator_appendere_literis(n, " - ");
         chorda_aedificator_appendere_chorda(n, v.visum);
-        _frangere(manus, _litterae(chorda_aedificator_finire(n), manus->piscina));
+        _frangere(manus, _litterae(chorda_aedificator_finire(n),
+            manus->piscina));
         redde FALSUM;
     }
     redde VERUM;
@@ -1405,7 +1463,8 @@ manus_scribere (
         "return{ok:true,visum:String(e.value)};");
 
     fructus = _agere(manus, "q(", selector,
-                     _litterae(chorda_aedificator_finire(a), manus->piscina),
+                     _litterae(chorda_aedificator_finire(a),
+                     manus->piscina),
                      "manus_scribere");
     redde fructus;
 }
@@ -1435,7 +1494,8 @@ _imaginem (
                                chorda_ex_literis(via, manus->piscina));
     si (tessera < 0)
     {
-        *causa_out = "manus_imaginem: applicatio imaginatorem non praebuit "
+        *causa_out =
+            "manus_imaginem: applicatio imaginatorem non praebuit "
                      "(imperium_imaginatorem_ponere vocatum est?)";
         redde FALSUM;
     }
@@ -1522,8 +1582,8 @@ manus_movere (
                     _js_exspectare(manus, (constans character*)
                         _litterae(chorda_aedificator_finire(a),
                                   manus->piscina),
-                        MANUS_MORA_ORDINARIA),
-                    MANUS_MORA_ORDINARIA);
+                        manus->mora_ordinaria),
+                    manus->mora_ordinaria);
     si (!v.respondit)
     {
         redde FALSUM;   /* _iussum iam fregit */
@@ -1702,7 +1762,8 @@ manus_existit (
         ");return{ok:n>0,visum:String(n)};");
 
     v = _interrogare(manus,
-                     _litterae(chorda_aedificator_finire(a), manus->piscina));
+                     _litterae(chorda_aedificator_finire(a),
+                     manus->piscina));
     redde v.ok;
 }
 
@@ -1726,7 +1787,8 @@ manus_numerus (
         ");return{ok:true,visum:String(n)};");
 
     v = _interrogare(manus,
-                     _litterae(chorda_aedificator_finire(a), manus->piscina));
+                     _litterae(chorda_aedificator_finire(a),
+                     manus->piscina));
     si (!v.respondit || !chorda_ut_s32(v.visum, &n))
     {
         redde 0;
@@ -1765,7 +1827,8 @@ manus_textus (
         "return{ok:true,visum:_tx(e)};");
 
     v = _interrogare(manus,
-                     _litterae(chorda_aedificator_finire(a), manus->piscina));
+                     _litterae(chorda_aedificator_finire(a),
+                     manus->piscina));
     si (!v.ok)
     {
         redde vacua;
@@ -2032,10 +2095,12 @@ manus_legere (
      * affordantiarum. v/_nz/_tx ex praeambulo veniunt - eadem lex
      * visibilitatis et eadem coactio spatiorum quae petitioni
      * textuali praeest. */
-    a = chorda_aedificator_creare(manus->piscina, (memoriae_index)(II * M));
+    a = chorda_aedificator_creare(manus->piscina,
+        (memoriae_index)(II * M));
     chorda_aedificator_appendere_literis(a, "(function(){");
     chorda_aedificator_appendere_literis(a, MANUS_JS_VISUS);
-    chorda_aedificator_appendere_literis(a, "var L=document.querySelectorAll(");
+    chorda_aedificator_appendere_literis(a,
+        "var L=document.querySelectorAll(");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a,
         "),i,j,r=[];"
@@ -2087,7 +2152,8 @@ manus_legere (
         per (j = ZEPHYRUM; j < quot; j++)
         {
             fructus.lineae[i].cellulae[j] = chorda_transcribere(
-                json_ad_chorda(json_tabulatum_obtinere(ordo, j)), piscina);
+                json_ad_chorda(json_tabulatum_obtinere(ordo, j)),
+                piscina);
         }
     }
 
@@ -2107,7 +2173,8 @@ _campus_chorda (
                Piscina* piscina)
 {
     redde chorda_transcribere(
-        json_ad_chorda(json_objectum_capere(obiectum, clavis)), piscina);
+        json_ad_chorda(json_objectum_capere(obiectum, clavis)),
+        piscina);
 }
 
 interior s32
@@ -2240,7 +2307,8 @@ manus_focus_ponere (
         "return{ok:true,visum:\"focatum\"};");
 
     redde _agere(manus, "q(", selector,
-                 _litterae(chorda_aedificator_finire(a), manus->piscina),
+                 _litterae(chorda_aedificator_finire(a),
+                 manus->piscina),
                  "manus_focus_ponere");
 }
 
@@ -2296,9 +2364,10 @@ manus_focus (
     }
 
     fructus.habet = _campus_numerus(lectio.radix, "habet") != ZEPHYRUM;
-    fructus.selector = _campus_chorda(lectio.radix, "selector", piscina);
-    fructus.titulus = _campus_chorda(lectio.radix, "titulus", piscina);
-    fructus.tag = _campus_chorda(lectio.radix, "tag", piscina);
+    fructus.selector = _campus_chorda(lectio.radix, "selector",
+        piscina);
+    fructus.titulus  = _campus_chorda(lectio.radix, "titulus", piscina);
+    fructus.tag      = _campus_chorda(lectio.radix, "tag", piscina);
     redde fructus;
 }
 
@@ -2494,7 +2563,8 @@ _expressio (
                  Manus* manus,
     constans character* selector)
 {
-    ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, CXXVIII);
+    ChordaAedificator* a = chorda_aedificator_creare(manus->piscina,
+        CXXVIII);
     chorda_aedificator_appendere_literis(a, "manus[");
     _appendere_litteras_js(a, selector);
     chorda_aedificator_appendere_literis(a, "]");
@@ -2527,7 +2597,8 @@ _manus_credo_existere (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2556,7 +2627,8 @@ _manus_credo_focum (
 
     a = chorda_aedificator_creare(manus->piscina, (memoriae_index)M);
     chorda_aedificator_appendere_literis(a, MANUS_JS_SEMITA);
-    chorda_aedificator_appendere_literis(a, "var e=document.activeElement,t=");
+    chorda_aedificator_appendere_literis(a,
+        "var e=document.activeElement,t=");
     /* querySelector, NON q(): elementum focum tenens visibile esse
      * DEBET ut focum utile habeat, sed si occultum est id ipsum est
      * quod probatio nosse vult. q() nihil inveniret et nuntius
@@ -2575,7 +2647,8 @@ _manus_credo_focum (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2627,7 +2700,8 @@ _manus_credo_textum (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2667,7 +2741,8 @@ _manus_credo_numerum (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2707,7 +2782,8 @@ _manus_credo_textum_paginae (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2751,7 +2827,8 @@ _manus_credo_omnino (
 
     v = _exspectare(manus,
                     _js_exspectare(manus,
-                        _litterae(chorda_aedificator_finire(a), manus->piscina),
+                        _litterae(chorda_aedificator_finire(a),
+                        manus->piscina),
                         mora),
                     mora);
 
@@ -2929,7 +3006,8 @@ _manus_credo_sine_erroribus (
 
     sprintf(numerus, "%lu", (insignatus longus)quot);
     {
-        ChordaAedificator* a = chorda_aedificator_creare(manus->piscina, CCLVI);
+        ChordaAedificator* a = chorda_aedificator_creare(manus->piscina,
+            CCLVI);
         chorda_aedificator_appendere_literis(a, numerus);
         si (primus.mensura > 0)
         {
@@ -2939,7 +3017,8 @@ _manus_credo_sine_erroribus (
         }
         _credo_notare("credo_manus_sine_erroribus",
                       "errores paginae",
-                      _litterae(chorda_aedificator_finire(a), manus->piscina),
+                      _litterae(chorda_aedificator_finire(a),
+                      manus->piscina),
                       "0",
                       filum, versus, quot == 0);
     }

@@ -96,8 +96,10 @@ principale (vacuum)
 
     imprimere("\n--- Culpa inserta II: gyrus infinitus ---\n");
 
-    CREDO_RUIT_CUM(probatio_credo_processus_pendere_semper(),
-                    SIGKILL);
+    /* CCC ms, non V s: filius numquam redit, ergo terminus totus
+     * semper exspectatur - V s hic somnus erat (VI s cursus). */
+    CREDO_RUIT_CUM_INTRA(probatio_credo_processus_pendere_semper(),
+                         SIGKILL, CCC);
 
 
     /* ==================================================

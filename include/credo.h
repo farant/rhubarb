@@ -581,7 +581,11 @@ credo_processus_iudicare (
             #expressio, (mora_ms), ZEPHYRUM, __FILE__, __LINE__); \
     } dum (FALSUM)
 
-#define CREDO_RUIT_CUM(expressio, signum) \
+/* _INTRA: terminum nominat. Pro filio qui NUMQUAM redit (gyrus
+ * infinitus, SIGKILL exspectatum) forma nuda V secunda dormit
+ * antequam occidat - terminus brevis ibi non est somnus sed
+ * mensura: quam cito detector eum capiat. */
+#define CREDO_RUIT_CUM_INTRA(expressio, signum, mora_ms) \
     fac { \
         CredoProcessusFructus _cpf = credo_processus_incipere(); \
         si (_cpf.in_filio) \
@@ -590,7 +594,10 @@ credo_processus_iudicare (
             credo_processus_filium_finire(); \
         } \
         credo_processus_iudicare(&_cpf, "credo_ruit_cum", #expressio, \
-            CREDO_MORA_ORDINARIA_MS, (signum), __FILE__, __LINE__); \
+            (mora_ms), (signum), __FILE__, __LINE__); \
     } dum (FALSUM)
+
+#define CREDO_RUIT_CUM(expressio, signum) \
+    CREDO_RUIT_CUM_INTRA(expressio, signum, CREDO_MORA_ORDINARIA_MS)
 
 #endif /* CREDO_H */

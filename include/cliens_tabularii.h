@@ -43,7 +43,10 @@ nomen structura {
     constans character* actor;           /* iniectus in transmittere */
     constans character* launcher;        /* via ad scriptum daemonis */
     constans character* praefixum;       /* nota stderr, e.g. "[villa]" */
-                   b32  genitus;         /* launcher iam excitatus?
+                   i32  mora_excitationis_ms; /* quamdiu post launcherum
+                                          * daemon exspectetur (ordinarius
+                                          * V s; probationes breviant) */
+                   b32 genitus;         /* launcher iam excitatus?
                                           * (in structura, non
                                           * hic_manens: duo clientes
                                           * in eodem processu portus
@@ -56,7 +59,8 @@ nomen structura {
  * ======================================================================== */
 
 /* Clientem ad valores ordinarios ponere (portus datus; actor
- * "fran"; launcher "./gesta/tabulariumd.sh"; praefixum "[cliens]"). */
+ * "fran"; launcher "./gesta/tabulariumd.sh"; praefixum "[cliens]";
+ * mora excitationis V s). */
 vacuum
 cliens_tabularii_incipere (
     ClientTabularii* cliens,

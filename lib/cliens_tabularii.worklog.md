@@ -56,3 +56,14 @@ signatures and the three semantic changes above were hand-edited.
 Gates: `probationes/probatio_cliens_tabularii.c` 21/21 (ephemeral
 daemon on `-portus 0`, fully offline); forum FUMUS PLENUS unchanged;
 root suite 104/104; gesta 4/4.
+
+## 2026-09-02 — mora_excitationis_ms
+
+After spawning the launcher the client polled 25 × 200 ms for the
+daemon. The fast-failure test (section VII) uses a launcher that
+starts nothing, so it paid the full 5 s before the "fast" second
+attempt. The budget is now a field (default 5 s, set by
+cliens_tabularii_incipere); the test sets one step. Note for the
+examen: the first cut compared a signed `integer k` with the i32
+field, which clang -Wsign-compare rejects and examen accepted.
+6.5 → 1.4 s.

@@ -54,7 +54,7 @@ _conectere_aut_gignere (
 {
     TcpResultus rc = tcp_connectere("127.0.0.1", cliens->portus,
         pn);
-    integer k;
+    i32 k;   /* comparatur cum mora_excitationis_ms (i32) */
 
     si (rc.successus)
     {
@@ -77,7 +77,10 @@ _conectere_aut_gignere (
             cliens->launcher, (int)cliens->portus);
         (vacuum)system(imperium);
     }
-    per (k = ZEPHYRUM; k < XXV; k++)
+    /* CC ms per gradum; gradus = mora_excitationis_ms / CC (V s
+     * ordinarie = XXV gradus). Probatio launcheris falsi moram
+     * brevem ponit ne V s dormiat. */
+    per (k = ZEPHYRUM; k < cliens->mora_excitationis_ms / CC; k++)
     {
         (vacuum)system("sleep 0.2");
         rc = tcp_connectere("127.0.0.1", cliens->portus, pn);
@@ -414,7 +417,8 @@ cliens_tabularii_transmittere (
     json_objectum_ponere(arg_obj, "actor",
         json_chorda_creare_literis(piscina, cliens->actor));
     textus = cliens_tabularii_vocare(cliens, piscina,
-        cliens_tabularii_litterae(piscina, instrumentum), arg_obj, culpa);
+        cliens_tabularii_litterae(piscina, instrumentum), arg_obj,
+        culpa);
     si (textus.mensura == ZEPHYRUM)
     {
         redde NIHIL;
@@ -447,10 +451,11 @@ cliens_tabularii_incipere (
     {
         redde;
     }
-    cliens->portus         = portus;
-    cliens->petitio_index  = (s64)I;
-    cliens->actor          = "fran";
-    cliens->launcher       = "./gesta/tabulariumd.sh";
-    cliens->praefixum      = "[cliens]";
-    cliens->genitus        = FALSUM;
+    cliens->portus                = portus;
+    cliens->petitio_index         = (s64)I;
+    cliens->actor                 = "fran";
+    cliens->launcher              = "./gesta/tabulariumd.sh";
+    cliens->praefixum             = "[cliens]";
+    cliens->mora_excitationis_ms  = V * M;
+    cliens->genitus               = FALSUM;
 }
