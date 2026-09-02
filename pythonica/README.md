@@ -30,6 +30,10 @@ plica pendet — veritas in C manet.
   silvae, processus proprius pigre natus ~1.5s): `vocantes(t)`,
   `vocata(t)`, `inclusiones(via)`, `caput(via)`, `symbolum(t)`,
   `diagnostica(via)` — idem apparatus quem Claude per MCP videt
+- `silva.selecta(via, selector, intra=None)` — sedes structurales byte-
+  exactae; `.replace_selecta(selector, novus, intra=)` ancora sine
+  textu; `silva.differre_git(via, ref)` verdictum contra historiam;
+  `silva.origo(via, linea)`, `silva.arbor(via)` textus crudi
 - `silva.usus(symbolum)` — sedes + usus per plagulam (nexus)
 - `silva.renominare(vetus, novum, viae, scribere=False)` — planum/applicatio
 

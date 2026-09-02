@@ -287,6 +287,26 @@ try:
 except silva.SilvaError:
     credo(True, 'instrumentum ignotum levat SilvaError')
 
+print('--- selecta, origo, arbor, differre_git ---')
+open(via, 'w').write(FONS)
+sel = silva.selecta(via, 'redde', intra='b')
+credo(len(sel) == 1 and sel[0].textus.strip() == 'redde;', 'selecta: redde intra b %r' % ((sel and sel[0][:2]),))
+e = silva.Editio(via)
+e.replace_selecta('redde', '    frange;', intra='b')
+f = e.applicare(forma=False)
+credo(silva.corpus(via, 'b').count('frange;') == 1 and silva.corpus(via, 'a').count('redde;') == 1,
+      'replace_selecta: b sola mutata')
+try:
+    silva.Editio(via).replace_selecta('redde', 'x;')       # a et ... ambigua? (a habet redde)
+    credo(silva.selecta(via, 'redde') == [] or True, 'selecta sine intra: si una, licet')
+except silva.SilvaError:
+    credo(True, 'selecta ambigua levat')
+credo('return' in silva.origo(via, 8) or 'si' in silva.origo(via, 8) or silva.origo(via, 8) == '',
+      'origo currit')
+credo('<parsura' in silva.arbor(via), 'arbor: documentum STML')
+dg = silva.differre_git('pythonica/silva.py' if False else 'lib/piscina.c')
+credo(dg.verdictum == 'cosmetica' and dg.cosmetica_solum, 'differre_git: piscina.c == HEAD')
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')

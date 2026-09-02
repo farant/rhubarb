@@ -248,6 +248,30 @@ class Editio(object):
         self.acta.append('membrum_addere %s' % typus)
         return self
 
+    def replace_selecta(self, selector, novus, intra=None):
+        """sedes structuralis (selecta) in textu PRAESENTI, exacte una,
+        lineis [a, b] substitutis - ancora sine textu litterali:
+        'redde' -intra f, 'si', 'vocatio' ..."""
+        d = os.path.dirname(_absoluta(self.via))
+        fd, via_t = tempfile.mkstemp(prefix='.editio_', suffix='.c', dir=d)
+        try:
+            with os.fdopen(fd, 'w') as f:
+                f.write(self.textus)
+            sedes = selecta(via_t, selector, intra)
+        finally:
+            os.unlink(via_t)
+        if len(sedes) != 1:
+            raise SilvaError("selector %r %d sedes (exspectata una)"
+                             % (selector, len(sedes)))
+        x = sedes[0]
+        if not novus.endswith('\n'):
+            novus += '\n'
+        lineae = self._lineae()
+        self.textus = ''.join(lineae[:x.linea_a - 1]) + novus \
+            + ''.join(lineae[x.linea_b:])
+        self.acta.append('replace_selecta %r' % selector)
+        return self
+
     # -- exitus --
     def diff(self):
         return ''.join(difflib.unified_diff(
@@ -348,6 +372,81 @@ class Fructus(object):
             lineae.append('  differre: %s %s' % (
                 self.differentia.verdictum, self.unitates()))
         return '\n'.join(lineae) + ('\n' + self.diff if self.diff else '')
+
+
+# ---------------------------------------------------------------- selecta
+
+Selectum = namedtuple('Selectum', 'linea_a linea_b textus')
+
+
+def selecta(via, selector, intra=None):
+    """sedes structurales per selectorem (selecta.sh): [Selectum] cum
+    lineis et textu byte-exacto - ancorae sine textu litterali"""
+    args = ['./silva/selecta.sh', _absoluta(via), selector, '-omnia']
+    if intra:
+        args += ['-intra', intra]
+    r = _curre(args)
+    if r.returncode == 2:
+        raise SilvaError('selecta fractus: %s' % r.stderr.strip()[-200:])
+    exitus = []
+    caput = re.compile(r'^\[(.+):(\d+)-(\d+)\]$')
+    cur = None
+    corpus_lineae = []
+    for linea in r.stdout.splitlines():
+        m = caput.match(linea)
+        if m:
+            if cur is not None:
+                exitus.append(Selectum(cur[0], cur[1],
+                                       '\n'.join(corpus_lineae).rstrip('\n')
+                                       + '\n'))
+            cur = (int(m.group(2)), int(m.group(3)))
+            corpus_lineae = []
+        elif cur is not None:
+            corpus_lineae.append(linea)
+    if cur is not None:
+        exitus.append(Selectum(cur[0], cur[1],
+                               '\n'.join(corpus_lineae).rstrip('\n') + '\n'))
+    return exitus
+
+
+def origo (via, linea, columna=None):
+    """historia expansionis ad sedem (origo.sh) - textus"""
+    sedes = '%d:%d' % (linea, columna) if columna else str(linea)
+    return _curre(['./silva/origo.sh', _absoluta(via), sedes,
+                   '-omnia']).stdout
+
+
+def arbor(via, nudum=False):
+    """documentum STML canonicum plagulae (arbor.sh) - textus"""
+    args = ['./silva/arbor.sh', _absoluta(via), '-tacitus']
+    if nudum:
+        args.append('-nudum')
+    r = _curre(args)
+    if r.returncode != 0 and not r.stdout:
+        raise SilvaError('arbor fractus: %s' % r.stderr.strip()[-200:])
+    return r.stdout
+
+
+def differre_git(via, ref_vetus='HEAD', ref_novum=None,
+                 gradus='cosmetica'):
+    """differentia unitatum contra historiam git (arbor operis
+    ordinaria) cum verdicto"""
+    args = ['./silva/differre.sh', '-git', via, ref_vetus]
+    if ref_novum:
+        args.append(ref_novum)
+    args += ['-machina', '-verdictum', gradus]
+    r = _curre(args)
+    paria = []
+    verd = None
+    for o in _tsv(r.stdout):
+        if o and o[0] == 'VERDICTUM' and len(o) > 1:
+            verd = o[1]
+        elif len(o) >= 6:
+            paria.append(Par(o[0], o[1], o[2], o[3], o[4], o[5]))
+    if verd is None:
+        raise SilvaError('differre -git sine verdicto (rc=%d): %s'
+                         % (r.returncode, r.stderr.strip()[-200:]))
+    return Differentia(paria, verd, r.returncode == 0, r.returncode)
 
 
 # ---------------------------------------------------------------- legati
