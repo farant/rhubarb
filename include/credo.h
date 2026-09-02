@@ -53,6 +53,9 @@ memoriae_index
 credo_numerus_fracti (
         vacuum);
 
+/* VERUM si assertio ulla cucurrit ET nulla fracta est. Totalis
+ * ZEPHYRUM = FALSUM ('NIHIL PROBATUM'): probatio quae nihil asserit
+ * non praeteriit (2026-09-02). */
 b32
 credo_omnia_praeterierunt (
         vacuum);
@@ -69,6 +72,21 @@ credo_invenire_fractos (
 /* ============================================
  * Macros - Nucleum
  * ============================================ */
+
+/* Culpa declarata: fractura sine expressione, pro exitu praematuro
+ * ('corpus non apertum', 'plica absens') qui olim imprimere + redde I
+ * erat et compendium 'OMNIA PRAETERIERUNT' supra se relinquebat.
+ * Numerat, ergo compendium et exitus consentiunt. */
+#define CREDO_CULPA(nuntius) \
+    _credo_notare( \
+            "credo_culpa", \
+            (nuntius), \
+            "culpa declarata", \
+            "nulla", \
+            __FILE__, \
+            __LINE__, \
+            FALSUM \
+    )
 
 #define CREDO_VERUM(x) \
     _credo_notare( \

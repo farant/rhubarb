@@ -110,6 +110,7 @@ _callback_terminare_post_tres (
 s32 principale(vacuum)
 {
     Piscina* piscina;
+        b32  praeteritus;
 
     /* Aperire piscina et credo */
     piscina = piscina_generare_dynamicum("test_iter_directoria", 8192);
@@ -488,8 +489,11 @@ s32 principale(vacuum)
     _purgare_structuram_probationis();
 
     credo_imprimere_compendium();
+    /* verdictum ANTE clausuram: sessio clausa = totalis ZEPHYRUM =
+     * NIHIL PROBATUM */
+    praeteritus = credo_omnia_praeterierunt();
     credo_claudere();
     piscina_destruere(piscina);
 
-    redde credo_omnia_praeterierunt() ? 0 : I;
+    redde praeteritus ? ZEPHYRUM : I;
 }

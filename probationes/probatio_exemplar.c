@@ -507,6 +507,7 @@ s32
 principale (vacuum)
 {
     Piscina* piscina;
+        b32  praeteritus;
 
     piscina = piscina_generare_dynamicum("probatio_exemplar", 65536);
     si (!piscina)
@@ -533,8 +534,11 @@ principale (vacuum)
     probare_status_descriptio(piscina);
 
     credo_imprimere_compendium();
+    /* verdictum ANTE clausuram: sessio clausa = totalis ZEPHYRUM =
+     * NIHIL PROBATUM */
+    praeteritus = credo_omnia_praeterierunt();
     credo_claudere();
     piscina_destruere(piscina);
 
-    redde credo_omnia_praeterierunt() ? 0 : 1;
+    redde praeteritus ? ZEPHYRUM : I;
 }

@@ -18,6 +18,7 @@ s32 principale(vacuum)
            InformatioDiei* info;
                      Dies  dies;
                    chorda  titulus;
+                      b32  praeteritus;
 
     /* Aperire credo et piscina */
     piscina = piscina_generare_dynamicum("test_calendarium", M * M);
@@ -522,9 +523,12 @@ s32 principale(vacuum)
     imprimere("\n");
     credo_imprimere_compendium();
 
+    /* verdictum ANTE clausuram: sessio clausa = totalis ZEPHYRUM =
+     * NIHIL PROBATUM */
+    praeteritus = credo_omnia_praeterierunt();
     calendarium_destruere(cal);
     credo_claudere();
     piscina_destruere(piscina);
 
-    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+    redde praeteritus ? ZEPHYRUM : I;
 }

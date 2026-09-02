@@ -37,7 +37,8 @@ _credo_allocare_notatio (
         exit(I);
     }
 
-    notatio = (CredoNotatio*)piscina_allocare(_credo_piscina, magnitudo(CredoNotatio));
+    notatio = (CredoNotatio*)piscina_allocare(_credo_piscina,
+        magnitudo(CredoNotatio));
     si (!notatio)
     {
         redde NIHIL;
@@ -136,6 +137,15 @@ b32
 credo_omnia_praeterierunt (
     vacuum)
 {
+    /* Nihil probatum = NON praeteritum. Probatio quae nullam
+     * assertionem fecit (corpus absens, plica mota, gyrus qui nihil
+     * invenit) viridis erat quia fractae nullae - lumen viride,
+     * nihil visum (2026-09-02). Totalis ZEPHYRUM hic FALSUM reddit;
+     * compendium 'NIHIL PROBATUM' imprimit. */
+    si (_credo_numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     redde credo_numerus_fracti() == ZEPHYRUM;
 }
 
@@ -212,7 +222,13 @@ credo_imprimere_compendium (
     imprimere("Praeteriti: %lu\n", (insignatus longus)praeteriti);
     imprimere("Fracti:     %lu\n", (insignatus longus)fracti);
 
-    si (fracti > ZEPHYRUM)
+    si (totalis == ZEPHYRUM)
+    {
+        /* tertia conditio: nulla assertio cucurrit - idem quod
+         * credo_omnia_praeterierunt FALSUM reddit */
+        imprimere("\nConditio: NIHIL PROBATUM\n");
+    }
+    alioquin si (fracti > ZEPHYRUM)
     {
         imprimere("\nConditio: FRACTA\n");
     }
@@ -243,9 +259,12 @@ _credo_notare (
     si (!notatio) redde;
 
     notatio->genus = chorda_ex_literis(genus,          _credo_piscina);
-    notatio->expressio = chorda_ex_literis(expressio,      _credo_piscina);
-    notatio->valor_primus = chorda_ex_literis(valor_primus,   _credo_piscina);
-    notatio->valor_secundus = chorda_ex_literis(valor_secundus, _credo_piscina);
+    notatio->expressio = chorda_ex_literis(expressio,
+        _credo_piscina);
+    notatio->valor_primus = chorda_ex_literis(valor_primus,
+        _credo_piscina);
+    notatio->valor_secundus = chorda_ex_literis(valor_secundus,
+        _credo_piscina);
     notatio->filum = chorda_ex_literis(filum,          _credo_piscina);
     notatio->versus = versus;
     notatio->praeteritus = praeteritus;
@@ -264,11 +283,14 @@ _credo_notare (
         imprimere("\n FRACTA (%s): %s at %s:%d\n",
                   chorda_ut_cstr(notatio->genus, _credo_piscina),
                   chorda_ut_cstr(notatio->expressio, _credo_piscina),
-                  chorda_ut_cstr(notatio->filum, _credo_piscina), versus);
+                  chorda_ut_cstr(notatio->filum, _credo_piscina),
+                  versus);
         imprimere("  Speratus: %s\n",
-                  chorda_ut_cstr(notatio->valor_secundus, _credo_piscina));
+                  chorda_ut_cstr(notatio->valor_secundus,
+                  _credo_piscina));
         imprimere("  Receptus: %s\n",
-                  chorda_ut_cstr(notatio->valor_primus, _credo_piscina));
+                  chorda_ut_cstr(notatio->valor_primus,
+                  _credo_piscina));
         /* effluere statim: probatio post fracturam saepe NIHIL
          * dereferens cadit, et per fistulam buffer plenus cum
          * relatione perit - segfault relationem absorbebat
@@ -295,7 +317,8 @@ _credo_notare_integrum (
 
     praeteritus = (valor_primus == valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -316,7 +339,8 @@ _credo_notare_integrum_i32 (
 
     praeteritus = (valor_primus == valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -337,7 +361,8 @@ _credo_notare_integrum_s64 (
 
     praeteritus = (valor_primus == valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -358,7 +383,8 @@ _credo_notare_integrum_inaequalitas (
 
     praeteritus = (valor_primus != valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -379,7 +405,8 @@ _credo_notare_integrum_inaequalitas_i32 (
 
     praeteritus = (valor_primus != valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -426,7 +453,8 @@ _credo_notare_chorda_literis (
 
     si (valor_primus.datum && len_to_copy > ZEPHYRUM)
     {
-        memcpy(buffer_primus, valor_primus.datum, (memoriae_index)len_to_copy);
+        memcpy(buffer_primus, valor_primus.datum,
+            (memoriae_index)len_to_copy);
     }
     buffer_primus[len_to_copy] = '\0';
 
@@ -454,7 +482,8 @@ _credo_notare_integrum_maior (
 
     praeteritus = (valor_primus > valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -475,7 +504,8 @@ _credo_notare_integrum_maior_i32 (
 
     praeteritus = (valor_primus > valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -496,7 +526,8 @@ _credo_notare_integrum_minor (
 
     praeteritus = (valor_primus < valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -517,7 +548,8 @@ _credo_notare_integrum_minor_i32 (
 
     praeteritus = (valor_primus < valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -538,7 +570,8 @@ _credo_notare_integrum_maior_aut_aequalis (
 
     praeteritus = (valor_primus >= valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -559,7 +592,8 @@ _credo_notare_integrum_maior_aut_aequalis_i32 (
 
     praeteritus = (valor_primus >= valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -580,7 +614,8 @@ _credo_notare_integrum_minor_aut_aequalis (
 
     praeteritus = (valor_primus <= valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -601,7 +636,8 @@ _credo_notare_integrum_minor_aut_aequalis_i32 (
 
     praeteritus = (valor_primus <= valor_secundus);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 vacuum
@@ -620,12 +656,14 @@ _credo_notare_f64_proximus (
           f64 differentia;
 
     snprintf(buffer_primus,   64, "%.10f", valor_primus);
-    snprintf(buffer_secundus, 64, "%.10f (ε=%.10f)", valor_secundus, epsilon);
+    snprintf(buffer_secundus, 64, "%.10f (ε=%.10f)", valor_secundus,
+        epsilon);
 
     differentia = fabs(valor_primus - valor_secundus);
     praeteritus = (differentia <= epsilon);
 
-    _credo_notare(genus, expressio, buffer_primus, buffer_secundus, filum, versus, praeteritus);
+    _credo_notare(genus, expressio, buffer_primus, buffer_secundus,
+        filum, versus, praeteritus);
 }
 
 
