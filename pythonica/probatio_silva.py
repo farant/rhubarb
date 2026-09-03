@@ -424,7 +424,9 @@ finally:
 
 print('--- metiri ---')
 mm = silva.metiri('lib/piscina.c', n=1)
-credo(mm.parsare_ms > 0 and mm.allocationes > 0 and 'glr' in mm.phases, 'metiri: mensura cum phasibus (%.1f ms)' % mm.parsare_ms)
+credo(mm.parsare_ms > 0 and mm.allocationes > 0 and 'glr' in mm.phases and mm.campi and mm.campi['via'].endswith('piscina.c'), 'metiri: mensura cum phasibus (%.1f ms)' % mm.parsare_ms)
+mc = silva.metiri('probationes/fixa/css/adversarius.css', n=1)
+credo(mc.parsare_ms >= 0 and 'arbor_legendi' in mc.phases and int(mc.campi['nodi']) > 0 and mc.campi['sana'] == '1', 'metiri css: semita materiae per titulos (%s nodi)' % mc.campi['nodi'])
 
 print('--- portae + commissio + planta ---')
 pp = silva.porta('formator-intra')

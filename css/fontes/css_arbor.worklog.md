@@ -63,3 +63,26 @@ at which it turned out to have been silently broken since the silva
 runner started compiling tests in two steps (`probatio_*.o` in
 `silva/build` matched the shim's object glob and doubled `main`).
 Fixed by excluding test objects; 348/348 through three oracles, 15 s.
+
+## 2026-09-02 — the bench: a computus for the materia path
+
+Every performance instrument in the repo measured silva's path
+(computus with its phase clocks, the byte-identity golden, the
+sampler wrapper), so phase 5 — C89 through materia, the acceptance
+test — would have had nothing to compare against. `css_computus` is
+the twin: one file, a parse arena with a fixed first bucket so the
+memory columns compare across files and commits, then emission, the
+STML document written and read back, and the tree comparator, each
+timed, in a second arena so the parse numbers stay pure. Counts (nodes,
+tokens, STML bytes, arena figures, allocations) are pinned by
+`probatio_css_computus` over the four committed fixtures; times print
+and are never pinned. Birth cost one -Wsign-compare rejection the
+examen does not know (unsigned loop index against the signed argument
+count — quaestio 01M1GB2MMJ's class again). The runners now record
+per-test timings the way root and silva do, so `silva.mensurae('css.')`
+works, and `silva.metiri` reads either bench by column title instead of
+by position. First reading on speculum.css: parse 0.18 ms, emit 0.05,
+STML write 2.3, read 3.2, compare 0.07 — the projection round trip is
+thirty times the parse. That is the same shape the silva corpus tests
+showed, now measured on the client whose parser has no preprocessor to
+blame, which makes it a materia_arbor question rather than a silva one.

@@ -1342,7 +1342,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         acta = open(via + '.acta').read()
         tot = _totum_actorum(acta)
         if tot is None:
-            praef = {'radix': '', 'silva': 'silva.'}.get(nomen)
+            praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
+                     'materia': 'materia.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
                 if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
@@ -1855,30 +1856,52 @@ def compendium_mensurae(sessio, quantum=5):
     return '\n'.join(lineae)
 
 
-Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes usus ordo')
+Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes usus ordo'
+                    ' campi', defaults=(None,))
 
 
 def metiri(via, n=7, nudum=False):
-    """computus min-of-n (singuli +-X%): parsare/lexare ms, phases
-    (lex/expansio/glr/commissio), allocationes, usus - pro A/B
-    optimizationum. ordo = ordo TSV integer cursus optimi."""
+    """computus min-of-n (singuli +-X%): parsare/lexare ms, phases,
+    allocationes, usus - pro A/B optimizationum. Instrumentum ex
+    suffixo: .css -> css/computus.sh (semita materiae; phases
+    emittendi/arbor_scribendi/arbor_legendi/comparandi), aliter
+    silva/computus.sh (lex/expansio/glr/commissio). Columnae per
+    TITULOS capitis '#' lectae (campi = dict cursus optimi), ordo =
+    ordo TSV crudus."""
+    css = via.endswith('.css')
     best = None
     for _ in range(n):
-        args = ['./silva/computus.sh', _absoluta(via), '-machina'] + (['-nudum'] if nudum else [])
+        if css:
+            args = ['./css/computus.sh', _absoluta(via), '-machina']
+        else:
+            args = ['./silva/computus.sh', _absoluta(via), '-machina'] \
+                + (['-nudum'] if nudum else [])
         out = _curre(args).stdout.splitlines()
+        caput = [l[1:].strip().split('\t') for l in out if l.startswith('#')]
         rows = [l.split('\t') for l in out if l and not l.startswith('#')]
-        if not rows:
+        if not rows or not caput:
             raise SilvaError('computus sine ordine: %s' % via)
-        r = rows[0]
-        v = float(r[7])
+        campi = dict(zip(caput[0], rows[0]))
+        v = float(campi['ms_parsandi'])
         if best is None or v < best[0]:
-            best = (v, r)
-    r = best[1]
-    phases = {}
-    if len(r) >= 20:
-        phases = {'lex': float(r[16]), 'expansio': float(r[17]),
-                  'glr': float(r[18]), 'commissio': float(r[19])}
-    return Mensura(via, best[0], float(r[6]), phases, int(r[13]), int(r[8]), r)
+            best = (v, rows[0], campi)
+    v, r, campi = best
+    if css:
+        phases = dict((k[3:], float(campi[k])) for k in
+                      ('ms_emittendi', 'ms_arbor_scribendi',
+                       'ms_arbor_legendi', 'ms_comparandi') if k in campi)
+        lexare = 0.0
+    else:
+        phases = dict((k[3:], float(campi[k])) for k in
+                      ('ph_lexandi', 'ph_expandendi', 'ph_glr',
+                       'ph_committendi') if k in campi)
+        phases = {'lex': phases.get('lexandi', 0.0),
+                  'expansio': phases.get('expandendi', 0.0),
+                  'glr': phases.get('glr', 0.0),
+                  'commissio': phases.get('committendi', 0.0)}
+        lexare = float(campi.get('ms_lexandi', 0))
+    return Mensura(via, v, lexare, phases, int(campi['allocationes']),
+                   int(campi['usus']), r, campi)
 
 
 # ---------------------------------------------------------------- selecta

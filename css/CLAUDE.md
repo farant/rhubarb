@@ -17,6 +17,18 @@ selector). Gates in pythonica's table: `css`, `materia`,
 SILENTLY BROKEN: silva's two-step test compile (2026-09-02) left
 `probatio_*.o` in `silva/build`, the shim's object glob linked them,
 and nothing ran it — a runner outside the gate table is a dead gate.
+BENCH (2026-09-02): `./css/computus.sh <plagula.css> [-machina]
+[-iter N]` = the computus twin for the MATERIA path (parse ms +
+emit + STML write/read + comparator; parse-arena dati/commissa/
+otiosa/apex/alvei/allocationes; nodes, tokens, STML bytes); gate
+`probatio_css_computus` pins the counts of the 4 fixa/css files in
+`probationes/fixa/computus/basis.tsv` (`COMPUTUS_SCRIBERE=1` + a
+named cause to regenerate); `silva.metiri('x.css', n)` reads it
+by column titles; css/materia runners record per-test times in the
+mensor store (`silva.mensurae('css.', n)`). First reading, speculum.css:
+parse 0.18 ms, STML write 2.3 + read 3.2 ms - the round trip is 30x
+the parse, same shape as silva's corpus tests. Phase 5 (C89 through
+materia) measures against THESE columns.
 Worklog: `css/fontes/css_arbor.worklog.md` (what the gates found,
 where the seam differed from the plan, which spec predictions were
 wrong). What comes next is a DECISION, not a task: materia phase 5

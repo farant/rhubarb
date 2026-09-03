@@ -142,6 +142,10 @@ for src in "$MATERIA_DIR"/probationes/*.c; do
     obj_files="$obj_files $obj"
 done
 
+# metra suitae in volumen mensoris (tools/mensor_suitae.sh; praefixum
+# "materia." - silva.mensurae('materia.', n) eas legit); numquam suitam frangit
+source "$RADIX_DIR/tools/mensor_suitae.sh"
+mensor_suitae_incipere "materia."
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$MATERIA_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
@@ -152,22 +156,31 @@ for test_file in "$MATERIA_DIR"/probationes/probatio_*.c; do
     bin="$BUILD_DIR/$name"
     echo ""
     echo "=== $name ==="
+    t0=$(mensor_suitae_nunc)
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue
     fi
+    mensor_suitae_compilatio "$name" "$t0"
+    t0=$(mensor_suitae_nunc)
     if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
+        mensor_suitae_cursus "$name" "$t0"
+        echo "--- $name praeteriit (${MSU_ULTIMA}s)"
         passed=$((passed + 1))
     else
+        mensor_suitae_cursus "$name" "$t0"
+        echo "--- $name FRACTA (${MSU_ULTIMA}s)"
         failed_names="$failed_names $name"
     fi
 done
 shopt -u nullglob
 
 echo ""
+mensor_suitae_tardissimae 5
 echo "========================================"
 echo "MATERIA PROBATIONES: $passed/$total praeteritae"
+mensor_suitae_finire "" "$total" "$(echo $failed_names | wc -w | tr -d ' ')" 0
 if [ -n "$failed_names" ]; then
     echo "FRACTAE:$failed_names"
     exit 1

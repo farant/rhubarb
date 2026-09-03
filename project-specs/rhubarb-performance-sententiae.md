@@ -354,6 +354,21 @@ AW    tools/aedilis.worklog.md
       question, decision pending), the child-access plumbing (three
       out-of-line calls per child visit, ~25% of canon samples), and
       the per-rule per-node loops in canon.
+10.14. A bench for the materia path (2026-09-02, night). Every
+      instrument above measures silva; phase 5 of the materia fork
+      (C89 through materia, its acceptance test) would have had no
+      baseline. `css/computus.sh` is the twin over the first client:
+      parse in a fixed-bucket arena (memory columns pinned by
+      `probatio_css_computus` over the four CSS fixtures, golden
+      `css/probationes/fixa/computus/basis.tsv`), then emission, STML
+      write, STML read and the tree comparator, each timed. The css
+      and materia runners record per-test times in the mensor store;
+      `silva.metiri` reads either bench by column title. First reading,
+      speculum.css (7.7 KB): parse 0.18 ms, emit 0.05, STML write 2.3,
+      read 3.2, compare 0.07. The projection round trip is thirty
+      times the parse on a parser with no preprocessor - the same
+      ratio the silva corpus tests showed (10.13), now attributable to
+      materia_arbor itself. Phase 5 compares against these columns.
 11.8. Re-measured on this toolchain, with the include closure:
       lib/stml.c (285,866 B) parses in 176 ms into 436 MB handed out,
       606 MB committed, 1,141,283 allocations, 11 blocks; lib/piscina.c
