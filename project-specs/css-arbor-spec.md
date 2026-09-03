@@ -282,6 +282,20 @@ Trees then read the way a human reads CSS, and `selecta` queries are
 not drowned in whitespace nodes. The cost is a rule with a seam that
 can be got wrong, so it gets its own gate (§9.7).
 
+**As built (B3, 2026-09-01) — D7 strengthened.** Inside a prelude or
+a declaration value, whitespace *and comments* are content
+(`lexema-servatum` leaves); the ligator is bypassed and content
+regions carry zero trivia. Three reasons, in order of force: (1) byte
+order — a comment between two preserved whitespace tokens has no
+trivia owner that keeps the three in sequence, so comments cannot be
+trivia there without breaking the byte round trip; (2) one-owner is
+then *built*, not asserted — `css_adaptare` converts one for one and
+the parser owns the trivia state, so a byte cannot be converted twice
+because it is not converted twice; (3) whether a region is a prelude
+is a parse-context fact, so the plan's bimodal "adapt with or without
+trivia" call could never implement D7 (css/CLAUDE.md, "T8 signature").
+Gates: §9.7 one-owner, plus the totality gate added between B6 and B7.
+
 ---
 
 ## 7. The STML document
@@ -328,6 +342,20 @@ holds `saeptum` or `regula-*`*). Weaker than c89's canon. Accepted for
 v1; tightening it means extending `<genus>` slot syntax to carry genus
 constraints (`slots="corpus:nodus(saeptum|regulae)"`), a generator
 change not worth making on speculation. Recorded in §11.
+
+**As built (B7, decree 2026-09-01): `css.canon` is HAND-WRITTEN, not
+generated.** The generator's productions closure had nothing to close
+over, so instead of a species-level generated canon the canon was
+written by hand (64 rules at B7, 96 after B8's selector genera) with
+slot constraints read from the parser's code. The freshness gate is
+replaced by a bidirectional DRIFT GUARD in `probatio_css_canon`:
+every genus, slot, lexeme and envelope has exactly one rule, every
+rule matches one of those tables, and the canon's `<optio>` sigillum
+is pinned to the live `materia_arbor_sigillum`. Falsified at birth by
+four plants. It is not registered in `canones.registrum` — the
+`<arbor>` root would also claim silva's subtree documents — and is
+judged by path with `bin/canon_examen -canon`. G3 (genus-level
+tightening) stays open.
 
 ---
 

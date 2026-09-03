@@ -8,12 +8,20 @@ CSS parser built on **materia** (not silva). Design:
 the old `css-arbor-plan.md` T10–T17 are superseded (stale types);
 its T1–T9 are the historical record.
 
-## Praesens status (2026-09-01, post B1-B6)
+## Praesens status (2026-09-02, post B10 — PLAN B CLOSED)
 
-PLAN B EXECUTING: `css-arbor-plan-B.md`. B1-B9 COMPLETE; next =
-**B10 (wire-up, spec closure, debrief)**. Suites: css 8/8
+B1-B10 COMPLETE; `css-arbor-plan-B.md` is finished. Suites: css 8/8
 (registrum, adaptare, arbor, corpus, stml, totalitas, canon,
-**selector**).
+selector). Gates in pythonica's table: `css`, `materia`,
+`materia-shim` (348/348, three oracles). B10 found the shim runner
+SILENTLY BROKEN: silva's two-step test compile (2026-09-02) left
+`probatio_*.o` in `silva/build`, the shim's object glob linked them,
+and nothing ran it — a runner outside the gate table is a dead gate.
+Worklog: `css/fontes/css_arbor.worklog.md` (what the gates found,
+where the seam differed from the plan, which spec predictions were
+wrong). What comes next is a DECISION, not a task: materia phase 5
+(C89 through materia — the acceptance test, materia-spec §7) or
+phase 4 (HTML); the parked S6 extraction (01M12BD0) waits for HTML.
 
 B9 (2026-09-01): `css_selector` - ANALYSIS tree over the prelude's
 component values. Shares TOKENS with the stylesheet tree, never

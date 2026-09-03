@@ -656,6 +656,8 @@ PORTAE = {
                    r'amalgamata: \d+ compilata, \d+ fracta'),
     'aedilis': (['./tools/aedilis_porta.sh'],
                 r'PORTA AEDILIS: \d+ probationes'),
+    'materia-shim': (['./materia/shim_probare.sh'],
+                     r'probatae \d+, fractae \d+'),
 }
 _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 

@@ -526,6 +526,24 @@ typed face — which is precisely rowan's bargain, and why M8 matters.
 *Order per Fran 2026-08-27: new clients first, silva migrated last.
 Six phases, ~55 tasks. Each phase ends with a gate that can fail.*
 
+**As built (phases I–III, 2026-08-27 → 2026-09-02).** The phase-1
+gate was met in substitute form, named here: the C89 *shim*
+(`materia/shim_probare.sh`, 348 files through three oracles — byte,
+STML round trip twice, tree comparator) rather than silva's own
+suites through materia; those remain the M3 acceptance test (§7),
+not yet sat. `MateriaContextus` as drawn below was never built: the
+coupling proved to be data-shape, so it dissolved into
+`MateriaArborConsilium` fields plus ten registered frontend hooks
+(origin and sedes on the writer side, two on `MateriaArborFrons` for
+the reader, the rest mirrors of writer concerns), each shown
+load-bearing on real C89 data. The tree comparator was ported (B1)
+and is the second oracle everywhere. The second client paid four
+substrate fixes that C89 could not reach structurally: the
+template-compression species guard (T3), the whitespace contract
+(T9), lexeme-path raw marking (B6) and CR representation via the
+`cr` attribute (B6, which also names a latent silva bug for the
+phase-5 replay). The as-built record is `materia/phase-log.md`.
+
 ### The measurement that shapes it (2026-08-27)
 
 What `silva_arbor` and `silva_scribere` actually use from the

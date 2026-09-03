@@ -19,9 +19,12 @@ mkdir -p "$BUILD"
 # duplicata); instr_* = obiecta instrumentorum quae fontem suum
 # duplicant (instr_silva_formator vs silva_formator). Lista
 # exclusionis contra glob: obiectum alienum NOVUM in silva/build
-# portam frangit, non fallit.
+# portam frangit, non fallit. probatio_*.o = obiecta probationum
+# (cursor silvae compilat et nectit duobus gradibus ab 2026-09-02) -
+# principale duplex, nexus fractus; porta muta per diem quia in
+# tabula portarum pythonicae non stabat (B10 eam registrat).
 OBIECTA=$(ls "$RADIX"/silva/build/*.o 2>/dev/null \
-          | grep -v -E "/(fons_|nexus_|instr_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
+          | grep -v -E "/(fons_|nexus_|instr_|probatio_|silva_amalgama\.o|amalgama_verificatio\.o|apparatus\.o)")
 if [ -z "$OBIECTA" ]; then
     echo "DEEST: silva/build/*.o - curre ./silva/compile_probationes.sh primum" >&2
     exit 2

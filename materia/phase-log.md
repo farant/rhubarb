@@ -1931,3 +1931,42 @@ REPLICATIO-VERDICTUM (silva/fontes tactum sub gelu, 2026-09-01):
 silva_c89_semantica.{c,h} codices 89/90 — frons C89 (iudex), extra
 subset portatum (materia = substratum arboris). NULLA replicatio
 debita. Vide silva/phase-log eodem die.
+
+========================================================================
+PHASIS III — B10: REGISTRATIO, CLAUSURA SPEC, RELATIO (2026-09-02)
+========================================================================
+
+Consilium B clausum. Cursores in tabula portarum pythonicae: css,
+materia, materia-shim (novus). Registratio shim eum FRACTUM invenit:
+cursor silvae ab 2026-09-02 probationes duobus gradibus compilat,
+probatio_*.o in silva/build relinquit, glob obiectorum shim ea
+nectebat - 'principale' duplex, nexus fractus, nemo currebat. Lex
+iterum (tertia vice in hoc arcu): cursor extra tabulam portarum est
+porta mortua. Exclusio 'probatio_' addita; 348/348 tribus oraculis,
+XV s.
+
+Emendationes spec: css-arbor-spec par. 6 (D7 ut aedificatum, tres
+causae), par. 8 (canon manu scriptum, custos derivae pro porta
+recentiae); materia-spec par. 10 (nota ut-aedificatum: porta phasis
+I forma substituta = shim, MateriaContextus in consilium + X hooks
+dissolutus, comparator portatus, IV vitia substrati a cliente
+secundo). Worklog css/fontes/css_arbor.worklog.md: quid portae
+invenerint quod unitates non tetigerunt, ubi sutura a praedictione
+discesserit, quae praedictiones par. 12 falsae fuerint (XI lineae =
+pavimentum; canon et machina selectorum NON hereditatae).
+
+PROXIMUM: decisio Frani - phasis V (C89 per materiam = probatio
+acceptionis) aut phasis IV (HTML). S6 parcum manet donec HTML.
+------------------------------------------------------------------------
+DEBRIEF INSTRUMENTORUM
+ADHIBITA: pythonica (Textus pro spec/md, PORTAE + porta pro
+registratione, commissio_umbra photographica pro commissione);
+tabularium (res S6, census); phase-log ipse ut fons relationis.
+FRUCTUS: registratio = probatio cursoris: 'porta("materia-shim")'
+uno vocamine fracturam diei ostendit quam nemo viderat; umbra
+photographica editionem inter portas non impedit.
+ASPERITATES: nulla nova; lectio vetus iterata (cursor non
+registratus = mutus).
+DESIDERATA: fumus qui cursorem quemque (*/compile_probationes.sh,
+*_probare.sh, *_porta.sh) in tabula PORTAE esse poscit - tertia
+occasio eiusdem classis.
