@@ -505,6 +505,14 @@ finally:
 silva.receptum_delere(via_v)
 # effusum non-UTF-8 (radix 2026-09-02: probatio octetos crudos imprimit)
 # - porta non ruit, verdictum legitur
+# porta md (A2, 2026-09-03): cursor extra tabulam = porta mortua (lectio
+# shim, ter) - registratio in QUATTUOR tabulis asseritur
+for _n in ('css', 'materia', 'md'):
+    credo(_n in silva.PORTAE and _n in silva.FORMAE and _n in silva.SUITAE,
+          'porta %s in PORTAE/FORMAE/SUITAE' % _n)
+credo(os.access(os.path.join(RADIX, silva.PORTAE['md'][0][0]), os.X_OK),
+      'cursor md exsistit et exsecutabilis')
+
 silva.PORTAE['ficta-octeti'] = (['printf', 'fictum: sanum \\246\\321\\n'],
                                 r'fictum: (sanum|FRACTUM)')
 try:
@@ -787,7 +795,11 @@ except silva.SilvaError as ex:
 import shutil
 UMBRAE_VERA, PORTAE_VERA = silva.UMBRAE_DIR, silva.PORTAE_DIR
 silva.UMBRAE_DIR = os.path.join(T, 'umbrae'); silva.PORTAE_DIR = os.path.join(T, 'portae')
-os.makedirs(silva.UMBRAE_DIR); os.makedirs(silva.PORTAE_DIR)
+# idempotens: cursus prior directoria reliquit (bis currere = FileExistsError,
+# 2026-09-03 - porta pythonica sub commissione md rubra sine culpa md)
+for _d in (silva.UMBRAE_DIR, silva.PORTAE_DIR):
+    shutil.rmtree(_d, ignore_errors=True)
+    os.makedirs(_d)
 orph = os.path.join(silva.UMBRAE_DIR, 'probatio-orphanus.1')
 vivus = os.path.join(silva.UMBRAE_DIR, 'probatio-vivus.1')
 seratus = os.path.join(silva.UMBRAE_DIR, 'probatio-seratus.1')
@@ -806,6 +818,8 @@ try:
     credo(sorted(deletae) == sorted([mortuus, orph]) and not os.path.exists(orph) and os.path.isdir(vivus) and os.path.isdir(seratus),
           'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati')
 finally:
+    for _d in (silva.UMBRAE_DIR, silva.PORTAE_DIR):
+        shutil.rmtree(_d, ignore_errors=True)
     silva.UMBRAE_DIR, silva.PORTAE_DIR = UMBRAE_VERA, PORTAE_VERA
 
 print('--- differre ---')

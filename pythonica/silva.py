@@ -631,6 +631,7 @@ PORTAE = {
     'css': (['./css/compile_probationes.sh'], r'CSS PROBATIONES: \d+/\d+'),
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
+    'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
     'officina': (['./officina/compile_probationes.sh'],
                  r'OFFICINA PROBATIONES: \d+/\d+'),
     'gesta': (['./gesta/compile_probationes.sh'],
@@ -665,7 +666,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # 'suita' (=== X === ... FRACTAE: X Y - silva et sub-suitae omnes),
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
-          'materia': 'suita', 'officina': 'suita', 'gesta': 'suita',
+          'materia': 'suita', 'md': 'suita', 'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
                          r'Praeteriti|Fracti|Conditio|error:|Segmentation|'
@@ -837,9 +838,17 @@ def commissio(nuntius, viae, portae=(), verificare=True):
             nomen, filtrum = (p, None) if isinstance(p, str) else p
             f = porta(nomen, filtrum)
         if not f.sana:
+            # acta portae foris currentis nusquam servata erant: fractura
+            # sine causa visibili (2026-09-03, porta pythonica sub md)
+            os.makedirs(PORTAE_DIR, exist_ok=True)
+            via_acta = os.path.join(PORTAE_DIR, re.sub(r'[^A-Za-z0-9_.-]+', '_', nomen)
+                                    + '.fracta.acta')
+            with open(via_acta, 'w') as fa:
+                fa.write(f.acta or '')
             raise SilvaError('porta %s non sana (%s, rc=%d) - nihil'
-                             ' commissum%s' % (nomen, f.compendium, f.rc,
-                                               relatio_fracturarum(f.fracturae)))
+                             ' commissum; acta: %s%s'
+                             % (nomen, f.compendium, f.rc, via_acta,
+                                relatio_fracturarum(f.fracturae)))
     # renominationes/deletiones per git mv/rm iam in indice: via absens
     # in disco licet si deletio eius in indice stat (viae NOVAE dantur)
     deletae = set(_curre(['git', 'diff', '--cached', '--name-only',
@@ -1343,7 +1352,7 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         tot = _totum_actorum(acta)
         if tot is None:
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
-                     'materia': 'materia.'}.get(nomen)
+                     'materia': 'materia.', 'md': 'md.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
                 if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
@@ -1422,6 +1431,7 @@ SUITAE = {
     'silva': ('silva/probationes', 'silva/build/%s'),
     'css': ('css/probationes', 'css/build/%s'),
     'materia': ('materia/probationes', 'materia/build/%s'),
+    'md': ('md/probationes', 'md/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),
     'gesta': ('gesta/probationes', 'gesta/build/%s'),
     'tessera': ('tessera/probationes', 'tessera/build/%s'),
