@@ -51,6 +51,15 @@ if [ ! -d "$PARENS" ]; then
     exit 2
 fi
 
+# stdin == plagula ipsa? 'cat > X < X' X truncat ANTE lectionem - plagula
+# vacua sine querela (2026-09-03: probatio_md_canon.c ita periit)
+# macOS: stat /dev/fd/0 devicem devfs reddit sed inodum plagulae subiacentis -
+# ergo inodus solus conferitur (-ef devicem quoque confert et fallit)
+if [ -f "$ABSOLUTA" ] && [ -f /dev/fd/0 ] && [ "$(stat -f %i /dev/fd/0 2>/dev/null)" = "$(stat -f %i "$ABSOLUTA" 2>/dev/null)" ]; then
+    echo "scribe: stdin est plagula ipsa ($VIA) - truncaretur ante lectionem; nihil scriptum" >&2
+    exit 2
+fi
+
 # scriptura - stdin totus, octetim
 if ! cat > "$ABSOLUTA"; then
     echo "scribe: scriptura fracta: $ABSOLUTA" >&2

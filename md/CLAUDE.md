@@ -70,8 +70,15 @@ STRUCTURALIS + FIDELIS over 17 cases + the corpus; `./md/arbor.sh
 <x.md>` prints the projection. Substrate fixes: slot TERMINATOR crlf
 (writer + reader); token values never contain `</md-` (split).
 
-**NEXT = A8b** (hand-written `md/grammatica/md.canon` + drift guard +
-sigillum pin), then A8c (totality + computus twin).
+**A8b DONE**: `md/grammatica/md.canon` hand-written (143 rules; no
+trivia wrappers by design; seal `de590d67` pinned); gate
+`probatio_md_canon` = drift guard both ways + seal pin + every corpus
+projection judged (0 faults). Manual judgment: `bin/canon_examen -canon
+md/grammatica/md.canon <doc.stml>`. Parser change → canon change → the
+corpus judgment falsifies it.
+
+**NEXT = A8c** (totality gate: random bytes, mutated corpus, depth;
+computus twin `md/computus.sh` + golden).
 
 ## Laws to keep (spec §3)
 

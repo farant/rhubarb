@@ -56,5 +56,10 @@ out=$(printf '/* x */\n' | "$SILVA_DIR/scribe.sh" /tmp/scribe_fumus_extra.c); rc
 if [ "$rc" -eq 4 ] && echo "$out" | grep -q 'extra repositorium'; then ok "extra repositorium -> non iudicatum, exitu IV"; else culpa "extra repositorium: exitus $rc"; fi
 rm -f /tmp/scribe_fumus_extra.c
 
+# VI. stdin == plagula ipsa -> 2, plagula INTACTA
+printf 'intacta\n' > eadem.md
+out=$("$SILVA_DIR/scribe.sh" eadem.md < eadem.md 2>&1); rc=$?
+if [ "$rc" -eq 2 ] && [ "$(cat eadem.md)" = "intacta" ]; then ok "stdin = plagula ipsa -> exitu II, plagula intacta"; else culpa "stdin = plagula ipsa: exitus $rc, contentum '$(cat eadem.md)'"; fi
+
 if [ "$fracta" -eq 0 ]; then echo "fumus scribe: sanum"; exit 0; fi
 echo "fumus scribe: FRACTUM ($fracta)"; exit 1

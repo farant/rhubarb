@@ -1,0 +1,784 @@
+<!--
+  md.canon
+  MANU SCRIPTUM (ut css.canon, decretum Frani 2026-09-01, consilium B).
+
+  Registrum md_registrum.c et lexicon md_lexicon.c manu scripta sunt,
+  ergo canon quoque. Custos derivae (probatio_md_canon) regulas huius
+  plagulae contra registrum generum, loci, lexicon et involucrum
+  UTRIMQUE retiret (regula absens ET regula rancida rubent); sigillum
+  registri infra PINNATUM contra vivum conferitur.
+
+  CONSTRICTIONES LOCORUM ad gradum speciei: quae liberi cuique loco
+  licent MANU ex md_arbor.c et md_inlinea.c lecta sunt (quid parsator
+  in locum ponat); parsator mutatus canonem mutare debet; porta
+  corporis id falsificat.
+
+  MODELLUM LINEARUM (spec par. III): trivia NULLA - involucra <ante>/
+  <post> hic NON declarantur, ergo apparentia 'elementum ignotum'
+  clamat, quod rectum est. Locus INDEX = involucrum cum TEXTU solo
+  (textus="verum"). Locus NODUS = involucrum loci continens elementum
+  generis. Lexemata DERIVATA (fons I) f="1" + linea/columna ferunt,
+  b numquam (octetos nullos tenent). 'crlf' in md-linea (terminator
+  "\r\n"), 'cr' in generibus VERBATIM (offsets '\r' in valore).
+
+  INVOLUCRUM: <arbor> (documentum subarboris, arbor M1). Iudicium:
+    bin/canon_examen -canon md/grammatica/md.canon <doc.stml>
+-->
+<canon dialectus="md" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- lexema unum quodlibet (locus TOKEN) -->
+  <#lexema-unum>
+    <liberum nomen="md-finis" maximum="1"/>
+    <liberum nomen="md-linea" maximum="1"/>
+    <liberum nomen="md-linea-cr" maximum="1"/>
+    <liberum nomen="md-indentatio" maximum="1"/>
+    <liberum nomen="md-marca-citationis" maximum="1"/>
+    <liberum nomen="md-marca-puncti" maximum="1"/>
+    <liberum nomen="md-marca-numeri" maximum="1"/>
+    <liberum nomen="md-marca-officii" maximum="1"/>
+    <liberum nomen="md-marca-atx" maximum="1"/>
+    <liberum nomen="md-clausura-atx" maximum="1"/>
+    <liberum nomen="md-subductio" maximum="1"/>
+    <liberum nomen="md-saeptum" maximum="1"/>
+    <liberum nomen="md-info" maximum="1"/>
+    <liberum nomen="md-divisio" maximum="1"/>
+    <liberum nomen="md-pipa" maximum="1"/>
+    <liberum nomen="md-textus" maximum="1"/>
+    <liberum nomen="md-delimitator" maximum="1"/>
+    <liberum nomen="md-gravis" maximum="1"/>
+    <liberum nomen="md-effugium" maximum="1"/>
+    <liberum nomen="md-ens" maximum="1"/>
+    <liberum nomen="md-nexus-apertum" maximum="1"/>
+    <liberum nomen="md-nexus-cauda" maximum="1"/>
+    <liberum nomen="md-autonexus" maximum="1"/>
+    <liberum nomen="md-html" maximum="1"/>
+    <liberum nomen="md-spatia-finalia" maximum="1"/>
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </#>
+
+  <!-- praefixa lineae: marcae continentium + indentatio + officium -->
+  <#praefixa>
+    <liberum nomen="md-indentatio"/>
+    <liberum nomen="md-marca-citationis"/>
+    <liberum nomen="md-marca-puncti"/>
+    <liberum nomen="md-marca-numeri"/>
+    <liberum nomen="md-marca-officii"/>
+  </#>
+
+  <!-- terminator lineae (locus TOKEN) -->
+  <#terminator>
+    <liberum nomen="md-linea" maximum="1"/>
+    <liberum nomen="md-linea-cr" maximum="1"/>
+  </#>
+
+  <!-- fractura cruda intra LISTA_TOKEN: terminator + praefixa sequentis -->
+  <#fractura-cruda>
+    <liberum nomen="md-linea"/>
+    <liberum nomen="md-linea-cr"/>
+    <liberum nomen="md-indentatio"/>
+    <liberum nomen="md-marca-citationis"/>
+    <liberum nomen="md-marca-puncti"/>
+    <liberum nomen="md-marca-numeri"/>
+    <liberum nomen="md-marca-officii"/>
+  </#>
+
+  <!-- bloci (locus LISTA_NODUS bloci) -->
+  <#bloci>
+    <liberum nomen="paragraphus"/>
+    <liberum nomen="capitulum"/>
+    <liberum nomen="saeptum"/>
+    <liberum nomen="citatio"/>
+    <liberum nomen="lista"/>
+    <liberum nomen="divisio"/>
+    <liberum nomen="tabula"/>
+    <liberum nomen="html"/>
+    <liberum nomen="definitio-nexus"/>
+    <liberum nomen="linea-vacua"/>
+  </#>
+
+  <!-- inlinei (locus LISTA_NODUS liberi) -->
+  <#inlinei>
+    <liberum nomen="textus"/>
+    <liberum nomen="emphasis"/>
+    <liberum nomen="fortis"/>
+    <liberum nomen="deletio"/>
+    <liberum nomen="verbatim"/>
+    <liberum nomen="nexus"/>
+    <liberum nomen="imago"/>
+    <liberum nomen="fractura-mollis"/>
+    <liberum nomen="fractura-dura"/>
+    <liberum nomen="html-inlineum"/>
+  </#>
+
+  <!-- lineae crudae (saeptum, html, praefatio) -->
+  <#lineae>
+    <liberum nomen="linea"/>
+    <liberum nomen="linea-vacua"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet - documentum ex parsatore, aliud ex proiectione
+          subarboris">
+    <attributum nomen="grammatica" genus="electio"
+      necessarium="verum">
+      <optio>md</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum tabularum md_registrum.c (A8: XXVIII
+            genera, LXXXVII loci). Tabula mutata sine hac optione
+            mutata rubet in iudicio ET in custode derivae
+            (probatio_md_canon optionem contra materia_arbor_sigillum
+            vivum confert).">
+      <optio>de590d67</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <liberum nomen="documentum"      maximum="1"/>
+    <liberum nomen="praefatio"       maximum="1"/>
+    <liberum nomen="linea"           maximum="1"/>
+    <liberum nomen="linea-vacua"     maximum="1"/>
+    <liberum nomen="paragraphus"     maximum="1"/>
+    <liberum nomen="capitulum"       maximum="1"/>
+    <liberum nomen="saeptum"         maximum="1"/>
+    <liberum nomen="limes"           maximum="1"/>
+    <liberum nomen="citatio"         maximum="1"/>
+    <liberum nomen="lista"           maximum="1"/>
+    <liberum nomen="elementum"       maximum="1"/>
+    <liberum nomen="divisio"         maximum="1"/>
+    <liberum nomen="tabula"          maximum="1"/>
+    <liberum nomen="ordo"            maximum="1"/>
+    <liberum nomen="cella"           maximum="1"/>
+    <liberum nomen="html"            maximum="1"/>
+    <liberum nomen="definitio-nexus" maximum="1"/>
+    <liberum nomen="inlinea"         maximum="1"/>
+    <liberum nomen="textus"          maximum="1"/>
+    <liberum nomen="emphasis"        maximum="1"/>
+    <liberum nomen="fortis"          maximum="1"/>
+    <liberum nomen="deletio"         maximum="1"/>
+    <liberum nomen="verbatim"        maximum="1"/>
+    <liberum nomen="nexus"           maximum="1"/>
+    <liberum nomen="imago"           maximum="1"/>
+    <liberum nomen="fractura-mollis" maximum="1"/>
+    <liberum nomen="fractura-dura"   maximum="1"/>
+    <liberum nomen="html-inlineum"   maximum="1"/>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (md_registrum.c). Locus quisque SEMEL aut nusquam:
+       absentia canonica (locus NIHIL non scribitur), lista vacua
+       scribitur.
+       -->
+
+  <elementum nomen="documentum">
+    <liberum nomen="praefatio" maximum="1"/>
+    <liberum nomen="bloci"     maximum="1"/>
+    <liberum nomen="finis"     maximum="1"/>
+  </elementum>
+  <elementum nomen="praefatio" intra="documentum">
+    <liberum nomen="praefatio" maximum="1"/>
+  </elementum>
+  <elementum nomen="bloci" intra="documentum">
+    <<#bloci>>
+  </elementum>
+  <elementum nomen="finis" intra="documentum">
+    <liberum nomen="md-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="praefatio"
+    nota="YAML front matter crudum: linea I '---' ... '---'">
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="lineae"  maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="praefatio">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+  <elementum nomen="lineae" intra="praefatio">
+    <<#lineae>>
+  </elementum>
+  <elementum nomen="clausum" intra="praefatio">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="linea"
+    nota="linea cruda: praefixa + contentum (scissum ad '</md-') + finis">
+    <liberum nomen="praefixa"  maximum="1"/>
+    <liberum nomen="contentum" maximum="1"/>
+    <liberum nomen="finis"     maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="linea">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="contentum" intra="linea">
+    <liberum nomen="md-textus"/>
+    <liberum nomen="md-html"/>
+    <liberum nomen="md-divisio"/>
+    <liberum nomen="md-subductio"/>
+  </elementum>
+  <elementum nomen="finis" intra="linea">
+    <<#terminator>>
+  </elementum>
+
+  <elementum nomen="linea-vacua">
+    <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="finis"    maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="linea-vacua">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="finis" intra="linea-vacua">
+    <<#terminator>>
+  </elementum>
+
+  <elementum nomen="paragraphus">
+    <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="nudus"    maximum="1"/>
+    <liberum nomen="inlinea"  maximum="1"/>
+    <liberum nomen="finis"    maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="paragraphus">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="nudus" intra="paragraphus" textus="verum"
+    nota="I = filius directus elementi listae STRICTAE (lex deprimendi)"/>
+  <elementum nomen="inlinea" intra="paragraphus">
+    <liberum nomen="inlinea" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="paragraphus">
+    <<#terminator>>
+  </elementum>
+
+  <elementum nomen="capitulum">
+    <liberum nomen="praefixa"  maximum="1"/>
+    <liberum nomen="gradus"    maximum="1"/>
+    <liberum nomen="marca"     maximum="1"/>
+    <liberum nomen="inlinea"   maximum="1"/>
+    <liberum nomen="clausum"   maximum="1"/>
+    <liberum nomen="finis"     maximum="1"/>
+    <liberum nomen="subductio" maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="capitulum">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="gradus" intra="capitulum" textus="verum"/>
+  <elementum nomen="marca" intra="capitulum">
+    <liberum nomen="md-marca-atx" maximum="1"/>
+  </elementum>
+  <elementum nomen="inlinea" intra="capitulum">
+    <liberum nomen="inlinea" maximum="1"/>
+  </elementum>
+  <elementum nomen="clausum" intra="capitulum">
+    <liberum nomen="md-clausura-atx" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="capitulum">
+    <<#terminator>>
+  </elementum>
+  <elementum nomen="subductio" intra="capitulum">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="saeptum">
+    <liberum nomen="forma"   maximum="1"/>
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="lingua"  maximum="1"/>
+    <liberum nomen="lineae"  maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="forma" intra="saeptum" textus="verum"/>
+  <elementum nomen="apertum" intra="saeptum">
+    <liberum nomen="limes" maximum="1"/>
+  </elementum>
+  <elementum nomen="lingua" intra="saeptum">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="lineae" intra="saeptum">
+    <<#lineae>>
+  </elementum>
+  <elementum nomen="clausum" intra="saeptum">
+    <liberum nomen="limes" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="limes">
+    <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="signum"   maximum="1"/>
+    <liberum nomen="info"     maximum="1"/>
+    <liberum nomen="finis"    maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="limes">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="signum" intra="limes">
+    <liberum nomen="md-saeptum" maximum="1"/>
+  </elementum>
+  <elementum nomen="info" intra="limes">
+    <liberum nomen="md-info" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="limes">
+    <<#terminator>>
+  </elementum>
+
+  <elementum nomen="citatio">
+    <liberum nomen="bloci" maximum="1"/>
+  </elementum>
+  <elementum nomen="bloci" intra="citatio">
+    <<#bloci>>
+  </elementum>
+
+  <elementum nomen="lista">
+    <liberum nomen="genus"    maximum="1"/>
+    <liberum nomen="initium"  maximum="1"/>
+    <liberum nomen="laxa"     maximum="1"/>
+    <liberum nomen="elementa" maximum="1"/>
+  </elementum>
+  <elementum nomen="genus" intra="lista" textus="verum"/>
+  <elementum nomen="initium" intra="lista" textus="verum"/>
+  <elementum nomen="laxa" intra="lista" textus="verum"/>
+  <elementum nomen="elementa" intra="lista">
+    <liberum nomen="elementum"/>
+  </elementum>
+
+  <elementum nomen="elementum">
+    <liberum nomen="officium" maximum="1"/>
+    <liberum nomen="bloci"    maximum="1"/>
+  </elementum>
+  <elementum nomen="officium" intra="elementum" textus="verum"/>
+  <elementum nomen="bloci" intra="elementum">
+    <<#bloci>>
+  </elementum>
+
+  <elementum nomen="divisio">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+  <elementum nomen="linea" intra="divisio">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tabula">
+    <liberum nomen="caput"     maximum="1"/>
+    <liberum nomen="separator" maximum="1"/>
+    <liberum nomen="ordines"   maximum="1"/>
+  </elementum>
+  <elementum nomen="caput" intra="tabula">
+    <liberum nomen="ordo" maximum="1"/>
+  </elementum>
+  <elementum nomen="separator" intra="tabula">
+    <liberum nomen="linea" maximum="1"/>
+  </elementum>
+  <elementum nomen="ordines" intra="tabula">
+    <liberum nomen="ordo"/>
+  </elementum>
+
+  <elementum nomen="ordo">
+    <liberum nomen="praefixa" maximum="1"/>
+    <liberum nomen="cellae"   maximum="1"/>
+    <liberum nomen="clausum"  maximum="1"/>
+    <liberum nomen="finis"    maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="ordo">
+    <<#praefixa>>
+  </elementum>
+  <elementum nomen="cellae" intra="ordo">
+    <liberum nomen="cella"/>
+  </elementum>
+  <elementum nomen="clausum" intra="ordo">
+    <liberum nomen="md-pipa" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="ordo">
+    <<#terminator>>
+  </elementum>
+
+  <elementum nomen="cella">
+    <liberum nomen="ordinatio" maximum="1"/>
+    <liberum nomen="apertum"   maximum="1"/>
+    <liberum nomen="inlinea"   maximum="1"/>
+  </elementum>
+  <elementum nomen="ordinatio" intra="cella" textus="verum"/>
+  <elementum nomen="apertum" intra="cella">
+    <liberum nomen="md-pipa" maximum="1"/>
+  </elementum>
+  <elementum nomen="inlinea" intra="cella">
+    <liberum nomen="inlinea" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="html">
+    <liberum nomen="lineae" maximum="1"/>
+  </elementum>
+  <elementum nomen="lineae" intra="html">
+    <<#lineae>>
+  </elementum>
+
+  <elementum nomen="definitio-nexus">
+    <liberum nomen="lineae"     maximum="1"/>
+    <liberum nomen="titulus"    maximum="1"/>
+    <liberum nomen="url"        maximum="1"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+  <elementum nomen="lineae" intra="definitio-nexus">
+    <<#lineae>>
+  </elementum>
+  <elementum nomen="titulus" intra="definitio-nexus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="url" intra="definitio-nexus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="descriptio" intra="definitio-nexus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+
+  <!-- inlinea -->
+
+  <elementum nomen="inlinea">
+    <liberum nomen="liberi" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="inlinea">
+    <<#inlinei>>
+  </elementum>
+
+  <elementum nomen="textus"
+    nota="cursus foliorum coalitus; valor derivatus solum si decoctio
+          differt">
+    <liberum nomen="crudum" maximum="1"/>
+    <liberum nomen="valor"  maximum="1"/>
+  </elementum>
+  <elementum nomen="crudum" intra="textus">
+    <liberum nomen="md-textus"/>
+    <liberum nomen="md-effugium"/>
+    <liberum nomen="md-ens"/>
+    <liberum nomen="md-delimitator"/>
+    <liberum nomen="md-nexus-apertum"/>
+    <liberum nomen="md-spatia-finalia"/>
+    <liberum nomen="md-autonexus"/>
+  </elementum>
+  <elementum nomen="valor" intra="textus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="emphasis">
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="liberi"  maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="emphasis">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="emphasis">
+    <<#inlinei>>
+  </elementum>
+  <elementum nomen="clausum" intra="emphasis">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="fortis">
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="liberi"  maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="fortis">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="fortis">
+    <<#inlinei>>
+  </elementum>
+  <elementum nomen="clausum" intra="fortis">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="deletio">
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="liberi"  maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="deletio">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="deletio">
+    <<#inlinei>>
+  </elementum>
+  <elementum nomen="clausum" intra="deletio">
+    <liberum nomen="md-delimitator" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="verbatim"
+    nota="code span; crudum trans lineas terminatorem + praefixa fert">
+    <liberum nomen="apertum" maximum="1"/>
+    <liberum nomen="crudum"  maximum="1"/>
+    <liberum nomen="valor"   maximum="1"/>
+    <liberum nomen="clausum" maximum="1"/>
+  </elementum>
+  <elementum nomen="apertum" intra="verbatim">
+    <liberum nomen="md-gravis" maximum="1"/>
+  </elementum>
+  <elementum nomen="crudum" intra="verbatim">
+    <liberum nomen="md-textus"/>
+    <<#fractura-cruda>>
+  </elementum>
+  <elementum nomen="valor" intra="verbatim">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="clausum" intra="verbatim">
+    <liberum nomen="md-gravis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="nexus">
+    <liberum nomen="forma"      maximum="1"/>
+    <liberum nomen="apertum"    maximum="1"/>
+    <liberum nomen="liberi"     maximum="1"/>
+    <liberum nomen="cauda"      maximum="1"/>
+    <liberum nomen="url"        maximum="1"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+  <elementum nomen="forma" intra="nexus" textus="verum"/>
+  <elementum nomen="apertum" intra="nexus">
+    <liberum nomen="md-nexus-apertum" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="nexus">
+    <<#inlinei>>
+  </elementum>
+  <elementum nomen="cauda" intra="nexus">
+    <liberum nomen="md-nexus-cauda"/>
+    <<#fractura-cruda>>
+  </elementum>
+  <elementum nomen="url" intra="nexus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="descriptio" intra="nexus">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="imago">
+    <liberum nomen="forma"      maximum="1"/>
+    <liberum nomen="apertum"    maximum="1"/>
+    <liberum nomen="liberi"     maximum="1"/>
+    <liberum nomen="cauda"      maximum="1"/>
+    <liberum nomen="url"        maximum="1"/>
+    <liberum nomen="descriptio" maximum="1"/>
+  </elementum>
+  <elementum nomen="forma" intra="imago" textus="verum"/>
+  <elementum nomen="apertum" intra="imago">
+    <liberum nomen="md-nexus-apertum" maximum="1"/>
+  </elementum>
+  <elementum nomen="liberi" intra="imago">
+    <<#inlinei>>
+  </elementum>
+  <elementum nomen="cauda" intra="imago">
+    <liberum nomen="md-nexus-cauda"/>
+    <<#fractura-cruda>>
+  </elementum>
+  <elementum nomen="url" intra="imago">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="descriptio" intra="imago">
+    <liberum nomen="md-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="fractura-mollis">
+    <liberum nomen="finis"    maximum="1"/>
+    <liberum nomen="praefixa" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="fractura-mollis">
+    <<#terminator>>
+  </elementum>
+  <elementum nomen="praefixa" intra="fractura-mollis">
+    <<#praefixa>>
+  </elementum>
+
+  <elementum nomen="fractura-dura"
+    nota="signum = spatia finalia II+ aut '\' - fractura ea POSSIDET">
+    <liberum nomen="signum"   maximum="1"/>
+    <liberum nomen="finis"    maximum="1"/>
+    <liberum nomen="praefixa" maximum="1"/>
+  </elementum>
+  <elementum nomen="signum" intra="fractura-dura">
+    <liberum nomen="md-spatia-finalia" maximum="1"/>
+    <liberum nomen="md-effugium" maximum="1"/>
+  </elementum>
+  <elementum nomen="finis" intra="fractura-dura">
+    <<#terminator>>
+  </elementum>
+  <elementum nomen="praefixa" intra="fractura-dura">
+    <<#praefixa>>
+  </elementum>
+
+  <elementum nomen="html-inlineum">
+    <liberum nomen="crudum" maximum="1"/>
+  </elementum>
+  <elementum nomen="crudum" intra="html-inlineum">
+    <liberum nomen="md-html"/>
+    <<#fractura-cruda>>
+  </elementum>
+
+  <!-- =============== LEXEMATA ===============
+       Ex MdLexGenus (md_lexicon.c): VERBATIM textum fert (+ 'cr'),
+       FIXUM/TERMINATOR orthographiam in genere ipso habent. Trivia
+       NULLA. Derivata (fons I): f, linea, columna.
+       -->
+
+  <elementum nomen="md-finis">
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-linea">
+    <attributum nomen="crlf" genus="electio">
+      <optio>true</optio>
+    </attributum>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-linea-cr" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-indentatio" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-marca-citationis" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-marca-puncti" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-marca-numeri" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-marca-officii" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-marca-atx" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-clausura-atx" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-subductio" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-saeptum" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-info" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-divisio" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-pipa" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-textus" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-delimitator" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-gravis" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-effugium" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-ens" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-nexus-apertum" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-nexus-cauda" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-autonexus" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-html" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-spatia-finalia" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-derivatum" textus="verum"
+    nota="fons I: valor decoctus/solutus; f=1, linea/columna portatae, b numquam">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+
+</canon>

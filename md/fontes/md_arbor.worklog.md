@@ -311,3 +311,28 @@ the hook made the hook table an unused constant and clang refused the
 file, which my grep read as silence. A plant that keeps the reference
 (`origo = (datum == NIHIL) ? NIHIL : &ORIGO_MD`) went red on six
 assertions, including the FOLLOWING source token's drifted position.
+
+## 2026-09-03 — A8b: the canon
+
+`md/grammatica/md.canon`, hand-written from the registry, the lexicon
+and the two parsers (what each slot actually receives): 143 rules —
+28 genera, 87 slot rules `intra=` their genus, 26 `md-` lexeme rules,
+the `<arbor>` involucrum with the seal pinned (`de590d67`). No `ante`/
+`post` rules on purpose: the line model has no trivia, so a trivia
+wrapper appearing anywhere is an unknown element, which is the right
+verdict. INDEX slots are wrappers with text only (`textus="verum"`),
+node slots are wrappers holding the genus element, derived tokens are
+`md-derivatum` with `f`/`linea`/`columna`, `crlf` on `md-linea` is a
+one-option choice as c89 does it. Gate `probatio_md_canon` (the css B7
+gate adapted): drift guard both ways over the three tables and the
+involucrum, seal pin vs `materia_arbor_sigillum` live, then every
+projection judged — 19 inline cases (CRLF, `</md-textus>` inside a
+code span and in text, every block and inline genus) and all 1,125
+corpus documents: 0 faults, green on the first run. Faults: seal
+altered → pin red; the `nudus` slot rule removed → drift guard names
+`locus 'nudus' intra 'paragraphus': regulae 0`.
+
+A note on tooling: I fed a generated file to `scribe` as its own
+stdin — `cat > X < X` truncates X before reading, so the file became
+empty without a word. scribe now refuses that (same-inode test on fd 0)
+and the smoke test covers it.
