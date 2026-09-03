@@ -86,3 +86,60 @@ inside list items and become continuation paragraphs.
 
 **Planted faults:** setext ignored → four structure reds; paragraph
 terminator dropped → byte-count mismatch on every fixture.
+
+## 2026-09-03 — A4: containers
+
+CommonMark's appendix-A strategy in the line model: a stack of open
+containers (document, citatio, lista, elementum); per line, match the
+open containers in order, then look for new container starts on the
+remainder, then hand the rest to the leaf. Every marker consumed on the
+way becomes a PREFIX TOKEN of the leaf that owns the line
+(`MdPraefixa`, a per-line list of (genus, ab, ad)), so containers own no
+bytes and the byte gate never noticed the difference: all 1,124 files
+stayed exact through the rewrite.
+
+**Three bugs at birth, all in the algorithm's seams, all found by the
+fixtures before the corpus was consulted:**
+1. A LISTA container was allowed to receive a non-item block. After an
+   unmatched item was popped the list stayed on top and the next
+   paragraph landed in `elementa`; the pending-blank flush then treated
+   that paragraph as "the last item" and appended into its `nudus`
+   INDEX slot → refusal → `parsura NIHIL` on every file with a list
+   followed by text. Fix: `_claudere_pro_bloco` closes unmatched
+   containers AND any list left on top before a non-item block.
+2. The paragraph-interruption rule for list markers (non-empty; ordered
+   must start at 1) applies only when a NEW list would start, never to a
+   sibling item — `4) b` after `3) a` had become lazy continuation.
+3. An item whose marker line is blank (`-` + EOL) must own that line: its
+   prefix carries the marker. Pending it and flushing to the parent later
+   put the marker's line outside the item.
+
+**Design points to keep:**
+- Blank lines are PENDING until the next non-blank line names the
+  container: deepest matched container, with `lista → last item` (a blank
+  between items belongs to the earlier item and makes the list loose),
+  indented code if it continues, the document at EOF. This is what makes
+  trailing blanks after a list land in the parent, not the last item.
+- `laxa` is computed at list close (item other than the last ending in a
+  blank; or two blocks of one item separated by a blank); `nudus` is set
+  then for direct-child paragraphs of tight items and to 0 for every
+  remaining paragraph at the end — INDEX slots are write-once, so
+  paragraphs no longer set `nudus` at creation.
+- The item content offset is stored RELATIVE to the parent's consumption
+  point (cmark's `marker_offset + padding`), matched by consuming that
+  many columns of whitespace; a tab is one byte with one owner, so a
+  partially consumed tab's overshoot is lost to the remainder's column
+  count (documented; corpus has zero tab-indented lines).
+- Setext applies only when every container matched; a `---` under a
+  quoted paragraph without `>` is a thematic break outside the quote.
+- Task boxes: `md_scan_officium` on the first paragraph of an item opened
+  on the same line; the box plus one space is a MARCA_OFFICII prefix;
+  `officium` is written once at end of line (0 when absent).
+- Depth cap 64 containers per line; beyond it a marker is text.
+
+**Numbers:** listae 10,435 · elementa 46,707 · citationes 160 · indented
+code 65 → 60 (five sites were list continuations). Faults: laxitas never
+set → 3 reds; lazy continuation removed → reds. The full CommonMark
+container example inputs run at A6 with the spec.txt reader; A4's
+coverage is the fixture set (interruption, empty items, nesting, quotes
+with lists, fences closing with their quote).

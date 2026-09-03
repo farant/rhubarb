@@ -33,7 +33,15 @@ corpus parse→emit byte-exact (1,124 files; capitula 18,520, saepta
 3,893 of which 65 indented — the census heuristic was list
 continuations, sites eyeballed). Lists and quotes are still paragraphs.
 
-**NEXT = A4** (containers: lists, block quotes, lazy continuation).
+**A4 DONE**: containers (lists with `genus`/`initium`/`laxa`, items
+with `officium`, block quotes, nesting, lazy continuation, tight-list
+`nudus` push-down) — the appendix-A stack in the line model; markers are
+prefix tokens of the owning leaf; blank lines PEND until the next
+non-blank line names their container. Corpus: 10,435 lists, 46,707
+items, 160 quotes, still byte-exact.
+
+**NEXT = A5** (GFM tables + link reference definitions with the
+derived-token machinery), then A6 (spec.txt reader + the example corpus).
 
 ## Laws to keep (spec §3)
 

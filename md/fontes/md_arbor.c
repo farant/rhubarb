@@ -1,22 +1,40 @@
 /* md_arbor.c - Vide md_arbor.h.
  *
- * A3: bloci folia. Ansa una super tabulam linearum; status = quod
- * apertum est (paragraphus, saeptum, html) et lineae vacuae pendentes
- * (intra codicem indentatum solae - vacuae ducentes et sequentes
- * codicis non sunt, CommonMark par. 4.4).
+ * A3 bloci folia, A4 CONTINENTIA (CommonMark appendix A, forma
+ * linearum). Acervus continentium apertorum (documentum, citationes,
+ * listae, elementa); per lineam TRES gradus:
  *
- * ORDO IUDICII per lineam (CommonMark par. 4, forma foliorum):
- *   saeptum apertum -> clausum? aliter linea saepti
- *   html apertus    -> finis conditionis? aliter linea html
- *   codex indentatus apertus -> vacua pendet, indentata continuat,
- *                              cetera claudunt
- *   vacua           -> paragraphum claudit, blocus linea-vacua
- *   indentatio >= IV -> continuatio paragraphi, aliter codex indentatus
- *   praefatio (linea I sola) · subductio (paragrapho aperto) ·
- *   divisio · ATX · saeptum apertum · html initium · paragraphus
+ *   I.  continentia aperta ordine congruere: citatio marcam '>' poscit,
+ *       elementum indentationem >= offset contenti aut lineam vacuam
+ *       (nisi vacuum incepit et adhuc vacuum est), lista semper (eius
+ *       elementum decernit). Primum non congruens sistit: quae infra
+ *       sunt NON CONGRUUNT.
+ *   II. initia continentium novorum in reliquo: '>' et marcae
+ *       listarum (divisio vincit; elementum paragraphum interrumpit
+ *       solum si non vacuum et, numeratum, initio I). Non congruentia
+ *       clauduntur ANTE aperturam.
+ *   III. reliquum folio: subductio (paragrapho aperto ET omnibus
+ *       congruentibus), divisio, ATX, saeptum, html, aliter
+ *       continuatio PIGRA paragraphi aperti (non congruentia manent
+ *       aperta!) aut codex indentatus aut paragraphus novus.
  *
- * Paragraphus in bloci NON appenditur dum aperitur sed dum CLAUDITUR:
- * subductio setext eum in capitulum vertit sine mutatione listae.
+ * MARCAE CONTINENTIUM PRAEFIXA LINEAE SUNT (spec par. III): quidquid
+ * gradus I et II consumunt in listam praefixorum cadit, quam folium
+ * lineae possidens accipit (praefixa blocci, praefixa fracturae mollis,
+ * praefixa lineae). Continentia octetos nullos possident.
+ *
+ * LINEAE VACUAE PENDENT: numquam statim ponuntur; linea non vacua
+ * proxima continens congruens ostendit (lista -> elementum ultimum:
+ * vacua elementa SEPARAT et laxitatem facit; codex indentatus si
+ * pergit; finis documenti -> documentum). Laxitas listae in clausura
+ * computatur: elementum non ultimum vacua desinens, aut duo bloci
+ * elementi vacua separati. 'nudus' paragraphorum tunc ponitur
+ * (semel scribitur), ceteri in fine ZEPHYRUM.
+ *
+ * TABULAE: tabula partim sumpta non scinditur (lexema unum, columnae
+ * residuae ad contentum per md_scan_indentatio iterum numerantur -
+ * excessus tabulae perit; corpus tabulas ducentes ZEPHYRUM habet).
+ * '>' + tabula: tabula tota sumitur.
  */
 
 #include "md_arbor.h"
@@ -27,6 +45,58 @@
 #include "materia_token.h"
 #include "xar.h"
 #include <string.h>
+
+#define MD_PROFUNDITAS_MAXIMA  ((i32)64)
+#define MD_PRAEFIXA_MAXIMA     ((i32)160)
+
+
+/* ==================================================
+ * Praefixa lineae
+ * ================================================== */
+
+nomen structura {
+    s32 genus;
+    s32 ab;
+    s32 ad;
+} MdPraefixum;
+
+nomen structura {
+            i32 n;
+    MdPraefixum v[MD_PRAEFIXA_MAXIMA];
+} MdPraefixa;
+
+interior vacuum
+_praefixum (
+    MdPraefixa* pf,
+    MdLexGenus  genus,
+           s32  ab,
+           s32  ad)
+{
+    si (ad <= ab || pf->n >= MD_PRAEFIXA_MAXIMA)
+    {
+        redde;
+    }
+    pf->v[pf->n].genus  = (s32)genus;
+    pf->v[pf->n].ab     = ab;
+    pf->v[pf->n].ad     = ad;
+    pf->n               = pf->n + I;
+}
+
+
+/* ==================================================
+ * Continentia
+ * ================================================== */
+
+nomen structura {
+          MdGenus  genus;
+     MateriaNodus* nodus;
+              i32  offset;           /* elementum: columnae contenti a
+                                      * sede parentis */
+              b32 initium_vacuum;   /* elementum: linea prima vacua */
+              b32 habet_contentum;  /* elementum: blocus non vacuus */
+              b32 numerata;         /* lista */
+        character delimitator;      /* lista */
+} MdContinens;
 
 
 /* ==================================================
@@ -40,23 +110,27 @@ nomen structura {
               MdFabrica  fabrica;
            MateriaNodus* documentum;
 
-    /* paragraphus apertus */
-          MateriaNodus* paragraphus;
-          MateriaNodus* inlinea;
-                   i32  paragraphus_ultima;   /* index lineae ultimae */
+            MdContinens acervus[MD_PROFUNDITAS_MAXIMA];
+                    i32 profunditas;
 
-    /* saeptum apertum (saeptum aut indentatum) */
+    /* folium apertum (in continente summo) */
+           MateriaNodus* paragraphus;
+           MateriaNodus* inlinea;
+                    i32  paragraphus_ultima;
            MateriaNodus* saeptum;
                     b32  saeptum_saeptus;
               character  saeptum_signum;
                     i32  saeptum_longitudo;
+           MateriaNodus* html;
+                    i32  html_conditio;
 
-    /* html apertus */
-          MateriaNodus* html;
-                   i32  html_conditio;
-
-    /* lineae vacuae pendentes intra codicem indentatum */
-                   Xar* vacuae;               /* Xar de MateriaNodus* */
+    /* lineae vacuae pendentes */
+                   Xar* vacuae;              /* Xar de MateriaNodus* */
+    /* paragraphi omnes (nudus in fine) */
+                   Xar* paragraphi;
+    /* elementum in hac linea apertum (officium in fine lineae) */
+          MateriaNodus* elementum_novus;
+                   i32  officium_pendens;
 } MdParsura;
 
 
@@ -92,7 +166,7 @@ _ponere_lexema (
 {
     si (lexema == NIHIL)
     {
-        redde VERUM;   /* locus optionalis vacuus */
+        redde VERUM;
     }
     redde materia_nodus_ponere(nodus, locus,
         materia_valor_token(lexema),
@@ -155,44 +229,43 @@ _ponere_indicem (
         MATERIA_LOCUS_INDEX);
 }
 
-/* Praefixum INDENTATIO in locum LISTA_TOKEN (nihil si vacuum) */
 interior b32
-_praefixum_indentationis (
-       MdParsura* p,
-    MateriaNodus* nodus,
-             i32  locus,
-             i32  linea,
-             s32  ab,
-             s32  post)
+_praefixa_ponere (
+              MdParsura* p,
+           MateriaNodus* nodus,
+                    i32  locus,
+                    i32  linea,
+    constans MdPraefixa* pf)
 {
-    si (post <= ab)
+    i32 i;
+
+    per (i = ZEPHYRUM; i < pf->n; i++)
     {
-        redde VERUM;
+        si (!_appendere_lexema(p, nodus, locus,
+                _lexema(p, (MdLexGenus)pf->v[i].genus, linea,
+                pf->v[i].ab,
+                    pf->v[i].ad)))
+        {
+            redde FALSUM;
+        }
     }
-    redde _appendere_lexema(p, nodus, locus,
-        _lexema(p, MD_LEX_INDENTATIO, linea, ab, post));
+    redde VERUM;
 }
 
-/* Nodus 'linea': praefixa [ab, post) ut INDENTATIO, contentum
- * [post, ad) generis dati, finis = terminator. */
+/* Nodus 'linea': praefixa, contentum [post, ad), finis */
 interior MateriaNodus*
 _linea (
-     MdParsura* p,
-           i32  linea,
-           s32  ab,
-           s32  post,
-           s32  ad,
-    MdLexGenus  genus_contenti)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad,
+             MdLexGenus  genus_contenti)
 {
     MateriaNodus* n = _nodus(p, MD_GENUS_LINEA);
 
-    si (n == NIHIL)
-    {
-        redde NIHIL;
-    }
-    si (!_praefixum_indentationis(p, n, (i32)MD_LINEA_PRAEFIXA, linea,
-        ab,
-            post))
+    si (   n == NIHIL
+        || !_praefixa_ponere(p, n, (i32)MD_LINEA_PRAEFIXA, linea, pf))
     {
         redde NIHIL;
     }
@@ -209,23 +282,16 @@ _linea (
     redde n;
 }
 
-/* Nodus 'linea-vacua': spatia [ab, post) ut INDENTATIO, finis. */
 interior MateriaNodus*
 _vacua (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf)
 {
     MateriaNodus* n = _nodus(p, MD_GENUS_LINEA_VACUA);
 
-    si (n == NIHIL)
-    {
-        redde NIHIL;
-    }
-    si (!_praefixum_indentationis(p, n, (i32)MD_VACUA_PRAEFIXA, linea,
-        ab,
-            post))
+    si (   n == NIHIL
+        || !_praefixa_ponere(p, n, (i32)MD_VACUA_PRAEFIXA, linea, pf))
     {
         redde NIHIL;
     }
@@ -237,7 +303,49 @@ _vacua (
     redde n;
 }
 
-/* Vacuas pendentes in locum datum effundere (ordine) */
+
+/* ==================================================
+ * Acervus et positio blocorum
+ * ================================================== */
+
+interior MdContinens*
+_summum (
+    MdParsura* p)
+{
+    redde &p->acervus[p->profunditas - I];
+}
+
+interior i32
+_locus_blocorum (
+    constans MdContinens* c)
+{
+    commutatio (c->genus)
+    {
+    casus MD_GENUS_CITATIO:   redde (i32)MD_CITATIO_BLOCI;
+    casus MD_GENUS_ELEMENTUM: redde (i32)MD_ELEMENTUM_BLOCI;
+    casus MD_GENUS_LISTA:     redde (i32)MD_LISTA_ELEMENTA;
+    ordinarius:               redde (i32)MD_DOCUMENTUM_BLOCI;
+    }
+}
+
+interior MateriaNodus*
+_elementum_ultimum (
+    constans MateriaNodus* lista)
+{
+    i32 n = materia_valor_lista_numerus(lista->loci[MD_LISTA_ELEMENTA]);
+    MateriaValor* v;
+
+    si (n == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    v = materia_valor_lista_obtinere(lista->loci[MD_LISTA_ELEMENTA], n
+        - I);
+    redde (v != NIHIL
+        && v->genus == MATERIA_VALOR_NODUS) ? v->datum.nodus
+                                                          : NIHIL;
+}
+
 interior b32
 _vacuas_effundere (
        MdParsura* p,
@@ -260,17 +368,49 @@ _vacuas_effundere (
     redde VERUM;
 }
 
+/* Vacuas pendentes in continens summum effundere: lista -> elementum
+ * eius ultimum (vacua elementa separat), aliter bloci eius. */
+interior b32
+_vacuas_in_summum (
+    MdParsura* p)
+{
+    MdContinens* c = _summum(p);
+
+    si (xar_numerus(p->vacuae) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (c->genus == MD_GENUS_LISTA)
+    {
+        MateriaNodus* ultimum = _elementum_ultimum(c->nodus);
+
+        si (ultimum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        redde _vacuas_effundere(p, ultimum, (i32)MD_ELEMENTUM_BLOCI);
+    }
+    redde _vacuas_effundere(p, c->nodus, _locus_blocorum(c));
+}
+
+/* Blocum in continens summum ponere (vacuae pendentes ante) */
 interior b32
 _blocum_addere (
        MdParsura* p,
     MateriaNodus* blocus)
 {
-    si (!_vacuas_effundere(p, p->documentum, (i32)MD_DOCUMENTUM_BLOCI))
+    MdContinens* c = _summum(p);
+
+    si (!_vacuas_in_summum(p))
     {
         redde FALSUM;
     }
-    redde _appendere_nodum(p, p->documentum, (i32)MD_DOCUMENTUM_BLOCI,
-        blocus);
+    si (   c->genus      == MD_GENUS_ELEMENTUM
+        && blocus->genus != (s32)MD_GENUS_LINEA_VACUA)
+    {
+        c->habet_contentum = VERUM;
+    }
+    redde _appendere_nodum(p, c->nodus, _locus_blocorum(c), blocus);
 }
 
 
@@ -287,11 +427,7 @@ _textus_crudus (
 {
     MateriaNodus* t = _nodus(p, MD_GENUS_TEXTUS);
 
-    si (t == NIHIL)
-    {
-        redde NIHIL;
-    }
-    si (!_appendere_lexema(p, t, (i32)MD_TEXTUS_CRUDUM,
+    si (   t == NIHIL || !_appendere_lexema(p, t, (i32)MD_TEXTUS_CRUDUM,
             _lexema(p, MD_LEX_TEXTUS, linea, ab, ad)))
     {
         redde NIHIL;
@@ -301,25 +437,22 @@ _textus_crudus (
 
 interior b32
 _paragraphum_aperire (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* par = _nodus(p, MD_GENUS_PARAGRAPHUS);
     MateriaNodus* inl = _nodus(p, MD_GENUS_INLINEA);
+    MateriaNodus** locus;
 
     si (par == NIHIL || inl == NIHIL)
     {
         redde FALSUM;
     }
-    si (!_praefixum_indentationis(p, par, (i32)MD_PARAGRAPHUS_PRAEFIXA,
-            linea, ab, post))
-    {
-        redde FALSUM;
-    }
-    si (!_ponere_indicem(par, (i32)MD_PARAGRAPHUS_NUDUS, ZEPHYRUM))
+    si (!_praefixa_ponere(p, par, (i32)MD_PARAGRAPHUS_PRAEFIXA, linea,
+        pf))
     {
         redde FALSUM;
     }
@@ -332,21 +465,25 @@ _paragraphum_aperire (
     {
         redde FALSUM;
     }
+    locus = (MateriaNodus**)xar_addere(p->paragraphi);
+    si (locus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *locus                 = par;
     p->paragraphus         = par;
     p->inlinea             = inl;
     p->paragraphus_ultima  = linea;
     redde VERUM;
 }
 
-/* Linea sequens: fractura-mollis (terminator lineae prioris + praefixa
- * huius) deinde textus crudus. */
 interior b32
 _paragraphum_continuare (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* fr = _nodus(p, MD_GENUS_FRACTURA_MOLLIS);
 
@@ -359,9 +496,7 @@ _paragraphum_continuare (
     {
         redde FALSUM;
     }
-    si (!_praefixum_indentationis(p, fr, (i32)MD_MOLLIS_PRAEFIXA, linea,
-        ab,
-            post))
+    si (!_praefixa_ponere(p, fr, (i32)MD_MOLLIS_PRAEFIXA, linea, pf))
     {
         redde FALSUM;
     }
@@ -400,16 +535,14 @@ _paragraphum_claudere (
     redde VERUM;
 }
 
-/* Subductio setext: paragraphus apertus fit capitulum (praefixa et
- * inlinea migrant), subductio = linea huius. */
 interior b32
 _setext (
-    MdParsura* p,
-          i32  gradus,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  gradus,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* cap = _nodus(p, MD_GENUS_CAPITULUM);
     MateriaNodus* par = p->paragraphus;
@@ -439,10 +572,12 @@ _setext (
         redde FALSUM;
     }
     si (!_ponere_nodum(cap, (i32)MD_CAPITULUM_SUBDUCTIO,
-            _linea(p, linea, ab, post, ad, MD_LEX_SUBDUCTIO)))
+            _linea(p, linea, pf, post, ad, MD_LEX_SUBDUCTIO)))
     {
         redde FALSUM;
     }
+    /* paragraphus in listam paragraphorum manet: nudus in fine ZEPHYRUM
+     * (capitulum eum non ostendit - innocuum) */
     p->paragraphus  = NIHIL;
     p->inlinea      = NIHIL;
     redde _blocum_addere(p, cap);
@@ -450,17 +585,17 @@ _setext (
 
 
 /* ==================================================
- * Capitulum ATX, divisio, saeptum, html, praefatio
+ * Folia cetera
  * ================================================== */
 
 interior b32
 _atx (
-         MdParsura* p,
-    constans MdAtx* a,
-               i32  linea,
-               s32  ab,
-               s32  post,
-               s32  ad)
+              MdParsura* p,
+         constans MdAtx* a,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* cap = _nodus(p, MD_GENUS_CAPITULUM);
     MateriaNodus* inl = _nodus(p, MD_GENUS_INLINEA);
@@ -469,9 +604,8 @@ _atx (
     {
         redde FALSUM;
     }
-    si (!_praefixum_indentationis(p, cap, (i32)MD_CAPITULUM_PRAEFIXA,
-        linea,
-            ab, post))
+    si (!_praefixa_ponere(p, cap, (i32)MD_CAPITULUM_PRAEFIXA, linea,
+        pf))
     {
         redde FALSUM;
     }
@@ -511,46 +645,35 @@ _atx (
 
 interior b32
 _divisio (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* d = _nodus(p, MD_GENUS_DIVISIO);
 
-    si (d == NIHIL)
-    {
-        redde FALSUM;
-    }
-    si (!_ponere_nodum(d, (i32)MD_DIVISIO_LINEA,
-            _linea(p, linea, ab, post, ad, MD_LEX_DIVISIO)))
+    si (   d == NIHIL || !_ponere_nodum(d, (i32)MD_DIVISIO_LINEA,
+            _linea(p, linea, pf, post, ad, MD_LEX_DIVISIO)))
     {
         redde FALSUM;
     }
     redde _blocum_addere(p, d);
 }
 
-/* Linea limitis saepti: praefixa, signum [post, signum_ad), info
- * [signum_ad, ad) si non vacua, finis. */
 interior MateriaNodus*
 _limes (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  signum_ad,
-          s32  ad)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  signum_ad,
+                    s32  ad)
 {
     MateriaNodus* l = _nodus(p, MD_GENUS_LIMES);
 
-    si (l == NIHIL)
-    {
-        redde NIHIL;
-    }
-    si (!_praefixum_indentationis(p, l, (i32)MD_LIMES_PRAEFIXA, linea,
-        ab,
-            post))
+    si (   l == NIHIL
+        || !_praefixa_ponere(p, l, (i32)MD_LIMES_PRAEFIXA, linea, pf))
     {
         redde NIHIL;
     }
@@ -559,9 +682,8 @@ _limes (
     {
         redde NIHIL;
     }
-    si (   ad > signum_ad
-        && !_ponere_lexema(l, (i32)MD_LIMES_INFO,
-               _lexema(p, MD_LEX_INFO, linea, signum_ad, ad)))
+    si (   ad > signum_ad && !_ponere_lexema(l, (i32)MD_LIMES_INFO,
+            _lexema(p, MD_LEX_INFO, linea, signum_ad, ad)))
     {
         redde NIHIL;
     }
@@ -575,26 +697,20 @@ _limes (
 
 interior b32
 _saeptum_aperire (
-             MdParsura* p,
-    constans MdSaeptum* s,
-                   i32  linea,
-                   s32  ab,
-                   s32  post,
-                   s32  ad)
+               MdParsura* p,
+      constans MdSaeptum* s,
+                     i32  linea,
+     constans MdPraefixa* pf,
+                     s32  post,
+                     s32  ad)
 {
     MateriaNodus* sa = _nodus(p, MD_GENUS_SAEPTUM);
 
-    si (sa == NIHIL)
-    {
-        redde FALSUM;
-    }
-    si (!_ponere_indicem(sa, (i32)MD_SAEPTUM_FORMA,
-            (i32)MD_SAEPTUM_SAEPTUS))
-    {
-        redde FALSUM;
-    }
-    si (!_ponere_nodum(sa, (i32)MD_SAEPTUM_APERTUM,
-            _limes(p, linea, ab, post, s->signum_ad, ad)))
+    si (   sa == NIHIL
+        || !_ponere_indicem(sa, (i32)MD_SAEPTUM_FORMA,
+        (i32)MD_SAEPTUM_SAEPTUS)
+        || !_ponere_nodum(sa, (i32)MD_SAEPTUM_APERTUM,
+               _limes(p, linea, pf, post, s->signum_ad, ad)))
     {
         redde FALSUM;
     }
@@ -607,25 +723,19 @@ _saeptum_aperire (
 
 interior b32
 _indentatum_aperire (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* sa = _nodus(p, MD_GENUS_SAEPTUM);
 
-    si (sa == NIHIL)
-    {
-        redde FALSUM;
-    }
-    si (!_ponere_indicem(sa, (i32)MD_SAEPTUM_FORMA,
-            (i32)MD_SAEPTUM_INDENTATUS))
-    {
-        redde FALSUM;
-    }
-    si (!_appendere_nodum(p, sa, (i32)MD_SAEPTUM_LINEAE,
-            _linea(p, linea, ab, post, ad, MD_LEX_TEXTUS)))
+    si (   sa == NIHIL
+        || !_ponere_indicem(sa, (i32)MD_SAEPTUM_FORMA,
+        (i32)MD_SAEPTUM_INDENTATUS)
+        || !_appendere_nodum(p, sa, (i32)MD_SAEPTUM_LINEAE,
+               _linea(p, linea, pf, post, ad, MD_LEX_TEXTUS)))
     {
         redde FALSUM;
     }
@@ -634,34 +744,20 @@ _indentatum_aperire (
     redde _blocum_addere(p, sa);
 }
 
-/* Linea html cruda tota (indentatio inclusa) ut lexema HTML */
-interior MateriaNodus*
-_linea_html (
-    MdParsura* p,
-          i32  linea,
-          s32  ab,
-          s32  ad)
-{
-    redde _linea(p, linea, ab, ab, ad, MD_LEX_HTML);
-}
-
 interior b32
 _html_aperire (
-    MdParsura* p,
-          i32  conditio,
-          i32  linea,
-          s32  ab,
-          s32  post,
-          s32  ad)
+              MdParsura* p,
+                    i32  conditio,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  cursor,
+                    s32  post,
+                    s32  ad)
 {
     MateriaNodus* h = _nodus(p, MD_GENUS_HTML);
 
-    si (h == NIHIL)
-    {
-        redde FALSUM;
-    }
-    si (!_appendere_nodum(p, h, (i32)MD_HTML_LINEAE,
-            _linea_html(p, linea, ab, ad)))
+    si (   h == NIHIL || !_appendere_nodum(p, h, (i32)MD_HTML_LINEAE,
+            _linea(p, linea, pf, cursor, ad, MD_LEX_HTML)))
     {
         redde FALSUM;
     }
@@ -672,6 +768,625 @@ _html_aperire (
         p->html_conditio  = conditio;
     }
     redde _blocum_addere(p, h);
+}
+
+
+/* ==================================================
+ * Clausura folii, listarum, continentium
+ * ================================================== */
+
+interior b32
+_folium_claudere (
+    MdParsura* p)
+{
+    p->saeptum  = NIHIL;
+    p->html     = NIHIL;
+    redde _paragraphum_claudere(p);
+}
+
+/* Laxitas listae et nudus paragraphorum filiorum directorum */
+interior b32
+_listam_claudere (
+    MateriaNodus* lista)
+{
+    MateriaValor elementa  = lista->loci[MD_LISTA_ELEMENTA];
+             i32 n         = materia_valor_lista_numerus(elementa);
+             i32 i;
+             b32 laxa = FALSUM;
+
+    per (i = ZEPHYRUM; i < n && !laxa; i++)
+    {
+        MateriaValor* ev  = materia_valor_lista_obtinere(elementa, i);
+        MateriaNodus* e   = ev->datum.nodus;
+        MateriaValor  bl  = e->loci[MD_ELEMENTUM_BLOCI];
+                 i32  m   = materia_valor_lista_numerus(bl);
+                 i32  j;
+                 b32  post_contentum  = FALSUM;   /* blocus non vacuus visus */
+                 b32  vacua_post      = FALSUM;   /* vacua post contentum */
+
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            MateriaNodus* b = materia_valor_lista_obtinere(bl,
+                j)->datum.nodus;
+
+            si (b->genus == (s32)MD_GENUS_LINEA_VACUA)
+            {
+                si (post_contentum)
+                {
+                    vacua_post = VERUM;
+                }
+            }
+            alioquin
+            {
+                si (vacua_post)
+                {
+                    laxa = VERUM;   /* duo bloci vacua separati */
+                }
+                post_contentum  = VERUM;
+                vacua_post      = FALSUM;
+            }
+        }
+        si (vacua_post && i < n - I)
+        {
+            laxa = VERUM;   /* elementa vacua separata */
+        }
+    }
+    si (!_ponere_indicem(lista, (i32)MD_LISTA_LAXA,
+        laxa ? I : ZEPHYRUM))
+    {
+        redde FALSUM;
+    }
+    /* nudus: paragraphi filii directi elementorum listae STRICTAE */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        MateriaNodus* e = materia_valor_lista_obtinere(elementa,
+            i)->datum.nodus;
+        MateriaValor bl  = e->loci[MD_ELEMENTUM_BLOCI];
+                 i32 m   = materia_valor_lista_numerus(bl);
+                 i32 j;
+
+        per (j = ZEPHYRUM; j < m; j++)
+        {
+            MateriaNodus* b = materia_valor_lista_obtinere(bl,
+                j)->datum.nodus;
+
+            si (   b->genus == (s32)MD_GENUS_PARAGRAPHUS
+                && b->loci[MD_PARAGRAPHUS_NUDUS].genus
+                    == MATERIA_VALOR_NIHIL
+                && !_ponere_indicem(b, (i32)MD_PARAGRAPHUS_NUDUS,
+                       laxa ? ZEPHYRUM : I))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* Continentia supra 'usque' (index acervi) claudere, folio primum */
+interior b32
+_claudere_usque (
+    MdParsura* p,
+          i32  usque)
+{
+    si (!_folium_claudere(p))
+    {
+        redde FALSUM;
+    }
+    dum (p->profunditas - I > usque)
+    {
+        MdContinens* c = _summum(p);
+
+        si (c->genus == MD_GENUS_LISTA && !_listam_claudere(c->nodus))
+        {
+            redde FALSUM;
+        }
+        p->profunditas = p->profunditas - I;
+    }
+    redde VERUM;
+}
+
+/* Ante blocum NON-elementum: continentia non congruentia claudere, deinde
+ * listam in summo (lista elementa sola accipit) */
+interior b32
+_claudere_pro_bloco (
+    MdParsura* p,
+          i32  usque)
+{
+    si (!_claudere_usque(p, usque))
+    {
+        redde FALSUM;
+    }
+    dum (_summum(p)->genus == MD_GENUS_LISTA)
+    {
+        si (!_listam_claudere(_summum(p)->nodus))
+        {
+            redde FALSUM;
+        }
+        p->profunditas = p->profunditas - I;
+    }
+    redde VERUM;
+}
+
+interior b32
+_aperire (
+       MdParsura* p,
+         MdGenus  genus,
+    MateriaNodus* nodus)
+{
+    MdContinens* c;
+
+    si (p->profunditas >= MD_PROFUNDITAS_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    c = &p->acervus[p->profunditas];
+    memset(c, ZEPHYRUM, magnitudo(*c));
+    c->genus        = genus;
+    c->nodus        = nodus;
+    p->profunditas  = p->profunditas + I;
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Columnae
+ * ================================================== */
+
+/* Spatia/tabulae a cursor consumere donec 'petitae' columnae coopertae
+ * sint (tabula ultra excedere potest). Reddit post; *coopertae. */
+interior s32
+_columnas_consumere (
+    constans character* fons,
+                   s32  cursor,
+                   s32  ad,
+                   i32  columna,
+                   i32  petitae,
+                   i32* coopertae)
+{
+    i32 c = columna;
+    s32 i = cursor;
+
+    dum (i < ad && (c - columna) < petitae)
+    {
+        si (fons[i] == '\t')
+        {
+            c = c + (IV - (c % IV));
+        }
+        alioquin si (fons[i] == ' ')
+        {
+            c = c + I;
+        }
+        alioquin
+        {
+            frange;
+        }
+        i = i + I;
+    }
+    *coopertae = c - columna;
+    redde i;
+}
+
+
+/* ==================================================
+ * Ansa
+ * ================================================== */
+
+/* Elementum novum in continente summo (lista existens aut nova) */
+interior b32
+_elementum_aperire (
+                 MdParsura* p,
+    constans MdMarcaListae* m,
+                       i32  offset)
+{
+    MdContinens* c = _summum(p);
+    MateriaNodus* lista;
+    MateriaNodus* elementum;
+
+    si (!(c->genus == MD_GENUS_LISTA && c->numerata == m->numerata
+          && c->delimitator == m->delimitator))
+    {
+        /* lista nova (lista aperta incompatibilis prius clausa) */
+        si (   c->genus == MD_GENUS_LISTA
+            && !_claudere_usque(p, p->profunditas - II))
+        {
+            redde FALSUM;
+        }
+        lista = _nodus(p, MD_GENUS_LISTA);
+        si (   lista == NIHIL
+            || !_ponere_indicem(lista, (i32)MD_LISTA_GENUS,
+                   m->numerata ? (i32)MD_LISTA_NUMERATA : (i32)MD_LISTA_PUNCTATA)
+            || !_ponere_indicem(lista, (i32)MD_LISTA_INITIUM,
+            m->initium)
+            || !_blocum_addere(p, lista)
+            || !_aperire(p, MD_GENUS_LISTA, lista))
+        {
+            redde FALSUM;
+        }
+        c               = _summum(p);
+        c->numerata     = m->numerata;
+        c->delimitator  = m->delimitator;
+    }
+    elementum = _nodus(p, MD_GENUS_ELEMENTUM);
+    si (   elementum == NIHIL || !_blocum_addere(p, elementum)
+        || !_aperire(p, MD_GENUS_ELEMENTUM, elementum))
+    {
+        redde FALSUM;
+    }
+    c                    = _summum(p);
+    c->offset            = offset;
+    c->initium_vacuum    = (b32)(m->spatia == ZEPHYRUM);
+    p->elementum_novus   = elementum;
+    p->officium_pendens  = (i32)MD_OFFICIUM_NULLUM;
+    redde VERUM;
+}
+
+interior b32
+_lineam_parsare (
+    MdParsura* p,
+          i32  i)
+{
+    constans MdLinea* l            = md_linea(&p->lineae, i);
+                  s32 ab           = l->offset;
+                  s32 ad           = ab + (s32)l->mensura;
+                  s32 cursor       = ab;
+                  i32 columna      = ZEPHYRUM;
+                  i32 congruentia  = ZEPHYRUM;   /* index acervi ultimi congruentis */
+                  i32 k;
+                  s32 post;
+                  i32 col;
+                  b32 vacua;
+           MdPraefixa pf;
+
+    pf.n                = ZEPHYRUM;
+    p->elementum_novus  = NIHIL;
+
+    /* ---- I. continentia aperta congruere ---- */
+    per (k = I; k < p->profunditas; k++)
+    {
+        MdContinens* c = &p->acervus[k];
+
+        post   = md_scan_indentatio(p->fons, cursor, ad, columna, &col);
+        vacua  = (b32)(post == ad);
+
+        si (c->genus == MD_GENUS_CITATIO)
+        {
+            s32 m_ad;
+
+            si (vacua || col > III || p->fons[post] != '>')
+            {
+                frange;
+            }
+            m_ad = md_scan_citatio(p->fons, post, ad);
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            _praefixum(&pf, MD_LEX_MARCA_CITATIONIS, post, m_ad);
+            columna = columna + col + I
+                    + ((m_ad - post > I) ? I : ZEPHYRUM);
+            cursor  = m_ad;
+        }
+        alioquin si (c->genus == MD_GENUS_ELEMENTUM)
+        {
+            si (vacua)
+            {
+                si (c->initium_vacuum && !c->habet_contentum)
+                {
+                    frange;   /* elementum vacuum: vacua secunda claudit */
+                }
+            }
+            alioquin
+            {
+                i32 coopertae;
+                s32 fin;
+
+                si (col < c->offset)
+                {
+                    frange;
+                }
+                fin = _columnas_consumere(p->fons, cursor, ad, columna,
+                    c->offset, &coopertae);
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, fin);
+                columna  = columna + coopertae;
+                cursor   = fin;
+            }
+        }
+        /* LISTA semper congruit: elementum eius decernit */
+        congruentia = k;
+    }
+
+    /* ---- folia quae lineam totam sumunt (si omnia congruunt) ---- */
+    si (congruentia == p->profunditas - I)
+    {
+        post   = md_scan_indentatio(p->fons, cursor, ad, columna, &col);
+        vacua  = (b32)(post == ad);
+
+        si (p->saeptum != NIHIL && p->saeptum_saeptus)
+        {
+            s32 sig_ad;
+
+            si (col <= III && md_scan_saeptum_clausum(p->fons, post, ad,
+                    p->saeptum_signum, p->saeptum_longitudo, &sig_ad))
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                si (!_ponere_nodum(p->saeptum, (i32)MD_SAEPTUM_CLAUSUM,
+                        _limes(p, i, &pf, post, sig_ad, ad)))
+                {
+                    redde FALSUM;
+                }
+                p->saeptum = NIHIL;
+                redde VERUM;
+            }
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _appendere_nodum(p, p->saeptum,
+                (i32)MD_SAEPTUM_LINEAE,
+                vacua ? _vacua(p, i, &pf)
+                      : _linea(p, i, &pf, post, ad, MD_LEX_TEXTUS));
+        }
+        si (p->html != NIHIL)
+        {
+            si (p->html_conditio >= VI && vacua)
+            {
+                p->html = NIHIL;   /* vacua ipsa blocci NON est */
+            }
+            alioquin
+            {
+                si (!_appendere_nodum(p, p->html, (i32)MD_HTML_LINEAE,
+                        _linea(p, i, &pf, cursor, ad, MD_LEX_HTML)))
+                {
+                    redde FALSUM;
+                }
+                si (   p->html_conditio <= V
+                    && md_scan_html_finis(p->fons, cursor, ad,
+                    p->html_conditio))
+                {
+                    p->html = NIHIL;
+                }
+                redde VERUM;
+            }
+        }
+        si (p->saeptum != NIHIL && !p->saeptum_saeptus)
+        {
+            si (vacua)
+            {
+                MateriaNodus** locus =
+                    (MateriaNodus**)xar_addere(p->vacuae);
+
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                si (locus == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *locus = _vacua(p, i, &pf);
+                redde (b32)(*locus != NIHIL);
+            }
+            si (col >= IV)
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                redde _vacuas_effundere(p, p->saeptum,
+                    (i32)MD_SAEPTUM_LINEAE)
+                    && _appendere_nodum(p, p->saeptum,
+                    (i32)MD_SAEPTUM_LINEAE,
+                           _linea(p, i, &pf, post, ad, MD_LEX_TEXTUS));
+            }
+            p->saeptum = NIHIL;
+        }
+    }
+    alioquin si (p->saeptum != NIHIL || p->html != NIHIL)
+    {
+        /* folium in continente non congruente: clauditur cum eo */
+        si (!_claudere_usque(p, congruentia))
+        {
+            redde FALSUM;
+        }
+    }
+
+    /* ---- II. initia continentium novorum ---- */
+    dum (VERUM)
+    {
+        MdMarcaListae m;
+
+        post   = md_scan_indentatio(p->fons, cursor, ad, columna, &col);
+        vacua  = (b32)(post == ad);
+        si (vacua || col > III)
+        {
+            frange;
+        }
+        si (p->fons[post] == '>')
+        {
+            s32 m_ad;
+
+            si (!_claudere_pro_bloco(p, congruentia))
+            { redde FALSUM;
+            } m_ad = md_scan_citatio(p->fons, post, ad);
+            {
+                MateriaNodus* q = _nodus(p, MD_GENUS_CITATIO);
+
+                si (   q == NIHIL || !_blocum_addere(p, q)
+                    || !_aperire(p, MD_GENUS_CITATIO, q))
+                {
+                    redde FALSUM;
+                }
+            }
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            _praefixum(&pf, MD_LEX_MARCA_CITATIONIS, post, m_ad);
+            columna = columna + col + I + ((m_ad - post
+                > I) ? I : ZEPHYRUM);
+            cursor       = m_ad;
+            congruentia  = p->profunditas - I;
+            perge;
+        }
+        si (md_scan_divisio(p->fons, post, ad))
+        {
+            frange;   /* divisio marcam listae vincit */
+        }
+        si (md_scan_marca_listae(p->fons, post, ad, columna + col, &m))
+        {
+            i32 n_spatia;
+            i32 coopertae;
+            s32 marca_ad;
+
+            /* paragraphum interrumpere: non vacuum et (punctata aut I) */
+            {
+                MdContinens* cc = &p->acervus[congruentia];
+                        b32  soror = (b32)(cc->genus == MD_GENUS_LISTA
+                                  && cc->numerata == m.numerata
+                                  && cc->delimitator == m.delimitator);
+
+                si (   !soror && p->paragraphus != NIHIL
+                    && (m.spatia == ZEPHYRUM
+                    || (m.numerata && m.initium != I)))
+                {
+                    frange;
+                }
+            }
+            n_spatia = (m.spatia == ZEPHYRUM
+                || m.spatia >= V) ? I : m.spatia;
+            marca_ad = (m.spatia == ZEPHYRUM) ? m.marca_ad
+                     : _columnas_consumere(p->fons, m.marca_ad, ad,
+                           columna + col + m.latitudo, n_spatia,
+                           &coopertae);
+            si (!_claudere_usque(p, congruentia))
+            {
+                redde FALSUM;
+            }
+            si (!_elementum_aperire(p, &m, col + m.latitudo + n_spatia))
+            {
+                redde FALSUM;
+            }
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            _praefixum(&pf,
+                m.numerata ? MD_LEX_MARCA_NUMERI : MD_LEX_MARCA_PUNCTI,
+                post, marca_ad);
+            columna      = columna + col + m.latitudo + n_spatia;
+            cursor       = marca_ad;
+            congruentia  = p->profunditas - I;
+            perge;
+        }
+        frange;
+    }
+
+    /* ---- III. reliquum folio ---- */
+    post   = md_scan_indentatio(p->fons, cursor, ad, columna, &col);
+    vacua  = (b32)(post == ad);
+
+    si (vacua)
+    {
+        MateriaNodus** locus;
+
+        /* linea marcae elementi vacui: vacua ELEMENTI est (marca eius
+         * praefixum fert), non pendens */
+        si (p->elementum_novus != NIHIL)
+        {
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _blocum_addere(p, _vacua(p, i, &pf));
+        }
+        si (!_claudere_usque(p, congruentia))
+        {
+            redde FALSUM;
+        }
+        _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+        locus = (MateriaNodus**)xar_addere(p->vacuae);
+        si (locus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *locus = _vacua(p, i, &pf);
+        redde (b32)(*locus != NIHIL);
+    }
+
+    {
+              i32 gradus;
+            MdAtx atx;
+        MdSaeptum s;
+              i32 conditio;
+              b32 omnia = (b32)(congruentia == p->profunditas
+                  - I);
+
+        si (col <= III)
+        {
+            si (   omnia && p->paragraphus != NIHIL
+                && md_scan_subductio(p->fons, post, ad, &gradus))
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                redde _setext(p, gradus, i, &pf, post, ad);
+            }
+            si (md_scan_divisio(p->fons, post, ad))
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                redde _claudere_pro_bloco(p, congruentia)
+                    && _divisio(p, i, &pf, post, ad);
+            }
+            si (md_scan_atx(p->fons, post, ad, &atx))
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                redde _claudere_pro_bloco(p, congruentia)
+                    && _atx(p, &atx, i, &pf, post, ad);
+            }
+            si (md_scan_saeptum_apertum(p->fons, post, ad, &s))
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                redde _claudere_pro_bloco(p, congruentia)
+                    && _saeptum_aperire(p, &s, i, &pf, post, ad);
+            }
+            conditio = md_scan_html_initium(p->fons, post, ad,
+                (b32)(p->paragraphus != NIHIL));
+            si (conditio != ZEPHYRUM)
+            {
+                redde _claudere_pro_bloco(p, congruentia)
+                    && _html_aperire(p, conditio, i, &pf, cursor, post,
+                    ad);
+            }
+        }
+        /* continuatio pigra: paragraphus apertus, textus purus */
+        si (p->paragraphus != NIHIL)
+        {
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _paragraphum_continuare(p, i, &pf, post, ad);
+        }
+        si (!_claudere_pro_bloco(p, congruentia))
+        { redde FALSUM;
+        } si (col >= IV)
+          {
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _indentatum_aperire(p, i, &pf, post, ad);
+          }
+        /* officium: blocus primus elementi in hac linea aperti */
+        si (p->elementum_novus != NIHIL)
+        {
+            MdMarcaOfficii o;
+
+            si (md_scan_officium(p->fons, post, ad, &o))
+            {
+                s32 fin = (o.ad < ad) ? o.ad + I : o.ad;
+
+                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                _praefixum(&pf, MD_LEX_MARCA_OFFICII, post, fin);
+                p->officium_pendens =
+                    o.perfectum ? (i32)MD_OFFICIUM_PERFECTUM
+                                                  : (i32)MD_OFFICIUM_APERTUM;
+                redde _paragraphum_aperire(p, i, &pf, fin, ad);
+            }
+        }
+        _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+        redde _paragraphum_aperire(p, i, &pf, post, ad);
+    }
+}
+
+/* officium elementi in hac linea aperti - semel, in fine lineae */
+interior b32
+_officium_finire (
+    MdParsura* p)
+{
+    si (p->elementum_novus == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (!_ponere_indicem(p->elementum_novus, (i32)MD_ELEMENTUM_OFFICIUM,
+            p->officium_pendens))
+    {
+        redde FALSUM;
+    }
+    p->elementum_novus = NIHIL;
+    redde VERUM;
 }
 
 /* Linea '---' exacte (praefatio) */
@@ -686,8 +1401,6 @@ _est_lineola (
                 && memcmp(p->fons + l->offset, "---", III) == ZEPHYRUM);
 }
 
-/* Praefatio: linea I '---', clausum '---' proxima; FALSUM = nulla
- * (vocans pergit). *proxima = index post praefationem. */
 interior b32
 _praefatio (
     MdParsura* p,
@@ -696,7 +1409,9 @@ _praefatio (
     i32 n = md_lineae_numerus(&p->lineae);
     i32 j;
     MateriaNodus* pr;
+    MdPraefixa nulla;
 
+    nulla.n = ZEPHYRUM;
     si (n < II || !_est_lineola(p, ZEPHYRUM))
     {
         redde FALSUM;
@@ -721,7 +1436,7 @@ _praefatio (
         constans MdLinea* l = md_linea(&p->lineae, ZEPHYRUM);
 
         si (!_ponere_nodum(pr, (i32)MD_PRAEFATIO_APERTUM,
-                _linea(p, ZEPHYRUM, l->offset, l->offset,
+                _linea(p, ZEPHYRUM, &nulla, l->offset,
                     l->offset + (s32)l->mensura, MD_LEX_TEXTUS)))
         {
             redde FALSUM;
@@ -738,10 +1453,19 @@ _praefatio (
                           i32 col;
                           s32 post = md_scan_indentatio(p->fons, ab, ad,
                                          ZEPHYRUM, &col);
-                MateriaNodus* ln = (post == ad) ? _vacua(p, k, ab, post)
-                                 : _linea(p, k, ab, ab, ad,
-                                 MD_LEX_TEXTUS);
+                   MdPraefixa pf;
+                MateriaNodus* ln;
 
+            pf.n = ZEPHYRUM;
+            si (post == ad)
+            {
+                _praefixum(&pf, MD_LEX_INDENTATIO, ab, post);
+                ln = _vacua(p, k, &pf);
+            }
+            alioquin
+            {
+                ln = _linea(p, k, &nulla, ab, ad, MD_LEX_TEXTUS);
+            }
             si (!_appendere_nodum(p, pr, (i32)MD_PRAEFATIO_LINEAE, ln))
             {
                 redde FALSUM;
@@ -752,8 +1476,9 @@ _praefatio (
         constans MdLinea* l = md_linea(&p->lineae, j);
 
         si (!_ponere_nodum(pr, (i32)MD_PRAEFATIO_CLAUSUM,
-                _linea(p, j, l->offset, l->offset,
-                    l->offset + (s32)l->mensura, MD_LEX_TEXTUS)))
+                _linea(p, j, &nulla, l->offset, l->offset
+                    + (s32)l->mensura,
+                    MD_LEX_TEXTUS)))
         {
             redde FALSUM;
         }
@@ -766,161 +1491,28 @@ _praefatio (
     redde VERUM;
 }
 
-
-/* ==================================================
- * Ansa
- * ================================================== */
-
+/* nudus ZEPHYRUM omnibus paragraphis quibus nondum positus (extra
+ * listas strictas) */
 interior b32
-_lineam_parsare (
-    MdParsura* p,
-          i32  i)
+_paragraphos_finire (
+    MdParsura* p)
 {
-     constans MdLinea* l    = md_linea(&p->lineae, i);
-                  s32  ab   = l->offset;
-                  s32  ad   = ab + (s32)l->mensura;
-                  i32  col  = ZEPHYRUM;
-                  s32  post = md_scan_indentatio(p->fons, ab, ad,
-                      ZEPHYRUM,
-                                 &col);
-                  b32 vacua = (b32)(post == ad);
+    i32 i;
+    i32 n = xar_numerus(p->paragraphi);
 
-    /* saeptum apertum */
-    si (p->saeptum != NIHIL && p->saeptum_saeptus)
+    per (i = ZEPHYRUM; i < n; i++)
     {
-        s32 sig_ad;
+        MateriaNodus* par = *(MateriaNodus**)xar_obtinere(p->paragraphi,
+            i);
 
-        si (   col <= III
-            && md_scan_saeptum_clausum(p->fons, post, ad,
-            p->saeptum_signum,
-                   p->saeptum_longitudo, &sig_ad))
-        {
-            si (!_ponere_nodum(p->saeptum, (i32)MD_SAEPTUM_CLAUSUM,
-                    _limes(p, i, ab, post, sig_ad, ad)))
-            {
-                redde FALSUM;
-            }
-            p->saeptum = NIHIL;
-            redde VERUM;
-        }
-        redde _appendere_nodum(p, p->saeptum, (i32)MD_SAEPTUM_LINEAE,
-            vacua ? _vacua(p, i, ab, post)
-                  : _linea(p, i, ab, post, ad, MD_LEX_TEXTUS));
-    }
-
-    /* html apertus */
-    si (p->html != NIHIL)
-    {
-        si (p->html_conditio >= VI && vacua)
-        {
-            p->html = NIHIL;   /* vacua ipsa blocci NON est */
-        }
-        alioquin
-        {
-            si (!_appendere_nodum(p, p->html, (i32)MD_HTML_LINEAE,
-                    _linea_html(p, i, ab, ad)))
-            {
-                redde FALSUM;
-            }
-            si (   p->html_conditio <= V
-                && md_scan_html_finis(p->fons, ab, ad,
-                p->html_conditio))
-            {
-                p->html = NIHIL;
-            }
-            redde VERUM;
-        }
-    }
-
-    /* codex indentatus apertus */
-    si (p->saeptum != NIHIL && !p->saeptum_saeptus)
-    {
-        si (vacua)
-        {
-            MateriaNodus** locus =
-                (MateriaNodus**)xar_addere(p->vacuae);
-
-            si (locus == NIHIL)
-            {
-                redde FALSUM;
-            }
-            *locus = _vacua(p, i, ab, post);
-            redde (b32)(*locus != NIHIL);
-        }
-        si (col >= IV)
-        {
-            si (!_vacuas_effundere(p, p->saeptum,
-                (i32)MD_SAEPTUM_LINEAE))
-            {
-                redde FALSUM;
-            }
-            redde _appendere_nodum(p, p->saeptum,
-                (i32)MD_SAEPTUM_LINEAE,
-                _linea(p, i, ab, post, ad, MD_LEX_TEXTUS));
-        }
-        p->saeptum = NIHIL;   /* vacuae pendentes documento cedunt */
-    }
-
-    /* linea vacua */
-    si (vacua)
-    {
-        si (!_paragraphum_claudere(p))
+        si (par->loci[MD_PARAGRAPHUS_NUDUS].genus == MATERIA_VALOR_NIHIL
+            && !_ponere_indicem(par, (i32)MD_PARAGRAPHUS_NUDUS,
+            ZEPHYRUM))
         {
             redde FALSUM;
         }
-        redde _blocum_addere(p, _vacua(p, i, ab, post));
     }
-
-    /* indentatio >= IV */
-    si (col >= IV)
-    {
-        si (p->paragraphus != NIHIL)
-        {
-            redde _paragraphum_continuare(p, i, ab, post, ad);
-        }
-        redde _indentatum_aperire(p, i, ab, post, ad);
-    }
-
-    /* contentum [post, ad), indentatio <= III */
-    {
-              i32 gradus;
-            MdAtx atx;
-        MdSaeptum s;
-              i32 conditio;
-
-        si (   p->paragraphus != NIHIL
-            && md_scan_subductio(p->fons, post, ad, &gradus))
-        {
-            redde _setext(p, gradus, i, ab, post, ad);
-        }
-        si (md_scan_divisio(p->fons, post, ad))
-        {
-            redde _paragraphum_claudere(p)
-                && _divisio(p, i, ab, post, ad);
-        }
-        si (md_scan_atx(p->fons, post, ad, &atx))
-        {
-            redde _paragraphum_claudere(p)
-                && _atx(p, &atx, i, ab, post, ad);
-        }
-        si (md_scan_saeptum_apertum(p->fons, post, ad, &s))
-        {
-            redde _paragraphum_claudere(p)
-                && _saeptum_aperire(p, &s, i, ab, post, ad);
-        }
-        conditio = md_scan_html_initium(p->fons, post, ad,
-            (b32)(p->paragraphus != NIHIL));
-        si (conditio != ZEPHYRUM)
-        {
-            redde _paragraphum_claudere(p)
-                && _html_aperire(p, conditio, i, ab, post, ad);
-        }
-        si (p->paragraphus != NIHIL)
-        {
-            redde _paragraphum_continuare(p, i, ab, post, ad);
-        }
-        redde _paragraphum_aperire(p, i, ab, post, ad);
-    }
+    redde VERUM;
 }
 
 MateriaNodus*
@@ -942,8 +1534,11 @@ md_arbor_parsare (
     }
     md_fabrica_incipere(&p.fabrica, piscina, &p.lineae);
     p.vacuae      = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
+    p.paragraphi  = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
     p.documentum  = _nodus(&p, MD_GENUS_DOCUMENTUM);
-    si (p.vacuae == NIHIL || p.documentum == NIHIL)
+    si (   p.vacuae     == NIHIL || p.paragraphi == NIHIL
+        || p.documentum == NIHIL
+        || !_aperire(&p, MD_GENUS_DOCUMENTUM, p.documentum))
     {
         redde NIHIL;
     }
@@ -956,16 +1551,20 @@ md_arbor_parsare (
     }
     per (; i < n; i++)
     {
-        si (!_lineam_parsare(&p, i))
+        si (!_lineam_parsare(&p, i) || !_officium_finire(&p))
         {
             redde NIHIL;
         }
     }
-    si (!_paragraphum_claudere(&p))
+    si (!_claudere_usque(&p, ZEPHYRUM))
     {
         redde NIHIL;
     }
     si (!_vacuas_effundere(&p, p.documentum, (i32)MD_DOCUMENTUM_BLOCI))
+    {
+        redde NIHIL;
+    }
+    si (!_paragraphos_finire(&p))
     {
         redde NIHIL;
     }

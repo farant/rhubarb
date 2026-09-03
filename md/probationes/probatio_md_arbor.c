@@ -611,6 +611,214 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: continentia (par. 5) - listae, citationes, laxitas
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* li;
+        MateriaNodus* e;
+        MateriaNodus* q;
+        MateriaNodus* par;
+
+        imprimere("\n--- Probans continentia ---\n");
+
+        /* lista stricta: paragraphi nudi */
+        d = PARSA("- a\n- b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (li->genus, (s32)MD_GENUS_LISTA);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_GENUS),
+            (s32)MD_LISTA_PUNCTATA);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_LAXA), ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(li, (i32)MD_LISTA_ELEMENTA), II);
+        e = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(e, (i32)MD_ELEMENTUM_OFFICIUM),
+            (s32)MD_OFFICIUM_NULLUM);
+        CREDO_AEQUALIS_I32 (_numerus(e, (i32)MD_ELEMENTUM_BLOCI), I);
+        par = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (par->genus, (s32)MD_GENUS_PARAGRAPHUS);
+        CREDO_AEQUALIS_S32 (_index(par, (i32)MD_PARAGRAPHUS_NUDUS),
+            (s32)I);
+        CREDO_AEQUALIS_I32 (_numerus(par, (i32)MD_PARAGRAPHUS_PRAEFIXA),
+            I);
+
+        /* laxa: vacua inter elementa; paragraphi non nudi */
+        d = PARSA("- a\n\n- b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_LAXA), (s32)I);
+        e = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(e, (i32)MD_ELEMENTUM_BLOCI), II);
+        par = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(par, (i32)MD_PARAGRAPHUS_NUDUS),
+            ZEPHYRUM);
+
+        /* vacuae finales listae ad documentum, non ad elementum ultimum */
+        d = PARSA("- a\n\npost\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_LAXA), ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_LINEA_VACUA);
+
+        /* numerata: initium et delimitator; punctae diversae = listae duae */
+        d = PARSA("3) a\n4) b\n");
+        CREDO_VERUM (sani);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_GENUS),
+            (s32)MD_LISTA_NUMERATA);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_INITIUM),
+            (s32)III);
+        CREDO_AEQUALIS_I32 (_numerus(li, (i32)MD_LISTA_ELEMENTA), II);
+        d = PARSA("* a\n- b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+
+        /* nidificatio */
+        d = PARSA("- a\n  - b\n    - c\n");
+        CREDO_VERUM (sani);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(li, (i32)MD_LISTA_ELEMENTA), I);
+        e = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(e, (i32)MD_ELEMENTUM_BLOCI), II);
+        li = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, I);
+        CREDO_AEQUALIS_S32 (li->genus, (s32)MD_GENUS_LISTA);
+        e   = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        li  = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, I);
+        CREDO_AEQUALIS_S32 (li->genus, (s32)MD_GENUS_LISTA);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_LAXA), ZEPHYRUM);
+
+        /* continuatio elementi post vacuam: laxa; codex intra elementum */
+        d = PARSA("- a\n\n  b\n");
+        CREDO_VERUM (sani);
+        li = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(li, (i32)MD_LISTA_LAXA), (s32)I);
+        e = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(e, (i32)MD_ELEMENTUM_BLOCI), III);
+        d = PARSA("- a\n\n      code\n");
+        CREDO_VERUM (sani);
+        e = _elementum(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_elementum(e, (i32)MD_ELEMENTUM_BLOCI,
+            II)->genus,
+            (s32)MD_GENUS_SAEPTUM);
+
+        /* continuatio pigra */
+        d = PARSA("- a\nb\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        e = _elementum(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        par = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(par->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI), III);
+
+        /* elementum vacuum: vacua secunda claudit */
+        d = PARSA("-\n  foo\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        e = _elementum(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(e, (i32)MD_ELEMENTUM_BLOCI), II);
+        d = PARSA("-\n\n  foo\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
+            (s32)MD_GENUS_PARAGRAPHUS);
+
+        /* interruptio paragraphi */
+        d = PARSA("foo\n- bar\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        d = PARSA("foo\n2. bar\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        d = PARSA("foo\n1. bar\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        d = PARSA("foo\n-\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_CAPITULUM);
+        d = PARSA("- - -\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DIVISIO);
+
+        /* officia GFM */
+        d = PARSA("- [ ] a\n- [x] b\n");
+        CREDO_VERUM (sani);
+        li  = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        e   = _elementum(li, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(e, (i32)MD_ELEMENTUM_OFFICIUM),
+            (s32)MD_OFFICIUM_APERTUM);
+        par = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(par, (i32)MD_PARAGRAPHUS_PRAEFIXA),
+            II);
+        e = _elementum(li, (i32)MD_LISTA_ELEMENTA, I);
+        CREDO_AEQUALIS_S32 (_index(e, (i32)MD_ELEMENTUM_OFFICIUM),
+            (s32)MD_OFFICIUM_PERFECTUM);
+
+        /* citationes */
+        d = PARSA("> a\n> b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        q = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (q->genus, (s32)MD_GENUS_CITATIO);
+        CREDO_AEQUALIS_I32 (_numerus(q, (i32)MD_CITATIO_BLOCI), I);
+        par = _elementum(q, (i32)MD_CITATIO_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(_elementum(
+            par->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI, I),
+            (i32)MD_MOLLIS_PRAEFIXA), I);
+        d = PARSA("> a\nb\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        d = PARSA("> a\n\n> b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II), (s32)MD_GENUS_CITATIO);
+        d = PARSA("> - a\n> - b\n");
+        CREDO_VERUM (sani);
+        q   = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        li  = _elementum(q, (i32)MD_CITATIO_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (li->genus, (s32)MD_GENUS_LISTA);
+        CREDO_AEQUALIS_I32 (_numerus(li, (i32)MD_LISTA_ELEMENTA), II);
+        d = PARSA("> foo\n> ---\n");
+        CREDO_VERUM (sani);
+        q = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_elementum(q, (i32)MD_CITATIO_BLOCI,
+            ZEPHYRUM)->genus,
+            (s32)MD_GENUS_CAPITULUM);
+        d = PARSA("> foo\n---\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_DIVISIO);
+        d = PARSA("- a\n> b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_CITATIO);
+
+        /* saeptum intra citationem clauditur cum ea */
+        d = PARSA("> ```\n> a\n```\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        q = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_FALSUM (_adest(_elementum(q, (i32)MD_CITATIO_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_SAEPTUM_CLAUSUM));
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_SAEPTUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: corpus totum - octeti et praesentia
      * ======================================================== */
 
@@ -628,6 +836,9 @@ principale (vacuum)
               i32  praefationes = ZEPHYRUM;
               i32  divisiones = ZEPHYRUM;
               i32  impressa = ZEPHYRUM;
+              i32  listae = ZEPHYRUM;
+              i32  elementa = ZEPHYRUM;
+              i32  citationes = ZEPHYRUM;
 
         imprimere("\n--- PORTA CORPORIS: parsura + emissio, omnes plagulae ---\n");
 
@@ -688,6 +899,11 @@ principale (vacuum)
                         (s32)MD_GENUS_SAEPTUM);
                     html += _genera_numerare(d,
                         (s32)MD_GENUS_HTML);
+                    listae += _genera_numerare(d, (s32)MD_GENUS_LISTA);
+                    elementa += _genera_numerare(d,
+                        (s32)MD_GENUS_ELEMENTUM);
+                    citationes += _genera_numerare(d,
+                        (s32)MD_GENUS_CITATIO);
                     divisiones += _genera_numerare(d,
                         (s32)MD_GENUS_DIVISIO);
                     praefationes += _adest(d,
@@ -707,12 +923,18 @@ principale (vacuum)
                 (integer)capitula, (integer)saepta, (integer)indentata,
                 (integer)html, (integer)divisiones,
                 (integer)praefationes);
+            imprimere("  listae %d, elementa %d, citationes %d\n",
+                (integer)listae, (integer)elementa,
+                (integer)citationes);
             CREDO_AEQUALIS_I32 (fractae, ZEPHYRUM);
             CREDO_AEQUALIS_I32 (absentes, ZEPHYRUM);
             CREDO_MAIOR_I32 (plagulae, (i32)1000);
             CREDO_MAIOR_I32 (capitula, (i32)500);
             CREDO_MAIOR_I32 (saepta - indentata, (i32)1000);
             CREDO_MAIOR_I32 (praefationes, (i32)300);
+            CREDO_MAIOR_I32 (listae, (i32)500);
+            CREDO_MAIOR_I32 (elementa, listae);
+            CREDO_MAIOR_I32 (citationes, (i32)30);
         }
     }
 
