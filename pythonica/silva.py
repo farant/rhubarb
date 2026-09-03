@@ -1023,6 +1023,26 @@ def _clonare_ignorata(ad):
                 raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
 
 
+def _tempora_speculari(ad, arbor):
+    """tempora (mtime) plagularum tractarum arboris vivae in clone
+    speculari. read-tree omnes 'nunc' stampat, res ignoratae (bin/,
+    build/ per clonefile) tempora sua servant - ordo temporum in clone
+    INVERSUS fit et custodes binariorum ('fons recentior binario':
+    probatio_natura_glossae/canones) in umbra RUBRI mentiuntur
+    (2026-09-03, porta radicis umbrae B1.1 md). Speculum ordinem vivum
+    reddit; plagula viva absens (nata post captum, deleta) tempus
+    checkout servat."""
+    r = _curre(['git', 'ls-tree', '-r', '-z', '--name-only', arbor])
+    for p in r.stdout.split('\0'):
+        if not p:
+            continue
+        try:
+            st = os.stat(os.path.join(RADIX, p))
+            os.utime(os.path.join(ad, p), ns=(st.st_atime_ns, st.st_mtime_ns))
+        except OSError:
+            pass
+
+
 def photographia_materializare(ph, nomen='umbra'):
     """photographiam ut directorium operis vivum: clone localis sine
     checkout (obiecta hardlinked, .git verum, HEAD = basis), read-tree
@@ -1043,6 +1063,7 @@ def photographia_materializare(ph, nomen='umbra'):
         raise SilvaError('photographia: read-tree: %s'
                          % r.stderr.strip()[-300:])
     _clonare_ignorata(via)
+    _tempora_speculari(via, ph.arbor)
     return ph._replace(via=via)
 
 

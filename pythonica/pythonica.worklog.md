@@ -232,3 +232,25 @@ called every one of them stale; it now compares the base commit. Named but not d
 test binaries to /tmp/<name>, a fixed shared path that a clone gate
 and a manual run could collide on — same class as the aedilis temp
 file, fix when the runner is next touched.
+
+## 2026-09-03 — umbra: tempora plagularum tractarum speculata
+
+The first root gate run in a shadow clone after B1.1 (md) went red on
+two natura tests that never touch STML: `probatio_natura_canones` and
+`probatio_natura_glossae`, both at their "binary older than a source"
+guard, naming `tools/natura_canones.c` / `tools/natura_glossae.c` as
+newer than `bin/natura_*`. Mechanism, measured: `git read-tree -u`
+stamps every tracked file with the checkout time, while
+`_clonare_ignorata` copies bin/ and build/ with `cp -c` (clonefile),
+which PRESERVES mtimes (`touch -t 2020… a; cp -c a b; stat` → equal).
+So in the clone every source is newer than every binary — the mtime
+order is inverted and any mtime-ordered guard lies red. Fix:
+`_tempora_speculari(ad, arbor)` after cloning — walk `git ls-tree -r`
+of the snapshot and `os.utime` each clone file from the live file's
+timestamps (6,730 tracked files, well under a second). A file absent
+live (born after capture, or deleted) keeps the checkout time. Gate:
+the photographia test sets the temp file to 2020 before materializing
+and asserts the clone shows 2020 and README's ns-mtime equals live.
+Doctrine reminder that this confirms: "compare OUTPUT, never
+timestamps" is the rule for artifacts; binary-staleness guards are
+the allowed exception, and they need the clone to be mtime-faithful.

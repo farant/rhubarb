@@ -759,8 +759,13 @@ credo(silva.photographia_continet(ph.arbor, tmpf_rel) and silva.photographia_con
 open(tmpf, 'w').write('post\n')
 credo(not silva.photographia_continet(ph.arbor, tmpf_rel), 'photographia_continet: mutatio post captum detecta')
 credo(silva.photographia_continet(ph.arbor, 'pythonica/.nemo.tmp'), 'photographia_continet: absens utrimque = idem')
+os.utime(tmpf, (1577854800, 1577854800))
 ph = silva.photographia_materializare(ph, 'probatio')
 try:
+    credo(int(os.stat(os.path.join(ph.via, tmpf_rel)).st_mtime) == 1577854800
+          and os.stat(os.path.join(ph.via, 'pythonica/README.md')).st_mtime_ns
+              == os.stat(os.path.join(silva.RADIX, 'pythonica/README.md')).st_mtime_ns,
+          'photographia: tempora plagularum tractarum e arbore viva speculata (custodes binariorum in clone ut vivi)')
     credo(os.path.isdir(ph.via) and open(os.path.join(ph.via, tmpf_rel)).read() == 'ante\n'
           and os.path.isdir(os.path.join(ph.via, 'bin')) and os.path.isdir(os.path.join(ph.via, 'build'))
           and os.path.isdir(os.path.join(ph.via, '.git')),
