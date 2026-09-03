@@ -189,3 +189,35 @@ compile; an `Editio` anchor on the state struct failed literal matching
 after the formatter realigned it (tolerant mode fixed it). Planted:
 storing the raw destination instead of the decoded one → red; minting
 derived tokens as source 0 → the omission proof red.
+
+## 2026-09-03 — A6: the example corpus
+
+Vendored `spec.txt` for CommonMark 0.31.2 (652 examples) and GFM 0.29
+(672) under `md/probationes/fixa/`, sources and pins in `FONTES.md`.
+One reader, `md_exempla`, for both: fence of 32 backticks + ` example`,
+`.` separator, closing fence, `→` → tab, section = nearest `#`/`##`
+heading above. cmark-gfm tags extension examples ON the fence line
+(`example table`, `example strikethrough`…): the exact-match reader
+found 648 of 672 and zero examples in the extension sections; matching
+the fence by prefix and keeping the tag as `extensio` gave 672 with the
+24 tagged ones (8 tables, 2 task lists, 2 strikethrough, 11 autolinks,
+1 disallowed raw html). Pinned: byte counts, example counts, the tag
+count, example 1's tab conversion.
+
+Every example INPUT of both files goes through parse → emit → memcmp:
+1,324 of 1,324 exact on the first run after the reader fix. These are
+CommonMark's own adversarial cases (tabs inside markers, deep nesting,
+unclosed fences, lazy continuation across quotes and lists), so this is
+the first evidence that the line model's byte law survives inputs the
+house corpus never produces. The corpus half of A6 already lived in
+`probatio_md_arbor`'s corpus section (all 1,124 files, structure
+counts interrogated, indented-code sites printed); it stays there — the
+plan's `probatio_md_corpus` name is split across `probatio_md_arbor`
+(house corpus) and `probatio_md_exempla` (spec examples).
+
+Note for later: the GFM spec.txt closes its YAML front matter with
+`...`, which our `praefatio` does not recognize (it wants `---`); the
+file is a fixture, not corpus, so nothing depends on it — recorded as a
+known limit of the front-matter scanner.
+
+Fault: tab conversion replaced by a space → example 1 red.

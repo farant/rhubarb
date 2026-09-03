@@ -49,8 +49,16 @@ paragraph close; label normalized into the parser's table; `titulus` /
 and the gate proves it both ways). Gates: `probatio_md_decoctum` +
 the arbor fixtures.
 
-**NEXT = A6** (vendor CommonMark 0.31.2 + GFM `spec.txt`, the example
-reader, the interrogated corpus gate), then A7 (inline tree).
+**A6 DONE**: `md/probationes/fixa/{commonmark,gfm}/spec.txt` vendored
+(FONTES.md has sources + pins), `md_exempla` reader (one form, both
+files, `→`→tab, extension tag kept), gate `probatio_md_exempla`: 652 +
+672 example INPUTS byte-exact through parse→emit. The house-corpus
+half stays in `probatio_md_arbor`.
+
+**NEXT = A7** (inline tree: textus/emphasis/fortis/deletio/verbatim/
+nexus/imago/fracturae/html-inlineum with derived `valor`; reference
+links resolved from the definition table), then A8 (projection,
+canon, totality, computus).
 
 ## Laws to keep (spec §3)
 
