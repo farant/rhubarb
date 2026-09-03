@@ -762,6 +762,50 @@ finally:
 credo(not os.path.exists(ph.via), 'photographia_delere: clone sublatus')
 os.unlink(tmpf)
 
+print('--- custodes: nomina plana, clones orphani ---')
+for malum in ('a/b', '..', '.', '', 'x y'):
+    try:
+        silva.imago_capere(malum, ['true'], [])
+        credo(False, 'imago_capere nomen %r refutat' % malum)
+    except silva.SilvaError as ex:
+        credo('nomen' in str(ex), 'imago_capere: nomen %r refutatum' % malum)
+try:
+    silva.photographia_materializare(silva.Photographia('0' * 40, '0' * 40, None), '../fuga')
+    credo(False, 'photographia_materializare nomen refutat')
+except silva.SilvaError as ex:
+    credo('nomen' in str(ex), 'photographia_materializare: nomen cum ../ refutatum ante clone')
+try:
+    silva.porta_umbra('vexilla', filtrum='a/b')
+    credo(False, 'porta_umbra filtrum refutat')
+except silva.SilvaError as ex:
+    credo('nomen' in str(ex) or 'filtrum' in str(ex), 'porta_umbra: filtrum cum / refutatum')
+# orphani - HERMETICE (UMBRAE_DIR + PORTAE_DIR temporaria): porta in
+# clone currens hoc probans clones veros purgaret - se ipsam delevit
+# 2026-09-02 (recepta clonis alia, sera PID ubique eadem)
+import shutil
+UMBRAE_VERA, PORTAE_VERA = silva.UMBRAE_DIR, silva.PORTAE_DIR
+silva.UMBRAE_DIR = os.path.join(T, 'umbrae'); silva.PORTAE_DIR = os.path.join(T, 'portae')
+os.makedirs(silva.UMBRAE_DIR); os.makedirs(silva.PORTAE_DIR)
+orph = os.path.join(silva.UMBRAE_DIR, 'probatio-orphanus.1')
+vivus = os.path.join(silva.UMBRAE_DIR, 'probatio-vivus.1')
+seratus = os.path.join(silva.UMBRAE_DIR, 'probatio-seratus.1')
+mortuus = os.path.join(silva.UMBRAE_DIR, 'probatio-mortuus.1')
+for d in (orph, vivus, seratus, mortuus):
+    os.makedirs(d)
+open(os.path.join(seratus, '.umbra.pid'), 'w').write(str(os.getpid()))
+open(os.path.join(mortuus, '.umbra.pid'), 'w').write('999999')
+open(os.path.join(silva.PORTAE_DIR, 'probatio-vivus.0.json.pendens'), 'w').write('999999\n' + vivus + '\n')
+try:
+    orphanae = silva.umbrae_orphanae()
+    credo(orph in orphanae and mortuus in orphanae and vivus not in orphanae and seratus not in orphanae,
+          'umbrae_orphanae: orphanus + sera mortua nominati; pendens + sera viva servati')
+    credo(any(v == orph and st == 'clone orphanus' for v, st in silva.portae_pendentes()), 'portae_pendentes: clone orphanus enumeratus')
+    deletae = silva.umbrae_purgare()
+    credo(sorted(deletae) == sorted([mortuus, orph]) and not os.path.exists(orph) and os.path.isdir(vivus) and os.path.isdir(seratus),
+          'umbrae_purgare: orphani deleti, clones portae currentis et processus vivi servati')
+finally:
+    silva.UMBRAE_DIR, silva.PORTAE_DIR = UMBRAE_VERA, PORTAE_VERA
+
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')
 sub = FONS.replace('x  = I;', 'x = II;')

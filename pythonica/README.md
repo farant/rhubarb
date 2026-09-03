@@ -64,7 +64,10 @@ plica pendet — veritas in C manet.
   `receptum_delere(via)` (clone quoque sublatus). Primitiva:
   `photographia_capere()` -> Photographia(arbor, basis, via),
   `photographia_continet(arbor, via)`, `photographia_materializare(ph,
-  nomen)`, `photographia_delere(ph)`
+  nomen)`, `photographia_delere(ph)`. Custodes: nomina (portae, filtra,
+  photographiae, imagines) segmentum viae UNUM esse debent (refusio
+  ante ullam scripturam); `umbrae_purgare()` clones orphanos (sine
+  recepto nec signo pendenti) delet, `portae_pendentes()` eos enumerat
 - `silva.Textus(via)` — editio textus PLANI (sh, md, html, toml):
   ancorae exactae numero asserto (`tolerans='spatia'`), omnia aut
   nihil, custos lectionis rancidae, sine formatore/examine

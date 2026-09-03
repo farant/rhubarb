@@ -199,6 +199,18 @@ def _sedes_lexematum(textus, vetus):
     return sedes
 
 
+def _nomen_planum(nomen, quid='nomen'):
+    """nomen ut segmentum viae UNUM: litterae, numeri, . _ - ; nihil
+    aliud (nec /, nec .., nec vacuum) - nomina in vias directoriorum
+    iunguntur (imagines, clones umbrae, recepta) et deletio recursiva
+    eas sequitur"""
+    if not isinstance(nomen, str) or not re.fullmatch(r'[A-Za-z0-9._-]+', nomen) \
+            or nomen in ('.', '..'):
+        raise SilvaError('%s non planum (segmentum viae unum exspectatum): %r'
+                         % (quid, nomen))
+    return nomen
+
+
 def _lineae_sedium(textus, sedes):
     """' - lineae [12, 340]' pro refusione ancorae: ubi ancora inventa
     sit, ut ancora longior sine grep eligatur; '' si nulla"""
@@ -1003,6 +1015,7 @@ def photographia_materializare(ph, nomen='umbra'):
     """photographiam ut directorium operis vivum: clone localis sine
     checkout (obiecta hardlinked, .git verum, HEAD = basis), read-tree
     arboris, res ignoratae clonatae. Reddit ph cum via."""
+    _nomen_planum(nomen, 'nomen photographiae')
     os.makedirs(UMBRAE_DIR, exist_ok=True)
     via = os.path.join(UMBRAE_DIR, '%s.%d' % (nomen, int(time.time() * 1000)))
     # clone LOCALIS (obiecta per hardlinks), non '-s' (alternates):
@@ -1029,6 +1042,9 @@ def photographia_delere(ph_aut_via):
 
 
 def _receptum_via(nomen, filtrum):
+    _nomen_planum(nomen, 'nomen portae')
+    if filtrum:
+        _nomen_planum(filtrum, 'filtrum')
     return os.path.join(PORTAE_DIR, '%s%s.%d.json' % (
         nomen, '.' + filtrum if filtrum else '', int(time.time())))
 
@@ -1045,19 +1061,26 @@ def porta_umbra(nomen, filtrum=None, photographica=True):
     if nomen not in PORTAE:
         raise SilvaError('porta ignota: %s' % nomen)
     os.makedirs(PORTAE_DIR, exist_ok=True)
-    via = _receptum_via(nomen, filtrum)
+    via = _receptum_via(nomen, filtrum)      # nomina plana hic iudicata
     extra = []
     if photographica:
         ph = photographia_materializare(photographia_capere(), nomen)
         extra = [ph.via, ph.arbor, ph.basis]
+        # sera processus: clone vivus dum PID vivit (lanceans nunc,
+        # operarius post furcam) - umbrae_purgare ex quovis contextu
+        # eum servat
+        open(os.path.join(ph.via, '.umbra.pid'), 'w').write(str(os.getpid()))
     p = subprocess.Popen(
         [sys.executable, os.path.abspath(__file__), '-umbra', nomen,
          filtrum or '', via] + extra, cwd=RADIX, start_new_session=True,
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
-    # signum pendens = PID operarii: operarius mortuus sine recepto
-    # nominatur (portae_pendentes 'mortua', exspectare levat statim)
-    open(via + '.pendens', 'w').write(str(p.pid))
+    # signum pendens = PID operarii (linea I; operarius mortuus sine
+    # recepto nominatur - portae_pendentes 'mortua', exspectare levat
+    # statim) + via clonis (linea II; umbrae_purgare eum vivum tenet)
+    open(via + '.pendens', 'w').write('%d\n%s\n' % (p.pid, extra[0] if extra else ''))
+    if extra:
+        open(os.path.join(extra[0], '.umbra.pid'), 'w').write(str(p.pid))
     return via
 
 
@@ -1065,8 +1088,8 @@ def _pendens_mortua(via):
     """VERUM si signum pendens PID mortuum fert (operarius abiit sine
     recepto); FALSUM si vivus aut signum vetus sine PID"""
     try:
-        pid = int(open(via + '.pendens').read().strip())
-    except (IOError, OSError, ValueError):
+        pid = int(open(via + '.pendens').read().strip().splitlines()[0])
+    except (IOError, OSError, ValueError, IndexError):
         return False
     try:
         os.kill(pid, 0)
@@ -1205,6 +1228,7 @@ def portae_pendentes():
         return []
     exitus = []
     sig = sigillum_arboris()
+    caput = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
     for f in sorted(os.listdir(PORTAE_DIR)):
         via = os.path.join(PORTAE_DIR, f)
         if f.endswith('.pendens'):
@@ -1213,11 +1237,83 @@ def portae_pendentes():
                            else 'pendens'))
         elif f.endswith('.json'):
             r = receptum_legere(via)
-            if r.rancida or r.sigillum != sig:
+            if r.photographia:
+                rancida = r.rancida or r.photographia.get('basis') != caput
+            else:
+                rancida = r.rancida or r.sigillum != sig
+            if rancida:
                 exitus.append((via, 'rancida'))
             else:
                 exitus.append((via, 'sana' if r.sana else 'fracta'))
+    for via in umbrae_orphanae():
+        exitus.append((via, 'clone orphanus'))
     return exitus
+
+
+def _pid_vivus(pid):
+    try:
+        os.kill(int(pid), 0)
+    except (ProcessLookupError, ValueError, TypeError):
+        return False
+    except OSError:
+        return True
+    return True
+
+
+def _clones_vivi():
+    """clones quos receptum, signum pendens, aut PROCESSUS VIVUS
+    (<clone>/.umbra.pid) tenet - trans contextus: porta in clone
+    currens sua recepta non videt (build/portae eius alter est), sed
+    PID eius vivus est ubique (porta pythonicae in clone se ipsam
+    delevit, 2026-09-02)"""
+    vivi = set()
+    if os.path.isdir(PORTAE_DIR):
+        for f in os.listdir(PORTAE_DIR):
+            via = os.path.join(PORTAE_DIR, f)
+            if f.endswith('.json'):
+                try:
+                    r = receptum_legere(via)
+                    if r.photographia and r.photographia.get('via_operis'):
+                        vivi.add(r.photographia['via_operis'])
+                except (SilvaError, ValueError, KeyError):
+                    pass
+            elif f.endswith('.pendens'):
+                lineae = open(via).read().splitlines()
+                if len(lineae) > 1 and lineae[1]:
+                    vivi.add(lineae[1])
+    if os.path.isdir(UMBRAE_DIR):
+        for f in os.listdir(UMBRAE_DIR):
+            via = os.path.join(UMBRAE_DIR, f)
+            sera = os.path.join(via, '.umbra.pid')
+            if os.path.exists(sera):
+                try:
+                    if _pid_vivus(open(sera).read().strip()):
+                        vivi.add(via)
+                except (IOError, OSError):
+                    pass
+    return vivi
+
+
+def umbrae_orphanae():
+    """clones sine recepto, sine signo pendenti, sine processu vivo
+    (lectio sola)"""
+    if not os.path.isdir(UMBRAE_DIR):
+        return []
+    vivi = _clones_vivi()
+    return [os.path.join(UMBRAE_DIR, f) for f in sorted(os.listdir(UMBRAE_DIR))
+            if os.path.isdir(os.path.join(UMBRAE_DIR, f))
+            and os.path.join(UMBRAE_DIR, f) not in vivi]
+
+
+def umbrae_purgare():
+    """clones orphanos delere (umbrae_orphanae) - porta fracta clonem
+    servat donec receptum deleatur, oblivio eos cumulat (~C MB veri
+    quisque). Reddit vias deletas."""
+    deletae = []
+    for via in umbrae_orphanae():
+        photographia_delere(via)
+        deletae.append(via)
+    return deletae
 
 
 def _totum_actorum(acta):
@@ -1598,6 +1694,7 @@ def imago_capere(nomen, imperium, plagulae):
     deletur."""
     import json as _json
     import shutil
+    _nomen_planum(nomen, 'nomen imaginis')
     d = os.path.join(IMAGINES_DIR, nomen)
     shutil.rmtree(d, ignore_errors=True)
     os.makedirs(d)
@@ -1618,6 +1715,7 @@ def imago_capere(nomen, imperium, plagulae):
 
 def imago_manifestum(nomen):
     import json as _json
+    _nomen_planum(nomen, 'nomen imaginis')
     via = os.path.join(IMAGINES_DIR, nomen, 'manifestum.json')
     if not os.path.exists(via):
         raise SilvaError('imago absens: %s (imago_capere primum)' % nomen)
@@ -1663,6 +1761,7 @@ def imago_conferre(nomen, imperium=None, plagulae=None):
 def imago_differentia(nomen, via, contextus=3):
     """differentia unificata effusus imaginis contra effusum ultimae
     conlationis (<nomen>.post) pro plagula una"""
+    _nomen_planum(nomen, 'nomen imaginis')
     d = os.path.join(IMAGINES_DIR, nomen)
     a = os.path.join(d, _imago_nomen_plagulae(via) + '.out')
     b = os.path.join(d + '.post', _imago_nomen_plagulae(via) + '.out')

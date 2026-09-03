@@ -208,3 +208,27 @@ Proof of the property: this commit's own pythonica gate ran in a
 clone while an untracked file was created in the live tree, and the
 commit went through; the same file offered for commit is refused with
 the reason named.
+
+Addendum (same night): two guards after walking the mechanism with
+Fran. Every name that becomes a path segment — gate, filter, snapshot,
+byte-oracle image — is now refused unless it is a single plain
+segment, before anything is written or removed; the recursive delete
+already could not leave its two roots, but a name with a slash could
+have landed inside them somewhere unintended. And clones can be
+orphaned when a failed receipt is forgotten: the pending marker now
+carries the clone path on its second line, `umbrae_orphanae` lists
+clones no receipt or pending gate names, `umbrae_purgare` removes
+them, and `portae_pendentes` shows them so a post-compaction glance
+sees the cost. The first gate run of that sweep deleted the clone it
+was running in: inside the clone the sweep test saw only the clone's
+own receipt directory, not the live repository's pending marker, so
+the real clone looked orphaned. Two consequences: every clone now
+carries `.umbra.pid` (launcher's pid at materialization, the worker's
+after spawn) and the sweep never removes a clone whose process is
+alive, which holds from any context; and the sweep test runs against
+temporary umbrae and receipt directories, never the real ones. The
+pending listing also judged snapshot receipts by the live seal and
+called every one of them stale; it now compares the base commit. Named but not done: the root runner still compiles
+test binaries to /tmp/<name>, a fixed shared path that a clone gate
+and a manual run could collide on — same class as the aedilis temp
+file, fix when the runner is next touched.
