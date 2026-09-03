@@ -272,10 +272,13 @@ _indentata_numerare (
                 ZEPHYRUM);
             i32 linea = ZEPHYRUM;
 
-            si (   l != NIHIL && l->loci[MD_LINEA_CONTENTUM].genus
-                    == MATERIA_VALOR_TOKEN)
+            si (   l != NIHIL
+                && materia_valor_lista_numerus(l->loci[MD_LINEA_CONTENTUM])
+                    > ZEPHYRUM)
             {
-                linea = l->loci[MD_LINEA_CONTENTUM].datum.token->linea;
+                linea =
+                    materia_valor_lista_obtinere(l->loci[MD_LINEA_CONTENTUM],
+                    ZEPHYRUM)->datum.token->linea;
             }
             imprimere("    indentatum: %s:%d\n", via, (integer)linea);
             *impressa = *impressa + I;

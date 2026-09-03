@@ -64,8 +64,14 @@ and both spec example sets stay byte-exact. Gate `probatio_md_inlinea`
 (§6.2 rules pinned). Birth lesson: delimiter extents must shrink in
 EVERY match branch or the matcher loops.
 
-**NEXT = A8** (STML projection with the derived-token origo/frons,
-hand-written `md.canon` + drift guard, totality, computus twin).
+**A8a DONE**: `md_stml_consilium` (origin hook: derived tokens carry
+position, root = empty sentinel); gate `probatio_md_stml` with
+STRUCTURALIS + FIDELIS over 17 cases + the corpus; `./md/arbor.sh
+<x.md>` prints the projection. Substrate fixes: slot TERMINATOR crlf
+(writer + reader); token values never contain `</md-` (split).
+
+**NEXT = A8b** (hand-written `md/grammatica/md.canon` + drift guard +
+sigillum pin), then A8c (totality + computus twin).
 
 ## Laws to keep (spec §3)
 

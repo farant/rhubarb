@@ -309,6 +309,17 @@ md_lexema_finis (
     MdFabrica* fabrica);
 
 
+/* Lexema valorem "</md-" continere NON potest: forma cruda proiectionis
+ * STML (elementum crudum) sequentiam claudentem propriam recusat, et
+ * omnes tagi lexematum md- incipiunt. Reddit indicem POST '<' proximi
+ * "</md-" in [ab, ad), aut ad si nullum - vocans lexema ibi scindit. */
+s32
+md_scissio_proxima (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad);
+
+
 /* Lexema DERIVATUM (spec par. III, fons I): valor decoctus in piscina,
  * byte_offset -I (octetos nullos tenet), linea/columna ex origine
  * (sedes portata). Emissor consilio fons_index = MD_FONS_PLAGULAE ea

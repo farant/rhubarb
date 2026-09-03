@@ -1072,6 +1072,26 @@ md_lexema_finis (
 }
 
 
+s32
+md_scissio_proxima (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i;
+
+    per (i = ab; i + IV < ad; i++)
+    {
+        si (fons[i] == '<' && fons[i + I] == '/' && fons[i + II] == 'm'
+            && fons[i + III] == 'd' && fons[i + IV] == '-')
+        {
+            redde i + I;
+        }
+    }
+    redde ad;
+}
+
+
 MateriaToken*
 md_lexema_derivatum (
                MdFabrica* fabrica,

@@ -281,10 +281,20 @@ _linea (
     {
         redde NIHIL;
     }
-    si (   ad > post && !_ponere_lexema(n, (i32)MD_LINEA_CONTENTUM,
-            _lexema(p, genus_contenti, linea, post, ad)))
     {
-        redde NIHIL;
+        s32 i = post;
+
+        dum (i < ad)
+        {
+            s32 fin = md_scissio_proxima(p->fons, i, ad);
+
+            si (!_appendere_lexema(p, n, (i32)MD_LINEA_CONTENTUM,
+                    _lexema(p, genus_contenti, linea, i, fin)))
+            {
+                redde NIHIL;
+            }
+            i = fin;
+        }
     }
     si (!_ponere_lexema(n, (i32)MD_LINEA_FINIS,
             md_lexema_terminator(&p->fabrica, linea)))
@@ -902,8 +912,26 @@ _definitiones_extrahere (
             {
                 redde FALSUM;
             }
-            si (!_ponere_lexema(ln, (i32)MD_LINEA_CONTENTUM, lineae[j])
-                || !_ponere_lexema(ln, (i32)MD_LINEA_FINIS, finis)
+            {
+                s32 la  = _lexema_ab(lineae[j]);
+                s32 lz  = _lexema_ad(lineae[j]);
+                s32 q   = la;
+
+                dum (q < lz)
+                {
+                    s32 fin = md_scissio_proxima(p->fons, q, lz);
+
+                    si (!_appendere_lexema(p, ln,
+                        (i32)MD_LINEA_CONTENTUM,
+                            _lexema(p, MD_LEX_TEXTUS, lineae[j]->linea
+                                - I, q, fin)))
+                    {
+                        redde FALSUM;
+                    }
+                    q = fin;
+                }
+            }
+            si (   !_ponere_lexema(ln, (i32)MD_LINEA_FINIS, finis)
                 || !_appendere_nodum(p, def, (i32)MD_DEFINITIO_LINEAE,
                 ln))
             {

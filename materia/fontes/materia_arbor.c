@@ -1159,6 +1159,20 @@ _scribere_lexema (
         }
     }
 
+    /* TERMINATOR in LOCO (non trivium): variatio CRLF ut in triviis
+     * supra - lector (_lexema_legere) 'crlf' iam legit, scriptor loci
+     * eam non scribebat. C89 id numquam tetigit (NOVA_LINEA trivium
+     * est); markdown terminatorem ut CONTENTUM fert (2026-09-03). */
+    si (   materia_lexicon_species(st->consilium->lexicon,
+        lexema->genus)
+               == MATERIA_LEX_TERMINATOR
+        && lexema->valor.mensura                           >= II
+        && lexema->valor.datum[lexema->valor.mensura - II] == (i8)'\r')
+    {
+        stml_attributum_boolean_addere(elementum, st->piscina,
+            st->intern,
+            "crlf");
+    }
     /* post */
     involucrum = _involucrum_triviorum(st, lexema->spatia_post,
         lexema->numerus_post, MATERIA_ARBOR_TAG_POST);
@@ -2275,7 +2289,13 @@ _lexema_legere (
 
         si (orthographia != NIHIL)
         {
-            valor = chorda_ex_literis(orthographia, lector->piscina);
+            /* TERMINATOR in loco: 'crlf' ut in triviis (speculum
+             * scriptoris loci, 2026-09-03) */
+            valor = (materia_lexicon_species(lex, genus)
+                == MATERIA_LEX_TERMINATOR
+                     && stml_attributum_habet(elementum, "crlf"))
+                  ? _terminator_crlf(lector, orthographia)
+                  : chorda_ex_literis(orthographia, lector->piscina);
         }
     }
 

@@ -264,12 +264,17 @@ _lexemata_inter (
         s32 fin    = in->segmenta[k].copia_ad;
         s32 usque  = (ad < fin) ? ad : fin;
 
-        si (   usque > i && !_appendere_lexema(in, nodus, locus,
-                _lexema(in, genus, i, usque)))
+        dum (i < usque)
         {
-            redde FALSUM;
+            s32 fin = md_scissio_proxima(in->copia, i, usque);
+
+            si (!_appendere_lexema(in, nodus, locus, _lexema(in, genus,
+                i, fin)))
+            {
+                redde FALSUM;
+            }
+            i = fin;
         }
-        i = usque;
         si (i < ad)
         {
             /* '\n' inter segmenta */

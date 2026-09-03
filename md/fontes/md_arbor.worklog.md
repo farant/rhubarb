@@ -271,3 +271,43 @@ the LINEA token inside `crudum` and the normalized `valor`.
 **Named gaps kept:** Unicode punctuation/whitespace classes in flanking
 (ASCII), inline link titles that span lines, labels that span lines,
 ~150 named entities. Fault: rule of three disabled → `*foo**bar*` red.
+
+## 2026-09-03 — A8a: the STML projection
+
+`md_stml_consilium`: registry, lexicon, grammar "md", and an ORIGIN
+HOOK for derived tokens. Writer side, `sedes_quaerere` declares source-1
+tokens non-source, so their position is carried (`linea`/`columna`; no
+`b` because `byte_offset` is -1) and `f="1"` is written. Reader side,
+`radix_quaerere` returns an empty, always-positioned sentinel as their
+root, so the reader neither touches their carried position nor advances
+the cursor — materia's own "a derived token holds no bytes" path, built
+for C89 expansions, reused unchanged. No frons: markdown tokens have no
+tail. Gate `probatio_md_stml`: write→read→write twice, STRUCTURALIS AND
+FIDELIS (css could not run fidelity; markdown's newline has munus LINEA
+so the reader's cursor reconstructs positions), emission from the read
+tree equals the file, 17 inline cases + the whole corpus (1,125 files
+through the projection with fidelity) + the derived-token spelling
+pinned (`f="1"`, `<md-derivatum`, no `<ante>` anywhere).
+
+**Two substrate findings, both fixed in `materia_arbor.c`:**
+1. A TERMINATOR genus in a content SLOT lost its CRLF: the `crlf` flag
+   was written and read only on the trivia paths; C89's newline is
+   trivia so it never showed. Slot writer and slot reader now mirror the
+   trivia branch. materia 6/6, css 9/9, shim 348/348 unchanged.
+2. The raw text form refuses a value containing its own closing tag,
+   and `project-specs/md-arbor-spec.md` contains `</md-textus>` inside
+   a fence. Since every md token tag starts with `md-`, a token value
+   must never contain `</md-`: `md_scissio_proxima` names the split
+   point and `linea.contentum` became a LISTA_TOKEN split there; the
+   inline module splits code-span, link-tail and inline-html runs the
+   same way. Byte-honest, and the corpus file that documents the
+   projection now projects.
+
+`md/arbor.sh <x.md>` prints the projection (instrument
+`md/instrumenta/arbor.c`, links `md/build/*.o`).
+Fault: origin hook removed → fidelity red on every derived token.
+Addendum: the first two plants of the A8a fault did not run — removing
+the hook made the hook table an unused constant and clang refused the
+file, which my grep read as silence. A plant that keeps the reference
+(`origo = (datum == NIHIL) ? NIHIL : &ORIGO_MD`) went red on six
+assertions, including the FOLLOWING source token's drifted position.

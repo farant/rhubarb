@@ -22,7 +22,7 @@ hic_manens constans MateriaTabLocus LOCI_MD[] = {
 
     /* linea (6..8) */
     { "praefixa",    (s32)MATERIA_LOCUS_LISTA_TOKEN },
-    { "contentum",   (s32)MATERIA_LOCUS_TOKEN },
+    { "contentum",   (s32)MATERIA_LOCUS_LISTA_TOKEN },   /* scissa ad "</md-" */
     { "finis",       (s32)MATERIA_LOCUS_TOKEN },
 
     /* linea-vacua (9..10) */

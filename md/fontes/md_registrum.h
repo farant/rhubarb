@@ -82,7 +82,9 @@ nomen enumeratio {
 
 nomen enumeratio {
     MD_LINEA_PRAEFIXA = 0,         /* LISTA_TOKEN */
-    MD_LINEA_CONTENTUM,            /* TOKEN? */
+    MD_LINEA_CONTENTUM,            /* LISTA_TOKEN: contentum lineae, scissum ubi
+                                    * "</md-" apparet (forma cruda proiectionis
+                                    * sequentiam claudentem propriam recusat) */
     MD_LINEA_FINIS                 /* TOKEN? LINEA */
 } MdLocusLineae;
 

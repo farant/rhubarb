@@ -1970,3 +1970,17 @@ registratus = mutus).
 DESIDERATA: fumus qui cursorem quemque (*/compile_probationes.sh,
 *_probare.sh, *_porta.sh) in tabula PORTAE esse poscit - tertia
 occasio eiusdem classis.
+
+## 2026-09-03 — cliens tertius (md): terminator in loco + crlf
+
+Markdown (md/) carries its newline as a CONTENT token (munus LINEA,
+species TERMINATOR) in slots, never as trivia. Two gaps surfaced and
+were fixed in `materia_arbor.c`: the slot lexeme writer did not emit the
+`crlf` flag for a TERMINATOR (only the trivia writer did), and the slot
+reader assigned the plain orthography without consulting `crlf` (only
+the trivia reader did). Both now mirror the trivia branches. Consumer
+gate: `probatio_md_stml` (CRLF case, fidelity). Substrate gates after
+the change: materia 6/6, css 9/9, shim 348/348. Also observed, not
+changed: the raw text form's refusal of a value containing its own
+closing tag is real for any client whose values can contain STML-shaped
+text — md avoids it by splitting tokens at `</md-`.
