@@ -51,11 +51,20 @@ plica pendet — veritas in C manet.
   per `git mv` acceptae (viae NOVAE dantur); `verificare=False`
 - `silva.planta(via, vetus, novus, porta)` — ritus culpae plantatae:
   rubra (non aedificatio fracta) -> reversio (finally) -> viridis
-- `silva.porta_umbra(nomen)` — porta in umbra (processus separatus),
-  receptum JSON in build/portae/ sigillo arboris ligatum;
-  `exspectare(via)`, `portae_pendentes()`, `commissio(portae=[via.json])`
-  receptum accipit nisi arbor mutata (rancidum); `receptum_delere(via)`
-  post consumptionem
+- `silva.porta_umbra(nomen[, photographica=True])` — porta in umbra
+  (processus separatus) contra PHOTOGRAPHIAM status operis: arbor git
+  status operis capta (index temporarius, arbor viva intacta), clone
+  localis in ~/.rhubarb/umbrae (obiecta hardlinked, .git verum, HEAD =
+  basis, read-tree arboris, bin/build/... clonata copy-on-write), porta
+  ibi currit - EDITIO PERGIT dum currit. Receptum sigillum = arbor;
+  `commissio(portae=[via.json])` plagulas SUAS contra blobs arboris
+  confert (HEAD = basis; quod committitur = quod probatum est, cetera
+  libera); `photographica=False` = mos vetus (sigillum arboris vivae,
+  rancidum si quid mutatum). `exspectare(via)`, `portae_pendentes()`,
+  `receptum_delere(via)` (clone quoque sublatus). Primitiva:
+  `photographia_capere()` -> Photographia(arbor, basis, via),
+  `photographia_continet(arbor, via)`, `photographia_materializare(ph,
+  nomen)`, `photographia_delere(ph)`
 - `silva.Textus(via)` — editio textus PLANI (sh, md, html, toml):
   ancorae exactae numero asserto (`tolerans='spatia'`), omnia aut
   nihil, custos lectionis rancidae, sine formatore/examine

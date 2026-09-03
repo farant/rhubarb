@@ -176,3 +176,35 @@ after the start anchor ends (it used to be able to match inside it).
 The tests that pinned the old behavior were rewritten, and the first
 two rewrites were wrong about the fixture, not about the code — the
 line-numbered refusal and the returned text made that a one-look fix.
+
+## 2026-09-02 (last) — the shadow gate binds to a snapshot
+
+The receipt used to hash the whole live tree at launch, so any edit
+while a gate ran made it stale: six gates tonight, twenty idle
+minutes. Now `porta_umbra` captures the working state as a git tree
+(temporary index copied from the real one, `add -A`, `write-tree`;
+staging files included, a snapshot is not a commit), materializes it
+as a local clone with no checkout under ~/.rhubarb/umbrae (objects
+hardlinked, HEAD = the real HEAD, `read-tree --reset -u` of the
+snapshot tree, then the ignored build products cloned copy-on-write —
+bin, build, silva/build, book_assets: 2 GB apparent, nothing real),
+and runs the gate there. Measured: capture 0.08 s, clone plus apply
+2.9 s, build products 0.8 s. Why a clone and not a git worktree: a
+worktree's `.git` is a pointer file, and the house git library opens
+`.git/HEAD` as a path, so the mensor would have silently stopped
+recording; the clone has a real `.git` and `bin/mensor sessio` works
+inside it. And why a local clone, not a shared one: the first gate
+run in a shared clone went red on one assertion — the differ, which
+reads HEAD through the house git library, saw an empty HEAD because
+the library does not follow git's alternates file, and reported
+lib/piscina.c as entirely added. Hardlinked objects cost nothing
+and the library reads them. The receipt's seal is the snapshot tree; `commissio` now
+verifies per file — each path it commits must equal its blob in that
+tree, and HEAD must equal the base — instead of the whole tree, so
+edits to anything not being committed no longer matter. Old mode
+kept behind `photographica=False`. `receptum_delere` removes the
+clone; a failed receipt keeps its clone for inspection until deleted.
+Proof of the property: this commit's own pythonica gate ran in a
+clone while an untracked file was created in the live tree, and the
+commit went through; the same file offered for commit is refused with
+the reason named.

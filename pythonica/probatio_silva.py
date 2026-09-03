@@ -4,6 +4,7 @@ Plagulae fictae in build/pythonica/; nihil in arbore tangitur.
 Exitus 0 sanum | 1 fractum. Culpae plantatae: ancora fallens plagulam
 intactam relinquit; differre substantiva verdictum negat."""
 import os
+import subprocess
 import sys
 
 RADIX = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -469,23 +470,37 @@ credo(os.path.exists(via_r + '.pendens'), 'pendens scriptum')
 credo(any(st == 'pendens' for _, st in silva.portae_pendentes()), 'portae_pendentes: pendens')
 r = silva.exspectare(via_r, tectum=300)
 credo(r.sana and r.cucurrit and not r.rancida, 'receptum sanum (%s)' % r.compendium)
-credo(silva.receptum_validum(via_r).sana, 'receptum validum (arbor eadem)')
+credo(r.photographia and os.path.isdir(r.photographia['via_operis']) and r.sigillum == r.photographia['arbor'],
+      'receptum photographicum: clone + arbor ut sigillum')
+credo(silva.receptum_validum(via_r, viae=['pythonica/README.md']).sana, 'receptum validum (plagula intacta = blob photographiae)')
 novum = os.path.join(silva.RADIX, 'pythonica', '.umbra_probatio.tmp')
 open(novum, 'w').write('x')
 try:
-    pv = silva.receptum_validum(via_r)
-    credo(not pv.sana and 'POST cursum' in pv.compendium, 'receptum rancidum post mutationem arboris')
+    pv = silva.receptum_validum(via_r, viae=['pythonica/README.md'])
+    credo(pv.sana, 'umbra photographica: plagula nova extra commissionem receptum NON rancidum facit (editio dum porta currit)')
+    pv2 = silva.receptum_validum(via_r, viae=['pythonica/.umbra_probatio.tmp'])
+    credo(not pv2.sana and 'photographiam' in pv2.compendium, 'receptum: plagula post photographiam nata pro commissione refutatur')
     try:
-        silva.commissio('nihil', ['pythonica/README.md'], portae=[via_r])
-        credo(False, 'commissio cum recepto rancido refutatur')
+        silva.commissio('nihil', ['pythonica/.umbra_probatio.tmp'], portae=[via_r])
+        credo(False, 'commissio plagulae extra photographiam refutatur')
     except silva.SilvaError as ex:
-        credo('rancidum' in str(ex), 'commissio: receptum rancidum refutatum')
+        credo('photographiam' in str(ex), 'commissio: plagula extra photographiam refutata')
 finally:
     os.unlink(novum)
-credo(silva.receptum_validum(via_r).sana, 'receptum iterum validum post reversionem')
+via_clone = r.photographia['via_operis']
 silva.receptum_delere(via_r)
-credo(not os.path.exists(via_r) and not os.path.exists(via_r + '.acta'),
-      'receptum deletum cum actis')
+credo(not os.path.exists(via_r) and not os.path.exists(via_r + '.acta') and not os.path.exists(via_clone),
+      'receptum deletum cum actis et clone')
+# mos vetus (photographica=False): sigillum arboris vivae, rancidum post mutationem
+via_v = silva.porta_umbra('formator-intra', photographica=False)
+rv = silva.exspectare(via_v, tectum=300)
+credo(rv.sana and not rv.photographia and silva.receptum_validum(via_v).sana, 'umbra vetus: receptum sigillo arboris vivae')
+open(novum, 'w').write('x')
+try:
+    credo(not silva.receptum_validum(via_v).sana, 'umbra vetus: rancidum post mutationem arboris')
+finally:
+    os.unlink(novum)
+silva.receptum_delere(via_v)
 # effusum non-UTF-8 (radix 2026-09-02: probatio octetos crudos imprimit)
 # - porta non ruit, verdictum legitur
 silva.PORTAE['ficta-octeti'] = (['printf', 'fictum: sanum \\246\\321\\n'],
@@ -719,6 +734,33 @@ co = silva.imago_conferre('probatio-imago', imperium=['sh', '-c', 'exit 3'])
 credo(co.diversae == [via_a, via_b], 'imago_conferre: rc diversus = diversa')
 shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago'), ignore_errors=True)
 shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago.post'), ignore_errors=True)
+
+print('--- photographia: status operis captus, arbor viva intacta ---')
+tmpf_rel = 'pythonica/.photo_probatio.tmp'
+tmpf = os.path.join(silva.RADIX, tmpf_rel)
+open(tmpf, 'w').write('ante\n')
+status_ante = silva._curre(['git', 'status', '--porcelain']).stdout
+ph = silva.photographia_capere()
+credo(len(ph.arbor) == 40 and ph.basis == silva._curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
+      and silva._curre(['git', 'status', '--porcelain']).stdout == status_ante,
+      'photographia_capere: arbor scripta, HEAD basis, arbor viva intacta')
+credo(silva.photographia_continet(ph.arbor, tmpf_rel) and silva.photographia_continet(ph.arbor, 'pythonica/README.md'),
+      'photographia_continet: plagula nova et tracta inclusae')
+open(tmpf, 'w').write('post\n')
+credo(not silva.photographia_continet(ph.arbor, tmpf_rel), 'photographia_continet: mutatio post captum detecta')
+credo(silva.photographia_continet(ph.arbor, 'pythonica/.nemo.tmp'), 'photographia_continet: absens utrimque = idem')
+ph = silva.photographia_materializare(ph, 'probatio')
+try:
+    credo(os.path.isdir(ph.via) and open(os.path.join(ph.via, tmpf_rel)).read() == 'ante\n'
+          and os.path.isdir(os.path.join(ph.via, 'bin')) and os.path.isdir(os.path.join(ph.via, 'build'))
+          and os.path.isdir(os.path.join(ph.via, '.git')),
+          'photographia_materializare: clone cum statu capto, bin/build clonata, .git verum')
+    credo(subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ph.via, capture_output=True, text=True).stdout.strip() == ph.basis,
+          'photographia: HEAD in clone = basis')
+finally:
+    silva.photographia_delere(ph)
+credo(not os.path.exists(ph.via), 'photographia_delere: clone sublatus')
+os.unlink(tmpf)
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

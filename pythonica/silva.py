@@ -58,11 +58,12 @@ Differentia = namedtuple('Differentia',
                          'paria verdictum cosmetica_solum rc')
 
 
-def _curre(args, stdin=None):
+def _curre(args, stdin=None, cwd=None):
     # errors='replace': effusum portae octetos non-UTF-8 ferre potest
     # (probatio octetos crudos imprimens) - decodificatio stricta
-    # operarium umbrae 2026-09-02 tacite necavit, signum pendens mansit
-    return subprocess.run(args, cwd=RADIX, capture_output=True,
+    # operarium umbrae 2026-09-02 tacite necavit, signum pendens mansit.
+    # cwd: radix altera (clone photographiae) - ordinarius RADIX
+    return subprocess.run(args, cwd=cwd or RADIX, capture_output=True,
                           text=True, errors='replace', input=stdin)
 
 
@@ -767,9 +768,10 @@ def porta_viae(via):
     raise SilvaError('porta viae ignota: %s' % via)
 
 
-def porta(nomen, filtrum=None):
+def porta(nomen, filtrum=None, radix=None):
     """portam currere: Porta(nomen, cucurrit, sana, compendium, rc,
     acta). sana SOLUM si cucurrit ET rc == 0 ET signum non fractum.
+    radix: directorium operis alterum (clone photographiae umbrae).
     NB: suites totae (radix, silva) minuta capiunt - in vocamine
     instrumenti tectum X minutorum: filtrum da aut in umbra curre."""
     if nomen not in PORTAE:
@@ -777,7 +779,7 @@ def porta(nomen, filtrum=None):
                          % (nomen, ', '.join(sorted(PORTAE))))
     imperium, signum = PORTAE[nomen]
     args = list(imperium) + ([filtrum] if filtrum else [])
-    r = _curre(args)
+    r = _curre(args, cwd=radix)
     acta = _ANSI.sub('', r.stdout + r.stderr)
     m = re.search(signum, acta)
     cucurrit = m is not None
@@ -815,7 +817,7 @@ def commissio(nuntius, viae, portae=(), verificare=True):
             raise SilvaError('via vetita commissioni: %s' % v)
     for p in portae:
         if isinstance(p, str) and p.endswith('.json'):
-            f = receptum_validum(p)            # porta ex umbra
+            f = receptum_validum(p, viae)      # porta ex umbra
             nomen = f.nomen + ' (receptum)'
         else:
             nomen, filtrum = (p, None) if isinstance(p, str) else p
@@ -856,8 +858,8 @@ import time
 
 PORTAE_DIR = os.path.join(RADIX, 'build', 'portae')
 Receptum = namedtuple('Receptum', 'via nomen filtrum sana cucurrit '
-                      'compendium rc sigillum rancida finis fracturae',
-                      defaults=([],))
+                      'compendium rc sigillum rancida finis fracturae '
+                      'photographia', defaults=([], None))
 
 
 def sigillum_arboris():
@@ -886,24 +888,171 @@ def sigillum_arboris():
     return h.hexdigest()[:16]
 
 
+# ---------------------------------------------------------------- photographia
+
+# Umbra PHOTOGRAPHICA: porta contra statum operis CAPTUM currit, non
+# contra arborem vivam - editio pergit dum porta currit (2026-09-02
+# vesperae VI portae ~XX minuta otiosa). Photographia = arbor git status
+# operis (index temporarius + add -A + write-tree), materializata ut
+# clone localis sine checkout (.git verum, obiecta hardlinked:
+# bibliotheca git domus et mensor HEAD legunt; worktree git '.git'
+# plagulam dat, clone '-s' alternates quas bibliotheca ignorat) + read-tree
+# arboris + clonatio (copy-on-write, APFS) rerum ignoratarum (bin/,
+# build/, book_assets/...). Receptum sigillum = arbor photographiae;
+# commissio plagulas SUAS contra blobs arboris confert, non arborem
+# totam: quod committitur est quod probatum est, cetera libera.
+UMBRAE_DIR = os.path.expanduser('~/.rhubarb/umbrae')
+Photographia = namedtuple('Photographia', 'arbor basis via')
+_IGNORATA_NON_CLONANDA = ('.superpowers', '.claude', '.DS_Store',
+                          'tabularium.db', 'tabularium.db-wal',
+                          'tabularium.db-shm')
+
+
+def photographia_capere():
+    """status operis (tractae mutatae + novae non ignoratae; VETITAE
+    inclusae - photographia non est commissio) ut arbor git, arbore viva
+    intacta. Reddit Photographia(arbor, basis=HEAD, via=None)."""
+    import shutil
+    index = _absoluta(_curre(['git', 'rev-parse', '--git-path',
+                              'index']).stdout.strip())
+    tmp = tempfile.NamedTemporaryFile(prefix='index.umbra.', delete=False)
+    tmp.close()
+    try:
+        if os.path.exists(index):
+            shutil.copyfile(index, tmp.name)
+        else:
+            os.unlink(tmp.name)
+        ambitus = dict(os.environ, GIT_INDEX_FILE=tmp.name)
+        r = subprocess.run(['git', 'add', '-A', '--', '.'], cwd=RADIX,
+                           env=ambitus, capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SilvaError('photographia: git add: %s'
+                             % r.stderr.strip()[-300:])
+        r = subprocess.run(['git', 'write-tree'], cwd=RADIX, env=ambitus,
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            raise SilvaError('photographia: write-tree: %s'
+                             % r.stderr.strip()[-300:])
+        arbor = r.stdout.strip()
+    finally:
+        try:
+            os.unlink(tmp.name)
+        except OSError:
+            pass
+    basis = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
+    return Photographia(arbor, basis, None)
+
+
+def photographia_continet(arbor, via):
+    """VERUM si contentum PRAESENS plagulae 'via' idem est ac blob eius
+    in arbore photographiae (absens utrimque = VERUM): 'quod committo
+    est quod probatum est'"""
+    r = _curre(['git', 'ls-tree', arbor, '--', via])
+    in_arbore = r.stdout.split('\t')[0].split()[2] if r.stdout.strip() \
+        else None
+    if not os.path.exists(_absoluta(via)):
+        return in_arbore is None
+    if in_arbore is None:
+        return False
+    nunc = _curre(['git', 'hash-object', '--', via]).stdout.strip()
+    return nunc == in_arbore
+
+
+def _ignorata():
+    r = _curre(['git', 'ls-files', '--others', '--ignored',
+                '--exclude-standard', '--directory'])
+    exitus = []
+    for l in r.stdout.splitlines():
+        if not l:
+            continue
+        primum = l.rstrip('/').split('/')[0]
+        if primum in _IGNORATA_NON_CLONANDA or l.endswith('.DS_Store'):
+            continue
+        exitus.append(l)
+    return exitus
+
+
+def _clonare_ignorata(ad):
+    """res ignoratae (bin/, build/, silva/build/, book_assets/*.txt ...)
+    in clone: cp -c (clonefile, copy-on-write) - spatium nullum donec
+    scribantur; directoria singula, plagulae fascibus per directorium"""
+    per_dir = {}
+    for l in _ignorata():
+        if l.endswith('/'):
+            d = l.rstrip('/')
+            os.makedirs(os.path.join(ad, os.path.dirname(d)), exist_ok=True)
+            r = subprocess.run(['cp', '-c', '-R', os.path.join(RADIX, d),
+                                os.path.join(ad, d)], capture_output=True,
+                               text=True)
+            if r.returncode != 0:
+                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
+        else:
+            per_dir.setdefault(os.path.dirname(l), []).append(l)
+    for d, plagulae in per_dir.items():
+        dest = os.path.join(ad, d) if d else ad
+        os.makedirs(dest, exist_ok=True)
+        for i in range(0, len(plagulae), 500):
+            r = subprocess.run(['cp', '-c'] + [os.path.join(RADIX, f) for f
+                                                in plagulae[i:i + 500]]
+                               + [dest], capture_output=True, text=True)
+            if r.returncode != 0:
+                raise SilvaError('clonatio %s: %s' % (d, r.stderr.strip()[-200:]))
+
+
+def photographia_materializare(ph, nomen='umbra'):
+    """photographiam ut directorium operis vivum: clone localis sine
+    checkout (obiecta hardlinked, .git verum, HEAD = basis), read-tree
+    arboris, res ignoratae clonatae. Reddit ph cum via."""
+    os.makedirs(UMBRAE_DIR, exist_ok=True)
+    via = os.path.join(UMBRAE_DIR, '%s.%d' % (nomen, int(time.time() * 1000)))
+    # clone LOCALIS (obiecta per hardlinks), non '-s' (alternates):
+    # bibliotheca git domus alternates non sequitur - in clone
+    # communi HEAD vacuum videbat, differre_git plagulam totam
+    # ADDITAM dicebat (porta prima rubra, 2026-09-02)
+    r = _curre(['git', 'clone', '-q', '-n', RADIX, via])
+    if r.returncode != 0:
+        raise SilvaError('photographia: clone: %s' % r.stderr.strip()[-300:])
+    r = subprocess.run(['git', 'read-tree', '--reset', '-u', ph.arbor],
+                       cwd=via, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise SilvaError('photographia: read-tree: %s'
+                         % r.stderr.strip()[-300:])
+    _clonare_ignorata(via)
+    return ph._replace(via=via)
+
+
+def photographia_delere(ph_aut_via):
+    import shutil
+    via = ph_aut_via.via if hasattr(ph_aut_via, 'via') else ph_aut_via
+    if via and via.startswith(UMBRAE_DIR) and os.path.isdir(via):
+        shutil.rmtree(via, ignore_errors=True)
+
+
 def _receptum_via(nomen, filtrum):
     return os.path.join(PORTAE_DIR, '%s%s.%d.json' % (
         nomen, '.' + filtrum if filtrum else '', int(time.time())))
 
 
-def porta_umbra(nomen, filtrum=None):
+def porta_umbra(nomen, filtrum=None, photographica=True):
     """portam in umbra currere (processus separatus, sessio propria):
-    receptum JSON in build/portae/ scriptum in fine - sigillo arboris
-    initii ligatum (rancidum si arbor mutata dum currit). Reddit viam
-    recepti (pendens: '.pendens' iuxta eam dum currit). exspectare(via)
-    manet; commissio(portae=[via]) receptum ut portam accipit."""
+    receptum JSON in build/portae/ scriptum in fine. photographica
+    (ordinarius): porta contra PHOTOGRAPHIAM status operis currit (clone
+    in ~/.rhubarb/umbrae) - editio pergere licet; commissio plagulas
+    suas contra blobs photographiae confert. photographica=False: mos
+    vetus, sigillum arboris vivae (rancidum si quid mutatum). Reddit
+    viam recepti (pendens: '.pendens' iuxta eam dum currit).
+    exspectare(via) manet; commissio(portae=[via]) receptum accipit."""
     if nomen not in PORTAE:
         raise SilvaError('porta ignota: %s' % nomen)
     os.makedirs(PORTAE_DIR, exist_ok=True)
     via = _receptum_via(nomen, filtrum)
+    extra = []
+    if photographica:
+        ph = photographia_materializare(photographia_capere(), nomen)
+        extra = [ph.via, ph.arbor, ph.basis]
     p = subprocess.Popen(
         [sys.executable, os.path.abspath(__file__), '-umbra', nomen,
-         filtrum or '', via], cwd=RADIX, start_new_session=True,
+         filtrum or '', via] + extra, cwd=RADIX, start_new_session=True,
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
     # signum pendens = PID operarii: operarius mortuus sine recepto
@@ -928,28 +1077,34 @@ def _pendens_mortua(via):
     return False
 
 
-def _umbra_currere(nomen, filtrum, via):
+def _umbra_currere(nomen, filtrum, via, via_operis=None, arbor=None,
+                   basis=None):
     """corpus operarii umbrae (processus separatus). Ruina QUAELIBET
     receptum FRACTUM scribit (traceback in .acta) et signum pendens
-    tollit - operarius numquam tacite abit."""
+    tollit - operarius numquam tacite abit. via_operis/arbor/basis:
+    umbra photographica (porta in clone, sigillum = arbor)."""
     import traceback
+    photo = ({'via_operis': via_operis, 'arbor': arbor, 'basis': basis}
+             if via_operis else None)
     sig = '?'
     try:
-        sig = sigillum_arboris()
-        p = porta(nomen, filtrum or None)
+        sig = arbor if photo else sigillum_arboris()
+        p = porta(nomen, filtrum or None, radix=via_operis)
         acta = p.acta
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
              'cucurrit': p.cucurrit, 'compendium': p.compendium,
              'rc': p.rc, 'sigillum': sig,
-             'rancida': sig != sigillum_arboris(), 'finis': time.time(),
-             'fracturae': [list(f) for f in (p.fracturae or [])]}
+             'rancida': False if photo else sig != sigillum_arboris(),
+             'finis': time.time(),
+             'fracturae': [list(f) for f in (p.fracturae or [])],
+             'photographia': photo}
     except Exception:
         acta = traceback.format_exc()
         ultima = acta.strip().splitlines()[-1][:200]
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': False,
              'cucurrit': False, 'compendium': 'UMBRA FRACTA: ' + ultima,
              'rc': -1, 'sigillum': sig, 'rancida': False,
-             'finis': time.time(), 'fracturae': []}
+             'finis': time.time(), 'fracturae': [], 'photographia': photo}
     with open(via + '.acta', 'w') as f:
         f.write(acta)
     with open(via + '.tmp', 'w') as f:
@@ -972,20 +1127,35 @@ def receptum_legere(via):
     return Receptum(via, d['nomen'], d['filtrum'], d['sana'], d['cucurrit'],
                     d['compendium'], d['rc'], d['sigillum'], d['rancida'],
                     d['finis'],
-                    [Fractura(*f) for f in d.get('fracturae', [])])
+                    [Fractura(*f) for f in d.get('fracturae', [])],
+                    d.get('photographia'))
 
 
-def receptum_validum(via):
-    """Porta ex recepto: sana SOLUM si receptum sanum, non rancidum, et
-    sigillum arboris PRAESENS idem (nihil mutatum post cursum)"""
+def receptum_validum(via, viae=None):
+    """Porta ex recepto. Photographicum: sana si receptum sanum, HEAD =
+    basis, et plagulae 'viae' (quae committentur) contentu idem ac in
+    arbore photographiae - cetera libera. Vetus: sigillum arboris vivae
+    idem (nihil mutatum post cursum)."""
     r = receptum_legere(via)
-    recens = r.sigillum == sigillum_arboris()
-    sana = r.sana and r.cucurrit and not r.rancida and recens
     causa = r.compendium
-    if r.rancida:
-        causa += ' [arbor mutata DUM currebat]'
-    elif not recens:
-        causa += ' [arbor mutata POST cursum - receptum rancidum]'
+    if r.photographia:
+        basis_eadem = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip() \
+            == r.photographia['basis']
+        mutatae = [v for v in (viae or [])
+                   if not photographia_continet(r.photographia['arbor'], v)]
+        recens = basis_eadem and not mutatae
+        if not basis_eadem:
+            causa += ' [HEAD mutatum post photographiam]'
+        if mutatae:
+            causa += ' [plagulae post photographiam mutatae aut extra eam:'
+            causa += ' %s]' % ', '.join(mutatae[:5])
+    else:
+        recens = r.sigillum == sigillum_arboris()
+        if r.rancida:
+            causa += ' [arbor mutata DUM currebat]'
+        elif not recens:
+            causa += ' [arbor mutata POST cursum - receptum rancidum]'
+    sana = r.sana and r.cucurrit and not r.rancida and recens
     return Porta(r.nomen, r.cucurrit, sana, causa, r.rc, '', r.fracturae)
 
 
@@ -1000,7 +1170,14 @@ def receptum_relatio(via):
 
 def receptum_delere(via):
     """receptum cum actis et signo pendenti delere - post consumptionem
-    (commissio) aut in fine probationis; absens = nihil"""
+    (commissio) aut in fine probationis; absens = nihil. Clone
+    photographiae (si adest) quoque sublatus."""
+    try:
+        r = receptum_legere(via)
+        if r.photographia and r.photographia.get('via_operis'):
+            photographia_delere(r.photographia['via_operis'])
+    except SilvaError:
+        pass
     for suffixum in ('', '.acta', '.pendens', '.tmp'):
         try:
             os.unlink(via + suffixum)
@@ -2013,8 +2190,12 @@ def differre(vetus, novus, gradus='cosmetica'):
 
 if __name__ == '__main__':
     if len(sys.argv) >= 5 and sys.argv[1] == '-umbra':
-        _umbra_currere(sys.argv[2], sys.argv[3], sys.argv[4])
+        if len(sys.argv) >= 8:
+            _umbra_currere(sys.argv[2], sys.argv[3], sys.argv[4],
+                           sys.argv[5], sys.argv[6], sys.argv[7])
+        else:
+            _umbra_currere(sys.argv[2], sys.argv[3], sys.argv[4])
     else:
         sys.stderr.write('usus: silva.py -umbra <porta> <filtrum|""> '
-                         '<receptum.json>\n')
+                         '<receptum.json> [<clone> <arbor> <basis>]\n')
         sys.exit(2)
