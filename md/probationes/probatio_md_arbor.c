@@ -1,0 +1,726 @@
+/* probatio_md_arbor.c - Bloci folia (A3)
+ *
+ * DUO ORACULA: structura (genera blocorum, gradus, forma, numeri
+ * liberorum) contra exempla CommonMark par. 4, et OCTETI: parsura ->
+ * materia_scribere_nodum -> memcmp contra fontem - super fixturas ET
+ * corpus TOTUM (MCXXII plagulae): lex octetorum non pendet ex
+ * structura agnita, ergo porta corporis iam in A3 currit etsi listae
+ * paragraphi sunt. Viride INTERROGATUM: capitula, saepta, praefationes
+ * numerantur et asseruntur > 0 (numquam 'N/N mundae' sine praesentia).
+ */
+
+#include "latina.h"
+#include "credo.h"
+#include "md_arbor.h"
+#include "md_registrum.h"
+#include "md_lexicon.h"
+#include "materia_nodus.h"
+#include "materia_scribere.h"
+#include "materia_token.h"
+#include "piscina.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+interior character*
+_plagulam_legere (
+               Piscina* piscina,
+    constans character* via,
+                   i32* mensura)
+{
+         FILE* f;
+        longus longitudo;
+    character* memoria;
+        size_t lecti;
+
+    f = fopen(via, "rb");
+    si (f == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (fseek(f, 0L, SEEK_END) != ZEPHYRUM)
+    {
+        fclose(f);
+        redde NIHIL;
+    }
+    longitudo = ftell(f);
+    si (longitudo < 0L)
+    {
+        fclose(f);
+        redde NIHIL;
+    }
+    rewind(f);
+    memoria = (character*)piscina_allocare(piscina,
+        (memoriae_index)longitudo + I);
+    lecti = fread(memoria, I, (size_t)longitudo, f);
+    fclose(f);
+    si (lecti != (size_t)longitudo)
+    {
+        redde NIHIL;
+    }
+    *mensura = (i32)longitudo;
+    redde memoria;
+}
+
+/* parsura -> emissio -> memcmp */
+interior MateriaNodus*
+_circuitus (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura,
+                   b32* octeti_sani)
+{
+              MateriaNodus* radix;
+           MateriaScriptura emissa;
+    MateriaScripturaConsilium consilium;
+
+    *octeti_sani  = FALSUM;
+    radix         = md_arbor_parsare(piscina, fons, mensura);
+    si (radix == NIHIL)
+    {
+        imprimere("    (parsura NIHIL)\n");
+        redde NIHIL;
+    }
+    materia_scriptura_consilium_nudum(&consilium, &MD_REGISTRUM);
+    emissa = materia_scribere_nodum(piscina, radix, &consilium);
+    si (!emissa.successus)
+    {
+        imprimere("    (emissio: %s)\n",
+            emissa.causa ? emissa.causa : "-");
+        redde radix;
+    }
+    si (emissa.textus.mensura != mensura)
+    {
+        imprimere("    (emissa %d contra fontem %d)\n",
+            (integer)emissa.textus.mensura, (integer)mensura);
+        redde radix;
+    }
+    *octeti_sani = (b32)(mensura == ZEPHYRUM
+        || memcmp(emissa.textus.datum, fons, (size_t)mensura)
+            == ZEPHYRUM);
+    si (!*octeti_sani)
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < mensura; k++)
+        {
+            si (emissa.textus.datum[k] != fons[k])
+            {
+                frange;
+            }
+        }
+        imprimere("    (octetus %d dispar)\n", (integer)k);
+    }
+    redde radix;
+}
+
+interior i32
+_numerus (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    redde materia_valor_lista_numerus(nodus->loci[locus]);
+}
+
+interior MateriaNodus*
+_elementum (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+                      i32  i)
+{
+    MateriaValor* v = materia_valor_lista_obtinere(nodus->loci[locus],
+        i);
+
+    redde (v != NIHIL
+        && v->genus == MATERIA_VALOR_NODUS) ? v->datum.nodus
+                                                          : NIHIL;
+}
+
+interior s32
+_genus_bloci (
+    constans MateriaNodus* doc,
+                      i32  i)
+{
+    MateriaNodus* b = _elementum(doc, (i32)MD_DOCUMENTUM_BLOCI, i);
+
+    redde b ? b->genus : (s32)-I;
+}
+
+interior s32
+_index (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    redde nodus->loci[locus].genus == MATERIA_VALOR_INDEX
+        ? nodus->loci[locus].datum.index : (s32)-I;
+}
+
+interior b32
+_adest (
+    constans MateriaNodus* nodus,
+                      i32  locus)
+{
+    redde (b32)(nodus->loci[locus].genus != MATERIA_VALOR_NIHIL);
+}
+
+/* Numerus nodorum generis dati, recursivus */
+interior i32
+_genera_numerare (
+    constans MateriaNodus* nodus,
+                      s32  genus)
+{
+    i32 summa;
+    i32 i;
+
+    si (nodus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    summa = (nodus->genus == genus) ? I : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans MateriaValor* v = &nodus->loci[i];
+
+        si (v->genus == MATERIA_VALOR_NODUS)
+        {
+            summa = summa + _genera_numerare(v->datum.nodus, genus);
+        }
+        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 n = materia_valor_lista_numerus(*v);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*v, j);
+
+                si (e != NIHIL && e->genus == MATERIA_VALOR_NODUS)
+                {
+                    summa = summa + _genera_numerare(e->datum.nodus,
+                        genus);
+                }
+            }
+        }
+    }
+    redde summa;
+}
+
+/* Saepta indentata numerare; prima X sedes (linea) imprimere */
+interior i32
+_indentata_numerare (
+    constans MateriaNodus* nodus,
+       constans character* via,
+                      i32* impressa)
+{
+    i32 summa = ZEPHYRUM;
+    i32 i;
+
+    si (nodus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (   nodus->genus == (s32)MD_GENUS_SAEPTUM
+        && _index(nodus, (i32)MD_SAEPTUM_FORMA)
+            == (s32)MD_SAEPTUM_INDENTATUS)
+    {
+        summa = I;
+        si (*impressa < X)
+        {
+            MateriaNodus* l = _elementum(nodus, (i32)MD_SAEPTUM_LINEAE,
+                ZEPHYRUM);
+            i32 linea = ZEPHYRUM;
+
+            si (   l != NIHIL && l->loci[MD_LINEA_CONTENTUM].genus
+                    == MATERIA_VALOR_TOKEN)
+            {
+                linea = l->loci[MD_LINEA_CONTENTUM].datum.token->linea;
+            }
+            imprimere("    indentatum: %s:%d\n", via, (integer)linea);
+            *impressa = *impressa + I;
+        }
+    }
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans MateriaValor* v = &nodus->loci[i];
+
+        si (v->genus == MATERIA_VALOR_NODUS)
+        {
+            summa = summa + _indentata_numerare(v->datum.nodus, via,
+                impressa);
+        }
+        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 n = materia_valor_lista_numerus(*v);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*v, j);
+
+                si (e != NIHIL && e->genus == MATERIA_VALOR_NODUS)
+                {
+                    summa = summa + _indentata_numerare(e->datum.nodus,
+                        via,
+                        impressa);
+                }
+            }
+        }
+    }
+    redde summa;
+}
+
+#define PARSA(lit) _circuitus(piscina, (lit), (i32)strlen(lit), &sani)
+
+s32
+principale (vacuum)
+{
+                   b32  praeteritus;
+               Piscina* piscina;
+                   b32  sani;
+    constans character* radix_viae;
+
+    piscina = piscina_generare_dynamicum("probatio_md_arbor", 1048576);
+    si (!piscina)
+    {
+        imprimere("FRACTA: piscina_generatio\n");
+        redde I;
+    }
+    credo_aperire(piscina);
+    radix_viae = getenv("RHUBARB_RADIX");
+    si (radix_viae == NIHIL)
+    {
+        radix_viae = ".";
+    }
+
+
+    /* ========================================================
+     * PROBARE: capitula ATX (par. 4.2)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* c;
+
+        imprimere("\n--- Probans capitula ATX ---\n");
+
+        d = PARSA("# Titulus\n");
+        CREDO_NON_NIHIL (d);
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_CAPITULUM);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+            (s32)I);
+        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_MARCA));
+        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_CLAUSUM));
+        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_SUBDUCTIO));
+        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_FINIS));
+        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI), I);
+        CREDO_VERUM (_adest(d, (i32)MD_DOCUMENTUM_FINIS));
+
+        d = PARSA("## foo ##\n#\n   ### x\n####### y\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), IV);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+            (s32)II);
+        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_CLAUSUM));
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, I);   /* '#' solus */
+        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI), ZEPHYRUM);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, II);  /* indentatum III */
+        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_I32 (_numerus(c, (i32)MD_CAPITULUM_PRAEFIXA), I);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, III),
+            (s32)MD_GENUS_PARAGRAPHUS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: paragraphi, lineae vacuae, continuatio (par. 4.8)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* par;
+        MateriaNodus* inl;
+        MateriaNodus* fr;
+
+        imprimere("\n--- Probans paragraphos ---\n");
+
+        d = PARSA("Para one\ncontinued\n\nSecond\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_LINEA_VACUA);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        par = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(par, (i32)MD_PARAGRAPHUS_NUDUS),
+            ZEPHYRUM);
+        CREDO_VERUM (_adest(par, (i32)MD_PARAGRAPHUS_FINIS));
+        inl = par->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus;
+        CREDO_AEQUALIS_I32 (_numerus(inl, (i32)MD_INLINEA_LIBERI), III);
+        CREDO_AEQUALIS_S32 (_elementum(inl, (i32)MD_INLINEA_LIBERI,
+            I)->genus,
+            (s32)MD_GENUS_FRACTURA_MOLLIS);
+
+        /* continuatio indentata: praefixa in fractura-mollis */
+        d = PARSA("a\n    b\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        par  = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        inl  = par->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus;
+        fr   = _elementum(inl, (i32)MD_INLINEA_LIBERI, I);
+        CREDO_AEQUALIS_I32 (_numerus(fr, (i32)MD_MOLLIS_PRAEFIXA), I);
+
+        /* sine terminatore ultimo: finis absens */
+        d = PARSA("a");
+        CREDO_VERUM (sani);
+        par = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_FALSUM (_adest(par, (i32)MD_PARAGRAPHUS_FINIS));
+
+        d = PARSA("");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI),
+            ZEPHYRUM);
+        d = PARSA("\n  \n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_I32 (_numerus(_elementum(d,
+            (i32)MD_DOCUMENTUM_BLOCI, I),
+            (i32)MD_VACUA_PRAEFIXA), I);
+
+        /* CRLF */
+        d = PARSA("a\r\nb\r\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+    }
+
+
+    /* ========================================================
+     * PROBARE: setext, divisio (par. 4.3, 4.1)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* c;
+
+        imprimere("\n--- Probans setext et divisiones ---\n");
+
+        d = PARSA("Setext\n===\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+            (s32)I);
+        CREDO_FALSUM (_adest(c, (i32)MD_CAPITULUM_MARCA));
+        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_SUBDUCTIO));
+        CREDO_VERUM (_adest(c, (i32)MD_CAPITULUM_FINIS));
+
+        /* setext vincit divisionem */
+        d = PARSA("Foo\n---\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (c->genus, (s32)MD_GENUS_CAPITULUM);
+        CREDO_AEQUALIS_S32 (_index(c, (i32)MD_CAPITULUM_GRADUS),
+            (s32)II);
+
+        /* multi-linea setext: inlinea III liberi */
+        d = PARSA("Foo\nBar\n===\n");
+        CREDO_VERUM (sani);
+        c = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(c->loci[MD_CAPITULUM_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI), III);
+
+        d = PARSA("---\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DIVISIO);
+        d = PARSA("para\n***\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_DIVISIO);
+        d = PARSA("    ***\n");   /* indentatum = codex */
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_SAEPTUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: saepta (par. 4.4, 4.5)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* s;
+
+        imprimere("\n--- Probans saepta ---\n");
+
+        d = PARSA("```c\nint x;\n```\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (s->genus, (s32)MD_GENUS_SAEPTUM);
+        CREDO_AEQUALIS_S32 (_index(s, (i32)MD_SAEPTUM_FORMA),
+            (s32)MD_SAEPTUM_SAEPTUS);
+        CREDO_VERUM (_adest(s, (i32)MD_SAEPTUM_APERTUM));
+        CREDO_VERUM (_adest(s->loci[MD_SAEPTUM_APERTUM].datum.nodus,
+            (i32)MD_LIMES_INFO));
+        CREDO_AEQUALIS_I32 (_numerus(s, (i32)MD_SAEPTUM_LINEAE), I);
+        CREDO_VERUM (_adest(s, (i32)MD_SAEPTUM_CLAUSUM));
+
+        /* non clausum: usque ad finem */
+        d = PARSA("```\nfoo\n\nbar\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(s, (i32)MD_SAEPTUM_LINEAE), III);
+        CREDO_FALSUM (_adest(s, (i32)MD_SAEPTUM_CLAUSUM));
+
+        /* clausum longius, tildae, '```' intra saeptum tildarum */
+        d = PARSA("~~~~\n```\n~~~~\n");
+        CREDO_VERUM (sani);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(s, (i32)MD_SAEPTUM_LINEAE), I);
+        CREDO_VERUM (_adest(s, (i32)MD_SAEPTUM_CLAUSUM));
+
+        /* indentatum: vacuae interiores intra, finales extra */
+        d = PARSA("    code\n\n    more\n\nafter\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        s = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(s, (i32)MD_SAEPTUM_FORMA),
+            (s32)MD_SAEPTUM_INDENTATUS);
+        CREDO_AEQUALIS_I32 (_numerus(s, (i32)MD_SAEPTUM_LINEAE), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_LINEA_VACUA);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
+            (s32)MD_GENUS_PARAGRAPHUS);
+
+        /* codex indentatus paragraphum NON interrumpit */
+        d = PARSA("para\n    still para\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+
+        /* saeptum paragraphum interrumpit */
+        d = PARSA("para\n```\nx\n```\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I), (s32)MD_GENUS_SAEPTUM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: bloci html (par. 4.6)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* h;
+
+        imprimere("\n--- Probans blocos html ---\n");
+
+        d = PARSA("<div>\nx\n</div>\n\npara\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        h = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (h->genus, (s32)MD_GENUS_HTML);
+        CREDO_AEQUALIS_I32 (_numerus(h, (i32)MD_HTML_LINEAE), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_LINEA_VACUA);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
+            (s32)MD_GENUS_PARAGRAPHUS);
+
+        /* conditio VII paragraphum non interrumpit */
+        d = PARSA("para\n<span>\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        /* sed VI interrumpit */
+        d = PARSA("para\n<div>\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        /* I: finis in eadem linea */
+        d = PARSA("<pre>x</pre>\ntext\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_HTML);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        /* II: commentum trans lineas */
+        d = PARSA("<!-- a\nb -->\nc\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        h = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(h, (i32)MD_HTML_LINEAE), II);
+        /* VII: tag integrum solum in linea */
+        d = PARSA("<a href=\"x\">\nb\n\nc\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_HTML);
+        CREDO_AEQUALIS_I32 (_numerus(_elementum(d,
+            (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM), (i32)MD_HTML_LINEAE), II);
+        d = PARSA("<a href=\"x\">b\n");   /* non integrum: paragraphus */
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: praefatio
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+
+        imprimere("\n--- Probans praefationem ---\n");
+
+        d = PARSA("---\nname: x\n\ndescription: y\n---\nbody\n");
+        CREDO_VERUM (sani);
+        CREDO_VERUM (_adest(d, (i32)MD_DOCUMENTUM_PRAEFATIO));
+        CREDO_AEQUALIS_I32 (_numerus(d->loci[MD_DOCUMENTUM_PRAEFATIO].datum.nodus,
+            (i32)MD_PRAEFATIO_LINEAE), III);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+
+        /* sine clausura: divisio + paragraphus */
+        d = PARSA("---\nno close\n");
+        CREDO_VERUM (sani);
+        CREDO_FALSUM (_adest(d, (i32)MD_DOCUMENTUM_PRAEFATIO));
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DIVISIO);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_PARAGRAPHUS);
+    }
+
+
+    /* ========================================================
+     * PROBARE: corpus totum - octeti et praesentia
+     * ======================================================== */
+
+    {
+        character via[DXII];
+             FILE* lista;
+              i32  plagulae = ZEPHYRUM;
+              i32  fractae  = ZEPHYRUM;
+              i32  absentes = ZEPHYRUM;
+              s64  octeti   = ZEPHYRUM;
+              i32  capitula = ZEPHYRUM;
+              i32  saepta   = ZEPHYRUM;
+              i32  indentata = ZEPHYRUM;
+              i32  html     = ZEPHYRUM;
+              i32  praefationes = ZEPHYRUM;
+              i32  divisiones = ZEPHYRUM;
+              i32  impressa = ZEPHYRUM;
+
+        imprimere("\n--- PORTA CORPORIS: parsura + emissio, omnes plagulae ---\n");
+
+        sprintf(via, "%s/md/build/corpus_md.txt", radix_viae);
+        lista = fopen(via, "r");
+        si (lista == NIHIL)
+        {
+            CREDO_CULPA ("md/build/corpus_md.txt absens - e radice per cursorem curre");
+        }
+        alioquin
+        {
+            character linea[DXII];
+
+            dum (fgets(linea, (integer)magnitudo(linea), lista)
+                != NIHIL)
+            {
+                     Piscina* p;
+                   character* textus;
+                MateriaNodus* d;
+                         i32  mensura = ZEPHYRUM;
+                      size_t  l = strlen(linea);
+                         b32  s;
+
+                dum (   l > ZEPHYRUM
+                     && (linea[l - I] == '\n' || linea[l - I] == '\r'))
+                {
+                    linea[l - I]  = '\0';
+                    l             = l - I;
+                }
+                si (l == ZEPHYRUM)
+                {
+                    perge;
+                }
+                sprintf(via, "%s/%s", radix_viae, linea);
+                p = piscina_generare_dynamicum("corpus_md_arbor",
+                    1048576);
+                textus = _plagulam_legere(p, via, &mensura);
+                si (textus == NIHIL)
+                {
+                    absentes = absentes + I;
+                    imprimere("  ABEST: %s\n", linea);
+                    piscina_destruere(p);
+                    perge;
+                }
+                plagulae  = plagulae + I;
+                octeti    = octeti + (s64)mensura;
+                d         = _circuitus(p, textus, mensura, &s);
+                si (d == NIHIL || !s)
+                {
+                    fractae = fractae + I;
+                    imprimere("  FRACTA: %s\n", linea);
+                }
+                alioquin
+                {
+                    capitula += _genera_numerare(d,
+                        (s32)MD_GENUS_CAPITULUM);
+                    saepta += _genera_numerare(d,
+                        (s32)MD_GENUS_SAEPTUM);
+                    html += _genera_numerare(d,
+                        (s32)MD_GENUS_HTML);
+                    divisiones += _genera_numerare(d,
+                        (s32)MD_GENUS_DIVISIO);
+                    praefationes += _adest(d,
+                        (i32)MD_DOCUMENTUM_PRAEFATIO) ? I : ZEPHYRUM;
+                    indentata += _indentata_numerare(d, linea,
+                        &impressa);
+                }
+                piscina_destruere(p);
+            }
+            fclose(lista);
+
+            imprimere("  plagulae %d, octeti %ld, fractae %d, absentes %d\n",
+                (integer)plagulae, (longus)octeti, (integer)fractae,
+                (integer)absentes);
+            imprimere("  capitula %d, saepta %d (indentata %d), html %d,"
+                " divisiones %d, praefationes %d\n",
+                (integer)capitula, (integer)saepta, (integer)indentata,
+                (integer)html, (integer)divisiones,
+                (integer)praefationes);
+            CREDO_AEQUALIS_I32 (fractae, ZEPHYRUM);
+            CREDO_AEQUALIS_I32 (absentes, ZEPHYRUM);
+            CREDO_MAIOR_I32 (plagulae, (i32)1000);
+            CREDO_MAIOR_I32 (capitula, (i32)500);
+            CREDO_MAIOR_I32 (saepta - indentata, (i32)1000);
+            CREDO_MAIOR_I32 (praefationes, (i32)300);
+        }
+    }
+
+
+    imprimere("\n");
+    credo_imprimere_compendium();
+
+    praeteritus = credo_omnia_praeterierunt();
+    piscina_destruere(piscina);
+    redde praeteritus ? ZEPHYRUM : I;
+}

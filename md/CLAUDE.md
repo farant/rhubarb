@@ -24,7 +24,16 @@ byte-exact — 1,122 files / 17.2 MB / 600k tokens). Runner
 finds 3,110 files, most of them scratch. Registered in pythonica
 `PORTAE['md']` (+ FORMAE, SUITAE, mensor prefix `md.`).
 
-**NEXT = A3** (leaf blocks in `md_arbor.{c,h}`).
+**A3 DONE**: `md_arbor.{c,h}` — `md_arbor_parsare` builds the leaf
+blocks (paragraphs with their final shape praefixa+nudus+inlinea+finis,
+ATX + setext headings, thematic breaks, fenced + indented code, blank
+lines, opaque html blocks by the seven start conditions, front matter).
+Gate `probatio_md_arbor`: CommonMark §4 structure fixtures + the WHOLE
+corpus parse→emit byte-exact (1,124 files; capitula 18,520, saepta
+3,893 of which 65 indented — the census heuristic was list
+continuations, sites eyeballed). Lists and quotes are still paragraphs.
+
+**NEXT = A4** (containers: lists, block quotes, lazy continuation).
 
 ## Laws to keep (spec §3)
 

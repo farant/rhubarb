@@ -94,7 +94,9 @@ nomen enumeratio {
 nomen enumeratio {
     MD_PARAGRAPHUS_PRAEFIXA = 0,   /* LISTA_TOKEN: praefixa lineae primae */
     MD_PARAGRAPHUS_NUDUS,          /* INDEX 0/1: filius directus elementi STRICTI */
-    MD_PARAGRAPHUS_INLINEA         /* NODUS inlinea */
+        MD_PARAGRAPHUS_INLINEA,        /* NODUS inlinea */
+    MD_PARAGRAPHUS_FINIS           /* TOKEN? LINEA lineae ultimae (contentum
+                                    * paragraphi terminatorem suum non fert) */
 } MdLocusParagraphi;
 
 nomen enumeratio {

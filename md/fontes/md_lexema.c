@@ -565,6 +565,332 @@ md_scan_tabula_separator (
 
 
 /* ==================================================
+ * Bloci html (CommonMark par. 4.6)
+ * ================================================== */
+
+hic_manens constans character* TAGI_BLOCORUM[] = {
+    "address", "article", "aside", "base", "basefont", "blockquote",
+    "body", "caption", "center", "col", "colgroup", "dd", "details",
+    "dialog", "dir", "div", "dl", "dt", "fieldset", "figcaption",
+    "figure", "footer", "form", "frame", "frameset", "h1", "h2", "h3",
+    "h4", "h5", "h6", "head", "header", "hr", "html", "iframe",
+        "legend",
+    "li", "link", "main", "menu", "menuitem", "nav", "noframes", "ol",
+    "optgroup", "option", "p", "param", "search", "section", "summary",
+    "table", "tbody", "td", "tfoot", "th", "thead", "title", "tr",
+    "track", "ul"
+};
+
+hic_manens constans character* TAGI_CRUDI[] = {
+    "script", "pre", "style", "textarea"
+};
+
+interior character
+_minuscula (
+    character c)
+{
+    redde (c >= 'A' && c <= 'Z') ? (character)(c + ('a' - 'A')) : c;
+}
+
+interior b32
+_littera (
+    character c)
+{
+    redde (b32)((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
+}
+
+/* Praefixum litteris insensibile. Reddit post praefixum; -I si non. */
+interior s32
+_praefixum_ci (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+    constans character* litterae)
+{
+    s32 i = ab;
+
+    dum (*litterae != '\0')
+    {
+        si (i >= ad || _minuscula(fons[i]) != *litterae)
+        {
+            redde (s32)-I;
+        }
+        i         = i + I;
+        litterae  = litterae + I;
+    }
+    redde i;
+}
+
+/* Chordam (ci) alicubi in [ab, ad) invenire */
+interior b32
+_continet_ci (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+    constans character* litterae)
+{
+    s32 i;
+
+    per (i = ab; i < ad; i++)
+    {
+        si (_praefixum_ci(fons, i, ad, litterae) >= ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Nomen tagi [A-Za-z][A-Za-z0-9-]*; reddit post, aut ab si nullum */
+interior s32
+_nomen_tagi (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i = ab;
+
+    si (i >= ad || !_littera(fons[i]))
+    {
+        redde ab;
+    }
+    dum (   i < ad
+         && (_littera(fons[i]) || _digitus(fons[i]) || fons[i] == '-'))
+    {
+        i = i + I;
+    }
+    redde i;
+}
+
+/* Post nomen tagi conditionis I/VI: spatium, tabula, '>', '/>' aut finis */
+interior b32
+_post_nomen (
+    constans character* fons,
+                   s32  i,
+                   s32  ad,
+                   b32  solidus_licet)
+{
+    si (i >= ad)
+    {
+        redde VERUM;
+    }
+    si (_spatium(fons[i]) || fons[i] == '>')
+    {
+        redde VERUM;
+    }
+    redde (b32)(solidus_licet && fons[i] == '/' && i + I < ad
+                && fons[i + I] == '>');
+}
+
+/* Tag apertum integrum (conditio VII): '<' nomen (attributa)* spatia
+ * '/'? '>' - deinde spatia sola usque ad finem. */
+interior b32
+_tag_apertum_integrum (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i = _nomen_tagi(fons, ab + I, ad);
+
+    si (i == ab + I)
+    {
+        redde FALSUM;
+    }
+    dum (VERUM)
+    {
+        s32 j = _spatia_post(fons, i, ad);
+
+        si (j >= ad)
+        {
+            redde FALSUM;
+        }
+        si (fons[j] == '/' || fons[j] == '>')
+        {
+            si (fons[j] == '/')
+            {
+                j = j + I;
+                si (j >= ad || fons[j] != '>')
+                {
+                    redde FALSUM;
+                }
+            }
+            redde (b32)(_spatia_post(fons, j + I, ad) == ad);
+        }
+        /* attributum: spatium ante obligatorium */
+        si (j == i)
+        {
+            redde FALSUM;
+        }
+        i = j;
+        si (!(_littera(fons[i]) || fons[i] == '_' || fons[i] == ':'))
+        {
+            redde FALSUM;
+        }
+        dum (   i < ad && (_littera(fons[i]) || _digitus(fons[i])
+                        || fons[i] == '_' || fons[i] == '.'
+                        || fons[i] == ':' || fons[i] == '-'))
+        {
+            i = i + I;
+        }
+        j = _spatia_post(fons, i, ad);
+        si (j < ad && fons[j] == '=')
+        {
+            j = _spatia_post(fons, j + I, ad);
+            si (j >= ad)
+            {
+                redde FALSUM;
+            }
+            si (fons[j] == '"' || fons[j] == '\'')
+            {
+                character q = fons[j];
+
+                j = j + I;
+                dum (j < ad && fons[j] != q)
+                {
+                    j = j + I;
+                }
+                si (j >= ad)
+                {
+                    redde FALSUM;
+                }
+                i = j + I;
+            }
+            alioquin
+            {
+                s32 k = j;
+
+                dum (   k < ad && !_spatium(fons[k]) && fons[k] != '"'
+                     && fons[k] != '\'' && fons[k] != '='
+                     && fons[k] != '<'
+                     && fons[k] != '>' && fons[k] != '`')
+                {
+                    k = k + I;
+                }
+                si (k == j)
+                {
+                    redde FALSUM;
+                }
+                i = k;
+            }
+        }
+    }
+}
+
+/* Tag clausum integrum: '</' nomen spatia '>' spatia finis */
+interior b32
+_tag_clausum_integrum (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i = _nomen_tagi(fons, ab + II, ad);
+
+    si (i == ab + II)
+    {
+        redde FALSUM;
+    }
+    i = _spatia_post(fons, i, ad);
+    si (i >= ad || fons[i] != '>')
+    {
+        redde FALSUM;
+    }
+    redde (b32)(_spatia_post(fons, i + I, ad) == ad);
+}
+
+i32
+md_scan_html_initium (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                   b32  paragraphus_apertus)
+{
+    i32 k;
+    s32 post;
+    s32 nomen_ab;
+
+    si (ab >= ad || fons[ab] != '<')
+    {
+        redde ZEPHYRUM;
+    }
+    /* I */
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(TAGI_CRUDI)
+        / magnitudo(TAGI_CRUDI[0])); k++)
+    {
+        post = _praefixum_ci(fons, ab + I, ad, TAGI_CRUDI[k]);
+        si (post >= ZEPHYRUM && _post_nomen(fons, post, ad, FALSUM))
+        {
+            redde I;
+        }
+    }
+    /* II..V */
+    si (_praefixum_ci(fons, ab, ad, "<!--") >= ZEPHYRUM)
+    {
+        redde II;
+    }
+    si (_praefixum_ci(fons, ab, ad, "<?") >= ZEPHYRUM)
+    {
+        redde III;
+    }
+    si (_praefixum_ci(fons, ab, ad, "<![cdata[") >= ZEPHYRUM)
+    {
+        redde V;
+    }
+    si (ab + II < ad && fons[ab + I] == '!' && _littera(fons[ab + II]))
+    {
+        redde IV;
+    }
+    /* VI: '<' aut '</' + tag blocci */
+    nomen_ab = (ab + I < ad && fons[ab + I] == '/') ? ab + II : ab + I;
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(TAGI_BLOCORUM)
+        / magnitudo(TAGI_BLOCORUM[0])); k++)
+    {
+        post = _praefixum_ci(fons, nomen_ab, ad, TAGI_BLOCORUM[k]);
+        si (post >= ZEPHYRUM && _post_nomen(fons, post, ad, VERUM))
+        {
+            redde VI;
+        }
+    }
+    /* VII */
+    si (paragraphus_apertus)
+    {
+        redde ZEPHYRUM;
+    }
+    si (ab + I < ad && fons[ab + I] == '/')
+    {
+        redde _tag_clausum_integrum(fons, ab, ad) ? VII : ZEPHYRUM;
+    }
+    redde _tag_apertum_integrum(fons, ab, ad) ? VII : ZEPHYRUM;
+}
+
+b32
+md_scan_html_finis (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                   i32  conditio)
+{
+    commutatio (conditio)
+    {
+    casus I:
+        redde (b32)(_continet_ci(fons, ab, ad, "</script>")
+                    || _continet_ci(fons, ab, ad, "</pre>")
+                    || _continet_ci(fons, ab, ad, "</style>")
+                    || _continet_ci(fons, ab, ad, "</textarea>"));
+    casus II:
+        redde _continet_ci(fons, ab, ad, "-->");
+    casus III:
+        redde _continet_ci(fons, ab, ad, "?>");
+    casus IV:
+        redde _continet_ci(fons, ab, ad, ">");
+    casus V:
+        redde _continet_ci(fons, ab, ad, "]]>");
+    ordinarius:
+        redde FALSUM;
+    }
+}
+
+
+/* ==================================================
  * Fabrica
  * ================================================== */
 

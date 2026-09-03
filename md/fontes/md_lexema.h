@@ -215,6 +215,31 @@ md_scan_tabula_separator (
                    i32  capacitas);
 
 
+/* Conditiones initii blocci html (CommonMark par. 4.6), super contentum
+ * post indentationem <= III: I script/pre/style/textarea · II '<!--' ·
+ * III '<?' · IV '<!' + littera · V '<![CDATA[' · VI tag blocci (LXII
+ * nomina) · VII tag apertum/clausum integrum solum in linea. Reddit
+ * I..VII; ZEPHYRUM = nulla. Conditio VII paragraphum interrumpere NON
+ * potest (paragraphus_apertus). */
+i32
+md_scan_html_initium (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                   b32  paragraphus_apertus);
+
+/* An linea blocum html conditionis datae CLAUDAT: I..V chordam finalem
+ * continent ('</script>' etc., '-->', '?>', '>', ']]>' - linea ipsa
+ * blocci pars est); VI et VII linea VACUA finiunt, quam vocans iudicat
+ * (hic FALSUM). */
+b32
+md_scan_html_finis (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                   i32  conditio);
+
+
 /* ==================================================
  * Fabrica lexematum
  * ================================================== */
