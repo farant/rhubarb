@@ -1,0 +1,25 @@
+<md>
+  <capitulum gradus="2"><inlinea><textus>Hello </textus><emphasis><textus>world</textus></emphasis></inlinea></capitulum>
+  <paragraphus><inlinea><textus>See </textus><nexus-referens titulus="foo"><textus>the docs</textus></nexus-referens><textus>.</textus></inlinea></paragraphus>
+  <definitio-nexus titulus="foo" url="/url" descriptio="title"/>
+  <lista genus="punctata" laxa="falsum">
+    <elementum><inlinea><textus>one</textus></inlinea>
+      <lista genus="punctata" laxa="falsum"><elementum><inlinea><textus>nested</textus></inlinea></elementum></lista>
+    </elementum>
+    <elementum><inlinea><textus>two</textus></inlinea></elementum>
+  </lista>
+</md>
+
+<TRANSPARENTIA tags="definitio-nexus"/>
+
+<EXEMPLAR output="$capitula"><capitulum gradus="$g" $c/></EXEMPLAR>
+<EXEMPLAR output="$emphases"><emphasis $e/></EXEMPLAR>
+<EXEMPLAR output="$nexus"><nexus-referens titulus="$t" $n/></EXEMPLAR>
+<EXEMPLAR output="$listae"><lista $l/></EXEMPLAR>
+
+<html>
+  <PER congruentia="$capitula"><h2 gradus="&@g;">&@c;</h2></PER>
+  <PER congruentia="$emphases"><em>&@e;</em></PER>
+  <PER congruentia="$nexus"><a href="?">&@n;</a></PER>
+  <PER congruentia="$listae"><ul>&@l;</ul></PER>
+</html>

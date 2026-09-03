@@ -1,0 +1,15 @@
+<md>
+  <paragraphus><inlinea><textus>See </textus><nexus-referens titulus="foo"><textus>the docs</textus></nexus-referens></inlinea></paragraphus>
+  <paragraphus><inlinea><nexus-referens titulus="bar"><textus>other</textus></nexus-referens></inlinea></paragraphus>
+  <definitio-nexus titulus="foo" url="/url" descriptio="title"/>
+  <definitio-nexus titulus="bar" url="/alia"/>
+</md>
+
+<CATENA output="$nexus">
+  <(><EXEMPLAR><nexus-referens titulus="$t" $n/></EXEMPLAR>
+  <(><EXEMPLAR radix="fontis"><definitio-nexus titulus="&@t;" url="$u"/></EXEMPLAR>
+</CATENA>
+
+<html>
+  <PER congruentia="$nexus"><a href="&@u;">&@n;</a></PER>
+</html>
