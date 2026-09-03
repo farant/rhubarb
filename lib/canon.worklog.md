@@ -572,3 +572,23 @@ Three EXEMPLAR sites mirror the engine's radix= law (value
 STATICALLY — the engine can only see it at runtime). Arm judge:
 ORDINARIUS+angustans = malformatum (CASUS angustans lawful,
 attribute unpoliced otherwise per CAPS custom). Mala rows 19-21.
+
+## 2026-09-02 (night) — one subtree collection for all root-scoped rules
+
+Profiled the silva canon corpus test (156 latinized lib sources
+judged twice each, plain and expanded): `_subarborem_colligere` was
+19% of the samples, and the callers were the uniqueness and citation
+loops in `canon_iudicare`. The C89 canon has one uniqueness rule and
+four citation rules, none with `intra`, so `_scopos_colligere`
+returns the root alone and each rule collected the ENTIRE document
+into its own fresh array — five full walks per judgment, ten per
+file, each walk three out-of-line calls per child. Now the block
+holding both loops keeps one `nodi_documenti`, filled by the first
+rule without `intra` and shared by the rest; rules with `intra` keep
+their own per-scope collection. Consumers only read the array.
+Serial canon corpus test 37.8 → 32.5 s, every census line identical.
+What remains in that test is the per-rule per-node loops themselves
+(attribute lookup and title compares over 17k–138k nodes per file)
+and the write-then-read of the parsura document; the accessor
+plumbing (xar_obtinere/xar_numerus/stml_liberum_ad_indicem) is still
+a quarter of the samples and is a library-wide question, not canon's.

@@ -91,16 +91,27 @@ _praetermittendum (
         || strcmp(titulus, "node_modules") == ZEPHYRUM;
 }
 
+/* Caput repositorii SEMEL lectum: via + textus in piscina probationis.
+ * Ante hoc quaeque plagula probata directoria omnia ambulabat et
+ * capita omnia legebat (CLVI vicibus; XIV% temporis, 2026-09-02) -
+ * nunc lectio una, praebitio per plagulam (contextus textum copiat). */
+nomen structura {
+             character  via[1024];
+    constans        i8* textus;
+                   i32  mensura;
+} CaputLectum;
+
 interior vacuum
-_caput_praebere (
-        SilvaContextus* ctx,
-               Piscina* piscina,
-        TabulaDispersa* visa,
-    constans character* via)
+_caput_legere (
+           Piscina* piscina,
+    TabulaDispersa* visa,
+constans character* via,
+               Xar* capita)
 {
-       chorda  clavis;
-           i8* textus;
-          i32  mensura;
+         chorda  clavis;
+             i8* textus;
+            i32  mensura;
+    CaputLectum* locus;
 
     clavis = chorda_ex_literis(via, piscina);
     si (tabula_dispersa_continet(visa, clavis))
@@ -112,19 +123,23 @@ _caput_praebere (
     {
         redde;
     }
-    si (silva_contextus_praebere(ctx, via,
-            (constans character*)textus, mensura))
+    locus = (CaputLectum*)xar_addere(capita);
+    si (locus == NIHIL)
     {
-        (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
+        redde;
     }
+    strcpy(locus->via, via);
+    locus->textus   = textus;
+    locus->mensura  = mensura;
+    (vacuum)tabula_dispersa_inserere(visa, clavis, NIHIL);
 }
 
 interior vacuum
-_capita_praeparare (
-        SilvaContextus* ctx,
-               Piscina* piscina,
-        TabulaDispersa* visa,
-    constans character* via)
+_capita_legere (
+           Piscina* piscina,
+    TabulaDispersa* visa,
+constans character* via,
+               Xar* capita)
 {
                  DIR* dir;
     structura dirent* introitus;
@@ -155,7 +170,7 @@ _capita_praeparare (
         sprintf(via_plena, "%s/%s", via, introitus->d_name);
         si (introitus->d_type == DT_DIR)
         {
-            _capita_praeparare(ctx, piscina, visa, via_plena);
+            _capita_legere(piscina, visa, via_plena, capita);
         }
         alioquin
         {
@@ -164,11 +179,31 @@ _capita_praeparare (
                 && introitus->d_name[m - II] == '.'
                 && introitus->d_name[m - I]  == 'h')
             {
-                _caput_praebere(ctx, piscina, visa, via_plena);
+                _caput_legere(piscina, visa, via_plena, capita);
             }
         }
     }
     closedir(dir);
+}
+
+/* capita lecta contextui plagulae praebere (ordine lectionis) */
+interior vacuum
+_capita_praebere (
+    SilvaContextus* ctx,
+      constans Xar* capita)
+{
+    i32 i;
+    i32 n;
+
+    n = xar_numerus(capita);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        constans CaputLectum* c;
+
+        c = (constans CaputLectum*)xar_obtinere(capita, i);
+        (vacuum)silva_contextus_praebere(ctx, c->via,
+            (constans character*)c->textus, c->mensura);
+    }
 }
 
 /* FALSUM = apparatus fractus (fracturae); recusa = fines tactae */
@@ -177,6 +212,7 @@ _recipe_examinis (
                Piscina* opus,
     constans character* radix,
     constans character* via,
+          constans Xar* capita,
          RecipeFructus* fructus)
 {
      SilvaContextus* ctx;
@@ -251,16 +287,8 @@ _recipe_examinis (
         redde FALSUM;
     }
 
-    /* capita repositorii (inclusio vera) */
-    {
-        TabulaDispersa* visa = tabula_dispersa_creare_chorda(opus,
-            DXII);
-
-        si (visa != NIHIL)
-        {
-            _capita_praeparare(ctx, opus, visa, radix);
-        }
-    }
+    /* capita repositorii (inclusio vera) - lecta semel, praebita hic */
+    _capita_praebere(ctx, capita);
 
     oraculum = silva_oraculum_creare(opus);
     parsura  = silva_c89_parsare_cum_contextu(opus, ctx, via,
@@ -506,7 +534,8 @@ _plagulam_probare (
      constans character* radix,
         constans chorda* lint_textus,
         constans chorda* lint_diribitio,
-             LintCensus* census)
+             LintCensus* census,
+           constans Xar* capita)
 {
                  Piscina* opus;
            RecipeFructus  fructus;
@@ -527,7 +556,7 @@ _plagulam_probare (
     }
     census->plagulae++;
 
-    si (!_recipe_examinis(opus, radix, via, &fructus))
+    si (!_recipe_examinis(opus, radix, via, capita, &fructus))
     {
         census->fracturae++;
         imprimere("    RECIPE FRACTUM: %s\n", via);
@@ -707,6 +736,7 @@ principale (vacuum)
                   chorda lint_diribitio;
                      i32 i;
                      b32 praeteritus;
+    Xar* capita;
 
     piscina = piscina_generare_dynamicum("probatio_lint_ii",
                                          4194304);
@@ -738,6 +768,18 @@ principale (vacuum)
     }
     lint_textus.datum    = lint_datum;
     lint_textus.mensura  = lint_mensura;
+
+    /* capita repositorii SEMEL lecta (vide CaputLectum) */
+    capita = xar_creare(piscina, (i32)magnitudo(CaputLectum));
+    {
+        TabulaDispersa* visa = tabula_dispersa_creare_chorda(piscina,
+            DXII);
+
+        si (capita != NIHIL && visa != NIHIL)
+        {
+            _capita_legere(piscina, visa, radix, capita);
+        }
+    }
 
     sprintf(via_plagulae,
         "%s/silva/probationes/fixa/exemplaria/"
@@ -779,7 +821,7 @@ principale (vacuum)
         sprintf(via_plagulae, "%s/lib/%s", radix,
                 introitus->d_name);
         _plagulam_probare(via_plagulae, radix, &lint_textus,
-                          &lint_diribitio, &census_bibliothecae);
+            &lint_diribitio, &census_bibliothecae, capita);
     }
     closedir(corpus);
     _censum_referre("bibliotheca", &census_bibliothecae);
@@ -793,7 +835,7 @@ principale (vacuum)
     {
         sprintf(via_plagulae, "%s/%s", radix, PROBATIONES_VIVAE[i]);
         _plagulam_probare(via_plagulae, radix, &lint_textus,
-                          &lint_diribitio, &census_probationum);
+            &lint_diribitio, &census_probationum, capita);
     }
     _censum_referre("probationes", &census_probationum);
 

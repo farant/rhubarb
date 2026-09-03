@@ -336,6 +336,24 @@ AW    tools/aedilis.worklog.md
       on the growable array, subtree collection per rule), not
       parsing (~3 s per test) - that is the next lever, and it is
       a canon/lint profile, not a silva one.
+10.13. Two test-side and canon-side repairs (2026-09-02, night),
+      from the launcher's profiles. (a) The two lint tests
+      (exemplaria_inutilia, exemplaria_obsoleta) walked every
+      directory under the repo root and read every header for EVERY
+      file they judged, 156 times - 14% of their samples in opendir,
+      readdir and fopen. The headers are now read once per test into
+      a CaputLectum array and handed to each file's context (the
+      context copies on provide, so the semantics are unchanged).
+      (b) canon_iudicare collected the whole document once per rule
+      for the five root-scoped C89 rules; it now collects once and
+      shares. Serial: canon_corpus 37.8 -> 32.5 s, inutilia 35.7 ->
+      30.2, obsoleta 38.9 -> 33.7; every findings line identical to
+      the pre-change logs. Remaining, in order of size: the
+      write-then-read of the parsura document in all five corpus
+      tests (lint 59%, inutilia 28%, canon ~16% - an arbor API
+      question, decision pending), the child-access plumbing (three
+      out-of-line calls per child visit, ~25% of canon samples), and
+      the per-rule per-node loops in canon.
 11.8. Re-measured on this toolchain, with the include closure:
       lib/stml.c (285,866 B) parses in 176 ms into 436 MB handed out,
       606 MB committed, 1,141,283 allocations, 11 blocks; lib/piscina.c

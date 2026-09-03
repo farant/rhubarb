@@ -302,14 +302,21 @@ genus_legere (
     constans chorda* s)
 {
     si (chorda_aequalis_literis(*s, "nomen"))   redde CANON_GENUS_NOMEN;
-    si (chorda_aequalis_literis(*s, "numerus")) redde CANON_GENUS_NUMERUS;
-    si (chorda_aequalis_literis(*s, "veritas")) redde CANON_GENUS_VERITAS;
+    si (chorda_aequalis_literis(*s,
+                                                    "numerus")) redde CANON_GENUS_NUMERUS;
+    si (chorda_aequalis_literis(*s,
+                                                    "veritas")) redde CANON_GENUS_VERITAS;
     si (chorda_aequalis_literis(*s, "dies"))    redde CANON_GENUS_DIES;
-    si (chorda_aequalis_literis(*s, "electio")) redde CANON_GENUS_ELECTIO;
-    si (chorda_aequalis_literis(*s, "identitas")) redde CANON_GENUS_IDENTITAS;
-    si (chorda_aequalis_literis(*s, "referentia")) redde CANON_GENUS_REFERENTIA;
-    si (chorda_aequalis_literis(*s, "compositum")) redde CANON_GENUS_COMPOSITUM;
-    si (chorda_aequalis_literis(*s, "titulus")) redde CANON_GENUS_TITULUS;
+    si (chorda_aequalis_literis(*s,
+                                                    "electio")) redde CANON_GENUS_ELECTIO;
+    si (chorda_aequalis_literis(*s,
+                                                      "identitas")) redde CANON_GENUS_IDENTITAS;
+    si (chorda_aequalis_literis(*s,
+                                                       "referentia")) redde CANON_GENUS_REFERENTIA;
+    si (chorda_aequalis_literis(*s,
+                                                       "compositum")) redde CANON_GENUS_COMPOSITUM;
+    si (chorda_aequalis_literis(*s,
+                                                    "titulus")) redde CANON_GENUS_TITULUS;
 
     redde CANON_GENUS_TEXTUS;
 }
@@ -2726,7 +2733,8 @@ _caps_iudicare (
               i32  numerus;
 
         output = stml_attributum_capere(n, "output");
-        si (   output                             == NIHIL || output->mensura < II
+        si (   output                             == NIHIL
+            || output->mensura < II
             || (character)output->datum[ZEPHYRUM] != '$')
         {
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
@@ -2802,7 +2810,8 @@ _caps_iudicare (
         chorda* voca;
 
         congruentia = stml_attributum_capere(n, "congruentia");
-        si (   congruentia                             == NIHIL || congruentia->mensura < II
+        si (   congruentia                             == NIHIL
+            || congruentia->mensura < II
             || (character)congruentia->datum[ZEPHYRUM] != '$')
         {
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
@@ -2829,7 +2838,8 @@ _caps_iudicare (
            i32  ante;
 
         output = stml_attributum_capere(n, "output");
-        si (   output                             == NIHIL || output->mensura < II
+        si (   output                             == NIHIL
+            || output->mensura < II
             || (character)output->datum[ZEPHYRUM] != '$')
         {
             vitium_addere(vitia, CANON_MACHINAE_MALFORMATUM, n,
@@ -3904,6 +3914,13 @@ canon_iudicare (
      * quaestionem, status intra machinam). Subarbor infixi
      * ubique praetermissa. ---- */
     {
+        /* subarbor documenti TOTIUS (regula sine intra: scopus =
+         * radix, limes nullus) semel collecta, regulis omnibus
+         * communis - olim regula quaeque documentum totum iterum
+         * ambulabat (V regulae c89 = XIX% temporis portae corporis,
+         * 2026-09-02). Consumptores legunt tantum. */
+        Xar* nodi_documenti = NIHIL;
+
         per (i = ZEPHYRUM; i < xar_numerus(canon->unicitates); i++)
         {
                  CanonUnicitas* u;
@@ -3934,9 +3951,23 @@ canon_iudicare (
                 s = *(StmlNodus**)xar_obtinere(scopi, is);
                 visa = tabula_dispersa_creare_chorda(piscina,
                                                      XXXII);
-                nodi = xar_creare(piscina,
-                                  (i32)magnitudo(StmlNodus*));
-                _subarborem_colligere(s, u->intra, infixus, nodi);
+                si (u->intra == NIHIL)
+                {
+                    si (nodi_documenti == NIHIL)
+                    {
+                        nodi_documenti = xar_creare(piscina,
+                            (i32)magnitudo(StmlNodus*));
+                        _subarborem_colligere(s, NIHIL, infixus,
+                            nodi_documenti);
+                    }
+                    nodi = nodi_documenti;
+                }
+                alioquin
+                {
+                    nodi = xar_creare(piscina,
+                        (i32)magnitudo(StmlNodus*));
+                    _subarborem_colligere(s, u->intra, infixus, nodi);
+                }
 
                 per (j = ZEPHYRUM; j < xar_numerus(nodi); j++)
                 {
@@ -4018,9 +4049,23 @@ canon_iudicare (
                 s = *(StmlNodus**)xar_obtinere(scopi, is);
                 claves = tabula_dispersa_creare_chorda(piscina,
                                                        XXXII);
-                nodi = xar_creare(piscina,
-                                  (i32)magnitudo(StmlNodus*));
-                _subarborem_colligere(s, ci->intra, infixus, nodi);
+                si (ci->intra == NIHIL)
+                {
+                    si (nodi_documenti == NIHIL)
+                    {
+                        nodi_documenti = xar_creare(piscina,
+                            (i32)magnitudo(StmlNodus*));
+                        _subarborem_colligere(s, NIHIL, infixus,
+                            nodi_documenti);
+                    }
+                    nodi = nodi_documenti;
+                }
+                alioquin
+                {
+                    nodi = xar_creare(piscina,
+                        (i32)magnitudo(StmlNodus*));
+                    _subarborem_colligere(s, ci->intra, infixus, nodi);
+                }
 
                 /* passus I: claves scopi colligere - nodus
                  * clavigerus est si titulus eius in indice
