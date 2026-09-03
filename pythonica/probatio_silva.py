@@ -388,16 +388,23 @@ credo(silva.mensurae('nemo.', 1) == [], 'mensurae: praefixum ignotum vacuum')
 print('--- replace_inter (Editio + Textus) ---')
 open(via, 'w').write(FONS)
 e = silva.Editio(via)
-e.replace_inter('b (vacuum)\n{', 'redde;\n}', 'b (vacuum)\n{\n    frange;\n}')   # 'vacuum b (vacuum)' prototypum quoque congrueret
-credo('x  = I;' not in e.textus and 'frange;' in e.textus and '/* b */' in e.textus, 'Editio.replace_inter: spatium inter ancoras substitutum, commentum ducens manet')
+e.replace_inter('b (vacuum)\n{', 'redde;\n}', '\n    frange;\n')   # 'vacuum b (vacuum)' prototypum quoque congrueret
+credo('x  = I;' not in e.textus and 'frange;' in e.textus and '/* b */' in e.textus and 'redde;\n}' in e.textus and e.textus.count('redde;') == 2,
+      'Editio.replace_inter: spatium inter ancoras substitutum, ancorae SERVATAE, commentum ducens manet')
+e2 = silva.Editio(via)
+e2.replace_inter('b (vacuum)\n{', 'redde;\n}', 'b (vacuum)\n{\n    frange;\n}', inclusae=True)
+credo(e2.textus.count('redde;') == 1 and 'frange;' in e2.textus, 'Editio.replace_inter inclusae=True: ancorae devoratae (mos vetus)')
 try:
     silva.Editio(via).replace_inter('redde;', '}', 'x')       # initium bis
     credo(False, 'replace_inter initium ambiguum levat')
 except silva.SilvaError:
     credo(True, 'replace_inter: initium ambiguum levat')
 tx = silva.Textus(via_t2)
-tx.replace_inter('# titulus', 'gamma', '# T')
-credo(tx.textus.startswith('# T\ncauda') or tx.textus.startswith('# T\n'), 'Textus.replace_inter')
+tx.replace_inter('# titulus', 'gamma', ' X ')
+credo(tx.textus == '# titulus X gamma\ncauda\nalius\n', 'Textus.replace_inter: ancorae servatae (%r)' % tx.textus[:30])
+tx = silva.Textus(via_t2)
+tx.replace_inter('# titulus', 'gamma', '# T', inclusae=True)
+credo(tx.textus == '# T\ncauda\nalius\n', 'Textus.replace_inter inclusae=True')
 try:
     silva.Editio(via).inserere_ante('nemo_hic', 'x')
 except silva.SilvaError as ex:
@@ -664,6 +671,54 @@ finally:
         os.unlink(os.path.join(silva.RADIX, 'build', 'sample', '.cursus_dormiens.tmp.sh.probatio.txt'))
     except OSError:
         pass
+
+print('--- refusio ancorae lineas nominat ---')
+open(via, 'w').write(FONS)
+try:
+    silva.Editio(via).replace('redde;', 'x')
+    credo(False, 'ancora bis levat')
+except silva.SilvaError as ex:
+    credo('lineae [' in str(ex) and str(ex).count(',') >= 1, 'Editio.replace: refusio lineas sedium nominat (%s)' % str(ex)[:70])
+via_t3 = os.path.join(T, 'ter.txt')
+open(via_t3, 'w').write('a\nb\na\n')
+try:
+    silva.Textus(via_t3).replace('a', 'x')
+    credo(False, 'Textus ancora bis levat')
+except silva.SilvaError as ex:
+    credo('lineae [1, 3]' in str(ex), 'Textus.replace: refusio lineas nominat (%s)' % str(ex)[:60])
+
+print('--- profilum: inclusivum recursione collapsa + viae ---')
+via_s = os.path.join(T, 'exemplum.sample.txt')
+open(via_s, 'w').write('Call graph:\n    100 Thread_1\n      100 start\n        100 main\n          60 f\n            40 g\n              30 g\n                20 g\n                  20 xar_obtinere\n          40 h\n            40 xar_obtinere\n\nTotal number in stack (recursive counted multiple, when >=5):\n')
+inc = dict((fn, n) for _, n, fn in silva.profilum_inclusivum(via_s))
+credo(inc.get('g') == 40 and inc.get('xar_obtinere') == 60 and inc.get('f') == 60 and 'main' not in inc,
+      'profilum_inclusivum: recursio collapsa (g 40, non 90), fila/main omissa')
+viae_x = silva.profilum_viae(via_s, 'xar_obtinere')
+credo(viae_x == [(40, 'h > xar_obtinere'), (20, 'f > g×3 > xar_obtinere')],
+      'profilum_viae: semitae ordine ponderis, recursio compressa (%s)' % viae_x)
+credo(silva.profilum_viae(via_s, 'g') == [(40, 'f > g')], 'profilum_viae: functio recursiva semel, in summo')
+
+print('--- imagines: oraculum identitatis octetorum ---')
+import shutil
+via_a = os.path.join(T, 'ia.txt'); via_b = os.path.join(T, 'ib.txt')
+open(via_a, 'w').write('alpha\n'); open(via_b, 'w').write('beta\n')
+im = silva.imago_capere('probatio-imago', ['cat'], [via_a, via_b])
+credo(im.numerus == 2 and os.path.exists(os.path.join(im.via, 'manifestum.json')), 'imago_capere: II plagulae + manifestum')
+co = silva.imago_conferre('probatio-imago')
+credo(co.sana and co.eaedem == [via_a, via_b], 'imago_conferre: idem = sana')
+open(via_b, 'w').write('BETA\n')
+co = silva.imago_conferre('probatio-imago')
+credo(not co.sana and co.diversae == [via_b] and co.eaedem == [via_a] and 'diversa: ' + via_b in str(co),
+      'imago_conferre: plagula mutata nominata')
+credo('-beta' in silva.imago_differentia('probatio-imago', via_b) and '+BETA' in silva.imago_differentia('probatio-imago', via_b),
+      'imago_differentia: lineae ante/post')
+co = silva.imago_conferre('probatio-imago', plagulae=[via_a, os.path.join(T, 'ic.txt')])
+credo(co.novae == [os.path.join(T, 'ic.txt')] and co.absentes == [via_b] and not co.sana,
+      'imago_conferre: novae et absentes nominatae')
+co = silva.imago_conferre('probatio-imago', imperium=['sh', '-c', 'exit 3'])
+credo(co.diversae == [via_a, via_b], 'imago_conferre: rc diversus = diversa')
+shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago'), ignore_errors=True)
+shutil.rmtree(os.path.join(silva.IMAGINES_DIR, 'probatio-imago.post'), ignore_errors=True)
 
 print('--- differre ---')
 cos = FONS.replace('x  = I;', 'x = I;')

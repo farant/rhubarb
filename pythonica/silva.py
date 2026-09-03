@@ -198,6 +198,14 @@ def _sedes_lexematum(textus, vetus):
     return sedes
 
 
+def _lineae_sedium(textus, sedes):
+    """' - lineae [12, 340]' pro refusione ancorae: ubi ancora inventa
+    sit, ut ancora longior sine grep eligatur; '' si nulla"""
+    if not sedes:
+        return ''
+    return ' - lineae %s' % [textus.count('\n', 0, a) + 1 for a, _ in sedes]
+
+
 class Editio(object):
     """Editiones unius plagulae in memoria; applicare() scribit semel.
 
@@ -233,37 +241,48 @@ class Editio(object):
                 sedes.append((i, i + len(vetus)))
                 i = self.textus.find(vetus, i + 1)
         if len(sedes) != numerus:
-            raise SilvaError("ancora %d vicibus inventa (exspectatae %d):"
-                             " %r" % (len(sedes), numerus, vetus[:60]))
+            raise SilvaError("ancora %d vicibus inventa (exspectatae %d)%s:"
+                             " %r" % (len(sedes), numerus,
+                                      _lineae_sedium(self.textus, sedes),
+                                      vetus[:60]))
         for a, b in reversed(sedes):
             self.textus = self.textus[:a] + novus + self.textus[b:]
         self.acta.append('replace %r' % vetus[:40])
         return self
 
-    def replace_inter(self, initium, finis, novus, tolerans=True):
-        """spatium ab INITIO ancorae 'initium' ad FINEM ancorae 'finis'
-        (post initium quaesitae) substituere - ambae breves, unicae;
-        quidquid inter eas (commenta inclusa) abit. Pro blocis quae
-        commenta tenent: ancora totius bloci commenta omnia ferre
-        deberet (lexema unum quodque) - hic duo anchorae solae."""
+    def replace_inter(self, initium, finis, novus, tolerans=True,
+                      inclusae=False):
+        """spatium INTER ancoram 'initium' (semel) et ancoram 'finis'
+        (primam POST initium) substituere - ambae breves, unicae,
+        SERVATAE (novus inter eas stat); inclusae=True: ancorae ipsae
+        quoque abeunt (mos ante 2026-09-02, qui caput 'si' devoravit).
+        Pro blocis quae commenta tenent: ancora totius bloci commenta
+        omnia ferre deberet (lexema unum quodque) - hic duae solae."""
         if tolerans is True:
             a = _sedes_lexematum(self.textus, initium)
         else:
             a = [(i, i + len(initium)) for i in
-                 [j for j in range(len(self.textus)) if self.textus.startswith(initium, j)]]
+                 [j for j in range(len(self.textus))
+                  if self.textus.startswith(initium, j)]]
         if len(a) != 1:
-            raise SilvaError("ancora initii %d vicibus inventa: %r" % (len(a), initium[:60]))
-        a0 = a[0][0]
-        cauda = self.textus[a0:]
+            raise SilvaError("ancora initii %d vicibus inventa%s: %r"
+                             % (len(a), _lineae_sedium(self.textus, a),
+                                initium[:60]))
+        a0, a1 = a[0]
+        cauda = self.textus[a1:]
         if tolerans is True:
             b = _sedes_lexematum(cauda, finis)
         else:
             b = [(i, i + len(finis)) for i in
                  [j for j in range(len(cauda)) if cauda.startswith(finis, j)]]
         if len(b) < 1:
-            raise SilvaError("ancora finis post initium non inventa: %r" % finis[:60])
-        b1 = a0 + b[0][1]
-        self.textus = self.textus[:a0] + novus + self.textus[b1:]
+            raise SilvaError("ancora finis post initium non inventa: %r"
+                             % finis[:60])
+        b0, b1 = a1 + b[0][0], a1 + b[0][1]
+        if inclusae:
+            self.textus = self.textus[:a0] + novus + self.textus[b1:]
+        else:
+            self.textus = self.textus[:a1] + novus + self.textus[b0:]
         self.acta.append('replace_inter %r..%r' % (initium[:20], finis[:20]))
         return self
 
@@ -511,8 +530,10 @@ class Textus(object):
                 sedes.append((i, i + len(vetus)))
                 i = self.textus.find(vetus, i + 1)
         if len(sedes) != numerus:
-            raise SilvaError("ancora %d vicibus inventa (exspectatae %d):"
-                             " %r" % (len(sedes), numerus, vetus[:60]))
+            raise SilvaError("ancora %d vicibus inventa (exspectatae %d)%s:"
+                             " %r" % (len(sedes), numerus,
+                                      _lineae_sedium(self.textus, sedes),
+                                      vetus[:60]))
         for a, b in reversed(sedes):
             self.textus = self.textus[:a] + novus + self.textus[b:]
         self.acta.append('replace %r' % vetus[:40])
@@ -524,16 +545,29 @@ class Textus(object):
     def inserere_ante(self, vetus, novus, numerus=1):
         return self.replace(vetus, novus + vetus, numerus)
 
-    def replace_inter(self, initium, finis, novus):
-        """ab initio 'initium' (semel) ad finem 'finis' (prima post
-        initium) substituere - exacte"""
-        if self.textus.count(initium) != 1:
-            raise SilvaError("ancora initii %d vicibus: %r" % (self.textus.count(initium), initium[:60]))
-        a0 = self.textus.index(initium)
-        b = self.textus.find(finis, a0 + len(initium))
-        if b < 0:
-            raise SilvaError("ancora finis post initium non inventa: %r" % finis[:60])
-        self.textus = self.textus[:a0] + novus + self.textus[b + len(finis):]
+    def replace_inter(self, initium, finis, novus, inclusae=False):
+        """spatium INTER 'initium' (semel) et 'finis' (primam post
+        initium) substituere, exacte; ancorae SERVATAE nisi
+        inclusae=True"""
+        sedes = []
+        i = self.textus.find(initium)
+        while i >= 0:
+            sedes.append((i, i + len(initium)))
+            i = self.textus.find(initium, i + 1)
+        if len(sedes) != 1:
+            raise SilvaError("ancora initii %d vicibus%s: %r"
+                             % (len(sedes), _lineae_sedium(self.textus, sedes),
+                                initium[:60]))
+        a0, a1 = sedes[0]
+        b0 = self.textus.find(finis, a1)
+        if b0 < 0:
+            raise SilvaError("ancora finis post initium non inventa: %r"
+                             % finis[:60])
+        b1 = b0 + len(finis)
+        if inclusae:
+            self.textus = self.textus[:a0] + novus + self.textus[b1:]
+        else:
+            self.textus = self.textus[:a1] + novus + self.textus[b0:]
         self.acta.append('replace_inter %r..%r' % (initium[:20], finis[:20]))
         return self
 
@@ -1113,7 +1147,8 @@ SUITAE = {
     'tessera': ('tessera/probationes', 'tessera/build/%s'),
     'saltuarius': ('saltuarius/probationes', 'saltuarius/build/%s'),
 }
-Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae profilum')
+Cursus = namedtuple('Cursus', 'nomen suita rc secunda acta fracturae profilum'
+                    ' via_profili', defaults=(None,))
 
 
 def probatio_suita(nomen):
@@ -1196,6 +1231,7 @@ def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
                                 stdin=subprocess.DEVNULL, stdout=effusus,
                                 stderr=subprocess.STDOUT)
         profilum = []
+        via_p = None
         if secunda > 0:
             finis_morae = time.time() + mora
             while time.time() < finis_morae and proc.poll() is None:
@@ -1203,8 +1239,9 @@ def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
             if proc.poll() is None:
                 os.makedirs(os.path.join(RADIX, 'build', 'sample'),
                             exist_ok=True)
-                profilum = _profilum(proc.pid, secunda, os.path.join(
-                    RADIX, 'build', 'sample', titulus + '.probatio.txt'))
+                via_p = os.path.join(RADIX, 'build', 'sample',
+                                     titulus + '.probatio.txt')
+                profilum = _profilum(proc.pid, secunda, via_p)
         try:
             rc = proc.wait(timeout=tectum)
         except subprocess.TimeoutExpired:
@@ -1216,7 +1253,89 @@ def probatio_currere(nomen, aedificare=False, secunda=0, mora=2.0,
     acta = _ANSI.sub('', open(via_acta.name, errors='replace').read())
     os.unlink(via_acta.name)
     fr = [] if rc == 0 else fracturae(acta, titulus, forma='generica')
-    return Cursus(titulus, suita, rc, t1 - t0, acta, fr, profilum)
+    return Cursus(titulus, suita, rc, t1 - t0, acta, fr, profilum, via_p)
+
+
+def _profilum_arbor(via):
+    """arbor vocationum ex effusu 'sample' (sectio 'Call graph'):
+    [(altitudo, numerus, functio)] ordine plagulae; numerus = exempla
+    INCLUSIVA subarboris illius"""
+    frusta = []
+    f = False
+    for l in open(via, errors='replace'):
+        if l.startswith('Call graph'):
+            f = True
+            continue
+        if l.startswith('Total number in stack'):
+            break
+        if not f:
+            continue
+        m = re.match(r'^([\s+!:|]*)(\d+) (\S+)', l)
+        if m:
+            frusta.append((len(m.group(1)), int(m.group(2)), m.group(3)))
+    return frusta
+
+
+def profilum_inclusivum(via, tectum=30):
+    """tempus INCLUSIVUM per functionem ex effusu sample - recursione
+    COLLAPSA: occurrentia functionis sub se ipsa non numeratur (summa
+    ingenua per gradus recursionis ambulatores recursivos septies
+    inflabat, 2026-09-02). [(pars, numerus, functio)] ordine ponderis;
+    fila/start/main omissa."""
+    frusta = _profilum_arbor(via)
+    summae = {}
+    acervus = []
+    totum = frusta[0][1] if frusta else 1
+    for altitudo, n, fn in frusta:
+        while acervus and acervus[-1][0] >= altitudo:
+            acervus.pop()
+        if fn not in [s[1] for s in acervus]:
+            summae[fn] = summae.get(fn, 0) + n
+        acervus.append((altitudo, fn))
+    ordo = sorted(summae.items(), key=lambda kv: -kv[1])
+    exitus = []
+    for fn, n in ordo:
+        if fn.startswith('Thread') or fn in ('start', 'main'):
+            continue
+        exitus.append((100.0 * n / totum, n, fn))
+        if len(exitus) >= tectum:
+            break
+    return exitus
+
+
+def profilum_viae(via, functio, minimum=0, tectum=12):
+    """semitae vocationum quae in 'functio' desinunt, a main deorsum:
+    [(numerus, 'a > b×3 > functio')] ordine ponderis - cursus eiusdem
+    functionis (recursio) in unum 'fn×k' comprimitur, occurrentia
+    functionis sub se ipsa omissa (numeratur semel, in summo)."""
+    frusta = _profilum_arbor(via)
+    acervus = []
+    summae = {}
+    for altitudo, n, fn in frusta:
+        while acervus and acervus[-1][0] >= altitudo:
+            acervus.pop()
+        catena = [s[1] for s in acervus]
+        if fn == functio and functio not in catena:
+            if 'main' in catena:
+                catena = catena[catena.index('main') + 1:]
+            catena = catena + [fn]
+            compressa = []
+            for c in catena:
+                if compressa and compressa[-1][0] == c:
+                    compressa[-1][1] += 1
+                else:
+                    compressa.append([c, 1])
+            clavis = ' > '.join(c if k == 1 else '%s×%d' % (c, k)
+                                for c, k in compressa)
+            summae[clavis] = summae.get(clavis, 0) + n
+        acervus.append((altitudo, fn))
+    ordo = sorted(summae.items(), key=lambda kv: -kv[1])
+    return [(n, s) for s, n in ordo if n >= minimum][:tectum]
+
+
+def profilum_inclusivum_textus(inclusivum, tectum=15):
+    return '\n'.join('  %5.1f%%  %6d  %s' % (p, n, fn)
+                     for p, n, fn in inclusivum[:tectum])
 
 
 def cursus_textus(c, tectum=15):
@@ -1234,7 +1353,149 @@ def cursus_textus(c, tectum=15):
         lineae.append('profilum (folia, %d exempla):'
                       % sum(n for n, _, _ in c.profilum))
         lineae.append(profilum_textus(c.profilum, tectum))
+    if c.via_profili and os.path.exists(c.via_profili):
+        lineae.append('profilum (inclusivum, recursione collapsa):')
+        lineae.append(profilum_inclusivum_textus(
+            profilum_inclusivum(c.via_profili), tectum))
+        lineae.append('  (semitae: profilum_viae(%r, functio))' % c.via_profili)
     return '\n'.join(lineae)
+
+
+# ---------------------------------------------------------------- imagines
+
+# Oraculum identitatis octetorum: effusus imperii per plagulam ANTE
+# mutationem servatus, POST conlatus - methodus probationis domus
+# (aequivalentia parsurae, clausurae aedilis, lineae census) quae ter
+# uno die manu gyro crustae scribebatur (2026-09-02).
+IMAGINES_DIR = os.path.join(RADIX, 'build', 'imagines')
+Imago = namedtuple('Imago', 'nomen via imperium plagulae numerus')
+
+
+class Collatio(object):
+    """fructus imago_conferre: eaedem / diversae / absentes (in imagine,
+    non in lista) / novae (in lista, sine imagine); .sana = eaedem
+    solae"""
+
+    def __init__(self, nomen, eaedem, diversae, absentes, novae):
+        self.nomen = nomen
+        self.eaedem = eaedem
+        self.diversae = diversae
+        self.absentes = absentes
+        self.novae = novae
+
+    @property
+    def sana(self):
+        return not (self.diversae or self.absentes or self.novae)
+
+    def __str__(self):
+        s = 'imago %s: %d eaedem, %d diversae, %d absentes, %d novae' % (
+            self.nomen, len(self.eaedem), len(self.diversae),
+            len(self.absentes), len(self.novae))
+        for titulus, lista in (('diversae', self.diversae),
+                               ('absentes', self.absentes),
+                               ('novae', self.novae)):
+            for v in lista[:20]:
+                s += '\n  %s: %s' % (titulus[:-1], v)
+            if len(lista) > 20:
+                s += '\n  ... (%d plures)' % (len(lista) - 20)
+        return s
+
+
+def _imago_nomen_plagulae(via):
+    return via.replace('/', '__')
+
+
+def _imago_currere(imperium, via):
+    args = ([via if a == '{}' else a for a in imperium]
+            if '{}' in imperium else list(imperium) + [via])
+    r = subprocess.run(args, cwd=RADIX, stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
+    return r.returncode, r.stdout
+
+
+def imago_capere(nomen, imperium, plagulae):
+    """imaginem effusus imperii per plagulam servare: build/imagines/
+    <nomen>/<via>.out (octeti stdout) + .rc, manifestum.json (imperium,
+    plagulae, HEAD, momentum). imperium: lista argumentorum, '{}' = via
+    plagulae (absens: via appenditur). Imago prior eiusdem nominis
+    deletur."""
+    import json as _json
+    import shutil
+    d = os.path.join(IMAGINES_DIR, nomen)
+    shutil.rmtree(d, ignore_errors=True)
+    os.makedirs(d)
+    for via in plagulae:
+        rc, octeti = _imago_currere(imperium, via)
+        basis = os.path.join(d, _imago_nomen_plagulae(via))
+        with open(basis + '.out', 'wb') as f:
+            f.write(octeti)
+        with open(basis + '.rc', 'w') as f:
+            f.write(str(rc))
+    with open(os.path.join(d, 'manifestum.json'), 'w') as f:
+        _json.dump({'imperium': list(imperium), 'plagulae': list(plagulae),
+                    'commissio': _curre(['git', 'rev-parse', '--short',
+                                         'HEAD']).stdout.strip(),
+                    'momentum': time.time()}, f)
+    return Imago(nomen, d, list(imperium), list(plagulae), len(plagulae))
+
+
+def imago_manifestum(nomen):
+    import json as _json
+    via = os.path.join(IMAGINES_DIR, nomen, 'manifestum.json')
+    if not os.path.exists(via):
+        raise SilvaError('imago absens: %s (imago_capere primum)' % nomen)
+    with open(via) as f:
+        return _json.load(f)
+
+
+def imago_conferre(nomen, imperium=None, plagulae=None):
+    """imaginem cum effusu PRAESENTI conferre (idem imperium, eaedem
+    plagulae nisi datae): Collatio; .sana = octeti et rc idem ubique.
+    Effusus novus in <nomen>.post/ servatur (imago_differentia)."""
+    m = imago_manifestum(nomen)
+    imperium = list(imperium) if imperium is not None else m['imperium']
+    plagulae = list(plagulae) if plagulae is not None else m['plagulae']
+    d = os.path.join(IMAGINES_DIR, nomen)
+    d_post = d + '.post'
+    import shutil
+    shutil.rmtree(d_post, ignore_errors=True)
+    os.makedirs(d_post)
+    eaedem, diversae, novae = [], [], []
+    for via in plagulae:
+        rc, octeti = _imago_currere(imperium, via)
+        basis = os.path.join(d, _imago_nomen_plagulae(via))
+        basis_post = os.path.join(d_post, _imago_nomen_plagulae(via))
+        with open(basis_post + '.out', 'wb') as f:
+            f.write(octeti)
+        with open(basis_post + '.rc', 'w') as f:
+            f.write(str(rc))
+        if not os.path.exists(basis + '.out'):
+            novae.append(via)
+            continue
+        with open(basis + '.out', 'rb') as f:
+            antea = f.read()
+        rc_antea = open(basis + '.rc').read().strip()
+        if antea == octeti and rc_antea == str(rc):
+            eaedem.append(via)
+        else:
+            diversae.append(via)
+    absentes = [v for v in m['plagulae'] if v not in plagulae]
+    return Collatio(nomen, eaedem, diversae, absentes, novae)
+
+
+def imago_differentia(nomen, via, contextus=3):
+    """differentia unificata effusus imaginis contra effusum ultimae
+    conlationis (<nomen>.post) pro plagula una"""
+    d = os.path.join(IMAGINES_DIR, nomen)
+    a = os.path.join(d, _imago_nomen_plagulae(via) + '.out')
+    b = os.path.join(d + '.post', _imago_nomen_plagulae(via) + '.out')
+    for v in (a, b):
+        if not os.path.exists(v):
+            raise SilvaError('effusus absens: %s' % v)
+    ta = open(a, errors='replace').read().splitlines(True)
+    tb = open(b, errors='replace').read().splitlines(True)
+    return ''.join(difflib.unified_diff(ta, tb, 'imago/' + via,
+                                        'nunc/' + via, n=contextus))
 
 
 # ---------------------------------------------------------------- mensurae

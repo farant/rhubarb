@@ -18,9 +18,11 @@ plica pendet — veritas in C manet.
   `.unitates()`); `strictum=True` REICE revertit
 - `silva.verdictum(via)` — examen + `-delta` uno vocamine
 - `silva.differre(a, b)` — paria unitatum + `cosmetica_solum`
-- `.replace_inter(initium, finis, novus)` — spatium ab ancora prima ad
-  ancoram alteram INCLUSIVE substituere (ancorae ipsae abeunt - novus
-  eas restatuat si manere debent; bloci cum commentis); Textus quoque
+- `.replace_inter(initium, finis, novus[, inclusae=True])` — spatium
+  INTER ancoram primam et alteram (primam post initium) substituere,
+  ancorae SERVATAE; `inclusae=True` = ancorae quoque abeunt (bloci cum
+  commentis); Textus quoque. Refusiones ancorarum LINEAS sedium
+  nominant ('lineae [12, 340]') ut ancora longior sine grep eligatur
 - `silva.metiri(via, n=7)` — computus min-of-n: parsare/lexare ms,
   phases, allocationes, usus (A/B optimizationum)
 - `.membrum_addere(typus, textus, post=None)` — membrum structurae/
@@ -79,6 +81,17 @@ plica pendet — veritas in C manet.
   build/sample/<nomen>.probatio.txt; `cursus_textus(c)` compendium
   (assertiones/fractae/conditio + fracturae + profilum);
   `probatio_suita(nomen)`
+- **profilum**: `Cursus.via_profili` (effusus sample crudus);
+  `silva.profilum_inclusivum(via)` = tempus inclusivum per functionem
+  RECURSIONE COLLAPSA (summa ingenua ambulatores recursivos inflat);
+  `profilum_viae(via, functio)` = semitae a main ad functionem, ordine
+  ponderis, recursio 'fn×k' compressa; `cursus_textus` utrumque imprimit
+- **imagines** (oraculum identitatis octetorum): `silva.imago_capere(nomen,
+  imperium, plagulae)` effusum imperii per plagulam ('{}' = via) in
+  build/imagines/<nomen>/ servat (+ rc, manifestum HEAD);
+  `imago_conferre(nomen[, imperium, plagulae])` -> Collatio (eaedem /
+  diversae / absentes / novae, `.sana`, str); `imago_differentia(nomen,
+  via)` diff ante/post. Methodus probationis domus facta primitivum
 - `Refactio.applicare()` reddit `FructusOmnes` (lista Fructus cum
   `.sana` omnium et str) — eadem assertio ac Fructus unius
 - `silva.mensurae(praefixum, quantum)` — sessiones voluminis mensoris

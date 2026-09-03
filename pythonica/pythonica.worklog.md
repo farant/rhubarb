@@ -149,3 +149,30 @@ the launcher, sampled 8 s — 26% blocked read, 24% xar accessors — the
 same table I built by hand earlier tonight, in one call. Also
 `Refactio.applicare` now returns `FructusOmnes`, a list with `.sana`,
 so the multi-file assertion reads like the single-file one.
+
+## 2026-09-02 (last stretch) — the profile and the oracle become calls
+
+Four rough edges from the performance evening, all mine to hit
+again otherwise. (1) The launcher returned a leaf table, but every
+conclusion came from two scratch scripts: an inclusive table with
+recursion collapsed and the call paths into a function. The first
+inclusive table I built summed every recursion level and inflated
+the recursive walkers seven-fold; that mistake is now impossible,
+because `profilum_inclusivum` counts a function only where it is not
+already on its own stack, and `profilum_viae` compresses recursive
+runs to `fn×k` and counts the target once, at the top. Checked
+against the saved canon sample: identical numbers and paths to the
+hand version. (2) Byte identity was proven three times by shell
+loops: snapshot per file, change, compare. `imago_capere` /
+`imago_conferre` / `imago_differentia` are that loop with a manifest
+(command, files, HEAD), return codes compared too, and named lists
+of same / changed / missing / new. Checked on the real thing: 156
+aedilis closures captured and re-compared, 156 identical. (3) Anchor
+refusals now list the line of each match, so a doubled anchor is
+lengthened without a grep. (4) `replace_inter` had eaten its anchors
+despite its name and cost one rebuild; it now keeps them, `inclusae=
+True` restores the old shape, and the end anchor is searched only
+after the start anchor ends (it used to be able to match inside it).
+The tests that pinned the old behavior were rewritten, and the first
+two rewrites were wrong about the fixture, not about the code — the
+line-numbered refusal and the returned text made that a one-look fix.
