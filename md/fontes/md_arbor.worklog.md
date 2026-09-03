@@ -221,3 +221,53 @@ file is a fixture, not corpus, so nothing depends on it — recorded as a
 known limit of the front-matter scanner.
 
 Fault: tab conversion replaced by a space → example 1 red.
+
+Addendum (post-commit 6c2d50e0): the A6 planted fault was confirmed red
+only AFTER the commit — the plant script's literal anchor missed twice
+because the formatter aligns `d[n]  = '\t';` with two spaces, and the
+commit went ahead on the green suite. Four reds once planted with a
+regex anchor. Rule from this: a plant step must PRINT that it planted
+and the run must PRINT the reds before the commit step is allowed to
+run; the scratchpad script now chains them with `&&`.
+
+## 2026-09-03 — A7: the inline tree
+
+`md_inlinea`: after block parsing, every `inlinea` node's children (one
+raw text per line, soft breaks between) are re-lexed and rebuilt in
+place. The content lines are copied contiguously with `\n` between and
+a segment table maps copy offsets back to source, so every token minted
+lies within one line. A doubly-linked list of ITEMS (lexeme leaf,
+finished node, line break) is what the delimiter-stack and bracket-
+stack algorithms restructure; only at the end do consecutive leaves
+merge into `textus` nodes (derived `valor` only when an escape, entity
+or trailing-space item made decoding differ) and the list becomes
+materia nodes. Breaks inside a LISTA_TOKEN slot (code span content,
+link tail, inline html) are the break's raw tokens; inside LISTA_NODUS
+(emphasis, link text) they stay break nodes — the old `fractura-mollis`
+node is reused, or replaced by a `fractura-dura` that OWNS the trailing
+spaces or backslash as its `signum`.
+
+**Birth reds, in order:** examen refused the first draft for exactly the
+things I already knew were wrong (an undefined helper macro, a stray
+field) plus two sign conversions in the rule-of-three arithmetic —
+`scribe` earned its keep. Then a SIGKILL after 18 s with no output: an
+infinite loop in the emphasis matcher — when both delimiter runs were
+consumed whole the items left the list but their extents never shrank,
+so the same pair matched again forever. Extents now shrink in every
+branch, decided before the list surgery. After that: 1,125 corpus files
+and all 1,324 spec example inputs byte-exact with inlines on, and the
+structure gate green except for my own fixture (a failed `[nope]`
+merges with its neighbours into one text node — correct, and the
+expectation was wrong).
+
+**What passed first time and surprised me:** all the §6.2 emphasis cases
+I pinned (flanking, intraword `_`, `***foo***`, `*foo**bar*` by the rule
+of three, `**foo*bar*baz**`), links in emphasis and emphasis in links,
+"links cannot contain links", reference/collapsed/shortcut forms with
+case-insensitive labels, angle autolinks, GFM bare URLs with trailing
+punctuation and unbalanced `)` excluded, code spans across lines with
+the LINEA token inside `crudum` and the normalized `valor`.
+
+**Named gaps kept:** Unicode punctuation/whitespace classes in flanking
+(ASCII), inline link titles that span lines, labels that span lines,
+~150 named entities. Fault: rule of three disabled → `*foo**bar*` red.

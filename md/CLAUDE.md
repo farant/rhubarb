@@ -55,10 +55,17 @@ files, `→`→tab, extension tag kept), gate `probatio_md_exempla`: 652 +
 672 example INPUTS byte-exact through parse→emit. The house-corpus
 half stays in `probatio_md_arbor`.
 
-**NEXT = A7** (inline tree: textus/emphasis/fortis/deletio/verbatim/
-nexus/imago/fracturae/html-inlineum with derived `valor`; reference
-links resolved from the definition table), then A8 (projection,
-canon, totality, computus).
+**A7 DONE**: `md_inlinea` — the inline tree built in place over each
+`inlinea` (item list → delimiter stack + bracket stack → materia nodes);
+text `valor` only when decoding differs; code spans, emphasis/strong/
+strikethrough, inline + reference + auto links (definition table),
+images, hard/soft breaks (dura OWNS its signum), inline html. Corpus
+and both spec example sets stay byte-exact. Gate `probatio_md_inlinea`
+(§6.2 rules pinned). Birth lesson: delimiter extents must shrink in
+EVERY match branch or the matcher loops.
+
+**NEXT = A8** (STML projection with the derived-token origo/frons,
+hand-written `md.canon` + drift guard, totality, computus twin).
 
 ## Laws to keep (spec §3)
 

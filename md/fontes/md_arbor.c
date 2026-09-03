@@ -42,6 +42,7 @@
 #include "md_lexicon.h"
 #include "md_registrum.h"
 #include "md_decoctum.h"
+#include "md_inlinea.h"
 #include "materia_arbor.h"
 #include "materia_token.h"
 #include "xar.h"
@@ -788,57 +789,6 @@ _definitionem_scandere (
     }
 }
 
-/* Clavis normalizata: trim, cursus spatiorum -> unum, minusculae ASCII
- * (plicatio Unicode = lacuna nominata). */
-interior chorda
-_clavem_normalizare (
-    MdParsura* p,
-          s32  ab,
-          s32  ad)
-{
-    character* d = (character*)piscina_allocare(p->piscina,
-        (memoriae_index)(ad - ab) + I);
-       i32 n = ZEPHYRUM;
-       s32 i;
-       b32 spatium = VERUM;
-    chorda c;
-    unio { character* c; i8* m; } u;
-
-    c.datum    = NIHIL;
-    c.mensura  = ZEPHYRUM;
-    si (d == NIHIL)
-    {
-        redde c;
-    }
-    per (i = ab; i < ad; i++)
-    {
-        character ch = p->fons[i];
-
-        si (ch == ' ' || ch == '\t')
-        {
-            si (!spatium)
-            {
-                d[n]     = ' ';
-                n        = n + I;
-                spatium  = VERUM;
-            }
-            perge;
-        }
-        d[n] = (ch >= 'A'
-            && ch <= 'Z') ? (character)(ch + ('a' - 'A')) : ch;
-        n        = n + I;
-        spatium  = FALSUM;
-    }
-    dum (n > ZEPHYRUM && d[n - I] == ' ')
-    {
-        n = n - I;
-    }
-    u.c        = d;
-    c.datum    = u.m;
-    c.mensura  = n;
-    redde c;
-}
-
 interior b32
 _derivatum_ponere (
                 MdParsura* p,
@@ -960,7 +910,7 @@ _definitiones_extrahere (
                 redde FALSUM;
             }
         }
-        clavis = _clavem_normalizare(p, d.la, d.lb);
+        clavis = md_clavem_normalizare(p->piscina, p->fons, d.la, d.lb);
         si (clavis.datum == NIHIL)
         {
             redde FALSUM;
@@ -2329,6 +2279,83 @@ _paragraphos_finire (
     redde VERUM;
 }
 
+
+/* ==================================================
+ * A7: arbor inlinea post blocos
+ * ================================================== */
+
+interior MateriaNodus*
+_definitio_quaerere (
+    vacuum* datum,
+    chorda  clavis)
+{
+    MdParsura* p = (MdParsura*)datum;
+          i32  m = xar_numerus(p->definitiones);
+          i32  q;
+
+    per (q = ZEPHYRUM; q < m; q++)
+    {
+        MdDefinitioClavis* dc =
+            (MdDefinitioClavis*)xar_obtinere(p->definitiones, q);
+
+        si (   dc->clavis.mensura == clavis.mensura
+            && memcmp(dc->clavis.datum, clavis.datum,
+            (size_t)clavis.mensura) == ZEPHYRUM)
+        {
+            redde dc->nodus;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Omnes nodos 'inlinea' arboris visitare (paragraphus, capitulum, cella) */
+interior b32
+_inlineas_construere (
+    MdInlineaContextus* c,
+          MateriaNodus* nodus)
+{
+    i32 i;
+
+    si (nodus == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (nodus->genus == (s32)MD_GENUS_INLINEA)
+    {
+        redde md_inlinea_construere(c, nodus);
+    }
+    per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+    {
+        constans MateriaValor* v = &nodus->loci[i];
+
+        si (v->genus == MATERIA_VALOR_NODUS)
+        {
+            si (!_inlineas_construere(c, v->datum.nodus))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (v->genus == MATERIA_VALOR_LISTA)
+        {
+            i32 n = materia_valor_lista_numerus(*v);
+            i32 j;
+
+            per (j = ZEPHYRUM; j < n; j++)
+            {
+                constans MateriaValor* e =
+                    materia_valor_lista_obtinere(*v, j);
+
+                si (   e != NIHIL && e->genus == MATERIA_VALOR_NODUS
+                    && !_inlineas_construere(c, e->datum.nodus))
+                {
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
+
 MateriaNodus*
 md_arbor_parsare (
                Piscina* piscina,
@@ -2383,6 +2410,19 @@ md_arbor_parsare (
     si (!_paragraphos_finire(&p))
     {
         redde NIHIL;
+    }
+    {
+        MdInlineaContextus c;
+
+        c.piscina             = piscina;
+        c.fons                = fons;
+        c.fabrica             = &p.fabrica;
+        c.definitio_quaerere  = _definitio_quaerere;
+        c.datum               = &p;
+        si (!_inlineas_construere(&c, p.documentum))
+        {
+            redde NIHIL;
+        }
     }
     si (!_ponere_lexema(p.documentum, (i32)MD_DOCUMENTUM_FINIS,
             md_lexema_finis(&p.fabrica)))

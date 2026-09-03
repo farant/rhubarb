@@ -315,3 +315,53 @@ md_decoquere (
     }
     redde c;
 }
+
+chorda
+md_clavem_normalizare (
+               Piscina* piscina,
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    character* d = (character*)piscina_allocare(piscina,
+        (memoriae_index)(ad - ab) + I);
+       i32 n = ZEPHYRUM;
+       s32 i;
+       b32 spatium = VERUM;
+    chorda c;
+    unio { character* c; i8* m; } u;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    si (d == NIHIL)
+    {
+        redde c;
+    }
+    per (i = ab; i < ad; i++)
+    {
+        character ch = fons[i];
+
+        si (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+        {
+            si (!spatium)
+            {
+                d[n]     = ' ';
+                n        = n + I;
+                spatium  = VERUM;
+            }
+            perge;
+        }
+        d[n] = (ch >= 'A'
+            && ch <= 'Z') ? (character)(ch + ('a' - 'A')) : ch;
+        n        = n + I;
+        spatium  = FALSUM;
+    }
+    dum (n > ZEPHYRUM && d[n - I] == ' ')
+    {
+        n = n - I;
+    }
+    u.c        = d;
+    c.datum    = u.m;
+    c.mensura  = n;
+    redde c;
+}

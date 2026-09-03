@@ -38,4 +38,14 @@ md_ens_decoquere (
                    i32* longitudo,
                    s32* post);
 
+/* Clavis tituli nexus normalizata (par. 4.7): trim, cursus spatiorum
+ * (spatium, tabula, linea nova) -> unum, minusculae ASCII (plicatio
+ * Unicode = lacuna nominata). Copia in piscina. */
+chorda
+md_clavem_normalizare (
+               Piscina* piscina,
+    constans character* fons,
+                   s32  ab,
+                   s32  ad);
+
 #endif /* MD_DECOCTUM_H */
