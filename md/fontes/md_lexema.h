@@ -309,6 +309,18 @@ md_lexema_finis (
     MdFabrica* fabrica);
 
 
+/* Lexema DERIVATUM (spec par. III, fons I): valor decoctus in piscina,
+ * byte_offset -I (octetos nullos tenet), linea/columna ex origine
+ * (sedes portata). Emissor consilio fons_index = MD_FONS_PLAGULAE ea
+ * omittit; proiectio ea cum f="1" scribit. */
+MateriaToken*
+md_lexema_derivatum (
+                MdFabrica* fabrica,
+                      s32  genus,
+                   chorda  valor,
+    constans MateriaToken* origo);
+
+
 /* ==================================================
  * Lexatio cruda - porta A2
  * ================================================== */

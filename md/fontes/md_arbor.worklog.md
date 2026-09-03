@@ -143,3 +143,49 @@ set → 3 reds; lazy continuation removed → reds. The full CommonMark
 container example inputs run at A6 with the spec.txt reader; A4's
 coverage is the fixture set (interruption, empty items, nesting, quotes
 with lists, fences closing with their quote).
+
+## 2026-09-03 — A5: tables (A5a) and link reference definitions (A5b)
+
+Both are "a paragraph turns out to be something else at a later line".
+Materia's list value is a VIEW `{xar, mensura}` over an append-only
+store, so a paragraph's inline list can be shortened by assigning its
+`mensura` — that is how the last line of a paragraph becomes a table
+header (16 files in the corpus have a header directly under paragraph
+text). Dropping leading lines is not a view operation, so definitions
+rebuild the remainder as a NEW paragraph node whose children are the
+old nodes (moved, not cloned; the orphaned node gets `nudus` 0
+harmlessly at the end).
+
+**Tables.** `md_scan_ordo` splits a row at unescaped pipes; the first
+and last segments are cells only if non-blank, interior ones always;
+every byte belongs to a cell's PIPA token (trailing whitespace of the
+previous content + `|` + leading whitespace) or to the row's `clausum`.
+Rows shorter than the header are padded with byte-less cells so the
+html transform never has to count. A delimiter row under a paragraph
+makes a table only if a pipe appears somewhere (delimiter or header);
+otherwise setext and thematic break keep precedence. Tables close on a
+blank line, a block start, or an unmatched container. 1,367 tables in
+the corpus.
+
+**Definitions.** Extracted at paragraph CLOSE from the leading lines:
+forms `[t]: d "s"`, `[t]:` + destination on the next line, destination
++ title on the next line; a title must close on its own line and a
+label may not span lines (named gaps; rare). The label is normalized
+(trim, whitespace collapsed, ASCII lowercase — Unicode case folding is
+a named gap) into the parser's definition table, first wins. Each
+definition carries THREE derived tokens (source 1, `byte_offset` -1,
+position portable from the origin token): `titulus`, `url`,
+`descriptio`, decoded by `md_decoquere` (backslash escapes + numeric
+entities + ~150 named entities; the full HTML5 table of 2,231 is a
+named gap for B3's entity section). The emitter with
+`consilium.fons_index = 0` omits them — the corpus stays byte-exact —
+and the gate also proves the mechanism the other way: emitting ALL
+sources yields more bytes than the file. Corpus: 0 definitions, as the
+census said.
+
+**Birth reds:** `nomen` as a struct member in the entity table (latina.h
+`typedef`) — examen REICE through `scribe`, fixed before a single
+compile; an `Editio` anchor on the state struct failed literal matching
+after the formatter realigned it (tolerant mode fixed it). Planted:
+storing the raw destination instead of the decoded one → red; minting
+derived tokens as source 0 → the omission proof red.

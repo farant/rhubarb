@@ -82,6 +82,7 @@ _circuitus (
         redde NIHIL;
     }
     materia_scriptura_consilium_nudum(&consilium, &MD_REGISTRUM);
+    consilium.fons_index = MD_FONS_PLAGULAE;   /* derivata (fons I) omissa */
     emissa = materia_scribere_nodum(piscina, radix, &consilium);
     si (!emissa.successus)
     {
@@ -112,6 +113,46 @@ _circuitus (
         imprimere("    (octetus %d dispar)\n", (integer)k);
     }
     redde radix;
+}
+
+/* Emissio OMNIUM fontium (fons_index -I): cum derivatis adest, octeti
+ * fonte LONGIORES - probat mechanismum omissionis, non parsuram. */
+interior i32
+_emissa_omnia (
+               Piscina* piscina,
+    constans character* fons,
+                   i32  mensura)
+{
+              MateriaNodus* radix = md_arbor_parsare(piscina, fons,
+                  mensura);
+             MateriaScriptura emissa;
+    MateriaScripturaConsilium consilium;
+
+    si (radix == NIHIL)
+    {
+        redde (i32)-I;
+    }
+    materia_scriptura_consilium_nudum(&consilium, &MD_REGISTRUM);
+    emissa = materia_scribere_nodum(piscina, radix, &consilium);
+    redde emissa.successus ? emissa.textus.mensura : (i32)-I;
+}
+
+interior b32
+_valor_aequalis (
+    constans MateriaNodus* nodus,
+                      i32  locus,
+       constans character* litterae)
+{
+    constans MateriaToken* t;
+
+    si (nodus->loci[locus].genus != MATERIA_VALOR_TOKEN)
+    {
+        redde FALSUM;
+    }
+    t = nodus->loci[locus].datum.token;
+    redde (b32)(t->valor.mensura == (i32)strlen(litterae)
+                && memcmp(t->valor.datum, litterae,
+                (size_t)t->valor.mensura) == ZEPHYRUM);
 }
 
 interior i32
@@ -927,6 +968,116 @@ principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: definitiones nexuum (par. 4.7) + lexemata derivata
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* def;
+
+        imprimere("\n--- Probans definitiones nexuum ---\n");
+
+        d = PARSA("[foo]: /url \"title\"\n\n[foo]\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DEFINITIO_NEXUS);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_LINEA_VACUA);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, II),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        def = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(def, (i32)MD_DEFINITIO_LINEAE), I);
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_TITULUS,
+            "foo"));
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_URL,
+            "/url"));
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_DESCRIPTIO,
+            "title"));
+        CREDO_AEQUALIS_S32 (def->loci[MD_DEFINITIO_URL].datum.token->fons_index,
+            MD_FONS_DERIVATUS);
+        CREDO_AEQUALIS_S32 (def->loci[MD_DEFINITIO_URL].datum.token->byte_offset,
+            (s32)-I);
+        /* mechanismus omissionis: omnia emissa = fonte longiora */
+        CREDO_MAIOR_I32 ((i32)_emissa_omnia(piscina,
+            "[foo]: /url \"title\"\n",
+            (i32)strlen("[foo]: /url \"title\"\n")),
+            (i32)strlen("[foo]: /url \"title\"\n"));
+
+        /* tres lineae, titulus normalizatus, reliquum paragraphus */
+        d = PARSA("[Foo  Bar]:\n/url\n'the title'\nrest\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        def = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (_numerus(def, (i32)MD_DEFINITIO_LINEAE),
+            III);
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_TITULUS,
+            "foo bar"));
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_DESCRIPTIO,
+            "the title"));
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        CREDO_AEQUALIS_I32 (_numerus(_elementum(d,
+            (i32)MD_DOCUMENTUM_BLOCI, I)
+            ->loci[MD_PARAGRAPHUS_INLINEA].datum.nodus,
+            (i32)MD_INLINEA_LIBERI), I);
+
+        /* duae definitiones + paragraphus; '<>' vacua; effugia/entia */
+        d = PARSA("[foo]: /a\n[bar]: <>\ntext\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), III);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_DEFINITIO_NEXUS);
+        CREDO_FALSUM (_adest(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI, I),
+            (i32)MD_DEFINITIO_DESCRIPTIO));
+        d = PARSA("[foo]: /f\\*o \"t&amp;t\"\n");
+        CREDO_VERUM (sani);
+        def = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_URL,
+            "/f*o"));
+        CREDO_VERUM (_valor_aequalis(def, (i32)MD_DEFINITIO_DESCRIPTIO,
+            "t&t"));
+
+        /* non definitiones */
+        d = PARSA("[foo]: /url \"title\" extra\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        d = PARSA("[foo]:\n\n/url\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        d = PARSA("[foo](/url)\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        d = PARSA("text\n[foo]: /url\n");   /* non interrumpit */
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        /* descriptio mala in linea proxima: definitio sine ea + paragraphus */
+        d = PARSA("[foo]: /url\n\"title\" ok\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DEFINITIO_NEXUS);
+        CREDO_FALSUM (_adest(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_DEFINITIO_DESCRIPTIO));
+
+        /* intra citationem: praefixa lineae in definitione */
+        d = PARSA("> [foo]: /url\n");
+        CREDO_VERUM (sani);
+        def = _elementum(_elementum(d, (i32)MD_DOCUMENTUM_BLOCI,
+            ZEPHYRUM),
+            (i32)MD_CITATIO_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (def->genus, (s32)MD_GENUS_DEFINITIO_NEXUS);
+        CREDO_AEQUALIS_I32 (_numerus(_elementum(def,
+            (i32)MD_DEFINITIO_LINEAE, ZEPHYRUM),
+            (i32)MD_LINEA_PRAEFIXA), I);
+    }
+
+
+    /* ========================================================
      * PROBARE: corpus totum - octeti et praesentia
      * ======================================================== */
 
@@ -948,6 +1099,7 @@ principale (vacuum)
               i32  elementa = ZEPHYRUM;
               i32 citationes = ZEPHYRUM;
               i32 tabulae = ZEPHYRUM;
+              i32 definitiones = ZEPHYRUM;
 
         imprimere("\n--- PORTA CORPORIS: parsura + emissio, omnes plagulae ---\n");
 
@@ -1015,6 +1167,8 @@ principale (vacuum)
                         (s32)MD_GENUS_CITATIO);
                     tabulae += _genera_numerare(d,
                         (s32)MD_GENUS_TABULA);
+                    definitiones += _genera_numerare(d,
+                        (s32)MD_GENUS_DEFINITIO_NEXUS);
                     divisiones += _genera_numerare(d,
                         (s32)MD_GENUS_DIVISIO);
                     praefationes += _adest(d,
@@ -1034,9 +1188,9 @@ principale (vacuum)
                 (integer)capitula, (integer)saepta, (integer)indentata,
                 (integer)html, (integer)divisiones,
                 (integer)praefationes);
-            imprimere("  listae %d, elementa %d, citationes %d, tabulae %d\n",
+            imprimere("  listae %d, elementa %d, citationes %d, tabulae %d, definitiones %d\n",
                 (integer)listae, (integer)elementa, (integer)citationes,
-                (integer)tabulae);
+                (integer)tabulae, (integer)definitiones);
             CREDO_AEQUALIS_I32 (fractae, ZEPHYRUM);
             CREDO_AEQUALIS_I32 (absentes, ZEPHYRUM);
             CREDO_MAIOR_I32 (plagulae, (i32)1000);

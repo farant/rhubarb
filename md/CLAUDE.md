@@ -40,8 +40,17 @@ prefix tokens of the owning leaf; blank lines PEND until the next
 non-blank line names their container. Corpus: 10,435 lists, 46,707
 items, 160 quotes, still byte-exact.
 
-**NEXT = A5** (GFM tables + link reference definitions with the
-derived-token machinery), then A6 (spec.txt reader + the example corpus).
+**A5 DONE**: GFM tables (`md_scan_ordo`, header from the paragraph's
+last line via the list VIEW, rows padded to the header's cell count,
+1,367 in the corpus) and link reference definitions (extracted at
+paragraph close; label normalized into the parser's table; `titulus` /
+`url` / `descriptio` as DERIVED tokens, source 1, decoded by
+`md_decoctum` — emitter omits them with `consilium.fons_index = 0`,
+and the gate proves it both ways). Gates: `probatio_md_decoctum` +
+the arbor fixtures.
+
+**NEXT = A6** (vendor CommonMark 0.31.2 + GFM `spec.txt`, the example
+reader, the interrogated corpus gate), then A7 (inline tree).
 
 ## Laws to keep (spec §3)
 

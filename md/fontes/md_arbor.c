@@ -41,6 +41,7 @@
 #include "md_lexema.h"
 #include "md_lexicon.h"
 #include "md_registrum.h"
+#include "md_decoctum.h"
 #include "materia_arbor.h"
 #include "materia_token.h"
 #include "xar.h"
@@ -104,6 +105,11 @@ nomen structura {
  * ================================================== */
 
 nomen structura {
+          chorda  clavis;   /* titulus normalizatus (trim, spatia I, minusculae ASCII) */
+    MateriaNodus* nodus;
+} MdDefinitioClavis;
+
+nomen structura {
                 Piscina* piscina;
      constans character* fons;
                MdLineae  lineae;
@@ -134,6 +140,8 @@ nomen structura {
     /* elementum in hac linea apertum (officium in fine lineae) */
           MateriaNodus* elementum_novus;
                    i32  officium_pendens;
+    /* definitiones nexuum: clavis normalizata -> nodus (prima vincit) */
+    Xar* definitiones;
 } MdParsura;
 
 
@@ -516,10 +524,562 @@ _paragraphum_continuare (
     redde VERUM;
 }
 
+
+/* ==================================================
+ * Definitiones nexuum (par. 4.7) - in initio paragraphi, ad clausuram
+ * ================================================== */
+
+nomen structura {
+    s32 la;
+    s32 lb;            /* titulus intra '[' ']' */
+    s32 da;
+    s32 db;            /* destinatio (sine '<' '>') */
+    s32 ta;
+    s32 tb;            /* descriptio (sine citationibus) */
+    b32 descriptio_adest;
+    i32 lineae;        /* lineae consumptae */
+} MdDefinitio;
+
+interior s32
+_lexema_ab (
+    constans MateriaToken* t)
+{
+    redde t->byte_offset;
+}
+
+interior s32
+_lexema_ad (
+    constans MateriaToken* t)
+{
+    redde t->byte_offset + (s32)t->valor.mensura;
+}
+
+/* Citationem clausam eiusdem lineae invenire: reddit index clausurae
+ * aut -I. Effugia '\' saltantur. */
+interior s32
+_clausuram_invenire (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+             character  clausura)
+{
+    s32 i;
+
+    per (i = ab; i < ad; i++)
+    {
+        si (fons[i] == '\\' && i + I < ad)
+        {
+            i = i + I;
+            perge;
+        }
+        si (fons[i] == clausura)
+        {
+            redde i;
+        }
+    }
+    redde (s32)-I;
+}
+
+interior b32
+_spatia_sola (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i;
+
+    per (i = ab; i < ad; i++)
+    {
+        si (fons[i] != ' ' && fons[i] != '\t')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* Definitionem a linea k paragraphi scandere (lexemata = contentum
+ * linearum). Formae: '[t]: d "s"' una linea; '[t]:' + d in linea
+ * sequenti; d + descriptio in linea sequenti. Descriptio lineam suam
+ * claudit (multi-lineae NON sustinentur); titulus lineam non transit. */
+interior b32
+_definitionem_scandere (
+          MdParsura*  p,
+       MateriaToken** lineae,
+                i32   n,
+                i32   k,
+        MdDefinitio*  d)
+{
+    constans character* fons  = p->fons;
+                   s32  ab    = _lexema_ab(lineae[k]);
+                   s32  ad    = _lexema_ad(lineae[k]);
+                   s32  i;
+                   i32  linea       = k;
+                   b32  non_vacuus  = FALSUM;
+
+    memset(d, ZEPHYRUM, magnitudo(*d));
+    si (ab >= ad || fons[ab] != '[')
+    {
+        redde FALSUM;
+    }
+    per (i = ab + I; i < ad; i++)
+    {
+        si (fons[i] == '\\' && i + I < ad)
+        {
+            i           = i + I;
+            non_vacuus  = VERUM;
+            perge;
+        }
+        si (fons[i] == '[')
+        {
+            redde FALSUM;
+        }
+        si (fons[i] == ']')
+        {
+            frange;
+        }
+        si (fons[i] != ' ' && fons[i] != '\t')
+        {
+            non_vacuus = VERUM;
+        }
+    }
+    si (i >= ad || !non_vacuus || i - (ab + I) > (s32)999)
+    {
+        redde FALSUM;
+    }
+    d->la  = ab + I;
+    d->lb  = i;
+    i      = i + I;
+    si (i >= ad || fons[i] != ':')
+    {
+        redde FALSUM;
+    }
+    i = i + I;
+    dum (i < ad && (fons[i] == ' ' || fons[i] == '\t'))
+    {
+        i = i + I;
+    }
+    si (i >= ad)
+    {
+        si (linea + I >= n)
+        {
+            redde FALSUM;
+        }
+        linea  = linea + I;
+        ab     = _lexema_ab(lineae[linea]);
+        ad     = _lexema_ad(lineae[linea]);
+        i      = ab;
+        dum (i < ad && (fons[i] == ' ' || fons[i] == '\t'))
+        {
+            i = i + I;
+        }
+        si (i >= ad)
+        {
+            redde FALSUM;
+        }
+    }
+    si (fons[i] == '<')
+    {
+        s32 j = _clausuram_invenire(fons, i + I, ad, '>');
+
+        si (j < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        d->da  = i + I;
+        d->db  = j;
+        i      = j + I;
+    }
+    alioquin
+    {
+        s32 j            = i;
+        i32 profunditas  = ZEPHYRUM;
+
+        dum (   j < ad && fons[j] != ' ' && fons[j] != '\t'
+             && (insignatus character)fons[j]
+                   > (insignatus character)0x1F)
+        {
+            si (fons[j] == '\\' && j + I < ad)
+            {
+                j = j + II;
+                perge;
+            }
+            si (fons[j] == '(')
+            {
+                profunditas = profunditas + I;
+            }
+            alioquin si (fons[j] == ')')
+            {
+                si (profunditas == ZEPHYRUM)
+                {
+                    frange;
+                }
+                profunditas = profunditas - I;
+            }
+            j = j + I;
+        }
+        si (j == i || profunditas != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        d->da  = i;
+        d->db  = j;
+        i      = j;
+    }
+    {
+        s32 post = i;
+
+        dum (post < ad && (fons[post] == ' ' || fons[post] == '\t'))
+        {
+            post = post + I;
+        }
+        si (post >= ad)
+        {
+            d->lineae = linea - k + I;
+            si (linea + I < n)
+            {
+                s32 tab  = _lexema_ab(lineae[linea + I]);
+                s32 tad  = _lexema_ad(lineae[linea + I]);
+                s32 t    = tab;
+
+                dum (t < tad && (fons[t] == ' ' || fons[t] == '\t'))
+                {
+                    t = t + I;
+                }
+                si (   t < tad
+                    && (fons[t] == '"' || fons[t] == '\''
+                    || fons[t] == '('))
+                {
+                    character cl = (fons[t] == '(') ? ')' : fons[t];
+                    s32 j = _clausuram_invenire(fons, t + I, tad, cl);
+
+                    si (j >= ZEPHYRUM && _spatia_sola(fons, j + I, tad))
+                    {
+                        d->ta                = t + I;
+                        d->tb                = j;
+                        d->descriptio_adest  = VERUM;
+                        d->lineae            = linea - k + II;
+                    }
+                }
+            }
+            redde VERUM;
+        }
+        si (post == i)
+        {
+            redde FALSUM;
+        }
+        si (   fons[post] == '"' || fons[post] == '\''
+            || fons[post] == '(')
+        {
+            character cl  = (fons[post] == '(') ? ')' : fons[post];
+                  s32 j   = _clausuram_invenire(fons, post + I,
+                      ad, cl);
+
+            si (j >= ZEPHYRUM && _spatia_sola(fons, j + I, ad))
+            {
+                d->ta                = post + I;
+                d->tb                = j;
+                d->descriptio_adest  = VERUM;
+                d->lineae            = linea - k + I;
+                redde VERUM;
+            }
+        }
+        redde FALSUM;
+    }
+}
+
+/* Clavis normalizata: trim, cursus spatiorum -> unum, minusculae ASCII
+ * (plicatio Unicode = lacuna nominata). */
+interior chorda
+_clavem_normalizare (
+    MdParsura* p,
+          s32  ab,
+          s32  ad)
+{
+    character* d = (character*)piscina_allocare(p->piscina,
+        (memoriae_index)(ad - ab) + I);
+       i32 n = ZEPHYRUM;
+       s32 i;
+       b32 spatium = VERUM;
+    chorda c;
+    unio { character* c; i8* m; } u;
+
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    si (d == NIHIL)
+    {
+        redde c;
+    }
+    per (i = ab; i < ad; i++)
+    {
+        character ch = p->fons[i];
+
+        si (ch == ' ' || ch == '\t')
+        {
+            si (!spatium)
+            {
+                d[n]     = ' ';
+                n        = n + I;
+                spatium  = VERUM;
+            }
+            perge;
+        }
+        d[n] = (ch >= 'A'
+            && ch <= 'Z') ? (character)(ch + ('a' - 'A')) : ch;
+        n        = n + I;
+        spatium  = FALSUM;
+    }
+    dum (n > ZEPHYRUM && d[n - I] == ' ')
+    {
+        n = n - I;
+    }
+    u.c        = d;
+    c.datum    = u.m;
+    c.mensura  = n;
+    redde c;
+}
+
+interior b32
+_derivatum_ponere (
+                MdParsura* p,
+             MateriaNodus* nodus,
+                      i32  locus,
+                      s32  ab,
+                      s32  ad,
+    constans MateriaToken* origo)
+{
+       b32 mutatus;
+    chorda valor = md_decoquere(p->piscina, p->fons + ab, (i32)(ad
+        - ab),
+        &mutatus);
+
+    si (valor.datum == NIHIL && ad > ab)
+    {
+        redde FALSUM;
+    }
+    redde _ponere_lexema(nodus, locus, md_lexema_derivatum(&p->fabrica,
+        (s32)MD_LEX_DERIVATUM, valor, origo));
+}
+
+/* Definitiones a fronte paragraphi aperti extrahere: nodi
+ * definitio-nexus in continens; reliquum paragraphus NOVUS (lineae
+ * migrant) aut nihil. */
+interior b32
+_definitiones_extrahere (
+    MdParsura* p)
+{
+    MateriaNodus* inl       = p->inlinea;
+    MateriaValor  lv        = inl->loci[MD_INLINEA_LIBERI];
+             i32  n         = lv.datum.lista.mensura;
+             i32  n_lineae  = (n + I) / II;
+    MateriaToken** lineae;
+    i32            k;
+    i32            j;
+    i32            consumptae = ZEPHYRUM;
+
+    si (n == ZEPHYRUM || n_lineae > (i32)256)
+    {
+        redde VERUM;
+    }
+    {
+        constans MateriaValor* v0 = materia_valor_lista_obtinere(lv,
+            ZEPHYRUM);
+                 MateriaNodus* t0 = v0->datum.nodus;
+
+        si (   t0->genus != (s32)MD_GENUS_TEXTUS
+            || p->fons[_lexema_ab(materia_valor_lista_obtinere(
+                   t0->loci[MD_TEXTUS_CRUDUM], ZEPHYRUM)->datum.token)]
+                       != '[')
+        {
+            redde VERUM;
+        }
+    }
+    lineae = (MateriaToken**)piscina_allocare(p->piscina,
+        (memoriae_index)n_lineae * (memoriae_index)magnitudo(MateriaToken*));
+    si (lineae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n_lineae; k++)
+    {
+        MateriaNodus* t = materia_valor_lista_obtinere(lv,
+            k * II)->datum.nodus;
+
+        lineae[k] =
+            materia_valor_lista_obtinere(t->loci[MD_TEXTUS_CRUDUM],
+            ZEPHYRUM)->datum.token;
+    }
+    dum (consumptae < n_lineae)
+    {
+        MdDefinitio d;
+        MateriaNodus* def;
+        chorda        clavis;
+        b32           nova = VERUM;
+
+        si (!_definitionem_scandere(p, lineae, n_lineae, consumptae,
+            &d))
+        {
+            frange;
+        }
+        def = _nodus(p, MD_GENUS_DEFINITIO_NEXUS);
+        si (def == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (j = consumptae; j < consumptae + d.lineae; j++)
+        {
+            MateriaNodus* ln = _nodus(p, MD_GENUS_LINEA);
+            MateriaValor  praefixa = (j == ZEPHYRUM)
+                ? p->paragraphus->loci[MD_PARAGRAPHUS_PRAEFIXA]
+                : materia_valor_lista_obtinere(lv, j * II
+                    - I)->datum.nodus
+                      ->loci[MD_MOLLIS_PRAEFIXA];
+            MateriaToken* finis = (j + I < n_lineae)
+                ? materia_valor_lista_obtinere(lv, j * II
+                    + I)->datum.nodus
+                      ->loci[MD_MOLLIS_FINIS].datum.token
+                : md_lexema_terminator(&p->fabrica, lineae[j]->linea
+                    - I);
+
+            si (ln == NIHIL)
+            {
+                redde FALSUM;
+            }
+            si (   praefixa.genus != MATERIA_VALOR_NIHIL
+                && !materia_nodus_ponere(ln, (i32)MD_LINEA_PRAEFIXA,
+                praefixa,
+                       MATERIA_LOCUS_LISTA_TOKEN))
+            {
+                redde FALSUM;
+            }
+            si (!_ponere_lexema(ln, (i32)MD_LINEA_CONTENTUM, lineae[j])
+                || !_ponere_lexema(ln, (i32)MD_LINEA_FINIS, finis)
+                || !_appendere_nodum(p, def, (i32)MD_DEFINITIO_LINEAE,
+                ln))
+            {
+                redde FALSUM;
+            }
+        }
+        clavis = _clavem_normalizare(p, d.la, d.lb);
+        si (clavis.datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (   !_ponere_lexema(def, (i32)MD_DEFINITIO_TITULUS,
+                md_lexema_derivatum(&p->fabrica, (s32)MD_LEX_DERIVATUM,
+                clavis,
+                    lineae[consumptae]))
+            || !_derivatum_ponere(p, def, (i32)MD_DEFINITIO_URL, d.da,
+            d.db,
+                   lineae[consumptae])
+            || (d.descriptio_adest
+                && !_derivatum_ponere(p, def,
+                (i32)MD_DEFINITIO_DESCRIPTIO,
+                       d.ta, d.tb, lineae[consumptae])))
+        {
+            redde FALSUM;
+        }
+        {
+            i32 m = xar_numerus(p->definitiones);
+            i32 q;
+
+            per (q = ZEPHYRUM; q < m; q++)
+            {
+                MdDefinitioClavis* dc =
+                    (MdDefinitioClavis*)xar_obtinere(
+                    p->definitiones, q);
+
+                si (   dc->clavis.mensura == clavis.mensura
+                    && memcmp(dc->clavis.datum, clavis.datum,
+                           (size_t)clavis.mensura) == ZEPHYRUM)
+                {
+                    nova = FALSUM;
+                    frange;
+                }
+            }
+            si (nova)
+            {
+                MdDefinitioClavis* dc = (MdDefinitioClavis*)xar_addere(
+                    p->definitiones);
+
+                si (dc == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                dc->clavis  = clavis;
+                dc->nodus   = def;
+            }
+        }
+        si (!_blocum_addere(p, def))
+        {
+            redde FALSUM;
+        }
+        consumptae = consumptae + d.lineae;
+    }
+    si (consumptae == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (consumptae >= n_lineae)
+    {
+        p->paragraphus  = NIHIL;
+        p->inlinea      = NIHIL;
+        redde VERUM;
+    }
+    {
+        MateriaNodus* par  = _nodus(p, MD_GENUS_PARAGRAPHUS);
+        MateriaNodus* ni   = _nodus(p, MD_GENUS_INLINEA);
+        MateriaValor  praefixa = materia_valor_lista_obtinere(lv,
+            consumptae * II - I)->datum.nodus->loci[MD_MOLLIS_PRAEFIXA];
+        MateriaNodus** locus;
+
+        si (par == NIHIL || ni == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (   praefixa.genus != MATERIA_VALOR_NIHIL
+            && !materia_nodus_ponere(par, (i32)MD_PARAGRAPHUS_PRAEFIXA,
+            praefixa,
+                   MATERIA_LOCUS_LISTA_TOKEN))
+        {
+            redde FALSUM;
+        }
+        per (j = consumptae * II; j < n; j++)
+        {
+            si (!_appendere_nodum(p, ni, (i32)MD_INLINEA_LIBERI,
+                    materia_valor_lista_obtinere(lv, j)->datum.nodus))
+            {
+                redde FALSUM;
+            }
+        }
+        si (!_ponere_nodum(par, (i32)MD_PARAGRAPHUS_INLINEA, ni))
+        {
+            redde FALSUM;
+        }
+        locus = (MateriaNodus**)xar_addere(p->paragraphi);
+        si (locus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *locus          = par;
+        p->paragraphus  = par;
+        p->inlinea      = ni;
+    }
+    redde VERUM;
+}
+
 interior b32
 _paragraphum_claudere (
     MdParsura* p)
 {
+    si (p->paragraphus == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (!_definitiones_extrahere(p))
+    {
+        redde FALSUM;
+    }
     si (p->paragraphus == NIHIL)
     {
         redde VERUM;
@@ -1789,9 +2349,11 @@ md_arbor_parsare (
     md_fabrica_incipere(&p.fabrica, piscina, &p.lineae);
     p.vacuae      = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
     p.paragraphi  = xar_creare(piscina, (i32)magnitudo(MateriaNodus*));
-    p.documentum  = _nodus(&p, MD_GENUS_DOCUMENTUM);
-    si (   p.vacuae     == NIHIL || p.paragraphi == NIHIL
-        || p.documentum == NIHIL
+    p.definitiones = xar_creare(piscina,
+        (i32)magnitudo(MdDefinitioClavis));
+    p.documentum = _nodus(&p, MD_GENUS_DOCUMENTUM);
+    si (   p.vacuae       == NIHIL || p.paragraphi == NIHIL
+        || p.definitiones == NIHIL || p.documentum == NIHIL
         || !_aperire(&p, MD_GENUS_DOCUMENTUM, p.documentum))
     {
         redde NIHIL;

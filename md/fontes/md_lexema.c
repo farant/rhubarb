@@ -1072,6 +1072,20 @@ md_lexema_finis (
 }
 
 
+MateriaToken*
+md_lexema_derivatum (
+               MdFabrica* fabrica,
+                     s32  genus,
+                  chorda  valor,
+    constans MateriaToken* origo)
+{
+    redde materia_token_creare(fabrica->piscina, &fabrica->forma, genus,
+        valor,
+        (s32)-I, origo ? origo->linea : I, origo ? origo->columna : I,
+        MD_FONS_DERIVATUS);
+}
+
+
 /* ==================================================
  * Lexatio cruda
  * ================================================== */
