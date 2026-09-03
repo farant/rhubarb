@@ -1324,10 +1324,14 @@ def _totum_actorum(acta):
 def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
                     siccum=False):
     """Portae umbrae SERIATIM (tempora non contendunt - mensurae suitae
-    fidae manent), deinde commissio contra recepta OMNIA, recepta
-    deleta. Porta fracta: SilvaError cum cauda actorum, recepta
-    servata ad inspectionem. siccum: portae solae, nihil commissum.
-    Reddit (hash | None, [(nomen, compendium, totum_secunda)])."""
+    fidae manent), quaeque in clone photographiae suae (editio pergit),
+    deinde commissio contra recepta OMNIA (plagulae viae contra blobs
+    photographiae), recepta et clones deleti. Porta fracta: SilvaError
+    cum probationibus fractis et lineis diagnosticis earum (fracturae);
+    receptum et clone servantur ad inspectionem (receptum_relatio,
+    receptum_delere; umbrae_purgare orphanos). siccum: portae solae,
+    nihil commissum. Reddit (hash | None, [(nomen, compendium,
+    totum_secunda)])."""
     recepta = []
     for p in portae:
         nomen, filtrum = (p, None) if isinstance(p, str) else p
