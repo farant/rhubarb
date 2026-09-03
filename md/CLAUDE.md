@@ -77,8 +77,15 @@ projection judged (0 faults). Manual judgment: `bin/canon_examen -canon
 md/grammatica/md.canon <doc.stml>`. Parser change → canon change → the
 corpus judgment falsifies it.
 
-**NEXT = A8c** (totality gate: random bytes, mutated corpus, depth;
-computus twin `md/computus.sh` + golden).
+**A8c DONE**: `probatio_md_totalitas` (random/mutated/truncated/
+nested to 50k — found and fixed the depth-cap NIHIL) and the computus
+twin (`./md/computus.sh <x.md> [-machina] [-iter N]`, golden
+`fixa/computus/basis.tsv` over `fixa/md/` snapshots; `COMPUTUS_SCRIBERE=1`
++ a named cause). Arc A COMPLETE: 9 gates.
+
+**NEXT = B1** (engine: `&@n.slot;` projections, `de="@arg.slot"`, PER
+over a forest with `voca=`, pattern CASUS + `tag=`, self-call as a
+check) — see `project-specs/md-arbor-spec.md` §6.
 
 ## Laws to keep (spec §3)
 

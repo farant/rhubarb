@@ -12,3 +12,11 @@ example fence form (32 backticks + ` example`, `.` separator, tabs as
 GFM sections judged by the html oracle (B3): Tables, Task list items,
 Strikethrough, Autolinks (extension); "Disallowed Raw HTML" is not in
 the dialect (spec §0).
+
+## Fixa md (snapshots, 2026-09-03, A8c)
+
+`md/spica.md` (project-specs/md-arbor-spica.md), `md/episodium.md`
+(episodes/1x01-piscina-capacitas-nova.md), `md/piscina.md`
+(docs/piscina.md), `md/sabaw.md` (SABAW2.md) — copies frozen for the
+computus golden (`computus/basis.tsv`) and the totality gate, so that
+the pinned numbers never move because a living document was edited.

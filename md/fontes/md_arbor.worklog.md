@@ -336,3 +336,29 @@ A note on tooling: I fed a generated file to `scribe` as its own
 stdin — `cat > X < X` truncates X before reading, so the file became
 empty without a word. scribe now refuses that (same-inode test on fd 0)
 and the smoke test covers it.
+
+## 2026-09-03 — A8c: totality and the computus twin
+
+**Totality found a real defect on its first run**, as it did for css at
+birth: quotes or lists nested past the container cap (64) made
+`md_arbor_parsare` return NIHIL — `_aperire` refused and the refusal
+propagated — although the spec and orientation both promised "beyond
+the cap a marker is text". The two container-open sites now fall
+through at the cap (a list needs two stack slots, list + item), so the
+extra markers become paragraph text and the byte law holds. Generators
+as css: random bytes (32 seeds), mutated fixtures (1 in 40 bytes), 23
+truncation steps, six markdown nesting forms (quotes, lists, brackets,
+asterisks, backticks, mixed) at depths 1/10/100/1000 closed and open,
+then 50,000 quotes and 50,000 brackets asserted NON RUIT — md has no
+known crash to pin, unlike css's 01M1FAD8. Coverage floor 150 for four
+fixtures (css's 200 assumed six). A failing source lands in
+`md/build/totalitas_fractum.md`.
+
+**Computus twin**: `md_computus_metiri` with css's columns exactly, so
+phase-5 comparisons read across clients; `./md/computus.sh <x.md>
+[-machina] [-iter N]`; golden `md/probationes/fixa/computus/basis.tsv`
+over four SNAPSHOT fixtures (`fixa/md/`, so a living document's edit
+never moves a pin), regenerated only with `COMPUTUS_SCRIBERE=1` and a
+named cause (this one: birth). First readings, sabaw.md (47.6 KB):
+parse 0.63 ms, emit 0.13, STML write 2.7 + read 4.0 — the same 10×
+shape css showed: the projection, not the parser, is where time goes.

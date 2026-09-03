@@ -1874,16 +1874,17 @@ Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes us
 def metiri(via, n=7, nudum=False):
     """computus min-of-n (singuli +-X%): parsare/lexare ms, phases,
     allocationes, usus - pro A/B optimizationum. Instrumentum ex
-    suffixo: .css -> css/computus.sh (semita materiae; phases
-    emittendi/arbor_scribendi/arbor_legendi/comparandi), aliter
-    silva/computus.sh (lex/expansio/glr/commissio). Columnae per
+    suffixo: .css -> css/computus.sh, .md -> md/computus.sh (semita
+    materiae; phases emittendi/arbor_scribendi/arbor_legendi/comparandi),
+    aliter silva/computus.sh (lex/expansio/glr/commissio). Columnae per
     TITULOS capitis '#' lectae (campi = dict cursus optimi), ordo =
     ordo TSV crudus."""
-    css = via.endswith('.css')
+    cliens = ('css' if via.endswith('.css')
+              else 'md' if via.endswith('.md') else None)
     best = None
     for _ in range(n):
-        if css:
-            args = ['./css/computus.sh', _absoluta(via), '-machina']
+        if cliens:
+            args = ['./%s/computus.sh' % cliens, _absoluta(via), '-machina']
         else:
             args = ['./silva/computus.sh', _absoluta(via), '-machina'] \
                 + (['-nudum'] if nudum else [])
@@ -1897,7 +1898,7 @@ def metiri(via, n=7, nudum=False):
         if best is None or v < best[0]:
             best = (v, rows[0], campi)
     v, r, campi = best
-    if css:
+    if cliens:
         phases = dict((k[3:], float(campi[k])) for k in
                       ('ms_emittendi', 'ms_arbor_scribendi',
                        'ms_arbor_legendi', 'ms_comparandi') if k in campi)

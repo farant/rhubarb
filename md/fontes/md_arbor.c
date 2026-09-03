@@ -1960,8 +1960,14 @@ _lineam_parsare (
         {
             s32 m_ad;
 
+            /* profunditas maxima: marca littera fit (totalitas, non NIHIL) */
+            si (p->profunditas >= MD_PROFUNDITAS_MAXIMA)
+            {
+                frange;
+            }
             si (!_claudere_pro_bloco(p, congruentia))
-            { redde FALSUM;
+            {
+                redde FALSUM;
             } m_ad = md_scan_citatio(p->fons, post, ad);
             {
                 MateriaNodus* q = _nodus(p, MD_GENUS_CITATIO);
@@ -1989,6 +1995,12 @@ _lineam_parsare (
             i32 n_spatia;
             i32 coopertae;
             s32 marca_ad;
+
+            /* lista + elementum = loci II acervi */
+            si (p->profunditas + II > MD_PROFUNDITAS_MAXIMA)
+            {
+                frange;
+            }
 
             /* paragraphum interrumpere: non vacuum et (punctata aut I) */
             {
