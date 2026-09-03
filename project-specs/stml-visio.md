@@ -579,3 +579,50 @@ shared version authority.
   what AMPLIFIES vocabulary deltas into everything downstream,
   which is why vocabulary change is the master question of the
   trajectory.
+
+## 11. The 2026-09-03 steer (md_arbor spec review) — parsers as ingress, apps as projections
+
+Recorded verbatim in substance from Fran, at the point where the
+markdown parser's html transform became the first GENERATOR over the
+command layer:
+
+- **All of the command/macro work is EXPLORATORY DESIGN.** STML is past
+  the seed-concept phase; the vision needs experimentation and may need
+  syntax or flow adjustments. Conceptual coherence is what Fran is
+  confident in; USABILITY is the open test — "technically feasible but
+  horrible to use" sends a piece back to the drawing board. Composition
+  is expected to be THE way larger ergonomic units are built from
+  smaller ones, and "macros and fragments as is are not yet ideal
+  composition units" is a live possibility: changes are welcome when
+  they are conceptually coherent.
+- **Many "input → STML AST" parsers, reachable through `<PARSE>`** (or
+  whatever its syntax becomes): materia clients (css, md, html, c89) and
+  also lighter ones — natural language / plain text into a tree,
+  regex-shaped parses that turn a string into words or characters. The
+  suspicion: with everything a tree, LOGIC can be implemented as tag
+  manipulation (pattern, dispatch, composition) as needed. Much
+  experimentation to see how that works in practice.
+- **Apps as projections.** The aggressive end of composition: lay out an
+  app's requirements as semantic tags, wrap them in `<php>` or `<c89>`
+  (or such), and through LAYERS of exactly the operations above obtain
+  an implemented app — the app is a projection of the STML document,
+  its library, and the STML operations. This needs units like
+  `<http-route>` / `<<#@http-route>>` that expand through many layers
+  into a concrete implementation while being contextually inflected
+  not only by parent tags but by tags ELSEWHERE in the app (the
+  cross-document/relational door, §6 and exemplaria §8.6).
+- **Three additions ratified at the same review** (from the md_arbor
+  experiment; all extend existing reservations): dotted SLOT
+  PROJECTIONS on subtree arguments (`&@n.gradus;` scalar,
+  `&@n.inlinea;` forest — the dotted forms the engine reserved); PER
+  over a FOREST with delegation (`<PER de="@n.bloci"
+  voca="#@md-nodus"/>` — door 5 with a path + existing `voca=`; the
+  descent guard is satisfied by construction, so self-call becomes a
+  CHECK); optional `<CASUS tag="x">` (a literal test on a subtree
+  scrutinee's root tag — inside THE LINE).
+- **Observation logged:** the no-expression line has so far pushed work
+  to where the domain itself puts it (decoding and link resolution into
+  the parser; parent context like list tightness into parse-time
+  marks). Termination by strata + descent = a stratified term-rewriting
+  system; expressiveness is bought by decreed projections, never by
+  expressions.

@@ -1,166 +1,148 @@
-# md_arbor — plan, DRAFT before interview (2026-09-02, night)
+# md_arbor — plan (re-cut 2026-09-03 from `md-arbor-spec.md` v1.1)
 
-> Status: draft written from the census, the spike
-> (`md-arbor-spica.md`) and Fran's decisions of 2026-09-02. The
-> interview and `md-arbor-spec.md` will correct it; tasks below carry
-> exit conditions, not code. House convention: inline execution, no
-> subagents; every gate born with a planted fault.
+> Status: EXECUTABLE. The draft of 2026-09-02 (its six open questions)
+> is superseded by the interview (`md-arbor-interview.md`) and the spec.
+> House convention: inline execution, no subagents; every gate born
+> with a planted fault; gates and commits through pythonica
+> (`silva.commissio_umbra(..., ['md', 'materia', 'pythonica'])` once
+> the `md` runner exists — registered in `PORTAE` and the
+> `commissio_umbra` prefix map in the SAME commit that creates it).
+> Frame (Fran, 2026-09-03): arc B is EXPLORATORY DESIGN — the program's
+> readability is a finding; log "quid STML voluit" as you go.
 
-**Goal:** a markdown parser on materia (third client), thorough
-(CommonMark blocks and inlines, GFM tables), byte-exact both ways,
-projected to STML, with HTML produced by STML template COMPOSITION over
-the projected tree as the second oracle, and pythonica's structural
-prose anchors as the first consumer.
-
-**Decisions already taken (do not re-litigate at execution):**
-- Consumer one = pythonica `Textus` structural anchors; thorough dialect.
-- Lines are block-level tokens; inline structure is an ANALYSIS tree over
-  the paragraph's tokens (shares tokens, never nodes — the B9 pattern),
-  so inline needs no byte gate of its own.
-- Fences opaque first; embedded-language hook later (2,540 C fences).
-- Reference links resolved IN THE PARSER (CommonMark: resolution is
-  parsing); the transform never joins.
-- Separating oracle per CommonMark example: parser's STML projection
-  (pinned, named-cause regen) + html vs spec html; byte round trip third.
-- HTML transform = template COMPOSITION (dispatcher + per-genus templates,
-  recursion through `de="@arg"`), AMBULATIO only as fallback.
-- HTML bytes via `stml vertere` over the produced html tree.
-
-**Global constraints:** the plan-B block verbatim (Latin, latina.h words
-forbidden, chorda not NUL-terminated, i32/i64 unsigned, exit 2 = nothing
-ran, never stage Fran's staging files, silva frozen, planted fault at
-every gate's birth, positions = byte offsets + 1-based linea/columna,
-`./tools/natura_struere.sh` after STML edits). Gates through pythonica:
-`silva.commissio_umbra(..., ['md', 'materia', 'pythonica'])` once the
-`md` runner exists — register it in PORTAE in the SAME task that creates
-it (a runner outside the table is dead: shim lesson, three times).
-
-**Open at interview (each decides a task's shape):**
-1. Heading levels: six-case DIRIBITIO in the transform, or a
-   titled-by-value element form in the engine?
-2. Template self-call under the strata law: permitted when the argument
-   is a strict subtree? (Fallback: AMBULATIO verb.)
-3. Dialect list: which CommonMark features and GFM extensions
-   (tables yes; task lists, strikethrough, autolinks?).
-4. The genus vocabulary in Latin (capitulum, paragraphus, lista,
-   elementum, saeptum, citatio, tabula, linea-thematica, inlinea, textus,
-   emphasis, fortis, codex, nexus, imago, fractura-dura, entitas…).
-5. Whitespace as trivia vs content per region (the markdown D7):
-   indentation inside containers, blank lines between blocks, trailing
-   spaces (hard breaks), fence contents.
-6. Where the html oracle's normalizer lives and what it forgives.
+**Goal:** the spec's §0. **Constraints:** the spec's §1 standing block
+plus the house block (Latin, latina.h words forbidden, chorda not
+NUL-terminated, i32/i64 unsigned, exit 2 = nothing ran, never stage
+Fran's staging files, silva frozen, positions = byte offsets + 1-based
+linea/columna, `./tools/natura_struere.sh` after STML edits, planted
+fault at every gate's birth).
 
 ---
 
 ## Arc A — the parser (materia client)
 
-### A1 Census committed + dialect decree
-Files: `md/CENSUS.md` (numbers from the 2026-09-02 census as a
-committed measurement), `project-specs/md-arbor-spec.md` (from the
-interview). Exit: spec §dialect lists every construct with its
-CommonMark section and whether v1 builds it.
+### A2 Registry, lexicon, line lexer, runner
+Files: `md/fontes/md_registrum.{c,h}` (spec §4 genera + slots as the
+css table: flat slot array + genus windows, named slot enums),
+`md/fontes/md_lexicon.{c,h}` (spec §4 lexicon, prefix `md-`, LINEA has
+munus LINEA), `md/fontes/md_lexema.{c,h}` (line lexer: prefix runs —
+indentation, `>`, list markers, task box, ATX marks, fence/info,
+setext, thematic break, pipes — then the rest of the line as one
+TEXTUS token, LINEA, FINIS; zero trivia), `md/compile_probationes.sh`
+(the css runner, `md` substituted, mensor prefix `md.`),
+`probatio_md_registrum`, `probatio_md_lexema`; pythonica `PORTAE['md']`
++ prefix map + a `Porta` test. Exit: lexer round trip byte-exact over
+all 1,120 files with coverage asserted (files > 0, bytes > 0);
+registry/lexicon counts asserted by TITLES; runner exit 2 on a bad
+filter; planted fault (drop a marker) red.
 
-### A2 Registry, lexicon, line lexer
-Files: `md/fontes/md_registrum.{c,h}` (genera + named slot enums,
-count-asserted like css), `md/fontes/md_lexicon.{c,h}`,
-`md/fontes/md_lexema.{c,h}` (line tokens: prefix runs — indentation,
-`>`, list markers, fence markers, setext underlines, thematic breaks —
-and the rest of the line as one text token), `md/compile_probationes.sh`
-(auto-discovering, mensor-wired, REGISTERED in pythonica PORTAE the same
-commit), `probatio_md_registrum`, `probatio_md_lexema`. Exit: lexer
-round trip byte-exact over the whole house corpus (1,118 files);
-registry enum count asserted against the table.
-
-### A3 Simple blocks
-Paragraphs, ATX + setext headings, thematic breaks, fenced + indented
-code, blank lines, HTML blocks as opaque. Files: `md/fontes/md_arbor.{c,h}`
-(`md_arbor_parsare(piscina, fons, mensura)` → `MateriaNodus*`, source not
-copied — the css_arbor law), `probatio_md_arbor`. Exit: parse→emit
-byte-exact on inline fixtures + the corpus subset without containers;
-structure asserted (a clean file has no `mala`).
+### A3 Leaf blocks
+`md/fontes/md_arbor.{c,h}` — `md_arbor_parsare(piscina, fons, mensura)`
+→ `documentum` node, source never copied (tokens point into it — the
+css B9 birth lesson). Paragraphs (raw content lines for now), ATX +
+setext headings, thematic breaks, fenced + indented code, blank lines,
+html blocks (seven start conditions, opaque), praefatio. Exit:
+parse→emit byte-exact on inline fixtures + the corpus subset without
+containers; clean files have no `mala`; headings/fences counted > 0.
+The indented-code count is PRINTED (spec §11).
 
 ### A4 Containers
-Lists (bullet, ordered, start number, tight/loose), nesting, block
-quotes, lazy continuation, list-item indentation rules. Exit: the
-CommonMark container examples (their inputs) round-trip byte-exact;
-tight/loose recorded on the list node; pinned structure for 20 chosen
-examples.
+Lists (bullet/ordered, start, tight/loose → `laxa`, `nudus` pushed down
+to first-child paragraphs), nesting, block quotes, lazy continuation,
+item indentation rules, task boxes → `officium`. Container markers are
+line prefixes (spec §3). Exit: every CommonMark container example
+INPUT round-trips byte-exact; `laxa`/`nudus`/`officium` pinned on 20
+chosen examples; planted fault (skip lazy continuation) red.
 
-### A5 Tables (GFM) + link reference definitions
-Pipe tables with alignment row; definitions collected document-wide and
-RESOLVED onto link nodes (`url=`, `descriptio=`) at parse end. Exit:
-tables round-trip; a reference link carries its target; an unresolved
-reference stays a text run (CommonMark semantics).
+### A5 Tables + link reference definitions
+GFM pipe tables (delimiter row → `ordinatio` on every cell);
+definitions collected document-wide and RESOLVED onto `nexus` nodes as
+derived tokens at parse end (needs A7's nexus nodes — A5 builds the
+definition table and the derived-token machinery; resolution lands in
+A7). Exit: tables round-trip; definition table pinned; a derived token
+(source 1) is omitted by the emitter and carries `f="1"` in the
+projection (the first derived-token gate).
 
 ### A6 The corpus gate
-`probatio_md_corpus`: byte oracle over all 1,118 files + the CommonMark
-example inputs; the green INTERROGATED as B5 was (structure assertions
-on clean files, zero `mala`, real headings/lists counted). Exit: 1,118/1,118
-byte-exact; a planted fault (skip a list) fails the assertion.
+`probatio_md_corpus`: byte oracle over 1,120 files + every
+CommonMark/GFM example input (the spec.txt reader lives here first);
+green INTERROGATED (structure on clean files, zero `mala`, real
+headings/lists/tables counted); spec §11 measurements printed. Exit:
+all byte-exact; planted fault red; the indented-code sample eyeballed
+and recorded in the worklog.
 
-### A7 Inline analysis tree
-`md/fontes/md_inlinea.{c,h}`: over a paragraph's tokens — code spans,
-emphasis/strong by the delimiter-run algorithm, links/images (inline +
-resolved reference), autolinks, hard/soft breaks, backslash escapes,
-entities kept raw. Shares TOKENS never NODES; no byte gate by design
-(header says so). Exit: the CommonMark inline examples' structure pinned
-for a chosen subset; emphasis algorithm cases from the spec's §6 all
-pinned.
+### A7 Inline tree (owns its bytes)
+`md/fontes/md_inlinea.{c,h}`: paragraph/heading/cell content re-lexed
+into inline tokens (TEXTUS runs, DELIMITATOR, GRAVIS, EFFUGIUM, ENS,
+NEXUS-*, AUTONEXUS, HTML, SPATIA-FINALIA, LINEA) and REPLACED by the
+inline tree (spec §3 deviation b): textus (crudum + derived valor when
+decoding differs), emphasis/fortis/deletio by the delimiter-run
+algorithm, verbatim, nexus (inline/reference/auto, resolved url +
+descriptio as derived tokens), imago, fractura-mollis/dura owning the
+newline and the next line's prefixes, html-inlineum, bare-URL
+autolinks. Exit: corpus gate still byte-exact (inline included); spec
+§6.2 emphasis cases pinned; decoded values pinned for escapes/entities;
+planted fault (wrong delimiter flanking) red.
 
-### A8 STML projection, canon, totality, computus
-`materia_arbor_scribere_nodum` / `legere` round trip with BOTH oracles
-over corpus + examples (two cycles); `md/grammatica/md.canon` hand-written
-with the drift guard + sigillum pin (css B7 pattern); `probatio_md_totalitas`
-(random bytes, mutated/truncated corpus, depth); `md/computus.sh` +
-`probatio_md_computus` golden (css computus pattern; columns identical so
-phase-5 comparisons read across clients). Exit: all four gates green, each
-seen red at birth.
+### A8 Projection, canon, totality, computus
+md `MateriaArborConsilium` with origo hook + frons for source-1 tokens
+(`cursorem_movere` VERUM for them); `probatio_md_stml` (write→read→
+write twice, STRUCTURALIS + FIDELIS — md has LINEA); `md/grammatica/
+md.canon` hand-written + drift guard + sigillum (`probatio_md_canon`);
+`probatio_md_totalitas` (random bytes, mutated/truncated corpus,
+depth); `md/computus.sh` + `probatio_md_computus` (css columns, golden
+`fixa/computus/basis.tsv`); `md/arbor.sh`. Exit: four gates green,
+each seen red; derived tokens round-trip with position portata.
 
-## Arc B — the transform by composition (engine + programs)
+## Arc B — the transform by composition (exploratory)
 
-### B1 Engine: `de="@arg"` + self-call rule + extent provenance
-`lib/stml_macros.c`: argument→scope (exemplaria spec §8 door 5) with
-declared capture signatures; a template may call itself when the
-argument is a strict subtree (termination by descent) — or AMBULATIO if
-the interview rejects self-calls; exemplaria §1.3 extent rule (positus
-carried through expansion for untouched/moved content). Gate: the spike
-documents in `project-specs/exhibita/` with expected html pinned;
-existing L1/lint II/codex-69 gates unchanged. Exit: the nested list in
-the spike produces one `<ul>` with a nested `<ul>` inside its `<li>`.
+### B1 Engine: five pieces (spec §6)
+`lib/stml_macros.c`: slot projections `&@n.slot;` · `de="@arg[.slot]"`
+scope threading · PER over a forest with `voca=` (+ `ut=` body form) ·
+pattern CASUS with `<EST>` + captures→arm + `tag=` sugar · self-call as
+a CHECK (descent guard). Fixtures in `probationes/fixa/exemplaria/`
+(the spike documents rewritten on the new forms + one per piece,
+expected output pinned); vitia named; INDAGO traces; canon CAPS rows.
+Exit: the spike's nested list produces one `<ul>` with a nested `<ul>`
+inside its `<li>`; L1 / lint II / codex-69 byte-identical; `stml`
+CLI rebuilt (`./tools/stml_struere.sh`).
 
 ### B2 The md→html program
-`md/html/md-html.stml`: `<#@md-nodus>` dispatcher (DIRIBITIO on genus)
-+ per-genus templates (heading levels by the interview's decision,
-lists tight/loose by CASUS on the parent's attribute, code fences with
-`class="language-x"`, links with resolved `href`, text escaped by
-`vertere`'s regime). Exit: the spike's three examples + 30 chosen
+`md/html/md-html.stml` per spec §5 (helpers, the one dispatcher, table
+arms, tight lists via `nudus`, `title=` presence, fences). `md/html.sh`.
+Worklog section "quid STML voluit" — every verbosity, wrapper fight,
+missing form, workaround. Exit: the spike's three examples + 30 chosen
 CommonMark examples produce the spec's html after normalization.
 
 ### B3 The html oracle
-`probatio_md_html` (or a runner script): for every CommonMark example
-(the spec's `spec.json`, vendored under `md/probationes/fixa/commonmark/`
-with its version pinned): parse → project → expand B2 → `vertere` →
-normalize → compare with expected html. Two goldens per example (A's
-projection, B's html). Exit: pass count pinned and only rising; failures
-listed by section; a planted fault in B2 red.
+`probatio_md_html`: vendored `spec.txt` (0.31.2) + GFM `spec.txt`
+(extension sections), parse → project → expand → `vertere` (fragment
+option) → C normalizer over `html_lexare` (forgives inter-tag
+whitespace outside `<pre>`, attribute order, void-element spelling,
+entity spelling — each COUNTED and reported) → compare. Raw html
+passthrough decided here (spec §13 f). Exit: pass count pinned and only
+rising; failures listed by section; planted fault in B2 red.
 
 ## Arc C — the consumer
 
-### C1 pythonica structural prose anchors
-`silva.Editio` twin for markdown: `Prosa(via)` with `capitulum(titulus)`,
-`elementum(...)`, `replace_in(...)` resolving by md structure (extents
-via `md/extenta.sh`, the formator `-extenta` pattern), stale-read guard,
-all-or-nothing write, no formatter/examen. Exit: the pythonica gate edits
-a spec by heading and by list item; refusals name lines.
+### C1 pythonica `Prosa`
+`md/extenta.sh` (selectio over the projection → TSV extents);
+`silva.Prosa(via)` per spec §9 (`selecta`, `capitulum`, `elementum`,
+`saeptum`, `substituere`, `inserere_*`, `corpus`, `applicare` with the
+re-parse judge); pythonica gate edits a copy of a real spec by heading
+and by list item; refusals name lines. Exit: gate green; stale read
+refused; a wrong-count anchor refused with line numbers.
 
-### C2 Wire-up, spec closure, debrief (the B10 shape)
-Runners registered (already, per A2), spec as-built notes, worklog with
-the three questions, ledger RELATIO + instrument debrief, memory.
+### C2 Wire-up, closure, debrief (the B10 shape)
+Spec as-built notes, `md/CLAUDE.md`, worklog, ledger RELATIO +
+instrument debrief, memory, `md/CENSUS.md` (the 2026-09-03 census as a
+committed measurement), exemplaria interview + visio updated with the
+"quid STML voluit" findings.
 
 ---
 
 ## Order and size
-A1–A8 ≈ 12 tasks, B1–B3 ≈ 6, C ≈ 3: about 21, matching the estimate.
-B1 can start after A3 (it needs only the spike documents); A7 and B2 are
-the two hard ones. Compact before execution; re-enter via this file, the
-parcum "Parsator markdown in materia", and `md-arbor-spica.md`.
+A2 → A3 → A4 → A5 → A6 → A7 → A8; B1 after A3 (spike documents
+suffice); B2 after A8; B3 after B2; C1 after A8; C2 last. About 20
+tasks; A7 and B1 are the hard ones. Re-entry: this file, the spec, the
+parcum "Parsator markdown in materia" (01M1JJMQBT), the interview.
