@@ -121,8 +121,11 @@ nomen structura {
                     b32  saeptum_saeptus;
               character  saeptum_signum;
                     i32  saeptum_longitudo;
-           MateriaNodus* html;
-                    i32  html_conditio;
+           MateriaNodus* html; i32 html_conditio;
+    /* tabula aperta: ordinationes ex ordine separatore */
+    MateriaNodus* tabula;
+             i32  tabula_numerus;
+             i32  tabula_ordinationes[MD_CELLAE_MAXIMAE];
 
     /* lineae vacuae pendentes */
                    Xar* vacuae;              /* Xar de MateriaNodus* */
@@ -772,6 +775,230 @@ _html_aperire (
 
 
 /* ==================================================
+ * Tabulae GFM (par. 4.10)
+ * ================================================== */
+
+interior b32
+_continet_pipam (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad)
+{
+    s32 i;
+
+    per (i = ab; i < ad; i++)
+    {
+        si (fons[i] == '|')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* Ordo: praefixa ex pf aut ex valore listae dato (linea capitis, cuius
+ * praefixa in paragrapho vixerunt), cellae ad numerum ordinationum
+ * SUPPLETAE (cella sine octetis - transformatio numerare nequit),
+ * clausum, finis. */
+interior MateriaNodus*
+_ordo (
+                MdParsura* p,
+                      i32  linea,
+      constans MdPraefixa* pf,
+    constans MateriaValor* praefixa_valor,
+                      s32  ab,
+                      s32  ad,
+             constans i32* ordinationes,
+                      i32  n_ord)
+{
+          MdOrdo  o;
+    MateriaNodus* ordo = _nodus(p, MD_GENUS_ORDO);
+             i32  n;
+             i32  k;
+             i32  summa;
+
+    si (ordo == NIHIL)
+    {
+        redde NIHIL;
+    }
+    n = md_scan_ordo(p->fons, ab, ad, &o);
+    si (   pf != NIHIL
+        && !_praefixa_ponere(p, ordo, (i32)MD_ORDO_PRAEFIXA, linea, pf))
+    {
+        redde NIHIL;
+    }
+    si (   praefixa_valor        != NIHIL
+        && praefixa_valor->genus != MATERIA_VALOR_NIHIL
+        && !materia_nodus_ponere(ordo, (i32)MD_ORDO_PRAEFIXA,
+        *praefixa_valor,
+               MATERIA_LOCUS_LISTA_TOKEN))
+    {
+        redde NIHIL;
+    }
+    summa = (n > n_ord) ? n : n_ord;
+    per (k = ZEPHYRUM; k < summa; k++)
+    {
+        MateriaNodus* cella  = _nodus(p, MD_GENUS_CELLA);
+        MateriaNodus* inl    = _nodus(p, MD_GENUS_INLINEA);
+
+        si (   cella == NIHIL || inl == NIHIL
+            || !_ponere_indicem(cella, (i32)MD_CELLA_ORDINATIO,
+                   (k
+                       < n_ord) ? ordinationes[k] : (i32)MD_ORDINATIO_NULLA))
+        {
+            redde NIHIL;
+        }
+        si (k < n)
+        {
+            constans MdCella* c = &o.cellae[k];
+
+            si (   c->pipa_ad > c->pipa_ab
+                && !_ponere_lexema(cella, (i32)MD_CELLA_APERTUM,
+                       _lexema(p, MD_LEX_PIPA, linea, c->pipa_ab,
+                       c->pipa_ad)))
+            {
+                redde NIHIL;
+            }
+            si (   c->ad > c->ab
+                && !_appendere_nodum(p, inl, (i32)MD_INLINEA_LIBERI,
+                       _textus_crudus(p, linea, c->ab, c->ad)))
+            {
+                redde NIHIL;
+            }
+        }
+        si (   !_ponere_nodum(cella, (i32)MD_CELLA_INLINEA, inl)
+            || !_appendere_nodum(p, ordo, (i32)MD_ORDO_CELLAE, cella))
+        {
+            redde NIHIL;
+        }
+    }
+    si (   o.clausum_ad > o.clausum_ab
+        && !_ponere_lexema(ordo, (i32)MD_ORDO_CLAUSUM,
+               _lexema(p, MD_LEX_PIPA, linea, o.clausum_ab,
+               o.clausum_ad)))
+    {
+        redde NIHIL;
+    }
+    si (!_ponere_lexema(ordo, (i32)MD_ORDO_FINIS,
+            md_lexema_terminator(&p->fabrica, linea)))
+    {
+        redde NIHIL;
+    }
+    redde ordo;
+}
+
+/* Linea separator sub paragrapho aperto: linea ULTIMA paragraphi fit
+ * caput si cellae eius numero ordinationum aequant. Paragraphus unius
+ * lineae evanescit; longior TRUNCATUR (prospectus listae liberorum -
+ * mensura sua, materia_nodus.h) et clauditur. Reddit I tabula facta,
+ * ZEPHYRUM non tabula, -I memoria. */
+interior i32
+_tabulam_incipere (
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad,
+           constans i32* ordinationes,
+                    i32  n_ord)
+{
+    MateriaNodus* inl  = p->inlinea;
+    MateriaValor* lv   = &inl->loci[MD_INLINEA_LIBERI];
+             i32  n    = lv->datum.lista.mensura;
+    MateriaNodus*  ultimus;
+    MateriaToken*  t;
+    MdOrdo         o;
+    MateriaValor   praefixa_capitis;
+    MateriaNodus*  caput;
+    MateriaNodus*  tabula;
+    i32            k;
+
+    si (n == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    ultimus = materia_valor_lista_obtinere(*lv, n - I)->datum.nodus;
+    si (ultimus->genus != (s32)MD_GENUS_TEXTUS)
+    {
+        redde ZEPHYRUM;
+    }
+    t = materia_valor_lista_obtinere(ultimus->loci[MD_TEXTUS_CRUDUM],
+        ZEPHYRUM)->datum.token;
+    si (md_scan_ordo(p->fons, t->byte_offset,
+            t->byte_offset + (s32)t->valor.mensura, &o) != n_ord)
+    {
+        redde ZEPHYRUM;
+    }
+    si (   !_continet_pipam(p->fons, post, ad)
+        && !_continet_pipam(p->fons, t->byte_offset,
+               t->byte_offset + (s32)t->valor.mensura))
+    {
+        redde ZEPHYRUM;   /* sine pipa ulla: subductio/divisio vincunt */
+    }
+
+    /* praefixa lineae capitis: paragraphi (unius lineae) aut fracturae
+     * mollis praecedentis */
+    si (n == I)
+    {
+        praefixa_capitis =
+            p->paragraphus->loci[MD_PARAGRAPHUS_PRAEFIXA];
+        p->paragraphus  = NIHIL;
+        p->inlinea      = NIHIL;
+    }
+    alioquin
+    {
+        MateriaNodus* mollis = materia_valor_lista_obtinere(*lv, n
+            - II)->datum.nodus;
+
+        praefixa_capitis         = mollis->loci[MD_MOLLIS_PRAEFIXA];
+        lv->datum.lista.mensura  = n - II;
+        p->paragraphus_ultima    = p->paragraphus_ultima - I;
+        si (!_paragraphum_claudere(p))
+        {
+            redde (i32)-I;
+        }
+    }
+
+    caput = _ordo(p, linea - I, NIHIL, &praefixa_capitis,
+        t->byte_offset,
+        t->byte_offset + (s32)t->valor.mensura, ordinationes, n_ord);
+    tabula = _nodus(p, MD_GENUS_TABULA);
+    si (   caput == NIHIL || tabula == NIHIL
+        || !_ponere_nodum(tabula, (i32)MD_TABULA_CAPUT, caput)
+        || !_ponere_nodum(tabula, (i32)MD_TABULA_SEPARATOR,
+               _linea(p, linea, pf, post, ad, MD_LEX_TEXTUS)))
+    {
+        redde (i32)-I;
+    }
+    per (k = ZEPHYRUM; k < n_ord; k++)
+    {
+        p->tabula_ordinationes[k] = ordinationes[k];
+    }
+    p->tabula_numerus  = n_ord;
+    p->tabula          = tabula;
+    redde _blocum_addere(p, tabula) ? I : (i32)-I;
+}
+
+interior b32
+_ordinem_addere (
+              MdParsura* p,
+                    i32  linea,
+    constans MdPraefixa* pf,
+                    s32  post,
+                    s32  ad)
+{
+    MateriaNodus* ordo = _ordo(p, linea, pf, NIHIL, post, ad,
+        p->tabula_ordinationes, p->tabula_numerus);
+
+    si (ordo == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde _appendere_nodum(p, p->tabula, (i32)MD_TABULA_ORDINES, ordo);
+}
+
+
+/* ==================================================
  * Clausura folii, listarum, continentium
  * ================================================== */
 
@@ -781,6 +1008,7 @@ _folium_claudere (
 {
     p->saeptum  = NIHIL;
     p->html     = NIHIL;
+    p->tabula   = NIHIL;
     redde _paragraphum_claudere(p);
 }
 
@@ -1303,6 +1531,27 @@ _lineam_parsare (
 
         si (col <= III)
         {
+            si (omnia && p->paragraphus != NIHIL)
+            {
+                i32 ord[MD_CELLAE_MAXIMAE];
+                i32 n_sep = md_scan_tabula_separator(p->fons, post, ad,
+                    ord,
+                    MD_CELLAE_MAXIMAE);
+
+                si (n_sep > ZEPHYRUM && n_sep <= MD_CELLAE_MAXIMAE)
+                {
+                    i32 r;
+
+                    _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                    r = _tabulam_incipere(p, i, &pf, post, ad, ord,
+                        n_sep);
+                    si (r != ZEPHYRUM)
+                    {
+                        redde (b32)(r > ZEPHYRUM);
+                    }
+                    pf.n = pf.n - ((post > cursor) ? I : ZEPHYRUM);
+                }
+            }
             si (   omnia && p->paragraphus != NIHIL
                 && md_scan_subductio(p->fons, post, ad, &gradus))
             {
@@ -1337,6 +1586,11 @@ _lineam_parsare (
             }
         }
         /* continuatio pigra: paragraphus apertus, textus purus */
+        si (p->tabula != NIHIL && omnia)
+        {
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _ordinem_addere(p, i, &pf, post, ad);
+        }
         si (p->paragraphus != NIHIL)
         {
             _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);

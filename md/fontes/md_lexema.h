@@ -213,6 +213,36 @@ md_scan_tabula_separator (
                    s32  ad,
                    i32* ordinationes,
                    i32  capacitas);
+#define MD_CELLAE_MAXIMAE ((i32)64)
+
+nomen structura {
+    s32 pipa_ab;   /* lexema PIPA ante cellam: spatia + '|' + spatia;
+                    * vacuum (== pipa_ad) pro cella prima sine pipa */
+    s32 pipa_ad;
+    s32 ab;        /* contentum, trim */
+    s32 ad;
+} MdCella;
+
+nomen structura {
+        i32 numerus;
+    MdCella cellae[MD_CELLAE_MAXIMAE];
+        s32 clausum_ab;   /* post cellam ultimam usque ad finem: pipa
+                           * finalis + spatia (vacuum licet) */
+    s32 clausum_ad;
+} MdOrdo;
+
+/* Ordo tabulae GFM (par. 4.10): cellae pipis NON effugitis ('\|' manet
+ * in contento) divisae; segmentum primum/ultimum cella est solum si non
+ * vacuum (pipa ducens/finalis optionalis), interiora semper. Omnis
+ * octetus [ab, ad) cellae aut clausum pertinet. Reddit numerum cellarum
+ * (ZEPHYRUM = linea vacua). Ultra capacitatem contentum cellae ultimae
+ * crescit. */
+i32
+md_scan_ordo (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                MdOrdo* o);
 
 
 /* Conditiones initii blocci html (CommonMark par. 4.6), super contentum

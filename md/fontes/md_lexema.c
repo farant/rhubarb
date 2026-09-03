@@ -563,6 +563,102 @@ md_scan_tabula_separator (
     redde n;
 }
 
+/* Pipa non effugita: numerus '\' praecedentium par */
+interior b32
+_pipa_vera (
+    constans character* fons,
+                   s32  ab,
+                   s32  i)
+{
+    i32 n = ZEPHYRUM;
+    s32 j = i;
+
+    dum (j > ab && fons[j - I] == '\\')
+    {
+        n = n + I;
+        j = j - I;
+    }
+    redde (b32)((n % II) == ZEPHYRUM);
+}
+
+i32
+md_scan_ordo (
+    constans character* fons,
+                   s32  ab,
+                   s32  ad,
+                MdOrdo* o)
+{
+    s32 seg_ab = ab;
+    s32 i;
+    i32 n         = ZEPHYRUM;
+    s32 cb_prior  = ab;   /* finis contenti cellae prioris (aut initium) */
+    b32 prima     = VERUM;
+
+    o->numerus     = ZEPHYRUM;
+    o->clausum_ab  = ad;
+    o->clausum_ad  = ad;
+    si (_spatia_post(fons, ab, ad) == ad)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ab; i <= ad; i++)
+    {
+        b32 finis_segmenti = (b32)(i == ad
+            || (fons[i] == '|' && _pipa_vera(fons, ab, i)));
+
+        si (!finis_segmenti)
+        {
+            perge;
+        }
+        {
+            s32 seg_ad  = i;
+            s32 ca      = _spatia_post(fons, seg_ab, seg_ad);
+            s32 cb      = _spatia_ante(fons, ca, seg_ad);
+            b32 vacua   = (b32)(ca == seg_ad);
+            b32 ultima  = (b32)(i == ad);
+            b32 cella;
+
+            /* segmentum primum/ultimum: cella solum si non vacuum */
+            cella = (b32)(!vacua || !(prima || ultima));
+            si (prima && vacua && ultima)
+            {
+                cella = FALSUM;
+            }
+            si (cella)
+            {
+                MdCella* c;
+
+                si (n >= MD_CELLAE_MAXIMAE)
+                {
+                    /* capacitas: contentum cellae ultimae usque ad finem */
+                    o->cellae[n - I].ad = _spatia_ante(fons, o->cellae[n
+                        - I].ab, ad);
+                    cb_prior = o->cellae[n - I].ad;
+                    frange;
+                }
+                c = &o->cellae[n];
+                si (vacua)
+                {
+                    ca = seg_ad;
+                    cb = seg_ad;
+                }
+                c->pipa_ab  = prima ? ca : cb_prior;
+                c->pipa_ad  = ca;
+                c->ab       = ca;
+                c->ad       = cb;
+                cb_prior    = cb;
+                n           = n + I;
+            }
+            prima   = FALSUM;
+            seg_ab  = i + I;
+        }
+    }
+    o->numerus     = n;
+    o->clausum_ab  = cb_prior;
+    o->clausum_ad  = ad;
+    redde n;
+}
+
 
 /* ==================================================
  * Bloci html (CommonMark par. 4.6)
