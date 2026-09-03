@@ -362,3 +362,70 @@ never moves a pin), regenerated only with `COMPUTUS_SCRIBERE=1` and a
 named cause (this one: birth). First readings, sabaw.md (47.6 KB):
 parse 0.63 ms, emit 0.13, STML write 2.7 + read 4.0 — the same 10×
 shape css showed: the projection, not the parser, is where time goes.
+
+## 2026-09-03 — B1 begins: quid STML voluit (1) — token slots
+
+Before a line of engine code, the first usability finding came from
+printing a real projection (`./md/arbor.sh`) and reading it as the
+html program would. Three slot kinds project three ways: INDEX slots
+hold bare text (`<gradus>2</gradus>`), NODUS slots hold the genus
+element inside the wrapper (`<inlinea><inlinea>…`), TOKEN slots hold
+token ELEMENTS in raw form (`<crudum><md-textus!>Hello </md-textus>`).
+The spec's §6.1 rule ("text-only wrapper = scalar") fits the first,
+makes the second a one-element forest (which PER handles uniformly),
+and leaves every token slot — including the derived ones, `valor`,
+`url` — unreadable as a string: the text arm would splice a
+`<md-textus>` element into html. No path or parser trick escapes it,
+because a token is always an element in the projection.
+
+Ruling with Fran (three rounds; the wrong first proposal recorded
+honestly): I first proposed an implicit rule "raw leaves count as
+text". Fran asked when this should be implicit vs explicit and whether
+a form like `&@n.b.c#text` or a `<TEXT>` command fits the landscape.
+Against the sigil registry: `#` is document-space (retired once
+already from a fourth role), `#text` is a DOM embedding not a meaning;
+`!` is the house raw sigil in the same glued suffix position, so
+`&@n.crudum!;` = "bytes of" rhymes exactly. Decision: paths yield
+CONTENT (never the wrapper; same-tag selection is a pattern's job);
+text is a scalar implicitly (nothing converts); raw elements become
+bytes only under `!`; `!` allowed anywhere as an assertion; structure
+under `!` = vitium VII; `<TEXTUS>` (textContent) reserved, not built.
+The html program will read `&@n.crudum!;` — the intent is on the page.
+Known edge: terminators are written as empty elements, so `!` on a
+`finis` slot yields ""; the program never projects one (breaks have
+arms). Recorded in spec §6.1 + §13 i, visio §2 row + §6 reservation.
+
+## 2026-09-03 — B1.1 built: slot projections — two more findings
+
+**(2) Paths are literal child steps.** My first implementation put a
+hidden hop between segments (segment = child of the unique element
+root of the previous wrapper's content), which made the spec's
+`&@n.inlinea.liberi;` read nicely on materia's double-wrapped NODUS
+slots but broke the plain case I had promised Fran: in
+`<a><b><c>text</c></b></a>`, `&@n.b.c;` came back PROIECTIO_ABSENS.
+The fixture caught it at birth. Rule now: every segment names a child
+element of the element the previous segment reached; the argument's
+forest must have one element root for the first step. Materia's
+honest spelling is `&@n.inlinea.inlinea.liberi;` — the wrapper is the
+slot, the inner element is the node — and the html program never
+needs it, because PER over `@n.inlinea` hands the genus element to
+the next fill where `&@n.liberi;` is one step. Spec §6.1 corrected.
+
+**(3) `est=""` cannot exist.** I wanted `<CASUS est="">` to tell an
+empty wrapper from a filled one. The base grammar reads an empty
+attribute value as a TOMBSTONE (attribute present, value NIHIL — the
+same explicit-absence reading `<@attr=>` elements have) and writes it
+back bare, so COMMUTATIO's collection judged the arm malformed. Not
+a defect, a decree I had forgotten. Consequence for the projection
+rule: an empty wrapper is a PRESENT empty scalar (`non-nihil`
+matches it); absence in materia is a MISSING wrapper (loud XXVII),
+and the arm that discriminates it is the pattern arm of B1.4 —
+exactly the spec's html-textus shape. Also learned the hard way:
+`structura` is `struct` (latina.h) — a variable named that fails to
+parse, and Editio then reports every later function as "not found in
+this file" because the whole in-memory parse died. `-fsyntax-only`
+on the dumped text named it in one line.
+
+Vitia XXVI–XXVIII; fixtures in `probatio_stml_exemplaria.c` (274
+assertions); planted fault = the implicit raw rule (raw leaves read as
+bytes without `!`): the `<q>` expectation goes red.

@@ -2049,6 +2049,248 @@ principale (
         CREDO_VERUM (e.vitium == STML_EXPANSIO_INDAGO_MALFORMATUM);
     }
 
+
+    /* ==================================================
+     * B1 (md-arbor-spec par. 6.1, ratificatio 2026-09-03) -
+     * PROIECTIONES LOCULORUM: '&@n.slot;' = CONTENTUM involucri
+     * liberi (textus = scalaris, aliter silva; numquam involucrum
+     * ipsum), '&@n.slot!;' = octeti textus et foliorum crudorum,
+     * vitia XXVI-XXVIII. Forma fixturarum: contentum, EXEMPLAR
+     * modus=unum, PER cum vocatione templi cui radix capta '&@c;'
+     * ut argumentum subarboreum 'n' transit (fixtura 6.1b) -
+     * corpus templi proiectiones legit.
+     * ================================================== */
+
+    /* --- proiectio scalaris (attributum + textus), via catenata --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: scalaris + via catenata ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\"><h g=\"&@n.gradus;\">&@n.gradus;/&@n.inlinea.t;"
+            "</h></#>"
+            "<capitulum><gradus>2</gradus><inlinea><t>x</t></inlinea>"
+            "</capitulum>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><capitulum $c/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<capitulum><gradus>2</gradus><inlinea><t>x</t></inlinea>"
+                "</capitulum>"
+                "<h g=\"2\">2/x</h></radix>");
+        }
+    }
+
+    /* --- proiectio silvae (splex), '!' octeti crudorum, vacuum --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: silva, '!', involucrum vacuum ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\"><p>&@n.inlinea;</p><q>&@n.crudum;</q>"
+            "<r>&@n.crudum!;</r><s>[&@n.vacuum;]</s></#>"
+            "<textus><inlinea><t>x</t><v/></inlinea>"
+            "<crudum><tok!>Hello </tok><tok!>w</tok></crudum>"
+            "<vacuum/></textus>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><textus $c/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix>"
+                "<textus><inlinea><t>x</t><v/></inlinea>"
+                "<crudum><tok!>Hello </tok><tok!>w</tok></crudum>"
+                "<vacuum/></textus>"
+                "<p><t>x</t><v/></p>"
+                "<q><tok!>Hello </tok><tok!>w</tok></q>"
+                "<r>Hello w</r><s>[]</s></radix>");
+        }
+    }
+
+    /* --- '!' super structuram = vitium VII (chordificatio tacita
+     * numquam) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: '!' super structuram ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.inlinea!;</r></#>"
+            "<textus><inlinea><t>x</t></inlinea></textus>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><textus $c/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_ARGUMENTUM_ARBOREUM);
+    }
+
+    /* --- XXVII ABSENS / XXVIII AMBIGUA (impletione) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: vitia XXVII / XXVIII ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.nusquam;</r></#>"
+            "<x><a/></x>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><x $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_ABSENS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "nusquam");
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.t;</r></#>"
+            "<x><t>1</t><t>2</t></x>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><x $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_AMBIGUA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "t");
+
+        /* gradus litterales: 'b' liberum de 'a' (saltus nullus) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.a.b;</r></#>"
+            "<x><a><b>1</b><b>2</b></a></x>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><x $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_AMBIGUA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "b");
+
+        /* radices plures argumenti subarborei: segmentum primum */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.q;</r></#>"
+            "<<#@f>><@n=><x/><y/></></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_AMBIGUA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "q");
+
+        /* argumentum scalare cum via: involucra nulla */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n.x;</r></#><<#@f n=\"5\">>"
+            "</radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_PROIECTIO_ABSENS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "x");
+    }
+
+    /* --- XXVI MALFORMATA (collectione, sine vocatione); forma
+     * imperfecta '&@n!x;' littera manet --- */
+    {
+        StmlExpansioResultus e;
+                StmlResultus ref;
+
+        imprimere("\n--- proiectio: vitium XXVI + littera ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n..x;</r></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_PROIECTIO_MALFORMATA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n..x");
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.fragmentum, "@f");
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@.x;</r></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_PROIECTIO_MALFORMATA);
+
+        /* declaratio cum puncto: loculus 'a.b' olim tacite factus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@a.b\"><r/></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_PROIECTIO_MALFORMATA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "a.b");
+
+        /* '!' non ultimum: nulla referentia - littera (regula entis
+         * ignoti), nec collectio nec impletio eam tangit */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><r>&@n!x;</r></#><<#@f n=\"1\">>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        ref =
+            stml_legere(chorda_ex_literis("<radix><r>&@n!x;</r></radix>",
+                                            piscina), piscina, intern);
+        CREDO_VERUM (ref.successus);
+        si (e.successus && ref.successus)
+        {
+            CREDO_CHORDA_AEQUALIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                stml_scribere(ref.radix, piscina, FALSUM));
+        }
+    }
+
+    /* --- COMMUTATIO super proiectionem; involucrum vacuum = scalaris
+     * vacuus PRAESENS (non-nihil congruit). 'est=""' scribi nequit:
+     * grammatica basis valorem vacuum ut sepulcrum legit (attributum
+     * nudum, valor NIHIL) - absentia in materia involucrum DEEST
+     * (XXVII), bracchium exemplaris eam discernit (B1.4) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: COMMUTATIO de=proiectio ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\">"
+            "<COMMUTATIO de=\"&@n.gradus;\"><CASUS est=\"2\"><h2/></CASUS>"
+            "<ORDINARIUS><h/></ORDINARIUS></COMMUTATIO>"
+            "<COMMUTATIO de=\"&@n.descriptio;\"><CASUS non-nihil>"
+            "<cum>[&@n.descriptio;]</cum></CASUS><ORDINARIUS><sine/>"
+            "</ORDINARIUS></COMMUTATIO>"
+            "</#>"
+            "<capitulum><gradus>2</gradus><descriptio/></capitulum>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><capitulum $c/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><capitulum><gradus>2</gradus><descriptio/>"
+                "</capitulum><h2/><cum>[]</cum></radix>");
+        }
+    }
+
+    /* --- proiectio ut argumentum bloci vocationis interioris
+     * ('<@m=>&@n.inlinea;</>' silvam involucri fert) --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- proiectio: transitus in argumentum bloci ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@g m=\"@m\"><w>&@m;</w></#>"
+            "<#@f n=\"@n\"><<#@g>><@m=>&@n.inlinea;</></#>"
+            "<textus><inlinea><t>x</t></inlinea></textus>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><textus $c/>"
+            "</EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><textus><inlinea><t>x</t></inlinea></textus>"
+                "<w><t>x</t></w></radix>");
+        }
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

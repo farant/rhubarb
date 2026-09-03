@@ -145,7 +145,28 @@ nomen enumeratio {
      * descendens primus COMPATIBILIS ordine documenti (conflictus
      * regulae V pergit - iunctiones sui profundae gratis); modus
      * strictus '<**>' numquam congruit (templa sine descensu). */
-    STML_EXPANSIO_DESCENSUS_MALFORMATUS    = XXV
+    STML_EXPANSIO_DESCENSUS_MALFORMATUS    = XXV,
+    /* PROIECTIONES loculorum (md-arbor-spec.md par. 6.1, ratificatio
+     * 2026-09-03 cum Frane): '&@n.slot.slot;' = CONTENTUM involucri
+     * liberi nominati (numquam involucrum ipsum; electio inter
+     * fratres eiusdem tituli exemplaris est, de="@n", numquam viae):
+     * textus solus (vacuus inclusus) = scalaris, aliter silva;
+     * '&@n.slot!;' = octeti textus et foliorum CRUDORUM concatenati
+     * (sigillum crudum in sede sua), structura sub eo = vitium VII.
+     * Regula elementum->textum implicita NULLA. Forma mala, in
+     * COLLECTIONE: segmentum vacuum ('a..b', '.b', 'a.'), aut
+     * declaratio loculi cum '.' aut '!' ('p="@a.b"'). Formae sparsae
+     * '&@...x;' hic cadunt - mortuae manent, clare. */
+    STML_EXPANSIO_PROIECTIO_MALFORMATA     = XXVI,
+    /* impletione: silva currens radicem elementarem NULLAM habet
+     * (argumentum scalare, silva vacua) aut segmentum liberum nullum
+     * nominat - loculus = segmentum. Involucrum praesens sed vacuum
+     * NON absens est: scalaris vacuus ('est=""' discernit) */
+    STML_EXPANSIO_PROIECTIO_ABSENS         = XXVII,
+    /* impletione: silva currens radices elementares PLURES habet aut
+     * segmentum plures liberos eodem titulo nominat (involucra
+     * materiae unica sunt; in STML libero electio exemplaris est) */
+    STML_EXPANSIO_PROIECTIO_AMBIGUA        = XXVIII
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

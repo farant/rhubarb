@@ -370,6 +370,12 @@ _vitium_expansionis_titulus (
             redde "INDAGO_MALFORMATUM";
         casus STML_EXPANSIO_DESCENSUS_MALFORMATUS:
             redde "DESCENSUS_MALFORMATUS";
+        casus STML_EXPANSIO_PROIECTIO_MALFORMATA:
+            redde "PROIECTIO_MALFORMATA";
+        casus STML_EXPANSIO_PROIECTIO_ABSENS:
+            redde "PROIECTIO_ABSENS";
+        casus STML_EXPANSIO_PROIECTIO_AMBIGUA:
+            redde "PROIECTIO_AMBIGUA";
         ordinarius:
             redde "IGNOTUM";
     }

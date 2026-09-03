@@ -228,6 +228,15 @@ _loculum_invenire (
             {
                 n++;
             }
+            /* suffixum crudum '!' (proiectio octetorum, md-arbor-
+             * spec par. 6.1): pars tituli, ultimum ante ';' solum -
+             * '&@n!x;' littera manet (forma imperfecta) */
+            si (   n > i + II
+                && n < textus->mensura
+                && textus->datum[n] == (i8)'!')
+            {
+                n++;
+            }
             si (   n > i + II
                 && n < textus->mensura
                 && textus->datum[n] == (i8)';')
@@ -242,6 +251,73 @@ _loculum_invenire (
         i++;
     }
     redde FALSUM;
+}
+
+/* Proiectionem legere: titulus '&@radix.segmentum.segmentum!;'
+ * (interior inter '&@' et ';', ut _loculum_invenire reddit) in
+ * radicem (nomen loculi declarati), viam (segmenta post radicem,
+ * vacua = referentia simplex) et signum crudum ('!' caudale)
+ * scindere. Forma mala = FALSUM: segmentum vacuum ('a..b', '.b',
+ * 'a.') - formae sparsae '&@...x;' hic cadunt et mortuae manent,
+ * clare (collectio PROIECTIO_MALFORMATA clamat). Grammatica UNA
+ * collectionis et impletionis. */
+interior b32
+_proiectionem_legere (
+    constans chorda* titulus,
+             chorda* radix,
+             chorda* via,
+                b32* crudum)
+{
+    i32 mensura;
+    i32 i;
+    i32 punctum;
+    b32 punctum_inventum;
+
+    mensura = titulus->mensura;
+    *crudum = FALSUM;
+    si (   mensura > ZEPHYRUM
+        && titulus->datum[mensura - I] == (i8)'!')
+    {
+        *crudum = VERUM;
+        mensura--;
+    }
+    si (mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    punctum           = ZEPHYRUM;
+    punctum_inventum  = FALSUM;
+    per (i = ZEPHYRUM; i < mensura; i++)
+    {
+        si (titulus->datum[i] == (i8)'.')
+        {
+            si (   i                     == ZEPHYRUM
+                || i                     == mensura - I
+                || titulus->datum[i - I] == (i8)'.')
+            {
+                redde FALSUM;
+            }
+            si (!punctum_inventum)
+            {
+                punctum           = i;
+                punctum_inventum  = VERUM;
+            }
+        }
+    }
+    radix->datum = titulus->datum;
+    si (!punctum_inventum)
+    {
+        radix->mensura  = mensura;
+        via->datum      = titulus->datum + mensura;
+        via->mensura    = ZEPHYRUM;
+    }
+    alioquin
+    {
+        radix->mensura  = punctum;
+        via->datum      = titulus->datum + punctum + I;
+        via->mensura    = mensura - punctum - I;
+    }
+    redde VERUM;
 }
 
 interior StmlMacroLoculus*
@@ -293,7 +369,7 @@ _in_angustatis (
 /* Declarationes loculorum ex tago aperienti definitionis: attributa
  * quorum valor '@nomen' est ('@' solum aut '@.' = attributum
  * ordinarium, non declaratio). */
-interior vacuum
+interior b32
 _loculos_declaratos_legere (
              StmlNodus* nodus,
     StmlMacroDefinitio* def,
@@ -304,7 +380,7 @@ _loculos_declaratos_legere (
 
     si (nodus->attributa == NIHIL)
     {
-        redde;
+        redde VERUM;
     }
     num = xar_numerus(nodus->attributa);
     per (i = ZEPHYRUM; i < num; i++)
@@ -321,6 +397,7 @@ _loculos_declaratos_legere (
                       chorda  titulus;
             StmlMacroLoculus* loc;
                          b32  optionalis;
+                         i32  j;
 
             titulus.datum    = attr->valor->datum + I;
             titulus.mensura  = attr->valor->mensura - I;
@@ -333,6 +410,22 @@ _loculos_declaratos_legere (
                 optionalis       = VERUM;
                 titulus.mensura  -= I;
             }
+            /* nomen loculi sine '.' et '!' (proiectiones, par. 6.1
+             * md): declaratio 'p="@a.b"' loculum 'a.b' olim tacite
+             * faciebat - nunc clare recusata */
+            per (j = ZEPHYRUM; j < titulus.mensura; j++)
+            {
+                si (   titulus.datum[j] == (i8)'.'
+                    || titulus.datum[j] == (i8)'!')
+                {
+                    _vitium_ponere(ctx,
+                                   STML_EXPANSIO_PROIECTIO_MALFORMATA,
+                                   nodus, def->id,
+                                   chorda_internare(ctx->intern,
+                                                    titulus));
+                    redde FALSUM;
+                }
+            }
             loc = (StmlMacroLoculus*)xar_addere(def->loculi);
             si (loc != NIHIL)
             {
@@ -342,6 +435,7 @@ _loculos_declaratos_legere (
             }
         }
     }
+    redde VERUM;
 }
 
 /* Chordam contra loculos declaratos perscrutari (collectione:
@@ -365,15 +459,27 @@ _chordam_perscrutari (
     ab = ZEPHYRUM;
     dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
     {
-                  chorda* titulus_internatus;
+                  chorda  radix;
+                  chorda  via;
+                     b32  crudum;
+                  chorda* radix_internata;
         StmlMacroLoculus* loc;
 
-        titulus_internatus = chorda_internare(ctx->intern, titulus);
-        loc = _loculus_declaratus(def, titulus_internatus);
+        /* proiectio (par. 6.1 md): forma hic, radix contra loculos
+         * declaratos; via impletione contra arborem iudicatur */
+        si (!_proiectionem_legere(&titulus, &radix, &via, &crudum))
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_PROIECTIO_MALFORMATA,
+                           nodus, def->id,
+                           chorda_internare(ctx->intern, titulus));
+            redde FALSUM;
+        }
+        radix_internata  = chorda_internare(ctx->intern, radix);
+        loc              = _loculus_declaratus(def, radix_internata);
         si (loc == NIHIL)
         {
             _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS,
-                           nodus, def->id, titulus_internatus);
+                           nodus, def->id, radix_internata);
             redde FALSUM;
         }
         si (   loc->optionalis
@@ -381,7 +487,7 @@ _chordam_perscrutari (
         {
             _vitium_ponere(ctx,
                            STML_EXPANSIO_LOCULUS_NON_ANGUSTATUS,
-                           nodus, def->id, titulus_internatus);
+                           nodus, def->id, radix_internata);
             redde FALSUM;
         }
         ab = post;
@@ -446,6 +552,9 @@ _commutationem_perscrutari (
 {
               chorda* de;
               chorda* referentia;
+              chorda  radix;
+              chorda  via;
+                 b32  crudum;
     StmlMacroLoculus* loc;
                  i32  i;
                  i32  num;
@@ -465,11 +574,21 @@ _commutationem_perscrutari (
                        com, def->id, NIHIL);
         redde FALSUM;
     }
-    loc = _loculus_declaratus(def, referentia);
+    /* scrutans = proiectio licita ('de="&@n.gradus;"', par. 6.1
+     * md): radix declarata, via impletione */
+    si (!_proiectionem_legere(referentia, &radix, &via, &crudum))
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_PROIECTIO_MALFORMATA, com,
+                       def->id, referentia);
+        redde FALSUM;
+    }
+    loc = _loculus_declaratus(def,
+                              chorda_internare(ctx->intern, radix));
     si (loc == NIHIL)
     {
         _vitium_ponere(ctx, STML_EXPANSIO_LOCULUS_IGNOTUS, com,
-                       def->id, referentia);
+                       def->id,
+                       chorda_internare(ctx->intern, radix));
         redde FALSUM;
     }
 
@@ -706,7 +825,10 @@ _definitiones_colligere (
         {
             redde FALSUM;
         }
-        _loculos_declaratos_legere(nodus, nova, ctx);
+        si (!_loculos_declaratos_legere(nodus, nova, ctx))
+        {
+            redde FALSUM;
+        }
         {
             Xar* angustati;
 
@@ -934,6 +1056,269 @@ _argumentum_invenire (
     redde NIHIL;
 }
 
+/* Octeti silvae: textus (et, cum 'cruda_admissa', folia CRUDA
+ * '<t!>…</t>' - contentum eorum textus est) concatenati ordine;
+ * commenta invisibilia. Nodus alius = STRUCTURA: *arborea VERUM,
+ * exitus NIHIL (vocans iudicat: silva aut vitium VII). Silva NIHIL
+ * aut vacua = chorda vacua. FALSUM = memoria sola. */
+interior b32
+_silvam_ad_octetos (
+    StmlMacroContextus*  ctx,
+                   Xar*  silva,
+                   b32   cruda_admissa,
+                chorda** exitus,
+                   b32*  arborea)
+{
+    ChordaAedificator* aed;
+               chorda  octeti;
+                  i32  i;
+                  i32  num;
+
+    *exitus   = NIHIL;
+    *arborea  = FALSUM;
+    aed       = chorda_aedificator_creare(ctx->piscina, LXIV);
+    si (aed == NIHIL)
+    {
+        redde FALSUM;
+    }
+    num = silva != NIHIL ? xar_numerus(silva) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* n = *(StmlNodus**)xar_obtinere(silva, i);
+
+        si (n == NIHIL || n->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (n->genus == STML_NODUS_TEXTUS)
+        {
+            si (n->valor != NIHIL)
+            {
+                chorda_aedificator_appendere_chorda(aed, *n->valor);
+            }
+            perge;
+        }
+        si (   cruda_admissa
+            && n->genus == STML_NODUS_ELEMENTUM
+            && n->crudus)
+        {
+            i32 j;
+            i32 num_liberorum;
+
+            num_liberorum = n->liberi != NIHIL
+                ? xar_numerus(n->liberi) : ZEPHYRUM;
+            per (j = ZEPHYRUM; j < num_liberorum; j++)
+            {
+                StmlNodus* t = *(StmlNodus**)xar_obtinere(n->liberi,
+                                                          j);
+
+                si (   t        != NIHIL
+                    && t->genus == STML_NODUS_TEXTUS
+                    && t->valor != NIHIL)
+                {
+                    chorda_aedificator_appendere_chorda(aed,
+                                                        *t->valor);
+                }
+            }
+            perge;
+        }
+        *arborea = VERUM;
+        redde VERUM;
+    }
+    octeti = chorda_aedificator_finire(aed);
+    si (octeti.mensura == ZEPHYRUM)
+    {
+        /* scalaris VACUUS (involucrum vacuum, par. 6.1 md): tabula
+         * internamenti clavem vacuam non fert - chorda propria in
+         * piscina, datum = buffer aedificatoris (non NIHIL) */
+        chorda* vacua;
+
+        vacua = (chorda*)piscina_allocare(ctx->piscina,
+                                          magnitudo(chorda));
+        si (vacua == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *vacua   = octeti;
+        *exitus  = vacua;
+        redde VERUM;
+    }
+    *exitus = chorda_internare(ctx->intern, octeti);
+    redde *exitus != NIHIL;
+}
+
+/* Elementum UNICUM silvae (titulus NIHIL = elementum quodvis; aliter
+ * liberi eo titulo): I -> *exitus; ZEPHYRUM -> PROIECTIO_ABSENS;
+ * plures -> PROIECTIO_AMBIGUA - loculus vitii = segmentum. */
+interior b32
+_elementum_unicum (
+    StmlMacroContextus*  ctx,
+                   Xar*  silva,
+       constans chorda*  titulus,
+                chorda   segmentum,
+             StmlNodus*  nodus,
+             StmlNodus** exitus)
+{
+    i32 i;
+    i32 num;
+    i32 numerus;
+
+    *exitus  = NIHIL;
+    numerus  = ZEPHYRUM;
+    num      = silva != NIHIL ? xar_numerus(silva) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* n = *(StmlNodus**)xar_obtinere(silva, i);
+
+        si (   n        != NIHIL
+            && n->genus == STML_NODUS_ELEMENTUM
+            && (   titulus == NIHIL
+                || (   n->titulus != NIHIL
+                    && chorda_aequalis(*n->titulus, *titulus))))
+        {
+            numerus++;
+            *exitus = n;
+        }
+    }
+    si (numerus == I)
+    {
+        redde VERUM;
+    }
+    _vitium_ponere(ctx,
+                   numerus == ZEPHYRUM
+                       ? STML_EXPANSIO_PROIECTIO_ABSENS
+                       : STML_EXPANSIO_PROIECTIO_AMBIGUA,
+                   nodus, NIHIL, chorda_internare(ctx->intern,
+                   segmentum));
+    redde FALSUM;
+}
+
+/* Proiectionem resolvere (md-arbor-spec par. 6.1, ratificatio
+ * 2026-09-03): referentia '&@radix.via!;' contra tabulam
+ * argumentorum. *praesens FALSUM = radix in tabula absens (loculus
+ * optionalis non impletus - vocans ut olim agit). Aliter exitus
+ * impletur: titulus = radix internata; valor (scalaris) AUT arbores
+ * (silva, Xar COMMUNIS - splices clonant, fons immutabilis).
+ * Referentia simplex sine '!' = argumentum ipsum. Via: quodque
+ * segmentum involucrum LIBERUM radicis elementaris UNICAE silvae
+ * currentis nominat; exitus = CONTENTUM involucri ultimi, numquam
+ * involucrum ipsum (electio inter fratres eiusdem tituli exemplaris
+ * est - de="@n" - numquam viae). Contentum: textus solus, vacuus
+ * inclusus = scalaris; aliter silva. '!' = octeti textus et
+ * foliorum crudorum; arborea sub eo = vitium VII (chordificatio
+ * tacita numquam). Vitia: radix elementaris nulla (scalaris, silva
+ * vacua) aut segmentum sine libero = PROIECTIO_ABSENS (loculus =
+ * segmentum); radices aut liberi plures = PROIECTIO_AMBIGUA.
+ * FALSUM = vitium positum aut memoria. */
+interior b32
+_proiectionem_resolvere (
+      StmlMacroContextus* ctx,
+                     Xar* argumenta,
+         constans chorda* titulus,
+               StmlNodus* nodus,  /* pro linea vitii */
+     StmlMacroArgumentum* exitus,
+                     b32* praesens)
+{
+                 chorda  radix;
+                 chorda  via;
+                    b32  crudum;
+                 chorda* radix_internata;
+    StmlMacroArgumentum* arg;
+                    Xar* silva;
+                 chorda* octeti;
+                    b32  arborea;
+
+    *praesens = FALSUM;
+    si (!_proiectionem_legere(titulus, &radix, &via, &crudum))
+    {
+        /* defensivum: collectio formam iam iudicavit */
+        _vitium_ponere(ctx, STML_EXPANSIO_PROIECTIO_MALFORMATA,
+                       nodus, NIHIL,
+                       chorda_internare(ctx->intern, *titulus));
+        redde FALSUM;
+    }
+    radix_internata  = chorda_internare(ctx->intern, radix);
+    arg              = _argumentum_invenire(argumenta, radix_internata);
+    si (arg == NIHIL)
+    {
+        redde VERUM;
+    }
+    *praesens        = VERUM;
+    exitus->titulus  = radix_internata;
+    exitus->valor    = arg->valor;
+    exitus->arbores  = arg->arbores;
+    si (via.mensura == ZEPHYRUM && !crudum)
+    {
+        redde VERUM;  /* referentia simplex - ut olim */
+    }
+    si (via.mensura == ZEPHYRUM && arg->valor != NIHIL)
+    {
+        redde VERUM;  /* '&@n!;' scalaris: octeti iam */
+    }
+    silva = arg->arbores;
+    si (via.mensura > ZEPHYRUM)
+    {
+        /* gradus LITTERALES: segmentum quodque liberum elementare
+         * currentis nominat - saltus implicitus NULLUS (involucrum
+         * NODI materiae elementum generis continet: '&@n.inlinea.
+         * inlinea.liberi;' arborem ut est legit). Primum: radix
+         * elementaris unica argumenti. */
+        StmlNodus* currens;
+              i32  ab;
+
+        currens  = NIHIL;
+        ab       = ZEPHYRUM;
+        dum (ab < via.mensura)
+        {
+            chorda segmentum;
+               i32 finis;
+
+            finis = ab;
+            dum (finis < via.mensura && via.datum[finis] != (i8)'.')
+            {
+                finis++;
+            }
+            segmentum.datum    = via.datum + ab;
+            segmentum.mensura  = finis - ab;
+            si (   currens == NIHIL
+                && !_elementum_unicum(ctx, silva, NIHIL, segmentum,
+                                      nodus, &currens))
+            {
+                redde FALSUM;
+            }
+            si (!_elementum_unicum(ctx, currens->liberi, &segmentum,
+                                   segmentum, nodus, &currens))
+            {
+                redde FALSUM;
+            }
+            ab = finis + I;
+        }
+        silva = currens->liberi;  /* contentum (NIHIL = vacuum) */
+    }
+
+    /* contentum -> scalaris aut silva */
+    si (!_silvam_ad_octetos(ctx, silva, crudum, &octeti, &arborea))
+    {
+        redde FALSUM;
+    }
+    si (arborea)
+    {
+        si (crudum)
+        {
+            _vitium_ponere(ctx, STML_EXPANSIO_ARGUMENTUM_ARBOREUM,
+                           nodus, NIHIL,
+                           chorda_internare(ctx->intern, *titulus));
+            redde FALSUM;
+        }
+        exitus->valor    = NIHIL;
+        exitus->arbores  = silva;
+        redde VERUM;
+    }
+    exitus->valor    = octeti;
+    exitus->arbores  = NIHIL;
+    redde VERUM;
+}
+
 /* Chordam substituere: extensiones '&@nomen;' valoribus
  * argumentorum substitutae (grammatica eadem ac collectio -
  * nomina iam iudicata declarata et impleta). Sine extensione:
@@ -968,29 +1353,33 @@ _chordam_substituere (
     }
     dum (_loculum_invenire(textus, ab, &initium, &post, &titulus))
     {
-        StmlMacroArgumentum* arg;
+        StmlMacroArgumentum proiectio;
+                        b32 praesens;
+                        b32 littera;
 
         fetta.datum    = textus->datum + ab;
         fetta.mensura  = initium - ab;
         chorda_aedificator_appendere_chorda(aed, fetta);
-        arg = _argumentum_invenire(
-            argumenta, chorda_internare(ctx->intern, titulus));
-        si (arg != NIHIL && arg->arbores != NIHIL)
+        littera = VERUM;
+        si (!_proiectionem_resolvere(ctx, argumenta, &titulus, nodus,
+                                     &proiectio, &praesens))
+        {
+            /* vitium positum: littera manet, custos finis cadit */
+        }
+        alioquin si (praesens && proiectio.arbores != NIHIL)
         {
             _vitium_ponere(ctx, STML_EXPANSIO_ARGUMENTUM_ARBOREUM,
-                           nodus, NIHIL, arg->titulus);
-            fetta.datum    = textus->datum + initium;
-            fetta.mensura  = post - initium;
-            chorda_aedificator_appendere_chorda(aed, fetta);
+                           nodus, NIHIL, proiectio.titulus);
         }
-        alioquin si (arg != NIHIL)
+        alioquin si (praesens)
         {
-            chorda_aedificator_appendere_chorda(aed, *arg->valor);
+            chorda_aedificator_appendere_chorda(aed, *proiectio.valor);
+            littera = FALSUM;
         }
-        alioquin
+        /* absens: defensivum - numquam per constructionem (collectio
+         * iudicavit) - extensio litteralis manet */
+        si (littera)
         {
-            /* defensivum: numquam per constructionem (collectio
-             * iudicavit) - extensio litteralis manet */
             fetta.datum    = textus->datum + initium;
             fetta.mensura  = post - initium;
             chorda_aedificator_appendere_chorda(aed, fetta);
@@ -1187,13 +1576,18 @@ _argumenta_bloci_colligere (
                     && initium            == ZEPHYRUM
                     && post               == primum->valor->mensura)
                 {
-                    StmlMacroArgumentum* arg_relatum;
+                    StmlMacroArgumentum proiectio;
+                                    b32 praesens;
 
-                    arg_relatum = _argumentum_invenire(
-                        argumenta_vocantis,
-                        chorda_internare(ctx->intern, referentia));
-                    si (   arg_relatum          != NIHIL
-                        && arg_relatum->arbores != NIHIL)
+                    /* proiectio quoque transit ('<@m=>&@n.inlinea;
+                     * </>' silvam involucri fert, par. 6.1 md) */
+                    si (!_proiectionem_resolvere(ctx,
+                            argumenta_vocantis, &referentia, primum,
+                            &proiectio, &praesens))
+                    {
+                        redde FALSUM;
+                    }
+                    si (praesens && proiectio.arbores != NIHIL)
                     {
                         StmlMacroArgumentum* arg;
 
@@ -1206,7 +1600,7 @@ _argumenta_bloci_colligere (
                         arg->titulus  = titulus;
                         arg->valor    = NIHIL;
                         /* fons immutabilis - splices clonant */
-                        arg->arbores  = arg_relatum->arbores;
+                        arg->arbores  = proiectio.arbores;
                         j++;
                         perge;
                     }
@@ -1511,7 +1905,7 @@ _commutationem_implere (
 {
                  chorda* de;
                  chorda* referentia;
-    StmlMacroArgumentum* arg;
+    StmlMacroArgumentum  proiectio;
                     b32  praesens;
                     b32  scalaris;
                     i32  i;
@@ -1525,9 +1919,13 @@ _commutationem_implere (
                        com, NIHIL, NIHIL);
         redde FALSUM;
     }
-    arg       = _argumentum_invenire(argumenta, referentia);
-    praesens  = arg != NIHIL;
-    scalaris  = praesens && arg->valor != NIHIL;
+    /* scrutans = argumentum aut proiectio eius (par. 6.1 md) */
+    si (!_proiectionem_resolvere(ctx, argumenta, referentia, com,
+                                 &proiectio, &praesens))
+    {
+        redde FALSUM;
+    }
+    scalaris = praesens && proiectio.valor != NIHIL;
 
     num = com->liberi != NIHIL
         ? xar_numerus(com->liberi) : ZEPHYRUM;
@@ -1562,7 +1960,7 @@ _commutationem_implere (
                     redde FALSUM;
                 }
                 congruit = scalaris
-                    && chorda_aequalis(*arg->valor, *est);
+                    && chorda_aequalis(*proiectio.valor, *est);
             }
             alioquin si (stml_attributum_capere(bracchium,
                              "non-nihil") != NIHIL)
@@ -1987,12 +2385,18 @@ _liberum_expandere (
             && initium == ZEPHYRUM
             && post    == liberum->valor->mensura)
         {
-            StmlMacroArgumentum* arg;
+            StmlMacroArgumentum proiectio;
+                            b32 praesens;
 
-            arg = _argumentum_invenire(
-                argumenta,
-                chorda_internare(ctx->intern, referentia));
-            si (arg != NIHIL && arg->arbores != NIHIL)
+            /* proiectio (par. 6.1 md): silva = splex clonans;
+             * scalaris infra per _expandere_nodum substituitur */
+            si (!_proiectionem_resolvere(ctx, argumenta, &referentia,
+                                         liberum, &proiectio,
+                                         &praesens))
+            {
+                redde FALSUM;  /* vitium positum */
+            }
+            si (praesens && proiectio.arbores != NIHIL)
             {
                 i32 k;
                 i32 num_arborum;
@@ -2004,17 +2408,17 @@ _liberum_expandere (
                 {
                     _vitium_ponere(
                         ctx, STML_EXPANSIO_ARGUMENTUM_ARBOREUM,
-                        liberum, NIHIL, arg->titulus);
+                        liberum, NIHIL, proiectio.titulus);
                     redde FALSUM;
                 }
-                num_arborum = xar_numerus(arg->arbores);
+                num_arborum = xar_numerus(proiectio.arbores);
                 per (k = ZEPHYRUM; k < num_arborum; k++)
                 {
                     StmlNodus* fons_arboris;
                     StmlNodus* clon;
 
                     fons_arboris = *(StmlNodus**)xar_obtinere(
-                        arg->arbores, k);
+                        proiectio.arbores, k);
                     si (fons_arboris == NIHIL)
                     {
                         perge;

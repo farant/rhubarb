@@ -287,12 +287,31 @@ output pinned, a vitium, and INDAGO coverage; the existing L1 / lint II
    `n` must be a SUBTREE argument whose single root is an element; `slot`
    names a CHILD ELEMENT of that root (a materia wrapper); the projection
    yields the wrapper's TEXT as a scalar when the wrapper holds only
-   text, else the wrapper's content FOREST. Paths may chain
-   (`&@n.inlinea.liberi;`). A missing wrapper = loud vitium
+   text, else the wrapper's content FOREST. Paths chain by LITERAL
+   child steps — every segment names a child element of the element
+   the previous segment reached, no hidden hop: a NODUS slot wraps
+   the genus element, so the heading's inline children are
+   `&@n.inlinea.inlinea.liberi;` (the tree as it is; the program never
+   chains through a NODUS slot — PER over `@n.inlinea` hands the genus
+   element to the next fill, whose `&@n.liberi;` is one step). A missing wrapper = loud vitium
    `LOCULUS_PROIECTIO_ABSENS`, naming argument and slot (a wrapper that
    is present but empty yields the empty forest — that is what "absent
    derived slot" looks like in §3, and arm order handles it). A forest
    in a string position = the existing vitium VII.
+   **Ratified 2026-09-03 (Fran, after the token-slot review):** the
+   path names a wrapper and yields its CONTENT, never the wrapper
+   itself (the element `<c>text</c>` is the parent's content; choosing
+   among same-tag siblings is a PATTERN's job, piece 2, never a path's).
+   Text content is a scalar with nothing converted. Raw (`!`) elements
+   are bytes by declaration but stay elements: `&@n.crudum!;` — the
+   raw suffix glued to the reference, the registry's own sigil in its
+   own position — yields the bytes of text and raw leaves concatenated;
+   `!` is allowed on any projection as an assertion (loud vitium VII
+   if structure appears). No implicit element→text rule exists. A
+   flattening verb `<TEXTUS>` (DOM textContent semantics) is RESERVED
+   in the visio, not built: md's needs are met by paths and by the
+   parser's derived tokens (a heading's plain text for an anchor id
+   would be a derived slot, never an engine flattening).
 2. **`de="@arg"` and `de="@arg.slot"` (exemplaria door 5, with a path).**
    Inside a fill, EXEMPLAR/CATENA/DIRIBITIO/PER may name a subtree
    argument, or a slot projection of one, as scope. The argument map is
@@ -452,6 +471,11 @@ DEFAULT; each is one line to overturn.
   — Fran's answer.
 - **h.** Parent context pushed down at parse time (`nudus`, `laxa`,
   `officium`) — the law of §3. — default: keep.
+- **i.** (2026-09-03, B1 start) Slot projections yield wrapper CONTENT;
+  raw elements become bytes only with the explicit `!` suffix
+  (`&@n.crudum!;`); `<TEXTUS>` flattening reserved, not built. —
+  Fran: "i would go either way, whichever you think makes the most
+  sense" → explicit `!` chosen (intent on the page, no heuristic).
 
 ## 14. Decree — html SENSE and FORM (2026-09-03)
 
