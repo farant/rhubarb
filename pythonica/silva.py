@@ -1450,6 +1450,8 @@ PORTAE = {
     'materia': (['./materia/compile_probationes.sh'],
                 r'MATERIA PROBATIONES: \d+/\d+'),
     'md': (['./md/compile_probationes.sh'], r'MD PROBATIONES: \d+/\d+'),
+    'oratio': (['./oratio/compile_probationes.sh'],
+               r'ORATIO PROBATIONES: \d+/\d+'),
     'officina': (['./officina/compile_probationes.sh'],
                  r'OFFICINA PROBATIONES: \d+/\d+'),
     'gesta': (['./gesta/compile_probationes.sh'],
@@ -1485,7 +1487,8 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 # 'suita' (=== X === ... FRACTAE: X Y - silva et sub-suitae omnes),
 # aliter 'generica' (porta tota = fractura una)
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
-          'materia': 'suita', 'md': 'suita', 'officina': 'suita', 'gesta': 'suita',
+          'materia': 'suita', 'md': 'suita', 'oratio': 'suita',
+          'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita', 'aedilis': 'suita'}
 _RELATIO_RE = re.compile(r'FRACTA|FRACTUM|FATALE|Speratus|Receptus|Totalis|'
                          r'Praeteriti|Fracti|Conditio|error:|Segmentation|'
@@ -2192,7 +2195,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
         tot = _totum_actorum(acta)
         if tot is None:
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
-                     'materia': 'materia.', 'md': 'md.'}.get(nomen)
+                     'materia': 'materia.', 'md': 'md.',
+                     'oratio': 'oratio.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
                 if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
@@ -2282,6 +2286,7 @@ SUITAE = {
     'css': ('css/probationes', 'css/build/%s'),
     'materia': ('materia/probationes', 'materia/build/%s'),
     'md': ('md/probationes', 'md/build/%s'),
+    'oratio': ('oratio/probationes', 'oratio/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),
     'gesta': ('gesta/probationes', 'gesta/build/%s'),
     'tessera': ('tessera/probationes', 'tessera/build/%s'),

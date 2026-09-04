@@ -138,6 +138,19 @@ born red by a planted fault.
 `oratio/sententiae.sh <x.txt>` (one sentence per line with byte
 extents), `oratio/computus.sh`.
 
+**As built (T1, 2026-09-04).** No `spatium` genus: whitespace rides
+as `cauda` LISTA_TOKEN slots on the preceding `vocabulum`,
+`interpunctio` or `numerus` under STML's possessor law (up to the first
+newline inclusive), the remainder of a blank-line run in
+`paragraphus.cauda`, leading whitespace in `documentum.praefixa` and
+`paragraphus.praefixa`; `sententia` has no whitespace slots. Lexicon
+`or-` (12 genera): FINIS, LINEA, LINEA_CR, SPATIUM, LITTERAE, DIGITI,
+HYPHEN, APOSTROPHUS, PUNCTUM (its own genus: abbreviations and
+sentence ends hang on it), INTERPUNCTIO, SIGNUM, DERIVATUM. Registry 6
+genera / 16 slots; `vocabulum` carries `analyses`, `classes`, `linguae`
+from birth (absent until stage 3). Gate `probatio_oratio_registrum`
+(130 assertions, round trip of "a\n").
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`

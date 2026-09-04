@@ -555,7 +555,7 @@ silva.receptum_delere(via_v)
 # - porta non ruit, verdictum legitur
 # porta md (A2, 2026-09-03): cursor extra tabulam = porta mortua (lectio
 # shim, ter) - registratio in QUATTUOR tabulis asseritur
-for _n in ('css', 'materia', 'md'):
+for _n in ('css', 'materia', 'md', 'oratio'):
     credo(_n in silva.PORTAE and _n in silva.FORMAE and _n in silva.SUITAE,
           'porta %s in PORTAE/FORMAE/SUITAE' % _n)
 credo(os.access(os.path.join(RADIX, silva.PORTAE['md'][0][0]), os.X_OK),
