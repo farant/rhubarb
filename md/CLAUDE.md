@@ -2,181 +2,91 @@
 
 *You are reading this because you touched a file in `md/`.*
 
-Markdown parser built on **materia** (third client after C89-shim and
-css). Design: `project-specs/md-arbor-spec.md` (v1.1, 2026-09-03);
-plan: `project-specs/md-arbor-plan.md` (A2..A8 parser, B1..B3
-html transform by STML COMPOSITION, C1..C2 pythonica `Prosa`);
-interview + census: `project-specs/md-arbor-interview.md`; spike:
-`md-arbor-spica.md`. Ledger parcum 01M1JJMQBT.
+Markdown parser on **materia** (third client after the C89 shim and
+css), html by STML COMPOSITION, and two consumers: pythonica `Prosa`
+(edit markdown by structure) and `citata` (documentation rot). Design:
+`project-specs/md-arbor-spec.md` (v1.1 + as-built notes); plan
+`md-arbor-plan.md`; interview `md-arbor-interview.md`; spike
+`md-arbor-spica.md`; findings ("quid STML voluit", 1–16 + C1) in
+`md/fontes/md_arbor.worklog.md`; ledger parcum 01M1JJMQBT (closed at C2),
+polish list desideratum 01M1NBEVM0.
 
-## Praesens status (2026-09-03)
+## Map
 
-**A2 DONE**: `md_registrum` (28 genera, 92 slots since B2.1, named slot enums),
-`md_lexicon` (26 token genera, prefix `md-`, LINEA is a TERMINATOR
-with munus LINEA — the FIDELIS comparator can run here, unlike css),
-`md_lexema` (line table + scanners + token factory + the crude
-stream). Gates: `probatio_md_registrum` (titles, contiguity, a
-materia round trip), `probatio_md_lexema` (line table, positions,
-scanners vs CommonMark examples, CORPUS: every git-tracked `*.md`
-byte-exact — 1,122 files / 17.2 MB / 600k tokens). Runner
-`./md/compile_probationes.sh [filter]` (exit 2 = nothing ran) writes
-`md/build/corpus_md.txt` from `git ls-files` first: a directory walk
-finds 3,110 files, most of them scratch. Registered in pythonica
-`PORTAE['md']` (+ FORMAE, SUITAE, mensor prefix `md.`).
+- **Parser** (`md/fontes/`): `md_registrum` (28 genera, 94 slots, named
+  slot enums), `md_lexicon` (27 token genera, `md-` prefix, LINEA is the
+  terminator), `md_lexema` (line table, scanners, token factory),
+  `md_arbor` (blocks: containers, leaves, tables, definitions),
+  `md_inlinea` (inline tree owning its bytes), `md_decoctum` (entity and
+  escape decoding, url encoding), `md_exempla` (spec.txt reader).
+- **Projection + html**: `md_stml` (consilium with the origin hook for
+  derived tokens), `md/grammatica/md.canon` (hand-written, seal pinned),
+  `md_html` (parse → project → compose with `md/html/md-html.stml` →
+  expand → distribute → `stml_html_vertere_liberos`).
+- **Consumers**: `md_extenta` (selector → source bytes by pre-order token
+  correspondence), `md_census` (counts from the parsed tree; code-span
+  dump), `md_computus` (bench twin).
+- **Instruments** (`md/*.sh`, need `md/build/*.o` from the runner):
+  `arbor.sh <x.md>` projection · `html.sh <x.md> [-stml]` · `extenta.sh
+  <x.md> '<selector>'` (TSV, rc 0/1/2) · `census.sh [-machina | -citata
+  [via] | -scribere]` (`-scribere` regenerates `md/CENSUS.md`) ·
+  `computus.sh <x.md> [-machina] [-iter N]`.
+- **pythonica**: `silva.Prosa(via)` (`capitulum`, `sectio`, `elementum`,
+  `saeptum`, `substituere`, `applicare` with the round-trip judge),
+  `silva.citata()` (paths and function names in code spans against the
+  tree and `build/nexus.tsv`), `silva.oraculum([n])` (CommonMark oracle
+  failures and raw examples), gate tables (`PORTAE['md']`).
 
-**A3 DONE**: `md_arbor.{c,h}` — `md_arbor_parsare` builds the leaf
-blocks (paragraphs with their final shape praefixa+nudus+inlinea+finis,
-ATX + setext headings, thematic breaks, fenced + indented code, blank
-lines, opaque html blocks by the seven start conditions, front matter).
-Gate `probatio_md_arbor`: CommonMark §4 structure fixtures + the WHOLE
-corpus parse→emit byte-exact (1,124 files; capitula 18,520, saepta
-3,893 of which 65 indented — the census heuristic was list
-continuations, sites eyeballed). Lists and quotes are still paragraphs.
+## Gates (`./md/compile_probationes.sh [filter]`; exit 2 = NOTHING RAN)
 
-**A4 DONE**: containers (lists with `genus`/`initium`/`laxa`, items
-with `officium`, block quotes, nesting, lazy continuation, tight-list
-`nudus` push-down) — the appendix-A stack in the line model; markers are
-prefix tokens of the owning leaf; blank lines PEND until the next
-non-blank line names their container. Corpus: 10,435 lists, 46,707
-items, 160 quotes, still byte-exact.
-
-**A5 DONE**: GFM tables (`md_scan_ordo`, header from the paragraph's
-last line via the list VIEW, rows padded to the header's cell count,
-1,367 in the corpus) and link reference definitions (extracted at
-paragraph close; label normalized into the parser's table; `titulus` /
-`url` / `descriptio` as DERIVED tokens, source 1, decoded by
-`md_decoctum` — emitter omits them with `consilium.fons_index = 0`,
-and the gate proves it both ways). Gates: `probatio_md_decoctum` +
-the arbor fixtures.
-
-**A6 DONE**: `md/probationes/fixa/{commonmark,gfm}/spec.txt` vendored
-(FONTES.md has sources + pins), `md_exempla` reader (one form, both
-files, `→`→tab, extension tag kept), gate `probatio_md_exempla`: 652 +
-672 example INPUTS byte-exact through parse→emit. The house-corpus
-half stays in `probatio_md_arbor`.
-
-**A7 DONE**: `md_inlinea` — the inline tree built in place over each
-`inlinea` (item list → delimiter stack + bracket stack → materia nodes);
-text `valor` only when decoding differs; code spans, emphasis/strong/
-strikethrough, inline + reference + auto links (definition table),
-images, hard/soft breaks (dura OWNS its signum), inline html. Corpus
-and both spec example sets stay byte-exact. Gate `probatio_md_inlinea`
-(§6.2 rules pinned). Birth lesson: delimiter extents must shrink in
-EVERY match branch or the matcher loops.
-
-**A8a DONE**: `md_stml_consilium` (origin hook: derived tokens carry
-position, root = empty sentinel); gate `probatio_md_stml` with
-STRUCTURALIS + FIDELIS over 17 cases + the corpus; `./md/arbor.sh
-<x.md>` prints the projection. Substrate fixes: slot TERMINATOR crlf
-(writer + reader); token values never contain `</md-` (split).
-
-**A8b DONE**: `md/grammatica/md.canon` hand-written (143 rules; no
-trivia wrappers by design; seal `de590d67` pinned); gate
-`probatio_md_canon` = drift guard both ways + seal pin + every corpus
-projection judged (0 faults). Manual judgment: `bin/canon_examen -canon
-md/grammatica/md.canon <doc.stml>`. Parser change → canon change → the
-corpus judgment falsifies it.
-
-**A8c DONE**: `probatio_md_totalitas` (random/mutated/truncated/
-nested to 50k — found and fixed the depth-cap NIHIL) and the computus
-twin (`./md/computus.sh <x.md> [-machina] [-iter N]`, golden
-`fixa/computus/basis.tsv` over `fixa/md/` snapshots; `COMPUTUS_SCRIBERE=1`
-+ a named cause). Arc A COMPLETE: 9 gates.
-
-**B1 IN PROGRESS** (engine, `lib/stml_macros.c`, spec §6; fixtures in
-`probationes/probatio_stml_exemplaria.c`; gates root + silva in shadow
-clones). **B1.1 DONE** (d50ade07): `&@n.slot.slot;` = CONTENT of the
-named child wrapper by literal child steps (text = scalar, else forest,
-never the wrapper itself); `&@n.slot!;` = bytes of text + raw leaves
-(explicit — no implicit element→text rule; structure = vitium VII);
-vitia XXVI–XXVIII. Findings so far in the worklog's "quid STML voluit"
-entries: token slots need `!`; NODUS slots are double-wrapped; `est=""`
-is a tombstone in the base grammar (empty wrapper = PRESENT empty
-scalar; absence = missing wrapper, XXVII, discriminated by B1.4's
-pattern arm). **B1.3 DONE**: `<PER de="@n.bloci" voca="#@f"/>` (rows =
-ELEMENTS of the projected forest into the delegated template's sole
-required slot, a true call) and `<PER de="@n.x" ut="e">…</PER>` (same
-fill, outer scope visible, row name local and non-shadowing); empty
-wrapper = zero rows; vitium XXIX. **B1.4 DONE**: `<CASUS tag="x">` and
-`<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>arm</CASUS>` in COMMUTATIO —
-pattern filled with the arguments, anchored at the scrutinee's root,
-captures join the arm's table; vitium XXX (scalar in tree position,
-mirror of VII). **B1.5 DONE**: a call or PER delegation to the
-template being filled is admitted iff every subtree argument descends
-STRICTLY from the current fill's arguments (parent pointers), else
-XXXI RECURSIO_NON_DESCENDENS; no depth cap (none existed); the spike's
-nested list through a four-arm dispatcher yields `<ul><li>one<ul>…`.
-B1.2 (`de="@n"` on EXEMPLAR inside bodies) NOT BUILT — no md consumer,
-needs fill-scoped relations; parked pending Fran (spec §6.2 note).
-Exhibit: `project-specs/exhibita/md-html-b1.stml` through `stml
-expandere`.
-
-**B2 IN PROGRESS.** **B2.1 DONE**: four derived tokens for the html
-program — `saeptum.valor` (decoded fence content, indentation stripped,
-lines + `\n`), `saeptum.lingua` (first word of the decoded info),
-`imago.alt` (plain text of the description), `fractura-mollis.valor` /
-`fractura-dura.valor` = `\n` (always present: the terminator has no
-bytes in the projection, and a template cannot manufacture whitespace —
-finding 13). Registry 92 slots, seal `81c120c4`. **B2.2 DONE**: `md/html/md-html.stml`
-(one dispatcher, DENSE form — finding 14: template layout leaks into
-html as trivia), `md_html_reddere` (`md/fontes/md_html.c`: parse →
-project → compose → expand → distribute → `stml_html_vertere_liberos`,
-the new doctype-less entry in `lib/stml_html.c`), `./md/html.sh <x.md>
-[-stml]`, gate `probatio_md_html` (twelve inputs byte-exact, our bytes).
-Finding 14 ruled: output formatting waits for the html autoformatter,
-program stays dense. **B3 IN PROGRESS. B3.1 DONE**: raw html passes
-through — `<crudum!>` decree in `lib/stml_html.c` (bare bytes, refused
-without `!`), `html.valor` derived (registry 93, seal `24df7f78`), two
-program arms. **B3.2 DONE**: `probatio_md_oraculum` — every CommonMark + GFM example
-through the program, both sides normalized over `html_lexare`
-(forgivenesses named and counted), pass count PINNED and only rising:
-1,168/1,324 at birth, 0.4 s. Section misses in the worklog. **B3.3 IN
-PROGRESS**: pin 1,168 → 1,248 (cef53339: last-prefix indentation, absent
-list wrappers by arm pairs, literal serializer mode, URL encoding) →
-1,270 (inline html across lines, link titles across a line ending,
-`md-indentatio-codicis` for a code line's own indentation, five list and
-setext rules). Remaining core misses are tabs, Unicode classes,
-multi-line labels and titles, the full entity table, and expected
-GFM-vs-core differences — see the worklog.
-
-**C1 DONE** (2026-09-04): `md_extenta_quaerere` (`md/fontes/md_extenta.c`:
-parse → project → `stml_legere` → selectio; matched element → source
-BYTES by pre-order token correspondence between the materia tree and
-the projection's token elements, self-checked every run by count and
-tag — the projection carries no per-token offsets, the reader's cursor
-does), instrument `./md/extenta.sh <x.md> '<selector>'` (TSV: via index
-tag b-initium b-finis linea columna linea-finis; rc 0 matches / 1 none /
-2 fracture), gate `probatio_md_extenta` (57 assertions; planted `finis -
-I` red). Consumer `silva.Prosa(via)` in pythonica: bytes, version-stamped
-extents, `capitulum`/`sectio`/`elementum`/`saeptum` sugar, judge = parse
-+ `documentum` extent == file. Line-model consequence pinned: a paragraph
-inside a list item owns its line's marker bytes. NEXT = C2 closure.
+registrum · lexema (corpus byte-exact, every tracked `*.md`) · decoctum
+· arbor (CommonMark §4/§5 structure + corpus parse→emit) · exempla (1,324
+spec inputs byte-exact) · inlinea (§6 rules) · stml (STRUCTURALIS +
+FIDELIS round trip) · canon (drift guard both ways, seal, corpus judged)
+· totalitas (random/mutated/nested to 50k) · computus (golden
+`fixa/computus/basis.tsv`, `COMPUTUS_SCRIBERE=1` + a named cause) ·
+html (twelve inputs byte-exact) · oraculum (1,270/1,324 pinned, only
+rising; `ORACULUM_OMNIA=1`, `ORACULUM_EXEMPLUM=N`) · extenta (57) ·
+census (41). Every gate was born red by a planted fault.
 
 ## Laws to keep (spec §3)
 
-- **Line model, zero trivia**: every byte is a token in ONE slot;
-  every line is owned by a LEAF block; container markers are prefix
-  tokens of the line they appear on; containers own no bytes; blank
-  lines are `linea-vacua` blocks of the open container.
-- **Inline tree owns its bytes** (A7 replaces raw content lines with
-  the inline tree; one shape from A3 on: paragraph = praefixa + nudus +
-  inlinea).
-- **Derived tokens** (`fons_index` 1, `MD_FONS_DERIVATUS`) carry
-  decoded text / resolved links / lingua; the emitter omits them
-  (`consilium.fons_index = 0`); present ONLY when they differ.
+- **Line model, zero trivia**: every byte is a token in ONE slot; every
+  line is owned by a LEAF block; container markers are prefix tokens of
+  the line they appear on (so a paragraph inside a list item owns its
+  marker bytes); containers own no bytes; blank lines are `linea-vacua`
+  blocks of the open container.
+- **Inline tree owns its bytes** (paragraph = praefixa + nudus + inlinea).
+- **Derived tokens** (`fons_index` 1) carry decoded text, resolved links,
+  fence language and content, alt text, newlines the program must emit;
+  the emitter omits them; present ONLY when they differ.
 - **Push-down law**: parent context (laxa, nudus, officium, ordinatio)
   is decided by the parser and stored as INDEX slots.
-- Scanners return EXTENTS; the parser decides ownership; a tab is
-  never split between owners (residual columns are content).
+- Scanners return EXTENTS; the parser decides ownership; a tab is never
+  split between owners.
 - Genera and token genera are APPENDED, never reordered; the tests
-  assert both tables by TITLE.
+  assert both tables by TITLE. Materia slots are WRITE-ONCE: an absent
+  list is empty, never pre-filled (the program pays with arm pairs).
+- The projection carries NO per-token offsets (the reader's byte cursor
+  reconstructs them); consumers map by correspondence, self-checked.
 
-## Birth lessons (A2)
+## Status (2026-09-04)
+
+Arc A (parser, 10 gates), arc B (B1 engine pieces in `lib/stml_macros.c`;
+B2 program; B3 oracle 1,270/1,324) and arc C (C1 extenta + Prosa; C2
+census, citata, closure) are DONE. Open, by name: the oracle polish
+classes (desideratum 01M1NBEVM0: entity table cheapest, tabs most
+instructive); B1.2 parked (spec §6.2); finding 14 (fills dropping layout
+trivia) deferred to the html autoformatter; the fence hook (C fences as
+silva trees inside the projection) named, not designed.
+
+## Birth lessons
 
 - `L` is the Roman numeral 50 in latina.h — a variable named `L` fails
-  to compile with a cryptic "expected identifier". Same for `C D M V
-  X I`. Lowercase single letters are safe.
-- `i - ab < longitudo_min` with s32 minus i32: `-Wsign-compare`; cast
-  the difference.
-- Planted faults at birth: ATX accepting seven `#` → scanner red;
-  dropping the INDENTATIO token → corpus red (1,122 files named).
+  with a cryptic "expected identifier". Same for `C D M V X I`, and
+  `nomen` is `typedef`. Lowercase single letters are safe.
+- `i - ab < longitudo_min` with s32 minus i32: `-Wsign-compare`; cast.
+- Examen's "vocatio implicita" suspecta are right: read them before
+  compiling (`credo_initium`, `chorda_ad_literas` did not exist).
+- Delimiter extents must shrink in EVERY match branch or the inline
+  matcher loops.

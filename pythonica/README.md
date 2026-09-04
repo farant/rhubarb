@@ -191,3 +191,22 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   RANCESCUNT (versio) — reselige. Refusiones: capitulum absens nominat
   capitula praesentia; n extra numerum; selector malus.
 - `silva.prosa_extenta(via, selector)` = involucrum crudum extenta.sh.
+
+## 2026-09-04 — census + citata (C2): instrumentum corporis
+
+- **`./md/census.sh [-machina | -citata [via.md] | -scribere]`** — numeri ex
+  ARBORE PARSATA super `git ls-files '*.md'` (MCXXIX plagulae, XVII MB, I
+  s): nodi per genus, capitula per gradum, listae/laxae/officia, saepta per
+  formam et linguam (lexema derivatum), nexus per formam, lexemata/derivata/
+  lineae. `-scribere` = `md/CENSUS.md` (mensura COMMISSA, regenerabilis,
+  numquam asserta — corpus mutat); `-citata` = verbatim (code spans) omnia
+  'via linea contentum'; porta `probatio_md_census`.
+- **`silva.citata(via=None, praefixa=None)`** → Citata(numeri, absentia,
+  mota, nuda): citationes in code spans contra arborem (viae: adest / nudum
+  = nomen sine directorio, sedes nominatae / motum = via absens, plagula eodem
+  nomine alibi / absens = nulla; relativae ad plagulam md quoque) et contra
+  `build/nexus.tsv` (symbola minuscula cum '(' scripta: adest / absens);
+  `silva.citata_textus(c)` = compendium + absentia per directorium + prima.
+  Corpus 2026-09-04: viae MMDCCXXXVI (absunt CCCL, motae CCCLXX), symbola
+  MMDCXXXI (absunt CXXXII), 0.6 s. Strepitus notus: nomina PHP/JS in
+  worklogs, exempla ('x.worklog.md'), functiones staticae olim deletae.

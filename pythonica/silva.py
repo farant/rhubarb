@@ -1268,6 +1268,126 @@ class Prosa(object):
                             causa)
 
 
+# ---------------------------------------------------------------- citata (md)
+
+Citatum = namedtuple('Citatum', 'via linea textus genus verdictum sedes')
+Citata = namedtuple('Citata', 'numeri absentia mota nuda')
+_VIA_CITATA = re.compile(
+    r'^(?:\./)?((?:\.\./)*[A-Za-z0-9_][A-Za-z0-9_./-]*\.(?:c|h|sh|md|py|stml|canon|tsv'
+    r'|txt|json|toml|html|css|js))$')
+_SYMBOLUM_CITATUM = re.compile(r'^([a-z_][a-z0-9_]*)\(\)?$')
+
+
+def _nexus_definitiones():
+    """symbola cum 'sedes' in build/nexus.tsv (tabula disponibilis nexus)"""
+    via = os.path.join(RADIX, 'build', 'nexus.tsv')
+    if not os.path.exists(via):
+        raise SilvaError('build/nexus.tsv absens - ./silva/nexus.sh -renovare')
+    sedes = set()
+    with open(via, errors='replace') as f:
+        for l in f:
+            if l.startswith('#'):
+                continue
+            p = l.split('\t')
+            if len(p) > 1 and p[1] == 'sedes':
+                sedes.add(p[0])
+    return sedes
+
+
+def citata(via=None, praefixa=None):
+    """CITATIONES in verbatim (code spans) corporis markdown contra arborem
+    et tabulam symbolorum (md/census.sh -citata; putredo documentorum):
+    VIAE (textus suffixo plagulae; relativae ad directorium plagulae md
+    quoque) - adest | nudum (nomen sine directorio: plagulae eodem nomine
+    in sedes nominatae) | motum (via cum directorio absens, plagulae eodem
+    nomine alibi) | absens (nulla plagula eo nomine); SYMBOLA (nomen minusculum cum '('
+    scriptum) - adest (sedes in nexus.tsv) | absens. via = plagula md una
+    (etiam extra git); praefixa = filtrum viarum md corporis. Reddit
+    Citata(numeri, absentia [Citatum], mota, nuda)."""
+    args = ['./md/census.sh', '-citata'] + ([_absoluta(via)] if via else [])
+    r = _curre(args)
+    if r.returncode != 0:
+        raise SilvaError('census -citata fractus: %s' % r.stderr.strip()[-200:])
+    tractae = _curre(['git', 'ls-files']).stdout.splitlines()
+    tractae_set = set(tractae)
+    per_nomen = {}
+    for t in tractae:
+        per_nomen.setdefault(os.path.basename(t), []).append(t)
+    definitiones = None
+    absentia, mota, nuda = [], [], []
+    numeri = dict((k, 0) for k in (
+        'citata viae viae_adsunt viae_nudae viae_motae viae_absunt '
+        'symbola symbola_adsunt symbola_absunt').split())
+    for linea in r.stdout.splitlines():
+        p = linea.split('\t', 2)
+        if len(p) < 3:
+            continue
+        via_md, num, textus = p[0], int(p[1]), p[2].strip()
+        if praefixa and not any(via_md.startswith(x) for x in praefixa):
+            continue
+        numeri['citata'] += 1
+        m = _VIA_CITATA.match(textus)
+        if m:
+            numeri['viae'] += 1
+            cand = m.group(1)
+            relativa = os.path.normpath(os.path.join(os.path.dirname(via_md),
+                                                     cand))
+            if cand in tractae_set or relativa in tractae_set \
+                    or os.path.exists(os.path.join(RADIX, cand)) \
+                    or os.path.exists(os.path.join(RADIX, relativa)):
+                numeri['viae_adsunt'] += 1
+                continue
+            alt = per_nomen.get(os.path.basename(cand), [])
+            if not alt:
+                numeri['viae_absunt'] += 1
+                absentia.append(Citatum(via_md, num, textus, 'via', 'absens', ''))
+            elif '/' not in cand:
+                numeri['viae_nudae'] += 1
+                nuda.append(Citatum(via_md, num, textus, 'via', 'nudum',
+                                    ' '.join(alt[:3])))
+            else:
+                numeri['viae_motae'] += 1
+                mota.append(Citatum(via_md, num, textus, 'via', 'motum',
+                                    ' '.join(alt[:3])))
+            continue
+        m = _SYMBOLUM_CITATUM.match(textus)
+        if m:
+            if definitiones is None:
+                definitiones = _nexus_definitiones()
+            numeri['symbola'] += 1
+            if m.group(1) in definitiones:
+                numeri['symbola_adsunt'] += 1
+            else:
+                numeri['symbola_absunt'] += 1
+                absentia.append(Citatum(via_md, num, textus, 'symbolum',
+                                        'absens', ''))
+    return Citata(numeri, absentia, mota, nuda)
+
+
+def citata_textus(c, tectum=40):
+    """compendium + absentia prima (via:linea textus)"""
+    n = c.numeri
+    lineae = ['citata %d: viae %d (adsunt %d, nudae %d, motae %d, ABSUNT %d);'
+              ' symbola %d (adsunt %d, ABSUNT %d)'
+              % (n['citata'], n['viae'], n['viae_adsunt'], n['viae_nudae'],
+                 n['viae_motae'], n['viae_absunt'], n['symbola'],
+                 n['symbola_adsunt'], n['symbola_absunt'])]
+    per_dir = {}
+    for x in c.absentia:
+        d = x.via.split('/')[0] if '/' in x.via else '.'
+        per_dir[d] = per_dir.get(d, 0) + 1
+    if per_dir:
+        lineae.append('absentia per directorium: ' + ', '.join(
+            '%s %d' % kv for kv in sorted(per_dir.items(),
+                                          key=lambda kv: -kv[1])[:8]))
+    for x in c.absentia[:tectum]:
+        lineae.append('  %s:%d  %s  (%s absens)' % (x.via, x.linea, x.textus,
+                                                     x.genus))
+    if len(c.absentia) > tectum:
+        lineae.append('  ... %d cetera' % (len(c.absentia) - tectum))
+    return '\n'.join(lineae)
+
+
 # ---------------------------------------------------------------- portae
 
 Porta = namedtuple('Porta', 'nomen cucurrit sana compendium rc acta fracturae',

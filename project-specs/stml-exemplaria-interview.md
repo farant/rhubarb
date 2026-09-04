@@ -1649,3 +1649,43 @@ change how programs are written: token slots need `!`; NODUS slots are
 double-wrapped and the program never chains through one; `est=""` is
 a tombstone (absence = missing wrapper, read by a pattern arm); the
 empty wrapper is the termination form of a recursion.
+
+## B2–C1 (md) BUILT 2026-09-03/04 — findings 13–16 and the composition verdict
+
+Findings after B1, from `md/fontes/md_arbor.worklog.md` ("quid STML
+voluit"), with what each means for the vocabulary:
+
+- **13. A template cannot manufacture whitespace.** Whitespace-only text
+  is trivia and `&#10;` is literal. Anything a program must EMIT as bytes
+  has to exist as a token value: the md projection grew derived tokens
+  that end in `\n` (`fractura-*.valor`, `saeptum.valor`, `html.valor`).
+- **14. Template layout LEAKS into output as trivia** (the serializer's
+  whitespace law). The program is written dense, one arm per line.
+  Ruled (Fran): output form waits for the html autoformatter; the fill
+  does not drop layout. Whether a fill MODE should drop layout trivia
+  stays an open door, named, not decided.
+- **15. th/td via `ut=`.** A row name local to a PER body was enough; no
+  verb.
+- **16. Absent list wrappers cost ARM PAIRS** per containable slot,
+  because materia slots are write-once: an absent list is empty, never
+  pre-filled. This is the price of B1's "absence is loud" decree; an
+  absence sugar (`<CASUS absens>`) is a candidate reservation, not
+  built.
+- **B3.1 decrees.** `!` over an empty element yields no bytes (a
+  terminator inside a token list broke `!` with vitium VII before);
+  `<crudum!>` in `vertere` is a tag-less byte splice, refused without
+  the `!`.
+- **C1 (a projection finding).** The projection carries no per-token
+  offsets by design; a consumer maps elements to source bytes by a
+  pre-order token correspondence, self-checked on every run.
+
+**Verdict on the composition premise** (Fran's frame: usability is the
+open test). The four B1 pieces — slot projections with `!`, forest PER,
+pattern arms, the self-call check — sufficed for the whole CommonMark
+program: about 45 dense arms, 1,270 of 1,324 spec examples, no new verb
+after B1, no walk, no join. What it cost the author: explicit `!` on
+every token slot, an arm pair for every wrapper that can be absent, the
+tombstone discrimination for `est=""`, and a program that cannot be
+laid out for reading. If a next increment is ever pulled, it is one of
+three: a fill mode that drops layout trivia (14), an absence sugar (16),
+or B1.2 for programs that need fill-scoped relations.

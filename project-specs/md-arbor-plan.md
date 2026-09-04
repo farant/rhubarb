@@ -164,12 +164,25 @@ marker bytes. pythonica gate: 17 assertions over a copy of this plan
 and a synthetic list/fence file. This section was written by Prosa.
 
 ### C2 Wire-up, closure, debrief (the B10 shape)
-Spec as-built notes, `md/CLAUDE.md`, worklog, ledger RELATIO +
-instrument debrief, memory, `md/CENSUS.md` (the 2026-09-03 census as a
-committed measurement), exemplaria interview + visio updated with the
-"quid STML voluit" findings.
-
----
+DONE 2026-09-04. Wire-up: the md runner is reached where css is, through
+pythonica's gate tables (`PORTAE['md']`, suites, forms, mensor prefix);
+no root script runs all suites unattended, for css or md — the commit
+gate discipline (`commissio` portae) is the unattended reach. Closure:
+spec as-built notes in §8, §9, §11 (and §13 deviation c closed as "not
+needed": extents by correspondence, not provenance); `md/CLAUDE.md`
+rewritten as a map; worklog retrospective (spike and spec predictions
+stated as wrong: the walk verb, the join, the census heuristic);
+exemplaria interview section B2–C1 with findings 13–16 and the
+composition verdict; visio §6 note (two doors named, not opened: fills
+dropping layout trivia, absence sugar; the fence hook named); ledger
+relatio with the instrument debrief, parcum closed, polish list as
+desideratum 01M1NBEVM0. Beyond the plan, the census question became an
+instrument: `./md/census.sh` (numbers from the parsed tree over the
+corpus; `md/CENSUS.md` committed and regenerable; gate
+`probatio_md_census`) and `silva.citata()` (documentation rot: 33,079
+code spans checked against the tree and `build/nexus.tsv` in 0.6 s —
+350 absent paths, 370 moved, 132 undefined functions on 2026-09-04).
+This section was written by Prosa.
 
 ## Order and size
 A2 → A3 → A4 → A5 → A6 → A7 → A8; B1 after A3 (spike documents

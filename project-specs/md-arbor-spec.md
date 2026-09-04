@@ -475,6 +475,16 @@ pinned in the gate.
 - `md/html.sh <x.md>` — projection + program → `vertere` bytes.
 - `md/computus.sh <x.md> [-machina] [-iter N]` — the bench twin.
 
+**As built (2026-09-04).** `md/extenta.sh <x.md> '<selector>'` prints
+`via index tag b-initium b-finis linea columna linea-finis` (exit 0 with
+matches, 1 none, 2 fracture). Two instruments the plan did not name:
+`md/census.sh [-machina | -citata [via.md] | -scribere]` — the corpus
+census from the parsed tree (`md/CENSUS.md` is its committed, regenerable
+output) and the code-span dump behind pythonica's `citata` — and
+`silva.citata()`, the citation rot report (paths against the tree,
+function names against `build/nexus.tsv`). Both run the whole corpus in
+about a second.
+
 ## 9. Arc C — `Prosa` in `pythonica/silva.py`
 
 `Prosa(via)` = `Textus` (stale-read guard, all-or-nothing write, no
@@ -529,6 +539,16 @@ C1 needs A8 + `extenta.sh`; C2 closes.
   share of projection bytes;
 - forgiveness count in `probatio_md_html` by kind (whitespace,
   attribute order).
+
+**As published (2026-09-04).** Indented-code blocks: 62 real today (65 at A3 on 1,124 files)
+against the 1,082 heuristic candidates (list continuations), now the
+`indentata` row of `md/CENSUS.md`. Setext headings and thematic breaks are counted by the
+census (`capitulum` by level, `divisio`), front-matter fences as
+`praefatio`. Derived tokens: 82,285 of 1,198,324 (6.9%). Forgiveness
+counts by kind live in `probatio_md_oraculum`'s output (whitespace
+between block tags 2,941, marginal 265, collapsed runs 498, attribute
+order 117, void spelling 152, boolean attributes 37 on the 1,324
+examples). `silva.oraculum()` returns them as a dict.
 
 ## 12. The plan, re-cut
 

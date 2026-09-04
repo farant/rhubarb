@@ -771,3 +771,58 @@ byte law working as designed; consumers that want the item use
 `elementum`. Setext headings span both lines; nested items are
 contained in their parent's extent; a definition's derived tokens do
 not move its extent. Instrument 0.09 s on the plan document.
+
+## 2026-09-04 — C2: the census is the parser's, not grep's
+
+`md_census` walks the parsed tree once per file and counts what the
+interview's shell one-liners could only guess: 1,129 files, 17.4 MB,
+310,808 lines, 1,198,324 tokens of which 82,285 derived; 18,627
+headings, 10,464 lists with 46,778 items, 358 front-matter blocks, 3,920
+code blocks (fences by language: c 2,579, xml 201, bash 148, stml 24).
+`./md/census.sh -scribere` writes `md/CENSUS.md`, a committed measurement
+that is regenerated, never asserted — the corpus changes with every
+commit and a pinned census would be noise. The interview's indented-code
+row (1,082 candidates) is answered by the `indentata` row of the census
+directly. Same instrument, `-citata` mode, feeds the citation rot report
+in pythonica (`silva.citata`), which is what the census question turned
+out to be about. Gate `probatio_md_census` (41 assertions; the planted
+list-genus inversion went red on `punctatae == II`).
+
+## 2026-09-04 — C2 retrospective: what the spec and spike predicted wrong
+
+Stated as wrong, per the B10 discipline:
+
+- **The spike predicted a WALK verb** (AMBULATIO) as the missing
+  transform primitive. Wrong. Template composition with a self-calling
+  dispatcher, forest PER, and pattern arms covered every genus; no walk
+  was ever built. What it cost instead: explicit `!` on token slots,
+  arm pairs for absent wrappers, and a dense program because template
+  layout leaks (findings 1, 13, 14, 16).
+- **The spike predicted a JOIN for reference links.** Wrong direction:
+  links are resolved in the parser and carried as derived tokens; the
+  joins door stayed shut and nothing missed it.
+- **"About 20 tasks; A7 and B1 the hard ones."** A7 and B1 were the hard
+  ones. B3 was the long one: the oracle climbed 1,168 → 1,248 → 1,270
+  over three commits, and it is where the parser's real defects
+  surfaced (list-continuation indentation, definitions before setext,
+  blank lines inside quotes, inline html across lines).
+- **The interview census counted 1,082 indented-code candidates.** The
+  parser found 65 (62 today). Grep cannot see container context; that
+  row of the census is now the parser's.
+- **"Inline structure = an analysis tree sharing tokens."** Reversed at
+  the interview (deviation b) and it stayed reversed: owning bytes put
+  inlines under the byte gate for free.
+- **§1.3 extent provenance, deferred to the first mutation consumer.**
+  C1 answered it without the mechanism it anticipated: extents come
+  from a pre-order token correspondence checked on every run, not from
+  provenance carried in the projection. The deviation closes as "not
+  needed".
+- **"Fences opaque first, embedded-language hook later."** Still opaque.
+  The hook is now a named next design: a C fence projected as a silva
+  tree inside the md projection, one STML document across grammars.
+- **B1.2** (`de="@n"` on EXEMPLAR inside bodies) was never pulled; no
+  program needed it.
+- **What the corpus found that fixtures missed:** the depth-cap NIHIL
+  (totality), the list-continuation confusion, the multi-line inline
+  html newline, token values containing `</md-`, the terminator crlf
+  slot. Every one arrived through a gate, none through review.

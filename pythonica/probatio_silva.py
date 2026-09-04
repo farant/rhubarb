@@ -1022,6 +1022,18 @@ except silva.SilvaError as ex:
 for _f in (via_p, via_q):
     os.unlink(_f)
 
+print('--- citata: putredo documentorum (C2) ---')
+via_c = os.path.join(T, 'citata.md')
+open(via_c, 'w').write('See `lib/chorda.c`, `chorda.c`, `lib/nemo_hic.c`, `../../include/latina.h`,\n'
+                       '`chorda_internare(`, `nemo_hic_est()`, `x = 1`.\n')
+ct = silva.citata(via=via_c)
+credo(ct.numeri['citata'] == 7 and ct.numeri['viae'] == 4 and ct.numeri['symbola'] == 2, 'citata: classificatio (viae IV, symbola II, cetera ignorata)')
+credo(ct.numeri['viae_adsunt'] == 2 and ct.numeri['viae_nudae'] == 1 and ct.numeri['viae_absunt'] == 1, 'citata: adest (absoluta + relativa), nudum, absens')
+credo([x.textus for x in ct.absentia] == ['lib/nemo_hic.c', 'nemo_hic_est()'] and ct.absentia[1].genus == 'symbolum', 'citata: absentia nominata cum genere')
+credo(ct.nuda[0].textus == 'chorda.c' and 'lib/chorda.c' in ct.nuda[0].sedes, 'citata: nudum sedem nominat')
+credo(ct.numeri['symbola_adsunt'] == 1 and 'ABSUNT 1' in silva.citata_textus(ct), 'citata: symbolum in nexus.tsv; textus compendii')
+os.unlink(via_c)
+
 print()
 if fracta:
     print('PYTHONICA: FRACTA %d' % len(fracta))

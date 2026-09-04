@@ -343,3 +343,21 @@ rewrites its heading and a refusal there would fight the common edit.
 substitution. Examen's "vocatio implicita" suspecta were right twice
 today (`credo_initium`, `chorda_ad_literas` do not exist) — read the
 suspecta line before compiling.
+
+## 2026-09-04 — citata: the rot report reads 33,079 code spans in 0.6 s
+
+Fran asked what the markdown tool could extract from the corpus. The
+answer that mattered was not statistics but verification: every path
+and every function name written in a code span, checked against the
+tree and the symbol table. `md/census.sh -citata` dumps the spans with
+positions (C, one parse per file), `silva.citata()` classifies them in
+Python: `build/nexus.tsv` read once (1.04M rows, 'sedes' = definitions)
+and `git ls-files` for paths. Two refinements came from the first run:
+citations resolve RELATIVE to the citing document first (`css/CLAUDE.md`
+cites `probationes/fixa/...`), and a bare name with several tracked
+homonyms is ambiguous, not absent. After them: of 2,736 path citations
+350 name a file that exists nowhere and 370 a file that moved; of 2,631
+function citations 132 name nothing defined. project-specs holds 330 of
+the absent paths — specs cite files before they exist, and some never
+came to exist. The report reports; a gate that pins the count "only
+falling" is the next step if Fran wants it.

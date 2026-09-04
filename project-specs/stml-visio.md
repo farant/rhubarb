@@ -215,6 +215,20 @@ Build nothing before it fires. Consensed design, all from 2026-08-10:
 - **UUID/NanoID + `##` in C** — TS has it; adopt only when something
   pulls (tabularium ULIDs cover most identity needs today).
 
+**As exercised by md (B2–C1, 2026-09-04).** The reservations B1 opened
+(slot projections with `!`, forest PER, pattern arms, the self-call
+check) sufficed for the full CommonMark program; no walk verb, no join.
+Two doors are named and not opened: a fill mode that drops template
+layout trivia (md finding 14 — the serializer's whitespace law makes a
+readable template leak into its output) and an absence sugar over the
+write-once law (finding 16). Decreed on the way: `!` over an empty
+element yields no bytes; `<crudum!>` in `vertere` is a tag-less byte
+splice. The fence hook — a C fence projected as a silva tree inside the
+md projection, one STML document across two grammars, selectable as one
+— is the named next design from the C2 census conversation; it is the
+concrete form of the parse/build blocks sketched in the markdown
+project record, not a new reservation here.
+
 ## 7. MORTUA — with their reasons, so they stay dead
 
 - **The homoiconic code plane** (G2's expression syntax, infix XML,
