@@ -41,7 +41,15 @@ SAMPLED every fifth file, 8.5 s) and `probatio_oratio_canon` (drift
 guard both ways + seal + corpus judged, sampled, 4 s);
 `ORATIO_CORPUS_TOTUS=1` runs the whole corpus (40 s + 20 s). Parent
 pointers are fixed after parsing (`materia_arbor_patres_figere`).
-NEXT: T5 totalitas + computus twin; T6 fissio comparison.
+**T5 DONE**: `probatio_oratio_totalitas` (random / mutated / truncated /
+nested / 50k-deep: never crashes, always byte-exact; 386 assertions,
+0.8 s) and the computus twin `./oratio/computus.sh <x.txt> [-machina]
+[-iter N]` with gate `probatio_oratio_computus` over five vendored
+Gutenberg texts (`fixa/txt/`, FONTES.md; golden
+`fixa/computus/basis.tsv`, `COMPUTUS_SCRIBERE=1` + a named cause;
+`silva.metiri('x.txt')`). Measured: STML projection ≈ 34× source, write
++ read ≈ 10× parse. NEXT: T6 fissio comparison (`sententia_fissio` vs
+oratio over the corpus), then stage 2 (Latin dictionary).
 
 ## Laws to keep (spec §2–3)
 

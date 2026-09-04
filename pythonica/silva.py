@@ -2728,13 +2728,15 @@ Mensura = namedtuple('Mensura', 'via parsare_ms lexare_ms phases allocationes us
 def metiri(via, n=7, nudum=False):
     """computus min-of-n (singuli +-X%): parsare/lexare ms, phases,
     allocationes, usus - pro A/B optimizationum. Instrumentum ex
-    suffixo: .css -> css/computus.sh, .md -> md/computus.sh (semita
+    suffixo: .css -> css/computus.sh, .md -> md/computus.sh, .txt ->
+    oratio/computus.sh (semita
     materiae; phases emittendi/arbor_scribendi/arbor_legendi/comparandi),
     aliter silva/computus.sh (lex/expansio/glr/commissio). Columnae per
     TITULOS capitis '#' lectae (campi = dict cursus optimi), ordo =
     ordo TSV crudus."""
     cliens = ('css' if via.endswith('.css')
-              else 'md' if via.endswith('.md') else None)
+              else 'md' if via.endswith('.md')
+              else 'oratio' if via.endswith('.txt') else None)
     best = None
     for _ in range(n):
         if cliens:

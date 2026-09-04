@@ -100,3 +100,28 @@ that channel test) and a renamed canon rule (red in the drift guard).
 The first plant I tried — removing the hook — was refused by
 `planta`'s pre-flight as an unused variable, exactly the refusal it was
 built for.
+
+## 2026-09-04 — T5: totality first try, and the projection is 34× the source
+
+The totality gate (random bytes, mutated and truncated fixtures, nested
+parentheses, brackets, straight and curly quotes, chained
+abbreviations, and fifty thousand of each of parentheses, words,
+paragraphs, and periods) passed on its first run: 386 assertions, no
+crash, every emission byte-exact. That is the byte law doing its work
+— a tree that is total by construction cannot lose bytes — and it made
+the planted fault hard to choose: most parser mutations keep the tree
+total. The plant that works is in the lexer, one byte off every token
+length, which no consumer above the lexer can repair.
+
+The computus twin over five vendored Gutenberg texts (three Latin, two
+English, boilerplate stripped, FONTES.md) published the number T4 had
+paid for without seeing: the STML projection is about 34× the source
+(Cicero: 92,723 bytes → 3,167,255 bytes of STML, 18 MB of arena), and
+STML write plus read cost about ten times the parse. Parse itself is
+fast (4 ms for 92 KB). The node-per-word tree is the right shape for
+the classifier, and this is what it costs to serialize; if the corpus
+gates ever need to run whole, the answer is a leaner projection of
+`vocabulum`, not a different tree. `silva.metiri('x.txt')` now routes
+to `oratio/computus.sh`. The fixture swap bit the zsh trap again: an
+unquoted variable does not word-split, so the loop fed awk one long
+file name — `${=var}` or no loop.

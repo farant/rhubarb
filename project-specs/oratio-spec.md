@@ -183,6 +183,15 @@ fifth file because the word-per-node tree makes the STML round trip
 of the whole corpus cost 40 s (byte gate 1.5 s); `ORATIO_CORPUS_TOTUS=1`
 runs all of it. The derived-token channel is exercised from stage 1.
 
+**As built (T5, 2026-09-04).** Totality gate on md's shape with prose
+nesting forms; green first run (the tree is total by construction, so
+the planted fault lives in the lexer's token lengths). Computus twin
+over five vendored Gutenberg texts (three Latin, two English; bodies
+only, FONTES.md). First published costs: parse 1–4 ms per file; STML
+projection ≈ 34× the source bytes and write+read ≈ 10× the parse — the
+price of a node per word, to be paid by a leaner `vocabulum` projection
+if it ever matters, not by a different tree.
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`
