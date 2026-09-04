@@ -464,3 +464,35 @@ Gate: five fixtures + nine vitia (305 assertions); planted fault
 (break after the first row) red on the delegation fixture, green on
 revert. Still refused inside bodies: EXEMPLAR/CATENA/DIRIBITIO with
 `de="@n"` — that is B1.2; the dispatcher's self-call is B1.5.
+
+## 2026-09-03 — B1.4 built: pattern and tag arms in COMMUTATIO
+
+Green on the first run, which after B1.1 and B1.3 says the seams were
+already cut: `_exemplar_petere` anchored at the scrutinee's root was
+the whole matcher, `_ligamina_ad_argumenta` the whole bridge, and
+`_bracchii_est_forma` (shared by collection and fill) the only new
+reading. Findings, spec §6.4 "as built":
+
+**(7) Patterns are parameterized for free.** Filling the pattern with
+the current arguments before matching (`_expandere_nodum` on the
+EXEMPLAR body) makes `<p id="&@k;"/>` a pattern that depends on a
+slot — the relational plane's bridge idiom, in the fill plane, with
+no new syntax. The dispatcher will not need it, but a template that
+dispatches on "the node whose id is my argument" reads naturally.
+
+**(8) Captures sit beside the outer scope.** The arm's table is the
+outer arguments plus the captures, so `<h g="&@g;">&@q.t;</h>` reads
+a capture and projects into a captured node in one line, and the
+outer `&@n;` stays visible. Collision is loud twice: a capture naming
+a declared slot at collection, a repeated name at fill (XXII).
+
+**(9) Scalar in tree position = XXX, the mirror of VII.** A tag or
+pattern arm against a scalar with text refuses; the PER over a scalar
+source of B1.3 moved to the same vitium. The empty scalar (empty
+wrapper) has no root and matches nothing — the two rules of B1.1 and
+B1.3 hold here without a third.
+
+Gate: three fixtures (tag dispatch; five pattern arms with value,
+node, text captures and `<**>` descent; parameterized pattern and
+absent optional) + nine vitia, 331 assertions; planted fault (tag arm
+always true) red on the dispatch fixture, green on revert.

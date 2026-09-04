@@ -344,6 +344,19 @@ output pinned, a vitium, and INDAGO coverage; the existing L1 / lint II
    tag, no captures (inside THE LINE: enumerable structure). `est=`
    literal arms keep working for scalars. First match wins; ORDINARIUS
    last; no match and no ORDINARIUS = CASUS_NULLUS.
+   **As built (2026-09-03, B1.4):** the pattern is FILLED with the
+   current arguments before matching (`<p id="&@k;"/>` is a
+   parameterized pattern — the bridge idiom in the fill plane), then
+   petitioned anchored at the scrutinee's single element root; its
+   captures (node `$q`, value `attr="$v"`, text `<t>$x</t>`) join the
+   arm's argument table beside the outer arguments (a name already in
+   the table = CAPTURA_COLLISA; a capture naming a declared slot is
+   refused at collection). A tag or pattern arm against a scalar WITH
+   text is vitium XXX ARGUMENTUM_SCALARE, the mirror of VII; the empty
+   scalar of §6.1 has no root and simply does not match; an absent
+   optional scrutinee matches neither. `<EST>` holds exactly one
+   attribute-less EXEMPLAR with a one-element body; EST is consumed,
+   never emitted.
 5. **Self-call as a CHECK, not a spelling.** A call (or a `voca=`) whose
    id is the definition being filled (ordo == tectum) is admitted iff
    every subtree argument of the call is a strict descendant (pointer

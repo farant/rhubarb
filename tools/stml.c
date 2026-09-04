@@ -378,6 +378,8 @@ _vitium_expansionis_titulus (
             redde "PROIECTIO_AMBIGUA";
         casus STML_EXPANSIO_PER_DELEGATIO_AMBIGUA:
             redde "PER_DELEGATIO_AMBIGUA";
+        casus STML_EXPANSIO_ARGUMENTUM_SCALARE:
+            redde "ARGUMENTUM_SCALARE";
         ordinarius:
             redde "IGNOTUM";
     }

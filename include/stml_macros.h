@@ -56,7 +56,11 @@ nomen enumeratio {
      * statice iudicabile manet): de non totus-ref '&@x;'; est cum
      * referentia (LINEA: casus litterae, numquam praedicata
      * computata); liberum non-CASUS/ORDINARIUS; ORDINARIUS non
-     * ultimus; attributum casus ignotum (par. 6.2) */
+     * ultimus; attributum casus ignotum (par. 6.2). Bracchia
+     * exemplaria (md-arbor-spec par. 6.4, 2026-09-03): forma una ex
+     * est/nihil/non-nihil/tag/<EST>; tag cum referentia; <EST> non
+     * EXEMPLAR unum sine attributis cum corpore elemento uno;
+     * captura formae ('$x') loculum declaratum iterans */
     STML_EXPANSIO_COMMUTATIO_MALFORMATA = IX,
     /* impletione: nullum bracchium congruit nec ORDINARIUS adest -
      * numquam vacuum tacitum (par. 6.2) */
@@ -177,7 +181,13 @@ nomen enumeratio {
      * eiusdem impletionis est (scopus exterior visibilis, 'e' loculum
      * declaratum obumbrans = XIII). Malformationes ceterae (de sine
      * silva, voca + corpus, ut sine corpore, '!' in de) = XIII. */
-    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX
+    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX,
+    /* argumentum SCALARE positionem ARBORIS implens - speculum vitii
+     * VII: bracchium 'tag=' aut exemplaris COMMUTATIONIS contra
+     * scalarem, PER super silvam cuius fons scalaris textum fert
+     * (md-arbor-spec par. 6.3/6.4). Scalaris VACUUS silva vacua est
+     * (par. 6.1), numquam hoc vitium. */
+    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

@@ -97,9 +97,12 @@ pattern arm). **B1.3 DONE**: `<PER de="@n.bloci" voca="#@f"/>` (rows =
 ELEMENTS of the projected forest into the delegated template's sole
 required slot, a true call) and `<PER de="@n.x" ut="e">…</PER>` (same
 fill, outer scope visible, row name local and non-shadowing); empty
-wrapper = zero rows; vitium XXIX. **NEXT = B1.4** pattern CASUS +
-`tag=` in COMMUTATIO, then B1.5 self-call check, B1.2 `de="@n"` on
-EXEMPLAR/CATENA.
+wrapper = zero rows; vitium XXIX. **B1.4 DONE**: `<CASUS tag="x">` and
+`<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>arm</CASUS>` in COMMUTATIO —
+pattern filled with the arguments, anchored at the scrutinee's root,
+captures join the arm's table; vitium XXX (scalar in tree position,
+mirror of VII). **NEXT = B1.5** self-call as a descent check, then
+B1.2 `de="@n"` on EXEMPLAR/CATENA.
 
 ## Laws to keep (spec §3)
 

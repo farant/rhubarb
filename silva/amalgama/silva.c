@@ -4173,7 +4173,11 @@ nomen enumeratio {
      * statice iudicabile manet): de non totus-ref '&@x;'; est cum
      * referentia (LINEA: casus litterae, numquam praedicata
      * computata); liberum non-CASUS/ORDINARIUS; ORDINARIUS non
-     * ultimus; attributum casus ignotum (par. 6.2) */
+     * ultimus; attributum casus ignotum (par. 6.2). Bracchia
+     * exemplaria (md-arbor-spec par. 6.4, 2026-09-03): forma una ex
+     * est/nihil/non-nihil/tag/<EST>; tag cum referentia; <EST> non
+     * EXEMPLAR unum sine attributis cum corpore elemento uno;
+     * captura formae ('$x') loculum declaratum iterans */
     STML_EXPANSIO_COMMUTATIO_MALFORMATA = IX,
     /* impletione: nullum bracchium congruit nec ORDINARIUS adest -
      * numquam vacuum tacitum (par. 6.2) */
@@ -4294,7 +4298,13 @@ nomen enumeratio {
      * eiusdem impletionis est (scopus exterior visibilis, 'e' loculum
      * declaratum obumbrans = XIII). Malformationes ceterae (de sine
      * silva, voca + corpus, ut sine corpore, '!' in de) = XIII. */
-    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX
+    STML_EXPANSIO_PER_DELEGATIO_AMBIGUA    = XXIX,
+    /* argumentum SCALARE positionem ARBORIS implens - speculum vitii
+     * VII: bracchium 'tag=' aut exemplaris COMMUTATIONIS contra
+     * scalarem, PER super silvam cuius fons scalaris textum fert
+     * (md-arbor-spec par. 6.3/6.4). Scalaris VACUUS silva vacua est
+     * (par. 6.1), numquam hoc vitium. */
+    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
@@ -18733,6 +18743,190 @@ _corpus_perscrutari (
     StmlMacroContextus* ctx,
                    SilvaXar* angustati);
 
+interior b32
+_liberum_perscrutari (
+             SilvaStmlNodus* liberum,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx,
+                   SilvaXar* angustati);
+
+/* Bracchium exemplare COMMUTATIONIS (par. 6.4 md): '<CASUS><EST>
+ * <EXEMPLAR>forma</EXEMPLAR></EST>bracchium</CASUS>'. Reddit
+ * ZEPHYRUM = sine EST; I = bene formatum (est_exitus, forma_exitus
+ * impleti); II = malformatum (EST plures, EST non EXEMPLAR unum,
+ * EXEMPLAR cum attributis - relationes in plano impletionis nullae -
+ * aut corpus non elementum unum). */
+interior i32
+_bracchii_est_forma (
+     SilvaStmlNodus*  bracchium,
+     SilvaStmlNodus** est_exitus,
+     SilvaStmlNodus** forma_exitus)
+{
+    SilvaStmlNodus* est;
+    SilvaStmlNodus* exemplar;
+    SilvaStmlNodus* forma;
+          i32  i;
+          i32  num;
+
+    *est_exitus    = NIHIL;
+    *forma_exitus  = NIHIL;
+    est            = NIHIL;
+    num = bracchium->liberi != NIHIL
+        ? silva_xar_numerus(bracchium->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(bracchium->liberi, i);
+
+        si (l != NIHIL && _est_titulo(l, "EST"))
+        {
+            si (est != NIHIL)
+            {
+                redde II;
+            }
+            est = l;
+        }
+    }
+    si (est == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    exemplar = NIHIL;
+    num = est->liberi != NIHIL ? silva_xar_numerus(est->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(est->liberi, i);
+
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (exemplar != NIHIL || !_est_titulo(l, "EXEMPLAR"))
+        {
+            redde II;
+        }
+        exemplar = l;
+    }
+    si (   exemplar == NIHIL
+        || (   exemplar->attributa != NIHIL
+            && silva_xar_numerus(exemplar->attributa) > ZEPHYRUM))
+    {
+        redde II;
+    }
+    forma = NIHIL;
+    num = exemplar->liberi != NIHIL
+        ? silva_xar_numerus(exemplar->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(exemplar->liberi, i);
+
+        si (l == NIHIL || l->genus == STML_NODUS_COMMENTUM)
+        {
+            perge;
+        }
+        si (forma != NIHIL || l->genus != STML_NODUS_ELEMENTUM)
+        {
+            redde II;
+        }
+        forma = l;
+    }
+    si (forma == NIHIL)
+    {
+        redde II;
+    }
+    *est_exitus    = est;
+    *forma_exitus  = forma;
+    redde I;
+}
+
+/* Nomina capturarum formae statice colligere ('$x' attributum nudum =
+ * captura nodi, valor '$x' = valoris, textus '$x' = textus - formae
+ * eaedem quas _laxa_congruere ligat): bracchium eas ut loculos
+ * temporarios videt. Iteratio nominis (regula V) bis appenditur -
+ * innoxium. */
+interior b32
+_capturas_formae_colligere (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* forma,
+                   SilvaXar* nomina)  /* chorda* */
+{
+    i32 i;
+    i32 num;
+
+    si (forma->genus == STML_NODUS_TEXTUS)
+    {
+        si (   forma->valor                  != NIHIL
+            && forma->valor->mensura > I
+            && forma->valor->datum[ZEPHYRUM] == (i8)'$')
+        {
+            SilvaChorda   pars;
+            SilvaChorda** cella;
+
+            pars.datum    = forma->valor->datum + I;
+            pars.mensura  = forma->valor->mensura - I;
+            cella         = (SilvaChorda**)silva_xar_addere(nomina);
+            si (cella == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *cella = silva_chorda_internare(ctx->intern, pars);
+        }
+        redde VERUM;
+    }
+    si (forma->genus != STML_NODUS_ELEMENTUM)
+    {
+        redde VERUM;
+    }
+    num = forma->attributa
+        != NIHIL ? silva_xar_numerus(forma->attributa) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlAttributum* fa =
+            (SilvaStmlAttributum*)silva_xar_obtinere(forma->attributa, i);
+        SilvaChorda   pars;
+        SilvaChorda** cella;
+
+        si (fa == NIHIL || fa->titulus == NIHIL)
+        {
+            perge;
+        }
+        si (   fa->titulus->mensura > I
+            && fa->titulus->datum[ZEPHYRUM] == (i8)'$')
+        {
+            pars.datum    = fa->titulus->datum + I;
+            pars.mensura  = fa->titulus->mensura - I;
+        }
+        alioquin si (   fa->valor                  != NIHIL
+                     && fa->valor->mensura > I
+                     && fa->valor->datum[ZEPHYRUM] == (i8)'$')
+        {
+            pars.datum    = fa->valor->datum + I;
+            pars.mensura  = fa->valor->mensura - I;
+        }
+        alioquin
+        {
+            perge;
+        }
+        cella = (SilvaChorda**)silva_xar_addere(nomina);
+        si (cella == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *cella = silva_chorda_internare(ctx->intern, pars);
+    }
+    num = forma->liberi
+        != NIHIL ? silva_xar_numerus(forma->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(forma->liberi, i);
+
+        si (l != NIHIL && !_capturas_formae_colligere(ctx, l, nomina))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* Estne PER super silvam argumenti? ('de="@n.via"' - '@' ducens;
  * 'de="$rel"' relatio documenti manet). de_exitus = titulus post '@'
  * (forma referentiae sine '&@'/';'). */
@@ -18945,36 +19139,47 @@ _commutationem_perscrutari (
         si (_est_titulo(bracchium, "CASUS"))
         {
             SilvaChorda* est;
+            SilvaChorda* tag;
                b32  habet_nihil;
                b32  habet_non_nihil;
                i32  formae;
+               i32  est_forma;
+         SilvaStmlNodus* est_nodus;
+         SilvaStmlNodus* forma;
 
             est              = silva_stml_attributum_capere(bracchium,
                                                       "est");
+            tag              = silva_stml_attributum_capere(bracchium,
+                                                      "tag");
             habet_nihil      = silva_stml_attributum_capere(bracchium,
                                    "nihil") != NIHIL;
             habet_non_nihil  = silva_stml_attributum_capere(bracchium,
                                    "non-nihil") != NIHIL;
+            est_forma        = _bracchii_est_forma(bracchium,
+                                                   &est_nodus, &forma);
             formae = (est != NIHIL ? I : ZEPHYRUM)
+                   + (tag != NIHIL ? I : ZEPHYRUM)
                    + (habet_nihil ? I : ZEPHYRUM)
-                   + (habet_non_nihil ? I : ZEPHYRUM);
-            si (formae != I)
+                   + (habet_non_nihil ? I : ZEPHYRUM)
+                   + (est_forma != ZEPHYRUM ? I : ZEPHYRUM);
+            si (formae != I || est_forma == II)
             {
                 _vitium_ponere(ctx,
                                STML_EXPANSIO_COMMUTATIO_MALFORMATA,
                                bracchium, def->id, NIHIL);
                 redde FALSUM;
             }
-            si (est != NIHIL)
+            si (est != NIHIL || tag != NIHIL)
             {
                 SilvaChorda titulus_ref;
                    i32 initium;
                    i32 post;
 
-                /* LINEA: est littera est - referentia intra eam
-                 * praedicatum computatum esset */
-                si (_loculum_invenire(est, ZEPHYRUM, &initium,
-                                      &post, &titulus_ref))
+                /* LINEA: est/tag litterae sunt - referentia intra
+                 * eas praedicatum computatum esset */
+                si (_loculum_invenire(est != NIHIL ? est : tag,
+                                      ZEPHYRUM, &initium, &post,
+                                      &titulus_ref))
                 {
                     _vitium_ponere(ctx,
                         STML_EXPANSIO_COMMUTATIO_MALFORMATA,
@@ -18982,7 +19187,89 @@ _commutationem_perscrutari (
                     redde FALSUM;
                 }
             }
-            si (est != NIHIL || habet_non_nihil)
+            si (est_forma == I)
+            {
+                /* bracchium exemplare (par. 6.4 md): forma contra
+                 * loculos declaratos SINE capturis (exemplar
+                 * parametrizatum '&@k;' licitum), deinde capturae
+                 * ut loculi temporarii (declaratum iterans =
+                 * malformatum), praesentia statuta, bracchium
+                 * (liberi praeter EST) scanditur */
+                   SilvaXar*  nomina;
+                   i32   j;
+                   i32   num_nominum;
+                   i32   num_lib;
+                   b32   bene;
+                SilvaChorda** cella;
+
+                si (!_liberum_perscrutari(est_nodus, def, ctx,
+                                          angustati))
+                {
+                    redde FALSUM;
+                }
+                nomina = silva_xar_creare(ctx->piscina, magnitudo(SilvaChorda*));
+                si (   nomina == NIHIL
+                    || !_capturas_formae_colligere(ctx, forma, nomina))
+                {
+                    redde FALSUM;
+                }
+                num_nominum = silva_xar_numerus(nomina);
+                per (j = ZEPHYRUM; j < num_nominum; j++)
+                {
+                    SilvaChorda* nomen_capturae =
+                        *(SilvaChorda**)silva_xar_obtinere(nomina, j);
+                    StmlMacroLoculus* temp;
+
+                    si (   nomen_capturae == NIHIL
+                        || _loculus_declaratus(def, nomen_capturae)
+                               != NIHIL)
+                    {
+                        _vitium_ponere(ctx,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA,
+                            bracchium, def->id, nomen_capturae);
+                        redde FALSUM;
+                    }
+                    temp = (StmlMacroLoculus*)silva_xar_addere(def->loculi);
+                    si (temp == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    temp->titulus     = nomen_capturae;
+                    temp->optionalis  = FALSUM;
+                }
+                cella = (SilvaChorda**)silva_xar_addere(angustati);
+                si (cella == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                *cella  = loc->titulus;
+                bene    = VERUM;
+                num_lib = bracchium->liberi != NIHIL
+                    ? silva_xar_numerus(bracchium->liberi) : ZEPHYRUM;
+                per (j = ZEPHYRUM; bene && j < num_lib; j++)
+                {
+                    SilvaStmlNodus* l =
+                        *(SilvaStmlNodus**)silva_xar_obtinere(bracchium->liberi,
+                        j);
+
+                    si (l != NIHIL && l != est_nodus)
+                    {
+                        bene = _liberum_perscrutari(l, def, ctx,
+                                                    angustati);
+                    }
+                }
+                silva_xar_removere_ultimum(angustati);
+                per (j = ZEPHYRUM; j < num_nominum; j++)
+                {
+                    silva_xar_removere_ultimum(def->loculi);
+                }
+                si (!bene)
+                {
+                    redde FALSUM;
+                }
+                perge;
+            }
+            si (est != NIHIL || tag != NIHIL || habet_non_nihil)
             {
                  SilvaChorda** cella;
                     b32   bene;
@@ -19039,79 +19326,84 @@ _corpus_perscrutari (
     num = silva_xar_numerus(nodus->liberi);
     per (i = ZEPHYRUM; i < num; i++)
     {
-          SilvaStmlNodus* liberum;
-             SilvaChorda  de_titulus;
-                i32  j;
-                i32  num_attr;
+        SilvaStmlNodus* liberum;
 
         liberum = *(SilvaStmlNodus**)silva_xar_obtinere(nodus->liberi, i);
-        si (liberum == NIHIL)
-        {
-            perge;
-        }
-        si (_est_definitio(liberum))
-        {
-            /* fragmentum nidificatum = materia definitionis
-             * citata, OPACA: eius '&@' ad loculos SUOS futuros
-             * refert, non ad nostros - nec scanditur nec
-             * substituitur (regula una utrimque) */
-            perge;
-        }
-        si (_est_titulo(liberum, "COMMUTATIO"))
-        {
-            /* attributa (de) et bracchia SEORSUM iudicata - de
-             * referentia scrutans est, ab angustatione exempta */
-            si (!_commutationem_perscrutari(liberum, def, ctx,
-                                            angustati))
-            {
-                redde FALSUM;
-            }
-            perge;
-        }
-        si (   _est_titulo(liberum, "PER")
-            && _per_silvae_est(liberum, &de_titulus))
-        {
-            /* PER super silvam argumenti (par. 6.3 md): de + forma
-             * + corpus cum loculo ordinis temporario */
-            si (!_per_silvae_perscrutari(liberum, de_titulus, def,
-                                         ctx, angustati))
-            {
-                redde FALSUM;
-            }
-            perge;
-        }
-        si (   (   liberum->genus == STML_NODUS_TEXTUS
-                || liberum->genus == STML_NODUS_TRANSCLUSIO)
-            && liberum->valor != NIHIL
-            && !_chordam_perscrutari(liberum->valor, liberum, def,
-                                     ctx, angustati))
-        {
-            redde FALSUM;
-        }
-        si (liberum->attributa != NIHIL)
-        {
-            num_attr = silva_xar_numerus(liberum->attributa);
-            per (j = ZEPHYRUM; j < num_attr; j++)
-            {
-                SilvaStmlAttributum* attr;
-
-                attr = (SilvaStmlAttributum*)silva_xar_obtinere(
-                    liberum->attributa, j);
-                si (   attr        != NIHIL
-                    && attr->valor != NIHIL
-                    && !_chordam_perscrutari(attr->valor, liberum,
-                                             def, ctx, angustati))
-                {
-                    redde FALSUM;
-                }
-            }
-        }
-        si (!_corpus_perscrutari(liberum, def, ctx, angustati))
+        si (   liberum != NIHIL
+            && !_liberum_perscrutari(liberum, def, ctx, angustati))
         {
             redde FALSUM;
         }
     }
     redde VERUM;
+}
+
+/* Liberum UNUM corporis perscrutari (nodus ipse + subarbor eius):
+ * definitio nidificata opaca; COMMUTATIO et PER super silvam per
+ * iudices suos; textus/transclusio/attributa contra loculos; deinde
+ * liberi. Ansa _corpus_perscrutari et bracchia exemplaria (liberi
+ * praeter EST) hoc vocant. */
+interior b32
+_liberum_perscrutari (
+             SilvaStmlNodus* liberum,
+    StmlMacroDefinitio* def,
+    StmlMacroContextus* ctx,
+                   SilvaXar* angustati)
+{
+    SilvaChorda de_titulus;
+       i32 j;
+       i32 num_attr;
+
+    si (_est_definitio(liberum))
+    {
+        /* fragmentum nidificatum = materia definitionis citata,
+         * OPACA: eius '&@' ad loculos SUOS futuros refert, non ad
+         * nostros - nec scanditur nec substituitur (regula una
+         * utrimque) */
+        redde VERUM;
+    }
+    si (_est_titulo(liberum, "COMMUTATIO"))
+    {
+        /* attributa (de) et bracchia SEORSUM iudicata - de
+         * referentia scrutans est, ab angustatione exempta */
+        redde _commutationem_perscrutari(liberum, def, ctx,
+                                         angustati);
+    }
+    si (   _est_titulo(liberum, "PER")
+        && _per_silvae_est(liberum, &de_titulus))
+    {
+        /* PER super silvam argumenti (par. 6.3 md): de + forma +
+         * corpus cum loculo ordinis temporario */
+        redde _per_silvae_perscrutari(liberum, de_titulus, def, ctx,
+                                      angustati);
+    }
+    si (   (   liberum->genus == STML_NODUS_TEXTUS
+            || liberum->genus == STML_NODUS_TRANSCLUSIO)
+        && liberum->valor != NIHIL
+        && !_chordam_perscrutari(liberum->valor, liberum, def, ctx,
+                                 angustati))
+    {
+        redde FALSUM;
+    }
+    si (liberum->attributa != NIHIL)
+    {
+        num_attr = silva_xar_numerus(liberum->attributa);
+        per (j = ZEPHYRUM; j < num_attr; j++)
+        {
+            SilvaStmlAttributum* attr;
+
+            attr = (SilvaStmlAttributum*)silva_xar_obtinere(liberum->attributa,
+                                                 j);
+            si (   attr        != NIHIL
+                && attr->valor != NIHIL
+                && !_chordam_perscrutari(attr->valor, liberum, def,
+                                         ctx, angustati))
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde _corpus_perscrutari(liberum, def, ctx, angustati);
 }
 
 /* Praetransitus: definitiones colligere ordine documenti (in
@@ -19765,6 +20057,28 @@ _per_implere (
                    i32  stratum,
                    i32  tectum);
 
+/* Bracchia exemplaria COMMUTATIONIS (par. 6.4 md) machinam
+ * exemplarium (infra definitam) vocant */
+interior b32
+_descensus_probare (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* forma,
+                SilvaChorda* titulus);
+
+interior b32
+_exemplar_petere (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* forma,
+             SilvaStmlNodus* nodus,
+                   b32  ancorata,
+                   SilvaXar* congruentiae,
+                   SilvaXar* opus_ligamina);
+
+interior SilvaXar*
+_ligamina_ad_argumenta (
+    StmlMacroContextus* ctx,
+                   SilvaXar* ligamina);
+
 interior b32
 _per_silvae_implere (
              SilvaStmlNodus* parens_novus,
@@ -20275,6 +20589,8 @@ _commutationem_implere (
     {
         SilvaStmlNodus* bracchium;
               b32  congruit;
+              SilvaXar* tabula;
+              SilvaXar* liberi_bracchii;
 
         bracchium = *(SilvaStmlNodus**)silva_xar_obtinere(com->liberi, i);
         si (   bracchium        == NIHIL
@@ -20282,7 +20598,9 @@ _commutationem_implere (
         {
             perge;
         }
-        congruit = FALSUM;
+        congruit         = FALSUM;
+        tabula           = argumenta;
+        liberi_bracchii  = bracchium->liberi;
         si (_est_titulo(bracchium, "ORDINARIUS"))
         {
             congruit = VERUM;
@@ -20290,8 +20608,12 @@ _commutationem_implere (
         alioquin si (_est_titulo(bracchium, "CASUS"))
         {
             SilvaChorda* est;
+            SilvaChorda* tag;
+         SilvaStmlNodus* est_nodus;
+         SilvaStmlNodus* forma;
 
             est = silva_stml_attributum_capere(bracchium, "est");
+            tag = silva_stml_attributum_capere(bracchium, "tag");
             si (est != NIHIL)
             {
                 si (praesens && !scalaris)
@@ -20303,6 +20625,181 @@ _commutationem_implere (
                 }
                 congruit = scalaris
                     && silva_chorda_aequalis(*proiectio.valor, *est);
+            }
+            alioquin si (   tag != NIHIL
+                         || _bracchii_est_forma(bracchium, &est_nodus,
+                                                &forma) == I)
+            {
+                /* bracchia exemplaria (par. 6.4 md): scrutans silva
+                 * radice elementari unica; scalaris cum textu in
+                 * positione arboris = XXX; absens = non congruit */
+                SilvaStmlNodus* radix;
+
+                si (praesens && scalaris)
+                {
+                    si (proiectio.valor->mensura > ZEPHYRUM)
+                    {
+                        _vitium_ponere(ctx,
+                            STML_EXPANSIO_ARGUMENTUM_SCALARE,
+                            bracchium, NIHIL, referentia);
+                        redde FALSUM;
+                    }
+                    congruit = FALSUM;  /* silva vacua: radix nulla */
+                }
+                alioquin si (praesens)
+                {
+                    si (!_elementum_unicum(ctx, proiectio.arbores,
+                        NIHIL,
+                                           *referentia, com, &radix))
+                    {
+                        redde FALSUM;
+                    }
+                    si (tag != NIHIL)
+                    {
+                        congruit = radix->titulus != NIHIL
+                            && silva_chorda_aequalis(*radix->titulus, *tag);
+                    }
+                    alioquin
+                    {
+                        /* forma argumentis impleta (exemplar
+                         * parametrizatum), ancorata ad radicem
+                         * petita; capturae -> tabula bracchii
+                         * (argumenta currentia + capturae; nomen
+                         * iteratum = XXII) */
+                        SilvaStmlNodus* forma_impleta;
+                              SilvaXar* congruentiae;
+                              SilvaXar* opus;
+
+                        forma_impleta = _expandere_nodum(forma, ctx,
+                            stratum, tectum, argumenta, NIHIL);
+                        si (forma_impleta == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        si (!_descensus_probare(ctx, forma_impleta,
+                                                referentia))
+                        {
+                            redde FALSUM;
+                        }
+                        congruentiae = silva_xar_creare(ctx->piscina,
+                            magnitudo(StmlExemplarCongruentia));
+                        opus = silva_xar_creare(ctx->piscina,
+                            magnitudo(StmlExemplarLigamen));
+                        si (congruentiae == NIHIL || opus == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        si (!_exemplar_petere(ctx, forma_impleta, radix,
+                                              VERUM, congruentiae,
+                                              opus))
+                        {
+                            redde FALSUM;
+                        }
+                        congruit = silva_xar_numerus(congruentiae) > ZEPHYRUM;
+                        si (congruit)
+                        {
+                            StmlExemplarCongruentia* con =
+                                (StmlExemplarCongruentia*)silva_xar_obtinere(
+                                    congruentiae, ZEPHYRUM);
+                            SilvaXar* capturae;
+                            i32  j;
+                            i32  num_cap;
+                            i32  num_arg;
+
+                            capturae = _ligamina_ad_argumenta(ctx,
+                                                              con->ligamina);
+                            tabula = silva_xar_creare(ctx->piscina,
+                                magnitudo(StmlMacroArgumentum));
+                            si (capturae == NIHIL || tabula == NIHIL)
+                            {
+                                redde FALSUM;
+                            }
+                            num_arg = silva_xar_numerus(argumenta);
+                            per (j = ZEPHYRUM; j < num_arg; j++)
+                            {
+                                StmlMacroArgumentum* fons =
+                                    (StmlMacroArgumentum*)silva_xar_obtinere(
+                                        argumenta, j);
+                                StmlMacroArgumentum* copia;
+
+                                si (fons == NIHIL)
+                                {
+                                    perge;
+                                }
+                                copia =
+                                    (StmlMacroArgumentum*)silva_xar_addere(
+                                    tabula);
+                                si (copia == NIHIL)
+                                {
+                                    redde FALSUM;
+                                }
+                                *copia = *fons;
+                            }
+                            num_cap = silva_xar_numerus(capturae);
+                            per (j = ZEPHYRUM; j < num_cap; j++)
+                            {
+                                StmlMacroArgumentum* cap =
+                                    (StmlMacroArgumentum*)silva_xar_obtinere(
+                                        capturae, j);
+                                StmlMacroArgumentum* copia;
+
+                                si (cap == NIHIL)
+                                {
+                                    perge;
+                                }
+                                si (_argumentum_invenire(tabula,
+                                        cap->titulus) != NIHIL)
+                                {
+                                    _vitium_ponere(ctx,
+                                        STML_EXPANSIO_CAPTURA_COLLISA,
+                                        bracchium, NIHIL, cap->titulus);
+                                    redde FALSUM;
+                                }
+                                copia =
+                                    (StmlMacroArgumentum*)silva_xar_addere(
+                                    tabula);
+                                si (copia == NIHIL)
+                                {
+                                    redde FALSUM;
+                                }
+                                *copia = *cap;
+                            }
+                        }
+                    }
+                }
+                si (congruit && est_nodus != NIHIL)
+                {
+                    /* EST consumptum: liberi praeter eum */
+                    i32 j;
+                    i32 num_lib;
+
+                    liberi_bracchii = silva_xar_creare(ctx->piscina,
+                                                 magnitudo(SilvaStmlNodus*));
+                    si (liberi_bracchii == NIHIL)
+                    {
+                        redde FALSUM;
+                    }
+                    num_lib = bracchium->liberi != NIHIL
+                        ? silva_xar_numerus(bracchium->liberi) : ZEPHYRUM;
+                    per (j = ZEPHYRUM; j < num_lib; j++)
+                    {
+                        SilvaStmlNodus* l = *(SilvaStmlNodus**)silva_xar_obtinere(
+                            bracchium->liberi, j);
+                        SilvaStmlNodus** cella;
+
+                        si (l == NIHIL || l == est_nodus)
+                        {
+                            perge;
+                        }
+                        cella =
+                            (SilvaStmlNodus**)silva_xar_addere(liberi_bracchii);
+                        si (cella == NIHIL)
+                        {
+                            redde FALSUM;
+                        }
+                        *cella = l;
+                    }
+                }
             }
             alioquin si (silva_stml_attributum_capere(bracchium,
                              "non-nihil") != NIHIL)
@@ -20317,9 +20814,8 @@ _commutationem_implere (
         }
         si (congruit)
         {
-            redde _liberos_expandere(parens_novus,
-                                     bracchium->liberi, ctx,
-                                     stratum, tectum, argumenta);
+            redde _liberos_expandere(parens_novus, liberi_bracchii,
+                                     ctx, stratum, tectum, tabula);
         }
     }
     _vitium_ponere(ctx, STML_EXPANSIO_CASUS_NULLUS, com, NIHIL,
@@ -23684,13 +24180,16 @@ _per_silvae_implere (
             && (   proiectio.valor == NIHIL
                 || proiectio.valor->mensura > ZEPHYRUM)))
         {
-        /* absens (defensivum - angustatio collectione) aut scalaris
-         * cum textu: fons silva esse debet. Scalaris VACUUS = involucrum
-         * vacuum (par. 6.1: textus solus, vacuus inclusus) = silva sine
-         * ordinibus - '<elementa/>' ordines nullos parit, clare */
-        _vitium_ponere(ctx, STML_EXPANSIO_EXEMPLAR_MALFORMATUM, nodus,
-                       NIHIL, silva_chorda_internare(ctx->intern,
-                       de_titulus));
+                /* absens (defensivum - angustatio collectione) aut scalaris
+         * cum textu in positione arboris (XXX, speculum VII): fons
+         * silva esse debet. Scalaris VACUUS = involucrum vacuum (par.
+         * 6.1: textus solus, vacuus inclusus) = silva sine ordinibus -
+         * '<elementa/>' ordines nullos parit, clare */
+        _vitium_ponere(ctx,
+                       praesens ? STML_EXPANSIO_ARGUMENTUM_SCALARE
+                                : STML_EXPANSIO_EXEMPLAR_MALFORMATUM,
+                       nodus, NIHIL,
+                       silva_chorda_internare(ctx->intern, de_titulus));
         redde FALSUM;
         }
     voca             = silva_stml_attributum_capere(nodus, "voca");

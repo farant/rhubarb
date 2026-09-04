@@ -2441,7 +2441,7 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium,
                             STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
 
-        /* XIII: fons scalaris (impletione) */
+        /* XXX: fons scalaris cum textu (impletione; speculum VII) */
         e = _expandere_litteras(piscina, intern,
             "<radix><#@list n=\"@n\"><PER de=\"@n.titulus\" ut=\"e\"><x/>"
             "</PER></#>"
@@ -2450,7 +2450,7 @@ principale (
             "<PER congruentia=\"$c\"><<#@list>><@n=>&@c;</></PER></radix>");
         CREDO_VERUM (!e.successus);
         CREDO_AEQUALIS_I32 (e.vitium,
-                            STML_EXPANSIO_EXEMPLAR_MALFORMATUM);
+                            STML_EXPANSIO_ARGUMENTUM_SCALARE);
         CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n.titulus");
 
         /* collectio: radix de ignota */
@@ -2485,6 +2485,195 @@ principale (
         CREDO_VERUM (!e.successus);
         CREDO_AEQUALIS_I32 (e.vitium,
                             STML_EXPANSIO_PROIECTIO_MALFORMATA);
+    }
+
+
+    /* ==================================================
+     * B1.4 (md-arbor-spec par. 6.4) - BRACCHIA EXEMPLARIA COMMUTATIONIS:
+     * '<CASUS tag="x">' (aequalitas tituli radicis) et '<CASUS><EST>
+     * <EXEMPLAR>forma</EXEMPLAR></EST>bracchium</CASUS>' (forma
+     * argumentis impleta, ancorata ad radicem scrutantis petita,
+     * capturae -> argumenta bracchii). Vitium XXX; malformationes IX.
+     * ================================================== */
+
+    /* --- dispensatio per tag: ordo ansae -> bracchium per genus --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- CASUS tag=: dispensatio ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"a\"><A/></CASUS>"
+            "<CASUS tag=\"b\"><B>&@n.t;</B></CASUS>"
+            "<ORDINARIUS><Z/></ORDINARIUS></COMMUTATIO></#>"
+            "<#@g n=\"@n\"><PER de=\"@n.liberi\" voca=\"#@f\"/></#>"
+            "<r><liberi><a/><b><t>x</t></b><c/></liberi></r>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><r $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@g>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><r><liberi><a/><b><t>x</t></b><c/></liberi></r>"
+                "<A/><B>x</B><Z/></radix>");
+        }
+    }
+
+    /* --- bracchia exemplaria: primum congruens vincit; capturae
+     * valoris, nodi, textus ut argumenta; descensus; tag ultimus --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- CASUS <EST>: formae + capturae ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><p><nudus>1</nudus></p></EXEMPLAR></EST>"
+            "<tight/></CASUS>"
+            "<CASUS><EST><EXEMPLAR><p gradus=\"$g\" $q/></EXEMPLAR></EST>"
+            "<h g=\"&@g;\">&@q.t;</h></CASUS>"
+            "<CASUS><EST><EXEMPLAR><p><t>$x</t></p></EXEMPLAR></EST>"
+            "<tx>&@x;</tx></CASUS>"
+            "<CASUS><EST><EXEMPLAR><p><**><deep/></**></p></EXEMPLAR></EST>"
+            "<dp/></CASUS>"
+            "<CASUS tag=\"p\"><loose/></CASUS>"
+            "</COMMUTATIO></#>"
+            "<#@g n=\"@n\"><PER de=\"@n.liberi\" voca=\"#@f\"/></#>"
+            "<r><liberi><p><nudus>1</nudus></p><p gradus=\"2\"><t>x</t></p>"
+            "<p><t>y</t></p><p><w><deep/></w></p><p/></liberi></r>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><r $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@g>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><r><liberi><p><nudus>1</nudus></p>"
+                "<p gradus=\"2\"><t>x</t></p><p><t>y</t></p>"
+                "<p><w><deep/></w></p><p/></liberi></r>"
+                "<tight/><h g=\"2\">x</h><tx>y</tx><dp/><loose/></radix>");
+        }
+    }
+
+    /* --- exemplar parametrizatum ('&@k;' in forma); scrutans
+     * optionalis absens -> ORDINARIUS --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- CASUS <EST>: forma parametrizata + absens ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\" k=\"@k\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><p id=\"&@k;\"/></EXEMPLAR></EST><hit/>"
+            "</CASUS><ORDINARIUS><miss/></ORDINARIUS></COMMUTATIO></#>"
+            "<#@g n=\"@n\"><PER de=\"@n.liberi\" ut=\"e\">"
+            "<<#@f k=\"2\">><@n=>&@e;</></PER></#>"
+            "<r><liberi><p id=\"1\"/><p id=\"2\"/></liberi></r>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><r $c/></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@g>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><r><liberi><p id=\"1\"/><p id=\"2\"/></liberi></r>"
+                "<miss/><hit/></radix>");
+        }
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n?\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"p\"><hit/></CASUS>"
+            "<ORDINARIUS><miss/></ORDINARIUS></COMMUTATIO></#>"
+            "<<#@f>></radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><miss/></radix>");
+        }
+    }
+
+    /* --- vitia: XXX scalaris in positione arboris; IX formae malae
+     * (collectione); XXII captura collisa; X nullum bracchium --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- CASUS exemplaria: vitia ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"p\"><hit/></CASUS></COMMUTATIO></#>"
+            "<<#@f n=\"5\">></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_ARGUMENTUM_SCALARE);
+
+        /* IX: EST + est */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS est=\"1\"><EST><EXEMPLAR><p/></EXEMPLAR></EST><x/></CASUS>"
+            "</COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+
+        /* IX: EST cum EXEMPLARIBUS duobus */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><p/></EXEMPLAR><EXEMPLAR><q/></EXEMPLAR>"
+            "</EST><x/></CASUS></COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+
+        /* IX: EXEMPLAR cum attributo (relationes in plano impletionis
+         * nullae) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR modus=\"unum\"><p/></EXEMPLAR></EST><x/>"
+            "</CASUS></COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+
+        /* IX: captura loculum declaratum iterans */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><p $n/></EXEMPLAR></EST><x/></CASUS>"
+            "</COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n");
+
+        /* IX: tag cum referentia (LINEA) */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\" k=\"@k\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"&@k;\"><x/></CASUS></COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_COMMUTATIO_MALFORMATA);
+
+        /* collectio: captura extra bracchium suum ignota */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><p $q/></EXEMPLAR></EST><x/></CASUS>"
+            "<ORDINARIUS>&@q;</ORDINARIUS></COMMUTATIO></#></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_LOCULUS_IGNOTUS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "q");
+
+        /* X: nullum bracchium exemplare congruit, ORDINARIUS abest */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"q\"><x/></CASUS></COMMUTATIO></#>"
+            "<<#@f>><@n=><p/></></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_CASUS_NULLUS);
     }
 
     credo_imprimere_compendium();
