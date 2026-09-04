@@ -380,6 +380,8 @@ _vitium_expansionis_titulus (
             redde "PER_DELEGATIO_AMBIGUA";
         casus STML_EXPANSIO_ARGUMENTUM_SCALARE:
             redde "ARGUMENTUM_SCALARE";
+        casus STML_EXPANSIO_RECURSIO_NON_DESCENDENS:
+            redde "RECURSIO_NON_DESCENDENS";
         ordinarius:
             redde "IGNOTUM";
     }

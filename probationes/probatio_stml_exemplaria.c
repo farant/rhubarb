@@ -2676,6 +2676,143 @@ principale (
         CREDO_AEQUALIS_I32 (e.vitium, STML_EXPANSIO_CASUS_NULLUS);
     }
 
+
+    /* ==================================================
+     * B1.5 (md-arbor-spec par. 6.5) - VOCATIO SUI ut PROBATIO: templum
+     * se vocat (vocatione aut PER voca=) solum argumentis subarboreis
+     * DESCENDENTIBUS STRICTIS argumentorum instantiationis currentis.
+     * Exitus B1 (consilium): lista nidificata spicae -> <ul> unum cum
+     * <ul> intra <li> suum. Vitium XXXI.
+     * ================================================== */
+
+    /* --- dispensator sui vocans: lista nidificata spicae --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- vocatio sui: dispensator, lista nidificata ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@md-nodus n=\"@n\"><COMMUTATIO de=\"&@n;\">"
+            "<CASUS tag=\"documentum\"><PER de=\"@n.bloci\" voca=\"#@md-nodus\"/>"
+            "</CASUS>"
+            "<CASUS tag=\"lista\"><ul><PER de=\"@n.elementa\" voca=\"#@md-nodus\"/>"
+            "</ul></CASUS>"
+            "<CASUS tag=\"elementum\"><li><PER de=\"@n.bloci\" voca=\"#@md-nodus\"/>"
+            "</li></CASUS>"
+            "<CASUS tag=\"textus\">&@n.crudum!;</CASUS>"
+            "<ORDINARIUS/></COMMUTATIO></#>"
+            "<documentum><bloci><lista><elementa>"
+            "<elementum><bloci><textus><crudum><t!>one</t></crudum></textus>"
+            "<lista><elementa><elementum><bloci><textus><crudum><t!>nested</t>"
+            "</crudum></textus></bloci></elementum></elementa></lista>"
+            "</bloci></elementum>"
+            "<elementum><bloci><textus><crudum><t!>two</t></crudum></textus>"
+            "</bloci></elementum>"
+            "</elementa></lista></bloci></documentum>"
+            "<EXEMPLAR modus=\"unum\" output=\"$d\"><documentum $d/></EXEMPLAR>"
+            "<html><PER congruentia=\"$d\"><<#@md-nodus>><@n=>&@d;</></PER></html>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            chorda scriptum = stml_scribere(e.radix_expansa, piscina,
+                FALSUM);
+            chorda html     = chorda_ex_literis(
+                "<html><ul><li>one<ul><li>nested</li></ul></li><li>two</li>"
+                "</ul></html></radix>", piscina);
+
+            CREDO_VERUM (scriptum.mensura > html.mensura);
+            si (scriptum.mensura > html.mensura)
+            {
+                chorda cauda;
+
+                cauda.datum = scriptum.datum + scriptum.mensura
+                    - html.mensura;
+                cauda.mensura = html.mensura;
+                CREDO_CHORDA_AEQUALIS (cauda, html);
+            }
+        }
+    }
+
+    /* --- vocatio sui explicita per proiectionem (descensus strictus);
+     * terminatio per bracchium exemplare --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- vocatio sui: explicita, proiectio descendens ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix>"
+            "<#@f n=\"@n\"><d><COMMUTATIO de=\"&@n;\">"
+            "<CASUS><EST><EXEMPLAR><a><liberi/></a></EXEMPLAR></EST>"
+            "<<#@f>><@n=>&@n.liberi;</></CASUS>"
+            "<ORDINARIUS><leaf/></ORDINARIUS></COMMUTATIO></d></#>"
+            "<w><a><liberi><a><liberi><a/></liberi></a></liberi></a></w>"
+            "<EXEMPLAR modus=\"unum\" output=\"$c\"><w><a $c/></w></EXEMPLAR>"
+            "<PER congruentia=\"$c\"><<#@f>><@n=>&@c;</></PER>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><w><a><liberi><a><liberi><a/></liberi></a></liberi></a>"
+                "</w><d><d><d><leaf/></d></d></d></radix>");
+        }
+    }
+
+    /* --- XXXI: argumentum idem, blocum recens, scalaria sola; recursio
+     * mutua POSTERIUS manet --- */
+    {
+        StmlExpansioResultus e;
+
+        imprimere("\n--- vocatio sui: vitia XXXI / POSTERIUS ---\n");
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><<#@f>><@n=>&@n;</></#>"
+            "<<#@f>><@n=><x/></></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_RECURSIO_NON_DESCENDENS);
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.fragmentum, "@f");
+        CREDO_CHORDA_AEQUALIS_LITERIS (e.loculus, "n");
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><<#@f>><@n=><y/></></#>"
+            "<<#@f>><@n=><x/></></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_RECURSIO_NON_DESCENDENS);
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f k=\"@k\"><<#@f k=\"1\">></#><<#@f k=\"0\">></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_RECURSIO_NON_DESCENDENS);
+
+        /* PER voca= sui: ordines descendentes stricti argumenti (etiam
+         * bloci recentis vocationis exterioris - descensus RELATIVUS
+         * argumentis currentibus); involucrum vacuum = ordines nulli
+         * = terminatio */
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@f n=\"@n\"><d><PER de=\"@n.liberi\" voca=\"#@f\"/></d>"
+            "</#><<#@f>><@n=><a><liberi><a><liberi/></a></liberi></a></>"
+            "</radix>");
+        CREDO_VERUM (e.successus);
+        si (e.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (
+                stml_scribere(e.radix_expansa, piscina, FALSUM),
+                "<radix><d><d/></d></radix>");
+        }
+
+        e = _expandere_litteras(piscina, intern,
+            "<radix><#@g n=\"@n\"><<#@f>><@n=>&@n.liberi;</></#>"
+            "<#@f n=\"@n\"><<#@g>><@n=>&@n.liberi;</></#>"
+            "<<#@f>><@n=><a><liberi><a/></liberi></a></></radix>");
+        CREDO_VERUM (!e.successus);
+        CREDO_AEQUALIS_I32 (e.vitium,
+                            STML_EXPANSIO_FRAGMENTUM_POSTERIUS);
+    }
+
     credo_imprimere_compendium();
     {
         b32 praeteritus = credo_omnia_praeterierunt();

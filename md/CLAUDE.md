@@ -101,8 +101,13 @@ wrapper = zero rows; vitium XXIX. **B1.4 DONE**: `<CASUS tag="x">` and
 `<CASUS><EST><EXEMPLAR>…</EXEMPLAR></EST>arm</CASUS>` in COMMUTATIO —
 pattern filled with the arguments, anchored at the scrutinee's root,
 captures join the arm's table; vitium XXX (scalar in tree position,
-mirror of VII). **NEXT = B1.5** self-call as a descent check, then
-B1.2 `de="@n"` on EXEMPLAR/CATENA.
+mirror of VII). **B1.5 DONE**: a call or PER delegation to the
+template being filled is admitted iff every subtree argument descends
+STRICTLY from the current fill's arguments (parent pointers), else
+XXXI RECURSIO_NON_DESCENDENS; no depth cap (none existed); the spike's
+nested list through a four-arm dispatcher yields `<ul><li>one<ul>…`.
+**NEXT = B1.2** `de="@n"` on EXEMPLAR/CATENA/DIRIBITIO inside bodies,
+then B1 closure (CLI rebuilt, spec as-built, plan tick) and B2.
 
 ## Laws to keep (spec §3)
 

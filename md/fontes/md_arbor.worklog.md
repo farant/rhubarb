@@ -496,3 +496,45 @@ Gate: three fixtures (tag dispatch; five pattern arms with value,
 node, text captures and `<**>` descent; parameterized pattern and
 absent optional) + nine vitia, 331 assertions; planted fault (tag arm
 always true) red on the dispatch fixture, green on revert.
+
+## 2026-09-03 — B1.5 built: the self-call as a descent check
+
+The dispatcher recursion works: a four-arm `#@md-nodus` over the
+spike's nested list (documentum → lista → elementum → textus) produces
+`<ul><li>one<ul><li>nested</li></ul></li><li>two</li></ul>`, the exit
+criterion of B1 in the plan, with no walk verb. Three things learned:
+
+**(10) There was no depth cap to keep.** The spec assumed an existing
+`stratum` cap as the last guard; the engine never had one — the
+strictly decreasing ceiling (`tectum`) was the whole termination
+argument. I added none: strict descent through parent pointers in a
+finite tree is a proof, not a guard, and a cap would only have hidden
+a bug behind a number.
+
+**(11) Descent is relative to the current fill's arguments, not to
+the document.** A block argument built fresh by an OUTER caller lives
+in an ephemeral wrapper, not in the expanded document, and it is
+still a legitimate root to recurse into — its subtree is finite. What
+must be refused is a self-call whose argument is not strictly inside
+what THIS fill received: the same argument, a block built inside the
+body, scalars only. Judging containment against `argumenta_vocantis`
+gets exactly that line.
+
+**(12) Two fixture mistakes, both instructive.** A `modus="unum"`
+capture of `<a>` over nested same-tag content matched three times
+(UNUM_VIOLATUM) — floating application visits every subtree root, the
+spike's lesson relearned; the fix is to anchor through a parent
+(`<w><a $c/></w>`). And a recursion whose leaf lacks the wrapper it
+recurses into dies loudly as PROIECTIO_ABSENS — the empty wrapper
+(`<liberi/>` → zero rows) is the termination form, and a projection
+program must give its leaves one. That is a real finding for B2: the
+md projection writes every list slot as a wrapper even when empty, so
+`bloci`/`elementa`/`liberi` always terminate; token and derived slots
+are the ones that may be missing, and those are read by pattern arms.
+
+Gate: nested-list dispatcher; explicit self-call through a projection
+with a pattern-arm terminator (`<d><d><d><leaf/></d></d></d>`); five
+vitia/limits (same argument, fresh block, scalars only, PER self-
+delegation descending, mutual recursion still POSTERIUS) — 348
+assertions. Planted fault (self-call never recognized) red on the
+explicit self-call fixture, green on revert.

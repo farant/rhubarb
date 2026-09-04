@@ -187,7 +187,17 @@ nomen enumeratio {
      * scalarem, PER super silvam cuius fons scalaris textum fert
      * (md-arbor-spec par. 6.3/6.4). Scalaris VACUUS silva vacua est
      * (par. 6.1), numquam hoc vitium. */
-    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX
+    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX,
+    /* vocatio SUI non descendens (md-arbor-spec par. 6.5, ratificatio
+     * 2026-09-03): vocatio (aut PER voca=) ad definitionem quae
+     * impletur (ordo == tectum) admittitur SOLUM si argumentum
+     * subarboreum quodque radices habet quae DESCENDENTES STRICTI
+     * (continentia punctatorum per parentes) alicuius argumenti
+     * subarborei instantiationis currentis sunt, et saltem unum
+     * tale argumentum adest - terminatio per structuram finitam.
+     * Argumentum idem ('&@n;'), blocum recens, scalaria sola = hoc
+     * vitium, templum nominans. Recursio mutua POSTERIUS manet. */
+    STML_EXPANSIO_RECURSIO_NON_DESCENDENS  = XXXI
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi

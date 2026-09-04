@@ -365,7 +365,18 @@ output pinned, a vitium, and INDAGO coverage; the existing L1 / lint II
    naming the template. Through piece 3 the condition holds by
    construction; the check stays so an explicit self-call with a
    non-descending argument cannot loop. Mutual recursion stays illegal.
-   The existing `stratum` depth cap remains the last guard.
+   **As built (2026-09-03, B1.5):** there was no `stratum` cap to keep
+   (termination was the strictly decreasing ceiling alone); none is
+   added — strict descent in a finite tree is the guarantee. "Strict
+   descendant" is judged against the CURRENT fill's subtree arguments
+   by parent-pointer containment, so a block argument built fresh by
+   an outer caller is a fine root to recurse into, while a self-call
+   passing the same argument, a block built inside the body, or
+   scalars only is XXXI RECURSIO_NON_DESCENDENS naming the template
+   and slot. PER delegation to the template being filled checks every
+   row the same way. The exit fixture: the spike's nested list through
+   a four-arm dispatcher yields one `<ul>` with a nested `<ul>` inside
+   its `<li>`.
 
 **§1.3 extents — DEFERRED (DEVIATION c).** The rule says nothing that
 WRITES may ride matches until extents survive expansion. The md→html

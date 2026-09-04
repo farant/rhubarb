@@ -4304,7 +4304,17 @@ nomen enumeratio {
      * scalarem, PER super silvam cuius fons scalaris textum fert
      * (md-arbor-spec par. 6.3/6.4). Scalaris VACUUS silva vacua est
      * (par. 6.1), numquam hoc vitium. */
-    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX
+    STML_EXPANSIO_ARGUMENTUM_SCALARE       = XXX,
+    /* vocatio SUI non descendens (md-arbor-spec par. 6.5, ratificatio
+     * 2026-09-03): vocatio (aut PER voca=) ad definitionem quae
+     * impletur (ordo == tectum) admittitur SOLUM si argumentum
+     * subarboreum quodque radices habet quae DESCENDENTES STRICTI
+     * (continentia punctatorum per parentes) alicuius argumenti
+     * subarborei instantiationis currentis sunt, et saltem unum
+     * tale argumentum adest - terminatio per structuram finitam.
+     * Argumentum idem ('&@n;'), blocum recens, scalaria sola = hoc
+     * vitium, templum nominans. Recursio mutua POSTERIUS manet. */
+    STML_EXPANSIO_RECURSIO_NON_DESCENDENS  = XXXI
 } StmlExpansioVitium;
 
 /* Nota provenientiae - una per splicem, radix splicis (liberi
@@ -20316,6 +20326,103 @@ _argumenta_bloci_colligere (
     redde VERUM;
 }
 
+/* Estne nodus descendens STRICTUS radicis alicuius argumenti
+ * subarborei tabulae? (catena parentum contra punctatores radicum;
+ * nodus ipse non descendens sui) */
+interior b32
+_descendit_stricte (
+          SilvaXar* argumenta,
+    SilvaStmlNodus* nodus)
+{
+    SilvaStmlNodus* p;
+
+    si (argumenta == NIHIL || nodus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (p = nodus->parens; p != NIHIL; p = p->parens)
+    {
+        i32 i;
+        i32 num = silva_xar_numerus(argumenta);
+
+        per (i = ZEPHYRUM; i < num; i++)
+        {
+            StmlMacroArgumentum* arg =
+                (StmlMacroArgumentum*)silva_xar_obtinere(argumenta, i);
+            i32 k;
+            i32 num_arborum;
+
+            si (arg == NIHIL || arg->arbores == NIHIL)
+            {
+                perge;
+            }
+            num_arborum = silva_xar_numerus(arg->arbores);
+            per (k = ZEPHYRUM; k < num_arborum; k++)
+            {
+                si (*(SilvaStmlNodus**)silva_xar_obtinere(arg->arbores, k) == p)
+                {
+                    redde VERUM;
+                }
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* Vocationem SUI probare (par. 6.5 md): argumenta vocationis contra
+ * argumenta instantiationis currentis - argumentum subarboreum
+ * quodque radicibus descendentibus strictis, saltem unum. Aliter
+ * XXXI RECURSIO_NON_DESCENDENS (templum, loculus peccans). */
+interior b32
+_recursionem_probare (
+    StmlMacroContextus* ctx,
+             SilvaStmlNodus* vocatio,
+    StmlMacroDefinitio* def,
+                   SilvaXar* argumenta,
+                   SilvaXar* argumenta_vocantis)
+{
+    i32 i;
+    i32 num;
+    i32 subarborea;
+
+    subarborea  = ZEPHYRUM;
+    num         = silva_xar_numerus(argumenta);
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlMacroArgumentum* arg =
+            (StmlMacroArgumentum*)silva_xar_obtinere(argumenta, i);
+        i32 k;
+        i32 num_arborum;
+
+        si (arg == NIHIL || arg->arbores == NIHIL)
+        {
+            perge;
+        }
+        subarborea++;
+        num_arborum = silva_xar_numerus(arg->arbores);
+        per (k = ZEPHYRUM; k < num_arborum; k++)
+        {
+            SilvaStmlNodus* radix = *(SilvaStmlNodus**)silva_xar_obtinere(arg->arbores,
+                k);
+
+            si (!_descendit_stricte(argumenta_vocantis, radix))
+            {
+                _vitium_ponere(ctx,
+                               STML_EXPANSIO_RECURSIO_NON_DESCENDENS,
+                               vocatio, def->id, arg->titulus);
+                redde FALSUM;
+            }
+        }
+    }
+    si (subarborea == ZEPHYRUM)
+    {
+        _vitium_ponere(ctx, STML_EXPANSIO_RECURSIO_NON_DESCENDENS,
+                       vocatio, def->id, NIHIL);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* Vocationem implere: corpus definitionis per AMBULATIONEM in
  * parentem splicare (copia caeca vocationes interiores verbatim
  * ferret - ambulatio eas expandit), notam registrare.
@@ -20348,6 +20455,7 @@ _vocationem_implere (
                    i32  ante_numerus;
                    i32  i;
                    i32  num;
+                   b32  vocatio_sui;
 
     id   = _vocationis_id(ctx, valor_effectivus, &post_id);
     def  = _definitionem_invenire(ctx, id);
@@ -20357,7 +20465,14 @@ _vocationem_implere (
                        vocatio, id, NIHIL);
         redde FALSUM;
     }
-    si (def->ordo >= tectum || !def->praeterita)
+    /* vocatio SUI (par. 6.5 md): definitio quae impletur (ordo ==
+     * tectum, iam praeterita, intra impletionem) sub PROBATIONE
+     * DESCENSUS infra admittitur; cetera ordinis >= tectum =
+     * POSTERIUS (lex stratorum; recursio mutua illegalis manet) */
+    vocatio_sui =    argumenta_vocantis != NIHIL
+                  && def->praeterita
+                  && def->ordo == tectum;
+    si (!vocatio_sui && (def->ordo >= tectum || !def->praeterita))
     {
         _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
                        vocatio, id, NIHIL);
@@ -20388,6 +20503,12 @@ _vocationem_implere (
                                     saltus, argumenta,
                                     argumenta_vocantis, stratum,
                                     tectum))
+    {
+        redde FALSUM;
+    }
+    si (   vocatio_sui
+        && !_recursionem_probare(ctx, vocatio, def, argumenta,
+                                 argumenta_vocantis))
     {
         redde FALSUM;
     }
@@ -24160,16 +24281,18 @@ _per_silvae_implere (
                    i32  tectum,
                    SilvaXar* argumenta)
 {
-    StmlMacroArgumentum  proiectio;
-                    b32  praesens;
-                 SilvaChorda* voca;
-                 SilvaChorda* ut;
-     StmlMacroDefinitio* def;
-                 SilvaChorda* loculus_ordinis;
-                    i32  i;
-                    i32  num;
-                    i32  ordines;
+        StmlMacroArgumentum  proiectio;
+                        b32  praesens;
+                     SilvaChorda* voca;
+                     SilvaChorda* ut;
+         StmlMacroDefinitio* def;
+                     SilvaChorda* loculus_ordinis;
+                        i32  i;
+                        i32  num;
+                        i32  ordines;
+                        b32  vocatio_sui;
 
+    vocatio_sui = FALSUM;
     si (!_proiectionem_resolvere(ctx, argumenta, &de_titulus, nodus,
                                  &proiectio, &praesens))
     {
@@ -24220,7 +24343,11 @@ _per_silvae_implere (
                            nodus, id, NIHIL);
             redde FALSUM;
         }
-        si (def->ordo >= tectum || !def->praeterita)
+                /* delegatio SUI (par. 6.5 md): templum quod impletur (ordo ==
+         * tectum) admissum - ordo quisque infra descendens strictus
+         * probatur; cetera ordinis >= tectum = POSTERIUS */
+        vocatio_sui = def->praeterita && def->ordo == tectum;
+        si (!vocatio_sui && (def->ordo >= tectum || !def->praeterita))
         {
             _vitium_ponere(ctx, STML_EXPANSIO_FRAGMENTUM_POSTERIUS,
                            nodus, id, NIHIL);
@@ -24273,6 +24400,14 @@ _per_silvae_implere (
         {
             perge;
         }
+                si (   vocatio_sui
+                    && !_descendit_stricte(argumenta, elementum))
+                {
+            _vitium_ponere(ctx, STML_EXPANSIO_RECURSIO_NON_DESCENDENS,
+                           nodus, def->id,
+                           silva_chorda_internare(ctx->intern, de_titulus));
+            redde FALSUM;
+                }
         ordines++;
         tabula = silva_xar_creare(ctx->piscina,
             magnitudo(StmlMacroArgumentum));
