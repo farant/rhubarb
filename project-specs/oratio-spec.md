@@ -57,6 +57,24 @@ a language to tokenize).
 | 21 | WORDS meanings compiled and exposed as a derived `sensus` string per analysis (the source's gloss verbatim, not a semantic layer). |
 | 22 | The C89 comments corpus (lib/, silva/) is a second Latin corpus: read through silva's tree, unknown words reported there too. |
 
+**Decided after stage 1 (Fran, 2026-09-04).** (23) A TEXT-FORM layer
+sits before the sentence reader, decoupled from it: a pass over each
+paragraph decides `prosa` | `versus` | `titulus` | `tabula` | `index`
+from the tree's own evidence (lines against sentences, line lengths
+and their variance, capitalized line starts, unpunctuated line ends)
+and stores it as an INDEX slot `forma` on `paragraphus` (the push-down
+law); the reader consults the slot (a line is the unit in verse and
+tables, a heading is one unit, prose keeps the current rule). Special
+cases accumulate as DATA with a measured count, never as code paths.
+(24) The ergonomic criterion for ambiguous cases is "reading a text one
+sentence at a time": a false merge is a mild annoyance, a false split
+breaks a thought, so ambiguity resolves toward MERGING — oratio's
+"never invent a boundary it cannot justify" is the same bias. (25)
+Oracles for segmentation: the UD treebanks (sentence-segmented; CIRCSE
+= Seneca's tragedies = gold verse), plus a small hand-judged set from
+the fixtures encoding the reader criterion, pinned only rising; the
+fissio comparison stays a report.
+
 ## 2. Doctrine
 
 **Moderate realism, applied.** Classes are real because words signify
@@ -201,6 +219,13 @@ a line end as a boundary (verse: 247 vs 52 on Propertius); fissio ends
 at `?`/`!` before a lowercase word; oratio ends at a paragraph end
 without punctuation. Replacement behind the same API awaits the call,
 with a verse mode as the likely precondition.
+
+**Planned (T6b, before stage 2).** The `forma` slot on `paragraphus`
+(decision 23): registry append (seal moves, canon pin with a named
+cause), classifier pass in `oratio_arbor` between elements and
+sentences, reader reads the slot; rules as a data table; gate over the
+CIRCSE verse file's sentence boundaries and a hand-judged fixture set;
+the fissio report re-run to show class (1) closing.
 
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
@@ -555,3 +580,12 @@ T20 recall measurement on a fixed query set.
 About 20 tasks; T3 (sentences) and T8 (Latin lookup) are the hard
 ones. Re-entry: this file, `oratio-interview.md`, the ledger parcum
 (created with this commit).
+
+**Stage 1b (added 2026-09-04, after T6).** T6b `forma` classifier:
+`ORATIO_PARAGRAPHUS_FORMA` INDEX slot (append; seal + canon pin
+updated with cause), `oratio_forma.c` (evidence from the paragraph's
+lines: count, lengths, variance, capital starts, unpunctuated ends;
+rules as a table), reader consults it (`versus`/`tabula`: line = unit;
+`titulus`: one unit), gate `probatio_oratio_forma` (fixtures: verse,
+tables, headings, wrapped prose; CIRCSE boundaries once vendored in T13
+— until then the five fixtures), fissio report re-run. Precedes T7.

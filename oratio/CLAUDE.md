@@ -55,7 +55,11 @@ Gutenberg texts (`fixa/txt/`, FONTES.md; golden
 disagreement classes in the worklog: line ends as boundaries in fissio,
 `?`/`!` before lowercase, paragraph ends without punctuation in
 oratio). Replacement of `sententia_fissio` behind its API = Fran's call.
-NEXT: stage 2, T7 (vendor WORDS + compile + seal).
+NEXT: **T6b `forma` classifier** (decision 23–25 in the spec: text-form
+slot on `paragraphus` before the reader, rules as data, reader
+criterion = one sentence at a time, ambiguity → merge; oracles = CIRCSE
+verse + hand-judged set), then stage 2 T7 (vendor WORDS + compile +
+seal).
 
 ## Laws to keep (spec §2–3)
 
