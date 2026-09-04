@@ -48,8 +48,14 @@ nested / 50k-deep: never crashes, always byte-exact; 386 assertions,
 Gutenberg texts (`fixa/txt/`, FONTES.md; golden
 `fixa/computus/basis.tsv`, `COMPUTUS_SCRIBERE=1` + a named cause;
 `silva.metiri('x.txt')`). Measured: STML projection ≈ 34× source, write
-+ read ≈ 10× parse. NEXT: T6 fissio comparison (`sententia_fissio` vs
-oratio over the corpus), then stage 2 (Latin dictionary).
++ read ≈ 10× parse. **T6 DONE — STAGE 1 COMPLETE**: `oratio_sententiae`
+(sentence extents, tails excluded), `./oratio/sententiae.sh <x.txt>
+[-machina]`, gate `probatio_oratio_fissio` (measure, not pin: fissio
+38,899 vs oratio 36,762 sentences, 35,922 common = 92.3% / 97.7%; three
+disagreement classes in the worklog: line ends as boundaries in fissio,
+`?`/`!` before lowercase, paragraph ends without punctuation in
+oratio). Replacement of `sententia_fissio` behind its API = Fran's call.
+NEXT: stage 2, T7 (vendor WORDS + compile + seal).
 
 ## Laws to keep (spec §2–3)
 

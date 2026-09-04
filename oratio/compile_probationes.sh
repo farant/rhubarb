@@ -53,6 +53,8 @@ declare -a RADIX_FONTES=(
     "stml_html"
     "html_lexema"
     "similitudo"
+    "sententia_fissio"
+    "utf8"
     "canon"
     "credo"
 )

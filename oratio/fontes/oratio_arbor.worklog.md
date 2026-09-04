@@ -125,3 +125,27 @@ gates ever need to run whole, the answer is a leaner projection of
 to `oratio/computus.sh`. The fixture swap bit the zsh trap again: an
 unquoted variable does not word-split, so the loop fed awk one long
 file name — `${=var}` or no loop.
+
+## 2026-09-04 — T6: sententia_fissio measured; stage 1 complete
+
+The comparison gate normalizes both splitters' sentence starts and
+merges them: over the five fixtures and 227 sampled markdown files,
+fissio finds 38,899 sentences, oratio 36,762, and 35,922 starts are
+common — 92.3% of fissio's, 97.7% of oratio's. On English prose they
+agree exactly (Lincoln 140/140) and oratio adds only paragraph-end
+units without terminal punctuation (headings, table rows: Trinity +44).
+The disagreements fall into three classes, all visible in the first
+ten lines printed per fixture: (1) fissio treats a line end as a
+boundary — every verse line of Propertius is a sentence to it (247
+against 52), which is arguably right for verse and wrong for wrapped
+prose; (2) fissio ends a sentence at `?` or `!` even when a lowercase
+word follows ("quam diu etiam…"), where oratio's capital rule keeps
+going; (3) oratio ends a sentence at a paragraph end without
+punctuation, fissio does not. Nothing here is pinned: the gate holds
+two sanity floors (both sides over a thousand sentences, common starts
+over half of each). Whether oratio replaces fissio behind its API is
+Fran's call from this report; if it does, class (1) suggests a verse
+mode (short lines in a paragraph as units) before the swap.
+`./oratio/sententiae.sh <x.txt>` prints one sentence per line with
+byte extents. Stage 1 is complete: six tasks, seven gates, every one
+born red.

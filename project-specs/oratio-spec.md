@@ -192,6 +192,16 @@ projection ≈ 34× the source bytes and write+read ≈ 10× the parse — the
 price of a node per word, to be paid by a leaner `vocabulum` projection
 if it ever matters, not by a different tree.
 
+**As built (T6, 2026-09-04) — stage 1 complete.** The fissio gate
+measures, it does not pin: over the fixtures and a fifth of the
+markdown corpus, `sententia_fissio` 38,899 sentences, oratio 36,762,
+common starts 35,922 (92.3% of the former, 97.7% of the latter);
+English prose agrees exactly. Three disagreement classes: fissio takes
+a line end as a boundary (verse: 247 vs 52 on Propertius); fissio ends
+at `?`/`!` before a lowercase word; oratio ends at a paragraph end
+without punctuation. Replacement behind the same API awaits the call,
+with a verse mode as the likely precondition.
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`
