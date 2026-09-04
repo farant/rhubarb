@@ -72,3 +72,31 @@ boundary: splitting is preferred over merging until the unicode story
 gives real case. Control bytes are whitespace-class for structure.
 Planted fault (`mr` dropped from the table) went red on the first
 fixture.
+
+## 2026-09-04 — T4: projection, canon, and the price of a node per word
+
+Three things the STML round trip taught. (1) The structural comparator
+compares parent pointers, and the reader sets them; a parser must
+call `materia_arbor_patres_figere` after building or every round trip
+fails at path 0.1 with "pater-nullitas" — md's parser does, mine did
+not until now. (2) The canon's corpus judgment found a real shape the
+canon did not describe: after a number's letter suffix, a joiner
+(`1980s-era`, `1980s'`) finds no word to join and becomes punctuation
+with an `or-hyphen` or `or-apostrophus` signum — 104 and 31 sites over
+the corpus. The parser is right (the tokenizer only made a joiner
+because letters flanked it), so the canon now admits both in `signum`
+with a nota; "parser decides, canon describes, corpus falsifies".
+(3) Cost: the prose tree has a node per word (1.9M words in the
+corpus), and the STML round trip of the whole corpus took 40 s, the
+canon judgment 20 s, against 1.5 s for the byte gate. Both corpus
+loops now sample every fifth file (226 of 1,134; 8.5 s and 4 s), and
+`ORATIO_CORPUS_TOTUS=1` runs everything. Sampling is honest as long as
+the thresholds say so — the self-measure floors were lowered with it.
+The derived-token channel (stage 3's `classes`) was exercised now: a
+hand-placed derived token writes with `f="1"` and a carried position,
+reads back structurally equal, and the emitter omits it. Planted
+faults: the position hook declaring every token a source token (red on
+that channel test) and a renamed canon rule (red in the drift guard).
+The first plant I tried — removing the hook — was refused by
+`planta`'s pre-flight as an unused variable, exactly the refusal it was
+built for.

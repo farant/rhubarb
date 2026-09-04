@@ -1,0 +1,252 @@
+<!--
+  oratio.canon
+  MANU SCRIPTUM (ut md.canon, decretum Frani 2026-09-01).
+
+  Registrum oratio_registrum.c et lexicon oratio_lexicon.c manu scripta
+  sunt, ergo canon quoque. Custos derivae (probatio_oratio_canon)
+  regulas huius plagulae contra registrum generum, loci, lexicon et
+  involucrum UTRIMQUE retiret; sigillum registri infra PINNATUM contra
+  vivum conferitur.
+
+  MODELLUM (oratio-spec par. III as-built): trivia NULLA - spatia et
+  lineae novae CONTENTUM in caudis/praefixis; involucra <ante>/<post>
+  hic NON declarantur. Locus TOKEN derivatus (classes, linguae) f="1"
+  + linea/columna fert, b numquam. 'crlf' in or-linea, 'cr' in generibus
+  VERBATIM. Locus analyses (gradus III) hic VACUUS declaratur: genera
+  analysis-* appenduntur cum nascuntur.
+
+  INVOLUCRUM: <arbor> (documentum subarboris). Iudicium:
+    bin/canon_examen -canon oratio/grammatica/oratio.canon <doc.stml>
+-->
+<canon dialectus="oratio" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- spatia: caudae et praefixa (LISTA_TOKEN) -->
+  <#spatia>
+    <liberum nomen="or-spatium"/>
+    <liberum nomen="or-linea"/>
+    <liberum nomen="or-linea-cr"/>
+    <liberum nomen="or-signum"/>
+  </#>
+
+  <!-- partes vocabuli -->
+  <#partes>
+    <liberum nomen="or-litterae"/>
+    <liberum nomen="or-digiti"/>
+    <liberum nomen="or-hyphen"/>
+    <liberum nomen="or-apostrophus"/>
+    <liberum nomen="or-punctum"/>
+  </#>
+
+  <!-- elementa sententiae -->
+  <#elementa>
+    <liberum nomen="vocabulum"/>
+    <liberum nomen="interpunctio"/>
+    <liberum nomen="numerus"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris: liberum unum, genus quodlibet">
+    <attributum nomen="grammatica" genus="electio"
+      necessarium="verum">
+      <optio>oratio</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum tabularum oratio_registrum.c (T1: VI genera,
+            XVI loci). Tabula mutata sine hac optione mutata rubet in
+            iudicio ET in custode derivae.">
+      <optio>b27fe13a</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <liberum nomen="documentum"   maximum="1"/>
+    <liberum nomen="paragraphus"  maximum="1"/>
+    <liberum nomen="sententia"    maximum="1"/>
+    <liberum nomen="vocabulum"    maximum="1"/>
+    <liberum nomen="interpunctio" maximum="1"/>
+    <liberum nomen="numerus"      maximum="1"/>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (oratio_registrum.c). Locus quisque SEMEL aut
+       nusquam: lista absens = vacua (non scribitur).
+       -->
+
+  <elementum nomen="documentum">
+    <liberum nomen="praefixa"   maximum="1"/>
+    <liberum nomen="paragraphi" maximum="1"/>
+    <liberum nomen="finis"      maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="documentum"
+    nota="spatium ante paragraphum primum (totum)">
+    <<#spatia>>
+  </elementum>
+  <elementum nomen="paragraphi" intra="documentum">
+    <liberum nomen="paragraphus"/>
+  </elementum>
+  <elementum nomen="finis" intra="documentum">
+    <liberum nomen="or-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="paragraphus">
+    <liberum nomen="praefixa"   maximum="1"/>
+    <liberum nomen="sententiae" maximum="1"/>
+    <liberum nomen="cauda"      maximum="1"/>
+  </elementum>
+  <elementum nomen="praefixa" intra="paragraphus"
+    nota="indentatio (spatia post lineam ultimam caudae praecedentis)">
+    <<#spatia>>
+  </elementum>
+  <elementum nomen="sententiae" intra="paragraphus">
+    <liberum nomen="sententia"/>
+  </elementum>
+  <elementum nomen="cauda" intra="paragraphus"
+    nota="lineae vacuae post elementum ultimum, usque ad lineam ultimam">
+    <<#spatia>>
+  </elementum>
+
+  <elementum nomen="sententia">
+    <liberum nomen="elementa" maximum="1"/>
+  </elementum>
+  <elementum nomen="elementa" intra="sententia">
+    <<#elementa>>
+  </elementum>
+
+  <elementum nomen="vocabulum"
+    nota="verbum superficiei cum partibus; analyses/classes/linguae gradus III">
+    <liberum nomen="partes"   maximum="1"/>
+    <liberum nomen="cauda"    maximum="1"/>
+    <liberum nomen="analyses" maximum="1"/>
+    <liberum nomen="classes"  maximum="1"/>
+    <liberum nomen="linguae"  maximum="1"/>
+  </elementum>
+  <elementum nomen="partes" intra="vocabulum">
+    <<#partes>>
+  </elementum>
+  <elementum nomen="cauda" intra="vocabulum">
+    <<#spatia>>
+  </elementum>
+  <elementum nomen="analyses" intra="vocabulum"
+    nota="gradus III: genera analysis-* appendenda; nunc vacuum"/>
+  <elementum nomen="classes" intra="vocabulum"
+    nota="derivatum: classes universales ordine">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+  <elementum nomen="linguae" intra="vocabulum"
+    nota="derivatum: linguae ordine">
+    <liberum nomen="or-derivatum" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="interpunctio">
+    <liberum nomen="signum" maximum="1"/>
+    <liberum nomen="cauda"  maximum="1"/>
+  </elementum>
+  <elementum nomen="signum" intra="interpunctio"
+    nota="hyphen/apostrophus solivagi: post suffixum litterarum numeri
+          (1980s-era) iunctura vocabulum non invenit et interpunctio fit">
+    <liberum nomen="or-punctum"      maximum="1"/>
+    <liberum nomen="or-interpunctio" maximum="1"/>
+    <liberum nomen="or-hyphen"       maximum="1"/>
+    <liberum nomen="or-apostrophus"  maximum="1"/>
+  </elementum>
+  <elementum nomen="cauda" intra="interpunctio">
+    <<#spatia>>
+  </elementum>
+
+  <elementum nomen="numerus">
+    <liberum nomen="crudum" maximum="1"/>
+    <liberum nomen="cauda"  maximum="1"/>
+  </elementum>
+  <elementum nomen="crudum" intra="numerus"
+    nota="digiti, separatores (punctum, comma), suffixum litterarum">
+    <liberum nomen="or-digiti"/>
+    <liberum nomen="or-punctum"/>
+    <liberum nomen="or-interpunctio"/>
+    <liberum nomen="or-litterae"/>
+  </elementum>
+  <elementum nomen="cauda" intra="numerus">
+    <<#spatia>>
+  </elementum>
+
+  <!-- =============== LEXEMATA (or-) =============== -->
+
+  <elementum nomen="or-finis">
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-linea">
+    <attributum nomen="crlf" genus="electio">
+      <optio>true</optio>
+    </attributum>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-linea-cr" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-spatium" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-litterae" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-digiti" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-hyphen">
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-apostrophus" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-punctum">
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-interpunctio" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-signum" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="or-derivatum" textus="verum"
+    nota="fons I: classes, linguae, lemma, sensus; f=1, linea/columna portatae, b numquam">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+
+</canon>

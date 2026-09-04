@@ -31,8 +31,17 @@ v1: candidate punctuation + closers, lookahead for a capital/number,
 abbreviation table incl. initials, internal-period words) and
 `oratio_abbreviatio_est`; gate `probatio_oratio_arbor` (68 assertions
 + CORPUS: every md paragraph via md's tree, 81,844 paragraphs
-byte-exact, 155k sentences, 1.9M words, 1.5 s). NEXT: T4 `oratio_stml`
-+ canon + `oratio/arbor.sh`.
+byte-exact, 155k sentences, 1.9M words, 1.5 s). **T4 DONE**: `oratio_stml`
+(consilium with the origin hook for derived tokens),
+`oratio/grammatica/oratio.canon` (hand-written, seal `b27fe13a` pinned;
+`signum` admits leftover joiners after a number suffix),
+`./oratio/arbor.sh <x.txt> [-tacitus]`; gates `probatio_oratio_stml`
+(STRUCTURALIS + FIDELIS round trip, derived channel exercised, corpus
+SAMPLED every fifth file, 8.5 s) and `probatio_oratio_canon` (drift
+guard both ways + seal + corpus judged, sampled, 4 s);
+`ORATIO_CORPUS_TOTUS=1` runs the whole corpus (40 s + 20 s). Parent
+pointers are fixed after parsing (`materia_arbor_patres_figere`).
+NEXT: T5 totalitas + computus twin; T6 fissio comparison.
 
 ## Laws to keep (spec §2–3)
 

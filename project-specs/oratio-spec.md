@@ -173,6 +173,16 @@ Corpus gate as built: every markdown paragraph's extent from md's tree
 directly (no STML in the loop): 81,844 paragraphs byte-exact, 155,328
 sentences, 1,918,204 words, 1.45 s.
 
+**As built (T4, 2026-09-04).** Projection consilium `oratio_stml` (md's
+origin hook, grammar `oratio`); canon `oratio/grammatica/oratio.canon`
+with seal `b27fe13a`, 6 genera / 16 slots / 12 tokens, `signum`
+admitting `or-hyphen` and `or-apostrophus` (a joiner after a number's
+letter suffix has no word to join — found by the corpus judgment).
+Parent pointers fixed after parsing. Both corpus gates SAMPLE every
+fifth file because the word-per-node tree makes the STML round trip
+of the whole corpus cost 40 s (byte gate 1.5 s); `ORATIO_CORPUS_TOTUS=1`
+runs all of it. The derived-token channel is exercised from stage 1.
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`

@@ -5,6 +5,7 @@
 #include "oratio_lexicon.h"
 #include "oratio_registrum.h"
 #include "materia_token.h"
+#include "materia_arbor.h"
 #include "xar.h"
 #include <string.h>
 
@@ -750,5 +751,7 @@ oratio_arbor_parsare (
     {
         redde NIHIL;
     }
+    /* patres post acceptum (comparator structuralis eos confert) */
+    materia_arbor_patres_figere(piscina, documentum);
     redde documentum;
 }
