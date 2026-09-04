@@ -898,6 +898,13 @@ try:
 except silva.SilvaError as ex:
     credo('non compilat' in str(ex) and 'praevolatus' in str(ex), 'planta: praevolatus non compilantem refutat')
 credo(cursus == [] and '(vacuum)a;' in open(via_p).read(), 'planta: porta non cursa, plagula intacta')
+via_s = os.path.join(T, 'planta.stml')
+open(via_s, 'w').write('<radix><a/></radix>\n')
+def porta_stml(v):
+    return silva.Porta('stml', True, '<b/>' not in open(v).read(), 'stml', 0, '')
+r_s, g_s = silva.planta(via_s, '<a/>', '<b/>', porta_stml)
+credo(open(via_s).read() == '<radix><a/></radix>\n', 'planta: plagula non-C sine praevolatu clang, reversa')
+os.unlink(via_s)
 
 print('--- expandere (stml) ---')
 ex_b = silva.expandere('<radix><a/></radix>')

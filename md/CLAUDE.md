@@ -117,10 +117,15 @@ lines + `\n`), `saeptum.lingua` (first word of the decoded info),
 `imago.alt` (plain text of the description), `fractura-mollis.valor` /
 `fractura-dura.valor` = `\n` (always present: the terminator has no
 bytes in the projection, and a template cannot manufacture whitespace —
-finding 13). Registry 92 slots, seal `81c120c4`. **NEXT = B2.2**: html
-fragment entry in `lib/stml_html.c`, the driver `md/instrumenta/html.c`
-+ `md/html.sh`, the program `md/html/md-html.stml`, gate
-`probatio_md_html` (spike examples pinned).
+finding 13). Registry 92 slots, seal `81c120c4`. **B2.2 DONE**: `md/html/md-html.stml`
+(one dispatcher, DENSE form — finding 14: template layout leaks into
+html as trivia), `md_html_reddere` (`md/fontes/md_html.c`: parse →
+project → compose → expand → distribute → `stml_html_vertere_liberos`,
+the new doctype-less entry in `lib/stml_html.c`), `./md/html.sh <x.md>
+[-stml]`, gate `probatio_md_html` (twelve inputs byte-exact, our bytes).
+Open for Fran: should fills drop layout trivia (finding 14)? **NEXT =
+B3** the CommonMark/GFM oracle with the C normalizer (`probatio_md_html`
+grows the spec loop; raw html passthrough decided there).
 
 ## Laws to keep (spec §3)
 

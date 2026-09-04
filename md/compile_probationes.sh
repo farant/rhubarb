@@ -49,6 +49,7 @@ declare -a RADIX_FONTES=(
     "selectio"
     "stml"
     "stml_macros"
+    "stml_html"
     "similitudo"
     "canon"
     "credo"

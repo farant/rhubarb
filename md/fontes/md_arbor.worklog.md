@@ -574,3 +574,51 @@ empty fence (valor present and empty), indented code with an interior
 blank line, image alt across five inline kinds, both break kinds. All
 green first run; planted fault (indented code stripping three columns)
 red on the indented-code case, green on revert.
+
+## 2026-09-03 — B2.2: the program runs — and its layout leaked
+
+`md/html/md-html.stml` (one dispatcher, ~40 arms) through
+`md_html_reddere` (parse → project → compose with the program and a
+fixed tail → expand → distribute → `stml_html_vertere_liberos`, the new
+doctype-less fragment entry) rendered every genus correctly on the
+FIRST run: fences with language, indented code, hard and soft breaks,
+images with alt and title, code spans, autolinks, entities, tables with
+alignment, ordered starts, task boxes, quotes, rules, tight and loose
+lists, all six heading levels, emphasis, strong, strikethrough, links.
+`./md/html.sh <x.md>` is the shell face. Two findings:
+
+**(14) A template's pretty layout leaks into the output.** Whitespace
+between tags is trivia, and the html serializer re-emits trivia by its
+whitespace law (§5.9, so that hand-written `<b>x</b> <i>y</i>` keeps
+its space). An arm written as `</EST>` newline indent `<a …>` produced
+`<p>      <a`. Inside content elements a template cannot be indented;
+between arms it can (CASUS nodes are consumed, their trivia with them).
+The program is therefore written DENSE: every arm on one line, and the
+table arm is one long line. This is the first real readability cost of
+the transform direction and it sits exactly where the trivia decree
+meets the whitespace law. Named question for Fran: should a FILL drop
+layout trivia from template bodies ("layout is the author's, never
+content")? It would let the program be pretty again, and it would
+close finding 13's door from the other side — but it would make an
+intentional inter-tag space unspellable in a template, which the
+serializer's whitespace law exists to keep. I lean to the decree with
+an explicit opt-in for content whitespace (the `\` multiline form
+already means "whitespace is content"), and left the program dense
+until you rule.
+
+**(15) Header cells: context by `ut=`, not push-down.** `th` versus
+`td` is the first place the html needed a fact the parser does not push
+down (is this cell in the header row). A separate `#@md-th` template
+would have needed the dispatcher back for the cell's inline content —
+mutual recursion, illegal. The `ut=` body form carries the context in
+place: thead → rows → cells with four alignment arms, inline. It
+works and reads acceptably; a `cella.caput` INDEX slot (the push-down
+law) would make the arm four lines shorter. Not done: one consumer.
+
+Gate `probatio_md_html`: twelve inputs pinned byte-exact against OUR
+bytes (no newlines between blocks — the serializer cannot make them
+and the B3 normalizer will forgive them), one raw-html input printed
+for B3. Planted fault (h2 arm → h3) red on the spike heading, green on
+revert. Boolean attributes come out bare (`checked disabled`), where
+GFM writes `checked="" disabled=""` — an "attribute spelling"
+forgiveness for B3's list.

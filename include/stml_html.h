@@ -73,6 +73,15 @@ stml_html_vertere (
     StmlNodus* radix,
       Piscina* piscina);
 
+/* Vertere FRAGMENTUM: liberos elementi (arbor post catenam) in HTML
+ * SINE doctype - pro transformationibus quae fragmentum reddunt
+ * (md -> html, B2.2: CommonMark exitum sine involucro documenti
+ * comparat). Leges eaedem ac stml_html_vertere. */
+StmlHtmlResultus
+stml_html_vertere_liberos (
+    StmlNodus* parens,
+      Piscina* piscina);
+
 /* Titulus vitii (pro nuntiis et probationibus) */
 constans character*
 stml_html_vitium_titulus (

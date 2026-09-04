@@ -612,6 +612,52 @@ stml_html_vertere (
     redde resultus;
 }
 
+StmlHtmlResultus
+stml_html_vertere_liberos (
+    StmlNodus* parens,
+      Piscina* piscina)
+{
+    StmlHtmlResultus resultus;
+     VersioContextus ctx;
+                 i32 i;
+                 i32 num;
+
+    resultus.successus  = FALSUM;
+    resultus.html       = _vacua_chorda();
+    resultus.vitium     = STML_HTML_BENE;
+    resultus.detail     = _vacua_chorda();
+
+    ctx.aed      = chorda_aedificator_creare(piscina, 4096);
+    ctx.piscina  = piscina;
+    ctx.vitium   = STML_HTML_BENE;
+    ctx.detail   = _vacua_chorda();
+    si (ctx.aed == NIHIL)
+    {
+        resultus.vitium = STML_HTML_MEMORIA;
+        redde resultus;
+    }
+    num = (parens != NIHIL && parens->liberi != NIHIL)
+        ? xar_numerus(parens->liberi) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        StmlNodus* l = *(StmlNodus**)xar_obtinere(parens->liberi, i);
+
+        si (l != NIHIL)
+        {
+            _nodum_emittere(&ctx, l);
+        }
+    }
+    si (ctx.vitium != STML_HTML_BENE)
+    {
+        resultus.vitium = ctx.vitium;
+        resultus.detail = ctx.detail;
+        redde resultus;
+    }
+    resultus.html       = chorda_aedificator_finire(ctx.aed);
+    resultus.successus  = VERUM;
+    redde resultus;
+}
+
 constans character*
 stml_html_vitium_titulus (
     StmlHtmlVitium vitium)

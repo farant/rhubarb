@@ -1585,7 +1585,7 @@ def planta(via, vetus, novus, porta_nomen, filtrum=None, tolerans=True):
     # copiam (plagula viva intacta, porta non cursa) ante ritum; planta
     # aedificationem frangens (parametrum inutile sub -Werror, B1.1)
     # cursum totum portae olim perdebat
-    causa = syntaxis(via, plantata)
+    causa = syntaxis(via, plantata) if via.endswith(('.c', '.h')) else None
     if causa:
         raise SilvaError('planta non compilat (praevolatus, nihil cursum):'
                          ' %s' % causa)

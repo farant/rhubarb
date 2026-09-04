@@ -119,6 +119,13 @@ arms, tight lists via `nudus`, `title=` presence, fences). `md/html.sh`.
 Worklog section "quid STML voluit" — every verbosity, wrapper fight,
 missing form, workaround. Exit: the spike's three examples + 30 chosen
 CommonMark examples produce the spec's html after normalization.
+**STATUS 2026-09-03: B2.1 (derived tokens: saeptum.valor/lingua,
+imago.alt, break newlines) 8f4e5921; B2.2 program + pipeline + gate —
+twelve inputs byte-exact, spike examples included; the "30 CommonMark
+examples after normalization" half moves to B3 where the normalizer
+lives. Findings 13–15 in the worklog (whitespace cannot be manufactured
+by a template; a template's layout leaks as trivia — program written
+DENSE, decree question open; th/td by `ut=`).**
 
 ### B3 The html oracle
 `probatio_md_html`: vendored `spec.txt` (0.31.2) + GFM `spec.txt`

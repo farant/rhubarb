@@ -282,6 +282,17 @@ rendered bytes as derived tokens: `saeptum.valor` + `saeptum.lingua`,
 `imago.alt` (plain text of the description), and `valor` = `\n` on both
 break kinds — the last always present, since a terminator has no bytes
 in the projection to differ from.
+**As built (B2.2):** the program is `md/html/md-html.stml`, one
+dispatcher of ~40 arms in DENSE form (finding 14: whitespace between
+tags inside an arm is trivia that vertere re-emits, so an indented arm
+leaks spaces into `<p>`; between arms layout is harmless). Headings are
+six pattern arms on `gradus`; tight paragraphs one arm on `nudus`;
+ordered lists two arms (`initium` 1 vs `start=`); task items two arms
+on `officium`; fences two arms on the presence of `lingua`; links and
+images two arms each on the presence of `descriptio`; header cells by
+the `ut=` body form inside the table arm (finding 15). Composition and
+the fixed tail live in `md_html_reddere`; the html is a fragment
+(`stml_html_vertere_liberos`, no doctype).
 
 ## 6. Engine increment B1 — five pieces in `lib/stml_macros.c`, all from existing reservations
 

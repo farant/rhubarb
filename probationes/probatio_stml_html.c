@@ -434,6 +434,27 @@ principale (
     }
 
     imprimere("\n");
+    /* --- fragmentum: liberi elementi sine doctype (B2.2 md) --- */
+    {
+            StmlResultus lectum;
+        StmlHtmlResultus r;
+
+        imprimere("\n--- vertere_liberos: fragmentum sine doctype ---\n");
+        lectum = stml_legere_ex_literis(
+            "<radix><p>a <b>x</b></p><br/><pre><code>y\nz\n</code></pre></radix>",
+            piscina, intern);
+        CREDO_VERUM (lectum.successus);
+        r = stml_html_vertere_liberos(lectum.elementum_radix, piscina);
+        CREDO_VERUM (r.successus);
+        si (r.successus)
+        {
+            CREDO_CHORDA_AEQUALIS_LITERIS (r.html,
+                "<p>a <b>x</b></p><br><pre><code>y\nz\n</code></pre>");
+        }
+        r = stml_html_vertere_liberos(NIHIL, piscina);
+        CREDO_VERUM (r.successus && r.html.mensura == ZEPHYRUM);
+    }
+
     credo_imprimere_compendium();
 
     si (credo_omnia_praeterierunt())
