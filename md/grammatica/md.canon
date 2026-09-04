@@ -34,6 +34,7 @@
     <liberum nomen="md-linea" maximum="1"/>
     <liberum nomen="md-linea-cr" maximum="1"/>
     <liberum nomen="md-indentatio" maximum="1"/>
+    <liberum nomen="md-indentatio-codicis" maximum="1"/>
     <liberum nomen="md-marca-citationis" maximum="1"/>
     <liberum nomen="md-marca-puncti" maximum="1"/>
     <liberum nomen="md-marca-numeri" maximum="1"/>
@@ -61,6 +62,7 @@
   <!-- praefixa lineae: marcae continentium + indentatio + officium -->
   <#praefixa>
     <liberum nomen="md-indentatio"/>
+    <liberum nomen="md-indentatio-codicis"/>
     <liberum nomen="md-marca-citationis"/>
     <liberum nomen="md-marca-puncti"/>
     <liberum nomen="md-marca-numeri"/>
@@ -135,7 +137,7 @@
             mutata rubet in iudicio ET in custode derivae
             (probatio_md_canon optionem contra materia_arbor_sigillum
             vivum confert).">
-      <optio>24df7f78</optio>
+      <optio>ba282b8a</optio>
     </attributum>
     <attributum nomen="fons"    genus="numerus"/>
     <attributum nomen="b"       genus="numerus"/>
@@ -635,6 +637,11 @@
 
   <elementum nomen="html-inlineum">
     <liberum nomen="crudum" maximum="1"/>
+    <liberum nomen="valor"  maximum="1"/>
+  </elementum>
+  <elementum nomen="valor" intra="html-inlineum"
+    nota="B3.3: octeti cum lineis novis (derivatum) cum lineas plures tenet">
+    <liberum nomen="md-derivatum" maximum="1"/>
   </elementum>
   <elementum nomen="crudum" intra="html-inlineum">
     <liberum nomen="md-html"/>
@@ -667,6 +674,12 @@
     <attributum nomen="columna" genus="numerus"/>
   </elementum>
   <elementum nomen="md-indentatio" textus="verum">
+    <attributum nomen="cr"      genus="textus"/>
+    <attributum nomen="f"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+  </elementum>
+  <elementum nomen="md-indentatio-codicis" textus="verum">
     <attributum nomen="cr"      genus="textus"/>
     <attributum nomen="f"       genus="numerus"/>
     <attributum nomen="linea"   genus="numerus"/>

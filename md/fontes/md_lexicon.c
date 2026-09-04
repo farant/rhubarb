@@ -65,6 +65,10 @@ hic_manens constans MateriaLexGenus GENERA_MD[] = {
 
     /* fons I */
     { "DERIVATUM",          NIHIL,  MATERIA_LEX_VERBATIM,
+        MATERIA_MUNUS_SUBSTANTIVUM },
+
+    /* appensum B3.3: indentatio propria lineae codicis */
+    { "INDENTATIO_CODICIS", NIHIL,  MATERIA_LEX_VERBATIM,
         MATERIA_MUNUS_SUBSTANTIVUM }
 };
 

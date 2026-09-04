@@ -42,7 +42,7 @@ hic_manens constans character* ORDO_EXSPECTATUS[] = {
     "TEXTUS", "DELIMITATOR", "GRAVIS", "EFFUGIUM", "ENS",
         "NEXUS_APERTUM",
     "NEXUS_CAUDA", "AUTONEXUS", "HTML", "SPATIA_FINALIA",
-    "DERIVATUM"
+    "DERIVATUM", "INDENTATIO_CODICIS"
 };
 
 hic_manens constans character* GENERA_EXSPECTATA[] = {

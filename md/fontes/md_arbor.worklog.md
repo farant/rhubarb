@@ -706,3 +706,42 @@ Pin 1,168 → 1,248. Remaining classes: emphasis (the rule of three),
 inline html across lines, tabs after markers, list edge rules,
 definitions with multi-line titles, Unicode case folding of labels,
 bare-URL autolinks in core examples (a GFM choice, expected).
+
+## 2026-09-03 — B3.3 (ii)+(iii): 1,248 → 1,270 — the parser learns from the oracle
+
+**Inline html across lines** (+10): `html-inlineum.valor`, derived only
+when the construct spans lines (the terminator has no bytes; the
+"present only when it differs" law holds here naturally), and a
+pattern arm pair in the program. Registry 94, seal ba282b8a.
+
+**Link titles across a line ending** (+2): the destination parser
+stopped at the line end; CommonMark allows spaces, tabs and up to ONE
+line ending around the title, and a title may span lines but not a
+blank one. `_spatia_caudae` says exactly that.
+
+**A distinct token for a code line's own indentation** (+4, and a
+real bug in everyday files): `md-indentatio-codicis` (lexicon 27,
+appended). Inside a list item every code line carries the item's
+continuation indentation as a prefix token of the SAME genus as its
+own indentation, so the fence content could not tell which spaces to
+strip — `<pre><code>  b` for every fenced block inside a list, and the
+corpus has 2,540 C fences. Now the leaf paths mint the code token,
+the derive pass keeps only that genus, and containers' tokens are
+never content. The byte model never cared; the html did.
+
+**Five CommonMark rules** (+6): a marker followed only by spaces is an
+empty start (content from marker + 1); a list item at an outer level
+does not "interrupt" a paragraph that lives inside the item being
+closed (depth of the open paragraph recorded); a blank line after an
+EMPTY item still separates items (loose); a bare `>` inside a quoted
+item is the quote's blank, not the item's; definitions are extracted
+BEFORE a setext underline is honored, so a paragraph that was only
+definitions keeps the underline as text.
+
+Fixtures for each rule; planted fault (quote blanks routed to lists)
+red on the arbor fixture, green on revert. Remaining core misses (17):
+tabs after markers (4), Unicode whitespace and punctuation classes
+and label case folding (5), definitions with multi-line labels or
+titles (3), the full HTML5 entity table (1), a raw-html comment edge
+(1), bare-URL autolinks in core examples (2 — a GFM choice, expected),
+plus the GFM file's 0.29-era emphasis expectations (10, spec version).

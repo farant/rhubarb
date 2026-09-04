@@ -32,7 +32,7 @@
 #include <string.h>
 
 /* pinna: praeterita minima (B3.2 nativitas: valor post cursum primum) */
-#define PINNA_PRAETERITA 1248
+#define PINNA_PRAETERITA 1270
 
 hic_manens constans character* TAGI_BLOCORUM[] = {
     "p", "div", "ul", "ol", "li", "blockquote", "pre", "h1", "h2", "h3",
@@ -606,6 +606,19 @@ principale (
                 nostra   = _normare(p, r.html, &ig);
                 sperata  = _normare(p, ex->html, &ig);
                 sanum    = chorda_aequalis(nostra, sperata);
+            }
+            si (   getenv("ORACULUM_EXEMPLUM") != NIHIL
+                && atoi(getenv("ORACULUM_EXEMPLUM"))
+                    == (integer)ex->numerus)
+            {
+                imprimere("\n=== EXEMPLUM %d (%s) ===\nmd: %.*s\nsperata cruda: %.*s\n" "nostra cruda:  %.*s\n",
+                    (integer)ex->numerus, plagulae[f],
+                    (integer)ex->markdown.mensura,
+                    (constans character*)ex->markdown.datum,
+                    (integer)ex->html.mensura,
+                    (constans character*)ex->html.datum,
+                    (integer)r.html.mensura,
+                    (constans character*)r.html.datum);
             }
             si (sanum)
             {

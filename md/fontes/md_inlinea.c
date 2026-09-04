@@ -1514,11 +1514,34 @@ _angulus (
         si (fin > ZEPHYRUM)
         {
             MateriaNodus* h = _nodus(in, MD_GENUS_HTML_INLINEUM);
+                     s32  q;
+                     b32  lineae_plures = FALSUM;
 
-            si (   h                  == NIHIL
+            si (   h == NIHIL
                 || !_lexemata_inter(in, h, (i32)MD_HTML_INLINEUM_CRUDUM,
-                       (s32)MD_LEX_HTML, i, fin)
-                || _nodus_item(in, h) == NIHIL)
+                       (s32)MD_LEX_HTML, i, fin))
+            {
+                redde (s32)-II;
+            }
+            /* lineas plures tenens: valor derivatus cum '\n' (terminator
+             * octetos in proiectione non fert - B3.3) */
+            per (q = i; q < fin; q++)
+            {
+                si (in->copia[q] == '\n')
+                {
+                    lineae_plures = VERUM;
+                    frange;
+                }
+            }
+            si (   lineae_plures
+                && !materia_nodus_ponere(h, (i32)MD_HTML_INLINEUM_VALOR,
+                       materia_valor_token(_derivatum(in,
+                           _chorda_copiae(in, i, fin), i)),
+                       MATERIA_LOCUS_TOKEN))
+            {
+                redde (s32)-II;
+            }
+            si (_nodus_item(in, h) == NIHIL)
             {
                 redde (s32)-II;
             }
@@ -1663,6 +1686,37 @@ _autonexus_nudus (
     redde k;
 }
 
+/* Spatia intra caudam nexus: spatia, tabuli, et lineam novam UNAM
+ * ad summum (CommonMark par. 6.6: 'spaces, tabs, and up to one line
+ * ending') - reddit indicem post spatia */
+interior s32
+_spatia_caudae (
+    constans MdInl* in,
+               s32  j,
+               s32  fin)
+{
+    b32 linea_nova = FALSUM;
+
+    dum (j < fin)
+    {
+        character c = in->copia[j];
+
+        si (c == ' ' || c == '\t')
+        {
+            j = j + I;
+            perge;
+        }
+        si (c == '\n' && !linea_nova)
+        {
+            linea_nova  = VERUM;
+            j           = j + I;
+            perge;
+        }
+        frange;
+    }
+    redde j;
+}
+
 /* Cauda nexus inlinei a i ('(' post ']'): destinatio et descriptio in
  * eadem linea. Reddit finem (post ')') aut -I. Extenta per *da..*tb. */
 interior s32
@@ -1679,24 +1733,14 @@ _cauda_inlinea (
     s32 fin  = in->mensura;
     s32 k;
 
-    /* usque ad finem lineae */
-    per (k = i; k < in->mensura; k++)
-    {
-        si (in->copia[k] == '\n')
-        {
-            fin = k;
-            frange;
-        }
-    }
     *descriptio = FALSUM;
-    dum (j < fin && (in->copia[j] == ' ' || in->copia[j] == '\t'))
-    {
-        j = j + I;
-    }
+    /* spatia (cum linea nova una) post '(' - B3.3: olim linea una sola */
+    j = _spatia_caudae(in, j, fin);
     si (j < fin && in->copia[j] == '<')
     {
         k = j + I;
-        dum (k < fin && in->copia[k] != '>' && in->copia[k] != '<')
+        dum (   k < fin && in->copia[k] != '>' && in->copia[k] != '<'
+             && in->copia[k] != '\n')
         {
             si (in->copia[k] == '\\' && k + I < fin)
             {
@@ -1748,13 +1792,8 @@ _cauda_inlinea (
         j    = k;
     }
     {
-        s32 post = j;
+        s32 post = _spatia_caudae(in, j, fin);
 
-        dum (   post < fin
-             && (in->copia[post] == ' ' || in->copia[post] == '\t'))
-        {
-            post = post + I;
-        }
         si (post < fin && in->copia[post] == ')')
         {
             redde post + I;
@@ -1772,6 +1811,12 @@ _cauda_inlinea (
             k = post + I;
             dum (k < fin && in->copia[k] != cl)
             {
+                /* descriptio lineas tenere potest, vacuam non */
+                si (   in->copia[k]     == '\n' && k + I < fin
+                    && in->copia[k + I] == '\n')
+                {
+                    redde (s32)-I;
+                }
                 si (in->copia[k] == '\\' && k + I < fin)
                 {
                     k = k + I;
@@ -1785,12 +1830,7 @@ _cauda_inlinea (
             *ta          = post + I;
             *tb          = k;
             *descriptio  = VERUM;
-            k            = k + I;
-            dum (   k < fin
-                 && (in->copia[k] == ' ' || in->copia[k] == '\t'))
-            {
-                k = k + I;
-            }
+            k            = _spatia_caudae(in, k + I, fin);
             si (k < fin && in->copia[k] == ')')
             {
                 redde k + I;

@@ -130,10 +130,14 @@ without `!`), `html.valor` derived (registry 93, seal `24df7f78`), two
 program arms. **B3.2 DONE**: `probatio_md_oraculum` — every CommonMark + GFM example
 through the program, both sides normalized over `html_lexare`
 (forgivenesses named and counted), pass count PINNED and only rising:
-1,168/1,324 at birth, 0.4 s. Section misses in the worklog. **NEXT =
-B3.3**: the failure classes biggest first (indented code inside list
-items leaks the marker; links; reference definitions; entities;
-emphasis; tabs), each commit raising the pin.
+1,168/1,324 at birth, 0.4 s. Section misses in the worklog. **B3.3 IN
+PROGRESS**: pin 1,168 → 1,248 (cef53339: last-prefix indentation, absent
+list wrappers by arm pairs, literal serializer mode, URL encoding) →
+1,270 (inline html across lines, link titles across a line ending,
+`md-indentatio-codicis` for a code line's own indentation, five list and
+setext rules). Remaining core misses are tabs, Unicode classes,
+multi-line labels and titles, the full entity table, and expected
+GFM-vs-core differences — see the worklog.
 
 ## Laws to keep (spec §3)
 

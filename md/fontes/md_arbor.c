@@ -125,6 +125,7 @@ nomen structura {
            MateriaNodus* paragraphus;
            MateriaNodus* inlinea;
                     i32  paragraphus_ultima;
+                    i32  paragraphus_profunditas;  /* acervi profunditas cum apertus */
            MateriaNodus* saeptum;
                     b32  saeptum_saeptus;
               character  saeptum_signum;
@@ -496,10 +497,11 @@ _paragraphum_aperire (
     {
         redde FALSUM;
     }
-    *locus                 = par;
-    p->paragraphus         = par;
-    p->inlinea             = inl;
-    p->paragraphus_ultima  = linea;
+    *locus                 = par; p->paragraphus         =
+                                                                                                                 par; p->paragraphus_profunditas =
+                                                                                                                                                                       p->profunditas; p->inlinea =
+                                                                                                                                                                                           inl;
+    p->paragraphus_ultima = linea;
     redde VERUM;
 }
 /* Octetus novae lineae pro lexematis derivatis fracturarum ('\n'
@@ -1089,11 +1091,10 @@ _definitiones_extrahere (
         {
             redde FALSUM;
         }
-        *locus          = par;
-        p->paragraphus  = par;
-        p->inlinea      = ni;
-    }
-    redde VERUM;
+        *locus          = par; p->paragraphus  =
+                                                                                                                               par; p->paragraphus_profunditas =
+                                                                                                                                                                                                             p->profunditas; p->inlinea      =
+                                                                                                                                                                                                                                                         ni; } redde VERUM;
 }
 
 interior b32
@@ -1697,9 +1698,10 @@ _listam_claudere (
                 vacua_post      = FALSUM;
             }
         }
-        si (vacua_post && i < n - I)
-        {
-            laxa = VERUM;   /* elementa vacua separata */
+        si (   i < n - I && m > ZEPHYRUM
+            && materia_valor_lista_obtinere(bl, m
+                - I)->datum.nodus->genus == (s32)MD_GENUS_LINEA_VACUA)
+        { laxa = VERUM; /* elementa vacua separata - etiam post elementum vacuum */
         }
     }
     si (!_ponere_indicem(lista, (i32)MD_LISTA_LAXA,
@@ -1986,11 +1988,19 @@ _lineam_parsare (
                 p->saeptum = NIHIL;
                 redde VERUM;
             }
-            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-            redde _appendere_nodum(p, p->saeptum,
-                (i32)MD_SAEPTUM_LINEAE,
-                vacua ? _vacua(p, i, &pf)
-                      : _linea(p, i, &pf, post, ad, MD_LEX_TEXTUS));
+            _praefixum(&pf, MD_LEX_INDENTATIO_CODICIS, cursor,
+                                                                          post); redde _appendere_nodum(p,
+                                                                                     p->saeptum,
+                                                                                     (i32)MD_SAEPTUM_LINEAE,
+                                                                                     vacua ? _vacua(p,
+                                                                                     i,
+                                                                                     &pf)
+                                                                                     : _linea(p,
+                                                                                     i,
+                                                                                     &pf,
+                                                                                     post,
+                                                                                     ad,
+                                                                                     MD_LEX_TEXTUS));
         }
         si (p->html != NIHIL)
         {
@@ -2021,22 +2031,31 @@ _lineam_parsare (
                 MateriaNodus** locus =
                     (MateriaNodus**)xar_addere(p->vacuae);
 
-                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-                si (locus == NIHIL)
-                {
-                    redde FALSUM;
-                }
-                *locus = _vacua(p, i, &pf);
+                _praefixum(&pf, MD_LEX_INDENTATIO_CODICIS, cursor,
+                                                                              post); si (locus
+                                                                                         == NIHIL)
+                                                                                     { redde FALSUM;
+                                                                                     } *locus =
+                                                                                           _vacua(p,
+                                                                                           i,
+                                                                                           &pf);
                 redde (b32)(*locus != NIHIL);
             }
             si (col >= IV)
             {
-                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-                redde _vacuas_effundere(p, p->saeptum,
-                    (i32)MD_SAEPTUM_LINEAE)
-                    && _appendere_nodum(p, p->saeptum,
-                    (i32)MD_SAEPTUM_LINEAE,
-                           _linea(p, i, &pf, post, ad, MD_LEX_TEXTUS));
+                _praefixum(&pf, MD_LEX_INDENTATIO_CODICIS, cursor,
+                                                                              post); redde _vacuas_effundere(p,
+                                                                                         p->saeptum,
+                                                                                         (i32)MD_SAEPTUM_LINEAE)
+                                                                                         && _appendere_nodum(p,
+                                                                                         p->saeptum,
+                                                                                         (i32)MD_SAEPTUM_LINEAE,
+                                                                                         _linea(p,
+                                                                                         i,
+                                                                                         &pf,
+                                                                                         post,
+                                                                                         ad,
+                                                                                         MD_LEX_TEXTUS));
             }
             p->saeptum = NIHIL;
         }
@@ -2096,10 +2115,23 @@ _lineam_parsare (
             frange;   /* divisio marcam listae vincit */
         }
         si (md_scan_marca_listae(p->fons, post, ad, columna + col, &m))
-        {
-            i32 n_spatia;
-            i32 coopertae;
-            s32 marca_ad;
+        { i32 n_spatia; i32 coopertae; s32 marca_ad;
+
+            /* marca sola in linea (spatia post eam) = initium vacuum:
+             * contentum a columna marca + I (CommonMark par. 5.2, B3.3) */
+            {
+                s32 q = m.marca_ad;
+
+                dum (   q < ad
+                     && (p->fons[q] == ' ' || p->fons[q] == '\t'))
+                {
+                    q++;
+                }
+                si (q == ad)
+                {
+                    m.spatia = ZEPHYRUM;
+                }
+            }
 
             /* lista + elementum = loci II acervi */
             si (p->profunditas + II > MD_PROFUNDITAS_MAXIMA)
@@ -2115,6 +2147,7 @@ _lineam_parsare (
                                   && cc->delimitator == m.delimitator);
 
                 si (   !soror && p->paragraphus != NIHIL
+                    && p->paragraphus_profunditas == congruentia + I
                     && (m.spatia == ZEPHYRUM
                     || (m.numerata && m.initium != I)))
                 {
@@ -2163,11 +2196,18 @@ _lineam_parsare (
             redde _blocum_addere(p, _vacua(p, i, &pf));
         }
         si (!_claudere_usque(p, congruentia))
-        {
-            redde FALSUM;
+        { redde FALSUM;
         }
-        _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-        locus = (MateriaNodus**)xar_addere(p->vacuae);
+        /* vacua intra citationem ('>' solum) citationis est - non pendet
+         * ad elementum (laxitas listae eam non videt, B3.3) */
+        si (   congruentia                   >= I
+            && p->acervus[congruentia].genus == MD_GENUS_CITATIO)
+        {
+            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+            redde _blocum_addere(p, _vacua(p, i, &pf));
+        }
+        _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post); locus =
+                                                              (MateriaNodus**)xar_addere(p->vacuae);
         si (locus == NIHIL)
         {
             redde FALSUM;
@@ -2210,8 +2250,18 @@ _lineam_parsare (
             si (   omnia && p->paragraphus != NIHIL
                 && md_scan_subductio(p->fons, post, ad, &gradus))
             {
-                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-                redde _setext(p, gradus, i, &pf, post, ad);
+                /* definitiones a fronte ANTE subductionem (CommonMark
+                 * par. 4.7: definitio caput setext non facit) -
+                 * paragraphus totus definitio = subductio textus fit */
+                si (!_definitiones_extrahere(p))
+                {
+                    redde FALSUM;
+                }
+                si (p->paragraphus != NIHIL)
+                {
+                    _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
+                    redde _setext(p, gradus, i, &pf, post, ad);
+                }
             }
             si (md_scan_divisio(p->fons, post, ad))
             {
@@ -2227,9 +2277,15 @@ _lineam_parsare (
             }
             si (md_scan_saeptum_apertum(p->fons, post, ad, &s))
             {
-                _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-                redde _claudere_pro_bloco(p, congruentia)
-                    && _saeptum_aperire(p, &s, i, &pf, post, ad);
+                _praefixum(&pf, MD_LEX_INDENTATIO_CODICIS, cursor,
+                                                                              post); redde _claudere_pro_bloco(p,
+                                                                                         congruentia)
+                                                                                             && _saeptum_aperire(p,
+                                                                                             &s,
+                                                                                             i,
+                                                                                             &pf,
+                                                                                             post,
+                                                                                             ad);
             }
             conditio = md_scan_html_initium(p->fons, post, ad,
                 (b32)(p->paragraphus != NIHIL));
@@ -2255,8 +2311,12 @@ _lineam_parsare (
         { redde FALSUM;
         } si (col >= IV)
           {
-            _praefixum(&pf, MD_LEX_INDENTATIO, cursor, post);
-            redde _indentatum_aperire(p, i, &pf, post, ad);
+            _praefixum(&pf, MD_LEX_INDENTATIO_CODICIS, cursor,
+                                                                          post); redde _indentatum_aperire(p,
+                                                                                     i,
+                                                                                     &pf,
+                                                                                     post,
+                                                                                     ad);
           }
         /* officium: blocus primus elementi in hac linea aperti */
         si (p->elementum_novus != NIHIL)
@@ -2461,42 +2521,31 @@ _lexemata_appendere (
     constans MateriaValor* v,
                       i32* sublatio,
                       b32  tabus_sumit,
-                      b32  ultimum_solum)
+                      b32  codicis_solum)
 {
     MateriaToken* primum = NIHIL;
              i32  n;
              i32  j;
-             i32  ab = ZEPHYRUM;
 
     si (v->genus != MATERIA_VALOR_LISTA)
     {
         redde NIHIL;
     }
     n = materia_valor_lista_numerus(*v);
-    /* praefixa: lexema unum per continens (marca, indentatio
-     * continuationis) + ULTIMUM = indentatio propria blocci - sola
-     * contentum est (B3.3: codex intra elementum listae marcam ferebat) */
-    si (ultimum_solum)
-    {
-        ab = n;
-        si (n > ZEPHYRUM)
-        {
-            constans MateriaValor* e = materia_valor_lista_obtinere(*v,
-                n - I);
-
-            si (   e != NIHIL && e->genus == MATERIA_VALOR_TOKEN
-                && e->datum.token->genus == (s32)MD_LEX_INDENTATIO)
-            {
-                ab = n - I;
-            }
-        }
-    }
-    per (j = ab; j < n; j++)
+    per (j = ZEPHYRUM; j < n; j++)
     {
         constans MateriaValor* e = materia_valor_lista_obtinere(*v, j);
                           i32  k;
 
         si (e == NIHIL || e->genus != MATERIA_VALOR_TOKEN)
+        {
+            perge;
+        }
+        /* praefixa: lexemata continentium (marcae, indentatio
+         * continuationis) contentum non sunt - indentatio PROPRIA codicis
+         * (INDENTATIO_CODICIS) sola manet, sublatione minuta (B3.3) */
+        si (   codicis_solum
+            && e->datum.token->genus != (s32)MD_LEX_INDENTATIO_CODICIS)
         {
             perge;
         }
@@ -2508,8 +2557,6 @@ _lexemata_appendere (
         {
             i8 c = e->datum.token->valor.datum[k];
 
-            /* indentatio auferenda (spatia; tabus in codice indentato
-             * columnas reliquas sumit - CommonMark par. 4.4/4.5) */
             si (*sublatio > ZEPHYRUM && c == (i8)' ')
             {
                 (*sublatio)--;
@@ -2568,16 +2615,16 @@ _saeptum_derivare (
 
             /* indentatio propria saepti = lexema praefixi ULTIMUM solum
              * (priora = continentes) */
-            per (j = m > ZEPHYRUM ? m - I : ZEPHYRUM; j < m; j++)
+            per (j = ZEPHYRUM; j < m; j++)
             {
                 constans MateriaValor* e =
                     materia_valor_lista_obtinere(*pv, j);
                                   i32 k;
 
                 si (   e == NIHIL || e->genus != MATERIA_VALOR_TOKEN
-                    || e->datum.token->genus != (s32)MD_LEX_INDENTATIO)
-                {
-                    perge;
+                    || e->datum.token->genus
+                        != (s32)MD_LEX_INDENTATIO_CODICIS)
+                { perge;
                 }
                 per (k = ZEPHYRUM; k
                     < e->datum.token->valor.mensura; k++)

@@ -156,8 +156,9 @@ hic_manens constans MateriaTabLocus LOCI_MD[] = {
     { "praefixa",    (s32)MATERIA_LOCUS_LISTA_TOKEN },
     { "valor",       (s32)MATERIA_LOCUS_TOKEN },      /* DERIVATUM: '\n' post <br/> */
 
-    /* html-inlineum (92) */
-    { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN }
+    /* html-inlineum (92..93) */
+    { "crudum",      (s32)MATERIA_LOCUS_LISTA_TOKEN },
+    { "valor",       (s32)MATERIA_LOCUS_TOKEN }       /* DERIVATUM: octeti cum lineis novis (B3.3, cum lineas plures tenet) */
 };
 
 hic_manens constans MateriaTabGenus GENERA_MD_NODI[] = {
@@ -189,7 +190,7 @@ hic_manens constans MateriaTabGenus GENERA_MD_NODI[] = {
     { "imago",             (i32)78, (i32)7 },
     { "fractura-mollis",   (i32)85, (i32)3 },
     { "fractura-dura",     (i32)88, (i32)4 },
-    { "html-inlineum",     (i32)92, (i32)1 }
+    { "html-inlineum",     (i32)92, (i32)2 }
 };
 
 constans MateriaRegistrumCoctum MD_REGISTRUM = {

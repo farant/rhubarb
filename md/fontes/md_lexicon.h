@@ -56,6 +56,11 @@ nomen enumeratio {
 
     /* fons I - valores semantici (spec par. III): emissor ea omittit */
     MD_LEX_DERIVATUM,
+    /* indentatio PROPRIA lineae codicis (saeptum): lexema distinctum ab
+     * indentatione continentium (continuatio elementi, ante marcam
+     * citationis) - valor saepti eam solam aufert (B3.3: codex intra
+     * elementum indentationem continentis ferebat). Appensum. */
+    MD_LEX_INDENTATIO_CODICIS,
 
     MD_LEX_NUMERUS_GENERUM
 } MdLexGenus;

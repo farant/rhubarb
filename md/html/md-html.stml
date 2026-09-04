@@ -87,6 +87,7 @@
 
     <!-- html crudum transit ut est (decretum B3.1: '<crudum!>' = splex sine tags) -->
     <CASUS tag="html"><crudum!>&@n.valor!;</crudum></CASUS>
+    <CASUS><EST><EXEMPLAR><html-inlineum><valor/></html-inlineum></EXEMPLAR></EST><crudum!>&@n.valor!;</crudum></CASUS>
     <CASUS tag="html-inlineum"><crudum!>&@n.crudum!;</crudum></CASUS>
 
     <!-- praefatio, linea-vacua, definitio-nexus: nihil -->

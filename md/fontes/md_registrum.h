@@ -233,7 +233,10 @@ nomen enumeratio {
 } MdLocusDurae;
 
 nomen enumeratio {
-    MD_HTML_INLINEUM_CRUDUM = 0    /* LISTA_TOKEN */
+    MD_HTML_INLINEUM_CRUDUM = 0,   /* LISTA_TOKEN */
+    MD_HTML_INLINEUM_VALOR         /* TOKEN? DERIVATUM: octeti cum '\n'
+                                    * (B3.3: html lineas plures tenens -
+                                    * terminator octetos non fert) */
 } MdLocusHtmlInlinei;
 
 

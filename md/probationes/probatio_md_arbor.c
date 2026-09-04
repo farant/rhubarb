@@ -1268,6 +1268,66 @@ principale (vacuum)
         CREDO_AEQUALIS_S32 (fr->genus, (s32)MD_GENUS_FRACTURA_MOLLIS);
         CREDO_VERUM (_valor_aequalis(fr, (i32)MD_MOLLIS_VALOR, "\n"));
     }
+
+
+    /* ========================================================
+     * PROBARE: regulae B3.3 (ex oraculo CommonMark)
+     * ======================================================== */
+
+    {
+        MateriaNodus* d;
+        MateriaNodus* l;
+        MateriaNodus* e;
+        MateriaNodus* s;
+
+        imprimere("\n--- Probans regulas B3.3 ---\n");
+        /* codex intra elementum: indentatio continentis non contentum */
+        d = PARSA("- a\n- ```\n  b\n  ```\n- c\n");
+        CREDO_VERUM (sani);
+        l = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        e = _elementum(l, (i32)MD_LISTA_ELEMENTA, I);
+        s = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (s->genus, (s32)MD_GENUS_SAEPTUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR, "b\n"));
+        d = PARSA("1. ```\n   foo\n   ```\n");
+        CREDO_VERUM (sani);
+        l = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        e = _elementum(l, (i32)MD_LISTA_ELEMENTA, ZEPHYRUM);
+        s = _elementum(e, (i32)MD_ELEMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_VERUM (_valor_aequalis(s, (i32)MD_SAEPTUM_VALOR,
+            "foo\n"));
+        /* marca sola cum spatiis: contentum a marca + I */
+        d = PARSA("-   \n  foo\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), I);
+        /* delimitator alius = lista nova (paragraphus intra elementum non
+         * interrumpitur - profunditas) */
+        d = PARSA("1. foo\n2. bar\n3) baz\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_I32 (_numerus(d, (i32)MD_DOCUMENTUM_BLOCI), II);
+        /* vacua post elementum vacuum = laxa */
+        d = PARSA("* a\n*\n\n* c\n");
+        CREDO_VERUM (sani);
+        l = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(l, (i32)MD_LISTA_LAXA), (s32)I);
+        /* '>' solum intra elementum: vacua citationis, lista arta */
+        d = PARSA("* a\n  > b\n  >\n* c\n");
+        CREDO_VERUM (sani);
+        l = _elementum(d, (i32)MD_DOCUMENTUM_BLOCI, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (_index(l, (i32)MD_LISTA_LAXA),
+            (s32)ZEPHYRUM);
+        /* definitio ante subductionem: caput non fit */
+        d = PARSA("[foo]: /url\n===\n[foo]\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, ZEPHYRUM),
+            (s32)MD_GENUS_DEFINITIO_NEXUS);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_PARAGRAPHUS);
+        d = PARSA("[foo]: /url\nbar\n===\n");
+        CREDO_VERUM (sani);
+        CREDO_AEQUALIS_S32 (_genus_bloci(d, I),
+            (s32)MD_GENUS_CAPITULUM);
+    }
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();
