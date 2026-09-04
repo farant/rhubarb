@@ -35,6 +35,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$MATERIA_DIR/fontes"
     "-I$ORATIO_DIR/fontes"
     "-I$ORATIO_DIR/probationes"
+    "-I$RADIX_DIR/md/fontes"
 )
 
 # Fontes radicis quibus materia in evolutione nititur.
@@ -49,8 +50,8 @@ declare -a RADIX_FONTES=(
     "selectio"
     "stml"
     "stml_macros"
-
-
+    "stml_html"
+    "html_lexema"
     "similitudo"
     "canon"
     "credo"
@@ -130,6 +131,19 @@ for m in materia_lexicon materia_token materia_nodus materia_scribere \
         echo "  [materia] $m.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $m.c" ; exit 1
+        fi
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# md sub-fontes: porta corporis paragraphos markdown per arborem md legit (T3)
+for src in "$RADIX_DIR"/md/fontes/*.c; do
+    base="$(basename "$src" .c)"
+    obj="$BUILD_DIR/$base.o"
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [md] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
         fi
     fi
     obj_files="$obj_files $obj"

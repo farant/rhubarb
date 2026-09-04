@@ -40,3 +40,35 @@ runs of the same byte — so the parser sees `"` `)` `.` separately but
 `---` and `!!!` whole. The const source pointer goes into the chorda
 through the same union md uses (-Wcast-qual). The planted fault
 (hyphen emitted as punctuation) went red on `well-known`.
+
+## 2026-09-04 — T3: the tree, two passes per paragraph, and 81,844 paragraphs first try
+
+`oratio_arbor_parsare` builds the tree in two passes per paragraph:
+first the token stream is grouped into elements (vocabulum, numerus,
+interpunctio) with their tails, and a whitespace run with two or more
+newlines closes the paragraph — the element's tail takes the run up to
+the first newline inclusive, the paragraph's tail the rest up to the
+last newline, and the spaces after that become the next paragraph's
+prefix; then the paragraph's elements are segmented into sentences with
+one element of lookahead. The corpus gate walks every markdown
+paragraph through md's own tree (extent = first to last source token
+of the subtree, no STML in the loop) and round-trips its bytes through
+oratio: 81,844 paragraphs, 0 fractures, 155,328 sentences, 1,918,204
+words, 1.45 s for the gate. All sixteen sentence fixtures — the cases
+`sententia_fissio`'s header lists plus initials, internal-period
+words, and a non-ASCII capital — passed on the first run; the two
+failures were my own byte counts on fixtures with escapes.
+
+Decisions worth naming. Elements are "letters first": a token starting
+with digits is a numerus and may take a letter suffix (3rd, 1980s),
+a token starting with letters is a vocabulum and may take digits
+(B2). A period joins letters on both sides without space (e.g, i.e,
+www.x) as a part; the trailing period is always its own element, and
+the abbreviation table (v1: English titles and citations plus a
+handful of Latin ones — cap, lib, q, a, ad, art, dist) is consulted
+for the vocabulum before it, with a single capital letter counting as
+an initial. Bytes at or above 0x80 count as a capital when deciding a
+boundary: splitting is preferred over merging until the unicode story
+gives real case. Control bytes are whitespace-class for structure.
+Planted fault (`mr` dropped from the table) went red on the first
+fixture.

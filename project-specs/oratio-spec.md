@@ -161,6 +161,18 @@ PUNCTUM only for a lone period; other punctuation one token per byte
 except same-byte runs. Corpus: every tracked markdown file byte-exact
 (1,134 files, 6.7M tokens, 0.7 s).
 
+**As built (T3, 2026-09-04).** Two passes per paragraph: elements with
+tails, then sentences with one element of lookahead. Numbers are
+"digits first" and may take a letter suffix; words are "letters first"
+and may take digits; a period between letters without space is a word
+part (e.g, i.e); the trailing period is its own element and the
+abbreviation table is consulted for the word before it. A byte at or
+above 0x80 counts as a capital for the boundary decision (splitting
+preferred until real case exists). Control bytes are whitespace-class.
+Corpus gate as built: every markdown paragraph's extent from md's tree
+directly (no STML in the loop): 81,844 paragraphs byte-exact, 155,328
+sentences, 1,918,204 words, 1.45 s.
+
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 
 **Sources vendored under `oratio/vocabularium/`** with `FONTES.md`

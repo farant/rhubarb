@@ -24,8 +24,15 @@ General Punctuation block, digits, hyphen/apostrophe between letters,
 PUNCTUM vs dot runs, one punctuation token per byte except same-byte
 runs, CRLF/CR, positions), derived-token factory; gate
 `probatio_oratio_lexema` (75 assertions + the md corpus byte-exact:
-1,134 files, 6.7M tokens, 0.7 s). NEXT: T3 `oratio_arbor` (paragraphs,
-sentences, vocabula with parts, corpus gate over md paragraph extents).
+1,134 files, 6.7M tokens, 0.7 s). **T3 DONE**: `oratio_arbor` —
+`oratio_arbor_parsare` (paragraphs by blank-line runs with the tail
+split; elements vocabulum/numerus/interpunctio with parts; sentences
+v1: candidate punctuation + closers, lookahead for a capital/number,
+abbreviation table incl. initials, internal-period words) and
+`oratio_abbreviatio_est`; gate `probatio_oratio_arbor` (68 assertions
++ CORPUS: every md paragraph via md's tree, 81,844 paragraphs
+byte-exact, 155k sentences, 1.9M words, 1.5 s). NEXT: T4 `oratio_stml`
++ canon + `oratio/arbor.sh`.
 
 ## Laws to keep (spec §2–3)
 
