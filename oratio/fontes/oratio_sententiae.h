@@ -14,12 +14,14 @@
 #include "piscina.h"
 #include "xar.h"
 #include "materia_nodus.h"
+#include "oratio_registrum.h"
 
 nomen structura {
-    s32 initium;
-    s32 finis;
-    i32 linea;      /* lexematis primi */
-    i32 elementa;   /* numerus elementorum */
+            s32 initium;
+            s32 finis;
+            i32 linea;      /* lexematis primi */
+            i32 elementa;   /* numerus elementorum */
+    OratioForma forma;   /* paragraphi (T6b) */
 } OratioSententia;
 
 /* Xar de OratioSententia ordine documenti; NIHIL = memoria */

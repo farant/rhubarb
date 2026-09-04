@@ -220,12 +220,28 @@ at `?`/`!` before a lowercase word; oratio ends at a paragraph end
 without punctuation. Replacement behind the same API awaits the call,
 with a verse mode as the likely precondition.
 
-**Planned (T6b, before stage 2).** The `forma` slot on `paragraphus`
-(decision 23): registry append (seal moves, canon pin with a named
-cause), classifier pass in `oratio_arbor` between elements and
-sentences, reader reads the slot; rules as a data table; gate over the
-CIRCSE verse file's sentence boundaries and a hand-judged fixture set;
-the fissio report re-run to show class (1) closing.
+**As built (T6b, 2026-09-04).** `ORATIO_PARAGRAPHUS_FORMA` (INDEX,
+appended after `cauda`; seal b27fe13a → 93c1c9cf, canon pinned with the
+cause). `oratio_forma.c`: indicia per paragraph (lines, widths, the
+VOLUNTARY BREAK — a line ended though the next word would have fit the
+paragraph's width, tokens of 24+ bytes excluded from the width —
+punctuated and capitalised line ends and starts, list marks, inner
+gaps) and a rule table `ORATIO_REGULAE_FORMAE` of ten rows, first match
+wins, no match = prosa. Verse needs width ≤ 64 (Gutenberg prose is
+typist-wrapped with a ragged margin at 70+, verse never reaches it) and
+one more signal (punctuated ends ≥ 40 %, capitalised starts ≥ 60 %, or
+≥ 70 % punctuated ends on short equal lines). The reader takes the
+forma: versus/tabula/index end a unit at every line end, titulus is one
+unit. Gate `probatio_oratio_forma` (171): rule table, 22 inline cases,
+fixture census (Propertius 21 versus / 0 prosa, 731 units where T6 had
+52; Lincoln 41 prosa / 0 versus), the hand-judged set `fixa/iudicia`
+(`[[` before each unit start; pins 8/8, 8/8, 25/25 and Cicero 10/14 —
+the four misses are one class: two spaces after `?`/`.` before a
+lowercase word as editorial boundary, recorded as data), and the md
+corpus census (14,862 paragraphs: prosa 11,879, titulus 2,869, versus
+76, index 21, tabula 17). Instruments `./oratio/formae.sh` (forma, rule,
+indicia per paragraph) and a forma column on `sententiae.sh`. CIRCSE
+joins as the verse oracle when vendored (T13).
 
 ## 4. Stage 2 — the Latin dictionary (`vocabularium`)
 

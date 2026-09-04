@@ -2,6 +2,7 @@
 
 #include "oratio_sententiae.h"
 #include "oratio_registrum.h"
+#include "oratio_forma.h"
 #include "materia_token.h"
 
 /* lexema primum/ultimum PARTIUM elementi (cauda exclusa) */
@@ -107,6 +108,7 @@ oratio_sententiae_extenta (
             x->finis     = b->byte_offset + (s32)b->valor.mensura;
             x->linea     = a->linea;
             x->elementa  = ne;
+            x->forma     = oratio_forma_paragraphi(par);
         }
     }
     redde exitus;

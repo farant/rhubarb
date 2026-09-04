@@ -55,11 +55,29 @@ Gutenberg texts (`fixa/txt/`, FONTES.md; golden
 disagreement classes in the worklog: line ends as boundaries in fissio,
 `?`/`!` before lowercase, paragraph ends without punctuation in
 oratio). Replacement of `sententia_fissio` behind its API = Fran's call.
-NEXT: **T6b `forma` classifier** (decision 23–25 in the spec: text-form
-slot on `paragraphus` before the reader, rules as data, reader
-criterion = one sentence at a time, ambiguity → merge; oracles = CIRCSE
-verse + hand-judged set), then stage 2 T7 (vendor WORDS + compile +
-seal).
+**T6b DONE — STAGE 1b**: the text-FORM layer (decisions 23–25).
+`ORATIO_PARAGRAPHUS_FORMA` (INDEX, appended; registry now 17 slots,
+seal `93c1c9cf`, canon pinned with the cause); `oratio_forma` decides
+prosa | versus | titulus | tabula | index per paragraph from indicia
+(lines, widths, the VOLUNTARY BREAK, punctuated/capitalised line ends
+and starts, list marks, inner gaps) through a RULE TABLE
+(`ORATIO_REGULAE_FORMAE`, ten rows, first match wins, no match = prosa
+= the merge bias); the reader consults the slot (versus/tabula/index:
+line = unit; titulus: one unit). Instruments `./oratio/formae.sh
+<x.txt> [-machina]` (forma, rule, every indicium per paragraph) and a
+forma column on `sententiae.sh`. Gate `probatio_oratio_forma` (171:
+rule table, 22 inline cases, fixture census — Propertius 21 versus /
+0 prosa, 731 units where T6 had 52; Lincoln 41 prosa / 0 versus —, the
+HAND-JUDGED set `fixa/iudicia/` (`[[` before each unit start, pins only
+rising: 8/8, 8/8, 25/25, Cicero 10/14), md corpus census sampled
+(14,862 paragraphs: prosa 11,879, titulus 2,869, versus 76, index 21,
+tabula 17; `ORATIO_FORMA_SPECIMINA=1` prints the non-prose ones).
+Fissio re-run: 93.0% / 95.7%, Propertius now covers 97% of fissio's
+starts. Open DATA: two spaces after `?`/`.` before a lowercase word is
+an editorial boundary in Gutenberg (Cicero, 4 of 14) — candidate rule,
+measure first. NEXT: stage 2 **T7** (vendor Whitaker's WORDS + FONTES.md
++ compile to a sealed table), then T8 lookup, T9 glossary, T10
+`vocabula.sh`.
 
 ## Laws to keep (spec §2–3)
 
@@ -71,3 +89,8 @@ seal).
 - Genera and token genera are APPENDED, never reordered; analysis genera
   (stage 3) append after `numerus`.
 - Unknown = finding, never a refused parse.
+- The FORM layer runs before the sentence reader and is decoupled from
+  it; its rules are DATA rows with a named cause and a measured count,
+  never code paths; no rule holding = prosa (ambiguity → merging).
+- A hand-built node takes its slot count from the registry
+  (`loci_numerus`), never a literal.

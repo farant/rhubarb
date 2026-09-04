@@ -9,6 +9,7 @@
 #include "latina.h"
 #include "oratio_arbor.h"
 #include "oratio_sententiae.h"
+#include "oratio_forma.h"
 #include "piscina.h"
 #include "xar.h"
 #include <stdio.h>
@@ -98,7 +99,7 @@ principale (
     }
     si (machina)
     {
-        imprimere("# initium\tfinis\tlinea\ttextus\n");
+        imprimere("# initium\tfinis\tlinea\tforma\ttextus\n");
     }
     n = xar_numerus(xs);
     per (i = ZEPHYRUM; i < (integer)n; i++)
@@ -108,9 +109,10 @@ principale (
             (i32)i);
         s32 k;
 
-        imprimere("%d\t%d\t%d\t", (integer)s->initium,
+        imprimere("%d\t%d\t%d\t%s\t", (integer)s->initium,
             (integer)s->finis,
-            (integer)s->linea);
+            (integer)s->linea,
+            oratio_forma_titulus(s->forma));
         per (k = s->initium; k < s->finis; k++)
         {
             character c = textus[k];

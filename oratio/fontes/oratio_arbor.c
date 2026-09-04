@@ -1,6 +1,7 @@
 /* oratio_arbor.c - Vide oratio_arbor.h. */
 
 #include "oratio_arbor.h"
+#include "oratio_forma.h"
 #include "oratio_lexema.h"
 #include "oratio_lexicon.h"
 #include "oratio_registrum.h"
@@ -515,13 +516,20 @@ _vocabulum_abbreviatio (
  * distribuere et paragrapho appendere */
 interior b32
 _sententias_distribuere (
-         Parsura* p,
-    MateriaNodus* paragraphus,
-             Xar* elementa)
+          Parsura* p,
+     MateriaNodus* paragraphus,
+              Xar* elementa,
+      OratioForma  forma)
 {
              i32  n          = xar_numerus(elementa);
              i32  i          = ZEPHYRUM;
     MateriaNodus* sententia  = NIHIL;
+    /* forma (T6b): versus/tabula/index = linea unitas; titulus = unitas
+     * una; prosa = regula v1 infra */
+             b32 per_lineas = (b32)(forma == ORATIO_FORMA_VERSUS
+                                  || forma == ORATIO_FORMA_TABULA
+                                  || forma == ORATIO_FORMA_INDEX);
+             b32 unitas_una = (b32)(forma == ORATIO_FORMA_TITULUS);
 
     dum (i < n)
     {
@@ -542,7 +550,15 @@ _sententias_distribuere (
             redde FALSUM;
         }
         i = i + I;
-        si (_candidatus_est(e))
+        si (unitas_una)
+        {
+            /* finis paragraphi solus finit */
+        }
+        alioquin si (per_lineas)
+        {
+            finis = oratio_forma_linea_finit(e);
+        }
+        alioquin si (_candidatus_est(e))
         {
             /* abbreviatio ante punctum? (punctum solum, non '!' '?') */
             b32 abbreviatio = FALSUM;
@@ -646,7 +662,9 @@ oratio_arbor_parsare (
             ORATIO_GENUS_PARAGRAPHUS);
         Xar* elementa = xar_creare(piscina,
             (i32)magnitudo(MateriaNodus*));
-        i32 praefixa_ab = i;
+                  i32 praefixa_ab = i;
+        OratioIndicia indicia;
+          OratioForma forma;
 
         si (paragraphus == NIHIL || elementa == NIHIL)
         {
@@ -736,15 +754,23 @@ oratio_arbor_parsare (
             }
             i = spatii_finis;
         }
-        /* forma (T6b): prosa donec classificator adveniat */
+        /* forma (T6b): stratum formae ante lectorem - indicia ex
+         * elementis cum caudis, regula prima tabulae, locus INDEX */
+                oratio_forma_indicia(elementa,
+                    _lex(&p, praefixa_ab)->byte_offset
+                    - ((s32)_lex(&p, praefixa_ab)->columna - I),
+                    &indicia);
+
+        forma = oratio_forma_iudicare(&indicia, NIHIL);
         si (!materia_nodus_ponere(paragraphus,
                 (i32)ORATIO_PARAGRAPHUS_FORMA,
-                materia_valor_index((s32)ORATIO_FORMA_PROSA),
+                materia_valor_index((s32)forma),
                 MATERIA_LOCUS_INDEX))
         {
             redde NIHIL;
         }
-        si (   !_sententias_distribuere(&p, paragraphus, elementa)
+        si (   !_sententias_distribuere(&p, paragraphus, elementa,
+            forma)
             || !_appendere_nodum(&p, documentum,
             (i32)ORATIO_DOCUMENTUM_PARAGRAPHI,
                    paragraphus))

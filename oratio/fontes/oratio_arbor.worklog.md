@@ -149,3 +149,87 @@ mode (short lines in a paragraph as units) before the swap.
 `./oratio/sententiae.sh <x.txt>` prints one sentence per line with
 byte extents. Stage 1 is complete: six tasks, seven gates, every one
 born red.
+
+## 2026-09-04 — T6b: the text-form layer (`forma`) before the sentence reader
+
+Decision 23 built: a fourth `paragraphus` slot, `forma` (INDEX), decided
+by `oratio_forma.c` between the element pass and the sentence pass, and
+consulted by the reader — versus, tabula and index read a LINE as the
+unit, titulus is one unit, prosa keeps the v1 rule. Seal moved
+b27fe13a → 93c1c9cf (canon pin, computus golden regenerated twice: once
+for the slot bytes, once for the verse units). Rules are a data table
+(`ORATIO_REGULAE_FORMAE`, ten rows, first match wins, no match = prosa
+= the merge bias of decision 24): two titulus rules (one line, all
+capitals / short without terminal punctuation), tabula (inner gaps of
+two spaces after a word or number, a tab, or two pipes on half the
+lines), two index rules (lines opening with a number, a list sign with
+a following space, a letter or Roman numeral plus `.`/`)`, or closing
+with a page number after leaders; and short capitalised lines all
+terminally punctuated — a Contents block), three versus rules and two
+distichon rules. `./oratio/formae.sh <x.txt> [-machina]` prints each
+paragraph's forma, the rule that fired and every indicium;
+`sententiae.sh` gained a forma column.
+
+The primary indicium is the VOLUNTARY BREAK: a line ended although the
+next line's first word would have fit within the paragraph's width
+(longest line, lines carrying a token of 24+ bytes excluded so a URL
+cannot fake the width). A greedy wrapper never produces one. Two things
+the corpus taught in the first hour: (1) Gutenberg prose was wrapped by
+TYPISTS with a ragged margin — Lincoln's paragraphs show 70–100 %
+"voluntary" breaks at widths 69–79 — so the fill test alone misreads
+wide prose as verse; the fix is a width bound (verse never reaches the
+prose wrap width: hexameters top out near 56 columns, prose wraps at
+70+), `latitudo <= 64`, plus one more signal per verse rule (line ends
+punctuated ≥ 40 %, or capitalised starts ≥ 60 %), which also rejects
+prose typed in a narrow column (Lincoln's "Resolved:" quotation, width
+48, 36 % punctuated). (2) An elegiac stanza of four lines has near-equal
+widths (44–48), so nothing "would have fit"; the punctuation rule
+(width ≤ 60, four or more lines, ≥ 70 % of lines ending in punctuation)
+catches it — the threshold sits between Propertius I.5 (62 lines, 72 %)
+and Lincoln's Constitution quotation (6 narrow lines, 66 %), both
+recorded here as the boundary cases.
+
+Two substrate lessons. The paragraph's `praefixa` does not hold the
+first line's indentation (the document praefixa or the previous
+paragraph's cauda does), so the first line's column-0 start comes from
+the first token's `columna` (1-based bytes) — without it every first
+line was measured from its first word and the elegiac indentation
+alternation read as 0/6. And a hand-built paragraph node in the
+registry gate carried the slot count as a literal `III`: the fourth
+slot read out of bounds and the writer crashed; nodes built by hand
+now take `loci_numerus` from the registry.
+
+Markdown corpus (227 files sampled, 14,862 paragraphs): prosa 11,879,
+titulus 2,869, versus 76, index 21, tabula 17. The first census showed
+117 index paragraphs — 40 of them `**Who:** …` lines in the episode
+files, because the `**` run matched `*` as a list sign; a list sign is
+now one byte followed by a space. What remains under versus is the
+prayer in CLAUDE.md, the one-liner list in RELAX.md, and 26 two-line
+`**Who:**`/`**Where:**` field pairs read as two units each (correct);
+one wrapped bullet item in a task file reads as two units (a false
+split, count 1, left as data).
+
+Fixture census: Propertius 21 versus / 25 titulus / 0 prosa — 731 units
+where T6 found 52; Lincoln 41 prosa / 2 titulus / 0 versus; Cicero
+42 / 5; Hilarius 28 / 4; Trinity 90 prosa, 19 titulus, 2 versus (the
+title block and an address block, both correctly line-by-line), 1 index
+(the Contents block). The fissio comparison re-run: Propertius fissio
+247 / oratio 731 / common 239 (class 1 closed from the other side —
+oratio now covers 97 % of fissio's starts there and adds the
+unpunctuated lines by decision); Lincoln exact 140/140 with five
+heading units extra; overall common 93.0 % of fissio's, 95.7 % of
+oratio's.
+
+Hand-judged set (`fixa/iudicia`, `[[` before each unit start, pins
+only rising): Propertius 8/8, Lincoln 8/8, Trinity 25/25 (title block
+per line, Contents per line, the quotation's four sentences, "Brig.
+Gen. Thomas Farrell" as ONE unit — the titulus rule spares it the
+abbreviation split), Cicero 10/14. The four Cicero misses are one
+class: in this Gutenberg edition a sentence boundary is marked by TWO
+SPACES after `?` or `.` even when a lowercase word follows ("nostra?
+quam diu", "intellegit.  consul") — the typewriter convention as
+editorial punctuation. Recorded as data (count 4 in 14); a rule
+"terminal + two spaces + lowercase = boundary" is the candidate, to be
+measured over the corpus before it is added. Gate born red by a plant
+in the percentage helper (hundredths → tenths, every threshold
+unreachable). 171 assertions, 0.5 s.

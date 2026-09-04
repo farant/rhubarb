@@ -25,9 +25,15 @@
  *    octeto >= 0x80 (capitalis ignota - fissio praefertur), aut numerus
  *    est; paragraphus finiens semper finit. NISI vocabulum ante punctum
  *    abbreviatio est (tabula: Mr Dr St etc e.g i.e cf ... et littera
- *    capitalis UNA = initialis), aut punctum intra vocabulum iacet.
+  *    capitalis UNA = initialis), aut punctum intra vocabulum iacet.
  *    Numquam finis fingitur qui iustificari nequit.
+ *  - FORMA (T6b, oratio_forma.h): ante cursum sententiarum stratum
+ *    formae paragraphum classificat (prosa | versus | titulus | tabula
+ *    | index) ex indiciis elementorum et in loco INDEX deponit; lector
+ *    formam consulit - versus/tabula/index: LINEA unitas; titulus:
+ *    unitas una; prosa: regula supra. Regulae DATA sunt.
  */
+
 
 #ifndef ORATIO_ARBOR_H
 #define ORATIO_ARBOR_H
